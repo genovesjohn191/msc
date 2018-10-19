@@ -35,13 +35,15 @@
                     [(ngModel)]="selectedResource"
                     (change)="onChangeResource($event)"
                     [mcsContextualHelp]="textContent.vdcDropdownList.helpText">
-                    <mcs-select-group [header]="textContent.vdcDropdownList.header">
-                      <ng-container *ngFor="let item of resources">
-                        <mcs-select-item [value]="item">
-                          {{ getResourceDisplayedText(item) }}
-                        </mcs-select-item>
+
+                    <mcs-option-group>
+                      <ng-container *mcsOptionGroupHeader>
+                        {{ textContent.vdcDropdownList.header }}
                       </ng-container>
-                    </mcs-select-group>
+                      <mcs-option [value]="item" *ngFor="let item of resources">
+                        {{ getResourceDisplayedText(item) }}
+                      </mcs-option>
+                    </mcs-option-group>
                   </mcs-select>
                 </mcs-form-field>
 

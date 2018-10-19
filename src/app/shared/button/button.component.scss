@@ -100,6 +100,8 @@ $button-error-bg-color: $color-red-00;
 }
 
 .button-wrapper.raised {
+  text-decoration: none;
+
   &.white {
     @include mcs-button-raised-color-setting(
       $button-white-bg-color,

@@ -27,11 +27,15 @@
               mcsId="select-resource"
               [placeholder]="textContent.selectResources"
               [mcsContextualHelp]="textContent.selectResourcesHelp">
-              <mcs-select-group header="VDC">
-                <mcs-select-item *ngFor="let resource of resources$ | async" [value]="resource">
+
+              <mcs-option-group>
+                <ng-container *mcsOptionGroupHeader>
+                  VDC
+                </ng-container>
+                <mcs-option *ngFor="let resource of resources$ | async" [value]="resource">
                   {{ resource.name }}
-                </mcs-select-item>
-              </mcs-select-group>
+                </mcs-option>
+              </mcs-option-group>
             </mcs-select>
 
             <mcs-error mcsError errorState="required">

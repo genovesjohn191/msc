@@ -5,6 +5,7 @@ import { ProgressBarModule } from '../progress-bar/progress-bar.module';
 import { IconModule } from '../icon/icon.module';
 import { AlertModule } from '../alert/alert.module';
 import { DirectivesModule } from '../directives';
+import { ButtonModule } from '../button';
 import { JobsProvisioningComponent } from './jobs-provisioning.component';
 
 @NgModule({
@@ -17,7 +18,8 @@ import { JobsProvisioningComponent } from './jobs-provisioning.component';
     ProgressBarModule,
     IconModule,
     AlertModule,
-    DirectivesModule
+    DirectivesModule,
+    ButtonModule
   ],
   exports: [
     CommonModule,
@@ -26,6 +28,7 @@ import { JobsProvisioningComponent } from './jobs-provisioning.component';
     IconModule,
     AlertModule,
     DirectivesModule,
+    ButtonModule,
     JobsProvisioningComponent
   ]
 })

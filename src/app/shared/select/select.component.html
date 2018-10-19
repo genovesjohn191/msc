@@ -7,17 +7,16 @@
 <div class="select-trigger" [ngClass]="size"
   mcsCursor="pointer" (click)="toggle()">
 
-  <span *ngIf="selection?.hasValue();else placeholderTemplate">
+  <span *ngIf="selectionModel?.hasValue();else placeholderTemplate">
     {{ displayedText }}
   </span>
   <mcs-icon size="small" [key]="carretDownIconKey"></mcs-icon>
 </div>
 
 <!-- Group Items container -->
-<div *ngIf="panelOpen">
-  <div #panelElement [@transformVertical] mcsScrollable class="select-group-panel-wrapper">
-    <div [@fadeIn]>
-      <ng-content></ng-content>
-    </div>
+<div>
+  <div [@transformVertical]="panelOpen ? 'transform' : 'void'"
+    mcsScrollable class="select-group-panel-wrapper">
+    <ng-content></ng-content>
   </div>
 </div>

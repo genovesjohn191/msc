@@ -12,8 +12,10 @@
               <!-- With ha group (with more than 1 group) -->
               <div *ngFor="let iterator of (firewallsMap | mcsMapIterable) |
                 mcsSortArray: firewallsListSource?.firewallGroupSortMethod" class="position-relative">
-                <mcs-option-group *ngIf="iterator.value?.length > 1"
-                  [label]="getFirewallGroupName(iterator.key)">
+                <mcs-option-group *ngIf="iterator.value?.length > 1">
+                  <ng-container *mcsOptionGroupLabel>
+                    <span>{{ getFirewallGroupName(iterator.key) }}</span>
+                  </ng-container>
 
                   <ng-container *ngFor="let firewall of (iterator.value | mcsSortArray: firewallsListSource?.firewallSortMethod)">
                     <a [mcsRouterLink]="[routeKeyEnum.FirewallDetail, firewall.id]"

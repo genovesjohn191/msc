@@ -54,11 +54,11 @@ describe('SelectComponent', () => {
       set: {
         template: `
         <mcs-select [(ngModel)]="selectedValue" placeholder="placeholder">
-          <mcs-select-group header="Group header">
-            <mcs-select-item *ngFor="let food of foods" [value]="food.value">
+          <mcs-option-group header="Group header">
+            <mcs-option *ngFor="let food of foods" [value]="food.value">
               {{ food.viewValue }}
-            </mcs-select-item>
-          </mcs-select-group>
+            </mcs-option>
+          </mcs-option-group>
         </mcs-select>
         `
       }

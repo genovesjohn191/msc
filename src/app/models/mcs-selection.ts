@@ -1,30 +1,23 @@
 import { Subject } from 'rxjs';
 import { isNullOrEmpty } from '@app/utilities';
+import { McsSelectionChange } from './mcs-selection-change';
 
 export class McsSelection<T> {
+
+  public change: Subject<McsSelectionChange<T>> = new Subject();
+
   /**
    * List of selected element based on the given ID
    */
-  private _selected: Set<T>;
+  private _selected: Set<T> = new Set<T>();
   public get selected(): T[] {
     return !isNullOrEmpty(this._selected) ? Array.from(this._selected.values()) : undefined;
   }
 
-  /**
-   * Stream that will notify when selection changed
-   */
-  private _selectionChangedStream: Subject<T[]>;
-  public get selectionChangedStream(): Subject<T[]> {
-    return this._selectionChangedStream;
-  }
-  public set selectionChangedStream(value: Subject<T[]>) {
-    this._selectionChangedStream = value;
-  }
+  private _newSelectedItems: T[] = [];
+  private _deselectedItems: T[] = [];
 
-  constructor(private _isMultiple = false) {
-    this._selected = new Set<T>();
-    this._selectionChangedStream = new Subject<T[]>();
-  }
+  constructor(private _isMultiple = false) { }
 
   /**
    * Return true if the given entity is selected othwerwise false
@@ -38,13 +31,8 @@ export class McsSelection<T> {
    * Select the given record and add it this to the list of selection
    * @param value Value of the entity to select
    */
-  public select(value: T): void {
-    if (this.isSelected(value)) { return; }
-    if (!this._isMultiple) {
-      this._selected.clear();
-    }
-
-    this._selected.add(value);
+  public select(...values: T[]): void {
+    values.forEach((value) => this._selectItem(value));
     this._emitChanges();
   }
 
@@ -52,10 +40,8 @@ export class McsSelection<T> {
    * Remove the selected entity from the list
    * @param value Value of the entity to deselect
    */
-  public deselect(value: T): void {
-    if (!this.isSelected(value)) { return; }
-
-    this._selected.delete(value);
+  public deselect(...values: T[]): void {
+    values.forEach((value) => this._deselectItem(value));
     this._emitChanges();
   }
 
@@ -87,6 +73,28 @@ export class McsSelection<T> {
    */
   private _emitChanges(): void {
     if (isNullOrEmpty(this.selected)) { return; }
-    this.selectionChangedStream.next(this.selected);
+    this.change.next({
+      source: this,
+      added: this._newSelectedItems,
+      removed: this._deselectedItems
+    });
+    this._newSelectedItems = [];
+    this._deselectedItems = [];
+  }
+
+  private _selectItem(value: T): void {
+    if (this.isSelected(value)) { return; }
+    if (!this._isMultiple) {
+      this._selected.clear();
+    }
+
+    this._selected.add(value);
+    this._newSelectedItems.push(value);
+  }
+
+  private _deselectItem(value: T) {
+    if (!this.isSelected(value)) { return; }
+    this._selected.delete(value);
+    this._deselectedItems.push(value);
   }
 }

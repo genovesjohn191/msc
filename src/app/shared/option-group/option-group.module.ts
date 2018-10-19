@@ -6,12 +6,14 @@ import { RippleModule } from '../ripple/ripple.module';
 /** Options */
 import { OptionGroupComponent } from './option-group.component';
 import { OptionGroupLabelDirective } from './option-group-label.directive';
+import { OptionGroupHeaderDirective } from './option-group-header.directive';
 import { OptionComponent } from './option/option.component';
 
 @NgModule({
   declarations: [
     OptionGroupComponent,
     OptionGroupLabelDirective,
+    OptionGroupHeaderDirective,
     OptionComponent
   ],
   imports: [
@@ -23,6 +25,7 @@ import { OptionComponent } from './option/option.component';
   exports: [
     OptionGroupComponent,
     OptionGroupLabelDirective,
+    OptionGroupHeaderDirective,
     OptionComponent,
     CommonModule,
     IconModule,

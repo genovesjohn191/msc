@@ -4,11 +4,9 @@
 <!-- Media selection -->
 <mcs-form-field [@fadeIn] *ngIf="media">
   <mcs-select [(ngModel)]="selectedMedia" placeholder="Select media" mcsId="select-media">
-    <mcs-select-group header="Media">
-      <mcs-select-item *ngFor="let medium of media" [value]="medium">
-        {{ medium.name }}
-      </mcs-select-item>
-    </mcs-select-group>
+    <mcs-option *ngFor="let medium of media" [value]="medium">
+      {{ medium.name }}
+    </mcs-option>
   </mcs-select>
 </mcs-form-field>
 <mcs-data-status-empty [@fadeIn] *ngIf="!media">
