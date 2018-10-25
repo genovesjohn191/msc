@@ -61,6 +61,7 @@ export class MediaUploadDetailsComponent
 
   public textContent: any;
   public resources$: Observable<McsResource[]>;
+  public mediaUploading: boolean;
   public selectedResource: McsResource;
   public urlInfoMessage: string;
   public uploadMediaFunc = this._uploadMedia.bind(this);
@@ -121,7 +122,7 @@ export class MediaUploadDetailsComponent
    * Event that emits when navigating away from this component page
    */
   public safeToNavigateAway(): boolean {
-    return !this._formGroup.hasDirtyFormControls();
+    return !this._formGroup.hasDirtyFormControls() || this.mediaUploading;
   }
 
   /**
@@ -163,7 +164,7 @@ export class MediaUploadDetailsComponent
     if (!this._validateFormFields()) { return of(undefined); }
     let uploadMediaModel = new McsResourceCatalogItemCreate();
     uploadMediaModel.name = this.fcMediaName.value;
-    uploadMediaModel.catalogName = 'dummy-catalog-name';
+    uploadMediaModel.catalogName = 'Customer_100320_Catalog';
     uploadMediaModel.url = this.fcMediaUrl.value;
     uploadMediaModel.description = this.fcMediaDescription.value;
     uploadMediaModel.type = CatalogItemType.Media;
@@ -179,6 +180,7 @@ export class MediaUploadDetailsComponent
         return throwError(_error);
       }),
       tap(() => {
+        this.mediaUploading = true;
         this._stepAlertMessage.removeComponent();
       }),
       finalize(() => this._changeDetectorRef.markForCheck())
