@@ -1,10 +1,10 @@
-<label [attr.for]="id" class="radio-button-layout-wrapper" #radioButton>
+<label [attr.for]="generatedId" class="radio-button-layout-wrapper" #radioButton>
   <div class="radio-button-inner-container">
     <!-- Radio Button element -->
     <input #inputElement hidden
       [ngStyle]="{position: 'absolute'}"
       type="radio"
-      [id]="id"
+      [attr.id]="generatedId"
       [attr.name]="name"
       [checked]="checked"
       (click)="onClickEvent($event)"

@@ -18,8 +18,7 @@ import {
   McsTextContentProvider,
   McsDialogService,
   McsErrorHandlerService,
-  McsNotificationEventsService,
-  CoreDefinition
+  McsNotificationEventsService
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -85,10 +84,6 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
 
   public ngOnDestroy() {
     super.destroyBase();
-  }
-
-  public get spinnerIconKey(): string {
-    return CoreDefinition.ASSETS_GIF_LOADER_SPINNER;
   }
 
   /**

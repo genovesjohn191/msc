@@ -20,16 +20,12 @@ import {
   McsAuthenticationIdentity
 } from '@app/core';
 import {
-  McsCompany,
-  DataStatus
-} from '@app/models';
-import {
-  refreshView,
   isNullOrEmpty,
   unsubscribeSubject,
   getSafeProperty
 } from '@app/utilities';
 import { NotificationsRepository } from '@app/services';
+import { McsCompany } from '@app/models';
 import { NotificationsDataSource } from './notifications.datasource';
 
 @Component({
@@ -69,7 +65,7 @@ export class NotificationsComponent
   }
 
   public ngAfterViewInit() {
-    refreshView(() => {
+    Promise.resolve().then(() => {
       this.initializeDatasource();
     });
   }
@@ -89,28 +85,9 @@ export class NotificationsComponent
   }
 
   /**
-   * Get the status icon key based on job
-   * @param dataStatus Status that serve as the basis
-   */
-  public getStatusIconKey(dataStatus: DataStatus): string {
-    return this._getStatusIcon(dataStatus).key;
-  }
-
-  /**
-   * Get the status icon color based on job
-   * @param dataStatus Status that serve as the basis
-   */
-  public getStatusIconColor(dataStatus: DataStatus): string {
-    return this._getStatusIcon(dataStatus).color;
-  }
-
-  /**
    * Retry obtaining datasource from notifications
    */
   public retryDatasource(): void {
-    // We need to initialize again the datasource in order for the
-    // observable merge work as expected, since it is closing the
-    // subscription when error occured.
     this.initializeDatasource();
   }
 
@@ -140,34 +117,6 @@ export class NotificationsComponent
       this.search
     );
     this.changeDetectorRef.markForCheck();
-  }
-
-  /**
-   * Get the status icon key based on the job
-   * @param dataStatus Status that serve as the basis
-   */
-  private _getStatusIcon(dataStatus: DataStatus): { key, color } {
-    let iconKey: string;
-    let iconColor: string;
-
-    switch (dataStatus) {
-      case DataStatus.InProgress:
-        iconKey = CoreDefinition.ASSETS_GIF_LOADER_SPINNER;
-        iconColor = 'black';
-        break;
-      case DataStatus.Error:
-        iconKey = CoreDefinition.ASSETS_FONT_CLOSE;
-        iconColor = 'red';
-        break;
-      case DataStatus.Success:
-        iconKey = CoreDefinition.ASSETS_FONT_CHECK;
-        iconColor = 'green';
-        break;
-      default:
-        break;
-    }
-
-    return { key: iconKey, color: iconColor };
   }
 
   /**

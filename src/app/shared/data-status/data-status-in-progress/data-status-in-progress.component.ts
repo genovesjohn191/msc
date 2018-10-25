@@ -3,7 +3,6 @@ import {
   ChangeDetectionStrategy,
   ViewEncapsulation
 } from '@angular/core';
-import { CoreDefinition } from '@app/core';
 
 @Component({
   selector: 'mcs-data-status-in-progress',
@@ -15,10 +14,4 @@ import { CoreDefinition } from '@app/core';
   }
 })
 
-export class DataStatusInProgressComponent {
-
-  // Returns the spinner icon key
-  public get spinnerIconKey(): string {
-    return CoreDefinition.ASSETS_GIF_LOADER_SPINNER;
-  }
-}
+export class DataStatusInProgressComponent { }

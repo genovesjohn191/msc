@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DirectivesModule } from '../directives/directives.module';
 import { IconModule } from '../icon/icon.module';
+import { LoadingModule } from '../loading/loading.module';
 /** Page */
 import { PageHeaderDirective } from './page-header.directive';
 import { PageComponent } from './page.component';
@@ -54,7 +55,8 @@ import {
   imports: [
     CommonModule,
     DirectivesModule,
-    IconModule
+    IconModule,
+    LoadingModule
   ],
   exports: [
     PageComponent,

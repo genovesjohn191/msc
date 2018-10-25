@@ -24,6 +24,7 @@ import {
   McsDialogService,
   McsNotificationEventsService,
   McsErrorHandlerService,
+  McsLoadingService,
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -98,10 +99,6 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   @ViewChild(ComponentHandlerDirective)
   private _componentHandler: ComponentHandlerDirective;
 
-  public get spinnerIconKey(): string {
-    return CoreDefinition.ASSETS_GIF_LOADER_SPINNER;
-  }
-
   public get checkIconKey(): string {
     return CoreDefinition.ASSETS_FONT_CHECK;
   }
@@ -158,6 +155,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     _changeDetectorRef: ChangeDetectorRef,
     _textProvider: McsTextContentProvider,
     _errorHandlerService: McsErrorHandlerService,
+    _loadingService: McsLoadingService,
     private _dialogService: McsDialogService,
     private _notificationEvents: McsNotificationEventsService
   ) {
@@ -168,7 +166,8 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
       _serverService,
       _changeDetectorRef,
       _textProvider,
-      _errorHandlerService
+      _errorHandlerService,
+      _loadingService
     );
     this._newNic = new McsServerNic();
     this.nicsColumns = new Array();

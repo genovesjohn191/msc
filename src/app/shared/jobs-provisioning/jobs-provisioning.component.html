@@ -23,7 +23,7 @@
                 <!-- In progress -->
                 <ng-container *ngSwitchCase="dataStatusEnum.InProgress">
                   <div class="inline-items-small">
-                    <mcs-icon [key]="spinnerIconKey" size="small"></mcs-icon>
+                    <mcs-loader size="small"></mcs-loader>
                     <span read-only>{{ task.description }}</span>
                   </div>
                 </ng-container>
@@ -54,7 +54,7 @@
               <!-- In progress -->
               <ng-container *ngSwitchCase="dataStatusEnum.InProgress">
                 <div class="inline-items-small">
-                  <mcs-icon [key]="spinnerIconKey" size="small"></mcs-icon>
+                  <mcs-loader size="small"></mcs-loader>
                   <span>{{ textContent.deploymentInProgress }}</span>
                 </div>
               </ng-container>
@@ -89,7 +89,7 @@
   <!-- When no job received yet -->
   <ng-container *ngSwitchCase="false">
     <div class="inline-items-small">
-      <mcs-icon [key]="spinnerIconKey" size="small"></mcs-icon>
+      <mcs-loader size="small"></mcs-loader>
       <span read-only>{{ textContent.deploymentInProgress }}</span>
     </div>
   </ng-container>

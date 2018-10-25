@@ -2,7 +2,8 @@ import { JsonProperty } from 'json-object-mapper';
 import { isNullOrEmpty } from '@app/utilities';
 import {
   CoreRoutes,
-  McsDateSerialization
+  McsDateSerialization,
+  CoreDefinition
 } from '@app/core';
 import {
   JobStatus,
@@ -118,6 +119,25 @@ export class McsJob extends McsEntityBase {
         break;
     }
     return dataStatus;
+  }
+
+  /**
+   * Returns true when the job is currently in progress
+   */
+  public get inProgress(): boolean {
+    return this.dataStatus === DataStatus.InProgress;
+  }
+
+  /**
+   * Returns the data status icon key based on the status of the job
+   */
+  public get dataStatusIconKey(): string {
+    if (this.dataStatus === DataStatus.InProgress) {
+      return CoreDefinition.ASSETS_GIF_LOADER_SPINNER;
+    }
+    return this.dataStatus === DataStatus.Success ?
+      CoreDefinition.ASSETS_SVG_SUCCESS :
+      CoreDefinition.ASSETS_SVG_ERROR;
   }
 
   /**

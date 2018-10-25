@@ -1,21 +1,23 @@
 import { ChangeDetectorRef } from '@angular/core';
 import {
-  Subscription,
-  Subject
+  Subject,
+  Observable
 } from 'rxjs';
 import {
   takeUntil,
-  finalize
+  finalize,
+  shareReplay,
+  tap
 } from 'rxjs/operators';
 import {
   McsTextContentProvider,
-  McsErrorHandlerService
+  McsErrorHandlerService,
+  McsLoadingService
 } from '@app/core';
 import {
   isNullOrEmpty,
   unsubscribeSafely,
-  getSafeProperty,
-  unsubscribeSubject
+  getSafeProperty
 } from '@app/utilities';
 import {
   McsJob,
@@ -31,8 +33,9 @@ import { ServerService } from '../server/server.service';
 
 export abstract class ServerDetailsBase {
   public serverResource: McsResource;
-  public serverResourceSubscription: Subscription;
+  public serverResource$: Observable<McsResource>;
   private _baseJobSubject = new Subject<void>();
+  private _serverTextContent: any;
 
   /**
    * Selected Server
@@ -53,13 +56,6 @@ export abstract class ServerDetailsBase {
     return this.server.processingText;
   }
 
-  /**
-   * Invalid storage text
-   */
-  public get invalidStorageText(): string {
-    return this._textProvider.content.servers.shared.storageScale.invalidStorage;
-  }
-
   constructor(
     protected _resourcesRespository: ResourcesRepository,
     protected _serversRepository: ServersRepository,
@@ -67,13 +63,15 @@ export abstract class ServerDetailsBase {
     protected _serverService: ServerService,
     protected _changeDetectorRef: ChangeDetectorRef,
     protected _textProvider: McsTextContentProvider,
-    protected _errorHandlerService: McsErrorHandlerService
+    protected _errorHandlerService: McsErrorHandlerService,
+    protected _loadingService: McsLoadingService,
   ) {
     this.server = new McsServer();
     this.serverResource = new McsResource();
   }
 
   protected initialize(): void {
+    this._serverTextContent = this._textProvider.content.servers.server;
     this._listenToServerSelectionChange();
     this._listenToServersUpdate();
   }
@@ -90,8 +88,7 @@ export abstract class ServerDetailsBase {
    * `@Note`: This should be call inside the destroy of the component
    */
   protected dispose(): void {
-    unsubscribeSafely(this.serverResourceSubscription);
-    unsubscribeSubject(this._baseJobSubject);
+    unsubscribeSafely(this._baseJobSubject);
   }
 
   /**
@@ -121,18 +118,18 @@ export abstract class ServerDetailsBase {
    * Obtain server resources and set resource map
    */
   private _getServerResources(fromCache: boolean = true): void {
-    unsubscribeSafely(this.serverResourceSubscription);
-    this.serverResourceSubscription = this._resourcesRespository
-      .findRecordById(this.server.platform.resourceId, fromCache)
-      .pipe(
+    this._loadingService.showLoader(this._serverTextContent.loadingResourceDetails);
+    this.serverResource$ = this._resourcesRespository
+      .findRecordById(this.server.platform.resourceId, fromCache).pipe(
+        shareReplay(1),
+        tap((response) => this.serverResource = response),
         finalize(() => {
           this.serverSelectionChanged();
+          this._loadingService.hideLoader();
           this._changeDetectorRef.markForCheck();
         })
-      )
-      .subscribe((resource) => {
-        this.serverResource = resource;
-      });
+      );
+    this.serverResource$.subscribe();
   }
 
   /**

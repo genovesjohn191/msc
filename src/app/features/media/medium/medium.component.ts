@@ -12,14 +12,17 @@ import {
   ActivatedRoute
 } from '@angular/router';
 import {
-  Subscription,
   throwError,
-  Subject
+  Subject,
+  Observable
 } from 'rxjs';
 import {
   catchError,
   takeUntil,
-  startWith
+  startWith,
+  tap,
+  shareReplay,
+  finalize
 } from 'rxjs/operators';
 import {
   McsTextContentProvider,
@@ -27,12 +30,12 @@ import {
   CoreDefinition,
   CoreRoutes,
   McsRoutingTabBase,
-  McsDataStatusFactory
+  McsDataStatusFactory,
+  McsLoadingService
 } from '@app/core';
 import {
   isNullOrEmpty,
   unsubscribeSafely,
-  unsubscribeSubject,
   getSafeProperty
 } from '@app/utilities';
 import {
@@ -45,7 +48,6 @@ import {
 } from '@app/shared';
 import { MediaRepository } from '@app/services';
 import { MediaListSource } from '../media.listsource';
-import { MediumService } from './medium.service';
 
 // Add another group type in here if you have addition tab
 type tabGroupType = 'overview' | 'servers';
@@ -68,11 +70,12 @@ export class MediumComponent
 
   public textContent: any;
   public mediaTextContent: any;
-  public selectedMedium: McsResourceMedia;
-  public mediumSubscription: Subscription;
+  public media$: Observable<McsResourceMedia>;
+  public mediaListing$: Observable<Map<string, McsResourceMedia[]>>;
   public mediaListSource: MediaListSource | null;
   public mediaMap: Map<string, McsResourceMedia[]>;
   public listStatusFactory: McsDataStatusFactory<Map<string, McsResourceMedia[]>>;
+
   private _destroySubject = new Subject<void>();
 
   public get routeKeyEnum(): any {
@@ -84,19 +87,17 @@ export class MediumComponent
     _activatedRoute: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef,
     private _textContentProvider: McsTextContentProvider,
+    private _loadingService: McsLoadingService,
     private _errorHandlerService: McsErrorHandlerService,
-    private _mediaRepository: MediaRepository,
-    private _mediumService: MediumService
+    private _mediaRepository: MediaRepository
   ) {
     super(_router, _activatedRoute);
-    this.selectedMedium = new McsResourceMedia();
     this.listStatusFactory = new McsDataStatusFactory(_changeDetectorRef);
   }
 
   public ngOnInit() {
     this.mediaTextContent = this._textContentProvider.content.media;
     this.textContent = this.mediaTextContent.medium;
-    // Initialize base class
     super.onInit();
   }
 
@@ -110,8 +111,7 @@ export class MediumComponent
   }
 
   public ngOnDestroy() {
-    unsubscribeSafely(this.mediumSubscription);
-    unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this._destroySubject);
   }
 
   public get angleDoubleRightIconKey(): string {
@@ -153,39 +153,23 @@ export class MediumComponent
     if (!isNullOrEmpty(this.componentHandler)) {
       this.componentHandler.recreateComponent();
     }
-    this._getMediumById(id);
-    this._setSelectedMediumById(id);
+    this._subscribeToMediaById(id);
   }
 
-  private _getMediumById(mediumId: string): void {
-    this.mediumSubscription = this._mediaRepository
-      .findRecordById(mediumId)
-      .pipe(
-        catchError((error) => {
-          // Handle common error status code
-          this._errorHandlerService.handleHttpRedirectionError(error.status);
-          return throwError(error);
-        })
-      )
-      .subscribe((response) => {
-        if (isNullOrEmpty(response)) { return; }
-        this._setSelectedMediumById(response.id);
-      });
-  }
-
-  private _setSelectedMediumById(mediumId: string): void {
-    if (isNullOrEmpty(mediumId)) { return; }
-
-    // Set the selection of server based on its ID
-    let mediumFound = this._mediaRepository.dataRecords
-      .find((server) => server.id === mediumId);
-    if (isNullOrEmpty(mediumFound)) {
-      this.selectedMedium = { id: mediumId } as McsResourceMedia;
-      return;
-    }
-    this.selectedMedium = mediumFound;
-    this._mediumService.setSelectedMedium(this.selectedMedium);
-    this._changeDetectorRef.markForCheck();
+  /**
+   * Subscribes to media based on the ID pProvided
+   * @param mediumId Media id to be selected
+   */
+  private _subscribeToMediaById(mediumId: string): void {
+    this._loadingService.showLoader(this.textContent.loading);
+    this.media$ = this._mediaRepository.findRecordById(mediumId).pipe(
+      catchError((error) => {
+        this._errorHandlerService.handleHttpRedirectionError(error.status);
+        return throwError(error);
+      }),
+      finalize(() => this._loadingService.hideLoader()),
+      shareReplay(1)
+    );
   }
 
   /**
@@ -203,18 +187,16 @@ export class MediumComponent
     };
 
     // Listen to all records changed
-    this.mediaListSource.findAllRecordsMapStream(keyFn)
-      .pipe(
-        takeUntil(this._destroySubject),
-        catchError((error) => {
-          this.listStatusFactory.setError();
-          return throwError(error);
-        })
-      )
-      .subscribe((response) => {
-        this.mediaMap = response;
+    this.mediaListing$ = this.mediaListSource.findAllRecordsMapStream(keyFn).pipe(
+      catchError((error) => {
+        this.listStatusFactory.setError();
+        return throwError(error);
+      }),
+      tap((response) => {
         this.search.showLoading(false);
         this.listStatusFactory.setSuccessful(response);
-      });
+      })
+    );
+    this._changeDetectorRef.markForCheck();
   }
 }

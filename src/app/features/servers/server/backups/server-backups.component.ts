@@ -21,7 +21,8 @@ import {
   McsNotificationEventsService,
   McsDataStatusFactory,
   CoreDefinition,
-  McsErrorHandlerService
+  McsErrorHandlerService,
+  McsLoadingService
 } from '@app/core';
 import {
   unsubscribeSafely,
@@ -109,10 +110,6 @@ export class ServerBackupsComponent extends ServerDetailsBase
     return CoreDefinition.ASSETS_SVG_WARNING;
   }
 
-  public get spinnerIconKey(): string {
-    return CoreDefinition.ASSETS_GIF_LOADER_SPINNER;
-  }
-
   constructor(
     _resourcesRepository: ResourcesRepository,
     _serversRepository: ServersRepository,
@@ -121,6 +118,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
     _changeDetectorRef: ChangeDetectorRef,
     _textProvider: McsTextContentProvider,
     _errorHandlerService: McsErrorHandlerService,
+    _loadingService: McsLoadingService,
     private _standardDateFormatPipe: StdDateFormatPipe,
     private _notificationEvents: McsNotificationEventsService,
     private _dialogService: McsDialogService
@@ -132,7 +130,8 @@ export class ServerBackupsComponent extends ServerDetailsBase
       _serverService,
       _changeDetectorRef,
       _textProvider,
-      _errorHandlerService
+      _errorHandlerService,
+      _loadingService
     );
   }
 
@@ -143,7 +142,6 @@ export class ServerBackupsComponent extends ServerDetailsBase
   }
 
   public ngOnDestroy() {
-    unsubscribeSafely(this.serverResourceSubscription);
     unsubscribeSafely(this.serverSnapshotsSubscription);
     unsubscribeSafely(this.createSnapshotSubscription);
     unsubscribeSafely(this.deleteSnapshotSubscription);

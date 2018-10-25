@@ -29,6 +29,7 @@ export * from './services/mcs-logger.service';
 export * from './services/mcs-form-group.service';
 export * from './services/google-analytics-events.service';
 export * from './services/mcs-session-handler.service';
+export * from './services/mcs-loading.service';
 /** Providers */
 export * from './providers/mcs-text-content.provider';
 export * from './providers/mcs-assets.provider';

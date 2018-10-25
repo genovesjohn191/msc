@@ -145,10 +145,6 @@ export class PaginatorComponent implements Paginator, OnInit, AfterViewInit {
     return CoreDefinition.ASSETS_FONT_CHEVRON_DOWN;
   }
 
-  public get spinnerIconKey(): string {
-    return CoreDefinition.ASSETS_GIF_LOADER_SPINNER;
-  }
-
   public nextPage() {
     if (!this.hasNextPage) { return; }
     this.pageIndex++;

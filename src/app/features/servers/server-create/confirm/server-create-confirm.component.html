@@ -94,9 +94,15 @@
     <div class="form-field-block">
       <span>{{ textContent.orderActions.header }}</span>
       <mcs-radio-button-group orientation="vertical" [(ngModel)]="selectedAction">
-        <mcs-radio-button [value]="0">{{ textContent.orderActions.submitOrder }}</mcs-radio-button>
-        <mcs-radio-button [value]="1">{{ textContent.orderActions.saveOrder }}</mcs-radio-button>
-        <mcs-radio-button [value]="2">{{ textContent.orderActions.mergeOrder }}</mcs-radio-button>
+        <mcs-radio-button mcsId [value]="0">
+          {{ textContent.orderActions.submitOrder }}
+        </mcs-radio-button>
+        <mcs-radio-button mcsId [value]="1">
+          {{ textContent.orderActions.saveOrder }}
+        </mcs-radio-button>
+        <mcs-radio-button mcsId [value]="2">
+          {{ textContent.orderActions.mergeOrder }}
+        </mcs-radio-button>
       </mcs-radio-button-group>
 
       <ng-container [ngSwitch]="selectedAction">

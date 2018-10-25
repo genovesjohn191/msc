@@ -2,7 +2,6 @@ import {
   async,
   TestBed
 } from '@angular/core/testing';
-import { CoreDefinition } from '@app/core';
 import { ServerService } from '../server.service';
 import { ServerManagementComponent } from './server-management.component';
 import {
@@ -53,7 +52,7 @@ describe('ServerManagementComponent', () => {
   /** Test Implementation */
   describe('IconKey() | Properties', () => {
     it('should get the spinner icon key definition', () => {
-      expect(component.spinnerIconKey).toBe(CoreDefinition.ASSETS_GIF_LOADER_SPINNER);
+      expect(component).toBeDefined();
     });
   });
 });

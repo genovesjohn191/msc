@@ -2,7 +2,7 @@
   <!-- Server Name Input -->
   <div class="field">
     <mcs-form-field>
-      <input mcsInput #serverNameInput mcsSetFocus required
+      <input mcsInput #serverNameInput required mcsSetFocus
         placeholder="Enter a server name" maxlength="15"
         mcsId="input-server-name"
         [formControl]="fcServerName"
@@ -85,7 +85,7 @@
   </div>
 
   <!-- Server RAM -->
-  <div class="field">
+  <div class="field action-box">
     <mcs-server-manage-scale [resource]="resource"
       (dataChange)="onScaleChanged($event)">
 
@@ -96,7 +96,7 @@
   </div>
 
   <!-- Storage Management -->
-  <div class="field">
+  <div class="field action-box">
     <mcs-server-manage-storage
       [storages]="resource?.storage"
       [minValueGB]="minimumStorageInGB"
@@ -114,14 +114,16 @@
   </div>
 
   <!-- Server network settings -->
-  <mcs-server-manage-network
-    [networks]="resource?.networks"
-    [resourceId]="resource?.id"
-    (dataChange)="onNetworkChanged($event)"
-    [mcsContextualHelp]="textHelpContent.networkField">
+  <div class="action-box">
+    <mcs-server-manage-network
+      [networks]="resource?.networks"
+      [resourceId]="resource?.id"
+      (dataChange)="onNetworkChanged($event)"
+      [mcsContextualHelp]="textHelpContent.networkField">
 
-    <ng-container mcsManageNetworkHeader>
-      <h2>{{ textContent.networkLabel }}</h2>
-    </ng-container>
-  </mcs-server-manage-network>
+      <ng-container mcsManageNetworkHeader>
+        <h2>{{ textContent.networkLabel }}</h2>
+      </ng-container>
+    </mcs-server-manage-network>
+  </div>
 </form>

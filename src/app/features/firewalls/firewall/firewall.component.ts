@@ -12,14 +12,17 @@ import {
   ActivatedRoute
 } from '@angular/router';
 import {
-  Subscription,
   Subject,
-  throwError
+  throwError,
+  Observable
 } from 'rxjs';
 import {
   startWith,
   takeUntil,
-  catchError
+  catchError,
+  tap,
+  shareReplay,
+  finalize
 } from 'rxjs/operators';
 import {
   CoreDefinition,
@@ -27,18 +30,14 @@ import {
   McsRoutingTabBase,
   McsErrorHandlerService,
   McsDataStatusFactory,
-  CoreRoutes
+  CoreRoutes,
+  McsLoadingService
 } from '@app/core';
 import {
   isNullOrEmpty,
-  refreshView,
-  unsubscribeSafely,
-  unsubscribeSubject
+  unsubscribeSafely
 } from '@app/utilities';
-import {
-  ComponentHandlerDirective,
-  Search
-} from '@app/shared';
+import { Search } from '@app/shared';
 import {
   RouteKey,
   McsFirewall
@@ -62,48 +61,24 @@ export class FirewallComponent
   extends McsRoutingTabBase<tabGroupType>
   implements OnInit, AfterViewInit, OnDestroy {
 
-  @ViewChild('search')
-  public search: Search;
-
-  @ViewChild(ComponentHandlerDirective)
-  public componentHandler: ComponentHandlerDirective;
-
+  public selectedFirewall$: Observable<McsFirewall>;
+  public firewallListing$: Observable<Map<string, McsFirewall[]>>;
   public firewallsTextContent: any;
   public firewallTextContent: any;
   public firewallsListSource: FirewallsListSource | null;
-  public firewallsMap: Map<string, McsFirewall[]>;
   public listStatusFactory: McsDataStatusFactory<Map<string, McsFirewall[]>>;
 
-  // Subscription
-  public firewallSubscription: Subscription;
-
-  public get spinnerIconKey(): string {
-    return CoreDefinition.ASSETS_GIF_LOADER_SPINNER;
-  }
+  @ViewChild('search')
+  public search: Search;
 
   public get cogIconKey(): string {
     return CoreDefinition.ASSETS_SVG_COG;
-  }
-
-  public get hasFirewallData(): boolean {
-    return !isNullOrEmpty(this.selectedFirewall);
   }
 
   public get routeKeyEnum(): any {
     return RouteKey;
   }
 
-  /**
-   * Selected Firewall based on the selected in the listing panel
-   */
-  private _selectedFirewall: McsFirewall;
-  public get selectedFirewall(): McsFirewall { return this._selectedFirewall; }
-  public set selectedFirewall(value: McsFirewall) {
-    if (this._selectedFirewall !== value) {
-      this._selectedFirewall = value;
-      this._changeDetectorRef.markForCheck();
-    }
-  }
   private _destroySubject = new Subject<void>();
 
   constructor(
@@ -112,12 +87,11 @@ export class FirewallComponent
     private _changeDetectorRef: ChangeDetectorRef,
     private _textContentProvider: McsTextContentProvider,
     private _errorHandlerService: McsErrorHandlerService,
+    private _loadingService: McsLoadingService,
     private _firewallService: FirewallService,
     private _firewallsRepository: FirewallsRepository
   ) {
     super(_router, _activatedRoute);
-    this.selectedFirewall = new McsFirewall();
-    this.firewallsMap = new Map();
     this.listStatusFactory = new McsDataStatusFactory();
   }
 
@@ -128,7 +102,7 @@ export class FirewallComponent
   }
 
   public ngAfterViewInit() {
-    refreshView(() => {
+    Promise.resolve().then(() => {
       this.search.searchChangedStream
         .pipe(startWith(null), takeUntil(this._destroySubject))
         .subscribe(() => this.listStatusFactory.setInProgress());
@@ -142,16 +116,15 @@ export class FirewallComponent
 
   public ngOnDestroy() {
     super.onDestroy();
-    unsubscribeSubject(this._destroySubject);
-    unsubscribeSafely(this.firewallSubscription);
+    unsubscribeSafely(this._destroySubject);
   }
 
   /**
    * Returns the firewall group name based on its ipaddress
    * @param ipAddress Ip address that served as the basis
    */
-  public getFirewallGroupName(ipAddress: string): string {
-    let firewallGroup = this.firewallsMap && this.firewallsMap.get(ipAddress);
+  public getFirewallGroupName(firewallMap: Map<string, McsFirewall[]>, ipAddress: string): string {
+    let firewallGroup = firewallMap && firewallMap.get(ipAddress);
     if (isNullOrEmpty(firewallGroup)) { return ''; }
 
     let masterFirewall = firewallGroup.find((firewall) => firewall.haRole === 'Master');
@@ -177,14 +150,7 @@ export class FirewallComponent
    */
   protected onParamIdChanged(id: string): void {
     if (isNullOrEmpty(id)) { return; }
-
-    // We need to recreate the component in order for the
-    // component to generate new instance
-    if (!isNullOrEmpty(this.componentHandler)) {
-      this.componentHandler.recreateComponent();
-    }
-    this._getFirewallById(id);
-    this._setSelectedFirewallById(id);
+    this._subscribeToFirewallById(id);
   }
 
   /**
@@ -204,56 +170,38 @@ export class FirewallComponent
     };
 
     // Listen to all records changed
-    this.firewallsListSource.findAllRecordsMapStream(keyFn)
-      .pipe(
-        takeUntil(this._destroySubject),
-        catchError((error) => {
-          this.listStatusFactory.setError();
-          return throwError(error);
-        })
-      )
-      .subscribe((response) => {
-        this.firewallsMap = response;
+    this.firewallListing$ = this.firewallsListSource.findAllRecordsMapStream(keyFn).pipe(
+      catchError((error) => {
+        this.listStatusFactory.setError();
+        return throwError(error);
+      }),
+      tap((response) => {
         this.search.showLoading(false);
         this.listStatusFactory.setSuccessful(response);
-      });
+      })
+    );
     this._changeDetectorRef.markForCheck();
   }
 
   /**
-   * This will set the active firewall when data was obtained from repository
+   * Subscribes to firewall by ID by creating the observable
    * @param firewallId Firewall identification
    */
-  private _getFirewallById(firewallId: string): void {
-    this.firewallSubscription = this._firewallsRepository
-      .findRecordById(firewallId)
-      .pipe(
-        catchError((error) => {
-          // Handle common error status code
-          this._errorHandlerService.handleHttpRedirectionError(error.status);
-          return throwError(error);
-        })
-      )
-      .subscribe((response) => {
-        this._setSelectedFirewallById(response.id);
+  private _subscribeToFirewallById(firewallId: string): void {
+    this._loadingService.showLoader(this.firewallTextContent.loading);
+    this.selectedFirewall$ = this._firewallsRepository.findRecordById(firewallId).pipe(
+      catchError((error) => {
+        // Handle common error status code
+        this._errorHandlerService.handleHttpRedirectionError(error.status);
+        return throwError(error);
+      }),
+      tap((response) => {
+        // this._setSelectedFirewallById(response.id);
+        this._firewallService.setSelectedFirewall(response);
         this._changeDetectorRef.markForCheck();
-      });
-  }
-
-  /**
-   * This will set the selected firewall details for every selection
-   */
-  private _setSelectedFirewallById(firewallId: string): void {
-    if (isNullOrEmpty(firewallId)) { return; }
-    // Set the selection of firewall based on its ID
-    let firewallFound = this._firewallsRepository.dataRecords
-      .find((firewall) => firewall.id === firewallId);
-    if (isNullOrEmpty(firewallFound)) {
-      this.selectedFirewall = { id: firewallId } as McsFirewall;
-      return;
-    }
-
-    this.selectedFirewall = firewallFound;
-    this._firewallService.setSelectedFirewall(this.selectedFirewall);
+      }),
+      finalize(() => this._loadingService.hideLoader()),
+      shareReplay(1)
+    );
   }
 }

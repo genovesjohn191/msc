@@ -23,7 +23,8 @@ import {
   McsNotificationEventsService,
   McsDialogService,
   McsErrorHandlerService,
-  McsDataStatusFactory
+  McsDataStatusFactory,
+  McsLoadingService
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -102,10 +103,6 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     return CoreDefinition.ASSETS_SVG_STORAGE;
   }
 
-  public get spinnerIconKey(): string {
-    return CoreDefinition.ASSETS_GIF_LOADER_SPINNER;
-  }
-
   /**
    * Returns true when the disks has reached its limitation
    */
@@ -158,6 +155,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     _changeDetectorRef: ChangeDetectorRef,
     _textProvider: McsTextContentProvider,
     _errorHandlerService: McsErrorHandlerService,
+    _loadingService: McsLoadingService,
     private _dialogService: McsDialogService,
     private _notificationEvents: McsNotificationEventsService
   ) {
@@ -168,7 +166,8 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
       _serverService,
       _changeDetectorRef,
       _textProvider,
-      _errorHandlerService
+      _errorHandlerService,
+      _loadingService
     );
     this._newDisk = new McsServerStorageDevice();
     this.disksColumns = new Array();

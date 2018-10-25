@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProgressBarModule } from '../progress-bar/progress-bar.module';
 import { IconModule } from '../icon/icon.module';
+import { LoaderModule } from '../loader/loader.module';
 import { AlertModule } from '../alert/alert.module';
 import { DirectivesModule } from '../directives';
 import { ButtonModule } from '../button';
@@ -17,6 +18,7 @@ import { JobsProvisioningComponent } from './jobs-provisioning.component';
     FormsModule,
     ProgressBarModule,
     IconModule,
+    LoaderModule,
     AlertModule,
     DirectivesModule,
     ButtonModule
@@ -26,7 +28,9 @@ import { JobsProvisioningComponent } from './jobs-provisioning.component';
     FormsModule,
     ProgressBarModule,
     IconModule,
+    LoaderModule,
     AlertModule,
+    ButtonModule,
     DirectivesModule,
     ButtonModule,
     JobsProvisioningComponent

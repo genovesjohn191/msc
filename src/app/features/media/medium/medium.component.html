@@ -1,7 +1,7 @@
 <mcs-page>
   <!-- Page template header -->
   <ng-container *mcsPageHeader>
-    <div class="inline-items-small">
+    <div class="inline-items-small" *ngIf="media$ | async as selectedMedium">
       <div><h1>{{ selectedMedium?.catalogName }}</h1></div>
       <div *ngIf="selectedMedium">
         <mcs-icon [key]="angleDoubleRightIconKey" size="xsmall"></mcs-icon>
@@ -21,7 +21,7 @@
           <mcs-data-status-success mcsDataSuccess>
 
             <mcs-list-panel>
-              <ng-container *ngFor="let iterator of (mediaMap | mcsMapIterable) |
+              <ng-container *ngFor="let iterator of ((mediaListing$ | async) | mcsMapIterable) |
                 mcsSortArray: mediaListSource?.catalogSortMethod">
 
                 <mcs-option-group>
@@ -38,7 +38,7 @@
                       mcsEventLabel="media-details-page">
 
                       <mcs-option [value]="medium"
-                        [selected]="selectedMedium?.id === medium.id">
+                        [selected]="(media$ | async)?.id === medium.id">
                         <div class="space-left-xsmall">
                           <span class="word-wrap">{{ medium.name }}</span>
                         </div>
@@ -78,12 +78,8 @@
       </mcs-tab-group>
 
       <!-- Tab content for routing tab -->
-      <div class="limited-view routing-tab-content-wrapper">
-        <mcs-loader [subscriptions]="mediumSubscription"
-          [loadingText]="textContent.loading"
-          [loadingPlacement]="top">
-          <div><router-outlet></router-outlet></div>
-        </mcs-loader>
+      <div class="routing-tab-content-wrapper limited-view">
+        <router-outlet></router-outlet>
       </div>
     </div>
   </mcs-content-panel>

@@ -14,8 +14,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
   McsDataStatusFactory,
-  McsTextContentProvider,
-  CoreDefinition
+  McsTextContentProvider
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -88,21 +87,6 @@ export class DataStatusComponent implements OnInit, OnDestroy {
 
   public get dataStatusEnum(): any {
     return DataStatus;
-  }
-
-  // Returns the spinner icon key
-  public get spinnerIconKey(): string {
-    return CoreDefinition.ASSETS_GIF_LOADER_SPINNER;
-  }
-
-  // Returns the warning icon key
-  public get warningIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_WARNING;
-  }
-
-  // Returns the error icon key
-  public get errorIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_ERROR;
   }
 
   /**

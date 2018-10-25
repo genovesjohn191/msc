@@ -12,8 +12,7 @@
         <mcs-data-cell *mcsDataCellDef="let row">
           <div class="inline-items-small">
             <ng-container *ngIf="serverIsInProgress(row)">
-              <mcs-icon [key]="spinnerIconKey" size="small"
-                [mcsTooltip]="selectedMedium.processingText"></mcs-icon>
+              <mcs-loader size="small" [mcsTooltip]="selectedMedium.processingText"></mcs-loader>
             </ng-container>
             <span>{{ row.name }}</span>
           </div>

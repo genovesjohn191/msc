@@ -49,7 +49,7 @@
     <ng-container *ngIf="dataStatus !== dataStatusEnum.Success">
       <div [ngSwitch]="dataStatus" class="inline-items-small centered">
         <div *ngSwitchCase="dataStatusEnum.InProgress">
-          <mcs-icon [key]="spinnerIconKey" size="small"></mcs-icon>
+          <mcs-loader size="small"></mcs-loader>
         </div>
         <div *ngSwitchCase="dataStatusEnum.Empty">
           <span>{{ textContent.noCompanies }}</span>

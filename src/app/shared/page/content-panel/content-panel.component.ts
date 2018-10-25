@@ -1,23 +1,63 @@
 import {
   Component,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  OnInit,
+  OnDestroy,
+  ChangeDetectorRef
 } from '@angular/core';
+import {
+  Subject,
+  Observable
+} from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { McsLoadingService } from '@app/core';
+import { unsubscribeSafely } from '@app/utilities';
 
 @Component({
   selector: 'mcs-content-panel',
-  template: `
-  <div class="content-panel-wrapper"
-    mcsSetFocus
-    tabindex="-1"
-    mcsScrollable mcsScrollbarId="page-content">
-    <ng-content></ng-content>
-  </div>
-  `,
+  templateUrl: './content-panel.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    'class': 'display-flex-row flex-auto',
-    'style': 'overflow: hidden'
+    'class': 'content-panel-wrapper'
   }
 })
 
-export class ContentPanelComponent { }
+export class ContentPanelComponent implements OnInit, OnDestroy {
+
+  public isLoading$: Observable<boolean>;
+  public loadingText$: Observable<string>;
+
+  private _destroySubject = new Subject<void>();
+
+  constructor(
+    private _loaderService: McsLoadingService,
+    private _changeDetectorRef: ChangeDetectorRef
+  ) { }
+
+  public ngOnInit() {
+    this._subscribeToLoadingStateChange();
+    this._subscribeToLoadingTextChange();
+  }
+
+  public ngOnDestroy() {
+    unsubscribeSafely(this._destroySubject);
+  }
+
+  /**
+   * Subscribe to the loading state change
+   */
+  private _subscribeToLoadingStateChange(): void {
+    this.isLoading$ = this._loaderService.loadingStateChange().pipe(
+      tap(() => this._changeDetectorRef.markForCheck())
+    );
+  }
+
+  /**
+   * Subscribe to loading text changes
+   */
+  private _subscribeToLoadingTextChange(): void {
+    this.loadingText$ = this._loaderService.loadingTextChange().pipe(
+      tap(() => this._changeDetectorRef.markForCheck())
+    );
+  }
+}

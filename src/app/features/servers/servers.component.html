@@ -124,7 +124,6 @@
   <mcs-content-panel *mcsContentPanelDef>
 
     <div class="listing-table-wrapper">
-
       <!-- Search -->
       <mcs-search *ngIf="isMobile" #search mcsId="virtual-mobile-search"></mcs-search>
 
@@ -158,15 +157,12 @@
             {{ columnSettings.name.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
-            <div class="inline-items-small">
+            <div class="form-field-inline">
               <div *ngIf="!row.isProcessing">
                 <mcs-icon [key]="row.powerStateIconKey" size="small"></mcs-icon>
               </div>
-              <div *ngIf="row.isProcessing"
-                [ngStyle]="{'pointer-events': 'auto'}"
-                class="power-state-spinner">
-                <mcs-icon [key]="spinnerIconKey" size="small"
-                  [mcsTooltip]="row.processingText"></mcs-icon>
+              <div *ngIf="row.isProcessing" [ngStyle]="{'pointer-events': 'auto'}">
+                <mcs-loader size="small" [mcsTooltip]="row.processingText"></mcs-loader>
               </div>
               <a (click)="navigateToServer(row)"
                 mcsId
@@ -284,7 +280,7 @@
             mcsCursor="default"
             mcsStopPropagation
             class="text-center action-data-cell">
-            <mcs-server-command [server]="row"
+            <mcs-server-command [server]="row" mcsId="server-command"
               [excluded]="excludedCommands"
               (onClick)="executeServerCommand(row, $event)"></mcs-server-command>
           </mcs-data-cell>

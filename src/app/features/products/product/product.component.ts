@@ -1,26 +1,17 @@
 import {
   Component,
   OnInit,
-  OnDestroy,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   ViewEncapsulation
 } from '@angular/core';
 import { Router } from '@angular/router';
-import {
-  Subscription,
-  Subject
-} from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import {
   McsTextContentProvider,
   CoreRoutes,
   CoreDefinition
 } from '@app/core';
-import {
-  isNullOrEmpty,
-  unsubscribeSubject
-} from '@app/utilities';
+import { isNullOrEmpty } from '@app/utilities';
 import {
   RouteKey,
   McsFileInfo,
@@ -41,11 +32,9 @@ import { ProductService } from './product.service';
   }
 })
 
-export class ProductComponent implements OnInit, OnDestroy {
-
+export class ProductComponent implements OnInit {
   public textContent: any;
-  public productSubscription: Subscription;
-  private _destroySubject = new Subject<void>();
+  public selectedProduct$: Observable<McsProduct>;
 
   public get productCatalogBannerKey(): string {
     return CoreDefinition.ASSETS_IMAGE_PRODUCT_CATALOG_BANNER;
@@ -55,27 +44,15 @@ export class ProductComponent implements OnInit, OnDestroy {
     return RouteKey;
   }
 
-  /**
-   * Returns the selected product from the list panel
-   */
-  public get selectedProduct(): McsProduct {
-    return this._productService.selectedProduct;
-  }
-
   constructor(
     private _router: Router,
-    private _changeDetectorRef: ChangeDetectorRef,
     private _textContentProvider: McsTextContentProvider,
     private _productService: ProductService
   ) { }
 
   public ngOnInit() {
     this.textContent = this._textContentProvider.content.products.product;
-    this._listenToSelectedProduct();
-  }
-
-  public ngOnDestroy() {
-    unsubscribeSubject(this._destroySubject);
+    this._subscribeToSelectedProduct();
   }
 
   /**
@@ -105,9 +82,7 @@ export class ProductComponent implements OnInit, OnDestroy {
   /**
    * Listens to every product selection and refresh the dom
    */
-  private _listenToSelectedProduct(): void {
-    this._productService.productSelectionChange
-      .pipe(takeUntil(this._destroySubject))
-      .subscribe(() => this._changeDetectorRef.markForCheck());
+  private _subscribeToSelectedProduct(): void {
+    this.selectedProduct$ = this._productService.productSelectionChange;
   }
 }

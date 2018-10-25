@@ -10,19 +10,23 @@ import {
 import { FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
-  Subscription,
   Subject,
-  throwError
+  throwError,
+  Observable
 } from 'rxjs';
 import {
   catchError,
-  takeUntil
+  takeUntil,
+  tap,
+  shareReplay,
+  finalize
 } from 'rxjs/operators';
 import {
   CoreDefinition,
   McsTextContentProvider,
   McsErrorHandlerService,
-  CoreRoutes
+  CoreRoutes,
+  McsLoadingService
 } from '@app/core';
 import {
   ServiceType,
@@ -32,7 +36,6 @@ import {
 import {
   isNullOrEmpty,
   replacePlaceholder,
-  unsubscribeSafely,
   unsubscribeSubject,
   getSafeProperty,
   McsSafeToNavigateAway
@@ -52,12 +55,12 @@ import { ServerCreateFlyweightContext } from './server-create-flyweight.context'
 export class ServerCreateComponent implements
   OnInit, AfterContentInit, OnDestroy, McsSafeToNavigateAway {
   public textContent: any;
-  public resourcesSubscription: Subscription;
-  public resourceSubscription: Subscription;
-  public selectedResource: McsResource;
+  public resources$: Observable<McsResource[]>;
+  public resource$: Observable<McsResource>;
   public faCreationForm: FormArray;
 
   private _destroySubject = new Subject<void>();
+  private _resourceChange = new Subject<McsResource>();
 
   public get backIconKey(): string {
     return CoreDefinition.ASSETS_FONT_CHEVRON_LEFT;
@@ -81,21 +84,20 @@ export class ServerCreateComponent implements
     private _errorHandlerService: McsErrorHandlerService,
     private _resourceRepository: ResourcesRepository,
     private _serverCreateService: ServerCreateService,
-    private _serverCreateFlyweightContext: ServerCreateFlyweightContext
+    private _serverCreateFlyweightContext: ServerCreateFlyweightContext,
+    private _loaderService: McsLoadingService
   ) { }
 
   public ngOnInit() {
     this.textContent = this._textContentProvider.content.servers.createServer;
-    this._getAllResources();
+    this._subscribeToAllResources();
   }
 
   public ngAfterContentInit() {
-    this._listenToFormArrayChanges();
+    this._subscribeToFormArrayChanges();
   }
 
   public ngOnDestroy() {
-    unsubscribeSafely(this.resourcesSubscription);
-    unsubscribeSafely(this.resourceSubscription);
     unsubscribeSubject(this._destroySubject);
   }
 
@@ -118,7 +120,8 @@ export class ServerCreateComponent implements
    */
   public onChangeResource(_resource: McsResource): void {
     if (isNullOrEmpty(_resource)) { return; }
-    this._getResourceById(_resource.id);
+    this._resourceChange.next(_resource);
+    this._subscribeResourceById(_resource.id);
   }
 
   /**
@@ -137,48 +140,39 @@ export class ServerCreateComponent implements
   /**
    * Gets the list of resources from repository
    */
-  private _getAllResources(): void {
-    this.resourcesSubscription = this._serverCreateService
-      .getCreationResources()
+  private _subscribeToAllResources(): void {
+    this._loaderService.showLoader('Loading resources');
+    this.resources$ = this._serverCreateService.getCreationResources()
       .pipe(
         catchError((error) => {
           this._errorHandlerService.handleHttpRedirectionError(error.status);
           return throwError(error);
         })
-      )
-      .subscribe((response) => {
-        this._resources = response;
-        this._setInitialSelection(this._resources);
-      });
-  }
-
-  /**
-   * Selects the first element on the resources
-   */
-  private _setInitialSelection(resources: McsResource[]): void {
-    if (isNullOrEmpty(resources)) { return; }
-    this.onChangeResource(resources[0]);
+      );
   }
 
   /**
    * Gets the resource based on ID provided
    * @param resourceId Resource Id of the resource to get
    */
-  private _getResourceById(resourceId: any): void {
-    this.resourceSubscription = this._resourceRepository
-      .findRecordById(resourceId)
-      .subscribe((updatedResource) => {
-        if (isNullOrEmpty(updatedResource)) { return; }
-        this.selectedResource = updatedResource;
-        this._serverCreateFlyweightContext.setResource(this.selectedResource);
-        this._changeDetectorRef.markForCheck();
-      });
+  private _subscribeResourceById(resourceId: any): void {
+    this._loaderService.showLoader('Loading resource details');
+    this.resource$ = this._resourceRepository.findRecordById(resourceId)
+      .pipe(
+        shareReplay(1),
+        tap((_updatedResource) => {
+          if (isNullOrEmpty(_updatedResource)) { return; }
+          this._serverCreateFlyweightContext.setResource(_updatedResource);
+          this._changeDetectorRef.markForCheck();
+        }),
+        finalize(() => this._loaderService.hideLoader())
+      );
   }
 
   /**
-   * Listens to each form array changes
+   * Listens/Subscribes to each form array changes
    */
-  private _listenToFormArrayChanges(): void {
+  private _subscribeToFormArrayChanges(): void {
     this._serverCreateFlyweightContext.formArrayChanges
       .pipe(takeUntil(this._destroySubject))
       .subscribe((_formArray) => {

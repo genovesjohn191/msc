@@ -16,7 +16,6 @@ import { AlertModule } from './alert/alert.module';
 import { ImageModule } from './image/image.module';
 import { TableModule } from './table/table.module';
 import { ListPanelModule } from './list-panel/list-panel.module';
-import { PageHeaderModule } from './page-header/page-header.module';
 import { LoaderModule } from './loader/loader.module';
 import { PageModule } from './page/page.module';
 import { ContextualHelpModule } from './contextual-help/contextual-help.module';
@@ -55,6 +54,7 @@ import { EventTrackerModule } from './event-tracker/event-tracker.module';
 import { BusyRibbonModule } from './busy-ribbon/busy-ribbon.module';
 import { NoteModule } from './note/note.module';
 import { JobsProvisioningModule } from './jobs-provisioning/jobs-provisioning.module';
+import { LoadingModule } from './loading/loading.module';
 
 @NgModule({
   imports: [
@@ -74,7 +74,6 @@ import { JobsProvisioningModule } from './jobs-provisioning/jobs-provisioning.mo
     FilterSelectorModule,
     TableModule,
     ListPanelModule,
-    PageHeaderModule,
     LoaderModule,
     PageModule,
     ContextualHelpModule,
@@ -110,7 +109,8 @@ import { JobsProvisioningModule } from './jobs-provisioning/jobs-provisioning.mo
     EventTrackerModule,
     BusyRibbonModule,
     NoteModule,
-    JobsProvisioningModule
+    JobsProvisioningModule,
+    LoadingModule
   ],
   exports: [
     CommonModule,
@@ -129,7 +129,6 @@ import { JobsProvisioningModule } from './jobs-provisioning/jobs-provisioning.mo
     FilterSelectorModule,
     TableModule,
     ListPanelModule,
-    PageHeaderModule,
     LoaderModule,
     PageModule,
     ContextualHelpModule,
@@ -165,7 +164,8 @@ import { JobsProvisioningModule } from './jobs-provisioning/jobs-provisioning.mo
     EventTrackerModule,
     BusyRibbonModule,
     NoteModule,
-    JobsProvisioningModule
+    JobsProvisioningModule,
+    LoadingModule
   ]
 })
 

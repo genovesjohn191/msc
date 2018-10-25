@@ -10,23 +10,30 @@ import {
   ActivatedRoute,
   ParamMap
 } from '@angular/router';
-import { throwError } from 'rxjs';
+import {
+  throwError,
+  Observable,
+  Subject
+} from 'rxjs';
 import {
   catchError,
   switchMap,
-  finalize
+  finalize,
+  shareReplay,
+  startWith,
+  map
 } from 'rxjs/operators';
 import { saveAs } from 'file-saver';
 import {
   CoreDefinition,
   McsTextContentProvider,
   McsErrorHandlerService,
-  CoreRoutes
+  CoreRoutes,
+  McsLoadingService
 } from '@app/core';
 import {
   isNullOrEmpty,
   compareDates,
-  replacePlaceholder,
   unsubscribeSafely
 } from '@app/utilities';
 import {
@@ -42,7 +49,7 @@ import {
   McsTicketCreateComment,
   McsTicketCreateAttachment
 } from '@app/models';
-import { TicketsApiService } from '@app/services';
+import { TicketsRepository } from '@app/services';
 import { TicketActivity } from '../shared';
 
 @Component({
@@ -54,95 +61,51 @@ import { TicketActivity } from '../shared';
 export class TicketComponent implements OnInit, OnDestroy {
 
   public textContent: any;
-  public ticketSubscription: any;
-  public createCommentSubscription: any;
-  public createAttachmentSubscription: any;
+  public selectedTicket$: Observable<McsTicket>;
+  public ticketActivites$: Observable<TicketActivity[]>;
+  public creatingComment$: Observable<boolean>;
 
   private _downloadingIdList: Set<string>;
-
-  /**
-   * An observable ticket data that obtained based on the given id
-   */
-  private _ticket: McsTicket;
-  public get ticket(): McsTicket { return this._ticket; }
-  public set ticket(value: McsTicket) {
-    if (this._ticket !== value) {
-      unsubscribeSafely(this.ticketSubscription);
-
-      this._ticket = value;
-      this._setActivities(this._ticket);
-      this._changeDetectorRef.markForCheck();
-    }
-  }
-
-  /**
-   * List of activities of the ticket
-   */
-  private _activities: TicketActivity[];
-  public get activities(): TicketActivity[] { return this._activities; }
-  public set activities(value: TicketActivity[]) {
-    if (this._activities !== value) {
-      this._activities = value;
-      this._changeDetectorRef.markForCheck();
-    }
-  }
-
-  public get ticketHeader(): string {
-    let subTypeEnumValue = isNullOrEmpty(this.ticket) ? '' : this.ticket.subType;
-
-    if (isNullOrEmpty(subTypeEnumValue)) { return ''; }
-
-    let enumTextValue = ticketSubTypeText[subTypeEnumValue];
-    let ticketTypeValue = isNullOrEmpty(enumTextValue) ?
-      '' : replacePlaceholder(this.textContent.header, 'ticketType', enumTextValue);
-
-    return `${ticketTypeValue}${this.ticket.crispTicketNumber}`;
-  }
+  private _creatingComment = new Subject<boolean>();
+  private _ticketDetailsChange = new Subject<void>();
 
   public get checkIconKey(): string {
     return CoreDefinition.ASSETS_FONT_CHECK;
-  }
-
-  public get userIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_USER;
   }
 
   public get backIconKey(): string {
     return CoreDefinition.ASSETS_FONT_CHEVRON_LEFT;
   }
 
-  public get requestor(): string {
-    return isNullOrEmpty(this.ticket) || isNullOrEmpty(this.ticket.requestor)
-      ? `${this.textContent.missingRequestorLabel}`
-      : `${this.ticket.requestor}`;
-  }
-
-  public get missingActivities(): boolean {
-    return isNullOrEmpty(this.activities);
-  }
-
   public constructor(
     private _router: Router,
     private _activatedRoute: ActivatedRoute,
-    private _ticketsService: TicketsApiService,
+    private _ticketsRepository: TicketsRepository,
+    private _loadingService: McsLoadingService,
     private _textContentProvider: McsTextContentProvider,
     private _errorHandlerService: McsErrorHandlerService,
     private _changeDetectorRef: ChangeDetectorRef
   ) {
-    this._ticket = new McsTicket();
-    this._activities = new Array();
     this._downloadingIdList = new Set();
   }
 
   public ngOnInit() {
     this.textContent = this._textContentProvider.content.tickets.ticket;
-    // Get ticket data by ID
-    this._getTicketById();
+    this.creatingComment$ = this._creatingComment;
+    this._subscribeToParamId();
   }
 
   public ngOnDestroy() {
-    // We just want to make sure that the subscription is empty
-    unsubscribeSafely(this.ticketSubscription);
+    unsubscribeSafely(this._ticketDetailsChange);
+    unsubscribeSafely(this._creatingComment);
+  }
+
+  /**
+   * Returns the formatted ticket header by subtype and crisp ticket number
+   */
+  public getTicketHeader(ticket: McsTicket): string {
+    if (isNullOrEmpty(ticket)) { return ''; }
+    return `${ticket.subTypeLabel} #${ticket.crispTicketNumber}`;
   }
 
   /**
@@ -150,15 +113,6 @@ export class TicketComponent implements OnInit, OnDestroy {
    */
   public gotoTickets(): void {
     this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.Tickets)]);
-  }
-
-  /**
-   * Track by function to help determine the view which data has beed modified
-   * @param index Index of the current loop
-   * @param _item Item of the loop
-   */
-  public trackByFn(index: any, _item: any) {
-    return index;
   }
 
   /**
@@ -179,13 +133,14 @@ export class TicketComponent implements OnInit, OnDestroy {
 
   /**
    * Download the file attachment based on the blob
+   * @param activeTicket The active ticket where the attachment would be downloaded
    * @param attachment Attachment information of the file to download
    */
-  public downloadAttachment(attachment: McsTicketAttachment) {
+  public downloadAttachment(activeTicket: McsTicket, attachment: McsTicketAttachment) {
     if (isNullOrEmpty(attachment)) { return; }
     this._downloadingIdList.add(attachment.id);
 
-    this._ticketsService.getFileAttachment(this.ticket.id, attachment.id)
+    this._ticketsRepository.findFileAttachment(activeTicket.id, attachment.id)
       .pipe(
         finalize(() => {
           this._downloadingIdList.delete(attachment.id);
@@ -199,136 +154,126 @@ export class TicketComponent implements OnInit, OnDestroy {
 
   /**
    * Create the whole comment including attachment
+   * @param activeTicket The active ticket where the comment should be appended
    * @param comment Comment information details
    */
-  public createComment(comment: McsComment) {
+  public createComment(activeTicket: McsTicket, comment: McsComment) {
     if (isNullOrEmpty(comment)) { return; }
+    this._creatingComment.next(true);
+    this._createCommentContent(activeTicket, comment.message);
 
-    // Create comment
-    this._createCommentContent(comment.message);
-
-    // Create attachment
     if (!isNullOrEmpty(comment.attachments)) {
       comment.attachments.forEach((attachment) => {
-        this._createAttachment(attachment);
+        this._createAttachment(activeTicket, attachment);
       });
     }
   }
 
-  private _createCommentContent(content: string) {
+  /**
+   * Creates a comment on the ticket
+   * @param activeTicket The active ticket where the comment should be appended
+   */
+  private _createCommentContent(activeTicket: McsTicket, content: string) {
     if (isNullOrEmpty(content)) { return; }
-
-    // Create comment
     let newComment = new McsTicketCreateComment();
     newComment.category = CommentCategory.Task;
     newComment.type = CommentType.Comments;
     newComment.value = content;
 
-    this.createCommentSubscription = this._ticketsService
-      .createComment(this.ticket.id, newComment)
-      .subscribe((response) => {
-        // Add the new comment in the activity list
-        if (!isNullOrEmpty(response)) {
-          let activity = new TicketActivity();
-          activity.setBasedOnComment(response.content);
-          this._addActivity(activity);
-        }
-      });
-    this.createCommentSubscription.add(() => {
-      this._changeDetectorRef.markForCheck();
-    });
+    this._ticketsRepository.createComment(activeTicket, newComment).pipe(
+      finalize(() => {
+        this._creatingComment.next(false);
+        this._ticketDetailsChange.next();
+        this._changeDetectorRef.markForCheck();
+      })
+    ).subscribe();
   }
 
-  private _createAttachment(attachedFile: McsFileInfo) {
+  /**
+   * Creates attachment based on the ticket id
+   * @param activeTicket The active ticket where the attachment should be appended
+   * @param attachedFile Attachment to be created
+   */
+  private _createAttachment(activeTicket: McsTicket, attachedFile: McsFileInfo) {
     if (isNullOrEmpty(attachedFile)) { return; }
-
-    // Create attachment
     let newAttachment = new McsTicketCreateAttachment();
-
     newAttachment.fileName = attachedFile.filename;
     newAttachment.contents = attachedFile.base64Contents;
 
-    this.createAttachmentSubscription = this._ticketsService
-      .createAttachment(this.ticket.id, newAttachment)
-      .subscribe((response) => {
-        // Add the new attachment in the activity list and the attachments
-        if (!isNullOrEmpty(response)) {
-          let activity = new TicketActivity();
-          activity.setBasedOnAttachment(response.content);
-          this._addActivity(activity);
-          this.ticket.attachments.splice(0, 0, response.content);
-        }
-      });
-    this.createAttachmentSubscription.add(() => {
-      this._changeDetectorRef.markForCheck();
+    this._ticketsRepository.createAttachment(activeTicket, newAttachment).pipe(
+      finalize(() => {
+        this._ticketDetailsChange.next();
+        this._changeDetectorRef.markForCheck();
+      })
+    ).subscribe();
+  }
+
+  /**
+   * Subscribes to parameter id
+   */
+  private _subscribeToParamId(): void {
+    this._activatedRoute.paramMap.subscribe((params: ParamMap) => {
+      let ticketId = params.get('id');
+      this._subscribeToTicketById(ticketId);
+      this._subscribeToSelectedTicket();
     });
   }
 
   /**
-   * Get Ticket based on the given ID in the provided parameter
+   * Subscribe to ticket based on the parameter ID
    */
-  private _getTicketById(): void {
-    this.ticketSubscription = this._activatedRoute.paramMap
-      .pipe(
-        switchMap((params: ParamMap) => {
-          let ticketId = params.get('id');
-          return this._ticketsService.getTicket(ticketId);
-        }),
-        catchError((error) => {
-          // Handle common error status code
-          this._errorHandlerService.handleHttpRedirectionError(error.status);
-          return throwError(error);
-        })
-      )
-      .subscribe((response) => {
-        if (!isNullOrEmpty(response)) {
-          this.ticket = response.content;
-        }
-      });
+  private _subscribeToTicketById(ticketId: string): void {
+    this._loadingService.showLoader(this.textContent.loading);
+    this.selectedTicket$ = this._ticketDetailsChange.pipe(
+      startWith(null),
+      switchMap(() =>
+        this._ticketsRepository.findRecordById(ticketId).pipe(
+          catchError((error) => {
+            this._errorHandlerService.handleHttpRedirectionError(error.status);
+            return throwError(error);
+          }),
+          finalize(() => this._loadingService.hideLoader())
+        )
+      ),
+      shareReplay(1)
+    );
   }
 
   /**
-   * Add a new activity and sort it by dates accordingly
-   * @param activity Activity to be added
+   * Subscribes to the selected ticket and always notifies
+   * the changes once the ticket details has been triggered
    */
-  private _addActivity(activity: TicketActivity) {
-    if (isNullOrEmpty(activity)) { return; }
+  private _subscribeToSelectedTicket(): void {
+    this.ticketActivites$ = this._ticketDetailsChange.pipe(
+      startWith(null),
+      switchMap(() => {
+        return this.selectedTicket$.pipe(
+          map((ticketDetails) => {
+            let ticketActivities: TicketActivity[] = new Array();
 
-    this.activities.push(activity);
-    // Sort activities by date
-    this.activities.sort((_first: TicketActivity, _second: TicketActivity) => {
-      return compareDates(_second.date, _first.date);
-    });
-  }
+            // Add attachment to the activity list
+            ticketDetails.attachments.forEach((ticketAttachment) => {
+              let activity = new TicketActivity();
+              activity.setBasedOnAttachment(ticketAttachment);
+              ticketActivities.push(activity);
+            });
 
-  /**
-   * Set the activities of the ticket and sort it by created date
-   * @param ticket Ticket to get the comments/attachment from
-   */
-  private _setActivities(ticket: McsTicket): void {
-    if (isNullOrEmpty(ticket)) { return; }
-    let ticketActivities: TicketActivity[] = new Array();
+            // Add comments to the activity list
+            ticketDetails.comments.forEach((ticketItem) => {
+              let activity = new TicketActivity();
+              activity.setBasedOnComment(ticketItem);
+              ticketActivities.push(activity);
+            });
 
-    // Add attachment to the activity list
-    this.ticket.attachments.forEach((ticketAttachment) => {
-      let activity = new TicketActivity();
-
-      activity.setBasedOnAttachment(ticketAttachment);
-      ticketActivities.push(activity);
-    });
-
-    // Add comments to the activity list
-    this.ticket.comments.forEach((ticketItem) => {
-      let activity = new TicketActivity();
-
-      activity.setBasedOnComment(ticketItem);
-      ticketActivities.push(activity);
-    });
-
-    // Sort activities by date
-    ticketActivities.sort((_first: TicketActivity, _second: TicketActivity) => {
-      return compareDates(_second.date, _first.date);
-    });
-    this.activities = ticketActivities;
+            // Sort activities by date
+            ticketActivities.sort((_first: TicketActivity, _second: TicketActivity) => {
+              return compareDates(_second.date, _first.date);
+            });
+            return ticketActivities;
+          })
+        );
+      }),
+      shareReplay(1)
+    );
   }
 }

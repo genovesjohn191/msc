@@ -158,7 +158,9 @@ export class ServerCloneComponent
       )
       .subscribe((response) => {
         if (isNullOrEmpty(response)) { return; }
-        this.servers = (response as McsServer[]).filter((server) => server.clonable);
+        this.servers = (response as McsServer[]).filter((server) => {
+          return server.clonable && server.serviceType === this.serviceType;
+        });
         this.dataStatusFactory.setSuccessful(response);
       });
     this.serversSubscription.add(() => {

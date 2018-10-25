@@ -1,4 +1,4 @@
-<mcs-page [header]="selectedPlatform?.resourceName">
+<mcs-page [header]="(selectedResource$ | async)?.name">
 
   <!-- Left Panel -->
   <mcs-left-panel *mcsLeftPanelDef="textContent.leftPanelHeader">
@@ -11,10 +11,10 @@
           <mcs-data-status-success mcsDataSuccess>
 
             <mcs-list-panel>
-              <ng-container *ngFor="let iterator of (serversMap | mcsMapIterable) |
+              <ng-container *ngFor="let iterator of ((serversMap$ | async) | mcsMapIterable) |
                 mcsSortArray: serverListSource?.sortResourceMethod">
 
-                <mcs-option-group [selected]="iterator.key?.resourceId === selectedPlatform?.resourceId">
+                <mcs-option-group [selected]="iterator.key?.resourceId === (selectedResource$ | async)?.id">
                   <ng-container *mcsOptionGroupLabel>
                     <ng-container *ngIf="iterator.key?.resourceId">
                       <a [mcsRouterLink]="[routeKeyEnum.VdcDetail, iterator.key?.resourceId]"
@@ -45,10 +45,9 @@
                           <mcs-icon *ngIf="!server.isProcessing" size="small"
                             [key]="server?.powerStateIconKey"></mcs-icon>
 
-                          <mcs-icon *ngIf="server.isProcessing"
-                            size="small" [key]="spinnerIconKey"
+                          <mcs-loader *ngIf="server.isProcessing" size="small"
                             [mcsTooltip]="server.processingText"
-                            mcsTooltipPosition="right"></mcs-icon>
+                            mcsTooltipPosition="right"></mcs-loader>
 
                           <span class="word-wrap">{{ server.name }}</span>
                         </div>
@@ -77,7 +76,7 @@
   </mcs-left-panel>
 
   <mcs-content-panel *mcsContentPanelDef>
-    <div class="routing-tab-wrapper" *mcsComponentHandler>
+    <div class="routing-tab-wrapper" *ngIf="selectedResource$ | async">
       <mcs-tab-group [selectedTabId]="selectedRoutingTab" (tabChanged)="onTabChanged($event)">
         <!-- Overview Tab -->
         <mcs-tab [label]="textContent.overview.label" id="overview">
@@ -88,12 +87,8 @@
       </mcs-tab-group>
 
       <!-- Tab content for routing tab -->
-      <div class="limited-view routing-tab-content-wrapper">
-        <mcs-loader [subscriptions]="vdcSubscription"
-          [loadingText]="textContent.loading"
-          [loadingPlacement]="top">
-          <div><router-outlet></router-outlet></div>
-        </mcs-loader>
+      <div class="routing-tab-content-wrapper limited-view">
+        <router-outlet></router-outlet>
       </div>
     </div>
   </mcs-content-panel>

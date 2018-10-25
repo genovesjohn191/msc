@@ -1,21 +1,19 @@
 <mcs-page>
   <!-- Page template header -->
   <ng-container *mcsPageHeader>
-    <div class="inline-items-small">
+    <div class="inline-items-small" *ngIf="selectedServer$ | async as selectedServer">
       <div>
-        <a [mcsRouterLink]="[routeKeyEnum.VdcDetail, selectedServer?.platform?.resourceId]"
+        <a [mcsRouterLink]="[routeKeyEnum.VdcDetail, selectedServer.platform?.resourceId]"
           mcsId="select-vdc"
           mcsEventTracker="select-vdc"
           mcsEventCategory="vdc"
           mcsEventLabel="server-details-page">
-          <h1>{{ selectedGroupName }}</h1>
+          <h1>{{ selectedServer.resourceName }}</h1>
         </a>
       </div>
-      <div *ngIf="selectedServer">
-        <mcs-icon [key]="angleDoubleRightIconKey" size="xsmall"></mcs-icon>
-      </div>
+      <mcs-icon [key]="angleDoubleRightIconKey" size="xsmall"></mcs-icon>
       <div>
-        <h1>{{ selectedServer?.name }}</h1>
+        <h1>{{ selectedServer.name }}</h1>
       </div>
     </div>
   </ng-container>
@@ -31,7 +29,7 @@
           <mcs-data-status-success mcsDataSuccess>
 
             <mcs-list-panel>
-              <ng-container *ngFor="let iterator of (serversMap | mcsMapIterable) |
+              <ng-container *ngFor="let iterator of ((serversMap$ | async) | mcsMapIterable) |
                 mcsSortArray: serverListSource?.sortResourceMethod">
 
                 <mcs-option-group>
@@ -59,15 +57,14 @@
                       mcsEventLabel="server-list-panel">
 
                       <mcs-option [value]="server"
-                        [selected]="selectedServer?.id === server.id">
+                        [selected]="(selectedServer$ | async)?.id === server.id">
                         <div class="form-field-inline">
                           <mcs-icon *ngIf="!server.isProcessing" size="small"
                             [key]="server?.powerStateIconKey"></mcs-icon>
 
-                          <mcs-icon *ngIf="server.isProcessing"
-                            size="small" [key]="spinnerIconKey"
+                          <mcs-loader *ngIf="server.isProcessing" size="small"
                             [mcsTooltip]="server.processingText"
-                            mcsTooltipPosition="right"></mcs-icon>
+                            mcsTooltipPosition="right"></mcs-loader>
 
                           <span class="word-wrap">{{ server.name }}</span>
                         </div>
@@ -96,9 +93,9 @@
   </mcs-left-panel>
 
   <mcs-content-panel *mcsContentPanelDef>
-    <div class="routing-tab-wrapper" *mcsComponentHandler>
+    <div class="routing-tab-wrapper" *ngIf="selectedServer$ | async as selectedServer">
       <!-- Busy status of the server -->
-      <ng-container *ngIf="selectedServer?.isProcessing">
+      <ng-container *ngIf="selectedServer.isProcessing">
         <mcs-busy-ribbon theme="dark" class="space-bottom-small">
           <span>{{ textContent.serverBusyLabel }}</span>
         </mcs-busy-ribbon>
@@ -132,12 +129,8 @@
       </mcs-tab-group>
 
       <!-- Tab content for routing tab -->
-      <div class="limited-view routing-tab-content-wrapper">
-        <mcs-loader [subscriptions]="serverSubscription"
-          [loadingText]="textContent.loading"
-          [loadingPlacement]="top">
-          <div><router-outlet></router-outlet></div>
-        </mcs-loader>
+      <div class="routing-tab-content-wrapper limited-view">
+        <router-outlet></router-outlet>
       </div>
     </div>
   </mcs-content-panel>

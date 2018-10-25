@@ -4,7 +4,6 @@ import {
   ChangeDetectionStrategy,
   ViewEncapsulation
 } from '@angular/core';
-import { CoreDefinition } from '@app/core';
 import {
   McsThemeType,
   animateFactory
@@ -31,11 +30,4 @@ import {
 export class BusyRibbonComponent {
   @Input()
   public theme: McsThemeType = 'light';
-
-  /**
-   * Returns the spinner icon key
-   */
-  public get spinnerIconKey(): string {
-    return CoreDefinition.ASSETS_GIF_LOADER_SPINNER;
-  }
 }

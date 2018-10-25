@@ -1,0 +1,45 @@
+@import "../../../styles/shared/base";
+
+$loader-bg-color: $light-bg-color;
+$loader-color: $light-bg-text-color;
+$loader-offset: 100px;
+$loader-interval: 8px;
+
+.loading-wrapper {
+  display: block;
+}
+
+.loading-content {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: $zindex-loader;
+  @include display-flex(column);
+  @include align-items(center);
+  justify-content: center;
+  @include set-items-interval($loader-interval);
+  background: $loader-bg-color;
+  color: $loader-color;
+
+  &.top-orientation {
+    justify-content: flex-start;
+    padding-top: $loader-offset;
+  }
+
+  &.left-orientation {
+    @include align-items(flex-start);
+    padding-left: $loader-offset;
+  }
+
+  &.right-orientation {
+    @include align-items(flex-end);
+    padding-right: $loader-offset;
+  }
+
+  &.bottom-orientation {
+    justify-content: flex-end;
+    padding-bottom: $loader-offset;
+  }
+}

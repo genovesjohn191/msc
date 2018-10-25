@@ -11,6 +11,10 @@ import {
   OrderOriginSerialization,
   orderOriginText
 } from '../enumerations/order-origin.enum';
+import {
+  WorkflowStatus,
+  WorkflowStatusSerialization
+} from '../enumerations/workflow-status.enum';
 import { McsJob } from './mcs-job';
 import { McsEntityBase } from '../mcs-entity.base';
 import { McsOrderItem } from './mcs-order-item';
@@ -24,6 +28,13 @@ export class McsOrder extends McsEntityBase {
   public createdBy: string;
   public itemCount: number;
   public errorCount: number;
+
+  @JsonProperty({
+    type: WorkflowStatus,
+    serializer: WorkflowStatusSerialization,
+    deserializer: WorkflowStatusSerialization
+  })
+  public workflowState: WorkflowStatus;
 
   @JsonProperty({
     type: OrderStatus,

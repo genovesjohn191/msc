@@ -94,10 +94,6 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
     return CoreDefinition.ASSETS_FONT_CHECK;
   }
 
-  public get spinnerIconKey(): string {
-    return CoreDefinition.ASSETS_GIF_LOADER_SPINNER;
-  }
-
   public get closeIconKey(): string {
     return CoreDefinition.ASSETS_FONT_CLOSE;
   }

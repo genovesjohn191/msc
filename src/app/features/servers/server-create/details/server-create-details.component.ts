@@ -126,8 +126,10 @@ export class ServerCreateDetailsComponent implements
    */
   public safeToNavigateAway(): boolean {
     if (isNullOrEmpty(this._createServerItems) || this.serverDeploying) { return true; }
-    let dirtyForm = this._createServerItems
-      .find((serverItem) => serverItem.getCreationForm().dirty);
+    let dirtyForm = this._createServerItems.find((serverItem) => {
+      let serverCreationForm = serverItem.getCreationForm();
+      return serverCreationForm.touched && serverCreationForm.dirty;
+    });
     return isNullOrEmpty(dirtyForm);
   }
 

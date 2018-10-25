@@ -33,7 +33,7 @@
 
     <mcs-radio-button-group orientation="vertical"
       [ngModel]="selectedIpAddressMode" (ngModelChange)="onRadioButtonChanged($event)">
-      <mcs-radio-button *ngFor="let item of ipAddressItems" [value]="item.value">
+      <mcs-radio-button *ngFor="let item of ipAddressItems" [value]="item.value" mcsId>
         {{ item.text }}
       </mcs-radio-button>
     </mcs-radio-button-group>
