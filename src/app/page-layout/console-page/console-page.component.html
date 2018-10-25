@@ -4,7 +4,7 @@
     <!-- Connecting state -->
     <ng-container *ngSwitchCase="vmConsoleStatusEnum.Connecting">
       <div class="inline-items-small console-message">
-        <mcs-icon [key]="loadingIconKey"></mcs-icon>
+        <mcs-loader></mcs-loader>
         <span>{{ textContent.loading }}</span>
       </div>
     </ng-container>

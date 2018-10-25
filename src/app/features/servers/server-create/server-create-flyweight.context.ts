@@ -138,7 +138,7 @@ export class ServerCreateFlyweightContext {
       let targetItem = new McsOrderItemUpdate();
       targetItem.parentReferenceId = updatedItem.parentReferenceId;
       targetItem.parentServiceId = updatedItem.serviceId;
-      targetItem.productOrderType = updatedItem.typeId;
+      targetItem.itemOrderType = updatedItem.typeId;
       targetItem.properties = updatedItem.properties;
       targetItem.referenceId = updatedItem.referenceId;
       targetOrder.items.push(targetItem);
@@ -178,7 +178,7 @@ export class ServerCreateFlyweightContext {
 
       // Create Order item
       let orderItem = new McsOrderItemCreate();
-      orderItem.productOrderType = OrderIdType.CreateManagedServer;
+      orderItem.itemOrderType = OrderIdType.CreateManagedServer;
       orderItem.referenceId = McsGuid.newGuid().toString();
       orderItem.parentServiceId = resourceName;
       orderItem.properties = serverModel;

@@ -12,32 +12,31 @@ import {
   ActivatedRoute
 } from '@angular/router';
 import {
-  Subscription,
   Subject,
-  throwError
+  throwError,
+  Observable
 } from 'rxjs';
 import {
   startWith,
   takeUntil,
-  catchError
+  catchError,
+  finalize,
+  tap,
+  shareReplay
 } from 'rxjs/operators';
 import {
-  CoreDefinition,
   McsTextContentProvider,
   McsRoutingTabBase,
   McsDataStatusFactory,
   McsErrorHandlerService,
-  CoreRoutes
+  CoreRoutes,
+  McsLoadingService
 } from '@app/core';
 import {
   isNullOrEmpty,
-  unsubscribeSafely,
-  unsubscribeSubject
+  unsubscribeSafely
 } from '@app/utilities';
-import {
-  Search,
-  ComponentHandlerDirective
-} from '@app/shared';
+import { Search } from '@app/shared';
 import {
   ServerCommand,
   McsResource,
@@ -70,33 +69,18 @@ export class VdcComponent
   @ViewChild('search')
   public search: Search;
 
-  @ViewChild(ComponentHandlerDirective)
-  public componentHandler: ComponentHandlerDirective;
-
   public textContent: any;
   public serversTextContent: any;
-  public serversMap: Map<string, McsServer[]>;
   public serverTextContent: any;
   public serverListSource: ServersListSource | null;
   public listStatusFactory: McsDataStatusFactory<Map<string, McsServer[]>>;
-  public selectedPlatform: McsServerPlatform;
 
-  // Subscription
-  public vdcSubscription: Subscription;
-
-  public get spinnerIconKey(): string {
-    return CoreDefinition.ASSETS_GIF_LOADER_SPINNER;
-  }
+  public selectedResource$: Observable<McsResource>;
+  public selectedPlatform$: Observable<McsServerPlatform>;
+  public serversMap$: Observable<Map<string, McsServer[]>>;
 
   public get routeKeyEnum(): any {
     return RouteKey;
-  }
-
-  private _vdc: McsResource;
-  public get vdc(): McsResource { return this._vdc; }
-  public set vdc(value: McsResource) {
-    this._vdc = value;
-    this._changeDetectorRef.markForCheck();
   }
 
   private _destroySubject = new Subject<void>();
@@ -105,16 +89,15 @@ export class VdcComponent
   constructor(
     _router: Router,
     _activatedRoute: ActivatedRoute,
-    private _textContentProvider: McsTextContentProvider,
     private _changeDetectorRef: ChangeDetectorRef,
+    private _loadingService: McsLoadingService,
+    private _textContentProvider: McsTextContentProvider,
     private _serversRepository: ServersRepository,
     private _resourcesRepository: ResourcesRepository,
     private _errorHandlerService: McsErrorHandlerService,
     private _vdcService: VdcService
   ) {
     super(_router, _activatedRoute);
-    this.vdc = new McsResource();
-    this.serversMap = new Map();
     this.listStatusFactory = new McsDataStatusFactory();
     this._resourcesKeyMap = new Map();
   }
@@ -139,8 +122,7 @@ export class VdcComponent
 
   public ngOnDestroy() {
     super.onDestroy();
-    unsubscribeSafely(this.vdcSubscription);
-    unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this._destroySubject);
   }
 
   /**
@@ -183,18 +165,7 @@ export class VdcComponent
    */
   protected onParamIdChanged(id: string): void {
     if (isNullOrEmpty(id)) { return; }
-    // We need to recreate the component in order for the
-    // component to generate new instance
-    if (!isNullOrEmpty(this.componentHandler)) {
-      this.componentHandler.recreateComponent();
-    }
-
-    this._getVdcById(id);
-    if (isNullOrEmpty(this.selectedPlatform)) {
-      let resourceExist = this._resourcesRepository.dataRecords
-        .find((resourceId) => resourceId.id === this.paramId);
-      this._setSelectedPlatformByResource(resourceExist);
-    }
+    this._subscribesToResourceById(id);
   }
 
   /**
@@ -220,53 +191,31 @@ export class VdcComponent
     };
 
     // Listen to all records changed
-    this.serverListSource.findAllRecordsMapStream(keyFn)
-      .pipe(
-        takeUntil(this._destroySubject),
-        catchError((error) => {
-          this.listStatusFactory.setError();
-          return throwError(error);
-        })
-      )
-      .subscribe((response) => {
-        this.serversMap = response;
+    this.serversMap$ = this.serverListSource.findAllRecordsMapStream(keyFn).pipe(
+      catchError((error) => {
+        this.listStatusFactory.setError();
+        return throwError(error);
+      }),
+      tap((response) => {
         this.search.showLoading(false);
         this.listStatusFactory.setSuccessful(response);
-        this._setSelectedPlatformByResource(this.vdc);
-      });
-    this._changeDetectorRef.markForCheck();
+      })
+    );
   }
 
   /**
    * This will set the active vdc when data was obtained from repository
    * @param vdcId VDC identification
    */
-  private _getVdcById(vdcId: string): void {
-    this.vdcSubscription = this._resourcesRepository
-      .findRecordById(vdcId)
-      .pipe(
-        catchError((error) => {
-          // Handle common error status code
-          this._errorHandlerService.handleHttpRedirectionError(error.status);
-          return throwError(error);
-        })
-      )
-      .subscribe((response) => {
-        this.vdc = response;
-        this._setSelectedPlatformByResource(this.vdc);
-        this._vdcService.setSelectedVdc(this.vdc);
-      });
-  }
-
-  /**
-   * Sets the selected platform based on its name
-   * @param resource Resource name to be the basis
-   */
-  private _setSelectedPlatformByResource(resource: McsResource): void {
-    if (isNullOrEmpty(resource)) { return; }
-    let platform = this._resourcesKeyMap.get(resource.name);
-    if (!isNullOrEmpty(platform)) {
-      this.selectedPlatform = platform;
-    }
+  private _subscribesToResourceById(vdcId: string): void {
+    this.selectedResource$ = this._resourcesRepository.findRecordById(vdcId).pipe(
+      catchError((error) => {
+        this._errorHandlerService.handleHttpRedirectionError(error.status);
+        return throwError(error);
+      }),
+      tap((response) => { this._vdcService.setSelectedVdc(response); }),
+      shareReplay(1),
+      finalize(() => this._loadingService.hideLoader())
+    );
   }
 }

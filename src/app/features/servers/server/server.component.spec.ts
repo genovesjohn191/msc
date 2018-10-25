@@ -61,8 +61,8 @@ describe('ServerComponent', () => {
       expect(component.textContent).toBeDefined();
     });
 
-    it('should set the value of server', () => {
-      expect(component.selectedServer).toBeDefined();
+    it('should set the value of serversTextContent', () => {
+      expect(component.serversTextContent).toBeDefined();
     });
   });
 });

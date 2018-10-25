@@ -100,7 +100,7 @@ $table-information-border-color: $color-grey-05;
   mcs-data-empty,
   mcs-data-error,
   .mcs-data-loading, {
-    margin-top: $space-large;
+    margin-top: $space-small;
     @include display-flex(row);
     @include align-items(center);
     justify-content: center;

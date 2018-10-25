@@ -12,14 +12,17 @@ import {
   ActivatedRoute
 } from '@angular/router';
 import {
-  Subscription,
   Subject,
-  throwError
+  throwError,
+  Observable
 } from 'rxjs';
 import {
   startWith,
   takeUntil,
-  catchError
+  catchError,
+  tap,
+  finalize,
+  shareReplay
 } from 'rxjs/operators';
 import {
   ResetPasswordDialogComponent,
@@ -35,13 +38,12 @@ import {
   McsRoutingTabBase,
   McsErrorHandlerService,
   McsDataStatusFactory,
-  CoreRoutes
+  CoreRoutes,
+  McsLoadingService
 } from '@app/core';
 import {
   isNullOrEmpty,
-  getSafeProperty,
-  unsubscribeSafely,
-  unsubscribeSubject
+  unsubscribeSafely
 } from '@app/utilities';
 import {
   Search,
@@ -51,7 +53,8 @@ import {
   ServerCommand,
   RouteKey,
   McsServer,
-  McsServerPlatform
+  McsServerPlatform,
+  McsResource
 } from '@app/models';
 import {
   ServersApiService,
@@ -59,9 +62,6 @@ import {
 } from '@app/services';
 import { ServerService } from './server.service';
 import { ServersListSource } from '../servers.listsource';
-
-// Constant Definition
-const SERVER_LIST_GROUP_OTHERS = 'Others';
 
 // Add another group type in here if you have addition tab
 type tabGroupType = 'management' | 'storage';
@@ -86,16 +86,12 @@ export class ServerComponent
 
   public textContent: any;
   public serversTextContent: any;
-  public serversMap: Map<string, McsServer[]>;
-  public selectedGroupName: string;
-  public selectedServer: McsServer;
-  public serverListSource: ServersListSource | null;
-  public serverSubscription: Subscription;
-  public listStatusFactory: McsDataStatusFactory<Map<string, McsServer[]>>;
 
-  public get spinnerIconKey(): string {
-    return CoreDefinition.ASSETS_GIF_LOADER_SPINNER;
-  }
+  public serverResource$: Observable<McsResource>;
+  public selectedServer$: Observable<McsServer>;
+  public serversMap$: Observable<Map<string, McsServer[]>>;
+  public serverListSource: ServersListSource | null;
+  public listStatusFactory: McsDataStatusFactory<Map<string, McsServer[]>>;
 
   public get angleDoubleRightIconKey(): string {
     return CoreDefinition.ASSETS_SVG_NEXT_ARROW;
@@ -117,20 +113,17 @@ export class ServerComponent
     private _serverService: ServerService,
     private _textContentProvider: McsTextContentProvider,
     private _changeDetectorRef: ChangeDetectorRef,
+    private _loadingService: McsLoadingService,
     private _errorHandlerService: McsErrorHandlerService
   ) {
     super(_router, _activatedRoute);
     this._resourcesKeyMap = new Map();
-    this.selectedServer = new McsServer();
-    this.serversMap = new Map();
     this.listStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
   }
 
   public ngOnInit() {
     this.serversTextContent = this._textContentProvider.content.servers;
     this.textContent = this._textContentProvider.content.servers.server;
-
-    // Initialize base class
     super.onInit();
   }
 
@@ -145,8 +138,7 @@ export class ServerComponent
 
   public ngOnDestroy() {
     super.onDestroy();
-    unsubscribeSafely(this.serverSubscription);
-    unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this._destroySubject);
   }
 
   /**
@@ -228,14 +220,7 @@ export class ServerComponent
    */
   protected onParamIdChanged(id: string) {
     if (isNullOrEmpty(id)) { return; }
-
-    // We need to recreate the component in order for the
-    // component to generate new instance
-    if (!isNullOrEmpty(this.componentHandler)) {
-      this.componentHandler.recreateComponent();
-    }
-    this._getServerById(id);
-    this._setSelectedServerById(id);
+    this._subscribeToServerById(id);
   }
 
   /**
@@ -261,64 +246,32 @@ export class ServerComponent
     };
 
     // Listen to all records changed
-    this.serverListSource.findAllRecordsMapStream(keyFn)
-      .pipe(
-        takeUntil(this._destroySubject),
-        catchError((error) => {
-          this.listStatusFactory.setError();
-          return throwError(error);
-        })
-      )
-      .subscribe((response) => {
-        this.serversMap = response;
+    this.serversMap$ = this.serverListSource.findAllRecordsMapStream(keyFn).pipe(
+      catchError((error) => {
+        this.listStatusFactory.setError();
+        return throwError(error);
+      }),
+      tap((response) => {
         this.search.showLoading(false);
         this.listStatusFactory.setSuccessful(response);
-      });
+      })
+    );
   }
 
   /**
    * This will set the active server when data was obtained from repository
    * @param serverId Server ID to be the basis of the server
    */
-  private _getServerById(serverId: string): void {
-    unsubscribeSafely(this.serverSubscription);
-    this.serverSubscription = this._serversRepository
-      .findRecordById(serverId)
-      .pipe(
-        catchError((error) => {
-          // Handle common error status code
-          this._errorHandlerService.handleHttpRedirectionError(error.status);
-          return throwError(error);
-        })
-      )
-      .subscribe((response) => {
-        this._setSelectedServerById(response.id);
-        this._changeDetectorRef.markForCheck();
-      });
-  }
-
-  /**
-   * This will set the selected server details every selection
-   */
-  private _setSelectedServerById(serverId: string): void {
-    if (isNullOrEmpty(serverId)) { return; }
-
-    // Set the selection of server based on its ID
-    let serverFound = this._serversRepository.dataRecords
-      .find((server) => server.id === serverId);
-    if (isNullOrEmpty(serverFound)) {
-      this.selectedServer = { id: serverId } as McsServer;
-      return;
-    }
-
-    this.selectedServer = serverFound;
-    this._serverService.setSelectedServer(this.selectedServer);
-    let hasResourceName = !isNullOrEmpty(
-      getSafeProperty(this.selectedServer, (obj) => obj.platform.resourceName)
+  private _subscribeToServerById(serverId: string): void {
+    this._loadingService.showLoader(this.textContent.loading);
+    this.selectedServer$ = this._serversRepository.findRecordById(serverId).pipe(
+      catchError((error) => {
+        this._errorHandlerService.handleHttpRedirectionError(error.status);
+        return throwError(error);
+      }),
+      tap((response) => this._serverService.setSelectedServer(response)),
+      shareReplay(1),
+      finalize(() => this._loadingService.hideLoader())
     );
-
-    let resourceName = (hasResourceName) ?
-      this.selectedServer.platform.resourceName : SERVER_LIST_GROUP_OTHERS;
-    this.selectedGroupName = resourceName;
   }
 }

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableComponent } from './table.component';
-import { IconModule } from '../icon/icon.module';
+import { LoaderModule } from '../loader/loader.module';
 /** Header */
 import {
   HeaderCellComponent,
@@ -58,7 +58,7 @@ import {
   ],
   imports: [
     CommonModule,
-    IconModule
+    LoaderModule
   ],
   exports: [
     TableComponent,

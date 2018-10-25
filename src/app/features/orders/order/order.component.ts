@@ -13,23 +13,22 @@ import {
 import {
   Subscription,
   throwError,
-  Subject
+  Subject,
+  Observable
 } from 'rxjs';
 import {
   catchError,
-  takeUntil
+  takeUntil,
+  finalize
 } from 'rxjs/operators';
 import {
   McsTextContentProvider,
   McsErrorHandlerService,
   CoreDefinition,
-  CoreRoutes
+  CoreRoutes,
+  McsLoadingService
 } from '@app/core';
-import {
-  isNullOrEmpty,
-  unsubscribeSafely,
-  unsubscribeSubject
-} from '@app/utilities';
+import { unsubscribeSubject } from '@app/utilities';
 import {
   RouteKey,
   McsOrder
@@ -45,7 +44,7 @@ import { OrdersRepository } from '@app/services';
 export class OrderComponent implements OnInit, OnDestroy {
   public textContent: any;
 
-  public order: McsOrder;
+  public order$: Observable<McsOrder>;
   public orderSubscription: Subscription;
   public orderItemsColumns: string[];
   private _destroySubject = new Subject<void>();
@@ -55,11 +54,10 @@ export class OrderComponent implements OnInit, OnDestroy {
     private _activatedRoute: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef,
     private _textContentProvider: McsTextContentProvider,
+    private _loadingService: McsLoadingService,
     private _errorHandlerService: McsErrorHandlerService,
     private _ordersRepository: OrdersRepository
-  ) {
-    this.order = new McsOrder();
-  }
+  ) { }
 
   public ngOnInit() {
     this.textContent = this._textContentProvider.content.orders.order;
@@ -68,7 +66,6 @@ export class OrderComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy() {
-    unsubscribeSafely(this.orderSubscription);
     unsubscribeSubject(this._destroySubject);
   }
 
@@ -101,25 +98,22 @@ export class OrderComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this._destroySubject))
       .subscribe((params: ParamMap) => {
         let orderId = params.get('id');
-        this._getOrderById(orderId);
+        this._subscribeToOrderById(orderId);
       });
   }
 
   /**
    * Get Order based on the given ID in the provided parameter
    */
-  private _getOrderById(orderId: string): void {
-    this.orderSubscription = this._ordersRepository.findRecordById(orderId)
-      .pipe(
-        catchError((error) => {
-          // Handle common error status code
-          this._errorHandlerService.handleHttpRedirectionError(error.status);
-          return throwError(error);
-        })
-      ).subscribe((response) => {
-        if (isNullOrEmpty(response)) { return; }
-        this.order = response;
-      });
+  private _subscribeToOrderById(orderId: string): void {
+    this._loadingService.showLoader(this.textContent.loading);
+    this.order$ = this._ordersRepository.findRecordById(orderId).pipe(
+      catchError((error) => {
+        this._errorHandlerService.handleHttpRedirectionError(error.status);
+        return throwError(error);
+      }),
+      finalize(() => this._loadingService.hideLoader())
+    );
   }
 
   /**

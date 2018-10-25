@@ -22,11 +22,17 @@ export function isNullOrEmpty<T>(data: T): boolean {
 
 /**
  * This will safely unsubscribe a subscription
- * @param subscription subscription to unsubscribe
+ * @param subscriber subscription to unsubscribe
  */
-export function unsubscribeSafely(subscription: Subscription): void {
-  if (isNullOrEmpty(subscription)) { return; }
-  subscription.unsubscribe();
+export function unsubscribeSafely(subscriber: Subscription | Subject<any>): void {
+  if (isNullOrEmpty(subscriber)) { return; }
+
+  if (subscriber instanceof Subscription) {
+    subscriber.unsubscribe();
+  } else {
+    subscriber.next();
+    subscriber.complete();
+  }
 }
 
 /**

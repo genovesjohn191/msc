@@ -1,14 +1,1 @@
-<!-- Content element that will when the loader has finished -->
-<div class="loader-inprogress-content" #targetElements>
-  <ng-content></ng-content>
-</div>
-
-<ng-container *ngIf="subscriptionsActive">
-  <div class="loader-content"
-    [@fadeOut]
-    (@fadeOut.start)="onLoaderAnimationStart()"
-    (@fadeOut.done)="onLoaderAnimationDone()">
-    <mcs-icon [key]="spinnerIconKey" [size]="iconSize"></mcs-icon>
-    <span *ngIf="loadingText">{{ loadingText }}</span>
-  </div>
-</ng-container>
+<mcs-icon [key]="loaderIconKey" [size]="size"></mcs-icon>

@@ -20,6 +20,7 @@ import { McsLoggerService } from './services/mcs-logger.service';
 import { McsFormGroupService } from './services/mcs-form-group.service';
 import { GoogleAnalyticsEventsService } from './services/google-analytics-events.service';
 import { McsSessionHandlerService } from './services/mcs-session-handler.service';
+import { McsLoadingService } from './services/mcs-loading.service';
 /** Providers */
 import { McsTextContentProvider } from './providers/mcs-text-content.provider';
 import { McsAssetsProvider } from './providers/mcs-assets.provider';
@@ -65,5 +66,6 @@ export const coreProviders: any[] = [
   McsAccessControlService,
   McsNavigateAwayGuard,
   GoogleAnalyticsEventsService,
-  McsSessionHandlerService
+  McsSessionHandlerService,
+  McsLoadingService
 ];

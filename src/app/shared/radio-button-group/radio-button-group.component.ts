@@ -251,7 +251,7 @@ export class RadioButtonGroupComponent implements AfterContentInit,
    */
   private _clearItemSelection(selectedItem: RadioButtonComponent): void {
     this._radioButtons.forEach((item) => {
-      if (item.id !== selectedItem.id) {
+      if (item.generatedId !== selectedItem.generatedId) {
         item.uncheckRadioButton();
         item.markForCheck();
       }

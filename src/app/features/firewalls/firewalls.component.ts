@@ -46,10 +46,6 @@ export class FirewallsComponent
     return CoreDefinition.ASSETS_SVG_COG;
   }
 
-  public get spinnerIconKey(): string {
-    return CoreDefinition.ASSETS_GIF_LOADER_SPINNER;
-  }
-
   public constructor(
     _browserService: McsBrowserService,
     _changeDetectorRef: ChangeDetectorRef,

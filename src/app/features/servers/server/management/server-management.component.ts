@@ -27,7 +27,8 @@ import {
   McsDialogService,
   McsNotificationEventsService,
   McsDataStatusFactory,
-  CoreRoutes
+  CoreRoutes,
+  McsLoadingService
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -99,10 +100,6 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
     return CoreDefinition.ASSETS_SVG_DOS_PROMPT_GREY;
   }
 
-  public get spinnerIconKey(): string {
-    return CoreDefinition.ASSETS_GIF_LOADER_SPINNER;
-  }
-
   public get ejectIconKey(): string {
     return CoreDefinition.ASSETS_SVG_EJECT_BLACK;
   }
@@ -126,8 +123,6 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
   }
 
   constructor(
-    private _router: Router,
-    private _activatedRoute: ActivatedRoute,
     _changeDetectorRef: ChangeDetectorRef,
     _resourcesRepository: ResourcesRepository,
     _serversRepository: ServersRepository,
@@ -135,6 +130,9 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
     _serverService: ServerService,
     _textProvider: McsTextContentProvider,
     _errorHandlerService: McsErrorHandlerService,
+    _loadingService: McsLoadingService,
+    private _router: Router,
+    private _activatedRoute: ActivatedRoute,
     private _dialogService: McsDialogService,
     private _notificationEvents: McsNotificationEventsService
   ) {
@@ -145,7 +143,8 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
       _serverService,
       _changeDetectorRef,
       _textProvider,
-      _errorHandlerService
+      _errorHandlerService,
+      _loadingService
     );
     this.manageScale = new ServerManageScale();
     this.mediaStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);

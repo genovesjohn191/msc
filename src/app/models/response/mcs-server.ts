@@ -1,5 +1,6 @@
-import { CoreDefinition } from '@app/core';
 import { JsonProperty } from 'json-object-mapper';
+import { CoreDefinition } from '@app/core';
+import { getSafeProperty } from '@app/utilities';
 import { McsServerOperatingSystemSummary } from './mcs-server-operating-system-summary';
 import { McsServerHardware } from './mcs-server-hardware';
 import { McsServerCompute } from './mcs-server-compute';
@@ -248,5 +249,13 @@ export class McsServer extends McsEntityBase {
         break;
     }
     return stateIconKey;
+  }
+
+  /**
+   * Returns the resource name of the server, otherwise it will set to Others
+   */
+  public get resourceName(): string {
+    let _resourceName = getSafeProperty(this.platform, (obj) => obj.resourceName);
+    return _resourceName || 'Others';
   }
 }

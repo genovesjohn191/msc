@@ -116,10 +116,6 @@ export class SwitchAccountComponent implements AfterViewInit, OnDestroy {
     return CoreDefinition.ASSETS_SVG_ARROW_RIGHT_BLUE;
   }
 
-  public get spinnerIconKey(): string {
-    return CoreDefinition.ASSETS_GIF_LOADER_SPINNER;
-  }
-
   constructor(
     private _switchAccountService: SwitchAccountService,
     private _switchAccountRepository: SwitchAccountRepository,

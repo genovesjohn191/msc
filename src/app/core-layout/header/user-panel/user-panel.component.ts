@@ -92,10 +92,6 @@ export class UserPanelComponent implements OnInit, OnDestroy {
     return CoreDefinition.ASSETS_SVG_USER_WHITE;
   }
 
-  public get spinnerIconKey(): string {
-    return CoreDefinition.ASSETS_GIF_LOADER_SPINNER;
-  }
-
   public get caretDownIconKey(): string {
     return CoreDefinition.ASSETS_FONT_CHEVRON_DOWN;
   }

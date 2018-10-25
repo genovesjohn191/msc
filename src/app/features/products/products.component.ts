@@ -8,15 +8,18 @@ import {
   ViewChild
 } from '@angular/core';
 import {
-  Subscription,
   Subject,
-  throwError
+  throwError,
+  Observable
 } from 'rxjs';
 import {
   startWith,
   takeUntil,
   switchMap,
-  catchError
+  catchError,
+  tap,
+  finalize,
+  shareReplay
 } from 'rxjs/operators';
 import {
   ActivatedRoute,
@@ -26,13 +29,12 @@ import {
   McsTextContentProvider,
   McsDataStatusFactory,
   McsErrorHandlerService,
-  CoreDefinition
+  CoreDefinition,
+  McsLoadingService
 } from '@app/core';
 import {
   unsubscribeSafely,
-  refreshView,
-  isNullOrEmpty,
-  unsubscribeSubject
+  isNullOrEmpty
 } from '@app/utilities';
 import {
   Search,
@@ -66,11 +68,9 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public textContent: any;
 
-  public catalogs: McsProductCatalog[];
+  public catalogs$: Observable<McsProductCatalog[]>;
+  public selectedProduct$: Observable<McsProduct>;
   public catalogListSource: ProductCatalogListSource | null;
-  public catalogSubscription: Subscription;
-  public selectedProduct: McsProduct;
-
   public listStatusFactory: McsDataStatusFactory<McsProductCatalog[]>;
   public productStatusFactory: McsDataStatusFactory<McsProduct>;
   private _destroySubject = new Subject<void>();
@@ -87,6 +87,7 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
     private _activatedRoute: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef,
     private _textContentProvider: McsTextContentProvider,
+    private _loadingService: McsLoadingService,
     private _errorHandlerService: McsErrorHandlerService,
     private _productService: ProductService,
     private _productsRepository: ProductsRepository,
@@ -98,11 +99,11 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public ngOnInit() {
     this.textContent = this._textContentProvider.content.products;
-    this._getProductById();
+    this._subscribeToProductById();
   }
 
   public ngAfterViewInit() {
-    refreshView(() => {
+    Promise.resolve().then(() => {
       this.search.searchChangedStream.pipe(startWith(null), takeUntil(this._destroySubject))
         .subscribe(() => this.listStatusFactory.setInProgress());
       this._productsRepository.dataRecordsChanged.pipe(takeUntil(this._destroySubject))
@@ -112,8 +113,7 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public ngOnDestroy() {
-    unsubscribeSafely(this.catalogSubscription);
-    unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this._destroySubject);
   }
 
   /**
@@ -134,45 +134,43 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
     );
 
     // Listen to all records changed
-    this.catalogListSource.findAllRecordsStream()
-      .pipe(
-        catchError((error) => {
-          this.listStatusFactory.setError();
-          return throwError(error);
-        })
-      )
-      .subscribe((response) => {
-        this.catalogs = response;
+    this.catalogs$ = this.catalogListSource.findAllRecordsStream().pipe(
+      catchError((error) => {
+        this.listStatusFactory.setError();
+        return throwError(error);
+      }),
+      tap((response) => {
         this.search.showLoading(false);
         this.listStatusFactory.setSuccessful(response);
-      });
+      }),
+      finalize(() => this._changeDetectorRef.markForCheck())
+    );
     this._changeDetectorRef.markForCheck();
   }
 
   /**
    * Listens to every params changed and get the product by id
    */
-  private _getProductById(): void {
-    this._activatedRoute.paramMap
-      .pipe(
-        takeUntil(this._destroySubject),
-        switchMap((params: ParamMap) => {
-          this.productStatusFactory.setInProgress();
-          let productId = params.get('id');
-          this.selectedProduct = { id: productId } as McsProduct;
-          return this._productsRepository.findRecordById(productId);
-        }),
-        catchError((error) => {
-          // Handle common error status code
-          this.productStatusFactory.setError();
-          this._errorHandlerService.handleHttpRedirectionError(error.status);
-          return throwError(error);
-        })
-      )
-      .subscribe((response) => {
-        this.selectedProduct = response;
+  private _subscribeToProductById(): void {
+    this.selectedProduct$ = this._activatedRoute.paramMap.pipe(
+      switchMap((params: ParamMap) => {
+        this.productStatusFactory.setInProgress();
+        this._loadingService.showLoader(this.textContent.loadingDetails);
+        return this._productsRepository.findRecordById(params.get('id')).pipe(
+          finalize(() => this._loadingService.hideLoader())
+        );
+      }),
+      catchError((error) => {
+        this.productStatusFactory.setError();
+        this._errorHandlerService.handleHttpRedirectionError(error.status);
+        return throwError(error);
+      }),
+      tap((response) => {
         this._productService.selectProduct(response);
         this.productStatusFactory.setSuccessful(response);
-      });
+        this._changeDetectorRef.markForCheck();
+      }),
+      shareReplay(1)
+    );
   }
 }

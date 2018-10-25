@@ -34,7 +34,6 @@ import {
   catchError
 } from 'rxjs/operators';
 /** Core / Utilities */
-import { CoreDefinition } from '@app/core';
 import { DataStatus } from '@app/models';
 import {
   isNullOrEmpty,
@@ -172,10 +171,6 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
 
     // Add loader while table is initializing
     this.dataStatus = DataStatus.InProgress;
-  }
-
-  public get spinnerIconKey(): string {
-    return CoreDefinition.ASSETS_GIF_LOADER_SPINNER;
   }
 
   public get dataStatusEnum(): any {

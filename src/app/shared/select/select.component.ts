@@ -418,20 +418,15 @@ export class SelectComponent extends McsFormFieldControlBase<any>
    * Set the initial selection of the select component
    */
   private _initializeSelection(): void {
-    // Defer setting the value in order to avoid the "Expression
-    // has changed after it was checked" errors from Angular.
     Promise.resolve().then(() => {
       let selectedValue = getSafeProperty(this.ngControl, (obj) => obj.value) || this._value;
       let isFirstItemSelected = this.required &&
         isNullOrEmpty(selectedValue) && !isNullOrEmpty(this._options);
 
-      if (isFirstItemSelected) {
-        // let firstItem = this._options.find((item) => !item.hasSubgroup);
-        let firstItem = this._options.first;
-        this._selectItem(firstItem);
-      } else {
+      isFirstItemSelected ?
+        this._selectItem(this._options.first) :
         this._selectItemByValue(this.ngControl ? this.ngControl.value : this._value);
-      }
+      if (!isNullOrEmpty(this.ngControl)) { this.ngControl.control.markAsPristine(); }
     });
   }
 

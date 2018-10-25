@@ -14,7 +14,6 @@ import {
 import { HttpErrorResponse } from '@angular/common/http';
 import {
   Subject,
-  Subscription,
   throwError,
   Observable,
   of
@@ -30,10 +29,10 @@ import {
   CoreDefinition,
   McsErrorHandlerService,
   McsFormGroupService,
-  McsScrollDispatcherService
+  McsScrollDispatcherService,
+  McsLoadingService
 } from '@app/core';
 import {
-  unsubscribeSubject,
   unsubscribeSafely,
   isNullOrEmpty,
   McsSafeToNavigateAway,
@@ -73,8 +72,6 @@ export class MediaUploadDetailsComponent
   public fcMediaUrl: FormControl;
   public fcMediaDescription: FormControl;
 
-  public loaderSubscription = new Subscription();
-
   private _mediaUrlStatusIconKey: string;
   public get mediaUrlStatusIconKey(): string { return this._mediaUrlStatusIconKey; }
   public set mediaUrlStatusIconKey(value: string) {
@@ -95,6 +92,7 @@ export class MediaUploadDetailsComponent
     private _changeDetectorRef: ChangeDetectorRef,
     private _textContentProvider: McsTextContentProvider,
     private _formGroupService: McsFormGroupService,
+    private _loadingService: McsLoadingService,
     private _errorHandlerService: McsErrorHandlerService,
     private _resourcesRepository: ResourcesRepository,
     private _mediaUploadService: MediaUploadService,
@@ -104,7 +102,7 @@ export class MediaUploadDetailsComponent
   public ngOnInit() {
     this.textContent = this._textContentProvider.content.mediaUpload.mediaStepDetails;
     this._registerFormGroup();
-    this._getResources();
+    this._subsribeToResources();
   }
 
   public ngAfterViewInit() {
@@ -116,8 +114,7 @@ export class MediaUploadDetailsComponent
   }
 
   public ngOnDestroy() {
-    unsubscribeSafely(this.loaderSubscription);
-    unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this._destroySubject);
   }
 
   /**
@@ -189,16 +186,17 @@ export class MediaUploadDetailsComponent
   }
 
   /**
-   * Get all the resources from the repository
+   * Subscribes to all the resources on the repository
    */
-  private _getResources(): void {
+  private _subsribeToResources(): void {
+    this._loadingService.showLoader(this.textContent.loadingResources);
     this.resources$ = this._resourcesRepository.findAllRecords()
       .pipe(
         catchError((error) => {
           this._errorHandlerService.handleHttpRedirectionError(error.status);
           return throwError(error);
         }),
-        finalize(() => unsubscribeSafely(this.loaderSubscription))
+        finalize(() => this._loadingService.hideLoader())
       );
   }
 

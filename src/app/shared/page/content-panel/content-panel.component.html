@@ -1,0 +1,11 @@
+<mcs-loading *ngIf="isLoading$ | async">
+  <span *ngIf="loadingText$ | async as loadingText">
+    {{ loadingText }}
+  </span>
+</mcs-loading>
+
+<div class="content-panel"
+  mcsSetFocus tabindex="-1"
+  mcsScrollable mcsScrollbarId="page-content">
+  <ng-content></ng-content>
+</div>

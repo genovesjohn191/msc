@@ -31,9 +31,9 @@ export class IdDirective implements AfterViewInit, OnChanges {
 
   @Input('mcsId')
   public customId: string;
-  public generatedId: string;
 
   private _hashInstance = new Hashids('', DEFAULT_HASH_LENGTH);
+  private _generatedId: string;
 
   constructor(
     private _elementRef: ElementRef,
@@ -50,6 +50,22 @@ export class IdDirective implements AfterViewInit, OnChanges {
     let customIdHasChanged = changes['customId'];
     if (isNullOrEmpty(customIdHasChanged)) { return; }
     this._generateUniqueId();
+  }
+
+  /**
+   * Returns the generated ID based on the text content of the element
+   */
+  public get generatedId(): string {
+    return this._generatedId;
+  }
+
+  /**
+   * Generates new unique hash id but the innertext will be remained for consistency
+   */
+  public generateNewHashId(): string {
+    return isNullOrEmpty(this.customId) ?
+      this._generateIdByTextContent() :
+      this._generateIdByCustomInput();
   }
 
   /**
@@ -83,7 +99,7 @@ export class IdDirective implements AfterViewInit, OnChanges {
    * Sets the default settings based on criteria
    */
   private _generateUniqueId(): void {
-    this.generatedId = isNullOrEmpty(this.customId) ?
+    this._generatedId = isNullOrEmpty(this.customId) ?
       this._generateIdByTextContent() :
       this._generateIdByCustomInput();
     this._changeDetectorRef.markForCheck();

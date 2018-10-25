@@ -2,11 +2,13 @@ import {
   Component,
   Input,
   OnInit,
+  AfterContentInit,
   OnDestroy,
   EventEmitter,
   ChangeDetectorRef,
   ChangeDetectionStrategy,
-  ViewEncapsulation
+  ViewEncapsulation,
+  ContentChild
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import {
@@ -18,8 +20,12 @@ import {
   CoreDefinition,
   McsTextContentProvider
 } from '@app/core';
-import { unsubscribeSubject } from '@app/utilities';
+import {
+  unsubscribeSubject,
+  isNullOrEmpty
+} from '@app/utilities';
 import { Search } from './search.interface';
+import { IdDirective } from '../directives';
 
 // Unique Id that generates during runtime
 let nextUniqueId = 0;
@@ -31,37 +37,33 @@ let nextUniqueId = 0;
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    'class': 'search-wrapper',
-    '[attr.id]': 'id'
+    'class': 'search-wrapper'
   }
 })
 
-export class SearchComponent implements OnInit, OnDestroy, Search {
-  @Input()
-  public id: string = `mcs-search-${nextUniqueId++}`;
-
+export class SearchComponent implements OnInit, AfterContentInit, OnDestroy, Search {
   @Input()
   public delayInSeconds: number | 'none' = 'none';
   public textContent: any;
 
   /** Interface implementation */
+  public generatedId: string;
   public keyword: string;
   public searching: boolean;
   public searchChangedStream: EventEmitter<any>;
 
-  // Others
-  public iconKey: string;
-
   /** Search subscription */
   private _searchSubject: Subject<string>;
   private _destroySubject = new Subject<void>();
+
+  @ContentChild(IdDirective)
+  private _idElement: IdDirective;
 
   public constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private _textContentProvider: McsTextContentProvider
   ) {
     this.keyword = '';
-    this.iconKey = CoreDefinition.ASSETS_FONT_SEARCH;
     this._searchSubject = new Subject<string>();
     this.searchChangedStream = new EventEmitter<any>();
   }
@@ -71,8 +73,20 @@ export class SearchComponent implements OnInit, OnDestroy, Search {
     this._createSearchSubject();
   }
 
+  public ngAfterContentInit() {
+    Promise.resolve().then(() => {
+      this.generatedId = isNullOrEmpty(this._idElement) ?
+        `mcs-search-${nextUniqueId++}` :
+        this._idElement.generateNewHashId();
+    });
+  }
+
   public ngOnDestroy(): void {
     unsubscribeSubject(this._destroySubject);
+  }
+
+  public get searchIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_SEARCH;
   }
 
   /**
@@ -99,9 +113,6 @@ export class SearchComponent implements OnInit, OnDestroy, Search {
    */
   public showLoading(showLoading: boolean): void {
     this.searching = showLoading;
-    this.iconKey = showLoading ?
-      CoreDefinition.ASSETS_GIF_LOADER_SPINNER :
-      CoreDefinition.ASSETS_FONT_SEARCH;
     this._changeDetectorRef.markForCheck();
   }
 

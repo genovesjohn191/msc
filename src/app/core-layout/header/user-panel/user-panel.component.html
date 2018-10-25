@@ -89,7 +89,7 @@
       <small *ngIf="!loadingAccount" class="user-info" read-only>{{ activeAccount?.name }}</small>
       <small *ngIf="loadingAccount" class="user-info" read-only>
         <div class="inline-items-small">
-          <mcs-icon [key]="spinnerIconKey" size="xsmall"></mcs-icon>
+          <mcs-loader size="xsmall"></mcs-loader>
           <span>{{ textContent.loadingCompany }}</span>
         </div>
       </small>

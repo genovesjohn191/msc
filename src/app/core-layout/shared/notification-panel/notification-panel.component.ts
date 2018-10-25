@@ -17,7 +17,8 @@ import {
 } from '@app/models';
 import {
   refreshView,
-  isNullOrEmpty
+  isNullOrEmpty,
+  getSafeProperty
 } from '@app/utilities';
 import { Router } from '@angular/router';
 
@@ -82,7 +83,6 @@ export class NotificationPanelComponent implements OnInit, OnChanges {
   private _timer: any;
   private _timeStart: any;
   private _timeRemainingInMilliSeconds: number;
-  private _timeOutInMilliSeconds: number;
 
   public get closeIconKey(): string {
     return CoreDefinition.ASSETS_SVG_CLOSE_WHITE;
@@ -94,6 +94,14 @@ export class NotificationPanelComponent implements OnInit, OnChanges {
 
   public get dataStatusEnum(): any {
     return DataStatus;
+  }
+
+  public get timeOutInMilliSeconds(): number {
+    let dataStatus = getSafeProperty(this.notification, (obj) => obj.dataStatus);
+    if (dataStatus === DataStatus.InProgress) { return undefined; }
+    return dataStatus === DataStatus.Success ?
+      CoreDefinition.NOTIFICATION_COMPLETED_TIMEOUT_IN_MS :
+      CoreDefinition.NOTIFICATION_FAILED_TIMEOUT_IN_MS;
   }
 
   public constructor(
@@ -108,11 +116,9 @@ export class NotificationPanelComponent implements OnInit, OnChanges {
   }
 
   public ngOnChanges() {
-    this.initializeNotification(this.notification);
-
     // Set the timer gradually
-    if (this._timeOutInMilliSeconds) {
-      this._removeNotification(this._timeOutInMilliSeconds);
+    if (this.timeOutInMilliSeconds) {
+      this._removeNotification(this.timeOutInMilliSeconds);
     }
   }
 
@@ -157,7 +163,7 @@ export class NotificationPanelComponent implements OnInit, OnChanges {
   private _setTimeRemaining(): void {
     let currentTime = new Date().getTime();
     if (isNullOrEmpty(this._timeRemainingInMilliSeconds)) {
-      this._timeRemainingInMilliSeconds = this._timeOutInMilliSeconds;
+      this._timeRemainingInMilliSeconds = this.timeOutInMilliSeconds;
     }
     this._timeRemainingInMilliSeconds = this._timeRemainingInMilliSeconds -
       (currentTime - this._timeStart);
@@ -182,30 +188,6 @@ export class NotificationPanelComponent implements OnInit, OnChanges {
   private _resumeTimeOut(): void {
     if (this._timeRemainingInMilliSeconds) {
       this._removeNotification(this._timeRemainingInMilliSeconds);
-    }
-  }
-
-  /**
-   * Initializes the notification settings based on input
-   */
-  private initializeNotification(notification: McsJob): void {
-    switch (notification.dataStatus) {
-      case DataStatus.InProgress:
-        this.iconStatusKey = CoreDefinition.ASSETS_GIF_LOADER_SPINNER;
-        this.iconStatusColor = 'black';
-        break;
-      case DataStatus.Error:
-        this.iconStatusKey = CoreDefinition.ASSETS_FONT_CLOSE;
-        this.iconStatusColor = 'red';
-        this._timeOutInMilliSeconds = CoreDefinition.NOTIFICATION_FAILED_TIMEOUT_IN_MS;
-        break;
-      case DataStatus.Success:
-        this.iconStatusKey = CoreDefinition.ASSETS_FONT_CHECK;
-        this.iconStatusColor = 'green';
-        this._timeOutInMilliSeconds = CoreDefinition.NOTIFICATION_COMPLETED_TIMEOUT_IN_MS;
-        break;
-      default:
-        break;
     }
   }
 

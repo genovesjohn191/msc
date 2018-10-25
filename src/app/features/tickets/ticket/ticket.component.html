@@ -1,4 +1,4 @@
-<mcs-page [header]="ticketHeader">
+<mcs-page [header]="getTicketHeader(selectedTicket$ | async)">
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef>
 
@@ -17,179 +17,168 @@
 
   <!-- Content Panel -->
   <mcs-content-panel *mcsContentPanelDef>
-    <mcs-loader [subscriptions]="ticketSubscription"
-      [loadingText]="textContent.loading"
-      loadingPlacement="top">
+    <div class="limited-view" *ngIf="selectedTicket$ | async as selectedTicket">
+      <!-- Ticket description -->
+      <div class="container-wrapper">
+        <h2 class="container-header">{{ textContent.description }}</h2>
+        <p><strong [innerHTML]="selectedTicket.shortDescription | mcsNewLines"></strong></p>
+        <p [innerHTML]="selectedTicket.description | mcsNewLines"></p>
+      </div>
 
-      <div class="limited-view">
-        <!-- Ticket description -->
-        <div class="container-wrapper">
-          <h2 class="container-header">{{ textContent.description }}</h2>
-          <p><strong [innerHTML]="ticket.shortDescription | mcsNewLines"></strong></p>
-          <p [innerHTML]="ticket.description | mcsNewLines"></p>
-        </div>
+      <!-- Ticket details -->
+      <div class="container-wrapper">
+        <h2 class="container-header">{{ textContent.information }}</h2>
+        <div class="grid-row vspace-medium">
+          <div class="grid-column">
+            <mcs-list spacing="xsmall">
+              <mcs-list-item class="form-field-inline">
+                <span>{{ textContent.requestor }}:</span>
+                <span [innerHTML]="selectedTicket.requestor | mcsDataLabel"></span>
+              </mcs-list-item>
 
-        <!-- Ticket details -->
-        <div class="container-wrapper">
-          <h2 class="container-header">{{ textContent.information }}</h2>
-          <div class="grid-row vspace-medium">
-            <div class="grid-column">
-              <mcs-list spacing="xsmall">
-                <mcs-list-item class="form-field-inline">
-                  <span>{{ textContent.requestor }}:</span>
-                  <span [innerHTML]="requestor | mcsDataLabel"></span>
-                </mcs-list-item>
+              <mcs-list-item class="form-field-inline">
+                <span>{{ textContent.createdDate }}:</span>
+                <span>{{ selectedTicket.createdOn | mcsStdDateFormat }}</span>
+              </mcs-list-item>
 
-                <mcs-list-item class="form-field-inline">
-                  <span>{{ textContent.createdDate }}:</span>
-                  <span>{{ ticket.createdOn | mcsStdDateFormat }}</span>
-                </mcs-list-item>
+              <mcs-list-item class="form-field-inline">
+                <span>{{ textContent.customerReference }}:</span>
+                <span [innerHTML]="selectedTicket.customerReference | mcsDataLabel: 'None'"></span>
+              </mcs-list-item>
+            </mcs-list>
+          </div>
 
-                <mcs-list-item class="form-field-inline">
-                  <span>{{ textContent.customerReference }}:</span>
-                  <span [innerHTML]="ticket.customerReference | mcsDataLabel: 'None'"></span>
-                </mcs-list-item>
-              </mcs-list>
-            </div>
+          <div class="grid-column">
+            <mcs-list spacing="xsmall">
+              <mcs-list-item class="form-field-inline">
+                <span>{{ textContent.status }}:</span>
+                <mcs-icon *ngIf="selectedTicket.resolved" [key]="checkIconKey" size="small"></mcs-icon>
+                <span [innerHTML]="selectedTicket.stateLabel | mcsDataLabel"></span>
+                <span *ngIf="selectedTicket.resolved">({{ selectedTicket.createdOn | mcsStdDateFormat }})</span>
+              </mcs-list-item>
 
-            <div class="grid-column">
-              <mcs-list spacing="xsmall">
-                <mcs-list-item class="form-field-inline">
-                  <span>{{ textContent.status }}:</span>
-                  <mcs-icon *ngIf="ticket.resolved" [key]="checkIconKey" size="small"></mcs-icon>
-                  <span [innerHTML]="ticket.stateLabel | mcsDataLabel"></span>
-                  <span *ngIf="ticket.resolved">({{ ticket.createdOn | mcsStdDateFormat }})</span>
-                </mcs-list-item>
-
-                <mcs-list-item class="form-field-inline">
-                  <span>{{ textContent.type }}:</span>
-                  <span>{{ getSubTypeString(ticket.subType) }}</span>
-                </mcs-list-item>
-              </mcs-list>
-            </div>
+              <mcs-list-item class="form-field-inline">
+                <span>{{ textContent.type }}:</span>
+                <span>{{ getSubTypeString(selectedTicket.subType) }}</span>
+              </mcs-list-item>
+            </mcs-list>
           </div>
         </div>
+      </div>
 
-        <!-- Ticket closure details -->
-        <div class="container-wrapper" *ngIf="ticket.closed">
-          <h2 class="container-header">{{ textContent.closureDetails }}</h2>
+      <!-- Ticket closure details -->
+      <div class="container-wrapper" *ngIf="selectedTicket.closed">
+        <h2 class="container-header">{{ textContent.closureDetails }}</h2>
 
-          <div class="grid-row">
-            <div class="grid-column">
-              <mcs-list spacing="xsmall">
-                <mcs-list-item class="form-field-inline">
-                  <span>{{ textContent.closureDate }}:</span>
-                  <span [innerHTML]="(ticket.closureInformation?.closedAt |
-                    mcsStdDateFormat) | mcsDataLabel"></span>
-                </mcs-list-item>
-
-                <mcs-list-item class="form-field-inline">
-                  <span>{{ textContent.closureNotes }}:</span>
-                  <span [innerHTML]="ticket.closureInformation?.closeNotes |
-                    mcsDataLabel: 'None'"></span>
-                </mcs-list-item>
-              </mcs-list>
-            </div>
-
-            <div class="grid-column">
-              <mcs-list spacing="xsmall">
-                <mcs-list-item class="form-field-inline">
-                  <span>{{ textContent.rootCause }}:</span>
-                  <span [innerHTML]="ticket.closureInformation?.closeProblem |
-                    mcsDataLabel: 'None'"></span>
-                </mcs-list-item>
-
-                <mcs-list-item class="form-field-inline">
-                  <span>{{ textContent.resolution }}:</span>
-                  <span [innerHTML]="ticket.closureInformation?.closeResolution |
-                    mcsDataLabel: 'None'"></span>
-                </mcs-list-item>
-              </mcs-list>
-            </div>
-          </div>
-        </div>
-
-        <!-- Ticket Services and Attachments -->
         <div class="grid-row">
-          <div class="container-wrapper grid-column">
-            <h2 class="container-header">{{ textContent.services }}</h2>
-            <ng-container *ngIf="ticket.serviceId | mcsIsNotNullOrEmpty; else noServices">
-              <mcs-list spacing="auto">
-                <mcs-list-item *ngFor="let service of ticket.serviceId">
-                  <span>{{ service }}</span>
-                </mcs-list-item>
-              </mcs-list>
-            </ng-container>
+          <div class="grid-column">
+            <mcs-list spacing="xsmall">
+              <mcs-list-item class="form-field-inline">
+                <span>{{ textContent.closureDate }}:</span>
+                <span [innerHTML]="(selectedTicket.closureInformation?.closedAt |
+                  mcsStdDateFormat) | mcsDataLabel"></span>
+              </mcs-list-item>
 
-            <ng-template #noServices>
-              <mcs-data-status-empty>
-                {{ textContent.missingServicesLabel }}
-              </mcs-data-status-empty>
-            </ng-template>
+              <mcs-list-item class="form-field-inline">
+                <span>{{ textContent.closureNotes }}:</span>
+                <span [innerHTML]="selectedTicket.closureInformation?.closeNotes |
+                  mcsDataLabel: 'None'"></span>
+              </mcs-list-item>
+            </mcs-list>
           </div>
 
-          <div class="container-wrapper grid-column">
-            <h2 class="container-header">{{ textContent.attachments }}</h2>
-            <ng-container *ngIf="ticket.attachments | mcsIsNotNullOrEmpty; else noAttachments">
-              <mcs-list spacing="small">
-                <mcs-list-item *ngFor="let attachment of ticket.attachments">
-                  <mcs-file-download [fileType]="attachment.contentType"
-                    [downloading]="isDownloading(attachment?.id)"
-                    (download)="downloadAttachment(attachment)"
-                    mcsId="download-attachment"
-                    mcsEventTracker="download-attachment"
-                    mcsEventCategory="ticket"
-                    mcsEventLabel="ticket-details-page">
-                    {{ attachment.fileName }}
-                  </mcs-file-download>
-                </mcs-list-item>
-              </mcs-list>
-            </ng-container>
+          <div class="grid-column">
+            <mcs-list spacing="xsmall">
+              <mcs-list-item class="form-field-inline">
+                <span>{{ textContent.rootCause }}:</span>
+                <span [innerHTML]="selectedTicket.closureInformation?.closeProblem |
+                  mcsDataLabel: 'None'"></span>
+              </mcs-list-item>
 
-            <ng-template #noAttachments>
-              <mcs-data-status-empty>
-                {{ textContent.missingAttachmentsLabel }}
-              </mcs-data-status-empty>
-            </ng-template>
+              <mcs-list-item class="form-field-inline">
+                <span>{{ textContent.resolution }}:</span>
+                <span [innerHTML]="selectedTicket.closureInformation?.closeResolution |
+                  mcsDataLabel: 'None'"></span>
+              </mcs-list-item>
+            </mcs-list>
           </div>
         </div>
+      </div>
 
-        <!-- Ticket Activities -->
-        <div class="container-wrapper">
-          <h2 class="container-header">{{ textContent.activity }}</h2>
+      <!-- Ticket Services and Attachments -->
+      <div class="grid-row">
+        <div class="container-wrapper grid-column">
+          <h2 class="container-header">{{ textContent.services }}</h2>
+          <ng-container *ngIf="selectedTicket.serviceId | mcsIsNotNullOrEmpty; else noServices">
+            <mcs-list spacing="auto">
+              <mcs-list-item *ngFor="let service of selectedTicket.serviceId">
+                <span>{{ service }}</span>
+              </mcs-list-item>
+            </mcs-list>
+          </ng-container>
+
+          <ng-template #noServices>
+            <mcs-data-status-empty>
+              {{ textContent.missingServicesLabel }}
+            </mcs-data-status-empty>
+          </ng-template>
         </div>
-        <div class="block-items-medium">
-          <ng-container *mcsAccessControl="['TicketEdit']">
-            <div *mcsExclusiveForAccount="'default'" class="position-relative">
-              <mcs-loader
-                [subscriptions]="[createCommentSubscription, createAttachmentSubscription]"
-                [loadingText]="textContent.creatingComment"
-                loadingPlacement="top">
 
-                <mcs-comment-box attachedLimit="single"
-                  [allowedMimeType]="['image/jpeg', 'image/png', 'image/bmp', 'text/plain']"
-                  (onAddComment)="createComment($event)">
-                </mcs-comment-box>
-              </mcs-loader>
-            </div>
+        <div class="container-wrapper grid-column">
+          <h2 class="container-header">{{ textContent.attachments }}</h2>
+          <ng-container *ngIf="selectedTicket.attachments | mcsIsNotNullOrEmpty; else noAttachments">
+            <mcs-list spacing="small">
+              <mcs-list-item *ngFor="let attachment of selectedTicket.attachments">
+                <mcs-file-download [fileType]="attachment.contentType"
+                  [downloading]="isDownloading(attachment?.id)"
+                  (download)="downloadAttachment(selectedTicket, attachment)"
+                  mcsId="download-attachment"
+                  mcsEventTracker="download-attachment"
+                  mcsEventCategory="ticket"
+                  mcsEventLabel="ticket-details-page">
+                  {{ attachment.fileName }}
+                </mcs-file-download>
+              </mcs-list-item>
+            </mcs-list>
           </ng-container>
 
-          <ng-container *ngIf="activities | mcsIsNotNullOrEmpty; else noActivities">
-            <div>
-              <mcs-ticket-activity [ticketId]="ticket.id"
-                class="vspace-xsmall"
-                *ngFor="let activity of activities; trackBy: trackByFn"
-                [activity]="activity">
-              </mcs-ticket-activity>
-            </div>
-          </ng-container>
+          <ng-template #noAttachments>
+            <mcs-data-status-empty>
+              {{ textContent.missingAttachmentsLabel }}
+            </mcs-data-status-empty>
+          </ng-template>
+        </div>
+      </div>
+
+      <!-- Ticket Activities -->
+      <div class="container-wrapper">
+        <h2 class="container-header">{{ textContent.activity }}</h2>
+      </div>
+      <div class="block-items-medium">
+        <ng-container *mcsAccessControl="['TicketCommentCreate']">
+          <div *mcsExclusiveForAccount="'default'" class="position-relative">
+            <mcs-comment-box attachedLimit="single" [disabled]="creatingComment$ | async"
+              [allowedMimeType]="['image/jpeg', 'image/png', 'image/bmp', 'text/plain']"
+              (onAddComment)="createComment(selectedTicket, $event)">
+            </mcs-comment-box>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="ticketActivites$ | async as ticketActivities">
+          <div *ngIf="ticketActivities | mcsIsNotNullOrEmpty; else noActivities">
+            <mcs-ticket-activity *ngFor="let activity of ticketActivities"
+              class="vspace-xsmall"
+              [ticketId]="selectedTicket.id"
+              [activity]="activity">
+            </mcs-ticket-activity>
+          </div>
           <ng-template #noActivities>
             <mcs-data-status-empty>
               {{ textContent.missingActivitiesLabel }}
             </mcs-data-status-empty>
           </ng-template>
-        </div>
+        </ng-container>
       </div>
-    </mcs-loader>
+    </div>
   </mcs-content-panel>
 </mcs-page>

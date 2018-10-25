@@ -21,7 +21,6 @@ import {
 import {
   McsTextContentProvider,
   McsErrorHandlerService,
-  CoreDefinition,
   McsDataStatusFactory
 } from '@app/core';
 import {
@@ -66,13 +65,6 @@ export class ServerProvisioningComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy() {
     unsubscribeSubject(this._destroySubject);
-  }
-
-  /**
-   * Returns status icon key
-   */
-  public get statusIconKey(): string {
-    return CoreDefinition.ASSETS_GIF_LOADER_SPINNER;
   }
 
   /**

@@ -12,7 +12,8 @@ import {
 } from '../enumerations/ticket-status';
 import {
   TicketSubType,
-  TicketSubTypeSerialization
+  TicketSubTypeSerialization,
+  ticketSubTypeText
 } from '../enumerations/ticket-subtype';
 import { McsTicketComment } from './mcs-ticket-comment';
 import { McsTicketClosureInformation } from './mcs-ticket-closure-information';
@@ -125,5 +126,12 @@ export class McsTicket extends McsEntityBase {
    */
   public get resolved(): boolean {
     return this.state === TicketStatus.Resolved;
+  }
+
+  /**
+   * Returns the ticket sub type label
+   */
+  public get subTypeLabel(): string {
+    return ticketSubTypeText[this.subType];
   }
 }

@@ -1,7 +1,8 @@
 @import "../../../styles/shared/base";
 
-$content-large-padding: $space-large $space-xxlarge $space-large $space-large;
-$content-small-padding: $space-large $space-medium $space-large $space-large;
+// Content Panel
+$content-large-padding: $space-large;
+$content-small-padding: $space-medium;
 
 // Main Page
 $page-border-color: $color-grey-05;
@@ -152,28 +153,21 @@ $left-panel-navigation-collapse-padding: 6px;
     }
 
     // Content Panel Styling with scrollable x and y
-    mcs-content-panel {
-      overflow: hidden;
-    }
     .content-panel-wrapper {
-      @include flex(1 1 auto);
-      outline: none;
-      display: block;
       position: relative;
-      overflow: auto;
-      padding: $content-large-padding;
-      @include breakpoint(small) {
-        padding: $content-small-padding
-      }
+      @include display-flex(row);
+      @include flex(auto);
+      overflow: hidden;
 
-      .content-wrapper {
-        display: inline-block;
-        @include breakpoint(xsmall) {
-          display: block;
-        }
+      .content-panel {
+        @include flex(1 1 auto);
+        display: block;
+        outline: none;
+        position: relative;
+        padding: $content-large-padding;
 
-        .title {
-          margin-bottom: $space-xlarge;
+        @include breakpoint(small) {
+          padding: $content-small-padding;
         }
       }
     }

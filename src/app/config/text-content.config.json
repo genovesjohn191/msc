@@ -303,11 +303,11 @@
     "server": {
       "header": "Servers",
       "loading": "Loading server details.",
+      "loadingResourceDetails": "Loading server properties.",
       "leftPanelHeader": "Virtual Server Filter",
       "serverBusyLabel": "This server is currently busy and some actions may be temporarily unavailable.",
       "management": {
         "label": "Management",
-        "loading": "Loading server properties.",
         "vmProperties": {
           "title": "VM Properties",
           "status": "Status",
@@ -741,6 +741,7 @@
     "mediaStepDetails": {
       "label": "Media Details",
       "description": "Your media will be uploaded into the default Storage Policy for your organisation.",
+      "loadingResources": "Loading media resources.",
       "selectResources": "Select a resource",
       "selectResourcesHelp": "The VDC you would like to make this media available to.",
       "mediaName": "Enter media name",
@@ -762,8 +763,7 @@
     "mediaStepGo": {
       "label": "Go!",
       "description": "Your media is uploading and will be available shortly. You can track progress from the notifications menu at the top of the portal."
-    },
-    "loadingResources": "Loading media resources."
+    }
   },
   "tickets": {
     "header": "Tickets",

@@ -7,13 +7,16 @@ import {
   EventEmitter,
   ElementRef,
   ChangeDetectorRef,
-  ViewChild
+  ViewChild,
+  ContentChild,
+  AfterContentInit
 } from '@angular/core';
 import { CoreDefinition } from '@app/core';
 import {
   coerceBoolean,
   isNullOrEmpty
 } from '@app/utilities';
+import { IdDirective } from '../../directives';
 
 // Unique Id that generates during runtime
 let nextUniqueId = 0;
@@ -30,16 +33,15 @@ let nextUniqueId = 0;
   }
 })
 
-export class RadioButtonComponent {
+export class RadioButtonComponent implements AfterContentInit {
+
+  public generatedId: string;
 
   @Output()
   public change = new EventEmitter<RadioButtonComponent>();
 
   @Input()
   public name: string;
-
-  @Input()
-  public id: string = `mcs-radio-button-${nextUniqueId++}`;
 
   @Input()
   public get checked(): boolean { return this._checked; }
@@ -59,16 +61,30 @@ export class RadioButtonComponent {
   @ViewChild('inputElement')
   private _inputElement: ElementRef;
 
+  @ContentChild(IdDirective)
+  private _idElement: IdDirective;
+
+  constructor(private _changeDetectorRef: ChangeDetectorRef) { }
+
+  public ngAfterContentInit() {
+    Promise.resolve().then(() => {
+      this.generatedId = isNullOrEmpty(this._idElement) ?
+        `mcs-radio-button-${nextUniqueId++}` :
+        this._idElement.generateNewHashId();
+    });
+  }
+
+  /**
+   * Returns the radio button icon key based on the checked status
+   */
   public get radioButtonIconKey(): string {
     return this.checked ? CoreDefinition.ASSETS_SVG_RADIO_CHECKED :
       CoreDefinition.ASSETS_SVG_RADIO_UNCHECKED;
   }
 
-  constructor(
-    private _changeDetectorRef: ChangeDetectorRef,
-    // private _elementRef: ElementRef
-  ) { }
-
+  /**
+   * Refresh the view of radio button component
+   */
   public markForCheck(): void {
     this._changeDetectorRef.markForCheck();
   }

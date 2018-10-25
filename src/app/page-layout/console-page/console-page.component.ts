@@ -91,10 +91,6 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
     return CoreDefinition.ASSETS_SVG_KEYBOARD;
   }
 
-  public get loadingIconKey(): string {
-    return CoreDefinition.ASSETS_GIF_LOADER_SPINNER;
-  }
-
   public get startIconKey(): string {
     return CoreDefinition.ASSETS_SVG_START;
   }

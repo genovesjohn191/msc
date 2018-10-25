@@ -1,6 +1,13 @@
 <mcs-form-field>
   <input mcsInput type="text" #search placeholder="Type to search..."
     (keyup)="onChangeKeyEvent(search.value)"
-    (keyup.enter)="onEnterKeyUpEvent(search.value)">
-  <mcs-icon [key]="iconKey" size="small"></mcs-icon>
+    (keyup.enter)="onEnterKeyUpEvent(search.value)"
+    [attr.id]="generatedId">
+
+  <ng-container *ngIf="searching; else iconElement">
+    <mcs-loader size="small"></mcs-loader>
+  </ng-container>
+  <ng-template #iconElement>
+    <mcs-icon [key]="searchIconKey" size="small"></mcs-icon>
+  </ng-template>
 </mcs-form-field>

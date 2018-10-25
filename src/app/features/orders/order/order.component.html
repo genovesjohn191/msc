@@ -1,4 +1,5 @@
-<mcs-page header="{{ textContent.header | mcsTextPlaceholder: 'orderId': order?.orderId }}">
+<mcs-page
+  header="{{ textContent.header | mcsTextPlaceholder: 'orderId': (order$ | async)?.orderId }}">
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef>
 
@@ -17,10 +18,8 @@
 
   <!-- Content Panel -->
   <mcs-content-panel *mcsContentPanelDef>
-    <mcs-loader [subscriptions]="orderSubscription"
-      [loadingText]="textContent.loading"
-      loadingPlacement="top">
 
+    <ng-container *ngIf="order$ | async as order">
       <!-- Order details -->
       <div class="container-wrapper limited-view">
         <h2 class="container-header">{{ textContent.description }}</h2>
@@ -126,7 +125,6 @@
         <mcs-header-row *mcsHeaderRowDef="orderItemsColumns"></mcs-header-row>
         <mcs-data-row *mcsDataRowDef="let row; columns: orderItemsColumns;"></mcs-data-row>
       </mcs-table>
-
-    </mcs-loader>
+    </ng-container>
   </mcs-content-panel>
 </mcs-page>

@@ -87,10 +87,6 @@ export class ServersComponent
     return [ServerCommand.Scale, ServerCommand.Clone];
   }
 
-  public get spinnerIconKey(): string {
-    return CoreDefinition.ASSETS_GIF_LOADER_SPINNER;
-  }
-
   public get addIconKey(): string {
     return CoreDefinition.ASSETS_FONT_PLUS;
   }
