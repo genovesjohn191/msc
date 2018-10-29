@@ -4,20 +4,26 @@
 </a>
 
 <ng-template #cogContent>
-  <div class="cog-container">
-    <a mcsEventTracker="attach"
+  <div class="action-items-block-wrapper">
+    <a mcsButton="basic" color="white"
+      mcsId
+      mcsEventTracker="attach"
       mcsEventCategory="media"
       mcsEventLabel="media-command-tool">
       {{ mediaCommandAttachText }}
     </a>
 
-    <a mcsEventTracker="delete"
+    <a mcsButton="basic" color="white"
+      mcsId
+      mcsEventTracker="delete"
       mcsEventCategory="media"
       mcsEventLabel="media-command-tool">
       {{ mediaCommandDeleteText }}
     </a>
 
-    <a mcsEventTracker="rename"
+    <a mcsButton="basic" color="white"
+      mcsId
+      mcsEventTracker="rename"
       mcsEventCategory="media"
       mcsEventLabel="media-command-tool">
       {{ mediaCommandRenameText }}

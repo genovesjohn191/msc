@@ -156,11 +156,11 @@ $left-panel-navigation-collapse-padding: 6px;
     .content-panel-wrapper {
       position: relative;
       @include display-flex(row);
-      @include flex(auto);
+      @include flex(1);
       overflow: hidden;
 
       .content-panel {
-        @include flex(1 1 auto);
+        @include flex(1);
         display: block;
         outline: none;
         position: relative;

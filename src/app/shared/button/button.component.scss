@@ -10,7 +10,6 @@ $button-padding: 0 15px;
 // Fonts
 $button-default-font-size: 12;
 $button-medium-font-size: 14;
-$button-font-family: $circular-pro-bold;
 // Theme colors
 $button-white-bg-color: $color-white;
 $button-primary-bg-color: $color-primary-01;
@@ -64,7 +63,6 @@ $button-error-bg-color: $color-red-00;
   box-sizing: border-box;
   position: relative;
   background-color: $button-bg-color;
-  font-family: $button-font-family;
   line-height: $button-default-size;
   @include font-size($button-default-font-size);
   @include transform(translate3d(0, 0, 0));
@@ -96,6 +94,15 @@ $button-error-bg-color: $color-red-00;
   &.medium {
     line-height: $button-medium-size;
     @include font-size($button-medium-font-size);
+  }
+}
+
+a.button-wrapper {
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: none;
+    color: inherit;
   }
 }
 
@@ -180,11 +187,12 @@ $button-error-bg-color: $color-red-00;
 }
 
 .button-wrapper:hover .button-focus-overlay {
-  opacity: 1;
+  opacity: 0.4;
 }
 
 .button-focus-overlay {
   opacity: 0;
+  background: rgba($color-black, 0.12);
   @include border-radius(inherit);
   @include transition((
     opacity 200ms cubic-bezier(0.35, 0, 0.25, 1),
