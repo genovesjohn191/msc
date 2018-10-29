@@ -1,18 +1,18 @@
 <div class="grid-row">
-  <div class="grid-column container-wrapper">
+  <!-- VDC Properties -->
+  <div class="grid-column container-wrapper" mcsId="vdc-properties">
     <h2 class="container-header">{{ textContent.vdcProperties.title }}</h2>
     <mcs-list spacing="xsmall">
-      <!-- Service Type -->
       <mcs-list-item class="form-field-inline">
         <span>{{ textContent.vdcProperties.serviceType }}:</span>
         <span [innerHTML]="selectedVdc?.serviceTypeLabel | mcsDataLabel"></span>
       </mcs-list-item>
-      <!-- Zone -->
+
       <mcs-list-item class="form-field-inline">
         <span>{{ textContent.vdcProperties.zone }}:</span>
         <span [innerHTML]="selectedVdc?.availabilityZone | mcsDataLabel"></span>
       </mcs-list-item>
-      <!-- Configuration -->
+
       <mcs-list-item class="form-field-inline">
         <span>{{ textContent.vdcProperties.configuration }}:</span>
         <span [innerHTML]="selectedVdc?.compute?.memoryLimitMBLabel | mcsDataLabel"></span>
@@ -22,8 +22,8 @@
     </mcs-list>
   </div>
 
-  <!-- VCloud -->
-  <div class="grid-column container-wrapper">
+  <!-- VCloud Director -->
+  <div class="grid-column container-wrapper" mcsId="vdc-vcloud-director">
     <h2 class="thumbnail-title container-header">{{ textContent.vcloud.title }}</h2>
     <mcs-list spacing="xsmall">
       <ng-container *mcsAccessControl="['VmEdit']">
@@ -50,7 +50,8 @@
 </div>
 
 <div class="grid-row">
-  <div class="grid-column container-wrapper">
+  <!-- Network Information -->
+  <div class="grid-column container-wrapper" mcsId="vdc-network-information">
     <h2 class="container-header container-header">{{ textContent.networkInformation.title }}</h2>
     <div class="vertical-items-spacing-medium">
       <span>{{ textContent.networkInformation.description }}</span>
@@ -70,7 +71,8 @@
     </div>
   </div>
 
-  <div class="grid-column container-wrapper">
+  <!-- Storage Profiles -->
+  <div class="grid-column container-wrapper" mcsId="vdc-storage-profiles">
     <h2 class="inline-items-small container-header">
       <mcs-icon *ngIf="hasLowStorage" [key]="warningIconKey"></mcs-icon>
       <span>{{ textContent.storageProfiles.title }}</span>
@@ -83,7 +85,7 @@
       </a>
     </h2>
 
-    <div class="vertical-items-spacing-medium">
+    <div class="block-items-medium">
       <span *ngIf="hasLowStorage">{{ storageSummary }}</span>
       <mcs-accordion [multi]="true">
         <mcs-accordion-panel *ngFor="let storage of selectedVdc.storage; let i = index"

@@ -751,7 +751,7 @@
         "selectResourceRequired": "You must select a resource",
         "selectResourceCatalog": "You must select a catalog",
         "mediaNameRequired": "Media name must be entered",
-        "mediaNameInvalid": "Media name can only contain letters, numbers, spaces or hyphens",
+        "mediaNameInvalid": "Media name can only contain letters, numbers or hyphens",
         "mediaUrlRequired": "Media url must be entered",
         "mediaUrlInvalid": "Invalid url format",
         "mediaUploadError": "Unfortunately an error occurred and we couldn't upload your media at this time. Please try again."
