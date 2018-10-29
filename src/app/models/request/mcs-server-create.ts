@@ -1,13 +1,13 @@
 import { JsonProperty } from 'json-object-mapper';
-import { McsServerClientObject } from './mcs-server-client-object';
 import { McsServerCreateStorage } from './mcs-server-create-storage';
 import { McsServerCreateNic } from './mcs-server-create-nic';
 import {
   ServerImageType,
   ServerImageTypeSerialization
 } from '../enumerations/server-image-type.enum';
+import { McsApiJobRequestBase } from '../mcs-api-job-request-base';
 
-export class McsServerCreate {
+export class McsServerCreate extends McsApiJobRequestBase {
   public platform: string;
   public resource: string;
   public name: string;
@@ -23,9 +23,6 @@ export class McsServerCreate {
   @JsonProperty({ type: McsServerCreateNic })
   public network: McsServerCreateNic;
 
-  @JsonProperty({ type: McsServerClientObject })
-  public clientReferenceObject: McsServerClientObject;
-
   @JsonProperty({
     type: ServerImageType,
     serializer: ServerImageTypeSerialization,
@@ -34,6 +31,7 @@ export class McsServerCreate {
   public imageType: ServerImageType;
 
   constructor() {
+    super();
     this.platform = undefined;
     this.resource = undefined;
     this.name = undefined;
@@ -45,6 +43,5 @@ export class McsServerCreate {
     this.serviceId = undefined;
     this.storage = undefined;
     this.network = undefined;
-    this.clientReferenceObject = undefined;
   }
 }

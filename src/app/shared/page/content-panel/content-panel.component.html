@@ -1,4 +1,4 @@
-<mcs-loading *ngIf="isLoading$ | async">
+<mcs-loading *ngIf="isLoading$ | async" [@fadeOut]>
   <span *ngIf="loadingText$ | async as loadingText">
     {{ loadingText }}
   </span>

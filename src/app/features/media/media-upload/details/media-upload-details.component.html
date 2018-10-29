@@ -20,8 +20,8 @@
       <div class="item-margin">
         <mcs-form-field>
           <mcs-select [formControl]="fcResources" required
-            (change)="onChangeResource($event)"
             mcsId="select-resource"
+            (change)="onChangeResource($event)"
             [placeholder]="textContent.selectResources"
             [mcsContextualHelp]="textContent.selectResourcesHelp">
 
@@ -41,10 +41,35 @@
         </mcs-form-field>
       </div>
 
+      <!-- Catalog Select -->
+      <div class="item-margin">
+        <mcs-form-field>
+          <mcs-select [formControl]="fcCatalogs" required
+            mcsId="select-catalog"
+            (change)="onChangeCatalog($event)"
+            [placeholder]="textContent.selectCatalog"
+            [mcsContextualHelp]="textContent.selectCatalogHelp">
+
+            <mcs-option-group>
+              <ng-container *mcsOptionGroupHeader>
+                {{ textContent.selectCatalogHeader }}
+              </ng-container>
+              <mcs-option *ngFor="let catalog of catalogItems$ | async" [value]="catalog">
+                {{ catalog.name }}
+              </mcs-option>
+            </mcs-option-group>
+          </mcs-select>
+
+          <mcs-error mcsError errorState="required">
+            {{ textContent.errors.selectResourceCatalog }}
+          </mcs-error>
+        </mcs-form-field>
+      </div>
+
       <!-- Media Name  -->
       <div class="item-margin">
         <mcs-form-field>
-          <input mcsInput #mediaName mcsSetFocus required mcsId="input-media-name"
+          <input mcsInput #mediaName required mcsId="input-media-name" mcsSetFocus
             [placeholder]="textContent.mediaName" maxlength="25"
             [formControl]="fcMediaName"
             [mcsContextualHelp]="textContent.mediaNameHelp">

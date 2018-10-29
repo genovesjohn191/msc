@@ -28,6 +28,7 @@ export enum TaskType {
   AttachServerMedia = 3015,
   DetachServerMedia = 3016,
   RenameServer = 3017,
+  CreateResourceCatalogItem = 3018,
 
   // Orchestration Ordering
   // Range 5000-6999

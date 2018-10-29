@@ -1,5 +1,5 @@
 import { JsonProperty } from 'json-object-mapper';
-import { isNullOrEmpty } from '@app/utilities';
+import { isNullOrEmpty, getSafeProperty } from '@app/utilities';
 import {
   CoreRoutes,
   McsDateSerialization,
@@ -28,6 +28,7 @@ export class McsJob extends McsEntityBase {
   public errorMessage: string;
   public elapsedTimeInSeconds: number;
   public clientReferenceObject: any;
+  public batchId: string;
 
   @JsonProperty({ type: McsTask })
   public tasks: McsTask[];
@@ -87,6 +88,7 @@ export class McsJob extends McsEntityBase {
     this.elapsedTimeInSeconds = undefined;
     this.tasks = undefined;
     this.clientReferenceObject = undefined;
+    this.batchId = undefined;
     this.status = undefined;
     this.createdOn = undefined;
     this.updatedOn = undefined;
@@ -142,15 +144,16 @@ export class McsJob extends McsEntityBase {
 
   /**
    * Returns the job link based on its job type
-   *
-   * TODO: Need to consider links based on status.
-   * Do we need to use base class and extend it?
+   * @deprecated Use the resourceLink instead because we are
+   * removing this property when the job page details is finished
    */
   public get link(): string {
     let jobLink: string = '';
     switch (this.type) {
       case JobType.CreateServer:
       case JobType.CloneServer:
+        // case JobType.CreateResourceCatalogItem:
+        // TODO: Remove comment this once the job details page is finished
         jobLink = `
           ${CoreRoutes.getNavigationPath(RouteKey.ServerCreateProvisioning)}/${this.id}
         `;
@@ -168,5 +171,20 @@ export class McsJob extends McsEntityBase {
    */
   public get hasLink(): boolean {
     return !isNullOrEmpty(this.link);
+  }
+
+  /**
+   * Returns the resource link based on the task provided
+   */
+  public get resourceLink(): string {
+    let completedTask = this.tasks && this.tasks.find((task) => {
+      return task.dataStatus === DataStatus.Success
+        && !isNullOrEmpty(task.referenceObject);
+    });
+    let resourceDynamicPath = getSafeProperty(
+      this.clientReferenceObject, (obj) => obj.resourcePath
+    );
+    let resourceId = getSafeProperty(completedTask, (obj) => obj.referenceObject.resourceId);
+    return !isNullOrEmpty(resourceId) ? `${resourceDynamicPath}/${resourceId}` : undefined;
   }
 }

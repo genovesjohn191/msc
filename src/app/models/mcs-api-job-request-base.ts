@@ -3,7 +3,7 @@ export class McsApiJobRequestBase {
   public batchId?: string;
 
   constructor() {
-    this.clientReferenceObject = undefined;
+    this.clientReferenceObject = {};
     this.batchId = undefined;
   }
 }

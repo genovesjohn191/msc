@@ -450,14 +450,6 @@
       }
     },
     "shared": {
-      "provisioningNotifications": {
-        "deployMultiple": "Deploy Servers",
-        "deploymentInProgress": "Preparing the server deployment process. This may take a moment.",
-        "deploymentCompleted": "Deployment Completed",
-        "deploymentFailed": "Deployment Failed",
-        "viewServersLink": "View your servers",
-        "viewServerLink": "View your server"
-      },
       "renameServerDialog": {
         "title": "Rename Server",
         "information": "Specify the new name for this server:",
@@ -742,8 +734,12 @@
       "label": "Media Details",
       "description": "Your media will be uploaded into the default Storage Policy for your organisation.",
       "loadingResources": "Loading media resources.",
+      "loadingResourceDetails": "Loading resource details.",
       "selectResources": "Select a resource",
       "selectResourcesHelp": "The VDC you would like to make this media available to.",
+      "selectCatalog": "Select a catalog",
+      "selectCatalogHeader": "Catalog items",
+      "selectCatalogHelp": "The catalog you would like to make this media available to.",
       "mediaName": "Enter media name",
       "mediaNameHelp": "A friendly name for your new media. If not supplied, we'll use the original filename from your media.",
       "mediaUrl": "Enter media URL",
@@ -753,6 +749,7 @@
       "mediaUploadDismissLabel": "DISMISS",
       "errors": {
         "selectResourceRequired": "You must select a resource",
+        "selectResourceCatalog": "You must select a catalog",
         "mediaNameRequired": "Media name must be entered",
         "mediaNameInvalid": "Media name can only contain letters, numbers, spaces or hyphens",
         "mediaUrlRequired": "Media url must be entered",
@@ -1096,6 +1093,13 @@
   "shared": {
     "safeToNavigateAway": {
       "message": "Your changes may not be saved. Are you sure you want to leave this page?"
+    },
+    "jobsProvisioning": {
+      "deployMultiple": "Deploy Servers",
+      "deploymentInProgress": "Preparing the server deployment process. This may take a moment.",
+      "deploymentCompleted": "Deployment Completed",
+      "deploymentFailed": "Deployment Failed",
+      "viewDetails": "View details"
     },
     "wizard": {
       "previous": "Back",

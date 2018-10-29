@@ -6,7 +6,7 @@
       <div class="vertical-items-spacing-medium">
         <ng-content *ngIf="hasInProgressJob" select="[mcsProvisioningText]"></ng-content>
         <h2 class="title">{{ getTitle() }}</h2>
-        <mcs-progress-bar *ngIf="hasInProgressJob" [@fadeIn]
+        <mcs-progress-bar *ngIf="hasInProgressJob && !hideProgressBar" [@fadeIn]
           [(ngModel)]="progressValue"
           [maxValue]="progressMax"></mcs-progress-bar>
       </div>
@@ -66,10 +66,10 @@
                   <span>{{ textContent.deploymentCompleted }}</span>
                 </div>
                 <div class="space-top-medium">
-                  <button mcsButton arrow="right" size="small"
-                    (click)="onViewServerPage(job.tasks)" mcsId="view-job">
-                    {{ getRedirectionLinkText(job.tasks) }}
-                  </button>
+                  <a mcsButton arrow="right" size="small"
+                    [mcsRouterLink]="job.resourceLink" mcsId="view-job">
+                    {{ textContent.viewDetails }}
+                  </a>
                 </div>
               </ng-container>
 

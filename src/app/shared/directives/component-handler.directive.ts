@@ -9,7 +9,8 @@ import {
 import { getSafeProperty } from '@app/utilities';
 
 @Directive({
-  selector: '[mcsComponentHandler]'
+  selector: '[mcsComponentHandler]',
+  exportAs: 'mcsComponentHandler'
 })
 export class ComponentHandlerDirective implements OnInit {
   constructor(

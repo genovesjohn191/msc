@@ -9,12 +9,14 @@ import {
   McsNotificationEventsService,
   McsDialogService
 } from '@app/core';
-import { isNullOrEmpty, getSafeProperty } from '@app/utilities';
+import {
+  isNullOrEmpty,
+  getSafeProperty
+} from '@app/utilities';
 import {
   ServerCommand,
   RouteKey,
   McsServer,
-  McsServerClientObject,
   McsJob,
   JobType,
   DataStatus
@@ -133,7 +135,7 @@ export class ServersServices {
             serverId: data.server.id,
             powerState: data.server.powerState,
             commandAction: action
-          } as McsServerClientObject)
+          })
           .pipe(
             catchError((error) => {
               this.clearServerSpinner(data.server);

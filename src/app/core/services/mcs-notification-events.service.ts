@@ -43,6 +43,9 @@ export class McsNotificationEventsService {
   /** Event that emits when scale server executed */
   public updateServerComputeEvent = new ReplaySubject<McsJob>(DEFAULT_CACHE_BUFFER);
 
+  /** Event that emits when upload media executed */
+  public createResourceCatalogItemEvent = new ReplaySubject<McsJob>(DEFAULT_CACHE_BUFFER);
+
   /** Event that emits when attach server media executed */
   public attachServerMediaEvent = new ReplaySubject<McsJob>(DEFAULT_CACHE_BUFFER);
 
@@ -158,6 +161,10 @@ export class McsNotificationEventsService {
 
         case JobType.UpdateServerCompute:
           this.updateServerComputeEvent.next(notification);
+          break;
+
+        case JobType.CreateResourceCatalogItem:
+          this.createResourceCatalogItemEvent.next(notification);
           break;
 
         case JobType.AttachServerMedia:

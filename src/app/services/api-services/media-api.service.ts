@@ -8,7 +8,6 @@ import {
   McsApiService,
   McsLoggerService
 } from '@app/core';
-import { HttpClient } from '@angular/common/http';
 import { isNullOrEmpty } from '@app/utilities';
 import {
   McsApiSuccessResponse,
@@ -17,9 +16,11 @@ import {
   McsJob,
   McsResourceMedia,
   McsResourceMediaServer,
-  McsServerAttachMedia
+  McsServerAttachMedia,
+  McsResourceCatalogItemCreate
 } from '@app/models';
 import { ServersApiService } from './servers-api.service';
+import { ResourcesApiService } from './resources-api.service';
 
 /**
  * Media Service Class
@@ -28,10 +29,10 @@ import { ServersApiService } from './servers-api.service';
 export class MediaApiService {
 
   constructor(
-    private _httpClient: HttpClient,
     private _mcsApiService: McsApiService,
     private _loggerService: McsLoggerService,
-    private _serversService: ServersApiService
+    private _serversService: ServersApiService,
+    private _resourcesService: ResourcesApiService
   ) { }
 
   /**
@@ -131,6 +132,15 @@ export class MediaApiService {
   }
 
   /**
+   * An observable method that sends a request to API for uploading media
+   * @param resourceId Resource ID where the media would be uploaded
+   * @param uploadDetails Upload details of the media to be provided
+   */
+  public uploadMedia(resourceId: string, uploadDetails: McsResourceCatalogItemCreate) {
+    return this._resourcesService.createCatalogItem(resourceId, uploadDetails);
+  }
+
+  /**
    * Detaches the server to the existing media
    * *Note: This will send a job (notification)
    *
@@ -158,18 +168,5 @@ export class MediaApiService {
     mediaDetails: McsServerAttachMedia
   ): Observable<McsApiSuccessResponse<McsJob>> {
     return this._serversService.attachServerMedia(serverId, mediaDetails);
-  }
-
-  public checkUrlExist(url: string): Observable<boolean> {
-    return this._httpClient.head(url).pipe(
-      finalize(() => {
-        this._loggerService.traceEnd(`"${url}" request ended.`);
-      }),
-      map((response) => {
-        this._loggerService.traceStart(url);
-        this._loggerService.traceInfo(`converted response:`, response);
-        return !isNullOrEmpty(response);
-      })
-    );
   }
 }

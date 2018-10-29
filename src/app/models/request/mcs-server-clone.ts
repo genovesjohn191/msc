@@ -1,14 +1,10 @@
-import { McsServerClientObject } from './mcs-server-client-object';
-import { JsonProperty } from 'json-object-mapper';
+import { McsApiJobRequestBase } from '../mcs-api-job-request-base';
 
-export class McsServerClone {
+export class McsServerClone extends McsApiJobRequestBase {
   public name: string;
 
-  @JsonProperty({ type: McsServerClientObject })
-  public clientReferenceObject: McsServerClientObject;
-
   constructor() {
+    super();
     this.name = undefined;
-    this.clientReferenceObject = undefined;
   }
 }

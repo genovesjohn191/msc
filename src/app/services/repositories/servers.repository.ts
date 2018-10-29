@@ -1,8 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  Observable,
-  Subject
-} from 'rxjs';
+import { Observable } from 'rxjs';
 import {
   map,
   takeUntil
@@ -13,7 +10,7 @@ import {
 } from '@app/core';
 import {
   isNullOrEmpty,
-  getSafeProperty
+  McsEventHandler
 } from '@app/utilities';
 import {
   McsApiSuccessResponse,
@@ -31,16 +28,14 @@ import {
 import { ServersApiService } from '../api-services/servers-api.service';
 
 @Injectable()
-export class ServersRepository extends McsRepositoryBase<McsServer> {
-
-  private _resetSubject = new Subject<void>();
+export class ServersRepository extends McsRepositoryBase<McsServer>
+  implements McsEventHandler {
 
   constructor(
     private _serversApiService: ServersApiService,
     private _notificationEvents: McsNotificationEventsService
   ) {
     super();
-    this._listenToAfterDataObtain();
   }
 
   /**
@@ -130,6 +125,83 @@ export class ServersRepository extends McsRepositoryBase<McsServer> {
   }
 
   /**
+   * A virtual method that gets called when all of the obtainment from api are finished
+   */
+  public registerEvents(): void {
+    this._notificationEvents.createServerEvent
+      .pipe(takeUntil(this.eventResetSubject))
+      .subscribe(this._onCreateServer.bind(this));
+
+    this._notificationEvents.cloneServerEvent
+      .pipe(takeUntil(this.eventResetSubject))
+      .subscribe(this._onCloneServer.bind(this));
+
+    this._notificationEvents.renameServerEvent
+      .pipe(takeUntil(this.eventResetSubject))
+      .subscribe(this._onRenameServer.bind(this));
+
+    this._notificationEvents.deleteServerEvent
+      .pipe(takeUntil(this.eventResetSubject))
+      .subscribe(this._onDeleteServer.bind(this));
+
+    this._notificationEvents.changeServerPowerStateEvent
+      .pipe(takeUntil(this.eventResetSubject))
+      .subscribe(this._onPowerStateServer.bind(this));
+
+    this._notificationEvents.updateServerComputeEvent
+      .pipe(takeUntil(this.eventResetSubject))
+      .subscribe(this._onScaleServer.bind(this));
+
+    this._notificationEvents.resetServerPasswordEvent
+      .pipe(takeUntil(this.eventResetSubject))
+      .subscribe(this._updateServerStatusByJob.bind(this));
+
+    this._notificationEvents.attachServerMediaEvent
+      .pipe(takeUntil(this.eventResetSubject))
+      .subscribe(this._updateServerStatusByJob.bind(this));
+
+    this._notificationEvents.detachServerMediaEvent
+      .pipe(takeUntil(this.eventResetSubject))
+      .subscribe(this._updateServerStatusByJob.bind(this));
+
+    this._notificationEvents.createServerDisk
+      .pipe(takeUntil(this.eventResetSubject))
+      .subscribe(this._updateServerStatusByJob.bind(this));
+
+    this._notificationEvents.updateServerDisk
+      .pipe(takeUntil(this.eventResetSubject))
+      .subscribe(this._updateServerStatusByJob.bind(this));
+
+    this._notificationEvents.deleteServerDisk
+      .pipe(takeUntil(this.eventResetSubject))
+      .subscribe(this._updateServerStatusByJob.bind(this));
+
+    this._notificationEvents.createServerNic
+      .pipe(takeUntil(this.eventResetSubject))
+      .subscribe(this._updateServerStatusByJob.bind(this));
+
+    this._notificationEvents.updateServerNic
+      .pipe(takeUntil(this.eventResetSubject))
+      .subscribe(this._updateServerStatusByJob.bind(this));
+
+    this._notificationEvents.deleteServerNic
+      .pipe(takeUntil(this.eventResetSubject))
+      .subscribe(this._updateServerStatusByJob.bind(this));
+
+    this._notificationEvents.createServerSnapshot
+      .pipe(takeUntil(this.eventResetSubject))
+      .subscribe(this._updateServerStatusByJob.bind(this));
+
+    this._notificationEvents.applyServerSnapshot
+      .pipe(takeUntil(this.eventResetSubject))
+      .subscribe(this._updateServerStatusByJob.bind(this));
+
+    this._notificationEvents.deleteServerSnapshot
+      .pipe(takeUntil(this.eventResetSubject))
+      .subscribe(this._updateServerStatusByJob.bind(this));
+  }
+
+  /**
    * This will be automatically called in the repoistory based class
    * to populate the data obtained
    */
@@ -152,99 +224,6 @@ export class ServersRepository extends McsRepositoryBase<McsServer> {
    */
   protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<McsServer>> {
     return this._serversApiService.getServer(recordId);
-  }
-
-  /**
-   * Listens to after data obtained from api event
-   */
-  private _listenToAfterDataObtain(): void {
-    this.afterDataObtainedFromApi.subscribe(() => {
-      let alreadyRegistered = !isNullOrEmpty(
-        getSafeProperty(this._resetSubject, (obj) => obj.observers.length)
-      );
-      if (alreadyRegistered) { return; }
-
-      // Drop the current subscription to prevent memory leak.
-      this._resetSubject.next();
-      this._registerJobEvents();
-    });
-  }
-
-  /**
-   * Register jobs/notifications events
-   */
-  private _registerJobEvents(): void {
-    this._notificationEvents.createServerEvent
-      .pipe(takeUntil(this._resetSubject))
-      .subscribe(this._onCreateServer.bind(this));
-
-    this._notificationEvents.cloneServerEvent
-      .pipe(takeUntil(this._resetSubject))
-      .subscribe(this._onCloneServer.bind(this));
-
-    this._notificationEvents.renameServerEvent
-      .pipe(takeUntil(this._resetSubject))
-      .subscribe(this._onRenameServer.bind(this));
-
-    this._notificationEvents.deleteServerEvent
-      .pipe(takeUntil(this._resetSubject))
-      .subscribe(this._onDeleteServer.bind(this));
-
-    this._notificationEvents.changeServerPowerStateEvent
-      .pipe(takeUntil(this._resetSubject))
-      .subscribe(this._onPowerStateServer.bind(this));
-
-    this._notificationEvents.updateServerComputeEvent
-      .pipe(takeUntil(this._resetSubject))
-      .subscribe(this._onScaleServer.bind(this));
-
-    this._notificationEvents.resetServerPasswordEvent
-      .pipe(takeUntil(this._resetSubject))
-      .subscribe(this._updateServerStatusByJob.bind(this));
-
-    this._notificationEvents.attachServerMediaEvent
-      .pipe(takeUntil(this._resetSubject))
-      .subscribe(this._updateServerStatusByJob.bind(this));
-
-    this._notificationEvents.detachServerMediaEvent
-      .pipe(takeUntil(this._resetSubject))
-      .subscribe(this._updateServerStatusByJob.bind(this));
-
-    this._notificationEvents.createServerDisk
-      .pipe(takeUntil(this._resetSubject))
-      .subscribe(this._updateServerStatusByJob.bind(this));
-
-    this._notificationEvents.updateServerDisk
-      .pipe(takeUntil(this._resetSubject))
-      .subscribe(this._updateServerStatusByJob.bind(this));
-
-    this._notificationEvents.deleteServerDisk
-      .pipe(takeUntil(this._resetSubject))
-      .subscribe(this._updateServerStatusByJob.bind(this));
-
-    this._notificationEvents.createServerNic
-      .pipe(takeUntil(this._resetSubject))
-      .subscribe(this._updateServerStatusByJob.bind(this));
-
-    this._notificationEvents.updateServerNic
-      .pipe(takeUntil(this._resetSubject))
-      .subscribe(this._updateServerStatusByJob.bind(this));
-
-    this._notificationEvents.deleteServerNic
-      .pipe(takeUntil(this._resetSubject))
-      .subscribe(this._updateServerStatusByJob.bind(this));
-
-    this._notificationEvents.createServerSnapshot
-      .pipe(takeUntil(this._resetSubject))
-      .subscribe(this._updateServerStatusByJob.bind(this));
-
-    this._notificationEvents.applyServerSnapshot
-      .pipe(takeUntil(this._resetSubject))
-      .subscribe(this._updateServerStatusByJob.bind(this));
-
-    this._notificationEvents.deleteServerSnapshot
-      .pipe(takeUntil(this._resetSubject))
-      .subscribe(this._updateServerStatusByJob.bind(this));
   }
 
   /**
