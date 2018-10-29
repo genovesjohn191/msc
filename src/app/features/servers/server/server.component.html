@@ -121,7 +121,8 @@
         <mcs-tab [canSelect]="false" customClass="right-align"
           *mcsAccessControl="['VmPowerStateEdit']">
           <ng-template mcsTabLabel>
-            <mcs-server-command [server]="selectedServer"
+            <mcs-server-command mcsId="server-command"
+              [server]="selectedServer"
               (onClick)="executeServerCommand(selectedServer, $event)">
             </mcs-server-command>
           </ng-template>

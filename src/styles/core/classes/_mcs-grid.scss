@@ -3,7 +3,7 @@
   @include display-flex(row);
   @include flex-wrap(wrap);
 
-  @include breakpoint(xsmall) {
+  @include breakpoint(small) {
     @include display-flex(column);
     @include set-items-interval($space-small);
   }
@@ -42,7 +42,7 @@
     justify-content: center;
   }
 
-  @include breakpoint(xsmall) {
+  @include breakpoint(small) {
     padding-left: 0;
     padding-right: 0;
 

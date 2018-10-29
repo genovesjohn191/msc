@@ -280,7 +280,8 @@
             mcsCursor="default"
             mcsStopPropagation
             class="text-center action-data-cell">
-            <mcs-server-command [server]="row" mcsId="server-command"
+            <mcs-server-command mcsId="server-command"
+              [server]="row"
               [excluded]="excludedCommands"
               (onClick)="executeServerCommand(row, $event)"></mcs-server-command>
           </mcs-data-cell>

@@ -3,7 +3,7 @@
   <div [@fadeIn] *ngSwitchDefault>
     <div class="grid-row">
       <!-- VM Properties -->
-      <div class="grid-column container-wrapper">
+      <div class="grid-column container-wrapper" mcsId="vm-properties">
         <h2 class="container-header">{{ textContent.vmProperties.title }}</h2>
         <mcs-list spacing="xsmall">
           <mcs-list-item class="form-field-inline">
@@ -63,7 +63,7 @@
       </div>
 
       <!-- VM Console -->
-      <div class="grid-column container-wrapper hidden-small">
+      <div class="grid-column container-wrapper hidden-small" mcsId="vm-console">
         <h2 class="container-header">{{ textContent.vmConsole.title }}</h2>
         <ng-container *ngIf="!server.consoleEnabled; else consoleTemplate">
           <div class="form-field-block">
@@ -100,7 +100,7 @@
 
     <div class="grid-row">
       <!-- VM Storage -->
-      <div class="grid-column container-wrapper">
+      <div class="grid-column container-wrapper" mcsId="vm-storage">
         <h2 class="container-header">
           <div class="form-field-inline">
             <span>{{ textContent.storage.title }}</span>
@@ -134,7 +134,7 @@
       </div>
 
       <!-- VM NICs -->
-      <div class="grid-column container-wrapper">
+      <div class="grid-column container-wrapper" mcsId="vm-nics">
         <h2 class="container-header">
           <div class="form-field-inline">
             <span>{{ textContent.nics.title }}</span>
@@ -200,7 +200,7 @@
 
     <div class="grid-row">
       <!-- VM Media -->
-      <div class="grid-column container-wrapper">
+      <div class="grid-column container-wrapper" mcsId="vm-media">
         <h2 class="container-header">
           <div class="form-field-inline">
             <span>{{ textContent.media.title }}</span>
@@ -254,7 +254,7 @@
       </div>
 
       <!-- VM Support Identifiers -->
-      <div class="grid-column container-wrapper">
+      <div class="grid-column container-wrapper" mcsId="vm-identifiers">
         <h2 class="container-header">{{ textContent.supportIdentifiers.title }}</h2>
         <mcs-list spacing="xsmall">
           <mcs-list-item class="form-field-inline">
