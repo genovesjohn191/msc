@@ -7,9 +7,9 @@ import {
   async,
   TestBed
 } from '@angular/core/testing';
+import { CoreTestingModule } from '@app/core/testing';
 import { ButtonComponent } from './button.component';
 import { ButtonModule } from './button.module';
-import { CoreTestingModule } from '@app/core/testing';
 
 @Component({
   selector: 'mcs-test-button',
@@ -42,9 +42,8 @@ describe('ButtonComponent', () => {
     TestBed.overrideComponent(TestButtonComponent, {
       set: {
         template: `
-        <button mcsButton id="btnFirst"
+        <button mcsButton="basic" id="btnFirst"
           arrow="right"
-          type="basic"
           size="small"
           color="primary">First Button</button>primary
         `
