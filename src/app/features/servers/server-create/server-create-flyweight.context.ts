@@ -14,7 +14,8 @@ import {
 } from 'rxjs/operators';
 import {
   McsGuid,
-  McsErrorHandlerService
+  McsErrorHandlerService,
+  CoreRoutes
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -32,7 +33,8 @@ import {
   McsOrderItemCreate,
   McsServerCreate,
   McsServerClone,
-  McsResource
+  McsResource,
+  RouteKey
 } from '@app/models';
 import {
   ServersApiService,
@@ -171,6 +173,8 @@ export class ServerCreateFlyweightContext {
     if (serviceType === ServiceType.SelfManaged) {
 
       // Create the server based on its intance
+      serverModel.clientReferenceObject.resourcePath =
+        CoreRoutes.getNavigationPath(RouteKey.ServerDetail);
       serverInstance = serverModel instanceof McsServerCreate ?
         this._createNewSelfManageServer(serverModel) :
         this._createCloneSelfManagedServer(serverModel);

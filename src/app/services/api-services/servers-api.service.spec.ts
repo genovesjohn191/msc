@@ -12,7 +12,6 @@ import {
   McsServer,
   McsServerThumbnail,
   McsServerUpdate,
-  McsServerClientObject,
   ServerCommand,
   McsServerStorageDevice,
   McsServerStorageDeviceUpdate,
@@ -39,7 +38,7 @@ describe('ServersApiService', () => {
     referenceObject: {
       commandAction: 1,
       processingText: 'process'
-    } as McsServerClientObject
+    }
   };
 
   beforeEach(async(() => {

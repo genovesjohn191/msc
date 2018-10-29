@@ -15,7 +15,9 @@ import {
   clearArrayRecord,
   compareStrings,
   mergeArrays,
-  unsubscribeSafely
+  unsubscribeSafely,
+  getSafeProperty,
+  McsEventHandler
 } from '@app/utilities';
 import {
   Search,
@@ -29,12 +31,15 @@ import {
 const DEFAULT_PAGE_INDEX = 1;
 const DEFAULT_PAGE_SIZE = 1000;
 
-export abstract class McsRepositoryBase<T extends McsEntityBase> {
+export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsEventHandler {
   /**
-   * Updated records obtained from each individual call to API (getRecordById)
+   * An event that emits when the data was obtained
+   * `@Note`: This should be use when you are registering events
    */
+  public eventResetSubject = new Subject<void>();
   private _updatedRecordsById: T[] = new Array();
   private _previouslySearched: string;
+  private _getDataRecordsSubscription: Subscription;
 
   /**
    * Get or Set the total records count of the entity
@@ -75,10 +80,9 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> {
     return !isNullOrEmpty(this.dataRecords);
   }
 
-  /**
-   * Data records obtainment subscription
-   */
-  private _getDataRecordsSubscription: Subscription;
+  constructor() {
+    this._subscribeToAfterObtainedData();
+  }
 
   /**
    * Dispose all the resources of the management based such as
@@ -278,6 +282,13 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> {
   }
 
   /**
+   * Registers all the associated events on the interited class
+   */
+  public registerEvents(): void {
+    // Do implementations outside
+  }
+
+  /**
    * Get all records based on type
    */
   protected abstract getAllRecords(
@@ -368,5 +379,23 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> {
   private _resetPaging(paginator: Paginator): void {
     if (isNullOrEmpty(paginator)) { return; }
     paginator.pageIndex = 0;
+  }
+
+  /**
+   * Subscribes to after obtained data observabled
+   */
+  private _subscribeToAfterObtainedData(): void {
+    // We need to reset the subscriptions of the reset subject
+    // in order to reregister and obtain the fresh data
+    // once the data was obtained from API
+    this.afterDataObtainedFromApi.subscribe(() => {
+      let alreadyRegistered = !isNullOrEmpty(
+        getSafeProperty(this.eventResetSubject, (obj) => obj.observers.length)
+      );
+      if (alreadyRegistered) { return; }
+      // Drop the current subscription to prevent memory leak.
+      this.eventResetSubject.next();
+      this.registerEvents();
+    });
   }
 }

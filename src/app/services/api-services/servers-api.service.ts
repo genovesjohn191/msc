@@ -33,7 +33,6 @@ import {
   McsServerClone,
   McsServerUpdate,
   McsServer,
-  McsServerClientObject,
   McsServerThumbnail,
   McsServerOperatingSystem,
   McsServerStorageDevice,
@@ -138,7 +137,7 @@ export class ServersApiService {
   public putServerCommand(
     id: any,
     action: ServerCommand,
-    referenceObject: McsServerClientObject
+    referenceObject: any
   ): Observable<McsApiSuccessResponse<McsJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${id}/power`;
@@ -170,7 +169,7 @@ export class ServersApiService {
    * @param id Server identification
    * @param referenceObject Reference object to obtain during subscribe
    */
-  public resetVmPassword(id: any, referenceObject: McsServerClientObject):
+  public resetVmPassword(id: any, referenceObject: any):
     Observable<McsApiSuccessResponse<McsJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${id}/password/reset`;
@@ -323,7 +322,7 @@ export class ServersApiService {
    */
   public deleteServer(
     id: string,
-    referenceObject: McsServerClientObject
+    referenceObject: any
   ): Observable<McsApiSuccessResponse<McsJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${id}`;
@@ -980,7 +979,7 @@ export class ServersApiService {
             serverId: data.server.id,
             powerState: data.server.powerState,
             commandAction: action
-          } as McsServerClientObject)
+          })
           .pipe(
             catchError((error) => {
               this.clearServerSpinner(data.server);

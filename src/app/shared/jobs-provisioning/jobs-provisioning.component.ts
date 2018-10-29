@@ -9,7 +9,6 @@ import {
   IterableDiffers,
   IterableDiffer
 } from '@angular/core';
-import { Router } from '@angular/router';
 import {
   timer,
   Subject,
@@ -22,8 +21,7 @@ import {
 import {
   CoreDefinition,
   McsTextContentProvider,
-  McsNotificationEventsService,
-  CoreRoutes
+  McsNotificationEventsService
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -34,10 +32,7 @@ import {
 } from '@app/utilities';
 import {
   McsJob,
-  McsTask,
-  TaskType,
   DataStatus,
-  RouteKey,
   JobType
 } from '@app/models';
 
@@ -99,7 +94,6 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
   }
 
   public constructor(
-    private _router: Router,
     private _textContentProvider: McsTextContentProvider,
     private _changeDetectorRef: ChangeDetectorRef,
     private _notificationsEvents: McsNotificationEventsService,
@@ -112,8 +106,7 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
   }
 
   public ngOnInit() {
-    this.textContent = this._textContentProvider.content
-      .servers.shared.provisioningNotifications;
+    this.textContent = this._textContentProvider.content.shared.jobsProvisioning;
     this._createExcludedProgressJobs();
     this._listenToCurrentUserJob();
   }
@@ -155,7 +148,14 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
    * Returns true when there is ongoing job
    */
   public get hasInProgressJob(): boolean {
-    return !this.allJobsCompleted && !this.hasErrorJobs && !this._hideProgressBar;
+    return !this.allJobsCompleted && !this.hasErrorJobs;
+  }
+
+  /**
+   * Returns true when the progress bar will be hidden
+   */
+  public get hideProgressBar(): boolean {
+    return this._hideProgressBar;
   }
 
   /**
@@ -185,42 +185,6 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
    */
   public isJobSuccessful(job: McsJob): boolean {
     return job.dataStatus === DataStatus.Success;
-  }
-
-  /**
-   * View the server page based on tasks provided
-   * @param tasks Tasks to be checked and navigated to
-   */
-  public onViewServerPage(tasks: McsTask[]): void {
-    let serverId = this._getCreatedServerId(tasks);
-    !isNullOrEmpty(serverId) ?
-      this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.ServerDetail), serverId]) :
-      this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.Servers)]);
-  }
-
-  /**
-   * Returns the redirection link text based on tasks provided
-   * @param tasks Tasks to be checked where the server will get from
-   */
-  public getRedirectionLinkText(tasks: McsTask[]): string {
-    let serverId = this._getCreatedServerId(tasks);
-    return !isNullOrEmpty(serverId) ?
-      this.textContent.viewServerLink : this.textContent.viewServersLink;
-  }
-
-  /**
-   * Returns the created server id when the job is done
-   * @param tasks Tasks to get the server details from
-   */
-  private _getCreatedServerId(tasks: McsTask[]): string {
-    if (isNullOrEmpty(tasks)) { return ''; }
-
-    let completedTask = tasks.find((task) => {
-      return (task.type === TaskType.CreateServer || task.type === TaskType.CloneServer)
-        && task.dataStatus === DataStatus.Success && !isNullOrEmpty(task.referenceObject);
-    });
-    return !isNullOrEmpty(completedTask) ?
-      completedTask.referenceObject.resourceId : '';
   }
 
   /**

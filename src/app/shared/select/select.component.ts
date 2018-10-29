@@ -420,8 +420,8 @@ export class SelectComponent extends McsFormFieldControlBase<any>
   private _initializeSelection(): void {
     Promise.resolve().then(() => {
       let selectedValue = getSafeProperty(this.ngControl, (obj) => obj.value) || this._value;
-      let isFirstItemSelected = this.required &&
-        isNullOrEmpty(selectedValue) && !isNullOrEmpty(this._options);
+      let isFirstItemSelected = this.required && !isNullOrEmpty(this._options)
+        && !this._options.find((option) => option.value === selectedValue);
 
       isFirstItemSelected ?
         this._selectItem(this._options.first) :

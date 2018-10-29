@@ -34,8 +34,7 @@ import {
   ServiceType,
   IpAllocationMode,
   McsServer,
-  McsServerClone,
-  McsServerClientObject
+  McsServerClone
 } from '@app/models';
 import { ServersRepository } from '@app/services';
 import { ServerCreateDetailsBase } from '../server-create-details.base';
@@ -129,7 +128,6 @@ export class ServerCloneComponent
 
     let serverClone = new McsServerClone();
     serverClone.name = this.fcServerName.value;
-    serverClone.clientReferenceObject = new McsServerClientObject();
     serverClone.clientReferenceObject.serverId = this.fcTargetServer.value.id;
     return serverClone;
   }

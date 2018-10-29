@@ -47,7 +47,6 @@ export * from './request/mcs-order-item-update';
 export * from './request/mcs-order-merge';
 export * from './request/mcs-order-update';
 export * from './request/mcs-server-attach-media';
-export * from './request/mcs-server-client-object';
 export * from './request/mcs-server-clone';
 export * from './request/mcs-server-create';
 export * from './request/mcs-server-create-nic';
