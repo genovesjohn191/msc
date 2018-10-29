@@ -55,26 +55,6 @@
   }
 }
 
-// Action items
-.action-items {
-  @include display-flex(row);
-  @include align-items(center);
-  justify-content: space-between;
-  margin-bottom: $space-medium;
-
-  > :only-child {
-    margin-left: auto;
-  }
-}
-
-.action-box {
-  border: 1px solid $border-color-dark;
-  @include border-radius($border-radius-small);
-  padding: $space-large;
-  @include display-flex(column);
-  @include set-items-interval($space-medium);
-}
-
 // Items
 .item-margin {
   margin-bottom: $space-medium;

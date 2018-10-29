@@ -106,12 +106,14 @@
               padding="none" [content]="actionContent" mcsCursor="pointer">
             </mcs-icon>
             <ng-template #actionContent>
-              <div class="cog-container">
-                <a [href]="selectedFirewall.url" target="_blank"
+              <div class="action-items-block-wrapper">
+                <a mcsButton="basic" color="white"
+                  [href]="selectedFirewall.url" target="_blank"
                   mcsId
                   mcsEventTracker="view-in-portal"
                   mcsEventCategory="firewall"
-                  mcsEventLabel="firewall-details-page">View in Portal</a>
+                  mcsEventLabel="firewall-details-page">View in Portal
+                </a>
               </div>
             </ng-template>
           </ng-template>

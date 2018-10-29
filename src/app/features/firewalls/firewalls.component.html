@@ -113,8 +113,9 @@
               padding="none" [content]="actionContent" mcsCursor="pointer">
             </mcs-icon>
             <ng-template #actionContent>
-              <div class="cog-container">
-                <a [href]="row.url"
+              <div class="action-items-block-wrapper">
+                <a mcsButton="basic" color="white"
+                  [href]="row.url"
                   target="_blank"
                   mcsId
                   mcsEventTracker="view-in-portal"

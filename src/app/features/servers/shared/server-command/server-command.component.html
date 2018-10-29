@@ -4,9 +4,10 @@
 </a>
 
 <ng-template #cogContent>
-  <div class="cog-container">
+  <div class="action-items-block-wrapper">
     <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Start)">
-      <a (click)="onExecuteCommand(serverCommandEnum.Start)"
+      <a mcsButton="basic" color="white"
+        (click)="onExecuteCommand(serverCommandEnum.Start)"
         [disabled]="!getEnabledCommand(serverCommandEnum.Start)"
         mcsId
         mcsEventTracker="start"
@@ -17,7 +18,8 @@
     </ng-container>
 
     <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Stop)">
-      <a (click)="onExecuteCommand(serverCommandEnum.Stop)"
+      <a mcsButton="basic" color="white"
+        (click)="onExecuteCommand(serverCommandEnum.Stop)"
         [disabled]="!getEnabledCommand(serverCommandEnum.Stop)"
         mcsId
         mcsEventTracker="stop"
@@ -28,7 +30,8 @@
     </ng-container>
 
     <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Restart)">
-      <a (click)="onExecuteCommand(serverCommandEnum.Restart)"
+      <a mcsButton="basic" color="white"
+        (click)="onExecuteCommand(serverCommandEnum.Restart)"
         [disabled]="!getEnabledCommand(serverCommandEnum.Restart)"
         mcsId
         mcsEventTracker="restart"
@@ -39,7 +42,8 @@
     </ng-container>
 
     <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Suspend)">
-      <a (click)="onExecuteCommand(serverCommandEnum.Suspend)"
+      <a mcsButton="basic" color="white"
+        (click)="onExecuteCommand(serverCommandEnum.Suspend)"
         [disabled]="!getEnabledCommand(serverCommandEnum.Suspend)"
         mcsId
         mcsEventTracker="suspend"
@@ -50,7 +54,8 @@
     </ng-container>
 
     <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Resume)">
-      <a (click)="onExecuteCommand(serverCommandEnum.Resume)"
+      <a mcsButton="basic" color="white"
+        (click)="onExecuteCommand(serverCommandEnum.Resume)"
         [disabled]="!getEnabledCommand(serverCommandEnum.Resume)"
         mcsId
         mcsEventTracker="resume"
@@ -63,7 +68,8 @@
     <!-- Remove temporarily -->
     <ng-container *ngIf="server.isSelfManaged">
       <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Scale)">
-        <a (click)="onExecuteCommand(serverCommandEnum.Scale)"
+        <a mcsButton="basic" color="white"
+          (click)="onExecuteCommand(serverCommandEnum.Scale)"
           [disabled]="!getEnabledCommand(serverCommandEnum.Scale)"
           mcsId
           mcsEventTracker="scale"
@@ -76,7 +82,8 @@
 
     <ng-container *ngIf="server.isSelfManaged">
       <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Clone)">
-        <a (click)="onExecuteCommand(serverCommandEnum.Clone)"
+        <a mcsButton="basic" color="white"
+          (click)="onExecuteCommand(serverCommandEnum.Clone)"
           [disabled]="!getEnabledCommand(serverCommandEnum.Clone)"
           mcsId
           mcsEventTracker="clone"
@@ -88,7 +95,8 @@
     </ng-container>
 
     <ng-container *ngIf="server.isSelfManaged">
-      <a (click)="onExecuteCommand(serverCommandEnum.Rename)"
+      <a mcsButton="basic" color="white"
+        (click)="onExecuteCommand(serverCommandEnum.Rename)"
         [disabled]="!getEnabledCommand(serverCommandEnum.Rename)"
         mcsId
         mcsEventTracker="rename"
@@ -100,7 +108,8 @@
 
     <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Delete)">
       <ng-container *ngIf="server.isSelfManaged">
-        <a (click)="onExecuteCommand(serverCommandEnum.Delete)"
+        <a mcsButton="basic" color="white"
+          (click)="onExecuteCommand(serverCommandEnum.Delete)"
           [disabled]="!getEnabledCommand(serverCommandEnum.Delete)"
           mcsId
           mcsEventTracker="delete"
@@ -112,7 +121,8 @@
     </ng-container>
 
     <ng-container *ngIf="getIncludedCommand(serverCommandEnum.ViewVCloud)">
-      <a (click)="onExecuteCommand(serverCommandEnum.ViewVCloud)"
+      <a mcsButton="basic" color="white"
+        (click)="onExecuteCommand(serverCommandEnum.ViewVCloud)"
         [disabled]="!getEnabledCommand(serverCommandEnum.ViewVCloud)"
         mcsId
         mcsEventTracker="view-in-portal"
@@ -123,7 +133,8 @@
     </ng-container>
 
     <ng-container *ngIf="getIncludedCommand(serverCommandEnum.ResetVmPassword)">
-      <a (click)="onExecuteCommand(serverCommandEnum.ResetVmPassword)"
+      <a mcsButton="basic" color="white"
+        (click)="onExecuteCommand(serverCommandEnum.ResetVmPassword)"
         [disabled]="!getEnabledCommand(serverCommandEnum.ResetVmPassword)"
         mcsId
         mcsEventTracker="reset-password"

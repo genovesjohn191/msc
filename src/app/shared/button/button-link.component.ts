@@ -20,6 +20,7 @@ import { ButtonComponent } from './button.component';
     '[attr.tabindex]': 'disabled ? -1 : 0',
     '[class.primary]': 'color === "primary"',
     '[class.raised]': 'type === "raised"',
+    '[class.basic]': 'type === "basic"',
     '[class.button-disabled]': 'disabled'
   }
 })
