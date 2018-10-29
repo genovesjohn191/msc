@@ -136,7 +136,7 @@
     "enumKey": "MediaUpload",
     "routePath": "compute/media/upload",
     "navigationPath": "compute/media/upload",
-    "requiredFeatureFlag": "EnableMediaCatalog",
+    "requiredFeatureFlag": "EnableResourceMediaUpload",
     "documentTitle": "Upload Media - Macquarie Cloud Services"
   },
   "firewalls": {

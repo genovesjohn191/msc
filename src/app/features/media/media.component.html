@@ -2,7 +2,7 @@
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef>
     <mcs-top-panel-item *mcsTopPanelItemDef>
-      <mcs-action-item
+      <mcs-action-item *mcsAccessControl="[]; feature: 'EnableResourceMediaUpload'"
         (click)="navigateToMediaUpload()"
         mcsId
         mcsEventTracker="upload-media"
