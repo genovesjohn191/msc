@@ -67,12 +67,10 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   public slidingPanel: SlidingPanelComponent;
 
   public textContent: any;
-
   public catalogs$: Observable<McsProductCatalog[]>;
   public selectedProduct$: Observable<McsProduct>;
   public catalogListSource: ProductCatalogListSource | null;
   public listStatusFactory: McsDataStatusFactory<McsProductCatalog[]>;
-  public productStatusFactory: McsDataStatusFactory<McsProduct>;
   private _destroySubject = new Subject<void>();
 
   public get toggleIconKey(): string {
@@ -94,7 +92,6 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
     private _productCatalogRepository: ProductCatalogRepository
   ) {
     this.listStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
-    this.productStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
   }
 
   public ngOnInit() {
@@ -154,20 +151,17 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   private _subscribeToProductById(): void {
     this.selectedProduct$ = this._activatedRoute.paramMap.pipe(
       switchMap((params: ParamMap) => {
-        this.productStatusFactory.setInProgress();
         this._loadingService.showLoader(this.textContent.loadingDetails);
         return this._productsRepository.findRecordById(params.get('id')).pipe(
           finalize(() => this._loadingService.hideLoader())
         );
       }),
       catchError((error) => {
-        this.productStatusFactory.setError();
         this._errorHandlerService.handleHttpRedirectionError(error.status);
         return throwError(error);
       }),
       tap((response) => {
         this._productService.selectProduct(response);
-        this.productStatusFactory.setSuccessful(response);
         this._changeDetectorRef.markForCheck();
       }),
       shareReplay(1)

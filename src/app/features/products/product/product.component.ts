@@ -2,16 +2,28 @@ import {
   Component,
   OnInit,
   ChangeDetectionStrategy,
-  ViewEncapsulation
+  ViewEncapsulation,
+  Renderer2,
+  ChangeDetectorRef
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import {
+  Observable,
+  of
+} from 'rxjs';
+import {
+  tap,
+  switchMap
+} from 'rxjs/operators';
 import {
   McsTextContentProvider,
   CoreRoutes,
   CoreDefinition
 } from '@app/core';
-import { isNullOrEmpty } from '@app/utilities';
+import {
+  isNullOrEmpty,
+  animateFactory
+} from '@app/utilities';
 import {
   RouteKey,
   McsFileInfo,
@@ -21,12 +33,18 @@ import {
 } from '@app/models';
 import { ProductService } from './product.service';
 
+const MAX_CHAR_LENGTH = 200;
+
 @Component({
   selector: 'mcs-product',
   templateUrl: 'product.component.html',
   styleUrls: ['./product.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  animations: [
+    animateFactory.fadeIn,
+    animateFactory.fadeOut
+  ],
   host: {
     'class': 'product-wrapper'
   }
@@ -34,10 +52,13 @@ import { ProductService } from './product.service';
 
 export class ProductComponent implements OnInit {
   public textContent: any;
+  public shortDescriptionExpanded: boolean;
+  public showMoreButtonIsDisplayed: boolean;
   public selectedProduct$: Observable<McsProduct>;
+  public selectedProductTextContent$: Observable<string>;
 
-  public get productCatalogBannerKey(): string {
-    return CoreDefinition.ASSETS_IMAGE_PRODUCT_CATALOG_BANNER;
+  public get cloudIconKey(): string {
+    return CoreDefinition.ASSETS_SVG_CLOUD_BLUE;
   }
 
   public get routeKeyEnum(): any {
@@ -46,6 +67,8 @@ export class ProductComponent implements OnInit {
 
   constructor(
     private _router: Router,
+    private _renderer: Renderer2,
+    private _changeDetectorRef: ChangeDetectorRef,
     private _textContentProvider: McsTextContentProvider,
     private _productService: ProductService
   ) { }
@@ -53,6 +76,7 @@ export class ProductComponent implements OnInit {
   public ngOnInit() {
     this.textContent = this._textContentProvider.content.products.product;
     this._subscribeToSelectedProduct();
+    this._subscribeToTextChange();
   }
 
   /**
@@ -80,9 +104,36 @@ export class ProductComponent implements OnInit {
   }
 
   /**
+   * Toggles the short-description content
+   */
+  public toggleShortDescription(): void {
+    this.shortDescriptionExpanded = !this.shortDescriptionExpanded;
+    this._changeDetectorRef.markForCheck();
+  }
+
+  /**
    * Listens to every product selection and refresh the dom
    */
   private _subscribeToSelectedProduct(): void {
     this.selectedProduct$ = this._productService.productSelectionChange;
+  }
+
+  /**
+   * Subscribe to short text change
+   */
+  private _subscribeToTextChange(): void {
+    this.selectedProductTextContent$ = this._productService.productSelectionChange.pipe(
+      switchMap((product) => {
+        let createdElement = this._renderer.createElement('div') as HTMLElement;
+        createdElement.innerHTML = product.shortDescription;
+        let textContent = createdElement && createdElement.textContent;
+        return of(textContent);
+      }),
+      tap((textContent: string) => {
+        this.shortDescriptionExpanded = false;
+        this.showMoreButtonIsDisplayed = textContent.length > MAX_CHAR_LENGTH;
+        this._changeDetectorRef.markForCheck();
+      })
+    );
   }
 }

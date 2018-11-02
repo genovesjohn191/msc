@@ -17,16 +17,12 @@ const DEFAULT_SCROLL_TIME = 20;
 
 @Injectable()
 export class McsScrollDispatcherService {
-
-  /** Subject for notifying that a registered scrollable reference element has been scrolled. */
-  public scrolledStream: Subject<any>;
-
-  // Other variables
   private _globalSubscription: Subscription;
   private _scrollableMap: Map<Scrollable, Subscription>;
+  private _onScroll: Subject<any>;
 
   constructor(private _ngZone: NgZone) {
-    this.scrolledStream = new Subject();
+    this._onScroll = new Subject();
     this._scrollableMap = new Map<Scrollable, Subscription>();
   }
 
@@ -67,8 +63,8 @@ export class McsScrollDispatcherService {
 
     // Register observable with delay call when specified
     let observable = auditTimeInMs > 0 ?
-      auditTime.call(this.scrolledStream.asObservable(), auditTimeInMs) :
-      this.scrolledStream.asObservable();
+      auditTime.call(this._onScroll.asObservable(), auditTimeInMs) :
+      this._onScroll.asObservable();
 
     // Register global subscription
     if (isNullOrEmpty(this._globalSubscription)) {
@@ -191,6 +187,6 @@ export class McsScrollDispatcherService {
    * Notify the scrolled stream
    */
   private _notifyStream(): void {
-    this.scrolledStream.next();
+    this._onScroll.next();
   }
 }

@@ -1,0 +1,11 @@
+<div #headerElement class="scroll-link-label">
+  <ng-container *ngIf="labelTemplate; else labelTemplate">
+    <h1>{{ label }}</h1>
+  </ng-container>
+  <ng-template #labelTemplate>
+    <ng-container *ngTemplateOutlet="labelTemplate.templateRef"></ng-container>
+  </ng-template>
+</div>
+<div class="scrollable-link-body">
+  <ng-content></ng-content>
+</div>

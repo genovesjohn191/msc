@@ -1,0 +1,27 @@
+<!-- Scrollable link group header -->
+<div class="scrollable-link-group-header-wrapper" #headerContainer>
+  <mcs-responsive-panel>
+    <ng-container *ngFor="let scrollableLink of scrollableLinks">
+      <mcs-scrollable-link-header
+        mcsId
+        mcsResponsivePanelItem
+        [mcsResponsivePanelItemSelectable]="true"
+        mcsRipple
+        [active]="activeLink?.id === scrollableLink.id"
+        (click)="onClickLink(scrollableLink)">
+
+        <ng-container *ngIf="!scrollableLink.labelTemplate; else labelTemplate">
+          <h2>{{ scrollableLink.label }}</h2>
+        </ng-container>
+        <ng-template #labelTemplate>
+          <ng-container *ngTemplateOutlet="scrollableLink.labelTemplate.templateRef"></ng-container>
+        </ng-template>
+      </mcs-scrollable-link-header>
+    </ng-container>
+  </mcs-responsive-panel>
+</div>
+
+<!-- Scrollabe link body wrapper -->
+<div class="scrollable-link-group-body-wrapper" mcsScrollable>
+  <ng-content></ng-content>
+</div>
