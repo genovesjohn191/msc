@@ -11,6 +11,7 @@
 @import "../../../../styles/core/elements/mcs-table";
 
 $product-max-width: 100%;
+$product-catalog-description-max-height: 30px;
 $product-catalog-widget-size: 350px;
 $product-panel-color: $color-grey-08;
 
@@ -21,14 +22,47 @@ $product-panel-color: $color-grey-08;
   right: 0;
   @include display-flex(column);
   max-width: $product-max-width;
+  max-height: 100%;
+  overflow: hidden;
+}
+
+.product-catalog-description {
+  @include flex(1 0 auto);
+  @include display-flex(column);
+  margin: $space-large $space-medium;
+  margin-bottom: 0;
+  position: relative;
+  max-height: $product-catalog-description-max-height;
+  overflow: hidden;
+
+  &.expanded {
+    height: auto;
+    max-height: unset;
+    overflow: unset;
+  }
+
+  .product-catalog-shorted-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .product-catalog-text {
+    display: block;
+  }
+}
+
+.product-catalog-read-action {
+  @include flex(1 0 auto);
+}
+
+.product-catalog-content {
+  @include flex(1);
+  @include display-flex(column);
 }
 
 .product-catalog-item {
-  padding: $space-large;
-
-  &:nth-of-type(odd) {
-    background-color: $product-panel-color;
-  }
+  margin: 0;
 }
 
 .product-catalog-banner {

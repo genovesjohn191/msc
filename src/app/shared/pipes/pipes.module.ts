@@ -7,6 +7,7 @@ import { SortArrayPipe } from './sort-array.pipe';
 import { DataLabelPipe } from './data-label.pipe';
 import { StdDateFormatPipe } from './std-date-format.pipe';
 import { ArrayTakeMaxPipe } from './array-take-max.pipe';
+import { ArrayCommaSeparatorPipe } from './array-comma-separator.pipe';
 import { PluralPipe } from './plural.pipe';
 import { TextPlaceholderPipe } from './text-placeholder.pipe';
 import { IsNotNullOrEmptyPipe } from './is-not-null-or-empty.pipe';
@@ -20,6 +21,7 @@ import { IsNotNullOrEmptyPipe } from './is-not-null-or-empty.pipe';
     DataLabelPipe,
     StdDateFormatPipe,
     ArrayTakeMaxPipe,
+    ArrayCommaSeparatorPipe,
     PluralPipe,
     TextPlaceholderPipe,
     IsNotNullOrEmptyPipe
@@ -32,6 +34,7 @@ import { IsNotNullOrEmptyPipe } from './is-not-null-or-empty.pipe';
     DataLabelPipe,
     StdDateFormatPipe,
     ArrayTakeMaxPipe,
+    ArrayCommaSeparatorPipe,
     PluralPipe,
     TextPlaceholderPipe,
     IsNotNullOrEmptyPipe

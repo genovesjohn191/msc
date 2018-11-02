@@ -27,6 +27,7 @@ import { DialogModule } from './dialog/dialog.module';
 import { SnackBarModule } from './snack-bar/snack-bar.module';
 import { TooltipModule } from './tooltip/tooltip.module';
 import { TabGroupModule } from './tab-group/tab-group.module';
+import { ScrollableLinkGroupModule } from './scrollable-link-group/scrollable-link-group.module';
 import { WizardModule } from './wizard/wizard.module';
 import { WidgetsModule } from './widgets/widgets.module';
 import { FileAttachmentModule } from './file-attachment/file-attachment.module';
@@ -85,6 +86,7 @@ import { LoadingModule } from './loading/loading.module';
     SnackBarModule,
     TooltipModule,
     TabGroupModule,
+    ScrollableLinkGroupModule,
     WizardModule,
     WidgetsModule,
     FileAttachmentModule,
@@ -140,6 +142,7 @@ import { LoadingModule } from './loading/loading.module';
     SnackBarModule,
     TooltipModule,
     TabGroupModule,
+    ScrollableLinkGroupModule,
     WizardModule,
     WidgetsModule,
     FileAttachmentModule,

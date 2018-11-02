@@ -137,6 +137,7 @@ export class CoreDefinition {
   public static ASSETS_SVG_DOS_PROMPT_BLUE = 'dos-prompt-blue';
   public static ASSETS_SVG_DOS_PROMPT_GREY = 'dos-prompt-grey';
   public static ASSETS_SVG_SUCCESS = 'success-svg';
+  public static ASSETS_SVG_CLOUD_BLUE = 'cloud-blue';
 
   // Font Awesome Icons
   public static ASSETS_FONT_CREDIT_CARD = 'credit-card';

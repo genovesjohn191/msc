@@ -1,0 +1,60 @@
+@import "../../../styles/shared/base";
+
+// Scrollable link group
+$scrollable-link-group-border: $border-color-light;
+// Scrollable link header
+$scrollable-link-header-item-min-width: 100px;
+$scrollable-link-header-color: $color-grey-02;
+$scrollable-link-header-padding: $space-small $space-medium;
+// Scrollable link body
+$scrollable-link-padding: $space-large;
+$scrollable-link-label-color: $color-primary-01;
+$scrollable-link-body-padding: $space-medium;
+
+.scrollable-link-group-wrapper {
+  @include display-flex(column);
+  position: relative;
+  overflow: hidden;
+  max-height: 100%;
+}
+
+.scrollable-link-wrapper {
+  padding: $scrollable-link-padding;
+
+  .scroll-link-label {
+    margin-bottom: $space-medium;
+    color: $scrollable-link-label-color;
+  }
+
+  .scrollable-link-body {
+    margin-left: $scrollable-link-body-padding;
+    margin-right: $scrollable-link-body-padding;
+    @include breakpoint(small) {
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+}
+
+.scrollable-link-group-header-wrapper {
+  display: block;
+  @include flex(0);
+  border-bottom: 1px solid $scrollable-link-group-border;
+
+  .scrollable-link-header-wrapper {
+    cursor: pointer;
+    position: relative;
+    @include display-flex(row);
+    @include align-items(center);
+    justify-content: center;
+    min-width: $scrollable-link-header-item-min-width;
+    padding: $scrollable-link-header-padding;
+    color: $scrollable-link-header-color;
+    white-space: nowrap;
+  }
+}
+
+.scrollable-link-group-body-wrapper {
+  @include display-flex(column);
+  @include flex(1);
+}

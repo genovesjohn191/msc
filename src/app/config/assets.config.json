@@ -90,7 +90,8 @@
     "success-svg": "success.svg",
     "download": "download.svg",
     "dos-prompt-blue": "dos-prompt-blue.svg",
-    "dos-prompt-grey": "dos-prompt-grey.svg"
+    "dos-prompt-grey": "dos-prompt-grey.svg",
+    "cloud-blue": "cloud-blue.svg"
   },
   "gifIcons": {
     "loader-spinner": "loader-spinner.gif",

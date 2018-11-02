@@ -7,18 +7,8 @@ import {
   OnChanges,
   SimpleChanges
 } from '@angular/core';
-import {
-  isNullOrEmpty,
-  convertSpacesToDash
-} from '@app/utilities';
-import Hashids from 'hashids';
-
-const DEFAULT_HASH_LENGTH = 8;
-const DEFAULT_ID_MAX_LENGTH = 25;
-const DEFAULT_TEXT_PREFIX = '@innertext';
-
-// Unique Id that generates during runtime
-let nextUniqueId = 0;
+import { isNullOrEmpty } from '@app/utilities';
+import { McsUniqueId } from '@app/core';
 
 @Directive({
   selector: '[mcsId]',
@@ -32,7 +22,6 @@ export class IdDirective implements AfterViewInit, OnChanges {
   @Input('mcsId')
   public customId: string;
 
-  private _hashInstance = new Hashids('', DEFAULT_HASH_LENGTH);
   private _generatedId: string;
 
   constructor(
@@ -73,26 +62,21 @@ export class IdDirective implements AfterViewInit, OnChanges {
    */
   public get hostTextContent(): string {
     let textContent = (this._elementRef.nativeElement.textContent || '').trim();
-    let convertedString = convertSpacesToDash(textContent);
-    return convertedString.substring(0,
-      Math.min(convertedString.length, DEFAULT_ID_MAX_LENGTH)
-    );
+    return textContent;
   }
 
   /**
    * Generates the id based on the host text content with hashing id key for uniqueness
    */
   private _generateIdByTextContent(): string {
-    let uniqueEncodedId = this._hashInstance.encode(nextUniqueId++);
-    return `${uniqueEncodedId}[${DEFAULT_TEXT_PREFIX}=${this.hostTextContent}]`;
+    return McsUniqueId.NewId(this.hostTextContent);
   }
 
   /**
    * Generates the id based on the custom input with hashing id key for uniqueness
    */
   private _generateIdByCustomInput(): string {
-    let uniqueEncodedId = this._hashInstance.encode(nextUniqueId++);
-    return `${uniqueEncodedId}[${DEFAULT_TEXT_PREFIX}=${this.customId}]`;
+    return McsUniqueId.NewId(this.customId);
   }
 
   /**
