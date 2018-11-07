@@ -11,7 +11,6 @@ export * from './guards/mcs-navigate-away.guard';
 export * from './services/mcs-api.service';
 export * from './services/mcs-storage.service';
 export * from './services/mcs-cookie.service';
-export * from './services/mcs-component.service';
 export * from './services/mcs-browser.service';
 export * from './services/mcs-notification-job.service';
 export * from './services/mcs-notification-context.service';
@@ -30,6 +29,7 @@ export * from './services/mcs-form-group.service';
 export * from './services/google-analytics-events.service';
 export * from './services/mcs-session-handler.service';
 export * from './services/mcs-loading.service';
+export * from './services/mcs-component-handler.service';
 /** Providers */
 export * from './providers/mcs-text-content.provider';
 export * from './providers/mcs-assets.provider';

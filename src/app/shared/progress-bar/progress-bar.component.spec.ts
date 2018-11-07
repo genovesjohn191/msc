@@ -1,13 +1,34 @@
 import {
+  Component,
+  ViewChild
+} from '@angular/core';
+import {
   async,
-  TestBed
+  TestBed,
+  ComponentFixture
 } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { CoreTestingModule } from '@app/core/testing';
+import { ProgressBarModule } from './progress-bar.module';
 import { ProgressBarComponent } from './progress-bar.component';
+
+@Component({
+  selector: 'mcs-test',
+  template: ``
+})
+export class TestComponent {
+  @ViewChild(ProgressBarComponent)
+  public progressbarComponent: ProgressBarComponent;
+
+  public progressValue: number = 10;
+  public progressMax: number = 100;
+}
 
 describe('ProgressBarComponent', () => {
 
   /** Stub Services/Components */
-  let component: ProgressBarComponent;
+  let component: TestComponent;
+  let fixture: ComponentFixture<TestComponent>;
 
   beforeEach(async(() => {
     /** Testbed Reset Module */
@@ -16,51 +37,59 @@ describe('ProgressBarComponent', () => {
     /** Testbed Configuration */
     TestBed.configureTestingModule({
       declarations: [
-        ProgressBarComponent
+        TestComponent
+      ],
+      imports: [
+        FormsModule,
+        ProgressBarModule,
+        CoreTestingModule
       ]
     });
 
     /** Testbed Onverriding of Components */
-    TestBed.overrideComponent(ProgressBarComponent, {
+    TestBed.overrideComponent(TestComponent, {
       set: {
-        template: `<div>ProgressBarComponent Template</div>`
+        template: `
+        <mcs-progress-bar
+          [(ngModel)]="progressValue"
+          [maxValue]="progressMax"></mcs-progress-bar>
+        `
       }
     });
 
     /** Tesbed Component Compilation and Creation */
     TestBed.compileComponents().then(() => {
-      let fixture = TestBed.createComponent(ProgressBarComponent);
+      fixture = TestBed.createComponent(TestComponent);
       fixture.detectChanges();
 
       component = fixture.componentInstance;
-      component.registerOnChange((_: any) => { return; });
-      component.registerOnTouched(() => { return; });
     });
   }));
 
   /** Test Implementation */
-  describe('getValueInRange()', () => {
-    it('should get the value based on inputed range', () => {
-      component.value = 100;
-      component.maxValue = 100;
-      let actualValue = component.getValueInRange();
-      expect(actualValue).toBe(100);
+  describe('ngOnInit()', () => {
+    it(`should create the mcs-progress-bar element`, () => {
+      let element = document.querySelector('mcs-progress-bar');
+      expect(element).not.toBe(null);
     });
   });
 
-  describe('getPercentage()', () => {
-    it('should get the percentage based on the value and maximum inputted', () => {
-      component.value = 25;
-      component.maxValue = 100;
-      let actualPercent = component.getPercentage();
-      expect(actualPercent).toBe(`${(component.value / component.maxValue) * 100}%`);
+  describe('modelValue()', () => {
+    it(`should set the current value of progress bar to 10`, () => {
+      expect(component.progressbarComponent.value).toBe(component.progressValue);
+    });
+
+    it(`should set the maximum value of progress bar to 100`, () => {
+      expect(component.progressbarComponent.maxValue).toBe(component.progressMax);
     });
   });
 
-  describe('writeValue()', () => {
-    it('should set the inputted value to 100', () => {
-      component.writeValue(100);
-      expect(component.value).toBe(100);
+  describe('modelUpdate()', () => {
+    it(`should upate the currently value of progressbar to 50%`, () => {
+      component.progressValue = 50;
+      component.progressbarComponent.writeValue(component.progressValue);
+      fixture.detectChanges();
+      expect(component.progressbarComponent.value).toBe(component.progressValue);
     });
   });
 });

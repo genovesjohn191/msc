@@ -1,0 +1,5 @@
+.cog-actions-wrapper {
+  margin: $space-small 0;
+  @include display-flex(column);
+  @include set-items-interval($space-xsmall, vertical);
+}

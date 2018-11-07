@@ -4,9 +4,9 @@
 </a>
 
 <ng-template #cogContent>
-  <div class="action-items-block-wrapper">
+  <div class="cog-actions-wrapper">
     <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Start)">
-      <a mcsButton="basic" color="white"
+      <a mcsButton="basic" color="white" labelPlacement="left"
         (click)="onExecuteCommand(serverCommandEnum.Start)"
         [disabled]="!getEnabledCommand(serverCommandEnum.Start)"
         mcsId
@@ -18,7 +18,7 @@
     </ng-container>
 
     <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Stop)">
-      <a mcsButton="basic" color="white"
+      <a mcsButton="basic" color="white" labelPlacement="left"
         (click)="onExecuteCommand(serverCommandEnum.Stop)"
         [disabled]="!getEnabledCommand(serverCommandEnum.Stop)"
         mcsId
@@ -30,7 +30,7 @@
     </ng-container>
 
     <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Restart)">
-      <a mcsButton="basic" color="white"
+      <a mcsButton="basic" color="white" labelPlacement="left"
         (click)="onExecuteCommand(serverCommandEnum.Restart)"
         [disabled]="!getEnabledCommand(serverCommandEnum.Restart)"
         mcsId
@@ -42,7 +42,7 @@
     </ng-container>
 
     <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Suspend)">
-      <a mcsButton="basic" color="white"
+      <a mcsButton="basic" color="white" labelPlacement="left"
         (click)="onExecuteCommand(serverCommandEnum.Suspend)"
         [disabled]="!getEnabledCommand(serverCommandEnum.Suspend)"
         mcsId
@@ -54,7 +54,7 @@
     </ng-container>
 
     <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Resume)">
-      <a mcsButton="basic" color="white"
+      <a mcsButton="basic" color="white" labelPlacement="left"
         (click)="onExecuteCommand(serverCommandEnum.Resume)"
         [disabled]="!getEnabledCommand(serverCommandEnum.Resume)"
         mcsId
@@ -68,7 +68,7 @@
     <!-- Remove temporarily -->
     <ng-container *ngIf="server.isSelfManaged">
       <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Scale)">
-        <a mcsButton="basic" color="white"
+        <a mcsButton="basic" color="white" labelPlacement="left"
           (click)="onExecuteCommand(serverCommandEnum.Scale)"
           [disabled]="!getEnabledCommand(serverCommandEnum.Scale)"
           mcsId
@@ -82,7 +82,7 @@
 
     <ng-container *ngIf="server.isSelfManaged">
       <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Clone)">
-        <a mcsButton="basic" color="white"
+        <a mcsButton="basic" color="white" labelPlacement="left"
           (click)="onExecuteCommand(serverCommandEnum.Clone)"
           [disabled]="!getEnabledCommand(serverCommandEnum.Clone)"
           mcsId
@@ -95,7 +95,7 @@
     </ng-container>
 
     <ng-container *ngIf="server.isSelfManaged">
-      <a mcsButton="basic" color="white"
+      <a mcsButton="basic" color="white" labelPlacement="left"
         (click)="onExecuteCommand(serverCommandEnum.Rename)"
         [disabled]="!getEnabledCommand(serverCommandEnum.Rename)"
         mcsId
@@ -108,7 +108,7 @@
 
     <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Delete)">
       <ng-container *ngIf="server.isSelfManaged">
-        <a mcsButton="basic" color="white"
+        <a mcsButton="basic" color="white" labelPlacement="left"
           (click)="onExecuteCommand(serverCommandEnum.Delete)"
           [disabled]="!getEnabledCommand(serverCommandEnum.Delete)"
           mcsId
@@ -121,7 +121,7 @@
     </ng-container>
 
     <ng-container *ngIf="getIncludedCommand(serverCommandEnum.ViewVCloud)">
-      <a mcsButton="basic" color="white"
+      <a mcsButton="basic" color="white" labelPlacement="left"
         (click)="onExecuteCommand(serverCommandEnum.ViewVCloud)"
         [disabled]="!getEnabledCommand(serverCommandEnum.ViewVCloud)"
         mcsId
@@ -133,7 +133,7 @@
     </ng-container>
 
     <ng-container *ngIf="getIncludedCommand(serverCommandEnum.ResetVmPassword)">
-      <a mcsButton="basic" color="white"
+      <a mcsButton="basic" color="white" labelPlacement="left"
         (click)="onExecuteCommand(serverCommandEnum.ResetVmPassword)"
         [disabled]="!getEnabledCommand(serverCommandEnum.ResetVmPassword)"
         mcsId

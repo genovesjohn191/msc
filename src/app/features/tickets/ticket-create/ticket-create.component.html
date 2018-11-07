@@ -23,7 +23,7 @@
         <div class="field">
           <mcs-form-field>
             <mcs-select mcsId="select-type" [placeholder]="textContent.placeholders.type"
-              [formControl]="fcType" mcsSetFocus required
+              [formControl]="fcType" required
               [mcsContextualHelp]="contextualContent.type">
 
               <mcs-option-group>
@@ -46,7 +46,7 @@
         <!-- Reference -->
         <div class="field">
           <mcs-form-field>
-            <input mcsInput #referenceInput
+            <input mcsInput mcsSetFocus #referenceInput
               mcsId="input-reference"
               [placeholder]="textContent.placeholders.reference" maxlength="15"
               [formControl]="fcReference"

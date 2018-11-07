@@ -21,6 +21,9 @@ import { ButtonComponent } from './button.component';
     '[class.primary]': 'color === "primary"',
     '[class.raised]': 'type === "raised"',
     '[class.basic]': 'type === "basic"',
+    '[class.label-placement-left]': 'labelPlacement === "left"',
+    '[class.label-placement-center]': 'labelPlacement === "center"',
+    '[class.label-placement-right]': 'labelPlacement === "right"',
     '[class.button-disabled]': 'disabled'
   }
 })

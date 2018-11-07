@@ -11,7 +11,8 @@ import { CoreDefinition } from '@app/core';
 import {
   isNullOrEmpty,
   coerceBoolean,
-  McsStatusColorType
+  McsStatusColorType,
+  McsPlacementType
 } from '@app/utilities';
 
 export type ButtonType =
@@ -30,6 +31,9 @@ export type ButtonType =
     '[class.primary]': 'color === "primary"',
     '[class.raised]': 'type === "raised"',
     '[class.basic]': 'type === "basic"',
+    '[class.label-placement-left]': 'labelPlacement === "left"',
+    '[class.label-placement-center]': 'labelPlacement === "center"',
+    '[class.label-placement-right]': 'labelPlacement === "right"',
     '[class.button-disabled]': 'disabled'
   }
 })
@@ -37,6 +41,9 @@ export type ButtonType =
 export class ButtonComponent {
   @Input()
   public arrow: 'up' | 'right';
+
+  @Input()
+  public labelPlacement: McsPlacementType = 'center';
 
   @Input('mcsButton')
   public get type(): ButtonType { return this._type; }
