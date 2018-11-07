@@ -39,6 +39,7 @@ export function unsubscribeSafely(subscriber: Subscription | Subject<any>): void
 /**
  * Unsubscribe the subject to kill its reference
  * @param subject Subject to be killed
+ * @deprecated use the unsubscribeSafely instead
  */
 export function unsubscribeSubject(subject: Subject<any>): void {
   if (isNullOrEmpty(subject)) { return; }

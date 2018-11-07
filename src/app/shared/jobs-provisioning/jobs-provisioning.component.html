@@ -6,9 +6,11 @@
       <div class="vertical-items-spacing-medium">
         <ng-content *ngIf="hasInProgressJob" select="[mcsProvisioningText]"></ng-content>
         <h2 class="title">{{ getTitle() }}</h2>
-        <mcs-progress-bar *ngIf="hasInProgressJob && !hideProgressBar" [@fadeIn]
-          [(ngModel)]="progressValue"
-          [maxValue]="progressMax"></mcs-progress-bar>
+        <ng-container *ngIf="!isProgressbarHidden">
+          <mcs-progress-bar [@fadeIn]
+            [(ngModel)]="progressValue"
+            [maxValue]="progressMax"></mcs-progress-bar>
+        </ng-container>
       </div>
 
       <!-- Job Details -->

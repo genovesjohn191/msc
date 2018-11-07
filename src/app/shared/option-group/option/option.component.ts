@@ -25,7 +25,6 @@ let nextUniqueId = 0;
     'class': 'option-wrapper',
     'role': 'option',
     '[id]': 'id',
-    '[attr.tabindex]': '0',
     '[class.option-selected]': 'selected',
     '[class.option-active]': 'active',
     '(click)': 'select()'

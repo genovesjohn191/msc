@@ -26,7 +26,6 @@ import {
 import {
   isNullOrEmpty,
   unsubscribeSafely,
-  unsubscribeSubject,
   addOrUpdateArrayRecord,
   animateFactory
 } from '@app/utilities';
@@ -68,7 +67,7 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
 
   // Subscription
   private _excludedProgressJobTypes: JobType[];
-  private _hideProgressBar: boolean;
+  private _isProgressbarHidden: boolean;
   private _timerSubscription: Subscription;
   private _destroySubject = new Subject<void>();
 
@@ -121,7 +120,7 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
 
   public ngOnDestroy() {
     unsubscribeSafely(this._timerSubscription);
-    unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this._destroySubject);
   }
 
   /**
@@ -154,8 +153,8 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
   /**
    * Returns true when the progress bar will be hidden
    */
-  public get hideProgressBar(): boolean {
-    return this._hideProgressBar;
+  public get isProgressbarHidden(): boolean {
+    return this._isProgressbarHidden || this.hasErrorJobs;
   }
 
   /**
@@ -202,12 +201,13 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
         this.progressValue += task.elapsedTimeInSeconds;
         this.progressMax += (task.ectInSeconds + task.elapsedTimeInSeconds);
       });
-      this._hideProgressBar = !!this._excludedProgressJobTypes
+      this._isProgressbarHidden = !!this._excludedProgressJobTypes
         .find((jobType) => jobType === job.type);
     });
 
     // Calculate the 99% of the progreesbar maximum
     progressMaxWithOffset = (this.progressMax * 0.99);
+    this._isProgressbarHidden = this.progressValue >= this.progressMax;
 
     // Set Inifinity Timer
     this._timerSubscription = timer(0, 1000)
@@ -215,6 +215,10 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
       .subscribe(() => {
         let actualProgress = this.progressValue + 1;
         this.progressValue = Math.min(actualProgress, progressMaxWithOffset);
+
+        // Exit progressbar
+        if (this.allJobsCompleted) { this._removeProgressbar(DataStatus.Success); }
+        if (this.hasErrorJobs) { this._removeProgressbar(DataStatus.Error); }
         this._changeDetectorRef.markForCheck();
       });
   }
@@ -232,11 +236,6 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
         // Update the existing job
         addOrUpdateArrayRecord(this.jobs, job, true,
           (_existingJob: McsJob) => _existingJob.id === job.id);
-
-        // Exit progressbar
-        if (this.allJobsCompleted) { this._removeProgressbar(DataStatus.Success); }
-        if (this.hasErrorJobs) { this._removeProgressbar(DataStatus.Error); }
-        this._changeDetectorRef.markForCheck();
       });
   }
 
@@ -259,11 +258,12 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
   /**
    * End all the timer to removed the infinity loop and
    * mitigate the problem of possible memory leak
-   * @param progressValue Progressbar value
+   * @param value Progressbar value
    */
-  private _endTimer(progressValue: number): void {
-    this.progressValue = progressValue;
+  private _endTimer(value: number): void {
+    this.progressValue = value;
     unsubscribeSafely(this._timerSubscription);
+    this._changeDetectorRef.markForCheck();
   }
 
   /**

@@ -395,7 +395,10 @@ export class SelectComponent extends McsFormFieldControlBase<any>
     // Register tab event subscription
     this._itemListKeyManager.tabPressed
       .pipe(takeUntil(this._destroySubject))
-      .subscribe(() => this.closePanel());
+      .subscribe(() => {
+        this.closePanel();
+        this.focus();
+      });
 
     // Register pre active change element
     this._itemListKeyManager.preActiveItemChanged
@@ -460,8 +463,8 @@ export class SelectComponent extends McsFormFieldControlBase<any>
   private _registerOpenPanelKeyEvents(): void {
     this._openPanelKeyEventsMap.set(Key.Enter, this._selectActiveItem.bind(this));
     this._openPanelKeyEventsMap.set(Key.Space, this._selectActiveItem.bind(this));
-    this._openPanelKeyEventsMap.set(Key.Tab, this.closePanel.bind(this));
     this._openPanelKeyEventsMap.set(Key.Escape, this.closePanel.bind(this));
+    this._openPanelKeyEventsMap.set(Key.Tab, this._keymanagerKeyDown.bind(this));
     this._openPanelKeyEventsMap.set(Key.UpArrow, this._setActiveItemByVisibility.bind(this));
     this._openPanelKeyEventsMap.set(Key.DownArrow, this._setActiveItemByVisibility.bind(this));
   }
@@ -583,6 +586,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
     ).subscribe((item) => {
       this._selectItem(item);
       this.closePanel();
+      this.focus();
     });
   }
 }

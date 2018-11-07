@@ -95,14 +95,18 @@ $button-error-bg-color: $color-red-00;
     line-height: $button-medium-size;
     @include font-size($button-medium-font-size);
   }
-}
 
-a.button-wrapper {
-  text-decoration: none;
+  // Label Placement
+  &.label-placement-left {
+    justify-content: flex-start;
+  }
 
-  &:hover {
-    text-decoration: none;
-    color: inherit;
+  &.label-placement-center {
+    justify-content: center;
+  }
+
+  &.label-placement-right {
+    justify-content: flex-end;
   }
 }
 
