@@ -38,127 +38,101 @@
           *ngIf="selectedProduct.description | mcsIsNotNullOrEmpty">
 
           <div class="product-catalog-widget-wrapper">
-            <!-- TODO: Remove the pricing for phase 1 -->
-            <div class="product-catalog-widget" *ngIf="false">
-              <div class="product-catalog-widget-item dark-panel text-center">
-                <strong>Pricing</strong>
-              </div>
-
-              <div class="product-catalog-widget-item">
-                <div class="space-between-inline-items">
-                  <span>Price</span>
-                  <strong class="blue-text">
-                    ${{ selectedProduct.price }}
-                  </strong>
-                </div>
-                <div class="divider"></div>
-
-                <div class="space-between-inline-items">
-                  <span>Retail Price</span>
-                  <strong class="blue-text">
-                    ${{ selectedProduct.retailPrice }}
-                  </strong>
-                </div>
-                <div class="divider"></div>
-
-                <div class="space-between-inline-items">
-                  <span>Recurring Price</span>
-                  <strong class="blue-text">
-                    ${{ selectedProduct.recurringPrice }}
-                  </strong>
-                </div>
-                <div class="divider"></div>
-
-                <div class="block-items-small">
-                  <button mcsButton [disabled]="true">Buy Now</button>
-                  <button mcsButton [disabled]="true">Make a Change</button>
-                </div>
-              </div>
-            </div>
-
             <!-- Ownerships -->
-            <div class="product-catalog-widget">
-              <div class="product-catalog-widget-item dark-panel text-center">
-                <strong>Ownership</strong>
-              </div>
+            <!-- TODO: Apply checking here -->
+            <mcs-presentation-panel>
+              <ng-container mcsPresentationPanelHeader>
+                <span>Ownership</span>
+              </ng-container>
 
-              <div class="product-catalog-widget-item">
-                <div class="form-field-inline"
-                  *ngIf="selectedProduct.productOwners | mcsIsNotNullOrEmpty">
-                  <span>Product Owners:</span>
-                  <strong>{{ selectedProduct.productOwners | mcsArrayCommaSeparator }}</strong>
-                </div>
+              <mcs-list spacing="auto">
+                <ng-container *mcsAccessControl="['CompanyView']">
+                  <mcs-list-item class="form-field-inline"
+                    *ngIf="selectedProduct.productOwners | mcsIsNotNullOrEmpty">
+                    <span>Product Owners:</span>
+                    <span>{{ selectedProduct.productOwners | mcsArrayCommaSeparator }}</span>
+                  </mcs-list-item>
+                </ng-container>
 
-                <div class="form-field-inline"
+                <mcs-list-item class="form-field-inline"
                   *ngIf="selectedProduct.architectureOwners | mcsIsNotNullOrEmpty">
                   <span>Architecture Owners:</span>
-                  <strong>{{ selectedProduct.architectureOwners | mcsArrayCommaSeparator }}</strong>
-                </div>
+                  <span>{{ selectedProduct.architectureOwners | mcsArrayCommaSeparator }}</span>
+                </mcs-list-item>
 
-                <div class="form-field-inline"
-                  *ngIf="selectedProduct.specialistOwner | mcsIsNotNullOrEmpty">
+                <mcs-list-item class="form-field-inline"
+                  *ngIf="selectedProduct.specialistOwner?.name | mcsIsNotNullOrEmpty">
                   <span>Specialist Owners:</span>
-                  <strong>{{ selectedProduct.specialistOwner?.name }}</strong>
-                </div>
-              </div>
-            </div>
+                  <span>{{ selectedProduct.specialistOwner?.name }}</span>
+                </mcs-list-item>
+              </mcs-list>
+            </mcs-presentation-panel>
 
             <!-- Dependencies -->
-            <div class="product-catalog-widget"
-              *ngIf="selectedProduct.dependentProducts | mcsIsNotNullOrEmpty">
-              <div class="product-catalog-widget-item dark-panel text-center">
-                <strong>Dependencies</strong>
-              </div>
-              <div class="product-catalog-widget-item">
-                <div>
-                  <div [ngStyle]="{'float': 'right'}">
-                    <mcs-icon size="100px" [key]="cloudIconKey"></mcs-icon>
-                  </div>
-                  <div class="block-items-xsmall">
-                    <a *ngFor="let dependentProduct of selectedProduct.dependentProducts"
-                      [mcsRouterLink]="[routeKeyEnum.ProductDetail, dependentProduct.id]"
-                      mcsId="product-dependency"
-                      mcsEventTracker="select-product-dependency"
-                      mcsEventCategory="product"
-                      mcsEventLabel="product-list-panel">
-                      {{ dependentProduct.name }}
-                    </a>
-                  </div>
+            <mcs-presentation-panel *ngIf="selectedProduct.dependentProducts | mcsIsNotNullOrEmpty">
+              <ng-container mcsPresentationPanelHeader>
+                <span>Dependencies</span>
+              </ng-container>
+
+              <div>
+                <div [ngStyle]="{'float': 'right'}">
+                  <mcs-icon size="100px" [key]="cloudIconKey"></mcs-icon>
+                </div>
+                <div class="block-items-xsmall">
+                  <a *ngFor="let dependentProduct of selectedProduct.dependentProducts"
+                    [mcsRouterLink]="[routeKeyEnum.ProductDetail, dependentProduct.id]"
+                    mcsId="product-dependency"
+                    mcsEventTracker="select-product-dependency"
+                    mcsEventCategory="product"
+                    mcsEventLabel="product-list-panel">
+                    {{ dependentProduct.name }}
+                  </a>
                 </div>
               </div>
-            </div>
+            </mcs-presentation-panel>
 
             <!-- Availability Zones -->
-            <div class="product-catalog-widget"
-              *ngIf="selectedProduct.locations | mcsIsNotNullOrEmpty">
-              <div class="product-catalog-widget-item dark-panel text-center">
-                <strong>Availability Zones</strong>
-              </div>
-              <div class="product-catalog-widget-item">
-                <ul>
-                  <!-- <li *ngFor="let location of selectedProduct.locations"></li> -->
-                </ul>
-              </div>
-            </div>
+            <mcs-presentation-panel *ngIf="selectedProduct.locations | mcsIsNotNullOrEmpty">
+              <ng-container mcsPresentationPanelHeader>
+                <span>Availability Zones</span>
+              </ng-container>
 
-            <!-- Related Products -->
-            <div class="product-catalog-widget"
-              *ngIf="selectedProduct.relatedProducts | mcsIsNotNullOrEmpty">
-              <div class="product-catalog-widget-item dark-panel text-center">
-                <strong>Related Products We Recommend</strong>
-              </div>
-            </div>
+              <mcs-list spacing="small">
+                <mcs-list-item *ngFor="let location of selectedProduct.locations">
+                  <div>
+                    <span>{{ location.name }}</span><br>
+                    <small read-only>{{ location.fullAddress }}</small>
+                  </div>
+                </mcs-list-item>
+              </mcs-list>
+            </mcs-presentation-panel>
           </div>
 
           <div [innerHTML]="selectedProduct.description"></div>
         </div>
 
         <!-- Product Options -->
-        <div class="product-catalog-item"
+        <div class="product-catalog-item block-items-small"
           *ngIf="selectedProduct.productOptions | mcsIsNotNullOrEmpty">
           <h3>Product Options</h3>
-          <!-- TODO: Iterate through product catalog option -->
-          <!-- <div [innerHTML]="selectedProduct.featureBenefitMatrix"></div> -->
+
+          <ng-container *ngFor="let productOption of selectedProduct.productOptions">
+            <div>
+              <strong>{{ productOption.name }}</strong>
+              <ul *ngIf="productOption.listOptions | mcsIsNotNullOrEmpty">
+                <li *ngFor="let option of productOption.listOptions">{{ option }}</li>
+              </ul>
+
+              <mcs-list spacing="auto" class="space-left-medium"
+                *ngIf="productOption.properties | mcsIsNotNullOrEmpty">
+                <mcs-list-item class="form-field-inline"
+                  *ngFor="let property of productOption.properties">
+                  <span>{{ property.label }}</span>
+                  <span>{{ property.value }}</span>
+                </mcs-list-item>
+              </mcs-list>
+            </div>
+          </ng-container>
         </div>
 
         <!-- Feature Benefit Matrix -->
@@ -178,7 +152,6 @@
           </ng-container>
         </div>
       </mcs-scrollable-link>
-
 
       <!-- Monitoring -->
       <mcs-scrollable-link label="Monitoring"

@@ -36,4 +36,11 @@ export class McsProductLocation {
     this.status = undefined;
     this.street = undefined;
   }
+
+  /**
+   * Returns the complete address of the location
+   */
+  public get fullAddress(): string {
+    return `${this.street} ${this.city}, ${this.country}, ${this.postCode}`;
+  }
 }
