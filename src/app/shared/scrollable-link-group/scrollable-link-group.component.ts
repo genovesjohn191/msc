@@ -84,6 +84,13 @@ export class ScrollableLinkGroupComponent implements AfterViewInit, AfterContent
   }
 
   /**
+   * Returns true when the scrollable element has only more than 1 link
+   */
+  public get hasMultipleLinks(): boolean {
+    return this.scrollableLinks.length > 1;
+  }
+
+  /**
    * Return the currently active link
    */
   public get activeLink(): ScrollableLinkComponent {

@@ -87,15 +87,4 @@ $product-panel-color: $color-grey-08;
     float: none;
     margin: 0;
   }
-
-  .product-catalog-widget {
-    .product-catalog-widget-item {
-      border-left: 1px solid $border-color-light;
-      border-right: 1px solid $border-color-light;
-      border-bottom: 1px solid $border-color-light;
-      padding: $space-small;
-      @include display-flex(column);
-      @include set-items-interval($space-xsmall);
-    }
-  }
 }

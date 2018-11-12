@@ -54,6 +54,7 @@ import { FileDownloadModule } from './file-download/file-download.module';
 import { EventTrackerModule } from './event-tracker/event-tracker.module';
 import { BusyRibbonModule } from './busy-ribbon/busy-ribbon.module';
 import { NoteModule } from './note/note.module';
+import { PresentationPanelModule } from './presentation-panel/presentation-panel.module';
 import { JobsProvisioningModule } from './jobs-provisioning/jobs-provisioning.module';
 import { LoadingModule } from './loading/loading.module';
 
@@ -111,6 +112,7 @@ import { LoadingModule } from './loading/loading.module';
     EventTrackerModule,
     BusyRibbonModule,
     NoteModule,
+    PresentationPanelModule,
     JobsProvisioningModule,
     LoadingModule
   ],
@@ -167,6 +169,7 @@ import { LoadingModule } from './loading/loading.module';
     EventTrackerModule,
     BusyRibbonModule,
     NoteModule,
+    PresentationPanelModule,
     JobsProvisioningModule,
     LoadingModule
   ]

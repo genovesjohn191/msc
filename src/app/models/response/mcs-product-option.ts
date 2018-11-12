@@ -1,22 +1,18 @@
 import { JsonProperty } from 'json-object-mapper';
-import { McsProductSelectOption } from './mcs-product-select-option';
+import { McsProductOptionProperty } from './mcs-product-option-property';
 
 export class McsProductOption {
   public name: string;
-  public type: string;
   public displayOrder: string;
-  public maxQuantity: string;
-  public minQuantity: string;
+  public listOptions: string[];
 
-  @JsonProperty({ type: McsProductSelectOption })
-  public selectOptions: McsProductSelectOption;
+  @JsonProperty({ type: McsProductOptionProperty })
+  public properties: McsProductOptionProperty[];
 
   constructor() {
     this.name = undefined;
-    this.type = undefined;
     this.displayOrder = undefined;
-    this.maxQuantity = undefined;
-    this.minQuantity = undefined;
-    this.selectOptions = undefined;
+    this.listOptions = undefined;
+    this.properties = undefined;
   }
 }

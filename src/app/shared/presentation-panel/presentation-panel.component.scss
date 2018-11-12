@@ -1,0 +1,24 @@
+@import "../../../styles/shared/base";
+
+.presentation-panel-wrapper {
+  @include display-flex(column);
+  @include box-shadow((
+    0 2px 2px rgba($color-black, 0.24),
+    0 0 2px rgba($color-black, 0.12)
+  ));
+  border: 1px solid $color-grey-07;
+  margin: $space-xsmall;
+}
+
+.presentation-panel-header {
+  @include display-flex(row);
+  @include align-items(center);
+  justify-content: center;
+  padding: $space-small;
+  background-color: $color-grey-07;
+}
+
+.presentation-panel-content {
+  padding: $space-small;
+}
+

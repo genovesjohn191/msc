@@ -84,7 +84,7 @@ export * from './response/mcs-product-category';
 export * from './response/mcs-product-dependency';
 export * from './response/mcs-product-download';
 export * from './response/mcs-product-option';
-export * from './response/mcs-product-select-option';
+export * from './response/mcs-product-option-property';
 export * from './response/mcs-product-owner';
 export * from './response/mcs-product-use-case';
 export * from './response/mcs-resource';
