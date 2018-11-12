@@ -306,7 +306,12 @@ export class SelectComponent extends McsFormFieldControlBase<any>
    * @param value Model binding value
    */
   public writeValue(value: any) {
-    if (!isNullOrEmpty(this._options)) { this._selectItemByValue(value); }
+    if (!isNullOrEmpty(this._options)) {
+      // We need to re-initialized the previous state of the select dropdown
+      // in case the dropdown is required since the select dropdown should
+      // consider the first item selected
+      isNullOrEmpty(value) ? this._initializeSelection() : this._selectItemByValue(value);
+    }
   }
 
   /**
