@@ -19,7 +19,8 @@ import {
   takeUntil,
   tap,
   shareReplay,
-  finalize
+  finalize,
+  map
 } from 'rxjs/operators';
 import {
   CoreDefinition,
@@ -31,7 +32,9 @@ import {
 import {
   ServiceType,
   RouteKey,
-  McsResource
+  McsResource,
+  DataStatus,
+  McsOrder
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -55,6 +58,8 @@ import { ServerCreateFlyweightContext } from './server-create-flyweight.context'
 export class ServerCreateComponent implements
   OnInit, AfterContentInit, OnDestroy, McsSafeToNavigateAway {
   public textContent: any;
+  public order$: Observable<McsOrder>;
+  public orderIsUpdating$: Observable<boolean>;
   public resources$: Observable<McsResource[]>;
   public resource$: Observable<McsResource>;
   public faCreationForm: FormArray;
@@ -95,6 +100,8 @@ export class ServerCreateComponent implements
 
   public ngAfterContentInit() {
     this._subscribeToFormArrayChanges();
+    this._subscribeToOrderChanges();
+    this._subscribeToUpdateOrderChanges();
   }
 
   public ngOnDestroy() {
@@ -179,5 +186,24 @@ export class ServerCreateComponent implements
         this.faCreationForm = _formArray;
         this._changeDetectorRef.markForCheck();
       });
+  }
+
+  /**
+   * Subscribe to order changes and always get the latest obtained from api
+   */
+  private _subscribeToOrderChanges(): void {
+    this.order$ = this._serverCreateFlyweightContext.orderChanges.pipe(
+      tap(() => this._changeDetectorRef.markForCheck())
+    );
+  }
+
+  /**
+   * Subscribe to updating order state changes
+   */
+  private _subscribeToUpdateOrderChanges(): void {
+    this.orderIsUpdating$ = this._serverCreateFlyweightContext
+      .updateOrderStateChanges.pipe(
+        map((state) => state === DataStatus.InProgress ? true : false)
+      );
   }
 }

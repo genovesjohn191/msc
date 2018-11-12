@@ -109,11 +109,6 @@
           <mcs-data-empty *mcsDataEmptyDef>
             <div class="listing-status-wrapper">
               <span>{{ textContent.noMedia }} </span>
-              <span *ngIf="!isSearching">
-                <!-- We need to hardcode this instead of putting in the text-config
-                    since it is using link -->
-                Click <a (click)="onClickNewMediaButton()">here</a> to add new media.
-              </span>
             </div>
           </mcs-data-empty>
           <mcs-data-error *mcsDataErrorDef>

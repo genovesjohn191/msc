@@ -678,7 +678,7 @@
     "uploadMedia": "Upload Media",
     "loading": "Loading Medias.",
     "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of media.",
-    "noMedias": "No media to display.",
+    "noMedia": "No media to display.",
     "retry": "Try again shortly",
     "filterColumn": "Filter Column",
     "tableSearch": "Table Search",

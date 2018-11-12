@@ -10,7 +10,9 @@ import {
   catchError,
   distinctUntilChanged,
   map,
-  tap
+  tap,
+  takeUntil,
+  finalize
 } from 'rxjs/operators';
 import {
   McsGuid,
@@ -27,18 +29,17 @@ import {
   McsJob,
   DataStatus,
   McsOrder,
-  McsOrderUpdate,
-  McsOrderItemUpdate,
   McsOrderCreate,
   McsOrderItemCreate,
   McsServerCreate,
   McsServerClone,
   McsResource,
-  RouteKey
+  RouteKey,
+  McsOrderCreateServer
 } from '@app/models';
 import {
   ServersApiService,
-  OrdersApiService
+  OrdersRepository
 } from '@app/services';
 
 @Injectable()
@@ -48,34 +49,49 @@ export class ServerCreateFlyweightContext {
   public resourceChanges = new BehaviorSubject<McsResource>(undefined);
   public formArrayChanges = new BehaviorSubject<FormArray>(undefined);
 
+  private _addedAddOns: McsOrderItemCreate[] = [];
+
   private _error: any;
   private _jobs: McsJob[];
   private _resource: McsResource;
   private _formArray: FormArray;
+  private _updateResetRequest = new Subject<void>();
 
   /**
-   * Returns the current order details
+   * Returns the main order reference ID
+   */
+  public get orderReferenceId(): string {
+    return getSafeProperty(this._order, (obj) => obj.items[0].referenceId);
+  }
+
+  /**
+   * Returns the main order service ID
+   */
+  public get orderServiceId(): string {
+    return getSafeProperty(this._order, (obj) => obj.items[0].serviceId);
+  }
+
+  /**
+   * Returns the whole order details
    */
   public get order(): McsOrder { return this._order; }
   private _order: McsOrder;
 
-  public get orderChange(): Observable<McsOrder> {
-    return this._orderChange.pipe(distinctUntilChanged());
-  }
-  private _orderChange: Subject<McsOrder>;
+  public get orderChanges(): Observable<McsOrder> { return this._orderChanges; }
+  private _orderChanges = new Subject<McsOrder>();
 
-  public get requestStatusChange(): Observable<DataStatus> {
-    return this._requestStatusChange.pipe(distinctUntilChanged());
+  public get updateOrderStateChanges(): Observable<DataStatus> {
+    return this._updateOrderStateChanges.pipe(distinctUntilChanged());
   }
-  private _requestStatusChange: Subject<DataStatus>;
+  private _updateOrderStateChanges = new Subject<DataStatus>();
 
   constructor(
-    private _ordersService: OrdersApiService,
+    private _ordersRepository: OrdersRepository,
     private _serversService: ServersApiService,
     private _errorHandlerService: McsErrorHandlerService
   ) {
     this._jobs = new Array();
-    this._requestStatusChange = new Subject<DataStatus>();
+    this._updateOrderStateChanges = new Subject<DataStatus>();
   }
 
   /**
@@ -120,46 +136,29 @@ export class ServerCreateFlyweightContext {
     this.errorChanges.next(this._error);
   }
 
-  /**
-   * Updates the inputted order based on its item list
-   * @param _updatedOrder Updated order to be requested
-   */
-  public updateOrder(_updatedOrder: McsOrder): void {
-    if (isNullOrEmpty(_updatedOrder)) { return; }
+  public updateAddOns(newLineItems: McsOrderItemCreate[]): Observable<McsOrder> {
+    this._updateOrderStateChanges.next(DataStatus.InProgress);
 
-    let targetOrder = new McsOrderUpdate();
-
-    /* TODO: 09112018
-       1. Set based on requirements
-       2. Confirm if error encountered, what will happen?
-       3. Need to check whether the line items have been changed so
-       that we will update the order based on the line items
-    */
-
-    _updatedOrder.items.forEach((updatedItem) => {
-      let targetItem = new McsOrderItemUpdate();
-      targetItem.parentReferenceId = updatedItem.parentReferenceId;
-      targetItem.parentServiceId = updatedItem.serviceId;
-      targetItem.itemOrderType = updatedItem.typeId;
-      targetItem.properties = updatedItem.properties;
-      targetItem.referenceId = updatedItem.referenceId;
-      targetOrder.items.push(targetItem);
-    });
-    targetOrder.description = _updatedOrder.description;
-    targetOrder.contractDuration = 2;
-
-    this._requestStatusChange.next(DataStatus.InProgress);
-    this._ordersService.updateOrder(_updatedOrder.id, targetOrder)
-      .pipe(
-        catchError((error) => {
-          this._requestStatusChange.next(DataStatus.Error);
-          return throwError(error);
-        })
-      )
-      .subscribe((responseOrder) => {
-        this._requestStatusChange.next(DataStatus.Success);
-        this._setOrderDetails(getSafeProperty(responseOrder, (obj) => obj.content));
-      });
+    // Send the request to API
+    this._updateResetRequest.next();
+    return this._ordersRepository.updateOrder(
+      this._order.id,
+      'Managed Servers Add-Ons',
+      12,
+      newLineItems,
+      this._addedAddOns
+    ).pipe(
+      takeUntil(this._updateResetRequest),
+      catchError((error) => {
+        this._updateOrderStateChanges.next(DataStatus.Error);
+        return throwError(error);
+      }),
+      tap((response) => {
+        this._updateOrderStateChanges.next(DataStatus.Success);
+        this._setOrderDetails(response);
+      }),
+      finalize(() => this._addedAddOns = newLineItems)
+    );
   }
 
   public createServer(
@@ -185,27 +184,26 @@ export class ServerCreateFlyweightContext {
       orderItem.itemOrderType = OrderIdType.CreateManagedServer;
       orderItem.referenceId = McsGuid.newGuid().toString();
       orderItem.parentServiceId = resourceName;
-      orderItem.properties = serverModel;
+      orderItem.properties = McsOrderCreateServer.createInstanceBySelfManaged(serverModel);
 
       // Create order
       let order = new McsOrderCreate();
-      order.description = 'Create Managed Server';
+      order.description = 'Managed server details';
       order.contractDuration = 12;
       order.items = [orderItem];
-      serverInstance = this._ordersService.createOrder(order)
-        .pipe(map((response) => getSafeProperty(response, (obj) => obj.content)));
+      serverInstance = this._ordersRepository.createOrder(order);
     }
 
-    this._requestStatusChange.next(DataStatus.InProgress);
+    this._updateOrderStateChanges.next(DataStatus.InProgress);
     return serverInstance.pipe(
       tap((response) => {
         response instanceof McsJob ?
           this.setJob(response) :
           this._setOrderDetails(response);
-        this._requestStatusChange.next(DataStatus.Success);
+        this._updateOrderStateChanges.next(DataStatus.Success);
       }),
       catchError((error) => {
-        this._requestStatusChange.next(DataStatus.Error);
+        this._updateOrderStateChanges.next(DataStatus.Error);
         this._errorHandlerService.handleHttpRedirectionError(error.status);
         return throwError(error);
       })
@@ -219,7 +217,7 @@ export class ServerCreateFlyweightContext {
   private _setOrderDetails(_orderDetails: McsOrder): void {
     if (isNullOrEmpty(_orderDetails)) { return undefined; }
     this._order = _orderDetails;
-    this._orderChange.next(_orderDetails);
+    this._orderChanges.next(this._order);
   }
 
   /**
