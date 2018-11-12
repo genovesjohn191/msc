@@ -10,6 +10,9 @@ import {
   McsServerHidsOptions
 } from '@app/models';
 
+/**
+ * @deprecated use the order/items/types instead
+ */
 @Injectable()
 export class OptionsApiService {
   // TODO: Needs refactoring once ordering API is ready

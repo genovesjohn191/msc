@@ -70,22 +70,35 @@
     </mcs-wizard>
 
     <!-- Quote Widget -->
-    <!-- TODO: The value should be changed when order endpoint was finalized -->
     <ng-container *ngIf="(resource$ | async)?.serviceType === serviceTypeEnum.Managed">
-      <mcs-quote-widget>
-        <ng-container mcsQuoteWidgetHeader>
-          <span>Total Cost: $200</span>
+      <mcs-quote-widget *ngIf="order$ | async as orderDetails">
+
+        <!-- Order Header -->
+        <ng-container mcsQuoteWidgetHeader *ngIf="(orderIsUpdating$ | async); else actualPrice">
+          <div class="inline-items-small">
+            <mcs-loader></mcs-loader>
+            <span>Updating charges</span>
+          </div>
         </ng-container>
+        <ng-template #actualPrice>
+          <span>Total Cost: ${{ orderDetails.charges?.monthly || 0 }}</span>
+        </ng-template>
 
-        <div class="space-between-inline-items">
-          <span>- Monthly cost</span>
-          <span>: $150</span>
-        </div>
-
-        <div class="space-between-inline-items">
-          <span>- One-off cost</span>
-          <span>: $50</span>
-        </div>
+        <!-- Order Content -->
+        <mcs-list spacing="auto">
+          <mcs-list-item class="space-between-inline-items">
+            <span>Monthly</span>
+            <span>${{ orderDetails.charges?.monthly || 0 }}</span>
+          </mcs-list-item>
+          <mcs-list-item class="space-between-inline-items">
+            <span>One-Off</span>
+            <span>${{ orderDetails.charges?.oneOff || 0 }}</span>
+          </mcs-list-item>
+          <mcs-list-item class="space-between-inline-items">
+            <span>Up-Front</span>
+            <span>${{ orderDetails.charges?.upFront || 0 }}</span>
+          </mcs-list-item>
+        </mcs-list>
       </mcs-quote-widget>
     </ng-container>
 

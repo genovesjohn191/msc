@@ -5,19 +5,26 @@ import {
   OrderStatusSerialization,
   orderStatusText
 } from '../enumerations/order-status.enum';
-import { McsOrderCharge } from './mcs-order-charge';
+import {
+  ProvisioningStatus,
+  ProvisioningStatusSerialization
+} from '../enumerations/provisioning-status.enum';
 import { McsEntityBase } from '../mcs-entity.base';
+import { McsOrderCharge } from './mcs-order-charge';
 
 export class McsOrderItem extends McsEntityBase {
+  @JsonProperty({
+    type: ProvisioningStatus,
+    serializer: ProvisioningStatusSerialization,
+    deserializer: ProvisioningStatusSerialization
+  })
+  public itemProvisioningStatus: ProvisioningStatus;
+  public automatedProvisioningAvailable: boolean;
   public referenceId: string;
   public parentReferenceId: string;
   public orderItemId: string;
-  public typeId: string;
-  public serviceId: string;
-  public description: string;
-  public properties: any;
-  public createdBy: string;
-  public modifiedBy: string;
+  public itemOrderType: string;
+  public parentServiceId: string;
 
   @JsonProperty({
     type: OrderStatus,
@@ -26,12 +33,16 @@ export class McsOrderItem extends McsEntityBase {
   })
   public status: OrderStatus;
 
+  public description: string;
+  public createdBy: string;
+
   @JsonProperty({
     type: Date,
     serializer: McsDateSerialization,
     deserializer: McsDateSerialization
   })
   public createdOn: Date;
+  public modifiedBy: string;
 
   @JsonProperty({
     type: Date,
@@ -43,21 +54,32 @@ export class McsOrderItem extends McsEntityBase {
   @JsonProperty({ type: McsOrderCharge })
   public charges: McsOrderCharge;
 
+  public properties: any;
+  public jobId: string;
+  public taskId: string;
+  public serviceId: string;
+
   constructor() {
     super();
-    this.referenceId = undefined;
-    this.parentReferenceId = undefined;
+    this.automatedProvisioningAvailable = undefined;
+    this.charges = undefined;
+    this.createdBy = undefined;
+    this.createdOn = undefined;
+    this.description = undefined;
+    this.id = undefined;
+    this.itemOrderType = undefined;
+    this.itemProvisioningStatus = undefined;
+    this.jobId = undefined;
+    this.modifiedBy = undefined;
+    this.modifiedOn = undefined;
     this.orderItemId = undefined;
-    this.typeId = undefined;
+    this.parentReferenceId = undefined;
+    this.parentServiceId = undefined;
+    this.properties = undefined;
+    this.referenceId = undefined;
     this.serviceId = undefined;
     this.status = undefined;
-    this.description = undefined;
-    this.properties = undefined;
-    this.createdBy = undefined;
-    this.modifiedBy = undefined;
-    this.createdOn = undefined;
-    this.modifiedOn = undefined;
-    this.charges = undefined;
+    this.taskId = undefined;
   }
 
   /**

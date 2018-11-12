@@ -4,11 +4,16 @@
     <p>{{ textContent.description }}</p>
 
     <div class="block-items-large">
-      <mcs-collapsible-panel [header]="textContent.antiMalwareAddOn"
+      <mcs-collapsible-panel (collapseChange)="antiMalwareCheckedChange($event)"
+        [header]="textContent.antiMalwareAddOn"
         [mcsContextualHelp]="textContent.antiMalwareAddOnHelp">
-        <mcs-anti-malware-addon></mcs-anti-malware-addon>
+        <mcs-anti-malware-addon
+          (dataChange)="onChangeAntiMalwareDetails($event)">
+        </mcs-anti-malware-addon>
       </mcs-collapsible-panel>
 
+      <!-- TODO: Remove this temporarily since they're not yet enabled,
+        or the payload was not finalize
       <mcs-collapsible-panel [header]="textContent.disasterRecoveryAddOn"
         [mcsContextualHelp]="textContent.disasterRecoveryAddOnHelp">
         <mcs-disaster-recovery-addon></mcs-disaster-recovery-addon>
@@ -18,10 +23,11 @@
         [mcsContextualHelp]="textContent.sqlServerAddOnHelp">
         <mcs-sql-server-addon></mcs-sql-server-addon>
       </mcs-collapsible-panel>
+      -->
     </div>
 
     <!-- Wizard Actions -->
-    <div class="action-items">
+    <div class="action-items space-top-medium">
       <a mcsWizardStepPrevious mcsId="step-2-back">Back</a>
       <button mcsButton size="small" arrow="right"
         mcsWizardStepNext mcsId="step-2-next">Next</button>

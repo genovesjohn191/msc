@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import {
   coerceBoolean,
-  animateFactory,
+  animateFactory
 } from '@app/utilities';
 import { CoreDefinition } from '@app/core';
 
@@ -52,10 +52,10 @@ export class QuoteWidgetComponent {
   public constructor(private _changeDetectorRef: ChangeDetectorRef) { }
 
   /**
-   * Returns the toggle icon key (Chevron right and down)
+   * Returns the toggle icon key (Chevron up and down)
    */
   public get toggleIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_CHEVRON_DOWN;
+    return CoreDefinition.ASSETS_FONT_CHEVRON_UP;
   }
 
   /**

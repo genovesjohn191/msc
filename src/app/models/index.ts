@@ -39,11 +39,14 @@ export * from './enumerations/ticket-priority';
 export * from './enumerations/ticket-status';
 export * from './enumerations/ticket-subtype';
 export * from './enumerations/status-code.enum';
+export * from './enumerations/provisioning-status.enum';
 
 /** Request */
+export * from './request/mcs-order-create-server';
+export * from './request/mcs-server-create-addon-anti-virus';
+
 export * from './request/mcs-order-create';
 export * from './request/mcs-order-item-create';
-export * from './request/mcs-order-item-update';
 export * from './request/mcs-order-merge';
 export * from './request/mcs-order-update';
 export * from './request/mcs-server-attach-media';

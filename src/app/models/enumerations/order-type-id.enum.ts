@@ -2,8 +2,9 @@ import { CacheKey } from 'json-object-mapper';
 import { McsEnumSerializationBase } from '@app/core';
 
 export enum OrderIdType {
-  CreateManagedServer = 'server.provision.vcloud',
-  CreateFirewallAddOn = 'server.firewall.addon'
+  CreateManagedServer = 'servers.vcloud.provision',
+  CreateAddOnAntiMalware = 'av.provision',
+  CreateAddOnFirewall = 'firewall.provision'
 }
 
 /**

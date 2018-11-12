@@ -8,6 +8,7 @@ import {
   getSafeProperty,
   isNullOrEmpty
 } from '@app/utilities';
+import { McsProductLocation } from './mcs-product-location';
 
 export class McsProduct extends McsEntityBase {
   public version: number;
@@ -28,9 +29,11 @@ export class McsProduct extends McsEntityBase {
   public price: string;
   public retailPrice: string;
   public recurringPrice: string;
-  public locations: string[];
   public serviceIdPrefix: string;
   public elementCode: number;
+
+  @JsonProperty({ type: McsProductLocation })
+  public locations: McsProductLocation[];
 
   @JsonProperty({ type: McsProductDependency })
   public dependentProducts: McsProductDependency[];
