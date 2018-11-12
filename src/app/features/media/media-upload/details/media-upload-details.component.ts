@@ -241,7 +241,8 @@ export class MediaUploadDetailsComponent
         this._errorHandlerService.handleHttpRedirectionError(error.status);
         return throwError(error);
       }),
-      finalize(() => this._loadingService.hideLoader())
+      finalize(() => this._loadingService.hideLoader()),
+      tap(() => this._resetFormFields())
     );
   }
 
@@ -327,5 +328,16 @@ export class MediaUploadDetailsComponent
     this._formGroupService.touchAllFieldsByFormGroup(this.fgMediaUpload);
     this._formGroupService.scrollToFirstInvalidField(this._elementRef.nativeElement);
     return false;
+  }
+
+  /**
+   * Resets all form fields data
+   */
+  private _resetFormFields(): void {
+    if (isNullOrEmpty(this.fgMediaUpload)) { return; }
+    this.fcCatalogs.reset();
+    this.fcMediaDescription.reset();
+    this.fcMediaName.reset();
+    this.fcMediaUrl.reset();
   }
 }

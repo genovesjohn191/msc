@@ -109,6 +109,14 @@
           <mcs-data-empty *mcsDataEmptyDef>
             <div class="listing-status-wrapper">
               <span>{{ textContent.noMedia }} </span>
+              <ng-container *mcsAccessControl="['TemplateEdit']">
+                <span>
+                  Click <a (click)="navigateToMediaUpload()"
+                  mcsEventTracker="upload-media"
+                  mcsEventCategory="media"
+                  mcsEventLabel="empty-media-listing-option">here</a> to upload media.
+                </span>
+              </ng-container>
             </div>
           </mcs-data-empty>
           <mcs-data-error *mcsDataErrorDef>
