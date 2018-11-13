@@ -1,4 +1,16 @@
-<mcs-page [header]="(selectedProduct$ | async)?.name">
+<mcs-page>
+  <!-- Page template header -->
+  <ng-container *mcsPageHeader>
+    <ng-container *ngIf="selectedProduct$ | async as selectedProduct">
+      <div class="space-between-inline-items align-items-center full-width">
+        <div><h1>{{ selectedProduct.name }}</h1></div>
+        <div class="form-field-inline">
+          <h3>{{ selectedProduct.serviceIdPrefix }}</h3>
+          <span read-only>v{{ selectedProduct.version }}</span>
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
 
   <!-- Left Panel -->
   <mcs-left-panel *mcsLeftPanelDef="textContent.leftPanelHeader">

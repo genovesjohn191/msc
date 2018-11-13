@@ -25,15 +25,6 @@ $scrollable-link-body-padding: $space-medium;
     margin-bottom: $space-medium;
     color: $scrollable-link-label-color;
   }
-
-  .scrollable-link-body {
-    margin-left: $scrollable-link-body-padding;
-    margin-right: $scrollable-link-body-padding;
-    @include breakpoint(small) {
-      margin-left: 0;
-      margin-right: 0;
-    }
-  }
 }
 
 .scrollable-link-group-header-wrapper {

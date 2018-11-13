@@ -13,7 +13,6 @@
 .presentation-panel-header {
   @include display-flex(row);
   @include align-items(center);
-  justify-content: center;
   padding: $space-small;
   background-color: $color-grey-07;
 }

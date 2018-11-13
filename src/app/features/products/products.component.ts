@@ -5,7 +5,8 @@ import {
   OnDestroy,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  ViewChild
+  ViewChild,
+  ViewEncapsulation
 } from '@angular/core';
 import {
   Subject,
@@ -55,7 +56,12 @@ import { ProductService } from './product/product.service';
 @Component({
   selector: 'mcs-products',
   templateUrl: 'products.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./products.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  host: {
+    'class': 'products-wrapper'
+  }
 })
 
 export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {

@@ -71,27 +71,6 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
   private _timerSubscription: Subscription;
   private _destroySubject = new Subject<void>();
 
-  public get isMultiJobs(): boolean {
-    return isNullOrEmpty(this.jobs) ? false : this.jobs.length > 1;
-  }
-
-  public get hasJobs(): boolean {
-    return !isNullOrEmpty(this.jobs);
-  }
-
-  public get dataStatusEnum(): any {
-    return DataStatus;
-  }
-
-  // Icons
-  public get checkIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_CHECK;
-  }
-
-  public get closeIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_CLOSE;
-  }
-
   public constructor(
     private _textContentProvider: McsTextContentProvider,
     private _changeDetectorRef: ChangeDetectorRef,
@@ -121,6 +100,41 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
   public ngOnDestroy() {
     unsubscribeSafely(this._timerSubscription);
     unsubscribeSafely(this._destroySubject);
+  }
+
+  /**
+   * Returns true when the inputted jobs are more than 1
+   */
+  public get isMultiJobs(): boolean {
+    return isNullOrEmpty(this.jobs) ? false : this.jobs.length > 1;
+  }
+
+  /**
+   * Returns true when the job is provided
+   */
+  public get hasJobs(): boolean {
+    return !isNullOrEmpty(this.jobs);
+  }
+
+  /**
+   * Returns the data status in enum form
+   */
+  public get dataStatusEnum(): any {
+    return DataStatus;
+  }
+
+  /**
+   * Returns the check icon key
+   */
+  public get checkIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_CHECK;
+  }
+
+  /**
+   * Returns the close icon key
+   */
+  public get closeIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_CLOSE;
   }
 
   /**
@@ -171,10 +185,10 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
   }
 
   /**
-   * Returns true when the job was completed
+   * Returns true when the job was ended
    * @param job Job to be checked
    */
-  public isJobCompleted(job: McsJob): boolean {
+  public isJobEnded(job: McsJob): boolean {
     return job.dataStatus !== DataStatus.InProgress;
   }
 

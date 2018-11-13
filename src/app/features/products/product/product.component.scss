@@ -24,6 +24,18 @@ $product-panel-color: $color-grey-08;
   max-width: $product-max-width;
   max-height: 100%;
   overflow: hidden;
+
+  h1 {
+    @include font-size(20);
+  }
+
+  h2 {
+    @include font-size(18);
+  }
+
+  h3 {
+    @include font-size(15);
+  }
 }
 
 .product-catalog-description {
@@ -63,6 +75,13 @@ $product-panel-color: $color-grey-08;
 
 .product-catalog-item {
   margin: 0;
+  counter-increment: product-catalog-item-count;
+
+  h2 {
+    &::before {
+      content: counter(product-catalog-item-count) ". ";
+    }
+  }
 }
 
 .product-catalog-banner {

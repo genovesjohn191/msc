@@ -1,4 +1,4 @@
-<div #headerElement class="scroll-link-label">
+<div #headerElement class="scroll-link-label" *ngIf="!labelIsHidden">
   <ng-container *ngIf="labelTemplate; else labelTemplate">
     <h1>{{ label }}</h1>
   </ng-container>

@@ -4,10 +4,6 @@ import { McsProductDependency } from './mcs-product-dependency';
 import { McsProductUseCase } from './mcs-product-use-case';
 import { McsProductOwner } from './mcs-product-owner';
 import { McsProductOption } from './mcs-product-option';
-import {
-  getSafeProperty,
-  isNullOrEmpty
-} from '@app/utilities';
 import { McsProductLocation } from './mcs-product-location';
 
 export class McsProduct extends McsEntityBase {
@@ -91,25 +87,5 @@ export class McsProduct extends McsEntityBase {
     this.architectOwnerSecondary = undefined;
     this.specialistOwner = undefined;
     this.productOptions = undefined;
-  }
-
-  /**
-   * Returns all the products owners of this product
-   */
-  public get productOwners(): string[] {
-    return new Array(
-      getSafeProperty(this.primaryOwner, (obj) => obj.name),
-      getSafeProperty(this.secondaryOwner, (obj) => obj.name)
-    ).filter((record) => !isNullOrEmpty(record));
-  }
-
-  /**
-   * Returns all the architecture ownsers of this product
-   */
-  public get architectureOwners(): string[] {
-    return new Array(
-      getSafeProperty(this.architectOwnerPrimary, (obj) => obj.name),
-      getSafeProperty(this.architectOwnerSecondary, (obj) => obj.name)
-    ).filter((record) => !isNullOrEmpty(record));
   }
 }
