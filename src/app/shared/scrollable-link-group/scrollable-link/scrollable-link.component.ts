@@ -5,7 +5,8 @@ import {
   ViewEncapsulation,
   ChangeDetectionStrategy,
   ElementRef,
-  ViewChild
+  ViewChild,
+  ChangeDetectorRef
 } from '@angular/core';
 import {
   McsUniqueId,
@@ -32,6 +33,7 @@ const DEFAULT_CONTENT_OFFSET_FROM_TOP = 50;
 
 export class ScrollableLinkComponent {
   public id = McsUniqueId.NewId('scrollable-link');
+  public labelIsHidden: boolean;
 
   @Input()
   public label: string;
@@ -53,6 +55,7 @@ export class ScrollableLinkComponent {
 
   constructor(
     private _elementRef: ElementRef,
+    private _changeDetectorRef: ChangeDetectorRef,
     private _scrollDispatcherService: McsScrollDispatcherService
   ) {
     this.active = false;
@@ -74,5 +77,13 @@ export class ScrollableLinkComponent {
       let headerElement = this._headerElement.nativeElement as HTMLElement;
       this._scrollDispatcherService.scrollToElement(headerElement, DEFAULT_CONTENT_OFFSET_FROM_TOP);
     });
+  }
+
+  /**
+   * Hides the label of the scrollable link element
+   */
+  public hideLabel(): void {
+    this.labelIsHidden = true;
+    this._changeDetectorRef.markForCheck();
   }
 }

@@ -67,7 +67,10 @@ export class ScrollableLinkGroupComponent implements AfterViewInit, AfterContent
     Promise.resolve().then(() => {
       this._scrollableHeaders.changes
         .pipe(startWith(null), takeUntil(this._destroySubject))
-        .subscribe(() => this._initializeSelection());
+        .subscribe(() => {
+          this._initializeSelection();
+          this._hideSingleScrollLinkLabel();
+        });
       this._subscribeToScrollUpdate();
       this._subscribeToActivatedLinkByScrollChange();
     });
@@ -124,6 +127,16 @@ export class ScrollableLinkGroupComponent implements AfterViewInit, AfterContent
   private _initializeSelection(): void {
     if (isNullOrEmpty(this.scrollableLinks)) { return; }
     this._selectLink(this.scrollableLinks.first);
+  }
+
+  /**
+   * Hides the label of the scrollable link when it has a single record
+   */
+  private _hideSingleScrollLinkLabel(): void {
+    if (isNullOrEmpty(this.scrollableLinks)) { return; }
+    if (!this.hasMultipleLinks) {
+      this.scrollableLinks.first.hideLabel();
+    }
   }
 
   /**

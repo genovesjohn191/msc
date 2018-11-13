@@ -49,8 +49,8 @@
             </div>
           </div>
 
-          <!-- Job completed -->
-          <div *ngIf="isJobCompleted(job)" class="job-completed">
+          <!-- Job ended -->
+          <div *ngIf="isJobEnded(job)" class="job-completed">
 
             <div [ngSwitch]="job.dataStatus">
               <!-- In progress -->

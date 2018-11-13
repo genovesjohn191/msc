@@ -1,7 +1,8 @@
 <ng-container *ngIf="selectedProduct$ | async as selectedProduct">
 
   <!-- Short description -->
-  <ng-container *ngIf="selectedProductTextContent$ | async as shortTextContent">
+  <!-- TODO: Temporarily Removed for the demo -->
+  <!-- <ng-container *ngIf="selectedProductTextContent$ | async as shortTextContent">
     <div class="product-catalog-description" *ngIf="selectedProduct.shortDescription"
       [ngClass]="{'expanded': shortDescriptionExpanded}">
 
@@ -27,7 +28,7 @@
         </ng-template>
       </button>
     </div>
-  </ng-container>
+  </ng-container> -->
 
   <div class="product-catalog-content">
     <mcs-scrollable-link-group>
@@ -39,31 +40,40 @@
 
           <div class="product-catalog-widget-wrapper">
             <!-- Ownerships -->
-            <!-- TODO: Apply checking here -->
-            <mcs-presentation-panel>
+            <mcs-presentation-panel *mcsAccessControl="['CompanyView']">
               <ng-container mcsPresentationPanelHeader>
-                <span>Ownership</span>
+                <h4>Ownership</h4>
               </ng-container>
 
-              <mcs-list spacing="auto">
-                <ng-container *mcsAccessControl="['CompanyView']">
-                  <mcs-list-item class="form-field-inline"
-                    *ngIf="selectedProduct.productOwners | mcsIsNotNullOrEmpty">
-                    <span>Product Owners:</span>
-                    <span>{{ selectedProduct.productOwners | mcsArrayCommaSeparator }}</span>
-                  </mcs-list-item>
-                </ng-container>
-
-                <mcs-list-item class="form-field-inline"
-                  *ngIf="selectedProduct.architectureOwners | mcsIsNotNullOrEmpty">
-                  <span>Architecture Owners:</span>
-                  <span>{{ selectedProduct.architectureOwners | mcsArrayCommaSeparator }}</span>
+              <mcs-list>
+                <mcs-list-item *ngIf="selectedProduct.primaryOwner?.name">
+                  <span>{{ selectedProduct.primaryOwner.name }} -
+                    <small read-only> Primary Product Owner</small>
+                  </span>
                 </mcs-list-item>
 
-                <mcs-list-item class="form-field-inline"
-                  *ngIf="selectedProduct.specialistOwner?.name | mcsIsNotNullOrEmpty">
-                  <span>Specialist Owners:</span>
-                  <span>{{ selectedProduct.specialistOwner?.name }}</span>
+                <mcs-list-item *ngIf="selectedProduct.secondaryOwner?.name">
+                  <span>{{ selectedProduct.secondaryOwner.name }} -
+                    <small read-only> Secondary Product Owner</small>
+                  </span>
+                </mcs-list-item>
+
+                <mcs-list-item *ngIf="selectedProduct.architectOwnerPrimary?.name">
+                  <span>{{ selectedProduct.architectOwnerPrimary.name }} -
+                    <small read-only> Primary Architecture Owner</small>
+                  </span>
+                </mcs-list-item>
+
+                <mcs-list-item *ngIf="selectedProduct.architectOwnerSecondary?.name">
+                  <span>{{ selectedProduct.architectOwnerSecondary.name }} -
+                    <small read-only> Secondary Architecture Owner</small>
+                  </span>
+                </mcs-list-item>
+
+                <mcs-list-item *ngIf="selectedProduct.specialistOwner?.name">
+                  <span>{{ selectedProduct.specialistOwner.name }} -
+                    <small read-only> Specialist Product Owner</small>
+                  </span>
                 </mcs-list-item>
               </mcs-list>
             </mcs-presentation-panel>
@@ -71,7 +81,7 @@
             <!-- Dependencies -->
             <mcs-presentation-panel *ngIf="selectedProduct.dependentProducts | mcsIsNotNullOrEmpty">
               <ng-container mcsPresentationPanelHeader>
-                <span>Dependencies</span>
+                <h4>Dependencies</h4>
               </ng-container>
 
               <div>
@@ -91,10 +101,10 @@
               </div>
             </mcs-presentation-panel>
 
-            <!-- Availability Zones -->
+            <!-- Locations -->
             <mcs-presentation-panel *ngIf="selectedProduct.locations | mcsIsNotNullOrEmpty">
               <ng-container mcsPresentationPanelHeader>
-                <span>Availability Zones</span>
+                <h4>Locations</h4>
               </ng-container>
 
               <mcs-list spacing="small">
@@ -108,13 +118,24 @@
             </mcs-presentation-panel>
           </div>
 
-          <div [innerHTML]="selectedProduct.description"></div>
+          <!-- Short description -->
+          <div *ngIf="selectedProduct.shortDescription | mcsIsNotNullOrEmpty">
+            <h2>Short Description</h2>
+            <div [innerHTML]="selectedProduct.shortDescription"></div>
+          </div>
+
+          <!-- description -->
+          <div class="product-catalog-item"
+            *ngIf="selectedProduct.description | mcsIsNotNullOrEmpty">
+            <h2>Description</h2>
+            <div [innerHTML]="selectedProduct.description"></div>
+          </div>
         </div>
 
         <!-- Product Options -->
         <div class="product-catalog-item block-items-small"
           *ngIf="selectedProduct.productOptions | mcsIsNotNullOrEmpty">
-          <h3>Product Options</h3>
+          <h2>Product Options</h2>
 
           <ng-container *ngFor="let productOption of selectedProduct.productOptions">
             <div>
@@ -138,14 +159,14 @@
         <!-- Feature Benefit Matrix -->
         <div class="product-catalog-item"
           *ngIf="selectedProduct.featureBenefitMatrix | mcsIsNotNullOrEmpty">
-          <h3>Feature Benefit Matrix</h3>
+          <h2>Feature Benefit Matrix</h2>
           <div [innerHTML]="selectedProduct.featureBenefitMatrix"></div>
         </div>
 
         <!-- Use Cases -->
         <div class="product-catalog-item"
           *ngIf="selectedProduct.useCases | mcsIsNotNullOrEmpty">
-          <h3>Use Cases</h3>
+          <h2>Use Cases</h2>
           <ng-container *ngFor="let useCase of selectedProduct.useCases">
             <h3>{{ useCase.name }}</h3>
             <div [innerHTML]="useCase.description"></div>
@@ -157,7 +178,7 @@
       <mcs-scrollable-link label="Monitoring"
         *ngIf="selectedProduct.Monitoring | mcsIsNotNullOrEmpty">
         <div class="product-catalog-item">
-          <h3>Monitoring</h3>
+          <h2>Monitoring</h2>
           <div [innerHTML]="selectedProduct.featureBenefitMatrix"></div>
         </div>
       </mcs-scrollable-link>
@@ -166,7 +187,7 @@
       <mcs-scrollable-link label="Compliance"
         *ngIf="selectedProduct.pciDetails | mcsIsNotNullOrEmpty">
         <div class="product-catalog-item">
-          <h3>PCI Compliance</h3>
+          <h2>PCI Compliance</h2>
           <div [innerHTML]="selectedProduct.pciDetails"></div>
         </div>
       </mcs-scrollable-link>
@@ -176,7 +197,7 @@
       <mcs-scrollable-link label="More"
         *ngIf="selectedProduct.downloads | mcsIsNotNullOrEmpty">
         <div class="product-catalog-item">
-          <h3>Downloads</h3>
+          <h2>Downloads</h2>
           <div [innerHTML]="selectedProduct.downloads"></div>
         </div>
       </mcs-scrollable-link>

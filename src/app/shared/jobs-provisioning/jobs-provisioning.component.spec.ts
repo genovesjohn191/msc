@@ -147,19 +147,19 @@ describe('JobsProvisioningComponent', () => {
 
   describe('isJobCompleted()', () => {
     it(`should return false when job is active`, () => {
-      let jobCompleted = component.isJobCompleted(
+      let jobCompleted = component.isJobEnded(
         createNotification('12348', JobStatus.Active));
       expect(jobCompleted).toBeFalsy();
     });
 
     it(`should return false when job is pending`, () => {
-      let jobCompleted = component.isJobCompleted(
+      let jobCompleted = component.isJobEnded(
         createNotification('12348', JobStatus.Pending));
       expect(jobCompleted).toBeFalsy();
     });
 
     it(`should return true when job is not active | pending`, () => {
-      let jobCompleted = component.isJobCompleted(
+      let jobCompleted = component.isJobEnded(
         createNotification('12348', JobStatus.Completed));
       expect(jobCompleted).toBeTruthy();
     });

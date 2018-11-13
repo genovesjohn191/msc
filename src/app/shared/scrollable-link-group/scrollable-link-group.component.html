@@ -1,6 +1,6 @@
 <!-- Scrollable link group header -->
-<div class="scrollable-link-group-header-wrapper" #headerContainer>
-  <mcs-responsive-panel *ngIf="hasMultipleLinks">
+<div *ngIf="hasMultipleLinks" class="scrollable-link-group-header-wrapper" #headerContainer>
+  <mcs-responsive-panel>
     <ng-container *ngFor="let scrollableLink of scrollableLinks">
       <mcs-scrollable-link-header
         mcsId

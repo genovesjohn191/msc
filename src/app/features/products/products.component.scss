@@ -1,0 +1,12 @@
+@import "../../../styles/shared/base";
+
+.products-wrapper {
+  display: block;
+
+  // We need to split the serviceId and the header thats why
+  // we need to set the page header into 100%, need to fix this
+  // on relayout of the whole page
+  .page-header {
+    width: 100%;
+  }
+}
