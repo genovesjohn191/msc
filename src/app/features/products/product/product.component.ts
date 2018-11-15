@@ -57,6 +57,11 @@ export class ProductComponent implements OnInit {
   public selectedProduct$: Observable<McsProduct>;
   public selectedProductTextContent$: Observable<string>;
 
+  // Table columns
+  public thresholdColumns = ['description', 'alertThreshold'];
+  public productOptionsColumns = ['name', 'options'];
+  public userCasesColumns = ['name', 'description'];
+
   public get cloudIconKey(): string {
     return CoreDefinition.ASSETS_SVG_CLOUD_BLUE;
   }

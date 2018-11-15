@@ -87,6 +87,8 @@ export * from './response/mcs-product-option';
 export * from './response/mcs-product-option-property';
 export * from './response/mcs-product-owner';
 export * from './response/mcs-product-use-case';
+export * from './response/mcs-product-inview';
+export * from './response/mcs-product-inview-threshold';
 export * from './response/mcs-resource';
 export * from './response/mcs-resource-catalog-item';
 export * from './response/mcs-resource-compute';

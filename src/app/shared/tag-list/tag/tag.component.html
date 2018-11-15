@@ -1,5 +1,4 @@
 <ng-content></ng-content>
-<div class="remove-icon" (click)="remove()">
-  <!-- TODO: Set this close icon when the icons was finalized -->
+<div class="remove-icon" (click)="remove()" *ngIf="removable">
   <strong>x</strong>
 </div>

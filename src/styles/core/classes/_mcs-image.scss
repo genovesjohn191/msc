@@ -2,6 +2,13 @@ $image-thumbnail-height: 96px;
 $image-thumbnail-width: 128px;
 $image-thumbnail-dark-bg-color: $color-black;
 
+.image-responsive {
+  display: block;
+  height: auto;
+  width: auto;
+  max-width: 100%;
+}
+
 .image-thumbnail {
   height: $image-thumbnail-height;
   width: $image-thumbnail-width;

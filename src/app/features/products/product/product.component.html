@@ -29,7 +29,6 @@
       </button>
     </div>
   </ng-container> -->
-
   <div class="product-catalog-content">
     <mcs-scrollable-link-group>
       <mcs-scrollable-link label="All Information">
@@ -42,7 +41,7 @@
             <!-- Ownerships -->
             <mcs-presentation-panel *mcsAccessControl="['CompanyView']">
               <ng-container mcsPresentationPanelHeader>
-                <h4>Ownership</h4>
+                Ownership
               </ng-container>
 
               <mcs-list>
@@ -81,7 +80,7 @@
             <!-- Dependencies -->
             <mcs-presentation-panel *ngIf="selectedProduct.dependentProducts | mcsIsNotNullOrEmpty">
               <ng-container mcsPresentationPanelHeader>
-                <h4>Dependencies</h4>
+                Dependencies
               </ng-container>
 
               <div>
@@ -104,7 +103,7 @@
             <!-- Locations -->
             <mcs-presentation-panel *ngIf="selectedProduct.locations | mcsIsNotNullOrEmpty">
               <ng-container mcsPresentationPanelHeader>
-                <h4>Locations</h4>
+                Locations
               </ng-container>
 
               <mcs-list spacing="small">
@@ -119,7 +118,8 @@
           </div>
 
           <!-- Short description -->
-          <div *ngIf="selectedProduct.shortDescription | mcsIsNotNullOrEmpty">
+          <div *ngIf="selectedProduct.shortDescription | mcsIsNotNullOrEmpty"
+            class="space-bottom-large">
             <h2>Short Description</h2>
             <div [innerHTML]="selectedProduct.shortDescription"></div>
           </div>
@@ -137,48 +137,117 @@
           *ngIf="selectedProduct.productOptions | mcsIsNotNullOrEmpty">
           <h2>Product Options</h2>
 
-          <ng-container *ngFor="let productOption of selectedProduct.productOptions">
-            <div>
-              <strong>{{ productOption.name }}</strong>
-              <ul *ngIf="productOption.listOptions | mcsIsNotNullOrEmpty">
-                <li *ngFor="let option of productOption.listOptions">{{ option }}</li>
-              </ul>
+          <mcs-table [dataSource]="selectedProduct.productOptions" class="limited-view">
+            <ng-container mcsColumnDef="name">
+              <mcs-header-cell *mcsHeaderCellDef>
+                Name
+              </mcs-header-cell>
+              <mcs-data-cell *mcsDataCellDef="let row">
+                {{ row.name }}
+              </mcs-data-cell>
+            </ng-container>
 
-              <mcs-list spacing="auto" class="space-left-medium"
-                *ngIf="productOption.properties | mcsIsNotNullOrEmpty">
-                <mcs-list-item class="form-field-inline"
-                  *ngFor="let property of productOption.properties">
-                  <span>{{ property.label }}</span>
-                  <span>{{ property.value }}</span>
-                </mcs-list-item>
-              </mcs-list>
-            </div>
-          </ng-container>
-        </div>
+            <ng-container mcsColumnDef="options">
+              <mcs-header-cell *mcsHeaderCellDef>
+                Options
+              </mcs-header-cell>
+              <mcs-data-cell *mcsDataCellDef="let row">
+                <mcs-tag-list>
+                  <mcs-tag *ngFor="let item of row.listOptions" [removable]="false">
+                    {{ item }}
+                  </mcs-tag>
+                </mcs-tag-list>
+              </mcs-data-cell>
+            </ng-container>
 
-        <!-- Feature Benefit Matrix -->
-        <div class="product-catalog-item"
-          *ngIf="selectedProduct.featureBenefitMatrix | mcsIsNotNullOrEmpty">
-          <h2>Feature Benefit Matrix</h2>
-          <div [innerHTML]="selectedProduct.featureBenefitMatrix"></div>
+            <mcs-header-row *mcsHeaderRowDef="productOptionsColumns"></mcs-header-row>
+            <mcs-data-row *mcsDataRowDef="let row; columns: productOptionsColumns;"></mcs-data-row>
+          </mcs-table>
         </div>
 
         <!-- Use Cases -->
         <div class="product-catalog-item"
           *ngIf="selectedProduct.useCases | mcsIsNotNullOrEmpty">
           <h2>Use Cases</h2>
-          <ng-container *ngFor="let useCase of selectedProduct.useCases">
-            <h3>{{ useCase.name }}</h3>
-            <div [innerHTML]="useCase.description"></div>
-          </ng-container>
+
+          <mcs-table [dataSource]="selectedProduct.useCases" class="limited-view">
+            <ng-container mcsColumnDef="name">
+              <mcs-header-cell *mcsHeaderCellDef>
+                Name
+              </mcs-header-cell>
+              <mcs-data-cell *mcsDataCellDef="let row">
+                {{ row.name }}
+              </mcs-data-cell>
+            </ng-container>
+
+            <ng-container mcsColumnDef="description">
+              <mcs-header-cell *mcsHeaderCellDef>
+                Description
+              </mcs-header-cell>
+              <mcs-data-cell *mcsDataCellDef="let row">
+                <div [ngStyle]="{'white-space': 'normal'}" [innerHTML]="row.description"></div>
+              </mcs-data-cell>
+            </ng-container>
+
+            <mcs-header-row *mcsHeaderRowDef="userCasesColumns"></mcs-header-row>
+            <mcs-data-row *mcsDataRowDef="let row; columns: userCasesColumns;"></mcs-data-row>
+          </mcs-table>
         </div>
+
+        <!-- Feature Benefit Matrix -->
+        <!-- TODO: Not included in the PH1 -->
+        <!-- <div class="product-catalog-item"
+          *ngIf="selectedProduct.featureBenefitMatrix | mcsIsNotNullOrEmpty">
+          <h2>Feature Benefit Matrix</h2>
+          <div [innerHTML]="selectedProduct.featureBenefitMatrix"></div>
+        </div> -->
       </mcs-scrollable-link>
 
       <!-- Monitoring -->
       <mcs-scrollable-link label="Monitoring"
-        *ngIf="selectedProduct.Monitoring | mcsIsNotNullOrEmpty">
+        *ngIf="selectedProduct.inviewPremium | mcsIsNotNullOrEmpty">
         <div class="product-catalog-item">
           <h2>Monitoring</h2>
+
+          <mcs-grid>
+            <mcs-grid-row *ngFor="let inview of selectedProduct.inviewPremium">
+              <mcs-grid-column>
+                <h3>{{ inview.name }}</h3>
+                <p [innerHTML]="inview.description"></p>
+                <mcs-table [dataSource]="inview.thresholds"
+                  *ngIf="inview.thresholds | mcsIsNotNullOrEmpty">
+                  <!-- Description Column -->
+                  <ng-container mcsColumnDef="description">
+                    <mcs-header-cell *mcsHeaderCellDef>
+                      Description
+                    </mcs-header-cell>
+                    <mcs-data-cell *mcsDataCellDef="let row">
+                      {{ row.description }}
+                    </mcs-data-cell>
+                  </ng-container>
+
+                  <!-- Threshold Utilisation Column -->
+                  <ng-container mcsColumnDef="alertThreshold">
+                    <mcs-header-cell *mcsHeaderCellDef>
+                      Alert Threshold
+                    </mcs-header-cell>
+                    <mcs-data-cell *mcsDataCellDef="let row">
+                      {{ row.defaultAlertThreshold }}
+                    </mcs-data-cell>
+                  </ng-container>
+
+                  <!-- Header and Data row -->
+                  <mcs-header-row *mcsHeaderRowDef="thresholdColumns"></mcs-header-row>
+                  <mcs-data-row *mcsDataRowDef="let row; columns: thresholdColumns;"></mcs-data-row>
+                </mcs-table>
+              </mcs-grid-column>
+
+              <mcs-grid-column *ngIf="inview.graphUrl | mcsIsNotNullOrEmpty">
+                <img [src]="inview.graphUrl" class="image-responsive">
+              </mcs-grid-column>
+            </mcs-grid-row>
+          </mcs-grid>
+          <!-- Use grid system here -->
           <div [innerHTML]="selectedProduct.featureBenefitMatrix"></div>
         </div>
       </mcs-scrollable-link>

@@ -15,7 +15,7 @@
       <ng-container *ngTemplateOutlet="tab.labelTemplate.templateRef"></ng-container>
     </ng-container>
     <ng-container *ngIf="!tab.labelTemplate">
-      <h2>{{ tab.label }}</h2>
+      <span>{{ tab.label }}</span>
     </ng-container>
   </mcs-tab-header-item>
 </mcs-responsive-panel>
