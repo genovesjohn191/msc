@@ -6,6 +6,8 @@ $scrollable-link-group-border: $border-color-light;
 $scrollable-link-header-item-min-width: 100px;
 $scrollable-link-header-color: $color-grey-02;
 $scrollable-link-header-padding: $space-small $space-medium;
+$scrollable-link-header-font-size: 16;
+$scrollable-link-header-font: $base-font-bold;
 // Scrollable link body
 $scrollable-link-padding: $space-large;
 $scrollable-link-label-color: $color-primary-01;
@@ -37,11 +39,13 @@ $scrollable-link-body-padding: $space-medium;
     position: relative;
     @include display-flex(row);
     @include align-items(center);
-    justify-content: center;
     min-width: $scrollable-link-header-item-min-width;
     padding: $scrollable-link-header-padding;
     color: $scrollable-link-header-color;
     white-space: nowrap;
+    @include font-size($scrollable-link-header-font-size);
+    font-family: $scrollable-link-header-font;
+    height: 100%;
   }
 }
 

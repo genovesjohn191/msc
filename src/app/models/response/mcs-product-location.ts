@@ -4,6 +4,7 @@ import {
   ProductLocationStatus,
   ProductLocationStatusSerialization
 } from '../enumerations/product-location-status.enum';
+import { isNullOrEmpty } from '@app/utilities';
 
 export class McsProductLocation {
   public name: string;
@@ -41,6 +42,8 @@ export class McsProductLocation {
    * Returns the complete address of the location
    */
   public get fullAddress(): string {
-    return `${this.street} ${this.city}, ${this.country}, ${this.postCode}`;
+    let addressList = [`${this.street} ${this.city}`, this.country, this.postCode];
+    addressList = addressList.filter((address) => !isNullOrEmpty(address));
+    return addressList.join(', ');
   }
 }

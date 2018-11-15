@@ -1,5 +1,10 @@
 @import "../../../styles/shared/base";
 
+$presentation-panel-header-font-size: 14;
+$presentation-panel-header-font: $base-font-bold;
+$presentation-panel-header-padding: 8px 10px;
+$presentation-panel-content-padding: 10px;
+
 .presentation-panel-wrapper {
   @include display-flex(column);
   @include box-shadow((
@@ -7,17 +12,18 @@
     0 0 2px rgba($color-black, 0.12)
   ));
   border: 1px solid $color-grey-07;
-  margin: $space-xsmall;
 }
 
 .presentation-panel-header {
   @include display-flex(row);
   @include align-items(center);
-  padding: $space-small;
+  padding: $presentation-panel-header-padding;
   background-color: $color-grey-07;
+  @include font-size($presentation-panel-header-font-size);
+  font-family: $presentation-panel-header-font;
 }
 
 .presentation-panel-content {
-  padding: $space-small;
+  padding: $presentation-panel-content-padding;
 }
 

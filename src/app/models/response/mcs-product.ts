@@ -5,9 +5,10 @@ import { McsProductUseCase } from './mcs-product-use-case';
 import { McsProductOwner } from './mcs-product-owner';
 import { McsProductOption } from './mcs-product-option';
 import { McsProductLocation } from './mcs-product-location';
+import { McsProductInview } from './mcs-product-inview';
 
 export class McsProduct extends McsEntityBase {
-  public version: number;
+  public version: string;
   public order: number;
   public parentProductId: string;
   public description: string;
@@ -52,6 +53,9 @@ export class McsProduct extends McsEntityBase {
   @JsonProperty({ type: McsProductOption })
   public productOptions: McsProductOption[];
 
+  @JsonProperty({ type: McsProductInview })
+  public inviewPremium: McsProductInview[];
+
   public name: string;
   public displayOrder: number;
   public catalogId: string;
@@ -87,5 +91,6 @@ export class McsProduct extends McsEntityBase {
     this.architectOwnerSecondary = undefined;
     this.specialistOwner = undefined;
     this.productOptions = undefined;
+    this.inviewPremium = undefined;
   }
 }

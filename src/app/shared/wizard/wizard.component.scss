@@ -13,6 +13,9 @@ $wizard-content-panel-large-padding: $content-large-padding;
 $wizard-content-panel-small-padding: $content-small-padding;
 // Step items
 $step-header-padding: $space-large;
+$step-header-font-size: 16;
+$step-header-font: $base-font-bold;
+
 $step-item-min-width: 130px;
 $step-item-arrow-icon-size: 10px;
 $step-item-large-padding: $space-small 0;
@@ -118,6 +121,8 @@ $step-disabled-color: $color-grey-02;
     height: $wizard-top-panel-height;
     @include display-flex(row);
     @include align-items(center);
+    @include font-size($step-header-font-size);
+    font-family: $step-header-font;
   }
 }
 

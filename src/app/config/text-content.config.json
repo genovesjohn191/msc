@@ -1013,7 +1013,7 @@
       "header": "500",
       "summary": "Sorry, something’s not right",
       "description": "We're currently experiencing a server issue.",
-      "retry": "Out team has been notified. Please try again later."
+      "retry": "Please try again later."
     },
     "unprocessable": {
       "header": "422",
@@ -1035,7 +1035,7 @@
       "header": "Oops",
       "summary": "Unfortunately an error has occurred",
       "description": "We're unable to proccess your request right now.",
-      "retry": "Our team has been notified. Please try again later."
+      "retry": "Please try again later."
     },
     "readOnlyMode": {
       "header": "Oops",

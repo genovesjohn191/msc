@@ -11,7 +11,7 @@
         (click)="onClickLink(scrollableLink)">
 
         <ng-container *ngIf="!scrollableLink.labelTemplate; else labelTemplate">
-          <h2>{{ scrollableLink.label }}</h2>
+          <span>{{ scrollableLink.label }}</span>
         </ng-container>
         <ng-template #labelTemplate>
           <ng-container *ngTemplateOutlet="scrollableLink.labelTemplate.templateRef"></ng-container>

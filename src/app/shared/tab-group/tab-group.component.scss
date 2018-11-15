@@ -7,6 +7,8 @@ $tab-header-item-min-width: 100px;
 $tab-header-item-color: $color-grey-02;
 $tab-header-item-active-color: $color-black;
 $tab-header-item-padding: $space-small $space-medium;
+$tab-header-item-font-size: 16;
+$tab-header-item-font: $base-font-bold;
 // Tab body
 $tab-body-padding: $space-medium 0;
 
@@ -21,12 +23,14 @@ $tab-body-padding: $space-medium 0;
 .tab-header-item-wrapper {
   @include display-flex(row);
   @include align-items(center);
-  justify-content: center;
   min-width: $tab-header-item-min-width;
   padding: $tab-header-item-padding;
   color: $tab-header-item-color;
   cursor: pointer;
   position: relative;
+  @include font-size($tab-header-item-font-size);
+  font-family: $tab-header-item-font;
+  height: 100%;
 
   &.active {
     color: $tab-header-item-active-color;

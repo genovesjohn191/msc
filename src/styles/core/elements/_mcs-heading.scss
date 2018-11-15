@@ -1,20 +1,20 @@
 // Headers
+$heading-scale-size: 1;
 $heading-font: $base-font-bold;
-$heading-large-size: 8;
-$heading-medium-size: 7;
-$heading-small-size: 7;
-$heading-scale-size: 2;
+$heading-font-large-size: $font-size-default;
+$heading-font-medium-size: $font-size-default - 1;
+$heading-font-small-size: $heading-font-medium-size - 1;
 
 @for $index from 1 through 6 {
   h#{$index} {
     width: 100%;
     font-family: $heading-font;
-    @include font-size($heading-large-size + ($heading-scale-size * (6 - $index)));
+    @include font-size($heading-font-large-size + ($heading-scale-size * (6 - $index)));
     @include breakpoint(medium) {
-      @include font-size($heading-medium-size + ($heading-scale-size * (6 - $index)));
+      @include font-size($heading-font-medium-size + ($heading-scale-size * (6 - $index)));
     }
     @include breakpoint(small) {
-      @include font-size($heading-small-size + ($heading-scale-size * (6 - $index)));
+      @include font-size($heading-font-small-size + ($heading-scale-size * (6 - $index)));
     }
   }
 }
