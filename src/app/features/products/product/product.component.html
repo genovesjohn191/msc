@@ -30,7 +30,7 @@
     </div>
   </ng-container> -->
   <div class="product-catalog-content">
-    <mcs-scrollable-link-group>
+    <mcs-scrollable-link-group *mcsComponentHandler>
       <mcs-scrollable-link label="All Information">
 
         <!-- Description -->
@@ -146,12 +146,26 @@
               </mcs-data-cell>
             </ng-container>
 
+            <ng-container mcsColumnDef="properties">
+              <mcs-header-cell *mcsHeaderCellDef>
+                Properties
+              </mcs-header-cell>
+              <mcs-data-cell *mcsDataCellDef="let row">
+                <mcs-list spacing="auto">
+                  <mcs-list-item class="form-field-inline" *ngFor="let property of row.properties">
+                    <span>{{ property.label }}:</span>
+                    <span>{{ property.value }}</span>
+                  </mcs-list-item>
+                </mcs-list>
+              </mcs-data-cell>
+            </ng-container>
+
             <ng-container mcsColumnDef="options">
               <mcs-header-cell *mcsHeaderCellDef>
                 Options
               </mcs-header-cell>
               <mcs-data-cell *mcsDataCellDef="let row">
-                <mcs-tag-list>
+                <mcs-tag-list *ngIf="row.listOptions | mcsIsNotNullOrEmpty">
                   <mcs-tag *ngFor="let item of row.listOptions" [removable]="false">
                     {{ item }}
                   </mcs-tag>
@@ -206,7 +220,7 @@
       <mcs-scrollable-link label="Monitoring"
         *ngIf="selectedProduct.inviewPremium | mcsIsNotNullOrEmpty">
         <div class="product-catalog-item">
-          <h2>Monitoring</h2>
+          <h2>Inview</h2>
 
           <mcs-grid>
             <mcs-grid-row *ngFor="let inview of selectedProduct.inviewPremium">
@@ -246,8 +260,6 @@
               </mcs-grid-column>
             </mcs-grid-row>
           </mcs-grid>
-          <!-- Use grid system here -->
-          <div [innerHTML]="selectedProduct.featureBenefitMatrix"></div>
         </div>
       </mcs-scrollable-link>
 

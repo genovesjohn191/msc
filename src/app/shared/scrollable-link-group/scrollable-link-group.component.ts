@@ -134,9 +134,11 @@ export class ScrollableLinkGroupComponent implements AfterViewInit, AfterContent
    */
   private _hideSingleScrollLinkLabel(): void {
     if (isNullOrEmpty(this.scrollableLinks)) { return; }
-    if (!this.hasMultipleLinks) {
-      this.scrollableLinks.first.hideLabel();
-    }
+    Promise.resolve().then(() => {
+      this.hasMultipleLinks ?
+        this.scrollableLinks.first.showLabel() :
+        this.scrollableLinks.first.hideLabel();
+    });
   }
 
   /**
