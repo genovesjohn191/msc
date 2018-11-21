@@ -101,6 +101,12 @@ $product-panel-color: $color-grey-08;
 .scrollable-link-wrapper:not(:only-child) {
   counter-increment: link-item-count;
 
+  .scroll-link-label {
+    h1:before {
+      content: counter(link-item-count) ". ";
+    }
+  }
+
   .product-catalog-item {
     counter-increment: product-catalog-item-count;
     h2:before {
