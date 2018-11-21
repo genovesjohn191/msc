@@ -29,258 +29,256 @@
       </button>
     </div>
   </ng-container> -->
-  <div class="product-catalog-content">
-    <mcs-scrollable-link-group *mcsComponentHandler>
-      <mcs-scrollable-link label="All Information">
+  <mcs-scrollable-link-group *mcsComponentHandler>
+    <mcs-scrollable-link label="All Information">
 
-        <!-- Description -->
-        <div class="product-catalog-item">
+      <!-- Description -->
+      <div class="product-catalog-item">
 
-          <div class="product-catalog-widget-wrapper">
-            <!-- Ownerships -->
-            <mcs-presentation-panel *mcsAccessControl="['CompanyView']">
-              <ng-container mcsPresentationPanelHeader>
-                Ownership
-              </ng-container>
+        <div class="product-catalog-widget-wrapper">
+          <!-- Ownerships -->
+          <mcs-presentation-panel *mcsAccessControl="['CompanyView']">
+            <ng-container mcsPresentationPanelHeader>
+              Ownership
+            </ng-container>
 
-              <mcs-list>
-                <mcs-list-item *ngIf="selectedProduct.primaryOwner?.name">
-                  <span>{{ selectedProduct.primaryOwner.name }} -
-                    <small read-only> Primary Product Owner</small>
-                  </span>
-                </mcs-list-item>
+            <mcs-list>
+              <mcs-list-item *ngIf="selectedProduct.primaryOwner?.name">
+                <span>{{ selectedProduct.primaryOwner.name }} -
+                  <small read-only> Primary Product Owner</small>
+                </span>
+              </mcs-list-item>
 
-                <mcs-list-item *ngIf="selectedProduct.secondaryOwner?.name">
-                  <span>{{ selectedProduct.secondaryOwner.name }} -
-                    <small read-only> Secondary Product Owner</small>
-                  </span>
-                </mcs-list-item>
+              <mcs-list-item *ngIf="selectedProduct.secondaryOwner?.name">
+                <span>{{ selectedProduct.secondaryOwner.name }} -
+                  <small read-only> Secondary Product Owner</small>
+                </span>
+              </mcs-list-item>
 
-                <mcs-list-item *ngIf="selectedProduct.architectOwnerPrimary?.name">
-                  <span>{{ selectedProduct.architectOwnerPrimary.name }} -
-                    <small read-only> Primary Architecture Owner</small>
-                  </span>
-                </mcs-list-item>
+              <mcs-list-item *ngIf="selectedProduct.architectOwnerPrimary?.name">
+                <span>{{ selectedProduct.architectOwnerPrimary.name }} -
+                  <small read-only> Primary Architecture Owner</small>
+                </span>
+              </mcs-list-item>
 
-                <mcs-list-item *ngIf="selectedProduct.architectOwnerSecondary?.name">
-                  <span>{{ selectedProduct.architectOwnerSecondary.name }} -
-                    <small read-only> Secondary Architecture Owner</small>
-                  </span>
-                </mcs-list-item>
+              <mcs-list-item *ngIf="selectedProduct.architectOwnerSecondary?.name">
+                <span>{{ selectedProduct.architectOwnerSecondary.name }} -
+                  <small read-only> Secondary Architecture Owner</small>
+                </span>
+              </mcs-list-item>
 
-                <mcs-list-item *ngIf="selectedProduct.specialistOwner?.name">
-                  <span>{{ selectedProduct.specialistOwner.name }} -
-                    <small read-only> Specialist Product Owner</small>
-                  </span>
-                </mcs-list-item>
-              </mcs-list>
-            </mcs-presentation-panel>
+              <mcs-list-item *ngIf="selectedProduct.specialistOwner?.name">
+                <span>{{ selectedProduct.specialistOwner.name }} -
+                  <small read-only> Specialist Product Owner</small>
+                </span>
+              </mcs-list-item>
+            </mcs-list>
+          </mcs-presentation-panel>
 
-            <!-- Dependencies -->
-            <mcs-presentation-panel *ngIf="selectedProduct.dependentProducts | mcsIsNotNullOrEmpty">
-              <ng-container mcsPresentationPanelHeader>
-                Dependencies
-              </ng-container>
+          <!-- Dependencies -->
+          <mcs-presentation-panel *ngIf="selectedProduct.dependentProducts | mcsIsNotNullOrEmpty">
+            <ng-container mcsPresentationPanelHeader>
+              Dependencies
+            </ng-container>
 
-              <div>
-                <div [ngStyle]="{'float': 'right'}">
-                  <mcs-icon size="100px" [key]="cloudIconKey"></mcs-icon>
-                </div>
-                <div class="block-items-xsmall">
-                  <a *ngFor="let dependentProduct of selectedProduct.dependentProducts"
-                    [mcsRouterLink]="[routeKeyEnum.ProductDetail, dependentProduct.id]"
-                    mcsId="product-dependency"
-                    mcsEventTracker="select-product-dependency"
-                    mcsEventCategory="product"
-                    mcsEventLabel="product-list-panel">
-                    {{ dependentProduct.name }}
-                  </a>
-                </div>
+            <div>
+              <div [ngStyle]="{'float': 'right'}">
+                <mcs-icon size="100px" [key]="cloudIconKey"></mcs-icon>
               </div>
-            </mcs-presentation-panel>
+              <div class="block-items-xsmall">
+                <a *ngFor="let dependentProduct of selectedProduct.dependentProducts"
+                  [mcsRouterLink]="[routeKeyEnum.ProductDetail, dependentProduct.id]"
+                  mcsId="product-dependency"
+                  mcsEventTracker="select-product-dependency"
+                  mcsEventCategory="product"
+                  mcsEventLabel="product-list-panel">
+                  {{ dependentProduct.name }}
+                </a>
+              </div>
+            </div>
+          </mcs-presentation-panel>
 
-            <!-- Locations -->
-            <mcs-presentation-panel *ngIf="selectedProduct.locations | mcsIsNotNullOrEmpty">
-              <ng-container mcsPresentationPanelHeader>
-                Locations
-              </ng-container>
+          <!-- Locations -->
+          <mcs-presentation-panel *ngIf="selectedProduct.locations | mcsIsNotNullOrEmpty">
+            <ng-container mcsPresentationPanelHeader>
+              Locations
+            </ng-container>
 
-              <mcs-list spacing="small">
-                <mcs-list-item *ngFor="let location of selectedProduct.locations">
-                  <div>
-                    <span>{{ location.name }}</span><br>
-                    <small read-only>{{ location.fullAddress }}</small>
-                  </div>
+            <mcs-list spacing="small">
+              <mcs-list-item *ngFor="let location of selectedProduct.locations">
+                <div>
+                  <span>{{ location.name }}</span><br>
+                  <small read-only>{{ location.fullAddress }}</small>
+                </div>
+              </mcs-list-item>
+            </mcs-list>
+          </mcs-presentation-panel>
+        </div>
+
+        <!-- Short description -->
+        <div *ngIf="selectedProduct.shortDescription | mcsIsNotNullOrEmpty"
+          class="space-bottom-large">
+          <h2>Short Description</h2>
+          <div [innerHTML]="selectedProduct.shortDescription"></div>
+        </div>
+
+        <!-- description -->
+        <div class="product-catalog-item"
+          *ngIf="selectedProduct.description | mcsIsNotNullOrEmpty">
+          <h2>Description</h2>
+          <div [innerHTML]="selectedProduct.description"></div>
+        </div>
+      </div>
+
+      <!-- Product Options -->
+      <div class="product-catalog-item block-items-small"
+        *ngIf="selectedProduct.productOptions | mcsIsNotNullOrEmpty">
+        <h2>Product Options</h2>
+
+        <mcs-table [dataSource]="selectedProduct.productOptions" class="limited-view">
+          <ng-container mcsColumnDef="name">
+            <mcs-header-cell *mcsHeaderCellDef>
+              Name
+            </mcs-header-cell>
+            <mcs-data-cell *mcsDataCellDef="let row">
+              {{ row.name }}
+            </mcs-data-cell>
+          </ng-container>
+
+          <ng-container mcsColumnDef="properties">
+            <mcs-header-cell *mcsHeaderCellDef>
+              Properties
+            </mcs-header-cell>
+            <mcs-data-cell *mcsDataCellDef="let row">
+              <mcs-list spacing="auto">
+                <mcs-list-item class="form-field-inline" *ngFor="let property of row.properties">
+                  <span>{{ property.label }}:</span>
+                  <span>{{ property.value }}</span>
                 </mcs-list-item>
               </mcs-list>
-            </mcs-presentation-panel>
-          </div>
+            </mcs-data-cell>
+          </ng-container>
 
-          <!-- Short description -->
-          <div *ngIf="selectedProduct.shortDescription | mcsIsNotNullOrEmpty"
-            class="space-bottom-large">
-            <h2>Short Description</h2>
-            <div [innerHTML]="selectedProduct.shortDescription"></div>
-          </div>
+          <ng-container mcsColumnDef="options">
+            <mcs-header-cell *mcsHeaderCellDef>
+              Options
+            </mcs-header-cell>
+            <mcs-data-cell *mcsDataCellDef="let row">
+              <mcs-tag-list *ngIf="row.listOptions | mcsIsNotNullOrEmpty">
+                <mcs-tag *ngFor="let item of row.listOptions" [removable]="false">
+                  {{ item }}
+                </mcs-tag>
+              </mcs-tag-list>
+            </mcs-data-cell>
+          </ng-container>
 
-          <!-- description -->
-          <div class="product-catalog-item"
-            *ngIf="selectedProduct.description | mcsIsNotNullOrEmpty">
-            <h2>Description</h2>
-            <div [innerHTML]="selectedProduct.description"></div>
-          </div>
-        </div>
+          <mcs-header-row *mcsHeaderRowDef="productOptionsColumns"></mcs-header-row>
+          <mcs-data-row *mcsDataRowDef="let row; columns: productOptionsColumns;"></mcs-data-row>
+        </mcs-table>
+      </div>
 
-        <!-- Product Options -->
-        <div class="product-catalog-item block-items-small"
-          *ngIf="selectedProduct.productOptions | mcsIsNotNullOrEmpty">
-          <h2>Product Options</h2>
+      <!-- Use Cases -->
+      <div class="product-catalog-item"
+        *ngIf="selectedProduct.useCases | mcsIsNotNullOrEmpty">
+        <h2>Use Cases</h2>
 
-          <mcs-table [dataSource]="selectedProduct.productOptions" class="limited-view">
-            <ng-container mcsColumnDef="name">
-              <mcs-header-cell *mcsHeaderCellDef>
-                Name
-              </mcs-header-cell>
-              <mcs-data-cell *mcsDataCellDef="let row">
-                {{ row.name }}
-              </mcs-data-cell>
-            </ng-container>
+        <mcs-table [dataSource]="selectedProduct.useCases" class="limited-view">
+          <ng-container mcsColumnDef="name">
+            <mcs-header-cell *mcsHeaderCellDef>
+              Name
+            </mcs-header-cell>
+            <mcs-data-cell *mcsDataCellDef="let row">
+              {{ row.name }}
+            </mcs-data-cell>
+          </ng-container>
 
-            <ng-container mcsColumnDef="properties">
-              <mcs-header-cell *mcsHeaderCellDef>
-                Properties
-              </mcs-header-cell>
-              <mcs-data-cell *mcsDataCellDef="let row">
-                <mcs-list spacing="auto">
-                  <mcs-list-item class="form-field-inline" *ngFor="let property of row.properties">
-                    <span>{{ property.label }}:</span>
-                    <span>{{ property.value }}</span>
-                  </mcs-list-item>
-                </mcs-list>
-              </mcs-data-cell>
-            </ng-container>
+          <ng-container mcsColumnDef="description">
+            <mcs-header-cell *mcsHeaderCellDef>
+              Description
+            </mcs-header-cell>
+            <mcs-data-cell *mcsDataCellDef="let row">
+              <div [ngStyle]="{'white-space': 'normal'}" [innerHTML]="row.description"></div>
+            </mcs-data-cell>
+          </ng-container>
 
-            <ng-container mcsColumnDef="options">
-              <mcs-header-cell *mcsHeaderCellDef>
-                Options
-              </mcs-header-cell>
-              <mcs-data-cell *mcsDataCellDef="let row">
-                <mcs-tag-list *ngIf="row.listOptions | mcsIsNotNullOrEmpty">
-                  <mcs-tag *ngFor="let item of row.listOptions" [removable]="false">
-                    {{ item }}
-                  </mcs-tag>
-                </mcs-tag-list>
-              </mcs-data-cell>
-            </ng-container>
+          <mcs-header-row *mcsHeaderRowDef="userCasesColumns"></mcs-header-row>
+          <mcs-data-row *mcsDataRowDef="let row; columns: userCasesColumns;"></mcs-data-row>
+        </mcs-table>
+      </div>
 
-            <mcs-header-row *mcsHeaderRowDef="productOptionsColumns"></mcs-header-row>
-            <mcs-data-row *mcsDataRowDef="let row; columns: productOptionsColumns;"></mcs-data-row>
-          </mcs-table>
-        </div>
+      <!-- Feature Benefit Matrix -->
+      <!-- TODO: Not included in the PH1 -->
+      <!-- <div class="product-catalog-item"
+        *ngIf="selectedProduct.featureBenefitMatrix | mcsIsNotNullOrEmpty">
+        <h2>Feature Benefit Matrix</h2>
+        <div [innerHTML]="selectedProduct.featureBenefitMatrix"></div>
+      </div> -->
+    </mcs-scrollable-link>
 
-        <!-- Use Cases -->
-        <div class="product-catalog-item"
-          *ngIf="selectedProduct.useCases | mcsIsNotNullOrEmpty">
-          <h2>Use Cases</h2>
+    <!-- Monitoring -->
+    <mcs-scrollable-link label="Monitoring"
+      *ngIf="selectedProduct.inviewPremium | mcsIsNotNullOrEmpty">
+      <div class="product-catalog-item">
+        <h2>Inview</h2>
 
-          <mcs-table [dataSource]="selectedProduct.useCases" class="limited-view">
-            <ng-container mcsColumnDef="name">
-              <mcs-header-cell *mcsHeaderCellDef>
-                Name
-              </mcs-header-cell>
-              <mcs-data-cell *mcsDataCellDef="let row">
-                {{ row.name }}
-              </mcs-data-cell>
-            </ng-container>
+        <mcs-grid>
+          <mcs-grid-row *ngFor="let inview of selectedProduct.inviewPremium">
+            <mcs-grid-column>
+              <h3>{{ inview.name }}</h3>
+              <p [innerHTML]="inview.description"></p>
+              <mcs-table [dataSource]="inview.thresholds"
+                *ngIf="inview.thresholds | mcsIsNotNullOrEmpty">
+                <!-- Description Column -->
+                <ng-container mcsColumnDef="description">
+                  <mcs-header-cell *mcsHeaderCellDef>
+                    Description
+                  </mcs-header-cell>
+                  <mcs-data-cell *mcsDataCellDef="let row">
+                    {{ row.description }}
+                  </mcs-data-cell>
+                </ng-container>
 
-            <ng-container mcsColumnDef="description">
-              <mcs-header-cell *mcsHeaderCellDef>
-                Description
-              </mcs-header-cell>
-              <mcs-data-cell *mcsDataCellDef="let row">
-                <div [ngStyle]="{'white-space': 'normal'}" [innerHTML]="row.description"></div>
-              </mcs-data-cell>
-            </ng-container>
+                <!-- Threshold Utilisation Column -->
+                <ng-container mcsColumnDef="alertThreshold">
+                  <mcs-header-cell *mcsHeaderCellDef>
+                    Alert Threshold
+                  </mcs-header-cell>
+                  <mcs-data-cell *mcsDataCellDef="let row">
+                    {{ row.defaultAlertThreshold }}
+                  </mcs-data-cell>
+                </ng-container>
 
-            <mcs-header-row *mcsHeaderRowDef="userCasesColumns"></mcs-header-row>
-            <mcs-data-row *mcsDataRowDef="let row; columns: userCasesColumns;"></mcs-data-row>
-          </mcs-table>
-        </div>
+                <!-- Header and Data row -->
+                <mcs-header-row *mcsHeaderRowDef="thresholdColumns"></mcs-header-row>
+                <mcs-data-row *mcsDataRowDef="let row; columns: thresholdColumns;"></mcs-data-row>
+              </mcs-table>
+            </mcs-grid-column>
 
-        <!-- Feature Benefit Matrix -->
-        <!-- TODO: Not included in the PH1 -->
-        <!-- <div class="product-catalog-item"
-          *ngIf="selectedProduct.featureBenefitMatrix | mcsIsNotNullOrEmpty">
-          <h2>Feature Benefit Matrix</h2>
-          <div [innerHTML]="selectedProduct.featureBenefitMatrix"></div>
-        </div> -->
-      </mcs-scrollable-link>
+            <mcs-grid-column *ngIf="inview.graphUrl | mcsIsNotNullOrEmpty">
+              <img [src]="inview.graphUrl" class="image-responsive">
+            </mcs-grid-column>
+          </mcs-grid-row>
+        </mcs-grid>
+      </div>
+    </mcs-scrollable-link>
 
-      <!-- Monitoring -->
-      <mcs-scrollable-link label="Monitoring"
-        *ngIf="selectedProduct.inviewPremium | mcsIsNotNullOrEmpty">
-        <div class="product-catalog-item">
-          <h2>Inview</h2>
+    <!-- PCI Compliance -->
+    <mcs-scrollable-link label="Compliance"
+      *ngIf="selectedProduct.pciDetails | mcsIsNotNullOrEmpty">
+      <div class="product-catalog-item">
+        <h2>PCI Compliance</h2>
+        <div [innerHTML]="selectedProduct.pciDetails"></div>
+      </div>
+    </mcs-scrollable-link>
 
-          <mcs-grid>
-            <mcs-grid-row *ngFor="let inview of selectedProduct.inviewPremium">
-              <mcs-grid-column>
-                <h3>{{ inview.name }}</h3>
-                <p [innerHTML]="inview.description"></p>
-                <mcs-table [dataSource]="inview.thresholds"
-                  *ngIf="inview.thresholds | mcsIsNotNullOrEmpty">
-                  <!-- Description Column -->
-                  <ng-container mcsColumnDef="description">
-                    <mcs-header-cell *mcsHeaderCellDef>
-                      Description
-                    </mcs-header-cell>
-                    <mcs-data-cell *mcsDataCellDef="let row">
-                      {{ row.description }}
-                    </mcs-data-cell>
-                  </ng-container>
-
-                  <!-- Threshold Utilisation Column -->
-                  <ng-container mcsColumnDef="alertThreshold">
-                    <mcs-header-cell *mcsHeaderCellDef>
-                      Alert Threshold
-                    </mcs-header-cell>
-                    <mcs-data-cell *mcsDataCellDef="let row">
-                      {{ row.defaultAlertThreshold }}
-                    </mcs-data-cell>
-                  </ng-container>
-
-                  <!-- Header and Data row -->
-                  <mcs-header-row *mcsHeaderRowDef="thresholdColumns"></mcs-header-row>
-                  <mcs-data-row *mcsDataRowDef="let row; columns: thresholdColumns;"></mcs-data-row>
-                </mcs-table>
-              </mcs-grid-column>
-
-              <mcs-grid-column *ngIf="inview.graphUrl | mcsIsNotNullOrEmpty">
-                <img [src]="inview.graphUrl" class="image-responsive">
-              </mcs-grid-column>
-            </mcs-grid-row>
-          </mcs-grid>
-        </div>
-      </mcs-scrollable-link>
-
-      <!-- PCI Compliance -->
-      <mcs-scrollable-link label="Compliance"
-        *ngIf="selectedProduct.pciDetails | mcsIsNotNullOrEmpty">
-        <div class="product-catalog-item">
-          <h2>PCI Compliance</h2>
-          <div [innerHTML]="selectedProduct.pciDetails"></div>
-        </div>
-      </mcs-scrollable-link>
-
-      <!-- More -->
-      <!-- TODO: Not included on PH1. and no corresponding field for downloads -->
-      <mcs-scrollable-link label="More"
-        *ngIf="selectedProduct.downloads | mcsIsNotNullOrEmpty">
-        <div class="product-catalog-item">
-          <h2>Downloads</h2>
-          <div [innerHTML]="selectedProduct.downloads"></div>
-        </div>
-      </mcs-scrollable-link>
-    </mcs-scrollable-link-group>
-  </div>
+    <!-- More -->
+    <!-- TODO: Not included on PH1. and no corresponding field for downloads -->
+    <mcs-scrollable-link label="More"
+      *ngIf="selectedProduct.downloads | mcsIsNotNullOrEmpty">
+      <div class="product-catalog-item">
+        <h2>Downloads</h2>
+        <div [innerHTML]="selectedProduct.downloads"></div>
+      </div>
+    </mcs-scrollable-link>
+  </mcs-scrollable-link-group>
 </ng-container>
