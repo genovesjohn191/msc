@@ -14,9 +14,9 @@ $scrollable-link-label-color: $color-primary-01;
 
 .scrollable-link-group-wrapper {
   @include display-flex(column);
+  @include flex(auto);
   position: relative;
   overflow: hidden;
-  max-height: 100%;
 }
 
 .scrollable-link-wrapper {
@@ -30,7 +30,7 @@ $scrollable-link-label-color: $color-primary-01;
 
 .scrollable-link-group-header-wrapper {
   display: block;
-  @include flex(0);
+  @include flex(none);
   border-bottom: 1px solid $scrollable-link-group-border;
 
   .scrollable-link-header-wrapper {
@@ -50,5 +50,5 @@ $scrollable-link-label-color: $color-primary-01;
 
 .scrollable-link-group-body-wrapper {
   @include display-flex(column);
-  @include flex(1);
+  @include flex(auto);
 }

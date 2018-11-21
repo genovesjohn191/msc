@@ -20,6 +20,7 @@ $product-panel-color: $color-grey-08;
   left: 0;
   top: 0;
   right: 0;
+  bottom: 0;
   @include display-flex(column);
   max-width: $product-max-width;
   max-height: 100%;
