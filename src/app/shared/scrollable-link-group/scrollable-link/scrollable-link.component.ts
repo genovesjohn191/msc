@@ -86,4 +86,12 @@ export class ScrollableLinkComponent {
     this.labelIsHidden = true;
     this._changeDetectorRef.markForCheck();
   }
+
+  /**
+   * Shows the label of the scrollable link element
+   */
+  public showLabel(): void {
+    this.labelIsHidden = false;
+    this._changeDetectorRef.markForCheck();
+  }
 }

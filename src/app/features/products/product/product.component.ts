@@ -4,7 +4,8 @@ import {
   ChangeDetectionStrategy,
   ViewEncapsulation,
   Renderer2,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  ViewChild
 } from '@angular/core';
 import { Router } from '@angular/router';
 import {
@@ -32,6 +33,7 @@ import {
   McsProductDependency
 } from '@app/models';
 import { ProductService } from './product.service';
+import { ComponentHandlerDirective } from '@app/shared';
 
 const MAX_CHAR_LENGTH = 200;
 
@@ -59,8 +61,11 @@ export class ProductComponent implements OnInit {
 
   // Table columns
   public thresholdColumns = ['description', 'alertThreshold'];
-  public productOptionsColumns = ['name', 'options'];
+  public productOptionsColumns = ['name', 'properties', 'options'];
   public userCasesColumns = ['name', 'description'];
+
+  @ViewChild(ComponentHandlerDirective)
+  private _componentHandler: ComponentHandlerDirective;
 
   public get cloudIconKey(): string {
     return CoreDefinition.ASSETS_SVG_CLOUD_BLUE;
@@ -120,7 +125,15 @@ export class ProductComponent implements OnInit {
    * Listens to every product selection and refresh the dom
    */
   private _subscribeToSelectedProduct(): void {
-    this.selectedProduct$ = this._productService.productSelectionChange;
+    this.selectedProduct$ = this._productService.productSelectionChange.pipe(
+      tap(() => {
+        Promise.resolve().then(() => {
+          if (isNullOrEmpty(this._componentHandler)) { return; }
+          this._componentHandler.recreateComponent();
+          this._changeDetectorRef.markForCheck();
+        });
+      })
+    );
   }
 
   /**
