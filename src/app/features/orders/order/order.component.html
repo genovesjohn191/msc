@@ -5,8 +5,8 @@
 
     <!-- Back to Orders -->
     <mcs-top-panel-item *mcsTopPanelItemDef>
-      <mcs-action-item class="right-align" (click)="gotoOrders()"
-        mcsId
+      <mcs-action-item (click)="gotoOrders()"
+        mcsId justify-self-right
         mcsEventTracker="navigate-to-order-listing"
         mcsEventCategory="order"
         mcsEventLabel="order-details-page">
@@ -21,32 +21,35 @@
 
     <ng-container *ngIf="order$ | async as order">
       <!-- Order details -->
-      <div class="container-wrapper limited-view">
-        <h2 class="container-header">{{ textContent.description }}</h2>
-        <p class="space-between-inline-items">
-          <strong [innerHTML]="order.description | mcsNewLines"></strong>
-          <span class="inline-items-small">
-            <button mcsButton color="error">Cancel</button>
-            <button mcsButton>Approve</button>
-          </span>
-        </p>
+      <div class="limited-view">
+        <mcs-presentation-panel>
+          <ng-container mcsPresentationPanelHeader>
+            <h2>{{ textContent.description }}</h2>
+          </ng-container>
 
-        <mcs-list spacing="xsmall">
-          <mcs-list-item class="form-field-inline">
+          <p>
+            <strong [innerHTML]="order.description | mcsNewLines"></strong>
+            <mcs-item>
+              <button mcsButton color="error">Cancel</button>
+              <button mcsButton>Approve</button>
+            </mcs-item>
+          </p>
+
+          <mcs-item>
             <span>{{ textContent.contractDuration }}:</span>
             <span>12</span>
-          </mcs-list-item>
+          </mcs-item>
 
-          <mcs-list-item class="form-field-inline">
+          <mcs-item>
             <span>{{ textContent.status }}:</span>
             <span [innerHTML]="order.statusLabel | mcsDataLabel"></span>
-          </mcs-list-item>
+          </mcs-item>
 
-          <mcs-list-item class="form-field-inline">
+          <mcs-item>
             <span>{{ textContent.createdBy }}:</span>
             <span>{{ order.createdBy }}</span>
-          </mcs-list-item>
-        </mcs-list>
+          </mcs-item>
+        </mcs-presentation-panel>
       </div>
 
       <!-- Order Items -->
@@ -67,7 +70,7 @@
             {{ textContent.columnHeaders.type }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
-            <span class="word-wrap">{{ getOderTypeById(row.typeId) }}</span>
+            <span text-wrap>{{ getOderTypeById(row.typeId) }}</span>
           </mcs-data-cell>
         </ng-container>
 
@@ -77,7 +80,7 @@
             {{ textContent.columnHeaders.description }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
-            <span class="word-wrap">{{ row.description }}</span>
+            <span text-wrap>{{ row.description }}</span>
           </mcs-data-cell>
         </ng-container>
 

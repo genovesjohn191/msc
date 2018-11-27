@@ -1,16 +1,16 @@
 <!-- Ticket Activity Icon Wrapper -->
-<div class="space-right-medium">
+<div margin-right-medium>
   <mcs-icon [key]="activityIconKey"></mcs-icon>
 </div>
 
-<div class="block-items-medium full-width">
+<section full-width>
   <!-- Header (User details) -->
-  <div class="space-between-inline-items">
+  <mcs-item orientation="separated">
     <strong>{{ activity.header }}</strong>
-    <span class="hidden-small" read-only>
+    <span hidden-small read-only>
       {{ activity.date | mcsStdDateFormat }}
     </span>
-  </div>
+  </mcs-item>
 
   <!-- Comment message -->
   <div>
@@ -24,9 +24,9 @@
   </div>
 
   <!-- Work note footer -->
-  <div class="right-align" *ngIf="isWorkNotes">
+  <div justify-self-right *ngIf="isWorkNotes">
     <span read-only>
       {{ textContent.worknotes }}
     </span>
   </div>
-</div>
+</section>

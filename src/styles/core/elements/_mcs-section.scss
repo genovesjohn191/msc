@@ -1,0 +1,6 @@
+$section-item-interval: $space-medium;
+
+section {
+  @include display-flex(column);
+  @include set-items-interval($section-item-interval);
+}

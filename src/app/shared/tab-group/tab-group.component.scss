@@ -35,6 +35,9 @@ $tab-body-padding: $space-medium 0;
   &.active {
     color: $tab-header-item-active-color;
   }
+  &.align-end {
+    margin-left: auto;
+  }
   &.custom-tab {
     cursor: default;
     min-width: 0;

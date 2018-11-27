@@ -2,13 +2,13 @@
   <!-- Page template header -->
   <ng-container *mcsPageHeader>
     <ng-container *ngIf="selectedProduct$ | async as selectedProduct">
-      <div class="space-between-inline-items align-items-center full-width">
+      <mcs-item full-width>
         <div><h1>{{ selectedProduct.name }}</h1></div>
-        <div class="form-field-inline">
+        <mcs-item justify-self-right>
           <h3>{{ selectedProduct.serviceIdPrefix }}</h3>
           <span read-only>v{{ selectedProduct.version }}</span>
-        </div>
-      </div>
+        </mcs-item>
+      </mcs-item>
     </ng-container>
   </ng-container>
 
@@ -36,8 +36,8 @@
 
                       <mcs-option [value]="product"
                         [selected]="(selectedProduct$ | async)?.id === product.id">
-                        <div class="space-left-xsmall">
-                          <span class="word-wrap">{{ product.name }}</span>
+                        <div margin-left-xsmall>
+                          <span text-wrap>{{ product.name }}</span>
                         </div>
                       </mcs-option>
                     </a>

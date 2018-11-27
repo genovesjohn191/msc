@@ -21,7 +21,7 @@
 
     <!-- Notification content -->
     <div class="notification-panel-content">
-      <span class="font-bold">{{ notification.description }}</span>
+      <strong>{{ notification.description }}</strong>
       <small class="notification-panel-message">{{ notification.summaryInformation }}</small>
       <ng-container *ngIf="notification.errorMessage">
         <small class="notification-panel-message">{{ notification.errorMessage }}</small>

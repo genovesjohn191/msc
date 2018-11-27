@@ -29,12 +29,6 @@ $listing-table-search-max-width: 300px;
       min-width: $listing-table-small-width;
     }
   }
-
-  .filter-section {
-    @include set-items-interval($space-medium, horizontal);
-    @include display-flex(row);
-    align-items: center;
-  }
 }
 
 .listing-action-wrapper {
@@ -45,7 +39,8 @@ $listing-table-search-max-width: 300px;
   .total-record-count {
     @include display-flex(row);
     @include align-items(center);
-    margin: 0 $space-large;
+    margin-left: auto;
+    margin-right: $space-large;
   }
 }
 

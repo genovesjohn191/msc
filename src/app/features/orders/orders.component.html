@@ -20,7 +20,7 @@
     <!-- Order Count -->
     <mcs-top-panel-item *mcsTopPanelItemDef>
       <div class="listing-action-wrapper">
-        <div class="total-record-count right-align">
+        <div class="total-record-count">
           <span>{{ totalRecordsCount | mcsPlural:
                 textContent.dataSingular : textContent.dataPlural }}
           </span>
@@ -70,10 +70,10 @@
 
         <!-- Status Column -->
         <ng-container mcsColumnDef="status" [mcsColumnDefHidden]="isColumnHidden('status')">
-          <mcs-header-cell *mcsHeaderCellDef class="hidden-xsmall">
+          <mcs-header-cell *mcsHeaderCellDef hidden-xsmall>
             {{ columnSettings.status.text }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-xsmall">
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-xsmall>
             {{ row.statusLabel }}
           </mcs-data-cell>
         </ng-container>
@@ -90,20 +90,20 @@
 
         <!-- Created By Column -->
         <ng-container mcsColumnDef="createdBy" [mcsColumnDefHidden]="isColumnHidden('createdBy')">
-          <mcs-header-cell *mcsHeaderCellDef class="hidden-xsmall">
+          <mcs-header-cell *mcsHeaderCellDef hidden-xsmall>
             {{ columnSettings.createdBy.text }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-xsmall">
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-xsmall>
             {{ row.createdBy }}
           </mcs-data-cell>
         </ng-container>
 
         <!-- Created On Column -->
         <ng-container mcsColumnDef="createdOn" [mcsColumnDefHidden]="isColumnHidden('createdOn')">
-          <mcs-header-cell *mcsHeaderCellDef class="hidden-xsmall">
+          <mcs-header-cell *mcsHeaderCellDef hidden-xsmall>
             {{ columnSettings.createdOn.text }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-xsmall">
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-xsmall>
             {{ row.createdOn | mcsStdDateFormat }}
           </mcs-data-cell>
         </ng-container>

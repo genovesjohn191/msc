@@ -1,77 +1,93 @@
-<div class="container-wrapper">
-  <h2 class="container-header">{{ textContent.snapshotHeader }}</h2>
-  <div class="vspace-medium space-between-inline-items">
-    <p [innerHTML]="textContent.snapshotDescription | mcsNewLines"></p>
-    <div>
-      <button mcsButton
-        size="small" arrow="right"
-        [disabled]="!enabledActions"
-        (click)="createSnapshot()"
-        mcsId
-        mcsEventTracker="create-snapshot"
-        mcsEventCategory="server"
-        mcsEventLabel="server-details-page">
-        {{ textContent.createSnapshot }}
-      </button>
-    </div>
-  </div>
-  <div>
-    <strong class="space-bottom-small block">{{ textContent.snapshots }}</strong>
+<mcs-presentation-panel mcsId="snapshots">
+  <ng-container mcsPresentationPanelHeader>
+    <h2>{{ textContent.snapshotHeader }}</h2>
+  </ng-container>
 
-    <!-- Snapshots -->
-    <mcs-data-status [dataStatusFactory]="dataStatusFactory">
-      <mcs-data-status-success mcsDataSuccess>
-        <ng-container [ngSwitch]="creatingSnapshot">
-          <ng-container *ngSwitchCase="false">
-            <div class="space-between-inline-items">
-              <div class="inline-items-xsmall">
-                <mcs-loader *ngIf="snapshotProcessing" size="small"
-                  [mcsTooltip]="server.processingText"></mcs-loader>
-                <span>{{ snapshot.createdOn | mcsStdDateFormat }}</span>
-                <span read-only>{{ snapshot.sizeMB | mcsDataSize: 'MB' }}</span>
-              </div>
-              <div [disabled]="!enabledActions" class="inline-items-medium text-right">
-                <a (click)="restoreSnapshot(snapshot)"
-                  mcsId
-                  mcsEventTracker="restore-snapshot"
-                  mcsEventCategory="server"
-                  mcsEventLabel="server-details-page">
-                  {{ textContent.restoreSnapshot }}
-                </a>
-                <a (click)="deleteSnapshot(snapshot)" class="space-left-small"
-                  mcsId
-                  mcsEventTracker="delete-snapshot"
-                  mcsEventCategory="server"
-                  mcsEventLabel="server-details-page">
-                  {{ textContent.deleteSnapshot }}
-                </a>
-              </div>
-            </div>
-          </ng-container>
-          <ng-container *ngSwitchDefault>
-            <div class="inline-items-xsmall">
-              <mcs-loader *ngIf="snapshotProcessing" size="small"
-                [mcsTooltip]="server.processingText"></mcs-loader>
-              <span>{{ textContent.creatingSnapshot }}</span>
-            </div>
-          </ng-container>
+  <mcs-grid>
+    <mcs-grid-row>
+      <mcs-grid-column>
+        <p [innerHTML]="textContent.snapshotDescription | mcsNewLines"></p>
+      </mcs-grid-column>
+
+      <mcs-grid-column align-items-end>
+        <div>
+          <button mcsButton
+            size="small" arrow="right"
+            [disabled]="!enabledActions"
+            (click)="createSnapshot()"
+            mcsId
+            mcsEventTracker="create-snapshot"
+            mcsEventCategory="server"
+            mcsEventLabel="server-details-page">
+            {{ textContent.createSnapshot }}
+          </button>
+        </div>
+      </mcs-grid-column>
+    </mcs-grid-row>
+  </mcs-grid>
+
+  <strong>{{ textContent.snapshots }}</strong>
+
+  <!-- Snapshots -->
+  <mcs-data-status [dataStatusFactory]="dataStatusFactory">
+    <mcs-data-status-success mcsDataSuccess>
+      <ng-container [ngSwitch]="creatingSnapshot">
+        <ng-container *ngSwitchCase="false">
+          <mcs-grid>
+            <mcs-grid-row>
+              <mcs-grid-column>
+                <mcs-item>
+                  <mcs-loader *ngIf="snapshotProcessing" size="small"
+                    [mcsTooltip]="server.processingText"></mcs-loader>
+                  <span>{{ snapshot.createdOn | mcsStdDateFormat }}</span>
+                  <span read-only>{{ snapshot.sizeMB | mcsDataSize: 'MB' }}</span>
+                </mcs-item>
+              </mcs-grid-column>
+
+              <mcs-grid-column align-items-end>
+                <mcs-item [disabled]="!enabledActions">
+                  <a (click)="restoreSnapshot(snapshot)"
+                    mcsId
+                    mcsEventTracker="restore-snapshot"
+                    mcsEventCategory="server"
+                    mcsEventLabel="server-details-page">
+                    {{ textContent.restoreSnapshot }}
+                  </a>
+                  <a (click)="deleteSnapshot(snapshot)"
+                    mcsId
+                    mcsEventTracker="delete-snapshot"
+                    mcsEventCategory="server"
+                    mcsEventLabel="server-details-page">
+                    {{ textContent.deleteSnapshot }}
+                  </a>
+                </mcs-item>
+              </mcs-grid-column>
+            </mcs-grid-row>
+          </mcs-grid>
         </ng-container>
-      </mcs-data-status-success>
+        <ng-container *ngSwitchDefault>
+          <mcs-item class="inline-items-xsmall">
+            <mcs-loader *ngIf="snapshotProcessing" size="small"
+              [mcsTooltip]="server.processingText"></mcs-loader>
+            <span>{{ textContent.creatingSnapshot }}</span>
+          </mcs-item>
+        </ng-container>
+      </ng-container>
+    </mcs-data-status-success>
 
-      <mcs-data-status-in-progress mcsDataInProgress>
-        <span>{{ textContent.loadingContent }}</span>
-      </mcs-data-status-in-progress>
+    <mcs-data-status-in-progress mcsDataInProgress>
+      <span>{{ textContent.loadingContent }}</span>
+    </mcs-data-status-in-progress>
 
-      <mcs-data-status-empty mcsDataEmpty>
-        <span>{{ textContent.noSnapshots }}</span>
-      </mcs-data-status-empty>
+    <mcs-data-status-empty mcsDataEmpty>
+      <span>{{ textContent.noSnapshots }}</span>
+    </mcs-data-status-empty>
 
-      <mcs-data-status-error mcsDataError>
-        <span>{{ textContent.errorGettingSnapshots }}</span>
-      </mcs-data-status-error>
-    </mcs-data-status>
-  </div>
-</div>
+    <mcs-data-status-error mcsDataError>
+      <span>{{ textContent.errorGettingSnapshots }}</span>
+    </mcs-data-status-error>
+  </mcs-data-status>
+</mcs-presentation-panel>
 
 <!-- Server Backups -->
 <!-- TODO: Remove ngIf when Backups is working -->

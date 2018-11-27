@@ -1,9 +1,9 @@
 <!-- Left Panel Wrapper -->
-<div #pageLeftElement class="page-left-wrapper hidden-small" [hidden]="!hasLeftPanel">
+<div #pageLeftElement class="page-left-wrapper" hidden-small [hidden]="!hasLeftPanel">
 
   <div class="left-nav-wrapper">
     <span class="horizontal-label" [hidden]="!leftPanelIsVisible">{{ leftPanelHeader }}</span>
-    <mcs-icon [key]="navIconKey" size="small" class="right-align" (click)="toggleLeftPanel()"
+    <mcs-icon [key]="navIconKey" size="small" justify-self-right (click)="toggleLeftPanel()"
       mcsCursor="pointer" [hidden]="!hasLeftPanel"></mcs-icon>
   </div>
   <div *ngIf="!leftPanelIsVisible" (click)="toggleLeftPanel()"

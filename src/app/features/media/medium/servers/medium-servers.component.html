@@ -1,8 +1,10 @@
-<div class="container-wrapper">
-  <h2 class="container-header">{{ textContent.title }}</h2>
+<mcs-presentation-panel>
+  <ng-container mcsPresentationPanelHeader>
+    <h2>{{ textContent.title }}</h2>
+  </ng-container>
   <p *ngIf="textContent.description">{{ textContent.description }}</p>
 
-  <div class="block-items-large">
+  <section>
     <mcs-table [dataSource]="serversDataSource">
       <!-- Name Column -->
       <ng-container mcsColumnDef="name">
@@ -10,12 +12,12 @@
           {{ textContent.columnHeaders.name }}
         </mcs-header-cell>
         <mcs-data-cell *mcsDataCellDef="let row">
-          <div class="inline-items-small">
+          <mcs-item>
             <ng-container *ngIf="serverIsInProgress(row)">
               <mcs-loader size="small" [mcsTooltip]="selectedMedium.processingText"></mcs-loader>
             </ng-container>
             <span>{{ row.name }}</span>
-          </div>
+          </mcs-item>
         </mcs-data-cell>
       </ng-container>
 
@@ -71,5 +73,5 @@
         </button>
       </div>
     </div>
-  </div>
-</div>
+  </section>
+</mcs-presentation-panel>

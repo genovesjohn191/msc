@@ -24,24 +24,33 @@ $dialog-border-color: $border-color-light;
       margin: 0;
     }
   }
+
+  .dialog-close-icon {
+    margin-left: auto !important;
+  }
 }
 
 .dialog-content-wrapper {
-  @include flex(1 1 auto);
-  @include display-flex(column);
-  padding: $dialog-content-padding;
-  overflow: auto;
+  @include display-flex(row);
+  @include flex(auto);
 
-  .dialog-content-body {
-    @include display-flex(row);
+  .dialog-content {
+    @include flex(1 1 auto);
+    @include display-flex(column);
+    padding: $dialog-content-padding;
+    overflow: auto;
 
-    .dialog-content-icon {
-      align-self: flex-start;
-      margin-top: $space-xsmall;
-    }
+    .dialog-content-body {
+      @include display-flex(row);
 
-    .dialog-content-message {
-      margin-left: $space-large;
+      .dialog-content-icon {
+        align-self: flex-start;
+        margin-top: $space-xsmall;
+      }
+
+      .dialog-content-message {
+        margin-left: $space-large;
+      }
     }
   }
 }

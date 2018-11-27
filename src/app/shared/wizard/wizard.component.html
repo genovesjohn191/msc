@@ -1,5 +1,5 @@
 <!-- Left panel wrapper in case of desktop -->
-<div class="wizard-steps-desktop hidden-medium">
+<div class="wizard-steps-desktop" hidden-medium>
   <div class="wizard-steps-header">
     <span read-only>{{ textContent.steps }}</span>
   </div>
@@ -27,7 +27,7 @@
 </div>
 
 <!-- Top panel wrapper in case of Mobile -->
-<div class="wizard-steps-mobile visible-medium">
+<div class="wizard-steps-mobile" visible-medium>
   <mcs-responsive-panel>
     <ng-container *ngFor="let step of steps; let idx = index">
       <div class="wizard-step-item"

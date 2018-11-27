@@ -36,14 +36,89 @@ $color-green-00: #21b21e;
 $color-yellow-00: #efc225;
 $color-red-00: #ed1d2b;
 
+// Color scheme (Needs to be expose in the future preference)
+$color-scheme-primary: $color-primary-01 !default;
+$color-scheme-secondary: $color-black !default;
+$color-scheme-tertiary: $color-grey-00 !default;
+$color-scheme-success: $color-green-00 !default;
+$color-scheme-warning: $color-yellow-00 !default;
+$color-scheme-danger: $color-red-00 !default;
+$color-scheme-light: $color-grey-08 !default;
+$color-scheme-medium: $color-grey-01 !default;
+$color-scheme-dark: $color-black !default;
+
+$color-scheme-map: (
+  primary: (
+    base: $color-scheme-primary,
+    contrast: $color-white,
+    shade: get-color-shade($color-scheme-primary),
+    tint: get-color-tint($color-scheme-primary)
+  ),
+  secondary: (
+    base: $color-scheme-secondary,
+    contrast: $color-white,
+    shade: get-color-shade($color-scheme-secondary),
+    tint: get-color-tint($color-scheme-secondary)
+  ),
+  tertiary: (
+    base: $color-scheme-tertiary,
+    contrast: $color-white,
+    shade: get-color-shade($color-scheme-tertiary),
+    tint: get-color-tint($color-scheme-tertiary)
+  ),
+  success: (
+    base: $color-scheme-success,
+    contrast: $color-white,
+    shade: get-color-shade($color-scheme-success),
+    tint: get-color-tint($color-scheme-success)
+  ),
+  warning: (
+    base: $color-scheme-warning,
+    contrast: $color-white,
+    shade: get-color-shade($color-scheme-warning),
+    tint: get-color-tint($color-scheme-warning)
+  ),
+  danger: (
+    base: $color-scheme-danger,
+    contrast: $color-white,
+    shade: get-color-shade($color-scheme-danger),
+    tint: get-color-tint($color-scheme-danger)
+  ),
+  light: (
+    base: $color-scheme-light,
+    contrast: $color-black,
+    shade: get-color-shade($color-scheme-light),
+    tint: get-color-tint($color-scheme-light)
+  ),
+  medium: (
+    base: $color-scheme-medium,
+    contrast: $color-white,
+    shade: get-color-shade($color-scheme-medium),
+    tint: get-color-tint($color-scheme-medium)
+  ),
+  dark: (
+    base: $color-scheme-dark,
+    contrast: $color-white,
+    shade: get-color-shade($color-scheme-dark),
+    tint: get-color-tint($color-scheme-dark)
+  )
+) !default;
+
+// Max View Width
+$limited-view-width: 800px;
+
 // Responsive Dimension Settings
 $large-platform-width: 970px;
 $medium-platform-width: 720px;
 $small-platform-width: 543px;
-$xmall-platform-width: 320px;
+$xsmall-platform-width: 320px;
 
-// Max View Width
-$limited-view-width: 800px;
+$screen-breakpoints-map: (
+  xsmall: $xsmall-platform-width,
+  small: $small-platform-width,
+  medium: $medium-platform-width,
+  large: $large-platform-width,
+) !default;
 
 // Spacer
 $space-xxlarge: 40px;
@@ -52,6 +127,14 @@ $space-large: 20px;
 $space-medium: 15px;
 $space-small: 10px;
 $space-xsmall: 5px;
+
+$space-map: (
+  xsmall: $space-xsmall,
+  small: $space-small,
+  medium: $space-medium,
+  large: $space-large,
+  xlarge: $space-xlarge,
+) !default;
 
 // Z-index
 $zindex-header: 1500;

@@ -1,0 +1,6 @@
+// Form Field
+$form-field-interval: $space-medium;
+
+.basic-form, form {
+  @include set-items-interval($form-field-interval);
+}

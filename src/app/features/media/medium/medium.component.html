@@ -1,13 +1,13 @@
 <mcs-page>
   <!-- Page template header -->
   <ng-container *mcsPageHeader>
-    <div class="inline-items-small" *ngIf="media$ | async as selectedMedium">
+    <mcs-item *ngIf="media$ | async as selectedMedium">
       <div><h1>{{ selectedMedium?.catalogName }}</h1></div>
       <div *ngIf="selectedMedium">
         <mcs-icon [key]="angleDoubleRightIconKey" size="xsmall"></mcs-icon>
       </div>
       <div><h1>{{ selectedMedium?.name }}</h1></div>
-    </div>
+    </mcs-item>
   </ng-container>
 
   <!-- Left Panel -->
@@ -39,8 +39,8 @@
 
                       <mcs-option [value]="medium"
                         [selected]="(media$ | async)?.id === medium.id">
-                        <div class="space-left-xsmall">
-                          <span class="word-wrap">{{ medium.name }}</span>
+                        <div margin-left-xsmall>
+                          <span text-wrap>{{ medium.name }}</span>
                         </div>
                       </mcs-option>
                     </a>

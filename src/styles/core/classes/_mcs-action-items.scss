@@ -1,14 +1,3 @@
-// Actions container
-.action-items-block-wrapper {
-  @include display-flex(column);
-  @include set-items-interval($space-xsmall, vertical);
-}
-
-.actions-items-inline-wrapper {
-  @include display-flex(column);
-  @include set-items-interval($space-xsmall, vertical);
-}
-
 // Action items
 .action-items {
   @include display-flex(row);

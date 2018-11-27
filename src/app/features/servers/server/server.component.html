@@ -1,7 +1,7 @@
 <mcs-page>
   <!-- Page template header -->
   <ng-container *mcsPageHeader>
-    <div class="inline-items-small" *ngIf="selectedServer$ | async as selectedServer">
+    <mcs-item *ngIf="selectedServer$ | async as selectedServer">
       <div>
         <a [mcsRouterLink]="[routeKeyEnum.VdcDetail, selectedServer.platform?.resourceId]"
           mcsId="select-vdc"
@@ -15,7 +15,7 @@
       <div>
         <h1>{{ selectedServer.name }}</h1>
       </div>
-    </div>
+    </mcs-item>
   </ng-container>
 
   <!-- Left Panel -->
@@ -58,7 +58,7 @@
 
                       <mcs-option [value]="server"
                         [selected]="(selectedServer$ | async)?.id === server.id">
-                        <div class="form-field-inline">
+                        <mcs-item>
                           <mcs-icon *ngIf="!server.isProcessing" size="small"
                             [key]="server?.powerStateIconKey"></mcs-icon>
 
@@ -66,8 +66,8 @@
                             [mcsTooltip]="server.processingText"
                             mcsTooltipPosition="right"></mcs-loader>
 
-                          <span class="word-wrap">{{ server.name }}</span>
-                        </div>
+                          <span text-wrap>{{ server.name }}</span>
+                        </mcs-item>
                       </mcs-option>
                     </a>
                   </ng-container>
@@ -96,7 +96,7 @@
     <div class="routing-tab-wrapper" *ngIf="selectedServer$ | async as selectedServer">
       <!-- Busy status of the server -->
       <ng-container *ngIf="selectedServer.isProcessing">
-        <mcs-busy-ribbon theme="dark" class="space-bottom-small">
+        <mcs-busy-ribbon theme="dark" margin-bottom-small>
           <span>{{ textContent.serverBusyLabel }}</span>
         </mcs-busy-ribbon>
       </ng-container>
@@ -118,7 +118,7 @@
         <mcs-tab [label]="textContent.nics.label" id="nics"></mcs-tab>
 
         <!-- Action tab -->
-        <mcs-tab [canSelect]="false" customClass="right-align"
+        <mcs-tab [canSelect]="false" align="end"
           *mcsAccessControl="['VmPowerStateEdit']">
           <ng-template mcsTabLabel>
             <mcs-server-command mcsId="server-command"

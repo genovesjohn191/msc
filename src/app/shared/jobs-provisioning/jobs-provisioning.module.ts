@@ -7,6 +7,7 @@ import { LoaderModule } from '../loader/loader.module';
 import { AlertModule } from '../alert/alert.module';
 import { DirectivesModule } from '../directives';
 import { ButtonModule } from '../button';
+import { ItemModule } from '../item/item.module';
 import { JobsProvisioningComponent } from './jobs-provisioning.component';
 
 @NgModule({
@@ -21,7 +22,8 @@ import { JobsProvisioningComponent } from './jobs-provisioning.component';
     LoaderModule,
     AlertModule,
     DirectivesModule,
-    ButtonModule
+    ButtonModule,
+    ItemModule
   ],
   exports: [
     CommonModule,
@@ -31,8 +33,8 @@ import { JobsProvisioningComponent } from './jobs-provisioning.component';
     LoaderModule,
     AlertModule,
     ButtonModule,
+    ItemModule,
     DirectivesModule,
-    ButtonModule,
     JobsProvisioningComponent
   ]
 })

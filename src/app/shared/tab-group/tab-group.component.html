@@ -7,7 +7,7 @@
     mcsRipple
     *ngFor="let tab of tabs"
     [active]="activeTab?.id === tab.id"
-    [ngClass]="tab?.customClass"
+    [align]="tab?.align"
     [class.custom-tab]="!tab.canSelect"
     (click)="onClickTab(tab)">
 

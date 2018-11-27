@@ -3,7 +3,7 @@
   <mcs-top-panel *mcsTopPanelDef>
     <mcs-top-panel-item *mcsTopPanelItemDef>
       <div class="listing-action-wrapper">
-        <div class="total-record-count right-align">
+        <div class="total-record-count">
           <span>{{ totalRecordsCount | mcsPlural:
                 textContent.dataSingular : textContent.dataPlural }}
           </span>
@@ -42,23 +42,23 @@
             {{ columnSettings.firewall.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
-            <div class="inline-items-small">
+            <mcs-item>
               <mcs-icon [key]="row.connectionStatusIconKey" size="small"></mcs-icon>
               <a (click)="navigateToFirewall(row)"
                 mcsId="select-firewall"
                 mcsEventTracker="select-firewall"
                 mcsEventCategory="firewall"
                 mcsEventLabel="firewall-listing-page">{{ row.managementName }}</a>
-            </div>
+            </mcs-item>
           </mcs-data-cell>
         </ng-container>
 
         <!-- Serial Number Column -->
         <ng-container mcsColumnDef="serialNumber" *mcsAccessControl="['FirewallSerialNumberView']">
-          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+          <mcs-header-cell *mcsHeaderCellDef hidden-small>
             {{ columnSettings.serialNumber.text }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
             <span [innerHTML]="row.serialNumber | mcsDataLabel: 'Unavailable'"></span>
           </mcs-data-cell>
         </ng-container>
@@ -66,20 +66,20 @@
         <!-- Firmware Version Column -->
         <ng-container mcsColumnDef="firmwareVersion"
           [mcsColumnDefHidden]="isColumnHidden('firmwareVersion')">
-          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+          <mcs-header-cell *mcsHeaderCellDef hidden-small>
             {{ columnSettings.firmwareVersion.text }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
             {{ row.osVendor }} {{ row.osRelease }}
           </mcs-data-cell>
         </ng-container>
 
         <!-- IP Address Column -->
         <ng-container mcsColumnDef="ipAddress" [mcsColumnDefHidden]="isColumnHidden('ipAddress')">
-          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+          <mcs-header-cell *mcsHeaderCellDef hidden-small>
             {{ columnSettings.ipAddress.text }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
             {{ row.managementIpAddress }}
           </mcs-data-cell>
         </ng-container>
@@ -106,9 +106,9 @@
 
         <!-- Action Column -->
         <ng-container mcsColumnDef="action">
-          <mcs-header-cell *mcsHeaderCellDef class="hidden-small"></mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="text-center hidden-small">
-            <mcs-icon class="action" mcsStopPropagation [key]="cogIconKey" size="medium"
+          <mcs-header-cell *mcsHeaderCellDef hidden-small></mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-small text-center>
+            <mcs-icon mcsStopPropagation [key]="cogIconKey" size="medium"
               mcsPopover placement="bottom" orientation="left" theme="light"
               padding="none" [content]="actionContent" mcsCursor="pointer">
             </mcs-icon>

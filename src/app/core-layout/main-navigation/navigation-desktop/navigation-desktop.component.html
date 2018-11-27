@@ -3,10 +3,14 @@
   <div class="product-megamenu-wrapper" mcsScrollable>
     <mcs-data-status [dataStatusFactory]="productsStatusFactory">
       <mcs-data-status-success mcsDataSuccess>
-        <div class="inline-items-medium bordered align-items-none">
+        <div class="inline-items-medium bordered" align-items-none>
           <ng-container *ngFor="let catalog of productCatalogs">
-            <div class="container-wrapper flex-auto block-items-medium">
-              <h2 class="container-header">{{ catalog.name }}</h2>
+            <mcs-presentation-panel>
+              <ng-container mcsPresentationPanelHeader>
+                <h2>{{ catalog.name }}</h2>
+              </ng-container>
+
+              <section>
                 <mcs-list [header]="category.name" itemsOffset="small"
                   *ngFor="let category of catalog.categories">
                   <mcs-list-item *ngFor="let product of category.products">
@@ -17,7 +21,8 @@
                       mcsEventLabel="main-nav">{{ product.name }}</a>
                   </mcs-list-item>
                 </mcs-list>
-            </div>
+              </section>
+            </mcs-presentation-panel>
           </ng-container>
         </div>
       </mcs-data-status-success>

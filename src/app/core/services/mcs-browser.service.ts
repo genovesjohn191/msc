@@ -1,43 +1,20 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
 import {
-  McsSize,
-  DeviceMode
-} from '@app/models';
+  BehaviorSubject,
+  Observable
+} from 'rxjs';
+import { distinctUntilChanged } from 'rxjs/operators';
+import { Breakpoint } from '@app/models';
 import { CoreDefinition } from '../core.definition';
 
 @Injectable()
 export class McsBrowserService {
-
-  /**
-   * Listener for resizing of window.::.
-   * This will notify all subscribers when the browser is resized
-   * and provide the device type based on the current size of the window (browser)
-   */
-  private _deviceTypeStream: BehaviorSubject<DeviceMode>;
-  public get deviceTypeStream(): BehaviorSubject<DeviceMode> {
-    return this._deviceTypeStream;
-  }
-  public set deviceTypeStream(value: BehaviorSubject<DeviceMode>) {
-    this._deviceTypeStream = value;
-  }
-
-  /**
-   * Listener for resizing of window.::.
-   * This will notify all subscribers when the browser is resized
-   * and provide the current size of the window (browser)
-   */
-  private _windowSizeStream: BehaviorSubject<McsSize>;
-  public get windowSizeStream(): BehaviorSubject<McsSize> {
-    return this._windowSizeStream;
-  }
-  public set windowSizeStream(value: BehaviorSubject<McsSize>) {
-    this._windowSizeStream = value;
-  }
+  private _breakpointChange: BehaviorSubject<Breakpoint>;
+  private _breakPoints: Map<Breakpoint, string>;
 
   constructor() {
-    this._deviceTypeStream = new BehaviorSubject<DeviceMode>(DeviceMode.Desktop);
-    this._windowSizeStream = new BehaviorSubject<McsSize>(new McsSize());
+    this._breakpointChange = new BehaviorSubject<Breakpoint>(Breakpoint.Large);
+    this._breakPoints = new Map();
     this.initialize();
   }
 
@@ -45,6 +22,9 @@ export class McsBrowserService {
    * Initialize stream and raise for resize event initially
    */
   public initialize() {
+    // Creates the breakpoints table
+    this._createBreakpoints();
+
     // Register the resize event
     window.addEventListener('resize', ($event) => {
       this.onResizeWindow($event);
@@ -57,34 +37,28 @@ export class McsBrowserService {
   }
 
   /**
-   * This event will invoke when the window/browser size is changed
-   * @param event Resize event properties
+   * Event that emits when the breakpoint changes
    */
-  public onResizeWindow(event: any): void {
-    let width: number;
-    width = event.target.innerWidth;
-
-    // Notify window size subscriber
-    this._windowSizeStream.next({
-      width: event.target.innerWidth,
-      height: event.target.innerHeight
-    } as McsSize
+  public breakpointChange(): Observable<Breakpoint> {
+    return this._breakpointChange.pipe(
+      distinctUntilChanged()
     );
+  }
 
-    // Notify device type subscriber
-    if (width >= CoreDefinition.DESKTOP_MIN_WIDTH) {
-      this._deviceTypeStream.next(DeviceMode.Desktop);
+  /**
+   * This event will invoke when the window/browser size is changed
+   * @param _event Resize event properties
+   */
+  public onResizeWindow(_event: any): void {
+    let largestBreakpoint: Breakpoint;
 
-    } else if (width >= CoreDefinition.TABLET_MIN_WIDTH) {
-      this._deviceTypeStream.next(DeviceMode.Tablet);
-
-    } else if (width >= CoreDefinition.MOBILE_LANDSCAPE_MIN_WIDTH) {
-      this._deviceTypeStream.next(DeviceMode.MobileLandscape);
-
-    } else {
-      this._deviceTypeStream.next(DeviceMode.MobilePortrait);
-
-    }
+    this._breakPoints.forEach((breakpointValue, breakpointKey) => {
+      let breakpointMatched = window.matchMedia(breakpointValue).matches;
+      if (breakpointMatched) {
+        largestBreakpoint = breakpointKey;
+      }
+    });
+    this._breakpointChange.next(largestBreakpoint);
   }
 
   /**
@@ -92,5 +66,15 @@ export class McsBrowserService {
    */
   public scrollToTop(): void {
     return window.scrollTo(0, 0);
+  }
+
+  /**
+   * Creates breakpoints table
+   */
+  private _createBreakpoints(): void {
+    this._breakPoints.set(Breakpoint.XSmall, `(min-width: ${CoreDefinition.BREAKPOINT_XSMALL}px)`);
+    this._breakPoints.set(Breakpoint.Small, `(min-width: ${CoreDefinition.BREAKPOINT_SMALL}px)`);
+    this._breakPoints.set(Breakpoint.Medium, `(min-width: ${CoreDefinition.BREAKPOINT_MEDIUM}px)`);
+    this._breakPoints.set(Breakpoint.Large, `(min-width: ${CoreDefinition.BREAKPOINT_LARGE}px)`);
   }
 }

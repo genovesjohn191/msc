@@ -1,25 +1,3 @@
-// Layout width
-.full-width {
-  width: 100%;
-}
-
-.auto-width {
-  width: auto;
-}
-
-// Outlines
-.outline-none {
-  outline: none;
-}
-
-// Position
-.position-relative {
-  position: relative;
-}
-
-.position-absolute {
-  position: absolute;
-}
 
 // Status
 .read-only {
@@ -29,13 +7,6 @@
 // Special effects
 .rotate-sideways {
   @include transform(translateX(-50%) translateY(-50%) rotate(-90deg));
-}
-
-// Icon with label
-.labelled-icon {
-  @include flex(0 0 auto);
-  @include display-flex(row);
-  @include set-items-interval($space-small, horizontal);
 }
 
 .dropzone {
@@ -50,23 +21,10 @@
 .limited-view {
   @include flex(0 0 auto !important); // Force the page to not apply flex auto
   width: $limited-view-width;
+
   @include breakpoint(medium) {
     width: 100%;
   }
-}
-
-// Items
-.item-margin {
-  margin-bottom: $space-medium;
-}
-
-// Bordered elements
-.bordered-container {
-  border: 1px solid $border-color-light;
-}
-
-.no-border {
-  border: none !important;
 }
 
 // Disabled element

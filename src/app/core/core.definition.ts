@@ -1,12 +1,9 @@
 export class CoreDefinition {
   /** Responsive Browser Width */
-  public static DESKTOP_MIN_WIDTH = 970;
-  public static TABLET_MAX_WIDTH = 969;
-  public static TABLET_MIN_WIDTH = 720;
-  public static MOBILE_LANDSCAPE_MAX_WIDTH = 719;
-  public static MOBILE_LANDSCAPE_MIN_WIDTH = 544;
-  public static MOBILE_PORTRAIT_MAX_WIDTH = 543;
-  public static MOBILE_PORTRAIT_MIN_WIDTH = 320;
+  public static BREAKPOINT_XSMALL = 0;
+  public static BREAKPOINT_SMALL = 543;
+  public static BREAKPOINT_MEDIUM = 720;
+  public static BREAKPOINT_LARGE = 970;
 
   /** Notifications */
   public static NOTIFICATION_ANIMATION_DELAY = 310;

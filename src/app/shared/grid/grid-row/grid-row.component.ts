@@ -1,8 +1,30 @@
 import {
   Component,
   ChangeDetectionStrategy,
-  ViewEncapsulation
+  ViewEncapsulation,
+  AfterContentInit,
+  OnDestroy,
+  ContentChildren,
+  QueryList,
+  ChangeDetectorRef,
+  Input,
+  ElementRef
 } from '@angular/core';
+import {
+  Subject,
+  merge
+} from 'rxjs';
+import {
+  takeUntil,
+  startWith
+} from 'rxjs/operators';
+import { McsBrowserService } from '@app/core';
+import {
+  unsubscribeSafely,
+  isNullOrEmpty,
+  coerceNumber
+} from '@app/utilities';
+import { GridColumnComponent } from '../grid-column/grid-column.component';
 
 @Component({
   selector: 'mcs-grid-row',
@@ -15,4 +37,109 @@ import {
   }
 })
 
-export class GridRowComponent { }
+export class GridRowComponent implements AfterContentInit, OnDestroy {
+  @Input()
+  public set gapSize(value: number) { this._gapSize = coerceNumber(value); }
+  private _gapSize: number = 15;
+
+  @ContentChildren(GridColumnComponent)
+  private _gridColumns: QueryList<GridColumnComponent>;
+
+  private _destroySubject = new Subject<void>();
+
+  constructor(
+    private _elementRef: ElementRef,
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _browserService: McsBrowserService
+  ) { }
+
+  public ngAfterContentInit() {
+    this._subscribesToColumnChanges();
+  }
+
+  public ngOnDestroy() {
+    unsubscribeSafely(this._destroySubject);
+  }
+
+  /**
+   * Returns the host element of the grid row
+   */
+  public get hostElement(): HTMLElement {
+    return this._elementRef.nativeElement;
+  }
+
+  /**
+   * Subscribe to column changes
+   */
+  private _subscribesToColumnChanges(): void {
+    this._gridColumns.changes.pipe(
+      startWith(null),
+      takeUntil(this._destroySubject)
+    ).subscribe(() => {
+      this._subscribeToBreakpointChanges();
+    });
+  }
+
+  /**
+   * Subscribes to window resize changes
+   */
+  private _subscribeToBreakpointChanges(): void {
+    let resetSubject = merge(this._gridColumns.changes, this._destroySubject);
+    this._browserService.breakpointChange().pipe(
+      takeUntil(resetSubject)
+    ).subscribe(() => this._updateGridLayout());
+  }
+
+  /**
+   * Updates the grid column width and set the values for those
+   * who doesn't have width with equally divided
+   */
+  private _updateGridLayout(): void {
+    Promise.resolve().then(() => {
+      let columnsCountWithDynamicSize = this._gridColumns
+        .filter((column) => isNullOrEmpty(column.getColumnSpan())).length;
+
+      let columnsAccumulatedSize = this._gridColumns
+        .filter((column) => !!column.getColumnSpan())
+        .map((column) => column.getColumnSpan())
+        .reduce((total, next) => total + next, 0);
+
+      let columnsAvailableSize = Math.max(0, 12 - columnsAccumulatedSize);
+      let individualDynamicColumnSize = columnsAvailableSize / columnsCountWithDynamicSize;
+      let columnSizeCounter = 0;
+
+      this._gridColumns.forEach((gridColumn) => {
+        let gridHasFixedSize = !isNullOrEmpty(gridColumn.getColumnSpan());
+        let gridActualSize = gridHasFixedSize ?
+          gridColumn.getColumnSpan() :
+          individualDynamicColumnSize;
+
+        columnSizeCounter += gridActualSize;
+        this._updateGridColumnWidth(gridActualSize, gridColumn);
+        this._updateGridColumnGap(columnSizeCounter > 12, gridColumn);
+      });
+      this._changeDetectorRef.markForCheck();
+    });
+  }
+
+  /**
+   * Updates the grid column width of based on inputs
+   * @param gridSize Grid size to be set on the column
+   * @param column Grid Column where the gridsize will be applied
+   */
+  private _updateGridColumnWidth(gridSize: number, column: GridColumnComponent): void {
+    let actualWidthPercentage = ((gridSize / 12) * 100);
+    column.applyColumnWidth(actualWidthPercentage, this._gapSize);
+  }
+
+  /**
+   * Updates the grid column gap based on the gapsize provided
+   * @param isColumnWrapped Flag to be determine if the column was wrapped
+   * @param column Column to be updated
+   */
+  private _updateGridColumnGap(isColumnWrapped: boolean, column: GridColumnComponent): void {
+    isColumnWrapped ?
+      column.applyColumnVerticalGap(this._gapSize) :
+      column.removeColumnVerticalGap();
+  }
+}

@@ -1,11 +1,12 @@
-<div class="space-between-inline-items align-items-center">
+<mcs-item>
   <span>{{ textContent.label }}:</span>
   <mcs-select [(ngModel)]="selectedServiceLevel"
     (change)="onServiceLevelChanged()"
     [placeholder]="textContent.placeholder"
-    class="form-field-size-small">
+    class="form-field-size-small"
+    justify-self-right>
     <mcs-option *ngFor="let level of serviceLevels" [value]="level">
       {{ level }}
     </mcs-option>
   </mcs-select>
-</div>
+</mcs-item>

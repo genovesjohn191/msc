@@ -7,7 +7,10 @@ import {
   ViewEncapsulation,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import { coerceBoolean } from '@app/utilities';
+import {
+  coerceBoolean,
+  McsAlignmentType
+} from '@app/utilities';
 
 @Component({
   selector: 'mcs-tab-header-item',
@@ -16,7 +19,10 @@ import { coerceBoolean } from '@app/utilities';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     'class': 'tab-header-item-wrapper',
-    '[class.active]': 'active'
+    '[class.active]': 'active',
+    '[class.align-start]': 'align === "start"',
+    '[class.align-center]': 'align === "center"',
+    '[class.align-end]': 'align === "end"'
   }
 })
 
@@ -26,13 +32,14 @@ export class TabHeaderItemComponent {
    */
   public selectionChanged: EventEmitter<any>;
 
+  @Input()
+  public align: McsAlignmentType;
+
   /**
    * Tab header item flag to determine if the tab is selected
    */
   @Input()
-  public get active(): boolean {
-    return this._active;
-  }
+  public get active(): boolean { return this._active; }
   public set active(value: boolean) {
     if (this._active !== value) {
       this._active = coerceBoolean(value);

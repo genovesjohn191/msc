@@ -48,61 +48,7 @@
   @include block-items($space-xlarge, $divider-light-color);
 }
 
-// Separate Items
-.space-between-inline-items {
-  @include display-flex(row);
-  @include flex-wrap(wrap);
-  justify-content: space-between;
-}
-
-.space-between-block-items {
-  @include display-flex(column);
-  justify-content: space-between;
-}
-
 // Others (Individual)
 .block {
   display: block;
-}
-
-.inline-block {
-  display: inline-block;
-}
-
-.valign-middle {
-  vertical-align: middle;
-}
-
-.valign-top {
-  vertical-align: text-top;
-}
-
-.valign-bottom {
-  vertical-align: text-bottom;
-}
-
-// Text alignment
-.text-center {
-  text-align: center;
-}
-
-.text-right {
-  text-align: right;
-}
-
-.text-left {
-  text-align: left;
-}
-
-// Item alignment
-.right-align {
-  margin-left: auto !important;
-}
-
-.left-align {
-  margin-right: auto !important;
-}
-
-.top-align {
-  vertical-align: top !important;
 }

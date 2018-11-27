@@ -41,7 +41,7 @@
 
                       <mcs-option [value]="server"
                         [selected]="selectedServer?.id === server.id">
-                        <div class="form-field-inline">
+                        <mcs-item>
                           <mcs-icon *ngIf="!server.isProcessing" size="small"
                             [key]="server?.powerStateIconKey"></mcs-icon>
 
@@ -49,8 +49,8 @@
                             [mcsTooltip]="server.processingText"
                             mcsTooltipPosition="right"></mcs-loader>
 
-                          <span class="word-wrap">{{ server.name }}</span>
-                        </div>
+                          <span text-wrap>{{ server.name }}</span>
+                        </mcs-item>
                       </mcs-option>
                     </a>
                   </ng-container>

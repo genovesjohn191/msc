@@ -1,3 +1,20 @@
+// Form field size
+$form-field-size-small: 200px;
+$form-field-size-medium: 300px;
+$form-field-size-large: 400px;
+
+.form-field-size-small {
+  max-width: $form-field-size-small;
+}
+
+.form-field-size-medium {
+  max-width: $form-field-size-medium;
+}
+
+.form-field-size-large {
+  max-width: $form-field-size-large;
+}
+
 // Input
 $input-font: $base-font;
 $input-font-size: $font-size-default;

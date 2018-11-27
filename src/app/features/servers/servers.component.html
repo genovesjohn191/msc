@@ -23,8 +23,7 @@
     <mcs-top-panel-item *mcsTopPanelItemDef [ngStyle]="{overflow: 'auto'}">
       <div class="listing-action-wrapper">
         <mcs-responsive-panel *mcsAccessControl="['VmPowerStateEdit']">
-          <mcs-action-item mcsResponsivePanelItem
-            class="hidden-small"
+          <mcs-action-item mcsResponsivePanelItem hidden-small
             [disabled]="!executableAction('startable')"
             (click)="executeTopPanelAction(serverCommand.Start)"
             mcsId
@@ -35,8 +34,7 @@
             <span>{{ textContent.start }}</span>
           </mcs-action-item>
 
-          <mcs-action-item mcsResponsivePanelItem
-            class="hidden-small"
+          <mcs-action-item mcsResponsivePanelItem hidden-small
             [disabled]="!executableAction('stoppable')"
             (click)="executeTopPanelAction(serverCommand.Stop)"
             mcsId
@@ -47,8 +45,7 @@
             <span>{{ textContent.stop }}</span>
           </mcs-action-item>
 
-          <mcs-action-item mcsResponsivePanelItem
-            class="hidden-small"
+          <mcs-action-item mcsResponsivePanelItem hidden-small
             [disabled]="!executableAction('restartable')"
             (click)="executeTopPanelAction(serverCommand.Restart)"
             mcsId
@@ -59,8 +56,7 @@
             <span>{{ textContent.restart }}</span>
           </mcs-action-item>
 
-          <mcs-action-item mcsResponsivePanelItem
-            class="hidden-small"
+          <mcs-action-item mcsResponsivePanelItem hidden-small
             [disabled]="!executableAction('deletable')"
             (click)="executeTopPanelAction(serverCommand.Delete)"
             mcsId
@@ -71,8 +67,7 @@
             <span>{{ textContent.delete }}</span>
           </mcs-action-item>
 
-          <mcs-action-item mcsResponsivePanelItem
-            class="hidden-small"
+          <mcs-action-item mcsResponsivePanelItem hidden-small
             [disabled]="!executableAction('suspendable')"
             (click)="executeTopPanelAction(serverCommand.Suspend)"
             mcsId
@@ -83,8 +78,7 @@
             <span>{{ textContent.suspend }}</span>
           </mcs-action-item>
 
-          <mcs-action-item mcsResponsivePanelItem
-            class="hidden-small"
+          <mcs-action-item mcsResponsivePanelItem hidden-small
             [disabled]="!executableAction('resumable')"
             (click)="executeTopPanelAction(serverCommand.Resume)"
             mcsId
@@ -96,7 +90,7 @@
           </mcs-action-item>
         </mcs-responsive-panel>
 
-        <div class="total-record-count right-align">
+        <div class="total-record-count">
           <span>{{ totalRecordsCount | mcsPlural:
                 textContent.dataSingular : textContent.dataPlural }}
           </span>
@@ -132,7 +126,7 @@
         <!-- Selection Column -->
         <ng-container mcsColumnDef="select" *mcsAccessControl="['VmPowerStateEdit']">
           <mcs-header-cell *mcsHeaderCellDef
-            class="text-center action-header-cell hidden-small">
+            hidden-small text-center class="action-header-cell">
             <mcs-checkbox (change)="toggleSelectAll()"
               color="white"
               [checked]="isAllSelected()"
@@ -140,10 +134,10 @@
             </mcs-checkbox>
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row"
+            hidden-small text-center class="action-data-cell"
             [disabled]="row.isProcessing"
             mcsCursor="default"
-            mcsStopPropagation
-            class="text-center action-data-cell hidden-small">
+            mcsStopPropagation>
             <mcs-checkbox
               [checked]="selection.isSelected(row)"
               (change)="selection.toggle(row)">
@@ -157,7 +151,7 @@
             {{ columnSettings.name.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
-            <div class="form-field-inline">
+            <mcs-item>
               <div *ngIf="!row.isProcessing">
                 <mcs-icon [key]="row.powerStateIconKey" size="small"></mcs-icon>
               </div>
@@ -170,26 +164,26 @@
                 mcsEventCategory="server"
                 mcsEventLabel="server-listing-page">
                 {{ row.name }}</a>
-            </div>
+            </mcs-item>
           </mcs-data-cell>
         </ng-container>
 
         <!-- Type Column -->
         <ng-container mcsColumnDef="type" [mcsColumnDefHidden]="isColumnHidden('type')">
-          <mcs-header-cell *mcsHeaderCellDef class="hidden-xsmall">
+          <mcs-header-cell *mcsHeaderCellDef hidden-xsmall>
             {{ columnSettings.type.text }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-xsmall">
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-xsmall>
             {{ serverServiceTypeText[row.serviceType] }}
           </mcs-data-cell>
         </ng-container>
 
         <!-- Catalog Column -->
         <ng-container mcsColumnDef="catalog" [mcsColumnDefHidden]="isColumnHidden('catalog')">
-          <mcs-header-cell *mcsHeaderCellDef class="hidden-xsmall">
+          <mcs-header-cell *mcsHeaderCellDef hidden-xsmall>
             {{ columnSettings.catalog.text }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-xsmall">
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-xsmall>
             {{ row.operatingSystem?.edition }}
           </mcs-data-cell>
         </ng-container>
@@ -197,10 +191,10 @@
         <!-- Tools Version Column -->
         <ng-container mcsColumnDef="toolsVersion"
           [mcsColumnDefHidden]="isColumnHidden('toolsVersion')">
-          <mcs-header-cell *mcsHeaderCellDef class="hidden-xsmall">
+          <mcs-header-cell *mcsHeaderCellDef hidden-xsmall>
             {{ columnSettings.toolsVersion.text }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-xsmall">
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-xsmall>
             <ng-container *ngIf="row.vmwareTools?.hasTools; else toolsNotInstalled">
               <span>{{ row.vmwareTools?.version }}</span>
             </ng-container>
@@ -218,20 +212,20 @@
         <ng-container mcsColumnDef="managementIp"
           [mcsColumnDefHidden]="isColumnHidden('managementIp')"
           *mcsAccessControl="['VmManagementIpView']">
-          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+          <mcs-header-cell *mcsHeaderCellDef hidden-small>
             {{ columnSettings.managementIp.text }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
             {{ row.ipAddress }}
           </mcs-data-cell>
         </ng-container>
 
         <!-- Zone Column -->
         <ng-container mcsColumnDef="zone" [mcsColumnDefHidden]="isColumnHidden('zone')">
-          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+          <mcs-header-cell *mcsHeaderCellDef hidden-small>
             {{ columnSettings.zone.text }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
             {{ row.availabilityZone }}
           </mcs-data-cell>
         </ng-container>
@@ -240,20 +234,20 @@
         <ng-container mcsColumnDef="serviceId"
           [mcsColumnDefHidden]="isColumnHidden('serviceId')"
           *ngIf="hasManagedResource">
-          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+          <mcs-header-cell *mcsHeaderCellDef hidden-small>
             {{ columnSettings.serviceId.text }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
             {{ row.serviceId }}
           </mcs-data-cell>
         </ng-container>
 
         <!-- Resource Column -->
         <ng-container mcsColumnDef="resource" [mcsColumnDefHidden]="isColumnHidden('resource')">
-          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+          <mcs-header-cell *mcsHeaderCellDef hidden-small>
             {{ columnSettings.resource.text }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
             <a (click)="navigateToResource(row)"
               mcsEventTracker="navigate-to-resource"
               mcsEventCategory="server"
@@ -265,10 +259,10 @@
 
         <!-- VApp Column -->
         <ng-container mcsColumnDef="vApp" [mcsColumnDefHidden]="isColumnHidden('vApp')">
-          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+          <mcs-header-cell *mcsHeaderCellDef hidden-small>
             {{ columnSettings.vApp.text }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
             {{ row.vApp }}
           </mcs-data-cell>
         </ng-container>
@@ -279,7 +273,7 @@
           <mcs-data-cell *mcsDataCellDef="let row"
             mcsCursor="default"
             mcsStopPropagation
-            class="text-center action-data-cell">
+            text-center class="action-data-cell">
             <mcs-server-command mcsId="server-command"
               [server]="row"
               [excluded]="excludedCommands"

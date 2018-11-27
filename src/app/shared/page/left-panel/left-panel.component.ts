@@ -4,6 +4,7 @@ import {
   ViewChild,
   ContentChildren,
   AfterContentInit,
+  ViewEncapsulation,
   QueryList
 } from '@angular/core';
 import { isNullOrEmpty } from '@app/utilities';
@@ -17,14 +18,15 @@ import {
 @Component({
   selector: 'mcs-left-panel',
   template: `
-    <div class="left-panel-wrapper" mcsScrollable>
+    <div class="left-panel-content" mcsScrollable>
       <ng-container mcsLeftPanelItemPlaceholder></ng-container>
       <ng-content></ng-content>
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
   host: {
-    'class': 'display-flex-row flex-auto',
+    'class': 'left-panel-wrapper',
     'style': 'overflow: hidden'
   }
 })

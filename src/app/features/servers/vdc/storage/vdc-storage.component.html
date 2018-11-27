@@ -1,26 +1,28 @@
-<div class="container-wrapper">
-  <h2 class="container-header">{{ textContent.title }}</h2>
-  <!-- Resource Storage Table -->
+<mcs-presentation-panel>
+  <ng-container mcsPresentationPanelHeader>
+    <h2>{{ textContent.title }}</h2>
+  </ng-container>
+
   <mcs-table [dataSource]="storageDatasource">
     <!-- Storage Profile Column -->
     <ng-container mcsColumnDef="storageProfile">
       <mcs-header-cell *mcsHeaderCellDef>
         {{ textContent.columnHeaders.storageProfile }}
       </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row" class="word-wrap">
-        <div class="form-field-inline">
+      <mcs-data-cell *mcsDataCellDef="let row" text-wrap>
+        <mcs-item>
           <mcs-icon [key]="storageIconKey" size="small"></mcs-icon>
-          <span class="break-word-all">{{ row.name }}</span>
-        </div>
+          <span text-wrap>{{ row.name }}</span>
+        </mcs-item>
       </mcs-data-cell>
     </ng-container>
 
     <!-- Usage Column -->
     <ng-container mcsColumnDef="usage">
-      <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+      <mcs-header-cell *mcsHeaderCellDef hidden-small>
         {{ textContent.columnHeaders.usage }}
       </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+      <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
         <mcs-capacity-bar
           [(ngModel)]="row.usedMB"
           [maxValue]="row.limitMB"></mcs-capacity-bar>
@@ -29,10 +31,10 @@
 
     <!-- Tier Column -->
     <ng-container mcsColumnDef="tier">
-      <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+      <mcs-header-cell *mcsHeaderCellDef hidden-small>
         {{ textContent.columnHeaders.tier }}
       </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+      <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
         <span [innerHTML]="(iopsLabelPlaceholder |
           mcsTextPlaceholder: 'iops': row.iops) |
           mcsDataLabel"></span>
@@ -53,4 +55,4 @@
     <mcs-header-row *mcsHeaderRowDef="storageColumns"></mcs-header-row>
     <mcs-data-row *mcsDataRowDef="let row; columns: storageColumns;"></mcs-data-row>
   </mcs-table>
-</div>
+</mcs-presentation-panel>

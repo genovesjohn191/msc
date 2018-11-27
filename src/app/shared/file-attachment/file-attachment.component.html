@@ -6,14 +6,14 @@
     </mcs-dialog-header>
 
     <mcs-dialog-content>
-      <div class="labelled-icon">
+      <mcs-item>
         <mcs-icon [key]="errorIconKey" color="red"></mcs-icon>
         <p>{{ message }}</p>
-      </div>
+      </mcs-item>
     </mcs-dialog-content>
 
     <mcs-dialog-actions>
-      <button mcsButton class="right-align" arrow="right"
+      <button mcsButton justify-self-right arrow="right"
         size="small" (click)="errorDialogRef?.close()"
         mcsId="ok-attachment">
         {{ textContent.ok }}

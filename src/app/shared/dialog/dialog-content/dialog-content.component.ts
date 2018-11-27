@@ -7,14 +7,14 @@ import {
 @Component({
   selector: 'mcs-dialog-content',
   template: `
-    <div class="dialog-content-wrapper" mcsScrollable>
+    <div class="dialog-content" mcsScrollable>
       <ng-content></ng-content>
     </div>
   `,
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    'class': 'display-flex-row flex-auto',
+    'class': 'dialog-content-wrapper',
     'style': 'overflow: hidden'
   }
 })

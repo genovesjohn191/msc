@@ -4,15 +4,15 @@
   </mcs-dialog-header>
 
   <mcs-dialog-content>
-    <div class="labelled-icon">
+    <mcs-item>
       <mcs-icon [key]="warningIconKey"></mcs-icon>
       <span>{{ textContent.alert }}</span>
-    </div>
+    </mcs-item>
   </mcs-dialog-content>
 
   <mcs-dialog-actions>
     <button mcsButton
-      class="right-align" arrow="right"
+      justify-self-right arrow="right"
       size="small" (click)="signIn()"
       mcsId="sign-in"
       mcsEventTracker="sign-in-click"

@@ -6,6 +6,7 @@ import { ListModule } from '../list/list.module';
 import { DirectivesModule } from '../directives/directives.module';
 import { InputModule } from '../input/input.module';
 import { FormFieldModule } from '../form-field/form-field.module';
+import { ItemModule } from '../item/item.module';
 /** External modules */
 import { FileUploadModule } from 'ng2-file-upload';
 import { CommentBoxComponent } from './comment-box.component';
@@ -22,7 +23,8 @@ import { CommentBoxComponent } from './comment-box.component';
     ListModule,
     DirectivesModule,
     InputModule,
-    FormFieldModule
+    FormFieldModule,
+    ItemModule
   ],
   exports: [
     FileUploadModule,
@@ -32,7 +34,8 @@ import { CommentBoxComponent } from './comment-box.component';
     ListModule,
     DirectivesModule,
     InputModule,
-    FormFieldModule
+    FormFieldModule,
+    ItemModule
   ]
 })
 

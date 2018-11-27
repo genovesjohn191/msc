@@ -17,7 +17,7 @@
     @media screen and (max-width: $small-platform-width) { @content; }
   }
   @else if $point == xsmall {
-    @media screen and (max-width: $xmall-platform-width) { @content; }
+    @media screen and (max-width: $xsmall-platform-width) { @content; }
   }
 }
 
@@ -518,5 +518,29 @@
 
   &.centered {
     @include align-items(center);
+  }
+}
+
+// Sets all the heading size based on scale by default the size is 8
+// Usage:
+// .mcs-slider {
+//   @include set-headings-size(2.5);
+// }
+@mixin set-headings-size($scale: 1, $base-size: $font-size-default) {
+  $base-large-size: $base-size;
+  $base-medium-size: $base-size - 1;
+  $base-small-size: $base-size - 1;
+
+  @for $index from 1 through 6 {
+    h#{$index} {
+      @content;
+      @include font-size($base-large-size + ($scale * (6 - $index)));
+      @include breakpoint(medium) {
+        @include font-size($base-medium-size + ($scale * (6 - $index)));
+      }
+      @include breakpoint(small) {
+        @include font-size($base-small-size + ($scale * (6 - $index)));
+      }
+    }
   }
 }

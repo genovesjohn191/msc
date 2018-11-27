@@ -50,8 +50,8 @@ $left-panel-navigation-collapse-padding: 6px;
     &.left-panel-collapsed {
       width: $left-panel-navigation-width;
 
-      .left-panel-wrapper {
-        display: none;
+      .left-panel-content {
+        display: none !important;
       }
 
       .left-nav-wrapper {
@@ -84,20 +84,26 @@ $left-panel-navigation-collapse-padding: 6px;
 
     // Left Panel Styling
     .left-panel-wrapper {
-      @include flex(1 1 auto);
-      @include display-flex(column);
-      position: relative;
-      width: $left-panel-width;
-      overflow: auto;
+      @include display-flex(row);
+      @include flex(auto);
+      overflow: hidden;
 
-      .left-panel-item-wrapper {
-        @include flex(0 0 auto);
+      .left-panel-content {
+        @include flex(1 1 auto);
         @include display-flex(column);
-        padding: $left-panel-item-padding;
-        @include set-items-interval($space-small);
+        position: relative;
+        width: $left-panel-width;
+        overflow: auto;
 
-        .listing-panel-wrapper {
-          @include set-items-interval($space-medium, vertical);
+        .left-panel-item-wrapper {
+          @include flex(0 0 auto);
+          @include display-flex(column);
+          padding: $left-panel-item-padding;
+          @include set-items-interval($space-small);
+
+          .listing-panel-wrapper {
+            @include set-items-interval($space-medium, vertical);
+          }
         }
       }
     }

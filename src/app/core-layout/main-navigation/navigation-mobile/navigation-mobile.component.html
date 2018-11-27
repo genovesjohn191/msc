@@ -9,7 +9,7 @@
               {{ catalog.name }}
             </mcs-accordion-panel-header>
 
-            <div class="block-items-medium bordered">
+            <section>
               <mcs-list [header]="category.name" itemsOffset="small"
                 *ngFor="let category of catalog.categories">
                 <mcs-list-item *ngFor="let product of category.products">
@@ -20,7 +20,7 @@
                     mcsEventLabel="main-nav">{{ product.name }}</a>
                 </mcs-list-item>
               </mcs-list>
-            </div>
+            </section>
           </mcs-accordion-panel>
         </mcs-accordion>
       </mcs-data-status-success>
@@ -49,34 +49,39 @@
   <!-- Macquarie Link View -->
   <div class="macquarie-link">
     <ng-container *ngIf="productCatalogFeatureIsOn; else macquarieViewTemplate">
-      <a class="inline-items-xsmall" mcsPopover maxWidth="auto"
+      <a mcsPopover maxWidth="auto"
         [content]="productMegaMenuTemplate"
         theme="light" priority="high"
         placement="bottom" orientation="left"
         [placementElement]="caretIconElement">
 
-        <span>{{ textContent.productCatalog }}</span>
-        <span #caretIconElement>
-          <mcs-icon [key]="caretDownIconKey"
-            size="medium" color="white"></mcs-icon>
-        </span>
+        <mcs-item>
+          <span>{{ textContent.productCatalog }}</span>
+          <span #caretIconElement>
+            <mcs-icon [key]="caretDownIconKey"
+              size="medium" color="white"></mcs-icon>
+          </span>
+        </mcs-item>
       </a>
     </ng-container>
 
     <ng-template #macquarieViewTemplate>
-      <a [href]="macviewUrl" target="_blank" class="inline-items-xsmall"
+      <a [href]="macviewUrl" target="_blank"
         mcsId="macquarie-view"
         mcsEventTracker="macquarie-view"
         mcsEventCategory="navigation"
         mcsEventLabel="main-nav">
-        <mcs-icon [key]="arrowUpIconKey" size="large"></mcs-icon>
-        <span>{{ textContent.macquarieView }}</span>
+
+        <mcs-item>
+          <mcs-icon [key]="arrowUpIconKey" size="large"></mcs-icon>
+          <span>{{ textContent.macquarieView }}</span>
+        </mcs-item>
       </a>
     </ng-template>
   </div>
 </div>
 
-<mcs-sliding-panel placement="left" offsetFrom="header" class="visible-small" #slidingPanel>
+<mcs-sliding-panel placement="left" offsetFrom="header" visible-small #slidingPanel>
   <!-- Navigation list from template binding -->
   <div class="navigation-mobile-list">
     <!-- Title -->

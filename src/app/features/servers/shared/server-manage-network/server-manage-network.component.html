@@ -2,34 +2,34 @@
 <div><ng-content select="[mcsManageNetworkHeader]"></ng-content></div>
 
 <!-- Network selection -->
-<div class="space-bottom-large">
-  <mcs-form-field>
-    <mcs-select [(ngModel)]="selectedNetwork" mcsId="select-network" placeholder="Select network">
+<mcs-form-field>
+  <mcs-select [(ngModel)]="selectedNetwork" mcsId="select-network" placeholder="Select network">
     <mcs-option-group>
       <ng-container *mcsOptionGroupHeader>Networks</ng-container>
       <mcs-option *ngFor="let network of networks" [value]="network">
         {{ network.name }}
       </mcs-option>
     </mcs-option-group>
-    </mcs-select>
-  </mcs-form-field>
-</div>
+  </mcs-select>
+</mcs-form-field>
 
 <!-- Network switcher -->
-<div class="space-between-inline-items">
-  <h2 class="space-bottom-small auto-width">IP address</h2>
-  <a *ngIf="inputManageType === inputManageTypeEnum.Custom" mcsId
-    (click)="onChangeInputManageType(inputManageTypeEnum.Buttons)">
-    {{ textContent.buttonSwitch }}</a>
-  <a *ngIf="inputManageType === inputManageTypeEnum.Buttons" mcsId
-    (click)="onChangeInputManageType(inputManageTypeEnum.Custom)">
-    {{ textContent.customSwitch }}</a>
-</div>
+<mcs-item>
+  <h2 auto-width>IP address</h2>
+  <div justify-self-right>
+    <a *ngIf="inputManageType === inputManageTypeEnum.Custom" mcsId
+      (click)="onChangeInputManageType(inputManageTypeEnum.Buttons)">
+      {{ textContent.buttonSwitch }}</a>
+    <a *ngIf="inputManageType === inputManageTypeEnum.Buttons" mcsId
+      (click)="onChangeInputManageType(inputManageTypeEnum.Custom)">
+      {{ textContent.customSwitch }}</a>
+  </div>
+</mcs-item>
 
-<div [ngSwitch]="inputManageType" [ngStyle]="{'min-height': '140px'}">
+<div [ngSwitch]="inputManageType">
   <!-- Ip address DHCP Mode -->
-  <div [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Buttons" class="block-items-medium">
-    <span>{{ textContent.buttonMessage }}</span>
+  <section [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Buttons">
+    <p>{{ textContent.buttonMessage }}</p>
 
     <mcs-radio-button-group orientation="vertical"
       [ngModel]="selectedIpAddressMode" (ngModelChange)="onRadioButtonChanged($event)">
@@ -39,13 +39,13 @@
     </mcs-radio-button-group>
 
     <ng-content select="[mcsManageNetworkWarning]"></ng-content>
-  </div>
+  </section>
 
   <!-- IP address custom mode -->
-  <div [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Custom" class="block-items-medium">
-    <span>{{ textContent.customMessage }}</span>
+  <section [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Custom">
+    <p>{{ textContent.customMessage }}</p>
 
-    <form [formGroup]="fgCustomIpAddress" class="form-field-block">
+    <form [formGroup]="fgCustomIpAddress">
       <span read-only *ngIf="netMask">
         {{ textContent.hints.ipRange }}: {{ netMask.first }} - {{ netMask.last }}
       </span>
@@ -67,8 +67,8 @@
 
     <mcs-data-status [dataStatusFactory]="ipAddressesStatusFactory"
       *ngIf="isIpAddressInUsed(customInput?.value)">
-      <mcs-data-status-success mcsDataSuccess class="inline-block">
-        <mcs-data-status-warning class="justify-content-start" [@fadeInOut]>
+      <mcs-data-status-success mcsDataSuccess display-inline-block>
+        <mcs-data-status-warning justify-content-start [@fadeInOut]>
           <span [innerHTML]="textContent.inUsedEnteredIpMessage | mcsNewLines"></span>
         </mcs-data-status-warning>
       </mcs-data-status-success>
@@ -76,5 +76,5 @@
         <span>{{ textContent.loadingIpInUsed }}</span>
       </mcs-data-status-in-progress>
     </mcs-data-status>
-  </div>
+  </section>
 </div>

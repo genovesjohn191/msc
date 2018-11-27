@@ -36,15 +36,14 @@
       </div>
 
       <!-- Jobs -->
-      <div class="hpadding-xsmall"
-        *ngFor="let notification of (displayedNotifications | mcsArrayTakeMax: 3)">
+      <div *ngFor="let notification of (displayedNotifications | mcsArrayTakeMax: 3)">
         <mcs-notification-panel
           type="running"
           [notification]="notification">
         </mcs-notification-panel>
       </div>
 
-      <div class="notification-item text-center">
+      <div class="notification-item" text-center>
         <a (click)="viewNotificationsPage()"
           mcsId="view-notifications"
           mcsEventTracker="view-notifications"
@@ -68,40 +67,40 @@
       [content]="notificationsContent">
 
       <mcs-icon [key]="bellIconKey" size="small" color="white"></mcs-icon>
-      <span *ngIf="hasNotification" class="inline-items-small justify-content-center">
-        {{ displayedNotifications.length }}
-      </span>
+      <span *ngIf="hasNotification">{{ displayedNotifications.length }}</span>
     </a>
   </div>
 
   <!-- User icon -->
-  <div class="user-panel-item user-item inline-items-small">
-    <a class="block-items" mcsCursor="pointer"
-      (click)="clickUser()"
-      mcsId="user-dropdown-toggle"
-      mcsEventTracker="user-dropdown-toggle"
-      mcsEventCategory="navigation"
-      mcsEventLabel="user-panel"
-      mcsStopPropagation>
-      <mcs-icon class="user-icon" [key]="userIconKey" size="small"></mcs-icon>
-      <span class="hidden-small grey-text">{{ firstName }} {{ lastName }}</span>
+  <div class="user-panel-item user-item">
+    <mcs-item>
+      <a mcsCursor="pointer"
+        (click)="clickUser()"
+        mcsId="user-dropdown-toggle"
+        mcsEventTracker="user-dropdown-toggle"
+        mcsEventCategory="navigation"
+        mcsEventLabel="user-panel"
+        mcsStopPropagation>
+        <mcs-icon class="user-icon" [key]="userIconKey" size="small"></mcs-icon>
+        <span hidden-small>{{ firstName }} {{ lastName }}</span>
 
-      <small *ngIf="!loadingAccount" class="user-info" read-only>{{ activeAccount?.name }}</small>
-      <small *ngIf="loadingAccount" class="user-info" read-only>
-        <div class="inline-items-small">
-          <mcs-loader size="xsmall"></mcs-loader>
-          <span>{{ textContent.loadingCompany }}</span>
-        </div>
-      </small>
-    </a>
+        <small *ngIf="!loadingAccount" class="user-info" read-only>{{ activeAccount?.name }}</small>
+        <small *ngIf="loadingAccount" class="user-info" read-only>
+          <mcs-item>
+            <mcs-loader size="xsmall"></mcs-loader>
+            <span>{{ textContent.loadingCompany }}</span>
+          </mcs-item>
+        </small>
+      </a>
 
-    <!-- Popover will display here -->
-    <mcs-icon class="caret-down right-align"
-      [key]="caretDownIconKey" color="white" mcsCursor="pointer"
+      <!-- Popover will display here -->
+      <mcs-icon class="caret-down"
+        [key]="caretDownIconKey" color="white" mcsCursor="pointer"
 
-      mcsPopover #userPopover="mcsPopover"
-      padding="none" placement="bottom" orientation="left"
-      theme="dark" priority="high"
-      [content]="userSettings" maxWidth="500px"></mcs-icon>
+        mcsPopover #userPopover="mcsPopover"
+        padding="none" placement="bottom" orientation="left"
+        theme="dark" priority="high"
+        [content]="userSettings" maxWidth="500px"></mcs-icon>
+    </mcs-item>
   </div>
 </div>

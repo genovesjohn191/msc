@@ -2,16 +2,19 @@
 
 $presentation-panel-header-font-size: 14;
 $presentation-panel-header-font: $base-font-bold;
-$presentation-panel-header-padding: 8px 10px;
-$presentation-panel-content-padding: 10px;
+$presentation-panel-header-padding: 5px 13px;
+$presentation-panel-content-padding: 13px;
 
 .presentation-panel-wrapper {
   @include display-flex(column);
-  @include box-shadow((
-    0 2px 2px rgba($color-black, 0.24),
-    0 0 2px rgba($color-black, 0.12)
-  ));
-  border: 1px solid $color-grey-07;
+
+  &.presentation-card {
+    @include box-shadow((
+      0 2px 2px rgba($color-black, 0.24),
+      0 0 2px rgba($color-black, 0.12)
+    ));
+    border: 1px solid $color-grey-07;
+  }
 }
 
 .presentation-panel-header {
@@ -24,6 +27,7 @@ $presentation-panel-content-padding: 10px;
 }
 
 .presentation-panel-content {
+  @include display-flex(column);
   padding: $presentation-panel-content-padding;
 }
 

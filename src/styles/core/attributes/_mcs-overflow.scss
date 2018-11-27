@@ -1,0 +1,20 @@
+/**
+  @title: Overflow Utilities
+  @description: Creates overflow attributes
+**/
+
+[overflow-auto] {
+  overflow: auto !important;
+}
+
+[overflow-hidden] {
+  overflow: hidden !important;
+}
+
+[overflow-visible] {
+  overflow: visible !important;
+}
+
+[overflow-scroll] {
+  overflow: scroll !important;
+}

@@ -1,71 +1,75 @@
-<!-- Firewall policy header -->
-<div class="space-between-inline-items space-bottom-medium">
-  <h2 class="auto-width">
-    {{ textContent.title | mcsTextPlaceholder: 'sequence': firewallPolicy?.objectSequence }}
-  </h2>
-  <mcs-icon [key]="closeIconKey" mcsCursor="pointer" size="small"
-    (click)="closePolicy()"></mcs-icon>
-</div>
+<section>
+  <!-- Firewall policy header -->
+  <mcs-item>
+    <h2 auto-width>
+      {{ textContent.title | mcsTextPlaceholder: 'sequence': firewallPolicy?.objectSequence }}
+    </h2>
+    <mcs-icon [key]="closeIconKey" size="small"
+      mcsCursor="pointer" justify-self-right
+      (click)="closePolicy()"></mcs-icon>
+  </mcs-item>
 
-<div class="grid-row">
-  <!-- Firewall Policy Source -->
-  <div class="grid-column">
-    <strong>{{ textContent.source }}</strong>
-    <div class="form-field-inline">
-      <span>{{ textContent.address }}:</span>
-      <mcs-list spacing="auto" >
-        <mcs-list-item *ngFor="let sourceAddress of firewallPolicy?.sourceAddresses">
-          {{ sourceAddress }}
-        </mcs-list-item>
-      </mcs-list>
-    </div>
+  <mcs-grid>
+    <mcs-grid-row>
+      <!-- Firewall Policy Source -->
+      <mcs-grid-column mcsId="firewall-policy-source">
+        <h5 margin-bottom-small>{{ textContent.source }}</h5>
+        <mcs-item>
+          <span>{{ textContent.address }}:</span>
+          <mcs-list spacing="auto">
+            <mcs-list-item *ngFor="let sourceAddress of firewallPolicy?.sourceAddresses">
+              {{ sourceAddress }}
+            </mcs-list-item>
+          </mcs-list>
+        </mcs-item>
 
-    <div class="form-field-inline">
-      <span>{{ textContent.interface }}:</span>
-      <mcs-list spacing="auto">
-        <mcs-list-item *ngFor="let sourceInterfaces of firewallPolicy?.sourceInterfaces">
-          {{ sourceInterfaces }}
-        </mcs-list-item>
-      </mcs-list>
-    </div>
-  </div>
+        <mcs-item>
+          <span>{{ textContent.interface }}:</span>
+          <mcs-list spacing="auto">
+            <mcs-list-item *ngFor="let sourceInterfaces of firewallPolicy?.sourceInterfaces">
+              {{ sourceInterfaces }}
+            </mcs-list-item>
+          </mcs-list>
+        </mcs-item>
+      </mcs-grid-column>
 
-  <!-- Firewall Policy Destination -->
-  <div class="grid-column">
-    <strong>{{ textContent.destination }}</strong>
-    <div class="form-field-inline">
-      <span>{{ textContent.address }}:</span>
-      <mcs-list spacing="auto" >
-        <mcs-list-item *ngFor="let destinationAddress of firewallPolicy?.destinationAddresses">
-          {{ destinationAddress }}
-        </mcs-list-item>
-      </mcs-list>
-    </div>
+      <!-- Firewall Policy Destination -->
+      <mcs-grid-column mcsId="firewall-policy-destination">
+        <h5 margin-bottom-small>{{ textContent.destination }}</h5>
+        <mcs-item>
+          <span>{{ textContent.address }}:</span>
+          <mcs-list spacing="auto" >
+            <mcs-list-item *ngFor="let destinationAddress of firewallPolicy?.destinationAddresses">
+              {{ destinationAddress }}
+            </mcs-list-item>
+          </mcs-list>
+        </mcs-item>
 
-    <div class="form-field-inline">
-      <span>{{ textContent.interface }}:</span>
-      <mcs-list spacing="auto" >
-        <mcs-list-item *ngFor="let destinationInterface of firewallPolicy?.destinationInterfaces">
-          {{ destinationInterface }}
-        </mcs-list-item>
-      </mcs-list>
-    </div>
-  </div>
-</div>
+        <mcs-item>
+          <span>{{ textContent.interface }}:</span>
+          <mcs-list spacing="auto">
+            <mcs-list-item *ngFor="let destinationInterface of firewallPolicy?.destinationInterfaces">
+              {{ destinationInterface }}
+            </mcs-list-item>
+          </mcs-list>
+        </mcs-item>
+      </mcs-grid-column>
+    </mcs-grid-row>
 
-<div class="grid-row">
-  <!-- Firewall Policy Details -->
-  <div class="grid-column">
-    <strong>{{ textContent.details }}</strong>
-    <div class="form-field-inline">
-      <span>{{ textContent.service }}:</span>
-      <span>{{ firewallPolicy?.service }}</span>
-    </div>
+    <mcs-grid-row>
+      <!-- Firewall Policy Details -->
+      <mcs-grid-column mcsId="firewall-policy-details">
+        <h5 margin-bottom-small>{{ textContent.details }}</h5>
+        <mcs-item>
+          <span>{{ textContent.service }}:</span>
+          <span>{{ firewallPolicy?.service }}</span>
+        </mcs-item>
 
-    <div class="form-field-inline">
-      <span>{{ textContent.action }}:</span>
-      <span>{{ firewallPolicy?.actionLabel }}</span>
-    </div>
-  </div>
-  <div class="grid-column container-wrapper"></div>
-</div>
+        <mcs-item>
+          <span>{{ textContent.action }}:</span>
+          <span>{{ firewallPolicy?.actionLabel }}</span>
+        </mcs-item>
+      </mcs-grid-column>
+    </mcs-grid-row>
+  </mcs-grid>
+</section>

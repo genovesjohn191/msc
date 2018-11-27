@@ -1,0 +1,23 @@
+/**
+  @title: Visibility Utilities
+  @description: Creates visibility attributes based on screen breakpoints
+**/
+
+@each $screen-breakpoint-key in map-keys($screen-breakpoints-map) {
+  $screen-breakpoint-value: map-get($screen-breakpoints-map, $screen-breakpoint-key );
+
+  // Creates the hidden attributes
+  [hidden-#{$screen-breakpoint-key}] {
+    @include breakpoint($screen-breakpoint-key) {
+      display: none !important;
+    }
+  }
+
+  // Creates the visible attributes
+  [visible-#{$screen-breakpoint-key}] {
+    display: none !important;
+    @include breakpoint($screen-breakpoint-key) {
+      display: block !important;
+    }
+  }
+}

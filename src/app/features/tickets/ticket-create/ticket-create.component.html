@@ -2,8 +2,9 @@
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef>
     <!-- Server Creation -->
-    <mcs-top-panel-item *mcsTopPanelItemDef class="no-border">
-      <mcs-action-item class="right-align" (click)="gotoTickets()"
+    <mcs-top-panel-item *mcsTopPanelItemDef no-border>
+      <mcs-action-item justify-self-right
+        (click)="gotoTickets()"
         mcsId
         mcsEventTracker="navigate-to-ticket-listing"
         mcsEventCategory="ticket"
@@ -17,101 +18,93 @@
   <!-- Content Panel -->
   <mcs-content-panel *mcsContentPanelDef>
     <p [innerHTML]="textContent.description | mcsNewLines"></p>
-    <div class="contextual-help-page-wrapper limited-view block-items-large">
+    <div class="contextual-help-page-wrapper limited-view">
       <form [formGroup]="fgCreateTicket" mcsFormGroup>
         <!-- Ticket Type -->
-        <div class="field">
-          <mcs-form-field>
-            <mcs-select mcsId="select-type" [placeholder]="textContent.placeholders.type"
-              [formControl]="fcType" required
-              [mcsContextualHelp]="contextualContent.type">
+        <mcs-form-field>
+          <mcs-select mcsId="select-type" required
+            [placeholder]="textContent.placeholders.type"
+            [formControl]="fcType"
+            [mcsContextualHelp]="contextualContent.type">
 
-              <mcs-option-group>
-                <ng-container *mcsOptionGroupHeader>
-                  {{ textContent.typeHeader }}
-                </ng-container>
-                <mcs-option *ngFor="let ticketType of ticketTypeList"
-                  [value]="ticketType.value">
-                  {{ ticketType.text }}
-                </mcs-option>
-              </mcs-option-group>
-            </mcs-select>
+            <mcs-option-group>
+              <ng-container *mcsOptionGroupHeader>
+                {{ textContent.typeHeader }}
+              </ng-container>
+              <mcs-option *ngFor="let ticketType of ticketTypeList"
+                [value]="ticketType.value">
+                {{ ticketType.text }}
+              </mcs-option>
+            </mcs-option-group>
+          </mcs-select>
 
-            <mcs-error mcsError errorState="required">
-              {{ textContent.errors.typeRequired }}
-            </mcs-error>
-          </mcs-form-field>
-        </div>
+          <mcs-error mcsError errorState="required">
+            {{ textContent.errors.typeRequired }}
+          </mcs-error>
+        </mcs-form-field>
 
         <!-- Reference -->
-        <div class="field">
-          <mcs-form-field>
-            <input mcsInput mcsSetFocus #referenceInput
-              mcsId="input-reference"
-              [placeholder]="textContent.placeholders.reference" maxlength="15"
-              [formControl]="fcReference"
-              [mcsContextualHelp]="contextualContent.reference">
+        <mcs-form-field>
+          <input mcsInput mcsSetFocus #referenceInput
+            mcsId="input-reference"
+            [placeholder]="textContent.placeholders.reference" maxlength="15"
+            [formControl]="fcReference"
+            [mcsContextualHelp]="contextualContent.reference">
 
-            <mcs-hint mcsHint align="start">
-              {{ convertMaxCharText(textContent.hints.reference, referenceInput.maxLength) }}
-            </mcs-hint>
-            <mcs-hint mcsHint align="end">
-              {{ referenceInput.value.length }} / {{ referenceInput.maxLength }}
-            </mcs-hint>
-          </mcs-form-field>
-        </div>
+          <mcs-hint mcsHint align="start">
+            {{ convertMaxCharText(textContent.hints.reference, referenceInput.maxLength) }}
+          </mcs-hint>
+          <mcs-hint mcsHint align="end">
+            {{ referenceInput.value.length }} / {{ referenceInput.maxLength }}
+          </mcs-hint>
+        </mcs-form-field>
 
         <!-- Summary -->
-        <div class="field">
-          <mcs-form-field>
-            <input mcsInput #summaryInput required
-              mcsId="input-summary"
-              [placeholder]="textContent.placeholders.summary" maxlength="80"
-              [formControl]="fcSummary"
-              [mcsContextualHelp]="contextualContent.summary">
+        <mcs-form-field>
+          <input mcsInput #summaryInput required
+            mcsId="input-summary"
+            [placeholder]="textContent.placeholders.summary" maxlength="80"
+            [formControl]="fcSummary"
+            [mcsContextualHelp]="contextualContent.summary">
 
-              <mcs-hint mcsHint align="start">
-                {{ convertMaxCharText(textContent.hints.summary, summaryInput.maxLength) }}
-              </mcs-hint>
-              <mcs-hint mcsHint align="end">
-                {{ summaryInput.value.length }} / {{ summaryInput.maxLength }}
-              </mcs-hint>
-              <mcs-error mcsError errorState="required">
-                {{ textContent.errors.summaryRequired }}
-              </mcs-error>
-          </mcs-form-field>
-        </div>
+          <mcs-hint mcsHint align="start">
+            {{ convertMaxCharText(textContent.hints.summary, summaryInput.maxLength) }}
+          </mcs-hint>
+          <mcs-hint mcsHint align="end">
+            {{ summaryInput.value.length }} / {{ summaryInput.maxLength }}
+          </mcs-hint>
+          <mcs-error mcsError errorState="required">
+            {{ textContent.errors.summaryRequired }}
+          </mcs-error>
+        </mcs-form-field>
 
         <!-- Details -->
-        <div class="field">
-          <mcs-form-field>
-            <textarea mcsInput rows="3" #detailsInput required
-              mcsId="input-details"
-              [placeholder]="textContent.placeholders.details" maxlength="4000"
-              [formControl]="fcDetails"
-              [mcsContextualHelp]="contextualContent.details"></textarea>
+        <mcs-form-field>
+          <textarea mcsInput rows="3" #detailsInput required
+            mcsId="input-details"
+            [placeholder]="textContent.placeholders.details" maxlength="4000"
+            [formControl]="fcDetails"
+            [mcsContextualHelp]="contextualContent.details"></textarea>
 
-            <mcs-hint mcsHint align="start">
-              {{ convertMaxCharText(textContent.hints.details, detailsInput.maxLength) }}
-            </mcs-hint>
-            <mcs-hint mcsHint align="end">
-              {{ detailsInput.value.length }} / {{ detailsInput.maxLength }}
-            </mcs-hint>
-            <mcs-error mcsError errorState="required">
-              {{ textContent.errors.detailsRequired }}
-            </mcs-error>
-          </mcs-form-field>
-        </div>
+          <mcs-hint mcsHint align="start">
+            {{ convertMaxCharText(textContent.hints.details, detailsInput.maxLength) }}
+          </mcs-hint>
+          <mcs-hint mcsHint align="end">
+            {{ detailsInput.value.length }} / {{ detailsInput.maxLength }}
+          </mcs-hint>
+          <mcs-error mcsError errorState="required">
+            {{ textContent.errors.detailsRequired }}
+          </mcs-error>
+        </mcs-form-field>
 
         <!-- Services -->
-        <div class="field">
-          <h2 class="space-bottom-small">{{ textContent.services }}</h2>
-          <div class="item">
+        <section>
+          <h2>{{ textContent.services }}</h2>
+          <div>
             <ng-container *ngIf="services">
-
-              <div class="inline-items-small">
+              <mcs-item>
                 <!-- Tags -->
-                <mcs-form-field class="full-width">
+                <mcs-form-field full-width no-margin>
                   <mcs-tag-list [placeholder]="textContent.placeholders.services"
                     mcsId="tag-services"
                     [formControl]="fcService">
@@ -129,8 +122,7 @@
                 </mcs-form-field>
 
                 <!-- Icon trigger -->
-                <div mcsCursor="pointer"
-                  class="space-left-small space-top-small"
+                <div mcsCursor="pointer" margin-left-small
                   (click)="servicePanelOpen = !servicePanelOpen" #trigger
                   mcsId="toggle-service-panel"
                   mcsEventTracker="toggle-service-panel"
@@ -143,10 +135,10 @@
                     [rippleCentered]="true">
                   </mcs-ripple>
                 </div>
-              </div>
+              </mcs-item>
 
               <div [@expansionVertical]="servicePanelOpen ? 'expanded' : 'collapsed'">
-                  <mcs-select-tag #selectService class="padding-small"
+                <mcs-select-tag #selectService padding-small
                   (selectionChanged)="serviceItemSelectionChanged($event)">
                   <mcs-select-tag-main-item *ngFor="let service of services"
                     [header]="service.serviceName">
@@ -155,23 +147,23 @@
                     [searchKey]="item.name" [value]="item">
                     {{ item.name }}
                   </mcs-select-tag-sub-item>
-                </mcs-select-tag-main-item>
+                  </mcs-select-tag-main-item>
                 </mcs-select-tag>
               </div>
             </ng-container>
           </div>
-        </div>
+        </section>
       </form>
 
       <!-- Attachments -->
-      <div>
-        <h2 class="space-bottom-small">{{ textContent.attachments }}</h2>
+      <section>
+        <h2>{{ textContent.attachments }}</h2>
         <mcs-file-attachment attachedLimit="multiple"
           [allowedMimeType]="['image/jpeg', 'image/png', 'image/bmp', 'text/plain']"
           (attachedFilesChanged)="onChangedAttachments($event)"
           [mcsContextualHelp]="contextualContent.attachments">
         </mcs-file-attachment>
-      </div>
+      </section>
 
       <!-- Ticket Action -->
       <div class="action-items">

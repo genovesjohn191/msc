@@ -1,0 +1,12 @@
+/**
+  @title: Font Utilities
+  @description: Creates font utilities attributes
+**/
+
+[font-bold] {
+  font-family: $base-font-bold !important;
+}
+
+[font-normal] {
+  font-family: $base-font !important;
+}

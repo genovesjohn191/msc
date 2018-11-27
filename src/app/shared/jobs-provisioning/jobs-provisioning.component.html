@@ -24,26 +24,26 @@
               <div [ngSwitch]="task.dataStatus">
                 <!-- In progress -->
                 <ng-container *ngSwitchCase="dataStatusEnum.InProgress">
-                  <div class="inline-items-small">
+                  <mcs-item>
                     <mcs-loader size="small"></mcs-loader>
                     <span read-only>{{ task.description }}</span>
-                  </div>
+                  </mcs-item>
                 </ng-container>
 
                 <!-- Success -->
                 <ng-container *ngSwitchCase="dataStatusEnum.Success">
-                  <div class="inline-items-small">
+                  <mcs-item>
                     <mcs-icon [key]="checkIconKey" size="small" color="green"></mcs-icon>
                     <span read-only>{{ task.description }}</span>
-                  </div>
+                  </mcs-item>
                 </ng-container>
 
                 <!-- Error -->
                 <ng-container *ngSwitchCase="dataStatusEnum.Error">
-                  <div class="inline-items-small">
+                  <mcs-item>
                     <mcs-icon [key]="closeIconKey" size="small" color="red"></mcs-icon>
                     <span read-only>{{ task.description }}</span>
-                  </div>
+                  </mcs-item>
                 </ng-container>
               </div>
             </div>
@@ -55,24 +55,24 @@
             <div [ngSwitch]="job.dataStatus">
               <!-- In progress -->
               <ng-container *ngSwitchCase="dataStatusEnum.InProgress">
-                <div class="inline-items-small">
+                <mcs-item>
                   <mcs-loader size="small"></mcs-loader>
                   <span>{{ textContent.deploymentInProgress }}</span>
-                </div>
+                </mcs-item>
               </ng-container>
 
               <!-- Success -->
               <ng-container *ngSwitchCase="dataStatusEnum.Success">
-                <div class="inline-items-small">
+                <mcs-item>
                   <mcs-icon [key]="checkIconKey" size="small" color="green"></mcs-icon>
                   <span>{{ textContent.deploymentCompleted }}</span>
-                </div>
-                <div class="space-top-medium">
+                </mcs-item>
+                <mcs-item>
                   <a mcsButton arrow="right" size="small"
                     [mcsRouterLink]="job.resourceLink" mcsId="view-job">
                     {{ textContent.viewDetails }}
                   </a>
-                </div>
+                </mcs-item>
               </ng-container>
 
               <!-- Error -->
@@ -90,10 +90,10 @@
 
   <!-- When no job received yet -->
   <ng-container *ngSwitchCase="false">
-    <div class="inline-items-small">
+    <mcs-item>
       <mcs-loader size="small"></mcs-loader>
       <span read-only>{{ textContent.deploymentInProgress }}</span>
-    </div>
+    </mcs-item>
   </ng-container>
 </ng-container>
 

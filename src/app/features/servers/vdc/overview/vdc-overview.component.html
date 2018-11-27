@@ -1,126 +1,136 @@
-<div class="grid-row">
-  <!-- VDC Properties -->
-  <div class="grid-column container-wrapper" mcsId="vdc-properties">
-    <h2 class="container-header">{{ textContent.vdcProperties.title }}</h2>
-    <mcs-list spacing="xsmall">
-      <mcs-list-item class="form-field-inline">
-        <span>{{ textContent.vdcProperties.serviceType }}:</span>
-        <span [innerHTML]="selectedVdc?.serviceTypeLabel | mcsDataLabel"></span>
-      </mcs-list-item>
+<mcs-grid>
+  <mcs-grid-row>
+    <!-- VDC Properties -->
+    <mcs-grid-column sizeSm="12">
+      <mcs-presentation-panel mcsId="vdc-properties">
+        <ng-container mcsPresentationPanelHeader>
+          <h2>{{ textContent.vdcProperties.title }}</h2>
+        </ng-container>
 
-      <mcs-list-item class="form-field-inline">
-        <span>{{ textContent.vdcProperties.zone }}:</span>
-        <span [innerHTML]="selectedVdc?.availabilityZone | mcsDataLabel"></span>
-      </mcs-list-item>
+        <mcs-item>
+          <span>{{ textContent.vdcProperties.serviceType }}:</span>
+          <span [innerHTML]="selectedVdc?.serviceTypeLabel | mcsDataLabel"></span>
+        </mcs-item>
 
-      <mcs-list-item class="form-field-inline">
-        <span>{{ textContent.vdcProperties.configuration }}:</span>
-        <span [innerHTML]="selectedVdc?.compute?.memoryLimitMBLabel | mcsDataLabel"></span>
-        <span>/</span>
-        <span [innerHTML]="selectedVdc?.compute?.cpuLimitMBLabel | mcsDataLabel"></span>
-      </mcs-list-item>
-    </mcs-list>
-  </div>
+        <mcs-item>
+          <span>{{ textContent.vdcProperties.zone }}:</span>
+          <span [innerHTML]="selectedVdc?.availabilityZone | mcsDataLabel"></span>
+        </mcs-item>
 
-  <!-- VCloud Director -->
-  <div class="grid-column container-wrapper" mcsId="vdc-vcloud-director">
-    <h2 class="thumbnail-title container-header">{{ textContent.vcloud.title }}</h2>
-    <mcs-list spacing="xsmall">
-      <ng-container *mcsAccessControl="['VmEdit']">
-        <mcs-list-item *ngIf="hasResources">
-          <button mcsButton size="small"
-            (click)="createNewServer()"
+        <mcs-item>
+          <span>{{ textContent.vdcProperties.configuration }}:</span>
+          <span [innerHTML]="selectedVdc?.compute?.memoryLimitMBLabel | mcsDataLabel"></span>
+          <span>/</span>
+          <span [innerHTML]="selectedVdc?.compute?.cpuLimitMBLabel | mcsDataLabel"></span>
+        </mcs-item>
+      </mcs-presentation-panel>
+    </mcs-grid-column>
+
+    <!-- VCloud Director -->
+    <mcs-grid-column sizeSm="12">
+      <mcs-presentation-panel mcsId="vdc-vcloud-director">
+        <ng-container mcsPresentationPanelHeader>
+          <h2>{{ textContent.vcloud.title }}</h2>
+        </ng-container>
+
+        <ng-container *mcsAccessControl="['VmEdit']">
+          <mcs-item *ngIf="hasResources">
+            <button mcsButton size="small"
+              (click)="createNewServer()"
+              mcsId
+              mcsEventTracker="new-server"
+              mcsEventCategory="vdc"
+              mcsEventLabel="vdc-details-page">
+              {{ textContent.vcloud.newServer }}
+            </button>
+          </mcs-item>
+        </ng-container>
+        <mcs-item *ngIf="selectedVdc.portalUrl">
+          <a [href]="selectedVdc.portalUrl" target="_blank"
             mcsId
-            mcsEventTracker="new-server"
+            mcsEventTracker="view-in-vcloud"
             mcsEventCategory="vdc"
-            mcsEventLabel="vdc-details-page">
-            {{ textContent.vcloud.newServer }}
-          </button>
-        </mcs-list-item>
-      </ng-container>
-      <mcs-list-item *ngIf="selectedVdc.portalUrl">
-        <a [href]="selectedVdc.portalUrl" target="_blank"
-          mcsId
-          mcsEventTracker="view-in-vcloud"
-          mcsEventCategory="vdc"
-          mcsEventLabel="vdc-details-page">{{ textContent.vcloud.viewVcloud}}</a>
-      </mcs-list-item>
-    </mcs-list>
-  </div>
-</div>
+            mcsEventLabel="vdc-details-page">{{ textContent.vcloud.viewVcloud}}</a>
+        </mcs-item>
+      </mcs-presentation-panel>
+    </mcs-grid-column>
+  </mcs-grid-row>
 
-<div class="grid-row">
-  <!-- Network Information -->
-  <div class="grid-column container-wrapper" mcsId="vdc-network-information">
-    <h2 class="container-header container-header">{{ textContent.networkInformation.title }}</h2>
-    <div class="vertical-items-spacing-medium">
-      <span>{{ textContent.networkInformation.description }}</span>
-      <mcs-accordion [multi]="true">
-        <mcs-accordion-panel *ngFor="let network of selectedVdc.networks; let i = index"
-          [expanded]="i === 0">
-          <mcs-accordion-panel-header mcsPanelHeaderDef>
-            {{ network.name }}
-          </mcs-accordion-panel-header>
-          <p>{{ textContent.networkInformation.itemDescription }}</p>
-          <div class="form-field-inline">
-            <span>{{ textContent.networkInformation.gateway }}:</span>
-            <span [innerHTML]="network.gateway | mcsDataLabel"></span>
-          </div>
-        </mcs-accordion-panel>
-      </mcs-accordion>
-    </div>
-  </div>
+  <mcs-grid-row>
+    <!-- Network Information -->
+    <mcs-grid-column sizeSm="12">
+      <mcs-presentation-panel mcsId="vdc-network-information">
+        <ng-container mcsPresentationPanelHeader>
+          <h2>{{ textContent.networkInformation.title }}</h2>
+        </ng-container>
+        <p>{{ textContent.networkInformation.description }}</p>
 
-  <!-- Storage Profiles -->
-  <div class="grid-column container-wrapper" mcsId="vdc-storage-profiles">
-    <h2 class="inline-items-small container-header">
-      <mcs-icon *ngIf="hasLowStorage" [key]="warningIconKey"></mcs-icon>
-      <span>{{ textContent.storageProfiles.title }}</span>
-      <a (click)="navigateVdcDetailTo(routeKeyEnum.VdcDetailStorage)"
-        mcsId="navigate-to-storage"
-        mcsEventTracker="navigate-to-storage"
-        mcsEventCategory="vdc"
-        mcsEventLabel="vdc-details-page">
-        {{ textContent.storageProfiles.manageLink }}
-      </a>
-    </h2>
+        <mcs-accordion [multi]="true">
+          <mcs-accordion-panel *ngFor="let network of selectedVdc.networks; let i = index"
+            [expanded]="i === 0">
+            <mcs-accordion-panel-header mcsPanelHeaderDef>
+              {{ network.name }}
+            </mcs-accordion-panel-header>
+            <p>{{ textContent.networkInformation.itemDescription }}</p>
+            <mcs-item>
+              <span>{{ textContent.networkInformation.gateway }}:</span>
+              <span [innerHTML]="network.gateway | mcsDataLabel"></span>
+            </mcs-item>
+          </mcs-accordion-panel>
+        </mcs-accordion>
+      </mcs-presentation-panel>
+    </mcs-grid-column>
 
-    <div class="block-items-medium">
-      <span *ngIf="hasLowStorage">{{ storageSummary }}</span>
-      <mcs-accordion [multi]="true">
-        <mcs-accordion-panel *ngFor="let storage of selectedVdc.storage; let i = index"
-          [expanded]="i === 0">
-          <mcs-accordion-panel-header mcsPanelHeaderDef>
-            <mcs-icon size="small" [key]="getStorageStatusIconKey(storage)"></mcs-icon>
-            {{ storage.name }}
-          </mcs-accordion-panel-header>
+    <!-- Storage Profiles -->
+    <mcs-grid-column sizeSm="12">
+      <mcs-presentation-panel mcsId="vdc-storage-profiles">
+        <ng-container mcsPresentationPanelHeader>
+          <mcs-item>
+            <mcs-icon *ngIf="hasLowStorage" [key]="warningIconKey"></mcs-icon>
+            <h2>{{ textContent.storageProfiles.title }}</h2>
+            <a (click)="navigateVdcDetailTo(routeKeyEnum.VdcDetailStorage)"
+              mcsId="navigate-to-storage"
+              mcsEventTracker="navigate-to-storage"
+              mcsEventCategory="vdc"
+              mcsEventLabel="vdc-details-page">
+              {{ textContent.storageProfiles.manageLink }}
+            </a>
+          </mcs-item>
+        </ng-container>
 
-          <mcs-list spacing="xsmall">
-            <mcs-list-item class="form-field-inline">
+        <span *ngIf="hasLowStorage">{{ storageSummary }}</span>
+        <mcs-accordion [multi]="true">
+          <mcs-accordion-panel *ngFor="let storage of selectedVdc.storage; let i = index"
+            [expanded]="i === 0">
+            <mcs-accordion-panel-header mcsPanelHeaderDef>
+              <mcs-icon size="small" [key]="getStorageStatusIconKey(storage)"></mcs-icon>
+              {{ storage.name }}
+            </mcs-accordion-panel-header>
+
+            <mcs-item>
               <span>{{ textContent.storageProfiles.status }}:</span>
               <span [innerHTML]="storage?.toggleLabel | mcsDataLabel"></span>
-            </mcs-list-item>
-            <mcs-list-item *ngIf="storage.iops" class="form-field-inline">
+            </mcs-item>
+            <mcs-item *ngIf="storage.iops">
               <span>{{ textContent.storageProfiles.tier }}:</span>
               <span [innerHTML]="(iopsLabelPlaceholder |
                 mcsTextPlaceholder: 'iops': storage.iops) |
                 mcsDataLabel"></span>
-            </mcs-list-item>
-            <mcs-list-item class="form-field-inline">
+            </mcs-item>
+            <mcs-item>
               <span>{{ textContent.storageProfiles.utilisation }}:</span>
-              <mcs-capacity-bar class="full-width"
+              <mcs-capacity-bar full-width
                 [(ngModel)]="storage.usedMB"
                 [maxValue]="storage.limitMB"></mcs-capacity-bar>
-            </mcs-list-item>
-          </mcs-list>
+            </mcs-item>
 
-          <div *ngIf="isStorageProfileLow(storage)"
-            class="inline-items-small vspace-small">
-            <mcs-icon [key]="warningIconKey"></mcs-icon>
-            <span>{{ textContent.storageProfiles.lowStorageProfile }}</span>
-          </div>
-        </mcs-accordion-panel>
-      </mcs-accordion>
-    </div>
-  </div>
-</div>
+            <mcs-item *ngIf="isStorageProfileLow(storage)">
+              <mcs-icon [key]="warningIconKey"></mcs-icon>
+              <span>{{ textContent.storageProfiles.lowStorageProfile }}</span>
+            </mcs-item>
+          </mcs-accordion-panel>
+        </mcs-accordion>
+      </mcs-presentation-panel>
+    </mcs-grid-column>
+  </mcs-grid-row>
+</mcs-grid>
