@@ -20,8 +20,6 @@ $scrollable-link-label-color: $color-primary-01;
 }
 
 .scrollable-link-wrapper {
-  padding: $scrollable-link-padding;
-
   .scroll-link-label {
     margin-bottom: $space-medium;
     color: $scrollable-link-label-color;
@@ -50,5 +48,6 @@ $scrollable-link-label-color: $color-primary-01;
 
 .scrollable-link-group-body-wrapper {
   @include display-flex(column);
-  @include flex(auto);
+  @include flex(1);
+  padding: $scrollable-link-padding;
 }
