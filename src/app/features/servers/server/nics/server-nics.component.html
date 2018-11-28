@@ -1,17 +1,19 @@
-<div class="container-wrapper">
-  <h2 class="container-header">{{ textContent.title }}</h2>
+<mcs-presentation-panel mcsId="nics">
+  <ng-container mcsPresentationPanelHeader>
+    <h2>{{ textContent.title }}</h2>
+  </ng-container>
   <p *ngIf="textContent.description">{{ textContent.description }}</p>
 
   <ng-container [ngSwitch]="nicMethodType">
-    <div [@fadeIn] *ngSwitchCase="serverNicMethodTypeEnum.AddNic" class="block-items-large">
+    <section [@fadeIn] *ngSwitchCase="serverNicMethodTypeEnum.AddNic">
       <!-- NICs Table -->
       <mcs-table [dataSource]="nicsDataSource">
         <!-- NIC Column -->
         <ng-container mcsColumnDef="nic">
-          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+          <mcs-header-cell *mcsHeaderCellDef hidden-small>
             {{ textContent.columnHeaders.nic }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
             <ng-container *ngIf="nicIsInProgress(row); else nicIndexTemplate">
               <mcs-loader size="small"
                 [mcsTooltip]="jobSummaryInfo"
@@ -28,7 +30,7 @@
           <mcs-header-cell *mcsHeaderCellDef>
             {{ textContent.columnHeaders.network }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="word-wrap">
+          <mcs-data-cell *mcsDataCellDef="let row" text-wrap>
             <span [innerHTML]="row.logicalNetworkName | mcsDataLabel">
             </span>
           </mcs-data-cell>
@@ -36,31 +38,31 @@
 
         <!-- Primary Column -->
         <ng-container mcsColumnDef="primary">
-          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+          <mcs-header-cell *mcsHeaderCellDef hidden-small>
             {{ textContent.columnHeaders.primary }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
-            <mcs-icon *ngIf="row.isPrimary" class="space-left-medium"
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+            <mcs-icon *ngIf="row.isPrimary" padding-left-medium
               [key]="checkIconKey" size="small"></mcs-icon>
           </mcs-data-cell>
         </ng-container>
 
         <!-- Type Column -->
         <ng-container mcsColumnDef="type">
-          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+          <mcs-header-cell *mcsHeaderCellDef hidden-small>
             {{ textContent.columnHeaders.type }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
             <span [innerHTML]="row.deviceTypeLabel | mcsDataLabel"></span>
           </mcs-data-cell>
         </ng-container>
 
         <!-- IP Mode Column -->
         <ng-container mcsColumnDef="ipMode">
-          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+          <mcs-header-cell *mcsHeaderCellDef hidden-small>
             {{ textContent.columnHeaders.ipMode }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
             <span [innerHTML]="row.ipAllocationModeLabel | mcsDataLabel"></span>
           </mcs-data-cell>
         </ng-container>
@@ -84,7 +86,7 @@
           <mcs-header-cell *mcsHeaderCellDef class="action-header-cell">
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
-            <div class="inline-items-small flex-nowrap">
+            <mcs-item>
               <span *ngIf="isEditNicEnabled(row)">
                 <a [disabled]="!server.executable"
                     (click)="openEditNicWindow(row)"
@@ -106,7 +108,7 @@
                   {{ textContent.deleteLink }}
                 </a>
               </span>
-            </div>
+            </mcs-item>
           </mcs-data-cell>
         </ng-container>
 
@@ -163,10 +165,10 @@
           <span>{{ textContent.reachedNetworksLimit }}</span>
         </mcs-data-status-warning>
       </ng-container>
-    </div>
+    </section>
 
     <!-- Edit NIC -->
-    <div [@fadeIn] *ngSwitchCase="serverNicMethodTypeEnum.EditNic" class="block-items-large">
+    <section [@fadeIn] *ngSwitchCase="serverNicMethodTypeEnum.EditNic">
       <div class="action-box" [disabled]="!server.executable">
         <mcs-server-manage-network
           [networks]="resourceNetworks"
@@ -204,6 +206,6 @@
           </button>
         </div>
       </div>
-    </div>
+    </section>
   </ng-container>
-</div>
+</mcs-presentation-panel>

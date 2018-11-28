@@ -4,17 +4,17 @@
   </mcs-dialog-header>
 
   <mcs-dialog-content>
-    <div class="labelled-icon">
+    <mcs-item>
       <mcs-icon [key]="warningIconKey"></mcs-icon>
-      <div class="display-flex-column">
+      <mcs-item orientation="block">
         <span>{{ textContent.alert }}</span>
         <span>{{ (countDown | async) | mcsPlural: 'second' }}</span>
-      </div>
-    </div>
+      </mcs-item>
+    </mcs-item>
   </mcs-dialog-content>
 
   <mcs-dialog-actions>
-    <button mcsButton class="right-align"
+    <button mcsButton justify-self-right
       arrow="right" size="small" (click)="continueSession()"
       mcsId="continue-session"
       mcsEventTracker="continue-session-click"

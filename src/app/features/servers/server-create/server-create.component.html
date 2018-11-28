@@ -3,8 +3,9 @@
   <mcs-top-panel *mcsTopPanelDef>
 
     <!-- Back to Servers -->
-    <mcs-top-panel-item *mcsTopPanelItemDef class="no-border">
-      <mcs-action-item class="right-align" (click)="gotoServers()"
+    <mcs-top-panel-item *mcsTopPanelItemDef no-border>
+      <mcs-action-item justify-self-right
+        (click)="gotoServers()"
         mcsId
         mcsEventTracker="back-to-server-listing"
         mcsEventCategory="server"
@@ -25,27 +26,27 @@
         [stepControl]="faCreationForm">
 
         <div class="limited-view">
-            <div class="contextual-help-page-wrapper">
-              <mcs-form-field class="space-bottom-medium">
-                <mcs-select placeholder="Select a VDC" required
-                  mcsId="select-resource"
-                  (change)="onChangeResource($event)"
-                  [mcsContextualHelp]="textContent.vdcDropdownList.helpText">
+          <div class="contextual-help-page-wrapper">
+            <mcs-form-field>
+              <mcs-select placeholder="Select a VDC" required
+                mcsId="select-resource"
+                (change)="onChangeResource($event)"
+                [mcsContextualHelp]="textContent.vdcDropdownList.helpText">
 
-                  <mcs-option-group>
-                    <ng-container *mcsOptionGroupHeader>
-                      {{ textContent.vdcDropdownList.header }}
-                    </ng-container>
+                <mcs-option-group>
+                  <ng-container *mcsOptionGroupHeader>
+                    {{ textContent.vdcDropdownList.header }}
+                  </ng-container>
 
-                    <mcs-option [value]="item" *ngFor="let item of resources$ | async">
-                      {{ getResourceDisplayedText(item) }}
-                    </mcs-option>
-                  </mcs-option-group>
-                </mcs-select>
-              </mcs-form-field>
+                  <mcs-option [value]="item" *ngFor="let item of resources$ | async">
+                    {{ getResourceDisplayedText(item) }}
+                  </mcs-option>
+                </mcs-option-group>
+              </mcs-select>
+            </mcs-form-field>
 
-              <mcs-server-create-details></mcs-server-create-details>
-            </div>
+            <mcs-server-create-details></mcs-server-create-details>
+          </div>
         </div>
       </mcs-wizard-step>
 
@@ -85,20 +86,18 @@
         </ng-template>
 
         <!-- Order Content -->
-        <mcs-list spacing="auto">
-          <mcs-list-item class="space-between-inline-items">
-            <span>Monthly</span>
-            <span>${{ orderDetails.charges?.monthly || 0 }}</span>
-          </mcs-list-item>
-          <mcs-list-item class="space-between-inline-items">
-            <span>One-Off</span>
-            <span>${{ orderDetails.charges?.oneOff || 0 }}</span>
-          </mcs-list-item>
-          <mcs-list-item class="space-between-inline-items">
-            <span>Up-Front</span>
-            <span>${{ orderDetails.charges?.upFront || 0 }}</span>
-          </mcs-list-item>
-        </mcs-list>
+        <mcs-item orientation="separated">
+          <span>Monthly</span>
+          <span>${{ orderDetails.charges?.monthly || 0 }}</span>
+        </mcs-item>
+        <mcs-item orientation="separated">
+          <span>One-Off</span>
+          <span>${{ orderDetails.charges?.oneOff || 0 }}</span>
+        </mcs-item>
+        <mcs-item orientation="separated">
+          <span>Up-Front</span>
+          <span>${{ orderDetails.charges?.upFront || 0 }}</span>
+        </mcs-item>
       </mcs-quote-widget>
     </ng-container>
 

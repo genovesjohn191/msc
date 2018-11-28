@@ -1,0 +1,71 @@
+/**
+  @title: Padding Utilities
+  @description: Creates a padding based on the space-map
+**/
+
+[no-padding] {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+@each $space-key in map-keys($space-map) {
+  $space-value: map-get($space-map, $space-key);
+
+  [padding-#{$space-key}] {
+    padding: $space-value;
+  }
+
+  [padding-left-#{$space-key}] {
+    padding-left: $space-value;
+  }
+
+  [padding-right-#{$space-key}] {
+    padding-right: $space-value;
+  }
+
+  [padding-top-#{$space-key}] {
+    padding-top: $space-value;
+  }
+
+  [padding-bottom-#{$space-key}] {
+    padding-bottom: $space-value;
+  }
+}
+
+/**
+  @title: Margin Utilities
+  @description: Creates a margin based on the space-map
+**/
+
+[no-margin] {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+@each $space-key in map-keys($space-map) {
+  $space-value: map-get($space-map, $space-key);
+
+  [margin-#{$space-key}] {
+    margin: $space-value;
+  }
+
+  [margin-left-#{$space-key}] {
+    margin-left: $space-value;
+  }
+
+  [margin-right-#{$space-key}] {
+    margin-right: $space-value;
+  }
+
+  [margin-top-#{$space-key}] {
+    margin-top: $space-value;
+  }
+
+  [margin-bottom-#{$space-key}] {
+    margin-bottom: $space-value;
+  }
+}

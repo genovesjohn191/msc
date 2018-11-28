@@ -5,7 +5,7 @@
     <!-- Notifications Action -->
     <mcs-top-panel-item *mcsTopPanelItemDef>
       <div class="listing-action-wrapper">
-        <div class="total-record-count right-align">
+        <div class="total-record-count">
           <span>{{ totalRecordsCount | mcsPlural:
                 textContent.dataSingular : textContent.dataPlural }}
           </span>
@@ -42,19 +42,19 @@
           <mcs-header-cell *mcsHeaderCellDef>
             {{ columnSettings.notification.text }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="word-wrap">
-            <div class="inline-items-small">
+          <mcs-data-cell *mcsDataCellDef="let row" text-wrap>
+            <mcs-item>
               <ng-container *ngIf="row.inProgress; else iconTemplate">
                 <mcs-loader size="small"></mcs-loader>
               </ng-container>
               <ng-template #iconTemplate>
                 <mcs-icon [key]="row.dataStatusIconKey" size="small"></mcs-icon>
               </ng-template>
-              <span class="inline-block">
+              <span>
                 {{ row.description }}<br/>
                 {{ row.summaryInformation }}
               </span>
-            </div>
+            </mcs-item>
           </mcs-data-cell>
         </ng-container>
 
@@ -73,20 +73,20 @@
 
         <!-- Start Time Column -->
         <ng-container mcsColumnDef="startTime" [mcsColumnDefHidden]="isColumnHidden('startTime')">
-          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+          <mcs-header-cell *mcsHeaderCellDef hidden-small>
             {{ columnSettings.startTime.text }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
               {{ row.startedOn | mcsStdDateFormat: 'ddd, DD MMM YYYY, LTS' }}
           </mcs-data-cell>
         </ng-container>
 
         <!-- Completed Column -->
         <ng-container mcsColumnDef="completed" [mcsColumnDefHidden]="isColumnHidden('completed')">
-          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+          <mcs-header-cell *mcsHeaderCellDef hidden-small>
             {{ columnSettings.completed.text }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
               {{ row.endedOn | mcsStdDateFormat: 'ddd, DD MMM YYYY, LTS'}}
           </mcs-data-cell>
         </ng-container>

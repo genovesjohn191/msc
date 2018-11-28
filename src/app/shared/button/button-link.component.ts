@@ -36,5 +36,13 @@ export class ButtonLinkComponent extends ButtonComponent {
     _changeDetectorRef: ChangeDetectorRef
   ) {
     super(_renderer, _elementRef, _changeDetectorRef);
+    this._setDefaultSettings();
+  }
+
+  /**
+   * Sets the default settings for links
+   */
+  private _setDefaultSettings(): void {
+    this.color = 'default';
   }
 }

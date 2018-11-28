@@ -1,0 +1,27 @@
+@import "../../../styles/shared/base";
+
+$item-offset: 8px;
+$items-iterval: 6px;
+
+.item-wrapper {
+  @include display-flex(row);
+
+  + .item-wrapper {
+    margin-top: $items-iterval;
+  }
+
+  &.item-inline {
+    @include align-items(center);
+    @include set-items-interval($item-offset, horizontal);
+  }
+
+  &.item-block {
+    @include display-flex(column);
+    @include set-items-interval($item-offset, vertical);
+  }
+
+  &.item-separated {
+    @include align-items(center);
+    justify-content: space-between;
+  }
+}

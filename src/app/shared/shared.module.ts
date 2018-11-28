@@ -58,6 +58,7 @@ import { NoteModule } from './note/note.module';
 import { PresentationPanelModule } from './presentation-panel/presentation-panel.module';
 import { JobsProvisioningModule } from './jobs-provisioning/jobs-provisioning.module';
 import { LoadingModule } from './loading/loading.module';
+import { ItemModule } from './item/item.module';
 
 @NgModule({
   imports: [
@@ -116,7 +117,8 @@ import { LoadingModule } from './loading/loading.module';
     NoteModule,
     PresentationPanelModule,
     JobsProvisioningModule,
-    LoadingModule
+    LoadingModule,
+    ItemModule
   ],
   exports: [
     CommonModule,
@@ -174,7 +176,8 @@ import { LoadingModule } from './loading/loading.module';
     NoteModule,
     PresentationPanelModule,
     JobsProvisioningModule,
-    LoadingModule
+    LoadingModule,
+    ItemModule
   ]
 })
 

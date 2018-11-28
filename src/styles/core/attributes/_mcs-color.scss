@@ -1,0 +1,22 @@
+/**
+  @title: Color settings
+  @description: Creates color attributes for common of the color settings
+**/
+
+@each $color-key in map-keys($color-scheme-map) {
+  $color-object: map-get($color-scheme-map, $color-key);
+
+  $color-base: map-get($color-object, base);
+  $color-contrast: map-get($color-object, contrast);
+  $color-shade: map-get($color-object, shade);
+  $color-tint: map-get($color-object, tint);
+
+  [color-#{$color-key}] {
+    background-color: $color-base !important;
+    color: $color-contrast !important;
+  }
+
+  [text-color-#{$color-key}] {
+    color: $color-base !important;
+  }
+}

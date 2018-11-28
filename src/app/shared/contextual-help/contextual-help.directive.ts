@@ -179,6 +179,6 @@ export class ContextualHelpDirective implements OnInit, OnDestroy {
    */
   private _setTabIndex(): void {
     this._renderer.setAttribute(this._elementRef.nativeElement, 'tabindex', '0');
-    this._renderer.addClass(this._elementRef.nativeElement, 'outline-none');
+    this._renderer.setStyle(this._elementRef.nativeElement, 'outline', 'none');
   }
 }

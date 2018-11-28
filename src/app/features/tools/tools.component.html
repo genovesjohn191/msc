@@ -10,17 +10,17 @@
           <mcs-header-cell *mcsHeaderCellDef>
             {{ textContent.table.header.name }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="top-align">
+          <mcs-data-cell *mcsDataCellDef="let row" text-top>
             {{ row.name}}
           </mcs-data-cell>
         </ng-container>
 
         <!-- Description Column -->
         <ng-container mcsColumnDef="resourceSpecific">
-          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+          <mcs-header-cell *mcsHeaderCellDef hidden-small>
             {{ textContent.table.header.description }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small top-align">
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-small text-top>
             {{ toolDescription.get(row.name) }}
           </mcs-data-cell>
         </ng-container>
@@ -30,8 +30,8 @@
           <mcs-header-cell *mcsHeaderCellDef>
             {{ textContent.table.header.access }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="top-align">
-            <div *ngFor="let access of row.portalAccess" class="access-link-wrapper">
+          <mcs-data-cell *mcsDataCellDef="let row" text-top>
+            <div *ngFor="let access of row.portalAccess">
               <a [href]="access.url" target="_blank"
                 mcsId="select-tool"
                 mcsEventTracker="navigate-to-othertools"

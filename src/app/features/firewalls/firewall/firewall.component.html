@@ -12,8 +12,7 @@
             <mcs-list-panel>
               <!-- With ha group (with more than 1 group) -->
               <ng-container *ngIf="firewallListing$ | async as firewallMap">
-                <div class="position-relative"
-                  *ngFor="let iterator of (firewallMap | mcsMapIterable) | mcsSortArray: firewallsListSource?.firewallGroupSortMethod" >
+                <div *ngFor="let iterator of (firewallMap | mcsMapIterable) | mcsSortArray: firewallsListSource?.firewallGroupSortMethod" >
                   <mcs-option-group *ngIf="iterator.value?.length > 1">
                     <ng-container *mcsOptionGroupLabel>
                       <span>{{ getFirewallGroupName(firewallMap, iterator.key) }}</span>
@@ -28,13 +27,13 @@
 
                         <mcs-option [value]="firewall"
                           [selected]="(selectedFirewall$ | async)?.id === firewall.id">
-                          <div class="inline-items-xsmall">
+                          <mcs-item>
                             <mcs-icon size="small"
                               [key]="firewall?.connectionStatusIconKey">
                             </mcs-icon>
                             <span>{{ firewall.managementName }}</span>
                             <span read-only>{{ firewall.haRole }}</span>
-                          </div>
+                          </mcs-item>
                         </mcs-option>
                       </a>
                     </ng-container>
@@ -43,7 +42,7 @@
 
                 <!-- Without ha group -->
                 <div *ngFor="let iterator of (firewallMap | mcsMapIterable) |
-                  mcsSortArray: firewallsListSource?.firewallGroupSortMethod" class="position-relative">
+                  mcsSortArray: firewallsListSource?.firewallGroupSortMethod">
                   <ng-container *ngIf="iterator.value?.length === 1">
 
                     <ng-container *ngFor="let firewall of (iterator.value | mcsSortArray: firewallsListSource?.firewallSortMethod)">
@@ -55,11 +54,11 @@
 
                         <mcs-option [value]="firewall"
                           [selected]="(selectedFirewall$ | async)?.id === firewall.id">
-                          <div class="inline-items-xsmall">
+                          <mcs-item>
                             <mcs-icon size="small"
                               [key]="firewall?.connectionStatusIconKey"></mcs-icon>
                             <span>{{ firewall.managementName }}</span>
-                          </div>
+                          </mcs-item>
                         </mcs-option>
                       </a>
                     </ng-container>
@@ -99,9 +98,9 @@
         </ng-container>
 
         <!-- Action tab -->
-        <mcs-tab [canSelect]="false" customClass="right-align">
+        <mcs-tab [canSelect]="false" align="end">
           <ng-template mcsTabLabel>
-            <mcs-icon class="action" [key]="cogIconKey" size="medium"
+            <mcs-icon [key]="cogIconKey" size="medium"
               mcsPopover placement="bottom" orientation="left" theme="light"
               padding="none" [content]="actionContent" mcsCursor="pointer">
             </mcs-icon>

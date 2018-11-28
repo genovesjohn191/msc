@@ -1,5 +1,5 @@
 <div [@expansionVertical]="showSubNavigation ? 'expanded' : 'collapsed'"
-  class="box-shadow-bottom-small full-width">
+  class="box-shadow-bottom-small" full-width>
   <!-- Sub-navigation desktop mode -->
   <mcs-sub-navigation-desktop>
     <ng-container *ngTemplateOutlet="subNavigationItemsTemplate"></ng-container>
@@ -13,7 +13,7 @@
 
 <!-- Router templates -->
 <ng-template #subNavigationItemsTemplate>
-  <div [ngSwitch]="activeRouteCategory" class="sub-navigation-content ">
+  <div [ngSwitch]="activeRouteCategory" class="sub-navigation-content">
     <!-- Compute Category -->
     <ng-container *ngSwitchCase="routeCategoryEnum.Compute">
       <a [mcsRouterLink]="routeKeyEnum.Servers" mcsRouterLinkActive="active"

@@ -1,13 +1,13 @@
 <!-- Mobile navigation header -->
-<div class="display-flex-row" mcsCursor="pointer" (click)="toggle()">
+<div class="sub-navigation-header-wrapper" mcsCursor="pointer" (click)="toggle()">
   <div class="sub-navigation-header">
     <span>{{ routeCategoryLabel }}</span>
   </div>
-  <mcs-icon class="space-right-medium" [@rotate180]="panelOpen ? 'rotate' : 'void'"
+  <mcs-icon margin-right-medium [@rotate180]="panelOpen ? 'rotate' : 'void'"
     [key]="toggleIconKey"></mcs-icon>
 </div>
 
 <!-- Mobile navigation content -->
-<div [@expansionVertical]="panelOpen ? 'expanded' : 'collapsed'" class="block-items">
+<div [@expansionVertical]="panelOpen ? 'expanded' : 'collapsed'">
   <ng-content></ng-content>
 </div>

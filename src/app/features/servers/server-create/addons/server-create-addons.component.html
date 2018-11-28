@@ -3,7 +3,7 @@
     <h2>{{ textContent.header }}</h2>
     <p>{{ textContent.description }}</p>
 
-    <div class="block-items-large">
+    <section class="block-items-large">
       <mcs-collapsible-panel (collapseChange)="antiMalwareCheckedChange($event)"
         [header]="textContent.antiMalwareAddOn"
         [mcsContextualHelp]="textContent.antiMalwareAddOnHelp">
@@ -24,10 +24,10 @@
         <mcs-sql-server-addon></mcs-sql-server-addon>
       </mcs-collapsible-panel>
       -->
-    </div>
+    </section>
 
     <!-- Wizard Actions -->
-    <div class="action-items space-top-medium">
+    <div class="action-items">
       <a mcsWizardStepPrevious mcsId="step-2-back">Back</a>
       <button mcsButton size="small" arrow="right"
         mcsWizardStepNext mcsId="step-2-next">Next</button>

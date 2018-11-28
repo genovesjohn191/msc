@@ -1,10 +1,10 @@
 <mcs-page [header]="textContent.header">
   <mcs-left-panel *mcsLeftPanelDef="textContent.leftPanelHeader">
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.creationDetails" offset="small">
-      <div class="inline-items-small">
+      <mcs-item>
         <span read-only>{{ textContent.serverHeader }}: </span>
         <span>{{ job?.description }}</span>
-      </div>
+      </mcs-item>
     </mcs-left-panel-item>
   </mcs-left-panel>
 

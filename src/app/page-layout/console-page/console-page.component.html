@@ -3,10 +3,10 @@
   <ng-container [ngSwitch]="consoleStatus">
     <!-- Connecting state -->
     <ng-container *ngSwitchCase="vmConsoleStatusEnum.Connecting">
-      <div class="inline-items-small console-message">
+      <mcs-item class="console-message">
         <mcs-loader></mcs-loader>
         <span>{{ textContent.loading }}</span>
-      </div>
+      </mcs-item>
     </ng-container>
 
     <!-- Disconnected state -->
@@ -32,7 +32,7 @@
 
     <!-- Connected state -->
     <ng-container *ngSwitchCase="vmConsoleStatusEnum.Connected">
-      <div class="left-align">
+      <div justify-self-left>
         <span>{{ server?.name }}</span>
       </div>
 

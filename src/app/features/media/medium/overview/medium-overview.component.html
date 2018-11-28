@@ -1,39 +1,46 @@
-<div class="grid-row">
+<mcs-grid>
+  <mcs-grid-row>
+    <!-- Media Properties -->
+    <mcs-grid-column>
+      <mcs-presentation-panel mcsId="media-properties">
+        <ng-container mcsPresentationPanelHeader>
+          <h2>{{ textContent.mediaProperties.title }}</h2>
+        </ng-container>
 
-  <!-- Media Properties -->
-  <div class="grid-column container-wrapper" mcsId="media-properties">
-    <h2 class="container-header">{{ textContent.mediaProperties.title }}</h2>
-    <mcs-list spacing="xsmall">
-      <mcs-list-item class="form-field-inline">
-        <span>{{ textContent.mediaProperties.name }}:</span>
-        <span [innerHTML]="selectedMedium.name | mcsDataLabel"></span>
-      </mcs-list-item>
+        <mcs-item>
+          <span>{{ textContent.mediaProperties.name }}:</span>
+          <span [innerHTML]="selectedMedium.name | mcsDataLabel"></span>
+        </mcs-item>
 
-      <mcs-list-item class="form-field-inline">
-        <span>{{ textContent.mediaProperties.status }}:</span>
-        <span [innerHTML]="selectedMedium.statusLabel | mcsDataLabel"></span>
-      </mcs-list-item>
+        <mcs-item>
+          <span>{{ textContent.mediaProperties.status }}:</span>
+          <span [innerHTML]="selectedMedium.statusLabel | mcsDataLabel"></span>
+        </mcs-item>
 
-      <mcs-list-item class="form-field-inline">
-        <span>{{ textContent.mediaProperties.dateAdded }}:</span>
-        <span [innerHTML]="selectedMedium.createdOn | mcsStdDateFormat"></span>
-      </mcs-list-item>
+        <mcs-item>
+          <span>{{ textContent.mediaProperties.dateAdded }}:</span>
+          <span [innerHTML]="selectedMedium.createdOn | mcsStdDateFormat"></span>
+        </mcs-item>
 
-      <mcs-list-item class="form-field-inline">
-        <span>{{ textContent.mediaProperties.description }}:</span>
-        <span [innerHTML]="selectedMedium.description | mcsDataLabel"></span>
-      </mcs-list-item>
-    </mcs-list>
-  </div>
+        <mcs-item>
+          <span>{{ textContent.mediaProperties.description }}:</span>
+          <span [innerHTML]="selectedMedium.description | mcsDataLabel"></span>
+        </mcs-item>
+      </mcs-presentation-panel>
+    </mcs-grid-column>
 
-  <!-- Storage Properties -->
-  <div class="grid-column container-wrapper" mcsId="storage-properties">
-    <h2 class="container-header">{{ textContent.storageProperties.title }}</h2>
-    <mcs-list spacing="xsmall">
-      <mcs-list-item class="form-field-inline">
-        <span>{{ textContent.storageProperties.size }}:</span>
-        <span [innerHTML]="selectedMedium.sizeMB | mcsDataSize: 'MB'"></span>
-      </mcs-list-item>
-    </mcs-list>
-  </div>
-</div>
+    <!-- Storage Properties -->
+    <mcs-grid-column>
+      <mcs-presentation-panel mcsId="storage-properties">
+        <ng-container mcsPresentationPanelHeader>
+          <h2>{{ textContent.storageProperties.title }}</h2>
+        </ng-container>
+
+        <mcs-item>
+          <span>{{ textContent.storageProperties.size }}:</span>
+          <span [innerHTML]="selectedMedium.sizeMB | mcsDataSize: 'MB'"></span>
+        </mcs-item>
+      </mcs-presentation-panel>
+    </mcs-grid-column>
+  </mcs-grid-row>
+</mcs-grid>

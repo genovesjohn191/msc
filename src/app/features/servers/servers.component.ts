@@ -43,7 +43,7 @@ import {
   ServiceType,
   serviceTypeText,
   ServerCommand,
-  DeviceMode,
+  Breakpoint,
   McsSelection,
   RouteKey,
   McsServer
@@ -376,11 +376,11 @@ export class ServersComponent
    * Listener to device changes
    */
   private _listenToDeviceChanges(): void {
-    this.browserService.deviceTypeStream
+    this.browserService.breakpointChange()
       .pipe(takeUntil(this._destroySubject))
       .subscribe((deviceType) => {
-        let multipleSelection = !(deviceType === DeviceMode.MobileLandscape ||
-          deviceType === DeviceMode.MobilePortrait);
+        let multipleSelection = !(deviceType === Breakpoint.Small ||
+          deviceType === Breakpoint.XSmall);
         this.selection = new McsSelection<McsServer>(multipleSelection);
       });
   }

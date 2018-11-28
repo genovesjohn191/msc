@@ -1,0 +1,20 @@
+/**
+  @title: Display Utilities
+  @description: Creates display attributes to modify element display
+**/
+
+[display-block] {
+  display: block !important;
+}
+
+[display-inline-block] {
+  display: inline-block !important;
+}
+
+[display-flex] {
+  display: flex !important;
+}
+
+[display-inline-flex] {
+  display: inline-flex !important;
+}

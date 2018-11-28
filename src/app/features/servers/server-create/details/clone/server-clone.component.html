@@ -1,77 +1,75 @@
 <form [formGroup]="fgCloneServer" mcsFormGroup>
-    <!-- Server Name Input -->
-    <div class="field">
-      <mcs-form-field>
-        <input mcsInput #serverNameInput required mcsSetFocus
-          placeholder="Enter a server name" maxlength="15"
-          mcsId="input-server-name"
-          [formControl]="fcServerName"
-          [mcsContextualHelp]="textHelpContent.serverNameField">
+  <!-- Server Name Input -->
+  <mcs-form-field>
+    <input mcsInput #serverNameInput required mcsSetFocus
+      placeholder="Enter a server name" maxlength="15"
+      mcsId="input-server-name"
+      [formControl]="fcServerName"
+      [mcsContextualHelp]="textHelpContent.serverNameField">
 
-        <mcs-hint mcsHint align="start">
-          {{ convertMaxCharText(textContent.hints.serverNameMax, serverNameInput.maxLength) }}
-        </mcs-hint>
-        <mcs-hint mcsHint align="end">
-          {{ serverNameInput.value.length }} / {{ serverNameInput.maxLength }}
-        </mcs-hint>
+    <mcs-hint mcsHint align="start">
+      {{ convertMaxCharText(textContent.hints.serverNameMax, serverNameInput.maxLength) }}
+    </mcs-hint>
+    <mcs-hint mcsHint align="end">
+      {{ serverNameInput.value.length }} / {{ serverNameInput.maxLength }}
+    </mcs-hint>
 
-        <mcs-error mcsError errorState="required">
-          {{ textContent.errors.serverNameRequired }}
-        </mcs-error>
-        <mcs-error mcsError errorState="invalidServerName">
-          {{ textContent.errors.invalidServerName }}
-        </mcs-error>
-      </mcs-form-field>
-    </div>
+    <mcs-error mcsError errorState="required">
+      {{ textContent.errors.serverNameRequired }}
+    </mcs-error>
+    <mcs-error mcsError errorState="invalidServerName">
+      {{ textContent.errors.invalidServerName }}
+    </mcs-error>
+  </mcs-form-field>
 
-    <div class="position-relative block-items-medium">
-      <!-- Servers -->
-      <mcs-data-status [dataStatusFactory]="dataStatusFactory">
-        <mcs-data-status-success mcsDataSuccess>
-          <mcs-form-field>
-            <mcs-select mcsId="select-server" required
-              [formControl]="fcTargetServer"
-              [(ngModel)]="selectedServer"
-              [placeholder]="textContent.placeholder.server">
+  <!-- Servers -->
+  <section>
+    <mcs-data-status [dataStatusFactory]="dataStatusFactory">
+      <mcs-data-status-success mcsDataSuccess>
+        <mcs-form-field>
+          <mcs-select mcsId="select-server" required
+            [formControl]="fcTargetServer"
+            [(ngModel)]="selectedServer"
+            [placeholder]="textContent.placeholder.server">
 
-              <mcs-option-group>
-                <ng-container *mcsOptionGroupHeader>Servers</ng-container>
-                <mcs-option *ngFor="let server of servers" [value]="server">
-                  {{ server.name }}
-                </mcs-option>
-              </mcs-option-group>
-            </mcs-select>
+            <mcs-option-group>
+              <ng-container *mcsOptionGroupHeader>Servers</ng-container>
+              <mcs-option *ngFor="let server of servers" [value]="server">
+                {{ server.name }}
+              </mcs-option>
+            </mcs-option-group>
+          </mcs-select>
 
-            <mcs-error mcsError errorState="required">
-              {{ textContent.errors.selectServerRequired }}
-            </mcs-error>
-          </mcs-form-field>
-        </mcs-data-status-success>
+          <mcs-error mcsError errorState="required">
+            {{ textContent.errors.selectServerRequired }}
+          </mcs-error>
+        </mcs-form-field>
+      </mcs-data-status-success>
 
-        <mcs-data-status-in-progress mcsDataInProgress>
-          <span>{{ textContent.loadingServers }}</span>
-        </mcs-data-status-in-progress>
+      <mcs-data-status-in-progress mcsDataInProgress>
+        <span>{{ textContent.loadingServers }}</span>
+      </mcs-data-status-in-progress>
 
-        <mcs-data-status-empty mcsDataEmpty>
-          <span>{{ textContent.noServers }}</span>
-        </mcs-data-status-empty>
+      <mcs-data-status-empty mcsDataEmpty>
+        <span>{{ textContent.noServers }}</span>
+      </mcs-data-status-empty>
 
-        <mcs-data-status-error mcsDataError>
-          <span>{{ textContent.errorMessageServers }}</span>
-        </mcs-data-status-error>
-      </mcs-data-status>
+      <mcs-data-status-error mcsDataError>
+        <span>{{ textContent.errorMessageServers }}</span>
+      </mcs-data-status-error>
+    </mcs-data-status>
 
-      <!-- Manual Ip-Address checking -->
-      <mcs-data-status [dataStatusFactory]="ipAddressStatusFactory">
-        <mcs-data-status-success mcsDataSuccess>
-          <mcs-data-status-warning *ngIf="serverIsManuallyAssignedIp">
-            <span [innerHTML]="(textContent.errors.manuallyAssignedIpWarning | mcsTextPlaceholder: 'server_name': selectedServer?.name) | mcsNewLines"></span>
-          </mcs-data-status-warning>
-        </mcs-data-status-success>
+    <!-- Manual Ip-Address checking -->
+    <mcs-data-status [dataStatusFactory]="ipAddressStatusFactory">
+      <mcs-data-status-success mcsDataSuccess>
+        <mcs-data-status-warning *ngIf="serverIsManuallyAssignedIp">
+          <span [innerHTML]="(textContent.errors.manuallyAssignedIpWarning | mcsTextPlaceholder: 'server_name': selectedServer?.name) | mcsNewLines"></span>
+        </mcs-data-status-warning>
+      </mcs-data-status-success>
 
-        <mcs-data-status-in-progress mcsDataInProgress>
-          <span>{{ textContent.loadingServerDetails }}</span>
-        </mcs-data-status-in-progress>
-      </mcs-data-status>
-    </div>
-  </form>
+      <mcs-data-status-in-progress mcsDataInProgress>
+        <span>{{ textContent.loadingServerDetails }}</span>
+      </mcs-data-status-in-progress>
+    </mcs-data-status>
+  </section>
+</form>

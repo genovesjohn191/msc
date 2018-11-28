@@ -11,7 +11,10 @@ import {
 } from '@angular/core';
 import { McsPortalTemplate } from '@app/core';
 import { TabLabelDirective } from './tab-label.directive';
-import { coerceBoolean } from '@app/utilities';
+import {
+  coerceBoolean,
+  McsAlignmentType
+} from '@app/utilities';
 
 /** Next overlay unique ID. */
 let nextUniqueId = 0;
@@ -38,7 +41,7 @@ export class TabComponent implements AfterViewInit {
   public label: string;
 
   @Input()
-  public customClass: string;
+  public align: McsAlignmentType;
 
   @ContentChild(TabLabelDirective)
   public labelTemplate: TabLabelDirective;

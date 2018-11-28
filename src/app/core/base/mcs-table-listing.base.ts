@@ -11,7 +11,7 @@ import {
 } from '@app/utilities';
 import {
   McsFilterInfo,
-  DeviceMode
+  Breakpoint
 } from '@app/models';
 import {
   Search,
@@ -154,11 +154,11 @@ export abstract class McsTableListingBase<T> {
    * Listen to any changes in size of the browser
    */
   private _listenToBroswerDeviceType(): void {
-    this.browserService.deviceTypeStream
+    this.browserService.breakpointChange()
       .pipe(takeUntil(this._baseDestroySubject))
       .subscribe((deviceType) => {
-        this.isMobile = deviceType === DeviceMode.MobileLandscape ||
-          deviceType === DeviceMode.MobilePortrait;
+        this.isMobile = deviceType === Breakpoint.Small ||
+          deviceType === Breakpoint.XSmall;
       });
   }
 }

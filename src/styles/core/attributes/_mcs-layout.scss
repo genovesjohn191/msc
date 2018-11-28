@@ -1,0 +1,16 @@
+// Box attributes
+// --------------------------------------------------
+[no-border] {
+  border: none !important;
+  @include box-shadow(none !important);
+}
+
+// Width settings
+// --------------------------------------------------
+[full-width] {
+  width: 100% !important;
+}
+
+[auto-width] {
+  width: auto !important;
+}

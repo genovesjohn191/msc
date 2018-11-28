@@ -37,7 +37,7 @@
 
         <div class="product-catalog-widget-wrapper">
           <!-- Ownerships -->
-          <mcs-presentation-panel *mcsAccessControl="['CompanyView']">
+          <mcs-presentation-panel [embossed]="true" *mcsAccessControl="['CompanyView']">
             <ng-container mcsPresentationPanelHeader>
               Ownership
             </ng-container>
@@ -76,7 +76,8 @@
           </mcs-presentation-panel>
 
           <!-- Dependencies -->
-          <mcs-presentation-panel *ngIf="selectedProduct.dependentProducts | mcsIsNotNullOrEmpty">
+          <mcs-presentation-panel [embossed]="true"
+            *ngIf="selectedProduct.dependentProducts | mcsIsNotNullOrEmpty">
             <ng-container mcsPresentationPanelHeader>
               Dependencies
             </ng-container>
@@ -85,21 +86,21 @@
               <div [ngStyle]="{'float': 'right'}">
                 <mcs-icon size="100px" [key]="cloudIconKey"></mcs-icon>
               </div>
-              <div class="block-items-xsmall">
-                <a *ngFor="let dependentProduct of selectedProduct.dependentProducts"
-                  [mcsRouterLink]="[routeKeyEnum.ProductDetail, dependentProduct.id]"
+              <mcs-item *ngFor="let dependentProduct of selectedProduct.dependentProducts">
+                <a [mcsRouterLink]="[routeKeyEnum.ProductDetail, dependentProduct.id]"
                   mcsId="product-dependency"
                   mcsEventTracker="select-product-dependency"
                   mcsEventCategory="product"
                   mcsEventLabel="product-list-panel">
                   {{ dependentProduct.name }}
                 </a>
-              </div>
+              </mcs-item>
             </div>
           </mcs-presentation-panel>
 
           <!-- Locations -->
-          <mcs-presentation-panel *ngIf="selectedProduct.locations | mcsIsNotNullOrEmpty">
+          <mcs-presentation-panel [embossed]="true"
+            *ngIf="selectedProduct.locations | mcsIsNotNullOrEmpty">
             <ng-container mcsPresentationPanelHeader>
               Locations
             </ng-container>
@@ -116,8 +117,7 @@
         </div>
 
         <!-- Short description -->
-        <div *ngIf="selectedProduct.shortDescription | mcsIsNotNullOrEmpty"
-          class="space-bottom-large">
+        <div *ngIf="selectedProduct.shortDescription | mcsIsNotNullOrEmpty" margin-bottom-large>
           <h2>Short Description</h2>
           <div [innerHTML]="selectedProduct.shortDescription"></div>
         </div>
@@ -131,7 +131,7 @@
       </div>
 
       <!-- Product Options -->
-      <div class="product-catalog-item block-items-small"
+      <div class="product-catalog-item"
         *ngIf="selectedProduct.productOptions | mcsIsNotNullOrEmpty">
         <h2>Product Options</h2>
 
@@ -151,9 +151,11 @@
             </mcs-header-cell>
             <mcs-data-cell *mcsDataCellDef="let row">
               <mcs-list spacing="auto">
-                <mcs-list-item class="form-field-inline" *ngFor="let property of row.properties">
-                  <span>{{ property.label }}:</span>
-                  <span>{{ property.value }}</span>
+                <mcs-list-item *ngFor="let property of row.properties">
+                  <mcs-item>
+                    <span>{{ property.label }}:</span>
+                    <span>{{ property.value }}</span>
+                  </mcs-item>
                 </mcs-list-item>
               </mcs-list>
             </mcs-data-cell>

@@ -14,4 +14,9 @@ $contextual-help-margin-left: 100px;
   @include display-flex(row);
   @include align-items(flex-start);
   margin-left: $contextual-help-margin-left;
+
+  > span {
+    display: block;
+    width: 100%;
+  }
 }

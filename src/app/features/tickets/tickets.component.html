@@ -19,9 +19,9 @@
       </mcs-top-panel-item>
     </ng-container>
 
-    <mcs-top-panel-item *mcsTopPanelItemDef [ngStyle]="{overflow: 'auto'}">
+    <mcs-top-panel-item *mcsTopPanelItemDef overflow-auto>
       <div class="listing-action-wrapper">
-        <div class="total-record-count right-align">
+        <div class="total-record-count">
           <span>{{ totalRecordsCount | mcsPlural:
                 textContent.dataSingular : textContent.dataPlural }}
           </span>
@@ -83,7 +83,7 @@
           <mcs-header-cell *mcsHeaderCellDef>
             {{ columnSettings.summary.text }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="word-wrap">
+          <mcs-data-cell *mcsDataCellDef="let row" text-wrap>
             <a (click)="navigateToTicket(row)"
             mcsId="select-ticket"
             mcsEventTracker="navigate-to-ticket"
@@ -94,10 +94,10 @@
 
         <!-- Logged By Column -->
         <ng-container mcsColumnDef="loggedBy" [mcsColumnDefHidden]="isColumnHidden('loggedBy')">
-          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+          <mcs-header-cell *mcsHeaderCellDef hidden-small>
             {{ columnSettings.loggedBy.text }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
             {{ row.requestor }}
           </mcs-data-cell>
         </ng-container>
@@ -105,10 +105,10 @@
         <!-- Last Updated Date Column -->
         <ng-container mcsColumnDef="lastUpdatedDate"
           [mcsColumnDefHidden]="isColumnHidden('lastUpdatedDate')">
-          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+          <mcs-header-cell *mcsHeaderCellDef hidden-small>
             {{ columnSettings.lastUpdatedDate.text }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
             {{ row.updatedOn | mcsStdDateFormat }}
           </mcs-data-cell>
         </ng-container>
@@ -116,10 +116,10 @@
         <!-- Last Updated By Column -->
         <ng-container mcsColumnDef="lastUpdatedBy"
           [mcsColumnDefHidden]="isColumnHidden('lastUpdatedBy')">
-          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+          <mcs-header-cell *mcsHeaderCellDef hidden-small>
             {{ columnSettings.lastUpdatedBy.text }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
             {{ row.updatedBy }}
           </mcs-data-cell>
         </ng-container>
@@ -127,10 +127,10 @@
         <!-- Customer Reference Column -->
         <ng-container mcsColumnDef="customerReference"
           [mcsColumnDefHidden]="isColumnHidden('customerReference')">
-          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+          <mcs-header-cell *mcsHeaderCellDef hidden-small>
             {{ columnSettings.customerReference.text }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
             <span [innerHTML]="row.customerReference | mcsDataLabel: 'None'"></span>
           </mcs-data-cell>
         </ng-container>

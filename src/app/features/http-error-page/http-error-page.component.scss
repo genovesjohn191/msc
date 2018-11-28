@@ -23,6 +23,7 @@ $http-error-page-max-width: 500px;
 .http-error-page-content {
   @include display-flex(column);
   @include align-items(center);
+  @include set-items-interval($space-medium);
   max-width: $http-error-page-max-width;
 
   .http-error-page-header {

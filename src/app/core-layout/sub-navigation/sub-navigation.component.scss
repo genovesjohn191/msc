@@ -45,15 +45,19 @@ $sub-navigation-mobile-border-color: $border-color-light;
     @include display-flex(column);
   }
 
-  .sub-navigation-header {
-    height: $shared-navigation-panel-height;
+  .sub-navigation-header-wrapper {
     @include display-flex(row);
-    @include align-items(center);
-    justify-content: center;
-    @include flex(1);
 
-    @include font-size(14);
-    font-family: $base-font-bold;
+    .sub-navigation-header {
+      height: $shared-navigation-panel-height;
+      @include display-flex(row);
+      @include align-items(center);
+      justify-content: center;
+      @include flex(1);
+
+      @include font-size(14);
+      font-family: $base-font-bold;
+    }
   }
 
   .sub-navigation-content {

@@ -1,3 +1,11 @@
 @function get-value($value) {
     @return $value
 }
+
+@function get-color-shade($color) {
+  @return mix(#000, $color, 12%);
+}
+
+@function get-color-tint($color) {
+  @return mix(#fff, $color, 10%);
+}

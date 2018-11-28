@@ -1,91 +1,85 @@
 <form [formGroup]="fgNewServer">
   <!-- Server Name Input -->
-  <div class="field">
-    <mcs-form-field>
-      <input mcsInput #serverNameInput required mcsSetFocus
-        placeholder="Enter a server name" maxlength="15"
-        mcsId="input-server-name"
-        [formControl]="fcServerName"
-        [mcsContextualHelp]="textHelpContent.serverNameField">
+  <mcs-form-field>
+    <input mcsInput #serverNameInput required mcsSetFocus
+      placeholder="Enter a server name" maxlength="15"
+      mcsId="input-server-name"
+      [formControl]="fcServerName"
+      [mcsContextualHelp]="textHelpContent.serverNameField">
 
-      <mcs-hint mcsHint align="start">
-        {{ convertMaxCharText(textContent.hints.serverNameMax, serverNameInput.maxLength) }}
-      </mcs-hint>
-      <mcs-hint mcsHint align="end">
-        {{ serverNameInput.value.length }} / {{ serverNameInput.maxLength }}
-      </mcs-hint>
+    <mcs-hint mcsHint align="start">
+      {{ convertMaxCharText(textContent.hints.serverNameMax, serverNameInput.maxLength) }}
+    </mcs-hint>
+    <mcs-hint mcsHint align="end">
+      {{ serverNameInput.value.length }} / {{ serverNameInput.maxLength }}
+    </mcs-hint>
 
-      <mcs-error mcsError errorState="required">
-        {{ textContent.errors.serverNameRequired }}
-      </mcs-error>
-      <mcs-error mcsError errorState="invalidServerName">
-        {{ textContent.errors.invalidServerName }}
-      </mcs-error>
-    </mcs-form-field>
-  </div>
+    <mcs-error mcsError errorState="required">
+      {{ textContent.errors.serverNameRequired }}
+    </mcs-error>
+    <mcs-error mcsError errorState="invalidServerName">
+      {{ textContent.errors.invalidServerName }}
+    </mcs-error>
+  </mcs-form-field>
 
   <!-- Virtual Applications Selection -->
-  <div class="field">
-    <mcs-form-field>
-      <mcs-select mcsId="select-vapp"
-        [formControl]="fcVApp"
-        [mcsContextualHelp]="textHelpContent.vAppField"
-        [placeholder]="textContent.placeholder.vApp">
+  <mcs-form-field>
+    <mcs-select mcsId="select-vapp"
+      [formControl]="fcVApp"
+      [mcsContextualHelp]="textHelpContent.vAppField"
+      [placeholder]="textContent.placeholder.vApp">
 
-        <mcs-option>{{ textContent.createNewVApp }}</mcs-option>
-        <mcs-option *ngFor="let vApp of resource?.vApps" [value]="vApp">
-          {{ vApp.name }}
-        </mcs-option>
-      </mcs-select>
+      <mcs-option>{{ textContent.createNewVApp }}</mcs-option>
+      <mcs-option *ngFor="let vApp of resource?.vApps" [value]="vApp">
+        {{ vApp.name }}
+      </mcs-option>
+    </mcs-select>
 
-      <mcs-error mcsError errorState="required">
-        {{ textContent.errors.selectVappRequired }}
-      </mcs-error>
-    </mcs-form-field>
-  </div>
+    <mcs-error mcsError errorState="required">
+      {{ textContent.errors.selectVappRequired }}
+    </mcs-error>
+  </mcs-form-field>
 
   <!-- Imges Selection -->
-  <div class="field">
-    <mcs-form-field>
-      <mcs-select mcsId="select-image" required
-        [formControl]="fcImage"
-        [placeholder]="textContent.placeholder.image"
-        [mcsContextualHelp]="textHelpContent.serverTemplateField">
-        <!-- Os Group -->
-        <mcs-option-group>
-          <ng-container *mcsOptionGroupHeader>
-            <span>{{ textContent.headers.os }}</span>
-          </ng-container>
+  <mcs-form-field>
+    <mcs-select mcsId="select-image" required
+      [formControl]="fcImage"
+      [placeholder]="textContent.placeholder.image"
+      [mcsContextualHelp]="textHelpContent.serverTemplateField">
+      <!-- Os Group -->
+      <mcs-option-group>
+        <ng-container *mcsOptionGroupHeader>
+          <span>{{ textContent.headers.os }}</span>
+        </ng-container>
 
-          <mcs-option-group [label]="platform.key"
-            *ngFor="let platform of (operatingSystemsMap$ | async) | mcsMapIterable">
+        <mcs-option-group [label]="platform.key"
+          *ngFor="let platform of (operatingSystemsMap$ | async) | mcsMapIterable">
 
-            <mcs-option *ngFor="let os of platform.value" [value]="os">
-              {{ os.name }}
-            </mcs-option>
-          </mcs-option-group>
-        </mcs-option-group>
-
-        <!-- Template Group -->
-        <mcs-option-group *ngIf="customTemplates">
-          <ng-container *mcsOptionGroupHeader>
-            <span>{{ textContent.headers.templates }}</span>
-          </ng-container>
-
-          <mcs-option *ngFor="let template of customTemplates" [value]="template">
-            {{ template.itemName }}
+          <mcs-option *ngFor="let os of platform.value" [value]="os">
+            {{ os.name }}
           </mcs-option>
         </mcs-option-group>
-      </mcs-select>
+      </mcs-option-group>
 
-      <mcs-error mcsError errorState="required">
-        {{ textContent.errors.selectImageRequired }}
-      </mcs-error>
-    </mcs-form-field>
-  </div>
+      <!-- Template Group -->
+      <mcs-option-group *ngIf="customTemplates">
+        <ng-container *mcsOptionGroupHeader>
+          <span>{{ textContent.headers.templates }}</span>
+        </ng-container>
+
+        <mcs-option *ngFor="let template of customTemplates" [value]="template">
+          {{ template.itemName }}
+        </mcs-option>
+      </mcs-option-group>
+    </mcs-select>
+
+    <mcs-error mcsError errorState="required">
+      {{ textContent.errors.selectImageRequired }}
+    </mcs-error>
+  </mcs-form-field>
 
   <!-- Server RAM -->
-  <div class="field action-box">
+  <div class="action-box">
     <mcs-server-manage-scale [resource]="resource"
       (dataChange)="onScaleChanged($event)">
 
@@ -96,7 +90,7 @@
   </div>
 
   <!-- Storage Management -->
-  <div class="field action-box">
+  <div class="action-box">
     <mcs-server-manage-storage
       [storages]="resource?.storage"
       [minValueGB]="minimumStorageInGB"

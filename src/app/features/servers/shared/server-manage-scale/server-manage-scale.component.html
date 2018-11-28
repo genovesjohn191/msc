@@ -1,40 +1,42 @@
 <!-- Scale header and switcher -->
-<div class="space-between-inline-items">
+<mcs-item>
   <div><ng-content select="[mcsManageScaleHeader]"></ng-content></div>
-  <a *ngIf="inputManageType === inputManageTypeEnum.Custom" mcsId
-    (click)="onChangeInputManageType(inputManageTypeEnum.Slider)">
-    {{ textContent.sliderSwitch }}</a>
-  <a *ngIf="inputManageType === inputManageTypeEnum.Slider" mcsId
-    (click)="onChangeInputManageType(inputManageTypeEnum.Custom)">
-    {{ textContent.customSwitch }}</a>
-</div>
+  <div justify-self-right>
+    <a *ngIf="inputManageType === inputManageTypeEnum.Custom" mcsId
+      (click)="onChangeInputManageType(inputManageTypeEnum.Slider)">
+      {{ textContent.sliderSwitch }}</a>
+    <a *ngIf="inputManageType === inputManageTypeEnum.Slider" mcsId
+      (click)="onChangeInputManageType(inputManageTypeEnum.Custom)">
+      {{ textContent.customSwitch }}</a>
+  </div>
+</mcs-item>
 
-<div [ngSwitch]="inputManageType" [ngStyle]="{'min-height': '140px'}">
+<div [ngSwitch]="inputManageType">
   <!-- Slider selection mode -->
-  <div [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Slider">
+  <section [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Slider">
     <p>
       <span>{{ textContent.sliderMessage }} </span>
       <span>This VDC has {{ resourceAvailableMemoryMB | mcsDataSize: 'MB' }}
         RAM and {{ resourceAvailableCpu }} vCPU available.</span>
     </p>
 
-    <mcs-slider [min]="0" [max]="(sliderTable?.length - 1)"
-      mcsId="slider-storage"
-      [ngModel]="sliderValueIndex"
-      (ngModelChange)="onSliderChanged($event)"></mcs-slider>
-    <div class="inline-items centered">
-      <strong>
+    <div>
+      <mcs-slider [min]="0" [max]="(sliderTable?.length - 1)"
+        mcsId="slider-storage"
+        [ngModel]="sliderValueIndex"
+        (ngModelChange)="onSliderChanged($event)"></mcs-slider>
+      <strong display-block text-center>
         {{ sliderValue?.memoryMB | number }} {{ textContent.ramUnit }} {{ textContent.ramLabel }} /
         {{ sliderValue?.cpuCount | number}} {{ textContent.cpuUnit }}
       </strong>
     </div>
-  </div>
+  </section>
 
   <!-- Custom scale mode -->
-  <div [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Custom">
+  <section [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Custom">
     <p>{{ textContent.customMessage }}</p>
 
-    <form [formGroup]="fgServerScale" class="block-items-small">
+    <form [formGroup]="fgServerScale">
       <mcs-form-field class="form-field-size-small">
         <input mcsInput placeholder="Enter RAM"
           mcsId="input-ram" [formControl]="fcCustomMemory">
@@ -91,5 +93,5 @@
         </mcs-error>
       </mcs-form-field>
     </form>
-  </div>
+  </section>
 </div>

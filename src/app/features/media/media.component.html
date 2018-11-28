@@ -15,7 +15,7 @@
 
     <mcs-top-panel-item *mcsTopPanelItemDef [ngStyle]="{overflow: 'auto'}">
       <div class="listing-action-wrapper">
-        <div class="total-record-count right-align">
+        <div class="total-record-count">
           <span>{{ totalRecordsCount | mcsPlural:
                 textContent.dataSingular : textContent.dataPlural }}
           </span>
@@ -65,10 +65,10 @@
 
         <!-- Size Column -->
         <ng-container mcsColumnDef="size" [mcsColumnDefHidden]="isColumnHidden('size')">
-          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+          <mcs-header-cell *mcsHeaderCellDef hidden-small>
             {{ columnSettings.size.text }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
             {{ row.sizeMB | mcsDataSize: 'MB' }}
           </mcs-data-cell>
         </ng-container>
@@ -76,10 +76,10 @@
         <!-- Uploaded Date Column -->
         <ng-container mcsColumnDef="uploadedDate"
           [mcsColumnDefHidden]="isColumnHidden('uploadedDate')">
-          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+          <mcs-header-cell *mcsHeaderCellDef hidden-small>
             {{ columnSettings.uploadedDate.text }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
             {{ row.createdOn | mcsStdDateFormat }}
           </mcs-data-cell>
         </ng-container>

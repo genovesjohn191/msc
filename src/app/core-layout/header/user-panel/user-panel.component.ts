@@ -11,7 +11,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
   McsJob,
-  DeviceMode,
+  Breakpoint,
   McsCompany,
   DataStatus,
   RouteKey
@@ -47,7 +47,7 @@ export class UserPanelComponent implements OnInit, OnDestroy {
   public notifications: McsJob[];
   public hasConnectionError: boolean;
   public textContent: any;
-  public deviceType: DeviceMode;
+  public deviceType: Breakpoint;
 
   @ViewChild('notificationsPopover')
   public notificationsPopover: any;
@@ -128,7 +128,7 @@ export class UserPanelComponent implements OnInit, OnDestroy {
   ) {
     this.hasConnectionError = false;
     this.notifications = new Array();
-    this.deviceType = DeviceMode.Desktop;
+    this.deviceType = Breakpoint.Large;
   }
 
   public ngOnInit(): void {
@@ -176,10 +176,10 @@ export class UserPanelComponent implements OnInit, OnDestroy {
    */
   public onOpenNotificationPanel(): void {
     let displayNotificationsPage = !this.hasNotification
-      || this.deviceType !== DeviceMode.Desktop;
+      || this.deviceType !== Breakpoint.Large;
     if (displayNotificationsPage) { this.viewNotificationsPage(); }
 
-    let mobileMode = this.deviceType !== DeviceMode.Desktop
+    let mobileMode = this.deviceType !== Breakpoint.Large
       && !isNullOrEmpty(this.notificationsPopover);
     if (mobileMode) { this.notificationsPopover.close(); }
   }
@@ -221,9 +221,9 @@ export class UserPanelComponent implements OnInit, OnDestroy {
    */
   private _listenToBrowserResize(): void {
     // Subscribe to browser service
-    this._browserService.deviceTypeStream
+    this._browserService.breakpointChange()
       .pipe(takeUntil(this._destroySubject))
-      .subscribe((deviceType: DeviceMode) => {
+      .subscribe((deviceType: Breakpoint) => {
         this.deviceType = deviceType;
         this._changeDetectorRef.markForCheck();
       });
