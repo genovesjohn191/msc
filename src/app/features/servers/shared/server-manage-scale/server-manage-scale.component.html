@@ -1,7 +1,7 @@
 <!-- Scale header and switcher -->
 <mcs-item>
   <div><ng-content select="[mcsManageScaleHeader]"></ng-content></div>
-  <div justify-self-right>
+  <div mcsAlign="end">
     <a *ngIf="inputManageType === inputManageTypeEnum.Custom" mcsId
       (click)="onChangeInputManageType(inputManageTypeEnum.Slider)">
       {{ textContent.sliderSwitch }}</a>

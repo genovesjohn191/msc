@@ -9,7 +9,7 @@
         <p [innerHTML]="textContent.snapshotDescription | mcsNewLines"></p>
       </mcs-grid-column>
 
-      <mcs-grid-column align-items-end>
+      <mcs-grid-column mcsAlignContent="top-right">
         <div>
           <button mcsButton
             size="small" arrow="right"
@@ -44,7 +44,7 @@
                 </mcs-item>
               </mcs-grid-column>
 
-              <mcs-grid-column align-items-end>
+              <mcs-grid-column mcsAlignContent="middle-right">
                 <mcs-item [disabled]="!enabledActions">
                   <a (click)="restoreSnapshot(snapshot)"
                     mcsId

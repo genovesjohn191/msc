@@ -26,7 +26,7 @@
               (filtersChange)="updateColumnSettings($event)">
             </mcs-filter-selector>
           </ng-container>
-          <div justify-self-right hidden-small>
+          <div mcsAlign="end" hidden-small>
             <span>
               {{ totalRecordsCount | mcsPlural: textContent.dataSingular : textContent.dataPlural}}
             </span>

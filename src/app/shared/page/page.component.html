@@ -3,7 +3,7 @@
 
   <div class="left-nav-wrapper">
     <span class="horizontal-label" [hidden]="!leftPanelIsVisible">{{ leftPanelHeader }}</span>
-    <mcs-icon [key]="navIconKey" size="small" justify-self-right (click)="toggleLeftPanel()"
+    <mcs-icon [key]="navIconKey" size="small" mcsAlign="end" (click)="toggleLeftPanel()"
       mcsCursor="pointer" [hidden]="!hasLeftPanel"></mcs-icon>
   </div>
   <div *ngIf="!leftPanelIsVisible" (click)="toggleLeftPanel()"
