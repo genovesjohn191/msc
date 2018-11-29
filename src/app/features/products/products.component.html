@@ -4,7 +4,7 @@
     <ng-container *ngIf="selectedProduct$ | async as selectedProduct">
       <mcs-item full-width>
         <div><h1>{{ selectedProduct.name }}</h1></div>
-        <mcs-item justify-self-right>
+        <mcs-item mcsAlign="end">
           <h3>{{ selectedProduct.serviceIdPrefix }}</h3>
           <span read-only>v{{ selectedProduct.version }}</span>
         </mcs-item>

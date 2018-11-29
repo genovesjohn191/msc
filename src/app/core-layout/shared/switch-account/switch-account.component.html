@@ -24,7 +24,7 @@
     <ng-container *mcsListHeader>
       <mcs-item read-only>
         <span>Company Accounts</span>
-        <span justify-self-right *ngIf="dataStatus === dataStatusEnum.Success">
+        <span mcsAlign="end" *ngIf="dataStatus === dataStatusEnum.Success">
           {{ filteredRecordCount }}/{{ totalRecordsCount }}
         </span>
       </mcs-item>
@@ -41,7 +41,7 @@
 
       <mcs-icon color="white" [key]="getUserIconKey(item.status)" size="small"></mcs-icon>
       <a class="unstyled-link">{{ getTextFormat(item) }}</a>
-      <mcs-icon justify-self-right [key]="arrowRightBueIconKey" size="small"></mcs-icon>
+      <mcs-icon mcsAlign="end" [key]="arrowRightBueIconKey" size="small"></mcs-icon>
     </mcs-list-item>
   </mcs-list>
 

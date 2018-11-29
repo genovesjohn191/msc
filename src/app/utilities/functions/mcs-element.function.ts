@@ -2,6 +2,9 @@ import { isNullOrEmpty } from './mcs-object.function';
 
 /**
  * Get style of the element based on the property given
+ *
+ * `@Note` The style property maps onto the HTML style attribute,
+ * not the cascaded or computed style. Thats why this function was created.
  * @param element Target element to get the property value
  * @param property Property to read the value of (i.e: position, display, etc...)
  */

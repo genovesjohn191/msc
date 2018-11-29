@@ -4,7 +4,7 @@
     (change)="onServiceLevelChanged()"
     [placeholder]="textContent.placeholder"
     class="form-field-size-small"
-    justify-self-right>
+    mcsAlign="end">
     <mcs-option *ngFor="let level of serviceLevels" [value]="level">
       {{ level }}
     </mcs-option>

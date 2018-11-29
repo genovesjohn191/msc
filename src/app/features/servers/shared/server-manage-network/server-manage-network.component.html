@@ -16,7 +16,7 @@
 <!-- Network switcher -->
 <mcs-item>
   <h2 auto-width>IP address</h2>
-  <div justify-self-right>
+  <div mcsAlign="end">
     <a *ngIf="inputManageType === inputManageTypeEnum.Custom" mcsId
       (click)="onChangeInputManageType(inputManageTypeEnum.Buttons)">
       {{ textContent.buttonSwitch }}</a>
@@ -68,7 +68,7 @@
     <mcs-data-status [dataStatusFactory]="ipAddressesStatusFactory"
       *ngIf="isIpAddressInUsed(customInput?.value)">
       <mcs-data-status-success mcsDataSuccess display-inline-block>
-        <mcs-data-status-warning justify-content-start [@fadeInOut]>
+        <mcs-data-status-warning [@fadeInOut]>
           <span [innerHTML]="textContent.inUsedEnteredIpMessage | mcsNewLines"></span>
         </mcs-data-status-warning>
       </mcs-data-status-success>
