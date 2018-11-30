@@ -65,6 +65,6 @@ $navigation-desktop-macquarie-link-bg-color: $color-grey-01;
   width: $product-megamenu-desktop-width;
 
   .product-items {
-    @include align-items(none);
+    @include align-items(unset);
   }
 }

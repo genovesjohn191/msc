@@ -16,7 +16,7 @@ export class AddOnsModel {
 
   public setAntiMalwareOrderDetails<T>(properties: T, parentReferenceId: string): void {
     let orderDetails = new McsOrderItemCreate();
-    orderDetails.itemOrderType = OrderIdType.CreateAddOnAntiMalware;
+    orderDetails.itemOrderTypeId = OrderIdType.CreateAddOnAntiMalware;
     orderDetails.referenceId = this._antiMalwareGuid.toString();
     orderDetails.properties = properties;
     orderDetails.parentReferenceId = parentReferenceId;

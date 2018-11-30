@@ -35,7 +35,9 @@ import {
   McsServerClone,
   McsResource,
   RouteKey,
-  McsOrderCreateServer
+  McsOrderCreateServer,
+  OrderWorkflowAction,
+  McsOrderWorkflow
 } from '@app/models';
 import {
   ServersApiService,
@@ -119,9 +121,9 @@ export class ServerCreateFlyweightContext {
    * Sets / Add the job provided to the instance of the jobs
    * @param job Job to be added
    */
-  public setJob(job: McsJob): void {
+  public setJobs(...job: McsJob[]): void {
     if (isNullOrEmpty(job)) { return; }
-    this._jobs.push(job);
+    this._jobs = job;
     this.jobsChanges.next(this._jobs);
   }
 
@@ -134,6 +136,18 @@ export class ServerCreateFlyweightContext {
     if (isNullOrEmpty(error)) { return; }
     this._error = error;
     this.errorChanges.next(this._error);
+  }
+
+  public createOrderWorkflow(): Observable<McsOrder> {
+    if (isNullOrEmpty(this.order)) { return; }
+    let workDetails = new McsOrderWorkflow();
+    workDetails.action = OrderWorkflowAction.Submit;
+
+    return this._ordersRepository.createOrderWorkflow(this.order.id, workDetails).pipe(
+      tap((orderDetails) => {
+        this.setJobs(...orderDetails.jobs);
+      })
+    );
   }
 
   public updateAddOns(newLineItems: McsOrderItemCreate[]): Observable<McsOrder> {
@@ -181,7 +195,7 @@ export class ServerCreateFlyweightContext {
 
       // Create Order item
       let orderItem = new McsOrderItemCreate();
-      orderItem.itemOrderType = OrderIdType.CreateManagedServer;
+      orderItem.itemOrderTypeId = OrderIdType.CreateManagedServer;
       orderItem.referenceId = McsGuid.newGuid().toString();
       orderItem.parentServiceId = resourceName;
       orderItem.properties = McsOrderCreateServer.createInstanceBySelfManaged(serverModel);
@@ -198,7 +212,7 @@ export class ServerCreateFlyweightContext {
     return serverInstance.pipe(
       tap((response) => {
         response instanceof McsJob ?
-          this.setJob(response) :
+          this.setJobs(response) :
           this._setOrderDetails(response);
         this._updateOrderStateChanges.next(DataStatus.Success);
       }),

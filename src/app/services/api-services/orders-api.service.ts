@@ -20,7 +20,9 @@ import {
   McsOrderItemType,
   McsOrderCreate,
   McsOrderUpdate,
-  McsOrderMerge
+  McsOrderMerge,
+  McsOrderItem,
+  McsOrderWorkflow
 } from '@app/models';
 
 @Injectable()
@@ -127,7 +129,7 @@ export class OrdersApiService {
    */
   public getOrderItemType(id: any): Observable<McsApiSuccessResponse<McsOrderItemType>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/order/items/types/${id}`;
+    mcsApiRequestParameter.endPoint = `/orders/items/types/${id}`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -231,13 +233,37 @@ export class OrdersApiService {
       );
   }
 
+  public getOrderWorkflow(id: any): Observable<McsApiSuccessResponse<McsOrderItem>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/orders/${id}/workflow`;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        finalize(() => {
+          this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+        }),
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsOrderItem>(McsOrder, response);
+
+          this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+          this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+          this._loggerService.traceInfo(`converted response:`, apiResponse);
+          return apiResponse;
+        })
+      );
+  }
+
   /**
-   * Submits the order to orchestration
+   * Creates the order workflow
    * @param orderData Order data to be created
    */
-  public submitOrder(id: any): Observable<McsApiSuccessResponse<McsOrder>> {
+  public createOrderWorkflow(id: any, workflowDetails: McsOrderWorkflow):
+    Observable<McsApiSuccessResponse<McsOrder>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/orders/${id}/submit`;
+    mcsApiRequestParameter.endPoint = `/orders/${id}/workflow`;
+    mcsApiRequestParameter.recordData = serializeObjectToJson(workflowDetails);
 
     return this._mcsApiService.post(mcsApiRequestParameter)
       .pipe(

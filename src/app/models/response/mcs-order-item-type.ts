@@ -6,12 +6,8 @@ import {
 import { McsEntityBase } from '../mcs-entity.base';
 
 export class McsOrderItemType extends McsEntityBase {
-  public typeId: string;
-  public name: string;
-  public description: string;
-  public productId: string;
-  public realtimeProvisioningSupport: boolean;
-  public parameters: any[];
+  public elementCode: string;
+  public productCode: string;
 
   @JsonProperty({
     type: OrderType,
@@ -20,13 +16,23 @@ export class McsOrderItemType extends McsEntityBase {
   })
   public orderType: OrderType;
 
+  public orderChangeType: string;
+  public productId: string;
+  public productOrderType: string;
+  public automatedProvisioningAvailable: true;
+  public description: string;
+  public provisioningEndpoint: string;
+
   constructor() {
     super();
-    this.typeId = undefined;
-    this.name = undefined;
+    this.automatedProvisioningAvailable = undefined;
     this.description = undefined;
+    this.elementCode = undefined;
+    this.orderChangeType = undefined;
+    this.orderType = undefined;
+    this.productCode = undefined;
     this.productId = undefined;
-    this.realtimeProvisioningSupport = undefined;
-    this.parameters = undefined;
+    this.productOrderType = undefined;
+    this.provisioningEndpoint = undefined;
   }
 }

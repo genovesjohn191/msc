@@ -124,17 +124,17 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
   }
 
   /**
-   * Returns the check icon key
+   * Returns the success icon key
    */
-  public get checkIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_CHECK;
+  public get successIconKey(): string {
+    return CoreDefinition.ASSETS_SVG_SUCCESS;
   }
 
   /**
-   * Returns the close icon key
+   * Returns the error icon key
    */
-  public get closeIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_CLOSE;
+  public get errorIconKey(): string {
+    return CoreDefinition.ASSETS_SVG_ERROR;
   }
 
   /**

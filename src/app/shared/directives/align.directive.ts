@@ -6,17 +6,13 @@ import {
   AfterViewInit
 } from '@angular/core';
 import { Subject } from 'rxjs';
-import {
-  startWith,
-  takeUntil
-} from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import {
   McsBrowserService,
   McsUniqueId
 } from '@app/core';
 import {
   McsAlignmentType,
-  getElementStyle,
   isNullOrEmpty
 } from '@app/utilities';
 
@@ -52,16 +48,6 @@ export class AlignDirective implements AfterViewInit {
   }
 
   /**
-   * Validates the parent element display settings
-   */
-  private _validateParentElementDisplay(): void {
-    let displayType = getElementStyle(this.hostElement.parentElement, 'display');
-    if (displayType !== 'flex') {
-      throw new Error('The element parent element container is not a flex.');
-    }
-  }
-
-  /**
    * Creates the spacer element
    */
   private _createSpacerElements(): void {
@@ -80,7 +66,7 @@ export class AlignDirective implements AfterViewInit {
   /**
    * Attach the spacer element into position
    */
-  private attachSpacerElementIntoPosition(): void {
+  private _attachSpacerElementIntoPosition(): void {
     // Invoke alignment
     let attachSpacer = this._alignmentTable.get(this.alignment);
     if (!isNullOrEmpty(attachSpacer)) {
@@ -135,13 +121,11 @@ export class AlignDirective implements AfterViewInit {
    */
   private _subscribeToBreakpointChanges(): void {
     this._browserService.breakpointChange().pipe(
-      startWith(null),
       takeUntil(this._destroySubject)
     ).subscribe(() => {
       Promise.resolve().then(() => {
-        this._validateParentElementDisplay();
         this._createSpacerElements();
-        this.attachSpacerElementIntoPosition();
+        this._attachSpacerElementIntoPosition();
       });
     });
   }

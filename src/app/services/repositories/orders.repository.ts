@@ -12,7 +12,9 @@ import {
   McsOrder,
   McsOrderCreate,
   McsOrderUpdate,
-  McsOrderItemCreate
+  McsOrderItemCreate,
+  McsOrderItem,
+  McsOrderWorkflow
 } from '@app/models';
 import { OrdersApiService } from '../api-services/orders-api.service';
 
@@ -24,10 +26,22 @@ export class OrdersRepository extends McsRepositoryBase<McsOrder> {
     super();
   }
 
+  public createOrderWorkflow(id: any, workflowDetails: McsOrderWorkflow): Observable<McsOrder> {
+    return this._ordersApiService.createOrderWorkflow(id, workflowDetails).pipe(
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
   public createOrder(orderData: McsOrderCreate): Observable<McsOrder> {
     return this._ordersApiService.createOrder(orderData).pipe(
       map((response) => getSafeProperty(response, (obj) => obj.content)),
       tap((order) => this._appendCreatedOrder(order))
+    );
+  }
+
+  public getOrderWorkflow(id: any): Observable<McsOrderItem> {
+    return this._ordersApiService.getOrderWorkflow(id).pipe(
+      map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
 
@@ -52,12 +66,6 @@ export class OrdersRepository extends McsRepositoryBase<McsOrder> {
 
   public deleteOrder(id: any): Observable<McsOrder> {
     return this._ordersApiService.deleteOrder(id).pipe(
-      map((response) => getSafeProperty(response, (obj) => obj.content))
-    );
-  }
-
-  public submitOrder(id: any): Observable<McsOrder> {
-    return this._ordersApiService.submitOrder(id).pipe(
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
@@ -118,7 +126,7 @@ export class OrdersRepository extends McsRepositoryBase<McsOrder> {
       orderItemUpdate.properties = item.properties;
       orderItemUpdate.parentServiceId = item.serviceId;
       orderItemUpdate.parentReferenceId = item.parentReferenceId;
-      orderItemUpdate.itemOrderType = item.itemOrderType;
+      orderItemUpdate.itemOrderTypeId = item.itemOrderTypeId;
       orderUpdateDetails.items.push(orderItemUpdate);
     });
     // Merge the new line items into original order

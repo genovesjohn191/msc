@@ -1,18 +1,24 @@
 // Form field size
+$form-field-size-xsmall: 150px;
 $form-field-size-small: 200px;
 $form-field-size-medium: 300px;
 $form-field-size-large: 400px;
 
-.form-field-size-small {
-  max-width: $form-field-size-small;
-}
+$form-field-size-map: (
+  xsmall: $form-field-size-xsmall,
+  small: $form-field-size-small,
+  medium: $form-field-size-medium,
+  large: $form-field-size-large,
+) !default;
 
-.form-field-size-medium {
-  max-width: $form-field-size-medium;
-}
+@each $field-size-key in map-keys($form-field-size-map) {
+  $form-field-size-value: map-get($form-field-size-map, $field-size-key);
 
-.form-field-size-large {
-  max-width: $form-field-size-large;
+  // Creates the hidden attributes
+  .form-field-size-#{$field-size-key} {
+    width: 100%;
+    max-width: $form-field-size-value;
+  }
 }
 
 // Input

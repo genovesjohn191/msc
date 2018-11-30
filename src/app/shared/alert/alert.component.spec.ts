@@ -90,28 +90,24 @@ describe('AlertComponent', () => {
   });
 
   describe('getAlertIconKey()', () => {
-    it(`should set the alert success icon color to green and the key icon`, () => {
-      expect(component.alertSuccess.alertIconDetails.key)
-        .toBe(CoreDefinition.ASSETS_FONT_CHECK_CIRCLE);
-      expect(component.alertSuccess.alertIconDetails.iconColor).toBe('green');
+    it(`should set the success icon when the alert type is success`, () => {
+      expect(component.alertSuccess.iconStatusKey)
+        .toBe(CoreDefinition.ASSETS_SVG_SUCCESS);
     });
 
-    it(`should set the alert error icon color to red and the key icon`, () => {
-      expect(component.alertError.alertIconDetails.key)
-        .toBe(CoreDefinition.ASSETS_FONT_CLOSE_CIRCLE);
-      expect(component.alertError.alertIconDetails.iconColor).toBe('red');
+    it(`should set the error icon when the alert type is error`, () => {
+      expect(component.alertError.iconStatusKey)
+        .toBe(CoreDefinition.ASSETS_SVG_ERROR);
     });
 
-    it(`should set the alert warning icon color to red and the key icon`, () => {
-      expect(component.alertWarning.alertIconDetails.key)
-        .toBe(CoreDefinition.ASSETS_FONT_WARNING);
-      expect(component.alertWarning.alertIconDetails.iconColor).toBe('red');
+    it(`should set the warning icon when the alert type is warning`, () => {
+      expect(component.alertWarning.iconStatusKey)
+        .toBe(CoreDefinition.ASSETS_SVG_WARNING);
     });
 
-    it(`should set the alert info icon color to green and the key icon`, () => {
-      expect(component.alertInfo.alertIconDetails.key)
-        .toBe(CoreDefinition.ASSETS_FONT_INFORMATION_CIRCLE);
-      expect(component.alertInfo.alertIconDetails.iconColor).toBe('primary');
+    it(`should set the info icon when the alert type is info`, () => {
+      expect(component.alertInfo.iconStatusKey)
+        .toBe(CoreDefinition.ASSETS_SVG_INFO);
     });
   });
 });

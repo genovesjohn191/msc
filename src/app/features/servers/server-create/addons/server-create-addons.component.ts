@@ -30,6 +30,7 @@ import { ServerCreateFlyweightContext } from '../server-create-flyweight.context
 export class ServerCreateAddOnsComponent implements OnInit, OnDestroy {
   public textContent: any;
   public addOnsDetails: AddOnsModel = new AddOnsModel();
+
   private _antiMalwareIsEnabled: boolean;
   private _selectedItemsChanges = new Subject<any[]>();
   private _destroySubject = new Subject<void>();
