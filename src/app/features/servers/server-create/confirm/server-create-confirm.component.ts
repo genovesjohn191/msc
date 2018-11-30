@@ -1,11 +1,13 @@
 import {
   Component,
   OnInit,
-  OnDestroy,
   Input,
   ChangeDetectorRef
 } from '@angular/core';
-import { throwError } from 'rxjs';
+import {
+  throwError,
+  Observable
+} from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import {
   McsTextContentProvider,
@@ -18,14 +20,17 @@ import {
 } from '@app/models';
 import { OrderItemTypesRepository } from '@app/services';
 import { ServerOrderDetail } from './server-order-detail';
+import { ServerCreateFlyweightContext } from '../server-create-flyweight.context';
 
 @Component({
   selector: 'mcs-server-create-confirm',
   templateUrl: 'server-create-confirm.component.html'
 })
 
-export class ServerCreateConfirmComponent implements OnInit, OnDestroy {
+export class ServerCreateConfirmComponent implements OnInit {
   public textContent: any;
+  public order$: Observable<McsOrder>;
+  public createOrderWorkflow = this._createOrderWorkflow.bind(this);
 
   @Input()
   public order: McsOrder;
@@ -40,12 +45,13 @@ export class ServerCreateConfirmComponent implements OnInit, OnDestroy {
 
   public itemTypesStatusFactory: McsDataStatusFactory<McsOrderItemType[]>;
   public orderDataSource: ServerOrderDetail[];
-  public dataColumns = ['charge', 'monthlyFee', 'oneOffCharge'];
+  public dataColumns: string[] = [];
 
   constructor(
     private _textContentProvider: McsTextContentProvider,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _orderItemTypesRepository: OrderItemTypesRepository
+    private _orderItemTypesRepository: OrderItemTypesRepository,
+    private _serverCreateFlyweightContext: ServerCreateFlyweightContext
   ) {
     this.orderDataSource = new Array();
     this.itemTypesStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
@@ -54,19 +60,8 @@ export class ServerCreateConfirmComponent implements OnInit, OnDestroy {
   public ngOnInit() {
     this.textContent = this._textContentProvider.content.servers.createServer.serverConfirmStep;
     this._getItemTypes();
-    this._changeDetectorRef.markForCheck();
-  }
-
-  public ngOnDestroy() {
-    // unsubscribeSafely(this.serversSubscription);
-  }
-
-  public updateOrder(): void {
-    // Do the updating of order here
-  }
-
-  public submitOrder(): void {
-    // Do the submitting of order right after updating the whole order
+    this._subscribeToOrderChanges();
+    this._setDataColumns();
   }
 
   /**
@@ -82,36 +77,31 @@ export class ServerCreateConfirmComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe((response) => {
-        this._createOrdersTable(response);
         this.itemTypesStatusFactory.setSuccessful(response);
       });
   }
 
   /**
-   * Creates the order table based on order data and item types
-   * @param orderItemTypes Order item type from where to get the order item details
+   * Sets data column for the corresponding table
    */
-  private _createOrdersTable(orderItemTypes: McsOrderItemType[]): void {
-    let orderIsEmpty = isNullOrEmpty(orderItemTypes) || isNullOrEmpty(this.order);
-    if (orderIsEmpty) { return; }
+  private _setDataColumns(): void {
+    this.dataColumns = Object.keys(this.textContent.orderDetails.columnHeaders);
+    if (isNullOrEmpty(this.dataColumns)) {
+      throw new Error('column definition for order charges was not defined');
+    }
+  }
 
-    // Add per-item details of order
-    this.order.items.forEach((_item) => {
-      let itemDetails = orderItemTypes.find((itemType) => {
-        return itemType.id === _item.id;
-      });
-      if (isNullOrEmpty(itemDetails)) { return; }
+  /**
+   * Subscribes to order changes
+   */
+  private _subscribeToOrderChanges(): void {
+    this.order$ = this._serverCreateFlyweightContext.orderChanges;
+  }
 
-      this.orderDataSource.push({
-        header: itemDetails.name,
-        charges: _item.charges
-      } as ServerOrderDetail);
-    });
-
-    // Add the total details of order
-    this.orderDataSource.push({
-      header: 'Total',
-      charges: this.order.charges
-    } as ServerOrderDetail);
+  /**
+   * Creates the order workflow based on the order contents
+   */
+  private _createOrderWorkflow(): Observable<McsOrder> {
+    return this._serverCreateFlyweightContext.createOrderWorkflow();
   }
 }

@@ -10,6 +10,13 @@ $items-iterval: 6px;
     margin-top: $items-iterval;
   }
 
+  // Forces the headings width to be auto
+  @for $index from 1 through 6 {
+    h#{$index} {
+      width: auto
+    }
+  }
+
   &.item-inline {
     @include align-items(center);
     @include set-items-interval($item-offset, horizontal);

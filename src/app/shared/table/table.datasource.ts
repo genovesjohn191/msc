@@ -49,7 +49,7 @@ export class TableDataSource<T> implements McsDataSource<T> {
             this.dataLoadingStream.next(DataStatus.InProgress);
           }
           return this._dataRecords.pipe(
-            map((response) => response.concat(Array.from(this._fakeDataRecords)))
+            map((response) => response && response.concat(Array.from(this._fakeDataRecords)))
           );
         }),
         map((records) => {

@@ -43,24 +43,24 @@
       </mcs-form-field>
       <p>{{ textContent.orderDetails.description }}</p>
 
-      <mcs-table [dataSource]="orderDataSource">
-        <!-- Charge Column -->
-        <ng-container mcsColumnDef="charge">
+      <mcs-table [dataSource]="(order$ | async)?.items">
+        <!-- Description Column -->
+        <ng-container mcsColumnDef="description">
           <mcs-header-cell *mcsHeaderCellDef>
-            {{ textContent.orderDetails.columnHeaders.charge }}
+            {{ textContent.orderDetails.columnHeaders.description }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
-            {{ row.charge }}
+            {{ row.description }}
           </mcs-data-cell>
         </ng-container>
 
-        <!-- Monthly Fee Column -->
-        <ng-container mcsColumnDef="monthlyFee">
+        <!-- Monthly Charge Column -->
+        <ng-container mcsColumnDef="monthlyCharge">
           <mcs-header-cell *mcsHeaderCellDef>
-            {{ textContent.orderDetails.columnHeaders.monthlyFee }}
+            {{ textContent.orderDetails.columnHeaders.monthlyCharge }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
-            {{ row.monthlyFee }}
+            ${{ row.charges?.monthly }}
           </mcs-data-cell>
         </ng-container>
 
@@ -70,7 +70,7 @@
             {{ textContent.orderDetails.columnHeaders.oneOffCharge }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
-            {{ row.oneOffCharge }}
+            ${{ row.charges?.oneOff }}
           </mcs-data-cell>
         </ng-container>
 
@@ -124,8 +124,9 @@
     <!-- Wizard action -->
     <div class="action-items">
       <a mcsWizardStepPrevious mcsId="step-3-back">Back</a>
-      <button mcsButton size="small" arrow="right"
-        mcsWizardStepNext mcsId="step-3-next">Next</button>
+      <button mcsButton size="small" arrow="right" mcsId="step-3-next"
+        mcsWizardStepNext
+        [mcsWizardStepNextWhen]="createOrderWorkflow">Next</button>
     </div>
   </div>
 </div>

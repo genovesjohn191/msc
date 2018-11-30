@@ -23,7 +23,7 @@ export class McsOrderItem extends McsEntityBase {
   public referenceId: string;
   public parentReferenceId: string;
   public orderItemId: string;
-  public itemOrderType: string;
+  public itemOrderTypeId: string;
   public parentServiceId: string;
 
   @JsonProperty({
@@ -67,7 +67,7 @@ export class McsOrderItem extends McsEntityBase {
     this.createdOn = undefined;
     this.description = undefined;
     this.id = undefined;
-    this.itemOrderType = undefined;
+    this.itemOrderTypeId = undefined;
     this.itemProvisioningStatus = undefined;
     this.jobId = undefined;
     this.modifiedBy = undefined;

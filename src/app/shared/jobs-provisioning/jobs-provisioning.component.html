@@ -33,7 +33,7 @@
                 <!-- Success -->
                 <ng-container *ngSwitchCase="dataStatusEnum.Success">
                   <mcs-item>
-                    <mcs-icon [key]="checkIconKey" size="small" color="green"></mcs-icon>
+                    <mcs-icon [key]="successIconKey" size="small"></mcs-icon>
                     <span read-only>{{ task.description }}</span>
                   </mcs-item>
                 </ng-container>
@@ -41,7 +41,7 @@
                 <!-- Error -->
                 <ng-container *ngSwitchCase="dataStatusEnum.Error">
                   <mcs-item>
-                    <mcs-icon [key]="closeIconKey" size="small" color="red"></mcs-icon>
+                    <mcs-icon [key]="errorIconKey" size="small"></mcs-icon>
                     <span read-only>{{ task.description }}</span>
                   </mcs-item>
                 </ng-container>
@@ -64,7 +64,7 @@
               <!-- Success -->
               <ng-container *ngSwitchCase="dataStatusEnum.Success">
                 <mcs-item>
-                  <mcs-icon [key]="checkIconKey" size="small" color="green"></mcs-icon>
+                  <mcs-icon [key]="successIconKey" size="small"></mcs-icon>
                   <span>{{ textContent.deploymentCompleted }}</span>
                 </mcs-item>
                 <mcs-item>

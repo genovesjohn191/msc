@@ -4,8 +4,8 @@
   @include display-flex(column);
   @include box-sizing(border-box);
   position: relative;
-  flex-basis: 0;
-  flex-grow: 0;
+  flex-basis: 0px;
+  flex-grow: 0px;
 
   width: 100%;
   max-width: 100%;

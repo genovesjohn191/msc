@@ -11,8 +11,8 @@ import { AnimationEvent } from '@angular/animations';
 import { CoreDefinition } from '@app/core';
 import {
   McsStatusType,
-  McsColorType,
-  animateFactory
+  animateFactory,
+  isNullOrEmpty
 } from '@app/utilities';
 
 @Component({
@@ -34,6 +34,7 @@ import {
 
 export class AlertComponent {
   public animationState = 'transform';
+  public iconStatusKey: string;
 
   @Input()
   public header: string;
@@ -43,10 +44,11 @@ export class AlertComponent {
   public set type(value: McsStatusType) {
     if (value !== this._type) {
       this._type = value;
+      this._setIconStatusKeyByType();
       this._changeDetectorRef.markForCheck();
     }
   }
-  private _type: McsStatusType = 'success';
+  private _type: McsStatusType;
 
   /**
    * Returns the host class based on its type
@@ -55,39 +57,14 @@ export class AlertComponent {
     return `${this._type} alert-wrapper`;
   }
 
+  private _iconTableMap: Map<McsStatusType, string>;
+
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private _elementRef: ElementRef,
     private _renderer: Renderer2
-  ) { }
-
-  /**
-   * Returns the alert icon key and color based on status
-   */
-  public get alertIconDetails(): { key, iconColor } {
-    let _iconKey: string;
-    let _iconColor: McsColorType;
-
-    switch (this.type) {
-      case 'error':
-        _iconKey = CoreDefinition.ASSETS_FONT_CLOSE_CIRCLE;
-        _iconColor = 'red';
-        break;
-      case 'warning':
-        _iconKey = CoreDefinition.ASSETS_FONT_WARNING;
-        _iconColor = 'red';
-        break;
-      case 'info':
-        _iconKey = CoreDefinition.ASSETS_FONT_INFORMATION_CIRCLE;
-        _iconColor = 'primary';
-        break;
-      case 'success':
-      default:
-        _iconKey = CoreDefinition.ASSETS_FONT_CHECK_CIRCLE;
-        _iconColor = 'green';
-        break;
-    }
-    return { key: _iconKey, iconColor: _iconColor };
+  ) {
+    this._createIconTable();
   }
 
   /**
@@ -105,5 +82,25 @@ export class AlertComponent {
     if (event.toState !== 'void') { return; }
     let hostElement = this._elementRef.nativeElement as HTMLElement;
     this._renderer.removeChild(hostElement.parentNode, hostElement);
+  }
+
+  /**
+   * Creates the icon key table
+   */
+  private _setIconStatusKeyByType(): void {
+    let iconKey = this._iconTableMap.get(this.type);
+    this.iconStatusKey = iconKey || CoreDefinition.ASSETS_SVG_INFO;
+  }
+
+  /**
+   * Creates the icon table map
+   */
+  private _createIconTable(): void {
+    if (!isNullOrEmpty(this._iconTableMap)) { return; }
+    this._iconTableMap = new Map<McsStatusType, string>();
+    this._iconTableMap.set('error', CoreDefinition.ASSETS_SVG_ERROR);
+    this._iconTableMap.set('warning', CoreDefinition.ASSETS_SVG_WARNING);
+    this._iconTableMap.set('info', CoreDefinition.ASSETS_SVG_INFO);
+    this._iconTableMap.set('success', CoreDefinition.ASSETS_SVG_SUCCESS);
   }
 }
