@@ -3,8 +3,8 @@
   @description: Creates color attributes for common of the color settings
 **/
 
-@each $color-key in map-keys($color-scheme-map) {
-  $color-object: map-get($color-scheme-map, $color-key);
+@each $color-key in map-keys($color-definitions) {
+  $color-object: map-get($color-definitions, $color-key);
 
   $color-base: map-get($color-object, base);
   $color-contrast: map-get($color-object, contrast);

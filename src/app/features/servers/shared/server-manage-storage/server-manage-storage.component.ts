@@ -49,10 +49,7 @@ const DEFAULT_STORAGE_STEPS = 10;
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     animateFactory.fadeIn
-  ],
-  host: {
-    'class': 'server-manage-storage-wrapper block block-items-medium',
-  }
+  ]
 })
 
 export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestroy {

@@ -471,56 +471,6 @@
   cursor: grabbing;
 }
 
-// Sets the items inline with each other
-// Usage:
-// .mcs-slider {
-//   @include inline-items(10px, pink);
-// }
-@mixin inline-items($interval, $item-border-color) {
-  @include flex(0 0 auto);
-  @include display-flex(row);
-  @include align-items(center);
-  @if $interval != null {
-    @include set-items-interval($interval, horizontal);
-  }
-
-  &.bordered {
-    @if $interval != null {
-      @include set-items-interval($interval * 0.5, horizontal);
-      @include set-items-padding($interval * 0.5, horizontal);
-    }
-    @include set-items-divider($divider-light-color, horizontal);
-  }
-
-  &.centered {
-    justify-content: center;
-  }
-}
-
-// Sets the items block with each other
-// Usage:
-// .mcs-slider {
-//   @include block-items(10px, pink);
-// }
-@mixin block-items($interval, $item-border-color) {
-  @include display-flex(column);
-  @if $interval != null {
-    @include set-items-interval($interval, vertical);
-  }
-
-  &.bordered {
-    @if $interval != null {
-      @include set-items-interval($interval * 0.5, vertical);
-      @include set-items-padding($interval * 0.5, vertical);
-    }
-    @include set-items-divider($divider-light-color, vertical);
-  }
-
-  &.centered {
-    @include align-items(center);
-  }
-}
-
 // Sets all the heading size based on scale by default the size is 8
 // Usage:
 // .mcs-slider {

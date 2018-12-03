@@ -48,12 +48,12 @@ describe('QuoteWidgetComponent', () => {
             <span>Total Cost: $200</span>
           </ng-container>
 
-          <div class="space-between-inline-items">
+          <div>
             <span>- Monthly cost</span>
             <span>: $150</span>
           </div>
 
-          <div class="space-between-inline-items">
+          <div>
             <span>- One-off cost</span>
             <span>: $50</span>
           </div>

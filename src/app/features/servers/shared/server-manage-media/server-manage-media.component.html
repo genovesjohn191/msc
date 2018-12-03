@@ -1,14 +1,18 @@
-<!-- Media header -->
-<div><ng-content select="[mcsManageMediaHeader]"></ng-content></div>
+<section>
+  <!-- Media header -->
+  <ng-content select="[mcsManageMediaHeader]"></ng-content>
 
-<!-- Media selection -->
-<mcs-form-field [@fadeIn] *ngIf="media">
-  <mcs-select [(ngModel)]="selectedMedia" placeholder="Select media" mcsId="select-media">
-    <mcs-option *ngFor="let medium of media" [value]="medium">
-      {{ medium.name }}
-    </mcs-option>
-  </mcs-select>
-</mcs-form-field>
-<mcs-data-status-empty [@fadeIn] *ngIf="!media">
-  <span>No media to attach.</span>
-</mcs-data-status-empty>
+  <!-- Media selection -->
+  <mcs-form-field [@fadeIn] *ngIf="media">
+    <mcs-select [(ngModel)]="selectedMedia" placeholder="Select media" mcsId="select-media">
+      <mcs-option *ngFor="let medium of media" [value]="medium">
+        {{ medium.name }}
+      </mcs-option>
+    </mcs-select>
+  </mcs-form-field>
+
+  <!-- No media status -->
+  <mcs-data-status-empty [@fadeIn] *ngIf="!media">
+    <span>No media to attach.</span>
+  </mcs-data-status-empty>
+</section>

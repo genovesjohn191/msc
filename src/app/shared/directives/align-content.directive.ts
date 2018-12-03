@@ -103,16 +103,6 @@ export class AlignContentDirective implements OnChanges, AfterViewInit, OnDestro
   }
 
   /**
-   * Validates the host display type based on the display property
-   */
-  private _validateHostDisplayType(): void {
-    let hostDisplayType = getElementStyle(this.hostElement, 'display');
-    if (hostDisplayType !== 'flex') {
-      throw new Error('The element display type is not a flex.');
-    }
-  }
-
-  /**
    * Validates the host alignment and throw error if the host element is not a flex
    */
   private _validateAlignment(): void {
@@ -205,7 +195,6 @@ export class AlignContentDirective implements OnChanges, AfterViewInit, OnDestro
       takeUntil(this._destroySubject)
     ).subscribe(() => {
       Promise.resolve().then(() => {
-        this._validateHostDisplayType();
         this._validateAlignment();
         this._updateContainerLayout();
       });

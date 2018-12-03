@@ -6,22 +6,24 @@
 
   &.list-horizontal {
     @include display-flex(row);
+
+    @each $space-key in map-keys($space-breakpoints) {
+      $space-value: map-get($space-breakpoints, $space-key);
+      &.#{$space-key} {
+        @include set-items-interval($space-value, horizontal);
+      }
+    }
   }
 
   &.list-vertical {
     @include display-flex(column);
-  }
 
-  &.xsmall {
-    @include set-items-interval($space-xsmall);
-  }
-
-  &.small {
-    @include set-items-interval($space-small);
-  }
-
-  &.medium {
-    @include set-items-interval($space-medium);
+    @each $space-key in map-keys($space-breakpoints) {
+      $space-value: map-get($space-breakpoints, $space-key);
+      &.#{$space-key} {
+        @include set-items-interval($space-value, vertical);
+      }
+    }
   }
 
   .list-item-wrapper {

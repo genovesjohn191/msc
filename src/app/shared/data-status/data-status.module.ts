@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { IconModule } from '../icon/icon.module';
 import { LoaderModule } from '../loader/loader.module';
 import { DirectivesModule } from '../directives/directives.module';
+import { ItemModule } from '../item/item.module';
 import { DataStatusComponent } from './data-status.component';
 import { DataStatusWarningComponent } from './data-status-warning/data-status-warning.component';
 import { DataStatusErrorComponent } from './data-status-error/data-status-error.component';
@@ -23,7 +24,8 @@ import {
     CommonModule,
     IconModule,
     LoaderModule,
-    DirectivesModule
+    DirectivesModule,
+    ItemModule
   ],
   exports: [
     DataStatusComponent,
