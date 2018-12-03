@@ -4,15 +4,17 @@
 
   <!-- Default account -->
   <mcs-list header="Default">
-    <mcs-list-item class="inline-items-xsmall"
-      (click)="selectAccount(defaultAccount)" mcsCursor="pointer"
+    <mcs-list-item mcsCursor="pointer"
+      (click)="selectAccount(defaultAccount)"
       mcsId="select-account"
       mcsEventTracker="use-default-account"
       mcsEventCategory="navigation"
       mcsEventLabel="switch-account-panel">
 
-      <mcs-icon [key]="arrowUpBueIconKey" size="small"></mcs-icon>
-      <a class="unstyled-link">{{ getTextFormat(defaultAccount) }}</a>
+      <mcs-item>
+        <mcs-icon [key]="arrowUpBueIconKey" size="small"></mcs-icon>
+        <a class="unstyled-link">{{ getTextFormat(defaultAccount) }}</a>
+      </mcs-item>
     </mcs-list-item>
   </mcs-list>
 
@@ -31,7 +33,6 @@
     </ng-container>
 
     <mcs-list-item *ngFor="let item of displayedCompanies; trackBy: trackByFn"
-      class="inline-items-xsmall"
       (click)="selectAccount(item)" mcsCursor="pointer"
       mcsId="switch-to-account"
       mcsEventTracker="switch-to-account"
@@ -39,15 +40,17 @@
       mcsEventLabel="switch-account-panel"
       [mcsTooltip]="getStatusText(item.status)" mcsTooltipColor="light">
 
-      <mcs-icon color="white" [key]="getUserIconKey(item.status)" size="small"></mcs-icon>
-      <a class="unstyled-link">{{ getTextFormat(item) }}</a>
-      <mcs-icon mcsAlign="end" [key]="arrowRightBueIconKey" size="small"></mcs-icon>
+      <mcs-item>
+        <mcs-icon color="white" [key]="getUserIconKey(item.status)" size="small"></mcs-icon>
+        <a class="unstyled-link">{{ getTextFormat(item) }}</a>
+        <mcs-icon mcsAlign="end" [key]="arrowRightBueIconKey" size="small"></mcs-icon>
+      </mcs-item>
     </mcs-list-item>
   </mcs-list>
 
   <!-- Data obtainment status -->
   <ng-container *ngIf="dataStatus !== dataStatusEnum.Success">
-    <div [ngSwitch]="dataStatus" class="inline-items-small centered">
+    <mcs-item [ngSwitch]="dataStatus" mcsAlignContent="middle-center">
       <div *ngSwitchCase="dataStatusEnum.InProgress">
         <mcs-loader size="small"></mcs-loader>
       </div>
@@ -62,7 +65,7 @@
           mcsEventCategory="navigation"
           mcsEventLabel="switch-account-panel"> {{ textContent.retry }}</a>
       </div>
-    </div>
+    </mcs-item>
   </ng-container>
 
   <!-- Paginator that displays when data obtainment was success -->

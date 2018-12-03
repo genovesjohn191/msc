@@ -3,28 +3,33 @@
   <div class="product-megamenu-wrapper" mcsScrollable>
     <mcs-data-status [dataStatusFactory]="productsStatusFactory">
       <mcs-data-status-success mcsDataSuccess>
-        <div class="inline-items-medium bordered product-items">
-          <ng-container *ngFor="let catalog of productCatalogs">
-            <mcs-presentation-panel>
-              <ng-container mcsPresentationPanelHeader>
-                <h2>{{ catalog.name }}</h2>
-              </ng-container>
+        <mcs-grid>
+          <mcs-grid-row>
+            <ng-container *ngFor="let catalog of productCatalogs; last as isLastItem">
+              <mcs-grid-column >
+                <mcs-presentation-panel>
+                  <ng-container mcsPresentationPanelHeader>
+                    <h2>{{ catalog.name }}</h2>
+                  </ng-container>
 
-              <section>
-                <mcs-list [header]="category.name" itemsOffset="small"
-                  *ngFor="let category of catalog.categories">
-                  <mcs-list-item *ngFor="let product of category.products">
-                    <a (click)="gotoProduct(product)"
-                      mcsId="select-product"
-                      mcsEventTracker="select-product"
-                      mcsEventCategory="navigation"
-                      mcsEventLabel="main-nav">{{ product.name }}</a>
-                  </mcs-list-item>
-                </mcs-list>
-              </section>
-            </mcs-presentation-panel>
-          </ng-container>
-        </div>
+                  <section>
+                    <mcs-list [header]="category.name" itemsOffset="small"
+                      *ngFor="let category of catalog.categories">
+                      <mcs-list-item *ngFor="let product of category.products">
+                        <a (click)="gotoProduct(product)"
+                          mcsId="select-product"
+                          mcsEventTracker="select-product"
+                          mcsEventCategory="navigation"
+                          mcsEventLabel="main-nav">{{ product.name }}</a>
+                      </mcs-list-item>
+                    </mcs-list>
+                  </section>
+                </mcs-presentation-panel>
+              </mcs-grid-column>
+              <mcs-divider *ngIf="!isLastItem" orientation="vertical"></mcs-divider>
+            </ng-container>
+          </mcs-grid-row>
+        </mcs-grid>
       </mcs-data-status-success>
 
       <mcs-data-status-in-progress mcsDataInProgress>
@@ -51,28 +56,32 @@
   <!-- Macquarie Link View -->
   <div class="macquarie-link">
     <ng-container *ngIf="productCatalogFeatureIsOn; else macquarieViewTemplate">
-      <a class="inline-items-xsmall" mcsPopover maxWidth="auto"
+      <a mcsPopover maxWidth="auto"
         [content]="productMegaMenuTemplate"
         theme="light" priority="high"
         placement="bottom" orientation="left"
         [placementElement]="caretIconElement">
 
-        <span>{{ textContent.productCatalog }}</span>
-        <span #caretIconElement>
-          <mcs-icon [key]="caretDownIconKey"
-            size="medium" color="white"></mcs-icon>
-        </span>
+        <mcs-item>
+          <span>{{ textContent.productCatalog }}</span>
+          <span #caretIconElement>
+            <mcs-icon [key]="caretDownIconKey"
+              size="medium" color="white"></mcs-icon>
+          </span>
+        </mcs-item>
       </a>
     </ng-container>
 
     <ng-template #macquarieViewTemplate>
-      <a [href]="macviewUrl" target="_blank" class="inline-items-xsmall"
+      <a [href]="macviewUrl" target="_blank"
         mcsId="macquarie-view"
         mcsEventTracker="macquarie-view"
         mcsEventCategory="navigation"
         mcsEventLabel="main-nav">
-        <mcs-icon [key]="arrowUpIconKey" size="large"></mcs-icon>
-        <span>{{ textContent.macquarieView }}</span>
+        <mcs-item>
+          <mcs-icon [key]="arrowUpIconKey" size="large"></mcs-icon>
+          <span>{{ textContent.macquarieView }}</span>
+        </mcs-item>
       </a>
     </ng-template>
   </div>

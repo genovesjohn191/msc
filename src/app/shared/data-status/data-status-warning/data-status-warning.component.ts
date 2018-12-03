@@ -11,7 +11,7 @@ import { CoreDefinition } from '@app/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   host: {
-    'class': 'data-status-warning-wrapper inline-items-xsmall centered'
+    'class': 'data-status-warning-wrapper'
   }
 })
 

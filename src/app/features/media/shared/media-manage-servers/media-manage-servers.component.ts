@@ -24,10 +24,7 @@ import { MediaManageServers } from './media-manage-servers';
 @Component({
   selector: 'mcs-media-manage-servers',
   templateUrl: './media-manage-servers.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    'class': 'media-manage-servers-wrapper block block-items-medium'
-  }
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MediaManageServersComponent implements OnInit, OnDestroy {
   public textContent: any;

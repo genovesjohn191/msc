@@ -1,33 +1,35 @@
 <!-- Manage Server header -->
-<div><ng-content select="[mcsManageServerHeader]"></ng-content></div>
+<section>
+  <ng-content select="[mcsManageServerHeader]"></ng-content>
 
-<!-- Manage Server selection list -->
-<!-- TODO: It should be a tag to apply multiple selection of servers -->
-<mcs-data-status [dataStatusFactory]="dataStatusFactory">
-  <mcs-data-status-success mcsDataSuccess>
-    <mcs-form-field>
-      <mcs-select [(ngModel)]="selectedServer" placeholder="Select server">
-        <mcs-option-group>
-          <ng-container *mcsOptionGroupHeader>
-            Servers
-          </ng-container>
-          <mcs-option *ngFor="let server of servers" [value]="server">
-            {{ server.name }}
-          </mcs-option>
-        </mcs-option-group>
-      </mcs-select>
-    </mcs-form-field>
-  </mcs-data-status-success>
+  <!-- Manage Server selection list -->
+  <!-- TODO: It should be a tag to apply multiple selection of servers -->
+  <mcs-data-status [dataStatusFactory]="dataStatusFactory">
+    <mcs-data-status-success mcsDataSuccess>
+      <mcs-form-field>
+        <mcs-select [(ngModel)]="selectedServer" placeholder="Select server">
+          <mcs-option-group>
+            <ng-container *mcsOptionGroupHeader>
+              Servers
+            </ng-container>
+            <mcs-option *ngFor="let server of servers" [value]="server">
+              {{ server.name }}
+            </mcs-option>
+          </mcs-option-group>
+        </mcs-select>
+      </mcs-form-field>
+    </mcs-data-status-success>
 
-  <mcs-data-status-in-progress mcsDataInProgress>
-    <span>{{ textContent.loadingContent }}</span>
-  </mcs-data-status-in-progress>
+    <mcs-data-status-in-progress mcsDataInProgress>
+      <span>{{ textContent.loadingContent }}</span>
+    </mcs-data-status-in-progress>
 
-  <mcs-data-status-empty mcsDataEmpty>
-    <span>{{ textContent.noServers }}</span>
-  </mcs-data-status-empty>
+    <mcs-data-status-empty mcsDataEmpty>
+      <span>{{ textContent.noServers }}</span>
+    </mcs-data-status-empty>
 
-  <mcs-data-status-error mcsDataError>
-    <span>{{ textContent.errorGettingServers }}</span>
-  </mcs-data-status-error>
-</mcs-data-status>
+    <mcs-data-status-error mcsDataError>
+      <span>{{ textContent.errorGettingServers }}</span>
+    </mcs-data-status-error>
+  </mcs-data-status>
+</section>

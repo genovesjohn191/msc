@@ -55,10 +55,7 @@ const Netmask = require('netmask').Netmask;
   animations: [
     animateFactory.fadeIn,
     animateFactory.fadeInOut
-  ],
-  host: {
-    'class': 'server-manage-network-wrapper block block-items-medium'
-  }
+  ]
 })
 
 export class ServerManageNetworkComponent implements OnInit, OnChanges {

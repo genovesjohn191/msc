@@ -1,80 +1,82 @@
-<!-- Network header -->
-<div><ng-content select="[mcsManageNetworkHeader]"></ng-content></div>
+<section>
+  <!-- Network header -->
+  <ng-content select="[mcsManageNetworkHeader]"></ng-content>
 
-<!-- Network selection -->
-<mcs-form-field>
-  <mcs-select [(ngModel)]="selectedNetwork" mcsId="select-network" placeholder="Select network">
-    <mcs-option-group>
-      <ng-container *mcsOptionGroupHeader>Networks</ng-container>
-      <mcs-option *ngFor="let network of networks" [value]="network">
-        {{ network.name }}
-      </mcs-option>
-    </mcs-option-group>
-  </mcs-select>
-</mcs-form-field>
+  <!-- Network selection -->
+  <mcs-form-field>
+    <mcs-select [(ngModel)]="selectedNetwork" mcsId="select-network" placeholder="Select network">
+      <mcs-option-group>
+        <ng-container *mcsOptionGroupHeader>Networks</ng-container>
+        <mcs-option *ngFor="let network of networks" [value]="network">
+          {{ network.name }}
+        </mcs-option>
+      </mcs-option-group>
+    </mcs-select>
+  </mcs-form-field>
 
-<!-- Network switcher -->
-<mcs-item orientation="separated">
-  <h2 auto-width>IP address</h2>
-  <div>
-    <a *ngIf="inputManageType === inputManageTypeEnum.Custom" mcsId
-      (click)="onChangeInputManageType(inputManageTypeEnum.Buttons)">
-      {{ textContent.buttonSwitch }}</a>
-    <a *ngIf="inputManageType === inputManageTypeEnum.Buttons" mcsId
-      (click)="onChangeInputManageType(inputManageTypeEnum.Custom)">
-      {{ textContent.customSwitch }}</a>
+  <!-- Network switcher -->
+  <mcs-item orientation="separated">
+    <h2 auto-width>IP address</h2>
+    <div>
+      <a *ngIf="inputManageType === inputManageTypeEnum.Custom" mcsId
+        (click)="onChangeInputManageType(inputManageTypeEnum.Buttons)">
+        {{ textContent.buttonSwitch }}</a>
+      <a *ngIf="inputManageType === inputManageTypeEnum.Buttons" mcsId
+        (click)="onChangeInputManageType(inputManageTypeEnum.Custom)">
+        {{ textContent.customSwitch }}</a>
+    </div>
+  </mcs-item>
+
+  <div [ngSwitch]="inputManageType">
+    <!-- Ip address DHCP Mode -->
+    <section [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Buttons">
+      <div>{{ textContent.buttonMessage }}</div>
+
+      <mcs-radio-button-group orientation="vertical"
+        [ngModel]="selectedIpAddressMode" (ngModelChange)="onRadioButtonChanged($event)">
+        <mcs-radio-button *ngFor="let item of ipAddressItems" [value]="item.value" mcsId>
+          {{ item.text }}
+        </mcs-radio-button>
+      </mcs-radio-button-group>
+
+      <ng-content select="[mcsManageNetworkWarning]"></ng-content>
+    </section>
+
+    <!-- IP address custom mode -->
+    <section [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Custom">
+      <div>{{ textContent.customMessage }}</div>
+
+      <form [formGroup]="fgCustomIpAddress">
+        <span read-only *ngIf="netMask">
+          {{ textContent.hints.ipRange }}: {{ netMask.first }} - {{ netMask.last }}
+        </span>
+        <mcs-form-field class="form-field-size-medium">
+          <input mcsInput placeholder="Enter IP Address" #customInput
+            mcsId="input-ipaddress" [formControl]="fcCustomIpAddress">
+
+          <mcs-error mcsError errorState="required">
+            {{ textContent.errors.ipAddressRequired }}
+          </mcs-error>
+          <mcs-error mcsError errorState="ipAddress">
+            {{ textContent.errors.ipAddressInvalid }}
+          </mcs-error>
+          <mcs-error mcsError errorState="ipRange">
+            {{ ipRangeErrorText }}
+          </mcs-error>
+        </mcs-form-field>
+      </form>
+
+      <mcs-data-status [dataStatusFactory]="ipAddressesStatusFactory"
+        *ngIf="isIpAddressInUsed(customInput?.value)">
+        <mcs-data-status-success mcsDataSuccess display-inline-block>
+          <mcs-data-status-warning [@fadeInOut]>
+            <span [innerHTML]="textContent.inUsedEnteredIpMessage | mcsNewLines"></span>
+          </mcs-data-status-warning>
+        </mcs-data-status-success>
+        <mcs-data-status-in-progress mcsDataInProgress>
+          <span>{{ textContent.loadingIpInUsed }}</span>
+        </mcs-data-status-in-progress>
+      </mcs-data-status>
+    </section>
   </div>
-</mcs-item>
-
-<div [ngSwitch]="inputManageType">
-  <!-- Ip address DHCP Mode -->
-  <section [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Buttons">
-    <p>{{ textContent.buttonMessage }}</p>
-
-    <mcs-radio-button-group orientation="vertical"
-      [ngModel]="selectedIpAddressMode" (ngModelChange)="onRadioButtonChanged($event)">
-      <mcs-radio-button *ngFor="let item of ipAddressItems" [value]="item.value" mcsId>
-        {{ item.text }}
-      </mcs-radio-button>
-    </mcs-radio-button-group>
-
-    <ng-content select="[mcsManageNetworkWarning]"></ng-content>
-  </section>
-
-  <!-- IP address custom mode -->
-  <section [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Custom">
-    <p>{{ textContent.customMessage }}</p>
-
-    <form [formGroup]="fgCustomIpAddress">
-      <span read-only *ngIf="netMask">
-        {{ textContent.hints.ipRange }}: {{ netMask.first }} - {{ netMask.last }}
-      </span>
-      <mcs-form-field class="form-field-size-medium">
-        <input mcsInput placeholder="Enter IP Address" #customInput
-          mcsId="input-ipaddress" [formControl]="fcCustomIpAddress">
-
-        <mcs-error mcsError errorState="required">
-          {{ textContent.errors.ipAddressRequired }}
-        </mcs-error>
-        <mcs-error mcsError errorState="ipAddress">
-          {{ textContent.errors.ipAddressInvalid }}
-        </mcs-error>
-        <mcs-error mcsError errorState="ipRange">
-          {{ ipRangeErrorText }}
-        </mcs-error>
-      </mcs-form-field>
-    </form>
-
-    <mcs-data-status [dataStatusFactory]="ipAddressesStatusFactory"
-      *ngIf="isIpAddressInUsed(customInput?.value)">
-      <mcs-data-status-success mcsDataSuccess display-inline-block>
-        <mcs-data-status-warning [@fadeInOut]>
-          <span [innerHTML]="textContent.inUsedEnteredIpMessage | mcsNewLines"></span>
-        </mcs-data-status-warning>
-      </mcs-data-status-success>
-      <mcs-data-status-in-progress mcsDataInProgress>
-        <span>{{ textContent.loadingIpInUsed }}</span>
-      </mcs-data-status-in-progress>
-    </mcs-data-status>
-  </section>
-</div>
+</section>

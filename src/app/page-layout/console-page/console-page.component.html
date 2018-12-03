@@ -31,38 +31,44 @@
     </ng-container>
 
     <!-- Connected state -->
-    <ng-container *ngSwitchCase="vmConsoleStatusEnum.Connected">
+    <ng-container *ngSwitchCase="vmConsoleStatusEnum.Connection">
       <div mcsAlign="start">
         <span>{{ server?.name }}</span>
       </div>
 
-      <div class="inline-items-medium">
-        <div class="console-button-command-action">
-          <!-- Stop -->
+      <mcs-list orientation="horizontal">
+        <!-- Stop -->
+        <mcs-list-item>
           <mcs-icon [key]="stopIconKey" size="small"
             [disabled]="!server?.stoppable"
             [mcsTooltip]="textContent.stop"
             mcsTooltipPosition="left"
             mcsCursor="pointer"
             (click)="executeServerCommand(serverCommandEnum.Stop)"></mcs-icon>
+        </mcs-list-item>
 
-          <!-- Restart -->
+        <!-- Restart -->
+        <mcs-list-item>
           <mcs-icon [key]="restartIconKey" size="small"
             [disabled]="!server?.restartable"
             [mcsTooltip]="textContent.restart"
             mcsTooltipPosition="left"
             mcsCursor="pointer"
             (click)="executeServerCommand(serverCommandEnum.Restart)"></mcs-icon>
-        </div>
+        </mcs-list-item>
+
+        <mcs-divider orientation="vertical"></mcs-divider>
 
         <!-- Ctrl + Alt + Del -->
-        <mcs-icon [key]="keyboardIconKey"
-          [mcsTooltip]="textContent.sendCtrlAltDelete"
-          mcsTooltipPosition="left"
-          mcsCursor="pointer"
-          (click)="onClickCtrlAltDelete()">
-        </mcs-icon>
-      </div>
+        <mcs-list-item>
+          <mcs-icon [key]="keyboardIconKey"
+            [mcsTooltip]="textContent.sendCtrlAltDelete"
+            mcsTooltipPosition="left"
+            mcsCursor="pointer"
+            (click)="onClickCtrlAltDelete()">
+          </mcs-icon>
+        </mcs-list-item>
+      </mcs-list>
     </ng-container>
   </ng-container>
 </div>

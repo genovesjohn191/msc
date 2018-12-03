@@ -23,10 +23,7 @@ import { McsServerMedia } from '@app/models';
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     animateFactory.fadeIn
-  ],
-  host: {
-    'class': 'server-manage-media-wrapper block block-items-medium'
-  }
+  ]
 })
 
 export class ServerManageMediaComponent implements OnInit, OnChanges, OnDestroy {

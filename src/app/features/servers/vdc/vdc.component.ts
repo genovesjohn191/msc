@@ -208,6 +208,7 @@ export class VdcComponent
    * @param vdcId VDC identification
    */
   private _subscribesToResourceById(vdcId: string): void {
+    this._loadingService.showLoader(this.textContent.loading);
     this.selectedResource$ = this._resourcesRepository.findRecordById(vdcId).pipe(
       catchError((error) => {
         this._errorHandlerService.handleHttpRedirectionError(error.status);

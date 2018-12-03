@@ -10,7 +10,7 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   host: {
-    'class': 'data-status-in-progress-wrapper inline-items-xsmall centered'
+    'class': 'data-status-in-progress-wrapper'
   }
 })
 

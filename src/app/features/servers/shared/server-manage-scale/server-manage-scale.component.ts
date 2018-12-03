@@ -50,10 +50,7 @@ const DEFAULT_MIN_CPU = 2;
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     animateFactory.fadeIn
-  ],
-  host: {
-    'class': 'server-manage-scale-wrapper block block-items-medium'
-  }
+  ]
 })
 
 export class ServerManageScaleComponent implements OnInit, OnChanges, OnDestroy {

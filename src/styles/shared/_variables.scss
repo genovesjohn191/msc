@@ -47,7 +47,7 @@ $color-scheme-light: $color-grey-08 !default;
 $color-scheme-medium: $color-grey-01 !default;
 $color-scheme-dark: $color-black !default;
 
-$color-scheme-map: (
+$color-definitions: (
   primary: (
     base: $color-scheme-primary,
     contrast: $color-white,
@@ -113,7 +113,7 @@ $medium-platform-width: 720px;
 $small-platform-width: 543px;
 $xsmall-platform-width: 320px;
 
-$screen-breakpoints-map: (
+$screen-breakpoints: (
   xsmall: $xsmall-platform-width,
   small: $small-platform-width,
   medium: $medium-platform-width,
@@ -128,12 +128,20 @@ $space-medium: 15px;
 $space-small: 10px;
 $space-xsmall: 5px;
 
-$space-map: (
+$space-breakpoints: (
   xsmall: $space-xsmall,
   small: $space-small,
   medium: $space-medium,
   large: $space-large,
   xlarge: $space-xlarge,
+) !default;
+
+// Directions
+$direction-breakpoints: (
+  left,
+  right,
+  top,
+  bottom
 ) !default;
 
 // Z-index

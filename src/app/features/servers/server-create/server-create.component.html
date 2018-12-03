@@ -76,10 +76,10 @@
 
         <!-- Order Header -->
         <ng-container mcsQuoteWidgetHeader *ngIf="(orderIsUpdating$ | async); else actualPrice">
-          <div class="inline-items-small">
+          <mcs-item>
             <mcs-loader></mcs-loader>
             <span>Updating charges</span>
-          </div>
+          </mcs-item>
         </ng-container>
         <ng-template #actualPrice>
           <span>Total Cost: ${{ orderDetails.charges?.monthly || 0 }}</span>

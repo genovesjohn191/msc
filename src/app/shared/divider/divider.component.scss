@@ -1,0 +1,23 @@
+@import "../../../styles/shared/base";
+
+$divider-width: 1px;
+$divider-color: rgba($color-scheme-dark, 0.12);
+
+.divider-wrapper {
+  @include align-self(normal);
+  display: block;
+  margin: 0;
+  border-top-width: $divider-width;
+  border-top-style: solid;
+
+  &.divider-horizontal {
+    border-top-color: $divider-color;
+  }
+
+  &.divider-vertical {
+    border-top: 0;
+    border-right-width: $divider-width;
+    border-right-style: solid;
+    border-right-color: $divider-color;
+  }
+}

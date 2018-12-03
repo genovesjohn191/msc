@@ -59,6 +59,7 @@ import { PresentationPanelModule } from './presentation-panel/presentation-panel
 import { JobsProvisioningModule } from './jobs-provisioning/jobs-provisioning.module';
 import { LoadingModule } from './loading/loading.module';
 import { ItemModule } from './item/item.module';
+import { DividerModule } from './divider/divider.module';
 
 @NgModule({
   imports: [
@@ -118,7 +119,8 @@ import { ItemModule } from './item/item.module';
     PresentationPanelModule,
     JobsProvisioningModule,
     LoadingModule,
-    ItemModule
+    ItemModule,
+    DividerModule
   ],
   exports: [
     CommonModule,
@@ -177,7 +179,8 @@ import { ItemModule } from './item/item.module';
     PresentationPanelModule,
     JobsProvisioningModule,
     LoadingModule,
-    ItemModule
+    ItemModule,
+    DividerModule
   ]
 })
 

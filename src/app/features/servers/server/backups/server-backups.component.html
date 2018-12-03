@@ -66,7 +66,7 @@
           </mcs-grid>
         </ng-container>
         <ng-container *ngSwitchDefault>
-          <mcs-item class="inline-items-xsmall">
+          <mcs-item>
             <mcs-loader *ngIf="snapshotProcessing" size="small"
               [mcsTooltip]="server.processingText"></mcs-loader>
             <span>{{ textContent.creatingSnapshot }}</span>
