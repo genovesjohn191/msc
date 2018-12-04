@@ -1,7 +1,7 @@
 export class CoreDefinition {
   /** Responsive Browser Width */
   /** These variables should be the same with the css definition */
-  public static BREAKPOINT_XSMALL = 320;
+  public static BREAKPOINT_XSMALL = 0;
   public static BREAKPOINT_SMALL = 543;
   public static BREAKPOINT_MEDIUM = 720;
   public static BREAKPOINT_LARGE = 970;
