@@ -142,7 +142,7 @@ export class FileAttachmentComponent implements OnInit {
         let convertedAttachment = new McsFileInfo();
         convertedAttachment.filename = attachment.file.name;
         convertedAttachment.fileContents = attachment.file;
-        convertedAttachment.base64Contents = btoa(fileReader.result);
+        convertedAttachment.base64Contents = btoa(fileReader.result as any);
         attachments.push(convertedAttachment);
         this.attachedFilesChanged.emit(attachments);
       };

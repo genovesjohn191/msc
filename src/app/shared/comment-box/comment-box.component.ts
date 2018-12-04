@@ -183,7 +183,7 @@ export class CommentBoxComponent implements OnInit {
           let convertedAttachment = new McsFileInfo();
           convertedAttachment.filename = attachment.file.name;
           convertedAttachment.fileContents = attachment.file;
-          convertedAttachment.base64Contents = btoa(fileReader.result);
+          convertedAttachment.base64Contents = btoa(fileReader.result as any);
           attachments.push(convertedAttachment);
 
           // Make sure all the data are loaded

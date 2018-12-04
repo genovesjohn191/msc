@@ -148,6 +148,10 @@ interface ErrorStackTraceLimit {
   stackTraceLimit: number;
 }
 
+interface Element {
+  msMatchesSelector(selectors: string): boolean;
+}
+
 // Extend typings
 interface NodeRequire extends WebpackRequire { }
 interface ErrorConstructor extends ErrorStackTraceLimit { }

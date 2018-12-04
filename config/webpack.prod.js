@@ -18,7 +18,6 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const CssSafeParser = require('postcss-safe-parser');
 const HashedModuleIdsPlugin = require('webpack/lib/HashedModuleIdsPlugin')
-const PurifyPlugin = require('@angular-devkit/build-optimizer').PurifyPlugin;
 const ModuleConcatenationPlugin = require('webpack/lib/optimize/ModuleConcatenationPlugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const ExposeSassPlugin = require('./expose-sass-plugin');
@@ -193,7 +192,6 @@ module.exports = function (env) {
         canPrint: true
       }),
 
-      new PurifyPlugin(), /* buildOptimizer */
       new HashedModuleIdsPlugin(),
       new ModuleConcatenationPlugin(),
       new ExposeSassPlugin(),

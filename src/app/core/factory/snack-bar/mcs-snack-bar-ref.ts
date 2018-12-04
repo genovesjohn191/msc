@@ -62,7 +62,7 @@ export class McsSnackBarRef<T> {
    */
   public closeAfter(duration: number): void {
     if (isNullOrEmpty(duration)) { return; }
-    this._durationTimeoutId = setTimeout(this.close.bind(this), duration);
+    this._durationTimeoutId = window.setTimeout(this.close.bind(this), duration);
   }
 
   /**
