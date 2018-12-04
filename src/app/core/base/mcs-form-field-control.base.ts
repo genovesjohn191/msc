@@ -38,8 +38,7 @@ export abstract class McsFormFieldControlBase<T> {
   public abstract placeholder: string;
 
   /** Error state matcher to be used in checking error forms */
-  public abstract errorStateMatcher: ErrorStateMatcher =
-    this.errorStateMatcher || defaultErrorStateMatcher;
+  public abstract errorStateMatcher: ErrorStateMatcher = defaultErrorStateMatcher;
 
   /** Whether the control is required. */
   public abstract required: boolean;

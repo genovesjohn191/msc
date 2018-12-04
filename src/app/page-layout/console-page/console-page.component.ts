@@ -389,7 +389,7 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
     if (closeConsoleWindow) {
       this.consoleStatus = VmConsoleStatus.Closing;
       if (!isNullOrEmpty(this._intervalId)) { clearInterval(this._intervalId); }
-      this._intervalId = setInterval(this._closeWindow.bind(this), 1000);
+      this._intervalId = window.setInterval(this._closeWindow.bind(this), 1000);
       return;
     }
 
