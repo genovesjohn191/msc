@@ -9,15 +9,15 @@ import {
   ViewChild,
   ContentChild
 } from '@angular/core';
-import { McsPortalTemplate } from '@app/core';
+import {
+  McsPortalTemplate,
+  McsUniqueId
+} from '@app/core';
 import { TabLabelDirective } from './tab-label.directive';
 import {
   coerceBoolean,
   McsAlignmentType
 } from '@app/utilities';
-
-/** Next overlay unique ID. */
-let nextUniqueId = 0;
 
 @Component({
   selector: 'mcs-tab',
@@ -35,7 +35,7 @@ export class TabComponent implements AfterViewInit {
   public portalTemplate: McsPortalTemplate<any>;
 
   @Input()
-  public id: any = `mcs-tab-${nextUniqueId++}`;
+  public id: any = McsUniqueId.NewId('tab');
 
   @Input()
   public label: string;

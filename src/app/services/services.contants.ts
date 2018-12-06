@@ -10,6 +10,7 @@ import { ServersApiService } from './api-services/servers-api.service';
 import { TicketsApiService } from './api-services/tickets-api.service';
 import { ToolsApiService } from './api-services/tools-api.service';
 
+/** Repositories */
 import { FirewallsRepository } from './repositories/firewalls.repository';
 import { MediaRepository } from './repositories/media.repository';
 import { NotificationsRepository } from './repositories/notifications.repository';
@@ -22,6 +23,9 @@ import { ServersOsRepository } from './repositories/servers-os.repository';
 import { ServersRepository } from './repositories/servers.repository';
 import { TicketsRepository } from './repositories/tickets.repository';
 import { ToolsRepository } from './repositories/tools.repository';
+
+/** Guards */
+import { RequiredResourcesGuard } from './guards/required-resources.guard';
 
 /**
  * List of services for the main module
@@ -49,5 +53,7 @@ export const servicesProviders: any[] = [
   ServersOsRepository,
   ServersRepository,
   TicketsRepository,
-  ToolsRepository
+  ToolsRepository,
+
+  RequiredResourcesGuard
 ];

@@ -9,16 +9,14 @@ import {
 } from '@angular/core';
 import {
   CoreDefinition,
-  McsTextContentProvider
+  McsTextContentProvider,
+  McsUniqueId
 } from '@app/core';
 import { McsResourceMedia } from '@app/models';
 import {
   MediaCommand,
   mediaCommandText
 } from './media-command.enum';
-
-// Unique Id that generates during runtime
-let nextUniqueId = 0;
 
 @Component({
   selector: 'mcs-media-command',
@@ -61,7 +59,7 @@ export class MediaCommandComponent implements OnInit {
   }
 
   constructor(private _textProvider: McsTextContentProvider) {
-    this.id = `mcs-media-command-${nextUniqueId++}`;
+    this.id = McsUniqueId.NewId('media-command');
   }
 
   public ngOnInit() {

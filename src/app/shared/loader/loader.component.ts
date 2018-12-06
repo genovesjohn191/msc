@@ -5,11 +5,13 @@ import {
   ChangeDetectionStrategy,
   ElementRef,
 } from '@angular/core';
-import { CoreDefinition } from '@app/core';
+import {
+  CoreDefinition,
+  McsUniqueId
+} from '@app/core';
 import { McsSizeType } from '@app/utilities';
 
 // Unique Id that generates during runtime
-let nextUniqueId = 0;
 type LoaderType = 'spinner' | 'ellipsis';
 
 @Component({
@@ -26,7 +28,7 @@ type LoaderType = 'spinner' | 'ellipsis';
 
 export class LoaderComponent {
   @Input()
-  public id: string = `mcs-loader-${nextUniqueId++}`;
+  public id: string = McsUniqueId.NewId('loader');
 
   @Input()
   public size: McsSizeType = 'medium';

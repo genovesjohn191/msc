@@ -33,7 +33,8 @@ import {
   McsJob,
   DataStatus,
   McsResourceMediaServer,
-  McsServer
+  McsServer,
+  McsResourceMedia
 } from '@app/models';
 import {
   MediaApiService,
@@ -57,6 +58,7 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
 
   private _inProgressServerId: any;
   private _newAttachServer: McsResourceMediaServer;
+  private _selectedMediumInstance: McsResourceMedia;
   private _destroySubject = new Subject<void>();
 
   constructor(
@@ -99,7 +101,7 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
    * Shows the detach server dialog
    * @param server Server to be detached
    */
-  public showDetachDialog(attachedServer: McsResourceMediaServer): void {
+  public showDetachDialog(medium: McsResourceMedia, attachedServer: McsResourceMediaServer): void {
     let dialogData = {
       data: attachedServer,
       type: 'warning',
@@ -118,7 +120,7 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
     detachDialogRef.afterClosed()
       .subscribe((response) => {
         if (isNullOrEmpty(response)) { return; }
-        this._detachServer(response.id);
+        this._detachServer(medium, response.id);
       });
   }
 
@@ -134,18 +136,19 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
   /**
    * Attach server to the existing media
    */
-  public attachServer(): void {
-    if (isNullOrEmpty(this.selectedMedium) || !this.manageServers.valid) {
+  public attachServer(medium: McsResourceMedia): void {
+    if (isNullOrEmpty(medium) || !this.manageServers.valid) {
       throw new Error(`No selected server to attached`);
     }
-    this._attachServer(this.manageServers.server);
+    this._attachServer(medium, this.manageServers.server);
   }
 
   /**
    * Event that will automatically invoked when the medium selection has been changed
    */
-  protected mediumSelectionChange(): void {
-    this._initializeDataSource();
+  protected mediumSelectionChange(medium: McsResourceMedia): void {
+    this._selectedMediumInstance = medium;
+    this._initializeDataSource(medium);
     this._changeDetectorRef.markForCheck();
   }
 
@@ -162,35 +165,35 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
   /**
    * Initializes the data source of the nics table
    */
-  private _initializeDataSource(): void {
-    this.serversDataSource = new TableDataSource(this._getAttachedServers());
+  private _initializeDataSource(medium: McsResourceMedia): void {
+    this.serversDataSource = new TableDataSource(this._getAttachedServers(medium));
   }
 
   /**
    * Get attached servers from media API
    */
-  private _getAttachedServers() {
-    return this._mediaRepository.findMediaServers(this.selectedMedium);
+  private _getAttachedServers(medium: McsResourceMedia) {
+    return this._mediaRepository.findMediaServers(medium);
   }
 
   /**
    * Detaches the server from the media
    */
-  private _detachServer(selectedServerId: any): void {
+  private _detachServer(medium: McsResourceMedia, selectedServerId: any): void {
     if (isNullOrEmpty(selectedServerId)) { return; }
     let expectedJobObject = {
-      mediaId: this.selectedMedium.id,
+      mediaId: medium.id,
       serverId: selectedServerId
     };
 
-    this.setSelectedMediumState(true);
+    this.setSelectedMediumState(medium, true);
     this._mediaService.detachServerMedia(
-      selectedServerId, this.selectedMedium.id,
+      selectedServerId, medium.id,
       { clientReferenceObject: expectedJobObject }
     )
       .pipe(
         catchError((error) => {
-          this.setSelectedMediumState(false);
+          this.setSelectedMediumState(medium, false);
           this._errorHandlerService.handleHttpRedirectionError(error.status);
           return throwError(error);
         })
@@ -200,24 +203,24 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
   /**
    * Attaches the server to the current media
    */
-  private _attachServer(serverDetails: McsServer): void {
+  private _attachServer(medium: McsResourceMedia, serverDetails: McsServer): void {
     if (isNullOrEmpty(serverDetails)) { return; }
     let expectedJobObject = {
-      mediaId: this.selectedMedium.id,
+      mediaId: medium.id,
       serverId: serverDetails.id,
       serverName: serverDetails.name
     };
 
-    this.setSelectedMediumState(true);
+    this.setSelectedMediumState(medium, true);
     this._mediaService.attachServerMedia(
       serverDetails.id,
       {
-        name: this.selectedMedium.name,
+        name: medium.name,
         clientReferenceObject: expectedJobObject
       })
       .pipe(
         catchError((error) => {
-          this.setSelectedMediumState(false);
+          this.setSelectedMediumState(medium, false);
           this._errorHandlerService.handleHttpRedirectionError(error.status);
           return throwError(error);
         })
@@ -242,7 +245,7 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
    * @param job Job to be checked for an existing process
    */
   private _onAttachServerMedia(job: McsJob): void {
-    if (!this.isMediaActive(job)) { return; }
+    if (!this.isMediaActive(this._selectedMediumInstance, job)) { return; }
 
     switch (job.dataStatus) {
       case DataStatus.InProgress:
@@ -251,7 +254,7 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
         break;
 
       case DataStatus.Success:
-        this.mediumSelectionChange();
+        this.mediumSelectionChange(this._selectedMediumInstance);
       case DataStatus.Error:
       default:
         this.serversDataSource.deleteRecord(this._newAttachServer);
@@ -264,12 +267,12 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
    * @param job Job to be checked for an existing process
    */
   private _onDetachServerMedia(job: McsJob): void {
-    if (!this.isMediaActive(job)) { return; }
+    if (!this.isMediaActive(this._selectedMediumInstance, job)) { return; }
 
     // Refresh the data when the serevr in-progress is already completed
     let inProgressServerId = !isNullOrEmpty(this._inProgressServerId)
       && job.dataStatus === DataStatus.Success;
-    if (inProgressServerId) { this.mediumSelectionChange(); }
+    if (inProgressServerId) { this.mediumSelectionChange(this._selectedMediumInstance); }
 
     // Set the inprogress server ID to be checked
     this._inProgressServerId = job.dataStatus === DataStatus.InProgress ?

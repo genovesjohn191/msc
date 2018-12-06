@@ -11,9 +11,7 @@ import {
   isElementVisible,
   coerceBoolean
 } from '@app/utilities';
-
-// Unique Id that generates during runtime
-let nextUniqueId = 0;
+import { McsUniqueId } from '@app/core';
 
 @Component({
   selector: 'mcs-option',
@@ -43,7 +41,7 @@ export class OptionComponent {
   public activeChange = new EventEmitter<OptionComponent>();
 
   @Input()
-  public id: string = `mcs-option-${nextUniqueId++}`;
+  public id: string = McsUniqueId.NewId('option');
 
   @Input()
   public value: any;

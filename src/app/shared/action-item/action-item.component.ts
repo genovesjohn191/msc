@@ -4,9 +4,7 @@ import {
   ChangeDetectionStrategy,
   ViewEncapsulation
 } from '@angular/core';
-
-// Unique Id that generates during runtime
-let nextUniqueId = 0;
+import { McsUniqueId } from '@app/core';
 
 @Component({
   selector: 'mcs-action-item',
@@ -27,5 +25,5 @@ let nextUniqueId = 0;
 export class ActionItemComponent {
 
   @Input()
-  public id: string = `mcs-action-item-${nextUniqueId++}`;
+  public id: string = McsUniqueId.NewId('action-item');
 }

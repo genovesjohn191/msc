@@ -5,9 +5,7 @@ import {
   ChangeDetectionStrategy,
   ViewEncapsulation
 } from '@angular/core';
-
-// Unique Id that generates during runtime
-let nextUniqueId = 0;
+import { McsUniqueId } from '@app/core';
 
 @Component({
   selector: 'mcs-error',
@@ -26,7 +24,7 @@ let nextUniqueId = 0;
 
 export class ErrorComponent {
   @Input()
-  public id: string = `mcs-error-item-${nextUniqueId++}`;
+  public id: string = McsUniqueId.NewId('error-item');
 
   @Input()
   public errorState: string;

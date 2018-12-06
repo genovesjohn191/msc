@@ -1,5 +1,11 @@
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import {
+  Subject,
+  Observable
+} from 'rxjs';
+import {
+  tap,
+  shareReplay
+} from 'rxjs/operators';
 import {
   unsubscribeSubject,
   isNullOrEmpty,
@@ -12,18 +18,16 @@ import {
 import { MediumService } from './medium.service';
 
 export abstract class MediumDetailsBase {
-  public selectedMedium: McsResourceMedia;
+  public selectedMedium$: Observable<McsResourceMedia>;
   private _baseDestroySubject = new Subject<void>();
 
-  constructor(protected _mediumService: MediumService) {
-    this.selectedMedium = new McsResourceMedia();
-  }
+  constructor(protected _mediumService: MediumService) { }
 
   /**
    * Initializes the based class implementation
    */
   protected initializeBase(): void {
-    this._listenToMediaSelectionChange();
+    this._subscribeToMediaSelectionChange();
   }
 
   /**
@@ -37,10 +41,10 @@ export abstract class MediumDetailsBase {
    * Returns true when the active job is based on currently selected media
    * @param mediaJob Job to be checked for the active media
    */
-  protected isMediaActive(mediaJob: McsJob): boolean {
-    if (isNullOrEmpty(mediaJob) || isNullOrEmpty(this.selectedMedium)) { return false; }
+  protected isMediaActive(selectedMedium: McsResourceMedia, mediaJob: McsJob): boolean {
+    if (isNullOrEmpty(mediaJob) || isNullOrEmpty(selectedMedium)) { return false; }
     let jobMediaId = getSafeProperty(mediaJob, (obj) => obj.clientReferenceObject.mediaId);
-    let selectedMediaId = getSafeProperty(this.selectedMedium, (obj) => obj.id);
+    let selectedMediaId = getSafeProperty(selectedMedium, (obj) => obj.id);
     let isActive = jobMediaId === selectedMediaId;
     return isActive;
   }
@@ -49,23 +53,20 @@ export abstract class MediumDetailsBase {
    * Set selected medium state (true: spinner, false: normal)
    * @param state State to be set in the processing flag of media
    */
-  protected setSelectedMediumState(state: boolean): void {
-    if (isNullOrEmpty(this.selectedMedium)) { return; }
-    this.selectedMedium.isProcessing = state;
+  protected setSelectedMediumState(selectedMedium: McsResourceMedia, state: boolean): void {
+    if (isNullOrEmpty(selectedMedium)) { return; }
+    selectedMedium.isProcessing = state;
   }
 
-  protected abstract mediumSelectionChange(): void;
+  protected abstract mediumSelectionChange(medium: McsResourceMedia): void;
 
   /**
    * Listens to media selection change
    */
-  private _listenToMediaSelectionChange(): void {
-    this._mediumService.selectedMediumChange()
-      .pipe(takeUntil(this._baseDestroySubject))
-      .subscribe((_medium) => {
-        if (isNullOrEmpty(_medium)) { return; }
-        this.selectedMedium = _medium;
-        this.mediumSelectionChange();
-      });
+  private _subscribeToMediaSelectionChange(): void {
+    this.selectedMedium$ = this._mediumService.selectedMediumChange().pipe(
+      tap((medium) => this.mediumSelectionChange(medium)),
+      shareReplay(1)
+    );
   }
 }

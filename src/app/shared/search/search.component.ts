@@ -18,7 +18,8 @@ import {
 } from 'rxjs/operators';
 import {
   CoreDefinition,
-  McsTextContentProvider
+  McsTextContentProvider,
+  McsUniqueId
 } from '@app/core';
 import {
   unsubscribeSubject,
@@ -26,9 +27,6 @@ import {
 } from '@app/utilities';
 import { Search } from './search.interface';
 import { IdDirective } from '../directives';
-
-// Unique Id that generates during runtime
-let nextUniqueId = 0;
 
 @Component({
   selector: 'mcs-search',
@@ -76,7 +74,7 @@ export class SearchComponent implements OnInit, AfterContentInit, OnDestroy, Sea
   public ngAfterContentInit() {
     Promise.resolve().then(() => {
       this.generatedId = isNullOrEmpty(this._idElement) ?
-        `mcs-search-${nextUniqueId++}` :
+        McsUniqueId.NewId('search') :
         this._idElement.generateNewHashId();
     });
   }

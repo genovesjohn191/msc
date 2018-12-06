@@ -20,9 +20,7 @@ import {
   animateFactory,
   McsPlacementType
 } from '@app/utilities';
-
-// Unique Id that generates during runtime
-let nextUniqueId = 0;
+import { McsUniqueId } from '@app/core';
 
 @Component({
   selector: 'mcs-sliding-panel',
@@ -63,7 +61,7 @@ export class SlidingPanelComponent {
   }
 
   @Input()
-  public id: string = `mcs-sliding-panel-${nextUniqueId++}`;
+  public id: string = McsUniqueId.NewId('sliding-panel');
 
   @Input()
   public placement: McsPlacementType = 'left';

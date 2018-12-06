@@ -8,9 +8,7 @@ import {
 import { isNullOrEmpty } from '@app/utilities';
 import { McsOverlayRef } from '../factory/overlay/mcs-overlay-ref';
 import { McsOverlayState } from '../factory/overlay/mcs-overlay-state';
-
-/** Next overlay unique ID. */
-let nextUniqueId = 0;
+import { McsUniqueId } from '../factory/unique-generators/mcs-unique-id';
 
 @Injectable()
 export class McsOverlayService {
@@ -82,7 +80,7 @@ export class McsOverlayService {
   private _createOverlayPane(itemWrapper: HTMLElement): HTMLElement {
     let pane = document.createElement('div');
 
-    pane.id = `mcs-overlay-${nextUniqueId++}`;
+    pane.id = McsUniqueId.NewId('overlay');
     pane.classList.add('mcs-overlay-pane');
     itemWrapper ? itemWrapper.appendChild(pane) :
       this._containerElement.appendChild(pane);

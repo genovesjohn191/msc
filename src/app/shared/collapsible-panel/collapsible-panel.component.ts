@@ -17,9 +17,7 @@ import {
   isNullOrEmpty,
   refreshView
 } from '@app/utilities';
-
-// Unique Id that generates during runtime
-let nextUniqueId = 0;
+import { McsUniqueId } from '@app/core';
 
 @Component({
   selector: 'mcs-collapsible-panel',
@@ -42,7 +40,7 @@ export class CollapsiblePanelComponent {
   public collapseChange = new EventEmitter<boolean>();
 
   @Input()
-  public id: string = `mcs-collapsible-panel-${nextUniqueId++}`;
+  public id: string = McsUniqueId.NewId('collapsible-panel');
 
   @Input()
   public get tabindex(): number { return this._tabindex; }

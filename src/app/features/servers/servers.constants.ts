@@ -4,6 +4,7 @@ import {
   CoreRoutes
 } from '@app/core';
 import { RouteKey } from '@app/models';
+import { RequiredResourcesGuard } from '@app/services';
 /** Services */
 import { ServerService } from './server/';
 import { ServersServices } from './servers.service';
@@ -69,7 +70,7 @@ export const serversRoutes: Routes = [
   {
     path: CoreRoutes.getRoutePath(RouteKey.ServerCreate),
     component: ServerCreateComponent,
-    canActivate: [ServerCreateGuard],
+    canActivate: [RequiredResourcesGuard],
     canDeactivate: [McsNavigateAwayGuard],
     data: { routeId: RouteKey.ServerCreate }
   },

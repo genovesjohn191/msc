@@ -5,9 +5,7 @@ import {
 import { CoreDefinition } from '../../core.definition';
 import { McsOverlayRef } from '../overlay/mcs-overlay-ref';
 import { McsDialogContainerComponent } from './mcs-dialog-container.component';
-
-// Counter for unique dialog ids.
-let nextUniqueId = 0;
+import { McsUniqueId } from '../unique-generators/mcs-unique-id';
 
 /**
  * Dialog reference that can manipulate on the existing dialog
@@ -31,7 +29,7 @@ export class McsDialogRef<T> {
   constructor(
     private _overlayRef: McsOverlayRef,
     private _dialogContainer: McsDialogContainerComponent,
-    public readonly id: string = `mcs-dialog-${nextUniqueId++}`
+    public readonly id: string = McsUniqueId.NewId('dialog')
   ) {
 
     // Listener for the dialog when it is finished

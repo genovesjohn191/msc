@@ -8,11 +8,11 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { McsErrorHandlerService } from '@app/core';
 import { isNullOrEmpty } from '@app/utilities';
-import { ResourcesRepository } from '@app/services';
 import { HttpStatusCode } from '@app/models';
+import { ResourcesRepository } from '../repositories/resources.repository';
 
 @Injectable()
-export class ServerCreateGuard implements CanActivate {
+export class RequiredResourcesGuard implements CanActivate {
 
   constructor(
     private _resourcesRepository: ResourcesRepository,

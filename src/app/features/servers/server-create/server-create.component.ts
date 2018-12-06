@@ -44,7 +44,6 @@ import {
   McsSafeToNavigateAway
 } from '@app/utilities';
 import { ResourcesRepository } from '@app/services';
-import { ServerCreateService } from './server-create.service';
 import { ServerCreateDetailsComponent } from './details/server-create-details.component';
 import { ServerCreateFlyweightContext } from './server-create-flyweight.context';
 
@@ -87,8 +86,7 @@ export class ServerCreateComponent implements
     private _changeDetectorRef: ChangeDetectorRef,
     private _textContentProvider: McsTextContentProvider,
     private _errorHandlerService: McsErrorHandlerService,
-    private _resourceRepository: ResourcesRepository,
-    private _serverCreateService: ServerCreateService,
+    private _resourcesRepository: ResourcesRepository,
     private _serverCreateFlyweightContext: ServerCreateFlyweightContext,
     private _loaderService: McsLoadingService
   ) { }
@@ -149,13 +147,12 @@ export class ServerCreateComponent implements
    */
   private _subscribeToAllResources(): void {
     this._loaderService.showLoader('Loading resources');
-    this.resources$ = this._serverCreateService.getCreationResources()
-      .pipe(
-        catchError((error) => {
-          this._errorHandlerService.handleHttpRedirectionError(error.status);
-          return throwError(error);
-        })
-      );
+    this.resources$ = this._resourcesRepository.findResourcesByFeature().pipe(
+      catchError((error) => {
+        this._errorHandlerService.handleHttpRedirectionError(error.status);
+        return throwError(error);
+      })
+    );
   }
 
   /**
@@ -164,7 +161,7 @@ export class ServerCreateComponent implements
    */
   private _subscribeResourceById(resourceId: any): void {
     this._loaderService.showLoader('Loading resource details');
-    this.resource$ = this._resourceRepository.findRecordById(resourceId)
+    this.resource$ = this._resourcesRepository.findRecordById(resourceId)
       .pipe(
         shareReplay(1),
         tap((_updatedResource) => {

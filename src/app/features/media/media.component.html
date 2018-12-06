@@ -1,17 +1,19 @@
 <mcs-page [header]="textContent.header">
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef>
-    <mcs-top-panel-item *mcsTopPanelItemDef>
-      <mcs-action-item *mcsAccessControl="[]; feature: 'EnableResourceMediaUpload'"
-        (click)="navigateToMediaUpload()"
-        mcsId
-        mcsEventTracker="upload-media"
-        mcsEventCategory="media"
-        mcsEventLabel="media-listing-top-panel">
-        <mcs-icon [key]="addIconKey" size="small"></mcs-icon>
-        <span>{{ textContent.uploadMedia }}</span>
-      </mcs-action-item>
-    </mcs-top-panel-item>
+    <ng-container *ngIf="hasResources$ | async">
+      <mcs-top-panel-item *mcsTopPanelItemDef>
+        <mcs-action-item *mcsAccessControl="[]; feature: 'EnableResourceMediaUpload'"
+          (click)="navigateToMediaUpload()"
+          mcsId
+          mcsEventTracker="upload-media"
+          mcsEventCategory="media"
+          mcsEventLabel="media-listing-top-panel">
+          <mcs-icon [key]="addIconKey" size="small"></mcs-icon>
+          <span>{{ textContent.uploadMedia }}</span>
+        </mcs-action-item>
+      </mcs-top-panel-item>
+    </ng-container>
 
     <mcs-top-panel-item *mcsTopPanelItemDef [ngStyle]="{overflow: 'auto'}">
       <div class="listing-action-wrapper">

@@ -6,9 +6,7 @@ import { takeUntil } from 'rxjs/operators';
 import { isNullOrEmpty } from '@app/utilities';
 import { McsOverlayRef } from '../overlay/mcs-overlay-ref';
 import { McsSnackBarContainerComponent } from './mcs-snack-bar-container.component';
-
-// Counter for unique snackbar ids.
-let nextUniqueId = 0;
+import { McsUniqueId } from '../unique-generators/mcs-unique-id';
 
 /**
  * Snackbar reference that can manipulate on the existing snackbar
@@ -27,7 +25,7 @@ export class McsSnackBarRef<T> {
   constructor(
     private _overlayRef: McsOverlayRef,
     public readonly containerInstance: McsSnackBarContainerComponent,
-    public readonly id: string = `mcs-snack-bar-${nextUniqueId++}`
+    public readonly id: string = McsUniqueId.NewId('snack-bar')
   ) {
     this._listenToAnimationChanged();
   }

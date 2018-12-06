@@ -11,15 +11,15 @@ import {
   ContentChild,
   AfterContentInit
 } from '@angular/core';
-import { CoreDefinition } from '@app/core';
+import {
+  CoreDefinition,
+  McsUniqueId
+} from '@app/core';
 import {
   coerceBoolean,
   isNullOrEmpty
 } from '@app/utilities';
 import { IdDirective } from '../../directives';
-
-// Unique Id that generates during runtime
-let nextUniqueId = 0;
 
 @Component({
   selector: 'mcs-radio-button',
@@ -69,7 +69,7 @@ export class RadioButtonComponent implements AfterContentInit {
   public ngAfterContentInit() {
     Promise.resolve().then(() => {
       this.generatedId = isNullOrEmpty(this._idElement) ?
-        `mcs-radio-button-${nextUniqueId++}` :
+        McsUniqueId.NewId('radio-button') :
         this._idElement.generateNewHashId();
     });
   }

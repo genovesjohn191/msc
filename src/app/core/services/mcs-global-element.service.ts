@@ -8,9 +8,7 @@ import { isNullOrEmpty } from '@app/utilities';
 import { McsGlobalElementOption } from '../factory/global-element/mcs-global-element-option';
 import { McsGlobalElementRef } from '../factory/global-element/mcs-global-element-ref';
 import { McsScrollDispatcherService } from './mcs-scroll-dispatcher.service';
-
-/** Next overlay unique ID. */
-let nextUniqueId = 0;
+import { McsUniqueId } from '../factory/unique-generators/mcs-unique-id';
 
 @Injectable()
 export class McsGlobalElementService {
@@ -61,7 +59,7 @@ export class McsGlobalElementService {
   private _createGlobalElementItem(): HTMLElement {
     let itemPane = document.createElement('div');
 
-    itemPane.id = `mcs-global-element-item-${nextUniqueId++}`;
+    itemPane.id = McsUniqueId.NewId('global-element-item');
     itemPane.classList.add('mcs-global-element-item');
     this._globalElementWrapper.appendChild(itemPane);
     return itemPane;

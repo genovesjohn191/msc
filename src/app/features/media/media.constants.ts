@@ -4,6 +4,7 @@ import {
   McsNavigateAwayGuard
 } from '@app/core';
 import { RouteKey } from '@app/models';
+import { RequiredResourcesGuard } from '@app/services';
 /** Components */
 import { MediaComponent } from './media.component';
 import {
@@ -48,6 +49,7 @@ export const mediaRoutes: Routes = [
   {
     path: CoreRoutes.getRoutePath(RouteKey.MediaUpload),
     component: MediaUploadComponent,
+    canActivate: [RequiredResourcesGuard],
     canDeactivate: [McsNavigateAwayGuard],
     data: { routeId: RouteKey.MediaUpload }
   },

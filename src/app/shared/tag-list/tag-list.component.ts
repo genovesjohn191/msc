@@ -27,7 +27,10 @@ import {
   NgControl,
   NgForm
 } from '@angular/forms';
-import { McsFormFieldControlBase } from '@app/core';
+import {
+  McsFormFieldControlBase,
+  McsUniqueId
+} from '@app/core';
 import { Key } from '@app/models';
 import {
   isNullOrEmpty,
@@ -39,9 +42,6 @@ import {
 } from '@app/utilities';
 import { TagComponent } from './tag/tag.component';
 import { TagInputDirective } from './tag-input/tag-input.directive';
-
-// Unique Id that generates during runtime
-let nextUniqueId = 0;
 
 @Component({
   selector: 'mcs-tag-list',
@@ -67,7 +67,7 @@ export class TagListComponent extends McsFormFieldControlBase<any>
   implements AfterContentInit, DoCheck, OnChanges, OnDestroy, ControlValueAccessor {
 
   @Input()
-  public id: string = `mcs-taglist-${nextUniqueId++}`;
+  public id: string = McsUniqueId.NewId('taglist');
 
   @Input()
   public placeholder: string;

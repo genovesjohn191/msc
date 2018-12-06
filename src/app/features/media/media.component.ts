@@ -7,6 +7,8 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import {
   McsTextContentProvider,
   CoreDefinition,
@@ -16,14 +18,16 @@ import {
 } from '@app/core';
 import {
   isNullOrEmpty,
-  refreshView,
   getSafeProperty
 } from '@app/utilities';
 import {
   RouteKey,
   McsResourceMedia
 } from '@app/models';
-import { MediaRepository } from '@app/services';
+import {
+  MediaRepository,
+  ResourcesRepository
+} from '@app/services';
 import { MediaDataSource } from './media.datasource';
 
 @Component({
@@ -37,23 +41,26 @@ export class MediaComponent
   implements OnInit, AfterViewInit, OnDestroy {
 
   public textContent: any;
+  public hasResources$: Observable<boolean>;
 
   public constructor(
     _browserService: McsBrowserService,
     _changeDetectorRef: ChangeDetectorRef,
+    private _router: Router,
     private _textProvider: McsTextContentProvider,
     private _mediaRepository: MediaRepository,
-    private _router: Router
+    private _resourcesRepository: ResourcesRepository
   ) {
     super(_browserService, _changeDetectorRef);
   }
 
   public ngOnInit() {
     this.textContent = this._textProvider.content.media;
+    this._subscribeToResources();
   }
 
   public ngAfterViewInit() {
-    refreshView(() => {
+    Promise.resolve().then(() => {
       this.initializeDatasource();
     });
   }
@@ -128,5 +135,14 @@ export class MediaComponent
       this.search
     );
     this.changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Subscribes to resources to set the flag of has resources
+   */
+  private _subscribeToResources(): void {
+    this.hasResources$ = this._resourcesRepository.findAllRecords().pipe(
+      map((resources) => !isNullOrEmpty(resources))
+    );
   }
 }
