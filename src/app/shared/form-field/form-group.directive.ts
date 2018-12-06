@@ -7,11 +7,11 @@ import {
   AfterContentInit
 } from '@angular/core';
 import { FormControlDirective } from '@angular/forms';
-import { McsScrollDispatcherService } from '@app/core';
+import {
+  McsScrollDispatcherService,
+  McsUniqueId
+} from '@app/core';
 import { isNullOrEmpty } from '@app/utilities';
-
-// Unique Id that generates during runtime
-let nextUniqueId = 0;
 
 @Directive({
   selector: 'form[mcsFormGroup]',
@@ -23,7 +23,7 @@ let nextUniqueId = 0;
 
 export class FormGroupDirective implements AfterContentInit {
   @Input()
-  public id: string = `mcs-form-group-${nextUniqueId++}`;
+  public id: string = McsUniqueId.NewId('form-group');
 
   @ContentChildren(FormControlDirective, { descendants: true })
   private _formFields: QueryList<FormControlDirective>;
@@ -34,7 +34,9 @@ export class FormGroupDirective implements AfterContentInit {
   ) { }
 
   public ngAfterContentInit(): void {
-    this._validateControls();
+    Promise.resolve().then(() => {
+      this._validateControls();
+    });
   }
 
   /**
@@ -120,7 +122,7 @@ export class FormGroupDirective implements AfterContentInit {
    */
   private _validateControls(): void {
     if (isNullOrEmpty(this._formFields)) {
-      throw new Error('Form field does not exist');
+      throw new Error('Form fields does not exist');
     }
   }
 }

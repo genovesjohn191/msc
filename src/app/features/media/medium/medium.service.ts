@@ -3,8 +3,12 @@ import {
   BehaviorSubject,
   Observable
 } from 'rxjs';
-import { distinctUntilChanged } from 'rxjs/operators';
+import {
+  distinctUntilChanged,
+  filter
+} from 'rxjs/operators';
 import { McsResourceMedia } from '@app/models';
+import { isNullOrEmpty } from '@app/utilities';
 
 @Injectable()
 export class MediumService {
@@ -18,7 +22,10 @@ export class MediumService {
    * Event that emits when the selected item has been changed
    */
   public selectedMediumChange(): Observable<McsResourceMedia> {
-    return this._selectedMediumChange.pipe(distinctUntilChanged());
+    return this._selectedMediumChange.pipe(
+      distinctUntilChanged(),
+      filter((medium) => !isNullOrEmpty(medium))
+    );
   }
 
   /**

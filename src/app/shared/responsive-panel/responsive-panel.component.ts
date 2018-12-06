@@ -24,7 +24,8 @@ import {
 } from 'rxjs/operators';
 import {
   CoreDefinition,
-  McsViewportService
+  McsViewportService,
+  McsUniqueId
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -40,9 +41,6 @@ import {
 
 // Constants
 const SCROLL_OFFSET = 60;
-
-// Unique Id that generates during runtime
-let nextUniqueId = 0;
 
 @Component({
   selector: 'mcs-responsive-panel',
@@ -60,7 +58,7 @@ let nextUniqueId = 0;
 export class ResponsivePanelComponent implements AfterViewInit, AfterViewChecked, OnDestroy {
 
   @Input()
-  public id: string = `mcs-responsive-panel-${nextUniqueId++}`;
+  public id: string = McsUniqueId.NewId('responsive-panel');
 
   @ViewChild('panelItemsMainContainer')
   public panelItemsMainContainer: ElementRef;

@@ -4,7 +4,7 @@
   </ng-container>
   <p *ngIf="textContent.description">{{ textContent.description }}</p>
 
-  <section>
+  <section *ngIf="selectedMedium$ | async as selectedMedium">
     <mcs-table [dataSource]="serversDataSource">
       <!-- Name Column -->
       <ng-container mcsColumnDef="name">
@@ -26,7 +26,7 @@
         <mcs-header-cell *mcsHeaderCellDef class="action-header-cell">
         </mcs-header-cell>
         <mcs-data-cell *mcsDataCellDef="let row">
-          <a (click)="showDetachDialog(row)"
+          <a (click)="showDetachDialog(selectedMedium, row)"
             [disabled]="selectedMedium.isProcessing"
             mcsId
             mcsEventTracker="detach-action"
@@ -64,7 +64,7 @@
         <button mcsButton
           arrow="right" size="small"
           [disabled]="!manageServers?.valid"
-          (click)="attachServer()"
+          (click)="attachServer(selectedMedium)"
           mcsId
           mcsEventTracker="attach-server"
           mcsEventCategory="media"

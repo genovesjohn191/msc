@@ -40,7 +40,8 @@ import {
   CoreDefinition,
   McsFormFieldControlBase,
   McsItemListKeyManager,
-  McsScrollDispatcherService
+  McsScrollDispatcherService,
+  McsUniqueId
 } from '@app/core';
 import {
   Key,
@@ -64,9 +65,6 @@ import {
 
 const SELECT_PANEL_MAX_HEIGHT = 400;
 const SELECT_ITEM_OFFSET = 7;
-
-// Unique Id that generates during runtime
-let nextUniqueId = 0;
 
 @Component({
   selector: 'mcs-select',
@@ -100,7 +98,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
   public change = new EventEmitter<any>();
 
   @Input()
-  public id: string = `mcs-select-${nextUniqueId++}`;
+  public id: string = McsUniqueId.NewId('select');
 
   @Input()
   public placeholder: string;
@@ -434,7 +432,9 @@ export class SelectComponent extends McsFormFieldControlBase<any>
       isFirstItemSelected ?
         this._selectItem(this._options.first) :
         this._selectItemByValue(this.ngControl ? this.ngControl.value : this._value);
-      if (!isNullOrEmpty(this.ngControl)) { this.ngControl.control.markAsPristine(); }
+      if (!isNullOrEmpty(this.ngControl)) {
+        this.ngControl.control.markAsPristine();
+      }
     });
   }
 
@@ -591,7 +591,6 @@ export class SelectComponent extends McsFormFieldControlBase<any>
     ).subscribe((item) => {
       this._selectItem(item);
       this.closePanel();
-      this.focus();
     });
   }
 }

@@ -14,12 +14,10 @@ import {
   coerceBoolean,
   animateFactory
 } from '@app/utilities';
+import { McsUniqueId } from '@app/core';
 import {
   AccordionPanelHeaderComponent
 } from '../accordion-panel-header/accordion-panel-header.component';
-
-// Unique Id that generates during runtime
-let nextUniqueId = 0;
 
 @Component({
   selector: 'mcs-accordion-panel',
@@ -36,7 +34,7 @@ let nextUniqueId = 0;
 })
 
 export class AccordionPanelComponent implements OnInit {
-  public id: string = `mcs-accordion-panel-${nextUniqueId++}`;
+  public id: string = McsUniqueId.NewId('accordion-panel');
 
   @Output()
   public selectionChanged = new EventEmitter<any>();

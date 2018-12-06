@@ -9,16 +9,14 @@ import {
 } from '@angular/core';
 import {
   CoreDefinition,
-  McsTextContentProvider
+  McsTextContentProvider,
+  McsUniqueId
 } from '@app/core';
 import { isNullOrEmpty } from '@app/utilities';
 import {
   McsServer,
   ServerCommand
 } from '@app/models';
-
-// Unique Id that generates during runtime
-let nextUniqueId = 0;
 
 @Component({
   selector: 'mcs-server-command',
@@ -55,7 +53,7 @@ export class ServerCommandComponent implements OnInit {
   }
 
   constructor(private _textProvider: McsTextContentProvider) {
-    this.id = `mcs-server-command-${nextUniqueId++}`;
+    this.id = McsUniqueId.NewId('server-command');
     this.excluded = new Array<ServerCommand>();
   }
 

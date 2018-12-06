@@ -753,7 +753,7 @@
         "mediaNameRequired": "Media name must be entered",
         "mediaNameInvalid": "Media name can only contain letters, numbers or hyphens",
         "mediaUrlRequired": "Media url must be entered",
-        "mediaUrlInvalid": "Invalid url format",
+        "mediaUrlInvalid": "Invalid media URL provided",
         "mediaUploadError": "Unfortunately an error occurred and we couldn't upload your media at this time. Please try again."
       }
     },

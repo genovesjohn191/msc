@@ -16,11 +16,11 @@ import {
   transition,
   animate,
 } from '@angular/animations';
+import {
+  CoreDefinition,
+  McsUniqueId
+} from '@app/core';
 import { SelectTagSubItemComponent } from '../select-tag-sub-item/select-tag-sub-item.component';
-import { CoreDefinition } from '@app/core';
-
-// Unique Id that generates during runtime
-let nextUniqueId = 0;
 
 @Component({
   selector: 'mcs-select-tag-main-item',
@@ -43,7 +43,7 @@ let nextUniqueId = 0;
 
 export class SelectTagMainItemComponent {
 
-  public id: string = `mcs-select-tag-main-item-${nextUniqueId++}`;
+  public id: string = McsUniqueId.NewId('select-tag-main-item');
 
   @Input()
   public header: string;

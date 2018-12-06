@@ -16,16 +16,14 @@ import {
 } from '@angular/forms';
 import {
   McsFormFieldControlBase,
-  McsPlatformService
+  McsPlatformService,
+  McsUniqueId
 } from '@app/core';
 import {
   isNullOrEmpty,
   ErrorStateMatcher,
   coerceBoolean
 } from '@app/utilities';
-
-// Unique Id that generates during runtime
-let nextUniqueId = 0;
 
 // Invalid types for input
 const MCS_INPUT_INVALID_TYPES = [
@@ -60,7 +58,7 @@ export class InputDirective extends McsFormFieldControlBase<any>
   implements OnChanges, OnDestroy, DoCheck {
 
   @Input()
-  public id: string = `mcs-input-item-${nextUniqueId++}`;
+  public id: string = McsUniqueId.NewId('input');
 
   @Input()
   public placeholder: string;

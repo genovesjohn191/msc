@@ -7,9 +7,7 @@ import {
   ElementRef,
   Renderer2
 } from '@angular/core';
-
-// Unique Id that generates during runtime
-let nextUniqueId = 0;
+import { McsUniqueId } from '@app/core';
 
 @Component({
   selector: 'mcs-hint',
@@ -24,7 +22,7 @@ let nextUniqueId = 0;
 
 export class HintComponent implements OnInit {
   @Input()
-  public id: string = `mcs-hint-item-${nextUniqueId++}`;
+  public id: string = McsUniqueId.NewId('hint-item');
 
   @Input()
   public align: 'start' | 'end';

@@ -11,12 +11,13 @@ import {
   Observable,
   Subject
 } from 'rxjs';
-import { McsScrollDispatcherService } from '@app/core';
+import {
+  McsScrollDispatcherService,
+  McsUniqueId
+} from '@app/core';
 import { isNullOrEmpty } from '@app/utilities';
 import { Scrollable } from './scrollable.interface';
 
-// Unique Id that generates during runtime
-let nextUniqueId = 0;
 type ScrollbarStyle = 'default' | 'dark';
 
 @Directive({
@@ -28,7 +29,7 @@ type ScrollbarStyle = 'default' | 'dark';
 
 export class ScrollableDirective implements OnInit, OnDestroy, Scrollable {
   @Input('mcsScrollbarId')
-  public scrollbarId: string = `mcs-scrollbar-item-${nextUniqueId++}`;
+  public scrollbarId: string = McsUniqueId.NewId('scrollbar-item');
 
   @Input('mcsScrollbarSize')
   public scrollbarSize: 'small' | 'medium';

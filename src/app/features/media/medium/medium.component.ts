@@ -48,6 +48,7 @@ import {
 } from '@app/shared';
 import { MediaRepository } from '@app/services';
 import { MediaListSource } from '../media.listsource';
+import { MediumService } from './medium.service';
 
 // Add another group type in here if you have addition tab
 type tabGroupType = 'overview' | 'servers';
@@ -89,7 +90,8 @@ export class MediumComponent
     private _textContentProvider: McsTextContentProvider,
     private _loadingService: McsLoadingService,
     private _errorHandlerService: McsErrorHandlerService,
-    private _mediaRepository: MediaRepository
+    private _mediaRepository: MediaRepository,
+    private _mediumService: MediumService
   ) {
     super(_router, _activatedRoute);
     this.listStatusFactory = new McsDataStatusFactory(_changeDetectorRef);
@@ -167,6 +169,7 @@ export class MediumComponent
         this._errorHandlerService.handleHttpRedirectionError(error.status);
         return throwError(error);
       }),
+      tap((media) => this._mediumService.setSelectedMedium(media)),
       finalize(() => this._loadingService.hideLoader()),
       shareReplay(1)
     );

@@ -15,15 +15,15 @@ import {
   transition,
   trigger
 } from '@angular/animations';
-import { CoreDefinition } from '@app/core';
+import {
+  CoreDefinition,
+  McsUniqueId
+} from '@app/core';
 import { Key } from '@app/models';
 import {
   coerceBoolean,
   isNullOrEmpty
 } from '@app/utilities';
-
-// Unique Id that generates during runtime
-let nextUniqueId = 0;
 
 @Component({
   selector: 'mcs-tag',
@@ -65,7 +65,7 @@ export class TagComponent {
   public receivedFocus = new EventEmitter<TagComponent>();
 
   @Input()
-  public id: string = `mcs-tag-${nextUniqueId++}`;
+  public id: string = McsUniqueId.NewId('tag');
 
   @Input()
   public get removable(): boolean { return this._removable; }

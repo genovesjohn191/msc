@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { McsRepositoryBase } from '@app/core';
+import {
+  McsRepositoryBase,
+  McsAccessControlService,
+  CoreDefinition
+} from '@app/core';
 import { getSafeProperty } from '@app/utilities';
 import {
   McsApiSuccessResponse,
@@ -13,14 +17,18 @@ import {
   McsResourceVApp,
   McsResourceCatalogItemCreate,
   McsJob,
-  McsValidation
+  McsValidation,
+  ServiceType
 } from '@app/models';
 import { ResourcesApiService } from '../api-services/resources-api.service';
 
 @Injectable()
 export class ResourcesRepository extends McsRepositoryBase<McsResource> {
 
-  constructor(private _resourcesApiService: ResourcesApiService) {
+  constructor(
+    private _accessControlService: McsAccessControlService,
+    private _resourcesApiService: ResourcesApiService
+  ) {
     super();
   }
 
@@ -105,6 +113,23 @@ export class ResourcesRepository extends McsRepositoryBase<McsResource> {
             resource.vApps, response.content);
           this.updateRecord(resource);
           return response.content;
+        })
+      );
+  }
+
+  /**
+   * Find all the resources based on the feature toggle
+   */
+  public findResourcesByFeature(): Observable<McsResource[]> {
+    return this.findAllRecords()
+      .pipe(
+        map((resources) => {
+          let managedFeatureIsOn = this._accessControlService
+            .hasAccessToFeature(CoreDefinition.FEATURE_FLAG_ENABLE_CREATE_MANAGED_SERVER);
+          return resources.filter(
+            (resource) => resource.serviceType === ServiceType.SelfManaged ||
+              (managedFeatureIsOn && resource.serviceType === ServiceType.Managed)
+          );
         })
       );
   }

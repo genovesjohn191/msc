@@ -6,9 +6,7 @@ import {
   Directive
 } from '@angular/core';
 import { coerceBoolean } from '@app/utilities';
-
-// Unique Id that generates during runtime
-let nextUniqueId = 0;
+import { McsUniqueId } from '@app/core';
 
 @Directive({
   selector: '[mcsResponsivePanelItem]',
@@ -28,7 +26,7 @@ export class ResponsivePanelItemDirective {
   public select: EventEmitter<any>;
 
   @Input()
-  public id: string = `mcs-responsive-panel-item-${nextUniqueId++}`;
+  public id: string = McsUniqueId.NewId('responsive-panel-item');
 
   @Input('mcsResponsivePanelItemSelectable')
   public get selectable(): boolean { return this._selectable; }

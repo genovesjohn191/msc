@@ -1,0 +1,7 @@
+@import "../../../../styles/shared/base";
+
+.data-status-in-progress-wrapper {
+  @include display-flex(row);
+  @include align-items(center);
+  justify-content: center;
+}

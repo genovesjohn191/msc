@@ -7,9 +7,7 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
-
-// Unique Id that generates during runtime
-let nextUniqueId = 0;
+import { McsUniqueId } from '@app/core';
 
 @Component({
   selector: 'mcs-wizard-step',
@@ -24,7 +22,7 @@ let nextUniqueId = 0;
 
 export class WizardStepComponent {
   @Input()
-  public id: any = `mcs-wizard-step-item-${nextUniqueId++}`;
+  public id: any = McsUniqueId.NewId('wizard-step');
 
   @Input()
   public stepTitle: string;

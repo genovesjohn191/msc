@@ -24,6 +24,7 @@ export class ServerCreateService {
 
   /**
    * Returns the resources applicable to create server (Filtered based on feature flag)
+   * @deprecated Used the findResourcesbyFeature method of Resources Repository instead
    */
   public getCreationResources(): Observable<McsResource[]> {
     return this._resourcesRepository.findAllRecords()

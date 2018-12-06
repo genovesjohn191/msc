@@ -25,3 +25,6 @@ export * from './repositories/servers.repository';
 export * from './repositories/servers-os.repository';
 export * from './repositories/tickets.repository';
 export * from './repositories/media.repository';
+
+/** Guards */
+export * from './guards/required-resources.guard';

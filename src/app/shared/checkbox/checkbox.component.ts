@@ -12,15 +12,15 @@ import {
   ControlValueAccessor,
   NG_VALUE_ACCESSOR
 } from '@angular/forms';
-import { CoreDefinition } from '@app/core';
+import {
+  CoreDefinition,
+  McsUniqueId
+} from '@app/core';
 import {
   coerceBoolean,
   coerceNumber,
   McsColorType
 } from '@app/utilities';
-
-// Unique Id that generates during runtime
-let nextUniqueId = 0;
 
 @Component({
   selector: 'mcs-checkbox',
@@ -45,7 +45,7 @@ export class CheckboxComponent implements ControlValueAccessor {
   public change: EventEmitter<CheckboxComponent> = new EventEmitter();
 
   @Input()
-  public id: string = `mcs-checkbox-${nextUniqueId++}`;
+  public id: string = McsUniqueId.NewId('checkbox');
 
   @Input()
   public color: McsColorType = 'black';

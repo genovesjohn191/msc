@@ -11,10 +11,10 @@ import {
   coerceBoolean,
   animateFactory
 } from '@app/utilities';
-import { CoreDefinition } from '@app/core';
-
-// Unique Id that generates during runtime
-let nextUniqueId = 0;
+import {
+  CoreDefinition,
+  McsUniqueId
+} from '@app/core';
 
 @Component({
   selector: 'mcs-quote-widget',
@@ -34,7 +34,7 @@ let nextUniqueId = 0;
 
 export class QuoteWidgetComponent {
   @Input()
-  public id: string = `mcs-quote-widget-${nextUniqueId++}`;
+  public id: string = McsUniqueId.NewId('quote-widget');
 
   @Output()
   public collapseChange = new EventEmitter<boolean>();

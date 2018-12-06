@@ -32,9 +32,7 @@ import {
   unsubscribeSubject
 } from '@app/utilities';
 import { RadioButtonComponent } from './radio-button/radio-button.component';
-
-// Unique Id that generates during runtime
-let nextUniqueId = 0;
+import { McsUniqueId } from '@app/core';
 
 @Component({
   selector: 'mcs-radio-button-group',
@@ -81,7 +79,7 @@ export class RadioButtonGroupComponent implements AfterContentInit,
     this._name = value;
     this._updateRadioButtonNames();
   }
-  private _name: string = `mcs-radio-button-group-${nextUniqueId++}`;
+  private _name: string = McsUniqueId.NewId('radio-button-group');
 
   /**
    * Model Value of the tag list (Two way binding)

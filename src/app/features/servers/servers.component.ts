@@ -53,7 +53,6 @@ import {
   ResourcesRepository,
   ServersRepository
 } from '@app/services';
-import { ServerCreateService } from './server-create';
 
 @Component({
   selector: 'mcs-servers',
@@ -122,7 +121,6 @@ export class ServersComponent
     private _textProvider: McsTextContentProvider,
     private _serversService: ServersServices,
     private _serversRepository: ServersRepository,
-    private _serverCreateService: ServerCreateService,
     private _resourcesRepository: ResourcesRepository,
     private _router: Router
   ) {
@@ -362,7 +360,7 @@ export class ServersComponent
           this.changeDetectorRef.markForCheck();
         })
       );
-    let createServerResources = this._serverCreateService.getCreationResources()
+    let createServerResources = this._resourcesRepository.findResourcesByFeature()
       .pipe(
         map((response) => {
           this.hasCreateResources = !isNullOrEmpty(response);
