@@ -45,12 +45,12 @@ import {
   DiskConflictSnapshotDialogComponent
 } from '../../shared';
 import {
-  ServersApiService,
-  ServersRepository,
-  ResourcesRepository
+  McsServersRepository,
+  McsResourcesRepository
 } from '@app/services';
 import { ServerService } from '../server.service';
 import { ServerDetailsBase } from '../server-details.base';
+import { ServersService } from '../../servers.service';
 
 enum SnapshotDialogType {
   None = 0,
@@ -111,14 +111,14 @@ export class ServerBackupsComponent extends ServerDetailsBase
   }
 
   constructor(
-    _resourcesRepository: ResourcesRepository,
-    _serversRepository: ServersRepository,
-    _serversService: ServersApiService,
+    _resourcesRepository: McsResourcesRepository,
+    _serversRepository: McsServersRepository,
     _serverService: ServerService,
     _changeDetectorRef: ChangeDetectorRef,
     _textProvider: McsTextContentProvider,
     _errorHandlerService: McsErrorHandlerService,
     _loadingService: McsLoadingService,
+    private _serversService: ServersService,
     private _standardDateFormatPipe: StdDateFormatPipe,
     private _notificationEvents: McsNotificationEventsService,
     private _dialogService: McsDialogService
@@ -126,7 +126,6 @@ export class ServerBackupsComponent extends ServerDetailsBase
     super(
       _resourcesRepository,
       _serversRepository,
-      _serversService,
       _serverService,
       _changeDetectorRef,
       _textProvider,
@@ -161,19 +160,17 @@ export class ServerBackupsComponent extends ServerDetailsBase
       if (dialogType !== SnapshotDialogType.Create) { return; }
 
       this._serversService.setServerSpinner(this.server);
-      this.createSnapshotSubscription = this._serversService
+      this.createSnapshotSubscription = this._serversRepository
         .createServerSnapshot(this.server.id, {
           preserveState: true,
           preserveMemory: true,
           clientReferenceObject: { serverId: this.server.id }
-        })
-        .pipe(
+        }).pipe(
           catchError((error) => {
             this._serversService.clearServerSpinner(this.server);
             return throwError(error);
           })
-        )
-        .subscribe();
+        ).subscribe();
     });
   }
 
@@ -186,17 +183,15 @@ export class ServerBackupsComponent extends ServerDetailsBase
 
     this._showDialog(SnapshotDialogType.Restore, () => {
       this._serversService.setServerSpinner(this.server);
-      this.restoreSnapshotSubscription = this._serversService
+      this.restoreSnapshotSubscription = this._serversRepository
         .restoreServerSnapshot(this.server.id, {
           clientReferenceObject: { serverId: this.server.id }
-        })
-        .pipe(
+        }).pipe(
           catchError((error) => {
             this._serversService.clearServerSpinner(this.server);
             return throwError(error);
           })
-        )
-        .subscribe();
+        ).subscribe();
     }, snapshot);
   }
 
@@ -209,17 +204,15 @@ export class ServerBackupsComponent extends ServerDetailsBase
 
     this._showDialog(SnapshotDialogType.Delete, () => {
       this._serversService.setServerSpinner(this.server);
-      this.deleteSnapshotSubscription = this._serversService
+      this.deleteSnapshotSubscription = this._serversRepository
         .deleteServerSnapshot(this.server.id, {
           clientReferenceObject: { serverId: this.server.id }
-        })
-        .pipe(
+        }).pipe(
           catchError((error) => {
             this._serversService.clearServerSpinner(this.server);
             return throwError(error);
           })
-        )
-        .subscribe();
+        ).subscribe();
     }, snapshot);
   }
 
@@ -374,7 +367,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
 
     this.dataStatusFactory.setInProgress();
     this.serverSnapshotsSubscription = this._serversRepository
-      .findSnapshots(this.server)
+      .getSnapshots(this.server)
       .pipe(
         catchError((error) => {
           // Handle common error status code

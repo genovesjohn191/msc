@@ -9,7 +9,8 @@ import {
 import {
   Subscription,
   Subject,
-  throwError
+  throwError,
+  Observable
 } from 'rxjs';
 import {
   startWith,
@@ -24,7 +25,8 @@ import {
   McsDialogService,
   McsErrorHandlerService,
   McsDataStatusFactory,
-  McsLoadingService
+  McsLoadingService,
+  McsTableDataSource
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -33,10 +35,7 @@ import {
   animateFactory,
   getSafeProperty
 } from '@app/utilities';
-import {
-  TableDataSource,
-  ComponentHandlerDirective
-} from '@app/shared';
+import { ComponentHandlerDirective } from '@app/shared';
 import {
   McsJob,
   DataStatus,
@@ -45,9 +44,8 @@ import {
   McsServerStorageDeviceUpdate
 } from '@app/models';
 import {
-  ServersApiService,
-  ServersRepository,
-  ResourcesRepository
+  McsServersRepository,
+  McsResourcesRepository
 } from '@app/services';
 import {
   DeleteStorageDialogComponent,
@@ -55,6 +53,7 @@ import {
 } from '../../shared';
 import { ServerService } from '../server.service';
 import { ServerDetailsBase } from '../server-details.base';
+import { ServersService } from '../../servers.service';
 
 // Enumeration
 export enum ServerDiskMethodType {
@@ -85,7 +84,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   public selectedStorage: McsResourceStorage;
   public selectedDisk: McsServerStorageDevice;
 
-  public disksDataSource: TableDataSource<McsServerStorageDevice>;
+  public disksDataSource: McsTableDataSource<McsServerStorageDevice>;
   public disksColumns: string[];
   public dataStatusFactory: McsDataStatusFactory<McsServerStorageDevice[]>;
   public manageStorageTemplate: any[];
@@ -148,21 +147,20 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   }
 
   constructor(
-    _resourcesRepository: ResourcesRepository,
-    _serversRepository: ServersRepository,
-    _serversService: ServersApiService,
+    _resourcesRepository: McsResourcesRepository,
+    _serversRepository: McsServersRepository,
     _serverService: ServerService,
     _changeDetectorRef: ChangeDetectorRef,
     _textProvider: McsTextContentProvider,
     _errorHandlerService: McsErrorHandlerService,
     _loadingService: McsLoadingService,
+    private _serversService: ServersService,
     private _dialogService: McsDialogService,
     private _notificationEvents: McsNotificationEventsService
   ) {
     super(
       _resourcesRepository,
       _serversRepository,
-      _serversService,
       _serverService,
       _changeDetectorRef,
       _textProvider,
@@ -171,7 +169,6 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     );
     this._newDisk = new McsServerStorageDevice();
     this.disksColumns = new Array();
-    this.disksDataSource = new TableDataSource([]);
     this.manageStorageTemplate = [{}];
     this.manageStorage = new ServerManageStorage();
     this.dataStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
@@ -283,7 +280,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     };
 
     this._serversService.setServerSpinner(this.server);
-    this._serversService.createServerStorage(this.server.id, diskValues)
+    this._serversRepository.createServerStorage(this.server.id, diskValues)
       .pipe(
         catchError((error) => {
           this._serversService.clearServerSpinner(this.server);
@@ -315,7 +312,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
         sizeMB: this.selectedDisk.sizeMB
       };
       this._serversService.setServerSpinner(this.server);
-      this._serversService.deleteServerStorage(this.server.id, this.selectedDisk.id, diskValues)
+      this._serversRepository.deleteServerStorage(this.server.id, this.selectedDisk.id, diskValues)
         .pipe(
           catchError((error) => {
             this._serversService.clearServerSpinner(this.server);
@@ -341,7 +338,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
 
     this.closeExpandDiskWindow();
     this._serversService.setServerSpinner(this.server);
-    this._serversService.updateServerStorage(this.server.id, this.selectedDisk.id, diskValues)
+    this._serversRepository.updateServerStorage(this.server.id, this.selectedDisk.id, diskValues)
       .pipe(
         catchError((error) => {
           this._serversService.clearServerSpinner(this.server);
@@ -374,7 +371,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
    * Initializes the data source of the disks table
    */
   private _initializeDataSource(): void {
-    this.disksDataSource = new TableDataSource(this._getServerDisks());
+    this.disksDataSource = new McsTableDataSource(this._serverDisksSource.bind(this));
   }
 
   /**
@@ -421,7 +418,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
         this.refreshServerResource();
       case DataStatus.Error:
       default:
-        this.disksDataSource.deleteRecord(this._newDisk);
+        this.disksDataSource.deleteRecordBy((item) => this._newDisk.id === item.id);
         break;
     }
   }
@@ -455,7 +452,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     this._newDisk.name = job.clientReferenceObject.name;
     this._newDisk.sizeMB = job.clientReferenceObject.sizeMB;
     this._newDisk.storageProfile = job.clientReferenceObject.storageProfile;
-    this.disksDataSource.addRecord(this._newDisk);
+    this.disksDataSource.addOrUpdateRecord(this._newDisk);
   }
 
   /**
@@ -469,12 +466,12 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   }
 
   /**
-   * Get Server Disks from API
+   * Server DISKS Datasource for the table
    */
-  private _getServerDisks() {
+  private _serverDisksSource(): Observable<McsServerStorageDevice[]> {
     return this._requestDisksSubject.pipe(
       startWith(null),
-      switchMap(() => this._serversRepository.findServerDisks(this.server))
+      switchMap(() => this._serversRepository.getServerDisks(this.server))
     );
   }
 
@@ -486,9 +483,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     if (!hasResource) { return; }
 
     this._storagesSubscription = this._resourcesRespository
-      .findResourceStorage(this.serverResource)
-      .subscribe(() => {
-        // Subscribe to update the storage to server resource
-      });
+      .getResourceStorage(this.serverResource)
+      .subscribe();
   }
 }

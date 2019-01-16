@@ -64,6 +64,7 @@ import {
 import { DataStatusDefDirective } from './data-status';
 import { TableDataSource } from './table.datasource';
 import { McsDataSource } from './mcs-data-source.interface';
+import { FilterSelector } from '../filter-selector';
 
 @Component({
   selector: 'mcs-table',
@@ -77,6 +78,16 @@ import { McsDataSource } from './mcs-data-source.interface';
 })
 
 export class TableComponent<T> implements OnInit, AfterContentInit, AfterContentChecked, OnDestroy {
+
+  @Input()
+  public set columnFilter(value: FilterSelector) {
+    this._columnFilter = value;
+    this._updateFiltersByColumnDef();
+    this._updateColumnVisibility();
+  }
+  private _columnFilter: FilterSelector;
+  private _columnFilterChange = new Subject<void>();
+
   /**
    * Trackby function to use wheater the data has been changed
    */
@@ -187,10 +198,13 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
     // Set the column definition mapping for easy accessing
     this._columnDefinitions.changes
       .pipe(startWith(null), takeUntil(this._destroySubject))
-      .subscribe(this._setColumnDefinitionsMap.bind(this));
+      .subscribe(() => {
+        this._setColumnDefinitionsMap();
+        this._renderHeaderRows();
 
-    // Render row headers
-    this._renderHeaderRows();
+        this._updateFiltersByColumnDef();
+        this._updateColumnVisibility();
+      });
   }
 
   public ngAfterContentChecked() {
@@ -213,6 +227,45 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
     this._columnDefinitionsMap.clear();
     this._columnDefinitions.forEach((columnDefDirective) => {
       this._columnDefinitionsMap.set(columnDefDirective.name, columnDefDirective);
+    });
+  }
+
+  /**
+   * Updates the column visibility based on the filter selector
+   */
+  private _updateColumnVisibility(): void {
+    Promise.resolve().then(() => {
+      if (isNullOrEmpty(this._columnFilter)) { return; }
+
+      this._columnFilterChange.next();
+      this._columnFilter.filtersChange.pipe(
+        startWith(null),
+        takeUntil(this._columnFilterChange)
+      ).subscribe(() => {
+        this._columnDefinitions.forEach((columnDef) => {
+          let existingColumn = this._columnFilter.filterItemsMap.get(columnDef.name);
+          if (!isNullOrEmpty(existingColumn)) {
+            existingColumn.value ? columnDef.showColumn() : columnDef.hideColumn();
+          }
+        });
+      });
+      this._changeDetectorRef.markForCheck();
+    });
+  }
+
+  /**
+   * Updates the filters by column definition, this will remove the unknown filters
+   * that are not registered on the column. i.e: ngIf on the column definition
+   */
+  private _updateFiltersByColumnDef(): void {
+    if (isNullOrEmpty(this._columnFilter)) { return; }
+
+    this._columnFilter.filterItemsMap.forEach((_value, _key) => {
+      let columnDefFound = this._columnDefinitions &&
+        this._columnDefinitions.find((columnDef) => columnDef.name === _key);
+      isNullOrEmpty(columnDefFound) ?
+        this._columnFilter.removeFilterSelector(_key) :
+        this._columnFilter.addFilterSelector(_key);
     });
   }
 
@@ -317,6 +370,7 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
       });
 
     // Render the view for the header row
+    this._headerPlaceholder.viewContainer.clear();
     this._headerPlaceholder.viewContainer
       .createEmbeddedView(this._headerRowDefinition.template, { headerCells });
     headerCells.forEach((cell) => {

@@ -6,7 +6,7 @@
     <mcs-top-panel-item *mcsTopPanelItemDef>
       <div class="listing-action-wrapper">
         <div class="total-record-count">
-          <span>{{ totalRecordsCount | mcsPlural:
+          <span>{{ dataSource?.totalRecordCount | mcsPlural:
                 textContent.dataSingular : textContent.dataPlural }}
           </span>
         </div>
@@ -23,7 +23,7 @@
 
     <!-- Column Filter -->
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.filterColumn" offset="medium">
-      <mcs-filter-selector [key]="columnSettingsKey"
+      <mcs-filter-selector [key]="columnSettingsKey" #filterSelector
         (filtersChange)="updateColumnSettings($event)"></mcs-filter-selector>
     </mcs-left-panel-item>
   </mcs-left-panel>
@@ -35,7 +35,7 @@
       <mcs-search *ngIf="isMobile" #search mcsId="notifications-mobile-search"></mcs-search>
 
       <!-- Table -->
-      <mcs-table [dataSource]="dataSource">
+      <mcs-table [dataSource]="dataSource" [columnFilter]="filterSelector">
 
         <!-- Notification Column -->
         <ng-container mcsColumnDef="notification">
@@ -72,7 +72,7 @@
         </ng-container>
 
         <!-- Start Time Column -->
-        <ng-container mcsColumnDef="startTime" [mcsColumnDefHidden]="isColumnHidden('startTime')">
+        <ng-container mcsColumnDef="startTime">
           <mcs-header-cell *mcsHeaderCellDef hidden-small>
             {{ columnSettings.startTime.text }}
           </mcs-header-cell>
@@ -82,7 +82,7 @@
         </ng-container>
 
         <!-- Completed Column -->
-        <ng-container mcsColumnDef="completed" [mcsColumnDefHidden]="isColumnHidden('completed')">
+        <ng-container mcsColumnDef="completed">
           <mcs-header-cell *mcsHeaderCellDef hidden-small>
             {{ columnSettings.completed.text }}
           </mcs-header-cell>
@@ -123,7 +123,7 @@
       <!-- Paginator -->
       <mcs-paginator #paginator
         [hidden]="isSearching"
-        [totalCount]="totalRecordsCount">
+        [totalCount]="dataSource?.totalRecordCount">
       </mcs-paginator>
     </div>
   </mcs-content-panel>

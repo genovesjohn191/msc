@@ -36,7 +36,7 @@ import {
   McsServer,
   McsServerClone
 } from '@app/models';
-import { ServersRepository } from '@app/services';
+import { McsServersRepository } from '@app/services';
 import { ServerCreateDetailsBase } from '../server-create-details.base';
 
 @Component({
@@ -93,7 +93,7 @@ export class ServerCloneComponent
     private _textContentProvider: McsTextContentProvider,
     private _activatedRoute: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _serversRepository: ServersRepository
+    private _serversRepository: McsServersRepository
   ) {
     super();
     this.dataStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
@@ -145,22 +145,19 @@ export class ServerCloneComponent
   private _getAllServers(): void {
     unsubscribeSafely(this.serversSubscription);
     this.dataStatusFactory.setInProgress();
-    this.serversSubscription = this._serversRepository
-      .findAllRecords()
-      .pipe(
-        catchError((error) => {
-          // Handle common error status code
-          this.dataStatusFactory.setError();
-          return throwError(error);
-        })
-      )
-      .subscribe((response) => {
-        if (isNullOrEmpty(response)) { return; }
-        this.servers = (response as McsServer[]).filter((server) => {
-          return server.clonable && server.serviceType === this.serviceType;
-        });
-        this.dataStatusFactory.setSuccessful(response);
+    this.serversSubscription = this._serversRepository.getAll().pipe(
+      catchError((error) => {
+        // Handle common error status code
+        this.dataStatusFactory.setError();
+        return throwError(error);
+      })
+    ).subscribe((response) => {
+      if (isNullOrEmpty(response)) { return; }
+      this.servers = (response as McsServer[]).filter((server) => {
+        return server.clonable && server.serviceType === this.serviceType;
       });
+      this.dataStatusFactory.setSuccessful(response);
+    });
     this.serversSubscription.add(() => {
       this._listenToParamChange();
       this._changeDetectorRef.markForCheck();
@@ -174,20 +171,18 @@ export class ServerCloneComponent
   private _getServerById(serverId: string): void {
     this.serverIsManuallyAssignedIp = false;
     this.ipAddressStatusFactory.setInProgress();
-    this._serversRepository.findRecordById(serverId)
-      .pipe(
-        catchError((error) => {
-          this.ipAddressStatusFactory.setSuccessful();
-          return throwError(error);
-        })
-      )
-      .subscribe((response) => {
-        this.ipAddressStatusFactory.setSuccessful(response);
-        let hasNics = !isNullOrEmpty(response) && !isNullOrEmpty(response.nics);
-        if (!hasNics) { return; }
-        this.serverIsManuallyAssignedIp = !!response.nics
-          .find((nic) => nic.ipAllocationMode === IpAllocationMode.Manual);
-      });
+    this._serversRepository.getById(serverId).pipe(
+      catchError((error) => {
+        this.ipAddressStatusFactory.setSuccessful();
+        return throwError(error);
+      })
+    ).subscribe((response) => {
+      this.ipAddressStatusFactory.setSuccessful(response);
+      let hasNics = !isNullOrEmpty(response) && !isNullOrEmpty(response.nics);
+      if (!hasNics) { return; }
+      this.serverIsManuallyAssignedIp = !!response.nics
+        .find((nic) => nic.ipAllocationMode === IpAllocationMode.Manual);
+    });
   }
 
   /**

@@ -46,9 +46,9 @@ describe('JobsApiService', () => {
   describe('getJobs()', () => {
     it('should get all jobs from API calls', () => {
       jobsApiService.getJobs({
-        page: requestOptions.page,
-        perPage: requestOptions.perPage,
-        searchKeyword: undefined
+        pageIndex: requestOptions.page,
+        pageSize: requestOptions.perPage,
+        keyword: undefined
       }).subscribe((response) => {
         expect(response).toBeDefined();
         expect(response.status).toBe(200);

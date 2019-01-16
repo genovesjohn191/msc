@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { SharedModule } from '@app/shared';
 /** Components */
 import { ConsolePageComponent } from './console-page.component';
-import { constantsProviders } from './console-page.constants';
 
 @NgModule({
   entryComponents: [
@@ -13,9 +12,6 @@ import { constantsProviders } from './console-page.constants';
   ],
   imports: [
     SharedModule
-  ],
-  providers: [
-    ...constantsProviders
   ]
 })
 

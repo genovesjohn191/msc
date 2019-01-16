@@ -3,11 +3,7 @@ import {
   TestBed
 } from '@angular/core/testing';
 import { CoreDefinition } from '@app/core';
-import { FirewallsApiService } from '@app/services';
-import {
-  FirewallsTestingModule,
-  mockFirewallsService
-} from './testing';
+import { FirewallsTestingModule } from './testing';
 import { FirewallsComponent } from './firewalls.component';
 
 describe('FirewallsComponent', () => {
@@ -31,7 +27,7 @@ describe('FirewallsComponent', () => {
     });
 
     /** Testbed Overriding of Providers */
-    TestBed.overrideProvider(FirewallsApiService, { useValue: mockFirewallsService });
+    // TestBed.overrideProvider(FirewallsApiService, { useValue: mockFirewallsService });
 
     /** Testbed Overriding of Components */
     TestBed.overrideComponent(FirewallsComponent, {

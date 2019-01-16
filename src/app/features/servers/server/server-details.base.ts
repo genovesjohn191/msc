@@ -6,8 +6,8 @@ import {
 import {
   takeUntil,
   finalize,
-  shareReplay,
-  tap
+  tap,
+  first
 } from 'rxjs/operators';
 import {
   McsTextContentProvider,
@@ -25,15 +25,15 @@ import {
   McsServer
 } from '@app/models';
 import {
-  ServersApiService,
-  ServersRepository,
-  ResourcesRepository
+  McsServersRepository,
+  McsResourcesRepository
 } from '@app/services';
 import { ServerService } from '../server/server.service';
 
 export abstract class ServerDetailsBase {
   public serverResource: McsResource;
   public serverResource$: Observable<McsResource>;
+
   private _baseJobSubject = new Subject<void>();
   private _serverTextContent: any;
 
@@ -57,9 +57,8 @@ export abstract class ServerDetailsBase {
   }
 
   constructor(
-    protected _resourcesRespository: ResourcesRepository,
-    protected _serversRepository: ServersRepository,
-    protected _serversService: ServersApiService,
+    protected _resourcesRespository: McsResourcesRepository,
+    protected _serversRepository: McsServersRepository,
     protected _serverService: ServerService,
     protected _changeDetectorRef: ChangeDetectorRef,
     protected _textProvider: McsTextContentProvider,
@@ -73,7 +72,7 @@ export abstract class ServerDetailsBase {
   protected initialize(): void {
     this._serverTextContent = this._textProvider.content.servers.server;
     this._listenToServerSelectionChange();
-    this._listenToServersUpdate();
+    this._subscribeToServersUpdate();
   }
 
   /**
@@ -119,22 +118,28 @@ export abstract class ServerDetailsBase {
    */
   private _getServerResources(fromCache: boolean = true): void {
     this._loadingService.showLoader(this._serverTextContent.loadingResourceDetails);
-    this.serverResource$ = this._resourcesRespository
-      .findRecordById(this.server.platform.resourceId, fromCache).pipe(
-        shareReplay(1),
-        tap((response) => this.serverResource = response),
-        finalize(() => {
-          this.serverSelectionChanged();
-          this._loadingService.hideLoader();
-          this._changeDetectorRef.markForCheck();
-        })
-      );
-    this.serverResource$.subscribe();
+    // Delete the record when it needs to refresh
+    if (!fromCache) { this._resourcesRespository.deleteById(this.server.platform.resourceId); }
+
+    this._resourcesRespository.getById(this.server.platform.resourceId).pipe(
+      tap((response) => {
+        this.serverResource = response;
+        this.serverSelectionChanged();
+
+      }),
+      finalize(() => {
+        this._loadingService.hideLoader();
+        this._changeDetectorRef.markForCheck();
+      }),
+      first()
+    ).subscribe();
   }
 
   /**
    * This will listen to selected server
    * and get its value to server variable
+   *
+   * @deprecated Make the server to observable
    */
   private _listenToServerSelectionChange(): void {
     this._serverService.selectedServerStream
@@ -151,8 +156,8 @@ export abstract class ServerDetailsBase {
    * Listen to each servers data update
    * so that we could refresh the view of the corresponding component
    */
-  private _listenToServersUpdate(): void {
-    this._serversRepository.dataRecordsChanged
+  private _subscribeToServersUpdate(): void {
+    this._serversRepository.dataChange()
       .pipe(takeUntil(this._baseJobSubject))
       .subscribe(() => this._changeDetectorRef.markForCheck());
   }

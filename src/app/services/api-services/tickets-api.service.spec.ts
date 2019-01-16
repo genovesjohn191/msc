@@ -46,9 +46,9 @@ describe('TicketsService', () => {
   describe('getTickets()', () => {
     it('should get all tickets from API calls', () => {
       ticketsService.getTickets({
-        page: requestOptions.page,
-        perPage: requestOptions.perPage,
-        searchKeyword: undefined
+        pageIndex: requestOptions.page,
+        pageSize: requestOptions.perPage,
+        keyword: undefined
       }).subscribe((response) => {
         expect(response).toBeDefined();
         expect(response.status).toBe(200);

@@ -9,12 +9,8 @@ import {
   Search
 } from '@app/shared';
 import { DataStatus } from '@app/models';
-import {
-  TicketsTestingModule,
-  mockTicketsService
-} from './testing';
+import { TicketsTestingModule } from './testing';
 import { TicketsComponent } from './tickets.component';
-import { TicketsApiService } from '@app/services';
 
 describe('TicketsComponent', () => {
 
@@ -36,7 +32,7 @@ describe('TicketsComponent', () => {
     });
 
     /** Testbed Onverriding of Providers */
-    TestBed.overrideProvider(TicketsApiService, { useValue: mockTicketsService });
+    // TestBed.overrideProvider(TicketsApiService, { useValue: mockTicketsService });
 
     /** Testbed Onverriding of Components */
     TestBed.overrideComponent(TicketsComponent, {
@@ -83,7 +79,8 @@ describe('TicketsComponent', () => {
         pageIndex: 0,
         pageSize: 10,
         totalCount: 100,
-        showLoading() { return; }
+        showLoading() { return; },
+        reset() { return; },
       } as Paginator;
 
       component.search = {

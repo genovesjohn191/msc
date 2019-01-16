@@ -52,12 +52,12 @@ import {
   ServerManageScale
 } from '../../shared';
 import {
-  ServersApiService,
-  ServersRepository,
-  ResourcesRepository
+  McsServersRepository,
+  McsResourcesRepository
 } from '@app/services';
 import { ServerDetailsBase } from '../server-details.base';
 import { ServerService } from '../server.service';
+import { ServersService } from '../../servers.service';
 
 // Enumeration
 export enum ServerManagementView {
@@ -124,13 +124,13 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
 
   constructor(
     _changeDetectorRef: ChangeDetectorRef,
-    _resourcesRepository: ResourcesRepository,
-    _serversRepository: ServersRepository,
-    _serversService: ServersApiService,
+    _resourcesRepository: McsResourcesRepository,
+    _serversRepository: McsServersRepository,
     _serverService: ServerService,
     _textProvider: McsTextContentProvider,
     _errorHandlerService: McsErrorHandlerService,
     _loadingService: McsLoadingService,
+    private _serversService: ServersService,
     private _router: Router,
     private _activatedRoute: ActivatedRoute,
     private _dialogService: McsDialogService,
@@ -139,7 +139,6 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
     super(
       _resourcesRepository,
       _serversRepository,
-      _serversService,
       _serverService,
       _changeDetectorRef,
       _textProvider,
@@ -258,7 +257,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
     // Set initial server status so that the spinner will show up immediately
     this._serversService.setServerSpinner(this.server);
     this.setViewMode(ServerManagementView.None);
-    this._serversService.updateServerCompute(
+    this._serversRepository.updateServerCompute(
       this.server.id,
       {
         memoryMB: this.manageScale.memoryMB,
@@ -310,7 +309,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
     // Set initial server status so that the spinner will show up immediately
     this._serversService.setServerSpinner(this.server);
     this.setViewMode(ServerManagementView.None);
-    this._serversService.attachServerMedia(
+    this._serversRepository.attachServerMedia(
       this.server.id,
       {
         name: media.name,
@@ -339,7 +338,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
 
     // Set initial server status so that the spinner will show up immediately
     this._serversService.setServerSpinner(this.server);
-    this._serversService.detachServerMedia(
+    this._serversRepository.detachServerMedia(
       this.server.id, media.id,
       { clientReferenceObject: expectedJobObject })
       .pipe(
@@ -379,12 +378,11 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
     this.serverThumbnail = undefined;
     if (isNullOrEmpty(this.server)) { return; }
 
-    this._serverThumbnailSubscription = this._serversService
+    this._serverThumbnailSubscription = this._serversRepository
       .getServerThumbnail(this.server.id)
       .subscribe((response) => {
-        let thumbnailDetails = getSafeProperty(response, (obj) => obj.content);
-        if (isNullOrEmpty(thumbnailDetails)) { return; }
-
+        if (isNullOrEmpty(response)) { return; }
+        let thumbnailDetails = response;
         this.serverThumbnail = getEncodedUrl(
           thumbnailDetails.file,
           thumbnailDetails.fileType,
@@ -401,7 +399,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
 
     this.mediaStatusFactory.setInProgress();
     this._serverMediaSubscription = this._serversRepository
-      .findServerMedias(this.server)
+      .getServerMedia(this.server)
       .pipe(
         catchError((error) => {
           // Handle common error status code
@@ -422,7 +420,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
     if (isNullOrEmpty(resourceId)) { return; }
 
     this._computeSubscription = this._resourcesRespository
-      .findResourceCompute(this.serverResource)
+      .getResourceCompute(this.serverResource)
       .subscribe();
   }
 

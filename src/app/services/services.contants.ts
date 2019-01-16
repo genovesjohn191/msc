@@ -9,20 +9,24 @@ import { ResourcesApiService } from './api-services/resources-api.service';
 import { ServersApiService } from './api-services/servers-api.service';
 import { TicketsApiService } from './api-services/tickets-api.service';
 import { ToolsApiService } from './api-services/tools-api.service';
+import { ConsoleApiService } from './api-services/console-api.service';
+import { CompaniesApiService } from './api-services/companies-api.service';
 
-/** Repositories */
-import { FirewallsRepository } from './repositories/firewalls.repository';
-import { MediaRepository } from './repositories/media.repository';
-import { NotificationsRepository } from './repositories/notifications.repository';
-import { OrderItemTypesRepository } from './repositories/order-item-types.repository';
-import { OrdersRepository } from './repositories/orders.repository';
-import { ProductCatalogRepository } from './repositories/product-catalog.repository';
-import { ProductsRepository } from './repositories/products.repository';
-import { ResourcesRepository } from './repositories/resources.repository';
-import { ServersOsRepository } from './repositories/servers-os.repository';
-import { ServersRepository } from './repositories/servers.repository';
-import { TicketsRepository } from './repositories/tickets.repository';
-import { ToolsRepository } from './repositories/tools.repository';
+/** New Repositories */
+import { McsFirewallsRepository } from './repositories/mcs-firewalls.repository';
+import { McsJobsRepository } from './repositories/mcs-jobs.repository';
+import { McsMediaRepository } from './repositories/mcs-media.repository';
+import { McsOrderItemTypesRepository } from './repositories/mcs-order-item-types.repository';
+import { McsOrdersRepository } from './repositories/mcs-orders.repository';
+import { McsProductCatalogRepository } from './repositories/mcs-product-catalog.repository';
+import { McsProductsRepository } from './repositories/mcs-products.repository';
+import { McsResourcesRepository } from './repositories/mcs-resources.repository';
+import { McsServersOsRepository } from './repositories/mcs-servers-os.repository';
+import { McsServersRepository } from './repositories/mcs-servers.repository';
+import { McsTicketsRepository } from './repositories/mcs-tickets.repository';
+import { McsToolsRepository } from './repositories/mcs-tools.repository';
+import { McsConsoleRepository } from './repositories/mcs-console.repository';
+import { McsCompaniesRepository } from './repositories/mcs-companies.repository';
 
 /** Guards */
 import { RequiredResourcesGuard } from './guards/required-resources.guard';
@@ -41,19 +45,23 @@ export const servicesProviders: any[] = [
   ServersApiService,
   TicketsApiService,
   ToolsApiService,
+  ConsoleApiService,
+  CompaniesApiService,
 
-  FirewallsRepository,
-  MediaRepository,
-  NotificationsRepository,
-  OrderItemTypesRepository,
-  OrdersRepository,
-  ProductCatalogRepository,
-  ProductsRepository,
-  ResourcesRepository,
-  ServersOsRepository,
-  ServersRepository,
-  TicketsRepository,
-  ToolsRepository,
+  McsFirewallsRepository,
+  McsJobsRepository,
+  McsMediaRepository,
+  McsOrderItemTypesRepository,
+  McsOrdersRepository,
+  McsProductCatalogRepository,
+  McsProductsRepository,
+  McsResourcesRepository,
+  McsServersOsRepository,
+  McsServersRepository,
+  McsTicketsRepository,
+  McsToolsRepository,
+  McsConsoleRepository,
+  McsCompaniesRepository,
 
   RequiredResourcesGuard
 ];

@@ -6,21 +6,18 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy
 } from '@angular/core';
+import { Observable } from 'rxjs';
 import {
   CoreDefinition,
   McsTextContentProvider,
   McsBrowserService,
-  McsTableListingBase
+  McsTableListingBase,
+  McsTableDataSource
 } from '@app/core';
-import {
-  refreshView,
-  animateFactory,
-  getSafeProperty
-} from '@app/utilities';
+import { animateFactory } from '@app/utilities';
 import { McsFirewallPolicy } from '@app/models';
-import { FirewallsRepository } from '@app/services';
+import { McsFirewallsRepository } from '@app/services';
 import { FirewallService } from '../firewall.service';
-import { FirewallPoliciesDataSource } from './firewall-policies.datasource';
 
 // Enumeration
 export enum FirewallPoliciesMode {
@@ -41,9 +38,8 @@ export enum FirewallPoliciesMode {
 })
 
 export class FirewallPoliciesComponent
-  extends McsTableListingBase<FirewallPoliciesDataSource>
+  extends McsTableListingBase<McsTableDataSource<McsFirewallPolicy>>
   implements OnInit, AfterViewInit, OnDestroy {
-
   public textContent: any;
   public selectedFirewallPolicy: McsFirewallPolicy;
 
@@ -79,7 +75,7 @@ export class FirewallPoliciesComponent
     _changeDetectorRef: ChangeDetectorRef,
     private _textContentProvider: McsTextContentProvider,
     private _firewallService: FirewallService,
-    private _firewallsRepository: FirewallsRepository
+    private _firewallsRepository: McsFirewallsRepository
   ) {
     super(_browserService, _changeDetectorRef);
     this.selectedFirewallPolicy = new McsFirewallPolicy();
@@ -90,7 +86,7 @@ export class FirewallPoliciesComponent
   }
 
   public ngAfterViewInit() {
-    refreshView(() => {
+    Promise.resolve().then(() => {
       this.initializeDatasource();
     });
   }
@@ -119,18 +115,7 @@ export class FirewallPoliciesComponent
    * Retry obtaining datasource from firewall policies
    */
   public retryDatasource(): void {
-    // We need to initialize again the datasource in order for the
-    // observable merge work as expected, since it is closing the
-    // subscription when error occured.
     this.initializeDatasource();
-  }
-
-  /**
-   * Returns the total record count of the policies
-   */
-  protected get totalRecordsCount(): number {
-    return getSafeProperty(this.dataSource,
-      (obj) => obj.totalRecordCount, 0);
   }
 
   /**
@@ -144,12 +129,24 @@ export class FirewallPoliciesComponent
    * Initialize the table datasource according to pagination and search settings
    */
   protected initializeDatasource(): void {
-    this.dataSource = new FirewallPoliciesDataSource(
-      this._firewallsRepository,
-      this._firewallService,
-      this.paginator,
-      this.search
-    );
+    this.dataSource = new McsTableDataSource(this._firewallPoliciesSource.bind(this));
+    this.dataSource
+      .registerSearch(this.search)
+      .registerPaginator(this.paginator);
     this.changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Returns the firewall policies
+   */
+  private _firewallPoliciesSource(): Observable<McsFirewallPolicy[]> {
+    return this._firewallsRepository.getFirewallPolicies(
+      this._firewallService.selectedFirewall,
+      {
+        keyword: this.search.keyword,
+        pageIndex: this.paginator.pageIndex,
+        pageSize: this.paginator.pageSize
+      }
+    );
   }
 }

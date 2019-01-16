@@ -4,9 +4,6 @@ import {
   CoreRoutes
 } from '@app/core';
 import { RouteKey } from '@app/models';
-import { ConsolePageService } from './console-page.service';
-import { ConsolePageRepository } from './console-page.repository';
-/** Components */
 import { ConsolePageComponent } from './console-page.component';
 
 /**
@@ -19,12 +16,4 @@ export const consolePageRoutes: Routes = [
     canActivate: [McsAuthenticationGuard],
     data: { routeId: RouteKey.Console }
   }
-];
-
-/**
- * List of services for the main module
- */
-export const constantsProviders: any[] = [
-  ConsolePageService,
-  ConsolePageRepository
 ];

@@ -16,50 +16,35 @@ import {
 import {
   McsApiSuccessResponse,
   McsApiRequestParameter,
-  McsFirewall,
   McsTicket,
   McsTicketCreateAttachment,
   McsTicketAttachment,
   McsTicketCreate,
   McsTicketCreateComment,
   McsTicketComment,
-  McsResource,
-  McsServer
+  McsQueryParam
 } from '@app/models';
-import { ResourcesRepository } from '../repositories/resources.repository';
-import { ServersRepository } from '../repositories/servers.repository';
-import { FirewallsRepository } from '../repositories/firewalls.repository';
 
 @Injectable()
 export class TicketsApiService {
 
   constructor(
     private _mcsApiService: McsApiService,
-    private _resourcesRepository: ResourcesRepository,
-    private _serversRespository: ServersRepository,
-    private _firewallsRepository: FirewallsRepository,
     private _loggerService: McsLoggerService
   ) { }
 
   /**
    * Get all the tickets from the API
-   * @param page Page index of the page to obtained
-   * @param perPage Size of item per page
-   * @param searchKeyword Keyword to be search during filtering
+   * @param query Query predicate that serves as the parameter of the endpoint
    */
-  public getTickets(args?: {
-    page?: number,
-    perPage?: number,
-    searchKeyword?: string
-  }): Observable<McsApiSuccessResponse<McsTicket[]>> {
+  public getTickets(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsTicket[]>> {
 
     // Set default values if null
-    if (isNullOrEmpty(args)) { args = {}; }
-
     let searchParams = new Map<string, any>();
-    searchParams.set('page', args.page ? args.page.toString() : undefined);
-    searchParams.set('per_page', args.perPage ? args.perPage.toString() : undefined);
-    searchParams.set('search_keyword', args.searchKeyword);
+    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
+    searchParams.set('page', query.pageIndex);
+    searchParams.set('per_page', query.pageSize);
+    searchParams.set('search_keyword', query.keyword);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/tickets';
@@ -81,33 +66,6 @@ export class TicketsApiService {
           return apiResponse;
         })
       );
-  }
-
-  /**
-   * Get all server resources from the API
-   */
-  public getServerResources(): Observable<McsResource[]> {
-    return this._resourcesRepository.findAllRecords();
-  }
-
-  /**
-   * Get all the servers from the API
-   * @param pageIdx Page index of the page to obtained
-   * @param perPageCount Size of item per page
-   * @param keyword Keyword to be search during filtering
-   */
-  public getServers(): Observable<McsServer[]> {
-    return this._serversRespository.findAllRecords();
-  }
-
-  /**
-   * Get all the firewalls from the API
-   * @param pageIdx Page index of the page to obtained
-   * @param perPageCount Size of item per page
-   * @param keyword Keyword to be search during filtering
-   */
-  public getFirewalls(): Observable<McsFirewall[]> {
-    return this._firewallsRepository.findAllRecords();
   }
 
   /**

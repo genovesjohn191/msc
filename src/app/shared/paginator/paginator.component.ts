@@ -25,7 +25,8 @@ import {
 import { Paginator } from './paginator.interface';
 
 // Constants default
-const PAGINATOR_DEFAULT_PAGE_SIZE = 25;
+const PAGINATOR_DEFAULT_PAGE_INDEX = CoreDefinition.DEFAULT_PAGE_INDEX;
+const PAGINATOR_DEFAULT_PAGE_SIZE = CoreDefinition.DEFAULT_PAGE_SIZE;
 const PAGINATOR_DEFAULT_LOAD_OFFSET = 10;
 
 @Component({
@@ -94,7 +95,7 @@ export class PaginatorComponent implements Paginator, OnInit, AfterViewInit {
     private _textContentProvider: McsTextContentProvider,
     private _scrollableDispatcher: McsScrollDispatcherService
   ) {
-    this._pageIndex = 0;
+    this._pageIndex = PAGINATOR_DEFAULT_PAGE_INDEX;
     this._pageSize = PAGINATOR_DEFAULT_PAGE_SIZE;
     this._scrollLoadOffset = PAGINATOR_DEFAULT_LOAD_OFFSET;
     this._totalCount = 0;
@@ -123,7 +124,7 @@ export class PaginatorComponent implements Paginator, OnInit, AfterViewInit {
    * Return true if the paginator has previous page otherwise false
    */
   public get hasPreviousPage(): boolean {
-    return this.pageIndex >= 1 && this.pageSize !== 0;
+    return this.pageIndex >= 2 && this.pageSize !== 0;
   }
 
   /**
@@ -154,6 +155,12 @@ export class PaginatorComponent implements Paginator, OnInit, AfterViewInit {
   public previousPage() {
     if (!this.hasPreviousPage) { return; }
     this.pageIndex--;
+    this._onPageChanged();
+  }
+
+  public reset(): void {
+    this.pageIndex = PAGINATOR_DEFAULT_PAGE_INDEX;
+    this.pageSize = PAGINATOR_DEFAULT_PAGE_SIZE;
     this._onPageChanged();
   }
 

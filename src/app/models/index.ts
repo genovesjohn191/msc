@@ -147,3 +147,4 @@ export * from './mcs-option';
 export * from './mcs-key-value-pair';
 export * from './mcs-route-details';
 export * from './mcs-route-info';
+export * from './mcs-query-param';

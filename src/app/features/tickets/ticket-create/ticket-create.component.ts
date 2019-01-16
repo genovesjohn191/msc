@@ -47,7 +47,7 @@ import {
   McsTicketCreate,
   McsTicketCreateAttachment
 } from '@app/models';
-import { TicketsRepository } from '@app/services';
+import { McsTicketsRepository } from '@app/services';
 import {
   TicketService,
   TicketServiceData,
@@ -129,7 +129,7 @@ export class TicketCreateComponent implements
     private _textContentProvider: McsTextContentProvider,
     private _ticketCreateService: TicketCreateService,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _ticketsRepository: TicketsRepository,
+    private _ticketsRepository: McsTicketsRepository,
     private _errorHandlerService: McsErrorHandlerService
   ) {
     this.ticketTypeList = new Array();
@@ -249,7 +249,7 @@ export class TicketCreateComponent implements
       .pipe(
         finalize(() => {
           this.fgCreateDirective.resetAllControls();
-          this._ticketsRepository.refreshRecords();
+          this._ticketsRepository.clearCache();
           this.creatingTicket = true;
         }),
         catchError((error) => {

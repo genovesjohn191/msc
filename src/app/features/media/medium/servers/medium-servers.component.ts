@@ -18,14 +18,14 @@ import {
   McsTextContentProvider,
   McsDialogService,
   McsErrorHandlerService,
-  McsNotificationEventsService
+  McsNotificationEventsService,
+  McsTableDataSource
 } from '@app/core';
 import {
   isNullOrEmpty,
   replacePlaceholder
 } from '@app/utilities';
 import {
-  TableDataSource,
   DialogConfirmationComponent,
   DialogConfirmation
 } from '@app/shared';
@@ -36,10 +36,7 @@ import {
   McsServer,
   McsResourceMedia
 } from '@app/models';
-import {
-  MediaApiService,
-  MediaRepository
-} from '@app/services';
+import { McsMediaRepository } from '@app/services';
 import { MediumService } from '../medium.service';
 import { MediumDetailsBase } from '../medium-details.base';
 import { MediaManageServers } from '../../shared';
@@ -53,7 +50,7 @@ import { MediaManageServers } from '../../shared';
 export class MediumServersComponent extends MediumDetailsBase implements OnInit, OnDestroy {
   public textContent: any;
   public serversColumns: string[];
-  public serversDataSource: TableDataSource<McsResourceMediaServer>;
+  public serversDataSource: McsTableDataSource<McsResourceMediaServer>;
   public manageServers: MediaManageServers;
 
   private _inProgressServerId: any;
@@ -63,8 +60,7 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
 
   constructor(
     _mediumService: MediumService,
-    private _mediaService: MediaApiService,
-    private _mediaRepository: MediaRepository,
+    private _mediaRepository: McsMediaRepository,
     private _dialogService: McsDialogService,
     private _errorHandlerService: McsErrorHandlerService,
     private _notificationEvents: McsNotificationEventsService,
@@ -74,7 +70,6 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
     super(_mediumService);
     this._newAttachServer = new McsResourceMediaServer();
     this.serversColumns = new Array();
-    this.serversDataSource = new TableDataSource([]);
   }
 
   public ngOnInit() {
@@ -166,14 +161,14 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
    * Initializes the data source of the nics table
    */
   private _initializeDataSource(medium: McsResourceMedia): void {
-    this.serversDataSource = new TableDataSource(this._getAttachedServers(medium));
+    this.serversDataSource = new McsTableDataSource(this._getAttachedServers(medium));
   }
 
   /**
    * Get attached servers from media API
    */
   private _getAttachedServers(medium: McsResourceMedia) {
-    return this._mediaRepository.findMediaServers(medium);
+    return this._mediaRepository.getMediaServers(medium);
   }
 
   /**
@@ -187,7 +182,7 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
     };
 
     this.setSelectedMediumState(medium, true);
-    this._mediaService.detachServerMedia(
+    this._mediaRepository.detachServerMedia(
       selectedServerId, medium.id,
       { clientReferenceObject: expectedJobObject }
     )
@@ -212,7 +207,7 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
     };
 
     this.setSelectedMediumState(medium, true);
-    this._mediaService.attachServerMedia(
+    this._mediaRepository.attachServerMedia(
       serverDetails.id,
       {
         name: medium.name,
@@ -250,14 +245,14 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
     switch (job.dataStatus) {
       case DataStatus.InProgress:
         this._newAttachServer.name = job.clientReferenceObject.serverName;
-        this.serversDataSource.addRecord(this._newAttachServer);
+        this.serversDataSource.addOrUpdateRecord(this._newAttachServer);
         break;
 
       case DataStatus.Success:
         this.mediumSelectionChange(this._selectedMediumInstance);
       case DataStatus.Error:
       default:
-        this.serversDataSource.deleteRecord(this._newAttachServer);
+        this.serversDataSource.deleteRecordBy((item) => this._newAttachServer.id === item.id);
         break;
     }
   }

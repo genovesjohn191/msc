@@ -223,42 +223,49 @@
       <div class="product-catalog-item">
         <h2>Inview</h2>
 
+        <ng-template let-inview #inviewTemplate>
+          <mcs-grid-column>
+            <h3>{{ inview.name }}</h3>
+            <p [innerHTML]="inview.description"></p>
+            <mcs-table [dataSource]="inview.thresholds"
+              *ngIf="inview.thresholds | mcsIsNotNullOrEmpty">
+              <!-- Description Column -->
+              <ng-container mcsColumnDef="description">
+                <mcs-header-cell *mcsHeaderCellDef>
+                  Description
+                </mcs-header-cell>
+                <mcs-data-cell *mcsDataCellDef="let row">
+                  {{ row.description }}
+                </mcs-data-cell>
+              </ng-container>
+
+              <!-- Threshold Utilisation Column -->
+              <ng-container mcsColumnDef="alertThreshold">
+                <mcs-header-cell *mcsHeaderCellDef>
+                  Alert Threshold
+                </mcs-header-cell>
+                <mcs-data-cell *mcsDataCellDef="let row">
+                  {{ row.defaultAlertThreshold }}
+                </mcs-data-cell>
+              </ng-container>
+
+              <!-- Header and Data row -->
+              <mcs-header-row *mcsHeaderRowDef="thresholdColumns"></mcs-header-row>
+              <mcs-data-row *mcsDataRowDef="let row; columns: thresholdColumns;"></mcs-data-row>
+            </mcs-table>
+          </mcs-grid-column>
+
+          <mcs-grid-column *ngIf="inview.graphUrl | mcsIsNotNullOrEmpty">
+            <img [src]="inview.graphUrl" class="image-responsive">
+          </mcs-grid-column>
+        </ng-template>
+
         <mcs-grid>
           <mcs-grid-row *ngFor="let inview of selectedProduct.inviewPremium">
-            <mcs-grid-column>
-              <h3>{{ inview.name }}</h3>
-              <p [innerHTML]="inview.description"></p>
-              <mcs-table [dataSource]="inview.thresholds"
-                *ngIf="inview.thresholds | mcsIsNotNullOrEmpty">
-                <!-- Description Column -->
-                <ng-container mcsColumnDef="description">
-                  <mcs-header-cell *mcsHeaderCellDef>
-                    Description
-                  </mcs-header-cell>
-                  <mcs-data-cell *mcsDataCellDef="let row">
-                    {{ row.description }}
-                  </mcs-data-cell>
-                </ng-container>
-
-                <!-- Threshold Utilisation Column -->
-                <ng-container mcsColumnDef="alertThreshold">
-                  <mcs-header-cell *mcsHeaderCellDef>
-                    Alert Threshold
-                  </mcs-header-cell>
-                  <mcs-data-cell *mcsDataCellDef="let row">
-                    {{ row.defaultAlertThreshold }}
-                  </mcs-data-cell>
-                </ng-container>
-
-                <!-- Header and Data row -->
-                <mcs-header-row *mcsHeaderRowDef="thresholdColumns"></mcs-header-row>
-                <mcs-data-row *mcsDataRowDef="let row; columns: thresholdColumns;"></mcs-data-row>
-              </mcs-table>
-            </mcs-grid-column>
-
-            <mcs-grid-column *ngIf="inview.graphUrl | mcsIsNotNullOrEmpty">
-              <img [src]="inview.graphUrl" class="image-responsive">
-            </mcs-grid-column>
+            <ng-container *ngTemplateOutlet="inviewTemplate; context: inview" ></ng-container>
+          </mcs-grid-row>
+          <mcs-grid-row *ngFor="let inview of selectedProduct.inviewStandard">
+            <ng-container *ngTemplateOutlet="inviewTemplate; context: inview" ></ng-container>
           </mcs-grid-row>
         </mcs-grid>
       </div>

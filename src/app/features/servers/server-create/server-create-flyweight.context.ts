@@ -9,7 +9,6 @@ import {
 import {
   catchError,
   distinctUntilChanged,
-  map,
   tap,
   takeUntil,
   finalize
@@ -40,8 +39,8 @@ import {
   McsOrderWorkflow
 } from '@app/models';
 import {
-  ServersApiService,
-  OrdersRepository
+  McsServersRepository,
+  McsOrdersRepository
 } from '@app/services';
 
 @Injectable()
@@ -88,8 +87,8 @@ export class ServerCreateFlyweightContext {
   private _updateOrderStateChanges = new Subject<DataStatus>();
 
   constructor(
-    private _ordersRepository: OrdersRepository,
-    private _serversService: ServersApiService,
+    private _ordersRepository: McsOrdersRepository,
+    private _serversRepository: McsServersRepository,
     private _errorHandlerService: McsErrorHandlerService
   ) {
     this._jobs = new Array();
@@ -240,8 +239,7 @@ export class ServerCreateFlyweightContext {
    */
   private _createNewSelfManageServer(serverCreateModel: McsServerCreate): Observable<McsJob> {
     if (isNullOrEmpty(serverCreateModel)) { return; }
-    return this._serversService.createServer(serverCreateModel)
-      .pipe(map((response) => getSafeProperty(response, (obj) => obj.content)));
+    return this._serversRepository.createServer(serverCreateModel);
   }
 
   /**
@@ -250,8 +248,7 @@ export class ServerCreateFlyweightContext {
    */
   private _createCloneSelfManagedServer(serverCloneModel: McsServerClone): Observable<McsJob> {
     if (isNullOrEmpty(serverCloneModel)) { return; }
-    return this._serversService
-      .cloneServer(serverCloneModel.clientReferenceObject.serverId, serverCloneModel)
-      .pipe(map((response) => getSafeProperty(response, (obj) => obj.content)));
+    return this._serversRepository
+      .cloneServer(serverCloneModel.clientReferenceObject.serverId, serverCloneModel);
   }
 }

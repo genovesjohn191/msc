@@ -47,9 +47,9 @@ describe('MediaApiService', () => {
   describe('getMedia()', () => {
     it('should get media from API calls', () => {
       mediaApiService.getMedia({
-        page: requestOptions.page,
-        perPage: requestOptions.perPage,
-        searchKeyword: undefined
+        pageIndex: requestOptions.page,
+        pageSize: requestOptions.perPage,
+        keyword: undefined
       }).subscribe((response) => {
         expect(response).toBeDefined();
         expect(response.status).toBe(200);

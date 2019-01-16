@@ -7,7 +7,7 @@ import { RouteKey } from '@app/models';
 import { RequiredResourcesGuard } from '@app/services';
 /** Services */
 import { ServerService } from './server/';
-import { ServersServices } from './servers.service';
+import { ServersService } from './servers.service';
 /** Components */
 import { ServersComponent } from './servers.component';
 import {
@@ -34,7 +34,7 @@ import {
  * List of services for the main module
  */
 export const serversProviders: any[] = [
-  ServersServices,
+  ServersService,
   ServerService,
   ServerCreateService,
   ServerCreateGuard,

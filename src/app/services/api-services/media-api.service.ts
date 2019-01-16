@@ -17,7 +17,8 @@ import {
   McsResourceMedia,
   McsResourceMediaServer,
   McsServerAttachMedia,
-  McsResourceCatalogItemCreate
+  McsResourceCatalogItemCreate,
+  McsQueryParam
 } from '@app/models';
 import { ServersApiService } from './servers-api.service';
 import { ResourcesApiService } from './resources-api.service';
@@ -37,23 +38,16 @@ export class MediaApiService {
 
   /**
    * Get Medias (MCS API Response)
-   * @param page Page Number
-   * @param perPage Count per page
-   * @param searchKeyword Keyword filter
+   * @param query Query predicate that serves as the parameter of the endpoint
    */
-  public getMedia(args?: {
-    page?: number,
-    perPage?: number,
-    searchKeyword?: string
-  }): Observable<McsApiSuccessResponse<McsResourceMedia[]>> {
+  public getMedia(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsResourceMedia[]>> {
 
     // Set default values if null
-    if (isNullOrEmpty(args)) { args = {}; }
-
     let searchParams = new Map<string, any>();
-    searchParams.set('page', args.page ? args.page.toString() : undefined);
-    searchParams.set('per_page', args.perPage ? args.perPage.toString() : undefined);
-    searchParams.set('search_keyword', args.searchKeyword);
+    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
+    searchParams.set('page', query.pageIndex);
+    searchParams.set('per_page', query.pageSize);
+    searchParams.set('search_keyword', query.keyword);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/resources/media';

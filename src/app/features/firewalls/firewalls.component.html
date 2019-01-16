@@ -4,7 +4,7 @@
     <mcs-top-panel-item *mcsTopPanelItemDef>
       <div class="listing-action-wrapper">
         <div class="total-record-count">
-          <span>{{ totalRecordsCount | mcsPlural:
+          <span>{{ dataSource?.totalRecordCount | mcsPlural:
                 textContent.dataSingular : textContent.dataPlural }}
           </span>
         </div>
@@ -21,8 +21,7 @@
 
     <!-- Column Filter -->
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.filterColumn" offset="medium">
-      <mcs-filter-selector [key]="columnSettingsKey"
-        [associatedTable]="firewallsTable"
+      <mcs-filter-selector [key]="columnSettingsKey" #filterSelector
         (filtersChange)="updateColumnSettings($event)"></mcs-filter-selector>
     </mcs-left-panel-item>
   </mcs-left-panel>
@@ -35,7 +34,7 @@
       <mcs-search *ngIf="isMobile" #search mcsId="firewalls-mobile-search"></mcs-search>
 
       <!-- Table -->
-      <mcs-table [dataSource]="dataSource" #firewallsTable>
+      <mcs-table [dataSource]="dataSource" [columnFilter]="filterSelector">
         <!-- Firewall Column -->
         <ng-container mcsColumnDef="firewall">
           <mcs-header-cell *mcsHeaderCellDef>
@@ -64,8 +63,7 @@
         </ng-container>
 
         <!-- Firmware Version Column -->
-        <ng-container mcsColumnDef="firmwareVersion"
-          [mcsColumnDefHidden]="isColumnHidden('firmwareVersion')">
+        <ng-container mcsColumnDef="firmwareVersion">
           <mcs-header-cell *mcsHeaderCellDef hidden-small>
             {{ columnSettings.firmwareVersion.text }}
           </mcs-header-cell>
@@ -75,7 +73,7 @@
         </ng-container>
 
         <!-- IP Address Column -->
-        <ng-container mcsColumnDef="ipAddress" [mcsColumnDefHidden]="isColumnHidden('ipAddress')">
+        <ng-container mcsColumnDef="ipAddress">
           <mcs-header-cell *mcsHeaderCellDef hidden-small>
             {{ columnSettings.ipAddress.text }}
           </mcs-header-cell>
@@ -85,7 +83,7 @@
         </ng-container>
 
         <!-- Role Column -->
-        <ng-container mcsColumnDef="role" [mcsColumnDefHidden]="isColumnHidden('role')">
+        <ng-container mcsColumnDef="role">
           <mcs-header-cell *mcsHeaderCellDef>
             {{ columnSettings.role.text }}
           </mcs-header-cell>
@@ -95,7 +93,7 @@
         </ng-container>
 
         <!-- Service ID Column -->
-        <ng-container mcsColumnDef="serviceId" [mcsColumnDefHidden]="isColumnHidden('serviceId')">
+        <ng-container mcsColumnDef="serviceId">
           <mcs-header-cell *mcsHeaderCellDef>
             {{ columnSettings.serviceId.text }}
           </mcs-header-cell>
@@ -159,7 +157,7 @@
       <!-- Paginator -->
       <mcs-paginator #paginator
         [hidden]="isSearching"
-        [totalCount]="totalRecordsCount">
+        [totalCount]="dataSource?.totalRecordCount">
       </mcs-paginator>
     </div>
   </mcs-content-panel>

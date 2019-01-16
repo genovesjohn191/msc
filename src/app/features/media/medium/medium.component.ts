@@ -46,7 +46,7 @@ import {
   Search,
   ComponentHandlerDirective
 } from '@app/shared';
-import { MediaRepository } from '@app/services';
+import { McsMediaRepository } from '@app/services';
 import { MediaListSource } from '../media.listsource';
 import { MediumService } from './medium.service';
 
@@ -90,7 +90,7 @@ export class MediumComponent
     private _textContentProvider: McsTextContentProvider,
     private _loadingService: McsLoadingService,
     private _errorHandlerService: McsErrorHandlerService,
-    private _mediaRepository: MediaRepository,
+    private _mediaRepository: McsMediaRepository,
     private _mediumService: MediumService
   ) {
     super(_router, _activatedRoute);
@@ -164,7 +164,7 @@ export class MediumComponent
    */
   private _subscribeToMediaById(mediumId: string): void {
     this._loadingService.showLoader(this.textContent.loading);
-    this.media$ = this._mediaRepository.findRecordById(mediumId).pipe(
+    this.media$ = this._mediaRepository.getById(mediumId).pipe(
       catchError((error) => {
         this._errorHandlerService.handleHttpRedirectionError(error.status);
         return throwError(error);

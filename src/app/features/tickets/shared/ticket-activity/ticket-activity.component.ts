@@ -12,7 +12,7 @@ import {
   McsTextContentProvider
 } from '@app/core';
 import { CommentType } from '@app/models';
-import { TicketsApiService } from '@app/services';
+import { McsTicketsRepository } from '@app/services';
 import { TicketActivity } from './ticket-activity';
 import { TicketActivityType } from './ticket-activity-type.enum';
 
@@ -71,7 +71,7 @@ export class TicketActivityComponent implements OnInit {
 
   public constructor(
     private _changeDetectorRef: ChangeDetectorRef,
-    private _ticketsService: TicketsApiService,
+    private _ticketsRepository: McsTicketsRepository,
     private _textContentProvider: McsTextContentProvider
   ) {
     this._activity = new TicketActivity();
@@ -93,7 +93,7 @@ export class TicketActivityComponent implements OnInit {
    */
   public downloadAttachment() {
     this.downloading = true;
-    this._ticketsService.getFileAttachment(this._ticketId, this._activity.id)
+    this._ticketsRepository.getFileAttachment(this._ticketId, this._activity.id)
       .subscribe((blobResponse) => {
         saveAs(blobResponse, this._activity.content);
         this.downloading = false;

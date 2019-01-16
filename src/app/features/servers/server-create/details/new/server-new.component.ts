@@ -46,7 +46,7 @@ import {
   McsServerCreateNic,
   McsServerOperatingSystem
 } from '@app/models';
-import { ServersOsRepository } from '@app/services';
+import { McsServersOsRepository } from '@app/services';
 import {
   ServerManageStorage,
   ServerManageNetwork,
@@ -102,7 +102,7 @@ export class ServerNewComponent
     private _changeDetectorRef: ChangeDetectorRef,
     private _textContentProvider: McsTextContentProvider,
     private _errorHandlerService: McsErrorHandlerService,
-    private _serversOsRepository: ServersOsRepository
+    private _serversOsRepository: McsServersOsRepository
   ) {
     super();
   }
@@ -264,7 +264,7 @@ export class ServerNewComponent
    * Gets the servers operating systems from repository
    */
   private _getServersOs(): void {
-    this.operatingSystemsMap$ = this._serversOsRepository.findAllRecords()
+    this.operatingSystemsMap$ = this._serversOsRepository.getAll()
       .pipe(
         catchError((error) => {
           // Handle common error status code

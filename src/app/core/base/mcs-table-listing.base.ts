@@ -15,30 +15,24 @@ import {
 } from '@app/models';
 import {
   Search,
-  Paginator
+  Paginator,
+  FilterSelector
 } from '@app/shared';
 import { McsBrowserService } from '../services/mcs-browser.service';
 
 export abstract class McsTableListingBase<T> {
-
   @ViewChild('search')
   public search: Search;
 
   @ViewChild('paginator')
   public paginator: Paginator;
 
-  // Subscription
-  public browserServiceSubscription: any;
+  @ViewChild('filterSelector')
+  public filterSelector: FilterSelector;
 
   // Table variables
   public dataSource: T;
-  public dataColumns: string[];
-  public hiddenColumnsKey: string[];
-
-  /**
-   * Returns the column settings in json format in order to use it over html easily
-   * `e.g:` columnSettings.name.text
-   */
+  public dataColumns: string[] = [];
   public columnSettings: any;
 
   /**
@@ -59,9 +53,7 @@ export abstract class McsTableListingBase<T> {
     protected browserService: McsBrowserService,
     protected changeDetectorRef: ChangeDetectorRef
   ) {
-    this.dataColumns = new Array();
-    this.hiddenColumnsKey = new Array();
-    this._listenToBroswerDeviceType();
+    this._subscribeToBreakpointChange();
   }
 
   /**
@@ -80,30 +72,7 @@ export abstract class McsTableListingBase<T> {
   public updateColumnSettings(columns: Map<string, McsFilterInfo>): void {
     if (isNullOrEmpty(columns)) { return; }
     this.columnSettings = convertMapToJsonObject(columns);
-
-    // Populate the data columns once so that it won't render multiple times in dom
-    let dataColumnChanged = isNullOrEmpty(this.dataColumns) ||
-      this.dataColumns.length !== columns.size;
-    if (dataColumnChanged) {
-      this.dataColumns = [];
-      columns.forEach((_value, _key) => this.dataColumns.push(_key));
-    }
-
-    // Set the displayed columns key based on the toggled
-    this.hiddenColumnsKey = [];
-    columns.forEach((_filterInfo, _key) => {
-      if (_filterInfo.value) { return; }
-      this.hiddenColumnsKey.push(_key);
-    });
-  }
-
-  /**
-   * Returns true when the column is hidden
-   */
-  public isColumnHidden(columnName: string): boolean {
-    let noFilteredColumns = isNullOrEmpty(columnName) || isNullOrEmpty(this.hiddenColumnsKey);
-    if (noFilteredColumns) { return false; }
-    return !!this.hiddenColumnsKey.find((hiddenColumn) => hiddenColumn === columnName);
+    this.dataColumns = Object.keys(this.columnSettings);
   }
 
   /**
@@ -118,11 +87,6 @@ export abstract class McsTableListingBase<T> {
    * Returns the column settings filter key or the listing table
    */
   protected abstract get columnSettingsKey(): string;
-
-  /**
-   * Returns the total records count of the listing table
-   */
-  protected abstract get totalRecordsCount(): number;
 
   /**
    * Retry the obtainment from the datasource when an error occured
@@ -153,7 +117,7 @@ export abstract class McsTableListingBase<T> {
   /**
    * Listen to any changes in size of the browser
    */
-  private _listenToBroswerDeviceType(): void {
+  private _subscribeToBreakpointChange(): void {
     this.browserService.breakpointChange()
       .pipe(takeUntil(this._baseDestroySubject))
       .subscribe((deviceType) => {

@@ -33,7 +33,7 @@ describe('ServersApiService', () => {
     page: 1,
     perPage: 10,
     searchKeyword: 'Arrian',
-    id: 459,
+    id: '459',
     action: ServerCommand.Start,
     referenceObject: {
       commandAction: 1,
@@ -63,9 +63,9 @@ describe('ServersApiService', () => {
   describe('getServers()', () => {
     it('should get all servers from API calls', () => {
       serversApiService.getServers({
-        page: requestOptions.page,
-        perPage: requestOptions.perPage,
-        searchKeyword: undefined
+        pageIndex: requestOptions.page,
+        pageSize: requestOptions.perPage,
+        keyword: undefined
       }).subscribe((response) => {
         expect(response).toBeDefined();
         expect(response.status).toBe(200);

@@ -32,7 +32,7 @@ import {
   JobType,
   HttpStatusCode,
 } from '@app/models';
-import { JobsApiService } from '@app/services';
+import { McsJobsRepository } from '@app/services';
 
 @Component({
   selector: 'mcs-server-provisioning',
@@ -50,7 +50,7 @@ export class ServerProvisioningComponent implements OnInit, OnDestroy {
   constructor(
     private _activatedRoute: ActivatedRoute,
     private _textContentProvider: McsTextContentProvider,
-    private _jobApiService: JobsApiService,
+    private _jobApiService: McsJobsRepository,
     private _errorHandlerService: McsErrorHandlerService,
     private _changeDetectorRef: ChangeDetectorRef
   ) {
@@ -83,14 +83,14 @@ export class ServerProvisioningComponent implements OnInit, OnDestroy {
         }),
         switchMap((params: ParamMap) => {
           let jobId = params.get('id');
-          return this._jobApiService.getJob(jobId);
+          return this._jobApiService.getById(jobId);
         }),
       )
       .subscribe((response) => {
         if (isNullOrEmpty(response)) { return; }
-        this.job = response.content;
+        this.job = response;
         this._validateJobType(this.job);
-        this.dataStatusFactory.setSuccessful(response.content);
+        this.dataStatusFactory.setSuccessful(response);
         this._changeDetectorRef.markForCheck();
       });
   }

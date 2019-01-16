@@ -22,7 +22,8 @@ import {
   McsOrderUpdate,
   McsOrderMerge,
   McsOrderItem,
-  McsOrderWorkflow
+  McsOrderWorkflow,
+  McsQueryParam
 } from '@app/models';
 
 @Injectable()
@@ -35,20 +36,16 @@ export class OrdersApiService {
 
   /**
    * Get Orders (MCS API Response)
+   * @param query Query predicate that serves as the parameter of the endpoint
    */
-  public getOrders(args?: {
-    page?: number,
-    perPage?: number,
-    searchKeyword?: string
-  }): Observable<McsApiSuccessResponse<McsOrder[]>> {
+  public getOrders(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsOrder[]>> {
 
     // Set default values if null
-    if (isNullOrEmpty(args)) { args = {}; }
-
     let searchParams = new Map<string, any>();
-    searchParams.set('page', args.page ? args.page.toString() : undefined);
-    searchParams.set('per_page', args.perPage ? args.perPage.toString() : undefined);
-    searchParams.set('search_keyword', args.searchKeyword);
+    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
+    searchParams.set('page', query.pageIndex);
+    searchParams.set('per_page', query.pageSize);
+    searchParams.set('search_keyword', query.keyword);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/orders';

@@ -49,7 +49,7 @@ import {
   McsTicketCreateComment,
   McsTicketCreateAttachment
 } from '@app/models';
-import { TicketsRepository } from '@app/services';
+import { McsTicketsRepository } from '@app/services';
 import { TicketActivity } from '../shared';
 
 @Component({
@@ -80,7 +80,7 @@ export class TicketComponent implements OnInit, OnDestroy {
   public constructor(
     private _router: Router,
     private _activatedRoute: ActivatedRoute,
-    private _ticketsRepository: TicketsRepository,
+    private _ticketsRepository: McsTicketsRepository,
     private _loadingService: McsLoadingService,
     private _textContentProvider: McsTextContentProvider,
     private _errorHandlerService: McsErrorHandlerService,
@@ -140,7 +140,7 @@ export class TicketComponent implements OnInit, OnDestroy {
     if (isNullOrEmpty(attachment)) { return; }
     this._downloadingIdList.add(attachment.id);
 
-    this._ticketsRepository.findFileAttachment(activeTicket.id, attachment.id)
+    this._ticketsRepository.getFileAttachment(activeTicket.id, attachment.id)
       .pipe(
         finalize(() => {
           this._downloadingIdList.delete(attachment.id);
@@ -227,7 +227,7 @@ export class TicketComponent implements OnInit, OnDestroy {
     this.selectedTicket$ = this._ticketDetailsChange.pipe(
       startWith(null),
       switchMap(() =>
-        this._ticketsRepository.findRecordById(ticketId).pipe(
+        this._ticketsRepository.getById(ticketId).pipe(
           catchError((error) => {
             this._errorHandlerService.handleHttpRedirectionError(error.status);
             return throwError(error);

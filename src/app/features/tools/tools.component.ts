@@ -1,60 +1,101 @@
 import {
   Component,
-  OnInit
+  ChangeDetectionStrategy,
+  AfterViewInit,
+  OnDestroy,
+  ChangeDetectorRef
 } from '@angular/core';
 /** Services */
 import {
-  CoreConfig,
-  McsTextContentProvider
+  McsTextContentProvider,
+  McsTableListingBase,
+  McsTableDataSource,
+  McsBrowserService,
+  CoreConfig
 } from '@app/core';
-import { ToolsRepository } from '@app/services';
-import { ToolsDataSource } from './tools.datasource';
+import { McsToolsRepository } from '@app/services';
+import {
+  McsPortal,
+  McsPortalAccess
+} from '@app/models';
 
 @Component({
   selector: 'mcs-tools',
-  templateUrl: './tools.component.html'
+  templateUrl: './tools.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class ToolsComponent implements OnInit {
+export class ToolsComponent
+  extends McsTableListingBase<McsTableDataSource<McsPortal>>
+  implements AfterViewInit, OnDestroy {
   public textContent: any;
   public toolDescription: Map<string, string>;
 
-  // Table variables
-  public dataSource: ToolsDataSource;
-  public dataColumns: string[];
-
-  public constructor(
-    private _textContentProvider: McsTextContentProvider,
+  constructor(
+    _browserService: McsBrowserService,
+    _changeDetectorRef: ChangeDetectorRef,
     private _coreConfig: CoreConfig,
-    private _toolsRepository: ToolsRepository
+    private _textContentProvider: McsTextContentProvider,
+    private _toolsRepository: McsToolsRepository
   ) {
+    super(_browserService, _changeDetectorRef);
     this.textContent = this._textContentProvider.content.tools;
-    this._initializeToolDescriptionMap();
-    this.dataColumns = ['name', 'resourceSpecific', 'portalAccess'];
   }
 
-  public ngOnInit(): void {
-    this._initiliazeDatasource();
+  public ngAfterViewInit(): void {
+    this.dataColumns = ['name', 'resourceSpecific', 'portalAccess'];
+    this._initializeToolDescriptionMap();
+    Promise.resolve().then(() => this.initializeDatasource());
+  }
+
+  public ngOnDestroy(): void {
+    this.dispose();
   }
 
   /**
    * Retry obtaining datasource from tools
    */
   public retryDatasource(): void {
-    // We need to initialize again the datasource in order for the
-    // observable merge work as expected, since it is closing the
-    // subscription when error occured.
-    this._initiliazeDatasource();
+    this.initializeDatasource();
   }
 
   /**
-   * Initialize the table datasource according to pagination and search settings
+   * Returns the column settings key for the filter selector
    */
-  private _initiliazeDatasource(): void {
-    // Set datasource
-    this.dataSource = new ToolsDataSource(this._coreConfig, this._toolsRepository);
+  protected get columnSettingsKey(): string {
+    // This is undefined since the table on tools doesnt have filtering of columns
+    return undefined;
   }
 
+  /**
+   * Initializes the table datasource
+   */
+  protected initializeDatasource(): void {
+    this.dataSource = new McsTableDataSource(this._toolsRepository);
+    this.dataSource.dataRenderedChange().subscribe((tools) => {
+      // Add Macquarie View
+      let macquarieView = new McsPortal();
+      macquarieView.name = 'Macquarie View';
+      macquarieView.resourceSpecific = true;
+
+      let macquarieViewPortalAccess = new McsPortalAccess();
+      macquarieViewPortalAccess.name = macquarieView.name;
+      macquarieViewPortalAccess.url = this._coreConfig.macviewUrl;
+      macquarieView.portalAccess = Array(macquarieViewPortalAccess);
+      this.dataSource.addOrUpdateRecord(macquarieView, null, 0);
+
+      // Remove resource specific
+      tools.slice().forEach((tool) => {
+        if (tool.resourceSpecific) { return; }
+        this.dataSource.deleteRecordBy((item) => item.id === tool.id);
+      });
+    });
+    this.changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Intializes tool description map
+   */
   private _initializeToolDescriptionMap(): void {
     let descriptions = this.textContent.table.descriptions;
     this.toolDescription = new Map<string, string>();

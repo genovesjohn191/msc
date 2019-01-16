@@ -45,8 +45,8 @@ import {
   McsServerPlatform
 } from '@app/models';
 import {
-  ResourcesRepository,
-  ServersRepository
+  McsResourcesRepository,
+  McsServersRepository
 } from '@app/services';
 import { } from '../repositories/servers.repository';
 import { ServersListSource } from '../servers.listsource';
@@ -92,8 +92,8 @@ export class VdcComponent
     private _changeDetectorRef: ChangeDetectorRef,
     private _loadingService: McsLoadingService,
     private _textContentProvider: McsTextContentProvider,
-    private _serversRepository: ServersRepository,
-    private _resourcesRepository: ResourcesRepository,
+    private _serversRepository: McsServersRepository,
+    private _resourcesRepository: McsResourcesRepository,
     private _errorHandlerService: McsErrorHandlerService,
     private _vdcService: VdcService
   ) {
@@ -114,7 +114,7 @@ export class VdcComponent
     Promise.resolve().then(() => {
       this.search.searchChangedStream.pipe(startWith(null), takeUntil(this._destroySubject))
         .subscribe(() => this.listStatusFactory.setInProgress());
-      this._serversRepository.dataRecordsChanged.pipe(takeUntil(this._destroySubject))
+      this._serversRepository.dataChange().pipe(takeUntil(this._destroySubject))
         .subscribe(() => this._changeDetectorRef.markForCheck());
       this._initializeListsource();
     });
@@ -209,7 +209,7 @@ export class VdcComponent
    */
   private _subscribesToResourceById(vdcId: string): void {
     this._loadingService.showLoader(this.textContent.loading);
-    this.selectedResource$ = this._resourcesRepository.findRecordById(vdcId).pipe(
+    this.selectedResource$ = this._resourcesRepository.getById(vdcId).pipe(
       catchError((error) => {
         this._errorHandlerService.handleHttpRedirectionError(error.status);
         return throwError(error);

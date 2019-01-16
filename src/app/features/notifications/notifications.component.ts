@@ -17,16 +17,18 @@ import {
   CoreDefinition,
   McsBrowserService,
   McsTableListingBase,
-  McsAuthenticationIdentity
+  McsAuthenticationIdentity,
+  McsTableDataSource
 } from '@app/core';
 import {
   isNullOrEmpty,
-  unsubscribeSubject,
-  getSafeProperty
+  unsubscribeSubject
 } from '@app/utilities';
-import { NotificationsRepository } from '@app/services';
-import { McsCompany } from '@app/models';
-import { NotificationsDataSource } from './notifications.datasource';
+import { McsJobsRepository } from '@app/services';
+import {
+  McsCompany,
+  McsJob
+} from '@app/models';
 
 @Component({
   selector: 'mcs-notifications',
@@ -36,12 +38,10 @@ import { NotificationsDataSource } from './notifications.datasource';
 })
 
 export class NotificationsComponent
-  extends McsTableListingBase<NotificationsDataSource>
+  extends McsTableListingBase<McsTableDataSource<McsJob>>
   implements OnInit, AfterViewInit, OnDestroy {
 
   public textContent: any;
-
-  // Subscription
   private _destroySubject = new Subject<void>();
 
   public get activeCompany(): McsCompany {
@@ -54,14 +54,14 @@ export class NotificationsComponent
     private _router: Router,
     private _authenticationIdentity: McsAuthenticationIdentity,
     private _textContentProvider: McsTextContentProvider,
-    private _notificationsRepository: NotificationsRepository
+    private _jobsRepository: McsJobsRepository
   ) {
     super(_browserService, _changeDetectorRef);
   }
 
   public ngOnInit() {
     this.textContent = this._textContentProvider.content.notifications;
-    this._listenToDataUpdate();
+    this._subscribeToDataUpdate();
   }
 
   public ngAfterViewInit() {
@@ -92,14 +92,6 @@ export class NotificationsComponent
   }
 
   /**
-   * Returns the totals record found in notifications
-   */
-  protected get totalRecordsCount(): number {
-    return getSafeProperty(this._notificationsRepository,
-      (obj) => obj.totalRecordsCount, 0);
-  }
-
-  /**
    * Returns the column settings key for the filter selector
    */
   protected get columnSettingsKey(): string {
@@ -110,21 +102,19 @@ export class NotificationsComponent
    * Initialize the table datasource according to pagination and search settings
    */
   protected initializeDatasource(): void {
-    // Set datasource
-    this.dataSource = new NotificationsDataSource(
-      this._notificationsRepository,
-      this.paginator,
-      this.search
-    );
+    this.dataSource = new McsTableDataSource(this._jobsRepository);
+    this.dataSource
+      .registerSearch(this.search)
+      .registerPaginator(this.paginator);
     this.changeDetectorRef.markForCheck();
   }
 
   /**
-   * Listens for every data and account changed
+   * Subscribe to data updates that includes the obtainment of the account change
    */
-  private _listenToDataUpdate(): void {
+  private _subscribeToDataUpdate(): void {
     let requestUpdate = merge(
-      this._notificationsRepository.dataRecordsChanged,
+      this.dataSource.dataRenderedChange(),
       this._authenticationIdentity.activeAccountChanged);
 
     requestUpdate.pipe(takeUntil(this._destroySubject))

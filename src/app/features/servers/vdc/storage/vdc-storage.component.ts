@@ -7,12 +7,12 @@ import {
 } from '@angular/core';
 import {
   CoreDefinition,
-  McsTextContentProvider
+  McsTextContentProvider,
+  McsTableDataSource
 } from '@app/core';
 import { isNullOrEmpty } from '@app/utilities';
 import { McsResourceStorage } from '@app/models';
-import { ResourcesRepository } from '@app/services';
-import { TableDataSource } from '@app/shared';
+import { McsResourcesRepository } from '@app/services';
 import { VdcService } from '../vdc.service';
 import { VdcDetailsBase } from '../vdc-details.base';
 
@@ -27,7 +27,7 @@ import { VdcDetailsBase } from '../vdc-details.base';
 
 export class VdcStorageComponent extends VdcDetailsBase implements OnInit, OnDestroy {
   public textContent: any;
-  public storageDatasource: TableDataSource<McsResourceStorage>;
+  public storageDatasource: McsTableDataSource<McsResourceStorage>;
   public storageColumns: string[];
 
   public get storageIconKey(): string {
@@ -43,7 +43,7 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnInit, OnDes
   }
 
   constructor(
-    _resourcesRespository: ResourcesRepository,
+    _resourcesRespository: McsResourcesRepository,
     _vdcService: VdcService,
     _changeDetectorRef: ChangeDetectorRef,
     _textContentProvider: McsTextContentProvider
@@ -55,7 +55,6 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnInit, OnDes
       _textContentProvider
     );
     this.storageColumns = new Array();
-    this.storageDatasource = new TableDataSource<McsResourceStorage>([]);
   }
 
   public ngOnInit() {
@@ -89,8 +88,8 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnInit, OnDes
    * Initializes the data source of the nics table
    */
   private _initializeDataSource(): void {
-    this.storageDatasource = new TableDataSource(
-      this._resourcesRespository.findResourceStorage(this.selectedVdc)
+    this.storageDatasource = new McsTableDataSource(
+      this._resourcesRespository.getResourceStorage(this.selectedVdc)
     );
   }
 }

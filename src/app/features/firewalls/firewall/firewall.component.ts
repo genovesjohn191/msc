@@ -42,7 +42,7 @@ import {
   RouteKey,
   McsFirewall
 } from '@app/models';
-import { FirewallsRepository } from '@app/services';
+import { McsFirewallsRepository } from '@app/services';
 import { FirewallService } from './firewall.service';
 import { FirewallsListSource } from '../firewalls.listsource';
 
@@ -88,8 +88,8 @@ export class FirewallComponent
     private _textContentProvider: McsTextContentProvider,
     private _errorHandlerService: McsErrorHandlerService,
     private _loadingService: McsLoadingService,
-    private _firewallService: FirewallService,
-    private _firewallsRepository: FirewallsRepository
+    private _firewallsRepository: McsFirewallsRepository,
+    private _firewallService: FirewallService
   ) {
     super(_router, _activatedRoute);
     this.listStatusFactory = new McsDataStatusFactory();
@@ -106,10 +106,6 @@ export class FirewallComponent
       this.search.searchChangedStream
         .pipe(startWith(null), takeUntil(this._destroySubject))
         .subscribe(() => this.listStatusFactory.setInProgress());
-
-      this._firewallsRepository.dataRecordsChanged
-        .pipe(takeUntil(this._destroySubject))
-        .subscribe(() => this._changeDetectorRef.markForCheck());
       this._initializeListsource();
     });
   }
@@ -189,7 +185,7 @@ export class FirewallComponent
    */
   private _subscribeToFirewallById(firewallId: string): void {
     this._loadingService.showLoader(this.firewallTextContent.loading);
-    this.selectedFirewall$ = this._firewallsRepository.findRecordById(firewallId).pipe(
+    this.selectedFirewall$ = this._firewallsRepository.getById(firewallId).pipe(
       catchError((error) => {
         // Handle common error status code
         this._errorHandlerService.handleHttpRedirectionError(error.status);

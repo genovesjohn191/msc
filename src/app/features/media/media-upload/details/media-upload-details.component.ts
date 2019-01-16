@@ -43,7 +43,7 @@ import {
   McsSafeToNavigateAway,
   getSafeProperty
 } from '@app/utilities';
-import { ResourcesRepository } from '@app/services';
+import { McsResourcesRepository } from '@app/services';
 import {
   McsResource,
   McsJob,
@@ -107,7 +107,7 @@ export class MediaUploadDetailsComponent
     private _formGroupService: McsFormGroupService,
     private _loadingService: McsLoadingService,
     private _errorHandlerService: McsErrorHandlerService,
-    private _resourcesRepository: ResourcesRepository,
+    private _resourcesRepository: McsResourcesRepository,
     private _mediaUploadService: MediaUploadService,
     private _scrollElementService: McsScrollDispatcherService
   ) {
@@ -219,7 +219,7 @@ export class MediaUploadDetailsComponent
    */
   private _subsribeToResources(): void {
     this._loadingService.showLoader(this.textContent.loadingResources);
-    this.resources$ = this._resourcesRepository.findAllRecords()
+    this.resources$ = this._resourcesRepository.getAll()
       .pipe(
         catchError((error) => {
           this._errorHandlerService.handleHttpRedirectionError(error.status);
@@ -235,7 +235,7 @@ export class MediaUploadDetailsComponent
    */
   private _subscribeToResourceById(resourceId: string): void {
     this._loadingService.showLoader(this.textContent.loadingResourceDetails);
-    this.selectedResource$ = this._resourcesRepository.findRecordById(resourceId).pipe(
+    this.selectedResource$ = this._resourcesRepository.getById(resourceId).pipe(
       shareReplay(1),
       catchError((error) => {
         this._errorHandlerService.handleHttpRedirectionError(error.status);

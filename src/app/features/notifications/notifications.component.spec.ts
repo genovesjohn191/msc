@@ -3,12 +3,8 @@ import {
   TestBed
 } from '@angular/core/testing';
 import { CoreDefinition } from '@app/core';
-import {
-  NotificationsTestingModule,
-  mockNotificationsService
-} from './testing';
+import { NotificationsTestingModule } from './testing';
 import { NotificationsComponent } from './notifications.component';
-import { JobsApiService } from '@app/services';
 
 describe('NotificationsComponent', () => {
 
@@ -31,7 +27,7 @@ describe('NotificationsComponent', () => {
     });
 
     /** Testbed Onverriding of Providers */
-    TestBed.overrideProvider(JobsApiService, { useValue: mockNotificationsService });
+    // TestBed.overrideProvider(JobsApiService, { useValue: mockNotificationsService });
 
     /** Testbed Onverriding of Components */
     TestBed.overrideComponent(NotificationsComponent, {

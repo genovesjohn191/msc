@@ -14,12 +14,12 @@ import {
   McsKeyValuePair,
   McsFirewall
 } from '@app/models';
-import { FirewallsRepository } from '@app/services';
+import { McsFirewallsRepository } from '@app/services';
 
 export class FirewallsListSource extends McsListSourceBase<McsFirewall> {
 
   constructor(
-    private _firewallsRepository: FirewallsRepository,
+    private _firewallsRepository: McsFirewallsRepository,
     private _search: Search) {
     super();
   }
@@ -57,7 +57,7 @@ export class FirewallsListSource extends McsListSourceBase<McsFirewall> {
    * Get all records from repository
    */
   protected getAllRecords(): Observable<McsFirewall[]> {
-    return this._firewallsRepository.findAllRecords();
+    return this._firewallsRepository.getAll();
   }
 
   /**

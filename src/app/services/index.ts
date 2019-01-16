@@ -1,30 +1,29 @@
 export * from './services.module';
 
-/** API services */
-export * from './api-services/jobs-api.service';
-export * from './api-services/options-api.service';
-export * from './api-services/tools-api.service';
-export * from './api-services/firewalls-api.service';
-export * from './api-services/orders-api.service';
-export * from './api-services/products-api.service';
-export * from './api-services/resources-api.service';
-export * from './api-services/servers-api.service';
-export * from './api-services/tickets-api.service';
-export * from './api-services/media-api.service';
+/** Data context */
+export * from './data-context/mcs-tools-data.context';
 
 /** Repositories */
-export * from './repositories/tools.repository';
-export * from './repositories/notifications.repository';
-export * from './repositories/firewalls.repository';
-export * from './repositories/orders.repository';
-export * from './repositories/order-item-types.repository';
-export * from './repositories/products.repository';
-export * from './repositories/product-catalog.repository';
-export * from './repositories/resources.repository';
-export * from './repositories/servers.repository';
-export * from './repositories/servers-os.repository';
-export * from './repositories/tickets.repository';
-export * from './repositories/media.repository';
+export * from './repositories/mcs-firewalls.repository';
+export * from './repositories/mcs-jobs.repository';
+export * from './repositories/mcs-media.repository';
+export * from './repositories/mcs-order-item-types.repository';
+export * from './repositories/mcs-orders.repository';
+export * from './repositories/mcs-product-catalog.repository';
+export * from './repositories/mcs-products.repository';
+export * from './repositories/mcs-resources.repository';
+export * from './repositories/mcs-servers-os.repository';
+export * from './repositories/mcs-servers.repository';
+export * from './repositories/mcs-tickets.repository';
+export * from './repositories/mcs-tools.repository';
+export * from './repositories/mcs-console.repository';
+export * from './repositories/mcs-companies.repository';
 
 /** Guards */
 export * from './guards/required-resources.guard';
+
+/**
+ * @deprecated TODO: Remove this after refactoring add-ons on server,
+ * api-services should not be expose
+ */
+export * from './api-services/options-api.service';

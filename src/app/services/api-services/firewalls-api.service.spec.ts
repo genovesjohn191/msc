@@ -19,8 +19,8 @@ describe('FirewallsService', () => {
   let requestOptions = {
     page: 1,
     perPage: 10,
-    searchKeyword: 'Arrian',
-    id: 459
+    searchKeyword: undefined,
+    id: '459'
   };
 
   beforeEach(async(() => {
@@ -45,9 +45,9 @@ describe('FirewallsService', () => {
   describe('getFirewalls()', () => {
     it('should get all firewalls from API calls', () => {
       firewallsService.getFirewalls({
-        page: requestOptions.page,
-        perPage: requestOptions.perPage,
-        searchKeyword: undefined
+        pageIndex: requestOptions.page,
+        pageSize: requestOptions.perPage,
+        keyword: undefined
       }).subscribe((response) => {
         expect(response).toBeDefined();
         expect(response.status).toBe(200);
@@ -94,7 +94,9 @@ describe('FirewallsService', () => {
       firewallsService.getFirewallPolicies(
         requestOptions.id,
         {
-          page: requestOptions.page
+          pageIndex: requestOptions.page,
+          pageSize: requestOptions.perPage,
+          keyword: requestOptions.searchKeyword
         }).subscribe((response) => {
           expect(response).toBeDefined();
           expect(response.status).toBe(200);
@@ -102,9 +104,11 @@ describe('FirewallsService', () => {
         });
 
       // Create request to the backend and expect that the request happened
-      let httpRequest = httpMock.expectOne(
-        `/firewalls/${requestOptions.id}/policies?page=${requestOptions.page}`
-      );
+      let endpoint = `/firewalls/${requestOptions.id}/policies`
+        + `?page=${requestOptions.page}`
+        + `&per_page=${requestOptions.perPage}`;
+
+      let httpRequest = httpMock.expectOne(endpoint.replace(' ', ''));
       expect(httpRequest.request.method).toEqual('GET');
 
       // Create response data and transmit, expect the result should go to subscribe callback

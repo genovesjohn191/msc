@@ -56,12 +56,10 @@ import {
   McsServerPlatform,
   McsResource
 } from '@app/models';
-import {
-  ServersApiService,
-  ServersRepository
-} from '@app/services';
+import { McsServersRepository } from '@app/services';
 import { ServerService } from './server.service';
 import { ServersListSource } from '../servers.listsource';
+import { ServersService } from '../servers.service';
 
 // Add another group type in here if you have addition tab
 type tabGroupType = 'management' | 'storage';
@@ -108,9 +106,9 @@ export class ServerComponent
     _router: Router,
     _activatedRoute: ActivatedRoute,
     private _dialogService: McsDialogService,
-    private _serversRepository: ServersRepository,
-    private _serversService: ServersApiService,
+    private _serversRepository: McsServersRepository,
     private _serverService: ServerService,
+    private _serversService: ServersService,
     private _textContentProvider: McsTextContentProvider,
     private _changeDetectorRef: ChangeDetectorRef,
     private _loadingService: McsLoadingService,
@@ -264,7 +262,7 @@ export class ServerComponent
    */
   private _subscribeToServerById(serverId: string): void {
     this._loadingService.showLoader(this.textContent.loading);
-    this.selectedServer$ = this._serversRepository.findRecordById(serverId).pipe(
+    this.selectedServer$ = this._serversRepository.getById(serverId).pipe(
       catchError((error) => {
         this._errorHandlerService.handleHttpRedirectionError(error.status);
         return throwError(error);

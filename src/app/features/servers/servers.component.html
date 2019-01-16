@@ -91,7 +91,7 @@
         </mcs-responsive-panel>
 
         <div class="total-record-count">
-          <span>{{ totalRecordsCount | mcsPlural:
+          <span>{{ dataSource?.totalRecordCount | mcsPlural:
                 textContent.dataSingular : textContent.dataPlural }}
           </span>
         </div>
@@ -108,8 +108,7 @@
 
     <!-- Column Filter -->
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.filterColumn" offset="medium">
-      <mcs-filter-selector [key]="columnSettingsKey"
-        [associatedTable]="serversTable"
+      <mcs-filter-selector [key]="columnSettingsKey" #filterSelector
         (filtersChange)="updateColumnSettings($event)"></mcs-filter-selector>
     </mcs-left-panel-item>
   </mcs-left-panel>
@@ -122,7 +121,7 @@
       <mcs-search *ngIf="isMobile" #search mcsId="virtual-mobile-search"></mcs-search>
 
       <!-- Table -->
-      <mcs-table [dataSource]="dataSource" #serversTable>
+      <mcs-table [dataSource]="dataSource" [columnFilter]="filterSelector">
         <!-- Selection Column -->
         <ng-container mcsColumnDef="select" *mcsAccessControl="['VmPowerStateEdit']">
           <mcs-header-cell *mcsHeaderCellDef
@@ -169,7 +168,7 @@
         </ng-container>
 
         <!-- Type Column -->
-        <ng-container mcsColumnDef="type" [mcsColumnDefHidden]="isColumnHidden('type')">
+        <ng-container mcsColumnDef="type">
           <mcs-header-cell *mcsHeaderCellDef hidden-xsmall>
             {{ columnSettings.type.text }}
           </mcs-header-cell>
@@ -179,7 +178,7 @@
         </ng-container>
 
         <!-- Catalog Column -->
-        <ng-container mcsColumnDef="catalog" [mcsColumnDefHidden]="isColumnHidden('catalog')">
+        <ng-container mcsColumnDef="catalog">
           <mcs-header-cell *mcsHeaderCellDef hidden-xsmall>
             {{ columnSettings.catalog.text }}
           </mcs-header-cell>
@@ -189,8 +188,7 @@
         </ng-container>
 
         <!-- Tools Version Column -->
-        <ng-container mcsColumnDef="toolsVersion"
-          [mcsColumnDefHidden]="isColumnHidden('toolsVersion')">
+        <ng-container mcsColumnDef="toolsVersion">
           <mcs-header-cell *mcsHeaderCellDef hidden-xsmall>
             {{ columnSettings.toolsVersion.text }}
           </mcs-header-cell>
@@ -210,7 +208,6 @@
 
         <!-- Management IP Column -->
         <ng-container mcsColumnDef="managementIp"
-          [mcsColumnDefHidden]="isColumnHidden('managementIp')"
           *mcsAccessControl="['VmManagementIpView']">
           <mcs-header-cell *mcsHeaderCellDef hidden-small>
             {{ columnSettings.managementIp.text }}
@@ -221,7 +218,7 @@
         </ng-container>
 
         <!-- Zone Column -->
-        <ng-container mcsColumnDef="zone" [mcsColumnDefHidden]="isColumnHidden('zone')">
+        <ng-container mcsColumnDef="zone">
           <mcs-header-cell *mcsHeaderCellDef hidden-small>
             {{ columnSettings.zone.text }}
           </mcs-header-cell>
@@ -231,9 +228,7 @@
         </ng-container>
 
         <!-- Service ID Column -->
-        <ng-container mcsColumnDef="serviceId"
-          [mcsColumnDefHidden]="isColumnHidden('serviceId')"
-          *ngIf="hasManagedResource">
+        <ng-container mcsColumnDef="serviceId" *ngIf="hasManagedResource">
           <mcs-header-cell *mcsHeaderCellDef hidden-small>
             {{ columnSettings.serviceId.text }}
           </mcs-header-cell>
@@ -243,7 +238,7 @@
         </ng-container>
 
         <!-- Resource Column -->
-        <ng-container mcsColumnDef="resource" [mcsColumnDefHidden]="isColumnHidden('resource')">
+        <ng-container mcsColumnDef="resource">
           <mcs-header-cell *mcsHeaderCellDef hidden-small>
             {{ columnSettings.resource.text }}
           </mcs-header-cell>
@@ -258,7 +253,7 @@
         </ng-container>
 
         <!-- VApp Column -->
-        <ng-container mcsColumnDef="vApp" [mcsColumnDefHidden]="isColumnHidden('vApp')">
+        <ng-container mcsColumnDef="vApp">
           <mcs-header-cell *mcsHeaderCellDef hidden-small>
             {{ columnSettings.vApp.text }}
           </mcs-header-cell>
@@ -324,7 +319,7 @@
       <!-- Paginator -->
       <mcs-paginator #paginator
         [hidden]="isSearching"
-        [totalCount]="totalRecordsCount">
+        [totalCount]="dataSource?.totalRecordCount">
       </mcs-paginator>
     </div>
   </mcs-content-panel>

@@ -38,7 +38,6 @@ export * from './providers/mcs-filter.provider';
 export * from './base/mcs-routing-tab.base';
 export * from './base/mcs-table-listing.base';
 export * from './base/mcs-form-field-control.base';
-export * from './base/mcs-repository.base';
 export * from './base/mcs-list-source.base';
 export * from './base/mcs-status-settings.base';
 /** Authentication */
@@ -68,3 +67,8 @@ export * from './factory/serialization/mcs-enum-serialization-base';
 export * from './factory/serialization/mcs-date-serialization';
 export * from './factory/item-list-manager/mcs-item-list-manager';
 export * from './factory/item-list-manager/mcs-item-list-key-manager';
+// Data Access Layer
+export * from './data-access/mcs-data-context.interface';
+export * from './data-access/mcs-repository.interface';
+export * from './data-access/mcs-repository.base';
+export * from './data-access/mcs-table-datasource';

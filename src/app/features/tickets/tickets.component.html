@@ -22,7 +22,7 @@
     <mcs-top-panel-item *mcsTopPanelItemDef overflow-auto>
       <div class="listing-action-wrapper">
         <div class="total-record-count">
-          <span>{{ totalRecordsCount | mcsPlural:
+          <span>{{ dataSource?.totalRecordCount | mcsPlural:
                 textContent.dataSingular : textContent.dataPlural }}
           </span>
         </div>
@@ -39,7 +39,7 @@
 
     <!-- Column Filter -->
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.filterColumn" offset="medium">
-      <mcs-filter-selector [key]="columnSettingsKey"
+      <mcs-filter-selector [key]="columnSettingsKey" #filterSelector
         (filtersChange)="updateColumnSettings($event)"></mcs-filter-selector>
     </mcs-left-panel-item>
   </mcs-left-panel>
@@ -52,10 +52,9 @@
       <mcs-search *ngIf="isMobile" #search mcsId="tickets-mobile-search"></mcs-search>
 
       <!-- Table -->
-      <mcs-table [dataSource]="dataSource">
+      <mcs-table [dataSource]="dataSource" [columnFilter]="filterSelector">
         <!-- ID Column -->
-        <ng-container mcsColumnDef="crispTicketNumber"
-          [mcsColumnDefHidden]="isColumnHidden('crispTicketNumber')">
+        <ng-container mcsColumnDef="crispTicketNumber">
           <mcs-header-cell *mcsHeaderCellDef>
             {{ columnSettings.crispTicketNumber.text }}
           </mcs-header-cell>
@@ -69,7 +68,7 @@
         </ng-container>
 
         <!-- Status Column -->
-        <ng-container mcsColumnDef="status" [mcsColumnDefHidden]="isColumnHidden('status')">
+        <ng-container mcsColumnDef="status">
           <mcs-header-cell *mcsHeaderCellDef>
             {{ columnSettings.status.text }}
           </mcs-header-cell>
@@ -93,7 +92,7 @@
         </ng-container>
 
         <!-- Logged By Column -->
-        <ng-container mcsColumnDef="loggedBy" [mcsColumnDefHidden]="isColumnHidden('loggedBy')">
+        <ng-container mcsColumnDef="loggedBy">
           <mcs-header-cell *mcsHeaderCellDef hidden-small>
             {{ columnSettings.loggedBy.text }}
           </mcs-header-cell>
@@ -103,8 +102,7 @@
         </ng-container>
 
         <!-- Last Updated Date Column -->
-        <ng-container mcsColumnDef="lastUpdatedDate"
-          [mcsColumnDefHidden]="isColumnHidden('lastUpdatedDate')">
+        <ng-container mcsColumnDef="lastUpdatedDate">
           <mcs-header-cell *mcsHeaderCellDef hidden-small>
             {{ columnSettings.lastUpdatedDate.text }}
           </mcs-header-cell>
@@ -114,8 +112,7 @@
         </ng-container>
 
         <!-- Last Updated By Column -->
-        <ng-container mcsColumnDef="lastUpdatedBy"
-          [mcsColumnDefHidden]="isColumnHidden('lastUpdatedBy')">
+        <ng-container mcsColumnDef="lastUpdatedBy">
           <mcs-header-cell *mcsHeaderCellDef hidden-small>
             {{ columnSettings.lastUpdatedBy.text }}
           </mcs-header-cell>
@@ -125,8 +122,7 @@
         </ng-container>
 
         <!-- Customer Reference Column -->
-        <ng-container mcsColumnDef="customerReference"
-          [mcsColumnDefHidden]="isColumnHidden('customerReference')">
+        <ng-container mcsColumnDef="customerReference">
           <mcs-header-cell *mcsHeaderCellDef hidden-small>
             {{ columnSettings.customerReference.text }}
           </mcs-header-cell>
@@ -176,7 +172,7 @@
       <!-- Paginator -->
       <mcs-paginator #paginator
         [hidden]="isSearching"
-        [totalCount]="totalRecordsCount">
+        [totalCount]="dataSource?.totalRecordCount">
       </mcs-paginator>
     </div>
   </mcs-content-panel>

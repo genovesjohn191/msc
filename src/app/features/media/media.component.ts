@@ -14,21 +14,18 @@ import {
   CoreDefinition,
   McsBrowserService,
   McsTableListingBase,
-  CoreRoutes
+  CoreRoutes,
+  McsTableDataSource
 } from '@app/core';
-import {
-  isNullOrEmpty,
-  getSafeProperty
-} from '@app/utilities';
+import { isNullOrEmpty } from '@app/utilities';
 import {
   RouteKey,
   McsResourceMedia
 } from '@app/models';
 import {
-  MediaRepository,
-  ResourcesRepository
+  McsMediaRepository,
+  McsResourcesRepository
 } from '@app/services';
-import { MediaDataSource } from './media.datasource';
 
 @Component({
   selector: 'mcs-media',
@@ -37,7 +34,7 @@ import { MediaDataSource } from './media.datasource';
 })
 
 export class MediaComponent
-  extends McsTableListingBase<MediaDataSource>
+  extends McsTableListingBase<McsTableDataSource<McsResourceMedia>>
   implements OnInit, AfterViewInit, OnDestroy {
 
   public textContent: any;
@@ -48,8 +45,8 @@ export class MediaComponent
     _changeDetectorRef: ChangeDetectorRef,
     private _router: Router,
     private _textProvider: McsTextContentProvider,
-    private _mediaRepository: MediaRepository,
-    private _resourcesRepository: ResourcesRepository
+    private _mediaRepository: McsMediaRepository,
+    private _resourcesRepository: McsResourcesRepository
   ) {
     super(_browserService, _changeDetectorRef);
   }
@@ -103,18 +100,7 @@ export class MediaComponent
    * Retry obtaining datasource from server
    */
   public retryDatasource(): void {
-    // We need to initialize again the datasource in order for the
-    // observable merge work as expected, since it is closing the
-    // subscription when error occured.
     this.initializeDatasource();
-  }
-
-  /**
-   * Returns the totals record found in orders
-   */
-  protected get totalRecordsCount(): number {
-    return getSafeProperty(this._mediaRepository,
-      (obj) => obj.totalRecordsCount, 0);
   }
 
   /**
@@ -128,12 +114,10 @@ export class MediaComponent
    * Initialize the table datasource according to pagination and search settings
    */
   protected initializeDatasource(): void {
-    // Set datasource instance
-    this.dataSource = new MediaDataSource(
-      this._mediaRepository,
-      this.paginator,
-      this.search
-    );
+    this.dataSource = new McsTableDataSource(this._mediaRepository);
+    this.dataSource
+      .registerSearch(this.search)
+      .registerPaginator(this.paginator);
     this.changeDetectorRef.markForCheck();
   }
 
@@ -141,7 +125,7 @@ export class MediaComponent
    * Subscribes to resources to set the flag of has resources
    */
   private _subscribeToResources(): void {
-    this.hasResources$ = this._resourcesRepository.findAllRecords().pipe(
+    this.hasResources$ = this._resourcesRepository.getAll().pipe(
       map((resources) => !isNullOrEmpty(resources))
     );
   }

@@ -12,31 +12,29 @@
           <mcs-search #search mcsId="firewall-policy-search"></mcs-search>
           <mcs-icon [key]="columnFilterIconKey" size="large" hidden-small
             mcsPopover placement="bottom" orientation="left" theme="light"
-            padding="narrow" [content]="filterSelector" mcsCursor="pointer">
+            padding="narrow" [content]="filterSelectorTemplate" mcsCursor="pointer">
           </mcs-icon>
-          <ng-template #filterSelector>
-            <mcs-filter-selector [key]="columnSettingsKey"
-              (filtersChange)="updateColumnSettings($event)">
-            </mcs-filter-selector>
-          </ng-template>
-          <!-- Note: This is required for generating policies table -->
-          <ng-container>
-            <mcs-filter-selector [hidden]="true"
+          <ng-template #filterSelectorTemplate>
+            <mcs-filter-selector #filterSelector
               [key]="columnSettingsKey"
-              (filtersChange)="updateColumnSettings($event)">
-            </mcs-filter-selector>
-          </ng-container>
+              (filtersChange)="updateColumnSettings($event)"></mcs-filter-selector>
+          </ng-template>
+
+          <!-- Note: Hidden selector to get the actual column during initialization -->
+          <mcs-filter-selector [hidden]="true" [key]="columnSettingsKey"
+            (filtersChange)="updateColumnSettings($event)"></mcs-filter-selector>
+
           <div mcsAlign="end" hidden-small>
-            <span>
-              {{ totalRecordsCount | mcsPlural: textContent.dataSingular : textContent.dataPlural}}
+            <span> {{ dataSource?.totalRecordCount | mcsPlural:
+               textContent.dataSingular : textContent.dataPlural }}
             </span>
           </div>
         </mcs-item>
 
         <!-- Table -->
-        <mcs-table [dataSource]="dataSource">
+        <mcs-table [dataSource]="dataSource" [columnFilter]="filterSelector">
           <!-- Action column -->
-          <ng-container mcsColumnDef="action" [mcsColumnDefHidden]="isColumnHidden('action')">
+          <ng-container mcsColumnDef="action">
             <mcs-header-cell *mcsHeaderCellDef hidden-small>
               {{ columnSettings.action.text }}
             </mcs-header-cell>
@@ -53,7 +51,7 @@
           </ng-container>
 
           <!-- Sequence Column -->
-          <ng-container mcsColumnDef="sequence" [mcsColumnDefHidden]="isColumnHidden('sequence')">
+          <ng-container mcsColumnDef="sequence">
             <mcs-header-cell *mcsHeaderCellDef hidden-small>
               {{ columnSettings.sequence.text }}
             </mcs-header-cell>
@@ -63,8 +61,7 @@
           </ng-container>
 
           <!-- Source Interfaces Column -->
-          <ng-container mcsColumnDef="sourceInterfaces"
-            [mcsColumnDefHidden]="isColumnHidden('sourceInterfaces')">
+          <ng-container mcsColumnDef="sourceInterfaces">
             <mcs-header-cell *mcsHeaderCellDef hidden-small>
               {{ columnSettings.sourceInterfaces.text }}
             </mcs-header-cell>
@@ -78,8 +75,7 @@
           </ng-container>
 
           <!-- Desination Interfaces Column -->
-          <ng-container mcsColumnDef="destinationInterfaces"
-            [mcsColumnDefHidden]="isColumnHidden('destinationInterfaces')">
+          <ng-container mcsColumnDef="destinationInterfaces">
             <mcs-header-cell *mcsHeaderCellDef hidden-small>
               {{ columnSettings.destinationInterfaces.text }}
             </mcs-header-cell>
@@ -115,8 +111,7 @@
           </ng-container>
 
           <!-- Destination Interfaces Column -->
-          <ng-container mcsColumnDef="destination"
-            [mcsColumnDefHidden]="isColumnHidden('destination')">
+          <ng-container mcsColumnDef="destination">
             <mcs-header-cell *mcsHeaderCellDef>
               {{ columnSettings.destination.text }}
             </mcs-header-cell>
@@ -138,7 +133,7 @@
           </ng-container>
 
           <!-- Label Column -->
-          <ng-container mcsColumnDef="label" [mcsColumnDefHidden]="isColumnHidden('label')">
+          <ng-container mcsColumnDef="label">
             <mcs-header-cell *mcsHeaderCellDef hidden-small>
               {{ columnSettings.label.text }}
             </mcs-header-cell>
@@ -148,7 +143,7 @@
           </ng-container>
 
           <!-- Schedule Column -->
-          <ng-container mcsColumnDef="schedule" [mcsColumnDefHidden]="isColumnHidden('schedule')">
+          <ng-container mcsColumnDef="schedule">
             <mcs-header-cell *mcsHeaderCellDef hidden-small>
               {{ columnSettings.schedule.text }}
             </mcs-header-cell>
@@ -176,7 +171,7 @@
           </ng-container>
 
           <!-- Details Column -->
-          <ng-container mcsColumnDef="details" [mcsColumnDefHidden]="isColumnHidden('details')">
+          <ng-container mcsColumnDef="details">
             <mcs-header-cell *mcsHeaderCellDef hidden-small>
               {{ columnSettings.details.text }}
             </mcs-header-cell>
@@ -216,7 +211,7 @@
         <!-- Paginator -->
         <mcs-paginator #paginator
           [hidden]="isSearching"
-          [totalCount]="totalRecordsCount">
+          [totalCount]="dataSource?.totalRecordCount">
         </mcs-paginator>
       </div>
     </div>

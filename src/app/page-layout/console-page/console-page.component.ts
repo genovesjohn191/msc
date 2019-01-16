@@ -39,10 +39,10 @@ import {
   ServerCommand
 } from '@app/models';
 import {
-  ServersRepository,
-  ServersApiService,
+  McsServersRepository,
+  McsConsoleRepository
 } from '@app/services';
-import { ConsolePageRepository } from './console-page.repository';
+import { ServersService } from '@app/features/servers';
 
 // JQuery script implementation
 require('script-loader!../../../assets/scripts/jquery/jquery-1.7.2.min.js');
@@ -143,12 +143,12 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public constructor(
-    private _consoleRepository: ConsolePageRepository,
+    private _consoleRepository: McsConsoleRepository,
     private _textContentProvider: McsTextContentProvider,
     private _notificationsEvents: McsNotificationEventsService,
     private _sessionHandler: McsSessionHandlerService,
-    private _serversRepository: ServersRepository,
-    private _serversService: ServersApiService,
+    private _serversRepository: McsServersRepository,
+    private _serversService: ServersService,
     private _activatedRoute: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef
   ) {
@@ -206,7 +206,7 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(takeUntil(this._destroySubject))
       .subscribe((params) => this._paramChangedEventHandler(params));
 
-    this._serversRepository.dataRecordsChanged
+    this._serversRepository.dataChange()
       .pipe(takeUntil(this._destroySubject))
       .subscribe(() => this._serverChangedEventHandler());
 
@@ -309,7 +309,7 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
     if (isNullOrEmpty(serverId)) { return; }
 
     this.consoleStatus = VmConsoleStatus.Connecting;
-    this._consoleRepository.findRecordById(serverId)
+    this._consoleRepository.getById(serverId)
       .pipe(
         catchError((error) => {
           // Handle common error status code
@@ -373,7 +373,7 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   private _getServerById(serverId: any): void {
     if (isNullOrEmpty(this._serverId)) { return; }
-    this._serversRepository.findRecordById(serverId)
+    this._serversRepository.getById(serverId)
       .subscribe((response) => {
         this.server = response;
         this._changeDetectorRef.markForCheck();

@@ -16,12 +16,12 @@ import {
   McsKeyValuePair,
   McsProductCatalog
 } from '@app/models';
-import { ProductCatalogRepository } from '@app/services';
+import { McsProductCatalogRepository } from '@app/services';
 
 export class ProductCatalogListSource extends McsListSourceBase<McsProductCatalog> {
 
   constructor(
-    private _catalogRepository: ProductCatalogRepository,
+    private _catalogRepository: McsProductCatalogRepository,
     private _search: Search) {
     super();
   }
@@ -59,7 +59,7 @@ export class ProductCatalogListSource extends McsListSourceBase<McsProductCatalo
    * Get all records from repository
    */
   protected getAllRecords(): Observable<McsProductCatalog[]> {
-    return this._catalogRepository.findAllRecords()
+    return this._catalogRepository.getAll()
       .pipe(
         map((response) => {
           // We need to create a new product object in here

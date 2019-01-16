@@ -18,7 +18,7 @@ import {
   McsOrder,
   McsOrderItemType
 } from '@app/models';
-import { OrderItemTypesRepository } from '@app/services';
+import { McsOrderItemTypesRepository } from '@app/services';
 import { ServerOrderDetail } from './server-order-detail';
 import { ServerCreateFlyweightContext } from '../server-create-flyweight.context';
 
@@ -50,7 +50,7 @@ export class ServerCreateConfirmComponent implements OnInit {
   constructor(
     private _textContentProvider: McsTextContentProvider,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _orderItemTypesRepository: OrderItemTypesRepository,
+    private _orderItemTypesRepository: McsOrderItemTypesRepository,
     private _serverCreateFlyweightContext: ServerCreateFlyweightContext
   ) {
     this.orderDataSource = new Array();
@@ -69,16 +69,14 @@ export class ServerCreateConfirmComponent implements OnInit {
    */
   private _getItemTypes(): void {
     this.itemTypesStatusFactory.setInProgress();
-    this._orderItemTypesRepository.findAllRecords()
-      .pipe(
-        catchError((error) => {
-          this.itemTypesStatusFactory.setError();
-          return throwError(error);
-        })
-      )
-      .subscribe((response) => {
-        this.itemTypesStatusFactory.setSuccessful(response);
-      });
+    this._orderItemTypesRepository.getAll().pipe(
+      catchError((error) => {
+        this.itemTypesStatusFactory.setError();
+        return throwError(error);
+      })
+    ).subscribe((response) => {
+      this.itemTypesStatusFactory.setSuccessful(response);
+    });
   }
 
   /**

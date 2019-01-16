@@ -13,19 +13,15 @@ import {
   CoreDefinition,
   McsBrowserService,
   McsTableListingBase,
-  CoreRoutes
+  CoreRoutes,
+  McsTableDataSource
 } from '@app/core';
-import {
-  isNullOrEmpty,
-  refreshView,
-  getSafeProperty
-} from '@app/utilities';
+import { isNullOrEmpty } from '@app/utilities';
 import {
   RouteKey,
   McsTicket
 } from '@app/models';
-import { TicketsRepository } from '@app/services';
-import { TicketsDataSource } from './tickets.datasource';
+import { McsTicketsRepository } from '@app/services';
 
 @Component({
   selector: 'mcs-tickets',
@@ -37,9 +33,8 @@ import { TicketsDataSource } from './tickets.datasource';
 })
 
 export class TicketsComponent
-  extends McsTableListingBase<TicketsDataSource>
+  extends McsTableListingBase<McsTableDataSource<McsTicket>>
   implements OnInit, AfterViewInit, OnDestroy {
-
   public textContent: any;
 
   public get addIconKey(): string {
@@ -50,7 +45,7 @@ export class TicketsComponent
     _browserService: McsBrowserService,
     _changeDetectorRef: ChangeDetectorRef,
     private _textContentProvider: McsTextContentProvider,
-    private _ticketsRepository: TicketsRepository,
+    private _ticketsRepository: McsTicketsRepository,
     private _router: Router
   ) {
     super(_browserService, _changeDetectorRef);
@@ -61,7 +56,7 @@ export class TicketsComponent
   }
 
   public ngAfterViewInit() {
-    refreshView(() => {
+    Promise.resolve().then(() => {
       this.initializeDatasource();
     });
   }
@@ -90,18 +85,7 @@ export class TicketsComponent
    * Retry obtaining datasource from tickets
    */
   public retryDatasource(): void {
-    // We need to initialize again the datasource in order for the
-    // observable merge work as expected, since it is closing the
-    // subscription when error occured.
     this.initializeDatasource();
-  }
-
-  /**
-   * Returns the totals record found in tickets
-   */
-  protected get totalRecordsCount(): number {
-    return getSafeProperty(this._ticketsRepository,
-      (obj) => obj.totalRecordsCount, 0);
   }
 
   /**
@@ -115,12 +99,10 @@ export class TicketsComponent
    * Initialize the table datasource according to pagination and search settings
    */
   protected initializeDatasource(): void {
-    // Set datasource
-    this.dataSource = new TicketsDataSource(
-      this._ticketsRepository,
-      this.paginator,
-      this.search
-    );
+    this.dataSource = new McsTableDataSource(this._ticketsRepository);
+    this.dataSource
+      .registerSearch(this.search)
+      .registerPaginator(this.paginator);
     this.changeDetectorRef.markForCheck();
   }
 }
