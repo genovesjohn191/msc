@@ -18,7 +18,7 @@
     <mcs-top-panel-item *mcsTopPanelItemDef [ngStyle]="{overflow: 'auto'}">
       <div class="listing-action-wrapper">
         <div class="total-record-count">
-          <span>{{ totalRecordsCount | mcsPlural:
+          <span>{{ dataSource?.totalRecordCount | mcsPlural:
                 textContent.dataSingular : textContent.dataPlural }}
           </span>
         </div>
@@ -35,7 +35,7 @@
 
     <!-- Column Filter -->
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.filterColumn" offset="medium">
-      <mcs-filter-selector [key]="columnSettingsKey"
+      <mcs-filter-selector [key]="columnSettingsKey" #filterSelector
         (filtersChange)="updateColumnSettings($event)"></mcs-filter-selector>
     </mcs-left-panel-item>
   </mcs-left-panel>
@@ -49,7 +49,7 @@
       <mcs-search *ngIf="isMobile" #search mcsId="media-mobile-search"></mcs-search>
 
       <!-- Table -->
-      <mcs-table [dataSource]="dataSource">
+      <mcs-table [dataSource]="dataSource" [columnFilter]="filterSelector">
         <!-- Media Name Column -->
         <ng-container mcsColumnDef="media">
           <mcs-header-cell *mcsHeaderCellDef>
@@ -66,7 +66,7 @@
         </ng-container>
 
         <!-- Size Column -->
-        <ng-container mcsColumnDef="size" [mcsColumnDefHidden]="isColumnHidden('size')">
+        <ng-container mcsColumnDef="size">
           <mcs-header-cell *mcsHeaderCellDef hidden-small>
             {{ columnSettings.size.text }}
           </mcs-header-cell>
@@ -76,8 +76,7 @@
         </ng-container>
 
         <!-- Uploaded Date Column -->
-        <ng-container mcsColumnDef="uploadedDate"
-          [mcsColumnDefHidden]="isColumnHidden('uploadedDate')">
+        <ng-container mcsColumnDef="uploadedDate">
           <mcs-header-cell *mcsHeaderCellDef hidden-small>
             {{ columnSettings.uploadedDate.text }}
           </mcs-header-cell>
@@ -87,7 +86,7 @@
         </ng-container>
 
         <!-- Attached To Column -->
-        <ng-container mcsColumnDef="attachedTo" [mcsColumnDefHidden]="isColumnHidden('attachedTo')">
+        <ng-container mcsColumnDef="attachedTo">
           <mcs-header-cell *mcsHeaderCellDef>
             {{ columnSettings.attachedTo.text }}
           </mcs-header-cell>
@@ -146,7 +145,7 @@
       <!-- Paginator -->
       <mcs-paginator #paginator
         [hidden]="isSearching"
-        [totalCount]="totalRecordsCount">
+        [totalCount]="dataSource?.totalRecordCount">
       </mcs-paginator>
     </div>
   </mcs-content-panel>

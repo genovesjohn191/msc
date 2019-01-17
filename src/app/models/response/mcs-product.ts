@@ -42,6 +42,9 @@ export class McsProduct extends McsEntityBase {
   public secondaryOwner: McsProductOwner;
 
   @JsonProperty({ type: McsProductOwner })
+  public tertiaryOwner: McsProductOwner;
+
+  @JsonProperty({ type: McsProductOwner })
   public architectOwnerPrimary: McsProductOwner;
 
   @JsonProperty({ type: McsProductOwner })
@@ -53,8 +56,13 @@ export class McsProduct extends McsEntityBase {
   @JsonProperty({ type: McsProductOption })
   public productOptions: McsProductOption[];
 
+  public icon: string;
+
   @JsonProperty({ type: McsProductInview })
   public inviewPremium: McsProductInview[];
+
+  @JsonProperty({ type: McsProductInview })
+  public inviewStandard: McsProductInview[];
 
   public name: string;
   public displayOrder: number;
@@ -92,5 +100,8 @@ export class McsProduct extends McsEntityBase {
     this.specialistOwner = undefined;
     this.productOptions = undefined;
     this.inviewPremium = undefined;
+    this.inviewStandard = undefined;
+    this.icon = undefined;
+    this.tertiaryOwner = undefined;
   }
 }

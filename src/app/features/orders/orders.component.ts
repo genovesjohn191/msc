@@ -12,19 +12,15 @@ import {
   CoreDefinition,
   McsBrowserService,
   McsTableListingBase,
-  CoreRoutes
+  CoreRoutes,
+  McsTableDataSource
 } from '@app/core';
-import {
-  refreshView,
-  getSafeProperty,
-  isNullOrEmpty
-} from '@app/utilities';
+import { isNullOrEmpty } from '@app/utilities';
 import {
   RouteKey,
   McsOrder
 } from '@app/models';
-import { OrdersRepository } from '@app/services';
-import { OrdersDataSource } from './orders.datasource';
+import { McsOrdersRepository } from '@app/services';
 
 @Component({
   selector: 'mcs-orders',
@@ -33,7 +29,7 @@ import { OrdersDataSource } from './orders.datasource';
 })
 
 export class OrdersComponent
-  extends McsTableListingBase<OrdersDataSource>
+  extends McsTableListingBase<McsTableDataSource<McsOrder>>
   implements OnInit, AfterViewInit, OnDestroy {
 
   public textContent: any;
@@ -43,7 +39,7 @@ export class OrdersComponent
     _changeDetectorRef: ChangeDetectorRef,
     private _router: Router,
     private _textProvider: McsTextContentProvider,
-    private _ordersRepository: OrdersRepository
+    private _ordersRepository: McsOrdersRepository
   ) {
     super(_browserService, _changeDetectorRef);
   }
@@ -53,7 +49,7 @@ export class OrdersComponent
   }
 
   public ngAfterViewInit() {
-    refreshView(() => this.initializeDatasource());
+    Promise.resolve().then(() => this.initializeDatasource());
   }
 
   public ngOnDestroy() {
@@ -87,18 +83,7 @@ export class OrdersComponent
    * Retry obtaining datasource from server
    */
   public retryDatasource(): void {
-    // We need to initialize again the datasource in order for the
-    // observable merge work as expected, since it is closing the
-    // subscription when error occured.
     this.initializeDatasource();
-  }
-
-  /**
-   * Returns the totals record found in orders
-   */
-  protected get totalRecordsCount(): number {
-    return getSafeProperty(this._ordersRepository,
-      (obj) => obj.totalRecordsCount, 0);
   }
 
   /**
@@ -113,11 +98,10 @@ export class OrdersComponent
    */
   protected initializeDatasource(): void {
     // Set datasource instance
-    this.dataSource = new OrdersDataSource(
-      this._ordersRepository,
-      this.paginator,
-      this.search
-    );
+    this.dataSource = new McsTableDataSource(this._ordersRepository);
+    this.dataSource
+      .registerSearch(this.search)
+      .registerPaginator(this.paginator);
     this.changeDetectorRef.markForCheck();
   }
 }

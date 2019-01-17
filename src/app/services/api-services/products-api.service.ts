@@ -14,7 +14,8 @@ import {
   McsApiSuccessResponse,
   McsApiRequestParameter,
   McsProduct,
-  McsProductCatalog
+  McsProductCatalog,
+  McsQueryParam
 } from '@app/models';
 
 @Injectable()
@@ -27,23 +28,17 @@ export class ProductsApiService {
 
   /**
    * Get Catalog (MCS API Response)
-   * @param page Page Number
-   * @param perPage Count per page
-   * @param searchKeyword Search keyword
+   * @param query Query predicate that serves as the parameter of the endpoint
    */
-  public getCatalogs(args?: {
-    page?: number,
-    perPage?: number,
-    searchKeyword?: string
-  }): Observable<McsApiSuccessResponse<McsProductCatalog[]>> {
+  public getCatalogs(query?: McsQueryParam):
+    Observable<McsApiSuccessResponse<McsProductCatalog[]>> {
 
     // Set default values if null
-    if (isNullOrEmpty(args)) { args = {}; }
-
     let searchParams = new Map<string, any>();
-    searchParams.set('page', args.page ? args.page.toString() : undefined);
-    searchParams.set('per_page', args.perPage ? args.perPage.toString() : undefined);
-    searchParams.set('search_keyword', args.searchKeyword);
+    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
+    searchParams.set('page', query.pageIndex);
+    searchParams.set('per_page', query.pageSize);
+    searchParams.set('search_keyword', query.keyword);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/catalogs';
@@ -95,23 +90,16 @@ export class ProductsApiService {
 
   /**
    * Get Products (MCS API Response)
-   * @param page Page Number
-   * @param perPage Count per page
-   * @param searchKeyword Search keyword
+   * @param query Query predicate that serves as the parameter of the endpoint
    */
-  public getProducts(args?: {
-    page?: number,
-    perPage?: number,
-    searchKeyword?: string
-  }): Observable<McsApiSuccessResponse<McsProduct[]>> {
+  public getProducts(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsProduct[]>> {
 
     // Set default values if null
-    if (isNullOrEmpty(args)) { args = {}; }
-
     let searchParams = new Map<string, any>();
-    searchParams.set('page', args.page ? args.page.toString() : undefined);
-    searchParams.set('per_page', args.perPage ? args.perPage.toString() : undefined);
-    searchParams.set('search_keyword', args.searchKeyword);
+    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
+    searchParams.set('page', query.pageIndex);
+    searchParams.set('per_page', query.pageSize);
+    searchParams.set('search_keyword', query.keyword);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/catalogs/products';

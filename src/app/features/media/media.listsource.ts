@@ -14,12 +14,12 @@ import {
   McsKeyValuePair,
   McsResourceMedia
 } from '@app/models';
-import { MediaRepository } from '@app/services';
+import { McsMediaRepository } from '@app/services';
 
 export class MediaListSource extends McsListSourceBase<McsResourceMedia> {
 
   constructor(
-    private _mediaRepository: MediaRepository,
+    private _mediaRepository: McsMediaRepository,
     private _search: Search) {
     super();
   }
@@ -57,7 +57,7 @@ export class MediaListSource extends McsListSourceBase<McsResourceMedia> {
    * Get all records from repository
    */
   protected getAllRecords(): Observable<McsResourceMedia[]> {
-    return this._mediaRepository.findAllRecords();
+    return this._mediaRepository.getAll();
   }
 
   /**

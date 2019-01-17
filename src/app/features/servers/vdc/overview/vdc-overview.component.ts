@@ -22,7 +22,7 @@ import {
   McsResource,
   McsResourceStorage
 } from '@app/models';
-import { ResourcesRepository } from '@app/services';
+import { McsResourcesRepository } from '@app/services';
 
 const VDC_LOW_STORAGE_PERCENTAGE = 85;
 
@@ -70,7 +70,7 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
   }
 
   constructor(
-    _resourcesRespository: ResourcesRepository,
+    _resourcesRespository: McsResourcesRepository,
     _vdcService: VdcService,
     _changeDetectorRef: ChangeDetectorRef,
     _textContentProvider: McsTextContentProvider,
@@ -185,7 +185,7 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
    * and check whether the resource has self managed type
    */
   private _validateResources(): void {
-    this._resourcesRespository.findAllRecords()
+    this._resourcesRespository.getAll()
       .subscribe((resources) => {
         this.hasResources = !isNullOrEmpty(resources);
         this._changeDetectorRef.markForCheck();

@@ -7,7 +7,7 @@ import {
   distinctUntilChanged,
   tap
 } from 'rxjs/operators';
-import { ResourcesRepository } from '@app/services';
+import { McsResourcesRepository } from '@app/services';
 import { isNullOrEmpty } from '@app/utilities';
 import {
   CatalogItemType,
@@ -37,7 +37,7 @@ export class MediaUploadService {
   }
   private _jobChanges: BehaviorSubject<McsJob>;
 
-  constructor(private _resourcesRepository: ResourcesRepository) {
+  constructor(private _resourcesRepository: McsResourcesRepository) {
     this._jobChanges = new BehaviorSubject(undefined);
     this._selectedResourceChange = new BehaviorSubject(undefined);
   }

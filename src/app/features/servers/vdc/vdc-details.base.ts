@@ -11,7 +11,7 @@ import {
   isNullOrEmpty
 } from '@app/utilities';
 import { McsResource } from '@app/models';
-import { ResourcesRepository } from '@app/services';
+import { McsResourcesRepository } from '@app/services';
 import { VdcService } from '../vdc/vdc.service';
 
 export abstract class VdcDetailsBase {
@@ -38,7 +38,7 @@ export abstract class VdcDetailsBase {
   }
 
   constructor(
-    protected _resourcesRespository: ResourcesRepository,
+    protected _resourcesRespository: McsResourcesRepository,
     protected _vdcService: VdcService,
     protected _changeDetectorRef: ChangeDetectorRef,
     protected _textContentProvider: McsTextContentProvider
@@ -89,7 +89,7 @@ export abstract class VdcDetailsBase {
    */
   private _listenToResourcesUpdate(): void {
     this._resourcesUpdateSubscription = this._resourcesRespository
-      .dataRecordsChanged
+      .dataChange()
       .pipe(takeUntil(this._destroySubject))
       .subscribe(() => this._changeDetectorRef.markForCheck());
   }

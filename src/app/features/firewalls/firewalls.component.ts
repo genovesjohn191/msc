@@ -4,8 +4,7 @@ import {
   OnDestroy,
   AfterViewInit,
   ChangeDetectorRef,
-  ChangeDetectionStrategy,
-  ViewChild
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { Router } from '@angular/router';
 import {
@@ -13,19 +12,15 @@ import {
   CoreDefinition,
   McsBrowserService,
   McsTableListingBase,
-  CoreRoutes
+  CoreRoutes,
+  McsTableDataSource
 } from '@app/core';
-import {
-  isNullOrEmpty,
-  getSafeProperty
-} from '@app/utilities';
-import { TableComponent } from '@app/shared';
+import { isNullOrEmpty } from '@app/utilities';
 import {
   RouteKey,
   McsFirewall
 } from '@app/models';
-import { FirewallsRepository } from '@app/services';
-import { FirewallsDataSource } from './firewalls.datasource';
+import { McsFirewallsRepository } from '@app/services';
 
 @Component({
   selector: 'mcs-firewalls',
@@ -34,13 +29,9 @@ import { FirewallsDataSource } from './firewalls.datasource';
 })
 
 export class FirewallsComponent
-  extends McsTableListingBase<FirewallsDataSource>
+  extends McsTableListingBase<McsTableDataSource<McsFirewall>>
   implements OnInit, AfterViewInit, OnDestroy {
-
   public textContent: any;
-
-  @ViewChild('firewallsTable')
-  public firewallsTable: TableComponent<any>;
 
   public get cogIconKey(): string {
     return CoreDefinition.ASSETS_SVG_COG;
@@ -49,9 +40,9 @@ export class FirewallsComponent
   public constructor(
     _browserService: McsBrowserService,
     _changeDetectorRef: ChangeDetectorRef,
+    private _router: Router,
     private _textProvider: McsTextContentProvider,
-    private _firewallsRepository: FirewallsRepository,
-    private _router: Router
+    private _firewallsRepository: McsFirewallsRepository
   ) {
     super(_browserService, _changeDetectorRef);
   }
@@ -83,18 +74,7 @@ export class FirewallsComponent
    * Retry obtaining datasource from firewalls
    */
   public retryDatasource(): void {
-    // We need to initialize again the datasource in order for the
-    // observable merge work as expected, since it is closing the
-    // subscription when error occured.
     this.initializeDatasource();
-  }
-
-  /**
-   * Returns the totals record found in firewalls
-   */
-  protected get totalRecordsCount(): number {
-    return getSafeProperty(this._firewallsRepository,
-      (obj) => obj.totalRecordsCount, 0);
   }
 
   /**
@@ -109,11 +89,10 @@ export class FirewallsComponent
    */
   protected initializeDatasource(): void {
     // Set datasource
-    this.dataSource = new FirewallsDataSource(
-      this._firewallsRepository,
-      this.paginator,
-      this.search
-    );
+    this.dataSource = new McsTableDataSource(this._firewallsRepository);
+    this.dataSource
+      .registerSearch(this.search)
+      .registerPaginator(this.paginator);
     this.changeDetectorRef.markForCheck();
   }
 }

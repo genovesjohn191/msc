@@ -1,20 +1,13 @@
 import { Injectable } from '@angular/core';
-import {
-  Observable,
-  throwError
-} from 'rxjs';
+import { Observable } from 'rxjs';
 import {
   finalize,
-  map,
-  catchError
+  map
 } from 'rxjs/operators';
-import { Router } from '@angular/router';
 /** Services and Models */
 import {
   McsApiService,
-  McsAuthenticationIdentity,
-  McsLoggerService,
-  CoreRoutes,
+  McsLoggerService
 } from '@app/core';
 import {
   serializeObjectToJson,
@@ -27,7 +20,6 @@ import {
   McsApiRequestParameter,
   McsJob,
   McsApiJobRequestBase,
-  RouteKey,
   McsServerCreate,
   McsServerRename,
   McsServerClone,
@@ -43,7 +35,8 @@ import {
   McsServerCreateSnapshot,
   McsServerMedia,
   McsServerAttachMedia,
-  McsServerCompute
+  McsServerCompute,
+  McsQueryParam
 } from '@app/models';
 
 /**
@@ -54,30 +47,21 @@ export class ServersApiService {
 
   constructor(
     private _mcsApiService: McsApiService,
-    private _loggerService: McsLoggerService,
-    private _authIdentity: McsAuthenticationIdentity,
-    private _router: Router
+    private _loggerService: McsLoggerService
   ) { }
 
   /**
    * Get Servers (MCS API Response)
-   * @param page Page Number
-   * @param perPage Count per page
-   * @param serverName Server name filter
+   * @param query Query predicate that serves as the parameter of the endpoint
    */
-  public getServers(args?: {
-    page?: number,
-    perPage?: number,
-    searchKeyword?: string
-  }): Observable<McsApiSuccessResponse<McsServer[]>> {
+  public getServers(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsServer[]>> {
 
     // Set default values if null
-    if (isNullOrEmpty(args)) { args = {}; }
-
     let searchParams = new Map<string, any>();
-    searchParams.set('page', args.page ? args.page.toString() : undefined);
-    searchParams.set('per_page', args.perPage ? args.perPage.toString() : undefined);
-    searchParams.set('search_keyword', args.searchKeyword);
+    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
+    searchParams.set('page', query.pageIndex);
+    searchParams.set('per_page', query.pageSize);
+    searchParams.set('search_keyword', query.keyword);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/servers';
@@ -196,7 +180,7 @@ export class ServersApiService {
   }
 
   /**
-   * Put server rename
+   * Renames a server based on the new name provided
    * @param id Server identification
    * @param referenceObject Reference object to obtain during subscribe
    */
@@ -225,8 +209,7 @@ export class ServersApiService {
   }
 
   /**
-   * Patch server data to process the scaling updates
-   * *Note: This will send a job (notification)
+   * Updates server compute data to process the scaling updates
    * @param id Server identification
    * @param serverData Server data for the patch update
    */
@@ -400,8 +383,7 @@ export class ServersApiService {
   }
 
   /**
-   * Creating server storage
-   * *Note: This will send a job (notification)
+   * Creates server storage based on the data provided
    * @param serverId Server identification
    * @param storageData Server storage data
    */
@@ -432,8 +414,7 @@ export class ServersApiService {
   }
 
   /**
-   * Updating server storage
-   * *Note: This will send a job (notification)
+   * Updates server storage based on the data provided
    * @param serverId Server identification
    * @param storageId Server storage identification
    * @param storageData Server storage data
@@ -466,15 +447,14 @@ export class ServersApiService {
   }
 
   /**
-   * Deleting server storage
-   * *Note: This will send a job (notification)
+   * Deletes server storage based on the data provided
    * @param serverId Server identification
    * @param storageId Server storage identification
    * @param storageData Server storage data
    */
   public deleteServerStorage(
-    serverId: any,
-    storageId: any,
+    serverId: string,
+    storageId: string,
     storageData: McsServerStorageDeviceUpdate
   ): Observable<McsApiSuccessResponse<McsJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
@@ -552,8 +532,7 @@ export class ServersApiService {
   }
 
   /**
-   * Adding server nic
-   * *Note: This will send a job (notification)
+   * Adds server nic based on the nic data provided
    * @param serverId Server identification
    * @param nicData Server nic data
    */
@@ -584,8 +563,7 @@ export class ServersApiService {
   }
 
   /**
-   * Updating server nic
-   * *Note: This will send a job (notification)
+   * Updates server nic based on the ID provided
    * @param serverId Server identification
    * @param nicId NIC identification
    * @param nicData Server network data
@@ -618,8 +596,7 @@ export class ServersApiService {
   }
 
   /**
-   * Deleting server nic
-   * *Note: This will send a job (notification)
+   * Deletes server nic based on the ID provided
    * @param serverId Server identification
    * @param nicId Network identification
    * @param nicData Server network data
@@ -702,9 +679,7 @@ export class ServersApiService {
   }
 
   /**
-   * Attaching server media
-   * *Note: This will send a job (notification)
-   *
+   * Attaches the server media based on the given server id
    * @param serverId Server Identification
    * @param mediaData Server media data
    */
@@ -735,9 +710,7 @@ export class ServersApiService {
   }
 
   /**
-   * Detaching server media
-   * *Note: This will send a job (notification)
-   *
+   * Detaches the server media based on the given server id
    * @param serverId Server Identification
    * @param mediaId Media Identification
    * @param referenceObject Reference object to be returned from the job
@@ -796,10 +769,9 @@ export class ServersApiService {
   }
 
   /**
-   * Create the server snapshot
-   * *Note: This will send a job (notification)
-   * @param id Server identification
-   * @param createSnapshot Snapshot model to be created
+   * Creates server snapshot
+   * @param serverId Server identification
+   * @param data Snapshot model to be created
    */
   public createServerSnapshot(id: any, createSnapshot: McsServerCreateSnapshot):
     Observable<McsApiSuccessResponse<McsJob>> {
@@ -826,9 +798,8 @@ export class ServersApiService {
   }
 
   /**
-   * Restore the server snapshot
-   * *Note: This will send a job (notification)
-   * @param id Server identification
+   * Restores server snapshot
+   * @param serverId Server identification
    * @param referenceObject Reference object of the server client to determine the status of job
    */
   public restoreServerSnapshot(id: any, referenceObject?: McsApiJobRequestBase):
@@ -856,8 +827,8 @@ export class ServersApiService {
   }
 
   /**
-   * This will delete the existing server snapshot
-   * @param id Server id to where the snapshot will be deleted
+   * Deletes the existing server snapshot
+   * @param serverId Server id to where the snapshot will be deleted
    * @param referenceObject Reference object
    */
   public deleteServerSnapshot(id: string, referenceObject?: McsApiJobRequestBase):
@@ -882,157 +853,5 @@ export class ServersApiService {
           return apiResponse;
         })
       );
-  }
-
-  /**
-   * Execute the server command according to inputs
-   * @param data Data of the server to process the action
-   * @param action Action to be execute
-   */
-  public executeServerCommand(
-    data: { server: McsServer, result?: any },
-    action: ServerCommand
-  ) {
-
-    switch (action) {
-      case ServerCommand.ViewVCloud:
-        window.open(data.server.portalUrl);
-        break;
-
-      case ServerCommand.Scale:
-        this._router.navigate([
-          CoreRoutes.getNavigationPath(RouteKey.Servers),
-          data.server.id,
-          CoreRoutes.getNavigationPath(RouteKey.ServerDetailManagement)
-        ], { queryParams: { scale: true } }
-        );
-        break;
-
-      case ServerCommand.Clone:
-        this._router.navigate(
-          [CoreRoutes.getNavigationPath(RouteKey.ServerCreate)],
-          { queryParams: { clone: data.server.id } }
-        );
-        break;
-
-      case ServerCommand.ResetVmPassword:
-        this.setServerSpinner(data.server);
-        this.resetVmPassword(data.server.id,
-          {
-            serverId: data.server.id,
-            userId: this._authIdentity.user.userId,
-            commandAction: action,
-            powerState: data.server.powerState,
-          })
-          .pipe(
-            catchError((error) => {
-              this.clearServerSpinner(data.server);
-              return throwError(error);
-            })
-          )
-          .subscribe(() => {
-            // Subscribe to execute the reset vm password
-          });
-        break;
-
-      case ServerCommand.Delete:
-        this.setServerSpinner(data.server);
-        this.deleteServer(data.server.id,
-          {
-            serverId: data.server.id,
-            commandAction: action,
-            powerState: data.server.powerState
-          })
-          .pipe(
-            catchError((error) => {
-              this.clearServerSpinner(data.server);
-              return throwError(error);
-            })
-          ).subscribe();
-        this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.Servers)]);
-        break;
-
-      case ServerCommand.Rename:
-        this.setServerSpinner(data.server);
-        this.renameServer(data.server.id,
-          {
-            name: data.result,    // Server name
-            clientReferenceObject: {
-              serverId: data.server.id,
-              commandAction: action,
-              powerState: data.server.powerState,
-              newName: data.result
-            }
-          })
-          .pipe(
-            catchError((error) => {
-              this.clearServerSpinner(data.server);
-              return throwError(error);
-            })
-          ).subscribe();
-        break;
-
-      default:
-        this.setServerSpinner(data.server);
-        this.putServerCommand(data.server.id, action,
-          {
-            serverId: data.server.id,
-            powerState: data.server.powerState,
-            commandAction: action
-          })
-          .pipe(
-            catchError((error) => {
-              this.clearServerSpinner(data.server);
-              return throwError(error);
-            })
-          ).subscribe();
-        break;
-    }
-  }
-
-  /**
-   * Set the server status to inprogress to display the spinner of corresponding server
-   * @param server Server to be set as processing
-   * @param classes Additional classed to set their isProcessing flag
-   */
-  public setServerSpinner(server: McsServer, ...classes: any[]): void {
-    this._setServerExecutionStatus(server, true, ...classes);
-  }
-
-  /**
-   * Clear the server status to hide the spinner of corresponding server
-   * @param server Server to be set as processing
-   * @param classes Additional classed to set their isProcessing flag
-   */
-  public clearServerSpinner(server: McsServer, ...classes: any[]): void {
-    this._setServerExecutionStatus(server, false, ...classes);
-  }
-
-  /**
-   * Set the server execution based on status in order for the
-   * server to load first while waiting for the corresponding job
-   * @param server Server to be set as processing
-   * @param classes Additional classed to set their isProcessing flag
-   */
-  private _setServerExecutionStatus(
-    server: McsServer,
-    status: boolean = true,
-    ...classes: any[]
-  ): void {
-    if (isNullOrEmpty(server)) { return; }
-    server.isProcessing = status;
-    server.processingText = 'Processing request.';
-
-    // Additional instance to set the process flag
-    if (!isNullOrEmpty(classes)) {
-      classes.forEach((param) => {
-        if (isNullOrEmpty(param)) {
-          param = Object.create(param);
-          param.isProcessing = status;
-        } else {
-          param.isProcessing = status;
-        }
-      });
-    }
   }
 }

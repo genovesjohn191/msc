@@ -9,13 +9,13 @@ import { map } from 'rxjs/operators';
 import { McsErrorHandlerService } from '@app/core';
 import { isNullOrEmpty } from '@app/utilities';
 import { HttpStatusCode } from '@app/models';
-import { ResourcesRepository } from '../repositories/resources.repository';
+import { McsResourcesRepository } from '../repositories/mcs-resources.repository';
 
 @Injectable()
 export class RequiredResourcesGuard implements CanActivate {
 
   constructor(
-    private _resourcesRepository: ResourcesRepository,
+    private _resourcesRepository: McsResourcesRepository,
     private _errorHandlerService: McsErrorHandlerService
   ) { }
 
@@ -23,7 +23,7 @@ export class RequiredResourcesGuard implements CanActivate {
     _route: ActivatedRouteSnapshot,
     _state: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean {
-    return this._resourcesRepository.findResourcesByFeature().pipe(
+    return this._resourcesRepository.getResourcesByFeature().pipe(
       map((resources) => {
         if (isNullOrEmpty(resources)) {
           this._errorHandlerService.handleHttpRedirectionError(HttpStatusCode.Forbidden);

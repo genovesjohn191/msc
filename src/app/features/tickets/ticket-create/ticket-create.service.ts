@@ -1,31 +1,41 @@
 import { Injectable } from '@angular/core';
 import { McsTicketCreate } from '@app/models';
-import { TicketsApiService } from '@app/services';
+import {
+  McsTicketsRepository,
+  McsServersRepository,
+  McsFirewallsRepository,
+  McsResourcesRepository
+} from '@app/services';
 
 @Injectable()
 export class TicketCreateService {
 
-  constructor(private _ticketsService: TicketsApiService) { }
+  constructor(
+    private _ticketsRepository: McsTicketsRepository,
+    private _resourcesRepository: McsResourcesRepository,
+    private _serversRepository: McsServersRepository,
+    private _firewallsRepository: McsFirewallsRepository
+  ) { }
 
   /**
    * Get server resources based from servers service
    */
   public getServerResources() {
-    return this._ticketsService.getServerResources();
+    return this._resourcesRepository.getAll();
   }
 
   /**
    * Get server list based from servers service
    */
   public getServers() {
-    return this._ticketsService.getServers();
+    return this._serversRepository.getAll();
   }
 
   /**
    * Get firewall list based from firewalls service
    */
   public getFirewalls() {
-    return this._ticketsService.getFirewalls();
+    return this._firewallsRepository.getAll();
   }
 
   /**
@@ -33,6 +43,6 @@ export class TicketCreateService {
    * @param ticket Ticket to be created
    */
   public createTicket(ticket: McsTicketCreate) {
-    return this._ticketsService.createTicket(ticket);
+    return this._ticketsRepository.createTicket(ticket);
   }
 }

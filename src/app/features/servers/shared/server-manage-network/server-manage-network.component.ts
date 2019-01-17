@@ -38,7 +38,7 @@ import {
   McsResourceNetwork,
   McsResourceNetworkIpAddress,
 } from '@app/models';
-import { ResourcesApiService } from '@app/services';
+import { McsResourcesRepository } from '@app/services';
 import { ServerManageNetwork } from './server-manage-network';
 
 // Constants
@@ -106,7 +106,7 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges {
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private _textContentProvider: McsTextContentProvider,
-    private _resourcesService: ResourcesApiService
+    private _resourcesRepository: McsResourcesRepository
   ) {
     this.inputManageType = InputManageType.Buttons;
     this.selectedIpAddressMode = IpAllocationMode.Dhcp;
@@ -192,13 +192,13 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges {
   private _setInUsedIpAddresses(network: McsResourceNetwork): void {
     if (isNullOrEmpty(network)) { return; }
     this.ipAddressesStatusFactory.setInProgress();
-    this._resourcesService.getResourceNetwork(this.resourceId, network.id)
+    this._resourcesRepository.getResourceNetwork(this.resourceId, network.id)
       .pipe(
         finalize(() => this.ipAddressesStatusFactory.setSuccessful(this.ipAddressesInUsed))
       )
       .subscribe((response) => {
         if (isNullOrEmpty(response)) { return; }
-        this.ipAddressesInUsed = response.content.ipAddresses;
+        this.ipAddressesInUsed = response.ipAddresses;
         this._changeDetectorRef.markForCheck();
       });
   }

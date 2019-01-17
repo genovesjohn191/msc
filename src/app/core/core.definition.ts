@@ -48,7 +48,6 @@ export class CoreDefinition {
   public static SEARCH_TIME = 1000;
   public static INPUT_TIME = 1000;
   public static DEFAULT_VIEW_REFRESH_TIME = 50;
-  public static DEFAULT_INITIAL_PAGE = 'servers';
   public static GB_TO_MB_MULTIPLIER = 1024;
   public static MB_TO_KB_MULTIPLIER = 1024;
 
@@ -226,4 +225,8 @@ export class CoreDefinition {
   /** Session count */
   public static SESSION_IDLE_TIME_IN_SECONDS = 720;
   public static SESSION_TIMEOUT_COUNTDOWN_IN_SECONDS = 150;
+
+  /** Paging Setup */
+  public static DEFAULT_PAGE_INDEX = 1;
+  public static DEFAULT_PAGE_SIZE = 25;
 }

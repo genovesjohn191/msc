@@ -8,12 +8,13 @@ import {
   McsApiService,
   McsLoggerService
 } from '@app/core';
-import { isNullOrEmpty } from '@app/utilities';
 import {
   McsJob,
   McsApiSuccessResponse,
-  McsApiRequestParameter
+  McsApiRequestParameter,
+  McsQueryParam
 } from '@app/models';
+import { isNullOrEmpty } from '@app/utilities';
 
 @Injectable()
 export class JobsApiService {
@@ -25,23 +26,16 @@ export class JobsApiService {
 
   /**
    * Get all the jobs from the API
-   * @param page Page index of the page to obtained
-   * @param perPage Size of item per page
-   * @param searchKeyword Keyword to be search during filtering
+   * @param query Query predicate that serves as the parameter of the endpoint
    */
-  public getJobs(args?: {
-    page?: number,
-    perPage?: number,
-    searchKeyword?: string
-  }): Observable<McsApiSuccessResponse<McsJob[]>> {
+  public getJobs(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsJob[]>> {
 
     // Set default values if null
-    if (isNullOrEmpty(args)) { args = {}; }
-
     let searchParams = new Map<string, any>();
-    searchParams.set('page', args.page ? args.page.toString() : undefined);
-    searchParams.set('per_page', args.perPage ? args.perPage.toString() : undefined);
-    searchParams.set('search_keyword', args.searchKeyword);
+    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
+    searchParams.set('page', query.pageIndex);
+    searchParams.set('per_page', query.pageSize);
+    searchParams.set('search_keyword', query.keyword);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/jobs';

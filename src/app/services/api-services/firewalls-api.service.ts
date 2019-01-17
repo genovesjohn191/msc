@@ -13,7 +13,8 @@ import {
   McsApiRequestParameter,
   McsApiSuccessResponse,
   McsFirewall,
-  McsFirewallPolicy
+  McsFirewallPolicy,
+  McsQueryParam
 } from '@app/models';
 
 @Injectable()
@@ -26,23 +27,16 @@ export class FirewallsApiService {
 
   /**
    * Get Firewalls (MCS API Response)
-   * @param page Page Number
-   * @param perPage Count per page
-   * @param searchKeyword Search filter
+   * @param query Query predicate that serves as the parameter of the endpoint
    */
-  public getFirewalls(args?: {
-    page?: number,
-    perPage?: number,
-    searchKeyword?: string
-  }): Observable<McsApiSuccessResponse<McsFirewall[]>> {
+  public getFirewalls(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsFirewall[]>> {
 
     // Set default values if null
-    if (isNullOrEmpty(args)) { args = {}; }
-
     let searchParams = new Map<string, any>();
-    searchParams.set('page', args.page ? args.page.toString() : undefined);
-    searchParams.set('per_page', args.perPage ? args.perPage.toString() : undefined);
-    searchParams.set('search_keyword', args.searchKeyword);
+    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
+    searchParams.set('page', query.pageIndex);
+    searchParams.set('per_page', query.pageSize);
+    searchParams.set('search_keyword', query.keyword);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/firewalls';
@@ -95,21 +89,19 @@ export class FirewallsApiService {
   /**
    * Get all firewall policies (MCS API Response)
    * @param id Firewall identification
-   * @param page Page index of the page to obtained
-   * @param perPage Size of item per page
-   * @param searchKeyword Keyword to be search during filtering
+   * @param query Query predicate that serves as the parameter of the endpoint
    */
   public getFirewallPolicies(
     id: any,
-    args?: {
-      page?: number,
-      perPage?: number,
-      searchKeyword?: string
-    }): Observable<McsApiSuccessResponse<McsFirewallPolicy[]>> {
+    query?: McsQueryParam
+  ): Observable<McsApiSuccessResponse<McsFirewallPolicy[]>> {
+
+    // Set default values if null
     let searchParams = new Map<string, any>();
-    searchParams.set('page', args.page ? args.page.toString() : undefined);
-    searchParams.set('per_page', args.perPage ? args.perPage.toString() : undefined);
-    searchParams.set('search_keyword', args.searchKeyword);
+    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
+    searchParams.set('page', query.pageIndex);
+    searchParams.set('per_page', query.pageSize);
+    searchParams.set('search_keyword', query.keyword);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/firewalls/${id}/policies`;

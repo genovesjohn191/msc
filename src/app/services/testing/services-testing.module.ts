@@ -6,7 +6,9 @@ import { servicesProviders } from '../services.contants';
   imports: [
     CoreTestingModule
   ],
-  providers: servicesProviders
+  providers: [
+    ...servicesProviders
+  ]
 })
 
 export class ServicesTestingModule { }

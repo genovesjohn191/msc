@@ -33,7 +33,7 @@ import {
   RouteKey,
   McsOrder
 } from '@app/models';
-import { OrdersRepository } from '@app/services';
+import { McsOrdersRepository } from '@app/services';
 
 @Component({
   selector: 'mcs-order',
@@ -56,7 +56,7 @@ export class OrderComponent implements OnInit, OnDestroy {
     private _textContentProvider: McsTextContentProvider,
     private _loadingService: McsLoadingService,
     private _errorHandlerService: McsErrorHandlerService,
-    private _ordersRepository: OrdersRepository
+    private _ordersRepository: McsOrdersRepository
   ) { }
 
   public ngOnInit() {
@@ -107,7 +107,7 @@ export class OrderComponent implements OnInit, OnDestroy {
    */
   private _subscribeToOrderById(orderId: string): void {
     this._loadingService.showLoader(this.textContent.loading);
-    this.order$ = this._ordersRepository.findRecordById(orderId).pipe(
+    this.order$ = this._ordersRepository.getById(orderId).pipe(
       catchError((error) => {
         this._errorHandlerService.handleHttpRedirectionError(error.status);
         return throwError(error);

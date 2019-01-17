@@ -14,12 +14,12 @@ import {
   McsKeyValuePair,
   McsServer
 } from '@app/models';
-import { ServersRepository } from '@app/services';
+import { McsServersRepository } from '@app/services';
 
 export class ServersListSource extends McsListSourceBase<McsServer> {
 
   constructor(
-    private _serversRepository: ServersRepository,
+    private _serversRepository: McsServersRepository,
     private _search: Search) {
     super();
   }
@@ -57,7 +57,7 @@ export class ServersListSource extends McsListSourceBase<McsServer> {
    * Get all records from repository
    */
   protected getAllRecords(): Observable<McsServer[]> {
-    return this._serversRepository.findAllRecords();
+    return this._serversRepository.getAll();
   }
 
   /**

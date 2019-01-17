@@ -18,7 +18,7 @@ import {
   isNullOrEmpty,
   refreshView
 } from '@app/utilities';
-import { SwitchAccountRepository } from './switch-account.repository';
+import { McsCompaniesRepository } from '@app/services';
 
 @Injectable()
 export class SwitchAccountService {
@@ -40,7 +40,7 @@ export class SwitchAccountService {
     private _authIdentity: McsAuthenticationIdentity,
     private _accessControlService: McsAccessControlService,
     private _cookieService: McsCookieService,
-    private _accountRepository: SwitchAccountRepository
+    private _companiesRepository: McsCompaniesRepository
   ) {
     // Initialize member variables
     this.companies = new Array();
@@ -106,20 +106,17 @@ export class SwitchAccountService {
       this.loadingAccount = true;
       this.activeAccountStream.next(this._activeAccount);
 
-      this._accountRepository
-        .findRecordById(selectedAccountId)
-        .pipe(
-          catchError((error) => {
-            setDefaultAccount();
-            return throwError(error);
-          })
-        )
-        .subscribe((account) => {
-          this.loadingAccount = false;
-          this._activeAccount = account;
-          this._authIdentity.setActiveAccount(this._activeAccount);
-          this.activeAccountStream.next(this._activeAccount);
-        });
+      this._companiesRepository.getById(selectedAccountId).pipe(
+        catchError((error) => {
+          setDefaultAccount();
+          return throwError(error);
+        })
+      ).subscribe((account) => {
+        this.loadingAccount = false;
+        this._activeAccount = account;
+        this._authIdentity.setActiveAccount(this._activeAccount);
+        this.activeAccountStream.next(this._activeAccount);
+      });
     } else {
       // Set the default account in case the user doesnt have admin access
       setDefaultAccount();

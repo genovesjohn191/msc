@@ -47,8 +47,8 @@ import {
   McsProductCatalog
 } from '@app/models';
 import {
-  ProductsRepository,
-  ProductCatalogRepository
+  McsProductsRepository,
+  McsProductCatalogRepository
 } from '@app/services';
 import { ProductCatalogListSource } from './products.listsource';
 import { ProductService } from './product/product.service';
@@ -94,8 +94,8 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
     private _loadingService: McsLoadingService,
     private _errorHandlerService: McsErrorHandlerService,
     private _productService: ProductService,
-    private _productsRepository: ProductsRepository,
-    private _productCatalogRepository: ProductCatalogRepository
+    private _productsRepository: McsProductsRepository,
+    private _productCatalogRepository: McsProductCatalogRepository
   ) {
     this.listStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
   }
@@ -109,7 +109,7 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
     Promise.resolve().then(() => {
       this.search.searchChangedStream.pipe(startWith(null), takeUntil(this._destroySubject))
         .subscribe(() => this.listStatusFactory.setInProgress());
-      this._productsRepository.dataRecordsChanged.pipe(takeUntil(this._destroySubject))
+      this._productsRepository.dataChange().pipe(takeUntil(this._destroySubject))
         .subscribe(() => this._changeDetectorRef.markForCheck());
       this._initializeListsource();
     });
@@ -158,7 +158,7 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.selectedProduct$ = this._activatedRoute.paramMap.pipe(
       switchMap((params: ParamMap) => {
         this._loadingService.showLoader(this.textContent.loadingDetails);
-        return this._productsRepository.findRecordById(params.get('id')).pipe(
+        return this._productsRepository.getById(params.get('id')).pipe(
           finalize(() => this._loadingService.hideLoader())
         );
       }),

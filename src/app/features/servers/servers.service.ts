@@ -21,17 +21,17 @@ import {
   JobType,
   DataStatus
 } from '@app/models';
-import { ServersApiService } from '@app/services';
+import { McsServersRepository } from '@app/services';
 import { ResetPasswordFinishedDialogComponent } from './shared';
 
 /**
  * Servers Services Class
  */
 @Injectable()
-export class ServersServices {
+export class ServersService {
 
   constructor(
-    private _serversApiService: ServersApiService,
+    private _serversRepository: McsServersRepository,
     private _notificationsEvent: McsNotificationEventsService,
     private _authIdentity: McsAuthenticationIdentity,
     private _dialogService: McsDialogService,
@@ -73,7 +73,7 @@ export class ServersServices {
 
       case ServerCommand.ResetVmPassword:
         this.setServerSpinner(data.server);
-        this._serversApiService.resetVmPassword(data.server.id,
+        this._serversRepository.resetVmPassword(data.server.id,
           {
             serverId: data.server.id,
             userId: this._authIdentity.user.userId,
@@ -93,7 +93,7 @@ export class ServersServices {
 
       case ServerCommand.Delete:
         this.setServerSpinner(data.server);
-        this._serversApiService.deleteServer(data.server.id,
+        this._serversRepository.deleteServer(data.server.id,
           {
             serverId: data.server.id,
             commandAction: action,
@@ -110,7 +110,7 @@ export class ServersServices {
 
       case ServerCommand.Rename:
         this.setServerSpinner(data.server);
-        this._serversApiService.renameServer(data.server.id,
+        this._serversRepository.renameServer(data.server.id,
           {
             name: data.result,    // Server name
             clientReferenceObject: {
@@ -130,7 +130,7 @@ export class ServersServices {
 
       default:
         this.setServerSpinner(data.server);
-        this._serversApiService.putServerCommand(data.server.id, action,
+        this._serversRepository.putServerCommand(data.server.id, action,
           {
             serverId: data.server.id,
             powerState: data.server.powerState,

@@ -1,20 +1,14 @@
 import {
   Component,
   OnInit,
-  OnChanges,
   OnDestroy,
   Input,
   Output,
   EventEmitter,
   ChangeDetectionStrategy,
   ViewEncapsulation,
-  ChangeDetectorRef,
-  SimpleChanges
+  ChangeDetectorRef
 } from '@angular/core';
-import {
-  takeUntil,
-  startWith
-} from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import {
   McsStorageService,
@@ -28,8 +22,13 @@ import {
   animateFactory,
   unsubscribeSubject
 } from '@app/utilities';
-import { TableComponent } from '../table/table.component';
-import { ColumnDefDirective } from '../table';
+import { FilterSelector } from './filter-selector.interface';
+
+type FilterSelectorDetails = {
+  visible: boolean,
+  key: string,
+  item: McsFilterInfo
+};
 
 @Component({
   selector: 'mcs-filter-selector',
@@ -45,22 +44,18 @@ import { ColumnDefDirective } from '../table';
   }
 })
 
-export class FilterSelectorComponent implements OnInit, OnChanges, OnDestroy {
+export class FilterSelectorComponent implements OnInit, OnDestroy, FilterSelector {
   @Input()
   public key: string;
-
-  @Input()
-  public associatedTable: TableComponent<any>;
 
   @Output()
   public filtersChange: EventEmitter<Map<string, McsFilterInfo>>;
 
-  /**
-   * Completed Filter items map
-   */
+  /** Original record of the filters */
   public filterItemsMap: Map<string, McsFilterInfo>;
   public displayedItemsMap: Map<string, McsFilterInfo>;
 
+  public displayedSelectors: FilterSelectorDetails[] = [];
   private _destroySubject = new Subject<void>();
 
   public constructor(
@@ -74,14 +69,8 @@ export class FilterSelectorComponent implements OnInit, OnChanges, OnDestroy {
 
   public ngOnInit() {
     this._getFilterItems();
-    this._initializeDisplayedFilters();
-  }
-
-  public ngOnChanges(_changes: SimpleChanges) {
-    let _associatedTable = _changes['associatedTable'];
-    if (!isNullOrEmpty(_associatedTable)) {
-      this._listenToTableColumnChanges();
-    }
+    this._setDisplayedSelectors();
+    this.onNotifyGetFilters();
   }
 
   public ngOnDestroy() {
@@ -94,7 +83,33 @@ export class FilterSelectorComponent implements OnInit, OnChanges, OnDestroy {
   public onNotifyGetFilters(): void {
     if (isNullOrEmpty(this.filterItemsMap)) { return; }
     this._storageService.setItem(this.key, convertMapToJsonObject(this.filterItemsMap));
-    this.filtersChange.emit(this.displayedItemsMap);
+
+    // Create map for the definition
+    let itemsMap = new Map<string, McsFilterInfo>();
+    this.displayedSelectors.forEach((selector) => itemsMap.set(selector.key, selector.item));
+    this.filtersChange.emit(itemsMap);
+    this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Remove the filter selector based on the key provided
+   * @param key Key to be removed on the record list
+   */
+  public removeFilterSelector(key: string): void {
+    let recordFound = this.displayedSelectors.find((item) => item.key === key);
+    if (isNullOrEmpty(recordFound)) { return; }
+    recordFound.visible = false;
+    this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Add the filter selector based on the key provided
+   * @param key Key to be added on the filter selector
+   */
+  public addFilterSelector(key: string): void {
+    let recordFound = this.displayedSelectors.find((item) => item.key === key);
+    if (isNullOrEmpty(recordFound)) { return; }
+    recordFound.visible = true;
     this._changeDetectorRef.markForCheck();
   }
 
@@ -132,34 +147,15 @@ export class FilterSelectorComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /**
-   * Listens to every table column changes
+   * Sets the displayed selectors
    */
-  private _listenToTableColumnChanges(): void {
-    if (isNullOrEmpty(this.associatedTable)) { return; }
-
-    this.associatedTable.displayedColumns.changes
-      .pipe(startWith(null), takeUntil(this._destroySubject))
-      .subscribe(() =>
-        this._initializeDisplayedFilters(this.associatedTable.displayedColumns.toArray())
-      );
-  }
-
-  /**
-   * Initializes displayed filters based on excluded items
-   */
-  private _initializeDisplayedFilters(columnsDef?: ColumnDefDirective[]): void {
-    let filteredMap = new Map<string, McsFilterInfo>(this.filterItemsMap);
-    let hasColumnDefinition = !isNullOrEmpty(this.associatedTable) && !isNullOrEmpty(columnsDef);
-
-    if (hasColumnDefinition) {
-      let deletedItems: string[] = [];
-      filteredMap.forEach((_filterValue, _filterKey) => {
-        let filterFound = columnsDef.find((_column) => _column.name === _filterKey);
-        if (isNullOrEmpty(filterFound)) { deletedItems.push(_filterKey); }
-      });
-      deletedItems.forEach((deletedItem) => filteredMap.delete(deletedItem));
-    }
-    this.displayedItemsMap = filteredMap;
-    this.onNotifyGetFilters();
+  private _setDisplayedSelectors(): void {
+    this.filterItemsMap.forEach((itemValue, itemKey) => {
+      this.displayedSelectors.push({
+        visible: true,
+        key: itemKey,
+        item: itemValue
+      } as FilterSelectorDetails);
+    });
   }
 }

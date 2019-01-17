@@ -8,14 +8,14 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { McsErrorHandlerService } from '@app/core';
 import { isNullOrEmpty } from '@app/utilities';
-import { ResourcesRepository } from '@app/services';
+import { McsResourcesRepository } from '@app/services';
 import { HttpStatusCode } from '@app/models';
 
 @Injectable()
 export class ServerCreateGuard implements CanActivate {
 
   constructor(
-    private _resourcesRepository: ResourcesRepository,
+    private _resourcesRepository: McsResourcesRepository,
     private _errorHandlerService: McsErrorHandlerService
   ) { }
 
@@ -23,7 +23,7 @@ export class ServerCreateGuard implements CanActivate {
     _route: ActivatedRouteSnapshot,
     _state: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean {
-    return this._resourcesRepository.findResourcesByFeature().pipe(
+    return this._resourcesRepository.getResourcesByFeature().pipe(
       map((resources) => {
         if (isNullOrEmpty(resources)) {
           this._errorHandlerService.handleHttpRedirectionError(HttpStatusCode.Forbidden);

@@ -47,7 +47,7 @@ import {
   McsProductCatalog
 } from '@app/models';
 import { SlidingPanelComponent } from '@app/shared';
-import { ProductCatalogRepository } from '@app/services';
+import { McsProductCatalogRepository } from '@app/services';
 
 @Component({
   selector: 'mcs-navigation-mobile',
@@ -132,7 +132,7 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
     private _authenticationIdentity: McsAuthenticationIdentity,
     private _authenticationService: McsAuthenticationService,
     private _textContentProvider: McsTextContentProvider,
-    private _productCatalogRepository: ProductCatalogRepository
+    private _productCatalogRepository: McsProductCatalogRepository
   ) {
     this.switchAccountAnimation = 'collapsed';
     this.productsStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
@@ -194,7 +194,7 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
    */
   private _getProductCatalogs(): void {
     this.productsStatusFactory.setInProgress();
-    this._productCatalogRepository.findAllRecords()
+    this._productCatalogRepository.getAll()
       .pipe(
         catchError((error) => {
           this.productsStatusFactory.setError();

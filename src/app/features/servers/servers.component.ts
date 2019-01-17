@@ -4,8 +4,7 @@ import {
   OnDestroy,
   AfterViewInit,
   ChangeDetectorRef,
-  ChangeDetectionStrategy,
-  ViewChild
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -13,10 +12,7 @@ import {
   takeUntil,
   map
 } from 'rxjs/operators';
-
-import { ServersServices } from './servers.service';
-import { ServersDataSource } from './servers.datasource';
-/** Shared */
+import { ServersService } from './servers.service';
 import {
   ResetPasswordDialogComponent,
   DeleteServerDialogComponent,
@@ -24,20 +20,19 @@ import {
   SuspendServerDialogComponent,
   ResumeServerDialogComponent
 } from './shared';
-/** Core */
 import {
   McsTextContentProvider,
   CoreDefinition,
   McsBrowserService,
   McsTableListingBase,
   McsDialogService,
-  CoreRoutes
+  CoreRoutes,
+  McsTableDataSource
 } from '@app/core';
 import {
   isNullOrEmpty,
   refreshView,
-  unsubscribeSubject,
-  getSafeProperty
+  unsubscribeSubject
 } from '@app/utilities';
 import {
   ServiceType,
@@ -48,10 +43,9 @@ import {
   RouteKey,
   McsServer
 } from '@app/models';
-import { TableComponent } from '@app/shared';
 import {
-  ResourcesRepository,
-  ServersRepository
+  McsResourcesRepository,
+  McsServersRepository
 } from '@app/services';
 
 @Component({
@@ -61,16 +55,13 @@ import {
 })
 
 export class ServersComponent
-  extends McsTableListingBase<ServersDataSource>
+  extends McsTableListingBase<McsTableDataSource<McsServer>>
   implements OnInit, AfterViewInit, OnDestroy {
 
   public textContent: any;
   public selection: McsSelection<McsServer>;
   public hasCreateResources: boolean;
   public hasManagedResource: boolean;
-
-  @ViewChild('serversTable')
-  public serversTable: TableComponent<any>;
 
   private _destroySubject = new Subject<any>();
 
@@ -119,9 +110,9 @@ export class ServersComponent
     _changeDetectorRef: ChangeDetectorRef,
     private _dialogService: McsDialogService,
     private _textProvider: McsTextContentProvider,
-    private _serversService: ServersServices,
-    private _serversRepository: ServersRepository,
-    private _resourcesRepository: ResourcesRepository,
+    private _serversService: ServersService,
+    private _serversRepository: McsServersRepository,
+    private _resourcesRepository: McsResourcesRepository,
     private _router: Router
   ) {
     super(_browserService, _changeDetectorRef);
@@ -131,8 +122,8 @@ export class ServersComponent
   public ngOnInit() {
     this.textContent = this._textProvider.content.servers;
     this._setResourcesFlag();
-    this._listenToDeviceChanges();
-    this._listenToDataChange();
+    this._subscribeToBreakpointChanges();
+    this._subscribeToDataChange();
   }
 
   public ngAfterViewInit() {
@@ -153,7 +144,7 @@ export class ServersComponent
     if (isNullOrEmpty(this.dataSource)) { return false; }
     if (!this.selection.hasValue()) { return false; }
 
-    let selectableRecords = this.dataSource.displayedRecords
+    let selectableRecords = this.dataSource.dataRecords
       .filter((record) => !record.isProcessing);
     if (isNullOrEmpty(selectableRecords)) { return false; }
 
@@ -169,7 +160,7 @@ export class ServersComponent
     if (this.isAllSelected()) {
       this.selection.clear();
     } else {
-      this.dataSource.displayedRecords.forEach((record) => {
+      this.dataSource.dataRecords.forEach((record) => {
         if (!record.isProcessing) {
           this.selection.select(record);
         }
@@ -199,7 +190,7 @@ export class ServersComponent
 
     // Get selected servers based on selection model
     this.selection.selected.forEach((selectedServer) => {
-      let existingServer = this.dataSource.displayedRecords
+      let existingServer = this.dataSource.dataRecords
         .find((data) => data.id === selectedServer.id);
       selectedServers.push(existingServer);
     });
@@ -313,18 +304,7 @@ export class ServersComponent
    * Retry obtaining datasource from server
    */
   public retryDatasource(): void {
-    // We need to initialize again the datasource in order for the
-    // observable merge work as expected, since it is closing the
-    // subscription when error occured.
     this.initializeDatasource();
-  }
-
-  /**
-   * Returns the totals record found in orders
-   */
-  protected get totalRecordsCount(): number {
-    return getSafeProperty(this._serversRepository,
-      (obj) => obj.totalRecordsCount, 0);
   }
 
   /**
@@ -338,12 +318,10 @@ export class ServersComponent
    * Initialize the table datasource according to pagination and search settings
    */
   protected initializeDatasource(): void {
-    // Set datasource instance
-    this.dataSource = new ServersDataSource(
-      this._serversRepository,
-      this.paginator,
-      this.search
-    );
+    this.dataSource = new McsTableDataSource(this._serversRepository);
+    this.dataSource
+      .registerSearch(this.search)
+      .registerPaginator(this.paginator);
     this.changeDetectorRef.markForCheck();
   }
 
@@ -352,7 +330,7 @@ export class ServersComponent
    * and check whether the resource has self managed type
    */
   private _setResourcesFlag(): void {
-    let managedResources = this._resourcesRepository.findAllRecords()
+    let managedResources = this._resourcesRepository.getAll()
       .pipe(
         map((resources) => {
           this.hasManagedResource = !!resources.find((_resource) =>
@@ -360,7 +338,7 @@ export class ServersComponent
           this.changeDetectorRef.markForCheck();
         })
       );
-    let createServerResources = this._resourcesRepository.findResourcesByFeature()
+    let createServerResources = this._resourcesRepository.getResourcesByFeature()
       .pipe(
         map((response) => {
           this.hasCreateResources = !isNullOrEmpty(response);
@@ -373,7 +351,7 @@ export class ServersComponent
   /**
    * Listener to device changes
    */
-  private _listenToDeviceChanges(): void {
+  private _subscribeToBreakpointChanges(): void {
     this.browserService.breakpointChange()
       .pipe(takeUntil(this._destroySubject))
       .subscribe((deviceType) => {
@@ -386,8 +364,8 @@ export class ServersComponent
   /**
    * Listen to data records changes
    */
-  private _listenToDataChange(): void {
-    this._serversRepository.dataRecordsChanged
+  private _subscribeToDataChange(): void {
+    this._serversRepository.dataChange()
       .pipe(takeUntil(this._destroySubject))
       .subscribe(() => this.changeDetectorRef.markForCheck());
   }

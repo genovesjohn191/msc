@@ -22,17 +22,17 @@
   <mcs-search #search></mcs-search>
 
   <!-- Company listing -->
-  <mcs-list class="company-list">
+  <mcs-list>
     <ng-container *mcsListHeader>
-      <mcs-item read-only>
-        <span>Company Accounts</span>
-        <span mcsAlign="end" *ngIf="dataStatus === dataStatusEnum.Success">
-          {{ filteredRecordCount }}/{{ totalRecordsCount }}
-        </span>
+      <mcs-item read-only full-width>
+        <span mcsAlign="start">Company Accounts</span>
+        <ng-container *ngIf="dataSource?.dataStatus !== dataStatusEnum.Error">
+          <span>{{ filteredRecordCount }}/{{ dataSource?.totalRecordCount }}</span>
+        </ng-container>
       </mcs-item>
     </ng-container>
 
-    <mcs-list-item *ngFor="let item of displayedCompanies; trackBy: trackByFn"
+    <mcs-list-item *ngFor="let item of dataSource?.dataRecords; trackBy: trackByFn"
       (click)="selectAccount(item)" mcsCursor="pointer"
       mcsId="switch-to-account"
       mcsEventTracker="switch-to-account"
@@ -40,7 +40,7 @@
       mcsEventLabel="switch-account-panel"
       [mcsTooltip]="getStatusText(item.status)" mcsTooltipColor="light">
 
-      <mcs-item>
+      <mcs-item full-width>
         <mcs-icon color="white" [key]="getUserIconKey(item.status)" size="small"></mcs-icon>
         <a class="unstyled-link">{{ getTextFormat(item) }}</a>
         <mcs-icon mcsAlign="end" [key]="arrowRightBueIconKey" size="small"></mcs-icon>
@@ -49,8 +49,8 @@
   </mcs-list>
 
   <!-- Data obtainment status -->
-  <ng-container *ngIf="dataStatus !== dataStatusEnum.Success">
-    <mcs-item [ngSwitch]="dataStatus" mcsAlignContent="middle-center">
+  <ng-container *ngIf="dataSource?.dataStatus !== dataStatusEnum.Success">
+    <mcs-item [ngSwitch]="dataSource?.dataStatus" mcsAlignContent="middle-center">
       <div *ngSwitchCase="dataStatusEnum.InProgress">
         <mcs-loader size="small"></mcs-loader>
       </div>
@@ -70,7 +70,7 @@
 
   <!-- Paginator that displays when data obtainment was success -->
   <mcs-paginator #paginator
-    [hidden]="dataStatus !== dataStatusEnum.Success"
-    [totalCount]="totalRecordsCount">
+    [hidden]="dataSource?.dataStatus !== dataStatusEnum.Success"
+    [totalCount]="dataSource?.totalRecordCount">
   </mcs-paginator>
 </section>

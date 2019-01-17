@@ -21,7 +21,7 @@
     <mcs-top-panel-item *mcsTopPanelItemDef>
       <div class="listing-action-wrapper">
         <div class="total-record-count">
-          <span>{{ totalRecordsCount | mcsPlural:
+          <span>{{ dataSource?.totalRecordCount | mcsPlural:
                 textContent.dataSingular : textContent.dataPlural }}
           </span>
         </div>
@@ -38,7 +38,7 @@
 
     <!-- Column Filter -->
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.filterColumn" offset="medium">
-      <mcs-filter-selector [key]="columnSettingsKey"
+      <mcs-filter-selector [key]="columnSettingsKey" #filterSelector
         (filtersChange)="updateColumnSettings($event)"></mcs-filter-selector>
     </mcs-left-panel-item>
   </mcs-left-panel>
@@ -52,7 +52,7 @@
       <mcs-search *ngIf="isMobile" #search mcsId="orders-mobile-search"></mcs-search>
 
       <!-- Table -->
-      <mcs-table [dataSource]="dataSource">
+      <mcs-table [dataSource]="dataSource" [columnFilter]="filterSelector">
         <!-- Description Column -->
         <ng-container mcsColumnDef="description">
           <mcs-header-cell *mcsHeaderCellDef>
@@ -69,7 +69,7 @@
         </ng-container>
 
         <!-- Status Column -->
-        <ng-container mcsColumnDef="status" [mcsColumnDefHidden]="isColumnHidden('status')">
+        <ng-container mcsColumnDef="status">
           <mcs-header-cell *mcsHeaderCellDef hidden-xsmall>
             {{ columnSettings.status.text }}
           </mcs-header-cell>
@@ -79,7 +79,7 @@
         </ng-container>
 
         <!-- Order ID Column -->
-        <ng-container mcsColumnDef="orderId" [mcsColumnDefHidden]="isColumnHidden('orderId')">
+        <ng-container mcsColumnDef="orderId">
           <mcs-header-cell *mcsHeaderCellDef>
             {{ columnSettings.orderId.text }}
           </mcs-header-cell>
@@ -89,7 +89,7 @@
         </ng-container>
 
         <!-- Created By Column -->
-        <ng-container mcsColumnDef="createdBy" [mcsColumnDefHidden]="isColumnHidden('createdBy')">
+        <ng-container mcsColumnDef="createdBy">
           <mcs-header-cell *mcsHeaderCellDef hidden-xsmall>
             {{ columnSettings.createdBy.text }}
           </mcs-header-cell>
@@ -99,7 +99,7 @@
         </ng-container>
 
         <!-- Created On Column -->
-        <ng-container mcsColumnDef="createdOn" [mcsColumnDefHidden]="isColumnHidden('createdOn')">
+        <ng-container mcsColumnDef="createdOn">
           <mcs-header-cell *mcsHeaderCellDef hidden-xsmall>
             {{ columnSettings.createdOn.text }}
           </mcs-header-cell>
@@ -140,7 +140,7 @@
       <!-- Paginator -->
       <mcs-paginator #paginator
         [hidden]="isSearching"
-        [totalCount]="totalRecordsCount">
+        [totalCount]="dataSource?.totalRecordCount">
       </mcs-paginator>
     </div>
   </mcs-content-panel>

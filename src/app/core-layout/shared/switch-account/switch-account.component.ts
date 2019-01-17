@@ -1,6 +1,5 @@
 import {
   Component,
-  ViewChild,
   AfterViewInit,
   OnDestroy,
   Output,
@@ -9,38 +8,28 @@ import {
   ChangeDetectionStrategy,
   ViewEncapsulation
 } from '@angular/core';
-import {
-  Subscription,
-  of,
-  merge,
-  throwError
-} from 'rxjs';
-import {
-  switchMap,
-  catchError
-} from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import {
   CoreDefinition,
-  McsTextContentProvider
+  McsTextContentProvider,
+  McsTableListingBase,
+  McsTableDataSource,
+  McsBrowserService,
+  McsAccessControlService
 } from '@app/core';
 import {
   isNullOrEmpty,
   getEnumString,
-  unsubscribeSafely,
-  deleteArrayRecord,
-  getArrayCount
+  unsubscribeSafely
 } from '@app/utilities';
-import {
-  Paginator,
-  Search
-} from '@app/shared';
 import {
   McsCompany,
   CompanyStatus,
   DataStatus
 } from '@app/models';
+import { McsCompaniesRepository } from '@app/services';
 import { SwitchAccountService } from './switch-account.service';
-import { SwitchAccountRepository } from './switch-account.repository';
 
 @Component({
   selector: 'mcs-switch-account',
@@ -53,54 +42,27 @@ import { SwitchAccountRepository } from './switch-account.repository';
   }
 })
 
-export class SwitchAccountComponent implements AfterViewInit, OnDestroy {
-
-  @ViewChild('search')
-  public search: Search;
-
-  @ViewChild('paginator')
-  public paginator: Paginator;
+export class SwitchAccountComponent
+  extends McsTableListingBase<McsTableDataSource<McsCompany>>
+  implements AfterViewInit, OnDestroy {
+  public textContent: any;
 
   @Output()
   public selectionChanged: EventEmitter<any>;
 
-  // Companies
-  public displayedCompanies: McsCompany[];
-  public recentCompanies: McsCompany[];
-  public activeAccount: McsCompany;
-
-  // Subscriptions
-  public companiesSubscription: Subscription;
-  public recentCompaniesSubscription: Subscription;
-  public activeAccountSubscription: Subscription;
-
   // Others
-  public textContent: any;
   public get companies(): McsCompany[] {
     return this._switchAccountService.companies;
   }
 
-  /**
-   * Data status
-   */
-  private _dataStatus: DataStatus;
-  public get dataStatus(): DataStatus { return this._dataStatus; }
-  public set dataStatus(value: DataStatus) {
-    if (value !== this._dataStatus) {
-      this._dataStatus = value;
-      this._changeDetectorRef.markForCheck();
-    }
-  }
+  private _destroySubject = new Subject<void>();
 
   public get dataStatusEnum(): any {
     return DataStatus;
   }
 
-  public get totalRecordsCount(): number { return this._totalRecordsCount; }
-  private _totalRecordsCount: number = 0;
-
   public get filteredRecordCount(): number {
-    return getArrayCount(this.displayedCompanies);
+    return this.dataSource && this.dataSource.dataRecords.length;
   }
 
   // Icons
@@ -117,27 +79,27 @@ export class SwitchAccountComponent implements AfterViewInit, OnDestroy {
   }
 
   constructor(
+    _browserService: McsBrowserService,
+    _changeDetectorRef: ChangeDetectorRef,
     private _switchAccountService: SwitchAccountService,
-    private _switchAccountRepository: SwitchAccountRepository,
-    private _changeDetectorRef: ChangeDetectorRef,
+    private _accessControlService: McsAccessControlService,
+    private _companiesRepository: McsCompaniesRepository,
     private _textContentProvider: McsTextContentProvider
   ) {
+    super(_browserService, _changeDetectorRef);
     this.selectionChanged = new EventEmitter();
     this.textContent = this._textContentProvider.content.switchAccount;
   }
 
   public ngAfterViewInit(): void {
-    setTimeout(() => {
-      this._listenToCompanies();
-      this._listenToRecentCompanies();
-      this._listenToActiveCompany();
+    Promise.resolve().then(() => {
+      this.initializeDatasource();
+      this._subscribeToActiveCompany();
     });
   }
 
   public ngOnDestroy(): void {
-    unsubscribeSafely(this.companiesSubscription);
-    unsubscribeSafely(this.recentCompaniesSubscription);
-    unsubscribeSafely(this.activeAccountSubscription);
+    unsubscribeSafely(this._destroySubject);
   }
 
   public getUserIconKey(status: CompanyStatus) {
@@ -198,85 +160,51 @@ export class SwitchAccountComponent implements AfterViewInit, OnDestroy {
    * Retry getting the companies
    */
   public retry(): void {
-    unsubscribeSafely(this.companiesSubscription);
-    this._listenToCompanies();
+    this.initializeDatasource();
   }
 
   /**
-   * Company list observables that is currently listening
-   * to any changes of the page/search
+   * Initialize the table datasource according to pagination and search settings
    */
-  private _listenToCompanies(): void {
-    const displayDataChanges = [
-      of(undefined),
-      this.paginator.pageChangedStream,
-      this.search.searchChangedStream
-    ];
+  protected initializeDatasource(): void {
+    if (!this._accessControlService.hasPermission(['CompanyView'])) { return; }
 
-    this.companiesSubscription = merge(...displayDataChanges)
-      .pipe(
-        switchMap((instance) => {
-          // Notify the component that a process is currently in-progress
-          // if the user is not searching because the filtering has already a loader
-          // and we need to check it here since the component can be recreated during runtime
-          let isSearching = !isNullOrEmpty(instance) && instance.searching;
-          if (!isSearching) {
-            this.dataStatus = DataStatus.InProgress;
-          }
+    this.dataSource = new McsTableDataSource(this._companiesRepository);
+    this.dataSource
+      .registerSearch(this.search)
+      .registerPaginator(this.paginator);
 
-          // Find all records based on settings provided in the input
-          return this._switchAccountRepository.findAllRecords(this.paginator, this.search);
-        }),
-        catchError((error) => {
-          this.dataStatus = DataStatus.Error;
-          return throwError(error);
-        })
-      )
-      .subscribe((response) => {
-        this.displayedCompanies = response.slice();
-        this._totalRecordsCount = this._switchAccountRepository.totalRecordsCount;
-
-        this._removeActiveDefaultAccounts();
-        this.search.showLoading(false);
-        this.paginator.showLoading(false);
-        this.dataStatus = isNullOrEmpty(this.displayedCompanies) ?
-          DataStatus.Empty : DataStatus.Success;
-      });
+    // Invoke when finished
+    this.dataSource.dataRenderedChange()
+      .subscribe(() => this._removeActiveDefaultAccounts());
+    this.changeDetectorRef.markForCheck();
   }
 
   /**
-   * Listener to recent companies selected
+   * Returns the column settings key for the filter selector
    */
-  private _listenToRecentCompanies(): void {
-    this.recentCompaniesSubscription = this._switchAccountService.recentCompaniesStream
-      .subscribe((recent) => {
-        this.recentCompanies = recent;
-        this._changeDetectorRef.markForCheck();
-      });
+  protected get columnSettingsKey(): string {
+    return null;
   }
 
   /**
    * Listener to active company changes
    */
-  private _listenToActiveCompany(): void {
-    this.activeAccountSubscription = this._switchAccountService.activeAccountStream
-      .subscribe(() => {
-        this._removeActiveDefaultAccounts();
-        this._changeDetectorRef.markForCheck();
-      });
+  private _subscribeToActiveCompany(): void {
+    this._switchAccountService.activeAccountStream.pipe(
+      takeUntil(this._destroySubject)
+    ).subscribe(() => this._removeActiveDefaultAccounts());
   }
 
   /**
    * Remove the active account and default account from displayed records
    */
   private _removeActiveDefaultAccounts(): void {
-    deleteArrayRecord(this.displayedCompanies, (_item) => {
-      let isActive = this._switchAccountService.activeAccount.id === _item.id;
-      let isDefault = this.defaultAccount.id === _item.id;
-
-      // Se the actual count based on deduction from active and default account
-      this._totalRecordsCount -= isActive || isDefault ? 1 : 0;
-      return isActive || isDefault;
-    });
+    if (isNullOrEmpty(this.dataSource)) { return; }
+    this.dataSource.deleteRecordBy((record) =>
+      this._switchAccountService.activeAccount.id === record.id
+    );
+    this.dataSource.deleteRecordBy((record) => this.defaultAccount.id === record.id);
+    this.changeDetectorRef.markForCheck();
   }
 }

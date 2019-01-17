@@ -22,7 +22,7 @@ import {
   McsProductCatalog
 } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
-import { ProductCatalogRepository } from '@app/services';
+import { McsProductCatalogRepository } from '@app/services';
 
 @Component({
   selector: 'mcs-navigation-desktop',
@@ -51,7 +51,7 @@ export class NavigationDesktopComponent implements OnInit {
     private _coreConfig: CoreConfig,
     private _changeDetectorRef: ChangeDetectorRef,
     private _textContentProvider: McsTextContentProvider,
-    private _productCatalogRepository: ProductCatalogRepository
+    private _productCatalogRepository: McsProductCatalogRepository
   ) {
     this.productsStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
   }
@@ -89,7 +89,7 @@ export class NavigationDesktopComponent implements OnInit {
    */
   private _getProductCatalogs(): void {
     this.productsStatusFactory.setInProgress();
-    this._productCatalogRepository.findAllRecords()
+    this._productCatalogRepository.getAll()
       .pipe(
         catchError((error) => {
           this.productsStatusFactory.setError();

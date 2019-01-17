@@ -18,7 +18,7 @@ import {
   unsubscribeSubject
 } from '@app/utilities';
 import { McsServer } from '@app/models';
-import { ServersRepository } from '@app/services';
+import { McsServersRepository } from '@app/services';
 import { MediaManageServers } from './media-manage-servers';
 
 @Component({
@@ -52,7 +52,7 @@ export class MediaManageServersComponent implements OnInit, OnDestroy {
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private _textProvider: McsTextContentProvider,
-    private _serversRepository: ServersRepository
+    private _serversRepository: McsServersRepository
   ) {
     this.dataStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
   }
@@ -71,7 +71,7 @@ export class MediaManageServersComponent implements OnInit, OnDestroy {
    */
   private _getServers(): void {
     this.dataStatusFactory.setInProgress();
-    this._serversRepository.findAllRecords()
+    this._serversRepository.getAll()
       .pipe(
         catchError((error) => {
           this.dataStatusFactory.setError();
