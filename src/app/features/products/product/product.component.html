@@ -227,32 +227,33 @@
           <mcs-grid-column>
             <h3>{{ inview.name }}</h3>
             <p [innerHTML]="inview.description"></p>
-            <mcs-table [dataSource]="inview.thresholds"
-              *ngIf="inview.thresholds | mcsIsNotNullOrEmpty">
-              <!-- Description Column -->
-              <ng-container mcsColumnDef="description">
-                <mcs-header-cell *mcsHeaderCellDef>
-                  Description
-                </mcs-header-cell>
-                <mcs-data-cell *mcsDataCellDef="let row">
-                  {{ row.description }}
-                </mcs-data-cell>
-              </ng-container>
+            <ng-container *ngIf="inview?.thresholds | mcsIsNotNullOrEmpty">
+              <mcs-table [dataSource]="inview.thresholds">
+                <!-- Description Column -->
+                <ng-container mcsColumnDef="description">
+                  <mcs-header-cell *mcsHeaderCellDef>
+                    Description
+                  </mcs-header-cell>
+                  <mcs-data-cell *mcsDataCellDef="let row">
+                    {{ row.description }}
+                  </mcs-data-cell>
+                </ng-container>
 
-              <!-- Threshold Utilisation Column -->
-              <ng-container mcsColumnDef="alertThreshold">
-                <mcs-header-cell *mcsHeaderCellDef>
-                  Alert Threshold
-                </mcs-header-cell>
-                <mcs-data-cell *mcsDataCellDef="let row">
-                  {{ row.defaultAlertThreshold }}
-                </mcs-data-cell>
-              </ng-container>
+                <!-- Threshold Utilisation Column -->
+                <ng-container mcsColumnDef="alertThreshold">
+                  <mcs-header-cell *mcsHeaderCellDef>
+                    Alert Threshold
+                  </mcs-header-cell>
+                  <mcs-data-cell *mcsDataCellDef="let row">
+                    {{ row.defaultAlertThreshold }}
+                  </mcs-data-cell>
+                </ng-container>
 
-              <!-- Header and Data row -->
-              <mcs-header-row *mcsHeaderRowDef="thresholdColumns"></mcs-header-row>
-              <mcs-data-row *mcsDataRowDef="let row; columns: thresholdColumns;"></mcs-data-row>
-            </mcs-table>
+                <!-- Header and Data row -->
+                <mcs-header-row *mcsHeaderRowDef="thresholdColumns"></mcs-header-row>
+                <mcs-data-row *mcsDataRowDef="let row; columns: thresholdColumns;"></mcs-data-row>
+              </mcs-table>
+            </ng-container>
           </mcs-grid-column>
 
           <mcs-grid-column *ngIf="inview.graphUrl | mcsIsNotNullOrEmpty">
@@ -262,10 +263,12 @@
 
         <mcs-grid>
           <mcs-grid-row *ngFor="let inview of selectedProduct.inviewPremium">
-            <ng-container *ngTemplateOutlet="inviewTemplate; context: inview" ></ng-container>
+            <ng-container *ngTemplateOutlet="inviewTemplate;
+              context: { $implicit: inview }"></ng-container>
           </mcs-grid-row>
           <mcs-grid-row *ngFor="let inview of selectedProduct.inviewStandard">
-            <ng-container *ngTemplateOutlet="inviewTemplate; context: inview" ></ng-container>
+            <ng-container *ngTemplateOutlet="inviewTemplate;
+              context: { $implicit: inview }"></ng-container>
           </mcs-grid-row>
         </mcs-grid>
       </div>

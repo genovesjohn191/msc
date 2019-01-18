@@ -30,26 +30,29 @@ type DelegateSource<T> = () => Observable<T[]>;
 
 export class McsTableDataSource<T> implements McsDataSource<T> {
   public dataLoadingStream: Subject<DataStatus>;
-  public totalRecordCount: number;
+  public totalRecordsCount: number;
   public dataStatus: DataStatus;
 
   private _paginator: Paginator;
   private _search: Search;
   private _searchPredicate: (data: T, keyword: string) => boolean;
 
+  private _previousRecordsCount: number;
   private _datasourceFuncPointer: DelegateSource<T>;
   private _dataRecords = new BehaviorSubject<T[]>(null);
   private _dataRenderedChange = new BehaviorSubject<T[]>(null);
   private _requestUpdate = new Subject<void>();
   private _searchSubject = new Subject<void>();
   private _pagingSubject = new Subject<void>();
+  private _dataChangeSubject = new Subject<void>();
 
   constructor(private _dataSource: McsRepository<T> | T[] | Observable<T[]> | DelegateSource<T>) {
     this.dataLoadingStream = new Subject<DataStatus>();
-    this.totalRecordCount = 0;
+    this.totalRecordsCount = 0;
     this._datasourceFuncPointer = this._datasourceIsPredicate ?
       this._dataSource as any : this._datasourceFunc.bind(this);
     this._subscribeToRequestChange();
+    this._subscribeToRepoDataChange();
   }
 
   /**
@@ -148,14 +151,14 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
     predicate?: (record: T) => boolean,
     insertIndex?: number
   ): void {
-    let previousRecords = this.dataRecords.slice();
     let allRecords = this.dataRecords;
     allRecords = addOrUpdateArrayRecord(allRecords, newRecord, false, predicate, insertIndex);
     this._updateDataRecords(allRecords);
 
-    if (previousRecords.length !== allRecords.length) {
-      ++this.totalRecordCount;
+    if (this._datasourceIsRepository) {
+      (this._dataSource as McsRepository<T>).addOrUpdate(newRecord);
     }
+    this._setTotalRecordsCountByContext(this.dataRecords);
   }
 
   /**
@@ -163,14 +166,14 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
    * @param predicate Predicate definition on what to be deleted
    */
   public deleteRecordBy(predicate: (record: T) => boolean): void {
-    let previousRecords = this.dataRecords.slice();
     let allRecords = this.dataRecords;
     allRecords = deleteArrayRecord(allRecords, predicate);
     this._updateDataRecords(allRecords);
 
-    if (previousRecords.length !== allRecords.length) {
-      --this.totalRecordCount;
+    if (this._datasourceIsRepository) {
+      (this._dataSource as McsRepository<T>).deleteBy(predicate);
     }
+    this._setTotalRecordsCountByContext(this.dataRecords);
   }
 
   /**
@@ -242,12 +245,29 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
       })
     ).subscribe((response) => {
       this._updateDataRecords(response);
-      this._setTotalRecordCountByContext(response);
+      this._setTotalRecordsCountByContext(response);
       this._dataRenderedChange.next(response);
 
       isNullOrEmpty(response) ?
         this.onCompletion(DataStatus.Empty) :
         this.onCompletion(DataStatus.Success);
+    });
+  }
+
+  /**
+   * Subscribe to repository data change and emit those changes once the
+   * a new record has been added or one the records of data source has been deleted
+   */
+  private _subscribeToRepoDataChange(): void {
+    if (!this._datasourceIsRepository) { return; }
+    (this._dataSource as McsRepository<T>).dataChange().pipe(
+      takeUntil(this._dataChangeSubject)
+    ).subscribe((records) => {
+      if (!isNullOrEmpty(this._previousRecordsCount) &&
+        this._previousRecordsCount !== records.length) {
+        this._requestUpdate.next();
+      }
+      this._previousRecordsCount = records.length;
     });
   }
 
@@ -303,9 +323,9 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
    * Sets the total record count by context provided
    * @param records Records to get the count from
    */
-  private _setTotalRecordCountByContext(records: T[]): void {
-    this.totalRecordCount = this._datasourceIsRepository ?
-      (this._dataSource as McsRepository<T>).getTotalRecordCount() :
+  private _setTotalRecordsCountByContext(records: T[]): void {
+    this.totalRecordsCount = this._datasourceIsRepository ?
+      (this._dataSource as McsRepository<T>).getTotalRecordsCount() :
       records.length;
   }
 

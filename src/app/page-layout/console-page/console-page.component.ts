@@ -206,10 +206,6 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(takeUntil(this._destroySubject))
       .subscribe((params) => this._paramChangedEventHandler(params));
 
-    this._serversRepository.dataChange()
-      .pipe(takeUntil(this._destroySubject))
-      .subscribe(() => this._serverChangedEventHandler());
-
     this._notificationsEvents.resetServerPasswordEvent
       .pipe(takeUntil(this._destroySubject))
       .subscribe((response) => this._resetVmPasswordEventHandler(response));
@@ -224,10 +220,6 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
     this._serverId = params['id'];
     this._getServerById(this._serverId);
     this._connectVmConsole(this._serverId);
-  }
-
-  private _serverChangedEventHandler() {
-    this._getServerById(this._serverId);
   }
 
   /**
@@ -309,19 +301,17 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
     if (isNullOrEmpty(serverId)) { return; }
 
     this.consoleStatus = VmConsoleStatus.Connecting;
-    this._consoleRepository.getById(serverId)
-      .pipe(
-        catchError((error) => {
-          // Handle common error status code
-          this.consoleStatus = VmConsoleStatus.Error;
-          return throwError(error);
-        })
-      )
-      .subscribe((response: McsConsole) => {
-        if (isNullOrEmpty(response)) { return; }
-        this._vmConsole.wmks('option', 'VCDProxyHandshakeVmxPath', response.vmx);
-        this._vmConsole.wmks('connect', response.url);
-      });
+    this._consoleRepository.getServerConsole(serverId).pipe(
+      catchError((error) => {
+        // Handle common error status code
+        this.consoleStatus = VmConsoleStatus.Error;
+        return throwError(error);
+      })
+    ).subscribe((response: McsConsole) => {
+      if (isNullOrEmpty(response)) { return; }
+      this._vmConsole.wmks('option', 'VCDProxyHandshakeVmxPath', response.vmx);
+      this._vmConsole.wmks('connect', response.url);
+    });
   }
 
   /**

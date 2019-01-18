@@ -10,7 +10,7 @@ import {
 import { ProductsApiService } from '../api-services/products-api.service';
 
 export class McsProductsDataContext implements McsDataContext<McsProduct> {
-  public totalRecordCount: number = 0;
+  public totalRecordsCount: number = 0;
 
   constructor(private _productsService: ProductsApiService) { }
 
@@ -49,7 +49,7 @@ export class McsProductsDataContext implements McsDataContext<McsProduct> {
    */
   private _getApiContentResponse<T>(apiResponse: McsApiSuccessResponse<T>): T {
     if (isNullOrEmpty(apiResponse)) { return; }
-    this.totalRecordCount = apiResponse.totalCount;
+    this.totalRecordsCount = apiResponse.totalCount;
     return apiResponse.content;
   }
 }

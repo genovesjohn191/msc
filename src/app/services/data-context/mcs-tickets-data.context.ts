@@ -10,7 +10,7 @@ import {
 import { TicketsApiService } from '../api-services/tickets-api.service';
 
 export class McsTicketsDataContext implements McsDataContext<McsTicket> {
-  public totalRecordCount: number = 0;
+  public totalRecordsCount: number = 0;
 
   constructor(private _ticketsApiService: TicketsApiService) { }
 
@@ -49,7 +49,7 @@ export class McsTicketsDataContext implements McsDataContext<McsTicket> {
    */
   private _getApiContentResponse<T>(apiResponse: McsApiSuccessResponse<T>): T {
     if (isNullOrEmpty(apiResponse)) { return; }
-    this.totalRecordCount = apiResponse.totalCount;
+    this.totalRecordsCount = apiResponse.totalCount;
     return apiResponse.content;
   }
 }

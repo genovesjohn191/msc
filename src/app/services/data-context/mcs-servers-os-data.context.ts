@@ -16,7 +16,7 @@ import {
 import { ServersApiService } from '../api-services/servers-api.service';
 
 export class McsServersOsDataContext implements McsDataContext<McsServerOperatingSystem> {
-  public totalRecordCount: number = 0;
+  public totalRecordsCount: number = 0;
 
   constructor(private _serversService: ServersApiService) { }
 
@@ -55,7 +55,7 @@ export class McsServersOsDataContext implements McsDataContext<McsServerOperatin
    */
   private _getApiContentResponse<T>(apiResponse: McsApiSuccessResponse<T>): T {
     if (isNullOrEmpty(apiResponse)) { return; }
-    this.totalRecordCount = apiResponse.totalCount;
+    this.totalRecordsCount = apiResponse.totalCount;
     return apiResponse.content;
   }
 }

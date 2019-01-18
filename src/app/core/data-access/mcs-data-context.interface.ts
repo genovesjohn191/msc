@@ -5,7 +5,7 @@ import {
 import { Observable } from 'rxjs';
 
 export interface McsDataContext<T extends McsEntityBase> {
-  totalRecordCount: number;
+  totalRecordsCount: number;
   getAllRecords(): Observable<T[]>;
   getRecordById(id: string): Observable<T>;
   filterRecords(query: McsQueryParam): Observable<T[]>;

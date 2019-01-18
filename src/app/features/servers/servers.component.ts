@@ -31,7 +31,6 @@ import {
 } from '@app/core';
 import {
   isNullOrEmpty,
-  refreshView,
   unsubscribeSubject
 } from '@app/utilities';
 import {
@@ -108,12 +107,12 @@ export class ServersComponent
   public constructor(
     _browserService: McsBrowserService,
     _changeDetectorRef: ChangeDetectorRef,
+    private _router: Router,
     private _dialogService: McsDialogService,
     private _textProvider: McsTextContentProvider,
-    private _serversService: ServersService,
     private _serversRepository: McsServersRepository,
     private _resourcesRepository: McsResourcesRepository,
-    private _router: Router
+    private _serversService: ServersService
   ) {
     super(_browserService, _changeDetectorRef);
     this.selection = new McsSelection<McsServer>(true);
@@ -127,7 +126,7 @@ export class ServersComponent
   }
 
   public ngAfterViewInit() {
-    refreshView(() => {
+    Promise.resolve().then(() => {
       this.initializeDatasource();
     });
   }

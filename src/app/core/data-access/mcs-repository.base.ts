@@ -32,7 +32,6 @@ export abstract class McsRepositoryBase<T extends McsEntityBase>
   protected filteredRecords = new Array<T>();
 
   // Other variables
-  private _getByRecordIds = new Array<string>();
   private _allRecordsCount: number = 0;
   private _previouslySearched: string = '';
 
@@ -49,7 +48,7 @@ export abstract class McsRepositoryBase<T extends McsEntityBase>
    * if the records has been changed the observers will be notified
    */
   public getAll(): Observable<T[]> {
-    let allRecordsObserver = this._recordIsMax ?
+    let allRecordsObserver = this._allRecordsAreLoaded ?
       this._getAllRecordsFromCache() :
       this._getAllRecordsFromContext();
 
@@ -121,30 +120,42 @@ export abstract class McsRepositoryBase<T extends McsEntityBase>
    * @param entity Entity to be added
    */
   public addOrUpdate(entity: T): void {
+    let isUpdate = !!this.dataRecords.find((item) => item.id === entity.id);
     this.dataRecords = addOrUpdateArrayRecord(
       this.dataRecords, entity, false,
-      (currentRecord: T) => currentRecord.id === entity.id
+      (currentEntity: T) => currentEntity.id === entity.id
     );
+
+    if (!isUpdate) { ++this._allRecordsCount; }
     this._notifyDataChange();
   }
 
   /**
-   * Delete a record to the repository
+   * Delete a record to the repository based on the entity provided
    * @param entity Entity to be deleted
    */
   public delete(entity: T): void {
-    this.dataRecords = deleteArrayRecord(this.dataRecords,
-      (item) => item.id === entity.id);
-    this._notifyDataChange();
+    let deletePredicate = (item: T) => item.id === entity.id;
+    this.deleteBy(deletePredicate);
   }
 
   /**
-   * Delete a record to the repository
+   * Delete a record to the repository based on the id provided
    * @param id id of the entity to be deleted
    */
   public deleteById(id: string): void {
-    this.dataRecords = deleteArrayRecord(this.dataRecords, (item) => item.id === id);
-    this._getByRecordIds = deleteArrayRecord(this._getByRecordIds, (itemId) => itemId === id);
+    let deletePredicate = (item: T) => item.id === id;
+    this.deleteBy(deletePredicate);
+  }
+
+  /**
+   * Delete a record to the repository based on the predicate definition
+   * @param predicate Predicate definition on which to delete the record
+   */
+  public deleteBy(predicate: (entity: T) => boolean) {
+    this.dataRecords = deleteArrayRecord(this.dataRecords, predicate);
+    this.filteredRecords = deleteArrayRecord(this.filteredRecords, predicate);
+    --this._allRecordsCount;
     this._notifyDataChange();
   }
 
@@ -167,15 +178,15 @@ export abstract class McsRepositoryBase<T extends McsEntityBase>
   /**
    * Returns the total record count from the context
    */
-  public getTotalRecordCount(): number {
-    return this._context.totalRecordCount;
+  public getTotalRecordsCount(): number {
+    return this._allRecordsCount;
   }
 
   /**
    * Clears the cache data and it will not notify the dataChange event
    */
   public clearCache(): void {
-    this._context.totalRecordCount = 0;
+    this._context.totalRecordsCount = 0;
     clearArrayRecord(this.dataRecords);
     clearArrayRecord(this.filteredRecords);
     this._notifyDataChange();
@@ -213,11 +224,11 @@ export abstract class McsRepositoryBase<T extends McsEntityBase>
   }
 
   /**
-   * Returns true when the record is already at maximum
+   * Returns true when all records are loaded
    */
-  private get _recordIsMax(): boolean {
-    if (this.getTotalRecordCount() < 1) { return false; }
-    return this.dataRecords.length >= this.getTotalRecordCount();
+  private get _allRecordsAreLoaded(): boolean {
+    if (this.getTotalRecordsCount() < 1) { return false; }
+    return this.dataRecords.length >= this.getTotalRecordsCount();
   }
 
   /**
@@ -227,9 +238,9 @@ export abstract class McsRepositoryBase<T extends McsEntityBase>
   private _pageRecordsFromContext(query: McsQueryParam): Observable<T[]> {
     return this._context.filterRecords(query).pipe(
       tap((newFilteredRecords) => {
-        this._allRecordsCount = this._context.totalRecordCount;
-        this._mergeNewRecordsToCache(...newFilteredRecords);
-        this.filteredRecords.push(...newFilteredRecords);
+        this._allRecordsCount = this._context.totalRecordsCount;
+        this._updateFilteredRecords(newFilteredRecords);
+        this._cacheRecords(...newFilteredRecords);
       }),
       finalize(() => this._dataContextChange.next())
     );
@@ -258,19 +269,35 @@ export abstract class McsRepositoryBase<T extends McsEntityBase>
   private _filterRecordsBySearchQuery(query: McsQueryParam): Observable<T[]> {
     let searchedRecords = this._context.filterRecords(query).pipe(
       tap((newFilteredRecords) => {
-        let recordsInstance: T[] = [];
-        // Get the original instance of the records from cache
-        newFilteredRecords.forEach((filteredRecord) => {
-          let recordFound = this.dataRecords.find((record) => record.id === filteredRecord.id);
-          isNullOrEmpty(recordFound) ?
-            recordsInstance.push(filteredRecord) :
-            recordsInstance.push(recordFound);
-        });
-        this.filteredRecords.push(...recordsInstance);
+        this._allRecordsCount = this._context.totalRecordsCount;
+        this._updateFilteredRecords(newFilteredRecords);
       }),
       finalize(() => this._dataContextChange.next())
     );
     return searchedRecords;
+  }
+
+  /**
+   * Updates the filter records based on the new record provided and
+   * it will get their corresponding instances once the record exist.
+   * @param recordsFromContext New Records from context obtainment
+   */
+  private _updateFilteredRecords(recordsFromContext: T[]): void {
+    let recordsInstance: T[] = [];
+
+    // Get the original instance of the records from cache
+    recordsFromContext.forEach((filteredRecord) => {
+      let recordFound = this.dataRecords.find((record) => record.id === filteredRecord.id);
+      isNullOrEmpty(recordFound) ?
+        recordsInstance.push(filteredRecord) :
+        recordsInstance.push(recordFound);
+    });
+    recordsInstance.forEach((record) => {
+      this.filteredRecords = addOrUpdateArrayRecord(
+        this.filteredRecords, record, false,
+        (item) => item.id === record.id
+      );
+    });
   }
 
   /**
@@ -280,15 +307,13 @@ export abstract class McsRepositoryBase<T extends McsEntityBase>
   private _filterRecordsByPageQuery(query: McsQueryParam): Observable<T[]> {
     let recordsCountToPull = query.pageSize * query.pageIndex;
     let currentRecordCount = this.dataRecords.length;
-    let requestRecordFromCache = this._recordIsMax || (currentRecordCount >= recordsCountToPull);
+    let requestRecordFromCache = this._allRecordsAreLoaded
+      || (currentRecordCount >= recordsCountToPull);
 
     let filterByObserver = requestRecordFromCache ?
       this._pageRecordsFromCache(query) :
       this._pageRecordsFromContext(query);
-
-    return filterByObserver.pipe(
-      tap(() => this._context.totalRecordCount = this._allRecordsCount)
-    );
+    return filterByObserver;
   }
 
   /**
@@ -304,8 +329,8 @@ export abstract class McsRepositoryBase<T extends McsEntityBase>
   private _getAllRecordsFromContext(): Observable<T[]> {
     return this._context.getAllRecords().pipe(
       tap((newRecords) => {
-        this._allRecordsCount = this._context.totalRecordCount;
-        this._mergeNewRecordsToCache(...newRecords);
+        this._allRecordsCount = this._context.totalRecordsCount;
+        this._cacheRecords(...newRecords);
       })
     );
   }
@@ -315,8 +340,9 @@ export abstract class McsRepositoryBase<T extends McsEntityBase>
    * @param id Id of the record to obtain
    */
   private _getRecordByIdFromCache(id: string): Observable<T> {
+    // Do the obtainment on backgroud
     this._context.getRecordById(id).subscribe((item) => {
-      this._mergeNewRecordsToCache(item);
+      this._cacheRecords(item);
       this._notifyDataChange();
     });
     return of(this.dataRecords.find((item) => item.id === id));
@@ -328,10 +354,7 @@ export abstract class McsRepositoryBase<T extends McsEntityBase>
    */
   private _getRecordByIdFromContext(id: string): Observable<T> {
     return this._context.getRecordById(id).pipe(
-      tap((item) => {
-        this._getByRecordIds.push(item.id);
-        this._mergeNewRecordsToCache(item);
-      }),
+      tap((item) => this._cacheRecords(item)),
       finalize(() => this._dataContextChange.next())
     );
   }
@@ -347,7 +370,7 @@ export abstract class McsRepositoryBase<T extends McsEntityBase>
    * Merge the new records to the cached datasource, if the record
    * is already exist, the instance will be remained
    */
-  private _mergeNewRecordsToCache(...newItems: T[]): void {
+  private _cacheRecords(...newItems: T[]): void {
     this.dataRecords = mergeArrays(
       this.dataRecords, newItems,
       (firstRecord: T, secondRecord: T) => firstRecord.id === secondRecord.id

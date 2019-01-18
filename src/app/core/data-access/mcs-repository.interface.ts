@@ -6,10 +6,11 @@ export interface McsRepository<T> {
   filterBy(query: McsQueryParam): Observable<T[]>;
   getBy(predicate: (entity: T) => boolean): Observable<T>;
   getById(id: string): Observable<T>;
-  getTotalRecordCount(): number;
+  getTotalRecordsCount(): number;
 
   addOrUpdate(entity: T): void;
   delete(entity: T): void;
+  deleteBy(predicate: (entity: T) => boolean);
   deleteById(id: string): void;
 
   dataChange(): Observable<T[]>;

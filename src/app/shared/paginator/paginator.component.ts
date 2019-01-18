@@ -19,7 +19,6 @@ import {
   coerceNumber,
   coerceBoolean,
   isNullOrEmpty,
-  refreshView,
   triggerEvent
 } from '@app/utilities';
 import { Paginator } from './paginator.interface';
@@ -107,16 +106,20 @@ export class PaginatorComponent implements Paginator, OnInit, AfterViewInit {
   }
 
   public ngAfterViewInit() {
-    refreshView(() => {
+    Promise.resolve().then(() => {
       this._listenToScrollChanged();
     });
+  }
+
+  public get arrowDownIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_CHEVRON_DOWN;
   }
 
   /**
    * Return true if the paginator has next page otherwise false
    */
   public get hasNextPage(): boolean {
-    let numberOfPages = Math.ceil(this.totalCount / this.pageSize) - 1;
+    let numberOfPages = Math.ceil(this.totalCount / this.pageSize);
     return this.pageIndex < numberOfPages && this.pageSize !== 0;
   }
 
@@ -142,33 +145,43 @@ export class PaginatorComponent implements Paginator, OnInit, AfterViewInit {
       && this.hasNextPage;
   }
 
-  public get arrowDownIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_CHEVRON_DOWN;
-  }
-
+  /**
+   * Go next from the current page
+   */
   public nextPage() {
     if (!this.hasNextPage) { return; }
     this.pageIndex++;
     this._onPageChanged();
   }
 
+  /**
+   * Go back to previous page
+   */
   public previousPage() {
     if (!this.hasPreviousPage) { return; }
     this.pageIndex--;
     this._onPageChanged();
   }
 
+  /**
+   * Resets the paginator
+   */
   public reset(): void {
     this.pageIndex = PAGINATOR_DEFAULT_PAGE_INDEX;
     this.pageSize = PAGINATOR_DEFAULT_PAGE_SIZE;
-    this._onPageChanged();
   }
 
+  /**
+   * Shows the loading based on the flag provided
+   */
   public showLoading(showLoading: boolean) {
     this.loading = showLoading;
     this._changeDetectorRef.markForCheck();
   }
 
+  /**
+   * Event that emits when the page has changed
+   */
   private _onPageChanged() {
     this.loading = true;
     this._changeDetectorRef.markForCheck();
