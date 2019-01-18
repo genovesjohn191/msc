@@ -517,7 +517,7 @@ export class McsServersRepository extends McsRepositoryBase<McsServer>
 
     this._updateServerStatusByJob(job);
     if (job.dataStatus === DataStatus.Success) {
-      this.deleteById(activeServer.id);
+      this.clearCache();
     }
   }
 

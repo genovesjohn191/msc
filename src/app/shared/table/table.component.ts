@@ -201,6 +201,7 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
       .subscribe(() => {
         this._setColumnDefinitionsMap();
         this._renderHeaderRows();
+        this._renderDataRows();
 
         this._updateFiltersByColumnDef();
         this._updateColumnVisibility();
@@ -348,7 +349,7 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
       if (!!rowDefinition.getColumnsDiff()) {
         this._dataDiffer.diff([]);
         this._dataPlaceholder.viewContainer.clear();
-        this._renderDataRows();
+        this._createDataRows();
       }
     });
   }
@@ -380,13 +381,23 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
   }
 
   /**
+   * Renders the data rows based on the column definition
+   */
+  private _renderDataRows(): void {
+    if (isNullOrEmpty(this._dataRowDefinitions)) { return; }
+    this._dataDiffer.diff([]);
+    this._dataPlaceholder.viewContainer.clear();
+    this._createDataRows();
+  }
+
+  /**
    * This will render the data rows with assigned data context
    * to be able to use the context as "let row" keyword on the HTML
    *
    * `@Note` The context should have $implicit variable to access
    * the data object on the HTML directly
    */
-  private _renderDataRows(): void {
+  private _createDataRows(): void {
     if (isNullOrEmpty(this._dataRowDefinitions)) { return; }
     let changes = this._dataDiffer.diff(this._data);
     if (!changes) { return; }
@@ -470,7 +481,7 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
       )
       .subscribe((data) => {
         this._data = data;
-        this._renderDataRows();
+        this._createDataRows();
         this.dataStatus = isNullOrEmpty(data) ?
           DataStatus.Empty :
           DataStatus.Success;

@@ -22,7 +22,10 @@ import {
   addOrUpdateArrayRecord,
   deleteArrayRecord
 } from '@app/utilities';
-import { DataStatus } from '@app/models';
+import {
+  DataStatus,
+  ActionStatus
+} from '@app/models';
 import { CoreDefinition } from '../core.definition';
 import { McsRepository } from './mcs-repository.interface';
 
@@ -37,7 +40,6 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
   private _search: Search;
   private _searchPredicate: (data: T, keyword: string) => boolean;
 
-  private _previousRecordsCount: number;
   private _datasourceFuncPointer: DelegateSource<T>;
   private _dataRecords = new BehaviorSubject<T[]>(null);
   private _dataRenderedChange = new BehaviorSubject<T[]>(null);
@@ -262,12 +264,9 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
     if (!this._datasourceIsRepository) { return; }
     (this._dataSource as McsRepository<T>).dataChange().pipe(
       takeUntil(this._dataChangeSubject)
-    ).subscribe((records) => {
-      if (!isNullOrEmpty(this._previousRecordsCount) &&
-        this._previousRecordsCount !== records.length) {
-        this._requestUpdate.next();
-      }
-      this._previousRecordsCount = records.length;
+    ).subscribe((actionState) => {
+      if (actionState !== ActionStatus.Clear) { return; }
+      this._requestUpdate.next();
     });
   }
 
