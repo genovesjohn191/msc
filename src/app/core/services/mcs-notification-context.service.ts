@@ -6,10 +6,10 @@ import {
 } from 'rxjs';
 import {
   takeUntil,
-  map
+  map,
+  tap
 } from 'rxjs/operators';
 import {
-  getTimeDifference,
   addOrUpdateArrayRecord,
   deleteArrayRecord,
   isNullOrEmpty,
@@ -24,7 +24,6 @@ import {
   McsApiSuccessResponse,
   JobType
 } from '@app/models';
-import { CoreDefinition } from '../core.definition';
 import { McsNotificationJobService } from './mcs-notification-job.service';
 import { McsApiService } from './mcs-api.service';
 
@@ -85,50 +84,19 @@ export class McsNotificationContextService implements McsInitializer {
    */
   public getAllActiveJobs() {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = '/jobs';
+    mcsApiRequestParameter.endPoint = '/jobs/?status=Pending,Active';
 
-    return this._apiService.get(mcsApiRequestParameter)
-      .pipe(
-        map((response) => {
-          // Deserialize json reponse
-          let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<McsJob[]>(McsJob, response);
-          return apiResponse ? apiResponse : new McsApiSuccessResponse<McsJob[]>();
-        })
-      )
-      .subscribe((mcsApiResponse) => {
-        if (mcsApiResponse.content) {
-          this._notifications = mcsApiResponse.content.filter((notification) => {
-            let jobIncluded = false;
-
-            // Filtered all the notification based on the status type and time duration
-            switch (notification.dataStatus) {
-              case DataStatus.InProgress:
-                jobIncluded = true;
-                break;
-
-              case DataStatus.Error:
-                if (notification.endedOn &&
-                  getTimeDifference(notification.endedOn, new Date()) <
-                  CoreDefinition.NOTIFICATION_FAILED_TIMEOUT_IN_MS) {
-                  jobIncluded = true;
-                }
-                break;
-
-              case DataStatus.Success:
-              default:
-                if (notification.endedOn &&
-                  getTimeDifference(notification.endedOn, new Date()) <
-                  CoreDefinition.NOTIFICATION_COMPLETED_TIMEOUT_IN_MS) {
-                  jobIncluded = true;
-                }
-                break;
-            }
-            return jobIncluded;
-          });
-          this._notificationsStream.next(this._notifications);
-        }
-      });
+    return this._apiService.get(mcsApiRequestParameter).pipe(
+      map((response) => {
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<McsJob[]>(McsJob, response);
+        return apiResponse ? apiResponse : new McsApiSuccessResponse<McsJob[]>();
+      }),
+      tap((jobs) => {
+        this._notifications = jobs && jobs.content;
+        this._notificationsStream.next(this._notifications);
+      })
+    ).subscribe();
   }
 
   /**

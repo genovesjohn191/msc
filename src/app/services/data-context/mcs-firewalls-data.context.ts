@@ -10,7 +10,7 @@ import {
 import { FirewallsApiService } from '../api-services/firewalls-api.service';
 
 export class McsFirewallsDataContext implements McsDataContext<McsFirewall> {
-  public totalRecordCount: number = 0;
+  public totalRecordsCount: number = 0;
 
   constructor(private _firewallsApiService: FirewallsApiService) { }
 
@@ -49,7 +49,7 @@ export class McsFirewallsDataContext implements McsDataContext<McsFirewall> {
    */
   private _getApiContentResponse<T>(apiResponse: McsApiSuccessResponse<T>): T {
     if (isNullOrEmpty(apiResponse)) { return; }
-    this.totalRecordCount = apiResponse.totalCount;
+    this.totalRecordsCount = apiResponse.totalCount;
     return apiResponse.content;
   }
 }

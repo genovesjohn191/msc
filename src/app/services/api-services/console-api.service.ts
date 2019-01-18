@@ -26,7 +26,7 @@ export class ConsoleApiService {
    * Get the server console for the commands to be executed
    * @param id Server identification
    */
-  public getServerConsole(id: any): Observable<McsApiSuccessResponse<McsConsole>> {
+  public getServerConsole(id: string): Observable<McsApiSuccessResponse<McsConsole>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${id}/console`;
 

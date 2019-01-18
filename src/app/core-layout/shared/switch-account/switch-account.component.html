@@ -27,7 +27,7 @@
       <mcs-item read-only full-width>
         <span mcsAlign="start">Company Accounts</span>
         <ng-container *ngIf="dataSource?.dataStatus !== dataStatusEnum.Error">
-          <span>{{ filteredRecordCount }}/{{ dataSource?.totalRecordCount }}</span>
+          <span>{{ filteredRecordCount }}/{{ dataSource?.totalRecordsCount }}</span>
         </ng-container>
       </mcs-item>
     </ng-container>
@@ -71,6 +71,6 @@
   <!-- Paginator that displays when data obtainment was success -->
   <mcs-paginator #paginator
     [hidden]="dataSource?.dataStatus !== dataStatusEnum.Success"
-    [totalCount]="dataSource?.totalRecordCount">
+    [totalCount]="dataSource?.totalRecordsCount">
   </mcs-paginator>
 </section>

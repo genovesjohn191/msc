@@ -10,7 +10,7 @@ import {
 import { ServersApiService } from '../api-services/servers-api.service';
 
 export class McsServersDataContext implements McsDataContext<McsServer> {
-  public totalRecordCount: number = 0;
+  public totalRecordsCount: number = 0;
 
   constructor(private _serversService: ServersApiService) { }
 
@@ -49,7 +49,7 @@ export class McsServersDataContext implements McsDataContext<McsServer> {
    */
   private _getApiContentResponse<T>(apiResponse: McsApiSuccessResponse<T>): T {
     if (isNullOrEmpty(apiResponse)) { return; }
-    this.totalRecordCount = apiResponse.totalCount;
+    this.totalRecordsCount = apiResponse.totalCount;
     return apiResponse.content;
   }
 }

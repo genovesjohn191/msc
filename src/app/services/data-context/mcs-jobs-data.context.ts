@@ -10,7 +10,7 @@ import {
 import { JobsApiService } from '../api-services/jobs-api.service';
 
 export class McsJobsDataContext implements McsDataContext<McsJob> {
-  public totalRecordCount: number = 0;
+  public totalRecordsCount: number = 0;
 
   constructor(private _jobsApiService: JobsApiService) { }
 
@@ -49,7 +49,7 @@ export class McsJobsDataContext implements McsDataContext<McsJob> {
    */
   private _getApiContentResponse<T>(apiResponse: McsApiSuccessResponse<T>): T {
     if (isNullOrEmpty(apiResponse)) { return; }
-    this.totalRecordCount = apiResponse.totalCount;
+    this.totalRecordsCount = apiResponse.totalCount;
     return apiResponse.content;
   }
 }

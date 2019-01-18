@@ -25,7 +25,7 @@
             (filtersChange)="updateColumnSettings($event)"></mcs-filter-selector>
 
           <div mcsAlign="end" hidden-small>
-            <span> {{ dataSource?.totalRecordCount | mcsPlural:
+            <span> {{ dataSource?.totalRecordsCount | mcsPlural:
                textContent.dataSingular : textContent.dataPlural }}
             </span>
           </div>
@@ -211,7 +211,7 @@
         <!-- Paginator -->
         <mcs-paginator #paginator
           [hidden]="isSearching"
-          [totalCount]="dataSource?.totalRecordCount">
+          [totalCount]="dataSource?.totalRecordsCount">
         </mcs-paginator>
       </div>
     </div>

@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import {
   BehaviorSubject,
-  throwError
+  throwError,
+  Observable
 } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import {
   McsAuthenticationIdentity,
   CoreDefinition,
@@ -106,22 +107,32 @@ export class SwitchAccountService {
       this.loadingAccount = true;
       this.activeAccountStream.next(this._activeAccount);
 
-      this._companiesRepository.getById(selectedAccountId).pipe(
+      this._getAccountById(selectedAccountId).pipe(
         catchError((error) => {
           setDefaultAccount();
           return throwError(error);
         })
-      ).subscribe((account) => {
-        this.loadingAccount = false;
-        this._activeAccount = account;
-        this._authIdentity.setActiveAccount(this._activeAccount);
-        this.activeAccountStream.next(this._activeAccount);
-      });
+      ).subscribe();
     } else {
       // Set the default account in case the user doesnt have admin access
       setDefaultAccount();
       this._authIdentity.setActiveAccount(this.defaultAccount);
     }
+  }
+
+  /**
+   * Get account by account ID
+   * @param accountId Account id to obtain from API
+   */
+  private _getAccountById(accountId: string): Observable<McsCompany> {
+    return this._companiesRepository.getById(accountId).pipe(
+      tap((account) => {
+        this.loadingAccount = false;
+        this._activeAccount = account;
+        this._authIdentity.setActiveAccount(this._activeAccount);
+        this.activeAccountStream.next(this._activeAccount);
+      })
+    );
   }
 
   /**

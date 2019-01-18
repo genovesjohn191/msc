@@ -13,7 +13,7 @@ import {
 import { ConsoleApiService } from '../api-services/console-api.service';
 
 export class McsConsoleDataContext implements McsDataContext<McsConsole> {
-  public totalRecordCount: number = 0;
+  public totalRecordsCount: number = 0;
 
   constructor(private _consoleService: ConsoleApiService) { }
 
@@ -48,7 +48,7 @@ export class McsConsoleDataContext implements McsDataContext<McsConsole> {
    */
   private _getApiContentResponse<T>(apiResponse: McsApiSuccessResponse<T>): T {
     if (isNullOrEmpty(apiResponse)) { return; }
-    this.totalRecordCount = apiResponse.totalCount;
+    this.totalRecordsCount = apiResponse.totalCount;
     return apiResponse.content;
   }
 }

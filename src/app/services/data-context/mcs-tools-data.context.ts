@@ -16,7 +16,7 @@ import {
 import { ToolsApiService } from '../api-services/tools-api.service';
 
 export class McsToolsDataContext implements McsDataContext<McsPortal> {
-  public totalRecordCount: number = 0;
+  public totalRecordsCount: number = 0;
 
   constructor(private _toolsApiService: ToolsApiService) { }
 
@@ -55,7 +55,7 @@ export class McsToolsDataContext implements McsDataContext<McsPortal> {
    */
   private _getApiContentResponse<T>(apiResponse: McsApiSuccessResponse<T>): T {
     if (isNullOrEmpty(apiResponse)) { return; }
-    this.totalRecordCount = apiResponse.totalCount;
+    this.totalRecordsCount = apiResponse.totalCount;
     return apiResponse.content;
   }
 }
