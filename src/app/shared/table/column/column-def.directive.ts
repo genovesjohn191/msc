@@ -100,29 +100,24 @@ export class ColumnDefDirective implements AfterContentInit, OnDestroy {
    * Updates the column visibility based on the hidden flag provided
    */
   private _updateColumnVisibility(): void {
-    if (this.hidden) {
-      this._setHeaderCellVisibility(false);
-      this._setDataCellsVisibility(false);
-    } else {
-      this._setHeaderCellVisibility(true);
-      this._setDataCellsVisibility(true);
-    }
+    this._updateHeaderCellVisibility();
+    this._updateDataCellsVisibility();
     this._changeDetectorRef.markForCheck();
   }
 
   /**
    * Sets the display of the associated header cell for this column
    */
-  private _setHeaderCellVisibility(visible: boolean): void {
+  private _updateHeaderCellVisibility(): void {
     if (isNullOrEmpty(this._headerCellsComponent)) { return; }
-    this._headerCellsComponent.forEach((headerCell) => headerCell.hidden = !visible);
+    this._headerCellsComponent.forEach((headerCell) => headerCell.hidden = this.hidden);
   }
 
   /**
    * Sets the display of the associated data cells for this column
    */
-  private _setDataCellsVisibility(visible: boolean): void {
+  private _updateDataCellsVisibility(): void {
     if (isNullOrEmpty(this._dataCellsComponent)) { return; }
-    this._dataCellsComponent.forEach((dataCell) => dataCell.hidden = !visible);
+    this._dataCellsComponent.forEach((dataCell) => dataCell.hidden = this.hidden);
   }
 }

@@ -1,5 +1,8 @@
 import { Observable } from 'rxjs';
-import { McsQueryParam } from '@app/models';
+import {
+  McsQueryParam,
+  ActionStatus
+} from '@app/models';
 
 export interface McsRepository<T> {
   getAll(): Observable<T[]>;
@@ -13,5 +16,5 @@ export interface McsRepository<T> {
   deleteBy(predicate: (entity: T) => boolean);
   deleteById(id: string): void;
 
-  dataChange(): Observable<T[]>;
+  dataChange(): Observable<ActionStatus>;
 }

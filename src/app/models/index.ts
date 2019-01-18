@@ -41,6 +41,7 @@ export * from './enumerations/ticket-status';
 export * from './enumerations/ticket-subtype';
 export * from './enumerations/status-code.enum';
 export * from './enumerations/provisioning-status.enum';
+export * from './enumerations/action-status.enum';
 
 /** Request */
 export * from './request/mcs-order-create-server';
