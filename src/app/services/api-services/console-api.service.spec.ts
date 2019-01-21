@@ -18,7 +18,7 @@ describe('ConsoleApiService', () => {
   let httpMock: HttpTestingController;
   let consoleService: ConsoleApiService;
   let requestOptions = {
-    id: 459
+    id: '459'
   };
 
   beforeEach(async(() => {

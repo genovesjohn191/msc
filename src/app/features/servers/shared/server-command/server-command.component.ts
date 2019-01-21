@@ -68,46 +68,6 @@ export class ServerCommandComponent implements OnInit {
     this.onClick.emit(command);
   }
 
-  public getEnabledCommand(command: ServerCommand): boolean {
-    let enabled: boolean;
-
-    switch (command) {
-      case ServerCommand.Start:
-        enabled = this.server.startable;
-        break;
-
-      case ServerCommand.Stop:
-        enabled = this.server.stoppable;
-        break;
-
-      case ServerCommand.Restart:
-        enabled = this.server.restartable;
-        break;
-
-      case ServerCommand.Suspend:
-        enabled = this.server.suspendable;
-        break;
-
-      case ServerCommand.ViewVCloud:
-        enabled = this.server.commandAction !== ServerCommand.Delete;
-        break;
-
-      case ServerCommand.Resume:
-        enabled = this.server.resumable;
-        break;
-
-      case ServerCommand.Delete:
-        enabled = this.server.deletable;
-        break;
-
-      default:
-        enabled = this.server.executable;
-        break;
-    }
-
-    return enabled;
-  }
-
   public getIncludedCommand(command: ServerCommand): boolean {
     let included = true;
 

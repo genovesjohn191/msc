@@ -31,8 +31,7 @@
             {{ textContent.columnHeaders.network }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" text-wrap>
-            <span [innerHTML]="row.logicalNetworkName | mcsDataLabel">
-            </span>
+            <span [innerHTML]="row.logicalNetworkName | mcsDataLabel"></span>
           </mcs-data-cell>
         </ng-container>
 

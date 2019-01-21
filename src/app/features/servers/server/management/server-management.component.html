@@ -32,7 +32,7 @@
               <span> / </span>
               <span>{{ server.compute?.cpuCount | number }} vCPU</span>
               <ng-container *mcsAccessControl="['VmEdit']">
-                <ng-container *ngIf="server.isSelfManaged">
+                <ng-container *ngIf="server.isSelfManaged && !server.isDedicated">
                   <mcs-loader *ngIf="scaleInProgress" size="small"
                     [mcsTooltip]="textContent.manageScale.scaling"></mcs-loader>
                   <a *ngIf="!scaleInProgress"
@@ -60,7 +60,7 @@
               </ng-template>
             </mcs-item>
 
-            <mcs-item *ngIf="server.vApp">
+            <mcs-item *ngIf="server.vApp && !server.isDedicated">
               <span>{{ textContent.vmProperties.vApp }}:</span>
               <span [innerHTML]="server.vApp"></span>
             </mcs-item>
@@ -116,7 +116,8 @@
               <mcs-item>
                 <h2>{{ textContent.storage.title }}</h2>
                 <ng-container *mcsAccessControl="['VmEdit']">
-                  <a [disabled]="!server.executable"
+                  <a *ngIf="!server.isDedicated"
+                    [disabled]="!server.executable"
                     (click)="navigateServerDetailsTo(routeKeyEnum.ServerDetailStorage)"
                     mcsId
                     mcsEventTracker="manage-storage"
@@ -154,7 +155,8 @@
               <mcs-item>
                 <h2>{{ textContent.nics.title }}</h2>
                 <ng-container *mcsAccessControl="['VmNicEdit']">
-                  <a [disabled]="!server.executable"
+                  <a *ngIf="!server.isDedicated"
+                    [disabled]="!server.executable"
                     (click)="navigateServerDetailsTo(routeKeyEnum.ServerDetailNics)"
                     mcsId
                     mcsEventTracker="manage-nics"
@@ -285,7 +287,7 @@
               <span [innerHTML]="server.platform?.resourceName | mcsDataLabel"></span>
             </mcs-item>
 
-            <mcs-item *ngIf="server.serviceId">
+            <mcs-item *ngIf="server.serviceId && !server.isDedicated">
               <span>{{ textContent.supportIdentifiers.serviceId }}:</span>
               <span>{{ server.serviceId }}</span>
             </mcs-item>

@@ -3,6 +3,7 @@ import {
   Input,
   OnInit,
   AfterViewInit,
+  OnDestroy,
   EventEmitter,
   ElementRef,
   ChangeDetectorRef,
@@ -10,6 +11,8 @@ import {
   ViewEncapsulation,
   ViewChild
 } from '@angular/core';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import {
   CoreDefinition,
   McsTextContentProvider,
@@ -19,7 +22,8 @@ import {
   coerceNumber,
   coerceBoolean,
   isNullOrEmpty,
-  triggerEvent
+  triggerEvent,
+  unsubscribeSafely
 } from '@app/utilities';
 import { Paginator } from './paginator.interface';
 
@@ -39,7 +43,7 @@ const PAGINATOR_DEFAULT_LOAD_OFFSET = 10;
   }
 })
 
-export class PaginatorComponent implements Paginator, OnInit, AfterViewInit {
+export class PaginatorComponent implements Paginator, OnInit, AfterViewInit, OnDestroy {
 
   public loading: boolean;
   public textContent: any;
@@ -88,6 +92,9 @@ export class PaginatorComponent implements Paginator, OnInit, AfterViewInit {
   @ViewChild('nextButton')
   private _nextButton: ElementRef;
 
+  private _destroySubject = new Subject<void>();
+  private _scrollableElement: HTMLElement;
+
   public constructor(
     private _elementRef: ElementRef,
     private _changeDetectorRef: ChangeDetectorRef,
@@ -107,8 +114,13 @@ export class PaginatorComponent implements Paginator, OnInit, AfterViewInit {
 
   public ngAfterViewInit() {
     Promise.resolve().then(() => {
-      this._listenToScrollChanged();
+      this._subscribeToScrollChanged();
     });
+  }
+
+  public ngOnDestroy() {
+    unsubscribeSafely(this._destroySubject);
+    unsubscribeSafely(this.pageChangedStream);
   }
 
   public get arrowDownIconKey(): string {
@@ -169,6 +181,9 @@ export class PaginatorComponent implements Paginator, OnInit, AfterViewInit {
   public reset(): void {
     this.pageIndex = PAGINATOR_DEFAULT_PAGE_INDEX;
     this.pageSize = PAGINATOR_DEFAULT_PAGE_SIZE;
+    if (!isNullOrEmpty(this._scrollableElement)) {
+      this._scrollableDispatcher.scrollToElement(this._scrollableElement);
+    }
   }
 
   /**
@@ -191,14 +206,17 @@ export class PaginatorComponent implements Paginator, OnInit, AfterViewInit {
   /**
    * Listen to each scroll changed
    */
-  private _listenToScrollChanged(): void {
+  private _subscribeToScrollChanged(): void {
     let scrollContainer = this._scrollableDispatcher.getScrollContainers(this._elementRef);
     if (isNullOrEmpty(scrollContainer)) { return; }
     let scrollableParent = scrollContainer[0];
     let scrollableElement = scrollableParent.getElementRef().nativeElement as HTMLElement;
 
-    scrollableParent.elementScrolled().subscribe(() => {
+    scrollableParent.elementScrolled().pipe(
+      takeUntil(this._destroySubject)
+    ).subscribe(() => {
       this._scrollChanged(scrollableElement);
+      this._scrollableElement = scrollableElement;
     });
   }
 

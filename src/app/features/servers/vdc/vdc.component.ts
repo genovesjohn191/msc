@@ -38,7 +38,6 @@ import {
 } from '@app/utilities';
 import { Search } from '@app/shared';
 import {
-  ServerCommand,
   McsResource,
   RouteKey,
   McsServer,
@@ -123,14 +122,6 @@ export class VdcComponent
   public ngOnDestroy() {
     super.onDestroy();
     unsubscribeSafely(this._destroySubject);
-  }
-
-  /**
-   * Return true when the server is currently deleting, otherwise false
-   * @param server Server to be deleted
-   */
-  public serverDeleting(server: McsServer): boolean {
-    return server.commandAction === ServerCommand.Delete && server.isProcessing;
   }
 
   /**

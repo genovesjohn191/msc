@@ -24,6 +24,7 @@ import {
   serverCommandActiveText
 } from '../enumerations/server-command.enum';
 import { McsEntityBase } from '../mcs-entity.base';
+import { PlatformType } from '../enumerations/platform-type.enum';
 
 export class McsServer extends McsEntityBase {
   public name: string;
@@ -165,6 +166,13 @@ export class McsServer extends McsEntityBase {
   }
 
   /**
+   * Returns true when server is scaleable
+   */
+  public get scaleable(): boolean {
+    return this.executable;
+  }
+
+  /**
    * Returns true when server is stoppable
    */
   public get stoppable(): boolean {
@@ -190,8 +198,9 @@ export class McsServer extends McsEntityBase {
    * Returns true when server is deletable
    */
   public get deletable(): boolean {
-    return !this.isProcessing &&
-      this.serviceType === ServiceType.SelfManaged;
+    return !this.isProcessing
+      && this.serviceType === ServiceType.SelfManaged
+      && !this.isDedicated;
   }
 
   /**
@@ -203,9 +212,23 @@ export class McsServer extends McsEntityBase {
   }
 
   /**
-   * Returns true when server is clonable
+   * Returns true when server is renameable
    */
-  public get clonable(): boolean {
+  public get renameable(): boolean {
+    return this.executable && !this.isDedicated;
+  }
+
+  /**
+   * Returns true when server can reset the password
+   */
+  public get canResetPassword(): boolean {
+    return this.executable && !this.isDedicated;
+  }
+
+  /**
+   * Returns true when server is cloneable
+   */
+  public get cloneable(): boolean {
     return this.executable;
   }
 
@@ -257,5 +280,20 @@ export class McsServer extends McsEntityBase {
   public get resourceName(): string {
     let _resourceName = getSafeProperty(this.platform, (obj) => obj.resourceName);
     return _resourceName || 'Others';
+  }
+
+  /**
+   * Returns true when the current server is dedicated
+   */
+  public get isDedicated(): boolean {
+    return getSafeProperty(this.platform, (obj) => obj.type) !== PlatformType.VCenter;
+  }
+
+  /**
+   * Returns true when the current server is deleting
+   */
+  public get isDeleting(): boolean {
+    return this.commandAction === ServerCommand.Delete
+      && this.isProcessing;
   }
 }

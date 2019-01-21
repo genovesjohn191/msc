@@ -270,14 +270,6 @@ export class ServersComponent
   }
 
   /**
-   * Return true when the server is currently deleting, otherwise false
-   * @param server Server to be deleted
-   */
-  public serverDeleting(server: McsServer): boolean {
-    return server.commandAction === ServerCommand.Delete && server.isProcessing;
-  }
-
-  /**
    * Navigate to server resouce page
    * @param server Server to be used as the data of the page
    */
@@ -295,7 +287,7 @@ export class ServersComponent
    */
   public navigateToServer(server: McsServer): void {
     // Do not navigate to server details when server is deleting
-    if (isNullOrEmpty(server) || this.serverDeleting(server)) { return; }
+    if (isNullOrEmpty(server) || server.isDeleting) { return; }
     this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.Servers), server.id]);
   }
 

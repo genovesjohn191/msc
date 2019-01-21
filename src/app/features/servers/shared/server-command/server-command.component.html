@@ -8,7 +8,7 @@
     <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Start)">
       <a mcsButton="basic" color="white" labelPlacement="left"
         (click)="onExecuteCommand(serverCommandEnum.Start)"
-        [disabled]="!getEnabledCommand(serverCommandEnum.Start)"
+        [disabled]="!server.startable"
         mcsId
         mcsEventTracker="start"
         mcsEventCategory="server"
@@ -20,7 +20,7 @@
     <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Stop)">
       <a mcsButton="basic" color="white" labelPlacement="left"
         (click)="onExecuteCommand(serverCommandEnum.Stop)"
-        [disabled]="!getEnabledCommand(serverCommandEnum.Stop)"
+        [disabled]="!server.stoppable"
         mcsId
         mcsEventTracker="stop"
         mcsEventCategory="server"
@@ -32,7 +32,7 @@
     <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Restart)">
       <a mcsButton="basic" color="white" labelPlacement="left"
         (click)="onExecuteCommand(serverCommandEnum.Restart)"
-        [disabled]="!getEnabledCommand(serverCommandEnum.Restart)"
+        [disabled]="!server.restartable"
         mcsId
         mcsEventTracker="restart"
         mcsEventCategory="server"
@@ -44,7 +44,7 @@
     <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Suspend)">
       <a mcsButton="basic" color="white" labelPlacement="left"
         (click)="onExecuteCommand(serverCommandEnum.Suspend)"
-        [disabled]="!getEnabledCommand(serverCommandEnum.Suspend)"
+        [disabled]="!server.suspendable"
         mcsId
         mcsEventTracker="suspend"
         mcsEventCategory="server"
@@ -56,7 +56,7 @@
     <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Resume)">
       <a mcsButton="basic" color="white" labelPlacement="left"
         (click)="onExecuteCommand(serverCommandEnum.Resume)"
-        [disabled]="!getEnabledCommand(serverCommandEnum.Resume)"
+        [disabled]="!server.resumable"
         mcsId
         mcsEventTracker="resume"
         mcsEventCategory="server"
@@ -70,7 +70,7 @@
       <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Scale)">
         <a mcsButton="basic" color="white" labelPlacement="left"
           (click)="onExecuteCommand(serverCommandEnum.Scale)"
-          [disabled]="!getEnabledCommand(serverCommandEnum.Scale)"
+          [disabled]="!server.scaleable"
           mcsId
           mcsEventTracker="scale"
           mcsEventCategory="server"
@@ -84,7 +84,7 @@
       <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Clone)">
         <a mcsButton="basic" color="white" labelPlacement="left"
           (click)="onExecuteCommand(serverCommandEnum.Clone)"
-          [disabled]="!getEnabledCommand(serverCommandEnum.Clone)"
+          [disabled]="!server.cloneable"
           mcsId
           mcsEventTracker="clone"
           mcsEventCategory="server"
@@ -97,7 +97,7 @@
     <ng-container *ngIf="server.isSelfManaged">
       <a mcsButton="basic" color="white" labelPlacement="left"
         (click)="onExecuteCommand(serverCommandEnum.Rename)"
-        [disabled]="!getEnabledCommand(serverCommandEnum.Rename)"
+        [disabled]="!server.renameable"
         mcsId
         mcsEventTracker="rename"
         mcsEventCategory="server"
@@ -110,7 +110,7 @@
       <ng-container *ngIf="server.isSelfManaged">
         <a mcsButton="basic" color="white" labelPlacement="left"
           (click)="onExecuteCommand(serverCommandEnum.Delete)"
-          [disabled]="!getEnabledCommand(serverCommandEnum.Delete)"
+          [disabled]="!server.deletable"
           mcsId
           mcsEventTracker="delete"
           mcsEventCategory="server"
@@ -123,7 +123,7 @@
     <ng-container *ngIf="getIncludedCommand(serverCommandEnum.ViewVCloud)">
       <a mcsButton="basic" color="white" labelPlacement="left"
         (click)="onExecuteCommand(serverCommandEnum.ViewVCloud)"
-        [disabled]="!getEnabledCommand(serverCommandEnum.ViewVCloud)"
+        [disabled]="server.isDeleting"
         mcsId
         mcsEventTracker="view-in-portal"
         mcsEventCategory="server"
@@ -135,7 +135,7 @@
     <ng-container *ngIf="getIncludedCommand(serverCommandEnum.ResetVmPassword)">
       <a mcsButton="basic" color="white" labelPlacement="left"
         (click)="onExecuteCommand(serverCommandEnum.ResetVmPassword)"
-        [disabled]="!getEnabledCommand(serverCommandEnum.ResetVmPassword)"
+        [disabled]="!server.canResetPassword"
         mcsId
         mcsEventTracker="reset-password"
         mcsEventCategory="server"

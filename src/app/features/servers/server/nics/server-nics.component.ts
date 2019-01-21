@@ -10,14 +10,12 @@ import { FormControl } from '@angular/forms';
 import {
   Subscription,
   Subject,
-  throwError,
-  Observable
+  throwError
 } from 'rxjs';
 import {
   startWith,
   takeUntil,
-  catchError,
-  switchMap
+  catchError
 } from 'rxjs/operators';
 import {
   CoreDefinition,
@@ -32,7 +30,8 @@ import {
   isNullOrEmpty,
   unsubscribeSafely,
   animateFactory,
-  unsubscribeSubject
+  unsubscribeSubject,
+  getSafeProperty
 } from '@app/utilities';
 import { ComponentHandlerDirective } from '@app/shared';
 import {
@@ -93,7 +92,6 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   private _newNic: McsServerNic;
   private _inProgressNicId: string;
   private _destroySubject = new Subject<void>();
-  private _requestNicsSubject = new Subject<void>();
 
   @ViewChild(ComponentHandlerDirective)
   private _componentHandler: ComponentHandlerDirective;
@@ -184,7 +182,6 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   public ngOnDestroy() {
     this.dispose();
     unsubscribeSubject(this._destroySubject);
-    unsubscribeSubject(this._requestNicsSubject);
     unsubscribeSafely(this._networksSubscription);
   }
 
@@ -350,7 +347,9 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    * Initializes the data source of the nics table
    */
   private _initializeDataSource(): void {
-    this.nicsDataSource = new McsTableDataSource(this._serverNicsSource.bind(this));
+    this.nicsDataSource = new McsTableDataSource(
+      this._serversRepository.getServerNics(this.server)
+    );
   }
 
   /**
@@ -455,25 +454,15 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   private _setDataColumns(): void {
     this.nicsColumns = Object.keys(this.textContent.columnHeaders);
     if (isNullOrEmpty(this.nicsColumns)) {
-      throw new Error('column definition for disks was not defined');
+      throw new Error('column definition for nics was not defined');
     }
-  }
-
-  /**
-   * Server NICS Datasource for the table
-   */
-  private _serverNicsSource(): Observable<McsServerNic[]> {
-    return this._requestNicsSubject.pipe(
-      startWith(null),
-      switchMap(() => this._serversRepository.getServerNics(this.server))
-    );
   }
 
   /**
    * Get the resource networks from the server
    */
   private _getResourceNetworks(): void {
-    let hasResource = !isNullOrEmpty(this.serverResource) && !isNullOrEmpty(this.serverResource.id);
+    let hasResource = getSafeProperty(this.serverResource, (obj) => obj.id);
     if (!hasResource) { return; }
 
     this._networksSubscription = this._resourcesRespository

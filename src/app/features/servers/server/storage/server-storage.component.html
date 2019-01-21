@@ -102,7 +102,7 @@
       <ng-container *mcsAccessControl="['VmEdit']">
         <div class="action-box" *ngIf="canAddDisk" [disabled]="!server.executable">
           <mcs-server-manage-storage *mcsComponentHandler
-            [storages]="resourceStorages"
+            [storages]="resourceStorages$ | async"
             (dataChange)="onStorageChanged($event)">
 
             <ng-container mcsManageStorageHeader>
@@ -136,7 +136,7 @@
     <section [@fadeIn] *ngSwitchCase="serverDiskMethodTypeEnum.ExpandDisk">
       <div class="action-box" [disabled]="!server.executable">
         <mcs-server-manage-storage
-          [storages]="resourceStorages"
+          [storages]="resourceStorages$ | async"
           [targetDisk]="selectedDisk"
           [detailsTemplate]="diskDetailsTemplate"
           (dataChange)="onStorageChanged($event)">

@@ -193,14 +193,6 @@ export class ServerComponent
   }
 
   /**
-   * Return true when the server is currently deleting, otherwise false
-   * @param server Server to be deleted
-   */
-  public serverDeleting(server: McsServer): boolean {
-    return server.commandAction === ServerCommand.Delete && server.isProcessing;
-  }
-
-  /**
    * Event that emits when the tab is changed in the routing tabgroup
    * @param tab Active tab
    */

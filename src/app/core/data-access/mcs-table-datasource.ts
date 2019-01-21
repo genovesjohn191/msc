@@ -51,8 +51,8 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
   constructor(private _dataSource: McsRepository<T> | T[] | Observable<T[]> | DelegateSource<T>) {
     this.dataLoadingStream = new Subject<DataStatus>();
     this.totalRecordsCount = 0;
-    this._datasourceFuncPointer = this._datasourceIsPredicate ?
-      this._dataSource as any : this._datasourceFunc.bind(this);
+
+    this._setDatasourcePointer();
     this._subscribeToRequestChange();
     this._subscribeToRepoDataChange();
   }
@@ -268,6 +268,14 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
       if (actionState !== ActionStatus.Clear) { return; }
       this._requestUpdate.next();
     });
+  }
+
+  /**
+   * Sets the datasource function pointer
+   */
+  private _setDatasourcePointer(): void {
+    this._datasourceFuncPointer = this._datasourceIsPredicate ?
+      this._dataSource as any : this._datasourceFunc.bind(this);
   }
 
   /**
