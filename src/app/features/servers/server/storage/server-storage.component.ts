@@ -15,8 +15,7 @@ import {
 import {
   startWith,
   takeUntil,
-  catchError,
-  switchMap
+  catchError
 } from 'rxjs/operators';
 import {
   CoreDefinition,
@@ -83,6 +82,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   public manageStorage: ServerManageStorage;
   public selectedStorage: McsResourceStorage;
   public selectedDisk: McsServerStorageDevice;
+  public resourceStorages$: Observable<McsResourceStorage[]>;
 
   public disksDataSource: McsTableDataSource<McsServerStorageDevice>;
   public disksColumns: string[];
@@ -371,7 +371,9 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
    * Initializes the data source of the disks table
    */
   private _initializeDataSource(): void {
-    this.disksDataSource = new McsTableDataSource(this._serverDisksSource.bind(this));
+    this.disksDataSource = new McsTableDataSource(
+      this._serversRepository.getServerDisks(this.server)
+    );
   }
 
   /**
@@ -466,24 +468,11 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   }
 
   /**
-   * Server DISKS Datasource for the table
-   */
-  private _serverDisksSource(): Observable<McsServerStorageDevice[]> {
-    return this._requestDisksSubject.pipe(
-      startWith(null),
-      switchMap(() => this._serversRepository.getServerDisks(this.server))
-    );
-  }
-
-  /**
    * Get the resource storage to the selected server
    */
   private _getResourceStorage(): void {
     let hasResource = getSafeProperty(this.serverResource, (obj) => obj.id);
     if (!hasResource) { return; }
-
-    this._storagesSubscription = this._resourcesRespository
-      .getResourceStorage(this.serverResource)
-      .subscribe();
+    this.resourceStorages$ = this._resourcesRespository.getResourceStorage(this.serverResource);
   }
 }

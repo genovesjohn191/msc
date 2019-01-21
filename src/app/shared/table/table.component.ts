@@ -37,8 +37,7 @@ import {
 import { DataStatus } from '@app/models';
 import {
   isNullOrEmpty,
-  unsubscribeSafely,
-  unsubscribeSubject
+  unsubscribeSafely
 } from '@app/utilities';
 /** Shared Directives */
 import {
@@ -78,7 +77,6 @@ import { FilterSelector } from '../filter-selector';
 })
 
 export class TableComponent<T> implements OnInit, AfterContentInit, AfterContentChecked, OnDestroy {
-
   @Input()
   public set columnFilter(value: FilterSelector) {
     this._columnFilter = value;
@@ -146,10 +144,10 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
    * Placeholders within the table template where the header and rows data will be inserted
    */
   @ViewChild(HeaderPlaceholderDirective)
-  private _headerPlaceholder: HeaderPlaceholderDirective;
+  private _headerRowOutlet: HeaderPlaceholderDirective;
 
   @ViewChild(DataPlaceholderDirective)
-  private _dataPlaceholder: DataPlaceholderDirective;
+  private _dataRowsOutlet: DataPlaceholderDirective;
 
   @ViewChild(DataStatusPlaceholderDirective)
   private _dataStatusPlaceholder: DataStatusPlaceholderDirective;
@@ -160,8 +158,8 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
   private _columnDefinitionsMap: Map<string, ColumnDefDirective>;
 
   /** Template of the header row directive */
-  @ContentChild(HeaderRowDefDirective)
-  private _headerRowDefinition: HeaderRowDefDirective;
+  @ContentChildren(HeaderRowDefDirective)
+  private _headerRowDefinition: QueryList<HeaderRowDefDirective>;
 
   /** Template of the data row directives */
   @ContentChildren(DataRowDefDirective)
@@ -170,6 +168,8 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
   /** Template of the data status directives */
   @ContentChild(DataStatusDefDirective)
   private _dataStatusDefinition: DataStatusDefDirective;
+
+  private _columnCountCache: number = 0;
 
   public constructor(
     private _changeDetectorRef: ChangeDetectorRef,
@@ -195,21 +195,18 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
   }
 
   public ngAfterContentInit() {
-    // Set the column definition mapping for easy accessing
-    this._columnDefinitions.changes
-      .pipe(startWith(null), takeUntil(this._destroySubject))
-      .subscribe(() => {
-        this._setColumnDefinitionsMap();
-        this._renderHeaderRows();
-        this._renderDataRows();
-
-        this._updateFiltersByColumnDef();
-        this._updateColumnVisibility();
-      });
+    this._renderUpdatedColumns();
+    this._columnDefinitions.changes.pipe(takeUntil(this._destroySubject)).subscribe((columns) => {
+      // We need to check if the previous column count is not the same with the current column
+      // since angular always triggered the changes without checking the whole context of it
+      // and it makes the other table acting weird.
+      // TODO: Check with the latest version of angular if this issue was already fixed.
+      if (this._columnCountCache !== columns.length) { this._renderUpdatedColumns(); }
+      this._columnCountCache = columns.length;
+    });
   }
 
   public ngAfterContentChecked() {
-    this._updateTableData();
     if (this._dataSource && !this._dataSourceSubscription) {
       this._getDatasourceData();
     }
@@ -218,7 +215,20 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
   public ngOnDestroy() {
     unsubscribeSafely(this._dataSourceSubscription);
     unsubscribeSafely(this._dataLoadingSubscription);
-    unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this._destroySubject);
+  }
+
+  /**
+   * Render updated columns based on the element definitions
+   */
+  private _renderUpdatedColumns(): void {
+    this._setColumnDefinitionsMap();
+    this._renderHeaderRows();
+    this._renderDataRows();
+
+    this._updateFiltersByColumnDef();
+    this._updateColumnVisibility();
+    this._changeDetectorRef.markForCheck();
   }
 
   /**
@@ -290,7 +300,7 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
 
     if (!isNullOrEmpty(newDatasource)) {
       if (this._dataDiffer) { this._dataDiffer.diff([]); }
-      this._dataPlaceholder.viewContainer.clear();
+      this._dataRowsOutlet.viewContainer.clear();
     }
   }
 
@@ -335,49 +345,28 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
   }
 
   /**
-   * This will update the table data including the header row
-   * based on the new header
-   */
-  private _updateTableData(): void {
-    // Header row refresh
-    if (this._headerRowDefinition.getColumnsDiff()) {
-      this._headerPlaceholder.viewContainer.clear();
-      this._renderHeaderRows();
-    }
-    // Data rows refresh
-    this._dataRowDefinitions.forEach((rowDefinition) => {
-      if (!!rowDefinition.getColumnsDiff()) {
-        this._dataDiffer.diff([]);
-        this._dataPlaceholder.viewContainer.clear();
-        this._createDataRows();
-      }
-    });
-  }
-
-  /**
    * This will render the header rows including each header cells
    */
   private _renderHeaderRows(): void {
-    if (isNullOrEmpty(this._headerRowDefinition)) { return; }
+    // Clear the header row outlet if any rows already exist since every table has only 1 row.
+    if (this._headerRowOutlet.viewContainer.length > 0) {
+      this._headerRowOutlet.viewContainer.clear();
+    }
 
-    // Get all header cells within the container
-    let headerCells: HeaderCellDefDirective[] = new Array();
-    this._headerRowDefinition.columns
-      .map((columnName) => {
+    this._headerRowDefinition.forEach((rowDef) => {
+      let headerCells: HeaderCellDefDirective[] = new Array();
+      rowDef.columns.map((columnName) => {
         if (this._columnDefinitionsMap.has(columnName)) {
           let column = this._columnDefinitionsMap.get(columnName);
           headerCells.push(column.headerCellDef);
         }
       });
 
-    // Render the view for the header row
-    this._headerPlaceholder.viewContainer.clear();
-    this._headerPlaceholder.viewContainer
-      .createEmbeddedView(this._headerRowDefinition.template, { headerCells });
-    headerCells.forEach((cell) => {
-      CellOutletDirective.mostRecentOutlet.viewContainer.createEmbeddedView(cell.template, {});
+      this._headerRowOutlet.viewContainer.createEmbeddedView(rowDef.template, { headerCells });
+      headerCells.forEach((cell) => {
+        CellOutletDirective.mostRecentOutlet.viewContainer.createEmbeddedView(cell.template, {});
+      });
     });
-    this._changeDetectorRef.markForCheck();
   }
 
   /**
@@ -386,7 +375,7 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
   private _renderDataRows(): void {
     if (isNullOrEmpty(this._dataRowDefinitions)) { return; }
     this._dataDiffer.diff([]);
-    this._dataPlaceholder.viewContainer.clear();
+    this._dataRowsOutlet.viewContainer.clear();
     this._createDataRows();
   }
 
@@ -402,18 +391,21 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
     let changes = this._dataDiffer.diff(this._data);
     if (!changes) { return; }
 
-    let dataRowViewContainer = this._dataPlaceholder.viewContainer;
-    changes.forEachOperation(
-      (item: IterableChangeRecord<any>, adjustedPreviousIndex: number, currentIndex: number) => {
-        if (item.previousIndex == null) {
-          this._insertRow(this._data[currentIndex], currentIndex);
-        } else if (currentIndex == null) {
-          dataRowViewContainer.remove(adjustedPreviousIndex);
-        } else {
-          const view = dataRowViewContainer.get(adjustedPreviousIndex);
-          dataRowViewContainer.move(view!, currentIndex);
-        }
-      });
+    let dataRowViewContainer = this._dataRowsOutlet.viewContainer;
+    changes.forEachOperation((
+      item: IterableChangeRecord<any>,
+      adjustedPreviousIndex: number,
+      currentIndex: number
+    ) => {
+      if (item.previousIndex == null) {
+        this._insertRow(this._data[currentIndex], currentIndex);
+      } else if (currentIndex == null) {
+        dataRowViewContainer.remove(adjustedPreviousIndex);
+      } else {
+        const view = dataRowViewContainer.get(adjustedPreviousIndex);
+        dataRowViewContainer.move(view!, currentIndex);
+      }
+    });
     this._updateDataRowContext();
   }
 
@@ -440,11 +432,10 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
     let context: CellOutletContext<T> = { $implicit: dataRow };
 
     // Render the view for the data row
-    this._dataPlaceholder.viewContainer.createEmbeddedView(row.template, context, index);
+    this._dataRowsOutlet.viewContainer.createEmbeddedView(row.template, context, index);
     dataCells.forEach((cell) => {
       CellOutletDirective.mostRecentOutlet.viewContainer.createEmbeddedView(cell.template, context);
     });
-    this._changeDetectorRef.markForCheck();
   }
 
   /**
@@ -453,7 +444,7 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
    * that was provided to each of its cells.
    */
   private _updateDataRowContext() {
-    const viewContainer = this._dataPlaceholder.viewContainer;
+    const viewContainer = this._dataRowsOutlet.viewContainer;
     for (let index = 0, count = viewContainer.length; index < count; index++) {
       const viewRef = viewContainer.get(index) as EmbeddedViewRef<CellOutletContext<T>>;
       viewRef.context.index = index;

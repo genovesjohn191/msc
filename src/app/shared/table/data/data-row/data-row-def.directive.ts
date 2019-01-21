@@ -15,17 +15,12 @@ import { coerceArray } from '@app/utilities';
 })
 
 export class DataRowDefDirective implements OnChanges {
-
-  public columnsDiffer: IterableDiffer<any>;
-
   @Input('mcsDataRowDefColumns')
-  public get columns(): string[] {
-    return this._columns;
-  }
-  public set columns(value: string[]) {
-    this._columns = coerceArray(value);
-  }
+  public get columns(): string[] { return this._columns; }
+  public set columns(value: string[]) { this._columns = coerceArray(value); }
   private _columns: string[];
+
+  private _columnsDiffer: IterableDiffer<any>;
 
   constructor(
     public template: TemplateRef<any>,
@@ -33,14 +28,14 @@ export class DataRowDefDirective implements OnChanges {
   ) { }
 
   public ngOnChanges(changes: SimpleChanges) {
-    const columns = changes['columns'].currentValue;
-    if (!this.columnsDiffer && columns) {
-      this.columnsDiffer = this.differs.find(columns).create();
-      this.columnsDiffer.diff(columns);
+    if (!this._columnsDiffer) {
+      const columns = (changes['columns'] && changes['columns'].currentValue) || [];
+      this._columnsDiffer = this.differs.find(columns).create();
+      this._columnsDiffer.diff(columns);
     }
   }
 
   public getColumnsDiff(): IterableChanges<any> | null {
-    return this.columnsDiffer.diff(this.columns);
+    return this._columnsDiffer.diff(this.columns);
   }
 }
