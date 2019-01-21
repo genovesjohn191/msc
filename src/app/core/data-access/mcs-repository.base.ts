@@ -121,6 +121,8 @@ export abstract class McsRepositoryBase<T extends McsEntityBase>
    * @param entity Entity to be added
    */
   public addOrUpdate(entity: T): void {
+    if (isNullOrEmpty(entity)) { return; }
+
     let isUpdate = !!this.dataRecords.find((item) => item.id === entity.id);
     this.dataRecords = addOrUpdateArrayRecord(
       this.dataRecords, entity, false,
@@ -140,6 +142,8 @@ export abstract class McsRepositoryBase<T extends McsEntityBase>
    * @param entity Entity to be deleted
    */
   public delete(entity: T): void {
+    if (isNullOrEmpty(entity)) { return; }
+
     let deletePredicate = (item: T) => item.id === entity.id;
     this.deleteBy(deletePredicate);
   }
