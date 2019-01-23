@@ -64,9 +64,9 @@ describe('OBJECT Functions', () => {
       expect(isNullOrUndefined(nullObject)).toBeTruthy();
     });
 
-    it('should return false when the object provided is undefined', () => {
-      let undefinedObject = null;
-      expect(isNullOrUndefined(undefinedObject)).toBeFalsy();
+    it('should return true when the object provided is undefined', () => {
+      let undefinedObject: string;
+      expect(isNullOrUndefined(undefinedObject)).toBeTruthy();
     });
 
     it('should return false when the object provided is empty string', () => {

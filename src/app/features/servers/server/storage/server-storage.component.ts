@@ -183,14 +183,14 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   }
 
   /**
-   * Returns true when user can add disk or not
+   * Returns true when user can add disk
    */
   public canAddDisk(server: McsServer, resourceStorages: McsResourceStorage[]): boolean {
     return !this.hasReachedDisksLimit(server) && !isNullOrEmpty(resourceStorages);
   }
 
   /**
-   * Returns true when there is a selected storage when adding disk and the inputted is valid
+   * Returns true when there is a selected storage when adding disk and the input is valid
    */
   public get inputIsValid(): boolean {
     return !isNullOrEmpty(this.manageStorage)
