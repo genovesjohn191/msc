@@ -195,17 +195,15 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
   }
 
   public ngAfterContentInit() {
-    Promise.resolve().then(() => {
-      this._renderUpdatedColumns();
+    this._renderUpdatedColumns();
 
-      // We need to check if the previous column count is not the same with the current column
-      // since angular always triggered the changes without checking the whole context of it
-      // and it makes the other table acting weird.
-      // TODO: Check with the latest version of angular if this issue was already fixed.
-      this._columnDefinitions.changes.pipe(takeUntil(this._destroySubject)).subscribe((columns) => {
-        if (this._columnCountCache !== columns.length) { this._renderUpdatedColumns(); }
-        this._columnCountCache = columns.length;
-      });
+    // We need to check if the previous column count is not the same with the current column
+    // since angular always triggered the changes without checking the whole context of it
+    // and it makes the other table acting weird.
+    // TODO: Check with the latest version of angular if this issue was already fixed.
+    this._columnDefinitions.changes.pipe(takeUntil(this._destroySubject)).subscribe((columns) => {
+      if (this._columnCountCache !== columns.length) { this._renderUpdatedColumns(); }
+      this._columnCountCache = columns.length;
     });
   }
 
