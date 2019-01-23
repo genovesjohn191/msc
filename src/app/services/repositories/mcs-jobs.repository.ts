@@ -26,15 +26,14 @@ export class McsJobsRepository extends McsRepositoryBase<McsJob> {
    * Subscribe to job events to update the existing job based on its status
    */
   private _subscribeToJobs(): void {
-    this._notificationEvents.notificationsEvent
-      .subscribe((updatedJobs) => {
-        if (!isNullOrEmpty(updatedJobs)) {
-          updatedJobs.forEach((job) => this.addOrUpdate(job));
-        }
-        let sortPredicate = (_first: McsJob, _second: McsJob) => {
-          return compareDates(_second.createdOn, _first.createdOn);
-        };
-        this.sortRecords(sortPredicate);
-      });
+    this._notificationEvents.notificationsEvent.subscribe((updatedJobs) => {
+      if (isNullOrEmpty(updatedJobs)) { return; }
+
+      updatedJobs.forEach((job) => this.addOrUpdate(job));
+      let sortPredicate = (firstRecord: McsJob, secondRecord: McsJob) => {
+        return compareDates(secondRecord.createdOn, firstRecord.createdOn);
+      };
+      this.sortRecords(sortPredicate);
+    });
   }
 }

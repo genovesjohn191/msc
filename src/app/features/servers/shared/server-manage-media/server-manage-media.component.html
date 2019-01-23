@@ -3,16 +3,11 @@
   <ng-content select="[mcsManageMediaHeader]"></ng-content>
 
   <!-- Media selection -->
-  <mcs-form-field [@fadeIn] *ngIf="media">
-    <mcs-select [(ngModel)]="selectedMedia" placeholder="Select media" mcsId="select-media">
-      <mcs-option *ngFor="let medium of media" [value]="medium">
-        {{ medium.name }}
+  <mcs-form-field>
+    <mcs-select [(ngModel)]="selectedCatalog" placeholder="Select media" mcsId="select-media">
+      <mcs-option *ngFor="let catalog of catalogs" [value]="catalog">
+        {{ catalog.itemName }}
       </mcs-option>
     </mcs-select>
   </mcs-form-field>
-
-  <!-- No media status -->
-  <mcs-data-status-empty [@fadeIn] *ngIf="!media">
-    <span>No media to attach.</span>
-  </mcs-data-status-empty>
 </section>

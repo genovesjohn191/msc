@@ -61,7 +61,6 @@ export class NotificationsComponent
 
   public ngOnInit() {
     this.textContent = this._textContentProvider.content.notifications;
-    this._subscribeToDataUpdate();
   }
 
   public ngAfterViewInit() {
@@ -106,6 +105,8 @@ export class NotificationsComponent
     this.dataSource
       .registerSearch(this.search)
       .registerPaginator(this.paginator);
+
+    this._subscribeToDataUpdate();
     this.changeDetectorRef.markForCheck();
   }
 
@@ -115,8 +116,8 @@ export class NotificationsComponent
   private _subscribeToDataUpdate(): void {
     let requestUpdate = merge(
       this.dataSource.dataRenderedChange(),
-      this._authenticationIdentity.activeAccountChanged);
-
+      this._authenticationIdentity.activeAccountChanged
+    );
     requestUpdate.pipe(takeUntil(this._destroySubject))
       .subscribe(() => this.changeDetectorRef.markForCheck());
   }

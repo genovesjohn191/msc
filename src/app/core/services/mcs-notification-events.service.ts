@@ -108,8 +108,8 @@ export class McsNotificationEventsService {
    */
   private _listenToNotificationsUpdate(): void {
     unsubscribeSafely(this._notificationsSubscription);
-    this._notificationsSubscription = this._notificationsContext.notificationsStream
-      .subscribe((updatedNotifications) => {
+    this._notificationsSubscription = this._notificationsContext
+      .notificationsStream.subscribe((updatedNotifications) => {
         // Notify general notifications
         this.notificationsEvent.next(updatedNotifications);
 

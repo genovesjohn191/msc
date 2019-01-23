@@ -4,6 +4,7 @@ import {
 } from 'rxjs';
 import {
   isNullOrEmpty,
+  isNullOrUndefined,
   unsubscribeSafely,
   unsubscribeSubject,
   updateObjectData,
@@ -54,6 +55,28 @@ describe('OBJECT Functions', () => {
       let stringObject: string = 'angular';
       let isEmpty = isNullOrEmpty(stringObject);
       expect(isEmpty).toBeFalsy();
+    });
+  });
+
+  describe('isNullOrUndefined()', () => {
+    it('should return true when the object provided is null', () => {
+      let nullObject = null;
+      expect(isNullOrUndefined(nullObject)).toBeTruthy();
+    });
+
+    it('should return false when the object provided is undefined', () => {
+      let undefinedObject = null;
+      expect(isNullOrUndefined(undefinedObject)).toBeFalsy();
+    });
+
+    it('should return false when the object provided is empty string', () => {
+      let stringObject: string = '';
+      expect(isNullOrUndefined(stringObject)).toBeFalsy();
+    });
+
+    it('should return false when the value of the object provided is 0', () => {
+      let numberObject: number = 0;
+      expect(isNullOrUndefined(numberObject)).toBeFalsy();
     });
   });
 

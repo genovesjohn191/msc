@@ -1,4 +1,4 @@
-<mcs-presentation-panel mcsId="storage">
+<mcs-presentation-panel mcsId="storage" *ngIf="serverDetails$ | async as serverDetails">
   <ng-container mcsPresentationPanelHeader>
     <h2>{{ textContent.title }}</h2>
   </ng-container>
@@ -25,7 +25,7 @@
             <mcs-item>
               <ng-container *ngIf="diskIsInProgress(row); else defaultStorageIconTemplate">
                 <mcs-loader size="small"
-                  [mcsTooltip]="jobSummaryInfo"
+                  [mcsTooltip]="serverDetails.server.processingText"
                   mcsTooltipPosition="right"></mcs-loader>
               </ng-container>
               <ng-template #defaultStorageIconTemplate>
@@ -62,7 +62,7 @@
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
             <mcs-item>
-              <a [disabled]="!server.executable"
+              <a [disabled]="!serverDetails.server.executable"
                   (click)="openExpandDiskWindow(row)"
                   mcsId
                   mcsEventTracker="show-expand-disk"
@@ -70,9 +70,9 @@
                   mcsEventLabel="server-details-page">
                 {{ textContent.expandStorageLink }}
               </a>
-              <a [disabled]="!server.executable"
-                *ngIf="canDeleteDisk"
-                (click)="deleteDisk(row)"
+              <a [disabled]="!serverDetails.server.executable"
+                *ngIf="canDeleteDisk(serverDetails.server)"
+                (click)="deleteDisk(serverDetails.server, row)"
                 mcsId
                 mcsEventTracker="delete-disk"
                 mcsEventCategory="server"
@@ -100,33 +100,37 @@
 
       <!-- Adding Disk -->
       <ng-container *mcsAccessControl="['VmEdit']">
-        <div class="action-box" *ngIf="canAddDisk" [disabled]="!server.executable">
-          <mcs-server-manage-storage *mcsComponentHandler
-            [storages]="resourceStorages$ | async"
-            (dataChange)="onStorageChanged($event)">
+        <ng-container *ngIf="resourceStorages$ | async as resourceStorages">
+          <div class="action-box" *ngIf="canAddDisk(serverDetails.server, resourceStorages)"
+            [@fadeIn] [disabled]="!serverDetails.server.executable">
 
-            <ng-container mcsManageStorageHeader>
-              <h2>{{ textContent.addStorageHeading }}</h2>
-            </ng-container>
-            <ng-container mcsManageStorageWarning>
-              <span>{{ textContent.fullStorageSpace }}</span>
-            </ng-container>
-          </mcs-server-manage-storage>
+            <mcs-server-manage-storage *mcsComponentHandler
+              [storages]="resourceStorages"
+              (dataChange)="onStorageChanged($event)">
 
-          <div class="action-items">
-            <button mcsButton arrow="right" size="small"
-              [disabled]="!addDiskEnabled"
-              (click)="addDisk()"
-              mcsId
-              mcsEventTracker="add-disk"
-              mcsEventCategory="server"
-              mcsEventLabel="server-details-page">
-              {{ textContent.addButton }}
-            </button>
+              <ng-container mcsManageStorageHeader>
+                <h2>{{ textContent.addStorageHeading }}</h2>
+              </ng-container>
+              <ng-container mcsManageStorageWarning>
+                <span>{{ textContent.fullStorageSpace }}</span>
+              </ng-container>
+            </mcs-server-manage-storage>
+
+            <div class="action-items">
+              <button mcsButton arrow="right" size="small"
+                [disabled]="!addDiskEnabled"
+                (click)="addDisk(serverDetails.server)"
+                mcsId
+                mcsEventTracker="add-disk"
+                mcsEventCategory="server"
+                mcsEventLabel="server-details-page">
+                {{ textContent.addButton }}
+              </button>
+            </div>
           </div>
-        </div>
+        </ng-container>
 
-        <mcs-data-status-warning *ngIf="hasReachedDisksLimit">
+        <mcs-data-status-warning *ngIf="hasReachedDisksLimit(serverDetails.server)">
           <span>{{ textContent.reachedStorageLimit }}</span>
         </mcs-data-status-warning>
       </ng-container>
@@ -134,7 +138,7 @@
 
     <!-- Expand Disk -->
     <section [@fadeIn] *ngSwitchCase="serverDiskMethodTypeEnum.ExpandDisk">
-      <div class="action-box" [disabled]="!server.executable">
+      <div class="action-box" [disabled]="!serverDetails.server.executable">
         <mcs-server-manage-storage
           [storages]="resourceStorages$ | async"
           [targetDisk]="selectedDisk"
@@ -172,7 +176,7 @@
 
           <button mcsButton arrow="right" size="small"
             [disabled]="!manageStorage?.hasChanged"
-            (click)="expandDisk()"
+            (click)="expandDisk(serverDetails.server)"
             mcsId
             mcsEventTracker="expand-disk"
             mcsEventCategory="server"

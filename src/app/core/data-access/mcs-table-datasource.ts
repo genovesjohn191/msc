@@ -2,14 +2,16 @@ import {
   Subject,
   Observable,
   of,
-  BehaviorSubject
+  BehaviorSubject,
+  throwError
 } from 'rxjs';
 import {
   map,
   startWith,
   switchMap,
   takeUntil,
-  filter
+  filter,
+  catchError
 } from 'rxjs/operators';
 import {
   McsDataSource,
@@ -243,7 +245,14 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
       switchMap(() => {
         this.dataStatus = DataStatus.InProgress;
         this.dataLoadingStream.next(DataStatus.InProgress);
-        return this._datasourceFuncPointer().pipe(map((records) => this._filterData(records)));
+
+        return this._datasourceFuncPointer().pipe(
+          map((records) => this._filterData(records)),
+          catchError((error) => {
+            this.dataLoadingStream.next(DataStatus.Error);
+            return throwError(error);
+          })
+        );
       })
     ).subscribe((response) => {
       this._updateDataRecords(response);

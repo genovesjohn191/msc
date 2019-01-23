@@ -7,7 +7,8 @@ import {
 import {
   takeUntil,
   map,
-  tap
+  tap,
+  filter
 } from 'rxjs/operators';
 import {
   addOrUpdateArrayRecord,
@@ -45,7 +46,7 @@ export class McsNotificationContextService implements McsInitializer {
   ) {
     this._excludedJobTypes = new Array();
     this._notifications = new Array();
-    this._notificationsStream = new BehaviorSubject<McsJob[]>(new Array());
+    this._notificationsStream = new BehaviorSubject<McsJob[]>(null);
   }
 
   /**
@@ -53,7 +54,7 @@ export class McsNotificationContextService implements McsInitializer {
    */
   public get notificationsStream(): Observable<McsJob[]> {
     return this._notificationsStream.pipe(
-      // Need to filter the system jobs being sent from rabbitMQ
+      filter((response) => response !== null),
       map((jobs) => jobs.filter((job) => {
         let jobType = getSafeProperty(job, (obj) => obj.type);
         return isNullOrEmpty(this._excludedJobTypes
