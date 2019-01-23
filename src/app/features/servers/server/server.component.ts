@@ -53,8 +53,7 @@ import {
   ServerCommand,
   RouteKey,
   McsServer,
-  McsServerPlatform,
-  McsResource
+  McsServerPlatform
 } from '@app/models';
 import { McsServersRepository } from '@app/services';
 import { ServerService } from './server.service';
@@ -85,7 +84,6 @@ export class ServerComponent
   public textContent: any;
   public serversTextContent: any;
 
-  public serverResource$: Observable<McsResource>;
   public selectedServer$: Observable<McsServer>;
   public serversMap$: Observable<Map<string, McsServer[]>>;
   public serverListSource: ServersListSource | null;

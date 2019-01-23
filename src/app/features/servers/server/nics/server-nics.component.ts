@@ -10,12 +10,14 @@ import { FormControl } from '@angular/forms';
 import {
   Subscription,
   Subject,
-  throwError
+  throwError,
+  Observable
 } from 'rxjs';
 import {
   startWith,
   takeUntil,
-  catchError
+  catchError,
+  shareReplay
 } from 'rxjs/operators';
 import {
   CoreDefinition,
@@ -30,8 +32,7 @@ import {
   isNullOrEmpty,
   unsubscribeSafely,
   animateFactory,
-  unsubscribeSubject,
-  getSafeProperty
+  unsubscribeSubject
 } from '@app/utilities';
 import { ComponentHandlerDirective } from '@app/shared';
 import {
@@ -39,7 +40,9 @@ import {
   DataStatus,
   McsResourceNetwork,
   McsServerNic,
-  McsServerCreateNic
+  McsServerCreateNic,
+  McsServer,
+  McsResource
 } from '@app/models';
 import {
   McsServersRepository,
@@ -77,6 +80,8 @@ const SERVER_MAXIMUM_NICS = 10;
 })
 
 export class ServerNicsComponent extends ServerDetailsBase implements OnInit, OnDestroy {
+  public resourceNetworks$: Observable<McsResourceNetwork[]>;
+
   public textContent: any;
   public currentIpAddress: string;
   public fcNetwork: FormControl;
@@ -101,35 +106,10 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   }
 
   /**
-   * Returns true when the nics has reached its limitation
-   */
-  public get hasReachedNicsLimit(): boolean {
-    return !isNullOrEmpty(this.server.nics) &&
-      this.server.nics.length >= SERVER_MAXIMUM_NICS;
-  }
-
-  /**
    * Returns the enum type of the server nic method
    */
   public get serverNicMethodTypeEnum(): any {
     return ServerNicMethodType;
-  }
-
-  /**
-   * Returns all the server nics including the newly created nic as a mock data
-   */
-  public get serverNics(): McsServerNic[] {
-    return isNullOrEmpty(this._newNic) ?
-      this.server.nics :
-      [...this.server.nics, this._newNic];
-  }
-
-  /**
-   * Returns all the resource networks
-   */
-  public get resourceNetworks(): McsResourceNetwork[] {
-    return !isNullOrEmpty(this.serverResource.networks) ?
-      this.serverResource.networks : new Array();
   }
 
   /**
@@ -186,6 +166,14 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   }
 
   /**
+   * Returns true when the nics has reached its limitation
+   */
+  public hasReachedNicsLimit(server: McsServer): boolean {
+    return !isNullOrEmpty(server.nics) &&
+      server.nics.length >= SERVER_MAXIMUM_NICS;
+  }
+
+  /**
    * Event that emits when data in network component has been changed
    * @param manageNetwork Manage Network content
    */
@@ -205,9 +193,9 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   /**
    * Returns true when user can add nic
    */
-  public get addNicEnabled(): boolean {
-    return !this.hasReachedNicsLimit
-      && !isNullOrEmpty(this.resourceNetworks);
+  public canAddNic(server: McsServer, resourceNetworks: McsResourceNetwork[]): boolean {
+    return !this.hasReachedNicsLimit(server)
+      && !isNullOrEmpty(resourceNetworks);
   }
 
   /**
@@ -234,23 +222,23 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   /**
    * Add NIC to the current server
    */
-  public addNic(): void {
+  public addNic(server: McsServer): void {
     let nicValues = new McsServerCreateNic();
     nicValues.name = this.manageNetwork.network.name;
     nicValues.ipAllocationMode = this.manageNetwork.ipAllocationMode;
     nicValues.ipAddress = this.manageNetwork.customIpAddress;
     nicValues.clientReferenceObject = {
-      serverId: this.server.id,
+      serverId: server.id,
       nicName: nicValues.name,
       nicIpAllocationMode: nicValues.ipAllocationMode,
       nicIpAddress: nicValues.ipAddress
     };
 
-    this._serversService.setServerSpinner(this.server, nicValues);
-    this._serversRepository.addServerNic(this.server.id, nicValues)
+    this._serversService.setServerSpinner(server, nicValues);
+    this._serversRepository.addServerNic(server.id, nicValues)
       .pipe(
         catchError((error) => {
-          this._serversService.clearServerSpinner(this.server, nicValues);
+          this._serversService.clearServerSpinner(server, nicValues);
           this._errorHandlerService.handleHttpRedirectionError(error.status);
           return throwError(error);
         })
@@ -261,7 +249,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    * Deletes the selected NIC
    * @param nic NIC to be deleted
    */
-  public deleteNic(nic: McsServerNic): void {
+  public deleteNic(server: McsServer, nic: McsServerNic): void {
     let dialogRef = this._dialogService.open(DeleteNicDialogComponent, {
       data: nic,
       size: 'medium'
@@ -274,15 +262,15 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
       let nicValues = new McsServerCreateNic();
       nicValues.name = this.selectedNic.logicalNetworkName;
       nicValues.clientReferenceObject = {
-        serverId: this.server.id,
+        serverId: server.id,
         nicId: this.selectedNic.id
       };
 
-      this._serversService.setServerSpinner(this.server);
-      this._serversRepository.deleteServerNic(this.server.id, this.selectedNic.id, nicValues)
+      this._serversService.setServerSpinner(server);
+      this._serversRepository.deleteServerNic(server.id, this.selectedNic.id, nicValues)
         .pipe(
           catchError((error) => {
-            this._serversService.clearServerSpinner(this.server);
+            this._serversService.clearServerSpinner(server);
             this._errorHandlerService.handleHttpRedirectionError(error.status);
             return throwError(error);
           })
@@ -293,22 +281,22 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   /**
    * Updates the NIC data based on the selected NIC
    */
-  public updateNic(): void {
+  public updateNic(server: McsServer): void {
     let nicValues = new McsServerCreateNic();
     nicValues.name = this.manageNetwork.network.name;
     nicValues.ipAllocationMode = this.manageNetwork.ipAllocationMode;
     nicValues.ipAddress = this.manageNetwork.customIpAddress;
     nicValues.clientReferenceObject = {
-      serverId: this.server.id,
+      serverId: server.id,
       nicId: this.selectedNic.id
     };
 
     this.closeEditNicWindow();
-    this._serversService.setServerSpinner(this.server);
-    this._serversRepository.updateServerNic(this.server.id, this.selectedNic.id, nicValues)
+    this._serversService.setServerSpinner(server);
+    this._serversRepository.updateServerNic(server.id, this.selectedNic.id, nicValues)
       .pipe(
         catchError((error) => {
-          this._serversService.clearServerSpinner(this.server);
+          this._serversService.clearServerSpinner(server);
           this._errorHandlerService.handleHttpRedirectionError(error.status);
           return throwError(error);
         })
@@ -328,27 +316,27 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    * Returns true when the edit nic link is enabled
    * @param nic Nic to be checked
    */
-  public isEditNicEnabled(nic: McsServerNic): boolean {
+  public isEditNicEnabled(server: McsServer, nic: McsServerNic): boolean {
     if (isNullOrEmpty(nic)) { return false; }
-    return this.server.isSelfManaged || !nic.isPrimary;
+    return server.isSelfManaged || !nic.isPrimary;
   }
 
   /**
    * Event that emits when the server selection was changed
    * `@Note:` Base implementation
    */
-  protected serverSelectionChanged(): void {
+  protected selectionChange(server: McsServer, resource: McsResource): void {
     this._resetNetworkValues();
-    this._getResourceNetworks();
-    this._initializeDataSource();
+    this._getResourceNetworks(resource);
+    this._initializeDataSource(server);
   }
 
   /**
    * Initializes the data source of the nics table
    */
-  private _initializeDataSource(): void {
+  private _initializeDataSource(server: McsServer): void {
     this.nicsDataSource = new McsTableDataSource(
-      this._serversRepository.getServerNics(this.server)
+      this._serversRepository.getServerNics(server)
     );
   }
 
@@ -387,12 +375,14 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    */
   private _selectNetworkByName(networkName: string): void {
     if (isNullOrEmpty(networkName)) { return; }
-    let foundNetwork = this.resourceNetworks.find((network) => {
-      return network.name === networkName;
+    this.resourceNetworks$.subscribe((resourceNetworks) => {
+      let foundNetwork = resourceNetworks.find((network) => {
+        return network.name === networkName;
+      });
+      if (!isNullOrEmpty(foundNetwork)) {
+        this.selectedNetwork = foundNetwork;
+      }
     });
-    if (!isNullOrEmpty(foundNetwork)) {
-      this.selectedNetwork = foundNetwork;
-    }
   }
 
   /**
@@ -461,12 +451,10 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   /**
    * Get the resource networks from the server
    */
-  private _getResourceNetworks(): void {
-    let hasResource = getSafeProperty(this.serverResource, (obj) => obj.id);
-    if (!hasResource) { return; }
-
-    this._networksSubscription = this._resourcesRespository
-      .getResourceNetworks(this.serverResource)
-      .subscribe();
+  private _getResourceNetworks(resource: McsResource): void {
+    if (isNullOrEmpty(resource)) { return; }
+    this.resourceNetworks$ = this._resourcesRespository.getResourceNetworks(resource).pipe(
+      shareReplay(1)
+    );
   }
 }

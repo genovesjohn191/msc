@@ -11,14 +11,16 @@ import {
   ParamMap
 } from '@angular/router';
 import {
-  Subscription,
   Subject,
-  throwError
+  throwError,
+  Observable
 } from 'rxjs';
 import {
   takeUntil,
   startWith,
-  catchError
+  catchError,
+  map,
+  tap
 } from 'rxjs/operators';
 import {
   McsTextContentProvider,
@@ -32,20 +34,21 @@ import {
 } from '@app/core';
 import {
   isNullOrEmpty,
-  unsubscribeSafely,
   animateFactory,
   unsubscribeSubject,
-  getEncodedUrl,
-  getSafeProperty
+  getEncodedUrl
 } from '@app/utilities';
 import {
-  CatalogItemType,
   IpAllocationMode,
   McsJob,
   DataStatus,
   RouteKey,
   McsServerUpdate,
-  McsServerMedia
+  McsServerMedia,
+  McsServer,
+  McsResource,
+  McsResourceCompute,
+  McsResourceCatalogItem
 } from '@app/models';
 import {
   DetachMediaDialogComponent,
@@ -79,20 +82,20 @@ export enum ServerManagementView {
 })
 
 export class ServerManagementComponent extends ServerDetailsBase implements OnInit, OnDestroy {
+  public serverThumbnail$: Observable<string>;
+  public serverMedia$: Observable<McsServerMedia[]>;
+  public resourceCompute$: Observable<McsResourceCompute>;
+  public resourceCatalogs$: Observable<McsResourceCatalogItem[]>;
+
   public textContent: any;
   public manageScale: ServerManageScale;
   public scaleInProgress: boolean;
   public serversTextContent: any;
-  public serverThumbnail: string;
   public serverManagementView: ServerManagementView;
   public mediaStatusFactory: McsDataStatusFactory<McsServerMedia[]>;
-  public selectedMedia: McsServerMedia;
+  public selectedCatalog: McsServerMedia;
 
   private _newMedia: McsServerMedia;
-  private _resourceMedias: McsServerMedia[];
-  private _serverMediaSubscription: Subscription;
-  private _serverThumbnailSubscription: Subscription;
-  private _computeSubscription: Subscription;
   private _destroySubject = new Subject<void>();
   private _detachingMediaId: string;
 
@@ -159,47 +162,16 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
   public ngOnDestroy() {
     this.dispose();
     unsubscribeSubject(this._destroySubject);
-    unsubscribeSafely(this._serverMediaSubscription);
-    unsubscribeSafely(this._serverThumbnailSubscription);
-    unsubscribeSafely(this._computeSubscription);
-  }
-
-  /**
-   * Returns the resource media items by catalogs
-   *
-   * `@Note`: All medias created doesn't have id, be carefull in using them
-   */
-  public get resourceMedias(): McsServerMedia[] {
-    return this._resourceMedias;
-  }
-
-  /**
-   * Returns all the server medias including the newly created media as a mock data
-   */
-  public get serverMedia(): McsServerMedia[] {
-    return isNullOrEmpty(this._newMedia) ||
-      isNullOrEmpty(this.server.media) ?
-      this.server.media :
-      [...this.server.media, this._newMedia];
-  }
-
-  /**
-   * Returns true when the attach media button should be enabled
-   */
-  public get attachMediaEnabled(): boolean {
-    return isNullOrEmpty(this.serverMedia)
-      && this.server.executable
-      && !isNullOrEmpty(this.resourceMedias);
   }
 
   /**
    * Navigate details tab into given key route
    * @param keyRoute Keyroute where to navigate
    */
-  public navigateServerDetailsTo(keyRoute: RouteKey): void {
+  public navigateServerDetailsTo(server: McsServer, keyRoute: RouteKey): void {
     this._router.navigate([
       CoreRoutes.getNavigationPath(RouteKey.ServerDetail),
-      this.server.id,
+      server.id,
       CoreRoutes.getNavigationPath(keyRoute)
     ]);
   }
@@ -208,7 +180,6 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
    * Event that emits when the scale has been cancelled
    */
   public onCancelScale(): void {
-    this.navigateServerDetailsTo(RouteKey.ServerDetailManagement);
     this.setViewMode(ServerManagementView.None);
   }
 
@@ -225,7 +196,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
   /**
    * View the console page
    */
-  public viewConsole(): void {
+  public viewConsole(server: McsServer): void {
     let percentOffset = 80 / 100;
     let offsetedScreenHeight = percentOffset * +screen.height;
     let offsetedScreenWidth = percentOffset * +screen.width;
@@ -235,8 +206,11 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
       width=${offsetedScreenWidth},
       height=${offsetedScreenHeight}`;
 
-    window.open(`${CoreRoutes.getNavigationPath(RouteKey.Console)}/${this.server.id}`,
-      this.server.id, windowFeatures);
+    window.open(
+      `${CoreRoutes.getNavigationPath(RouteKey.Console)}/${server.id}`,
+      server.id,
+      windowFeatures
+    );
   }
 
   /**
@@ -251,26 +225,26 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
   /**
    * Updates the scale of the current server
    */
-  public updateScale(): void {
-    if (isNullOrEmpty(this.server)) { return; }
+  public updateScale(server: McsServer): void {
+    if (isNullOrEmpty(server)) { return; }
 
     // Set initial server status so that the spinner will show up immediately
-    this._serversService.setServerSpinner(this.server);
+    this._serversService.setServerSpinner(server);
     this.setViewMode(ServerManagementView.None);
     this._serversRepository.updateServerCompute(
-      this.server.id,
+      server.id,
       {
         memoryMB: this.manageScale.memoryMB,
         cpuCount: this.manageScale.cpuCount,
         clientReferenceObject: {
-          serverId: this.server.id,
+          serverId: server.id,
           memoryMB: this.manageScale.memoryMB,
           cpuCount: this.manageScale.cpuCount
         }
       } as McsServerUpdate)
       .pipe(
         catchError((error) => {
-          this._serversService.clearServerSpinner(this.server);
+          this._serversService.clearServerSpinner(server);
           this._errorHandlerService.handleHttpRedirectionError(error.status);
           return throwError(error);
         })
@@ -281,7 +255,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
    * Shows the detach media dialog box
    * @param media Media to be displayed in dialog box
    */
-  public showDetachMediaDialog(media: McsServerMedia): void {
+  public showDetachMediaDialog(server: McsServer, media: McsServerMedia): void {
     if (isNullOrEmpty(media)) { return; }
     let dialogRef = this._dialogService
       .open(DetachMediaDialogComponent, {
@@ -290,34 +264,34 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
       });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result) { this.detachMedia(media); }
+      if (result) { this.detachMedia(server, media); }
     });
   }
 
   /**
    * Attach media from the selected server
-   * @param media Media to be attached
+   * @param catalog Catalog to be attached
    */
-  public attachMedia(media: McsServerMedia): void {
-    if (isNullOrEmpty(media)) { return; }
+  public attachMedia(server: McsServer, catalog: McsResourceCatalogItem): void {
+    if (isNullOrEmpty(catalog)) { return; }
     // Set reference object to be expected
     let expectedJobObject = {
-      mediaName: media.name,
-      serverId: this.server.id
+      mediaName: catalog.name,
+      serverId: server.id
     };
 
     // Set initial server status so that the spinner will show up immediately
-    this._serversService.setServerSpinner(this.server);
+    this._serversService.setServerSpinner(server);
     this.setViewMode(ServerManagementView.None);
     this._serversRepository.attachServerMedia(
-      this.server.id,
+      server.id,
       {
-        name: media.name,
+        name: catalog.name,
         clientReferenceObject: expectedJobObject
       })
       .pipe(
         catchError((error) => {
-          this._serversService.clearServerSpinner(this.server);
+          this._serversService.clearServerSpinner(server);
           this._errorHandlerService.handleHttpRedirectionError(error.status);
           return throwError(error);
         })
@@ -328,22 +302,22 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
    * Detaches the media from the selected server
    * @param media Media to be detached
    */
-  public detachMedia(media: McsServerMedia): void {
+  public detachMedia(server: McsServer, media: McsServerMedia): void {
     if (isNullOrEmpty(media)) { return; }
     // Set reference object to be expected
     let expectedJobObject = {
       mediaId: media.id,
-      serverId: this.server.id
+      serverId: server.id
     };
 
     // Set initial server status so that the spinner will show up immediately
-    this._serversService.setServerSpinner(this.server);
+    this._serversService.setServerSpinner(server);
     this._serversRepository.detachServerMedia(
-      this.server.id, media.id,
+      server.id, media.id,
       { clientReferenceObject: expectedJobObject })
       .pipe(
         catchError((error) => {
-          this._serversService.clearServerSpinner(this.server);
+          this._serversService.clearServerSpinner(server);
           this._errorHandlerService.handleHttpRedirectionError(error.status);
           return throwError(error);
         })
@@ -363,81 +337,53 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
    * Event that emits when the server selection was changed
    * `@Note:` Base implementation
    */
-  protected serverSelectionChanged(): void {
-    this._getServerThumbnail();
-    this._getResourceCompute();
-    this._getResourceMedia();
-    this._getServerMedia();
+  protected selectionChange(server: McsServer, resource: McsResource): void {
+    this._getServerThumbnail(server);
+    this._getServerMedia(server);
+
+    this._getResourceCompute(resource);
+    this._getResourceCatalogs(resource);
     this._checkScaleParamMode();
   }
 
   /**
    * Get the current server thumbnail
    */
-  private _getServerThumbnail(): void {
-    this.serverThumbnail = undefined;
-    if (isNullOrEmpty(this.server)) { return; }
-
-    this._serverThumbnailSubscription = this._serversRepository
-      .getServerThumbnail(this.server.id)
-      .subscribe((response) => {
-        if (isNullOrEmpty(response)) { return; }
-        let thumbnailDetails = response;
-        this.serverThumbnail = getEncodedUrl(
-          thumbnailDetails.file,
-          thumbnailDetails.fileType,
-          thumbnailDetails.encoding);
-        this._changeDetectorRef.markForCheck();
-      });
+  private _getServerThumbnail(server: McsServer): void {
+    this.serverThumbnail$ = this._serversRepository.getServerThumbnail(server.id).pipe(
+      map((thumbnailDetails) =>
+        getEncodedUrl(thumbnailDetails.file, thumbnailDetails.fileType, thumbnailDetails.encoding)
+      )
+    );
   }
 
   /**
    * Get the server media
    */
-  private _getServerMedia(): void {
-    unsubscribeSafely(this._serverMediaSubscription);
-
-    this.mediaStatusFactory.setInProgress();
-    this._serverMediaSubscription = this._serversRepository
-      .getServerMedia(this.server)
-      .pipe(
-        catchError((error) => {
-          // Handle common error status code
-          this.mediaStatusFactory.setError();
-          return throwError(error);
-        })
-      )
-      .subscribe(() => {
-        this.mediaStatusFactory.setSuccessful(this.serverMedia);
-      });
+  private _getServerMedia(server: McsServer): void {
+    this.serverMedia$ = this._serversRepository.getServerMedia(server).pipe(
+      catchError((error) => {
+        this.mediaStatusFactory.setError();
+        return throwError(error);
+      }),
+      tap((media) => this.mediaStatusFactory.setSuccessful(media))
+    );
   }
 
   /**
    * Get the server resource compute
    */
-  private _getResourceCompute(): void {
-    let resourceId = getSafeProperty(this.serverResource, (obj) => obj.id);
-    if (isNullOrEmpty(resourceId)) { return; }
-
-    this._computeSubscription = this._resourcesRespository
-      .getResourceCompute(this.serverResource)
-      .subscribe();
+  private _getResourceCompute(resource: McsResource): void {
+    // Subscribe manually to override the resource details compute inside repository
+    this.resourceCompute$ = this._resourcesRespository.getResourceCompute(resource);
+    this.resourceCompute$.subscribe();
   }
 
   /**
    * Get the resource media list
    */
-  private _getResourceMedia(): void {
-    let resourceCatalogs = getSafeProperty(this.serverResource, (obj) => obj.catalogItems);
-    if (isNullOrEmpty(resourceCatalogs)) { return; }
-
-    this._resourceMedias = new Array();
-    resourceCatalogs.forEach((catalog) => {
-      if (catalog.itemType !== CatalogItemType.Media) { return; }
-      let media = new McsServerMedia();
-      media.name = catalog.itemName;
-      this._resourceMedias.push(media);
-    });
+  private _getResourceCatalogs(resource: McsResource): void {
+    this.resourceCatalogs$ = this._resourcesRespository.getResourceCatalogItems(resource);
   }
 
   /**
@@ -483,7 +429,6 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
         break;
 
       case DataStatus.Success:
-        this._updateServerComputeByJob(job);
         this.refreshServerResource();
       case DataStatus.Error:
       default:
@@ -491,21 +436,6 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
         break;
     }
     this._changeDetectorRef.markForCheck();
-  }
-
-  /**
-   * Update the server compute data based on the job
-   */
-  private _updateServerComputeByJob(job: McsJob): void {
-    let referenceObject = getSafeProperty(job, (obj) => obj.clientReferenceObject);
-    if (isNullOrEmpty(referenceObject)) { return; }
-
-    this.server.compute.memoryMB = referenceObject.memoryMB;
-    if (this.server.compute.cpuCount > 1) {
-      this.server.compute.cpuCount = referenceObject.cpuCount;
-    } else {
-      this.server.compute.coreCount = referenceObject.cpuCount;
-    }
   }
 
   /**
@@ -525,11 +455,6 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
       default:
         this._newMedia = undefined;
         break;
-    }
-
-    // Update the media status factory to see the actual data
-    if (!isNullOrEmpty(this.mediaStatusFactory)) {
-      this.mediaStatusFactory.setSuccessful(this.serverMedia);
     }
   }
 

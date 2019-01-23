@@ -18,6 +18,7 @@ import {
   McsPortal,
   McsPortalAccess
 } from '@app/models';
+import { isNullOrUndefined } from '@app/utilities';
 
 @Component({
   selector: 'mcs-tools',
@@ -40,12 +41,14 @@ export class ToolsComponent
   ) {
     super(_browserService, _changeDetectorRef);
     this.textContent = this._textContentProvider.content.tools;
+    this.dataColumns = ['name', 'resourceSpecific', 'portalAccess'];
   }
 
   public ngAfterViewInit(): void {
-    this.dataColumns = ['name', 'resourceSpecific', 'portalAccess'];
     this._initializeToolDescriptionMap();
-    Promise.resolve().then(() => this.initializeDatasource());
+    Promise.resolve().then(() => {
+      this.initializeDatasource();
+    });
   }
 
   public ngOnDestroy(): void {
@@ -73,6 +76,8 @@ export class ToolsComponent
   protected initializeDatasource(): void {
     this.dataSource = new McsTableDataSource(this._toolsRepository);
     this.dataSource.dataRenderedChange().subscribe((tools) => {
+      if (isNullOrUndefined(tools)) { return; }
+
       // Add Macquarie View
       let macquarieView = new McsPortal();
       macquarieView.name = 'Macquarie View';

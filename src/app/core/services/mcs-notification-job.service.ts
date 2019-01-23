@@ -45,7 +45,7 @@ const DEFAULT_HEARTBEAT_OUT = 20000;
  */
 @Injectable()
 export class McsNotificationJobService implements McsInitializer {
-  public notificationStream = new BehaviorSubject<McsJob>(new McsJob());
+  public notificationStream = new BehaviorSubject<McsJob>(null);
   public connectionStatusStream = new Subject<NetworkStatus>();
 
   private _apiSubscription: any;

@@ -195,14 +195,17 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
   }
 
   public ngAfterContentInit() {
-    this._renderUpdatedColumns();
-    this._columnDefinitions.changes.pipe(takeUntil(this._destroySubject)).subscribe((columns) => {
+    Promise.resolve().then(() => {
+      this._renderUpdatedColumns();
+
       // We need to check if the previous column count is not the same with the current column
       // since angular always triggered the changes without checking the whole context of it
       // and it makes the other table acting weird.
       // TODO: Check with the latest version of angular if this issue was already fixed.
-      if (this._columnCountCache !== columns.length) { this._renderUpdatedColumns(); }
-      this._columnCountCache = columns.length;
+      this._columnDefinitions.changes.pipe(takeUntil(this._destroySubject)).subscribe((columns) => {
+        if (this._columnCountCache !== columns.length) { this._renderUpdatedColumns(); }
+        this._columnCountCache = columns.length;
+      });
     });
   }
 
@@ -355,11 +358,10 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
 
     this._headerRowDefinition.forEach((rowDef) => {
       let headerCells: HeaderCellDefDirective[] = new Array();
-      rowDef.columns.map((columnName) => {
-        if (this._columnDefinitionsMap.has(columnName)) {
-          let column = this._columnDefinitionsMap.get(columnName);
-          headerCells.push(column.headerCellDef);
-        }
+      rowDef.columns.forEach((columnName) => {
+        let column = this._columnDefinitionsMap.get(columnName);
+        if (isNullOrEmpty(column)) { return; }
+        headerCells.push(column.headerCellDef);
       });
 
       this._headerRowOutlet.viewContainer.createEmbeddedView(rowDef.template, { headerCells });

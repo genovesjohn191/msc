@@ -7,7 +7,6 @@ import {
   ViewChild
 } from '@angular/core';
 import {
-  Subscription,
   Subject,
   throwError,
   Observable
@@ -15,7 +14,8 @@ import {
 import {
   startWith,
   takeUntil,
-  catchError
+  catchError,
+  shareReplay
 } from 'rxjs/operators';
 import {
   CoreDefinition,
@@ -23,16 +23,13 @@ import {
   McsNotificationEventsService,
   McsDialogService,
   McsErrorHandlerService,
-  McsDataStatusFactory,
   McsLoadingService,
   McsTableDataSource
 } from '@app/core';
 import {
   isNullOrEmpty,
-  unsubscribeSafely,
   unsubscribeSubject,
-  animateFactory,
-  getSafeProperty
+  animateFactory
 } from '@app/utilities';
 import { ComponentHandlerDirective } from '@app/shared';
 import {
@@ -40,7 +37,9 @@ import {
   DataStatus,
   McsResourceStorage,
   McsServerStorageDevice,
-  McsServerStorageDeviceUpdate
+  McsServerStorageDeviceUpdate,
+  McsServer,
+  McsResource
 } from '@app/models';
 import {
   McsServersRepository,
@@ -78,53 +77,25 @@ const SERVER_MAXIMUM_DISKS = 14;
 })
 
 export class ServerStorageComponent extends ServerDetailsBase implements OnInit, OnDestroy {
+  public resourceStorages$: Observable<McsResourceStorage[]>;
+
   public textContent: any;
   public manageStorage: ServerManageStorage;
   public selectedStorage: McsResourceStorage;
   public selectedDisk: McsServerStorageDevice;
-  public resourceStorages$: Observable<McsResourceStorage[]>;
 
   public disksDataSource: McsTableDataSource<McsServerStorageDevice>;
   public disksColumns: string[];
-  public dataStatusFactory: McsDataStatusFactory<McsServerStorageDevice[]>;
-  public manageStorageTemplate: any[];
 
-  private _storagesSubscription: Subscription;
   private _newDisk: McsServerStorageDevice;
   private _inProgressDiskId: string;
   private _destroySubject = new Subject<void>();
-  private _requestDisksSubject = new Subject<void>();
 
   @ViewChild(ComponentHandlerDirective)
   private _componentHandler: ComponentHandlerDirective;
 
   public get storageIconKey(): string {
     return CoreDefinition.ASSETS_SVG_STORAGE;
-  }
-
-  /**
-   * Returns true when the disks has reached its limitation
-   */
-  public get hasReachedDisksLimit(): boolean {
-    return !isNullOrEmpty(this.server.storageDevices) &&
-      this.server.storageDevices.length >= SERVER_MAXIMUM_DISKS;
-  }
-
-  /**
-   * Returns all the server disks including the newly created disk as a mock data
-   */
-  public get serverDisks(): McsServerStorageDevice[] {
-    if (isNullOrEmpty(this.server.storageDevices)) { return new Array(); }
-    return isNullOrEmpty(this._newDisk) ?
-      this.server.storageDevices :
-      [...this.server.storageDevices, this._newDisk];
-  }
-
-  /**
-   * Returns all the resource storages
-   */
-  public get resourceStorages(): McsResourceStorage[] {
-    return getSafeProperty(this.serverResource, (obj) => obj.storage);
   }
 
   /**
@@ -169,9 +140,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     );
     this._newDisk = new McsServerStorageDevice();
     this.disksColumns = new Array();
-    this.manageStorageTemplate = [{}];
     this.manageStorage = new ServerManageStorage();
-    this.dataStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
     this.diskMethodType = ServerDiskMethodType.AddDisk;
   }
 
@@ -185,8 +154,6 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   public ngOnDestroy() {
     this.dispose();
     unsubscribeSubject(this._destroySubject);
-    unsubscribeSubject(this._requestDisksSubject);
-    unsubscribeSafely(this._storagesSubscription);
   }
 
   /**
@@ -200,35 +167,34 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   }
 
   /**
-   * Returns true when there is a selected storage when adding disk and the inputted is valid
+   * Returns true when the disks has reached its limitation
    */
-  public get inputIsValid(): boolean {
-    return !isNullOrEmpty(this.manageStorage)
-      && this.manageStorage.valid;
+  public hasReachedDisksLimit(server: McsServer): boolean {
+    return !isNullOrEmpty(server.storageDevices) &&
+      server.storageDevices.length >= SERVER_MAXIMUM_DISKS;
   }
 
   /**
    * Returns true when the storage has atleast 2 disk or more
    */
-  public get canDeleteDisk(): boolean {
-    return isNullOrEmpty(this.server.storageDevices) ? false :
-      this.server.storageDevices.length > 1;
-  }
-
-  /**
-   * Returns true when server has readched more than 1 disk
-   */
-  public get hasMoreThanOneDisk(): boolean {
-    return getSafeProperty(this.server,
-      (obj) => obj.storageDevices.length, 0) > 1;
+  public canDeleteDisk(server: McsServer): boolean {
+    return isNullOrEmpty(server.storageDevices) ? false :
+      server.storageDevices.length > 1;
   }
 
   /**
    * Returns true when user can add disk or not
    */
-  public get canAddDisk(): boolean {
-    return !this.hasReachedDisksLimit
-      && !isNullOrEmpty(this.resourceStorages);
+  public canAddDisk(server: McsServer, resourceStorages: McsResourceStorage[]): boolean {
+    return !this.hasReachedDisksLimit(server) && !isNullOrEmpty(resourceStorages);
+  }
+
+  /**
+   * Returns true when there is a selected storage when adding disk and the inputted is valid
+   */
+  public get inputIsValid(): boolean {
+    return !isNullOrEmpty(this.manageStorage)
+      && this.manageStorage.valid;
   }
 
   /**
@@ -268,22 +234,22 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   /**
    * Add disk to the current server
    */
-  public addDisk(): void {
+  public addDisk(server: McsServer): void {
     let diskValues = new McsServerStorageDeviceUpdate();
     diskValues.storageProfile = this.manageStorage.storage.name;
     diskValues.sizeMB = this.manageStorage.sizeMB;
     diskValues.clientReferenceObject = {
-      serverId: this.server.id,
-      name: `${this.textContent.diskName} ${this.server.storageDevices.length + 1}`,
+      serverId: server.id,
+      name: `${this.textContent.diskName} ${server.storageDevices.length + 1}`,
       storageProfile: this.manageStorage.storage.name,
       sizeMB: this.manageStorage.sizeMB
     };
 
-    this._serversService.setServerSpinner(this.server);
-    this._serversRepository.createServerStorage(this.server.id, diskValues)
+    this._serversService.setServerSpinner(server);
+    this._serversRepository.createServerStorage(server.id, diskValues)
       .pipe(
         catchError((error) => {
-          this._serversService.clearServerSpinner(this.server);
+          this._serversService.clearServerSpinner(server);
           this._errorHandlerService.handleHttpRedirectionError(error.status);
           return throwError(error);
         })
@@ -294,7 +260,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
    * Deletes the selected disk
    * @param disk Storage disk to be deleted
    */
-  public deleteDisk(disk: McsServerStorageDevice): void {
+  public deleteDisk(server: McsServer, disk: McsServerStorageDevice): void {
     let dialogRef = this._dialogService.open(DeleteStorageDialogComponent, {
       data: disk,
       size: 'medium'
@@ -306,16 +272,16 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
 
       let diskValues = new McsServerStorageDeviceUpdate();
       diskValues.clientReferenceObject = {
-        serverId: this.server.id,
+        serverId: server.id,
         diskId: this.selectedDisk.id,
         storageProfile: this.selectedDisk.storageProfile,
         sizeMB: this.selectedDisk.sizeMB
       };
-      this._serversService.setServerSpinner(this.server);
-      this._serversRepository.deleteServerStorage(this.server.id, this.selectedDisk.id, diskValues)
+      this._serversService.setServerSpinner(server);
+      this._serversRepository.deleteServerStorage(server.id, this.selectedDisk.id, diskValues)
         .pipe(
           catchError((error) => {
-            this._serversService.clearServerSpinner(this.server);
+            this._serversService.clearServerSpinner(server);
             this._errorHandlerService.handleHttpRedirectionError(error.status);
             return throwError(error);
           })
@@ -326,22 +292,22 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   /**
    * Expands the storage of the selected disk
    */
-  public expandDisk(): void {
+  public expandDisk(server: McsServer): void {
     let diskValues = new McsServerStorageDeviceUpdate();
     diskValues.name = this.selectedStorage.name;
     diskValues.storageProfile = this.selectedStorage.name;
     diskValues.sizeMB = this.manageStorage.sizeMB;
     diskValues.clientReferenceObject = {
-      serverId: this.server.id,
+      serverId: server.id,
       diskId: this.selectedDisk.id
     };
 
     this.closeExpandDiskWindow();
-    this._serversService.setServerSpinner(this.server);
-    this._serversRepository.updateServerStorage(this.server.id, this.selectedDisk.id, diskValues)
+    this._serversService.setServerSpinner(server);
+    this._serversRepository.updateServerStorage(server.id, this.selectedDisk.id, diskValues)
       .pipe(
         catchError((error) => {
-          this._serversService.clearServerSpinner(this.server);
+          this._serversService.clearServerSpinner(server);
           this._errorHandlerService.handleHttpRedirectionError(error.status);
           return throwError(error);
         })
@@ -361,18 +327,18 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
    * Event that emits when the server selection was changed
    * `@Note:` Base implementation
    */
-  protected serverSelectionChanged(): void {
+  protected selectionChange(server: McsServer, resource: McsResource): void {
     this._resetStorageValues();
-    this._getResourceStorage();
-    this._initializeDataSource();
+    this._getResourceStorages(resource);
+    this._initializeDataSource(server);
   }
 
   /**
    * Initializes the data source of the disks table
    */
-  private _initializeDataSource(): void {
+  private _initializeDataSource(server: McsServer): void {
     this.disksDataSource = new McsTableDataSource(
-      this._serversRepository.getServerDisks(this.server)
+      this._serversRepository.getServerDisks(server)
     );
   }
 
@@ -470,9 +436,10 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   /**
    * Get the resource storage to the selected server
    */
-  private _getResourceStorage(): void {
-    let hasResource = getSafeProperty(this.serverResource, (obj) => obj.id);
-    if (!hasResource) { return; }
-    this.resourceStorages$ = this._resourcesRespository.getResourceStorage(this.serverResource);
+  private _getResourceStorages(resource: McsResource): void {
+    if (isNullOrEmpty(resource)) { return; }
+    this.resourceStorages$ = this._resourcesRespository.getResourceStorage(resource).pipe(
+      shareReplay(1)
+    );
   }
 }

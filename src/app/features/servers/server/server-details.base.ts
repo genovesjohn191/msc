@@ -1,13 +1,15 @@
 import { ChangeDetectorRef } from '@angular/core';
 import {
   Subject,
-  Observable
+  Observable,
+  of
 } from 'rxjs';
 import {
   takeUntil,
   finalize,
   tap,
-  first
+  switchMap,
+  concatMap
 } from 'rxjs/operators';
 import {
   McsTextContentProvider,
@@ -30,31 +32,15 @@ import {
 } from '@app/services';
 import { ServerService } from '../server/server.service';
 
+export interface ServerDetails {
+  server: McsServer;
+  resource: McsResource;
+}
+
 export abstract class ServerDetailsBase {
-  public serverResource: McsResource;
-  public serverResource$: Observable<McsResource>;
-
+  public serverDetails$: Observable<ServerDetails>;
   private _baseJobSubject = new Subject<void>();
-  private _serverTextContent: any;
-
-  /**
-   * Selected Server
-   */
   private _server: McsServer;
-  public get server(): McsServer { return this._server; }
-  public set server(value: McsServer) {
-    if (value !== this._server) {
-      this._server = value;
-      this._changeDetectorRef.markForCheck();
-    }
-  }
-
-  /**
-   * Selected server job summary information
-   */
-  public get jobSummaryInfo(): string {
-    return this.server.processingText;
-  }
 
   constructor(
     protected _resourcesRespository: McsResourcesRepository,
@@ -65,21 +51,18 @@ export abstract class ServerDetailsBase {
     protected _errorHandlerService: McsErrorHandlerService,
     protected _loadingService: McsLoadingService,
   ) {
-    this.server = new McsServer();
-    this.serverResource = new McsResource();
   }
 
   protected initialize(): void {
-    this._serverTextContent = this._textProvider.content.servers.server;
-    this._listenToServerSelectionChange();
-    this._subscribeToServersUpdate();
+    this._subscribeToServersDataChange();
+    this._subscribeToSelectedServer();
   }
 
   /**
    * Contains all the methods you need to execute
    * when the selected server changes
    */
-  protected abstract serverSelectionChanged(): void;
+  protected abstract selectionChange(server: McsServer, resource: McsResource): void;
 
   /**
    * Dispose all of the resource from the datasource including all the subscription
@@ -95,9 +78,9 @@ export abstract class ServerDetailsBase {
    * @param job Emitted job to be checked
    */
   protected serverIsActiveByJob(job: McsJob): boolean {
-    if (isNullOrEmpty(job) || isNullOrEmpty(this.server)) { return false; }
+    if (isNullOrEmpty(job) || isNullOrEmpty(this._server)) { return false; }
     let jobServerId = getSafeProperty(job, (obj) => obj.clientReferenceObject.serverId);
-    let selectedServerId = getSafeProperty(this.server, (obj) => obj.id);
+    let selectedServerId = getSafeProperty(this._server, (obj) => obj.id);
     let activeServer = jobServerId === selectedServerId;
     return activeServer;
   }
@@ -106,57 +89,34 @@ export abstract class ServerDetailsBase {
    * Refresh the server resource to get the updated result
    */
   protected refreshServerResource(): void {
-    let hasSelectedServer = !isNullOrEmpty(getSafeProperty(this.server, (obj) => obj.id));
-    if (!hasSelectedServer) {
-      throw new Error('Could not get the resource since there is no selected server yet');
-    }
-    this._getServerResources(false);
+    this._subscribeToSelectedServer();
   }
 
   /**
-   * Obtain server resources and set resource map
+   * Subscribe to selected server to obtain also the resource details
    */
-  private _getServerResources(fromCache: boolean = true): void {
-    this._loadingService.showLoader(this._serverTextContent.loadingResourceDetails);
-    // Delete the record when it needs to refresh
-    if (!fromCache) { this._resourcesRespository.deleteById(this.server.platform.resourceId); }
-
-    this._resourcesRespository.getById(this.server.platform.resourceId).pipe(
-      tap((response) => {
-        this.serverResource = response;
-        this.serverSelectionChanged();
-
+  private _subscribeToSelectedServer(): void {
+    this.serverDetails$ = this._serverService.selectedServer().pipe(
+      concatMap((selectedServer) =>
+        this._resourcesRespository.getById(selectedServer.platform.resourceId).pipe(
+          switchMap((selectedResource) =>
+            of({ server: selectedServer, resource: selectedResource } as ServerDetails)
+          )
+        )
+      ),
+      tap((serverDetails) => {
+        this._server = serverDetails.server;
+        this.selectionChange(serverDetails.server, serverDetails.resource);
       }),
-      finalize(() => {
-        this._loadingService.hideLoader();
-        this._changeDetectorRef.markForCheck();
-      }),
-      first()
-    ).subscribe();
-  }
-
-  /**
-   * This will listen to selected server
-   * and get its value to server variable
-   *
-   * @deprecated Make the server to observable
-   */
-  private _listenToServerSelectionChange(): void {
-    this._serverService.selectedServerStream
-      .pipe(takeUntil(this._baseJobSubject))
-      .subscribe((server) => {
-        if (!isNullOrEmpty(server) && this.server.id !== server.id) {
-          this.server = server;
-          this._getServerResources();
-        }
-      });
+      finalize(() => this._changeDetectorRef.markForCheck())
+    );
   }
 
   /**
    * Listen to each servers data update
    * so that we could refresh the view of the corresponding component
    */
-  private _subscribeToServersUpdate(): void {
+  private _subscribeToServersDataChange(): void {
     this._serversRepository.dataChange()
       .pipe(takeUntil(this._baseJobSubject))
       .subscribe(() => this._changeDetectorRef.markForCheck());

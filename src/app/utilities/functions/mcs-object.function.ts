@@ -2,7 +2,6 @@ import {
   Subscription,
   Subject
 } from 'rxjs';
-import { isNullOrUndefined } from 'util';
 import { deserializeJsonToObject } from './mcs-json.function';
 
 /**
@@ -19,6 +18,14 @@ export function isNullOrEmpty<T>(data: T): boolean {
   } else {
     return !data;
   }
+}
+
+/**
+ * Returns true when the data provided is null or undefined
+ * @param data Data to be checked
+ */
+export function isNullOrUndefined<T>(data: T): boolean {
+  return data === null || data === undefined;
 }
 
 /**

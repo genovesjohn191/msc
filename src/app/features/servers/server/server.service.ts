@@ -1,18 +1,22 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable
+} from 'rxjs';
+import { distinctUntilChanged } from 'rxjs/operators';
 import { McsServer } from '@app/models';
 
 @Injectable()
 export class ServerService {
-  /**
-   * This will notify the subscriber everytime the server is selected or
-   * everytime there are new data from the selected server
-   */
-  public selectedServerStream: BehaviorSubject<McsServer>;
-  public selectedServer: McsServer;
+  private _selectedServer = new BehaviorSubject<McsServer>(null);
 
-  constructor() {
-    this.selectedServerStream = new BehaviorSubject<McsServer>(undefined);
+  /**
+   * Returns the selected server as an observable
+   */
+  public selectedServer(): Observable<McsServer> {
+    return this._selectedServer.asObservable().pipe(
+      distinctUntilChanged()
+    );
   }
 
   /**
@@ -20,9 +24,6 @@ export class ServerService {
    * @param server Server to be selected
    */
   public setSelectedServer(server: McsServer): void {
-    if (this.selectedServer !== server) {
-      this.selectedServer = server;
-      this.selectedServerStream.next(server);
-    }
+    this._selectedServer.next(server);
   }
 }

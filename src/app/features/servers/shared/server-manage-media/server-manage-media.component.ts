@@ -15,7 +15,7 @@ import {
   animateFactory,
   unsubscribeSubject
 } from '@app/utilities';
-import { McsServerMedia } from '@app/models';
+import { McsResourceCatalogItem } from '@app/models';
 
 @Component({
   selector: 'mcs-server-manage-media',
@@ -30,20 +30,20 @@ export class ServerManageMediaComponent implements OnInit, OnChanges, OnDestroy 
   public textContent: any;
 
   @Output()
-  public selectedMediaChange = new EventEmitter<McsServerMedia>();
+  public selectedCatalogChange = new EventEmitter<McsResourceCatalogItem>();
 
   @Input()
-  public media: McsServerMedia[];
+  public catalogs: McsResourceCatalogItem[];
 
   @Input()
-  public get selectedMedia(): McsServerMedia { return this._selectedMedia; }
-  public set selectedMedia(value: McsServerMedia) {
-    if (this._selectedMedia !== value) {
-      this._selectedMedia = value;
-      this.selectedMediaChange.emit(this._selectedMedia);
+  public get selectedCatalog(): McsResourceCatalogItem { return this._selectedCatalog; }
+  public set selectedCatalog(value: McsResourceCatalogItem) {
+    if (this._selectedCatalog !== value) {
+      this._selectedCatalog = value;
+      this.selectedCatalogChange.emit(this._selectedCatalog);
     }
   }
-  private _selectedMedia: McsServerMedia;
+  private _selectedCatalog: McsResourceCatalogItem;
 
   constructor(private _textContentProvider: McsTextContentProvider) { }
 
@@ -54,22 +54,22 @@ export class ServerManageMediaComponent implements OnInit, OnChanges, OnDestroy 
   public ngOnChanges(changes: SimpleChanges) {
     let mediasChange = changes['medias'];
     if (!isNullOrEmpty(mediasChange)) {
-      this._setSelectedMedia();
+      this._setSelectedCatalog();
     }
   }
 
   public ngOnDestroy() {
-    unsubscribeSubject(this.selectedMediaChange);
+    unsubscribeSubject(this.selectedCatalogChange);
   }
 
   /**
-   * Sets the selected media if no media selected yet
+   * Sets the selected catalog if no media selected yet
    */
-  private _setSelectedMedia(): void {
-    if (isNullOrEmpty(this.media)) { return; }
-    let hasSelectedMedia = !isNullOrEmpty(this.selectedMedia)
-      && !isNullOrEmpty(this.media.find((network) => network === this.selectedMedia));
+  private _setSelectedCatalog(): void {
+    if (isNullOrEmpty(this.catalogs)) { return; }
+    let hasSelectedMedia = !isNullOrEmpty(this.selectedCatalog)
+      && !isNullOrEmpty(this.catalogs.find((network) => network === this.selectedCatalog));
     if (hasSelectedMedia) { return; }
-    this.selectedMedia = this.media[0];
+    this.selectedCatalog = this.catalogs[0];
   }
 }

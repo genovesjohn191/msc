@@ -169,7 +169,7 @@ export class McsServer extends McsEntityBase {
    * Returns true when server is scaleable
    */
   public get scaleable(): boolean {
-    return this.executable;
+    return this.executable && this.isSelfManaged && !this.isDedicated;
   }
 
   /**
@@ -286,7 +286,7 @@ export class McsServer extends McsEntityBase {
    * Returns true when the current server is dedicated
    */
   public get isDedicated(): boolean {
-    return getSafeProperty(this.platform, (obj) => obj.type) !== PlatformType.VCenter;
+    return getSafeProperty(this.platform, (obj) => obj.type) === PlatformType.VCenter;
   }
 
   /**

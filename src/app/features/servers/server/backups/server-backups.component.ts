@@ -6,14 +6,16 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 import {
-  Subscription,
   throwError,
-  Subject
+  Subject,
+  Observable
 } from 'rxjs';
 import {
   catchError,
   startWith,
-  takeUntil
+  takeUntil,
+  map,
+  tap
 } from 'rxjs/operators';
 import {
   McsDialogService,
@@ -25,7 +27,6 @@ import {
   McsLoadingService
 } from '@app/core';
 import {
-  unsubscribeSafely,
   isNullOrEmpty,
   unsubscribeSubject
 } from '@app/utilities';
@@ -34,7 +35,10 @@ import {
   McsJob,
   DataStatus,
   McsServerSnapshot,
-  McsServerStorageDevice
+  McsServerStorageDevice,
+  McsServer,
+  McsResource,
+  McsResourceStorage
 } from '@app/models';
 import {
   ServerSnapshotDialogContent,
@@ -69,36 +73,15 @@ enum SnapshotDialogType {
 export class ServerBackupsComponent extends ServerDetailsBase
   implements OnInit, OnDestroy {
 
-  public dataStatusFactory: McsDataStatusFactory<McsServerSnapshot[]>;
-
   public textContent: any;
-  public serverSnapshotsSubscription: Subscription;
-  public createSnapshotSubscription: Subscription;
-  public deleteSnapshotSubscription: Subscription;
-  public restoreSnapshotSubscription: Subscription;
+  public snapshot$: Observable<McsServerSnapshot>;
+  public dataStatusFactory: McsDataStatusFactory<McsServerSnapshot[]>;
 
   private _newSnapshot: McsServerSnapshot;
   private _destroySubject = new Subject<void>();
 
-  public get hasSnapshot(): boolean {
-    return !isNullOrEmpty(this.server.snapshots);
-  }
-
-  public get snapshot(): McsServerSnapshot {
-    return this.hasSnapshot ?
-      this.server.snapshots[0] : new McsServerSnapshot();
-  }
-
   public get creatingSnapshot(): boolean {
     return !isNullOrEmpty(this._newSnapshot);
-  }
-
-  public get enabledActions(): boolean {
-    return !isNullOrEmpty(this.server.storageDevices)
-      && !this.snapshotProcessing
-      && !this.server.isProcessing
-      && (!isNullOrEmpty(this.serverSnapshotsSubscription)
-        && this.serverSnapshotsSubscription.closed);
   }
 
   private _snapshotProcessing: boolean = false;
@@ -132,6 +115,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
       _errorHandlerService,
       _loadingService
     );
+    this.dataStatusFactory = new McsDataStatusFactory();
   }
 
   public ngOnInit() {
@@ -141,57 +125,60 @@ export class ServerBackupsComponent extends ServerDetailsBase
   }
 
   public ngOnDestroy() {
-    unsubscribeSafely(this.serverSnapshotsSubscription);
-    unsubscribeSafely(this.createSnapshotSubscription);
-    unsubscribeSafely(this.deleteSnapshotSubscription);
-    unsubscribeSafely(this.restoreSnapshotSubscription);
     unsubscribeSubject(this._destroySubject);
     this.dispose();
+  }
+
+  public enabledActions(server): boolean {
+    return !isNullOrEmpty(server.storageDevices)
+      && !this.snapshotProcessing
+      && !server.isProcessing;
   }
 
   /**
    * Create snapshot based on server details
    */
-  public createSnapshot(): void {
-    let dialogType = this._getSnapshotDialogType();
+  public createSnapshot(server: McsServer, resource: McsResource): void {
+    let dialogType = this._getSnapshotDialogType(server, resource);
 
     // For sufficient storage show the creation dialog
-    this._showDialog(dialogType, () => {
-      if (dialogType !== SnapshotDialogType.Create) { return; }
+    this._showDialog(
+      server,
+      dialogType,
+      () => {
+        if (dialogType !== SnapshotDialogType.Create) { return; }
 
-      this._serversService.setServerSpinner(this.server);
-      this.createSnapshotSubscription = this._serversRepository
-        .createServerSnapshot(this.server.id, {
+        this._serversService.setServerSpinner(server);
+        this._serversRepository.createServerSnapshot(server.id, {
           preserveState: true,
           preserveMemory: true,
-          clientReferenceObject: { serverId: this.server.id }
+          clientReferenceObject: { serverId: server.id }
         }).pipe(
           catchError((error) => {
-            this._serversService.clearServerSpinner(this.server);
+            this._serversService.clearServerSpinner(server);
             return throwError(error);
           })
         ).subscribe();
-    });
+      });
   }
 
   /**
    * Restore snapshot based on server snapshot details
    * @param snapshot Snapshot to be restored
    */
-  public restoreSnapshot(snapshot: McsServerSnapshot) {
+  public restoreSnapshot(server: McsServer, snapshot: McsServerSnapshot) {
     if (isNullOrEmpty(snapshot)) { return; }
 
-    this._showDialog(SnapshotDialogType.Restore, () => {
-      this._serversService.setServerSpinner(this.server);
-      this.restoreSnapshotSubscription = this._serversRepository
-        .restoreServerSnapshot(this.server.id, {
-          clientReferenceObject: { serverId: this.server.id }
-        }).pipe(
-          catchError((error) => {
-            this._serversService.clearServerSpinner(this.server);
-            return throwError(error);
-          })
-        ).subscribe();
+    this._showDialog(server, SnapshotDialogType.Restore, () => {
+      this._serversService.setServerSpinner(server);
+      this._serversRepository.restoreServerSnapshot(server.id, {
+        clientReferenceObject: { serverId: server.id }
+      }).pipe(
+        catchError((error) => {
+          this._serversService.clearServerSpinner(server);
+          return throwError(error);
+        })
+      ).subscribe();
     }, snapshot);
   }
 
@@ -199,20 +186,19 @@ export class ServerBackupsComponent extends ServerDetailsBase
    * Delete the existing snapshot of the server
    * @param snapshot Snapshot to be deleted
    */
-  public deleteSnapshot(snapshot: McsServerSnapshot) {
+  public deleteSnapshot(server: McsServer, snapshot: McsServerSnapshot) {
     if (isNullOrEmpty(snapshot)) { return; }
 
-    this._showDialog(SnapshotDialogType.Delete, () => {
-      this._serversService.setServerSpinner(this.server);
-      this.deleteSnapshotSubscription = this._serversRepository
-        .deleteServerSnapshot(this.server.id, {
-          clientReferenceObject: { serverId: this.server.id }
-        }).pipe(
-          catchError((error) => {
-            this._serversService.clearServerSpinner(this.server);
-            return throwError(error);
-          })
-        ).subscribe();
+    this._showDialog(server, SnapshotDialogType.Delete, () => {
+      this._serversService.setServerSpinner(server);
+      this._serversRepository.deleteServerSnapshot(server.id, {
+        clientReferenceObject: { serverId: server.id }
+      }).pipe(
+        catchError((error) => {
+          this._serversService.clearServerSpinner(server);
+          return throwError(error);
+        })
+      ).subscribe();
     }, snapshot);
   }
 
@@ -221,8 +207,8 @@ export class ServerBackupsComponent extends ServerDetailsBase
    *
    * `@Note:` This is a base class implemenatation
    */
-  protected serverSelectionChanged(): void {
-    this._getServerSnapshots();
+  protected selectionChange(server: McsServer, _resource: McsResource): void {
+    this._getServerSnapshots(server);
   }
 
   /**
@@ -232,6 +218,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
    * @param _snapshot Optional Snapshot to be inputted
    */
   private _showDialog(
+    server: McsServer,
     dialogType: SnapshotDialogType,
     dialogCallback: () => void,
     _snapshot?: McsServerSnapshot
@@ -240,11 +227,11 @@ export class ServerBackupsComponent extends ServerDetailsBase
 
     let dialogComponent = null;
     let dialogData = new ServerSnapshotDialogContent();
-    dialogData.serverName = this.server.name;
+    dialogData.serverName = server.name;
     if (!isNullOrEmpty(_snapshot)) {
       dialogData.snapshotName = this._standardDateFormatPipe.transform(_snapshot.createdOn);
     }
-    dialogData.vdcName = this.serverResource.name;
+    dialogData.vdcName = server.resourceName;
 
     // Set the dialog component instance and the callback function
     switch (dialogType) {
@@ -279,7 +266,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
     dialogRef.afterClosed().subscribe((dialogResult) => {
       if (dialogResult) {
         // Set initial server status so that the spinner will show up immediately
-        this._serversService.setServerSpinner(this.server, this.snapshot);
+        this._serversService.setServerSpinner(server);
         this._changeDetectorRef.markForCheck();
         // Invoke function pointer for the corresponding action
         dialogCallback();
@@ -357,29 +344,16 @@ export class ServerBackupsComponent extends ServerDetailsBase
   /**
    * This will get all the snapshots from the server
    */
-  private _getServerSnapshots(): void {
-    unsubscribeSafely(this.serverSnapshotsSubscription);
-    // We need to check the datastatus factory if its not undefined
-    // because it was called under base class and for any reason, the instance is undefined.
-    if (isNullOrEmpty(this.dataStatusFactory)) {
-      this.dataStatusFactory = new McsDataStatusFactory();
-    }
-
+  private _getServerSnapshots(server: McsServer): void {
     this.dataStatusFactory.setInProgress();
-    this.serverSnapshotsSubscription = this._serversRepository
-      .getSnapshots(this.server)
-      .pipe(
-        catchError((error) => {
-          // Handle common error status code
-          this.dataStatusFactory.setError();
-          return throwError(error);
-        })
-      )
-      .subscribe((response) => {
-        // Subscribe to update the snapshots in server instance
-        this.dataStatusFactory.setSuccessful(response);
-        this._changeDetectorRef.markForCheck();
-      });
+    this.snapshot$ = this._serversRepository.getSnapshots(server).pipe(
+      catchError((error) => {
+        this.dataStatusFactory.setError();
+        return throwError(error);
+      }),
+      map((snapshots) => snapshots && snapshots[0]),
+      tap((snapshot) => this.dataStatusFactory.setSuccessful([snapshot]))
+    );
   }
 
   /**
@@ -402,8 +376,11 @@ export class ServerBackupsComponent extends ServerDetailsBase
    * Get storage profile available space
    * @param storageProfile Server resource storage profile
    */
-  private _getStorageProfileAvailableMB(storageProfile: string): number {
-    let storage = this.serverResource.storage.find((profile) => {
+  private _getStorageProfileAvailableMB(
+    resourceStorage: McsResourceStorage[],
+    storageProfile: string
+  ): number {
+    let storage = resourceStorage.find((profile) => {
       return profile.name === storageProfile;
     });
     return !isNullOrEmpty(storage) ? storage.availableMB : 0;
@@ -412,20 +389,20 @@ export class ServerBackupsComponent extends ServerDetailsBase
   /**
    * Get snapshot dialog type
    */
-  private _getSnapshotDialogType(): SnapshotDialogType {
-    if (isNullOrEmpty(this.server.storageDevices)) { return SnapshotDialogType.None; }
+  private _getSnapshotDialogType(server: McsServer, resource: McsResource): SnapshotDialogType {
+    if (isNullOrEmpty(server.storageDevices)) { return SnapshotDialogType.None; }
 
     let dialogType: SnapshotDialogType;
     // Business rule: Customer can't create snapshot if
     // server has disks with multiple storage profiles
-    let hasDiskConflict = this._hasDiskConflict(this.server.storageDevices);
+    let hasDiskConflict = this._hasDiskConflict(server.storageDevices);
 
     if (hasDiskConflict) {
       dialogType = SnapshotDialogType.DiskConflict;
     } else {
-      let storageProfile = this.server.storageDevices[0].storageProfile;
-      let availableStorageMB = this._getStorageProfileAvailableMB(storageProfile);
-      let snapshotSizeMB = this.hasSnapshot ? this.snapshot.sizeMB : 0;
+      let storageProfile = server.storageDevices[0].storageProfile;
+      let availableStorageMB = this._getStorageProfileAvailableMB(resource.storage, storageProfile);
+      let snapshotSizeMB = !isNullOrEmpty(server.snapshots) ? server.snapshots[0].sizeMB : 0;
       let hasSufficientStorage = availableStorageMB >= snapshotSizeMB;
 
       dialogType = hasSufficientStorage ?
