@@ -68,7 +68,10 @@
         </mcs-grid-column>
 
         <!-- VM Console -->
-        <mcs-grid-column sizeSm="12" hidden-small>
+        <mcs-grid-column sizeSm="12" hidden-small
+          *mcsAccessControl="[]; feature: 'enableDedicatedVmConsole';
+            validateWhen: serverDetails.server.isDedicated">
+
           <mcs-presentation-panel mcsId="vm-console">
             <ng-container mcsPresentationPanelHeader>
               <h2>{{ textContent.vmConsole.title }}</h2>
@@ -218,7 +221,10 @@
       <mcs-grid-row>
 
         <!-- VM Media -->
-        <mcs-grid-column sizeSm="12">
+        <mcs-grid-column sizeSm="12" sizeLg="6"
+          *mcsAccessControl="[]; feature: 'enableDedicatedVmMediaView';
+          validateWhen: serverDetails.server.isDedicated">
+
           <mcs-presentation-panel mcsId="vm-media">
             <ng-container mcsPresentationPanelHeader>
               <mcs-item>
@@ -271,7 +277,7 @@
         </mcs-grid-column>
 
         <!-- VM Support Identifiers -->
-        <mcs-grid-column sizeSm="12">
+        <mcs-grid-column sizeSm="12" sizeLg="6">
           <mcs-presentation-panel>
             <ng-container mcsPresentationPanelHeader>
               <h2>{{ textContent.supportIdentifiers.title }}</h2>

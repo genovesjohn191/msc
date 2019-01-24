@@ -24,7 +24,8 @@ import {
   McsDialogService,
   McsErrorHandlerService,
   McsLoadingService,
-  McsTableDataSource
+  McsTableDataSource,
+  McsAccessControlService
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -125,6 +126,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     _textProvider: McsTextContentProvider,
     _errorHandlerService: McsErrorHandlerService,
     _loadingService: McsLoadingService,
+    _accessControl: McsAccessControlService,
     private _serversService: ServersService,
     private _dialogService: McsDialogService,
     private _notificationEvents: McsNotificationEventsService
@@ -136,7 +138,8 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
       _changeDetectorRef,
       _textProvider,
       _errorHandlerService,
-      _loadingService
+      _loadingService,
+      _accessControl
     );
     this._newDisk = new McsServerStorageDevice();
     this.disksColumns = new Array();
@@ -146,9 +149,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
 
   public ngOnInit() {
     this.textContent = this._textProvider.content.servers.server.storage;
-    this.initialize();
     this._setDataColumns();
-    this._registerJobEvents();
   }
 
   public ngOnDestroy() {
@@ -328,7 +329,9 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
    * `@Note:` Base implementation
    */
   protected selectionChange(server: McsServer, resource: McsResource): void {
+    this.validateDedicatedFeatureFlag(server, 'EnableDedicatedVmStorageView');
     this._resetStorageValues();
+    this._registerJobEvents();
     this._getResourceStorages(resource);
     this._initializeDataSource(server);
   }
@@ -337,9 +340,13 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
    * Initializes the data source of the disks table
    */
   private _initializeDataSource(server: McsServer): void {
-    this.disksDataSource = new McsTableDataSource(
-      this._serversRepository.getServerDisks(server)
-    );
+    if (isNullOrEmpty(this.disksDataSource)) {
+      this.disksDataSource = new McsTableDataSource(
+        this._serversRepository.getServerDisks(server)
+      );
+      return;
+    }
+    this.disksDataSource.refreshDataRecords();
   }
 
   /**
@@ -357,6 +364,9 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
    * Register disk jobs events
    */
   private _registerJobEvents(): void {
+    // Remove the previously subscription
+    this._destroySubject.next();
+
     this._notificationEvents.createServerDisk
       .pipe(startWith(null), takeUntil(this._destroySubject))
       .subscribe(this._onCreateServerDisk.bind(this));

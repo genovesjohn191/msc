@@ -7,8 +7,9 @@ import {
 } from '@angular/core';
 import { McsAccessControlService } from '@app/core';
 import {
+  isNullOrEmpty,
   coerceArray,
-  isNullOrEmpty
+  coerceBoolean
 } from '@app/utilities';
 
 @Directive({
@@ -31,6 +32,12 @@ export class AccessControlDirective implements OnChanges {
   public set feature(featureFlag: string) { this._featureFlag = featureFlag; }
   private _featureFlag: string;
 
+  @Input('mcsAccessControlValidateWhen')
+  public set validateWhen(validateWhen: boolean) {
+    this._validateWhen = coerceBoolean(validateWhen);
+  }
+  private _validateWhen: boolean = true;
+
   @Input('mcsAccessControlElse')
   public set elseTemplate(templateRef: TemplateRef<any>) { this._elseTemplate = templateRef; }
   private _elseTemplate: TemplateRef<any>;
@@ -51,6 +58,12 @@ export class AccessControlDirective implements OnChanges {
    * Removes the element from the DOM based on its permissions required and feature flag
    */
   private _removeElementByAccessControl(): void {
+    // Do nothing incase the validateWhen flag is false
+    if (!this._validateWhen) {
+      this.viewContainer.createEmbeddedView(this.templateRef);
+      return;
+    }
+
     let hasAccess = this._accessControlService
       .hasAccess(this._requiredPermission, this._featureFlag);
 

@@ -70,7 +70,9 @@ export class McsAccessControlService {
     if (isNullOrEmpty(features)) { return false; }
 
     // Check feature flag
-    let targetFeature = features.find((featureFlag) => featureFlag.key === feature);
+    let targetFeature = features.find((featureFlag) => {
+      return featureFlag.key.toLowerCase() === feature.toLowerCase();
+    });
     if (isNullOrEmpty(targetFeature)) { return defaultValue; }
     return targetFeature.value;
   }
