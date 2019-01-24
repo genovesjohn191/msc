@@ -145,6 +145,13 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
   }
 
   /**
+   * Refreshes the data records of the table
+   */
+  public refreshDataRecords(): void {
+    this._requestUpdate.next();
+  }
+
+  /**
    * Add or Update the new record into the datasource
    * @param newRecord New record to be added/updated
    * @param predicate Predicated definition on how the addition/update process will work

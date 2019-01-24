@@ -30,7 +30,8 @@ import {
   McsNotificationEventsService,
   McsDataStatusFactory,
   CoreRoutes,
-  McsLoadingService
+  McsLoadingService,
+  McsAccessControlService
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -133,6 +134,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
     _textProvider: McsTextContentProvider,
     _errorHandlerService: McsErrorHandlerService,
     _loadingService: McsLoadingService,
+    _accessControl: McsAccessControlService,
     private _serversService: ServersService,
     private _router: Router,
     private _activatedRoute: ActivatedRoute,
@@ -146,7 +148,8 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
       _changeDetectorRef,
       _textProvider,
       _errorHandlerService,
-      _loadingService
+      _loadingService,
+      _accessControl
     );
     this.manageScale = new ServerManageScale();
     this.mediaStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
@@ -155,8 +158,6 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
   public ngOnInit() {
     this.textContent = this._textProvider.content.servers.server.management;
     this.serversTextContent = this._textProvider.content.servers;
-    this.initialize();
-    this._registerJobEvents();
   }
 
   public ngOnDestroy() {
@@ -338,6 +339,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
    * `@Note:` Base implementation
    */
   protected selectionChange(server: McsServer, resource: McsResource): void {
+    this._registerJobEvents();
     this._getServerThumbnail(server);
     this._getServerMedia(server);
 
@@ -403,6 +405,9 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
    * Register jobs/notifications events
    */
   private _registerJobEvents(): void {
+    // Remove the previously subscription
+    this._destroySubject.next();
+
     this._notificationEvents.attachServerMediaEvent
       .pipe(startWith(null!), takeUntil(this._destroySubject))
       .subscribe(this._onAttachMedia.bind(this));

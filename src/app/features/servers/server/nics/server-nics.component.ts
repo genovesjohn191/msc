@@ -26,7 +26,8 @@ import {
   McsNotificationEventsService,
   McsErrorHandlerService,
   McsLoadingService,
-  McsTableDataSource
+  McsTableDataSource,
+  McsAccessControlService
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -132,6 +133,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     _textProvider: McsTextContentProvider,
     _errorHandlerService: McsErrorHandlerService,
     _loadingService: McsLoadingService,
+    _accessControl: McsAccessControlService,
     private _serversService: ServersService,
     private _dialogService: McsDialogService,
     private _notificationEvents: McsNotificationEventsService
@@ -143,7 +145,8 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
       _changeDetectorRef,
       _textProvider,
       _errorHandlerService,
-      _loadingService
+      _loadingService,
+      _accessControl
     );
     this._newNic = new McsServerNic();
     this.nicsColumns = new Array();
@@ -154,9 +157,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
 
   public ngOnInit() {
     this.textContent = this._textProvider.content.servers.server.nics;
-    this.initialize();
     this._setDataColumns();
-    this._registerJobEvents();
   }
 
   public ngOnDestroy() {
@@ -326,7 +327,9 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    * `@Note:` Base implementation
    */
   protected selectionChange(server: McsServer, resource: McsResource): void {
+    this.validateDedicatedFeatureFlag(server, 'EnableDedicatedVmNicView');
     this._resetNetworkValues();
+    this._registerJobEvents();
     this._getResourceNetworks(resource);
     this._initializeDataSource(server);
   }
@@ -335,9 +338,13 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    * Initializes the data source of the nics table
    */
   private _initializeDataSource(server: McsServer): void {
-    this.nicsDataSource = new McsTableDataSource(
-      this._serversRepository.getServerNics(server)
-    );
+    if (isNullOrEmpty(this.nicsDataSource)) {
+      this.nicsDataSource = new McsTableDataSource(
+        this._serversRepository.getServerNics(server)
+      );
+      return;
+    }
+    this.nicsDataSource.refreshDataRecords();
   }
 
   /**
@@ -356,6 +363,9 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    * Register jobs/notifications events
    */
   private _registerJobEvents(): void {
+    // Remove the previously subscription
+    this._destroySubject.next();
+
     this._notificationEvents.createServerNic
       .pipe(startWith(null), takeUntil(this._destroySubject))
       .subscribe(this._onCreateServerNic.bind(this));

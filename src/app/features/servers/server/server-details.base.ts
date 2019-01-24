@@ -14,7 +14,8 @@ import {
 import {
   McsTextContentProvider,
   McsErrorHandlerService,
-  McsLoadingService
+  McsLoadingService,
+  McsAccessControlService
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -24,7 +25,8 @@ import {
 import {
   McsJob,
   McsResource,
-  McsServer
+  McsServer,
+  HttpStatusCode
 } from '@app/models';
 import {
   McsServersRepository,
@@ -50,12 +52,25 @@ export abstract class ServerDetailsBase {
     protected _textProvider: McsTextContentProvider,
     protected _errorHandlerService: McsErrorHandlerService,
     protected _loadingService: McsLoadingService,
+    protected _accessControlService: McsAccessControlService
   ) {
-  }
-
-  protected initialize(): void {
     this._subscribeToServersDataChange();
     this._subscribeToSelectedServer();
+  }
+
+  /**
+   * Validates the dedicated feature flag of the VM
+   *
+   * `@Note` This was implemented for temporary used only
+   * @param server Server to be checked if it is applicable for checking
+   * @param featureFlag Feature flag to be checked
+   */
+  protected validateDedicatedFeatureFlag(server: McsServer, featureFlag: string): void {
+    if (!server.isDedicated) { return; }
+    let hasAccess = this._accessControlService.hasAccessToFeature(featureFlag);
+    if (!hasAccess) {
+      this._errorHandlerService.handleHttpRedirectionError(HttpStatusCode.Forbidden);
+    }
   }
 
   /**

@@ -24,7 +24,8 @@ import {
   McsDataStatusFactory,
   CoreDefinition,
   McsErrorHandlerService,
-  McsLoadingService
+  McsLoadingService,
+  McsAccessControlService
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -101,6 +102,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
     _textProvider: McsTextContentProvider,
     _errorHandlerService: McsErrorHandlerService,
     _loadingService: McsLoadingService,
+    _accessControl: McsAccessControlService,
     private _serversService: ServersService,
     private _standardDateFormatPipe: StdDateFormatPipe,
     private _notificationEvents: McsNotificationEventsService,
@@ -113,15 +115,14 @@ export class ServerBackupsComponent extends ServerDetailsBase
       _changeDetectorRef,
       _textProvider,
       _errorHandlerService,
-      _loadingService
+      _loadingService,
+      _accessControl
     );
     this.dataStatusFactory = new McsDataStatusFactory();
   }
 
   public ngOnInit() {
     this.textContent = this._textProvider.content.servers.server.backups;
-    this.initialize();
-    this._registerJobEvents();
   }
 
   public ngOnDestroy() {
@@ -208,6 +209,8 @@ export class ServerBackupsComponent extends ServerDetailsBase
    * `@Note:` This is a base class implemenatation
    */
   protected selectionChange(server: McsServer, _resource: McsResource): void {
+    this.validateDedicatedFeatureFlag(server, 'EnableDedicatedVmSnapshotView');
+    this._registerJobEvents();
     this._getServerSnapshots(server);
   }
 
@@ -278,6 +281,9 @@ export class ServerBackupsComponent extends ServerDetailsBase
    * Register disk jobs events
    */
   private _registerJobEvents(): void {
+    // Remove the previously subscription
+    this._destroySubject.next();
+
     this._notificationEvents.createServerSnapshot
       .pipe(startWith(null), takeUntil(this._destroySubject))
       .subscribe(this._onCreateServerSnapshot.bind(this));

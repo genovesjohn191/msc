@@ -101,7 +101,9 @@
         mcsId
         mcsEventTracker="rename"
         mcsEventCategory="server"
-        mcsEventLabel="server-command-tool">
+        mcsEventLabel="server-command-tool"
+        *mcsAccessControl="[]; feature: 'EnableDedicatedVmRename';
+          validateWhen: server.isDedicated">
         {{ textContent.rename }}
       </a>
     </ng-container>
@@ -139,7 +141,9 @@
         mcsId
         mcsEventTracker="reset-password"
         mcsEventCategory="server"
-        mcsEventLabel="server-command-tool">
+        mcsEventLabel="server-command-tool"
+        *mcsAccessControl="[]; feature: 'EnableDedicatedVmPasswordReset';
+          validateWhen: server.isDedicated">
         {{ textContent.resetVmPassword }}
       </a>
     </ng-container>
