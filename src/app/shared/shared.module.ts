@@ -60,6 +60,7 @@ import { JobsProvisioningModule } from './jobs-provisioning/jobs-provisioning.mo
 import { LoadingModule } from './loading/loading.module';
 import { ItemModule } from './item/item.module';
 import { DividerModule } from './divider/divider.module';
+import { TreeModule } from './tree/tree.module';
 
 @NgModule({
   imports: [
@@ -120,7 +121,8 @@ import { DividerModule } from './divider/divider.module';
     JobsProvisioningModule,
     LoadingModule,
     ItemModule,
-    DividerModule
+    DividerModule,
+    TreeModule
   ],
   exports: [
     CommonModule,
@@ -180,7 +182,8 @@ import { DividerModule } from './divider/divider.module';
     JobsProvisioningModule,
     LoadingModule,
     ItemModule,
-    DividerModule
+    DividerModule,
+    TreeModule
   ]
 })
 

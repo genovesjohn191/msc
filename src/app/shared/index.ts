@@ -12,6 +12,7 @@ export * from './paginator';
 export * from './search';
 export * from './directives';
 export * from './filter-selector';
+export * from './tree';
 
 /** Expose directives */
 export * from './form-field/form-group.directive';
@@ -19,4 +20,3 @@ export * from './tag-list/tag-input/tag-input.directive';
 
 /** Expose components */
 export * from './sliding-panel/sliding-panel.component';
-// export * from './filter-selector/filter-selector.component';

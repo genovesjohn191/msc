@@ -4,6 +4,7 @@
 $button-bg-color: $color-white;
 $button-medium-size: 34px;
 $button-default-size: 26px;
+$button-icon-size: 40px;
 $button-min-width: 88px;
 $button-min-height: 25px;
 $button-padding: 0 15px;
@@ -177,6 +178,30 @@ $button-error-bg-color: $color-red-00;
 
   &.error {
     @include mcs-button-basic-color-setting($button-error-bg-color);
+  }
+}
+
+.button-wrapper.icon {
+  padding: 0;
+  min-width: 0;
+  width: $button-icon-size;
+  height: $button-icon-size;
+  line-height: $button-icon-size;
+  flex-shrink: 0;
+  border-radius: 50%;
+  @include box-shadow(none);
+  background-color: transparent;
+  overflow: hidden;
+
+  .button-text-wrapper {
+   .icon-wrapper {
+     padding-left: 0;
+   }
+  }
+
+  &:hover .button-focus-overlay {
+    opacity: 0;
+    transition: none;
   }
 }
 

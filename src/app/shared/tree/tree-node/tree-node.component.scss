@@ -1,0 +1,20 @@
+@import "../../../../styles/shared/base";
+
+$tree-node-min-height: 40px;
+$tree-node-left-offset: 60px;
+
+.tree-node-wrapper {
+  @include display-flex(column);
+  min-height: $tree-node-min-height;
+
+  .tree-node-label {
+    @include display-flex(row);
+    @include align-items(center);
+  }
+
+  .tree-node-content {
+    display: block;
+    position: relative;
+    left: $tree-node-left-offset;
+  }
+}

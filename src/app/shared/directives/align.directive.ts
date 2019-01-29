@@ -3,7 +3,8 @@ import {
   Input,
   Renderer2,
   ElementRef,
-  AfterViewInit
+  AfterViewInit,
+  OnDestroy
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -20,7 +21,7 @@ import {
   selector: '[mcsAlign]',
 })
 
-export class AlignDirective implements AfterViewInit {
+export class AlignDirective implements AfterViewInit, OnDestroy {
   @Input('mcsAlign')
   public alignment: McsAlignmentType = 'start';
 
@@ -38,6 +39,15 @@ export class AlignDirective implements AfterViewInit {
   public ngAfterViewInit() {
     this._createAlignmentTable();
     this._subscribeToBreakpointChanges();
+  }
+
+  public ngOnDestroy() {
+    if (!isNullOrEmpty(this._startSpacerElement)) {
+      this._renderer.removeChild(this._startSpacerElement.parentElement, this._startSpacerElement);
+    }
+    if (!isNullOrEmpty(this._endSpacerElement)) {
+      this._renderer.removeChild(this._endSpacerElement.parentElement, this._endSpacerElement);
+    }
   }
 
   /**
