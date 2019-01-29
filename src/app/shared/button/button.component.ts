@@ -31,6 +31,7 @@ export type ButtonType =
     '[class.primary]': 'color === "primary"',
     '[class.raised]': 'type === "raised"',
     '[class.basic]': 'type === "basic"',
+    '[class.icon]': 'type === "icon"',
     '[class.label-placement-left]': 'labelPlacement === "left"',
     '[class.label-placement-center]': 'labelPlacement === "center"',
     '[class.label-placement-right]': 'labelPlacement === "right"',
@@ -92,6 +93,13 @@ export class ButtonComponent {
 
   public get hostElement(): HTMLElement {
     return this._elementRef.nativeElement;
+  }
+
+  /**
+   * Returns true when the button type is icon
+   */
+  public get isIconType(): boolean {
+    return this.type === 'icon';
   }
 
   /**

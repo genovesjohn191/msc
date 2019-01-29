@@ -1,0 +1,24 @@
+<div class="tree-node-label">
+  <button disabled mcsButton="icon"></button>
+
+  <!-- Checkable label -->
+  <ng-container *ngIf="checkable; else nonCheckableTemplate">
+    <mcs-checkbox (change)="onTickCheckbox($event)" [checked]="selected">
+      <ng-container *ngTemplateOutlet="labelContentTemplate"></ng-container>
+    </mcs-checkbox>
+  </ng-container>
+
+  <!-- Non-checkable label -->
+  <ng-template #nonCheckableTemplate>
+    <ng-container *ngTemplateOutlet="labelContentTemplate"></ng-container>
+  </ng-template>
+
+  <ng-template #labelContentTemplate>
+    <ng-content></ng-content>
+  </ng-template>
+</div>
+
+<!-- Tree Node Context when toggled -->
+<div [@expansionVertical]="selected ? 'expanded' : 'collapsed'" class="tree-node-content">
+  <ng-content select="[mcsTreeNodeContent]"></ng-content>
+</div>

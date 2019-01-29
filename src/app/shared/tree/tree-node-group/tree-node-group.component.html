@@ -1,0 +1,36 @@
+<!-- Tree Node Group Label -->
+<div class="tree-node-group-label">
+  <button mcsButton="icon" (click)="togglePanel()">
+    <div [@rotate45]="panelOpen ? 'rotate' : 'void'">
+      <mcs-icon size="small" [key]="caretRightIconKey"></mcs-icon>
+    </div>
+  </button>
+
+  <!-- Checkable Template -->
+  <ng-container *ngIf="checkable; else nonCheckableTemplate">
+    <mcs-checkbox (change)="onTickCheckbox($event)"
+      [indeterminate]="hasSelectedNode && !allNodesAreSelected"
+      [checked]="allNodesAreSelected">
+      <ng-container *ngTemplateOutlet="labelContentTemplate"></ng-container>
+    </mcs-checkbox>
+  </ng-container>
+
+  <!-- Non-checkable Template -->
+  <ng-template #nonCheckableTemplate>
+    <ng-container *ngTemplateOutlet="labelContentTemplate"></ng-container>
+  </ng-template>
+
+  <ng-template #labelContentTemplate>
+    <ng-container *ngIf="labelTemplate; else basicLabelTemplate">
+      <ng-container *ngTemplateOutlet="labelTemplate?.templateRef"></ng-container>
+    </ng-container>
+    <ng-template #basicLabelTemplate>
+      <span>{{ label }}</span>
+    </ng-template>
+  </ng-template>
+</div>
+
+<!-- Tree Node Group Content -->
+<div class="tree-node-group-contents" [@expansionVertical]="panelOpen ? 'expanded' : 'collapsed'">
+  <ng-content></ng-content>
+</div>

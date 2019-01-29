@@ -1,0 +1,17 @@
+@import "../../../../styles/shared/base";
+
+$tree-node-group-left-offset: 10px;
+
+.tree-node-group-wrapper {
+  position: relative;
+
+  .tree-node-group-label {
+    @include display-flex(row);
+    @include align-items(center);
+  }
+
+  .tree-node-group-contents {
+    @include display-flex(column);
+    padding-left: $tree-node-group-left-offset;
+  }
+}
