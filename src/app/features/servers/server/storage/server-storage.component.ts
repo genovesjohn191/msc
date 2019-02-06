@@ -251,7 +251,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
       .pipe(
         catchError((error) => {
           this._serversService.clearServerSpinner(server);
-          this._errorHandlerService.handleHttpRedirectionError(error.status);
+          this._errorHandlerService.redirectToErrorPage(error.status);
           return throwError(error);
         })
       ).subscribe();
@@ -283,7 +283,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
         .pipe(
           catchError((error) => {
             this._serversService.clearServerSpinner(server);
-            this._errorHandlerService.handleHttpRedirectionError(error.status);
+            this._errorHandlerService.redirectToErrorPage(error.status);
             return throwError(error);
           })
         ).subscribe();
@@ -309,7 +309,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
       .pipe(
         catchError((error) => {
           this._serversService.clearServerSpinner(server);
-          this._errorHandlerService.handleHttpRedirectionError(error.status);
+          this._errorHandlerService.redirectToErrorPage(error.status);
           return throwError(error);
         })
       ).subscribe();
@@ -331,9 +331,9 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   protected selectionChange(server: McsServer, resource: McsResource): void {
     this.validateDedicatedFeatureFlag(server, 'EnableDedicatedVmStorageView');
     this._resetStorageValues();
-    this._registerJobEvents();
-    this._getResourceStorages(resource);
     this._initializeDataSource(server);
+    this._getResourceStorages(resource);
+    this._registerJobEvents();
   }
 
   /**
@@ -364,8 +364,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
    * Register disk jobs events
    */
   private _registerJobEvents(): void {
-    // Remove the previously subscription
-    this._destroySubject.next();
+    if (!isNullOrEmpty(this._destroySubject.observers)) { return; }
 
     this._notificationEvents.createServerDisk
       .pipe(startWith(null), takeUntil(this._destroySubject))
@@ -396,7 +395,9 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
         this.refreshServerResource();
       case DataStatus.Error:
       default:
-        this.disksDataSource.deleteRecordBy((item) => this._newDisk.id === item.id);
+        if (!isNullOrEmpty(this.disksDataSource)) {
+          this.disksDataSource.deleteRecordBy((item) => this._newDisk.id === item.id);
+        }
         break;
     }
   }
@@ -430,7 +431,10 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     this._newDisk.name = job.clientReferenceObject.name;
     this._newDisk.sizeMB = job.clientReferenceObject.sizeMB;
     this._newDisk.storageProfile = job.clientReferenceObject.storageProfile;
-    this.disksDataSource.addOrUpdateRecord(this._newDisk);
+
+    if (!isNullOrEmpty(this.disksDataSource)) {
+      this.disksDataSource.addOrUpdateRecord(this._newDisk);
+    }
   }
 
   /**

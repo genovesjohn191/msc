@@ -39,6 +39,7 @@ import { ResponsivePanelModule } from './responsive-panel/responsive-panel.modul
 import { CollapsiblePanelModule } from './collapsible-panel/collapsible-panel.module';
 import { RadioButtonGroupModule } from './radio-button-group/radio-button-group.module';
 import { FormFieldModule } from './form-field/form-field.module';
+import { FormMessageModule } from './form-message/form-message.module';
 import { InputModule } from './input/input.module';
 import { SearchModule } from './search/search.module';
 import { SliderModule } from './slider/slider.module';
@@ -103,6 +104,7 @@ import { TreeModule } from './tree/tree.module';
     CollapsiblePanelModule,
     RadioButtonGroupModule,
     FormFieldModule,
+    FormMessageModule,
     InputModule,
     SearchModule,
     SliderModule,
@@ -164,6 +166,7 @@ import { TreeModule } from './tree/tree.module';
     CollapsiblePanelModule,
     RadioButtonGroupModule,
     FormFieldModule,
+    FormMessageModule,
     InputModule,
     SearchModule,
     SliderModule,

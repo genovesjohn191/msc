@@ -78,7 +78,7 @@ export class ServerProvisioningComponent implements OnInit, OnDestroy {
         catchError((error) => {
           // Handle common error status code
           this.dataStatusFactory.setError();
-          this._errorHandlerService.handleHttpRedirectionError(error.status);
+          this._errorHandlerService.redirectToErrorPage(error.status);
           return throwError(error);
         }),
         switchMap((params: ParamMap) => {
@@ -104,7 +104,7 @@ export class ServerProvisioningComponent implements OnInit, OnDestroy {
     let createServerType = job.type === JobType.CreateServer
       || job.type === JobType.CloneServer;
     if (!createServerType) {
-      this._errorHandlerService.handleHttpRedirectionError(HttpStatusCode.NotFound);
+      this._errorHandlerService.redirectToErrorPage(HttpStatusCode.NotFound);
     }
   }
 }

@@ -17,7 +17,9 @@
                     mcsId="select-product"
                     mcsEventTracker="select-product"
                     mcsEventCategory="navigation"
-                    mcsEventLabel="main-nav">{{ product.name }}</a>
+                    mcsEventLabel="main-nav"
+                    [ngClass]="{'active': (selectedProduct$ | async)?.id === product.id}">
+                    {{ product.name }}</a>
                 </mcs-list-item>
               </mcs-list>
             </section>

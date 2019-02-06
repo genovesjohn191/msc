@@ -6,9 +6,11 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { throwError } from 'rxjs';
+import {
+  throwError,
+  Observable
+} from 'rxjs';
 import { catchError } from 'rxjs/operators';
-/** Providers / Services */
 import {
   CoreRoutes,
   CoreConfig,
@@ -21,6 +23,10 @@ import {
   McsProduct,
   McsProductCatalog
 } from '@app/models';
+import {
+  EventBusPropertyListenOn,
+  EventBusItem
+} from '@app/event-bus';
 import { isNullOrEmpty } from '@app/utilities';
 import { McsProductCatalogRepository } from '@app/services';
 
@@ -33,10 +39,12 @@ import { McsProductCatalogRepository } from '@app/services';
 })
 
 export class NavigationDesktopComponent implements OnInit {
-
   public textContent: any;
   public productCatalogs: McsProductCatalog[];
   public productsStatusFactory: McsDataStatusFactory<McsProductCatalog[]>;
+
+  @EventBusPropertyListenOn(EventBusItem.SelectedProduct)
+  public selectedProduct$: Observable<McsProduct>;
 
   public get arrowUpIconKey(): string {
     return CoreDefinition.ASSETS_SVG_ARROW_UP_WHITE;

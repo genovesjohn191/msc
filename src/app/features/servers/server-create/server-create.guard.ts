@@ -26,7 +26,7 @@ export class ServerCreateGuard implements CanActivate {
     return this._resourcesRepository.getResourcesByFeature().pipe(
       map((resources) => {
         if (isNullOrEmpty(resources)) {
-          this._errorHandlerService.handleHttpRedirectionError(HttpStatusCode.Forbidden);
+          this._errorHandlerService.redirectToErrorPage(HttpStatusCode.Forbidden);
           return false;
         }
         return true;

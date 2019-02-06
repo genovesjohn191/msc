@@ -29,7 +29,7 @@
       </button>
     </div>
   </ng-container> -->
-  <mcs-scrollable-link-group *mcsComponentHandler>
+  <mcs-scrollable-link-group>
     <mcs-scrollable-link label="All Information">
 
       <!-- Description -->
@@ -145,7 +145,7 @@
             </mcs-data-cell>
           </ng-container>
 
-          <ng-container mcsColumnDef="properties">
+          <ng-container mcsColumnDef="properties" *ngIf="selectedProduct.hasProductProperties">
             <mcs-header-cell *mcsHeaderCellDef>
               Properties
             </mcs-header-cell>
@@ -154,14 +154,14 @@
                 <mcs-list-item *ngFor="let property of row.properties">
                   <mcs-item>
                     <span>{{ property.label }}:</span>
-                    <span>{{ property.value }}</span>
+                    <span>{{ property.value }} {{ property.unit }}</span>
                   </mcs-item>
                 </mcs-list-item>
               </mcs-list>
             </mcs-data-cell>
           </ng-container>
 
-          <ng-container mcsColumnDef="options">
+          <ng-container mcsColumnDef="options" *ngIf="selectedProduct.hasProductListOptions">
             <mcs-header-cell *mcsHeaderCellDef>
               Options
             </mcs-header-cell>

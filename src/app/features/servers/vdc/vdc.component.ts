@@ -202,7 +202,7 @@ export class VdcComponent
     this._loadingService.showLoader(this.textContent.loading);
     this.selectedResource$ = this._resourcesRepository.getById(vdcId).pipe(
       catchError((error) => {
-        this._errorHandlerService.handleHttpRedirectionError(error.status);
+        this._errorHandlerService.redirectToErrorPage(error.status);
         return throwError(error);
       }),
       tap((response) => { this._vdcService.setSelectedVdc(response); }),

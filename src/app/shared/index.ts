@@ -13,6 +13,7 @@ export * from './search';
 export * from './directives';
 export * from './filter-selector';
 export * from './tree';
+export * from './form-message';
 
 /** Expose directives */
 export * from './form-field/form-group.directive';

@@ -5,6 +5,7 @@ import {
   clearArrayRecord,
   compareArrays,
   getArrayCount,
+  getUniqueRecords,
   isArray
 } from './mcs-array.function';
 
@@ -264,6 +265,49 @@ describe('ARRAY Functions', () => {
     it(`should return 0 when the array is undefined`, () => {
       let listItems: TestStructure[];
       expect(getArrayCount(listItems)).toBe(0);
+    });
+  });
+
+  describe('getUniqueRecords()', () => {
+    it(`should return all unique elements by value`, () => {
+      let listItems: TestStructure[] = new Array();
+
+      listItems.push(new TestStructure('1', 'hello1'));
+      listItems.push(new TestStructure('2', 'hello1'));
+      listItems.push(new TestStructure('3', 'hello2'));
+
+      expect(getUniqueRecords(listItems, (item) => item.value).length).toEqual(2);
+    });
+
+    it(`should return all unique elements even though the key are not unique`, () => {
+      let listItems: TestStructure[] = new Array();
+
+      listItems.push(new TestStructure('1', 'hello1'));
+      listItems.push(new TestStructure('1', 'hello2'));
+      listItems.push(new TestStructure('3', 'hello3'));
+
+      expect(getUniqueRecords(listItems, (item) => item.value).length).toEqual(3);
+    });
+
+    it(`should return all elements when no one has conflict`, () => {
+      let listItems: TestStructure[] = new Array();
+
+      listItems.push(new TestStructure('1', 'hello1'));
+      listItems.push(new TestStructure('2', 'hello2'));
+      listItems.push(new TestStructure('3', 'hello3'));
+
+      expect(getUniqueRecords(listItems, (item) => item.value).length).toEqual(3);
+    });
+
+    it(`should not return the original instance of the records`, () => {
+      let listItems: TestStructure[] = new Array();
+
+      listItems.push(new TestStructure('1', 'hello1'));
+      listItems.push(new TestStructure('2', 'hello1'));
+      listItems.push(new TestStructure('3', 'hello3'));
+
+      let uniqueRecords = getUniqueRecords(listItems, (item) => item.value);
+      expect(uniqueRecords).not.toEqual(listItems);
     });
   });
 

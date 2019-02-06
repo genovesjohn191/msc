@@ -188,7 +188,7 @@ export class FirewallComponent
     this.selectedFirewall$ = this._firewallsRepository.getById(firewallId).pipe(
       catchError((error) => {
         // Handle common error status code
-        this._errorHandlerService.handleHttpRedirectionError(error.status);
+        this._errorHandlerService.redirectToErrorPage(error.status);
         return throwError(error);
       }),
       tap((response) => {

@@ -149,7 +149,7 @@ export class ServerCreateComponent implements
     this._loaderService.showLoader('Loading resources');
     this.resources$ = this._resourcesRepository.getResourcesByFeature().pipe(
       catchError((error) => {
-        this._errorHandlerService.handleHttpRedirectionError(error.status);
+        this._errorHandlerService.redirectToErrorPage(error.status);
         return throwError(error);
       })
     );

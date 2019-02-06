@@ -268,7 +268,7 @@ export class ServerNewComponent
       .pipe(
         catchError((error) => {
           // Handle common error status code
-          this._errorHandlerService.handleHttpRedirectionError(error.status);
+          this._errorHandlerService.redirectToErrorPage(error.status);
           return throwError(error);
         }),
         switchMap((_response) => of(this._filterOsGroup(_response)))

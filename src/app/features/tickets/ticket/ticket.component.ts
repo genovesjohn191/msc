@@ -229,7 +229,7 @@ export class TicketComponent implements OnInit, OnDestroy {
       switchMap(() =>
         this._ticketsRepository.getById(ticketId).pipe(
           catchError((error) => {
-            this._errorHandlerService.handleHttpRedirectionError(error.status);
+            this._errorHandlerService.redirectToErrorPage(error.status);
             return throwError(error);
           }),
           finalize(() => this._loadingService.hideLoader())

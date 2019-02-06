@@ -222,7 +222,7 @@ export class MediaUploadDetailsComponent
     this.resources$ = this._resourcesRepository.getAll()
       .pipe(
         catchError((error) => {
-          this._errorHandlerService.handleHttpRedirectionError(error.status);
+          this._errorHandlerService.redirectToErrorPage(error.status);
           return throwError(error);
         }),
         finalize(() => this._loadingService.hideLoader())
@@ -238,7 +238,7 @@ export class MediaUploadDetailsComponent
     this.selectedResource$ = this._resourcesRepository.getById(resourceId).pipe(
       shareReplay(1),
       catchError((error) => {
-        this._errorHandlerService.handleHttpRedirectionError(error.status);
+        this._errorHandlerService.redirectToErrorPage(error.status);
         return throwError(error);
       }),
       finalize(() => this._loadingService.hideLoader()),

@@ -5,7 +5,6 @@ import {
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
-  isNullOrEmpty,
   unsubscribeSubject,
   McsInitializer
 } from '@app/utilities';
@@ -38,23 +37,10 @@ export class McsErrorHandlerService implements McsInitializer {
   }
 
   /**
-   * Handle the common error for each HTTP request
+   * Redirects to error page based on the error code
    * @param errorCode Error code of the corresponding request
-   * @param handleCodes Error codes to be handled/considered
    */
-  public handleHttpRedirectionError(errorCode: number, handleCodes?: number[]): void {
-    let codeExist: boolean = true;
-
-    // Check if the error code is considered to be handle
-    if (!isNullOrEmpty(handleCodes)) {
-      let handleCode = handleCodes.find((err) => {
-        return err === errorCode;
-      });
-      codeExist = !!(!isNullOrEmpty(handleCode));
-    }
-    if (!codeExist) { return; }
-
-    // Redirect to error page
+  public redirectToErrorPage(errorCode: number): void {
     this._router.navigate(['**'], {
       skipLocationChange: true,
       queryParams: {
@@ -74,7 +60,7 @@ export class McsErrorHandlerService implements McsInitializer {
         if (!errorResponse) { return; }
         switch (errorResponse.status) {
           case HttpStatusCode.ReadOnlyMode:
-            this.handleHttpRedirectionError(HttpStatusCode.ReadOnlyMode);
+            this.redirectToErrorPage(HttpStatusCode.ReadOnlyMode);
             break;
 
           case HttpStatusCode.Unauthorized:

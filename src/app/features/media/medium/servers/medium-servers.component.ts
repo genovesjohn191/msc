@@ -189,7 +189,7 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
       .pipe(
         catchError((error) => {
           this.setSelectedMediumState(medium, false);
-          this._errorHandlerService.handleHttpRedirectionError(error.status);
+          this._errorHandlerService.redirectToErrorPage(error.status);
           return throwError(error);
         })
       ).subscribe();
@@ -216,7 +216,7 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
       .pipe(
         catchError((error) => {
           this.setSelectedMediumState(medium, false);
-          this._errorHandlerService.handleHttpRedirectionError(error.status);
+          this._errorHandlerService.redirectToErrorPage(error.status);
           return throwError(error);
         })
       ).subscribe();
