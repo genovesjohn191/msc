@@ -217,7 +217,7 @@ export class ServerCreateFlyweightContext {
       }),
       catchError((error) => {
         this._updateOrderStateChanges.next(DataStatus.Error);
-        this._errorHandlerService.handleHttpRedirectionError(error.status);
+        this._errorHandlerService.redirectToErrorPage(error.status);
         return throwError(error);
       })
     );

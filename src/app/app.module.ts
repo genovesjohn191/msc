@@ -52,6 +52,7 @@ import {
   GoogleAnalyticsEventsService,
   McsSessionHandlerService
 } from './core';
+import { EventBusModule } from './event-bus';
 import { ServicesModule } from './services';
 import {
   ConsolePageModule,
@@ -107,6 +108,7 @@ export function coreConfig(): CoreConfig {
     BrowserAnimationsModule,
 
     CoreModule.forRoot(coreConfig),
+    EventBusModule.forRoot(),
     ServicesModule.forRoot(),
 
     SharedModule,

@@ -69,7 +69,7 @@ export abstract class ServerDetailsBase {
     if (!server.isDedicated) { return; }
     let hasAccess = this._accessControlService.hasAccessToFeature(featureFlag);
     if (!hasAccess) {
-      this._errorHandlerService.handleHttpRedirectionError(HttpStatusCode.Forbidden);
+      this._errorHandlerService.redirectToErrorPage(HttpStatusCode.Forbidden);
     }
   }
 

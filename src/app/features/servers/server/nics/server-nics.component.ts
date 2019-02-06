@@ -240,7 +240,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
       .pipe(
         catchError((error) => {
           this._serversService.clearServerSpinner(server, nicValues);
-          this._errorHandlerService.handleHttpRedirectionError(error.status);
+          this._errorHandlerService.redirectToErrorPage(error.status);
           return throwError(error);
         })
       ).subscribe();
@@ -272,7 +272,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
         .pipe(
           catchError((error) => {
             this._serversService.clearServerSpinner(server);
-            this._errorHandlerService.handleHttpRedirectionError(error.status);
+            this._errorHandlerService.redirectToErrorPage(error.status);
             return throwError(error);
           })
         ).subscribe();
@@ -298,7 +298,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
       .pipe(
         catchError((error) => {
           this._serversService.clearServerSpinner(server);
-          this._errorHandlerService.handleHttpRedirectionError(error.status);
+          this._errorHandlerService.redirectToErrorPage(error.status);
           return throwError(error);
         })
       ).subscribe();
@@ -329,9 +329,9 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   protected selectionChange(server: McsServer, resource: McsResource): void {
     this.validateDedicatedFeatureFlag(server, 'EnableDedicatedVmNicView');
     this._resetNetworkValues();
-    this._registerJobEvents();
-    this._getResourceNetworks(resource);
     this._initializeDataSource(server);
+    this._getResourceNetworks(resource);
+    this._registerJobEvents();
   }
 
   /**
@@ -363,8 +363,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    * Register jobs/notifications events
    */
   private _registerJobEvents(): void {
-    // Remove the previously subscription
-    this._destroySubject.next();
+    if (!isNullOrEmpty(this._destroySubject.observers)) { return; }
 
     this._notificationEvents.createServerNic
       .pipe(startWith(null), takeUntil(this._destroySubject))
@@ -411,7 +410,9 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
         this.refreshServerResource();
       case DataStatus.Error:
       default:
-        this.nicsDataSource.deleteRecordBy((item) => this._newNic.id === item.id);
+        if (!isNullOrEmpty(this.nicsDataSource)) {
+          this.nicsDataSource.deleteRecordBy((item) => this._newNic.id === item.id);
+        }
         break;
     }
   }
@@ -445,7 +446,10 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     this._newNic.logicalNetworkName = job.clientReferenceObject.nicName;
     this._newNic.ipAllocationMode = job.clientReferenceObject.nicIpAllocationMode;
     this._newNic.ipAddresses = [job.clientReferenceObject.nicIpAddress];
-    this.nicsDataSource.addOrUpdateRecord(this._newNic);
+
+    if (!isNullOrEmpty(this.nicsDataSource)) {
+      this.nicsDataSource.addOrUpdateRecord(this._newNic);
+    }
   }
 
   /**

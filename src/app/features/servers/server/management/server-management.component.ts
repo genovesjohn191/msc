@@ -246,7 +246,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
       .pipe(
         catchError((error) => {
           this._serversService.clearServerSpinner(server);
-          this._errorHandlerService.handleHttpRedirectionError(error.status);
+          this._errorHandlerService.redirectToErrorPage(error.status);
           return throwError(error);
         })
       ).subscribe();
@@ -293,7 +293,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
       .pipe(
         catchError((error) => {
           this._serversService.clearServerSpinner(server);
-          this._errorHandlerService.handleHttpRedirectionError(error.status);
+          this._errorHandlerService.redirectToErrorPage(error.status);
           return throwError(error);
         })
       ).subscribe();
@@ -319,7 +319,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
       .pipe(
         catchError((error) => {
           this._serversService.clearServerSpinner(server);
-          this._errorHandlerService.handleHttpRedirectionError(error.status);
+          this._errorHandlerService.redirectToErrorPage(error.status);
           return throwError(error);
         })
       ).subscribe();
@@ -405,8 +405,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
    * Register jobs/notifications events
    */
   private _registerJobEvents(): void {
-    // Remove the previously subscription
-    this._destroySubject.next();
+    if (!isNullOrEmpty(this._destroySubject.observers)) { return; }
 
     this._notificationEvents.attachServerMediaEvent
       .pipe(startWith(null!), takeUntil(this._destroySubject))

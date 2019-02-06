@@ -20,7 +20,8 @@ import {
 } from '@angular/animations';
 import {
   throwError,
-  Subject
+  Subject,
+  Observable
 } from 'rxjs';
 import {
   catchError,
@@ -46,6 +47,10 @@ import {
   McsProduct,
   McsProductCatalog
 } from '@app/models';
+import {
+  EventBusPropertyListenOn,
+  EventBusItem
+} from '@app/event-bus';
 import { SlidingPanelComponent } from '@app/shared';
 import { McsProductCatalogRepository } from '@app/services';
 
@@ -72,6 +77,9 @@ import { McsProductCatalogRepository } from '@app/services';
 export class NavigationMobileComponent implements OnInit, OnDestroy {
   @ViewChild('slidingPanel')
   public slidingPanel: SlidingPanelComponent;
+
+  @EventBusPropertyListenOn(EventBusItem.SelectedProduct)
+  public selectedProduct$: Observable<McsProduct>;
 
   public textContent: any;
   public productCatalogs: McsProductCatalog[];

@@ -166,7 +166,7 @@ export class MediumComponent
     this._loadingService.showLoader(this.textContent.loading);
     this.media$ = this._mediaRepository.getById(mediumId).pipe(
       catchError((error) => {
-        this._errorHandlerService.handleHttpRedirectionError(error.status);
+        this._errorHandlerService.redirectToErrorPage(error.status);
         return throwError(error);
       }),
       tap((media) => this._mediumService.setSelectedMedium(media)),

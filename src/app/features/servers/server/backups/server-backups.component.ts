@@ -3,7 +3,8 @@ import {
   OnInit,
   OnDestroy,
   ChangeDetectionStrategy,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  ViewChild
 } from '@angular/core';
 import {
   throwError,
@@ -29,9 +30,14 @@ import {
 } from '@app/core';
 import {
   isNullOrEmpty,
-  unsubscribeSubject
+  unsubscribeSubject,
+  getSafeProperty,
+  getUniqueRecords
 } from '@app/utilities';
-import { StdDateFormatPipe } from '@app/shared';
+import {
+  StdDateFormatPipe,
+  FormMessage
+} from '@app/shared';
 import {
   McsJob,
   DataStatus,
@@ -76,19 +82,13 @@ export class ServerBackupsComponent extends ServerDetailsBase
 
   public textContent: any;
   public snapshot$: Observable<McsServerSnapshot>;
+  public updatingSnapshot: boolean;
+  public capturingSnapshot: boolean;
   public dataStatusFactory: McsDataStatusFactory<McsServerSnapshot[]>;
 
-  private _newSnapshot: McsServerSnapshot;
+  @ViewChild('formMessage')
+  private _formMessage: FormMessage;
   private _destroySubject = new Subject<void>();
-
-  public get creatingSnapshot(): boolean {
-    return !isNullOrEmpty(this._newSnapshot);
-  }
-
-  private _snapshotProcessing: boolean = false;
-  public get snapshotProcessing(): boolean {
-    return this._snapshotProcessing;
-  }
 
   public get warningIconKey(): string {
     return CoreDefinition.ASSETS_SVG_WARNING;
@@ -132,7 +132,8 @@ export class ServerBackupsComponent extends ServerDetailsBase
 
   public enabledActions(server): boolean {
     return !isNullOrEmpty(server.storageDevices)
-      && !this.snapshotProcessing
+      && !this.capturingSnapshot
+      && !this.updatingSnapshot
       && !server.isProcessing;
   }
 
@@ -140,7 +141,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
    * Create snapshot based on server details
    */
   public createSnapshot(server: McsServer, resource: McsResource): void {
-    let dialogType = this._getSnapshotDialogType(server, resource);
+    let dialogType = this._getDialogTypeByVmStorage(server, resource);
 
     // For sufficient storage show the creation dialog
     this._showDialog(
@@ -155,9 +156,13 @@ export class ServerBackupsComponent extends ServerDetailsBase
           preserveMemory: true,
           clientReferenceObject: { serverId: server.id }
         }).pipe(
-          catchError((error) => {
+          catchError((httpError) => {
             this._serversService.clearServerSpinner(server);
-            return throwError(error);
+            this._formMessage.showMessage(
+              getSafeProperty(httpError, (obj) =>
+                obj.error.errors.maps((errorContent) => errorContent.message))
+            );
+            return throwError(httpError);
           })
         ).subscribe();
       });
@@ -175,9 +180,13 @@ export class ServerBackupsComponent extends ServerDetailsBase
       this._serversRepository.restoreServerSnapshot(server.id, {
         clientReferenceObject: { serverId: server.id }
       }).pipe(
-        catchError((error) => {
+        catchError((httpError) => {
           this._serversService.clearServerSpinner(server);
-          return throwError(error);
+          this._formMessage.showMessage(
+            getSafeProperty(httpError, (obj) =>
+              obj.error.errors.maps((errorContent) => errorContent.message))
+          );
+          return throwError(httpError);
         })
       ).subscribe();
     }, snapshot);
@@ -195,9 +204,13 @@ export class ServerBackupsComponent extends ServerDetailsBase
       this._serversRepository.deleteServerSnapshot(server.id, {
         clientReferenceObject: { serverId: server.id }
       }).pipe(
-        catchError((error) => {
+        catchError((httpError) => {
           this._serversService.clearServerSpinner(server);
-          return throwError(error);
+          this._formMessage.showMessage(
+            getSafeProperty(httpError, (obj) =>
+              obj.error.errors.maps((errorContent) => errorContent.message))
+          );
+          return throwError(httpError);
         })
       ).subscribe();
     }, snapshot);
@@ -281,8 +294,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
    * Register disk jobs events
    */
   private _registerJobEvents(): void {
-    // Remove the previously subscription
-    this._destroySubject.next();
+    if (!isNullOrEmpty(this._destroySubject.observers)) { return; }
 
     this._notificationEvents.createServerSnapshot
       .pipe(startWith(null), takeUntil(this._destroySubject))
@@ -303,19 +315,11 @@ export class ServerBackupsComponent extends ServerDetailsBase
    */
   private _onCreateServerSnapshot(job: McsJob): void {
     if (!this.serverIsActiveByJob(job)) { return; }
-
-    switch (job.dataStatus) {
-      case DataStatus.InProgress:
-        this._onCreatingSnapshot(job);
-        break;
-
-      case DataStatus.Success:
-        this.refreshServerResource();
-      case DataStatus.Error:
-      default:
-        this._newSnapshot = undefined;
-        break;
+    this.capturingSnapshot = job.dataStatus === DataStatus.InProgress;
+    if (job.dataStatus === DataStatus.Success) {
+      this.refreshServerResource();
     }
+    this._changeDetectorRef.markForCheck();
   }
 
   /**
@@ -324,26 +328,10 @@ export class ServerBackupsComponent extends ServerDetailsBase
    */
   private _onUpdateServerSnapshot(job: McsJob): void {
     if (!this.serverIsActiveByJob(job)) { return; }
-
-    // We need to set the processing flag manually here in order to cater
-    // from moving one server to another
-    this._snapshotProcessing = job.dataStatus === DataStatus.InProgress;
-
-    // Update the server snapshot
+    this.updatingSnapshot = job.dataStatus === DataStatus.InProgress;
     if (job.dataStatus === DataStatus.Success) {
       this.refreshServerResource();
     }
-  }
-
-  /**
-   * Will trigger if currently creating a snapshot
-   * @param job Emitted job content
-   */
-  private _onCreatingSnapshot(job: McsJob): void {
-    if (!this.serverIsActiveByJob(job)) { return; }
-
-    // Mock snapshot data based on job response
-    this._newSnapshot = new McsServerSnapshot();
     this._changeDetectorRef.markForCheck();
   }
 
@@ -363,19 +351,14 @@ export class ServerBackupsComponent extends ServerDetailsBase
   }
 
   /**
-   * Check if server has disk conflict or
-   * has disks with multiple storage profiles
-   * @param disks Server disks
+   * Returns true when the disks has multiple storage profiles
+   * @param disks Server disks to be checked for storage profiles
    */
-  private _hasDiskConflict(disks: McsServerStorageDevice[]): boolean {
+  private _hasMultipleStorageProfiles(disks: McsServerStorageDevice[]): boolean {
     if (isNullOrEmpty(disks)) { return false; }
 
-    let storageProfile = disks[0].storageProfile;
-    let conflictDisk = disks.find((disk) => {
-      return disk.storageProfile !== storageProfile;
-    });
-
-    return !isNullOrEmpty(conflictDisk);
+    let uniqueDisks = getUniqueRecords(disks.slice(), (item) => item.storageProfile);
+    return uniqueDisks.length > 1;
   }
 
   /**
@@ -393,26 +376,29 @@ export class ServerBackupsComponent extends ServerDetailsBase
   }
 
   /**
-   * Get snapshot dialog type
+   * Gets the snapshot dialog type based on the vm storage size
    */
-  private _getSnapshotDialogType(server: McsServer, resource: McsResource): SnapshotDialogType {
+  private _getDialogTypeByVmStorage(server: McsServer, resource: McsResource): SnapshotDialogType {
     if (isNullOrEmpty(server.storageDevices)) { return SnapshotDialogType.None; }
 
     let dialogType: SnapshotDialogType;
     // Business rule: Customer can't create snapshot if
     // server has disks with multiple storage profiles
-    let hasDiskConflict = this._hasDiskConflict(server.storageDevices);
+    let hasMultipleStorageProfiles = this._hasMultipleStorageProfiles(server.storageDevices);
 
-    if (hasDiskConflict) {
+    if (hasMultipleStorageProfiles) {
       dialogType = SnapshotDialogType.DiskConflict;
     } else {
       let storageProfile = server.storageDevices[0].storageProfile;
-      let availableStorageMB = this._getStorageProfileAvailableMB(resource.storage, storageProfile);
-      let snapshotSizeMB = !isNullOrEmpty(server.snapshots) ? server.snapshots[0].sizeMB : 0;
-      let hasSufficientStorage = availableStorageMB >= snapshotSizeMB;
+      let resourceSizeMb = this._getStorageProfileAvailableMB(resource.storage, storageProfile);
+      let disksSizeMb = server.storageDevices && server.storageDevices
+        .map((disk) => disk.sizeMB)
+        .reduce((totalSize, currentSize) => totalSize + currentSize);
+      let inSufficientStorage = disksSizeMb > resourceSizeMb;
 
-      dialogType = hasSufficientStorage ?
-        SnapshotDialogType.Create : SnapshotDialogType.InsufficientStorage;
+      dialogType = inSufficientStorage ?
+        SnapshotDialogType.InsufficientStorage :
+        SnapshotDialogType.Create;
     }
 
     return dialogType;

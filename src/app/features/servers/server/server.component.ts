@@ -254,7 +254,7 @@ export class ServerComponent
     this._loadingService.showLoader(this.textContent.loading);
     this.selectedServer$ = this._serversRepository.getById(serverId).pipe(
       catchError((error) => {
-        this._errorHandlerService.handleHttpRedirectionError(error.status);
+        this._errorHandlerService.redirectToErrorPage(error.status);
         return throwError(error);
       }),
       tap((response) => this._serverService.setSelectedServer(response)),

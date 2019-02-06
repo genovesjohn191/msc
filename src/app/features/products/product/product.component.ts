@@ -1,11 +1,11 @@
 import {
   Component,
   OnInit,
+  OnDestroy,
   ChangeDetectionStrategy,
   ViewEncapsulation,
   Renderer2,
-  ChangeDetectorRef,
-  ViewChild
+  ChangeDetectorRef
 } from '@angular/core';
 import { Router } from '@angular/router';
 import {
@@ -33,7 +33,6 @@ import {
   McsProductDependency
 } from '@app/models';
 import { ProductService } from './product.service';
-import { ComponentHandlerDirective } from '@app/shared';
 
 const MAX_CHAR_LENGTH = 200;
 
@@ -52,7 +51,7 @@ const MAX_CHAR_LENGTH = 200;
   }
 })
 
-export class ProductComponent implements OnInit {
+export class ProductComponent implements OnInit, OnDestroy {
   public textContent: any;
   public shortDescriptionExpanded: boolean;
   public showMoreButtonIsDisplayed: boolean;
@@ -63,9 +62,6 @@ export class ProductComponent implements OnInit {
   public thresholdColumns = ['description', 'alertThreshold'];
   public productOptionsColumns = ['name', 'properties', 'options'];
   public userCasesColumns = ['name', 'description'];
-
-  @ViewChild(ComponentHandlerDirective)
-  private _componentHandler: ComponentHandlerDirective;
 
   public get cloudIconKey(): string {
     return CoreDefinition.ASSETS_SVG_CLOUD_BLUE;
@@ -87,6 +83,10 @@ export class ProductComponent implements OnInit {
     this.textContent = this._textContentProvider.content.products.product;
     this._subscribeToSelectedProduct();
     this._subscribeToTextChange();
+  }
+
+  public ngOnDestroy() {
+    this._productService.removeSelectedProduct();
   }
 
   /**
@@ -125,22 +125,14 @@ export class ProductComponent implements OnInit {
    * Listens to every product selection and refresh the dom
    */
   private _subscribeToSelectedProduct(): void {
-    this.selectedProduct$ = this._productService.productSelectionChange.pipe(
-      tap(() => {
-        Promise.resolve().then(() => {
-          if (isNullOrEmpty(this._componentHandler)) { return; }
-          this._componentHandler.recreateComponent();
-          this._changeDetectorRef.markForCheck();
-        });
-      })
-    );
+    this.selectedProduct$ = this._productService.selectedProduct();
   }
 
   /**
    * Subscribe to short text change
    */
   private _subscribeToTextChange(): void {
-    this.selectedProductTextContent$ = this._productService.productSelectionChange.pipe(
+    this.selectedProductTextContent$ = this._productService.selectedProduct().pipe(
       switchMap((product) => {
         let createdElement = this._renderer.createElement('div') as HTMLElement;
         createdElement.innerHTML = product.shortDescription;

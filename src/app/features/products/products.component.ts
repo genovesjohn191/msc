@@ -163,11 +163,11 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
         );
       }),
       catchError((error) => {
-        this._errorHandlerService.handleHttpRedirectionError(error.status);
+        this._errorHandlerService.redirectToErrorPage(error.status);
         return throwError(error);
       }),
       tap((response) => {
-        this._productService.selectProduct(response);
+        this._productService.setProduct(response);
         this._changeDetectorRef.markForCheck();
       }),
       shareReplay(1)

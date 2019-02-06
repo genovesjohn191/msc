@@ -186,6 +186,20 @@ export function getArrayCount<T>(sourceArray: T[]): number {
 }
 
 /**
+ * Returns all the unique records from the array
+ * @param sourceArray Source array to get the unique from
+ * @param predicate Predicate definition that evaluates the unique items
+ */
+export function getUniqueRecords<T>(sourceArray: T[], predicate: (item: T) => any): T[] {
+  if (isNullOrEmpty(sourceArray)) { return; }
+
+  let uniqueItems = new Set(sourceArray.map((predicate)));
+  return Array.from(uniqueItems).map((id) =>
+    sourceArray.find((item) => predicate(item) === id)
+  );
+}
+
+/**
  * Returns true when the representation object is an array, otherwise false
  * @param object Object to be checked
  */

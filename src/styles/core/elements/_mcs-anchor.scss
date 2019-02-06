@@ -15,7 +15,7 @@ a {
   }
 
   &.active {
-    font-family: $base-font-bold;
+    color: $link-hover-color;
   }
 
   &:hover {

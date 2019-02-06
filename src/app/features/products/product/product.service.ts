@@ -1,35 +1,40 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { isNullOrEmpty } from '@app/utilities';
+import {
+  BehaviorSubject,
+  Observable
+} from 'rxjs';
+import {
+  EventBusDispatcherService,
+  EventBusItem
+} from '@app/event-bus';
 import { McsProduct } from '@app/models';
 
 @Injectable()
 export class ProductService {
+  private _selectedProduct$ = new BehaviorSubject<McsProduct>(null);
+
+  constructor(private _eventDispatcher: EventBusDispatcherService) { }
+
   /**
-   * Stream for product selection
+   * Returns the selected product as observable
    */
-  private _productSelectionChange = new BehaviorSubject<McsProduct>(undefined);
-  public get productSelectionChange(): BehaviorSubject<McsProduct> {
-    return this._productSelectionChange;
+  public selectedProduct(): Observable<McsProduct> {
+    return this._selectedProduct$.asObservable();
   }
 
   /**
-   * The product selected from the list panel
-   */
-  private _selectedProduct: McsProduct;
-  public get selectedProduct(): McsProduct { return this._selectedProduct; }
-
-  constructor() {
-    this._selectedProduct = new McsProduct();
-  }
-
-  /**
-   * Select the product and notify the selection change
+   * Setst the product and notify the selection change
    * @param product Product to be selected
    */
-  public selectProduct(product: McsProduct): void {
-    if (isNullOrEmpty(product)) { return; }
-    this._selectedProduct = product;
-    this._productSelectionChange.next(product);
+  public setProduct(product: McsProduct): void {
+    this._eventDispatcher.dispatchEvent(EventBusItem.SelectedProduct, product);
+    this._selectedProduct$.next(product);
+  }
+
+  /**
+   * Removes the selected product on the event bus
+   */
+  public removeSelectedProduct(): void {
+    this._eventDispatcher.clearEventObject(EventBusItem.SelectedProduct);
   }
 }

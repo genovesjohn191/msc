@@ -22,6 +22,7 @@ import { GoogleAnalyticsEventsService } from './services/google-analytics-events
 import { McsSessionHandlerService } from './services/mcs-session-handler.service';
 import { McsLoadingService } from './services/mcs-loading.service';
 import { McsComponentHandlerService } from './services/mcs-component-handler.service';
+
 /** Providers */
 import { McsTextContentProvider } from './providers/mcs-text-content.provider';
 import { McsAssetsProvider } from './providers/mcs-assets.provider';

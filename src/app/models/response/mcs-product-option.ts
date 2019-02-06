@@ -3,6 +3,7 @@ import { McsProductOptionProperty } from './mcs-product-option-property';
 
 export class McsProductOption {
   public name: string;
+  public type: string;
   public displayOrder: string;
   public listOptions: string[];
 
@@ -11,6 +12,7 @@ export class McsProductOption {
 
   constructor() {
     this.name = undefined;
+    this.type = undefined;
     this.displayOrder = undefined;
     this.listOptions = undefined;
     this.properties = undefined;

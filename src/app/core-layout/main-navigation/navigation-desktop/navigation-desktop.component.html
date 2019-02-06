@@ -3,7 +3,7 @@
   <div class="product-megamenu-wrapper" mcsScrollable>
     <mcs-data-status [dataStatusFactory]="productsStatusFactory">
       <mcs-data-status-success mcsDataSuccess>
-        <mcs-grid>
+        <mcs-grid *ngIf="selectedProduct$ | async as selectedProduct">
           <mcs-grid-row>
             <ng-container *ngFor="let catalog of productCatalogs; last as isLastItem">
               <mcs-grid-column >
@@ -20,7 +20,9 @@
                           mcsId="select-product"
                           mcsEventTracker="select-product"
                           mcsEventCategory="navigation"
-                          mcsEventLabel="main-nav">{{ product.name }}</a>
+                          mcsEventLabel="main-nav"
+                          [ngClass]="{'active': selectedProduct?.id === product.id}">
+                          {{ product.name }}</a>
                       </mcs-list-item>
                     </mcs-list>
                   </section>

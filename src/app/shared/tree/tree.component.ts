@@ -71,12 +71,18 @@ export class TreeComponent<T> implements AfterContentInit, OnDestroy {
     unsubscribeSafely(this._destroySubject);
   }
 
+  /**
+   * Subscribes to tree node selection change and notify the changes to outside components
+   */
   private _subscribeToTreeNodesSelection(): void {
     this._treeNodesSelectionChanges.pipe(
       takeUntil(this._destroySubject)
     ).subscribe(() => this._notifyChanges());
   }
 
+  /**
+   * Notify the changes on the selection
+   */
   private _notifyChanges(): void {
     if (isNullOrEmpty(this.treeNodes)) { return; }
     let treeNodes = new Array<TreeNode<T>>();

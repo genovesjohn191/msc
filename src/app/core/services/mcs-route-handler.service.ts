@@ -22,6 +22,10 @@ import {
   HttpStatusCode,
   McsRouteInfo
 } from '@app/models';
+import {
+  EventBusDispatcherService,
+  EventBusItem
+} from '@app/event-bus';
 import { CoreRoutes } from '../core.routes';
 import { McsAccessControlService } from '../authentication/mcs-access-control.service';
 import { McsAuthenticationService } from '../authentication/mcs-authentication.service';
@@ -41,6 +45,7 @@ export class McsRouteHandlerService implements McsInitializer {
     private _router: Router,
     private _activatedRoute: ActivatedRoute,
     private _titleService: Title,
+    private _eventbusService: EventBusDispatcherService,
     private _loggerService: McsLoggerService,
     private _accessControlService: McsAccessControlService,
     private _authenticationService: McsAuthenticationService,
@@ -91,6 +96,7 @@ export class McsRouteHandlerService implements McsInitializer {
       if (isNullOrEmpty(response)) { return; }
       this._activeRoute = CoreRoutes.getRouteInfoByKey(+response.routeId);
       this.onActiveRoute.next(this._activeRoute);
+      this._eventbusService.dispatchEvent(EventBusItem.RouteChange, this._activeRoute);
       this._applyRouteSettings();
     });
   }
@@ -157,7 +163,7 @@ export class McsRouteHandlerService implements McsInitializer {
    */
   private _navigateToForbiddenPage() {
     this._loggerService.traceInfo(`ROUTE ACCESS DENIED!`);
-    this._errorHandlerService.handleHttpRedirectionError(HttpStatusCode.Forbidden);
+    this._errorHandlerService.redirectToErrorPage(HttpStatusCode.Forbidden);
   }
 
   /**
@@ -165,6 +171,6 @@ export class McsRouteHandlerService implements McsInitializer {
    */
   private _navigateToNotFoundPage() {
     this._loggerService.traceInfo('FEATURE FLAG IS TURNED OFF!');
-    this._errorHandlerService.handleHttpRedirectionError(HttpStatusCode.NotFound);
+    this._errorHandlerService.redirectToErrorPage(HttpStatusCode.NotFound);
   }
 }

@@ -1,0 +1,22 @@
+<mcs-alert [@fadeIn] [type]="type" *mcsComponentHandler>
+  <ng-container *ngIf="hasCustomMessage; else contentTemplate">
+    <ng-container *ngFor="let message of messages$ | async">
+      <div class="form-field-inline">
+        <mcs-icon [key]="bulletIconKey" size="xxsmall"></mcs-icon>
+        <span>{{ message }}</span>
+      </div>
+    </ng-container>
+  </ng-container>
+  <ng-template #contentTemplate>
+    <span>Something went wrong while processing your request. Please try again later.</span>
+  </ng-template>
+
+  <a mcsButton="basic" [color]="type"
+    mcsId
+    mcsAlertAction="dismiss"
+    mcsEventTracker="dissmiss-media-error"
+    mcsEventCategory="media"
+    mcsEventLabel="upload-media-page">
+    {{ type === 'error' ? 'DISMISS' : 'OK' }}
+  </a>
+</mcs-alert>

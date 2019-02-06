@@ -1,4 +1,5 @@
 import { JsonProperty } from 'json-object-mapper';
+import { isNullOrEmpty } from '@app/utilities';
 import { McsEntityBase } from '../mcs-entity.base';
 import { McsProductDependency } from './mcs-product-dependency';
 import { McsProductUseCase } from './mcs-product-use-case';
@@ -103,5 +104,21 @@ export class McsProduct extends McsEntityBase {
     this.inviewStandard = undefined;
     this.icon = undefined;
     this.tertiaryOwner = undefined;
+  }
+
+  /**
+   * Returns true when this product has product list options
+   */
+  public get hasProductListOptions(): boolean {
+    if (isNullOrEmpty(this.productOptions)) { return false; }
+    return !!this.productOptions.find((option) => !isNullOrEmpty(option.listOptions));
+  }
+
+  /**
+   * Returns true when this product has properties options
+   */
+  public get hasProductProperties(): boolean {
+    if (isNullOrEmpty(this.productOptions)) { return false; }
+    return !!this.productOptions.find((option) => !isNullOrEmpty(option.properties));
   }
 }

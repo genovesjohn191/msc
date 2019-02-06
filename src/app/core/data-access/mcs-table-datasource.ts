@@ -42,6 +42,7 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
   private _search: Search;
   private _searchPredicate: (data: T, keyword: string) => boolean;
 
+  private _addedRecordsCache: T[];
   private _datasourceFuncPointer: DelegateSource<T>;
   private _dataRecords = new BehaviorSubject<T[]>(null);
   private _dataRenderedChange = new BehaviorSubject<T[]>(null);
@@ -53,6 +54,7 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
   constructor(private _dataSource: McsRepository<T> | T[] | Observable<T[]> | DelegateSource<T>) {
     this.dataLoadingStream = new Subject<DataStatus>();
     this.totalRecordsCount = 0;
+    this._addedRecordsCache = [];
 
     this._setDatasourcePointer();
     this._subscribeToRequestChange();
@@ -162,8 +164,16 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
     predicate?: (record: T) => boolean,
     insertIndex?: number
   ): void {
-    let allRecords = this.dataRecords;
-    allRecords = addOrUpdateArrayRecord(allRecords, newRecord, false, predicate, insertIndex);
+    // We need to add the additional record on the cache, because there are
+    // instances where in the data is currently obtaining and the actual datasource
+    // will be replaced and the added data will be erased
+    if (isNullOrEmpty(this.dataRecords)) {
+      this._addedRecordsCache = addOrUpdateArrayRecord(
+        this.dataRecords, newRecord, false, predicate);
+    }
+
+    let allRecords = addOrUpdateArrayRecord(
+      this.dataRecords, newRecord, false, predicate, insertIndex);
     this._updateDataRecords(allRecords);
 
     if (this._datasourceIsRepository) {
@@ -177,8 +187,7 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
    * @param predicate Predicate definition on what to be deleted
    */
   public deleteRecordBy(predicate: (record: T) => boolean): void {
-    let allRecords = this.dataRecords;
-    allRecords = deleteArrayRecord(allRecords, predicate);
+    let allRecords = deleteArrayRecord(this.dataRecords, predicate);
     this._updateDataRecords(allRecords);
 
     if (this._datasourceIsRepository) {
@@ -307,9 +316,22 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
    * @param dataRecords Datarecords to be filtered
    */
   private _filterData(dataRecords: T[]): T[] {
-    let searchedData = this._searchData(dataRecords);
+    let addedData = this._addedData(dataRecords);
+    let searchedData = this._searchData(addedData);
     let pagedData = this._pageData(searchedData);
     return pagedData;
+  }
+
+  /**
+   * Returns the added datarecords from cache
+   * @param dataRecords Datarecords to be added
+   */
+  private _addedData(dataRecords: T[]): T[] {
+    this._addedRecordsCache.forEach((addedRecord) => {
+      dataRecords = addOrUpdateArrayRecord(
+        dataRecords, addedRecord, false);
+    });
+    return dataRecords;
   }
 
   /**

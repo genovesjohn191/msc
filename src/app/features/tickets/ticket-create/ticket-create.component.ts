@@ -256,7 +256,7 @@ export class TicketCreateComponent implements
           unsubscribeSafely(this.createTicketSubscription);
           this._changeDetectorRef.markForCheck();
           // Handle common error status code
-          this._errorHandlerService.handleHttpRedirectionError(error.status);
+          this._errorHandlerService.redirectToErrorPage(error.status);
           return throwError(error);
         })
       )
