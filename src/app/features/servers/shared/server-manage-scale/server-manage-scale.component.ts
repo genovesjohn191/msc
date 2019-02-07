@@ -1,13 +1,12 @@
 import {
   Component,
   OnInit,
-  OnChanges,
+  DoCheck,
   OnDestroy,
   Input,
   ChangeDetectionStrategy,
   EventEmitter,
   Output,
-  SimpleChanges,
   ChangeDetectorRef
 } from '@angular/core';
 import {
@@ -24,7 +23,8 @@ import {
   animateFactory,
   unsubscribeSubject,
   getSafeProperty,
-  coerceBoolean
+  coerceBoolean,
+  convertMbToGb
 } from '@app/utilities';
 import {
   McsTextContentProvider,
@@ -53,7 +53,7 @@ const DEFAULT_MIN_CPU = 2;
   ]
 })
 
-export class ServerManageScaleComponent implements OnInit, OnChanges, OnDestroy {
+export class ServerManageScaleComponent implements OnInit, DoCheck, OnDestroy {
   public textContent: any;
   public inputManageType: InputManageType;
   public sliderValueIndex: number;
@@ -83,6 +83,7 @@ export class ServerManageScaleComponent implements OnInit, OnChanges, OnDestroy 
 
   private _destroySubject = new Subject<void>();
   private _scaleOutput = new ServerManageScale();
+  private _previousResourceAvailable = 0;
 
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
@@ -96,12 +97,11 @@ export class ServerManageScaleComponent implements OnInit, OnChanges, OnDestroy 
     this._reset();
   }
 
-  public ngOnChanges(changes: SimpleChanges) {
-    let resourceChange = changes['resource'];
-    let computChange = changes['compute'];
-    if (!isNullOrEmpty(resourceChange) || !isNullOrEmpty(computChange)) {
+  public ngDoCheck() {
+    if (this._previousResourceAvailable !== this.resourceAvailableMemoryMB) {
       this._createSliderTable();
       this._reset();
+      this._previousResourceAvailable = this.resourceAvailableMemoryMB;
     }
   }
 
@@ -199,7 +199,7 @@ export class ServerManageScaleComponent implements OnInit, OnChanges, OnDestroy 
     if (isNullOrEmpty(this.fgServerScale)) { return; }
     this.fgServerScale.reset();
     this.fcCustomCpu.setValue(this.serverCpuUsed);
-    this.fcCustomMemory.setValue(this.serverMemoryUsedMB);
+    this.fcCustomMemory.setValue(convertMbToGb(this.serverMemoryUsedMB));
   }
 
   /**
@@ -293,6 +293,9 @@ export class ServerManageScaleComponent implements OnInit, OnChanges, OnDestroy 
    * Event that emits when an input has been changed
    */
   private _notifyDataChanged() {
+    let hasNoScaleContent = isNullOrEmpty(this.sliderValue) || isNullOrEmpty(this._scaleOutput);
+    if (hasNoScaleContent) { return; }
+
     // Set model data based on management type
     switch (this.inputManageType) {
       case InputManageType.Custom:

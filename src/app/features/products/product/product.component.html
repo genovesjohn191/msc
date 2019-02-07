@@ -223,54 +223,53 @@
       <div class="product-catalog-item">
         <h2>Inview</h2>
 
-        <ng-template let-inview #inviewTemplate>
-          <mcs-grid-column>
-            <h3>{{ inview.name }}</h3>
-            <p [innerHTML]="inview.description"></p>
-            <ng-container *ngIf="inview?.thresholds | mcsIsNotNullOrEmpty">
-              <mcs-table [dataSource]="inview.thresholds">
-                <!-- Description Column -->
-                <ng-container mcsColumnDef="description">
-                  <mcs-header-cell *mcsHeaderCellDef>
-                    Description
-                  </mcs-header-cell>
-                  <mcs-data-cell *mcsDataCellDef="let row">
-                    {{ row.description }}
-                  </mcs-data-cell>
+        <ng-template let-inviews #inviewTemplate>
+          <mcs-grid>
+            <mcs-grid-row *ngFor="let inview of inviews">
+              <mcs-grid-column sizeSm="12">
+                <h3>{{ inview.name }}</h3>
+                <p [innerHTML]="inview.description"></p>
+                <ng-container *ngIf="inview?.thresholds | mcsIsNotNullOrEmpty">
+                  <mcs-table [dataSource]="inview.thresholds">
+                    <!-- Description Column -->
+                    <ng-container mcsColumnDef="description">
+                      <mcs-header-cell *mcsHeaderCellDef>
+                        Description
+                      </mcs-header-cell>
+                      <mcs-data-cell *mcsDataCellDef="let row">
+                        {{ row.description }}
+                      </mcs-data-cell>
+                    </ng-container>
+
+                    <!-- Threshold Utilisation Column -->
+                    <ng-container mcsColumnDef="alertThreshold">
+                      <mcs-header-cell *mcsHeaderCellDef>
+                        Alert Threshold
+                      </mcs-header-cell>
+                      <mcs-data-cell *mcsDataCellDef="let row">
+                        {{ row.defaultAlertThreshold }}
+                      </mcs-data-cell>
+                    </ng-container>
+
+                    <!-- Header and Data row -->
+                    <mcs-header-row *mcsHeaderRowDef="thresholdColumns"></mcs-header-row>
+                    <mcs-data-row *mcsDataRowDef="let row; columns: thresholdColumns;"></mcs-data-row>
+                  </mcs-table>
                 </ng-container>
+              </mcs-grid-column>
 
-                <!-- Threshold Utilisation Column -->
-                <ng-container mcsColumnDef="alertThreshold">
-                  <mcs-header-cell *mcsHeaderCellDef>
-                    Alert Threshold
-                  </mcs-header-cell>
-                  <mcs-data-cell *mcsDataCellDef="let row">
-                    {{ row.defaultAlertThreshold }}
-                  </mcs-data-cell>
-                </ng-container>
-
-                <!-- Header and Data row -->
-                <mcs-header-row *mcsHeaderRowDef="thresholdColumns"></mcs-header-row>
-                <mcs-data-row *mcsDataRowDef="let row; columns: thresholdColumns;"></mcs-data-row>
-              </mcs-table>
-            </ng-container>
-          </mcs-grid-column>
-
-          <mcs-grid-column *ngIf="inview.graphUrl | mcsIsNotNullOrEmpty">
-            <img [src]="inview.graphUrl" class="image-responsive">
-          </mcs-grid-column>
+              <mcs-grid-column *ngIf="inview.graphUrl | mcsIsNotNullOrEmpty" sizeSm="12">
+                <img [src]="inview.graphUrl" class="image-responsive">
+              </mcs-grid-column>
+            </mcs-grid-row>
+          </mcs-grid>
         </ng-template>
 
-        <mcs-grid>
-          <mcs-grid-row *ngFor="let inview of selectedProduct.inviewPremium">
-            <ng-container *ngTemplateOutlet="inviewTemplate;
-              context: { $implicit: inview }"></ng-container>
-          </mcs-grid-row>
-          <mcs-grid-row *ngFor="let inview of selectedProduct.inviewStandard">
-            <ng-container *ngTemplateOutlet="inviewTemplate;
-              context: { $implicit: inview }"></ng-container>
-          </mcs-grid-row>
-        </mcs-grid>
+        <ng-container *ngTemplateOutlet="inviewTemplate;
+          context: { $implicit: selectedProduct.inviewPremium }"></ng-container>
+
+        <ng-container *ngTemplateOutlet="inviewTemplate;
+          context: { $implicit: selectedProduct.inviewStandard }"></ng-container>
       </div>
     </mcs-scrollable-link>
 

@@ -65,6 +65,10 @@ export class TicketsComponent
     this.dispose();
   }
 
+  public get routeKeyEnum(): any {
+    return RouteKey;
+  }
+
   /**
    * Navigate to ticket details page
    * @param ticket Ticket to view the details

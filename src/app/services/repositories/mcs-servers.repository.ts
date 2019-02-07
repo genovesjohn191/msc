@@ -407,6 +407,8 @@ export class McsServersRepository extends McsRepositoryBase<McsServer>
    * A virtual method that gets called when all of the obtainment from api are finished
    */
   public registerEvents(): void {
+    // TODO: Once we use the event-bus in here,
+    // we need to create an event manager for the repository
     this._notificationEvents.createServerEvent
       .pipe(takeUntil(this.eventResetSubject))
       .subscribe(this._onCreateServer.bind(this));

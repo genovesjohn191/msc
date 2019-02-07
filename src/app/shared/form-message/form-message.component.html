@@ -8,15 +8,11 @@
     </ng-container>
   </ng-container>
   <ng-template #contentTemplate>
-    <span>Something went wrong while processing your request. Please try again later.</span>
+    <span><ng-content></ng-content></span>
   </ng-template>
 
   <a mcsButton="basic" [color]="type"
-    mcsId
-    mcsAlertAction="dismiss"
-    mcsEventTracker="dissmiss-media-error"
-    mcsEventCategory="media"
-    mcsEventLabel="upload-media-page">
+    mcsId="form-message-dismiss" mcsAlertAction="dismiss">
     {{ type === 'error' ? 'DISMISS' : 'OK' }}
   </a>
 </mcs-alert>

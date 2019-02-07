@@ -25,7 +25,7 @@ import {
 } from '@app/core';
 import {
   EventBusDispatcherService,
-  EventBusItem
+  EventBusState
 } from '@app/event-bus';
 import { FormMessage } from './form-message';
 import { ComponentHandlerDirective } from '../directives';
@@ -64,7 +64,7 @@ export class FormMessageComponent implements OnInit, OnDestroy, FormMessage {
 
   public ngOnInit() {
     this._changeRouteSubs = this._eventbusService.addEventListener(
-      EventBusItem.RouteChange, this._onRouteChange.bind(this));
+      EventBusState.RouteChange, this._onRouteChange.bind(this));
   }
 
   public ngOnDestroy() {

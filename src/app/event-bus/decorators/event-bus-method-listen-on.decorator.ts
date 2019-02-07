@@ -1,5 +1,5 @@
 import { map } from 'rxjs/operators';
-import { EventBusItem } from '../event-bus-item.enum';
+import { EventBusState } from '../event-bus-state.enum';
 import { EventBusDispatcherCore } from '../event-bus-dispatcher-core';
 
 /**
@@ -7,7 +7,7 @@ import { EventBusDispatcherCore } from '../event-bus-dispatcher-core';
  * @param event Event name on where to listen
  * @param destroy Flag that determines if the event should be automatically released
  */
-export function EventBusMethodListenOn(event: EventBusItem, destroy: boolean = false) {
+export function EventBusMethodListenOn(event: EventBusState, destroy: boolean = false) {
   return (target: any, _name: string, descriptor: PropertyDescriptor) => {
     let eventsService = EventBusDispatcherCore.getInstance();
     let originalMethod = descriptor.value;

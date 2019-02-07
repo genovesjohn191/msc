@@ -56,6 +56,10 @@ export class OrdersComponent
     this.dispose();
   }
 
+  public get routeKeyEnum(): any {
+    return RouteKey;
+  }
+
   /**
    * Returns the + icon key
    */

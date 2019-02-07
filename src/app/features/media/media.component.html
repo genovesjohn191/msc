@@ -3,7 +3,7 @@
   <mcs-top-panel *mcsTopPanelDef>
     <ng-container *ngIf="hasResources$ | async">
       <mcs-top-panel-item *mcsTopPanelItemDef>
-        <mcs-action-item *mcsAccessControl="[]; feature: 'EnableResourceMediaUpload'"
+        <mcs-action-item *mcsAccessControl="['TemplateEdit']; feature: 'EnableResourceMediaUpload'"
           (click)="navigateToMediaUpload()"
           mcsId
           mcsEventTracker="upload-media"
@@ -56,7 +56,7 @@
             {{ columnSettings.media.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
-            <a (click)="navigateToMedia(row)"
+            <a [mcsRouterLink]="[routeKeyEnum.Medium, row.id]"
               mcsId="select-media"
               mcsEventTracker="navigate-to-media"
               mcsEventCategory="media"

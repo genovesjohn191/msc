@@ -19,7 +19,7 @@
 
         <mcs-item>
           <span>{{ textContent.vdcProperties.configuration }}:</span>
-          <span [innerHTML]="selectedVdc?.compute?.memoryLimitMBLabel | mcsDataLabel"></span>
+          <span [innerHTML]="selectedVdc?.compute?.memoryLimitMB | mcsDataSize: 'MB'"></span>
           <span>/</span>
           <span [innerHTML]="selectedVdc?.compute?.cpuLimitMBLabel | mcsDataLabel"></span>
         </mcs-item>

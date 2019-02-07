@@ -4,7 +4,6 @@ import {
   OnDestroy,
   ChangeDetectorRef,
   ElementRef,
-  AfterViewInit,
   ViewChild
 } from '@angular/core';
 import {
@@ -23,8 +22,6 @@ import {
   catchError,
   tap,
   finalize,
-  switchMap,
-  take,
   shareReplay
 } from 'rxjs/operators';
 import {
@@ -33,7 +30,6 @@ import {
   CoreDefinition,
   McsErrorHandlerService,
   McsFormGroupService,
-  McsScrollDispatcherService,
   McsLoadingService,
   CoreRoutes
 } from '@app/core';
@@ -41,7 +37,8 @@ import {
   unsubscribeSafely,
   isNullOrEmpty,
   McsSafeToNavigateAway,
-  getSafeProperty
+  getSafeProperty,
+  getUniqueRecords
 } from '@app/utilities';
 import { McsResourcesRepository } from '@app/services';
 import {
@@ -54,7 +51,7 @@ import {
 } from '@app/models';
 import {
   FormGroupDirective,
-  ComponentHandlerDirective
+  FormMessage
 } from '@app/shared';
 import { MediaUploadService } from '../media-upload.service';
 
@@ -64,11 +61,10 @@ import { MediaUploadService } from '../media-upload.service';
 })
 
 export class MediaUploadDetailsComponent
-  implements McsSafeToNavigateAway, OnInit, AfterViewInit, OnDestroy {
+  implements McsSafeToNavigateAway, OnInit, OnDestroy {
 
   public textContent: any;
   public resources$: Observable<McsResource[]>;
-  public catalogItems$: Observable<McsResourceCatalogItem[]>;
   public selectedCatalog$: BehaviorSubject<McsResourceCatalogItem>;
   public selectedResource$: Observable<McsResource>;
   public selectedResourceId: string;
@@ -97,8 +93,8 @@ export class MediaUploadDetailsComponent
   @ViewChild(FormGroupDirective)
   private _formGroup: FormGroupDirective;
 
-  @ViewChild(ComponentHandlerDirective)
-  private _stepAlertMessage: ComponentHandlerDirective;
+  @ViewChild('formMessage')
+  private _formMessage: FormMessage;
 
   constructor(
     private _elementRef: ElementRef,
@@ -108,8 +104,7 @@ export class MediaUploadDetailsComponent
     private _loadingService: McsLoadingService,
     private _errorHandlerService: McsErrorHandlerService,
     private _resourcesRepository: McsResourcesRepository,
-    private _mediaUploadService: MediaUploadService,
-    private _scrollElementService: McsScrollDispatcherService
+    private _mediaUploadService: MediaUploadService
   ) {
     this.selectedCatalog$ = new BehaviorSubject(undefined);
   }
@@ -117,15 +112,8 @@ export class MediaUploadDetailsComponent
   public ngOnInit() {
     this.textContent = this._textContentProvider.content.mediaUpload.mediaStepDetails;
     this._registerFormGroup();
+    this._subscribeToResourcesDataChange();
     this._subsribeToResources();
-  }
-
-  public ngAfterViewInit() {
-    Promise.resolve().then(() => {
-      if (!isNullOrEmpty(this._stepAlertMessage)) {
-        this._stepAlertMessage.removeComponent();
-      }
-    });
   }
 
   public ngOnDestroy() {
@@ -142,11 +130,10 @@ export class MediaUploadDetailsComponent
   /**
    * Event that emits whenever a resource has been change
    */
-  public onChangeResource(_resource: McsResource): void {
-    if (isNullOrEmpty(_resource)) { return; }
-    this.selectedResourceId = _resource.id;
-    this._subscribeToResourceById(_resource.id);
-    this._subscribeToCatalogItems();
+  public onChangeResource(resource: McsResource): void {
+    if (isNullOrEmpty(resource)) { return; }
+    this.selectedResourceId = resource.id;
+    this._subscribeToResourceById(resource.id);
   }
 
   /**
@@ -183,6 +170,16 @@ export class MediaUploadDetailsComponent
   }
 
   /**
+   * Filters all unique catalog items from the resource
+   * @param resource Selected resource where to extract the catalog items
+   */
+  public filterUniqueCatalogs(resource: McsResource): McsResourceCatalogItem[] {
+    let catalogItems = getSafeProperty(resource, (obj) => obj.catalogItems, []).slice();
+    catalogItems = getUniqueRecords(catalogItems, (catalog) => catalog.name);
+    return catalogItems;
+  }
+
+  /**
    * Upload media based on form contents
    */
   private _uploadMedia(): Observable<McsJob> {
@@ -196,19 +193,16 @@ export class MediaUploadDetailsComponent
     uploadMediaModel.clientReferenceObject.resourcePath =
       CoreRoutes.getNavigationPath(RouteKey.Medium);
 
-    this._stepAlertMessage.removeComponent();
     return this._mediaUploadService.uploadMedia(
       this.selectedResourceId,
       uploadMediaModel
     ).pipe(
       catchError((_error) => {
-        this._stepAlertMessage.createComponent();
-        this._scrollElementService.scrollToElement(this._stepAlertMessage.elementRef.nativeElement);
+        this._formMessage.showMessage();
         return throwError(_error);
       }),
       tap(() => {
         this.mediaUploading = true;
-        this._stepAlertMessage.removeComponent();
       }),
       finalize(() => this._changeDetectorRef.markForCheck())
     );
@@ -243,28 +237,6 @@ export class MediaUploadDetailsComponent
       }),
       finalize(() => this._loadingService.hideLoader()),
       tap(() => this._resetFormFields())
-    );
-  }
-
-  /**
-   * Subscribe to catalog items for every resource change
-   */
-  private _subscribeToCatalogItems(): void {
-    this.catalogItems$ = this.selectedResource$.pipe(
-      switchMap((response) => {
-        let uniqueMapList = new Map<string, McsResourceCatalogItem>();
-        let catalogItems = getSafeProperty(response, (obj) => obj.catalogItems);
-        if (!isNullOrEmpty(catalogItems)) {
-          catalogItems.forEach((_catalog) => {
-            let itemExist = uniqueMapList.get(_catalog.name);
-            if (!itemExist) {
-              uniqueMapList.set(_catalog.name, _catalog);
-            }
-          });
-        }
-        return of(Array.from(uniqueMapList.values()));
-      }),
-      take(1)
     );
   }
 
@@ -328,6 +300,15 @@ export class MediaUploadDetailsComponent
     this._formGroupService.touchAllFieldsByFormGroup(this.fgMediaUpload);
     this._formGroupService.scrollToFirstInvalidField(this._elementRef.nativeElement);
     return false;
+  }
+
+  /**
+   * Subscribes to resources data change on the repository
+   */
+  private _subscribeToResourcesDataChange(): void {
+    this._resourcesRepository.dataChange().subscribe(() => {
+      this._changeDetectorRef.markForCheck();
+    });
   }
 
   /**

@@ -1,17 +1,9 @@
 <div class="limited-view">
   <div class="contextual-help-page-wrapper">
-    <div *mcsComponentHandler>
-      <mcs-alert type="error">
-        {{ textContent.errors.mediaUploadError }}
-        <a mcsButton="basic" color="error" mcsAlertAction="dismiss"
-          mcsId
-          mcsEventTracker="dissmiss-media-error"
-          mcsEventCategory="media"
-          mcsEventLabel="upload-media-page">
-          {{ textContent.mediaUploadDismissLabel }}
-        </a>
-      </mcs-alert>
-    </div>
+    <!-- Form Message -->
+    <mcs-form-message type="error" #formMessage>
+      {{ textContent.errors.mediaUploadError }}
+    </mcs-form-message>
     <p>{{ textContent.description }}</p>
 
     <form [formGroup]="fgMediaUpload" mcsFormGroup>
@@ -39,7 +31,7 @@
       </mcs-form-field>
 
       <!-- Catalog Select -->
-      <mcs-form-field>
+      <mcs-form-field *ngIf="selectedResource$ | async as selectedResource">
         <mcs-select [formControl]="fcCatalogs" required
           mcsId="select-catalog"
           (change)="onChangeCatalog($event)"
@@ -50,7 +42,8 @@
             <ng-container *mcsOptionGroupHeader>
               {{ textContent.selectCatalogHeader }}
             </ng-container>
-            <mcs-option *ngFor="let catalog of catalogItems$ | async" [value]="catalog">
+            <mcs-option *ngFor="let catalog of filterUniqueCatalogs(selectedResource)"
+              [value]="catalog">
               {{ catalog.name }}
             </mcs-option>
           </mcs-option-group>

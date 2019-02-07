@@ -59,7 +59,7 @@
             {{ columnSettings.description.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
-            <a (click)="navigateToOrder(row)"
+            <a [mcsRouterLink]="[routeKeyEnum.OrderDetail, row.id]"
               mcsId="select-order"
               mcsEventTracker="navigate-to-order"
               mcsEventCategory="order"
