@@ -96,7 +96,7 @@ export class McsRouteHandlerService implements McsInitializer {
       if (isNullOrEmpty(response)) { return; }
       this._activeRoute = CoreRoutes.getRouteInfoByKey(+response.routeId);
       this.onActiveRoute.next(this._activeRoute);
-      this._eventbusService.dispatchEvent(EventBusState.RouteChange, this._activeRoute);
+      this._eventbusService.dispatch(EventBusState.RouteChange, this._activeRoute);
       this._applyRouteSettings();
     });
   }

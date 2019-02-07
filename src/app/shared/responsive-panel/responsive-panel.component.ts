@@ -11,16 +11,20 @@ import {
   OnDestroy,
   ContentChildren,
   QueryList,
-  ViewChild
+  ViewChild,
+  NgZone
 } from '@angular/core';
 import {
   Observable,
   Subject,
-  merge
+  merge,
+  defer
 } from 'rxjs';
 import {
   startWith,
-  takeUntil
+  takeUntil,
+  take,
+  switchMap
 } from 'rxjs/operators';
 import {
   CoreDefinition,
@@ -29,8 +33,7 @@ import {
 } from '@app/core';
 import {
   isNullOrEmpty,
-  unsubscribeSubject,
-  refreshView
+  unsubscribeSubject
 } from '@app/utilities';
 import {
   ResponsivePanelBarComponent
@@ -102,13 +105,20 @@ export class ResponsivePanelComponent implements AfterViewInit, AfterViewChecked
   }
 
   /**
-   * Combine stream of all the selected item child's change event
+   * Returns all the combined selection changes event of all the panel items
    */
-  public get itemsSelectionChanged(): Observable<ResponsivePanelItemDirective> {
-    return merge(...this.panelItems.map((item) => item.select));
-  }
+  private readonly _itemsSelectionChanged: Observable<ResponsivePanelItemDirective> = defer(() => {
+    if (!isNullOrEmpty(this.panelItems)) {
+      return merge(...this.panelItems.map((panelItem) => panelItem.selectionChange));
+    }
+    return this._ngZone.onStable.asObservable().pipe(
+      take(1),
+      switchMap(() => this._itemsSelectionChanged)
+    );
+  });
 
   constructor(
+    private _ngZone: NgZone,
     private _elementRef: ElementRef,
     private _changeDetectorRef: ChangeDetectorRef,
     private _renderer: Renderer2,
@@ -116,16 +126,16 @@ export class ResponsivePanelComponent implements AfterViewInit, AfterViewChecked
   ) { }
 
   public ngAfterViewInit(): void {
-    // We need to listen to changes on header
-    // in order to cater the scenarios of dynamic adding of responsive panel item
-    this.panelItems.changes
-      .pipe(startWith(null), takeUntil(this._destroySubject))
-      .subscribe(() => {
-        this._updatePagination();
-        this._listenToSelectionChange();
-        this._selectActivePanelItem();
-      });
-    this._listenToViewportChange();
+    Promise.resolve().then(() => {
+      this.panelItems.changes
+        .pipe(startWith(null), takeUntil(this._destroySubject))
+        .subscribe(() => {
+          this._updatePagination();
+          this._subscribeToSelectionChange();
+          this._selectActivePanelItem();
+        });
+    });
+    this._subscribeToViewportChange();
   }
 
   public ngAfterViewChecked(): void {
@@ -234,32 +244,39 @@ export class ResponsivePanelComponent implements AfterViewInit, AfterViewChecked
    */
   private _selectActivePanelItem(): void {
     if (isNullOrEmpty(this._selectedPanelItem)) { return; }
-    this._selectedPanelItem.select.emit(this._selectedPanelItem);
+    this._selectedPanelItem.selectionChange.emit(this._selectedPanelItem);
   }
 
   /**
    * Listen to selection changed of all the items
    */
-  private _listenToSelectionChange(): void {
+  private _subscribeToSelectionChange(): void {
     let resetSubject = merge(this.panelItems.changes, this._destroySubject);
-    this.itemsSelectionChanged
-      .pipe(takeUntil(resetSubject))
-      .subscribe((item) => {
-        refreshView(() => {
-          this._selectedPanelItem = item;
-          if (this.showPaginationControls) { this._scrollToElement(item); }
-          if (item.selectable) {
-            this.panelBorderBar.alignToElement(item.elementRef);
-          }
-          this._changeDetectorRef.markForCheck();
-        });
+
+    this._itemsSelectionChanged.pipe(
+      startWith(null),
+      takeUntil(resetSubject)
+    ).subscribe((selectedItem) => {
+      if (isNullOrEmpty(selectedItem)) {
+        selectedItem = this.panelItems.find((panelItem) => panelItem.active);
+      }
+      if (isNullOrEmpty(selectedItem)) { return; }
+
+      Promise.resolve().then(() => {
+        this._selectedPanelItem = selectedItem;
+        if (this.showPaginationControls) { this._scrollToElement(selectedItem); }
+
+        if (selectedItem.selectable) {
+          this.panelBorderBar.alignToElement(selectedItem.elementRef);
+        }
       });
+    });
   }
 
   /**
    * Listen to viewport resize change
    */
-  private _listenToViewportChange(): void {
+  private _subscribeToViewportChange(): void {
     this._viewportService.change()
       .pipe(takeUntil(this._destroySubject))
       .subscribe(() => this._updatePagination());
