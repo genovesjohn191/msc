@@ -47,7 +47,7 @@ export class EventBusDispatcherCore {
    * @param event Event name of the event to dispatch
    * @param args Arguments to be dispatched on the event
    */
-  public dispatchEvent<T>(event: EventBusState, ...args: T[]): void {
+  public dispatch<T>(event: EventBusState, ...args: T[]): void {
     let eventObject = this._getEventObjectFromCache(event);
     eventObject.latestArgs = args;
     eventObject.subject.next({ params: eventObject.latestArgs });

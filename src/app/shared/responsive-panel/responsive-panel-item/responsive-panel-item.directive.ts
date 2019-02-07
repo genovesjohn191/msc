@@ -23,7 +23,7 @@ export class ResponsivePanelItemDirective {
   /**
    * Event that emits when selection is changed
    */
-  public select: EventEmitter<any>;
+  public selectionChange: EventEmitter<any>;
 
   @Input()
   public id: string = McsUniqueId.NewId('responsive-panel-item');
@@ -44,7 +44,7 @@ export class ResponsivePanelItemDirective {
     if (this._active !== value) {
       this._active = coerceBoolean(value);
       if (this._active) {
-        this.select.next(this);
+        this.selectionChange.next(this);
       }
       this.changeDetectorRef.markForCheck();
     }
@@ -55,7 +55,7 @@ export class ResponsivePanelItemDirective {
     private _elementRef: ElementRef,
     public changeDetectorRef: ChangeDetectorRef
   ) {
-    this.select = new EventEmitter();
+    this.selectionChange = new EventEmitter();
   }
 
   /**
@@ -69,6 +69,6 @@ export class ResponsivePanelItemDirective {
    * Event that triggers when the component is clicked
    */
   public onClick(): void {
-    this.select.next(this);
+    this.selectionChange.next(this);
   }
 }

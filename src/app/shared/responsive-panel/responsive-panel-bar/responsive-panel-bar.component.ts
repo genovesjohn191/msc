@@ -3,7 +3,6 @@ import {
   Renderer2,
   ElementRef,
   NgZone,
-  ChangeDetectorRef,
   ViewEncapsulation,
   ChangeDetectionStrategy
 } from '@angular/core';
@@ -21,7 +20,6 @@ import {
 export class ResponsivePanelBarComponent {
 
   constructor(
-    private _changeDetectorRef: ChangeDetectorRef,
     private _renderer: Renderer2,
     private _elementRef: ElementRef,
     private _ngZone: NgZone
@@ -32,14 +30,11 @@ export class ResponsivePanelBarComponent {
    * @param element Element where the border will be align
    */
   public alignToElement(element: HTMLElement) {
-    if (typeof requestAnimationFrame !== 'undefined') {
-      this._ngZone.runOutsideAngular(() => {
-        requestAnimationFrame(() => this._setStyles(element));
-      });
-    } else {
-      this._setStyles(element);
-    }
-    this._changeDetectorRef.markForCheck();
+    this._ngZone.runOutsideAngular(() => {
+      typeof requestAnimationFrame !== 'undefined' ?
+        requestAnimationFrame(() => this._setStyles(element)) :
+        setTimeout(() => this._setStyles(element));
+    });
   }
 
   /**

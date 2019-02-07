@@ -28,7 +28,7 @@ export class EventBusDispatcherService {
    * @param event Event name of the event to dispatch
    * @param args Arguments to be dispatched on the event
    */
-  public dispatchEvent<T>(event: EventBusState, ...args: T[]): void {
-    this._eventDispatcherRef.dispatchEvent(event, args);
+  public dispatch<T>(event: EventBusState, ...args: T[]): void {
+    this._eventDispatcherRef.dispatch(event, args);
   }
 }
