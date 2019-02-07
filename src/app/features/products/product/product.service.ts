@@ -5,7 +5,7 @@ import {
 } from 'rxjs';
 import {
   EventBusDispatcherService,
-  EventBusItem
+  EventBusState
 } from '@app/event-bus';
 import { McsProduct } from '@app/models';
 
@@ -27,7 +27,7 @@ export class ProductService {
    * @param product Product to be selected
    */
   public setProduct(product: McsProduct): void {
-    this._eventDispatcher.dispatchEvent(EventBusItem.SelectedProduct, product);
+    this._eventDispatcher.dispatchEvent(EventBusState.ProductSelected, product);
     this._selectedProduct$.next(product);
   }
 
@@ -35,6 +35,6 @@ export class ProductService {
    * Removes the selected product on the event bus
    */
   public removeSelectedProduct(): void {
-    this._eventDispatcher.clearEventObject(EventBusItem.SelectedProduct);
+    this._eventDispatcher.dispatchEvent(EventBusState.ProductUnSelected);
   }
 }

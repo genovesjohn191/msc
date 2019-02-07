@@ -9,8 +9,8 @@ export enum ConfigurationStatus {
 
 export const configurationStatusText = {
   [ConfigurationStatus.Unknown]: 'Unknown',
-  [ConfigurationStatus.InSync]: 'InSync',
-  [ConfigurationStatus.OutOfSync]: 'OutOfSync'
+  [ConfigurationStatus.InSync]: 'In Sync',
+  [ConfigurationStatus.OutOfSync]: 'Out Of Sync'
 };
 
 /**

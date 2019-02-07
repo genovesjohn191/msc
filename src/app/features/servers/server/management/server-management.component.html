@@ -28,7 +28,7 @@
 
             <mcs-item>
               <span>{{ textContent.vmProperties.configuration }}:</span>
-              <span>{{ serverDetails.server.compute?.memoryMB | number }} MB</span>
+              <span>{{ serverDetails.server.compute?.memoryMB | mcsDataSize: 'MB' }}</span>
               <span> / </span>
               <span>{{ serverDetails.server.compute?.cpuCount | number }} vCPU</span>
               <ng-container *mcsAccessControl="['VmEdit']">

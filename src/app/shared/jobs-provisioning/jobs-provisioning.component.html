@@ -67,12 +67,14 @@
                   <mcs-icon [key]="successIconKey" size="small"></mcs-icon>
                   <span>{{ textContent.deploymentCompleted }}</span>
                 </mcs-item>
-                <mcs-item>
-                  <a mcsButton arrow="right" size="small"
-                    [mcsRouterLink]="job.resourceLink" mcsId="view-job">
-                    {{ textContent.viewDetails }}
-                  </a>
-                </mcs-item>
+                <div margin-top-medium>
+                  <mcs-item>
+                    <a mcsButton arrow="right" size="small"
+                      [mcsRouterLink]="job.resourceLink" mcsId="view-job">
+                      {{ textContent.viewDetails }}
+                    </a>
+                  </mcs-item>
+                </div>
               </ng-container>
 
               <!-- Error -->

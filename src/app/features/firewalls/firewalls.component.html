@@ -43,7 +43,7 @@
           <mcs-data-cell *mcsDataCellDef="let row">
             <mcs-item>
               <mcs-icon [key]="row.connectionStatusIconKey" size="small"></mcs-icon>
-              <a (click)="navigateToFirewall(row)"
+              <a [mcsRouterLink]="[routeKeyEnum.FirewallDetail, row.id]"
                 mcsId="select-firewall"
                 mcsEventTracker="select-firewall"
                 mcsEventCategory="firewall"

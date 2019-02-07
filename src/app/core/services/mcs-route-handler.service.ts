@@ -24,7 +24,7 @@ import {
 } from '@app/models';
 import {
   EventBusDispatcherService,
-  EventBusItem
+  EventBusState
 } from '@app/event-bus';
 import { CoreRoutes } from '../core.routes';
 import { McsAccessControlService } from '../authentication/mcs-access-control.service';
@@ -96,7 +96,7 @@ export class McsRouteHandlerService implements McsInitializer {
       if (isNullOrEmpty(response)) { return; }
       this._activeRoute = CoreRoutes.getRouteInfoByKey(+response.routeId);
       this.onActiveRoute.next(this._activeRoute);
-      this._eventbusService.dispatchEvent(EventBusItem.RouteChange, this._activeRoute);
+      this._eventbusService.dispatchEvent(EventBusState.RouteChange, this._activeRoute);
       this._applyRouteSettings();
     });
   }

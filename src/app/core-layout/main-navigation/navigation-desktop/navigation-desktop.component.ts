@@ -8,7 +8,7 @@ import {
 import { Router } from '@angular/router';
 import {
   throwError,
-  Observable
+  Subject
 } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import {
@@ -25,7 +25,8 @@ import {
 } from '@app/models';
 import {
   EventBusPropertyListenOn,
-  EventBusItem
+  EventBusState,
+  EventBusDispatcherService
 } from '@app/event-bus';
 import { isNullOrEmpty } from '@app/utilities';
 import { McsProductCatalogRepository } from '@app/services';
@@ -43,8 +44,8 @@ export class NavigationDesktopComponent implements OnInit {
   public productCatalogs: McsProductCatalog[];
   public productsStatusFactory: McsDataStatusFactory<McsProductCatalog[]>;
 
-  @EventBusPropertyListenOn(EventBusItem.SelectedProduct)
-  public selectedProduct$: Observable<McsProduct>;
+  @EventBusPropertyListenOn(EventBusState.ProductSelected)
+  public selectedProduct$: Subject<McsProduct>;
 
   public get arrowUpIconKey(): string {
     return CoreDefinition.ASSETS_SVG_ARROW_UP_WHITE;
@@ -58,6 +59,7 @@ export class NavigationDesktopComponent implements OnInit {
     private _router: Router,
     private _coreConfig: CoreConfig,
     private _changeDetectorRef: ChangeDetectorRef,
+    private _eventDispatcher: EventBusDispatcherService,
     private _textContentProvider: McsTextContentProvider,
     private _productCatalogRepository: McsProductCatalogRepository
   ) {
@@ -66,6 +68,7 @@ export class NavigationDesktopComponent implements OnInit {
 
   public ngOnInit() {
     this.textContent = this._textContentProvider.content.navigation;
+    this._registerEvents();
     this._getProductCatalogs();
   }
 
@@ -90,6 +93,22 @@ export class NavigationDesktopComponent implements OnInit {
   public gotoProduct(_product: McsProduct) {
     if (isNullOrEmpty(_product)) { return; }
     this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.ProductDetail), _product.id]);
+  }
+
+  /**
+   * Register events state
+   */
+  private _registerEvents(): void {
+    this._eventDispatcher.addEventListener(
+      EventBusState.ProductUnSelected, this._onProductUnSelected.bind(this)
+    );
+  }
+
+  /**
+   * Event that gets notified when product has been unselected
+   */
+  private _onProductUnSelected(): void {
+    this.selectedProduct$.next({} as any);
   }
 
   /**

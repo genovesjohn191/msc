@@ -61,6 +61,10 @@ export class FirewallsComponent
     this.dispose();
   }
 
+  public get routeKeyEnum(): any {
+    return RouteKey;
+  }
+
   /**
    * Navigate to firewall details page
    * @param firewall Firewall to view the details

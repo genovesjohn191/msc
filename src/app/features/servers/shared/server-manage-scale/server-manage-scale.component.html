@@ -27,7 +27,7 @@
           [ngModel]="sliderValueIndex"
           (ngModelChange)="onSliderChanged($event)"></mcs-slider>
         <strong display-block text-center>
-          {{ sliderValue?.memoryMB | number }} {{ textContent.ramUnit }} {{ textContent.ramLabel }} /
+          {{ sliderValue?.memoryMB | mcsDataSize: 'MB' }} {{ textContent.ramLabel }} /
           {{ sliderValue?.cpuCount | number}} {{ textContent.cpuUnit }}
         </strong>
       </div>
@@ -62,7 +62,7 @@
           </mcs-error>
           <mcs-error mcsError errorState="memoryInvalid">
             {{ textContent.errors.ramInvalid |
-              mcsTextPlaceholder: 'multiplier': '2048' }}
+              mcsTextPlaceholder: 'multiplier': '2' }}
           </mcs-error>
         </mcs-form-field>
 

@@ -20,8 +20,7 @@ import {
 } from '@angular/animations';
 import {
   throwError,
-  Subject,
-  Observable
+  Subject
 } from 'rxjs';
 import {
   catchError,
@@ -49,7 +48,8 @@ import {
 } from '@app/models';
 import {
   EventBusPropertyListenOn,
-  EventBusItem
+  EventBusState,
+  EventBusDispatcherService
 } from '@app/event-bus';
 import { SlidingPanelComponent } from '@app/shared';
 import { McsProductCatalogRepository } from '@app/services';
@@ -78,8 +78,8 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
   @ViewChild('slidingPanel')
   public slidingPanel: SlidingPanelComponent;
 
-  @EventBusPropertyListenOn(EventBusItem.SelectedProduct)
-  public selectedProduct$: Observable<McsProduct>;
+  @EventBusPropertyListenOn(EventBusState.ProductSelected)
+  public selectedProduct$: Subject<McsProduct>;
 
   public textContent: any;
   public productCatalogs: McsProductCatalog[];
@@ -137,6 +137,7 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
     private _router: Router,
     private _coreConfig: CoreConfig,
     private _changeDetectorRef: ChangeDetectorRef,
+    private _eventDispatcher: EventBusDispatcherService,
     private _authenticationIdentity: McsAuthenticationIdentity,
     private _authenticationService: McsAuthenticationService,
     private _textContentProvider: McsTextContentProvider,
@@ -148,6 +149,7 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this.textContent = this._textContentProvider.content.navigation;
+    this._registerEvents();
     this._listenToRouterEvents();
     this._listenToSwitchAccount();
     this._getProductCatalogs();
@@ -195,6 +197,22 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
   public gotoProduct(_product: McsProduct) {
     if (isNullOrEmpty(_product)) { return; }
     this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.ProductDetail), _product.id]);
+  }
+
+  /**
+   * Register events state
+   */
+  private _registerEvents(): void {
+    this._eventDispatcher.addEventListener(
+      EventBusState.ProductUnSelected, this._onProductUnSelected.bind(this)
+    );
+  }
+
+  /**
+   * Event that gets notified when product has been unselected
+   */
+  private _onProductUnSelected(): void {
+    this.selectedProduct$.next({} as any);
   }
 
   /**

@@ -136,6 +136,10 @@ export class ServersComponent
     unsubscribeSubject(this._destroySubject);
   }
 
+  public get routeKeyEnum(): any {
+    return RouteKey;
+  }
+
   /**
    * Return true if all the displayed record is selected otherwise false
    */
