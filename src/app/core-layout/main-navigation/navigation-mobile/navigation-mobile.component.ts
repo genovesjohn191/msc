@@ -7,10 +7,7 @@ import {
   ChangeDetectorRef,
   ViewEncapsulation
 } from '@angular/core';
-import {
-  Router,
-  NavigationStart
-} from '@angular/router';
+import { Router } from '@angular/router';
 import {
   trigger,
   state,
@@ -22,26 +19,22 @@ import {
   throwError,
   Subject
 } from 'rxjs';
-import {
-  catchError,
-  takeUntil
-} from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 /** Providers / Services */
 import {
   CoreConfig,
   CoreDefinition,
-  McsAuthenticationIdentity,
   McsAuthenticationService,
   McsTextContentProvider,
   McsDataStatusFactory,
-  CoreRoutes
+  CoreRoutes,
+  McsAccessControlService
 } from '@app/core';
 import {
   isNullOrEmpty,
   unsubscribeSubject
 } from '@app/utilities';
 import {
-  McsCompany,
   RouteKey,
   McsProduct,
   McsProductCatalog
@@ -75,24 +68,18 @@ import { McsProductCatalogRepository } from '@app/services';
 })
 
 export class NavigationMobileComponent implements OnInit, OnDestroy {
+  public textContent: any;
+  public productCatalogs: McsProductCatalog[];
+  public productsStatusFactory: McsDataStatusFactory<McsProductCatalog[]>;
+  public switchAccountAnimation: string;
+
   @ViewChild('slidingPanel')
   public slidingPanel: SlidingPanelComponent;
 
   @EventBusPropertyListenOn(EventBusState.ProductSelected)
   public selectedProduct$: Subject<McsProduct>;
 
-  public textContent: any;
-  public productCatalogs: McsProductCatalog[];
-  public productsStatusFactory: McsDataStatusFactory<McsProductCatalog[]>;
-  public switchAccountAnimation: string;
   private _destroySubject = new Subject<void>();
-
-  /**
-   * Get the currently active account
-   */
-  public get activeAccount(): McsCompany {
-    return this._authenticationIdentity.activeAccount;
-  }
 
   public get macviewUrl(): string {
     return this._coreConfig.macviewUrl;
@@ -118,14 +105,6 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
     return CoreDefinition.ASSETS_SVG_CLOSE_WHITE;
   }
 
-  public get firstName(): string {
-    return this._authenticationIdentity.user.firstName;
-  }
-
-  public get lastName(): string {
-    return this._authenticationIdentity.user.lastName;
-  }
-
   /**
    * Returns true when feature flag is on for product catalog
    */
@@ -138,7 +117,7 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
     private _coreConfig: CoreConfig,
     private _changeDetectorRef: ChangeDetectorRef,
     private _eventDispatcher: EventBusDispatcherService,
-    private _authenticationIdentity: McsAuthenticationIdentity,
+    private _accessControl: McsAccessControlService,
     private _authenticationService: McsAuthenticationService,
     private _textContentProvider: McsTextContentProvider,
     private _productCatalogRepository: McsProductCatalogRepository
@@ -150,8 +129,6 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
   public ngOnInit() {
     this.textContent = this._textContentProvider.content.navigation;
     this._registerEvents();
-    this._listenToRouterEvents();
-    this._listenToSwitchAccount();
     this._getProductCatalogs();
   }
 
@@ -204,8 +181,10 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
    */
   private _registerEvents(): void {
     this._eventDispatcher.addEventListener(
-      EventBusState.ProductUnSelected, this._onProductUnSelected.bind(this)
-    );
+      EventBusState.ProductUnSelected, this._onProductUnSelected.bind(this));
+
+    this._eventDispatcher.addEventListener(
+      EventBusState.RouteChange, this._onRouteChanged.bind(this));
   }
 
   /**
@@ -216,46 +195,26 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Events that gets notified when route has been changed
+   */
+  private _onRouteChanged(): void {
+    this.close();
+  }
+
+  /**
    * Gets the product catalogs
    */
   private _getProductCatalogs(): void {
     this.productsStatusFactory.setInProgress();
-    this._productCatalogRepository.getAll()
-      .pipe(
-        catchError((error) => {
-          this.productsStatusFactory.setError();
-          return throwError(error);
-        })
-      )
-      .subscribe((response) => {
-        this.productsStatusFactory.setSuccessful(response);
-        if (isNullOrEmpty(response)) { return; }
-        this.productCatalogs = response;
-      });
-  }
+    if (!this._accessControl.hasAccessToFeature('EnableProductCatalog')) { return; }
 
-  /**
-   * Listens to every account changes
-   */
-  private _listenToSwitchAccount(): void {
-    this._authenticationIdentity.activeAccountChanged
-      .pipe(takeUntil(this._destroySubject))
-      .subscribe(() => {
-        // Refresh the page when account is selected
-        this._changeDetectorRef.markForCheck();
-      });
-  }
-
-  /**
-   * Listens to every router event changes
-   */
-  private _listenToRouterEvents(): void {
-    this._router.events
-      .pipe(takeUntil(this._destroySubject))
-      .subscribe((event) => {
-        if (event instanceof NavigationStart) {
-          this.close();
-        }
-      });
+    this._productCatalogRepository.getAll().pipe(
+      catchError((error) => {
+        this.productsStatusFactory.setError();
+        return throwError(error);
+      })
+    ).subscribe((response) => {
+      this.productsStatusFactory.setSuccessful(response);
+    });
   }
 }

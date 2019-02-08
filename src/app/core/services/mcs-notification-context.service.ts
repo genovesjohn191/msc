@@ -15,8 +15,8 @@ import {
   deleteArrayRecord,
   isNullOrEmpty,
   unsubscribeSubject,
-  McsInitializer,
-  getSafeProperty
+  getSafeProperty,
+  McsDisposable
 } from '@app/utilities';
 import {
   McsJob,
@@ -34,7 +34,7 @@ import { McsApiService } from './mcs-api.service';
  * get notified when there are changes on the notification job
  */
 @Injectable()
-export class McsNotificationContextService implements McsInitializer {
+export class McsNotificationContextService implements McsDisposable {
   private _destroySubject = new Subject<void>();
   private _excludedJobTypes: JobType[];
   private _notifications: McsJob[];
@@ -47,6 +47,7 @@ export class McsNotificationContextService implements McsInitializer {
     this._excludedJobTypes = new Array();
     this._notifications = new Array();
     this._notificationsStream = new BehaviorSubject<McsJob[]>(null);
+    this.onInit();
   }
 
   /**
@@ -66,16 +67,16 @@ export class McsNotificationContextService implements McsInitializer {
   /**
    * Initializes the context instance
    */
-  public initialize(): void {
+  public onInit(): void {
     this.getAllActiveJobs();
     this._createFilteredJobList();
     this._listenToJobChanged();
   }
 
   /**
-   * Destroy all instance of notification job service including its subscription
+   * Disposes all instance of the job context from notifying job
    */
-  public destroy(): void {
+  public dispose(): void {
     unsubscribeSubject(this._destroySubject);
   }
 

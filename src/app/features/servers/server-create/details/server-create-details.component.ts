@@ -24,7 +24,8 @@ import {
   startWith,
   takeUntil,
   merge,
-  tap
+  tap,
+  shareReplay
 } from 'rxjs/operators';
 import {
   McsTextContentProvider,
@@ -186,13 +187,12 @@ export class ServerCreateDetailsComponent implements
         tap((_response) => {
           if (isNullOrEmpty(_response)) { return; }
           this._resource = _response;
-          Promise.resolve().then(() => {
-            if (!isNullOrEmpty(this._serverDetailsComponent)) {
-              this._serverDetailsComponent.recreateComponent();
-            }
-          });
+          if (!isNullOrEmpty(this._serverDetailsComponent)) {
+            this._serverDetailsComponent.recreateComponent();
+          }
           this._changeDetectorRef.markForCheck();
-        })
+        }),
+        shareReplay(1)
       );
   }
 

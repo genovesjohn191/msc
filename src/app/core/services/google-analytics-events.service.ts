@@ -1,49 +1,32 @@
 import { Injectable } from '@angular/core';
+import { NavigationEnd } from '@angular/router';
+import { isNullOrEmpty } from '@app/utilities';
 import {
-  Router,
-  NavigationEnd,
-} from '@angular/router';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+  McsIdentity,
+  McsRouteInfo
+} from '@app/models';
 import {
-  isNullOrEmpty,
-  unsubscribeSubject
-} from '@app/utilities';
+  EventBusDispatcherService,
+  EventBusState
+} from '@app/event-bus';
 import { CoreDefinition } from '../core.definition';
-import { McsAuthenticationIdentity } from '../authentication/mcs-authentication.identity';
-import { McsInitializer } from '@app/utilities';
 
 declare let dataLayer: any;
 
 @Injectable()
-export class GoogleAnalyticsEventsService implements McsInitializer {
-  private _destroySubject = new Subject<void>();
+export class GoogleAnalyticsEventsService {
 
-  constructor(
-    private _mcsAuthenticationIdentity: McsAuthenticationIdentity,
-    private _router: Router) {
+  constructor(private _eventDispatcher: EventBusDispatcherService) {
+    this._registerEvents();
   }
 
   /**
-   * Initializes the google analytics by providing the user
+   * Event that emits when an action has been triggered
+   * @param _eventCategory Event category of the GTM
+   * @param _eventAction Event action name of the control
+   * @param _eventLabel Event label of the control
+   * @param _eventValue Event value to be printed on GTM
    */
-  public initialize(): void {
-    this._mcsAuthenticationIdentity.userChanged
-      .pipe(takeUntil(this._destroySubject))
-      .subscribe((updated) => {
-        if (isNullOrEmpty(updated)) { return; }
-        this._setUser();
-        this._subscribeToNavigationEvents();
-      });
-  }
-
-  /**
-   * Destroys all the resources
-   */
-  public destroy(): void {
-    unsubscribeSubject(this._destroySubject);
-  }
-
   public emitEvent(
     _eventCategory: string,
     _eventAction: string,
@@ -58,8 +41,42 @@ export class GoogleAnalyticsEventsService implements McsInitializer {
     });
   }
 
-  private _setUser() {
-    let identity = this._mcsAuthenticationIdentity.user.hashedId.split('.');
+  /**
+   * Event that gets emitted when the user has been changed
+   */
+  private _onUserChanged(user: McsIdentity): void {
+    if (isNullOrEmpty(user)) { return; }
+    this._setUser(user);
+  }
+
+  /**
+   * Event that gets emitted when the route has been changed
+   * @param routeEvent Navigation router event
+   * @param activeRoute Custom activated route of the router
+   */
+  private _onRouteChanged(routeEvent: NavigationEnd, _activeRoute: McsRouteInfo): void {
+    if (isNullOrEmpty(routeEvent)) { return; }
+
+    // Mask UUID from the URL
+    let maskedUrl = this._maskPrivateDataFromUrl(
+      routeEvent.urlAfterRedirects, CoreDefinition.REGEX_UUID_PATTERN, '{id}');
+
+    // Mask JWT Token from the URL
+    maskedUrl = this._maskPrivateDataFromUrl(
+      maskedUrl, CoreDefinition.REGEX_BEARER_PATTERN, 'bearer={token}');
+
+    dataLayer.push({
+      'event': 'virtualPageView',
+      'virtualPageURL': maskedUrl
+    });
+  }
+
+  /**
+   * Sets the user to GTM Identity configuration
+   * @param user User to be set on the GTM
+   */
+  private _setUser(user: McsIdentity) {
+    let identity = user.hashedId.split('.');
     dataLayer.push({
       'userID': identity[0],
       'companyGroup': identity[1],
@@ -67,24 +84,12 @@ export class GoogleAnalyticsEventsService implements McsInitializer {
     });
   }
 
-  private _subscribeToNavigationEvents(): void {
-    this._router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) {
-        // Mask UUID from the URL
-        let maskedUrl = this._maskPrivateDataFromUrl(
-          event.urlAfterRedirects, CoreDefinition.REGEX_UUID_PATTERN, '{id}');
-        // Mask JWT Token from the URL
-        maskedUrl = this._maskPrivateDataFromUrl(
-          maskedUrl, CoreDefinition.REGEX_BEARER_PATTERN, 'bearer={token}');
-
-        dataLayer.push({
-          'event': 'virtualPageView',
-          'virtualPageURL': maskedUrl
-        });
-      }
-    });
-  }
-
+  /**
+   * Masks the private data from url into GTM
+   * @param url Url to be masked
+   * @param pattern Regex Pattern to be execute in masking
+   * @param value Value to be checked
+   */
   private _maskPrivateDataFromUrl(
     url: string,
     pattern: RegExp,
@@ -92,5 +97,16 @@ export class GoogleAnalyticsEventsService implements McsInitializer {
     if (isNullOrEmpty(url)) { return ''; }
 
     return url.replace(pattern, value);
+  }
+
+  /**
+   * Register event listeners to event-bus
+   */
+  private _registerEvents(): void {
+    this._eventDispatcher.addEventListener(
+      EventBusState.UserChange, this._onUserChanged.bind(this));
+
+    this._eventDispatcher.addEventListener(
+      EventBusState.RouteChange, this._onRouteChanged.bind(this));
   }
 }

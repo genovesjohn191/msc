@@ -177,7 +177,7 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
     this._updateDataRecords(allRecords);
 
     if (this._datasourceIsRepository) {
-      (this._dataSource as McsRepository<T>).addOrUpdate(newRecord);
+      (this._dataSource as McsRepository<T>).addOrUpdate(newRecord, insertIndex);
     }
     this._setTotalRecordsCountByContext(this.dataRecords);
   }

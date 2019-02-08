@@ -3,35 +3,42 @@
   <div class="product-megamenu-wrapper" mcsScrollable>
     <mcs-data-status [dataStatusFactory]="productsStatusFactory">
       <mcs-data-status-success mcsDataSuccess>
-        <mcs-grid *ngIf="selectedProduct$ | async as selectedProduct">
-          <mcs-grid-row>
-            <ng-container *ngFor="let catalog of productCatalogs; last as isLastItem">
-              <mcs-grid-column >
-                <mcs-presentation-panel>
-                  <ng-container mcsPresentationPanelHeader>
-                    <h2>{{ catalog.name }}</h2>
-                  </ng-container>
+        <ng-container *mcsAccessControl="[]; feature: EnableProductCatalog">
+          <mcs-grid *ngIf="selectedProduct$ | async as selectedProduct">
+            <mcs-grid-row>
+              <ng-container *ngFor="let catalog of productCatalogs; last as isLastItem">
+                <mcs-grid-column >
+                  <mcs-presentation-panel>
+                    <ng-container mcsPresentationPanelHeader>
+                      <h2>{{ catalog.name }}</h2>
+                    </ng-container>
 
-                  <section>
-                    <mcs-list [header]="category.name" itemsOffset="small"
-                      *ngFor="let category of catalog.categories">
-                      <mcs-list-item *ngFor="let product of category.products">
-                        <a (click)="gotoProduct(product)"
-                          mcsId="select-product"
-                          mcsEventTracker="select-product"
-                          mcsEventCategory="navigation"
-                          mcsEventLabel="main-nav"
-                          [ngClass]="{'active': selectedProduct?.id === product.id}">
-                          {{ product.name }}</a>
-                      </mcs-list-item>
-                    </mcs-list>
-                  </section>
-                </mcs-presentation-panel>
-              </mcs-grid-column>
-              <mcs-divider *ngIf="!isLastItem" orientation="vertical"></mcs-divider>
-            </ng-container>
-          </mcs-grid-row>
-        </mcs-grid>
+                    <section>
+                      <mcs-list [header]="category.name"
+                        *ngFor="let category of catalog.categories">
+                        <mcs-list-item *ngFor="let product of category.products">
+
+                          <a mcsButton="basic"
+                            labelPlacement="left" text-wrap full-width
+                            [active]="selectedProduct?.id === product.id"
+                            [mcsRouterLink]="[routeKeyEnum.ProductDetail, product.id]"
+                            (click)="gotoProduct(product)"
+                            mcsId="select-product"
+                            mcsEventTracker="select-product"
+                            mcsEventCategory="navigation"
+                            mcsEventLabel="main-nav">
+                            {{ product.name }}</a>
+
+                        </mcs-list-item>
+                      </mcs-list>
+                    </section>
+                  </mcs-presentation-panel>
+                </mcs-grid-column>
+                <mcs-divider *ngIf="!isLastItem" orientation="vertical"></mcs-divider>
+              </ng-container>
+            </mcs-grid-row>
+          </mcs-grid>
+        </ng-container>
       </mcs-data-status-success>
 
       <mcs-data-status-in-progress mcsDataInProgress>

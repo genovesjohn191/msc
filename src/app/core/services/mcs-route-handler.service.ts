@@ -16,11 +16,12 @@ import {
 import {
   isNullOrEmpty,
   unsubscribeSubject,
-  McsInitializer
+  McsDisposable
 } from '@app/utilities';
 import {
   HttpStatusCode,
-  McsRouteInfo
+  McsRouteInfo,
+  McsIdentity
 } from '@app/models';
 import {
   EventBusDispatcherService,
@@ -33,7 +34,7 @@ import { McsLoggerService } from './mcs-logger.service';
 import { McsErrorHandlerService } from './mcs-error-handler.service';
 
 @Injectable()
-export class McsRouteHandlerService implements McsInitializer {
+export class McsRouteHandlerService implements McsDisposable {
 
   public onActiveRoute = new BehaviorSubject<McsRouteInfo>(undefined);
 
@@ -45,30 +46,19 @@ export class McsRouteHandlerService implements McsInitializer {
     private _router: Router,
     private _activatedRoute: ActivatedRoute,
     private _titleService: Title,
-    private _eventbusService: EventBusDispatcherService,
+    private _eventDispatcher: EventBusDispatcherService,
     private _loggerService: McsLoggerService,
     private _accessControlService: McsAccessControlService,
     private _authenticationService: McsAuthenticationService,
     private _errorHandlerService: McsErrorHandlerService
-  ) { }
-
-  /**
-   * Initializes all the router handler/guard events
-   */
-  public initialize(): void {
-    this._loggerService.traceInfo(`Route checking initialized.`);
-    this._router.events
-      .pipe(
-        takeUntil(this._destroySubject),
-        filter((event) => event instanceof NavigationEnd)
-      )
-      .subscribe(() => this._setMainActiveRoute());
+  ) {
+    this._registerEvents();
   }
 
   /**
    * Destroys all the resources
    */
-  public destroy(): void {
+  public dispose(): void {
     unsubscribeSubject(this._destroySubject);
     unsubscribeSubject(this._urlSubject);
   }
@@ -87,7 +77,7 @@ export class McsRouteHandlerService implements McsInitializer {
   /**
    * Sets the active main route based on the string url
    */
-  private _setMainActiveRoute(): void {
+  private _setMainActiveRoute(routeArgs: NavigationEnd): void {
     let activateRouteKey = this._activatedRoute.root;
     while (activateRouteKey.firstChild) {
       activateRouteKey = activateRouteKey.firstChild;
@@ -96,7 +86,7 @@ export class McsRouteHandlerService implements McsInitializer {
       if (isNullOrEmpty(response)) { return; }
       this._activeRoute = CoreRoutes.getRouteInfoByKey(+response.routeId);
       this.onActiveRoute.next(this._activeRoute);
-      this._eventbusService.dispatch(EventBusState.RouteChange, this._activeRoute);
+      this._eventDispatcher.dispatch(EventBusState.RouteChange, routeArgs, this._activeRoute);
       this._applyRouteSettings();
     });
   }
@@ -172,5 +162,28 @@ export class McsRouteHandlerService implements McsInitializer {
   private _navigateToNotFoundPage() {
     this._loggerService.traceInfo('FEATURE FLAG IS TURNED OFF!');
     this._errorHandlerService.redirectToErrorPage(HttpStatusCode.NotFound);
+  }
+
+  /**
+   * Registers the event handlers
+   */
+  private _registerEvents(): void {
+    this._eventDispatcher.addEventListener(
+      EventBusState.UserChange, this._onUserChanged.bind(this));
+  }
+
+  /**
+   * Event that gets emitted when the user has been changed
+   */
+  private _onUserChanged(user: McsIdentity): void {
+    if (isNullOrEmpty(user)) { return; }
+
+    this._loggerService.traceInfo(`Route checking initialized.`);
+    this._router.events
+      .pipe(
+        takeUntil(this._destroySubject),
+        filter((event) => event instanceof NavigationEnd)
+      )
+      .subscribe((eventArgs) => this._setMainActiveRoute(eventArgs as NavigationEnd));
   }
 }

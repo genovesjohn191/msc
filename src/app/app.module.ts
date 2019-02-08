@@ -5,8 +5,6 @@ import {
 } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
 /**
  * Raven logger
@@ -43,16 +41,13 @@ import { routes } from './app.routes';
  */
 import {
   CoreModule,
-  CoreConfig,
-  McsAuthenticationIdentity,
-  McsRouteHandlerService,
-  McsErrorHandlerService,
-  McsNotificationJobService,
-  McsNotificationContextService,
-  GoogleAnalyticsEventsService,
-  McsSessionHandlerService
+  CoreConfig
 } from './core';
-import { EventBusModule } from './event-bus';
+import {
+  EventBusModule,
+  EventBusDispatcherService,
+  EventBusState
+} from './event-bus';
 import { ServicesModule } from './services';
 import {
   ConsolePageModule,
@@ -68,6 +63,7 @@ import {
   resolveEnvVar,
   isNullOrEmpty
 } from './utilities';
+import { McsIdentity } from './models';
 
 /**
  * Application-Wide Providers
@@ -127,63 +123,40 @@ export function coreConfig(): CoreConfig {
 })
 
 export class AppModule {
-  private _destroySubject = new Subject<void>();
 
   constructor(
     private _router: Router,
-    private _authIdentity: McsAuthenticationIdentity,
-    private _routeHandlerService: McsRouteHandlerService,
-    private _errorHandlerService: McsErrorHandlerService,
-    private _notificationJobService: McsNotificationJobService,
-    private _notificationContextService: McsNotificationContextService,
-    private _googleAnalyticsEventsService: GoogleAnalyticsEventsService,
-    private _sessionHandlerService: McsSessionHandlerService
+    private _eventDispatcher: EventBusDispatcherService
   ) {
     this._initializeRoutes();
-    this._initializeInDependentServices();
-    this._listenToUserChanges();
-    this._listenToSessionTimedOut();
+    this._registerEvents();
   }
 
   /**
-   * Listens to every user changed.
-   *
-   * `@Note`: In most cases, this will only called once
+   * Register event handlers for app module only
    */
-  private _listenToUserChanges(): void {
-    this._authIdentity.userChanged
-      .pipe(takeUntil(this._destroySubject))
-      .subscribe((response) => {
-        if (isNullOrEmpty(response)) { return; }
-        // We need to initialize all the required services after obtaining
-        // the user identity because we want to make sure that the user
-        // is authenticated, otherwise it will conflict to other process that
-        // dependent on the user identity, like getting the job/connection prior to authentication.
-        this._initializeRavenSentry();
-        this._initializeAuthorizedServices();
-      });
+  private _registerEvents(): void {
+    this._eventDispatcher.addEventListener(
+      EventBusState.UserChange, this._onUserChanged.bind(this));
   }
 
   /**
-   * Listens to sessioned timed out
+   * Event that emits when user has been changed
+   * @param user User emitted
    */
-  private _listenToSessionTimedOut(): void {
-    this._sessionHandlerService.onSessionTimeOut()
-      .pipe(takeUntil(this._destroySubject))
-      .subscribe((response) => {
-        if (!response) { return; }
-        this._releaseServices();
-      });
+  private _onUserChanged(user: McsIdentity): void {
+    if (isNullOrEmpty(user)) { return; }
+    this._initializeRavenSentry(user);
   }
 
   /**
    * Initializes the raven sentry configuration
    */
-  private _initializeRavenSentry(): void {
+  private _initializeRavenSentry(user: McsIdentity): void {
     setUserIdentity(
-      this._authIdentity.user.userId,
-      `${this._authIdentity.user.firstName} ${this._authIdentity.user.lastName}`,
-      this._authIdentity.user.email
+      user.userId,
+      `${user.firstName} ${user.lastName}`,
+      user.email
     );
   }
 
@@ -195,32 +168,5 @@ export class AppModule {
    */
   private _initializeRoutes(): void {
     this._router.resetConfig(routes);
-  }
-
-  /**
-   * Initializes all independent services, this doesn't require authentication to work on
-   */
-  private _initializeInDependentServices(): void {
-    this._errorHandlerService.initialize();
-  }
-
-  /**
-   * Initializes all authorized services
-   */
-  private _initializeAuthorizedServices(): void {
-    this._sessionHandlerService.initialize();
-    this._notificationJobService.initialize();
-    this._notificationContextService.initialize();
-    this._googleAnalyticsEventsService.initialize();
-    this._routeHandlerService.initialize();
-  }
-
-  /**
-   * Destroy all services
-   */
-  private _releaseServices(): void {
-    this._sessionHandlerService.destroy();
-    this._notificationJobService.destroy();
-    this._notificationContextService.destroy();
   }
 }

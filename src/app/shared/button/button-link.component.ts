@@ -24,6 +24,7 @@ import { ButtonComponent } from './button.component';
     '[class.label-placement-left]': 'labelPlacement === "left"',
     '[class.label-placement-center]': 'labelPlacement === "center"',
     '[class.label-placement-right]': 'labelPlacement === "right"',
+    '[class.button-active]': 'active',
     '[class.button-disabled]': 'disabled'
   }
 })

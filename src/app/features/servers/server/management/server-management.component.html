@@ -280,21 +280,21 @@
         <mcs-grid-column sizeSm="12" sizeLg="6">
           <mcs-presentation-panel>
             <ng-container mcsPresentationPanelHeader>
-              <h2>{{ textContent.supportIdentifiers.title }}</h2>
+              <h2>{{ textContent.serviceInformation.title }}</h2>
             </ng-container>
 
             <mcs-item>
-              <span>{{ textContent.supportIdentifiers.vdc }}:</span>
+              <span>{{ textContent.serviceInformation.vdc }}:</span>
               <span [innerHTML]="serverDetails.server.platform?.resourceName | mcsDataLabel"></span>
             </mcs-item>
 
             <mcs-item *ngIf="serverDetails.server.serviceId && !serverDetails.server.isDedicated">
-              <span>{{ textContent.supportIdentifiers.serviceId }}:</span>
+              <span>{{ textContent.serviceInformation.serviceId }}:</span>
               <span>{{ serverDetails.server.serviceId }}</span>
             </mcs-item>
 
             <mcs-item>
-              <span>{{ textContent.supportIdentifiers.vmWareId }}:</span>
+              <span>{{ textContent.serviceInformation.vmWareId }}:</span>
               <span [innerHTML]="serverDetails.server.instanceId | mcsDataLabel"></span>
             </mcs-item>
           </mcs-presentation-panel>

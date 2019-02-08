@@ -16,7 +16,7 @@ export function EventBusMethodListenOn(event: EventBusState, destroy: boolean = 
       let eventSubscription = eventsService.getEvent(event).subject
         .pipe(map((response) => response.params))
         .subscribe((args) => {
-          originalMethod.apply(this, ...args);
+          originalMethod.apply(this, args);
         });
 
       // Execute auto release of memory to prevent memory leak

@@ -1,31 +1,18 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
 import {
   McsCompany,
   McsIdentity,
   AccountStatus
 } from '@app/models';
-import { AppState } from '@app/app.service';
+import {
+  EventBusDispatcherService,
+  EventBusState
+} from '@app/event-bus';
 import { CoreDefinition } from '../core.definition';
 import { McsCookieService } from '../services/mcs-cookie.service';
 
 @Injectable()
 export class McsAuthenticationIdentity {
-
-  /**
-   * Event that triggers when the identity applied or changed
-   */
-  private _userChanged: BehaviorSubject<McsIdentity>;
-  public get userChanged(): BehaviorSubject<McsIdentity> { return this._userChanged; }
-
-  /**
-   * Event that triggers when the active account was found or set
-   */
-  private _activeAccountChanged: BehaviorSubject<McsCompany>;
-  public get activeAccountChanged(): BehaviorSubject<McsCompany> {
-    return this._activeAccountChanged;
-  }
-
   /**
    * Identity of the user logged in
    */
@@ -48,23 +35,20 @@ export class McsAuthenticationIdentity {
   }
 
   constructor(
-    private _appState: AppState,
-    private _cookieService: McsCookieService
+    private _cookieService: McsCookieService,
+    private _eventDispatcher: EventBusDispatcherService
   ) {
-    this._activeAccountChanged = new BehaviorSubject(undefined);
-    this._userChanged = new BehaviorSubject(undefined);
     this._user = new McsIdentity();
     this._activeAccount = new McsCompany();
   }
 
   /**
-   * Apply the given identity to the service
+   * Sets the currently active user
+   * @param identity The user identity to be set
    */
-  public applyIdentity(): void {
-    let identity = this._appState.get(CoreDefinition.APPSTATE_AUTH_IDENTITY);
-    if (!identity) { return; }
+  public setActiveUser(identity: McsIdentity): void {
     this._user = identity;
-    this._userChanged.next(this._user);
+    this._eventDispatcher.dispatch(EventBusState.UserChange, identity);
   }
 
   /**
@@ -73,6 +57,6 @@ export class McsAuthenticationIdentity {
    */
   public setActiveAccount(company: McsCompany): void {
     this._activeAccount = company;
-    this._activeAccountChanged.next(company);
+    this._eventDispatcher.dispatch(EventBusState.AccountChange, this._activeAccount);
   }
 }

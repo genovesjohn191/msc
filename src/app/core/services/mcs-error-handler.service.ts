@@ -6,33 +6,28 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
   unsubscribeSubject,
-  McsInitializer
+  McsDisposable
 } from '@app/utilities';
 import { HttpStatusCode } from '@app/models';
 import { McsAuthenticationService } from '../authentication/mcs-authentication.service';
 import { McsApiService } from './mcs-api.service';
 
 @Injectable()
-export class McsErrorHandlerService implements McsInitializer {
+export class McsErrorHandlerService implements McsDisposable {
   private _destroySubject = new Subject<void>();
 
   constructor(
     private _router: Router,
     private _apiService: McsApiService,
     private _authService: McsAuthenticationService
-  ) { }
-
-  /**
-   * Initialize all the error handlers to all the response
-   */
-  public initialize(): void {
-    this._listenToApiResponse();
+  ) {
+    this._subscribeToApiResponse();
   }
 
   /**
    * Destroys all the resources
    */
-  public destroy(): void {
+  public dispose(): void {
     unsubscribeSubject(this._destroySubject);
   }
 
@@ -52,8 +47,9 @@ export class McsErrorHandlerService implements McsInitializer {
 
   /**
    * Listen to each api error response
+   * @deprecated Create an interceptor for all the api request on appmodule instead
    */
-  private _listenToApiResponse(): void {
+  private _subscribeToApiResponse(): void {
     this._apiService.errorResponseStream
       .pipe(takeUntil(this._destroySubject))
       .subscribe((errorResponse) => {

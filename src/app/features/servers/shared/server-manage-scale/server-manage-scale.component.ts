@@ -39,7 +39,7 @@ import { ServerManageScale } from './server-manage-scale';
 
 // Constants definition
 const DEFAULT_MB = 1024;
-const DEFAULT_MEMORY_MULTIPLIER = 2048;
+const DEFAULT_MEMORY_MULTIPLIER = 2;
 const DEFAULT_CPU_MULTIPLIER = 2;
 const DEFAULT_MIN_MEMORY = 2048;
 const DEFAULT_MIN_CPU = 2;
@@ -200,6 +200,13 @@ export class ServerManageScaleComponent implements OnInit, DoCheck, OnDestroy {
     this.fgServerScale.reset();
     this.fcCustomCpu.setValue(this.serverCpuUsed);
     this.fcCustomMemory.setValue(convertMbToGb(this.serverMemoryUsedMB));
+
+    this.fcCustomMemory.setValidators(
+      CoreValidators.min(convertMbToGb(this.minimumMemoryMB))
+    );
+    this.fcCustomMemory.setValidators(
+      CoreValidators.max(convertMbToGb(this.resourceAvailableMemoryMB))
+    );
   }
 
   /**
@@ -241,8 +248,8 @@ export class ServerManageScaleComponent implements OnInit, DoCheck, OnDestroy {
     // Create custom storage control and register the listener
     this.fcCustomMemory = new FormControl('', [
       CoreValidators.required,
-      CoreValidators.min(this.minimumMemoryMB),
-      CoreValidators.max(this.resourceAvailableMemoryMB),
+      CoreValidators.min(convertMbToGb(this.minimumMemoryMB)),
+      CoreValidators.max(convertMbToGb(this.resourceAvailableMemoryMB)),
       CoreValidators.numeric,
       CoreValidators.custom(
         this._memoryInvalidValidator.bind(this),

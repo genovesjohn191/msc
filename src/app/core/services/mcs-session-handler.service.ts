@@ -19,10 +19,13 @@ import {
   isNullOrEmpty,
   unsubscribeSubject,
   coerceNumber,
-  resolveEnvVar,
-  McsInitializer
+  resolveEnvVar
 } from '@app/utilities';
 import { McsIdentity } from '@app/models';
+import {
+  EventBusDispatcherService,
+  EventBusState
+} from '@app/event-bus';
 import { CoreDefinition } from '../core.definition';
 import { McsAuthenticationIdentity } from '../authentication/mcs-authentication.identity';
 import { McsAuthenticationService } from '../authentication/mcs-authentication.service';
@@ -30,14 +33,14 @@ import { McsLoggerService } from './mcs-logger.service';
 import { McsCookieService } from './mcs-cookie.service';
 
 @Injectable()
-export class McsSessionHandlerService implements McsInitializer {
+export class McsSessionHandlerService {
   private _sessionIdleCounter: number = 0;
   private _sessionIsIdle: boolean = false;
   private _previousTargetCompanyId: string;
 
   // Events subject
   private _onTargetCompanyChanged = new Subject<boolean>();
-  private _onUserChanged = new Subject<boolean>();
+  private _onCurrentUserChanged = new Subject<boolean>();
   private _onSessionIdle = new Subject<boolean>();
   private _onSessionTimeOut = new Subject<boolean>();
   private _onSessionActivated = new Subject<boolean>();
@@ -97,24 +100,21 @@ export class McsSessionHandlerService implements McsInitializer {
   }
 
   constructor(
+    private _eventDispatcher: EventBusDispatcherService,
     private _cookieService: McsCookieService,
     private _authIdentity: McsAuthenticationIdentity,
     private _authService: McsAuthenticationService,
     private _loggerService: McsLoggerService
-  ) { }
+  ) {
 
-  public initialize(): void {
-    // Get current target company to be used for company switch detection
-    this._previousTargetCompanyId =
-      this._cookieService.getEncryptedItem(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
-
-    this._registerActivityEvents();
-    this._initializeSessionStatusObserver();
-    this._registerEventHandlers();
-    this._onSessionActivated.next(true);
+    this._eventDispatcher.addEventListener(
+      EventBusState.UserChange, this._onUserChanged.bind(this));
   }
 
-  public destroy(): void {
+  /**
+   * Stops all sessions
+   */
+  public stopSessions(): void {
     unsubscribeSubject(this._destroySubject);
     unsubscribeSubject(this._timerSubject);
   }
@@ -122,21 +122,21 @@ export class McsSessionHandlerService implements McsInitializer {
   /**
    * Resets idle counter and resumes the session
    */
-  public resumeSession(): void {
+  public resumeSessions(): void {
     this._sessionIdleCounter = 0;
     this._sessionIsIdle = false;
     this._onSessionIdle.next(false);
     this._onSessionTimeOut.next(false);
     this._onSessionActivated.next(true);
-    this._onUserChanged.next(this.userChanged);
+    this._onCurrentUserChanged.next(this.userChanged);
     this._onTargetCompanyChanged.next(this.targetCompanyChanged);
   }
 
   /**
    * Triggers when user changed
    */
-  public onUserChanged(): Observable<boolean> {
-    return this._onUserChanged
+  public onCurrentUserChanged(): Observable<boolean> {
+    return this._onCurrentUserChanged
       .pipe(distinctUntilChanged(), filter((response) => response));
   }
 
@@ -166,6 +166,7 @@ export class McsSessionHandlerService implements McsInitializer {
 
   /**
    * Triggers when session has timed out
+   * @deprecated Use the event bus instead
    */
   public onSessionTimeOut(): Observable<boolean> {
     return this._onSessionTimeOut
@@ -203,7 +204,7 @@ export class McsSessionHandlerService implements McsInitializer {
       .subscribe((_events: any) => {
         if (isNullOrEmpty(_events)) { return; }
 
-        this.resumeSession();
+        this.resumeSessions();
       });
   }
 
@@ -220,10 +221,30 @@ export class McsSessionHandlerService implements McsInitializer {
   }
 
   /**
+   * Event that emits when the user has been changed
+   * @param user Changed user/identity
+   */
+  private _onUserChanged(user: McsIdentity): void {
+    if (isNullOrEmpty(user)) { return; }
+    this._setUserValidation(user);
+
+    // Get current target company to be used for company switch detection
+    this._previousTargetCompanyId =
+      this._cookieService.getEncryptedItem(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
+
+    this._registerActivityEvents();
+    this._initializeSessionStatusObserver();
+    this._registerEventHandlers();
+
+    this._onSessionActivated.next(true);
+  }
+
+  /**
    * Registers all the event handlers
    */
   private _registerEventHandlers() {
-    this.onUserChanged()
+
+    this.onCurrentUserChanged()
       .pipe(takeUntil(this._destroySubject))
       .subscribe(() => {
         this._loggerService.traceStart(`Change User`);
@@ -239,10 +260,6 @@ export class McsSessionHandlerService implements McsInitializer {
         location.reload();
       });
 
-    this._authIdentity.userChanged
-      .pipe(takeUntil(this._destroySubject))
-      .subscribe((identity) => this._sessionUserValidation(identity));
-
     this.onSessionIdle()
       .pipe(takeUntil(this._destroySubject))
       .subscribe(() => this._sessionIdleEventHandler());
@@ -255,7 +272,7 @@ export class McsSessionHandlerService implements McsInitializer {
   /**
    * Validates the user and remove it from the cookie when the user has been changed
    */
-  private _sessionUserValidation(identity: McsIdentity) {
+  private _setUserValidation(identity: McsIdentity) {
     let sessionId = identity.hashedId + identity.expiry;
     let hashedId = this._cookieService.getEncryptedItem(CoreDefinition.COOKIE_SESSION_ID);
     if (sessionId !== hashedId) {
@@ -296,7 +313,7 @@ export class McsSessionHandlerService implements McsInitializer {
 
   private _triggerEvents(): void {
     // Trigger user changed event
-    this._onUserChanged.next(this.userChanged);
+    this._onCurrentUserChanged.next(this.userChanged);
 
     // Trigger target company changed event
     this._onTargetCompanyChanged.next(this.targetCompanyChanged);
@@ -310,8 +327,10 @@ export class McsSessionHandlerService implements McsInitializer {
     // Trigger timedout event
     if (this.sessionTimedOut) {
       this._loggerService.traceStart('Session Timed Out');
+      this._eventDispatcher.dispatch(EventBusState.SessionTimedOut);
       this._createSessionId();
     }
+
     this._onSessionTimeOut.next(this.sessionTimedOut);
   }
 

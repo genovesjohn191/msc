@@ -8,7 +8,8 @@ import {
 } from '@angular/core';
 import {
   merge,
-  Subject
+  Subject,
+  Observable
 } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Router } from '@angular/router';
@@ -29,6 +30,10 @@ import {
   McsCompany,
   McsJob
 } from '@app/models';
+import {
+  EventBusPropertyListenOn,
+  EventBusState
+} from '@app/event-bus';
 
 @Component({
   selector: 'mcs-notifications',
@@ -40,6 +45,9 @@ import {
 export class NotificationsComponent
   extends McsTableListingBase<McsTableDataSource<McsJob>>
   implements OnInit, AfterViewInit, OnDestroy {
+
+  @EventBusPropertyListenOn(EventBusState.AccountChange)
+  public activeCompany$: Observable<McsCompany>;
 
   public textContent: any;
   private _destroySubject = new Subject<void>();
@@ -115,9 +123,10 @@ export class NotificationsComponent
    */
   private _subscribeToDataUpdate(): void {
     let requestUpdate = merge(
-      this.dataSource.dataRenderedChange(),
-      this._authenticationIdentity.activeAccountChanged
+      this._jobsRepository.dataChange(),
+      this.dataSource.dataRenderedChange()
     );
+
     requestUpdate.pipe(takeUntil(this._destroySubject))
       .subscribe(() => this.changeDetectorRef.markForCheck());
   }

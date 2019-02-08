@@ -15,24 +15,23 @@ import { EventBusDispatcherCore } from '../event-bus-dispatcher-core';
 export function EventBusPropertyListenOn(event: EventBusState) {
   return (target: any, name: string) => {
     let eventsService = EventBusDispatcherCore.getInstance();
+    let decoratorSubject = new BehaviorSubject<any>({});
 
     let instanceFunc = function() {
       let eventObject = eventsService.getEvent(event);
       let eventSubject = eventObject.subject.pipe(
-        map((response) => getSafeProperty(response, (obj) => obj.params[0][0], {})),
-        shareReplay(1)
+        map((response) => getSafeProperty(response, (obj) => obj.params[0], {}))
       );
 
-      let decoratorSubject = new BehaviorSubject<any>({});
-      eventSubject.subscribe((response) => decoratorSubject.next(response));
-      return decoratorSubject;
+      eventSubject.subscribe(decoratorSubject);
+      return decoratorSubject.pipe(shareReplay(1)) as BehaviorSubject<any>;
     };
 
     Object.defineProperty(target, name, {
       enumerable: true,
       configurable: true,
       writable: true,
-      value: instanceFunc.apply(this)
+      value: instanceFunc.call(this)
     });
   };
 }

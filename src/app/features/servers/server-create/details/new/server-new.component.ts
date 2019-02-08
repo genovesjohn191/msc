@@ -14,11 +14,13 @@ import {
   Subscription,
   throwError,
   Observable,
-  of
+  of,
+  Subject
 } from 'rxjs';
 import {
   catchError,
-  switchMap
+  switchMap,
+  takeUntil
 } from 'rxjs/operators';
 import {
   McsErrorHandlerService,
@@ -31,7 +33,8 @@ import {
   isNullOrEmpty,
   appendUnitSuffix,
   convertMbToGb,
-  getSafeProperty
+  getSafeProperty,
+  unsubscribeSafely
 } from '@app/utilities';
 import {
   CatalogItemType,
@@ -46,7 +49,10 @@ import {
   McsServerCreateNic,
   McsServerOperatingSystem
 } from '@app/models';
-import { McsServersOsRepository } from '@app/services';
+import {
+  McsServersOsRepository,
+  McsResourcesRepository
+} from '@app/services';
 import {
   ServerManageStorage,
   ServerManageNetwork,
@@ -86,6 +92,8 @@ export class ServerNewComponent
   public fcScale: FormControl;
   public fcStorage: FormControl;
 
+  private _destroySubject = new Subject<void>();
+
   @Input()
   public get resource(): McsResource { return this._resource; }
   public set resource(value: McsResource) {
@@ -102,7 +110,8 @@ export class ServerNewComponent
     private _changeDetectorRef: ChangeDetectorRef,
     private _textContentProvider: McsTextContentProvider,
     private _errorHandlerService: McsErrorHandlerService,
-    private _serversOsRepository: McsServersOsRepository
+    private _serversOsRepository: McsServersOsRepository,
+    private _resourcesRepository: McsResourcesRepository
   ) {
     super();
   }
@@ -111,10 +120,11 @@ export class ServerNewComponent
     this.textContent = this._textContentProvider.content.servers.createServer.newServer;
     this.textHelpContent = this._textContentProvider.content.servers.createServer.contextualHelp;
     this._registerFormGroup();
+    this._subscribeToResourceDataChange();
   }
 
   public ngOnDestroy() {
-    // Do something
+    unsubscribeSafely(this._destroySubject);
   }
 
   public get scaleMemoryMB(): number {
@@ -264,15 +274,14 @@ export class ServerNewComponent
    * Gets the servers operating systems from repository
    */
   private _getServersOs(): void {
-    this.operatingSystemsMap$ = this._serversOsRepository.getAll()
-      .pipe(
-        catchError((error) => {
-          // Handle common error status code
-          this._errorHandlerService.redirectToErrorPage(error.status);
-          return throwError(error);
-        }),
-        switchMap((_response) => of(this._filterOsGroup(_response)))
-      );
+    this.operatingSystemsMap$ = this._serversOsRepository.getAll().pipe(
+      catchError((error) => {
+        // Handle common error status code
+        this._errorHandlerService.redirectToErrorPage(error.status);
+        return throwError(error);
+      }),
+      switchMap((_response) => of(this._filterOsGroup(_response)))
+    );
   }
 
   /**
@@ -364,5 +373,14 @@ export class ServerNewComponent
    */
   private _customServerNameValidator(inputValue: any): boolean {
     return CoreDefinition.REGEX_SERVER_NAME_PATTERN.test(inputValue);
+  }
+
+  /**
+   * Subscribes to resource data changes and update the DOM
+   */
+  private _subscribeToResourceDataChange(): void {
+    this._resourcesRepository.dataChange().pipe(
+      takeUntil(this._destroySubject)
+    ).subscribe(() => this._changeDetectorRef.markForCheck());
   }
 }
