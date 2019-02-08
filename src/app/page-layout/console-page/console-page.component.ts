@@ -194,7 +194,7 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private _registerEventHandlers() {
-    this._sessionHandler.onUserChanged()
+    this._sessionHandler.onCurrentUserChanged()
       .pipe(takeUntil(this._destroySubject))
       .subscribe(() => this._onSessionChangedEventHandler());
 

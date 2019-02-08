@@ -21,15 +21,20 @@ import {
   deserializeJsonToObject,
   isNullOrEmpty,
   unsubscribeSubject,
-  McsInitializer
+  McsDisposable
 } from '@app/utilities';
 import {
   McsJob,
   McsJobConnection,
   McsApiSuccessResponse,
   NetworkStatus,
-  McsApiRequestParameter
+  McsApiRequestParameter,
+  McsIdentity
 } from '@app/models';
+import {
+  EventBusDispatcherService,
+  EventBusState
+} from '@app/event-bus';
 import { McsApiService } from './mcs-api.service';
 import { McsLoggerService } from './mcs-logger.service';
 import { McsSessionHandlerService } from './mcs-session-handler.service';
@@ -37,6 +42,7 @@ import { CoreDefinition } from '../core.definition';
 
 const DEFAULT_HEARTBEAT_IN = 0;
 const DEFAULT_HEARTBEAT_OUT = 20000;
+const DEFAULT_MAX_CONNECTION_RETRY = 10;
 
 /**
  * MCS notification job service
@@ -44,10 +50,11 @@ const DEFAULT_HEARTBEAT_OUT = 20000;
  * get notified when there are changes on the websocket (RabbitMQ)
  */
 @Injectable()
-export class McsNotificationJobService implements McsInitializer {
+export class McsNotificationJobService implements McsDisposable {
   public notificationStream = new BehaviorSubject<McsJob>(null);
   public connectionStatusStream = new Subject<NetworkStatus>();
 
+  private _stompReTryRemaining = DEFAULT_MAX_CONNECTION_RETRY;
   private _apiSubscription: any;
   private _stompInstance: Observable<any>;
   private _stompSubscription: Subscription;
@@ -64,26 +71,19 @@ export class McsNotificationJobService implements McsInitializer {
   }
 
   constructor(
+    private _eventDispatcher: EventBusDispatcherService,
     private _apiService: McsApiService,
     private _loggerService: McsLoggerService,
     private _sessionHandlerService: McsSessionHandlerService,
     private _stompService: StompRService
-  ) { }
-
-  /**
-   * Initializes the websocket instance and connect
-   */
-  public initialize(): void {
-    // Prevent the stomp from connecting when the session is already timedout
-    let sessionTimedOut = this._sessionHandlerService.sessionTimedOut;
-    if (sessionTimedOut) { return; }
-    this._connectStomp();
+  ) {
+    this._registerEvents();
   }
 
   /**
-   * Destroy all instance of websocket and webstomp including subscription
+   * Disposes the instance of job connection from rabbit MQ
    */
-  public destroy() {
+  public dispose() {
     unsubscribeSafely(this._stompSubscription);
     unsubscribeSafely(this._apiSubscription);
     unsubscribeSubject(this.connectionStatusStream);
@@ -151,7 +151,10 @@ export class McsNotificationJobService implements McsInitializer {
    */
   private _tryConnectToWebstomp(): void {
     try {
+      if (this._stompReTryRemaining <= 0) { return; }
+
       this._stompService.initAndConnect();
+      this._stompReTryRemaining -= 1;
     } catch (_error) {
       this._tryConnectToWebstomp();
     }
@@ -223,6 +226,7 @@ export class McsNotificationJobService implements McsInitializer {
     let updatedNotification: McsJob;
     updatedNotification = deserializeJsonToObject(McsJob, JSON.parse(bodyContent));
     this.notificationStream.next(updatedNotification);
+    this._loggerService.trace(`Job Received`, updatedNotification);
   }
 
   /**
@@ -265,5 +269,24 @@ export class McsNotificationJobService implements McsInitializer {
     // Split decoded value
     credentials = decodedHex.split('.');
     return { username: credentials[0], password: credentials[1] };
+  }
+
+  /**
+   * Register event listeners to event-bus
+   */
+  private _registerEvents(): void {
+    this._eventDispatcher.addEventListener(
+      EventBusState.UserChange, this._onUserChanged.bind(this));
+  }
+
+  /**
+   * Event that gets emitted when the user has been changed
+   */
+  private _onUserChanged(user: McsIdentity): void {
+    if (isNullOrEmpty(user)) { return; }
+    // Prevent the stomp from connecting when the session is already timedout
+    let sessionTimedOut = this._sessionHandlerService.sessionTimedOut;
+    if (sessionTimedOut) { return; }
+    this._connectStomp();
   }
 }

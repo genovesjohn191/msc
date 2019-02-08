@@ -2,7 +2,6 @@ import { isNullOrEmpty } from '@app/utilities';
 
 const GUID_EMPTY = '00000000-0000-0000-0000-000000000000';
 const GUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-const GUID_CRYPTO = window.crypto || (window as any).msCrypto;
 
 export class McsGuid {
   /**
@@ -14,11 +13,16 @@ export class McsGuid {
    * Generates new guid and return the whole McsGuid class
    */
   public static newGuid(): McsGuid {
-    let pattern = ([1e7] as any + -1e3 + -4e3 + -8e3 + -1e11);
-    let generatedGuid = pattern.replace(/[018]/g, (value: any) =>
-      // tslint:disable-next-line:no-bitwise
-      (value ^ GUID_CRYPTO.getRandomValues(new Uint8Array(1))[0] & 15 >> value / 4).toString(16)
-    );
+    let pattern = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
+    let currentDateStamp = new Date().getTime();
+    if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
+      currentDateStamp += performance.now(); // use high-precision timer if available
+    }
+    let generatedGuid = pattern.replace(/[xy]/g, (value: any) => {
+      let randomValues = (currentDateStamp + Math.random() * 16) % 16 | 0;
+      currentDateStamp = Math.floor(currentDateStamp / 16);
+      return (value === 'x' ? randomValues : (randomValues & 0x3 | 0x8)).toString(16);
+    });
     return new McsGuid(generatedGuid);
   }
 

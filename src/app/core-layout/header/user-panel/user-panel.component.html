@@ -82,15 +82,11 @@
         mcsEventLabel="user-panel"
         mcsStopPropagation>
         <mcs-icon class="user-icon" [key]="userIconKey" size="small"></mcs-icon>
-        <span hidden-small>{{ firstName }} {{ lastName }}</span>
+        <span hidden-small>{{ (activeUser$ | async)?.fullName }}</span>
 
-        <small *ngIf="!loadingAccount" class="user-info" read-only>{{ activeAccount?.name }}</small>
-        <small *ngIf="loadingAccount" class="user-info" read-only>
-          <mcs-item>
-            <mcs-loader size="xsmall"></mcs-loader>
-            <span>{{ textContent.loadingCompany }}</span>
-          </mcs-item>
-        </small>
+        <ng-container *ngIf="activeAccount$ | async as activeAccount">
+          <small class="user-info" read-only>{{ activeAccount.name }}</small>
+        </ng-container>
       </a>
 
       <!-- Popover will display here -->

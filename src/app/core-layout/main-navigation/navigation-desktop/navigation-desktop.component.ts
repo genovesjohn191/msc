@@ -8,7 +8,7 @@ import {
 import { Router } from '@angular/router';
 import {
   throwError,
-  Subject
+  BehaviorSubject
 } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import {
@@ -30,6 +30,7 @@ import {
 } from '@app/event-bus';
 import { isNullOrEmpty } from '@app/utilities';
 import { McsProductCatalogRepository } from '@app/services';
+import { McsAccessControlService } from '@app/core/authentication/mcs-access-control.service';
 
 @Component({
   selector: 'mcs-navigation-desktop',
@@ -45,7 +46,7 @@ export class NavigationDesktopComponent implements OnInit {
   public productsStatusFactory: McsDataStatusFactory<McsProductCatalog[]>;
 
   @EventBusPropertyListenOn(EventBusState.ProductSelected)
-  public selectedProduct$: Subject<McsProduct>;
+  public selectedProduct$: BehaviorSubject<McsProduct>;
 
   public get arrowUpIconKey(): string {
     return CoreDefinition.ASSETS_SVG_ARROW_UP_WHITE;
@@ -55,11 +56,16 @@ export class NavigationDesktopComponent implements OnInit {
     return CoreDefinition.ASSETS_FONT_CHEVRON_DOWN;
   }
 
+  public get routeKeyEnum(): any {
+    return RouteKey;
+  }
+
   constructor(
     private _router: Router,
     private _coreConfig: CoreConfig,
     private _changeDetectorRef: ChangeDetectorRef,
     private _eventDispatcher: EventBusDispatcherService,
+    private _accessControl: McsAccessControlService,
     private _textContentProvider: McsTextContentProvider,
     private _productCatalogRepository: McsProductCatalogRepository
   ) {
@@ -116,17 +122,16 @@ export class NavigationDesktopComponent implements OnInit {
    */
   private _getProductCatalogs(): void {
     this.productsStatusFactory.setInProgress();
-    this._productCatalogRepository.getAll()
-      .pipe(
-        catchError((error) => {
-          this.productsStatusFactory.setError();
-          return throwError(error);
-        })
-      )
-      .subscribe((response) => {
-        this.productsStatusFactory.setSuccessful(response);
-        if (isNullOrEmpty(response)) { return; }
-        this.productCatalogs = response;
-      });
+    if (!this._accessControl.hasAccessToFeature('EnableProductCatalog')) { return; }
+
+    this._productCatalogRepository.getAll().pipe(
+      catchError((error) => {
+        this.productsStatusFactory.setError();
+        return throwError(error);
+      })
+    ).subscribe((response) => {
+      this.productsStatusFactory.setSuccessful(response);
+      this.productCatalogs = response;
+    });
   }
 }

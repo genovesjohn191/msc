@@ -19,6 +19,7 @@ export * from './functions/mcs-coerce.function';
 /** Interfaces */
 export * from './interfaces/mcs-component-type.interface';
 export * from './interfaces/mcs-delegate.interface';
+export * from './interfaces/mcs-disposable.interface';
 export * from './interfaces/mcs-initializer.interface';
 export * from './interfaces/mcs-property-type.interface';
 export * from './interfaces/mcs-safe-to-navigate-away.interface';

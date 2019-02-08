@@ -80,7 +80,7 @@ export class WebStompComponent implements OnInit {
         if (stompIsConnected) {
           this._hideStompErrorStatusBar();
           this._showStompSuccessStatusBar();
-          this._notificationContext.initialize();
+          this._notificationContext.onInit();
           return;
         }
 

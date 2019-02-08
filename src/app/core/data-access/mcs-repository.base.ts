@@ -119,19 +119,21 @@ export abstract class McsRepositoryBase<T extends McsEntityBase>
   /**
    * Add a new record to the repository
    * @param entity Entity to be added
+   * @param insertIndex Index position on where to insert the record
    */
-  public addOrUpdate(entity: T): void {
+  public addOrUpdate(entity: T, insertIndex?: number): void {
     if (isNullOrEmpty(entity)) { return; }
 
     let isUpdate = !!this.dataRecords.find((item) => item.id === entity.id);
     this.dataRecords = addOrUpdateArrayRecord(
       this.dataRecords, entity, false,
-      (currentEntity: T) => currentEntity.id === entity.id
+      (currentEntity: T) => currentEntity.id === entity.id,
+      insertIndex
     );
 
     if (!isUpdate) {
-      ++this._allRecordsCount;
       this._notifyDataChange(ActionStatus.Add);
+      if (!isNullOrEmpty(this._allRecordsCount)) { ++this._allRecordsCount; }
     } else {
       this._notifyDataChange(ActionStatus.Update);
     }

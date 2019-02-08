@@ -2,7 +2,10 @@ import {
   Subscription,
   Subject
 } from 'rxjs';
-import { isNullOrUndefined } from '@app/utilities';
+import {
+  isNullOrUndefined,
+  isNullOrEmpty
+} from '@app/utilities';
 import { EventBusState } from './event-bus-state.enum';
 
 export interface EventBusHandler<T> {
@@ -38,7 +41,7 @@ export class EventBusDispatcherCore {
   public addEventListener(event: EventBusState, callback: (...args: any[]) => void): Subscription {
     let eventObject = this._getEventObjectFromCache<any>(event);
     return eventObject.subject.subscribe((eventArg) => {
-      callback.apply(this, ...eventArg.params);
+      callback.apply(this, eventArg.params);
     });
   }
 
@@ -49,7 +52,7 @@ export class EventBusDispatcherCore {
    */
   public dispatch<T>(event: EventBusState, ...args: T[]): void {
     let eventObject = this._getEventObjectFromCache(event);
-    eventObject.latestArgs = args;
+    eventObject.latestArgs = isNullOrEmpty(args) ? eventObject.latestArgs : args;
     eventObject.subject.next({ params: eventObject.latestArgs });
   }
 

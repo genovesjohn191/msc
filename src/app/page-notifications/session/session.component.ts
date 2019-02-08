@@ -71,7 +71,7 @@ export class SessionComponent implements OnInit {
 
     this._sessionIdleDialogRef.afterClosed().subscribe((result) => {
       if (isNullOrEmpty(result)) { return; }
-      this._sessionHandlerService.resumeSession();
+      this._sessionHandlerService.resumeSessions();
     });
   }
 

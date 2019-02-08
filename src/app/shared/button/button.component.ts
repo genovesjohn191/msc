@@ -35,6 +35,7 @@ export type ButtonType =
     '[class.label-placement-left]': 'labelPlacement === "left"',
     '[class.label-placement-center]': 'labelPlacement === "center"',
     '[class.label-placement-right]': 'labelPlacement === "right"',
+    '[class.button-active]': 'active',
     '[class.button-disabled]': 'disabled'
   }
 })
@@ -65,6 +66,13 @@ export class ButtonComponent {
   public set size(value: string) {
     this._setSize(value);
   }
+
+  @Input()
+  public get active(): boolean { return this._active; }
+  public set active(value: boolean) {
+    this._active = coerceBoolean(value);
+  }
+  private _active: boolean;
 
   @Input()
   public get disabled(): boolean { return this._disabled; }

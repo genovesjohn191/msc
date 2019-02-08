@@ -54,11 +54,11 @@
           </mcs-error>
           <mcs-error mcsError errorState="min">
             {{ textContent.errors.ramMin |
-              mcsTextPlaceholder: 'min_value': minimumMemoryMB }}
+              mcsTextPlaceholder: 'min_value': (minimumMemoryMB | mcsDataSize: 'MB') }}
           </mcs-error>
           <mcs-error mcsError errorState="max">
             {{ textContent.errors.ramMax |
-              mcsTextPlaceholder: 'max_value': resourceAvailableMemoryMB }}
+              mcsTextPlaceholder: 'max_value': (resourceAvailableMemoryMB | mcsDataSize: 'MB') }}
           </mcs-error>
           <mcs-error mcsError errorState="memoryInvalid">
             {{ textContent.errors.ramInvalid |

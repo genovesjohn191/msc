@@ -11,7 +11,7 @@ export interface McsRepository<T> {
   getById(id: string): Observable<T>;
   getTotalRecordsCount(): number;
 
-  addOrUpdate(entity: T): void;
+  addOrUpdate(entity: T, insertIndex?: number): void;
   delete(entity: T): void;
   deleteBy(predicate: (entity: T) => boolean);
   deleteById(id: string): void;

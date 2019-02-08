@@ -365,8 +365,8 @@
           "scaling": "Scaling in progress.",
           "loadingContent": "Loading server compute."
         },
-        "supportIdentifiers": {
-          "title": "Support Identifiers",
+        "serviceInformation": {
+          "title": "Service Information",
           "vdc": "Resource",
           "serviceId": "Service ID",
           "vmWareId": "VMWare ID"

@@ -110,10 +110,8 @@ export class McsAuthenticationService {
    * @param identity Currently login user information
    */
   private _setUserIdentity(identity: McsIdentity) {
-    this._appState.set(CoreDefinition.APPSTATE_AUTH_IDENTITY, identity);
-    this._authenticationIdentity.applyIdentity();
-    this._cookieService.setItem(
-      CoreDefinition.COOKIE_USER_STATE_ID, this._authenticationIdentity.user.hashedId);
+    this._authenticationIdentity.setActiveUser(identity);
+    this._cookieService.setItem(CoreDefinition.COOKIE_USER_STATE_ID, identity.hashedId);
   }
 
   /**

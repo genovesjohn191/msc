@@ -15,7 +15,7 @@
   <!-- Storage profiles selection and details template -->
   <ng-container *ngIf="!detailsTemplate;else detailsTemplate">
     <mcs-form-field>
-      <mcs-select [formControl]="fcSelectStorages"
+      <mcs-select [formControl]="fcSelectStorages" required
         mcsId="select-storage"
         placeholder="Select storage profile">
 

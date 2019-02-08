@@ -10,16 +10,12 @@ import {
   Component,
   ViewChild
 } from '@angular/core';
-import {
-  CoreDefinition,
-  McsAuthenticationIdentity
-} from '@app/core';
+import { McsAuthenticationIdentity } from '@app/core';
 import {
   McsIdentity,
   McsKeyValuePair
 } from '@app/models';
 import { CoreTestingModule } from '@app/core/testing';
-import { AppState } from '@app/app.service';
 import { AccessControlDirective } from './access-control.directive';
 
 @Component({
@@ -36,7 +32,6 @@ describe('AccessControlDirective', () => {
   /** Stub Services/Components */
   let component: TestComponent;
   let fixtureInstance: ComponentFixture<TestComponent>;
-  let appState: AppState;
   let mcsAuthenticationIdentity: McsAuthenticationIdentity;
 
   beforeEach(async(() => {
@@ -67,7 +62,6 @@ describe('AccessControlDirective', () => {
     TestBed.compileComponents().then(() => {
       fixtureInstance = TestBed.createComponent(TestComponent);
       fixtureInstance.detectChanges();
-      appState = getTestBed().get(AppState);
       component = fixtureInstance.componentInstance;
       mcsAuthenticationIdentity = getTestBed().get(McsAuthenticationIdentity);
     });
@@ -78,8 +72,7 @@ describe('AccessControlDirective', () => {
       let userIdentity = new McsIdentity();
       userIdentity.permissions = ['VmAccess', 'VmEdit'];
       userIdentity.features = [];
-      appState.set(CoreDefinition.APPSTATE_AUTH_IDENTITY, userIdentity);
-      mcsAuthenticationIdentity.applyIdentity();
+      mcsAuthenticationIdentity.setActiveUser(userIdentity);
 
       spyOn(component.accessControl.viewContainer, 'createEmbeddedView');
       component.accessControl.requiredPermission = ['VmEdit'];
@@ -95,8 +88,7 @@ describe('AccessControlDirective', () => {
       feature.key = 'createServer';
       feature.value = true;
       userIdentity.features = [feature];
-      appState.set(CoreDefinition.APPSTATE_AUTH_IDENTITY, userIdentity);
-      mcsAuthenticationIdentity.applyIdentity();
+      mcsAuthenticationIdentity.setActiveUser(userIdentity);
 
       spyOn(component.accessControl.viewContainer, 'createEmbeddedView');
       component.accessControl.requiredPermission = [];
@@ -110,8 +102,7 @@ describe('AccessControlDirective', () => {
       let userIdentity = new McsIdentity();
       userIdentity.permissions = ['VmAccess'];
       userIdentity.features = [];
-      appState.set(CoreDefinition.APPSTATE_AUTH_IDENTITY, userIdentity);
-      mcsAuthenticationIdentity.applyIdentity();
+      mcsAuthenticationIdentity.setActiveUser(userIdentity);
 
       spyOn(component.accessControl.viewContainer, 'clear');
       component.accessControl.requiredPermission = ['VmEdit'];
@@ -124,8 +115,7 @@ describe('AccessControlDirective', () => {
       let userIdentity = new McsIdentity();
       userIdentity.permissions = ['VmAccess'];
       userIdentity.features = [];
-      appState.set(CoreDefinition.APPSTATE_AUTH_IDENTITY, userIdentity);
-      mcsAuthenticationIdentity.applyIdentity();
+      mcsAuthenticationIdentity.setActiveUser(userIdentity);
 
       spyOn(component.accessControl.viewContainer, 'clear');
       component.accessControl.requiredPermission = [];

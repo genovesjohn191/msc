@@ -3,28 +3,30 @@
   <div class="product-megamenu-mobile-wrapper" mcsScrollable>
     <mcs-data-status [dataStatusFactory]="productsStatusFactory">
       <mcs-data-status-success mcsDataSuccess>
-        <mcs-accordion [multi]="true">
-          <mcs-accordion-panel *ngFor="let catalog of productCatalogs">
-            <mcs-accordion-panel-header mcsPanelHeaderDef>
-              {{ catalog.name }}
-            </mcs-accordion-panel-header>
+        <ng-container *mcsAccessControl="[]; feature: EnableProductCatalog">
+          <mcs-accordion [multi]="true" *ngIf="selectedProduct$ | async as selectedProduct">
+            <mcs-accordion-panel *ngFor="let catalog of productCatalogs">
+              <mcs-accordion-panel-header mcsPanelHeaderDef>
+                {{ catalog.name }}
+              </mcs-accordion-panel-header>
 
-            <section>
-              <mcs-list [header]="category.name" itemsOffset="small"
-                *ngFor="let category of catalog.categories">
-                <mcs-list-item *ngFor="let product of category.products">
-                  <a (click)="gotoProduct(product)"
-                    mcsId="select-product"
-                    mcsEventTracker="select-product"
-                    mcsEventCategory="navigation"
-                    mcsEventLabel="main-nav"
-                    [ngClass]="{'active': (selectedProduct$ | async)?.id === product.id}">
-                    {{ product.name }}</a>
-                </mcs-list-item>
-              </mcs-list>
-            </section>
-          </mcs-accordion-panel>
-        </mcs-accordion>
+              <section>
+                <mcs-list [header]="category.name" itemsOffset="small"
+                  *ngFor="let category of catalog.categories">
+                  <mcs-list-item *ngFor="let product of category.products">
+                    <a (click)="gotoProduct(product)"
+                      mcsId="select-product"
+                      mcsEventTracker="select-product"
+                      mcsEventCategory="navigation"
+                      mcsEventLabel="main-nav"
+                      [ngClass]="{'active': selectedProduct.id === product.id}">
+                      {{ product.name }}</a>
+                  </mcs-list-item>
+                </mcs-list>
+              </section>
+            </mcs-accordion-panel>
+          </mcs-accordion>
+        </ng-container>
       </mcs-data-status-success>
 
       <mcs-data-status-in-progress mcsDataInProgress>

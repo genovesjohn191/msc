@@ -7,14 +7,18 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
+import {
+  Subject,
+  Observable
+} from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
   McsJob,
   Breakpoint,
   McsCompany,
   DataStatus,
-  RouteKey
+  RouteKey,
+  McsIdentity
 } from '@app/models';
 /** Services/Providers */
 import {
@@ -23,7 +27,6 @@ import {
   McsTextContentProvider,
   McsNotificationEventsService,
   McsBrowserService,
-  McsAuthenticationIdentity,
   McsAuthenticationService,
 } from '@app/core';
 import {
@@ -34,6 +37,10 @@ import {
   replacePlaceholder,
   unsubscribeSubject
 } from '@app/utilities';
+import {
+  EventBusPropertyListenOn,
+  EventBusState
+} from '@app/event-bus';
 import { SwitchAccountService } from '../../shared';
 
 @Component({
@@ -54,6 +61,12 @@ export class UserPanelComponent implements OnInit, OnDestroy {
 
   @ViewChild('userPopover')
   public userPopover: any;
+
+  @EventBusPropertyListenOn(EventBusState.UserChange)
+  public activeUser$: Observable<McsIdentity>;
+
+  @EventBusPropertyListenOn(EventBusState.AccountChange)
+  public activeAccount$: Observable<McsCompany>;
 
   private _destroySubject = new Subject<void>();
 
@@ -100,29 +113,12 @@ export class UserPanelComponent implements OnInit, OnDestroy {
     return CoreDefinition.ASSETS_SVG_LOGOUT_WHITE;
   }
 
-  public get firstName(): string {
-    return this._authenticationIdentity.user.firstName;
-  }
-
-  public get lastName(): string {
-    return this._authenticationIdentity.user.lastName;
-  }
-
-  public get activeAccount(): McsCompany {
-    return this._switchAccountService.activeAccount;
-  }
-
-  public get loadingAccount(): boolean {
-    return this._switchAccountService.loadingAccount;
-  }
-
   public constructor(
     private _textContent: McsTextContentProvider,
     private _router: Router,
     private _notificationEvents: McsNotificationEventsService,
     private _browserService: McsBrowserService,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _authenticationIdentity: McsAuthenticationIdentity,
     private _authenticationService: McsAuthenticationService,
     private _switchAccountService: SwitchAccountService
   ) {
@@ -133,8 +129,6 @@ export class UserPanelComponent implements OnInit, OnDestroy {
 
   public ngOnInit(): void {
     this.textContent = this._textContent.content.header.userPanel;
-
-    // Listen to events
     this._listenToCurrentUserJob();
     this._listenToBrowserResize();
     this._listenToSwitchAccount();

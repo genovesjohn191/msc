@@ -32,4 +32,11 @@ export class McsIdentity {
     this.permissions = undefined;
     this.features = undefined;
   }
+
+  /**
+   * Returns the full name of the user
+   */
+  public get fullName(): string {
+    return `${this.firstName} ${this.lastName}`;
+  }
 }

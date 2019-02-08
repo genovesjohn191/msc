@@ -87,7 +87,11 @@ export class ToolsComponent
       macquarieViewPortalAccess.name = macquarieView.name;
       macquarieViewPortalAccess.url = this._coreConfig.macviewUrl;
       macquarieView.portalAccess = Array(macquarieViewPortalAccess);
-      this.dataSource.addOrUpdateRecord(macquarieView, null, 0);
+      this.dataSource.addOrUpdateRecord(
+        macquarieView,
+        (item) => item.name === macquarieView.name,
+        0
+      );
 
       // Remove resource specific
       tools.slice().forEach((tool) => {
