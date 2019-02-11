@@ -4,7 +4,8 @@ import {
   getTestBed,
   ComponentFixture,
   fakeAsync,
-  tick
+  tick,
+  discardPeriodicTasks
 } from '@angular/core/testing';
 import {
   Component,
@@ -79,6 +80,7 @@ describe('AccessControlDirective', () => {
       component.accessControl.ngOnChanges();
       tick();
       expect(component.accessControl.viewContainer.createEmbeddedView).toHaveBeenCalledTimes(1);
+      discardPeriodicTasks();
     }));
 
     it(`should render the element when feature required is enabled`, fakeAsync(() => {
@@ -96,6 +98,7 @@ describe('AccessControlDirective', () => {
       component.accessControl.ngOnChanges();
       tick();
       expect(component.accessControl.viewContainer.createEmbeddedView).toHaveBeenCalledTimes(1);
+      discardPeriodicTasks();
     }));
 
     it(`should not render the element if permission is missing`, fakeAsync(() => {
@@ -109,6 +112,7 @@ describe('AccessControlDirective', () => {
       component.accessControl.ngOnChanges();
       tick();
       expect(component.accessControl.viewContainer.clear).toHaveBeenCalledTimes(1);
+      discardPeriodicTasks();
     }));
 
     it(`should not render the element if feature is disabled`, fakeAsync(() => {
@@ -123,6 +127,7 @@ describe('AccessControlDirective', () => {
       component.accessControl.ngOnChanges();
       tick();
       expect(component.accessControl.viewContainer.clear).toHaveBeenCalledTimes(1);
+      discardPeriodicTasks();
     }));
   });
 });

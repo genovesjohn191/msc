@@ -1,6 +1,7 @@
 import {
   Component,
   OnInit,
+  OnDestroy,
   ChangeDetectionStrategy,
   ViewEncapsulation,
   ChangeDetectorRef
@@ -8,7 +9,8 @@ import {
 import { Router } from '@angular/router';
 import {
   throwError,
-  BehaviorSubject
+  BehaviorSubject,
+  Subscription
 } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import {
@@ -28,7 +30,10 @@ import {
   EventBusState,
   EventBusDispatcherService
 } from '@app/event-bus';
-import { isNullOrEmpty } from '@app/utilities';
+import {
+  isNullOrEmpty,
+  unsubscribeSafely
+} from '@app/utilities';
 import { McsProductCatalogRepository } from '@app/services';
 import { McsAccessControlService } from '@app/core/authentication/mcs-access-control.service';
 
@@ -40,7 +45,7 @@ import { McsAccessControlService } from '@app/core/authentication/mcs-access-con
   encapsulation: ViewEncapsulation.None
 })
 
-export class NavigationDesktopComponent implements OnInit {
+export class NavigationDesktopComponent implements OnInit, OnDestroy {
   public textContent: any;
   public productCatalogs: McsProductCatalog[];
   public productsStatusFactory: McsDataStatusFactory<McsProductCatalog[]>;
@@ -60,6 +65,8 @@ export class NavigationDesktopComponent implements OnInit {
     return RouteKey;
   }
 
+  private _productUnselectedHandler: Subscription;
+
   constructor(
     private _router: Router,
     private _coreConfig: CoreConfig,
@@ -76,6 +83,10 @@ export class NavigationDesktopComponent implements OnInit {
     this.textContent = this._textContentProvider.content.navigation;
     this._registerEvents();
     this._getProductCatalogs();
+  }
+
+  public ngOnDestroy() {
+    unsubscribeSafely(this._productUnselectedHandler);
   }
 
   /**
@@ -105,7 +116,7 @@ export class NavigationDesktopComponent implements OnInit {
    * Register events state
    */
   private _registerEvents(): void {
-    this._eventDispatcher.addEventListener(
+    this._productUnselectedHandler = this._eventDispatcher.addEventListener(
       EventBusState.ProductUnSelected, this._onProductUnSelected.bind(this)
     );
   }

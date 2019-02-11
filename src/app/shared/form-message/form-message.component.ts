@@ -53,7 +53,7 @@ export class FormMessageComponent implements OnInit, OnDestroy, FormMessage {
 
   @ViewChild(ComponentHandlerDirective)
   private _alertMessage: ComponentHandlerDirective;
-  private _changeRouteSubs: Subscription;
+  private _changeRouteHandler: Subscription;
 
   public constructor(
     private _changeDetectorRef: ChangeDetectorRef,
@@ -63,12 +63,13 @@ export class FormMessageComponent implements OnInit, OnDestroy, FormMessage {
   ) { }
 
   public ngOnInit() {
-    this._changeRouteSubs = this._eventbusService.addEventListener(
-      EventBusState.RouteChange, this._onRouteChange.bind(this));
+    this._changeRouteHandler = this._eventbusService.addEventListener(
+      EventBusState.RouteChange, this._onRouteChange.bind(this)
+    );
   }
 
   public ngOnDestroy() {
-    unsubscribeSafely(this._changeRouteSubs);
+    unsubscribeSafely(this._changeRouteHandler);
   }
 
   public get bulletIconKey(): string {
