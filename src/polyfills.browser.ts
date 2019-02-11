@@ -41,25 +41,6 @@ import 'core-js/es6/typed';
 /** IE10 and IE11 requires the following for NgClass support on SVG elements */
 // import 'classlist.js';  // Run `npm install --save classlist.js`.
 
-/**
- * .matches is not supported on IE we need to override it
- * https://developer.mozilla.org/en-US/docs/Web/API/Element/matches
- */
-if (!Element.prototype.matches) {
-  Element.prototype.matches = Element.prototype.msMatchesSelector ||
-    Element.prototype.webkitMatchesSelector;
-}
-
-/**
- * .setPrototypeOf is not supported on IE we need to override it
- * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/
- * Global_Objects/Object/setPrototypeOf
- */
-Object.setPrototypeOf = Object.setPrototypeOf || function(obj, proto) {
-  obj.__proto__ = proto;
-  return obj;
-};
-
 // Evergreen browsers require these.
 import 'core-js/es6/reflect';
 import 'core-js/es7/reflect';
@@ -85,6 +66,35 @@ import 'zone.js/dist/long-stack-trace-zone';
 /***************************************************************************************************
  * APPLICATION IMPORTS
  */
+
+/**
+ * TextEncoder is not yet support on any Microsoft browsers as of 2018 and the ng2-stompjs updated
+ * version is using it. We need a polyfill for this. However, this is not working properly
+ * as the text-encoding was deprecated. We need to wait for the ng2-stompjs fix, for now
+ * we gonna use the version 6.0.0
+ * https://stomp-js.github.io/guide/stompjs/rx-stomp/ng2-stompjs/2018/06/28/
+ * pollyfils-for-stompjs-v5.html
+ */
+// import 'text-encoding';
+
+/**
+ * .matches is not supported on IE we need to override it
+ * https://developer.mozilla.org/en-US/docs/Web/API/Element/matches
+ */
+if (!Element.prototype.matches) {
+  Element.prototype.matches = Element.prototype.msMatchesSelector ||
+    Element.prototype.webkitMatchesSelector;
+}
+
+/**
+ * .setPrototypeOf is not supported on IE we need to override it
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/
+ * Global_Objects/Object/setPrototypeOf
+ */
+Object.setPrototypeOf = Object.setPrototypeOf || function(obj, proto) {
+  obj.__proto__ = proto;
+  return obj;
+};
 
 /**
  * Date, currency, decimal and percent pipes.

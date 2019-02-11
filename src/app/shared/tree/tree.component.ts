@@ -53,7 +53,9 @@ export class TreeComponent<T> implements AfterContentInit, OnDestroy {
    */
   private readonly _treeNodesSelectionChanges: Observable<TreeNodeComponent<T>> = defer(() => {
     if (!isNullOrEmpty(this.treeNodes)) {
-      return merge(...this.treeNodes.map((treeNode) => treeNode.selectionChange));
+      return merge<TreeNodeComponent<T>>(
+        ...this.treeNodes.map((treeNode) => treeNode.selectionChange)
+      );
     }
     return this._ngZone.onStable.asObservable().pipe(
       take(1),

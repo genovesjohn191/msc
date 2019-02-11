@@ -181,7 +181,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
    */
   private readonly _optionsSelectionChanges: Observable<OptionComponent> = defer(() => {
     if (!isNullOrEmpty(this._options)) {
-      return merge(...this._options.map((option) => option.selectionChange));
+      return merge<OptionComponent>(...this._options.map((option) => option.selectionChange));
     }
     return this._ngZone.onStable.asObservable().pipe(
       take(1),
