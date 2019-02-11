@@ -109,7 +109,9 @@ export class ResponsivePanelComponent implements AfterViewInit, AfterViewChecked
    */
   private readonly _itemsSelectionChanged: Observable<ResponsivePanelItemDirective> = defer(() => {
     if (!isNullOrEmpty(this.panelItems)) {
-      return merge(...this.panelItems.map((panelItem) => panelItem.selectionChange));
+      return merge<ResponsivePanelItemDirective>(
+        ...this.panelItems.map((panelItem) => panelItem.selectionChange)
+      );
     }
     return this._ngZone.onStable.asObservable().pipe(
       take(1),

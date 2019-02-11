@@ -45,7 +45,7 @@ export class ListPanelComponent implements AfterContentInit, OnDestroy {
    * Combine streams of all option selection change
    */
   private readonly _optionsSelectionChanges: Observable<OptionComponent> = defer(() => {
-    return merge(...this._options.map((option) => option.selectionChange));
+    return merge<OptionComponent>(...this._options.map((option) => option.selectionChange));
   });
 
   constructor(private _changeDetectorRef: ChangeDetectorRef) { }
