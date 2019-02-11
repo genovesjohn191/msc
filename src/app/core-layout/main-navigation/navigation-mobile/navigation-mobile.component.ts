@@ -17,7 +17,8 @@ import {
 } from '@angular/animations';
 import {
   throwError,
-  Subject
+  Subject,
+  Subscription
 } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 /** Providers / Services */
@@ -32,7 +33,7 @@ import {
 } from '@app/core';
 import {
   isNullOrEmpty,
-  unsubscribeSubject
+  unsubscribeSafely
 } from '@app/utilities';
 import {
   RouteKey,
@@ -79,8 +80,6 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
   @EventBusPropertyListenOn(EventBusState.ProductSelected)
   public selectedProduct$: Subject<McsProduct>;
 
-  private _destroySubject = new Subject<void>();
-
   public get macviewUrl(): string {
     return this._coreConfig.macviewUrl;
   }
@@ -112,6 +111,9 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
     return this._productCatalogRepository.productCatalogFeatureIsOn;
   }
 
+  private _routeChangeHandler: Subscription;
+  private _productUnselectedHandler: Subscription;
+
   public constructor(
     private _router: Router,
     private _coreConfig: CoreConfig,
@@ -133,7 +135,8 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy() {
-    unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this._routeChangeHandler);
+    unsubscribeSafely(this._productUnselectedHandler);
   }
 
   /**
@@ -180,11 +183,13 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
    * Register events state
    */
   private _registerEvents(): void {
-    this._eventDispatcher.addEventListener(
-      EventBusState.ProductUnSelected, this._onProductUnSelected.bind(this));
+    this._productUnselectedHandler = this._eventDispatcher.addEventListener(
+      EventBusState.ProductUnSelected, this._onProductUnSelected.bind(this)
+    );
 
-    this._eventDispatcher.addEventListener(
-      EventBusState.RouteChange, this._onRouteChanged.bind(this));
+    this._routeChangeHandler = this._eventDispatcher.addEventListener(
+      EventBusState.RouteChange, this._onRouteChanged.bind(this)
+    );
   }
 
   /**

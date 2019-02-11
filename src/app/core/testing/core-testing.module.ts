@@ -6,6 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AppState } from '@app/app.service';
+import { EventBusTestingModule } from '@app/event-bus/testing';
 import { CoreConfig } from '../core.config';
 import { coreProviders } from '../core.constants';
 import { MockCoreConfig } from './core-config.mock';
@@ -17,7 +18,8 @@ import { MockCoreConfig } from './core-config.mock';
     HttpClientModule,
     HttpClientTestingModule,
     RouterTestingModule,
-    CookieModule.forRoot()
+    CookieModule.forRoot(),
+    EventBusTestingModule
   ],
   exports: [
     HttpClientTestingModule
