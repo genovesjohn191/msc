@@ -26,6 +26,9 @@ import {
 } from '@app/utilities';
 import { GridColumnComponent } from '../grid-column/grid-column.component';
 
+const DEFAULT_MAX_GRID_SIZE = 12;
+const DEFAULT_GAP_SIZE = 15;
+
 @Component({
   selector: 'mcs-grid-row',
   template: `<ng-content></ng-content>`,
@@ -40,7 +43,7 @@ import { GridColumnComponent } from '../grid-column/grid-column.component';
 export class GridRowComponent implements AfterContentInit, OnDestroy {
   @Input()
   public set gapSize(value: number) { this._gapSize = coerceNumber(value); }
-  private _gapSize: number = 15;
+  private _gapSize: number = DEFAULT_GAP_SIZE;
 
   @ContentChildren(GridColumnComponent)
   private _gridColumns: QueryList<GridColumnComponent>;
@@ -116,7 +119,7 @@ export class GridRowComponent implements AfterContentInit, OnDestroy {
 
         columnSizeCounter += gridActualSize;
         this._updateGridColumnWidth(gridActualSize, gridColumn);
-        this._updateGridColumnGap(columnSizeCounter > 12, gridColumn);
+        this._updateGridColumnGap(columnSizeCounter > DEFAULT_MAX_GRID_SIZE, gridColumn);
       });
       this._changeDetectorRef.markForCheck();
     });
@@ -128,7 +131,7 @@ export class GridRowComponent implements AfterContentInit, OnDestroy {
    * @param column Grid Column where the gridsize will be applied
    */
   private _updateGridColumnWidth(gridSize: number, column: GridColumnComponent): void {
-    let actualWidthPercentage = ((gridSize / 12) * 100);
+    let actualWidthPercentage = ((gridSize / DEFAULT_MAX_GRID_SIZE) * 100);
     column.applyColumnWidth(actualWidthPercentage, this._gapSize);
   }
 

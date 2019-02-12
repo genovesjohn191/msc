@@ -4,7 +4,7 @@
   </ng-container>
   <p *ngIf="textContent.description">{{ textContent.description }}</p>
 
-  <section *ngIf="selectedMedium$ | async as selectedMedium">
+  <mcs-section *ngIf="selectedMedium$ | async as selectedMedium">
     <mcs-table [dataSource]="serversDataSource">
       <!-- Name Column -->
       <ng-container mcsColumnDef="name">
@@ -73,5 +73,5 @@
         </button>
       </div>
     </div>
-  </section>
+  </mcs-section>
 </mcs-presentation-panel>

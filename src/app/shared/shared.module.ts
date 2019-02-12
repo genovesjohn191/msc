@@ -62,6 +62,7 @@ import { LoadingModule } from './loading/loading.module';
 import { ItemModule } from './item/item.module';
 import { DividerModule } from './divider/divider.module';
 import { TreeModule } from './tree/tree.module';
+import { SectionModule } from './section/section.module';
 
 @NgModule({
   imports: [
@@ -124,7 +125,8 @@ import { TreeModule } from './tree/tree.module';
     LoadingModule,
     ItemModule,
     DividerModule,
-    TreeModule
+    TreeModule,
+    SectionModule
   ],
   exports: [
     CommonModule,
@@ -186,7 +188,8 @@ import { TreeModule } from './tree/tree.module';
     LoadingModule,
     ItemModule,
     DividerModule,
-    TreeModule
+    TreeModule,
+    SectionModule
   ]
 })
 

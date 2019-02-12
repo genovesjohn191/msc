@@ -185,12 +185,12 @@
               </ng-container>
 
               <ng-container *ngIf="ticketActivites$ | async as ticketActivities">
-                <section *ngIf="ticketActivities | mcsIsNotNullOrEmpty; else noActivities">
+                <mcs-section *ngIf="ticketActivities | mcsIsNotNullOrEmpty; else noActivities">
                   <mcs-ticket-activity *ngFor="let activity of ticketActivities"
                     [ticketId]="selectedTicket.id"
                     [activity]="activity">
                   </mcs-ticket-activity>
-                </section>
+                </mcs-section>
                 <ng-template #noActivities>
                   <mcs-data-status-empty>
                     {{ textContent.missingActivitiesLabel }}

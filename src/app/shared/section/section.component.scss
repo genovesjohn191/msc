@@ -1,0 +1,27 @@
+@import "../../../styles/shared/base";
+
+.section-wrapper {
+  @include display-flex(column);
+
+  &.section-horizontal {
+    @include display-flex(row);
+
+    @each $space-key in map-keys($space-breakpoints) {
+      $space-value: map-get($space-breakpoints, $space-key);
+      &.#{$space-key} {
+        @include set-items-interval($space-value, horizontal);
+      }
+    }
+  }
+
+  &.section-vertical {
+    @include display-flex(column);
+
+    @each $space-key in map-keys($space-breakpoints) {
+      $space-value: map-get($space-breakpoints, $space-key);
+      &.#{$space-key} {
+        @include set-items-interval($space-value, vertical);
+      }
+    }
+  }
+}

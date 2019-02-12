@@ -1,4 +1,4 @@
-<section>
+<mcs-section>
   <!-- Network header -->
   <ng-content select="[mcsManageNetworkHeader]"></ng-content>
 
@@ -29,7 +29,7 @@
 
   <div [ngSwitch]="inputManageType">
     <!-- Ip address DHCP Mode -->
-    <section [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Buttons">
+    <mcs-section [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Buttons">
       <div>{{ textContent.buttonMessage }}</div>
 
       <mcs-radio-button-group orientation="vertical"
@@ -40,10 +40,10 @@
       </mcs-radio-button-group>
 
       <ng-content select="[mcsManageNetworkWarning]"></ng-content>
-    </section>
+    </mcs-section>
 
     <!-- IP address custom mode -->
-    <section [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Custom">
+    <mcs-section [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Custom">
       <div>{{ textContent.customMessage }}</div>
 
       <form [formGroup]="fgCustomIpAddress">
@@ -77,6 +77,6 @@
           <span>{{ textContent.loadingIpInUsed }}</span>
         </mcs-data-status-in-progress>
       </mcs-data-status>
-    </section>
+    </mcs-section>
   </div>
-</section>
+</mcs-section>

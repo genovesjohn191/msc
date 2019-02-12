@@ -12,7 +12,7 @@
   </ng-template>
 
   <ng-container [ngSwitch]="diskMethodType">
-    <section [@fadeIn] *ngSwitchCase="serverDiskMethodTypeEnum.AddDisk">
+    <mcs-section [@fadeIn] *ngSwitchCase="serverDiskMethodTypeEnum.AddDisk">
 
       <!-- DISKs Table -->
       <mcs-table [dataSource]="disksDataSource">
@@ -134,10 +134,10 @@
           <span>{{ textContent.reachedStorageLimit }}</span>
         </mcs-data-status-warning>
       </ng-container>
-    </section>
+    </mcs-section>
 
     <!-- Expand Disk -->
-    <section [@fadeIn] *ngSwitchCase="serverDiskMethodTypeEnum.ExpandDisk">
+    <mcs-section [@fadeIn] *ngSwitchCase="serverDiskMethodTypeEnum.ExpandDisk">
       <div class="action-box" [disabled]="!serverDetails.server.executable">
         <mcs-server-manage-storage
           [storages]="resourceStorages$ | async"
@@ -185,6 +185,6 @@
           </button>
         </div>
       </div>
-    </section>
+    </mcs-section>
   </ng-container>
 </mcs-presentation-panel>
