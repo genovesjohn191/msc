@@ -82,6 +82,12 @@ export class McsNotificationEventsService {
   /** Event that emits only when current user triggered a job */
   public currentUserJob = new ReplaySubject<McsJob>(DEFAULT_CACHE_BUFFER);
 
+  /** Event that emits only when os updates are applied to a server */
+  public applyServerOsUpdates = new ReplaySubject<McsJob>(DEFAULT_CACHE_BUFFER);
+
+  /** Event that emits only when os update analysis is triggered */
+  public inspectServerForAvailableOsUpdate = new ReplaySubject<McsJob>(DEFAULT_CACHE_BUFFER);
+
   /** Event that emits all jobs */
   public notificationsEvent = new BehaviorSubject<McsJob[]>(undefined);
 
@@ -209,6 +215,14 @@ export class McsNotificationEventsService {
 
         case JobType.DeleteServerSnapshot:
           this.deleteServerSnapshot.next(notification);
+          break;
+
+        case JobType.ApplyServerOsUpdates:
+          this.applyServerOsUpdates.next(notification);
+          break;
+
+        case JobType.PerformServerOsUpdateAnalysis:
+          this.inspectServerForAvailableOsUpdate.next(notification);
           break;
 
         default:

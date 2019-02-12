@@ -28,7 +28,7 @@ export class McsSelection<T> {
   }
 
   /**
-   * Select the given record and add it this to the list of selection
+   * Select the given record and add it to the list of selection
    * @param value Value of the entity to select
    */
   public select(...values: T[]): void {

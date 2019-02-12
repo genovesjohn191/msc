@@ -35,6 +35,15 @@
     "requiredPermissions": ["VmAccess"],
     "documentTitle": "Server Management - Macquarie Cloud Services"
   },
+  "serverDetailServices": {
+    "enumCategory": "Compute",
+    "enumKey": "ServerDetailServices",
+    "routePath": "services",
+    "navigationPath": "services",
+    "requiredPermissions": ["VmAccess"],
+    "requiredFeatureFlag": "EnableServerOsUpdates",
+    "documentTitle": "Server Services - Macquarie Cloud Services"
+  },
   "serverDetailStorage": {
     "enumCategory": "Compute",
     "enumKey": "ServerDetailStorage",

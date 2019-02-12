@@ -1,4 +1,5 @@
 let moment = require('moment');
+let momenttz = require('moment-timezone');
 
 export function formatDate(date: Date, format: string): string {
   let formattedDate: string = '';
@@ -6,6 +7,25 @@ export function formatDate(date: Date, format: string): string {
   // Format date based on formatting string
   if (date) {
     formattedDate = moment(date.toUTCString()).format(format);
+  }
+
+  // return the formatted date using moment
+  return formattedDate;
+}
+
+/**
+ * Formats the time with specific timezone, uses moment-timezone JS
+ * @param date date to convert
+ * @param timezone specific timezone of the date
+ * @param format desired format of the output date
+ * TODO : we can replace this by the moment based angular formatDate
+ */
+export function formatDateTimeZone(date: Date, timezone: string, format: string): string {
+  let formattedDate: string = '';
+
+  // Format date based on formatting string
+  if (date) {
+    formattedDate = momenttz(date.toUTCString()).tz(timezone).format(format);
   }
 
   // return the formatted date using moment
@@ -73,7 +93,25 @@ export function compareDates(firstDate: Date, secondDate: Date): number {
 export function getExpiryLabel(expiry: Date) {
   let label: string = '';
   if (expiry) {
-    label = (compareDates(expiry, new Date()) >= 0) ? 'Expires' : 'Expired' ;
+    label = (compareDates(expiry, new Date()) >= 0) ? 'Expires' : 'Expired';
   }
   return label;
+}
+
+/**
+ * Converts time with supplied formats, uses moment JS
+ * @param time time to convert
+ * @param inputFormat format of the input
+ * @param outputFomat desired format of the output, default to 24HR format (HH:mm)
+ */
+export function formatTime(
+  time: string,
+  inputFormat: string,
+  outputFomat: string = 'HH:mm'
+): string {
+  let convertedTime: string = '';
+  if (time) {
+    convertedTime = moment(time, inputFormat).format(outputFomat);
+  }
+  return convertedTime;
 }

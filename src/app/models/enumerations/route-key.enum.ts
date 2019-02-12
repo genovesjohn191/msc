@@ -6,6 +6,7 @@ export enum RouteKey {
   Servers,
   ServerDetail,
   ServerDetailManagement,
+  ServerDetailServices,
   ServerDetailStorage,
   ServerDetailBackups,
   ServerDetailNics,

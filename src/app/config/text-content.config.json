@@ -376,6 +376,73 @@
           "description": "Ensure your server is fully protected. Enable and configure managed services for this server."
         }
       },
+      "services": {
+        "loading": "Loading services information.",
+        "loadingContent": "Loading server os updates details.",
+        "errorGettingServerDetails": "Sorry, something’s not right. We weren’t able to retrieve the os update details of the server.",
+        "label": "Services",
+        "title": "Operating System Updates",
+        "description": "Keep your server protected by applying regular OS updates.",
+        "updatesStatusTitleLabel": "Status",
+        "updatesAnalysisLabel": "Inspect Now",
+        "updatesScheduleTitleLabel": "Jobs",
+        "updatesScheduleLabel": {
+          "scheduled": "You have an update schedule configured.",
+          "unscheduled": "No update schedule configured."
+        },
+        "updatesScheduleRunOnceWarningLabel": "Once this job is complete, you will need to set up a new update schedule.",
+        "updatesScheduleConfigureLink": "Configure",
+        "updatesScheduleRunNowLink": "Update Now",
+        "unscheduled": {
+          "loading": "Loading server os updates.",
+          "title": "Apply Updates",
+          "description": "Select the updates or update categories you would like to apply and we will install them on your server for you.",
+          "listLabel": "Which updates should we apply?",
+          "listAllSelection": "All Updates",
+          "noOsUpdates": "no availabe os updates for this server.",
+          "osUpdatesloadingContent": "Loading list of server os updates.",
+          "errorOsUpdates": "Sorry, something’s not right. We weren’t able to retrieve the list of os updates for this server.",
+          "applyUpdatesButton": "Apply Updates"
+        },
+        "scheduled": {
+          "title": "Configure Schedule",
+          "description": {
+            "default": "Our system will update the guest OS on this server for you.",
+            "recurring": "Our system will update the guest OS on this server for you. Your server has a recurring update schedule set. See the Recurring option below for details.",
+            "runonce": "Our system will update the guest OS on this server for you. Your server has a one-time update schedule set. See the Later option below for details."
+          },
+          "scheduleTypeLabel": "Schedule Type:",
+          "scheduleTypeOption": {
+            "runonce": "Later",
+            "recurring": "Recurring"
+          },
+          "scheduleTimeLabel": "Schedule:",
+          "listLabel": "Which updates should we apply?",
+          "listAllSelection": "All Updates",
+          "datePreposition": "at",
+          "timezoneAbrv": "AEST",
+          "checkboxSelectionEveryday": "Everyday",
+          "checkboxSelectionWeekdays": "Weekdays",
+          "checkboxSelectionWeekends": "Weekends",
+          "timeSelection": "12:00,12:15,12:30,12:45,1:00,1:15,1:30,1:45,2:00,2:15,2:30,2:45,3:00,3:15,3:30,3:45,2:00,2:15,2:30,2:45,3:00,3:15,3:30,3:45,4:00,4:15,4:30,4:45,5:00,5:15,5:30,5:45,6:00,6:15,6:30,6:45,7:00,7:15,7:30,7:45,8:00,8:15,8:30,8:45,9:00,9:15,9:30,9:45,10:00,10:15,10:30,10:45,11:00,11:15,11:30,11:45",
+          "dayPeriod": "AM,PM",
+          "osUpdatesCategoryloadingContent": "Loading server os updates categories.",
+          "noOsUpdatesCategory": "no availabe os updates category for this server.",
+          "errorGettingOsUpdatesCategory": "Sorry, something’s not right. We weren’t able to retrieve the list of os updates category for this server.",
+          "scheduleDateloadingContent": "Loading server os updates schedule",
+          "errorGettingscheduleDate": "Sorry, something’s not right. We weren’t able to retrieve the os update schedule for this server.",
+          "deleteScheduleButton": "Delete Schedule",
+          "saveScheduleButton": "Save Schedule",
+          "updateDialogTitle": "Save Update Schedule",
+          "updateDialogMessage": "Your server already has an update schedule configured. \n \n Are you sure you wish to overwrite this?",
+          "deleteDialogTitle": "Delete Existing Schedule",
+          "deleteDialogMessage": "Deleting a schedule cannot be undone and will not revert any updates which have been applied. \n \n Are you sure you wish to continue?",
+          "deleteSuccessMessage": "Schedule was successfully deleted!",
+          "deleteErrorMessage": "Failed in deleting the existing schedule!",
+          "updateSuccessMessage": "Schedule was successfully saved!",
+          "updateErrorMessage": "Failed in saving the schedule!"
+        }
+      },
       "storage": {
         "label": "Storage",
         "loading": "Loading storage information.",

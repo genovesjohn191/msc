@@ -14,6 +14,8 @@ import {
   ServerBackupsComponent,
   ServerComponent,
   ServerManagementComponent,
+  ServerServicesComponent,
+  ServerServicesGuard,
   ServerStorageComponent,
   ServerNicsComponent
 } from './server';
@@ -36,6 +38,7 @@ import {
 export const serversProviders: any[] = [
   ServersService,
   ServerService,
+  ServerServicesGuard,
   ServerCreateService,
   ServerCreateGuard,
   VdcService
@@ -50,6 +53,7 @@ export const serversRoutesComponents: any[] = [
   ServerProvisioningComponent,
   ServerComponent,
   ServerManagementComponent,
+  ServerServicesComponent,
   ServerStorageComponent,
   ServerNicsComponent,
   ServerBackupsComponent,
@@ -93,6 +97,12 @@ export const serversRoutes: Routes = [
         path: CoreRoutes.getRoutePath(RouteKey.ServerDetailManagement),
         component: ServerManagementComponent,
         data: { routeId: RouteKey.ServerDetailManagement }
+      },
+      {
+        path: CoreRoutes.getRoutePath(RouteKey.ServerDetailServices),
+        component: ServerServicesComponent,
+        data: { routeId: RouteKey.ServerDetailServices },
+        canActivate: [ServerServicesGuard]
       },
       {
         path: CoreRoutes.getRoutePath(RouteKey.ServerDetailStorage),
