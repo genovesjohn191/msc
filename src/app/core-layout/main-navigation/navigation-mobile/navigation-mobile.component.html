@@ -10,7 +10,7 @@
                 {{ catalog.name }}
               </mcs-accordion-panel-header>
 
-              <section>
+              <mcs-section>
                 <mcs-list [header]="category.name" itemsOffset="small"
                   *ngFor="let category of catalog.categories">
                   <mcs-list-item *ngFor="let product of category.products">
@@ -23,7 +23,7 @@
                       {{ product.name }}</a>
                   </mcs-list-item>
                 </mcs-list>
-              </section>
+              </mcs-section>
             </mcs-accordion-panel>
           </mcs-accordion>
         </ng-container>

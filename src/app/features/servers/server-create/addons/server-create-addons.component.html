@@ -3,7 +3,7 @@
     <h2>{{ textContent.header }}</h2>
     <p>{{ textContent.description }}</p>
 
-    <section>
+    <mcs-section>
       <mcs-collapsible-panel (collapseChange)="antiMalwareCheckedChange($event)"
         [header]="textContent.antiMalwareAddOn"
         [mcsContextualHelp]="textContent.antiMalwareAddOnHelp">
@@ -24,7 +24,7 @@
         <mcs-sql-server-addon></mcs-sql-server-addon>
       </mcs-collapsible-panel>
       -->
-    </section>
+    </mcs-section>
 
     <!-- Wizard Actions -->
     <div class="action-items">

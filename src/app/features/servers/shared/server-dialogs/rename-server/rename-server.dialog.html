@@ -4,7 +4,7 @@
   </mcs-dialog-header>
 
   <mcs-dialog-content>
-    <section>
+    <mcs-section>
       <span>{{ textContent.information }}</span>
       <mcs-form-field>
         <input mcsInput #serverNameInput maxlength="15"
@@ -24,7 +24,7 @@
           <span [innerHTML]="textContent.errors.invalidServerName | mcsNewLines"></span>
         </mcs-error>
       </mcs-form-field>
-    </section>
+    </mcs-section>
   </mcs-dialog-content>
 
   <mcs-dialog-actions>

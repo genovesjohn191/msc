@@ -13,7 +13,7 @@
                       <h2>{{ catalog.name }}</h2>
                     </ng-container>
 
-                    <section>
+                    <mcs-section>
                       <mcs-list [header]="category.name"
                         *ngFor="let category of catalog.categories">
                         <mcs-list-item *ngFor="let product of category.products">
@@ -31,7 +31,7 @@
 
                         </mcs-list-item>
                       </mcs-list>
-                    </section>
+                    </mcs-section>
                   </mcs-presentation-panel>
                 </mcs-grid-column>
                 <mcs-divider *ngIf="!isLastItem" orientation="vertical"></mcs-divider>

@@ -1,4 +1,4 @@
-<section>
+<mcs-section>
   <!-- Scale header and switcher -->
   <mcs-item orientation="separated">
     <div><ng-content select="[mcsManageScaleHeader]"></ng-content></div>
@@ -14,7 +14,7 @@
 
   <div [ngSwitch]="inputManageType">
     <!-- Slider selection mode -->
-    <section [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Slider">
+    <mcs-section [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Slider">
       <div>
         <span>{{ textContent.sliderMessage }} </span>
         <span>This VDC has {{ resourceAvailableMemoryMB | mcsDataSize: 'MB' }}
@@ -31,10 +31,10 @@
           {{ sliderValue?.cpuCount | number}} {{ textContent.cpuUnit }}
         </strong>
       </div>
-    </section>
+    </mcs-section>
 
     <!-- Custom scale mode -->
-    <section [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Custom">
+    <mcs-section [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Custom">
       <div>{{ textContent.customMessage }}</div>
 
       <form [formGroup]="fgServerScale">
@@ -94,6 +94,6 @@
           </mcs-error>
         </mcs-form-field>
       </form>
-    </section>
+    </mcs-section>
   </div>
-</section>
+</mcs-section>

@@ -98,7 +98,7 @@
         </mcs-form-field>
 
         <!-- Services -->
-        <section>
+        <mcs-section>
           <h2>{{ textContent.services }}</h2>
           <div>
             <ng-container *ngIf="services">
@@ -152,18 +152,18 @@
               </div>
             </ng-container>
           </div>
-        </section>
+        </mcs-section>
       </form>
 
       <!-- Attachments -->
-      <section>
+      <mcs-section>
         <h2>{{ textContent.attachments }}</h2>
         <mcs-file-attachment attachedLimit="multiple"
           [allowedMimeType]="['image/jpeg', 'image/png', 'image/bmp', 'text/plain']"
           (attachedFilesChanged)="onChangedAttachments($event)"
           [mcsContextualHelp]="contextualContent.attachments">
         </mcs-file-attachment>
-      </section>
+      </mcs-section>
 
       <!-- Ticket Action -->
       <div class="action-items">

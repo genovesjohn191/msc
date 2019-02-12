@@ -5,7 +5,7 @@
   <p *ngIf="textContent.description">{{ textContent.description }}</p>
 
   <ng-container [ngSwitch]="nicMethodType">
-    <section [@fadeIn] *ngSwitchCase="serverNicMethodTypeEnum.AddNic">
+    <mcs-section [@fadeIn] *ngSwitchCase="serverNicMethodTypeEnum.AddNic">
       <!-- NICs Table -->
       <mcs-table [dataSource]="nicsDataSource">
         <!-- NIC Column -->
@@ -168,10 +168,10 @@
           <span>{{ textContent.reachedNetworksLimit }}</span>
         </mcs-data-status-warning>
       </ng-container>
-    </section>
+    </mcs-section>
 
     <!-- Edit NIC -->
-    <section [@fadeIn] *ngSwitchCase="serverNicMethodTypeEnum.EditNic">
+    <mcs-section [@fadeIn] *ngSwitchCase="serverNicMethodTypeEnum.EditNic">
       <div class="action-box" [disabled]="!serverDetails.server.executable">
         <mcs-server-manage-network
           [networks]="resourceNetworks$ | async"
@@ -209,6 +209,6 @@
           </button>
         </div>
       </div>
-    </section>
+    </mcs-section>
   </ng-container>
 </mcs-presentation-panel>

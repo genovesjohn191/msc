@@ -1,4 +1,4 @@
-<section>
+<mcs-section>
   <!-- Storage header and switcher -->
   <mcs-item orientation="separated">
     <div><ng-content select="[mcsManageStorageHeader]"></ng-content></div>
@@ -33,7 +33,7 @@
 
   <div *ngIf="hasAvailableMemory" [ngSwitch]="inputManageType">
     <!-- Slider selection mode -->
-    <section [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Slider">
+    <mcs-section [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Slider">
       <div>
         <span>{{ textContent.sliderMessage }} </span>
         <span>
@@ -49,10 +49,10 @@
         </mcs-slider>
         <strong display-block text-center>{{ storageValue | mcsDataSize: 'GB' }}</strong>
       </div>
-    </section>
+    </mcs-section>
 
     <!-- Custom storage mode -->
-    <section [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Custom">
+    <mcs-section [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Custom">
       <div>{{ textContent.customMessage }}</div>
 
       <form [formGroup]="fgServerStorage">
@@ -78,7 +78,7 @@
           </mcs-error>
         </mcs-form-field>
       </form>
-    </section>
+    </mcs-section>
   </div>
 
   <!-- Insufficient Storage Capacity Warning Message -->
@@ -87,4 +87,4 @@
       <ng-content select="[mcsManageStorageWarning]"></ng-content>
     </mcs-data-status-warning>
   </div>
-</section>
+</mcs-section>
