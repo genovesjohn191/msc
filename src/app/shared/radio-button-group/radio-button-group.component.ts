@@ -3,8 +3,6 @@ import {
   forwardRef,
   Input,
   AfterContentInit,
-  Renderer2,
-  ElementRef,
   OnDestroy,
   ContentChildren,
   QueryList,
@@ -29,7 +27,8 @@ import { Key } from '@app/models';
 import {
   coerceNumber,
   isNullOrEmpty,
-  unsubscribeSubject
+  unsubscribeSubject,
+  McsOrientationType
 } from '@app/utilities';
 import { RadioButtonComponent } from './radio-button/radio-button.component';
 import { McsUniqueId } from '@app/core';
@@ -49,7 +48,8 @@ import { McsUniqueId } from '@app/core';
   ],
   host: {
     'class': 'radio-button-group-wrapper',
-    '[class.horizontal]': '!orientation',
+    '[class.radio-button-group-horizontal]': 'orientation === "horizontal"',
+    '[class.radio-button-group-vertical]': 'orientation === "vertical"',
     'role': 'radiogroup',
     '[attr.tabindex]': 'tabindex',
     '(keydown)': 'onKeyDown($event)'
@@ -60,13 +60,7 @@ export class RadioButtonGroupComponent implements AfterContentInit,
   ControlValueAccessor, OnDestroy {
 
   @Input()
-  public get orientation(): string { return this._orientation; }
-  public set orientation(value: string) {
-    this._orientation = value;
-    if (isNullOrEmpty(value)) { return; }
-    this._renderer.addClass(this._elementRef.nativeElement, value);
-  }
-  private _orientation: string;
+  public orientation: McsOrientationType = 'horizontal';
 
   @Input()
   public get tabindex(): number { return this._tabindex; }
@@ -89,6 +83,7 @@ export class RadioButtonGroupComponent implements AfterContentInit,
   public set value(value: any) {
     if (value !== this._value) {
       this._value = value;
+      this._selectElementByValue(this.value);
       this._onChanged(this._value);
       this._changeDetectorRef.markForCheck();
     }
@@ -113,9 +108,7 @@ export class RadioButtonGroupComponent implements AfterContentInit,
   }
 
   public constructor(
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _renderer: Renderer2,
-    private _elementRef: ElementRef
+    private _changeDetectorRef: ChangeDetectorRef
   ) { }
 
   public ngAfterContentInit() {
@@ -185,6 +178,18 @@ export class RadioButtonGroupComponent implements AfterContentInit,
    */
   public onBlur(): void {
     this._onTouched();
+  }
+
+  /**
+   * Selects the element based on the value
+   */
+  private _selectElementByValue(value: any): void {
+    if (isNullOrEmpty(value)) { return; }
+
+    let radioButtonFound = this._radioButtons.find((radioButton) => radioButton.value === value);
+    if (!isNullOrEmpty(radioButtonFound)) {
+      radioButtonFound.onClickEvent(null);
+    }
   }
 
   /**

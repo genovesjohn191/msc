@@ -1,0 +1,214 @@
+<mcs-presentation-panel>
+  <ng-container mcsPresentationPanelHeader>
+    <mcs-item orientation="separated" full-width>
+      <h2>{{ textContent.title }}</h2>
+      <ng-content select="[mcsViewServicesTab]"></ng-content>
+    </mcs-item>
+  </ng-container>
+  <p>{{ description }}</p>
+
+  <ng-container [ngSwitch]="scheduleType">
+    <form [formGroup]="fgSchedule" [disabled]="selectedServer.isProcessing">
+
+      <mcs-grid>
+        <!-- TODO: needs to integrate with data status factory -->
+        <ng-template #scheduleDateTemplate>
+          <mcs-grid-row>
+            <mcs-grid-column>
+              <mcs-item orientaion="inline" mcsAlignContent="middle-center">
+                <mcs-loader [mcsTooltip]="textContent.scheduleDateloadingContent" size="small"></mcs-loader>
+                <span> {{textContent.scheduleDateloadingContent}} </span>
+              </mcs-item>
+            </mcs-grid-column>
+          </mcs-grid-row>
+        </ng-template>
+
+        <ng-container *ngIf="scheduleDate$ | async as scheduleDate; else scheduleDateTemplate">
+          <mcs-grid-row>
+            <!-- Schedule Type -->
+            <mcs-item orientation="block">
+              <strong>{{textContent.scheduleTypeLabel}}</strong>
+              <mcs-radio-button-group [(ngModel)]="scheduleType" [ngModelOptions]="{standalone: true}">
+                <mcs-radio-button mcsId [value]="scheduleTypeOption.RunOnce">
+                  {{textContent.scheduleTypeOption.runonce}}
+                </mcs-radio-button>
+                <mcs-radio-button mcsId [value]="scheduleTypeOption.Recurring">
+                  {{textContent.scheduleTypeOption.recurring}}
+                </mcs-radio-button>
+              </mcs-radio-button-group>
+            </mcs-item>
+          </mcs-grid-row>
+
+          <!-- Schedule Type Recurring -->
+          <mcs-grid-row [@fadeIn] *ngSwitchCase="scheduleTypeOption.Recurring">
+            <!-- Recurring Day Selection-->
+            <mcs-grid-column>
+              <mcs-item>
+                <strong>{{textContent.scheduleTimeLabel}}</strong>
+              </mcs-item>
+              <mcs-item>
+                <mcs-checkbox [checked]="scheduleDetails?.isEveryday" (change)="scheduleEveryday($event)">
+                  {{textContent.checkboxSelectionEveryday}}
+                </mcs-checkbox>
+                <mcs-checkbox [checked]="scheduleDetails?.isWeekdays" (change)="scheduleWeekdays($event)">
+                  {{textContent.checkboxSelectionWeekdays}}
+                </mcs-checkbox>
+                <mcs-checkbox [checked]="scheduleDetails?.isWeekends" (change)="scheduleWeekends($event)">
+                  {{textContent.checkboxSelectionWeekends}}
+                </mcs-checkbox>
+              </mcs-item>
+
+              <mcs-item>
+                <ng-container *ngFor="let scheduleDay of scheduleDetails.scheduleDays">
+                  <mcs-checkbox [checked]="scheduleDay.checked" (change)="toggleScheduleDay($event, scheduleDay)">
+                    {{scheduleDay.name}}
+                  </mcs-checkbox>
+                </ng-container>
+              </mcs-item>
+            </mcs-grid-column>
+          </mcs-grid-row>
+
+          <!-- Recurring Time/Period Selection-->
+          <mcs-grid-row [@fadeIn] *ngSwitchCase="scheduleTypeOption.Recurring">
+            <mcs-grid-column>
+              <mcs-item orientation="inline">
+                <span>
+                  {{textContent.datePreposition}}
+                </span>
+                <mcs-select required mcsId="select-resource" [formControl]="fcRecurringScheduleTime" class="form-field-size-xsmall">
+                  <mcs-option *ngFor="let timeOption of timeOptions" [value]="timeOption">
+                    {{timeOption}}
+                  </mcs-option>
+                </mcs-select>
+                <mcs-select required mcsId="select-resource" [formControl]="fcRecurringSchedulePeriod" class="form-field-size-xsmall">
+                  <mcs-option *ngFor="let dayPeriodOption of dayPeriodOptions" [value]="dayPeriodOption">
+                    {{dayPeriodOption}}
+                  </mcs-option>
+                </mcs-select>
+                <span>
+                  {{textContent.timezoneAbrv}}
+                </span>
+              </mcs-item>
+            </mcs-grid-column>
+          </mcs-grid-row>
+
+          <!-- Schedule Type Later/RunOnce -->
+          <mcs-grid-row [@fadeIn] *ngSwitchCase="scheduleTypeOption.RunOnce">
+            <!-- RunOnce Day Selection-->
+            <mcs-grid-column>
+              <mcs-item>
+                <strong>{{textContent.scheduleTimeLabel}}</strong>
+              </mcs-item>
+              <mcs-item>
+                <mcs-radio-button-group [(ngModel)]="runOnceScheduleDay" [ngModelOptions]="{standalone: true}">
+                  <ng-container *ngFor="let scheduleDay of scheduleDetails.scheduleDays">
+                    <mcs-radio-button mcsId [value]="scheduleDay.day">
+                      {{scheduleDay.name}}
+                    </mcs-radio-button>
+                  </ng-container>
+                </mcs-radio-button-group>
+              </mcs-item>
+            </mcs-grid-column>
+          </mcs-grid-row>
+
+          <!-- RunOnce Time/Period Selection-->
+          <mcs-grid-row [@fadeIn] *ngSwitchCase="scheduleTypeOption.RunOnce">
+            <mcs-grid-column>
+              <mcs-item orientation="inline">
+                <span> {{textContent.datePreposition}} </span>
+                <mcs-select required mcsId="select-resource" [formControl]="fcRunOnceScheduleTime" class="form-field-size-xsmall">
+                  <mcs-option *ngFor="let timeOption of timeOptions" [value]="timeOption">
+                    {{timeOption}}
+                  </mcs-option>
+                </mcs-select>
+                <mcs-select required mcsId="select-resource" [formControl]="fcRunOnceSchedulePeriod" class="form-field-size-xsmall">
+                  <mcs-option *ngFor="let dayPeriodOption of dayPeriodOptions" [value]="dayPeriodOption">
+                    {{dayPeriodOption}}
+                  </mcs-option>
+                </mcs-select>
+                <span>
+                  {{textContent.timezoneAbrv}}
+                </span>
+              </mcs-item>
+            </mcs-grid-column>
+          </mcs-grid-row>
+        </ng-container>
+      </mcs-grid>
+
+      <!-- Action Buttons -->
+      <mcs-item>
+        <strong>
+          {{textContent.listLabel}}
+        </strong>
+        <button delete-button mcsButton mcsAlign="end" size="medium" (click)="deleteSchedule()" [disabled]="!hasSchedule"
+          color="error">
+          {{ textContent.deleteScheduleButton }}
+        </button>
+        <button *ngSwitchCase="scheduleTypeOption.RunOnce" mcsButton size="medium" (click)="saveRunOnceSchedule()"
+          [disabled]="isRunOnceSaveButtonDisabled">
+          {{ textContent.saveScheduleButton }}
+        </button>
+        <button *ngSwitchCase="scheduleTypeOption.Recurring" mcsButton size="medium" (click)="saveRecurringSchedule()"
+          [disabled]="isRecurringSaveButtonDisabled">
+          {{ textContent.saveScheduleButton }}
+        </button>
+      </mcs-item>
+
+      <mcs-data-status [dataStatusFactory]="categoriesStatusFactory">
+        <mcs-data-status-success mcsDataSuccess>
+          <!-- Tree View -->
+          <div class="action-box" *ngIf="osUpdatesCategories$ | async as osUpdatesCategories">
+            <mcs-tree (selectionChange)="onTreeChange($event)">
+              <mcs-tree-node-group [label]="textContent.listAllSelection" checkable>
+                <mcs-tree-node *ngFor="let osUpdatesCategory of osUpdatesCategories" [value]="osUpdatesCategory"
+                  [selected]="tickNodeIfSelected(osUpdatesCategory)">
+                  <span>{{osUpdatesCategory.name}}</span>
+                </mcs-tree-node>
+              </mcs-tree-node-group>
+            </mcs-tree>
+          </div>
+        </mcs-data-status-success>
+
+        <mcs-data-status-in-progress mcsDataInProgress>
+          <span>{{ textContent.osUpdatesCategoryloadingContent }}</span>
+        </mcs-data-status-in-progress>
+
+        <mcs-data-status-error mcsDataError>
+          <span>{{ textContent.errorGettingOsUpdatesCategory }}</span>
+        </mcs-data-status-error>
+      </mcs-data-status>
+
+    </form>
+  </ng-container>
+</mcs-presentation-panel>
+
+<!-- Snack Bar Templates -->
+<!-- TODO : will be replaced by form message -->
+<ng-template #updateSuccessStatusTemplate>
+  <mcs-snack-bar [snackBarRef]="updateSuccessStatusBarRef" theme="dark" [hideCloseButton]="false">
+    <mcs-item>
+      <span>{{ textContent.updateSuccessMessage }}</span>
+    </mcs-item>
+  </mcs-snack-bar>
+</ng-template>
+<ng-template #updateErrorStatusTemplate>
+  <mcs-snack-bar [snackBarRef]="updateErrorStatusBarRef" theme="dark" [hideCloseButton]="false">
+    <mcs-item>
+      <span>{{ textContent.updateErrorMessage }}</span>
+    </mcs-item>
+  </mcs-snack-bar>
+</ng-template>
+<ng-template #deleteSuccessStatusTemplate>
+  <mcs-snack-bar [snackBarRef]="deleteSuccessStatusBarRef" theme="dark" [hideCloseButton]="false">
+    <mcs-item>
+      <span>{{ textContent.deleteSuccessMessage }}</span>
+    </mcs-item>
+  </mcs-snack-bar>
+</ng-template>
+<ng-template #deleteErrorStatusTemplate>
+  <mcs-snack-bar [snackBarRef]="deleteErrorStatusBarRef" theme="dark" [hideCloseButton]="false">
+    <mcs-item>
+      <span>{{ textContent.deleteErrorMessage }}</span>
+    </mcs-item>
+  </mcs-snack-bar>
+</ng-template>

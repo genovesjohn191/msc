@@ -105,6 +105,11 @@
         <!-- Management Tab -->
         <mcs-tab [label]="textContent.management.label" id="management"></mcs-tab>
 
+        <!-- Services Tab -->
+        <ng-container *ngIf="selectedServer.isManagedVCloud">
+          <mcs-tab [label]="textContent.services.label" id="services" *mcsAccessControl="[]; feature: 'EnableServerOsUpdates'"></mcs-tab>
+        </ng-container>
+
         <!-- Storage Tab -->
         <mcs-tab [label]="textContent.storage.label" id="storage"
           *mcsAccessControl="[]; feature: 'EnableDedicatedVmStorageView';

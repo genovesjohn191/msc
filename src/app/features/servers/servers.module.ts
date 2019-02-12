@@ -35,7 +35,9 @@ import {
   ServerStorageComponent,
   ServerNicsComponent,
   ServerBackupsComponent,
-  ServerServicesComponent
+  ServerServicesComponent,
+  OsUpdatesScheduleScheduledComponent,
+  OsUpdatesScheduleUnscheduledComponent
 } from './server/';
 /** Server Provisioning */
 import { ServerProvisioningComponent } from './server-provisioning/server-provisioning.component';
@@ -91,7 +93,6 @@ import {
     ServerManagementComponent,
     ServerStorageComponent,
     ServerNicsComponent,
-    ServerServicesComponent,
     ServerBackupsComponent,
     ServerManageStorageComponent,
     ServerManageNetworkComponent,
@@ -105,6 +106,9 @@ import {
     ServerCreateAddOnsComponent,
     ServerCreateConfirmComponent,
     ServerCreateProvisioningComponent,
+    ServerServicesComponent,
+    OsUpdatesScheduleScheduledComponent,
+    OsUpdatesScheduleUnscheduledComponent,
     VdcComponent,
     VdcOverviewComponent,
     VdcStorageComponent,

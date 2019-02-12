@@ -25,6 +25,8 @@ import {
 } from '../enumerations/server-command.enum';
 import { McsEntityBase } from '../mcs-entity.base';
 import { PlatformType } from '../enumerations/platform-type.enum';
+import { McsServerOsUpdatesDetails } from './mcs-server-os-updates-details';
+import { ServerType } from '../enumerations/server-type.enum';
 
 export class McsServer extends McsEntityBase {
   public name: string;
@@ -65,6 +67,9 @@ export class McsServer extends McsEntityBase {
 
   @JsonProperty({ type: McsServerCompute })
   public compute: McsServerCompute;
+
+  @JsonProperty({ type: McsServerCompute })
+  public osUpdateDetails: McsServerOsUpdatesDetails;
 
   @JsonProperty({
     type: VmPowerState,
@@ -116,6 +121,14 @@ export class McsServer extends McsEntityBase {
    */
   public get isSelfManaged(): boolean {
     return this.serviceType === ServiceType.SelfManaged;
+  }
+
+  /**
+   * Returns true when the server is manage and the platform is VCloud
+   */
+  public get isManagedVCloud(): boolean {
+    return this.serviceType === ServiceType.Managed &&
+      this.platform.type === PlatformType.VCloud;
   }
 
   /**
@@ -295,5 +308,12 @@ export class McsServer extends McsEntityBase {
   public get isDeleting(): boolean {
     return this.commandAction === ServerCommand.Delete
       && this.isProcessing;
+  }
+
+  /**
+   * Returns true if the server is windows, false otherwise
+   */
+  public get isWindows(): boolean {
+    return this.operatingSystem.type === ServerType.Windows;
   }
 }

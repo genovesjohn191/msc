@@ -30,6 +30,9 @@ import { TreeNode } from './tree-node';
 })
 
 export class TreeNodeComponent<T> implements AfterViewInit, TreeNode<T> {
+  public checkable: boolean;
+  public selectionChange = new EventEmitter<TreeNodeComponent<T>>();
+
   @Input()
   public id: string = McsUniqueId.NewId('tree-node');
 
@@ -39,10 +42,16 @@ export class TreeNodeComponent<T> implements AfterViewInit, TreeNode<T> {
     return (this._elementRef.nativeElement.textContent || '').trim();
   }
 
-  public selected: boolean;
-  public checkable: boolean;
-
-  public selectionChange = new EventEmitter<TreeNodeComponent<T>>();
+  @Input()
+  public get selected(): boolean { return this._selected; }
+  public set selected(value: boolean) {
+    if (this._selected !== value) {
+      this._selected = value;
+      this.selectionChange.next(this);
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+  private _selected: boolean;
 
   constructor(
     private _elementRef: ElementRef<HTMLElement>,
@@ -82,8 +91,6 @@ export class TreeNodeComponent<T> implements AfterViewInit, TreeNode<T> {
    */
   public select(): void {
     this.selected = true;
-    this.selectionChange.next(this);
-    this._changeDetectorRef.markForCheck();
   }
 
   /**
@@ -91,7 +98,5 @@ export class TreeNodeComponent<T> implements AfterViewInit, TreeNode<T> {
    */
   public deselect(): void {
     this.selected = false;
-    this.selectionChange.next(this);
-    this._changeDetectorRef.markForCheck();
   }
 }

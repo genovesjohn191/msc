@@ -6,7 +6,7 @@ import {
 } from 'rxjs/operators';
 import {
   McsRepositoryBase,
-  McsNotificationEventsService
+  McsNotificationEventsService,
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -17,15 +17,12 @@ import {
   McsServer,
   McsServerStorageDevice,
   McsServerNic,
-  McsServerCompute,
   McsServerMedia,
   McsServerSnapshot,
-  McsJob,
-  DataStatus,
+  McsServerCompute,
+  McsServerOsUpdates,
   ServerCommand,
   VmPowerState,
-  McsServerCreate,
-  McsServerClone,
   McsServerRename,
   McsServerStorageDeviceUpdate,
   McsServerCreateNic,
@@ -33,7 +30,16 @@ import {
   McsServerAttachMedia,
   McsApiJobRequestBase,
   McsServerThumbnail,
-  McsServerCreateSnapshot
+  McsServerCreateSnapshot,
+  McsJob,
+  DataStatus,
+  McsServerOsUpdatesSchedule,
+  McsServerOsUpdatesScheduleRequest,
+  McsServerCreate,
+  McsServerClone,
+  McsServerOsUpdatesCategory,
+  McsServerOsUpdatesRequest,
+  McsServerOsUpdatesDetails
 } from '@app/models';
 import { ServersApiService } from '../api-services/servers-api.service';
 import { McsServersDataContext } from '../data-context/mcs-servers-data.context';
@@ -136,6 +142,109 @@ export class McsServersRepository extends McsRepositoryBase<McsServer>
   }
 
   /**
+   * Calls the api service to find all related updates from the server
+   * @param serverId Server id where to get the updates
+   */
+  public getServerOsUpdates(activeServer: McsServer): Observable<McsServerOsUpdates[]> {
+    return this._serversApiService.getServerOsUpdates(
+      activeServer.id,
+      { pageSize: 10000, keyword: '', pageIndex: 1 } // get all the os updates
+    ).pipe(
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  /**
+   * Calls the api service to find the os updates details from the server
+   * @param serverId Server id where to get the updates
+   */
+  public getServerOsUpdatesDetails(serverId: string): Observable<McsServerOsUpdatesDetails> {
+    return this._serversApiService.getServerOsUpdatesDetails(serverId).pipe(
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  /**
+   * Calls the api service to update server by ID
+   * @param id Server identification
+   * @param updates Can be update IDs or/and categories
+   */
+  public updateServerOs(
+    activeServer: McsServer,
+    updates: McsServerOsUpdatesRequest
+  ): Observable<McsJob> {
+    return this._serversApiService.updateServerOs(activeServer.id, updates).pipe(
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  /**
+   * Calls the api service to inspect the Server for available os-updates
+   * @param id Server identification
+   */
+  public inspectServerForAvailableOsUpdates(id: string, referenceObject: any): Observable<McsJob> {
+    return this._serversApiService.inspectServerForAvailableOsUpdates(id, referenceObject).pipe(
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  /**
+   * Calls the api service to get the schedule of the Server OS update
+   * @param id Server identification
+   */
+  public getServerOsUpdatesSchedule(id: string): Observable<McsServerOsUpdatesSchedule[]> {
+    return this._serversApiService.getServerOsUpdatesSchedule(id).pipe(
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  /**
+   * Calls the api service to update the schedule of the Server OS update
+   * @param id Server identification
+   * @param schedule Model that contains the cron and the schedule details
+   */
+  public updateServerOsUpdatesSchedule(
+    id: string,
+    schedule: McsServerOsUpdatesScheduleRequest
+  ): Observable<McsServerOsUpdatesSchedule> {
+    return this._serversApiService.updateServerOsUpdatesSchedule(
+      id, schedule
+    ).pipe(
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  /**
+   * Calls the api service to delete the schedule of the Server OS update
+   * @param id Server identification
+   */
+  public deleteServerOsUpdatesSchedule(id: string): Observable<boolean> {
+    return this._serversApiService.deleteServerOsUpdatesSchedule(id).pipe(
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  /**
+   * Calls the api service to get all the server os-updates categories
+   */
+  public getServerOsUpdatesCategories(): Observable<McsServerOsUpdatesCategory[]> {
+    return this._serversApiService.getServerOsUpdatesCategories().pipe(
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  /**
+   * Resets a VM Password
+   * @param id Server identification
+   * @param referenceObject Reference object to obtain during subscribe
+   */
+  public resetVmPassword(id: string, referenceObject: any): Observable<McsJob> {
+    return this._serversApiService.resetVmPassword(id, referenceObject).pipe(
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  /**
    * This will create the new server based on the inputted information
    * @param serverData Server data to be created
    */
@@ -152,17 +261,6 @@ export class McsServersRepository extends McsRepositoryBase<McsServer>
    */
   public cloneServer(id: string, serverData: McsServerClone): Observable<McsJob> {
     return this._serversApiService.cloneServer(id, serverData).pipe(
-      map((response) => getSafeProperty(response, (obj) => obj.content))
-    );
-  }
-
-  /**
-   * Resets a VM Password
-   * @param id Server identification
-   * @param referenceObject Reference object to obtain during subscribe
-   */
-  public resetVmPassword(id: string, referenceObject: any): Observable<McsJob> {
-    return this._serversApiService.resetVmPassword(id, referenceObject).pipe(
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
@@ -478,6 +576,14 @@ export class McsServersRepository extends McsRepositoryBase<McsServer>
       .subscribe(this._updateServerStatusByJob.bind(this));
 
     this._notificationEvents.deleteServerSnapshot
+      .pipe(takeUntil(this.eventResetSubject))
+      .subscribe(this._updateServerStatusByJob.bind(this));
+
+    this._notificationEvents.applyServerOsUpdates
+      .pipe(takeUntil(this.eventResetSubject))
+      .subscribe(this._updateServerStatusByJob.bind(this));
+
+    this._notificationEvents.inspectServerForAvailableOsUpdate
       .pipe(takeUntil(this.eventResetSubject))
       .subscribe(this._updateServerStatusByJob.bind(this));
   }

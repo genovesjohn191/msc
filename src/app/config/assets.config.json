@@ -75,6 +75,7 @@
     "resume": "resume.svg",
     "eject-blue": "eject-blue.svg",
     "eject-black": "eject-black.svg",
+    "chevron-left-svg": "chevron-left.svg",
     "user-white": "user-white.svg",
     "logout-white": "logout-white.svg",
     "circle-info-black": "circle-info-black.svg",
@@ -91,7 +92,8 @@
     "download": "download.svg",
     "dos-prompt-blue": "dos-prompt-blue.svg",
     "dos-prompt-grey": "dos-prompt-grey.svg",
-    "cloud-blue": "cloud-blue.svg"
+    "cloud-blue": "cloud-blue.svg",
+    "clock": "clock.svg"
   },
   "gifIcons": {
     "loader-spinner": "loader-spinner.gif",

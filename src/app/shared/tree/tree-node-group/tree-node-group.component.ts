@@ -92,6 +92,7 @@ export class TreeNodeGroupComponent<T> implements AfterContentInit {
   ) { }
 
   public ngAfterContentInit() {
+    this._subscribeToTreeNodesChanges();
     this._subscribeToTreeNodesSelection();
   }
 
@@ -152,14 +153,26 @@ export class TreeNodeGroupComponent<T> implements AfterContentInit {
   }
 
   /**
-   * Subscribes to tree node selection
+   * Subscribes to tree node changes
+   */
+  private _subscribeToTreeNodesChanges(): void {
+    this.treeNodes.changes.pipe(
+      startWith(null),
+      takeUntil(this._destroySubject)
+    ).subscribe(() => {
+      this._setTreeNodeCheckableState();
+      this._changeDetectorRef.markForCheck();
+    });
+  }
+
+  /**
+   * Subscribes to tree node selection change event
    */
   private _subscribeToTreeNodesSelection(): void {
     this._treeNodesSelectionChanges.pipe(
       startWith(null),
       takeUntil(this._destroySubject)
     ).subscribe(() => {
-      this._setTreeNodeCheckableState();
       this._changeDetectorRef.markForCheck();
     });
   }

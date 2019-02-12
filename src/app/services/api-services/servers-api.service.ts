@@ -36,8 +36,14 @@ import {
   McsServerMedia,
   McsServerAttachMedia,
   McsServerCompute,
-  McsQueryParam
+  McsServerOsUpdates,
+  McsServerOsUpdatesRequest,
+  McsServerOsUpdatesScheduleRequest,
+  McsServerOsUpdatesSchedule,
+  McsQueryParam,
+  McsServerOsUpdatesDetails
 } from '@app/models';
+import { McsServerOsUpdatesCategory } from '@app/models/response/mcs-server-os-updates-category';
 
 /**
  * Servers Services Class
@@ -102,6 +108,265 @@ export class ServersApiService {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
             .deserializeResponse<McsServer>(McsServer, response);
+
+          this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+          this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+          this._loggerService.traceInfo(`converted response:`, apiResponse);
+          return apiResponse;
+        })
+      );
+  }
+
+  /**
+   * Get the os-updates of the server
+   * @param id Server identification
+   * @param query contains the keyword, page index and size
+   */
+  public getServerOsUpdates(
+    id: any,
+    query?: McsQueryParam
+  ): Observable<McsApiSuccessResponse<McsServerOsUpdates[]>> {
+    // Set default values if null
+    let searchParams = new Map<string, any>();
+    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
+    searchParams.set('page', query.pageIndex);
+    searchParams.set('per_page', query.pageSize);
+    searchParams.set('search_keyword', query.keyword);
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/servers/${id}/os-updates`;
+    mcsApiRequestParameter.searchParameters = searchParams;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        finalize(() => {
+          this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+        }),
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsServerOsUpdates[]>(McsServerOsUpdates, response);
+
+          this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+          this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+          this._loggerService.traceInfo(`converted response:`, apiResponse);
+          return apiResponse;
+        })
+      );
+  }
+
+  /**
+   * Get the os-updates details of the server
+   * @param id Server identification
+   * @param query contains the keyword, page index and size
+   */
+  public getServerOsUpdatesDetails(
+    id: any
+  ): Observable<McsApiSuccessResponse<McsServerOsUpdatesDetails>> {
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/servers/${id}/os-updates/details`;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        finalize(() => {
+          this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+        }),
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsServerOsUpdatesDetails>(McsServerOsUpdatesDetails, response);
+
+          this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+          this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+          this._loggerService.traceInfo(`converted response:`, apiResponse);
+          return apiResponse;
+        })
+      );
+  }
+
+  /**
+   * Update server os by ID
+   * *Note: This will send a job (notification)
+   * @param id Server identification
+   * @param updateRequestDetails Can be update IDs or/and categories
+   */
+  public updateServerOs(
+    id: any,
+    updateRequestDetails: McsServerOsUpdatesRequest
+  ): Observable<McsApiSuccessResponse<McsJob>> {
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/servers/${id}/os-updates/apply-requests`;
+    mcsApiRequestParameter.recordData = serializeObjectToJson(updateRequestDetails);
+
+    return this._mcsApiService.post(mcsApiRequestParameter)
+      .pipe(
+        finalize(() => {
+          this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+        }),
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsJob>(McsJob, response);
+
+          this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+          this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+          this._loggerService.traceInfo(`converted response:`, apiResponse);
+          return apiResponse;
+        })
+      );
+  }
+
+  /**
+   * Gets all the server os-updates categories
+   */
+  public getServerOsUpdatesCategories()
+    : Observable<McsApiSuccessResponse<McsServerOsUpdatesCategory[]>> {
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/servers/os-updates/categories`;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        finalize(() => {
+          this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+        }),
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsServerOsUpdatesCategory[]>(
+              McsServerOsUpdatesCategory, response
+            );
+
+          this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+          this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+          this._loggerService.traceInfo(`converted response:`, apiResponse);
+          return apiResponse;
+        })
+      );
+  }
+
+  /**
+   * Inspect the Server for available updates
+   * @param id Server identification
+   */
+  public inspectServerForAvailableOsUpdates(
+    id: any,
+    referenceObject: any
+  ): Observable<McsApiSuccessResponse<McsJob>> {
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/servers/${id}/os-updates/analysis-requests`;
+    mcsApiRequestParameter.recordData = serializeObjectToJson({
+      clientReferenceObject: referenceObject
+    });
+
+    return this._mcsApiService.post(mcsApiRequestParameter)
+      .pipe(
+        finalize(() => {
+          this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+        }),
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsJob>(
+              McsJob, response
+            );
+
+          this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+          this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+          this._loggerService.traceInfo(`converted response:`, apiResponse);
+          return apiResponse;
+        })
+      );
+  }
+
+  /**
+   * Get the schedule of the Server OS update
+   * @param id Server identification
+   */
+  public getServerOsUpdatesSchedule(
+    id: any
+  ): Observable<McsApiSuccessResponse<McsServerOsUpdatesSchedule[]>> {
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/servers/${id}/os-updates/schedules`;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        finalize(() => {
+          this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+        }),
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsServerOsUpdatesSchedule[]>(
+              McsServerOsUpdatesSchedule, response
+            );
+
+          this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+          this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+          this._loggerService.traceInfo(`converted response:`, apiResponse);
+          return apiResponse;
+        })
+      );
+  }
+
+  /**
+   * Update the schedule of the Server OS update
+   * @param id Server identification
+   * @param schedule Model that contains the cron and the schedule details
+   */
+  public updateServerOsUpdatesSchedule(
+    id: any,
+    schedule: McsServerOsUpdatesScheduleRequest
+  ): Observable<McsApiSuccessResponse<McsServerOsUpdatesSchedule>> {
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/servers/${id}/os-updates/schedules`;
+    mcsApiRequestParameter.recordData = serializeObjectToJson(schedule);
+
+    return this._mcsApiService.post(mcsApiRequestParameter)
+      .pipe(
+        finalize(() => {
+          this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+        }),
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsServerOsUpdatesSchedule>(
+              McsServerOsUpdatesSchedule, response
+            );
+
+          this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+          this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+          this._loggerService.traceInfo(`converted response:`, apiResponse);
+          return apiResponse;
+        })
+      );
+  }
+
+  /**
+   * Delete the schedule of the Server OS update
+   * @param id Server identification
+   */
+  public deleteServerOsUpdatesSchedule(
+    id: any
+  ): Observable<McsApiSuccessResponse<boolean>> {
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/servers/${id}/os-updates/schedules`;
+
+    return this._mcsApiService.delete(mcsApiRequestParameter)
+      .pipe(
+        finalize(() => {
+          this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+        }),
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<boolean>(Boolean, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);

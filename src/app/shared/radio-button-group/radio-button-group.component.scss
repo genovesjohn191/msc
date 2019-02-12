@@ -7,13 +7,13 @@ $radio-button-icon-ripple-size: 15px;
 .radio-button-group-wrapper {
   outline: none;
 
-  &.horizontal {
+  &.radio-button-group-horizontal {
     @include display-flex(row);
     @include align-items(center);
     @include set-items-interval($space-small, horizontal);
   }
 
-  &.vertical {
+  &.radio-button-group-vertical {
     @include display-flex(column);
     justify-content: center;
   }
