@@ -106,6 +106,13 @@ export class OsUpdatesStatusConfiguration {
   }
 
   /**
+   * Returns the current status of the Os Update
+   */
+  public get status(): OsUpdatesStatus {
+    return this._osUpdateStatus;
+  }
+
+  /**
    * Returns true if a schedule is set, false otherwise
    */
   public get hasSchedule(): boolean {
@@ -159,9 +166,9 @@ export class OsUpdatesStatusConfiguration {
     return this.hasSchedule && this.updateStatusHasNoErrors && this._updatesDetails.runOnce;
   }
 
-  constructor(updateDetails: McsServerOsUpdatesDetails) {
-    this._updatesDetails = updateDetails ? updateDetails : new McsServerOsUpdatesDetails();
-    this._osUpdateStatus = OsUpdatesStatus.Unanalysed;
+  constructor(updateDetails?: McsServerOsUpdatesDetails) {
+    this._updatesDetails = isNullOrEmpty(updateDetails) ?
+      new McsServerOsUpdatesDetails() : updateDetails;
     this._createStatusMapTable();
   }
 
@@ -170,6 +177,13 @@ export class OsUpdatesStatusConfiguration {
    */
   public setOsUpdateStatus(osUpdateStatus: OsUpdatesStatus) {
     this._osUpdateStatus = osUpdateStatus;
+  }
+
+  /**
+   * Set the Os Updates Details
+   */
+  public setOsUpdateDetails(updateDetails: McsServerOsUpdatesDetails) {
+    this._updatesDetails = updateDetails;
   }
 
   /**

@@ -17,7 +17,7 @@
   <!-- Left Panel -->
   <mcs-left-panel *mcsLeftPanelDef="textContent.leftPanelHeader">
     <!-- Search -->
-    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.tableSearch">
+    <mcs-left-panel-item *mcsLeftPanelItemDef>
       <mcs-search *ngIf="!isMobile" #search mcsId="notifications-desktop-search"></mcs-search>
     </mcs-left-panel-item>
 

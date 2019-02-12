@@ -413,7 +413,7 @@
           },
           "scheduleTypeLabel": "Schedule Type:",
           "scheduleTypeOption": {
-            "runonce": "Later",
+            "runonce": "Once",
             "recurring": "Recurring"
           },
           "scheduleTimeLabel": "Schedule:",

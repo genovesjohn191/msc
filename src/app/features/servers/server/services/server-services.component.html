@@ -40,7 +40,7 @@
                 <mcs-grid-column mcsAlignContent="middle-right">
                   <ng-container *ngIf="updateStatusConfiguration.runNowButtonShown">
                     <button mcsButton size="xsmall" (click)="setViewMode(serverServicesViewOption.Unscheduled)"
-                      *mcsAccessControl="['VmPatchManagement']">
+                      *mcsAccessControl="['VmPatchManagement']" [disabled]="serverDetails.server.isProcessing">
                       {{ textContent.updatesScheduleRunNowLink }}
                     </button>
                   </ng-container>
@@ -67,21 +67,23 @@
                             [mcsTooltipShow]="updateStatusConfiguration.configureScheduleButtonDisabled">
                             <ng-container *ngIf="updateStatusConfiguration.updateStatusHasNoErrors">
                               <a *mcsAccessControl="['VmPatchManagement']" (click)="setViewMode(serverServicesViewOption.Scheduled)"
-                                [disabled]="updateStatusConfiguration.configureScheduleButtonDisabled">
+                                [disabled]="configureButtonDisabled(serverDetails.server)">
                                 {{ textContent.updatesScheduleConfigureLink }}
                               </a>
                             </ng-container>
                           </span>
-
                         </mcs-item>
-                      </small>
-
-                      <small *ngIf="updateStatusConfiguration.updatesScheduleRunOnceWarningLabelShown">
-                        <mcs-icon [key]="warningSvgKey" size="small"></mcs-icon>
-                        {{ textContent.updatesScheduleRunOnceWarningLabel }}
                       </small>
                     </div>
                   </mcs-item>
+                  <mcs-item *ngIf="updateStatusConfiguration.updatesScheduleRunOnceWarningLabelShown">
+                    <mcs-data-status-warning margin-left-large>
+                      <small>
+                        {{ textContent.updatesScheduleRunOnceWarningLabel }}
+                      </small>
+                    </mcs-data-status-warning>
+                  </mcs-item>
+
                 </ng-container>
               </mcs-grid-column>
             </mcs-grid-row>
@@ -116,14 +118,14 @@
     </ng-container>
 
   </ng-container>
-</ng-container>
 
-<!-- Go back to services tab view -->
-<ng-template #servicesTabView>
-  <a mcsButton="basic" size="medium" (click)="setViewMode(serverServicesViewOption.Default)">
-    <mcs-item>
-      <mcs-icon [key]="chevronLeftKey" size="xsmall"></mcs-icon>
-      <span>{{ textContent.label }}</span>
-    </mcs-item>
-  </a>
-</ng-template>
+  <!-- Go back to services tab view -->
+  <ng-template #servicesTabView>
+    <a mcsButton="basic" size="medium" (click)="setViewMode(serverServicesViewOption.Default)" [disabled]="serverDetails.server.isProcessing">
+      <mcs-item>
+        <mcs-icon [key]="chevronLeftKey" size="xsmall"></mcs-icon>
+        <span>{{ textContent.label }}</span>
+      </mcs-item>
+    </a>
+  </ng-template>
+</ng-container>

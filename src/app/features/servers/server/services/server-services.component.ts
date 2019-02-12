@@ -139,11 +139,11 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
       _accessControlService
     );
     this.dataStatusFactory = new McsDataStatusFactory();
+    this.updateStatusConfiguration = new OsUpdatesStatusConfiguration();
   }
 
   public ngOnInit() {
     this.textContent = this._textProvider.content.servers.server.services;
-    this._registerJobEvents();
     this._getServerUpdateDetailsUsingServerId();
   }
 
@@ -189,7 +189,14 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
    * Disable the inspect now button if the server is powered off
    */
   public inspectNowButtonDisabled(server: McsServer): boolean {
-    return server.isPoweredOff;
+    return server.isPoweredOff || server.isProcessing;
+  }
+
+  /**
+   * Disable the configure button if the server is processing, being analyse or update
+   */
+  public configureButtonDisabled(server: McsServer): boolean {
+    return this.updateStatusConfiguration.configureScheduleButtonDisabled || server.isProcessing;
   }
 
   /**
@@ -198,6 +205,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
    */
   protected selectionChange(_server: McsServer, _resource: McsResource): void {
     this.serverServicesView = ServerServicesView.Default;
+    this._registerJobEvents();
   }
 
   /**
@@ -216,9 +224,14 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
    * Register jobs/notifications events
    */
   private _registerJobEvents(): void {
-    this._notificationEvents.inspectServerForAvailableOsUpdate.pipe(takeUntil(this._destroySubject))
+    if (!isNullOrEmpty(this._destroySubject.observers)) { return; }
+
+    this._notificationEvents.inspectServerForAvailableOsUpdate
+      .pipe(takeUntil(this._destroySubject))
       .subscribe(this.onInspectForAvailableOsUpdates.bind(this));
-    this._notificationEvents.applyServerOsUpdates.pipe(takeUntil(this._destroySubject))
+
+    this._notificationEvents.applyServerOsUpdates
+      .pipe(takeUntil(this._destroySubject))
       .subscribe(this.onApplyServerOsUpdates.bind(this));
   }
 
@@ -232,8 +245,11 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
     this.updatesDetails$ = this._serversRepository.getServerOsUpdatesDetails(id).pipe(
       shareReplay(1),
       tap((serverOsUpdateDetails) => {
-        this.updateStatusConfiguration = new OsUpdatesStatusConfiguration(serverOsUpdateDetails);
         this.dataStatusFactory.setSuccessful(serverOsUpdateDetails);
+        this.updateStatusConfiguration.setOsUpdateDetails(serverOsUpdateDetails);
+        if (this.updateStatusConfiguration.status === OsUpdatesStatus.Analysing) {
+          return;
+        }
         let notYetInspected = isNullOrEmpty(serverOsUpdateDetails.lastInspectDate);
         if (notYetInspected) {
           this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Unanalysed);
@@ -248,9 +264,6 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
           this.updateStatusConfiguration.updatesStatusSubtitleLabel;
       }),
       catchError((error) => {
-        this.updateStatusConfiguration = new OsUpdatesStatusConfiguration(
-          new McsServerOsUpdatesDetails()
-        );
         this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Error);
         this.dataStatusFactory.setError();
         return throwError(error);
@@ -264,7 +277,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
    */
   private onInspectForAvailableOsUpdates(job: McsJob): void {
 
-    if (isNullOrEmpty(job) || isNullOrEmpty(this.updateStatusConfiguration)) { return; }
+    if (!this.serverIsActiveByJob(job)) { return; }
 
     switch (job.dataStatus) {
       case DataStatus.InProgress:
@@ -288,7 +301,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
    */
   private onApplyServerOsUpdates(job: McsJob): void {
 
-    if (isNullOrEmpty(job) || isNullOrEmpty(this.updateStatusConfiguration)) { return; }
+    if (!this.serverIsActiveByJob(job)) { return; }
 
     switch (job.dataStatus) {
       case DataStatus.InProgress:
