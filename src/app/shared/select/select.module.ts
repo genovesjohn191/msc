@@ -4,11 +4,14 @@ import { IconModule } from '../icon/icon.module';
 import { DirectivesModule } from '../directives/directives.module';
 import { RippleModule } from '../ripple/ripple.module';
 import { OptionGroupModule } from '../option-group';
+
 import { SelectComponent } from './select.component';
+import { SelectTriggerLabelDirective } from './select-trigger-label.directive';
 
 @NgModule({
   declarations: [
-    SelectComponent
+    SelectComponent,
+    SelectTriggerLabelDirective
   ],
   imports: [
     CommonModule,
@@ -19,6 +22,7 @@ import { SelectComponent } from './select.component';
   ],
   exports: [
     SelectComponent,
+    SelectTriggerLabelDirective,
     CommonModule,
     IconModule,
     DirectivesModule,

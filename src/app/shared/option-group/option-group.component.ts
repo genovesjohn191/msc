@@ -139,6 +139,15 @@ export class OptionGroupComponent implements AfterContentInit, OnDestroy {
   }
 
   /**
+   * Returns true when there are selected/active options
+   */
+  public get hasSelectedOption(): boolean {
+    return !isNullOrEmpty(this._options.filter(
+      (option) => option.selected || option.active)
+    );
+  }
+
+  /**
    * Returns the associated host element of the component
    */
   public get hostElement(): HTMLElement {
@@ -196,8 +205,7 @@ export class OptionGroupComponent implements AfterContentInit, OnDestroy {
       startWith(null),
       takeUntil(resetSubject)
     ).subscribe(() => {
-      let selectedOptions = this._options.filter((option) => option.selected || option.active);
-      isNullOrEmpty(selectedOptions) ? this.closePanel() : this.openPanel();
+      !this.hasSelectedOption ? this.closePanel() : this.openPanel();
     });
   }
 }

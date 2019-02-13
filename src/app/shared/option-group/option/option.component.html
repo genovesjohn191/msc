@@ -1,2 +1,15 @@
-<ng-content></ng-content>
+<!-- Template with checkbox -->
+<ng-container *ngIf="checkable; else contentTemplate">
+  <mcs-item>
+    <mcs-checkbox [checked]="selected"></mcs-checkbox>
+    <div><ng-container *ngTemplateOutlet="contentTemplate"></ng-container></div>
+  </mcs-item>
+</ng-container>
+
+<!-- Content template -->
+<ng-template #contentTemplate>
+  <ng-content></ng-content>
+</ng-template>
+
+<!-- Ripple effect -->
 <mcs-ripple mcsRipple [rippleTrigger]="hostElement"></mcs-ripple>
