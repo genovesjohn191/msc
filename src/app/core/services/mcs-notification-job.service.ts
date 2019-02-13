@@ -42,7 +42,6 @@ import { CoreDefinition } from '../core.definition';
 
 const DEFAULT_HEARTBEAT_IN = 0;
 const DEFAULT_HEARTBEAT_OUT = 20000;
-const DEFAULT_MAX_CONNECTION_RETRY = 10;
 
 /**
  * MCS notification job service
@@ -54,7 +53,6 @@ export class McsNotificationJobService implements McsDisposable {
   public notificationStream = new BehaviorSubject<McsJob>(null);
   public connectionStatusStream = new Subject<NetworkStatus>();
 
-  private _stompReTryRemaining = DEFAULT_MAX_CONNECTION_RETRY;
   private _apiSubscription: any;
   private _stompInstance: Observable<any>;
   private _stompSubscription: Subscription;
@@ -142,22 +140,7 @@ export class McsNotificationJobService implements McsDisposable {
       heartbeat_out: DEFAULT_HEARTBEAT_OUT,
       reconnect_delay: CoreDefinition.NOTIFICATION_CONNECTION_RETRY_INTERVAL
     } as StompConfig;
-    this._tryConnectToWebstomp();
-  }
-
-  /**
-   * Try to connect to webstomp, just wanna make sure the connection is clear
-   * and would not throw error in the log
-   */
-  private _tryConnectToWebstomp(): void {
-    try {
-      if (this._stompReTryRemaining <= 0) { return; }
-
-      this._stompService.initAndConnect();
-      this._stompReTryRemaining -= 1;
-    } catch (_error) {
-      this._tryConnectToWebstomp();
-    }
+    this._stompService.initAndConnect();
   }
 
   /**
@@ -165,13 +148,17 @@ export class McsNotificationJobService implements McsDisposable {
    */
   private _onStompConnected(): void {
     try {
-      this._loggerService.trace(`Web stomp connected.`);
-      unsubscribeSafely(this._stompSubscription);
-      this._stompInstance = this._stompService.subscribe(this._jobConnection.destinationRoute);
+      Promise.resolve().then(() => {
+        this._loggerService.trace(`Web stomp connected.`);
 
-      this._stompSubscription = this._stompInstance
-        .subscribe(this._onStompMessage.bind(this));
-      this.connectionStatus = NetworkStatus.Success;
+        unsubscribeSafely(this._stompSubscription);
+        this._stompInstance = this._stompService
+          .subscribe(this._jobConnection.destinationRoute);
+
+        this._stompSubscription = this._stompInstance
+          .subscribe(this._onStompMessage.bind(this));
+        this.connectionStatus = NetworkStatus.Success;
+      });
     } catch (_error) {
       this._loggerService.trace(`Web stomp subscription encountered error.`);
     }
