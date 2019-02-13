@@ -11,7 +11,7 @@ $option-selected-color: $selected-bg-color;
   cursor: pointer;
   padding: $option-padding;
 
-  &.option-selected {
+  &.option-selected:not(.option-checkable) {
     background-color: $option-selected-color;
   }
 
@@ -19,7 +19,7 @@ $option-selected-color: $selected-bg-color;
     background-color: $option-active-color;
   }
 
-  &:hover:not(.option-selected) {
+  &:hover {
     background-color: $option-hover-color;
   }
 }

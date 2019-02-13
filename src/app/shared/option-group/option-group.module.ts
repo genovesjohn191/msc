@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { IconModule } from '../icon/icon.module';
 import { DirectivesModule } from '../directives/directives.module';
 import { RippleModule } from '../ripple/ripple.module';
+import { CheckboxModule } from '../checkbox/checkbox.module';
+import { ItemModule } from '../item/item.module';
 /** Options */
 import { OptionGroupComponent } from './option-group.component';
 import { OptionGroupLabelDirective } from './option-group-label.directive';
@@ -20,7 +22,9 @@ import { OptionComponent } from './option/option.component';
     CommonModule,
     IconModule,
     DirectivesModule,
-    RippleModule
+    RippleModule,
+    CheckboxModule,
+    ItemModule
   ],
   exports: [
     OptionGroupComponent,
@@ -30,7 +34,9 @@ import { OptionComponent } from './option/option.component';
     CommonModule,
     IconModule,
     DirectivesModule,
-    RippleModule
+    RippleModule,
+    CheckboxModule,
+    ItemModule
   ]
 })
 

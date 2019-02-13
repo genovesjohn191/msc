@@ -5,11 +5,13 @@ import {
   ViewEncapsulation,
   EventEmitter,
   ChangeDetectorRef,
-  ElementRef
+  ElementRef,
+  OnDestroy
 } from '@angular/core';
 import {
   isElementVisible,
-  coerceBoolean
+  coerceBoolean,
+  unsubscribeSafely
 } from '@app/utilities';
 import { McsUniqueId } from '@app/core';
 
@@ -25,20 +27,16 @@ import { McsUniqueId } from '@app/core';
     '[id]': 'id',
     '[class.option-selected]': 'selected',
     '[class.option-active]': 'active',
-    '(click)': 'select()'
+    '[class.option-checkable]': 'checkable',
+    '(click)': 'onClickOption()'
   }
 })
 
-export class OptionComponent {
-  /**
-   * Event that emits when the option had been selected
-   */
+export class OptionComponent implements OnDestroy {
   public selectionChange = new EventEmitter<OptionComponent>();
-
-  /**
-   * Event that emtis when the option has been activated
-   */
   public activeChange = new EventEmitter<OptionComponent>();
+  public clickChange = new EventEmitter<OptionComponent>();
+  public checkable = false;
 
   @Input()
   public id: string = McsUniqueId.NewId('option');
@@ -79,6 +77,12 @@ export class OptionComponent {
     private _elementRef: ElementRef
   ) { }
 
+  public ngOnDestroy() {
+    unsubscribeSafely(this.selectionChange);
+    unsubscribeSafely(this.activeChange);
+    unsubscribeSafely(this.clickChange);
+  }
+
   /**
    * Returns the associated host element of the component
    */
@@ -91,6 +95,29 @@ export class OptionComponent {
    */
   public isVisible(): boolean {
     return isElementVisible(this.hostElement);
+  }
+
+  /**
+   * Shows the checkbox of the option
+   */
+  public showCheckbox(): void {
+    this.checkable = true;
+    this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Hides the checkbox of the option
+   */
+  public hideCheckbox(): void {
+    this.checkable = false;
+    this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Event handler that gets emitted when the option was clicked
+   */
+  public onClickOption(): void {
+    this.clickChange.next(this);
   }
 
   /**
@@ -110,11 +137,10 @@ export class OptionComponent {
   }
 
   /**
-   * Removes the selected state and will not notify the selectionChange event
+   * Toggles the option
    */
-  public removeSelectedState(): void {
-    this._selected = false;
-    this._changeDetectorRef.markForCheck();
+  public toggle(): void {
+    this.selected ? this.deselect() : this.select();
   }
 
   /**

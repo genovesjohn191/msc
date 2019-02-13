@@ -7,8 +7,16 @@
 <div class="select-trigger" [ngClass]="size"
   mcsCursor="pointer" (click)="toggle()">
 
-  <span *ngIf="selectionModel?.hasValue();else placeholderTemplate">
-    {{ displayedText }}
+  <span *ngIf="displayedText; else placeholderTemplate">
+    <ng-container *ngIf="labelTemplate; else labelContentTemplate">
+      <ng-container *ngTemplateOutlet="labelTemplate?.templateRef"></ng-container>
+    </ng-container>
+    <ng-template #labelContentTemplate>
+      <div>{{ displayedText }}
+        <small read-only *ngIf="selectedOptions?.length > 1">
+          (+{{ selectedOptions.length - 1}} others)</small>
+      </div>
+    </ng-template>
   </span>
   <mcs-icon size="small" [key]="carretDownIconKey"></mcs-icon>
 </div>

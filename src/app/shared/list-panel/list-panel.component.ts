@@ -42,17 +42,17 @@ export class ListPanelComponent implements AfterContentInit, OnDestroy {
   private _destroySubject = new Subject<void>();
 
   /**
-   * Combine streams of all option selection change
+   * Combine streams of all option click change
    */
-  private readonly _optionsSelectionChanges: Observable<OptionComponent> = defer(() => {
-    return merge<OptionComponent>(...this._options.map((option) => option.selectionChange));
+  private readonly _optionsClickEvents: Observable<OptionComponent> = defer(() => {
+    return merge<OptionComponent>(...this._options.map((option) => option.clickChange));
   });
 
   constructor(private _changeDetectorRef: ChangeDetectorRef) { }
 
   public ngAfterContentInit(): void {
     this._options.changes.pipe(takeUntil(this._destroySubject))
-      .subscribe(() => this._listenToOptionsSelectionChange());
+      .subscribe(() => this._subscribesToOptionsClickEvent());
   }
 
   public ngOnDestroy(): void {
@@ -60,39 +60,46 @@ export class ListPanelComponent implements AfterContentInit, OnDestroy {
   }
 
   /**
-   * Listens to every selection of option to close the previous selection
+   * Subscribes to all the options click events
    */
-  private _listenToOptionsSelectionChange(): void {
+  private _subscribesToOptionsClickEvent(): void {
     let resetSubject = merge(this._options.changes, this._destroySubject);
 
-    this._optionsSelectionChanges.pipe(takeUntil(resetSubject))
-      .subscribe((option: OptionComponent) => {
-        this._clearOptionSelection(option);
-        this._closeGroupsPanel(option);
-        this._changeDetectorRef.markForCheck();
-      });
-  }
-
-  /**
-   * Closes all group panel elements and ignore who has the child of active option
-   */
-  private _closeGroupsPanel(_activeOption: OptionComponent): void {
-    if (isNullOrEmpty(this._optionGroups)) { return; }
-    this._optionGroups.forEach((optionGroup) => {
-      let hasOption = optionGroup.hasOption(_activeOption);
-      hasOption ? optionGroup.openPanel() : optionGroup.closePanel();
+    this._optionsClickEvents.pipe(
+      takeUntil(resetSubject)
+    ).subscribe((option: OptionComponent) => {
+      this._selectSingleOption(option);
+      this._closeOptionGroupsPanel();
+      this._changeDetectorRef.markForCheck();
     });
   }
 
   /**
-   * Clears the selection of option element
-   * @param _activeOption Current active option that remains opened
+   * Selects single option based on the input provided
+   * @param option Option to be selected
    */
-  private _clearOptionSelection(_activeOption: OptionComponent): void {
-    if (isNullOrEmpty(this._options)) { return; }
-    this._options.forEach((option) => {
-      if (option === _activeOption) { return; }
-      option.removeSelectedState();
+  private _selectSingleOption(option: OptionComponent): void {
+    this._clearSelectedOptions();
+    option.select();
+  }
+
+  /**
+   * Clears all selected options
+   */
+  private _clearSelectedOptions(): void {
+    this._options.forEach((option) => option.deselect());
+  }
+
+  /**
+   * Close all the option groups without option selected/active
+   */
+  private _closeOptionGroupsPanel(): void {
+    if (isNullOrEmpty(this._optionGroups)) { return; }
+
+    this._optionGroups.forEach((optionGroup) => {
+      if (!optionGroup.hasSelectedOption) {
+        optionGroup.closePanel();
+      }
     });
   }
 }

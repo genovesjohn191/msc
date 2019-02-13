@@ -15,7 +15,8 @@ import {
   Self,
   EventEmitter,
   Output,
-  NgZone
+  NgZone,
+  ContentChild
 } from '@angular/core';
 import {
   ControlValueAccessor,
@@ -33,8 +34,7 @@ import {
   startWith,
   takeUntil,
   take,
-  switchMap,
-  filter
+  switchMap
 } from 'rxjs/operators';
 import {
   CoreDefinition,
@@ -55,13 +55,14 @@ import {
   coerceBoolean,
   coerceNumber,
   animateFactory,
-  unsubscribeSubject,
-  getSafeProperty
+  getSafeProperty,
+  unsubscribeSafely
 } from '@app/utilities';
 import {
   OptionComponent,
   OptionGroupComponent
 } from '../option-group';
+import { SelectTriggerLabelDirective } from './select-trigger-label.directive';
 
 const SELECT_PANEL_MAX_HEIGHT = 400;
 const SELECT_ITEM_OFFSET = 7;
@@ -94,6 +95,9 @@ export class SelectComponent extends McsFormFieldControlBase<any>
 
   public selectionModel: McsSelection<OptionComponent>;
 
+  @ContentChild(SelectTriggerLabelDirective)
+  public labelTemplate: SelectTriggerLabelDirective;
+
   @Output()
   public change = new EventEmitter<any>();
 
@@ -108,6 +112,11 @@ export class SelectComponent extends McsFormFieldControlBase<any>
 
   @Input()
   public size: 'default' | 'small';
+
+  @Input()
+  public get multiple(): boolean { return this._multiple; }
+  public set multiple(value: boolean) { this._multiple = coerceBoolean(value); }
+  private _multiple: boolean;
 
   @Input()
   public get disabled(): boolean {
@@ -162,10 +171,6 @@ export class SelectComponent extends McsFormFieldControlBase<any>
   private _closePanelKeyEventsMap = new Map<Key, (_event) => void>();
   private _openPanelKeyEventsMap = new Map<Key, (_event) => void>();
   private _destroySubject = new Subject<void>();
-
-  /**
-   * Event handler references
-   */
   private _closeOutsideHandler = this._onCloseOutside.bind(this);
 
   public get carretDownIconKey(): string {
@@ -173,19 +178,22 @@ export class SelectComponent extends McsFormFieldControlBase<any>
   }
 
   public get displayedText(): string {
-    return this.selectionModel.selected.map((item) => item.viewValue).toString();
+    return getSafeProperty(this.selectedOptions,
+      (obj) => obj[0].viewValue.toString()
+    );
   }
 
-  /**
-   * Returns all the combined selection changes event of all the options
-   */
-  private readonly _optionsSelectionChanges: Observable<OptionComponent> = defer(() => {
+  public get selectedOptions(): OptionComponent[] {
+    return this._options.filter((option) => option.selected);
+  }
+
+  private readonly _optionsClickEvent: Observable<OptionComponent> = defer(() => {
     if (!isNullOrEmpty(this._options)) {
-      return merge<OptionComponent>(...this._options.map((option) => option.selectionChange));
+      return merge<OptionComponent>(...this._options.map((option) => option.clickChange));
     }
     return this._ngZone.onStable.asObservable().pipe(
       take(1),
-      switchMap(() => this._optionsSelectionChanges)
+      switchMap(() => this._optionsClickEvent)
     );
   });
 
@@ -210,7 +218,6 @@ export class SelectComponent extends McsFormFieldControlBase<any>
   public ngAfterContentInit(): void {
     registerEvent(document, 'click', this._closeOutsideHandler);
     this._initializeKeyboardManager();
-    this._subscribeToSelectionModelChanges();
     this._subscribeToOptionItemsChanges();
   }
 
@@ -226,7 +233,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
 
   public ngOnDestroy(): void {
     unregisterEvent(document, 'click', this._closeOutsideHandler);
-    unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this._destroySubject);
     this.stateChanges.complete();
   }
 
@@ -254,18 +261,11 @@ export class SelectComponent extends McsFormFieldControlBase<any>
    */
   public closePanel() {
     if (!isNullOrEmpty(this._options) && !this.panelOpen) { return; }
+    this._clearActiveOptionsState();
+    this._closeInActiveOptionPanels();
 
-    // We need to clear the active item upon closing the panel
-    // to selected item as active item
-    this._clearActiveItemState();
-    if (this.selectionModel.hasValue()) {
-      let selectedItem = this.selectionModel.selected[0];
-      this._optionGroups.forEach((groupItem) => {
-        if (!groupItem.hasOption(selectedItem)) {
-          groupItem.closePanel();
-        }
-      });
-      this._itemListKeyManager.setActiveItem(this.selectionModel.selected[0]);
+    if (!isNullOrEmpty(this.selectedOptions)) {
+      this._itemListKeyManager.setActiveItem(this.selectedOptions[0]);
     }
     this.panelOpen = false;
   }
@@ -308,7 +308,9 @@ export class SelectComponent extends McsFormFieldControlBase<any>
       // We need to re-initialized the previous state of the select dropdown
       // in case the dropdown is required since the select dropdown should
       // consider the first item selected
-      isNullOrEmpty(value) ? this._initializeSelection() : this._selectItemByValue(value);
+      isNullOrEmpty(value) ?
+        this._initializeSelection() :
+        this._selectOptionByValue(value);
     }
   }
 
@@ -350,43 +352,71 @@ export class SelectComponent extends McsFormFieldControlBase<any>
 
   /**
    * Selects the item provided by the parameter
-   * @param item Item to be selected
+   * @param option Item to be selected
    */
-  private _selectItem(item: OptionComponent) {
+  private _selectOption(option: OptionComponent) {
     // Clear the selection including the value in case the item is null
     // to make way with the changes when formControl.reset() was called
-    if (isNullOrEmpty(item)) {
-      this.value = undefined;
-      this._clearItemSelection(item);
-      this.stateChanges.next();
+    if (isNullOrEmpty(option)) {
+      this._resetSelection();
       return;
     }
 
-    this._clearItemSelection(item);
-    item.select();
-    this.selectionModel.select(item);
-    this.value = item.value;
+    // Select the actual option item
+    this.multiple ?
+      this._selectMultipleOptions(option) :
+      this._selectSingleOption(option);
+  }
+
+  /**
+   * Resets all the selection
+   */
+  private _resetSelection(): void {
+    this._clearOptionsSelection();
+    this.value = undefined;
     this.stateChanges.next();
+  }
+
+  /**
+   * Selects multiple options and the panel will remain open
+   * @param options Items to be selected
+   */
+  private _selectMultipleOptions(...options: OptionComponent[]): void {
+    if (isNullOrEmpty(options)) { return; }
+
+    options.forEach((item) => item.toggle());
+    this.value = this.selectedOptions.map((selectedOption) => selectedOption.value);
+    this.stateChanges.next();
+  }
+
+  /**
+   * Selects on single entity and always close the panel
+   * @param option Item to be selected
+   */
+  private _selectSingleOption(option: OptionComponent): void {
+    if (isNullOrEmpty(option)) { return; }
+
+    this._clearOptionsSelection();
+    option.select();
+    this.value = option.value;
+    this.stateChanges.next();
+    this.closePanel();
   }
 
   /**
    * Selects the element based on the provided value
    * @param value Value to be checked in the item options
    */
-  private _selectItemByValue(value: any) {
+  private _selectOptionByValue(value: any) {
     let selectedItem = this._options.find((item) => item.value === value);
-    this._selectItem(selectedItem);
+    this._selectOption(selectedItem);
   }
 
   /**
    * Clears the item selection model
-   * @param skipItem Item to be skipped in clearing the selection
    */
-  private _clearItemSelection(_skipItem: OptionComponent): void {
-    if (this.selectionModel.hasValue()) {
-      this.selectionModel.selected[0].deselect();
-    }
-    this.selectionModel.clear();
+  private _clearOptionsSelection(): void {
+    this.selectedOptions.forEach((selectedOption) => selectedOption.deselect());
   }
 
   /**
@@ -406,7 +436,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
     // Register pre active change element
     this._itemListKeyManager.preActiveItemChanged
       .pipe(takeUntil(this._destroySubject))
-      .subscribe(() => this._clearActiveItemState());
+      .subscribe(() => this._clearActiveOptionsState());
 
     // Register change element on manager subscription
     this._itemListKeyManager.activeItemChanged
@@ -430,8 +460,8 @@ export class SelectComponent extends McsFormFieldControlBase<any>
         && !this._options.find((option) => option.value === selectedValue);
 
       isFirstItemSelected ?
-        this._selectItem(this._options.first) :
-        this._selectItemByValue(this.ngControl ? this.ngControl.value : this._value);
+        this._selectOption(this._options.first) :
+        this._selectOptionByValue(this.ngControl ? this.ngControl.value : this._value);
       if (!isNullOrEmpty(this.ngControl)) {
         this.ngControl.control.markAsPristine();
       }
@@ -503,15 +533,28 @@ export class SelectComponent extends McsFormFieldControlBase<any>
    */
   private _selectActiveItem(): void {
     if (isNullOrEmpty(this._itemListKeyManager.activeItem)) { return; }
-    this._itemListKeyManager.activeItem.select();
+    this.multiple ?
+      this._itemListKeyManager.activeItem.toggle() :
+      this._itemListKeyManager.activeItem.select();
   }
 
   /**
    * Clears the currently active item status
    */
-  private _clearActiveItemState(): void {
+  private _clearActiveOptionsState(): void {
     if (isNullOrEmpty(this._itemListKeyManager.activeItem)) { return; }
     this._itemListKeyManager.activeItem.setInActiveState();
+  }
+
+  /**
+   * Close all the inactive group panel options
+   */
+  private _closeInActiveOptionPanels(): void {
+    this._optionGroups.forEach((optionGroup) => {
+      if (!optionGroup.hasSelectedOption) {
+        optionGroup.closePanel();
+      }
+    });
   }
 
   /**
@@ -556,18 +599,6 @@ export class SelectComponent extends McsFormFieldControlBase<any>
   }
 
   /**
-   * Subscribes to every selection model changes
-   */
-  private _subscribeToSelectionModelChanges(): void {
-    this.selectionModel.change.pipe(
-      takeUntil(this._destroySubject)
-    ).subscribe((changeEvent) => {
-      changeEvent.added.forEach((option) => option.select());
-      changeEvent.removed.forEach((option) => option.deselect());
-    });
-  }
-
-  /**
    * Subscrbies to option item changes
    */
   private _subscribeToOptionItemsChanges(): void {
@@ -575,6 +606,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
       startWith(null),
       takeUntil(this._destroySubject)
     ).subscribe(() => {
+      this._enableMultipleSelection();
       this._subscribeToSelectionChange();
       this._initializeSelection();
     });
@@ -585,12 +617,19 @@ export class SelectComponent extends McsFormFieldControlBase<any>
    */
   private _subscribeToSelectionChange(): void {
     let resetSubject = merge(this._options.changes, this._destroySubject);
-    this._optionsSelectionChanges.pipe(
-      takeUntil(resetSubject),
-      filter((item) => item.selected)
-    ).subscribe((item) => {
-      this._selectItem(item);
-      this.closePanel();
+    this._optionsClickEvent.pipe(
+      takeUntil(resetSubject)
+    ).subscribe((option) => {
+      this._selectOption(option);
     });
+  }
+
+  /**
+   * Enable multiple selection on all options
+   */
+  private _enableMultipleSelection(): void {
+    if (!this.multiple) { return; }
+    this.selectionModel = new McsSelection(this.multiple);
+    this._options.forEach((option) => option.showCheckbox());
   }
 }
