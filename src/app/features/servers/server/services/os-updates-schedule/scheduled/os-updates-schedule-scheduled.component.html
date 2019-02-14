@@ -46,7 +46,8 @@
               <mcs-item>
                 <strong>{{textContent.scheduleTimeLabel}}</strong>
               </mcs-item>
-              <mcs-item>
+              <!-- TODO : Temporary hidden, would refactor and reorganize after the multiselect is implemented -->
+              <mcs-item *ngIf="false">
                 <mcs-checkbox [checked]="scheduleDetails?.isEveryday" (change)="scheduleEveryday($event)">
                   {{textContent.checkboxSelectionEveryday}}
                 </mcs-checkbox>
@@ -140,7 +141,7 @@
         <strong>
           {{textContent.listLabel}}
         </strong>
-        <button delete-button mcsButton mcsAlign="end" size="medium" (click)="deleteExistingSchedule()" [disabled]="!hasSchedule"
+        <button delete-button mcsButton mcsAlign="end" size="medium" (click)="deleteExistingSchedule()" *ngIf="hasSchedule"
           color="error">
           {{ textContent.deleteScheduleButton }}
         </button>

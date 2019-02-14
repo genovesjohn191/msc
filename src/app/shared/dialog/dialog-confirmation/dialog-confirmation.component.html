@@ -19,11 +19,11 @@
 
   <mcs-dialog-actions>
     <a (click)="closeDialog()"
-      mcsId="close-dialog">Cancel</a>
+      mcsId="close-dialog">{{ cancelText }}</a>
 
     <button mcsButton arrow="right"
       size="small" [color]="statusColor"
       (click)="confirmDialog()"
-      mcsId="confirm-dialog">Confirm</button>
+      mcsId="confirm-dialog">{{ confirmText }}</button>
   </mcs-dialog-actions>
 </mcs-dialog>
