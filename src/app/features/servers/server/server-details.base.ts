@@ -26,7 +26,8 @@ import {
   McsJob,
   McsResource,
   McsServer,
-  HttpStatusCode
+  HttpStatusCode,
+  McsServerPlatform
 } from '@app/models';
 import {
   McsServersRepository,
@@ -112,18 +113,31 @@ export abstract class ServerDetailsBase {
    */
   private _subscribeToSelectedServer(): void {
     this.serverDetails$ = this._serverService.selectedServer().pipe(
-      concatMap((selectedServer) =>
-        this._resourcesRespository.getById(selectedServer.platform.resourceId).pipe(
+      concatMap((selectedServer) => {
+        return this._getServerResourceByPlatform(selectedServer.platform).pipe(
           switchMap((selectedResource) =>
             of({ server: selectedServer, resource: selectedResource } as ServerDetails)
           )
-        )
-      ),
+        );
+      }),
       tap((serverDetails) => {
         this._server = serverDetails.server;
         this.selectionChange(serverDetails.server, serverDetails.resource);
-      }),
-      finalize(() => this._changeDetectorRef.markForCheck())
+      })
+    );
+  }
+
+  /**
+   * Gets the server resource based on the server platform data
+   * @param platform Platform on what resourceId to be obtained
+   */
+  private _getServerResourceByPlatform(platform: McsServerPlatform): Observable<McsResource> {
+    let platformIsEmpty = isNullOrEmpty(platform) || isNullOrEmpty(platform.resourceName);
+    if (platformIsEmpty) { return of(new McsResource()); }
+    this._loadingService.showLoader();
+
+    return this._resourcesRespository.getById(platform.resourceId).pipe(
+      finalize(() => this._loadingService.hideLoader())
     );
   }
 

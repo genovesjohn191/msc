@@ -34,7 +34,6 @@ import {
   McsServerClone,
   McsResource,
   RouteKey,
-  McsOrderCreateServer,
   OrderWorkflowAction,
   McsOrderWorkflow
 } from '@app/models';
@@ -137,10 +136,10 @@ export class ServerCreateFlyweightContext {
     this.errorChanges.next(this._error);
   }
 
-  public createOrderWorkflow(): Observable<McsOrder> {
+  public createOrderWorkflow(action: OrderWorkflowAction): Observable<McsOrder> {
     if (isNullOrEmpty(this.order)) { return; }
     let workDetails = new McsOrderWorkflow();
-    workDetails.action = OrderWorkflowAction.Submit;
+    workDetails.state = action;
 
     return this._ordersRepository.createOrderWorkflow(this.order.id, workDetails).pipe(
       tap((orderDetails) => {
@@ -156,7 +155,7 @@ export class ServerCreateFlyweightContext {
     this._updateResetRequest.next();
     return this._ordersRepository.updateOrder(
       this._order.id,
-      'Managed Servers Add-Ons',
+      'Managed Server',
       12,
       newLineItems,
       this._addedAddOns
@@ -182,22 +181,25 @@ export class ServerCreateFlyweightContext {
     if (isNullOrEmpty(serverModel)) { return; }
     let serverInstance: Observable<McsJob | McsOrder>;
 
-    if (serviceType === ServiceType.SelfManaged) {
+    // Create the server based on its instance
+    serverModel.clientReferenceObject.resourcePath =
+      CoreRoutes.getNavigationPath(RouteKey.ServerDetail);
 
-      // Create the server based on its intance
-      serverModel.clientReferenceObject.resourcePath =
-        CoreRoutes.getNavigationPath(RouteKey.ServerDetail);
+    if (serviceType === ServiceType.SelfManaged) {
       serverInstance = serverModel instanceof McsServerCreate ?
         this._createNewSelfManageServer(serverModel) :
         this._createCloneSelfManagedServer(serverModel);
     } else {
+
+      // Set Inview level
+      (serverModel as any).inviewLevel = 'Premium';
 
       // Create Order item
       let orderItem = new McsOrderItemCreate();
       orderItem.itemOrderTypeId = OrderIdType.CreateManagedServer;
       orderItem.referenceId = McsGuid.newGuid().toString();
       orderItem.parentServiceId = resourceName;
-      orderItem.properties = McsOrderCreateServer.createInstanceBySelfManaged(serverModel);
+      orderItem.properties = serverModel;
 
       // Create order
       let order = new McsOrderCreate();

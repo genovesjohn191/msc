@@ -24,6 +24,7 @@ export * from './enumerations/order-status.enum';
 export * from './enumerations/order-type-id.enum';
 export * from './enumerations/order-type.enum';
 export * from './enumerations/order-workflow-action.enum';
+export * from './enumerations/os-type.enum';
 export * from './enumerations/os-updates-status.enum';
 export * from './enumerations/os-updates-schedule-type.enum';
 export * from './enumerations/catalog-item-type.enum';
@@ -35,7 +36,6 @@ export * from './enumerations/device-type.enum';
 export * from './enumerations/input-manage-type.enum';
 export * from './enumerations/running-status.enum';
 export * from './enumerations/server-command.enum';
-export * from './enumerations/server-image-type.enum';
 export * from './enumerations/version-status.enum';
 export * from './enumerations/vm-power-state.enum';
 export * from './enumerations/comment-category';
@@ -48,7 +48,6 @@ export * from './enumerations/provisioning-status.enum';
 export * from './enumerations/action-status.enum';
 
 /** Request */
-export * from './request/mcs-order-create-server';
 export * from './request/mcs-server-create-addon-anti-virus';
 
 export * from './request/mcs-order-create';
@@ -60,6 +59,7 @@ export * from './request/mcs-server-attach-media';
 export * from './request/mcs-server-clone';
 export * from './request/mcs-server-create';
 export * from './request/mcs-server-create-nic';
+export * from './request/mcs-server-create-os';
 export * from './request/mcs-server-create-snapshot';
 export * from './request/mcs-server-create-storage';
 export * from './request/mcs-server-rename';

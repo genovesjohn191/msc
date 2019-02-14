@@ -9,7 +9,7 @@ export enum OrderStatus {
   RequiresPricingApproval = 4,
   PricingApproved = 5,
   Conversions = 6,
-  Provisioning = 7,
+  TransitionProvisioning = 7,
   BillingProduction = 8,
   Cancelled = 9,
   Completed = 10
@@ -23,7 +23,7 @@ export const orderStatusText = {
   [OrderStatus.RequiresPricingApproval]: 'Requires Pricing Approval',
   [OrderStatus.PricingApproved]: 'Pricing Approved',
   [OrderStatus.Conversions]: 'Conversions',
-  [OrderStatus.Provisioning]: 'Provisioning',
+  [OrderStatus.TransitionProvisioning]: 'Provisioning',
   [OrderStatus.BillingProduction]: 'Billing Production',
   [OrderStatus.Cancelled]: 'Cancelled',
   [OrderStatus.Completed]: 'Completed'

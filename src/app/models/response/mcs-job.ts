@@ -184,6 +184,11 @@ export class McsJob extends McsEntityBase {
     let resourceDynamicPath = getSafeProperty(
       this.clientReferenceObject, (obj) => obj.resourcePath
     );
+
+    // TODO: Temporarily force the compute/virtual since the job is not
+    // sending back the resourcePath when creating managed server
+    resourceDynamicPath = isNullOrEmpty(resourceDynamicPath) ?
+      `/compute/virtual` : resourceDynamicPath;
     let resourceId = getSafeProperty(completedTask, (obj) => obj.referenceObject.resourceId);
     return !isNullOrEmpty(resourceId) ? `${resourceDynamicPath}/${resourceId}` : undefined;
   }
