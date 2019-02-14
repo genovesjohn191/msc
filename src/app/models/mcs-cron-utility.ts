@@ -20,11 +20,11 @@ export class McsCronUtility {
    * @param dayOfWeek comma separated days
    */
   public static buildCron(
-    minute: number[],
-    hour: number[],
-    dayOfMonth: number[],
-    month: number[],
-    dayOfWeek: number[]
+    minute: number[] | string[],
+    hour: number[] | string[],
+    dayOfMonth: number[] | string[],
+    month: number[] | string[],
+    dayOfWeek: number[] | string[]
   ): string {
 
     if (isNullOrEmpty(minute) ||
@@ -53,9 +53,9 @@ export class McsCronUtility {
    * @param dayOfWeek comma separated days
    */
   public static buildCronWeekly(
-    minute: number[],
-    hour: number[],
-    dayOfWeek: number[]
+    minute: number[] | string[],
+    hour: number[] | string[],
+    dayOfWeek: number[] | string[]
   ): string {
 
     if (isNullOrEmpty(minute) ||

@@ -421,9 +421,9 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
   private _createCronStringRequest(time: string, period: string, daysOfWeek: number[]): string {
     let timeWithPeriod = time + ' ' + period;
     let convertedTimeArray = formatTime(timeWithPeriod, 'hh:mm a').split(':');
-    let hour = +convertedTimeArray[0];
-    let minute = +convertedTimeArray[1];
-    return McsCronUtility.buildCronWeekly(new Array(minute), new Array(hour), daysOfWeek);
+    let hour = convertedTimeArray[0];
+    let minute = convertedTimeArray[1];
+    return McsCronUtility.buildCronWeekly([minute], [hour], daysOfWeek);
   }
 
   /**
