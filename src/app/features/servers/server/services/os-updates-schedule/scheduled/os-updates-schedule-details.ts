@@ -134,6 +134,7 @@ export class OsUpdatesScheduleDetails {
     switch (dayFrequency) {
       case DayFrequency.Everyday:
         this._scheduleDays.forEach((scheduleDay) => scheduleDay.checked = true);
+        break;
 
       case DayFrequency.Weekdays:
         this._scheduleDays.forEach((scheduleDay) => {

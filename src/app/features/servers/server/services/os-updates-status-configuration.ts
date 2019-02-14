@@ -7,7 +7,8 @@ import {
   McsServerOsUpdatesDetails,
   osUpdatesScheduleSubtitleLabel,
   OsUpdatesScheduleType,
-  McsCronUtility
+  McsCronUtility,
+  McsServer
 } from '@app/models';
 import {
   replacePlaceholder,
@@ -29,9 +30,9 @@ export enum ServerServicesView {
   Scheduled = 2,
 }
 
-export type ServerServicesActionDetails = {
-  viewMode: ServerServicesView,
-  callServerDetails: boolean
+export type OsUpdatesActionDetails = {
+  server: McsServer,
+  requestData?: any
 };
 
 const INSPECTDATE_TIMEZONE = 'Australia/Sydney';
