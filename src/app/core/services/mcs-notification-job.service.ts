@@ -11,8 +11,7 @@ import {
 import {
   takeUntil,
   finalize,
-  map,
-  take
+  map
 } from 'rxjs/operators';
 import {
   StompRService,
@@ -127,8 +126,11 @@ export class McsNotificationJobService implements McsDisposable {
 
         this._jobConnection = details.content;
         this.connectionStatus = NetworkStatus.Connecting;
-        this._initializeWebstomp();
-        this._listenToStateChange();
+
+        this._ngZone.runOutsideAngular(() => {
+          this._initializeWebstomp();
+          this._listenToStateChange();
+        });
       });
   }
 
@@ -153,20 +155,15 @@ export class McsNotificationJobService implements McsDisposable {
    */
   private _onStompConnected(): void {
     try {
-      this._ngZone.onStable.pipe(
-        take(1),
-        takeUntil(this._destroySubject)
-      ).subscribe(() => {
-        this._loggerService.trace(`Web stomp connected.`);
+      this._loggerService.trace(`Web stomp connected.`);
 
-        unsubscribeSafely(this._stompSubscription);
-        this._stompInstance = this._stompService
-          .subscribe(this._jobConnection.destinationRoute);
+      unsubscribeSafely(this._stompSubscription);
+      this._stompInstance = this._stompService
+        .subscribe(this._jobConnection.destinationRoute);
 
-        this._stompSubscription = this._stompInstance
-          .subscribe(this._onStompMessage.bind(this));
-        this.connectionStatus = NetworkStatus.Success;
-      });
+      this._stompSubscription = this._stompInstance
+        .subscribe(this._onStompMessage.bind(this));
+      this.connectionStatus = NetworkStatus.Success;
     } catch (_error) {
       this._loggerService.trace(`Web stomp subscription encountered error.`);
     }
