@@ -141,7 +141,7 @@
         <strong>
           {{textContent.listLabel}}
         </strong>
-        <button delete-button mcsButton mcsAlign="end" size="medium" (click)="deleteExistingSchedule()" *ngIf="hasSchedule"
+        <button delete-button mcsButton mcsAlign="end" size="medium" (click)="deleteExistingSchedule()" [disabled]="!hasSchedule"
           color="error">
           {{ textContent.deleteScheduleButton }}
         </button>
