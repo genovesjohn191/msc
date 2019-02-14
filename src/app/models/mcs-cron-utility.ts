@@ -1,4 +1,5 @@
 import * as Cron from 'cron-converter';
+import { isNullOrEmpty } from '@app/utilities';
 
 type CronInfo = {
   minute: any[],
@@ -26,6 +27,14 @@ export class McsCronUtility {
     dayOfWeek: number[]
   ): string {
 
+    if (isNullOrEmpty(minute) ||
+      isNullOrEmpty(hour) ||
+      isNullOrEmpty(dayOfMonth) ||
+      isNullOrEmpty(month) ||
+      isNullOrEmpty(dayOfWeek)) {
+      throw new Error('Invalid cron input');
+    }
+
     let cronRequest = '';
     cronRequest += minute.join(',');
     cronRequest += ' ' + hour.join(',');
@@ -44,10 +53,16 @@ export class McsCronUtility {
    * @param dayOfWeek comma separated days
    */
   public static buildCronWeekly(
-    minute: number[] | string[],
-    hour: number[] | string[],
-    dayOfWeek: number[] | string[]
+    minute: number[],
+    hour: number[],
+    dayOfWeek: number[]
   ): string {
+
+    if (isNullOrEmpty(minute) ||
+      isNullOrEmpty(hour) ||
+      isNullOrEmpty(dayOfWeek)) {
+      throw new Error('Invalid cron input');
+    }
 
     let cronRequest = '';
     cronRequest += minute.join(',');

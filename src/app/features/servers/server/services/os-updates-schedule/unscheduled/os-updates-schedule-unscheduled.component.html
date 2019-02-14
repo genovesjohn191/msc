@@ -27,7 +27,6 @@
                 <mcs-item>
                   <span>{{osUpdate.name}}</span>
                   <span *ngIf="!selectedServer?.isWindows" read-only> {{osUpdate.properties?.version}}</span>
-                  <span *ngIf="selectedServer?.isWindows">{{osUpdate.properties?.kbNumbers?.join(',')}}</span>
                 </mcs-item>
               </mcs-tree-node>
             </mcs-tree-node-group>
