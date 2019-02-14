@@ -4,6 +4,7 @@ import {
   Input,
   ChangeDetectorRef
 } from '@angular/core';
+import { Router } from '@angular/router';
 import {
   throwError,
   Observable
@@ -27,7 +28,6 @@ import {
 import { McsOrderItemTypesRepository } from '@app/services';
 import { ServerOrderDetail } from './server-order-detail';
 import { ServerCreateFlyweightContext } from '../server-create-flyweight.context';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'mcs-server-create-confirm',
