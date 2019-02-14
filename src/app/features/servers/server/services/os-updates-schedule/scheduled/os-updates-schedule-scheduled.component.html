@@ -140,7 +140,7 @@
         <strong>
           {{textContent.listLabel}}
         </strong>
-        <button delete-button mcsButton mcsAlign="end" size="medium" (click)="deleteSchedule()" [disabled]="!hasSchedule"
+        <button delete-button mcsButton mcsAlign="end" size="medium" (click)="deleteExistingSchedule()" [disabled]="!hasSchedule"
           color="error">
           {{ textContent.deleteScheduleButton }}
         </button>
@@ -181,34 +181,3 @@
     </form>
   </ng-container>
 </mcs-presentation-panel>
-
-<!-- Snack Bar Templates -->
-<!-- TODO : will be replaced by form message -->
-<ng-template #updateSuccessStatusTemplate>
-  <mcs-snack-bar [snackBarRef]="updateSuccessStatusBarRef" theme="dark" [hideCloseButton]="false">
-    <mcs-item>
-      <span>{{ textContent.updateSuccessMessage }}</span>
-    </mcs-item>
-  </mcs-snack-bar>
-</ng-template>
-<ng-template #updateErrorStatusTemplate>
-  <mcs-snack-bar [snackBarRef]="updateErrorStatusBarRef" theme="dark" [hideCloseButton]="false">
-    <mcs-item>
-      <span>{{ textContent.updateErrorMessage }}</span>
-    </mcs-item>
-  </mcs-snack-bar>
-</ng-template>
-<ng-template #deleteSuccessStatusTemplate>
-  <mcs-snack-bar [snackBarRef]="deleteSuccessStatusBarRef" theme="dark" [hideCloseButton]="false">
-    <mcs-item>
-      <span>{{ textContent.deleteSuccessMessage }}</span>
-    </mcs-item>
-  </mcs-snack-bar>
-</ng-template>
-<ng-template #deleteErrorStatusTemplate>
-  <mcs-snack-bar [snackBarRef]="deleteErrorStatusBarRef" theme="dark" [hideCloseButton]="false">
-    <mcs-item>
-      <span>{{ textContent.deleteErrorMessage }}</span>
-    </mcs-item>
-  </mcs-snack-bar>
-</ng-template>

@@ -17,8 +17,8 @@ export const osUpdatesStatusLabel = {
 };
 
 export const osUpdatesStatusSubtitleLabel = {
-  [OsUpdatesStatus.Updated]: 'Last inspected {{lastInspectDate}}.',
-  [OsUpdatesStatus.Outdated]: 'Last inspected {{lastInspectDate}}.',
+  [OsUpdatesStatus.Updated]: 'Last inspected {{lastInspectDate}}, Sydney Time.',
+  [OsUpdatesStatus.Outdated]: 'Last inspected {{lastInspectDate}}, Sydney Time.',
   [OsUpdatesStatus.Analysing]: 'Last inspected never.',
   [OsUpdatesStatus.Updating]: 'Started on {{dateOfStart}}.',
   [OsUpdatesStatus.Unanalysed]: 'Your operating system has never been inspected.',

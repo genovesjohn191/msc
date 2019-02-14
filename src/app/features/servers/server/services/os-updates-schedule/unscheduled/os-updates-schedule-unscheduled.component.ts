@@ -23,15 +23,10 @@ import {
   McsServer,
   McsServerOsUpdatesRequest
 } from '@app/models';
-import {
-  McsServersRepository
-} from '@app/services';
+import { McsServersRepository } from '@app/services';
 import { TreeNode } from '@app/shared';
 import { ServersService } from '@app/features/servers/servers.service';
-import {
-  ServerServicesActionDetails,
-  ServerServicesView
-} from '../../os-updates-status-configuration';
+import { OsUpdatesActionDetails } from '../../os-updates-status-configuration';
 
 @Component({
   selector: 'mcs-server-os-updates-schedule-unscheduled',
@@ -46,7 +41,7 @@ export class OsUpdatesScheduleUnscheduledComponent implements OnInit {
   public selectedServer: McsServer;
 
   @Output()
-  public serverServicesViewChange: EventEmitter<ServerServicesActionDetails>;
+  public applyUpdates: EventEmitter<OsUpdatesActionDetails>;
 
   public textContent: any;
   public osUpdates$: Observable<McsServerOsUpdates[]>;
@@ -73,7 +68,7 @@ export class OsUpdatesScheduleUnscheduledComponent implements OnInit {
     protected _changeDetectorRef: ChangeDetectorRef,
     protected _textProvider: McsTextContentProvider,
   ) {
-    this.serverServicesViewChange = new EventEmitter();
+    this.applyUpdates = new EventEmitter();
     this.dataStatusFactory = new McsDataStatusFactory();
     this.selectedNodes = new Array<TreeNode<McsServerOsUpdates>>();
   }
@@ -92,23 +87,17 @@ export class OsUpdatesScheduleUnscheduledComponent implements OnInit {
   }
 
   /**
-   * Apply the selected os updates on the server
+   * Emits an event to Apply the selected os updates on the server
    */
-  public applyUpdates(): void {
+  public applySelectedUpdates(): void {
     let request = new McsServerOsUpdatesRequest();
     request.updates = [];
     request.clientReferenceObject = { serverId: this.selectedServer.id };
     this.selectedNodes.forEach((node) => request.updates.push(node.value.id));
 
-    this._serversService.setServerSpinner(this.selectedServer);
-    this._serversRepository.updateServerOs(this.selectedServer, request).pipe(
-      catchError((error) => {
-        this._redirectToServicesTab();
-        return throwError(error);
-      })
-    ).subscribe(() => {
-      this._redirectToServicesTab();
-      this._serversService.clearServerSpinner(this.selectedServer);
+    this.applyUpdates.emit({
+      server: this.selectedServer,
+      requestData: request
     });
   }
 
@@ -126,16 +115,5 @@ export class OsUpdatesScheduleUnscheduledComponent implements OnInit {
         return throwError(error);
       })
     );
-  }
-
-  /**
-   * Redirects the view to the services tab
-   */
-  private _redirectToServicesTab(): void {
-    this.serverServicesViewChange.emit({
-      viewMode: ServerServicesView.Default,
-      callServerDetails: false
-    });
-    this._serversService.clearServerSpinner(this.selectedServer);
   }
 }

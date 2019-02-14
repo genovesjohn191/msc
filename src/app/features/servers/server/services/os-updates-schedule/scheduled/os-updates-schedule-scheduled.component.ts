@@ -4,9 +4,7 @@ import {
   ChangeDetectorRef,
   Input,
   Output,
-  EventEmitter,
-  TemplateRef,
-  ViewChild
+  EventEmitter
 } from '@angular/core';
 import {
   FormGroup,
@@ -20,16 +18,12 @@ import {
 import {
   catchError,
   map,
-  tap,
-  concatMap
+  tap
 } from 'rxjs/operators';
 import {
   McsTextContentProvider,
   CoreValidators,
   McsDialogService,
-  McsSnackBarRef,
-  McsSnackBarService,
-  McsSnackBarConfig,
   McsDataStatusFactory
 } from '@app/core';
 import {
@@ -47,24 +41,18 @@ import {
   McsCronUtility,
   OsUpdatesScheduleType
 } from '@app/models';
-import {
-  McsServersRepository
-} from '@app/services';
+import { McsServersRepository } from '@app/services';
 import {
   DialogConfirmation,
   DialogConfirmationComponent
 } from '@app/shared';
 import { TreeNode } from '@angular/router/src/utils/tree';
-import { ServersService } from '@app/features/servers/servers.service';
 import {
   OsUpdatesScheduleDetails,
   ScheduleDay,
   DayFrequency
 } from './os-updates-schedule-details';
-import {
-  ServerServicesActionDetails,
-  ServerServicesView
-} from '../../os-updates-status-configuration';
+import { OsUpdatesActionDetails } from '../../os-updates-status-configuration';
 
 @Component({
   selector: 'mcs-server-os-updates-schedule-scheduled',
@@ -95,11 +83,6 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
   public timeOptions: string[] = [];
   public dayPeriodOptions: string[] = [];
 
-  public updateSuccessStatusBarRef: McsSnackBarRef<any>;
-  public updateErrorStatusBarRef: McsSnackBarRef<any>;
-  public deleteSuccessStatusBarRef: McsSnackBarRef<any>;
-  public deleteErrorStatusBarRef: McsSnackBarRef<any>;
-
   // Form variables
   public fgSchedule: FormGroup;
   public fcRecurringScheduleTime: FormControl;
@@ -111,23 +94,12 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
   public selectedServer: McsServer;
 
   @Output()
-  public serverServicesViewChange: EventEmitter<ServerServicesActionDetails>;
+  public saveSchedule: EventEmitter<OsUpdatesActionDetails>;
 
-  // TODO : snack bar will be replaced by form message
-  @ViewChild('updateSuccessStatusTemplate')
-  private _updateSuccessStatusTemplate: TemplateRef<any>;
-
-  @ViewChild('updateErrorStatusTemplate')
-  private _updateErrorStatusTemplate: TemplateRef<any>;
-
-  @ViewChild('deleteSuccessStatusTemplate')
-  private _deleteSuccessStatusTemplate: TemplateRef<any>;
-
-  @ViewChild('deleteErrorStatusTemplate')
-  private _deleteErrorStatusTemplate: TemplateRef<any>;
+  @Output()
+  public deleteSchedule: EventEmitter<OsUpdatesActionDetails>;
 
   private _initialCategoryList: McsServerOsUpdatesCategory[];
-  private _snackBarConfig: McsSnackBarConfig;
 
   /**
    * Returns the enum type of the server services view
@@ -202,23 +174,17 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
   }
 
   constructor(
-    private _snackBarRefService: McsSnackBarService,
     private _dialogService: McsDialogService,
-    private _serversService: ServersService,
     protected _serversRepository: McsServersRepository,
     protected _changeDetectorRef: ChangeDetectorRef,
     protected _textProvider: McsTextContentProvider
   ) {
-    this.serverServicesViewChange = new EventEmitter();
+    this.saveSchedule = new EventEmitter();
+    this.deleteSchedule = new EventEmitter();
     this.scheduleDetails = new OsUpdatesScheduleDetails();
     this.categoriesStatusFactory = new McsDataStatusFactory();
     this.scheduleDateStatusFactory = new McsDataStatusFactory();
     this.selectedNodes = new Array<TreeNode<McsServerOsUpdatesCategory>>();
-    this._snackBarConfig = {
-      verticalPlacement: 'top',
-      horizontalAlignment: 'center',
-      duration: 3000
-    } as McsSnackBarConfig;
   }
 
   public ngOnInit() {
@@ -237,7 +203,7 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
   }
 
   /**
-   * Save/Update the os-update schedule as Run Once
+   * Emits an event to save/update the os-update schedule as Run Once
    */
   public saveRunOnceSchedule(): void {
     let request = new McsServerOsUpdatesScheduleRequest();
@@ -250,23 +216,25 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
       scheduleDayArray
     );
     this.selectedNodes.forEach((selection) => request.categories.push(selection.value.id));
+    let actionDetails = { server: this.selectedServer, requestData: request };
 
     if (this.hasSchedule) {
       this._showScheduleDialog(
         this.selectedServer,
         this.textContent.updateDialogTitle,
         this.textContent.updateDialogMessage
-      ).pipe(concatMap((dialogResult) => {
-        if (isNullOrEmpty(dialogResult)) { return of(undefined); }
-        return this._saveSchedule(this.selectedServer, request);
-      })).subscribe();
+      ).pipe(
+        tap((dialogResult) => {
+          if (isNullOrEmpty(dialogResult)) { return of(undefined); }
+          this.saveSchedule.emit(actionDetails);
+        })).subscribe();
     } else {
-      this._saveSchedule(this.selectedServer, request).subscribe();
+      this.saveSchedule.emit(actionDetails);
     }
   }
 
   /**
-   * Save/Update the os-update schedule as Recurring
+   * Emits an event to save/update the os-update schedule as Recurring
    */
   public saveRecurringSchedule(): void {
     let request = new McsServerOsUpdatesScheduleRequest();
@@ -278,58 +246,34 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
     );
     request.categories = [];
     this.selectedNodes.forEach((selection) => request.categories.push(selection.value.id));
+    let actionDetails = { server: this.selectedServer, requestData: request };
 
     if (this.hasSchedule) {
       this._showScheduleDialog(this.selectedServer,
         this.textContent.updateDialogTitle,
         this.textContent.updateDialogMessage
-      ).pipe(concatMap((dialogResult) => {
-        if (isNullOrEmpty(dialogResult)) { return of(undefined); }
-        return this._saveSchedule(this.selectedServer, request);
-      })).subscribe();
+      ).pipe(
+        tap((dialogResult) => {
+          if (isNullOrEmpty(dialogResult)) { return of(undefined); }
+          this.saveSchedule.emit(actionDetails);
+        })).subscribe();
     } else {
-      this._saveSchedule(this.selectedServer, request).subscribe();
+      this.saveSchedule.emit(actionDetails);
     }
   }
 
   /**
-   * Deletes the os-update schedule of the server
+   * Emits an event to delete the os-update schedule of the server
    */
-  public deleteSchedule(): void {
-
+  public deleteExistingSchedule(): void {
     this._showScheduleDialog(
       this.selectedServer,
       this.textContent.deleteDialogTitle,
       this.textContent.deleteDialogMessage
     ).pipe(
-      catchError((error) => {
-        this._snackBarConfig.id = 'delete-schedule-error-status-bar';
-        this.deleteErrorStatusBarRef = this._snackBarRefService.open(
-          this._deleteErrorStatusTemplate,
-          this._snackBarConfig
-        );
-        return throwError(error);
-      }),
-      concatMap((dialogResult) => {
+      tap((dialogResult) => {
         if (isNullOrEmpty(dialogResult)) { return of(undefined); }
-        this._serversService.setServerSpinner(this.selectedServer);
-        this._changeDetectorRef.markForCheck();
-
-        return this._serversRepository.deleteServerOsUpdatesSchedule(this.selectedServer.id).pipe(
-          catchError((error) => {
-            this._redirectToServicesTab();
-            return throwError(error);
-          }),
-          tap(() => {
-            this._redirectToServicesTab();
-            if (isNullOrEmpty(this._deleteSuccessStatusTemplate)) { return; }
-            this._snackBarConfig.id = 'delete-schedule-success-status-bar';
-            this.deleteSuccessStatusBarRef = this._snackBarRefService.open(
-              this._deleteSuccessStatusTemplate,
-              this._snackBarConfig
-            );
-          })
-        );
+        this.deleteSchedule.emit({ server: this.selectedServer });
       })
     ).subscribe();
   }
@@ -465,46 +409,6 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
   }
 
   /**
-   * Save/Update os-update schedule based from serverId and request param
-   * @param server selected server reference
-   * @param request request containing the cron (schedule)
-   */
-  private _saveSchedule(
-    server: McsServer,
-    request: McsServerOsUpdatesScheduleRequest
-  ): Observable<McsServerOsUpdatesSchedule> {
-    // TODO : find a better way of saving, currently deleting all then saving the new schedule
-    this._serversService.setServerSpinner(server);
-    this._changeDetectorRef.markForCheck();
-    return this._serversRepository.
-      deleteServerOsUpdatesSchedule(server.id).pipe(
-        catchError((error) => throwError(error)),
-        concatMap(() => {
-          return this._serversRepository.updateServerOsUpdatesSchedule(server.id, request).pipe(
-            catchError((error) => {
-              this._redirectToServicesTab();
-              this._snackBarConfig.id = 'update-schedule-error-status-bar';
-              this.updateErrorStatusBarRef = this._snackBarRefService.open(
-                this._updateErrorStatusTemplate,
-                this._snackBarConfig
-              );
-              return throwError(error);
-            }),
-            tap(() => {
-              this._redirectToServicesTab();
-              if (isNullOrEmpty(this._updateSuccessStatusTemplate)) { return; }
-              this._snackBarConfig.id = 'update-schedule-success-status-bar';
-              this.updateSuccessStatusBarRef = this._snackBarRefService.open(
-                this._updateSuccessStatusTemplate,
-                this._snackBarConfig
-              );
-            })
-          );
-        })
-      );
-  }
-
-  /**
    * Create the cron string for the OS Updates Schedule Request with the proper format
    * @param time time in string
    * @param period period in string (AM, PM)
@@ -566,16 +470,5 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
     let dialogRef = this._dialogService.open(DialogConfirmationComponent, { data, size: 'medium' });
 
     return dialogRef.afterClosed();
-  }
-
-  /**
-   * Redirects the view to the services tab
-   */
-  private _redirectToServicesTab(): void {
-    this.serverServicesViewChange.emit({
-      viewMode: ServerServicesView.Default,
-      callServerDetails: true
-    });
-    this._serversService.clearServerSpinner(this.selectedServer);
   }
 }

@@ -2,12 +2,9 @@ import {
   Component,
   ChangeDetectorRef,
   OnInit,
-  OnDestroy
+  OnDestroy,
+  ViewChild
 } from '@angular/core';
-import {
-  ActivatedRoute,
-  ParamMap
-} from '@angular/router';
 import {
   Subject,
   Observable,
@@ -17,7 +14,8 @@ import {
   takeUntil,
   tap,
   shareReplay,
-  catchError
+  catchError,
+  concatMap
 } from 'rxjs/operators';
 import {
   McsTextContentProvider,
@@ -45,15 +43,20 @@ import {
   DataStatus,
   McsServer,
   McsResource,
-  OsUpdatesStatus
+  OsUpdatesStatus,
+  McsServerOsUpdatesScheduleRequest,
+  McsServerOsUpdatesSchedule,
+  McsServerOsUpdatesRequest
 } from '@app/models';
+import { FormMessage } from '@app/shared';
 import { ServerDetailsBase } from '../server-details.base';
 import { ServerService } from '../server.service';
 import {
   OsUpdatesStatusConfiguration,
-  ServerServicesActionDetails,
+  OsUpdatesActionDetails,
   ServerServicesView
 } from './os-updates-status-configuration';
+import { ServersService } from '../../servers.service';
 
 @Component({
   selector: 'mcs-server-services',
@@ -68,6 +71,10 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
   public updateStatusConfiguration: OsUpdatesStatusConfiguration;
   public updatesDetails$: Observable<McsServerOsUpdatesDetails>;
   public dataStatusFactory: McsDataStatusFactory<McsServerOsUpdatesDetails>;
+  public formType: string;
+
+  @ViewChild('formMessage')
+  private _formMessage: FormMessage;
 
   private _destroySubject = new Subject<void>();
   private _updatesStatusSubtitleLabel: string;
@@ -125,7 +132,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
     _loadingService: McsLoadingService,
     protected _accessControlService: McsAccessControlService,
     protected _changeDetectorRef: ChangeDetectorRef,
-    private _activatedRoute: ActivatedRoute,
+    private _serversService: ServersService,
     private _notificationEvents: McsNotificationEventsService
   ) {
     super(
@@ -144,7 +151,6 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
 
   public ngOnInit() {
     this.textContent = this._textProvider.content.servers.server.services;
-    this._getServerUpdateDetailsUsingServerId();
   }
 
   public ngOnDestroy() {
@@ -162,15 +168,38 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
   }
 
   /**
-   * Event listener for setting the server services view
-   * @param actionDetails includes viewmode and the to recall server details
+   * Event listener for saving the schedule
+   * @param actionDetails includes the request data and the server reference
    */
-  public onServerServicesViewChange(actionDetails: ServerServicesActionDetails): void {
-    this.serverServicesView = actionDetails.viewMode;
-    this._changeDetectorRef.markForCheck();
-    if (actionDetails.callServerDetails) {
-      this._getServerUpdateDetailsUsingServerId();
-    }
+  public onSaveSchedule(actionDetails: OsUpdatesActionDetails): void {
+    this.serverServicesView = ServerServicesView.Default;
+    this._saveSchedule(actionDetails.server, actionDetails.requestData).pipe(
+      tap(() => {
+        this.refreshServerResource();
+      })
+    ).subscribe();
+  }
+
+  /**
+   * Event listener for deleting the schedule
+   * @param actionDetails includes the request data and the server reference
+   */
+  public onDeleteSchedule(actionDetails: OsUpdatesActionDetails): void {
+    this.serverServicesView = ServerServicesView.Default;
+    this._deleteSchedule(actionDetails.server).pipe(
+      tap(() => {
+        this.refreshServerResource();
+      })
+    ).subscribe();
+  }
+
+  /**
+   * Event listener for applying updates on the server
+   * @param actionDetails includes the request data and the server reference
+   */
+  public onApplyUpdates(actionDetails: OsUpdatesActionDetails): void {
+    this.serverServicesView = ServerServicesView.Default;
+    this._applyUpdates(actionDetails.server, actionDetails.requestData).subscribe();
   }
 
   /**
@@ -180,13 +209,13 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
   public inspectForAvailableOsUpdates(server: McsServer): void {
     this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Analysing);
     this._serversRepository.inspectServerForAvailableOsUpdates(
-      server.id,
-      { serverId: server.id }
+      server.id, { serverId: server.id }
     ).subscribe();
   }
 
   /**
-   * Disable the inspect now button if the server is powered off
+   * Disable the inspect now button if the server is powered off or processing
+   * @param server selected server object reference
    */
   public inspectNowButtonDisabled(server: McsServer): boolean {
     return server.isPoweredOff || server.isProcessing;
@@ -194,6 +223,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
 
   /**
    * Disable the configure button if the server is processing, being analyse or update
+   * @param server selected server object reference
    */
   public configureButtonDisabled(server: McsServer): boolean {
     return this.updateStatusConfiguration.configureScheduleButtonDisabled || server.isProcessing;
@@ -206,18 +236,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
   protected selectionChange(_server: McsServer, _resource: McsResource): void {
     this.serverServicesView = ServerServicesView.Default;
     this._registerJobEvents();
-  }
-
-  /**
-   * Listener for parameter changed events
-   */
-  private _getServerUpdateDetailsUsingServerId(): void {
-    this._activatedRoute.parent.paramMap
-      .subscribe((params: ParamMap) => {
-        // TODO : server Id should be pass down to this component
-        this._getServerUpdateDetails(params.get('id'));
-        this._changeDetectorRef.markForCheck();
-      });
+    this._getServerUpdateDetails(_server.id);
   }
 
   /**
@@ -236,47 +255,10 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
   }
 
   /**
-   * Get the latest update details of the server from api
-   * @param id job object reference
-   */
-  private _getServerUpdateDetails(id: string): void {
-
-    this.dataStatusFactory.setInProgress();
-    this.updatesDetails$ = this._serversRepository.getServerOsUpdatesDetails(id).pipe(
-      shareReplay(1),
-      tap((serverOsUpdateDetails) => {
-        this.dataStatusFactory.setSuccessful(serverOsUpdateDetails);
-        this.updateStatusConfiguration.setOsUpdateDetails(serverOsUpdateDetails);
-        if (this.updateStatusConfiguration.status === OsUpdatesStatus.Analysing) {
-          return;
-        }
-        let notYetInspected = isNullOrEmpty(serverOsUpdateDetails.lastInspectDate);
-        if (notYetInspected) {
-          this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Unanalysed);
-          this._updatesStatusSubtitleLabel =
-            this.updateStatusConfiguration.updatesStatusSubtitleLabel;
-          return;
-        }
-        let status = serverOsUpdateDetails.updateCount > 0 ?
-          OsUpdatesStatus.Outdated : OsUpdatesStatus.Updated;
-        this.updateStatusConfiguration.setOsUpdateStatus(status);
-        this._updatesStatusSubtitleLabel =
-          this.updateStatusConfiguration.updatesStatusSubtitleLabel;
-      }),
-      catchError((error) => {
-        this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Error);
-        this.dataStatusFactory.setError();
-        return throwError(error);
-      }),
-    );
-  }
-
-  /**
    * Listener for the inspect server for os-updates method call
    * @param job job object reference
    */
   private onInspectForAvailableOsUpdates(job: McsJob): void {
-
     if (!this.serverIsActiveByJob(job)) { return; }
 
     switch (job.dataStatus) {
@@ -284,7 +266,8 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
         this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Analysing);
         break;
       case DataStatus.Success:
-        this._getServerUpdateDetailsUsingServerId();
+        this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Unanalysed);
+        this.refreshServerResource();
         break;
       case DataStatus.Error:
         this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Error);
@@ -300,7 +283,6 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
    * @param job job object reference
    */
   private onApplyServerOsUpdates(job: McsJob): void {
-
     if (!this.serverIsActiveByJob(job)) { return; }
 
     switch (job.dataStatus) {
@@ -312,7 +294,8 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
           formatDate(job.startedOn, 'ddd, DD MMM, HH:mm A'));
         break;
       case DataStatus.Success:
-        this._getServerUpdateDetailsUsingServerId();
+        this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Updated);
+        this.refreshServerResource();
         break;
       case DataStatus.Error:
         this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Error);
@@ -321,5 +304,119 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
         this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Error);
     }
     this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Get the latest update details of the server from api
+   * @param id job object reference
+   */
+  private _getServerUpdateDetails(id: string): void {
+
+    this.dataStatusFactory.setInProgress();
+    this.updatesDetails$ = this._serversRepository.getServerOsUpdatesDetails(id).pipe(
+      catchError((error) => {
+        this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Error);
+        this.dataStatusFactory.setError();
+        return throwError(error);
+      }),
+      shareReplay(1),
+      tap((serverOsUpdateDetails) => {
+        this.dataStatusFactory.setSuccessful(serverOsUpdateDetails);
+        this.updateStatusConfiguration.setOsUpdateDetails(serverOsUpdateDetails);
+        if (this.updateStatusConfiguration.status === OsUpdatesStatus.Analysing
+          || this.updateStatusConfiguration.status === OsUpdatesStatus.Updating) {
+          return;
+        }
+        let notYetInspected = isNullOrEmpty(serverOsUpdateDetails.lastInspectDate);
+        if (notYetInspected) {
+          this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Unanalysed);
+          this._updatesStatusSubtitleLabel =
+            this.updateStatusConfiguration.updatesStatusSubtitleLabel;
+          return;
+        }
+        let status = serverOsUpdateDetails.updateCount > 0 ?
+          OsUpdatesStatus.Outdated : OsUpdatesStatus.Updated;
+        this.updateStatusConfiguration.setOsUpdateStatus(status);
+        this._updatesStatusSubtitleLabel =
+          this.updateStatusConfiguration.updatesStatusSubtitleLabel;
+      })
+    );
+  }
+
+  /**
+   * Apply the selected os updates on the server
+   * @param server selected server reference
+   * @param request request containing the update ids
+   */
+  private _applyUpdates(server: McsServer, request: McsServerOsUpdatesRequest): Observable<McsJob> {
+    this._serversService.setServerSpinner(server);
+    return this._serversRepository.updateServerOs(server, request).pipe(
+      catchError((error) => {
+        this._serversService.clearServerSpinner(server);
+        return throwError(error);
+      }),
+      tap(() => {
+        this._serversService.clearServerSpinner(server);
+      })
+    );
+  }
+
+  /**
+   * Save/Update os-update schedule based from serverId and request param
+   * @param server selected server reference
+   * @param request request containing the cron (schedule)
+   */
+  private _saveSchedule(
+    server: McsServer,
+    request: McsServerOsUpdatesScheduleRequest
+  ): Observable<McsServerOsUpdatesSchedule> {
+    // TODO : find a better way of saving, currently deleting all then saving the new schedule
+    this._serversService.setServerSpinner(server);
+    return this._serversRepository.
+      deleteServerOsUpdatesSchedule(server.id).pipe(
+        catchError((error) => {
+          this._serversService.clearServerSpinner(server);
+          this._showFormMessage(this.textContent.updateErrorMessage, 'error');
+          return throwError(error);
+        }),
+        concatMap(() => {
+          return this._serversRepository.updateServerOsUpdatesSchedule(server.id, request).pipe(
+            tap(() => {
+              this._serversService.clearServerSpinner(server);
+              this._showFormMessage(this.textContent.updateSuccessMessage, 'success');
+            })
+          );
+        })
+      );
+  }
+
+  /**
+   * Deletes the os-update schedule of the server
+   * @param server selected server reference
+   */
+  private _deleteSchedule(server: McsServer): Observable<boolean> {
+
+    this._serversService.setServerSpinner(server);
+    return this._serversRepository.deleteServerOsUpdatesSchedule(server.id).pipe(
+      catchError((error) => {
+        this._serversService.clearServerSpinner(server);
+        this._showFormMessage(this.textContent.deleteErrorMessage, 'error');
+        return throwError(error);
+      }),
+      tap(() => {
+        this._serversService.clearServerSpinner(server);
+        this._showFormMessage(this.textContent.deleteSuccessMessage, 'success');
+      })
+    );
+  }
+
+  /**
+   * Show the form message template
+   * @param message message to show
+   * @param type type of message, can be error or success
+   */
+  private _showFormMessage(message: string, type: string): void {
+    this.formType = type;
+    this._formMessage.showMessage(message);
   }
 }

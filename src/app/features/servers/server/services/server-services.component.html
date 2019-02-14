@@ -6,85 +6,86 @@
         <h2>{{ textContent.title }}</h2>
       </ng-container>
       <p>{{ textContent.description }}</p>
-
+      <p>
+        <mcs-form-message [type]="formType" #formMessage>
+          {{textContent.formMessageDefaultError}}
+        </mcs-form-message>
+      </p>
       <mcs-grid>
         <mcs-data-status [dataStatusFactory]="dataStatusFactory">
           <mcs-data-status-success mcsDataSuccess>
 
             <!-- Status -->
-            <mcs-grid-row>
-              <ng-container *ngIf="updatesDetails$ | async as updatesDetails">
-                <mcs-grid-column sizeLg="8">
-                  <strong>{{textContent.updatesStatusTitleLabel}}</strong>
-                  <mcs-item>
-                    <mcs-icon [key]="updateStatusConfiguration.updatesStatusIcon" size="small"></mcs-icon>
-                    <div>
+            <mcs-grid-row *ngIf="updatesDetails$ | async as updatesDetails">
+              <mcs-grid-column sizeLg="8">
+                <strong>{{textContent.updatesStatusTitleLabel}}</strong>
+                <mcs-item>
+                  <mcs-icon [key]="updateStatusConfiguration.updatesStatusIcon" size="small"></mcs-icon>
+                  <div>
+                    <mcs-item orientation="inline">
+                      <span>{{ updateStatusConfiguration.updatesStatusLabel }}</span>
+                    </mcs-item>
+                    <small read-only display-block *ngIf="updateStatusConfiguration.updateStatusHasNoErrors">
                       <mcs-item orientation="inline">
-                        <span>{{ updateStatusConfiguration.updatesStatusLabel }}</span>
+                        <span> {{ updatesStatusSubtitleLabel }} </span>
+                        <ng-container *ngIf="updateStatusConfiguration.inspectButtonShown">
+                          <a (click)="inspectForAvailableOsUpdates(serverDetails.server)" *mcsAccessControl="['VmPatchManagement']"
+                            [disabled]="inspectNowButtonDisabled(serverDetails.server)">
+                            {{ textContent.updatesAnalysisLabel }}
+                          </a>
+                        </ng-container>
                       </mcs-item>
-                      <small read-only display-block *ngIf="updateStatusConfiguration.updateStatusHasNoErrors">
-                        <mcs-item orientation="inline">
-                          <span> {{ updatesStatusSubtitleLabel }} </span>
-                          <ng-container *ngIf="updateStatusConfiguration.inspectButtonShown">
-                            <a (click)="inspectForAvailableOsUpdates(serverDetails.server)" *mcsAccessControl="['VmPatchManagement']"
-                              [disabled]="inspectNowButtonDisabled(serverDetails.server)">
-                              {{ textContent.updatesAnalysisLabel }}
-                            </a>
-                          </ng-container>
-                        </mcs-item>
-                      </small>
-                    </div>
-                  </mcs-item>
-                </mcs-grid-column>
+                    </small>
+                  </div>
+                </mcs-item>
+              </mcs-grid-column>
 
-                <mcs-grid-column mcsAlignContent="middle-right">
-                  <ng-container *ngIf="updateStatusConfiguration.runNowButtonShown">
-                    <button mcsButton size="xsmall" (click)="setViewMode(serverServicesViewOption.Unscheduled)"
-                      *mcsAccessControl="['VmPatchManagement']" [disabled]="serverDetails.server.isProcessing">
-                      {{ textContent.updatesScheduleRunNowLink }}
-                    </button>
-                  </ng-container>
-                </mcs-grid-column>
-              </ng-container>
+              <mcs-grid-column mcsAlignContent="middle-right">
+                <ng-container *ngIf="updateStatusConfiguration.runNowButtonShown">
+                  <button mcsButton size="xsmall" (click)="setViewMode(serverServicesViewOption.Unscheduled)"
+                    *mcsAccessControl="['VmPatchManagement']" [disabled]="serverDetails.server.isProcessing">
+                    {{ textContent.updatesScheduleRunNowLink }}
+                  </button>
+                </ng-container>
+              </mcs-grid-column>
             </mcs-grid-row>
 
             <!-- Schedule/Jobs -->
-            <mcs-grid-row>
+            <mcs-grid-row *ngIf="updatesDetails$ | async as updatesDetails">
               <mcs-grid-column>
+
                 <strong>{{textContent.updatesScheduleTitleLabel}}</strong>
-                <ng-container *ngIf="updatesDetails$ | async as updatesDetails">
-                  <mcs-item>
-                    <mcs-icon [key]="clockKey" size="small"></mcs-icon>
-                    <div>
-                      <span>{{ updatesScheduleLabel }}</span>
-                      <small read-only display-block *ngIf="updateStatusConfiguration.updateStatusHasNoErrors">
-                        <mcs-item orientation="inline">
+                <mcs-item>
+                  <mcs-icon [key]="clockKey" size="small"></mcs-icon>
+                  <div>
+                    <span>{{ updatesScheduleLabel }}</span>
+                    <small read-only display-block *ngIf="updateStatusConfiguration.updateStatusHasNoErrors">
+                      <mcs-item orientation="inline">
 
-                          <span *ngIf="updateStatusConfiguration.hasSchedule">
-                            {{ updateStatusConfiguration.updatesScheduleSubtitleLabel }}
-                          </span>
-                          <span [mcsTooltip]="updateStatusConfiguration.updatesScheduleConfigureHoverLabel"
-                            [mcsTooltipShow]="updateStatusConfiguration.configureScheduleButtonDisabled">
-                            <ng-container *ngIf="updateStatusConfiguration.updateStatusHasNoErrors">
-                              <a *mcsAccessControl="['VmPatchManagement']" (click)="setViewMode(serverServicesViewOption.Scheduled)"
-                                [disabled]="configureButtonDisabled(serverDetails.server)">
-                                {{ textContent.updatesScheduleConfigureLink }}
-                              </a>
-                            </ng-container>
-                          </span>
-                        </mcs-item>
-                      </small>
-                    </div>
-                  </mcs-item>
-                  <mcs-item *ngIf="updateStatusConfiguration.updatesScheduleRunOnceWarningLabelShown">
-                    <mcs-data-status-warning margin-left-large>
-                      <small>
-                        {{ textContent.updatesScheduleRunOnceWarningLabel }}
-                      </small>
-                    </mcs-data-status-warning>
-                  </mcs-item>
+                        <span *ngIf="updateStatusConfiguration.hasSchedule">
+                          {{ updateStatusConfiguration.updatesScheduleSubtitleLabel }}
+                        </span>
+                        <span [mcsTooltip]="updateStatusConfiguration.updatesScheduleConfigureHoverLabel"
+                          [mcsTooltipShow]="updateStatusConfiguration.configureScheduleButtonDisabled">
+                          <ng-container *ngIf="updateStatusConfiguration.updateStatusHasNoErrors">
+                            <a *mcsAccessControl="['VmPatchManagement']" (click)="setViewMode(serverServicesViewOption.Scheduled)"
+                              [disabled]="configureButtonDisabled(serverDetails.server)">
+                              {{ textContent.updatesScheduleConfigureLink }}
+                            </a>
+                          </ng-container>
+                        </span>
+                      </mcs-item>
+                    </small>
+                  </div>
+                </mcs-item>
+                <mcs-item *ngIf="updateStatusConfiguration.updatesScheduleRunOnceWarningLabelShown">
+                  <mcs-data-status-warning margin-left-large>
+                    <small>
+                      {{ textContent.updatesScheduleRunOnceWarningLabel }}
+                    </small>
+                  </mcs-data-status-warning>
+                </mcs-item>
 
-                </ng-container>
               </mcs-grid-column>
             </mcs-grid-row>
           </mcs-data-status-success>
@@ -104,14 +105,15 @@
     <ng-container *ngIf="updatesDetails$ | async as updatesDetails">
       <!-- Unscheduled / Run Now / Update Now -->
       <ng-container [@fadeIn] *ngSwitchCase="serverServicesViewOption.Unscheduled">
-        <mcs-server-os-updates-schedule-unscheduled [selectedServer]="serverDetails.server" (serverServicesViewChange)="onServerServicesViewChange($event)">
+        <mcs-server-os-updates-schedule-unscheduled [selectedServer]="serverDetails.server" (applyUpdates)="onApplyUpdates($event)">
           <ng-container mcsViewServicesTab *ngTemplateOutlet="servicesTabView"></ng-container>
         </mcs-server-os-updates-schedule-unscheduled>
       </ng-container>
 
       <!-- Scheduled Type Later/RunOnce or Recurring -->
       <ng-container [@fadeIn] *ngSwitchCase="serverServicesViewOption.Scheduled">
-        <mcs-server-os-updates-schedule-scheduled [selectedServer]="serverDetails.server" (serverServicesViewChange)="onServerServicesViewChange($event)">
+        <mcs-server-os-updates-schedule-scheduled [selectedServer]="serverDetails.server" (saveSchedule)="onSaveSchedule($event)"
+          (deleteSchedule)="onDeleteSchedule($event)">
           <ng-container mcsViewServicesTab *ngTemplateOutlet="servicesTabView"></ng-container>
         </mcs-server-os-updates-schedule-scheduled>
       </ng-container>
