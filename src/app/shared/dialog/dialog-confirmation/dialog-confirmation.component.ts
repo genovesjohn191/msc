@@ -64,6 +64,20 @@ export class DialogConfirmationComponent extends McsStatusSettingsBase {
   }
 
   /**
+   * Returns the confirm text label of the dialog
+   */
+  public get confirmText(): string {
+    return this.dialogData.confirmText || 'Confirm';
+  }
+
+  /**
+   * Returns the cancel text label of the dialog
+   */
+  public get cancelText(): string {
+    return this.dialogData.cancelText || 'Cancel';
+  }
+
+  /**
    * Closes the displayed dialog
    */
   public closeDialog(): void {

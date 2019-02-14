@@ -222,7 +222,8 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
       this._showScheduleDialog(
         this.selectedServer,
         this.textContent.updateDialogTitle,
-        this.textContent.updateDialogMessage
+        this.textContent.updateDialogMessage,
+        this.textContent.saveConfirmText,
       ).pipe(
         tap((dialogResult) => {
           if (isNullOrEmpty(dialogResult)) { return of(undefined); }
@@ -251,7 +252,8 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
     if (this.hasSchedule) {
       this._showScheduleDialog(this.selectedServer,
         this.textContent.updateDialogTitle,
-        this.textContent.updateDialogMessage
+        this.textContent.updateDialogMessage,
+        this.textContent.saveConfirmText,
       ).pipe(
         tap((dialogResult) => {
           if (isNullOrEmpty(dialogResult)) { return of(undefined); }
@@ -269,7 +271,8 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
     this._showScheduleDialog(
       this.selectedServer,
       this.textContent.deleteDialogTitle,
-      this.textContent.deleteDialogMessage
+      this.textContent.deleteDialogMessage,
+      this.textContent.deleteConfirmText,
     ).pipe(
       tap((dialogResult) => {
         if (isNullOrEmpty(dialogResult)) { return of(undefined); }
@@ -465,8 +468,19 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
    * @param title title to be displaye on the dialog box
    * @param message message to be displayed on the dialog box
    */
-  private _showScheduleDialog(server: McsServer, title: string, message: string): Observable<any> {
-    let data = { data: server, type: 'warning', title, message } as DialogConfirmation<McsServer>;
+  private _showScheduleDialog(
+    server: McsServer,
+    title: string,
+    message: string,
+    confirmText: string
+  ): Observable<any> {
+
+    let data = {
+      data: server,
+      type: 'warning',
+      title, message,
+      confirmText
+    } as DialogConfirmation<McsServer>;
     let dialogRef = this._dialogService.open(DialogConfirmationComponent, { data, size: 'medium' });
 
     return dialogRef.afterClosed();
