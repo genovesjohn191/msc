@@ -3,10 +3,11 @@ import { McsEnumSerializationBase } from '@app/core';
 
 export enum OrderWorkflowAction {
   Unknown = 0,
+  Incomplete,
   Draft,
-  Approve,
-  Reject,
-  Submit
+  AwaitingApproval,
+  Submitted,
+  Cancelled
 }
 
 /**

@@ -82,7 +82,7 @@
           </mcs-item>
         </ng-container>
         <ng-template #actualPrice>
-          <span>Total Cost: ${{ orderDetails.charges?.monthly || 0 }}</span>
+          <span>Total Cost: ${{ getTotalOrderCost(orderDetails) }}</span>
         </ng-template>
 
         <!-- Order Content -->
@@ -93,10 +93,6 @@
         <mcs-item orientation="separated">
           <span>One-Off</span>
           <span>${{ orderDetails.charges?.oneOff || 0 }}</span>
-        </mcs-item>
-        <mcs-item orientation="separated">
-          <span>Up-Front</span>
-          <span>${{ orderDetails.charges?.upFront || 0 }}</span>
         </mcs-item>
       </mcs-quote-widget>
     </ng-container>

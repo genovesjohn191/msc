@@ -107,6 +107,14 @@ export class ServerCreateComponent implements
   }
 
   /**
+   * Returns the total cos
+   */
+  public getTotalOrderCost(order: McsOrder): number {
+    if (isNullOrEmpty(order)) { return 0; }
+    return order.charges.monthly + order.charges.oneOff;
+  }
+
+  /**
    * Event that emits when navigating away from create server page to other route
    */
   public safeToNavigateAway(): boolean {

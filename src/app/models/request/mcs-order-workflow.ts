@@ -11,10 +11,10 @@ export class McsOrderWorkflow extends McsApiJobRequestBase {
     serializer: OrderWorkflowActionSerialization,
     deserializer: OrderWorkflowActionSerialization
   })
-  public action: OrderWorkflowAction;
+  public state: OrderWorkflowAction;
 
   constructor() {
     super();
-    this.action = undefined;
+    this.state = undefined;
   }
 }

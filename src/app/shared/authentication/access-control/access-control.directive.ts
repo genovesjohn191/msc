@@ -42,16 +42,18 @@ export class AccessControlDirective implements OnChanges {
   public set elseTemplate(templateRef: TemplateRef<any>) { this._elseTemplate = templateRef; }
   private _elseTemplate: TemplateRef<any>;
 
+  private _elseTemplateCreated: boolean = false;
+
   constructor(
     private _accessControlService: McsAccessControlService,
     public templateRef: TemplateRef<any>,
     public viewContainer: ViewContainerRef
   ) { }
 
-  public ngOnChanges() {
-    // We need to put this under onChanges in order
-    // to wait for observable calls to update the DOM
-    this._removeElementByAccessControl();
+  public ngOnChanges(): void {
+    Promise.resolve().then(() => {
+      this._removeElementByAccessControl();
+    });
   }
 
   /**
@@ -60,7 +62,7 @@ export class AccessControlDirective implements OnChanges {
   private _removeElementByAccessControl(): void {
     // Do nothing incase the validateWhen flag is false
     if (!this._validateWhen) {
-      this.viewContainer.createEmbeddedView(this.templateRef);
+      this._createHostTemplateView();
       return;
     }
 
@@ -68,11 +70,40 @@ export class AccessControlDirective implements OnChanges {
       .hasAccess(this._requiredPermission, this._featureFlag);
 
     if (isNullOrEmpty(this._elseTemplate)) {
-      hasAccess ? this.viewContainer.createEmbeddedView(this.templateRef) :
-        this.viewContainer.clear();
+      hasAccess ?
+        this._createHostTemplateView() :
+        this._clearHostTemplateView();
     } else {
-      hasAccess ? this.viewContainer.createEmbeddedView(this.templateRef) :
-        this.viewContainer.createEmbeddedView(this._elseTemplate);
+      hasAccess ?
+        this._createHostTemplateView() :
+        this._createElseTemplateView();
     }
+  }
+
+  /**
+   * Creates the else template view when the feature/permission is not exist
+   */
+  private _createElseTemplateView(): void {
+    this.viewContainer.clear();
+    this.viewContainer.createEmbeddedView(this._elseTemplate);
+    this._elseTemplateCreated = true;
+  }
+
+  /**
+   * Creates the host template of the element view
+   */
+  private _createHostTemplateView(): void {
+    let templateViewFound = this.viewContainer.get(0);
+    if (!isNullOrEmpty(templateViewFound) && !this._elseTemplateCreated) { return; }
+
+    this.viewContainer.createEmbeddedView(this.templateRef);
+    this._elseTemplateCreated = false;
+  }
+
+  /**
+   * Clears the element from the DOM
+   */
+  private _clearHostTemplateView(): void {
+    this.viewContainer.clear();
   }
 }

@@ -8,19 +8,26 @@ import {
   throwError,
   Observable
 } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import {
+  catchError,
+  tap
+} from 'rxjs/operators';
 import {
   McsTextContentProvider,
-  McsDataStatusFactory
+  McsDataStatusFactory,
+  CoreRoutes
 } from '@app/core';
 import { isNullOrEmpty } from '@app/utilities';
 import {
   McsOrder,
-  McsOrderItemType
+  McsOrderItemType,
+  OrderWorkflowAction,
+  RouteKey
 } from '@app/models';
 import { McsOrderItemTypesRepository } from '@app/services';
 import { ServerOrderDetail } from './server-order-detail';
 import { ServerCreateFlyweightContext } from '../server-create-flyweight.context';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'mcs-server-create-confirm',
@@ -30,38 +37,52 @@ import { ServerCreateFlyweightContext } from '../server-create-flyweight.context
 export class ServerCreateConfirmComponent implements OnInit {
   public textContent: any;
   public order$: Observable<McsOrder>;
-  public createOrderWorkflow = this._createOrderWorkflow.bind(this);
+  public createOrderWorkflow: () => Observable<McsOrder>;
 
   @Input()
   public order: McsOrder;
+
+  public itemTypesStatusFactory: McsDataStatusFactory<McsOrderItemType[]>;
+  public orderDataSource: ServerOrderDetail[];
+  public dataColumns: string[] = [];
 
   // Model binding (should be enum type)
   public selectedTerm: number = 0;
   public selectedEntity: number = 0;
   public selectedSite: number = 0;
   public selectedCost: number = 0;
-  public selectedAction: number = 0;
   public selectedServer: number = 0;
 
-  public itemTypesStatusFactory: McsDataStatusFactory<McsOrderItemType[]>;
-  public orderDataSource: ServerOrderDetail[];
-  public dataColumns: string[] = [];
+  public get selectedAction(): OrderWorkflowAction { return this._selectedAction; }
+  public set selectedAction(value: OrderWorkflowAction) {
+    this._selectedAction = value;
+    this.createOrderWorkflow = this._orderWorkFlowMap.get(this._selectedAction);
+  }
+  private _selectedAction: OrderWorkflowAction;
+  private _orderWorkFlowMap: Map<OrderWorkflowAction, () => Observable<McsOrder>>;
 
   constructor(
+    private _router: Router,
     private _textContentProvider: McsTextContentProvider,
     private _changeDetectorRef: ChangeDetectorRef,
     private _orderItemTypesRepository: McsOrderItemTypesRepository,
     private _serverCreateFlyweightContext: ServerCreateFlyweightContext
   ) {
+    this._orderWorkFlowMap = new Map();
     this.orderDataSource = new Array();
     this.itemTypesStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
   }
 
   public ngOnInit() {
     this.textContent = this._textContentProvider.content.servers.createServer.serverConfirmStep;
+    this._createOrderWorkFlowMap();
     this._getItemTypes();
     this._subscribeToOrderChanges();
     this._setDataColumns();
+  }
+
+  public get orderWorkFlowEnum(): any {
+    return OrderWorkflowAction;
   }
 
   /**
@@ -96,10 +117,19 @@ export class ServerCreateConfirmComponent implements OnInit {
     this.order$ = this._serverCreateFlyweightContext.orderChanges;
   }
 
-  /**
-   * Creates the order workflow based on the order contents
-   */
-  private _createOrderWorkflow(): Observable<McsOrder> {
-    return this._serverCreateFlyweightContext.createOrderWorkflow();
+  private _createOrderWorkFlowMap(): void {
+    this._orderWorkFlowMap.set(OrderWorkflowAction.Submitted, this._createOrderSubmit.bind(this));
+    this._orderWorkFlowMap.set(OrderWorkflowAction.Draft, this._createOrderDraft.bind(this));
+  }
+
+  private _createOrderSubmit(): Observable<McsOrder> {
+    return this._serverCreateFlyweightContext
+      .createOrderWorkflow(OrderWorkflowAction.Submitted);
+  }
+
+  private _createOrderDraft(): Observable<McsOrder> {
+    return this._serverCreateFlyweightContext.createOrderWorkflow(OrderWorkflowAction.Draft).pipe(
+      tap(() => this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.Orders)]))
+    );
   }
 }

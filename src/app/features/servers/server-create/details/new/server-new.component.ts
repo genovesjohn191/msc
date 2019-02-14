@@ -39,7 +39,6 @@ import {
 import {
   CatalogItemType,
   ServiceType,
-  ServerImageType,
   UnitType,
   McsResource,
   McsResourceStorage,
@@ -47,7 +46,9 @@ import {
   McsServerCreate,
   McsServerCreateStorage,
   McsServerCreateNic,
-  McsServerOperatingSystem
+  McsServerOperatingSystem,
+  McsServerCreateOs,
+  OsType
 } from '@app/models';
 import {
   McsServersOsRepository,
@@ -233,6 +234,17 @@ export class ServerNewComponent
     serverCreate.name = this.fcServerName.value;
     serverCreate.target = getSafeProperty(this.fcVApp, (obj) => obj.value.name);
 
+    // Os
+    let selectedImage = this.fcImage.value;
+    serverCreate.os = new McsServerCreateOs();
+    if (selectedImage instanceof McsServerOperatingSystem) {
+      serverCreate.os.name = selectedImage.name;
+      serverCreate.os.type = OsType.Image;
+    } else {
+      serverCreate.os.name = selectedImage.itemName;
+      serverCreate.os.type = OsType.Template;
+    }
+
     // Scale
     let serverScale = this.fcScale.value as ServerManageScale;
     serverCreate.cpuCount = serverScale.cpuCount;
@@ -251,15 +263,6 @@ export class ServerNewComponent
     serverCreate.network.ipAllocationMode = serverNetwork.ipAllocationMode;
     serverCreate.network.ipAddress = serverNetwork.customIpAddress;
 
-    // VM Image
-    let selectedImage = this.fcImage.value;
-    if (selectedImage instanceof McsServerOperatingSystem) {
-      serverCreate.image = selectedImage.name;
-      serverCreate.imageType = ServerImageType.Os;
-    } else {
-      serverCreate.image = selectedImage.itemName;
-      serverCreate.imageType = ServerImageType.Template;
-    }
     return serverCreate;
   }
 

@@ -1,4 +1,7 @@
-import { Injectable } from '@angular/core';
+import {
+  Injectable,
+  NgZone
+} from '@angular/core';
 import {
   Subject,
   BehaviorSubject,
@@ -8,7 +11,8 @@ import {
 import {
   takeUntil,
   finalize,
-  map
+  map,
+  take
 } from 'rxjs/operators';
 import {
   StompRService,
@@ -69,6 +73,7 @@ export class McsNotificationJobService implements McsDisposable {
   }
 
   constructor(
+    private _ngZone: NgZone,
     private _eventDispatcher: EventBusDispatcherService,
     private _apiService: McsApiService,
     private _loggerService: McsLoggerService,
@@ -148,7 +153,10 @@ export class McsNotificationJobService implements McsDisposable {
    */
   private _onStompConnected(): void {
     try {
-      Promise.resolve().then(() => {
+      this._ngZone.onStable.pipe(
+        take(1),
+        takeUntil(this._destroySubject)
+      ).subscribe(() => {
         this._loggerService.trace(`Web stomp connected.`);
 
         unsubscribeSafely(this._stompSubscription);

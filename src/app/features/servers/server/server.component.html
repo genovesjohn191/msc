@@ -111,19 +111,22 @@
         </ng-container>
 
         <!-- Storage Tab -->
-        <mcs-tab [label]="textContent.storage.label" id="storage"
-          *mcsAccessControl="[]; feature: 'EnableDedicatedVmStorageView';
-          validateWhen: selectedServer.isDedicated"></mcs-tab>
+        <ng-container *mcsAccessControl="[]; feature: 'EnableDedicatedVmStorageView';
+          validateWhen: selectedServer.isDedicated">
+          <mcs-tab [label]="textContent.storage.label" id="storage"></mcs-tab>
+        </ng-container>
 
         <!-- Snapshots Tab -->
-        <mcs-tab label="Snapshots" id="snapshots"
-          *mcsAccessControl="[]; feature: 'EnableDedicatedVmSnapshotView';
-          validateWhen: selectedServer.isDedicated"></mcs-tab>
+        <ng-container *mcsAccessControl="[]; feature: 'EnableDedicatedVmSnapshotView';
+          validateWhen: selectedServer.isDedicated">
+          <mcs-tab label="Snapshots" id="snapshots"></mcs-tab>
+        </ng-container>
 
         <!-- Networks Tab -->
-        <mcs-tab [label]="textContent.nics.label" id="nics"
-          *mcsAccessControl="[]; feature: 'EnableDedicatedVmNicView';
-          validateWhen: selectedServer.isDedicated"></mcs-tab>
+        <ng-container *mcsAccessControl="[]; feature: 'EnableDedicatedVmNicView';
+          validateWhen: selectedServer.isDedicated">
+          <mcs-tab [label]="textContent.nics.label" id="nics"></mcs-tab>
+        </ng-container>
 
         <!-- Action tab -->
         <mcs-tab [canSelect]="false" align="end"

@@ -79,6 +79,8 @@ export class ListPanelComponent implements AfterContentInit, OnDestroy {
    * @param option Option to be selected
    */
   private _selectSingleOption(option: OptionComponent): void {
+    if (isNullOrEmpty(option)) { return; }
+
     this._clearSelectedOptions();
     option.select();
   }
