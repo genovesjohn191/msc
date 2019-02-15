@@ -49,7 +49,8 @@ import {
   McsServer,
   McsResource,
   McsResourceCompute,
-  McsResourceCatalogItem
+  McsResourceCatalogItem,
+  McsServerThumbnail
 } from '@app/models';
 import {
   DetachMediaDialogComponent,
@@ -353,9 +354,16 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
    */
   private _getServerThumbnail(server: McsServer): void {
     this.serverThumbnail$ = this._serversRepository.getServerThumbnail(server.id).pipe(
-      map((thumbnailDetails) =>
-        getEncodedUrl(thumbnailDetails.file, thumbnailDetails.fileType, thumbnailDetails.encoding)
-      )
+      map((thumbnailDetails) => {
+        if (isNullOrEmpty(thumbnailDetails)) {
+          thumbnailDetails = new McsServerThumbnail();
+        }
+        return getEncodedUrl(
+          thumbnailDetails.file,
+          thumbnailDetails.fileType,
+          thumbnailDetails.encoding
+        );
+      })
     );
   }
 

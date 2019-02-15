@@ -13,7 +13,7 @@ export function isNullOrEmpty<T>(data: T): boolean {
   // Return object in case it is null / undefined already
   if (data === null || data === undefined) { return true; }
   if (data instanceof Array) {
-    let actualArrayData = data.filter((record) => !!record);
+    let actualArrayData = data.filter((record) => !isNullOrUndefined(record));
     return !(actualArrayData ? actualArrayData.length > 0 : false);
   } else {
     return !data;
