@@ -1,16 +1,19 @@
 <ng-container *ngIf="serverDetails$ | async as serverDetails">
   <ng-container [ngSwitch]="serverServicesView">
+
     <!-- Default View -->
     <mcs-presentation-panel [@fadeIn] *ngSwitchCase="serverServicesViewOption.Default">
       <ng-container mcsPresentationPanelHeader>
         <h2>{{ textContent.title }}</h2>
       </ng-container>
       <p>{{ textContent.description }}</p>
+
       <p>
         <mcs-form-message [type]="formType" #formMessage>
           {{textContent.formMessageDefaultError}}
         </mcs-form-message>
       </p>
+
       <mcs-grid>
         <mcs-data-status [dataStatusFactory]="dataStatusFactory">
           <mcs-data-status-success mcsDataSuccess>

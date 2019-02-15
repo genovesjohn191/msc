@@ -32,6 +32,35 @@ describe('OBJECT Functions', () => {
       expect(isEmpty).toBeTruthy();
     });
 
+    it('should return true if the Array object has only undefined content', () => {
+      let arrayObject: string[] = new Array();
+      arrayObject.push(undefined);
+      let isEmpty = isNullOrEmpty(arrayObject);
+      expect(isEmpty).toBeTruthy();
+    });
+
+    it('should return true if the Array object has only null contents', () => {
+      let arrayObject: string[] = new Array();
+      arrayObject.push(null);
+      arrayObject.push(undefined);
+      let isEmpty = isNullOrEmpty(arrayObject);
+      expect(isEmpty).toBeTruthy();
+    });
+
+    it('should return false if the Array object has only 0 content', () => {
+      let arrayObject: number[] = new Array();
+      arrayObject.push(0);
+      let isEmpty = isNullOrEmpty(arrayObject);
+      expect(isEmpty).toBeFalsy();
+    });
+
+    it('should return false if the Array object has only empty string content', () => {
+      let arrayObject: string[] = new Array();
+      arrayObject.push('');
+      let isEmpty = isNullOrEmpty(arrayObject);
+      expect(isEmpty).toBeFalsy();
+    });
+
     it('should return true if the String object is empty', () => {
       let stringObject: string = '';
       let isEmpty = isNullOrEmpty(stringObject);

@@ -3,11 +3,11 @@
     <h2>{{ textContent.snapshotHeader }}</h2>
   </ng-container>
 
-  <!-- Form Message Handler -->
-  <mcs-form-message type="error" #formMessage>
-    <!-- TODO: Set this into default error message of form-message -->
-    {{textContent.formMessageDefaultError}}
-  </mcs-form-message>
+  <p>
+    <mcs-form-message type="error" #formMessage>
+      {{ textContent.formMessageDefaultError }}
+    </mcs-form-message>
+  </p>
 
   <mcs-grid>
     <mcs-grid-row>
