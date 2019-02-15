@@ -81,7 +81,8 @@ export class FormMessageComponent implements OnInit, OnDestroy, FormMessage {
    */
   public showMessage(...messages: string[]): void {
     this.messages$ = of(messages);
-    this.hasCustomMessage = !isNullOrEmpty(messages) && messages.length > 1;
+    // TODO : Add check for list of errors
+    this.hasCustomMessage = !isNullOrEmpty(messages);
     this.hidden = false;
 
     Promise.resolve().then(() => {
