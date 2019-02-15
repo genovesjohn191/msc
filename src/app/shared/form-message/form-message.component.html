@@ -2,7 +2,8 @@
   <ng-container *ngIf="hasCustomMessage; else contentTemplate">
     <ng-container *ngFor="let message of messages$ | async">
       <div class="form-field-inline">
-        <mcs-icon [key]="bulletIconKey" size="xxsmall"></mcs-icon>
+        <!-- TODO : Add bullet for list of errors -->
+        <!-- <mcs-icon [key]="bulletIconKey" size="xxsmall"></mcs-icon> -->
         <span>{{ message }}</span>
       </div>
     </ng-container>
