@@ -1,6 +1,7 @@
 @import "../../../styles/shared/base";
 
-$item-offset: 8px;
+$item-inline-offset: 8px;
+$item-block-offset: 5px;
 $items-iterval: 6px;
 
 .item-wrapper {
@@ -12,12 +13,12 @@ $items-iterval: 6px;
 
   &.item-inline {
     @include align-items(center);
-    @include set-items-interval($item-offset, horizontal);
+    @include set-items-interval($item-inline-offset, horizontal);
   }
 
   &.item-block {
     @include display-flex(column);
-    @include set-items-interval($item-offset, vertical);
+    @include set-items-interval($item-block-offset, vertical);
   }
 
   &.item-separated {

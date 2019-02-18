@@ -12,7 +12,7 @@ import { McsUniqueId } from '@app/core';
   selector: '[mcsResponsivePanelItem]',
   host: {
     'class': 'responsive-panel-item-wrapper',
-    '[class.active]': 'active',
+    '[class.active]': 'selected',
     '[class.selectable]': 'selectable',
     '(click)': 'onClick()',
     '[attr.id]': 'id'
@@ -20,10 +20,13 @@ import { McsUniqueId } from '@app/core';
 })
 
 export class ResponsivePanelItemDirective {
+  public selected: boolean;
+
   /**
    * Event that emits when selection is changed
    */
-  public selectionChange: EventEmitter<any>;
+  public selectionChange: EventEmitter<ResponsivePanelItemDirective>;
+  public clickChange = new EventEmitter<ResponsivePanelItemDirective>();
 
   @Input()
   public id: string = McsUniqueId.NewId('responsive-panel-item');
@@ -35,25 +38,9 @@ export class ResponsivePanelItemDirective {
   }
   private _selectable: boolean = false;
 
-  /**
-   * Tab header item flag to determine if the tab is selected
-   */
-  @Input()
-  public get active(): boolean { return this._active; }
-  public set active(value: boolean) {
-    if (this._active !== value) {
-      this._active = coerceBoolean(value);
-      if (this._active) {
-        this.selectionChange.next(this);
-      }
-      this.changeDetectorRef.markForCheck();
-    }
-  }
-  private _active: boolean;
-
   constructor(
     private _elementRef: ElementRef,
-    public changeDetectorRef: ChangeDetectorRef
+    private _changeDetectorRef: ChangeDetectorRef
   ) {
     this.selectionChange = new EventEmitter();
   }
@@ -69,6 +56,22 @@ export class ResponsivePanelItemDirective {
    * Event that triggers when the component is clicked
    */
   public onClick(): void {
-    this.selectionChange.next(this);
+    this.clickChange.next(this);
+  }
+
+  /**
+   * Selects the responsive panel item
+   */
+  public select(): void {
+    this.selected = true;
+    this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Deselects the responsive panel item
+   */
+  public deselect(): void {
+    this.selected = false;
+    this._changeDetectorRef.markForCheck();
   }
 }

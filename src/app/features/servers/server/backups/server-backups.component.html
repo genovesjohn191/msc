@@ -3,94 +3,93 @@
     <h2>{{ textContent.snapshotHeader }}</h2>
   </ng-container>
 
-  <p>
-    <mcs-form-message type="error" #formMessage>
-      {{ textContent.formMessageDefaultError }}
-    </mcs-form-message>
-  </p>
+  <mcs-section>
+    <mcs-form-message #formMessage></mcs-form-message>
 
-  <mcs-grid>
-    <mcs-grid-row>
-      <mcs-grid-column>
-        <p [innerHTML]="textContent.snapshotDescription | mcsNewLines"></p>
-      </mcs-grid-column>
+    <mcs-grid>
+      <mcs-grid-row>
+        <mcs-grid-column>
+          <p [innerHTML]="textContent.snapshotDescription | mcsNewLines"></p>
+        </mcs-grid-column>
 
-      <mcs-grid-column mcsAlignContent="top-right">
-        <div>
-          <button mcsButton
-            size="small" arrow="right"
-            [disabled]="!enabledActions(serverDetails.server)"
-            (click)="createSnapshot(serverDetails.server, serverDetails.resource)"
-            mcsId
-            mcsEventTracker="create-snapshot"
-            mcsEventCategory="server"
-            mcsEventLabel="server-details-page">
-            {{ textContent.createSnapshot }}
-          </button>
-        </div>
-      </mcs-grid-column>
-    </mcs-grid-row>
-  </mcs-grid>
+        <mcs-grid-column mcsAlignContent="top-right">
+          <div>
+            <button mcsButton
+              size="small" arrow="right"
+              [disabled]="!enabledActions(serverDetails.server)"
+              (click)="createSnapshot(serverDetails.server, serverDetails.resource)"
+              mcsId
+              mcsEventTracker="create-snapshot"
+              mcsEventCategory="server"
+              mcsEventLabel="server-details-page">
+              {{ textContent.createSnapshot }}
+            </button>
+          </div>
+        </mcs-grid-column>
+      </mcs-grid-row>
+    </mcs-grid>
 
-  <strong>{{ textContent.snapshots }}</strong>
+    <!-- Snapshots -->
+    <mcs-item orientation="block">
+      <strong>{{ textContent.snapshots }}</strong>
+      <mcs-data-status [dataStatusFactory]="dataStatusFactory">
+        <mcs-data-status-success mcsDataSuccess>
+          <ng-container *ngIf="!capturingSnapshot; else capturingSnapshotTemplate">
+            <mcs-grid *ngIf="snapshot$ | async as snapshot">
+              <mcs-grid-row>
+                <mcs-grid-column>
+                  <mcs-item>
+                    <mcs-loader *ngIf="snapshotProcessing" size="small"
+                      [mcsTooltip]="serverDetails.server.processingText"></mcs-loader>
+                    <span>{{ snapshot.createdOn | mcsStdDateFormat }}</span>
+                    <span read-only>{{ snapshot.sizeMB | mcsDataSize: 'MB' }}</span>
+                  </mcs-item>
+                </mcs-grid-column>
 
-  <!-- Snapshots -->
-  <mcs-data-status [dataStatusFactory]="dataStatusFactory">
-    <mcs-data-status-success mcsDataSuccess>
-      <ng-container *ngIf="!capturingSnapshot; else capturingSnapshotTemplate">
-        <mcs-grid *ngIf="snapshot$ | async as snapshot">
-          <mcs-grid-row>
-            <mcs-grid-column>
-              <mcs-item>
-                <mcs-loader *ngIf="snapshotProcessing" size="small"
-                  [mcsTooltip]="serverDetails.server.processingText"></mcs-loader>
-                <span>{{ snapshot.createdOn | mcsStdDateFormat }}</span>
-                <span read-only>{{ snapshot.sizeMB | mcsDataSize: 'MB' }}</span>
-              </mcs-item>
-            </mcs-grid-column>
+                <mcs-grid-column mcsAlignContent="middle-right">
+                  <mcs-item [disabled]="!enabledActions(serverDetails.server)">
+                    <a (click)="restoreSnapshot(serverDetails.server, snapshot)"
+                      mcsId
+                      mcsEventTracker="restore-snapshot"
+                      mcsEventCategory="server"
+                      mcsEventLabel="server-details-page">
+                      {{ textContent.restoreSnapshot }}
+                    </a>
+                    <a (click)="deleteSnapshot(serverDetails.server, snapshot)"
+                      mcsId
+                      mcsEventTracker="delete-snapshot"
+                      mcsEventCategory="server"
+                      mcsEventLabel="server-details-page">
+                      {{ textContent.deleteSnapshot }}
+                    </a>
+                  </mcs-item>
+                </mcs-grid-column>
+              </mcs-grid-row>
+            </mcs-grid>
+          </ng-container>
 
-            <mcs-grid-column mcsAlignContent="middle-right">
-              <mcs-item [disabled]="!enabledActions(serverDetails.server)">
-                <a (click)="restoreSnapshot(serverDetails.server, snapshot)"
-                  mcsId
-                  mcsEventTracker="restore-snapshot"
-                  mcsEventCategory="server"
-                  mcsEventLabel="server-details-page">
-                  {{ textContent.restoreSnapshot }}
-                </a>
-                <a (click)="deleteSnapshot(serverDetails.server, snapshot)"
-                  mcsId
-                  mcsEventTracker="delete-snapshot"
-                  mcsEventCategory="server"
-                  mcsEventLabel="server-details-page">
-                  {{ textContent.deleteSnapshot }}
-                </a>
-              </mcs-item>
-            </mcs-grid-column>
-          </mcs-grid-row>
-        </mcs-grid>
-      </ng-container>
+          <ng-template #capturingSnapshotTemplate>
+            <mcs-item>
+              <mcs-loader size="small" [mcsTooltip]="serverDetails.server.processingText"></mcs-loader>
+              <span>{{ textContent.creatingSnapshot }}</span>
+            </mcs-item>
+          </ng-template>
+        </mcs-data-status-success>
 
-      <ng-template #capturingSnapshotTemplate>
-        <mcs-item>
-          <mcs-loader size="small" [mcsTooltip]="serverDetails.server.processingText"></mcs-loader>
-          <span>{{ textContent.creatingSnapshot }}</span>
-        </mcs-item>
-      </ng-template>
-    </mcs-data-status-success>
+        <mcs-data-status-in-progress mcsDataInProgress>
+          <span>{{ textContent.loadingContent }}</span>
+        </mcs-data-status-in-progress>
 
-    <mcs-data-status-in-progress mcsDataInProgress>
-      <span>{{ textContent.loadingContent }}</span>
-    </mcs-data-status-in-progress>
+        <mcs-data-status-empty mcsDataEmpty>
+          <span>{{ textContent.noSnapshots }}</span>
+        </mcs-data-status-empty>
 
-    <mcs-data-status-empty mcsDataEmpty>
-      <span>{{ textContent.noSnapshots }}</span>
-    </mcs-data-status-empty>
-
-    <mcs-data-status-error mcsDataError>
-      <span>{{ textContent.errorGettingSnapshots }}</span>
-    </mcs-data-status-error>
-  </mcs-data-status>
+        <mcs-data-status-error mcsDataError>
+          <span>{{ textContent.errorGettingSnapshots }}</span>
+        </mcs-data-status-error>
+      </mcs-data-status>
+    </mcs-item>
+  </mcs-section>
 </mcs-presentation-panel>
 
 <!-- Server Backups -->

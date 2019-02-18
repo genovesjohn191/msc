@@ -330,21 +330,36 @@
 }
 
 // Set interval to all child(items) vertical or horizontal
+// and eliminate all of the hidden elements
 // Usage:
 // .mcs-textbox {
 //   @include set-items-interval(20);
 // }
 @mixin set-items-interval($value, $orientation: vertical) {
-  @if $orientation == vertical {
-    > * {
-      &:not(:first-child) {
-        margin-top: $value;
+  $interval-breakpoints: (
+    horizontal: left,
+    vertical: top
+  ) !default;
+  $interval-margin-position: map-get($interval-breakpoints, $orientation);
+
+  > * {
+    &:not(:first-child) {
+      margin-#{$interval-margin-position}: $value;
+    }
+
+    @each $screen-breakpoint-key in map-keys($screen-breakpoints) {
+      $screen-breakpoint-value: map-get($screen-breakpoints, $screen-breakpoint-key);
+      &[hidden-#{$screen-breakpoint-key}] {
+        + * {
+          margin-#{$interval-margin-position}: 0;
+        }
       }
     }
-  } @else {
-    > * {
-      &:not(:first-child) {
-        margin-left: $value;
+
+    &[style*="display: none;"],
+    &[class*="hide-element"] {
+      + * {
+        margin-#{$interval-margin-position}: 0;
       }
     }
   }

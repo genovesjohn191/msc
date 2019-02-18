@@ -197,9 +197,12 @@ export class MediaUploadDetailsComponent
       this.selectedResourceId,
       uploadMediaModel
     ).pipe(
-      catchError((_error) => {
-        this._formMessage.showMessage();
-        return throwError(_error);
+      catchError((httpError) => {
+        this._formMessage.showMessage('error', {
+          messages: httpError.errorMessages,
+          fallbackMessage: this.textContent.errors.mediaUploadError
+        });
+        return throwError(httpError);
       }),
       tap(() => {
         this.mediaUploading = true;

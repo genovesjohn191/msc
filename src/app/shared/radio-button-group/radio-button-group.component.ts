@@ -26,12 +26,12 @@ import {
 import { Key } from '@app/models';
 import {
   coerceNumber,
-  isNullOrEmpty,
   unsubscribeSubject,
-  McsOrientationType
+  McsOrientationType,
+  isNullOrUndefined
 } from '@app/utilities';
-import { RadioButtonComponent } from './radio-button/radio-button.component';
 import { McsUniqueId } from '@app/core';
+import { RadioButtonComponent } from './radio-button/radio-button.component';
 
 @Component({
   selector: 'mcs-radio-button-group',
@@ -184,10 +184,10 @@ export class RadioButtonGroupComponent implements AfterContentInit,
    * Selects the element based on the value
    */
   private _selectElementByValue(value: any): void {
-    if (isNullOrEmpty(value)) { return; }
+    if (isNullOrUndefined(value)) { return; }
 
     let radioButtonFound = this._radioButtons.find((radioButton) => radioButton.value === value);
-    if (!isNullOrEmpty(radioButtonFound)) {
+    if (!isNullOrUndefined(radioButtonFound)) {
       radioButtonFound.onClickEvent(null);
     }
   }
@@ -199,17 +199,13 @@ export class RadioButtonGroupComponent implements AfterContentInit,
     // Defer setting the value in order to avoid the "Expression
     // has changed after it was checked" errors from Angular.
     Promise.resolve().then(() => {
-      if (isNullOrEmpty(this.value)) {
-        this._radioButtons.first.onClickEvent(null);
-      } else {
-        let elementByValue = this._radioButtons.find((radio) => {
-          return radio.value === this.value;
-        });
-        if (isNullOrEmpty(elementByValue)) {
-          throw new Error('Specified value could not be found within the group.');
-        }
-        elementByValue.onClickEvent(null);
+      let radioButtonFound = this._radioButtons
+        .find((radioButton) => radioButton.value === this.value);
+
+      if (isNullOrUndefined(radioButtonFound)) {
+        radioButtonFound = this._radioButtons.first;
       }
+      radioButtonFound.onClickEvent(null);
     });
   }
 
@@ -242,7 +238,7 @@ export class RadioButtonGroupComponent implements AfterContentInit,
    * @param item Item to be selected
    */
   private _selectItem(item: RadioButtonComponent) {
-    if (isNullOrEmpty(item)) { return; }
+    if (isNullOrUndefined(item)) { return; }
     this._clearItemSelection(item);
     item.checkRadioButton();
     this.value = item.value;
