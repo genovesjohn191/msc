@@ -1,9 +1,7 @@
 <div class="limited-view">
   <div class="contextual-help-page-wrapper">
     <!-- Form Message -->
-    <mcs-form-message type="error" #formMessage>
-      {{ textContent.errors.mediaUploadError }}
-    </mcs-form-message>
+    <mcs-form-message #formMessage></mcs-form-message>
     <p>{{ textContent.description }}</p>
 
     <form [formGroup]="fgMediaUpload" mcsFormGroup>

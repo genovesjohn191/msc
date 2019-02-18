@@ -31,7 +31,6 @@ import {
 import {
   isNullOrEmpty,
   unsubscribeSubject,
-  getSafeProperty,
   getUniqueRecords
 } from '@app/utilities';
 import {
@@ -45,8 +44,13 @@ import {
   McsServerStorageDevice,
   McsServer,
   McsResource,
-  McsResourceStorage
+  McsResourceStorage,
+  McsApiErrorResponse
 } from '@app/models';
+import {
+  McsServersRepository,
+  McsResourcesRepository
+} from '@app/services';
 import {
   ServerSnapshotDialogContent,
   CreateSnapshotDialogComponent,
@@ -55,10 +59,6 @@ import {
   InsufficientStorageSnapshotDialogComponent,
   DiskConflictSnapshotDialogComponent
 } from '../../shared';
-import {
-  McsServersRepository,
-  McsResourcesRepository
-} from '@app/services';
 import { ServerService } from '../server.service';
 import { ServerDetailsBase } from '../server-details.base';
 import { ServersService } from '../../servers.service';
@@ -158,10 +158,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
         }).pipe(
           catchError((httpError) => {
             this._serversService.clearServerSpinner(server);
-            this._formMessage.showMessage(
-              getSafeProperty(httpError, (obj) =>
-                obj.error.errors.maps((errorContent) => errorContent.message))
-            );
+            this._showErrorMessageByResponse(httpError);
             return throwError(httpError);
           })
         ).subscribe();
@@ -182,10 +179,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
       }).pipe(
         catchError((httpError) => {
           this._serversService.clearServerSpinner(server);
-          this._formMessage.showMessage(
-            getSafeProperty(httpError, (obj) =>
-              obj.error.errors.maps((errorContent) => errorContent.message))
-          );
+          this._showErrorMessageByResponse(httpError);
           return throwError(httpError);
         })
       ).subscribe();
@@ -206,10 +200,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
       }).pipe(
         catchError((httpError) => {
           this._serversService.clearServerSpinner(server);
-          this._formMessage.showMessage(
-            getSafeProperty(httpError, (obj) =>
-              obj.error.errors.maps((errorContent) => errorContent.message))
-          );
+          this._showErrorMessageByResponse(httpError);
           return throwError(httpError);
         })
       ).subscribe();
@@ -402,5 +393,16 @@ export class ServerBackupsComponent extends ServerDetailsBase
     }
 
     return dialogType;
+  }
+
+  /**
+   * Shows the error response message on the form field
+   * @param httpResponse Http error response to be shown
+   */
+  private _showErrorMessageByResponse(httpResponse: McsApiErrorResponse): void {
+    this._formMessage.showMessage('error', {
+      messages: httpResponse.errorMessages,
+      fallbackMessage: this.textContent.formMessageDefaultError
+    });
   }
 }

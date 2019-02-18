@@ -81,7 +81,6 @@ export class ResponsivePanelComponent implements AfterViewInit, AfterViewChecked
 
   private _scrollDistanceChanged: boolean;
   private _destroySubject = new Subject<void>();
-  private _selectedPanelItem: ResponsivePanelItemDirective;
 
   public get chevronRightKey(): string {
     return CoreDefinition.ASSETS_FONT_CHEVRON_RIGHT;
@@ -107,15 +106,15 @@ export class ResponsivePanelComponent implements AfterViewInit, AfterViewChecked
   /**
    * Returns all the combined selection changes event of all the panel items
    */
-  private readonly _itemsSelectionChanged: Observable<ResponsivePanelItemDirective> = defer(() => {
+  private readonly _itemsClickEvents: Observable<ResponsivePanelItemDirective> = defer(() => {
     if (!isNullOrEmpty(this.panelItems)) {
       return merge<ResponsivePanelItemDirective>(
-        ...this.panelItems.map((panelItem) => panelItem.selectionChange)
+        ...this.panelItems.map((panelItem) => panelItem.clickChange)
       );
     }
     return this._ngZone.onStable.asObservable().pipe(
       take(1),
-      switchMap(() => this._itemsSelectionChanged)
+      switchMap(() => this._itemsClickEvents)
     );
   });
 
@@ -133,8 +132,8 @@ export class ResponsivePanelComponent implements AfterViewInit, AfterViewChecked
         .pipe(startWith(null), takeUntil(this._destroySubject))
         .subscribe(() => {
           this._updatePagination();
-          this._subscribeToSelectionChange();
-          this._selectActivePanelItem();
+          this._subscribeToClickEvents();
+          this._initializeSelection();
         });
     });
     this._subscribeToViewportChange();
@@ -242,37 +241,50 @@ export class ResponsivePanelComponent implements AfterViewInit, AfterViewChecked
   }
 
   /**
-   * Select the current active panel item
+   * Listen to selection changed of all the items
    */
-  private _selectActivePanelItem(): void {
-    if (isNullOrEmpty(this._selectedPanelItem)) { return; }
-    this._selectedPanelItem.selectionChange.emit(this._selectedPanelItem);
+  private _subscribeToClickEvents(): void {
+    let resetSubject = merge(this.panelItems.changes, this._destroySubject);
+
+    this._itemsClickEvents.pipe(takeUntil(resetSubject)).subscribe((selectedItem) => {
+      if (isNullOrEmpty(selectedItem)) { return; }
+      this._clearSelectedPanels();
+      this._selectReponsivePanelItem(selectedItem);
+    });
   }
 
   /**
-   * Listen to selection changed of all the items
+   * Initialize responsive panel item selection
    */
-  private _subscribeToSelectionChange(): void {
-    let resetSubject = merge(this.panelItems.changes, this._destroySubject);
+  private _initializeSelection(): void {
+    if (isNullOrEmpty(this.panelItems)) { return; }
+    let selectedItemFound = this.panelItems.find((item) => item.selected);
+    if (!isNullOrEmpty(selectedItemFound)) { return; }
 
-    this._itemsSelectionChanged.pipe(
-      startWith(null),
-      takeUntil(resetSubject)
-    ).subscribe((selectedItem) => {
-      if (isNullOrEmpty(selectedItem)) {
-        selectedItem = this.panelItems.find((panelItem) => panelItem.active);
-      }
-      if (isNullOrEmpty(selectedItem)) { return; }
+    let firstItem = this.panelItems.first;
+    if (!isNullOrEmpty(firstItem)) {
+      firstItem.onClick();
+    }
+  }
 
-      Promise.resolve().then(() => {
-        this._selectedPanelItem = selectedItem;
-        if (this.showPaginationControls) { this._scrollToElement(selectedItem); }
+  /**
+   * Clears the selected panel items
+   */
+  private _clearSelectedPanels(): void {
+    if (isNullOrEmpty(this.panelItems)) { return; }
+    this.panelItems.forEach((panel) => panel.deselect());
+  }
 
-        if (selectedItem.selectable) {
-          this.panelBorderBar.alignToElement(selectedItem.elementRef);
-        }
-      });
-    });
+  /**
+   * Select the responsive panel item
+   */
+  private _selectReponsivePanelItem(selectedPanel: ResponsivePanelItemDirective): void {
+    selectedPanel.select();
+    if (this.showPaginationControls) { this._scrollToElement(selectedPanel); }
+
+    if (selectedPanel.selectable) {
+      this.panelBorderBar.alignToElement(selectedPanel.elementRef);
+    }
   }
 
   /**

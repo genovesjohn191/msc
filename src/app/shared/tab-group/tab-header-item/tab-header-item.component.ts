@@ -6,11 +6,16 @@ import {
   ChangeDetectorRef,
   ViewEncapsulation,
   ChangeDetectionStrategy,
+  ContentChild,
 } from '@angular/core';
 import {
   coerceBoolean,
-  McsAlignmentType
+  McsAlignmentType,
+  isNullOrEmpty
 } from '@app/utilities';
+import {
+  ResponsivePanelItemDirective
+} from '../../responsive-panel/responsive-panel-item/responsive-panel-item.directive';
 
 @Component({
   selector: 'mcs-tab-header-item',
@@ -45,16 +50,28 @@ export class TabHeaderItemComponent {
       this._active = coerceBoolean(value);
       if (this._active) {
         this.selectionChanged.next(this);
+        this._selectResponsivePanel();
       }
       this.changeDetectorRef.markForCheck();
     }
   }
   private _active: boolean;
 
+  @ContentChild(ResponsivePanelItemDirective)
+  private _responsivePanelItem: ResponsivePanelItemDirective;
+
   constructor(
     public elementRef: ElementRef,
     public changeDetectorRef: ChangeDetectorRef
   ) {
     this.selectionChanged = new EventEmitter();
+  }
+
+  /**
+   * Select the corresponding active panel item
+   */
+  private _selectResponsivePanel(): void {
+    if (isNullOrEmpty(this._responsivePanelItem)) { return; }
+    this._responsivePanelItem.onClick();
   }
 }

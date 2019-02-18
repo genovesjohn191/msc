@@ -203,7 +203,7 @@ export class ServerCreateFlyweightContext {
 
       // Create order
       let order = new McsOrderCreate();
-      order.description = 'Managed server details';
+      order.description = 'New Managed Server';
       order.contractDuration = 12;
       order.items = [orderItem];
       serverInstance = this._ordersRepository.createOrder(order);

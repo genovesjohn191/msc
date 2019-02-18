@@ -27,8 +27,12 @@ import {
   EventBusDispatcherService,
   EventBusState
 } from '@app/event-bus';
-import { FormMessage } from './form-message';
+import {
+  FormMessage,
+  FormMessageContent
+} from './form-message';
 import { ComponentHandlerDirective } from '../directives';
+import { FormMessageConfig } from './form-message.config';
 
 @Component({
   selector: 'mcs-form-message',
@@ -44,12 +48,13 @@ import { ComponentHandlerDirective } from '../directives';
 })
 
 export class FormMessageComponent implements OnInit, OnDestroy, FormMessage {
-  @Input()
-  public type: McsStatusType = 'success';
-
   public messages$: Observable<string[]>;
+  public type: McsStatusType;
   public hidden: boolean = true;
-  public hasCustomMessage: boolean = false;
+  public showBullet: boolean = false;
+
+  @Input()
+  public config: FormMessageConfig;
 
   @ViewChild(ComponentHandlerDirective)
   private _alertMessage: ComponentHandlerDirective;
@@ -79,11 +84,15 @@ export class FormMessageComponent implements OnInit, OnDestroy, FormMessage {
   /**
    * Shows the message based on the message strings
    */
-  public showMessage(...messages: string[]): void {
-    this.messages$ = of(messages);
-    // TODO : Add check for list of errors
-    this.hasCustomMessage = !isNullOrEmpty(messages);
+  public showMessage(messageType: McsStatusType, messageContent: FormMessageContent): void {
+    if (isNullOrEmpty(messageContent)) {
+      throw new Error('Form message content is not defined.');
+    }
+
+    // Set form attributes
+    this.type = messageType;
     this.hidden = false;
+    this._setFormMessageContent(messageContent);
 
     Promise.resolve().then(() => {
       if (!isNullOrEmpty(this._alertMessage)) {
@@ -112,5 +121,18 @@ export class FormMessageComponent implements OnInit, OnDestroy, FormMessage {
    */
   private _onRouteChange(): void {
     this.hideMessage();
+  }
+
+  /**
+   * Sets the form message contents
+   * @param messageContent Message content to be set on the form component
+   */
+  private _setFormMessageContent(messageContent: FormMessageContent): void {
+    let formMessages: string[] = !(messageContent.messages instanceof Array) ?
+      [messageContent.messages] : messageContent.messages;
+
+    this.showBullet = !isNullOrEmpty(messageContent.messages) && messageContent.messages.length > 1;
+    this.messages$ = isNullOrEmpty(formMessages) ?
+      of([messageContent.fallbackMessage]) : of(formMessages);
   }
 }

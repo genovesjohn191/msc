@@ -15,11 +15,13 @@ import { catchError } from 'rxjs/operators';
 import {
   isUrlValid,
   isNullOrEmpty,
-  convertMapToJsonObject
+  convertMapToJsonObject,
+  deserializeJsonToObject
 } from '@app/utilities';
 import {
   McsApiRequestParameter,
-  McsCompany
+  McsCompany,
+  McsApiErrorResponse
 } from '@app/models';
 import { CoreConfig } from '../core.config';
 import { CoreDefinition } from '../core.definition';
@@ -163,10 +165,10 @@ export class McsApiService {
    * Handle server error
    * @param httpError HTTP Error Response
    */
-  private _handleServerError(httpError: HttpErrorResponse | any) {
-    // Rethrow to notify outside subscribers that an error occured
+  private _handleServerError(httpError: HttpErrorResponse) {
+    let deserializedError = deserializeJsonToObject(McsApiErrorResponse, httpError.error);
     this._errorResponseStream.next(httpError);
-    return throwError(httpError);
+    return throwError(deserializedError);
   }
 
   /**

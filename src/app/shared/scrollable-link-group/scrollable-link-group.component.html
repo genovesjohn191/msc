@@ -7,7 +7,6 @@
         mcsResponsivePanelItem
         [mcsResponsivePanelItemSelectable]="true"
         mcsRipple
-        [active]="activeLink?.id === scrollableLink.id"
         (click)="onClickLink(scrollableLink)">
 
         <ng-container *ngIf="!scrollableLink.labelTemplate; else labelTemplate">

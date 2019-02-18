@@ -105,11 +105,11 @@ export class RadioButtonComponent implements AfterContentInit {
 
   /**
    * Event that emits when checkbox is clicked
-   * @param _event Event that emitted
+   * @param event Event that emitted
    */
-  public onClickEvent(_event: MouseEvent) {
-    if (!isNullOrEmpty(_event)) {
-      _event.stopPropagation();
+  public onClickEvent(event?: MouseEvent) {
+    if (!isNullOrEmpty(event)) {
+      event.stopPropagation();
     }
     this.change.emit(this);
   }

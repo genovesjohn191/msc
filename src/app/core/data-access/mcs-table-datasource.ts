@@ -35,13 +35,13 @@ type DelegateSource<T> = () => Observable<T[]>;
 
 export class McsTableDataSource<T> implements McsDataSource<T> {
   public dataLoadingStream: Subject<DataStatus>;
-  public totalRecordsCount: number;
   public dataStatus: DataStatus;
 
   private _paginator: Paginator;
   private _search: Search;
   private _searchPredicate: (data: T, keyword: string) => boolean;
 
+  private _totalRecordsCount: number;
   private _addedRecordsCache: T[];
   private _datasourceFuncPointer: DelegateSource<T>;
   private _dataRecords = new BehaviorSubject<T[]>(null);
@@ -53,8 +53,8 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
 
   constructor(private _dataSource: McsRepository<T> | T[] | Observable<T[]> | DelegateSource<T>) {
     this.dataLoadingStream = new Subject<DataStatus>();
-    this.totalRecordsCount = 0;
     this._addedRecordsCache = [];
+    this._totalRecordsCount = 0;
 
     this._setDatasourcePointer();
     this._subscribeToRequestChange();
@@ -144,6 +144,13 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
    */
   public get dataRecords(): T[] {
     return this._dataRecords.getValue() || [];
+  }
+
+  /**
+   * Returns the total records count of the data records
+   */
+  public get totalRecordsCount(): number {
+    return Math.max(this._totalRecordsCount, 0);
   }
 
   /**
@@ -369,7 +376,7 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
    * @param records Records to get the count from
    */
   private _setTotalRecordsCountByContext(records: T[]): void {
-    this.totalRecordsCount = this._datasourceIsRepository ?
+    this._totalRecordsCount = this._datasourceIsRepository ?
       (this._dataSource as McsRepository<T>).getTotalRecordsCount() :
       records.length;
   }

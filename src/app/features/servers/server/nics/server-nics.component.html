@@ -172,43 +172,45 @@
 
     <!-- Edit NIC -->
     <mcs-section [@fadeIn] *ngSwitchCase="serverNicMethodTypeEnum.EditNic">
-      <div class="action-box" [disabled]="!serverDetails.server.executable">
-        <mcs-server-manage-network
-          [networks]="resourceNetworks$ | async"
-          [resourceId]="serverDetails.resource?.id"
-          (dataChange)="onNetworkChanged($event)"
-          [targetNic]="selectedNic"
-          [(selectedNetwork)]="selectedNetwork">
+      <ng-container *ngIf="resourceNetworks$ | async resourceNetworks">
+        <div class="action-box" [disabled]="!serverDetails.server.executable">
+          <mcs-server-manage-network
+            [networks]="resourceNetworks"
+            [resourceId]="serverDetails.resource?.id"
+            (dataChange)="onNetworkChanged($event)"
+            [targetNic]="selectedNic"
+            [(selectedNetwork)]="selectedNetwork">
 
-          <ng-container mcsManageNetworkHeader>
-            <h2>{{ textContent.editHeading }} {{ selectedNic.index }}</h2>
-          </ng-container>
+            <ng-container mcsManageNetworkHeader>
+              <h2>{{ textContent.editHeading }} {{ selectedNic.index }}</h2>
+            </ng-container>
 
-          <ng-container mcsManageNetworkWarning>
-            <mcs-data-status-warning>
-              {{ textContent.warningEditingNic }}
-            </mcs-data-status-warning>
-          </ng-container>
-        </mcs-server-manage-network>
+            <ng-container mcsManageNetworkWarning>
+              <mcs-data-status-warning>
+                {{ textContent.warningEditingNic }}
+              </mcs-data-status-warning>
+            </ng-container>
+          </mcs-server-manage-network>
 
-        <div class="action-items">
-          <a (click)="closeEditNicWindow()"
-            mcsId
-            mcsEventTracker="update-nic-close"
-            mcsEventCategory="server"
-            mcsEventLabel="server-details-page">Cancel</a>
-          <button *mcsAccessControl="['VmEdit']"
-            mcsButton arrow="right" size="small"
-            [disabled]="!manageNetwork?.hasChanged"
-            (click)="updateNic(serverDetails.server)"
-            mcsId
-            mcsEventTracker="update-nic"
-            mcsEventCategory="server"
-            mcsEventLabel="server-details-page">
-            {{ textContent.updateButton }}
-          </button>
+          <div class="action-items">
+            <a (click)="closeEditNicWindow()"
+              mcsId
+              mcsEventTracker="update-nic-close"
+              mcsEventCategory="server"
+              mcsEventLabel="server-details-page">Cancel</a>
+            <button *mcsAccessControl="['VmEdit']"
+              mcsButton arrow="right" size="small"
+              [disabled]="!manageNetwork?.hasChanged"
+              (click)="updateNic(serverDetails.server)"
+              mcsId
+              mcsEventTracker="update-nic"
+              mcsEventCategory="server"
+              mcsEventLabel="server-details-page">
+              {{ textContent.updateButton }}
+            </button>
+          </div>
         </div>
-      </div>
+      </ng-container>
     </mcs-section>
   </ng-container>
 </mcs-presentation-panel>

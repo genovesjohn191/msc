@@ -1,19 +1,19 @@
 <mcs-alert [@fadeIn] [type]="type" *mcsComponentHandler>
-  <ng-container *ngIf="hasCustomMessage; else contentTemplate">
-    <ng-container *ngFor="let message of messages$ | async">
-      <div class="form-field-inline">
-        <!-- TODO : Add bullet for list of errors -->
-        <!-- <mcs-icon [key]="bulletIconKey" size="xxsmall"></mcs-icon> -->
-        <span>{{ message }}</span>
-      </div>
-    </ng-container>
+  <ng-container *ngFor="let message of messages$ | async">
+    <mcs-item>
+      <mcs-icon *ngIf="showBullet" [key]="bulletIconKey" size="xxsmall"></mcs-icon>
+      <span>{{ message }}</span>
+    </mcs-item>
   </ng-container>
-  <ng-template #contentTemplate>
-    <span><ng-content></ng-content></span>
-  </ng-template>
 
   <a mcsButton="basic" [color]="type"
     mcsId="form-message-dismiss" mcsAlertAction="dismiss">
-    {{ type === 'error' ? 'DISMISS' : 'OK' }}
+
+    <ng-container *ngIf="config?.confirmText; else defaultCloseMessage">
+      {{ config?.confirmText }}
+    </ng-container>
+    <ng-template #defaultCloseMessage>
+      {{ type === 'error' ? 'DISMISS' : 'OK' }}
+    </ng-template>
   </a>
 </mcs-alert>

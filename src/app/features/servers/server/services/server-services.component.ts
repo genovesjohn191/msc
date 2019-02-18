@@ -71,7 +71,6 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
   public updateStatusConfiguration: OsUpdatesStatusConfiguration;
   public updatesDetails$: Observable<McsServerOsUpdatesDetails>;
   public dataStatusFactory: McsDataStatusFactory<McsServerOsUpdatesDetails>;
-  public formType: string;
 
   @ViewChild('formMessage')
   private _formMessage: FormMessage;
@@ -374,16 +373,21 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
     this._serversService.setServerSpinner(server);
     return this._serversRepository.
       deleteServerOsUpdatesSchedule(server.id).pipe(
-        catchError((error) => {
+        catchError((httpError) => {
           this._serversService.clearServerSpinner(server);
-          this._showFormMessage(this.textContent.updateErrorMessage, 'error');
-          return throwError(error);
+          this._formMessage.showMessage('error', {
+            messages: httpError.errorMessages,
+            fallbackMessage: this.textContent.updateErrorMessage
+          });
+          return throwError(httpError);
         }),
         concatMap(() => {
           return this._serversRepository.updateServerOsUpdatesSchedule(server.id, request).pipe(
             tap(() => {
               this._serversService.clearServerSpinner(server);
-              this._showFormMessage(this.textContent.updateSuccessMessage, 'success');
+              this._formMessage.showMessage('success', {
+                messages: this.textContent.updateSuccessMessage
+              });
             })
           );
         })
@@ -398,25 +402,20 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
 
     this._serversService.setServerSpinner(server);
     return this._serversRepository.deleteServerOsUpdatesSchedule(server.id).pipe(
-      catchError((error) => {
+      catchError((httpError) => {
         this._serversService.clearServerSpinner(server);
-        this._showFormMessage(this.textContent.deleteErrorMessage, 'error');
-        return throwError(error);
+        this._formMessage.showMessage('error', {
+          messages: httpError.errorMessages,
+          fallbackMessage: this.textContent.deleteErrorMessage
+        });
+        return throwError(httpError);
       }),
       tap(() => {
         this._serversService.clearServerSpinner(server);
-        this._showFormMessage(this.textContent.deleteSuccessMessage, 'success');
+        this._formMessage.showMessage('success', {
+          messages: this.textContent.deleteSuccessMessage
+        });
       })
     );
-  }
-
-  /**
-   * Show the form message template
-   * @param message message to show
-   * @param type type of message, can be error or success
-   */
-  private _showFormMessage(message: string, type: string): void {
-    this.formType = type;
-    this._formMessage.showMessage(message);
   }
 }
