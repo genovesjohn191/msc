@@ -7,14 +7,14 @@ import {
   McsServerOsUpdatesDetails,
   osUpdatesScheduleSubtitleLabel,
   OsUpdatesScheduleType,
-  McsCronUtility,
   McsServer
 } from '@app/models';
 import {
   replacePlaceholder,
   isNullOrEmpty,
   formatTime,
-  formatDateTimeZone
+  formatDateTimeZone,
+  parseCronStringToJson
 } from '@app/utilities';
 
 type OsUpdatesStatusDetails = {
@@ -195,7 +195,7 @@ export class OsUpdatesStatusConfiguration {
     this._updatesStatusDetailsMap.set(
       OsUpdatesStatus.Unanalysed,
       {
-        icon: CoreDefinition.ASSETS_SVG_STATE_RESTARTING,
+        icon: CoreDefinition.ASSETS_SVG_STATE_SUSPENDED,
         label: osUpdatesStatusLabel[OsUpdatesStatus.Unanalysed],
         sublabel: osUpdatesStatusSubtitleLabel[OsUpdatesStatus.Unanalysed]
       }
@@ -249,7 +249,7 @@ export class OsUpdatesStatusConfiguration {
    */
   private _buildFormattedScheduleDate() {
     let convertedDaysArray = [];
-    let cronJson = McsCronUtility.parseCronStringToJson(this._updatesDetails.crontab);
+    let cronJson = parseCronStringToJson(this._updatesDetails.crontab);
     cronJson.dayOfWeek.forEach(
       (day) => convertedDaysArray.push(formatTime(day.toString(), 'd', 'ddd'))
     );

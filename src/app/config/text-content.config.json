@@ -394,10 +394,10 @@
         "updatesScheduleRunOnceWarningLabel": "Once this job is complete, you will need to set up a new update schedule.",
         "updatesScheduleConfigureLink": "Configure",
         "updatesScheduleRunNowLink": "Update Now",
-        "deleteSuccessMessage": "Schedule was successfully deleted!",
-        "deleteErrorMessage": "Failed in deleting the existing schedule!",
-        "updateSuccessMessage": "Schedule was successfully saved!",
-        "updateErrorMessage": "Failed in saving the schedule!",
+        "deleteSuccessMessage": "Schedule deleted",
+        "deleteErrorMessage": "Schedule could not be deleted at this time",
+        "updateSuccessMessage": "Schedule saved",
+        "updateErrorMessage": "Schedule could not be saved at this time",
         "unscheduled": {
           "loading": "Loading server os updates.",
           "title": "Apply Updates",
@@ -422,6 +422,10 @@
             "recurring": "Recurring"
           },
           "scheduleTimeLabel": "Schedule:",
+          "daysPlaceholder": {
+            "runonce": "Select day",
+            "recurring": "Select day/s"
+          },
           "listLabel": "Which updates should we apply?",
           "listAllSelection": "All Updates",
           "datePreposition": "at",

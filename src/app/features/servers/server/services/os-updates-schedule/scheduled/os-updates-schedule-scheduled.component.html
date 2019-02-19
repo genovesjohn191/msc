@@ -41,96 +41,105 @@
 
           <!-- Schedule Type Recurring -->
           <mcs-grid-row [@fadeIn] *ngSwitchCase="scheduleTypeOption.Recurring">
-            <!-- Recurring Day Selection-->
             <mcs-grid-column>
-              <mcs-item>
-                <strong>{{textContent.scheduleTimeLabel}}</strong>
-              </mcs-item>
-              <!-- TODO : Temporary hidden, would refactor and reorganize after the multiselect is implemented -->
-              <mcs-item *ngIf="false">
-                <mcs-checkbox [checked]="scheduleDetails?.isEveryday" (change)="scheduleEveryday($event)">
-                  {{textContent.checkboxSelectionEveryday}}
-                </mcs-checkbox>
-                <mcs-checkbox [checked]="scheduleDetails?.isWeekdays" (change)="scheduleWeekdays($event)">
-                  {{textContent.checkboxSelectionWeekdays}}
-                </mcs-checkbox>
-                <mcs-checkbox [checked]="scheduleDetails?.isWeekends" (change)="scheduleWeekends($event)">
-                  {{textContent.checkboxSelectionWeekends}}
-                </mcs-checkbox>
-              </mcs-item>
 
-              <mcs-item>
-                <ng-container *ngFor="let scheduleDay of scheduleDetails.scheduleDays">
-                  <mcs-checkbox [checked]="scheduleDay.checked" (change)="toggleScheduleDay($event, scheduleDay)">
-                    {{scheduleDay.name}}
-                  </mcs-checkbox>
-                </ng-container>
-              </mcs-item>
-            </mcs-grid-column>
-          </mcs-grid-row>
+              <mcs-item orientation="block">
+                <strong>{{ textContent.scheduleTimeLabel }}</strong>
+                <mcs-section orientation="horizontal" mcsAlignContent="middle-left">
 
-          <!-- Recurring Time/Period Selection-->
-          <mcs-grid-row [@fadeIn] *ngSwitchCase="scheduleTypeOption.Recurring">
-            <mcs-grid-column>
-              <mcs-item orientation="inline">
-                <span>
-                  {{textContent.datePreposition}}
-                </span>
-                <mcs-select required mcsId="select-resource" [formControl]="fcRecurringScheduleTime" class="form-field-size-xsmall">
-                  <mcs-option *ngFor="let timeOption of timeOptions" [value]="timeOption">
-                    {{timeOption}}
-                  </mcs-option>
-                </mcs-select>
-                <mcs-select required mcsId="select-resource" [formControl]="fcRecurringSchedulePeriod" class="form-field-size-xsmall">
-                  <mcs-option *ngFor="let dayPeriodOption of dayPeriodOptions" [value]="dayPeriodOption">
-                    {{dayPeriodOption}}
-                  </mcs-option>
-                </mcs-select>
-                <span>
-                  {{textContent.timezoneAbrv}}
-                </span>
+                  <!-- Recurring Day Selection -->
+                  <mcs-form-field class="form-field-size-small">
+                    <mcs-select
+                      mcsId="select-recurring-day-os-updates"
+                      [placeholder]="textContent.daysPlaceholder.recurring"
+                      [formControl]="fcRecurringScheduleDay"
+                      (change)="toggleScheduleDay()" required multiple>
+                      <mcs-option
+                        *ngFor="let scheduleDay of scheduleDetails.scheduleDays"
+                        [value]="scheduleDay.day"
+                        [selected]="scheduleDay.checked">{{ scheduleDay.name }}</mcs-option>
+                    </mcs-select>
+                  </mcs-form-field>
+
+                  <span>{{ textContent.datePreposition }}</span>
+
+                  <!-- Recurring Time Selection -->
+                  <mcs-form-field class="form-field-size-xsmall">
+                    <mcs-select
+                      mcsId="select-recurring-time-os-updates"
+                      [formControl]="fcRecurringScheduleTime" required>
+                      <mcs-option
+                        *ngFor="let timeOption of timeOptions"
+                        [value]="timeOption">{{ timeOption }}</mcs-option>
+                    </mcs-select>
+                  </mcs-form-field>
+
+                  <!-- Recurring Period Selection -->
+                  <mcs-form-field class="form-field-size-xsmall">
+                    <mcs-select
+                      mcsId="select-recurring-period-os-updates"
+                      [formControl]="fcRecurringSchedulePeriod" required>
+                      <mcs-option
+                        *ngFor="let dayPeriodOption of dayPeriodOptions"
+                        [value]="dayPeriodOption">{{ dayPeriodOption }}</mcs-option>
+                    </mcs-select>
+                  </mcs-form-field>
+
+                  <span>{{ textContent.timezoneAbrv }}</span>
+                </mcs-section>
               </mcs-item>
             </mcs-grid-column>
           </mcs-grid-row>
 
           <!-- Schedule Type Later/RunOnce -->
           <mcs-grid-row [@fadeIn] *ngSwitchCase="scheduleTypeOption.RunOnce">
-            <!-- RunOnce Day Selection-->
             <mcs-grid-column>
-              <mcs-item>
-                <strong>{{textContent.scheduleTimeLabel}}</strong>
-              </mcs-item>
-              <mcs-item>
-                <mcs-radio-button-group [(ngModel)]="runOnceScheduleDay" [ngModelOptions]="{standalone: true}">
-                  <ng-container *ngFor="let scheduleDay of scheduleDetails.scheduleDays">
-                    <mcs-radio-button mcsId [value]="scheduleDay.day">
-                      {{scheduleDay.name}}
-                    </mcs-radio-button>
-                  </ng-container>
-                </mcs-radio-button-group>
-              </mcs-item>
-            </mcs-grid-column>
-          </mcs-grid-row>
 
-          <!-- RunOnce Time/Period Selection-->
-          <mcs-grid-row [@fadeIn] *ngSwitchCase="scheduleTypeOption.RunOnce">
-            <mcs-grid-column>
-              <mcs-item orientation="inline">
-                <span> {{textContent.datePreposition}} </span>
-                <mcs-select required mcsId="select-resource" [formControl]="fcRunOnceScheduleTime" class="form-field-size-xsmall">
-                  <mcs-option *ngFor="let timeOption of timeOptions" [value]="timeOption">
-                    {{timeOption}}
-                  </mcs-option>
-                </mcs-select>
-                <mcs-select required mcsId="select-resource" [formControl]="fcRunOnceSchedulePeriod" class="form-field-size-xsmall">
-                  <mcs-option *ngFor="let dayPeriodOption of dayPeriodOptions" [value]="dayPeriodOption">
-                    {{dayPeriodOption}}
-                  </mcs-option>
-                </mcs-select>
-                <span>
-                  {{textContent.timezoneAbrv}}
-                </span>
-              </mcs-item>
+              <mcs-item orientation="block">
+                <strong>{{ textContent.scheduleTimeLabel }}</strong>
+                <mcs-section orientation="horizontal" mcsAlignContent="middle-left">
+
+                  <!-- RunOnce Day Selection-->
+                  <!-- TODO : First element is selected -->
+                      <mcs-form-field class="form-field-size-small">
+                        <mcs-select
+                          mcsId="select-runonce-day-os-updates"
+                          [formControl]="fcRunOnceScheduleDay" required >
+                          <mcs-option
+                            *ngFor="let scheduleDay of scheduleDetails.scheduleDays"
+                            [value]="scheduleDay.day"
+                            [selected]="scheduleDay.checked">{{ scheduleDay.name }}</mcs-option>
+                        </mcs-select>
+                      </mcs-form-field>
+
+                      <span>{{ textContent.datePreposition }}</span>
+
+                      <!-- RunOnce Time Selection -->
+                      <mcs-form-field class="form-field-size-xsmall">
+                        <mcs-select
+                          mcsId="select-runonce-time-os-updates"
+                          [formControl]="fcRunOnceScheduleTime" required>
+                          <mcs-option
+                            *ngFor="let timeOption of timeOptions"
+                            [value]="timeOption">{{ timeOption }}</mcs-option>
+                        </mcs-select>
+                      </mcs-form-field>
+
+                      <!-- RunOnce Period Selection -->
+                      <mcs-form-field class="form-field-size-xsmall">
+                        <mcs-select
+                          mcsId="select-runonce-period-os-updates"
+                          [formControl]="fcRunOnceSchedulePeriod" required>
+                          <mcs-option
+                            *ngFor="let dayPeriodOption of dayPeriodOptions"
+                            [value]="dayPeriodOption">{{ dayPeriodOption }}</mcs-option>
+                        </mcs-select>
+                      </mcs-form-field>
+
+                      <span>{{ textContent.timezoneAbrv }}</span>
+                    </mcs-section>
+                  </mcs-item>
+
             </mcs-grid-column>
           </mcs-grid-row>
         </ng-container>
@@ -141,8 +150,8 @@
         <strong>
           {{textContent.listLabel}}
         </strong>
-        <button delete-button mcsButton mcsAlign="end" size="medium" (click)="deleteExistingSchedule()" [disabled]="!hasSchedule"
-          color="error">
+        <button delete-button mcsButton mcsAlign="end" size="medium" (click)="deleteExistingSchedule()" [hidden]="!hasSchedule"
+          [disabled]="!hasSchedule" color="error">
           {{ textContent.deleteScheduleButton }}
         </button>
         <button *ngSwitchCase="scheduleTypeOption.RunOnce" mcsButton size="medium" (click)="saveRunOnceSchedule()"

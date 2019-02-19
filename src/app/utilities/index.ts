@@ -2,6 +2,7 @@
 export * from './functions/mcs-url.function';
 export * from './functions/mcs-element.function';
 export * from './functions/mcs-json.function';
+export * from './functions/mcs-cron.function';
 export * from './functions/mcs-date.function';
 export * from './functions/mcs-string.function';
 export * from './functions/mcs-number.function';
