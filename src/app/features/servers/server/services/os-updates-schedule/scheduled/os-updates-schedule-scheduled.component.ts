@@ -30,15 +30,15 @@ import {
   animateFactory,
   isNullOrEmpty,
   deleteArrayRecord,
-  formatTime
+  formatTime,
+  buildCronWeekly,
+  parseCronStringToJson
 } from '@app/utilities';
 import {
   McsServerOsUpdatesScheduleRequest,
   McsServerOsUpdatesSchedule,
   McsServerOsUpdatesCategory,
   McsServer,
-  Day,
-  McsCronUtility,
   OsUpdatesScheduleType
 } from '@app/models';
 import { McsServersRepository } from '@app/services';
@@ -49,7 +49,6 @@ import {
 import { TreeNode } from '@angular/router/src/utils/tree';
 import {
   OsUpdatesScheduleDetails,
-  ScheduleDay,
   DayFrequency
 } from './os-updates-schedule-details';
 import { OsUpdatesActionDetails } from '../../os-updates-status-configuration';
@@ -70,7 +69,6 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
   public categories: McsServerOsUpdatesCategory[];
   public scheduleDetails: OsUpdatesScheduleDetails;
   public scheduleDate: McsServerOsUpdatesSchedule;
-  public runOnceScheduleDay: Day;
   public scheduleType: OsUpdatesScheduleType;
 
   public osUpdatesCategories$: Observable<McsServerOsUpdatesCategory[]>;
@@ -85,8 +83,10 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
 
   // Form variables
   public fgSchedule: FormGroup;
+  public fcRecurringScheduleDay: FormControl;
   public fcRecurringScheduleTime: FormControl;
   public fcRecurringSchedulePeriod: FormControl;
+  public fcRunOnceScheduleDay: FormControl;
   public fcRunOnceScheduleTime: FormControl;
   public fcRunOnceSchedulePeriod: FormControl;
 
@@ -143,7 +143,7 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
     if (this.selectedNodes.length <= 0) { return true; }
 
     if (this.hasSchedule && this.scheduleDate.runOnce) {
-      let scheduleDayArray = [this.runOnceScheduleDay];
+      let scheduleDayArray = [this.fcRunOnceScheduleDay.value];
       let currentCronSelected = this._createCronStringRequest(
         this.fcRunOnceScheduleTime.value,
         this.fcRunOnceSchedulePeriod.value,
@@ -207,7 +207,7 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
    */
   public saveRunOnceSchedule(): void {
     let request = new McsServerOsUpdatesScheduleRequest();
-    let scheduleDayArray = [this.runOnceScheduleDay];
+    let scheduleDayArray = [this.fcRunOnceScheduleDay.value];
     request.runOnce = true; // RunOnce
     request.categories = [];
     request.crontab = this._createCronStringRequest(
@@ -283,11 +283,9 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
 
   /**
    * Toggles the schedule day based on checkbox value
-   * @param event event reference
-   * @param scheduleDay scheduleDay reference to be toggle
    */
-  public toggleScheduleDay(event: any, scheduleDay: ScheduleDay): void {
-    scheduleDay.checked = event.checked;
+  public toggleScheduleDay(): void {
+    this.scheduleDetails.setDays(...this.fcRecurringScheduleDay.value);
   }
 
   /**
@@ -343,15 +341,19 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
    */
   private _initializeFormData(): void {
     // Register Form Controls
+    this.fcRecurringScheduleDay = new FormControl('', [CoreValidators.required]);
     this.fcRecurringScheduleTime = new FormControl('', [CoreValidators.required]);
     this.fcRecurringSchedulePeriod = new FormControl('', [CoreValidators.required]);
+    this.fcRunOnceScheduleDay = new FormControl('', [CoreValidators.required]);
     this.fcRunOnceScheduleTime = new FormControl('', [CoreValidators.required]);
     this.fcRunOnceSchedulePeriod = new FormControl('', [CoreValidators.required]);
 
     // Register Form Groups using binding
     this.fgSchedule = new FormGroup({
+      fcRecurringScheduleDay: this.fcRecurringScheduleDay,
       fcRecurringScheduleTime: this.fcRecurringScheduleTime,
       fcRecurringSchedulePeriod: this.fcRecurringSchedulePeriod,
+      fcRunOnceScheduleDay: this.fcRunOnceScheduleDay,
       fcRunOnceScheduleTime: this.fcRunOnceScheduleTime,
       fcRunOnceSchedulePeriod: this.fcRunOnceSchedulePeriod,
     });
@@ -423,7 +425,7 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
     let convertedTimeArray = formatTime(timeWithPeriod, 'hh:mm a').split(':');
     let hour = convertedTimeArray[0];
     let minute = convertedTimeArray[1];
-    return McsCronUtility.buildCronWeekly([minute], [hour], daysOfWeek);
+    return buildCronWeekly([minute], [hour], daysOfWeek);
   }
 
   /**
@@ -431,13 +433,13 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
    */
   private _mapScheduleDateToUi(): void {
     if (!this.hasSchedule) { return; }
-    let cronJson = McsCronUtility.parseCronStringToJson(this.scheduleDate.crontab);
+    let cronJson = parseCronStringToJson(this.scheduleDate.crontab);
     let convertedTime = formatTime(cronJson.hour + ':' + cronJson.minute, 'HH:mm', 'h:mm A');
     let convertedTimeArray = convertedTime.split(' ');
     if (this.scheduleDate.runOnce) {
       this.fcRunOnceSchedulePeriod.setValue(convertedTimeArray[1]);
       this.fcRunOnceScheduleTime.setValue(convertedTimeArray[0]);
-      this.runOnceScheduleDay = cronJson.dayOfWeek[0];
+      this.fcRunOnceScheduleDay.setValue(cronJson.dayOfWeek[0]);
     } else {
       this.fcRecurringSchedulePeriod.setValue(convertedTimeArray[1]);
       this.fcRecurringScheduleTime.setValue(convertedTimeArray[0]);
@@ -468,6 +470,7 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
    * @param server Server to be detached
    * @param title title to be displaye on the dialog box
    * @param message message to be displayed on the dialog box
+   * @param confirmText text label of the confirm button
    */
   private _showScheduleDialog(
     server: McsServer,

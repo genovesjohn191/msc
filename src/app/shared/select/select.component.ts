@@ -43,10 +43,7 @@ import {
   McsScrollDispatcherService,
   McsUniqueId
 } from '@app/core';
-import {
-  Key,
-  McsSelection
-} from '@app/models';
+import { Key } from '@app/models';
 import {
   isNullOrEmpty,
   registerEvent,
@@ -92,8 +89,6 @@ const SELECT_ITEM_OFFSET = 7;
 
 export class SelectComponent extends McsFormFieldControlBase<any>
   implements AfterContentInit, DoCheck, OnChanges, OnDestroy, ControlValueAccessor {
-
-  public selectionModel: McsSelection<OptionComponent>;
 
   @ContentChild(SelectTriggerLabelDirective)
   public labelTemplate: SelectTriggerLabelDirective;
@@ -211,7 +206,6 @@ export class SelectComponent extends McsFormFieldControlBase<any>
       this.ngControl.valueAccessor = this;
     }
     this.panelOpen = false;
-    this.selectionModel = new McsSelection<OptionComponent>(false);
     this.size = 'default';
   }
 
@@ -455,6 +449,11 @@ export class SelectComponent extends McsFormFieldControlBase<any>
    */
   private _initializeSelection(): void {
     Promise.resolve().then(() => {
+      // TODO: Remove the first item selection since we're going to implement the
+      // placeholder when we're dealing with forms; moreover, we can still use the
+      // selected of the option itself :)
+      if (this.multiple) { return; }
+
       let selectedValue = getSafeProperty(this.ngControl, (obj) => obj.value) || this._value;
       let isFirstItemSelected = this.required && !isNullOrEmpty(this._options)
         && !this._options.find((option) => option.value === selectedValue);
@@ -629,7 +628,6 @@ export class SelectComponent extends McsFormFieldControlBase<any>
    */
   private _enableMultipleSelection(): void {
     if (!this.multiple) { return; }
-    this.selectionModel = new McsSelection(this.multiple);
     this._options.forEach((option) => option.showCheckbox());
   }
 }
