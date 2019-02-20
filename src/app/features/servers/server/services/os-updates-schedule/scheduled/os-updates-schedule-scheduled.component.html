@@ -28,7 +28,7 @@
             <!-- Schedule Type -->
             <mcs-item orientation="block">
               <strong>{{textContent.scheduleTypeLabel}}</strong>
-              <mcs-radio-button-group [(ngModel)]="scheduleType" [ngModelOptions]="{standalone: true}">
+              <mcs-radio-button-group [(ngModel)]="scheduleType" [ngModelOptions]="{standalone: true}" (ngModelChange)="onScheduleTypeChange()">
                 <mcs-radio-button mcsId [value]="scheduleTypeOption.RunOnce">
                   {{textContent.scheduleTypeOption.runonce}}
                 </mcs-radio-button>
@@ -78,7 +78,7 @@
                   <mcs-form-field class="form-field-size-xsmall">
                     <mcs-select
                       mcsId="select-recurring-period-os-updates"
-                      [formControl]="fcRecurringSchedulePeriod" required>
+                      [formControl]="fcRecurringScheduleTimePeriod" required>
                       <mcs-option
                         *ngFor="let dayPeriodOption of dayPeriodOptions"
                         [value]="dayPeriodOption">{{ dayPeriodOption }}</mcs-option>
@@ -129,7 +129,7 @@
                       <mcs-form-field class="form-field-size-xsmall">
                         <mcs-select
                           mcsId="select-runonce-period-os-updates"
-                          [formControl]="fcRunOnceSchedulePeriod" required>
+                          [formControl]="fcRunOnceScheduleTimePeriod" required>
                           <mcs-option
                             *ngFor="let dayPeriodOption of dayPeriodOptions"
                             [value]="dayPeriodOption">{{ dayPeriodOption }}</mcs-option>

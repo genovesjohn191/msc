@@ -39,7 +39,8 @@ import {
   McsServerOsUpdatesSchedule,
   McsServerOsUpdatesCategory,
   McsServer,
-  OsUpdatesScheduleType
+  OsUpdatesScheduleType,
+  Day
 } from '@app/models';
 import { McsServersRepository } from '@app/services';
 import {
@@ -85,10 +86,10 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
   public fgSchedule: FormGroup;
   public fcRecurringScheduleDay: FormControl;
   public fcRecurringScheduleTime: FormControl;
-  public fcRecurringSchedulePeriod: FormControl;
+  public fcRecurringScheduleTimePeriod: FormControl;
   public fcRunOnceScheduleDay: FormControl;
   public fcRunOnceScheduleTime: FormControl;
-  public fcRunOnceSchedulePeriod: FormControl;
+  public fcRunOnceScheduleTimePeriod: FormControl;
 
   @Input()
   public selectedServer: McsServer;
@@ -100,6 +101,7 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
   public deleteSchedule: EventEmitter<OsUpdatesActionDetails>;
 
   private _initialCategoryList: McsServerOsUpdatesCategory[];
+  private _initialCronJson: any;
 
   /**
    * Returns the enum type of the server services view
@@ -146,7 +148,7 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
       let scheduleDayArray = [this.fcRunOnceScheduleDay.value];
       let currentCronSelected = this._createCronStringRequest(
         this.fcRunOnceScheduleTime.value,
-        this.fcRunOnceSchedulePeriod.value,
+        this.fcRunOnceScheduleTimePeriod.value,
         scheduleDayArray);
       let sameCronOption = this.scheduleDate.crontab === currentCronSelected;
       let sameCategorySelection = !this._categorySelectionHasChanged();
@@ -164,7 +166,7 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
     if (this.hasSchedule && !this.scheduleDate.runOnce) {
       let currentCronSelected = this._createCronStringRequest(
         this.fcRecurringScheduleTime.value,
-        this.fcRecurringSchedulePeriod.value,
+        this.fcRecurringScheduleTimePeriod.value,
         this.scheduleDetails.selectedScheduleDaysAsArray);
       let sameCronOption = this.scheduleDate.crontab === currentCronSelected;
       let sameCategorySelection = !this._categorySelectionHasChanged();
@@ -212,7 +214,7 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
     request.categories = [];
     request.crontab = this._createCronStringRequest(
       this.fcRunOnceScheduleTime.value,
-      this.fcRunOnceSchedulePeriod.value,
+      this.fcRunOnceScheduleTimePeriod.value,
       scheduleDayArray
     );
     this.selectedNodes.forEach((selection) => request.categories.push(selection.value.id));
@@ -242,7 +244,7 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
     request.runOnce = false; // Recurring
     request.crontab = this._createCronStringRequest(
       this.fcRecurringScheduleTime.value,
-      this.fcRecurringSchedulePeriod.value,
+      this.fcRecurringScheduleTimePeriod.value,
       this.scheduleDetails.selectedScheduleDaysAsArray
     );
     request.categories = [];
@@ -322,6 +324,35 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
   }
 
   /**
+   * Event listener whenever schedule type change
+   */
+  public onScheduleTypeChange(): void {
+    if (!this.hasSchedule) { return; }
+
+    let formattedTime = this._initialCronJson.hour + ':' + this._initialCronJson.minute;
+    let convertedTime = formatTime(formattedTime, 'HH:mm', 'h:mm A');
+    let convertedTimeArray = convertedTime.split(' ');
+    if (this.scheduleType === OsUpdatesScheduleType.Recurring && !this.scheduleDate.runOnce) {
+      this._setRecurringFormControls(
+        convertedTimeArray[1],
+        convertedTimeArray[0],
+        this._initialCronJson.dayOfWeek
+      );
+      this.fcRecurringScheduleDay.markAsDirty();
+      return;
+    }
+    if (this.scheduleType === OsUpdatesScheduleType.RunOnce && this.scheduleDate.runOnce) {
+      this._setRunOnceFormControls(
+        convertedTimeArray[1],
+        convertedTimeArray[0],
+        this._initialCronJson.dayOfWeek[0]
+      );
+      return;
+    }
+    this.scheduleDetails.resetDays();
+  }
+
+  /**
    * Toggles the node in the tree view if it is present in the categories list of the schedule date
    * @param osUpdateCategory category reference
    */
@@ -343,19 +374,19 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
     // Register Form Controls
     this.fcRecurringScheduleDay = new FormControl('', [CoreValidators.required]);
     this.fcRecurringScheduleTime = new FormControl('', [CoreValidators.required]);
-    this.fcRecurringSchedulePeriod = new FormControl('', [CoreValidators.required]);
+    this.fcRecurringScheduleTimePeriod = new FormControl('', [CoreValidators.required]);
     this.fcRunOnceScheduleDay = new FormControl('', [CoreValidators.required]);
     this.fcRunOnceScheduleTime = new FormControl('', [CoreValidators.required]);
-    this.fcRunOnceSchedulePeriod = new FormControl('', [CoreValidators.required]);
+    this.fcRunOnceScheduleTimePeriod = new FormControl('', [CoreValidators.required]);
 
     // Register Form Groups using binding
     this.fgSchedule = new FormGroup({
       fcRecurringScheduleDay: this.fcRecurringScheduleDay,
       fcRecurringScheduleTime: this.fcRecurringScheduleTime,
-      fcRecurringSchedulePeriod: this.fcRecurringSchedulePeriod,
+      fcRecurringSchedulePeriod: this.fcRecurringScheduleTimePeriod,
       fcRunOnceScheduleDay: this.fcRunOnceScheduleDay,
       fcRunOnceScheduleTime: this.fcRunOnceScheduleTime,
-      fcRunOnceSchedulePeriod: this.fcRunOnceSchedulePeriod,
+      fcRunOnceSchedulePeriod: this.fcRunOnceScheduleTimePeriod,
     });
     // Initialize Time and Period selections
     // TODO : can be created by loop
@@ -400,7 +431,7 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
             this.scheduleDate = schedules[0];
             this.scheduleType = this.scheduleDate.runOnce ?
               OsUpdatesScheduleType.RunOnce : OsUpdatesScheduleType.Recurring;
-            this._mapScheduleDateToUi();
+            this._setInitialScheduleReference();
           }
           this.scheduleDateStatusFactory.setSuccessful(schedules);
           this._changeDetectorRef.markForCheck();
@@ -431,23 +462,30 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
   /**
    * Maps the existing Schedule to the UI components
    */
-  private _mapScheduleDateToUi(): void {
+  private _setInitialScheduleReference(): void {
     if (!this.hasSchedule) { return; }
-    let cronJson = parseCronStringToJson(this.scheduleDate.crontab);
-    let convertedTime = formatTime(cronJson.hour + ':' + cronJson.minute, 'HH:mm', 'h:mm A');
-    let convertedTimeArray = convertedTime.split(' ');
-    if (this.scheduleDate.runOnce) {
-      this.fcRunOnceSchedulePeriod.setValue(convertedTimeArray[1]);
-      this.fcRunOnceScheduleTime.setValue(convertedTimeArray[0]);
-      this.fcRunOnceScheduleDay.setValue(cronJson.dayOfWeek[0]);
-    } else {
-      this.fcRecurringSchedulePeriod.setValue(convertedTimeArray[1]);
-      this.fcRecurringScheduleTime.setValue(convertedTimeArray[0]);
-      this.scheduleDetails.setDays(...cronJson.dayOfWeek);
-    }
+    this._initialCronJson = parseCronStringToJson(this.scheduleDate.crontab);
     // Clone category selection
     this._initialCategoryList = this.scheduleDate.categories.slice();
     this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Sets the form controls of the recurring schedule
+   */
+  private _setRecurringFormControls(period: string, time: string, days: Day[]): void {
+    this.fcRecurringScheduleTimePeriod.setValue(period);
+    this.fcRecurringScheduleTime.setValue(time);
+    this.scheduleDetails.setDays(...days);
+  }
+
+  /**
+   * Sets the form controls of the run once schedule
+   */
+  private _setRunOnceFormControls(period: string, time: string, day: Day): void {
+    this.fcRunOnceScheduleTimePeriod.setValue(period);
+    this.fcRunOnceScheduleTime.setValue(time);
+    this.fcRunOnceScheduleDay.setValue(day);
   }
 
   /**

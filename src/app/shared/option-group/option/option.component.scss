@@ -11,6 +11,10 @@ $option-selected-color: $selected-bg-color;
   cursor: pointer;
   padding: $option-padding;
 
+  .option-checkbox-icon {
+    pointer-events: none;
+  }
+
   &.option-selected:not(.option-checkable) {
     background-color: $option-selected-color;
   }
