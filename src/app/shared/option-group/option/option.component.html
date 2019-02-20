@@ -1,7 +1,7 @@
 <!-- Template with checkbox -->
 <ng-container *ngIf="checkable; else contentTemplate">
   <mcs-item>
-    <mcs-checkbox [checked]="selected"></mcs-checkbox>
+    <mcs-checkbox class="option-checkbox-icon" [checked]="selected"></mcs-checkbox>
     <div><ng-container *ngTemplateOutlet="contentTemplate"></ng-container></div>
   </mcs-item>
 </ng-container>
