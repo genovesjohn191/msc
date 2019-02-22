@@ -104,6 +104,26 @@ export class McsScrollDispatcherService {
   }
 
   /**
+   * Returns the scrollable item based it's id
+   */
+  public getScrollableItemById(id: string): Scrollable {
+    let scrollableItem: Scrollable;
+
+    this._scrollableMap.forEach((_value, key) => {
+      if (key.scrollbarId !== id) { return; }
+      scrollableItem = key;
+    });
+    return scrollableItem;
+  }
+
+  /**
+   * Returns all the registered scrollable items
+   */
+  public getScrollableItems(): Scrollable[] {
+    return Array.from(this._scrollableMap.keys());
+  }
+
+  /**
    * Returns true if the element is contained within the provided Scrollable.
    * @param scrollable Scrollable information
    * @param elementRef Element Reference to check the scrollabe content

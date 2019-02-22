@@ -3,6 +3,6 @@ import { Observable } from 'rxjs';
 
 export interface Scrollable {
   scrollbarId: string;
-  getElementRef(): ElementRef;
+  getElementRef(): ElementRef<HTMLElement>;
   elementScrolled(): Observable<any>;
 }

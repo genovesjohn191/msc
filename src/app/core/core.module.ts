@@ -48,7 +48,7 @@ import { McsErrorHandlerService } from './services/mcs-error-handler.service';
     HttpClientModule,
 
     CookieModule.forRoot(),
-    RouterModule.forRoot([])
+    RouterModule.forRoot([], { scrollPositionRestoration: 'enabled' })
   ],
   exports: [
     CommonModule,
