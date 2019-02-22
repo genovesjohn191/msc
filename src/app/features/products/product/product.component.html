@@ -223,11 +223,12 @@
       <div class="product-catalog-item">
         <h2>Inview</h2>
 
-        <ng-template let-inviews #inviewTemplate>
+        <ng-template let-inviews let-title="inviewTitle" #inviewTemplate>
           <mcs-grid>
             <mcs-grid-row *ngFor="let inview of inviews">
               <mcs-grid-column sizeSm="12">
-                <h3>{{ inview.name }}</h3>
+                <h3>{{ title }}</h3>
+                <h4>{{ inview.name }}</h4>
                 <p [innerHTML]="inview.description"></p>
                 <ng-container *ngIf="inview?.thresholds | mcsIsNotNullOrEmpty">
                   <mcs-table [dataSource]="inview.thresholds">
@@ -258,7 +259,8 @@
                 </ng-container>
               </mcs-grid-column>
 
-              <mcs-grid-column padding-large *ngIf="inview.graphUrl | mcsIsNotNullOrEmpty" sizeSm="12">
+              <mcs-grid-column padding-large
+                *ngIf="inview.graphUrl | mcsIsNotNullOrEmpty" sizeSm="12">
                 <img [src]="inview.graphUrl" class="image-responsive">
               </mcs-grid-column>
             </mcs-grid-row>
@@ -266,10 +268,16 @@
         </ng-template>
 
         <ng-container *ngTemplateOutlet="inviewTemplate;
-          context: { $implicit: selectedProduct.inviewPremium }"></ng-container>
+          context: {
+            $implicit: selectedProduct.inviewPremium,
+            inviewTitle: 'Premium'
+          }"></ng-container>
 
         <ng-container *ngTemplateOutlet="inviewTemplate;
-          context: { $implicit: selectedProduct.inviewStandard }"></ng-container>
+          context: {
+            $implicit: selectedProduct.inviewStandard,
+            inviewTitle: 'Standard'
+          }"></ng-container>
       </div>
     </mcs-scrollable-link>
 

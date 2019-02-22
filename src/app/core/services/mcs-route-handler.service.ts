@@ -32,6 +32,7 @@ import { McsAccessControlService } from '../authentication/mcs-access-control.se
 import { McsAuthenticationService } from '../authentication/mcs-authentication.service';
 import { McsLoggerService } from './mcs-logger.service';
 import { McsErrorHandlerService } from './mcs-error-handler.service';
+import { McsScrollDispatcherService } from './mcs-scroll-dispatcher.service';
 
 @Injectable()
 export class McsRouteHandlerService implements McsDisposable {
@@ -50,7 +51,8 @@ export class McsRouteHandlerService implements McsDisposable {
     private _loggerService: McsLoggerService,
     private _accessControlService: McsAccessControlService,
     private _authenticationService: McsAuthenticationService,
-    private _errorHandlerService: McsErrorHandlerService
+    private _errorHandlerService: McsErrorHandlerService,
+    private _scrollDispatcher: McsScrollDispatcherService
   ) {
     this._registerEvents();
   }
@@ -165,6 +167,19 @@ export class McsRouteHandlerService implements McsDisposable {
   }
 
   /**
+   * Scrolls to top when route has been changed
+   */
+  private _scrollPageToTop(): void {
+    let scrollableElements = this._scrollDispatcher.getScrollableItems();
+    if (isNullOrEmpty(scrollableElements)) { return; }
+
+    scrollableElements.forEach((item) => {
+      let scrollableElement = item.getElementRef().nativeElement;
+      this._scrollDispatcher.scrollToElement(scrollableElement, 0, 0);
+    });
+  }
+
+  /**
    * Registers the event handlers
    */
   private _registerEvents(): void {
@@ -183,7 +198,9 @@ export class McsRouteHandlerService implements McsDisposable {
       .pipe(
         takeUntil(this._destroySubject),
         filter((event) => event instanceof NavigationEnd)
-      )
-      .subscribe((eventArgs) => this._setMainActiveRoute(eventArgs as NavigationEnd));
+      ).subscribe((eventArgs) => {
+        this._scrollPageToTop();
+        this._setMainActiveRoute(eventArgs as NavigationEnd);
+      });
   }
 }
