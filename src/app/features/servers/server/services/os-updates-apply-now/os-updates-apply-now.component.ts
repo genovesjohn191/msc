@@ -26,16 +26,16 @@ import {
 import { McsServersRepository } from '@app/services';
 import { TreeNode } from '@app/shared';
 import { ServersService } from '@app/features/servers/servers.service';
-import { OsUpdatesActionDetails } from '../../os-updates-status-configuration';
+import { OsUpdatesActionDetails } from '../os-updates-status-configuration';
 
 @Component({
-  selector: 'mcs-server-os-updates-schedule-unscheduled',
-  templateUrl: './os-updates-schedule-unscheduled.component.html',
+  selector: 'mcs-server-os-updates-apply-now',
+  templateUrl: './os-updates-apply-now.component.html',
   host: {
     'class': 'block'
   }
 })
-export class OsUpdatesScheduleUnscheduledComponent implements OnInit {
+export class OsUpdatesApplyNowComponent implements OnInit {
 
   @Input()
   public selectedServer: McsServer;
@@ -74,7 +74,7 @@ export class OsUpdatesScheduleUnscheduledComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.textContent = this._textProvider.content.servers.server.services.unscheduled;
+    this.textContent = this._textProvider.content.servers.server.services.applyNow;
     this._initializeTreeSource();
   }
 
