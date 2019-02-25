@@ -398,7 +398,7 @@
         "deleteErrorMessage": "Schedule could not be deleted at this time",
         "updateSuccessMessage": "Schedule saved",
         "updateErrorMessage": "Schedule could not be saved at this time",
-        "unscheduled": {
+        "applyNow": {
           "loading": "Loading server os updates.",
           "title": "Apply Updates",
           "description": "Select the updates or update categories you would like to apply and we will install them on your server for you.",
@@ -409,7 +409,7 @@
           "errorOsUpdates": "Sorry, something’s not right. We weren’t able to retrieve the list of os updates for this server.",
           "applyUpdatesButton": "Apply Updates"
         },
-        "scheduled": {
+        "schedule": {
           "title": "Configure Schedule",
           "description": {
             "default": "Our system will update the guest OS on this server for you.",

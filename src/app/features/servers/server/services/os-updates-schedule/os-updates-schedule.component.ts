@@ -4,7 +4,8 @@ import {
   ChangeDetectorRef,
   Input,
   Output,
-  EventEmitter
+  EventEmitter,
+  ViewChild
 } from '@angular/core';
 import {
   FormGroup,
@@ -18,7 +19,8 @@ import {
 import {
   catchError,
   map,
-  tap
+  tap,
+  concatMap
 } from 'rxjs/operators';
 import {
   McsTextContentProvider,
@@ -45,18 +47,16 @@ import {
 import { McsServersRepository } from '@app/services';
 import {
   DialogConfirmation,
-  DialogConfirmationComponent
+  DialogConfirmationComponent,
+  FormGroupDirective
 } from '@app/shared';
 import { TreeNode } from '@angular/router/src/utils/tree';
-import {
-  OsUpdatesScheduleDetails,
-  DayFrequency
-} from './os-updates-schedule-details';
-import { OsUpdatesActionDetails } from '../../os-updates-status-configuration';
+import { OsUpdatesScheduleDetails } from './os-updates-schedule-details';
+import { OsUpdatesActionDetails } from '../os-updates-status-configuration';
 
 @Component({
-  selector: 'mcs-server-os-updates-schedule-scheduled',
-  templateUrl: './os-updates-schedule-scheduled.component.html',
+  selector: 'mcs-server-os-updates-schedule',
+  templateUrl: './os-updates-schedule.component.html',
   host: {
     'class': 'block'
   },
@@ -64,20 +64,17 @@ import { OsUpdatesActionDetails } from '../../os-updates-status-configuration';
     animateFactory.fadeIn
   ]
 })
-export class OsUpdatesScheduleScheduledComponent implements OnInit {
+export class OsUpdatesScheduleComponent implements OnInit {
   public textContent: any;
 
-  public categories: McsServerOsUpdatesCategory[];
+  public recurringCategories: McsServerOsUpdatesCategory[];
+  public runOnceCategories: McsServerOsUpdatesCategory[];
   public scheduleDetails: OsUpdatesScheduleDetails;
   public scheduleDate: McsServerOsUpdatesSchedule;
   public scheduleType: OsUpdatesScheduleType;
 
-  public osUpdatesCategories$: Observable<McsServerOsUpdatesCategory[]>;
-  public scheduleDate$: Observable<McsServerOsUpdatesSchedule>;
-
-  public categoriesStatusFactory: McsDataStatusFactory<McsServerOsUpdatesCategory[]>;
-  public scheduleDateStatusFactory: McsDataStatusFactory<McsServerOsUpdatesSchedule[]>;
-  public selectedNodes: Array<TreeNode<McsServerOsUpdatesCategory>>;
+  public osUpdatesScheduleConfiguration$: Observable<McsServerOsUpdatesSchedule>;
+  public configurationStatusFactory: McsDataStatusFactory<any>;
 
   public timeOptions: string[] = [];
   public dayPeriodOptions: string[] = [];
@@ -100,7 +97,10 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
   @Output()
   public deleteSchedule: EventEmitter<OsUpdatesActionDetails>;
 
-  private _initialCategoryList: McsServerOsUpdatesCategory[];
+  @ViewChild(FormGroupDirective)
+  private _formGroup: FormGroupDirective;
+
+  private _initialScheduleCategoryList: McsServerOsUpdatesCategory[];
   private _initialCronJson: any;
 
   /**
@@ -142,17 +142,17 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
    * Returns true if there are no selected categories and no change in the form, false otherwise
    */
   public get isRunOnceSaveButtonDisabled(): boolean {
-    if (this.selectedNodes.length <= 0) { return true; }
+    if (isNullOrEmpty(this._formGroup)) { return true; }
+
+    let hasSelectedCategories = this.runOnceCategories.filter(
+      (category) => category.isSelected
+    ).length > 0;
+    let allRequiredFieldsAreSet = hasSelectedCategories && this._formGroup.isValid();
+
+    if (!allRequiredFieldsAreSet) { return true; }
 
     if (this.hasSchedule && this.scheduleDate.runOnce) {
-      let scheduleDayArray = [this.fcRunOnceScheduleDay.value];
-      let currentCronSelected = this._createCronStringRequest(
-        this.fcRunOnceScheduleTime.value,
-        this.fcRunOnceScheduleTimePeriod.value,
-        scheduleDayArray);
-      let sameCronOption = this.scheduleDate.crontab === currentCronSelected;
-      let sameCategorySelection = !this._categorySelectionHasChanged();
-      return sameCronOption && sameCategorySelection;
+      return !this._hasPendingRunOnceScheduleChanges();
     }
     return false;
   }
@@ -161,16 +161,19 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
    * Returns true if there are no selected categories and no change in the form, false otherwise
    */
   public get isRecurringSaveButtonDisabled(): boolean {
-    if (this.selectedNodes.length <= 0 || !this.scheduleDetails.hasSelection) { return true; }
+    if (isNullOrEmpty(this._formGroup)) { return true; }
+
+    let hasSelectedCategories = this.recurringCategories.filter(
+      (category) => category.isSelected
+    ).length > 0;
+    let allRequiredFieldsAreSet = hasSelectedCategories &&
+      this.scheduleDetails.hasSelection &&
+      this._formGroup.isValid();
+
+    if (!allRequiredFieldsAreSet) { return true; }
 
     if (this.hasSchedule && !this.scheduleDate.runOnce) {
-      let currentCronSelected = this._createCronStringRequest(
-        this.fcRecurringScheduleTime.value,
-        this.fcRecurringScheduleTimePeriod.value,
-        this.scheduleDetails.selectedScheduleDaysAsArray);
-      let sameCronOption = this.scheduleDate.crontab === currentCronSelected;
-      let sameCategorySelection = !this._categorySelectionHasChanged();
-      return sameCronOption && sameCategorySelection;
+      return !this._hasPendingRecurringScheduleChanges();
     }
     return false;
   }
@@ -184,24 +187,13 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
     this.saveSchedule = new EventEmitter();
     this.deleteSchedule = new EventEmitter();
     this.scheduleDetails = new OsUpdatesScheduleDetails();
-    this.categoriesStatusFactory = new McsDataStatusFactory();
-    this.scheduleDateStatusFactory = new McsDataStatusFactory();
-    this.selectedNodes = new Array<TreeNode<McsServerOsUpdatesCategory>>();
+    this.configurationStatusFactory = new McsDataStatusFactory();
   }
 
   public ngOnInit() {
-    this.textContent = this._textProvider.content.servers.server.services.scheduled;
+    this.textContent = this._textProvider.content.servers.server.services.schedule;
     this._initializeFormData();
-    this._initializeTreeSource();
-    this._getScheduleDate();
-  }
-
-  /**
-   * Listener method whenever there is a change in selection on the tree view
-   * @param _selectedNodes selected nodes reference from the tree view
-   */
-  public onTreeChange(_selectedNodes: Array<TreeNode<McsServerOsUpdatesCategory>>): void {
-    this.selectedNodes = _selectedNodes;
+    this._getOsUpdatesScheduleConfiguration();
   }
 
   /**
@@ -217,7 +209,11 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
       this.fcRunOnceScheduleTimePeriod.value,
       scheduleDayArray
     );
-    this.selectedNodes.forEach((selection) => request.categories.push(selection.value.id));
+    this.runOnceCategories.forEach(
+      (category) => {
+        if (category.isSelected) { request.categories.push(category.id); }
+      }
+    );
     let actionDetails = { server: this.selectedServer, requestData: request };
 
     if (this.hasSchedule) {
@@ -248,7 +244,11 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
       this.scheduleDetails.selectedScheduleDaysAsArray
     );
     request.categories = [];
-    this.selectedNodes.forEach((selection) => request.categories.push(selection.value.id));
+    this.recurringCategories.forEach(
+      (category) => {
+        if (category.isSelected) { request.categories.push(category.id); }
+      }
+    );
     let actionDetails = { server: this.selectedServer, requestData: request };
 
     if (this.hasSchedule) {
@@ -291,39 +291,6 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
   }
 
   /**
-   * Toggles all the days
-   */
-  public scheduleEveryday(): void {
-    if (this.scheduleDetails.isEveryday) {
-      this.scheduleDetails.resetDays();
-    } else {
-      this.scheduleDetails.setDaysByFrequency(DayFrequency.Everyday);
-    }
-  }
-
-  /**
-   * Toggles all the days applicable for Weekdays
-   */
-  public scheduleWeekdays(): void {
-    if (this.scheduleDetails.isWeekdays) {
-      this.scheduleDetails.resetDays();
-    } else {
-      this.scheduleDetails.setDaysByFrequency(DayFrequency.Weekdays);
-    }
-  }
-
-  /**
-   * Toggles all the days applicable for Weekends
-   */
-  public scheduleWeekends(): void {
-    if (this.scheduleDetails.isWeekends) {
-      this.scheduleDetails.resetDays();
-    } else {
-      this.scheduleDetails.setDaysByFrequency(DayFrequency.Weekends);
-    }
-  }
-
-  /**
    * Event listener whenever schedule type change
    */
   public onScheduleTypeChange(): void {
@@ -338,7 +305,9 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
         convertedTimeArray[0],
         this._initialCronJson.dayOfWeek
       );
-      this.fcRecurringScheduleDay.markAsDirty();
+      this.recurringCategories = this._mapSelectedCategories(
+        this.recurringCategories, this._initialScheduleCategoryList
+      );
       return;
     }
     if (this.scheduleType === OsUpdatesScheduleType.RunOnce && this.scheduleDate.runOnce) {
@@ -347,16 +316,45 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
         convertedTimeArray[0],
         this._initialCronJson.dayOfWeek[0]
       );
+      this.runOnceCategories = this._mapSelectedCategories(
+        this.runOnceCategories, this._initialScheduleCategoryList
+      );
       return;
     }
+    this.recurringCategories.forEach((category) => category.isSelected = false);
+    this.runOnceCategories.forEach((category) => category.isSelected = false);
     this.scheduleDetails.resetDays();
+    this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Listener method whenever there is a change in selection on the runonce tree view
+   * @param _selectedNodes selected nodes reference from the tree view
+   */
+  public onRunOnceTreeChange(_selectedNodes: Array<TreeNode<McsServerOsUpdatesCategory>>): void {
+    this.runOnceCategories.forEach((category) => {
+      category.isSelected = !isNullOrEmpty(_selectedNodes.find(
+        (selectedNode) => category.id === selectedNode.value.id));
+    });
+  }
+
+  /**
+   * Listener method whenever there is a change in selection on the recurring tree view
+   * @param _selectedNodes selected nodes reference from the tree view
+   */
+  public onRecurringTreeChange(_selectedNodes: Array<TreeNode<McsServerOsUpdatesCategory>>): void {
+    this.recurringCategories.forEach((category) => {
+      category.isSelected = !isNullOrEmpty(_selectedNodes.find(
+        (selectedNode) => category.id === selectedNode.value.id));
+    });
+    this._changeDetectorRef.markForCheck();
   }
 
   /**
    * Toggles the node in the tree view if it is present in the categories list of the schedule date
    * @param osUpdateCategory category reference
    */
-  public tickNodeIfSelected(osUpdateCategory: McsServerOsUpdatesCategory): boolean {
+  public isCategorySelected(osUpdateCategory: McsServerOsUpdatesCategory): boolean {
     if (!this.hasSchedule) { return false; }
     if (this.scheduleType === OsUpdatesScheduleType.Recurring && this.scheduleDate.runOnce) {
       return false;
@@ -395,35 +393,49 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
   }
 
   /**
-   * Initializes the data source of the os updates table and os updates category table
+   * Get the Categories and Schedule date of the current server
    */
-  private _initializeTreeSource(): void {
-    this.categoriesStatusFactory.setInProgress();
-    this.osUpdatesCategories$ = this._serversRepository.getServerOsUpdatesCategories().pipe(
+  private _getOsUpdatesScheduleConfiguration() {
+    this.configurationStatusFactory.setInProgress();
+    this.osUpdatesScheduleConfiguration$ =
+      this._getOsUpdatesCategories().pipe(concatMap((categories) => {
+        return this._getScheduleDate(categories);
+      }), tap((result) => {
+        this.configurationStatusFactory.setSuccessful(result);
+      }), catchError((error) => {
+        this.configurationStatusFactory.setError();
+        return throwError(error);
+      }));
+  }
+
+  /**
+   * Get the list of categories of the current server
+   */
+  private _getOsUpdatesCategories(): Observable<McsServerOsUpdatesCategory[]> {
+    return this._serversRepository.getServerOsUpdatesCategories().pipe(
       map((response) => response.filter(
         (category) => category.osType === this.selectedServer.operatingSystem.type)
       ),
-      tap((osUpdates) => {
-        this.categoriesStatusFactory.setSuccessful(osUpdates);
+      tap((categories) => {
+        this.runOnceCategories = categories.slice();
+        this.recurringCategories = categories.slice();
       }),
-      catchError((error) => {
-        this.categoriesStatusFactory.setError();
-        return throwError(error);
-      })
+      catchError((error) => throwError(error))
     );
   }
 
   /**
    * Get the schedule date from api, if there are multiple entries, the first one will be used
+   * @param categories categories list reference where the selected categories of the user are map
    */
-  private _getScheduleDate(): void {
-    this.scheduleDateStatusFactory.setInProgress();
-    this.scheduleDate$ = this._serversRepository
+  private _getScheduleDate(
+    categories: McsServerOsUpdatesCategory[]
+  ): Observable<McsServerOsUpdatesSchedule> {
+    return this._serversRepository
       .getServerOsUpdatesSchedule(this.selectedServer.id)
       .pipe(
         catchError((error) => {
           this.scheduleDate = undefined;
-          this.scheduleDateStatusFactory.setError();
           return throwError(error);
         }),
         tap((schedules) => {
@@ -432,14 +444,20 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
             this.scheduleType = this.scheduleDate.runOnce ?
               OsUpdatesScheduleType.RunOnce : OsUpdatesScheduleType.Recurring;
             this._setInitialScheduleReference();
+
+            let selectedCategories = this._mapSelectedCategories(
+              categories, this.scheduleDate.categories
+            );
+            if (this.scheduleDate.runOnce) {
+              this.runOnceCategories = selectedCategories;
+            } else {
+              this.recurringCategories = selectedCategories;
+            }
           }
-          this.scheduleDateStatusFactory.setSuccessful(schedules);
           this._changeDetectorRef.markForCheck();
         }),
         map((schedules) => {
-          if (!isNullOrEmpty(schedules)) {
-            return schedules[0];
-          }
+          if (!isNullOrEmpty(schedules)) { return schedules[0]; }
           return new McsServerOsUpdatesSchedule();
         })
       );
@@ -465,22 +483,28 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
   private _setInitialScheduleReference(): void {
     if (!this.hasSchedule) { return; }
     this._initialCronJson = parseCronStringToJson(this.scheduleDate.crontab);
-    // Clone category selection
-    this._initialCategoryList = this.scheduleDate.categories.slice();
+    this._initialScheduleCategoryList = this.scheduleDate.categories.slice();
     this._changeDetectorRef.markForCheck();
   }
 
   /**
    * Sets the form controls of the recurring schedule
+   * @param period period selected by the user
+   * @param time time selected by the user
+   * @param days days selected by the user
    */
   private _setRecurringFormControls(period: string, time: string, days: Day[]): void {
     this.fcRecurringScheduleTimePeriod.setValue(period);
     this.fcRecurringScheduleTime.setValue(time);
+    this.fcRecurringScheduleDay.setValue(days);
     this.scheduleDetails.setDays(...days);
   }
 
   /**
    * Sets the form controls of the run once schedule
+   * @param period period selected by the user
+   * @param time time selected by the user
+   * @param day day selected by the user
    */
   private _setRunOnceFormControls(period: string, time: string, day: Day): void {
     this.fcRunOnceScheduleTimePeriod.setValue(period);
@@ -489,18 +513,68 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
   }
 
   /**
-   * Returns true if there is a change in the category selection, false otherwise
+   * Returns true if there are current changes in the schedule options of runonce schedule
    */
-  private _categorySelectionHasChanged(): boolean {
-    let notEqualLength = this._initialCategoryList.length !==
-      this.selectedNodes.length;
-    if (notEqualLength) { return true; }
+  private _hasPendingRunOnceScheduleChanges(): boolean {
+    let scheduleDayArray = [this.fcRunOnceScheduleDay.value];
+    let currentCronSelected = this._createCronStringRequest(
+      this.fcRunOnceScheduleTime.value,
+      this.fcRunOnceScheduleTimePeriod.value,
+      scheduleDayArray
+    );
+    let differentCronOption = this.scheduleDate.crontab !== currentCronSelected;
+    let differentCategorySelection = this._categorySelectionHasChanged(this.runOnceCategories);
+    return differentCronOption || differentCategorySelection;
+  }
 
-    let mockRecords = this._initialCategoryList.slice();
-    deleteArrayRecord(mockRecords, (item) => {
-      return !!this.selectedNodes.find((record) => record.value.id === item.id);
+  /**
+   * Returns true if there are current changes in the schedule options of recurring schedule
+   */
+  private _hasPendingRecurringScheduleChanges(): boolean {
+    let currentCronSelected = this._createCronStringRequest(
+      this.fcRecurringScheduleTime.value,
+      this.fcRecurringScheduleTimePeriod.value,
+      this.scheduleDetails.selectedScheduleDaysAsArray
+    );
+    let differentCronOption = this.scheduleDate.crontab !== currentCronSelected;
+    let differentCategorySelection = this._categorySelectionHasChanged(this.recurringCategories);
+    return differentCronOption || differentCategorySelection;
+  }
+
+  /**
+   * Returns true if there is a change in the category selection, false otherwise
+   * @param categories list of categories to be checked
+   */
+  private _categorySelectionHasChanged(categories: McsServerOsUpdatesCategory[]): boolean {
+
+    let selectedCategories = categories.filter((category) => category.isSelected);
+    if (this._initialScheduleCategoryList.length !== selectedCategories.length) { return true; }
+
+    let cloneCategoryList = this._initialScheduleCategoryList.slice();
+    deleteArrayRecord(cloneCategoryList, (item) => {
+      return !!categories.find((record) => record.id === item.id);
     });
-    return mockRecords.length !== 0;
+
+    return cloneCategoryList.length !== 0;
+  }
+
+  /**
+   * Maps and returns the list of categories with the selected values
+   * @param categories list of categories
+   * @param selectedCategories selected categories
+   */
+  private _mapSelectedCategories(
+    categories: McsServerOsUpdatesCategory[],
+    selectedCategories: McsServerOsUpdatesCategory[]
+  ): McsServerOsUpdatesCategory[] {
+    let cloneCategories = categories.slice();
+    cloneCategories.forEach((category) => {
+      category.isSelected = !isNullOrEmpty(selectedCategories.find(
+        (selectedCategory) => category.id === selectedCategory.id
+      ));
+    });
+
+    return categories;
   }
 
   /**
@@ -516,12 +590,8 @@ export class OsUpdatesScheduleScheduledComponent implements OnInit {
     message: string,
     confirmText: string
   ): Observable<any> {
-
     let data = {
-      data: server,
-      type: 'warning',
-      title, message,
-      confirmText
+      data: server, type: 'warning', title, message, confirmText
     } as DialogConfirmation<McsServer>;
     let dialogRef = this._dialogService.open(DialogConfirmationComponent, { data, size: 'medium' });
 

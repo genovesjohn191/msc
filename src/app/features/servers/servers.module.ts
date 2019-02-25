@@ -36,8 +36,8 @@ import {
   ServerNicsComponent,
   ServerBackupsComponent,
   ServerServicesComponent,
-  OsUpdatesScheduleScheduledComponent,
-  OsUpdatesScheduleUnscheduledComponent
+  OsUpdatesScheduleComponent,
+  OsUpdatesApplyNowComponent
 } from './server/';
 /** Server Provisioning */
 import { ServerProvisioningComponent } from './server-provisioning/server-provisioning.component';
@@ -107,8 +107,8 @@ import {
     ServerCreateConfirmComponent,
     ServerCreateProvisioningComponent,
     ServerServicesComponent,
-    OsUpdatesScheduleScheduledComponent,
-    OsUpdatesScheduleUnscheduledComponent,
+    OsUpdatesScheduleComponent,
+    OsUpdatesApplyNowComponent,
     VdcComponent,
     VdcOverviewComponent,
     VdcStorageComponent,
