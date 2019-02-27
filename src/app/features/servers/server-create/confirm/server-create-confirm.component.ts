@@ -14,7 +14,6 @@ import {
   tap
 } from 'rxjs/operators';
 import {
-  McsTextContentProvider,
   McsDataStatusFactory,
   CoreRoutes
 } from '@app/core';
@@ -28,6 +27,7 @@ import {
 import { McsOrderItemTypesRepository } from '@app/services';
 import { ServerOrderDetail } from './server-order-detail';
 import { ServerCreateFlyweightContext } from '../server-create-flyweight.context';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'mcs-server-create-confirm',
@@ -35,7 +35,6 @@ import { ServerCreateFlyweightContext } from '../server-create-flyweight.context
 })
 
 export class ServerCreateConfirmComponent implements OnInit {
-  public textContent: any;
   public order$: Observable<McsOrder>;
   public createOrderWorkflow: () => Observable<McsOrder>;
 
@@ -63,7 +62,7 @@ export class ServerCreateConfirmComponent implements OnInit {
 
   constructor(
     private _router: Router,
-    private _textContentProvider: McsTextContentProvider,
+    private _translateService: TranslateService,
     private _changeDetectorRef: ChangeDetectorRef,
     private _orderItemTypesRepository: McsOrderItemTypesRepository,
     private _serverCreateFlyweightContext: ServerCreateFlyweightContext
@@ -74,7 +73,6 @@ export class ServerCreateConfirmComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.textContent = this._textContentProvider.content.servers.createServer.serverConfirmStep;
     this._createOrderWorkFlowMap();
     this._getItemTypes();
     this._subscribeToOrderChanges();
@@ -104,7 +102,9 @@ export class ServerCreateConfirmComponent implements OnInit {
    * Sets data column for the corresponding table
    */
   private _setDataColumns(): void {
-    this.dataColumns = Object.keys(this.textContent.orderDetails.columnHeaders);
+    this.dataColumns = Object.keys(
+      this._translateService.instant('serverCreateConfirmStep.orderDetails.columnHeaders')
+    );
     if (isNullOrEmpty(this.dataColumns)) {
       throw new Error('column definition for order charges was not defined');
     }

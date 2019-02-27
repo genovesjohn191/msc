@@ -9,8 +9,7 @@ import {
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
-  McsRouteHandlerService,
-  McsTextContentProvider
+  McsRouteHandlerService
 } from '@app/core';
 import {
   unsubscribeSubject,
@@ -37,7 +36,6 @@ import {
 })
 
 export class SubNavigationComponent implements OnInit, OnDestroy {
-  public textContent: any;
   public activeRouteCategory: RouteCategory;
 
   /**
@@ -66,12 +64,10 @@ export class SubNavigationComponent implements OnInit, OnDestroy {
 
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
-    private _textContentProvider: McsTextContentProvider,
     private _routerHandlerService: McsRouteHandlerService
   ) { }
 
   public ngOnInit() {
-    this.textContent = this._textContentProvider.content.navigation;
     this._listenToRouteChanges();
   }
 

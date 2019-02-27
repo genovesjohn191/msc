@@ -1,8 +1,8 @@
 <ng-container *ngIf="selectedResource$ | async as selectedResource">
   <mcs-tab-group [(selectedTabId)]="selectedTabIndex" *mcsComponentHandler>
     <!-- New Server Tab -->
-    <mcs-tab [label]="textContent.newServer.title" [id]="serverCreateTypeEnum.New">
-      <p>{{ textContent.newServer.description }}</p>
+    <mcs-tab [label]="'serverCreateDetailsStepNewServer.title' | translate" [id]="serverCreateTypeEnum.New">
+      <p>{{ 'serverCreateDetailsStepNewServer.description' | translate }}</p>
 
       <ng-container *ngIf="selectedTabIndex === serverCreateTypeEnum.New">
         <mcs-server-new #serverBase
@@ -12,8 +12,8 @@
     </mcs-tab>
 
     <!-- Clone Server Tab -->
-    <mcs-tab [label]="textContent.cloneServer.title" [id]="serverCreateTypeEnum.Clone">
-      <p>{{ textContent.cloneServer.description }}</p>
+    <mcs-tab [label]="'serverCreateDetailsStepCloneServer.title' | translate" [id]="serverCreateTypeEnum.Clone">
+      <p>{{ 'serverCreateDetailsStepCloneServer.description' | translate }}</p>
 
       <ng-container *ngIf="selectedTabIndex === serverCreateTypeEnum.Clone">
         <mcs-server-clone #serverBase

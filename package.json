@@ -91,6 +91,8 @@
     "@angular/platform-server": "^7.2.4",
     "@angular/router": "^7.2.4",
     "@nguniversal/express-engine": "^7.1.0",
+    "@ngx-translate/core": "^11.0.1",
+    "@ngx-translate/http-loader": "^4.0.0",
     "@stomp/ng2-stompjs": "^6.0.1",
     "core-js": "^2.6.4",
     "cron-converter": "^0.0.12",

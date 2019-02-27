@@ -6,12 +6,12 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { VdcService } from '../vdc.service';
 import { VdcDetailsBase } from '../vdc-details.base';
 import {
   CoreRoutes,
-  CoreDefinition,
-  McsTextContentProvider
+  CoreDefinition
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -33,7 +33,6 @@ const VDC_LOW_STORAGE_PERCENTAGE = 85;
 })
 
 export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDestroy {
-  public textContent: any;
   public hasResources: boolean;
 
   public get warningIconKey(): string {
@@ -58,7 +57,9 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
   public get storageSummary(): string {
     if (!this.hasLowStorage) { return ''; }
 
-    let status = this.textContent.storageProfiles.lowStorageSummary;
+    let status = this._translateService.instant(
+      'serversVdcOverview.storageProfiles.lowStorageSummary'
+    );
 
     let storageCount = this._getLowStorageCount();
     status = replacePlaceholder(status, 'storage_profile_number', `${storageCount}`);
@@ -73,20 +74,19 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
     _resourcesRespository: McsResourcesRepository,
     _vdcService: VdcService,
     _changeDetectorRef: ChangeDetectorRef,
-    _textContentProvider: McsTextContentProvider,
+    _translateService: TranslateService,
     private _router: Router
   ) {
     super(
       _resourcesRespository,
       _vdcService,
       _changeDetectorRef,
-      _textContentProvider
+      _translateService
     );
     this.selectedVdc = new McsResource();
   }
 
   public ngOnInit(): void {
-    this.textContent = this._textContentProvider.content.servers.vdc.overview;
     this.initialize();
     this._validateResources();
   }

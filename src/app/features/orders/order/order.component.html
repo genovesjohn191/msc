@@ -1,5 +1,4 @@
-<mcs-page
-  header="{{ textContent.header | mcsTextPlaceholder: 'orderId': (order$ | async)?.orderId }}">
+<mcs-page [header]="'order.header' | translate:{orderId: (order$ | async)?.orderId}">
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef>
 
@@ -11,7 +10,7 @@
         mcsEventCategory="order"
         mcsEventLabel="order-details-page">
         <mcs-icon [key]="backIconKey" size="large"></mcs-icon>
-        <span>{{ textContent.backToOrders }}</span>
+        <span>{{ 'order.backToOrders' | translate }}</span>
       </mcs-action-item>
     </mcs-top-panel-item>
   </mcs-top-panel>
@@ -24,7 +23,7 @@
       <div class="limited-view">
         <mcs-presentation-panel>
           <ng-container mcsPresentationPanelHeader>
-            <h2>{{ textContent.description }}</h2>
+            <h2>{{ 'order.description' | translate }}</h2>
           </ng-container>
 
           <p>
@@ -36,17 +35,17 @@
           </p>
 
           <mcs-item>
-            <span>{{ textContent.contractDuration }}:</span>
+            <span>{{ 'order.contractDuration' | translate }}:</span>
             <span>12</span>
           </mcs-item>
 
           <mcs-item>
-            <span>{{ textContent.status }}:</span>
+            <span>{{ 'order.status' | translate }}:</span>
             <span [innerHTML]="order.statusLabel | mcsDataLabel"></span>
           </mcs-item>
 
           <mcs-item>
-            <span>{{ textContent.createdBy }}:</span>
+            <span>{{ 'order.createdBy' | translate }}:</span>
             <span>{{ order.createdBy }}</span>
           </mcs-item>
         </mcs-presentation-panel>
@@ -57,7 +56,7 @@
         <!-- Item ID Column -->
         <ng-container mcsColumnDef="id">
           <mcs-header-cell *mcsHeaderCellDef>
-            {{ textContent.columnHeaders.id }}
+            {{ 'order.columnHeaders.id' | translate }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
             {{ row.orderItemId }}
@@ -67,7 +66,7 @@
         <!-- Type Column -->
         <ng-container mcsColumnDef="type">
           <mcs-header-cell *mcsHeaderCellDef>
-            {{ textContent.columnHeaders.type }}
+            {{ 'order.columnHeaders.type' | translate }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
             <span text-wrap>{{ getOderTypeById(row.typeId) }}</span>
@@ -77,7 +76,7 @@
         <!-- Description Column -->
         <ng-container mcsColumnDef="description">
           <mcs-header-cell *mcsHeaderCellDef>
-            {{ textContent.columnHeaders.description }}
+            {{ 'order.columnHeaders.description' | translate }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
             <span text-wrap>{{ row.description }}</span>
@@ -87,7 +86,7 @@
         <!-- Status Column -->
         <ng-container mcsColumnDef="status">
           <mcs-header-cell *mcsHeaderCellDef>
-            {{ textContent.columnHeaders.status }}
+            {{ 'order.columnHeaders.status' | translate }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
             {{ row.statusLabel }}
@@ -97,7 +96,7 @@
         <!-- One-off Charge Column -->
         <ng-container mcsColumnDef="oneOffCharge">
           <mcs-header-cell *mcsHeaderCellDef>
-            {{ textContent.columnHeaders.oneOffCharge }}
+            {{ 'order.columnHeaders.oneOffCharge' | translate }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
             {{ row.charges?.currencySymbol }} {{ row.charges?.oneOff }}
@@ -107,7 +106,7 @@
         <!-- Monthly Charge Column -->
         <ng-container mcsColumnDef="monthlyCharge">
           <mcs-header-cell *mcsHeaderCellDef>
-            {{ textContent.columnHeaders.monthlyCharge }}
+            {{ 'order.columnHeaders.monthlyCharge' | translate }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
             {{ row.charges?.currencySymbol }} {{ row.charges?.monthly }}
@@ -117,10 +116,10 @@
         <!-- Data Status Integration -->
         <ng-container mcsDataStatusDef>
           <mcs-data-empty *mcsDataEmptyDef>
-            <span>{{ textContent.noOrderItems }} </span>
+            <span>{{ 'order.noOrderItems' | translate }}</span>
           </mcs-data-empty>
           <mcs-data-error *mcsDataErrorDef>
-            <span>{{ textContent.errorOnOrderItems }}</span>
+            <span>{{ 'order.errorOnOrderItems' | translate }}</span>
           </mcs-data-error>
         </ng-container>
 

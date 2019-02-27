@@ -1,6 +1,5 @@
 import {
   Component,
-  OnInit,
   OnDestroy,
   AfterViewInit,
   ChangeDetectorRef,
@@ -8,7 +7,6 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import {
-  McsTextContentProvider,
   CoreDefinition,
   McsBrowserService,
   McsTableListingBase,
@@ -30,22 +28,15 @@ import { McsOrdersRepository } from '@app/services';
 
 export class OrdersComponent
   extends McsTableListingBase<McsTableDataSource<McsOrder>>
-  implements OnInit, AfterViewInit, OnDestroy {
-
-  public textContent: any;
+  implements AfterViewInit, OnDestroy {
 
   public constructor(
     _browserService: McsBrowserService,
     _changeDetectorRef: ChangeDetectorRef,
     private _router: Router,
-    private _textProvider: McsTextContentProvider,
     private _ordersRepository: McsOrdersRepository
   ) {
     super(_browserService, _changeDetectorRef);
-  }
-
-  public ngOnInit() {
-    this.textContent = this._textProvider.content.orders;
   }
 
   public ngAfterViewInit() {

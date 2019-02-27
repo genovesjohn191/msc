@@ -30,15 +30,15 @@
       </mcs-data-status-success>
 
       <mcs-data-status-in-progress mcsDataInProgress>
-        <span>{{ textContent.loadingProducts }}</span>
+        <span>{{ 'navigation.loadingProducts' | translate }}</span>
       </mcs-data-status-in-progress>
 
       <mcs-data-status-empty mcsDataEmpty>
-        <span>{{ textContent.noProducts }}</span>
+        <span>{{ 'navigation.noProducts' | translate }}</span>
       </mcs-data-status-empty>
 
       <mcs-data-status-error mcsDataError>
-        <span>{{ textContent.errorProducts }}</span>
+        <span>{{ 'navigation.errorProducts' | translate }}</span>
       </mcs-data-status-error>
     </mcs-data-status>
   </div>
@@ -60,7 +60,7 @@
         [placementElement]="caretIconElement">
 
         <mcs-item>
-          <span>{{ textContent.productCatalog }}</span>
+          <span>{{ 'navigation.productCatalog' | translate }}</span>
           <span #caretIconElement>
             <mcs-icon [key]="caretDownIconKey"
               size="medium" color="white"></mcs-icon>
@@ -78,7 +78,7 @@
 
         <mcs-item>
           <mcs-icon [key]="arrowUpIconKey" size="large"></mcs-icon>
-          <span>{{ textContent.macquarieView }}</span>
+          <span>{{ 'navigation.macquarieView' | translate }}</span>
         </mcs-item>
       </a>
     </ng-template>
@@ -90,7 +90,7 @@
   <div class="navigation-mobile-list">
     <!-- Title -->
     <div class="navigation-mobile-item navigation-mobile-title">
-      <h2>{{ textContent.title }}</h2>
+      <h2>{{ 'navigation.title' | translate }}</h2>
       <mcs-icon [key]="closeIconKey" color="white"
         mcsCursor="pointer" (click)="close()"></mcs-icon>
     </div>
@@ -105,7 +105,7 @@
         mcsId
         mcsEventTracker="sign-out"
         mcsEventCategory="navigation"
-        mcsEventLabel="main-nav">{{ textContent.signOut }}</a>
+        mcsEventLabel="main-nav">{{ 'navigation.signOut' | translate }}</a>
     </div>
   </div>
 </mcs-sliding-panel>

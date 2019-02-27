@@ -26,7 +26,6 @@ import {
   CoreConfig,
   CoreDefinition,
   McsAuthenticationService,
-  McsTextContentProvider,
   McsDataStatusFactory,
   CoreRoutes,
   McsAccessControlService
@@ -69,7 +68,6 @@ import { McsProductCatalogRepository } from '@app/services';
 })
 
 export class NavigationMobileComponent implements OnInit, OnDestroy {
-  public textContent: any;
   public productCatalogs: McsProductCatalog[];
   public productsStatusFactory: McsDataStatusFactory<McsProductCatalog[]>;
   public switchAccountAnimation: string;
@@ -121,7 +119,6 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
     private _eventDispatcher: EventBusDispatcherService,
     private _accessControl: McsAccessControlService,
     private _authenticationService: McsAuthenticationService,
-    private _textContentProvider: McsTextContentProvider,
     private _productCatalogRepository: McsProductCatalogRepository
   ) {
     this.switchAccountAnimation = 'collapsed';
@@ -129,7 +126,6 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit() {
-    this.textContent = this._textContentProvider.content.navigation;
     this._registerEvents();
     this._getProductCatalogs();
   }

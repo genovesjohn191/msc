@@ -1,4 +1,4 @@
-<mcs-page [header]="textContent.header">
+<mcs-page [header]="'servers.header' | translate">
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef [active]="selection.hasValue()">
 
@@ -13,7 +13,7 @@
             mcsEventCategory="server"
             mcsEventLabel="server-listing-top-panel">
             <mcs-icon [key]="addIconKey" size="small"></mcs-icon>
-            <span>{{ textContent.newServer }}</span>
+            <span>{{ 'servers.newServer' | translate }}</span>
           </mcs-action-item>
         </mcs-top-panel-item>
       </ng-container>
@@ -31,7 +31,7 @@
             mcsEventCategory="server"
             mcsEventLabel="server-listing-top-panel">
             <mcs-icon [key]="startIconKey" size="small"></mcs-icon>
-            <span>{{ textContent.start }}</span>
+            <span>{{ 'servers.start' | translate }}</span>
           </mcs-action-item>
 
           <mcs-action-item mcsResponsivePanelItem hidden-small
@@ -42,7 +42,7 @@
             mcsEventCategory="server"
             mcsEventLabel="server-listing-top-panel">
             <mcs-icon [key]="stopIconKey" size="small"></mcs-icon>
-            <span>{{ textContent.stop }}</span>
+            <span>{{ 'servers.stop' | translate }}</span>
           </mcs-action-item>
 
           <mcs-action-item mcsResponsivePanelItem hidden-small
@@ -53,7 +53,7 @@
             mcsEventCategory="server"
             mcsEventLabel="server-listing-top-panel">
             <mcs-icon [key]="restartIconKey" size="small"></mcs-icon>
-            <span>{{ textContent.restart }}</span>
+            <span>{{ 'servers.restart' | translate }}</span>
           </mcs-action-item>
 
           <mcs-action-item mcsResponsivePanelItem hidden-small
@@ -64,7 +64,7 @@
             mcsEventCategory="server"
             mcsEventLabel="server-listing-top-panel">
             <mcs-icon [key]="deleteIconKey" size="small"></mcs-icon>
-            <span>{{ textContent.delete }}</span>
+            <span>{{ 'servers.delete' | translate }}</span>
           </mcs-action-item>
 
           <mcs-action-item mcsResponsivePanelItem hidden-small
@@ -75,7 +75,7 @@
             mcsEventCategory="server"
             mcsEventLabel="server-listing-top-panel">
             <mcs-icon [key]="suspendIconKey" size="small"></mcs-icon>
-            <span>{{ textContent.suspend }}</span>
+            <span>{{ 'servers.suspend' | translate }}</span>
           </mcs-action-item>
 
           <mcs-action-item mcsResponsivePanelItem hidden-small
@@ -86,13 +86,13 @@
             mcsEventCategory="server"
             mcsEventLabel="server-listing-top-panel">
             <mcs-icon [key]="resumeIconKey" size="small"></mcs-icon>
-            <span>{{ textContent.resume }}</span>
+            <span>{{ 'servers.resume' | translate }}</span>
           </mcs-action-item>
         </mcs-responsive-panel>
 
         <div class="total-record-count">
           <span>{{ dataSource?.totalRecordsCount | mcsPlural:
-                textContent.dataSingular : textContent.dataPlural }}
+                ('servers.dataSingular' | translate) : ('servers.dataPlural' | translate) }}
           </span>
         </div>
       </div>
@@ -100,14 +100,14 @@
   </mcs-top-panel>
 
   <!-- Left Panel -->
-  <mcs-left-panel *mcsLeftPanelDef="textContent.leftPanelHeader">
+  <mcs-left-panel *mcsLeftPanelDef="'servers.leftPanelHeader' | translate">
     <!-- Search -->
     <mcs-left-panel-item *mcsLeftPanelItemDef>
       <mcs-search *ngIf="!isMobile" #search mcsId="virtual-desktop-search"></mcs-search>
     </mcs-left-panel-item>
 
     <!-- Column Filter -->
-    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.filterColumn" offset="medium">
+    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'servers.filterColumn' | translate" offset="medium">
       <mcs-filter-selector [key]="columnSettingsKey" #filterSelector
         (filtersChange)="updateColumnSettings($event)"></mcs-filter-selector>
     </mcs-left-panel-item>
@@ -198,9 +198,9 @@
             </ng-container>
             <ng-template #toolsNotInstalled>
               <mcs-data-status-empty
-                [mcsTooltip]="textContent.toolsUnavailable"
+                [mcsTooltip]="'servers.toolsUnavailable' | translate"
                 [mcsTooltipShow]="!row.vmwareTools?.hasTools">
-                {{ textContent.toolsNotInstalled }}
+                {{ 'servers.toolsNotInstalled' | translate }}
               </mcs-data-status-empty>
             </ng-template>
           </mcs-data-cell>
@@ -280,7 +280,7 @@
         <ng-container mcsDataStatusDef>
           <mcs-data-empty *mcsDataEmptyDef>
             <div class="listing-status-wrapper">
-              <span>{{ textContent.noServers }} </span>
+              <span>{{ 'servers.noServers' | translate }} </span>
               <span *ngIf="hasCreateResources && !isSearching">
                 <!-- We need to hardcode this instead of putting in the text-config
                     since it is using link -->
@@ -293,12 +293,12 @@
           </mcs-data-empty>
           <mcs-data-error *mcsDataErrorDef>
             <div class="listing-status-wrapper">
-              <span>{{ textContent.errorMessage }}</span>
+              <span>{{ 'servers.errorMessage' | translate }}</span>
               <a (click)="retryDatasource()"
                 mcsId
                 mcsEventTracker="retry-loading-server-list"
                 mcsEventCategory="server"
-                mcsEventLabel="server-listing-page">{{ textContent.retry }}</a>.
+                mcsEventLabel="server-listing-page">{{ 'servers.retry' | translate }}</a>.
             </div>
           </mcs-data-error>
         </ng-container>

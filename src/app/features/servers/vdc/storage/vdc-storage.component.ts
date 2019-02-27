@@ -7,9 +7,9 @@ import {
 } from '@angular/core';
 import {
   CoreDefinition,
-  McsTextContentProvider,
   McsTableDataSource
 } from '@app/core';
+import { TranslateService } from '@ngx-translate/core';
 import { isNullOrEmpty } from '@app/utilities';
 import { McsResourceStorage } from '@app/models';
 import { McsResourcesRepository } from '@app/services';
@@ -26,7 +26,6 @@ import { VdcDetailsBase } from '../vdc-details.base';
 })
 
 export class VdcStorageComponent extends VdcDetailsBase implements OnInit, OnDestroy {
-  public textContent: any;
   public storageDatasource: McsTableDataSource<McsResourceStorage>;
   public storageColumns: string[];
 
@@ -46,19 +45,18 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnInit, OnDes
     _resourcesRespository: McsResourcesRepository,
     _vdcService: VdcService,
     _changeDetectorRef: ChangeDetectorRef,
-    _textContentProvider: McsTextContentProvider
+    _translateService: TranslateService
   ) {
     super(
       _resourcesRespository,
       _vdcService,
       _changeDetectorRef,
-      _textContentProvider
+      _translateService
     );
     this.storageColumns = new Array();
   }
 
   public ngOnInit() {
-    this.textContent = this._textContentProvider.content.servers.vdc.storage;
     this.initialize();
     this._setDataColumns();
   }
@@ -78,7 +76,9 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnInit, OnDes
    * Sets data column for the corresponding table
    */
   private _setDataColumns(): void {
-    this.storageColumns = Object.keys(this.textContent.columnHeaders);
+    this.storageColumns = Object.keys(
+      this._translateService.instant('serversVdcStorage.columnHeaders')
+    );
     if (isNullOrEmpty(this.storageColumns)) {
       throw new Error('column definition for storage was not defined');
     }

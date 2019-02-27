@@ -5,20 +5,20 @@
       placeholder="Enter a server name" maxlength="15"
       mcsId="input-server-name"
       [formControl]="fcServerName"
-      [mcsContextualHelp]="textHelpContent.serverNameField">
+      [mcsContextualHelp]="'serverCreateDetailsStep.contextualHelp.serverNameField' | translate">
 
     <mcs-hint mcsHint align="start">
-      {{ convertMaxCharText(textContent.hints.serverNameMax, serverNameInput.maxLength) }}
+      {{ 'serverCreateDetailsStepCloneServer.hints.serverNameMax' | translate:{max_char: serverNameInput.maxLength} }}
     </mcs-hint>
     <mcs-hint mcsHint align="end">
       {{ serverNameInput.value.length }} / {{ serverNameInput.maxLength }}
     </mcs-hint>
 
     <mcs-error mcsError errorState="required">
-      {{ textContent.errors.serverNameRequired }}
+      {{ 'serverCreateDetailsStepCloneServer.errors.serverNameRequired' | translate }}
     </mcs-error>
     <mcs-error mcsError errorState="invalidServerName">
-      {{ textContent.errors.invalidServerName }}
+      {{ 'serverCreateDetailsStepCloneServer.errors.invalidServerName' | translate }}
     </mcs-error>
   </mcs-form-field>
 
@@ -30,7 +30,7 @@
           <mcs-select mcsId="select-server" required
             [formControl]="fcTargetServer"
             [(ngModel)]="selectedServer"
-            [placeholder]="textContent.placeholder.server">
+            [placeholder]="'serverCreateDetailsStepCloneServer.placeholder.server' | translate">
 
             <mcs-option-group>
               <ng-container *mcsOptionGroupHeader>Servers</ng-container>
@@ -41,21 +41,21 @@
           </mcs-select>
 
           <mcs-error mcsError errorState="required">
-            {{ textContent.errors.selectServerRequired }}
+            {{ 'serverCreateDetailsStepCloneServer.errors.selectServerRequired' | translate }}
           </mcs-error>
         </mcs-form-field>
       </mcs-data-status-success>
 
       <mcs-data-status-in-progress mcsDataInProgress>
-        <span>{{ textContent.loadingServers }}</span>
+        <span>{{ 'serverCreateDetailsStepCloneServer.loadingServers' | translate }}</span>
       </mcs-data-status-in-progress>
 
       <mcs-data-status-empty mcsDataEmpty>
-        <span>{{ textContent.noServers }}</span>
+        <span>{{ 'serverCreateDetailsStepCloneServer.noServers' | translate }}</span>
       </mcs-data-status-empty>
 
       <mcs-data-status-error mcsDataError>
-        <span>{{ textContent.errorMessageServers }}</span>
+        <span>{{ 'serverCreateDetailsStepCloneServer.errorMessageServers' | translate }}</span>
       </mcs-data-status-error>
     </mcs-data-status>
 
@@ -63,12 +63,13 @@
     <mcs-data-status [dataStatusFactory]="ipAddressStatusFactory">
       <mcs-data-status-success mcsDataSuccess>
         <mcs-data-status-warning *ngIf="serverIsManuallyAssignedIp">
-          <span [innerHTML]="(textContent.errors.manuallyAssignedIpWarning | mcsTextPlaceholder: 'server_name': selectedServer?.name) | mcsNewLines"></span>
+          <span [innerHTML]="('serverCreateDetailsStepCloneServer.errors.manuallyAssignedIpWarning'
+          | translate:{'server_name': selectedServer?.name}) | mcsNewLines"></span>
         </mcs-data-status-warning>
       </mcs-data-status-success>
 
       <mcs-data-status-in-progress mcsDataInProgress>
-        <span>{{ textContent.loadingServerDetails }}</span>
+        <span>{{ 'serverCreateDetailsStepCloneServer.loadingServerDetails' | translate }}</span>
       </mcs-data-status-in-progress>
     </mcs-data-status>
   </mcs-section>

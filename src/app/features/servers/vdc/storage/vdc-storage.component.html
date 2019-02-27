@@ -1,13 +1,13 @@
 <mcs-presentation-panel>
   <ng-container mcsPresentationPanelHeader>
-    <h2>{{ textContent.title }}</h2>
+    <h2>{{ 'serversVdcStorage.title' | translate }}</h2>
   </ng-container>
 
   <mcs-table [dataSource]="storageDatasource">
     <!-- Storage Profile Column -->
     <ng-container mcsColumnDef="storageProfile">
       <mcs-header-cell *mcsHeaderCellDef>
-        {{ textContent.columnHeaders.storageProfile }}
+        {{ 'serversVdcStorage.columnHeaders.storageProfile' | translate }}
       </mcs-header-cell>
       <mcs-data-cell *mcsDataCellDef="let row" text-wrap>
         <mcs-item>
@@ -20,7 +20,7 @@
     <!-- Usage Column -->
     <ng-container mcsColumnDef="usage">
       <mcs-header-cell *mcsHeaderCellDef hidden-small>
-        {{ textContent.columnHeaders.usage }}
+        {{ 'serversVdcStorage.columnHeaders.usage' | translate }}
       </mcs-header-cell>
       <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
         <mcs-capacity-bar
@@ -32,7 +32,7 @@
     <!-- Tier Column -->
     <ng-container mcsColumnDef="tier">
       <mcs-header-cell *mcsHeaderCellDef hidden-small>
-        {{ textContent.columnHeaders.tier }}
+        {{ 'serversVdcStorage.columnHeaders.tier' | translate }}
       </mcs-header-cell>
       <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
         <span [innerHTML]="(iopsLabelPlaceholder |
@@ -44,10 +44,10 @@
     <!-- Data Status Integration -->
     <ng-container mcsDataStatusDef>
       <mcs-data-empty *mcsDataEmptyDef>
-        <span>{{ textContent.noStorage }} </span>
+        <span>{{ 'serversVdcStorage.noStorage' | translate }} </span>
       </mcs-data-empty>
       <mcs-data-error *mcsDataErrorDef>
-        <span>{{ textContent.errorGettingStorage }}</span>
+        <span>{{ 'serversVdcStorage.errorGettingStorage' | translate }}</span>
       </mcs-data-error>
     </ng-container>
 

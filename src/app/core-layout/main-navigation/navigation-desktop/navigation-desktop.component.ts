@@ -17,7 +17,6 @@ import {
   CoreRoutes,
   CoreConfig,
   CoreDefinition,
-  McsTextContentProvider,
   McsDataStatusFactory
 } from '@app/core';
 import {
@@ -46,7 +45,6 @@ import { McsAccessControlService } from '@app/core/authentication/mcs-access-con
 })
 
 export class NavigationDesktopComponent implements OnInit, OnDestroy {
-  public textContent: any;
   public productCatalogs: McsProductCatalog[];
   public productsStatusFactory: McsDataStatusFactory<McsProductCatalog[]>;
 
@@ -73,14 +71,12 @@ export class NavigationDesktopComponent implements OnInit, OnDestroy {
     private _changeDetectorRef: ChangeDetectorRef,
     private _eventDispatcher: EventBusDispatcherService,
     private _accessControl: McsAccessControlService,
-    private _textContentProvider: McsTextContentProvider,
     private _productCatalogRepository: McsProductCatalogRepository
   ) {
     this.productsStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
   }
 
   public ngOnInit() {
-    this.textContent = this._textContentProvider.content.navigation;
     this._registerEvents();
     this._getProductCatalogs();
   }
