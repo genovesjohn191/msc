@@ -32,6 +32,11 @@ $product-panel-color: $color-grey-08;
   h1, h2, h3, h4, h5, h6 {
     margin-bottom: $space-small;
   }
+
+  sup {
+    font-size: x-small;
+    vertical-align: super;
+  }
 }
 
 .product-catalog-description {
