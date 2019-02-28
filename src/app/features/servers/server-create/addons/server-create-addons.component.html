@@ -1,12 +1,12 @@
 <div class="limited-view">
   <div class="contextual-help-page-wrapper">
-    <h2>{{ textContent.header }}</h2>
-    <p>{{ textContent.description }}</p>
+    <h2>{{ 'serverCreateAddOnsStep.header' | translate }}</h2>
+    <p>{{ 'serverCreateAddOnsStep.description' | translate }}</p>
 
     <mcs-section>
       <mcs-collapsible-panel (collapseChange)="antiMalwareCheckedChange($event)"
-        [header]="textContent.antiMalwareAddOn"
-        [mcsContextualHelp]="textContent.antiMalwareAddOnHelp">
+        [header]="'serverCreateAddOnsStep.antiMalwareAddOn' | translate"
+        [mcsContextualHelp]="'serverCreateAddOnsStep.antiMalwareAddOnHelp' | translate">
         <mcs-anti-malware-addon
           (dataChange)="onChangeAntiMalwareDetails($event)">
         </mcs-anti-malware-addon>
@@ -14,13 +14,13 @@
 
       <!-- TODO: Remove this temporarily since they're not yet enabled,
         or the payload was not finalize
-      <mcs-collapsible-panel [header]="textContent.disasterRecoveryAddOn"
-        [mcsContextualHelp]="textContent.disasterRecoveryAddOnHelp">
+      <mcs-collapsible-panel [header]="'serverCreateAddOnsStep.disasterRecoveryAddOn' | translate"
+        [mcsContextualHelp]="'serverCreateAddOnsStep.disasterRecoveryAddOnHelp' | translate">
         <mcs-disaster-recovery-addon></mcs-disaster-recovery-addon>
       </mcs-collapsible-panel>
 
-      <mcs-collapsible-panel [header]="textContent.sqlServerAddOn"
-        [mcsContextualHelp]="textContent.sqlServerAddOnHelp">
+      <mcs-collapsible-panel [header]="'serverCreateAddOnsStep.sqlServerAddOn' | translate"
+        [mcsContextualHelp]="'serverCreateAddOnsStep.sqlServerAddOnHelp' | translate">
         <mcs-sql-server-addon></mcs-sql-server-addon>
       </mcs-collapsible-panel>
       -->

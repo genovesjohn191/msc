@@ -5,6 +5,7 @@ import {
   FormsModule,
   ReactiveFormsModule
 } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 /** Modules */
 import { RippleModule } from './ripple/ripple.module';
 import { GridModule } from './grid/grid.module';
@@ -70,6 +71,7 @@ import { SectionModule } from './section/section.module';
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
+    TranslateModule,
     PipesModule,
     DirectivesModule,
     RippleModule,
@@ -133,6 +135,7 @@ import { SectionModule } from './section/section.module';
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
+    TranslateModule,
     PipesModule,
     DirectivesModule,
     RippleModule,

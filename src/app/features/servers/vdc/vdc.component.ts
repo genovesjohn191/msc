@@ -11,6 +11,7 @@ import {
   Router,
   ActivatedRoute
 } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import {
   Subject,
   throwError,
@@ -25,7 +26,6 @@ import {
   shareReplay
 } from 'rxjs/operators';
 import {
-  McsTextContentProvider,
   McsRoutingTabBase,
   McsDataStatusFactory,
   McsErrorHandlerService,
@@ -68,9 +68,6 @@ export class VdcComponent
   @ViewChild('search')
   public search: Search;
 
-  public textContent: any;
-  public serversTextContent: any;
-  public serverTextContent: any;
   public serverListSource: ServersListSource | null;
   public listStatusFactory: McsDataStatusFactory<Map<string, McsServer[]>>;
 
@@ -90,7 +87,7 @@ export class VdcComponent
     _activatedRoute: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef,
     private _loadingService: McsLoadingService,
-    private _textContentProvider: McsTextContentProvider,
+    private _translateService: TranslateService,
     private _serversRepository: McsServersRepository,
     private _resourcesRepository: McsResourcesRepository,
     private _errorHandlerService: McsErrorHandlerService,
@@ -102,9 +99,6 @@ export class VdcComponent
   }
 
   public ngOnInit() {
-    this.textContent = this._textContentProvider.content.servers.vdc;
-    this.serversTextContent = this._textContentProvider.content.servers;
-
     // Initialize base class
     super.onInit();
   }
@@ -199,7 +193,7 @@ export class VdcComponent
    * @param vdcId VDC identification
    */
   private _subscribesToResourceById(vdcId: string): void {
-    this._loadingService.showLoader(this.textContent.loading);
+    this._loadingService.showLoader(this._translateService.instant('serversVdc.loading'));
     this.selectedResource$ = this._resourcesRepository.getById(vdcId).pipe(
       catchError((error) => {
         this._errorHandlerService.redirectToErrorPage(error.status);

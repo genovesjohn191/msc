@@ -8,6 +8,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { FormArray } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import {
   Subject,
@@ -24,7 +25,6 @@ import {
 } from 'rxjs/operators';
 import {
   CoreDefinition,
-  McsTextContentProvider,
   McsErrorHandlerService,
   CoreRoutes,
   McsLoadingService
@@ -56,7 +56,6 @@ import { ServerCreateFlyweightContext } from './server-create-flyweight.context'
 
 export class ServerCreateComponent implements
   OnInit, AfterContentInit, OnDestroy, McsSafeToNavigateAway {
-  public textContent: any;
   public order$: Observable<McsOrder>;
   public orderIsUpdating$: Observable<boolean>;
   public resources$: Observable<McsResource[]>;
@@ -84,7 +83,7 @@ export class ServerCreateComponent implements
   constructor(
     private _router: Router,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _textContentProvider: McsTextContentProvider,
+    private _translateService: TranslateService,
     private _errorHandlerService: McsErrorHandlerService,
     private _resourcesRepository: McsResourcesRepository,
     private _serverCreateFlyweightContext: ServerCreateFlyweightContext,
@@ -92,7 +91,6 @@ export class ServerCreateComponent implements
   ) { }
 
   public ngOnInit() {
-    this.textContent = this._textContentProvider.content.servers.createServer;
     this._subscribeToAllResources();
   }
 
@@ -143,7 +141,7 @@ export class ServerCreateComponent implements
    */
   public getResourceDisplayedText(resource: McsResource): string {
     let prefix = replacePlaceholder(
-      this.textContent.vdcDropdownList.prefix,
+      this._translateService.instant('serverCreate.vdcDropdownList.prefix'),
       ['service_type', 'zone'],
       [resource.serviceTypeLabel, resource.availabilityZone]
     );

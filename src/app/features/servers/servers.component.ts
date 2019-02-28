@@ -21,7 +21,6 @@ import {
   ResumeServerDialogComponent
 } from './shared';
 import {
-  McsTextContentProvider,
   CoreDefinition,
   McsBrowserService,
   McsTableListingBase,
@@ -57,7 +56,6 @@ export class ServersComponent
   extends McsTableListingBase<McsTableDataSource<McsServer>>
   implements OnInit, AfterViewInit, OnDestroy {
 
-  public textContent: any;
   public selection: McsSelection<McsServer>;
   public hasCreateResources: boolean;
   public hasManagedResource: boolean;
@@ -109,7 +107,6 @@ export class ServersComponent
     _changeDetectorRef: ChangeDetectorRef,
     private _router: Router,
     private _dialogService: McsDialogService,
-    private _textProvider: McsTextContentProvider,
     private _serversRepository: McsServersRepository,
     private _resourcesRepository: McsResourcesRepository,
     private _serversService: ServersService
@@ -119,7 +116,6 @@ export class ServersComponent
   }
 
   public ngOnInit() {
-    this.textContent = this._textProvider.content.servers;
     this._setResourcesFlag();
     this._subscribeToBreakpointChanges();
     this._subscribeToDataChange();

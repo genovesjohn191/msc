@@ -1,0 +1,267 @@
+{
+  "consolePage": {},
+  "navigation": {
+    "title": "Macquarie Cloud Services Portal",
+    "dashboard": "Dashboard",
+    "virtual": "Virtual",
+    "medias": "Media",
+    "servers": "Servers",
+    "others": "Others",
+    "networking": "Networking",
+    "firewalls": "Firewalls",
+    "tools": "Other Tools",
+    "catalog": "Catalog",
+    "signOut": "Sign Out",
+    "macquarieView": "MacquarieView",
+    "productCatalog": "Products",
+    "loadingProducts": "Loading products.",
+    "noProducts": "No products to display.",
+    "errorProducts": "Sorry, something’s not right. We weren’t able to retrieve the list of products."
+  },
+  "orders": {
+    "header": "Orders",
+    "leftPanelHeader": "Order Filter",
+    "filterColumn": "Filter Column",
+    "tableSearch": "Table Search",
+    "newOrder": "New Order",
+    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of orders.",
+    "noRecordsFoundMessage": "No orders to display.",
+    "retry": "Try again shortly",
+    "dataSingular": "Order",
+    "dataPlural": "Orders"
+  },
+  "order": {
+    "header": "Draft Order# {{orderId}}",
+    "description": "Details",
+    "loading": "Loading order details",
+    "backToOrders": "Back To Orders",
+    "contractDuration": "Contract Duration",
+    "status": "Status",
+    "createdBy": "Order created by",
+    "columnHeaders": {
+      "id": "ID",
+      "type": "Order Type",
+      "description": "Order Description",
+      "status": "Status",
+      "oneOffCharge": "One-off charge",
+      "monthlyCharge": "Monthly charge"
+    },
+    "noOrderItems": "No order items found.",
+    "errorOnOrderItems": "Sorry, something’s not right. We weren’t able to retrieve the list of order items."
+  },
+  "servers": {
+    "header": "Virtual",
+    "description": "View and manage any Managed or Self-Managed VDC servers. Dedicated and physical servers will be displayed in future versions of the portal.",
+    "leftPanelHeader": "Virtual Server Filter",
+    "newServer": "New Server",
+    "loading": "Loading servers.",
+    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of servers.",
+    "noServers": "No servers to display.",
+    "retry": "Try again shortly",
+    "start": "Start",
+    "stop": "Stop",
+    "restart": "Restart",
+    "scale": "Scale",
+    "clone": "Clone",
+    "delete": "Delete",
+    "viewVCloud": "View in vCloud",
+    "resetVmPassword": "Reset VM Password",
+    "rename": "Rename",
+    "suspend": "Suspend",
+    "resume": "Resume",
+    "filterColumn": "Filter Column",
+    "tableSearch": "Table Search",
+    "dataSingular": "Server",
+    "dataPlural": "Servers",
+    "toolsNotInstalled": "Not Installed",
+    "toolsUnavailable": "Some management features may be unavailable.",
+    "columnHeaders": {
+      "state": "State",
+      "name": "Server",
+      "action": "Action"
+    }
+  },
+  "serversVdc": {
+    "leftPanelHeader": "Virtual Server Filter",
+    "loading": "Loading VDC details.",
+    "iopsLabel": "Performance {{iops}}"
+  },
+  "serversVdcOverview": {
+    "label": "Overview",
+    "vdcProperties": {
+      "title": "VDC Properties",
+      "serviceType": "Service Type",
+      "zone": "Zone",
+      "configuration": "Configuration",
+      "scale": "Scale",
+      "scaling": "Scaling"
+    },
+    "vcloud": {
+      "title": "vCloud Director Virtual Data Centre",
+      "viewVcloud": "View in VCloud",
+      "newServer": "New Server"
+    },
+    "networkInformation": {
+      "title": "Network Information",
+      "description": "All networks are fully operational",
+      "itemDescription": "Standard management network for this VDC.",
+      "gateway": "Gateway"
+    },
+    "storageProfiles": {
+      "title": "Storage Profiles",
+      "manageLink": "Manage",
+      "status": "Status",
+      "tier": "Tier",
+      "iops": "Performance {{iops}}",
+      "utilisation": "Utilisation",
+      "lowStorageSummary": "{{storage_profile_number}} of your storage profiles {{verb}} running low on capacity.",
+      "lowStorageProfile": "You're running low on capacity in this profile."
+    }
+  },
+  "serversVdcStorage": {
+    "label": "Storage",
+    "title": "Manage Storage",
+    "columnHeaders": {
+      "storageProfile": "Storage Profile",
+      "usage": "Usage",
+      "tier": "Tier"
+    },
+    "iopsLabel": "Performance",
+    "expandLink": "Expand",
+    "newStorageProfile": "New Storage Profile",
+    "loadingContent": "Loading list of storage.",
+    "noStorage": "No storage available.",
+    "errorGettingStorage": "Sorry, something’s not right. We weren’t able to retrieve the list of storage."
+  },
+  "serverCreate": {
+    "header": "Create a New Server",
+    "backToServers": "Back To Servers",
+    "vdcDropdownList": {
+      "header": "Virtual Data Centres",
+      "prefix": "{{service_type}} VDC - {{zone}} ",
+      "helpText": "Virtual Data Center to deploy your server. You can deploy your server to any Virtual Data Center available in this list."
+    }
+  },
+  "serverCreateDetailsStep": {
+    "title": "Server Details",
+    "loading": "Loading server data, this may take a few moments.",
+    "contextualHelp": {
+      "serverNameField": "Choose a name for your server. The server name must be 15 characters or less and can contain letters, numbers and hyphens. We'll also use this as a hostname for the server.",
+      "vAppField": "A vApp houses one or more servers. By default we create a vApp for each of your servers.",
+      "intellicentre": "Virtual Data Centre to deploy this Server in.",
+      "serverTemplateField": "Select the operating system or your own custom template to create this server from.",
+      "computeField": "Choose the memory and vCPU for your server. Click 'Enter custom size' to enter a precise value. Your selection is bound by the remaining compute in your Virtual Data Centre.",
+      "storageField": "Choose the profile and size of the server's primary storage volume. Click 'Enter custom size' to enter a precise value. Your selection is bound by the remaining capacity in the selected storage profile.",
+      "serverName": "Starting from an existing server's configuration helps you get a new server up and running quicker.",
+      "networkField": "Select the network to create a primary network interface for your server.\r\n\n Select a method for acquiring the server's private IP address. Selecting DHCP will allocate an IP address on boot. Static Pool will give you the next available IP in the static pool.",
+      "cloneServer": "When you clone a server you get an identical copy of the existing server. it will have the same compute, storage and network characteristics. You can change the properties of server once it has been deployed.",
+      "quickNavigateToCreatedServer": "You can go back to server listing page to view your newly created server",
+      "backToListing": "This link would take you back to your server listing page"
+    }
+  },
+  "serverCreateDetailsStepNewServer": {
+    "title": "New server",
+    "description": "Creating a new server allows you to specify the way your server will be built.",
+    "computeSizeLabel": "Compute Size",
+    "storageLabel": "Storage",
+    "networkLabel": "Network",
+    "ipAddressLabel": "IP Address",
+    "createNewVApp": "Create a new vApp",
+    "headers": {
+      "vApp": "Virtual Applications",
+      "os": "Operating System",
+      "templates": "Custom Templates",
+      "network": "Networks"
+    },
+    "placeholder": {
+      "vApp": "Select vApp",
+      "image": "Select Image",
+      "network": "Select Network"
+    },
+    "hints": {
+      "serverNameMax": "Max of {{max_char}} characters"
+    },
+    "errors": {
+      "serverNameRequired": "Enter a server name.",
+      "invalidServerName": "Server name can only contain letters, numbers or hyphens.",
+      "selectVappRequired": "Virtual application is required.",
+      "selectImageRequired": "You must select an image.",
+      "selectNetworkRequired": "You must select a network."
+    },
+    "noResourceFound": {
+      "header": "Unable to Create Server",
+      "content": "No resources found. You can't create a server at this moment. Please try again later"
+    },
+    "fullStorageSpace": "This server cannot be created due to insufficient storage space ({{remaining_memory}} remaining)."
+  },
+  "serverCreateDetailsStepCloneServer": {
+    "title": "Clone a server",
+    "description": "Cloning a server gives you an exact replica of an existing server in the same Virtual Data Centre.",
+    "loadingServerDetails": "Retrieving network information.",
+    "loadingServers": "Loading servers.",
+    "noServers": "No servers to clone. Create a new server first.",
+    "errorMessageServers": "Sorry, something’s not right. We weren’t able to retrieve the list of servers.",
+    "placeholder": {
+      "server": "Select Server"
+    },
+    "hints": {
+      "serverNameMax": "Max of {{max_char}} characters"
+    },
+    "errors": {
+      "serverNameRequired": "Enter a server name.",
+      "invalidServerName": "Server name can only contain letters, numbers or hyphens.",
+      "selectServerRequired": "You must select a server.",
+      "manuallyAssignedIpWarning": "{{server_name}} has a manually-assigned IP address.\r\n Your new server may not be usable until {{server_name}} is stopped or its IP address is dissociated."
+    }
+  },
+  "serverCreateAddOnsStep": {
+    "title": "Add ons",
+    "header": "Add ons",
+    "description": "Select the Add-Ons you'd like for this order and specify any relevant configuration options.",
+    "antiMalwareAddOn": "Anti-Malware",
+    "antiMalwareAddOnHelp": "Protect systems from malicious software, including signature-based malware detection, behaviour-based malware detection and sandboxing",
+    "disasterRecoveryAddOn": "Disaster Recovery",
+    "disasterRecoveryAddOnHelp": "Disaster recovery has a lot of benefits including faster recovery, financial saving, scalability, and security",
+    "sqlServerAddOn": "SQL Server",
+    "sqlServerAddOnHelp": "Add additional storage on your server to save more data"
+  },
+  "serverCreateConfirmStep": {
+    "title": "Confirm",
+    "header": "Confirm Order",
+    "description": "Confirm the details of your order and then continue.",
+    "billingDetails": "Billing Details",
+    "orderDetails": {
+      "header": "Order Details",
+      "description": "Review the charges for this order below.",
+      "noItemTypes": "No item types found.",
+      "errorItemTypes": "Sorry, something’s not right. We weren’t able to retrieve the list of item types.",
+      "columnHeaders": {
+        "description": "Description",
+        "monthlyCharge": "Monthly Fee",
+        "oneOffCharge": "One-off Charge"
+      }
+    },
+    "orderActions": {
+      "header": "What would you like to do with this order?",
+      "submitOrder": "Submit this order for Provisioning",
+      "submitOrderNote": "By submitting this order, you agree to these charges and the",
+      "saveOrder": "Save this order as a Draft",
+      "mergeOrder": "Merge this order with an Existing draft Order"
+    }
+  },
+  "serverCreateProvisioningStep": {
+    "title": "Go!",
+    "description": "Your server is deploying and will be available shortly. You can track progress from the notifications menu at the top of the portal."
+  },
+  "serverProvisioningPage": {
+    "header": "Create server status",
+    "description": "Your server is deploying and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
+    "leftPanelHeader": "New server",
+    "creationDetails": "Creation details",
+    "serverHeader": "Server",
+    "noJob": "There are no Job to display for this server.",
+    "loadingJob": "Loading server creation details.",
+    "errorGettingJob": "Sorry, something’s not right. We weren’t able to retrieve the creation details of the server."
+  }
+
+}

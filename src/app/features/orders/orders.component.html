@@ -1,4 +1,4 @@
-<mcs-page [header]="textContent.header">
+<mcs-page [header]="'orders.header' | translate">
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef>
 
@@ -7,12 +7,12 @@
       <mcs-top-panel-item *mcsTopPanelItemDef>
         <mcs-action-item
           (click)="onClickNewOrder()"
-          mcsId
+          mcsIdS
           mcsEventTracker="create-new-order"
           mcsEventCategory="order"
           mcsEventLabel="order-listing-top-panel">
           <mcs-icon [key]="addIconKey" size="small"></mcs-icon>
-          <span>{{ textContent.newOrder }}</span>
+          <span>{{ 'orders.newOrder' | translate }}</span>
         </mcs-action-item>
       </mcs-top-panel-item>
     </ng-container>
@@ -22,7 +22,8 @@
       <div class="listing-action-wrapper">
         <div class="total-record-count">
           <span>{{ dataSource?.totalRecordsCount | mcsPlural:
-                textContent.dataSingular : textContent.dataPlural }}
+                  ('orders.dataSingular' | translate) :
+                  ('orders.dataPlural' | translate) }}
           </span>
         </div>
       </div>
@@ -30,14 +31,14 @@
   </mcs-top-panel>
 
   <!-- Left Panel -->
-  <mcs-left-panel *mcsLeftPanelDef="textContent.leftPanelHeader">
+  <mcs-left-panel *mcsLeftPanelDef="'orders.leftPanelHeader' | translate">
     <!-- Search -->
     <mcs-left-panel-item *mcsLeftPanelItemDef>
       <mcs-search *ngIf="!isMobile" #search mcsId="orders-desktop-search"></mcs-search>
     </mcs-left-panel-item>
 
     <!-- Column Filter -->
-    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.filterColumn" offset="medium">
+    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'orders.filterColumn' | translate" offset="medium">
       <mcs-filter-selector [key]="columnSettingsKey" #filterSelector
         (filtersChange)="updateColumnSettings($event)"></mcs-filter-selector>
     </mcs-left-panel-item>
@@ -112,17 +113,17 @@
         <ng-container mcsDataStatusDef>
           <mcs-data-empty *mcsDataEmptyDef>
             <div class="listing-status-wrapper">
-              <span>{{ textContent.noOrders }} </span>
+              <span>{{ 'orders.noOrders' | translate }} </span>
             </div>
           </mcs-data-empty>
           <mcs-data-error *mcsDataErrorDef>
             <div class="listing-status-wrapper">
-              <span>{{ textContent.errorMessage }}</span>
+              <span>{{ 'orders.errorMessage' | translate }}</span>
               <a (click)="retryDatasource()"
                 mcsId
                 mcsEventTracker="retry-orders"
                 mcsEventCategory="order"
-                mcsEventLabel="order-listing-page">{{ textContent.retry }}</a>.
+                mcsEventLabel="order-listing-page">{{ 'orders.retry' | translate }}</a>.
             </div>
           </mcs-data-error>
         </ng-container>

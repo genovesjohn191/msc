@@ -10,7 +10,6 @@ import {
   debounceTime,
   takeUntil
 } from 'rxjs/operators';
-import { McsTextContentProvider } from '@app/core';
 import {
   unsubscribeSafely,
   isNullOrEmpty
@@ -28,7 +27,6 @@ import { ServerCreateFlyweightContext } from '../server-create-flyweight.context
 })
 
 export class ServerCreateAddOnsComponent implements OnInit, OnDestroy {
-  public textContent: any;
   public addOnsDetails: AddOnsModel = new AddOnsModel();
 
   private _antiMalwareIsEnabled: boolean;
@@ -36,14 +34,12 @@ export class ServerCreateAddOnsComponent implements OnInit, OnDestroy {
   private _destroySubject = new Subject<void>();
 
   constructor(
-    private _textContentProvider: McsTextContentProvider,
     private _changeDetectorRef: ChangeDetectorRef,
     private _serverCreateFlyweightContext: ServerCreateFlyweightContext
   ) {
   }
 
   public ngOnInit() {
-    this.textContent = this._textContentProvider.content.servers.createServer.serverAddOnsStep;
     this._subscribeToSelectedAddOnsChanges();
   }
 

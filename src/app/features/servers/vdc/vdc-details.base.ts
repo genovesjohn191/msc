@@ -1,10 +1,10 @@
 import { ChangeDetectorRef } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import {
   Subscription,
   Subject
 } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { McsTextContentProvider } from '@app/core';
 import {
   unsubscribeSafely,
   unsubscribeSubject,
@@ -33,15 +33,14 @@ export abstract class VdcDetailsBase {
    * Returns iops label placeholder
    */
   public get iopsLabelPlaceholder(): string {
-    return this._textContentProvider.content
-      .servers.vdc.shared.iopsLabel;
+    return this._translateService.instant('serversVdc.iopsLabel');
   }
 
   constructor(
     protected _resourcesRespository: McsResourcesRepository,
     protected _vdcService: VdcService,
     protected _changeDetectorRef: ChangeDetectorRef,
-    protected _textContentProvider: McsTextContentProvider
+    protected _translateService: TranslateService
   ) {
     this._selectedVdc = new McsResource();
   }

@@ -6,7 +6,6 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import {
-  McsTextContentProvider,
   McsAuthenticationService,
   CoreConfig,
   CoreDefinition,
@@ -21,18 +20,15 @@ import { RouteKey } from '@app/models';
 })
 
 export class DashboardComponent implements OnInit {
-  public textContent: any;
 
   public constructor(
     private _router: Router,
     private _coreConfig: CoreConfig,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _textContent: McsTextContentProvider,
     private _authenticationService: McsAuthenticationService
   ) { }
 
   public ngOnInit() {
-    this.textContent = this._textContent.content.dashboard;
     this._changeDetectorRef.markForCheck();
   }
 

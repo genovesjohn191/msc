@@ -1,17 +1,16 @@
-<mcs-page [header]="textContent.header">
+<mcs-page [header]="'serverCreate.header' | translate">
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef>
 
     <!-- Back to Servers -->
     <mcs-top-panel-item *mcsTopPanelItemDef no-border>
-      <mcs-action-item mcsAlign="end"
+      <mcs-action-item mcsAlign="end" mcsId
         (click)="gotoServers()"
-        mcsId
         mcsEventTracker="back-to-server-listing"
         mcsEventCategory="server"
         mcsEventLabel="create-new-server-page">
         <mcs-icon [key]="backIconKey" size="large"></mcs-icon>
-        <span>{{ textContent.backToServers }}</span>
+        <span>{{ 'serverCreate.backToServers' | translate }}</span>
       </mcs-action-item>
     </mcs-top-panel-item>
   </mcs-top-panel>
@@ -19,10 +18,11 @@
   <!-- Content Panel -->
   <mcs-content-panel *mcsContentPanelDef>
 
-    <mcs-wizard [header]="textContent.header">
+    <mcs-wizard [header]="'serverCreate.header' | translate">
 
       <!-- Server Details Step-->
-      <mcs-wizard-step [stepTitle]="textContent.serverDetailsStep.title"
+      <mcs-wizard-step
+        [stepTitle]="'serverCreateDetailsStep.title' | translate"
         [stepControl]="faCreationForm">
 
         <div class="limited-view">
@@ -31,11 +31,11 @@
               <mcs-select placeholder="Select a VDC" required
                 mcsId="select-resource"
                 (change)="onChangeResource($event)"
-                [mcsContextualHelp]="textContent.vdcDropdownList.helpText">
+                [mcsContextualHelp]="'serverCreate.vdcDropdownList.helpText' | translate">
 
                 <mcs-option-group>
                   <ng-container *mcsOptionGroupHeader>
-                    {{ textContent.vdcDropdownList.header }}
+                    {{ 'serverCreate.vdcDropdownList.header' | translate }}
                   </ng-container>
 
                   <mcs-option [value]="item" *ngFor="let item of resources$ | async">
@@ -53,19 +53,19 @@
       <ng-container *ngIf="resource$ | async as resource">
         <!-- Add-ons Step -->
         <mcs-wizard-step *ngIf="resource?.serviceType === serviceTypeEnum.Managed"
-          [stepTitle]="textContent.serverAddOnsStep.title">
+          [stepTitle]="'serverCreateAddOnsStep.title' | translate">
           <mcs-server-create-addons></mcs-server-create-addons>
         </mcs-wizard-step>
 
         <!-- Confirm Step  -->
         <mcs-wizard-step *ngIf="resource?.serviceType === serviceTypeEnum.Managed"
-          [stepTitle]="textContent.serverConfirmStep.title">
+          [stepTitle]="'serverCreateConfirmStep.title' | translate">
           <mcs-server-create-confirm></mcs-server-create-confirm>
         </mcs-wizard-step>
       </ng-container>
 
       <!-- Go! Step  -->
-      <mcs-wizard-step [stepTitle]="textContent.serverProvisioningStep.title">
+      <mcs-wizard-step [stepTitle]="'serverCreateProvisioningStep.title' | translate">
         <mcs-server-create-provisioning></mcs-server-create-provisioning>
       </mcs-wizard-step>
     </mcs-wizard>

@@ -10,6 +10,7 @@ import {
   ActivatedRoute,
   ParamMap
 } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import {
   Subscription,
   throwError,
@@ -22,7 +23,6 @@ import {
   finalize
 } from 'rxjs/operators';
 import {
-  McsTextContentProvider,
   McsErrorHandlerService,
   CoreDefinition,
   CoreRoutes,
@@ -42,7 +42,6 @@ import { McsOrdersRepository } from '@app/services';
 })
 
 export class OrderComponent implements OnInit, OnDestroy {
-  public textContent: any;
 
   public order$: Observable<McsOrder>;
   public orderSubscription: Subscription;
@@ -53,14 +52,13 @@ export class OrderComponent implements OnInit, OnDestroy {
     private _router: Router,
     private _activatedRoute: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _textContentProvider: McsTextContentProvider,
+    private _translateService: TranslateService,
     private _loadingService: McsLoadingService,
     private _errorHandlerService: McsErrorHandlerService,
     private _ordersRepository: McsOrdersRepository
   ) { }
 
   public ngOnInit() {
-    this.textContent = this._textContentProvider.content.orders.order;
     this._listenToParamChange();
     this._getOrderItemsColumnDef();
   }
@@ -106,7 +104,7 @@ export class OrderComponent implements OnInit, OnDestroy {
    * Get Order based on the given ID in the provided parameter
    */
   private _subscribeToOrderById(orderId: string): void {
-    this._loadingService.showLoader(this.textContent.loading);
+    this._loadingService.showLoader(this._translateService.instant('order.loading'));
     this.order$ = this._ordersRepository.getById(orderId).pipe(
       catchError((error) => {
         this._errorHandlerService.redirectToErrorPage(error.status);
@@ -120,7 +118,7 @@ export class OrderComponent implements OnInit, OnDestroy {
    * Gets the order items column definitions from text content
    */
   private _getOrderItemsColumnDef(): void {
-    this.orderItemsColumns = Object.keys(this.textContent.columnHeaders);
+    this.orderItemsColumns = Object.keys(this._translateService.instant('order.columnHeaders'));
     this._changeDetectorRef.markForCheck();
   }
 }

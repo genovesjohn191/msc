@@ -19,13 +19,11 @@ import {
 } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import {
-  McsTextContentProvider,
   CoreDefinition,
   CoreValidators,
   McsDataStatusFactory
 } from '@app/core';
 import {
-  replacePlaceholder,
   isNullOrEmpty,
   unsubscribeSafely,
   refreshView
@@ -51,8 +49,6 @@ export class ServerCloneComponent
   @Input()
   public serviceType: ServiceType;
 
-  public textContent: any;
-  public textHelpContent: any;
   public servers: McsServer[];
   public serversSubscription: Subscription;
   public parameterSubscription: Subscription;
@@ -90,7 +86,6 @@ export class ServerCloneComponent
   }
 
   constructor(
-    private _textContentProvider: McsTextContentProvider,
     private _activatedRoute: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef,
     private _serversRepository: McsServersRepository
@@ -101,8 +96,6 @@ export class ServerCloneComponent
   }
 
   public ngOnInit() {
-    this.textContent = this._textContentProvider.content.servers.createServer.cloneServer;
-    this.textHelpContent = this._textContentProvider.content.servers.createServer.contextualHelp;
     this._registerFormGroup();
     this._getAllServers();
   }
@@ -110,13 +103,6 @@ export class ServerCloneComponent
   public ngOnDestroy() {
     unsubscribeSafely(this.parameterSubscription);
     unsubscribeSafely(this.serversSubscription);
-  }
-
-  /**
-   * Converts the character to maximum input
-   */
-  public convertMaxCharText(text: string, maxchar: number): string {
-    return replacePlaceholder(text, 'max_char', maxchar.toString());
   }
 
   /**

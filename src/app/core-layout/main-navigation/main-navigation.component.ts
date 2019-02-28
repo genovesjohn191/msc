@@ -12,7 +12,6 @@ import { takeUntil } from 'rxjs/operators';
 import {
   CoreDefinition,
   CoreRoutes,
-  McsTextContentProvider,
   McsRouteHandlerService,
   McsAccessControlService,
 } from '@app/core';
@@ -38,7 +37,6 @@ import {
 })
 
 export class MainNavigationComponent implements OnInit, OnDestroy {
-  public textContent: any;
   public selectedCategory: RouteCategory;
 
   public get caretRightIconKey(): string {
@@ -59,12 +57,10 @@ export class MainNavigationComponent implements OnInit, OnDestroy {
     private _router: Router,
     private _changeDetectorRef: ChangeDetectorRef,
     private _routerHandlerService: McsRouteHandlerService,
-    private _textProvider: McsTextContentProvider,
     private _accessControlService: McsAccessControlService
   ) { }
 
   public ngOnInit() {
-    this.textContent = this._textProvider.content;
     this._listenToRouteChanges();
   }
 

@@ -22,7 +22,7 @@
         mcsEventTracker="navigate-to-servers"
         mcsEventCategory="navigation"
         mcsEventLabel="sub-nav">
-        {{ textContent.virtual }}
+        {{ 'navigation.virtual' | translate }}
       </a>
 
       <a [mcsRouterLink]="routeKeyEnum.Media" mcsRouterLinkActive="active"
@@ -32,7 +32,7 @@
         mcsEventTracker="navigate-to-firewalls"
         mcsEventCategory="navigation"
         mcsEventLabel="sub-nav">
-        {{ textContent.medias }}
+        {{ 'navigation.medias' | translate }}
       </a>
     </ng-container>
 
@@ -45,7 +45,7 @@
         mcsEventTracker="navigate-to-firewalls"
         mcsEventCategory="navigation"
         mcsEventLabel="sub-nav">
-        {{ textContent.firewalls }}
+        {{ 'navigation.firewalls' | translate }}
       </a>
     </ng-container>
   </div>

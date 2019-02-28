@@ -28,7 +28,6 @@ import {
   shareReplay
 } from 'rxjs/operators';
 import {
-  McsTextContentProvider,
   McsFormGroupService
 } from '@app/core';
 import {
@@ -54,8 +53,6 @@ enum ServerCreateType {
 
 export class ServerCreateDetailsComponent implements
   OnInit, AfterViewInit, OnDestroy, McsSafeToNavigateAway {
-  public textContent: any;
-  public textHelpContent: any;
 
   public faCreationForms: FormArray;
   public selectedTabIndex: ServerCreateType = ServerCreateType.New;
@@ -82,7 +79,6 @@ export class ServerCreateDetailsComponent implements
     private _activatedRoute: ActivatedRoute,
     private _elementRef: ElementRef,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _textContentProvider: McsTextContentProvider,
     private _formGroupService: McsFormGroupService,
     private _serverCreateFlyweightContext: ServerCreateFlyweightContext
   ) {
@@ -90,8 +86,6 @@ export class ServerCreateDetailsComponent implements
   }
 
   public ngOnInit() {
-    this.textContent = this._textContentProvider.content.servers.createServer;
-    this.textHelpContent = this._textContentProvider.content.servers.createServer.contextualHelp;
     this._listenToResourceChanges();
     this._setInitialTabViewByParam();
   }

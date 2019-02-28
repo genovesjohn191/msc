@@ -1,7 +1,7 @@
 <div class="limited-view">
   <div class="contextual-help-page-wrapper">
-    <h2>{{ textContent.header }}</h2>
-    <p>{{ textContent.description }}</p>
+    <h2>{{ 'serverCreateConfirmStep.header' | translate }}</h2>
+    <p>{{ 'serverCreateConfirmStep.description' | translate }}</p>
 
     <!-- Billing Details -->
     <mcs-section margin-bottom-small>
@@ -35,17 +35,17 @@
 
     <!-- Order Details -->
     <mcs-section *ngIf="order$ | async as order" margin-bottom-small>
-      <h2>{{ textContent.orderDetails.header }}</h2>
+      <h2>{{ 'serverCreateConfirmStep.orderDetails.header' | translate }}</h2>
       <mcs-form-field>
         <input type="text" mcsInput [value]="order.description">
       </mcs-form-field>
-      <p>{{ textContent.orderDetails.description }}</p>
+      <p>{{ 'serverCreateConfirmStep.orderDetails.description' | translate }}</p>
 
       <mcs-table [dataSource]="order.items">
         <!-- Description Column -->
         <ng-container mcsColumnDef="description">
           <mcs-header-cell *mcsHeaderCellDef>
-            {{ textContent.orderDetails.columnHeaders.description }}
+            {{ 'serverCreateConfirmStep.orderDetails.columnHeaders.description' | translate }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
             {{ row.description }}
@@ -55,7 +55,7 @@
         <!-- Monthly Charge Column -->
         <ng-container mcsColumnDef="monthlyCharge">
           <mcs-header-cell *mcsHeaderCellDef>
-            {{ textContent.orderDetails.columnHeaders.monthlyCharge }}
+            {{ 'serverCreateConfirmStep.orderDetails.columnHeaders.monthlyCharge' | translate }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
             ${{ row.charges?.monthly }}
@@ -65,7 +65,7 @@
         <!-- One-off Charge Column -->
         <ng-container mcsColumnDef="oneOffCharge">
           <mcs-header-cell *mcsHeaderCellDef>
-            {{ textContent.orderDetails.columnHeaders.oneOffCharge }}
+            {{ 'serverCreateConfirmStep.orderDetails.columnHeaders.oneOffCharge' | translate }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
             ${{ row.charges?.oneOff }}
@@ -75,10 +75,10 @@
         <!-- Data Status Integration -->
         <ng-container mcsDataStatusDef>
           <mcs-data-empty *mcsDataEmptyDef>
-            <span>{{ textContent.orderDetails.noItemTypes }} </span>
+            <span>{{ 'serverCreateConfirmStep.orderDetails.noItemTypes' | translate }} </span>
           </mcs-data-empty>
           <mcs-data-error *mcsDataErrorDef>
-            <span>{{ textContent.orderDetails.errorItemTypes }}</span>
+            <span>{{ 'serverCreateConfirmStep.orderDetails.errorItemTypes' | translate }}</span>
           </mcs-data-error>
         </ng-container>
 
@@ -90,22 +90,22 @@
 
     <!-- Order Actions -->
     <mcs-section>
-      <span>{{ textContent.orderActions.header }}</span>
+      <span>{{ 'serverCreateConfirmStep.orderActions.header' | translate }}</span>
       <mcs-radio-button-group orientation="vertical" [(ngModel)]="selectedAction">
         <mcs-radio-button mcsId [value]="orderWorkFlowEnum.Submitted">
-          {{ textContent.orderActions.submitOrder }}
+          {{ 'serverCreateConfirmStep.orderActions.submitOrder' | translate }}
         </mcs-radio-button>
         <mcs-radio-button mcsId [value]="orderWorkFlowEnum.Draft">
-          {{ textContent.orderActions.saveOrder }}
+          {{ 'serverCreateConfirmStep.orderActions.saveOrder' | translate }}
         </mcs-radio-button>
         <mcs-radio-button mcsId [value]="orderWorkFlowEnum.AwaitingApproval">
-          {{ textContent.orderActions.mergeOrder }}
+          {{ 'serverCreateConfirmStep.orderActions.mergeOrder' | translate }}
         </mcs-radio-button>
       </mcs-radio-button-group>
 
       <ng-container [ngSwitch]="selectedAction">
         <mcs-note *ngSwitchCase="orderWorkFlowEnum.Submitted">
-          <span read-only>{{ textContent.orderActions.submitOrderNote }}</span><br>
+          <span read-only>{{ 'serverCreateConfirmStep.orderActions.submitOrderNote' | translate }}</span><br>
           <a>Macquarie Telecom Pty Ltd terms and conditions.</a>
         </mcs-note>
         <mcs-note *ngSwitchCase="orderWorkFlowEnum.AwaitingApproval">
