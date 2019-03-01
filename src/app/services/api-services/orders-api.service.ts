@@ -230,6 +230,10 @@ export class OrdersApiService {
       );
   }
 
+  /**
+   * Gets the workflow details of the existing order
+   * @param id Id of the order to be obtained
+   */
   public getOrderWorkflow(id: any): Observable<McsApiSuccessResponse<McsOrderItem>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/orders/${id}/workflow`;

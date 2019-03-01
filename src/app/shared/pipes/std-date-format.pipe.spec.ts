@@ -8,6 +8,7 @@ import {
   ViewChild,
   ElementRef
 } from '@angular/core';
+import { CoreTestingModule } from '@app/core/testing';
 import { StdDateFormatPipe } from './std-date-format.pipe';
 
 @Component({
@@ -39,6 +40,9 @@ describe('StdDateFormatPipe', () => {
       declarations: [
         TestComponent,
         StdDateFormatPipe
+      ],
+      imports: [
+        CoreTestingModule
       ]
     });
 

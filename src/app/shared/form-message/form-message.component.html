@@ -1,4 +1,5 @@
 <mcs-alert [@fadeIn] [type]="type" *mcsComponentHandler>
+  <!-- Message content -->
   <ng-container *ngFor="let message of messages$ | async">
     <mcs-item>
       <mcs-icon *ngIf="showBullet" [key]="bulletIconKey" size="xxsmall"></mcs-icon>
@@ -6,14 +7,16 @@
     </mcs-item>
   </ng-container>
 
-  <a mcsButton="basic" [color]="type"
-    mcsId="form-message-dismiss" mcsAlertAction="dismiss">
-
-    <ng-container *ngIf="config?.confirmText; else defaultCloseMessage">
-      {{ config?.confirmText }}
-    </ng-container>
-    <ng-template #defaultCloseMessage>
-      {{ type === 'error' ? 'DISMISS' : 'OK' }}
-    </ng-template>
-  </a>
+  <ng-container mcsAlertActions>
+    <!-- Dismiss actions -->
+    <a mcsButton="basic" [hidden]="config?.hideDismissButton"
+      (click)="hideMessage()" [color]="type" mcsId="form-message-dismiss">
+      <ng-container *ngIf="config?.confirmText; else defaultCloseMessage">
+        {{ config?.confirmText }}
+      </ng-container>
+      <ng-template #defaultCloseMessage>
+        {{ type === 'error' ? 'DISMISS' : 'OK' }}
+      </ng-template>
+    </a>
+  </ng-container>
 </mcs-alert>

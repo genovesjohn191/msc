@@ -8,24 +8,22 @@ import {
   ViewChildren,
   QueryList,
   ElementRef,
-  ViewChild
+  ViewChild,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  Output,
+  EventEmitter
 } from '@angular/core';
 import { FormArray } from '@angular/forms';
 import {
   ActivatedRoute,
   ParamMap
 } from '@angular/router';
-import {
-  Subject,
-  Observable,
-  of
-} from 'rxjs';
+import { Subject } from 'rxjs';
 import {
   startWith,
-  takeUntil,
-  merge,
-  tap,
-  shareReplay
+  takeUntil
 } from 'rxjs/operators';
 import {
   McsFormGroupService
@@ -36,9 +34,8 @@ import {
   McsSafeToNavigateAway
 } from '@app/utilities';
 import { McsResource } from '@app/models';
-import { ServerCreateDetailsBase } from './server-create-details.base';
-import { ServerCreateFlyweightContext } from '../server-create-flyweight.context';
 import { ComponentHandlerDirective } from '@app/shared';
+import { ServerCreateDetailsBase } from './server-create-details.base';
 
 enum ServerCreateType {
   New = 1,
@@ -52,20 +49,22 @@ enum ServerCreateType {
 })
 
 export class ServerCreateDetailsComponent implements
-  OnInit, AfterViewInit, OnDestroy, McsSafeToNavigateAway {
+  OnInit, OnChanges, AfterViewInit, OnDestroy, McsSafeToNavigateAway {
+  public textContent: any;
+  public textHelpContent: any;
 
   public faCreationForms: FormArray;
   public selectedTabIndex: ServerCreateType = ServerCreateType.New;
   public serverDeploying: boolean;
-  public selectedResource$: Observable<McsResource>;
-  public createServerFunc = this._createServer.bind(this);
 
-  /**
-   * Returns the current selected resource
-   */
-  public get resource(): McsResource { return this._resource; }
-  public set resource(value: McsResource) { this._resource = value; }
-  private _resource: McsResource;
+  @Input()
+  public resource: McsResource;
+
+  @Output()
+  public dataChange = new EventEmitter<Array<ServerCreateDetailsBase<any>>>();
+
+  @Output()
+  public dataSubmit = new EventEmitter<Array<ServerCreateDetailsBase<any>>>();
 
   @ViewChildren('serverBase')
   private _createServerItems: QueryList<ServerCreateDetailsBase<any>>;
@@ -79,14 +78,12 @@ export class ServerCreateDetailsComponent implements
     private _activatedRoute: ActivatedRoute,
     private _elementRef: ElementRef,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _formGroupService: McsFormGroupService,
-    private _serverCreateFlyweightContext: ServerCreateFlyweightContext
+    private _formGroupService: McsFormGroupService
   ) {
     this.faCreationForms = new FormArray([]);
   }
 
   public ngOnInit() {
-    this._listenToResourceChanges();
     this._setInitialTabViewByParam();
   }
 
@@ -100,9 +97,15 @@ export class ServerCreateDetailsComponent implements
             this.faCreationForms.push(creationDetails.getCreationForm());
           });
         }
-        this._serverCreateFlyweightContext.setCreationFormArray(this.faCreationForms);
         this._changeDetectorRef.markForCheck();
       });
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    let resourceChange = changes['resource'];
+    if (!isNullOrEmpty(resourceChange)) {
+      this._resetTabForms();
+    }
   }
 
   public ngOnDestroy() {
@@ -138,56 +141,55 @@ export class ServerCreateDetailsComponent implements
   }
 
   /**
-   * Create server based on server details
+   * Event that emits when the created details have been changed
    */
-  private _createServer(): Observable<any> {
-    if (!this._validateFormFields()) { return of(undefined); }
+  public onChangeCreationDetails(): void {
+    if (!this.allFormsAreValid) { return; }
+    if (isNullOrEmpty(this._createServerItems)) { return; }
+    this.dataChange.emit(this._createServerItems.map((data) => data));
+  }
 
+  /**
+   * Event that emits when the creation details have been submitted
+   */
+  public onSubmitCreationDetails(): void {
+    if (!this._validateFormFields()) { return; }
     if (isNullOrEmpty(this._createServerItems)) { return; }
     this.serverDeploying = true;
-    let createServerStreams: Observable<any>;
+    this.dataSubmit.emit(this._createServerItems.map((data) => data));
+  }
 
-    this._createServerItems.forEach((serverDetails) => {
-      let serverStream = this._serverCreateFlyweightContext.createServer(
-        serverDetails.getCreationInputs(),
-        this.resource.serviceType,
-        this.resource.name
-      );
-      isNullOrEmpty(createServerStreams) ?
-        createServerStreams = serverStream :
-        createServerStreams.pipe(merge(serverStream));
-    });
-    return createServerStreams;
+  /**
+   * Returns true when all forms are valid
+   */
+  public get allFormsAreValid(): boolean {
+    return !isNullOrEmpty(this.faCreationForms) && this.faCreationForms.valid;
   }
 
   /**
    * Validates the form fields in all existing form groups
    */
   private _validateFormFields(): boolean {
-    let formsAreValid = !isNullOrEmpty(this.faCreationForms) && this.faCreationForms.valid;
-    if (formsAreValid) { return true; }
-    this._formGroupService.touchAllFieldsByFormArray(this.faCreationForms);
-    this._formGroupService.scrollToFirstInvalidField(this._elementRef.nativeElement);
+    if (this.allFormsAreValid) { return true; }
+    this._touchInvalidFields();
     return false;
   }
 
   /**
-   * Listens to resource changes
+   * Touches all the invalid form fields
    */
-  private _listenToResourceChanges(): void {
-    this.selectedResource$ = this._serverCreateFlyweightContext.resourceChanges
-      .pipe(
-        takeUntil(this._destroySubject),
-        tap((_response) => {
-          if (isNullOrEmpty(_response)) { return; }
-          this._resource = _response;
-          if (!isNullOrEmpty(this._serverDetailsComponent)) {
-            this._serverDetailsComponent.recreateComponent();
-          }
-          this._changeDetectorRef.markForCheck();
-        }),
-        shareReplay(1)
-      );
+  private _touchInvalidFields(): void {
+    this._formGroupService.touchAllFieldsByFormArray(this.faCreationForms);
+    this._formGroupService.scrollToFirstInvalidField(this._elementRef.nativeElement);
+  }
+
+  /**
+   * Resets all the tab forms
+   */
+  private _resetTabForms(): void {
+    if (!isNullOrEmpty(this._serverDetailsComponent)) {
+      this._serverDetailsComponent.recreateComponent();
+    }
   }
 
   /**

@@ -5,11 +5,7 @@ import {
   Inject
 } from '@angular/core';
 import { Observable } from 'rxjs';
-import { finalize } from 'rxjs/operators';
-import {
-  isNullOrEmpty,
-  McsDelegate
-} from '@app/utilities';
+import { isNullOrUndefined } from '@app/utilities';
 import { WizardComponent } from '../wizard.component';
 
 @Directive({
@@ -23,7 +19,7 @@ import { WizardComponent } from '../wizard.component';
 
 export class WizardStepNextDirective {
   @Input('mcsWizardStepNextWhen')
-  public when: McsDelegate<Observable<any>>;
+  public when: Observable<boolean> | boolean;
 
   constructor(
     @Inject(forwardRef(() => WizardComponent)) private _wizard: WizardComponent
@@ -34,21 +30,18 @@ export class WizardStepNextDirective {
    * otherwise it will wait after the when is finished before proceeding
    */
   public next(): void {
-    if (isNullOrEmpty(this.when)) {
+    if (isNullOrUndefined(this.when)) {
       this._wizard.next();
       return;
     }
 
-    // Set disable to the wizard while it is processing
-    // the observable, when an error occured during the process,
-    // the dialog box for error will be displayed and the wizard current step will remain
-    this._wizard.disableWizard();
-    this.when().pipe(
-      finalize(() => this._wizard.enableWizard())
-    ).subscribe((response) => {
-      if (isNullOrEmpty(response)) { return; }
-      this._wizard.enableWizard();
+    if (this.when instanceof Observable) {
+      this.when.subscribe((result) => {
+        if (!result) { return; }
+        this._wizard.next();
+      });
+    } else if (this.when === true) {
       this._wizard.next();
-    });
+    }
   }
 }

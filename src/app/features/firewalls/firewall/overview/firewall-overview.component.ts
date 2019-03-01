@@ -9,11 +9,11 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
   McsTextContentProvider,
-  CoreDefinition
+  CoreDefinition,
+  McsDateTimeService
 } from '@app/core';
 import {
   isNullOrEmpty,
-  formatDate,
   compareDates,
   getExpiryLabel,
   unsubscribeSubject
@@ -37,6 +37,7 @@ export class FirewallOverviewComponent implements OnInit, OnDestroy {
   private _destroySubject = new Subject<void>();
 
   constructor(
+    private _dateTimeService: McsDateTimeService,
     private _textContentProvider: McsTextContentProvider,
     private _firewallService: FirewallService,
     private _changeDetectorRef: ChangeDetectorRef
@@ -64,7 +65,7 @@ export class FirewallOverviewComponent implements OnInit, OnDestroy {
       this.textContent.utmServices.invalidLicense :
       this.textContent.utmServices.licensed;
 
-    let formattedDate = formatDate(expirationDate, 'YYYY-MM-DD');
+    let formattedDate = this._dateTimeService.formatDate(expirationDate, 'shortDate');
     return `${licenseText} (${getExpiryLabel(expirationDate)} ${formattedDate})`;
   }
 

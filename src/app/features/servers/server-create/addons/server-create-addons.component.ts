@@ -1,88 +1,69 @@
 import {
   Component,
-  OnInit,
   OnDestroy,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  EventEmitter,
+  Output
 } from '@angular/core';
 import { Subject } from 'rxjs';
-import {
-  distinctUntilChanged,
-  debounceTime,
-  takeUntil
-} from 'rxjs/operators';
+import { McsGuid } from '@app/core';
 import {
   unsubscribeSafely,
-  isNullOrEmpty
+  McsDataChange
 } from '@app/utilities';
 import {
   McsServerCreateAddOnAntiVirus,
-  McsOrderItemCreate
+  OrderIdType,
 } from '@app/models';
-import { AddOnsModel } from './addons-model';
-import { ServerCreateFlyweightContext } from '../server-create-flyweight.context';
+import { AddOnDetails } from './addons-model';
+
+const ADDON_ANTI_MALWARE_ID = McsGuid.newGuid().toString();
 
 @Component({
   selector: 'mcs-server-create-addons',
   templateUrl: 'server-create-addons.component.html'
 })
 
-export class ServerCreateAddOnsComponent implements OnInit, OnDestroy {
-  public addOnsDetails: AddOnsModel = new AddOnsModel();
+export class ServerCreateAddOnsComponent implements OnDestroy, McsDataChange<AddOnDetails[]> {
+  public antiMalwareAddOn: AddOnDetails;
 
-  private _antiMalwareIsEnabled: boolean;
-  private _selectedItemsChanges = new Subject<any[]>();
+  @Output()
+  public dataChange = new EventEmitter<AddOnDetails[]>();
   private _destroySubject = new Subject<void>();
 
-  constructor(
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _serverCreateFlyweightContext: ServerCreateFlyweightContext
-  ) {
-  }
-
-  public ngOnInit() {
-    this._subscribeToSelectedAddOnsChanges();
+  constructor(private _changeDetectorRef: ChangeDetectorRef) {
+    this.antiMalwareAddOn = new AddOnDetails();
   }
 
   public ngOnDestroy() {
     unsubscribeSafely(this._destroySubject);
   }
 
-  public antiMalwareCheckedChange(collapse: boolean): void {
-    this._antiMalwareIsEnabled = !collapse;
-    this._notifyPricingChanges();
+  /**
+   * Event that emits when antimalware collapse panel has been toggled
+   * @param collapse Collapse flag of the panel
+   */
+  public onToggleAntiMalware(collapse: boolean): void {
+    this.antiMalwareAddOn.selected = !collapse;
+    this.notifyDataChange();
   }
 
+  /**
+   * Event that emits when anti malware details has been changed
+   * @param antiMalwareDetails Updated Anti malware data
+   */
   public onChangeAntiMalwareDetails(antiMalwareDetails: McsServerCreateAddOnAntiVirus): void {
-    this.addOnsDetails.setAntiMalwareOrderDetails(
-      antiMalwareDetails,
-      this._serverCreateFlyweightContext.orderReferenceId
-    );
-    this._notifyPricingChanges();
+    this.antiMalwareAddOn.addOnContent = antiMalwareDetails;
+    this.antiMalwareAddOn.typeId = OrderIdType.CreateAddOnAntiMalware;
+    this.antiMalwareAddOn.referenceId = ADDON_ANTI_MALWARE_ID;
+    this.notifyDataChange();
   }
 
-  private _notifyPricingChanges(): void {
-    let selectedAddOns: McsOrderItemCreate[] = [];
-
-    // Check and add the anti malware
-    if (this._antiMalwareIsEnabled) {
-      selectedAddOns.push(this.addOnsDetails.antiMalware);
-    }
-    this._selectedItemsChanges.next(selectedAddOns);
-  }
-
-  private _subscribeToSelectedAddOnsChanges(): void {
-    this._selectedItemsChanges.pipe(
-      takeUntil(this._destroySubject),
-      debounceTime(2000),
-      distinctUntilChanged((first, second) => JSON.stringify(first) === JSON.stringify(second))
-    ).subscribe((response) => {
-      if (isNullOrEmpty(this._serverCreateFlyweightContext.order)) { return; }
-      this._updatedAddOns(response);
-      this._changeDetectorRef.markForCheck();
-    });
-  }
-
-  private _updatedAddOns(selectedAddOns: McsOrderItemCreate[]): void {
-    this._serverCreateFlyweightContext.updateAddOns(selectedAddOns).subscribe();
+  /**
+   * Notifies the changes on the event parameter
+   */
+  public notifyDataChange(): void {
+    this.dataChange.next([this.antiMalwareAddOn]);
+    this._changeDetectorRef.markForCheck();
   }
 }

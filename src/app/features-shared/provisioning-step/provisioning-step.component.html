@@ -1,0 +1,23 @@
+<ng-container [ngSwitch]="status$ | async">
+
+  <!-- Provisioning content when successfull -->
+  <ng-container *ngSwitchCase="dataStatusEnum.Success">
+    <mcs-jobs-provisioning [jobs]="jobs">
+      <ng-container mcsProvisioningText>
+        <ng-content select="[mcsProvisioningStepDescription]"></ng-content>
+      </ng-container>
+    </mcs-jobs-provisioning>
+  </ng-container>
+
+  <!-- Provisioning while request is in-progress -->
+  <ng-container *ngSwitchCase="dataStatusEnum.InProgress">
+    <mcs-data-status-in-progress mcsAlignContent="middle-left">
+      <div><ng-content select="[mcsProvisioningStepInProgress]"></ng-content></div>
+    </mcs-data-status-in-progress>
+  </ng-container>
+
+  <!-- Provisioning content when error occured on the request -->
+  <ng-container *ngSwitchCase="dataStatusEnum.Error">
+    <ng-content select="[mcsProvisioningStepError]"></ng-content>
+  </ng-container>
+</ng-container>

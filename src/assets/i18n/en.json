@@ -143,7 +143,7 @@
     }
   },
   "serverCreateDetailsStep": {
-    "title": "Server Details",
+    "stepTitle": "Server Details",
     "loading": "Loading server data, this may take a few moments.",
     "contextualHelp": {
       "serverNameField": "Choose a name for your server. The server name must be 15 characters or less and can contain letters, numbers and hyphens. We'll also use this as a hostname for the server.",
@@ -157,65 +157,65 @@
       "cloneServer": "When you clone a server you get an identical copy of the existing server. it will have the same compute, storage and network characteristics. You can change the properties of server once it has been deployed.",
       "quickNavigateToCreatedServer": "You can go back to server listing page to view your newly created server",
       "backToListing": "This link would take you back to your server listing page"
-    }
-  },
-  "serverCreateDetailsStepNewServer": {
-    "title": "New server",
-    "description": "Creating a new server allows you to specify the way your server will be built.",
-    "computeSizeLabel": "Compute Size",
-    "storageLabel": "Storage",
-    "networkLabel": "Network",
-    "ipAddressLabel": "IP Address",
-    "createNewVApp": "Create a new vApp",
-    "headers": {
-      "vApp": "Virtual Applications",
-      "os": "Operating System",
-      "templates": "Custom Templates",
-      "network": "Networks"
     },
-    "placeholder": {
-      "vApp": "Select vApp",
-      "image": "Select Image",
-      "network": "Select Network"
+    "newServer": {
+      "title": "New server",
+      "description": "Creating a new server allows you to specify the way your server will be built.",
+      "computeSizeLabel": "Compute Size",
+      "storageLabel": "Storage",
+      "networkLabel": "Network",
+      "ipAddressLabel": "IP Address",
+      "createNewVApp": "Create a new vApp",
+      "headers": {
+        "vApp": "Virtual Applications",
+        "os": "Operating System",
+        "templates": "Custom Templates",
+        "network": "Networks"
+      },
+      "placeholder": {
+        "vApp": "Select vApp",
+        "image": "Select Image",
+        "network": "Select Network"
+      },
+      "hints": {
+        "serverNameMax": "Max of {{max_char}} characters"
+      },
+      "errors": {
+        "serverNameRequired": "Enter a server name.",
+        "invalidServerName": "Server name can only contain letters, numbers or hyphens.",
+        "selectVappRequired": "Virtual application is required.",
+        "selectImageRequired": "You must select an image.",
+        "selectNetworkRequired": "You must select a network."
+      },
+      "noResourceFound": {
+        "header": "Unable to Create Server",
+        "content": "No resources found. You can't create a server at this moment. Please try again later"
+      },
+      "fullStorageSpace": "This server cannot be created due to insufficient storage space ({{remaining_memory}} remaining)."
     },
-    "hints": {
-      "serverNameMax": "Max of {{max_char}} characters"
-    },
-    "errors": {
-      "serverNameRequired": "Enter a server name.",
-      "invalidServerName": "Server name can only contain letters, numbers or hyphens.",
-      "selectVappRequired": "Virtual application is required.",
-      "selectImageRequired": "You must select an image.",
-      "selectNetworkRequired": "You must select a network."
-    },
-    "noResourceFound": {
-      "header": "Unable to Create Server",
-      "content": "No resources found. You can't create a server at this moment. Please try again later"
-    },
-    "fullStorageSpace": "This server cannot be created due to insufficient storage space ({{remaining_memory}} remaining)."
-  },
-  "serverCreateDetailsStepCloneServer": {
-    "title": "Clone a server",
-    "description": "Cloning a server gives you an exact replica of an existing server in the same Virtual Data Centre.",
-    "loadingServerDetails": "Retrieving network information.",
-    "loadingServers": "Loading servers.",
-    "noServers": "No servers to clone. Create a new server first.",
-    "errorMessageServers": "Sorry, something’s not right. We weren’t able to retrieve the list of servers.",
-    "placeholder": {
-      "server": "Select Server"
-    },
-    "hints": {
-      "serverNameMax": "Max of {{max_char}} characters"
-    },
-    "errors": {
-      "serverNameRequired": "Enter a server name.",
-      "invalidServerName": "Server name can only contain letters, numbers or hyphens.",
-      "selectServerRequired": "You must select a server.",
-      "manuallyAssignedIpWarning": "{{server_name}} has a manually-assigned IP address.\r\n Your new server may not be usable until {{server_name}} is stopped or its IP address is dissociated."
+    "cloneServer": {
+      "title": "Clone a server",
+      "description": "Cloning a server gives you an exact replica of an existing server in the same Virtual Data Centre.",
+      "loadingServerDetails": "Retrieving network information.",
+      "loadingServers": "Loading servers.",
+      "noServers": "No servers to clone. Create a new server first.",
+      "errorMessageServers": "Sorry, something’s not right. We weren’t able to retrieve the list of servers.",
+      "placeholder": {
+        "server": "Select Server"
+      },
+      "hints": {
+        "serverNameMax": "Max of {{max_char}} characters"
+      },
+      "errors": {
+        "serverNameRequired": "Enter a server name.",
+        "invalidServerName": "Server name can only contain letters, numbers or hyphens.",
+        "selectServerRequired": "You must select a server.",
+        "manuallyAssignedIpWarning": "{{server_name}} has a manually-assigned IP address.\r\n Your new server may not be usable until {{server_name}} is stopped or its IP address is dissociated."
+      }
     }
   },
   "serverCreateAddOnsStep": {
-    "title": "Add ons",
+    "stepTitle": "Add ons",
     "header": "Add ons",
     "description": "Select the Add-Ons you'd like for this order and specify any relevant configuration options.",
     "antiMalwareAddOn": "Anti-Malware",
@@ -226,15 +226,46 @@
     "sqlServerAddOnHelp": "Add additional storage on your server to save more data"
   },
   "serverCreateConfirmStep": {
-    "title": "Confirm",
+    "stepTitle": "Confirm"
+  },
+  "serverCreateProvisioningStep": {
+    "stepTitle": "Go!",
+    "description": "Your server is deploying and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
+    "dataInProgress": "Preparing the server deployment process. This may take a moment.",
+    "dataError": "Something went wrong while processing your request. Please try again later."
+  },
+  "serverProvisioningPage": {
+    "header": "Create server status",
+    "description": "Your server is deploying and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
+    "leftPanelHeader": "New server",
+    "creationDetails": "Creation details",
+    "serverHeader": "Server",
+    "noJob": "There are no Job to display for this server.",
+    "loadingJob": "Loading server creation details.",
+    "errorGettingJob": "Sorry, something’s not right. We weren’t able to retrieve the creation details of the server."
+  },
+  "orderDetailsStep": {
+    "stepTitle": "Confirm",
     "header": "Confirm Order",
     "description": "Confirm the details of your order and then continue.",
-    "billingDetails": "Billing Details",
+    "billingDetails": {
+      "header": "Billing Details",
+      "contractTermPlaceholder": "Contract Term",
+      "contractTermHelp": "Select a contract term for all items in this order.",
+      "contractTermRequired": "You must select the contract term.",
+      "entityPlaceholder": "Billing Entity",
+      "entityHelp": "Select the billing entity to bill this order to.",
+      "entityRequired": "You must select the billing entity.",
+      "sitePlaceholder": "Billing Site",
+      "siteHelp": "Select a nominated billing site.",
+      "siteRequired": "You must select the billing site.",
+      "costCenterPlaceholder": "Billing Cost Center",
+      "costCenterHelp": "Select the correct billing cost centre.",
+      "costCenterRequired": "You must select the cost center."
+    },
     "orderDetails": {
       "header": "Order Details",
       "description": "Review the charges for this order below.",
-      "noItemTypes": "No item types found.",
-      "errorItemTypes": "Sorry, something’s not right. We weren’t able to retrieve the list of item types.",
       "columnHeaders": {
         "description": "Description",
         "monthlyCharge": "Monthly Fee",
@@ -249,19 +280,13 @@
       "mergeOrder": "Merge this order with an Existing draft Order"
     }
   },
-  "serverCreateProvisioningStep": {
-    "title": "Go!",
-    "description": "Your server is deploying and will be available shortly. You can track progress from the notifications menu at the top of the portal."
+  "provisioningStep": {
+    "stepTitle": "Go!"
   },
-  "serverProvisioningPage": {
-    "header": "Create server status",
-    "description": "Your server is deploying and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
-    "leftPanelHeader": "New server",
-    "creationDetails": "Creation details",
-    "serverHeader": "Server",
-    "noJob": "There are no Job to display for this server.",
-    "loadingJob": "Loading server creation details.",
-    "errorGettingJob": "Sorry, something’s not right. We weren’t able to retrieve the creation details of the server."
+  "pricingCalculator": {
+    "loading": "Updating charges",
+    "monthlyCost": "Monthly",
+    "oneOffCost": "One-off",
+    "totalCost": "Total Cost"
   }
-
 }

@@ -269,14 +269,14 @@
 
         <ng-container *ngTemplateOutlet="inviewTemplate;
           context: {
-            $implicit: selectedProduct.inviewPremium,
-            inviewTitle: 'Premium'
+            $implicit: selectedProduct.inviewStandard,
+            inviewTitle: 'Standard'
           }"></ng-container>
 
         <ng-container *ngTemplateOutlet="inviewTemplate;
           context: {
-            $implicit: selectedProduct.inviewStandard,
-            inviewTitle: 'Standard'
+            $implicit: selectedProduct.inviewPremium,
+            inviewTitle: 'Premium'
           }"></ng-container>
       </div>
     </mcs-scrollable-link>

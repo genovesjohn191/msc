@@ -8,17 +8,17 @@
       [mcsContextualHelp]="'serverCreateDetailsStep.contextualHelp.serverNameField' | translate">
 
     <mcs-hint mcsHint align="start">
-      {{ 'serverCreateDetailsStepNewServer.hints.serverNameMax' | translate:{max_char: serverNameInput.maxLength} }}
+      {{ 'serverCreateDetailsStep.newServer.hints.serverNameMax' | translate:{max_char: serverNameInput.maxLength} }}
     </mcs-hint>
     <mcs-hint mcsHint align="end">
       {{ serverNameInput.value.length }} / {{ serverNameInput.maxLength }}
     </mcs-hint>
 
     <mcs-error mcsError errorState="required">
-      {{ 'serverCreateDetailsStepNewServer.errors.serverNameRequired' | translate }}
+      {{ 'serverCreateDetailsStep.newServer.errors.serverNameRequired' | translate }}
     </mcs-error>
     <mcs-error mcsError errorState="invalidServerName">
-      {{ 'serverCreateDetailsStepNewServer.errors.invalidServerName' | translate }}
+      {{ 'serverCreateDetailsStep.newServer.errors.invalidServerName' | translate }}
     </mcs-error>
   </mcs-form-field>
 
@@ -27,16 +27,16 @@
     <mcs-select mcsId="select-vapp"
       [formControl]="fcVApp"
       [mcsContextualHelp]="'serverCreateDetailsStep.contextualHelp.vAppField' | translate"
-      [placeholder]="'serverCreateDetailsStepNewServer.placeholder.vApp' | translate">
+      [placeholder]="'serverCreateDetailsStep.newServer.placeholder.vApp' | translate">
 
-      <mcs-option>{{ 'serverCreateDetailsStepNewServer.createNewVApp' | translate }}</mcs-option>
+      <mcs-option>{{ 'serverCreateDetailsStep.newServer.createNewVApp' | translate }}</mcs-option>
       <mcs-option *ngFor="let vApp of resource?.vApps" [value]="vApp">
         {{ vApp.name }}
       </mcs-option>
     </mcs-select>
 
     <mcs-error mcsError errorState="required">
-      {{ 'serverCreateDetailsStepNewServer.errors.selectVappRequired' | translate }}
+      {{ 'serverCreateDetailsStep.newServer.errors.selectVappRequired' | translate }}
     </mcs-error>
   </mcs-form-field>
 
@@ -44,12 +44,12 @@
   <mcs-form-field>
     <mcs-select mcsId="select-image" required
       [formControl]="fcImage"
-      [placeholder]="'serverCreateDetailsStepNewServer.placeholder.image' | translate"
+      [placeholder]="'serverCreateDetailsStep.newServer.placeholder.image' | translate"
       [mcsContextualHelp]="'serverCreateDetailsStep.contextualHelp.serverTemplateField' | translate">
       <!-- Os Group -->
       <mcs-option-group>
         <ng-container *mcsOptionGroupHeader>
-          <span>{{ 'serverCreateDetailsStepNewServer.headers.os' | translate }}</span>
+          <span>{{ 'serverCreateDetailsStep.newServer.headers.os' | translate }}</span>
         </ng-container>
 
         <mcs-option-group [label]="platform.key"
@@ -64,7 +64,7 @@
       <!-- Template Group -->
       <mcs-option-group *ngIf="customTemplates">
         <ng-container *mcsOptionGroupHeader>
-          <span>{{ 'serverCreateDetailsStepNewServer.headers.templates' | translate }}</span>
+          <span>{{ 'serverCreateDetailsStep.newServer.headers.templates' | translate }}</span>
         </ng-container>
 
         <mcs-option *ngFor="let template of customTemplates" [value]="template">
@@ -74,7 +74,7 @@
     </mcs-select>
 
     <mcs-error mcsError errorState="required">
-      {{ 'serverCreateDetailsStepNewServer.errors.selectImageRequired' | translate }}
+      {{ 'serverCreateDetailsStep.newServer.errors.selectImageRequired' | translate }}
     </mcs-error>
   </mcs-form-field>
 
@@ -84,7 +84,7 @@
       (dataChange)="onScaleChanged($event)">
 
       <ng-container mcsManageScaleHeader>
-        <h2>{{ 'serverCreateDetailsStepNewServer.computeSizeLabel' | translate }}</h2>
+        <h2>{{ 'serverCreateDetailsStep.newServer.computeSizeLabel' | translate }}</h2>
       </ng-container>
     </mcs-server-manage-scale>
   </div>
@@ -99,7 +99,7 @@
       [mcsContextualHelp]="'serverCreateDetailsStep.contextualHelp.storageField' | translate">
 
       <ng-container mcsManageStorageHeader>
-        <h2>{{ 'serverCreateDetailsStepNewServer.storageLabel' | translate }}</h2>
+        <h2>{{ 'serverCreateDetailsStep.newServer.storageLabel' | translate }}</h2>
       </ng-container>
       <ng-container mcsManageStorageWarning>
         <span>{{ storageWarning }}</span>
@@ -116,7 +116,7 @@
       [mcsContextualHelp]="'serverCreateDetailsStep.contextualHelp.networkField' | translate">
 
       <ng-container mcsManageNetworkHeader>
-        <h2>{{ 'serverCreateDetailsStepNewServer.networkLabel' | translate }}</h2>
+        <h2>{{ 'serverCreateDetailsStep.newServer.networkLabel' | translate }}</h2>
       </ng-container>
     </mcs-server-manage-network>
   </div>

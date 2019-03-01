@@ -4,12 +4,15 @@ import {
   OnDestroy,
   Input,
   ChangeDetectionStrategy,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  Output,
+  EventEmitter
 } from '@angular/core';
 import {
   FormGroup,
   FormControl
 } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 import {
   Subscription,
   throwError,
@@ -24,7 +27,6 @@ import {
 } from 'rxjs/operators';
 import {
   McsErrorHandlerService,
-  McsTextContentProvider,
   CoreDefinition,
   CoreValidators
 } from '@app/core';
@@ -77,8 +79,6 @@ export class ServerNewComponent
   @Input()
   public serviceType: ServiceType;
 
-  public textContent: any;
-  public textHelpContent: any;
   public operatingSystemsMap$: Observable<Map<string, McsServerOperatingSystem[]>>;
   public operatingSystemsSubscription: Subscription;
   public selectedStorage: McsResourceStorage;
@@ -93,7 +93,8 @@ export class ServerNewComponent
   public fcScale: FormControl;
   public fcStorage: FormControl;
 
-  private _destroySubject = new Subject<void>();
+  @Output()
+  public dataChange = new EventEmitter<ServerCreateDetailsBase<McsServerCreate>>();
 
   @Input()
   public get resource(): McsResource { return this._resource; }
@@ -106,10 +107,11 @@ export class ServerNewComponent
     }
   }
   private _resource: McsResource;
+  private _destroySubject = new Subject<void>();
 
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
-    private _textContentProvider: McsTextContentProvider,
+    private _translate: TranslateService,
     private _errorHandlerService: McsErrorHandlerService,
     private _serversOsRepository: McsServersOsRepository,
     private _resourcesRepository: McsResourcesRepository
@@ -118,8 +120,6 @@ export class ServerNewComponent
   }
 
   public ngOnInit() {
-    this.textContent = this._textContentProvider.content.servers.createServer.newServer;
-    this.textHelpContent = this._textContentProvider.content.servers.createServer.contextualHelp;
     this._registerFormGroup();
     this._subscribeToResourceDataChange();
   }
@@ -159,11 +159,9 @@ export class ServerNewComponent
   public get storageWarning(): string {
     let maxMemoryInGb = Math.floor(convertMbToGb(this.storageMaxMemoryMB));
 
-    return replacePlaceholder(
-      this.textContent.fullStorageSpace,
-      'remaining_memory',
-      appendUnitSuffix(maxMemoryInGb, UnitType.Gigabyte)
-    );
+    return this._translate.instant('serverCreateDetailsStep.newServer.fullStorageSpace', {
+      remaining_memory: appendUnitSuffix(maxMemoryInGb, UnitType.Gigabyte)
+    });
   }
 
   /**
@@ -183,6 +181,13 @@ export class ServerNewComponent
   public get currentScaleValue(): number {
     let currentSelectedScale = this.fcScale.value && this.fcScale.value.memoryMB;
     return convertMbToGb(currentSelectedScale);
+  }
+
+  /**
+   * Returns true when the form is valid
+   */
+  public get formIsValid(): boolean {
+    return !isNullOrEmpty(this.fgNewServer) && this.fgNewServer.valid;
   }
 
   /**
@@ -368,6 +373,9 @@ export class ServerNewComponent
       fcScale: this.fcScale,
       fcStorage: this.fcStorage
     });
+    this.fgNewServer.valueChanges.pipe(
+      takeUntil(this._destroySubject)
+    ).subscribe(this._notifyDataChange.bind(this));
   }
 
   /**
@@ -385,5 +393,13 @@ export class ServerNewComponent
     this._resourcesRepository.dataChange().pipe(
       takeUntil(this._destroySubject)
     ).subscribe(() => this._changeDetectorRef.markForCheck());
+  }
+
+  /**
+   * Notifies the data change on the form
+   */
+  private _notifyDataChange(): void {
+    if (!this.formIsValid) { return; }
+    this.dataChange.next(this);
   }
 }

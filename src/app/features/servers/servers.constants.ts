@@ -22,7 +22,6 @@ import {
 import { ServerProvisioningComponent } from './server-provisioning/server-provisioning.component';
 import {
   ServerCreateComponent,
-  ServerCreateService,
   ServerCreateGuard
 } from './server-create';
 import {
@@ -39,7 +38,6 @@ export const serversProviders: any[] = [
   ServersService,
   ServerService,
   ServerServicesGuard,
-  ServerCreateService,
   ServerCreateGuard,
   VdcService
 ];

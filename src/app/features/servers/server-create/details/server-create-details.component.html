@@ -1,33 +1,36 @@
-<ng-container *ngIf="selectedResource$ | async as selectedResource">
-  <mcs-tab-group [(selectedTabId)]="selectedTabIndex" *mcsComponentHandler>
-    <!-- New Server Tab -->
-    <mcs-tab [label]="'serverCreateDetailsStepNewServer.title' | translate" [id]="serverCreateTypeEnum.New">
-      <p>{{ 'serverCreateDetailsStepNewServer.description' | translate }}</p>
+<mcs-tab-group [(selectedTabId)]="selectedTabIndex" *mcsComponentHandler>
+  <!-- New Server Tab -->
+  <mcs-tab [id]="serverCreateTypeEnum.New"
+    [label]="'serverCreateDetailsStep.newServer.title' | translate">
+    <p>{{ 'serverCreateDetailsStep.newServer.description' | translate }}</p>
 
-      <ng-container *ngIf="selectedTabIndex === serverCreateTypeEnum.New">
-        <mcs-server-new #serverBase
-          [resource]="selectedResource"
-          [serviceType]="selectedResource.serviceType"></mcs-server-new>
-      </ng-container>
-    </mcs-tab>
+    <ng-container *ngIf="selectedTabIndex === serverCreateTypeEnum.New">
+      <mcs-server-new #serverBase
+        [resource]="resource"
+        [serviceType]="resource.serviceType"
+        (dataChange)="onChangeCreationDetails()"></mcs-server-new>
+    </ng-container>
+  </mcs-tab>
 
-    <!-- Clone Server Tab -->
-    <mcs-tab [label]="'serverCreateDetailsStepCloneServer.title' | translate" [id]="serverCreateTypeEnum.Clone">
-      <p>{{ 'serverCreateDetailsStepCloneServer.description' | translate }}</p>
+  <!-- Clone Server Tab -->
+  <mcs-tab [id]="serverCreateTypeEnum.Clone"
+    [label]="'serverCreateDetailsStep.cloneServer.title' | translate">
+    <p>{{'serverCreateDetailsStep.cloneServer.description' | translate }}</p>
 
-      <ng-container *ngIf="selectedTabIndex === serverCreateTypeEnum.Clone">
-        <mcs-server-clone #serverBase
-          [serviceType]="selectedResource.serviceType"></mcs-server-clone>
-      </ng-container>
-    </mcs-tab>
-  </mcs-tab-group>
-</ng-container>
+    <ng-container *ngIf="selectedTabIndex === serverCreateTypeEnum.Clone">
+      <mcs-server-clone #serverBase
+        (dataChange)="onChangeCreationDetails()"
+        [serviceType]="resource.serviceType"></mcs-server-clone>
+    </ng-container>
+  </mcs-tab>
+</mcs-tab-group>
 
 <!-- Wizard Actions -->
 <div class="action-items">
   <button mcsButton size="small" arrow="right"
     mcsWizardStepNext
-    [mcsWizardStepNextWhen]="createServerFunc"
+    [mcsWizardStepNextWhen]="allFormsAreValid"
+    (click)="onSubmitCreationDetails()"
     mcsId="step-1-next"
     mcsEventTracker="step-1-next"
     mcsEventCategory="server"

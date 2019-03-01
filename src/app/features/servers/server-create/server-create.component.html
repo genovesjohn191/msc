@@ -18,84 +18,89 @@
   <!-- Content Panel -->
   <mcs-content-panel *mcsContentPanelDef>
 
-    <mcs-wizard [header]="'serverCreate.header' | translate">
+    <mcs-wizard [header]="'serverCreate.header' | translate"
+      (stepChange)="onWizardStepChanged($event)">
+
+      <!-- Error message -->
+      <ng-container mcsWizardErrorTemplate>
+        <mcs-form-message #formMessage></mcs-form-message>
+      </ng-container>
 
       <!-- Server Details Step-->
-      <mcs-wizard-step
-        [stepTitle]="'serverCreateDetailsStep.title' | translate"
-        [stepControl]="faCreationForm">
+      <mcs-wizard-step id="server-details-step"
+        [stepTitle]="'serverCreateDetailsStep.stepTitle' | translate"
+        customClass="contextual-help-page-wrapper limited-view">
 
-        <div class="limited-view">
-          <div class="contextual-help-page-wrapper">
-            <mcs-form-field>
-              <mcs-select placeholder="Select a VDC" required
-                mcsId="select-resource"
-                (change)="onChangeResource($event)"
-                [mcsContextualHelp]="'serverCreate.vdcDropdownList.helpText' | translate">
+        <mcs-form-field>
+          <mcs-select placeholder="Select a VDC" required
+            mcsId="select-resource"
+            (change)="onChangeResource($event)"
+            [mcsContextualHelp]="'serverCreate.vdcDropdownList.helpText' | translate">
 
-                <mcs-option-group>
-                  <ng-container *mcsOptionGroupHeader>
-                    {{ 'serverCreate.vdcDropdownList.header' | translate }}
-                  </ng-container>
+            <mcs-option-group>
+              <ng-container *mcsOptionGroupHeader>
+                {{ 'serverCreate.vdcDropdownList.header' | translate }}
+              </ng-container>
 
-                  <mcs-option [value]="item" *ngFor="let item of resources$ | async">
-                    {{ getResourceDisplayedText(item) }}
-                  </mcs-option>
-                </mcs-option-group>
-              </mcs-select>
-            </mcs-form-field>
+              <mcs-option [value]="item" *ngFor="let item of resources$ | async">
+                {{ getResourceDisplayedText(item) }}
+              </mcs-option>
+            </mcs-option-group>
+          </mcs-select>
+        </mcs-form-field>
 
-            <mcs-server-create-details></mcs-server-create-details>
-          </div>
-        </div>
+        <ng-container *ngIf="resource$ | async as selectedResource">
+          <mcs-server-create-details [resource]="selectedResource" #serverDetailsStep
+            (dataChange)="onServerDetailsChange(selectedResource, $event)"
+            (dataSubmit)="onServerDetailsSubmit(selectedResource, $event)">
+          </mcs-server-create-details>
+        </ng-container>
       </mcs-wizard-step>
 
       <ng-container *ngIf="resource$ | async as resource">
         <!-- Add-ons Step -->
-        <mcs-wizard-step *ngIf="resource?.serviceType === serviceTypeEnum.Managed"
-          [stepTitle]="'serverCreateAddOnsStep.title' | translate">
-          <mcs-server-create-addons></mcs-server-create-addons>
+        <mcs-wizard-step id="addon-step"
+          *ngIf="resource?.serviceType === serviceTypeEnum.Managed"
+          [stepTitle]="'serverCreateAddOnsStep.stepTitle' | translate"
+          customClass="contextual-help-page-wrapper limited-view">
+
+          <mcs-server-create-addons (dataChange)="onServerAddOnChange($event)">
+          </mcs-server-create-addons>
         </mcs-wizard-step>
 
         <!-- Confirm Step  -->
-        <mcs-wizard-step *ngIf="resource?.serviceType === serviceTypeEnum.Managed"
-          [stepTitle]="'serverCreateConfirmStep.title' | translate">
-          <mcs-server-create-confirm></mcs-server-create-confirm>
+        <mcs-wizard-step id="confirm-step"
+          *ngIf="resource?.serviceType === serviceTypeEnum.Managed"
+          [stepTitle]="'serverCreateConfirmStep.stepTitle' | translate"
+          customClass="contextual-help-page-wrapper limited-view">
+
+          <mcs-order-details-step [order]="order$ | async"
+            (submitOrder)="onSubmitOrder($event)"></mcs-order-details-step>
         </mcs-wizard-step>
       </ng-container>
 
       <!-- Go! Step  -->
-      <mcs-wizard-step [stepTitle]="'serverCreateProvisioningStep.title' | translate">
-        <mcs-server-create-provisioning></mcs-server-create-provisioning>
+      <mcs-wizard-step id="go-step"
+        [stepTitle]="'serverCreateProvisioningStep.stepTitle' | translate"
+        customClass="limited-view">
+
+        <mcs-provisioning-step [jobs]="jobs$ | async" [requestState]="dataStatus$ | async">
+          <ng-container mcsProvisioningStepDescription>
+            {{ 'serverCreateProvisioningStep.description' | translate }}
+          </ng-container>
+
+          <ng-container mcsProvisioningStepInProgress>
+            {{ 'serverCreateProvisioningStep.dataInProgress' | translate}}
+          </ng-container>
+        </mcs-provisioning-step>
       </mcs-wizard-step>
     </mcs-wizard>
 
-    <!-- Quote Widget -->
-    <ng-container *ngIf="(resource$ | async)?.serviceType === serviceTypeEnum.Managed">
-      <mcs-quote-widget *ngIf="order$ | async as orderDetails">
-
-        <!-- Order Header -->
-        <ng-container mcsQuoteWidgetHeader *ngIf="(orderIsUpdating$ | async); else actualPrice">
-          <mcs-item>
-            <mcs-loader></mcs-loader>
-            <span>Updating charges</span>
-          </mcs-item>
-        </ng-container>
-        <ng-template #actualPrice>
-          <span>Total Cost: ${{ getTotalOrderCost(orderDetails) }}</span>
-        </ng-template>
-
-        <!-- Order Content -->
-        <mcs-item orientation="separated">
-          <span>Monthly</span>
-          <span>${{ orderDetails.charges?.monthly || 0 }}</span>
-        </mcs-item>
-        <mcs-item orientation="separated">
-          <span>One-Off</span>
-          <span>${{ orderDetails.charges?.oneOff || 0 }}</span>
-        </mcs-item>
-      </mcs-quote-widget>
-    </ng-container>
-
   </mcs-content-panel>
 </mcs-page>
+
+<!-- Pricing Calculator Widget -->
+<mcs-pricing-calculator #pricingCalculator
+  [state]="dataStatus$ | async"
+  [order]="order$ | async">
+</mcs-pricing-calculator>

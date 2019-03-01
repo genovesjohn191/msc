@@ -38,7 +38,6 @@ import {
 @Component({
   selector: 'mcs-jobs-provisioning',
   templateUrl: './jobs-provisioning.component.html',
-  styleUrls: ['./jobs-provisioning.component.scss'],
   animations: [
     animateFactory.fadeIn
   ],

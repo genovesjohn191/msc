@@ -3,9 +3,10 @@ import {
   ElementRef,
   OnDestroy,
   OnChanges,
-  AfterViewInit,
+  AfterContentInit,
   Input,
-  SimpleChanges
+  SimpleChanges,
+  Renderer2
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import {
@@ -46,7 +47,7 @@ type AlignmentDetails = {
   selector: '[mcsAlignContent]',
 })
 
-export class AlignContentDirective implements OnChanges, AfterViewInit, OnDestroy {
+export class AlignContentDirective implements OnChanges, AfterContentInit, OnDestroy {
   @Input('mcsAlignContent')
   public alignment: string;
 
@@ -57,6 +58,7 @@ export class AlignContentDirective implements OnChanges, AfterViewInit, OnDestro
 
   constructor(
     private _elementRef: ElementRef<HTMLElement>,
+    private _renderer: Renderer2,
     private _browserService: McsBrowserService
   ) {
     this._createHorizontalAlignTable();
@@ -66,13 +68,14 @@ export class AlignContentDirective implements OnChanges, AfterViewInit, OnDestro
   public ngOnChanges(changes: SimpleChanges): void {
     let alignmentChange = changes['alignment'];
     if (!isNullOrEmpty(alignmentChange)) {
-      this._layoutRequestChange.next();
+      this._validateAlignment();
+      this._updateContainerLayout();
     }
   }
 
-  public ngAfterViewInit(): void {
-    this._subscribeToBreakpointChanges();
+  public ngAfterContentInit(): void {
     this._subscribeToLayoutRequest();
+    this._subscribeToBreakpointChanges();
   }
 
   public ngOnDestroy(): void {
@@ -91,8 +94,8 @@ export class AlignContentDirective implements OnChanges, AfterViewInit, OnDestro
    * Returns the flex axis direction based on the property
    */
   public get containerDirection(): Direction {
-    return getElementStyle(this.hostElement, 'flexDirection') === 'row' ?
-      Direction.Horizontal : Direction.Vertical;
+    return getElementStyle(this.hostElement, 'flexDirection') === 'column' ?
+      Direction.Vertical : Direction.Horizontal;
   }
 
   /**
@@ -115,13 +118,15 @@ export class AlignContentDirective implements OnChanges, AfterViewInit, OnDestro
    * Updates the container layout based on the direction and alignment settings
    */
   private _updateContainerLayout(): void {
-    let alignDetails = this.containerDirection === Direction.Horizontal ?
-      this._horizontalAlignmentTable.get(this.containerAlignment) :
-      this._verticalAlignmentTable.get(this.containerAlignment);
+    Promise.resolve().then(() => {
+      let alignDetails = this.containerDirection === Direction.Horizontal ?
+        this._horizontalAlignmentTable.get(this.containerAlignment) :
+        this._verticalAlignmentTable.get(this.containerAlignment);
 
-    if (isNullOrEmpty(alignDetails)) { return; }
-    this.hostElement.style.alignItems = alignDetails.alignItems;
-    this.hostElement.style.justifyContent = alignDetails.justifyContent;
+      if (isNullOrEmpty(alignDetails)) { return; }
+      this._renderer.setStyle(this.hostElement, 'alignItems', alignDetails.alignItems);
+      this._renderer.setStyle(this.hostElement, 'justifyContent', alignDetails.justifyContent);
+    });
   }
 
   /**
@@ -181,7 +186,6 @@ export class AlignContentDirective implements OnChanges, AfterViewInit, OnDestro
    */
   private _subscribeToBreakpointChanges(): void {
     this._browserService.breakpointChange().pipe(
-      startWith(null),
       takeUntil(this._destroySubject)
     ).subscribe(() => this._layoutRequestChange.next());
   }
@@ -194,10 +198,8 @@ export class AlignContentDirective implements OnChanges, AfterViewInit, OnDestro
       startWith(null),
       takeUntil(this._destroySubject)
     ).subscribe(() => {
-      Promise.resolve().then(() => {
-        this._validateAlignment();
-        this._updateContainerLayout();
-      });
+      this._validateAlignment();
+      this._updateContainerLayout();
     });
   }
 }
