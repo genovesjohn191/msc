@@ -54,5 +54,8 @@
 
 <!-- Content panel generation -->
 <div class="wizard-content-panel-wrapper">
-  <ng-template [ngTemplateOutlet]="activeStep?.templateRef"></ng-template>
+  <section [ngClass]="activeStep?.customClass">
+    <ng-content select="[mcsWizardErrorTemplate]"></ng-content>
+    <ng-template [ngTemplateOutlet]="activeStep?.templateRef"></ng-template>
+  </section>
 </div>

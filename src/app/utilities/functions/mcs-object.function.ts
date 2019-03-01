@@ -2,7 +2,6 @@ import {
   Subscription,
   Subject
 } from 'rxjs';
-import { deserializeJsonToObject } from './mcs-json.function';
 
 /**
  * This will check if the inputted object is null/undefined or empty,
@@ -65,12 +64,36 @@ export function updateObjectData(target: any, ...source: any[]): void {
 }
 
 /**
- * Creates new object from source object by deserializing its content
- * @param objectType Object type to be created
+ * Deep clone the object based on its source
  * @param sourceObject Source object from which to copy the object
  */
-export function createNewObject<T>(objectType: new () => any, sourceObject: T): T {
-  return deserializeJsonToObject<T>(objectType, sourceObject);
+export function cloneObject<T>(sourceObject: T): T {
+  let memberwiseClone = (source: any) => {
+    if (isNullOrUndefined(source)) { return source; }
+    let target: any;
+    if (typeof source === 'object') {
+      target = isNullOrUndefined(source.constructor) ?
+        new Object() : new source.constructor();
+    } else {
+      target = source;
+    }
+    Object.assign(target, source);
+
+    if (typeof target === 'object') {
+      let objectKeys = Object.keys(target);
+
+      objectKeys.forEach((fieldKey) => {
+        let fieldType = typeof target[fieldKey];
+        let fieldValue = target[fieldKey];
+
+        target[fieldKey] = fieldType === 'object' ?
+          memberwiseClone(fieldValue) :
+          fieldValue;
+      });
+    }
+    return target;
+  };
+  return memberwiseClone(sourceObject);
 }
 
 /**

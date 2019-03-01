@@ -22,14 +22,15 @@ import {
   isNullOrEmpty,
   unsubscribeSafely,
   addOrUpdateArrayRecord,
-  deleteArrayRecord
+  deleteArrayRecord,
+  isNullOrUndefined
 } from '@app/utilities';
 import {
   DataStatus,
   ActionStatus
 } from '@app/models';
-import { CoreDefinition } from '../core.definition';
 import { McsRepository } from './mcs-repository.interface';
+import { CoreDefinition } from '../core.definition';
 
 type DelegateSource<T> = () => Observable<T[]>;
 
@@ -207,13 +208,18 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
    * Data source function pointer
    */
   private _datasourceFunc(): Observable<T[]> {
+    // Return immediately when it is null
+    if (isNullOrUndefined(this._dataSource)) {
+      return this._dataSource = of([]);
+    }
+
     if (this._dataSource instanceof Observable) {
       return this._dataSource;
     } else if (this._dataSource instanceof Array) {
       return of(this._dataSource);
     }
 
-    return (this._dataSource as McsRepository<T>).filterBy({
+    return !isNullOrUndefined(this._dataSource) && (this._dataSource as McsRepository<T>).filterBy({
       keyword: this._search && this._search.keyword || '',
       pageIndex: this._paginator && this._paginator.pageIndex || CoreDefinition.DEFAULT_PAGE_INDEX,
       pageSize: this._paginator && this._paginator.pageSize || CoreDefinition.DEFAULT_PAGE_SIZE
@@ -224,7 +230,8 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
    * Returns true once the datasource is a repository type
    */
   private get _datasourceIsRepository(): boolean {
-    return (this._dataSource as any).filterBy !== undefined;
+    return !isNullOrUndefined(this._dataSource) &&
+      (this._dataSource as any).filterBy !== undefined;
   }
 
   /**

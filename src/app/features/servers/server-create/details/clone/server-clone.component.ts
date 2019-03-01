@@ -3,7 +3,9 @@ import {
   OnInit,
   OnDestroy,
   Input,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  Output,
+  EventEmitter
 } from '@angular/core';
 import {
   FormGroup,
@@ -15,9 +17,13 @@ import {
 } from '@angular/router';
 import {
   Subscription,
-  throwError
+  throwError,
+  Subject
 } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import {
+  catchError,
+  takeUntil
+} from 'rxjs/operators';
 import {
   CoreDefinition,
   CoreValidators,
@@ -25,8 +31,7 @@ import {
 } from '@app/core';
 import {
   isNullOrEmpty,
-  unsubscribeSafely,
-  refreshView
+  unsubscribeSafely
 } from '@app/utilities';
 import {
   ServiceType,
@@ -49,6 +54,11 @@ export class ServerCloneComponent
   @Input()
   public serviceType: ServiceType;
 
+  @Output()
+  public dataChange = new EventEmitter<ServerCreateDetailsBase<McsServerClone>>();
+
+  public textContent: any;
+  public textHelpContent: any;
   public servers: McsServer[];
   public serversSubscription: Subscription;
   public parameterSubscription: Subscription;
@@ -61,19 +71,6 @@ export class ServerCloneComponent
   public fcTargetServer: FormControl;
 
   /**
-   * Selected server property
-   */
-  private _selectedServer: McsServer;
-  public get selectedServer(): McsServer { return this._selectedServer; }
-  public set selectedServer(value: McsServer) {
-    if (this._selectedServer !== value) {
-      this._selectedServer = value;
-      this._getServerById(this._selectedServer.id);
-      this._changeDetectorRef.markForCheck();
-    }
-  }
-
-  /**
    * Returns true when the server is manually assigned IP address
    */
   private _serverIsManuallyAssignedIp: boolean;
@@ -84,6 +81,8 @@ export class ServerCloneComponent
       this._changeDetectorRef.markForCheck();
     }
   }
+
+  private _destroySubject = new Subject<void>();
 
   constructor(
     private _activatedRoute: ActivatedRoute,
@@ -103,6 +102,7 @@ export class ServerCloneComponent
   public ngOnDestroy() {
     unsubscribeSafely(this.parameterSubscription);
     unsubscribeSafely(this.serversSubscription);
+    unsubscribeSafely(this._destroySubject);
   }
 
   /**
@@ -155,6 +155,8 @@ export class ServerCloneComponent
    * @param serverId Sever ID to get the server details
    */
   private _getServerById(serverId: string): void {
+    if (isNullOrEmpty(serverId)) { return; }
+
     this.serverIsManuallyAssignedIp = false;
     this.ipAddressStatusFactory.setInProgress();
     this._serversRepository.getById(serverId).pipe(
@@ -189,7 +191,7 @@ export class ServerCloneComponent
     let hasServers = !isNullOrEmpty(serverId) && !isNullOrEmpty(this.servers);
     if (!hasServers) { return; }
     let server = this.servers.find((_server) => _server.id === serverId);
-    refreshView(() => this.fcTargetServer.setValue(server));
+    Promise.resolve().then(() => this.fcTargetServer.setValue(server));
   }
 
   /**
@@ -208,12 +210,18 @@ export class ServerCloneComponent
     this.fcTargetServer = new FormControl('', [
       CoreValidators.required
     ]);
+    this.fcTargetServer.valueChanges.pipe(
+      takeUntil(this._destroySubject)
+    ).subscribe((server) => this._getServerById(server && server.id));
 
     // Register Form Groups using binding
     this.fgCloneServer = new FormGroup({
       fcServerName: this.fcServerName,
       fcTargetServer: this.fcTargetServer
     });
+    this.fgCloneServer.valueChanges.pipe(
+      takeUntil(this._destroySubject)
+    ).subscribe(this._notifyDataChange.bind(this));
   }
 
   /**
@@ -222,5 +230,12 @@ export class ServerCloneComponent
    */
   private _customServerNameValidator(inputValue: any): boolean {
     return CoreDefinition.REGEX_SERVER_NAME_PATTERN.test(inputValue);
+  }
+
+  /**
+   * Notifies the data change on the form
+   */
+  private _notifyDataChange(): void {
+    this.dataChange.next(this);
   }
 }

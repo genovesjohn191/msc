@@ -1,0 +1,34 @@
+@import "../../../styles/shared/base";
+
+// Variables
+$pricing-calculator-max-width: 250px;
+$pricing-calculator-offset: $space-large;
+$pricing-calculator-color: $color-white;
+$pricing-calculator-header-bg-color: $color-black;
+$pricing-calculator-panel-bg-color: rgba($color-black, 0.87);
+
+.pricing-calculator-wrapper {
+  @include border-radius($border-radius-small);
+  @include display-flex(column);
+  position: fixed;
+  overflow: hidden;
+  right: $pricing-calculator-offset;
+  bottom: $pricing-calculator-offset;
+  max-width: $pricing-calculator-max-width;
+  width: 100%;
+}
+
+.pricing-calculator-panel {
+  color: $pricing-calculator-color;
+  background-color: $pricing-calculator-panel-bg-color;
+  padding: $space-medium;
+}
+
+.pricing-calculator-header {
+  @include display-flex(row);
+  @include align-items(center);
+  justify-content: space-between;
+  color: $pricing-calculator-color;
+  background-color: $pricing-calculator-header-bg-color;
+  padding: $space-medium;
+}

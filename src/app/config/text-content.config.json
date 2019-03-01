@@ -142,7 +142,9 @@
       },
       "serverProvisioningStep": {
         "title": "Go!",
-        "description": "Your server is deploying and will be available shortly. You can track progress from the notifications menu at the top of the portal."
+        "description": "Your server is deploying and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
+        "dataInProgress": "Preparing the server deployment process. This may take a moment.",
+        "dataError": "Something went wrong while processing your request. Please try again later."
       },
       "newServer": {
         "title": "New server",

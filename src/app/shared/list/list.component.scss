@@ -26,6 +26,7 @@
     }
   }
 
+  // @deprecated: use mcs-item instead
   .list-item-wrapper {
     @include flex(0 0 auto);
     @include display-flex(row);

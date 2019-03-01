@@ -1,37 +1,33 @@
-<div class="limited-view">
-  <div class="contextual-help-page-wrapper">
-    <h2>{{ 'serverCreateAddOnsStep.header' | translate }}</h2>
-    <p>{{ 'serverCreateAddOnsStep.description' | translate }}</p>
+<section>
+  <h2>{{ 'serverCreateAddOnsStep.header' | translate }}</h2>
+  <p>{{ 'serverCreateAddOnsStep.description' | translate }}</p>
 
-    <mcs-section>
-      <mcs-collapsible-panel (collapseChange)="antiMalwareCheckedChange($event)"
-        [header]="'serverCreateAddOnsStep.antiMalwareAddOn' | translate"
-        [mcsContextualHelp]="'serverCreateAddOnsStep.antiMalwareAddOnHelp' | translate">
-        <mcs-anti-malware-addon
-          (dataChange)="onChangeAntiMalwareDetails($event)">
-        </mcs-anti-malware-addon>
-      </mcs-collapsible-panel>
+    <mcs-collapsible-panel [header]="'serverCreateAddOnsStep.antiMalwareAddOn' | translate"
+      (collapseChange)="onToggleAntiMalware($event)"
+      [mcsContextualHelp]="'serverCreateAddOnsStep.antiMalwareAddOnHelp' | translate">
 
-      <!-- TODO: Remove this temporarily since they're not yet enabled,
-        or the payload was not finalize
-      <mcs-collapsible-panel [header]="'serverCreateAddOnsStep.disasterRecoveryAddOn' | translate"
-        [mcsContextualHelp]="'serverCreateAddOnsStep.disasterRecoveryAddOnHelp' | translate">
-        <mcs-disaster-recovery-addon></mcs-disaster-recovery-addon>
-      </mcs-collapsible-panel>
+      <mcs-anti-malware-addon (dataChange)="onChangeAntiMalwareDetails($event)">
+      </mcs-anti-malware-addon>
+    </mcs-collapsible-panel>
 
-      <mcs-collapsible-panel [header]="'serverCreateAddOnsStep.sqlServerAddOn' | translate"
-        [mcsContextualHelp]="'serverCreateAddOnsStep.sqlServerAddOnHelp' | translate">
-        <mcs-sql-server-addon></mcs-sql-server-addon>
-      </mcs-collapsible-panel>
-      -->
-    </mcs-section>
+    <!-- TODO: Remove this temporarily since they're not yet enabled,
+      or the payload was not finalize
+    <mcs-collapsible-panel [header]="textContent.disasterRecoveryAddOn"
+      [mcsContextualHelp]="textContent.disasterRecoveryAddOnHelp">
+      <mcs-disaster-recovery-addon></mcs-disaster-recovery-addon>
+    </mcs-collapsible-panel>
 
-    <!-- Wizard Actions -->
-    <div class="action-items">
-      <a mcsWizardStepPrevious mcsId="step-2-back">Back</a>
-      <button mcsButton size="small" arrow="right"
-        mcsWizardStepNext
-        mcsId="step-2-next">Next</button>
-    </div>
+    <mcs-collapsible-panel [header]="textContent.sqlServerAddOn"
+      [mcsContextualHelp]="textContent.sqlServerAddOnHelp">
+      <mcs-sql-server-addon></mcs-sql-server-addon>
+    </mcs-collapsible-panel>
+    -->
+
+  <!-- Wizard Actions -->
+  <div class="action-items">
+    <a mcsWizardStepPrevious mcsId="step-2-back">Back</a>
+    <button mcsButton size="small" arrow="right"
+      mcsWizardStepNext
+      mcsId="step-2-next">Next</button>
   </div>
-</div>
+</section>

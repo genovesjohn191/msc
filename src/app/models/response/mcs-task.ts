@@ -85,7 +85,7 @@ export class McsTask extends McsEntityBase {
     let dataStatus: DataStatus;
 
     switch (this.status) {
-      case JobStatus.Timedout:
+      case JobStatus.TimedOut:
       case JobStatus.Failed:
       case JobStatus.Cancelled:
         dataStatus = DataStatus.Error;

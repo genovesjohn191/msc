@@ -24,7 +24,8 @@ import {
   CoreDefinition,
   McsNotificationEventsService,
   McsAccessControlService,
-  McsDataStatusFactory
+  McsDataStatusFactory,
+  McsDateTimeService
 } from '@app/core';
 import {
   McsResourcesRepository,
@@ -34,8 +35,7 @@ import {
   animateFactory,
   unsubscribeSubject,
   isNullOrEmpty,
-  replacePlaceholder,
-  formatDate
+  replacePlaceholder
 } from '@app/utilities';
 import {
   McsServerOsUpdatesDetails,
@@ -131,6 +131,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
     _loadingService: McsLoadingService,
     protected _accessControlService: McsAccessControlService,
     protected _changeDetectorRef: ChangeDetectorRef,
+    private _dateTimeService: McsDateTimeService,
     private _serversService: ServersService,
     private _notificationEvents: McsNotificationEventsService
   ) {
@@ -290,7 +291,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
         this._updatesStatusSubtitleLabel = replacePlaceholder(
           this.updateStatusConfiguration.updatesStatusSubtitleLabel,
           'dateOfStart',
-          formatDate(job.startedOn, 'ddd, DD MMM, HH:mm A'));
+          this._dateTimeService.formatDate(job.startedOn, 'ddd, DD MMM, HH:mm A'));
         break;
       case DataStatus.Success:
         this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Updated);

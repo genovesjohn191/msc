@@ -7,6 +7,7 @@ import { LoaderModule } from '../loader/loader.module';
 import { AlertModule } from '../alert/alert.module';
 import { DirectivesModule } from '../directives';
 import { ButtonModule } from '../button';
+import { ListModule } from '../list/list.module';
 import { ItemModule } from '../item/item.module';
 import { JobsProvisioningComponent } from './jobs-provisioning.component';
 
@@ -23,6 +24,7 @@ import { JobsProvisioningComponent } from './jobs-provisioning.component';
     AlertModule,
     DirectivesModule,
     ButtonModule,
+    ListModule,
     ItemModule
   ],
   exports: [
@@ -33,6 +35,7 @@ import { JobsProvisioningComponent } from './jobs-provisioning.component';
     LoaderModule,
     AlertModule,
     ButtonModule,
+    ListModule,
     ItemModule,
     DirectivesModule,
     JobsProvisioningComponent

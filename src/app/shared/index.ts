@@ -14,6 +14,7 @@ export * from './directives';
 export * from './filter-selector';
 export * from './tree';
 export * from './form-message';
+export * from './pricing-calculator';
 
 /** Expose directives */
 export * from './form-field/form-group.directive';

@@ -161,7 +161,9 @@ export function compareArrays<T>(
   if (!secondArray) { secondArray = new Array(); }
 
   // Set the default comparer when the predicate is not provided
-  if (!predicate) { predicate = (_rec1, _rec2) => _rec1 === _rec2; }
+  if (!predicate) {
+    predicate = (_rec1, _rec2) => JSON.stringify(_rec1) === JSON.stringify(_rec2);
+  }
 
   // Check record count
   if (firstArray.length > secondArray.length) { return contentType = -1; }

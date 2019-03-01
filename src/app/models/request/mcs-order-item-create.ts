@@ -1,9 +1,9 @@
 export class McsOrderItemCreate {
-  public itemOrderTypeId: string;
-  public referenceId: string;
-  public parentServiceId: string;
-  public parentReferenceId: string;
-  public properties: any;
+  public itemOrderTypeId?: string;
+  public referenceId?: string;
+  public parentServiceId?: string;
+  public parentReferenceId?: string;
+  public properties?: any;
 
   constructor() {
     this.itemOrderTypeId = undefined;

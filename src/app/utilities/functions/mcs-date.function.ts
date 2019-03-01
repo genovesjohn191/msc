@@ -1,6 +1,9 @@
 let moment = require('moment');
 let momenttz = require('moment-timezone');
 
+/**
+ * @deprecated Use the service instead for common implementation
+ */
 export function formatDate(date: Date, format: string): string {
   let formattedDate: string = '';
 
@@ -15,6 +18,7 @@ export function formatDate(date: Date, format: string): string {
 
 /**
  * Formats the time with specific timezone, uses moment-timezone JS
+ * @deprecated Use the service instead for common implementation
  * @param date date to convert
  * @param timezone specific timezone of the date
  * @param format desired format of the output date

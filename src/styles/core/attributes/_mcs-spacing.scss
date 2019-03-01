@@ -21,20 +21,20 @@
   $space-value: map-get($space-breakpoints, $space-key);
 
   [padding-#{$space-key}] {
-    padding: $space-value;
+    padding: $space-value !important;
   }
 
   [margin-#{$space-key}] {
-    margin: $space-value;
+    margin: $space-value !important;
   }
 
   @each $direction in $direction-breakpoints {
     [padding-#{$direction}-#{$space-key}] {
-      padding-#{$direction}: $space-value;
+      padding-#{$direction}: $space-value !important;
     }
 
     [margin-#{$direction}-#{$space-key}] {
-      margin-#{$direction}: $space-value;
+      margin-#{$direction}: $space-value !important;
     }
   }
 }

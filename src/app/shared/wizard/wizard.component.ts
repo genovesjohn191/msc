@@ -30,6 +30,7 @@ import { WizardTopPanelDefDirective } from './wizard-top-panel/wizard-top-panel-
 import {
   WizardTopPanelPlaceholderDirective
 } from './wizard-top-panel/wizard-top-panel-placeholder.directive';
+import { IWizardStep } from './wizard-step/wizard-step.interface';
 
 @Component({
   selector: 'mcs-wizard',
@@ -55,8 +56,11 @@ export class WizardComponent implements AfterContentInit, OnDestroy {
   @Input()
   public headerTemplate: TemplateRef<any>;
 
+  @Input()
+  public customClass: string;
+
   @Output()
-  public stepChange: EventEmitter<WizardStepComponent>;
+  public stepChange: EventEmitter<IWizardStep>;
 
   @Output()
   public completed: EventEmitter<any>;
@@ -86,12 +90,8 @@ export class WizardComponent implements AfterContentInit, OnDestroy {
   ) {
     this.isCompleted = false;
     this.activeStep = new WizardStepComponent();
-    this.stepChange = new EventEmitter<WizardStepComponent>();
+    this.stepChange = new EventEmitter<IWizardStep>();
     this.completed = new EventEmitter<any>();
-  }
-
-  public get checkIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_CHECK;
   }
 
   public ngAfterContentInit() {
@@ -112,6 +112,10 @@ export class WizardComponent implements AfterContentInit, OnDestroy {
 
   public ngOnDestroy() {
     unsubscribeSubject(this._destroySubject);
+  }
+
+  public get checkIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_CHECK;
   }
 
   /**
@@ -187,6 +191,7 @@ export class WizardComponent implements AfterContentInit, OnDestroy {
     step.isActive = true;
     this.activeStep = step;
     this.activeStep.enabled = true;
+    this.activeStep.isLastStep = this._wizardSteps.last.id === step.id;
 
     // Set the active step index
     this.activeStepIndex = this.steps.indexOf(this.activeStep);

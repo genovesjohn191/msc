@@ -7,7 +7,7 @@ export enum JobStatus {
   Completed = 2,
   Cancelled = 3,
   Failed = 4,
-  Timedout = 5,
+  TimedOut = 5,
   SessionExpired = 6
 }
 

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { SharedModule } from '@app/shared';
+import { FeaturesSharedModule } from '@app/features-shared';
 import { ServersComponent } from './servers.component';
 /** Shared */
 import {
@@ -47,9 +48,7 @@ import {
   ServerCreateDetailsComponent,
   ServerNewComponent,
   ServerCloneComponent,
-  ServerCreateAddOnsComponent,
-  ServerCreateConfirmComponent,
-  ServerCreateProvisioningComponent
+  ServerCreateAddOnsComponent
 } from './server-create';
 /** VDC */
 import {
@@ -104,8 +103,6 @@ import {
     ServerNewComponent,
     ServerCloneComponent,
     ServerCreateAddOnsComponent,
-    ServerCreateConfirmComponent,
-    ServerCreateProvisioningComponent,
     ServerServicesComponent,
     OsUpdatesScheduleComponent,
     OsUpdatesApplyNowComponent,
@@ -134,7 +131,8 @@ import {
     ResumeServerDialogComponent
   ],
   imports: [
-    SharedModule
+    SharedModule,
+    FeaturesSharedModule
   ],
   providers: [
     ...serversProviders

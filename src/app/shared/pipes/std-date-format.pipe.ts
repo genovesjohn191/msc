@@ -3,24 +3,24 @@ import {
   PipeTransform
 } from '@angular/core';
 import {
-  isNullOrEmpty,
-  formatDate
-} from '@app/utilities';
-
-const DEFAULT_DATE_FORMAT = 'ddd, DD MMM YYYY, LT';
+  McsDateTimeFormat,
+  McsDateTimeService
+} from '@app/core';
 
 @Pipe({
   name: 'mcsStdDateFormat'
 })
 
 export class StdDateFormatPipe implements PipeTransform {
+
+  constructor(private _dateTimeService: McsDateTimeService) { }
+
   /**
    * Converts the date into standard format if the custom format is not provided
    * @param date Date to be formatted
-   * @param customFormat Custom format to be the basis of the formatting
+   * @param format Custom format to be the basis of the formatting
    */
-  public transform(date: Date, customFormat?: string): any {
-    let dateFormat = isNullOrEmpty(customFormat) ? DEFAULT_DATE_FORMAT : customFormat;
-    return isNullOrEmpty(date) ? '' : formatDate(date, dateFormat);
+  public transform(date: Date, format: McsDateTimeFormat = 'default'): any {
+    return this._dateTimeService.formatDate(date, format);
   }
 }

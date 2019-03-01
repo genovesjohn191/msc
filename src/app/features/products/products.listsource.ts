@@ -9,7 +9,7 @@ import {
   compareStrings,
   containsString,
   isNullOrEmpty,
-  createNewObject
+  cloneObject
 } from '@app/utilities';
 import { Search } from '@app/shared';
 import {
@@ -65,7 +65,7 @@ export class ProductCatalogListSource extends McsListSourceBase<McsProductCatalo
           // We need to create a new product object in here
           // because we are eliminating other products that are
           // not in the keyword.
-          return createNewObject<McsProductCatalog[]>(McsProductCatalog, response);
+          return cloneObject<McsProductCatalog[]>(response);
         })
       );
   }

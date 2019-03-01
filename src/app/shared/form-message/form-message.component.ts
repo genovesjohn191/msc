@@ -117,6 +117,15 @@ export class FormMessageComponent implements OnInit, OnDestroy, FormMessage {
   }
 
   /**
+   * Updates the configuration of the form message
+   * @param config Configuration to be applied
+   */
+  public updateConfiguration(newConfig: FormMessageConfig): void {
+    this.config = newConfig;
+    this._changeDetectorRef.markForCheck();
+  }
+
+  /**
    * Event that gets notified once there are changes on the route
    */
   private _onRouteChange(): void {

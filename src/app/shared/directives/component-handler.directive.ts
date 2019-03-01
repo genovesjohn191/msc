@@ -4,19 +4,25 @@ import {
   TemplateRef,
   ElementRef,
   ViewContainerRef,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  EmbeddedViewRef
 } from '@angular/core';
-import { getSafeProperty } from '@app/utilities';
+import {
+  getSafeProperty,
+  isNullOrEmpty
+} from '@app/utilities';
 
 @Directive({
   selector: '[mcsComponentHandler]',
   exportAs: 'mcsComponentHandler'
 })
 export class ComponentHandlerDirective implements OnInit {
+  private _embeddedViewRef: EmbeddedViewRef<any>;
+
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
-    private _templateRef: TemplateRef<any>,
-    private _viewContainer: ViewContainerRef
+    public templateRef: TemplateRef<any>,
+    public viewContainer: ViewContainerRef
   ) { }
 
   public ngOnInit() {
@@ -27,14 +33,15 @@ export class ComponentHandlerDirective implements OnInit {
    * Returns the elementref of the handler
    */
   public get elementRef(): ElementRef<any> {
-    return getSafeProperty(this._templateRef, (obj) => obj.elementRef);
+    return getSafeProperty(this.templateRef, (obj) => obj.elementRef);
   }
 
   /**
    * Removes the component from the DOM
    */
   public removeComponent() {
-    this._viewContainer.clear();
+    this.viewContainer.clear();
+    this._embeddedViewRef = null;
     this._changeDetectorRef.markForCheck();
   }
 
@@ -45,7 +52,9 @@ export class ComponentHandlerDirective implements OnInit {
    * make sure you use this when the component is not created
    */
   public createComponent() {
-    this._viewContainer.createEmbeddedView(this._templateRef);
+    if (!isNullOrEmpty(this._embeddedViewRef)) { return; }
+
+    this._embeddedViewRef = this.viewContainer.createEmbeddedView(this.templateRef);
     this._changeDetectorRef.markForCheck();
   }
 
@@ -54,6 +63,6 @@ export class ComponentHandlerDirective implements OnInit {
    */
   public recreateComponent() {
     this.removeComponent();
-    Promise.resolve().then(() => this.createComponent());
+    requestAnimationFrame(() => this.createComponent());
   }
 }

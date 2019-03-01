@@ -64,6 +64,7 @@ import { ItemModule } from './item/item.module';
 import { DividerModule } from './divider/divider.module';
 import { TreeModule } from './tree/tree.module';
 import { SectionModule } from './section/section.module';
+import { PricingCalculatorModule } from './pricing-calculator/pricing-calculator.module';
 
 @NgModule({
   imports: [
@@ -128,7 +129,8 @@ import { SectionModule } from './section/section.module';
     ItemModule,
     DividerModule,
     TreeModule,
-    SectionModule
+    SectionModule,
+    PricingCalculatorModule
   ],
   exports: [
     CommonModule,
@@ -192,7 +194,8 @@ import { SectionModule } from './section/section.module';
     ItemModule,
     DividerModule,
     TreeModule,
-    SectionModule
+    SectionModule,
+    PricingCalculatorModule
   ]
 })
 

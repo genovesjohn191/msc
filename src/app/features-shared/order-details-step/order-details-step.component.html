@@ -1,0 +1,167 @@
+<div class="limited-view">
+  <div class="contextual-help-page-wrapper">
+    <!-- Billing Details -->
+    <div>
+      <h2>{{ 'orderDetailsStep.header' | translate }}</h2>
+      <p>{{ 'orderDetailsStep.description' | translate }}</p>
+
+      <section margin-top-xlarge>
+        <h3>{{ 'orderDetailsStep.billingDetails.header' | translate }}</h3>
+        <form [formGroup]="fgOrderBilling" mcsFormGroup>
+          <mcs-form-field>
+            <mcs-select [formControl]="fcContractTerm"
+              [placeholder]="'orderDetailsStep.billingDetails.contractTermPlaceholder' | translate"
+              [mcsContextualHelp]="'orderDetailsStep.billingDetails.contractTermHelp' | translate">
+
+              <mcs-option [value]="12">30 Days</mcs-option>
+              <mcs-option [value]="23">Per Existing Contract</mcs-option>
+            </mcs-select>
+
+            <mcs-error mcsError errorState="required">
+              {{ 'orderDetailsStep.billingDetails.contractTermRequired' | translate }}
+            </mcs-error>
+          </mcs-form-field>
+
+          <mcs-form-field>
+            <mcs-select [formControl]="fcBillingEntity"
+              [placeholder]="'orderDetailsStep.billingDetails.entityPlaceholder' | translate"
+              [mcsContextualHelp]="'orderDetailsStep.billingDetails.entityHelp' | translate">
+
+              <mcs-option [value]="1">MCS Test</mcs-option>
+            </mcs-select>
+
+            <mcs-error mcsError errorState="required">
+              {{ 'orderDetailsStep.billingDetails.entityRequired' | translate }}
+            </mcs-error>
+          </mcs-form-field>
+
+          <mcs-form-field>
+            <mcs-select [formControl]="fcBillingSite"
+              [placeholder]="'orderDetailsStep.billingDetails.sitePlaceholder' | translate"
+              [mcsContextualHelp]="'orderDetailsStep.billingDetails.siteHelp' | translate">
+
+              <mcs-option [value]="1">Market Street</mcs-option>
+            </mcs-select>
+
+            <mcs-error mcsError errorState="required">
+              {{ 'orderDetailsStep.billingDetails.siteRequired' | translate }}
+            </mcs-error>
+          </mcs-form-field>
+
+          <mcs-form-field>
+            <mcs-select [formControl]="fcBillingCostCenter"
+              [placeholder]="'orderDetailsStep.billingDetails.costCenterPlaceholder' | translate"
+              [mcsContextualHelp]="'orderDetailsStep.billingDetails.costCenterHelp' | translate">
+
+              <mcs-option [value]="1">Telecom</mcs-option>
+              <mcs-option [value]="2">Cloud Services</mcs-option>
+              <mcs-option [value]="3">Government</mcs-option>
+            </mcs-select>
+
+            <mcs-error mcsError errorState="required">
+              {{ 'orderDetailsStep.billingDetails.costCenterRequired' | translate }}
+            </mcs-error>
+          </mcs-form-field>
+        </form>
+      </section>
+    </div>
+
+    <!-- Order Details -->
+    <section margin-top-xlarge>
+      <h3>{{ 'orderDetailsStep.orderDetails.header' | translate }}</h3>
+      <mcs-form-field>
+        <input type="text" mcsInput [(ngModel)]="orderDescription">
+      </mcs-form-field>
+      <p>{{ 'orderDetailsStep.orderDetails.description' | translate }}</p>
+
+      <mcs-table [dataSource]="orderDatasource">
+        <!-- Description Column -->
+        <ng-container mcsColumnDef="description">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ 'orderDetailsStep.orderDetails.columnHeaders.description' | translate }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row">
+            {{ row.description }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Monthly Charge Column -->
+        <ng-container mcsColumnDef="monthlyCharge">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ 'orderDetailsStep.orderDetails.columnHeaders.monthlyCharge' | translate }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row">
+            ${{ row.charges?.monthly }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- One-off Charge Column -->
+        <ng-container mcsColumnDef="oneOffCharge">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ 'orderDetailsStep.orderDetails.columnHeaders.oneOffCharge' | translate }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row">
+            ${{ row.charges?.oneOff }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Data Status Integration -->
+        <ng-container mcsDataStatusDef>
+          <mcs-data-empty *mcsDataEmptyDef>
+            <span>{{ 'orderDetailsStep.orderDetails.noItemTypes' | translate }} </span>
+          </mcs-data-empty>
+          <mcs-data-error *mcsDataErrorDef>
+            <span>{{ 'orderDetailsStep.orderDetails.errorItemTypes' | translate }}</span>
+          </mcs-data-error>
+        </ng-container>
+
+        <!-- Header and Data row -->
+        <mcs-header-row *mcsHeaderRowDef="orderDataColumns"></mcs-header-row>
+        <mcs-data-row *mcsDataRowDef="let row; columns: orderDataColumns;"></mcs-data-row>
+      </mcs-table>
+    </section>
+
+    <!-- Order Actions -->
+    <section margin-top-xlarge>
+      <span>{{ 'orderDetailsStep.orderActions.header' | translate }}</span>
+      <mcs-radio-button-group orientation="vertical" [(ngModel)]="workflowAction">
+        <mcs-radio-button mcsId [value]="orderWorkFlowEnum.Submitted">
+          {{ 'orderDetailsStep.orderActions.submitOrder' | translate }}
+        </mcs-radio-button>
+        <mcs-radio-button mcsId [value]="orderWorkFlowEnum.Draft">
+          {{ 'orderDetailsStep.orderActions.saveOrder' | translate }}
+        </mcs-radio-button>
+        <mcs-radio-button mcsId [value]="orderWorkFlowEnum.AwaitingApproval">
+          {{ 'orderDetailsStep.orderActions.mergeOrder' | translate }}
+        </mcs-radio-button>
+      </mcs-radio-button-group>
+
+      <ng-container [ngSwitch]="workflowAction">
+        <mcs-note *ngSwitchCase="orderWorkFlowEnum.Submitted">
+          <span read-only>
+            {{ 'orderDetailsStep.orderActions.submitOrderNote' | translate }}
+          </span><br>
+          <a>Macquarie Telecom Pty Ltd terms and conditions.</a>
+        </mcs-note>
+        <mcs-note *ngSwitchCase="orderWorkFlowEnum.AwaitingApproval">
+          <mcs-form-field>
+            <mcs-select [(ngModel)]="selectedServer">
+              <mcs-option [value]="0">New Dedicated Server(120033)</mcs-option>
+              <mcs-option [value]="1">EOFS Runout Sale(188837)</mcs-option>
+            </mcs-select>
+          </mcs-form-field>
+        </mcs-note>
+      </ng-container>
+    </section>
+
+    <!-- Wizard action -->
+    <div class="action-items">
+      <a mcsWizardStepPrevious mcsId="step-3-back">Back</a>
+      <button mcsButton size="small" arrow="right"
+        mcsId="step-3-next"
+        mcsWizardStepNext
+        [mcsWizardStepNextWhen]="allFormFieldsAreValid"
+        (click)="onClickSubmitOrder()">Next</button>
+    </div>
+  </div>
+</div>

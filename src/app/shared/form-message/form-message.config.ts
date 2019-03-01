@@ -1,3 +1,4 @@
 export interface FormMessageConfig {
-  confirmText: string;
+  confirmText?: string;
+  hideDismissButton?: boolean;
 }

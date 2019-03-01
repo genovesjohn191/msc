@@ -9,7 +9,7 @@ import {
   unsubscribeSubject,
   updateObjectData,
   getSafeProperty,
-  createNewObject
+  cloneObject
 } from './mcs-object.function';
 
 describe('OBJECT Functions', () => {
@@ -172,7 +172,7 @@ describe('OBJECT Functions', () => {
         public age: string;
       }
       let sourceInstance = { name: 'Arrian', age: '27' } as TestClass;
-      let targetInstance = createNewObject(TestClass, sourceInstance);
+      let targetInstance = cloneObject(sourceInstance);
       expect(targetInstance).toBeDefined();
       expect(targetInstance).not.toBe(sourceInstance);
     });

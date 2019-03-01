@@ -14,4 +14,11 @@ export class McsOrderCharge {
     // TODO: Need to be confirmed since the currency should depend on the country
     return '$';
   }
+
+  /**
+   * Returns the sum of monthly and oneoff total cost
+   */
+  public get totalCost(): number {
+    return this.monthly + this.oneOff;
+  }
 }

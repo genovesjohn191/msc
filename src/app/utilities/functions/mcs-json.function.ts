@@ -116,3 +116,32 @@ export function isJson(content: string | any): boolean {
   }
   return true;
 }
+
+/**
+ * Compares the two json as object and return the status based on the comparison method:
+ *
+ * -1 = firstString < secondString
+ * 0 = firstString === secondString
+ * 1 = firstString > secondString
+ *
+ * @param firstObject First object to compare
+ * @param secondObject Second object to compare
+ */
+export function compareJsons<T>(firstObject: T, secondObject: T): number {
+  let firstJsonString: string;
+  let secondJsonString: string;
+
+  if (isNullOrEmpty(firstObject)) {
+    firstJsonString = '';
+    secondJsonString = '';
+  } else {
+    firstJsonString = JSON.stringify(firstObject);
+    secondJsonString = JSON.stringify(secondObject);
+  }
+
+  if (firstJsonString === secondJsonString) {
+    return 0;
+  } else {
+    return (firstJsonString.length < secondJsonString.length) ? -1 : 1;
+  }
+}

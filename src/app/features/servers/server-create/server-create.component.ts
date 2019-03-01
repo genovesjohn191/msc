@@ -1,7 +1,6 @@
 import {
   Component,
   OnInit,
-  AfterContentInit,
   OnDestroy,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -11,59 +10,59 @@ import { FormArray } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import {
-  Subject,
   throwError,
   Observable
 } from 'rxjs';
 import {
   catchError,
-  takeUntil,
-  tap,
   shareReplay,
-  finalize,
-  map
+  finalize
 } from 'rxjs/operators';
 import {
   CoreDefinition,
   McsErrorHandlerService,
   CoreRoutes,
-  McsLoadingService
+  McsLoadingService,
+  McsOrderWizardBase
 } from '@app/core';
 import {
   ServiceType,
   RouteKey,
   McsResource,
-  DataStatus,
-  McsOrder
+  McsOrderWorkflow
 } from '@app/models';
 import {
   isNullOrEmpty,
-  replacePlaceholder,
-  unsubscribeSubject,
   getSafeProperty,
   McsSafeToNavigateAway
 } from '@app/utilities';
 import { McsResourcesRepository } from '@app/services';
+import { OrderDetails } from '@app/features-shared';
 import { ServerCreateDetailsComponent } from './details/server-create-details.component';
-import { ServerCreateFlyweightContext } from './server-create-flyweight.context';
+import { ServerCreateService } from './server-create.service';
+import { IServerCreate } from './factory/server-create.interface';
+import { ServerCreateFactory } from './factory/server-create-factory';
+import { ServerCreateDetailsBase } from './details/server-create-details.base';
+import { AddOnDetails } from './addons/addons-model';
 
 @Component({
   selector: 'mcs-server-create',
   templateUrl: 'server-create.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [ServerCreateFlyweightContext]
+  providers: [ServerCreateService]
 })
 
-export class ServerCreateComponent implements
-  OnInit, AfterContentInit, OnDestroy, McsSafeToNavigateAway {
-  public order$: Observable<McsOrder>;
-  public orderIsUpdating$: Observable<boolean>;
+export class ServerCreateComponent extends McsOrderWizardBase
+  implements OnInit, OnDestroy, McsSafeToNavigateAway {
+
+  // Other variables
   public resources$: Observable<McsResource[]>;
   public resource$: Observable<McsResource>;
   public faCreationForm: FormArray;
 
-  private _destroySubject = new Subject<void>();
-  private _resourceChange = new Subject<McsResource>();
+  // Creation factory of the server
+  private _serverCreateInstance: IServerCreate;
+  private _serverCreateFactory = new ServerCreateFactory();
 
   public get backIconKey(): string {
     return CoreDefinition.ASSETS_FONT_CHEVRON_LEFT;
@@ -77,39 +76,39 @@ export class ServerCreateComponent implements
   public get resources(): McsResource[] { return this._resources; }
   private _resources: McsResource[];
 
-  @ViewChild(ServerCreateDetailsComponent)
+  @ViewChild('serverDetailsStep')
   private _detailsStep: ServerCreateDetailsComponent;
 
   constructor(
     private _router: Router,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _translateService: TranslateService,
+    private _loaderService: McsLoadingService,
+    private _translate: TranslateService,
     private _errorHandlerService: McsErrorHandlerService,
     private _resourcesRepository: McsResourcesRepository,
-    private _serverCreateFlyweightContext: ServerCreateFlyweightContext,
-    private _loaderService: McsLoadingService
-  ) { }
+    private _serverCreateService: ServerCreateService
+  ) {
+    super(_serverCreateService);
+  }
 
   public ngOnInit() {
     this._subscribeToAllResources();
   }
 
-  public ngAfterContentInit() {
-    this._subscribeToFormArrayChanges();
-    this._subscribeToOrderChanges();
-    this._subscribeToUpdateOrderChanges();
-  }
-
   public ngOnDestroy() {
-    unsubscribeSubject(this._destroySubject);
+    super.dispose();
   }
 
   /**
-   * Returns the total cos
+   * Returns the resource displayed text based on resource data
+   * @param resource Resource to be displayed
    */
-  public getTotalOrderCost(order: McsOrder): number {
-    if (isNullOrEmpty(order)) { return 0; }
-    return order.charges.monthly + order.charges.oneOff;
+  public getResourceDisplayedText(resource: McsResource): string {
+    let prefix = this._translate.instant('serverCreate.vdcDropdownList.prefix', {
+      service_type: resource.serviceTypeLabel,
+      zone: resource.availabilityZone
+    });
+    return `${prefix} ${resource.name}`;
   }
 
   /**
@@ -129,23 +128,102 @@ export class ServerCreateComponent implements
   /**
    * Event that emits whenever a resource is selected
    */
-  public onChangeResource(_resource: McsResource): void {
-    if (isNullOrEmpty(_resource)) { return; }
-    this._resourceChange.next(_resource);
-    this._subscribeResourceById(_resource.id);
+  public onChangeResource(resource: McsResource): void {
+    if (isNullOrEmpty(resource)) { return; }
+    this._subscribeResourceById(resource.id);
+
+    this._serverCreateInstance = this._serverCreateFactory
+      .getCreationFactory(resource.serviceType);
+
+    this._serverCreateInstance.isSelfManaged() ?
+      this.pricingCalculator.hideWidget() :
+      this.pricingCalculator.showWidget();
   }
 
   /**
-   * Returns the resource displayed text based on resource data
-   * @param resource Resource to be displayed
+   * Event that emits when the server details has been changed
+   * @param resource Resource on where to create the server
+   * @param serverDetails Server details to be created
    */
-  public getResourceDisplayedText(resource: McsResource): string {
-    let prefix = replacePlaceholder(
-      this._translateService.instant('serverCreate.vdcDropdownList.prefix'),
-      ['service_type', 'zone'],
-      [resource.serviceTypeLabel, resource.availabilityZone]
-    );
-    return `${prefix} ${resource.name}`;
+  public onServerDetailsChange<T>(
+    resource: McsResource,
+    serverDetails: Array<ServerCreateDetailsBase<T>>
+  ): void {
+    if (isNullOrEmpty(serverDetails)) { return; }
+    if (this._serverCreateInstance.isSelfManaged()) { return; }
+    this._createServer(resource, serverDetails);
+  }
+
+  /**
+   * Event that emits whe nthe server details have been submitted
+   * @param resource Resource on where to create the server
+   * @param serverDetails Server details to be created
+   */
+  public onServerDetailsSubmit<T>(
+    resource: McsResource,
+    serverDetails: Array<ServerCreateDetailsBase<T>>
+  ): void {
+    this._createServer(resource, serverDetails);
+  }
+
+  /**
+   * Event that emits when the add ons have been changed
+   * @param addOnDetails Add on details to be submitted
+   */
+  public onServerAddOnChange(addOnDetails: AddOnDetails[]): void {
+    if (isNullOrEmpty(addOnDetails)) { return; }
+
+    addOnDetails.forEach((addOn) => {
+      !addOn.selected ?
+        this._serverCreateService.deleteOrderItemByRefId(addOn.referenceId) :
+        this._serverCreateService.addOrUpdateOrderItem({
+          itemOrderTypeId: addOn.typeId,
+          referenceId: addOn.referenceId,
+          properties: addOn.addOnContent,
+          parentReferenceId: this._serverCreateService.orderReferenceId,
+          parentServiceId: this._serverCreateService.orderServiceId
+        });
+    });
+  }
+
+  /**
+   * Event that emits when the order have been submitted
+   * @param submitDetails Submit details of the order
+   */
+  public onSubmitOrder(submitDetails: OrderDetails): void {
+    if (isNullOrEmpty(submitDetails)) { return; }
+    let workflow = {
+      state: submitDetails.workflowAction,
+      clientReferenceObject: {
+        resourcePath: CoreRoutes.getNavigationPath(RouteKey.ServerDetail)
+      }
+    } as McsOrderWorkflow;
+
+    this._serverCreateService.updateAndSubmitOrder({
+      description: submitDetails.description,
+      contractDuration: submitDetails.contractDuration,
+      workflowDetails: workflow
+    });
+  }
+
+  /**
+   * Creates the managed/self-managed server according to factory instance
+   * @param resource Resource on where to create the server
+   * @param serverDetails Server details to be created
+   */
+  private _createServer<T>(
+    resource: McsResource,
+    serverDetails: Array<ServerCreateDetailsBase<T>>
+  ): void {
+    if (isNullOrEmpty(serverDetails)) { return; }
+
+    serverDetails.forEach((serverDetail) => {
+      this._serverCreateInstance.createServer(
+        resource,
+        this._serverCreateService,
+        serverDetail.getCreationInputs()
+      );
+    });
   }
 
   /**
@@ -159,6 +237,7 @@ export class ServerCreateComponent implements
         return throwError(error);
       })
     );
+    this._changeDetectorRef.markForCheck();
   }
 
   /**
@@ -167,46 +246,9 @@ export class ServerCreateComponent implements
    */
   private _subscribeResourceById(resourceId: any): void {
     this._loaderService.showLoader('Loading resource details');
-    this.resource$ = this._resourcesRepository.getById(resourceId)
-      .pipe(
-        shareReplay(1),
-        tap((_updatedResource) => {
-          if (isNullOrEmpty(_updatedResource)) { return; }
-          this._serverCreateFlyweightContext.setResource(_updatedResource);
-          this._changeDetectorRef.markForCheck();
-        }),
-        finalize(() => this._loaderService.hideLoader())
-      );
-  }
-
-  /**
-   * Listens/Subscribes to each form array changes
-   */
-  private _subscribeToFormArrayChanges(): void {
-    this._serverCreateFlyweightContext.formArrayChanges
-      .pipe(takeUntil(this._destroySubject))
-      .subscribe((_formArray) => {
-        this.faCreationForm = _formArray;
-        this._changeDetectorRef.markForCheck();
-      });
-  }
-
-  /**
-   * Subscribe to order changes and always get the latest obtained from api
-   */
-  private _subscribeToOrderChanges(): void {
-    this.order$ = this._serverCreateFlyweightContext.orderChanges.pipe(
-      tap(() => this._changeDetectorRef.markForCheck())
+    this.resource$ = this._resourcesRepository.getById(resourceId).pipe(
+      shareReplay(1),
+      finalize(() => this._loaderService.hideLoader())
     );
-  }
-
-  /**
-   * Subscribe to updating order state changes
-   */
-  private _subscribeToUpdateOrderChanges(): void {
-    this.orderIsUpdating$ = this._serverCreateFlyweightContext
-      .updateOrderStateChanges.pipe(
-        map((state) => state === DataStatus.InProgress ? true : false)
-      );
   }
 }
