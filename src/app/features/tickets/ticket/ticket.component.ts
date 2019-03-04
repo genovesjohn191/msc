@@ -252,18 +252,22 @@ export class TicketComponent implements OnInit, OnDestroy {
             let ticketActivities: TicketActivity[] = new Array();
 
             // Add attachment to the activity list
-            ticketDetails.attachments.forEach((ticketAttachment) => {
-              let activity = new TicketActivity();
-              activity.setBasedOnAttachment(ticketAttachment);
-              ticketActivities.push(activity);
-            });
+            if (!isNullOrEmpty(ticketDetails.attachments)) {
+              ticketDetails.attachments.forEach((ticketAttachment) => {
+                let activity = new TicketActivity();
+                activity.setBasedOnAttachment(ticketAttachment);
+                ticketActivities.push(activity);
+              });
+            }
 
             // Add comments to the activity list
-            ticketDetails.comments.forEach((ticketItem) => {
-              let activity = new TicketActivity();
-              activity.setBasedOnComment(ticketItem);
-              ticketActivities.push(activity);
-            });
+            if (!isNullOrEmpty(ticketDetails.comments)) {
+              ticketDetails.comments.forEach((ticketItem) => {
+                let activity = new TicketActivity();
+                activity.setBasedOnComment(ticketItem);
+                ticketActivities.push(activity);
+              });
+            }
 
             // Sort activities by date
             ticketActivities.sort((_first: TicketActivity, _second: TicketActivity) => {

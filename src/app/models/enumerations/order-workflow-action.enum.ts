@@ -7,7 +7,8 @@ export enum OrderWorkflowAction {
   Draft,
   AwaitingApproval,
   Submitted,
-  Cancelled
+  Cancelled,
+  Rejected
 }
 
 /**

@@ -199,11 +199,10 @@ export class ServerCreateComponent extends McsOrderWizardBase
       }
     } as McsOrderWorkflow;
 
-    this._serverCreateService.updateAndSubmitOrder({
+    this._serverCreateService.sendOrderWorkflow({
       description: submitDetails.description,
-      contractDuration: submitDetails.contractDuration,
-      workflowDetails: workflow
-    });
+      contractDuration: submitDetails.contractDuration
+    }, workflow);
   }
 
   /**

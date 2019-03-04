@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 
-export interface IMcsErrorable {
+export interface IMcsFallible {
   errorsChange(): Observable<string[]>;
   setErrors(...errors: string[]): void;
 }

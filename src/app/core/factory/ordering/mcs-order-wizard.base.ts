@@ -14,8 +14,8 @@ import {
   McsOrder,
   McsJob
 } from '@app/models';
+import { McsOrderBase } from './mcs-order.base';
 import { McsWizardBase } from '../../base/mcs-wizard.base';
-import { McsOrderCoreBase } from './mcs-order-core.base';
 
 export abstract class McsOrderWizardBase extends McsWizardBase implements McsDisposable {
   public order$: Observable<McsOrder>;
@@ -25,7 +25,7 @@ export abstract class McsOrderWizardBase extends McsWizardBase implements McsDis
   @ViewChild('pricingCalculator')
   public pricingCalculator: PricingCalculator;
 
-  constructor(private _orderBase: McsOrderCoreBase) {
+  constructor(private _orderBase: McsOrderBase) {
     super(_orderBase, _orderBase);
     this._subscribeToOrderChanges();
     this._subscribeToDataStateChanges();

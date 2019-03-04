@@ -77,7 +77,7 @@ export * from './factory/item-list-manager/mcs-item-list-key-manager';
 export * from './factory/ordering/mcs-order-factory.interface';
 export * from './factory/ordering/mcs-order-request';
 export * from './factory/ordering/mcs-order-wizard.base';
-export * from './factory/ordering/mcs-order-core.base';
+export * from './factory/ordering/mcs-order.base';
 export * from './factory/ordering/mcs-order.builder';
 export * from './factory/ordering/mcs-order.director';
 
@@ -88,6 +88,6 @@ export * from './data-access/mcs-repository.base';
 export * from './data-access/mcs-table-datasource';
 
 // Interfaces
-export * from './interfaces/mcs-errorable.interface';
-export * from './interfaces/mcs-jobable.interface';
+export * from './interfaces/mcs-fallible.interface';
+export * from './interfaces/mcs-job-manager.interface';
 export * from './interfaces/mcs-state-changeable.interface';
