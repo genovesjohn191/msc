@@ -8,10 +8,10 @@ import {
   catchError
 } from 'rxjs/operators';
 import {
-  McsOrderCoreBase,
+  McsOrderBase,
   CoreRoutes,
-  IMcsJobable,
-  IMcsErrorable,
+  IMcsJobManager,
+  IMcsFallible,
   IMcsStateChangeable
 } from '@app/core';
 import {
@@ -28,8 +28,8 @@ import {
 import { isNullOrEmpty } from '@app/utilities';
 
 @Injectable()
-export class ServerCreateService extends McsOrderCoreBase
-  implements IMcsJobable, IMcsErrorable, IMcsStateChangeable {
+export class ServerCreateService extends McsOrderBase
+  implements IMcsJobManager, IMcsFallible, IMcsStateChangeable {
 
   constructor(
     _ordersRepository: McsOrdersRepository,

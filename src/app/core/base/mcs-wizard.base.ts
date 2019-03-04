@@ -12,7 +12,7 @@ import {
   unsubscribeSafely
 } from '@app/utilities';
 import { DataStatus } from '@app/models';
-import { IMcsErrorable } from '../interfaces/mcs-errorable.interface';
+import { IMcsFallible } from '../interfaces/mcs-fallible.interface';
 import { IMcsStateChangeable } from '../interfaces/mcs-state-changeable.interface';
 
 export abstract class McsWizardBase implements McsDisposable {
@@ -22,7 +22,7 @@ export abstract class McsWizardBase implements McsDisposable {
   private _wizardDestroySubject = new Subject<void>();
 
   constructor(
-    private _errorableContext: IMcsErrorable,
+    private _errorableContext: IMcsFallible,
     private _stateChangeContext: IMcsStateChangeable
   ) {
     this._subscribeToErrorResponse();

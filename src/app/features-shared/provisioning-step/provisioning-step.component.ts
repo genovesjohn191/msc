@@ -59,8 +59,8 @@ export class ProvisioninStepComponent implements OnChanges {
       return;
     }
 
-    let jobHasNotReceiveYet = this.requestState === DataStatus.Success && isNullOrEmpty(this.jobs);
-    if (jobHasNotReceiveYet) {
+    let waitingForJob = this.requestState === DataStatus.Success && isNullOrEmpty(this.jobs);
+    if (waitingForJob) {
       this.status$ = of(DataStatus.InProgress);
       this._changeDetectorRef.markForCheck();
       return;

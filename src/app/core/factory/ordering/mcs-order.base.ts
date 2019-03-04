@@ -27,10 +27,12 @@ import {
   DataStatus,
   ActionStatus,
   McsOrderItemCreate,
-  McsJob
+  McsJob,
+  OrderWorkflowAction,
+  McsApiJobRequestBase
 } from '@app/models';
-import { IMcsErrorable } from '../../interfaces/mcs-errorable.interface';
-import { IMcsJobable } from '../../interfaces/mcs-jobable.interface';
+import { IMcsFallible } from '../../interfaces/mcs-fallible.interface';
+import { IMcsJobManager } from '../../interfaces/mcs-job-manager.interface';
 import { IMcsStateChangeable } from '../../interfaces/mcs-state-changeable.interface';
 import { McsOrderBuilder } from './mcs-order.builder';
 import { McsOrderRequest } from './mcs-order-request';
@@ -40,15 +42,16 @@ import { IMcsOrderFactory } from './mcs-order-factory.interface';
 export interface IOrderSubmitDetails {
   description: string;
   contractDuration: number;
-  workflowDetails: McsOrderWorkflow;
 }
 
-export abstract class McsOrderCoreBase implements IMcsJobable, IMcsErrorable,
+export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible,
   IMcsStateChangeable, McsDisposable {
 
   // Order builders and director
   private _orderBuilder: McsOrderBuilder;
   private _orderDirector: McsOrderDirector;
+  private _workflowMapTable: Map<OrderWorkflowAction, (
+    orderDetails: IOrderSubmitDetails, jobReference: McsApiJobRequestBase) => void>;
 
   // Order content
   private _createdOrder: McsOrder;
@@ -63,8 +66,10 @@ export abstract class McsOrderCoreBase implements IMcsJobable, IMcsErrorable,
   private _errorsChange = new Subject<string[]>();
 
   constructor(private _orderFactory: IMcsOrderFactory) {
+    this._workflowMapTable = new Map();
     this._orderBuilder = new McsOrderBuilder();
     this._orderDirector = new McsOrderDirector();
+    this._createWorkflowMap();
     this._subscribeAndExecuteNewOrder();
   }
 
@@ -169,15 +174,19 @@ export abstract class McsOrderCoreBase implements IMcsJobable, IMcsErrorable,
   }
 
   /**
-   * Updates and submit the order at once
-   * @param details The details of the order to be submitted
+   * Sends the order workflow based on the associated order type
+   * @param updatedOrderDetails Updated order details to be set on the existing order
+   * @param workflow Workflow details to be submitted on the order
    */
-  public updateAndSubmitOrder(details: IOrderSubmitDetails): void {
-    this._orderBuilder
-      .setDescription(details.description)
-      .setContractDuration(details.contractDuration)
-      .setOrderWorkflow(details.workflowDetails);
-    this._orderDirector.construct(this._orderBuilder);
+  public sendOrderWorkflow(
+    updatedOrderDetails: IOrderSubmitDetails,
+    workflow: McsOrderWorkflow
+  ): void {
+    let executeOrderWorkflow = this._workflowMapTable.get(workflow.state);
+    if (isNullOrEmpty(executeOrderWorkflow)) {
+      throw new Error(`Cannot find the associated workflow state for: ${workflow.state}`);
+    }
+    executeOrderWorkflow(updatedOrderDetails, workflow);
   }
 
   /**
@@ -280,6 +289,85 @@ export abstract class McsOrderCoreBase implements IMcsJobable, IMcsErrorable,
     if (isNullOrEmpty(workflowState)) { return; }
 
     this.createOrderWorkFlow(workflowDetails).subscribe();
+  }
+
+  /**
+   * Creates the order workflow table map
+   */
+  private _createWorkflowMap(): void {
+    this._workflowMapTable.set(OrderWorkflowAction.Draft, this._draftOrder.bind(this));
+    this._workflowMapTable.set(OrderWorkflowAction.Submitted, this._submitOrder.bind(this));
+    this._workflowMapTable.set(OrderWorkflowAction.Cancelled, this._cancelOrder.bind(this));
+    this._workflowMapTable.set(OrderWorkflowAction.Rejected, this._rejectOrder.bind(this));
+    this._workflowMapTable.set(OrderWorkflowAction.AwaitingApproval,
+      this._sendOrderForApproval.bind(this));
+  }
+
+  /**
+   * Send the order workflow as Draft state
+   * @param details Details of the order to be update
+   * @param jobReference Job Reference to be appended on the workflow
+   */
+  private _draftOrder(details: IOrderSubmitDetails, jobReference: McsApiJobRequestBase): void {
+    this._submitOrderWorkflow(details, OrderWorkflowAction.Draft, jobReference);
+  }
+
+  /**
+   * Send the order workflow as Submitted state
+   * @param details Details of the order to be update
+   * @param jobReference Job Reference to be appended on the workflow
+   */
+  private _submitOrder(details: IOrderSubmitDetails, jobReference: McsApiJobRequestBase): void {
+    this._submitOrderWorkflow(details, OrderWorkflowAction.Submitted, jobReference);
+  }
+
+  /**
+   * Send the order workflow as Cancelled state
+   * @param details Details of the order to be update
+   * @param jobReference Job Reference to be appended on the workflow
+   */
+  private _cancelOrder(details: IOrderSubmitDetails, jobReference: McsApiJobRequestBase): void {
+    this._submitOrderWorkflow(details, OrderWorkflowAction.Cancelled, jobReference);
+  }
+
+  /**
+   * Send the order workflow as Rejected state
+   * @param details Details of the order to be update
+   * @param jobReference Job Reference to be appended on the workflow
+   */
+  private _rejectOrder(details: IOrderSubmitDetails, jobReference: McsApiJobRequestBase): void {
+    this._submitOrderWorkflow(details, OrderWorkflowAction.Rejected, jobReference);
+  }
+
+  /**
+   * Send the order workflow as for approval state
+   * @param details Details of the order to be update
+   * @param jobReference Job Reference to be appended on the workflow
+   */
+  private _sendOrderForApproval(
+    details: IOrderSubmitDetails, jobReference: McsApiJobRequestBase
+  ): void {
+    this._submitOrderWorkflow(details, OrderWorkflowAction.AwaitingApproval, jobReference);
+  }
+
+  /**
+   * Submit the order workflow with corresponding update of the order
+   * @param details Details to be set on the created order
+   * @param workflowAction Workflow action to be executed
+   */
+  private _submitOrderWorkflow(
+    details: IOrderSubmitDetails,
+    workflowAction: OrderWorkflowAction,
+    referenceObject: McsApiJobRequestBase
+  ): void {
+    this._orderBuilder
+      .setDescription(details.description)
+      .setContractDuration(details.contractDuration)
+      .setOrderWorkflow({
+        state: workflowAction,
+        ...referenceObject
+      });
+    this._orderDirector.construct(this._orderBuilder);
   }
 
   /**
