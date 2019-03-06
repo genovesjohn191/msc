@@ -49,6 +49,10 @@
     "noOrderItems": "No order items found.",
     "errorOnOrderItems": "Sorry, something’s not right. We weren’t able to retrieve the list of order items."
   },
+  "notification": {
+    "leftPanelHeader": "Notification details",
+    "backToNotifications": "Back to Notifications"
+  },
   "servers": {
     "header": "Virtual",
     "description": "View and manage any Managed or Self-Managed VDC servers. Dedicated and physical servers will be displayed in future versions of the portal.",
@@ -288,5 +292,15 @@
     "monthlyCost": "Monthly",
     "oneOffCost": "One-off",
     "totalCost": "Total Cost"
+  },
+  "jobDefinitions": {
+    "createServer": {
+      "enumValue": "CreateServer",
+      "loadingText": "Your server is deploying and will be available shortly. You can track progress from the notifications menu at the top of the portal."
+    },
+    "mediaUpload": {
+      "enumValue": "CreateResourceCatalogItem",
+      "loadingText": "Your media is uploading and will be available shortly. You can track progress from the notifications menu at the top of the portal."
+    }
   }
 }

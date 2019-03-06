@@ -1,8 +1,5 @@
 <div class="notification-panel-content-wrapper"
   animate [trigger]="animationTrigger"
-  mcsCursor="pointer"
-  [mcsTriggerCursorIf]="notification.hasLink"
-  (click)="onClickNotification()"
   mcsId="navigate-to-notification"
   mcsEventTracker="navigate-to-notification"
   mcsEventCategory="notification"
@@ -21,7 +18,12 @@
 
     <!-- Notification content -->
     <div class="notification-panel-content">
-      <strong>{{ notification.description }}</strong>
+      <strong>
+        <a [mcsRouterLink]="[routeKeyEnum.Notification, notification?.id]">
+          {{ notification.description }}
+        </a>
+      </strong>
+
       <small class="notification-panel-message">{{ notification.summaryInformation }}</small>
       <ng-container *ngIf="notification.errorMessage">
         <small class="notification-panel-message">{{ notification.errorMessage }}</small>

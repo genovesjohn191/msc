@@ -19,7 +19,6 @@ import {
   ServerStorageComponent,
   ServerNicsComponent
 } from './server';
-import { ServerProvisioningComponent } from './server-provisioning/server-provisioning.component';
 import {
   ServerCreateComponent,
   ServerCreateGuard
@@ -48,7 +47,6 @@ export const serversProviders: any[] = [
 export const serversRoutesComponents: any[] = [
   ServersComponent,
   ServerCreateComponent,
-  ServerProvisioningComponent,
   ServerComponent,
   ServerManagementComponent,
   ServerServicesComponent,
@@ -75,11 +73,6 @@ export const serversRoutes: Routes = [
     canActivate: [RequiredResourcesGuard],
     canDeactivate: [McsNavigateAwayGuard],
     data: { routeId: RouteKey.ServerCreate }
-  },
-  {
-    path: CoreRoutes.getRoutePath(RouteKey.ServerCreateProvisioning),
-    component: ServerProvisioningComponent,
-    data: { routeId: RouteKey.ServerCreateProvisioning }
   },
   {
     path: CoreRoutes.getRoutePath(RouteKey.ServerDetail),

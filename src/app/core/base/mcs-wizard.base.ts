@@ -1,6 +1,12 @@
 import { ViewChild } from '@angular/core';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import {
+  Subject,
+  Observable
+} from 'rxjs';
+import {
+  takeUntil,
+  shareReplay
+} from 'rxjs/operators';
 import {
   FormMessage,
   IWizardStep
@@ -11,22 +17,26 @@ import {
   McsDisposable,
   unsubscribeSafely
 } from '@app/utilities';
-import { DataStatus } from '@app/models';
-import { IMcsFallible } from '../interfaces/mcs-fallible.interface';
-import { IMcsStateChangeable } from '../interfaces/mcs-state-changeable.interface';
+import {
+  DataStatus,
+  McsJob
+} from '@app/models';
+import { IMcsWizard } from '../interfaces/mcs-wizard.interface';
 
 export abstract class McsWizardBase implements McsDisposable {
+  public jobs$: Observable<McsJob[]>;
+  public dataStatus$: Observable<DataStatus>;
+
   @ViewChild('formMessage')
   public formMessage: FormMessage;
 
   private _wizardDestroySubject = new Subject<void>();
 
-  constructor(
-    private _errorableContext: IMcsFallible,
-    private _stateChangeContext: IMcsStateChangeable
-  ) {
+  constructor(private _wizardContext: IMcsWizard) {
     this._subscribeToErrorResponse();
     this._subscribeToStateChange();
+    this._subscribeToDataStateChanges();
+    this._subscribeToJobsChanges();
   }
 
   /**
@@ -55,7 +65,7 @@ export abstract class McsWizardBase implements McsDisposable {
    * Subscribe to errorable response of the context
    */
   private _subscribeToErrorResponse(): void {
-    this._errorableContext.errorsChange().pipe(
+    this._wizardContext.errorsChange().pipe(
       takeUntil(this._wizardDestroySubject)
     ).subscribe(this._showWizardFormErrorMessage.bind(this));
   }
@@ -64,7 +74,7 @@ export abstract class McsWizardBase implements McsDisposable {
    * Subscribes to state changeable of the data context
    */
   private _subscribeToStateChange(): void {
-    this._stateChangeContext.stateChange().pipe(
+    this._wizardContext.stateChange().pipe(
       takeUntil(this._wizardDestroySubject)
     ).subscribe((state) => {
       let isWizardProcessCompleted = state === DataStatus.InProgress ||
@@ -93,5 +103,25 @@ export abstract class McsWizardBase implements McsDisposable {
       messages: errorMessages,
       fallbackMessage: 'Somethings went wrong while trying to process the request'
     });
+  }
+
+  /**
+   * Subscribes to data state changes
+   */
+  private _subscribeToDataStateChanges(): void {
+    this.dataStatus$ = this._wizardContext.stateChange().pipe(
+      takeUntil(this._wizardDestroySubject),
+      shareReplay(1)
+    );
+  }
+
+  /**
+   * Subscribes to jobs changes
+   */
+  private _subscribeToJobsChanges(): void {
+    this.jobs$ = this._wizardContext.jobsChange().pipe(
+      takeUntil(this._wizardDestroySubject),
+      shareReplay(1)
+    );
   }
 }

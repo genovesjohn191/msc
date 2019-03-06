@@ -8,7 +8,6 @@ import {
 } from '@angular/core';
 import { FormArray } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
-import { Router } from '@angular/router';
 import {
   throwError,
   Observable
@@ -65,7 +64,7 @@ export class ServerCreateComponent extends McsOrderWizardBase
   private _serverCreateFactory = new ServerCreateFactory();
 
   public get backIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_CHEVRON_LEFT;
+    return CoreDefinition.ASSETS_SVG_CHEVRON_LEFT;
   }
 
   public get serviceTypeEnum() { return ServiceType; }
@@ -80,7 +79,6 @@ export class ServerCreateComponent extends McsOrderWizardBase
   private _detailsStep: ServerCreateDetailsComponent;
 
   constructor(
-    private _router: Router,
     private _changeDetectorRef: ChangeDetectorRef,
     private _loaderService: McsLoadingService,
     private _translate: TranslateService,
@@ -116,13 +114,6 @@ export class ServerCreateComponent extends McsOrderWizardBase
    */
   public safeToNavigateAway(): boolean {
     return getSafeProperty(this._detailsStep, (obj) => obj.safeToNavigateAway(), true);
-  }
-
-  /**
-   * Navigate to servers listing page
-   */
-  public gotoServers() {
-    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.Servers)]);
   }
 
   /**

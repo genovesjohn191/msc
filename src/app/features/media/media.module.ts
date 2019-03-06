@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { SharedModule } from '@app/shared';
+import { FeaturesSharedModule } from '@app/features-shared';
 /** Services */
 import {
   mediaProviders,
@@ -9,8 +10,7 @@ import {
 import { MediaComponent } from './media.component';
 import {
   MediaUploadComponent,
-  MediaUploadDetailsComponent,
-  MediaUploadProvisioningComponent
+  MediaUploadDetailsComponent
 } from './media-upload';
 import {
   MediumComponent,
@@ -31,7 +31,6 @@ import {
     MediaComponent,
     MediaUploadComponent,
     MediaUploadDetailsComponent,
-    MediaUploadProvisioningComponent,
     MediumComponent,
     MediumOverviewComponent,
     MediumServersComponent,
@@ -39,7 +38,8 @@ import {
     MediaManageServersComponent
   ],
   imports: [
-    SharedModule
+    SharedModule,
+    FeaturesSharedModule
   ],
   providers: [
     ...mediaProviders

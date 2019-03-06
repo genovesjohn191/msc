@@ -40,8 +40,6 @@ import {
   OsUpdatesScheduleComponent,
   OsUpdatesApplyNowComponent
 } from './server/';
-/** Server Provisioning */
-import { ServerProvisioningComponent } from './server-provisioning/server-provisioning.component';
 /** Create Servers */
 import {
   ServerCreateComponent,
@@ -97,7 +95,6 @@ import {
     ServerManageNetworkComponent,
     ServerManageMediaComponent,
     ServerManageScaleComponent,
-    ServerProvisioningComponent,
     ServerCreateComponent,
     ServerCreateDetailsComponent,
     ServerNewComponent,

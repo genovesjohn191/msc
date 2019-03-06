@@ -121,7 +121,7 @@ export class MediumComponent
   }
 
   public get backIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_CHEVRON_LEFT;
+    return CoreDefinition.ASSETS_SVG_CHEVRON_LEFT;
   }
 
   /**

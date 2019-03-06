@@ -14,13 +14,13 @@ import { CoreDefinition } from '@app/core';
 import {
   McsJob,
   DataStatus,
+  RouteKey,
 } from '@app/models';
 import {
   refreshView,
   isNullOrEmpty,
   getSafeProperty
 } from '@app/utilities';
-import { Router } from '@angular/router';
 
 // Notification type
 type notificationType = 'statechange' | 'running';
@@ -106,8 +106,7 @@ export class NotificationPanelComponent implements OnInit, OnChanges {
 
   public constructor(
     private _ngZone: NgZone,
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _router: Router
+    private _changeDetectorRef: ChangeDetectorRef
   ) { }
 
   public ngOnInit() {
@@ -120,6 +119,10 @@ export class NotificationPanelComponent implements OnInit, OnChanges {
     if (this.timeOutInMilliSeconds) {
       this._removeNotification(this.timeOutInMilliSeconds);
     }
+  }
+
+  public get routeKeyEnum(): any {
+    return RouteKey;
   }
 
   /**
@@ -145,16 +148,6 @@ export class NotificationPanelComponent implements OnInit, OnChanges {
    */
   public removeNotification(): void {
     this._removeNotification(0);
-  }
-
-  /**
-   * Event that triggers when the notification was clicked
-   */
-  public onClickNotification(): void {
-    let hasLink = !isNullOrEmpty(this.notification) &&
-      !isNullOrEmpty(this.notification.link);
-    if (!hasLink) { return; }
-    this._router.navigate([this.notification.link]);
   }
 
   /**

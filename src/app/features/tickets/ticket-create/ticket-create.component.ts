@@ -143,7 +143,7 @@ export class TicketCreateComponent implements
   }
 
   public get backIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_CHEVRON_LEFT;
+    return CoreDefinition.ASSETS_SVG_CHEVRON_LEFT;
   }
 
   public get toggleIconKey(): string {
@@ -196,13 +196,6 @@ export class TicketCreateComponent implements
    */
   public onChangedAttachments(attachments: any): void {
     this.fileAttachments = attachments;
-  }
-
-  /**
-   * Navigate to ticket listing
-   */
-  public gotoTickets(): void {
-    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.Tickets)]);
   }
 
   /**

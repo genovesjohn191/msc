@@ -38,15 +38,16 @@
 
     <!-- Network Category -->
     <ng-container *ngSwitchCase="routeCategoryEnum.Network">
-      <a [mcsRouterLink]="routeKeyEnum.Firewalls" mcsRouterLinkActive="active"
-        *mcsAccessControl="['FirewallConfigurationView']"
-        class="sub-navigation-item unstyled-link"
-        mcsId
-        mcsEventTracker="navigate-to-firewalls"
-        mcsEventCategory="navigation"
-        mcsEventLabel="sub-nav">
-        {{ 'navigation.firewalls' | translate }}
-      </a>
+      <ng-container *mcsAccessControl="['FirewallConfigurationView']">
+        <a [mcsRouterLink]="routeKeyEnum.Firewalls" mcsRouterLinkActive="active"
+          class="sub-navigation-item unstyled-link"
+          mcsId
+          mcsEventTracker="navigate-to-firewalls"
+          mcsEventCategory="navigation"
+          mcsEventLabel="sub-nav">
+          {{ 'navigation.firewalls' | translate }}
+        </a>
+      </ng-container>
     </ng-container>
   </div>
 </ng-template>

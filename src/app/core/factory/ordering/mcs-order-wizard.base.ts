@@ -9,27 +9,19 @@ import {
   McsDisposable,
   isNullOrEmpty
 } from '@app/utilities';
-import {
-  DataStatus,
-  McsOrder,
-  McsJob
-} from '@app/models';
+import { McsOrder } from '@app/models';
 import { McsOrderBase } from './mcs-order.base';
 import { McsWizardBase } from '../../base/mcs-wizard.base';
 
 export abstract class McsOrderWizardBase extends McsWizardBase implements McsDisposable {
   public order$: Observable<McsOrder>;
-  public jobs$: Observable<McsJob[]>;
-  public dataStatus$: Observable<DataStatus>;
 
   @ViewChild('pricingCalculator')
   public pricingCalculator: PricingCalculator;
 
   constructor(private _orderBase: McsOrderBase) {
-    super(_orderBase, _orderBase);
+    super(_orderBase);
     this._subscribeToOrderChanges();
-    this._subscribeToDataStateChanges();
-    this._subscribeToJobsChanges();
   }
 
   /**
@@ -60,24 +52,6 @@ export abstract class McsOrderWizardBase extends McsWizardBase implements McsDis
    */
   private _subscribeToOrderChanges(): void {
     this.order$ = this._orderBase.orderChange().pipe(
-      shareReplay(1)
-    );
-  }
-
-  /**
-   * Subscribes to data state changes
-   */
-  private _subscribeToDataStateChanges(): void {
-    this.dataStatus$ = this._orderBase.stateChange().pipe(
-      shareReplay(1)
-    );
-  }
-
-  /**
-   * Subscribes to jobs changes
-   */
-  private _subscribeToJobsChanges(): void {
-    this.jobs$ = this._orderBase.jobsChange().pipe(
       shareReplay(1)
     );
   }

@@ -76,14 +76,6 @@
     "requiredPermissions": ["VmEdit"],
     "documentTitle": "Create Server - Macquarie Cloud Services"
   },
-  "serverCreateProvisioning": {
-    "enumCategory": "Compute",
-    "enumKey": "ServerCreateProvisioning",
-    "routePath": "compute/virtual/create/:id",
-    "navigationPath": "compute/virtual/create",
-    "requiredPermissions": ["VmAccess"],
-    "documentTitle": "Server Deployment - Macquarie Cloud Services"
-  },
   "vdcDetail": {
     "enumCategory": "Compute",
     "enumKey": "VdcDetail",
@@ -207,6 +199,12 @@
     "routePath": "notifications",
     "navigationPath": "notifications",
     "documentTitle": "Notifications - Macquarie Cloud Services"
+  },
+  "notification": {
+    "enumKey": "Notification",
+    "routePath": "notifications/:id",
+    "navigationPath": "notifications",
+    "documentTitle": "Notification - Macquarie Cloud Services"
   },
   "productDetail": {
     "enumKey": "ProductDetail",

@@ -47,6 +47,31 @@ export enum JobType {
   ApplyServerOsUpdates = 100502
 }
 
+export const jobTypeText = {
+  [JobType.CreateServer]: 'New Server',
+  [JobType.UpdateServerCompute]: 'Scale Server',
+  [JobType.DeleteServer]: 'Delete Server',
+  [JobType.CloneServer]: 'Clone Server',
+  [JobType.RenameServer]: 'Rename Server',
+  [JobType.ProvisionCreateServer]: 'New Managed Server',
+  [JobType.CreateServerSnapshot]: 'New Snapshot',
+  [JobType.ApplyServerSnapshot]: 'Restore Snapshot',
+  [JobType.DeleteServerSnapshot]: 'Delete Snapshot',
+  [JobType.ChangeServerPowerState]: 'Change Server Power-state',
+  [JobType.CreateServerDisk]: 'New Disk',
+  [JobType.UpdateServerDisk]: 'Scale Disk',
+  [JobType.DeleteServerDisk]: 'Delete Disk',
+  [JobType.ResetServerPassword]: 'Reset Server Password',
+  [JobType.CreateServerNic]: 'New NIC',
+  [JobType.UpdateServerNic]: 'Update NIC',
+  [JobType.DeleteServerNic]: 'Delete NIC',
+  [JobType.AttachServerMedia]: 'Attach Media',
+  [JobType.DetachServerMedia]: 'Detach Media',
+  [JobType.CreateResourceCatalogItem]: 'New Catalog Media',
+  [JobType.PerformServerOsUpdateAnalysis]: 'Perform OS Inspection',
+  [JobType.ApplyServerOsUpdates]: 'Apply OS Updates',
+};
+
 /**
  * Enumeration serializer and deserializer methods
  */

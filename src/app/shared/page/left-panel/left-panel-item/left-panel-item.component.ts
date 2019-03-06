@@ -5,9 +5,11 @@ import {
   ViewChild,
   AfterContentInit,
   Renderer2,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  ContentChild
 } from '@angular/core';
 import { isNullOrEmpty } from '@app/utilities';
+import { LeftPanelItemHeaderDirective } from './left-panel-item-header.directive';
 
 type offsetType = 'small' | 'medium' | 'large';
 
@@ -26,13 +28,14 @@ export class LeftPanelItemComponent implements AfterContentInit {
   @ViewChild('itemElement')
   public itemElement: ElementRef;
 
+  @ContentChild(LeftPanelItemHeaderDirective)
+  public leftPanelItemHeader: LeftPanelItemHeaderDirective;
+
   /**
    * Label Panel Item Header
    */
   @Input()
-  public get header(): string {
-    return this._header;
-  }
+  public get header(): string { return this._header; }
   public set header(value: string) {
     if (this._header !== value) {
       this._header = value;
@@ -44,9 +47,7 @@ export class LeftPanelItemComponent implements AfterContentInit {
    * Offset of the item from the left of the header
    */
   @Input()
-  public get offset(): offsetType {
-    return this._offset;
-  }
+  public get offset(): offsetType { return this._offset; }
   public set offset(value: offsetType) {
     if (this._offset !== value) {
       this._offset = value;

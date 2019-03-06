@@ -4,12 +4,12 @@
 
     <!-- Back to Orders -->
     <mcs-top-panel-item *mcsTopPanelItemDef>
-      <mcs-action-item (click)="gotoOrders()"
-        mcsId mcsAlign="end"
+      <mcs-action-item mcsId mcsAlign="end"
+        mcsRouterLink="Orders"
         mcsEventTracker="navigate-to-order-listing"
         mcsEventCategory="order"
         mcsEventLabel="order-details-page">
-        <mcs-icon [key]="backIconKey" size="large"></mcs-icon>
+        <mcs-icon [key]="backIconKey" size="small"></mcs-icon>
         <span>{{ 'order.backToOrders' | translate }}</span>
       </mcs-action-item>
     </mcs-top-panel-item>

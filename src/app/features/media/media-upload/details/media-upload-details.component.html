@@ -132,7 +132,8 @@
     <div class="action-items">
       <button mcsButton size="small" arrow="right"
         mcsWizardStepNext
-        [mcsWizardStepNextWhen]="uploadMediaFunc"
+        [mcsWizardStepNextWhen]="allFormsAreValid"
+        (click)="onSubmitMediaUpload()"
         mcsId="step-1-next"
         mcsEventTracker="step-1-next"
         mcsEventCategory="media"

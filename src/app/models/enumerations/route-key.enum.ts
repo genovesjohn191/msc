@@ -11,7 +11,6 @@ export enum RouteKey {
   ServerDetailBackups,
   ServerDetailNics,
   ServerCreate,
-  ServerCreateProvisioning,
 
   VdcDetail,
   VdcDetailOverview,
@@ -33,6 +32,7 @@ export enum RouteKey {
   TicketCreate,
 
   Notifications,
+  Notification,
 
   ProductDetail,
 

@@ -14,7 +14,8 @@ import {
   LeftPanelPlaceholderDirective,
   LeftPanelItemComponent,
   LeftPanelItemDefDirective,
-  LeftPanelItemPlaceholderDirective
+  LeftPanelItemPlaceholderDirective,
+  LeftPanelItemHeaderDirective
 } from './left-panel';
 /** Top Panel */
 import {
@@ -42,6 +43,7 @@ import {
     LeftPanelItemComponent,
     LeftPanelItemDefDirective,
     LeftPanelItemPlaceholderDirective,
+    LeftPanelItemHeaderDirective,
     TopPanelComponent,
     TopPanelDefDirective,
     TopPanelPlaceholderDirective,
@@ -67,6 +69,7 @@ import {
     LeftPanelItemComponent,
     LeftPanelItemDefDirective,
     LeftPanelItemPlaceholderDirective,
+    LeftPanelItemHeaderDirective,
     TopPanelComponent,
     TopPanelDefDirective,
     TopPanelPlaceholderDirective,

@@ -6,10 +6,13 @@ import {
 import { Router } from '@angular/router';
 import { CoreRoutes } from '@app/core';
 import { RouteKey } from '@app/models';
-import { isNullOrEmpty, compareArrays } from '@app/utilities';
+import {
+  isNullOrEmpty,
+  compareArrays
+} from '@app/utilities';
 
 @Directive({
-  selector: 'a[mcsRouterLink]',
+  selector: '[mcsRouterLink]',
   host: {
     '(click)': 'navigateToLink()',
     '[attr.href]': 'hrefUrl'
@@ -62,10 +65,13 @@ export class RouterLinkDirective implements AfterViewChecked {
    */
   private _createRouterUrl(): string {
     let stringUrls: string[] = [];
+
     this._routerLinkKey.forEach((link) => {
       if (isNullOrEmpty(link)) { return; }
+
+      let routeKey = (typeof link === 'string') ? RouteKey[link] : link;
       stringUrls.push(
-        (typeof link === 'string') ? link : CoreRoutes.getNavigationPath(link)
+        isNullOrEmpty(routeKey) ? link : CoreRoutes.getNavigationPath(routeKey)
       );
     });
     return this._router.createUrlTree(stringUrls).toString();

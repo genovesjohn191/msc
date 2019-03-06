@@ -7,7 +7,8 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy,
   IterableDiffers,
-  IterableDiffer
+  IterableDiffer,
+  ContentChild
 } from '@angular/core';
 import {
   timer,
@@ -34,6 +35,7 @@ import {
   DataStatus,
   JobType
 } from '@app/models';
+import { JobsProvisioningLoadingTextDirective } from './jobs-provisioning-loading-text.directive';
 
 @Component({
   selector: 'mcs-jobs-provisioning',
@@ -49,6 +51,9 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
   public progressMax: number;
   public progressBarHidden: boolean;
   public textContent: any;
+
+  @ContentChild(JobsProvisioningLoadingTextDirective)
+  public jobsProvisioningLoadingText: JobsProvisioningLoadingTextDirective;
 
   /**
    * Returns all the jobs of the current provisioning
@@ -85,7 +90,7 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
   public ngOnInit() {
     this.textContent = this._textContentProvider.content.shared.jobsProvisioning;
     this._createExcludedProgressJobs();
-    this._listenToCurrentUserJob();
+    this._subscribesToCurrentUserJob();
   }
 
   public ngDoCheck() {
@@ -99,13 +104,6 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
   public ngOnDestroy() {
     unsubscribeSafely(this._timerSubscription);
     unsubscribeSafely(this._destroySubject);
-  }
-
-  /**
-   * Returns true when the inputted jobs are more than 1
-   */
-  public get isMultiJobs(): boolean {
-    return isNullOrEmpty(this.jobs) ? false : this.jobs.length > 1;
   }
 
   /**
@@ -123,17 +121,10 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
   }
 
   /**
-   * Returns the success icon key
+   * Returns the dot icon key
    */
-  public get successIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_SUCCESS;
-  }
-
-  /**
-   * Returns the error icon key
-   */
-  public get errorIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_ERROR;
+  public get dotIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_BULLET;
   }
 
   /**
@@ -167,36 +158,24 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
    * Returns true when the progress bar will be hidden
    */
   public get isProgressbarHidden(): boolean {
-    return this._isProgressbarHidden || this.hasErrorJobs;
+    return this._isProgressbarHidden;
   }
 
   /**
-   * Returns the title based on single or multiple deployments status
+   * Returns if the loading text should be displayed
    */
-  public getTitle(): string {
-    let title: string;
-    if (this.isMultiJobs) {
-      title = this.textContent ? this.textContent.deployMultiple : '';
-    } else {
-      title = isNullOrEmpty(this.jobs) ? '' : this.jobs[0].description;
-    }
-    return title;
+  public get loadingTextIsDisplay(): boolean {
+    return this.hasInProgressJob && !isNullOrEmpty(this.jobsProvisioningLoadingText);
   }
 
   /**
-   * Returns true when the job was ended
-   * @param job Job to be checked
+   * Gets the status icon key by status
+   * @param status Status of the job/task, which to get the icon key
    */
-  public isJobEnded(job: McsJob): boolean {
-    return job.dataStatus !== DataStatus.InProgress;
-  }
-
-  /**
-   * Returns true when the job was successful
-   * @param job Job to be checked
-   */
-  public isJobSuccessful(job: McsJob): boolean {
-    return job.dataStatus === DataStatus.Success;
+  public getStatusIconKey(status: DataStatus): string {
+    return status === DataStatus.Success ?
+      CoreDefinition.ASSETS_SVG_SUCCESS :
+      CoreDefinition.ASSETS_SVG_ERROR;
   }
 
   /**
@@ -214,13 +193,11 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
         this.progressValue += task.elapsedTimeInSeconds;
         this.progressMax += (task.ectInSeconds + task.elapsedTimeInSeconds);
       });
-      this._isProgressbarHidden = !!this._excludedProgressJobTypes
-        .find((jobType) => jobType === job.type);
     });
 
     // Calculate the 99% of the progreesbar maximum
     progressMaxWithOffset = (this.progressMax * 0.99);
-    this._isProgressbarHidden = this.progressValue >= this.progressMax;
+    this._setProgressBarVisibility();
 
     // Set Inifinity Timer
     this._timerSubscription = timer(0, 1000)
@@ -239,7 +216,7 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
   /**
    * Listen to current user job triggered
    */
-  private _listenToCurrentUserJob(): void {
+  private _subscribesToCurrentUserJob(): void {
     this._notificationsEvents.currentUserJob
       .pipe(takeUntil(this._destroySubject))
       .subscribe((job) => {
@@ -293,5 +270,19 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
    */
   private _createExcludedProgressJobs(): void {
     this._excludedProgressJobTypes.push(JobType.CreateResourceCatalogItem);
+  }
+
+  /**
+   * Sets the progress bar visibility
+   */
+  private _setProgressBarVisibility(): void {
+    if (isNullOrEmpty(this.jobs)) { return; }
+
+    // Check by progress value
+    this._isProgressbarHidden = this.progressValue >= this.progressMax;
+    this._isProgressbarHidden = !isNullOrEmpty(
+      this.jobs.filter((job) => !job.isEstimable || !job.inProgress)
+    );
+    this._changeDetectorRef.markForCheck();
   }
 }

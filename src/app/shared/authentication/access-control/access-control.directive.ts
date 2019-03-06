@@ -51,9 +51,7 @@ export class AccessControlDirective implements OnChanges {
   ) { }
 
   public ngOnChanges(): void {
-    Promise.resolve().then(() => {
-      this._removeElementByAccessControl();
-    });
+    this._removeElementByAccessControl();
   }
 
   /**
