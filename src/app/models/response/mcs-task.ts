@@ -78,8 +78,8 @@ export class McsTask extends McsEntityBase {
   }
 
   /**
-   * Returns the task data status if in progress,
-   * success or error based on the task status
+   * Returns the job data status if in progress,
+   * success or error based on the job status
    */
   public get dataStatus(): DataStatus {
     let dataStatus: DataStatus;
@@ -102,5 +102,12 @@ export class McsTask extends McsEntityBase {
         break;
     }
     return dataStatus;
+  }
+
+  /**
+   * Returns true when the job is currently in progress
+   */
+  public get inProgress(): boolean {
+    return this.dataStatus === DataStatus.InProgress;
   }
 }

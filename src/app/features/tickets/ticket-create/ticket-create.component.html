@@ -3,13 +3,12 @@
   <mcs-top-panel *mcsTopPanelDef>
     <!-- Server Creation -->
     <mcs-top-panel-item *mcsTopPanelItemDef no-border>
-      <mcs-action-item mcsAlign="end"
-        (click)="gotoTickets()"
-        mcsId
+      <mcs-action-item mcsAlign="end" mcsId
+        mcsRouterLink="Tickets"
         mcsEventTracker="navigate-to-ticket-listing"
         mcsEventCategory="ticket"
         mcsEventLabel="create-new-ticket-page">
-        <mcs-icon [key]="backIconKey" size="large"></mcs-icon>
+        <mcs-icon [key]="backIconKey" size="small"></mcs-icon>
         <span>{{ textContent.backToTickets }}</span>
       </mcs-action-item>
     </mcs-top-panel-item>

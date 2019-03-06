@@ -19,7 +19,8 @@ import {
   McsBrowserService,
   McsTableListingBase,
   McsAuthenticationIdentity,
-  McsTableDataSource
+  McsTableDataSource,
+  CoreRoutes
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -28,7 +29,8 @@ import {
 import { McsJobsRepository } from '@app/services';
 import {
   McsCompany,
-  McsJob
+  McsJob,
+  RouteKey
 } from '@app/models';
 import {
   EventBusPropertyListenOn,
@@ -89,6 +91,18 @@ export class NotificationsComponent
   public tryNavigateTo(url: string): void {
     if (isNullOrEmpty(url)) { return; }
     this._router.navigate([url]);
+  }
+
+  /**
+   * Navigates to notification page
+   * @param job Notification job on where to go
+   */
+  public navigateToNotification(job: McsJob): void {
+    if (isNullOrEmpty(job)) { return; }
+    this._router.navigate([
+      CoreRoutes.getNavigationPath(RouteKey.Notification),
+      job.id
+    ]);
   }
 
   /**

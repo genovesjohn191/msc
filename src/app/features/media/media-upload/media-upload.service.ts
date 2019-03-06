@@ -2,24 +2,36 @@ import { Injectable } from '@angular/core';
 import {
   Observable,
   BehaviorSubject,
+  Subject,
+  throwError,
 } from 'rxjs';
 import {
   distinctUntilChanged,
-  tap
+  tap,
+  catchError
 } from 'rxjs/operators';
-import { McsResourcesRepository } from '@app/services';
+import {
+  IMcsFallible,
+  IMcsStateChangeable,
+  IMcsJobManager
+} from '@app/core';
 import { isNullOrEmpty } from '@app/utilities';
+import { McsResourcesRepository } from '@app/services';
 import {
   CatalogItemType,
   McsResource,
   McsResourceCatalogItemCreate,
   McsJob,
   McsApiSuccessResponse,
-  McsValidation
+  McsValidation,
+  DataStatus
 } from '@app/models';
 
 @Injectable()
-export class MediaUploadService {
+export class MediaUploadService implements IMcsFallible, IMcsJobManager, IMcsStateChangeable {
+  private _errorChange = new Subject<string[]>();
+  private _stateChange = new Subject<DataStatus>();
+  private _jobsChange = new Subject<McsJob[]>();
 
   /**
    * An observable event that emits when the selected resource has bee changed
@@ -29,16 +41,7 @@ export class MediaUploadService {
   }
   private _selectedResourceChange: BehaviorSubject<McsResource>;
 
-  /**
-   * An observable event that emits whenever there are changes on the job
-   */
-  public get jobChanges(): Observable<McsJob> {
-    return this._jobChanges.pipe(distinctUntilChanged());
-  }
-  private _jobChanges: BehaviorSubject<McsJob>;
-
   constructor(private _resourcesRepository: McsResourcesRepository) {
-    this._jobChanges = new BehaviorSubject(undefined);
     this._selectedResourceChange = new BehaviorSubject(undefined);
   }
 
@@ -73,9 +76,63 @@ export class MediaUploadService {
    * @param createDetails Creation details of the media to be provided
    */
   public uploadMedia(resourceId: string, createDetails: McsResourceCatalogItemCreate) {
+    this.setChangeState(DataStatus.InProgress);
     return this._resourcesRepository.createResourceCatalogItem(resourceId, createDetails)
       .pipe(
-        tap((response) => this._jobChanges.next(response))
+        tap((response) => {
+          this.setChangeState(DataStatus.Success);
+          this.setJobs(response);
+        }),
+        catchError((httpError) => {
+          this.setChangeState(DataStatus.Error);
+          this.setErrors(...httpError.errorMessages);
+          return throwError(httpError);
+        })
       );
+  }
+
+  /**
+   * Event that emits when job has been changed
+   */
+  public jobsChange(): Observable<McsJob[]> {
+    return this._jobsChange.asObservable();
+  }
+
+  /**
+   * Event that emits when state has been changed
+   */
+  public stateChange(): Observable<DataStatus> {
+    return this._stateChange.asObservable();
+  }
+
+  /**
+   * Event that emits when error has been changed
+   */
+  public errorsChange(): Observable<string[]> {
+    return this._errorChange.asObservable();
+  }
+
+  /**
+   * Sets the error to the event
+   * @param errorMessages Error messages to be emitted
+   */
+  public setErrors(...errors: string[]): void {
+    this._errorChange.next(errors);
+  }
+
+  /**
+   * Sets the change state to the event
+   * @param dataStatus Data status to be emitted
+   */
+  public setChangeState(state: DataStatus): void {
+    this._stateChange.next(state);
+  }
+
+  /**
+   * Sets the jobs to the event
+   * @param jobs Jobs to be emitted
+   */
+  public setJobs(...jobs: McsJob[]): void {
+    this._jobsChange.next(jobs);
   }
 }

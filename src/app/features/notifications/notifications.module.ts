@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { SharedModule } from '@app/shared';
 /** Components */
 import { NotificationsComponent } from './notifications.component';
+import { NotificationComponent } from './notification/notification.component';
 import { notificationsRoutesComponents } from './notifications.constants';
 
 @NgModule({
@@ -9,7 +10,8 @@ import { notificationsRoutesComponents } from './notifications.constants';
     ...notificationsRoutesComponents
   ],
   declarations: [
-    NotificationsComponent
+    NotificationsComponent,
+    NotificationComponent
   ],
   imports: [
     SharedModule

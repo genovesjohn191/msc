@@ -45,6 +45,7 @@ export * from './base/mcs-table-listing.base';
 export * from './base/mcs-form-field-control.base';
 export * from './base/mcs-list-source.base';
 export * from './base/mcs-status-settings.base';
+export * from './base/mcs-wizard.base';
 
 /** Authentication */
 export * from './authentication/mcs-authentication.guard';
@@ -91,3 +92,4 @@ export * from './data-access/mcs-table-datasource';
 export * from './interfaces/mcs-fallible.interface';
 export * from './interfaces/mcs-job-manager.interface';
 export * from './interfaces/mcs-state-changeable.interface';
+export * from './interfaces/mcs-wizard.interface';

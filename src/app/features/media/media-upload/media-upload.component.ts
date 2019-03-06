@@ -5,20 +5,19 @@ import {
   ChangeDetectionStrategy,
   ViewChild
 } from '@angular/core';
-import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import {
   CoreDefinition,
-  CoreRoutes,
-  McsTextContentProvider
+  McsTextContentProvider,
+  McsWizardBase
 } from '@app/core';
 import {
   unsubscribeSubject,
   getSafeProperty,
   McsSafeToNavigateAway
 } from '@app/utilities';
-import { RouteKey } from '@app/models';
 import { MediaUploadDetailsComponent } from './details/media-upload-details.component';
+import { MediaUploadService } from './media-upload.service';
 
 @Component({
   selector: 'mcs-media-upload',
@@ -26,21 +25,22 @@ import { MediaUploadDetailsComponent } from './details/media-upload-details.comp
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class MediaUploadComponent implements McsSafeToNavigateAway, OnInit, OnDestroy {
-  public textContent: any;
-  private _destroySubject = new Subject<void>();
+export class MediaUploadComponent extends McsWizardBase
+  implements McsSafeToNavigateAway, OnInit, OnDestroy {
 
-  public get backIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_CHEVRON_LEFT;
-  }
+  public textContent: any;
+
+  private _destroySubject = new Subject<void>();
 
   @ViewChild(MediaUploadDetailsComponent)
   private _detailsStep: MediaUploadDetailsComponent;
 
   constructor(
-    private _router: Router,
-    private _textContentProvider: McsTextContentProvider
-  ) { }
+    _mediaUploadService: MediaUploadService,
+    private _textContentProvider: McsTextContentProvider,
+  ) {
+    super(_mediaUploadService);
+  }
 
   public ngOnInit() {
     this.textContent = this._textContentProvider.content.mediaUpload;
@@ -50,17 +50,14 @@ export class MediaUploadComponent implements McsSafeToNavigateAway, OnInit, OnDe
     unsubscribeSubject(this._destroySubject);
   }
 
+  public get backIconKey(): string {
+    return CoreDefinition.ASSETS_SVG_CHEVRON_LEFT;
+  }
+
   /**
    * Event that emits when navigating away from media upload page to other route
    */
   public safeToNavigateAway(): boolean {
     return getSafeProperty(this._detailsStep, (obj) => obj.safeToNavigateAway(), true);
-  }
-
-  /**
-   * Navigates to media listing
-   */
-  public navigateToMedia(): void {
-    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.Media)]);
   }
 }

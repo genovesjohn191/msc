@@ -1,106 +1,62 @@
-<ng-container [ngSwitch]="hasJobs">
-  <!-- When job received -->
-  <ng-container *ngSwitchCase="true">
-    <section>
-      <!-- Progress Information -->
-      <div *ngIf="hasInProgressJob">
-        <ng-content select="[mcsProvisioningText]"></ng-content>
-      </div>
-      <h2 class="title">{{ getTitle() }}</h2>
-      <ng-container *ngIf="!isProgressbarHidden">
-        <mcs-progress-bar [@fadeIn]
-          [(ngModel)]="progressValue"
-          [maxValue]="progressMax"></mcs-progress-bar>
-      </ng-container>
+<section>
+  <!-- In Progress Text -->
+  <div *ngIf="loadingTextIsDisplay">
+    <ng-container *ngTemplateOutlet="jobsProvisioningLoadingText?.templateRef"></ng-container>
+  </div>
 
-      <!-- Job Details -->
-      <section *ngFor="let job of jobs">
-        <h2 *ngIf="isMultiJobs">{{ job.description }}</h2>
+  <!-- Progress bar -->
+  <ng-container *ngIf="!isProgressbarHidden">
+    <mcs-progress-bar [@fadeIn]
+      [(ngModel)]="progressValue"
+      [maxValue]="progressMax"></mcs-progress-bar>
+  </ng-container>
 
-        <!-- Tasks content -->
-        <ng-container *ngIf="job.tasks">
-          <mcs-list *ngFor="let task of job.tasks">
+  <!-- Job Details -->
+  <section *ngFor="let job of jobs">
+    <h2>{{ job.description }}</h2>
 
-            <ng-container *ngTemplateOutlet="statusTemplate; context: {
-              $implicit: task.dataStatus,
-              inProgressText: task.description,
-              errorText: task.description,
-              successText: task.description
-            }"></ng-container>
-          </mcs-list>
-        </ng-container>
+    <!-- Tasks content -->
+    <ng-container *ngIf="job.tasks">
+      <mcs-list *ngFor="let task of job.tasks">
 
-        <!-- Job ended -->
-        <mcs-list *ngIf="isJobEnded(job)">
+        <mcs-item orientation="block">
+          <mcs-item>
+            <mcs-loader *ngIf="task.inProgress" size="small"></mcs-loader>
+            <mcs-icon *ngIf="!task.inProgress"
+              [key]="getStatusIconKey(task.dataStatus)" size="small"></mcs-icon>
+            <span>{{ task.description }}</span>
+          </mcs-item>
 
-          <ng-container *ngTemplateOutlet="statusTemplate; context: {
-            $implicit: job.dataStatus,
-            inProgressText: textContent.deploymentInProgress,
-            errorText: job.errorMessage,
-            isErrorAlert: true,
-            successText: textContent.deploymentCompleted
-          }"></ng-container>
+          <mcs-item *ngIf="task.summaryInformation" read-only margin-left-xlarge>
+            <mcs-icon [key]="dotIconKey" size="xxsmall"></mcs-icon>
+            <span>{{ task.summaryInformation }}</span>
+          </mcs-item>
+        </mcs-item>
+      </mcs-list>
+    </ng-container>
 
-          <mcs-item *ngIf="job.dataStatus === dataStatusEnum.Success">
+    <!-- Job content when ended -->
+    <mcs-list *ngIf="!job.inProgress">
+
+      <ng-container [ngSwitch]="job.dataStatus">
+        <!-- Job Success -->
+        <ng-container *ngSwitchCase="dataStatusEnum.Success">
+          <mcs-alert type="success" [header]="job.summaryInformation"></mcs-alert>
+          <mcs-item *ngIf="job.resourceLink">
             <a mcsButton arrow="right" size="small" mcsId="view-job" margin-top-small
               [mcsRouterLink]="job.resourceLink">
               {{ textContent.viewDetails }}
             </a>
           </mcs-item>
-        </mcs-list>
-      </section>
-    </section>
-  </ng-container>
+        </ng-container>
 
-  <!-- When no job received yet -->
-  <ng-container *ngSwitchCase="false">
-    <mcs-item>
-      <mcs-loader size="small"></mcs-loader>
-      <span read-only>{{ textContent.deploymentInProgress }}</span>
-    </mcs-item>
-  </ng-container>
-</ng-container>
-
-<ng-template #statusTemplate
-  let-dataStatus
-  let-inProgressText="inProgressText"
-  let-errorText="errorText"
-  let-isErrorAlert="isErrorAlert"
-  let-successText="successText">
-
-  <ng-container [ngSwitch]="dataStatus">
-    <!-- In progress -->
-    <ng-container *ngSwitchCase="dataStatusEnum.InProgress">
-      <mcs-item>
-        <mcs-loader size="small"></mcs-loader>
-        <span read-only>{{ inProgressText }}</span>
-      </mcs-item>
-    </ng-container>
-
-    <!-- Success -->
-    <ng-container *ngSwitchCase="dataStatusEnum.Success">
-      <mcs-item>
-        <mcs-icon [key]="successIconKey" size="small"></mcs-icon>
-        <span>{{ successText }}</span>
-      </mcs-item>
-    </ng-container>
-
-    <!-- Error -->
-    <ng-container *ngSwitchCase="dataStatusEnum.Error">
-      <mcs-alert type="error" *ngIf="isErrorAlert; else iconType"
-        [header]="textContent.deploymentFailed">
-        <span>{{ errorText }}</span>
-      </mcs-alert>
-
-      <ng-template #iconType>
-        <mcs-item>
-          <mcs-icon [key]="errorIconKey" size="small"></mcs-icon>
-          <span>{{ errorText }}</span>
-        </mcs-item>
-      </ng-template>
-    </ng-container>
-
-  </ng-container>
-</ng-template>
-
-
+        <!-- Job Error -->
+        <ng-container *ngSwitchCase="dataStatusEnum.Error">
+          <mcs-alert type="error" [header]="job.summaryInformation">
+            <span>{{ job.errorMessage }}</span>
+          </mcs-alert>
+        </ng-container>
+      </ng-container>
+    </mcs-list>
+  </section>
+</section>

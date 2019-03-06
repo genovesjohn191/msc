@@ -3,7 +3,7 @@
   <!-- Provisioning content when successfull -->
   <ng-container *ngSwitchCase="dataStatusEnum.Success">
     <mcs-jobs-provisioning [jobs]="jobs">
-      <ng-container mcsProvisioningText>
+      <ng-container *mcsJobsProvisioningLoadingText>
         <ng-content select="[mcsProvisioningStepDescription]"></ng-content>
       </ng-container>
     </mcs-jobs-provisioning>

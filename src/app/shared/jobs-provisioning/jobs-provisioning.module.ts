@@ -9,11 +9,14 @@ import { DirectivesModule } from '../directives';
 import { ButtonModule } from '../button';
 import { ListModule } from '../list/list.module';
 import { ItemModule } from '../item/item.module';
+
 import { JobsProvisioningComponent } from './jobs-provisioning.component';
+import { JobsProvisioningLoadingTextDirective } from './jobs-provisioning-loading-text.directive';
 
 @NgModule({
   declarations: [
-    JobsProvisioningComponent
+    JobsProvisioningComponent,
+    JobsProvisioningLoadingTextDirective
   ],
   imports: [
     CommonModule,
@@ -38,7 +41,8 @@ import { JobsProvisioningComponent } from './jobs-provisioning.component';
     ListModule,
     ItemModule,
     DirectivesModule,
-    JobsProvisioningComponent
+    JobsProvisioningComponent,
+    JobsProvisioningLoadingTextDirective
   ]
 })
 

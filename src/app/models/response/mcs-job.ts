@@ -1,7 +1,9 @@
 import { JsonProperty } from 'json-object-mapper';
-import { isNullOrEmpty, getSafeProperty } from '@app/utilities';
 import {
-  CoreRoutes,
+  isNullOrEmpty,
+  getSafeProperty
+} from '@app/utilities';
+import {
   McsDateSerialization,
   CoreDefinition
 } from '@app/core';
@@ -12,8 +14,8 @@ import {
 import {
   JobType,
   JobTypeSerialization,
+  jobTypeText,
 } from '../enumerations/job-type.enum';
-import { RouteKey } from '../enumerations/route-key.enum';
 import { DataStatus } from '../enumerations/data-status.enum';
 import { McsEntityBase } from '../mcs-entity.base';
 import { McsTask } from './mcs-task';
@@ -143,37 +145,6 @@ export class McsJob extends McsEntityBase {
   }
 
   /**
-   * Returns the job link based on its job type
-   * @deprecated Use the resourceLink instead because we are
-   * removing this property when the job page details is finished
-   */
-  public get link(): string {
-    let jobLink: string = '';
-    switch (this.type) {
-      case JobType.CreateServer:
-      case JobType.CloneServer:
-        // case JobType.CreateResourceCatalogItem:
-        // TODO: Remove comment this once the job details page is finished
-        jobLink = `
-          ${CoreRoutes.getNavigationPath(RouteKey.ServerCreateProvisioning)}/${this.id}
-        `;
-        break;
-
-      // Add more link here when a job has requested page
-      default:
-        break;
-    }
-    return jobLink.trim();
-  }
-
-  /**
-   * Returns true when the job has link url
-   */
-  public get hasLink(): boolean {
-    return !isNullOrEmpty(this.link);
-  }
-
-  /**
    * Returns the resource link based on the task provided
    */
   public get resourceLink(): string {
@@ -185,11 +156,21 @@ export class McsJob extends McsEntityBase {
       this.clientReferenceObject, (obj) => obj.resourcePath
     );
 
-    // TODO: Temporarily force the compute/virtual since the job is not
-    // sending back the resourcePath when creating managed server
-    resourceDynamicPath = isNullOrEmpty(resourceDynamicPath) ?
-      `/compute/virtual` : resourceDynamicPath;
     let resourceId = getSafeProperty(completedTask, (obj) => obj.referenceObject.resourceId);
     return !isNullOrEmpty(resourceId) ? `${resourceDynamicPath}/${resourceId}` : undefined;
+  }
+
+  /**
+   * Returns the type label of the job
+   */
+  public get typeLabel(): string {
+    return jobTypeText[this.type];
+  }
+
+  /**
+   * Returns true when the job process can be estimated
+   */
+  public get isEstimable(): boolean {
+    return this.type !== JobType.CreateResourceCatalogItem;
   }
 }

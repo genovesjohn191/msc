@@ -759,7 +759,8 @@
     },
     "mediaStepGo": {
       "label": "Go!",
-      "description": "Your media is uploading and will be available shortly. You can track progress from the notifications menu at the top of the portal."
+      "description": "Your media is uploading and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
+      "dataInProgress": "Preparing the media upload process. This may take a moment."
     }
   },
   "tickets": {

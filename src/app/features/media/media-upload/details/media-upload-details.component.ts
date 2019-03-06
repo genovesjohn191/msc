@@ -15,8 +15,7 @@ import {
   Subject,
   BehaviorSubject,
   throwError,
-  Observable,
-  of
+  Observable
 } from 'rxjs';
 import {
   catchError,
@@ -43,7 +42,6 @@ import {
 import { McsResourcesRepository } from '@app/services';
 import {
   McsResource,
-  McsJob,
   McsResourceCatalogItemCreate,
   CatalogItemType,
   McsResourceCatalogItem,
@@ -71,7 +69,6 @@ export class MediaUploadDetailsComponent
 
   public mediaUploading: boolean;
   public urlInfoMessage: string;
-  public uploadMediaFunc = this._uploadMedia.bind(this);
 
   // Form variables
   public fgMediaUpload: FormGroup;
@@ -118,6 +115,13 @@ export class MediaUploadDetailsComponent
 
   public ngOnDestroy() {
     unsubscribeSafely(this._destroySubject);
+  }
+
+  /**
+   * Returns true when all forms are valid
+   */
+  public get allFormsAreValid(): boolean {
+    return getSafeProperty(this.fgMediaUpload, (obj) => obj.valid);
   }
 
   /**
@@ -180,10 +184,11 @@ export class MediaUploadDetailsComponent
   }
 
   /**
-   * Upload media based on form contents
+   * Event that emits when the form will be submitted
    */
-  private _uploadMedia(): Observable<McsJob> {
-    if (!this._validateFormFields()) { return of(undefined); }
+  public onSubmitMediaUpload(): void {
+    if (!this._validateFormFields()) { return; }
+
     let uploadMediaModel = new McsResourceCatalogItemCreate();
     uploadMediaModel.name = this.fcMediaName.value;
     uploadMediaModel.catalogName = this.selectedCatalog$.getValue().name;
@@ -193,7 +198,7 @@ export class MediaUploadDetailsComponent
     uploadMediaModel.clientReferenceObject.resourcePath =
       CoreRoutes.getNavigationPath(RouteKey.Medium);
 
-    return this._mediaUploadService.uploadMedia(
+    this._mediaUploadService.uploadMedia(
       this.selectedResourceId,
       uploadMediaModel
     ).pipe(
@@ -204,11 +209,9 @@ export class MediaUploadDetailsComponent
         });
         return throwError(httpError);
       }),
-      tap(() => {
-        this.mediaUploading = true;
-      }),
+      tap(() => this.mediaUploading = true),
       finalize(() => this._changeDetectorRef.markForCheck())
-    );
+    ).subscribe();
   }
 
   /**
@@ -298,8 +301,7 @@ export class MediaUploadDetailsComponent
    * Validates the form fields in all existing form groups
    */
   private _validateFormFields(): boolean {
-    let formIsValid = getSafeProperty(this.fgMediaUpload, (obj) => obj.valid);
-    if (formIsValid) { return true; }
+    if (this.allFormsAreValid) { return true; }
     this._formGroupService.touchAllFieldsByFormGroup(this.fgMediaUpload);
     this._formGroupService.scrollToFirstInvalidField(this._elementRef.nativeElement);
     return false;

@@ -1,0 +1,31 @@
+<mcs-page *ngIf="job$ |async as job" [header]="job.typeLabel">
+
+  <!-- Left Panel Content -->
+  <mcs-left-panel *mcsLeftPanelDef="'notification.leftPanelHeader' | translate">
+    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="job.description" offset="small">
+      <mcs-item *ngFor="let task of job.tasks">
+        <mcs-icon [key]="dotIconKey" size="xxsmall"></mcs-icon>
+        <span>{{ task.description }}</span>
+      </mcs-item>
+    </mcs-left-panel-item>
+  </mcs-left-panel>
+
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef>
+    <mcs-top-panel-item *mcsTopPanelItemDef>
+      <mcs-action-item mcsId mcsAlign="end"
+        mcsRouterLink="Notifications"
+        mcsEventTracker="navigate-to-notification-listing"
+        mcsEventCategory="notification"
+        mcsEventLabel="notification-details-page">
+        <mcs-icon [key]="backIconKey" size="small"></mcs-icon>
+        <span>{{ 'notification.backToNotifications' | translate }}</span>
+      </mcs-action-item>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
+  <!-- Main Panel Content -->
+  <mcs-content-panel *mcsContentPanelDef class="limited-view">
+    <mcs-jobs-provisioning [jobs]="[job]"></mcs-jobs-provisioning>
+  </mcs-content-panel>
+</mcs-page>

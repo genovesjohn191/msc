@@ -1,2 +1,10 @@
-<span read-only>{{ header }}</span>
+<!-- Left Panel Header -->
+<ng-container *ngIf="leftPanelItemHeader; else defaultHeaderTemplate">
+  <ng-container *ngTemplateOutlet="leftPanelItemHeader?.templateRef"></ng-container>
+</ng-container>
+<ng-template #defaultHeaderTemplate>
+  <span read-only>{{ header }}</span>
+</ng-template>
+
+<!-- Left Panel Contents -->
 <div #itemElement><ng-content></ng-content></div>

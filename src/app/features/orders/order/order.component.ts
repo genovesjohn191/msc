@@ -6,7 +6,6 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import {
-  Router,
   ActivatedRoute,
   ParamMap
 } from '@angular/router';
@@ -25,14 +24,10 @@ import {
 import {
   McsErrorHandlerService,
   CoreDefinition,
-  CoreRoutes,
   McsLoadingService
 } from '@app/core';
 import { unsubscribeSubject } from '@app/utilities';
-import {
-  RouteKey,
-  McsOrder
-} from '@app/models';
+import { McsOrder } from '@app/models';
 import { McsOrdersRepository } from '@app/services';
 
 @Component({
@@ -49,7 +44,6 @@ export class OrderComponent implements OnInit, OnDestroy {
   private _destroySubject = new Subject<void>();
 
   public constructor(
-    private _router: Router,
     private _activatedRoute: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef,
     private _translateService: TranslateService,
@@ -68,7 +62,7 @@ export class OrderComponent implements OnInit, OnDestroy {
   }
 
   public get backIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_CHEVRON_LEFT;
+    return CoreDefinition.ASSETS_SVG_CHEVRON_LEFT;
   }
 
   /**
@@ -79,13 +73,6 @@ export class OrderComponent implements OnInit, OnDestroy {
     // TODO: return the type description from API
     // once the endpoint for /order/items/type is done
     return typeId;
-  }
-
-  /**
-   * Navigate to order listing
-   */
-  public gotoOrders(): void {
-    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.Orders)]);
   }
 
   /**

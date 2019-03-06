@@ -6,7 +6,6 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import {
-  Router,
   ActivatedRoute,
   ParamMap
 } from '@angular/router';
@@ -28,7 +27,6 @@ import {
   CoreDefinition,
   McsTextContentProvider,
   McsErrorHandlerService,
-  CoreRoutes,
   McsLoadingService
 } from '@app/core';
 import {
@@ -41,7 +39,6 @@ import {
   CommentType,
   McsFileInfo,
   McsComment,
-  RouteKey,
   McsTicket,
   TicketSubType,
   ticketSubTypeText,
@@ -74,11 +71,10 @@ export class TicketComponent implements OnInit, OnDestroy {
   }
 
   public get backIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_CHEVRON_LEFT;
+    return CoreDefinition.ASSETS_SVG_CHEVRON_LEFT;
   }
 
   public constructor(
-    private _router: Router,
     private _activatedRoute: ActivatedRoute,
     private _ticketsRepository: McsTicketsRepository,
     private _loadingService: McsLoadingService,
@@ -106,13 +102,6 @@ export class TicketComponent implements OnInit, OnDestroy {
   public getTicketHeader(ticket: McsTicket): string {
     if (isNullOrEmpty(ticket)) { return ''; }
     return `${ticket.subTypeLabel} #${ticket.crispTicketNumber}`;
-  }
-
-  /**
-   * Navigate to ticket listing
-   */
-  public gotoTickets(): void {
-    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.Tickets)]);
   }
 
   /**
