@@ -10,8 +10,6 @@ export * from './scrollable.interface';
 export * from './set-focus.directive';
 export * from './stop-propagation.directive';
 export * from './id.directive';
-export * from './navigate-back.directive';
-export * from './navigate-forward.directive';
 
 export * from './overriden-directives/disabled.directive';
 export * from './overriden-directives/hidden.directive';

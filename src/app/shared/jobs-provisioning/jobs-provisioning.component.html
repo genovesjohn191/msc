@@ -8,7 +8,8 @@
   <ng-container *ngIf="!isProgressbarHidden">
     <mcs-progress-bar [@fadeIn]
       [(ngModel)]="progressValue"
-      [maxValue]="progressMax"></mcs-progress-bar>
+      [maxValue]="progressMax"
+      (completed)="onProgressCompleted()"></mcs-progress-bar>
   </ng-container>
 
   <!-- Job Details -->
@@ -27,10 +28,12 @@
             <span>{{ task.description }}</span>
           </mcs-item>
 
-          <mcs-item *ngIf="task.summaryInformation" read-only margin-left-xlarge>
-            <mcs-icon [key]="dotIconKey" size="xxsmall"></mcs-icon>
-            <span>{{ task.summaryInformation }}</span>
-          </mcs-item>
+          <ng-container *ngIf="task.dataStatus !== dataStatusEnum.Success">
+            <mcs-item *ngIf="task.summaryInformation" read-only margin-left-xlarge>
+              <mcs-icon [key]="dotIconKey" size="xxsmall"></mcs-icon>
+              <span>{{ task.summaryInformation }}</span>
+            </mcs-item>
+          </ng-container>
         </mcs-item>
       </mcs-list>
     </ng-container>

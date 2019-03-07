@@ -28,7 +28,8 @@ import {
   isNullOrEmpty,
   animateFactory,
   clearArrayRecord,
-  getSafeProperty
+  getSafeProperty,
+  coerceBoolean
 } from '@app/utilities';
 import {
   InputManageType,
@@ -85,6 +86,19 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges {
 
   @Input()
   public targetNic: McsServerNic;
+
+  @Input()
+  public get disableDynamicIp(): boolean { return this._disableDynamicIp; }
+  public set disableDynamicIp(value: boolean) {
+    value = coerceBoolean(value);
+    if (this._disableDynamicIp !== value) {
+      this._disableDynamicIp = value;
+      if (this._disableDynamicIp) {
+        this.inputManageType = InputManageType.Custom;
+      }
+    }
+  }
+  private _disableDynamicIp: boolean;
 
   @Input()
   public get selectedNetwork(): McsResourceNetwork { return this._selectedNetwork; }
