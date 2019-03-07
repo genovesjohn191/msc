@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import {
   FormGroup,
-  FormArray
+  FormArray,
+  FormControl
 } from '@angular/forms';
 import { isNullOrEmpty } from '@app/utilities';
 import { McsScrollDispatcherService } from './mcs-scroll-dispatcher.service';
@@ -11,9 +12,7 @@ const FORM_GROUP_SCROLL_OFFSET = 10;
 @Injectable()
 export class McsFormGroupService {
 
-  constructor(private _scrollDispatcherService: McsScrollDispatcherService) {
-
-  }
+  constructor(private _scrollDispatcherService: McsScrollDispatcherService) { }
 
   /**
    * Touches all corresponding form controls inside form groups
@@ -24,7 +23,9 @@ export class McsFormGroupService {
     if (formGroupIsValid) { return; }
 
     Object.keys(formGroup.controls).forEach((key) => {
-      formGroup.controls[key].markAsTouched();
+      formGroup.controls[key] instanceof FormGroup ?
+        this.touchAllFieldsByFormGroup(formGroup.controls[key] as FormGroup) :
+        this._markInvalidFormControl(formGroup.controls[key] as FormControl);
     });
   }
 
@@ -50,5 +51,14 @@ export class McsFormGroupService {
     let firstInvalidElement = host.querySelector('mcs-form-field.ng-invalid');
     this._scrollDispatcherService.scrollToElement(
       firstInvalidElement as HTMLElement, FORM_GROUP_SCROLL_OFFSET);
+  }
+
+  /**
+   * This will mark the form control as invalid
+   * @param formControl Form control to be marked
+   */
+  private _markInvalidFormControl(formControl: FormControl): void {
+    if (isNullOrEmpty(formControl)) { return; }
+    formControl.markAsTouched();
   }
 }

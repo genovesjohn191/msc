@@ -110,6 +110,7 @@
   <!-- Server network settings -->
   <div class="action-box">
     <mcs-server-manage-network
+      [disableDynamicIp]="resourceIsManaged"
       [networks]="resource?.networks"
       [resourceId]="resource?.id"
       (dataChange)="onNetworkChanged($event)"

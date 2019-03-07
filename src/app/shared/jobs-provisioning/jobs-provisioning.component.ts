@@ -98,6 +98,7 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
     if (!isNullOrEmpty(changes)) {
       this._resetJob();
       this._updateProgressbarRealTimeAsync();
+      this._initializeProgressBarVisibility();
     }
   }
 
@@ -158,7 +159,7 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
    * Returns true when the progress bar will be hidden
    */
   public get isProgressbarHidden(): boolean {
-    return this._isProgressbarHidden;
+    return this._isProgressbarHidden || this.hasErrorJobs;
   }
 
   /**
@@ -176,6 +177,14 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
     return status === DataStatus.Success ?
       CoreDefinition.ASSETS_SVG_SUCCESS :
       CoreDefinition.ASSETS_SVG_ERROR;
+  }
+
+  /**
+   * Event that emits when the progress bar has been completed
+   */
+  public onProgressCompleted(): void {
+    this._isProgressbarHidden = true;
+    this._changeDetectorRef.markForCheck();
   }
 
   /**
@@ -197,7 +206,6 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
 
     // Calculate the 99% of the progreesbar maximum
     progressMaxWithOffset = (this.progressMax * 0.99);
-    this._setProgressBarVisibility();
 
     // Set Inifinity Timer
     this._timerSubscription = timer(0, 1000)
@@ -253,7 +261,6 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
   private _endTimer(value: number): void {
     this.progressValue = value;
     unsubscribeSafely(this._timerSubscription);
-    this._changeDetectorRef.markForCheck();
   }
 
   /**
@@ -273,9 +280,9 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
   }
 
   /**
-   * Sets the progress bar visibility
+   * Initialize progress bar visibility based on the job data
    */
-  private _setProgressBarVisibility(): void {
+  private _initializeProgressBarVisibility(): void {
     if (isNullOrEmpty(this.jobs)) { return; }
 
     // Check by progress value

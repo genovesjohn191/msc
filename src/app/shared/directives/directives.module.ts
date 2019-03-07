@@ -10,8 +10,6 @@ import { SetFocusDirective } from './set-focus.directive';
 import { IdDirective } from './id.directive';
 import { AlignContentDirective } from './align-content.directive';
 import { AlignDirective } from './align.directive';
-import { NavigateBackDirective } from './navigate-back.directive';
-import { NavigateForwardDirective } from './navigate-forward.directive';
 
 import { DisabledDirective } from './overriden-directives/disabled.directive';
 import { HiddenDirective } from './overriden-directives/hidden.directive';
@@ -32,9 +30,7 @@ import { ReadOnlyDirective } from './overriden-directives/read-only.directive';
     SetFocusDirective,
     IdDirective,
     AlignContentDirective,
-    AlignDirective,
-    NavigateBackDirective,
-    NavigateForwardDirective
+    AlignDirective
   ],
   exports: [
     ComponentHandlerDirective,
@@ -50,9 +46,7 @@ import { ReadOnlyDirective } from './overriden-directives/read-only.directive';
     SetFocusDirective,
     IdDirective,
     AlignContentDirective,
-    AlignDirective,
-    NavigateBackDirective,
-    NavigateForwardDirective
+    AlignDirective
   ]
 })
 

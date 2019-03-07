@@ -17,7 +17,7 @@
   <!-- Network switcher -->
   <mcs-item orientation="separated">
     <h2 auto-width>IP address</h2>
-    <div>
+    <div *ngIf="!disableDynamicIp">
       <a *ngIf="inputManageType === inputManageTypeEnum.Custom" mcsId
         (click)="onChangeInputManageType(inputManageTypeEnum.Buttons)">
         {{ textContent.buttonSwitch }}</a>

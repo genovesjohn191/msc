@@ -144,6 +144,10 @@ export class ServerNewComponent
     return CoreDefinition.CREATE_SERVER_STORAGE_STEP;
   }
 
+  public get resourceIsManaged(): boolean {
+    return this.serviceType === ServiceType.Managed;
+  }
+
   /**
    * Returns the minimum storage in GB
    */

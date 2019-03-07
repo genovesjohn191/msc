@@ -292,15 +292,5 @@
     "monthlyCost": "Monthly",
     "oneOffCost": "One-off",
     "totalCost": "Total Cost"
-  },
-  "jobDefinitions": {
-    "createServer": {
-      "enumValue": "CreateServer",
-      "loadingText": "Your server is deploying and will be available shortly. You can track progress from the notifications menu at the top of the portal."
-    },
-    "mediaUpload": {
-      "enumValue": "CreateResourceCatalogItem",
-      "loadingText": "Your media is uploading and will be available shortly. You can track progress from the notifications menu at the top of the portal."
-    }
   }
 }
