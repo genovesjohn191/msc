@@ -13,7 +13,8 @@ import {
 } from '../enumerations/order-origin.enum';
 import {
   WorkflowStatus,
-  WorkflowStatusSerialization
+  WorkflowStatusSerialization,
+  workflowStatusText
 } from '../enumerations/workflow-status.enum';
 import { McsJob } from './mcs-job';
 import { McsEntityBase } from '../mcs-entity.base';
@@ -91,6 +92,7 @@ export class McsOrder extends McsEntityBase {
     this.origin = undefined;
     this.itemCount = undefined;
     this.errorCount = undefined;
+    this.workflowState = undefined;
     this.charges = undefined;
     this.items = undefined;
     this.errors = undefined;
@@ -112,9 +114,48 @@ export class McsOrder extends McsEntityBase {
   }
 
   /**
-   * Retusn the order origin label
+   * Returns the workflow status label
+   */
+  public get workflowStatusLabel(): string {
+    return workflowStatusText[this.workflowState];
+  }
+
+  /**
+   * Returns the order origin label
    */
   public get originLabel(): string {
     return orderOriginText[this.origin];
+  }
+
+  /**
+   * Returns true when the order can be submitted
+   */
+  public get canBeSubmitted(): boolean {
+    return this.workflowState === WorkflowStatus.Incomplete ||
+      this.workflowState === WorkflowStatus.Draft ||
+      this.workflowState === WorkflowStatus.AwaitingApproval;
+  }
+
+  /**
+   * Returns true when the order requires approval
+   */
+  public get requiresApproval(): boolean {
+    return this.workflowState === WorkflowStatus.Incomplete ||
+      this.workflowState === WorkflowStatus.Draft;
+  }
+
+  /**
+   * Returns true when the order is cancellable
+   */
+  public get cancellable(): boolean {
+    return this.workflowState === WorkflowStatus.Incomplete ||
+      this.workflowState === WorkflowStatus.Draft;
+  }
+
+  /**
+   * Returns true when the order is rejectable
+   */
+  public get rejectable(): boolean {
+    return this.workflowState === WorkflowStatus.AwaitingApproval;
   }
 }

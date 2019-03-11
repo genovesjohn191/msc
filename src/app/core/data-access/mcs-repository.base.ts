@@ -104,9 +104,7 @@ export abstract class McsRepositoryBase<T extends McsEntityBase>
   }
 
   /**
-   * Get the record based on the predicate provided and
-   * creates a new observable if the data of the record has been changed
-   * the observer will be notified
+   * Get the record from the current datasource based on the predicate provided
    * @param predicate Predicate of the item that returns true if the record should be obtained
    */
   public getBy(predicate: (entity: T) => boolean): Observable<T> {

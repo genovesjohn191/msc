@@ -206,12 +206,6 @@ $button-error-bg-color: $color-red-00;
   background-color: transparent;
   overflow: hidden;
 
-  .button-text-wrapper {
-   .icon-wrapper {
-     padding-left: 0;
-   }
-  }
-
   &:hover .button-focus-overlay {
     opacity: 0;
     transition: none;
@@ -223,7 +217,7 @@ $button-error-bg-color: $color-red-00;
   @include align-items(center);
   justify-content: center;
 
- .icon-wrapper {
+ .button-text-arrow {
    padding-left: $space-small;
  }
 }

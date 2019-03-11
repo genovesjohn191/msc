@@ -217,6 +217,7 @@
     "enumKey": "Orders",
     "routePath": "orders",
     "navigationPath": "orders",
+    "requiredPermissions": ["OrderView"],
     "requiredFeatureFlag": "EnableOrdering",
     "documentTitle": "Orders - Macquarie Cloud Services"
   },
@@ -224,6 +225,7 @@
     "enumKey": "OrderDetail",
     "routePath": "orders/:id",
     "navigationPath": "orders",
+    "requiredPermissions": ["OrderView", "OrderEdit", "OrderApprove"],
     "requiredFeatureFlag": "EnableOrdering",
     "documentTitle": "Order Details - Macquarie Cloud Services"
   },
