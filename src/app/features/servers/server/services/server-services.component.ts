@@ -58,6 +58,8 @@ import {
 } from './os-updates-status-configuration';
 import { ServersService } from '../../servers.service';
 
+const OS_UPDATE_TIMEZONE = 'Australia/Sydney';
+const OS_UPDATE_DATEFORMAT = "EEEE, d MMMM, yyyy 'at' h:mm a";
 @Component({
   selector: 'mcs-server-services',
   templateUrl: './server-services.component.html',
@@ -76,7 +78,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
   private _formMessage: FormMessage;
 
   private _destroySubject = new Subject<void>();
-  private _updatesStatusSubtitleLabel: string;
+  private _updateStartedDate: Date;
 
   /**
    * Returns the clock icon key
@@ -109,10 +111,41 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
   }
 
   /**
-   * Returns the warning svg key
+   * Returns the updates status subtitle label for Updated/Outdated/Error status
+   * also returns the subtitle label for inspected server with status Analysing/Updating
    */
-  public get updatesStatusSubtitleLabel(): string {
-    return this._updatesStatusSubtitleLabel;
+  public get updatesStatusSubtitleLabelDefault(): string {
+    if (!this.updateStatusConfiguration.hasBeenInspectedBefore) {
+      return this.updateStatusConfiguration.updatesStatusSubtitleLabel;
+    }
+
+    let formattedDate = this._dateTimeService.formatDate(
+      new Date(this.updateStatusConfiguration.lastInspectedDate),
+      OS_UPDATE_DATEFORMAT,
+      OS_UPDATE_TIMEZONE
+    );
+
+    return replacePlaceholder(
+      this.updateStatusConfiguration.updatesStatusSubtitleLabel,
+      'lastInspectDate',
+      formattedDate
+    );
+  }
+
+  /**
+   * Returns the updates status subtitle label for Updating status
+   */
+  public get updatesStatusSubtitleLabelUpdating(): string {
+    let formattedDate = this._dateTimeService.formatDate(
+      this._updateStartedDate,
+      OS_UPDATE_DATEFORMAT,
+      OS_UPDATE_TIMEZONE
+    );
+
+    return replacePlaceholder(
+      this.updateStatusConfiguration.updatesStatusSubtitleLabel,
+      'dateOfStart',
+      formattedDate);
   }
 
   /**
@@ -120,6 +153,13 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
    */
   public get serverServicesViewOption(): typeof ServerServicesView {
     return ServerServicesView;
+  }
+
+  /**
+   * Returns the enum type of the os update status
+   */
+  public get osUpdateStatusOption(): typeof OsUpdatesStatus {
+    return OsUpdatesStatus;
   }
 
   constructor(
@@ -288,10 +328,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
     switch (job.dataStatus) {
       case DataStatus.InProgress:
         this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Updating);
-        this._updatesStatusSubtitleLabel = replacePlaceholder(
-          this.updateStatusConfiguration.updatesStatusSubtitleLabel,
-          'dateOfStart',
-          this._dateTimeService.formatDate(job.startedOn, 'ddd, DD MMM, HH:mm A'));
+        this._updateStartedDate = job.startedOn;
         break;
       case DataStatus.Success:
         this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Updated);
@@ -327,18 +364,13 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
           || this.updateStatusConfiguration.status === OsUpdatesStatus.Updating) {
           return;
         }
-        let notYetInspected = isNullOrEmpty(serverOsUpdateDetails.lastInspectDate);
-        if (notYetInspected) {
+        if (!this.updateStatusConfiguration.hasBeenInspectedBefore) {
           this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Unanalysed);
-          this._updatesStatusSubtitleLabel =
-            this.updateStatusConfiguration.updatesStatusSubtitleLabel;
           return;
         }
         let status = serverOsUpdateDetails.updateCount > 0 ?
           OsUpdatesStatus.Outdated : OsUpdatesStatus.Updated;
         this.updateStatusConfiguration.setOsUpdateStatus(status);
-        this._updatesStatusSubtitleLabel =
-          this.updateStatusConfiguration.updatesStatusSubtitleLabel;
       })
     );
   }

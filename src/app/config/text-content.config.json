@@ -329,7 +329,7 @@
           "description": "Select the updates or update categories you would like to apply and we will install them on your server for you.",
           "listLabel": "Which updates should we apply?",
           "listAllSelection": "All Updates",
-          "noOsUpdates": "no availabe os updates for this server.",
+          "noOsUpdates": "No availabe os updates for this server.",
           "osUpdatesloadingContent": "Loading list of server os updates.",
           "errorOsUpdates": "Sorry, something’s not right. We weren’t able to retrieve the list of os updates for this server.",
           "applyUpdatesButton": "Apply Updates"
