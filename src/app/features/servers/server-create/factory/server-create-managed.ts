@@ -25,6 +25,9 @@ export class ServerCreateManaged implements IServerCreate {
 
     serverCreateService.createOrUpdateOrder({
       description: 'New Managed Server', contractDuration: 12,
+      // TODO : temporary static value
+      billingSite: '129973',
+      costCentre: '281504',
       items: [{
         itemOrderTypeId: OrderIdType.CreateManagedServer,
         referenceId: this._serverReferenceId.toString(),
