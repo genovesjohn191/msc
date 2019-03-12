@@ -2,21 +2,6 @@
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef>
 
-    <!-- Order Creation -->
-    <ng-container *mcsAccessControl="['OrderEdit']">
-      <mcs-top-panel-item *mcsTopPanelItemDef>
-        <mcs-action-item
-          (click)="onClickNewOrder()"
-          mcsIdS
-          mcsEventTracker="create-new-order"
-          mcsEventCategory="order"
-          mcsEventLabel="order-listing-top-panel">
-          <mcs-icon [key]="addIconKey" size="small"></mcs-icon>
-          <span>{{ 'orders.newOrder' | translate }}</span>
-        </mcs-action-item>
-      </mcs-top-panel-item>
-    </ng-container>
-
     <!-- Order Count -->
     <mcs-top-panel-item *mcsTopPanelItemDef>
       <div class="listing-action-wrapper">
@@ -75,7 +60,7 @@
             {{ columnSettings.status.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" hidden-xsmall>
-            {{ row.statusLabel }}
+            {{ row.workflowStatusLabel }}
           </mcs-data-cell>
         </ng-container>
 

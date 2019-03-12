@@ -5,15 +5,21 @@ export enum WorkflowStatus {
   Unknown = 0,
   Incomplete,
   Draft,
-  RequiresSignoff,
-  RequiresPricingApproval,
-  PricingApproved,
-  Conversions,
-  Provisioning,
-  BillingProduction,
+  AwaitingApproval,
+  Submitted,
   Cancelled,
-  Completed
+  Rejected
 }
+
+export const workflowStatusText = {
+  [WorkflowStatus.Unknown]: 'Unknown',
+  [WorkflowStatus.Incomplete]: 'Incomplete',
+  [WorkflowStatus.Draft]: 'Draft',
+  [WorkflowStatus.AwaitingApproval]: 'Awaiting Approval',
+  [WorkflowStatus.Submitted]: 'Submitted',
+  [WorkflowStatus.Cancelled]: 'Cancelled',
+  [WorkflowStatus.Rejected]: 'Rejected'
+};
 
 /**
  * Enumeration serializer and deserializer methods

@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import {
+  map,
+  tap
+} from 'rxjs/operators';
 import {
   McsRepositoryBase,
   IMcsOrderFactory
@@ -28,7 +31,8 @@ export class McsOrdersRepository extends McsRepositoryBase<McsOrder> implements 
    */
   public createOrder(orderData: McsOrderCreate): Observable<McsOrder> {
     return this._ordersApiService.createOrder(orderData).pipe(
-      map((response) => getSafeProperty(response, (obj) => obj.content))
+      map((response) => getSafeProperty(response, (obj) => obj.content)),
+      tap((order) => this.addOrUpdate(order))
     );
   }
 
@@ -39,7 +43,8 @@ export class McsOrdersRepository extends McsRepositoryBase<McsOrder> implements 
    */
   public createOrderWorkFlow(orderId: string, workflow: McsOrderWorkflow): Observable<McsOrder> {
     return this._ordersApiService.createOrderWorkflow(orderId, workflow).pipe(
-      map((response) => getSafeProperty(response, (obj) => obj.content))
+      map((response) => getSafeProperty(response, (obj) => obj.content)),
+      tap((order) => this.addOrUpdate(order))
     );
   }
 
@@ -60,7 +65,8 @@ export class McsOrdersRepository extends McsRepositoryBase<McsOrder> implements 
    */
   public updateOrder(orderId: string, updatedOrder: McsOrderCreate): Observable<McsOrder> {
     return this._ordersApiService.updateOrder(orderId, updatedOrder).pipe(
-      map((response) => getSafeProperty(response, (obj) => obj.content))
+      map((response) => getSafeProperty(response, (obj) => obj.content)),
+      tap((order) => this.addOrUpdate(order))
     );
   }
 
@@ -70,7 +76,8 @@ export class McsOrdersRepository extends McsRepositoryBase<McsOrder> implements 
    */
   public deleteOrder(id: any): Observable<McsOrder> {
     return this._ordersApiService.deleteOrder(id).pipe(
-      map((response) => getSafeProperty(response, (obj) => obj.content))
+      map((response) => getSafeProperty(response, (obj) => obj.content)),
+      tap((order) => this.delete(order))
     );
   }
 }

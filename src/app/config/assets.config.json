@@ -93,7 +93,9 @@
     "dos-prompt-blue": "dos-prompt-blue.svg",
     "dos-prompt-grey": "dos-prompt-grey.svg",
     "cloud-blue": "cloud-blue.svg",
-    "clock": "clock.svg"
+    "clock": "clock.svg",
+    "block": "block.svg",
+    "check-black": "check.svg"
   },
   "gifIcons": {
     "loader-spinner": "loader-spinner.gif",

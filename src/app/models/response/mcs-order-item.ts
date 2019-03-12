@@ -22,7 +22,7 @@ export class McsOrderItem extends McsEntityBase {
   public automatedProvisioningAvailable: boolean;
   public referenceId: string;
   public parentReferenceId: string;
-  public orderItemId: string;
+  public itemId: string;
   public itemOrderTypeId: string;
   public parentServiceId: string;
 
@@ -72,7 +72,7 @@ export class McsOrderItem extends McsEntityBase {
     this.jobId = undefined;
     this.modifiedBy = undefined;
     this.modifiedOn = undefined;
-    this.orderItemId = undefined;
+    this.itemId = undefined;
     this.parentReferenceId = undefined;
     this.parentServiceId = undefined;
     this.properties = undefined;

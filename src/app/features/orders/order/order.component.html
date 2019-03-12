@@ -1,9 +1,58 @@
-<mcs-page [header]="'order.header' | translate:{orderId: (order$ | async)?.orderId}">
+<mcs-page [header]="('order.header' | translate) + (order$ | async)?.orderId">
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef>
 
-    <!-- Back to Orders -->
     <mcs-top-panel-item *mcsTopPanelItemDef>
+      <mcs-responsive-panel *ngIf="order$ | async as selectedOrder">
+        <!-- Submit order -->
+        <ng-container *mcsAccessControl="['OrderApprove']; else requiresApprovalTemplate">
+          <mcs-action-item mcsResponsivePanelItem mcsId
+            *ngIf="selectedOrder.canBeSubmitted"
+            (click)="submitOrder(selectedOrder)"
+            mcsEventTracker="submit-order"
+            mcsEventCategory="order"
+            mcsEventLabel="order-details-top-panel">
+            <mcs-icon [key]="submitIconKey"></mcs-icon>
+            <span>{{ 'order.submitOrder' | translate }}</span>
+          </mcs-action-item>
+        </ng-container>
+
+        <!-- Requires Approval -->
+        <ng-template #requiresApprovalTemplate>
+          <mcs-action-item mcsResponsivePanelItem mcsId
+            *ngIf="selectedOrder.requiresApproval"
+            (click)="submitForApproval(selectedOrder)"
+            mcsEventTracker="submit-for-approval"
+            mcsEventCategory="order"
+            mcsEventLabel="order-details-top-panel">
+            <mcs-icon [key]="submitIconKey"></mcs-icon>
+            <span>{{ 'order.submitForApproval' | translate }}</span>
+          </mcs-action-item>
+        </ng-template>
+
+        <!-- Reject order -->
+        <mcs-action-item mcsResponsivePanelItem mcsId
+          *ngIf="selectedOrder.rejectable"
+          (click)="rejectOrder(selectedOrder)"
+          mcsEventTracker="reject-order"
+          mcsEventCategory="order"
+          mcsEventLabel="order-details-top-panel">
+          <mcs-icon [key]="cancelIconKey"></mcs-icon>
+          <span>{{ 'order.rejectOrder' | translate }}</span>
+        </mcs-action-item>
+
+        <!-- Cancel order -->
+        <mcs-action-item mcsResponsivePanelItem mcsId
+          *ngIf="selectedOrder.cancellable"
+          (click)="cancelOrder(selectedOrder)"
+          mcsEventTracker="cancel-order"
+          mcsEventCategory="order"
+          mcsEventLabel="order-details-top-panel">
+          <mcs-icon [key]="cancelIconKey"></mcs-icon>
+          <span>{{ 'order.cancelOrder' | translate }}</span>
+        </mcs-action-item>
+      </mcs-responsive-panel>
+
       <mcs-action-item mcsId mcsAlign="end"
         mcsRouterLink="Orders"
         mcsEventTracker="navigate-to-order-listing"
@@ -18,78 +67,96 @@
   <!-- Content Panel -->
   <mcs-content-panel *mcsContentPanelDef>
 
-    <ng-container *ngIf="order$ | async as order">
-      <!-- Order details -->
-      <div class="limited-view">
-        <mcs-presentation-panel>
-          <ng-container mcsPresentationPanelHeader>
-            <h2>{{ 'order.description' | translate }}</h2>
-          </ng-container>
+    <section *ngIf="order$ | async as selectedOrder">
+      <mcs-grid class="limited-view">
+        <mcs-grid-row>
+          <!-- Order details -->
+          <mcs-grid-column>
+            <mcs-presentation-panel>
+              <ng-container mcsPresentationPanelHeader>
+                <h2>{{ 'order.orderDetails' | translate }}</h2>
+              </ng-container>
 
-          <p>
-            <strong [innerHTML]="order.description | mcsNewLines"></strong>
-            <mcs-item>
-              <button mcsButton color="error">Cancel</button>
-              <button mcsButton>Approve</button>
-            </mcs-item>
-          </p>
+              <mcs-item>
+                <span>{{ 'order.description' | translate }}:</span>
+                <span [innerHTML]="selectedOrder.description | mcsDataLabel"></span>
+              </mcs-item>
 
-          <mcs-item>
-            <span>{{ 'order.contractDuration' | translate }}:</span>
-            <span>12</span>
-          </mcs-item>
+              <mcs-item>
+                <span>{{ 'order.status' | translate }}:</span>
+                <span [innerHTML]="selectedOrder.workflowStatusLabel | mcsDataLabel"></span>
+              </mcs-item>
 
-          <mcs-item>
-            <span>{{ 'order.status' | translate }}:</span>
-            <span [innerHTML]="order.statusLabel | mcsDataLabel"></span>
-          </mcs-item>
+              <mcs-item>
+                <span>{{ 'order.createdBy' | translate }}:</span>
+                <span>{{ selectedOrder.createdBy }}</span>
+              </mcs-item>
 
-          <mcs-item>
-            <span>{{ 'order.createdBy' | translate }}:</span>
-            <span>{{ order.createdBy }}</span>
-          </mcs-item>
-        </mcs-presentation-panel>
-      </div>
+              <mcs-item>
+                <span>{{ 'order.createdOn' | translate }}:</span>
+                <span>{{ selectedOrder.createdOn | mcsStdDateFormat }}</span>
+              </mcs-item>
+
+              <mcs-item>
+                <span>{{ 'order.totalCharge' | translate }}:</span>
+                <span>{{ selectedOrder.charges?.totalCost }}</span>
+              </mcs-item>
+
+            </mcs-presentation-panel>
+          </mcs-grid-column>
+
+          <!-- Order billing information -->
+          <mcs-grid-column>
+            <mcs-presentation-panel>
+              <ng-container mcsPresentationPanelHeader>
+                <h2>{{ 'order.billingDetails' | translate }}</h2>
+              </ng-container>
+
+              <mcs-item>
+                <span>{{ 'order.contractTerm' | translate }}:</span>
+                <span>12 Months</span>
+              </mcs-item>
+
+              <mcs-item>
+                <span>{{ 'order.billingEntity' | translate }}:</span>
+                <span>Billing Entity 1</span>
+              </mcs-item>
+
+              <mcs-item>
+                <span>{{ 'order.billingSite' | translate }}:</span>
+                <span>Billing Site 1</span>
+              </mcs-item>
+
+              <mcs-item>
+                <span>{{ 'order.costCenter' | translate }}:</span>
+                <span>Cost Center 1</span>
+              </mcs-item>
+
+            </mcs-presentation-panel>
+          </mcs-grid-column>
+        </mcs-grid-row>
+      </mcs-grid>
 
       <!-- Order Items -->
-      <mcs-table [dataSource]="order.items" class="limited-view">
-        <!-- Item ID Column -->
-        <ng-container mcsColumnDef="id">
-          <mcs-header-cell *mcsHeaderCellDef>
-            {{ 'order.columnHeaders.id' | translate }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row">
-            {{ row.orderItemId }}
-          </mcs-data-cell>
-        </ng-container>
-
-        <!-- Type Column -->
-        <ng-container mcsColumnDef="type">
-          <mcs-header-cell *mcsHeaderCellDef>
-            {{ 'order.columnHeaders.type' | translate }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row">
-            <span text-wrap>{{ getOderTypeById(row.typeId) }}</span>
-          </mcs-data-cell>
-        </ng-container>
-
-        <!-- Description Column -->
+      <mcs-table [dataSource]="getOrderItemsDatasource(selectedOrder)" class="limited-view">
+        <!-- Description -->
         <ng-container mcsColumnDef="description">
           <mcs-header-cell *mcsHeaderCellDef>
             {{ 'order.columnHeaders.description' | translate }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
-            <span text-wrap>{{ row.description }}</span>
+            {{ row.description }}
           </mcs-data-cell>
         </ng-container>
 
-        <!-- Status Column -->
-        <ng-container mcsColumnDef="status">
+        <!-- Quantity -->
+        <!-- TODO: Under confirmation on how line items could be merged -->
+        <ng-container mcsColumnDef="quantity">
           <mcs-header-cell *mcsHeaderCellDef>
-            {{ 'order.columnHeaders.status' | translate }}
+            {{ 'order.columnHeaders.quantity' | translate }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
-            {{ row.statusLabel }}
+            <span text-wrap>1</span>
           </mcs-data-cell>
         </ng-container>
 
@@ -127,6 +194,6 @@
         <mcs-header-row *mcsHeaderRowDef="orderItemsColumns"></mcs-header-row>
         <mcs-data-row *mcsDataRowDef="let row; columns: orderItemsColumns;"></mcs-data-row>
       </mcs-table>
-    </ng-container>
+    </section>
   </mcs-content-panel>
 </mcs-page>

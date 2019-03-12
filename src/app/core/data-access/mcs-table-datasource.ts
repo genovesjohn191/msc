@@ -33,6 +33,7 @@ import { McsRepository } from './mcs-repository.interface';
 import { CoreDefinition } from '../core.definition';
 
 type DelegateSource<T> = () => Observable<T[]>;
+type DatasourceType<T> = McsRepository<T> | T[] | Observable<T[]> | DelegateSource<T>;
 
 export class McsTableDataSource<T> implements McsDataSource<T> {
   public dataLoadingStream: Subject<DataStatus>;
@@ -52,7 +53,7 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
   private _pagingSubject = new Subject<void>();
   private _dataChangeSubject = new Subject<void>();
 
-  constructor(private _dataSource: McsRepository<T> | T[] | Observable<T[]> | DelegateSource<T>) {
+  constructor(private _dataSource?: DatasourceType<T>) {
     this.dataLoadingStream = new Subject<DataStatus>();
     this._addedRecordsCache = [];
     this._totalRecordsCount = 0;
@@ -60,6 +61,16 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
     this._setDatasourcePointer();
     this._subscribeToRequestChange();
     this._subscribeToRepoDataChange();
+  }
+
+  /**
+   * Updates the data source provided on the table
+   * @param dataSource New datasource provided
+   */
+  public updateDatasource(dataSource: DatasourceType<T>) {
+    this._dataSource = dataSource;
+    this._setDatasourcePointer();
+    this.refreshDataRecords();
   }
 
   /**
@@ -209,10 +220,7 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
    */
   private _datasourceFunc(): Observable<T[]> {
     // Return immediately when it is null
-    if (isNullOrUndefined(this._dataSource)) {
-      return this._dataSource = of([]);
-    }
-
+    if (isNullOrUndefined(this._dataSource)) { return of(null); }
     if (this._dataSource instanceof Observable) {
       return this._dataSource;
     } else if (this._dataSource instanceof Array) {
@@ -285,6 +293,8 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
         );
       })
     ).subscribe((response) => {
+      if (isNullOrUndefined(this._dataSource)) { return; }
+
       this._updateDataRecords(response);
       this._setTotalRecordsCountByContext(response);
       this._dataRenderedChange.next(response);
