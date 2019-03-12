@@ -23,10 +23,13 @@
                     <mcs-item>
                       <mcs-icon [key]="updateStatusConfiguration.updatesStatusIcon" size="small"></mcs-icon>
                       <div>
-                        <span>{{ updateStatusConfiguration.updatesStatusLabel }}</span><br/>
+                        <span>{{ updateStatusConfiguration.updatesStatusLabel }}</span><br />
                         <small read-only *ngIf="updateStatusConfiguration.updateStatusHasNoErrors">
                           <mcs-item orientation="inline">
-                            <span> {{ updatesStatusSubtitleLabel }} </span>
+                            <ng-container [ngSwitch]="updateStatusConfiguration.status">
+                              <span [@fadeIn] *ngSwitchCase="osUpdateStatusOption.Updating">{{ updatesStatusSubtitleLabelUpdating }}</span>
+                              <span [@fadeIn] *ngSwitchDefault>{{ updatesStatusSubtitleLabelDefault }}</span>
+                            </ng-container>
                             <ng-container *ngIf="updateStatusConfiguration.inspectButtonShown">
                               <a (click)="inspectForAvailableOsUpdates(serverDetails.server)" *mcsAccessControl="['VmPatchManagement']"
                                 [disabled]="inspectNowButtonDisabled(serverDetails.server)">
@@ -42,7 +45,8 @@
 
                 <mcs-grid-column mcsAlignContent="middle-right">
                   <ng-container *ngIf="updateStatusConfiguration.runNowButtonShown">
-                    <button mcsButton size="xsmall" *mcsAccessControl="['VmPatchManagement']"
+                    <button mcsButton size="xsmall"
+                      *mcsAccessControl="['VmPatchManagement']"
                       (click)="setViewMode(serverServicesViewOption.Unscheduled)"
                       [disabled]="serverDetails.server.isProcessing">
                       {{ textContent.updatesScheduleRunNowLink }}
@@ -59,7 +63,7 @@
                     <mcs-item>
                       <mcs-icon [key]="clockKey" size="small"></mcs-icon>
                       <div>
-                        <span>{{ updatesScheduleLabel }}</span><br/>
+                        <span>{{ updatesScheduleLabel }}</span><br />
                         <small read-only *ngIf="updateStatusConfiguration.updateStatusHasNoErrors">
                           <mcs-item orientation="inline">
                             <span *ngIf="updateStatusConfiguration.hasSchedule">

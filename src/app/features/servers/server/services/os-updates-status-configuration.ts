@@ -13,7 +13,6 @@ import {
   replacePlaceholder,
   isNullOrEmpty,
   formatTime,
-  formatDateTimeZone,
   parseCronStringToJson
 } from '@app/utilities';
 
@@ -35,52 +34,46 @@ export type OsUpdatesActionDetails = {
   requestData?: any
 };
 
-const INSPECTDATE_TIMEZONE = 'Australia/Sydney';
-const INSPECTDATE_FORMAT = 'dddd, Do MMMM, YYYY [at] h:mm A';
 export class OsUpdatesStatusConfiguration {
   private _osUpdateStatus: OsUpdatesStatus;
   private _updatesStatusDetailsMap: Map<OsUpdatesStatus, OsUpdatesStatusDetails>;
   private _updatesDetails: McsServerOsUpdatesDetails;
+  private _updateStatusDetails: OsUpdatesStatusDetails;
 
   /**
    * Returns the icon of the os update status
    */
   public get updatesStatusIcon(): string {
-    return this._updatesStatusDetailsMap.get(this._osUpdateStatus).icon;
+    return this._updateStatusDetails.icon;
   }
 
   /**
    * Returns the label of the os update status
    */
   public get updatesStatusLabel(): string {
-    return this._updatesStatusDetailsMap.get(this._osUpdateStatus).label;
+    return this._updateStatusDetails.label;
   }
 
   /**
    * Returns the subtitleLabel of the os update status
    */
   public get updatesStatusSubtitleLabel(): string {
+    let isInitialAnalysis =
+      !this.hasBeenInspectedBefore && OsUpdatesStatus.Analysing === this._osUpdateStatus;
 
-    let notYetInspected = isNullOrEmpty(this._updatesDetails.lastInspectDate);
-
-    if (notYetInspected && OsUpdatesStatus.Unanalysed === this._osUpdateStatus) {
-      return this._updatesStatusDetailsMap.get(this._osUpdateStatus).sublabel;
+    if (isInitialAnalysis) {
+      return this._updatesStatusDetailsMap.get(OsUpdatesStatus.Analysing).sublabel;
     }
 
-    if (notYetInspected && OsUpdatesStatus.Analysing === this._osUpdateStatus) {
-      return this._updatesStatusDetailsMap.get(this._osUpdateStatus).sublabel;
+    if (OsUpdatesStatus.Unanalysed === this._osUpdateStatus) {
+      return this._updatesStatusDetailsMap.get(OsUpdatesStatus.Unanalysed).sublabel;
     }
 
     if (OsUpdatesStatus.Updating === this._osUpdateStatus) {
-      return this._updatesStatusDetailsMap.get(this._osUpdateStatus).sublabel;
+      return this._updatesStatusDetailsMap.get(OsUpdatesStatus.Updating).sublabel;
     }
 
-    let formattedDate = formatDateTimeZone(
-      new Date(this._updatesDetails.lastInspectDate), INSPECTDATE_TIMEZONE, INSPECTDATE_FORMAT
-    );
-    return replacePlaceholder(
-      this._updatesStatusDetailsMap.get(OsUpdatesStatus.Updated).sublabel,
-      'lastInspectDate', formattedDate);
+    return this._updatesStatusDetailsMap.get(OsUpdatesStatus.Updated).sublabel;
   }
 
   /**
@@ -107,6 +100,13 @@ export class OsUpdatesStatusConfiguration {
   }
 
   /**
+   * Returns the last inspected date
+   */
+  public get lastInspectedDate(): string {
+    return this._updatesDetails.lastInspectDate;
+  }
+
+  /**
    * Returns the current status of the Os Update
    */
   public get status(): OsUpdatesStatus {
@@ -125,6 +125,14 @@ export class OsUpdatesStatusConfiguration {
    */
   public get isRunOnce(): boolean {
     return this._updatesDetails.runOnce;
+  }
+
+  /**
+   * Returns true if the server was already inspected before
+   */
+  public get hasBeenInspectedBefore(): boolean {
+    let wasInspected = !isNullOrEmpty(this._updatesDetails.lastInspectDate);
+    return wasInspected;
   }
 
   /**
@@ -178,6 +186,7 @@ export class OsUpdatesStatusConfiguration {
    */
   public setOsUpdateStatus(osUpdateStatus: OsUpdatesStatus) {
     this._osUpdateStatus = osUpdateStatus;
+    this._updateStatusDetails = this._updatesStatusDetailsMap.get(this._osUpdateStatus);
   }
 
   /**
