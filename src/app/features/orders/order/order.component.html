@@ -105,11 +105,11 @@
             </mcs-presentation-panel>
           </mcs-grid-column>
 
-          <!-- Order billing information -->
+          <!-- Charges -->
           <mcs-grid-column>
             <mcs-presentation-panel>
               <ng-container mcsPresentationPanelHeader>
-                <h2>{{ 'order.billingDetails' | translate }}</h2>
+                <h2>{{ 'order.charges' | translate }}</h2>
               </ng-container>
 
               <mcs-item>
@@ -118,18 +118,8 @@
               </mcs-item>
 
               <mcs-item>
-                <span>{{ 'order.billingEntity' | translate }}:</span>
-                <span>Billing Entity 1</span>
-              </mcs-item>
-
-              <mcs-item>
-                <span>{{ 'order.billingSite' | translate }}:</span>
-                <span>Billing Site 1</span>
-              </mcs-item>
-
-              <mcs-item>
-                <span>{{ 'order.costCenter' | translate }}:</span>
-                <span>Cost Center 1</span>
+                <span>{{ 'order.totalCharge' | translate }}:</span>
+                <span>{{ selectedOrder.charges?.totalCost }}</span>
               </mcs-item>
 
             </mcs-presentation-panel>
@@ -157,6 +147,26 @@
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
             <span text-wrap>1</span>
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Billing Site -->
+        <ng-container mcsColumnDef="billingSite">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ 'order.columnHeaders.billingSite' | translate }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row">
+            <span>{{ row.billingSite }}</span>
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Cost Centre -->
+        <ng-container mcsColumnDef="costCentre">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ 'order.columnHeaders.costCentre' | translate }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row">
+            <span>{{ row.costCentre }}</span>
           </mcs-data-cell>
         </ng-container>
 
