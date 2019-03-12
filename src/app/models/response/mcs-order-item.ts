@@ -25,6 +25,8 @@ export class McsOrderItem extends McsEntityBase {
   public itemId: string;
   public itemOrderTypeId: string;
   public parentServiceId: string;
+  public billingSite: string;
+  public costCentre: string;
 
   @JsonProperty({
     type: OrderStatus,
@@ -75,6 +77,8 @@ export class McsOrderItem extends McsEntityBase {
     this.itemId = undefined;
     this.parentReferenceId = undefined;
     this.parentServiceId = undefined;
+    this.billingSite = undefined;
+    this.costCentre = undefined;
     this.properties = undefined;
     this.referenceId = undefined;
     this.serviceId = undefined;
