@@ -15,8 +15,7 @@ import {
   McsTextContentProvider,
   McsTableListingBase,
   McsTableDataSource,
-  McsBrowserService,
-  McsAccessControlService
+  McsBrowserService
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -82,7 +81,6 @@ export class SwitchAccountComponent
     _browserService: McsBrowserService,
     _changeDetectorRef: ChangeDetectorRef,
     private _switchAccountService: SwitchAccountService,
-    private _accessControlService: McsAccessControlService,
     private _companiesRepository: McsCompaniesRepository,
     private _textContentProvider: McsTextContentProvider
   ) {
@@ -167,7 +165,7 @@ export class SwitchAccountComponent
    * Initialize the table datasource according to pagination and search settings
    */
   protected initializeDatasource(): void {
-    if (!this._accessControlService.hasPermission(['CompanyView'])) { return; }
+    if (!this._switchAccountService.hasRequiredPermission()) { return; }
 
     this.dataSource = new McsTableDataSource(this._companiesRepository);
     this.dataSource

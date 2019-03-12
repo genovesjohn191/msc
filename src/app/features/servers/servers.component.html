@@ -3,7 +3,7 @@
   <mcs-top-panel *mcsTopPanelDef [active]="selection.hasValue()">
 
     <!-- Server Creation -->
-    <ng-container *mcsAccessControl="['VmEdit']">
+    <ng-container *mcsAccessControl="['DedicatedVmEdit', 'CloudVmEdit']">
       <ng-container *ngIf="hasCreateResources">
         <mcs-top-panel-item *mcsTopPanelItemDef>
           <mcs-action-item
@@ -22,7 +22,7 @@
     <!-- Server Actions -->
     <mcs-top-panel-item *mcsTopPanelItemDef [ngStyle]="{overflow: 'auto'}">
       <div class="listing-action-wrapper">
-        <mcs-responsive-panel *mcsAccessControl="['VmPowerStateEdit']">
+        <mcs-responsive-panel *mcsAccessControl="['DedicatedVmPowerStateEdit','CloudVmPowerStateEdit']">
           <mcs-action-item mcsResponsivePanelItem hidden-small
             [disabled]="!executableAction('startable')"
             (click)="executeTopPanelAction(serverCommand.Start)"
@@ -123,7 +123,7 @@
       <!-- Table -->
       <mcs-table [dataSource]="dataSource" [columnFilter]="filterSelector">
         <!-- Selection Column -->
-        <ng-container mcsColumnDef="select" *mcsAccessControl="['VmPowerStateEdit']">
+        <ng-container mcsColumnDef="select" *mcsAccessControl="['DedicatedVmPowerStateEdit','CloudVmPowerStateEdit']">
           <mcs-header-cell *mcsHeaderCellDef
             hidden-small text-center class="action-header-cell">
             <mcs-checkbox (change)="toggleSelectAll()"
@@ -207,8 +207,7 @@
         </ng-container>
 
         <!-- Management IP Column -->
-        <ng-container mcsColumnDef="managementIp"
-          *mcsAccessControl="['VmManagementIpView']">
+        <ng-container mcsColumnDef="managementIp" *mcsAccessControl="['CloudVmManagementIpView','DedicatedVmManagementIpView']">
           <mcs-header-cell *mcsHeaderCellDef hidden-small>
             {{ columnSettings.managementIp.text }}
           </mcs-header-cell>
@@ -263,7 +262,7 @@
         </ng-container>
 
         <!-- Action Column -->
-        <ng-container mcsColumnDef="action" *mcsAccessControl="['VmPowerStateEdit']">
+        <ng-container mcsColumnDef="action" *mcsAccessControl="['DedicatedVmPowerStateEdit','CloudVmPowerStateEdit']">
           <mcs-header-cell *mcsHeaderCellDef class="action-header-cell"></mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row"
             mcsCursor="default"

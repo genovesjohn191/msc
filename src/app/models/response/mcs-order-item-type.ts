@@ -3,7 +3,7 @@ import {
   OrderType,
   OrderTypeSerialization
 } from '../enumerations/order-type.enum';
-import { McsEntityBase } from '../mcs-entity.base';
+import { McsEntityBase } from '../common/mcs-entity.base';
 
 export class McsOrderItemType extends McsEntityBase {
   public elementCode: string;

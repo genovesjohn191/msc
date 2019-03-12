@@ -10,7 +10,7 @@ import {
   DeviceTypeSerialization,
   deviceTypeText
 } from '../enumerations/device-type.enum';
-import { McsEntityBase } from '../mcs-entity.base';
+import { McsEntityBase } from '../common/mcs-entity.base';
 
 export class McsServerNic extends McsEntityBase {
   public vCloudNicId: string;

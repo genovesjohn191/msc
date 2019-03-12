@@ -81,7 +81,7 @@
         </ng-container>
 
         <!-- Action Column -->
-        <ng-container mcsColumnDef="action" *mcsAccessControl="['VmNicEdit']">
+        <ng-container mcsColumnDef="action" *mcsAccessControl="serverPermision.vmNicEdit">
           <mcs-header-cell *mcsHeaderCellDef class="action-header-cell">
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
@@ -127,7 +127,7 @@
       </mcs-table>
 
       <!-- Adding NIC -->
-      <ng-container *mcsAccessControl="['VmNicEdit']">
+      <ng-container *mcsAccessControl="serverPermision.vmNicEdit">
         <ng-container *ngIf="resourceNetworks$ | async as resourceNetworks">
           <div class="action-box" *ngIf="canAddNic(serverDetails.server, resourceNetworks)"
             [@fadeIn] [disabled]="!serverDetails.server.executable">
@@ -198,7 +198,7 @@
               mcsEventTracker="update-nic-close"
               mcsEventCategory="server"
               mcsEventLabel="server-details-page">Cancel</a>
-            <button *mcsAccessControl="['VmEdit']"
+            <button *mcsAccessControl="serverPermision.vmEdit"
               mcsButton arrow="right" size="small"
               [disabled]="!manageNetwork?.hasChanged"
               (click)="updateNic(serverDetails.server)"

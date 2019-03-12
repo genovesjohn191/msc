@@ -1,6 +1,6 @@
 import { JsonProperty } from 'json-object-mapper';
 import { isNullOrEmpty } from '@app/utilities';
-import { McsEntityBase } from '../mcs-entity.base';
+import { McsEntityBase } from '../common/mcs-entity.base';
 import { McsProductDependency } from './mcs-product-dependency';
 import { McsProductUseCase } from './mcs-product-use-case';
 import { McsProductOwner } from './mcs-product-owner';

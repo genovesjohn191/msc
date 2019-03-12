@@ -59,6 +59,7 @@ export class ProductComponent implements OnInit, OnDestroy {
   public selectedProductTextContent$: Observable<string>;
 
   // Table columns
+  // TODO: transfer to en.json
   public thresholdColumns = ['description', 'alertThreshold'];
   public productOptionsColumns = ['name', 'properties', 'options'];
   public userCasesColumns = ['name', 'description'];

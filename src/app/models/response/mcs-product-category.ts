@@ -1,6 +1,6 @@
 import { JsonProperty } from 'json-object-mapper';
 import { McsProduct } from './mcs-product';
-import { McsEntityBase } from '../mcs-entity.base';
+import { McsEntityBase } from '../common/mcs-entity.base';
 
 export class McsProductCategory extends McsEntityBase {
   public name: string;

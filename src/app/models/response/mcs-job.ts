@@ -17,7 +17,7 @@ import {
   jobTypeText,
 } from '../enumerations/job-type.enum';
 import { DataStatus } from '../enumerations/data-status.enum';
-import { McsEntityBase } from '../mcs-entity.base';
+import { McsEntityBase } from '../common/mcs-entity.base';
 import { McsTask } from './mcs-task';
 
 export class McsJob extends McsEntityBase {

@@ -13,7 +13,8 @@ import {
 } from '@app/core';
 import {
   McsCompany,
-  DataStatus
+  DataStatus,
+  McsPermission
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -35,7 +36,6 @@ export class SwitchAccountService {
 
   // Others
   private _activeAccount: McsCompany;
-  private _hasPermission: boolean;
 
   constructor(
     private _authIdentity: McsAuthenticationIdentity,
@@ -47,10 +47,6 @@ export class SwitchAccountService {
     this.companies = new Array();
     this.recentCompaniesStream = new BehaviorSubject(undefined);
     this.activeAccountStream = new BehaviorSubject(undefined);
-
-    if (this._accessControlService.hasPermission(['CompanyView'])) {
-      this._hasPermission = true;
-    }
 
     // Initialize companies
     refreshView(() => {
@@ -101,7 +97,7 @@ export class SwitchAccountService {
       this.activeAccountStream.next(this._activeAccount);
     };
 
-    let hasSelectedAccount = !isNullOrEmpty(selectedAccountId) && this._hasPermission;
+    let hasSelectedAccount = !isNullOrEmpty(selectedAccountId) && this.hasRequiredPermission();
     if (hasSelectedAccount) {
       // Get the active account based on cookie when user has admin access
       this.loadingAccount = true;
@@ -118,6 +114,13 @@ export class SwitchAccountService {
       setDefaultAccount();
       this._authIdentity.setActiveAccount(this.defaultAccount);
     }
+  }
+
+  /**
+   * Returns true if the user has company view permission
+   */
+  public hasRequiredPermission(): boolean {
+    return this._accessControlService.hasPermission([McsPermission.CompanyView]);
   }
 
   /**

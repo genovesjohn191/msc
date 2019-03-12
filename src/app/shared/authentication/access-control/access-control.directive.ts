@@ -19,7 +19,7 @@ import {
 /**
  * Usage
  * Access:*mcsAccessControl="['VmConfigurationEdit']; feature: 'vmConfiguration'; else: template"
- * Permission: *mcsAccessControl="['VmAccess']"
+ * Permission: *mcsAccessControl="['DedicatedVmAccess']"
  * Feature: *mcsAccessControl="[]; feature: 'experimentalFeature'"
  * Else: *mcsAccessControl="[]; feature: 'experimentalFeature'; else: templateName"
  */

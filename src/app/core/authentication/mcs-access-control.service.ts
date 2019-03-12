@@ -44,10 +44,10 @@ export class McsAccessControlService {
 
     // Loop thru each required permissions
     // making sure all of them are exist in the users permissions.
-    let hasPermission: boolean = true;
+    let hasPermission: boolean = false;
     for (let value of requiredPermissions) {
-      if (userPermissions.indexOf(value) === -1) {
-        hasPermission = false;
+      if (userPermissions.indexOf(value) !== -1) {
+        hasPermission = true;
         break;
       }
     }

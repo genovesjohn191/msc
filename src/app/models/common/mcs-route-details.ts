@@ -1,4 +1,4 @@
-import { RouteCategory } from './enumerations/route-category.enum';
+import { RouteCategory } from '../enumerations/route-category.enum';
 
 export class McsRouteDetails {
   public url?: string;

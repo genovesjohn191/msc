@@ -17,7 +17,7 @@ import {
   workflowStatusText
 } from '../enumerations/workflow-status.enum';
 import { McsJob } from './mcs-job';
-import { McsEntityBase } from '../mcs-entity.base';
+import { McsEntityBase } from '../common/mcs-entity.base';
 import { McsOrderItem } from './mcs-order-item';
 import { McsOrderCharge } from './mcs-order-charge';
 import { McsOrderError } from './mcs-order-error';

@@ -53,6 +53,9 @@ export * from './authentication/mcs-authentication.service';
 export * from './authentication/mcs-access-control.service';
 export * from './authentication/mcs-authentication.identity';
 
+/** Permission */
+export * from './authentication/permissions/mcs-server.permission';
+
 /** Factory */
 export * from './factory/dialog/mcs-dialog-ref';
 export * from './factory/dialog/mcs-dialog-config';

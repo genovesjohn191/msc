@@ -9,7 +9,7 @@ import {
   PolicyNat,
   PolicyNatSerialization
 } from '../enumerations/policy-nat.enum';
-import { McsEntityBase } from '../mcs-entity.base';
+import { McsEntityBase } from '../common/mcs-entity.base';
 
 export class McsFirewallPolicy extends McsEntityBase {
   public policyId: number;

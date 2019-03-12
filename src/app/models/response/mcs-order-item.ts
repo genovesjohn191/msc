@@ -9,7 +9,7 @@ import {
   ProvisioningStatus,
   ProvisioningStatusSerialization
 } from '../enumerations/provisioning-status.enum';
-import { McsEntityBase } from '../mcs-entity.base';
+import { McsEntityBase } from '../common/mcs-entity.base';
 import { McsOrderCharge } from './mcs-order-charge';
 
 export class McsOrderItem extends McsEntityBase {

@@ -39,7 +39,8 @@ import {
   McsErrorHandlerService,
   McsDataStatusFactory,
   CoreRoutes,
-  McsLoadingService
+  McsLoadingService,
+  McsServerPermission
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -83,6 +84,7 @@ export class ServerComponent
 
   public textContent: any;
   public serversTextContent: any;
+  public serverPermission: McsServerPermission;
 
   public selectedServer$: Observable<McsServer>;
   public serversMap$: Observable<Map<string, McsServer[]>>;
@@ -257,7 +259,10 @@ export class ServerComponent
         this._errorHandlerService.redirectToErrorPage(error.status);
         return throwError(error);
       }),
-      tap((response) => this._serverService.setSelectedServer(response)),
+      tap((response) => {
+        this._serverService.setSelectedServer(response);
+        this.serverPermission = new McsServerPermission(response);
+      }),
       shareReplay(1),
       finalize(() => this._loadingService.hideLoader())
     );

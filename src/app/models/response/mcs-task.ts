@@ -9,7 +9,7 @@ import {
   JobStatusSerialization,
 } from '../enumerations/job-status.enum';
 import { DataStatus } from '../enumerations/data-status.enum';
-import { McsEntityBase } from '../mcs-entity.base';
+import { McsEntityBase } from '../common/mcs-entity.base';
 
 export class McsTask extends McsEntityBase {
   public description: string;

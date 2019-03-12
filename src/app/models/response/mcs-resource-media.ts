@@ -1,7 +1,7 @@
 import { JsonProperty } from 'json-object-mapper';
 import { McsDateSerialization } from '@app/core';
 import { McsResourceMediaServer } from './mcs-resource-media-server';
-import { McsEntityBase } from '../mcs-entity.base';
+import { McsEntityBase } from '../common/mcs-entity.base';
 
 export class McsResourceMedia extends McsEntityBase {
   public name: string;

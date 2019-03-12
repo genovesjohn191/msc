@@ -26,7 +26,7 @@ export class DashboardComponent implements OnInit {
     private _coreConfig: CoreConfig,
     private _changeDetectorRef: ChangeDetectorRef,
     private _authenticationService: McsAuthenticationService
-  ) { }
+  ) {}
 
   public ngOnInit() {
     this._changeDetectorRef.markForCheck();

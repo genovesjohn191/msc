@@ -27,7 +27,7 @@ import {
   McsTextContentProvider,
   McsNotificationEventsService,
   McsBrowserService,
-  McsAuthenticationService,
+  McsAuthenticationService
 } from '@app/core';
 import {
   refreshView,
