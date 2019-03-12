@@ -1,5 +1,5 @@
-import { RouteCategory } from './enumerations/route-category.enum';
-import { RouteKey } from './enumerations/route-key.enum';
+import { RouteCategory } from '../enumerations/route-category.enum';
+import { RouteKey } from '../enumerations/route-key.enum';
 
 export class McsRouteInfo {
   public enumCategory?: RouteCategory;

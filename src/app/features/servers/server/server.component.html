@@ -130,7 +130,7 @@
 
         <!-- Action tab -->
         <mcs-tab [canSelect]="false" align="end"
-          *mcsAccessControl="['VmPowerStateEdit']">
+          *mcsAccessControl="serverPermission.VmPowerStateEdit">
           <ng-template mcsTabLabel>
             <mcs-server-command mcsId="server-command"
               [server]="selectedServer"

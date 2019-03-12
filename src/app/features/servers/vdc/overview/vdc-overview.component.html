@@ -33,7 +33,7 @@
           <h2>{{ 'serversVdcOverview.vcloud.title' | translate }}</h2>
         </ng-container>
 
-        <ng-container *mcsAccessControl="['VmEdit']">
+        <ng-container *mcsAccessControl="['DedicatedVmEdit', 'CloudVmEdit']">
           <mcs-item *ngIf="hasResources">
             <button mcsButton size="small"
               (click)="createNewServer()"

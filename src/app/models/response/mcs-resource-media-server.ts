@@ -1,4 +1,4 @@
-import { McsEntityBase } from '../mcs-entity.base';
+import { McsEntityBase } from '../common/mcs-entity.base';
 
 export class McsResourceMediaServer extends McsEntityBase {
   public name: string;

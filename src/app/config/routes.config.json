@@ -16,7 +16,7 @@
     "enumKey": "Servers",
     "routePath": "compute/virtual",
     "navigationPath": "compute/virtual",
-    "requiredPermissions": ["VmAccess"],
+    "requiredPermissions": ["CloudVmAccess", "DedicatedVmAccess"],
     "documentTitle": "Virtual Servers - Macquarie Cloud Services"
   },
   "serverDetail": {
@@ -24,7 +24,7 @@
     "enumKey": "ServerDetail",
     "routePath": "compute/virtual/:id",
     "navigationPath": "compute/virtual",
-    "requiredPermissions": ["VmAccess"],
+    "requiredPermissions": ["CloudVmAccess", "DedicatedVmAccess"],
     "documentTitle": "Server Details - Macquarie Cloud Services"
   },
   "serverDetailManagement": {
@@ -32,7 +32,7 @@
     "enumKey": "ServerDetailManagement",
     "routePath": "management",
     "navigationPath": "management",
-    "requiredPermissions": ["VmAccess"],
+    "requiredPermissions": ["CloudVmAccess", "DedicatedVmAccess"],
     "documentTitle": "Server Management - Macquarie Cloud Services"
   },
   "serverDetailServices": {
@@ -40,7 +40,7 @@
     "enumKey": "ServerDetailServices",
     "routePath": "services",
     "navigationPath": "services",
-    "requiredPermissions": ["VmAccess"],
+    "requiredPermissions": ["CloudVmAccess", "DedicatedVmAccess"],
     "requiredFeatureFlag": "EnableServerOsUpdates",
     "documentTitle": "Server Services - Macquarie Cloud Services"
   },
@@ -49,7 +49,7 @@
     "enumKey": "ServerDetailStorage",
     "routePath": "storage",
     "navigationPath": "storage",
-    "requiredPermissions": ["VmAccess"],
+    "requiredPermissions": ["CloudVmAccess", "DedicatedVmAccess"],
     "documentTitle": "Server Storage - Macquarie Cloud Services"
   },
   "serverDetailBackups": {
@@ -57,7 +57,7 @@
     "enumKey": "ServerDetailBackups",
     "routePath": "snapshots",
     "navigationPath": "snapshots",
-    "requiredPermissions": ["VmAccess"],
+    "requiredPermissions": ["CloudVmAccess", "DedicatedVmAccess"],
     "documentTitle": "Server Snapshots - Macquarie Cloud Services"
   },
   "serverDetailNics": {
@@ -65,7 +65,7 @@
     "enumKey": "ServerDetailNics",
     "routePath": "nics",
     "navigationPath": "nics",
-    "requiredPermissions": ["VmAccess"],
+    "requiredPermissions": ["CloudVmAccess", "DedicatedVmAccess"],
     "documentTitle": "Server NICs - Macquarie Cloud Services"
   },
   "serverCreate": {
@@ -73,7 +73,7 @@
     "enumKey": "ServerCreate",
     "routePath": "compute/virtual/create",
     "navigationPath": "compute/virtual/create",
-    "requiredPermissions": ["VmEdit"],
+    "requiredPermissions": ["CloudVmEdit", "DedicatedVmEdit"],
     "documentTitle": "Create Server - Macquarie Cloud Services"
   },
   "vdcDetail": {
@@ -81,7 +81,7 @@
     "enumKey": "VdcDetail",
     "routePath": "compute/virtual/vdc/:id",
     "navigationPath": "compute/virtual/vdc",
-    "requiredPermissions": ["VmAccess"],
+    "requiredPermissions": ["CloudVmAccess", "DedicatedVmAccess"],
     "documentTitle": "VDC Details - Macquarie Cloud Services"
   },
   "vdcDetailOverview": {
@@ -89,7 +89,7 @@
     "enumKey": "VdcDetailOverview",
     "routePath": "overview",
     "navigationPath": "overview",
-    "requiredPermissions": ["VmAccess"],
+    "requiredPermissions": ["CloudVmAccess", "DedicatedVmAccess"],
     "documentTitle": "VDC Management - Macquarie Cloud Services"
   },
   "vdcDetailStorage": {
@@ -97,7 +97,7 @@
     "enumKey": "VdcDetailStorage",
     "routePath": "storage",
     "navigationPath": "storage",
-    "requiredPermissions": ["VmAccess"],
+    "requiredPermissions": ["CloudVmAccess", "DedicatedVmAccess"],
     "documentTitle": "VDC Storage - Macquarie Cloud Services"
   },
   "media": {

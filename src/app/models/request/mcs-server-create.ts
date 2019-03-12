@@ -1,7 +1,7 @@
 import { JsonProperty } from 'json-object-mapper';
 import { McsServerCreateStorage } from './mcs-server-create-storage';
 import { McsServerCreateNic } from './mcs-server-create-nic';
-import { McsApiJobRequestBase } from '../mcs-api-job-request-base';
+import { McsApiJobRequestBase } from '../common/mcs-api-job-request-base';
 import { McsServerCreateOs } from './mcs-server-create-os';
 
 export class McsServerCreate extends McsApiJobRequestBase {

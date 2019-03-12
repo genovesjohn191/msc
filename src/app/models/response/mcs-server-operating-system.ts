@@ -3,7 +3,7 @@ import {
   ServiceType,
   ServiceTypeSerialization
 } from '../enumerations/service-type.enum';
-import { McsEntityBase } from '../mcs-entity.base';
+import { McsEntityBase } from '../common/mcs-entity.base';
 
 export class McsServerOperatingSystem extends McsEntityBase {
   public name: string;

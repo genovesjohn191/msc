@@ -1,4 +1,4 @@
-import { McsEntityBase } from '../mcs-entity.base';
+import { McsEntityBase } from '../common/mcs-entity.base';
 
 export class McsConsole extends McsEntityBase {
   public url: string;

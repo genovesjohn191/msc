@@ -65,7 +65,7 @@ export class SubNavigationComponent implements OnInit, OnDestroy {
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private _routerHandlerService: McsRouteHandlerService
-  ) { }
+  ) {}
 
   public ngOnInit() {
     this._listenToRouteChanges();

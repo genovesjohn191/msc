@@ -1,4 +1,4 @@
-import { McsApiJobRequestBase } from '../mcs-api-job-request-base';
+import { McsApiJobRequestBase } from '../common/mcs-api-job-request-base';
 
 export class McsServerAttachMedia extends McsApiJobRequestBase {
   public name: string;

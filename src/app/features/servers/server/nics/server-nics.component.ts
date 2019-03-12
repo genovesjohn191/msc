@@ -114,6 +114,14 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   }
 
   /**
+   * Returns true when there is a selected network when adding nic and the inputted is valid
+   */
+  public get inputIsValid(): boolean {
+    return !isNullOrEmpty(this.manageNetwork)
+      && this.manageNetwork.valid;
+  }
+
+  /**
    * Returns the nic type based on the method currently invoked
    */
   private _nicMethodType: ServerNicMethodType = ServerNicMethodType.AddNic;
@@ -181,14 +189,6 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   public onNetworkChanged(manageNetwork: ServerManageNetwork): void {
     if (isNullOrEmpty(manageNetwork)) { return; }
     this.manageNetwork = manageNetwork;
-  }
-
-  /**
-   * Returns true when there is a selected network when adding nic and the inputted is valid
-   */
-  public get inputIsValid(): boolean {
-    return !isNullOrEmpty(this.manageNetwork)
-      && this.manageNetwork.valid;
   }
 
   /**

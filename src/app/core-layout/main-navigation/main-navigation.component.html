@@ -31,7 +31,7 @@
     <!-- Compute Category -->
     <div class="navigation-item"
       [class.active]="selectedCategory === routerCategoryEnum.Compute"
-      *mcsAccessControl="['VmAccess']">
+      *mcsAccessControl="['DedicatedVmAccess','CloudVmAccess']">
 
       <mcs-icon [key]="caretRightIconKey" color="white"
         size="medium" class="navigation-mobile"></mcs-icon>

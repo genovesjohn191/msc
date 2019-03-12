@@ -1,5 +1,5 @@
 import { JsonProperty } from 'json-object-mapper';
-import { McsEntityBase } from '../mcs-entity.base';
+import { McsEntityBase } from '../common/mcs-entity.base';
 import {
   ServiceType,
   ServiceTypeSerialization

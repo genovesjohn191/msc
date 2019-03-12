@@ -31,7 +31,7 @@
               <span>{{ serverDetails.server.compute?.memoryMB | mcsDataSize: 'MB' }}</span>
               <span> / </span>
               <span>{{ serverDetails.server.compute?.cpuCount | number }} vCPU</span>
-              <ng-container *mcsAccessControl="['VmEdit']">
+              <ng-container *mcsAccessControl="serverPermision.vmEdit">
                 <ng-container *ngIf="serverDetails.server.scaleable">
                   <mcs-loader *ngIf="scaleInProgress" size="small"
                     [mcsTooltip]="textContent.manageScale.scaling"></mcs-loader>
@@ -118,7 +118,7 @@
             <ng-container mcsPresentationPanelHeader>
               <mcs-item>
                 <h2>{{ textContent.storage.title }}</h2>
-                <ng-container *mcsAccessControl="['VmEdit']">
+                <ng-container *mcsAccessControl="serverPermision.vmEdit">
                   <a *ngIf="!serverDetails.server.isDedicated"
                     [disabled]="!serverDetails.server.executable"
                     (click)="navigateServerDetailsTo(serverDetails.server, routeKeyEnum.ServerDetailStorage)"
@@ -157,7 +157,7 @@
             <ng-container mcsPresentationPanelHeader>
               <mcs-item>
                 <h2>{{ textContent.nics.title }}</h2>
-                <ng-container *mcsAccessControl="['VmNicEdit']">
+                <ng-container *mcsAccessControl="serverPermision.vmNicEdit">
                   <a *ngIf="!serverDetails.server.isDedicated"
                     [disabled]="!serverDetails.server.executable"
                     (click)="navigateServerDetailsTo(serverDetails.server, routeKeyEnum.ServerDetailNics)"
@@ -229,7 +229,7 @@
             <ng-container mcsPresentationPanelHeader>
               <mcs-item>
                 <h2>{{ textContent.media.title }}</h2>
-                <ng-container *mcsAccessControl="['VmEdit']">
+                <ng-container *mcsAccessControl="serverPermision.vmEdit">
                   <a (click)="setViewMode(serverManagementViewEnum.ManageMedia)"
                     [disabled]="!serverDetails.server.executable"
                     mcsId="attach-media"
@@ -248,7 +248,7 @@
 
                 <mcs-list-item *ngFor="let media of serverMedia">
                   <mcs-item>
-                    <ng-container *mcsAccessControl="['VmEdit']">
+                    <ng-container *mcsAccessControl="serverPermision.vmEdit">
                       <mcs-loader *ngIf="mediaIsDetaching(media)" size="small"
                         [mcsTooltip]="serverDetails.server.processingText"></mcs-loader>
 

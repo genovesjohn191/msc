@@ -14,7 +14,7 @@ import {
   PlatformTypeSerialization,
   platformTypeText
 } from '../enumerations/platform-type.enum';
-import { McsEntityBase } from '../mcs-entity.base';
+import { McsEntityBase } from '../common/mcs-entity.base';
 
 export class McsResource extends McsEntityBase {
   public name: string;

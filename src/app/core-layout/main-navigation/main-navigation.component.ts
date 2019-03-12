@@ -13,12 +13,13 @@ import {
   CoreDefinition,
   CoreRoutes,
   McsRouteHandlerService,
-  McsAccessControlService,
+  McsAccessControlService
 } from '@app/core';
 import {
   RouteKey,
   RouteCategory,
-  routeCategoryText
+  routeCategoryText,
+  McsPermission
 } from '@app/models';
 import {
   unsubscribeSubject,
@@ -72,8 +73,11 @@ export class MainNavigationComponent implements OnInit, OnDestroy {
    * Returns true when the user has hosting permission
    */
   public get hasHostingAccess(): boolean {
-    return this._accessControlService.hasPermission(['VmAccess']) ||
-      this._accessControlService.hasPermission(['FirewallConfigurationView']);
+    return this._accessControlService.hasPermission([
+      McsPermission.CloudVmAccess,
+      McsPermission.DedicatedVmAccess,
+      McsPermission.FirewallConfigurationView
+    ]);
   }
 
   /**

@@ -1,6 +1,6 @@
 import { JsonProperty } from 'json-object-mapper';
 import { McsDateSerialization } from '@app/core';
-import { McsEntityBase } from '../mcs-entity.base';
+import { McsEntityBase } from '../common/mcs-entity.base';
 import {
   TicketPriority,
   TicketPrioritySerialization

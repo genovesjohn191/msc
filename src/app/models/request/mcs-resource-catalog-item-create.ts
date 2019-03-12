@@ -3,7 +3,7 @@ import {
   CatalogItemType,
   CatalogItemTypeSerialization
 } from '../enumerations/catalog-item-type.enum';
-import { McsApiJobRequestBase } from '../mcs-api-job-request-base';
+import { McsApiJobRequestBase } from '../common/mcs-api-job-request-base';
 
 export class McsResourceCatalogItemCreate extends McsApiJobRequestBase {
   @JsonProperty({

@@ -1,5 +1,5 @@
 import { JsonProperty } from 'json-object-mapper';
-import { McsApiJobRequestBase } from '../mcs-api-job-request-base';
+import { McsApiJobRequestBase } from '../common/mcs-api-job-request-base';
 import {
   OrderWorkflowAction,
   OrderWorkflowActionSerialization

@@ -1,5 +1,5 @@
 import { JsonProperty } from 'json-object-mapper';
-import { McsApiError } from '@app/models';
+import { McsApiError } from '../common/mcs-api-error';
 
 export class McsApiErrorResponse {
   public status: number;

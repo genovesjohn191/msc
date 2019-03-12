@@ -1,4 +1,4 @@
-import { McsEntityBase } from '../mcs-entity.base';
+import { McsEntityBase } from '../common/mcs-entity.base';
 import { McsServerOsUpdatesCategory } from './mcs-server-os-updates-category';
 
 export class McsServerOsUpdatesSchedule extends McsEntityBase {

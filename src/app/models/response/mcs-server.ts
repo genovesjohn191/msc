@@ -23,7 +23,7 @@ import {
   ServerCommand,
   serverCommandActiveText
 } from '../enumerations/server-command.enum';
-import { McsEntityBase } from '../mcs-entity.base';
+import { McsEntityBase } from '../common/mcs-entity.base';
 import { PlatformType } from '../enumerations/platform-type.enum';
 import { McsServerOsUpdatesDetails } from './mcs-server-os-updates-details';
 import { ServerType } from '../enumerations/server-type.enum';

@@ -15,7 +15,8 @@ import {
   McsTextContentProvider,
   McsErrorHandlerService,
   McsLoadingService,
-  McsAccessControlService
+  McsAccessControlService,
+  McsServerPermission
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -42,6 +43,7 @@ export interface ServerDetails {
 
 export abstract class ServerDetailsBase {
   public serverDetails$: Observable<ServerDetails>;
+  protected serverPermision: McsServerPermission;
   private _baseJobSubject = new Subject<void>();
   private _server: McsServer;
 
@@ -122,6 +124,7 @@ export abstract class ServerDetailsBase {
       }),
       tap((serverDetails) => {
         this._server = serverDetails.server;
+        this.serverPermision = new McsServerPermission(this._server);
         this.selectionChange(serverDetails.server, serverDetails.resource);
       })
     );

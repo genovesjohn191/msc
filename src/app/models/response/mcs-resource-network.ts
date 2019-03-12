@@ -1,6 +1,6 @@
 import { JsonProperty } from 'json-object-mapper';
 import { McsResourceNetworkIpAddress } from './mcs-resource-network-ip-address';
-import { McsEntityBase } from '../mcs-entity.base';
+import { McsEntityBase } from '../common/mcs-entity.base';
 
 export class McsResourceNetwork extends McsEntityBase {
   public name: string;

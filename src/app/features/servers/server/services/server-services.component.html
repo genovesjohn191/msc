@@ -31,7 +31,7 @@
                               <span [@fadeIn] *ngSwitchDefault>{{ updatesStatusSubtitleLabelDefault }}</span>
                             </ng-container>
                             <ng-container *ngIf="updateStatusConfiguration.inspectButtonShown">
-                              <a (click)="inspectForAvailableOsUpdates(serverDetails.server)" *mcsAccessControl="['VmPatchManagement']"
+                              <a (click)="inspectForAvailableOsUpdates(serverDetails.server)" *mcsAccessControl="serverPermision.vmPatchManagement"
                                 [disabled]="inspectNowButtonDisabled(serverDetails.server)">
                                 {{ textContent.updatesAnalysisLabel }}
                               </a>
@@ -46,7 +46,7 @@
                 <mcs-grid-column mcsAlignContent="middle-right">
                   <ng-container *ngIf="updateStatusConfiguration.runNowButtonShown">
                     <button mcsButton size="xsmall"
-                      *mcsAccessControl="['VmPatchManagement']"
+                      *mcsAccessControl="serverPermision.vmPatchManagement"
                       (click)="setViewMode(serverServicesViewOption.Unscheduled)"
                       [disabled]="serverDetails.server.isProcessing">
                       {{ textContent.updatesScheduleRunNowLink }}
@@ -72,7 +72,7 @@
                             <span [mcsTooltip]="updateStatusConfiguration.updatesScheduleConfigureHoverLabel"
                               [mcsTooltipShow]="updateStatusConfiguration.configureScheduleButtonDisabled">
                               <ng-container *ngIf="updateStatusConfiguration.updateStatusHasNoErrors">
-                                <a *mcsAccessControl="['VmPatchManagement']" (click)="setViewMode(serverServicesViewOption.Scheduled)"
+                                <a *mcsAccessControl="serverPermision.vmPatchManagement" (click)="setViewMode(serverServicesViewOption.Scheduled)"
                                   [disabled]="configureButtonDisabled(serverDetails.server)">
                                   {{ textContent.updatesScheduleConfigureLink }}
                                 </a>

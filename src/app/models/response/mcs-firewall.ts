@@ -22,7 +22,7 @@ import {
 } from '../enumerations/ha-mode.enum';
 import { McsFirewallUtm } from './mcs-firewall-utm';
 import { McsFirewallPolicy } from './mcs-firewall-policy';
-import { McsEntityBase } from '../mcs-entity.base';
+import { McsEntityBase } from '../common/mcs-entity.base';
 
 export class McsFirewall extends McsEntityBase {
   public serviceId: string;
