@@ -10,7 +10,7 @@ export class McsServerPermission {
   /**
    * Returns the permission for Vm Access based on Server Type
    */
-  public get VmAccess(): string[] {
+  public get vmAccess(): string[] {
     return this._server.isDedicated ?
       [McsPermission.DedicatedVmAccess] : [McsPermission.CloudVmAccess];
   }
@@ -18,7 +18,7 @@ export class McsServerPermission {
   /**
    * Returns the permission for Vm Edit based on Server Type
    */
-  public get VmEdit(): string[] {
+  public get vmEdit(): string[] {
     return this._server.isDedicated ?
       [McsPermission.DedicatedVmEdit] : [McsPermission.CloudVmEdit];
   }
@@ -26,7 +26,7 @@ export class McsServerPermission {
   /**
    * Returns the permission for Vm Nic Edit based on Server Type
    */
-  public get VmNicEdit(): string[] {
+  public get vmNicEdit(): string[] {
     return this._server.isDedicated ?
       [McsPermission.DedicatedVmNicEdit] : [McsPermission.CloudVmNicEdit];
   }
@@ -34,7 +34,7 @@ export class McsServerPermission {
   /**
    * Returns the permission for Vm Power State Edit based on Server Type
    */
-  public get VmPowerStateEdit(): string[] {
+  public get vmPowerStateEdit(): string[] {
     return this._server.isDedicated ?
       [McsPermission.DedicatedVmPowerStateEdit] : [McsPermission.CloudVmPowerStateEdit];
   }
@@ -42,7 +42,7 @@ export class McsServerPermission {
   /**
    * Returns the permission for Vm Patch Management
    */
-  public get VmPatchManagement(): string[] {
+  public get vmPatchManagement(): string[] {
     return [McsPermission.CloudVmPatchManagement];
   }
 }
