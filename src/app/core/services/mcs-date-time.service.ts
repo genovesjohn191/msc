@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { formatDate } from '@angular/common';
 import { isNullOrEmpty } from '@app/utilities';
+import * as moment from 'moment-timezone';
 
 export type McsDateTimeFormat = 'default' | 'short' | 'medium' | 'long' | 'full' |
   'dashShortDate' | 'shortDate' | 'mediumDate' | 'longDate' | 'fullDate' |
@@ -16,12 +17,16 @@ export class McsDateTimeService {
 
   /**
    * Formats the date provided based on the format type
+   * Returns 'Invalid Date' as string, when the date passed is null or empty
    * @param date Date to be formatted
    * @param formatType Format type to follow on the formatting
    * @param timeZone Timezone to be followed
    */
   public formatDate(date: Date, formatType: McsDateTimeFormat | string, timeZone?: string): string {
-    if (isNullOrEmpty(date)) { return ''; }
+    if (isNullOrEmpty(date)) { return 'Invalid Date'; }
+    if (!isNullOrEmpty(timeZone)) {
+      timeZone = moment(date).tz(timeZone).format('Z');
+    }
     let actualFormat = isNullOrEmpty(formatType) ? 'default' : formatType;
 
     let formatFound = this._dateTimeMapTable.has(formatType as McsDateTimeFormat);
