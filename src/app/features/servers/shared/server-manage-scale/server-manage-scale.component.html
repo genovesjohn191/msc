@@ -1,12 +1,12 @@
-<mcs-section>
+<form [formGroup]="fgServerScale" mcsFormGroup>
   <!-- Scale header and switcher -->
   <mcs-item orientation="separated">
     <div><ng-content select="[mcsManageScaleHeader]"></ng-content></div>
     <div>
       <a *ngIf="inputManageType === inputManageTypeEnum.Custom" mcsId
-        (click)="onChangeInputManageType(inputManageTypeEnum.Slider)">
+        (click)="onChangeInputManageType(inputManageTypeEnum.Auto)">
         {{ textContent.sliderSwitch }}</a>
-      <a *ngIf="inputManageType === inputManageTypeEnum.Slider" mcsId
+      <a *ngIf="inputManageType === inputManageTypeEnum.Auto" mcsId
         (click)="onChangeInputManageType(inputManageTypeEnum.Custom)">
         {{ textContent.customSwitch }}</a>
     </div>
@@ -14,7 +14,7 @@
 
   <div [ngSwitch]="inputManageType">
     <!-- Slider selection mode -->
-    <mcs-section [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Slider">
+    <mcs-section [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Auto">
       <div>
         <span>{{ textContent.sliderMessage }} </span>
         <span>This VDC has {{ resourceAvailableMemoryMB | mcsDataSize: 'MB' }}
@@ -24,7 +24,7 @@
       <div>
         <mcs-slider [min]="0" [max]="(sliderTable?.length - 1)"
           mcsId="slider-storage"
-          [ngModel]="sliderValueIndex"
+          [ngModel]="sliderValueIndex" [ngModelOptions]="{standalone: true}"
           (ngModelChange)="onSliderChanged($event)"></mcs-slider>
         <strong display-block text-center>
           {{ sliderValue?.memoryMB | mcsDataSize: 'MB' }} {{ textContent.ramLabel }} /
@@ -37,63 +37,61 @@
     <mcs-section [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Custom">
       <div>{{ textContent.customMessage }}</div>
 
-      <form [formGroup]="fgServerScale">
-        <mcs-form-field class="form-field-size-small">
-          <input mcsInput placeholder="Enter RAM"
-            mcsId="input-ram" [formControl]="fcCustomMemory">
-          <mcs-suffix mcsSuffix>{{ textContent.ramUnit }}</mcs-suffix>
+      <mcs-form-field class="form-field-size-small">
+        <input mcsInput placeholder="Enter RAM"
+          mcsId="input-ram" [formControl]="fcCustomMemory">
+        <mcs-suffix mcsSuffix>{{ textContent.ramUnit }}</mcs-suffix>
 
-          <mcs-hint mcsHint align="start">
-            {{ textContent.maximumRam }}: {{ resourceAvailableMemoryMB | mcsDataSize: 'MB' }}
-          </mcs-hint>
-          <mcs-error mcsError errorState="required">
-            {{ textContent.errors.ramRequired }}
-          </mcs-error>
-          <mcs-error mcsError errorState="numeric">
-            {{ textContent.errors.ramNumeric }}
-          </mcs-error>
-          <mcs-error mcsError errorState="min">
-            {{ textContent.errors.ramMin |
-              mcsTextPlaceholder: 'min_value': (minimumMemoryMB | mcsDataSize: 'MB') }}
-          </mcs-error>
-          <mcs-error mcsError errorState="max">
-            {{ textContent.errors.ramMax |
-              mcsTextPlaceholder: 'max_value': (resourceAvailableMemoryMB | mcsDataSize: 'MB') }}
-          </mcs-error>
-          <mcs-error mcsError errorState="memoryInvalid">
-            {{ textContent.errors.ramInvalid |
+        <mcs-hint mcsHint align="start">
+          {{ textContent.maximumRam }}: {{ resourceAvailableMemoryMB | mcsDataSize: 'MB' }}
+        </mcs-hint>
+        <mcs-error mcsError errorState="required">
+          {{ textContent.errors.ramRequired }}
+        </mcs-error>
+        <mcs-error mcsError errorState="numeric">
+          {{ textContent.errors.ramNumeric }}
+        </mcs-error>
+        <mcs-error mcsError errorState="min">
+          {{ textContent.errors.ramMin |
+            mcsTextPlaceholder: 'min_value': (minimumMemoryMB | mcsDataSize: 'MB') }}
+        </mcs-error>
+        <mcs-error mcsError errorState="max">
+          {{ textContent.errors.ramMax |
+            mcsTextPlaceholder: 'max_value': (resourceAvailableMemoryMB | mcsDataSize: 'MB') }}
+        </mcs-error>
+        <mcs-error mcsError errorState="memoryInvalid">
+          {{ textContent.errors.ramInvalid |
+            mcsTextPlaceholder: 'multiplier': '2' }}
+        </mcs-error>
+      </mcs-form-field>
+
+      <mcs-form-field class="form-field-size-small">
+        <input mcsInput placeholder="Enter CPU"
+          mcsId="enter-cpu" [formControl]="fcCustomCpu">
+        <mcs-suffix mcsSuffix>{{ textContent.cpuUnit }}</mcs-suffix>
+
+        <mcs-hint mcsHint align="start">
+          {{ textContent.maximumCpu }}: {{ resourceAvailableCpu }} vCPU
+        </mcs-hint>
+        <mcs-error mcsError errorState="required">
+          {{ textContent.errors.cpuRequired }}
+        </mcs-error>
+        <mcs-error mcsError errorState="numeric">
+          {{ textContent.errors.cpuNumeric }}
+        </mcs-error>
+        <mcs-error mcsError errorState="min">
+          {{ textContent.errors.cpuMin |
+              mcsTextPlaceholder: 'min_value': minimumCpuUsed }}
+        </mcs-error>
+        <mcs-error mcsError errorState="max">
+          {{ textContent.errors.cpuMax |
+              mcsTextPlaceholder: 'max_value': resourceAvailableCpu }}
+        </mcs-error>
+        <mcs-error mcsError errorState="cpuInvalid">
+          {{ textContent.errors.cpuInvalid |
               mcsTextPlaceholder: 'multiplier': '2' }}
-          </mcs-error>
-        </mcs-form-field>
-
-        <mcs-form-field class="form-field-size-small">
-          <input mcsInput placeholder="Enter CPU"
-            mcsId="enter-cpu" [formControl]="fcCustomCpu">
-          <mcs-suffix mcsSuffix>{{ textContent.cpuUnit }}</mcs-suffix>
-
-          <mcs-hint mcsHint align="start">
-            {{ textContent.maximumCpu }}: {{ resourceAvailableCpu }} vCPU
-          </mcs-hint>
-          <mcs-error mcsError errorState="required">
-            {{ textContent.errors.cpuRequired }}
-          </mcs-error>
-          <mcs-error mcsError errorState="numeric">
-            {{ textContent.errors.cpuNumeric }}
-          </mcs-error>
-          <mcs-error mcsError errorState="min">
-            {{ textContent.errors.cpuMin |
-                mcsTextPlaceholder: 'min_value': minimumCpuUsed }}
-          </mcs-error>
-          <mcs-error mcsError errorState="max">
-            {{ textContent.errors.cpuMax |
-                mcsTextPlaceholder: 'max_value': resourceAvailableCpu }}
-          </mcs-error>
-          <mcs-error mcsError errorState="cpuInvalid">
-            {{ textContent.errors.cpuInvalid |
-                mcsTextPlaceholder: 'multiplier': '2' }}
-          </mcs-error>
-        </mcs-form-field>
-      </form>
+        </mcs-error>
+      </mcs-form-field>
     </mcs-section>
   </div>
-</mcs-section>
+</form>

@@ -48,7 +48,7 @@ import {
   RouteKey
 } from '@app/models';
 import {
-  FormGroupDirective,
+  McsFormGroupDirective,
   FormMessage
 } from '@app/shared';
 import { MediaUploadService } from '../media-upload.service';
@@ -87,8 +87,8 @@ export class MediaUploadDetailsComponent
 
   private _destroySubject = new Subject<void>();
 
-  @ViewChild(FormGroupDirective)
-  private _formGroup: FormGroupDirective;
+  @ViewChild(McsFormGroupDirective)
+  private _formGroup: McsFormGroupDirective;
 
   @ViewChild('formMessage')
   private _formMessage: FormMessage;
@@ -302,7 +302,7 @@ export class MediaUploadDetailsComponent
    */
   private _validateFormFields(): boolean {
     if (this.allFormsAreValid) { return true; }
-    this._formGroupService.touchAllFieldsByFormGroup(this.fgMediaUpload);
+    this._formGroupService.touchAllFormFields(this.fgMediaUpload);
     this._formGroupService.scrollToFirstInvalidField(this._elementRef.nativeElement);
     return false;
   }

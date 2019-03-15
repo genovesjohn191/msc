@@ -48,6 +48,7 @@
     "no-string-literal": false,
     "no-use-before-declare": true,
     "no-bitwise": false,
+    "unified-signatures": false,
     "object-literal-sort-keys": false,
     "object-literal-key-quotes": false,
     "ordered-imports": [

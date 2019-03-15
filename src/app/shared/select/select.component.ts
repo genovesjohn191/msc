@@ -461,8 +461,10 @@ export class SelectComponent extends McsFormFieldControlBase<any>
       isFirstItemSelected ?
         this._selectOption(this._options.first) :
         this._selectOptionByValue(this.ngControl ? this.ngControl.value : this._value);
-      if (!isNullOrEmpty(this.ngControl)) {
-        this.ngControl.control.markAsPristine();
+
+      let associatedControl = getSafeProperty(this.ngControl, (obj) => obj.control);
+      if (!isNullOrEmpty(associatedControl)) {
+        associatedControl.markAsPristine();
       }
     });
   }

@@ -186,7 +186,8 @@ export class RadioButtonGroupComponent implements AfterContentInit,
   private _selectElementByValue(value: any): void {
     if (isNullOrUndefined(value)) { return; }
 
-    let radioButtonFound = this._radioButtons.find((radioButton) => radioButton.value === value);
+    let radioButtonFound = this._radioButtons && this._radioButtons
+      .find((radioButton) => radioButton.value === value);
     if (!isNullOrUndefined(radioButtonFound)) {
       radioButtonFound.onClickEvent(null);
     }

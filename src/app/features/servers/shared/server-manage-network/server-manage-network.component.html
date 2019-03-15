@@ -1,10 +1,11 @@
-<mcs-section>
+<form [formGroup]="fgNetwork" mcsFormGroup>
   <!-- Network header -->
   <ng-content select="[mcsManageNetworkHeader]"></ng-content>
 
   <!-- Network selection -->
   <mcs-form-field>
-    <mcs-select [(ngModel)]="selectedNetwork" mcsId="select-network" placeholder="Select network">
+    <mcs-select mcsId="select-network" [ngModelOptions]="{standalone: true}"
+      [(ngModel)]="selectedNetwork" placeholder="Select network">
       <mcs-option-group>
         <ng-container *mcsOptionGroupHeader>Networks</ng-container>
         <mcs-option *ngFor="let network of networks" [value]="network">
@@ -19,9 +20,9 @@
     <h2 auto-width>IP address</h2>
     <div *ngIf="!disableDynamicIp">
       <a *ngIf="inputManageType === inputManageTypeEnum.Custom" mcsId
-        (click)="onChangeInputManageType(inputManageTypeEnum.Buttons)">
+        (click)="onChangeInputManageType(inputManageTypeEnum.Auto)">
         {{ textContent.buttonSwitch }}</a>
-      <a *ngIf="inputManageType === inputManageTypeEnum.Buttons" mcsId
+      <a *ngIf="inputManageType === inputManageTypeEnum.Auto" mcsId
         (click)="onChangeInputManageType(inputManageTypeEnum.Custom)">
         {{ textContent.customSwitch }}</a>
     </div>
@@ -29,11 +30,10 @@
 
   <div [ngSwitch]="inputManageType">
     <!-- Ip address DHCP Mode -->
-    <mcs-section [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Buttons">
+    <mcs-section [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Auto">
       <div>{{ textContent.buttonMessage }}</div>
 
-      <mcs-radio-button-group orientation="vertical"
-        [ngModel]="selectedIpAddressMode" (ngModelChange)="onRadioButtonChanged($event)">
+      <mcs-radio-button-group orientation="vertical" [formControl]="fcIpAllocationMode">
         <mcs-radio-button *ngFor="let item of ipAddressItems" [value]="item.value" mcsId>
           {{ item.text }}
         </mcs-radio-button>
@@ -46,7 +46,7 @@
     <mcs-section [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Custom">
       <div>{{ textContent.customMessage }}</div>
 
-      <form [formGroup]="fgCustomIpAddress">
+      <mcs-item orientation="block">
         <span read-only *ngIf="netMask">
           {{ textContent.hints.ipRange }}: {{ netMask.first }} - {{ netMask.last }}
         </span>
@@ -64,7 +64,7 @@
             {{ ipRangeErrorText }}
           </mcs-error>
         </mcs-form-field>
-      </form>
+      </mcs-item>
 
       <mcs-data-status [dataStatusFactory]="ipAddressesStatusFactory"
         *ngIf="isIpAddressInUsed(customInput?.value)">
@@ -79,4 +79,4 @@
       </mcs-data-status>
     </mcs-section>
   </div>
-</mcs-section>
+</form>

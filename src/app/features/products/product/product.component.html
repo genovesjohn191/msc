@@ -224,10 +224,10 @@
         <h2>Inview</h2>
 
         <ng-template let-inviews let-title="inviewTitle" #inviewTemplate>
+          <h3>{{ title }}</h3>
           <mcs-grid>
             <mcs-grid-row *ngFor="let inview of inviews">
               <mcs-grid-column sizeSm="12">
-                <h3>{{ title }}</h3>
                 <h4>{{ inview.name }}</h4>
                 <p [innerHTML]="inview.description"></p>
                 <ng-container *ngIf="inview?.thresholds | mcsIsNotNullOrEmpty">

@@ -80,7 +80,8 @@
 
   <!-- Server RAM -->
   <div class="action-box">
-    <mcs-server-manage-scale [resource]="resource"
+    <mcs-server-manage-scale #fgManageScale
+      [resource]="resource"
       (dataChange)="onScaleChanged($event)">
 
       <ng-container mcsManageScaleHeader>
@@ -91,7 +92,7 @@
 
   <!-- Storage Management -->
   <div class="action-box">
-    <mcs-server-manage-storage
+    <mcs-server-manage-storage #fgManageStorage
       [storages]="resource?.storage"
       [minValueGB]="minimumStorageInGB"
       [deductValueGB]="currentScaleValue"
@@ -109,7 +110,7 @@
 
   <!-- Server network settings -->
   <div class="action-box">
-    <mcs-server-manage-network
+    <mcs-server-manage-network #fgManageNetwork
       [disableDynamicIp]="resourceIsManaged"
       [networks]="resource?.networks"
       [resourceId]="resource?.id"

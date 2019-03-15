@@ -26,7 +26,7 @@ import {
   OrderWorkflowAction,
   McsOrderItem
 } from '@app/models';
-import { FormGroupDirective } from '@app/shared';
+import { McsFormGroupDirective } from '@app/shared';
 import { OrderDetails } from './order-details-step';
 
 @Component({
@@ -54,8 +54,8 @@ export class OrderDetailsStepComponent implements OnChanges {
   public orderDatasource: McsTableDataSource<McsOrderItem>;
   public orderDataColumns: string[] = [];
 
-  @ViewChild(FormGroupDirective)
-  private _formGroup: FormGroupDirective;
+  @ViewChild(McsFormGroupDirective)
+  private _formGroup: McsFormGroupDirective;
 
   constructor(
     private _translate: TranslateService,
@@ -98,7 +98,7 @@ export class OrderDetailsStepComponent implements OnChanges {
    */
   public onClickSubmitOrder(): void {
     if (!this.allFormFieldsAreValid) {
-      this._formGroup.setFocusToInvalidElement();
+      this._formGroup.validateFormControls(true);
       return;
     }
 
@@ -140,7 +140,6 @@ export class OrderDetailsStepComponent implements OnChanges {
     if (isNullOrEmpty(this.order)) { return; }
     this.orderDatasource = new McsTableDataSource(this.order.items || []);
 
-    // Add the total charges on the datasource
     this.orderDatasource.addOrUpdateRecord({
       description: 'Total',
       charges: {

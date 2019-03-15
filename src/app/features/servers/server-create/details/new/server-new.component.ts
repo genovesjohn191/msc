@@ -6,7 +6,9 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Output,
-  EventEmitter
+  EventEmitter,
+  ViewChild,
+  AfterViewInit
 } from '@angular/core';
 import {
   FormGroup,
@@ -28,7 +30,8 @@ import {
 import {
   McsErrorHandlerService,
   CoreDefinition,
-  CoreValidators
+  CoreValidators,
+  IMcsFormGroup
 } from '@app/core';
 import {
   replacePlaceholder,
@@ -74,7 +77,7 @@ const DEFAULT_SELF_MANAGE_STORAGE_MINIMUM = 30;
 
 export class ServerNewComponent
   extends ServerCreateDetailsBase<McsServerCreate>
-  implements OnInit, OnDestroy {
+  implements OnInit, AfterViewInit, OnDestroy {
 
   @Input()
   public serviceType: ServiceType;
@@ -84,8 +87,16 @@ export class ServerNewComponent
   public selectedStorage: McsResourceStorage;
   public customTemplates: McsResourceCatalogItem[];
 
+  public manageScale: ServerManageScale;
+  public manageStorage: ServerManageStorage;
+  public manageNetwork: ServerManageNetwork;
+
   // Form variables
   public fgNewServer: FormGroup;
+  public fgScale: FormGroup;
+  public fgStorage: FormGroup;
+  public fgNetwork: FormGroup;
+
   public fcServerName: FormControl;
   public fcVApp: FormControl;
   public fcImage: FormControl;
@@ -107,6 +118,16 @@ export class ServerNewComponent
     }
   }
   private _resource: McsResource;
+
+  @ViewChild('fgManageScale')
+  private _fgManageScale: IMcsFormGroup;
+
+  @ViewChild('fgManageStorage')
+  private _fgManageStorage: IMcsFormGroup;
+
+  @ViewChild('fgManageNetwork')
+  private _fgManageNetwork: IMcsFormGroup;
+
   private _destroySubject = new Subject<void>();
 
   constructor(
@@ -122,6 +143,12 @@ export class ServerNewComponent
   public ngOnInit() {
     this._registerFormGroup();
     this._subscribeToResourceDataChange();
+  }
+
+  public ngAfterViewInit() {
+    Promise.resolve().then(() => {
+      this._registerNestedFormGroups();
+    });
   }
 
   public ngOnDestroy() {
@@ -174,7 +201,7 @@ export class ServerNewComponent
    * `@Note`: The value will vary according to selected CPU scale
    */
   public get storageMaxMemoryMB(): number {
-    let currentSelectedScale = this.fcScale.value && this.fcScale.value.memoryMB;
+    let currentSelectedScale = getSafeProperty(this.manageScale, (obj) => obj.memoryMB);
     let storageAvailable = getSafeProperty(this.selectedStorage, (obj) => obj.availableMB, 0);
     return Math.max(0, (storageAvailable - currentSelectedScale));
   }
@@ -183,7 +210,7 @@ export class ServerNewComponent
    * Returns the current scale value to deduct in the storage
    */
   public get currentScaleValue(): number {
-    let currentSelectedScale = this.fcScale.value && this.fcScale.value.memoryMB;
+    let currentSelectedScale = getSafeProperty(this.manageScale, (obj) => obj.memoryMB);
     return convertMbToGb(currentSelectedScale);
   }
 
@@ -199,8 +226,7 @@ export class ServerNewComponent
    * @param serverScale Server Scale Result
    */
   public onScaleChanged(serverScale: ServerManageScale) {
-    if (isNullOrEmpty(this.fcScale)) { return; }
-    serverScale.valid ? this.fcScale.setValue(serverScale) : this.fcScale.reset();
+    this.manageScale = serverScale;
   }
 
   /**
@@ -208,8 +234,7 @@ export class ServerNewComponent
    * @param serverStorage Server Storage Result
    */
   public onStorageChanged(serverStorage: ServerManageStorage) {
-    if (isNullOrEmpty(this.fcStorage) || isNullOrEmpty(this.resource)) { return; }
-    serverStorage.valid ? this.fcStorage.setValue(serverStorage) : this.fcStorage.reset();
+    this.manageStorage = serverStorage;
     this.selectedStorage = serverStorage.storage;
   }
 
@@ -218,8 +243,7 @@ export class ServerNewComponent
    * @param network Server network output to be emitted
    */
   public onNetworkChanged(network: ServerManageNetwork): void {
-    if (isNullOrEmpty(this.fcNetwork)) { return; }
-    network.valid ? this.fcNetwork.setValue(network) : this.fcNetwork.reset();
+    this.manageNetwork = network;
   }
 
   /**
@@ -255,22 +279,19 @@ export class ServerNewComponent
     }
 
     // Scale
-    let serverScale = this.fcScale.value as ServerManageScale;
-    serverCreate.cpuCount = serverScale.cpuCount;
-    serverCreate.memoryMB = serverScale.memoryMB;
+    serverCreate.cpuCount = this.manageScale.cpuCount;
+    serverCreate.memoryMB = this.manageScale.memoryMB;
 
     // Storage
-    let serverStorage = this.fcStorage.value as ServerManageStorage;
     serverCreate.storage = new McsServerCreateStorage();
-    serverCreate.storage.name = serverStorage.storage.name;
-    serverCreate.storage.sizeMB = serverStorage.sizeMB;
+    serverCreate.storage.name = this.manageStorage.storage.name;
+    serverCreate.storage.sizeMB = this.manageStorage.sizeMB;
 
     // Network
-    let serverNetwork = this.fcNetwork.value as ServerManageNetwork;
     serverCreate.network = new McsServerCreateNic();
-    serverCreate.network.name = serverNetwork.network.name;
-    serverCreate.network.ipAllocationMode = serverNetwork.ipAllocationMode;
-    serverCreate.network.ipAddress = serverNetwork.customIpAddress;
+    serverCreate.network.name = this.manageNetwork.network.name;
+    serverCreate.network.ipAllocationMode = this.manageNetwork.ipAllocationMode;
+    serverCreate.network.ipAddress = this.manageNetwork.customIpAddress;
 
     return serverCreate;
   }
@@ -288,7 +309,6 @@ export class ServerNewComponent
   private _getServersOs(): void {
     this.operatingSystemsMap$ = this._serversOsRepository.getAll().pipe(
       catchError((error) => {
-        // Handle common error status code
         this._errorHandlerService.redirectToErrorPage(error.status);
         return throwError(error);
       }),
@@ -356,30 +376,35 @@ export class ServerNewComponent
       CoreValidators.required
     ]);
 
-    this.fcNetwork = new FormControl('', [
-      CoreValidators.required
-    ]);
-
-    this.fcScale = new FormControl('', [
-      CoreValidators.required
-    ]);
-
-    this.fcStorage = new FormControl('', [
-      CoreValidators.required
-    ]);
-
     // Register Form Groups using binding
     this.fgNewServer = new FormGroup({
       fcServerName: this.fcServerName,
       fcVApp: this.fcVApp,
       fcImage: this.fcImage,
-      fcNetwork: this.fcNetwork,
-      fcScale: this.fcScale,
-      fcStorage: this.fcStorage
     });
     this.fgNewServer.valueChanges.pipe(
       takeUntil(this._destroySubject)
     ).subscribe(this._notifyDataChange.bind(this));
+  }
+
+  /**
+   * Registers nested form groups
+   */
+  private _registerNestedFormGroups(): void {
+    if (!isNullOrEmpty(this._fgManageScale)) {
+      this.fgNewServer.addControl('fgScale',
+        this._fgManageScale.getFormGroup().formGroup);
+    }
+
+    if (!isNullOrEmpty(this._fgManageStorage)) {
+      this.fgNewServer.addControl('fgStorage',
+        this._fgManageStorage.getFormGroup().formGroup);
+    }
+
+    if (!isNullOrEmpty(this._fgManageNetwork)) {
+      this.fgNewServer.addControl('fgNetwork',
+        this._fgManageNetwork.getFormGroup().formGroup);
+    }
   }
 
   /**
@@ -403,7 +428,9 @@ export class ServerNewComponent
    * Notifies the data change on the form
    */
   private _notifyDataChange(): void {
-    if (!this.formIsValid) { return; }
-    this.dataChange.next(this);
+    Promise.resolve().then(() => {
+      if (!this.formIsValid) { return; }
+      this.dataChange.next(this);
+    });
   }
 }

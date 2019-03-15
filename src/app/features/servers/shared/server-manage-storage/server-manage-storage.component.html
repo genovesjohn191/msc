@@ -1,12 +1,12 @@
-<mcs-section>
+<form [formGroup]="fgScale" mcsFormGroup>
   <!-- Storage header and switcher -->
   <mcs-item orientation="separated">
     <div><ng-content select="[mcsManageStorageHeader]"></ng-content></div>
     <div>
       <a *ngIf="inputManageType === inputManageTypeEnum.Custom" mcsId
-        (click)="onChangeInputManageType(inputManageTypeEnum.Slider)">
+        (click)="onChangeInputManageType(inputManageTypeEnum.Auto)">
         {{ textContent.sliderSwitch }}</a>
-      <a *ngIf="inputManageType === inputManageTypeEnum.Slider" mcsId
+      <a *ngIf="inputManageType === inputManageTypeEnum.Auto" mcsId
         (click)="onChangeInputManageType(inputManageTypeEnum.Custom)">
         {{ textContent.customSwitch }}</a>
     </div>
@@ -33,7 +33,7 @@
 
   <div *ngIf="hasAvailableMemory" [ngSwitch]="inputManageType">
     <!-- Slider selection mode -->
-    <mcs-section [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Slider">
+    <mcs-section [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Auto">
       <div>
         <span>{{ textContent.sliderMessage }} </span>
         <span>
@@ -44,7 +44,7 @@
       <div>
         <mcs-slider [min]="minValueGB" [max]="availableMemory" [step]="10"
           mcsId="slider-memory"
-          [ngModel]="storageValue"
+          [ngModel]="storageValue" [ngModelOptions]="{standalone: true}"
           (ngModelChange)="onSliderChanged($event)">
         </mcs-slider>
         <strong display-block text-center>{{ storageValue | mcsDataSize: 'GB' }}</strong>
@@ -55,29 +55,27 @@
     <mcs-section [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Custom">
       <div>{{ textContent.customMessage }}</div>
 
-      <form [formGroup]="fgServerStorage">
-        <mcs-form-field class="form-field-size-small">
-          <input mcsInput placeholder="Enter storage"
-            mcsId="input-storage" [formControl]="fcCustomStorage">
-          <mcs-suffix mcsSuffix>{{ textContent.unit }}</mcs-suffix>
+      <mcs-form-field class="form-field-size-small">
+        <input mcsInput placeholder="Enter storage"
+          mcsId="input-storage" [formControl]="fcCustomStorage">
+        <mcs-suffix mcsSuffix>{{ textContent.unit }}</mcs-suffix>
 
-          <mcs-hint mcsHint align="start">
-            {{ textContent.maximumStorage }}: {{ availableMemory | mcsDataSize: 'GB' }}
-          </mcs-hint>
-          <mcs-error mcsError errorState="required">
-            {{ textContent.errors.storageRequired }}
-          </mcs-error>
-          <mcs-error mcsError errorState="numeric">
-            {{ textContent.errors.storageNumeric }}
-          </mcs-error>
-          <mcs-error mcsError errorState="min">
-            {{ storageMinValueText }}
-          </mcs-error>
-          <mcs-error mcsError errorState="storageAvailable">
-            {{ storageAvailableText }}
-          </mcs-error>
-        </mcs-form-field>
-      </form>
+        <mcs-hint mcsHint align="start">
+          {{ textContent.maximumStorage }}: {{ availableMemory | mcsDataSize: 'GB' }}
+        </mcs-hint>
+        <mcs-error mcsError errorState="required">
+          {{ textContent.errors.storageRequired }}
+        </mcs-error>
+        <mcs-error mcsError errorState="numeric">
+          {{ textContent.errors.storageNumeric }}
+        </mcs-error>
+        <mcs-error mcsError errorState="min">
+          {{ storageMinValueText }}
+        </mcs-error>
+        <mcs-error mcsError errorState="storageAvailable">
+          {{ storageAvailableText }}
+        </mcs-error>
+      </mcs-form-field>
     </mcs-section>
   </div>
 
@@ -87,4 +85,4 @@
       <ng-content select="[mcsManageStorageWarning]"></ng-content>
     </mcs-data-status-warning>
   </div>
-</mcs-section>
+</form>

@@ -15,7 +15,10 @@ import {
   Output,
   EventEmitter
 } from '@angular/core';
-import { FormArray } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder
+} from '@angular/forms';
 import {
   ActivatedRoute,
   ParamMap
@@ -31,7 +34,8 @@ import {
 import {
   unsubscribeSubject,
   isNullOrEmpty,
-  McsSafeToNavigateAway
+  McsSafeToNavigateAway,
+  getSafeProperty
 } from '@app/utilities';
 import { McsResource } from '@app/models';
 import { ComponentHandlerDirective } from '@app/shared';
@@ -75,12 +79,13 @@ export class ServerCreateDetailsComponent implements
   private _destroySubject = new Subject<void>();
 
   constructor(
+    private _formBuilder: FormBuilder,
     private _activatedRoute: ActivatedRoute,
     private _elementRef: ElementRef,
     private _changeDetectorRef: ChangeDetectorRef,
     private _formGroupService: McsFormGroupService
   ) {
-    this.faCreationForms = new FormArray([]);
+    this.faCreationForms = this._formBuilder.array([]);
   }
 
   public ngOnInit() {
@@ -92,7 +97,7 @@ export class ServerCreateDetailsComponent implements
       .pipe(startWith(null), takeUntil(this._destroySubject))
       .subscribe(() => {
         if (!isNullOrEmpty(this._createServerItems)) {
-          this.faCreationForms = new FormArray([]);
+          this.faCreationForms = this._formBuilder.array([]);
           this._createServerItems.forEach((creationDetails) => {
             this.faCreationForms.push(creationDetails.getCreationForm());
           });
@@ -163,7 +168,7 @@ export class ServerCreateDetailsComponent implements
    * Returns true when all forms are valid
    */
   public get allFormsAreValid(): boolean {
-    return !isNullOrEmpty(this.faCreationForms) && this.faCreationForms.valid;
+    return getSafeProperty(this.faCreationForms, (obj) => obj.valid);
   }
 
   /**
@@ -179,7 +184,7 @@ export class ServerCreateDetailsComponent implements
    * Touches all the invalid form fields
    */
   private _touchInvalidFields(): void {
-    this._formGroupService.touchAllFieldsByFormArray(this.faCreationForms);
+    this._formGroupService.touchAllFormFields(this.faCreationForms);
     this._formGroupService.scrollToFirstInvalidField(this._elementRef.nativeElement);
   }
 

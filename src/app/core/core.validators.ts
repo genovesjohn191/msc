@@ -13,8 +13,8 @@ import {
   catchError,
   map
 } from 'rxjs/operators';
-import { McsPropertyType } from '@app/utilities';
 import { CoreDefinition } from './core.definition';
+import { IMcsProperty } from './interfaces/mcs-property.interface';
 
 export class CoreValidators {
 
@@ -90,7 +90,7 @@ export class CoreValidators {
     patternName: string
   ): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      let patternData: McsPropertyType = {};
+      let patternData: IMcsProperty<any> = {};
       patternData[patternName] = true;
 
       return !predicate(control.value) ? patternData : null;
@@ -108,7 +108,7 @@ export class CoreValidators {
     patternName: string
   ): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
-      let patternData: McsPropertyType = {};
+      let patternData: IMcsProperty<any> = {};
       patternData[patternName] = true;
 
       return predicate(control.value).pipe(
