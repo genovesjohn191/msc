@@ -4,7 +4,10 @@ import {
   FormArray,
   FormControl
 } from '@angular/forms';
-import { isNullOrEmpty } from '@app/utilities';
+import {
+  isNullOrEmpty,
+  getSafeProperty
+} from '@app/utilities';
 import { McsScrollDispatcherService } from './mcs-scroll-dispatcher.service';
 
 const FORM_GROUP_SCROLL_OFFSET = 10;
@@ -15,31 +18,27 @@ export class McsFormGroupService {
   constructor(private _scrollDispatcherService: McsScrollDispatcherService) { }
 
   /**
-   * Touches all corresponding form controls inside form groups
-   * @param formGroup Form group where all the form fields are to be touches
+   * Touch all form fields by form group
+   * @param formGroup Form group to be touched
    */
-  public touchAllFieldsByFormGroup(formGroup: FormGroup): void {
-    let formGroupIsValid = !isNullOrEmpty(formGroup) && formGroup.valid;
-    if (formGroupIsValid) { return; }
-
-    Object.keys(formGroup.controls).forEach((key) => {
-      formGroup.controls[key] instanceof FormGroup ?
-        this.touchAllFieldsByFormGroup(formGroup.controls[key] as FormGroup) :
-        this._markInvalidFormControl(formGroup.controls[key] as FormControl);
-    });
-  }
+  public touchAllFormFields(formGroup: FormGroup): void;
 
   /**
-   * Touches all the form fields inside form array
-   * @param formArry Form array where all the form fields are to be touches
+   * Touch all form fields by form array
+   * @param formArray Form array which to touch the controls
    */
-  public touchAllFieldsByFormArray(formArry: FormArray): void {
-    let formsAreValid = !isNullOrEmpty(formArry) && formArry.valid;
-    if (formsAreValid) { return; }
+  public touchAllFormFields(formArray: FormArray): void;
 
-    formArry.controls.forEach((formGroup: FormGroup) => {
-      this.touchAllFieldsByFormGroup(formGroup);
-    });
+  /**
+   * Touch all form fields based on the main content type
+   * @param formMainContent Main form content per type
+   */
+  public touchAllFormFields(formMainContent: FormGroup | FormArray): void {
+    if (isNullOrEmpty(formMainContent)) { return; }
+
+    formMainContent instanceof FormGroup ?
+      this._touchAllFormFieldsByFormGroup(formMainContent) :
+      formMainContent.controls.forEach(this._touchAllFormFieldsByFormGroup.bind(this));
   }
 
   /**
@@ -60,5 +59,20 @@ export class McsFormGroupService {
   private _markInvalidFormControl(formControl: FormControl): void {
     if (isNullOrEmpty(formControl)) { return; }
     formControl.markAsTouched();
+  }
+
+  /**
+   * Touches all form fields by form group
+   * @param formGroup Form group for the form fields
+   */
+  private _touchAllFormFieldsByFormGroup(formGroup: FormGroup): void {
+    let formGroupIsValid = getSafeProperty(formGroup, (obj) => obj.valid);
+    if (formGroupIsValid) { return; }
+
+    Object.keys(formGroup.controls).forEach((key) => {
+      formGroup.controls[key] instanceof FormGroup ?
+        this._touchAllFormFieldsByFormGroup(formGroup.controls[key] as FormGroup) :
+        this._markInvalidFormControl(formGroup.controls[key] as FormControl);
+    });
   }
 }

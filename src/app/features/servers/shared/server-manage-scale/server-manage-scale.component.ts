@@ -7,11 +7,14 @@ import {
   ChangeDetectionStrategy,
   EventEmitter,
   Output,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  ViewChild,
+  AfterViewInit
 } from '@angular/core';
 import {
   FormGroup,
-  FormControl
+  FormControl,
+  FormBuilder
 } from '@angular/forms';
 import { Subject } from 'rxjs';
 import {
@@ -24,11 +27,13 @@ import {
   unsubscribeSubject,
   getSafeProperty,
   coerceBoolean,
-  convertMbToGb
+  convertMbToGb,
+  isNullOrUndefined
 } from '@app/utilities';
 import {
   McsTextContentProvider,
-  CoreValidators
+  CoreValidators,
+  IMcsFormGroup
 } from '@app/core';
 import {
   InputManageType,
@@ -36,6 +41,7 @@ import {
   McsServerCompute
 } from '@app/models';
 import { ServerManageScale } from './server-manage-scale';
+import { McsFormGroupDirective } from '@app/shared';
 
 // Constants definition
 const DEFAULT_MB = 1024;
@@ -53,7 +59,9 @@ const DEFAULT_MIN_CPU = 2;
   ]
 })
 
-export class ServerManageScaleComponent implements OnInit, DoCheck, OnDestroy {
+export class ServerManageScaleComponent
+  implements OnInit, DoCheck, AfterViewInit, OnDestroy, IMcsFormGroup {
+
   public textContent: any;
   public inputManageType: InputManageType;
   public sliderValueIndex: number;
@@ -81,14 +89,21 @@ export class ServerManageScaleComponent implements OnInit, DoCheck, OnDestroy {
   }
   private _allowScaleDown: boolean;
 
+  @ViewChild(McsFormGroupDirective)
+  private _formGroup: McsFormGroupDirective;
+
   private _destroySubject = new Subject<void>();
   private _scaleOutput = new ServerManageScale();
+  private _formControlsMap = new Map<InputManageType, () => void>();
   private _previousResourceAvailable = 0;
 
   constructor(
+    private _formBuilder: FormBuilder,
     private _changeDetectorRef: ChangeDetectorRef,
     private _textContentProvider: McsTextContentProvider
-  ) { }
+  ) {
+    this._createFormControlsMap();
+  }
 
   public ngOnInit() {
     this.textContent = this._textContentProvider.content.servers.shared.manageScale;
@@ -105,8 +120,28 @@ export class ServerManageScaleComponent implements OnInit, DoCheck, OnDestroy {
     }
   }
 
+  public ngAfterViewInit() {
+    Promise.resolve().then(() => {
+      this._subscribeToFormTouchedState();
+    });
+  }
+
   public ngOnDestroy() {
     unsubscribeSubject(this._destroySubject);
+  }
+
+  /**
+   * Returns the form group
+   */
+  public getFormGroup(): McsFormGroupDirective {
+    return this._formGroup;
+  }
+
+  /**
+   * Returns true when the form group is valid
+   */
+  public isValid(): boolean {
+    return getSafeProperty(this.fgServerScale, (obj) => obj.valid);
   }
 
   /**
@@ -169,6 +204,7 @@ export class ServerManageScaleComponent implements OnInit, DoCheck, OnDestroy {
    */
   public onChangeInputManageType(inputManageType: InputManageType) {
     this.inputManageType = inputManageType;
+    this._registerFormControlsByInputType();
     this._notifyDataChanged();
   }
 
@@ -189,7 +225,7 @@ export class ServerManageScaleComponent implements OnInit, DoCheck, OnDestroy {
     this._resetFormGroup();
     this.sliderValueIndex = 0;
     this.sliderValue = this.sliderTable[this.sliderValueIndex];
-    this.inputManageType = InputManageType.Slider;
+    this.inputManageType = InputManageType.Auto;
   }
 
   /**
@@ -200,13 +236,6 @@ export class ServerManageScaleComponent implements OnInit, DoCheck, OnDestroy {
     this.fgServerScale.reset();
     this.fcCustomCpu.setValue(this.serverCpuUsed);
     this.fcCustomMemory.setValue(convertMbToGb(this.serverMemoryUsedMB));
-
-    this.fcCustomMemory.setValidators(
-      CoreValidators.min(convertMbToGb(this.minimumMemoryMB))
-    );
-    this.fcCustomMemory.setValidators(
-      CoreValidators.max(convertMbToGb(this.resourceAvailableMemoryMB))
-    );
   }
 
   /**
@@ -242,14 +271,25 @@ export class ServerManageScaleComponent implements OnInit, DoCheck, OnDestroy {
   }
 
   /**
+   * Creates the form controls table map
+   */
+  private _createFormControlsMap(): void {
+    this._formControlsMap.set(InputManageType.Auto,
+      this._registerAutoFormControls.bind(this));
+
+    this._formControlsMap.set(InputManageType.Custom,
+      this._registerCustomFormControls.bind(this));
+  }
+
+  /**
    * Register form group elements for custom type
    */
   private _registerFormGroup(): void {
-    // Create custom storage control and register the listener
+    // Register custom memory
     this.fcCustomMemory = new FormControl('', [
       CoreValidators.required,
-      CoreValidators.min(convertMbToGb(this.minimumMemoryMB)),
-      CoreValidators.max(convertMbToGb(this.resourceAvailableMemoryMB)),
+      (control) => CoreValidators.min(convertMbToGb(this.minimumMemoryMB))(control),
+      (control) => CoreValidators.max(convertMbToGb(this.resourceAvailableMemoryMB))(control),
       CoreValidators.numeric,
       CoreValidators.custom(
         this._memoryInvalidValidator.bind(this),
@@ -257,6 +297,7 @@ export class ServerManageScaleComponent implements OnInit, DoCheck, OnDestroy {
       )
     ]);
 
+    // Register custom CPU
     this.fcCustomCpu = new FormControl('', [
       CoreValidators.required,
       CoreValidators.min(this.minimumCpuUsed),
@@ -269,15 +310,40 @@ export class ServerManageScaleComponent implements OnInit, DoCheck, OnDestroy {
     ]);
 
     // Create form group and bind the form controls
-    this.fgServerScale = new FormGroup({
-      fcCustomMemory: this.fcCustomMemory,
-      fcCustomCpu: this.fcCustomCpu,
-    });
-
-    // Notify data changed for every changes made in the status
+    this.fgServerScale = this._formBuilder.group([]);
     this.fgServerScale.statusChanges
       .pipe(startWith(null), takeUntil(this._destroySubject))
       .subscribe(() => this._notifyDataChanged());
+    this._registerFormControlsByInputType();
+  }
+
+  /**
+   * Registers form controls based on the associated settings
+   */
+  private _registerFormControlsByInputType(): void {
+    if (isNullOrUndefined(this.inputManageType)) { return; }
+
+    let formControlsFunc = this._formControlsMap.get(this.inputManageType);
+    if (isNullOrEmpty(formControlsFunc)) {
+      throw new Error(`Invalid input manage type ${this.inputManageType}`);
+    }
+    formControlsFunc.call(this);
+  }
+
+  /**
+   * Registers auto settings associated form controls
+   */
+  private _registerAutoFormControls(): void {
+    this.fgServerScale.removeControl('fcCustomMemory');
+    this.fgServerScale.removeControl('fcCustomCpu');
+  }
+
+  /**
+   * Registers custom settings associated form controls
+   */
+  private _registerCustomFormControls(): void {
+    this.fgServerScale.setControl('fcCustomMemory', this.fcCustomMemory);
+    this.fgServerScale.setControl('fcCustomCpu', this.fcCustomCpu);
   }
 
   /**
@@ -297,6 +363,15 @@ export class ServerManageScaleComponent implements OnInit, DoCheck, OnDestroy {
   }
 
   /**
+   * Subscribe to touched state of the form group
+   */
+  private _subscribeToFormTouchedState(): void {
+    this._formGroup.touchedStateChanges().pipe(
+      takeUntil(this._destroySubject)
+    ).subscribe(() => this._changeDetectorRef.markForCheck());
+  }
+
+  /**
    * Event that emits when an input has been changed
    */
   private _notifyDataChanged() {
@@ -306,12 +381,12 @@ export class ServerManageScaleComponent implements OnInit, DoCheck, OnDestroy {
     // Set model data based on management type
     switch (this.inputManageType) {
       case InputManageType.Custom:
-        this._scaleOutput.memoryMB = +this.fcCustomMemory.value;
+        this._scaleOutput.memoryMB = +this.fcCustomMemory.value * DEFAULT_MB;
         this._scaleOutput.cpuCount = +this.fcCustomCpu.value;
         this._scaleOutput.valid = this.fgServerScale.valid;
         break;
 
-      case InputManageType.Slider:
+      case InputManageType.Auto:
       default:
         this._scaleOutput.memoryMB = this.sliderValue.memoryMB;
         this._scaleOutput.cpuCount = this.sliderValue.cpuCount;

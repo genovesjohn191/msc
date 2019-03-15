@@ -48,7 +48,7 @@ import { McsServersRepository } from '@app/services';
 import {
   DialogConfirmation,
   DialogConfirmationComponent,
-  FormGroupDirective
+  McsFormGroupDirective
 } from '@app/shared';
 import { TreeNode } from '@angular/router/src/utils/tree';
 import { OsUpdatesScheduleDetails } from './os-updates-schedule-details';
@@ -97,8 +97,8 @@ export class OsUpdatesScheduleComponent implements OnInit {
   @Output()
   public deleteSchedule: EventEmitter<OsUpdatesActionDetails>;
 
-  @ViewChild(FormGroupDirective)
-  private _formGroup: FormGroupDirective;
+  @ViewChild(McsFormGroupDirective)
+  private _formGroup: McsFormGroupDirective;
 
   private _initialScheduleCategoryList: McsServerOsUpdatesCategory[];
   private _initialCronJson: any;

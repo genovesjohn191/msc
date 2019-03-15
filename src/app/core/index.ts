@@ -96,3 +96,5 @@ export * from './interfaces/mcs-fallible.interface';
 export * from './interfaces/mcs-job-manager.interface';
 export * from './interfaces/mcs-state-changeable.interface';
 export * from './interfaces/mcs-wizard.interface';
+export * from './interfaces/mcs-form-group.interface';
+export * from './interfaces/mcs-property.interface';

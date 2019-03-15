@@ -7,11 +7,14 @@ import {
   ChangeDetectionStrategy,
   EventEmitter,
   Output,
-  SimpleChanges
+  SimpleChanges,
+  ViewChild,
+  AfterViewInit
 } from '@angular/core';
 import {
   FormGroup,
-  FormControl
+  FormControl,
+  FormBuilder
 } from '@angular/forms';
 import { Subject } from 'rxjs';
 import {
@@ -21,7 +24,8 @@ import {
 import {
   McsTextContentProvider,
   CoreValidators,
-  McsDataStatusFactory
+  McsDataStatusFactory,
+  IMcsFormGroup
 } from '@app/core';
 import {
   replacePlaceholder,
@@ -29,7 +33,8 @@ import {
   animateFactory,
   clearArrayRecord,
   getSafeProperty,
-  coerceBoolean
+  coerceBoolean,
+  isNullOrUndefined
 } from '@app/utilities';
 import {
   InputManageType,
@@ -40,6 +45,7 @@ import {
   McsResourceNetworkIpAddress,
 } from '@app/models';
 import { McsResourcesRepository } from '@app/services';
+import { McsFormGroupDirective } from '@app/shared';
 import { ServerManageNetwork } from './server-manage-network';
 
 // Constants
@@ -59,17 +65,19 @@ const Netmask = require('netmask').Netmask;
   ]
 })
 
-export class ServerManageNetworkComponent implements OnInit, OnChanges {
+export class ServerManageNetworkComponent
+  implements OnInit, OnChanges, AfterViewInit, IMcsFormGroup {
+
   public textContent: any;
   public netMask: any;
-  public selectedIpAddressMode: IpAllocationMode;
   public ipAddressesInUsed: McsResourceNetworkIpAddress[];
   public ipAddressItems: McsOption[];
   public inputManageType: InputManageType;
   public ipAddressesStatusFactory = new McsDataStatusFactory<McsResourceNetworkIpAddress[]>();
 
   // Form variables
-  public fgCustomIpAddress: FormGroup;
+  public fgNetwork: FormGroup;
+  public fcIpAllocationMode: FormControl;
   public fcCustomIpAddress: FormControl;
 
   @Output()
@@ -114,25 +122,31 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges {
   }
   private _selectedNetwork: McsResourceNetwork;
 
+  @ViewChild(McsFormGroupDirective)
+  private _formGroup: McsFormGroupDirective;
+
   private _networkOutput = new ServerManageNetwork();
   private _destroySubject = new Subject<void>();
+  private _formControlsMap = new Map<InputManageType, () => void>();
 
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
+    private _formBuilder: FormBuilder,
     private _textContentProvider: McsTextContentProvider,
     private _resourcesRepository: McsResourcesRepository
   ) {
-    this.inputManageType = InputManageType.Buttons;
-    this.selectedIpAddressMode = IpAllocationMode.Dhcp;
+    this.inputManageType = InputManageType.Auto;
     this.ipAddressItems = new Array();
     this.ipAddressesInUsed = new Array();
     this.netMask = new Netmask(`${DEFAULT_GATEWAY}/${DEFAULT_NETMASK}`);
-    this._registerFormGroup();
+    this._createFormControlsMap();
   }
 
   public ngOnInit() {
     this.textContent = this._textContentProvider.content
       .servers.shared.manageNetwork;
+
+    this._registerFormGroup();
     this._setIpAddressItems();
     this._setSelectedNetwork();
     this._initializeCurrentView();
@@ -144,6 +158,12 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges {
     if (!isNullOrEmpty(networksChange)) {
       this._setSelectedNetwork();
     }
+  }
+
+  public ngAfterViewInit() {
+    Promise.resolve().then(() => {
+      this._subscribeToFormTouchedState();
+    });
   }
 
   /**
@@ -165,19 +185,25 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges {
   }
 
   /**
+   * Returns the form group
+   */
+  public getFormGroup(): McsFormGroupDirective {
+    return this._formGroup;
+  }
+
+  /**
+   * Returns true when the form group is valid
+   */
+  public isValid(): boolean {
+    return getSafeProperty(this.fgNetwork, (obj) => obj.valid);
+  }
+
+  /**
    * Event that emits when the input manage type has been changed
    */
   public onChangeInputManageType(inputManageType: InputManageType) {
     this.inputManageType = inputManageType;
-    this._notifyDataChanged();
-  }
-
-  /**
-   * Event that emits when the radio button selection has been changed
-   * @param inputValue Server allocation mode of the radio button
-   */
-  public onRadioButtonChanged(inputValue: IpAllocationMode) {
-    this.selectedIpAddressMode = inputValue;
+    this._registerFormControlsByInputType();
     this._notifyDataChanged();
   }
 
@@ -238,7 +264,13 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges {
    * Registers the form group controls
    */
   private _registerFormGroup(): void {
-    // Create form controls
+    // Register form control for Ip allocation mode
+    this.fcIpAllocationMode = new FormControl(IpAllocationMode.Manual, [CoreValidators.required]);
+    this.fcIpAllocationMode.valueChanges
+      .pipe(takeUntil(this._destroySubject))
+      .subscribe(() => this._notifyDataChanged());
+
+    // Register form control for custom ip address
     this.fcCustomIpAddress = new FormControl('', [
       CoreValidators.required,
       CoreValidators.ipAddress,
@@ -251,10 +283,49 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges {
       .pipe(takeUntil(this._destroySubject))
       .subscribe(() => this._notifyDataChanged());
 
-    // Create form group and bind the form controls
-    this.fgCustomIpAddress = new FormGroup({
-      fcCustomIpAddress: this.fcCustomIpAddress
-    });
+    // Form group settings
+    this.fgNetwork = this._formBuilder.group([]);
+    this._registerFormControlsByInputType();
+  }
+
+  /**
+   * Registers form controls based on the associated settings
+   */
+  private _registerFormControlsByInputType(): void {
+    if (isNullOrUndefined(this.inputManageType)) { return; }
+
+    let formControlsFunc = this._formControlsMap.get(this.inputManageType);
+    if (isNullOrEmpty(formControlsFunc)) {
+      throw new Error(`Invalid input manage type ${this.inputManageType}`);
+    }
+    formControlsFunc.call(this);
+  }
+
+  /**
+   * Registers auto settings associated form controls
+   */
+  private _registerAutoFormControls(): void {
+    this.fgNetwork.removeControl('fcCustomIpAddress');
+    this.fgNetwork.setControl('fcIpAllocationMode', this.fcIpAllocationMode);
+  }
+
+  /**
+   * Registers custom settings associated form controls
+   */
+  private _registerCustomFormControls(): void {
+    this.fgNetwork.removeControl('fcIpAllocationMode');
+    this.fgNetwork.setControl('fcCustomIpAddress', this.fcCustomIpAddress);
+  }
+
+  /**
+   * Creates the form controls table map
+   */
+  private _createFormControlsMap(): void {
+    this._formControlsMap.set(InputManageType.Auto,
+      this._registerAutoFormControls.bind(this));
+
+    this._formControlsMap.set(InputManageType.Custom,
+      this._registerCustomFormControls.bind(this));
   }
 
   /**
@@ -262,9 +333,11 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges {
    */
   private _resetFormGroup(): void {
     clearArrayRecord(this.ipAddressesInUsed);
-    if (isNullOrEmpty(this.fgCustomIpAddress)) { return; }
-    this.fgCustomIpAddress.reset();
-    this.fcCustomIpAddress.reset();
+
+    if (!isNullOrEmpty(this.fgNetwork)) {
+      this.fgNetwork.reset();
+      this.fcCustomIpAddress.reset();
+    }
   }
 
   /**
@@ -298,9 +371,9 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges {
 
     this.inputManageType = this.targetNic.ipAllocationMode === IpAllocationMode.Manual ?
       InputManageType.Custom :
-      InputManageType.Buttons;
+      InputManageType.Auto;
     if (this.targetNic.ipAllocationMode !== IpAllocationMode.Manual) {
-      this.selectedIpAddressMode = this.targetNic.ipAllocationMode;
+      this.fcIpAllocationMode.setValue(this.targetNic.ipAllocationMode);
     }
     this.fcCustomIpAddress.setValue(getSafeProperty(this.targetNic, (obj) => obj.ipAddresses[0]));
     this._changeDetectorRef.markForCheck();
@@ -310,6 +383,10 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges {
    * Event that emits when an input has been changed
    */
   private _notifyDataChanged() {
+    let noFormsRegistered = isNullOrEmpty(this.fcCustomIpAddress) ||
+      isNullOrEmpty(this.fcIpAllocationMode);
+    if (noFormsRegistered) { return; }
+
     // Set model data based on management type
     switch (this.inputManageType) {
       case InputManageType.Custom:
@@ -320,13 +397,13 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges {
           !isNullOrEmpty(this.selectedNetwork);
         break;
 
-      case InputManageType.Buttons:
+      case InputManageType.Auto:
       default:
         this._networkOutput.network = this.selectedNetwork;
         this._networkOutput.customIpAddress = null;
-        this._networkOutput.ipAllocationMode = this.selectedIpAddressMode;
-        this._networkOutput.valid = !isNullOrEmpty(this.selectedNetwork) &&
-          !isNullOrEmpty(this.selectedIpAddressMode);
+        this._networkOutput.ipAllocationMode = this.fcIpAllocationMode.value;
+        this._networkOutput.valid = this.fcIpAllocationMode.valid &&
+          !isNullOrEmpty(this.selectedNetwork);
         break;
     }
     this._setNetworkHasChangedFlag();
@@ -353,5 +430,14 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges {
         this._networkOutput.customIpAddress === ipAddress);
       this._networkOutput.hasChanged = isNullOrEmpty(ipAddressFound);
     }
+  }
+
+  /**
+   * Subscribe to touched state of the form group
+   */
+  private _subscribeToFormTouchedState(): void {
+    this._formGroup.touchedStateChanges().pipe(
+      takeUntil(this._destroySubject)
+    ).subscribe(() => this._changeDetectorRef.markForCheck());
   }
 }

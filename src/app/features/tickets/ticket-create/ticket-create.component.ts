@@ -33,7 +33,7 @@ import {
   animateFactory,
   McsSafeToNavigateAway
 } from '@app/utilities';
-import { FormGroupDirective } from '@app/shared';
+import { McsFormGroupDirective } from '@app/shared';
 import {
   TicketSubType,
   ticketSubTypeText,
@@ -76,8 +76,8 @@ export class TicketCreateComponent implements
   public servicePanelOpen: boolean;
   public creatingTicket: boolean;
 
-  @ViewChild(FormGroupDirective)
-  public fgCreateDirective: FormGroupDirective;
+  @ViewChild(McsFormGroupDirective)
+  public fgCreateDirective: McsFormGroupDirective;
 
   // Form variables
   public fgCreateTicket: FormGroup;

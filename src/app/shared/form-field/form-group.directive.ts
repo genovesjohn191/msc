@@ -1,17 +1,30 @@
 import {
   Directive,
   Input,
-  QueryList,
   ChangeDetectorRef,
-  ContentChildren,
-  AfterContentInit
+  ElementRef,
+  Optional,
+  OnDestroy,
+  OnInit
 } from '@angular/core';
-import { FormControlDirective } from '@angular/forms';
 import {
-  McsScrollDispatcherService,
-  McsUniqueId
+  AbstractControl,
+  FormGroupDirective,
+  FormGroup
+} from '@angular/forms';
+import {
+  Subject,
+  Observable
+} from 'rxjs';
+import {
+  McsUniqueId,
+  McsFormGroupService
 } from '@app/core';
-import { isNullOrEmpty } from '@app/utilities';
+import {
+  isNullOrEmpty,
+  getSafeProperty,
+  unsubscribeSafely
+} from '@app/utilities';
 
 @Directive({
   selector: 'form[mcsFormGroup]',
@@ -21,22 +34,84 @@ import { isNullOrEmpty } from '@app/utilities';
   }
 })
 
-export class FormGroupDirective implements AfterContentInit {
+export class McsFormGroupDirective implements OnInit, OnDestroy {
   @Input()
   public id: string = McsUniqueId.NewId('form-group');
 
-  @ContentChildren(FormControlDirective, { descendants: true })
-  private _formFields: QueryList<FormControlDirective>;
+  private _pristineStateChange = new Subject<boolean>();
+  private _dirtyStateChange = new Subject<boolean>();
+  private _touchedStateChange = new Subject<boolean>();
 
   constructor(
+    private _elementRef: ElementRef<HTMLElement>,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _scrollDispatcher: McsScrollDispatcherService
+    private _formGroupService: McsFormGroupService,
+    @Optional() private _formGroup: FormGroupDirective,
   ) { }
 
-  public ngAfterContentInit(): void {
-    Promise.resolve().then(() => {
-      this._validateControls();
-    });
+  public ngOnInit() {
+    this._overrideTouchedMethod();
+    this._overridePristineMethod();
+    this._overrideDirtyMethod();
+  }
+
+  public ngOnDestroy() {
+    unsubscribeSafely(this._pristineStateChange);
+    unsubscribeSafely(this._touchedStateChange);
+  }
+
+  /**
+   * Event that emits when the pristine state has been changed
+   */
+  public pristineStateChanges(): Observable<boolean> {
+    return this._pristineStateChange.asObservable();
+  }
+
+  /**
+   * Event that emits when the dirty state has been changed
+   */
+  public dirtyStateChanges(): Observable<boolean> {
+    return this._dirtyStateChange.asObservable();
+  }
+
+  /**
+   * Event that emits when the touched state has been changed
+   */
+  public touchedStateChanges(): Observable<boolean> {
+    return this._touchedStateChange.asObservable();
+  }
+
+  /**
+   * Event that emits when the value of the forms has been changed
+   */
+  public valueChanges(): Observable<any> {
+    return this._formGroup.valueChanges;
+  }
+
+  /**
+   * Event that emits when the state of the forms has been changed
+   */
+  public stateChanges(): Observable<any> {
+    return this._formGroup.statusChanges;
+  }
+
+  /**
+   * Returns the formgroup object
+   */
+  public get formGroup(): FormGroup {
+    return this._formGroup.control;
+  }
+
+  /**
+   * Returns the form controls of the form group
+   */
+  public get formControls(): AbstractControl[] {
+    let controls = getSafeProperty(this._formGroup, (obj) => obj.control.controls);
+    if (isNullOrEmpty(controls)) { return undefined; }
+
+    let controlKeys = Object.keys(controls);
+    let convertedControls = controlKeys.map((key) => controls[key]);
+    return convertedControls;
   }
 
   /**
@@ -44,15 +119,11 @@ export class FormGroupDirective implements AfterContentInit {
    * and mark them as touched.
    */
   public validateFormControls(focusInvalidControl?: boolean): void {
-    if (isNullOrEmpty(this._formFields)) { return; }
-    this._formFields.map((formField) => {
-      formField.control.markAsTouched();
-    });
+    if (isNullOrEmpty(this._formGroup)) { return; }
+    this._formGroupService.touchAllFormFields(this._formGroup.control);
 
     // Set focus to invalid element
-    if (focusInvalidControl) {
-      this.setFocusToInvalidElement();
-    }
+    if (focusInvalidControl) { this.setFocusToInvalidElement(); }
     this._changeDetectorRef.markForCheck();
   }
 
@@ -60,13 +131,14 @@ export class FormGroupDirective implements AfterContentInit {
    * Determine whether one of the form field was dirty/modified, otherwise it will return false
    */
   public hasDirtyFormControls(): boolean {
-    if (isNullOrEmpty(this._formFields)) { return; }
+    if (isNullOrEmpty(this._formGroup)) { return; }
+
     let hasDirty: boolean = false;
-    this._formFields.map((formField) => {
+    this.formControls.map((formField) => {
       if (!hasDirty) {
-        hasDirty = formField.form.dirty
-          && !formField.form.pristine
-          && formField.form.touched;
+        hasDirty = formField.dirty
+          && !formField.pristine
+          && formField.touched;
       }
     });
     return hasDirty;
@@ -76,17 +148,8 @@ export class FormGroupDirective implements AfterContentInit {
    * This will scroll to first invalid form field element
    */
   public setFocusToInvalidElement(): void {
-    if (isNullOrEmpty(this._formFields) || this.isValid()) { return; }
-    let firstElementFound: boolean = false;
-
-    this._formFields.map((formField) => {
-      if (!firstElementFound && formField.form.invalid) {
-        firstElementFound = true;
-        let formElement = (formField.valueAccessor as any)._elementRef.nativeElement;
-        this._scrollDispatcher.scrollToElement(formElement);
-        formElement.focus();
-      }
-    });
+    if (this.isValid()) { return; }
+    this._formGroupService.scrollToFirstInvalidField(this._elementRef.nativeElement);
   }
 
   /**
@@ -97,11 +160,12 @@ export class FormGroupDirective implements AfterContentInit {
    * for such checking purposes are not included.
    */
   public isValid(): boolean {
-    if (isNullOrEmpty(this._formFields)) { return false; }
+    if (isNullOrEmpty(this._formGroup)) { return false; }
+
     let hasInvalid: boolean = false;
-    this._formFields.map((formField) => {
-      if (!hasInvalid && formField.form.invalid) {
-        hasInvalid = formField.form.invalid;
+    this.formControls.map((formField) => {
+      if (!hasInvalid && formField.invalid) {
+        hasInvalid = formField.invalid;
       }
     });
     return !hasInvalid;
@@ -111,18 +175,48 @@ export class FormGroupDirective implements AfterContentInit {
    * Reset all controls from the given content
    */
   public resetAllControls(): void {
-    if (isNullOrEmpty(this._formFields)) { return; }
-    this._formFields.map((formField) => {
+    if (isNullOrEmpty(this._formGroup)) { return; }
+    this.formControls.map((formField) => {
       formField.reset();
     });
   }
 
   /**
-   * Validate if atleast 1 field is existing, otherwise it will throw an exception
+   * Overrides the touched method of the form group control
    */
-  private _validateControls(): void {
-    if (isNullOrEmpty(this._formFields)) {
-      throw new Error('Form fields does not exist');
-    }
+  private _overrideTouchedMethod(): void {
+    let oldMethodAttached = this._formGroup.control.markAsTouched;
+    Object.defineProperty(this._formGroup.control, 'markAsTouched', {
+      value: () => {
+        if (!oldMethodAttached) { oldMethodAttached.call(this); }
+        this._touchedStateChange.next(this._formGroup.control.touched);
+      }
+    });
+  }
+
+  /**
+   * Overrides the pristine method of the form group control
+   */
+  private _overridePristineMethod(): void {
+    let oldMethodAttached = this._formGroup.control.markAsPristine;
+    Object.defineProperty(this._formGroup.control, 'markAsPristine', {
+      value: () => {
+        if (!oldMethodAttached) { oldMethodAttached.call(this); }
+        this._pristineStateChange.next(this._formGroup.control.pristine);
+      }
+    });
+  }
+
+  /**
+   * Overrides the dirty method of the form group control
+   */
+  private _overrideDirtyMethod(): void {
+    let oldMethodAttached = this._formGroup.control.markAsDirty;
+    Object.defineProperty(this._formGroup.control, 'markAsDirty', {
+      value: () => {
+        if (!oldMethodAttached) { oldMethodAttached.call(this); }
+        this._dirtyStateChange.next(this._formGroup.control.dirty);
+      }
+    });
   }
 }

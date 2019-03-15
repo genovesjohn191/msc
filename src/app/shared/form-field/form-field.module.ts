@@ -6,7 +6,7 @@ import {
 } from '@angular/forms';
 import { DirectivesModule } from '../directives/directives.module';
 import { FormFieldComponent } from './form-field.component';
-import { FormGroupDirective } from './form-group.directive';
+import { McsFormGroupDirective } from './form-group.directive';
 // Shared components
 import {
   ErrorComponent,
@@ -19,7 +19,7 @@ import {
 @NgModule({
   declarations: [
     FormFieldComponent,
-    FormGroupDirective,
+    McsFormGroupDirective,
     ErrorComponent,
     HintComponent,
     HintMessageComponent,
@@ -34,7 +34,7 @@ import {
   ],
   exports: [
     FormFieldComponent,
-    FormGroupDirective,
+    McsFormGroupDirective,
     ErrorComponent,
     HintComponent,
     HintMessageComponent,
