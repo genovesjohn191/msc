@@ -3,8 +3,16 @@ import {
   NgModule,
   ErrorHandler
 } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
+
+import {
+  TranslateModule,
+  TranslateLoader,
+  TranslateService
+} from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 /**
  * Raven logger
@@ -73,6 +81,10 @@ const APP_PROVIDERS = [
   AppState
 ];
 
+export function createTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
+
 /**
  * Set Core Configuration based on environment variables
  */
@@ -103,6 +115,14 @@ export function coreConfig(): CoreConfig {
     BrowserModule,
     BrowserAnimationsModule,
 
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: (createTranslateLoader),
+        deps: [HttpClient]
+      }
+    }),
+
     CoreModule.forRoot(coreConfig),
     EventBusModule.forRoot(),
     ServicesModule.forRoot(),
@@ -126,8 +146,10 @@ export class AppModule {
 
   constructor(
     private _router: Router,
+    private _translateService: TranslateService,
     private _eventDispatcher: EventBusDispatcherService
   ) {
+    this._initializeLanguage();
     this._initializeRoutes();
     this._registerEvents();
   }
@@ -168,5 +190,13 @@ export class AppModule {
    */
   private _initializeRoutes(): void {
     this._router.resetConfig(routes);
+  }
+
+  /**
+   * Sets the default language to english
+   */
+  private _initializeLanguage() {
+    this._translateService.setDefaultLang('en');
+    this._translateService.use('en');
   }
 }

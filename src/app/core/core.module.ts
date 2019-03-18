@@ -6,16 +6,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import {
-  HttpClientModule,
-  HttpClient
-} from '@angular/common/http';
-import {
-  TranslateModule,
-  TranslateLoader,
-  TranslateService
-} from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { HttpClientModule } from '@angular/common/http';
 import { CookieModule } from 'ngx-cookie';
 import {
   EventBusDispatcherService,
@@ -41,9 +32,6 @@ import { McsNotificationJobService } from './services/mcs-notification-job.servi
 import { McsNotificationContextService } from './services/mcs-notification-context.service';
 import { McsErrorHandlerService } from './services/mcs-error-handler.service';
 
-export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
-}
 @NgModule({
   declarations: [
     McsDialogContainerComponent,
@@ -59,13 +47,6 @@ export function createTranslateLoader(http: HttpClient) {
     RouterModule,
     HttpClientModule,
 
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: (createTranslateLoader),
-        deps: [HttpClient]
-      }
-    }),
     CookieModule.forRoot(),
     RouterModule.forRoot([], { scrollPositionRestoration: 'enabled' })
   ],
@@ -100,7 +81,6 @@ export class CoreModule {
     private _notificationJob: McsNotificationJobService,
     private _notificationContext: McsNotificationContextService,
     private _routerHandler: McsRouteHandlerService,
-    private _translateService: TranslateService,
     _errorHandlerService: McsErrorHandlerService,
     _googleAnalytics: GoogleAnalyticsEventsService,
     _sessionHandlerService: McsSessionHandlerService
@@ -109,8 +89,6 @@ export class CoreModule {
       throw new Error(
         'CoreModule is already loaded. Import it in the AppModule only');
     }
-    this._translateService.setDefaultLang('en');
-    this._translateService.use('en');
     this._registerEvents();
   }
 
