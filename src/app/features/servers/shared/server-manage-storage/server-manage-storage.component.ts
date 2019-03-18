@@ -18,17 +18,16 @@ import {
   FormControl,
   FormBuilder
 } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
   CoreValidators,
-  McsTextContentProvider,
   IMcsFormGroup
-} from '@app/core';
+   } from '@app/core';
 import {
   convertMbToGb,
   convertGbToMb,
-  replacePlaceholder,
   appendUnitSuffix,
   isNullOrEmpty,
   coerceNumber,
@@ -61,7 +60,6 @@ const DEFAULT_STORAGE_STEPS = 10;
 export class ServerManageStorageComponent
   implements OnInit, OnChanges, AfterViewInit, OnDestroy, IMcsFormGroup {
 
-  public textContent: any;
   public inputManageType: InputManageType;
   public storageValue: number;
 
@@ -138,10 +136,9 @@ export class ServerManageStorageComponent
    * Returns the storage available text content
    */
   public get storageAvailableText(): string {
-    return replacePlaceholder(
-      this.textContent.errors.storageAvailable,
-      'available_storage',
-      appendUnitSuffix(this.availableMemory, UnitType.Gigabyte)
+    return this._translateService.instant(
+      'serverShared.manageStorage.errors.storageAvailable',
+      { available_storage: appendUnitSuffix(this.availableMemory, UnitType.Gigabyte) }
     );
   }
 
@@ -149,23 +146,21 @@ export class ServerManageStorageComponent
    * Returns the storage minimum value text content
    */
   public get storageMinValueText(): string {
-    return replacePlaceholder(
-      this.textContent.errors.storageMin,
-      'min_value',
-      appendUnitSuffix(this.minValueGB, UnitType.Gigabyte)
+    return this._translateService.instant(
+      'serverShared.manageStorage.errors.storageMin',
+      { min_value: appendUnitSuffix(this.minValueGB, UnitType.Gigabyte) }
     );
   }
 
   public constructor(
     private _formBuilder: FormBuilder,
-    private _textProvider: McsTextContentProvider,
+    private _translateService: TranslateService,
     private _changeDetectorRef: ChangeDetectorRef
   ) {
     this._createFormControlsMap();
   }
 
   public ngOnInit() {
-    this.textContent = this._textProvider.content.servers.shared.manageStorage;
     this.reset();
     this._registerFormGroup();
     this._setSelectedStorage();

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 import { DialogModule } from '../dialog/dialog.module';
 import { ButtonModule } from '../button/button.module';
 import { ListModule } from '../list/list.module';
@@ -18,6 +19,7 @@ import { CommentBoxComponent } from './comment-box.component';
   imports: [
     FileUploadModule,
     CommonModule,
+    TranslateModule,
     DialogModule,
     ButtonModule,
     ListModule,
@@ -28,14 +30,15 @@ import { CommentBoxComponent } from './comment-box.component';
   ],
   exports: [
     FileUploadModule,
-    CommentBoxComponent,
+    TranslateModule,
     DialogModule,
     ButtonModule,
     ListModule,
     DirectivesModule,
     InputModule,
     FormFieldModule,
-    ItemModule
+    ItemModule,
+    CommentBoxComponent,
   ]
 })
 

@@ -8,7 +8,7 @@
       <mcs-icon [key]="warningIconKey"></mcs-icon>
       <mcs-section>
         <span>{{ dialogAlert }}</span>
-        <span>{{ textContent.confirmation }}</span>
+        <span>{{ 'serverShared.dialogSuspendServer.confirmation' | translate }}</span>
       </mcs-section>
     </mcs-item>
   </mcs-dialog-content>
@@ -18,13 +18,13 @@
       (click)="closeDialog()"
       mcsEventTracker="cancel"
       mcsEventCategory="server"
-      mcsEventLabel="suspend-dialog">{{ textContent.cancel }}</a>
+      mcsEventLabel="suspend-dialog">{{ 'serverShared.dialogSuspendServer.cancel' | translate }}</a>
     <button mcsButton id="ctaSuspendServer" arrow="right"
       size="small" (click)="suspendServer()"
       mcsEventTracker="confirm"
       mcsEventCategory="server"
       mcsEventLabel="suspend-dialog">
-      {{ textContent.confirm }}
+      {{ 'serverShared.dialogSuspendServer.confirm' | translate }}
     </button>
   </mcs-dialog-actions>
 </mcs-dialog>

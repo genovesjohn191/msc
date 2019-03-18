@@ -6,7 +6,6 @@ import {
 } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { JobsProvisioningComponent } from './jobs-provisioning.component';
-import { McsTextContentProvider } from '@app/core';
 import { getEnumString } from '@app/utilities';
 import {
   McsJob,
@@ -59,9 +58,6 @@ describe('JobsProvisioningComponent', () => {
       imports: [
         RouterTestingModule,
         CoreTestingModule
-      ],
-      providers: [
-        McsTextContentProvider
       ]
     });
 
@@ -95,10 +91,6 @@ describe('JobsProvisioningComponent', () => {
       component.ngDoCheck();
       discardPeriodicTasks();
     }));
-
-    it(`should not be null/undefine the value of textContent`, () => {
-      expect(component.textContent).toBeDefined();
-    });
 
     it(`should set the progressbar maximum based on the ectInSeconds of all the tasks`, () => {
       expect(component.progressMax).toBe(15);

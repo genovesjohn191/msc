@@ -7,6 +7,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 import {
   Subscription,
   Subject,
@@ -21,7 +22,6 @@ import {
 } from 'rxjs/operators';
 import {
   CoreDefinition,
-  McsTextContentProvider,
   McsDialogService,
   McsNotificationEventsService,
   McsErrorHandlerService,
@@ -83,7 +83,6 @@ const SERVER_MAXIMUM_NICS = 10;
 export class ServerNicsComponent extends ServerDetailsBase implements OnInit, OnDestroy {
   public resourceNetworks$: Observable<McsResourceNetwork[]>;
 
-  public textContent: any;
   public currentIpAddress: string;
   public fcNetwork: FormControl;
   public manageNetwork: ServerManageNetwork;
@@ -138,10 +137,10 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     _serversRepository: McsServersRepository,
     _serverService: ServerService,
     _changeDetectorRef: ChangeDetectorRef,
-    _textProvider: McsTextContentProvider,
     _errorHandlerService: McsErrorHandlerService,
     _loadingService: McsLoadingService,
     _accessControl: McsAccessControlService,
+    private _translateService: TranslateService,
     private _serversService: ServersService,
     private _dialogService: McsDialogService,
     private _notificationEvents: McsNotificationEventsService
@@ -151,7 +150,6 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
       _serversRepository,
       _serverService,
       _changeDetectorRef,
-      _textProvider,
       _errorHandlerService,
       _loadingService,
       _accessControl
@@ -164,7 +162,6 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   }
 
   public ngOnInit() {
-    this.textContent = this._textProvider.content.servers.server.nics;
     this._setDataColumns();
   }
 
@@ -456,7 +453,9 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    * Sets data column for the corresponding table
    */
   private _setDataColumns(): void {
-    this.nicsColumns = Object.keys(this.textContent.columnHeaders);
+    this.nicsColumns = Object.keys(
+      this._translateService.instant('serverNics.columnHeaders')
+    );
     if (isNullOrEmpty(this.nicsColumns)) {
       throw new Error('column definition for nics was not defined');
     }

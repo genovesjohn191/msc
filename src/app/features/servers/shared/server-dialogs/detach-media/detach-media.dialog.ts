@@ -3,15 +3,12 @@ import {
   Inject,
   ViewEncapsulation
 } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import {
   MCS_DIALOG_DATA,
-  McsDialogRef,
-  McsTextContentProvider
+  McsDialogRef
 } from '@app/core';
-import {
-  isNullOrEmpty,
-  replacePlaceholder
-} from '@app/utilities';
+import { isNullOrEmpty } from '@app/utilities';
 import { McsServerMedia } from '@app/models';
 
 @Component({
@@ -24,28 +21,26 @@ import { McsServerMedia } from '@app/models';
 })
 
 export class DetachMediaDialogComponent {
-  public textContent: any;
   public media: McsServerMedia;
+
+  constructor(
+    private _translateService: TranslateService,
+    public dialogRef: McsDialogRef<DetachMediaDialogComponent>,
+    @Inject(MCS_DIALOG_DATA) public dialogData: McsServerMedia
+  ) {
+    this.media = this.dialogData;
+  }
 
   /**
    * Dialog title
    */
   public get dialogTitle(): string {
     if (isNullOrEmpty(this.media)) { return ''; }
-    return replacePlaceholder(
-      this.textContent.title,
-      'media_name',
-      this.media.name
-    );
-  }
 
-  constructor(
-    private _textContentProvider: McsTextContentProvider,
-    public dialogRef: McsDialogRef<DetachMediaDialogComponent>,
-    @Inject(MCS_DIALOG_DATA) public dialogData: McsServerMedia
-  ) {
-    this.textContent = this._textContentProvider.content.servers.shared.detachMediaDialog;
-    this.media = this.dialogData;
+    return this._translateService.instant(
+      'serverShared.dialogDetachMedia.alert',
+      { media_name: this.media.name }
+    );
   }
 
   /**

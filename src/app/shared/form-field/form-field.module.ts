@@ -4,6 +4,7 @@ import {
   FormsModule,
   ReactiveFormsModule
 } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { DirectivesModule } from '../directives/directives.module';
 import { FormFieldComponent } from './form-field.component';
 import { McsFormGroupDirective } from './form-group.directive';
@@ -28,6 +29,7 @@ import {
   ],
   imports: [
     CommonModule,
+    TranslateModule,
     DirectivesModule,
     FormsModule,
     ReactiveFormsModule
@@ -40,6 +42,7 @@ import {
     HintMessageComponent,
     PrefixComponent,
     SuffixComponent,
+    TranslateModule,
     DirectivesModule,
     FormsModule,
     ReactiveFormsModule

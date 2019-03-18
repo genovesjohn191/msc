@@ -1,6 +1,5 @@
 import {
   Component,
-  OnInit,
   AfterViewInit,
   OnDestroy,
   ChangeDetectorRef,
@@ -9,7 +8,6 @@ import {
 import { Observable } from 'rxjs';
 import {
   CoreDefinition,
-  McsTextContentProvider,
   McsBrowserService,
   McsTableListingBase,
   McsTableDataSource
@@ -39,8 +37,7 @@ export enum FirewallPoliciesMode {
 
 export class FirewallPoliciesComponent
   extends McsTableListingBase<McsTableDataSource<McsFirewallPolicy>>
-  implements OnInit, AfterViewInit, OnDestroy {
-  public textContent: any;
+  implements AfterViewInit, OnDestroy {
   public selectedFirewallPolicy: McsFirewallPolicy;
 
   public get columnFilterIconKey(): string {
@@ -73,16 +70,11 @@ export class FirewallPoliciesComponent
   constructor(
     _browserService: McsBrowserService,
     _changeDetectorRef: ChangeDetectorRef,
-    private _textContentProvider: McsTextContentProvider,
     private _firewallService: FirewallService,
     private _firewallsRepository: McsFirewallsRepository
   ) {
     super(_browserService, _changeDetectorRef);
     this.selectedFirewallPolicy = new McsFirewallPolicy();
-  }
-
-  public ngOnInit() {
-    this.textContent = this._textContentProvider.content.firewalls.firewall.policies;
   }
 
   public ngAfterViewInit() {

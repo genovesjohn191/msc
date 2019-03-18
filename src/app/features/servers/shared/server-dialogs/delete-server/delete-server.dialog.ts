@@ -3,16 +3,13 @@ import {
   Inject,
   ViewEncapsulation
 } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import {
   MCS_DIALOG_DATA,
   McsDialogRef,
-  CoreDefinition,
-  McsTextContentProvider
+  CoreDefinition
 } from '@app/core';
-import {
-  replacePlaceholder,
-  isNullOrEmpty
-} from '@app/utilities';
+import { isNullOrEmpty } from '@app/utilities';
 import { McsServer } from '@app/models';
 
 @Component({
@@ -25,7 +22,6 @@ import { McsServer } from '@app/models';
 })
 
 export class DeleteServerDialogComponent {
-  public textContent: any;
   public servers: McsServer[];
 
   public get warningIconKey(): string {
@@ -41,7 +37,7 @@ export class DeleteServerDialogComponent {
   }
 
   constructor(
-    private _textContentProvider: McsTextContentProvider,
+    private _translateService: TranslateService,
     public dialogRef: McsDialogRef<DeleteServerDialogComponent>,
     @Inject(MCS_DIALOG_DATA) public dialogData
   ) {
@@ -66,10 +62,13 @@ export class DeleteServerDialogComponent {
     let title = '';
 
     if (this.hasMultipleServers) {
-      title = this.textContent.title.multiple;
+      title = this._translateService.instant('serverShared.dialogDeleteServer.title.multiple');
     } else {
-      let serverName = (this.hasServer) ? this.servers[0].name : '' ;
-      title = replacePlaceholder(this.textContent.title.single, 'server_name', serverName);
+      let serverName = (this.hasServer) ? this.servers[0].name : '';
+      title = this._translateService.instant(
+        'serverShared.dialogDeleteServer.title.single',
+        { server_name: serverName }
+      );
     }
 
     return title;
@@ -77,12 +76,11 @@ export class DeleteServerDialogComponent {
 
   public get dialogAlert(): string {
     return (this.hasMultipleServers) ?
-      this.textContent.alert.multiple :
-      this.textContent.alert.single ;
+      this._translateService.instant('serverShared.dialogDeleteServer.alert.multiple') :
+      this._translateService.instant('serverShared.dialogDeleteServer.alert.single');
   }
 
   private _initialize(): void {
-    this.textContent = this._textContentProvider.content.servers.shared.deleteServerDialog;
     this.servers = new Array<McsServer>();
 
     if (Array.isArray(this.dialogData)) {

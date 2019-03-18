@@ -1,14 +1,10 @@
 import {
   Component,
-  OnInit,
   Output,
   EventEmitter,
   ChangeDetectionStrategy
 } from '@angular/core';
-import {
-  McsTextContentProvider,
-  CoreConfig
-} from '@app/core';
+import { CoreConfig } from '@app/core';
 import { isNullOrEmpty } from '@app/utilities';
 import { RouteKey } from '@app/models';
 
@@ -19,9 +15,7 @@ import { RouteKey } from '@app/models';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class AccountPanelComponent implements OnInit {
-
-  public textContent: any;
+export class AccountPanelComponent {
 
   @Output()
   public selectionChanged: EventEmitter<any>;
@@ -30,15 +24,8 @@ export class AccountPanelComponent implements OnInit {
     return RouteKey;
   }
 
-  constructor(
-    private _coreConfig: CoreConfig,
-    private _textContent: McsTextContentProvider
-  ) {
+  constructor(private _coreConfig: CoreConfig) {
     this.selectionChanged = new EventEmitter();
-  }
-
-  public ngOnInit(): void {
-    this.textContent = this._textContent.content.accountPanel;
   }
 
   /**

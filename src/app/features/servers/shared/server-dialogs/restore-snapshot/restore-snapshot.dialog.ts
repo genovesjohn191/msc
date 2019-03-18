@@ -3,13 +3,12 @@ import {
   Inject,
   ViewEncapsulation
 } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import {
   MCS_DIALOG_DATA,
   McsDialogRef,
-  McsTextContentProvider,
   CoreDefinition
 } from '@app/core';
-import { replacePlaceholder } from '@app/utilities';
 import { ServerSnapshotDialogContent } from '../../server-snapshot-dialog-content';
 
 @Component({
@@ -22,15 +21,13 @@ import { ServerSnapshotDialogContent } from '../../server-snapshot-dialog-conten
 })
 
 export class RestoreSnapshotDialogComponent {
-  public textContent: any;
   public dialogModel: ServerSnapshotDialogContent;
 
   constructor(
-    private _textContentProvider: McsTextContentProvider,
+    private _translateService: TranslateService,
     public dialogRef: McsDialogRef<RestoreSnapshotDialogComponent>,
     @Inject(MCS_DIALOG_DATA) public dialogData
   ) {
-    this.textContent = this._textContentProvider.content.servers.shared.restoreSnapshotDialog;
     this.dialogModel = this.dialogData as ServerSnapshotDialogContent[][0];
   }
 
@@ -45,14 +42,13 @@ export class RestoreSnapshotDialogComponent {
    * Confirmation message to be displayed in the dialog
    */
   public get confirmationMessage(): string {
-    return replacePlaceholder(
-      this.textContent.confirmation, [
-        'snapshot_name',
-        'server_name'
-      ], [
-        this.dialogModel.snapshotName,
-        this.dialogModel.serverName
-      ]);
+    return this._translateService.instant(
+      'serverShared.dialogRestoreSnapshot.confirmation',
+      {
+        snapshot_name: this.dialogModel.snapshotName,
+        server_name: this.dialogModel.serverName
+      }
+    );
   }
 
   /**

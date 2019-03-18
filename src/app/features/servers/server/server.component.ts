@@ -24,6 +24,7 @@ import {
   finalize,
   shareReplay
 } from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
 import {
   ResetPasswordDialogComponent,
   DeleteServerDialogComponent,
@@ -33,7 +34,6 @@ import {
 } from '../shared';
 import {
   CoreDefinition,
-  McsTextContentProvider,
   McsDialogService,
   McsRoutingTabBase,
   McsErrorHandlerService,
@@ -82,10 +82,7 @@ export class ServerComponent
   @ViewChild(ComponentHandlerDirective)
   public componentHandler: ComponentHandlerDirective;
 
-  public textContent: any;
-  public serversTextContent: any;
   public serverPermission: McsServerPermission;
-
   public selectedServer$: Observable<McsServer>;
   public serversMap$: Observable<Map<string, McsServer[]>>;
   public serverListSource: ServersListSource | null;
@@ -109,7 +106,7 @@ export class ServerComponent
     private _serversRepository: McsServersRepository,
     private _serverService: ServerService,
     private _serversService: ServersService,
-    private _textContentProvider: McsTextContentProvider,
+    private _translateService: TranslateService,
     private _changeDetectorRef: ChangeDetectorRef,
     private _loadingService: McsLoadingService,
     private _errorHandlerService: McsErrorHandlerService
@@ -120,8 +117,6 @@ export class ServerComponent
   }
 
   public ngOnInit() {
-    this.serversTextContent = this._textContentProvider.content.servers;
-    this.textContent = this._textContentProvider.content.servers.server;
     super.onInit();
   }
 
@@ -253,7 +248,7 @@ export class ServerComponent
    * @param serverId Server ID to be the basis of the server
    */
   private _subscribeToServerById(serverId: string): void {
-    this._loadingService.showLoader(this.textContent.loading);
+    this._loadingService.showLoader(this._translateService.instant('server.loading'));
     this.selectedServer$ = this._serversRepository.getById(serverId).pipe(
       catchError((error) => {
         this._errorHandlerService.redirectToErrorPage(error.status);

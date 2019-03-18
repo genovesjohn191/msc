@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 import { DirectivesModule } from '../directives/directives.module';
 import { IconModule } from '../icon/icon.module';
 import { ButtonModule } from '../button/button.module';
@@ -27,6 +28,7 @@ import {
   ],
   imports: [
     CommonModule,
+    TranslateModule,
     TabGroupModule,
     DirectivesModule,
     IconModule,
@@ -40,6 +42,7 @@ import {
     WizardTopPanelDefDirective,
     WizardTopPanelPlaceholderDirective,
     TabGroupModule,
+    TranslateModule,
     DirectivesModule,
     IconModule,
     ButtonModule

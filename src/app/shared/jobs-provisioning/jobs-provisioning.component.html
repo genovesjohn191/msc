@@ -48,7 +48,7 @@
           <mcs-item *ngIf="job.resourceLink">
             <a mcsButton arrow="right" size="small" mcsId="view-job" margin-top-small
               [mcsRouterLink]="job.resourceLink">
-              {{ textContent.viewDetails }}
+              {{ 'shared.jobsProvisioning.viewDetails' | translate }}
             </a>
           </mcs-item>
         </ng-container>

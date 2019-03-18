@@ -5,14 +5,14 @@
     <ng-container *ngSwitchCase="vmConsoleStatusEnum.Connecting">
       <mcs-item class="console-message">
         <mcs-loader></mcs-loader>
-        <span>{{ textContent.loading }}</span>
+        <span>{{ 'consolePage.loading' | translate }}</span>
       </mcs-item>
     </ng-container>
 
     <!-- Disconnected state -->
     <ng-container *ngSwitchCase="vmConsoleStatusEnum.Disconnected">
       <div class="console-message">
-        <span>{{ textContent.disconnectedMessage }}</span>
+        <span>{{ 'consolePage.disconnectedMessage' | translate }}</span>
       </div>
     </ng-container>
 
@@ -26,7 +26,7 @@
     <!-- Error state -->
     <ng-container *ngSwitchCase="vmConsoleStatusEnum.Error">
       <div class="console-message">
-        <span>{{ textContent.errorMessage }}</span>
+        <span>{{ 'consolePage.errorMessage' | translate }}</span>
       </div>
     </ng-container>
 
@@ -41,7 +41,7 @@
         <mcs-list-item>
           <mcs-icon [key]="stopIconKey" size="small"
             [disabled]="!server?.stoppable"
-            [mcsTooltip]="textContent.stop"
+            [mcsTooltip]="'consolePage.stop' | translate"
             mcsTooltipPosition="left"
             mcsCursor="pointer"
             (click)="executeServerCommand(serverCommandEnum.Stop)"></mcs-icon>
@@ -51,7 +51,7 @@
         <mcs-list-item>
           <mcs-icon [key]="restartIconKey" size="small"
             [disabled]="!server?.restartable"
-            [mcsTooltip]="textContent.restart"
+            [mcsTooltip]="'consolePage.restart' | translate"
             mcsTooltipPosition="left"
             mcsCursor="pointer"
             (click)="executeServerCommand(serverCommandEnum.Restart)"></mcs-icon>
@@ -62,7 +62,7 @@
         <!-- Ctrl + Alt + Del -->
         <mcs-list-item>
           <mcs-icon [key]="keyboardIconKey"
-            [mcsTooltip]="textContent.sendCtrlAltDelete"
+            [mcsTooltip]="'consolePage.sendCtrlAltDelete' | translate"
             mcsTooltipPosition="left"
             mcsCursor="pointer"
             (click)="onClickCtrlAltDelete()">

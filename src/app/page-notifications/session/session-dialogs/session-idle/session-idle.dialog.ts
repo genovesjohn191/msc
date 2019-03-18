@@ -15,7 +15,6 @@ import {
 import {
   MCS_DIALOG_DATA,
   McsDialogRef,
-  McsTextContentProvider,
   CoreDefinition
 } from '@app/core';
 
@@ -29,7 +28,6 @@ import {
 })
 
 export class SessionIdleDialogComponent implements OnInit {
-  public textContent: any;
   public countDown: Observable<number>;
 
   public get warningIconKey(): string {
@@ -37,13 +35,9 @@ export class SessionIdleDialogComponent implements OnInit {
   }
 
   constructor(
-    private _textContentProvider: McsTextContentProvider,
     public dialogRef: McsDialogRef<SessionIdleDialogComponent>,
     @Inject(MCS_DIALOG_DATA) public dialogData: any
-  ) {
-    this.textContent = this._textContentProvider.content
-      .pageNotifications.sessionHandler.sessionIdleDialog;
-  }
+  ) {}
 
   public ngOnInit(): void {
     this.countDown = timer(0, 1000).pipe(

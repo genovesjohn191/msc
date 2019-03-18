@@ -14,12 +14,12 @@ import {
   FormGroup,
   FormControl
 } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 import {
   FileUploader,
   FileItem
 } from 'ng2-file-upload';
 import {
-  McsTextContentProvider,
   McsDialogService,
   McsDialogRef,
   CoreDefinition
@@ -42,7 +42,6 @@ import {
 })
 
 export class CommentBoxComponent implements OnInit {
-  public textContent: any;
   public fileUploader: FileUploader;
   public hasDropZone: boolean;
   public errorDialogRef: McsDialogRef<any>;
@@ -69,7 +68,7 @@ export class CommentBoxComponent implements OnInit {
   }
 
   public constructor(
-    private _textContentProvider: McsTextContentProvider,
+    private _translateService: TranslateService,
     private _dialogService: McsDialogService,
     private _changeDetectorRef: ChangeDetectorRef
   ) {
@@ -104,7 +103,6 @@ export class CommentBoxComponent implements OnInit {
 
   public ngOnInit() {
     // Initialize text content provider and file loader settings
-    this.textContent = this._textContentProvider.content.shared.commentBox;
     this.fileUploader = new FileUploader({
       autoUpload: false,
       queueLimit: this.allowMultiple ? undefined : 1,
@@ -210,11 +208,11 @@ export class CommentBoxComponent implements OnInit {
         return;
 
       case 'mimeType':
-        errorMessage = this.textContent.errorFileType;
+        errorMessage = this._translateService.instant('shared.commentBox.errorFileType');
         break;
 
       default:
-        errorMessage = this.textContent.errorGeneral;
+        errorMessage = this._translateService.instant('shared.commentBox.errorGeneral');
         break;
     }
 

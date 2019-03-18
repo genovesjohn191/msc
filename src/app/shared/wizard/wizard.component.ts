@@ -16,10 +16,7 @@ import {
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import {
-  CoreDefinition,
-  McsTextContentProvider
-} from '@app/core';
+import { CoreDefinition } from '@app/core';
 import {
   isNullOrEmpty,
   unsubscribeSubject,
@@ -45,7 +42,6 @@ import { IWizardStep } from './wizard-step/wizard-step.interface';
 })
 
 export class WizardComponent implements AfterContentInit, OnDestroy {
-  public textContent: any;
   public activeStepIndex: number;
   public isCompleted: boolean;
   public activeStep: WizardStepComponent;
@@ -84,10 +80,7 @@ export class WizardComponent implements AfterContentInit, OnDestroy {
     return this._wizardSteps.toArray();
   }
 
-  public constructor(
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _textContentProvider: McsTextContentProvider
-  ) {
+  public constructor(private _changeDetectorRef: ChangeDetectorRef) {
     this.isCompleted = false;
     this.activeStep = new WizardStepComponent();
     this.stepChange = new EventEmitter<IWizardStep>();
@@ -106,7 +99,6 @@ export class WizardComponent implements AfterContentInit, OnDestroy {
     }
 
     // Set text content
-    this.textContent = this._textContentProvider.content.shared.wizard;
     this._changeDetectorRef.markForCheck();
   }
 

@@ -40,11 +40,4 @@ describe('FirewallOverviewComponent', () => {
       component = fixture.componentInstance;
     });
   }));
-
-  /** Test Implementation */
-  describe('ngOnInit()', () => {
-    it('should define the text content value to firewallOverviewTextContent', () => {
-      expect(component.textContent).toBeDefined();
-    });
-  });
 });

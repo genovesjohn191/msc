@@ -11,6 +11,7 @@ import {
   Router,
   ActivatedRoute
 } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import {
   throwError,
   Subject,
@@ -25,7 +26,6 @@ import {
   finalize
 } from 'rxjs/operators';
 import {
-  McsTextContentProvider,
   McsErrorHandlerService,
   CoreDefinition,
   CoreRoutes,
@@ -69,8 +69,6 @@ export class MediumComponent
   @ViewChild(ComponentHandlerDirective)
   public componentHandler: ComponentHandlerDirective;
 
-  public textContent: any;
-  public mediaTextContent: any;
   public media$: Observable<McsResourceMedia>;
   public mediaListing$: Observable<Map<string, McsResourceMedia[]>>;
   public mediaListSource: MediaListSource | null;
@@ -87,7 +85,7 @@ export class MediumComponent
     _router: Router,
     _activatedRoute: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _textContentProvider: McsTextContentProvider,
+    private _translateService: TranslateService,
     private _loadingService: McsLoadingService,
     private _errorHandlerService: McsErrorHandlerService,
     private _mediaRepository: McsMediaRepository,
@@ -98,8 +96,6 @@ export class MediumComponent
   }
 
   public ngOnInit() {
-    this.mediaTextContent = this._textContentProvider.content.media;
-    this.textContent = this.mediaTextContent.medium;
     super.onInit();
   }
 
@@ -163,7 +159,7 @@ export class MediumComponent
    * @param mediumId Media id to be selected
    */
   private _subscribeToMediaById(mediumId: string): void {
-    this._loadingService.showLoader(this.textContent.loading);
+    this._loadingService.showLoader(this._translateService.instant('mediaMedium.loading'));
     this.media$ = this._mediaRepository.getById(mediumId).pipe(
       catchError((error) => {
         this._errorHandlerService.redirectToErrorPage(error.status);

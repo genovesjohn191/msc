@@ -20,7 +20,6 @@ import {
 } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import {
-  McsTextContentProvider,
   McsErrorHandlerService,
   CoreValidators,
   CoreDefinition,
@@ -68,8 +67,6 @@ export class TicketCreateComponent implements
   OnDestroy,
   McsSafeToNavigateAway {
 
-  public textContent: any;
-  public contextualContent: any;
   public services: TicketService[];
   public isServicesOpen: boolean;
   public textService: string;
@@ -126,7 +123,6 @@ export class TicketCreateComponent implements
 
   constructor(
     private _router: Router,
-    private _textContentProvider: McsTextContentProvider,
     private _ticketCreateService: TicketCreateService,
     private _changeDetectorRef: ChangeDetectorRef,
     private _ticketsRepository: McsTicketsRepository,
@@ -161,9 +157,6 @@ export class TicketCreateComponent implements
   }
 
   public ngOnInit() {
-    this.textContent = this._textContentProvider.content.tickets.createTicket;
-    this.contextualContent = this.textContent.contextualHelp;
-
     this._registerFormGroup();
     this._setTicketType();
     this._getServices();

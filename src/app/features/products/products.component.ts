@@ -8,6 +8,7 @@ import {
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import {
   Subject,
   throwError,
@@ -27,7 +28,6 @@ import {
   ParamMap
 } from '@angular/router';
 import {
-  McsTextContentProvider,
   McsDataStatusFactory,
   McsErrorHandlerService,
   CoreDefinition,
@@ -72,7 +72,6 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('slidingPanel')
   public slidingPanel: SlidingPanelComponent;
 
-  public textContent: any;
   public catalogs$: Observable<McsProductCatalog[]>;
   public selectedProduct$: Observable<McsProduct>;
   public catalogListSource: ProductCatalogListSource | null;
@@ -90,7 +89,7 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private _activatedRoute: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _textContentProvider: McsTextContentProvider,
+    private _translateService: TranslateService,
     private _loadingService: McsLoadingService,
     private _errorHandlerService: McsErrorHandlerService,
     private _productService: ProductService,
@@ -101,7 +100,6 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public ngOnInit() {
-    this.textContent = this._textContentProvider.content.products;
     this._subscribeToProductById();
   }
 
@@ -157,7 +155,7 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   private _subscribeToProductById(): void {
     this.selectedProduct$ = this._activatedRoute.paramMap.pipe(
       switchMap((params: ParamMap) => {
-        this._loadingService.showLoader(this.textContent.loadingDetails);
+        this._loadingService.showLoader(this._translateService.instant('products.loadingDetails'));
         return this._productsRepository.getById(params.get('id')).pipe(
           finalize(() => this._loadingService.hideLoader())
         );

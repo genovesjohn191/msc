@@ -31,10 +31,10 @@ import {
   isNullOrUndefined
 } from '@app/utilities';
 import {
-  McsTextContentProvider,
-  CoreValidators,
-  IMcsFormGroup
-} from '@app/core';
+ CoreValidators,
+ IMcsFormGroup
+  } from '@app/core';
+
 import {
   InputManageType,
   McsResource,
@@ -62,7 +62,6 @@ const DEFAULT_MIN_CPU = 2;
 export class ServerManageScaleComponent
   implements OnInit, DoCheck, AfterViewInit, OnDestroy, IMcsFormGroup {
 
-  public textContent: any;
   public inputManageType: InputManageType;
   public sliderValueIndex: number;
   public sliderValue: ServerManageScale;
@@ -98,15 +97,13 @@ export class ServerManageScaleComponent
   private _previousResourceAvailable = 0;
 
   constructor(
-    private _formBuilder: FormBuilder,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _textContentProvider: McsTextContentProvider
+    private _formBuilder: FormBuilder
   ) {
     this._createFormControlsMap();
   }
 
   public ngOnInit() {
-    this.textContent = this._textContentProvider.content.servers.shared.manageScale;
     this._registerFormGroup();
     this._createSliderTable();
     this._reset();

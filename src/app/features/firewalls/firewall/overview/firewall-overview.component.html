@@ -5,21 +5,21 @@
     <mcs-grid-column sizeSm="12">
       <mcs-presentation-panel mcsId="firewall-properties">
         <ng-container mcsPresentationPanelHeader>
-          <h2>{{ textContent.properties.title }}</h2>
+          <h2>{{ 'firewall.overview.properties.title' | translate }}</h2>
         </ng-container>
 
         <mcs-item>
-          <span>{{ textContent.properties.model }}:</span>
+          <span>{{ 'firewall.overview.properties.model' | translate }}:</span>
           <span [innerHTML]="firewall.model | mcsDataLabel"></span>
         </mcs-item>
 
         <mcs-item>
-          <span>{{ textContent.properties.cpu }}:</span>
+          <span>{{ 'firewall.overview.properties.cpu' | translate }}:</span>
           <span [innerHTML]="firewall.cpuCountLabel | mcsDataLabel"></span>
         </mcs-item>
 
         <mcs-item>
-          <span>{{ textContent.properties.ram }}:</span>
+          <span>{{ 'firewall.overview.properties.ram' | translate }}:</span>
           <span>{{ firewall.memoryMB | mcsDataSize: 'MB' }}</span>
         </mcs-item>
       </mcs-presentation-panel>
@@ -29,16 +29,16 @@
     <mcs-grid-column sizeSm="12">
       <mcs-presentation-panel mcsId="firewall-identifiers">
         <ng-container mcsPresentationPanelHeader>
-          <h2>{{ textContent.supportIdentifiers.title }}</h2>
+          <h2>{{ 'firewall.overview.supportIdentifiers.title' | translate }}</h2>
         </ng-container>
 
         <mcs-item>
-          <span>{{ textContent.supportIdentifiers.service }}:</span>
+          <span>{{ 'firewall.overview.supportIdentifiers.service' | translate }}:</span>
           <span [innerHTML]="firewall.serviceId | mcsDataLabel"></span>
         </mcs-item>
 
         <mcs-item *mcsAccessControl="['FirewallSerialNumberView']">
-          <span>{{ textContent.supportIdentifiers.serial }}:</span>
+          <span>{{ 'firewall.overview.supportIdentifiers.serial' | translate }}:</span>
           <span [innerHTML]="firewall.serialNumber | mcsDataLabel"></span>
         </mcs-item>
       </mcs-presentation-panel>
@@ -50,24 +50,24 @@
     <mcs-grid-column sizeSm="12" sizeLg="6">
       <mcs-presentation-panel mcsId="firewall-status">
         <ng-container mcsPresentationPanelHeader>
-          <h2>{{ textContent.status.title }}</h2>
+          <h2>{{ 'firewall.overview.status.title' | translate }}</h2>
         </ng-container>
 
         <mcs-item>
           <mcs-icon size="small" [key]="firewall.deviceStatusIconKey"></mcs-icon>
-          <span>{{ textContent.status.deviceStatus }}:</span>
+          <span>{{ 'firewall.overview.status.deviceStatus' | translate }}:</span>
           <span>{{ firewall.deviceStatusLabel }}</span>
         </mcs-item>
 
         <mcs-item>
           <mcs-icon size="small" [key]="firewall.connectionStatusIconKey"></mcs-icon>
-          <span>{{ textContent.status.connectionStatus }}:</span>
+          <span>{{ 'firewall.overview.status.connectionStatus' | translate }}:</span>
           <span>{{ firewall.connectionStatusLabel }}</span>
         </mcs-item>
 
         <mcs-item>
           <mcs-icon size="small" [key]="firewall.configurationStatusIconKey"></mcs-icon>
-          <span>{{ textContent.status.configurationStatus }}:</span>
+          <span>{{ 'firewall.overview.status.configurationStatus' | translate }}:</span>
           <span>{{ firewall.configurationStatusLabel }}</span>
         </mcs-item>
       </mcs-presentation-panel>
@@ -78,27 +78,27 @@
       <mcs-grid-column sizeSm="12" sizeLg="6">
         <mcs-presentation-panel mcsId="firewall-topology">
           <ng-container mcsPresentationPanelHeader>
-            <h2>{{ textContent.utmServices.title }}</h2>
+            <h2>{{ 'firewall.overview.utmServices.title' | translate }}</h2>
           </ng-container>
 
           <mcs-item *ngIf="firewall?.utm?.avExpiryDate">
             <mcs-icon size="small"
               [key]="getLicenseIconKey(firewall?.utm?.avExpiryDate)"></mcs-icon>
-            <span>{{ textContent.utmServices.antivirus }}:</span>
+            <span>{{ 'firewall.overview.utmServices.antivirus' | translate }}:</span>
             <span>{{ getLicenseText(firewall?.utm?.avExpiryDate) }}</span>
           </mcs-item>
 
           <mcs-item *ngIf="firewall?.utm?.webExpiryDate">
             <mcs-icon size="small"
               [key]="getLicenseIconKey(firewall?.utm?.webExpiryDate)"></mcs-icon>
-            <span>{{ textContent.utmServices.webFiltering }}:</span>
+            <span>{{ 'firewall.overview.utmServices.webFiltering' | translate }}:</span>
             <span>{{ getLicenseText(firewall?.utm?.webExpiryDate) }}</span>
           </mcs-item>
 
           <mcs-item *ngIf="firewall?.utm?.emailExpiryDate">
             <mcs-icon size="small"
               [key]="getLicenseIconKey(firewall?.utm?.emailExpiryDate)"></mcs-icon>
-            <span>{{ textContent.utmServices.emailFiltering }}:</span>
+            <span>{{ 'firewall.overview.utmServices.emailFiltering' | translate }}:</span>
             <span>{{ getLicenseText(firewall?.utm?.emailExpiryDate) }}</span>
           </mcs-item>
         </mcs-presentation-panel>
@@ -109,21 +109,21 @@
     <mcs-grid-column sizeSm="12" sizeLg="6">
       <mcs-presentation-panel mcsId="firewall-ha-role">
         <ng-container mcsPresentationPanelHeader>
-          <h2>{{ textContent.topology.title }}</h2>
+          <h2>{{ 'firewall.overview.topology.title' | translate }}</h2>
         </ng-container>
 
         <ng-container *ngIf="firewall?.haRole; else noTopologyInfo">
           <mcs-list spacing="xsmall">
             <mcs-list-item *ngIf="firewall.haRole">
               <mcs-item>
-                <span>{{ textContent.topology.role }}:</span>
+                <span>{{ 'firewall.overview.topology.role' | translate }}:</span>
                 <span>{{ firewall.haRole }}</span>
               </mcs-item>
             </mcs-list-item>
           </mcs-list>
         </ng-container>
         <ng-template #noTopologyInfo>
-          <span read-only>{{ textContent.topology.noContentMessage }}</span>
+          <span read-only>{{ 'firewall.overview.topology.noContentMessage' | translate }}</span>
         </ng-template>
       </mcs-presentation-panel>
     </mcs-grid-column>

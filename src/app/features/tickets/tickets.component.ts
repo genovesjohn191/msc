@@ -1,6 +1,5 @@
 import {
   Component,
-  OnInit,
   OnDestroy,
   AfterViewInit,
   ChangeDetectorRef,
@@ -9,7 +8,6 @@ import {
 import { Router } from '@angular/router';
 /** Services */
 import {
-  McsTextContentProvider,
   CoreDefinition,
   McsBrowserService,
   McsTableListingBase,
@@ -34,8 +32,7 @@ import { McsTicketsRepository } from '@app/services';
 
 export class TicketsComponent
   extends McsTableListingBase<McsTableDataSource<McsTicket>>
-  implements OnInit, AfterViewInit, OnDestroy {
-  public textContent: any;
+  implements AfterViewInit, OnDestroy {
 
   public get addIconKey(): string {
     return CoreDefinition.ASSETS_FONT_PLUS;
@@ -44,15 +41,10 @@ export class TicketsComponent
   constructor(
     _browserService: McsBrowserService,
     _changeDetectorRef: ChangeDetectorRef,
-    private _textContentProvider: McsTextContentProvider,
     private _ticketsRepository: McsTicketsRepository,
     private _router: Router
   ) {
     super(_browserService, _changeDetectorRef);
-  }
-
-  public ngOnInit(): void {
-    this.textContent = this._textContentProvider.content.tickets;
   }
 
   public ngAfterViewInit() {

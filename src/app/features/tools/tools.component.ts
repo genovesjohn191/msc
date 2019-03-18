@@ -5,9 +5,9 @@ import {
   OnDestroy,
   ChangeDetectorRef
 } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 /** Services */
 import {
-  McsTextContentProvider,
   McsTableListingBase,
   McsTableDataSource,
   McsBrowserService,
@@ -29,18 +29,16 @@ import { isNullOrUndefined } from '@app/utilities';
 export class ToolsComponent
   extends McsTableListingBase<McsTableDataSource<McsPortal>>
   implements AfterViewInit, OnDestroy {
-  public textContent: any;
   public toolDescription: Map<string, string>;
 
   constructor(
     _browserService: McsBrowserService,
     _changeDetectorRef: ChangeDetectorRef,
     private _coreConfig: CoreConfig,
-    private _textContentProvider: McsTextContentProvider,
+    private _translateService: TranslateService,
     private _toolsRepository: McsToolsRepository
   ) {
     super(_browserService, _changeDetectorRef);
-    this.textContent = this._textContentProvider.content.tools;
     this.dataColumns = ['name', 'resourceSpecific', 'portalAccess'];
   }
 
@@ -106,7 +104,7 @@ export class ToolsComponent
    * Intializes tool description map
    */
   private _initializeToolDescriptionMap(): void {
-    let descriptions = this.textContent.table.descriptions;
+    let descriptions = this._translateService.instant('tools.table.descriptions');
     this.toolDescription = new Map<string, string>();
     this.toolDescription.set(
       descriptions.macquarieView.name,

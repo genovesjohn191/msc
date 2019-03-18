@@ -1,12 +1,12 @@
 <mcs-grid>
   <mcs-grid-row>
     <mcs-grid-column>
-      <span>{{ textContent.serviceVariant.label }}:</span>
+      <span>{{ 'serverShared.addOnHids.serviceVariant.label' | translate }}:</span>
     </mcs-grid-column>
     <mcs-grid-column>
       <mcs-select [(ngModel)]="selectedHidsServiceVariant"
         (change)="onServiceVariantChanged()"
-        [placeholder]="textContent.serviceVariant.placeholder"
+        [placeholder]="'serverShared.addOnHids.serviceVariant.placeholder' | translate"
         class="form-field-size-small">
         <mcs-option *ngFor="let serviceVariant of hidsServiceVariants" [value]="serviceVariant">
           {{ serviceVariant }}
@@ -17,12 +17,12 @@
 
   <mcs-grid-row>
     <mcs-grid-column>
-      <span>{{ textContent.protectionLevel.label }}:</span>
+      <span>{{ 'serverShared.addOnHids.protectionLevel.label' | translate }}:</span>
     </mcs-grid-column>
     <mcs-grid-column>
       <mcs-select [(ngModel)]="selectedHidsProtectionLevel"
         (change)="onProtectionLevelChanged()"
-        [placeholder]="textContent.protectionLevel.placeholder"
+        [placeholder]="'serverShared.addOnHids.protectionLevel.placeholder' | translate"
         class="form-field-size-small">
         <ng-container *ngFor="let protectionLevel of hidsProtectionLevels">
           <mcs-option [value]="protectionLevel">
@@ -35,12 +35,12 @@
 
   <mcs-grid-row>
     <mcs-grid-column>
-      <span>{{ textContent.policyTemplate.label }}:</span>
+      <span>{{ 'serverShared.addOnHids.policyTemplate.label' | translate }}:</span>
     </mcs-grid-column>
     <mcs-grid-column>
       <mcs-select [(ngModel)]="selectedHidsPolicyTemplate"
         (change)="onPolicyTemplateChanged()"
-        [placeholder]="textContent.policyTemplate.placeholder"
+        [placeholder]="'serverShared.addOnHids.policyTemplate.placeholder' | translate"
         class="form-field-size-small">
         <mcs-option
           *ngFor="let policyTemplate of hidsPolicyTemplates"

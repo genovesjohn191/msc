@@ -3,13 +3,12 @@ import {
   Inject,
   ViewEncapsulation
 } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import {
   MCS_DIALOG_DATA,
   McsDialogRef,
-  McsTextContentProvider,
   CoreDefinition
 } from '@app/core';
-import { replacePlaceholder } from '@app/utilities';
 import { ServerSnapshotDialogContent } from '../../server-snapshot-dialog-content';
 
 @Component({
@@ -22,16 +21,13 @@ import { ServerSnapshotDialogContent } from '../../server-snapshot-dialog-conten
 })
 
 export class InsufficientStorageSnapshotDialogComponent {
-  public textContent: any;
   public dialogModel: ServerSnapshotDialogContent;
 
   constructor(
-    private _textContentProvider: McsTextContentProvider,
+    private _translateService: TranslateService,
     public dialogRef: McsDialogRef<InsufficientStorageSnapshotDialogComponent>,
     @Inject(MCS_DIALOG_DATA) public dialogData
   ) {
-    this.textContent =
-      this._textContentProvider.content.servers.shared.insufficientStorageSnapshotDialog;
     this.dialogModel = this.dialogData as ServerSnapshotDialogContent[][0];
   }
 
@@ -46,10 +42,10 @@ export class InsufficientStorageSnapshotDialogComponent {
    * Alert message to be displayed in the dialog
    */
   public get alertMessage(): string {
-    return replacePlaceholder(
-      this.textContent.alert,
-      'vdc_name',
-      this.dialogModel.vdcName);
+    return this._translateService.instant(
+      'serverShared.dialogInsufficientStorageSnapshot.alert',
+      { vdc_name: this.dialogModel.vdcName }
+    );
   }
 
   /**

@@ -1,6 +1,6 @@
 <mcs-dialog>
   <mcs-dialog-header>
-    <h1>{{ textContent.title }}</h1>
+    <h1>{{ 'serverShared.dialogInsufficientStorageSnapshot.title' | translate }}</h1>
   </mcs-dialog-header>
 
   <mcs-dialog-content>
@@ -8,7 +8,7 @@
       <mcs-icon [key]="warningIconKey"></mcs-icon>
       <mcs-section>
         <span>{{ alertMessage }}</span>
-        <span>{{ textContent.confirmation }}</span>
+        <span>{{ 'serverShared.dialogInsufficientStorageSnapshot.confirmation' | translate }}</span>
       </mcs-section>
     </mcs-item>
   </mcs-dialog-content>
@@ -18,6 +18,6 @@
       (click)="closeDialog()"
       mcsEventTracker="close"
       mcsEventCategory="server"
-      mcsEventLabel="insufficient-snapshot-storage-dialog">{{ textContent.cancel }}</a>
+      mcsEventLabel="insufficient-snapshot-storage-dialog">{{ 'serverShared.dialogInsufficientStorageSnapshot.cancel' | translate }}</a>
   </mcs-dialog-actions>
 </mcs-dialog>

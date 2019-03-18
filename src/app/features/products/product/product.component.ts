@@ -17,7 +17,6 @@ import {
   switchMap
 } from 'rxjs/operators';
 import {
-  McsTextContentProvider,
   CoreRoutes,
   CoreDefinition
 } from '@app/core';
@@ -52,7 +51,6 @@ const MAX_CHAR_LENGTH = 200;
 })
 
 export class ProductComponent implements OnInit, OnDestroy {
-  public textContent: any;
   public shortDescriptionExpanded: boolean;
   public showMoreButtonIsDisplayed: boolean;
   public selectedProduct$: Observable<McsProduct>;
@@ -76,12 +74,10 @@ export class ProductComponent implements OnInit, OnDestroy {
     private _router: Router,
     private _renderer: Renderer2,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _textContentProvider: McsTextContentProvider,
     private _productService: ProductService
   ) { }
 
   public ngOnInit() {
-    this.textContent = this._textContentProvider.content.products.product;
     this._subscribeToSelectedProduct();
     this._subscribeToTextChange();
   }

@@ -7,9 +7,9 @@ import {
 } from '@angular/core';
 import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { McsTextContentProvider } from '@app/core';
 import { HttpStatusCode } from '@app/models';
 import {
   unsubscribeSubject,
@@ -29,7 +29,6 @@ import {
 export class HttpErrorPageComponent implements OnInit, OnDestroy {
   public textHeader: string;
   public textContent: any;
-  public textContentAll: any;
 
   /**
    * Error code of the current http request
@@ -50,11 +49,10 @@ export class HttpErrorPageComponent implements OnInit, OnDestroy {
     private _locationService: Location,
     private _activatedRoute: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _textProvider: McsTextContentProvider
+    private _translateService: TranslateService
   ) { }
 
   public ngOnInit() {
-    this.textContentAll = this._textProvider.content.pageHttpError;
     this._listenToParamChanges();
   }
 
@@ -101,38 +99,39 @@ export class HttpErrorPageComponent implements OnInit, OnDestroy {
    * Set the text content based on the status code obtained in the parameter
    */
   private _setTextContent(): void {
+    // TODO: can be stored to map, make a configuration class and set the status
     switch (this.errorCode) {
       case HttpStatusCode.InternalServerError:
-        this.textContent = this.textContentAll.internalServerError;
+        this.textContent = this._translateService.instant('pageHttpError.internalServerError');
         break;
 
       case HttpStatusCode.Unprocessable:
-        this.textContent = this.textContentAll.unprocessable;
+        this.textContent = this._translateService.instant('pageHttpError.unprocessable');
         break;
 
       case HttpStatusCode.ServiceUnavailable:
-        this.textContent = this.textContentAll.serviceUnavailable;
+        this.textContent = this._translateService.instant('pageHttpError.serviceUnavailable');
         break;
 
       case HttpStatusCode.Unauthorized:
-        this.textContent = this.textContentAll.unauthorized;
+        this.textContent = this._translateService.instant('pageHttpError.unauthorized');
         break;
 
       case HttpStatusCode.Forbidden:
-        this.textContent = this.textContentAll.forbidden;
+        this.textContent = this._translateService.instant('pageHttpError.forbidden');
         break;
 
       case HttpStatusCode.ReadOnlyMode:
-        this.textContent = this.textContentAll.readOnlyMode;
+        this.textContent = this._translateService.instant('pageHttpError.readOnlyMode');
         break;
 
       case HttpStatusCode.NotFound:
-        this.textContent = this.textContentAll.notFound;
+        this.textContent = this._translateService.instant('pageHttpError.notFound');
         break;
 
       default:
         this.textHeader = this.errorCode.toString();
-        this.textContent = this.textContentAll.genericError;
+        this.textContent = this._translateService.instant('pageHttpError.genericError');
         break;
     }
   }

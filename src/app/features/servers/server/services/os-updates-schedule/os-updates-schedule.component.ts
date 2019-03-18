@@ -11,6 +11,7 @@ import {
   FormGroup,
   FormControl
 } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 import {
   throwError,
   Observable,
@@ -23,7 +24,6 @@ import {
   concatMap
 } from 'rxjs/operators';
 import {
-  McsTextContentProvider,
   CoreValidators,
   McsDialogService,
   McsDataStatusFactory
@@ -65,7 +65,6 @@ import { OsUpdatesActionDetails } from '../os-updates-status-configuration';
   ]
 })
 export class OsUpdatesScheduleComponent implements OnInit {
-  public textContent: any;
 
   public recurringCategories: McsServerOsUpdatesCategory[];
   public runOnceCategories: McsServerOsUpdatesCategory[];
@@ -115,12 +114,18 @@ export class OsUpdatesScheduleComponent implements OnInit {
    */
   public get description(): string {
     if (!this.hasSchedule) {
-      return this.textContent.description.default;
+      return this._translateService.instant(
+        'serverServicesOsUpdatesSchedule.description.default'
+      );
     }
     if (this.isRunOnce) {
-      return this.textContent.description.runonce;
+      return this._translateService.instant(
+        'serverServicesOsUpdatesSchedule.description.runonce'
+      );
     } else {
-      return this.textContent.description.recurring;
+      return this._translateService.instant(
+        'serverServicesOsUpdatesSchedule.description.recurring'
+      );
     }
   }
 
@@ -182,7 +187,7 @@ export class OsUpdatesScheduleComponent implements OnInit {
     private _dialogService: McsDialogService,
     protected _serversRepository: McsServersRepository,
     protected _changeDetectorRef: ChangeDetectorRef,
-    protected _textProvider: McsTextContentProvider
+    protected _translateService: TranslateService
   ) {
     this.saveSchedule = new EventEmitter();
     this.deleteSchedule = new EventEmitter();
@@ -191,7 +196,6 @@ export class OsUpdatesScheduleComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.textContent = this._textProvider.content.servers.server.services.schedule;
     this._initializeFormData();
     this._getOsUpdatesScheduleConfiguration();
   }
@@ -219,9 +223,9 @@ export class OsUpdatesScheduleComponent implements OnInit {
     if (this.hasSchedule) {
       this._showScheduleDialog(
         this.selectedServer,
-        this.textContent.updateDialogTitle,
-        this.textContent.updateDialogMessage,
-        this.textContent.saveConfirmText,
+        this._translateService.instant('serverServicesOsUpdatesSchedule.updateDialogTitle'),
+        this._translateService.instant('serverServicesOsUpdatesSchedule.updateDialogMessage'),
+        this._translateService.instant('serverServicesOsUpdatesSchedule.saveConfirmText'),
       ).pipe(
         tap((dialogResult) => {
           if (isNullOrEmpty(dialogResult)) { return of(undefined); }
@@ -253,9 +257,9 @@ export class OsUpdatesScheduleComponent implements OnInit {
 
     if (this.hasSchedule) {
       this._showScheduleDialog(this.selectedServer,
-        this.textContent.updateDialogTitle,
-        this.textContent.updateDialogMessage,
-        this.textContent.saveConfirmText,
+        this._translateService.instant('serverServicesOsUpdatesSchedule.updateDialogTitle'),
+        this._translateService.instant('serverServicesOsUpdatesSchedule.updateDialogMessage'),
+        this._translateService.instant('serverServicesOsUpdatesSchedule.saveConfirmText'),
       ).pipe(
         tap((dialogResult) => {
           if (isNullOrEmpty(dialogResult)) { return of(undefined); }
@@ -272,9 +276,9 @@ export class OsUpdatesScheduleComponent implements OnInit {
   public deleteExistingSchedule(): void {
     this._showScheduleDialog(
       this.selectedServer,
-      this.textContent.deleteDialogTitle,
-      this.textContent.deleteDialogMessage,
-      this.textContent.deleteConfirmText,
+      this._translateService.instant('serverServicesOsUpdatesSchedule.deleteDialogTitle'),
+      this._translateService.instant('serverServicesOsUpdatesSchedule.deleteDialogMessage'),
+      this._translateService.instant('serverServicesOsUpdatesSchedule.deleteConfirmText'),
     ).pipe(
       tap((dialogResult) => {
         if (isNullOrEmpty(dialogResult)) { return of(undefined); }
@@ -388,8 +392,12 @@ export class OsUpdatesScheduleComponent implements OnInit {
     });
     // Initialize Time and Period selections
     // TODO : can be created by loop
-    this.timeOptions = this.textContent.timeSelection.split(',');
-    this.dayPeriodOptions = this.textContent.dayPeriod.split(',');
+    this.timeOptions = this._translateService.instant(
+      'serverServicesOsUpdatesSchedule.timeSelection'
+    ).split(',');
+    this.dayPeriodOptions = this._translateService.instant(
+      'serverServicesOsUpdatesSchedule.dayPeriod'
+    ).split(',');
   }
 
   /**

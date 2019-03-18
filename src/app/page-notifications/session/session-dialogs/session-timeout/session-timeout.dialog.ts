@@ -6,7 +6,6 @@ import {
 import {
   MCS_DIALOG_DATA,
   McsDialogRef,
-  McsTextContentProvider,
   CoreDefinition,
   McsSessionHandlerService
 } from '@app/core';
@@ -21,17 +20,12 @@ import {
 })
 
 export class SessionTimeoutDialogComponent {
-  public textContent: any;
 
   constructor(
-    private _textContentProvider: McsTextContentProvider,
     public dialogRef: McsDialogRef<SessionTimeoutDialogComponent>,
     private _sessionHandlerService: McsSessionHandlerService,
     @Inject(MCS_DIALOG_DATA) public dialogData: any
-  ) {
-    this.textContent = this._textContentProvider.content
-      .pageNotifications.sessionHandler.sessionTimeoutDialog;
-  }
+  ) { }
 
   public get warningIconKey(): string {
     return CoreDefinition.ASSETS_SVG_WARNING;

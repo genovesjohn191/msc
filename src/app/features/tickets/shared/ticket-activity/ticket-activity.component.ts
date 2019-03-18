@@ -1,16 +1,12 @@
 import {
   Component,
   Input,
-  OnInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   ViewEncapsulation
 } from '@angular/core';
 import { saveAs } from 'file-saver';
-import {
-  CoreDefinition,
-  McsTextContentProvider
-} from '@app/core';
+import { CoreDefinition } from '@app/core';
 import { CommentType } from '@app/models';
 import { McsTicketsRepository } from '@app/services';
 import { TicketActivity } from './ticket-activity';
@@ -28,10 +24,9 @@ import { TicketActivityType } from './ticket-activity-type.enum';
   }
 })
 
-export class TicketActivityComponent implements OnInit {
+export class TicketActivityComponent {
 
   public downloading: boolean;
-  public textContent: any;
 
   /**
    * Activity of the ticket to be populated on the view
@@ -71,14 +66,9 @@ export class TicketActivityComponent implements OnInit {
 
   public constructor(
     private _changeDetectorRef: ChangeDetectorRef,
-    private _ticketsRepository: McsTicketsRepository,
-    private _textContentProvider: McsTextContentProvider
+    private _ticketsRepository: McsTicketsRepository
   ) {
     this._activity = new TicketActivity();
-  }
-
-  public ngOnInit() {
-    this.textContent = this._textContentProvider.content.tickets.shared.ticketActivity;
   }
 
   public get activityIconKey(): string {

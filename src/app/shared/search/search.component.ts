@@ -18,7 +18,6 @@ import {
 } from 'rxjs/operators';
 import {
   CoreDefinition,
-  McsTextContentProvider,
   McsUniqueId
 } from '@app/core';
 import {
@@ -42,7 +41,6 @@ import { IdDirective } from '../directives';
 export class SearchComponent implements OnInit, AfterContentInit, OnDestroy, Search {
   @Input()
   public delayInSeconds: number | 'none' = 'none';
-  public textContent: any;
 
   /** Interface implementation */
   public generatedId: string;
@@ -57,17 +55,13 @@ export class SearchComponent implements OnInit, AfterContentInit, OnDestroy, Sea
   @ContentChild(IdDirective)
   private _idElement: IdDirective;
 
-  public constructor(
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _textContentProvider: McsTextContentProvider
-  ) {
+  public constructor(private _changeDetectorRef: ChangeDetectorRef) {
     this.keyword = '';
     this._searchSubject = new Subject<string>();
     this.searchChangedStream = new EventEmitter<any>();
   }
 
   public ngOnInit(): void {
-    this.textContent = this._textContentProvider.content.shared.search;
     this._createSearchSubject();
   }
 

@@ -25,7 +25,6 @@ import {
 import { saveAs } from 'file-saver';
 import {
   CoreDefinition,
-  McsTextContentProvider,
   McsErrorHandlerService,
   McsLoadingService
 } from '@app/core';
@@ -48,6 +47,7 @@ import {
 } from '@app/models';
 import { McsTicketsRepository } from '@app/services';
 import { TicketActivity } from '../shared';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'mcs-ticket',
@@ -57,7 +57,6 @@ import { TicketActivity } from '../shared';
 
 export class TicketComponent implements OnInit, OnDestroy {
 
-  public textContent: any;
   public selectedTicket$: Observable<McsTicket>;
   public ticketActivites$: Observable<TicketActivity[]>;
   public creatingComment$: Observable<boolean>;
@@ -75,10 +74,10 @@ export class TicketComponent implements OnInit, OnDestroy {
   }
 
   public constructor(
+    private _translateService: TranslateService,
     private _activatedRoute: ActivatedRoute,
     private _ticketsRepository: McsTicketsRepository,
     private _loadingService: McsLoadingService,
-    private _textContentProvider: McsTextContentProvider,
     private _errorHandlerService: McsErrorHandlerService,
     private _changeDetectorRef: ChangeDetectorRef
   ) {
@@ -86,7 +85,6 @@ export class TicketComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit() {
-    this.textContent = this._textContentProvider.content.tickets.ticket;
     this.creatingComment$ = this._creatingComment;
     this._subscribeToParamId();
   }
@@ -212,7 +210,7 @@ export class TicketComponent implements OnInit, OnDestroy {
    * Subscribe to ticket based on the parameter ID
    */
   private _subscribeToTicketById(ticketId: string): void {
-    this._loadingService.showLoader(this.textContent.loading);
+    this._loadingService.showLoader(this._translateService.instant('ticket.loading'));
     this.selectedTicket$ = this._ticketDetailsChange.pipe(
       startWith(null),
       switchMap(() =>

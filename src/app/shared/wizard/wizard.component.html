@@ -1,7 +1,7 @@
 <!-- Left panel wrapper in case of desktop -->
 <div class="wizard-steps-desktop" hidden-small>
   <div class="wizard-steps-header">
-    <span read-only>{{ textContent.steps }}</span>
+    <span read-only>{{ 'shared.wizard.steps' | translate }}</span>
   </div>
   <div>
     <ng-container *ngFor="let step of steps; let idx = index">

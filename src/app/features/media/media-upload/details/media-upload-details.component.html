@@ -2,7 +2,7 @@
   <div class="contextual-help-page-wrapper">
     <!-- Form Message -->
     <mcs-form-message #formMessage></mcs-form-message>
-    <p>{{ textContent.description }}</p>
+    <p>{{ 'mediaUpload.mediaStepDetails.description' | translate }}</p>
 
     <form [formGroup]="fgMediaUpload" mcsFormGroup>
       <!-- Resource Select -->
@@ -10,8 +10,8 @@
         <mcs-select [formControl]="fcResources" required
           mcsId="select-resource"
           (change)="onChangeResource($event)"
-          [placeholder]="textContent.selectResources"
-          [mcsContextualHelp]="textContent.selectResourcesHelp">
+          [placeholder]="'mediaUpload.mediaStepDetails.selectResources' | translate"
+          [mcsContextualHelp]="'mediaUpload.mediaStepDetails.selectResourcesHelp' | translate">
 
           <mcs-option-group>
             <ng-container *mcsOptionGroupHeader>
@@ -24,7 +24,7 @@
         </mcs-select>
 
         <mcs-error mcsError errorState="required">
-          {{ textContent.errors.selectResourceRequired }}
+          {{ 'mediaUpload.mediaStepDetails.errors.selectResourceRequired' | translate }}
         </mcs-error>
       </mcs-form-field>
 
@@ -33,12 +33,12 @@
         <mcs-select [formControl]="fcCatalogs" required
           mcsId="select-catalog"
           (change)="onChangeCatalog($event)"
-          [placeholder]="textContent.selectCatalog"
-          [mcsContextualHelp]="textContent.selectCatalogHelp">
+          [placeholder]="'mediaUpload.mediaStepDetails.selectCatalog' | translate"
+          [mcsContextualHelp]="'mediaUpload.mediaStepDetails.selectCatalogHelp' | translate">
 
           <mcs-option-group>
             <ng-container *mcsOptionGroupHeader>
-              {{ textContent.selectCatalogHeader }}
+              {{ 'mediaUpload.mediaStepDetails.selectCatalogHeader' | translate }}
             </ng-container>
             <mcs-option *ngFor="let catalog of filterUniqueCatalogs(selectedResource)"
               [value]="catalog">
@@ -48,7 +48,7 @@
         </mcs-select>
 
         <mcs-error mcsError errorState="required">
-          {{ textContent.errors.selectResourceCatalog }}
+          {{ 'mediaUpload.mediaStepDetails.errors.selectResourceCatalog' | translate }}
         </mcs-error>
       </mcs-form-field>
 
@@ -56,9 +56,9 @@
       <mcs-form-field>
         <input mcsInput #mediaName required mcsSetFocus
           mcsId="input-media-name"
-          [placeholder]="textContent.mediaName" maxlength="25"
+          [placeholder]="'mediaUpload.mediaStepDetails.mediaName' | translate" maxlength="25"
           [formControl]="fcMediaName"
-          [mcsContextualHelp]="textContent.mediaNameHelp">
+          [mcsContextualHelp]="'mediaUpload.mediaStepDetails.mediaNameHelp' | translate">
 
         <mcs-hint mcsHint align="start">
           <mcs-hint-message type="maxChar"
@@ -70,19 +70,19 @@
         </mcs-hint>
 
         <mcs-error mcsError errorState="required">
-          {{ textContent.errors.mediaNameRequired }}
+          {{ 'mediaUpload.mediaStepDetails.errors.mediaNameRequired' | translate }}
         </mcs-error>
         <mcs-error mcsError errorState="mediaNameInvalid">
-          {{ textContent.errors.mediaNameInvalid }}
+          {{ 'mediaUpload.mediaStepDetails.errors.mediaNameInvalid' | translate }}
         </mcs-error>
       </mcs-form-field>
 
       <!-- Media URL  -->
       <mcs-form-field>
         <input mcsInput #mediaUrl required mcsId="input-media-url"
-          [placeholder]="textContent.mediaUrl" maxlength="300"
+          [placeholder]="'mediaUpload.mediaStepDetails.mediaUrl' | translate" maxlength="300"
           [formControl]="fcMediaUrl"
-          [mcsContextualHelp]="textContent.mediaUrlHelp"
+          [mcsContextualHelp]="'mediaUpload.mediaStepDetails.mediaUrlHelp' | translate"
           (blur)="onBlurMediaUrl()">
 
         <mcs-suffix *ngIf="mediaUrlStatusIconKey">
@@ -101,10 +101,10 @@
         </mcs-hint>
 
         <mcs-error mcsError errorState="required">
-          {{ textContent.errors.mediaUrlRequired }}
+          {{ 'mediaUpload.mediaStepDetails.errors.mediaUrlRequired' | translate }}
         </mcs-error>
         <mcs-error mcsError errorState="url">
-          {{ textContent.errors.mediaUrlInvalid }}
+          {{ 'mediaUpload.mediaStepDetails.errors.mediaUrlInvalid' | translate }}
         </mcs-error>
         <mcs-error mcsError errorState="urlValidationError">
           {{ urlInfoMessage }}
@@ -114,9 +114,9 @@
       <!-- Media Description  -->
       <mcs-form-field>
         <input mcsInput #mediaDescription mcsId="input-media-description"
-          [placeholder]="textContent.mediaDescription" maxlength="1000"
+          [placeholder]="'mediaUpload.mediaStepDetails.mediaDescription' | translate" maxlength="1000"
           [formControl]="fcMediaDescription"
-          [mcsContextualHelp]="textContent.mediaDescriptionHelp">
+          [mcsContextualHelp]="'mediaUpload.mediaStepDetails.mediaDescriptionHelp' | translate">
 
         <mcs-hint mcsHint align="start">
           <mcs-hint-message type="maxChar"

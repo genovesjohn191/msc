@@ -3,17 +3,14 @@ import {
   Inject,
   ViewEncapsulation
 } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import {
   MCS_DIALOG_DATA,
   McsDialogRef,
-  CoreDefinition,
-  McsTextContentProvider
+  CoreDefinition
 } from '@app/core';
 import { McsServer } from '@app/models';
-import {
-  replacePlaceholder,
-  isNullOrEmpty
-} from '@app/utilities';
+import { isNullOrEmpty } from '@app/utilities';
 
 @Component({
   selector: 'mcs-suspend-server-dialog',
@@ -25,8 +22,15 @@ import {
 })
 
 export class SuspendServerDialogComponent {
-  public textContent: any;
   public servers: McsServer[];
+
+  constructor(
+    private _translateService: TranslateService,
+    public dialogRef: McsDialogRef<SuspendServerDialogComponent>,
+    @Inject(MCS_DIALOG_DATA) public dialogData
+  ) {
+    this._initialize();
+  }
 
   public get warningIconKey(): string {
     return CoreDefinition.ASSETS_SVG_WARNING;
@@ -40,12 +44,26 @@ export class SuspendServerDialogComponent {
     return this.hasServer && this.servers.length > 1;
   }
 
-  constructor(
-    private _textContentProvider: McsTextContentProvider,
-    public dialogRef: McsDialogRef<SuspendServerDialogComponent>,
-    @Inject(MCS_DIALOG_DATA) public dialogData
-  ) {
-    this._initialize();
+  public get dialogTitle(): string {
+    let title = '';
+
+    if (this.hasMultipleServers) {
+      title = this._translateService.instant('serverShared.dialogSuspendServer.title.multiple');
+    } else {
+      let serverName = (this.hasServer) ? this.servers[0].name : '';
+      title = this._translateService.instant(
+        'serverShared.dialogSuspendServer.title.single',
+        { server_name: serverName }
+      );
+    }
+
+    return title;
+  }
+
+  public get dialogAlert(): string {
+    return (this.hasMultipleServers) ?
+      this._translateService.instant('serverShared.dialogSuspendServer.alert.multiple') :
+      this._translateService.instant('serverShared.dialogSuspendServer.alert.single');
   }
 
   /**
@@ -62,27 +80,7 @@ export class SuspendServerDialogComponent {
     this.dialogRef.close(true);
   }
 
-  public get dialogTitle(): string {
-    let title = '';
-
-    if (this.hasMultipleServers) {
-      title = this.textContent.title.multiple;
-    } else {
-      let serverName = (this.hasServer) ? this.servers[0].name : '' ;
-      title = replacePlaceholder(this.textContent.title.single, 'server_name', serverName);
-    }
-
-    return title;
-  }
-
-  public get dialogAlert(): string {
-    return (this.hasMultipleServers) ?
-      this.textContent.alert.multiple :
-      this.textContent.alert.single ;
-  }
-
   private _initialize(): void {
-    this.textContent = this._textContentProvider.content.servers.shared.suspendServerDialog;
     this.servers = new Array<McsServer>();
 
     if (Array.isArray(this.dialogData)) {

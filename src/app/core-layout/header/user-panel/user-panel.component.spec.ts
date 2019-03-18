@@ -2,6 +2,7 @@ import {
   async,
   TestBed
 } from '@angular/core/testing';
+import { TranslateService } from '@ngx-translate/core';
 import { UserPanelComponent } from './user-panel.component';
 import { CoreDefinition } from '@app/core';
 import { CoreLayoutTestingModule } from '../../testing';
@@ -22,7 +23,8 @@ describe('UserPanelComponent', () => {
       ],
       imports: [
         CoreLayoutTestingModule
-      ]
+      ],
+      providers: [TranslateService]
     });
 
     /** Testbed Onverriding of Components */

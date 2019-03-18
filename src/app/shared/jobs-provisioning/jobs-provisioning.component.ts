@@ -21,7 +21,6 @@ import {
 } from 'rxjs/operators';
 import {
   CoreDefinition,
-  McsTextContentProvider,
   McsNotificationEventsService
 } from '@app/core';
 import {
@@ -50,7 +49,6 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
   public progressValue: number;
   public progressMax: number;
   public progressBarHidden: boolean;
-  public textContent: any;
 
   @ContentChild(JobsProvisioningLoadingTextDirective)
   public jobsProvisioningLoadingText: JobsProvisioningLoadingTextDirective;
@@ -76,7 +74,6 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
   private _destroySubject = new Subject<void>();
 
   public constructor(
-    private _textContentProvider: McsTextContentProvider,
     private _changeDetectorRef: ChangeDetectorRef,
     private _notificationsEvents: McsNotificationEventsService,
     private _iterableDiffers: IterableDiffers
@@ -88,7 +85,6 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
   }
 
   public ngOnInit() {
-    this.textContent = this._textContentProvider.content.shared.jobsProvisioning;
     this._createExcludedProgressJobs();
     this._subscribesToCurrentUserJob();
   }

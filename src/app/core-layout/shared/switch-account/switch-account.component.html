@@ -1,6 +1,6 @@
 <!-- Switch trigger -->
 <mcs-section>
-  <span>{{ textContent?.header }}</span>
+  <span>{{ 'switchAccount.header' | translate }}</span>
 
   <!-- Default account -->
   <mcs-list header="Default">
@@ -55,15 +55,15 @@
         <mcs-loader size="small"></mcs-loader>
       </div>
       <div *ngSwitchCase="dataStatusEnum.Empty">
-        <span>{{ textContent.noCompanies }}</span>
+        <span>{{ 'switchAccount.noCompanies' | translate }}</span>
       </div>
       <div *ngSwitchCase="dataStatusEnum.Error">
-        <span>{{ textContent.errorMessage }}</span>
+        <span>{{ 'switchAccount.errorMessage' | translate }}</span>
         <a (click)="retry()"
           mcsId
           mcsEventTracker="retry-loading-account-list"
           mcsEventCategory="navigation"
-          mcsEventLabel="switch-account-panel"> {{ textContent.retry }}</a>
+          mcsEventLabel="switch-account-panel"> {{ 'switchAccount.retry' | translate }}</a>
       </div>
     </mcs-item>
   </ng-container>

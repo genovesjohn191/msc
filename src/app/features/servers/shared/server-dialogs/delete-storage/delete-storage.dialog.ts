@@ -3,16 +3,13 @@ import {
   Inject,
   ViewEncapsulation
 } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import {
   MCS_DIALOG_DATA,
   McsDialogRef,
-  McsTextContentProvider,
   CoreDefinition
 } from '@app/core';
-import {
-  isNullOrEmpty,
-  replacePlaceholder
-} from '@app/utilities';
+import { isNullOrEmpty } from '@app/utilities';
 import { McsServerStorageDevice } from '@app/models';
 
 @Component({
@@ -25,15 +22,13 @@ import { McsServerStorageDevice } from '@app/models';
 })
 
 export class DeleteStorageDialogComponent {
-  public textContent: any;
   public storage: McsServerStorageDevice;
 
   constructor(
-    private _textContentProvider: McsTextContentProvider,
+    private _translateService: TranslateService,
     public dialogRef: McsDialogRef<DeleteStorageDialogComponent>,
     @Inject(MCS_DIALOG_DATA) public dialogData: McsServerStorageDevice
   ) {
-    this.textContent = this._textContentProvider.content.servers.shared.deleteStorageDialog;
     this.storage = this.dialogData;
   }
 
@@ -60,10 +55,10 @@ export class DeleteStorageDialogComponent {
    */
   public get dialogTitle(): string {
     if (isNullOrEmpty(this.storage)) { return ''; }
-    return replacePlaceholder(
-      this.textContent.title,
-      'storage_name',
-      this.storage.name
+
+    return this._translateService.instant(
+      'serverShared.dialogDeleteStorage.title',
+      { storage_name: this.storage.name }
     );
   }
 
@@ -72,10 +67,10 @@ export class DeleteStorageDialogComponent {
    */
   public get dialogAlertMessage(): string {
     if (isNullOrEmpty(this.storage)) { return ''; }
-    return replacePlaceholder(
-      this.textContent.alert,
-      'storage_name',
-      this.storage.name
+
+    return this._translateService.instant(
+      'serverShared.dialogDeleteStorage.alert',
+      { storage_name: this.storage.name }
     );
   }
 }

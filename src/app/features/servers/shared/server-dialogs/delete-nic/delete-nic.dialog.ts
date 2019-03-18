@@ -3,16 +3,13 @@ import {
   Inject,
   ViewEncapsulation
 } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import {
   MCS_DIALOG_DATA,
   McsDialogRef,
-  McsTextContentProvider,
   CoreDefinition
 } from '@app/core';
-import {
-  isNullOrEmpty,
-  replacePlaceholder
-} from '@app/utilities';
+import { isNullOrEmpty } from '@app/utilities';
 import { McsServerNic } from '@app/models';
 
 @Component({
@@ -25,15 +22,13 @@ import { McsServerNic } from '@app/models';
 })
 
 export class DeleteNicDialogComponent {
-  public textContent: any;
   public nic: McsServerNic;
 
   constructor(
-    private _textContentProvider: McsTextContentProvider,
+    private _translateService: TranslateService,
     public dialogRef: McsDialogRef<DeleteNicDialogComponent>,
     @Inject(MCS_DIALOG_DATA) public dialogData: McsServerNic
   ) {
-    this.textContent = this._textContentProvider.content.servers.shared.deleteNicDialog;
     this.nic = this.dialogData;
   }
 
@@ -60,10 +55,10 @@ export class DeleteNicDialogComponent {
    */
   public get dialogTitle(): string {
     if (isNullOrEmpty(this.nic)) { return ''; }
-    return replacePlaceholder(
-      this.textContent.title,
-      'nic_name',
-      this.nic.name
+
+    return this._translateService.instant(
+      'serverShared.dialogDeleteNic.title',
+      { nic_name: this.nic.name }
     );
   }
 }

@@ -54,7 +54,6 @@ enum ServerCreateType {
 
 export class ServerCreateDetailsComponent implements
   OnInit, OnChanges, AfterViewInit, OnDestroy, McsSafeToNavigateAway {
-  public textContent: any;
   public textHelpContent: any;
 
   public faCreationForms: FormArray;

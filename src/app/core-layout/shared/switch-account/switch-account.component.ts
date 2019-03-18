@@ -12,7 +12,6 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
   CoreDefinition,
-  McsTextContentProvider,
   McsTableListingBase,
   McsTableDataSource,
   McsBrowserService
@@ -44,7 +43,6 @@ import { SwitchAccountService } from './switch-account.service';
 export class SwitchAccountComponent
   extends McsTableListingBase<McsTableDataSource<McsCompany>>
   implements AfterViewInit, OnDestroy {
-  public textContent: any;
 
   @Output()
   public selectionChanged: EventEmitter<any>;
@@ -81,12 +79,10 @@ export class SwitchAccountComponent
     _browserService: McsBrowserService,
     _changeDetectorRef: ChangeDetectorRef,
     private _switchAccountService: SwitchAccountService,
-    private _companiesRepository: McsCompaniesRepository,
-    private _textContentProvider: McsTextContentProvider
+    private _companiesRepository: McsCompaniesRepository
   ) {
     super(_browserService, _changeDetectorRef);
     this.selectionChanged = new EventEmitter();
-    this.textContent = this._textContentProvider.content.switchAccount;
   }
 
   public ngAfterViewInit(): void {

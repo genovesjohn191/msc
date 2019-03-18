@@ -5,10 +5,10 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy
 } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
-  McsTextContentProvider,
   CoreDefinition,
   McsDateTimeService
 } from '@app/core';
@@ -31,14 +31,13 @@ import { FirewallService } from '../firewall.service';
 })
 
 export class FirewallOverviewComponent implements OnInit, OnDestroy {
-  public textContent: any;
   public firewall: McsFirewall;
 
   private _destroySubject = new Subject<void>();
 
   constructor(
     private _dateTimeService: McsDateTimeService,
-    private _textContentProvider: McsTextContentProvider,
+    private _translateService: TranslateService,
     private _firewallService: FirewallService,
     private _changeDetectorRef: ChangeDetectorRef
   ) {
@@ -46,7 +45,6 @@ export class FirewallOverviewComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
-    this.textContent = this._textContentProvider.content.firewalls.firewall.overview;
     this._listenToFirewallSelection();
   }
 
@@ -62,8 +60,8 @@ export class FirewallOverviewComponent implements OnInit, OnDestroy {
     if (isNullOrEmpty(expirationDate)) { return undefined; }
     let dateIsExpired = this._isDateExpired(expirationDate);
     let licenseText = dateIsExpired ?
-      this.textContent.utmServices.invalidLicense :
-      this.textContent.utmServices.licensed;
+      this._translateService.instant('firewall.overview.utmServices.invalidLicense') :
+      this._translateService.instant('firewall.overview.utmServices.licensed');
 
     let formattedDate = this._dateTimeService.formatDate(expirationDate, 'shortDate');
     return `${licenseText} (${getExpiryLabel(expirationDate)} ${formattedDate})`;

@@ -10,7 +10,6 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
-  McsTextContentProvider,
   CoreDefinition,
   McsBrowserService,
   McsTableListingBase,
@@ -37,14 +36,12 @@ export class MediaComponent
   extends McsTableListingBase<McsTableDataSource<McsResourceMedia>>
   implements OnInit, AfterViewInit, OnDestroy {
 
-  public textContent: any;
   public hasResources$: Observable<boolean>;
 
   public constructor(
     _browserService: McsBrowserService,
     _changeDetectorRef: ChangeDetectorRef,
     private _router: Router,
-    private _textProvider: McsTextContentProvider,
     private _mediaRepository: McsMediaRepository,
     private _resourcesRepository: McsResourcesRepository
   ) {
@@ -52,7 +49,6 @@ export class MediaComponent
   }
 
   public ngOnInit() {
-    this.textContent = this._textProvider.content.media;
     this._subscribeToResources();
   }
 

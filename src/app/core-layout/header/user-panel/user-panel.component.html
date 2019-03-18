@@ -10,7 +10,7 @@
         mcsId
         mcsEventTracker="logout"
         mcsEventCategory="navigation"
-        mcsEventLabel="user-panel">{{ textContent.signOut }}</a>
+        mcsEventLabel="user-panel">{{ 'header.userPanel.signOut' | translate }}</a>
     </div>
 
     <div *mcsAccessControl="['CompanyView']"
@@ -28,11 +28,11 @@
   <ng-container *ngIf="notificationsPopover.componentRef">
     <div class="notifications-content-wrapper">
       <div class="notification-item">
-        <span>{{ textContent.notifications.title }}</span>
+        <span>{{ 'header.userPanel.notifications.title' | translate }}</span>
       </div>
 
       <div class="notification-item" *ngIf="!hasNotification">
-        <span>{{ textContent.notifications.noRecord }}</span>
+        <span>{{ 'header.userPanel.notifications.noRecord' | translate }}</span>
       </div>
 
       <!-- Jobs -->

@@ -1,7 +1,6 @@
 import {
   Component,
   Input,
-  OnInit,
   OnDestroy,
   ElementRef,
   Renderer2,
@@ -12,10 +11,7 @@ import {
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import {
-  McsDataStatusFactory,
-  McsTextContentProvider
-} from '@app/core';
+import { McsDataStatusFactory } from '@app/core';
 import {
   isNullOrEmpty,
   animateFactory,
@@ -38,8 +34,7 @@ import { DataStatusErrorComponent } from './data-status-error/data-status-error.
   }
 })
 
-export class DataStatusComponent implements OnInit, OnDestroy {
-  public textContent: any;
+export class DataStatusComponent implements OnDestroy {
 
   @ContentChild(DataStatusErrorComponent)
   public errorTemplate: DataStatusErrorComponent;
@@ -73,13 +68,8 @@ export class DataStatusComponent implements OnInit, OnDestroy {
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private _elementRef: ElementRef,
-    private _renderer: Renderer2,
-    private _textContentProvider: McsTextContentProvider
+    private _renderer: Renderer2
   ) { }
-
-  public ngOnInit() {
-    this.textContent = this._textContentProvider.content.shared.dataStatus;
-  }
 
   public ngOnDestroy() {
     unsubscribeSubject(this._destroySubject);

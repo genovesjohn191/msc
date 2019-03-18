@@ -9,7 +9,6 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { McsTextContentProvider } from '@app/core';
 import {
   unsubscribeSafely,
   isNullOrEmpty
@@ -28,7 +27,6 @@ import { ServerDisasterRecovery } from './server-disaster-recovery';
 })
 
 export class DisasterRecoveryAddOnComponent implements OnInit, OnDestroy {
-  public textContent: any;
   public protectionGroups: string[];
   public disasterRecovery: ServerDisasterRecovery;
 
@@ -49,7 +47,6 @@ export class DisasterRecoveryAddOnComponent implements OnInit, OnDestroy {
   private _protectionGroupSubscription: Subscription;
 
   public constructor(
-    private _textProvider: McsTextContentProvider,
     private _changeDetectorRef: ChangeDetectorRef,
     private _optionsApiService: OptionsApiService
   ) {
@@ -58,7 +55,6 @@ export class DisasterRecoveryAddOnComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
-    this.textContent = this._textProvider.content.servers.shared.disasterRecoveryAddOn;
     this._getDisasterRecoveryGroups();
   }
 

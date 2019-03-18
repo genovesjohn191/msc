@@ -1,14 +1,14 @@
 <mcs-presentation-panel mcsId="storage" *ngIf="serverDetails$ | async as serverDetails">
   <ng-container mcsPresentationPanelHeader>
-    <h2>{{ textContent.title }}</h2>
+    <h2>{{ 'serverStorage.title' | translate }}</h2>
   </ng-container>
 
   <!-- Description -->
   <ng-container *mcsAccessControl="serverPermision.vmEdit; else noEditableDiskTemplate">
-    <p>{{ textContent.hasEditableDiskDescription }}</p>
+    <p>{{ 'serverStorage.hasEditableDiskDescription' | translate }}</p>
   </ng-container>
   <ng-template #noEditableDiskTemplate>
-    <p>{{ textContent.noEditableDiskDescription }}</p>
+    <p>{{ 'serverStorage.noEditableDiskDescription' | translate }}</p>
   </ng-template>
 
   <ng-container [ngSwitch]="diskMethodType">
@@ -19,7 +19,7 @@
         <!-- Storage Device Column -->
         <ng-container mcsColumnDef="storageDevice">
           <mcs-header-cell *mcsHeaderCellDef>
-            {{ textContent.columnHeaders.storageDevice }}
+            {{ 'serverStorage.columnHeaders.storageDevice' | translate }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" text-wrap>
             <mcs-item>
@@ -39,7 +39,7 @@
         <!-- Storage Profile Column -->
         <ng-container mcsColumnDef="storageProfile">
           <mcs-header-cell *mcsHeaderCellDef hidden-small>
-            {{ textContent.columnHeaders.storageProfile }}
+            {{ 'serverStorage.columnHeaders.storageProfile' | translate }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" hidden-small text-wrap>
             <span [innerHTML]="row.storageProfile | mcsDataLabel"></span>
@@ -49,7 +49,7 @@
         <!-- Capacity Column -->
         <ng-container mcsColumnDef="capacity">
           <mcs-header-cell *mcsHeaderCellDef>
-            {{ textContent.columnHeaders.capacity }}
+            {{ 'serverStorage.columnHeaders.capacity' | translate }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
             <span [innerHTML]="(row.sizeMB | mcsDataSize: 'MB') | mcsDataLabel"></span>
@@ -68,7 +68,7 @@
                   mcsEventTracker="show-expand-disk"
                   mcsEventCategory="server"
                   mcsEventLabel="server-details-page">
-                {{ textContent.expandStorageLink }}
+                {{ 'serverStorage.expandStorageLink' | translate }}
               </a>
               <a [disabled]="!serverDetails.server.executable"
                 *ngIf="canDeleteDisk(serverDetails.server)"
@@ -77,7 +77,7 @@
                 mcsEventTracker="delete-disk"
                 mcsEventCategory="server"
                 mcsEventLabel="server-details-page">
-                {{ textContent.deleteStorageLink }}
+                {{ 'serverStorage.deleteStorageLink' | translate }}
               </a>
             </mcs-item>
           </mcs-data-cell>
@@ -86,10 +86,10 @@
         <!-- Data Status Integration -->
         <ng-container mcsDataStatusDef>
           <mcs-data-empty *mcsDataEmptyDef>
-            <span>{{ textContent.noDisks }} </span>
+            <span>{{ 'serverStorage.noDisks' | translate }} </span>
           </mcs-data-empty>
           <mcs-data-error *mcsDataErrorDef>
-            <span>{{ textContent.errorGettingDisks }}</span>
+            <span>{{ 'serverStorage.errorGettingDisks' | translate }}</span>
           </mcs-data-error>
         </ng-container>
 
@@ -109,10 +109,10 @@
               (dataChange)="onStorageChanged($event)">
 
               <ng-container mcsManageStorageHeader>
-                <h2>{{ textContent.addStorageHeading }}</h2>
+                <h2>{{ 'serverStorage.addStorageHeading' | translate }}</h2>
               </ng-container>
               <ng-container mcsManageStorageWarning>
-                <span>{{ textContent.fullStorageSpace }}</span>
+                <span>{{ 'serverStorage.fullStorageSpace' | translate }}</span>
               </ng-container>
             </mcs-server-manage-storage>
 
@@ -124,14 +124,14 @@
                 mcsEventTracker="add-disk"
                 mcsEventCategory="server"
                 mcsEventLabel="server-details-page">
-                {{ textContent.addButton }}
+                {{ 'serverStorage.addButton' | translate }}
               </button>
             </div>
           </div>
         </ng-container>
 
         <mcs-data-status-warning *ngIf="hasReachedDisksLimit(serverDetails.server)">
-          <span>{{ textContent.reachedStorageLimit }}</span>
+          <span>{{ 'serverStorage.reachedStorageLimit' | translate }}</span>
         </mcs-data-status-warning>
       </ng-container>
     </mcs-section>
@@ -146,21 +146,21 @@
           (dataChange)="onStorageChanged($event)">
 
           <ng-container mcsManageStorageHeader>
-            <h2>{{ textContent.expandStorageHeading }}</h2>
+            <h2>{{ 'serverStorage.expandStorageHeading' | translate }}</h2>
           </ng-container>
         </mcs-server-manage-storage>
 
         <ng-template #diskDetailsTemplate>
           <mcs-item>
-            <strong>{{ textContent.columnHeaders.storageDevice }}:</strong>
+            <strong>{{ 'serverStorage.columnHeaders.storageDevice' | translate }}:</strong>
             <span>{{ selectedDisk.name }}</span>
           </mcs-item>
           <mcs-item>
-            <strong>{{ textContent.columnHeaders.storageProfile }}:</strong>
+            <strong>{{ 'serverStorage.columnHeaders.storageProfile' | translate }}:</strong>
             <span>{{ selectedDisk.storageProfile }}</span>
           </mcs-item>
           <mcs-item>
-            <strong>{{ textContent.columnHeaders.capacity }}:</strong>
+            <strong>{{ 'serverStorage.columnHeaders.capacity' | translate }}:</strong>
             <span>{{ selectedDisk.sizeMB | mcsDataSize: 'MB' }}</span>
           </mcs-item>
         </ng-template>
@@ -171,7 +171,7 @@
             mcsEventTracker="expand-disk-close"
             mcsEventCategory="server"
             mcsEventLabel="server-details-page">
-            {{ textContent.cancelButton }}
+            {{ 'serverStorage.cancelButton' | translate }}
           </a>
 
           <button mcsButton arrow="right" size="small"
@@ -181,7 +181,7 @@
             mcsEventTracker="expand-disk"
             mcsEventCategory="server"
             mcsEventLabel="server-details-page">
-            {{ textContent.updateButton }}
+            {{ 'serverStorage.updateButton' | translate }}
           </button>
         </div>
       </div>

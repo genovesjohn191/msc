@@ -2,7 +2,7 @@
 <ng-template #errorDialogTemplate let-message="data.message">
   <mcs-dialog>
     <mcs-dialog-header [dialogRefTemplate]="errorDialogRef">
-      <h1>{{ textContent.errorCaption }}</h1>
+      <h1>{{ 'shared.fileAttachment.errorCaption' | translate }}</h1>
     </mcs-dialog-header>
 
     <mcs-dialog-content>
@@ -16,7 +16,7 @@
       <button mcsButton mcsAlign="end" arrow="right"
         size="small" (click)="errorDialogRef?.close()"
         mcsId="ok-attachment">
-        {{ textContent.ok }}
+        {{ 'shared.fileAttachment.ok' | translate }}
       </button>
     </mcs-dialog-actions>
   </mcs-dialog>
@@ -33,14 +33,14 @@
 
     <!-- Drop zone -->
     <mcs-icon [key]="cloudUploadBlueIconKey" size="xxlarge"></mcs-icon>
-    <span read-only>{{ textContent.dragDropZone }}</span>
+    <span read-only>{{ 'shared.fileAttachment.dragDropZone' | translate }}</span>
     <span read-only>or</span>
 
     <!-- Selection zone -->
     <button mcsButton size="small" (click)="chooFileElement.click()" mcsId="choose-attachment">
       <input #chooFileElement type="file" [accept]="allowedMimeType"
         ng2FileSelect [uploader]="fileUploader" (change)="onSelectFile()"/>
-      {{ textContent.chooseFile }}
+      {{ 'shared.fileAttachment.chooseFile' | translate }}
     </button>
   </div>
 </div>
@@ -50,7 +50,7 @@
   <mcs-list spacing="auto" orientation="horizontal">
     <mcs-list-item *ngFor="let attachedItem of attachedFiles">
       <mcs-action-item (click)="removeAttachment(attachedItem)"
-        [mcsTooltip]="textContent.detachTooltip">
+        [mcsTooltip]="'shared.fileAttachment.detachTooltip' | translate">
         <mcs-icon [key]="closeIconKey" size="small"></mcs-icon>
         <span>{{ attachedItem?.file.name }}</span>
       </mcs-action-item>

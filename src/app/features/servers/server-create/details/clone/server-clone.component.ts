@@ -57,7 +57,6 @@ export class ServerCloneComponent
   @Output()
   public dataChange = new EventEmitter<ServerCreateDetailsBase<McsServerClone>>();
 
-  public textContent: any;
   public textHelpContent: any;
   public servers: McsServer[];
   public serversSubscription: Subscription;

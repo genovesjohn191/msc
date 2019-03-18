@@ -11,7 +11,6 @@ import {
   McsSnackBarService,
   McsNotificationJobService,
   McsSnackBarConfig,
-  McsTextContentProvider,
   CoreDefinition,
   McsNotificationContextService
 } from '@app/core';
@@ -26,7 +25,6 @@ const DEFAULT_SUCCESS_SNACKBAR_DURATION = 5000;
 })
 
 export class WebStompComponent implements OnInit {
-  public textContent: any;
   public stompErrorStatusBarRef: McsSnackBarRef<any>;
   public stompSuccessStatusBarRef: McsSnackBarRef<any>;
 
@@ -49,12 +47,10 @@ export class WebStompComponent implements OnInit {
   constructor(
     private _snackBarRefService: McsSnackBarService,
     private _notificationJobService: McsNotificationJobService,
-    private _notificationContext: McsNotificationContextService,
-    private _textContentProvider: McsTextContentProvider
+    private _notificationContext: McsNotificationContextService
   ) { }
 
   public ngOnInit() {
-    this.textContent = this._textContentProvider.content.pageNotifications.webStomp;
     this._listenToStompStatus();
   }
 

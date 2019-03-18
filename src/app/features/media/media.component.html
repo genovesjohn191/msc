@@ -1,4 +1,4 @@
-<mcs-page [header]="textContent.header">
+<mcs-page [header]="'media.header' | translate">
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef>
     <ng-container *ngIf="hasResources$ | async">
@@ -10,7 +10,7 @@
           mcsEventCategory="media"
           mcsEventLabel="media-listing-top-panel">
           <mcs-icon [key]="addIconKey" size="small"></mcs-icon>
-          <span>{{ textContent.uploadMedia }}</span>
+          <span>{{ 'media.uploadMedia' | translate }}</span>
         </mcs-action-item>
       </mcs-top-panel-item>
     </ng-container>
@@ -19,7 +19,7 @@
       <div class="listing-action-wrapper">
         <div class="total-record-count">
           <span>{{ dataSource?.totalRecordsCount | mcsPlural:
-                textContent.dataSingular : textContent.dataPlural }}
+              ('media.dataSingular' | translate) : ('media.dataPlural' | translate) }}
           </span>
         </div>
       </div>
@@ -27,14 +27,14 @@
   </mcs-top-panel>
 
   <!-- Left Panel -->
-  <mcs-left-panel *mcsLeftPanelDef="textContent.leftPanelHeader">
+  <mcs-left-panel *mcsLeftPanelDef="'media.leftPanelHeader' | translate">
     <!-- Search -->
     <mcs-left-panel-item *mcsLeftPanelItemDef>
       <mcs-search *ngIf="!isMobile" #search mcsId="media-desktop-search"></mcs-search>
     </mcs-left-panel-item>
 
     <!-- Column Filter -->
-    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.filterColumn" offset="medium">
+    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'media.filterColumn' | translate" offset="medium">
       <mcs-filter-selector [key]="columnSettingsKey" #filterSelector
         (filtersChange)="updateColumnSettings($event)"></mcs-filter-selector>
     </mcs-left-panel-item>
@@ -109,7 +109,7 @@
         <ng-container mcsDataStatusDef>
           <mcs-data-empty *mcsDataEmptyDef>
             <div class="listing-status-wrapper">
-              <span>{{ textContent.noMedia }} </span>
+              <span>{{ 'media.noMedia' | translate }} </span>
               <ng-container *mcsAccessControl="['TemplateEdit']">
                 <span>
                   Click <a (click)="navigateToMediaUpload()"
@@ -122,12 +122,12 @@
           </mcs-data-empty>
           <mcs-data-error *mcsDataErrorDef>
             <div class="listing-status-wrapper">
-              <span>{{ textContent.errorMessage }}</span>
+              <span>{{ 'media.errorMessage' | translate }}</span>
               <a (click)="retryDatasource()"
                 mcsId
                 mcsEventTracker="retry-media"
                 mcsEventCategory="media"
-                mcsEventLabel="media-listing-page">{{ textContent.retry }}</a>.
+                mcsEventLabel="media-listing-page">{{ 'media.retry' | translate }}</a>.
             </div>
           </mcs-data-error>
         </ng-container>

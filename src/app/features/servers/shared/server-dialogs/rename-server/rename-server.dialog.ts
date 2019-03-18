@@ -8,7 +8,6 @@ import {
   MCS_DIALOG_DATA,
   McsDialogRef,
   CoreDefinition,
-  McsTextContentProvider,
   CoreValidators
 } from '@app/core';
 import {
@@ -27,7 +26,6 @@ import { McsServer } from '@app/models';
 })
 
 export class RenameServerDialogComponent {
-  public textContent: any;
   public server: McsServer;
   public fcServerName: FormControl;
 
@@ -39,11 +37,9 @@ export class RenameServerDialogComponent {
   }
 
   constructor(
-    private _textContentProvider: McsTextContentProvider,
     public dialogRef: McsDialogRef<RenameServerDialogComponent>,
     @Inject(MCS_DIALOG_DATA) public dialogData
   ) {
-    this.textContent = this._textContentProvider.content.servers.shared.renameServerDialog;
     this.server = this.dialogData as McsServer[][0];
     this._registerFormControl();
   }

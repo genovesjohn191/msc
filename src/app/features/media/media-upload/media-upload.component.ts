@@ -1,6 +1,5 @@
 import {
   Component,
-  OnInit,
   OnDestroy,
   ChangeDetectionStrategy,
   ViewChild
@@ -8,7 +7,6 @@ import {
 import { Subject } from 'rxjs';
 import {
   CoreDefinition,
-  McsTextContentProvider,
   McsWizardBase
 } from '@app/core';
 import {
@@ -26,9 +24,7 @@ import { MediaUploadService } from './media-upload.service';
 })
 
 export class MediaUploadComponent extends McsWizardBase
-  implements McsSafeToNavigateAway, OnInit, OnDestroy {
-
-  public textContent: any;
+  implements McsSafeToNavigateAway, OnDestroy {
 
   private _destroySubject = new Subject<void>();
 
@@ -36,14 +32,9 @@ export class MediaUploadComponent extends McsWizardBase
   private _detailsStep: MediaUploadDetailsComponent;
 
   constructor(
-    _mediaUploadService: MediaUploadService,
-    private _textContentProvider: McsTextContentProvider,
+    _mediaUploadService: MediaUploadService
   ) {
     super(_mediaUploadService);
-  }
-
-  public ngOnInit() {
-    this.textContent = this._textContentProvider.content.mediaUpload;
   }
 
   public ngOnDestroy() {

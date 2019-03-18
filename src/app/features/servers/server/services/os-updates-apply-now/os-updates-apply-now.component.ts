@@ -15,7 +15,6 @@ import {
   catchError
 } from 'rxjs/operators';
 import {
-  McsTextContentProvider,
   McsDataStatusFactory,
 } from '@app/core';
 import {
@@ -43,7 +42,6 @@ export class OsUpdatesApplyNowComponent implements OnInit {
   @Output()
   public applyUpdates: EventEmitter<OsUpdatesActionDetails>;
 
-  public textContent: any;
   public osUpdates$: Observable<McsServerOsUpdates[]>;
   public dataStatusFactory: McsDataStatusFactory<McsServerOsUpdates[]>;
   public selectedNodes: Array<TreeNode<McsServerOsUpdates>>;
@@ -55,18 +53,10 @@ export class OsUpdatesApplyNowComponent implements OnInit {
     return this.selectedNodes.length <= 0 || this.selectedServer.isProcessing;
   }
 
-  /**
-   * Returns the label of the Select all of the tree view
-   */
-  public get treeViewSelectAllLabel(): string {
-    return this.textContent.treeviewAllUpdates;
-  }
-
   constructor(
     protected _serversService: ServersService,
     protected _serversRepository: McsServersRepository,
     protected _changeDetectorRef: ChangeDetectorRef,
-    protected _textProvider: McsTextContentProvider,
   ) {
     this.applyUpdates = new EventEmitter();
     this.dataStatusFactory = new McsDataStatusFactory();
@@ -74,7 +64,6 @@ export class OsUpdatesApplyNowComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.textContent = this._textProvider.content.servers.server.services.applyNow;
     this._initializeTreeSource();
   }
 

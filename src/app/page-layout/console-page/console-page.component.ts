@@ -10,6 +10,7 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import {
   throwError,
   Subject
@@ -21,12 +22,10 @@ import {
 import {
   refreshView,
   isNullOrEmpty,
-  replacePlaceholder,
   unsubscribeSubject,
   getSafeProperty
 } from '@app/utilities';
 import {
-  McsTextContentProvider,
   CoreDefinition,
   McsNotificationEventsService,
   McsSessionHandlerService
@@ -79,7 +78,6 @@ enum VmConsoleStatus {
 })
 
 export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
-  public textContent: any;
   public stopping: boolean;
   public closingTime: number;
 
@@ -104,8 +102,9 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public get stoppingText(): string {
-    return replacePlaceholder(this.textContent.stopping,
-      'timer', this.closingTime.toString());
+    return this._translateService.instant(
+      'consolePage.stopping', { timer: this.closingTime.toString() }
+    );
   }
 
   /**
@@ -144,7 +143,7 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public constructor(
     private _consoleRepository: McsConsoleRepository,
-    private _textContentProvider: McsTextContentProvider,
+    private _translateService: TranslateService,
     private _notificationsEvents: McsNotificationEventsService,
     private _sessionHandler: McsSessionHandlerService,
     private _serversRepository: McsServersRepository,
@@ -157,7 +156,6 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public ngOnInit() {
-    this.textContent = this._textContentProvider.content.consolePage;
     this._registerEventHandlers();
   }
 

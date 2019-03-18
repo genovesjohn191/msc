@@ -5,6 +5,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef
 } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import {
   throwError,
   Subject
@@ -15,16 +16,12 @@ import {
   takeUntil
 } from 'rxjs/operators';
 import {
-  McsTextContentProvider,
   McsDialogService,
   McsErrorHandlerService,
   McsNotificationEventsService,
   McsTableDataSource
 } from '@app/core';
-import {
-  isNullOrEmpty,
-  replacePlaceholder
-} from '@app/utilities';
+import { isNullOrEmpty } from '@app/utilities';
 import {
   DialogConfirmationComponent,
   DialogConfirmation
@@ -48,7 +45,6 @@ import { MediaManageServers } from '../../shared';
 })
 
 export class MediumServersComponent extends MediumDetailsBase implements OnInit, OnDestroy {
-  public textContent: any;
   public serversColumns: string[];
   public serversDataSource: McsTableDataSource<McsResourceMediaServer>;
   public manageServers: MediaManageServers;
@@ -65,7 +61,7 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
     private _errorHandlerService: McsErrorHandlerService,
     private _notificationEvents: McsNotificationEventsService,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _textContentProvider: McsTextContentProvider,
+    private _translateService: TranslateService,
   ) {
     super(_mediumService);
     this._newAttachServer = new McsResourceMediaServer();
@@ -73,7 +69,6 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
   }
 
   public ngOnInit() {
-    this.textContent = this._textContentProvider.content.media.medium.servers;
     super.initializeBase();
     this._setDataColumns();
     this._registerJobEvents();
@@ -97,13 +92,16 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
    * @param server Server to be detached
    */
   public showDetachDialog(medium: McsResourceMedia, attachedServer: McsResourceMediaServer): void {
+    let dialogMessage = this._translateService.instant(
+      'mediaMedium.servers.detachDialog.message', { server_name: attachedServer.name }
+    );
+    let dialogTitle = this._translateService.instant('mediaMedium.servers.detachDialog.title');
+
     let dialogData = {
       data: attachedServer,
       type: 'warning',
-      title: this.textContent.detachDialog.title,
-      message: replacePlaceholder(
-        this.textContent.detachDialog.message,
-        'server_name', attachedServer.name)
+      title: dialogTitle,
+      message: dialogMessage
     } as DialogConfirmation<McsResourceMediaServer>;
 
     let detachDialogRef = this._dialogService
@@ -151,7 +149,9 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
    * Sets data column for the corresponding table
    */
   private _setDataColumns(): void {
-    this.serversColumns = Object.keys(this.textContent.columnHeaders);
+    this.serversColumns = Object.keys(
+      this._translateService.instant('mediaMedium.servers.columnHeaders')
+    );
     if (isNullOrEmpty(this.serversColumns)) {
       throw new Error('column definition for disks was not defined');
     }
