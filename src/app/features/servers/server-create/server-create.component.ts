@@ -192,7 +192,9 @@ export class ServerCreateComponent extends McsOrderWizardBase
 
     this._serverCreateService.sendOrderWorkflow({
       description: submitDetails.description,
-      contractDuration: submitDetails.contractDuration
+      contractDuration: submitDetails.contractDuration,
+      billingSiteId: submitDetails.billingSite.id,
+      billingCostCentreId: submitDetails.billingCostCentre.id
     }, workflow);
   }
 

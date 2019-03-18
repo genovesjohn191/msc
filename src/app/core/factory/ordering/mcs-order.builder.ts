@@ -12,6 +12,8 @@ import { McsOrderRequest } from './mcs-order-request';
 export class McsOrderBuilder {
   private _description: string;
   private _contractDuration: number;
+  private _billingSiteId: string;
+  private _billingCostCentreId: string;
   private _orderItems: McsOrderItemCreate[];
   private _orderWorkflow: McsOrderWorkflow;
   private _orderRequestDetails: McsOrderRequest;
@@ -19,6 +21,8 @@ export class McsOrderBuilder {
   constructor() {
     this._description = '';
     this._contractDuration = 0;
+    this._billingSiteId = '';
+    this._billingCostCentreId = '';
     this._orderItems = [];
     this._orderRequestDetails = new McsOrderRequest();
   }
@@ -45,6 +49,24 @@ export class McsOrderBuilder {
    */
   public setContractDuration(duration: number): McsOrderBuilder {
     this._contractDuration = duration;
+    return this;
+  }
+
+  /**
+   * Sets the billing site id
+   * @param siteId Billing site id to be set
+   */
+  public setBillingSiteId(siteId: string): McsOrderBuilder {
+    this._billingSiteId = siteId;
+    return this;
+  }
+
+  /**
+   * Sets the billing cost centre id
+   * @param costCentreId Cost centre id to be set
+   */
+  public setBillingCostCentreId(costCentreId: string): McsOrderBuilder {
+    this._billingCostCentreId = costCentreId;
     return this;
   }
 
@@ -102,6 +124,8 @@ export class McsOrderBuilder {
   public buildOrderDetails(): McsOrderBuilder {
     this._orderRequestDetails.orderDetails.contractDuration = this._contractDuration;
     this._orderRequestDetails.orderDetails.description = this._description;
+    this._orderRequestDetails.orderDetails.billingSiteId = this._billingSiteId;
+    this._orderRequestDetails.orderDetails.costCentreId = this._billingCostCentreId;
     return this;
   }
 

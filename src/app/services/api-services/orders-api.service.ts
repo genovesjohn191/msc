@@ -23,7 +23,8 @@ import {
   McsOrderMerge,
   McsOrderItem,
   McsOrderWorkflow,
-  McsQueryParam
+  McsQueryParam,
+  McsBilling
 } from '@app/models';
 
 @Injectable()
@@ -137,6 +138,32 @@ export class OrdersApiService {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
             .deserializeResponse<McsOrderItemType>(McsOrder, response);
+
+          this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+          this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+          this._loggerService.traceInfo(`converted response:`, apiResponse);
+          return apiResponse;
+        })
+      );
+  }
+
+  /**
+   * Get Order Billing (MCS API Response)
+   * @param query Query predicate that serves as the parameter of the endpoint
+   */
+  public getBilling(): Observable<McsApiSuccessResponse<McsBilling[]>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/orders/billing';
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        finalize(() => {
+          this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+        }),
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsBilling[]>(McsBilling, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);

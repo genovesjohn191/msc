@@ -42,6 +42,8 @@ import { IMcsOrderFactory } from './mcs-order-factory.interface';
 export interface IOrderSubmitDetails {
   description: string;
   contractDuration: number;
+  billingSiteId: string;
+  billingCostCentreId: string;
 }
 
 export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible,
@@ -136,6 +138,8 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible,
     this._orderBuilder
       .setDescription(orderDetails.description)
       .setContractDuration(orderDetails.contractDuration)
+      .setBillingSiteId(orderDetails.billingSiteId)
+      .setBillingCostCentreId(orderDetails.costCentreId)
       .setOrderWorkflow(null);
     orderDetails.items.forEach((item) => this._orderBuilder.addOrUpdateOrderItem(item));
     this._orderDirector.construct(this._orderBuilder);
@@ -363,6 +367,8 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible,
     this._orderBuilder
       .setDescription(details.description)
       .setContractDuration(details.contractDuration)
+      .setBillingSiteId(details.billingSiteId)
+      .setBillingCostCentreId(details.billingCostCentreId)
       .setOrderWorkflow({
         state: workflowAction,
         ...referenceObject
