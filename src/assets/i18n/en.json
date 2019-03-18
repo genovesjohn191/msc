@@ -82,13 +82,14 @@
     "createdOn": "Created On",
     "charges": "Charges",
     "contractTerm": "Contract Term",
+    "contractTermSuffix": "Months",
     "totalCharge": "Total Charge",
     "lineItemsLabel": "Line Items",
     "columnHeaders": {
       "description": "Item Description",
       "quantity": "Quantity",
+      "costCentre": "Cost Centre",
       "billingSite": "Billing Site",
-      "costCentre": "Const Centre",
       "oneOffCharge": "One-off charge",
       "monthlyCharge": "Monthly charge"
     },

@@ -69,10 +69,10 @@ export class OrderComponent implements OnInit, OnDestroy {
     private _ordersRepository: McsOrdersRepository
   ) {
     this.orderItemsDataSource = new McsTableDataSource();
+    this.setOrderItemsColumn();
   }
 
   public ngOnInit() {
-    this.setOrderItemsColumn();
     this._subscribeToParamChange();
     this._subscribeToDataChange();
   }

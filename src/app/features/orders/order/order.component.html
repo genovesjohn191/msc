@@ -98,28 +98,19 @@
               </mcs-item>
 
               <mcs-item>
-                <span>{{ 'order.totalCharge' | translate }}:</span>
-                <span>{{ selectedOrder.charges?.totalCost }}</span>
-              </mcs-item>
-
-            </mcs-presentation-panel>
-          </mcs-grid-column>
-
-          <!-- Charges -->
-          <mcs-grid-column>
-            <mcs-presentation-panel>
-              <ng-container mcsPresentationPanelHeader>
-                <h2>{{ 'order.charges' | translate }}</h2>
-              </ng-container>
-
-              <mcs-item>
                 <span>{{ 'order.contractTerm' | translate }}:</span>
-                <span>12 Months</span>
+                <span>
+                  {{ selectedOrder.contractDuration || 0 }}
+                  {{ 'order.contractTermSuffix' | translate }}
+                </span>
               </mcs-item>
 
               <mcs-item>
                 <span>{{ 'order.totalCharge' | translate }}:</span>
-                <span>{{ selectedOrder.charges?.totalCost }}</span>
+                <span>
+                  {{ selectedOrder.charges?.currencySymbol }}
+                  {{ selectedOrder.charges?.totalCost || 0 }}
+                </span>
               </mcs-item>
 
             </mcs-presentation-panel>
@@ -150,16 +141,6 @@
           </mcs-data-cell>
         </ng-container>
 
-        <!-- Billing Site -->
-        <ng-container mcsColumnDef="billingSite">
-          <mcs-header-cell *mcsHeaderCellDef>
-            {{ 'order.columnHeaders.billingSite' | translate }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row">
-            <span>{{ row.billingSite }}</span>
-          </mcs-data-cell>
-        </ng-container>
-
         <!-- Cost Centre -->
         <ng-container mcsColumnDef="costCentre">
           <mcs-header-cell *mcsHeaderCellDef>
@@ -167,6 +148,16 @@
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
             <span>{{ row.costCentre }}</span>
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Billing Site -->
+        <ng-container mcsColumnDef="billingSite">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ 'order.columnHeaders.billingSite' | translate }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row">
+            <span>{{ row.billingSite }}</span>
           </mcs-data-cell>
         </ng-container>
 
