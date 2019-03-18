@@ -3,7 +3,9 @@ import {
   Input,
   Output,
   EventEmitter,
+  OnInit,
   OnChanges,
+  OnDestroy,
   SimpleChanges,
   ViewChild
 } from '@angular/core';
@@ -13,28 +15,36 @@ import {
 } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import {
+  Observable,
+  Subject
+} from 'rxjs';
+import {
   McsTableDataSource,
   CoreValidators,
   McsDateTimeService
 } from '@app/core';
 import {
   isNullOrEmpty,
-  getSafeProperty
+  getSafeProperty,
+  unsubscribeSafely
 } from '@app/utilities';
 import {
   McsOrder,
   OrderWorkflowAction,
-  McsOrderItem
+  McsOrderItem,
+  McsBilling,
+  McsBillingSite
 } from '@app/models';
 import { McsFormGroupDirective } from '@app/shared';
 import { OrderDetails } from './order-details-step';
+import { McsOrdersRepository } from '@app/services';
 
 @Component({
   selector: 'mcs-order-details-step',
   templateUrl: 'order-details-step.component.html'
 })
 
-export class OrderDetailsStepComponent implements OnChanges {
+export class OrderDetailsStepComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public order: McsOrder;
 
@@ -49,6 +59,10 @@ export class OrderDetailsStepComponent implements OnChanges {
   public fcBillingCostCenter: FormControl;
 
   // Others
+  public billing$: Observable<McsBilling[]>;
+  public selectedBilling$: Observable<McsBilling>;
+  public selectedBillingSite$: Observable<McsBillingSite>;
+
   public workflowAction: OrderWorkflowAction;
   public orderDescription: string;
   public orderDatasource: McsTableDataSource<McsOrderItem>;
@@ -57,13 +71,20 @@ export class OrderDetailsStepComponent implements OnChanges {
   @ViewChild(McsFormGroupDirective)
   private _formGroup: McsFormGroupDirective;
 
+  private _destroySubject = new Subject<void>();
+
   constructor(
     private _translate: TranslateService,
-    private _dateTimeService: McsDateTimeService
+    private _dateTimeService: McsDateTimeService,
+    private _ordersRepository: McsOrdersRepository
   ) {
     this.workflowAction = OrderWorkflowAction.Submitted;
     this._registerFormGroup();
     this._setDataColumns();
+  }
+
+  public ngOnInit() {
+    this._subscribeToBillingDetails();
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
@@ -72,6 +93,10 @@ export class OrderDetailsStepComponent implements OnChanges {
       this._initializeOrderDatasource();
       this._setOrderDescription();
     }
+  }
+
+  public ngOnDestroy() {
+    unsubscribeSafely(this._destroySubject);
   }
 
   public get orderWorkFlowEnum(): any {
@@ -107,7 +132,7 @@ export class OrderDetailsStepComponent implements OnChanges {
       contractDuration: this.fcContractTerm.value,
       billingEntity: this.fcBillingEntity.value,
       billingSite: this.fcBillingSite.value,
-      billingCustomCenter: this.fcBillingCostCenter.value,
+      billingCostCentre: this.fcBillingCostCenter.value,
       workflowAction: this.workflowAction
     });
   }
@@ -153,19 +178,22 @@ export class OrderDetailsStepComponent implements OnChanges {
    * Form groups and Form controls registration area
    */
   private _registerFormGroup(): void {
-    // Register Form Controls
+    // Contract term settings
     this.fcContractTerm = new FormControl('', [
       CoreValidators.required
     ]);
 
+    // Billing entity settings
     this.fcBillingEntity = new FormControl('', [
       CoreValidators.required
     ]);
 
+    // Billing site settings
     this.fcBillingSite = new FormControl('', [
       CoreValidators.required
     ]);
 
+    // Billing cost centre settings
     this.fcBillingCostCenter = new FormControl('', [
       CoreValidators.required
     ]);
@@ -177,5 +205,12 @@ export class OrderDetailsStepComponent implements OnChanges {
       fcBillingSite: this.fcBillingSite,
       fcBillingCostCenter: this.fcBillingCostCenter
     });
+  }
+
+  /**
+   * Subscribes to order billing details
+   */
+  private _subscribeToBillingDetails(): void {
+    this.billing$ = this._ordersRepository.getBilling();
   }
 }

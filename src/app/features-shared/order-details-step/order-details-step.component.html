@@ -22,46 +22,54 @@
             </mcs-error>
           </mcs-form-field>
 
-          <mcs-form-field>
-            <mcs-select [formControl]="fcBillingEntity"
-              [placeholder]="'orderDetailsStep.billingDetails.entityPlaceholder' | translate"
-              [mcsContextualHelp]="'orderDetailsStep.billingDetails.entityHelp' | translate">
+          <ng-container *ngIf="billing$ | async as billingDetails">
+            <mcs-form-field>
+              <mcs-select [formControl]="fcBillingEntity"
+                [placeholder]="'orderDetailsStep.billingDetails.entityPlaceholder' | translate"
+                [mcsContextualHelp]="'orderDetailsStep.billingDetails.entityHelp' | translate">
 
-              <mcs-option [value]="1">MCS Test</mcs-option>
-            </mcs-select>
+                <mcs-option [value]="billing" *ngFor="let billing of billingDetails">
+                  {{ billing.name }}
+                </mcs-option>
+              </mcs-select>
 
-            <mcs-error mcsError errorState="required">
-              {{ 'orderDetailsStep.billingDetails.entityRequired' | translate }}
-            </mcs-error>
-          </mcs-form-field>
+              <mcs-error mcsError errorState="required">
+                {{ 'orderDetailsStep.billingDetails.entityRequired' | translate }}
+              </mcs-error>
+            </mcs-form-field>
 
-          <mcs-form-field>
-            <mcs-select [formControl]="fcBillingSite"
-              [placeholder]="'orderDetailsStep.billingDetails.sitePlaceholder' | translate"
-              [mcsContextualHelp]="'orderDetailsStep.billingDetails.siteHelp' | translate">
+            <mcs-form-field>
+              <mcs-select [formControl]="fcBillingSite"
+                [placeholder]="'orderDetailsStep.billingDetails.sitePlaceholder' | translate"
+                [mcsContextualHelp]="'orderDetailsStep.billingDetails.siteHelp' | translate">
 
-              <mcs-option [value]="1">Market Street</mcs-option>
-            </mcs-select>
+                <mcs-option [value]="billingSite"
+                  *ngFor="let billingSite of fcBillingEntity?.value?.sites">
+                  {{ billingSite.name }}
+                </mcs-option>
+              </mcs-select>
 
-            <mcs-error mcsError errorState="required">
-              {{ 'orderDetailsStep.billingDetails.siteRequired' | translate }}
-            </mcs-error>
-          </mcs-form-field>
+              <mcs-error mcsError errorState="required">
+                {{ 'orderDetailsStep.billingDetails.siteRequired' | translate }}
+              </mcs-error>
+            </mcs-form-field>
 
-          <mcs-form-field>
-            <mcs-select [formControl]="fcBillingCostCenter"
-              [placeholder]="'orderDetailsStep.billingDetails.costCenterPlaceholder' | translate"
-              [mcsContextualHelp]="'orderDetailsStep.billingDetails.costCenterHelp' | translate">
+            <mcs-form-field>
+              <mcs-select [formControl]="fcBillingCostCenter"
+                [placeholder]="'orderDetailsStep.billingDetails.costCenterPlaceholder' | translate"
+                [mcsContextualHelp]="'orderDetailsStep.billingDetails.costCenterHelp' | translate">
 
-              <mcs-option [value]="1">Telecom</mcs-option>
-              <mcs-option [value]="2">Cloud Services</mcs-option>
-              <mcs-option [value]="3">Government</mcs-option>
-            </mcs-select>
+                <mcs-option [value]="costCentre"
+                  *ngFor="let costCentre of fcBillingSite?.value?.costCenters">
+                  {{ costCentre.name }}
+                </mcs-option>
+              </mcs-select>
 
-            <mcs-error mcsError errorState="required">
-              {{ 'orderDetailsStep.billingDetails.costCenterRequired' | translate }}
-            </mcs-error>
-          </mcs-form-field>
+              <mcs-error mcsError errorState="required">
+                {{ 'orderDetailsStep.billingDetails.costCenterRequired' | translate }}
+              </mcs-error>
+            </mcs-form-field>
+          </ng-container>
         </form>
       </section>
     </div>

@@ -13,7 +13,8 @@ import {
   McsOrder,
   McsOrderWorkflow,
   McsOrderCreate,
-  McsOrderItem
+  McsOrderItem,
+  McsBilling
 } from '@app/models';
 import { OrdersApiService } from '../api-services/orders-api.service';
 import { McsOrdersDataContext } from '../data-context/mcs-orders-data.context';
@@ -78,6 +79,15 @@ export class McsOrdersRepository extends McsRepositoryBase<McsOrder> implements 
     return this._ordersApiService.deleteOrder(id).pipe(
       map((response) => getSafeProperty(response, (obj) => obj.content)),
       tap((order) => this.delete(order))
+    );
+  }
+
+  /**
+   * Gets the order billing details
+   */
+  public getBilling(): Observable<McsBilling[]> {
+    return this._ordersApiService.getBilling().pipe(
+      map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
 }
