@@ -1,6 +1,5 @@
 import {
   Component,
-  OnInit,
   OnDestroy,
   AfterViewInit,
   ChangeDetectorRef,
@@ -14,7 +13,6 @@ import {
 import { takeUntil } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import {
-  McsTextContentProvider,
   CoreDefinition,
   McsBrowserService,
   McsTableListingBase,
@@ -46,12 +44,11 @@ import {
 
 export class NotificationsComponent
   extends McsTableListingBase<McsTableDataSource<McsJob>>
-  implements OnInit, AfterViewInit, OnDestroy {
+  implements AfterViewInit, OnDestroy {
 
   @EventBusPropertyListenOn(EventBusState.AccountChange)
   public activeCompany$: Observable<McsCompany>;
 
-  public textContent: any;
   private _destroySubject = new Subject<void>();
 
   public get activeCompany(): McsCompany {
@@ -63,14 +60,9 @@ export class NotificationsComponent
     _changeDetectorRef: ChangeDetectorRef,
     private _router: Router,
     private _authenticationIdentity: McsAuthenticationIdentity,
-    private _textContentProvider: McsTextContentProvider,
     private _jobsRepository: McsJobsRepository
   ) {
     super(_browserService, _changeDetectorRef);
-  }
-
-  public ngOnInit() {
-    this.textContent = this._textContentProvider.content.notifications;
   }
 
   public ngAfterViewInit() {

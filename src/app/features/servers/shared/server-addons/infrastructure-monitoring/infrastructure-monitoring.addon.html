@@ -1,8 +1,8 @@
 <mcs-item>
-  <span>{{ textContent.label }}:</span>
+  <span>{{ 'serverShared.addOnInfrastructureMonitoring.label' | translate }}:</span>
   <mcs-select [(ngModel)]="selectedServiceLevel"
     (change)="onServiceLevelChanged()"
-    [placeholder]="textContent.placeholder"
+    [placeholder]="'serverShared.addOnInfrastructureMonitoring.placeholder' | translate"
     class="form-field-size-small"
     mcsAlign="end">
     <mcs-option *ngFor="let level of serviceLevels" [value]="level">

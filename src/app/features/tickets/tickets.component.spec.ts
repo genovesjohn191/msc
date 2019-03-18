@@ -55,10 +55,6 @@ describe('TicketsComponent', () => {
 
   /** Test Implementation */
   describe('ngOnInit() | constructor', () => {
-    it('should defined the text content', () => {
-      expect(component.textContent).toBeDefined();
-    });
-
     it('should initialize the datasource of the table', () => {
       expect(component.dataSource).toBeDefined();
     });

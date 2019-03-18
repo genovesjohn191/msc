@@ -1,13 +1,13 @@
 <mcs-dialog>
   <mcs-dialog-header>
-    <h1>{{ textContent.title }}</h1>
+    <h1>{{ 'serverShared.dialogDiskConflictSnapshot.title' | translate }}</h1>
   </mcs-dialog-header>
 
   <mcs-dialog-content>
     <mcs-item>
       <mcs-icon [key]="warningIconKey"></mcs-icon>
       <mcs-section>
-        <span>{{ textContent.alert }}</span>
+        <span>{{ 'serverShared.dialogDiskConflictSnapshot.alert' | translate }}</span>
       </mcs-section>
     </mcs-item>
   </mcs-dialog-content>
@@ -17,6 +17,6 @@
       (click)="closeDialog()"
       mcsEventTracker="close"
       mcsEventCategory="server"
-      mcsEventLabel="disk-conflict-snapshot-dialog">{{ textContent.cancel }}</a>
+      mcsEventLabel="disk-conflict-snapshot-dialog">{{ 'serverShared.dialogDiskConflictSnapshot.cancel' | translate }}</a>
   </mcs-dialog-actions>
 </mcs-dialog>

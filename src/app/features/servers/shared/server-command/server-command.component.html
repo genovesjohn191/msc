@@ -13,7 +13,7 @@
         mcsEventTracker="start"
         mcsEventCategory="server"
         mcsEventLabel="server-command-tool">
-        {{ textContent.start }}
+        {{ 'servers.start' | translate }}
       </a>
     </ng-container>
 
@@ -25,7 +25,7 @@
         mcsEventTracker="stop"
         mcsEventCategory="server"
         mcsEventLabel="server-command-tool">
-        {{ textContent.stop }}
+        {{ 'servers.start' | translate }}
       </a>
     </ng-container>
 
@@ -37,7 +37,7 @@
         mcsEventTracker="restart"
         mcsEventCategory="server"
         mcsEventLabel="server-command-tool">
-        {{ textContent.restart }}
+        {{ 'servers.start' | translate }}
       </a>
     </ng-container>
 
@@ -49,7 +49,7 @@
         mcsEventTracker="suspend"
         mcsEventCategory="server"
         mcsEventLabel="server-command-tool">
-        {{ textContent.suspend }}
+        {{ 'servers.start' | translate }}
       </a>
     </ng-container>
 
@@ -61,7 +61,7 @@
         mcsEventTracker="resume"
         mcsEventCategory="server"
         mcsEventLabel="server-command-tool">
-        {{ textContent.resume }}
+        {{ 'servers.start' | translate }}
       </a>
     </ng-container>
 
@@ -75,7 +75,7 @@
           mcsEventTracker="scale"
           mcsEventCategory="server"
           mcsEventLabel="server-command-tool">
-          {{ textContent.scale }}
+          {{ 'servers.start' | translate }}
         </a>
       </ng-container>
     </ng-container>
@@ -89,7 +89,7 @@
           mcsEventTracker="clone"
           mcsEventCategory="server"
           mcsEventLabel="server-command-tool">
-          {{ textContent.clone }}
+          {{ 'servers.clone' | translate }}
         </a>
       </ng-container>
     </ng-container>
@@ -104,7 +104,7 @@
         mcsEventLabel="server-command-tool"
         *mcsAccessControl="[]; feature: 'EnableDedicatedVmRename';
           validateWhen: server.isDedicated">
-        {{ textContent.rename }}
+        {{ 'servers.rename' | translate }}
       </a>
     </ng-container>
 
@@ -117,7 +117,7 @@
           mcsEventTracker="delete"
           mcsEventCategory="server"
           mcsEventLabel="server-command-tool">
-          {{ textContent.delete }}
+          {{ 'servers.delete' | translate }}
         </a>
       </ng-container>
     </ng-container>
@@ -130,7 +130,7 @@
         mcsEventTracker="view-in-portal"
         mcsEventCategory="server"
         mcsEventLabel="server-command-tool">
-        {{ textContent.viewVCloud }}
+        {{ 'servers.viewVCloud' | translate }}
       </a>
     </ng-container>
 
@@ -144,7 +144,7 @@
         mcsEventLabel="server-command-tool"
         *mcsAccessControl="[]; feature: 'EnableDedicatedVmPasswordReset';
           validateWhen: server.isDedicated">
-        {{ textContent.resetVmPassword }}
+        {{ 'servers.resetVmPassword' | translate }}
       </a>
     </ng-container>
   </div>

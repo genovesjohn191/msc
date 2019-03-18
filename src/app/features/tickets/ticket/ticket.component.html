@@ -10,7 +10,7 @@
         mcsEventCategory="ticket"
         mcsEventLabel="ticket-details-page">
         <mcs-icon [key]="backIconKey" size="small"></mcs-icon>
-        <span>{{ textContent.backToTickets }}</span>
+        <span>{{ 'tickets.backToTickets' | translate }}</span>
       </mcs-action-item>
     </mcs-top-panel-item>
   </mcs-top-panel>
@@ -21,7 +21,7 @@
       <!-- Ticket description -->
       <mcs-presentation-panel mcsId="ticket-description">
         <ng-container mcsPresentationPanelHeader>
-          <h2>{{ textContent.description }}</h2>
+          <h2>{{ 'tickets.description' | translate }}</h2>
         </ng-container>
         <p><strong [innerHTML]="selectedTicket.shortDescription | mcsNewLines"></strong></p>
         <p [innerHTML]="selectedTicket.description | mcsNewLines"></p>
@@ -30,31 +30,31 @@
       <!-- Ticket details -->
       <mcs-presentation-panel mcsId="ticket-details">
         <ng-container mcsPresentationPanelHeader>
-          <h2>{{ textContent.information }}</h2>
+          <h2>{{ 'tickets.information' | translate }}</h2>
         </ng-container>
 
         <mcs-grid>
           <mcs-grid-row>
             <mcs-grid-column>
               <mcs-item>
-                <span>{{ textContent.requestor }}:</span>
+                <span>{{ 'tickets.requestor' | translate }}:</span>
                 <span [innerHTML]="selectedTicket.requestor | mcsDataLabel"></span>
               </mcs-item>
 
               <mcs-item>
-                <span>{{ textContent.createdDate }}:</span>
+                <span>{{ 'tickets.createdDate' | translate }}:</span>
                 <span>{{ selectedTicket.createdOn | mcsStdDateFormat }}</span>
               </mcs-item>
 
               <mcs-item>
-                <span>{{ textContent.customerReference }}:</span>
+                <span>{{ 'tickets.customerReference' | translate }}:</span>
                 <span [innerHTML]="selectedTicket.customerReference | mcsDataLabel: 'None'"></span>
               </mcs-item>
             </mcs-grid-column>
 
             <mcs-grid-column>
               <mcs-item>
-                <span>{{ textContent.status }}:</span>
+                <span>{{ 'tickets.status' | translate }}:</span>
                 <mcs-icon *ngIf="selectedTicket.resolved" [key]="checkIconKey" size="small"></mcs-icon>
                 <span [innerHTML]="selectedTicket.stateLabel | mcsDataLabel"></span>
                 <span *ngIf="selectedTicket.resolved">
@@ -63,7 +63,7 @@
               </mcs-item>
 
               <mcs-item>
-                <span>{{ textContent.type }}:</span>
+                <span>{{ 'tickets.type' | translate }}:</span>
                 <span>{{ getSubTypeString(selectedTicket.subType) }}</span>
               </mcs-item>
             </mcs-grid-column>
@@ -74,20 +74,20 @@
       <!-- Ticket closure details -->
       <mcs-presentation-panel *ngIf="selectedTicket.closed" mcsId="ticket-closure-details">
         <ng-container mcsPresentationPanelHeader>
-          <h2>{{ textContent.closureDetails }}</h2>
+          <h2>{{ 'tickets.closureDetails' | translate }}</h2>
         </ng-container>
 
         <mcs-grid>
           <mcs-grid-row>
             <mcs-grid-column>
               <mcs-item>
-                <span>{{ textContent.closureDate }}:</span>
+                <span>{{ 'tickets.closureDate' | translate }}:</span>
                 <span [innerHTML]="(selectedTicket.closureInformation?.closedAt |
                   mcsStdDateFormat) | mcsDataLabel"></span>
               </mcs-item>
 
               <mcs-item>
-                <span>{{ textContent.closureNotes }}:</span>
+                <span>{{ 'tickets.closureNotes' | translate }}:</span>
                 <span [innerHTML]="selectedTicket.closureInformation?.closeNotes |
                   mcsDataLabel: 'None'"></span>
               </mcs-item>
@@ -95,13 +95,13 @@
 
             <mcs-grid-column>
               <mcs-item>
-                <span>{{ textContent.rootCause }}:</span>
+                <span>{{ 'tickets.rootCause' | translate }}:</span>
                 <span [innerHTML]="selectedTicket.closureInformation?.closeProblem |
                   mcsDataLabel: 'None'"></span>
               </mcs-item>
 
               <mcs-item>
-                <span>{{ textContent.resolution }}:</span>
+                <span>{{ 'tickets.resolution' | translate }}:</span>
                 <span [innerHTML]="selectedTicket.closureInformation?.closeResolution |
                   mcsDataLabel: 'None'"></span>
               </mcs-item>
@@ -116,7 +116,7 @@
           <mcs-grid-column sizeSm="12" mcsId="ticket-services">
             <mcs-presentation-panel>
               <ng-container mcsPresentationPanelHeader>
-                <h2>{{ textContent.services }}</h2>
+                <h2>{{ 'tickets.services' | translate }}</h2>
               </ng-container>
 
               <ng-container *ngIf="selectedTicket.serviceId | mcsIsNotNullOrEmpty; else noServices">
@@ -129,7 +129,7 @@
 
               <ng-template #noServices>
                 <mcs-data-status-empty>
-                  {{ textContent.missingServicesLabel }}
+                  {{ 'tickets.missingServicesLabel' | translate }}
                 </mcs-data-status-empty>
               </ng-template>
             </mcs-presentation-panel>
@@ -138,7 +138,7 @@
           <mcs-grid-column sizeSm="12" mcsId="ticket-attachments">
             <mcs-presentation-panel>
               <ng-container mcsPresentationPanelHeader>
-                <h2>{{ textContent.attachments }}</h2>
+                <h2>{{ 'tickets.attachments' | translate }}</h2>
               </ng-container>
 
               <ng-container *ngIf="selectedTicket.attachments | mcsIsNotNullOrEmpty; else noAttachments">
@@ -159,7 +159,7 @@
 
               <ng-template #noAttachments>
                 <mcs-data-status-empty>
-                  {{ textContent.missingAttachmentsLabel }}
+                  {{ 'tickets.missingAttachmentsLabel' | translate }}
                 </mcs-data-status-empty>
               </ng-template>
             </mcs-presentation-panel>
@@ -171,7 +171,7 @@
             <!-- Ticket Activities -->
             <mcs-presentation-panel mcsId="ticket-activities">
               <ng-container mcsPresentationPanelHeader>
-                <h2>{{ textContent.activity }}</h2>
+                <h2>{{ 'tickets.activity' | translate }}</h2>
               </ng-container>
 
               <ng-container *mcsAccessControl="['TicketCommentCreate']">
@@ -192,7 +192,7 @@
                 </mcs-section>
                 <ng-template #noActivities>
                   <mcs-data-status-empty>
-                    {{ textContent.missingActivitiesLabel }}
+                    {{ 'tickets.missingActivitiesLabel' | translate }}
                   </mcs-data-status-empty>
                 </ng-template>
               </ng-container>

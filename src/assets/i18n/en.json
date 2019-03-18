@@ -1,5 +1,4 @@
 {
-  "consolePage": {},
   "navigation": {
     "title": "Macquarie Cloud Services Portal",
     "dashboard": "Dashboard",
@@ -17,6 +16,38 @@
     "loadingProducts": "Loading products.",
     "noProducts": "No products to display.",
     "errorProducts": "Sorry, something’s not right. We weren’t able to retrieve the list of products."
+  },
+  "consolePage": {
+    "loading": "Loading VM Console...",
+    "sendCtrlAltDelete": "Send ctrl+alt+del",
+    "start": "Start",
+    "stop": "Stop",
+    "restart": "Restart",
+    "disconnectedMessage": "Console disconnected. Attempting to reconnect...",
+    "stopping": "Window will close in <strong>{{timer}}</strong>.",
+    "errorMessage": "Console connection error."
+  },
+  "pageNotifications": {
+    "sessionHandler": {
+      "sessionIdleDialog": {
+        "title": "Hey, are you still there?",
+        "alert": "We've noticed you've been inactive for a while. Click to continue your session, otherwise you'll be signed out in ",
+        "dataSingular": "second",
+        "dataPlural": "seconds",
+        "confirm": "Continue Session"
+      },
+      "sessionTimeoutDialog": {
+        "title": "Session Timed Out",
+        "alert": "Your session has expired due to inactivity. Click to sign in again.",
+        "confirm": "Sign In"
+      }
+    },
+    "webStomp": {
+      "connectionError": "We’re experiencing connectivity issues.",
+      "connectionSuccess": "Successfully connected.",
+      "connectionRetryButton": "RETRY",
+      "connectionRefreshButton": "REFRESH"
+    }
   },
   "orders": {
     "header": "Orders",
@@ -153,6 +184,230 @@
     "loadingContent": "Loading list of storage.",
     "noStorage": "No storage available.",
     "errorGettingStorage": "Sorry, something’s not right. We weren’t able to retrieve the list of storage."
+  },
+  "server": {
+    "header": "Servers",
+    "loading": "Loading server details.",
+    "loadingResourceDetails": "Loading server properties.",
+    "leftPanelHeader": "Virtual Server Filter",
+    "serverBusyLabel": "This server is currently busy and some actions may be temporarily unavailable."
+  },
+  "serverBackups": {
+    "label": "Snapshots",
+    "loading": "Loading snapshots information.",
+    "loadingContent": "Loading snapshots.",
+    "formMessageDefaultError": "Something went wrong while processing your request. Please try again later.",
+    "snapshotHeader": "VM Snapshot",
+    "snapshotDescription": "Snapshots are point-in-time VM-level restore points.\r\n Restoring a snapshot is not reversible, so restore carefully.",
+    "snapshots": "Snapshots",
+    "noSnapshots": "There are no Snapshots to display for this server.",
+    "errorGettingSnapshots": "Sorry, something’s not right. We weren’t able to retrieve the list of snapshots.",
+    "createSnapshot": "Snapshot now",
+    "creatingSnapshot": "Capturing Snapshot",
+    "restoreSnapshot": "Restore",
+    "deleteSnapshot": "Delete",
+    "serverBackups": "Server Backups",
+    "serverBackupsDescription": "If something's not quite right with your server and you urgently need a restore, we can look into restoring a server-level backup for you.",
+    "requestRestore": "Request a restore"
+  },
+  "serverManagement": {
+    "label": "Management",
+    "vmProperties": {
+      "title": "VM Properties",
+      "status": "Status",
+      "image": "Image",
+      "zone": "Zone",
+      "configuration": "Configuration",
+      "vmwareTools": "Tools Version",
+      "vApp": "vApp"
+    },
+    "vmConsole": {
+      "title": "VM Console",
+      "link": "View Console",
+      "serverPoweredOff": "Console unavailable while server is stopped.",
+      "serverSuspended": "Console unavailable while server is suspended."
+    },
+    "nics": {
+      "title": "NICs",
+      "manage": "Manage",
+      "publicIp": "Public IP",
+      "interface": "NIC",
+      "primary": "Primary",
+      "ipAllocationMode": "IP Mode",
+      "ipAddresses": "IP Addresses",
+      "dhcpLabel": "Automatically assigned",
+      "staticLabel": "Unable to obtain",
+      "noContentMessage": "There are no NICs for this server."
+    },
+    "storage": {
+      "title": "Storage",
+      "primaryVolume": "Primary Volume",
+      "secondaryVolumes": "Secondary Volumes",
+      "storagePolicy": "Storage Policy",
+      "manageStorage": "Manage Storage",
+      "manage": "Manage",
+      "noContentMessage": "Storage information is unavailable."
+    },
+    "media": {
+      "title": "Media",
+      "attachHeading": "Attach media to your Server",
+      "manageHeader": "Select media",
+      "attach": "Attach",
+      "detach": "Detach",
+      "cancel": "Cancel",
+      "loadingContent": "Loading list of media.",
+      "errorGettingMedias": "Sorry, something’s not right. We weren’t able to retrieve the list of media.",
+      "noContentMessage": "No media is mounted for this server.",
+      "noAvailableMedia": "No available media to attach."
+    },
+    "manageScale": {
+      "header": "Managed RAM and vCPU",
+      "description": "Scaling a server allows for adjustment of RAM and vCPU power.",
+      "warning": "Scaling the Server will require a restart.",
+      "scale": "Scale",
+      "cancel": "Cancel",
+      "scaling": "Scaling in progress.",
+      "loadingContent": "Loading server compute."
+    },
+    "serviceInformation": {
+      "title": "Service Information",
+      "vdc": "Resource",
+      "serviceId": "Service ID",
+      "vmWareId": "VMWare ID"
+    },
+    "manageServices": {
+      "title": "Manage Services",
+      "description": "Ensure your server is fully protected. Enable and configure managed services for this server."
+    }
+  },
+  "serverNics": {
+    "label": "NICs",
+    "loading": "Loading NICs information.",
+    "loadingContent": "Loading NICs.",
+    "title": "Manage NICs",
+    "description": "",
+    "editLink": "Edit",
+    "deleteLink": "Delete",
+    "addHeading": "Add NIC",
+    "addButton": "Add",
+    "updateButton": "Update",
+    "editHeading": "Edit NIC",
+    "editButton": "Update",
+    "columnHeaders": {
+      "nic": "NIC",
+      "network": "Network",
+      "primary": "Primary",
+      "type": "Type",
+      "ipMode": "IP Mode",
+      "ipAddresses": "IP Addresses",
+      "action": ""
+    },
+    "noNics": "There are no NICs to display for this server.",
+    "warningEditingNic": "This server may need to be restarted before any NIC changes are made effective.",
+    "errorGettingNics": "Sorry, something’s not right. We weren’t able to retrieve the list of NICs.",
+    "reachedNetworksLimit": "You've reached the maximum number of NICs for this server."
+  },
+  "serverServices": {
+    "loading": "Loading services information.",
+    "loadingContent": "Loading server os updates details.",
+    "errorGettingServerDetails": "Sorry, something’s not right. We weren’t able to retrieve the os update details of the server.",
+    "formMessageDefaultError": "Something went wrong while processing your request. Please try again later.",
+    "label": "Services",
+    "title": "Operating System Updates",
+    "description": "Keep your server protected by applying regular OS updates.",
+    "updatesStatusTitleLabel": "Status",
+    "updatesAnalysisLabel": "Inspect Now",
+    "updatesScheduleTitleLabel": "Jobs",
+    "updatesScheduleLabel": {
+      "scheduled": "You have an update schedule configured.",
+      "unscheduled": "No update schedule configured."
+    },
+    "updatesScheduleRunOnceWarningLabel": "Once this job is complete, you will need to set up a new update schedule.",
+    "updatesScheduleConfigureLink": "Configure",
+    "updatesScheduleRunNowLink": "Update Now",
+    "deleteSuccessMessage": "Schedule deleted",
+    "deleteErrorMessage": "Schedule could not be deleted at this time",
+    "updateSuccessMessage": "Schedule saved",
+    "updateErrorMessage": "Schedule could not be saved at this time"
+  },
+  "serverServicesOsUpdatesApplyNow": {
+    "loading": "Loading server os updates.",
+    "title": "Apply Updates",
+    "description": "Select the updates or update categories you would like to apply and we will install them on your server for you.",
+    "listLabel": "Which updates should we apply?",
+    "listAllSelection": "All Updates",
+    "noOsUpdates": "no availabe os updates for this server.",
+    "osUpdatesloadingContent": "Loading list of server os updates.",
+    "errorOsUpdates": "Sorry, something’s not right. We weren’t able to retrieve the list of os updates for this server.",
+    "applyUpdatesButton": "Apply Updates"
+  },
+  "serverServicesOsUpdatesSchedule": {
+    "title": "Configure Schedule",
+    "description": {
+      "default": "Our system will update the guest OS on this server for you.",
+      "recurring": "Our system will update the guest OS on this server for you. Your server has a recurring update schedule set. See the Recurring option below for details.",
+      "runonce": "Our system will update the guest OS on this server for you. Your server has a one-time update schedule set. See the Later option below for details."
+    },
+    "scheduleTypeLabel": "Schedule Type:",
+    "scheduleTypeOption": {
+      "runonce": "Once",
+      "recurring": "Recurring"
+    },
+    "scheduleTimeLabel": "Schedule:",
+    "daysPlaceholder": {
+      "runonce": "Select day",
+      "recurring": "Select day/s"
+    },
+    "listLabel": "Which updates should we apply?",
+    "listAllSelection": "All Updates",
+    "datePreposition": "at",
+    "timezoneAbrv": "AEST",
+    "checkboxSelectionEveryday": "Everyday",
+    "checkboxSelectionWeekdays": "Weekdays",
+    "checkboxSelectionWeekends": "Weekends",
+    "timeSelection": "12:00,12:15,12:30,12:45,1:00,1:15,1:30,1:45,2:00,2:15,2:30,2:45,3:00,3:15,3:30,3:45,4:00,4:15,4:30,4:45,5:00,5:15,5:30,5:45,6:00,6:15,6:30,6:45,7:00,7:15,7:30,7:45,8:00,8:15,8:30,8:45,9:00,9:15,9:30,9:45,10:00,10:15,10:30,10:45,11:00,11:15,11:30,11:45",
+    "dayPeriod": "AM,PM",
+    "osUpdatesCategoryloadingContent": "Loading server os updates categories.",
+    "noOsUpdatesCategory": "no availabe os updates category for this server.",
+    "errorGettingOsUpdatesCategory": "Sorry, something’s not right. We weren’t able to retrieve the list of os updates category for this server.",
+    "scheduleDateloadingContent": "Loading server os updates schedule",
+    "errorGettingscheduleDate": "Sorry, something’s not right. We weren’t able to retrieve the os update schedule for this server.",
+    "deleteScheduleButton": "Delete Existing Schedule",
+    "deleteConfirmText": "Delete",
+    "saveScheduleButton": "Save Schedule",
+    "saveConfirmText": "Save",
+    "updateDialogTitle": "Save Update Schedule",
+    "updateDialogMessage": "Your server already has an update schedule configured. \n \n Are you sure you wish to overwrite this?",
+    "deleteDialogTitle": "Delete Existing Schedule",
+    "deleteDialogMessage": "Deleting a schedule cannot be undone and will not revert any updates which have been applied. \n \n Are you sure you wish to continue?"
+  },
+  "serverStorage": {
+    "label": "Storage",
+    "loading": "Loading storage information.",
+    "loadingContent": "Loading disks.",
+    "title": "Manage Disks",
+    "hasEditableDiskDescription": "Manage the disks attached to your server. You can delete or expand existing disks, or you can add a new disk.",
+    "noEditableDiskDescription": "View the disks attached to your server.",
+    "primary": "Primary",
+    "other": "Other",
+    "diskName": "Hard disk",
+    "addButton": "Attach",
+    "updateButton": "Update",
+    "cancelButton": "Cancel",
+    "addStorageHeading": "Add New Disk",
+    "expandStorageHeading": "Expand Disk",
+    "expandStorageLink": "Expand",
+    "deleteStorageLink": "Delete",
+    "reachedStorageLimit": "You've reached the maximum number of disks for this server.",
+    "columnHeaders": {
+      "storageDevice": "Storage Device",
+      "storageProfile": "Storage Profile",
+      "capacity": "Capacity",
+      "action": ""
+    },
+    "noDisks": "No disks are attached to this server.",
+    "errorGettingDisks": "Sorry, something’s not right. We weren’t able to retrieve the list of disks.",
+    "fullStorageSpace": "This disk cannot be created due to insufficient storage space (0 GB remaining)."
   },
   "serverCreate": {
     "header": "Create a New Server",
@@ -309,5 +564,698 @@
     "monthlyCost": "Monthly",
     "oneOffCost": "One-off",
     "totalCost": "Total Cost"
+  },
+  "serverShared": {
+    "addOnAntiMalware": {
+      "header": "Anti-Malware",
+      "label": "Anti-Malware Service Variant",
+      "placeholder": "Select variant"
+    },
+    "addOnDisasterRecovery": {
+      "header": "Disaster Recovery",
+      "label": "VM Replication Protection Group",
+      "placeholder": "Select group"
+    },
+    "addOnHids": {
+      "header": "Host Intrusion Detection",
+      "serviceVariant": {
+        "label": "Service Variant",
+        "placeholder": "Select service variant"
+      },
+      "protectionLevel": {
+        "label": "Protection Level",
+        "placeholder": "Select protection level"
+      },
+      "policyTemplate": {
+        "label": "Policy Template",
+        "placeholder": "Select policy template"
+      }
+    },
+    "addOnInfrastructureMonitoring": {
+      "header": "Infrastructure Monitoring",
+      "label": "Service Level",
+      "placeholder": "Select service level"
+    },
+    "addOnSqlServer": {
+      "header": "SQL Server",
+      "version": {
+        "label": "Version",
+        "placeholder": "Select version"
+      },
+      "edition": {
+        "label": "Edition",
+        "placeholder": "Select edition"
+      },
+      "architecture": {
+        "label": "Architecture",
+        "placeholder": "Select architecture"
+      }
+    },
+    "dialogCreateSnapshot": {
+      "title": "New VM Snapshot",
+      "alert": "Capturing a new snapshot will replace any existing snapshots for this VM.",
+      "confirmation": "Are you sure you wish to capture a new snapshot for <strong>{{server_name}}</strong>?",
+      "cancel": "Cancel",
+      "confirm": "Confirm"
+    },
+    "dialogDeleteNic": {
+      "title": "Delete {{nic_name}}",
+      "alert": "This server may need to be restarted before any NIC changes are made effective.",
+      "confirmation": "Are you sure you want to delete this NIC?",
+      "cancel": "Cancel",
+      "confirm": "Yes"
+    },
+    "dialogDeleteServer": {
+      "title": {
+        "single": "Delete Server {{server_name}}",
+        "multiple": "Delete Servers"
+      },
+      "alert": {
+        "single": "Deleting a server cannot be undone. If this is the only remaining server in a vApp, the vApp will also be deleted.",
+        "multiple": "Deleting a server cannot be undone. If any server selected is the only remaining server in a vApp, the vApp will also be deleted."
+      },
+      "confirmation": "Are you sure you wish to continue?",
+      "cancel": "Cancel",
+      "confirm": "Delete"
+    },
+    "dialogDeleteSnapshot": {
+      "title": "Delete {{snapshot_name}}",
+      "alert": "Deleting a snapshot cannot be undone.",
+      "confirmation": "Are you sure you wish to continue?",
+      "cancel": "Cancel",
+      "confirm": "Confirm"
+    },
+    "dialogDeleteStorage": {
+      "title": "Delete {{storage_name}}",
+      "alert": "The data on {{storage_name}} will be lost forever.",
+      "confirmation": "Are you sure you want to delete this volume?",
+      "cancel": "Cancel",
+      "confirm": "Yes"
+    },
+    "dialogDetachMedia": {
+      "title": "Detach {{media_name}} Media",
+      "confirmation": "Are you sure you want to detach this media?",
+      "cancel": "Cancel",
+      "confirm": "Yes"
+    },
+    "dialogDiskConflictSnapshot": {
+      "title": "Disk Conflict",
+      "alert": "A snapshot cannot be captured for this server as it uses a custom, split-profile disk configuration.",
+      "cancel": "Close"
+    },
+    "dialogInsufficientStorageSnapshot": {
+      "title": "Insufficient Storage",
+      "alert": "The VDC {{vdc_name}} does not have enough storage space available in order to capture a snapshot.",
+      "confirmation": "Please remove any unneeded servers or snapshots and then try again.",
+      "cancel": "Close"
+    },
+    "dialogRenameServer": {
+      "title": "Rename Server",
+      "information": "Specify the new name for this server:",
+      "cancel": "Cancel",
+      "rename": "Rename",
+      "hints": {
+        "serverNameMax": "Max of {{max_char}} characters"
+      },
+      "errors": {
+        "required": "Server name is required",
+        "invalidServerName": "Please ensure the new name meets the following criteria: \r\n • Different to the current name\r\n • Between 1 and 15 characters\r\n • No special characters or spaces except - or _"
+      }
+    },
+    "dialogResetPassword": {
+      "title": "Reset Server Password",
+      "poweredOnInfo": "Resetting the server password requires a restart of your server. Are you sure you want to reset the password and restart server <strong>{{server_name}}</strong> now?",
+      "poweredOffInfo": "Are you sure you want to reset the password for <strong>{{server_name}}</strong>?",
+      "cancel": "Cancel",
+      "poweredOnReset": "Reset Password and Restart",
+      "poweredOffReset": "Reset Password"
+    },
+    "dialogResetPasswordFinished": {
+      "title": "Your Server Password",
+      "information": "We've reset the password for server <strong>{{server_name}}</strong>.",
+      "warning": "We won't show you this password again so we've emailed it to you for your reference.",
+      "close": "Close",
+      "username": "Username:",
+      "password": "Password:"
+    },
+    "dialogRestoreSnapshot": {
+      "title": "Restore VM Snapshot",
+      "alert": "Restoring a snapshot replaces data on the VM and cannot be undone. The server will be unavailable until this process is complete.",
+      "confirmation": "Are you sure you wish to restore <strong>{{snapshot_name}}</strong> to <strong>{{server_name}}</strong>?",
+      "cancel": "Cancel",
+      "confirm": "Confirm"
+    },
+    "dialogResumeServer": {
+      "title": {
+        "single": "Resume Server {{server_name}}",
+        "multiple": "Resume Servers"
+      },
+      "alert": {
+        "single": "After you resume a server, you cannot return to the state that the virtual machine was in when you suspended it. To return to the same state repeatedly, you must take a snapshot.",
+        "multiple": "After you resume a server, you cannot return to the state that the virtual machine was in when you suspended it. To return to the same state repeatedly, you must take a snapshot."
+      },
+      "confirmation": "Are you sure you wish to continue?",
+      "cancel": "Cancel",
+      "confirm": "Resume"
+    },
+    "dialogSuspendServer": {
+      "title": {
+        "single": "Suspend Server {{server_name}}",
+        "multiple": "Suspend Servers"
+      },
+      "alert": {
+        "single": "Suspending a server will save its current state and pause any operations that are in progress.",
+        "multiple": "Suspending a server will save its current state and pause any operations that are in progress."
+      },
+      "confirmation": "Are you sure you wish to continue?",
+      "cancel": "Cancel",
+      "confirm": "Suspend"
+    },
+    "manageNetwork": {
+      "customSwitch": "Enter a custom IP Address",
+      "customMessage": "Manually enter an IP address.",
+      "buttonSwitch": "Select from default",
+      "buttonMessage": "Selecting DHCP will allocate an IP address on boot. Static Pool will give you the next available IP in the static pool.",
+      "inUsedEnteredIpMessage": "This IP address is already assigned to a server.\r\n Your server may not be usable until the IP address is dissociated or the server it is assigned to is stopped.",
+      "loadingIpInUsed": "Loading Ip-addresses.",
+      "hints": {
+        "ipRange": "Valid range"
+      },
+      "errors": {
+        "ipAddressRequired": "Enter an IP address.",
+        "ipAddressInvalid": "Please enter a valid IP Address.",
+        "ipAddressRangeError": "IP Address must be in the range ({{ip_range}})."
+      }
+    },
+    "manageScale": {
+      "sliderSwitch": "Select from slider",
+      "customSwitch": "Enter custom size",
+      "sliderMessage": "Select the RAM and CPU for this server from a slider.",
+      "customMessage": "Manually enter the size of RAM and CPU for this server.",
+      "maximumRam": "Maximum RAM",
+      "maximumCpu": "Maximum CPU",
+      "ramLabel": "RAM",
+      "ramUnit": "GB",
+      "cpuLabel": "vCPUs",
+      "cpuUnit": "vCPU",
+      "errors": {
+        "ramRequired": "Enter RAM value.",
+        "ramNumeric": "Please enter a valid number.",
+        "ramMin": "The minimum value that can be entered is {{min_value}}.",
+        "ramMax": "Memory should not exceed {{max_value}}.",
+        "ramInvalid": "RAM must be a multiple of {{multiplier}} GB.",
+        "cpuRequired": "Enter CPU count.",
+        "cpuNumeric": "Please enter a valid number.",
+        "cpuMin": "The minimum value that can be entered is {{min_value}}.",
+        "cpuMax": "The number of vCPUs should not exceed {{max_value}}.",
+        "cpuInvalid": "vCPU must be a multiple of {{multiplier}}."
+      }
+    },
+    "manageStorage": {
+      "label": "Storage",
+      "unit": "GB",
+      "sliderSwitch": "Select from slider",
+      "sliderMessage": "Select the disk size from a slider.",
+      "customSwitch": "Enter custom size",
+      "customMessage": "Manually enter the disk size.",
+      "maximumStorage": "Maximum storage",
+      "errors": {
+        "storageRequired": "Enter storage value.",
+        "storageNumeric": "Please enter a valid number.",
+        "storageMin": "The minimum value that can be entered is {{min_value}}.",
+        "storageAvailable": "Storage size should not exceed {{available_storage}}."
+      }
+    }
+  },
+  "media": {
+    "header": "Media",
+    "leftPanelHeader": "Media Filter",
+    "uploadMedia": "Upload Media",
+    "loading": "Loading Medias.",
+    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of media.",
+    "noMedia": "No media to display.",
+    "retry": "Try again shortly",
+    "filterColumn": "Filter Column",
+    "tableSearch": "Table Search",
+    "dataSingular": "Item",
+    "dataPlural": "Items"
+  },
+  "mediaMedium": {
+    "loading": "Loading Media Details.",
+    "leftPanelHeader": "Media Filter",
+    "overview": {
+      "label": "Overview",
+      "mediaProperties": {
+        "title": "Media Properties",
+        "name": "Name",
+        "status": "Status",
+        "dateAdded": "Date Added",
+        "description": "Description"
+      },
+      "storageProperties": {
+        "title": "Storage Properties",
+        "size": "Size"
+      }
+    },
+    "servers": {
+      "label": "Servers",
+      "title": "Attached Servers",
+      "noMediaServers": "No attached servers to display.",
+      "errorMediaServers": "Sorry, something’s not right. We weren’t able to retrieve the list of attached servers.",
+      "attachServersHeader": "Attach to Media",
+      "attachAction": "Attach",
+      "detachAction": "Detach",
+      "columnHeaders": {
+        "name": "Name",
+        "action": ""
+      },
+      "detachDialog": {
+        "title": "Detach From Server",
+        "message": "Are you sure you want to detach <b>{{server_name}}</b>?"
+      }
+    }
+  },
+  "mediaUpload": {
+    "header": "Upload Media",
+    "backToMedia": "Back to Media",
+    "mediaStepDetails": {
+      "label": "Media Details",
+      "description": "Your media will be uploaded into the default Storage Policy for your organisation.",
+      "loadingResources": "Loading media resources.",
+      "loadingResourceDetails": "Loading resource details.",
+      "selectResources": "Select a resource",
+      "selectResourcesHelp": "The VDC you would like to make this media available to.",
+      "selectCatalog": "Select a catalog",
+      "selectCatalogHeader": "Catalog items",
+      "selectCatalogHelp": "The catalog you would like to make this media available to.",
+      "mediaName": "Enter media name",
+      "mediaNameHelp": "A friendly name for your new media. If not supplied, we'll use the original filename from your media.",
+      "mediaUrl": "Enter media URL",
+      "mediaUrlHelp": "The publicly-accessible URL for us to download your media from. For example, https://www.example.com/example.iso",
+      "mediaDescription": "Enter media description",
+      "mediaDescriptionHelp": "Enter a custom description for your media.",
+      "mediaUploadDismissLabel": "DISMISS",
+      "errors": {
+        "selectResourceRequired": "You must select a resource",
+        "selectResourceCatalog": "You must select a catalog",
+        "mediaNameRequired": "Media name must be entered",
+        "mediaNameInvalid": "Media name can only contain letters, numbers or hyphens",
+        "mediaUrlRequired": "Media url must be entered",
+        "mediaUrlInvalid": "Invalid media URL provided",
+        "mediaUploadError": "Unfortunately an error occurred and we couldn't upload your media at this time. Please try again."
+      }
+    },
+    "mediaStepGo": {
+      "label": "Go!",
+      "description": "Your media is uploading and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
+      "dataInProgress": "Preparing the media upload process. This may take a moment."
+    }
+  },
+  "mediaShared": {
+    "manageServer": {
+      "loadingContent": "Loading servers.",
+      "noServers": "No servers to attach.",
+      "errorGettingServers": "Sorry, something’s not right. We weren’t able to retrieve the list of servers to attach."
+    }
+  },
+  "tickets": {
+    "header": "Tickets",
+    "leftPanelHeader": "Ticket Filter",
+    "description": "Below is the list of your Macquarie Cloud Services tickets.",
+    "newTicket": "New Ticket",
+    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of tickets.",
+    "noRecordsFoundMessage": "No tickets to display.",
+    "retry": "Try again shortly",
+    "filterColumn": "Filter Column",
+    "tableSearch": "Table Search",
+    "dataSingular": "Ticket",
+    "dataPlural": "Tickets"
+  },
+  "ticket": {
+    "header": "{{ticketType}} #",
+    "status": "Status",
+    "type": "Type",
+    "requestor": "Requestor",
+    "createdDate": "Created Date",
+    "customerReference": "Customer Reference",
+    "closureDetails": "Closure Details",
+    "closureDate": "Closure Date",
+    "closureNotes": "Closure Notes",
+    "rootCause": "Root Cause",
+    "resolution": "Resolution",
+    "information": "Information",
+    "description": "Description",
+    "services": "Services",
+    "attachments": "Attachments",
+    "activity": "Activity",
+    "loading": "Loading ticket details.",
+    "newActivity": "New Comment/Attachment",
+    "missingRequestorLabel": "Unknown Requestor",
+    "missingServicesLabel": "No services found",
+    "missingAttachmentsLabel": "No attachments found",
+    "missingActivitiesLabel": "No activities yet",
+    "creatingComment": "Adding comment...",
+    "backToTickets": "Back To Tickets",
+    "addActivity": "Add",
+    "cancelActivity": "Cancel"
+  },
+  "ticketCreate": {
+    "header": "Create New Ticket",
+    "description": "<h2>We all need help from time to time.</h2>\r\n Our qualified team of Hosting Management Centre professionals are on standby 24x7 to help you get to the bottom of your issue.\r\n\n Provide us with as much information as you can and we'll take a look.\r\n\n Existing tickets can be viewed and managed in MacquarieView.",
+    "type": "Ticket Type",
+    "typeHeader": "Ticket Type",
+    "services": "Services",
+    "attachments": "Attachments",
+    "backToTickets": "Back To Tickets",
+    "newTicket": "Log Ticket",
+    "cancelActivity": "Cancel",
+    "creatingTicket": "Creating ticket, this may take a few moments.",
+    "hints": {
+      "reference": "Max of {{max_char}} characters",
+      "summary": "Max of {{max_char}} characters",
+      "details": "Max of {{max_char}} characters"
+    },
+    "errors": {
+      "typeRequired": "You must select a ticket type.",
+      "summaryRequired": "Ticket summary must be entered.",
+      "detailsRequired": "Ticket details must be entered.",
+      "servicesRequired": "You must select a service."
+    },
+    "placeholders": {
+      "type": "Select the ticket type",
+      "reference": "Enter reference number",
+      "summary": "Enter ticket summary",
+      "details": "Enter ticket details",
+      "services": "Select a service"
+    },
+    "contextualHelp": {
+      "type": "Select the ticket type",
+      "reference": "If you have a reference number or ID you would like to relate to this ticket, enter it here.",
+      "summary": "A short title that describes this ticket.",
+      "details": "Please provide as much information as you can and describe any attempts made to remedy the problem",
+      "services": "Choose the service type this ticket relates to.",
+      "attachments": "Optionally attach screenshots or other files to this support ticket by dragging and dropping into this area from your computer (limit 1 file)."
+    }
+  },
+  "ticketShared": {
+    "activity": {
+      "worknotes": "The comment is not visible to the customer"
+    }
+  },
+  "firewalls": {
+    "header": "Firewalls",
+    "description": "View details of your firewalls and firewall policies. Firewalls prevent malicious traffic from accessing services deployed in your environment.",
+    "leftPanelHeader": "Firewall Filter",
+    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of firewalls.",
+    "loading": "Loading firewalls.",
+    "noFirewalls": "No firewalls to display.",
+    "retry": "Try again shortly",
+    "filterColumn": "Filter Column",
+    "tableSearch": "Table Search",
+    "dataSingular": "Firewall",
+    "dataPlural": "Firewalls"
+  },
+  "firewall": {
+    "header": "Firewall",
+    "leftPanelHeader": "Firewall Filter",
+    "loading": "Loading firewall details.",
+    "overview": {
+      "label": "Overview",
+      "properties": {
+        "title": "Firewall Properties",
+        "model": "Model",
+        "cpu": "CPU",
+        "ram": "RAM",
+        "cpuUnit": "CPU",
+        "ramUnit": "GB",
+        "unknown": "Unknown"
+      },
+      "supportIdentifiers": {
+        "title": "Support Identifiers",
+        "service": "Service ID",
+        "serial": "Serial Number"
+      },
+      "status": {
+        "title": "Status",
+        "deviceStatus": "Device Status",
+        "connectionStatus": "Connection Status",
+        "configurationStatus": "Config Status"
+      },
+      "utmServices": {
+        "title": "UTM Services",
+        "antivirus": "Antivirus",
+        "webFiltering": "Web Filtering",
+        "emailFiltering": "Email Filtering",
+        "licensed": "Licensed",
+        "invalidLicense": "Invalid License",
+        "expires": "Expires"
+      },
+      "topology": {
+        "title": "Topology",
+        "role": "Role",
+        "noContentMessage": "Topology information is unavailable."
+      }
+    },
+    "policies": {
+      "label": "Policies",
+      "header": "Firewall Policies",
+      "description": "Firewall policies specify the permissible and forbidden traffic at the network perimeter. View details of your firewall policies here.",
+      "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of firewall policies.",
+      "noPolicies": "No firewall policies to display.",
+      "retry": "Try again shortly",
+      "dataSingular": "Policy",
+      "dataPlural": "Policies",
+      "policy": {
+        "title": "Policy: Seq {{sequence}}",
+        "source": "Source",
+        "destination": "Destination",
+        "address": "Address",
+        "interface": "Interface",
+        "details": "Details",
+        "service": "Service",
+        "action": "Action"
+      }
+    }
+  },
+  "products": {
+    "header": "Product Catalog",
+    "leftPanelHeader": "Product Filter",
+    "loading": "Loading Products.",
+    "loadingDetails": "Loading product details.",
+    "noProducts": "No products to display.",
+    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of products.",
+    "product": {
+      "loading": "Loading product details."
+    }
+  },
+  "tools": {
+    "header": "Other Tools",
+    "description": "Macquarie Cloud Services have all the tools you need to manage your compute workloads. Occasionally you may want to do something that's not possible in the Macquarie Cloud Services portal, but available in our partner portals. You have permission to access the following partner portals.",
+    "otherServicesTableCaption": "Other services we offer.",
+    "table": {
+      "header": {
+        "name": "Portal",
+        "description": "Description",
+        "access": "Access",
+        "order": "Get it now"
+      },
+      "descriptions": {
+        "macquarieView": {
+          "name": "Macquarie View",
+          "description": "Manage company contacts, users, invoices and monitor your infrastructure."
+        },
+        "vCloud": {
+          "name": "vCloud Director",
+          "description": "Manage your Virtual Machines and Virtual Data Centers."
+        },
+        "vSphere": {
+          "name": "vSphere",
+          "description": "Manage every detail of your virtual data centres."
+        },
+        "firewall": {
+          "name": "FortiManager",
+          "description": "Manage your network Firewall."
+        },
+        "zerto": {
+          "name": "Zerto",
+          "description": "True High Availability, at the click of a button."
+        },
+        "ciscoUcs": {
+          "name": "Cisco UCS",
+          "description": "Unified management of all server hardware managed under one umbrella."
+        },
+        "f5": {
+          "name": "F5",
+          "description": "Manage load balancing and SSL offload."
+        }
+      },
+      "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of other tools.",
+      "noRecordsFoundMessage": "No other tools found.",
+      "retry": "Try again shortly"
+    }
+  },
+  "notifications": {
+    "header": "Notifications",
+    "leftPanelHeader": "Notification Filter",
+    "description": "Notifications play back and track activity within the portal.",
+    "filterColumn": "Filter Column",
+    "tableSearch": "Table Search",
+    "account": "(Macquarie)",
+    "dataSingular": "Notification",
+    "dataPlural": "Notifications",
+    "tableHeader": {
+      "status": "Status",
+      "user": "User",
+      "notification": "Notification",
+      "startTime": "Start Time",
+      "completed": "Completed",
+      "vdc": "VDC"
+    },
+    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of notifications.",
+    "noNotifications": "No notifications to display.",
+    "retry": "Try again shortly"
+  },
+  "pageHttpError": {
+    "notFound": {
+      "header": "404",
+      "summary": "The page you're looking for can't be found",
+      "description": "There isn't anything located at the specified address.",
+      "retry": "Please check the address and try again."
+    },
+    "internalServerError": {
+      "header": "500",
+      "summary": "Sorry, something’s not right",
+      "description": "We're currently experiencing a server issue.",
+      "retry": "Please try again later."
+    },
+    "unprocessable": {
+      "header": "422",
+      "summary": "Your changes could not be made",
+      "description": "One or more inputs provided were invalid or malformed.",
+      "retry": "Please check your inputs and try again."
+    },
+    "unauthorized": {
+      "header": "401",
+      "summary": "You are unauthorized to access this page.",
+      "retry": "Please check the address and try again."
+    },
+    "forbidden": {
+      "header": "403",
+      "summary": "You don't have permission to access this page.",
+      "retry": "Please check the address and try again."
+    },
+    "serviceUnavailable": {
+      "header": "Oops",
+      "summary": "Unfortunately an error has occurred",
+      "description": "We're unable to proccess your request right now.",
+      "retry": "Please try again later."
+    },
+    "readOnlyMode": {
+      "header": "Oops",
+      "summary": "Unfortunately an error has occurred",
+      "description": "We are currently undergoing critical maintenance. Some actions may be temporarily unavailable.",
+      "retry": "Please try again later."
+    },
+    "genericError": {
+      "summary": "The Portal has encountered an unknown error",
+      "description": "Our technical staff have been notified and are looking into the issue.",
+      "retry": "Please try again shortly."
+    },
+    "refresh": "Refresh the page",
+    "home": "Go to home page"
+  },
+  "accountPanel": {
+    "accountSettings": "Account Settings",
+    "profile": "Profile",
+    "tickets": "Tickets",
+    "orders": "Orders",
+    "manageUsers": "Manage Users",
+    "changePassword": "Change Password"
+  },
+  "switchAccount": {
+    "header": "Switch Account",
+    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of companies.",
+    "noCompanies": "No companies to display.",
+    "retry": "Try again shortly"
+  },
+  "header": {
+    "userPanel": {
+      "notifications": {
+        "title": "Notifications",
+        "noRecord": "Nothing new to report",
+        "connectionError": "Notification server connection error",
+        "viewMoreCount": "View {{count}} more...",
+        "viewMore": "View more..."
+      },
+      "loadingCompany": "Loading company details.",
+      "signOut": "Sign Out"
+    }
+  },
+  "footer": {
+    "copyright": "Copyright",
+    "company": "Macquarie Telecom Group",
+    "links": {
+      "privacyPolicy": "Privacy Policy",
+      "termsOfUse": "Terms Of Use",
+      "serviceAgreement": "Service Agreement"
+    }
+  },
+  "shared": {
+    "safeToNavigateAway": {
+      "message": "Your changes may not be saved. Are you sure you want to leave this page?"
+    },
+    "jobsProvisioning": {
+      "deployMultiple": "Deploy Servers",
+      "deploymentInProgress": "Preparing the server deployment process. This may take a moment.",
+      "deploymentCompleted": "Deployment Completed",
+      "deploymentFailed": "Deployment Failed",
+      "viewDetails": "View details"
+    },
+    "wizard": {
+      "previous": "Back",
+      "next": "Next",
+      "cancel": "Cancel",
+      "completed": "Go",
+      "steps": "STEPS",
+      "stepErrorTitle": "Wizard Error",
+      "stepErrorMessage": "Unexpected error occured. Please resolve the issue and try again."
+    },
+    "paginator": {
+      "nextPage": "More"
+    },
+    "search": {
+      "placeholder": "Type to search..."
+    },
+    "fileAttachment": {
+      "chooseFile": "Choose File",
+      "dragDropZone": "Drag & drop file here",
+      "ok": "OK",
+      "errorCaption": "Selection error",
+      "errorFileType": "Invalid file type selected.",
+      "errorFileSize": "The file you are trying to attach exceeds the {{max_size}}MB attachment limit.",
+      "errorGeneral": "Unexpected error occured.",
+      "detachTooltip": "Click to remove"
+    },
+    "commentBox": {
+      "chooseFile": "Attach file",
+      "addComment": "Add comment",
+      "dragDropZone": "File attachments (select or drag & drop)",
+      "ok": "OK",
+      "errorCaption": "Selection error",
+      "errorFileType": "Invalid file type selected.",
+      "errorGeneral": "Unexpected error occured.",
+      "commentPlaceholder": "Enter your comment here.",
+      "errors": {
+        "commentRequired": "Please enter a comment."
+      }
+    },
+    "dataStatus": {
+      "errorMessage": "Currently unavailable"
+    },
+    "formField": {
+      "hints": {
+        "maxChar": "Max of {{value}} characters"
+      }
+    }
   }
 }

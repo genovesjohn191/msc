@@ -1,4 +1,4 @@
-<mcs-page [header]="textContent.header">
+<mcs-page [header]="'mediaUpload.header' | translate">
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef>
 
@@ -10,7 +10,7 @@
         mcsEventCategory="media"
         mcsEventLabel="create-new-server-page">
         <mcs-icon [key]="backIconKey" size="small"></mcs-icon>
-        <span>{{ textContent.backToMedia }}</span>
+        <span>{{ 'mediaUpload.backToMedia' | translate }}</span>
       </mcs-action-item>
     </mcs-top-panel-item>
   </mcs-top-panel>
@@ -18,11 +18,11 @@
   <!-- Content Panel -->
   <mcs-content-panel *mcsContentPanelDef>
 
-    <mcs-wizard [header]="textContent.header">
+    <mcs-wizard [header]="'mediaUpload.header' | translate">
 
       <!-- Server Details Step-->
       <mcs-wizard-step id="media-details"
-        [stepTitle]="textContent.mediaStepDetails.label"
+        [stepTitle]="'mediaUpload.mediaStepDetails.label' | translate"
         customClass="contextual-help-page-wrapper limited-view">
 
         <mcs-media-upload-details></mcs-media-upload-details>
@@ -30,16 +30,16 @@
 
       <!-- Go! Step  -->
       <mcs-wizard-step id="go-step"
-        [stepTitle]="textContent.mediaStepGo.label"
+        [stepTitle]="'mediaUpload.mediaStepGo.label' | translate"
         customClass="limited-view">
 
         <mcs-provisioning-step [jobs]="jobs$ | async" [requestState]="dataStatus$ | async">
           <ng-container mcsProvisioningStepDescription>
-            {{ textContent.mediaStepGo.description }}
+            {{ 'mediaUpload.mediaStepGo.description' | translate }}
           </ng-container>
 
           <ng-container mcsProvisioningStepInProgress>
-            {{ textContent.mediaStepGo.dataInProgress }}
+            {{ 'mediaUpload.ediaStepGo.dataInProgress' | translate }}
           </ng-container>
         </mcs-provisioning-step>
       </mcs-wizard-step>

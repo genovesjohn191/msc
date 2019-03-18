@@ -6,6 +6,7 @@ import {
   ChangeDetectionStrategy,
   ViewChild
 } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import {
   Subject,
   throwError,
@@ -19,7 +20,6 @@ import {
 } from 'rxjs/operators';
 import {
   CoreDefinition,
-  McsTextContentProvider,
   McsNotificationEventsService,
   McsDialogService,
   McsErrorHandlerService,
@@ -80,7 +80,6 @@ const SERVER_MAXIMUM_DISKS = 14;
 export class ServerStorageComponent extends ServerDetailsBase implements OnInit, OnDestroy {
   public resourceStorages$: Observable<McsResourceStorage[]>;
 
-  public textContent: any;
   public manageStorage: ServerManageStorage;
   public selectedStorage: McsResourceStorage;
   public selectedDisk: McsServerStorageDevice;
@@ -123,10 +122,10 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     _serversRepository: McsServersRepository,
     _serverService: ServerService,
     _changeDetectorRef: ChangeDetectorRef,
-    _textProvider: McsTextContentProvider,
     _errorHandlerService: McsErrorHandlerService,
     _loadingService: McsLoadingService,
     _accessControl: McsAccessControlService,
+    private _translateService: TranslateService,
     private _serversService: ServersService,
     private _dialogService: McsDialogService,
     private _notificationEvents: McsNotificationEventsService
@@ -136,7 +135,6 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
       _serversRepository,
       _serverService,
       _changeDetectorRef,
-      _textProvider,
       _errorHandlerService,
       _loadingService,
       _accessControl
@@ -148,7 +146,6 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   }
 
   public ngOnInit() {
-    this.textContent = this._textProvider.content.servers.server.storage;
     this._setDataColumns();
   }
 
@@ -237,11 +234,12 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
    */
   public addDisk(server: McsServer): void {
     let diskValues = new McsServerStorageDeviceUpdate();
+    let diskName = this._translateService.instant('serverStorage.diskName');
     diskValues.storageProfile = this.manageStorage.storage.name;
     diskValues.sizeMB = this.manageStorage.sizeMB;
     diskValues.clientReferenceObject = {
       serverId: server.id,
-      name: `${this.textContent.diskName} ${server.storageDevices.length + 1}`,
+      name: `${diskName} ${server.storageDevices.length + 1}`,
       storageProfile: this.manageStorage.storage.name,
       sizeMB: this.manageStorage.sizeMB
     };
@@ -441,7 +439,9 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
    * Sets data column for the corresponding table
    */
   private _setDataColumns(): void {
-    this.disksColumns = Object.keys(this.textContent.columnHeaders);
+    this.disksColumns = Object.keys(
+      this._translateService.instant('serverStorage.columnHeaders')
+    );
     if (isNullOrEmpty(this.disksColumns)) {
       throw new Error('column definition for disks was not defined');
     }

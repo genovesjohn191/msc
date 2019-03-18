@@ -3,13 +3,12 @@ import {
   Inject,
   ViewEncapsulation
 } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import {
   MCS_DIALOG_DATA,
   McsDialogRef,
-  McsTextContentProvider,
   CoreDefinition
 } from '@app/core';
-import { replacePlaceholder } from '@app/utilities';
 import { ServerSnapshotDialogContent } from '../../server-snapshot-dialog-content';
 
 @Component({
@@ -22,16 +21,13 @@ import { ServerSnapshotDialogContent } from '../../server-snapshot-dialog-conten
 })
 
 export class CreateSnapshotDialogComponent {
-  public textContent: any;
   public dialogModel: ServerSnapshotDialogContent;
 
   constructor(
-    private _textContentProvider: McsTextContentProvider,
+    private _translateService: TranslateService,
     public dialogRef: McsDialogRef<CreateSnapshotDialogComponent>,
     @Inject(MCS_DIALOG_DATA) public dialogData
   ) {
-    this.textContent =
-      this._textContentProvider.content.servers.shared.createSnapshotDialog;
     this.dialogModel = this.dialogData as ServerSnapshotDialogContent[][0];
   }
 
@@ -46,10 +42,10 @@ export class CreateSnapshotDialogComponent {
    * Confirmation message to be displayed in the dialog
    */
   public get confirmationMessage(): string {
-    return replacePlaceholder(
-      this.textContent.confirmation,
-      'server_name',
-      this.dialogModel.serverName);
+    return this._translateService.instant(
+      'serverShared.dialogCreateSnapshot.alert',
+      { server_name: this.dialogModel.serverName }
+    );
   }
 
   /**

@@ -1,7 +1,6 @@
 import {
   Component,
   Input,
-  OnInit,
   AfterViewInit,
   OnDestroy,
   EventEmitter,
@@ -15,7 +14,6 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
   CoreDefinition,
-  McsTextContentProvider,
   McsScrollDispatcherService
 } from '@app/core';
 import {
@@ -43,10 +41,9 @@ const PAGINATOR_DEFAULT_LOAD_OFFSET = 10;
   }
 })
 
-export class PaginatorComponent implements Paginator, OnInit, AfterViewInit, OnDestroy {
+export class PaginatorComponent implements Paginator, AfterViewInit, OnDestroy {
 
   public loading: boolean;
-  public textContent: any;
   public pageChangedStream: EventEmitter<any>;
 
   @Input()
@@ -98,7 +95,6 @@ export class PaginatorComponent implements Paginator, OnInit, AfterViewInit, OnD
   public constructor(
     private _elementRef: ElementRef,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _textContentProvider: McsTextContentProvider,
     private _scrollableDispatcher: McsScrollDispatcherService
   ) {
     this._pageIndex = PAGINATOR_DEFAULT_PAGE_INDEX;
@@ -106,10 +102,6 @@ export class PaginatorComponent implements Paginator, OnInit, AfterViewInit, OnD
     this._scrollLoadOffset = PAGINATOR_DEFAULT_LOAD_OFFSET;
     this._totalCount = 0;
     this.pageChangedStream = new EventEmitter<any>();
-  }
-
-  public ngOnInit() {
-    this.textContent = this._textContentProvider.content.shared.paginator;
   }
 
   public ngAfterViewInit() {

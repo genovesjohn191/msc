@@ -11,7 +11,7 @@
   </ng-container>
 
   <!-- Left Panel -->
-  <mcs-left-panel *mcsLeftPanelDef="textContent.leftPanelHeader">
+  <mcs-left-panel *mcsLeftPanelDef="'mediaMedium.leftPanelHeader' | translate">
     <!-- listing panel -->
     <mcs-left-panel-item *mcsLeftPanelItemDef>
       <div class="listing-panel-wrapper">
@@ -52,15 +52,15 @@
           </mcs-data-status-success>
 
           <mcs-data-status-in-progress mcsDataInProgress>
-            <span>{{ mediaTextContent.loading }}</span>
+            <span>{{ 'media.loading' | translate }}</span>
           </mcs-data-status-in-progress>
 
           <mcs-data-status-empty mcsDataEmpty>
-            <span>{{ mediaTextContent.noMedia }}</span>
+            <span>{{ 'media.noMedia' | translate }}</span>
           </mcs-data-status-empty>
 
           <mcs-data-status-error mcsDataError>
-            <span>{{ mediaTextContent.errorMessage }}</span>
+            <span>{{ 'media.errorMessage' | translate }}</span>
           </mcs-data-status-error>
         </mcs-data-status>
       </div>
@@ -71,10 +71,10 @@
     <div class="routing-tab-wrapper" *mcsComponentHandler>
       <mcs-tab-group [selectedTabId]="selectedRoutingTab" (tabChanged)="onTabChanged($event)">
         <!-- Overview Tab -->
-        <mcs-tab [label]="textContent.overview.label" id="overview"></mcs-tab>
+        <mcs-tab [label]="'mediaMedium.overview.label' | translate" id="overview"></mcs-tab>
 
         <!-- Servers Tab -->
-        <mcs-tab [label]="textContent.servers.label" id="servers"></mcs-tab>
+        <mcs-tab [label]="'mediaMedium.servers.label' | translate" id="servers"></mcs-tab>
       </mcs-tab-group>
 
       <!-- Tab content for routing tab -->

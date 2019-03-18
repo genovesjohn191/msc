@@ -1,16 +1,12 @@
 import {
   Component,
-  OnInit,
   Input,
   Output,
   EventEmitter,
   ChangeDetectorRef,
   ChangeDetectionStrategy
 } from '@angular/core';
-import {
-  McsTextContentProvider,
-  CoreDefinition
-} from '@app/core';
+import { CoreDefinition } from '@app/core';
 import { McsFirewallPolicy } from '@app/models';
 
 @Component({
@@ -19,8 +15,7 @@ import { McsFirewallPolicy } from '@app/models';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class FirewallPolicyComponent implements OnInit {
-  public textContent: any;
+export class FirewallPolicyComponent {
 
   @Output()
   public close = new EventEmitter<void>();
@@ -35,15 +30,7 @@ export class FirewallPolicyComponent implements OnInit {
   }
   private _firewallPolicy: McsFirewallPolicy;
 
-  constructor(
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _textContentProvider: McsTextContentProvider
-  ) {
-  }
-
-  public ngOnInit() {
-    this.textContent = this._textContentProvider.content.firewalls.firewall.policies.policy;
-  }
+  constructor(private _changeDetectorRef: ChangeDetectorRef) { }
 
   /**
    * Returns the close icon key

@@ -1,6 +1,5 @@
 import {
   Component,
-  OnInit,
   Input,
   Output,
   EventEmitter,
@@ -9,7 +8,6 @@ import {
 } from '@angular/core';
 import {
   CoreDefinition,
-  McsTextContentProvider,
   McsUniqueId
 } from '@app/core';
 import { McsResourceMedia } from '@app/models';
@@ -27,7 +25,7 @@ import {
   }
 })
 
-export class MediaCommandComponent implements OnInit {
+export class MediaCommandComponent {
   @Input()
   public media: McsResourceMedia;
 
@@ -39,8 +37,6 @@ export class MediaCommandComponent implements OnInit {
 
   @ViewChild('popoverActionElement')
   public popoverActionElement: any;
-
-  public textContent: any;
 
   public get gearIconKey(): string {
     return CoreDefinition.ASSETS_SVG_COG;
@@ -58,12 +54,8 @@ export class MediaCommandComponent implements OnInit {
     return mediaCommandText[MediaCommand.Rename];
   }
 
-  constructor(private _textProvider: McsTextContentProvider) {
+  constructor() {
     this.id = McsUniqueId.NewId('media-command');
-  }
-
-  public ngOnInit() {
-    this.textContent = this._textProvider.content.servers;
   }
 
   public onExecuteCommand(command: MediaCommand) {

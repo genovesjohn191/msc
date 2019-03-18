@@ -1,6 +1,6 @@
 <mcs-presentation-panel mcsId="snapshots" *ngIf="serverDetails$ | async as serverDetails">
   <ng-container mcsPresentationPanelHeader>
-    <h2>{{ textContent.snapshotHeader }}</h2>
+    <h2>{{ 'serverBackups.snapshotHeader' | translate }}</h2>
   </ng-container>
 
   <mcs-section>
@@ -9,7 +9,7 @@
     <mcs-grid>
       <mcs-grid-row>
         <mcs-grid-column>
-          <p [innerHTML]="textContent.snapshotDescription | mcsNewLines"></p>
+          <p [innerHTML]="('serverBackups.snapshotDescription' | translate) | mcsNewLines"></p>
         </mcs-grid-column>
 
         <mcs-grid-column mcsAlignContent="top-right">
@@ -22,7 +22,7 @@
               mcsEventTracker="create-snapshot"
               mcsEventCategory="server"
               mcsEventLabel="server-details-page">
-              {{ textContent.createSnapshot }}
+              {{ 'serverBackups.createSnapshot' | translate }}
             </button>
           </div>
         </mcs-grid-column>
@@ -31,7 +31,7 @@
 
     <!-- Snapshots -->
     <mcs-item orientation="block">
-      <strong>{{ textContent.snapshots }}</strong>
+      <strong>{{ 'serverBackups.snapshots' | translate }}</strong>
       <mcs-data-status [dataStatusFactory]="dataStatusFactory">
         <mcs-data-status-success mcsDataSuccess>
           <ng-container *ngIf="!capturingSnapshot; else capturingSnapshotTemplate">
@@ -53,14 +53,14 @@
                       mcsEventTracker="restore-snapshot"
                       mcsEventCategory="server"
                       mcsEventLabel="server-details-page">
-                      {{ textContent.restoreSnapshot }}
+                      {{ 'serverBackups.restoreSnapshot' | translate }}
                     </a>
                     <a (click)="deleteSnapshot(serverDetails.server, snapshot)"
                       mcsId
                       mcsEventTracker="delete-snapshot"
                       mcsEventCategory="server"
                       mcsEventLabel="server-details-page">
-                      {{ textContent.deleteSnapshot }}
+                      {{ 'serverBackups.deleteSnapshot' | translate }}
                     </a>
                   </mcs-item>
                 </mcs-grid-column>
@@ -71,21 +71,21 @@
           <ng-template #capturingSnapshotTemplate>
             <mcs-item>
               <mcs-loader size="small" [mcsTooltip]="serverDetails.server.processingText"></mcs-loader>
-              <span>{{ textContent.creatingSnapshot }}</span>
+              <span>{{ 'serverBackups.creatingSnapshot' | translate }}</span>
             </mcs-item>
           </ng-template>
         </mcs-data-status-success>
 
         <mcs-data-status-in-progress mcsDataInProgress>
-          <span>{{ textContent.loadingContent }}</span>
+          <span>{{ 'serverBackups.loadingContent' | translate }}</span>
         </mcs-data-status-in-progress>
 
         <mcs-data-status-empty mcsDataEmpty>
-          <span>{{ textContent.noSnapshots }}</span>
+          <span>{{ 'serverBackups.noSnapshots' | translate }}</span>
         </mcs-data-status-empty>
 
         <mcs-data-status-error mcsDataError>
-          <span>{{ textContent.errorGettingSnapshots }}</span>
+          <span>{{ 'serverBackups.errorGettingSnapshots' | translate }}</span>
         </mcs-data-status-error>
       </mcs-data-status>
     </mcs-item>
@@ -95,13 +95,13 @@
 <!-- Server Backups -->
 <!-- TODO: Remove ngIf when Backups is working -->
 <div *ngIf="false">
-  <h2>{{ textContent.serverBackups }}</h2>
-  <p>{{ textContent.serverBackupsDescription }}</p>
+  <h2>{{ 'serverBackups.serverBackups' | translate }}</h2>
+  <p>{{ 'serverBackups.serverBackupsDescription' | translate }}</p>
   <div>
     <button mcsButton size="small" [disabled]="true"
       mcsId
       mcsEventTracker="request-restore"
       mcsEventCategory="server"
-      mcsEventLabel="server-details-page">{{ textContent.requestRestore }}</button>
+      mcsEventLabel="server-details-page">{{ 'serverBackups.requestRestore' | translate }}</button>
   </div>
 </div>

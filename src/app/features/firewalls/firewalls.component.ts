@@ -1,6 +1,5 @@
 import {
   Component,
-  OnInit,
   OnDestroy,
   AfterViewInit,
   ChangeDetectorRef,
@@ -8,7 +7,6 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import {
-  McsTextContentProvider,
   CoreDefinition,
   McsBrowserService,
   McsTableListingBase,
@@ -30,8 +28,7 @@ import { McsFirewallsRepository } from '@app/services';
 
 export class FirewallsComponent
   extends McsTableListingBase<McsTableDataSource<McsFirewall>>
-  implements OnInit, AfterViewInit, OnDestroy {
-  public textContent: any;
+  implements AfterViewInit, OnDestroy {
 
   public get cogIconKey(): string {
     return CoreDefinition.ASSETS_SVG_COG;
@@ -41,14 +38,9 @@ export class FirewallsComponent
     _browserService: McsBrowserService,
     _changeDetectorRef: ChangeDetectorRef,
     private _router: Router,
-    private _textProvider: McsTextContentProvider,
     private _firewallsRepository: McsFirewallsRepository
   ) {
     super(_browserService, _changeDetectorRef);
-  }
-
-  public ngOnInit() {
-    this.textContent = this._textProvider.content.firewalls;
   }
 
   public ngAfterViewInit() {

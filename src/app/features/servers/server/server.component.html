@@ -19,7 +19,7 @@
   </ng-container>
 
   <!-- Left Panel -->
-  <mcs-left-panel *mcsLeftPanelDef="textContent.leftPanelHeader">
+  <mcs-left-panel *mcsLeftPanelDef="'server.leftPanelHeader' | translate">
     <!-- listing panel -->
     <mcs-left-panel-item *mcsLeftPanelItemDef>
       <div class="listing-panel-wrapper">
@@ -77,15 +77,15 @@
           </mcs-data-status-success>
 
           <mcs-data-status-in-progress mcsDataInProgress>
-            <span>{{ serversTextContent.loading }}</span>
+            <span>{{ 'servers.loading' | translate }}</span>
           </mcs-data-status-in-progress>
 
           <mcs-data-status-empty mcsDataEmpty>
-            <span>{{ serversTextContent.noServers }}</span>
+            <span>{{ 'servers.noServers' | translate }}</span>
           </mcs-data-status-empty>
 
           <mcs-data-status-error mcsDataError>
-            <span>{{ serversTextContent.errorMessage }}</span>
+            <span>{{ 'servers.errorMessage' | translate }}</span>
           </mcs-data-status-error>
         </mcs-data-status>
       </div>
@@ -97,35 +97,35 @@
       <!-- Busy status of the server -->
       <ng-container *ngIf="selectedServer.isProcessing">
         <mcs-busy-ribbon theme="dark" margin-bottom-small>
-          <span>{{ textContent.serverBusyLabel }}</span>
+          <span>{{ 'server.serverBusyLabel' | translate }}</span>
         </mcs-busy-ribbon>
       </ng-container>
 
       <mcs-tab-group [selectedTabId]="selectedRoutingTab" (tabChanged)="onTabChanged($event)">
         <!-- Management Tab -->
-        <mcs-tab [label]="textContent.management.label" id="management"></mcs-tab>
+        <mcs-tab [label]="'serverManagement.label' | translate" id="management"></mcs-tab>
 
         <!-- Services Tab -->
         <ng-container *ngIf="selectedServer.isManagedVCloud">
-          <mcs-tab [label]="textContent.services.label" id="services" *mcsAccessControl="[]; feature: 'EnableServerOsUpdates'"></mcs-tab>
+          <mcs-tab [label]="'serverServices.label' | translate" id="services" *mcsAccessControl="[]; feature: 'EnableServerOsUpdates'"></mcs-tab>
         </ng-container>
 
         <!-- Storage Tab -->
         <ng-container *mcsAccessControl="[]; feature: 'EnableDedicatedVmStorageView';
           validateWhen: selectedServer.isDedicated">
-          <mcs-tab [label]="textContent.storage.label" id="storage"></mcs-tab>
+          <mcs-tab [label]="'serverStorage.label' | translate" id="storage"></mcs-tab>
         </ng-container>
 
         <!-- Snapshots Tab -->
         <ng-container *mcsAccessControl="[]; feature: 'EnableDedicatedVmSnapshotView';
           validateWhen: selectedServer.isDedicated">
-          <mcs-tab label="Snapshots" id="snapshots"></mcs-tab>
+          <mcs-tab [label]="'serverBackups.label' | translate" id="snapshots"></mcs-tab>
         </ng-container>
 
         <!-- Networks Tab -->
         <ng-container *mcsAccessControl="[]; feature: 'EnableDedicatedVmNicView';
           validateWhen: selectedServer.isDedicated">
-          <mcs-tab [label]="textContent.nics.label" id="nics"></mcs-tab>
+          <mcs-tab [label]="'serverNics.label' | translate" id="nics"></mcs-tab>
         </ng-container>
 
         <!-- Action tab -->

@@ -1,4 +1,4 @@
-<mcs-page [header]="textContent.header">
+<mcs-page [header]="'notifications.header' | translate">
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef>
 
@@ -7,7 +7,7 @@
       <div class="listing-action-wrapper">
         <div class="total-record-count">
           <span>{{ dataSource?.totalRecordsCount | mcsPlural:
-                textContent.dataSingular : textContent.dataPlural }}
+                ('notifications.dataSingular' | translate) : ('notifications.dataPlural' | translate) }}
           </span>
         </div>
       </div>
@@ -15,14 +15,14 @@
   </mcs-top-panel>
 
   <!-- Left Panel -->
-  <mcs-left-panel *mcsLeftPanelDef="textContent.leftPanelHeader">
+  <mcs-left-panel *mcsLeftPanelDef="'notifications.leftPanelHeader' | translate">
     <!-- Search -->
     <mcs-left-panel-item *mcsLeftPanelItemDef>
       <mcs-search *ngIf="!isMobile" #search mcsId="notifications-desktop-search"></mcs-search>
     </mcs-left-panel-item>
 
     <!-- Column Filter -->
-    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.filterColumn" offset="medium">
+    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'notifications.filterColumn' | translate" offset="medium">
       <mcs-filter-selector [key]="columnSettingsKey" #filterSelector
         (filtersChange)="updateColumnSettings($event)"></mcs-filter-selector>
     </mcs-left-panel-item>
@@ -66,7 +66,7 @@
           <mcs-data-cell *mcsDataCellDef="let row">
             <span>{{ row.initiatorFullName }}</span><br/>
             <span read-only *ngIf="(activeCompany$ | async)?.id !== row.initiatorCompanyId">
-              {{ textContent.account }}
+              {{ 'notifications.account' | translate }}
             </span>
           </mcs-data-cell>
         </ng-container>
@@ -94,16 +94,16 @@
         <!-- Data Status Integration -->
         <ng-container mcsDataStatusDef>
           <mcs-data-empty *mcsDataEmptyDef>
-            <span>{{ textContent.noNotifications }}</span>
+            <span>{{ 'notifications.noNotifications' | translate }}</span>
           </mcs-data-empty>
           <mcs-data-error *mcsDataErrorDef>
             <div class="listing-status-wrapper">
-              <span>{{ textContent.errorMessage }}</span>
+              <span>{{ 'notifications.errorMessage' | translate }}</span>
               <a (click)="retryDatasource()"
                 mcsId
                 mcsEventTracker="retry-loading-notifications"
                 mcsEventCategory="notification"
-                mcsEventLabel="notification-listing-page">{{ textContent.retry }}</a>.
+                mcsEventLabel="notification-listing-page">{{ 'notifications.retry' | translate }}</a>.
             </div>
           </mcs-data-error>
         </ng-container>

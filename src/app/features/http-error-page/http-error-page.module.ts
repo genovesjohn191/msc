@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import {
   ButtonModule,
   DirectivesModule
@@ -19,6 +20,7 @@ import { httpErrorRoutesComponents } from './http-error-page.constants';
   imports: [
     CommonModule,
     RouterModule,
+    TranslateModule,
     ButtonModule,
     DirectivesModule
   ]

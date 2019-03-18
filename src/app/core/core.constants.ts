@@ -25,7 +25,6 @@ import { McsComponentHandlerService } from './services/mcs-component-handler.ser
 import { McsDateTimeService } from './services/mcs-date-time.service';
 
 /** Providers */
-import { McsTextContentProvider } from './providers/mcs-text-content.provider';
 import { McsAssetsProvider } from './providers/mcs-assets.provider';
 import { McsFilterProvider } from './providers/mcs-filter.provider';
 /** Authentication */
@@ -60,7 +59,6 @@ export const coreProviders: any[] = [
   McsPlatformService,
   McsLoggerService,
   McsFormGroupService,
-  McsTextContentProvider,
   McsAssetsProvider,
   McsFilterProvider,
   McsAuthenticationIdentity,

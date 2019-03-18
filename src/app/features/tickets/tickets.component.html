@@ -1,4 +1,4 @@
-<mcs-page [header]="textContent.header">
+<mcs-page [header]="'tickets.header' | translate">
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef>
 
@@ -13,7 +13,7 @@
             mcsEventCategory="ticket"
             mcsEventLabel="ticket-listing-page">
             <mcs-icon [key]="addIconKey" size="small"></mcs-icon>
-            <span>{{ textContent.newTicket }}</span>
+            <span>{{ 'tickets.newTicket' | translate }}</span>
           </mcs-action-item>
         </ng-container>
       </mcs-top-panel-item>
@@ -23,7 +23,7 @@
       <div class="listing-action-wrapper">
         <div class="total-record-count">
           <span>{{ dataSource?.totalRecordsCount | mcsPlural:
-                textContent.dataSingular : textContent.dataPlural }}
+                ('tickets.dataSingular' | translate) : ('tickets.dataPlural' | translate) }}
           </span>
         </div>
       </div>
@@ -31,14 +31,14 @@
   </mcs-top-panel>
 
   <!-- Left Panel -->
-  <mcs-left-panel *mcsLeftPanelDef="textContent.leftPanelHeader">
+  <mcs-left-panel *mcsLeftPanelDef="'tickets.leftPanelHeader' | translate">
     <!-- Search -->
     <mcs-left-panel-item *mcsLeftPanelItemDef>
       <mcs-search *ngIf="!isMobile" #search mcsId="tickets-desktop-search"></mcs-search>
     </mcs-left-panel-item>
 
     <!-- Column Filter -->
-    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.filterColumn" offset="medium">
+    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'tickets.filterColumn' | translate" offset="medium">
       <mcs-filter-selector [key]="columnSettingsKey" #filterSelector
         (filtersChange)="updateColumnSettings($event)"></mcs-filter-selector>
     </mcs-left-panel-item>
@@ -135,7 +135,7 @@
         <ng-container mcsDataStatusDef>
           <mcs-data-empty *mcsDataEmptyDef>
             <div class="listing-status-wrapper">
-              <span>{{ textContent.noRecordsFoundMessage }} </span>
+              <span>{{ 'tickets.noRecordsFoundMessage' | translate }} </span>
               <span *mcsExclusiveForAccount="'default'">
                 <!-- We need to hardcode this instead of putting in the text-config
                     since it is using link -->
@@ -149,12 +149,12 @@
           </mcs-data-empty>
           <mcs-data-error *mcsDataErrorDef>
             <div class="listing-status-wrapper">
-              <span>{{ textContent.errorMessage }}</span>
+              <span>{{ 'tickets.errorMessage' | translate }}</span>
               <a (click)="retryDatasource()"
                 mcsId
                 mcsEventTracker="retry-loading-ticket-list"
                 mcsEventCategory="ticket"
-                mcsEventLabel="ticket-listing-page">{{ textContent.retry }}</a>.
+                mcsEventLabel="ticket-listing-page">{{ 'tickets.retry' | translate }}</a>.
             </div>
           </mcs-data-error>
         </ng-container>

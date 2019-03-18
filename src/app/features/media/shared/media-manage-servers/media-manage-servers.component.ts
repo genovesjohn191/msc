@@ -9,10 +9,7 @@ import {
 } from '@angular/core';
 import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import {
-  McsTextContentProvider,
-  McsDataStatusFactory
-} from '@app/core';
+import { McsDataStatusFactory } from '@app/core';
 import {
   isNullOrEmpty,
   unsubscribeSubject
@@ -27,7 +24,6 @@ import { MediaManageServers } from './media-manage-servers';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MediaManageServersComponent implements OnInit, OnDestroy {
-  public textContent: any;
   public servers: McsServer[];
   public dataStatusFactory: McsDataStatusFactory<McsServer[]>;
 
@@ -51,14 +47,12 @@ export class MediaManageServersComponent implements OnInit, OnDestroy {
 
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
-    private _textProvider: McsTextContentProvider,
     private _serversRepository: McsServersRepository
   ) {
     this.dataStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
   }
 
   public ngOnInit() {
-    this.textContent = this._textProvider.content.media.shared.manageServer;
     this._getServers();
   }
 

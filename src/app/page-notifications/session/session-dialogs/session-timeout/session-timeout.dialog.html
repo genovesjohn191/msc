@@ -1,12 +1,12 @@
 <mcs-dialog>
   <mcs-dialog-header [hideCloseButton]="true">
-    <h1>{{ textContent.title }}</h1>
+    <h1>{{ 'pageNotifications.sessionHandler.sessionTimeoutDialog.title' | translate }}</h1>
   </mcs-dialog-header>
 
   <mcs-dialog-content>
     <mcs-item>
       <mcs-icon [key]="warningIconKey"></mcs-icon>
-      <span>{{ textContent.alert }}</span>
+      <span>{{ 'pageNotifications.sessionHandler.sessionTimeoutDialog.alert' | translate }}</span>
     </mcs-item>
   </mcs-dialog-content>
 
@@ -18,7 +18,7 @@
       mcsEventTracker="sign-in-click"
       mcsEventCategory="session"
       mcsEventLabel="sign-in-dialog">
-      {{ textContent.confirm }}
+      {{ 'pageNotifications.sessionHandler.sessionTimeoutDialog.confirm' | translate }}
     </button>
   </mcs-dialog-actions>
 </mcs-dialog>

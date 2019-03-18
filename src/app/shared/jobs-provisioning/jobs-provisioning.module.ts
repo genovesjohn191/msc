@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { ProgressBarModule } from '../progress-bar/progress-bar.module';
 import { IconModule } from '../icon/icon.module';
 import { LoaderModule } from '../loader/loader.module';
@@ -21,6 +22,7 @@ import { JobsProvisioningLoadingTextDirective } from './jobs-provisioning-loadin
   imports: [
     CommonModule,
     FormsModule,
+    TranslateModule,
     ProgressBarModule,
     IconModule,
     LoaderModule,
@@ -33,6 +35,7 @@ import { JobsProvisioningLoadingTextDirective } from './jobs-provisioning-loadin
   exports: [
     CommonModule,
     FormsModule,
+    TranslateModule,
     ProgressBarModule,
     IconModule,
     LoaderModule,

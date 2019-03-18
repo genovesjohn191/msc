@@ -3,16 +3,13 @@ import {
   Inject,
   ViewEncapsulation
 } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import {
   MCS_DIALOG_DATA,
   McsDialogRef,
-  CoreDefinition,
-  McsTextContentProvider
+  CoreDefinition
 } from '@app/core';
-import {
-  isNullOrEmpty,
-  replacePlaceholder
-} from '@app/utilities';
+import { isNullOrEmpty } from '@app/utilities';
 import { McsServerCredential } from '@app/models';
 
 @Component({
@@ -25,7 +22,7 @@ import { McsServerCredential } from '@app/models';
 })
 
 export class ResetPasswordFinishedDialogComponent {
-  public textContent: any;
+
   public serverCredential: McsServerCredential;
 
   public get checkIconKey(): string {
@@ -37,11 +34,10 @@ export class ResetPasswordFinishedDialogComponent {
   }
 
   constructor(
-    private _textContentProvider: McsTextContentProvider,
+    private _translateService: TranslateService,
     public dialogRef: McsDialogRef<ResetPasswordFinishedDialogComponent>,
     @Inject(MCS_DIALOG_DATA) public dialogData
   ) {
-    this.textContent = this._textContentProvider.content.servers.shared.resetPasswordFinishedDialog;
     this.serverCredential = this.dialogData as McsServerCredential;
   }
 
@@ -50,10 +46,10 @@ export class ResetPasswordFinishedDialogComponent {
    */
   public getPasswordInformation(): string {
     if (isNullOrEmpty(this.serverCredential)) { return ''; }
-    return replacePlaceholder(
-      this.textContent.information,
-      'server_name',
-      this.serverCredential.server
+
+    return this._translateService.instant(
+      'serverShared.dialogResetPasswordFinished.information',
+      { server_name: this.serverCredential.server }
     );
   }
 

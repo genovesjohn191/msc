@@ -4,9 +4,9 @@
     <!-- Default View -->
     <mcs-presentation-panel [@fadeIn] *ngSwitchCase="serverServicesViewOption.Default">
       <ng-container mcsPresentationPanelHeader>
-        <h2>{{ textContent.title }}</h2>
+        <h2>{{ 'serverServices.title' | translate }}</h2>
       </ng-container>
-      <p>{{ textContent.description }}</p>
+      <p>{{ 'serverServices.description' | translate }}</p>
 
       <mcs-section>
         <mcs-form-message #formMessage></mcs-form-message>
@@ -19,7 +19,7 @@
               <mcs-grid-row *ngIf="updatesDetails$ | async as updatesDetails">
                 <mcs-grid-column sizeLg="9">
                   <mcs-item orientation="block">
-                    <strong>{{textContent.updatesStatusTitleLabel}}</strong>
+                    <strong>{{ 'serverServices.updatesStatusTitleLabel' | translate }}</strong>
                     <mcs-item>
                       <mcs-icon [key]="updateStatusConfiguration.updatesStatusIcon" size="small"></mcs-icon>
                       <div>
@@ -33,7 +33,7 @@
                             <ng-container *ngIf="updateStatusConfiguration.inspectButtonShown">
                               <a (click)="inspectForAvailableOsUpdates(serverDetails.server)" *mcsAccessControl="serverPermision.vmPatchManagement"
                                 [disabled]="inspectNowButtonDisabled(serverDetails.server)">
-                                {{ textContent.updatesAnalysisLabel }}
+                                {{ 'serverServices.updatesAnalysisLabel' | translate }}
                               </a>
                             </ng-container>
                           </mcs-item>
@@ -49,7 +49,7 @@
                       *mcsAccessControl="serverPermision.vmPatchManagement"
                       (click)="setViewMode(serverServicesViewOption.Unscheduled)"
                       [disabled]="serverDetails.server.isProcessing">
-                      {{ textContent.updatesScheduleRunNowLink }}
+                      {{ 'serverServices.updatesScheduleRunNowLink' | translate }}
                     </button>
                   </ng-container>
                 </mcs-grid-column>
@@ -59,7 +59,7 @@
               <mcs-grid-row *ngIf="updatesDetails$ | async as updatesDetails">
                 <mcs-grid-column>
                   <mcs-item orientation="block">
-                    <strong>{{textContent.updatesScheduleTitleLabel}}</strong>
+                    <strong>{{ 'serverServices.updatesScheduleTitleLabel' | translate }}</strong>
                     <mcs-item>
                       <mcs-icon [key]="clockKey" size="small"></mcs-icon>
                       <div>
@@ -74,7 +74,7 @@
                               <ng-container *ngIf="updateStatusConfiguration.updateStatusHasNoErrors">
                                 <a *mcsAccessControl="serverPermision.vmPatchManagement" (click)="setViewMode(serverServicesViewOption.Scheduled)"
                                   [disabled]="configureButtonDisabled(serverDetails.server)">
-                                  {{ textContent.updatesScheduleConfigureLink }}
+                                  {{ 'serverServices.updatesScheduleConfigureLink' | translate }}
                                 </a>
                               </ng-container>
                             </span>
@@ -87,7 +87,7 @@
                   <mcs-item *ngIf="updateStatusConfiguration.updatesScheduleRunOnceWarningLabelShown">
                     <mcs-data-status-warning margin-left-large>
                       <small>
-                        {{ textContent.updatesScheduleRunOnceWarningLabel }}
+                        {{ 'serverServices.updatesScheduleRunOnceWarningLabel' | translate }}
                       </small>
                     </mcs-data-status-warning>
                   </mcs-item>
@@ -97,11 +97,11 @@
             </mcs-data-status-success>
 
             <mcs-data-status-in-progress mcsDataInProgress>
-              <span>{{ textContent.loadingContent }}</span>
+              <span>{{ 'serverServices.loadingContent' | translate }}</span>
             </mcs-data-status-in-progress>
 
             <mcs-data-status-error mcsDataError>
-              <span>{{ textContent.errorGettingServerDetails }}</span>
+              <span>{{ 'serverServices.errorGettingServerDetails' | translate }}</span>
             </mcs-data-status-error>
           </mcs-data-status>
         </mcs-grid>
@@ -133,7 +133,7 @@
     <a mcsButton="basic" size="medium" (click)="setViewMode(serverServicesViewOption.Default)" [disabled]="serverDetails.server.isProcessing">
       <mcs-item>
         <mcs-icon [key]="chevronLeftKey" size="xsmall"></mcs-icon>
-        <span>{{ textContent.label }}</span>
+        <span>{{ 'serverServices.label' | translate }}</span>
       </mcs-item>
     </a>
   </ng-template>

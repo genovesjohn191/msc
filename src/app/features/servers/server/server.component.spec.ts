@@ -55,14 +55,4 @@ describe('ServerComponent', () => {
     });
   }));
 
-  /** Test Implementation */
-  describe('ngOnInit()', () => {
-    it('should define the text content value to serverManagementTextContent', () => {
-      expect(component.textContent).toBeDefined();
-    });
-
-    it('should set the value of serversTextContent', () => {
-      expect(component.serversTextContent).toBeDefined();
-    });
-  });
 });

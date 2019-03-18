@@ -2,7 +2,7 @@
   <!-- Firewall policy header -->
   <mcs-item>
     <h2 auto-width>
-      {{ textContent.title | mcsTextPlaceholder: 'sequence': firewallPolicy?.objectSequence }}
+      {{ 'firewall.policies.policy.title' | translate: {sequence: firewallPolicy?.objectSequence} }}
     </h2>
     <mcs-icon [key]="closeIconKey" size="small"
       mcsCursor="pointer" mcsAlign="end"
@@ -13,9 +13,9 @@
     <mcs-grid-row>
       <!-- Firewall Policy Source -->
       <mcs-grid-column mcsId="firewall-policy-source">
-        <h5 margin-bottom-small>{{ textContent.source }}</h5>
+        <h5 margin-bottom-small>{{ 'firewall.policies.policy.source' | translate }}</h5>
         <mcs-item>
-          <span>{{ textContent.address }}:</span>
+          <span>{{ 'firewall.policies.policy.address' | translate }}:</span>
           <mcs-list spacing="auto">
             <mcs-list-item *ngFor="let sourceAddress of firewallPolicy?.sourceAddresses">
               {{ sourceAddress }}
@@ -24,7 +24,7 @@
         </mcs-item>
 
         <mcs-item>
-          <span>{{ textContent.interface }}:</span>
+          <span>{{ 'firewall.policies.policy.interface' | translate }}:</span>
           <mcs-list spacing="auto">
             <mcs-list-item *ngFor="let sourceInterfaces of firewallPolicy?.sourceInterfaces">
               {{ sourceInterfaces }}
@@ -35,9 +35,9 @@
 
       <!-- Firewall Policy Destination -->
       <mcs-grid-column mcsId="firewall-policy-destination">
-        <h5 margin-bottom-small>{{ textContent.destination }}</h5>
+        <h5 margin-bottom-small>{{ 'firewall.policies.policy.destination' | translate }}</h5>
         <mcs-item>
-          <span>{{ textContent.address }}:</span>
+          <span>{{ 'firewall.policies.policy.address' | translate }}:</span>
           <mcs-list spacing="auto" >
             <mcs-list-item *ngFor="let destinationAddress of firewallPolicy?.destinationAddresses">
               {{ destinationAddress }}
@@ -46,7 +46,7 @@
         </mcs-item>
 
         <mcs-item>
-          <span>{{ textContent.interface }}:</span>
+          <span>{{ 'firewall.policies.policy.interface' | translate }}:</span>
           <mcs-list spacing="auto">
             <mcs-list-item *ngFor="let destinationInterface of firewallPolicy?.destinationInterfaces">
               {{ destinationInterface }}
@@ -59,14 +59,14 @@
     <mcs-grid-row>
       <!-- Firewall Policy Details -->
       <mcs-grid-column mcsId="firewall-policy-details">
-        <h5 margin-bottom-small>{{ textContent.details }}</h5>
+        <h5 margin-bottom-small>{{ 'firewall.policies.policy.details' | translate }}</h5>
         <mcs-item>
-          <span>{{ textContent.service }}:</span>
+          <span>{{ 'firewall.policies.policy.service' | translate }}:</span>
           <span>{{ firewallPolicy?.service }}</span>
         </mcs-item>
 
         <mcs-item>
-          <span>{{ textContent.action }}:</span>
+          <span>{{ 'firewall.policies.policy.action' | translate }}:</span>
           <span>{{ firewallPolicy?.actionLabel }}</span>
         </mcs-item>
       </mcs-grid-column>

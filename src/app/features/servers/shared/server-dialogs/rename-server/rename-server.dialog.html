@@ -1,27 +1,29 @@
 <mcs-dialog>
   <mcs-dialog-header>
-    <h1>{{ textContent.title }}</h1>
+    <h1>{{ 'serverShared.dialogRenameServer.title' | translate  }}</h1>
   </mcs-dialog-header>
 
   <mcs-dialog-content>
     <mcs-section>
-      <span>{{ textContent.information }}</span>
+      <span>{{ 'serverShared.dialogRenameServer.information' | translate }}</span>
       <mcs-form-field>
         <input mcsInput #serverNameInput maxlength="15"
           [formControl]="fcServerName">
 
         <mcs-hint mcsHint align="start">
-          {{ convertMaxCharText(textContent.hints.serverNameMax, serverNameInput.maxLength) }}
+          {{ convertMaxCharText(
+            ('serverShared.dialogRenameServer.hints.serverNameMax' | translate),
+            serverNameInput.maxLength) }}
         </mcs-hint>
         <mcs-hint mcsHint align="end">
           {{ serverNameInput.value.length }} / {{ serverNameInput.maxLength }}
         </mcs-hint>
 
         <mcs-error mcsError errorState="required">
-          {{ textContent.errors.required }}
+          {{ 'serverShared.dialogRenameServer.errors.required' | translate }}
         </mcs-error>
         <mcs-error mcsError errorState="invalidServerName">
-          <span [innerHTML]="textContent.errors.invalidServerName | mcsNewLines"></span>
+          <span [innerHTML]="('serverShared.dialogRenameServer.errors.invalidServerName' | translate) | mcsNewLines"></span>
         </mcs-error>
       </mcs-form-field>
     </mcs-section>
@@ -31,13 +33,13 @@
     <a id="ctaCloseRenameServerDialog" (click)="closeDialog()"
       mcsEventTracker="cancel"
       mcsEventCategory="server"
-      mcsEventLabel="rename-dialog">{{ textContent.cancel }}</a>
+      mcsEventLabel="rename-dialog">{{ 'serverShared.dialogRenameServer.cancel' | translate }}</a>
     <button mcsButton id="ctaRenameServer" arrow="right" [disabled]="disabledRenameButton"
       size="small" (click)="renameServer(serverNameInput)"
       mcsEventTracker="confirm"
       mcsEventCategory="server"
       mcsEventLabel="rename-dialog">
-      {{ textContent.rename }}
+      {{ 'serverShared.dialogRenameServer.rename' | translate }}
     </button>
   </mcs-dialog-actions>
 </mcs-dialog>

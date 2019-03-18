@@ -1,7 +1,7 @@
 <!-- More button -->
 <ng-container *ngIf="showMoreButton">
   <div #nextButton class="paginator-load-more" (click)="nextPage()" mcsRipple>
-    <span>{{ textContent.nextPage }}</span>
+    <span>{{ 'shared.paginator.nextPage' | translate }}</span>
     <mcs-icon [key]="arrowDownIconKey" size="small"></mcs-icon>
   </div>
 </ng-container>

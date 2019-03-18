@@ -7,6 +7,7 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import {
   Subject,
   Observable
@@ -24,7 +25,6 @@ import {
 import {
   CoreRoutes,
   CoreDefinition,
-  McsTextContentProvider,
   McsNotificationEventsService,
   McsBrowserService,
   McsAuthenticationService
@@ -34,7 +34,6 @@ import {
   isNullOrEmpty,
   addOrUpdateArrayRecord,
   compareDates,
-  replacePlaceholder,
   unsubscribeSubject
 } from '@app/utilities';
 import {
@@ -43,6 +42,7 @@ import {
 } from '@app/event-bus';
 import { SwitchAccountService } from '../../shared';
 
+const NOTIFICATIONS_COUNT_LIMIT = 3;
 @Component({
   selector: 'mcs-user-panel',
   templateUrl: './user-panel.component.html',
@@ -53,7 +53,6 @@ import { SwitchAccountService } from '../../shared';
 export class UserPanelComponent implements OnInit, OnDestroy {
   public notifications: McsJob[];
   public hasConnectionError: boolean;
-  public textContent: any;
   public deviceType: Breakpoint;
 
   @ViewChild('notificationsPopover')
@@ -87,14 +86,16 @@ export class UserPanelComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Returns 'View [total number of other active notifications] More'
-   * if more than three notifications are created else just returns 'View More'
+   * Returns 'View [totalNotificationsCount - countLimit] More'
+   * if more than [countLimit] notifications are created else just returns 'View More'
    */
   public get viewMoreNotificationsText(): string {
-    return this.displayedNotifications.length > 3 ?
-      replacePlaceholder(this.textContent.notifications.viewMoreCount,
-        'count', `${this.displayedNotifications.length - 3}`) :
-      this.textContent.notifications.viewMore;
+    let showNotificationCount = this.displayedNotifications.length > NOTIFICATIONS_COUNT_LIMIT;
+    let remainingNotificationCount = this.displayedNotifications.length - NOTIFICATIONS_COUNT_LIMIT;
+
+    return showNotificationCount ? this._translateService.instant(
+      'header.userPanel.notifications.viewMoreCount', { count: remainingNotificationCount }
+    ) : this._translateService.instant('header.userPanel.notifications.viewMore');
   }
 
   public get bellIconKey(): string {
@@ -114,7 +115,7 @@ export class UserPanelComponent implements OnInit, OnDestroy {
   }
 
   public constructor(
-    private _textContent: McsTextContentProvider,
+    private _translateService: TranslateService,
     private _router: Router,
     private _notificationEvents: McsNotificationEventsService,
     private _browserService: McsBrowserService,
@@ -128,7 +129,6 @@ export class UserPanelComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
-    this.textContent = this._textContent.content.header.userPanel;
     this._listenToCurrentUserJob();
     this._listenToBrowserResize();
     this._listenToSwitchAccount();

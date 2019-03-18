@@ -1,6 +1,5 @@
 import {
   Component,
-  OnInit,
   OnDestroy,
   ChangeDetectorRef,
   ChangeDetectionStrategy,
@@ -23,7 +22,6 @@ import {
   tap
 } from 'rxjs/operators';
 import {
-  McsTextContentProvider,
   McsErrorHandlerService,
   CoreDefinition,
   McsDialogService,
@@ -83,16 +81,14 @@ export enum ServerManagementView {
   }
 })
 
-export class ServerManagementComponent extends ServerDetailsBase implements OnInit, OnDestroy {
+export class ServerManagementComponent extends ServerDetailsBase implements OnDestroy {
   public serverThumbnail$: Observable<string>;
   public serverMedia$: Observable<McsServerMedia[]>;
   public resourceCompute$: Observable<McsResourceCompute>;
   public resourceCatalogs$: Observable<McsResourceCatalogItem[]>;
 
-  public textContent: any;
   public manageScale: ServerManageScale;
   public scaleInProgress: boolean;
-  public serversTextContent: any;
   public serverManagementView: ServerManagementView;
   public mediaStatusFactory: McsDataStatusFactory<McsServerMedia[]>;
   public selectedCatalog: McsServerMedia;
@@ -132,7 +128,6 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
     _resourcesRepository: McsResourcesRepository,
     _serversRepository: McsServersRepository,
     _serverService: ServerService,
-    _textProvider: McsTextContentProvider,
     _errorHandlerService: McsErrorHandlerService,
     _loadingService: McsLoadingService,
     _accessControl: McsAccessControlService,
@@ -147,18 +142,12 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
       _serversRepository,
       _serverService,
       _changeDetectorRef,
-      _textProvider,
       _errorHandlerService,
       _loadingService,
       _accessControl
     );
     this.manageScale = new ServerManageScale();
     this.mediaStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
-  }
-
-  public ngOnInit() {
-    this.textContent = this._textProvider.content.servers.server.management;
-    this.serversTextContent = this._textProvider.content.servers;
   }
 
   public ngOnDestroy() {

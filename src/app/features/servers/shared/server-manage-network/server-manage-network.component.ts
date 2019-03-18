@@ -16,19 +16,18 @@ import {
   FormControl,
   FormBuilder
 } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 import {
   finalize,
   takeUntil
 } from 'rxjs/operators';
 import {
-  McsTextContentProvider,
   CoreValidators,
   McsDataStatusFactory,
   IMcsFormGroup
 } from '@app/core';
 import {
-  replacePlaceholder,
   isNullOrEmpty,
   animateFactory,
   clearArrayRecord,
@@ -68,7 +67,6 @@ const Netmask = require('netmask').Netmask;
 export class ServerManageNetworkComponent
   implements OnInit, OnChanges, AfterViewInit, IMcsFormGroup {
 
-  public textContent: any;
   public netMask: any;
   public ipAddressesInUsed: McsResourceNetworkIpAddress[];
   public ipAddressItems: McsOption[];
@@ -132,7 +130,7 @@ export class ServerManageNetworkComponent
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private _formBuilder: FormBuilder,
-    private _textContentProvider: McsTextContentProvider,
+    private _translateService: TranslateService,
     private _resourcesRepository: McsResourcesRepository
   ) {
     this.inputManageType = InputManageType.Auto;
@@ -143,8 +141,6 @@ export class ServerManageNetworkComponent
   }
 
   public ngOnInit() {
-    this.textContent = this._textContentProvider.content
-      .servers.shared.manageNetwork;
 
     this._registerFormGroup();
     this._setIpAddressItems();
@@ -177,10 +173,9 @@ export class ServerManageNetworkComponent
    * Returns the ip range error text content
    */
   public get ipRangeErrorText(): string {
-    return replacePlaceholder(
-      this.textContent.errors.ipAddressRangeError,
-      'ip_range',
-      `${this.netMask.first} - ${this.netMask.last}`
+    return this._translateService.instant(
+      'serverShared.manageNetwork.errors.ipAddressRangeError',
+      { ip_range: `${this.netMask.first} - ${this.netMask.last}` }
     );
   }
 

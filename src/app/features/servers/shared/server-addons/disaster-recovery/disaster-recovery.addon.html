@@ -1,8 +1,8 @@
 <mcs-section>
-  <span>{{ textContent.label }}:</span>
+  <span>{{ 'serverShared.addOnDisasterRecovery.label' | translate }}:</span>
   <mcs-select [(ngModel)]="protectionGroup"
     (change)="onGroupChanged()"
-    [placeholder]="textContent.placeholder"
+    [placeholder]="'serverShared.addOnDisasterRecovery.placeholder' | translate"
     class="form-field-size-small">
     <mcs-option *ngFor="let group of protectionGroups" [value]="group">
       {{ group }}

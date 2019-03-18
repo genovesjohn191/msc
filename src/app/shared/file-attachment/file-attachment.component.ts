@@ -10,12 +10,12 @@ import {
   ChangeDetectionStrategy,
   ViewEncapsulation
 } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import {
   FileUploader,
   FileItem
 } from 'ng2-file-upload';
 import {
-  McsTextContentProvider,
   McsDialogService,
   McsDialogRef,
   CoreDefinition
@@ -23,8 +23,7 @@ import {
 import { McsFileInfo } from '@app/models';
 import {
   isNullOrEmpty,
-  coerceNumber,
-  replacePlaceholder
+  coerceNumber
 } from '@app/utilities';
 
 const DEFAULT_MAX_FILE_SIZE_IN_MB = 20;
@@ -41,7 +40,6 @@ const DEFAULT_MAX_FILE_SIZE_IN_MB = 20;
 })
 
 export class FileAttachmentComponent implements OnInit {
-  public textContent: any;
   public fileUploader: FileUploader;
   public hasDropZone: boolean;
   public errorDialogRef: McsDialogRef<any>;
@@ -67,7 +65,7 @@ export class FileAttachmentComponent implements OnInit {
   }
 
   public constructor(
-    private _textContentProvider: McsTextContentProvider,
+    private _translateService: TranslateService,
     private _dialogService: McsDialogService,
     private _changeDetectorRef: ChangeDetectorRef
   ) {
@@ -89,7 +87,6 @@ export class FileAttachmentComponent implements OnInit {
 
   public ngOnInit() {
     // Initialize text content provider and file loader settings
-    this.textContent = this._textContentProvider.content.shared.fileAttachment;
     this.fileUploader = new FileUploader({
       autoUpload: false,
       queueLimit: this.attachedLimit === 'single' ? 1 : undefined,
@@ -165,18 +162,17 @@ export class FileAttachmentComponent implements OnInit {
         return;
 
       case 'mimeType':
-        errorMessage = this.textContent.errorFileType;
+        errorMessage = this._translateService.instant('shared.fileAttachment.errorFileType');
         break;
 
       case 'fileSize':
-        errorMessage = replacePlaceholder(
-          this.textContent.errorFileSize,
-          'max_size',
-          `${this._maxSizeInMb}`);
+        errorMessage = this._translateService.instant(
+          'shared.fileAttachment.errorFileSize', { max_size: this._maxSizeInMb }
+        );
         break;
 
       default:
-        errorMessage = this.textContent.errorGeneral;
+        errorMessage = this._translateService.instant('shared.fileAttachment.errorGeneral');
         break;
     }
 

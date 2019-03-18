@@ -1,15 +1,5 @@
 <div class="account-panel-wrapper">
   <mcs-list header="Account">
-    <!-- <mcs-list-item>
-      <a mcsCursor="pointer" (click)="notifySelectionChange('settings')">
-        {{ textContent.accountSettings }}
-      </a>
-    </mcs-list-item>
-    <mcs-list-item>
-      <a mcsCursor="pointer" (click)="notifySelectionChange('profile')">
-        {{ textContent.profile }}
-      </a>
-    </mcs-list-item> -->
     <mcs-list-item *mcsAccessControl="['TicketView']">
       <a mcsCursor="pointer" [mcsRouterLink]="routeKeyEnum.Tickets"
         (click)="notifySelectionChange('tickets')"
@@ -17,7 +7,7 @@
         mcsEventTracker="navigate-to-tickets"
         mcsEventCategory="navigation"
         mcsEventLabel="user-panel">
-        {{ textContent.tickets }}
+        {{ 'accountPanel.tickets' | translate }}
       </a>
     </mcs-list-item>
     <mcs-list-item *mcsAccessControl="['OrderView']">
@@ -28,7 +18,7 @@
           mcsEventTracker="navigate-to-orders"
           mcsEventCategory="navigation"
           mcsEventLabel="user-panel">
-          {{ textContent.orders }}
+          {{ 'accountPanel.orders' | translate }}
         </a>
       </ng-container>
 
@@ -39,7 +29,7 @@
           mcsEventTracker="navigate-to-orders"
           mcsEventCategory="navigation"
           mcsEventLabel="user-panel">
-          {{ textContent.orders }}
+          {{ 'accountPanel.orders' | translate }}
         </a>
       </ng-template>
     </mcs-list-item>
@@ -50,7 +40,7 @@
         mcsEventTracker="navigate-to-change-password"
         mcsEventCategory="navigation"
         mcsEventLabel="user-panel">
-        {{ textContent.changePassword }}
+        {{ 'accountPanel.changePassword' | translate }}
       </a>
     </mcs-list-item>
   </mcs-list>

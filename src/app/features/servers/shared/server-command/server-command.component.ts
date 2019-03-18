@@ -1,6 +1,5 @@
 import {
   Component,
-  OnInit,
   Input,
   Output,
   EventEmitter,
@@ -9,7 +8,6 @@ import {
 } from '@angular/core';
 import {
   CoreDefinition,
-  McsTextContentProvider,
   McsUniqueId
 } from '@app/core';
 import { isNullOrEmpty } from '@app/utilities';
@@ -26,7 +24,7 @@ import {
     '[attr.id]': 'id'
   }
 })
-export class ServerCommandComponent implements OnInit {
+export class ServerCommandComponent {
   @Input()
   public server: McsServer;
 
@@ -42,8 +40,6 @@ export class ServerCommandComponent implements OnInit {
   @ViewChild('popoverActionElement')
   public popoverActionElement: any;
 
-  public textContent: any;
-
   public get gearIconKey(): string {
     return CoreDefinition.ASSETS_SVG_COG;
   }
@@ -52,13 +48,9 @@ export class ServerCommandComponent implements OnInit {
     return ServerCommand;
   }
 
-  constructor(private _textProvider: McsTextContentProvider) {
+  constructor() {
     this.id = McsUniqueId.NewId('server-command');
     this.excluded = new Array<ServerCommand>();
-  }
-
-  public ngOnInit() {
-    this.textContent = this._textProvider.content.servers;
   }
 
   public onExecuteCommand(command: ServerCommand) {

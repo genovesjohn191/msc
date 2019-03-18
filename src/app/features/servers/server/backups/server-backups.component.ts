@@ -1,6 +1,5 @@
 import {
   Component,
-  OnInit,
   OnDestroy,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -20,7 +19,6 @@ import {
 } from 'rxjs/operators';
 import {
   McsDialogService,
-  McsTextContentProvider,
   McsNotificationEventsService,
   McsDataStatusFactory,
   CoreDefinition,
@@ -62,6 +60,7 @@ import {
 import { ServerService } from '../server.service';
 import { ServerDetailsBase } from '../server-details.base';
 import { ServersService } from '../../servers.service';
+import { TranslateService } from '@ngx-translate/core';
 
 enum SnapshotDialogType {
   None = 0,
@@ -78,9 +77,8 @@ enum SnapshotDialogType {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ServerBackupsComponent extends ServerDetailsBase
-  implements OnInit, OnDestroy {
+  implements OnDestroy {
 
-  public textContent: any;
   public snapshot$: Observable<McsServerSnapshot>;
   public updatingSnapshot: boolean;
   public capturingSnapshot: boolean;
@@ -99,10 +97,10 @@ export class ServerBackupsComponent extends ServerDetailsBase
     _serversRepository: McsServersRepository,
     _serverService: ServerService,
     _changeDetectorRef: ChangeDetectorRef,
-    _textProvider: McsTextContentProvider,
     _errorHandlerService: McsErrorHandlerService,
     _loadingService: McsLoadingService,
     _accessControl: McsAccessControlService,
+    private _translateService: TranslateService,
     private _serversService: ServersService,
     private _standardDateFormatPipe: StdDateFormatPipe,
     private _notificationEvents: McsNotificationEventsService,
@@ -113,16 +111,11 @@ export class ServerBackupsComponent extends ServerDetailsBase
       _serversRepository,
       _serverService,
       _changeDetectorRef,
-      _textProvider,
       _errorHandlerService,
       _loadingService,
       _accessControl
     );
     this.dataStatusFactory = new McsDataStatusFactory();
-  }
-
-  public ngOnInit() {
-    this.textContent = this._textProvider.content.servers.server.backups;
   }
 
   public ngOnDestroy() {
@@ -354,6 +347,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
 
   /**
    * Get storage profile available space
+   * @param resourceStorage Server resource storage
    * @param storageProfile Server resource storage profile
    */
   private _getStorageProfileAvailableMB(
@@ -402,7 +396,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
   private _showErrorMessageByResponse(httpResponse: McsApiErrorResponse): void {
     this._formMessage.showMessage('error', {
       messages: httpResponse.errorMessages,
-      fallbackMessage: this.textContent.formMessageDefaultError
+      fallbackMessage: this._translateService.instant('serverBackups.formMessageDefaultError')
     });
   }
 }

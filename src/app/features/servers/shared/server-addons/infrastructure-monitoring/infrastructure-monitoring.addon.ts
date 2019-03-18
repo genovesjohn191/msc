@@ -8,7 +8,6 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { McsTextContentProvider } from '@app/core';
 import {
   unsubscribeSafely,
   isNullOrEmpty
@@ -27,7 +26,6 @@ import { ServerInfrastructure } from './server-infrastructure';
 })
 
 export class InfrastructureMonitoringAddOnComponent implements OnInit, OnDestroy {
-  public textContent: any;
   public serviceLevels: string[];
   public infrastructure: ServerInfrastructure;
   public selectedServiceLevel: string;
@@ -37,16 +35,12 @@ export class InfrastructureMonitoringAddOnComponent implements OnInit, OnDestroy
 
   private _serviceLevelsSubscription: Subscription;
 
-  public constructor(
-    private _textProvider: McsTextContentProvider,
-    private _optionsApiService: OptionsApiService
-  ) {
+  public constructor(private _optionsApiService: OptionsApiService) {
     this.serviceLevels = new Array();
     this.infrastructure = new ServerInfrastructure();
   }
 
   public ngOnInit(): void {
-    this.textContent = this._textProvider.content.servers.shared.infrastructureMonitoringAddOn;
     this._getInfrastructureServiceLevels();
   }
 

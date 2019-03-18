@@ -1,6 +1,5 @@
 import {
   Component,
-  OnInit,
   OnChanges,
   OnDestroy,
   Input,
@@ -9,10 +8,7 @@ import {
   SimpleChanges
 } from '@angular/core';
 import { Router } from '@angular/router';
-import {
-  McsTextContentProvider,
-  CoreRoutes
-} from '@app/core';
+import { CoreRoutes } from '@app/core';
 import { isNullOrEmpty } from '@app/utilities';
 import {
   RouteKey,
@@ -31,22 +27,15 @@ import {
   }
 })
 
-export class ProductAnnexComponent implements OnInit, OnChanges, OnDestroy {
+export class ProductAnnexComponent implements OnChanges, OnDestroy {
 
   @Input()
   public product: McsProduct;
 
-  public textContent: any;
-
   constructor(
     private _router: Router,
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _textContentProvider: McsTextContentProvider
+    private _changeDetectorRef: ChangeDetectorRef
   ) { }
-
-  public ngOnInit() {
-    this.textContent = this._textContentProvider.content.products.product;
-  }
 
   public ngOnChanges(changes: SimpleChanges) {
     let productChanges = changes['product'];

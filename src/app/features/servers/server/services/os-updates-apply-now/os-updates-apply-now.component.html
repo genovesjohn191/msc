@@ -1,19 +1,19 @@
 <mcs-presentation-panel>
   <ng-container mcsPresentationPanelHeader>
     <mcs-item orientation="separated" full-width>
-      <h2>{{ textContent.title }}</h2>
+      <h2>{{ 'serverServicesOsUpdatesApplyNow.title' | translate }}</h2>
       <ng-content select="[mcsViewServicesTab]"></ng-content>
     </mcs-item>
   </ng-container>
-  <p>{{ textContent.description }}</p>
+  <p>{{ 'serverServicesOsUpdatesApplyNow.description' | translate }}</p>
   <section>
     <!-- Action Buttons -->
     <mcs-item>
       <strong>
-        {{ textContent.listLabel }}
+        {{ 'serverServicesOsUpdatesApplyNow.listLabel' | translate }}
       </strong>
       <button mcsButton mcsAlign="end" size="medium" (click)="applySelectedUpdates()" [disabled]="isApplyButtonDisabled">
-        {{ textContent.applyUpdatesButton }}
+        {{ 'serverServicesOsUpdatesApplyNow.applyUpdatesButton' | translate }}
       </button>
     </mcs-item>
 
@@ -22,7 +22,7 @@
         <!-- Tree View -->
         <div mcsScrollable class="action-box" [ngStyle]="{'max-height': '400px'}" *ngIf="osUpdates$ | async as osUpdates">
           <mcs-tree (selectionChange)="onTreeChange($event)" [disabled]="selectedServer.isProcessing">
-            <mcs-tree-node-group [label]="textContent.listAllSelection" checkable>
+            <mcs-tree-node-group [label]="'serverServicesOsUpdatesApplyNow.listAllSelection' | translate" checkable>
               <mcs-tree-node *ngFor="let osUpdate of osUpdates" [value]="osUpdate">
                 <mcs-item>
                   <span>{{osUpdate.name}}</span>
@@ -35,15 +35,15 @@
       </mcs-data-status-success>
 
       <mcs-data-status-empty mcsDataEmpty>
-          <span>{{ textContent.noOsUpdates }}</span>
+          <span>{{ 'serverServicesOsUpdatesApplyNow.noOsUpdates' | translate }}</span>
       </mcs-data-status-empty>
 
       <mcs-data-status-in-progress mcsDataInProgress>
-        <span>{{ textContent.osUpdatesloadingContent }}</span>
+        <span>{{ 'serverServicesOsUpdatesApplyNow.osUpdatesloadingContent' | translate }}</span>
       </mcs-data-status-in-progress>
 
       <mcs-data-status-error mcsDataError>
-        <span>{{ textContent.errorOsUpdates }}</span>
+        <span>{{ 'serverServicesOsUpdatesApplyNow.errorOsUpdates' | translate }}</span>
       </mcs-data-status-error>
     </mcs-data-status>
   </section>

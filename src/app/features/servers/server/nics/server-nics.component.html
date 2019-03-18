@@ -1,8 +1,8 @@
  <mcs-presentation-panel mcsId="nics" *ngIf="serverDetails$ | async as serverDetails">
   <ng-container mcsPresentationPanelHeader>
-    <h2>{{ textContent.title }}</h2>
+    <h2>{{ 'serverNics.title' | translate }}</h2>
   </ng-container>
-  <p *ngIf="textContent.description">{{ textContent.description }}</p>
+  <p *ngIf="'serverNics.description' | translate">{{ 'serverNics.description' | translate }}</p>
 
   <ng-container [ngSwitch]="nicMethodType">
     <mcs-section [@fadeIn] *ngSwitchCase="serverNicMethodTypeEnum.AddNic">
@@ -11,7 +11,7 @@
         <!-- NIC Column -->
         <ng-container mcsColumnDef="nic">
           <mcs-header-cell *mcsHeaderCellDef hidden-small>
-            {{ textContent.columnHeaders.nic }}
+            {{ 'serverNics.columnHeaders.nic' | translate }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
             <ng-container *ngIf="nicIsInProgress(row); else nicIndexTemplate">
@@ -28,7 +28,7 @@
         <!-- Network Column -->
         <ng-container mcsColumnDef="network">
           <mcs-header-cell *mcsHeaderCellDef>
-            {{ textContent.columnHeaders.network }}
+            {{ 'serverNics.columnHeaders.network' | translate }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" text-wrap>
             <span [innerHTML]="row.logicalNetworkName | mcsDataLabel"></span>
@@ -38,7 +38,7 @@
         <!-- Primary Column -->
         <ng-container mcsColumnDef="primary">
           <mcs-header-cell *mcsHeaderCellDef hidden-small>
-            {{ textContent.columnHeaders.primary }}
+            {{ 'serverNics.columnHeaders.primary' | translate }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
             <mcs-icon *ngIf="row.isPrimary" padding-left-medium
@@ -49,7 +49,7 @@
         <!-- Type Column -->
         <ng-container mcsColumnDef="type">
           <mcs-header-cell *mcsHeaderCellDef hidden-small>
-            {{ textContent.columnHeaders.type }}
+            {{ 'serverNics.columnHeaders.type' | translate }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
             <span [innerHTML]="row.deviceTypeLabel | mcsDataLabel"></span>
@@ -59,7 +59,7 @@
         <!-- IP Mode Column -->
         <ng-container mcsColumnDef="ipMode">
           <mcs-header-cell *mcsHeaderCellDef hidden-small>
-            {{ textContent.columnHeaders.ipMode }}
+            {{ 'serverNics.columnHeaders.ipMode' | translate }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
             <span [innerHTML]="row.ipAllocationModeLabel | mcsDataLabel"></span>
@@ -69,7 +69,7 @@
         <!-- IP Addresses Column -->
         <ng-container mcsColumnDef="ipAddresses">
           <mcs-header-cell *mcsHeaderCellDef>
-            {{ textContent.columnHeaders.ipAddresses }}
+            {{ 'serverNics.columnHeaders.ipAddresses' | translate }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
             <mcs-list spacing="none">
@@ -93,7 +93,7 @@
                     mcsEventTracker="edit-nic"
                     mcsEventCategory="server"
                     mcsEventLabel="server-details-page">
-                  {{ textContent.editLink }}
+                  {{ 'serverNics.editLink' | translate }}
                 </a>
               </span>
               <span>
@@ -104,7 +104,7 @@
                   mcsEventTracker="delete-nic"
                   mcsEventCategory="server"
                   mcsEventLabel="server-details-page">
-                  {{ textContent.deleteLink }}
+                  {{ 'serverNics.deleteLink' | translate }}
                 </a>
               </span>
             </mcs-item>
@@ -114,10 +114,10 @@
         <!-- Data Status Integration -->
         <ng-container mcsDataStatusDef>
           <mcs-data-empty *mcsDataEmptyDef>
-            <span>{{ textContent.noNics }} </span>
+            <span>{{ 'serverNics.noNics' | translate }} </span>
           </mcs-data-empty>
           <mcs-data-error *mcsDataErrorDef>
-            <span>{{ textContent.errorGettingNics }}</span>
+            <span>{{ 'serverNics.errorGettingNics' | translate }}</span>
           </mcs-data-error>
         </ng-container>
 
@@ -139,12 +139,12 @@
               [(selectedNetwork)]="selectedNetwork">
 
               <ng-container mcsManageNetworkHeader>
-                <h2>{{ textContent.addHeading }}</h2>
+                <h2>{{ 'serverNics.addHeading' | translate }}</h2>
               </ng-container>
 
               <ng-container mcsManageNetworkWarning>
                 <mcs-data-status-warning>
-                  {{ textContent.warningEditingNic }}
+                  {{ 'serverNics.warningEditingNic' | translate }}
                 </mcs-data-status-warning>
               </ng-container>
             </mcs-server-manage-network>
@@ -158,14 +158,14 @@
                 mcsEventTracker="add-nic"
                 mcsEventCategory="server"
                 mcsEventLabel="server-details-page">
-                {{ textContent.addButton }}
+                {{ 'serverNics.addButton' | translate }}
               </button>
             </div>
           </div>
         </ng-container>
 
         <mcs-data-status-warning *ngIf="hasReachedNicsLimit(serverDetails.server)">
-          <span>{{ textContent.reachedNetworksLimit }}</span>
+          <span>{{ 'serverNics.reachedNetworksLimit' | translate }}</span>
         </mcs-data-status-warning>
       </ng-container>
     </mcs-section>
@@ -182,12 +182,12 @@
             [(selectedNetwork)]="selectedNetwork">
 
             <ng-container mcsManageNetworkHeader>
-              <h2>{{ textContent.editHeading }} {{ selectedNic.index }}</h2>
+              <h2>{{ 'serverNics.editHeading' | translate }} {{ selectedNic.index }}</h2>
             </ng-container>
 
             <ng-container mcsManageNetworkWarning>
               <mcs-data-status-warning>
-                {{ textContent.warningEditingNic }}
+                {{ 'serverNics.warningEditingNic' | translate }}
               </mcs-data-status-warning>
             </ng-container>
           </mcs-server-manage-network>
@@ -206,7 +206,7 @@
               mcsEventTracker="update-nic"
               mcsEventCategory="server"
               mcsEventLabel="server-details-page">
-              {{ textContent.updateButton }}
+              {{ 'serverNics.updateButton' | translate }}
             </button>
           </div>
         </div>

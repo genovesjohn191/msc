@@ -5,7 +5,6 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef
 } from '@angular/core';
-import { McsTextContentProvider } from '@app/core';
 import { MediumService } from '../medium.service';
 import { MediumDetailsBase } from '../medium-details.base';
 
@@ -16,18 +15,15 @@ import { MediumDetailsBase } from '../medium-details.base';
 })
 
 export class MediumOverviewComponent extends MediumDetailsBase implements OnInit, OnDestroy {
-  public textContent: any;
 
   constructor(
     _mediumService: MediumService,
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _textContentProvider: McsTextContentProvider,
+    private _changeDetectorRef: ChangeDetectorRef
   ) {
     super(_mediumService);
   }
 
   public ngOnInit() {
-    this.textContent = this._textContentProvider.content.media.medium.overview;
     super.initializeBase();
   }
 

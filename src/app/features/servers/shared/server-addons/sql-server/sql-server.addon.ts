@@ -8,7 +8,6 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { McsTextContentProvider } from '@app/core';
 import {
   unsubscribeSafely,
   isNullOrEmpty
@@ -28,7 +27,6 @@ import { ServerSql } from './server-sql';
 })
 
 export class SqlServerAddOnComponent implements OnInit, OnDestroy {
-  public textContent: any;
   public sqlServerOptions: McsServerSqlOptions;
   public sqlServer: ServerSql;
   public sqlServerVersions: string[];
@@ -44,10 +42,7 @@ export class SqlServerAddOnComponent implements OnInit, OnDestroy {
 
   private _sqlServerOptionsSubscription: Subscription;
 
-  public constructor(
-    private _textProvider: McsTextContentProvider,
-    private _optionsApiService: OptionsApiService
-  ) {
+  public constructor(private _optionsApiService: OptionsApiService) {
     this.sqlServerOptions = new McsServerSqlOptions();
     this.sqlServerVersions = new Array();
     this.sqlServerEditions = new Array();
@@ -56,7 +51,6 @@ export class SqlServerAddOnComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
-    this.textContent = this._textProvider.content.servers.shared.sqlServerAddOn;
     this._getSqlServerOptions();
   }
 

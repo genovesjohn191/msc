@@ -50,10 +50,6 @@ describe('FirewallComponent', () => {
 
   /** Test Implementation */
   describe('ngOnInit()', () => {
-    it('should define the text content value to firewallTextContent', () => {
-      expect(component.firewallTextContent).toBeDefined();
-    });
-
     it('should set the firewall listsource', () => {
       expect(component.firewallsListSource).toBeDefined();
     });

@@ -1,13 +1,11 @@
 import {
   Component,
   Input,
-  OnInit,
   ChangeDetectionStrategy,
   ViewEncapsulation
 } from '@angular/core';
-import { McsTextContentProvider } from '@app/core';
+import { TranslateService } from '@ngx-translate/core';
 import {
-  replacePlaceholder,
   McsFieldHintType,
   isNullOrEmpty
 } from '@app/utilities';
@@ -22,9 +20,7 @@ import {
   }
 })
 
-export class HintMessageComponent implements OnInit {
-
-  public textContent: any;
+export class HintMessageComponent {
 
   @Input()
   public type: McsFieldHintType;
@@ -42,15 +38,9 @@ export class HintMessageComponent implements OnInit {
    * Returns the maximum character text content
    */
   public get convertedTextContent(): string {
-    return replacePlaceholder(
-      this.textContent[this.typeString],
-      'value', this.valueString.toString()
-    );
+    let translateKey = 'shared.formField.hints.' + this.typeString;
+    return this._translateService.instant(translateKey, { 'value': this.valueString.toString() });
   }
 
-  constructor(private _textContentProvider: McsTextContentProvider) { }
-
-  public ngOnInit(): void {
-    this.textContent = this._textContentProvider.content.shared.formField.hints;
-  }
+  constructor(private _translateService: TranslateService) { }
 }

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 import { IconModule } from '../icon/icon.module';
 import { LoaderModule } from '../loader/loader.module';
 import { DirectivesModule } from '../directives/directives.module';
@@ -22,6 +23,7 @@ import {
   ],
   imports: [
     CommonModule,
+    TranslateModule,
     IconModule,
     LoaderModule,
     DirectivesModule,

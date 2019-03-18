@@ -21,17 +21,17 @@
     <div *ngIf="!disableDynamicIp">
       <a *ngIf="inputManageType === inputManageTypeEnum.Custom" mcsId
         (click)="onChangeInputManageType(inputManageTypeEnum.Auto)">
-        {{ textContent.buttonSwitch }}</a>
+        {{ 'serverShared.manageNetwork.buttonSwitch' | translate }}</a>
       <a *ngIf="inputManageType === inputManageTypeEnum.Auto" mcsId
         (click)="onChangeInputManageType(inputManageTypeEnum.Custom)">
-        {{ textContent.customSwitch }}</a>
+        {{ 'serverShared.manageNetwork.customSwitch' | translate }}</a>
     </div>
   </mcs-item>
 
   <div [ngSwitch]="inputManageType">
     <!-- Ip address DHCP Mode -->
     <mcs-section [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Auto">
-      <div>{{ textContent.buttonMessage }}</div>
+      <div>{{ 'serverShared.manageNetwork.buttonMessage' | translate }}</div>
 
       <mcs-radio-button-group orientation="vertical" [formControl]="fcIpAllocationMode">
         <mcs-radio-button *ngFor="let item of ipAddressItems" [value]="item.value" mcsId>
@@ -44,21 +44,21 @@
 
     <!-- IP address custom mode -->
     <mcs-section [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Custom">
-      <div>{{ textContent.customMessage }}</div>
+      <div>{{ 'serverShared.manageNetwork.customMessage' | translate }}</div>
 
       <mcs-item orientation="block">
         <span read-only *ngIf="netMask">
-          {{ textContent.hints.ipRange }}: {{ netMask.first }} - {{ netMask.last }}
+          {{ 'serverShared.manageNetwork.hints.ipRange' | translate }}: {{ netMask.first }} - {{ netMask.last }}
         </span>
         <mcs-form-field class="form-field-size-medium">
           <input mcsInput placeholder="Enter IP Address" #customInput
             mcsId="input-ipaddress" [formControl]="fcCustomIpAddress">
 
           <mcs-error mcsError errorState="required">
-            {{ textContent.errors.ipAddressRequired }}
+            {{ 'serverShared.manageNetwork.errors.ipAddressRequired' | translate }}
           </mcs-error>
           <mcs-error mcsError errorState="ipAddress">
-            {{ textContent.errors.ipAddressInvalid }}
+            {{ 'serverShared.manageNetwork.errors.ipAddressInvalid' | translate }}
           </mcs-error>
           <mcs-error mcsError errorState="ipRange">
             {{ ipRangeErrorText }}
@@ -70,11 +70,11 @@
         *ngIf="isIpAddressInUsed(customInput?.value)">
         <mcs-data-status-success mcsDataSuccess display-inline-block>
           <mcs-data-status-warning [@fadeInOut]>
-            <span [innerHTML]="textContent.inUsedEnteredIpMessage | mcsNewLines"></span>
+            <span [innerHTML]="('serverShared.manageNetwork.inUsedEnteredIpMessage' | translate)  | mcsNewLines"></span>
           </mcs-data-status-warning>
         </mcs-data-status-success>
         <mcs-data-status-in-progress mcsDataInProgress>
-          <span>{{ textContent.loadingIpInUsed }}</span>
+          <span>{{ 'serverShared.manageNetwork.loadingIpInUsed' | translate }}</span>
         </mcs-data-status-in-progress>
       </mcs-data-status>
     </mcs-section>

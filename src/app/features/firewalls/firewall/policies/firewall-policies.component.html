@@ -1,6 +1,6 @@
 <mcs-presentation-panel>
   <ng-container mcsPresentationPanelHeader>
-    <h2>{{ textContent.header }}</h2>
+    <h2>{{ 'firewall.policies.header' | translate }}</h2>
   </ng-container>
 
   <ng-container [ngSwitch]="firewallPoliciesMode">
@@ -26,7 +26,7 @@
 
           <div mcsAlign="end" hidden-small>
             <span> {{ dataSource?.totalRecordsCount | mcsPlural:
-               textContent.dataSingular : textContent.dataPlural }}
+               ('firewall.policies.dataSingular' | translate) : ('firewall.policies.dataPlural' | translate) }}
             </span>
           </div>
         </mcs-item>
@@ -189,16 +189,16 @@
           <!-- Data Status Integration -->
           <ng-container mcsDataStatusDef>
             <mcs-data-empty *mcsDataEmptyDef>
-              <span>{{ textContent.noPolicies }}</span>
+              <span>{{ 'firewall.policies.noPolicies' | translate }}</span>
             </mcs-data-empty>
             <mcs-data-error *mcsDataErrorDef>
               <div class="data-error">
-                <span>{{ textContent.errorMessage }}</span>
+                <span>{{ 'firewall.policies.errorMessage' | translate }}</span>
                 <a (click)="retryDatasource()"
                   mcsId
                   mcsEventTracker="retry-policies"
                   mcsEventCategory="firewall"
-                  mcsEventLabel="firewall-details-page">{{ textContent.retry }}</a>.
+                  mcsEventLabel="firewall-details-page">{{ 'firewall.policies.retry' | translate }}</a>.
               </div>
             </mcs-data-error>
           </ng-container>

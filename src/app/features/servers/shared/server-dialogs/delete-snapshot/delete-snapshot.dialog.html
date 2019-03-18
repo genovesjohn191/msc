@@ -7,8 +7,8 @@
     <mcs-item>
       <mcs-icon [key]="warningIconKey"></mcs-icon>
       <mcs-section>
-        <span>{{ textContent.alert }}</span>
-        <span>{{ textContent.confirmation }}</span>
+        <span>{{ 'serverShared.dialogDeleteSnapshot.alert' | translate }}</span>
+        <span>{{ 'serverShared.dialogDeleteSnapshot.confirmation' | translate }}</span>
       </mcs-section>
     </mcs-item>
   </mcs-dialog-content>
@@ -18,7 +18,7 @@
       (click)="closeDialog()"
       mcsEventTracker="cancel"
       mcsEventCategory="server"
-      mcsEventLabel="delete-snapshot-dialog">{{ textContent.cancel }}</a>
+      mcsEventLabel="delete-snapshot-dialog">{{ 'serverShared.dialogDeleteSnapshot.cancel' | translate }}</a>
     <button mcsButton
       id="ctaDeleteSnapshot"
       arrow="right"
@@ -28,7 +28,7 @@
       mcsEventTracker="confirm"
       mcsEventCategory="server"
       mcsEventLabel="delete-snapshot-dialog">
-      {{ textContent.confirm }}
+      {{ 'serverShared.dialogDeleteSnapshot.confirm' | translate }}
     </button>
   </mcs-dialog-actions>
 </mcs-dialog>

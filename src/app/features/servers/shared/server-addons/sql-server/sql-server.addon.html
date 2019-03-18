@@ -1,8 +1,8 @@
 <mcs-item>
-  <span>{{ textContent.version.label }}:</span>
+  <span>{{ 'serverShared.addOnSqlServer.version.label' | translate }}:</span>
   <mcs-select [(ngModel)]="selectedSqlServerVersion"
     (change)="onVersionChanged()"
-    [placeholder]="textContent.version.placeholder"
+    [placeholder]="'serverShared.addOnSqlServer.version.placeholder' | translate"
     class="form-field-size-small">
     <mcs-option *ngFor="let version of sqlServerVersions" [value]="version">
       {{ version }}
@@ -11,10 +11,10 @@
 </mcs-item>
 
 <mcs-item>
-  <span>{{ textContent.edition.label }}:</span>
+  <span>{{ 'serverShared.addOnSqlServer.edition.label' | translate }}:</span>
   <mcs-select [(ngModel)]="selectedSqlServerEdition"
     (change)="onEditionChanged()"
-    [placeholder]="textContent.edition.placeholder"
+    [placeholder]="'serverShared.addOnSqlServer.edition.placeholder' | translate"
     class="form-field-size-small">
     <ng-container *ngFor="let edition of sqlServerEditions">
       <mcs-option *ngIf="isOptionIncluded(edition)" [value]="edition">
@@ -25,10 +25,10 @@
 </mcs-item>
 
 <mcs-item>
-  <span>{{ textContent.architecture.label }}:</span>
+  <span>{{ 'serverShared.addOnSqlServer.architecture.label' | translate }}:</span>
   <mcs-select [(ngModel)]="selectedSqlServerArchitecture"
     (change)="onArchitectureChanged()"
-    [placeholder]="textContent.architecture.placeholder"
+    [placeholder]="'serverShared.addOnSqlServer.architecture.placeholder' | translate"
     class="form-field-size-small">
     <mcs-option
       *ngFor="let architecture of sqlServerArchitectures"

@@ -6,7 +6,6 @@ import {
 import {
   MCS_DIALOG_DATA,
   McsDialogRef,
-  McsTextContentProvider,
   CoreDefinition
 } from '@app/core';
 import { ServerSnapshotDialogContent } from '../../server-snapshot-dialog-content';
@@ -21,16 +20,12 @@ import { ServerSnapshotDialogContent } from '../../server-snapshot-dialog-conten
 })
 
 export class DiskConflictSnapshotDialogComponent {
-  public textContent: any;
   public dialogModel: ServerSnapshotDialogContent;
 
   constructor(
-    private _textContentProvider: McsTextContentProvider,
     public dialogRef: McsDialogRef<DiskConflictSnapshotDialogComponent>,
     @Inject(MCS_DIALOG_DATA) public dialogData
   ) {
-    this.textContent =
-      this._textContentProvider.content.servers.shared.diskConflictSnapshotDialog;
     this.dialogModel = this.dialogData as ServerSnapshotDialogContent[][0];
   }
 

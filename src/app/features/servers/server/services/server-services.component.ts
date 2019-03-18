@@ -1,10 +1,10 @@
 import {
   Component,
   ChangeDetectorRef,
-  OnInit,
   OnDestroy,
   ViewChild
 } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import {
   Subject,
   Observable,
@@ -18,7 +18,6 @@ import {
   concatMap
 } from 'rxjs/operators';
 import {
-  McsTextContentProvider,
   McsErrorHandlerService,
   McsLoadingService,
   CoreDefinition,
@@ -67,8 +66,7 @@ const OS_UPDATE_DATEFORMAT = "EEEE, d MMMM, yyyy 'at' h:mm a";
     animateFactory.fadeIn
   ]
 })
-export class ServerServicesComponent extends ServerDetailsBase implements OnInit, OnDestroy {
-  public textContent: any;
+export class ServerServicesComponent extends ServerDetailsBase implements OnDestroy {
   public serverServicesView: ServerServicesView;
   public updateStatusConfiguration: OsUpdatesStatusConfiguration;
   public updatesDetails$: Observable<McsServerOsUpdatesDetails>;
@@ -106,8 +104,8 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
    */
   public get updatesScheduleLabel(): string {
     return this.updateStatusConfiguration.hasSchedule ?
-      this.textContent.updatesScheduleLabel.scheduled :
-      this.textContent.updatesScheduleLabel.unscheduled;
+      this._translateService.instant('serverServices.updatesScheduleLabel.scheduled') :
+      this._translateService.instant('serverServices.updatesScheduleLabel.unscheduled');
   }
 
   /**
@@ -166,13 +164,13 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
     _resourcesRepository: McsResourcesRepository,
     _serversRepository: McsServersRepository,
     _serverService: ServerService,
-    _textProvider: McsTextContentProvider,
     _errorHandlerService: McsErrorHandlerService,
     _loadingService: McsLoadingService,
     protected _accessControlService: McsAccessControlService,
     protected _changeDetectorRef: ChangeDetectorRef,
     private _dateTimeService: McsDateTimeService,
     private _serversService: ServersService,
+    private _translateService: TranslateService,
     private _notificationEvents: McsNotificationEventsService
   ) {
     super(
@@ -180,17 +178,12 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
       _serversRepository,
       _serverService,
       _changeDetectorRef,
-      _textProvider,
       _errorHandlerService,
       _loadingService,
       _accessControlService
     );
     this.dataStatusFactory = new McsDataStatusFactory();
     this.updateStatusConfiguration = new OsUpdatesStatusConfiguration();
-  }
-
-  public ngOnInit() {
-    this.textContent = this._textProvider.content.servers.server.services;
   }
 
   public ngOnDestroy() {
@@ -410,7 +403,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
           this._serversService.clearServerSpinner(server);
           this._formMessage.showMessage('error', {
             messages: httpError.errorMessages,
-            fallbackMessage: this.textContent.updateErrorMessage
+            fallbackMessage: this._translateService.instant('serverServices.updateErrorMessage')
           });
           return throwError(httpError);
         }),
@@ -419,7 +412,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
             tap(() => {
               this._serversService.clearServerSpinner(server);
               this._formMessage.showMessage('success', {
-                messages: this.textContent.updateSuccessMessage
+                messages: this._translateService.instant('serverServices.updateSuccessMessage')
               });
             })
           );
@@ -439,14 +432,14 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
         this._serversService.clearServerSpinner(server);
         this._formMessage.showMessage('error', {
           messages: httpError.errorMessages,
-          fallbackMessage: this.textContent.deleteErrorMessage
+          fallbackMessage: this._translateService.instant('serverServices.deleteErrorMessage')
         });
         return throwError(httpError);
       }),
       tap(() => {
         this._serversService.clearServerSpinner(server);
         this._formMessage.showMessage('success', {
-          messages: this.textContent.deleteSuccessMessage
+          messages: this._translateService.instant('serverServices.deleteSuccessMessage')
         });
       })
     );

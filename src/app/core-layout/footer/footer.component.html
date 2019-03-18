@@ -1,25 +1,25 @@
 <footer class="dark">
   <div class="footer-container">
     <div class="copyright">
-      <span>&copy; {{ footerTextContent.copyright }}</span>
-      <span>{{ this.currentDate.getFullYear() }}</span>
-      <span>{{ footerTextContent.company }}</span>
+      <span>&copy; {{ 'footer.copyright' | translate }}</span>
+      <span>{{ currentDate.getFullYear() }}</span>
+      <span>{{ 'footer.company' | translate }}</span>
     </div>
     <div class="links">
       <ul class="unstyled-list">
         <li>
           <a href="#">
-            {{ links.privacyPolicy }}
+            {{ 'footer.links.privacyPolicy' | translate }}
           </a>
         </li>
         <li>
           <a href="#">
-            {{ links.termsOfUse }}
+            {{ 'footer.links.termsOfUse' | translate }}
           </a>
         </li>
         <li>
           <a href="#">
-            {{ links.serviceAgreement }}
+            {{ 'footer.links.serviceAgreement' | translate }}
           </a>
         </li>
       </ul>

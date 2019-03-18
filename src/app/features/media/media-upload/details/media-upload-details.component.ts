@@ -24,7 +24,6 @@ import {
   shareReplay
 } from 'rxjs/operators';
 import {
-  McsTextContentProvider,
   CoreValidators,
   CoreDefinition,
   McsErrorHandlerService,
@@ -52,6 +51,7 @@ import {
   FormMessage
 } from '@app/shared';
 import { MediaUploadService } from '../media-upload.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'mcs-media-upload-details',
@@ -61,7 +61,6 @@ import { MediaUploadService } from '../media-upload.service';
 export class MediaUploadDetailsComponent
   implements McsSafeToNavigateAway, OnInit, OnDestroy {
 
-  public textContent: any;
   public resources$: Observable<McsResource[]>;
   public selectedCatalog$: BehaviorSubject<McsResourceCatalogItem>;
   public selectedResource$: Observable<McsResource>;
@@ -96,7 +95,7 @@ export class MediaUploadDetailsComponent
   constructor(
     private _elementRef: ElementRef,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _textContentProvider: McsTextContentProvider,
+    private _translateService: TranslateService,
     private _formGroupService: McsFormGroupService,
     private _loadingService: McsLoadingService,
     private _errorHandlerService: McsErrorHandlerService,
@@ -107,7 +106,6 @@ export class MediaUploadDetailsComponent
   }
 
   public ngOnInit() {
-    this.textContent = this._textContentProvider.content.mediaUpload.mediaStepDetails;
     this._registerFormGroup();
     this._subscribeToResourcesDataChange();
     this._subsribeToResources();
@@ -203,9 +201,12 @@ export class MediaUploadDetailsComponent
       uploadMediaModel
     ).pipe(
       catchError((httpError) => {
+        let fallbackMessage = this._translateService.instant(
+          'mediaUpload.mediaStepDetails.errors.mediaUploadError'
+        );
         this._formMessage.showMessage('error', {
           messages: httpError.errorMessages,
-          fallbackMessage: this.textContent.errors.mediaUploadError
+          fallbackMessage
         });
         return throwError(httpError);
       }),
@@ -218,7 +219,9 @@ export class MediaUploadDetailsComponent
    * Subscribes to all the resources on the repository
    */
   private _subsribeToResources(): void {
-    this._loadingService.showLoader(this.textContent.loadingResources);
+    this._loadingService.showLoader(
+      this._translateService.instant('mediaUpload.mediaStepDetails.loadingResources')
+    );
     this.resources$ = this._resourcesRepository.getAll()
       .pipe(
         catchError((error) => {
@@ -234,7 +237,9 @@ export class MediaUploadDetailsComponent
    * @param resourceId Resource id to be find in the resources
    */
   private _subscribeToResourceById(resourceId: string): void {
-    this._loadingService.showLoader(this.textContent.loadingResourceDetails);
+    this._loadingService.showLoader(
+      this._translateService.instant('mediaUpload.mediaStepDetails.loadingResourceDetails')
+    );
     this.selectedResource$ = this._resourcesRepository.getById(resourceId).pipe(
       shareReplay(1),
       catchError((error) => {

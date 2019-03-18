@@ -12,7 +12,6 @@ import {
   concatMap
 } from 'rxjs/operators';
 import {
-  McsTextContentProvider,
   McsErrorHandlerService,
   McsLoadingService,
   McsAccessControlService,
@@ -52,7 +51,6 @@ export abstract class ServerDetailsBase {
     protected _serversRepository: McsServersRepository,
     protected _serverService: ServerService,
     protected _changeDetectorRef: ChangeDetectorRef,
-    protected _textProvider: McsTextContentProvider,
     protected _errorHandlerService: McsErrorHandlerService,
     protected _loadingService: McsLoadingService,
     protected _accessControlService: McsAccessControlService

@@ -1,6 +1,5 @@
 import {
   Component,
-  OnInit,
   OnChanges,
   OnDestroy,
   Input,
@@ -9,7 +8,6 @@ import {
   Output,
   SimpleChanges
 } from '@angular/core';
-import { McsTextContentProvider } from '@app/core';
 import {
   isNullOrEmpty,
   animateFactory,
@@ -26,8 +24,7 @@ import { McsResourceCatalogItem } from '@app/models';
   ]
 })
 
-export class ServerManageMediaComponent implements OnInit, OnChanges, OnDestroy {
-  public textContent: any;
+export class ServerManageMediaComponent implements OnChanges, OnDestroy {
 
   @Output()
   public selectedCatalogChange = new EventEmitter<McsResourceCatalogItem>();
@@ -44,12 +41,6 @@ export class ServerManageMediaComponent implements OnInit, OnChanges, OnDestroy 
     }
   }
   private _selectedCatalog: McsResourceCatalogItem;
-
-  constructor(private _textContentProvider: McsTextContentProvider) { }
-
-  public ngOnInit() {
-    this.textContent = this._textContentProvider.content.servers.shared.manageMedia;
-  }
 
   public ngOnChanges(changes: SimpleChanges) {
     let mediasChange = changes['medias'];

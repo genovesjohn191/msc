@@ -3,16 +3,13 @@ import {
   Inject,
   ViewEncapsulation
 } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import {
   MCS_DIALOG_DATA,
   McsDialogRef,
-  CoreDefinition,
-  McsTextContentProvider
+  CoreDefinition
 } from '@app/core';
-import {
-  isNullOrEmpty,
-  replacePlaceholder
-} from '@app/utilities';
+import { isNullOrEmpty } from '@app/utilities';
 import {
   McsServer,
   VmPowerState
@@ -28,7 +25,6 @@ import {
 })
 
 export class ResetPasswordDialogComponent {
-  public textContent: any;
   public server: McsServer;
 
   public get powerStateEnum(): any {
@@ -40,11 +36,10 @@ export class ResetPasswordDialogComponent {
   }
 
   constructor(
-    private _textContentProvider: McsTextContentProvider,
+    private _translateService: TranslateService,
     public dialogRef: McsDialogRef<ResetPasswordDialogComponent>,
     @Inject(MCS_DIALOG_DATA) public dialogData
   ) {
-    this.textContent = this._textContentProvider.content.servers.shared.resetPasswordDialog;
     this.server = this.dialogData as McsServer[][0];
   }
 
@@ -67,10 +62,10 @@ export class ResetPasswordDialogComponent {
    */
   public getPoweredOnInfo(): string {
     if (isNullOrEmpty(this.server)) { return ''; }
-    return replacePlaceholder(
-      this.textContent.poweredOnInfo,
-      'server_name',
-      this.server.name
+
+    return this._translateService.instant(
+      'serverShared.dialogResetPassword.poweredOnInfo',
+      { server_name: this.server.name }
     );
   }
 
@@ -79,10 +74,10 @@ export class ResetPasswordDialogComponent {
    */
   public getPoweredOffInfo(): string {
     if (isNullOrEmpty(this.server)) { return ''; }
-    return replacePlaceholder(
-      this.textContent.poweredOffInfo,
-      'server_name',
-      this.server.name
+
+    return this._translateService.instant(
+      'serverShared.dialogResetPassword.poweredOffInfo',
+      { server_name: this.server.name }
     );
   }
 }

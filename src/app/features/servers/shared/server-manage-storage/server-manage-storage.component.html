@@ -5,10 +5,10 @@
     <div>
       <a *ngIf="inputManageType === inputManageTypeEnum.Custom" mcsId
         (click)="onChangeInputManageType(inputManageTypeEnum.Auto)">
-        {{ textContent.sliderSwitch }}</a>
+        {{ 'serverShared.manageStorage.sliderSwitch' | translate }}</a>
       <a *ngIf="inputManageType === inputManageTypeEnum.Auto" mcsId
         (click)="onChangeInputManageType(inputManageTypeEnum.Custom)">
-        {{ textContent.customSwitch }}</a>
+        {{ 'serverShared.manageStorage.sliderSwitch' | translate }}</a>
     </div>
   </mcs-item>
 
@@ -35,7 +35,7 @@
     <!-- Slider selection mode -->
     <mcs-section [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Auto">
       <div>
-        <span>{{ textContent.sliderMessage }} </span>
+        <span>{{ 'serverShared.manageStorage.sliderMessage' | translate }} </span>
         <span>
           This storage profile has {{ availableMemory | mcsDataSize: 'GB' }} of usable capacity.
         </span>
@@ -53,21 +53,21 @@
 
     <!-- Custom storage mode -->
     <mcs-section [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Custom">
-      <div>{{ textContent.customMessage }}</div>
+      <div>{{ 'serverShared.manageStorage.customMessage' | translate }}</div>
 
       <mcs-form-field class="form-field-size-small">
         <input mcsInput placeholder="Enter storage"
           mcsId="input-storage" [formControl]="fcCustomStorage">
-        <mcs-suffix mcsSuffix>{{ textContent.unit }}</mcs-suffix>
+          <mcs-suffix mcsSuffix>{{ 'serverShared.manageStorage.unit' | translate }}</mcs-suffix>
 
         <mcs-hint mcsHint align="start">
-          {{ textContent.maximumStorage }}: {{ availableMemory | mcsDataSize: 'GB' }}
+            {{ 'serverShared.manageStorage.maximumStorage' | translate }}: {{ availableMemory | mcsDataSize: 'GB' }}
         </mcs-hint>
         <mcs-error mcsError errorState="required">
-          {{ textContent.errors.storageRequired }}
+            {{ 'serverShared.manageStorage.errors.storageRequired' | translate }}
         </mcs-error>
         <mcs-error mcsError errorState="numeric">
-          {{ textContent.errors.storageNumeric }}
+            {{ 'serverShared.manageStorage.errors.storageNumeric' | translate }}
         </mcs-error>
         <mcs-error mcsError errorState="min">
           {{ storageMinValueText }}

@@ -8,33 +8,33 @@
         <mcs-grid-column sizeSm="12">
           <mcs-presentation-panel mcsId="vm-properties">
             <ng-container mcsPresentationPanelHeader>
-              <h2>{{ textContent.vmProperties.title }}</h2>
+              <h2>{{ 'serverManagement.vmProperties.title' | translate }}</h2>
             </ng-container>
 
             <mcs-item>
-              <span>{{ textContent.vmProperties.status }}:</span>
+              <span>{{ 'serverManagement.vmProperties.status' | translate }}:</span>
               <span [innerHTML]="serverDetails.server.statusLabel | mcsDataLabel"></span>
             </mcs-item>
 
             <mcs-item>
-              <span>{{ textContent.vmProperties.image }}:</span>
+              <span>{{ 'serverManagement.vmProperties.image' | translate }}:</span>
               <span [innerHTML]="serverDetails.server.operatingSystem?.guestOs | mcsDataLabel"></span>
             </mcs-item>
 
             <mcs-item>
-              <span>{{ textContent.vmProperties.zone }}:</span>
+              <span>{{ 'serverManagement.vmProperties.zone' | translate }}:</span>
               <span [innerHTML]="serverDetails.server.availabilityZone | mcsDataLabel"></span>
             </mcs-item>
 
             <mcs-item>
-              <span>{{ textContent.vmProperties.configuration }}:</span>
+              <span>{{ 'serverManagement.vmProperties.configuration' | translate }}:</span>
               <span>{{ serverDetails.server.compute?.memoryMB | mcsDataSize: 'MB' }}</span>
               <span> / </span>
               <span>{{ serverDetails.server.compute?.cpuCount | number }} vCPU</span>
               <ng-container *mcsAccessControl="serverPermision.vmEdit">
                 <ng-container *ngIf="serverDetails.server.scaleable">
                   <mcs-loader *ngIf="scaleInProgress" size="small"
-                    [mcsTooltip]="textContent.manageScale.scaling"></mcs-loader>
+                    [mcsTooltip]="'serverManagement.manageScale.scaling' | translate"></mcs-loader>
                   <a *ngIf="!scaleInProgress"
                     (click)="setViewMode(serverManagementViewEnum.ManageScale)"
                     mcsId
@@ -42,26 +42,26 @@
                     mcsEventCategory="server"
                     mcsEventLabel="server-details-page"
                     [disabled]="!serverDetails.server.executable">
-                    {{ textContent.manageScale.scale }}</a>
+                    {{ 'serverManagement.manageScale.scale' | translate }}</a>
                 </ng-container>
               </ng-container>
             </mcs-item>
 
             <mcs-item>
-              <span>{{ textContent.vmProperties.vmwareTools }}:</span>
+              <span>{{ 'serverManagement.vmProperties.vmwareTools' | translate }}:</span>
               <ng-container *ngIf="serverDetails.server.vmwareTools?.hasTools; else vmwareTemplate">
                 <span>{{ serverDetails.server.vmwareTools?.version }}</span>
               </ng-container>
 
               <ng-template #vmwareTemplate>
-                <mcs-data-status-empty [mcsTooltip]="serversTextContent.toolsUnavailable">
-                  {{ serversTextContent.toolsNotInstalled }}
+                <mcs-data-status-empty [mcsTooltip]="'servers.toolsUnavailable' | translate">
+                  {{ 'servers.toolsNotInstalled' | translate }}
                 </mcs-data-status-empty>
               </ng-template>
             </mcs-item>
 
             <mcs-item *ngIf="serverDetails.server.vApp && !serverDetails.server.isDedicated">
-              <span>{{ textContent.vmProperties.vApp }}:</span>
+              <span>{{ 'serverManagement.vmProperties.vApp' | translate }}:</span>
               <span [innerHTML]="serverDetails.server.vApp"></span>
             </mcs-item>
           </mcs-presentation-panel>
@@ -74,7 +74,7 @@
 
           <mcs-presentation-panel mcsId="vm-console">
             <ng-container mcsPresentationPanelHeader>
-              <h2>{{ textContent.vmConsole.title }}</h2>
+              <h2>{{ 'serverManagement.vmConsole.title' | translate }}</h2>
             </ng-container>
 
             <ng-container *ngIf="!serverDetails.server.consoleEnabled; else consoleTemplate">
@@ -84,10 +84,10 @@
                 </div>
                 <div read-only>
                   <span *ngIf="serverDetails.server.isPoweredOff">
-                    {{ textContent.vmConsole.serverPoweredOff }}
+                    {{ 'serverManagement.vmConsole.serverPoweredOff' | translate }}
                   </span>
                   <span *ngIf="serverDetails.server.isSuspended">
-                    {{ textContent.vmConsole.serverSuspended }}
+                    {{ 'serverManagement.vmConsole.serverSuspended' | translate }}
                   </span>
                 </div>
               </mcs-item>
@@ -104,7 +104,7 @@
                 <div class="image-thumbnail dark" mcsCursor="pointer">
                   <img display-block full-width [attr.src]="serverThumbnail$ | async"/>
                 </div>
-                <a>{{ textContent.vmConsole.link }}</a>
+                <a>{{ 'serverManagement.vmConsole.link' | translate }}</a>
               </div>
             </ng-template>
           </mcs-presentation-panel>
@@ -117,7 +117,7 @@
           <mcs-presentation-panel mcsId="vm-storage">
             <ng-container mcsPresentationPanelHeader>
               <mcs-item>
-                <h2>{{ textContent.storage.title }}</h2>
+                <h2>{{ 'serverManagement.storage.title' | translate }}</h2>
                 <ng-container *mcsAccessControl="serverPermision.vmEdit">
                   <a *ngIf="!serverDetails.server.isDedicated"
                     [disabled]="!serverDetails.server.executable"
@@ -126,7 +126,7 @@
                     mcsEventTracker="manage-storage"
                     mcsEventCategory="server"
                     mcsEventLabel="server-details-page">
-                    {{ textContent.storage.manage }}
+                    {{ 'serverManagement.storage.manage' | translate }}
                   </a>
                 </ng-container>
               </mcs-item>
@@ -145,7 +145,7 @@
 
             <ng-template #noDisks>
               <mcs-data-status-empty>
-                {{ textContent.storage.noContentMessage }}
+                {{ 'serverManagement.storage.noContentMessage' | translate }}
               </mcs-data-status-empty>
             </ng-template>
           </mcs-presentation-panel>
@@ -156,7 +156,7 @@
           <mcs-presentation-panel mcsId="vm-nics">
             <ng-container mcsPresentationPanelHeader>
               <mcs-item>
-                <h2>{{ textContent.nics.title }}</h2>
+                <h2>{{ 'serverManagement.nics.title' | translate }}</h2>
                 <ng-container *mcsAccessControl="serverPermision.vmNicEdit">
                   <a *ngIf="!serverDetails.server.isDedicated"
                     [disabled]="!serverDetails.server.executable"
@@ -165,7 +165,7 @@
                     mcsEventTracker="manage-nics"
                     mcsEventCategory="server"
                     mcsEventLabel="server-details-page">
-                    {{ textContent.nics.manage }}
+                    {{ 'serverManagement.nics.manage' | translate }}
                   </a>
                 </ng-container>
               </mcs-item>
@@ -177,15 +177,15 @@
                   [expanded]="i === 0">
                   <mcs-accordion-panel-header mcsPanelHeaderDef>
                     <span>{{ nic.name }}</span>
-                    <span *ngIf="nic.isPrimary">({{ textContent.nics.primary }})</span>
+                    <span *ngIf="nic.isPrimary">({{ 'serverManagement.nics.primary' | translate }})</span>
                   </mcs-accordion-panel-header>
 
                   <mcs-item>
-                    <span>{{ textContent.nics.ipAllocationMode }}:</span>
+                    <span>{{ 'serverManagement.nics.ipAllocationMode' | translate }}:</span>
                     <span>{{ nic.ipAllocationModeLabel }}</span>
                   </mcs-item>
                   <mcs-item>
-                    <span>{{ textContent.nics.ipAddresses }}:</span>
+                    <span>{{ 'serverManagement.nics.ipAddresses' | translate }}:</span>
                     <ng-container *ngIf="nic.logicalIpAddresses; else noIpAddressTemplate">
                       <mcs-list spacing="auto">
                         <mcs-list-item *ngFor="let item of nic.logicalIpAddresses">
@@ -197,10 +197,10 @@
                     <ng-template #noIpAddressTemplate>
                       <span read-only [ngSwitch]="nic?.ipAllocationMode">
                         <ng-container *ngSwitchCase="ipAllocationModeEnum.Dhcp">
-                          {{ textContent.nics.dhcpLabel }}
+                          {{ 'serverManagement.nics.dhcpLabel' | translate }}
                         </ng-container>
                         <ng-container *ngSwitchDefault>
-                          {{ textContent.nics.staticLabel }}
+                          {{ 'serverManagement.nics.staticLabel' | translate }}
                         </ng-container>
                       </span>
                     </ng-template>
@@ -211,7 +211,7 @@
 
             <ng-template #noContentMessage>
               <mcs-data-status-empty>
-                {{ textContent.nics.noContentMessage }}
+                {{ 'serverManagement.nics.noContentMessage' | translate }}
               </mcs-data-status-empty>
             </ng-template>
           </mcs-presentation-panel>
@@ -228,7 +228,7 @@
           <mcs-presentation-panel mcsId="vm-media">
             <ng-container mcsPresentationPanelHeader>
               <mcs-item>
-                <h2>{{ textContent.media.title }}</h2>
+                <h2>{{ 'serverManagement.media.title' | translate }}</h2>
                 <ng-container *mcsAccessControl="serverPermision.vmEdit">
                   <a (click)="setViewMode(serverManagementViewEnum.ManageMedia)"
                     [disabled]="!serverDetails.server.executable"
@@ -236,7 +236,7 @@
                     mcsEventTracker="attach-media-option"
                     mcsEventCategory="server"
                     mcsEventLabel="server-details-page">
-                    {{ textContent.media.attach }}
+                    {{ 'serverManagement.media.attach' | translate }}
                   </a>
                 </ng-container>
               </mcs-item>
@@ -256,7 +256,7 @@
                         [key]="ejectIconKey" size="small"
                         (click)="showDetachMediaDialog(serverDetails.server, media)"
                         mcsId="show-detach-media"
-                        [mcsTooltip]="textContent.media.detach"
+                        [mcsTooltip]="'serverManagement.media.detach' | translate"
                         mcsEventTracker="detach-media-option"
                         mcsEventCategory="server"
                         mcsEventLabel="server-details-page"></mcs-icon>
@@ -269,7 +269,7 @@
 
             <ng-template #noMediaTemplate>
               <mcs-data-status-empty mcsDataEmpty>
-                <span>{{ textContent.media.noContentMessage }}</span>
+                <span>{{ 'serverManagement.media.noContentMessage' | translate }}</span>
               </mcs-data-status-empty>
             </ng-template>
 
@@ -280,21 +280,21 @@
         <mcs-grid-column sizeSm="12" sizeLg="6">
           <mcs-presentation-panel>
             <ng-container mcsPresentationPanelHeader>
-              <h2>{{ textContent.serviceInformation.title }}</h2>
+              <h2>{{ 'serverManagement.serviceInformation.title' | translate }}</h2>
             </ng-container>
 
             <mcs-item>
-              <span>{{ textContent.serviceInformation.vdc }}:</span>
+              <span>{{ 'serverManagement.serviceInformation.vdc' | translate }}:</span>
               <span [innerHTML]="serverDetails.server.platform?.resourceName | mcsDataLabel"></span>
             </mcs-item>
 
             <mcs-item *ngIf="serverDetails.server.serviceId && !serverDetails.server.isDedicated">
-              <span>{{ textContent.serviceInformation.serviceId }}:</span>
+              <span>{{ 'serverManagement.serviceInformation.serviceId' | translate }}:</span>
               <span>{{ serverDetails.server.serviceId }}</span>
             </mcs-item>
 
             <mcs-item>
-              <span>{{ textContent.serviceInformation.vmWareId }}:</span>
+              <span>{{ 'serverManagement.serviceInformation.vmWareId' | translate }}:</span>
               <span [innerHTML]="serverDetails.server.instanceId | mcsDataLabel"></span>
             </mcs-item>
           </mcs-presentation-panel>
@@ -307,9 +307,9 @@
   <div [@fadeIn] *ngSwitchCase="serverManagementViewEnum.ManageScale">
     <mcs-presentation-panel>
       <ng-container mcsPresentationPanelHeader>
-        <h2>{{ textContent.manageScale.header }}</h2>
+        <h2>{{ 'serverManagement.manageScale.header' | translate }}</h2>
       </ng-container>
-      <p>{{ textContent.manageScale.description }}</p>
+      <p>{{ 'serverManagement.manageScale.description' | translate }}</p>
 
       <div class="action-box" [disabled]="!serverDetails.server.executable">
         <mcs-server-manage-scale [resource]="serverDetails.resource"
@@ -323,7 +323,7 @@
         </mcs-server-manage-scale>
 
         <mcs-data-status-warning *ngIf="serverDetails.server.isPoweredOn">
-          <span>{{ textContent.manageScale.warning }}</span>
+          <span>{{ 'serverManagement.manageScale.warning' | translate }}</span>
         </mcs-data-status-warning>
 
         <div class="action-items">
@@ -332,7 +332,7 @@
             mcsEventTracker="scale-cancel"
             mcsEventCategory="server"
             mcsEventLabel="server-details-page">
-            {{ textContent.manageScale.cancel }}
+            {{ 'serverManagement.manageScale.cancel' | translate }}
           </a>
 
           <button mcsButton
@@ -343,7 +343,7 @@
             mcsEventTracker="scale-option"
             mcsEventCategory="server"
             mcsEventLabel="server-details-page">
-            {{ textContent.manageScale.scale }}
+            {{ 'serverManagement.manageScale.scale' | translate }}
           </button>
         </div>
       </div>
@@ -354,7 +354,7 @@
   <div [@fadeIn] *ngSwitchCase="serverManagementViewEnum.ManageMedia">
     <mcs-presentation-panel>
       <ng-container mcsPresentationPanelHeader>
-        <h2>{{ textContent.media.manageHeader }}</h2>
+        <h2>{{ 'serverManagement.media.manageHeader' | translate }}</h2>
       </ng-container>
 
       <div class="action-box" [disabled]="!serverDetails.server.executable">
@@ -362,7 +362,7 @@
           [(selectedCatalog)]="selectedCatalog">
 
           <ng-container mcsManageMediaHeader>
-            <h2>{{ textContent.media.attachHeading }}</h2>
+            <h2>{{ 'serverManagement.media.attachHeading' | translate }}</h2>
           </ng-container>
         </mcs-server-manage-media>
 
@@ -372,7 +372,7 @@
             mcsEventTracker="attach-media-cancel"
             mcsEventCategory="server"
             mcsEventLabel="server-details-page">
-            {{ textContent.media.cancel }}
+            {{ 'serverManagement.media.cancel' | translate }}
           </a>
 
           <button mcsButton
@@ -383,7 +383,7 @@
             mcsEventTracker="attach-media"
             mcsEventCategory="server"
             mcsEventLabel="server-details-page">
-            {{ textContent.media.attach }}
+            {{ 'serverManagement.media.attach' | translate }}
           </button>
         </div>
       </div>

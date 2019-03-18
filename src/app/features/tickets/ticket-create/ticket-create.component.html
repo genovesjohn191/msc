@@ -1,4 +1,4 @@
-<mcs-page [header]="textContent.header">
+<mcs-page [header]="'ticketCreate.header' | translate">
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef>
     <!-- Server Creation -->
@@ -9,26 +9,26 @@
         mcsEventCategory="ticket"
         mcsEventLabel="create-new-ticket-page">
         <mcs-icon [key]="backIconKey" size="small"></mcs-icon>
-        <span>{{ textContent.backToTickets }}</span>
+        <span>{{ 'ticketCreate.backToTickets' | translate }}</span>
       </mcs-action-item>
     </mcs-top-panel-item>
   </mcs-top-panel>
 
   <!-- Content Panel -->
   <mcs-content-panel *mcsContentPanelDef>
-    <p [innerHTML]="textContent.description | mcsNewLines"></p>
+    <p [innerHTML]="('ticketCreate.description' | translate) | mcsNewLines "></p>
     <div class="contextual-help-page-wrapper limited-view">
       <form [formGroup]="fgCreateTicket" mcsFormGroup>
         <!-- Ticket Type -->
         <mcs-form-field>
           <mcs-select mcsId="select-type" required
-            [placeholder]="textContent.placeholders.type"
+            [placeholder]="'ticketCreate.placeholders.type' | translate"
             [formControl]="fcType"
-            [mcsContextualHelp]="contextualContent.type">
+            [mcsContextualHelp]="'ticketCreate.contextualHelp.type' | translate">
 
             <mcs-option-group>
               <ng-container *mcsOptionGroupHeader>
-                {{ textContent.typeHeader }}
+                {{ 'ticketCreate.typeHeader' | translate }}
               </ng-container>
               <mcs-option *ngFor="let ticketType of ticketTypeList"
                 [value]="ticketType.value">
@@ -38,7 +38,7 @@
           </mcs-select>
 
           <mcs-error mcsError errorState="required">
-            {{ textContent.errors.typeRequired }}
+            {{ 'ticketCreate.errors.typeRequired' | translate }}
           </mcs-error>
         </mcs-form-field>
 
@@ -46,12 +46,12 @@
         <mcs-form-field>
           <input mcsInput mcsSetFocus #referenceInput
             mcsId="input-reference"
-            [placeholder]="textContent.placeholders.reference" maxlength="15"
+            [placeholder]="'ticketCreate.placeholders.reference' | translate" maxlength="15"
             [formControl]="fcReference"
-            [mcsContextualHelp]="contextualContent.reference">
+            [mcsContextualHelp]="'ticketCreate.contextualHelp.reference' | translate">
 
           <mcs-hint mcsHint align="start">
-            {{ convertMaxCharText(textContent.hints.reference, referenceInput.maxLength) }}
+            {{ convertMaxCharText('ticketCreate.hints.reference' | translate, referenceInput.maxLength) }}
           </mcs-hint>
           <mcs-hint mcsHint align="end">
             {{ referenceInput.value.length }} / {{ referenceInput.maxLength }}
@@ -62,18 +62,18 @@
         <mcs-form-field>
           <input mcsInput #summaryInput required
             mcsId="input-summary"
-            [placeholder]="textContent.placeholders.summary" maxlength="80"
+            [placeholder]="'ticketCreate.placeholders.summary' | translate" maxlength="80"
             [formControl]="fcSummary"
-            [mcsContextualHelp]="contextualContent.summary">
+            [mcsContextualHelp]="'ticketCreate.contextualHelp.summary' | translate">
 
           <mcs-hint mcsHint align="start">
-            {{ convertMaxCharText(textContent.hints.summary, summaryInput.maxLength) }}
+            {{ convertMaxCharText('ticketCreate.hints.summary' | translate, summaryInput.maxLength) }}
           </mcs-hint>
           <mcs-hint mcsHint align="end">
             {{ summaryInput.value.length }} / {{ summaryInput.maxLength }}
           </mcs-hint>
           <mcs-error mcsError errorState="required">
-            {{ textContent.errors.summaryRequired }}
+            {{ 'ticketCreate.errors.summaryRequired' | translate }}
           </mcs-error>
         </mcs-form-field>
 
@@ -81,30 +81,30 @@
         <mcs-form-field>
           <textarea mcsInput rows="3" #detailsInput required
             mcsId="input-details"
-            [placeholder]="textContent.placeholders.details" maxlength="4000"
+            [placeholder]="'ticketCreate.placeholders.details' | translate" maxlength="4000"
             [formControl]="fcDetails"
-            [mcsContextualHelp]="contextualContent.details"></textarea>
+            [mcsContextualHelp]="'ticketCreate.contextualHelp.details' | translate"></textarea>
 
           <mcs-hint mcsHint align="start">
-            {{ convertMaxCharText(textContent.hints.details, detailsInput.maxLength) }}
+            {{ convertMaxCharText('ticketCreate.hints.details' | translate, detailsInput.maxLength) }}
           </mcs-hint>
           <mcs-hint mcsHint align="end">
             {{ detailsInput.value.length }} / {{ detailsInput.maxLength }}
           </mcs-hint>
           <mcs-error mcsError errorState="required">
-            {{ textContent.errors.detailsRequired }}
+            {{ 'ticketCreate.errors.detailsRequired' | translate }}
           </mcs-error>
         </mcs-form-field>
 
         <!-- Services -->
         <mcs-section>
-          <h2>{{ textContent.services }}</h2>
+          <h2>{{ 'ticketCreate.services' | translate }}</h2>
           <div>
             <ng-container *ngIf="services">
               <mcs-item>
                 <!-- Tags -->
                 <mcs-form-field full-width no-margin>
-                  <mcs-tag-list [placeholder]="textContent.placeholders.services"
+                  <mcs-tag-list [placeholder]="'ticketCreate.placeholders.services' | translate"
                     mcsId="tag-services"
                     [formControl]="fcService">
 
@@ -116,7 +116,7 @@
                   </mcs-tag-list>
 
                   <mcs-error mcsError errorState="required">
-                    {{ textContent.errors.servicesRequired }}
+                    {{ 'ticketCreate.errors.servicesRequired' | translate }}
                   </mcs-error>
                 </mcs-form-field>
 
@@ -156,11 +156,11 @@
 
       <!-- Attachments -->
       <mcs-section>
-        <h2>{{ textContent.attachments }}</h2>
+        <h2>{{ 'ticketCreate.attachments' | translate }}</h2>
         <mcs-file-attachment attachedLimit="multiple"
           [allowedMimeType]="['image/jpeg', 'image/png', 'image/bmp', 'text/plain']"
           (attachedFilesChanged)="onChangedAttachments($event)"
-          [mcsContextualHelp]="contextualContent.attachments">
+          [mcsContextualHelp]="'ticketCreate.contextualHelp.attachments' | translate">
         </mcs-file-attachment>
       </mcs-section>
 
@@ -170,7 +170,7 @@
           mcsId
           mcsEventTracker="cancel-ticket-creation"
           mcsEventCategory="ticket"
-          mcsEventLabel="create-new-ticket-page">{{ textContent.cancelActivity }}</a>
+          mcsEventLabel="create-new-ticket-page">{{ 'ticketCreate.cancelActivity' | translate }}</a>
 
         <button mcsButton
           arrow="right"
@@ -179,7 +179,7 @@
           mcsEventTracker="submit-new-ticket"
           mcsEventCategory="ticket"
           mcsEventLabel="create-new-ticket-page">
-          {{ textContent.newTicket }}
+          {{ 'ticketCreate.newTicket' | translate }}
         </button>
       </div>
     </div>

@@ -35,7 +35,6 @@ export * from './services/mcs-component-handler.service';
 export * from './services/mcs-date-time.service';
 
 /** Providers */
-export * from './providers/mcs-text-content.provider';
 export * from './providers/mcs-assets.provider';
 export * from './providers/mcs-filter.provider';
 

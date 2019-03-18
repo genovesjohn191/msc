@@ -1,13 +1,13 @@
 <mcs-dialog>
   <mcs-dialog-header>
-    <h1>{{ textContent.title }}</h1>
+    <h1>{{ 'serverShared.dialogCreateSnapshot.title' | translate }}</h1>
   </mcs-dialog-header>
 
   <mcs-dialog-content>
     <mcs-item>
       <mcs-icon [key]="warningIconKey"></mcs-icon>
       <mcs-section>
-        <span>{{ textContent.alert }}</span>
+        <span>{{ 'serverShared.dialogCreateSnapshot.alert' | translate }}</span>
         <span [innerHTML]="confirmationMessage"></span>
       </mcs-section>
     </mcs-item>
@@ -18,13 +18,13 @@
       (click)="closeDialog()"
       mcsEventTracker="cancel"
       mcsEventCategory="server"
-      mcsEventLabel="create-snapshot-dialog">{{ textContent.cancel }}</a>
+      mcsEventLabel="create-snapshot-dialog">{{ 'serverShared.dialogCreateSnapshot.cancel' | translate }}</a>
     <button mcsButton id="ctaCreateSnapshot" arrow="right"
       size="small" (click)="createSnapshot()"
       mcsEventTracker="confirm"
       mcsEventCategory="server"
       mcsEventLabel="create-snapshot-dialog">
-      {{ textContent.confirm }}
+      {{ 'serverShared.dialogCreateSnapshot.confirm' | translate }}
     </button>
   </mcs-dialog-actions>
 </mcs-dialog>

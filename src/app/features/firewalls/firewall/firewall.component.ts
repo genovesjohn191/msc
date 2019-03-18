@@ -11,6 +11,7 @@ import {
   Router,
   ActivatedRoute
 } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import {
   Subject,
   throwError,
@@ -26,7 +27,6 @@ import {
 } from 'rxjs/operators';
 import {
   CoreDefinition,
-  McsTextContentProvider,
   McsRoutingTabBase,
   McsErrorHandlerService,
   McsDataStatusFactory,
@@ -63,8 +63,6 @@ export class FirewallComponent
 
   public selectedFirewall$: Observable<McsFirewall>;
   public firewallListing$: Observable<Map<string, McsFirewall[]>>;
-  public firewallsTextContent: any;
-  public firewallTextContent: any;
   public firewallsListSource: FirewallsListSource | null;
   public listStatusFactory: McsDataStatusFactory<Map<string, McsFirewall[]>>;
 
@@ -85,7 +83,7 @@ export class FirewallComponent
     _router: Router,
     _activatedRoute: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _textContentProvider: McsTextContentProvider,
+    private _translateService: TranslateService,
     private _errorHandlerService: McsErrorHandlerService,
     private _loadingService: McsLoadingService,
     private _firewallsRepository: McsFirewallsRepository,
@@ -96,8 +94,6 @@ export class FirewallComponent
   }
 
   public ngOnInit() {
-    this.firewallsTextContent = this._textContentProvider.content.firewalls;
-    this.firewallTextContent = this._textContentProvider.content.firewalls.firewall;
     super.onInit();
   }
 
@@ -184,7 +180,7 @@ export class FirewallComponent
    * @param firewallId Firewall identification
    */
   private _subscribeToFirewallById(firewallId: string): void {
-    this._loadingService.showLoader(this.firewallTextContent.loading);
+    this._loadingService.showLoader(this._translateService.instant('firewall.loading'));
     this.selectedFirewall$ = this._firewallsRepository.getById(firewallId).pipe(
       catchError((error) => {
         // Handle common error status code
