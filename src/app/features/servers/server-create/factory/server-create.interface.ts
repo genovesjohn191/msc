@@ -7,6 +7,4 @@ export interface IServerCreate {
     serverCreateService: ServerCreateService,
     serverDetails: T
   ): void;
-
-  isSelfManaged(): boolean;
 }

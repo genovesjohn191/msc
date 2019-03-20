@@ -15,7 +15,8 @@ import {
 import {
   catchError,
   shareReplay,
-  finalize
+  finalize,
+  tap
 } from 'rxjs/operators';
 import {
   CoreDefinition,
@@ -39,10 +40,9 @@ import { McsResourcesRepository } from '@app/services';
 import { OrderDetails } from '@app/features-shared';
 import { ServerCreateDetailsComponent } from './details/server-create-details.component';
 import { ServerCreateService } from './server-create.service';
-import { IServerCreate } from './factory/server-create.interface';
-import { ServerCreateFactory } from './factory/server-create-factory';
 import { ServerCreateDetailsBase } from './details/server-create-details.base';
 import { AddOnDetails } from './addons/addons-model';
+import { ServerCreateBuilder } from './server-create.builder';
 
 @Component({
   selector: 'mcs-server-create',
@@ -59,10 +59,6 @@ export class ServerCreateComponent extends McsOrderWizardBase
   public resource$: Observable<McsResource>;
   public faCreationForm: FormArray;
 
-  // Creation factory of the server
-  private _serverCreateInstance: IServerCreate;
-  private _serverCreateFactory = new ServerCreateFactory();
-
   public get backIconKey(): string {
     return CoreDefinition.ASSETS_SVG_CHEVRON_LEFT;
   }
@@ -77,6 +73,7 @@ export class ServerCreateComponent extends McsOrderWizardBase
 
   @ViewChild('serverDetailsStep')
   private _detailsStep: ServerCreateDetailsComponent;
+  private _serverCreateBuilder: ServerCreateBuilder<any>;
 
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
@@ -87,6 +84,7 @@ export class ServerCreateComponent extends McsOrderWizardBase
     private _serverCreateService: ServerCreateService
   ) {
     super(_serverCreateService);
+    this._serverCreateBuilder = new ServerCreateBuilder(_serverCreateService);
   }
 
   public ngOnInit() {
@@ -123,10 +121,8 @@ export class ServerCreateComponent extends McsOrderWizardBase
     if (isNullOrEmpty(resource)) { return; }
     this._subscribeResourceById(resource.id);
 
-    this._serverCreateInstance = this._serverCreateFactory
-      .getCreationFactory(resource.serviceType);
-
-    this._serverCreateInstance.isSelfManaged() ?
+    this._serverCreateBuilder.setServiceType(resource.serviceType);
+    this._serverCreateBuilder.isSelfManaged ?
       this.pricingCalculator.hideWidget() :
       this.pricingCalculator.showWidget();
   }
@@ -136,13 +132,11 @@ export class ServerCreateComponent extends McsOrderWizardBase
    * @param resource Resource on where to create the server
    * @param serverDetails Server details to be created
    */
-  public onServerDetailsChange<T>(
-    resource: McsResource,
-    serverDetails: Array<ServerCreateDetailsBase<T>>
-  ): void {
+  public onServerDetailsChange<T>(serverDetails: Array<ServerCreateDetailsBase<T>>): void {
     if (isNullOrEmpty(serverDetails)) { return; }
-    if (this._serverCreateInstance.isSelfManaged()) { return; }
-    this._createServer(resource, serverDetails);
+
+    if (this._serverCreateBuilder.isSelfManaged) { return; }
+    this._createServer(serverDetails);
   }
 
   /**
@@ -150,31 +144,16 @@ export class ServerCreateComponent extends McsOrderWizardBase
    * @param resource Resource on where to create the server
    * @param serverDetails Server details to be created
    */
-  public onServerDetailsSubmit<T>(
-    resource: McsResource,
-    serverDetails: Array<ServerCreateDetailsBase<T>>
-  ): void {
-    this._createServer(resource, serverDetails);
+  public onServerDetailsSubmit<T>(serverDetails: Array<ServerCreateDetailsBase<T>>): void {
+    this._createServer(serverDetails);
   }
 
   /**
    * Event that emits when the add ons have been changed
-   * @param addOnDetails Add on details to be submitted
+   * @param addOns Add on details to be submitted
    */
-  public onServerAddOnChange(addOnDetails: AddOnDetails[]): void {
-    if (isNullOrEmpty(addOnDetails)) { return; }
-
-    addOnDetails.forEach((addOn) => {
-      !addOn.selected ?
-        this._serverCreateService.deleteOrderItemByRefId(addOn.referenceId) :
-        this._serverCreateService.addOrUpdateOrderItem({
-          itemOrderTypeId: addOn.typeId,
-          referenceId: addOn.referenceId,
-          properties: addOn.addOnContent,
-          parentReferenceId: this._serverCreateService.orderReferenceId,
-          parentServiceId: this._serverCreateService.orderServiceId
-        });
-    });
+  public onServerAddOnChange(addOns: Array<AddOnDetails<any>>): void {
+    this._serverCreateBuilder.setAddOns(...addOns);
   }
 
   /**
@@ -203,18 +182,13 @@ export class ServerCreateComponent extends McsOrderWizardBase
    * @param resource Resource on where to create the server
    * @param serverDetails Server details to be created
    */
-  private _createServer<T>(
-    resource: McsResource,
-    serverDetails: Array<ServerCreateDetailsBase<T>>
-  ): void {
+  private _createServer<T>(serverDetails: Array<ServerCreateDetailsBase<T>>): void {
     if (isNullOrEmpty(serverDetails)) { return; }
 
     serverDetails.forEach((serverDetail) => {
-      this._serverCreateInstance.createServer(
-        resource,
-        this._serverCreateService,
-        serverDetail.getCreationInputs()
-      );
+      this._serverCreateBuilder
+        .setServerDetails(serverDetail.getCreationInputs())
+        .createOrUpdateServer();
     });
   }
 
@@ -239,6 +213,7 @@ export class ServerCreateComponent extends McsOrderWizardBase
   private _subscribeResourceById(resourceId: any): void {
     this._loaderService.showLoader('Loading resource details');
     this.resource$ = this._resourcesRepository.getById(resourceId).pipe(
+      tap((resource) => this._serverCreateBuilder.setResource(resource)),
       shareReplay(1),
       finalize(() => this._loaderService.hideLoader())
     );

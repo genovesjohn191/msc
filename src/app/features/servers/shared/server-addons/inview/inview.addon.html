@@ -1,0 +1,17 @@
+<form [formGroup]="fgInview">
+
+  <!-- Inview level version -->
+  <mcs-item orientation="separated">
+    <span>{{ 'serverShared.addOnInview.version.label' | translate }}:</span>
+    <mcs-form-field class="form-field-size-medium">
+      <mcs-select required
+        [placeholder]="'serverShared.addOnInview.version.placeholder' | translate"
+        [formControl]="fcInview">
+
+        <mcs-option *ngFor="let inview of inviewOptions$ | async" [value]="inview">
+          {{ inview }}
+        </mcs-option>
+      </mcs-select>
+    </mcs-form-field>
+  </mcs-item>
+</form>

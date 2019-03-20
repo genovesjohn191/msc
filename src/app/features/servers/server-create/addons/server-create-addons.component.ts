@@ -12,8 +12,10 @@ import {
   McsDataChange
 } from '@app/utilities';
 import {
-  McsServerCreateAddOnAntiVirus,
   OrderIdType,
+  McsServerCreateAddOnAntiVirus,
+  McsServerCreateAddOnSqlServer,
+  McsServerCreateAddOnInview,
 } from '@app/models';
 import { AddOnDetails } from './addons-model';
 
@@ -24,19 +26,29 @@ const ADDON_ANTI_MALWARE_ID = McsGuid.newGuid().toString();
   templateUrl: 'server-create-addons.component.html'
 })
 
-export class ServerCreateAddOnsComponent implements OnDestroy, McsDataChange<AddOnDetails[]> {
-  public antiMalwareAddOn: AddOnDetails;
+export class ServerCreateAddOnsComponent
+  implements OnDestroy, McsDataChange<Array<AddOnDetails<any>>> {
+  public sqlServerAddOn = new AddOnDetails<McsServerCreateAddOnSqlServer>();
+  public antiMalwareAddOn = new AddOnDetails<McsServerCreateAddOnAntiVirus>();
+  public inviewAddOn = new AddOnDetails<McsServerCreateAddOnInview>();
 
   @Output()
-  public dataChange = new EventEmitter<AddOnDetails[]>();
+  public dataChange = new EventEmitter<Array<AddOnDetails<any>>>();
   private _destroySubject = new Subject<void>();
 
-  constructor(private _changeDetectorRef: ChangeDetectorRef) {
-    this.antiMalwareAddOn = new AddOnDetails();
-  }
+  constructor(private _changeDetectorRef: ChangeDetectorRef) { }
 
   public ngOnDestroy() {
     unsubscribeSafely(this._destroySubject);
+  }
+
+  /**
+   * Event that emits when Sql Server collapse panel has been toggled
+   * @param collapse Collapse flag of the panel
+   */
+  public onToggleSqlServer(collapse: boolean): void {
+    this.sqlServerAddOn.selected = !collapse;
+    this.notifyDataChange();
   }
 
   /**
@@ -53,9 +65,28 @@ export class ServerCreateAddOnsComponent implements OnDestroy, McsDataChange<Add
    * @param antiMalwareDetails Updated Anti malware data
    */
   public onChangeAntiMalwareDetails(antiMalwareDetails: McsServerCreateAddOnAntiVirus): void {
-    this.antiMalwareAddOn.addOnContent = antiMalwareDetails;
+    this.antiMalwareAddOn.properties = antiMalwareDetails;
     this.antiMalwareAddOn.typeId = OrderIdType.CreateAddOnAntiMalware;
     this.antiMalwareAddOn.referenceId = ADDON_ANTI_MALWARE_ID;
+    this.notifyDataChange();
+  }
+
+  /**
+   * Event that emits when Sql Server details has been changed
+   * @param sqlServerDetails Updated Sql Server data
+   */
+  public onChangeSqlServerDetails(sqlServerDetails: McsServerCreateAddOnSqlServer): void {
+    this.sqlServerAddOn.properties = sqlServerDetails;
+    this.notifyDataChange();
+  }
+
+  /**
+   * Event that emits when iview item has been changed
+   * @param inviewContent Inview to be set
+   */
+  public onChangeInviewDetails(inviewContent: McsServerCreateAddOnInview): void {
+    this.inviewAddOn.properties = inviewContent;
+    this.inviewAddOn.selected = true;
     this.notifyDataChange();
   }
 
@@ -63,7 +94,11 @@ export class ServerCreateAddOnsComponent implements OnDestroy, McsDataChange<Add
    * Notifies the changes on the event parameter
    */
   public notifyDataChange(): void {
-    this.dataChange.next([this.antiMalwareAddOn]);
+    this.dataChange.next([
+      this.antiMalwareAddOn,
+      this.inviewAddOn,
+      this.sqlServerAddOn
+    ]);
     this._changeDetectorRef.markForCheck();
   }
 }

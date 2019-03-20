@@ -51,6 +51,8 @@ export * from './enumerations/workflow-status.enum';
 
 /** Request */
 export * from './request/mcs-server-create-addon-anti-virus';
+export * from './request/mcs-server-create-addon-sql-server';
+export * from './request/mcs-server-create-addon-inview';
 
 export * from './request/mcs-order-create';
 export * from './request/mcs-order-item-create';

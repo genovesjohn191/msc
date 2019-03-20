@@ -1,6 +1,10 @@
 import { ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
-import { shareReplay } from 'rxjs/operators';
+import {
+  shareReplay,
+  tap,
+  startWith
+} from 'rxjs/operators';
 import {
   PricingCalculator,
   IWizardStep
@@ -18,6 +22,7 @@ export abstract class McsOrderWizardBase extends McsWizardBase implements McsDis
 
   @ViewChild('pricingCalculator')
   public pricingCalculator: PricingCalculator;
+  private _pricingIsHiddenByStep: boolean;
 
   constructor(private _orderBase: McsOrderBase) {
     super(_orderBase);
@@ -31,13 +36,9 @@ export abstract class McsOrderWizardBase extends McsWizardBase implements McsDis
   public onWizardStepChanged(activeStep: IWizardStep): void {
     super.onWizardStepChanged(activeStep);
 
-    let noPricingCalculator = isNullOrEmpty(this.pricingCalculator);
-    if (noPricingCalculator) { return; }
-
-    let displayWidget = activeStep.id.includes('confirm-step') || activeStep.isLastStep;
-    displayWidget ?
-      this.pricingCalculator.hideWidget() :
-      this.pricingCalculator.showWidget();
+    this._pricingIsHiddenByStep = activeStep.id.includes('confirm-step')
+      || activeStep.isLastStep;
+    this._setPricingCalculatorVisibility();
   }
 
   /**
@@ -52,7 +53,27 @@ export abstract class McsOrderWizardBase extends McsWizardBase implements McsDis
    */
   private _subscribeToOrderChanges(): void {
     this.order$ = this._orderBase.orderChange().pipe(
-      shareReplay(1)
+      startWith(null),
+      shareReplay(1),
+      tap(() => this._setPricingCalculatorVisibility())
     );
+  }
+
+  /**
+   * Sets the pricing calculator visibility
+   */
+  private _setPricingCalculatorVisibility(): void {
+    let noPricingCalculator = isNullOrEmpty(this.pricingCalculator);
+    if (noPricingCalculator) { return; }
+
+    if (this._pricingIsHiddenByStep) {
+      this.pricingCalculator.hideWidget();
+      return;
+    }
+
+    let hasOrder = !isNullOrEmpty(this._orderBase.order);
+    hasOrder ?
+      this.pricingCalculator.showWidget() :
+      this.pricingCalculator.hideWidget();
   }
 }

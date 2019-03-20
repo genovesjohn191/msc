@@ -76,10 +76,10 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible,
   }
 
   /**
-   * Returns the order id once it was created
+   * Returns the created order, otherwise the other was not yet created
    */
-  public get orderId(): string {
-    return getSafeProperty(this._createdOrder, (obj) => obj.id);
+  public get order(): McsOrder {
+    return this._createdOrder;
   }
 
   /**

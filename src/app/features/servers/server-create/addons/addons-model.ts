@@ -1,6 +1,6 @@
-export class AddOnDetails {
+export class AddOnDetails<T> {
   public referenceId: string;
   public selected: boolean;
   public typeId: string;
-  public addOnContent: any;
+  public properties: T;
 }

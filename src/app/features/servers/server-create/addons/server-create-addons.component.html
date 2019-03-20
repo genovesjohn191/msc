@@ -2,6 +2,22 @@
   <h2>{{ 'serverCreateAddOnsStep.header' | translate }}</h2>
   <p>{{ 'serverCreateAddOnsStep.description' | translate }}</p>
 
+  <!-- Inview settings -->
+  <div class="action-box">
+    <mcs-inview-addon (dataChange)="onChangeInviewDetails($event)">
+    </mcs-inview-addon>
+  </div>
+
+  <!-- SQL Server -->
+  <mcs-collapsible-panel [header]="'serverCreateAddOnsStep.sqlServerAddOn' | translate"
+    (collapseChange)="onToggleSqlServer($event)"
+    [mcsContextualHelp]="'serverCreateAddOnsStep.sqlServerAddOnHelp' | translate">
+
+    <mcs-sql-server-addon (dataChange)="onChangeSqlServerDetails($event)">
+    </mcs-sql-server-addon>
+  </mcs-collapsible-panel>
+
+  <!-- TODO: Remove this temporarily since they're not yet enabled, or the payload was not finalize
     <mcs-collapsible-panel [header]="'serverCreateAddOnsStep.antiMalwareAddOn' | translate"
       (collapseChange)="onToggleAntiMalware($event)"
       [mcsContextualHelp]="'serverCreateAddOnsStep.antiMalwareAddOnHelp' | translate">
@@ -10,8 +26,6 @@
       </mcs-anti-malware-addon>
     </mcs-collapsible-panel>
 
-    <!-- TODO: Remove this temporarily since they're not yet enabled,
-      or the payload was not finalize
     <mcs-collapsible-panel [header]="textContent.disasterRecoveryAddOn"
       [mcsContextualHelp]="textContent.disasterRecoveryAddOnHelp">
       <mcs-disaster-recovery-addon></mcs-disaster-recovery-addon>
@@ -20,8 +34,7 @@
     <mcs-collapsible-panel [header]="textContent.sqlServerAddOn"
       [mcsContextualHelp]="textContent.sqlServerAddOnHelp">
       <mcs-sql-server-addon></mcs-sql-server-addon>
-    </mcs-collapsible-panel>
-    -->
+    </mcs-collapsible-panel> -->
 
   <!-- Wizard Actions -->
   <div class="action-items">

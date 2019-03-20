@@ -3,6 +3,7 @@ import {
   McsResource
 } from '@app/models';
 import { McsGuid } from '@app/core';
+import { isNullOrEmpty } from '@app/utilities';
 import { IServerCreate } from './server-create.interface';
 import { ServerCreateService } from '../server-create.service';
 
@@ -20,8 +21,9 @@ export class ServerCreateManaged implements IServerCreate {
     serverCreateService: ServerCreateService,
     serverDetails: T
   ): void {
-    // TODO: We need to find a way on how to deal this in UI
-    (serverDetails as any).inviewLevel = 'Premium';
+    if (isNullOrEmpty(serverDetails['inviewLevel'])) {
+      serverDetails['inviewLevel'] = 'Premium';
+    }
 
     serverCreateService.createOrUpdateOrder({
       description: 'New Managed Server',
@@ -33,12 +35,5 @@ export class ServerCreateManaged implements IServerCreate {
         properties: serverDetails
       }]
     });
-  }
-
-  /**
-   * Returns true when the server is self managed
-   */
-  public isSelfManaged(): boolean {
-    return false;
   }
 }

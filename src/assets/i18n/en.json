@@ -543,6 +543,7 @@
     "orderDetails": {
       "header": "Order Details",
       "description": "Review the charges for this order below.",
+      "totalLabel": "<strong>TOTAL</strong>",
       "columnHeaders": {
         "description": "Description",
         "monthlyCharge": "Monthly Fee",
@@ -551,10 +552,17 @@
     },
     "orderActions": {
       "header": "What would you like to do with this order?",
-      "submitOrder": "Submit this order for Provisioning",
+      "submitOrder": "Submit",
       "submitOrderNote": "By submitting this order, you agree to these charges and the",
-      "saveOrder": "Save this order as a Draft",
-      "mergeOrder": "Merge this order with an Existing draft Order"
+      "awaitingApproval": "Submit for approval",
+      "saveOrder": "Save as draft",
+      "mergeOrder": "Merge",
+      "contractTerms": {
+        "trial": "30 days cancellation",
+        "12Months": "12 Months",
+        "24Months": "24 Months",
+        "36Months": "36 Months"
+      }
     }
   },
   "provisioningStep": {
@@ -602,14 +610,13 @@
       "version": {
         "label": "Version",
         "placeholder": "Select version"
-      },
-      "edition": {
-        "label": "Edition",
-        "placeholder": "Select edition"
-      },
-      "architecture": {
-        "label": "Architecture",
-        "placeholder": "Select architecture"
+      }
+    },
+    "addOnInview": {
+      "header": "Inview",
+      "version": {
+        "label": "Inview level",
+        "placeholder": "Select inview"
       }
     },
     "dialogCreateSnapshot": {

@@ -17,11 +17,4 @@ export class ServerCreateSelfManaged implements IServerCreate {
   ): void {
     serverCreateService.createSelfManagedServer(serverDetails as any);
   }
-
-  /**
-   * Returns true when the server is self managed
-   */
-  public isSelfManaged(): boolean {
-    return true;
-  }
 }

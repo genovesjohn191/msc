@@ -3,18 +3,30 @@ import {
   Output,
   EventEmitter,
   OnInit,
-  OnDestroy,
   ChangeDetectionStrategy,
-  ViewEncapsulation
+  ViewEncapsulation,
+  OnDestroy
 } from '@angular/core';
-import { Subscription } from 'rxjs';
 import {
-  unsubscribeSafely,
-  isNullOrEmpty
+  Observable,
+  of,
+  Subject
+} from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import {
+  FormGroup,
+  FormControl
+} from '@angular/forms';
+import { McsServerCreateAddOnSqlServer } from '@app/models';
+import {
+  McsDataChange,
+  unsubscribeSafely
 } from '@app/utilities';
-import { McsServerSqlOptions } from '@app/models';
-import { OptionsApiService } from '@app/services';
-import { ServerSql } from './server-sql';
+
+export type SqlServerOption = {
+  category: string,
+  options: string[]
+};
 
 @Component({
   selector: 'mcs-sql-server-addon',
@@ -26,162 +38,82 @@ import { ServerSql } from './server-sql';
   }
 })
 
-export class SqlServerAddOnComponent implements OnInit, OnDestroy {
-  public sqlServerOptions: McsServerSqlOptions;
-  public sqlServer: ServerSql;
-  public sqlServerVersions: string[];
-  public sqlServerEditions: string[];
-  public sqlServerArchitectures: string[];
+export class SqlServerAddOnComponent implements
+  OnInit, OnDestroy, McsDataChange<McsServerCreateAddOnSqlServer> {
 
-  public selectedSqlServerVersion: string;
-  public selectedSqlServerEdition: string;
-  public selectedSqlServerArchitecture: string;
+  public sqlServerOptions$: Observable<SqlServerOption[]>;
+  public fgSqlServer: FormGroup;
+  public fcSqlServer: FormControl;
 
   @Output()
-  public change: EventEmitter<ServerSql> = new EventEmitter();
-
-  private _sqlServerOptionsSubscription: Subscription;
-
-  public constructor(private _optionsApiService: OptionsApiService) {
-    this.sqlServerOptions = new McsServerSqlOptions();
-    this.sqlServerVersions = new Array();
-    this.sqlServerEditions = new Array();
-    this.sqlServerArchitectures = new Array();
-    this.sqlServer = new ServerSql();
-  }
+  public dataChange = new EventEmitter<McsServerCreateAddOnSqlServer>();
+  private _destroySubject = new Subject<void>();
 
   public ngOnInit(): void {
-    this._getSqlServerOptions();
+    this._subscribeToSqlServerOptions();
+    this._registerFormGroup();
   }
 
-  public ngOnDestroy(): void {
-    unsubscribeSafely(this._sqlServerOptionsSubscription);
-  }
-
-  /**
-   * This will return true if the option needs to
-   * be included in the select dropdown
-   * @param option Select dropdown option
-   */
-  public isOptionIncluded(option: string): boolean {
-    let isIncluded: boolean;
-
-    switch (option) {
-      case 'Datacenter':
-        // Datacenter will be included if
-        // 2012 SP3 was selected as version
-        isIncluded = this.selectedSqlServerVersion === '2012 SP3';
-        break;
-
-      default:
-        isIncluded = true;
-        break;
-    }
-
-    return isIncluded;
+  public ngOnDestroy() {
+    unsubscribeSafely(this._destroySubject);
   }
 
   /**
-   * This will set the sql server version value
-   * and notify change parameter
+   * Event that emits whenever there are changes in the data
    */
-  public onVersionChanged(): void {
-    // TODO: Will refactor this when the API is ready
-    if (this.selectedSqlServerVersion !== '2012 SP3' &&
-      this.selectedSqlServerEdition === 'Datacenter') {
-      this.selectedSqlServerEdition = this._setSelectDefaultValue(
-        this.sqlServerOptions.editions, 0);
-    }
-    this._notifyChangeParameter();
+  public notifyDataChange(): void {
+    let sqlServerRef = new McsServerCreateAddOnSqlServer();
+    sqlServerRef.sqlServer = this.fcSqlServer.value;
+    this.dataChange.emit(sqlServerRef);
   }
 
   /**
-   * This will set the sql server edition value
-   * and notify change parameter
+   * Subscribe to sql server options
    */
-  public onEditionChanged(): void {
-    this._notifyChangeParameter();
+  private _subscribeToSqlServerOptions(): void {
+    // TODO: This should be obtained on api
+    this.sqlServerOptions$ = of([
+      {
+        category: 'Web',
+        options: [
+          'SQL Server 2012 Web',
+          'SQL Server 2014 Web',
+          'SQL Server 2016 Web'
+        ]
+      },
+      {
+        category: 'Standard',
+        options: [
+          'SQL Server 2012 Standard',
+          'SQL Server 2014 Standard',
+          'SQL Server 2016 Standard',
+          'SQL Server 2017 Standard'
+        ]
+      },
+      {
+        category: 'Enterprise',
+        options: [
+          'SQL Server 2012 Enterprise',
+          'SQL Server 2014 Enterprise',
+          'SQL Server 2016 Enterprise',
+          'SQL Server 2017 Enterprise'
+        ]
+      },
+    ]);
   }
 
   /**
-   * This will set the sql server architecture value
-   * and notify change parameter
+   * Registers all form group on the anti malware
    */
-  public onArchitectureChanged(): void {
-    this._notifyChangeParameter();
-  }
+  private _registerFormGroup(): void {
+    // Register Form Groups using binding
+    this.fcSqlServer = new FormControl('');
 
-  /**
-   * Get sql server options from the API
-   */
-  private _getSqlServerOptions(): void {
-    this._sqlServerOptionsSubscription = this._optionsApiService.getSqlServerOptions()
-      .subscribe((response) => {
-        if (isNullOrEmpty(response)) { return; }
-
-        this.sqlServerOptions = response.content;
-
-        if (!isNullOrEmpty(this.sqlServerOptions)) {
-          this._setSqlServerVersions(this.sqlServerOptions.versions);
-          this._setSqlServerEditions(this.sqlServerOptions.editions);
-          this._setSqlServerArchitectures(this.sqlServerOptions.architectures);
-
-          this.selectedSqlServerVersion = this._setSelectDefaultValue(
-            this.sqlServerOptions.versions, 10);
-          this.selectedSqlServerEdition = this._setSelectDefaultValue(
-            this.sqlServerOptions.editions, 0);
-          this.selectedSqlServerArchitecture = this._setSelectDefaultValue(
-            this.sqlServerOptions.architectures, 0);
-        }
-      });
-  }
-
-  /**
-   * Set SQL Server Versions
-   * @param versions Sql server versions
-   */
-  private _setSqlServerVersions(versions: string[]): void {
-    if (isNullOrEmpty(versions)) { return; }
-    this.sqlServerVersions = versions;
-  }
-
-  /**
-   * Set SQL Server Editions
-   * @param editions Sql server versions
-   */
-  private _setSqlServerEditions(editions: string[]): void {
-    if (isNullOrEmpty(editions)) { return; }
-    this.sqlServerEditions = editions;
-  }
-
-  /**
-   * Set SQL Server Architectures
-   * @param architectures Sql server versions
-   */
-  private _setSqlServerArchitectures(architectures: string[]): void {
-    if (isNullOrEmpty(architectures)) { return; }
-    this.sqlServerArchitectures = architectures;
-  }
-
-  /**
-   * Set the default value of the select dropdown
-   * @param options Options where to select the value
-   * @param index Index of the value to be set
-   */
-  private _setSelectDefaultValue(options: string[], index: number): string {
-    if (isNullOrEmpty(options)) { return undefined; }
-
-    return (index >= 0 && index < (options.length)) ?
-      options[index] : options[0];
-  }
-
-  /**
-   * Event that emits whenever there are changes in the model
-   */
-  private _notifyChangeParameter(): void {
-    this.sqlServer.version = this.selectedSqlServerVersion;
-    this.sqlServer.edition = this.selectedSqlServerEdition;
-    this.sqlServer.architecture = this.selectedSqlServerArchitecture;
-    this.change.emit(this.sqlServer);
+    this.fgSqlServer = new FormGroup({
+      fcSqlServer: this.fcSqlServer
+    });
+    this.fgSqlServer.valueChanges.pipe(
+      takeUntil(this._destroySubject)
+    ).subscribe(this.notifyDataChange.bind(this));
   }
 }

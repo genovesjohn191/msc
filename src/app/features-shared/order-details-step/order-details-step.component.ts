@@ -16,7 +16,8 @@ import {
 import { TranslateService } from '@ngx-translate/core';
 import {
   Observable,
-  Subject
+  Subject,
+  of
 } from 'rxjs';
 import {
   McsTableDataSource,
@@ -33,11 +34,12 @@ import {
   OrderWorkflowAction,
   McsOrderItem,
   McsBilling,
-  McsBillingSite
+  McsBillingSite,
+  McsOption
 } from '@app/models';
 import { McsFormGroupDirective } from '@app/shared';
-import { OrderDetails } from './order-details-step';
 import { McsOrdersRepository } from '@app/services';
+import { OrderDetails } from './order-details-step';
 
 @Component({
   selector: 'mcs-order-details-step',
@@ -59,6 +61,7 @@ export class OrderDetailsStepComponent implements OnInit, OnChanges, OnDestroy {
   public fcBillingCostCenter: FormControl;
 
   // Others
+  public contractTerms$: Observable<McsOption[]>;
   public billing$: Observable<McsBilling[]>;
   public selectedBilling$: Observable<McsBilling>;
   public selectedBillingSite$: Observable<McsBillingSite>;
@@ -84,6 +87,7 @@ export class OrderDetailsStepComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public ngOnInit() {
+    this._subscribeToContractTerms();
     this._subscribeToBillingDetails();
   }
 
@@ -166,7 +170,7 @@ export class OrderDetailsStepComponent implements OnInit, OnChanges, OnDestroy {
     this.orderDatasource = new McsTableDataSource(this.order.items || []);
 
     this.orderDatasource.addOrUpdateRecord({
-      description: 'Total',
+      description: this._translate.instant('orderDetailsStep.orderDetails.totalLabel'),
       charges: {
         monthly: getSafeProperty(this.order, (obj) => obj.charges.monthly, 0),
         oneOff: getSafeProperty(this.order, (obj) => obj.charges.oneOff, 0)
@@ -205,6 +209,31 @@ export class OrderDetailsStepComponent implements OnInit, OnChanges, OnDestroy {
       fcBillingSite: this.fcBillingSite,
       fcBillingCostCenter: this.fcBillingCostCenter
     });
+  }
+
+  /**
+   * Subscribes to contract terms
+   */
+  private _subscribeToContractTerms(): void {
+    // TODO: Need to consider the change order
+    this.contractTerms$ = of([
+      {
+        value: 0,
+        text: this._translate.instant('orderDetailsStep.orderActions.contractTerms.trial')
+      },
+      {
+        value: 12,
+        text: this._translate.instant('orderDetailsStep.orderActions.contractTerms.12Months')
+      },
+      {
+        value: 24,
+        text: this._translate.instant('orderDetailsStep.orderActions.contractTerms.24Months')
+      },
+      {
+        value: 36,
+        text: this._translate.instant('orderDetailsStep.orderActions.contractTerms.36Months')
+      }
+    ]);
   }
 
   /**

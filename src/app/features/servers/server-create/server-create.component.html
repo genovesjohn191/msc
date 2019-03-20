@@ -51,8 +51,8 @@
 
         <ng-container *ngIf="resource$ | async as selectedResource">
           <mcs-server-create-details [resource]="selectedResource" #serverDetailsStep
-            (dataChange)="onServerDetailsChange(selectedResource, $event)"
-            (dataSubmit)="onServerDetailsSubmit(selectedResource, $event)">
+            (dataChange)="onServerDetailsChange($event)"
+            (dataSubmit)="onServerDetailsSubmit($event)">
           </mcs-server-create-details>
         </ng-container>
       </mcs-wizard-step>
