@@ -534,9 +534,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
    */
   private _selectActiveItem(): void {
     if (isNullOrEmpty(this._itemListKeyManager.activeItem)) { return; }
-    this.multiple ?
-      this._itemListKeyManager.activeItem.toggle() :
-      this._itemListKeyManager.activeItem.select();
+    this._selectOption(this._itemListKeyManager.activeItem);
   }
 
   /**

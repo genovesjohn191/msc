@@ -3,7 +3,8 @@
   <p>{{ 'serverCreateAddOnsStep.description' | translate }}</p>
 
   <!-- Inview settings -->
-  <div class="action-box">
+  <div class="action-box"
+    [mcsContextualHelp]="'serverCreateAddOnsStep.inviewLevelHelp' | translate">
     <mcs-inview-addon (dataChange)="onChangeInviewDetails($event)">
     </mcs-inview-addon>
   </div>

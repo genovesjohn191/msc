@@ -499,8 +499,10 @@
     "antiMalwareAddOnHelp": "Protect systems from malicious software, including signature-based malware detection, behaviour-based malware detection and sandboxing",
     "disasterRecoveryAddOn": "Disaster Recovery",
     "disasterRecoveryAddOnHelp": "Disaster recovery has a lot of benefits including faster recovery, financial saving, scalability, and security",
+    "inviewLevel": "Inview Level",
+    "inviewLevelHelp": "InView allows you to keep track of your services in realtime – from receiving alerts and reviewing trends, to learning how compute resources are being used at a low level. It gives you full visibility over your servers and also helps you respond to issues more quickly.",
     "sqlServerAddOn": "SQL Server",
-    "sqlServerAddOnHelp": "Add additional storage on your server to save more data"
+    "sqlServerAddOnHelp": "Build intelligent, mission-critical applications using a scalable, hybrid database platform that has everything built in—from in-memory performance and advanced security to in-database analytics."
   },
   "serverCreateConfirmStep": {
     "stepTitle": "Confirm"

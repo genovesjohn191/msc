@@ -76,7 +76,7 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible,
   }
 
   /**
-   * Returns the created order, otherwise the other was not yet created
+   * Returns the created order, otherwise the order was not yet created
    */
   public get order(): McsOrder {
     return this._createdOrder;

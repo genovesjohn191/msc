@@ -4,8 +4,8 @@ import { isNullOrEmpty } from '@app/utilities';
 
 export abstract class McsItemListManager<T> {
 
-  public activeItemChanged: Subject<number> = new Subject();
-  public preActiveItemChanged: Subject<number> = new Subject();
+  public activeItemChanged: Subject<T> = new Subject();
+  public preActiveItemChanged: Subject<T> = new Subject();
 
   /**
    * Returns all the array of the querylist provided
@@ -17,6 +17,12 @@ export abstract class McsItemListManager<T> {
    */
   public get activeItem(): T { return this._activeItem; }
   private _activeItem: T;
+
+  /**
+   * Returns the previously active item
+   */
+  public get previouslyActiveItem(): T { return this._previouslyActiveItem; }
+  private _previouslyActiveItem: T;
 
   /**
    * Returns the currently active index
@@ -36,14 +42,13 @@ export abstract class McsItemListManager<T> {
     if (isNullOrEmpty(item)) { return; }
 
     // Notify Pre active changed event
-    this.preActiveItemChanged.next(this._activeItemIndex);
+    this._previouslyActiveItem = this.itemsArray[this._activeItemIndex];
+    this.preActiveItemChanged.next(this._previouslyActiveItem);
 
     // Set the active item and item index
     this._activeItemIndex = this.itemsArray.indexOf(item);
     this._activeItem = this.itemsArray[this._activeItemIndex];
-
-    // Notify whenever change happen on active items
-    this.activeItemChanged.next(this._activeItemIndex);
+    this.activeItemChanged.next(this._activeItem);
   }
 
   /**
