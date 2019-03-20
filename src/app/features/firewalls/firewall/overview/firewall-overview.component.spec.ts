@@ -6,8 +6,6 @@ import { FirewallsTestingModule } from '../../testing';
 import { FirewallOverviewComponent } from './firewall-overview.component';
 
 describe('FirewallOverviewComponent', () => {
-  /** Stub Services/Components */
-  let component: FirewallOverviewComponent;
 
   beforeEach(async(() => {
     /** Testbed Reset Module */
@@ -36,8 +34,6 @@ describe('FirewallOverviewComponent', () => {
     TestBed.compileComponents().then(() => {
       let fixture = TestBed.createComponent(FirewallOverviewComponent);
       fixture.detectChanges();
-
-      component = fixture.componentInstance;
     });
   }));
 });

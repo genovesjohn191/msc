@@ -155,22 +155,6 @@ export class ServerNewComponent
     unsubscribeSafely(this._destroySubject);
   }
 
-  public get scaleMemoryMB(): number {
-    return CoreDefinition.CREATE_SERVER_MINIMUM_RAM;
-  }
-
-  public get scaleCpuCount(): number {
-    return CoreDefinition.CREATE_SERVER_MINIMUM_CPU;
-  }
-
-  public get storageMinMemoryMB(): number {
-    return CoreDefinition.CREATE_SERVER_MINIMUM_STORAGE;
-  }
-
-  public get storageSliderStep(): number {
-    return CoreDefinition.CREATE_SERVER_STORAGE_STEP;
-  }
-
   public get resourceIsManaged(): boolean {
     return this.serviceType === ServiceType.Managed;
   }

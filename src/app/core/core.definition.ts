@@ -48,14 +48,6 @@ export class CoreDefinition {
   public static SEARCH_TIME = 1000;
   public static INPUT_TIME = 1000;
   public static DEFAULT_VIEW_REFRESH_TIME = 50;
-  public static GB_TO_MB_MULTIPLIER = 1024;
-  public static MB_TO_KB_MULTIPLIER = 1024;
-
-  /** Server Page */
-  public static CREATE_SERVER_MINIMUM_RAM = 2048;
-  public static CREATE_SERVER_MINIMUM_CPU = 2;
-  public static CREATE_SERVER_MINIMUM_STORAGE = 30 * CoreDefinition.GB_TO_MB_MULTIPLIER;
-  public static CREATE_SERVER_STORAGE_STEP = 10;
 
   /** Style */
   public static BASE_FONT = 'Circular-Pro-Book';
