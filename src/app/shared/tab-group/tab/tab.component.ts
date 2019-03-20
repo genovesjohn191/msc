@@ -14,10 +14,7 @@ import {
   McsUniqueId
 } from '@app/core';
 import { TabLabelDirective } from './tab-label.directive';
-import {
-  coerceBoolean,
-  McsAlignmentType
-} from '@app/utilities';
+import { McsAlignmentType } from '@app/utilities';
 
 @Component({
   selector: 'mcs-tab',
@@ -49,14 +46,7 @@ export class TabComponent implements AfterViewInit {
   @ViewChild(TemplateRef)
   private _content: TemplateRef<any>;
 
-  @Input()
-  public get canSelect(): boolean { return this._canSelect; }
-  public set canSelect(value: boolean) { this._canSelect = coerceBoolean(value); }
-  private _canSelect: boolean;
-
-  constructor(private _viewContainerRef: ViewContainerRef) {
-    this.canSelect = true;
-  }
+  constructor(private _viewContainerRef: ViewContainerRef) { }
 
   public ngAfterViewInit(): void {
     this.portalTemplate = new McsPortalTemplate(this._content, this._viewContainerRef);

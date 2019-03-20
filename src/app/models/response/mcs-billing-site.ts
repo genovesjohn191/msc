@@ -9,12 +9,12 @@ export class McsBillingSite extends McsEntityBase  {
   @JsonProperty({
     type: McsBillingCostCentre
   })
-  public costCenters: McsBillingCostCentre[];
+  public costCentres: McsBillingCostCentre[];
 
   constructor() {
     super();
     this.name = undefined;
     this.displayOrder = undefined;
-    this.costCenters = undefined;
+    this.costCentres = undefined;
   }
 }
