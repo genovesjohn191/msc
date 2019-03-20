@@ -13,8 +13,9 @@
               [placeholder]="'orderDetailsStep.billingDetails.contractTermPlaceholder' | translate"
               [mcsContextualHelp]="'orderDetailsStep.billingDetails.contractTermHelp' | translate">
 
-              <mcs-option [value]="12">30 Days</mcs-option>
-              <mcs-option [value]="23">Per Existing Contract</mcs-option>
+              <mcs-option [value]="term.value" *ngFor="let term of contractTerms$ | async">
+                {{ term.text }}
+              </mcs-option>
             </mcs-select>
 
             <mcs-error mcsError errorState="required">
@@ -89,7 +90,7 @@
             {{ 'orderDetailsStep.orderDetails.columnHeaders.description' | translate }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
-            {{ row.description }}
+            <span [innerHTML]="row.description"></span>
           </mcs-data-cell>
         </ng-container>
 
@@ -131,18 +132,32 @@
 
     <!-- Order Actions -->
     <section margin-top-xlarge>
-      <span>{{ 'orderDetailsStep.orderActions.header' | translate }}</span>
-      <mcs-radio-button-group orientation="vertical" [(ngModel)]="workflowAction">
-        <mcs-radio-button mcsId [value]="orderWorkFlowEnum.Submitted">
-          {{ 'orderDetailsStep.orderActions.submitOrder' | translate }}
-        </mcs-radio-button>
-        <mcs-radio-button mcsId [value]="orderWorkFlowEnum.Draft">
-          {{ 'orderDetailsStep.orderActions.saveOrder' | translate }}
-        </mcs-radio-button>
-        <mcs-radio-button mcsId [value]="orderWorkFlowEnum.AwaitingApproval">
-          {{ 'orderDetailsStep.orderActions.mergeOrder' | translate }}
-        </mcs-radio-button>
-      </mcs-radio-button-group>
+      <mcs-item orientation="separated">
+        <span>{{ 'orderDetailsStep.orderActions.header' | translate }}</span>
+        <mcs-form-field class="form-field-size-small">
+          <mcs-select [(ngModel)]="workflowAction">
+
+            <ng-container *mcsAccessControl="['OrderApprove']; else requestApprovalTemplate">
+              <mcs-option [value]="orderWorkFlowEnum.Submitted">
+                {{ 'orderDetailsStep.orderActions.submitOrder' | translate }}
+              </mcs-option>
+            </ng-container>
+
+            <ng-template #requestApprovalTemplate>
+              <mcs-option [value]="orderWorkFlowEnum.AwaitingApproval">
+                {{ 'orderDetailsStep.orderActions.awaitingApproval' | translate }}
+              </mcs-option>
+            </ng-template>
+
+            <mcs-option [value]="orderWorkFlowEnum.Draft">
+              {{ 'orderDetailsStep.orderActions.saveOrder' | translate }}
+            </mcs-option>
+            <!-- <mcs-option [value]="orderWorkFlowEnum.AwaitingApproval">
+              {{ 'orderDetailsStep.orderActions.mergeOrder' | translate }}
+            </mcs-option> -->
+          </mcs-select>
+        </mcs-form-field>
+      </mcs-item>
 
       <ng-container [ngSwitch]="workflowAction">
         <mcs-note *ngSwitchCase="orderWorkFlowEnum.Submitted">

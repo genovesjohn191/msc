@@ -328,9 +328,7 @@ export class ServerManageNetworkComponent
    */
   private _resetFormGroup(): void {
     clearArrayRecord(this.ipAddressesInUsed);
-
     if (!isNullOrEmpty(this.fgNetwork)) {
-      this.fgNetwork.reset();
       this.fcCustomIpAddress.reset();
     }
   }

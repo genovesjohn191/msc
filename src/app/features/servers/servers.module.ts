@@ -27,7 +27,8 @@ import {
   DisasterRecoveryAddOnComponent,
   SqlServerAddOnComponent,
   InfrastructureMonitoringAddOnComponent,
-  HidsAddOnComponent
+  HidsAddOnComponent,
+  InviewAddOnComponent
 } from './shared';
 /** Server */
 import {
@@ -81,7 +82,8 @@ import {
     DisasterRecoveryAddOnComponent,
     SqlServerAddOnComponent,
     InfrastructureMonitoringAddOnComponent,
-    HidsAddOnComponent
+    HidsAddOnComponent,
+    InviewAddOnComponent
   ],
   declarations: [
     ServersComponent,
@@ -111,6 +113,7 @@ import {
     SqlServerAddOnComponent,
     InfrastructureMonitoringAddOnComponent,
     HidsAddOnComponent,
+    InviewAddOnComponent,
 
     ResetPasswordDialogComponent,
     ResetPasswordFinishedDialogComponent,

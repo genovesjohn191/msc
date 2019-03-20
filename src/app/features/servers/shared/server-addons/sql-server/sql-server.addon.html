@@ -1,39 +1,25 @@
-<mcs-item>
-  <span>{{ 'serverShared.addOnSqlServer.version.label' | translate }}:</span>
-  <mcs-select [(ngModel)]="selectedSqlServerVersion"
-    (change)="onVersionChanged()"
-    [placeholder]="'serverShared.addOnSqlServer.version.placeholder' | translate"
-    class="form-field-size-small">
-    <mcs-option *ngFor="let version of sqlServerVersions" [value]="version">
-      {{ version }}
-    </mcs-option>
-  </mcs-select>
-</mcs-item>
+<form [formGroup]="fgSqlServer">
 
-<mcs-item>
-  <span>{{ 'serverShared.addOnSqlServer.edition.label' | translate }}:</span>
-  <mcs-select [(ngModel)]="selectedSqlServerEdition"
-    (change)="onEditionChanged()"
-    [placeholder]="'serverShared.addOnSqlServer.edition.placeholder' | translate"
-    class="form-field-size-small">
-    <ng-container *ngFor="let edition of sqlServerEditions">
-      <mcs-option *ngIf="isOptionIncluded(edition)" [value]="edition">
-        {{ edition }}
-      </mcs-option>
-    </ng-container>
-  </mcs-select>
-</mcs-item>
+  <!-- Sql Server version -->
+  <mcs-item orientation="separated">
+    <span>{{ 'serverShared.addOnSqlServer.version.label' | translate }}:</span>
+    <mcs-form-field class="form-field-size-medium">
+      <mcs-select required
+        [placeholder]="'serverShared.addOnSqlServer.version.placeholder' | translate"
+        [formControl]="fcSqlServer">
 
-<mcs-item>
-  <span>{{ 'serverShared.addOnSqlServer.architecture.label' | translate }}:</span>
-  <mcs-select [(ngModel)]="selectedSqlServerArchitecture"
-    (change)="onArchitectureChanged()"
-    [placeholder]="'serverShared.addOnSqlServer.architecture.placeholder' | translate"
-    class="form-field-size-small">
-    <mcs-option
-      *ngFor="let architecture of sqlServerArchitectures"
-      [value]="architecture">
-      {{ architecture }}
-    </mcs-option>
-  </mcs-select>
-</mcs-item>
+        <ng-container *ngFor="let sqlOption of sqlServerOptions$ | async">
+          <mcs-option-group>
+            <ng-container *mcsOptionGroupHeader>
+              <span>{{ sqlOption.category }}</span>
+            </ng-container>
+
+            <mcs-option *ngFor="let sqlOption of sqlOption.options" [value]="sqlOption">
+              {{ sqlOption }}
+            </mcs-option>
+          </mcs-option-group>
+        </ng-container>
+      </mcs-select>
+    </mcs-form-field>
+  </mcs-item>
+</form>

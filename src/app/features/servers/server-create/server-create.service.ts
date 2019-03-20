@@ -19,13 +19,18 @@ import {
   McsJob,
   McsServerClone,
   RouteKey,
-  DataStatus
+  DataStatus,
+  McsServerCreateAddOnSqlServer,
+  McsServerCreateAddOnInview
 } from '@app/models';
 import {
   McsOrdersRepository,
   McsServersRepository
 } from '@app/services';
-import { isNullOrEmpty } from '@app/utilities';
+import {
+  isNullOrEmpty,
+  getSafeProperty
+} from '@app/utilities';
 
 @Injectable()
 export class ServerCreateService extends McsOrderBase
@@ -64,6 +69,32 @@ export class ServerCreateService extends McsOrderBase
         return throwError(httpError);
       })
     ).subscribe();
+  }
+
+  /**
+   * Sets the sql server add on to the created order
+   * @param sql Sql server to be set
+   */
+  public setSqlServerAddOn(sql: McsServerCreateAddOnSqlServer): void {
+    let mainOrder = getSafeProperty(this.order, (obj) => obj.items[0]);
+    if (isNullOrEmpty(mainOrder)) {
+      throw new Error(`Main order was not yet created.`);
+    }
+    mainOrder.properties['sqlServer'] = sql.sqlServer;
+    this.addOrUpdateOrderItem(mainOrder);
+  }
+
+  /**
+   * Sets the inview level to the created order
+   * @param inview Inview level to be set
+   */
+  public setInviewAddOn(inview: McsServerCreateAddOnInview): void {
+    let mainOrder = getSafeProperty(this.order, (obj) => obj.items[0]);
+    if (isNullOrEmpty(mainOrder)) {
+      throw new Error(`Main order was not yet created.`);
+    }
+    mainOrder.properties['inview'] = inview.inviewLevel;
+    this.addOrUpdateOrderItem(mainOrder);
   }
 
   /**
