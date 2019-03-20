@@ -150,14 +150,11 @@
               Properties
             </mcs-header-cell>
             <mcs-data-cell *mcsDataCellDef="let row">
-              <mcs-list spacing="auto">
-                <mcs-list-item *ngFor="let property of row.properties">
-                  <mcs-item>
-                    <span>{{ property.label }}:</span>
-                    <span>{{ property.value }} {{ property.unit }}</span>
-                  </mcs-item>
-                </mcs-list-item>
-              </mcs-list>
+              <mcs-tag-list>
+                <mcs-tag [removable]="false" *ngFor="let property of getFormattedProperties(row)">
+                    {{ property }}
+                </mcs-tag>
+              </mcs-tag-list>
             </mcs-data-cell>
           </ng-container>
 

@@ -22,19 +22,23 @@ import {
 } from '@app/core';
 import {
   isNullOrEmpty,
-  animateFactory
+  animateFactory,
+  getSafeProperty,
+  compareStrings
 } from '@app/utilities';
 import {
   RouteKey,
   McsFileInfo,
   McsProduct,
   McsProductDownload,
-  McsProductDependency
+  McsProductDependency,
+  McsProductOptionProperty,
+  McsProductOption
 } from '@app/models';
 import { ProductService } from './product.service';
 
 const MAX_CHAR_LENGTH = 200;
-
+const PRODUCT_OPTION_TYPE_NUMERIC = 'numeric';
 @Component({
   selector: 'mcs-product',
   templateUrl: 'product.component.html',
@@ -116,6 +120,52 @@ export class ProductComponent implements OnInit, OnDestroy {
   public toggleShortDescription(): void {
     this.shortDescriptionExpanded = !this.shortDescriptionExpanded;
     this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Returns the property array with proper formatting
+   */
+  public getFormattedProperties(productOption: McsProductOption): string[] {
+    if (isNullOrEmpty(productOption) || isNullOrEmpty(productOption.properties)) { return []; }
+    return productOption.type.toLowerCase() === PRODUCT_OPTION_TYPE_NUMERIC ?
+      this._getPropertiesNumericFormat(productOption.properties) :
+      this._getPropertiesDefaultFormat(productOption.properties);
+  }
+
+  /**
+   * Returns the properties with default format when the property array has 1 or more than 2 items
+   * Format is "Label: Value Unit"
+   */
+  private _getPropertiesDefaultFormat(properties: McsProductOptionProperty[]): string[] {
+    let formattedProperties = [];
+    for (let property of properties) {
+      if (!isNullOrEmpty(property.value)) {
+        formattedProperties.push(`${property.label}: ${property.value} ${property.unit}`);
+      }
+    }
+    return formattedProperties;
+  }
+
+  /**
+   * Returns the properties with range format when the property array length has 2 items
+   * Format same unit "LowerValue-HigherValue Unit"
+   * Format different unit "first value unit - second value unit"
+   */
+  private _getPropertiesNumericFormat(properties: McsProductOptionProperty[]): string[] {
+    if (properties.length !== 2) { return this._getPropertiesDefaultFormat(properties); }
+
+    let firstProperty = properties[0];
+    let secondProperty = properties[1];
+    let firstValue = +getSafeProperty(firstProperty, (obj) => obj.value, 0);
+    let secondValue = +getSafeProperty(secondProperty, (obj) => obj.value, 0);
+
+    let minValue = Math.min(firstValue, secondValue);
+    let maxValue = Math.max(firstValue, secondValue);
+
+    return compareStrings(firstProperty.unit, secondProperty.unit) === 0 ?
+      [`${minValue}-${maxValue} ${secondProperty.unit}`] :
+      [`${firstProperty.value} ${firstProperty.unit}-
+        ${secondProperty.value} ${secondProperty.unit}`];
   }
 
   /**
