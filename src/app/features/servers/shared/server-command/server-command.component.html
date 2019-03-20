@@ -1,9 +1,11 @@
-<a mcsPopover #popoverActionElement="mcsPopover" padding="none" priority="low"
-  placement="bottom" orientation="left" theme="light" [content]="cogContent">
-  <mcs-icon [key]="gearIconKey" size="medium"></mcs-icon>
-</a>
+<button mcsButton="icon" mcsId="server-action"
+  #popoverActionElement="mcsPopover"
+  mcsPopover placement="bottom" orientation="left"
+  theme="light" padding="none" [content]="actionContent">
+  <mcs-icon [key]="gearIconKey"></mcs-icon>
+</button>
 
-<ng-template #cogContent>
+<ng-template #actionContent>
   <div class="cog-actions-wrapper">
     <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Start)">
       <a mcsButton="basic" color="white" labelPlacement="left"
@@ -25,7 +27,7 @@
         mcsEventTracker="stop"
         mcsEventCategory="server"
         mcsEventLabel="server-command-tool">
-        {{ 'servers.start' | translate }}
+        {{ 'servers.stop' | translate }}
       </a>
     </ng-container>
 
@@ -37,7 +39,7 @@
         mcsEventTracker="restart"
         mcsEventCategory="server"
         mcsEventLabel="server-command-tool">
-        {{ 'servers.start' | translate }}
+        {{ 'servers.restart' | translate }}
       </a>
     </ng-container>
 
@@ -49,7 +51,7 @@
         mcsEventTracker="suspend"
         mcsEventCategory="server"
         mcsEventLabel="server-command-tool">
-        {{ 'servers.start' | translate }}
+        {{ 'servers.suspend' | translate }}
       </a>
     </ng-container>
 
@@ -61,7 +63,7 @@
         mcsEventTracker="resume"
         mcsEventCategory="server"
         mcsEventLabel="server-command-tool">
-        {{ 'servers.start' | translate }}
+        {{ 'servers.resume' | translate }}
       </a>
     </ng-container>
 
@@ -75,7 +77,7 @@
           mcsEventTracker="scale"
           mcsEventCategory="server"
           mcsEventLabel="server-command-tool">
-          {{ 'servers.start' | translate }}
+          {{ 'servers.scale' | translate }}
         </a>
       </ng-container>
     </ng-container>

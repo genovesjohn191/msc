@@ -98,25 +98,25 @@
         </ng-container>
 
         <!-- Action tab -->
-        <mcs-tab [canSelect]="false" align="end">
-          <ng-template mcsTabLabel>
-            <mcs-icon [key]="cogIconKey" size="medium"
-              mcsPopover placement="bottom" orientation="left" theme="light"
-              padding="none" [content]="actionContent" mcsCursor="pointer">
-            </mcs-icon>
-            <ng-template #actionContent>
-              <div class="cog-actions-wrapper">
-                <a mcsButton="basic" color="white" labelPlacement="left"
-                  [href]="selectedFirewall.url" target="_blank"
-                  mcsId
-                  mcsEventTracker="view-in-portal"
-                  mcsEventCategory="firewall"
-                  mcsEventLabel="firewall-details-page">View in Portal
-                </a>
-              </div>
-            </ng-template>
+        <ng-container mcsTabHeaderCustom>
+          <button mcsButton="icon" mcsId="firewall-action" mcsAlign="end"
+            mcsPopover placement="bottom" orientation="left"
+            theme="light" padding="none" [content]="actionContent">
+            <mcs-icon [key]="cogIconKey"></mcs-icon>
+          </button>
+
+          <ng-template #actionContent>
+            <div class="cog-actions-wrapper">
+              <a mcsButton="basic" color="white" labelPlacement="left"
+                [href]="selectedFirewall.url" target="_blank"
+                mcsId
+                mcsEventTracker="view-in-portal"
+                mcsEventCategory="firewall"
+                mcsEventLabel="firewall-details-page">View in Portal
+              </a>
+            </div>
           </ng-template>
-        </mcs-tab>
+        </ng-container>
       </mcs-tab-group>
 
       <!-- Tab content for routing tab -->

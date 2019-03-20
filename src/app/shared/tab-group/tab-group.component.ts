@@ -119,7 +119,7 @@ export class TabGroupComponent implements AfterViewInit, AfterContentInit, OnDes
    * @param tab Tab to be selected
    */
   private _selectTab(tab: TabComponent): void {
-    if (isNullOrEmpty(tab) || !tab.canSelect) { return; }
+    if (isNullOrEmpty(tab)) { return; }
     this._selectionModel.select(tab);
     this.tabChanged.emit(tab);
     this._changeDetectorRef.markForCheck();

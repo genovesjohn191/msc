@@ -129,15 +129,12 @@
         </ng-container>
 
         <!-- Action tab -->
-        <mcs-tab [canSelect]="false" align="end"
-          *mcsAccessControl="serverPermission.VmPowerStateEdit">
-          <ng-template mcsTabLabel>
-            <mcs-server-command mcsId="server-command"
-              [server]="selectedServer"
-              (onClick)="executeServerCommand(selectedServer, $event)">
-            </mcs-server-command>
-          </ng-template>
-        </mcs-tab>
+        <ng-container mcsTabHeaderCustom *mcsAccessControl="serverPermission.VmPowerStateEdit">
+          <mcs-server-command mcsId="server-command" mcsAlign="end"
+            [server]="selectedServer"
+            (onClick)="executeServerCommand(selectedServer, $event)">
+          </mcs-server-command>
+        </ng-container>
       </mcs-tab-group>
 
       <!-- Tab content for routing tab -->
