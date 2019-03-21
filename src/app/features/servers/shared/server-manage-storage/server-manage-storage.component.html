@@ -5,7 +5,7 @@
     <div>
       <a *ngIf="inputManageType === inputManageTypeEnum.Custom" mcsId
         (click)="onChangeInputManageType(inputManageTypeEnum.Auto)">
-        {{ 'serverShared.manageStorage.sliderSwitch' | translate }}</a>
+        {{ 'serverShared.manageStorage.customSwitch' | translate }}</a>
       <a *ngIf="inputManageType === inputManageTypeEnum.Auto" mcsId
         (click)="onChangeInputManageType(inputManageTypeEnum.Custom)">
         {{ 'serverShared.manageStorage.sliderSwitch' | translate }}</a>
@@ -61,7 +61,8 @@
           <mcs-suffix mcsSuffix>{{ 'serverShared.manageStorage.unit' | translate }}</mcs-suffix>
 
         <mcs-hint mcsHint align="start">
-            {{ 'serverShared.manageStorage.maximumStorage' | translate }}: {{ availableMemory | mcsDataSize: 'GB' }}
+            {{ 'serverShared.manageStorage.maximumStorage' | translate }}:
+            {{ availableMemory | mcsDataSize: 'GB' }}
         </mcs-hint>
         <mcs-error mcsError errorState="required">
             {{ 'serverShared.manageStorage.errors.storageRequired' | translate }}
@@ -70,10 +71,12 @@
             {{ 'serverShared.manageStorage.errors.storageNumeric' | translate }}
         </mcs-error>
         <mcs-error mcsError errorState="min">
-          {{ storageMinValueText }}
+          {{ 'serverShared.manageStorage.errors.storageMin' |
+            translate: { min_value: (minValueGB | mcsDataSize: 'GB') } }}
         </mcs-error>
         <mcs-error mcsError errorState="storageAvailable">
-          {{ storageAvailableText }}
+          {{ 'serverShared.manageStorage.errors.storageAvailable' |
+            translate: { available_storage: (availableMemory | mcsDataSize: 'GB') } }}
         </mcs-error>
       </mcs-form-field>
     </mcs-section>
