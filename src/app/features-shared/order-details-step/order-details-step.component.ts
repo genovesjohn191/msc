@@ -167,7 +167,8 @@ export class OrderDetailsStepComponent implements OnInit, OnChanges, OnDestroy {
    */
   private _initializeOrderDatasource(): void {
     if (isNullOrEmpty(this.order)) { return; }
-    this.orderDatasource = new McsTableDataSource(this.order.items || []);
+    let orderItems = Object.assign([], this.order.items);
+    this.orderDatasource = new McsTableDataSource(orderItems || []);
 
     this.orderDatasource.addOrUpdateRecord({
       description: this._translate.instant('orderDetailsStep.orderDetails.totalLabel'),

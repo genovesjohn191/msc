@@ -18,7 +18,6 @@ import {
   FormControl,
   FormBuilder
 } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
@@ -28,7 +27,6 @@ import {
 import {
   convertMbToGb,
   convertGbToMb,
-  appendUnitSuffix,
   isNullOrEmpty,
   coerceNumber,
   animateFactory,
@@ -38,7 +36,6 @@ import {
 } from '@app/utilities';
 import {
   InputManageType,
-  UnitType,
   McsResourceStorage,
   McsServerStorageDevice
 } from '@app/models';
@@ -132,29 +129,8 @@ export class ServerManageStorageComponent
     return (this.availableMemory - this.minValueGB) > 0;
   }
 
-  /**
-   * Returns the storage available text content
-   */
-  public get storageAvailableText(): string {
-    return this._translateService.instant(
-      'serverShared.manageStorage.errors.storageAvailable',
-      { available_storage: appendUnitSuffix(this.availableMemory, UnitType.Gigabyte) }
-    );
-  }
-
-  /**
-   * Returns the storage minimum value text content
-   */
-  public get storageMinValueText(): string {
-    return this._translateService.instant(
-      'serverShared.manageStorage.errors.storageMin',
-      { min_value: appendUnitSuffix(this.minValueGB, UnitType.Gigabyte) }
-    );
-  }
-
   public constructor(
     private _formBuilder: FormBuilder,
-    private _translateService: TranslateService,
     private _changeDetectorRef: ChangeDetectorRef
   ) {
     this._createFormControlsMap();
