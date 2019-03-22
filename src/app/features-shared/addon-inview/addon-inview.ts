@@ -25,16 +25,16 @@ import {
 } from '@app/core';
 
 @Component({
-  selector: 'mcs-inview-addon',
-  templateUrl: './inview.addon.html',
+  selector: 'mcs-addon-inview',
+  templateUrl: './addon-inview.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    'class': 'inview-wrapper'
+    'class': 'addon-inview-wrapper'
   }
 })
 
-export class InviewAddOnComponent implements
+export class AddOnInviewComponent implements
   OnInit, OnDestroy, IMcsDataChange<McsServerCreateAddOnInview> {
 
   public inviewOptions$: Observable<string[]>;

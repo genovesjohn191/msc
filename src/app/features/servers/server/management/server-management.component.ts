@@ -50,14 +50,12 @@ import {
   McsResourceCatalogItem,
   McsServerThumbnail
 } from '@app/models';
-import {
-  DetachMediaDialogComponent,
-  ServerManageScale
-} from '../../shared';
+import { ServerManageScale } from '@app/features-shared';
 import {
   McsServersRepository,
   McsResourcesRepository
 } from '@app/services';
+import { DetachMediaDialogComponent } from '../../shared';
 import { ServerDetailsBase } from '../server-details.base';
 import { ServerService } from '../server.service';
 import { ServersService } from '../../servers.service';
@@ -329,6 +327,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnDe
    * `@Note:` Base implementation
    */
   protected selectionChange(server: McsServer, resource: McsResource): void {
+    this.setViewMode(ServerManagementView.None);
     this._registerJobEvents();
     this._getServerThumbnail(server);
     this._getServerMedia(server);

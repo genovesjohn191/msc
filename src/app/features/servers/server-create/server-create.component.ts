@@ -176,13 +176,7 @@ export class ServerCreateComponent extends McsOrderWizardBase
         resourcePath: CoreRoutes.getNavigationPath(RouteKey.ServerDetail)
       }
     } as McsOrderWorkflow;
-
-    this._serverCreateService.sendOrderWorkflow({
-      description: submitDetails.description,
-      contractDuration: submitDetails.contractDuration,
-      billingSiteId: submitDetails.billingSite.id,
-      billingCostCentreId: submitDetails.billingCostCentre.id
-    }, workflow);
+    this._serverCreateService.submitOrderWorkflow(workflow).subscribe();
   }
 
   /**
@@ -205,7 +199,7 @@ export class ServerCreateComponent extends McsOrderWizardBase
    */
   private _subscribeToAllResources(): void {
     this._loaderService.showLoader('Loading resources');
-    this.resources$ = this._resourcesRepository.getResourcesByFeature().pipe(
+    this.resources$ = this._resourcesRepository.getResourcesByAccess().pipe(
       catchError((error) => {
         this._errorHandlerService.redirectToErrorPage(error.status);
         return throwError(error);

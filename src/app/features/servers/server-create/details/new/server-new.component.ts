@@ -63,7 +63,7 @@ import {
   ServerManageStorage,
   ServerManageNetwork,
   ServerManageScale,
-} from '../../../shared';
+} from '@app/features-shared';
 import { ServerCreateDetailsBase } from '../server-create-details.base';
 
 const DEFAULT_MANAGE_STORAGE_MINIMUM = 50;

@@ -75,11 +75,11 @@
           [stepTitle]="'serverCreateConfirmStep.stepTitle' | translate"
           customClass="contextual-help-page-wrapper limited-view">
 
-          <mcs-order-details-step [order]="order$ | async"
+          <mcs-step-order-details [order]="order$ | async"
             [requestState]="dataStatus$ | async"
             (dataChange)="onServerConfirmOrderChange($event)"
             (submitOrder)="onSubmitOrder($event)">
-          </mcs-order-details-step>
+          </mcs-step-order-details>
         </mcs-wizard-step>
       </ng-container>
 
@@ -88,7 +88,7 @@
         [stepTitle]="'serverCreateProvisioningStep.stepTitle' | translate"
         customClass="limited-view">
 
-        <mcs-provisioning-step [jobs]="jobs$ | async" [requestState]="dataStatus$ | async">
+        <mcs-step-provisioning [jobs]="jobs$ | async" [requestState]="dataStatus$ | async">
           <ng-container mcsProvisioningStepDescription>
             {{ 'serverCreateProvisioningStep.description' | translate }}
           </ng-container>
@@ -96,7 +96,7 @@
           <ng-container mcsProvisioningStepInProgress>
             {{ 'serverCreateProvisioningStep.dataInProgress' | translate}}
           </ng-container>
-        </mcs-provisioning-step>
+        </mcs-step-provisioning>
       </mcs-wizard-step>
     </mcs-wizard>
 

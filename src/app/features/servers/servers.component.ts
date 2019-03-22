@@ -329,7 +329,7 @@ export class ServersComponent
           this.changeDetectorRef.markForCheck();
         })
       );
-    let createServerResources = this._resourcesRepository.getResourcesByFeature()
+    let createServerResources = this._resourcesRepository.getResourcesByAccess()
       .pipe(
         map((response) => {
           this.hasCreateResources = !isNullOrEmpty(response);

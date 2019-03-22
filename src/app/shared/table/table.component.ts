@@ -24,7 +24,8 @@ import {
 import {
   Subject,
   Subscription,
-  Observable
+  Observable,
+  isObservable
 } from 'rxjs';
 import {
   takeUntil,
@@ -55,6 +56,7 @@ import {
 import { DataStatusDefDirective } from './data-status';
 import { McsDataSource } from './mcs-data-source.interface';
 import { FilterSelector } from '../filter-selector';
+import { TableDataSource } from './table.datasource';
 
 @Component({
   selector: 'mcs-table',
@@ -85,11 +87,18 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
   private _trackBy: TrackByFunction<T>;
 
   @Input()
-  public set dataSource(value: McsDataSource<T>) {
+  public set dataSource(value: McsDataSource<T> | T[] | Observable<T[]>) {
     let dataSourceHasBeenChanged = this._dataSource !== value;
     if (dataSourceHasBeenChanged) {
-      this._switchDataSource(value);
-      this._dataSource = value;
+
+      let actualDataSource = Array.isArray(value) || isObservable(value) ?
+        new TableDataSource(value) : value;
+      if (isNullOrEmpty(actualDataSource)) {
+        actualDataSource = new TableDataSource(undefined);
+      }
+
+      this._switchDataSource(actualDataSource);
+      this._dataSource = actualDataSource;
     }
   }
   private _dataSource: McsDataSource<T>;
@@ -417,8 +426,9 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
    * Subscribe to data status
    */
   private _subscribeToDataStatus(): void {
-    this._dataStatusSubject.next();
+    if (isNullOrEmpty(this._dataSource)) { return; }
 
+    this._dataStatusSubject.next();
     this.dataStatusChange$ = this._dataSource.dataStatusChange().pipe(
       takeUntil(this._dataStatusSubject),
       tap(this._switchDataStatus.bind(this))

@@ -19,10 +19,7 @@ import {
   ServerStorageComponent,
   ServerNicsComponent
 } from './server';
-import {
-  ServerCreateComponent,
-  ServerCreateGuard
-} from './server-create';
+import { ServerCreateComponent } from './server-create';
 import {
   VdcComponent,
   VdcOverviewComponent,
@@ -37,7 +34,6 @@ export const serversProviders: any[] = [
   ServersService,
   ServerService,
   ServerServicesGuard,
-  ServerCreateGuard,
   VdcService
 ];
 

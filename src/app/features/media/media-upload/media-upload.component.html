@@ -33,7 +33,7 @@
         [stepTitle]="'mediaUpload.mediaStepGo.label' | translate"
         customClass="limited-view">
 
-        <mcs-provisioning-step [jobs]="jobs$ | async" [requestState]="dataStatus$ | async">
+        <mcs-step-provisioning [jobs]="jobs$ | async" [requestState]="dataStatus$ | async">
           <ng-container mcsProvisioningStepDescription>
             {{ 'mediaUpload.mediaStepGo.description' | translate }}
           </ng-container>
@@ -41,7 +41,7 @@
           <ng-container mcsProvisioningStepInProgress>
             {{ 'mediaUpload.mediaStepGo.dataInProgress' | translate }}
           </ng-container>
-        </mcs-provisioning-step>
+        </mcs-step-provisioning>
       </mcs-wizard-step>
     </mcs-wizard>
 

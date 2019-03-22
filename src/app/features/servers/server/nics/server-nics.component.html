@@ -171,7 +171,7 @@
 
     <!-- Edit NIC -->
     <mcs-section [@fadeIn] *ngSwitchCase="serverNicMethodTypeEnum.EditNic">
-      <ng-container *ngIf="resourceNetworks$ | async resourceNetworks">
+      <ng-container *ngIf="resourceNetworks$ | async as resourceNetworks">
         <div class="action-box" [disabled]="!serverDetails.server.executable">
           <mcs-server-manage-network
             [networks]="resourceNetworks"

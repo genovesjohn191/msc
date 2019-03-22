@@ -172,10 +172,8 @@
           mcsEventCategory="ticket"
           mcsEventLabel="create-new-ticket-page">{{ 'ticketCreate.cancelActivity' | translate }}</a>
 
-        <button mcsButton
-          arrow="right"
-          (click)="onLogTicket()"
-          mcsId
+        <button mcsButton  arrow="right" mcsId="new-ticket"
+          [disabled]="creatingTicket" (click)="onLogTicket()"
           mcsEventTracker="submit-new-ticket"
           mcsEventCategory="ticket"
           mcsEventLabel="create-new-ticket-page">

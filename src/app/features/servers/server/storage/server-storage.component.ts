@@ -46,10 +46,8 @@ import {
   McsServersRepository,
   McsResourcesRepository
 } from '@app/services';
-import {
-  DeleteStorageDialogComponent,
-  ServerManageStorage
-} from '../../shared';
+import { ServerManageStorage } from '@app/features-shared';
+import { DeleteStorageDialogComponent } from '../../shared';
 import { ServerService } from '../server.service';
 import { ServerDetailsBase } from '../server-details.base';
 import { ServersService } from '../../servers.service';

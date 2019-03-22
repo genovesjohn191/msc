@@ -5,8 +5,8 @@
   <!-- Inview settings -->
   <div class="action-box"
     [mcsContextualHelp]="'serverCreateAddOnsStep.inviewLevelHelp' | translate">
-    <mcs-inview-addon (dataChange)="onChangeInviewDetails($event)">
-    </mcs-inview-addon>
+    <mcs-addon-inview (dataChange)="onChangeInviewDetails($event)">
+    </mcs-addon-inview>
   </div>
 
   <!-- SQL Server -->
@@ -14,8 +14,8 @@
     (collapseChange)="onToggleSqlServer($event)"
     [mcsContextualHelp]="'serverCreateAddOnsStep.sqlServerAddOnHelp' | translate">
 
-    <mcs-sql-server-addon (dataChange)="onChangeSqlServerDetails($event)">
-    </mcs-sql-server-addon>
+    <mcs-addon-sql-server (dataChange)="onChangeSqlServerDetails($event)">
+    </mcs-addon-sql-server>
   </mcs-collapsible-panel>
 
   <!-- TODO: Remove this temporarily since they're not yet enabled, or the payload was not finalize
@@ -23,8 +23,8 @@
       (collapseChange)="onToggleAntiMalware($event)"
       [mcsContextualHelp]="'serverCreateAddOnsStep.antiMalwareAddOnHelp' | translate">
 
-      <mcs-anti-malware-addon (dataChange)="onChangeAntiMalwareDetails($event)">
-      </mcs-anti-malware-addon>
+      <mcs-addon-anti-malware (dataChange)="onChangeAntiMalwareDetails($event)">
+      </mcs-addon-anti-malware>
     </mcs-collapsible-panel>
 
     <mcs-collapsible-panel [header]="textContent.disasterRecoveryAddOn"

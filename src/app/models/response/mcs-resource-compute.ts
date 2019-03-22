@@ -6,24 +6,20 @@ import {
 
 export class McsResourceCompute {
   public cpuAllocation: number;
-  public cpuReservation: number;
   public cpuLimit: number;
   public cpuUsed: number;
   public cpuAvailable: number;
   public memoryAllocationMB: number;
-  public memoryReservationMB: number;
   public memoryLimitMB: number;
   public memoryUsedMB: number;
   public memoryAvailableMB: number;
 
   constructor() {
     this.cpuAllocation = undefined;
-    this.cpuReservation = undefined;
     this.cpuLimit = undefined;
     this.cpuUsed = undefined;
     this.cpuAvailable = undefined;
     this.memoryAllocationMB = undefined;
-    this.memoryReservationMB = undefined;
     this.memoryLimitMB = undefined;
     this.memoryUsedMB = undefined;
     this.memoryAvailableMB = undefined;

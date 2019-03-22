@@ -1,10 +1,4 @@
-/** Server Manage */
-export * from './server-command/server-command.component';
-export * from './server-manage-storage/server-manage-storage.component';
-export * from './server-manage-network/server-manage-network.component';
-export * from './server-manage-media/server-manage-media.component';
-export * from './server-manage-scale/server-manage-scale.component';
-/** Server Dialogs */
+/** Compoenents */
 export * from './server-dialogs/rename-server/rename-server.dialog';
 export * from './server-dialogs/reset-password/reset-password.dialog';
 export * from './server-dialogs/reset-password-finished/reset-password-finished.dialog';
@@ -19,15 +13,7 @@ export * from './server-dialogs/restore-snapshot/restore-snapshot.dialog';
 export * from './server-dialogs/suspend-server/suspend-server.dialog';
 export * from './server-dialogs/resume-server/resume-server.dialog';
 export * from './server-dialogs/disk-conflict-snapshot/disk-conflict-snapshot.dialog';
-/** Add Ons */
-export * from './server-addons/anti-malware/anti-malware.addon';
-export * from './server-addons/disaster-recovery/disaster-recovery.addon';
-export * from './server-addons/sql-server/sql-server.addon';
-export * from './server-addons/inview/inview.addon';
-export * from './server-addons/infrastructure-monitoring/infrastructure-monitoring.addon';
-export * from './server-addons/hids/hids.addon';
+export * from './server-command/server-command.component';
+
 /** Models */
 export * from './server-snapshot-dialog-content';
-export * from './server-manage-network/server-manage-network';
-export * from './server-manage-scale/server-manage-scale';
-export * from './server-manage-storage/server-manage-storage';

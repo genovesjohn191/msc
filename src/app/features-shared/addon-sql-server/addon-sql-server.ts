@@ -27,16 +27,16 @@ export type SqlServerOption = {
 };
 
 @Component({
-  selector: 'mcs-sql-server-addon',
-  templateUrl: './sql-server.addon.html',
+  selector: 'mcs-addon-sql-server',
+  templateUrl: './addon-sql-server.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    'class': 'sql-server-wrapper'
+    'class': 'addon-sql-server-wrapper'
   }
 })
 
-export class SqlServerAddOnComponent implements
+export class AddOnSqlServerComponent implements
   OnInit, OnDestroy, IMcsDataChange<McsServerCreateAddOnSqlServer> {
 
   public sqlServerOptions$: Observable<SqlServerOption[]>;

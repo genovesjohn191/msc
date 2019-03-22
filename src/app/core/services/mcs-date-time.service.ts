@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { formatDate } from '@angular/common';
 import { isNullOrEmpty } from '@app/utilities';
+import { CoreDefinition } from '../core.definition';
 import * as moment from 'moment-timezone';
 
 export type McsDateTimeFormat = 'default' | 'short' | 'medium' | 'long' | 'full' |
@@ -33,7 +34,7 @@ export class McsDateTimeService {
     if (formatFound) {
       actualFormat = this._dateTimeMapTable.get(formatType as McsDateTimeFormat);
     }
-    return formatDate(date.toUTCString(), actualFormat, 'en-US', timeZone);
+    return formatDate(date.toUTCString(), actualFormat, CoreDefinition.LOCALE, timeZone);
   }
 
   /**
