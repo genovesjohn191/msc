@@ -1,17 +1,15 @@
 import {
   Observable,
-  Subject,
   of
 } from 'rxjs';
 import { McsDataSource } from '../mcs-data-source.interface';
-import { DataStatus } from '@app/models';
 import { TableUserData } from './table-userdata';
+import { DataStatus } from '@app/models';
 
 export class TableDatasource implements McsDataSource<any> {
   /**
    * This will notify the subscribers of the datasource that the obtainment is InProgress
    */
-  public dataLoadingStream: Subject<DataStatus>;
   public loading: boolean;
 
   constructor() {
@@ -35,5 +33,9 @@ export class TableDatasource implements McsDataSource<any> {
 
   public onCompletion(): void {
     this.loading = false;
+  }
+
+  public dataStatusChange(): Observable<DataStatus> {
+    return of(DataStatus.Success);
   }
 }

@@ -36,7 +36,6 @@ type DelegateSource<T> = () => Observable<T[]>;
 type DatasourceType<T> = McsRepository<T> | T[] | Observable<T[]> | DelegateSource<T>;
 
 export class McsTableDataSource<T> implements McsDataSource<T> {
-  public dataLoadingStream: Subject<DataStatus>;
   public dataStatus: DataStatus;
 
   private _paginator: Paginator;
@@ -48,17 +47,17 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
   private _datasourceFuncPointer: DelegateSource<T>;
   private _dataRecords = new BehaviorSubject<T[]>(null);
   private _dataRenderedChange = new BehaviorSubject<T[]>(null);
+  private _dataStatusChange = new BehaviorSubject<DataStatus>(null);
   private _requestUpdate = new Subject<void>();
   private _searchSubject = new Subject<void>();
   private _pagingSubject = new Subject<void>();
   private _dataChangeSubject = new Subject<void>();
 
   constructor(private _dataSource?: DatasourceType<T>) {
-    this.dataLoadingStream = new Subject<DataStatus>();
     this._addedRecordsCache = [];
     this._totalRecordsCount = 0;
 
-    this._setDatasourcePointer();
+    this.updateDatasource(_dataSource);
     this._subscribeToRequestChange();
     this._subscribeToRepoDataChange();
   }
@@ -67,10 +66,20 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
    * Updates the data source provided on the table
    * @param dataSource New datasource provided
    */
-  public updateDatasource(dataSource: DatasourceType<T>) {
+  public updateDatasource(dataSource: DatasourceType<T>): void {
     this._dataSource = dataSource;
+    this.updateDataStatus(DataStatus.InProgress);
     this._setDatasourcePointer();
     this.refreshDataRecords();
+  }
+
+  /**
+   * Updates the data status of the table
+   * @param state State of the table to be set
+   */
+  public updateDataStatus(state: DataStatus): void {
+    this.dataStatus = state;
+    this._dataStatusChange.next(state);
   }
 
   /**
@@ -120,25 +129,33 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
    * and return all the record to its original value
    */
   public disconnect() {
+    unsubscribeSafely(this._dataRecords);
+    unsubscribeSafely(this._dataRenderedChange);
+    unsubscribeSafely(this._requestUpdate);
     unsubscribeSafely(this._searchSubject);
     unsubscribeSafely(this._pagingSubject);
-    unsubscribeSafely(this._requestUpdate);
-    unsubscribeSafely(this._dataRenderedChange);
-    unsubscribeSafely(this._dataRecords);
+    unsubscribeSafely(this._dataChangeSubject);
+    unsubscribeSafely(this._dataStatusChange);
   }
 
   /**
    * An event that emits when the datasource finished the obtainment
    * @param status Status of the datasource
    */
-  public onCompletion(status: DataStatus): void {
-    this.dataStatus = status;
+  public onCompletion(_data?: any): void {
     if (!isNullOrEmpty(this._search)) {
       this._search.showLoading(false);
     }
     if (!isNullOrEmpty(this._paginator)) {
       this._paginator.showLoading(false);
     }
+  }
+
+  /**
+   * Event that emits when the table data has been changed
+   */
+  public dataStatusChange(): Observable<DataStatus> {
+    return this._dataStatusChange.asObservable();
   }
 
   /**
@@ -281,13 +298,12 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
     this._requestUpdate.pipe(
       startWith(null),
       switchMap(() => {
-        this.dataStatus = DataStatus.InProgress;
-        this.dataLoadingStream.next(DataStatus.InProgress);
+        this.updateDataStatus(DataStatus.InProgress);
 
         return this._datasourceFuncPointer().pipe(
           map((records) => this._filterData(records)),
           catchError((error) => {
-            this.dataLoadingStream.next(DataStatus.Error);
+            this.updateDataStatus(DataStatus.Error);
             return throwError(error);
           })
         );
@@ -298,10 +314,8 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
       this._updateDataRecords(response);
       this._setTotalRecordsCountByContext(response);
       this._dataRenderedChange.next(response);
-
-      isNullOrEmpty(response) ?
-        this.onCompletion(DataStatus.Empty) :
-        this.onCompletion(DataStatus.Success);
+      this.updateDataStatus(isNullOrEmpty(response) ? DataStatus.Empty : DataStatus.Success);
+      this.onCompletion(response);
     });
   }
 

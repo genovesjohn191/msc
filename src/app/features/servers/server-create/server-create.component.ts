@@ -157,6 +157,14 @@ export class ServerCreateComponent extends McsOrderWizardBase
   }
 
   /**
+   * Event that emits when the server confirm order has been changed
+   * @param orderDetails Order details to be set
+   */
+  public onServerConfirmOrderChange(orderDetails: OrderDetails): void {
+    this._serverCreateBuilder.setOrderDetails(orderDetails);
+  }
+
+  /**
    * Event that emits when the order have been submitted
    * @param submitDetails Submit details of the order
    */

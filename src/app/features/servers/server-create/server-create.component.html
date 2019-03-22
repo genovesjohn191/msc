@@ -50,7 +50,8 @@
         </mcs-form-field>
 
         <ng-container *ngIf="resource$ | async as selectedResource">
-          <mcs-server-create-details [resource]="selectedResource" #serverDetailsStep
+          <mcs-server-create-details #serverDetailsStep
+            [resource]="selectedResource"
             (dataChange)="onServerDetailsChange($event)"
             (dataSubmit)="onServerDetailsSubmit($event)">
           </mcs-server-create-details>
@@ -75,7 +76,10 @@
           customClass="contextual-help-page-wrapper limited-view">
 
           <mcs-order-details-step [order]="order$ | async"
-            (submitOrder)="onSubmitOrder($event)"></mcs-order-details-step>
+            [requestState]="dataStatus$ | async"
+            (dataChange)="onServerConfirmOrderChange($event)"
+            (submitOrder)="onSubmitOrder($event)">
+          </mcs-order-details-step>
         </mcs-wizard-step>
       </ng-container>
 

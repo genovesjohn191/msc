@@ -141,7 +141,11 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible,
       .setBillingSiteId(orderDetails.billingSiteId)
       .setBillingCostCentreId(orderDetails.costCentreId)
       .setOrderWorkflow(null);
-    orderDetails.items.forEach((item) => this._orderBuilder.addOrUpdateOrderItem(item));
+
+    let orderItems = getSafeProperty(orderDetails, (obj) => obj.items);
+    if (!isNullOrEmpty(orderItems)) {
+      orderItems.forEach((item) => this._orderBuilder.addOrUpdateOrderItem(item));
+    }
     this._orderDirector.construct(this._orderBuilder);
   }
 
@@ -169,7 +173,7 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible,
    */
   public createOrderWorkFlow(workflow: McsOrderWorkflow): Observable<McsOrder> {
     return this._orderFactory.createOrderWorkFlow(this._createdOrder.id, workflow).pipe(
-      tap((response) => this.setJobs(...response.jobs)),
+      tap((response) => response && this.setJobs(...response.jobs)),
       catchError((httpError) => {
         this.setErrors(...httpError.errorMessages);
         return throwError(httpError);

@@ -7,11 +7,15 @@ import {
   OnChanges,
   OnDestroy,
   SimpleChanges,
-  ViewChild
+  ViewChild,
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef
 } from '@angular/core';
 import {
   FormGroup,
-  FormControl
+  FormControl,
+  FormBuilder
 } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import {
@@ -19,15 +23,18 @@ import {
   Subject,
   of
 } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import {
   McsTableDataSource,
   CoreValidators,
-  McsDateTimeService
+  McsDateTimeService,
+  IMcsDataChange
 } from '@app/core';
 import {
   isNullOrEmpty,
   getSafeProperty,
-  unsubscribeSafely
+  unsubscribeSafely,
+  isNullOrUndefined
 } from '@app/utilities';
 import {
   McsOrder,
@@ -35,7 +42,8 @@ import {
   McsOrderItem,
   McsBilling,
   McsBillingSite,
-  McsOption
+  McsOption,
+  DataStatus
 } from '@app/models';
 import { McsFormGroupDirective } from '@app/shared';
 import { McsOrdersRepository } from '@app/services';
@@ -43,15 +51,23 @@ import { OrderDetails } from './order-details-step';
 
 @Component({
   selector: 'mcs-order-details-step',
-  templateUrl: 'order-details-step.component.html'
+  templateUrl: 'order-details-step.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class OrderDetailsStepComponent implements OnInit, OnChanges, OnDestroy {
+export class OrderDetailsStepComponent
+  implements OnInit, OnChanges, AfterViewInit, OnDestroy, IMcsDataChange<OrderDetails> {
   @Input()
   public order: McsOrder;
 
+  @Input()
+  public requestState: DataStatus;
+
   @Output()
   public submitOrder = new EventEmitter<OrderDetails>();
+
+  @Output()
+  public dataChange = new EventEmitter<OrderDetails>();
 
   // Form variables
   public fgOrderBilling: FormGroup;
@@ -59,6 +75,8 @@ export class OrderDetailsStepComponent implements OnInit, OnChanges, OnDestroy {
   public fcBillingEntity: FormControl;
   public fcBillingSite: FormControl;
   public fcBillingCostCenter: FormControl;
+  public fcDescription: FormControl;
+  public fcWorkflowAction: FormControl;
 
   // Others
   public contractTerms$: Observable<McsOption[]>;
@@ -67,9 +85,9 @@ export class OrderDetailsStepComponent implements OnInit, OnChanges, OnDestroy {
   public selectedBillingSite$: Observable<McsBillingSite>;
 
   public workflowAction: OrderWorkflowAction;
-  public orderDescription: string;
   public orderDatasource: McsTableDataSource<McsOrderItem>;
   public orderDataColumns: string[] = [];
+  public dataChangeStatus: DataStatus;
 
   @ViewChild(McsFormGroupDirective)
   private _formGroup: McsFormGroupDirective;
@@ -77,11 +95,13 @@ export class OrderDetailsStepComponent implements OnInit, OnChanges, OnDestroy {
   private _destroySubject = new Subject<void>();
 
   constructor(
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _formBuilder: FormBuilder,
     private _translate: TranslateService,
     private _dateTimeService: McsDateTimeService,
     private _ordersRepository: McsOrdersRepository
   ) {
-    this.workflowAction = OrderWorkflowAction.Submitted;
+    this.orderDatasource = new McsTableDataSource([]);
     this._registerFormGroup();
     this._setDataColumns();
   }
@@ -97,6 +117,19 @@ export class OrderDetailsStepComponent implements OnInit, OnChanges, OnDestroy {
       this._initializeOrderDatasource();
       this._setOrderDescription();
     }
+
+    let requestChange = changes['requestState'];
+    if (!isNullOrEmpty(requestChange)) {
+      this._setFormFieldsStatus();
+      this._setDataChangeStatus();
+      this._setTableStatus();
+    }
+  }
+
+  public ngAfterViewInit() {
+    Promise.resolve().then(() => {
+      this._subscribeToDataChange();
+    });
   }
 
   public ngOnDestroy() {
@@ -105,6 +138,22 @@ export class OrderDetailsStepComponent implements OnInit, OnChanges, OnDestroy {
 
   public get orderWorkFlowEnum(): any {
     return OrderWorkflowAction;
+  }
+
+  /**
+   * Returns true when the order has been successfully created and no changes have been made
+   */
+  public get isNextButtonDisabled(): boolean {
+    return this.requestState === DataStatus.InProgress ||
+      this.requestState === DataStatus.Error ||
+      this.dataChangeStatus === DataStatus.InProgress;
+  }
+
+  /**
+   * Returns true when the order is currently on-going
+   */
+  public get orderIsInProgress(): boolean {
+    return this.requestState === DataStatus.InProgress;
   }
 
   /**
@@ -123,6 +172,15 @@ export class OrderDetailsStepComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /**
+   * Event that emits when the order has been changed
+   */
+  public onDataChange(): void {
+    if (!this.allFormFieldsAreValid) { return; }
+    this.dataChangeStatus = DataStatus.InProgress;
+    this.notifyDataChange();
+  }
+
+  /**
    * Event that emits when the order has been submitted
    */
   public onClickSubmitOrder(): void {
@@ -130,24 +188,68 @@ export class OrderDetailsStepComponent implements OnInit, OnChanges, OnDestroy {
       this._formGroup.validateFormControls(true);
       return;
     }
+    this.submitOrder.next(this._getOrderDetails());
+  }
 
-    this.submitOrder.next({
-      description: this.orderDescription,
-      contractDuration: this.fcContractTerm.value,
-      billingEntity: this.fcBillingEntity.value,
-      billingSite: this.fcBillingSite.value,
-      billingCostCentre: this.fcBillingCostCenter.value,
-      workflowAction: this.workflowAction
-    });
+  /**
+   * Notifies the data change event
+   */
+  public notifyDataChange(): void {
+    this.dataChange.next(this._getOrderDetails());
+  }
+
+  /**
+   * Returns the constructed order details
+   */
+  private _getOrderDetails(): OrderDetails {
+    if (isNullOrEmpty(this.fgOrderBilling)) { return; }
+
+    let orderDetails = new OrderDetails();
+    orderDetails.description = this.fcDescription.value;
+    orderDetails.contractDuration = this.fcContractTerm.value;
+    orderDetails.billingEntity = this.fcBillingEntity.value;
+    orderDetails.billingSite = this.fcBillingSite.value;
+    orderDetails.billingCostCentre = this.fcBillingCostCenter.value;
+    orderDetails.workflowAction = this.fcWorkflowAction.value;
+    return orderDetails;
   }
 
   /**
    * Sets the order description based on the order details
    */
   private _setOrderDescription(): void {
-    if (!this.hasOrder) { return; }
-    this.orderDescription = `${this.order.description} - ${
+    let descriptionCanBeSet = this.hasOrder && !isNullOrEmpty(this.fcDescription);
+    if (!descriptionCanBeSet) { return; }
+
+    let description = `${this.order.description} - ${
       this._dateTimeService.formatDate(this.order.createdOn, 'shortDate')}`;
+    this.fcDescription.setValue(description);
+  }
+
+  /**
+   * Sets the table status based on state provided
+   */
+  private _setTableStatus(): void {
+    if (isNullOrUndefined(this.orderDatasource)) { return; }
+    this.orderDatasource.updateDataStatus(this.requestState);
+    this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Sets the data change status
+   */
+  private _setDataChangeStatus(): void {
+    this.dataChangeStatus = this.requestState;
+  }
+
+  /**
+   * Sets the form fields status
+   */
+  private _setFormFieldsStatus(): void {
+    if (isNullOrEmpty(this.fcDescription)) { return; }
+    this.orderIsInProgress ?
+      this.fcDescription.disable() :
+      this.fcDescription.enable();
   }
 
   /**
@@ -168,7 +270,7 @@ export class OrderDetailsStepComponent implements OnInit, OnChanges, OnDestroy {
   private _initializeOrderDatasource(): void {
     if (isNullOrEmpty(this.order)) { return; }
     let orderItems = Object.assign([], this.order.items);
-    this.orderDatasource = new McsTableDataSource(orderItems || []);
+    this.orderDatasource.updateDatasource(orderItems);
 
     this.orderDatasource.addOrUpdateRecord({
       description: this._translate.instant('orderDetailsStep.orderDetails.totalLabel'),
@@ -203,12 +305,24 @@ export class OrderDetailsStepComponent implements OnInit, OnChanges, OnDestroy {
       CoreValidators.required
     ]);
 
+    // Description settings
+    this.fcDescription = new FormControl('', [
+      CoreValidators.required
+    ]);
+
+    // Workflow actions
+    this.fcWorkflowAction = new FormControl(OrderWorkflowAction.Submitted, [
+      CoreValidators.required
+    ]);
+
     // Register Form Groups using binding
-    this.fgOrderBilling = new FormGroup({
+    this.fgOrderBilling = this._formBuilder.group({
       fcContractTerm: this.fcContractTerm,
       fcBillingEntity: this.fcBillingEntity,
       fcBillingSite: this.fcBillingSite,
-      fcBillingCostCenter: this.fcBillingCostCenter
+      fcBillingCostCenter: this.fcBillingCostCenter,
+      fcDescription: this.fcDescription,
+      fcWorkflowAction: this.fcWorkflowAction
     });
   }
 
@@ -242,5 +356,14 @@ export class OrderDetailsStepComponent implements OnInit, OnChanges, OnDestroy {
    */
   private _subscribeToBillingDetails(): void {
     this.billing$ = this._ordersRepository.getBilling();
+  }
+
+  /**
+   * Subscribes to form data change of the confirm details
+   */
+  private _subscribeToDataChange(): void {
+    this._formGroup.valueChanges().pipe(
+      takeUntil(this._destroySubject)
+    ).subscribe(() => this.onDataChange());
   }
 }

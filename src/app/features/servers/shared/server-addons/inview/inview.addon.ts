@@ -18,11 +18,11 @@ import {
   FormControl
 } from '@angular/forms';
 import { McsServerCreateAddOnInview } from '@app/models';
+import { unsubscribeSafely } from '@app/utilities';
 import {
-  McsDataChange,
-  unsubscribeSafely
-} from '@app/utilities';
-import { CoreValidators } from '@app/core';
+  CoreValidators,
+  IMcsDataChange
+} from '@app/core';
 
 @Component({
   selector: 'mcs-inview-addon',
@@ -35,7 +35,7 @@ import { CoreValidators } from '@app/core';
 })
 
 export class InviewAddOnComponent implements
-  OnInit, OnDestroy, McsDataChange<McsServerCreateAddOnInview> {
+  OnInit, OnDestroy, IMcsDataChange<McsServerCreateAddOnInview> {
 
   public inviewOptions$: Observable<string[]>;
   public fgInview: FormGroup;

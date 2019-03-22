@@ -1,6 +1,6 @@
 import { EventEmitter } from '@angular/core';
 
-export interface McsDataChange<T> {
+export interface IMcsDataChange<T> {
   dataChange: EventEmitter<T>;
   notifyDataChange(): void;
 }

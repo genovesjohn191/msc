@@ -24,22 +24,18 @@ import {
 import {
   Subject,
   Subscription,
-  throwError,
-  isObservable,
   Observable
 } from 'rxjs';
 import {
   takeUntil,
   startWith,
-  catchError
+  tap
 } from 'rxjs/operators';
-/** Core / Utilities */
 import { DataStatus } from '@app/models';
 import {
   isNullOrEmpty,
   unsubscribeSafely
 } from '@app/utilities';
-/** Shared Directives */
 import {
   CellOutletDirective,
   HeaderPlaceholderDirective,
@@ -47,21 +43,16 @@ import {
   DataStatusPlaceholderDirective,
   CellOutletContext
 } from './shared';
-/** Column */
 import { ColumnDefDirective } from './column';
-/** Headers */
 import {
   HeaderRowDefDirective,
   HeaderCellDefDirective
 } from './header';
-/** Datarow */
 import {
   DataCellDefDirective,
   DataRowDefDirective
 } from './data';
-/** Datastatus */
 import { DataStatusDefDirective } from './data-status';
-import { TableDataSource } from './table.datasource';
 import { McsDataSource } from './mcs-data-source.interface';
 import { FilterSelector } from '../filter-selector';
 
@@ -77,6 +68,8 @@ import { FilterSelector } from '../filter-selector';
 })
 
 export class TableComponent<T> implements OnInit, AfterContentInit, AfterContentChecked, OnDestroy {
+  public dataStatusChange$: Observable<DataStatus>;
+
   @Input()
   public set columnFilter(value: FilterSelector) {
     this._columnFilter = value;
@@ -86,31 +79,17 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
   private _columnFilter: FilterSelector;
   private _columnFilterChange = new Subject<void>();
 
-  /**
-   * Trackby function to use wheater the data has been changed
-   */
   @Input()
   public set trackBy(fn: TrackByFunction<T>) { this._trackBy = fn; }
   public get trackBy(): TrackByFunction<T> { return this._trackBy; }
   private _trackBy: TrackByFunction<T>;
 
-  /**
-   * An observable datasource to bind inside the table data
-   */
   @Input()
-  public set dataSource(value: McsDataSource<T> | Observable<T[]> | T[]) {
+  public set dataSource(value: McsDataSource<T>) {
     let dataSourceHasBeenChanged = this._dataSource !== value;
     if (dataSourceHasBeenChanged) {
-      // Convert the actual data source based on its type
-      let actualDataSource = Array.isArray(value) || isObservable(value) ?
-        new TableDataSource(value) : value;
-      if (isNullOrEmpty(actualDataSource)) {
-        actualDataSource = new TableDataSource(undefined);
-      }
-
-      this._listenToDataLoading(actualDataSource);
-      this._switchDataSource(actualDataSource);
-      this._dataSource = actualDataSource;
+      this._switchDataSource(value);
+      this._dataSource = value;
     }
   }
   private _dataSource: McsDataSource<T>;
@@ -119,30 +98,8 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
   private _data: NgIterable<T>;
   private _dataDiffer: IterableDiffer<T>;
   private _destroySubject = new Subject<void>();
+  private _dataStatusSubject = new Subject<void>();
 
-  /**
-   * Get/Set the data obtainment status based on observables
-   */
-  private _dataStatus: DataStatus;
-  public get dataStatus(): DataStatus { return this._dataStatus; }
-  public set dataStatus(value: DataStatus) {
-    if (this._dataStatus !== value) {
-      this._dataStatus = value;
-      this._switchDataStatus(value);
-      this._changeDetectorRef.markForCheck();
-    }
-  }
-
-  /**
-   * Returns all the displayed columns of the table
-   */
-  public get displayedColumns(): QueryList<ColumnDefDirective> {
-    return this._columnDefinitions;
-  }
-
-  /**
-   * Placeholders within the table template where the header and rows data will be inserted
-   */
   @ViewChild(HeaderPlaceholderDirective)
   private _headerRowOutlet: HeaderPlaceholderDirective;
 
@@ -152,20 +109,16 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
   @ViewChild(DataStatusPlaceholderDirective)
   private _dataStatusPlaceholder: DataStatusPlaceholderDirective;
 
-  /** Columns */
   @ContentChildren(ColumnDefDirective)
   private _columnDefinitions: QueryList<ColumnDefDirective>;
   private _columnDefinitionsMap: Map<string, ColumnDefDirective>;
 
-  /** Template of the header row directive */
   @ContentChildren(HeaderRowDefDirective)
   private _headerRowDefinition: QueryList<HeaderRowDefDirective>;
 
-  /** Template of the data row directives */
   @ContentChildren(DataRowDefDirective)
   private _dataRowDefinitions: QueryList<DataRowDefDirective>;
 
-  /** Template of the data status directives */
   @ContentChild(DataStatusDefDirective)
   private _dataStatusDefinition: DataStatusDefDirective;
 
@@ -179,9 +132,6 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
   ) {
     this._data = [];
     this._columnDefinitionsMap = new Map<string, ColumnDefDirective>();
-
-    // Add loader while table is initializing
-    this.dataStatus = DataStatus.InProgress;
   }
 
   public get dataStatusEnum(): any {
@@ -209,6 +159,7 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
 
   public ngAfterContentChecked() {
     if (this._dataSource && !this._dataSourceSubscription) {
+      this._subscribeToDataStatus();
       this._getDatasourceData();
     }
   }
@@ -217,6 +168,14 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
     unsubscribeSafely(this._dataSourceSubscription);
     unsubscribeSafely(this._dataLoadingSubscription);
     unsubscribeSafely(this._destroySubject);
+    unsubscribeSafely(this._dataStatusSubject);
+  }
+
+  /**
+   * Returns all the displayed columns of the table
+   */
+  public get displayedColumns(): QueryList<ColumnDefDirective> {
+    return this._columnDefinitions;
   }
 
   /**
@@ -328,21 +287,6 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
       default:
         break;
     }
-  }
-
-  /**
-   * Listener when data is loading from the datasource
-   * @param newDatasource New datasource to listen
-   */
-  private _listenToDataLoading(newDatasource: McsDataSource<T>) {
-    unsubscribeSafely(this._dataLoadingSubscription);
-
-    // Subscribe to data loading process
-    if (isNullOrEmpty(newDatasource.dataLoadingStream)) {
-      newDatasource.dataLoadingStream = new Subject<any>();
-    }
-    this._dataLoadingSubscription = newDatasource.dataLoadingStream
-      .subscribe((status) => this.dataStatus = status);
   }
 
   /**
@@ -462,21 +406,22 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
    * `@Note` This will run asynchronously
    */
   private _getDatasourceData(): void {
-    this._dataSourceSubscription = this._dataSource.connect()
-      .pipe(
-        catchError((error) => {
-          this.dataStatus = DataStatus.Error;
-          this._dataSource.onCompletion(this.dataStatus, undefined);
-          return throwError(error);
-        })
-      )
-      .subscribe((data) => {
-        this._data = data;
-        this._createDataRows();
-        this.dataStatus = isNullOrEmpty(data) ?
-          DataStatus.Empty :
-          DataStatus.Success;
-        this._dataSource.onCompletion(this.dataStatus, data);
-      });
+    this._dataSourceSubscription = this._dataSource.connect().subscribe((data) => {
+      this._data = data;
+      this._createDataRows();
+      this._dataSource.onCompletion(data);
+    });
+  }
+
+  /**
+   * Subscribe to data status
+   */
+  private _subscribeToDataStatus(): void {
+    this._dataStatusSubject.next();
+
+    this.dataStatusChange$ = this._dataSource.dataStatusChange().pipe(
+      takeUntil(this._dataStatusSubject),
+      tap(this._switchDataStatus.bind(this))
+    );
   }
 }
