@@ -2,7 +2,6 @@
   <ng-container mcsPresentationPanelHeader>
     <h2>{{ 'mediaMedium.servers.title' | translate }}</h2>
   </ng-container>
-  <p *ngIf="'mediaMedium.servers.description' | translate">{{ 'mediaMedium.servers.description' | translate }}</p>
 
   <mcs-section *ngIf="selectedMedium$ | async as selectedMedium">
     <mcs-table [dataSource]="serversDataSource">
