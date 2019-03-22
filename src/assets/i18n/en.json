@@ -546,6 +546,8 @@
       "header": "Order Details",
       "description": "Review the charges for this order below.",
       "totalLabel": "<strong>TOTAL</strong>",
+      "noLineItems": "No order items to display.",
+      "errorLineItems": "Something went wrong while processing your request order. Please try again later.",
       "columnHeaders": {
         "description": "Description",
         "monthlyCharge": "Monthly Fee",

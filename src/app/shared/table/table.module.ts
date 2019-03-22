@@ -2,21 +2,18 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableComponent } from './table.component';
 import { LoaderModule } from '../loader/loader.module';
-/** Header */
 import {
   HeaderCellComponent,
   HeaderRowComponent,
   HeaderCellDefDirective,
   HeaderRowDefDirective
 } from './header';
-/** Data */
 import {
   DataCellComponent,
   DataRowComponent,
   DataCellDefDirective,
   DataRowDefDirective
 } from './data';
-/** Data status */
 import {
   DataEmptyComponent,
   DataErrorComponent,
@@ -24,9 +21,7 @@ import {
   DataErrorDefDirective,
   DataStatusDefDirective
 } from './data-status';
-/** Column */
 import { ColumnDefDirective } from './column';
-/** Shared */
 import {
   CellOutletDirective,
   HeaderPlaceholderDirective,

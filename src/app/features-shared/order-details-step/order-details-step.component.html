@@ -1,13 +1,13 @@
 <div class="limited-view">
   <div class="contextual-help-page-wrapper">
     <!-- Billing Details -->
-    <div>
-      <h2>{{ 'orderDetailsStep.header' | translate }}</h2>
-      <p>{{ 'orderDetailsStep.description' | translate }}</p>
+    <form [formGroup]="fgOrderBilling" mcsFormGroup>
+      <section>
+        <h2>{{ 'orderDetailsStep.header' | translate }}</h2>
+        <p>{{ 'orderDetailsStep.description' | translate }}</p>
 
-      <section margin-top-xlarge>
-        <h3>{{ 'orderDetailsStep.billingDetails.header' | translate }}</h3>
-        <form [formGroup]="fgOrderBilling" mcsFormGroup>
+        <section>
+          <h3>{{ 'orderDetailsStep.billingDetails.header' | translate }}</h3>
           <mcs-form-field>
             <mcs-select [formControl]="fcContractTerm"
               [placeholder]="'orderDetailsStep.billingDetails.contractTermPlaceholder' | translate"
@@ -71,117 +71,119 @@
               </mcs-error>
             </mcs-form-field>
           </ng-container>
-        </form>
+        </section>
       </section>
-    </div>
 
-    <!-- Order Details -->
-    <section margin-top-xlarge>
-      <h3>{{ 'orderDetailsStep.orderDetails.header' | translate }}</h3>
-      <mcs-form-field>
-        <input type="text" mcsInput [(ngModel)]="orderDescription">
-      </mcs-form-field>
-      <p>{{ 'orderDetailsStep.orderDetails.description' | translate }}</p>
-
-      <mcs-table [dataSource]="orderDatasource">
-        <!-- Description Column -->
-        <ng-container mcsColumnDef="description">
-          <mcs-header-cell *mcsHeaderCellDef>
-            {{ 'orderDetailsStep.orderDetails.columnHeaders.description' | translate }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row">
-            <span [innerHTML]="row.description"></span>
-          </mcs-data-cell>
-        </ng-container>
-
-        <!-- Monthly Charge Column -->
-        <ng-container mcsColumnDef="monthlyCharge">
-          <mcs-header-cell *mcsHeaderCellDef>
-            {{ 'orderDetailsStep.orderDetails.columnHeaders.monthlyCharge' | translate }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row">
-            ${{ row.charges?.monthly }}
-          </mcs-data-cell>
-        </ng-container>
-
-        <!-- One-off Charge Column -->
-        <ng-container mcsColumnDef="oneOffCharge">
-          <mcs-header-cell *mcsHeaderCellDef>
-            {{ 'orderDetailsStep.orderDetails.columnHeaders.oneOffCharge' | translate }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row">
-            ${{ row.charges?.oneOff }}
-          </mcs-data-cell>
-        </ng-container>
-
-        <!-- Data Status Integration -->
-        <ng-container mcsDataStatusDef>
-          <mcs-data-empty *mcsDataEmptyDef>
-            <span>{{ 'orderDetailsStep.orderDetails.noItemTypes' | translate }} </span>
-          </mcs-data-empty>
-          <mcs-data-error *mcsDataErrorDef>
-            <span>{{ 'orderDetailsStep.orderDetails.errorItemTypes' | translate }}</span>
-          </mcs-data-error>
-        </ng-container>
-
-        <!-- Header and Data row -->
-        <mcs-header-row *mcsHeaderRowDef="orderDataColumns"></mcs-header-row>
-        <mcs-data-row *mcsDataRowDef="let row; columns: orderDataColumns;"></mcs-data-row>
-      </mcs-table>
-    </section>
-
-    <!-- Order Actions -->
-    <section margin-top-xlarge>
-      <mcs-item orientation="separated">
-        <span>{{ 'orderDetailsStep.orderActions.header' | translate }}</span>
-        <mcs-form-field class="form-field-size-small">
-          <mcs-select [(ngModel)]="workflowAction">
-
-            <ng-container *mcsAccessControl="['OrderApprove']; else requestApprovalTemplate">
-              <mcs-option [value]="orderWorkFlowEnum.Submitted">
-                {{ 'orderDetailsStep.orderActions.submitOrder' | translate }}
-              </mcs-option>
-            </ng-container>
-
-            <ng-template #requestApprovalTemplate>
-              <mcs-option [value]="orderWorkFlowEnum.AwaitingApproval">
-                {{ 'orderDetailsStep.orderActions.awaitingApproval' | translate }}
-              </mcs-option>
-            </ng-template>
-
-            <mcs-option [value]="orderWorkFlowEnum.Draft">
-              {{ 'orderDetailsStep.orderActions.saveOrder' | translate }}
-            </mcs-option>
-            <!-- TODO: Put this on-hold since merge was not implemented on the API -->
-            <!-- <mcs-option [value]="orderWorkFlowEnum.Merge">
-              {{ 'orderDetailsStep.orderActions.mergeOrder' | translate }}
-            </mcs-option> -->
-          </mcs-select>
+      <!-- Order Details -->
+      <section margin-top-xlarge>
+        <h3>{{ 'orderDetailsStep.orderDetails.header' | translate }}</h3>
+        <mcs-form-field>
+          <input type="text" mcsInput [formControl]="fcDescription">
         </mcs-form-field>
-      </mcs-item>
+        <p>{{ 'orderDetailsStep.orderDetails.description' | translate }}</p>
 
-      <ng-container [ngSwitch]="workflowAction">
-        <mcs-note *ngSwitchCase="orderWorkFlowEnum.Submitted">
-          <span read-only>
-            {{ 'orderDetailsStep.orderActions.submitOrderNote' | translate }}
-          </span><br>
-          <a>Macquarie Telecom Pty Ltd terms and conditions.</a>
-        </mcs-note>
-        <mcs-note *ngSwitchCase="orderWorkFlowEnum.AwaitingApproval">
-          <mcs-form-field>
-            <mcs-select [(ngModel)]="selectedServer">
-              <mcs-option [value]="0">New Dedicated Server(120033)</mcs-option>
-              <mcs-option [value]="1">EOFS Runout Sale(188837)</mcs-option>
+        <mcs-table [dataSource]="orderDatasource">
+          <!-- Description Column -->
+          <ng-container mcsColumnDef="description">
+            <mcs-header-cell *mcsHeaderCellDef>
+              {{ 'orderDetailsStep.orderDetails.columnHeaders.description' | translate }}
+            </mcs-header-cell>
+            <mcs-data-cell *mcsDataCellDef="let row">
+              <span [innerHTML]="row.description"></span>
+            </mcs-data-cell>
+          </ng-container>
+
+          <!-- Monthly Charge Column -->
+          <ng-container mcsColumnDef="monthlyCharge">
+            <mcs-header-cell *mcsHeaderCellDef>
+              {{ 'orderDetailsStep.orderDetails.columnHeaders.monthlyCharge' | translate }}
+            </mcs-header-cell>
+            <mcs-data-cell *mcsDataCellDef="let row">
+              ${{ row.charges?.monthly }}
+            </mcs-data-cell>
+          </ng-container>
+
+          <!-- One-off Charge Column -->
+          <ng-container mcsColumnDef="oneOffCharge">
+            <mcs-header-cell *mcsHeaderCellDef>
+              {{ 'orderDetailsStep.orderDetails.columnHeaders.oneOffCharge' | translate }}
+            </mcs-header-cell>
+            <mcs-data-cell *mcsDataCellDef="let row">
+              ${{ row.charges?.oneOff }}
+            </mcs-data-cell>
+          </ng-container>
+
+          <!-- Data Status Integration -->
+          <ng-container mcsDataStatusDef>
+            <mcs-data-empty *mcsDataEmptyDef>
+              <span>{{ 'orderDetailsStep.orderDetails.noLineItems' | translate }} </span>
+            </mcs-data-empty>
+            <mcs-data-error *mcsDataErrorDef>
+              <span>{{ 'orderDetailsStep.orderDetails.errorLineItems' | translate }}</span>
+            </mcs-data-error>
+          </ng-container>
+
+          <!-- Header and Data row -->
+          <mcs-header-row *mcsHeaderRowDef="orderDataColumns"></mcs-header-row>
+          <mcs-data-row *mcsDataRowDef="let row; columns: orderDataColumns;"></mcs-data-row>
+        </mcs-table>
+      </section>
+
+      <!-- Order Actions -->
+      <section margin-top-xlarge>
+        <mcs-item orientation="separated">
+          <span>{{ 'orderDetailsStep.orderActions.header' | translate }}</span>
+          <mcs-form-field class="form-field-size-small">
+            <mcs-select [formControl]="fcWorkflowAction">
+
+              <ng-container *mcsAccessControl="['OrderApprove']; else requestApprovalTemplate">
+                <mcs-option [value]="orderWorkFlowEnum.Submitted">
+                  {{ 'orderDetailsStep.orderActions.submitOrder' | translate }}
+                </mcs-option>
+              </ng-container>
+
+              <ng-template #requestApprovalTemplate>
+                <mcs-option [value]="orderWorkFlowEnum.AwaitingApproval">
+                  {{ 'orderDetailsStep.orderActions.awaitingApproval' | translate }}
+                </mcs-option>
+              </ng-template>
+
+              <mcs-option [value]="orderWorkFlowEnum.Draft">
+                {{ 'orderDetailsStep.orderActions.saveOrder' | translate }}
+              </mcs-option>
+              <!-- TODO: Put this on-hold since merge was not implemented on the API -->
+              <!-- <mcs-option [value]="orderWorkFlowEnum.Merge">
+                {{ 'orderDetailsStep.orderActions.mergeOrder' | translate }}
+              </mcs-option> -->
             </mcs-select>
           </mcs-form-field>
-        </mcs-note>
-      </ng-container>
-    </section>
+        </mcs-item>
+
+        <ng-container [ngSwitch]="fcWorkflowAction?.value">
+          <mcs-note *ngSwitchCase="orderWorkFlowEnum.Submitted">
+            <span read-only>
+              {{ 'orderDetailsStep.orderActions.submitOrderNote' | translate }}
+            </span><br>
+            <a>Macquarie Telecom Pty Ltd terms and conditions.</a>
+          </mcs-note>
+          <mcs-note *ngSwitchCase="orderWorkFlowEnum.AwaitingApproval">
+            <mcs-form-field>
+              <mcs-select [(ngModel)]="selectedServer">
+                <mcs-option [value]="0">New Dedicated Server(120033)</mcs-option>
+                <mcs-option [value]="1">EOFS Runout Sale(188837)</mcs-option>
+              </mcs-select>
+            </mcs-form-field>
+          </mcs-note>
+        </ng-container>
+      </section>
+
+    </form>
 
     <!-- Wizard action -->
     <div class="action-items">
       <a mcsWizardStepPrevious mcsId="step-3-back">Back</a>
       <button mcsButton size="small" arrow="right"
+        [disabled]="isNextButtonDisabled"
         mcsId="step-3-next"
         mcsWizardStepNext
         [mcsWizardStepNextWhen]="allFormFieldsAreValid"

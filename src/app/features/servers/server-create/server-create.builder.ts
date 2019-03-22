@@ -5,6 +5,7 @@ import {
   McsServerCreateAddOnSqlServer,
   McsServerCreateAddOnInview
 } from '@app/models';
+import { OrderDetails } from '@app/features-shared';
 import { IServerCreate } from './factory/server-create.interface';
 import { ServerCreateFactory } from './factory/server-create-factory';
 import { ServerCreateService } from './server-create.service';
@@ -69,6 +70,20 @@ export class ServerCreateBuilder<T> {
       this._serverCreateService,
       this._serverDetails
     );
+  }
+
+  /**
+   * Sets the order details of the managed server
+   * @param orderDetails Order details to be set
+   */
+  public setOrderDetails(orderDetails: OrderDetails): void {
+    if (isNullOrEmpty(orderDetails)) { return; }
+    this._serverCreateService.createOrUpdateOrder({
+      billingSiteId: orderDetails.billingSite.id,
+      contractDuration: orderDetails.contractDuration,
+      costCentreId: orderDetails.billingCostCentre.id,
+      description: orderDetails.description
+    });
   }
 
   /**

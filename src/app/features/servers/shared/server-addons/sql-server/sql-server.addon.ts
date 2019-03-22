@@ -17,11 +17,9 @@ import {
   FormGroup,
   FormControl
 } from '@angular/forms';
+import { IMcsDataChange } from '@app/core';
 import { McsServerCreateAddOnSqlServer } from '@app/models';
-import {
-  McsDataChange,
-  unsubscribeSafely
-} from '@app/utilities';
+import { unsubscribeSafely } from '@app/utilities';
 
 export type SqlServerOption = {
   category: string,
@@ -39,7 +37,7 @@ export type SqlServerOption = {
 })
 
 export class SqlServerAddOnComponent implements
-  OnInit, OnDestroy, McsDataChange<McsServerCreateAddOnSqlServer> {
+  OnInit, OnDestroy, IMcsDataChange<McsServerCreateAddOnSqlServer> {
 
   public sqlServerOptions$: Observable<SqlServerOption[]>;
   public fgSqlServer: FormGroup;

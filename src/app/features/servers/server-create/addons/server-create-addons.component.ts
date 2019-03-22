@@ -6,11 +6,11 @@ import {
   Output
 } from '@angular/core';
 import { Subject } from 'rxjs';
-import { McsGuid } from '@app/core';
 import {
-  unsubscribeSafely,
-  McsDataChange
-} from '@app/utilities';
+  McsGuid,
+  IMcsDataChange
+} from '@app/core';
+import { unsubscribeSafely } from '@app/utilities';
 import {
   OrderIdType,
   McsServerCreateAddOnAntiVirus,
@@ -27,7 +27,7 @@ const ADDON_ANTI_MALWARE_ID = McsGuid.newGuid().toString();
 })
 
 export class ServerCreateAddOnsComponent
-  implements OnDestroy, McsDataChange<Array<AddOnDetails<any>>> {
+  implements OnDestroy, IMcsDataChange<Array<AddOnDetails<any>>> {
   public sqlServerAddOn = new AddOnDetails<McsServerCreateAddOnSqlServer>();
   public antiMalwareAddOn = new AddOnDetails<McsServerCreateAddOnAntiVirus>();
   public inviewAddOn = new AddOnDetails<McsServerCreateAddOnInview>();

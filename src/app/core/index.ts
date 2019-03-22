@@ -97,3 +97,4 @@ export * from './interfaces/mcs-state-changeable.interface';
 export * from './interfaces/mcs-wizard.interface';
 export * from './interfaces/mcs-form-group.interface';
 export * from './interfaces/mcs-property.interface';
+export * from './interfaces/mcs-data-change.interface';

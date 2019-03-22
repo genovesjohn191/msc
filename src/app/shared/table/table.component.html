@@ -8,8 +8,9 @@
 
 <div class="mcs-table-footer-wrapper">
   <!-- Data Loading -->
-  <ng-container *ngIf="dataStatus === dataStatusEnum.InProgress">
-    <mcs-loader class="mcs-data-loading" type="ellipsis" size="large"></mcs-loader>
+  <ng-container *ngIf="dataStatusChange$ | async as dataStatus">
+    <mcs-loader *ngIf="dataStatus === dataStatusEnum.InProgress"
+      class="mcs-data-loading" type="ellipsis" size="large"></mcs-loader>
   </ng-container>
 
   <!-- Data status content will be created within this container -->
