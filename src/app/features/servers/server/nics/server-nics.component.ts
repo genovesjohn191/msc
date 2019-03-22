@@ -49,10 +49,8 @@ import {
   McsServersRepository,
   McsResourcesRepository
 } from '@app/services';
-import {
-  DeleteNicDialogComponent,
-  ServerManageNetwork
-} from '../../shared';
+import { ServerManageNetwork } from '@app/features-shared';
+import { DeleteNicDialogComponent } from '../../shared';
 import { ServerService } from '../server.service';
 import { ServerDetailsBase } from '../server-details.base';
 import { ServersService } from '../../servers.service';

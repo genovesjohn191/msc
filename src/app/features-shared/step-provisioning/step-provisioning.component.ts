@@ -17,12 +17,12 @@ import {
 import { isNullOrEmpty } from '@app/utilities';
 
 @Component({
-  selector: 'mcs-provisioning-step',
-  templateUrl: 'provisioning-step.component.html',
+  selector: 'mcs-step-provisioning',
+  templateUrl: 'step-provisioning.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class ProvisioninStepComponent implements OnChanges {
+export class StepProvisioningComponent implements OnChanges {
   public status$: Observable<DataStatus>;
 
   @Input()

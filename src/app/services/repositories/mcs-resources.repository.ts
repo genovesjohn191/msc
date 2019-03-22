@@ -133,20 +133,21 @@ export class McsResourcesRepository extends McsRepositoryBase<McsResource> {
   }
 
   /**
-   * Find all the resources based on the feature toggle
+   * Get all the resources based on the access control
+   * @note OrderEdit and EnableCreateManagedServer
    */
-  public getResourcesByFeature(): Observable<McsResource[]> {
-    return this.getAll()
-      .pipe(
-        map((resources) => {
-          let managedFeatureIsOn = this._accessControlService
-            .hasAccessToFeature(CoreDefinition.FEATURE_FLAG_ENABLE_CREATE_MANAGED_SERVER);
-          return resources.filter(
-            (resource) => resource.serviceType === ServiceType.SelfManaged ||
-              (managedFeatureIsOn && resource.serviceType === ServiceType.Managed)
-          );
-        })
-      );
+  public getResourcesByAccess(): Observable<McsResource[]> {
+    return this.getAll().pipe(
+      map((resources) => {
+        let managedResourceIsOn = this._accessControlService.hasAccess(
+          ['OrderEdit'], CoreDefinition.FEATURE_FLAG_ENABLE_CREATE_MANAGED_SERVER);
+
+        return resources.filter(
+          (resource) => resource.serviceType === ServiceType.SelfManaged ||
+            (managedResourceIsOn && resource.serviceType === ServiceType.Managed)
+        );
+      })
+    );
   }
 
   /**

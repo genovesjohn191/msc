@@ -293,7 +293,7 @@ export class OrdersApiService {
     mcsApiRequestParameter.endPoint = `/orders/${id}/workflow`;
     mcsApiRequestParameter.recordData = serializeObjectToJson(workflowDetails);
 
-    return this._mcsApiService.post(mcsApiRequestParameter)
+    return this._mcsApiService.put(mcsApiRequestParameter)
       .pipe(
         finalize(() => {
           this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);

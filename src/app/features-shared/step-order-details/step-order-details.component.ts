@@ -27,7 +27,6 @@ import { takeUntil } from 'rxjs/operators';
 import {
   McsTableDataSource,
   CoreValidators,
-  McsDateTimeService,
   IMcsDataChange
 } from '@app/core';
 import {
@@ -47,15 +46,15 @@ import {
 } from '@app/models';
 import { McsFormGroupDirective } from '@app/shared';
 import { McsOrdersRepository } from '@app/services';
-import { OrderDetails } from './order-details-step';
+import { OrderDetails } from './order-details';
 
 @Component({
-  selector: 'mcs-order-details-step',
-  templateUrl: 'order-details-step.component.html',
+  selector: 'mcs-step-order-details',
+  templateUrl: 'step-order-details.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class OrderDetailsStepComponent
+export class StepOrderDetailsComponent
   implements OnInit, OnChanges, AfterViewInit, OnDestroy, IMcsDataChange<OrderDetails> {
   @Input()
   public order: McsOrder;
@@ -98,7 +97,6 @@ export class OrderDetailsStepComponent
     private _changeDetectorRef: ChangeDetectorRef,
     private _formBuilder: FormBuilder,
     private _translate: TranslateService,
-    private _dateTimeService: McsDateTimeService,
     private _ordersRepository: McsOrdersRepository
   ) {
     this.orderDatasource = new McsTableDataSource([]);
@@ -146,7 +144,8 @@ export class OrderDetailsStepComponent
   public get isNextButtonDisabled(): boolean {
     return this.requestState === DataStatus.InProgress ||
       this.requestState === DataStatus.Error ||
-      this.dataChangeStatus === DataStatus.InProgress;
+      this.dataChangeStatus === DataStatus.InProgress ||
+      !this.allFormFieldsAreValid;
   }
 
   /**
@@ -220,10 +219,7 @@ export class OrderDetailsStepComponent
   private _setOrderDescription(): void {
     let descriptionCanBeSet = this.hasOrder && !isNullOrEmpty(this.fcDescription);
     if (!descriptionCanBeSet) { return; }
-
-    let description = `${this.order.description} - ${
-      this._dateTimeService.formatDate(this.order.createdOn, 'shortDate')}`;
-    this.fcDescription.setValue(description);
+    this.fcDescription.setValue(this.order.description);
   }
 
   /**
@@ -248,8 +244,8 @@ export class OrderDetailsStepComponent
   private _setFormFieldsStatus(): void {
     if (isNullOrEmpty(this.fcDescription)) { return; }
     this.orderIsInProgress ?
-      this.fcDescription.disable() :
-      this.fcDescription.enable();
+      this.fcDescription.disable({ onlySelf: true }) :
+      this.fcDescription.enable({ onlySelf: true });
   }
 
   /**

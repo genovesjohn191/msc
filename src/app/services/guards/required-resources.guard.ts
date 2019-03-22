@@ -23,7 +23,7 @@ export class RequiredResourcesGuard implements CanActivate {
     _route: ActivatedRouteSnapshot,
     _state: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean {
-    return this._resourcesRepository.getResourcesByFeature().pipe(
+    return this._resourcesRepository.getResourcesByAccess().pipe(
       map((resources) => {
         if (isNullOrEmpty(resources)) {
           this._errorHandlerService.redirectToErrorPage(HttpStatusCode.Forbidden);

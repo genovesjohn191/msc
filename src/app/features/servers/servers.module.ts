@@ -5,10 +5,6 @@ import { ServersComponent } from './servers.component';
 /** Shared */
 import {
   ServerCommandComponent,
-  ServerManageStorageComponent,
-  ServerManageNetworkComponent,
-  ServerManageMediaComponent,
-  ServerManageScaleComponent,
   ResetPasswordDialogComponent,
   ResetPasswordFinishedDialogComponent,
   DeleteStorageDialogComponent,
@@ -22,13 +18,7 @@ import {
   RestoreSnapshotDialogComponent,
   DiskConflictSnapshotDialogComponent,
   SuspendServerDialogComponent,
-  ResumeServerDialogComponent,
-  AntiMalwareAddOnComponent,
-  DisasterRecoveryAddOnComponent,
-  SqlServerAddOnComponent,
-  InfrastructureMonitoringAddOnComponent,
-  HidsAddOnComponent,
-  InviewAddOnComponent
+  ResumeServerDialogComponent
 } from './shared';
 /** Server */
 import {
@@ -77,13 +67,7 @@ import {
     DiskConflictSnapshotDialogComponent,
     DeleteServerDialogComponent,
     SuspendServerDialogComponent,
-    ResumeServerDialogComponent,
-    AntiMalwareAddOnComponent,
-    DisasterRecoveryAddOnComponent,
-    SqlServerAddOnComponent,
-    InfrastructureMonitoringAddOnComponent,
-    HidsAddOnComponent,
-    InviewAddOnComponent
+    ResumeServerDialogComponent
   ],
   declarations: [
     ServersComponent,
@@ -93,10 +77,6 @@ import {
     ServerStorageComponent,
     ServerNicsComponent,
     ServerBackupsComponent,
-    ServerManageStorageComponent,
-    ServerManageNetworkComponent,
-    ServerManageMediaComponent,
-    ServerManageScaleComponent,
     ServerCreateComponent,
     ServerCreateDetailsComponent,
     ServerNewComponent,
@@ -108,12 +88,6 @@ import {
     VdcComponent,
     VdcOverviewComponent,
     VdcStorageComponent,
-    AntiMalwareAddOnComponent,
-    DisasterRecoveryAddOnComponent,
-    SqlServerAddOnComponent,
-    InfrastructureMonitoringAddOnComponent,
-    HidsAddOnComponent,
-    InviewAddOnComponent,
 
     ResetPasswordDialogComponent,
     ResetPasswordFinishedDialogComponent,

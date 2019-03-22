@@ -5,10 +5,10 @@
     <div>
       <a *ngIf="inputManageType === inputManageTypeEnum.Custom" mcsId
         (click)="onChangeInputManageType(inputManageTypeEnum.Auto)">
-        {{ 'serverShared.manageStorage.customSwitch' | translate }}</a>
+        {{ 'serverShared.manageStorage.sliderSwitch' | translate }}</a>
       <a *ngIf="inputManageType === inputManageTypeEnum.Auto" mcsId
         (click)="onChangeInputManageType(inputManageTypeEnum.Custom)">
-        {{ 'serverShared.manageStorage.sliderSwitch' | translate }}</a>
+        {{ 'serverShared.manageStorage.customSwitch' | translate }}</a>
     </div>
   </mcs-item>
 

@@ -230,23 +230,19 @@ export class TicketCreateComponent implements
     }
 
     // Create ticket
-    this.createTicketSubscription = this._ticketCreateService
-      .createTicket(ticket)
-      .pipe(
-        finalize(() => {
-          this.fgCreateDirective.resetAllControls();
-          this._ticketsRepository.clearCache();
-          this.creatingTicket = true;
-        }),
-        catchError((error) => {
-          unsubscribeSafely(this.createTicketSubscription);
-          this._changeDetectorRef.markForCheck();
-          // Handle common error status code
-          this._errorHandlerService.redirectToErrorPage(error.status);
-          return throwError(error);
-        })
-      )
-      .subscribe(() => this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.Tickets)]));
+    this.creatingTicket = true;
+    this.createTicketSubscription = this._ticketCreateService.createTicket(ticket).pipe(
+      finalize(() => {
+        this.fgCreateDirective.resetAllControls();
+        this._ticketsRepository.clearCache();
+      }),
+      catchError((error) => {
+        unsubscribeSafely(this.createTicketSubscription);
+        this._changeDetectorRef.markForCheck();
+        this._errorHandlerService.redirectToErrorPage(error.status);
+        return throwError(error);
+      })
+    ).subscribe(() => this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.Tickets)]));
   }
 
   /**
