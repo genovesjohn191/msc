@@ -2,7 +2,6 @@
   <ng-container mcsPresentationPanelHeader>
     <h2>{{ 'serverNics.title' | translate }}</h2>
   </ng-container>
-  <p *ngIf="'serverNics.description' | translate">{{ 'serverNics.description' | translate }}</p>
 
   <ng-container [ngSwitch]="nicMethodType">
     <mcs-section [@fadeIn] *ngSwitchCase="serverNicMethodTypeEnum.AddNic">
