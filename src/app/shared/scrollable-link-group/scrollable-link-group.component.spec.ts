@@ -89,11 +89,4 @@ describe('ScrollableLinkGroupComponent', () => {
       expect(description.label).toBe('Description');
     });
   });
-
-  describe('activeLink()', () => {
-    it(`should the Information link is currently active by default`, () => {
-      let allInformation = component.scrollableLinkComponent.scrollableLinks.first;
-      expect(allInformation).toBe(component.scrollableLinkComponent.activeLink);
-    });
-  });
 });
