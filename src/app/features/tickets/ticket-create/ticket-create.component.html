@@ -97,7 +97,7 @@
         </mcs-form-field>
 
         <!-- Services -->
-        <mcs-section>
+        <mcs-section [mcsContextualHelp]="'ticketCreate.contextualHelp.services' | translate" >
           <h2>{{ 'ticketCreate.services' | translate }}</h2>
           <div>
             <ng-container *ngIf="services">
