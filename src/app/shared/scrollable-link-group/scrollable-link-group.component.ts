@@ -21,7 +21,8 @@ import {
 import { McsScrollDispatcherService } from '@app/core';
 import {
   isNullOrEmpty,
-  unsubscribeSafely
+  unsubscribeSafely,
+  getSafeProperty
 } from '@app/utilities';
 import { McsSelection } from '@app/models';
 import { ScrollableLinkComponent } from './scrollable-link/scrollable-link.component';
@@ -65,12 +66,13 @@ export class ScrollableLinkGroupComponent implements AfterViewInit, AfterContent
 
   public ngAfterViewInit() {
     Promise.resolve().then(() => {
-      this._scrollableHeaders.changes
-        .pipe(startWith(null), takeUntil(this._destroySubject))
-        .subscribe(() => {
-          this._initializeSelection();
-          this._hideSingleScrollLinkLabel();
-        });
+      this._scrollableHeaders.changes.pipe(
+        startWith(null), takeUntil(this._destroySubject)
+      ).subscribe(() => {
+        this._initializeSelection();
+        this._hideSingleScrollLinkLabel();
+      });
+
       this._subscribeToScrollUpdate();
       this._subscribeToActivatedLinkByScrollChange();
     });
@@ -91,14 +93,6 @@ export class ScrollableLinkGroupComponent implements AfterViewInit, AfterContent
    */
   public get hasMultipleLinks(): boolean {
     return this.scrollableLinks.length > 1;
-  }
-
-  /**
-   * Return the currently active link
-   */
-  public get activeLink(): ScrollableLinkComponent {
-    return isNullOrEmpty(this._selectionModel.selected) ?
-      undefined : this._selectionModel.selected[0];
   }
 
   /**
@@ -176,10 +170,24 @@ export class ScrollableLinkGroupComponent implements AfterViewInit, AfterContent
       takeUntil(this._destroySubject),
       distinctUntilChanged()
     ).subscribe((activatedLink) => {
-      Promise.resolve().then(() => {
-        if (isNullOrEmpty(activatedLink)) { return; }
-        this._selectLink(activatedLink);
-      });
+      if (isNullOrEmpty(activatedLink)) { return; }
+      this._selectLink(activatedLink);
+      this._selectScrollHeader(activatedLink);
     });
+  }
+
+  /**
+   * Selects the scrollable header
+   */
+  private _selectScrollHeader(header: ScrollableLinkComponent): void {
+    if (isNullOrEmpty(header)) { return; }
+
+    let headerIndex = this.scrollableLinks.toArray().indexOf(header);
+    let responsiveItem = getSafeProperty(this._scrollableHeaders,
+      (obj) => obj.toArray()[headerIndex].responsiveItem
+    );
+    if (!isNullOrEmpty(responsiveItem)) {
+      responsiveItem.onClick();
+    }
   }
 }
