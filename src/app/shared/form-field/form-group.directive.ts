@@ -46,7 +46,7 @@ export class McsFormGroupDirective implements OnInit, OnDestroy {
     private _elementRef: ElementRef<HTMLElement>,
     private _changeDetectorRef: ChangeDetectorRef,
     private _formGroupService: McsFormGroupService,
-    @Optional() private _formGroup: FormGroupDirective,
+    @Optional() private _formGroup: FormGroupDirective
   ) { }
 
   public ngOnInit() {

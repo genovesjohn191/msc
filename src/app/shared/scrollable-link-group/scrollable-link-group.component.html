@@ -2,11 +2,9 @@
 <div *ngIf="hasMultipleLinks" class="scrollable-link-group-header-wrapper" #headerContainer>
   <mcs-responsive-panel>
     <ng-container *ngFor="let scrollableLink of scrollableLinks">
-      <mcs-scrollable-link-header
-        mcsId
+      <mcs-scrollable-link-header mcsId mcsRipple
         mcsResponsivePanelItem
         [mcsResponsivePanelItemSelectable]="true"
-        mcsRipple
         (click)="onClickLink(scrollableLink)">
 
         <ng-container *ngIf="!scrollableLink.labelTemplate; else labelTemplate">
