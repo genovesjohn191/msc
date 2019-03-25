@@ -166,12 +166,6 @@
 
       <!-- Ticket Action -->
       <div class="action-items">
-        <a (click)="gotoTickets()"
-          mcsId
-          mcsEventTracker="cancel-ticket-creation"
-          mcsEventCategory="ticket"
-          mcsEventLabel="create-new-ticket-page">{{ 'ticketCreate.cancelActivity' | translate }}</a>
-
         <button mcsButton  arrow="right" mcsId="new-ticket"
           [disabled]="creatingTicket" (click)="onLogTicket()"
           mcsEventTracker="submit-new-ticket"
