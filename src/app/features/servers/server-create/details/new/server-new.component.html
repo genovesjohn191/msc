@@ -82,7 +82,8 @@
   <div class="action-box">
     <mcs-server-manage-scale #fgManageScale
       [resource]="resource"
-      (dataChange)="onScaleChanged($event)">
+      (dataChange)="onScaleChanged($event)"
+      [mcsContextualHelp]="'serverCreateDetailsStep.contextualHelp.computeField' | translate">
 
       <ng-container mcsManageScaleHeader>
         <h2>{{ 'serverCreateDetailsStep.newServer.computeSizeLabel' | translate }}</h2>

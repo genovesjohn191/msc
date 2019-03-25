@@ -43,7 +43,7 @@ export class CreateSnapshotDialogComponent {
    */
   public get confirmationMessage(): string {
     return this._translateService.instant(
-      'serverShared.dialogCreateSnapshot.alert',
+      'serverShared.dialogCreateSnapshot.confirmation',
       { server_name: this.dialogModel.serverName }
     );
   }
