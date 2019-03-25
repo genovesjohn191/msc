@@ -9,7 +9,8 @@ import {
 } from '@angular/core';
 import {
   FormGroup,
-  FormControl
+  FormControl,
+  FormBuilder
 } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import {
@@ -185,6 +186,7 @@ export class OsUpdatesScheduleComponent implements OnInit {
 
   constructor(
     private _dialogService: McsDialogService,
+    private _formBuilder: FormBuilder,
     protected _serversRepository: McsServersRepository,
     protected _changeDetectorRef: ChangeDetectorRef,
     protected _translateService: TranslateService
@@ -298,6 +300,10 @@ export class OsUpdatesScheduleComponent implements OnInit {
    * Event listener whenever schedule type change
    */
   public onScheduleTypeChange(): void {
+    // TODO : map can be use here
+    this.scheduleType === OsUpdatesScheduleType.Recurring ?
+      this._registerRecurringFormControls() : this._registerRunOnceFormControls();
+
     if (!this.hasSchedule) { return; }
 
     let formattedTime = this._initialCronJson.hour + ':' + this._initialCronJson.minute;
@@ -382,14 +388,8 @@ export class OsUpdatesScheduleComponent implements OnInit {
     this.fcRunOnceScheduleTimePeriod = new FormControl('', [CoreValidators.required]);
 
     // Register Form Groups using binding
-    this.fgSchedule = new FormGroup({
-      fcRecurringScheduleDay: this.fcRecurringScheduleDay,
-      fcRecurringScheduleTime: this.fcRecurringScheduleTime,
-      fcRecurringSchedulePeriod: this.fcRecurringScheduleTimePeriod,
-      fcRunOnceScheduleDay: this.fcRunOnceScheduleDay,
-      fcRunOnceScheduleTime: this.fcRunOnceScheduleTime,
-      fcRunOnceSchedulePeriod: this.fcRunOnceScheduleTimePeriod,
-    });
+    this.fgSchedule = this._formBuilder.group([]);
+
     // Initialize Time and Period selections
     // TODO : can be created by loop
     this.timeOptions = this._translateService.instant(
@@ -469,6 +469,26 @@ export class OsUpdatesScheduleComponent implements OnInit {
           return new McsServerOsUpdatesSchedule();
         })
       );
+  }
+
+  /**
+   * Registers the form controls related to recurring schedule type
+   */
+  private _registerRecurringFormControls(): void {
+    this.fgSchedule = this._formBuilder.group([]);
+    this.fgSchedule.setControl('fcRecurringScheduleDay', this.fcRecurringScheduleDay);
+    this.fgSchedule.setControl('fcRecurringScheduleTime', this.fcRecurringScheduleTime);
+    this.fgSchedule.setControl('fcRecurringScheduleTimePeriod', this.fcRecurringScheduleTimePeriod);
+  }
+
+  /**
+   * Registers the form controls related to runonce schedule type
+   */
+  private _registerRunOnceFormControls(): void {
+    this.fgSchedule = this._formBuilder.group([]);
+    this.fgSchedule.setControl('fcRunOnceScheduleDay', this.fcRunOnceScheduleDay);
+    this.fgSchedule.setControl('fcRunOnceScheduleTime', this.fcRunOnceScheduleTime);
+    this.fgSchedule.setControl('fcRunOnceScheduleTimePeriod', this.fcRunOnceScheduleTimePeriod);
   }
 
   /**
