@@ -928,8 +928,7 @@
     "missingActivitiesLabel": "No activities yet",
     "creatingComment": "Adding comment...",
     "backToTickets": "Back To Tickets",
-    "addActivity": "Add",
-    "cancelActivity": "Cancel"
+    "addActivity": "Add"
   },
   "ticketCreate": {
     "header": "Create New Ticket",
@@ -940,7 +939,6 @@
     "attachments": "Attachments",
     "backToTickets": "Back To Tickets",
     "newTicket": "Log Ticket",
-    "cancelActivity": "Cancel",
     "creatingTicket": "Creating ticket, this may take a few moments.",
     "hints": {
       "reference": "Max of {{max_char}} characters",
