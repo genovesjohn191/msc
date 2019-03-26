@@ -18,7 +18,12 @@
   <!-- Content Panel -->
   <mcs-content-panel *mcsContentPanelDef>
 
-    <mcs-wizard [header]="'mediaUpload.header' | translate">
+    <mcs-wizard [header]="'mediaUpload.header' | translate"
+      (stepChange)="onWizardStepChanged($event)">
+      <!-- Form Message -->
+      <ng-container mcsWizardErrorTemplate>
+        <mcs-form-message #formMessage></mcs-form-message>
+      </ng-container>
 
       <!-- Server Details Step-->
       <mcs-wizard-step id="media-details"
