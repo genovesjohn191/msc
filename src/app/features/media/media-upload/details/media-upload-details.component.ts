@@ -146,9 +146,9 @@ export class MediaUploadDetailsComponent
   public onBlurMediaUrl(): void {
     if (this.fcMediaUrl.hasError('url')) { return; }
     this.fcMediaUrl.markAsPending();
+    this.mediaUrlStatusIconKey = CoreDefinition.ASSETS_GIF_LOADER_ELLIPSIS;
     let mediaUrl = this.fcMediaUrl.value;
 
-    this.mediaUrlStatusIconKey = CoreDefinition.ASSETS_GIF_LOADER_ELLIPSIS;
     this._mediaUploadService.validateUrl(
       this.selectedResourceId,
       mediaUrl
@@ -160,10 +160,10 @@ export class MediaUploadDetailsComponent
         this.fcMediaUrl.setErrors({ urlValidationError: true });
         return throwError(_httpError);
       })
-    ).subscribe((response) => {
+      ).subscribe((response) => {
+      this.fcMediaUrl.updateValueAndValidity();
       this.mediaUrlStatusIconKey = CoreDefinition.ASSETS_SVG_SUCCESS;
       this.urlInfoMessage = getSafeProperty(response, (obj) => obj.content[0].message);
-      this.fcMediaUrl.updateValueAndValidity();
     });
   }
 
