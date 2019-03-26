@@ -183,19 +183,17 @@
                 </div>
               </ng-container>
 
-              <ng-container *ngIf="ticketActivites$ | async as ticketActivities">
-                <mcs-section *ngIf="ticketActivities | mcsIsNotNullOrEmpty; else noActivities">
-                  <mcs-ticket-activity *ngFor="let activity of ticketActivities"
-                    [ticketId]="selectedTicket.id"
-                    [activity]="activity">
-                  </mcs-ticket-activity>
-                </mcs-section>
-                <ng-template #noActivities>
-                  <mcs-data-status-empty>
-                    {{ 'ticket.missingActivitiesLabel' | translate }}
-                  </mcs-data-status-empty>
-                </ng-template>
-              </ng-container>
+              <mcs-section *ngIf="selectedTicket.activities | mcsIsNotNullOrEmpty; else noActivities">
+                <mcs-ticket-activity *ngFor="let activity of selectedTicket.activities"
+                  [ticketId]="selectedTicket.id"
+                  [activity]="activity">
+                </mcs-ticket-activity>
+              </mcs-section>
+              <ng-template #noActivities>
+                <mcs-data-status-empty>
+                  {{ 'ticket.missingActivitiesLabel' | translate }}
+                </mcs-data-status-empty>
+              </ng-template>
             </mcs-presentation-panel>
           </mcs-grid-column>
         </mcs-grid-row>

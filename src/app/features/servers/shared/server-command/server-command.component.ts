@@ -34,6 +34,9 @@ export class ServerCommandComponent {
   @Input()
   public id: string;
 
+  @Input()
+  public autoCalculatePosition: boolean = true;
+
   @Output()
   public onClick: EventEmitter<ServerCommand> = new EventEmitter();
 

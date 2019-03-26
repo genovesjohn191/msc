@@ -6,19 +6,19 @@
 <mcs-section full-width>
   <!-- Header (User details) -->
   <mcs-item orientation="separated">
-    <strong>{{ activity.header }}</strong>
+    <strong>{{ ticketActivity.header }}</strong>
     <span hidden-small read-only>
-      {{ activity.date | mcsStdDateFormat }}
+      {{ ticketActivity.date | mcsStdDateFormat }}
     </span>
   </mcs-item>
 
   <!-- Comment message -->
   <div>
-    <p *ngIf="!isAttachment" [innerHTML]="activity.content | mcsNewLines"></p>
+    <p *ngIf="!isAttachment" [innerHTML]="ticketActivity.content | mcsNewLines"></p>
     <p *ngIf="isAttachment">
       <mcs-file-download [downloading]="downloading"
         (download)="downloadAttachment()">
-        {{ activity.content }}
+        {{ ticketActivity.content }}
       </mcs-file-download>
     </p>
   </div>

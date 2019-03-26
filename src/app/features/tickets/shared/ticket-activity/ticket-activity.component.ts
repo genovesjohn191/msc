@@ -7,8 +7,13 @@ import {
 } from '@angular/core';
 import { saveAs } from 'file-saver';
 import { CoreDefinition } from '@app/core';
-import { CommentType } from '@app/models';
+import { isNullOrEmpty } from '@app/utilities';
 import { McsTicketsRepository } from '@app/services';
+import {
+  CommentType,
+  McsTicketComment,
+  McsTicketAttachment
+} from '@app/models';
 import { TicketActivity } from './ticket-activity';
 import { TicketActivityType } from './ticket-activity-type.enum';
 
@@ -25,56 +30,50 @@ import { TicketActivityType } from './ticket-activity-type.enum';
 })
 
 export class TicketActivityComponent {
-
   public downloading: boolean;
 
-  /**
-   * Activity of the ticket to be populated on the view
-   */
   @Input()
-  public get activity(): TicketActivity {
-    return this._activity;
-  }
-  public set activity(value: TicketActivity) {
-    if (this._activity !== value) {
-      this._activity = value;
-      this._changeDetectorRef.markForCheck();
-    }
-  }
+  public ticketId: string;
 
   @Input()
-  public get ticketId(): TicketActivity {
-    return this._ticketId;
+  public set activity(value: McsTicketComment | McsTicketAttachment) {
+    if (isNullOrEmpty(value)) { return; }
+    this._activity = value instanceof McsTicketComment ?
+      TicketActivity.createByComment(value) :
+      TicketActivity.createByAttachment(value);
   }
-  public set ticketId(value: TicketActivity) {
-    if (this._ticketId !== value) {
-      this._ticketId = value;
-      this._changeDetectorRef.markForCheck();
-    }
-  }
-
-  public get isWorkNotes(): boolean {
-    return this.activity.commentType === CommentType.WorkNotes;
-  }
-
-  private _ticketId: any;
   private _activity: TicketActivity;
-
-  public get isAttachment(): boolean {
-    return this.activity.type === TicketActivityType.Attachment;
-  }
 
   public constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private _ticketsRepository: McsTicketsRepository
-  ) {
-    this._activity = new TicketActivity();
-  }
+  ) { }
 
   public get activityIconKey(): string {
-    return this.activity.type === TicketActivityType.Comment ?
+    return this._activity.type === TicketActivityType.Comment ?
       CoreDefinition.ASSETS_FONT_COMMENT :
       CoreDefinition.ASSETS_FONT_ATTACHMENT;
+  }
+
+  /**
+   * Returns the ticket activity
+   */
+  public get ticketActivity(): TicketActivity {
+    return this._activity;
+  }
+
+  /**
+   * Returns true when the activity is an attachment type
+   */
+  public get isAttachment(): boolean {
+    return this._activity.type === TicketActivityType.Attachment;
+  }
+
+  /**
+   * Returns true when the comment type is work notes
+   */
+  public get isWorkNotes(): boolean {
+    return this._activity.commentType === CommentType.WorkNotes;
   }
 
   /**
@@ -83,11 +82,12 @@ export class TicketActivityComponent {
    */
   public downloadAttachment() {
     this.downloading = true;
-    this._ticketsRepository.getFileAttachment(this._ticketId, this._activity.id)
-      .subscribe((blobResponse) => {
-        saveAs(blobResponse, this._activity.content);
-        this.downloading = false;
-        this._changeDetectorRef.markForCheck();
-      });
+    this._ticketsRepository.getFileAttachment(
+      this.ticketId, this._activity.id
+    ).subscribe((blobResponse) => {
+      saveAs(blobResponse, this._activity.content);
+      this.downloading = false;
+      this._changeDetectorRef.markForCheck();
+    });
   }
 }

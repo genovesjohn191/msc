@@ -18,6 +18,7 @@ import {
 import { McsTicketComment } from './mcs-ticket-comment';
 import { McsTicketClosureInformation } from './mcs-ticket-closure-information';
 import { McsTicketAttachment } from './mcs-ticket-attachment';
+import { isNullOrEmpty } from '@app/utilities';
 
 export class McsTicket extends McsEntityBase {
   public number: string;
@@ -133,5 +134,14 @@ export class McsTicket extends McsEntityBase {
    */
   public get subTypeLabel(): string {
     return ticketSubTypeText[this.subType];
+  }
+
+  /**
+   * Returns the ticket activities
+   */
+  public get activities(): any[] {
+    let comments = isNullOrEmpty(this.comments) ? [] : this.comments;
+    let attachments = isNullOrEmpty(this.attachments) ? [] : this.attachments;
+    return [...comments, ...attachments];
   }
 }
