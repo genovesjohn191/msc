@@ -131,7 +131,7 @@
         <!-- Action tab -->
         <ng-container mcsTabHeaderCustom *mcsAccessControl="serverPermission.VmPowerStateEdit">
           <mcs-server-command mcsId="server-command" mcsAlign="end"
-            [server]="selectedServer"
+            [server]="selectedServer" [autoCalculatePosition]="false"
             (onClick)="executeServerCommand(selectedServer, $event)">
           </mcs-server-command>
         </ng-container>

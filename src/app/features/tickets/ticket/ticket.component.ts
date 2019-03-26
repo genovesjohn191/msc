@@ -16,11 +16,8 @@ import {
 } from 'rxjs';
 import {
   catchError,
-  switchMap,
   finalize,
-  shareReplay,
-  startWith,
-  map
+  takeUntil
 } from 'rxjs/operators';
 import { saveAs } from 'file-saver';
 import {
@@ -30,7 +27,6 @@ import {
 } from '@app/core';
 import {
   isNullOrEmpty,
-  compareDates,
   unsubscribeSafely
 } from '@app/utilities';
 import {
@@ -46,7 +42,6 @@ import {
   McsTicketCreateAttachment
 } from '@app/models';
 import { McsTicketsRepository } from '@app/services';
-import { TicketActivity } from '../shared';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -58,12 +53,12 @@ import { TranslateService } from '@ngx-translate/core';
 export class TicketComponent implements OnInit, OnDestroy {
 
   public selectedTicket$: Observable<McsTicket>;
-  public ticketActivites$: Observable<TicketActivity[]>;
   public creatingComment$: Observable<boolean>;
 
   private _downloadingIdList: Set<string>;
   private _creatingComment = new Subject<boolean>();
   private _ticketDetailsChange = new Subject<void>();
+  private _destroySubject = new Subject<void>();
 
   public get checkIconKey(): string {
     return CoreDefinition.ASSETS_FONT_CHECK;
@@ -86,12 +81,14 @@ export class TicketComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this.creatingComment$ = this._creatingComment;
+    this._subscribeToTicketsDataChange();
     this._subscribeToParamId();
   }
 
   public ngOnDestroy() {
     unsubscribeSafely(this._ticketDetailsChange);
     unsubscribeSafely(this._creatingComment);
+    unsubscribeSafely(this._destroySubject);
   }
 
   /**
@@ -199,10 +196,11 @@ export class TicketComponent implements OnInit, OnDestroy {
    * Subscribes to parameter id
    */
   private _subscribeToParamId(): void {
-    this._activatedRoute.paramMap.subscribe((params: ParamMap) => {
+    this._activatedRoute.paramMap.pipe(
+      takeUntil(this._destroySubject)
+    ).subscribe((params: ParamMap) => {
       let ticketId = params.get('id');
       this._subscribeToTicketById(ticketId);
-      this._subscribeToSelectedTicket();
     });
   }
 
@@ -211,60 +209,21 @@ export class TicketComponent implements OnInit, OnDestroy {
    */
   private _subscribeToTicketById(ticketId: string): void {
     this._loadingService.showLoader(this._translateService.instant('ticket.loading'));
-    this.selectedTicket$ = this._ticketDetailsChange.pipe(
-      startWith(null),
-      switchMap(() =>
-        this._ticketsRepository.getById(ticketId).pipe(
-          catchError((error) => {
-            this._errorHandlerService.redirectToErrorPage(error.status);
-            return throwError(error);
-          }),
-          finalize(() => this._loadingService.hideLoader())
-        )
-      ),
-      shareReplay(1)
+    this.selectedTicket$ = this._ticketsRepository.getById(ticketId).pipe(
+      catchError((error) => {
+        this._errorHandlerService.redirectToErrorPage(error.status);
+        return throwError(error);
+      }),
+      finalize(() => this._loadingService.hideLoader())
     );
   }
 
   /**
-   * Subscribes to the selected ticket and always notifies
-   * the changes once the ticket details has been triggered
+   * Subscribes to ticket data change
    */
-  private _subscribeToSelectedTicket(): void {
-    this.ticketActivites$ = this._ticketDetailsChange.pipe(
-      startWith(null),
-      switchMap(() => {
-        return this.selectedTicket$.pipe(
-          map((ticketDetails) => {
-            let ticketActivities: TicketActivity[] = new Array();
-
-            // Add attachment to the activity list
-            if (!isNullOrEmpty(ticketDetails.attachments)) {
-              ticketDetails.attachments.forEach((ticketAttachment) => {
-                let activity = new TicketActivity();
-                activity.setBasedOnAttachment(ticketAttachment);
-                ticketActivities.push(activity);
-              });
-            }
-
-            // Add comments to the activity list
-            if (!isNullOrEmpty(ticketDetails.comments)) {
-              ticketDetails.comments.forEach((ticketItem) => {
-                let activity = new TicketActivity();
-                activity.setBasedOnComment(ticketItem);
-                ticketActivities.push(activity);
-              });
-            }
-
-            // Sort activities by date
-            ticketActivities.sort((_first: TicketActivity, _second: TicketActivity) => {
-              return compareDates(_second.date, _first.date);
-            });
-            return ticketActivities;
-          })
-        );
-      }),
-      shareReplay(1)
-    );
+  private _subscribeToTicketsDataChange(): void {
+    this._ticketsRepository.dataChange().pipe(
+      takeUntil(this._destroySubject)
+    ).subscribe(() => this._changeDetectorRef.markForCheck());
   }
 }

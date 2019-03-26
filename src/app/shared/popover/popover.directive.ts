@@ -47,6 +47,9 @@ const POPOVER_ARROW_OFFSET = 20;
 
 export class PopoverDirective implements OnInit, OnDestroy {
   @Input()
+  public autoCalculatePosition: boolean;
+
+  @Input()
   public priority: 'low' | 'medium' | 'high';
 
   @Input()
@@ -102,6 +105,7 @@ export class PopoverDirective implements OnInit, OnDestroy {
     private _popoverService: PopoverService
   ) {
     // Set default values for Inputs
+    this.autoCalculatePosition = true;
     this.priority = 'low';
     this.placement = 'bottom';
     this.orientation = 'center';
@@ -217,7 +221,7 @@ export class PopoverDirective implements OnInit, OnDestroy {
 
   public moveElementPosition(orientation: string) {
     // Update the placement of the component itself
-    let placement = this._getActualPlacement();
+    let placement = this.autoCalculatePosition ? this._getActualPlacement() : this.placement;
     this.componentRef.instance.placement = placement;
 
     // Move the element based on the placement position
