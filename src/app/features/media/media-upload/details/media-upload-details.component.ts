@@ -10,7 +10,6 @@ import {
   FormGroup,
   FormControl
 } from '@angular/forms';
-import { HttpErrorResponse } from '@angular/common/http';
 import {
   Subject,
   BehaviorSubject,
@@ -44,7 +43,8 @@ import {
   McsResourceCatalogItemCreate,
   CatalogItemType,
   McsResourceCatalogItem,
-  RouteKey
+  RouteKey,
+  McsApiErrorResponse
 } from '@app/models';
 import {
   McsFormGroupDirective,
@@ -158,10 +158,10 @@ export class MediaUploadDetailsComponent
       this.selectedResourceId,
       mediaUrl
     ).pipe(
-      catchError((_httpError: HttpErrorResponse) => {
+      catchError((_httpError: McsApiErrorResponse) => {
         if (isNullOrEmpty(_httpError)) { return throwError(_httpError); }
         this.mediaUrlStatusIconKey = CoreDefinition.ASSETS_SVG_ERROR;
-        this.urlInfoMessage = getSafeProperty(_httpError, (obj) => obj.error.errors[0].message);
+        this.urlInfoMessage = getSafeProperty(_httpError, (obj) => obj.errorMessages[0]);
         this.fcMediaUrl.setErrors({ urlValidationError: true });
         return throwError(_httpError);
       })
