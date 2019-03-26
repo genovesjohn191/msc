@@ -46,10 +46,7 @@ import {
   RouteKey,
   McsApiErrorResponse
 } from '@app/models';
-import {
-  McsFormGroupDirective,
-  FormMessage
-} from '@app/shared';
+import { McsFormGroupDirective } from '@app/shared';
 import { MediaUploadService } from '../media-upload.service';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -88,9 +85,6 @@ export class MediaUploadDetailsComponent
 
   @ViewChild(McsFormGroupDirective)
   private _formGroup: McsFormGroupDirective;
-
-  @ViewChild('formMessage')
-  private _formMessage: FormMessage;
 
   constructor(
     private _elementRef: ElementRef,
@@ -151,6 +145,7 @@ export class MediaUploadDetailsComponent
    */
   public onBlurMediaUrl(): void {
     if (this.fcMediaUrl.hasError('url')) { return; }
+    this.fcMediaUrl.markAsPending();
     let mediaUrl = this.fcMediaUrl.value;
 
     this.mediaUrlStatusIconKey = CoreDefinition.ASSETS_GIF_LOADER_ELLIPSIS;
@@ -168,6 +163,7 @@ export class MediaUploadDetailsComponent
     ).subscribe((response) => {
       this.mediaUrlStatusIconKey = CoreDefinition.ASSETS_SVG_SUCCESS;
       this.urlInfoMessage = getSafeProperty(response, (obj) => obj.content[0].message);
+      this.fcMediaUrl.updateValueAndValidity();
     });
   }
 
@@ -201,13 +197,7 @@ export class MediaUploadDetailsComponent
       uploadMediaModel
     ).pipe(
       catchError((httpError) => {
-        let fallbackMessage = this._translateService.instant(
-          'mediaUpload.mediaStepDetails.errors.mediaUploadError'
-        );
-        this._formMessage.showMessage('error', {
-          messages: httpError.errorMessages,
-          fallbackMessage
-        });
+        this._mediaUploadService.setErrors(httpError.errorMessages);
         return throwError(httpError);
       }),
       tap(() => this.mediaUploading = true),
