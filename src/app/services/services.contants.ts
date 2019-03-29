@@ -28,13 +28,21 @@ import { McsToolsRepository } from './repositories/mcs-tools.repository';
 import { McsConsoleRepository } from './repositories/mcs-console.repository';
 import { McsCompaniesRepository } from './repositories/mcs-companies.repository';
 
+/** Job Managers */
+import { McsServersJobManager } from './job-manager/mcs-servers-job.manager';
+import { McsMediaJobManager } from './job-manager/mcs-media-job.manager';
+import { McsNotificationJobManager } from './job-manager/mcs-notification-job.manager';
+
 /** Guards */
 import { RequiredResourcesGuard } from './guards/required-resources.guard';
 
-/**
- * List of services for the main module
- */
-export const servicesProviders: any[] = [
+export const initializableProviders: any[] = [
+  McsServersJobManager,
+  McsMediaJobManager,
+  McsNotificationJobManager
+];
+
+export const apiProviders: any[] = [
   FirewallsApiService,
   JobsApiService,
   MediaApiService,
@@ -47,7 +55,9 @@ export const servicesProviders: any[] = [
   ToolsApiService,
   ConsoleApiService,
   CompaniesApiService,
+];
 
+export const repositoryProviders: any[] = [
   McsFirewallsRepository,
   McsJobsRepository,
   McsMediaRepository,
@@ -62,6 +72,8 @@ export const servicesProviders: any[] = [
   McsToolsRepository,
   McsConsoleRepository,
   McsCompaniesRepository,
+];
 
+export const guardProviders: any[] = [
   RequiredResourcesGuard
 ];

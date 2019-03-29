@@ -8,10 +8,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { CookieModule } from 'ngx-cookie';
-import {
-  EventBusDispatcherService,
-  EventBusState
-} from '@app/event-bus';
+import { EventBusDispatcherService } from '@app/event-bus';
 import {
   McsDisposable,
   isNullOrEmpty
@@ -19,6 +16,7 @@ import {
 
 import { CoreConfig } from './core.config';
 import { coreProviders } from './core.constants';
+import { CoreEvent } from './core.event';
 import { McsDialogContainerComponent } from './factory/dialog/mcs-dialog-container.component';
 import { McsDialogRefDirective } from './factory/dialog/mcs-dialog-ref.directive';
 import {
@@ -31,6 +29,7 @@ import { McsRouteHandlerService } from './services/mcs-route-handler.service';
 import { McsNotificationJobService } from './services/mcs-notification-job.service';
 import { McsNotificationContextService } from './services/mcs-notification-context.service';
 import { McsErrorHandlerService } from './services/mcs-error-handler.service';
+import { McsNotificationEventsService } from './services/mcs-notification-events.service';
 
 @NgModule({
   declarations: [
@@ -78,9 +77,10 @@ export class CoreModule {
   constructor(
     @Optional() @SkipSelf() parentModule: CoreModule,
     private _eventDispatcher: EventBusDispatcherService,
+    private _routerHandler: McsRouteHandlerService,
     private _notificationJob: McsNotificationJobService,
     private _notificationContext: McsNotificationContextService,
-    private _routerHandler: McsRouteHandlerService,
+    _notificationEvents: McsNotificationEventsService,
     _errorHandlerService: McsErrorHandlerService,
     _googleAnalytics: GoogleAnalyticsEventsService,
     _sessionHandlerService: McsSessionHandlerService
@@ -89,6 +89,8 @@ export class CoreModule {
       throw new Error(
         'CoreModule is already loaded. Import it in the AppModule only');
     }
+
+    // TODO: Register the providers with initializable interface
     this._registerEvents();
   }
 
@@ -97,7 +99,7 @@ export class CoreModule {
    */
   private _registerEvents(): void {
     this._eventDispatcher.addEventListener(
-      EventBusState.SessionTimedOut, this._onSessionTimedOut.bind(this));
+      CoreEvent.sessionTimedOut, this._onSessionTimedOut.bind(this));
   }
 
   /**

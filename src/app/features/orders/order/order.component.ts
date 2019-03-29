@@ -251,7 +251,7 @@ export class OrderComponent implements OnInit, OnDestroy {
    */
   private _subscribeToOrderById(orderId: string): void {
     this._loadingService.showLoader(this._translate.instant('order.loading'));
-    this.order$ = this._ordersRepository.getById(orderId).pipe(
+    this.order$ = this._ordersRepository.getByIdAsync(orderId).pipe(
       catchError((error) => {
         this._errorHandlerService.redirectToErrorPage(error.status);
         return throwError(error);

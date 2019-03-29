@@ -2,12 +2,11 @@ import { Injectable } from '@angular/core';
 import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
-/** Services and Models */
 import {
   CoreRoutes,
   McsAuthenticationIdentity,
-  McsNotificationEventsService,
-  McsDialogService
+  McsDialogService,
+  CoreEvent
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -22,22 +21,20 @@ import {
   DataStatus
 } from '@app/models';
 import { McsServersRepository } from '@app/services';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { ResetPasswordFinishedDialogComponent } from './shared';
 
-/**
- * Servers Services Class
- */
 @Injectable()
 export class ServersService {
 
   constructor(
     private _serversRepository: McsServersRepository,
-    private _notificationsEvent: McsNotificationEventsService,
+    private _eventDispatcher: EventBusDispatcherService,
     private _authIdentity: McsAuthenticationIdentity,
     private _dialogService: McsDialogService,
     private _router: Router
   ) {
-    this._listensToResetVmPasswordByUser();
+    this._registerEvents();
   }
 
   /**
@@ -196,23 +193,26 @@ export class ServersService {
    * Listens to current user job to trigger the dialog box
    * when the reset vm password has finished
    */
-  private _listensToResetVmPasswordByUser(): void {
-    this._notificationsEvent.currentUserJob
-      .subscribe((job: McsJob) => {
-        let jobIsResetVmPassword: boolean;
-        jobIsResetVmPassword = getSafeProperty(job, (obj) => obj.type)
-          === JobType.ResetServerPassword;
-        if (!jobIsResetVmPassword) { return; }
+  private _registerEvents(): void {
+    this._eventDispatcher.addEventListener(
+      CoreEvent.jobServerResetPassword, this._onResetVmPassword.bind(this));
+  }
 
-        if (job.dataStatus === DataStatus.Success) {
-          let credentialObject = job.tasks[0].referenceObject.credential;
-          this._dialogService.open(ResetPasswordFinishedDialogComponent, {
-            id: 'reset-vm-password-confirmation',
-            data: credentialObject,
-            size: 'medium',
-            disableClose: true
-          });
-        }
+  /**
+   * Event that emits when vm password has been received
+   */
+  private _onResetVmPassword(job: McsJob): void {
+    let jobIsResetVmPassword = getSafeProperty(job, (obj) => obj.type) === JobType.ResetServerPassword;
+    if (!jobIsResetVmPassword) { return; }
+
+    if (job.dataStatus === DataStatus.Success) {
+      let credentialObject = job.tasks[0].referenceObject.credential;
+      this._dialogService.open(ResetPasswordFinishedDialogComponent, {
+        id: 'reset-vm-password-confirmation',
+        data: credentialObject,
+        size: 'medium',
+        disableClose: true
       });
+    }
   }
 }

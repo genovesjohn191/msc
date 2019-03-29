@@ -93,54 +93,56 @@
   </mcs-left-panel>
 
   <mcs-content-panel *mcsContentPanelDef>
-    <div class="routing-tab-wrapper" *ngIf="selectedServer$ | async as selectedServer">
-      <!-- Busy status of the server -->
-      <ng-container *ngIf="selectedServer.isProcessing">
-        <mcs-busy-ribbon theme="dark" margin-bottom-small>
-          <span>{{ 'server.serverBusyLabel' | translate }}</span>
-        </mcs-busy-ribbon>
+    <div class="routing-tab-wrapper" *mcsComponentHandler>
+      <ng-container *ngIf="selectedServer$ | async as selectedServer">
+        <!-- Busy status of the server -->
+        <ng-container *ngIf="selectedServer.isProcessing">
+          <mcs-busy-ribbon theme="dark" margin-bottom-small>
+            <span>{{ 'server.serverBusyLabel' | translate }}</span>
+          </mcs-busy-ribbon>
+        </ng-container>
+
+        <mcs-tab-group [selectedTabId]="selectedRoutingTab" (tabChanged)="onTabChanged($event)">
+          <!-- Management Tab -->
+          <mcs-tab [label]="'serverManagement.label' | translate" id="management"></mcs-tab>
+
+          <!-- Services Tab -->
+          <ng-container *ngIf="selectedServer.isManagedVCloud">
+            <mcs-tab [label]="'serverServices.label' | translate" id="services" *mcsAccessControl="[]; feature: 'EnableServerOsUpdates'"></mcs-tab>
+          </ng-container>
+
+          <!-- Storage Tab -->
+          <ng-container *mcsAccessControl="[]; feature: 'EnableDedicatedVmStorageView';
+            validateWhen: selectedServer.isDedicated">
+            <mcs-tab [label]="'serverStorage.label' | translate" id="storage"></mcs-tab>
+          </ng-container>
+
+          <!-- Snapshots Tab -->
+          <ng-container *mcsAccessControl="[]; feature: 'EnableDedicatedVmSnapshotView';
+            validateWhen: selectedServer.isDedicated">
+            <mcs-tab [label]="'serverBackups.label' | translate" id="snapshots"></mcs-tab>
+          </ng-container>
+
+          <!-- Networks Tab -->
+          <ng-container *mcsAccessControl="[]; feature: 'EnableDedicatedVmNicView';
+            validateWhen: selectedServer.isDedicated">
+            <mcs-tab [label]="'serverNics.label' | translate" id="nics"></mcs-tab>
+          </ng-container>
+
+          <!-- Action tab -->
+          <ng-container mcsTabHeaderCustom *mcsAccessControl="serverPermission.VmPowerStateEdit">
+            <mcs-server-command mcsId="server-command" mcsAlign="end"
+              [server]="selectedServer" [autoCalculatePosition]="false"
+              (onClick)="executeServerCommand(selectedServer, $event)">
+            </mcs-server-command>
+          </ng-container>
+        </mcs-tab-group>
+
+        <!-- Tab content for routing tab -->
+        <div class="routing-tab-content-wrapper limited-view">
+          <router-outlet></router-outlet>
+        </div>
       </ng-container>
-
-      <mcs-tab-group [selectedTabId]="selectedRoutingTab" (tabChanged)="onTabChanged($event)">
-        <!-- Management Tab -->
-        <mcs-tab [label]="'serverManagement.label' | translate" id="management"></mcs-tab>
-
-        <!-- Services Tab -->
-        <ng-container *ngIf="selectedServer.isManagedVCloud">
-          <mcs-tab [label]="'serverServices.label' | translate" id="services" *mcsAccessControl="[]; feature: 'EnableServerOsUpdates'"></mcs-tab>
-        </ng-container>
-
-        <!-- Storage Tab -->
-        <ng-container *mcsAccessControl="[]; feature: 'EnableDedicatedVmStorageView';
-          validateWhen: selectedServer.isDedicated">
-          <mcs-tab [label]="'serverStorage.label' | translate" id="storage"></mcs-tab>
-        </ng-container>
-
-        <!-- Snapshots Tab -->
-        <ng-container *mcsAccessControl="[]; feature: 'EnableDedicatedVmSnapshotView';
-          validateWhen: selectedServer.isDedicated">
-          <mcs-tab [label]="'serverBackups.label' | translate" id="snapshots"></mcs-tab>
-        </ng-container>
-
-        <!-- Networks Tab -->
-        <ng-container *mcsAccessControl="[]; feature: 'EnableDedicatedVmNicView';
-          validateWhen: selectedServer.isDedicated">
-          <mcs-tab [label]="'serverNics.label' | translate" id="nics"></mcs-tab>
-        </ng-container>
-
-        <!-- Action tab -->
-        <ng-container mcsTabHeaderCustom *mcsAccessControl="serverPermission.VmPowerStateEdit">
-          <mcs-server-command mcsId="server-command" mcsAlign="end"
-            [server]="selectedServer" [autoCalculatePosition]="false"
-            (onClick)="executeServerCommand(selectedServer, $event)">
-          </mcs-server-command>
-        </ng-container>
-      </mcs-tab-group>
-
-      <!-- Tab content for routing tab -->
-      <div class="routing-tab-content-wrapper limited-view">
-        <router-outlet></router-outlet>
-      </div>
     </div>
   </mcs-content-panel>
 </mcs-page>

@@ -156,7 +156,7 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.selectedProduct$ = this._activatedRoute.paramMap.pipe(
       switchMap((params: ParamMap) => {
         this._loadingService.showLoader(this._translateService.instant('products.loadingDetails'));
-        return this._productsRepository.getById(params.get('id')).pipe(
+        return this._productsRepository.getByIdAsync(params.get('id')).pipe(
           finalize(() => this._loadingService.hideLoader())
         );
       }),

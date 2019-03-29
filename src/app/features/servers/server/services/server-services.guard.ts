@@ -26,7 +26,7 @@ export class ServerServicesGuard implements CanActivate {
   ): Observable<boolean> | Promise<boolean> | boolean {
 
     let serverId = _route.parent.paramMap.get('id');
-    return this._serverRepository.getById(serverId).pipe(
+    return this._serverRepository.getByIdAsync(serverId).pipe(
       map((response) => {
         if (response.isManagedVCloud) {
           return true;

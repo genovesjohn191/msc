@@ -181,7 +181,7 @@ export class FirewallComponent
    */
   private _subscribeToFirewallById(firewallId: string): void {
     this._loadingService.showLoader(this._translateService.instant('firewall.loading'));
-    this.selectedFirewall$ = this._firewallsRepository.getById(firewallId).pipe(
+    this.selectedFirewall$ = this._firewallsRepository.getByIdAsync(firewallId).pipe(
       catchError((error) => {
         // Handle common error status code
         this._errorHandlerService.redirectToErrorPage(error.status);

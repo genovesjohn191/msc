@@ -14,11 +14,12 @@ import { takeUntil } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import {
   CoreDefinition,
+  CoreRoutes,
+  CoreEvent,
   McsBrowserService,
   McsTableListingBase,
   McsAuthenticationIdentity,
-  McsTableDataSource,
-  CoreRoutes
+  McsTableDataSource
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -30,10 +31,7 @@ import {
   McsJob,
   RouteKey
 } from '@app/models';
-import {
-  EventBusPropertyListenOn,
-  EventBusState
-} from '@app/event-bus';
+import { EventBusPropertyListenOn } from '@app/event-bus';
 
 @Component({
   selector: 'mcs-notifications',
@@ -46,7 +44,7 @@ export class NotificationsComponent
   extends McsTableListingBase<McsTableDataSource<McsJob>>
   implements AfterViewInit, OnDestroy {
 
-  @EventBusPropertyListenOn(EventBusState.AccountChange)
+  @EventBusPropertyListenOn(CoreEvent.accountChange)
   public activeCompany$: Observable<McsCompany>;
 
   private _destroySubject = new Subject<void>();

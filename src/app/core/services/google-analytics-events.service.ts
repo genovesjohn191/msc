@@ -1,15 +1,12 @@
 import { Injectable } from '@angular/core';
-import { NavigationEnd } from '@angular/router';
 import { isNullOrEmpty } from '@app/utilities';
 import {
   McsIdentity,
   McsRouteInfo
 } from '@app/models';
-import {
-  EventBusDispatcherService,
-  EventBusState
-} from '@app/event-bus';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { CoreDefinition } from '../core.definition';
+import { CoreEvent } from '../core.event';
 
 declare let dataLayer: any;
 
@@ -51,15 +48,14 @@ export class GoogleAnalyticsEventsService {
 
   /**
    * Event that gets emitted when the route has been changed
-   * @param routeEvent Navigation router event
    * @param activeRoute Custom activated route of the router
    */
-  private _onRouteChanged(routeEvent: NavigationEnd, _activeRoute: McsRouteInfo): void {
-    if (isNullOrEmpty(routeEvent)) { return; }
+  private _onRouteChanged(activeRoute: McsRouteInfo): void {
+    if (isNullOrEmpty(activeRoute)) { return; }
 
     // Mask UUID from the URL
     let maskedUrl = this._maskPrivateDataFromUrl(
-      routeEvent.urlAfterRedirects, CoreDefinition.REGEX_UUID_PATTERN, '{id}');
+      activeRoute.urlAfterRedirects, CoreDefinition.REGEX_UUID_PATTERN, '{id}');
 
     // Mask JWT Token from the URL
     maskedUrl = this._maskPrivateDataFromUrl(
@@ -104,9 +100,9 @@ export class GoogleAnalyticsEventsService {
    */
   private _registerEvents(): void {
     this._eventDispatcher.addEventListener(
-      EventBusState.UserChange, this._onUserChanged.bind(this));
+      CoreEvent.userChange, this._onUserChanged.bind(this));
 
     this._eventDispatcher.addEventListener(
-      EventBusState.RouteChange, this._onRouteChanged.bind(this));
+      CoreEvent.routeChange, this._onRouteChanged.bind(this));
   }
 }

@@ -3,5 +3,6 @@ export enum ActionStatus {
   Delete,
   Update,
   Clear,
-  Sort
+  Sort,
+  View
 }

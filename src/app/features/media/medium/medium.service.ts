@@ -13,6 +13,7 @@ import { isNullOrEmpty } from '@app/utilities';
 @Injectable()
 export class MediumService {
   private _selectedMediumChange: BehaviorSubject<McsResourceMedia>;
+  private _mediaId: string;
 
   constructor() {
     this._selectedMediumChange = new BehaviorSubject<McsResourceMedia>(undefined);
@@ -34,5 +35,20 @@ export class MediumService {
    */
   public setSelectedMedium(medium: McsResourceMedia): void {
     this._selectedMediumChange.next(medium);
+  }
+
+  /**
+   * Sets the media id based on the provided string
+   * @param mediaId Media id to be set
+   */
+  public setMediaId(mediaId: string): void {
+    this._mediaId = mediaId;
+  }
+
+  /**
+   * Returns the media id
+   */
+  public getMediaId(): string {
+    return this._mediaId;
   }
 }

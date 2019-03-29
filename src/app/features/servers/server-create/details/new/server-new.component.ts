@@ -185,7 +185,7 @@ export class ServerNewComponent
    * `@Note`: The value will vary according to selected CPU scale
    */
   public get storageMaxMemoryMB(): number {
-    let currentSelectedScale = getSafeProperty(this.manageScale, (obj) => obj.memoryMB);
+    let currentSelectedScale = getSafeProperty(this.manageScale, (obj) => obj.memoryGB);
     let storageAvailable = getSafeProperty(this.selectedStorage, (obj) => obj.availableMB, 0);
     return Math.max(0, (storageAvailable - currentSelectedScale));
   }
@@ -194,7 +194,7 @@ export class ServerNewComponent
    * Returns the current scale value to deduct in the storage
    */
   public get currentScaleValue(): number {
-    let currentSelectedScale = getSafeProperty(this.manageScale, (obj) => obj.memoryMB);
+    let currentSelectedScale = getSafeProperty(this.manageScale, (obj) => obj.memoryGB);
     return convertMbToGb(currentSelectedScale);
   }
 
@@ -264,7 +264,7 @@ export class ServerNewComponent
 
     // Scale
     serverCreate.cpuCount = this.manageScale.cpuCount;
-    serverCreate.memoryMB = this.manageScale.memoryMB;
+    serverCreate.memoryMB = this.manageScale.memoryGB;
 
     // Storage
     serverCreate.storage = new McsServerCreateStorage();

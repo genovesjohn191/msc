@@ -128,7 +128,7 @@ export class SwitchAccountService {
    * @param accountId Account id to obtain from API
    */
   private _getAccountById(accountId: string): Observable<McsCompany> {
-    return this._companiesRepository.getById(accountId).pipe(
+    return this._companiesRepository.getByIdAsync(accountId).pipe(
       tap((account) => {
         this.loadingAccount = false;
         this._activeAccount = account;

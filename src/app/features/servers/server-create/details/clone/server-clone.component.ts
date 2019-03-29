@@ -158,7 +158,7 @@ export class ServerCloneComponent
 
     this.serverIsManuallyAssignedIp = false;
     this.ipAddressStatusFactory.setInProgress();
-    this._serversRepository.getById(serverId).pipe(
+    this._serversRepository.getByIdAsync(serverId).pipe(
       catchError((error) => {
         this.ipAddressStatusFactory.setSuccessful();
         return throwError(error);

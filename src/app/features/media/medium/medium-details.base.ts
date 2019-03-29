@@ -38,15 +38,12 @@ export abstract class MediumDetailsBase {
   }
 
   /**
-   * Returns true when the active job is based on currently selected media
-   * @param mediaJob Job to be checked for the active media
+   * Returns true when media is active by the job
+   * @param job Job to be the basis of the media
    */
-  protected isMediaActive(selectedMedium: McsResourceMedia, mediaJob: McsJob): boolean {
-    if (isNullOrEmpty(mediaJob) || isNullOrEmpty(selectedMedium)) { return false; }
-    let jobMediaId = getSafeProperty(mediaJob, (obj) => obj.clientReferenceObject.mediaId);
-    let selectedMediaId = getSafeProperty(selectedMedium, (obj) => obj.id);
-    let isActive = jobMediaId === selectedMediaId;
-    return isActive;
+  protected isMediaActiveByJob(job: McsJob): boolean {
+    if (isNullOrEmpty(job) || isNullOrEmpty(this._mediumService.getMediaId())) { return false; }
+    return getSafeProperty(job, (obj) => obj.clientReferenceObject.mediaId) === this._mediumService.getMediaId();
   }
 
   /**

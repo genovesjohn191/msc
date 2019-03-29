@@ -145,13 +145,11 @@ export class MediumComponent
    */
   protected onParamIdChanged(id: string) {
     if (isNullOrEmpty(id)) { return; }
-
-    // We need to recreate the component in order for the
-    // component to generate new instance
+    this._mediumService.setMediaId(id);
+    this._subscribeToMediaById(id);
     if (!isNullOrEmpty(this.componentHandler)) {
       this.componentHandler.recreateComponent();
     }
-    this._subscribeToMediaById(id);
   }
 
   /**
@@ -160,7 +158,7 @@ export class MediumComponent
    */
   private _subscribeToMediaById(mediumId: string): void {
     this._loadingService.showLoader(this._translateService.instant('mediaMedium.loading'));
-    this.media$ = this._mediaRepository.getById(mediumId).pipe(
+    this.media$ = this._mediaRepository.getByIdAsync(mediumId).pipe(
       catchError((error) => {
         this._errorHandlerService.redirectToErrorPage(error.status);
         return throwError(error);

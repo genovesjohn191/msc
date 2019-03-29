@@ -9,7 +9,7 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy
 } from '@angular/core';
-import { McsNotificationEventsService } from '@app/core';
+import { Subscription } from 'rxjs';
 import {
   McsJob,
   DataStatus
@@ -19,6 +19,8 @@ import {
   addOrUpdateArrayRecord,
   isNullOrEmpty
 } from '@app/utilities';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { CoreEvent } from '@app/core/core.event';
 
 @Component({
   selector: 'mcs-state-change-notifications',
@@ -40,22 +42,12 @@ export class StateChangeNotificationsComponent implements OnInit, OnDestroy {
   // Notifications variable
   public notifications: McsJob[];
   public closedNotifications: McsJob[];
-  public notificationsSubscription: any;
   public visible: boolean;
 
-  /**
-   * Returns the displayed notifications and ignore those who are already closed
-   */
-  public get displayedNotifications(): McsJob[] {
-    return this.notifications.filter((job) => {
-      let jobClosed = this.closedNotifications
-        .find((closedJob) => job.id === closedJob.id);
-      return !jobClosed;
-    });
-  }
+  private _currentUserJobHandler: Subscription;
 
   public constructor(
-    private _notificationEvents: McsNotificationEventsService,
+    private _eventDispatcher: EventBusDispatcherService,
     private _renderer: Renderer2,
     private _changeDetectorRef: ChangeDetectorRef
   ) {
@@ -66,15 +58,23 @@ export class StateChangeNotificationsComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit() {
-    // Listen to notifications change event of the current user profile
-    this._listenToCurrentUserJob();
-
-    // Set notifications placement
+    this._registerEvents();
     this.setPlacement();
   }
 
   public ngOnDestroy() {
-    unsubscribeSafely(this.notificationsSubscription);
+    unsubscribeSafely(this._currentUserJobHandler);
+  }
+
+  /**
+   * Returns the displayed notifications and ignore those who are already closed
+   */
+  public get displayedNotifications(): McsJob[] {
+    return this.notifications.filter((job) => {
+      let jobClosed = this.closedNotifications
+        .find((closedJob) => job.id === closedJob.id);
+      return !jobClosed;
+    });
   }
 
   /**
@@ -107,23 +107,26 @@ export class StateChangeNotificationsComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Listen to current user job triggered
+   * Event that emits when the current user job has been received
+   * @param job Job emitted on the current user
    */
-  private _listenToCurrentUserJob(): void {
-    this.notificationsSubscription = this._notificationEvents.currentUserJob
-      .subscribe((notification) => {
-        if (isNullOrEmpty(notification) ||
-          notification.dataStatus === DataStatus.InProgress) { return; }
-
-        // Update or add the new notification based on job ID
-        this.notifications = addOrUpdateArrayRecord(
-          this.notifications,
-          notification,
-          false,
-          (_existingJob: McsJob) => {
-            return _existingJob.id === notification.id;
-          });
-        this._changeDetectorRef.markForCheck();
+  private _onCurrentUserJob(job: McsJob): void {
+    if (isNullOrEmpty(job) || job.dataStatus === DataStatus.InProgress) { return; }
+    this.notifications = addOrUpdateArrayRecord(
+      this.notifications,
+      job,
+      false,
+      (_existingJob: McsJob) => {
+        return _existingJob.id === job.id;
       });
+    this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Register job events
+   */
+  private _registerEvents(): void {
+    this._currentUserJobHandler = this._eventDispatcher.addEventListener(
+      CoreEvent.jobCurrentUser, this._onCurrentUserJob.bind(this));
   }
 }

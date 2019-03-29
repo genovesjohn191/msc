@@ -94,11 +94,8 @@ export abstract class ServerDetailsBase {
    * @param job Emitted job to be checked
    */
   protected serverIsActiveByJob(job: McsJob): boolean {
-    if (isNullOrEmpty(job) || isNullOrEmpty(this._server)) { return false; }
-    let jobServerId = getSafeProperty(job, (obj) => obj.clientReferenceObject.serverId);
-    let selectedServerId = getSafeProperty(this._server, (obj) => obj.id);
-    let activeServer = jobServerId === selectedServerId;
-    return activeServer;
+    if (isNullOrEmpty(job) || isNullOrEmpty(this._serverService.getServerId())) { return false; }
+    return getSafeProperty(job, (obj) => obj.clientReferenceObject.serverId) === this._serverService.getServerId();
   }
 
   /**
@@ -137,7 +134,7 @@ export abstract class ServerDetailsBase {
     if (platformIsEmpty) { return of(new McsResource()); }
     this._loadingService.showLoader();
 
-    return this._resourcesRespository.getById(platform.resourceId).pipe(
+    return this._resourcesRespository.getByIdAsync(platform.resourceId).pipe(
       finalize(() => this._loadingService.hideLoader())
     );
   }

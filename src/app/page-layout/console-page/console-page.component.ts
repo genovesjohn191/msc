@@ -13,7 +13,8 @@ import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import {
   throwError,
-  Subject
+  Subject,
+  Subscription
 } from 'rxjs';
 import {
   catchError,
@@ -22,12 +23,12 @@ import {
 import {
   refreshView,
   isNullOrEmpty,
-  unsubscribeSubject,
-  getSafeProperty
+  getSafeProperty,
+  unsubscribeSafely
 } from '@app/utilities';
 import {
   CoreDefinition,
-  McsNotificationEventsService,
+  CoreEvent,
   McsSessionHandlerService
 } from '@app/core';
 import {
@@ -42,6 +43,7 @@ import {
   McsConsoleRepository
 } from '@app/services';
 import { ServersService } from '@app/features/servers';
+import { EventBusDispatcherService } from '@app/event-bus';
 
 // JQuery script implementation
 require('script-loader!../../../assets/scripts/jquery/jquery-1.7.2.min.js');
@@ -84,29 +86,6 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('consoleUiElement')
   public consoleUiElement: ElementRef;
 
-  // Icons key variables
-  public get keyboardIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_KEYBOARD;
-  }
-
-  public get startIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_START;
-  }
-
-  public get restartIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_RESTART;
-  }
-
-  public get stopIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_STOP;
-  }
-
-  public get stoppingText(): string {
-    return this._translateService.instant(
-      'consolePage.stopping', { timer: this.closingTime.toString() }
-    );
-  }
-
   /**
    * Server console status based on progress of the VMWare
    */
@@ -132,19 +111,12 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
   private _vmConsole: any;
   private _serverId: string;
   private _destroySubject = new Subject<void>();
-
-  public get vmConsoleStatusEnum() {
-    return VmConsoleStatus;
-  }
-
-  public get serverCommandEnum() {
-    return ServerCommand;
-  }
+  private _resetVmPasswordHandler: Subscription;
 
   public constructor(
     private _consoleRepository: McsConsoleRepository,
     private _translateService: TranslateService,
-    private _notificationsEvents: McsNotificationEventsService,
+    private _eventDispatcher: EventBusDispatcherService,
     private _sessionHandler: McsSessionHandlerService,
     private _serversRepository: McsServersRepository,
     private _serversService: ServersService,
@@ -167,7 +139,38 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public ngOnDestroy() {
-    unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this._destroySubject);
+    unsubscribeSafely(this._resetVmPasswordHandler);
+  }
+
+  public get vmConsoleStatusEnum() {
+    return VmConsoleStatus;
+  }
+
+  public get serverCommandEnum() {
+    return ServerCommand;
+  }
+
+  public get keyboardIconKey(): string {
+    return CoreDefinition.ASSETS_SVG_KEYBOARD;
+  }
+
+  public get startIconKey(): string {
+    return CoreDefinition.ASSETS_SVG_START;
+  }
+
+  public get restartIconKey(): string {
+    return CoreDefinition.ASSETS_SVG_RESTART;
+  }
+
+  public get stopIconKey(): string {
+    return CoreDefinition.ASSETS_SVG_STOP;
+  }
+
+  public get stoppingText(): string {
+    return this._translateService.instant(
+      'consolePage.stopping', { timer: this.closingTime.toString() }
+    );
   }
 
   /**
@@ -204,9 +207,8 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(takeUntil(this._destroySubject))
       .subscribe((params) => this._paramChangedEventHandler(params));
 
-    this._notificationsEvents.resetServerPasswordEvent
-      .pipe(takeUntil(this._destroySubject))
-      .subscribe((response) => this._resetVmPasswordEventHandler(response));
+    this._resetVmPasswordHandler = this._eventDispatcher.addEventListener(
+      CoreEvent.jobServerResetPassword, this._resetVmPasswordEventHandler.bind(this));
   }
 
   private _onSessionChangedEventHandler() {
@@ -361,7 +363,7 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   private _getServerById(serverId: any): void {
     if (isNullOrEmpty(this._serverId)) { return; }
-    this._serversRepository.getById(serverId)
+    this._serversRepository.getByIdAsync(serverId)
       .subscribe((response) => {
         this.server = response;
         this._changeDetectorRef.markForCheck();

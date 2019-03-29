@@ -1,15 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { McsRepositoryBase } from '@app/core';
 import {
-  map,
-  takeUntil
-} from 'rxjs/operators';
-import {
-  McsRepositoryBase,
-  McsNotificationEventsService,
-} from '@app/core';
-import {
-  isNullOrEmpty,
   McsEventHandler,
   getSafeProperty
 } from '@app/utilities';
@@ -22,7 +15,6 @@ import {
   McsServerCompute,
   McsServerOsUpdates,
   ServerCommand,
-  VmPowerState,
   McsServerRename,
   McsServerStorageDeviceUpdate,
   McsServerCreateNic,
@@ -32,7 +24,6 @@ import {
   McsServerThumbnail,
   McsServerCreateSnapshot,
   McsJob,
-  DataStatus,
   McsServerOsUpdatesSchedule,
   McsServerOsUpdatesScheduleRequest,
   McsServerCreate,
@@ -48,10 +39,7 @@ import { McsServersDataContext } from '../data-context/mcs-servers-data.context'
 export class McsServersRepository extends McsRepositoryBase<McsServer>
   implements McsEventHandler {
 
-  constructor(
-    private _serversApiService: ServersApiService,
-    private _notificationEvents: McsNotificationEventsService
-  ) {
+  constructor(private _serversApiService: ServersApiService) {
     super(new McsServersDataContext(_serversApiService));
   }
 
@@ -499,247 +487,5 @@ export class McsServersRepository extends McsRepositoryBase<McsServer>
     return this._serversApiService.putServerCommand(id, action, referenceObject).pipe(
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
-  }
-
-  /**
-   * A virtual method that gets called when all of the obtainment from api are finished
-   */
-  public registerEvents(): void {
-    // TODO: Once we use the event-bus in here,
-    // we need to create an event manager for the repository
-    this._notificationEvents.createServerEvent
-      .pipe(takeUntil(this.eventResetSubject))
-      .subscribe(this._onCreateServer.bind(this));
-
-    this._notificationEvents.cloneServerEvent
-      .pipe(takeUntil(this.eventResetSubject))
-      .subscribe(this._onCloneServer.bind(this));
-
-    this._notificationEvents.renameServerEvent
-      .pipe(takeUntil(this.eventResetSubject))
-      .subscribe(this._onRenameServer.bind(this));
-
-    this._notificationEvents.deleteServerEvent
-      .pipe(takeUntil(this.eventResetSubject))
-      .subscribe(this._onDeleteServer.bind(this));
-
-    this._notificationEvents.changeServerPowerStateEvent
-      .pipe(takeUntil(this.eventResetSubject))
-      .subscribe(this._onPowerStateServer.bind(this));
-
-    this._notificationEvents.updateServerComputeEvent
-      .pipe(takeUntil(this.eventResetSubject))
-      .subscribe(this._onScaleServer.bind(this));
-
-    this._notificationEvents.resetServerPasswordEvent
-      .pipe(takeUntil(this.eventResetSubject))
-      .subscribe(this._updateServerStatusByJob.bind(this));
-
-    this._notificationEvents.attachServerMediaEvent
-      .pipe(takeUntil(this.eventResetSubject))
-      .subscribe(this._updateServerStatusByJob.bind(this));
-
-    this._notificationEvents.detachServerMediaEvent
-      .pipe(takeUntil(this.eventResetSubject))
-      .subscribe(this._updateServerStatusByJob.bind(this));
-
-    this._notificationEvents.createServerDisk
-      .pipe(takeUntil(this.eventResetSubject))
-      .subscribe(this._updateServerStatusByJob.bind(this));
-
-    this._notificationEvents.updateServerDisk
-      .pipe(takeUntil(this.eventResetSubject))
-      .subscribe(this._updateServerStatusByJob.bind(this));
-
-    this._notificationEvents.deleteServerDisk
-      .pipe(takeUntil(this.eventResetSubject))
-      .subscribe(this._updateServerStatusByJob.bind(this));
-
-    this._notificationEvents.createServerNic
-      .pipe(takeUntil(this.eventResetSubject))
-      .subscribe(this._updateServerStatusByJob.bind(this));
-
-    this._notificationEvents.updateServerNic
-      .pipe(takeUntil(this.eventResetSubject))
-      .subscribe(this._updateServerStatusByJob.bind(this));
-
-    this._notificationEvents.deleteServerNic
-      .pipe(takeUntil(this.eventResetSubject))
-      .subscribe(this._updateServerStatusByJob.bind(this));
-
-    this._notificationEvents.createServerSnapshot
-      .pipe(takeUntil(this.eventResetSubject))
-      .subscribe(this._updateServerStatusByJob.bind(this));
-
-    this._notificationEvents.applyServerSnapshot
-      .pipe(takeUntil(this.eventResetSubject))
-      .subscribe(this._updateServerStatusByJob.bind(this));
-
-    this._notificationEvents.deleteServerSnapshot
-      .pipe(takeUntil(this.eventResetSubject))
-      .subscribe(this._updateServerStatusByJob.bind(this));
-
-    this._notificationEvents.applyServerOsUpdates
-      .pipe(takeUntil(this.eventResetSubject))
-      .subscribe(this._updateServerStatusByJob.bind(this));
-
-    this._notificationEvents.inspectServerForAvailableOsUpdate
-      .pipe(takeUntil(this.eventResetSubject))
-      .subscribe(this._updateServerStatusByJob.bind(this));
-  }
-
-  /**
-   * Event that emits when new server created
-   * @param job Emitted job content
-   */
-  private _onCreateServer(job: McsJob): void {
-    let successfullyCreated = !isNullOrEmpty(job) && job.dataStatus === DataStatus.Success;
-    if (!successfullyCreated) { return; }
-    this.clearCache();
-  }
-
-  /**
-   * Event that emits when cloning a server
-   * @param job Emitted job content
-   */
-  private _onCloneServer(job: McsJob): void {
-    if (isNullOrEmpty(job)) { return; }
-
-    let clonedServer = this._getServerByJob(job);
-    if (!isNullOrEmpty(clonedServer)) {
-      this._setServerProcessDetails(clonedServer, job);
-    }
-
-    if (job.dataStatus === DataStatus.Success) {
-      this.clearCache();
-    }
-  }
-
-  /**
-   * Event that emits when the server deleted
-   * @param job Emitted job content
-   */
-  private _onDeleteServer(job: McsJob): void {
-    let activeServer = this._getServerByJob(job);
-    if (isNullOrEmpty(activeServer)) { return; }
-
-    this._updateServerStatusByJob(job);
-    if (job.dataStatus === DataStatus.Success) {
-      this.clearCache();
-    }
-  }
-
-  /**
-   * Event that emits when server is renamed
-   * @param job Emitted job content
-   */
-  private _onRenameServer(job: McsJob): void {
-    let activeServer = this._getServerByJob(job);
-    if (isNullOrEmpty(activeServer)) { return; }
-
-    if (job.dataStatus === DataStatus.Success) {
-      activeServer.name = job.clientReferenceObject.newName;
-    }
-    this._updateServerStatusByJob(job);
-  }
-
-  /**
-   * Event that emits when the server command is executed
-   * @param job Emitted job content
-   */
-  private _onPowerStateServer(job: McsJob): void {
-    let activeServer = this._getServerByJob(job);
-    if (isNullOrEmpty(activeServer)) { return; }
-
-    if (job.dataStatus === DataStatus.Success) {
-      this._updateServerPowerState(activeServer);
-    }
-    this._updateServerStatusByJob(job);
-  }
-
-  /**
-   * Event that emits when scaling a server
-   * @param job Emitted job content
-   */
-  private _onScaleServer(job: McsJob): void {
-    let activeServer = this._getServerByJob(job);
-    if (isNullOrEmpty(activeServer)) { return; }
-
-    if (job.dataStatus === DataStatus.Success && !isNullOrEmpty(activeServer.compute)) {
-      activeServer.compute.memoryMB = job.clientReferenceObject.memoryMB;
-      activeServer.compute.cpuCount = job.clientReferenceObject.cpuCount;
-      activeServer.compute.coreCount = 1;
-    }
-    this._updateServerStatusByJob(job);
-  }
-
-  /**
-   * Set the server process details to display in the view
-   * @param job Emitted job content
-   */
-  private _setServerProcessDetails(activeServer: McsServer, job: McsJob): void {
-    let noActiveServer = isNullOrEmpty(activeServer) || isNullOrEmpty(job);
-    if (noActiveServer) { return; }
-    activeServer.isProcessing = this._getProcessingFlagByJob(job);
-    activeServer.commandAction = job.clientReferenceObject.commandAction;
-    activeServer.processingText = job.summaryInformation;
-  }
-
-  /**
-   * Updates the server status based on the job
-   */
-  private _updateServerStatusByJob(job: McsJob): void {
-    let activeServer = this._getServerByJob(job);
-    this._setServerProcessDetails(activeServer, job);
-    this.addOrUpdate(activeServer);
-  }
-
-  /**
-   * This will update the server power state
-   * based on the command action
-   * @param activeServer Active server
-   */
-  private _updateServerPowerState(activeServer: McsServer): void {
-    if (isNullOrEmpty(activeServer)) { return; }
-
-    switch (activeServer.commandAction) {
-      case ServerCommand.Start:
-      case ServerCommand.Restart:
-      case ServerCommand.Resume:
-        activeServer.powerState = VmPowerState.PoweredOn;
-        break;
-
-      case ServerCommand.Stop:
-        activeServer.powerState = VmPowerState.PoweredOff;
-        break;
-
-      case ServerCommand.Suspend:
-        activeServer.powerState = VmPowerState.Suspended;
-        break;
-
-      default:
-        // Do nothing
-        break;
-    }
-  }
-
-  /**
-   * Get the server based on job client reference object
-   * @param job Emitted job content
-   */
-  private _getServerByJob(job: McsJob): McsServer {
-    if (isNullOrEmpty(job)) { return undefined; }
-    return this.dataRecords.find((serverItem) => {
-      return !isNullOrEmpty(job) && !isNullOrEmpty(job.clientReferenceObject)
-        && serverItem.id === job.clientReferenceObject.serverId;
-    });
-  }
-
-  /**
-   * Returns the processing flag based on job status
-   */
-  private _getProcessingFlagByJob(job: McsJob): boolean {
-    if (isNullOrEmpty(job)) { return false; }
-    return job.dataStatus === DataStatus.InProgress;
   }
 }

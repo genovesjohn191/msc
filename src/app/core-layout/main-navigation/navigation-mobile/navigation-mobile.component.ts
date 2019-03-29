@@ -25,9 +25,10 @@ import { catchError } from 'rxjs/operators';
 import {
   CoreConfig,
   CoreDefinition,
+  CoreRoutes,
+  CoreEvent,
   McsAuthenticationService,
   McsDataStatusFactory,
-  CoreRoutes,
   McsAccessControlService
 } from '@app/core';
 import {
@@ -41,7 +42,6 @@ import {
 } from '@app/models';
 import {
   EventBusPropertyListenOn,
-  EventBusState,
   EventBusDispatcherService
 } from '@app/event-bus';
 import { SlidingPanelComponent } from '@app/shared';
@@ -75,7 +75,7 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
   @ViewChild('slidingPanel')
   public slidingPanel: SlidingPanelComponent;
 
-  @EventBusPropertyListenOn(EventBusState.ProductSelected)
+  @EventBusPropertyListenOn(CoreEvent.productSelected)
   public selectedProduct$: Subject<McsProduct>;
 
   public get macviewUrl(): string {
@@ -180,11 +180,11 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
    */
   private _registerEvents(): void {
     this._productUnselectedHandler = this._eventDispatcher.addEventListener(
-      EventBusState.ProductUnSelected, this._onProductUnSelected.bind(this)
+      CoreEvent.productUnSelected, this._onProductUnSelected.bind(this)
     );
 
     this._routeChangeHandler = this._eventDispatcher.addEventListener(
-      EventBusState.RouteChange, this._onRouteChanged.bind(this)
+      CoreEvent.routeChange, this._onRouteChanged.bind(this)
     );
   }
 

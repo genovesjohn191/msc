@@ -1,7 +1,8 @@
 import {
   Observable,
   of,
-  Subject
+  Subject,
+  BehaviorSubject
 } from 'rxjs';
 import {
   McsEntityBase,
@@ -11,7 +12,8 @@ import {
 import {
   tap,
   switchMap,
-  finalize
+  finalize,
+  filter
 } from 'rxjs/operators';
 import {
   addOrUpdateArrayRecord,
@@ -38,7 +40,8 @@ export abstract class McsRepositoryBase<T extends McsEntityBase>
 
   // Events notifier for live data refresh on the view per subscription
   private _dataContextChange = new Subject<void>();
-  private _dataChange = new Subject<ActionStatus>();
+  private _dataClear = new Subject<void>();
+  private _dataChange = new BehaviorSubject<T[]>(null);
 
   constructor(private _context: McsDataContext<T>) {
     this._subscribeToDataContextChange();
@@ -92,6 +95,19 @@ export abstract class McsRepositoryBase<T extends McsEntityBase>
    * @param id Id of the record to be obtained
    */
   public getById(id: string): Observable<T> {
+    return this._context.getRecordById(id).pipe(
+      tap((item) => this._cacheRecords(item)),
+      finalize(() => this._notifyDataChange())
+    );
+  }
+
+  /**
+   * Get the record based on the identity provided and
+   * creates a new observable if the data of the record has been changed
+   * the observer will be notified
+   * @param id Id of the record to be obtained
+   */
+  public getByIdAsync(id: string): Observable<T> {
     let recordFound = this.dataRecords.find((item) => item.id === id);
     let getByIdObserver = !isNullOrEmpty(recordFound) ?
       this._getRecordByIdFromCache(id) :
@@ -169,10 +185,19 @@ export abstract class McsRepositoryBase<T extends McsEntityBase>
   }
 
   /**
-   * An observable event that emits whenever there are changes on the repository data
+   * An observable event that emits when the data has been changed
    */
-  public dataChange(): Observable<ActionStatus> {
-    return this._dataChange.asObservable();
+  public dataChange(): Observable<T[]> {
+    return this._dataChange.asObservable().pipe(
+      filter((response) => !isNullOrEmpty(response))
+    );
+  }
+
+  /**
+   * An observable event that emits when the data has been cleared
+   */
+  public dataClear(): Observable<void> {
+    return this._dataClear.asObservable();
   }
 
   /**
@@ -194,7 +219,7 @@ export abstract class McsRepositoryBase<T extends McsEntityBase>
   /**
    * Clears the cache data and it will not notify the dataChange event
    */
-  public clearCache(): void {
+  public clearData(): void {
     this._context.totalRecordsCount = 0;
     clearArrayRecord(this.dataRecords);
     clearArrayRecord(this.filteredRecords);
@@ -349,7 +374,6 @@ export abstract class McsRepositoryBase<T extends McsEntityBase>
    * @param id Id of the record to obtain
    */
   private _getRecordByIdFromCache(id: string): Observable<T> {
-    // Do the obtainment on backgroud
     this._context.getRecordById(id).subscribe((item) => {
       this._cacheRecords(item);
       this._notifyDataChange();
@@ -371,8 +395,8 @@ export abstract class McsRepositoryBase<T extends McsEntityBase>
   /**
    * Notifies the datarecords changes event
    */
-  private _notifyDataChange(state?: ActionStatus): void {
-    this._dataChange.next(state || ActionStatus.Update);
+  private _notifyDataChange(_state?: ActionStatus): void {
+    this._dataChange.next(this.dataRecords);
   }
 
   /**

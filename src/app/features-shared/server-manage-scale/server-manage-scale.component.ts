@@ -242,26 +242,26 @@ export class ServerManageScaleComponent
     // Create table definitions
     let table = new Array<ServerManageScale>();
     let baseMB = DEFAULT_MB;
-    table.push({ memoryMB: baseMB * 2, cpuCount: 2 } as ServerManageScale);
-    table.push({ memoryMB: baseMB * 4, cpuCount: 2 } as ServerManageScale);
-    table.push({ memoryMB: baseMB * 8, cpuCount: 4 } as ServerManageScale);
-    table.push({ memoryMB: baseMB * 16, cpuCount: 4 } as ServerManageScale);
-    table.push({ memoryMB: baseMB * 24, cpuCount: 4 } as ServerManageScale);
-    table.push({ memoryMB: baseMB * 32, cpuCount: 4 } as ServerManageScale);
-    table.push({ memoryMB: baseMB * 64, cpuCount: 8 } as ServerManageScale);
-    table.push({ memoryMB: baseMB * 128, cpuCount: 8 } as ServerManageScale);
-    table.push({ memoryMB: baseMB * 256, cpuCount: 8 } as ServerManageScale);
+    table.push({ memoryGB: baseMB * 2, cpuCount: 2 } as ServerManageScale);
+    table.push({ memoryGB: baseMB * 4, cpuCount: 2 } as ServerManageScale);
+    table.push({ memoryGB: baseMB * 8, cpuCount: 4 } as ServerManageScale);
+    table.push({ memoryGB: baseMB * 16, cpuCount: 4 } as ServerManageScale);
+    table.push({ memoryGB: baseMB * 24, cpuCount: 4 } as ServerManageScale);
+    table.push({ memoryGB: baseMB * 32, cpuCount: 4 } as ServerManageScale);
+    table.push({ memoryGB: baseMB * 64, cpuCount: 8 } as ServerManageScale);
+    table.push({ memoryGB: baseMB * 128, cpuCount: 8 } as ServerManageScale);
+    table.push({ memoryGB: baseMB * 256, cpuCount: 8 } as ServerManageScale);
 
     // Filter applicable values on the table
     this.sliderTable = table.filter((scale) => {
-      return (scale.memoryMB >= this.minimumMemoryMB
-        && scale.memoryMB <= this.resourceAvailableMemoryMB)
+      return (scale.memoryGB >= this.minimumMemoryMB
+        && scale.memoryGB <= this.resourceAvailableMemoryMB)
         && (scale.cpuCount >= this.minimumCpuUsed
           && scale.cpuCount <= this.resourceAvailableCpu);
     });
     if (isNullOrEmpty(this.sliderTable)) {
       this.sliderTable.push({
-        memoryMB: this.resourceAvailableMemoryMB,
+        memoryGB: this.resourceAvailableMemoryMB,
         cpuCount: this.resourceAvailableCpu
       } as ServerManageScale);
     }
@@ -378,21 +378,21 @@ export class ServerManageScaleComponent
     // Set model data based on management type
     switch (this.inputManageType) {
       case InputManageType.Custom:
-        this._scaleOutput.memoryMB = +this.fcCustomMemory.value * DEFAULT_MB;
+        this._scaleOutput.memoryGB = +this.fcCustomMemory.value * DEFAULT_MB;
         this._scaleOutput.cpuCount = +this.fcCustomCpu.value;
         this._scaleOutput.valid = this.fgServerScale.valid;
         break;
 
       case InputManageType.Auto:
       default:
-        this._scaleOutput.memoryMB = this.sliderValue.memoryMB;
+        this._scaleOutput.memoryGB = this.sliderValue.memoryGB;
         this._scaleOutput.cpuCount = this.sliderValue.cpuCount;
         this._scaleOutput.valid = true;
         break;
     }
     this._scaleOutput.hasChanged = this._scaleOutput.valid
       && (this.serverCpuUsed !== this._scaleOutput.cpuCount
-        || this.serverMemoryUsedMB !== this._scaleOutput.memoryMB);
+        || (this.serverMemoryUsedMB * DEFAULT_MB) !== this._scaleOutput.memoryGB);
 
     // Emit changes
     this.dataChange.emit(this._scaleOutput);

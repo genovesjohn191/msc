@@ -3,16 +3,15 @@ import {
   map,
   shareReplay
 } from 'rxjs/operators';
-import { getSafeProperty } from '@app/utilities';
-import { EventBusState } from '../event-bus-state.enum';
 import { EventBusDispatcherCore } from '../event-bus-dispatcher-core';
+import { EventBusState } from '../event-bus-state';
 
 /**
  * Subscribes to an event property based on the event name provided
  * @param event Event name on where to subcribe
  * @param destroy Flag that determines if the event should be automatically released
  */
-export function EventBusPropertyListenOn(event: EventBusState) {
+export function EventBusPropertyListenOn<T>(event: EventBusState<T>) {
   return (target: any, name: string) => {
     let eventsService = EventBusDispatcherCore.getInstance();
     let decoratorSubject = new BehaviorSubject<any>({});
@@ -20,7 +19,7 @@ export function EventBusPropertyListenOn(event: EventBusState) {
     let instanceFunc = function() {
       let eventObject = eventsService.getEvent(event);
       let eventSubject = eventObject.subject.pipe(
-        map((response) => getSafeProperty(response, (obj) => obj.params[0], {}))
+        map((response) => response || {})
       );
 
       eventSubject.subscribe(decoratorSubject);

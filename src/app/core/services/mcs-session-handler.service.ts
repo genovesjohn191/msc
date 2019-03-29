@@ -22,15 +22,13 @@ import {
   resolveEnvVar
 } from '@app/utilities';
 import { McsIdentity } from '@app/models';
-import {
-  EventBusDispatcherService,
-  EventBusState
-} from '@app/event-bus';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { CoreDefinition } from '../core.definition';
 import { McsAuthenticationIdentity } from '../authentication/mcs-authentication.identity';
 import { McsAuthenticationService } from '../authentication/mcs-authentication.service';
 import { McsLoggerService } from './mcs-logger.service';
 import { McsCookieService } from './mcs-cookie.service';
+import { CoreEvent } from '../core.event';
 
 @Injectable()
 export class McsSessionHandlerService {
@@ -108,7 +106,7 @@ export class McsSessionHandlerService {
   ) {
 
     this._eventDispatcher.addEventListener(
-      EventBusState.UserChange, this._onUserChanged.bind(this));
+      CoreEvent.userChange, this._onUserChanged.bind(this));
   }
 
   /**
@@ -327,7 +325,7 @@ export class McsSessionHandlerService {
     // Trigger timedout event
     if (this.sessionTimedOut) {
       this._loggerService.traceStart('Session Timed Out');
-      this._eventDispatcher.dispatch(EventBusState.SessionTimedOut);
+      this._eventDispatcher.dispatch(CoreEvent.sessionTimedOut);
       this._createSessionId();
     }
 

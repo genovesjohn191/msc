@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { EventBusState } from './event-bus-state.enum';
 import { EventBusDispatcherCore } from './event-bus-dispatcher-core';
+import { EventBusState } from './event-bus-state';
 
 @Injectable()
 export class EventBusDispatcherService {
@@ -16,19 +16,29 @@ export class EventBusDispatcherService {
    * @param event Event name to where the handler will be attached
    * @param callback Event handler callback to be called when the event emitted
    */
-  public addEventListener(
-    event: EventBusState,
-    callback: (...args: any[]) => void
-  ): Subscription {
+  public addEventListener<T>(event: EventBusState<T>, callback: (payload: T) => void): Subscription {
     return this._eventDispatcherRef.addEventListener(event, callback);
   }
 
   /**
-   * Dispatches an event based on the event name provided and emit the provided arguments
-   * @param event Event name of the event to dispatch
-   * @param args Arguments to be dispatched on the event
+   * Dispatches an event based on the event state provided
+   * @param eventState Event state to be invoked
    */
-  public dispatch(event: EventBusState, ...args: any[]): void {
-    this._eventDispatcherRef.dispatch(event, ...args);
+  public dispatch<T>(eventState: EventBusState<T>): void;
+
+  /**
+   * Dispatches an event based on the event state provided and payload
+   * @param eventState Event state to dispatch
+   * @param payload Payload to be dispatched
+   */
+  public dispatch<T>(eventState: EventBusState<T>, payload?: T): void;
+
+  /**
+   * Dispatches an event based on the event state provided and payload
+   * @param eventState Event state to be invoked
+   * @param payload Payload to be invoked
+   */
+  public dispatch<T>(eventState: EventBusState<T>, payload?: T): void {
+    this._eventDispatcherRef.dispatch(eventState, payload);
   }
 }

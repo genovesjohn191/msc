@@ -234,7 +234,7 @@ export class TicketCreateComponent implements
     this.createTicketSubscription = this._ticketCreateService.createTicket(ticket).pipe(
       finalize(() => {
         this.fgCreateDirective.resetAllControls();
-        this._ticketsRepository.clearCache();
+        this._ticketsRepository.clearData();
       }),
       catchError((error) => {
         unsubscribeSafely(this.createTicketSubscription);
