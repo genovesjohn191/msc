@@ -26,6 +26,7 @@ export * from './services/mcs-scroll-dispatcher.service';
 export * from './services/mcs-viewport.service';
 export * from './services/mcs-error-handler.service';
 export * from './services/mcs-route-handler.service';
+export * from './services/mcs-route-settings.service';
 export * from './services/mcs-platform.service';
 export * from './services/mcs-logger.service';
 export * from './services/mcs-form-group.service';

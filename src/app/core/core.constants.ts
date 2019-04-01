@@ -15,6 +15,7 @@ import { McsScrollDispatcherService } from './services/mcs-scroll-dispatcher.ser
 import { McsViewportService } from './services/mcs-viewport.service';
 import { McsErrorHandlerService } from './services/mcs-error-handler.service';
 import { McsRouteHandlerService } from './services/mcs-route-handler.service';
+import { McsRouteSettingsService } from './services/mcs-route-settings.service';
 import { McsPlatformService } from './services/mcs-platform.service';
 import { McsLoggerService } from './services/mcs-logger.service';
 import { McsFormGroupService } from './services/mcs-form-group.service';
@@ -56,6 +57,7 @@ export const coreProviders: any[] = [
   McsViewportService,
   McsErrorHandlerService,
   McsRouteHandlerService,
+  McsRouteSettingsService,
   McsPlatformService,
   McsLoggerService,
   McsFormGroupService,

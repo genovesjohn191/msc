@@ -5,13 +5,6 @@ import { RouteKey } from '@app/models';
 import { HttpErrorPageComponent } from './http-error-page.component';
 
 /**
- * List of all the entry components
- */
-export const httpErrorRoutesComponents: any[] = [
-  HttpErrorPageComponent
-];
-
-/**
  * List of routest for the main module
  */
 export const httpErrorPageRoutes: Routes = [

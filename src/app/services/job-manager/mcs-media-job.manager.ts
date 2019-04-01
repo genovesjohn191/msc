@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Subscription } from 'rxjs';
+import {
+  Subscription,
+  Observable
+} from 'rxjs';
 import {
   McsDisposable,
   unsubscribeSafely
@@ -62,6 +65,14 @@ export class McsMediaJobManager extends McsEntityJobManager<McsResourceMedia>
     media.isProcessing = false;
     media.processingText = null;
     this._entityRepository.addOrUpdate(media);
+  }
+
+  /**
+   * Gets the entity update details based on the entity id
+   * @param entityId Entity id of the entity to be updated
+   */
+  protected getEntityUpdateDetailsById(entityId: string): Observable<McsResourceMedia> {
+    return this._entityRepository.getById(entityId);
   }
 
   /**

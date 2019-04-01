@@ -7,24 +7,25 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 import {
   CoreDefinition,
   CoreRoutes,
-  McsRouteHandlerService,
   McsAccessControlService
 } from '@app/core';
 import {
   RouteKey,
   RouteCategory,
   routeCategoryText,
-  McsPermission
+  McsPermission,
+  McsRouteInfo
 } from '@app/models';
 import {
-  unsubscribeSubject,
-  isNullOrEmpty
+  isNullOrEmpty,
+  unsubscribeSafely
 } from '@app/utilities';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { CoreEvent } from '@app/core/core.event';
 
 @Component({
   selector: 'mcs-main-navigation',
@@ -39,6 +40,22 @@ import {
 
 export class MainNavigationComponent implements OnInit, OnDestroy {
   public selectedCategory: RouteCategory;
+  private _routeHandler: Subscription;
+
+  public constructor(
+    private _router: Router,
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _eventDispatcher: EventBusDispatcherService,
+    private _accessControlService: McsAccessControlService
+  ) { }
+
+  public ngOnInit() {
+    this._registerEvents();
+  }
+
+  public ngOnDestroy() {
+    unsubscribeSafely(this._routeHandler);
+  }
 
   public get caretRightIconKey(): string {
     return CoreDefinition.ASSETS_FONT_CARET_RIGHT;
@@ -50,23 +67,6 @@ export class MainNavigationComponent implements OnInit, OnDestroy {
 
   public get routeKeyEnum(): any {
     return RouteKey;
-  }
-
-  private _destroySubject = new Subject<void>();
-
-  public constructor(
-    private _router: Router,
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _routerHandlerService: McsRouteHandlerService,
-    private _accessControlService: McsAccessControlService
-  ) { }
-
-  public ngOnInit() {
-    this._listenToRouteChanges();
-  }
-
-  public ngOnDestroy() {
-    unsubscribeSubject(this._destroySubject);
   }
 
   /**
@@ -97,15 +97,21 @@ export class MainNavigationComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Listens to route details changes
+   * Registers event handlers
    */
-  private _listenToRouteChanges(): void {
-    this._routerHandlerService.onActiveRoute
-      .pipe(takeUntil(this._destroySubject))
-      .subscribe((activeRoute) => {
-        if (isNullOrEmpty(activeRoute)) { return; }
-        this.selectedCategory = activeRoute.enumCategory;
-        this._changeDetectorRef.markForCheck();
-      });
+  private _registerEvents(): void {
+    this._routeHandler = this._eventDispatcher.addEventListener(
+      CoreEvent.routeChange, this._onRouteChanged.bind(this));
+
+    this._eventDispatcher.dispatch(CoreEvent.routeChange);
+  }
+
+  /**
+   * Event that emits when the route has been changed
+   * @param routeInfo Current route information
+   */
+  private _onRouteChanged(routeInfo: McsRouteInfo): void {
+    this.selectedCategory = routeInfo.enumCategory;
+    this._changeDetectorRef.markForCheck();
   }
 }

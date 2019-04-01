@@ -4,9 +4,6 @@ import { SharedModule } from '@app/shared';
 import { ConsolePageComponent } from './console-page.component';
 
 @NgModule({
-  entryComponents: [
-    ConsolePageComponent
-  ],
   declarations: [
     ConsolePageComponent
   ],

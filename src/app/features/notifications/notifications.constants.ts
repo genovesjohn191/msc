@@ -6,14 +6,6 @@ import { NotificationsComponent } from './notifications.component';
 import { NotificationComponent } from './notification/notification.component';
 
 /**
- * List of all the entry components
- */
-export const notificationsRoutesComponents: any[] = [
-  NotificationsComponent,
-  NotificationComponent
-];
-
-/**
  * List of routes for the main module
  */
 export const notificationsRoutes: Routes = [

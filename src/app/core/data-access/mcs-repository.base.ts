@@ -6,8 +6,7 @@ import {
 } from 'rxjs';
 import {
   McsEntityBase,
-  McsQueryParam,
-  ActionStatus
+  McsQueryParam
 } from '@app/models';
 import {
   tap,
@@ -146,10 +145,10 @@ export abstract class McsRepositoryBase<T extends McsEntityBase>
     );
 
     if (!isUpdate) {
-      this._notifyDataChange(ActionStatus.Add);
+      this._notifyDataChange();
       if (!isNullOrEmpty(this._allRecordsCount)) { ++this._allRecordsCount; }
     } else {
-      this._notifyDataChange(ActionStatus.Update);
+      this._notifyDataChange();
     }
   }
 
@@ -181,7 +180,7 @@ export abstract class McsRepositoryBase<T extends McsEntityBase>
     this.dataRecords = deleteArrayRecord(this.dataRecords, predicate);
     this.filteredRecords = deleteArrayRecord(this.filteredRecords, predicate);
     --this._allRecordsCount;
-    this._notifyDataChange(ActionStatus.Delete);
+    this._notifyDataChange();
   }
 
   /**
@@ -206,7 +205,7 @@ export abstract class McsRepositoryBase<T extends McsEntityBase>
    */
   public sortRecords(predicate: (first: T, second: T) => number) {
     this.dataRecords.sort(predicate);
-    this._notifyDataChange(ActionStatus.Sort);
+    this._notifyDataChange();
   }
 
   /**
@@ -223,7 +222,7 @@ export abstract class McsRepositoryBase<T extends McsEntityBase>
     this._context.totalRecordsCount = 0;
     clearArrayRecord(this.dataRecords);
     clearArrayRecord(this.filteredRecords);
-    this._notifyDataChange(ActionStatus.Clear);
+    this._dataClear.next();
   }
 
   /**
@@ -395,7 +394,7 @@ export abstract class McsRepositoryBase<T extends McsEntityBase>
   /**
    * Notifies the datarecords changes event
    */
-  private _notifyDataChange(_state?: ActionStatus): void {
+  private _notifyDataChange(): void {
     this._dataChange.next(this.dataRecords);
   }
 

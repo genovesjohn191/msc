@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Subscription } from 'rxjs';
+import {
+  Subscription,
+  Observable,
+  of
+} from 'rxjs';
 import {
   McsDisposable,
   getSafeProperty,
@@ -11,7 +15,9 @@ import {
 } from '@app/core';
 import {
   McsJob,
-  McsServer
+  McsServer,
+  JobType,
+  DataStatus
 } from '@app/models';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { McsServersRepository } from '../repositories/mcs-servers.repository';
@@ -77,9 +83,22 @@ export class McsServersJobManager extends McsEntityJobManager<McsServer>
   }
 
   /**
-   * Refresh the server listing repository data
+   * Gets the entity update details based on the entity id
+   * @param entityId Entity id of the entity to be updated
    */
-  private _refreshServerListing(): void {
+  protected getEntityUpdateDetailsById(entityId: string, job: McsJob): Observable<McsServer> {
+    let entityRequiredForUpdate = job.type !== JobType.DeleteServer &&
+      job.type !== JobType.CloneServer &&
+      job.type !== JobType.CreateServer;
+    return entityRequiredForUpdate ? this._entityRepository.getById(entityId) : of(null);
+  }
+
+  /**
+   * Refresh the server listing repository data
+   * @param job emitted job
+   */
+  private _refreshServerListing(job: McsJob): void {
+    if (job.dataStatus !== DataStatus.Success) { return; }
     this._entityRepository.clearData();
   }
 

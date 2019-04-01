@@ -6,20 +6,19 @@ import {
   ViewEncapsulation,
   ChangeDetectorRef
 } from '@angular/core';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { CoreEvent } from '@app/core';
 import {
-  McsRouteHandlerService
-} from '@app/core';
-import {
-  unsubscribeSubject,
   isNullOrEmpty,
-  animateFactory
+  animateFactory,
+  unsubscribeSafely
 } from '@app/utilities';
 import {
   RouteKey,
-  RouteCategory
+  RouteCategory,
+  McsRouteInfo
 } from '@app/models';
+import { EventBusDispatcherService } from '@app/event-bus';
 
 @Component({
   selector: 'mcs-sub-navigation',
@@ -37,6 +36,20 @@ import {
 
 export class SubNavigationComponent implements OnInit, OnDestroy {
   public activeRouteCategory: RouteCategory;
+  private _routeHandler: Subscription;
+
+  constructor(
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _eventDispatcher: EventBusDispatcherService
+  ) { }
+
+  public ngOnInit() {
+    this._registerEvents();
+  }
+
+  public ngOnDestroy() {
+    unsubscribeSafely(this._routeHandler);
+  }
 
   /**
    * Returns the route category enumeration
@@ -60,31 +73,22 @@ export class SubNavigationComponent implements OnInit, OnDestroy {
       && this.activeRouteCategory !== RouteCategory.None;
   }
 
-  private _destroySubject = new Subject<void>();
+  /**
+   * Registers event handlers
+   */
+  private _registerEvents(): void {
+    this._routeHandler = this._eventDispatcher.addEventListener(
+      CoreEvent.routeChange, this._onRouteChanged.bind(this));
 
-  constructor(
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _routerHandlerService: McsRouteHandlerService
-  ) {}
-
-  public ngOnInit() {
-    this._listenToRouteChanges();
-  }
-
-  public ngOnDestroy() {
-    unsubscribeSubject(this._destroySubject);
+    this._eventDispatcher.dispatch(CoreEvent.routeChange);
   }
 
   /**
-   * Listen to route category changes
+   * Event that emits when the route has been changed
+   * @param routeInfo Current route information
    */
-  private _listenToRouteChanges(): void {
-    this._routerHandlerService.onActiveRoute
-      .pipe(takeUntil(this._destroySubject))
-      .subscribe((activeRoute) => {
-        if (isNullOrEmpty(activeRoute)) { return; }
-        this.activeRouteCategory = activeRoute.enumCategory;
-        this._changeDetectorRef.markForCheck();
-      });
+  private _onRouteChanged(routeInfo: McsRouteInfo): void {
+    this.activeRouteCategory = routeInfo.enumCategory;
+    this._changeDetectorRef.markForCheck();
   }
 }

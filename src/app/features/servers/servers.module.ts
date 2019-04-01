@@ -45,14 +45,10 @@ import {
   VdcOverviewComponent,
   VdcStorageComponent
 } from './vdc';
-import {
-  serversProviders,
-  serversRoutesComponents
-} from './servers.constants';
+import { serversProviders } from './servers.constants';
 
 @NgModule({
   entryComponents: [
-    ...serversRoutesComponents,
     ResetPasswordDialogComponent,
     ResetPasswordFinishedDialogComponent,
     DeleteStorageDialogComponent,

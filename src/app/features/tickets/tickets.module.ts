@@ -6,15 +6,9 @@ import { TicketsComponent } from './tickets.component';
 import { TicketComponent } from './ticket/ticket.component';
 /** Create Ticket */
 import { TicketCreateComponent } from './ticket-create';
-import {
-  ticketsProviders,
-  ticketsRoutesComponents
-} from './tickets.constants';
+import { ticketsProviders } from './tickets.constants';
 
 @NgModule({
-  entryComponents:[
-    ...ticketsRoutesComponents
-  ],
   declarations: [
     TicketsComponent,
     TicketComponent,

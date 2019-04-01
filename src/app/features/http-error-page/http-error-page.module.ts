@@ -8,12 +8,8 @@ import {
 } from '@app/shared';
 /** Components */
 import { HttpErrorPageComponent } from './http-error-page.component';
-import { httpErrorRoutesComponents } from './http-error-page.constants';
 
 @NgModule({
-  entryComponents: [
-    ...httpErrorRoutesComponents
-  ],
   declarations: [
     HttpErrorPageComponent
   ],

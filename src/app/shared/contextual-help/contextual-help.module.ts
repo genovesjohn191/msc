@@ -18,7 +18,9 @@ import { ContextualHelpDirective } from './contextual-help.directive';
     ContextualHelpDirective,
     PipesModule
   ],
-  entryComponents: [ContextualHelpComponent]
+  entryComponents: [
+    ContextualHelpComponent
+  ]
 })
 
 export class ContextualHelpModule { }

@@ -6,14 +6,6 @@ import { OrdersComponent } from './orders.component';
 import { OrderComponent } from './order/order.component';
 
 /**
- * List of all the entry components
- */
-export const ordersRoutesComponents: any[] = [
-  OrdersComponent,
-  OrderComponent
-];
-
-/**
  * List of routes for the main module
  */
 export const ordersRoutes: Routes = [
