@@ -23,16 +23,14 @@ import {
   McsRouteInfo,
   McsIdentity
 } from '@app/models';
-import {
-  EventBusDispatcherService,
-  EventBusState
-} from '@app/event-bus';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { CoreRoutes } from '../core.routes';
 import { McsAccessControlService } from '../authentication/mcs-access-control.service';
 import { McsAuthenticationService } from '../authentication/mcs-authentication.service';
 import { McsLoggerService } from './mcs-logger.service';
 import { McsErrorHandlerService } from './mcs-error-handler.service';
 import { McsScrollDispatcherService } from './mcs-scroll-dispatcher.service';
+import { CoreEvent } from '../core.event';
 
 @Injectable()
 export class McsRouteHandlerService implements McsDisposable {
@@ -87,8 +85,9 @@ export class McsRouteHandlerService implements McsDisposable {
     activateRouteKey.data.subscribe((response) => {
       if (isNullOrEmpty(response)) { return; }
       this._activeRoute = CoreRoutes.getRouteInfoByKey(+response.routeId);
+      this._activeRoute.urlAfterRedirects = routeArgs.urlAfterRedirects;
       this.onActiveRoute.next(this._activeRoute);
-      this._eventDispatcher.dispatch(EventBusState.RouteChange, routeArgs, this._activeRoute);
+      this._eventDispatcher.dispatch(CoreEvent.routeChange, this._activeRoute);
       this._applyRouteSettings();
     });
   }
@@ -184,7 +183,7 @@ export class McsRouteHandlerService implements McsDisposable {
    */
   private _registerEvents(): void {
     this._eventDispatcher.addEventListener(
-      EventBusState.UserChange, this._onUserChanged.bind(this));
+      CoreEvent.userChange, this._onUserChanged.bind(this));
   }
 
   /**

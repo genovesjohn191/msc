@@ -34,14 +34,12 @@ import {
   McsApiRequestParameter,
   McsIdentity
 } from '@app/models';
-import {
-  EventBusDispatcherService,
-  EventBusState
-} from '@app/event-bus';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { McsApiService } from './mcs-api.service';
 import { McsLoggerService } from './mcs-logger.service';
 import { McsSessionHandlerService } from './mcs-session-handler.service';
 import { CoreDefinition } from '../core.definition';
+import { CoreEvent } from '../core.event';
 
 const DEFAULT_HEARTBEAT_IN = 0;
 const DEFAULT_HEARTBEAT_OUT = 20000;
@@ -59,6 +57,7 @@ export class McsNotificationJobService implements McsDisposable {
   private _apiSubscription: any;
   private _stompInstance: Observable<any>;
   private _stompSubscription: Subscription;
+  private _userChangeHandler: Subscription;
   private _jobConnection: McsJobConnection;
   private _destroySubject = new Subject<void>();
 
@@ -91,6 +90,7 @@ export class McsNotificationJobService implements McsDisposable {
     unsubscribeSubject(this.connectionStatusStream);
     unsubscribeSubject(this.notificationStream);
     unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this._userChangeHandler);
     this._disconnectStomp();
   }
 
@@ -267,8 +267,8 @@ export class McsNotificationJobService implements McsDisposable {
    * Register event listeners to event-bus
    */
   private _registerEvents(): void {
-    this._eventDispatcher.addEventListener(
-      EventBusState.UserChange, this._onUserChanged.bind(this));
+    this._userChangeHandler = this._eventDispatcher.addEventListener(
+      CoreEvent.userChange, this._onUserChanged.bind(this));
   }
 
   /**

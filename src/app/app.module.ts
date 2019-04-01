@@ -49,12 +49,12 @@ import { routes } from './app.routes';
  */
 import {
   CoreModule,
-  CoreConfig
+  CoreConfig,
+  CoreEvent
 } from './core';
 import {
   EventBusModule,
-  EventBusDispatcherService,
-  EventBusState
+  EventBusDispatcherService
 } from './event-bus';
 import { ServicesModule } from './services';
 import {
@@ -159,7 +159,7 @@ export class AppModule {
    */
   private _registerEvents(): void {
     this._eventDispatcher.addEventListener(
-      EventBusState.UserChange, this._onUserChanged.bind(this));
+      CoreEvent.userChange, this._onUserChanged.bind(this));
   }
 
   /**

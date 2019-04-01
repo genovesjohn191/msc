@@ -79,22 +79,14 @@ export class ServerComponent
   @ViewChild('search')
   public search: Search;
 
-  @ViewChild(ComponentHandlerDirective)
-  public componentHandler: ComponentHandlerDirective;
-
   public serverPermission: McsServerPermission;
   public selectedServer$: Observable<McsServer>;
   public serversMap$: Observable<Map<string, McsServer[]>>;
   public serverListSource: ServersListSource | null;
   public listStatusFactory: McsDataStatusFactory<Map<string, McsServer[]>>;
 
-  public get angleDoubleRightIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_NEXT_ARROW;
-  }
-
-  public get routeKeyEnum(): any {
-    return RouteKey;
-  }
+  @ViewChild(ComponentHandlerDirective)
+  private _componentHandler: ComponentHandlerDirective;
 
   private _destroySubject = new Subject<void>();
   private _resourcesKeyMap: Map<string, McsServerPlatform>;
@@ -132,6 +124,14 @@ export class ServerComponent
   public ngOnDestroy() {
     super.onDestroy();
     unsubscribeSafely(this._destroySubject);
+  }
+
+  public get angleDoubleRightIconKey(): string {
+    return CoreDefinition.ASSETS_SVG_NEXT_ARROW;
+  }
+
+  public get routeKeyEnum(): any {
+    return RouteKey;
   }
 
   /**
@@ -205,7 +205,11 @@ export class ServerComponent
    */
   protected onParamIdChanged(id: string) {
     if (isNullOrEmpty(id)) { return; }
+    this._serverService.setServerId(id);
     this._subscribeToServerById(id);
+    if (!isNullOrEmpty(this._componentHandler)) {
+      this._componentHandler.recreateComponent();
+    }
   }
 
   /**
@@ -249,7 +253,7 @@ export class ServerComponent
    */
   private _subscribeToServerById(serverId: string): void {
     this._loadingService.showLoader(this._translateService.instant('server.loading'));
-    this.selectedServer$ = this._serversRepository.getById(serverId).pipe(
+    this.selectedServer$ = this._serversRepository.getByIdAsync(serverId).pipe(
       catchError((error) => {
         this._errorHandlerService.redirectToErrorPage(error.status);
         return throwError(error);

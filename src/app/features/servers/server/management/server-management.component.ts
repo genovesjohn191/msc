@@ -3,6 +3,7 @@ import {
   OnDestroy,
   ChangeDetectorRef,
   ChangeDetectionStrategy,
+  OnInit,
 } from '@angular/core';
 import {
   Router,
@@ -12,35 +13,33 @@ import {
 import {
   Subject,
   throwError,
-  Observable
+  Observable,
+  Subscription
 } from 'rxjs';
 import {
   takeUntil,
-  startWith,
   catchError,
-  map,
-  tap
+  map
 } from 'rxjs/operators';
+import { EventBusDispatcherService } from '@app/event-bus';
 import {
   McsErrorHandlerService,
   CoreDefinition,
   McsDialogService,
-  McsNotificationEventsService,
-  McsDataStatusFactory,
   CoreRoutes,
   McsLoadingService,
-  McsAccessControlService
+  McsAccessControlService,
+  CoreEvent
 } from '@app/core';
 import {
   isNullOrEmpty,
   animateFactory,
-  unsubscribeSubject,
-  getEncodedUrl
+  getEncodedUrl,
+  unsubscribeSafely
 } from '@app/utilities';
 import {
   IpAllocationMode,
   McsJob,
-  DataStatus,
   RouteKey,
   McsServerUpdate,
   McsServerMedia,
@@ -79,7 +78,7 @@ export enum ServerManagementView {
   }
 })
 
-export class ServerManagementComponent extends ServerDetailsBase implements OnDestroy {
+export class ServerManagementComponent extends ServerDetailsBase implements OnInit, OnDestroy {
   public serverThumbnail$: Observable<string>;
   public serverMedia$: Observable<McsServerMedia[]>;
   public resourceCompute$: Observable<McsResourceCompute>;
@@ -88,12 +87,53 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnDe
   public manageScale: ServerManageScale;
   public scaleInProgress: boolean;
   public serverManagementView: ServerManagementView;
-  public mediaStatusFactory: McsDataStatusFactory<McsServerMedia[]>;
   public selectedCatalog: McsServerMedia;
 
   private _newMedia: McsServerMedia;
   private _destroySubject = new Subject<void>();
   private _detachingMediaId: string;
+
+  private _attachMediaHandler: Subscription;
+  private _detachMediaHandler: Subscription;
+  private _updateComputeHandler: Subscription;
+
+  constructor(
+    _changeDetectorRef: ChangeDetectorRef,
+    _resourcesRepository: McsResourcesRepository,
+    _serversRepository: McsServersRepository,
+    _serverService: ServerService,
+    _errorHandlerService: McsErrorHandlerService,
+    _loadingService: McsLoadingService,
+    _accessControl: McsAccessControlService,
+    private _router: Router,
+    private _eventDispatcher: EventBusDispatcherService,
+    private _serversService: ServersService,
+    private _activatedRoute: ActivatedRoute,
+    private _dialogService: McsDialogService
+  ) {
+    super(
+      _resourcesRepository,
+      _serversRepository,
+      _serverService,
+      _changeDetectorRef,
+      _errorHandlerService,
+      _loadingService,
+      _accessControl
+    );
+    this.manageScale = new ServerManageScale();
+  }
+
+  public ngOnInit() {
+    this._registerEvents();
+  }
+
+  public ngOnDestroy() {
+    this.dispose();
+    unsubscribeSafely(this._destroySubject);
+    unsubscribeSafely(this._attachMediaHandler);
+    unsubscribeSafely(this._detachMediaHandler);
+    unsubscribeSafely(this._updateComputeHandler);
+  }
 
   public get consoleIconKey(): string {
     return CoreDefinition.ASSETS_SVG_DOS_PROMPT_GREY;
@@ -107,50 +147,12 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnDe
     return RouteKey;
   }
 
-  /**
-   * Returns the enum type of the server management view
-   */
   public get serverManagementViewEnum(): any {
     return ServerManagementView;
   }
 
-  /**
-   * Returns the enum type of the ip allocation mode
-   */
   public get ipAllocationModeEnum(): any {
     return IpAllocationMode;
-  }
-
-  constructor(
-    _changeDetectorRef: ChangeDetectorRef,
-    _resourcesRepository: McsResourcesRepository,
-    _serversRepository: McsServersRepository,
-    _serverService: ServerService,
-    _errorHandlerService: McsErrorHandlerService,
-    _loadingService: McsLoadingService,
-    _accessControl: McsAccessControlService,
-    private _serversService: ServersService,
-    private _router: Router,
-    private _activatedRoute: ActivatedRoute,
-    private _dialogService: McsDialogService,
-    private _notificationEvents: McsNotificationEventsService
-  ) {
-    super(
-      _resourcesRepository,
-      _serversRepository,
-      _serverService,
-      _changeDetectorRef,
-      _errorHandlerService,
-      _loadingService,
-      _accessControl
-    );
-    this.manageScale = new ServerManageScale();
-    this.mediaStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
-  }
-
-  public ngOnDestroy() {
-    this.dispose();
-    unsubscribeSubject(this._destroySubject);
   }
 
   /**
@@ -223,11 +225,11 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnDe
     this._serversRepository.updateServerCompute(
       server.id,
       {
-        memoryMB: this.manageScale.memoryMB,
+        memoryMB: this.manageScale.memoryGB,
         cpuCount: this.manageScale.cpuCount,
         clientReferenceObject: {
           serverId: server.id,
-          memoryMB: this.manageScale.memoryMB,
+          memoryMB: this.manageScale.memoryGB,
           cpuCount: this.manageScale.cpuCount
         }
       } as McsServerUpdate)
@@ -328,7 +330,6 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnDe
    */
   protected selectionChange(server: McsServer, resource: McsResource): void {
     this.setViewMode(ServerManagementView.None);
-    this._registerJobEvents();
     this._getServerThumbnail(server);
     this._getServerMedia(server);
 
@@ -359,20 +360,13 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnDe
    * Get the server media
    */
   private _getServerMedia(server: McsServer): void {
-    this.serverMedia$ = this._serversRepository.getServerMedia(server).pipe(
-      catchError((error) => {
-        this.mediaStatusFactory.setError();
-        return throwError(error);
-      }),
-      tap((media) => this.mediaStatusFactory.setSuccessful(media))
-    );
+    this.serverMedia$ = this._serversRepository.getServerMedia(server);
   }
 
   /**
    * Get the server resource compute
    */
   private _getResourceCompute(resource: McsResource): void {
-    // Subscribe manually to override the resource details compute inside repository
     this.resourceCompute$ = this._resourcesRespository.getResourceCompute(resource);
     this.resourceCompute$.subscribe();
   }
@@ -400,20 +394,23 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnDe
   /**
    * Register jobs/notifications events
    */
-  private _registerJobEvents(): void {
-    if (!isNullOrEmpty(this._destroySubject.observers)) { return; }
+  private _registerEvents(): void {
+    this._attachMediaHandler = this._eventDispatcher.addEventListener(
+      CoreEvent.jobServerMediaAttach, this._onAttachMedia.bind(this)
+    );
 
-    this._notificationEvents.attachServerMediaEvent
-      .pipe(startWith(null!), takeUntil(this._destroySubject))
-      .subscribe(this._onAttachMedia.bind(this));
+    this._detachMediaHandler = this._eventDispatcher.addEventListener(
+      CoreEvent.jobServerMediaDetach, this._onDetachMedia.bind(this)
+    );
 
-    this._notificationEvents.detachServerMediaEvent
-      .pipe(startWith(null!), takeUntil(this._destroySubject))
-      .subscribe(this._onDetachMedia.bind(this));
+    this._updateComputeHandler = this._eventDispatcher.addEventListener(
+      CoreEvent.jobServerComputeUpdate, this._onUpdateServerCompute.bind(this)
+    );
 
-    this._notificationEvents.updateServerComputeEvent
-      .pipe(startWith(null), takeUntil(this._destroySubject))
-      .subscribe(this._onUpdateServerCompute.bind(this));
+    // Invoke the event initially
+    this._eventDispatcher.dispatch(CoreEvent.jobServerMediaAttach);
+    this._eventDispatcher.dispatch(CoreEvent.jobServerMediaDetach);
+    this._eventDispatcher.dispatch(CoreEvent.jobServerComputeUpdate);
   }
 
   /**
@@ -421,20 +418,12 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnDe
    * @param job Emitted job content
    */
   private _onUpdateServerCompute(job: McsJob): void {
-    if (!this.serverIsActiveByJob(job)) { return; }
+    let serverIsActive = this.serverIsActiveByJob(job);
+    if (!serverIsActive) { return; }
 
-    switch (job.dataStatus) {
-      case DataStatus.InProgress:
-        this.scaleInProgress = true;
-        break;
-
-      case DataStatus.Success:
-        this.refreshServerResource();
-      case DataStatus.Error:
-      default:
-        this.scaleInProgress = false;
-        break;
-    }
+    // Refresh everything when all job is done
+    if (!job.inProgress) { this.refreshServerResource(); }
+    this.scaleInProgress = job.inProgress;
     this._changeDetectorRef.markForCheck();
   }
 
@@ -443,19 +432,20 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnDe
    * @param job Emitted job content
    */
   private _onAttachMedia(job: McsJob): void {
-    if (!this.serverIsActiveByJob(job)) { return; }
-    switch (job.dataStatus) {
-      case DataStatus.InProgress:
-        this._addMockMedia(job);
-        break;
+    let serverIsActive = this.serverIsActiveByJob(job);
+    if (!serverIsActive) { return; }
 
-      case DataStatus.Success:
-        this.refreshServerResource();
-      case DataStatus.Error:
-      default:
-        this._newMedia = undefined;
-        break;
+    // Refresh everything when all job is done
+    if (!job.inProgress) {
+      this._newMedia = null;
+      this.refreshServerResource();
+      return;
     }
+
+    // Add in progress jobs
+    this._newMedia = new McsServerMedia();
+    this._newMedia.name = job.clientReferenceObject.mediaName;
+    this._changeDetectorRef.markForCheck();
   }
 
   /**
@@ -463,28 +453,17 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnDe
    * @param job Emitted job content
    */
   private _onDetachMedia(job: McsJob): void {
-    if (!this.serverIsActiveByJob(job)) { return; }
+    let serverIsActive = this.serverIsActiveByJob(job);
+    if (!serverIsActive) { return; }
 
-    // Refresh the data when the detaching media was already completed
-    let detachingMediaEnded = !isNullOrEmpty(this._detachingMediaId)
-      && job.dataStatus === DataStatus.Success;
-    if (detachingMediaEnded) { this.refreshServerResource(); }
+    // Refresh everything when all job is done
+    if (!job.inProgress) {
+      this._detachingMediaId = null;
+      this.refreshServerResource();
+      return;
+    }
 
-    // Set the inprogress media ID to be checked
-    this._detachingMediaId = job.dataStatus === DataStatus.InProgress ?
-      job.clientReferenceObject.mediaId : undefined;
-  }
-
-  /**
-   * Add mock media for the server
-   * @param job Emitted job content
-   */
-  private _addMockMedia(job: McsJob): void {
-    if (!this.serverIsActiveByJob(job)) { return; }
-
-    // Mock media data based on job response
-    this._newMedia = new McsServerMedia();
-    this._newMedia.name = job.clientReferenceObject.mediaName;
-    this._changeDetectorRef.markForCheck();
+    // Add in progress jobs
+    this._detachingMediaId = job.clientReferenceObject.mediaId;
   }
 }

@@ -2,29 +2,30 @@ import {
   Component,
   ChangeDetectorRef,
   OnDestroy,
-  ViewChild
+  ViewChild,
+  OnInit
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import {
-  Subject,
   Observable,
-  throwError
+  throwError,
+  Subscription
 } from 'rxjs';
 import {
-  takeUntil,
   tap,
   shareReplay,
   catchError,
   concatMap
 } from 'rxjs/operators';
+import { EventBusDispatcherService } from '@app/event-bus';
 import {
   McsErrorHandlerService,
   McsLoadingService,
   CoreDefinition,
-  McsNotificationEventsService,
   McsAccessControlService,
   McsDataStatusFactory,
-  McsDateTimeService
+  McsDateTimeService,
+  CoreEvent
 } from '@app/core';
 import {
   McsResourcesRepository,
@@ -32,20 +33,19 @@ import {
 } from '@app/services';
 import {
   animateFactory,
-  unsubscribeSubject,
-  isNullOrEmpty,
-  replacePlaceholder
+  replacePlaceholder,
+  unsubscribeSafely
 } from '@app/utilities';
 import {
   McsServerOsUpdatesDetails,
   McsJob,
-  DataStatus,
   McsServer,
   McsResource,
   OsUpdatesStatus,
   McsServerOsUpdatesScheduleRequest,
   McsServerOsUpdatesSchedule,
-  McsServerOsUpdatesRequest
+  McsServerOsUpdatesRequest,
+  DataStatus
 } from '@app/models';
 import { FormMessage } from '@app/shared';
 import { ServerDetailsBase } from '../server-details.base';
@@ -66,17 +66,54 @@ const OS_UPDATE_DATEFORMAT = "EEEE, d MMMM, yyyy 'at' h:mm a";
     animateFactory.fadeIn
   ]
 })
-export class ServerServicesComponent extends ServerDetailsBase implements OnDestroy {
+export class ServerServicesComponent extends ServerDetailsBase implements OnInit, OnDestroy {
   public serverServicesView: ServerServicesView;
   public updateStatusConfiguration: OsUpdatesStatusConfiguration;
   public updatesDetails$: Observable<McsServerOsUpdatesDetails>;
   public dataStatusFactory: McsDataStatusFactory<McsServerOsUpdatesDetails>;
 
+  private _inspectOsUpdateHandler: Subscription;
+  private _applyOsUpdateHandler: Subscription;
+  private _updateStartedDate: Date;
+
   @ViewChild('formMessage')
   private _formMessage: FormMessage;
 
-  private _destroySubject = new Subject<void>();
-  private _updateStartedDate: Date;
+  constructor(
+    _resourcesRepository: McsResourcesRepository,
+    _serversRepository: McsServersRepository,
+    _serverService: ServerService,
+    _errorHandlerService: McsErrorHandlerService,
+    _loadingService: McsLoadingService,
+    protected _accessControlService: McsAccessControlService,
+    protected _changeDetectorRef: ChangeDetectorRef,
+    private _eventDispatcher: EventBusDispatcherService,
+    private _dateTimeService: McsDateTimeService,
+    private _serversService: ServersService,
+    private _translateService: TranslateService
+  ) {
+    super(
+      _resourcesRepository,
+      _serversRepository,
+      _serverService,
+      _changeDetectorRef,
+      _errorHandlerService,
+      _loadingService,
+      _accessControlService
+    );
+    this.dataStatusFactory = new McsDataStatusFactory();
+    this.updateStatusConfiguration = new OsUpdatesStatusConfiguration();
+  }
+
+  public ngOnInit() {
+    this._registerEvents();
+  }
+
+  public ngOnDestroy() {
+    this.dispose();
+    unsubscribeSafely(this._inspectOsUpdateHandler);
+    unsubscribeSafely(this._applyOsUpdateHandler);
+  }
 
   /**
    * Returns the clock icon key
@@ -160,37 +197,6 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnDest
     return OsUpdatesStatus;
   }
 
-  constructor(
-    _resourcesRepository: McsResourcesRepository,
-    _serversRepository: McsServersRepository,
-    _serverService: ServerService,
-    _errorHandlerService: McsErrorHandlerService,
-    _loadingService: McsLoadingService,
-    protected _accessControlService: McsAccessControlService,
-    protected _changeDetectorRef: ChangeDetectorRef,
-    private _dateTimeService: McsDateTimeService,
-    private _serversService: ServersService,
-    private _translateService: TranslateService,
-    private _notificationEvents: McsNotificationEventsService
-  ) {
-    super(
-      _resourcesRepository,
-      _serversRepository,
-      _serverService,
-      _changeDetectorRef,
-      _errorHandlerService,
-      _loadingService,
-      _accessControlService
-    );
-    this.dataStatusFactory = new McsDataStatusFactory();
-    this.updateStatusConfiguration = new OsUpdatesStatusConfiguration();
-  }
-
-  public ngOnDestroy() {
-    this.dispose();
-    unsubscribeSubject(this._destroySubject);
-  }
-
   /**
    * Sets the view type of server services
    * @param viewMode View mode to be set as displayed
@@ -268,45 +274,45 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnDest
    */
   protected selectionChange(_server: McsServer, _resource: McsResource): void {
     this.serverServicesView = ServerServicesView.Default;
-    this._registerJobEvents();
     this._getServerUpdateDetails(_server.id);
   }
 
   /**
    * Register jobs/notifications events
    */
-  private _registerJobEvents(): void {
-    if (!isNullOrEmpty(this._destroySubject.observers)) { return; }
+  private _registerEvents(): void {
+    this._inspectOsUpdateHandler = this._eventDispatcher.addEventListener(
+      CoreEvent.jobServerOsUpdateInspect, this._onInspectForAvailableOsUpdates.bind(this)
+    );
 
-    this._notificationEvents.inspectServerForAvailableOsUpdate
-      .pipe(takeUntil(this._destroySubject))
-      .subscribe(this.onInspectForAvailableOsUpdates.bind(this));
+    this._applyOsUpdateHandler = this._eventDispatcher.addEventListener(
+      CoreEvent.jobServerOsUpdateApply, this._onApplyServerOsUpdates.bind(this)
+    );
 
-    this._notificationEvents.applyServerOsUpdates
-      .pipe(takeUntil(this._destroySubject))
-      .subscribe(this.onApplyServerOsUpdates.bind(this));
+    // Invoke the event initially
+    this._eventDispatcher.dispatch(CoreEvent.jobServerSnapshotCreate);
+    this._eventDispatcher.dispatch(CoreEvent.jobServerSnapshotApply);
   }
 
   /**
    * Listener for the inspect server for os-updates method call
    * @param job job object reference
    */
-  private onInspectForAvailableOsUpdates(job: McsJob): void {
-    if (!this.serverIsActiveByJob(job)) { return; }
+  private _onInspectForAvailableOsUpdates(job: McsJob): void {
+    let serverIsActive = this.serverIsActiveByJob(job);
+    if (!serverIsActive) { return; }
 
-    switch (job.dataStatus) {
-      case DataStatus.InProgress:
-        this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Analysing);
-        break;
-      case DataStatus.Success:
-        this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Unanalysed);
-        this.refreshServerResource();
-        break;
-      case DataStatus.Error:
-        this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Error);
-        break;
-      default:
-        this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Error);
+    if (job.dataStatus === DataStatus.Error) {
+      this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Error);
+      return;
+    }
+
+    // Refresh everything when all job is done
+    if (job.inProgress) {
+      this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Analysing);
+    } else {
+      this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Unanalysed);
+      this.refreshServerResource();
     }
     this._changeDetectorRef.markForCheck();
   }
@@ -315,23 +321,22 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnDest
    * Listener for the apply os updates on server method call
    * @param job job object reference
    */
-  private onApplyServerOsUpdates(job: McsJob): void {
-    if (!this.serverIsActiveByJob(job)) { return; }
+  private _onApplyServerOsUpdates(job: McsJob): void {
+    let serverIsActive = this.serverIsActiveByJob(job);
+    if (!serverIsActive) { return; }
 
-    switch (job.dataStatus) {
-      case DataStatus.InProgress:
-        this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Updating);
-        this._updateStartedDate = job.startedOn;
-        break;
-      case DataStatus.Success:
-        this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Updated);
-        this.refreshServerResource();
-        break;
-      case DataStatus.Error:
-        this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Error);
-        break;
-      default:
-        this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Error);
+    if (job.dataStatus === DataStatus.Error) {
+      this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Error);
+      return;
+    }
+
+    // Refresh everything when all job is done
+    if (job.inProgress) {
+      this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Updating);
+      this._updateStartedDate = job.startedOn;
+    } else {
+      this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Updated);
+      this.refreshServerResource();
     }
     this._changeDetectorRef.markForCheck();
   }
@@ -397,27 +402,26 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnDest
   ): Observable<McsServerOsUpdatesSchedule> {
     // TODO : find a better way of saving, currently deleting all then saving the new schedule
     this._serversService.setServerSpinner(server);
-    return this._serversRepository.
-      deleteServerOsUpdatesSchedule(server.id).pipe(
-        catchError((httpError) => {
-          this._serversService.clearServerSpinner(server);
-          this._formMessage.showMessage('error', {
-            messages: httpError.errorMessages,
-            fallbackMessage: this._translateService.instant('serverServices.updateErrorMessage')
-          });
-          return throwError(httpError);
-        }),
-        concatMap(() => {
-          return this._serversRepository.updateServerOsUpdatesSchedule(server.id, request).pipe(
-            tap(() => {
-              this._serversService.clearServerSpinner(server);
-              this._formMessage.showMessage('success', {
-                messages: this._translateService.instant('serverServices.updateSuccessMessage')
-              });
-            })
-          );
-        })
-      );
+    return this._serversRepository.deleteServerOsUpdatesSchedule(server.id).pipe(
+      catchError((httpError) => {
+        this._serversService.clearServerSpinner(server);
+        this._formMessage.showMessage('error', {
+          messages: httpError.errorMessages,
+          fallbackMessage: this._translateService.instant('serverServices.updateErrorMessage')
+        });
+        return throwError(httpError);
+      }),
+      concatMap(() => {
+        return this._serversRepository.updateServerOsUpdatesSchedule(server.id, request).pipe(
+          tap(() => {
+            this._serversService.clearServerSpinner(server);
+            this._formMessage.showMessage('success', {
+              messages: this._translateService.instant('serverServices.updateSuccessMessage')
+            });
+          })
+        );
+      })
+    );
   }
 
   /**

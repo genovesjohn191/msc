@@ -10,7 +10,8 @@ import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import {
   Subject,
-  Observable
+  Observable,
+  Subscription
 } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
@@ -25,7 +26,7 @@ import {
 import {
   CoreRoutes,
   CoreDefinition,
-  McsNotificationEventsService,
+  CoreEvent,
   McsBrowserService,
   McsAuthenticationService
 } from '@app/core';
@@ -34,11 +35,11 @@ import {
   isNullOrEmpty,
   addOrUpdateArrayRecord,
   compareDates,
-  unsubscribeSubject
+  unsubscribeSafely
 } from '@app/utilities';
 import {
   EventBusPropertyListenOn,
-  EventBusState
+  EventBusDispatcherService
 } from '@app/event-bus';
 import { SwitchAccountService } from '../../shared';
 
@@ -61,13 +62,55 @@ export class UserPanelComponent implements OnInit, OnDestroy {
   @ViewChild('userPopover')
   public userPopover: any;
 
-  @EventBusPropertyListenOn(EventBusState.UserChange)
+  @EventBusPropertyListenOn(CoreEvent.userChange)
   public activeUser$: Observable<McsIdentity>;
 
-  @EventBusPropertyListenOn(EventBusState.AccountChange)
+  @EventBusPropertyListenOn(CoreEvent.accountChange)
   public activeAccount$: Observable<McsCompany>;
 
+  private _currentUserJobHandler: Subscription;
   private _destroySubject = new Subject<void>();
+
+  public constructor(
+    private _translateService: TranslateService,
+    private _router: Router,
+    private _eventDispatcher: EventBusDispatcherService,
+    private _browserService: McsBrowserService,
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _authenticationService: McsAuthenticationService,
+    private _switchAccountService: SwitchAccountService
+  ) {
+    this.hasConnectionError = false;
+    this.notifications = new Array();
+    this.deviceType = Breakpoint.Large;
+  }
+
+  public ngOnInit(): void {
+    this._registerEvents();
+    this._listenToBrowserResize();
+    this._listenToSwitchAccount();
+  }
+
+  public ngOnDestroy(): void {
+    unsubscribeSafely(this._destroySubject);
+    unsubscribeSafely(this._currentUserJobHandler);
+  }
+
+  public get bellIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_BELL;
+  }
+
+  public get userIconKey(): string {
+    return CoreDefinition.ASSETS_SVG_USER_WHITE;
+  }
+
+  public get caretDownIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_CHEVRON_DOWN;
+  }
+
+  public get logoutIconKey(): string {
+    return CoreDefinition.ASSETS_SVG_LOGOUT_WHITE;
+  }
 
   /**
    * Returns the displayed notifications and ignore those who are already closed
@@ -96,46 +139,6 @@ export class UserPanelComponent implements OnInit, OnDestroy {
     return showNotificationCount ? this._translateService.instant(
       'header.userPanel.notifications.viewMoreCount', { count: remainingNotificationCount }
     ) : this._translateService.instant('header.userPanel.notifications.viewMore');
-  }
-
-  public get bellIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_BELL;
-  }
-
-  public get userIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_USER_WHITE;
-  }
-
-  public get caretDownIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_CHEVRON_DOWN;
-  }
-
-  public get logoutIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_LOGOUT_WHITE;
-  }
-
-  public constructor(
-    private _translateService: TranslateService,
-    private _router: Router,
-    private _notificationEvents: McsNotificationEventsService,
-    private _browserService: McsBrowserService,
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _authenticationService: McsAuthenticationService,
-    private _switchAccountService: SwitchAccountService
-  ) {
-    this.hasConnectionError = false;
-    this.notifications = new Array();
-    this.deviceType = Breakpoint.Large;
-  }
-
-  public ngOnInit(): void {
-    this._listenToCurrentUserJob();
-    this._listenToBrowserResize();
-    this._listenToSwitchAccount();
-  }
-
-  public ngOnDestroy(): void {
-    unsubscribeSubject(this._destroySubject);
   }
 
   /**
@@ -189,32 +192,26 @@ export class UserPanelComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Listen to current user job triggered
+   * Event that emits when the current user job has been received
    */
-  private _listenToCurrentUserJob(): void {
-    this._notificationEvents.currentUserJob
-      .pipe(takeUntil(this._destroySubject))
-      .subscribe((notification) => {
-        if (isNullOrEmpty(notification)) { return; }
+  private _onCurrentUserJob(job: McsJob): void {
+    if (isNullOrEmpty(job)) { return; }
 
-        // Update or add the new notification based on job ID
-        this.notifications = addOrUpdateArrayRecord(
-          this.notifications,
-          notification,
-          false,
-          (_existingJob: McsJob) => {
-            return _existingJob.id === notification.id;
-          });
-        this._sortNotifications();
-        this._changeDetectorRef.markForCheck();
+    this.notifications = addOrUpdateArrayRecord(
+      this.notifications,
+      job,
+      false,
+      (_existingJob: McsJob) => {
+        return _existingJob.id === job.id;
       });
+    this._sortNotifications();
+    this._changeDetectorRef.markForCheck();
   }
 
   /**
    * Listener for browser resize
    */
   private _listenToBrowserResize(): void {
-    // Subscribe to browser service
     this._browserService.breakpointChange()
       .pipe(takeUntil(this._destroySubject))
       .subscribe((deviceType: Breakpoint) => {
@@ -229,9 +226,15 @@ export class UserPanelComponent implements OnInit, OnDestroy {
   private _listenToSwitchAccount(): void {
     this._switchAccountService.activeAccountStream
       .pipe(takeUntil(this._destroySubject))
-      .subscribe(() => {
-        // Refresh the page when account is selected
-        this._changeDetectorRef.markForCheck();
-      });
+      .subscribe(() => this._changeDetectorRef.markForCheck());
+  }
+
+  /**
+   * Registers the events
+   */
+  private _registerEvents(): void {
+    this._currentUserJobHandler = this._eventDispatcher.addEventListener(
+      CoreEvent.jobCurrentUser, this._onCurrentUserJob.bind(this));
+    this._eventDispatcher.dispatch(CoreEvent.jobCurrentUser);
   }
 }

@@ -214,7 +214,7 @@ export class ServerCreateComponent extends McsOrderWizardBase
    */
   private _subscribeResourceById(resourceId: any): void {
     this._loaderService.showLoader('Loading resource details');
-    this.resource$ = this._resourcesRepository.getById(resourceId).pipe(
+    this.resource$ = this._resourcesRepository.getByIdAsync(resourceId).pipe(
       tap((resource) => this._serverCreateBuilder.setResource(resource)),
       shareReplay(1),
       finalize(() => this._loaderService.hideLoader())

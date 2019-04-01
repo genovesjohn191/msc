@@ -3,33 +3,34 @@ import {
   OnDestroy,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  ViewChild
+  ViewChild,
+  OnInit
 } from '@angular/core';
 import {
   throwError,
-  Subject,
-  Observable
+  Observable,
+  Subscription
 } from 'rxjs';
 import {
   catchError,
-  startWith,
-  takeUntil,
   map,
   tap
 } from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
+import { EventBusDispatcherService } from '@app/event-bus';
 import {
   McsDialogService,
-  McsNotificationEventsService,
   McsDataStatusFactory,
   CoreDefinition,
   McsErrorHandlerService,
   McsLoadingService,
-  McsAccessControlService
+  McsAccessControlService,
+  CoreEvent
 } from '@app/core';
 import {
   isNullOrEmpty,
-  unsubscribeSubject,
-  getUniqueRecords
+  getUniqueRecords,
+  unsubscribeSafely
 } from '@app/utilities';
 import {
   StdDateFormatPipe,
@@ -37,7 +38,6 @@ import {
 } from '@app/shared';
 import {
   McsJob,
-  DataStatus,
   McsServerSnapshot,
   McsServerStorageDevice,
   McsServer,
@@ -60,7 +60,6 @@ import {
 import { ServerService } from '../server.service';
 import { ServerDetailsBase } from '../server-details.base';
 import { ServersService } from '../../servers.service';
-import { TranslateService } from '@ngx-translate/core';
 
 enum SnapshotDialogType {
   None = 0,
@@ -77,16 +76,19 @@ enum SnapshotDialogType {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ServerBackupsComponent extends ServerDetailsBase
-  implements OnDestroy {
+  implements OnInit, OnDestroy {
 
   public snapshot$: Observable<McsServerSnapshot>;
   public updatingSnapshot: boolean;
   public capturingSnapshot: boolean;
   public dataStatusFactory: McsDataStatusFactory<McsServerSnapshot[]>;
 
+  private _createSnapshotHandler: Subscription;
+  private _applySnapshotHandler: Subscription;
+  private _deleteSnapshotHandler: Subscription;
+
   @ViewChild('formMessage')
   private _formMessage: FormMessage;
-  private _destroySubject = new Subject<void>();
 
   public get warningIconKey(): string {
     return CoreDefinition.ASSETS_SVG_WARNING;
@@ -101,9 +103,9 @@ export class ServerBackupsComponent extends ServerDetailsBase
     _loadingService: McsLoadingService,
     _accessControl: McsAccessControlService,
     private _translateService: TranslateService,
+    private _eventDispatcher: EventBusDispatcherService,
     private _serversService: ServersService,
     private _standardDateFormatPipe: StdDateFormatPipe,
-    private _notificationEvents: McsNotificationEventsService,
     private _dialogService: McsDialogService
   ) {
     super(
@@ -118,12 +120,18 @@ export class ServerBackupsComponent extends ServerDetailsBase
     this.dataStatusFactory = new McsDataStatusFactory();
   }
 
-  public ngOnDestroy() {
-    unsubscribeSubject(this._destroySubject);
-    this.dispose();
+  public ngOnInit() {
+    this._registerEvents();
   }
 
-  public enabledActions(server): boolean {
+  public ngOnDestroy() {
+    this.dispose();
+    unsubscribeSafely(this._createSnapshotHandler);
+    unsubscribeSafely(this._applySnapshotHandler);
+    unsubscribeSafely(this._deleteSnapshotHandler);
+  }
+
+  public enabledActions(server: McsServer): boolean {
     return !isNullOrEmpty(server.storageDevices)
       && !this.capturingSnapshot
       && !this.updatingSnapshot
@@ -207,7 +215,6 @@ export class ServerBackupsComponent extends ServerDetailsBase
    */
   protected selectionChange(server: McsServer, _resource: McsResource): void {
     this.validateDedicatedFeatureFlag(server, 'EnableDedicatedVmSnapshotView');
-    this._registerJobEvents();
     this._getServerSnapshots(server);
   }
 
@@ -265,32 +272,34 @@ export class ServerBackupsComponent extends ServerDetailsBase
     });
     dialogRef.afterClosed().subscribe((dialogResult) => {
       if (dialogResult) {
-        // Set initial server status so that the spinner will show up immediately
         this._serversService.setServerSpinner(server);
         this._changeDetectorRef.markForCheck();
-        // Invoke function pointer for the corresponding action
         dialogCallback();
       }
     });
   }
 
   /**
-   * Register disk jobs events
+   * Register jobs events
    */
-  private _registerJobEvents(): void {
-    if (!isNullOrEmpty(this._destroySubject.observers)) { return; }
+  private _registerEvents(): void {
+    this._createSnapshotHandler = this._eventDispatcher.addEventListener(
+      CoreEvent.jobServerSnapshotCreate, this._onCreateServerSnapshot.bind(this)
+    );
 
-    this._notificationEvents.createServerSnapshot
-      .pipe(startWith(null), takeUntil(this._destroySubject))
-      .subscribe(this._onCreateServerSnapshot.bind(this));
+    this._applySnapshotHandler = this._eventDispatcher.addEventListener(
+      CoreEvent.jobServerSnapshotApply, this._onUpdateServerSnapshot.bind(this)
+    );
 
-    this._notificationEvents.applyServerSnapshot
-      .pipe(startWith(null), takeUntil(this._destroySubject))
-      .subscribe(this._onUpdateServerSnapshot.bind(this));
+    this._deleteSnapshotHandler = this._eventDispatcher.addEventListener(
+      CoreEvent.jobServerSnapshotDelete, this._onUpdateServerSnapshot.bind(this)
+    );
 
-    this._notificationEvents.deleteServerSnapshot
-      .pipe(startWith(null), takeUntil(this._destroySubject))
-      .subscribe(this._onUpdateServerSnapshot.bind(this));
+    // Invoke the event initially
+    this._eventDispatcher.dispatch(CoreEvent.jobServerSnapshotCreate);
+    this._eventDispatcher.dispatch(CoreEvent.jobServerSnapshotApply);
+    this._eventDispatcher.dispatch(CoreEvent.jobServerSnapshotDelete);
+
   }
 
   /**
@@ -298,11 +307,12 @@ export class ServerBackupsComponent extends ServerDetailsBase
    * @param job Emitted job content
    */
   private _onCreateServerSnapshot(job: McsJob): void {
-    if (!this.serverIsActiveByJob(job)) { return; }
-    this.capturingSnapshot = job.dataStatus === DataStatus.InProgress;
-    if (job.dataStatus === DataStatus.Success) {
-      this.refreshServerResource();
-    }
+    let serverIsActive = this.serverIsActiveByJob(job);
+    if (!serverIsActive) { return; }
+
+    // Refresh everything when job is done
+    if (!job.inProgress) { this.refreshServerResource(); }
+    this.capturingSnapshot = job.inProgress;
     this._changeDetectorRef.markForCheck();
   }
 
@@ -311,11 +321,12 @@ export class ServerBackupsComponent extends ServerDetailsBase
    * @param job Emitted job content
    */
   private _onUpdateServerSnapshot(job: McsJob): void {
-    if (!this.serverIsActiveByJob(job)) { return; }
-    this.updatingSnapshot = job.dataStatus === DataStatus.InProgress;
-    if (job.dataStatus === DataStatus.Success) {
-      this.refreshServerResource();
-    }
+    let serverIsActive = this.serverIsActiveByJob(job);
+    if (!serverIsActive) { return; }
+
+    // Refresh everything when all job is done
+    if (!job.inProgress) { this.refreshServerResource(); }
+    this.updatingSnapshot = job.inProgress;
     this._changeDetectorRef.markForCheck();
   }
 

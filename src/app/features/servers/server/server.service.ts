@@ -9,6 +9,7 @@ import { McsServer } from '@app/models';
 @Injectable()
 export class ServerService {
   private _selectedServer = new BehaviorSubject<McsServer>(null);
+  private _serverId: string;
 
   /**
    * Returns the selected server as an observable
@@ -25,5 +26,20 @@ export class ServerService {
    */
   public setSelectedServer(server: McsServer): void {
     this._selectedServer.next(server);
+  }
+
+  /**
+   * Sets the server id based on the provided string
+   * @param serverId Server id to be set
+   */
+  public setServerId(serverId: string): void {
+    this._serverId = serverId;
+  }
+
+  /**
+   * Returns the server id
+   */
+  public getServerId(): string {
+    return this._serverId;
   }
 }

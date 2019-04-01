@@ -89,12 +89,4 @@ describe('StateChangeNotificationsComponent', () => {
       expect(component.stateChangeNotificationsElement.nativeElement.style.right).toContain('px');
     });
   });
-
-  describe('ngOnDestroy()', () => {
-    it('should unsubscribe to notificationsSubscription', () => {
-      spyOn(component.notificationsSubscription, 'unsubscribe');
-      component.ngOnDestroy();
-      expect(component.notificationsSubscription.unsubscribe).toHaveBeenCalledTimes(1);
-    });
-  });
 });

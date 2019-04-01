@@ -8,34 +8,37 @@ import {
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import {
-  Subject,
   throwError,
-  Observable
+  Observable,
+  Subscription,
+  of
 } from 'rxjs';
 import {
-  startWith,
-  takeUntil,
   catchError,
-  shareReplay
+  shareReplay,
+  map,
+  tap
 } from 'rxjs/operators';
 import {
   CoreDefinition,
-  McsNotificationEventsService,
   McsDialogService,
   McsErrorHandlerService,
   McsLoadingService,
   McsTableDataSource,
-  McsAccessControlService
+  McsAccessControlService,
+  CoreEvent,
+  McsGuid
 } from '@app/core';
 import {
   isNullOrEmpty,
-  unsubscribeSubject,
-  animateFactory
+  animateFactory,
+  unsubscribeSafely,
+  getSafeProperty,
+  addOrUpdateArrayRecord
 } from '@app/utilities';
 import { ComponentHandlerDirective } from '@app/shared';
 import {
   McsJob,
-  DataStatus,
   McsResourceStorage,
   McsServerStorageDevice,
   McsServerStorageDeviceUpdate,
@@ -47,6 +50,7 @@ import {
   McsResourcesRepository
 } from '@app/services';
 import { ServerManageStorage } from '@app/features-shared';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { DeleteStorageDialogComponent } from '../../shared';
 import { ServerService } from '../server.service';
 import { ServerDetailsBase } from '../server-details.base';
@@ -62,6 +66,7 @@ export enum ServerDiskMethodType {
 
 // Constants
 const SERVER_MAXIMUM_DISKS = 14;
+const SERVER_DISK_NEW_ID = McsGuid.newGuid().toString();
 
 @Component({
   selector: 'mcs-server-storage',
@@ -77,7 +82,6 @@ const SERVER_MAXIMUM_DISKS = 14;
 
 export class ServerStorageComponent extends ServerDetailsBase implements OnInit, OnDestroy {
   public resourceStorages$: Observable<McsResourceStorage[]>;
-
   public manageStorage: ServerManageStorage;
   public selectedStorage: McsResourceStorage;
   public selectedDisk: McsServerStorageDevice;
@@ -85,9 +89,13 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   public disksDataSource: McsTableDataSource<McsServerStorageDevice>;
   public disksColumns: string[];
 
+  private _inProgressDisk: string;
   private _newDisk: McsServerStorageDevice;
-  private _inProgressDiskId: string;
-  private _destroySubject = new Subject<void>();
+  private _serverDisksCache: Observable<McsServerStorageDevice[]>;
+
+  private _createDiskHandler: Subscription;
+  private _updateDiskHandler: Subscription;
+  private _deleteDiskHandler: Subscription;
 
   @ViewChild(ComponentHandlerDirective)
   private _componentHandler: ComponentHandlerDirective;
@@ -123,10 +131,10 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     _errorHandlerService: McsErrorHandlerService,
     _loadingService: McsLoadingService,
     _accessControl: McsAccessControlService,
+    private _eventDispatcher: EventBusDispatcherService,
     private _translateService: TranslateService,
     private _serversService: ServersService,
     private _dialogService: McsDialogService,
-    private _notificationEvents: McsNotificationEventsService
   ) {
     super(
       _resourcesRepository,
@@ -137,19 +145,22 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
       _loadingService,
       _accessControl
     );
-    this._newDisk = new McsServerStorageDevice();
-    this.disksColumns = new Array();
+    this.disksColumns = [];
+    this.disksDataSource = new McsTableDataSource();
     this.manageStorage = new ServerManageStorage();
     this.diskMethodType = ServerDiskMethodType.AddDisk;
   }
 
   public ngOnInit() {
     this._setDataColumns();
+    this._registerEvents();
   }
 
   public ngOnDestroy() {
     this.dispose();
-    unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this._createDiskHandler);
+    unsubscribeSafely(this._updateDiskHandler);
+    unsubscribeSafely(this._deleteDiskHandler);
   }
 
   /**
@@ -317,7 +328,8 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
    */
   public diskIsInProgress(disk: McsServerStorageDevice): boolean {
     if (isNullOrEmpty(disk)) { return false; }
-    return disk.id === this._inProgressDiskId;
+    let newDiskId = getSafeProperty(this._newDisk, (obj) => obj.id);
+    return disk.id === newDiskId || disk.id === this._inProgressDisk;
   }
 
   /**
@@ -327,22 +339,33 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   protected selectionChange(server: McsServer, resource: McsResource): void {
     this.validateDedicatedFeatureFlag(server, 'EnableDedicatedVmStorageView');
     this._resetStorageValues();
-    this._initializeDataSource(server);
+    this._updateTableDataSource(server);
     this._getResourceStorages(resource);
-    this._registerJobEvents();
   }
 
   /**
    * Initializes the data source of the disks table
    */
-  private _initializeDataSource(server: McsServer): void {
-    if (isNullOrEmpty(this.disksDataSource)) {
-      this.disksDataSource = new McsTableDataSource(
-        this._serversRepository.getServerDisks(server)
-      );
-      return;
+  private _updateTableDataSource(server?: McsServer): void {
+    let serverDiskDataSource: Observable<McsServerStorageDevice[]>;
+    if (!isNullOrEmpty(server)) {
+      serverDiskDataSource = this._serversRepository.getServerDisks(server).pipe(
+        tap((records) => this._serverDisksCache = of(records)));
     }
-    this.disksDataSource.refreshDataRecords();
+    let tableDataSource = isNullOrEmpty(this._serverDisksCache) ?
+      serverDiskDataSource : this._serverDisksCache;
+
+    let hasNewRecord = !isNullOrEmpty(this._newDisk) && !isNullOrEmpty(tableDataSource);
+    if (hasNewRecord) {
+      tableDataSource = tableDataSource.pipe(
+        map((result) => {
+          result = addOrUpdateArrayRecord(result, this._newDisk, false,
+            (item) => item.id === SERVER_DISK_NEW_ID);
+          return result;
+        })
+      );
+    }
+    this.disksDataSource.updateDatasource(tableDataSource);
   }
 
   /**
@@ -350,6 +373,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
    */
   private _resetStorageValues(): void {
     this.diskMethodType = ServerDiskMethodType.AddDisk;
+    this._serverDisksCache = null;
     this.manageStorage = new ServerManageStorage();
     if (!isNullOrEmpty(this._componentHandler)) {
       this._componentHandler.recreateComponent();
@@ -359,20 +383,23 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   /**
    * Register disk jobs events
    */
-  private _registerJobEvents(): void {
-    if (!isNullOrEmpty(this._destroySubject.observers)) { return; }
+  private _registerEvents(): void {
+    this._createDiskHandler = this._eventDispatcher.addEventListener(
+      CoreEvent.jobServerDiskCreate, this._onCreateServerDisk.bind(this)
+    );
 
-    this._notificationEvents.createServerDisk
-      .pipe(startWith(null), takeUntil(this._destroySubject))
-      .subscribe(this._onCreateServerDisk.bind(this));
+    this._updateDiskHandler = this._eventDispatcher.addEventListener(
+      CoreEvent.jobServerDiskUpdate, this._onUpdateServerDisk.bind(this)
+    );
 
-    this._notificationEvents.updateServerDisk
-      .pipe(startWith(null), takeUntil(this._destroySubject))
-      .subscribe(this._onUpdateServerDisk.bind(this));
+    this._deleteDiskHandler = this._eventDispatcher.addEventListener(
+      CoreEvent.jobServerDiskDelete, this._onUpdateServerDisk.bind(this)
+    );
 
-    this._notificationEvents.deleteServerDisk
-      .pipe(startWith(null), takeUntil(this._destroySubject))
-      .subscribe(this._onUpdateServerDisk.bind(this));
+    // Invoke the event initially
+    this._eventDispatcher.dispatch(CoreEvent.jobServerDiskCreate);
+    this._eventDispatcher.dispatch(CoreEvent.jobServerDiskUpdate);
+    this._eventDispatcher.dispatch(CoreEvent.jobServerDiskDelete);
   }
 
   /**
@@ -380,57 +407,42 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
    * @param job Emitted job content
    */
   private _onCreateServerDisk(job: McsJob): void {
-    if (!this.serverIsActiveByJob(job)) { return; }
+    let serverIsActive = this.serverIsActiveByJob(job);
+    if (!serverIsActive) { return; }
 
-    switch (job.dataStatus) {
-      case DataStatus.InProgress:
-        this._onAddingDisk(job);
-        break;
-
-      case DataStatus.Success:
-        this.refreshServerResource();
-      case DataStatus.Error:
-      default:
-        if (!isNullOrEmpty(this.disksDataSource)) {
-          this.disksDataSource.deleteRecordBy((item) => this._newDisk.id === item.id);
-        }
-        break;
+    // Refresh everything when all job is done
+    if (!job.inProgress) {
+      this._newDisk = null;
+      this.refreshServerResource();
+      return;
     }
+
+    // Add in progress jobs
+    this._newDisk = new McsServerStorageDevice();
+    this._newDisk.id = SERVER_DISK_NEW_ID;
+    this._newDisk.name = job.clientReferenceObject.name;
+    this._newDisk.sizeMB = job.clientReferenceObject.sizeMB;
+    this._newDisk.storageProfile = job.clientReferenceObject.storageProfile;
+    this._updateTableDataSource();
   }
 
   /**
    * Event that emits when updating a server disk
-   * @param job Emitted job content
+   * @param jobs Emitted job content
    */
   private _onUpdateServerDisk(job: McsJob): void {
-    if (!this.serverIsActiveByJob(job)) { return; }
+    let serverIsActive = this.serverIsActiveByJob(job);
+    if (!serverIsActive) { return; }
 
-    // Refresh the data when the disk in-progress is already completed
-    let inProgressDiskEnded = !isNullOrEmpty(this._inProgressDiskId)
-      && job.dataStatus === DataStatus.Success;
-    if (inProgressDiskEnded) { this.refreshServerResource(); }
-
-    // Set the inprogress disk ID to be checked
-    this._inProgressDiskId = job.dataStatus === DataStatus.InProgress ?
-      job.clientReferenceObject.diskId : undefined;
-  }
-
-  /**
-   * Will trigger if currently adding a disk
-   * @param job Emitted job content
-   */
-  private _onAddingDisk(job: McsJob): void {
-    if (!this.serverIsActiveByJob(job)) { return; }
-
-    // Mock disk data based on job response
-    this._newDisk.id = this._inProgressDiskId;
-    this._newDisk.name = job.clientReferenceObject.name;
-    this._newDisk.sizeMB = job.clientReferenceObject.sizeMB;
-    this._newDisk.storageProfile = job.clientReferenceObject.storageProfile;
-
-    if (!isNullOrEmpty(this.disksDataSource)) {
-      this.disksDataSource.addOrUpdateRecord(this._newDisk);
+    // Refresh everything when all job is done
+    if (!job.inProgress) {
+      this._inProgressDisk = null;
+      this.refreshServerResource();
+      return;
     }
+
+    // Add in progress jobs
+    this._inProgressDisk = job.clientReferenceObject.diskId;
   }
 
   /**

@@ -16,6 +16,7 @@ import { catchError } from 'rxjs/operators';
 import {
   CoreRoutes,
   CoreConfig,
+  CoreEvent,
   CoreDefinition,
   McsDataStatusFactory
 } from '@app/core';
@@ -26,7 +27,6 @@ import {
 } from '@app/models';
 import {
   EventBusPropertyListenOn,
-  EventBusState,
   EventBusDispatcherService
 } from '@app/event-bus';
 import {
@@ -48,7 +48,7 @@ export class NavigationDesktopComponent implements OnInit, OnDestroy {
   public productCatalogs: McsProductCatalog[];
   public productsStatusFactory: McsDataStatusFactory<McsProductCatalog[]>;
 
-  @EventBusPropertyListenOn(EventBusState.ProductSelected)
+  @EventBusPropertyListenOn(CoreEvent.productSelected)
   public selectedProduct$: BehaviorSubject<McsProduct>;
 
   public get arrowUpIconKey(): string {
@@ -113,7 +113,7 @@ export class NavigationDesktopComponent implements OnInit, OnDestroy {
    */
   private _registerEvents(): void {
     this._productUnselectedHandler = this._eventDispatcher.addEventListener(
-      EventBusState.ProductUnSelected, this._onProductUnSelected.bind(this)
+      CoreEvent.productUnSelected, this._onProductUnSelected.bind(this)
     );
   }
 

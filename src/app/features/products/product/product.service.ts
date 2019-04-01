@@ -3,11 +3,9 @@ import {
   BehaviorSubject,
   Observable
 } from 'rxjs';
-import {
-  EventBusDispatcherService,
-  EventBusState
-} from '@app/event-bus';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { McsProduct } from '@app/models';
+import { CoreEvent } from '@app/core';
 
 @Injectable()
 export class ProductService {
@@ -27,7 +25,7 @@ export class ProductService {
    * @param product Product to be selected
    */
   public setProduct(product: McsProduct): void {
-    this._eventDispatcher.dispatch(EventBusState.ProductSelected, product);
+    this._eventDispatcher.dispatch(CoreEvent.productSelected, product);
     this._selectedProduct$.next(product);
   }
 
@@ -35,6 +33,6 @@ export class ProductService {
    * Removes the selected product on the event bus
    */
   public removeSelectedProduct(): void {
-    this._eventDispatcher.dispatch(EventBusState.ProductUnSelected);
+    this._eventDispatcher.dispatch(CoreEvent.productUnSelected);
   }
 }

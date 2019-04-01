@@ -230,7 +230,7 @@ export class MediaUploadDetailsComponent
     this._loadingService.showLoader(
       this._translateService.instant('mediaUpload.mediaStepDetails.loadingResourceDetails')
     );
-    this.selectedResource$ = this._resourcesRepository.getById(resourceId).pipe(
+    this.selectedResource$ = this._resourcesRepository.getByIdAsync(resourceId).pipe(
       shareReplay(1),
       catchError((error) => {
         this._errorHandlerService.redirectToErrorPage(error.status);

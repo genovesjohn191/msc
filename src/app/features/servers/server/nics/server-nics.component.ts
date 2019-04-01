@@ -6,39 +6,39 @@ import {
   ChangeDetectionStrategy,
   ViewChild,
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import {
   Subscription,
-  Subject,
   throwError,
-  Observable
+  Observable,
+  of
 } from 'rxjs';
 import {
-  startWith,
-  takeUntil,
   catchError,
-  shareReplay
+  shareReplay,
+  tap,
+  map
 } from 'rxjs/operators';
 import {
   CoreDefinition,
   McsDialogService,
-  McsNotificationEventsService,
   McsErrorHandlerService,
   McsLoadingService,
   McsTableDataSource,
-  McsAccessControlService
+  McsAccessControlService,
+  CoreEvent,
+  McsGuid
 } from '@app/core';
 import {
   isNullOrEmpty,
   unsubscribeSafely,
   animateFactory,
-  unsubscribeSubject
+  addOrUpdateArrayRecord,
+  getSafeProperty
 } from '@app/utilities';
 import { ComponentHandlerDirective } from '@app/shared';
 import {
   McsJob,
-  DataStatus,
   McsResourceNetwork,
   McsServerNic,
   McsServerCreateNic,
@@ -49,6 +49,7 @@ import {
   McsServersRepository,
   McsResourcesRepository
 } from '@app/services';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { ServerManageNetwork } from '@app/features-shared';
 import { DeleteNicDialogComponent } from '../../shared';
 import { ServerService } from '../server.service';
@@ -65,6 +66,7 @@ export enum ServerNicMethodType {
 
 // Constants
 const SERVER_MAXIMUM_NICS = 10;
+const SERVER_NIC_NEW_ID = McsGuid.newGuid().toString();
 
 @Component({
   selector: 'mcs-server-nics',
@@ -82,19 +84,20 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   public resourceNetworks$: Observable<McsResourceNetwork[]>;
 
   public currentIpAddress: string;
-  public fcNetwork: FormControl;
   public manageNetwork: ServerManageNetwork;
   public selectedNetwork: McsResourceNetwork;
   public selectedNic: McsServerNic;
 
   public nicsDataSource: McsTableDataSource<McsServerNic>;
   public nicsColumns: string[];
-  public manageNetworkTemplate: any[];
 
-  private _networksSubscription: Subscription;
   private _newNic: McsServerNic;
   private _inProgressNicId: string;
-  private _destroySubject = new Subject<void>();
+  private _serverNicsCache: Observable<McsServerNic[]>;
+
+  private _createNicHandler: Subscription;
+  private _updateNicHandler: Subscription;
+  private _deleteNicHandler: Subscription;
 
   @ViewChild(ComponentHandlerDirective)
   private _componentHandler: ComponentHandlerDirective;
@@ -138,10 +141,10 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     _errorHandlerService: McsErrorHandlerService,
     _loadingService: McsLoadingService,
     _accessControl: McsAccessControlService,
+    private _eventDispatcher: EventBusDispatcherService,
     private _translateService: TranslateService,
     private _serversService: ServersService,
-    private _dialogService: McsDialogService,
-    private _notificationEvents: McsNotificationEventsService
+    private _dialogService: McsDialogService
   ) {
     super(
       _resourcesRepository,
@@ -152,21 +155,22 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
       _loadingService,
       _accessControl
     );
-    this._newNic = new McsServerNic();
-    this.nicsColumns = new Array();
-    this.manageNetworkTemplate = [{}];
+    this.nicsColumns = [];
+    this.nicsDataSource = new McsTableDataSource();
     this.manageNetwork = new ServerManageNetwork();
     this.nicMethodType = ServerNicMethodType.AddNic;
   }
 
   public ngOnInit() {
     this._setDataColumns();
+    this._registerEvents();
   }
 
   public ngOnDestroy() {
     this.dispose();
-    unsubscribeSubject(this._destroySubject);
-    unsubscribeSafely(this._networksSubscription);
+    unsubscribeSafely(this._createNicHandler);
+    unsubscribeSafely(this._updateNicHandler);
+    unsubscribeSafely(this._deleteNicHandler);
   }
 
   /**
@@ -305,7 +309,8 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    */
   public nicIsInProgress(nic: McsServerNic): boolean {
     if (isNullOrEmpty(nic)) { return false; }
-    return nic.id === this._inProgressNicId;
+    let newNicId = getSafeProperty(this._newNic, (obj) => obj.id);
+    return nic.id === newNicId || nic.id === this._inProgressNicId;
   }
 
   /**
@@ -324,22 +329,8 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   protected selectionChange(server: McsServer, resource: McsResource): void {
     this.validateDedicatedFeatureFlag(server, 'EnableDedicatedVmNicView');
     this._resetNetworkValues();
-    this._initializeDataSource(server);
+    this._updateTableDataSource(server);
     this._getResourceNetworks(resource);
-    this._registerJobEvents();
-  }
-
-  /**
-   * Initializes the data source of the nics table
-   */
-  private _initializeDataSource(server: McsServer): void {
-    if (isNullOrEmpty(this.nicsDataSource)) {
-      this.nicsDataSource = new McsTableDataSource(
-        this._serversRepository.getServerNics(server)
-      );
-      return;
-    }
-    this.nicsDataSource.refreshDataRecords();
   }
 
   /**
@@ -347,6 +338,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    */
   private _resetNetworkValues(): void {
     this.nicMethodType = ServerNicMethodType.AddNic;
+    this._serverNicsCache = null;
     this.manageNetwork = new ServerManageNetwork();
     this.currentIpAddress = undefined;
     if (!isNullOrEmpty(this._componentHandler)) {
@@ -357,20 +349,48 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   /**
    * Register jobs/notifications events
    */
-  private _registerJobEvents(): void {
-    if (!isNullOrEmpty(this._destroySubject.observers)) { return; }
+  private _registerEvents(): void {
+    this._createNicHandler = this._eventDispatcher.addEventListener(
+      CoreEvent.jobServerNicCreate, this._onCreateServerNic.bind(this)
+    );
 
-    this._notificationEvents.createServerNic
-      .pipe(startWith(null), takeUntil(this._destroySubject))
-      .subscribe(this._onCreateServerNic.bind(this));
+    this._updateNicHandler = this._eventDispatcher.addEventListener(
+      CoreEvent.jobServerNicUpdate, this._onUpdateServerNic.bind(this)
+    );
 
-    this._notificationEvents.updateServerNic
-      .pipe(startWith(null), takeUntil(this._destroySubject))
-      .subscribe(this._onModifyServerNic.bind(this));
+    this._deleteNicHandler = this._eventDispatcher.addEventListener(
+      CoreEvent.jobServerNicDelete, this._onUpdateServerNic.bind(this)
+    );
 
-    this._notificationEvents.deleteServerNic
-      .pipe(startWith(null), takeUntil(this._destroySubject))
-      .subscribe(this._onModifyServerNic.bind(this));
+    // Invoke the event initially
+    this._eventDispatcher.dispatch(CoreEvent.jobServerNicCreate);
+    this._eventDispatcher.dispatch(CoreEvent.jobServerNicUpdate);
+    this._eventDispatcher.dispatch(CoreEvent.jobServerNicDelete);
+  }
+
+  /**
+   * Initializes the data source of the disks table
+   */
+  private _updateTableDataSource(server?: McsServer): void {
+    let serverNicsDataSource: Observable<McsServerNic[]>;
+    if (!isNullOrEmpty(server)) {
+      serverNicsDataSource = this._serversRepository.getServerNics(server).pipe(
+        tap((records) => this._serverNicsCache = of(records)));
+    }
+    let tableDataSource = isNullOrEmpty(this._serverNicsCache) ?
+      serverNicsDataSource : this._serverNicsCache;
+
+    let hasNewRecord = !isNullOrEmpty(this._newNic) && !isNullOrEmpty(tableDataSource);
+    if (hasNewRecord) {
+      tableDataSource = tableDataSource.pipe(
+        map((result) => {
+          result = addOrUpdateArrayRecord(result, this._newNic, false,
+            (item) => item.id === SERVER_NIC_NEW_ID);
+          return result;
+        })
+      );
+    }
+    this.nicsDataSource.updateDatasource(tableDataSource);
   }
 
   /**
@@ -394,57 +414,42 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    * @param job Emitted job content
    */
   private _onCreateServerNic(job: McsJob): void {
-    if (!this.serverIsActiveByJob(job)) { return; }
+    let serverIsActive = this.serverIsActiveByJob(job);
+    if (!serverIsActive) { return; }
 
-    switch (job.dataStatus) {
-      case DataStatus.InProgress:
-        this._onAddingNic(job);
-        break;
-
-      case DataStatus.Success:
-        this.refreshServerResource();
-      case DataStatus.Error:
-      default:
-        if (!isNullOrEmpty(this.nicsDataSource)) {
-          this.nicsDataSource.deleteRecordBy((item) => this._newNic.id === item.id);
-        }
-        break;
+    // Refresh everything when all job is done
+    if (!job.inProgress) {
+      this._newNic = null;
+      this.refreshServerResource();
+      return;
     }
+
+    // Add in progress jobs
+    this._newNic = new McsServerNic();
+    this._newNic.id = SERVER_NIC_NEW_ID;
+    this._newNic.logicalNetworkName = job.clientReferenceObject.nicName;
+    this._newNic.ipAllocationMode = job.clientReferenceObject.nicIpAllocationMode;
+    this._newNic.ipAddresses = [job.clientReferenceObject.nicIpAddress];
+    this._updateTableDataSource();
   }
 
   /**
    * Event that emits when either updating or deleting a server nic
    * @param job Emitted job content
    */
-  private _onModifyServerNic(job: McsJob): void {
-    if (!this.serverIsActiveByJob(job)) { return; }
+  private _onUpdateServerNic(job: McsJob): void {
+    let serverIsActive = this.serverIsActiveByJob(job);
+    if (!serverIsActive) { return; }
 
-    // Refresh the data when the nic in-progress is already completed
-    let inProgressNicEnded = !isNullOrEmpty(this._inProgressNicId)
-      && job.dataStatus === DataStatus.Success;
-    if (inProgressNicEnded) { this.refreshServerResource(); }
-
-    // Set the inprogress nic ID to be checked
-    this._inProgressNicId = job.dataStatus === DataStatus.InProgress ?
-      job.clientReferenceObject.nicId : undefined;
-  }
-
-  /**
-   * Will trigger if currently adding a NIC
-   * @param job Emitted job content
-   */
-  private _onAddingNic(job: McsJob): void {
-    if (!this.serverIsActiveByJob(job)) { return; }
-
-    // Mock NIC data based on job response
-    this._newNic.id = this._inProgressNicId;
-    this._newNic.logicalNetworkName = job.clientReferenceObject.nicName;
-    this._newNic.ipAllocationMode = job.clientReferenceObject.nicIpAllocationMode;
-    this._newNic.ipAddresses = [job.clientReferenceObject.nicIpAddress];
-
-    if (!isNullOrEmpty(this.nicsDataSource)) {
-      this.nicsDataSource.addOrUpdateRecord(this._newNic);
+    // Refresh everything when all job is done
+    if (!job.inProgress) {
+      this._inProgressNicId = null;
+      this.refreshServerResource();
+      return;
     }
+
+    // Add in progress jobs
+    this._inProgressNicId = job.clientReferenceObject.nicId;
   }
 
   /**

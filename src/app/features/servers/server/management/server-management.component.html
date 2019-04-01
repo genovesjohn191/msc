@@ -32,9 +32,9 @@
               <span> / </span>
               <span>{{ serverDetails.server.compute?.cpuCount | number }} vCPU</span>
               <ng-container *mcsAccessControl="serverPermision.vmEdit">
+                <mcs-loader *ngIf="scaleInProgress" size="small"
+                  [mcsTooltip]="'serverManagement.manageScale.scaling' | translate"></mcs-loader>
                 <ng-container *ngIf="serverDetails.server.scaleable">
-                  <mcs-loader *ngIf="scaleInProgress" size="small"
-                    [mcsTooltip]="'serverManagement.manageScale.scaling' | translate"></mcs-loader>
                   <a *ngIf="!scaleInProgress"
                     (click)="setViewMode(serverManagementViewEnum.ManageScale)"
                     mcsId

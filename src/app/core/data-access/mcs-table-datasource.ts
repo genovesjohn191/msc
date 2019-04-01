@@ -25,10 +25,7 @@ import {
   deleteArrayRecord,
   isNullOrUndefined
 } from '@app/utilities';
-import {
-  DataStatus,
-  ActionStatus
-} from '@app/models';
+import { DataStatus } from '@app/models';
 import { McsRepository } from './mcs-repository.interface';
 import { CoreDefinition } from '../core.definition';
 
@@ -325,12 +322,9 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
    */
   private _subscribeToRepoDataChange(): void {
     if (!this._datasourceIsRepository) { return; }
-    (this._dataSource as McsRepository<T>).dataChange().pipe(
+    (this._dataSource as McsRepository<T>).dataClear().pipe(
       takeUntil(this._dataChangeSubject)
-    ).subscribe((actionState) => {
-      if (actionState !== ActionStatus.Clear) { return; }
-      this._requestUpdate.next();
-    });
+    ).subscribe(() => this._requestUpdate.next());
   }
 
   /**

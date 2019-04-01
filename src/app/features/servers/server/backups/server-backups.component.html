@@ -32,48 +32,44 @@
     <!-- Snapshots -->
     <mcs-item orientation="block">
       <strong>{{ 'serverBackups.snapshots' | translate }}</strong>
-      <mcs-data-status [dataStatusFactory]="dataStatusFactory">
+      <mcs-item *ngIf="capturingSnapshot">
+        <mcs-loader size="small" [mcsTooltip]="serverDetails.server.processingText"></mcs-loader>
+        <span>{{ 'serverBackups.creatingSnapshot' | translate }}</span>
+      </mcs-item>
+
+      <mcs-data-status [dataStatusFactory]="dataStatusFactory" *ngIf="!capturingSnapshot">
         <mcs-data-status-success mcsDataSuccess>
-          <ng-container *ngIf="!capturingSnapshot; else capturingSnapshotTemplate">
-            <mcs-grid *ngIf="snapshot$ | async as snapshot">
-              <mcs-grid-row>
-                <mcs-grid-column>
-                  <mcs-item>
-                    <mcs-loader *ngIf="snapshotProcessing" size="small"
-                      [mcsTooltip]="serverDetails.server.processingText"></mcs-loader>
-                    <span>{{ snapshot.createdOn | mcsStdDateFormat }}</span>
-                    <span read-only>{{ snapshot.sizeMB | mcsDataSize: 'MB' }}</span>
-                  </mcs-item>
-                </mcs-grid-column>
+          <mcs-grid *ngIf="snapshot$ | async as snapshot">
+            <mcs-grid-row>
+              <mcs-grid-column>
+                <mcs-item>
+                  <mcs-loader *ngIf="snapshotProcessing" size="small"
+                    [mcsTooltip]="serverDetails.server.processingText"></mcs-loader>
+                  <span>{{ snapshot.createdOn | mcsStdDateFormat }}</span>
+                  <span read-only>{{ snapshot.sizeMB | mcsDataSize: 'MB' }}</span>
+                </mcs-item>
+              </mcs-grid-column>
 
-                <mcs-grid-column mcsAlignContent="middle-right">
-                  <mcs-item [disabled]="!enabledActions(serverDetails.server)">
-                    <a (click)="restoreSnapshot(serverDetails.server, snapshot)"
-                      mcsId
-                      mcsEventTracker="restore-snapshot"
-                      mcsEventCategory="server"
-                      mcsEventLabel="server-details-page">
-                      {{ 'serverBackups.restoreSnapshot' | translate }}
-                    </a>
-                    <a (click)="deleteSnapshot(serverDetails.server, snapshot)"
-                      mcsId
-                      mcsEventTracker="delete-snapshot"
-                      mcsEventCategory="server"
-                      mcsEventLabel="server-details-page">
-                      {{ 'serverBackups.deleteSnapshot' | translate }}
-                    </a>
-                  </mcs-item>
-                </mcs-grid-column>
-              </mcs-grid-row>
-            </mcs-grid>
-          </ng-container>
-
-          <ng-template #capturingSnapshotTemplate>
-            <mcs-item>
-              <mcs-loader size="small" [mcsTooltip]="serverDetails.server.processingText"></mcs-loader>
-              <span>{{ 'serverBackups.creatingSnapshot' | translate }}</span>
-            </mcs-item>
-          </ng-template>
+              <mcs-grid-column mcsAlignContent="middle-right">
+                <mcs-item [disabled]="!enabledActions(serverDetails.server)">
+                  <a (click)="restoreSnapshot(serverDetails.server, snapshot)"
+                    mcsId
+                    mcsEventTracker="restore-snapshot"
+                    mcsEventCategory="server"
+                    mcsEventLabel="server-details-page">
+                    {{ 'serverBackups.restoreSnapshot' | translate }}
+                  </a>
+                  <a (click)="deleteSnapshot(serverDetails.server, snapshot)"
+                    mcsId
+                    mcsEventTracker="delete-snapshot"
+                    mcsEventCategory="server"
+                    mcsEventLabel="server-details-page">
+                    {{ 'serverBackups.deleteSnapshot' | translate }}
+                  </a>
+                </mcs-item>
+              </mcs-grid-column>
+            </mcs-grid-row>
+          </mcs-grid>
         </mcs-data-status-success>
 
         <mcs-data-status-in-progress mcsDataInProgress>

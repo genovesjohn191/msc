@@ -209,7 +209,7 @@ export class TicketComponent implements OnInit, OnDestroy {
    */
   private _subscribeToTicketById(ticketId: string): void {
     this._loadingService.showLoader(this._translateService.instant('ticket.loading'));
-    this.selectedTicket$ = this._ticketsRepository.getById(ticketId).pipe(
+    this.selectedTicket$ = this._ticketsRepository.getByIdAsync(ticketId).pipe(
       catchError((error) => {
         this._errorHandlerService.redirectToErrorPage(error.status);
         return throwError(error);

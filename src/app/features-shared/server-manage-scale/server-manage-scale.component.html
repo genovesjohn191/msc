@@ -27,7 +27,7 @@
           [ngModel]="sliderValueIndex" [ngModelOptions]="{standalone: true}"
           (ngModelChange)="onSliderChanged($event)"></mcs-slider>
         <strong display-block text-center>
-          {{ sliderValue?.memoryMB | mcsDataSize: 'MB' }} {{ 'serverShared.manageScale.ramLabel' | translate }} /
+          {{ sliderValue?.memoryGB | mcsDataSize: 'MB' }} {{ 'serverShared.manageScale.ramLabel' | translate }} /
           {{ sliderValue?.cpuCount | number}} {{ 'serverShared.manageScale.cpuUnit' | translate }}
         </strong>
       </div>

@@ -1,21 +1,19 @@
-import { map } from 'rxjs/operators';
-import { EventBusState } from '../event-bus-state.enum';
 import { EventBusDispatcherCore } from '../event-bus-dispatcher-core';
+import { EventBusState } from '../event-bus-state';
 
 /**
  * Subscribes to an event method based on the event name provided
  * @param event Event name on where to listen
  * @param destroy Flag that determines if the event should be automatically released
  */
-export function EventBusMethodListenOn(event: EventBusState, destroy: boolean = false) {
+export function EventBusMethodListenOn<T>(event: EventBusState<T>, destroy: boolean = false) {
   return (target: any, _name: string, descriptor: PropertyDescriptor) => {
     let eventsService = EventBusDispatcherCore.getInstance();
     let originalMethod = descriptor.value;
 
     let instanceFunc = function() {
-      let eventSubscription = eventsService.getEvent(event).subject
-        .pipe(map((response) => response.params))
-        .subscribe((args) => {
+      let eventSubscription = eventsService.getEvent(event)
+        .subject.subscribe((args) => {
           originalMethod.apply(this, args);
         });
 

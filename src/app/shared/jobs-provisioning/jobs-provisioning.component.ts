@@ -12,16 +12,12 @@ import {
 } from '@angular/core';
 import {
   timer,
-  Subject,
   Subscription
 } from 'rxjs';
-import {
-  takeUntil,
-  take
-} from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 import {
   CoreDefinition,
-  McsNotificationEventsService
+  CoreEvent
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -34,6 +30,7 @@ import {
   DataStatus,
   JobType
 } from '@app/models';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { JobsProvisioningLoadingTextDirective } from './jobs-provisioning-loading-text.directive';
 
 @Component({
@@ -71,11 +68,11 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
   private _excludedProgressJobTypes: JobType[];
   private _isProgressbarHidden: boolean;
   private _timerSubscription: Subscription;
-  private _destroySubject = new Subject<void>();
+  private _jobReceiveHandler: Subscription;
 
   public constructor(
     private _changeDetectorRef: ChangeDetectorRef,
-    private _notificationsEvents: McsNotificationEventsService,
+    private _eventDispatcher: EventBusDispatcherService,
     private _iterableDiffers: IterableDiffers
   ) {
     this.progressValue = 0;
@@ -85,8 +82,8 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
   }
 
   public ngOnInit() {
+    this._registerEvents();
     this._createExcludedProgressJobs();
-    this._subscribesToCurrentUserJob();
   }
 
   public ngDoCheck() {
@@ -100,7 +97,7 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
 
   public ngOnDestroy() {
     unsubscribeSafely(this._timerSubscription);
-    unsubscribeSafely(this._destroySubject);
+    unsubscribeSafely(this._jobReceiveHandler);
   }
 
   /**
@@ -220,17 +217,21 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
   /**
    * Listen to current user job triggered
    */
-  private _subscribesToCurrentUserJob(): void {
-    this._notificationsEvents.currentUserJob
-      .pipe(takeUntil(this._destroySubject))
-      .subscribe((job) => {
-        let inProgressJob = isNullOrEmpty(job) || job.dataStatus === DataStatus.InProgress;
-        if (inProgressJob) { return; }
+  private _registerEvents(): void {
+    this._jobReceiveHandler = this._eventDispatcher.addEventListener(
+      CoreEvent.jobReceive, this._onJobReceived.bind(this));
+  }
 
-        // Update the existing job
-        addOrUpdateArrayRecord(this.jobs, job, true,
-          (_existingJob: McsJob) => _existingJob.id === job.id);
-      });
+  /**
+   * Event that emits when the job has been received
+   * @param job New Job received
+   */
+  private _onJobReceived(job: McsJob): void {
+    let inProgressJob = isNullOrEmpty(job) || job.dataStatus === DataStatus.InProgress;
+    if (inProgressJob) { return; }
+
+    addOrUpdateArrayRecord(this.jobs, job, true,
+      (_existingJob: McsJob) => _existingJob.id === job.id);
   }
 
   /**
@@ -281,7 +282,6 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
   private _initializeProgressBarVisibility(): void {
     if (isNullOrEmpty(this.jobs)) { return; }
 
-    // Check by progress value
     this._isProgressbarHidden = this.progressValue >= this.progressMax;
     this._isProgressbarHidden = !isNullOrEmpty(
       this.jobs.filter((job) => !job.isEstimable || !job.inProgress)

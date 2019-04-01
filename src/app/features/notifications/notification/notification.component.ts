@@ -78,7 +78,7 @@ export class NotificationComponent implements OnInit, OnDestroy {
    */
   private _subscribeToJobById(jobId: string): void {
     this._loadingService.showLoader('Loading notification details');
-    this.job$ = this._jobsRepository.getById(jobId).pipe(
+    this.job$ = this._jobsRepository.getByIdAsync(jobId).pipe(
       shareReplay(),
       finalize(() => this._loadingService.hideLoader())
     );

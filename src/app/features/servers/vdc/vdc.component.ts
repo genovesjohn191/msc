@@ -194,7 +194,7 @@ export class VdcComponent
    */
   private _subscribesToResourceById(vdcId: string): void {
     this._loadingService.showLoader(this._translateService.instant('serversVdc.loading'));
-    this.selectedResource$ = this._resourcesRepository.getById(vdcId).pipe(
+    this.selectedResource$ = this._resourcesRepository.getByIdAsync(vdcId).pipe(
       catchError((error) => {
         this._errorHandlerService.redirectToErrorPage(error.status);
         return throwError(error);
