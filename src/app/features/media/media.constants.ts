@@ -27,17 +27,6 @@ export const mediaProviders: any[] = [
 ];
 
 /**
- * List of all the entry components
- */
-export const mediaRoutesComponents: any[] = [
-  MediaComponent,
-  MediaUploadComponent,
-  MediumComponent,
-  MediumOverviewComponent,
-  MediumServersComponent
-];
-
-/**
  * List of routes for the main module
  */
 export const mediaRoutes: Routes = [

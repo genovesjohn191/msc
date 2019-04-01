@@ -5,7 +5,6 @@ import {
   SkipSelf
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { CookieModule } from 'ngx-cookie';
 import { EventBusDispatcherService } from '@app/event-bus';
@@ -13,7 +12,6 @@ import {
   McsDisposable,
   isNullOrEmpty
 } from '@app/utilities';
-
 import { CoreConfig } from './core.config';
 import { coreProviders } from './core.constants';
 import { CoreEvent } from './core.event';
@@ -30,6 +28,7 @@ import { McsNotificationJobService } from './services/mcs-notification-job.servi
 import { McsNotificationContextService } from './services/mcs-notification-context.service';
 import { McsErrorHandlerService } from './services/mcs-error-handler.service';
 import { McsNotificationEventsService } from './services/mcs-notification-events.service';
+import { McsRouteSettingsService } from './services/mcs-route-settings.service';
 
 @NgModule({
   declarations: [
@@ -43,15 +42,11 @@ import { McsNotificationEventsService } from './services/mcs-notification-events
   ],
   imports: [
     CommonModule,
-    RouterModule,
     HttpClientModule,
-
-    CookieModule.forRoot(),
-    RouterModule.forRoot([], { scrollPositionRestoration: 'enabled' })
+    CookieModule.forRoot()
   ],
   exports: [
     CommonModule,
-    RouterModule,
     HttpClientModule
   ],
   entryComponents: [
@@ -78,6 +73,7 @@ export class CoreModule {
     @Optional() @SkipSelf() parentModule: CoreModule,
     private _eventDispatcher: EventBusDispatcherService,
     private _routerHandler: McsRouteHandlerService,
+    private _routeSettings: McsRouteSettingsService,
     private _notificationJob: McsNotificationJobService,
     private _notificationContext: McsNotificationContextService,
     _notificationEvents: McsNotificationEventsService,
@@ -130,7 +126,8 @@ export class CoreModule {
     return [
       this._notificationJob,
       this._notificationContext,
-      this._routerHandler
+      this._routerHandler,
+      this._routeSettings
     ];
   }
 }

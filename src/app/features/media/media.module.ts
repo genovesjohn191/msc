@@ -2,10 +2,7 @@ import { NgModule } from '@angular/core';
 import { SharedModule } from '@app/shared';
 import { FeaturesSharedModule } from '@app/features-shared';
 /** Services */
-import {
-  mediaProviders,
-  mediaRoutesComponents
-} from './media.constants';
+import { mediaProviders } from './media.constants';
 /** Components */
 import { MediaComponent } from './media.component';
 import {
@@ -24,9 +21,6 @@ import {
 } from './shared';
 
 @NgModule({
-  entryComponents: [
-    ...mediaRoutesComponents
-  ],
   declarations: [
     MediaComponent,
     MediaUploadComponent,

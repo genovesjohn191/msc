@@ -5,7 +5,7 @@ import {
 } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
 
 import {
   TranslateModule,
@@ -114,6 +114,7 @@ export function coreConfig(): CoreConfig {
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    RouterModule.forRoot(routes),
 
     TranslateModule.forRoot({
       loader: {
@@ -145,12 +146,10 @@ export function coreConfig(): CoreConfig {
 export class AppModule {
 
   constructor(
-    private _router: Router,
     private _translateService: TranslateService,
     private _eventDispatcher: EventBusDispatcherService
   ) {
     this._initializeLanguage();
-    this._initializeRoutes();
     this._registerEvents();
   }
 
@@ -180,16 +179,6 @@ export class AppModule {
       `${user.firstName} ${user.lastName}`,
       user.email
     );
-  }
-
-  /**
-   * Initializes all the routes on the application
-   *
-   * `@Note`: This is needed in order for the
-   * dynamic routing work in AOT as expected
-   */
-  private _initializeRoutes(): void {
-    this._router.resetConfig(routes);
   }
 
   /**

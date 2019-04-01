@@ -1,6 +1,7 @@
 import {
   zip,
-  of
+  of,
+  Observable
 } from 'rxjs';
 import {
   take,
@@ -42,6 +43,7 @@ export abstract class McsEntityJobManager<T extends McsEntityBase>
 
   protected abstract onUpdateEntityState(entity: T, job?: McsJob): void;
   protected abstract onClearEntityState(entity: T): void;
+  protected abstract getEntityUpdateDetailsById(entityId: string, job?: McsJob): Observable<T>;
 
   /**
    * Event that emits when an inprogress job has been received
@@ -83,7 +85,7 @@ export abstract class McsEntityJobManager<T extends McsEntityBase>
     let entityKeyId = getSafeProperty(job, (obj) => obj.clientReferenceObject[this._entityKeyId]);
     if (isNullOrEmpty(entityKeyId)) { return; }
 
-    this._entityRepository.getById(entityKeyId).pipe(
+    this.getEntityUpdateDetailsById(entityKeyId, job).pipe(
       tap(() => this.dispatchJobAfterCompletion(job))
     ).subscribe();
   }

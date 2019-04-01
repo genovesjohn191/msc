@@ -123,6 +123,13 @@ export class McsNotificationEventsService {
     this._jobTypeEventMap.set(JobType.DeleteServerSnapshot, CoreEvent.jobServerSnapshotDelete);
     this._jobTypeEventMap.set(JobType.PerformServerOsUpdateAnalysis, CoreEvent.jobServerOsUpdateInspect);
     this._jobTypeEventMap.set(JobType.ApplyServerOsUpdates, CoreEvent.jobServerOsUpdateApply);
+    this._jobTypeEventMap.set(JobType.CreateServer, CoreEvent.jobServerCreate);
+    this._jobTypeEventMap.set(JobType.CloneServer, CoreEvent.jobServerClone);
+    this._jobTypeEventMap.set(JobType.RenameServer, CoreEvent.jobServerRename);
+    this._jobTypeEventMap.set(JobType.DeleteServer, CoreEvent.jobServerDelete);
+    this._jobTypeEventMap.set(JobType.ChangeServerPowerState, CoreEvent.jobServerChangePowerState);
+    this._jobTypeEventMap.set(JobType.ResetServerPassword, CoreEvent.jobServerResetPassword);
+    this._jobTypeEventMap.set(JobType.CreateResourceCatalogItem, CoreEvent.jobResourceCatalogItemCreate);
   }
 
   /**

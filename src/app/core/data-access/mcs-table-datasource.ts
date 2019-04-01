@@ -6,12 +6,12 @@ import {
   throwError
 } from 'rxjs';
 import {
-  map,
   startWith,
   switchMap,
   takeUntil,
   filter,
-  catchError
+  catchError,
+  exhaustMap
 } from 'rxjs/operators';
 import {
   McsDataSource,
@@ -298,7 +298,7 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
         this.updateDataStatus(DataStatus.InProgress);
 
         return this._datasourceFuncPointer().pipe(
-          map((records) => this._filterData(records)),
+          exhaustMap((records) => of(this._filterData(records))),
           catchError((error) => {
             this.updateDataStatus(DataStatus.Error);
             return throwError(error);
