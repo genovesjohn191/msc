@@ -48,6 +48,7 @@ export * from './enumerations/status-code.enum';
 export * from './enumerations/provisioning-status.enum';
 export * from './enumerations/action-status.enum';
 export * from './enumerations/workflow-status.enum';
+export * from './enumerations/product-availability-state.enum';
 
 /** Request */
 export * from './request/mcs-server-create-addon-anti-virus';

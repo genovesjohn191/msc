@@ -14,6 +14,7 @@ import { AlignDirective } from './align.directive';
 import { DisabledDirective } from './overriden-directives/disabled.directive';
 import { HiddenDirective } from './overriden-directives/hidden.directive';
 import { ReadOnlyDirective } from './overriden-directives/read-only.directive';
+import { GreyedOutDirective } from './greyed-out.directive';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { ReadOnlyDirective } from './overriden-directives/read-only.directive';
     DisabledDirective,
     HiddenDirective,
     CursorDirective,
+    GreyedOutDirective,
     AnimateDirective,
     ScrollableDirective,
     StopPropagationDirective,
@@ -40,6 +42,7 @@ import { ReadOnlyDirective } from './overriden-directives/read-only.directive';
     DisabledDirective,
     HiddenDirective,
     CursorDirective,
+    GreyedOutDirective,
     AnimateDirective,
     ScrollableDirective,
     StopPropagationDirective,

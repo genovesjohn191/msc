@@ -7,6 +7,10 @@ import { McsProductOwner } from './mcs-product-owner';
 import { McsProductOption } from './mcs-product-option';
 import { McsProductLocation } from './mcs-product-location';
 import { McsProductInview } from './mcs-product-inview';
+import {
+  ProductAvailabilityState,
+  ProductAvailabilityStateSerialization
+} from '../enumerations/product-availability-state.enum';
 
 export class McsProduct extends McsEntityBase {
   public version: string;
@@ -65,6 +69,13 @@ export class McsProduct extends McsEntityBase {
   @JsonProperty({ type: McsProductInview })
   public inviewStandard: McsProductInview[];
 
+  @JsonProperty({
+    type: ProductAvailabilityState,
+    serializer: ProductAvailabilityStateSerialization,
+    deserializer: ProductAvailabilityStateSerialization
+  })
+  public availabilityState: ProductAvailabilityState;
+
   public name: string;
   public displayOrder: number;
   public catalogId: string;
@@ -104,6 +115,7 @@ export class McsProduct extends McsEntityBase {
     this.inviewStandard = undefined;
     this.icon = undefined;
     this.tertiaryOwner = undefined;
+    this.availabilityState = undefined;
   }
 
   /**
@@ -120,5 +132,10 @@ export class McsProduct extends McsEntityBase {
   public get hasProductProperties(): boolean {
     if (isNullOrEmpty(this.productOptions)) { return false; }
     return !!this.productOptions.find((option) => !isNullOrEmpty(option.properties));
+  }
+
+  public get isActiveIncompleteRelease(): boolean {
+    if (isNullOrEmpty(this.availabilityState)) { return false; }
+    return this.availabilityState === ProductAvailabilityState.ActiveIncompleteRelease;
   }
 }

@@ -3,6 +3,7 @@ export * from './directives.module';
 export * from './animation.directive';
 export * from './component-handler.directive';
 export * from './cursor.directive';
+export * from './greyed-out.directive';
 export * from './router-link-active.directive';
 export * from './router-link.directive';
 export * from './scrollable.directive';
