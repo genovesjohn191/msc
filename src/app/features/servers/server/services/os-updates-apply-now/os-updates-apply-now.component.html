@@ -12,7 +12,13 @@
       <strong>
         {{ 'serverServicesOsUpdatesApplyNow.listLabel' | translate }}
       </strong>
-      <button mcsButton mcsAlign="end" size="medium" (click)="applySelectedUpdates()" [disabled]="isApplyButtonDisabled">
+      <button mcsButton mcsAlign="end" size="medium"
+        mcsId="apply-updates-button"
+        mcsEventTracker="os-updates-apply-updates-click"
+        mcsEventCategory="server"
+        mcsEventLabel="os-updates-apply-updates"
+        (click)="applySelectedUpdates()"
+        [disabled]="isApplyButtonDisabled">
         {{ 'serverServicesOsUpdatesApplyNow.applyUpdatesButton' | translate }}
       </button>
     </mcs-item>
@@ -21,7 +27,9 @@
       <mcs-data-status-success mcsDataSuccess>
         <!-- Tree View -->
         <div mcsScrollable class="action-box" [ngStyle]="{'max-height': '400px'}" *ngIf="osUpdates$ | async as osUpdates">
-          <mcs-tree (selectionChange)="onTreeChange($event)" [disabled]="selectedServer.isProcessing">
+          <mcs-tree mcsId="tree-view-apply-updates"
+            (selectionChange)="onTreeChange($event)"
+            [disabled]="selectedServer.isProcessing">
             <mcs-tree-node-group [label]="'serverServicesOsUpdatesApplyNow.listAllSelection' | translate" checkable>
               <mcs-tree-node *ngFor="let osUpdate of osUpdates" [value]="osUpdate">
                 <mcs-item>

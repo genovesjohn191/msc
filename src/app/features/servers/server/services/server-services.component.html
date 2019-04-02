@@ -23,15 +23,26 @@
                     <mcs-item>
                       <mcs-icon [key]="updateStatusConfiguration.updatesStatusIcon" size="small"></mcs-icon>
                       <div>
-                        <span>{{ updateStatusConfiguration.updatesStatusLabel }}</span><br />
+                        <span mcsId="status-label">{{ updateStatusConfiguration.updatesStatusLabel }}</span><br />
                         <small read-only *ngIf="updateStatusConfiguration.updateStatusHasNoErrors">
                           <mcs-item orientation="inline">
                             <ng-container [ngSwitch]="updateStatusConfiguration.status">
-                              <span [@fadeIn] *ngSwitchCase="osUpdateStatusOption.Updating">{{ updatesStatusSubtitleLabelUpdating }}</span>
-                              <span [@fadeIn] *ngSwitchDefault>{{ updatesStatusSubtitleLabelDefault }}</span>
+                              <span mcsId="status-sublabel-updating"
+                                [@fadeIn] *ngSwitchCase="osUpdateStatusOption.Updating">
+                                {{ updatesStatusSubtitleLabelUpdating }}
+                              </span>
+                              <span mcsId="status-sublabel-default"
+                                [@fadeIn] *ngSwitchDefault>
+                                {{ updatesStatusSubtitleLabelDefault }}
+                            </span>
                             </ng-container>
                             <ng-container *ngIf="updateStatusConfiguration.inspectButtonShown">
-                              <a (click)="inspectForAvailableOsUpdates(serverDetails.server)" *mcsAccessControl="serverPermision.vmPatchManagement"
+                              <a mcsId="inspect-server-link"
+                                mcsEventTracker="os-updates-inspect-server-click"
+                                mcsEventCategory="server"
+                                mcsEventLabel="os-updates-inspect-server"
+                                (click)="inspectForAvailableOsUpdates(serverDetails.server)"
+                                *mcsAccessControl="serverPermision.vmPatchManagement"
                                 [disabled]="inspectNowButtonDisabled(serverDetails.server)">
                                 {{ 'serverServices.updatesAnalysisLabel' | translate }}
                               </a>
@@ -47,6 +58,10 @@
                   <ng-container *ngIf="updateStatusConfiguration.runNowButtonShown">
                     <button mcsButton size="xsmall"
                       *mcsAccessControl="serverPermision.vmPatchManagement"
+                      mcsId="update-now-button"
+                      mcsEventTracker="os-updates-update-now-click"
+                      mcsEventCategory="server"
+                      mcsEventLabel="os-updates-update-now"
                       (click)="setViewMode(serverServicesViewOption.Unscheduled)"
                       [disabled]="serverDetails.server.isProcessing">
                       {{ 'serverServices.updatesScheduleRunNowLink' | translate }}
@@ -66,13 +81,20 @@
                         <span>{{ updatesScheduleLabel }}</span><br />
                         <small read-only *ngIf="updateStatusConfiguration.updateStatusHasNoErrors">
                           <mcs-item orientation="inline">
-                            <span *ngIf="updateStatusConfiguration.hasSchedule">
+                            <span *ngIf="updateStatusConfiguration.hasSchedule"
+                              mcsId="schedule-sublabel">
                               {{ updateStatusConfiguration.updatesScheduleSubtitleLabel }}
                             </span>
                             <span [mcsTooltip]="updateStatusConfiguration.updatesScheduleConfigureHoverLabel"
                               [mcsTooltipShow]="updateStatusConfiguration.configureScheduleButtonDisabled">
                               <ng-container *ngIf="updateStatusConfiguration.updateStatusHasNoErrors">
-                                <a *mcsAccessControl="serverPermision.vmPatchManagement" (click)="setViewMode(serverServicesViewOption.Scheduled)"
+                                <a
+                                  mcsId="configure-schedule-link"
+                                  mcsEventTracker="os-updates-configure-schedule-click"
+                                  mcsEventCategory="server"
+                                  mcsEventLabel="os-updates-configure-schedule"
+                                  *mcsAccessControl="serverPermision.vmPatchManagement"
+                                  (click)="setViewMode(serverServicesViewOption.Scheduled)"
                                   [disabled]="configureButtonDisabled(serverDetails.server)">
                                   {{ 'serverServices.updatesScheduleConfigureLink' | translate }}
                                 </a>
@@ -130,7 +152,13 @@
 
   <!-- Go back to services tab view -->
   <ng-template #servicesTabView>
-    <a mcsButton="basic" size="medium" (click)="setViewMode(serverServicesViewOption.Default)" [disabled]="serverDetails.server.isProcessing">
+    <a mcsButton="basic" size="medium"
+      mcsId="back-to-services-link"
+      mcsEventTracker="os-updates-back-to-services-click"
+      mcsEventCategory="server"
+      mcsEventLabel="os-updates-back-to-services"
+      (click)="setViewMode(serverServicesViewOption.Default)"
+      [disabled]="serverDetails.server.isProcessing">
       <mcs-item>
         <mcs-icon [key]="chevronLeftKey" size="xsmall"></mcs-icon>
         <span>{{ 'serverServices.label' | translate }}</span>
