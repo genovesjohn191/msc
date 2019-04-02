@@ -19,11 +19,12 @@
                   <mcs-item orientation="block">
                     <strong>{{ 'serverServicesOsUpdatesSchedule.scheduleTypeLabel' | translate }}</strong>
                     <mcs-radio-button-group [(ngModel)]="scheduleType" [ngModelOptions]="{standalone: true}"
+                      mcsId="schedule-type"
                       (ngModelChange)="onScheduleTypeChange()">
-                      <mcs-radio-button mcsId [value]="scheduleTypeOption.RunOnce">
+                      <mcs-radio-button [value]="scheduleTypeOption.RunOnce">
                         {{ 'serverServicesOsUpdatesSchedule.scheduleTypeOption.runonce' | translate }}
                       </mcs-radio-button>
-                      <mcs-radio-button mcsId [value]="scheduleTypeOption.Recurring">
+                      <mcs-radio-button [value]="scheduleTypeOption.Recurring">
                         {{ 'serverServicesOsUpdatesSchedule.scheduleTypeOption.recurring' | translate }}
                       </mcs-radio-button>
                     </mcs-radio-button-group>
@@ -122,22 +123,40 @@
                 <!-- Action Buttons -->
                 <mcs-item>
                   <strong>{{ 'serverServicesOsUpdatesSchedule.listLabel' | translate }}</strong>
-                  <button delete-button mcsButton mcsAlign="end" size="medium" (click)="deleteExistingSchedule()" [hidden]="!hasSchedule"
+                  <button delete-button mcsButton size="medium" mcsAlign="end"
+                    mcsId="delete-schedule-button"
+                    mcsEventTracker="os-updates-delete-schedule-click"
+                    mcsEventCategory="server"
+                    mcsEventLabel="os-updates-delete-schedule"
+                    (click)="deleteExistingSchedule()"
+                    [hidden]="!hasSchedule"
                     [disabled]="!hasSchedule" color="error">
                     {{ 'serverServicesOsUpdatesSchedule.deleteScheduleButton' | translate }}
                   </button>
-                  <button *ngSwitchCase="scheduleTypeOption.RunOnce" mcsButton size="medium" (click)="saveRunOnceSchedule()"
+                  <button *ngSwitchCase="scheduleTypeOption.RunOnce" mcsButton size="medium"
+                    mcsId="save-runonce-button"
+                    mcsEventTracker="os-updates-save-runonce-click"
+                    mcsEventCategory="server"
+                    mcsEventLabel="os-updates-save-runonce"
+                    (click)="saveRunOnceSchedule()"
                     [disabled]="isRunOnceSaveButtonDisabled">
                     {{ 'serverServicesOsUpdatesSchedule.saveScheduleButton' | translate }}
                   </button>
-                  <button *ngSwitchCase="scheduleTypeOption.Recurring" mcsButton size="medium" (click)="saveRecurringSchedule()"
+                  <button *ngSwitchCase="scheduleTypeOption.Recurring" mcsButton size="medium"
+                    mcsId="save-recurring-button"
+                    mcsEventTracker="os-updates-save-recurring-click"
+                    mcsEventCategory="server"
+                    mcsEventLabel="os-updates-save-recurring"
+                    (click)="saveRecurringSchedule()"
                     [disabled]="isRecurringSaveButtonDisabled">
                     {{ 'serverServicesOsUpdatesSchedule.saveScheduleButton' | translate }}
                   </button>
                 </mcs-item>
                 <!-- Tree View -->
                 <div class="action-box">
-                  <mcs-tree *ngSwitchCase="scheduleTypeOption.RunOnce" (selectionChange)="onRunOnceTreeChange($event)">
+                  <mcs-tree *ngSwitchCase="scheduleTypeOption.RunOnce"
+                    mcsId="tree-view-runonce"
+                    (selectionChange)="onRunOnceTreeChange($event)">
                     <mcs-tree-node-group [label]="'serverServicesOsUpdatesSchedule.listAllSelection' | translate" checkable>
                       <mcs-tree-node
                         *ngFor="let runOnceCategory of runOnceCategories"
@@ -148,7 +167,9 @@
                     </mcs-tree-node-group>
                   </mcs-tree>
 
-                  <mcs-tree *ngSwitchCase="scheduleTypeOption.Recurring" (selectionChange)="onRecurringTreeChange($event)">
+                  <mcs-tree *ngSwitchCase="scheduleTypeOption.Recurring"
+                    mcsId="tree-view-recurring"
+                    (selectionChange)="onRecurringTreeChange($event)">
                     <mcs-tree-node-group [label]="'serverServicesOsUpdatesSchedule.listAllSelection' | translate" checkable>
                       <mcs-tree-node
                         *ngFor="let recurringCategory of recurringCategories"
