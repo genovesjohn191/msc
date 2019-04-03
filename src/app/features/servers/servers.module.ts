@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { SharedModule } from '@app/shared';
 import { FeaturesSharedModule } from '@app/features-shared';
+
+import { serversRoutes } from './servers.constants';
 import { ServersComponent } from './servers.component';
 /** Shared */
 import {
@@ -46,6 +48,7 @@ import {
   VdcStorageComponent
 } from './vdc';
 import { serversProviders } from './servers.constants';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   entryComponents: [
@@ -102,7 +105,8 @@ import { serversProviders } from './servers.constants';
   ],
   imports: [
     SharedModule,
-    FeaturesSharedModule
+    FeaturesSharedModule,
+    RouterModule.forChild(serversRoutes)
   ],
   providers: [
     ...serversProviders

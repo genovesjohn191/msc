@@ -1,8 +1,5 @@
 import { Routes } from '@angular/router';
-import {
-  McsNavigateAwayGuard,
-  CoreRoutes
-} from '@app/core';
+import { McsNavigateAwayGuard } from '@app/core';
 import { RouteKey } from '@app/models';
 /** Components */
 import { TicketsComponent } from './tickets.component';
@@ -23,19 +20,18 @@ export const ticketsProviders: any[] = [
  */
 export const ticketsRoutes: Routes = [
   {
-    path: CoreRoutes.getRoutePath(RouteKey.Tickets),
-    component: TicketsComponent,
-    data: { routeId: RouteKey.Tickets }
+    path: '',
+    component: TicketsComponent
   },
   {
-    path: CoreRoutes.getRoutePath(RouteKey.TicketCreate),
+    path: '',
     component: TicketCreateComponent,
     canDeactivate: [McsNavigateAwayGuard],
     data: { routeId: RouteKey.TicketCreate }
   },
   {
-    path: CoreRoutes.getRoutePath(RouteKey.TicketDetail),
+    path: '',
     component: TicketComponent,
-    data: { routeId: RouteKey.TicketDetail }
+    data: { routeId: RouteKey.TicketDetails }
   }
 ];

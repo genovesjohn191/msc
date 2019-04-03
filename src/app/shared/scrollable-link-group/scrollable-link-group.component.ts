@@ -24,7 +24,6 @@ import {
   unsubscribeSafely,
   getSafeProperty
 } from '@app/utilities';
-import { McsSelection } from '@app/models';
 import { ScrollableLinkComponent } from './scrollable-link/scrollable-link.component';
 import {
   ScrollableLinkHeaderComponent
@@ -53,16 +52,13 @@ export class ScrollableLinkGroupComponent implements AfterViewInit, AfterContent
   @ViewChildren(ScrollableLinkHeaderComponent)
   private _scrollableHeaders: QueryList<ScrollableLinkHeaderComponent>;
 
-  private _selectionModel: McsSelection<ScrollableLinkComponent>;
   private _activatedLinkByScrollChange = new Subject<ScrollableLinkComponent>();
   private _destroySubject = new Subject<void>();
 
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private _scrollDispatcherService: McsScrollDispatcherService
-  ) {
-    this._selectionModel = new McsSelection<ScrollableLinkComponent>(false);
-  }
+  ) { }
 
   public ngAfterViewInit() {
     Promise.resolve().then(() => {
@@ -110,7 +106,6 @@ export class ScrollableLinkGroupComponent implements AfterViewInit, AfterContent
    */
   private _selectLink(link: ScrollableLinkComponent): void {
     if (isNullOrEmpty(link)) { return; }
-    this._selectionModel.select(link);
     this.change.emit(link);
     this._changeDetectorRef.markForCheck();
   }

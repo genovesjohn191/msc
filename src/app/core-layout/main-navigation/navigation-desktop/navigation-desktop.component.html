@@ -22,7 +22,7 @@
                             [mcsGreyedOut]="product.isActiveIncompleteRelease"
                             labelPlacement="left" text-wrap full-width
                             [active]="selectedProduct?.id === product.id"
-                            [mcsRouterLink]="[routeKeyEnum.ProductDetail, product.id]"
+                            [mcsRouterLink]="[routeKeyEnum.ProductDetails, product.id]"
                             (click)="gotoProduct(product)"
                             mcsId="select-product"
                             mcsEventTracker="select-product"

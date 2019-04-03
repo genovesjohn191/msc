@@ -5,7 +5,6 @@ $tab-group-border: $border-color-light;
 // Tab header
 $tab-header-item-min-width: 100px;
 $tab-header-item-color: $color-grey-02;
-$tab-header-item-active-color: $color-black;
 $tab-header-item-padding: $space-small $space-medium;
 $tab-header-item-font-size: 16;
 $tab-header-item-font: $base-font-bold;
@@ -31,18 +30,6 @@ $tab-body-padding: $space-medium 0;
   @include font-size($tab-header-item-font-size);
   font-family: $tab-header-item-font;
   height: 100%;
-
-  &.active {
-    color: $tab-header-item-active-color;
-  }
-  &.align-end {
-    margin-left: auto;
-  }
-  &.custom-tab {
-    cursor: default;
-    min-width: 0;
-    color: $tab-header-item-active-color;
-  }
 }
 
 .tab-group-body-wrapper {

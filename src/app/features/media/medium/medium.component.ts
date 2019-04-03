@@ -47,6 +47,7 @@ import {
   ComponentHandlerDirective
 } from '@app/shared';
 import { McsMediaRepository } from '@app/services';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { MediaListSource } from '../media.listsource';
 import { MediumService } from './medium.service';
 
@@ -82,8 +83,9 @@ export class MediumComponent
   }
 
   public constructor(
-    _router: Router,
+    _eventDispatcher: EventBusDispatcherService,
     _activatedRoute: ActivatedRoute,
+    private _router: Router,
     private _changeDetectorRef: ChangeDetectorRef,
     private _translateService: TranslateService,
     private _loadingService: McsLoadingService,
@@ -91,7 +93,7 @@ export class MediumComponent
     private _mediaRepository: McsMediaRepository,
     private _mediumService: MediumService
   ) {
-    super(_router, _activatedRoute);
+    super(_eventDispatcher, _activatedRoute);
     this.listStatusFactory = new McsDataStatusFactory(_changeDetectorRef);
   }
 
@@ -124,7 +126,7 @@ export class MediumComponent
    * Navigate to media listing
    */
   public gotoMedia(): void {
-    this.router.navigate([CoreRoutes.getNavigationPath(RouteKey.Media)]);
+    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.Media)]);
   }
 
   /**
@@ -132,7 +134,7 @@ export class MediumComponent
    * @param tab Active tab
    */
   protected onTabChanged(tab: any) {
-    this.router.navigate([
+    this._router.navigate([
       CoreRoutes.getNavigationPath(RouteKey.Medium),
       this.paramId,
       tab.id

@@ -17,7 +17,7 @@
                 <mcs-option-group [selected]="iterator.key?.resourceId === (selectedResource$ | async)?.id">
                   <ng-container *mcsOptionGroupLabel>
                     <ng-container *ngIf="iterator.key?.resourceId">
-                      <a [mcsRouterLink]="[routeKeyEnum.VdcDetail, iterator.key?.resourceId]"
+                      <a [mcsRouterLink]="[routeKeyEnum.VdcDetails, iterator.key?.resourceId]"
                         mcsStopPropagation
                         mcsId="select-resource"
                         mcsEventTracker="select-resource"
@@ -32,7 +32,7 @@
                   </ng-container>
 
                   <ng-container *ngFor="let server of (iterator.value | mcsSortArray: serverListSource?.serversSortMethod)">
-                    <a [mcsRouterLink]="[routeKeyEnum.ServerDetail, server.id]"
+                    <a [mcsRouterLink]="[routeKeyEnum.ServerDetails, server.id]"
                       [disabled]="server.isDeleting"
                       mcsId="select-server"
                       mcsEventTracker="select-server"

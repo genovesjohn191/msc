@@ -67,7 +67,7 @@ export class TicketsComponent
    */
   public navigateToTicket(ticket: McsTicket): void {
     if (isNullOrEmpty(ticket)) { return; }
-    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.TicketDetail), ticket.id]);
+    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.TicketDetails), ticket.id]);
   }
 
   /**

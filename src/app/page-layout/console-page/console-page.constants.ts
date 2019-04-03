@@ -1,17 +1,14 @@
 import { Routes } from '@angular/router';
-import {
-  McsAuthenticationGuard,
-  CoreRoutes
-} from '@app/core';
-import { RouteKey } from '@app/models';
+import { McsAuthenticationGuard } from '@app/core';
 import { ConsolePageComponent } from './console-page.component';
+import { RouteKey } from '@app/models';
 
 /**
  * List of routes for the main module
  */
 export const consolePageRoutes: Routes = [
   {
-    path: CoreRoutes.getRoutePath(RouteKey.Console),
+    path: '',
     component: ConsolePageComponent,
     canActivate: [McsAuthenticationGuard],
     data: { routeId: RouteKey.Console }

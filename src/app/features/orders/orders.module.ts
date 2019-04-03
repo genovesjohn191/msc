@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { SharedModule } from '@app/shared';
 /** Components */
+import { ordersRoutes } from './orders.constants';
 import { OrdersComponent } from './orders.component';
 import { OrderComponent } from './order/order.component';
 
@@ -10,7 +12,8 @@ import { OrderComponent } from './order/order.component';
     OrderComponent
   ],
   imports: [
-    SharedModule
+    SharedModule,
+    RouterModule.forChild(ordersRoutes)
   ]
 })
 

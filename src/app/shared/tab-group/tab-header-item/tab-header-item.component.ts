@@ -7,6 +7,7 @@ import {
   ViewEncapsulation,
   ChangeDetectionStrategy,
   ContentChild,
+  Optional,
 } from '@angular/core';
 import {
   coerceBoolean,
@@ -24,6 +25,7 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     'class': 'tab-header-item-wrapper',
+    '[id]': 'id',
     '[class.active]': 'active',
     '[class.align-start]': 'align === "start"',
     '[class.align-center]': 'align === "center"',
@@ -36,6 +38,9 @@ export class TabHeaderItemComponent {
    * Event that emits when selection is changed
    */
   public selectionChanged: EventEmitter<any>;
+
+  @Input()
+  public id: string;
 
   @Input()
   public align: McsAlignmentType;
@@ -62,9 +67,17 @@ export class TabHeaderItemComponent {
 
   constructor(
     public elementRef: ElementRef,
-    public changeDetectorRef: ChangeDetectorRef
+    public changeDetectorRef: ChangeDetectorRef,
+    @Optional() private _responsiveItem: ResponsivePanelItemDirective
   ) {
     this.selectionChanged = new EventEmitter();
+  }
+
+  /**
+   * Returns the responsive panel item
+   */
+  public get responsiveItem(): ResponsivePanelItemDirective {
+    return this._responsiveItem;
   }
 
   /**

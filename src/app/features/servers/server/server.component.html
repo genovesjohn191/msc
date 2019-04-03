@@ -3,7 +3,7 @@
   <ng-container *mcsPageHeader>
     <mcs-item *ngIf="selectedServer$ | async as selectedServer">
       <div>
-        <a [mcsRouterLink]="[routeKeyEnum.VdcDetail, selectedServer.platform?.resourceId]"
+        <a [mcsRouterLink]="[routeKeyEnum.VdcDetails, selectedServer.platform?.resourceId]"
           mcsId="select-vdc"
           mcsEventTracker="select-vdc"
           mcsEventCategory="vdc"
@@ -35,7 +35,7 @@
                 <mcs-option-group>
                   <ng-container *mcsOptionGroupLabel>
                     <ng-container *ngIf="iterator.key?.resourceId">
-                      <a [mcsRouterLink]="[routeKeyEnum.VdcDetail, iterator.key?.resourceId]"
+                      <a [mcsRouterLink]="[routeKeyEnum.VdcDetails, iterator.key?.resourceId]"
                         mcsId="select-vdc"
                         mcsEventTracker="select-vdc"
                         mcsEventCategory="vdc"
@@ -49,7 +49,7 @@
                   </ng-container>
 
                   <ng-container *ngFor="let server of (iterator.value | mcsSortArray: serverListSource?.serversSortMethod)">
-                    <a [mcsRouterLink]="[routeKeyEnum.ServerDetail, server.id]"
+                    <a [mcsRouterLink]="[routeKeyEnum.ServerDetails, server.id]"
                       [disabled]="server.isDeleting"
                       mcsId="select-server"
                       mcsEventTracker="select-server"
@@ -108,7 +108,8 @@
 
           <!-- Services Tab -->
           <ng-container *ngIf="selectedServer.isManagedVCloud">
-            <mcs-tab [label]="'serverServices.label' | translate" id="services" *mcsAccessControl="[]; feature: 'EnableServerOsUpdates'"></mcs-tab>
+            <mcs-tab [label]="'serverServices.label' | translate" id="services"
+              *mcsAccessControl="[]; feature: 'EnableServerOsUpdates'"></mcs-tab>
           </ng-container>
 
           <!-- Storage Tab -->

@@ -21,7 +21,8 @@ import {
 import { McsSelection } from '@app/models';
 import {
   isNullOrEmpty,
-  unsubscribeSubject
+  unsubscribeSubject,
+  getSafeProperty
 } from '@app/utilities';
 import { TabComponent } from './tab/tab.component';
 import { TabHeaderItemComponent } from './tab-header-item/tab-header-item.component';
@@ -70,15 +71,15 @@ export class TabGroupComponent implements AfterViewInit, AfterContentInit, OnDes
   }
 
   public ngAfterContentInit(): void {
-    this.tabs.changes
-      .pipe(startWith(null), takeUntil(this._destroySubject))
-      .subscribe(() => this._changeDetectorRef.markForCheck());
+    this.tabs.changes.pipe(
+      startWith(null), takeUntil(this._destroySubject)
+    ).subscribe(() => this._changeDetectorRef.markForCheck());
   }
 
   public ngAfterViewInit() {
-    this._tabHeaders.changes
-      .pipe(startWith(null), takeUntil(this._destroySubject))
-      .subscribe(() => this._initializeSelection());
+    this._tabHeaders.changes.pipe(
+      startWith(null), takeUntil(this._destroySubject)
+    ).subscribe(() => this._initializeSelection());
   }
 
   public ngOnDestroy() {
@@ -98,7 +99,7 @@ export class TabGroupComponent implements AfterViewInit, AfterContentInit, OnDes
    * @param tab Clicked tab to be set
    */
   public onClickTab(tab: TabComponent): void {
-    this._selectTab(tab);
+    this._selectTabItem(tab);
     this._selectedTabId = tab.id;
     this.selectedTabIdChange.emit(this._selectedTabId);
   }
@@ -111,15 +112,19 @@ export class TabGroupComponent implements AfterViewInit, AfterContentInit, OnDes
     let noTabItems = isNullOrEmpty(this.tabs) || isNullOrEmpty(tabId);
     if (noTabItems) { return; }
     let tabFound = this.tabs.find((tab) => tab.id === tabId);
-    this._selectTab(tabFound);
+    this._selectTabItem(tabFound);
   }
 
   /**
-   * Selects the tab based on the provided tab component
+   * Selects the tab item based on the provided tab component
    * @param tab Tab to be selected
    */
-  private _selectTab(tab: TabComponent): void {
+  private _selectTabItem(tab: TabComponent): void {
     if (isNullOrEmpty(tab)) { return; }
+
+    let tabHeader = this._tabHeaders.find((header) => header.id === tab.id);
+    this._selectTabHeader(tabHeader);
+
     this._selectionModel.select(tab);
     this.tabChanged.emit(tab);
     this._changeDetectorRef.markForCheck();
@@ -138,5 +143,20 @@ export class TabGroupComponent implements AfterViewInit, AfterContentInit, OnDes
         this.onClickTab(this.tabs.toArray()[0]) :
         this._selectTabById(this._selectedTabId);
     });
+  }
+
+  /**
+   * Selects the tab header
+   */
+  private _selectTabHeader(header: TabHeaderItemComponent): void {
+    if (isNullOrEmpty(header)) { return; }
+
+    let headerIndex = this._tabHeaders.toArray().indexOf(header);
+    let responsiveItem = getSafeProperty(this._tabHeaders,
+      (obj) => obj.toArray()[headerIndex].responsiveItem
+    );
+    if (!isNullOrEmpty(responsiveItem)) {
+      responsiveItem.onClick();
+    }
   }
 }

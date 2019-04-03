@@ -77,7 +77,7 @@ export class SlidingPanelComponent {
   /**
    * Returns true when panel is currently opened, otherwise false
    */
-  private _panelOpen: boolean;
+  private _panelOpen: boolean = false;
   public get panelOpen(): boolean { return this._panelOpen; }
   public set panelOpen(value: boolean) {
     if (value !== this._panelOpen) {

@@ -276,7 +276,7 @@ export class ServersComponent
   public navigateToResource(server: McsServer): void {
     if (isNullOrEmpty(server.platform)) { return; }
     this._router.navigate([
-      CoreRoutes.getNavigationPath(RouteKey.VdcDetail),
+      CoreRoutes.getNavigationPath(RouteKey.VdcDetails),
       server.platform.resourceId
     ]);
   }

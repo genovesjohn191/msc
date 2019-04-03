@@ -6,7 +6,8 @@ import {
   ContentChildren,
   ElementRef,
   Renderer2,
-  QueryList
+  QueryList,
+  OnDestroy
 } from '@angular/core';
 import {
   Router,
@@ -15,16 +16,20 @@ import {
 import { Subject } from 'rxjs';
 import {
   takeUntil,
-  startWith
+  startWith,
+  filter
 } from 'rxjs/operators';
-import { isNullOrEmpty } from '@app/utilities';
+import {
+  isNullOrEmpty,
+  unsubscribeSafely
+} from '@app/utilities';
 import { RouterLinkDirective } from './router-link.directive';
 
 @Directive({
   selector: '[mcsRouterLinkActive]',
 })
 
-export class RouterLinkActiveDirective implements OnInit, AfterContentInit {
+export class RouterLinkActiveDirective implements OnInit, OnDestroy, AfterContentInit {
   @Input('mcsRouterLinkActive')
   public set routerLinkActive(value: string | string[]) {
     let classes = Array.isArray(value) ? value : value.split(' ');
@@ -49,30 +54,34 @@ export class RouterLinkActiveDirective implements OnInit, AfterContentInit {
   }
 
   public ngAfterContentInit(): void {
-    this._routerLinks.changes
-      .pipe(startWith(null!), takeUntil(this._destroySubject))
-      .subscribe(() => this._updateActiveLinkStatusView());
+    Promise.resolve().then(() => {
+      this._routerLinks.changes.pipe(
+        startWith(null!), takeUntil(this._destroySubject)
+      ).subscribe(() => this._updateActiveLinkStatusView());
+    });
+  }
+
+  public ngOnDestroy(): void {
+    unsubscribeSafely(this._destroySubject);
   }
 
   /**
    * Listens to every change of router url
    */
   private _listenToRouterChanges(): void {
-    this._router.events
-      .pipe(takeUntil(this._destroySubject))
-      .subscribe((event) => {
-        if (event instanceof NavigationEnd) {
-          this._updateActiveLinkStatusView();
-        }
-      });
+    this._router.events.pipe(
+      takeUntil(this._destroySubject),
+      filter((event) => event instanceof NavigationEnd)
+    ).subscribe(() => this._updateActiveLinkStatusView());
   }
 
   /**
    * Updates the active link status view according to active route
    */
   private _updateActiveLinkStatusView(): void {
-    let hasClasses = isNullOrEmpty(this._routerClasses) || !this._router.navigated;
-    if (hasClasses) { return; }
+    let stateIsUpdated = isNullOrEmpty(this._routerClasses) || !this._router.navigated;
+    if (stateIsUpdated) { return; }
+
     Promise.resolve().then(() => {
       let currentActiveStatus = this.hasActiveRoute;
       let activeStatusHasChanged = this._savedActiveLinkStatus !== currentActiveStatus;

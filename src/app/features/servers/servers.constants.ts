@@ -1,8 +1,5 @@
 import { Routes } from '@angular/router';
-import {
-  McsNavigateAwayGuard,
-  CoreRoutes
-} from '@app/core';
+import { McsNavigateAwayGuard } from '@app/core';
 import { RouteKey } from '@app/models';
 import { RequiredResourcesGuard } from '@app/services';
 /** Services */
@@ -42,74 +39,75 @@ export const serversProviders: any[] = [
  */
 export const serversRoutes: Routes = [
   {
-    path: CoreRoutes.getRoutePath(RouteKey.Servers),
-    component: ServersComponent,
-    data: { routeId: RouteKey.Servers }
+    path: '',
+    component: ServersComponent
   },
   {
-    path: CoreRoutes.getRoutePath(RouteKey.ServerCreate),
+    path: '',
     component: ServerCreateComponent,
     canActivate: [RequiredResourcesGuard],
     canDeactivate: [McsNavigateAwayGuard],
     data: { routeId: RouteKey.ServerCreate }
   },
   {
-    path: CoreRoutes.getRoutePath(RouteKey.ServerDetail),
+    path: '',
     component: ServerComponent,
-    data: { routeId: RouteKey.ServerDetail },
+    data: { routeId: RouteKey.ServerDetails },
     children: [
       {
         path: '',
-        redirectTo: CoreRoutes.getRoutePath(RouteKey.ServerDetailManagement),
-        pathMatch: 'full'
+        redirectTo: '',
+        pathMatch: 'full',
+        data: { routeId: RouteKey.ServerDetailsManagement }
       },
       {
-        path: CoreRoutes.getRoutePath(RouteKey.ServerDetailManagement),
+        path: '',
         component: ServerManagementComponent,
-        data: { routeId: RouteKey.ServerDetailManagement }
+        data: { routeId: RouteKey.ServerDetailsManagement }
       },
       {
-        path: CoreRoutes.getRoutePath(RouteKey.ServerDetailServices),
+        path: '',
         component: ServerServicesComponent,
-        data: { routeId: RouteKey.ServerDetailServices },
+        data: { routeId: RouteKey.ServerDetailsServices },
         canActivate: [ServerServicesGuard]
       },
       {
-        path: CoreRoutes.getRoutePath(RouteKey.ServerDetailStorage),
+        path: '',
         component: ServerStorageComponent,
-        data: { routeId: RouteKey.ServerDetailStorage }
+        data: { routeId: RouteKey.ServerDetailsStorage }
       },
       {
-        path: CoreRoutes.getRoutePath(RouteKey.ServerDetailNics),
+        path: '',
         component: ServerNicsComponent,
-        data: { routeId: RouteKey.ServerDetailNics }
+        data: { routeId: RouteKey.ServerDetailsNics }
       },
       {
-        path: CoreRoutes.getRoutePath(RouteKey.ServerDetailBackups),
+        path: '',
         component: ServerBackupsComponent,
-        data: { routeId: RouteKey.ServerDetailBackups }
+        data: { routeId: RouteKey.ServerDetailsBackups }
       }
     ]
   },
   {
-    path: CoreRoutes.getRoutePath(RouteKey.VdcDetail),
+    path: '',
     component: VdcComponent,
-    data: { routeId: RouteKey.VdcDetail },
+    data: { routeId: RouteKey.VdcDetails },
     children: [
       {
         path: '',
-        redirectTo: CoreRoutes.getRoutePath(RouteKey.VdcDetailOverview),
-        pathMatch: 'full'
+        redirectTo: '',
+        pathMatch: 'full',
+        data: { routeId: RouteKey.VdcDetailsOverview }
       },
       {
-        path: CoreRoutes.getRoutePath(RouteKey.VdcDetailOverview),
+        path: '',
         component: VdcOverviewComponent,
-        data: { routeId: RouteKey.VdcDetailOverview }
+        data: { routeId: RouteKey.VdcDetailsOverview }
       },
       {
-        path: CoreRoutes.getRoutePath(RouteKey.VdcDetailStorage),
+        path: '',
         component: VdcStorageComponent,
-        data: { routeId: RouteKey.VdcDetailStorage }
+        data: { routeId: RouteKey.VdcDetailsStorage }
       }
     ]
   }

@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { CoreRoutes } from '@app/core';
 import { RouteKey } from '@app/models';
 /** Components */
 import { OrdersComponent } from './orders.component';
@@ -10,13 +9,12 @@ import { OrderComponent } from './order/order.component';
  */
 export const ordersRoutes: Routes = [
   {
-    path: CoreRoutes.getRoutePath(RouteKey.Orders),
-    component: OrdersComponent,
-    data: { routeId: RouteKey.Orders }
+    path: '',
+    component: OrdersComponent
   },
   {
-    path: CoreRoutes.getRoutePath(RouteKey.OrderDetail),
+    path: '',
     component: OrderComponent,
-    data: { routeId: RouteKey.OrderDetail }
+    data: { routeId: RouteKey.OrderDetails }
   },
 ];

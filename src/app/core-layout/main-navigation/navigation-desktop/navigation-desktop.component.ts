@@ -105,7 +105,7 @@ export class NavigationDesktopComponent implements OnInit, OnDestroy {
    */
   public gotoProduct(_product: McsProduct) {
     if (isNullOrEmpty(_product)) { return; }
-    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.ProductDetail), _product.id]);
+    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.ProductDetails), _product.id]);
   }
 
   /**

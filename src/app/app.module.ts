@@ -13,40 +13,15 @@ import {
   TranslateService
 } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-
-/**
- * Raven logger
- */
+import { environment } from 'environments/environment';
+import { AppComponent } from './app.component';
+import { APP_RESOLVER_PROVIDERS } from './app.resolver';
+import { AppState } from './app.service';
+import { appRoutes } from './app.routes';
 import {
   errorHandlerProvider,
   setUserIdentity
 } from './app.logger';
-
-/**
- * Platform and Environment providers/directives/pipes
- */
-import { environment } from 'environments/environment';
-
-/**
- * App is our top level component
- */
-import { AppComponent } from './app.component';
-import { APP_RESOLVER_PROVIDERS } from './app.resolver';
-import { AppState } from './app.service';
-
-/**
- * Styling SASS
- */
-import '../styles/base.scss';
-
-/**
- * Routing
- */
-import { routes } from './app.routes';
-
-/**
- * MCS Portal Modules Declaration
- */
 import {
   CoreModule,
   CoreConfig,
@@ -57,21 +32,16 @@ import {
   EventBusDispatcherService
 } from './event-bus';
 import { ServicesModule } from './services';
-import {
-  ConsolePageModule,
-  DefaultPageModule
-} from './page-layout';
+import { DefaultPageModule } from './page-layout';
 import { PageNotificationsModule } from './page-notifications';
 import { SharedModule } from './shared';
-
-/**
- * MCS Portal Utilities
- */
 import {
   resolveEnvVar,
   isNullOrEmpty
 } from './utilities';
 import { McsIdentity } from './models';
+
+import '../styles/base.scss';
 
 /**
  * Application-Wide Providers
@@ -114,7 +84,7 @@ export function coreConfig(): CoreConfig {
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    RouterModule.forRoot(routes),
+    RouterModule.forRoot(appRoutes),
 
     TranslateModule.forRoot({
       loader: {
@@ -129,7 +99,6 @@ export function coreConfig(): CoreConfig {
     ServicesModule.forRoot(),
 
     SharedModule,
-    ConsolePageModule,
     DefaultPageModule,
     PageNotificationsModule,
   ],
@@ -184,7 +153,7 @@ export class AppModule {
   /**
    * Sets the default language to english
    */
-  private _initializeLanguage() {
+  private _initializeLanguage(): void {
     this._translateService.setDefaultLang('en');
     this._translateService.use('en');
   }

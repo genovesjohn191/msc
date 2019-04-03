@@ -1,8 +1,10 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { SharedModule } from '@app/shared';
 /** Firewalls */
-import { firewallProviders } from './firewalls.constants';
+import {
+  firewallProviders,
+  firewallRoutes
+} from './firewalls.constants';
 import { FirewallsComponent } from './firewalls.component';
 import {
   FirewallComponent,
@@ -10,6 +12,7 @@ import {
   FirewallPoliciesComponent,
   FirewallPolicyComponent
 } from './firewall';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -20,8 +23,8 @@ import {
     FirewallPolicyComponent
   ],
   imports: [
-    CommonModule,
-    SharedModule
+    SharedModule,
+    RouterModule.forChild(firewallRoutes)
   ],
   providers: [
     ...firewallProviders

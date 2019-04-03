@@ -86,9 +86,7 @@ export class McsRouteHandlerService implements McsDisposable {
       let currentActiveRoute = this._getCurrentActiveRoute(activatedChild.children);
       routeId = this._getRouteIdBySnapshot(currentActiveRoute);
     });
-    if (isNullOrEmpty(routeId)) {
-      throw new Error(`Route with id ${routeId} is not registered.`);
-    }
+    if (isNullOrEmpty(routeId)) { return; }
 
     let activeRoute = CoreRoutes.getRouteInfoByKey(routeId);
     activeRoute.urlAfterRedirects = routeArgs.urlAfterRedirects;
