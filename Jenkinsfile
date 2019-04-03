@@ -58,6 +58,7 @@ def qualys_api_url = params.QUALYS_API_URL
 def qualys_app_id = params.QUALYS_APP_ID
 def qualys_auth_record = params.QUALYS_AUTH_RECORD
 def qualys_auth_record_id = params.QUALYS_AUTH_RECORD_ID
+def deploy_after_build = params.DEPLOY_AFTER_BUILD
 
 echo "Building with the following configuration:"
 echo "\tRegistry: ${params.REGISTRY_LOCATION}\n\tDocker Sock: ${params.HOST_DOCKER_SOCK}\n\tDocker Binary: ${params.HOST_DOCKER_BIN}\n\tKubectl Binary: ${params.HOST_KUBECTL_BIN}"
@@ -163,14 +164,16 @@ podTemplate(
                     sh "docker push ${registry_location}/${image_name}:latest"
                 }
             }
-            stage('Deploy to k8s cluster') {
-                if (env.DEPLOYMENT_ENVIRONMENT != "LAB") {
-                    image_version = params.IMAGE_VERSION
-                }
+            if (deploy_after_build) {
+                stage('Deploy to k8s cluster') {
+                    if (env.DEPLOYMENT_ENVIRONMENT != "LAB") {
+                        image_version = params.IMAGE_VERSION
+                    }
 
-                echo "Update the deployed image"
-                sh "kubectl set image deployment ${kube_deployment} ${kube_deployment}=${registry_location}/${image_name}:${image_version} --record"
-                sh "kubectl rollout status deployment ${kube_deployment}"
+                    echo "Update the deployed image"
+                    sh "kubectl set image deployment ${kube_deployment} ${kube_deployment}=${registry_location}/${image_name}:${image_version} --record"
+                    sh "kubectl rollout status deployment ${kube_deployment}"
+                }
             }
             if (env.DEPLOYMENT_ENVIRONMENT == "LAB" && (qualys_was_type == 'VULNERABILITY' || qualys_was_type == 'DISCOVERY')) {
                 stage('Qualys Web Application Vulnerability Scan') {

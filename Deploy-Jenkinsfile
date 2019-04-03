@@ -1,0 +1,129 @@
+/**
+ * This job requires the presence of a Google Service Account JSON key file
+ * See: https://cloud.google.com/container-registry/docs/advanced-authentication.
+ *
+ * This JSON key file must be uploaded as a credential of type secret in Jenkins.
+ * The secret then gets copied to the build job as part of the pipeline and used
+ * to authenticate and then pull back a list of deployable tags for any given image.
+*/
+
+if (!params.JENKINS_CREDENTIALS_NAME) {
+    echo "Setting build parameters for first run."
+    properties(
+        [
+            disableConcurrentBuilds(),
+            parameters([
+                booleanParam(defaultValue: false, description: 'Pull the latest version of the Jenkins JNLP slave. Set to false for faster deploys.', name: 'FORCE_JNLP_IMAGE_PULL'),
+                string(defaultValue: 'gcr.io/cloud-services-portal-dev', description: 'Location of the docker registry.', name: 'REGISTRY_LOCATION'),
+                string(defaultValue: 'default', description: 'The namespace where kubernetes resources should be found and bound.', name: 'K8S_NAMESPACE'),
+                string(defaultValue: 'default', description: 'The name of the Jenkins credentials containing the JSON key file for OAuth2 authentication with Google.', name: 'JENKINS_CREDENTIALS_NAME'),
+                string(defaultValue: 'mcs/image-name', description: 'The full image name in the Google Container Registry.', name: 'IMAGE_NAME'),
+                string(defaultValue: '100', description: 'The number of image tags to display in the dropdown.', name: 'TAG_COUNT'),
+                string(defaultValue: '/home/kubernetes/bin/kubectl', description: 'Location of the kubectl binary on the host operating system.', name: 'HOST_KUBECTL_BIN'),
+                string(defaultValue: 'k8sDeployment1-ReplaceMe,k8sDeployment2-ReplaceMe', description: 'A list of Kubernetes deployment names, comma delimited.', name: 'DEPLOYMENT_NAMES'),
+                booleanParam(defaultValue: true, description: 'Whether to deploy \'latest\' or prompt for tag to select.', name: 'DEPLOY_LATEST_TAG'),
+            ]),
+            pipelineTriggers([])
+        ]
+    )
+}
+
+if (!params.JENKINS_CREDENTIALS_NAME || !params.REGISTRY_LOCATION || !params.IMAGE_NAME || !params.DEPLOYMENT_NAMES || !params.HOST_KUBECTL_BIN) {
+    error("You must provide all required build parameters to run this job.")
+}
+
+def label = "deploy"
+def force_jnlp_image_pull = params.FORCE_JNLP_IMAGE_PULL
+def registry_location = params.REGISTRY_LOCATION
+def k8s_namespace = params.K8S_NAMESPACE
+def credentials_name = params.JENKINS_CREDENTIALS_NAME
+def image_name = params.IMAGE_NAME
+def tag_count = params.TAG_COUNT
+def deployment_names = params.DEPLOYMENT_NAMES
+def kubectl_bin = params.HOST_KUBECTL_BIN
+def deploy_latest = params.DEPLOY_LATEST_TAG
+def selected_tag = "latest"
+def slack_notify_on_success = true
+
+/**
+ * Retrieves tags from Google Container Registry using the gcloud CLI.
+*/
+def getTags(googleServiceAccountCredentialsId, registryLocation, imageName, tagCount=100) {
+    withCredentials([file(credentialsId: googleServiceAccountCredentialsId, variable: 'SERVICE_ACCOUNT_FILE')]) {
+      sh "gcloud auth activate-service-account --key-file=\"${SERVICE_ACCOUNT_FILE}\""
+      def cmd_str = "gcloud container images list-tags ${registryLocation}/${imageName} --filter=\"TAGS:*\" --format=\"table(tags)[no-heading]\" --sort-by=~TIMESTAMP --limit=${tagCount} | sed -E 's/,/\\n/g'"
+      def output = sh(returnStdout: true, script: cmd_str).trim()
+      
+      "${output}"
+    }
+}
+
+// Create a Kubernetes Pod Template and run the job steps within the pod
+podTemplate(
+    label: label,
+    containers: [
+        containerTemplate(
+            name: 'jnlp',
+            image: 'gcr.io/cloud-services-portal-dev/mcs/jnlp-slave',
+            args: '${computer.jnlpmac} ${computer.name}',
+            alwaysPullImage: force_jnlp_image_pull,
+            ttyEnabled: true
+        )
+    ],
+    namespace: params.K8S_NAMESPACE,
+    volumes: [
+        hostPathVolume(
+            hostPath: kubectl_bin, // hook into the hosts' kubectl bin
+            mountPath: '/usr/bin/kubectl'
+        )
+    ]
+) {
+    node (label) {
+        try {
+            stage('Select tag') {
+                if (!deploy_latest) {
+                    tags = getTags(credentials_name, registry_location, image_name, tag_count)
+                    selected_tag = input(
+                        id: 'userInput', message: 'Promote:', parameters: [
+                            [$class: 'ChoiceParameterDefinition', choices: tags, description: 'Select an image tag', name: 'tag']
+                        ]
+                    )
+                } else {
+                    println "Will deploy ${image_name}:latest"
+                }
+            }
+            stage('Deploy the correct version') {
+                println "Deploying: ${deployment_names}"
+                deployment_names.split(',').each {
+                    println "You've chosen to deploy ${it} as ${registry_location}/${image_name}:${selected_tag}"
+                    sh "kubectl set image deployment ${it} ${it}=${registry_location}/${image_name}:${selected_tag} --record"
+                    sh "kubectl rollout status deployment ${it}"
+                }
+            }
+            stage('Update the build description') {
+                currentBuild.description = "${image_name}:${selected_tag}"
+            }
+            if (slack_notify_on_success) {
+                stage('Notify') {
+                    slackSend (
+                        color: '#00ff00', //green
+                        message: "LABORATORY - DEPLOYMENT SUCCESS: <${env.BUILD_URL}console|${env.JOB_NAME} #[${env.BUILD_NUMBER}]>\n" +
+                                "Deployed ${image_name}:${selected_tag} for ${deployment_names}\n"
+                    )
+                }
+            }
+        }
+        catch (e) {
+            // If there was an exception thrown, the build failed
+            currentBuild.result = "BUILD FAILED"
+            slackSend (
+                color: '#ff0000', //red
+                message: "LABORATORY - DEPLOYMENT FAILURE: <${env.BUILD_URL}console|${env.JOB_NAME} #[${env.BUILD_NUMBER}]>\n" +
+                        "Tried to deploy ${image_name}:${selected_tag} for ${deployment_names}\n" +
+                        "Error:\n" +
+                        "> ${e}\n" +
+                        "<${env.BUILD_URL}console|Jenkins Link>"
+            )
+        }
+    }
+}
