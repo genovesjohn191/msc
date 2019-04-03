@@ -80,7 +80,7 @@ export class ServerCreateBuilder<T> {
     if (isNullOrEmpty(orderDetails)) { return; }
     this._serverCreateService.createOrUpdateOrder({
       billingSiteId: orderDetails.billingSite.id,
-      contractDuration: orderDetails.contractDuration,
+      contractDurationMonths: orderDetails.contractDurationMonths,
       costCentreId: orderDetails.billingCostCentre.id,
       description: orderDetails.description
     });

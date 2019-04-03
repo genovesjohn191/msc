@@ -205,7 +205,7 @@ export class StepOrderDetailsComponent
 
     let orderDetails = new OrderDetails();
     orderDetails.description = this.fcDescription.value;
-    orderDetails.contractDuration = this.fcContractTerm.value;
+    orderDetails.contractDurationMonths = this.fcContractTerm.value;
     orderDetails.billingEntity = this.fcBillingEntity.value;
     orderDetails.billingSite = this.fcBillingSite.value;
     orderDetails.billingCostCentre = this.fcBillingCostCenter.value;

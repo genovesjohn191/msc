@@ -97,19 +97,37 @@
                 <span>{{ selectedOrder.createdOn | mcsStdDateFormat }}</span>
               </mcs-item>
 
+            </mcs-presentation-panel>
+          </mcs-grid-column>
+
+          <!-- Billing Details -->
+          <mcs-grid-column>
+            <mcs-presentation-panel>
+              <ng-container mcsPresentationPanelHeader>
+                <h2>{{ 'order.billingDetails' | translate }}</h2>
+              </ng-container>
+
               <mcs-item>
                 <span>{{ 'order.contractTerm' | translate }}:</span>
                 <span>
-                  {{ selectedOrder.contractDuration || 0 }}
+                  {{ selectedOrder.contractDurationMonths || 0 }}
                   {{ 'order.contractTermSuffix' | translate }}
                 </span>
               </mcs-item>
 
               <mcs-item>
-                <span>{{ 'order.totalCharge' | translate }}:</span>
+                <span>{{ 'order.totalOneOffCost' | translate }}:</span>
                 <span>
                   {{ selectedOrder.charges?.currencySymbol }}
-                  {{ selectedOrder.charges?.totalCost || 0 }}
+                  {{ selectedOrder.charges?.oneOff || 0 }}
+                </span>
+              </mcs-item>
+
+              <mcs-item>
+                <span>{{ 'order.totalMonthlyCost' | translate }}:</span>
+                <span>
+                  {{ selectedOrder.charges?.currencySymbol }}
+                  {{ selectedOrder.charges?.monthly || 0 }}
                 </span>
               </mcs-item>
 
