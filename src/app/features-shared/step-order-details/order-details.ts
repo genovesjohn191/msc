@@ -7,7 +7,7 @@ import {
 
 export class OrderDetails {
   public description: string;
-  public contractDuration: number;
+  public contractDurationMonths: number;
   public workflowAction: OrderWorkflowAction;
   public billingEntity: McsBilling;
   public billingSite: McsBillingSite;

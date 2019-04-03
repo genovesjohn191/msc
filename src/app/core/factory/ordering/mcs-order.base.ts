@@ -43,7 +43,7 @@ import { IMcsOrderFactory } from './mcs-order-factory.interface';
 
 export interface IOrderSubmitDetails {
   description: string;
-  contractDuration: number;
+  contractDurationMonths: number;
   billingSiteId: string;
   billingCostCentreId: string;
 }
@@ -138,7 +138,7 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible,
   public createOrUpdateOrder(orderDetails: McsOrderCreate): void {
     this._orderBuilder
       .setDescription(orderDetails.description)
-      .setContractDuration(orderDetails.contractDuration)
+      .setContractDuration(orderDetails.contractDurationMonths)
       .setBillingSiteId(orderDetails.billingSiteId)
       .setBillingCostCentreId(orderDetails.costCentreId)
       .setOrderWorkflow(null);

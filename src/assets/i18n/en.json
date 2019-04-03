@@ -81,10 +81,12 @@
     "status": "Status",
     "createdBy": "Created By",
     "createdOn": "Created On",
+    "billingDetails": "Billing Details",
     "charges": "Charges",
     "contractTerm": "Contract Term",
     "contractTermSuffix": "Months",
-    "totalCharge": "Total Charge",
+    "totalOneOffCost": "Total One-Off Cost",
+    "totalMonthlyCost": "Total Monthly Cost",
     "lineItemsLabel": "Line Items",
     "columnHeaders": {
       "description": "Item Description",

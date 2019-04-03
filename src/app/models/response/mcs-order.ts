@@ -26,6 +26,7 @@ export class McsOrder extends McsEntityBase {
   public orderId: string;
   public description: string;
   public companyId: string;
+  public contractDurationMonths: number;
   public createdBy: string;
   public itemCount: number;
   public errorCount: number;
@@ -84,6 +85,7 @@ export class McsOrder extends McsEntityBase {
     this.orderId = undefined;
     this.description = undefined;
     this.companyId = undefined;
+    this.contractDurationMonths = undefined;
     this.status = undefined;
     this.createdBy = undefined;
     this.createdOn = undefined;

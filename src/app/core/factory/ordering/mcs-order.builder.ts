@@ -11,7 +11,7 @@ import { McsOrderRequest } from './mcs-order-request';
 
 export class McsOrderBuilder {
   private _description: string;
-  private _contractDuration: number;
+  private _contractDurationMonths: number;
   private _billingSiteId: string;
   private _billingCostCentreId: string;
   private _orderItems: McsOrderItemCreate[];
@@ -20,7 +20,7 @@ export class McsOrderBuilder {
 
   constructor() {
     this._description = '';
-    this._contractDuration = 0;
+    this._contractDurationMonths = 0;
     this._billingSiteId = '';
     this._billingCostCentreId = '';
     this._orderItems = [];
@@ -48,7 +48,7 @@ export class McsOrderBuilder {
    * @param duration Duration of the order to be set
    */
   public setContractDuration(duration: number): McsOrderBuilder {
-    this._contractDuration = duration;
+    this._contractDurationMonths = duration;
     return this;
   }
 
@@ -122,7 +122,7 @@ export class McsOrderBuilder {
    * Build the generic details of the order
    */
   public buildOrderDetails(): McsOrderBuilder {
-    this._orderRequestDetails.orderDetails.contractDuration = this._contractDuration;
+    this._orderRequestDetails.orderDetails.contractDurationMonths = this._contractDurationMonths;
     this._orderRequestDetails.orderDetails.description = this._description;
     this._orderRequestDetails.orderDetails.billingSiteId = this._billingSiteId;
     this._orderRequestDetails.orderDetails.costCentreId = this._billingCostCentreId;
