@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { SharedModule } from '@app/shared';
 /** Components */
+import { consolePageRoutes } from './console-page.constants';
 import { ConsolePageComponent } from './console-page.component';
 
 @NgModule({
@@ -8,7 +10,8 @@ import { ConsolePageComponent } from './console-page.component';
     ConsolePageComponent
   ],
   imports: [
-    SharedModule
+    SharedModule,
+    RouterModule.forChild(consolePageRoutes)
   ]
 })
 

@@ -121,7 +121,7 @@
                 <ng-container *mcsAccessControl="serverPermision.vmEdit">
                   <a *ngIf="!serverDetails.server.isDedicated"
                     [disabled]="!serverDetails.server.executable"
-                    (click)="navigateServerDetailsTo(serverDetails.server, routeKeyEnum.ServerDetailStorage)"
+                    (click)="navigateServerDetailsTo(serverDetails.server, routeKeyEnum.ServerDetailsStorage)"
                     mcsId
                     mcsEventTracker="manage-storage"
                     mcsEventCategory="server"
@@ -160,7 +160,7 @@
                 <ng-container *mcsAccessControl="serverPermision.vmNicEdit">
                   <a *ngIf="!serverDetails.server.isDedicated"
                     [disabled]="!serverDetails.server.executable"
-                    (click)="navigateServerDetailsTo(serverDetails.server, routeKeyEnum.ServerDetailNics)"
+                    (click)="navigateServerDetailsTo(serverDetails.server, routeKeyEnum.ServerDetailsNics)"
                     mcsId
                     mcsEventTracker="manage-nics"
                     mcsEventCategory="server"

@@ -1,7 +1,4 @@
-import {
-  Injectable,
-  NgZone
-} from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
   Subject,
   BehaviorSubject,
@@ -71,7 +68,6 @@ export class McsNotificationJobService implements McsDisposable {
   }
 
   constructor(
-    private _ngZone: NgZone,
     private _eventDispatcher: EventBusDispatcherService,
     private _apiService: McsApiService,
     private _loggerService: McsLoggerService,
@@ -126,11 +122,8 @@ export class McsNotificationJobService implements McsDisposable {
 
         this._jobConnection = details.content;
         this.connectionStatus = NetworkStatus.Connecting;
-
-        this._ngZone.runOutsideAngular(() => {
-          this._initializeWebstomp();
-          this._listenToStateChange();
-        });
+        this._initializeWebstomp();
+        this._listenToStateChange();
       });
   }
 

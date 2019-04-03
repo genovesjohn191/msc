@@ -59,7 +59,7 @@
             {{ columnSettings.crispTicketNumber.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
-            <a [mcsRouterLink]="[routeKeyEnum.TicketDetail, row.id]"
+            <a [mcsRouterLink]="[routeKeyEnum.TicketDetails, row.id]"
               mcsId="select-ticket"
               mcsEventTracker="navigate-to-ticke"
               mcsEventCategory="ticket"
@@ -83,7 +83,7 @@
             {{ columnSettings.summary.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" text-wrap>
-            <a [mcsRouterLink]="[routeKeyEnum.TicketDetail, row.id]"
+            <a [mcsRouterLink]="[routeKeyEnum.TicketDetails, row.id]"
             mcsId="select-ticket"
             mcsEventTracker="navigate-to-ticket"
             mcsEventCategory="ticket"

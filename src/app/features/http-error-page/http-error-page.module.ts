@@ -7,6 +7,7 @@ import {
   DirectivesModule
 } from '@app/shared';
 /** Components */
+import { httpErrorPageRoutes } from './http-error-page.constants';
 import { HttpErrorPageComponent } from './http-error-page.component';
 
 @NgModule({
@@ -15,7 +16,7 @@ import { HttpErrorPageComponent } from './http-error-page.component';
   ],
   imports: [
     CommonModule,
-    RouterModule,
+    RouterModule.forChild(httpErrorPageRoutes),
     TranslateModule,
     ButtonModule,
     DirectivesModule

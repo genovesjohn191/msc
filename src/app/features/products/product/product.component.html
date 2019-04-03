@@ -87,7 +87,7 @@
                 <mcs-icon size="100px" [key]="cloudIconKey"></mcs-icon>
               </div>
               <mcs-item *ngFor="let dependentProduct of selectedProduct.dependentProducts">
-                <a [mcsRouterLink]="[routeKeyEnum.ProductDetail, dependentProduct.id]"
+                <a [mcsRouterLink]="[routeKeyEnum.ProductDetails, dependentProduct.id]"
                   mcsId="product-dependency"
                   mcsEventTracker="select-product-dependency"
                   mcsEventCategory="product"

@@ -45,7 +45,7 @@
             {{ columnSettings.description.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
-            <a [mcsRouterLink]="[routeKeyEnum.OrderDetail, row.id]"
+            <a [mcsRouterLink]="[routeKeyEnum.OrderDetails, row.id]"
               mcsId="select-order"
               mcsEventTracker="navigate-to-order"
               mcsEventCategory="order"

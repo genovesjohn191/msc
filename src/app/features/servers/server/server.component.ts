@@ -57,6 +57,7 @@ import {
   McsServerPlatform
 } from '@app/models';
 import { McsServersRepository } from '@app/services';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { ServerService } from './server.service';
 import { ServersListSource } from '../servers.listsource';
 import { ServersService } from '../servers.service';
@@ -92,8 +93,9 @@ export class ServerComponent
   private _resourcesKeyMap: Map<string, McsServerPlatform>;
 
   constructor(
-    _router: Router,
+    _eventDispatcher: EventBusDispatcherService,
     _activatedRoute: ActivatedRoute,
+    private _router: Router,
     private _dialogService: McsDialogService,
     private _serversRepository: McsServersRepository,
     private _serverService: ServerService,
@@ -103,7 +105,7 @@ export class ServerComponent
     private _loadingService: McsLoadingService,
     private _errorHandlerService: McsErrorHandlerService
   ) {
-    super(_router, _activatedRoute);
+    super(_eventDispatcher, _activatedRoute);
     this._resourcesKeyMap = new Map();
     this.listStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
   }
@@ -192,8 +194,8 @@ export class ServerComponent
    * @param tab Active tab
    */
   protected onTabChanged(tab: any) {
-    this.router.navigate([
-      CoreRoutes.getNavigationPath(RouteKey.ServerDetail),
+    this._router.navigate([
+      CoreRoutes.getNavigationPath(RouteKey.ServerDetails),
       this.paramId,
       tab.id
     ]);
@@ -205,8 +207,15 @@ export class ServerComponent
    */
   protected onParamIdChanged(id: string) {
     if (isNullOrEmpty(id)) { return; }
+    this._resetManagementState();
     this._serverService.setServerId(id);
     this._subscribeToServerById(id);
+  }
+
+  /**
+   * Resets the management state
+   */
+  private _resetManagementState(): void {
     if (!isNullOrEmpty(this._componentHandler)) {
       this._componentHandler.recreateComponent();
     }

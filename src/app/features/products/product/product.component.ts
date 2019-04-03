@@ -111,7 +111,7 @@ export class ProductComponent implements OnInit, OnDestroy {
    */
   public onClickDependency(dependency: McsProductDependency): void {
     if (isNullOrEmpty(dependency)) { return; }
-    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.ProductDetail), dependency.id]);
+    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.ProductDetails), dependency.id]);
   }
 
   /**

@@ -161,7 +161,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
    */
   public navigateServerDetailsTo(server: McsServer, keyRoute: RouteKey): void {
     this._router.navigate([
-      CoreRoutes.getNavigationPath(RouteKey.ServerDetail),
+      CoreRoutes.getNavigationPath(RouteKey.ServerDetails),
       server.id,
       CoreRoutes.getNavigationPath(keyRoute)
     ]);
@@ -267,7 +267,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
     if (isNullOrEmpty(catalog)) { return; }
     // Set reference object to be expected
     let expectedJobObject = {
-      mediaName: catalog.name,
+      mediaName: catalog.itemName,
       serverId: server.id
     };
 
@@ -277,7 +277,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
     this._serversRepository.attachServerMedia(
       server.id,
       {
-        name: catalog.name,
+        name: catalog.itemName,
         clientReferenceObject: expectedJobObject
       })
       .pipe(

@@ -1,22 +1,20 @@
 <!-- Tab header -->
 <mcs-responsive-panel class="tab-header-wrapper">
-  <mcs-tab-header-item
-    mcsId
-    mcsResponsivePanelItem
-    [mcsResponsivePanelItemSelectable]="true"
-    mcsRipple
-    *ngFor="let tab of tabs"
-    [active]="activeTab?.id === tab.id"
-    [align]="tab?.align"
-    (click)="onClickTab(tab)">
+  <ng-container *ngFor="let tab of tabs">
+    <mcs-tab-header-item mcsId mcsRipple
+      mcsResponsivePanelItem
+      [mcsResponsivePanelItemSelectable]="true"
+      (click)="onClickTab(tab)"
+      [id]="tab?.id">
 
-    <ng-container *ngIf="tab.labelTemplate">
-      <ng-container *ngTemplateOutlet="tab.labelTemplate.templateRef"></ng-container>
-    </ng-container>
-    <ng-container *ngIf="!tab.labelTemplate">
-      <span>{{ tab.label }}</span>
-    </ng-container>
-  </mcs-tab-header-item>
+      <ng-container *ngIf="tab.labelTemplate">
+        <ng-container *ngTemplateOutlet="tab.labelTemplate.templateRef"></ng-container>
+      </ng-container>
+      <ng-container *ngIf="!tab.labelTemplate">
+        <span>{{ tab.label }}</span>
+      </ng-container>
+    </mcs-tab-header-item>
+  </ng-container>
 
   <ng-content select="[mcsTabHeaderCustom]"></ng-content>
 </mcs-responsive-panel>

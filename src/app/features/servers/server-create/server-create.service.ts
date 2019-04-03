@@ -46,7 +46,7 @@ export class ServerCreateService extends McsOrderBase
     if (isNullOrEmpty(serverModel)) { return; }
 
     serverModel.clientReferenceObject.resourcePath =
-      CoreRoutes.getNavigationPath(RouteKey.ServerDetail);
+      CoreRoutes.getNavigationPath(RouteKey.ServerDetails);
 
     let serverInstance = serverModel instanceof McsServerCreate ?
       this._createNewSelfManageServer(serverModel) :

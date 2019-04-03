@@ -101,7 +101,7 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
    */
   public navigateVdcDetailTo(keyRoute: RouteKey): void {
     this._router.navigate([
-      CoreRoutes.getNavigationPath(RouteKey.VdcDetail),
+      CoreRoutes.getNavigationPath(RouteKey.VdcDetails),
       this.selectedVdc.id,
       CoreRoutes.getNavigationPath(keyRoute)
     ]);

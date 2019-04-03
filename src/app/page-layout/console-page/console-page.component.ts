@@ -21,7 +21,6 @@ import {
   takeUntil
 } from 'rxjs/operators';
 import {
-  refreshView,
   isNullOrEmpty,
   getSafeProperty,
   unsubscribeSafely
@@ -42,7 +41,6 @@ import {
   McsServersRepository,
   McsConsoleRepository
 } from '@app/services';
-import { ServersService } from '@app/features/servers';
 import { EventBusDispatcherService } from '@app/event-bus';
 
 // JQuery script implementation
@@ -119,7 +117,6 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
     private _eventDispatcher: EventBusDispatcherService,
     private _sessionHandler: McsSessionHandlerService,
     private _serversRepository: McsServersRepository,
-    private _serversService: ServersService,
     private _activatedRoute: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef
   ) {
@@ -132,7 +129,7 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public ngAfterViewInit() {
-    refreshView(() => {
+    Promise.resolve().then(() => {
       this._configureVmConsole();
       this._registerVmConsoleEvents();
     });
@@ -191,9 +188,18 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
   public executeServerCommand(action: ServerCommand): void {
     if (isNullOrEmpty(action)) { return; }
     this.stopping = action === ServerCommand.Stop;
-    this._serversService.executeServerCommand({ server: this.server }, action);
+    this._serversRepository.putServerCommand(this.server.id, action,
+      {
+        serverId: this.server.id,
+        powerState: this.server.powerState,
+        commandAction: action
+      }
+    );
   }
 
+  /**
+   * Registers the event handlers
+   */
   private _registerEventHandlers() {
     this._sessionHandler.onCurrentUserChanged()
       .pipe(takeUntil(this._destroySubject))
@@ -211,11 +217,18 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
       CoreEvent.jobServerResetPassword, this._resetVmPasswordEventHandler.bind(this));
   }
 
+  /**
+   * Event that emits when the session has been changed
+   */
   private _onSessionChangedEventHandler() {
     this.closingTime = 0;
     this._closeWindow();
   }
 
+  /**
+   * Event that emits when the parameter has been changed
+   * @param params Params content
+   */
   private _paramChangedEventHandler(params: any) {
     this._serverId = params['id'];
     this._getServerById(this._serverId);

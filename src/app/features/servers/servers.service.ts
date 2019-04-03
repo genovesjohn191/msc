@@ -56,7 +56,7 @@ export class ServersService {
         this._router.navigate([
           CoreRoutes.getNavigationPath(RouteKey.Servers),
           data.server.id,
-          CoreRoutes.getNavigationPath(RouteKey.ServerDetailManagement)
+          CoreRoutes.getNavigationPath(RouteKey.ServerDetailsManagement)
         ], { queryParams: { scale: true } }
         );
         break;

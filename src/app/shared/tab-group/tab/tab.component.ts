@@ -14,7 +14,6 @@ import {
   McsUniqueId
 } from '@app/core';
 import { TabLabelDirective } from './tab-label.directive';
-import { McsAlignmentType } from '@app/utilities';
 
 @Component({
   selector: 'mcs-tab',
@@ -36,9 +35,6 @@ export class TabComponent implements AfterViewInit {
 
   @Input()
   public label: string;
-
-  @Input()
-  public align: McsAlignmentType;
 
   @ContentChild(TabLabelDirective)
   public labelTemplate: TabLabelDirective;

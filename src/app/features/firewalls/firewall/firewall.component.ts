@@ -43,6 +43,7 @@ import {
   McsFirewall
 } from '@app/models';
 import { McsFirewallsRepository } from '@app/services';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { FirewallService } from './firewall.service';
 import { FirewallsListSource } from '../firewalls.listsource';
 
@@ -80,8 +81,9 @@ export class FirewallComponent
   private _destroySubject = new Subject<void>();
 
   constructor(
-    _router: Router,
     _activatedRoute: ActivatedRoute,
+    _eventDispatcher: EventBusDispatcherService,
+    private _router: Router,
     private _changeDetectorRef: ChangeDetectorRef,
     private _translateService: TranslateService,
     private _errorHandlerService: McsErrorHandlerService,
@@ -89,7 +91,7 @@ export class FirewallComponent
     private _firewallsRepository: McsFirewallsRepository,
     private _firewallService: FirewallService
   ) {
-    super(_router, _activatedRoute);
+    super(_eventDispatcher, _activatedRoute);
     this.listStatusFactory = new McsDataStatusFactory();
   }
 
@@ -129,8 +131,8 @@ export class FirewallComponent
    */
   protected onTabChanged(tab: any) {
     // Navigate route based on current active tab
-    this.router.navigate([
-      CoreRoutes.getNavigationPath(RouteKey.FirewallDetail),
+    this._router.navigate([
+      CoreRoutes.getNavigationPath(RouteKey.FirewallDetails),
       this.paramId,
       tab.id
     ]);

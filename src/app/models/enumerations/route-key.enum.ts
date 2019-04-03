@@ -4,17 +4,17 @@ export enum RouteKey {
   Console,
 
   Servers,
-  ServerDetail,
-  ServerDetailManagement,
-  ServerDetailServices,
-  ServerDetailStorage,
-  ServerDetailBackups,
-  ServerDetailNics,
+  ServerDetails,
+  ServerDetailsManagement,
+  ServerDetailsServices,
+  ServerDetailsStorage,
+  ServerDetailsBackups,
+  ServerDetailsNics,
   ServerCreate,
 
-  VdcDetail,
-  VdcDetailOverview,
-  VdcDetailStorage,
+  VdcDetails,
+  VdcDetailsOverview,
+  VdcDetailsStorage,
 
   Media,
   Medium,
@@ -23,21 +23,21 @@ export enum RouteKey {
   MediaUpload,
 
   Firewalls,
-  FirewallDetail,
-  FirewallDetailOverview,
-  FirewallDetailPolicies,
+  FirewallDetails,
+  FirewallDetailsOverview,
+  FirewallDetailsPolicies,
 
   Tickets,
-  TicketDetail,
+  TicketDetails,
   TicketCreate,
 
   Notifications,
   Notification,
 
-  ProductDetail,
+  ProductDetails,
 
   Orders,
-  OrderDetail,
+  OrderDetails,
 
   OtherTools,
 

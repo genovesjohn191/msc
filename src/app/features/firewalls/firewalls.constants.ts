@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { CoreRoutes } from '../../core';
 import { RouteKey } from '@app/models';
 /** Components/Services */
 import { FirewallsComponent } from './firewalls.component';
@@ -22,29 +21,29 @@ export const firewallProviders: any[] = [
  */
 export const firewallRoutes: Routes = [
   {
-    path: CoreRoutes.getRoutePath(RouteKey.Firewalls),
-    component: FirewallsComponent,
-    data: { routeId: RouteKey.Firewalls }
+    path: '',
+    component: FirewallsComponent
   },
   {
-    path: CoreRoutes.getRoutePath(RouteKey.FirewallDetail),
+    path: '',
     component: FirewallComponent,
-    data: { routeId: RouteKey.FirewallDetail },
+    data: { routeId: RouteKey.FirewallDetails },
     children: [
       {
         path: '',
-        redirectTo: CoreRoutes.getRoutePath(RouteKey.FirewallDetailOverview),
-        pathMatch: 'full'
+        redirectTo: '',
+        pathMatch: 'full',
+        data: { routeId: RouteKey.FirewallDetailsOverview }
       },
       {
-        path: CoreRoutes.getRoutePath(RouteKey.FirewallDetailOverview),
+        path: '',
         component: FirewallOverviewComponent,
-        data: { routeId: RouteKey.FirewallDetailOverview }
+        data: { routeId: RouteKey.FirewallDetailsOverview }
       },
       {
-        path: CoreRoutes.getRoutePath(RouteKey.FirewallDetailPolicies),
+        path: '',
         component: FirewallPoliciesComponent,
-        data: { routeId: RouteKey.FirewallDetailPolicies }
+        data: { routeId: RouteKey.FirewallDetailsPolicies }
       }
     ]
   }

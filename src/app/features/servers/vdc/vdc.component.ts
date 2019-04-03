@@ -47,9 +47,10 @@ import {
   McsResourcesRepository,
   McsServersRepository
 } from '@app/services';
-import { } from '../repositories/servers.repository';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { ServersListSource } from '../servers.listsource';
 import { VdcService } from './vdc.service';
+
 // Add another group type in here if you have addition tab
 type tabGroupType = 'overview';
 
@@ -83,8 +84,9 @@ export class VdcComponent
   private _resourcesKeyMap: Map<string, McsServerPlatform>;
 
   constructor(
-    _router: Router,
+    _eventDispatcher: EventBusDispatcherService,
     _activatedRoute: ActivatedRoute,
+    private _router: Router,
     private _changeDetectorRef: ChangeDetectorRef,
     private _loadingService: McsLoadingService,
     private _translateService: TranslateService,
@@ -93,13 +95,12 @@ export class VdcComponent
     private _errorHandlerService: McsErrorHandlerService,
     private _vdcService: VdcService
   ) {
-    super(_router, _activatedRoute);
+    super(_eventDispatcher, _activatedRoute);
     this.listStatusFactory = new McsDataStatusFactory();
     this._resourcesKeyMap = new Map();
   }
 
   public ngOnInit() {
-    // Initialize base class
     super.onInit();
   }
 
@@ -126,8 +127,8 @@ export class VdcComponent
     if (isNullOrEmpty(resource.resourceId)) { return; }
 
     this._changeDetectorRef.markForCheck();
-    this.router.navigate([
-      CoreRoutes.getNavigationPath(RouteKey.VdcDetail),
+    this._router.navigate([
+      CoreRoutes.getNavigationPath(RouteKey.VdcDetails),
       resource.resourceId
     ]);
   }
@@ -137,8 +138,8 @@ export class VdcComponent
    * @param tab Active tab
    */
   protected onTabChanged(tab: any) {
-    this.router.navigate([
-      CoreRoutes.getNavigationPath(RouteKey.VdcDetail),
+    this._router.navigate([
+      CoreRoutes.getNavigationPath(RouteKey.VdcDetails),
       this.paramId,
       tab.id
     ]);

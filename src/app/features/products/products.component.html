@@ -28,7 +28,7 @@
                   *ngFor="let category of catalog.categories">
 
                   <ng-container *ngFor="let product of category.products">
-                    <a [mcsRouterLink]="[routeKeyEnum.ProductDetail, product.id]"
+                    <a [mcsRouterLink]="[routeKeyEnum.ProductDetails, product.id]"
                       mcsId="select-product"
                       mcsEventTracker="select-product"
                       mcsEventCategory="product"

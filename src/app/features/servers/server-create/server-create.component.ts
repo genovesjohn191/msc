@@ -173,7 +173,7 @@ export class ServerCreateComponent extends McsOrderWizardBase
     let workflow = {
       state: submitDetails.workflowAction,
       clientReferenceObject: {
-        resourcePath: CoreRoutes.getNavigationPath(RouteKey.ServerDetail)
+        resourcePath: CoreRoutes.getNavigationPath(RouteKey.ServerDetails)
       }
     } as McsOrderWorkflow;
     this._serverCreateService.submitOrderWorkflow(workflow).subscribe();

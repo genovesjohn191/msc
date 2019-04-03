@@ -35,10 +35,12 @@ export class RouterLinkDirective implements AfterViewChecked {
   constructor(private _router: Router) { }
 
   public ngAfterViewChecked() {
-    let comparisonResult = compareArrays(this._routerLinkKey, this._previousRouterLink);
-    if (comparisonResult === 0) { return; }
-    this._setRouterLink();
-    this._previousRouterLink = Object.create(this._routerLinkKey);
+    Promise.resolve().then(() => {
+      let comparisonResult = compareArrays(this._routerLinkKey, this._previousRouterLink);
+      if (comparisonResult === 0) { return; }
+      this._setRouterLink();
+      this._previousRouterLink = Object.create(this._routerLinkKey);
+    });
   }
 
   /**

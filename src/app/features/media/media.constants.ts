@@ -1,8 +1,5 @@
 import { Routes } from '@angular/router';
-import {
-  CoreRoutes,
-  McsNavigateAwayGuard
-} from '@app/core';
+import { McsNavigateAwayGuard } from '@app/core';
 import { RouteKey } from '@app/models';
 import { RequiredResourcesGuard } from '@app/services';
 /** Components */
@@ -31,34 +28,34 @@ export const mediaProviders: any[] = [
  */
 export const mediaRoutes: Routes = [
   {
-    path: CoreRoutes.getRoutePath(RouteKey.Media),
-    component: MediaComponent,
-    data: { routeId: RouteKey.Media }
+    path: '',
+    component: MediaComponent
   },
   {
-    path: CoreRoutes.getRoutePath(RouteKey.MediaUpload),
+    path: '',
     component: MediaUploadComponent,
     canActivate: [RequiredResourcesGuard],
     canDeactivate: [McsNavigateAwayGuard],
     data: { routeId: RouteKey.MediaUpload }
   },
   {
-    path: CoreRoutes.getRoutePath(RouteKey.Medium),
+    path: '',
     component: MediumComponent,
     data: { routeId: RouteKey.Medium },
     children: [
       {
         path: '',
-        redirectTo: CoreRoutes.getRoutePath(RouteKey.MediumOverview),
-        pathMatch: 'full'
+        redirectTo: '',
+        pathMatch: 'full',
+        data: { routeId: RouteKey.MediumOverview }
       },
       {
-        path: CoreRoutes.getRoutePath(RouteKey.MediumOverview),
+        path: '',
         component: MediumOverviewComponent,
         data: { routeId: RouteKey.MediumOverview }
       },
       {
-        path: CoreRoutes.getRoutePath(RouteKey.MediumServers),
+        path: '',
         component: MediumServersComponent,
         data: { routeId: RouteKey.MediumServers }
       }
