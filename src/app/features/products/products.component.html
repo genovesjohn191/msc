@@ -36,7 +36,8 @@
 
                       <mcs-option [value]="product"
                         [selected]="(selectedProduct$ | async)?.id === product.id">
-                        <div margin-left-xsmall>
+                        <div margin-left-xsmall
+                          [mcsGreyedOut]="product.isActiveIncompleteRelease">
                           <span text-wrap>{{ product.name }}</span>
                         </div>
                       </mcs-option>

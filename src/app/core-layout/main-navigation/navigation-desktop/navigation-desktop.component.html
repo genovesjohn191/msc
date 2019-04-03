@@ -19,6 +19,7 @@
                         <mcs-list-item *ngFor="let product of category.products">
 
                           <a mcsButton="basic"
+                            [mcsGreyedOut]="product.isActiveIncompleteRelease"
                             labelPlacement="left" text-wrap full-width
                             [active]="selectedProduct?.id === product.id"
                             [mcsRouterLink]="[routeKeyEnum.ProductDetail, product.id]"

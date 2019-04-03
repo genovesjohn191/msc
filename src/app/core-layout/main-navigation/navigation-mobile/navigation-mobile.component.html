@@ -16,6 +16,7 @@
                   <mcs-list-item *ngFor="let product of category.products">
                     <a (click)="gotoProduct(product)"
                       mcsId="select-product"
+                      [mcsGreyedOut]="product.isActiveIncompleteRelease"
                       mcsEventTracker="select-product"
                       mcsEventCategory="navigation"
                       mcsEventLabel="main-nav"
