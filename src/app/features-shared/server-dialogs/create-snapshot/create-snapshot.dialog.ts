@@ -9,23 +9,23 @@ import {
   McsDialogRef,
   CoreDefinition
 } from '@app/core';
-import { ServerSnapshotDialogContent } from '../../server-snapshot-dialog-content';
+import { ServerSnapshotDialogContent } from '../server-snapshot-dialog-content';
 
 @Component({
-  selector: 'mcs-delete-snapshot-dialog',
-  templateUrl: './delete-snapshot.dialog.html',
+  selector: 'mcs-create-snapshot-dialog',
+  templateUrl: './create-snapshot.dialog.html',
   encapsulation: ViewEncapsulation.None,
   host: {
-    'class': 'delete-snapshot-dialog-wrapper'
+    'class': 'create-snapshot-dialog-wrapper'
   }
 })
 
-export class DeleteSnapshotDialogComponent {
+export class CreateSnapshotDialogComponent {
   public dialogModel: ServerSnapshotDialogContent;
 
   constructor(
     private _translateService: TranslateService,
-    public dialogRef: McsDialogRef<DeleteSnapshotDialogComponent>,
+    public dialogRef: McsDialogRef<CreateSnapshotDialogComponent>,
     @Inject(MCS_DIALOG_DATA) public dialogData
   ) {
     this.dialogModel = this.dialogData as ServerSnapshotDialogContent[][0];
@@ -39,11 +39,12 @@ export class DeleteSnapshotDialogComponent {
   }
 
   /**
-   * Title text to be displayed in the dialog
+   * Confirmation message to be displayed in the dialog
    */
-  public get titleText(): string {
+  public get confirmationMessage(): string {
     return this._translateService.instant(
-      'serverShared.dialogDeleteSnapshot.title', { snapshot_name: this.dialogModel.snapshotName }
+      'serverShared.dialogCreateSnapshot.confirmation',
+      { server_name: this.dialogModel.serverName }
     );
   }
 
@@ -57,7 +58,7 @@ export class DeleteSnapshotDialogComponent {
   /**
    * This will close the dialog and set the dialog result to true
    */
-  public deleteSnapshot(): void {
+  public createSnapshot(): void {
     this.dialogRef.close(true);
   }
 }

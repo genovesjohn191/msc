@@ -34,6 +34,7 @@ import {
 import { ServicesModule } from './services';
 import { DefaultPageModule } from './page-layout';
 import { PageNotificationsModule } from './page-notifications';
+import { FeaturesSharedModule } from './features-shared';
 import { SharedModule } from './shared';
 import {
   resolveEnvVar,
@@ -98,6 +99,7 @@ export function coreConfig(): CoreConfig {
     EventBusModule.forRoot(),
     ServicesModule.forRoot(),
 
+    FeaturesSharedModule,
     SharedModule,
     DefaultPageModule,
     PageNotificationsModule,

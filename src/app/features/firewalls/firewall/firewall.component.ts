@@ -22,8 +22,7 @@ import {
   takeUntil,
   catchError,
   tap,
-  shareReplay,
-  finalize
+  shareReplay
 } from 'rxjs/operators';
 import {
   CoreDefinition,
@@ -183,19 +182,26 @@ export class FirewallComponent
    */
   private _subscribeToFirewallById(firewallId: string): void {
     this._loadingService.showLoader(this._translateService.instant('firewall.loading'));
-    this.selectedFirewall$ = this._firewallsRepository.getByIdAsync(firewallId).pipe(
+
+    this.selectedFirewall$ = this._firewallsRepository.getByIdAsync(
+      firewallId, this._onFirewallObtained.bind(this)
+    ).pipe(
       catchError((error) => {
-        // Handle common error status code
         this._errorHandlerService.redirectToErrorPage(error.status);
         return throwError(error);
       }),
       tap((response) => {
-        // this._setSelectedFirewallById(response.id);
         this._firewallService.setSelectedFirewall(response);
         this._changeDetectorRef.markForCheck();
       }),
-      finalize(() => this._loadingService.hideLoader()),
       shareReplay(1)
     );
+  }
+
+  /**
+   * Event that emits when the firewall has been obtained
+   */
+  private _onFirewallObtained(): void {
+    this._loadingService.hideLoader();
   }
 }

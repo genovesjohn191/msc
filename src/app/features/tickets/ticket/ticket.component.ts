@@ -209,12 +209,14 @@ export class TicketComponent implements OnInit, OnDestroy {
    */
   private _subscribeToTicketById(ticketId: string): void {
     this._loadingService.showLoader(this._translateService.instant('ticket.loading'));
-    this.selectedTicket$ = this._ticketsRepository.getByIdAsync(ticketId).pipe(
+
+    this.selectedTicket$ = this._ticketsRepository.getByIdAsync(
+      ticketId, this._onTicketObtained.bind(this)
+    ).pipe(
       catchError((error) => {
         this._errorHandlerService.redirectToErrorPage(error.status);
         return throwError(error);
-      }),
-      finalize(() => this._loadingService.hideLoader())
+      })
     );
   }
 
@@ -225,5 +227,12 @@ export class TicketComponent implements OnInit, OnDestroy {
     this._ticketsRepository.dataChange().pipe(
       takeUntil(this._destroySubject)
     ).subscribe(() => this._changeDetectorRef.markForCheck());
+  }
+
+  /**
+   * Event that emits when the ticket has been completed
+   */
+  private _onTicketObtained(): void {
+    this._loadingService.hideLoader();
   }
 }

@@ -88,6 +88,8 @@ export class SubNavigationComponent implements OnInit, OnDestroy {
    * @param routeInfo Current route information
    */
   private _onRouteChanged(routeInfo: McsRouteInfo): void {
+    if (isNullOrEmpty(routeInfo)) { return; }
+
     this.activeRouteCategory = routeInfo.enumCategory;
     this._changeDetectorRef.markForCheck();
   }

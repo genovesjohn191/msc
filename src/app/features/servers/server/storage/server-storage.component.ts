@@ -51,7 +51,7 @@ import {
 } from '@app/services';
 import { ServerManageStorage } from '@app/features-shared';
 import { EventBusDispatcherService } from '@app/event-bus';
-import { DeleteStorageDialogComponent } from '../../shared';
+import { DeleteStorageDialogComponent } from '@app/features-shared';
 import { ServerService } from '../server.service';
 import { ServerDetailsBase } from '../server-details.base';
 import { ServersService } from '../../servers.service';

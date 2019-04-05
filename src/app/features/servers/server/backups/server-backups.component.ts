@@ -56,7 +56,7 @@ import {
   RestoreSnapshotDialogComponent,
   InsufficientStorageSnapshotDialogComponent,
   DiskConflictSnapshotDialogComponent
-} from '../../shared';
+} from '@app/features-shared';
 import { ServerService } from '../server.service';
 import { ServerDetailsBase } from '../server-details.base';
 import { ServersService } from '../../servers.service';

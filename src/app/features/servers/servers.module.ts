@@ -1,27 +1,10 @@
 import { NgModule } from '@angular/core';
 import { SharedModule } from '@app/shared';
 import { FeaturesSharedModule } from '@app/features-shared';
-
 import { serversRoutes } from './servers.constants';
 import { ServersComponent } from './servers.component';
 /** Shared */
-import {
-  ServerCommandComponent,
-  ResetPasswordDialogComponent,
-  ResetPasswordFinishedDialogComponent,
-  DeleteStorageDialogComponent,
-  DeleteNicDialogComponent,
-  DetachMediaDialogComponent,
-  DeleteServerDialogComponent,
-  RenameServerDialogComponent,
-  CreateSnapshotDialogComponent,
-  DeleteSnapshotDialogComponent,
-  InsufficientStorageSnapshotDialogComponent,
-  RestoreSnapshotDialogComponent,
-  DiskConflictSnapshotDialogComponent,
-  SuspendServerDialogComponent,
-  ResumeServerDialogComponent
-} from './shared';
+import { ServerCommandComponent } from './shared';
 /** Server */
 import {
   ServerComponent,
@@ -51,23 +34,6 @@ import { serversProviders } from './servers.constants';
 import { RouterModule } from '@angular/router';
 
 @NgModule({
-  entryComponents: [
-    ResetPasswordDialogComponent,
-    ResetPasswordFinishedDialogComponent,
-    DeleteStorageDialogComponent,
-    DeleteNicDialogComponent,
-    DetachMediaDialogComponent,
-    DeleteServerDialogComponent,
-    RenameServerDialogComponent,
-    CreateSnapshotDialogComponent,
-    DeleteSnapshotDialogComponent,
-    InsufficientStorageSnapshotDialogComponent,
-    RestoreSnapshotDialogComponent,
-    DiskConflictSnapshotDialogComponent,
-    DeleteServerDialogComponent,
-    SuspendServerDialogComponent,
-    ResumeServerDialogComponent
-  ],
   declarations: [
     ServersComponent,
     ServerCommandComponent,
@@ -86,22 +52,7 @@ import { RouterModule } from '@angular/router';
     OsUpdatesApplyNowComponent,
     VdcComponent,
     VdcOverviewComponent,
-    VdcStorageComponent,
-
-    ResetPasswordDialogComponent,
-    ResetPasswordFinishedDialogComponent,
-    DeleteStorageDialogComponent,
-    DeleteNicDialogComponent,
-    DetachMediaDialogComponent,
-    DeleteServerDialogComponent,
-    RenameServerDialogComponent,
-    CreateSnapshotDialogComponent,
-    DeleteSnapshotDialogComponent,
-    InsufficientStorageSnapshotDialogComponent,
-    RestoreSnapshotDialogComponent,
-    DiskConflictSnapshotDialogComponent,
-    SuspendServerDialogComponent,
-    ResumeServerDialogComponent
+    VdcStorageComponent
   ],
   imports: [
     SharedModule,

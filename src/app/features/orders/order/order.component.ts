@@ -134,8 +134,8 @@ export class OrderComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().pipe(
       concatMap((dialogResult) => {
         if (isNullOrEmpty(dialogResult)) { return of(null); }
-
         this._loadingService.showLoader(this._translate.instant('order.submitOrderLoading'));
+
         return this._ordersRepository.createOrderWorkFlow(order.id, {
           state: OrderWorkflowAction.AwaitingApproval
         });
@@ -251,14 +251,23 @@ export class OrderComponent implements OnInit, OnDestroy {
    */
   private _subscribeToOrderById(orderId: string): void {
     this._loadingService.showLoader(this._translate.instant('order.loading'));
-    this.order$ = this._ordersRepository.getByIdAsync(orderId).pipe(
+
+    this.order$ = this._ordersRepository.getByIdAsync(
+      orderId, this._onOrderObtained.bind(this)
+    ).pipe(
       catchError((error) => {
         this._errorHandlerService.redirectToErrorPage(error.status);
         return throwError(error);
       }),
-      shareReplay(1),
-      finalize(() => this._loadingService.hideLoader())
+      shareReplay(1)
     );
+  }
+
+  /**
+   * Event that emits when an order has been obtained
+   */
+  private _onOrderObtained(): void {
+    this._loadingService.hideLoader();
   }
 
   /**

@@ -22,8 +22,7 @@ import {
   takeUntil,
   startWith,
   tap,
-  shareReplay,
-  finalize
+  shareReplay
 } from 'rxjs/operators';
 import {
   McsErrorHandlerService,
@@ -160,15 +159,24 @@ export class MediumComponent
    */
   private _subscribeToMediaById(mediumId: string): void {
     this._loadingService.showLoader(this._translateService.instant('mediaMedium.loading'));
-    this.media$ = this._mediaRepository.getByIdAsync(mediumId).pipe(
+
+    this.media$ = this._mediaRepository.getByIdAsync(
+      mediumId, this._onMediaObtained.bind(this)
+    ).pipe(
       catchError((error) => {
         this._errorHandlerService.redirectToErrorPage(error.status);
         return throwError(error);
       }),
       tap((media) => this._mediumService.setSelectedMedium(media)),
-      finalize(() => this._loadingService.hideLoader()),
       shareReplay(1)
     );
+  }
+
+  /**
+   * Event the emits when the media has been obtained
+   */
+  private _onMediaObtained(): void {
+    this._loadingService.hideLoader();
   }
 
   /**

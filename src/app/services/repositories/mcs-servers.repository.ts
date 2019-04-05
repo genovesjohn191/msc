@@ -2,10 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { McsRepositoryBase } from '@app/core';
-import {
-  McsEventHandler,
-  getSafeProperty
-} from '@app/utilities';
+import { getSafeProperty } from '@app/utilities';
 import {
   McsServer,
   McsServerStorageDevice,
@@ -36,8 +33,7 @@ import { ServersApiService } from '../api-services/servers-api.service';
 import { McsServersDataContext } from '../data-context/mcs-servers-data.context';
 
 @Injectable()
-export class McsServersRepository extends McsRepositoryBase<McsServer>
-  implements McsEventHandler {
+export class McsServersRepository extends McsRepositoryBase<McsServer> {
 
   constructor(private _serversApiService: ServersApiService) {
     super(new McsServersDataContext(_serversApiService));

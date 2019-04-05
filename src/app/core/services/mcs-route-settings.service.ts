@@ -73,6 +73,8 @@ export class McsRouteSettingsService implements McsDisposable {
    * @param routeInfo Route to be emitted
    */
   private _onRouteChanged(routeInfo: McsRouteInfo): void {
+    if (isNullOrEmpty(routeInfo)) { return; }
+
     this._scrollPageToTop();
     this._applySettingsByActiveRoute(routeInfo);
   }

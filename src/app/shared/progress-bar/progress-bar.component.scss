@@ -1,56 +1,218 @@
 @import "../../../styles/shared/base";
 
 // Progress Bar
-$progress-bar-height: 17px;
+$progress-bar-xsmall: 4px;
+$progress-bar-small: 10px;
+$progress-bar-medium: 17px;
+$progress-bar-large: 25px;
+
+$progress-bar-breakpoints: (
+  xsmall: $progress-bar-xsmall,
+  small: $progress-bar-small,
+  medium: $progress-bar-medium,
+  large: $progress-bar-large,
+) !default;
+
 $progress-bar-border-radius: 10px;
 $progress-bar-bg-color: $color-primary-02;
 $progress-bg-color: $color-primary-01;
-// Common for text
 $progress-bar-text-font-size: 13;
-$progress-bar-text-line-height: 17; // Same as height
+$progress-bar-text-line-height: 17;
 $progress-bar-text-offset: $space-small;
-// Static Text
 $progress-bar-static-text-color: $color-black;
-// Responsive Text
 $progress-bar-responsive-text-color: $color-white;
+
+// Progress bar animation variable setup
+$progress-bar-full-animation-duration: 2000ms !default;
+$progress-bar-piece-animation-duration: 250ms !default;
+
+$progress-bar-primary-indeterminate-translate-step-2: cubic-bezier(0.5, 0, 0.701732, 0.495819) !default;
+$progress-bar-primary-indeterminate-translate-step-3: cubic-bezier(0.302435, 0.381352, 0.55, 0.956352) !default;
+
+$progress-bar-primary-indeterminate-scale-step-2: cubic-bezier(0.334731, 0.12482, 0.785844, 1) !default;
+$progress-bar-primary-indeterminate-scale-step-3: cubic-bezier(0.06, 0.11, 0.6, 1) !default;
+
+$progress-bar-secondary-indeterminate-translate-step-1: cubic-bezier(0.15, 0, 0.515058, 0.409685) !default;
+$progress-bar-secondary-indeterminate-translate-step-2: cubic-bezier(0.31033, 0.284058, 0.8, 0.733712) !default;
+$progress-bar-secondary-indeterminate-translate-step-3: cubic-bezier(0.4, 0.627035, 0.6, 0.902026) !default;
+
+$progress-bar-secondary-indeterminate-scale-step-1: cubic-bezier(0.15, 0, 0.515058, 0.409685) !default;
+$progress-bar-secondary-indeterminate-scale-step-2: cubic-bezier(0.31033, 0.284058, 0.8, 0.733712) !default;
+$progress-bar-secondary-indeterminate-scale-step-3: cubic-bezier(0.4, 0.627035, 0.6, 0.902026) !default;
 
 .progress-bar-wrapper {
   display: block;
   position: relative;
-  min-height: $progress-bar-height;
-}
-
-.progress-bar-container {
-  position: absolute;
   width: 100%;
-  height: $progress-bar-height;
-  background-color: $progress-bar-bg-color;
+  overflow: hidden;
+  @include transition(opacity 250ms ease);
   @include border-radius($progress-bar-border-radius);
 
-  span.static-text {
-    display: block;
+  @each $progress-breakpoint in map-keys($progress-bar-breakpoints) {
+    $breakpoint-value: map-get($progress-bar-breakpoints, $progress-breakpoint);
+    &.progress-bar-#{$progress-breakpoint} {
+      height: $breakpoint-value;
+    }
+  }
+
+  .progress-bar-background {
     position: absolute;
-    text-align: left;
-    @include font-size($progress-bar-text-font-size, $progress-bar-text-line-height);
-    color: $progress-bar-static-text-color;
-    padding-left: $progress-bar-text-offset;
+    width: 100%;
+    height: 100%;
+    background-color: $progress-bar-bg-color;
+    transform-origin: top left;
+    @include transition(transform 250ms ease);
+
+    span.static-text {
+      display: block;
+      position: absolute;
+      text-align: left;
+      @include font-size($progress-bar-text-font-size, $progress-bar-text-line-height);
+      color: $progress-bar-static-text-color;
+      padding-left: $progress-bar-text-offset;
+    }
+  }
+
+  .progress-container-primary {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    @include transition($progress-bar-piece-animation-duration linear);
+
+    span.responsive-text {
+      display: block;
+      position: relative;
+      text-align: right;
+      @include font-size($progress-bar-text-font-size, $progress-bar-text-line-height);
+      color: $progress-bar-responsive-text-color;
+      padding: 0 $progress-bar-text-offset;
+    }
+  }
+
+  .progress-container-secondary {
+    display: none;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+  }
+
+  .progress-container-fill {
+    animation: none;
+    transform-origin: top left;
+    transition: transform $progress-bar-piece-animation-duration ease;
+
+    &::after {
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      animation: none;
+      content: '';
+      display: inline-block;
+      left: 0;
+      background-color: $progress-bg-color;
+    }
+  }
+
+  &.progress-bar-indeterminate {
+    .progress-container-primary {
+      transition: none;
+      @include backface-visibility(hidden);
+      animation: progress-bar-primary-indeterminate-translate
+          $progress-bar-full-animation-duration infinite linear;
+      left: -145.166611%;
+
+      &.progress-container-fill::after {
+        @include backface-visibility(hidden);
+        animation: progress-bar-primary-indeterminate-scale
+            $progress-bar-full-animation-duration infinite linear;
+      }
+    }
+
+    .progress-container-secondary {
+      transition: none;
+      @include backface-visibility(hidden);
+      animation: progress-bar-secondary-indeterminate-translate
+          $progress-bar-full-animation-duration infinite linear;
+      left: -54.888891%;
+      display: block;
+
+      &.progress-container-fill::after {
+        @include backface-visibility(hidden);
+        animation: progress-bar-secondary-indeterminate-scale
+            $progress-bar-full-animation-duration infinite linear;
+      }
+    }
   }
 }
 
-.progress-container {
-  position: absolute;
-  overflow: hidden;
-  height: $progress-bar-height;
-  background-color: $progress-bg-color;
-  @include border-radius($progress-bar-border-radius);
-  @include transition(.4s linear);
+// Animations
+@keyframes progress-bar-primary-indeterminate-translate {
+  0% {
+    transform: translateX(0);
+  }
+  20% {
+    animation-timing-function: $progress-bar-primary-indeterminate-translate-step-2;
+    transform: translateX(0);
+  }
+  59.15% {
+    animation-timing-function: $progress-bar-primary-indeterminate-translate-step-3;
+    transform: translateX(83.67142%);
+  }
+  100% {
+    transform: translateX(200.611057%);
+  }
+}
 
-  span.responsive-text {
-    display: block;
-    position: relative;
-    text-align: right;
-    @include font-size($progress-bar-text-font-size, $progress-bar-text-line-height);
-    color: $progress-bar-responsive-text-color;
-    padding: 0 $progress-bar-text-offset;
+@keyframes progress-bar-primary-indeterminate-scale {
+  0% {
+    transform: scaleX(0.08);
+  }
+  36.65% {
+    animation-timing-function: $progress-bar-primary-indeterminate-scale-step-2;
+    transform: scaleX(0.08);
+  }
+  69.15% {
+    animation-timing-function: $progress-bar-primary-indeterminate-scale-step-3;
+    transform: scaleX(0.661479);
+  }
+  100% {
+    transform: scaleX(0.08);
+  }
+}
+
+@keyframes progress-bar-secondary-indeterminate-translate {
+  0% {
+    animation-timing-function: $progress-bar-secondary-indeterminate-translate-step-1;
+    transform: translateX(0);
+  }
+  25% {
+    animation-timing-function: $progress-bar-secondary-indeterminate-translate-step-2;
+
+    transform: translateX(37.651913%);
+  }
+  48.35% {
+    animation-timing-function: $progress-bar-secondary-indeterminate-translate-step-3;
+    transform: translateX(84.386165%);
+  }
+  100% {
+    transform: translateX(160.277782%);
+  }
+}
+
+@keyframes progress-bar-secondary-indeterminate-scale {
+  0% {
+    animation-timing-function: $progress-bar-secondary-indeterminate-scale-step-1;
+    transform: scaleX(0.08);
+  }
+  19.15% {
+    animation-timing-function: $progress-bar-secondary-indeterminate-scale-step-2;
+    transform: scaleX(0.457104);
+  }
+  44.15% {
+    animation-timing-function: $progress-bar-secondary-indeterminate-scale-step-3;
+    transform: scaleX(0.72796);
+  }
+  100% {
+    transform: scaleX(0.08);
   }
 }

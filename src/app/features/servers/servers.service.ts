@@ -22,7 +22,7 @@ import {
 } from '@app/models';
 import { McsServersRepository } from '@app/services';
 import { EventBusDispatcherService } from '@app/event-bus';
-import { ResetPasswordFinishedDialogComponent } from './shared';
+import { ResetPasswordFinishedDialogComponent } from '@app/features-shared';
 
 @Injectable()
 export class ServersService {

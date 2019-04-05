@@ -21,7 +21,6 @@ import {
   startWith,
   takeUntil,
   catchError,
-  finalize,
   tap,
   shareReplay
 } from 'rxjs/operators';
@@ -195,14 +194,23 @@ export class VdcComponent
    */
   private _subscribesToResourceById(vdcId: string): void {
     this._loadingService.showLoader(this._translateService.instant('serversVdc.loading'));
-    this.selectedResource$ = this._resourcesRepository.getByIdAsync(vdcId).pipe(
+
+    this.selectedResource$ = this._resourcesRepository.getByIdAsync(
+      vdcId, this._onResourceCompleted.bind(this)
+    ).pipe(
       catchError((error) => {
         this._errorHandlerService.redirectToErrorPage(error.status);
         return throwError(error);
       }),
       tap((response) => { this._vdcService.setSelectedVdc(response); }),
-      shareReplay(1),
-      finalize(() => this._loadingService.hideLoader())
+      shareReplay(1)
     );
+  }
+
+  /**
+   * Event that emits when the resource has been completed
+   */
+  private _onResourceCompleted(): void {
+    this._loadingService.hideLoader();
   }
 }

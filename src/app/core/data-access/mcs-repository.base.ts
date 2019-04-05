@@ -19,17 +19,13 @@ import {
   mergeArrays,
   deleteArrayRecord,
   isNullOrEmpty,
-  clearArrayRecord,
-  getSafeProperty,
-  McsEventHandler
+  clearArrayRecord
 } from '@app/utilities';
 import { McsRepository } from './mcs-repository.interface';
 import { McsDataContext } from './mcs-data-context.interface';
 
-export abstract class McsRepositoryBase<T extends McsEntityBase>
-  implements McsRepository<T>, McsEventHandler {
+export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsRepository<T> {
 
-  public eventResetSubject = new Subject<void>();
   protected dataRecords = new Array<T>();
   protected filteredRecords = new Array<T>();
 
@@ -38,13 +34,10 @@ export abstract class McsRepositoryBase<T extends McsEntityBase>
   private _previouslySearched: string = '';
 
   // Events notifier for live data refresh on the view per subscription
-  private _dataContextChange = new Subject<void>();
   private _dataClear = new Subject<void>();
   private _dataChange = new BehaviorSubject<T[]>(null);
 
-  constructor(private _context: McsDataContext<T>) {
-    this._subscribeToDataContextChange();
-  }
+  constructor(private _context: McsDataContext<T>) { }
 
   /**
    * Get all records from the repository and creates a new observable
@@ -94,23 +87,28 @@ export abstract class McsRepositoryBase<T extends McsEntityBase>
    * @param id Id of the record to be obtained
    */
   public getById(id: string): Observable<T> {
-    return this._context.getRecordById(id).pipe(
-      tap((item) => this._cacheRecords(item)),
-      finalize(() => this._notifyDataChange())
-    );
+    return this._getRecordByIdFromContext(id);
   }
 
   /**
-   * Get the record based on the identity provided and
-   * creates a new observable if the data of the record has been changed
-   * the observer will be notified
-   * @param id Id of the record to be obtained
+   * Gets the record based on its id that includes the background update of the record as async
+   * @param id Id to be obtained
    */
-  public getByIdAsync(id: string): Observable<T> {
+  public getByIdAsync(id: string): Observable<T>;
+
+  /**
+   * Gets the record based on its id and notifies the callback once the rendering was finished
+   * @param id Id to be obtained
+   * @param completedCallback Completed callback that triggers when the obtainment was finished
+   */
+  public getByIdAsync(id: string, completedCallback?: () => void): Observable<T>;
+  public getByIdAsync(id: string, completedCallback?: () => void): Observable<T> {
     let recordFound = this.dataRecords.find((item) => item.id === id);
     let getByIdObserver = !isNullOrEmpty(recordFound) ?
-      this._getRecordByIdFromCache(id) :
-      this._getRecordByIdFromContext(id);
+      this._getRecordByIdFromCache(id, completedCallback) :
+      this._getRecordByIdFromContext(id).pipe(
+        finalize(() => completedCallback && completedCallback())
+      );
 
     return getByIdObserver.pipe(
       switchMap(() => of(this.dataRecords.find((record) => record.id === id))),
@@ -250,13 +248,6 @@ export abstract class McsRepositoryBase<T extends McsEntityBase>
   }
 
   /**
-   * Registers all the associated events on the interited class
-   */
-  public registerEvents(): void {
-    // Do implementations outside
-  }
-
-  /**
    * Returns true when all records are loaded
    */
   private get _allRecordsAreLoaded(): boolean {
@@ -274,8 +265,7 @@ export abstract class McsRepositoryBase<T extends McsEntityBase>
         this._allRecordsCount = this._context.totalRecordsCount;
         this._updateFilteredRecords(newFilteredRecords);
         this._cacheRecords(...newFilteredRecords);
-      }),
-      finalize(() => this._dataContextChange.next())
+      })
     );
   }
 
@@ -304,8 +294,7 @@ export abstract class McsRepositoryBase<T extends McsEntityBase>
       tap((newFilteredRecords) => {
         this._allRecordsCount = this._context.totalRecordsCount;
         this._updateFilteredRecords(newFilteredRecords);
-      }),
-      finalize(() => this._dataContextChange.next())
+      })
     );
     return searchedRecords;
   }
@@ -372,11 +361,10 @@ export abstract class McsRepositoryBase<T extends McsEntityBase>
    * Get record by ID from cached data
    * @param id Id of the record to obtain
    */
-  private _getRecordByIdFromCache(id: string): Observable<T> {
-    this._context.getRecordById(id).subscribe((item) => {
-      this._cacheRecords(item);
-      this._notifyDataChange();
-    });
+  private _getRecordByIdFromCache(id: string, completedCallback?: (data?: T) => void): Observable<T> {
+    this._getRecordByIdFromContext(id).pipe(
+      finalize(() => completedCallback && completedCallback())
+    ).subscribe();
     return of(this.dataRecords.find((item) => item.id === id));
   }
 
@@ -386,8 +374,10 @@ export abstract class McsRepositoryBase<T extends McsEntityBase>
    */
   private _getRecordByIdFromContext(id: string): Observable<T> {
     return this._context.getRecordById(id).pipe(
-      tap((item) => this._cacheRecords(item)),
-      finalize(() => this._dataContextChange.next())
+      tap((item) => {
+        this._cacheRecords(item);
+        this._notifyDataChange();
+      })
     );
   }
 
@@ -407,23 +397,5 @@ export abstract class McsRepositoryBase<T extends McsEntityBase>
       this.dataRecords, newItems,
       (firstRecord: T, secondRecord: T) => firstRecord.id === secondRecord.id
     );
-  }
-
-  /**
-   * Subscribes to after obtained data observabled
-   */
-  private _subscribeToDataContextChange(): void {
-    // We need to reset the subscriptions of the reset subject
-    // in order to reregister and obtain the fresh data
-    // once the data was obtained from API
-    this._dataContextChange.subscribe(() => {
-      let alreadyRegistered = !isNullOrEmpty(
-        getSafeProperty(this.eventResetSubject, (obj) => obj.observers.length)
-      );
-      if (alreadyRegistered) { return; }
-      // Drop the current subscription to prevent memory leak.
-      this.eventResetSubject.next();
-      this.registerEvents();
-    });
   }
 }

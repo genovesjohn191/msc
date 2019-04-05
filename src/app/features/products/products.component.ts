@@ -156,8 +156,9 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.selectedProduct$ = this._activatedRoute.paramMap.pipe(
       switchMap((params: ParamMap) => {
         this._loadingService.showLoader(this._translateService.instant('products.loadingDetails'));
-        return this._productsRepository.getByIdAsync(params.get('id')).pipe(
-          finalize(() => this._loadingService.hideLoader())
+
+        return this._productsRepository.getByIdAsync(
+          params.get('id'), this._onProductObtained.bind(this)
         );
       }),
       catchError((error) => {
@@ -170,5 +171,12 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
       }),
       shareReplay(1)
     );
+  }
+
+  /**
+   * Event that emits when the product has been obtained
+   */
+  private _onProductObtained(): void {
+    this._loadingService.hideLoader();
   }
 }

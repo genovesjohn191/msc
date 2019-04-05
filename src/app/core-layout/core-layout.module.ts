@@ -16,6 +16,7 @@ import {
   SubNavigationMobileComponent
 } from './sub-navigation';
 /** Layout Components */
+import { MainLoaderComponent } from './main-loader/main-loader.component';
 import { ContentComponent } from './content/content.component';
 import { FooterComponent } from './footer/footer.component';
 import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
@@ -39,6 +40,7 @@ import { coreLayoutProviders } from './core-layout.constants';
     NotificationPanelComponent,
     SwitchAccountComponent,
     RecentCompaniesMaxPipe,
+    MainLoaderComponent,
     ContentComponent,
     FooterComponent,
     HeaderComponent,
@@ -61,6 +63,7 @@ import { coreLayoutProviders } from './core-layout.constants';
     NotificationPanelComponent,
     SwitchAccountComponent,
     RecentCompaniesMaxPipe,
+    MainLoaderComponent,
     ContentComponent,
     FooterComponent,
     HeaderComponent,
@@ -73,7 +76,8 @@ import { coreLayoutProviders } from './core-layout.constants';
     SubNavigationDesktopComponent,
     SubNavigationMobileComponent,
     CommonModule,
-    FormsModule
+    FormsModule,
+    SharedModule
   ],
   providers: [
     ...coreLayoutProviders

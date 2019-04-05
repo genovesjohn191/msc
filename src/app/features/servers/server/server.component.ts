@@ -21,7 +21,6 @@ import {
   takeUntil,
   catchError,
   tap,
-  finalize,
   shareReplay
 } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
@@ -31,7 +30,7 @@ import {
   RenameServerDialogComponent,
   SuspendServerDialogComponent,
   ResumeServerDialogComponent
-} from '../shared';
+} from '@app/features-shared';
 import {
   CoreDefinition,
   McsDialogService,
@@ -262,17 +261,18 @@ export class ServerComponent
    */
   private _subscribeToServerById(serverId: string): void {
     this._loadingService.showLoader(this._translateService.instant('server.loading'));
+
     this.selectedServer$ = this._serversRepository.getByIdAsync(serverId).pipe(
-      catchError((error) => {
-        this._errorHandlerService.redirectToErrorPage(error.status);
-        return throwError(error);
-      }),
-      tap((response) => {
-        this._serverService.setSelectedServer(response);
-        this.serverPermission = new McsServerPermission(response);
-      }),
-      shareReplay(1),
-      finalize(() => this._loadingService.hideLoader())
-    );
+        catchError((error) => {
+          this._errorHandlerService.redirectToErrorPage(error.status);
+          return throwError(error);
+        }),
+        tap((response) => {
+          this._serverService.setSelectedServer(response);
+          this.serverPermission = new McsServerPermission(response);
+        }),
+        shareReplay(1)
+      );
+    this._changeDetectorRef.markForCheck();
   }
 }

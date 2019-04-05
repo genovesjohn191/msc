@@ -160,7 +160,7 @@ export class MediaUploadDetailsComponent
         this.fcMediaUrl.setErrors({ urlValidationError: true });
         return throwError(_httpError);
       })
-      ).subscribe((response) => {
+    ).subscribe((response) => {
       this.fcMediaUrl.updateValueAndValidity();
       this.mediaUrlStatusIconKey = CoreDefinition.ASSETS_SVG_SUCCESS;
       this.urlInfoMessage = getSafeProperty(response, (obj) => obj.content[0].message);
@@ -212,13 +212,13 @@ export class MediaUploadDetailsComponent
     this._loadingService.showLoader(
       this._translateService.instant('mediaUpload.mediaStepDetails.loadingResources')
     );
+
     this.resources$ = this._resourcesRepository.getAll()
       .pipe(
         catchError((error) => {
           this._errorHandlerService.redirectToErrorPage(error.status);
           return throwError(error);
-        }),
-        finalize(() => this._loadingService.hideLoader())
+        })
       );
   }
 
@@ -230,15 +230,24 @@ export class MediaUploadDetailsComponent
     this._loadingService.showLoader(
       this._translateService.instant('mediaUpload.mediaStepDetails.loadingResourceDetails')
     );
-    this.selectedResource$ = this._resourcesRepository.getByIdAsync(resourceId).pipe(
+
+    this.selectedResource$ = this._resourcesRepository.getByIdAsync(
+      resourceId, this._onResourceObtained.bind(this)
+    ).pipe(
       shareReplay(1),
       catchError((error) => {
         this._errorHandlerService.redirectToErrorPage(error.status);
         return throwError(error);
       }),
-      finalize(() => this._loadingService.hideLoader()),
       tap(() => this._resetFormFields())
     );
+  }
+
+  /**
+   * Event that emits when the resource has been obtained
+   */
+  private _onResourceObtained(): void {
+    this._loadingService.hideLoader();
   }
 
   /**
