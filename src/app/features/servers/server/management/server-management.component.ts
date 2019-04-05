@@ -49,12 +49,14 @@ import {
   McsResourceCatalogItem,
   McsServerThumbnail
 } from '@app/models';
-import { ServerManageScale } from '@app/features-shared';
+import {
+  ServerManageScale,
+  DetachMediaDialogComponent
+} from '@app/features-shared';
 import {
   McsServersRepository,
   McsResourcesRepository
 } from '@app/services';
-import { DetachMediaDialogComponent } from '../../shared';
 import { ServerDetailsBase } from '../server-details.base';
 import { ServerService } from '../server.service';
 import { ServersService } from '../../servers.service';

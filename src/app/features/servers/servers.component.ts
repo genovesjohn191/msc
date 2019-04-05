@@ -19,7 +19,7 @@ import {
   RenameServerDialogComponent,
   SuspendServerDialogComponent,
   ResumeServerDialogComponent
-} from './shared';
+} from '@app/features-shared';
 import {
   CoreDefinition,
   McsBrowserService,

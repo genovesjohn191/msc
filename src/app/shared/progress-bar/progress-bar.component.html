@@ -1,7 +1,16 @@
-<div class="progress-bar-container" (blur)="onBlur()">
-  <span class="static-text">{{ getPercentage() }}</span>
+<div [hidden]="hideBackground" class="progress-bar-background" (blur)="onBlur()">
+  <span [hidden]="isTextHidden" class="static-text">{{ getStringPercentage() }}</span>
 </div>
 
-<div class="progress-container" [ngStyle]="{width: getPercentage()}" #progressBarContainer>
-  <span class="responsive-text">{{ getPercentage() }}</span>
+<div class="progress-container-primary progress-container-fill"
+  [ngStyle]="getProgressScale()" #progressBarContainer>
 </div>
+
+<!-- Displayed text -->
+<div [hidden]="isTextHidden" class="progress-container-primary"
+  [ngStyle]="{width: getStringPercentage()}">
+  <span class="responsive-text">{{ getStringPercentage() }}</span>
+</div>
+
+<!-- Use to indeterminate mode only for backup purposes -->
+<div class="progress-container-secondary progress-container-fill"></div>

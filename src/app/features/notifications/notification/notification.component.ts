@@ -15,8 +15,7 @@ import {
 } from 'rxjs';
 import {
   takeUntil,
-  shareReplay,
-  finalize
+  shareReplay
 } from 'rxjs/operators';
 import { McsJob } from '@app/models';
 import {
@@ -78,10 +77,10 @@ export class NotificationComponent implements OnInit, OnDestroy {
    */
   private _subscribeToJobById(jobId: string): void {
     this._loadingService.showLoader('Loading notification details');
-    this.job$ = this._jobsRepository.getByIdAsync(jobId).pipe(
-      shareReplay(),
-      finalize(() => this._loadingService.hideLoader())
-    );
+
+    this.job$ = this._jobsRepository.getByIdAsync(
+      jobId, this._onJobObtained.bind(this)
+    ).pipe(shareReplay());
   }
 
   /**
@@ -91,5 +90,12 @@ export class NotificationComponent implements OnInit, OnDestroy {
     this._jobsRepository.dataChange().pipe(
       takeUntil(this._destroySubject)
     ).subscribe(() => this._changeDetectorRef.markForCheck());
+  }
+
+  /**
+   * Event that emits when the job obtained
+   */
+  private _onJobObtained(): void {
+    this._loadingService.hideLoader();
   }
 }

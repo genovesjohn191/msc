@@ -17,7 +17,6 @@ import {
   ControlValueAccessor,
   NG_VALUE_ACCESSOR
 } from '@angular/forms';
-import { AnimationEvent } from '@angular/animations';
 import {
   Subject,
   fromEvent
@@ -29,9 +28,10 @@ import {
 import {
   coerceNumber,
   unsubscribeSafely,
-  animateFactory
+  McsSizeType
 } from '@app/utilities';
-import { McsComponentHandlerService } from '@app/core';
+
+type ProgressMode = 'determinate' | 'indeterminate';
 
 @Component({
   selector: 'mcs-progress-bar',
@@ -39,9 +39,6 @@ import { McsComponentHandlerService } from '@app/core';
   styleUrls: ['./progress-bar.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [
-    animateFactory.fadeInOut
-  ],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -50,14 +47,23 @@ import { McsComponentHandlerService } from '@app/core';
     }
   ],
   host: {
-    'class': 'progress-bar-wrapper',
-    '[@fadeInOut]': 'animationState',
-    '(@fadeInOut.done)': 'onAnimationDone($event)'
+    '[class]': 'hostClasses',
+    'role': 'progressbar',
+    'aria-valuemin': '0',
+    'aria-valuemax': '100',
+    '[attr.mode]': 'mode'
   }
 })
 
 export class ProgressBarComponent implements AfterViewInit, OnDestroy, ControlValueAccessor {
-  public animationState: string;
+  @Input()
+  public size: McsSizeType = 'medium';
+
+  @Input()
+  public mode: ProgressMode = 'determinate';
+
+  @Input()
+  public hideBackground: boolean = false;
 
   @Output()
   public completed = new EventEmitter<ProgressBarComponent>();
@@ -82,14 +88,21 @@ export class ProgressBarComponent implements AfterViewInit, OnDestroy, ControlVa
   private _value: any;
 
   @ViewChild('progressBarContainer')
-  private progressBarContainer: ElementRef;
+  private _progressBarContainer: ElementRef;
   private _destroySubject = new Subject<void>();
+
+  /**
+   * Returns all the classes of the element with space separated
+   */
+  public get hostClasses(): string {
+    return `progress-bar-wrapper`
+      + ` progress-bar-${this.size}`
+      + ` progress-bar-${this.mode}`;
+  }
 
   public constructor(
     private _ngZone: NgZone,
-    private _elementRef: ElementRef,
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _componentHandler: McsComponentHandlerService
+    private _changeDetectorRef: ChangeDetectorRef
   ) {
     this.maxValue = 0;
     this._value = 0;
@@ -97,13 +110,21 @@ export class ProgressBarComponent implements AfterViewInit, OnDestroy, ControlVa
 
   public ngAfterViewInit(): void {
     Promise.resolve().then(() => {
-      this.animationState = 'in';
       this._subscribeToAnimationEndOfProgressBar();
     });
   }
 
   public ngOnDestroy(): void {
     unsubscribeSafely(this._destroySubject);
+  }
+
+  /**
+   * Returns true when the mode is indeterminate
+   */
+  public get isTextHidden(): boolean {
+    return this.mode === 'indeterminate' ||
+      this.size === 'small' ||
+      this.size === 'xsmall';
   }
 
   /**
@@ -143,16 +164,7 @@ export class ProgressBarComponent implements AfterViewInit, OnDestroy, ControlVa
   public onProgressbarTransitionEnd(): void {
     if (this.value < this.maxValue) { return; }
     this.completed.next(this);
-    this.animationState = 'void';
     this._changeDetectorRef.markForCheck();
-  }
-
-  /**
-   * Event that emits when the animation of the main component has been ended
-   */
-  public onAnimationDone(event: AnimationEvent): void {
-    if (event.toState !== 'void') { return; }
-    this._componentHandler.deleteComponent(this._elementRef);
   }
 
   /**
@@ -164,13 +176,27 @@ export class ProgressBarComponent implements AfterViewInit, OnDestroy, ControlVa
   }
 
   /**
-   * Returns the percentage into string representation
+   * Returns the percentage of the progress
    */
-  public getPercentage(): string {
-    // Return the percentage of the current value based on the maximum value inputted
+  public getPercentage(): number {
     let percentNumber = 100 * this.getValueInRange() / this.maxValue;
-    percentNumber = isNaN(percentNumber) ? 0 : percentNumber;
-    return percentNumber.toFixed().toString() + '%';
+    return isNaN(percentNumber) ? 0 : percentNumber;
+  }
+
+  /**
+   * Returns the string percentage
+   */
+  public getStringPercentage(): string {
+    let percentage = this.getPercentage();
+    return percentage.toFixed().toString() + '%';
+  }
+
+  /**
+   * Returns the progress in scale
+   */
+  public getProgressScale() {
+    let scale = this.getPercentage() / 100;
+    return { transform: `scaleX(${scale})` };
   }
 
   /**
@@ -178,10 +204,10 @@ export class ProgressBarComponent implements AfterViewInit, OnDestroy, ControlVa
    */
   private _subscribeToAnimationEndOfProgressBar(): void {
     this._ngZone.runOutsideAngular(() => {
-      fromEvent<TransitionEvent>(this.progressBarContainer.nativeElement, 'transitionend').pipe(
+      fromEvent<TransitionEvent>(this._progressBarContainer.nativeElement, 'transitionend').pipe(
         takeUntil(this._destroySubject),
         filter((_event: TransitionEvent) => {
-          return _event.target === this.progressBarContainer.nativeElement;
+          return _event.target === this._progressBarContainer.nativeElement;
         })
       ).subscribe(() => {
         this._ngZone.run(() => this.onProgressbarTransitionEnd());

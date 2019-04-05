@@ -83,10 +83,10 @@ export class UserPanelComponent implements OnInit, OnDestroy {
     this.hasConnectionError = false;
     this.notifications = new Array();
     this.deviceType = Breakpoint.Large;
+    this._registerEvents();
   }
 
   public ngOnInit(): void {
-    this._registerEvents();
     this._listenToBrowserResize();
     this._listenToSwitchAccount();
   }
@@ -235,6 +235,7 @@ export class UserPanelComponent implements OnInit, OnDestroy {
   private _registerEvents(): void {
     this._currentUserJobHandler = this._eventDispatcher.addEventListener(
       CoreEvent.jobCurrentUser, this._onCurrentUserJob.bind(this));
+
     this._eventDispatcher.dispatch(CoreEvent.jobCurrentUser);
   }
 }

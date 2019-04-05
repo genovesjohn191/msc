@@ -2,10 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { McsRepositoryBase } from '@app/core';
-import {
-  getSafeProperty,
-  McsEventHandler
-} from '@app/utilities';
+import { getSafeProperty } from '@app/utilities';
 import {
   McsJob,
   McsResourceMedia,
@@ -18,7 +15,7 @@ import { MediaApiService } from '../api-services/media-api.service';
 import { McsMediaDataContext } from '../data-context/mcs-media-data.context';
 
 @Injectable()
-export class McsMediaRepository extends McsRepositoryBase<McsResourceMedia> implements McsEventHandler {
+export class McsMediaRepository extends McsRepositoryBase<McsResourceMedia> {
 
   constructor(private _mediaApiService: MediaApiService) {
     super(new McsMediaDataContext(_mediaApiService));

@@ -122,8 +122,11 @@ export class McsNotificationJobService implements McsDisposable {
 
         this._jobConnection = details.content;
         this.connectionStatus = NetworkStatus.Connecting;
-        this._initializeWebstomp();
-        this._listenToStateChange();
+
+        Promise.resolve().then(() => {
+          this._initializeWebstomp();
+          this._listenToStateChange();
+        });
       });
   }
 

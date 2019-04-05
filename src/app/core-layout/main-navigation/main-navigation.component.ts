@@ -111,6 +111,8 @@ export class MainNavigationComponent implements OnInit, OnDestroy {
    * @param routeInfo Current route information
    */
   private _onRouteChanged(routeInfo: McsRouteInfo): void {
+    if (isNullOrEmpty(routeInfo)) { return; }
+
     this.selectedCategory = routeInfo.enumCategory;
     this._changeDetectorRef.markForCheck();
   }

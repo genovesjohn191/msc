@@ -15,7 +15,6 @@ import {
 import {
   catchError,
   shareReplay,
-  finalize,
   tap
 } from 'rxjs/operators';
 import {
@@ -199,6 +198,7 @@ export class ServerCreateComponent extends McsOrderWizardBase
    */
   private _subscribeToAllResources(): void {
     this._loaderService.showLoader('Loading resources');
+
     this.resources$ = this._resourcesRepository.getResourcesByAccess().pipe(
       catchError((error) => {
         this._errorHandlerService.redirectToErrorPage(error.status);
@@ -214,10 +214,19 @@ export class ServerCreateComponent extends McsOrderWizardBase
    */
   private _subscribeResourceById(resourceId: any): void {
     this._loaderService.showLoader('Loading resource details');
-    this.resource$ = this._resourcesRepository.getByIdAsync(resourceId).pipe(
+
+    this.resource$ = this._resourcesRepository.getByIdAsync(
+      resourceId, this._onResourceObtained.bind(this)
+    ).pipe(
       tap((resource) => this._serverCreateBuilder.setResource(resource)),
-      shareReplay(1),
-      finalize(() => this._loaderService.hideLoader())
+      shareReplay(1)
     );
+  }
+
+  /**
+   * Event that emits when the resource has been completed
+   */
+  private _onResourceObtained(): void {
+    this._loaderService.hideLoader();
   }
 }

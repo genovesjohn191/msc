@@ -55,10 +55,10 @@ export class StateChangeNotificationsComponent implements OnInit, OnDestroy {
     this.notifications = new Array();
     this.closedNotifications = new Array();
     this.visible = true;
+    this._registerEvents();
   }
 
   public ngOnInit() {
-    this._registerEvents();
     this.setPlacement();
   }
 
@@ -128,5 +128,7 @@ export class StateChangeNotificationsComponent implements OnInit, OnDestroy {
   private _registerEvents(): void {
     this._currentUserJobHandler = this._eventDispatcher.addEventListener(
       CoreEvent.jobCurrentUser, this._onCurrentUserJob.bind(this));
+
+    this._eventDispatcher.dispatch(CoreEvent.jobCurrentUser);
   }
 }

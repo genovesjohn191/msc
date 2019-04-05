@@ -509,3 +509,13 @@
     }
   }
 }
+
+// Sets the backface-visibility
+// Usage:
+// .mcs-slider {
+//   @include backface-visibility(hidden);
+// }
+@mixin backface-visibility($value) {
+  -webkit-backface-visibility: $value;
+  backface-visibility: $value;
+}

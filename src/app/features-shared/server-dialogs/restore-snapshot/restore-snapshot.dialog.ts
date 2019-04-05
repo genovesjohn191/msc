@@ -9,23 +9,23 @@ import {
   McsDialogRef,
   CoreDefinition
 } from '@app/core';
-import { ServerSnapshotDialogContent } from '../../server-snapshot-dialog-content';
+import { ServerSnapshotDialogContent } from '../server-snapshot-dialog-content';
 
 @Component({
-  selector: 'mcs-create-snapshot-dialog',
-  templateUrl: './create-snapshot.dialog.html',
+  selector: 'mcs-restore-snapshot-dialog',
+  templateUrl: './restore-snapshot.dialog.html',
   encapsulation: ViewEncapsulation.None,
   host: {
-    'class': 'create-snapshot-dialog-wrapper'
+    'class': 'restore-snapshot-dialog-wrapper'
   }
 })
 
-export class CreateSnapshotDialogComponent {
+export class RestoreSnapshotDialogComponent {
   public dialogModel: ServerSnapshotDialogContent;
 
   constructor(
     private _translateService: TranslateService,
-    public dialogRef: McsDialogRef<CreateSnapshotDialogComponent>,
+    public dialogRef: McsDialogRef<RestoreSnapshotDialogComponent>,
     @Inject(MCS_DIALOG_DATA) public dialogData
   ) {
     this.dialogModel = this.dialogData as ServerSnapshotDialogContent[][0];
@@ -43,8 +43,11 @@ export class CreateSnapshotDialogComponent {
    */
   public get confirmationMessage(): string {
     return this._translateService.instant(
-      'serverShared.dialogCreateSnapshot.confirmation',
-      { server_name: this.dialogModel.serverName }
+      'serverShared.dialogRestoreSnapshot.confirmation',
+      {
+        snapshot_name: this.dialogModel.snapshotName,
+        server_name: this.dialogModel.serverName
+      }
     );
   }
 
@@ -58,7 +61,7 @@ export class CreateSnapshotDialogComponent {
   /**
    * This will close the dialog and set the dialog result to true
    */
-  public createSnapshot(): void {
+  public restoreSnapshot(): void {
     this.dialogRef.close(true);
   }
 }

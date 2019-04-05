@@ -6,7 +6,6 @@ import {
 } from 'rxjs';
 import {
   takeUntil,
-  finalize,
   tap,
   switchMap,
   concatMap
@@ -132,11 +131,17 @@ export abstract class ServerDetailsBase {
   private _getServerResourceByPlatform(platform: McsServerPlatform): Observable<McsResource> {
     let platformIsEmpty = isNullOrEmpty(platform) || isNullOrEmpty(platform.resourceName);
     if (platformIsEmpty) { return of(new McsResource()); }
-    this._loadingService.showLoader();
 
-    return this._resourcesRespository.getByIdAsync(platform.resourceId).pipe(
-      finalize(() => this._loadingService.hideLoader())
+    return this._resourcesRespository.getByIdAsync(platform.resourceId,
+      this._onResourceObtained.bind(this)
     );
+  }
+
+  /**
+   * Event that emits when the resource has been obtained
+   */
+  private _onResourceObtained(): void {
+    this._loadingService.hideLoader();
   }
 
   /**

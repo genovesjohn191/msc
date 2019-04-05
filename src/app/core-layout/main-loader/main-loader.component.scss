@@ -1,0 +1,15 @@
+@import "../../../styles/shared/base";
+
+$main-loader-bg-color: transparent;
+$main-loader-height: 4px;
+$main-loader-z-index: $zindex-main-loader;
+
+.main-loader-wrapper {
+  @include display-flex(row);
+  background-color: $main-loader-bg-color;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: $main-loader-height;
+  z-index: $main-loader-z-index;
+}

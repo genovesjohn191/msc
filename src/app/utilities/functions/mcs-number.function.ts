@@ -18,3 +18,12 @@ export function compareNumbers(firstNumber: number, secondNumber: number): numbe
   }
   return compareValues;
 }
+
+/**
+ * Gets the random value between number
+ * @param minValue Minimum value of the number
+ * @param maxValue Maximum value of the number
+ */
+export function getRandomNumber(minValue: number, maxValue: number): number {
+  return Math.random() * (maxValue - minValue) + minValue;
+}
