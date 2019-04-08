@@ -63,7 +63,7 @@
       <mcs-data-status-success mcsDataSuccess>
         <mcs-data-status-warning *ngIf="serverIsManuallyAssignedIp">
           <span [innerHTML]="('serverCreateDetailsStep.cloneServer.errors.manuallyAssignedIpWarning'
-          | translate:{'server_name': selectedServer?.name}) | mcsNewLines"></span>
+          | translate:{'server_name': fcTargetServer?.value?.name}) | mcsNewLines"></span>
         </mcs-data-status-warning>
       </mcs-data-status-success>
 
