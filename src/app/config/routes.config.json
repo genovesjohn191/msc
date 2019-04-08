@@ -57,7 +57,7 @@
     "enumKey": "ServerDetailsBackups",
     "routePath": "snapshots",
     "navigationPath": "snapshots",
-    "requiredPermissions": ["CloudVmAccess", "DedicatedVmAccess"],
+    "requiredPermissions": ["CloudVmSnapshotAccess", "DedicatedVmSnapshotAccess"],
     "documentTitle": "Server Snapshots - Macquarie Cloud Services"
   },
   "serverDetailsNics": {
@@ -105,6 +105,7 @@
     "enumKey": "Media",
     "routePath": "compute/media",
     "navigationPath": "compute/media",
+    "requiredPermissions": ["TemplateView", "CatalogView"],
     "requiredFeatureFlag": "EnableMediaCatalog",
     "documentTitle": "Media Catalog - Macquarie Cloud Services"
   },
@@ -113,6 +114,7 @@
     "enumKey": "Medium",
     "routePath": ":id",
     "navigationPath": "compute/media",
+    "requiredPermissions": ["TemplateView", "CatalogView"],
     "requiredFeatureFlag": "EnableMediaCatalog",
     "documentTitle": "Media Details - Macquarie Cloud Services"
   },
@@ -121,6 +123,7 @@
     "enumKey": "MediumOverview",
     "routePath": "overview",
     "navigationPath": "overview",
+    "requiredPermissions": ["TemplateView", "CatalogView"],
     "requiredFeatureFlag": "EnableMediaCatalog",
     "documentTitle": "Media Management - Macquarie Cloud Services"
   },
@@ -129,6 +132,7 @@
     "enumKey": "MediumServers",
     "routePath": "servers",
     "navigationPath": "servers",
+    "requiredPermissions": ["TemplateView", "CatalogView"],
     "requiredFeatureFlag": "EnableMediaCatalog",
     "documentTitle": "Media Servers - Macquarie Cloud Services"
   },

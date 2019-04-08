@@ -22,6 +22,8 @@ export enum McsPermission {
   FirewallSerialNumberView = 'FirewallSerialNumberView',
 
   // vCloud Catalog
+  CatalogView = 'CatalogView',
+  TemplateView = 'TemplateView',
   TemplateEdit = 'TemplateEdit',
 
   // Ticketing

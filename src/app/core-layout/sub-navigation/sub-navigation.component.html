@@ -24,12 +24,11 @@
         mcsEventLabel="sub-nav">
         {{ 'navigation.virtual' | translate }}
       </a>
-
       <a [mcsRouterLink]="routeKeyEnum.Media" mcsRouterLinkActive="active"
-        *mcsAccessControl="[]; feature: 'EnableMediaCatalog'"
+        *mcsAccessControl="['TemplateView','CatalogView']; feature: 'EnableMediaCatalog'"
         class="sub-navigation-item unstyled-link"
         mcsId
-        mcsEventTracker="navigate-to-firewalls"
+        mcsEventTracker="navigate-to-medias"
         mcsEventCategory="navigation"
         mcsEventLabel="sub-nav">
         {{ 'navigation.medias' | translate }}

@@ -121,7 +121,9 @@
           <!-- Snapshots Tab -->
           <ng-container *mcsAccessControl="[]; feature: 'EnableDedicatedVmSnapshotView';
             validateWhen: selectedServer.isDedicated">
-            <mcs-tab [label]="'serverBackups.label' | translate" id="snapshots"></mcs-tab>
+            <ng-container *mcsAccessControl="serverPermission.vmSnapshotAccess">
+              <mcs-tab [label]="'serverBackups.label' | translate" id="snapshots"></mcs-tab>
+            </ng-container>
           </ng-container>
 
           <!-- Networks Tab -->
