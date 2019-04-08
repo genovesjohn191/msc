@@ -32,7 +32,10 @@ import {
   EventBusDispatcherService
 } from './event-bus';
 import { ServicesModule } from './services';
-import { DefaultPageModule } from './page-layout';
+import {
+  ConsolePageModule,
+  DefaultPageModule
+} from './page-layout';
 import { PageNotificationsModule } from './page-notifications';
 import { FeaturesSharedModule } from './features-shared';
 import { SharedModule } from './shared';
@@ -101,6 +104,7 @@ export function coreConfig(): CoreConfig {
 
     FeaturesSharedModule,
     SharedModule,
+    ConsolePageModule,
     DefaultPageModule,
     PageNotificationsModule,
   ],
