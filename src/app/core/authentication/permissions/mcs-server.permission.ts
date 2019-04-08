@@ -32,6 +32,14 @@ export class McsServerPermission {
   }
 
   /**
+   * Returns the permission for Vm Snapshot Access based on Server Type
+   */
+  public get vmSnapshotAccess(): string[] {
+    return this._server.isDedicated ?
+      [McsPermission.DedicatedVmSnapshotAccess] : [McsPermission.CloudVmSnapshotAccess];
+  }
+
+  /**
    * Returns the permission for Vm Power State Edit based on Server Type
    */
   public get vmPowerStateEdit(): string[] {
