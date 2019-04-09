@@ -23,12 +23,13 @@ import {
   shareReplay,
   concatMap
 } from 'rxjs/operators';
+import { EventBusDispatcherService } from '@app/event-bus';
 import {
   McsErrorHandlerService,
   CoreDefinition,
-  McsLoadingService,
   McsTableDataSource,
-  McsDialogService
+  McsDialogService,
+  CoreEvent
 } from '@app/core';
 import {
   unsubscribeSubject,
@@ -37,13 +38,19 @@ import {
 import {
   McsOrder,
   McsOrderItem,
-  OrderWorkflowAction
+  OrderWorkflowAction,
+  McsOrderApprover
 } from '@app/models';
 import { McsOrdersRepository } from '@app/services';
 import {
   DialogConfirmationComponent,
   DialogConfirmation
 } from '@app/shared';
+
+enum OrderDetailsView {
+  OrderDetails = 0,
+  OrderApproval = 1
+}
 
 @Component({
   selector: 'mcs-order',
@@ -56,18 +63,21 @@ export class OrderComponent implements OnInit, OnDestroy {
   public order$: Observable<McsOrder>;
   public orderItemsColumns: string[];
   public orderItemsDataSource: McsTableDataSource<McsOrderItem>;
+  public orderDetailsView: OrderDetailsView;
 
+  private _orderApprovers: McsOrderApprover[];
   private _destroySubject = new Subject<void>();
 
   public constructor(
     private _activatedRoute: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef,
     private _translate: TranslateService,
+    private _eventDispatcher: EventBusDispatcherService,
     private _dialogService: McsDialogService,
-    private _loadingService: McsLoadingService,
     private _errorHandlerService: McsErrorHandlerService,
     private _ordersRepository: McsOrdersRepository
   ) {
+    this.orderDetailsView = OrderDetailsView.OrderDetails;
     this.orderItemsDataSource = new McsTableDataSource();
     this.setOrderItemsColumn();
   }
@@ -81,6 +91,10 @@ export class OrderComponent implements OnInit, OnDestroy {
     unsubscribeSubject(this._destroySubject);
   }
 
+  public get orderDetailsViewEnum() {
+    return OrderDetailsView;
+  }
+
   public get submitIconKey(): string {
     return CoreDefinition.ASSETS_SVG_CHECK;
   }
@@ -91,6 +105,13 @@ export class OrderComponent implements OnInit, OnDestroy {
 
   public get backIconKey(): string {
     return CoreDefinition.ASSETS_SVG_CHEVRON_LEFT;
+  }
+
+  /**
+   * Returns true when there are selected approvers
+   */
+  public get hasSelectedApprovers(): boolean {
+    return !isNullOrEmpty(this._orderApprovers);
   }
 
   /**
@@ -114,10 +135,37 @@ export class OrderComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Shows the approver selection table
+   */
+  public selectApprover(): void {
+    this.orderDetailsView = OrderDetailsView.OrderApproval;
+    this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Cancels the approver selection
+   */
+  public cancelApproverSelection(): void {
+    this.orderDetailsView = OrderDetailsView.OrderDetails;
+    this._orderApprovers = [];
+    this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Event that emits when the approvers has been selected
+   * @param approvers Selected approvers
+   */
+  public onChangeApprover(approvers: McsOrderApprover[]): void {
+    this._orderApprovers = approvers;
+  }
+
+  /**
    * Submits the current order for approval
    * @param order Order to be submitted
    */
   public submitForApproval(order: McsOrder): void {
+    if (isNullOrEmpty(this._orderApprovers)) { return; }
+
     let dialogData = {
       data: order,
       title: this._translate.instant('order.submitForApproval'),
@@ -134,13 +182,17 @@ export class OrderComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().pipe(
       concatMap((dialogResult) => {
         if (isNullOrEmpty(dialogResult)) { return of(null); }
-        this._loadingService.showLoader(this._translate.instant('order.submitOrderLoading'));
+        this._eventDispatcher.dispatch(CoreEvent.loaderShow);
 
         return this._ordersRepository.createOrderWorkFlow(order.id, {
-          state: OrderWorkflowAction.AwaitingApproval
+          state: OrderWorkflowAction.AwaitingApproval,
+          approvers: this._orderApprovers.map((approver) => approver.userId)
         });
       }),
-      finalize(() => this._loadingService.hideLoader())
+      finalize(() => {
+        this._eventDispatcher.dispatch(CoreEvent.loaderHide);
+        this.orderDetailsView = OrderDetailsView.OrderDetails;
+      })
     ).subscribe();
   }
 
@@ -164,13 +216,13 @@ export class OrderComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().pipe(
       concatMap((dialogResult) => {
         if (isNullOrEmpty(dialogResult)) { return of(null); }
+        this._eventDispatcher.dispatch(CoreEvent.loaderShow);
 
-        this._loadingService.showLoader(this._translate.instant('order.cancelOrderLoading'));
         return this._ordersRepository.createOrderWorkFlow(order.id, {
           state: OrderWorkflowAction.Cancelled
         });
       }),
-      finalize(() => this._loadingService.hideLoader())
+      finalize(() => this._eventDispatcher.dispatch(CoreEvent.loaderHide))
     ).subscribe();
   }
 
@@ -194,13 +246,13 @@ export class OrderComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().pipe(
       concatMap((dialogResult) => {
         if (isNullOrEmpty(dialogResult)) { return of(null); }
+        this._eventDispatcher.dispatch(CoreEvent.loaderShow);
 
-        this._loadingService.showLoader(this._translate.instant('order.rejectOrderLoading'));
         return this._ordersRepository.createOrderWorkFlow(order.id, {
           state: OrderWorkflowAction.Rejected
         });
       }),
-      finalize(() => this._loadingService.hideLoader())
+      finalize(() => this._eventDispatcher.dispatch(CoreEvent.loaderHide))
     ).subscribe();
   }
 
@@ -224,13 +276,13 @@ export class OrderComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().pipe(
       concatMap((dialogResult) => {
         if (isNullOrEmpty(dialogResult)) { return of(null); }
+        this._eventDispatcher.dispatch(CoreEvent.loaderShow);
 
-        this._loadingService.showLoader(this._translate.instant('order.submitOrderLoading'));
         return this._ordersRepository.createOrderWorkFlow(order.id, {
           state: OrderWorkflowAction.Submitted
         });
       }),
-      finalize(() => this._loadingService.hideLoader())
+      finalize(() => this._eventDispatcher.dispatch(CoreEvent.loaderHide))
     ).subscribe();
   }
 
@@ -250,7 +302,7 @@ export class OrderComponent implements OnInit, OnDestroy {
    * Get Order based on the given ID in the provided parameter
    */
   private _subscribeToOrderById(orderId: string): void {
-    this._loadingService.showLoader(this._translate.instant('order.loading'));
+    this._eventDispatcher.dispatch(CoreEvent.loaderShow);
 
     this.order$ = this._ordersRepository.getByIdAsync(
       orderId, this._onOrderObtained.bind(this)
@@ -267,7 +319,7 @@ export class OrderComponent implements OnInit, OnDestroy {
    * Event that emits when an order has been obtained
    */
   private _onOrderObtained(): void {
-    this._loadingService.hideLoader();
+    this._eventDispatcher.dispatch(CoreEvent.loaderHide);
   }
 
   /**

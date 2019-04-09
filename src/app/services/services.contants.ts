@@ -28,18 +28,20 @@ import { McsToolsRepository } from './repositories/mcs-tools.repository';
 import { McsConsoleRepository } from './repositories/mcs-console.repository';
 import { McsCompaniesRepository } from './repositories/mcs-companies.repository';
 
-/** Job Managers */
-import { McsServersJobManager } from './job-manager/mcs-servers-job.manager';
-import { McsMediaJobManager } from './job-manager/mcs-media-job.manager';
-import { McsNotificationJobManager } from './job-manager/mcs-notification-job.manager';
+/** State Managers */
+import { McsJobStateManager } from './state-manager/mcs-job.state-manager';
+import { McsServerStateManager } from './state-manager/mcs-server.state-manager';
+import { McsMediaStateManager } from './state-manager/mcs-media.state-manager';
+import { McsOrderStateManager } from './state-manager/mcs-order.state-manager';
 
 /** Guards */
 import { RequiredResourcesGuard } from './guards/required-resources.guard';
 
 export const initializableProviders: any[] = [
-  McsServersJobManager,
-  McsMediaJobManager,
-  McsNotificationJobManager
+  McsServerStateManager,
+  McsMediaStateManager,
+  McsJobStateManager,
+  McsOrderStateManager
 ];
 
 export const apiProviders: any[] = [

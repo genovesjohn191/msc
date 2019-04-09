@@ -22,7 +22,8 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
   CoreValidators,
-  IMcsFormGroup
+  IMcsFormGroup,
+  IMcsDataChange
    } from '@app/core';
 import {
   convertMbToGb,
@@ -55,7 +56,7 @@ const DEFAULT_STORAGE_STEPS = 10;
 })
 
 export class ServerManageStorageComponent
-  implements OnInit, OnChanges, AfterViewInit, OnDestroy, IMcsFormGroup {
+  implements OnInit, OnChanges, AfterViewInit, OnDestroy, IMcsFormGroup, IMcsDataChange<ServerManageStorage> {
 
   public inputManageType: InputManageType;
   public storageValue: number;
@@ -141,7 +142,7 @@ export class ServerManageStorageComponent
     this._registerFormGroup();
     this._setSelectedStorage();
     this._setCustomStorageValue();
-    this._notifyDataChanged();
+    this.notifyDataChange();
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -197,7 +198,7 @@ export class ServerManageStorageComponent
   public onChangeInputManageType(inputManageType: InputManageType) {
     this.inputManageType = inputManageType;
     this._registerFormControlsByInputType();
-    this._notifyDataChanged();
+    this.notifyDataChange();
   }
 
   /**
@@ -206,7 +207,35 @@ export class ServerManageStorageComponent
    */
   public onSliderChanged(sliderValue: number): void {
     this.storageValue = sliderValue;
-    this._notifyDataChanged();
+    this.notifyDataChange();
+  }
+
+  /**
+   * Event that emits when an input has been changed
+   */
+  public notifyDataChange() {
+    // Set model data based on management type
+    switch (this.inputManageType) {
+      case InputManageType.Custom:
+        this._storageOutput.storage = this.selectedStorage;
+        this._storageOutput.sizeMB = convertGbToMb(
+          coerceNumber(this.fcCustomStorage.value, this.minValueGB)
+        );
+        this._storageOutput.valid = this.fcCustomStorage.valid;
+        break;
+
+      case InputManageType.Auto:
+      default:
+        this._storageOutput.storage = this.selectedStorage;
+        this._storageOutput.sizeMB = convertGbToMb(this.storageValue);
+        this._storageOutput.valid = this.hasAvailableMemory;
+        break;
+    }
+    this._setStorageHasChangedFlag();
+
+    // Emit changes
+    this.dataChange.emit(this._storageOutput);
+    this._changeDetectorRef.markForCheck();
   }
 
   /**
@@ -273,7 +302,7 @@ export class ServerManageStorageComponent
     ]);
     this.fcCustomStorage.valueChanges
       .pipe(takeUntil(this._destroySubject))
-      .subscribe(() => this._notifyDataChanged());
+      .subscribe(() => this.notifyDataChange());
 
     // Register form control for selection of storage
     this.fcSelectStorages = new FormControl('', [
@@ -284,7 +313,7 @@ export class ServerManageStorageComponent
     ]);
     this.fcSelectStorages.valueChanges
       .pipe(takeUntil(this._destroySubject))
-      .subscribe(() => this._notifyDataChanged());
+      .subscribe(() => this.notifyDataChange());
 
     // Create form group and bind the form controls
     this.fgScale = this._formBuilder.group([]);
@@ -341,34 +370,6 @@ export class ServerManageStorageComponent
     this._formGroup.touchedStateChanges().pipe(
       takeUntil(this._destroySubject)
     ).subscribe(() => this._changeDetectorRef.markForCheck());
-  }
-
-  /**
-   * Event that emits when an input has been changed
-   */
-  private _notifyDataChanged() {
-    // Set model data based on management type
-    switch (this.inputManageType) {
-      case InputManageType.Custom:
-        this._storageOutput.storage = this.selectedStorage;
-        this._storageOutput.sizeMB = convertGbToMb(
-          coerceNumber(this.fcCustomStorage.value, this.minValueGB)
-        );
-        this._storageOutput.valid = this.fcCustomStorage.valid;
-        break;
-
-      case InputManageType.Auto:
-      default:
-        this._storageOutput.storage = this.selectedStorage;
-        this._storageOutput.sizeMB = convertGbToMb(this.storageValue);
-        this._storageOutput.valid = this.hasAvailableMemory;
-        break;
-    }
-    this._setStorageHasChangedFlag();
-
-    // Emit changes
-    this.dataChange.emit(this._storageOutput);
-    this._changeDetectorRef.markForCheck();
   }
 
   /**

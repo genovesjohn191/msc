@@ -23,7 +23,6 @@ import {
   CoreDefinition,
   McsDialogService,
   McsErrorHandlerService,
-  McsLoadingService,
   McsTableDataSource,
   McsAccessControlService,
   CoreEvent,
@@ -129,7 +128,6 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     _serverService: ServerService,
     _changeDetectorRef: ChangeDetectorRef,
     _errorHandlerService: McsErrorHandlerService,
-    _loadingService: McsLoadingService,
     _accessControl: McsAccessControlService,
     private _eventDispatcher: EventBusDispatcherService,
     private _translateService: TranslateService,
@@ -142,7 +140,6 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
       _serverService,
       _changeDetectorRef,
       _errorHandlerService,
-      _loadingService,
       _accessControl
     );
     this.disksColumns = [];

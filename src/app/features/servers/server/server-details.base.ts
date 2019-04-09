@@ -1,18 +1,14 @@
 import { ChangeDetectorRef } from '@angular/core';
 import {
   Subject,
-  Observable,
-  of
+  Observable
 } from 'rxjs';
 import {
   takeUntil,
-  tap,
-  switchMap,
-  concatMap
+  tap
 } from 'rxjs/operators';
 import {
   McsErrorHandlerService,
-  McsLoadingService,
   McsAccessControlService,
   McsServerPermission
 } from '@app/core';
@@ -25,23 +21,19 @@ import {
   McsJob,
   McsResource,
   McsServer,
-  HttpStatusCode,
-  McsServerPlatform
+  HttpStatusCode
 } from '@app/models';
 import {
   McsServersRepository,
   McsResourcesRepository
 } from '@app/services';
 import { ServerService } from '../server/server.service';
-
-export interface ServerDetails {
-  server: McsServer;
-  resource: McsResource;
-}
+import { ServerDetails } from './server-details';
 
 export abstract class ServerDetailsBase {
   public serverDetails$: Observable<ServerDetails>;
-  protected serverPermision: McsServerPermission;
+  public serverPermision: McsServerPermission;
+
   private _baseJobSubject = new Subject<void>();
   private _server: McsServer;
 
@@ -51,11 +43,10 @@ export abstract class ServerDetailsBase {
     protected _serverService: ServerService,
     protected _changeDetectorRef: ChangeDetectorRef,
     protected _errorHandlerService: McsErrorHandlerService,
-    protected _loadingService: McsLoadingService,
     protected _accessControlService: McsAccessControlService
   ) {
     this._subscribeToServersDataChange();
-    this._subscribeToSelectedServer();
+    this._subscribeToServerDetails();
   }
 
   /**
@@ -101,47 +92,20 @@ export abstract class ServerDetailsBase {
    * Refresh the server resource to get the updated result
    */
   protected refreshServerResource(): void {
-    this._subscribeToSelectedServer();
+    this._subscribeToServerDetails();
   }
 
   /**
-   * Subscribe to selected server to obtain also the resource details
+   * Subscribe to Server Details
    */
-  private _subscribeToSelectedServer(): void {
-    this.serverDetails$ = this._serverService.selectedServer().pipe(
-      concatMap((selectedServer) => {
-        return this._getServerResourceByPlatform(selectedServer.platform).pipe(
-          switchMap((selectedResource) =>
-            of({ server: selectedServer, resource: selectedResource } as ServerDetails)
-          )
-        );
-      }),
+  private _subscribeToServerDetails(): void {
+    this.serverDetails$ = this._serverService.getServerDetails().pipe(
       tap((serverDetails) => {
         this._server = serverDetails.server;
         this.serverPermision = new McsServerPermission(this._server);
         this.selectionChange(serverDetails.server, serverDetails.resource);
       })
     );
-  }
-
-  /**
-   * Gets the server resource based on the server platform data
-   * @param platform Platform on what resourceId to be obtained
-   */
-  private _getServerResourceByPlatform(platform: McsServerPlatform): Observable<McsResource> {
-    let platformIsEmpty = isNullOrEmpty(platform) || isNullOrEmpty(platform.resourceName);
-    if (platformIsEmpty) { return of(new McsResource()); }
-
-    return this._resourcesRespository.getByIdAsync(platform.resourceId,
-      this._onResourceObtained.bind(this)
-    );
-  }
-
-  /**
-   * Event that emits when the resource has been obtained
-   */
-  private _onResourceObtained(): void {
-    this._loadingService.hideLoader();
   }
 
   /**

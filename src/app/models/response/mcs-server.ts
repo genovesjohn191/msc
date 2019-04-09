@@ -85,10 +85,7 @@ export class McsServer extends McsEntityBase {
   })
   public serviceType: ServiceType;
 
-  // Additional flag not related to API response
-  public isProcessing: boolean;
   public commandAction: ServerCommand;
-  public processingText: string;
 
   constructor() {
     super();

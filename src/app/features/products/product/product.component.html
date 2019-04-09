@@ -39,7 +39,7 @@
           <!-- Ownerships -->
           <mcs-presentation-panel [embossed]="true" *mcsAccessControl="['CompanyView']">
             <ng-container mcsPresentationPanelHeader>
-              Ownership
+              <strong>Ownership</strong>
             </ng-container>
 
             <mcs-list>
@@ -79,7 +79,7 @@
           <mcs-presentation-panel [embossed]="true"
             *ngIf="selectedProduct.dependentProducts | mcsIsNotNullOrEmpty">
             <ng-container mcsPresentationPanelHeader>
-              Dependencies
+              <strong>Dependencies</strong>
             </ng-container>
 
             <div>
@@ -102,7 +102,7 @@
           <mcs-presentation-panel [embossed]="true"
             *ngIf="selectedProduct.locations | mcsIsNotNullOrEmpty">
             <ng-container mcsPresentationPanelHeader>
-              Locations
+              <strong>Locations</strong>
             </ng-container>
 
             <mcs-list spacing="small">

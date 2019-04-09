@@ -23,7 +23,7 @@ import {
 } from '@app/models';
 import { EventBusDispatcherService } from '@app/event-bus';
 
-export abstract class McsEntityJobManager<T extends McsEntityBase>
+export abstract class McsEntityJobBaseStateManager<T extends McsEntityBase>
   extends McsJobManagerBase implements McsDisposable {
 
   constructor(

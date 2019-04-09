@@ -21,10 +21,10 @@ import {
 } from '@app/models';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { McsServersRepository } from '../repositories/mcs-servers.repository';
-import { McsEntityJobManager } from './mcs-entity-job.manager';
+import { McsEntityJobBaseStateManager } from './mcs-entity-job-base.state-manager';
 
 @Injectable()
-export class McsServersJobManager extends McsEntityJobManager<McsServer>
+export class McsServerStateManager extends McsEntityJobBaseStateManager<McsServer>
   implements IMcsInitializable, McsDisposable {
 
   private _serverCreateHandler: Subscription;

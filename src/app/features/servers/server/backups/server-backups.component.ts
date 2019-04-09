@@ -23,7 +23,6 @@ import {
   McsDataStatusFactory,
   CoreDefinition,
   McsErrorHandlerService,
-  McsLoadingService,
   McsAccessControlService,
   CoreEvent
 } from '@app/core';
@@ -100,7 +99,6 @@ export class ServerBackupsComponent extends ServerDetailsBase
     _serverService: ServerService,
     _changeDetectorRef: ChangeDetectorRef,
     _errorHandlerService: McsErrorHandlerService,
-    _loadingService: McsLoadingService,
     _accessControl: McsAccessControlService,
     private _translateService: TranslateService,
     private _eventDispatcher: EventBusDispatcherService,
@@ -114,7 +112,6 @@ export class ServerBackupsComponent extends ServerDetailsBase
       _serverService,
       _changeDetectorRef,
       _errorHandlerService,
-      _loadingService,
       _accessControl
     );
     this.dataStatusFactory = new McsDataStatusFactory();

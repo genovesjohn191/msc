@@ -1,19 +1,19 @@
 <mcs-page>
   <!-- Page template header -->
   <ng-container *mcsPageHeader>
-    <mcs-item *ngIf="selectedServer$ | async as selectedServer">
+    <mcs-item *ngIf="serverDetails$ | async as serverDetails">
       <div>
-        <a [mcsRouterLink]="[routeKeyEnum.VdcDetails, selectedServer.platform?.resourceId]"
+        <a [mcsRouterLink]="[routeKeyEnum.VdcDetails, serverDetails.server?.platform?.resourceId]"
           mcsId="select-vdc"
           mcsEventTracker="select-vdc"
           mcsEventCategory="vdc"
           mcsEventLabel="server-details-page">
-          <h1>{{ selectedServer.resourceName }}</h1>
+          <h1>{{ serverDetails.server?.resourceName }}</h1>
         </a>
       </div>
       <mcs-icon [key]="angleDoubleRightIconKey" size="xsmall"></mcs-icon>
       <div>
-        <h1>{{ selectedServer.name }}</h1>
+        <h1>{{ serverDetails.server?.name }}</h1>
       </div>
     </mcs-item>
   </ng-container>
@@ -56,8 +56,7 @@
                       mcsEventCategory="server"
                       mcsEventLabel="server-list-panel">
 
-                      <mcs-option [value]="server"
-                        [selected]="(selectedServer$ | async)?.id === server.id">
+                      <mcs-option [value]="server" [selected]="selectedServerId === server.id">
                         <mcs-item>
                           <mcs-icon *ngIf="!server.isProcessing" size="small"
                             [key]="server?.powerStateIconKey"></mcs-icon>
@@ -94,9 +93,9 @@
 
   <mcs-content-panel *mcsContentPanelDef>
     <div class="routing-tab-wrapper" *mcsComponentHandler>
-      <ng-container *ngIf="selectedServer$ | async as selectedServer">
+      <ng-container *ngIf="serverDetails$ | async as serverDetails">
         <!-- Busy status of the server -->
-        <ng-container *ngIf="selectedServer.isProcessing">
+        <ng-container *ngIf="serverDetails.server?.isProcessing">
           <mcs-busy-ribbon theme="dark" margin-bottom-small>
             <span>{{ 'server.serverBusyLabel' | translate }}</span>
           </mcs-busy-ribbon>
@@ -107,20 +106,20 @@
           <mcs-tab [label]="'serverManagement.label' | translate" id="management"></mcs-tab>
 
           <!-- Services Tab -->
-          <ng-container *ngIf="selectedServer.isManagedVCloud">
+          <ng-container *ngIf="serverDetails.server?.isManagedVCloud">
             <mcs-tab [label]="'serverServices.label' | translate" id="services"
               *mcsAccessControl="[]; feature: 'EnableServerOsUpdates'"></mcs-tab>
           </ng-container>
 
           <!-- Storage Tab -->
           <ng-container *mcsAccessControl="[]; feature: 'EnableDedicatedVmStorageView';
-            validateWhen: selectedServer.isDedicated">
+            validateWhen: serverDetails.server?.isDedicated">
             <mcs-tab [label]="'serverStorage.label' | translate" id="storage"></mcs-tab>
           </ng-container>
 
           <!-- Snapshots Tab -->
           <ng-container *mcsAccessControl="[]; feature: 'EnableDedicatedVmSnapshotView';
-            validateWhen: selectedServer.isDedicated">
+            validateWhen: serverDetails.server?.isDedicated">
             <ng-container *mcsAccessControl="serverPermission.vmSnapshotAccess">
               <mcs-tab [label]="'serverBackups.label' | translate" id="snapshots"></mcs-tab>
             </ng-container>
@@ -128,15 +127,15 @@
 
           <!-- Networks Tab -->
           <ng-container *mcsAccessControl="[]; feature: 'EnableDedicatedVmNicView';
-            validateWhen: selectedServer.isDedicated">
+            validateWhen: serverDetails.server?.isDedicated">
             <mcs-tab [label]="'serverNics.label' | translate" id="nics"></mcs-tab>
           </ng-container>
 
           <!-- Action tab -->
           <ng-container mcsTabHeaderCustom *mcsAccessControl="serverPermission.VmPowerStateEdit">
             <mcs-server-command mcsId="server-command" mcsAlign="end"
-              [server]="selectedServer" [autoCalculatePosition]="false"
-              (onClick)="executeServerCommand(selectedServer, $event)">
+              [server]="serverDetails.server" [autoCalculatePosition]="false"
+              (onClick)="executeServerCommand(serverDetails.server, $event)">
             </mcs-server-command>
           </ng-container>
         </mcs-tab-group>

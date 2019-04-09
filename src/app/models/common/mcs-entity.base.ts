@@ -1,12 +1,11 @@
 import { McsGuid } from '@app/core';
+import { McsEntityStateBase } from './mcs-entity-state.base';
 
-/**
- * Entity base for all the model entity
- */
-export abstract class McsEntityBase {
+export abstract class McsEntityBase extends McsEntityStateBase {
   public id: string;
 
   constructor() {
+    super();
     this.id = McsGuid.newGuid().toString();
   }
 }

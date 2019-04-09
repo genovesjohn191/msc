@@ -65,16 +65,12 @@
   "order": {
     "header": "Order #",
     "submitOrder": "Submit Order",
-    "submitOrderLoading": "Submitting order...",
     "submitOrderMessage": "Are you sure you want to submit order <strong>{{order}}</strong>?",
     "submitForApproval": "Submit for Approval",
-    "submitForApprovalLoading": "Submitting order for approval...",
     "submitForApprovalMessage": "Are you sure you want to submit draft order <strong>{{order}}</strong> for approval?\r\n\n Designated approvers from your organisation will be notified and may approve or reject your request.",
     "rejectOrder": "Reject Order",
-    "rejectOrderLoading": "Rejecting order...",
     "rejectOrderMessage": "Are you sure you want to reject order <strong>{{order}}</strong>?",
     "cancelOrder": "Cancel Order",
-    "cancelOrderLoading": "Cancelling order...",
     "cancelOrderMessage": "Are you sure you want to cancel draft order <strong>{{order}}</strong>?\r\n\n This action cannot be undone.",
     "orderDetails": "Details",
     "description": "Description",
@@ -96,10 +92,22 @@
       "oneOffCharge": "One-off charge",
       "monthlyCharge": "Monthly charge"
     },
-    "loading": "Loading order details",
     "noOrderItems": "No order items found.",
     "errorOnOrderItems": "Sorry, something’s not right. We weren’t able to retrieve the list of order items.",
-    "backToOrders": "Back To Orders"
+    "backToOrders": "Back To Orders",
+    "submitForApprovalHeader": "Submit for Approval",
+    "submitForApprovalDescription": "Please select one or more preferred approvers below and they will be notified of this request via email.",
+    "backToDetails": "Details",
+    "btnSubmitForApproval": "Submit"
+  },
+  "orderApproval": {
+    "noApprovers": "noApprovers",
+    "errorGettingApprovers": "errorGettingApprovers",
+    "columnHeaders": {
+      "select": "",
+      "name": "Name",
+      "email": "Email Address"
+    }
   },
   "notification": {
     "leftPanelHeader": "Notification details",
@@ -139,7 +147,6 @@
   },
   "serversVdc": {
     "leftPanelHeader": "Virtual Server Filter",
-    "loading": "Loading VDC details.",
     "iopsLabel": "Performance {{iops}}"
   },
   "serversVdcOverview": {
@@ -191,8 +198,6 @@
   },
   "server": {
     "header": "Servers",
-    "loading": "Loading server details.",
-    "loadingResourceDetails": "Loading server properties.",
     "leftPanelHeader": "Virtual Server Filter",
     "serverBusyLabel": "This server is currently busy and some actions may be temporarily unavailable."
   },
@@ -270,8 +275,7 @@
       "warning": "Scaling the Server will require a restart.",
       "scale": "Scale",
       "cancel": "Cancel",
-      "scaling": "Scaling in progress.",
-      "loadingContent": "Loading server compute."
+      "scaling": "Scaling in progress."
     },
     "serviceInformation": {
       "title": "Service Information",
@@ -805,7 +809,7 @@
     "header": "Media",
     "leftPanelHeader": "Media Filter",
     "uploadMedia": "Upload Media",
-    "loading": "Loading Medias.",
+    "loading": "Loading List of Media.",
     "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of media.",
     "noMedia": "No media to display.",
     "retry": "Try again shortly",
@@ -815,7 +819,6 @@
     "dataPlural": "Items"
   },
   "mediaMedium": {
-    "loading": "Loading Media Details.",
     "leftPanelHeader": "Media Filter",
     "overview": {
       "label": "Overview",
@@ -855,8 +858,6 @@
     "mediaStepDetails": {
       "label": "Media Details",
       "description": "Your media will be uploaded into the default Storage Policy for your organisation.",
-      "loadingResources": "Loading media resources.",
-      "loadingResourceDetails": "Loading resource details.",
       "selectResources": "Select a resource",
       "selectResourcesHelp": "The VDC you would like to make this media available to.",
       "selectCatalog": "Select a catalog",
@@ -922,7 +923,6 @@
     "services": "Services",
     "attachments": "Attachments",
     "activity": "Activity",
-    "loading": "Loading ticket details.",
     "newActivity": "New Comment/Attachment",
     "missingRequestorLabel": "Unknown Requestor",
     "missingServicesLabel": "No services found",
@@ -990,7 +990,6 @@
   "firewall": {
     "header": "Firewall",
     "leftPanelHeader": "Firewall Filter",
-    "loading": "Loading firewall details.",
     "overview": {
       "label": "Overview",
       "properties": {
@@ -1053,12 +1052,8 @@
     "header": "Product Catalog",
     "leftPanelHeader": "Product Filter",
     "loading": "Loading Products.",
-    "loadingDetails": "Loading product details.",
     "noProducts": "No products to display.",
-    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of products.",
-    "product": {
-      "loading": "Loading product details."
-    }
+    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of products."
   },
   "tools": {
     "header": "Other Tools",
@@ -1199,7 +1194,6 @@
         "viewMoreCount": "View {{count}} more...",
         "viewMore": "View more..."
       },
-      "loadingCompany": "Loading company details.",
       "signOut": "Sign Out"
     }
   },

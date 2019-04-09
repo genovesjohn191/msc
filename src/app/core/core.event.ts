@@ -4,6 +4,11 @@ import { UserChangeEvent } from './events/user-change.event';
 import { SessionTimedOutEvent } from './events/session-timedout.event';
 import { ProductSelectedEvent } from './events/product-selected.event';
 import { ProductUnSelectedEvent } from './events/product-unselected.event';
+import { OrderStateBusyEvent } from './events/order-state-busy.event';
+import { OrderStateEndedEvent } from './events/order-state-ended.event';
+import { LoaderShowEvent } from './events/loader-show.event';
+import { LoaderHideEvent } from './events/loader-hide.event';
+
 import { JobServerDiskCreateEvent } from './events/job-server-disk-create.event';
 import { JobServerDiskUpdateEvent } from './events/job-server-disk-update.event';
 import { JobServerDiskDeleteEvent } from './events/job-server-disk-delete.event';
@@ -38,6 +43,10 @@ export class CoreEvent {
   public static sessionTimedOut = new SessionTimedOutEvent();
   public static productSelected = new ProductSelectedEvent();
   public static productUnSelected = new ProductUnSelectedEvent();
+  public static orderStateBusy = new OrderStateBusyEvent();
+  public static orderStateEnded = new OrderStateEndedEvent();
+  public static loaderShow = new LoaderShowEvent();
+  public static loaderHide = new LoaderHideEvent();
 
   public static jobCurrentUser = new JobCurrentUserEvent();
   public static jobReceive = new JobReceiveEvent();

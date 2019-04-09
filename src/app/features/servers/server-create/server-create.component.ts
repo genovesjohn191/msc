@@ -17,12 +17,13 @@ import {
   shareReplay,
   tap
 } from 'rxjs/operators';
+import { EventBusDispatcherService } from '@app/event-bus';
 import {
   CoreDefinition,
-  McsErrorHandlerService,
   CoreRoutes,
-  McsLoadingService,
-  McsOrderWizardBase
+  McsErrorHandlerService,
+  McsOrderWizardBase,
+  CoreEvent
 } from '@app/core';
 import {
   ServiceType,
@@ -76,8 +77,8 @@ export class ServerCreateComponent extends McsOrderWizardBase
 
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
-    private _loaderService: McsLoadingService,
     private _translate: TranslateService,
+    private _eventDispatcher: EventBusDispatcherService,
     private _errorHandlerService: McsErrorHandlerService,
     private _resourcesRepository: McsResourcesRepository,
     private _serverCreateService: ServerCreateService
@@ -197,7 +198,7 @@ export class ServerCreateComponent extends McsOrderWizardBase
    * Gets the list of resources from repository
    */
   private _subscribeToAllResources(): void {
-    this._loaderService.showLoader('Loading resources');
+    this._eventDispatcher.dispatch(CoreEvent.loaderShow);
 
     this.resources$ = this._resourcesRepository.getResourcesByAccess().pipe(
       catchError((error) => {
@@ -213,7 +214,7 @@ export class ServerCreateComponent extends McsOrderWizardBase
    * @param resourceId Resource Id of the resource to get
    */
   private _subscribeResourceById(resourceId: any): void {
-    this._loaderService.showLoader('Loading resource details');
+    this._eventDispatcher.dispatch(CoreEvent.loaderShow);
 
     this.resource$ = this._resourcesRepository.getByIdAsync(
       resourceId, this._onResourceObtained.bind(this)
@@ -227,6 +228,6 @@ export class ServerCreateComponent extends McsOrderWizardBase
    * Event that emits when the resource has been completed
    */
   private _onResourceObtained(): void {
-    this._loaderService.hideLoader();
+    this._eventDispatcher.dispatch(CoreEvent.loaderHide);
   }
 }

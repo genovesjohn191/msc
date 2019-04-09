@@ -11,7 +11,6 @@ import {
   Router,
   ActivatedRoute
 } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
 import {
   Subject,
   throwError,
@@ -29,7 +28,7 @@ import {
   McsDataStatusFactory,
   McsErrorHandlerService,
   CoreRoutes,
-  McsLoadingService
+  CoreEvent
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -87,8 +86,6 @@ export class VdcComponent
     _activatedRoute: ActivatedRoute,
     private _router: Router,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _loadingService: McsLoadingService,
-    private _translateService: TranslateService,
     private _serversRepository: McsServersRepository,
     private _resourcesRepository: McsResourcesRepository,
     private _errorHandlerService: McsErrorHandlerService,
@@ -193,7 +190,7 @@ export class VdcComponent
    * @param vdcId VDC identification
    */
   private _subscribesToResourceById(vdcId: string): void {
-    this._loadingService.showLoader(this._translateService.instant('serversVdc.loading'));
+    this.eventDispatcher.dispatch(CoreEvent.loaderShow);
 
     this.selectedResource$ = this._resourcesRepository.getByIdAsync(
       vdcId, this._onResourceCompleted.bind(this)
@@ -211,6 +208,6 @@ export class VdcComponent
    * Event that emits when the resource has been completed
    */
   private _onResourceCompleted(): void {
-    this._loadingService.hideLoader();
+    this.eventDispatcher.dispatch(CoreEvent.loaderHide);
   }
 }

@@ -1,0 +1,51 @@
+<mcs-table [dataSource]="approversDataSource">
+  <!-- Selection Column -->
+  <ng-container mcsColumnDef="select">
+    <mcs-header-cell *mcsHeaderCellDef>
+      <mcs-checkbox (change)="approversSelection.toggleAllItemsSelection()"
+        color="white"
+        [checked]="approversSelection.allItemsAreSelected()"
+        [indeterminate]="approversSelection.someItemsAreSelected()">
+      </mcs-checkbox>
+    </mcs-header-cell>
+    <mcs-data-cell *mcsDataCellDef="let row" text-wrap>
+      <mcs-checkbox [checked]="approversSelection.isItemSelected(row)"
+        (change)="approversSelection.toggleItemSelection(row)">
+      </mcs-checkbox>
+    </mcs-data-cell>
+  </ng-container>
+
+  <!-- Name Column -->
+  <ng-container mcsColumnDef="name">
+    <mcs-header-cell *mcsHeaderCellDef hidden-small>
+      {{ 'orderApproval.columnHeaders.name' | translate }}
+    </mcs-header-cell>
+    <mcs-data-cell *mcsDataCellDef="let row">
+      <span>{{ row.fullName }}</span>
+    </mcs-data-cell>
+  </ng-container>
+
+  <!-- Email Address Column -->
+  <ng-container mcsColumnDef="email">
+    <mcs-header-cell *mcsHeaderCellDef>
+      {{ 'orderApproval.columnHeaders.email' | translate }}
+    </mcs-header-cell>
+    <mcs-data-cell *mcsDataCellDef="let row">
+      <span>{{ row.email }}</span>
+    </mcs-data-cell>
+  </ng-container>
+
+  <!-- Data Status Integration -->
+  <ng-container mcsDataStatusDef>
+    <mcs-data-empty *mcsDataEmptyDef>
+      <span>{{ 'orderApproval.noApprovers' | translate }} </span>
+    </mcs-data-empty>
+    <mcs-data-error *mcsDataErrorDef>
+      <span>{{ 'orderApproval.errorGettingApprovers' | translate }}</span>
+    </mcs-data-error>
+  </ng-container>
+
+  <!-- Header and Data row -->
+  <mcs-header-row *mcsHeaderRowDef="approversColumns"></mcs-header-row>
+  <mcs-data-row *mcsDataRowDef="let row; columns: approversColumns;"></mcs-data-row>
+</mcs-table>
