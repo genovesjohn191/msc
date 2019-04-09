@@ -95,6 +95,7 @@ export * from './response/mcs-order-charge';
 export * from './response/mcs-order-error';
 export * from './response/mcs-order-item';
 export * from './response/mcs-order-item-type';
+export * from './response/mcs-order-approver';
 export * from './response/mcs-product';
 export * from './response/mcs-product-catalog';
 export * from './response/mcs-product-category';

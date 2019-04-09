@@ -14,7 +14,7 @@ import {
 import { McsJobsRepository } from '../repositories/mcs-jobs.repository';
 
 @Injectable()
-export class McsNotificationJobManager implements IMcsInitializable, McsDisposable {
+export class McsJobStateManager implements IMcsInitializable, McsDisposable {
 
   private _jobReceiveHandler: Subscription;
 

@@ -25,7 +25,8 @@ import {
 import {
   CoreValidators,
   McsDataStatusFactory,
-  IMcsFormGroup
+  IMcsFormGroup,
+  IMcsDataChange
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -65,7 +66,7 @@ const Netmask = require('netmask').Netmask;
 })
 
 export class ServerManageNetworkComponent
-  implements OnInit, OnChanges, AfterViewInit, IMcsFormGroup {
+  implements OnInit, OnChanges, AfterViewInit, IMcsFormGroup, IMcsDataChange<ServerManageNetwork> {
 
   public netMask: any;
   public ipAddressesInUsed: McsResourceNetworkIpAddress[];
@@ -115,7 +116,7 @@ export class ServerManageNetworkComponent
       this._resetFormGroup();
       this._createNetmaskByNetwork(this._selectedNetwork);
       this._setInUsedIpAddresses(this._selectedNetwork);
-      this._notifyDataChanged();
+      this.notifyDataChange();
     }
   }
   private _selectedNetwork: McsResourceNetwork;
@@ -141,12 +142,11 @@ export class ServerManageNetworkComponent
   }
 
   public ngOnInit() {
-
     this._registerFormGroup();
     this._setIpAddressItems();
     this._setSelectedNetwork();
     this._initializeCurrentView();
-    this._notifyDataChanged();
+    this.notifyDataChange();
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -199,7 +199,7 @@ export class ServerManageNetworkComponent
   public onChangeInputManageType(inputManageType: InputManageType) {
     this.inputManageType = inputManageType;
     this._registerFormControlsByInputType();
-    this._notifyDataChanged();
+    this.notifyDataChange();
   }
 
   /**
@@ -209,6 +209,40 @@ export class ServerManageNetworkComponent
   public isIpAddressInUsed(ipAddress: string): boolean {
     if (isNullOrEmpty(ipAddress)) { return false; }
     return !!this.ipAddressesInUsed.find((inUsed) => ipAddress === inUsed.ipAddress);
+  }
+
+  /**
+   * Event that emits when an input has been changed
+   */
+  public notifyDataChange() {
+    let noFormsRegistered = isNullOrEmpty(this.fcCustomIpAddress) ||
+      isNullOrEmpty(this.fcIpAllocationMode);
+    if (noFormsRegistered) { return; }
+
+    // Set model data based on management type
+    switch (this.inputManageType) {
+      case InputManageType.Custom:
+        this._networkOutput.network = this.selectedNetwork;
+        this._networkOutput.customIpAddress = this.fcCustomIpAddress.value;
+        this._networkOutput.ipAllocationMode = IpAllocationMode.Manual;
+        this._networkOutput.valid = this.fcCustomIpAddress.valid &&
+          !isNullOrEmpty(this.selectedNetwork);
+        break;
+
+      case InputManageType.Auto:
+      default:
+        this._networkOutput.network = this.selectedNetwork;
+        this._networkOutput.customIpAddress = null;
+        this._networkOutput.ipAllocationMode = this.fcIpAllocationMode.value;
+        this._networkOutput.valid = this.fcIpAllocationMode.valid &&
+          !isNullOrEmpty(this.selectedNetwork);
+        break;
+    }
+    this._setNetworkHasChangedFlag();
+
+    // Emit changes
+    this.dataChange.emit(this._networkOutput);
+    this._changeDetectorRef.markForCheck();
   }
 
   /**
@@ -263,7 +297,7 @@ export class ServerManageNetworkComponent
     this.fcIpAllocationMode = new FormControl(IpAllocationMode.Manual, [CoreValidators.required]);
     this.fcIpAllocationMode.valueChanges
       .pipe(takeUntil(this._destroySubject))
-      .subscribe(() => this._notifyDataChanged());
+      .subscribe(() => this.notifyDataChange());
 
     // Register form control for custom ip address
     this.fcCustomIpAddress = new FormControl('', [
@@ -276,7 +310,7 @@ export class ServerManageNetworkComponent
     ]);
     this.fcCustomIpAddress.valueChanges
       .pipe(takeUntil(this._destroySubject))
-      .subscribe(() => this._notifyDataChanged());
+      .subscribe(() => this.notifyDataChange());
 
     // Form group settings
     this.fgNetwork = this._formBuilder.group([]);
@@ -369,40 +403,6 @@ export class ServerManageNetworkComponent
       this.fcIpAllocationMode.setValue(this.targetNic.ipAllocationMode);
     }
     this.fcCustomIpAddress.setValue(getSafeProperty(this.targetNic, (obj) => obj.ipAddresses[0]));
-    this._changeDetectorRef.markForCheck();
-  }
-
-  /**
-   * Event that emits when an input has been changed
-   */
-  private _notifyDataChanged() {
-    let noFormsRegistered = isNullOrEmpty(this.fcCustomIpAddress) ||
-      isNullOrEmpty(this.fcIpAllocationMode);
-    if (noFormsRegistered) { return; }
-
-    // Set model data based on management type
-    switch (this.inputManageType) {
-      case InputManageType.Custom:
-        this._networkOutput.network = this.selectedNetwork;
-        this._networkOutput.customIpAddress = this.fcCustomIpAddress.value;
-        this._networkOutput.ipAllocationMode = IpAllocationMode.Manual;
-        this._networkOutput.valid = this.fcCustomIpAddress.valid &&
-          !isNullOrEmpty(this.selectedNetwork);
-        break;
-
-      case InputManageType.Auto:
-      default:
-        this._networkOutput.network = this.selectedNetwork;
-        this._networkOutput.customIpAddress = null;
-        this._networkOutput.ipAllocationMode = this.fcIpAllocationMode.value;
-        this._networkOutput.valid = this.fcIpAllocationMode.valid &&
-          !isNullOrEmpty(this.selectedNetwork);
-        break;
-    }
-    this._setNetworkHasChangedFlag();
-
-    // Emit changes
-    this.dataChange.emit(this._networkOutput);
     this._changeDetectorRef.markForCheck();
   }
 

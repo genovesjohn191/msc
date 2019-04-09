@@ -2,11 +2,13 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
   map,
-  tap
+  tap,
+  finalize
 } from 'rxjs/operators';
 import {
   McsRepositoryBase,
-  IMcsOrderFactory
+  IMcsOrderFactory,
+  CoreEvent
 } from '@app/core';
 import { getSafeProperty } from '@app/utilities';
 import {
@@ -14,15 +16,20 @@ import {
   McsOrderWorkflow,
   McsOrderCreate,
   McsOrderItem,
-  McsBilling
+  McsBilling,
+  McsOrderApprover
 } from '@app/models';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { OrdersApiService } from '../api-services/orders-api.service';
 import { McsOrdersDataContext } from '../data-context/mcs-orders-data.context';
 
 @Injectable()
 export class McsOrdersRepository extends McsRepositoryBase<McsOrder> implements IMcsOrderFactory {
 
-  constructor(private _ordersApiService: OrdersApiService) {
+  constructor(
+    private _ordersApiService: OrdersApiService,
+    private _eventDispatcher: EventBusDispatcherService
+  ) {
     super(new McsOrdersDataContext(_ordersApiService));
   }
 
@@ -43,9 +50,12 @@ export class McsOrdersRepository extends McsRepositoryBase<McsOrder> implements 
    * @param workflow Workflow details
    */
   public createOrderWorkFlow(orderId: string, workflow: McsOrderWorkflow): Observable<McsOrder> {
+    this._eventDispatcher.dispatch(CoreEvent.orderStateBusy, orderId);
+
     return this._ordersApiService.createOrderWorkflow(orderId, workflow).pipe(
       map((response) => getSafeProperty(response, (obj) => obj.content)),
-      tap((order) => this.addOrUpdate(order))
+      tap((order) => this.addOrUpdate(order)),
+      finalize(() => this._eventDispatcher.dispatch(CoreEvent.orderStateEnded, orderId))
     );
   }
 
@@ -65,20 +75,26 @@ export class McsOrdersRepository extends McsRepositoryBase<McsOrder> implements 
    * @param updatedOrder Updated order details to be set on the existing order
    */
   public updateOrder(orderId: string, updatedOrder: McsOrderCreate): Observable<McsOrder> {
+    this._eventDispatcher.dispatch(CoreEvent.orderStateBusy, orderId);
+
     return this._ordersApiService.updateOrder(orderId, updatedOrder).pipe(
       map((response) => getSafeProperty(response, (obj) => obj.content)),
-      tap((order) => this.addOrUpdate(order))
+      tap((order) => this.addOrUpdate(order)),
+      finalize(() => this._eventDispatcher.dispatch(CoreEvent.orderStateEnded, orderId))
     );
   }
 
   /**
    * Deletes a corresponding order based on id
-   * @param id Id of the order to be deleted
+   * @param orderId Id of the order to be deleted
    */
-  public deleteOrder(id: any): Observable<McsOrder> {
-    return this._ordersApiService.deleteOrder(id).pipe(
+  public deleteOrder(orderId: any): Observable<McsOrder> {
+    this._eventDispatcher.dispatch(CoreEvent.orderStateBusy, orderId);
+
+    return this._ordersApiService.deleteOrder(orderId).pipe(
       map((response) => getSafeProperty(response, (obj) => obj.content)),
-      tap((order) => this.delete(order))
+      tap((order) => this.delete(order)),
+      finalize(() => this._eventDispatcher.dispatch(CoreEvent.orderStateEnded, orderId))
     );
   }
 
@@ -87,6 +103,15 @@ export class McsOrdersRepository extends McsRepositoryBase<McsOrder> implements 
    */
   public getBilling(): Observable<McsBilling[]> {
     return this._ordersApiService.getBilling().pipe(
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  /**
+   * Gets the order approvers
+   */
+  public getOrderApprovers(): Observable<McsOrderApprover[]> {
+    return this._ordersApiService.getOrderApprovers().pipe(
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }

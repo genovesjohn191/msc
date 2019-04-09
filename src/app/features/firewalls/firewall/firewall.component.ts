@@ -11,7 +11,6 @@ import {
   Router,
   ActivatedRoute
 } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
 import {
   Subject,
   throwError,
@@ -30,7 +29,7 @@ import {
   McsErrorHandlerService,
   McsDataStatusFactory,
   CoreRoutes,
-  McsLoadingService
+  CoreEvent
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -84,9 +83,7 @@ export class FirewallComponent
     _eventDispatcher: EventBusDispatcherService,
     private _router: Router,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _translateService: TranslateService,
     private _errorHandlerService: McsErrorHandlerService,
-    private _loadingService: McsLoadingService,
     private _firewallsRepository: McsFirewallsRepository,
     private _firewallService: FirewallService
   ) {
@@ -181,7 +178,7 @@ export class FirewallComponent
    * @param firewallId Firewall identification
    */
   private _subscribeToFirewallById(firewallId: string): void {
-    this._loadingService.showLoader(this._translateService.instant('firewall.loading'));
+    this.eventDispatcher.dispatch(CoreEvent.loaderShow);
 
     this.selectedFirewall$ = this._firewallsRepository.getByIdAsync(
       firewallId, this._onFirewallObtained.bind(this)
@@ -202,6 +199,6 @@ export class FirewallComponent
    * Event that emits when the firewall has been obtained
    */
   private _onFirewallObtained(): void {
-    this._loadingService.hideLoader();
+    this.eventDispatcher.dispatch(CoreEvent.loaderHide);
   }
 }

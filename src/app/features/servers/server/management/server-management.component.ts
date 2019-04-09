@@ -27,7 +27,6 @@ import {
   CoreDefinition,
   McsDialogService,
   CoreRoutes,
-  McsLoadingService,
   McsAccessControlService,
   CoreEvent
 } from '@app/core';
@@ -105,7 +104,6 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
     _serversRepository: McsServersRepository,
     _serverService: ServerService,
     _errorHandlerService: McsErrorHandlerService,
-    _loadingService: McsLoadingService,
     _accessControl: McsAccessControlService,
     private _router: Router,
     private _eventDispatcher: EventBusDispatcherService,
@@ -119,7 +117,6 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
       _serverService,
       _changeDetectorRef,
       _errorHandlerService,
-      _loadingService,
       _accessControl
     );
     this.manageScale = new ServerManageScale();

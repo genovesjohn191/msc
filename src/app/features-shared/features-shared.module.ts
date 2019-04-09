@@ -4,6 +4,7 @@ import { SharedModule } from '@app/shared';
 import { AddOnAntiMalwareComponent } from './addon-anti-malware/addon-anti-malware';
 import { AddOnInviewComponent } from './addon-inview/addon-inview';
 import { AddOnSqlServerComponent } from './addon-sql-server/addon-sql-server';
+import { OrderApprovalComponent } from './order-approval/order-approval.component';
 import { ServerManageMediaComponent } from './server-manage-media/server-manage-media.component';
 import { ServerManageNetworkComponent } from './server-manage-network/server-manage-network.component';
 import { ServerManageScaleComponent } from './server-manage-scale/server-manage-scale.component';
@@ -37,6 +38,7 @@ import { SuspendServerDialogComponent } from './server-dialogs/suspend-server/su
     AddOnAntiMalwareComponent,
     AddOnInviewComponent,
     AddOnSqlServerComponent,
+    OrderApprovalComponent,
     ServerManageMediaComponent,
     ServerManageNetworkComponent,
     ServerManageScaleComponent,
@@ -66,6 +68,7 @@ import { SuspendServerDialogComponent } from './server-dialogs/suspend-server/su
     AddOnAntiMalwareComponent,
     AddOnInviewComponent,
     AddOnSqlServerComponent,
+    OrderApprovalComponent,
     ServerManageMediaComponent,
     ServerManageNetworkComponent,
     ServerManageScaleComponent,

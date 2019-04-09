@@ -14,16 +14,18 @@ import {
 import {
   Subject,
   throwError,
-  Observable
+  Observable,
+  of
 } from 'rxjs';
 import {
   startWith,
   takeUntil,
   catchError,
   tap,
-  shareReplay
+  shareReplay,
+  concatMap,
+  switchMap
 } from 'rxjs/operators';
-import { TranslateService } from '@ngx-translate/core';
 import {
   ResetPasswordDialogComponent,
   DeleteServerDialogComponent,
@@ -38,8 +40,8 @@ import {
   McsErrorHandlerService,
   McsDataStatusFactory,
   CoreRoutes,
-  McsLoadingService,
-  McsServerPermission
+  McsServerPermission,
+  CoreEvent
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -53,13 +55,18 @@ import {
   ServerCommand,
   RouteKey,
   McsServer,
-  McsServerPlatform
+  McsServerPlatform,
+  McsResource
 } from '@app/models';
-import { McsServersRepository } from '@app/services';
+import {
+  McsServersRepository,
+  McsResourcesRepository
+} from '@app/services';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { ServerService } from './server.service';
 import { ServersListSource } from '../servers.listsource';
 import { ServersService } from '../servers.service';
+import { ServerDetails } from './server-details';
 
 // Add another group type in here if you have addition tab
 type tabGroupType = 'management' | 'storage';
@@ -80,7 +87,7 @@ export class ServerComponent
   public search: Search;
 
   public serverPermission: McsServerPermission;
-  public selectedServer$: Observable<McsServer>;
+  public serverDetails$: Observable<ServerDetails>;
   public serversMap$: Observable<Map<string, McsServer[]>>;
   public serverListSource: ServersListSource | null;
   public listStatusFactory: McsDataStatusFactory<Map<string, McsServer[]>>;
@@ -96,12 +103,11 @@ export class ServerComponent
     _activatedRoute: ActivatedRoute,
     private _router: Router,
     private _dialogService: McsDialogService,
+    private _resourcesRespository: McsResourcesRepository,
     private _serversRepository: McsServersRepository,
     private _serverService: ServerService,
     private _serversService: ServersService,
-    private _translateService: TranslateService,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _loadingService: McsLoadingService,
     private _errorHandlerService: McsErrorHandlerService
   ) {
     super(_eventDispatcher, _activatedRoute);
@@ -133,6 +139,13 @@ export class ServerComponent
 
   public get routeKeyEnum(): any {
     return RouteKey;
+  }
+
+  /**
+   * Returns the selected server id
+   */
+  public get selectedServerId(): string {
+    return this._serverService.getServerId();
   }
 
   /**
@@ -208,7 +221,8 @@ export class ServerComponent
     if (isNullOrEmpty(id)) { return; }
     this._resetManagementState();
     this._serverService.setServerId(id);
-    this._subscribeToServerById(id);
+    this._subscribeToServerDetails(id);
+    this._changeDetectorRef.markForCheck();
   }
 
   /**
@@ -259,20 +273,47 @@ export class ServerComponent
    * This will set the active server when data was obtained from repository
    * @param serverId Server ID to be the basis of the server
    */
-  private _subscribeToServerById(serverId: string): void {
-    this._loadingService.showLoader(this._translateService.instant('server.loading'));
+  private _subscribeToServerDetails(serverId: string): void {
+    this.eventDispatcher.dispatch(CoreEvent.loaderShow);
 
-    this.selectedServer$ = this._serversRepository.getByIdAsync(serverId).pipe(
-        catchError((error) => {
-          this._errorHandlerService.redirectToErrorPage(error.status);
-          return throwError(error);
-        }),
-        tap((response) => {
-          this._serverService.setSelectedServer(response);
-          this.serverPermission = new McsServerPermission(response);
-        }),
-        shareReplay(1)
-      );
-    this._changeDetectorRef.markForCheck();
+    this.serverDetails$ = this._serversRepository.getByIdAsync(serverId).pipe(
+      catchError((error) => {
+        this._errorHandlerService.redirectToErrorPage(error.status);
+        return throwError(error);
+      }),
+      concatMap((selectedServer) =>
+        this._getServerResourceByPlatform(selectedServer.platform).pipe(
+          switchMap((selectedResource) =>
+            of({ server: selectedServer, resource: selectedResource } as ServerDetails)
+          )
+        )
+      ),
+      tap((details) => {
+        if (isNullOrEmpty(details)) { return; }
+        this._serverService.setServerDetails(details);
+        this.serverPermission = new McsServerPermission(details.server);
+      }),
+      shareReplay(1)
+    );
+  }
+
+  /**
+   * Gets the server resource based on the server platform data
+   * @param platform Platform on what resourceId to be obtained
+   */
+  private _getServerResourceByPlatform(platform: McsServerPlatform): Observable<McsResource> {
+    let platformIsEmpty = isNullOrEmpty(platform) || isNullOrEmpty(platform.resourceName);
+    if (platformIsEmpty) { return of(new McsResource()); }
+
+    return this._resourcesRespository.getByIdAsync(platform.resourceId,
+      this._onResourceObtained.bind(this)
+    );
+  }
+
+  /**
+   * Event that emits when the resource has been obtained
+   */
+  private _onResourceObtained(): void {
+    this.eventDispatcher.dispatch(CoreEvent.loaderHide);
   }
 }

@@ -32,7 +32,6 @@ export * from './services/mcs-logger.service';
 export * from './services/mcs-form-group.service';
 export * from './services/google-analytics-events.service';
 export * from './services/mcs-session-handler.service';
-export * from './services/mcs-loading.service';
 export * from './services/mcs-component-handler.service';
 export * from './services/mcs-date-time.service';
 
@@ -92,6 +91,7 @@ export * from './data-access/mcs-data-context.interface';
 export * from './data-access/mcs-repository.interface';
 export * from './data-access/mcs-repository.base';
 export * from './data-access/mcs-table-datasource';
+export * from './data-access/mcs-table-selection';
 
 // Interfaces
 export * from './interfaces/mcs-fallible.interface';
@@ -102,3 +102,4 @@ export * from './interfaces/mcs-form-group.interface';
 export * from './interfaces/mcs-property.interface';
 export * from './interfaces/mcs-data-change.interface';
 export * from './interfaces/mcs-initializable.interface';
+export * from './interfaces/mcs-processable.interface';

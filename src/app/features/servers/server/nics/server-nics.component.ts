@@ -23,7 +23,6 @@ import {
   CoreDefinition,
   McsDialogService,
   McsErrorHandlerService,
-  McsLoadingService,
   McsTableDataSource,
   McsAccessControlService,
   CoreEvent,
@@ -141,7 +140,6 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     _serverService: ServerService,
     _changeDetectorRef: ChangeDetectorRef,
     _errorHandlerService: McsErrorHandlerService,
-    _loadingService: McsLoadingService,
     _accessControl: McsAccessControlService,
     private _eventDispatcher: EventBusDispatcherService,
     private _translateService: TranslateService,
@@ -154,7 +152,6 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
       _serverService,
       _changeDetectorRef,
       _errorHandlerService,
-      _loadingService,
       _accessControl
     );
     this.nicsColumns = [];

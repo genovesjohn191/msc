@@ -24,7 +24,8 @@ import {
   McsOrderItem,
   McsOrderWorkflow,
   McsQueryParam,
-  McsBilling
+  McsBilling,
+  McsOrderApprover
 } from '@app/models';
 
 @Injectable()
@@ -164,6 +165,31 @@ export class OrdersApiService {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
             .deserializeResponse<McsBilling[]>(McsBilling, response);
+
+          this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+          this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+          this._loggerService.traceInfo(`converted response:`, apiResponse);
+          return apiResponse;
+        })
+      );
+  }
+
+  /**
+   * Get Order Approvers (MCS API Response)
+   */
+  public getOrderApprovers(): Observable<McsApiSuccessResponse<McsOrderApprover[]>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/orders/approvers';
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        finalize(() => {
+          this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+        }),
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsOrderApprover[]>(McsOrderApprover, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);

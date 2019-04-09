@@ -72,7 +72,6 @@ export class McsSelection<T> {
    * Notify the changes for the selectionChanged subscribers
    */
   private _emitChanges(): void {
-    if (isNullOrEmpty(this.selected)) { return; }
     this.change.next({
       source: this,
       added: this._newSelectedItems,

@@ -20,7 +20,6 @@ import {
 import { EventBusDispatcherService } from '@app/event-bus';
 import {
   McsErrorHandlerService,
-  McsLoadingService,
   CoreDefinition,
   McsAccessControlService,
   McsDataStatusFactory,
@@ -84,7 +83,6 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
     _serversRepository: McsServersRepository,
     _serverService: ServerService,
     _errorHandlerService: McsErrorHandlerService,
-    _loadingService: McsLoadingService,
     protected _accessControlService: McsAccessControlService,
     protected _changeDetectorRef: ChangeDetectorRef,
     private _eventDispatcher: EventBusDispatcherService,
@@ -98,7 +96,6 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
       _serverService,
       _changeDetectorRef,
       _errorHandlerService,
-      _loadingService,
       _accessControlService
     );
     this.dataStatusFactory = new McsDataStatusFactory();

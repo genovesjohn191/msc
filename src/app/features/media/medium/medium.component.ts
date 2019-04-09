@@ -11,7 +11,6 @@ import {
   Router,
   ActivatedRoute
 } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
 import {
   throwError,
   Subject,
@@ -30,7 +29,7 @@ import {
   CoreRoutes,
   McsRoutingTabBase,
   McsDataStatusFactory,
-  McsLoadingService
+  CoreEvent
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -86,8 +85,6 @@ export class MediumComponent
     _activatedRoute: ActivatedRoute,
     private _router: Router,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _translateService: TranslateService,
-    private _loadingService: McsLoadingService,
     private _errorHandlerService: McsErrorHandlerService,
     private _mediaRepository: McsMediaRepository,
     private _mediumService: MediumService
@@ -158,7 +155,7 @@ export class MediumComponent
    * @param mediumId Media id to be selected
    */
   private _subscribeToMediaById(mediumId: string): void {
-    this._loadingService.showLoader(this._translateService.instant('mediaMedium.loading'));
+    this.eventDispatcher.dispatch(CoreEvent.loaderShow);
 
     this.media$ = this._mediaRepository.getByIdAsync(
       mediumId, this._onMediaObtained.bind(this)
@@ -176,7 +173,7 @@ export class MediumComponent
    * Event the emits when the media has been obtained
    */
   private _onMediaObtained(): void {
-    this._loadingService.hideLoader();
+    this.eventDispatcher.dispatch(CoreEvent.loaderHide);
   }
 
   /**

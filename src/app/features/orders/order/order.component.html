@@ -3,7 +3,7 @@
   <mcs-top-panel *mcsTopPanelDef>
 
     <mcs-top-panel-item *mcsTopPanelItemDef>
-      <mcs-responsive-panel *ngIf="order$ | async as selectedOrder">
+      <mcs-responsive-panel *ngIf="order$ | async as selectedOrder" [disabled]="selectedOrder.isProcessing">
         <!-- Submit order -->
         <ng-container *mcsAccessControl="['OrderApprove']; else requiresApprovalTemplate">
           <mcs-action-item mcsResponsivePanelItem mcsId
@@ -21,7 +21,7 @@
         <ng-template #requiresApprovalTemplate>
           <mcs-action-item mcsResponsivePanelItem mcsId
             *ngIf="selectedOrder.requiresApproval"
-            (click)="submitForApproval(selectedOrder)"
+            (click)="selectApprover()"
             mcsEventTracker="submit-for-approval"
             mcsEventCategory="order"
             mcsEventLabel="order-details-top-panel">
@@ -67,152 +67,189 @@
   <!-- Content Panel -->
   <mcs-content-panel *mcsContentPanelDef>
 
-    <section *ngIf="order$ | async as selectedOrder">
-      <mcs-grid class="limited-view">
-        <mcs-grid-row>
-          <!-- Order details -->
-          <mcs-grid-column>
-            <mcs-presentation-panel>
-              <ng-container mcsPresentationPanelHeader>
-                <h2>{{ 'order.orderDetails' | translate }}</h2>
-              </ng-container>
+    <section [ngSwitch]="orderDetailsView" *ngIf="order$ | async as selectedOrder">
+      <!-- View -->
+      <ng-container *ngSwitchDefault>
+        <mcs-grid class="limited-view">
+          <mcs-grid-row>
+            <!-- Order details -->
+            <mcs-grid-column>
+              <mcs-presentation-panel>
+                <ng-container mcsPresentationPanelHeader>
+                  <h2>{{ 'order.orderDetails' | translate }}</h2>
+                </ng-container>
 
+                <mcs-item>
+                  <span>{{ 'order.description' | translate }}:</span>
+                  <span [innerHTML]="selectedOrder.description | mcsDataLabel"></span>
+                </mcs-item>
+
+                <mcs-item>
+                  <span>{{ 'order.status' | translate }}:</span>
+                  <span [innerHTML]="selectedOrder.workflowStatusLabel | mcsDataLabel"></span>
+                </mcs-item>
+
+                <mcs-item>
+                  <span>{{ 'order.createdBy' | translate }}:</span>
+                  <span>{{ selectedOrder.createdBy }}</span>
+                </mcs-item>
+
+                <mcs-item>
+                  <span>{{ 'order.createdOn' | translate }}:</span>
+                  <span>{{ selectedOrder.createdOn | mcsStdDateFormat }}</span>
+                </mcs-item>
+
+              </mcs-presentation-panel>
+            </mcs-grid-column>
+
+            <!-- Billing Details -->
+            <mcs-grid-column>
+              <mcs-presentation-panel>
+                <ng-container mcsPresentationPanelHeader>
+                  <h2>{{ 'order.billingDetails' | translate }}</h2>
+                </ng-container>
+
+                <mcs-item>
+                  <span>{{ 'order.contractTerm' | translate }}:</span>
+                  <span>
+                    {{ selectedOrder.contractDurationMonths || 0 }}
+                    {{ 'order.contractTermSuffix' | translate }}
+                  </span>
+                </mcs-item>
+
+                <mcs-item>
+                  <span>{{ 'order.totalOneOffCost' | translate }}:</span>
+                  <span>
+                    {{ selectedOrder.charges?.currencySymbol }}
+                    {{ selectedOrder.charges?.oneOff || 0 }}
+                  </span>
+                </mcs-item>
+
+                <mcs-item>
+                  <span>{{ 'order.totalMonthlyCost' | translate }}:</span>
+                  <span>
+                    {{ selectedOrder.charges?.currencySymbol }}
+                    {{ selectedOrder.charges?.monthly || 0 }}
+                  </span>
+                </mcs-item>
+
+              </mcs-presentation-panel>
+            </mcs-grid-column>
+          </mcs-grid-row>
+        </mcs-grid>
+
+        <!-- Order Items -->
+        <mcs-table [dataSource]="getOrderItemsDatasource(selectedOrder)" class="limited-view">
+          <!-- Description -->
+          <ng-container mcsColumnDef="description">
+            <mcs-header-cell *mcsHeaderCellDef>
+              {{ 'order.columnHeaders.description' | translate }}
+            </mcs-header-cell>
+            <mcs-data-cell *mcsDataCellDef="let row">
+              {{ row.description }}
+            </mcs-data-cell>
+          </ng-container>
+
+          <!-- Quantity -->
+          <!-- TODO: Under confirmation on how line items could be merged -->
+          <ng-container mcsColumnDef="quantity">
+            <mcs-header-cell *mcsHeaderCellDef>
+              {{ 'order.columnHeaders.quantity' | translate }}
+            </mcs-header-cell>
+            <mcs-data-cell *mcsDataCellDef="let row">
+              <span text-wrap>1</span>
+            </mcs-data-cell>
+          </ng-container>
+
+          <!-- Cost Centre -->
+          <ng-container mcsColumnDef="costCentre">
+            <mcs-header-cell *mcsHeaderCellDef>
+              {{ 'order.columnHeaders.costCentre' | translate }}
+            </mcs-header-cell>
+            <mcs-data-cell *mcsDataCellDef="let row">
+              <span>{{ row.costCentre }}</span>
+            </mcs-data-cell>
+          </ng-container>
+
+          <!-- Billing Site -->
+          <ng-container mcsColumnDef="billingSite">
+            <mcs-header-cell *mcsHeaderCellDef>
+              {{ 'order.columnHeaders.billingSite' | translate }}
+            </mcs-header-cell>
+            <mcs-data-cell *mcsDataCellDef="let row">
+              <span>{{ row.billingSite }}</span>
+            </mcs-data-cell>
+          </ng-container>
+
+          <!-- One-off Charge Column -->
+          <ng-container mcsColumnDef="oneOffCharge">
+            <mcs-header-cell *mcsHeaderCellDef>
+              {{ 'order.columnHeaders.oneOffCharge' | translate }}
+            </mcs-header-cell>
+            <mcs-data-cell *mcsDataCellDef="let row">
+              {{ row.charges?.currencySymbol }} {{ row.charges?.oneOff }}
+            </mcs-data-cell>
+          </ng-container>
+
+          <!-- Monthly Charge Column -->
+          <ng-container mcsColumnDef="monthlyCharge">
+            <mcs-header-cell *mcsHeaderCellDef>
+              {{ 'order.columnHeaders.monthlyCharge' | translate }}
+            </mcs-header-cell>
+            <mcs-data-cell *mcsDataCellDef="let row">
+              {{ row.charges?.currencySymbol }} {{ row.charges?.monthly }}
+            </mcs-data-cell>
+          </ng-container>
+
+          <!-- Data Status Integration -->
+          <ng-container mcsDataStatusDef>
+            <mcs-data-empty *mcsDataEmptyDef>
+              <span>{{ 'order.noOrderItems' | translate }}</span>
+            </mcs-data-empty>
+            <mcs-data-error *mcsDataErrorDef>
+              <span>{{ 'order.errorOnOrderItems' | translate }}</span>
+            </mcs-data-error>
+          </ng-container>
+
+          <!-- Header and Data row -->
+          <mcs-header-row *mcsHeaderRowDef="orderItemsColumns"></mcs-header-row>
+          <mcs-data-row *mcsDataRowDef="let row; columns: orderItemsColumns;"></mcs-data-row>
+        </mcs-table>
+      </ng-container>
+
+      <!-- Order approval -->
+      <ng-container *ngSwitchCase="orderDetailsViewEnum.OrderApproval">
+        <mcs-presentation-panel class="limited-view">
+          <ng-container mcsPresentationPanelHeader>
+            <h2>{{ 'order.submitForApprovalHeader' | translate }}</h2>
+
+            <button mcsButton="basic" mcsAlign="right" (click)="cancelApproverSelection()">
               <mcs-item>
-                <span>{{ 'order.description' | translate }}:</span>
-                <span [innerHTML]="selectedOrder.description | mcsDataLabel"></span>
+                <mcs-icon [key]="backIconKey" size="xsmall"></mcs-icon>
+                <span>{{ 'order.backToDetails' | translate }}</span>
               </mcs-item>
+            </button>
+          </ng-container>
 
-              <mcs-item>
-                <span>{{ 'order.status' | translate }}:</span>
-                <span [innerHTML]="selectedOrder.workflowStatusLabel | mcsDataLabel"></span>
-              </mcs-item>
+          <p>{{ 'order.submitForApprovalDescription' | translate }}</p>
 
-              <mcs-item>
-                <span>{{ 'order.createdBy' | translate }}:</span>
-                <span>{{ selectedOrder.createdBy }}</span>
-              </mcs-item>
+          <section>
+            <mcs-order-approval (dataChange)="onChangeApprover($event)"></mcs-order-approval>
 
-              <mcs-item>
-                <span>{{ 'order.createdOn' | translate }}:</span>
-                <span>{{ selectedOrder.createdOn | mcsStdDateFormat }}</span>
-              </mcs-item>
-
-            </mcs-presentation-panel>
-          </mcs-grid-column>
-
-          <!-- Billing Details -->
-          <mcs-grid-column>
-            <mcs-presentation-panel>
-              <ng-container mcsPresentationPanelHeader>
-                <h2>{{ 'order.billingDetails' | translate }}</h2>
-              </ng-container>
-
-              <mcs-item>
-                <span>{{ 'order.contractTerm' | translate }}:</span>
-                <span>
-                  {{ selectedOrder.contractDurationMonths || 0 }}
-                  {{ 'order.contractTermSuffix' | translate }}
-                </span>
-              </mcs-item>
-
-              <mcs-item>
-                <span>{{ 'order.totalOneOffCost' | translate }}:</span>
-                <span>
-                  {{ selectedOrder.charges?.currencySymbol }}
-                  {{ selectedOrder.charges?.oneOff || 0 }}
-                </span>
-              </mcs-item>
-
-              <mcs-item>
-                <span>{{ 'order.totalMonthlyCost' | translate }}:</span>
-                <span>
-                  {{ selectedOrder.charges?.currencySymbol }}
-                  {{ selectedOrder.charges?.monthly || 0 }}
-                </span>
-              </mcs-item>
-
-            </mcs-presentation-panel>
-          </mcs-grid-column>
-        </mcs-grid-row>
-      </mcs-grid>
-
-      <!-- Order Items -->
-      <mcs-table [dataSource]="getOrderItemsDatasource(selectedOrder)" class="limited-view">
-        <!-- Description -->
-        <ng-container mcsColumnDef="description">
-          <mcs-header-cell *mcsHeaderCellDef>
-            {{ 'order.columnHeaders.description' | translate }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row">
-            {{ row.description }}
-          </mcs-data-cell>
-        </ng-container>
-
-        <!-- Quantity -->
-        <!-- TODO: Under confirmation on how line items could be merged -->
-        <ng-container mcsColumnDef="quantity">
-          <mcs-header-cell *mcsHeaderCellDef>
-            {{ 'order.columnHeaders.quantity' | translate }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row">
-            <span text-wrap>1</span>
-          </mcs-data-cell>
-        </ng-container>
-
-        <!-- Cost Centre -->
-        <ng-container mcsColumnDef="costCentre">
-          <mcs-header-cell *mcsHeaderCellDef>
-            {{ 'order.columnHeaders.costCentre' | translate }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row">
-            <span>{{ row.costCentre }}</span>
-          </mcs-data-cell>
-        </ng-container>
-
-        <!-- Billing Site -->
-        <ng-container mcsColumnDef="billingSite">
-          <mcs-header-cell *mcsHeaderCellDef>
-            {{ 'order.columnHeaders.billingSite' | translate }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row">
-            <span>{{ row.billingSite }}</span>
-          </mcs-data-cell>
-        </ng-container>
-
-        <!-- One-off Charge Column -->
-        <ng-container mcsColumnDef="oneOffCharge">
-          <mcs-header-cell *mcsHeaderCellDef>
-            {{ 'order.columnHeaders.oneOffCharge' | translate }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row">
-            {{ row.charges?.currencySymbol }} {{ row.charges?.oneOff }}
-          </mcs-data-cell>
-        </ng-container>
-
-        <!-- Monthly Charge Column -->
-        <ng-container mcsColumnDef="monthlyCharge">
-          <mcs-header-cell *mcsHeaderCellDef>
-            {{ 'order.columnHeaders.monthlyCharge' | translate }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row">
-            {{ row.charges?.currencySymbol }} {{ row.charges?.monthly }}
-          </mcs-data-cell>
-        </ng-container>
-
-        <!-- Data Status Integration -->
-        <ng-container mcsDataStatusDef>
-          <mcs-data-empty *mcsDataEmptyDef>
-            <span>{{ 'order.noOrderItems' | translate }}</span>
-          </mcs-data-empty>
-          <mcs-data-error *mcsDataErrorDef>
-            <span>{{ 'order.errorOnOrderItems' | translate }}</span>
-          </mcs-data-error>
-        </ng-container>
-
-        <!-- Header and Data row -->
-        <mcs-header-row *mcsHeaderRowDef="orderItemsColumns"></mcs-header-row>
-        <mcs-data-row *mcsDataRowDef="let row; columns: orderItemsColumns;"></mcs-data-row>
-      </mcs-table>
+            <div class="action-items">
+              <button mcsButton arrow="right" size="small"
+                [disabled]="!hasSelectedApprovers || selectedOrder.isProcessing"
+                (click)="submitForApproval(selectedOrder)"
+                mcsId="submit-for-approval"
+                mcsEventTracker="submit-for-approval"
+                mcsEventCategory="order"
+                mcsEventLabel="order-details-page">
+                {{ 'order.btnSubmitForApproval' | translate }}
+              </button>
+            </div>
+          </section>
+        </mcs-presentation-panel>
+      </ng-container>
     </section>
   </mcs-content-panel>
 </mcs-page>

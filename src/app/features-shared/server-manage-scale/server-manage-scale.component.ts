@@ -32,7 +32,8 @@ import {
 } from '@app/utilities';
 import {
  CoreValidators,
- IMcsFormGroup
+ IMcsFormGroup,
+ IMcsDataChange
   } from '@app/core';
 
 import {
@@ -60,7 +61,7 @@ const DEFAULT_MIN_CPU = 2;
 })
 
 export class ServerManageScaleComponent
-  implements OnInit, DoCheck, AfterViewInit, OnDestroy, IMcsFormGroup {
+  implements OnInit, DoCheck, AfterViewInit, OnDestroy, IMcsFormGroup, IMcsDataChange<ServerManageScale> {
 
   public inputManageType: InputManageType;
   public sliderValueIndex: number;
@@ -202,7 +203,7 @@ export class ServerManageScaleComponent
   public onChangeInputManageType(inputManageType: InputManageType) {
     this.inputManageType = inputManageType;
     this._registerFormControlsByInputType();
-    this._notifyDataChanged();
+    this.notifyDataChange();
   }
 
   /**
@@ -212,7 +213,38 @@ export class ServerManageScaleComponent
   public onSliderChanged(index: number) {
     this.sliderValueIndex = index;
     this.sliderValue = this.sliderTable[this.sliderValueIndex];
-    this._notifyDataChanged();
+    this.notifyDataChange();
+  }
+
+  /**
+   * Event that emits when an input has been changed
+   */
+  public notifyDataChange() {
+    let hasNoScaleContent = isNullOrEmpty(this.sliderValue) || isNullOrEmpty(this._scaleOutput);
+    if (hasNoScaleContent) { return; }
+
+    // Set model data based on management type
+    switch (this.inputManageType) {
+      case InputManageType.Custom:
+        this._scaleOutput.memoryGB = +this.fcCustomMemory.value * DEFAULT_MB;
+        this._scaleOutput.cpuCount = +this.fcCustomCpu.value;
+        this._scaleOutput.valid = this.fgServerScale.valid;
+        break;
+
+      case InputManageType.Auto:
+      default:
+        this._scaleOutput.memoryGB = this.sliderValue.memoryGB;
+        this._scaleOutput.cpuCount = this.sliderValue.cpuCount;
+        this._scaleOutput.valid = true;
+        break;
+    }
+    this._scaleOutput.hasChanged = this._scaleOutput.valid
+      && (this.serverCpuUsed !== this._scaleOutput.cpuCount
+        || (this.serverMemoryUsedMB * DEFAULT_MB) !== this._scaleOutput.memoryGB);
+
+    // Emit changes
+    this.dataChange.emit(this._scaleOutput);
+    this._changeDetectorRef.markForCheck();
   }
 
   /**
@@ -310,7 +342,7 @@ export class ServerManageScaleComponent
     this.fgServerScale = this._formBuilder.group([]);
     this.fgServerScale.statusChanges
       .pipe(startWith(null), takeUntil(this._destroySubject))
-      .subscribe(() => this._notifyDataChanged());
+      .subscribe(() => this.notifyDataChange());
     this._registerFormControlsByInputType();
   }
 
@@ -366,36 +398,5 @@ export class ServerManageScaleComponent
     this._formGroup.touchedStateChanges().pipe(
       takeUntil(this._destroySubject)
     ).subscribe(() => this._changeDetectorRef.markForCheck());
-  }
-
-  /**
-   * Event that emits when an input has been changed
-   */
-  private _notifyDataChanged() {
-    let hasNoScaleContent = isNullOrEmpty(this.sliderValue) || isNullOrEmpty(this._scaleOutput);
-    if (hasNoScaleContent) { return; }
-
-    // Set model data based on management type
-    switch (this.inputManageType) {
-      case InputManageType.Custom:
-        this._scaleOutput.memoryGB = +this.fcCustomMemory.value * DEFAULT_MB;
-        this._scaleOutput.cpuCount = +this.fcCustomCpu.value;
-        this._scaleOutput.valid = this.fgServerScale.valid;
-        break;
-
-      case InputManageType.Auto:
-      default:
-        this._scaleOutput.memoryGB = this.sliderValue.memoryGB;
-        this._scaleOutput.cpuCount = this.sliderValue.cpuCount;
-        this._scaleOutput.valid = true;
-        break;
-    }
-    this._scaleOutput.hasChanged = this._scaleOutput.valid
-      && (this.serverCpuUsed !== this._scaleOutput.cpuCount
-        || (this.serverMemoryUsedMB * DEFAULT_MB) !== this._scaleOutput.memoryGB);
-
-    // Emit changes
-    this.dataChange.emit(this._scaleOutput);
-    this._changeDetectorRef.markForCheck();
   }
 }

@@ -8,7 +8,8 @@ import {
 } from '@angular/core';
 import {
   Subject,
-  timer
+  timer,
+  Subscription
 } from 'rxjs';
 import {
   takeUntil,
@@ -16,11 +17,12 @@ import {
   distinctUntilChanged,
   debounceTime
 } from 'rxjs/operators';
-import { McsLoadingService } from '@app/core';
 import {
   unsubscribeSafely,
   getRandomNumber
 } from '@app/utilities';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { CoreEvent } from '@app/core';
 
 const LOADER_INITIAL_MIN_VALUE = 5;
 const LOADER_INITIAL_MAX_VALUE = 100;
@@ -43,21 +45,28 @@ export class MainLoaderComponent implements OnInit, OnDestroy {
   public progressValue = 0;
   public progressMax = LOADER_MAX_VALUE;
 
+  private _loadingStateChange = new Subject<boolean>();
   private _destroySubject = new Subject<void>();
   private _progressSubject = new Subject<void>();
 
+  private _showLoaderHandler: Subscription;
+  private _hideLoaderHandler: Subscription;
+
   constructor(
-    private _loadingService: McsLoadingService,
+    private _eventDispatcher: EventBusDispatcherService,
     private _changeDetectorRef: ChangeDetectorRef
   ) { }
 
   public ngOnInit() {
+    this._registerEvents();
     this._subscribeToLoadingStateChange();
   }
 
   public ngOnDestroy() {
     unsubscribeSafely(this._destroySubject);
     unsubscribeSafely(this._progressSubject);
+    unsubscribeSafely(this._showLoaderHandler);
+    unsubscribeSafely(this._hideLoaderHandler);
   }
 
   /**
@@ -110,10 +119,36 @@ export class MainLoaderComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Registers events
+   */
+  private _registerEvents(): void {
+    this._showLoaderHandler = this._eventDispatcher.addEventListener(
+      CoreEvent.loaderShow, this._onShowLoader.bind(this));
+
+    this._hideLoaderHandler = this._eventDispatcher.addEventListener(
+      CoreEvent.loaderHide, this._onHideLoader.bind(this));
+  }
+
+  /**
+   * Shows loader with message
+   * @param _message Message to be displayed
+   */
+  private _onShowLoader(_message: string): void {
+    this._loadingStateChange.next(true);
+  }
+
+  /**
+   * Hides the loader
+   */
+  private _onHideLoader(): void {
+    this._loadingStateChange.next(false);
+  }
+
+  /**
    * Subscribe to the loading state change
    */
   private _subscribeToLoadingStateChange(): void {
-    this._loadingService.loadingStateChange().pipe(
+    this._loadingStateChange.pipe(
       takeUntil(this._destroySubject),
       distinctUntilChanged(),
       debounceTime(100),

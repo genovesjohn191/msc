@@ -25,8 +25,8 @@ import {
 } from '@app/models';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { CoreRoutes } from '../core.routes';
-import { McsLoggerService } from './mcs-logger.service';
 import { CoreEvent } from '../core.event';
+import { McsLoggerService } from './mcs-logger.service';
 
 @Injectable()
 export class McsRouteHandlerService implements McsDisposable {
@@ -103,8 +103,7 @@ export class McsRouteHandlerService implements McsDisposable {
 
     activeRoutes.forEach((currentRoute) => {
       activeRoute = isNullOrEmpty(currentRoute.children) ?
-        currentRoute :
-        this._getCurrentActiveRoute(currentRoute.children);
+        currentRoute : this._getCurrentActiveRoute(currentRoute.children);
     });
     return activeRoute;
   }

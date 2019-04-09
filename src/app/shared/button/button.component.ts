@@ -1,6 +1,7 @@
 import {
   Component,
   Input,
+  OnInit,
   Renderer2,
   ElementRef,
   ChangeDetectorRef,
@@ -40,7 +41,7 @@ export type ButtonType =
   }
 })
 
-export class ButtonComponent {
+export class ButtonComponent implements OnInit {
   @Input()
   public arrow: 'up' | 'right';
 
@@ -99,6 +100,10 @@ export class ButtonComponent {
     protected _changeDetectorRef: ChangeDetectorRef
   ) { }
 
+  public ngOnInit() {
+    this._initializeColorByType();
+  }
+
   public get hostElement(): HTMLElement {
     return this._elementRef.nativeElement;
   }
@@ -133,5 +138,12 @@ export class ButtonComponent {
   private _setColor(color: string): void {
     if (isNullOrEmpty(color)) { return; }
     this._renderer.addClass(this._elementRef.nativeElement, color);
+  }
+
+  /**
+   * Initializes the color based on the button type
+   */
+  private _initializeColorByType(): void {
+    this.color = this._type === 'raised' ? 'primary' : 'default';
   }
 }

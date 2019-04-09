@@ -14,11 +14,11 @@ import {
 } from '@app/models';
 import { IMcsInitializable, CoreEvent } from '@app/core';
 import { EventBusDispatcherService } from '@app/event-bus';
-import { McsEntityJobManager } from './mcs-entity-job.manager';
+import { McsEntityJobBaseStateManager } from './mcs-entity-job-base.state-manager';
 import { McsMediaRepository } from '../repositories/mcs-media.repository';
 
 @Injectable()
-export class McsMediaJobManager extends McsEntityJobManager<McsResourceMedia>
+export class McsMediaStateManager extends McsEntityJobBaseStateManager<McsResourceMedia>
   implements IMcsInitializable, McsDisposable {
 
   private catalogItemCreateHandler: Subscription;

@@ -23,7 +23,7 @@ import { saveAs } from 'file-saver';
 import {
   CoreDefinition,
   McsErrorHandlerService,
-  McsLoadingService
+  CoreEvent
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -42,7 +42,7 @@ import {
   McsTicketCreateAttachment
 } from '@app/models';
 import { McsTicketsRepository } from '@app/services';
-import { TranslateService } from '@ngx-translate/core';
+import { EventBusDispatcherService } from '@app/event-bus';
 
 @Component({
   selector: 'mcs-ticket',
@@ -69,10 +69,9 @@ export class TicketComponent implements OnInit, OnDestroy {
   }
 
   public constructor(
-    private _translateService: TranslateService,
+    private _eventDispatcher: EventBusDispatcherService,
     private _activatedRoute: ActivatedRoute,
     private _ticketsRepository: McsTicketsRepository,
-    private _loadingService: McsLoadingService,
     private _errorHandlerService: McsErrorHandlerService,
     private _changeDetectorRef: ChangeDetectorRef
   ) {
@@ -208,7 +207,7 @@ export class TicketComponent implements OnInit, OnDestroy {
    * Subscribe to ticket based on the parameter ID
    */
   private _subscribeToTicketById(ticketId: string): void {
-    this._loadingService.showLoader(this._translateService.instant('ticket.loading'));
+    this._eventDispatcher.dispatch(CoreEvent.loaderShow);
 
     this.selectedTicket$ = this._ticketsRepository.getByIdAsync(
       ticketId, this._onTicketObtained.bind(this)
@@ -233,6 +232,6 @@ export class TicketComponent implements OnInit, OnDestroy {
    * Event that emits when the ticket has been completed
    */
   private _onTicketObtained(): void {
-    this._loadingService.hideLoader();
+    this._eventDispatcher.dispatch(CoreEvent.loaderHide);
   }
 }

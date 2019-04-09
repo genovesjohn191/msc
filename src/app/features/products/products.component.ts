@@ -8,7 +8,6 @@ import {
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import {
   Subject,
   throwError,
@@ -27,11 +26,12 @@ import {
   ActivatedRoute,
   ParamMap
 } from '@angular/router';
+import { EventBusDispatcherService } from '@app/event-bus';
 import {
   McsDataStatusFactory,
   McsErrorHandlerService,
   CoreDefinition,
-  McsLoadingService
+  CoreEvent
 } from '@app/core';
 import {
   unsubscribeSafely,
@@ -89,8 +89,7 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private _activatedRoute: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _translateService: TranslateService,
-    private _loadingService: McsLoadingService,
+    private _eventDispatcher: EventBusDispatcherService,
     private _errorHandlerService: McsErrorHandlerService,
     private _productService: ProductService,
     private _productsRepository: McsProductsRepository,
@@ -155,7 +154,7 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   private _subscribeToProductById(): void {
     this.selectedProduct$ = this._activatedRoute.paramMap.pipe(
       switchMap((params: ParamMap) => {
-        this._loadingService.showLoader(this._translateService.instant('products.loadingDetails'));
+        this._eventDispatcher.dispatch(CoreEvent.loaderShow);
 
         return this._productsRepository.getByIdAsync(
           params.get('id'), this._onProductObtained.bind(this)
@@ -177,6 +176,6 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
    * Event that emits when the product has been obtained
    */
   private _onProductObtained(): void {
-    this._loadingService.hideLoader();
+    this._eventDispatcher.dispatch(CoreEvent.loaderHide);
   }
 }

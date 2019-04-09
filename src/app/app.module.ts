@@ -106,7 +106,7 @@ export function coreConfig(): CoreConfig {
     SharedModule,
     ConsolePageModule,
     DefaultPageModule,
-    PageNotificationsModule,
+    PageNotificationsModule
   ],
   providers: [
     environment.ENV_PROVIDERS,

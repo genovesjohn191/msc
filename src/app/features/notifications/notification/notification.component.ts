@@ -17,10 +17,11 @@ import {
   takeUntil,
   shareReplay
 } from 'rxjs/operators';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { McsJob } from '@app/models';
 import {
-  McsLoadingService,
-  CoreDefinition
+  CoreDefinition,
+  CoreEvent
 } from '@app/core';
 import { McsJobsRepository } from '@app/services';
 import { unsubscribeSafely } from '@app/utilities';
@@ -39,7 +40,7 @@ export class NotificationComponent implements OnInit, OnDestroy {
   public constructor(
     private _activatedRoute: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _loadingService: McsLoadingService,
+    private _eventDispatcher: EventBusDispatcherService,
     private _jobsRepository: McsJobsRepository
   ) { }
 
@@ -76,7 +77,7 @@ export class NotificationComponent implements OnInit, OnDestroy {
    * Subscribes to job based on the parameter ID
    */
   private _subscribeToJobById(jobId: string): void {
-    this._loadingService.showLoader('Loading notification details');
+    this._eventDispatcher.dispatch(CoreEvent.loaderShow);
 
     this.job$ = this._jobsRepository.getByIdAsync(
       jobId, this._onJobObtained.bind(this)
@@ -96,6 +97,6 @@ export class NotificationComponent implements OnInit, OnDestroy {
    * Event that emits when the job obtained
    */
   private _onJobObtained(): void {
-    this._loadingService.hideLoader();
+    this._eventDispatcher.dispatch(CoreEvent.loaderHide);
   }
 }
