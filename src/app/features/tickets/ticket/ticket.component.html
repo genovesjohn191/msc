@@ -23,8 +23,8 @@
         <ng-container mcsPresentationPanelHeader>
           <h2>{{ 'ticket.description' | translate }}</h2>
         </ng-container>
-        <p><strong [innerHTML]="selectedTicket.shortDescription | mcsNewLines"></strong></p>
-        <p [innerHTML]="selectedTicket.description | mcsNewLines"></p>
+        <p><strong >{{ selectedTicket.shortDescription }}</strong></p>
+        <p text-pre-wrap>{{ selectedTicket.description }}</p>
       </mcs-presentation-panel>
 
       <!-- Ticket details -->

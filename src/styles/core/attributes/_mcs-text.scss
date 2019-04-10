@@ -36,6 +36,10 @@
   white-space: normal !important;
 }
 
+[text-pre-wrap] {
+  white-space: pre-wrap !important;
+}
+
 // Transformation
 [text-uppercase] {
   text-transform: uppercase !important;
