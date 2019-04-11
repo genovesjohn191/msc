@@ -21,9 +21,10 @@ import { EventBusDispatcherService } from '@app/event-bus';
 import {
   CoreDefinition,
   CoreRoutes,
+  CoreEvent,
   McsErrorHandlerService,
   McsOrderWizardBase,
-  CoreEvent
+  McsNavigationService
 } from '@app/core';
 import {
   ServiceType,
@@ -76,14 +77,15 @@ export class ServerCreateComponent extends McsOrderWizardBase
   private _serverCreateBuilder: ServerCreateBuilder<any>;
 
   constructor(
+    _navigationService: McsNavigationService,
+    _serverCreateService: ServerCreateService,
     private _changeDetectorRef: ChangeDetectorRef,
     private _translate: TranslateService,
     private _eventDispatcher: EventBusDispatcherService,
     private _errorHandlerService: McsErrorHandlerService,
-    private _resourcesRepository: McsResourcesRepository,
-    private _serverCreateService: ServerCreateService
+    private _resourcesRepository: McsResourcesRepository
   ) {
-    super(_serverCreateService);
+    super(_navigationService, _serverCreateService);
     this._serverCreateBuilder = new ServerCreateBuilder(_serverCreateService);
   }
 
@@ -176,7 +178,7 @@ export class ServerCreateComponent extends McsOrderWizardBase
         resourcePath: CoreRoutes.getNavigationPath(RouteKey.ServerDetails)
       }
     } as McsOrderWorkflow;
-    this._serverCreateService.submitOrderWorkflow(workflow).subscribe();
+    this.submitOrderWorkflow(workflow);
   }
 
   /**

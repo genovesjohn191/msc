@@ -23,6 +23,7 @@ import { GoogleAnalyticsEventsService } from './services/google-analytics-events
 import { McsSessionHandlerService } from './services/mcs-session-handler.service';
 import { McsComponentHandlerService } from './services/mcs-component-handler.service';
 import { McsDateTimeService } from './services/mcs-date-time.service';
+import { McsNavigationService } from './services/mcs-navigation.service';
 
 /** Providers */
 import { McsAssetsProvider } from './providers/mcs-assets.provider';
@@ -70,5 +71,6 @@ export const coreProviders: any[] = [
   GoogleAnalyticsEventsService,
   McsSessionHandlerService,
   McsComponentHandlerService,
-  McsDateTimeService
+  McsDateTimeService,
+  McsNavigationService
 ];

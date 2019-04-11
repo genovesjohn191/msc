@@ -34,7 +34,8 @@ import {
   isNullOrEmpty,
   animateFactory,
   getEncodedUrl,
-  unsubscribeSafely
+  unsubscribeSafely,
+  convertGbToMb
 } from '@app/utilities';
 import {
   IpAllocationMode,
@@ -233,11 +234,11 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
     this._serversRepository.updateServerCompute(
       server.id,
       {
-        memoryMB: this.manageScale.memoryGB,
+        memoryMB: convertGbToMb(this.manageScale.memoryGB),
         cpuCount: this.manageScale.cpuCount,
         clientReferenceObject: {
           serverId: server.id,
-          memoryMB: this.manageScale.memoryGB,
+          memoryMB: convertGbToMb(this.manageScale.memoryGB),
           cpuCount: this.manageScale.cpuCount
         }
       } as McsServerUpdate)

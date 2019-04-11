@@ -4,13 +4,11 @@ import { RouteKey } from '@app/models';
 import { OrdersComponent } from './orders.component';
 import { OrderComponent } from './order/order.component';
 import { ScaleManagedServerComponent } from './scale-managed-server/scale-managed-server.component';
-import { ScaleManagedServerService } from './scale-managed-server/scale-managed-server.service';
 
 /**
  * List of services for the main module
  */
 export const ordersProviders: any[] = [
-  ScaleManagedServerService
 ];
 
 /**

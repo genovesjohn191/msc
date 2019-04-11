@@ -12,6 +12,7 @@ import {
   exhaustMap,
   finalize
 } from 'rxjs/operators';
+import { CoreDefinition } from '@app/core';
 import {
   McsDisposable,
   unsubscribeSafely,
@@ -32,7 +33,6 @@ import {
   OrderWorkflowAction,
   McsApiJobRequestBase
 } from '@app/models';
-import { CoreDefinition } from '@app/core';
 import { IMcsFallible } from '../../interfaces/mcs-fallible.interface';
 import { IMcsJobManager } from '../../interfaces/mcs-job-manager.interface';
 import { IMcsStateChangeable } from '../../interfaces/mcs-state-changeable.interface';
@@ -132,6 +132,15 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible,
   }
 
   /**
+   * Create default order description based on order description
+   * @param description Description of order details
+   */
+  public createDefaultOrderDescription(description: string): string {
+    let currentDate = formatDate(new Date(), 'shortDate', CoreDefinition.LOCALE);
+    return `${description} - ${currentDate}`;
+  }
+
+  /**
    * Creates or Update the order details
    * @param orderDetails The details of the order to be created
    */
@@ -140,8 +149,7 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible,
       .setDescription(orderDetails.description)
       .setContractDuration(orderDetails.contractDurationMonths)
       .setBillingSiteId(orderDetails.billingSiteId)
-      .setBillingCostCentreId(orderDetails.billingCostCentreId)
-      .setOrderWorkflow(null);
+      .setBillingCostCentreId(orderDetails.billingCostCentreId);
 
     let orderItems = getSafeProperty(orderDetails, (obj) => obj.items);
     if (!isNullOrEmpty(orderItems)) {
@@ -349,8 +357,6 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible,
    * @param orderDetails Details of the order to be created
    */
   private _createOrder(orderDetails: McsOrderCreate): Observable<McsOrder> {
-    let currentDate = formatDate(new Date(), 'shortDate', CoreDefinition.LOCALE);
-    orderDetails.description = `${orderDetails.description} - ${currentDate}`;
     return this._orderFactory.createOrder(orderDetails);
   }
 

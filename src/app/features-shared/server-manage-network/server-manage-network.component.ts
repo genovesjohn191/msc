@@ -20,7 +20,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 import {
   finalize,
-  takeUntil
+  takeUntil,
+  shareReplay
 } from 'rxjs/operators';
 import {
   CoreValidators,
@@ -260,16 +261,16 @@ export class ServerManageNetworkComponent
    */
   private _setInUsedIpAddresses(network: McsResourceNetwork): void {
     if (isNullOrEmpty(network)) { return; }
+
     this.ipAddressesStatusFactory.setInProgress();
-    this._resourcesRepository.getResourceNetwork(this.resourceId, network.id)
-      .pipe(
-        finalize(() => this.ipAddressesStatusFactory.setSuccessful(this.ipAddressesInUsed))
-      )
-      .subscribe((response) => {
-        if (isNullOrEmpty(response)) { return; }
-        this.ipAddressesInUsed = response.ipAddresses;
-        this._changeDetectorRef.markForCheck();
-      });
+    this._resourcesRepository.getResourceNetwork(this.resourceId, network.id).pipe(
+      finalize(() => this.ipAddressesStatusFactory.setSuccessful(this.ipAddressesInUsed)),
+      shareReplay(1)
+    ).subscribe((response) => {
+      if (isNullOrEmpty(response)) { return; }
+      this.ipAddressesInUsed = response.ipAddresses;
+      this._changeDetectorRef.markForCheck();
+    });
   }
 
   /**

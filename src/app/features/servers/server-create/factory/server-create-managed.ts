@@ -26,7 +26,7 @@ export class ServerCreateManaged implements IServerCreate {
     }
 
     serverCreateService.createOrUpdateOrder({
-      description: 'New Managed Server',
+      description: serverCreateService.createDefaultOrderDescription('New Managed Server'),
       contractDurationMonths: 12,
       items: [{
         itemOrderTypeId: OrderIdType.CreateManagedServer,
