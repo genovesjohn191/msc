@@ -148,6 +148,7 @@ podTemplate(
                     sh "yarn install"
                     sh "npm run lint"
                     sh "CHROME_BIN=/usr/bin/google-chrome npm run test:prod" // Requires headless browser in the jnlp-slave container
+                    junit '**/*.xml'
                 }
             }
             if (slack_notify_on_success) {
