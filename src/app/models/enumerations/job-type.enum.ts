@@ -13,6 +13,7 @@ export enum JobType {
   CloneServer = 100004,
   RenameServer = 100005,
   ProvisionCreateServer = 100006,
+  OrderScaleManagedServer = 100007,
 
   // Server Snapshot
   CreateServerSnapshot = 100051,
@@ -70,6 +71,7 @@ export const jobTypeText = {
   [JobType.CreateResourceCatalogItem]: 'New Catalog Media',
   [JobType.PerformServerOsUpdateAnalysis]: 'Perform OS Inspection',
   [JobType.ApplyServerOsUpdates]: 'Apply OS Updates',
+  [JobType.OrderScaleManagedServer]: 'Scale Managed Server',
 };
 
 /**

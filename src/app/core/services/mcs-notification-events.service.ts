@@ -130,6 +130,7 @@ export class McsNotificationEventsService {
     this._jobTypeEventMap.set(JobType.ChangeServerPowerState, CoreEvent.jobServerChangePowerState);
     this._jobTypeEventMap.set(JobType.ResetServerPassword, CoreEvent.jobServerResetPassword);
     this._jobTypeEventMap.set(JobType.CreateResourceCatalogItem, CoreEvent.jobResourceCatalogItemCreate);
+    this._jobTypeEventMap.set(JobType.OrderScaleManagedServer, CoreEvent.jobOrderScaleManagedServer);
   }
 
   /**

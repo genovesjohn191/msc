@@ -5,7 +5,7 @@ export class McsOrderCreate {
   public description?: string;
   public contractDurationMonths?: number;
   public billingSiteId?: string;
-  public costCentreId?: string;
+  public billingCostCentreId?: string;
 
   @JsonProperty({ type: McsOrderItemCreate })
   public items?: McsOrderItemCreate[];
@@ -15,6 +15,6 @@ export class McsOrderCreate {
     this.contractDurationMonths = undefined;
     this.items = [];
     this.billingSiteId = undefined;
-    this.costCentreId = undefined;
+    this.billingCostCentreId = undefined;
   }
 }

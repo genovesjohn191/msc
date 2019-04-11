@@ -125,7 +125,7 @@ export class McsOrderBuilder {
     this._orderRequestDetails.orderDetails.contractDurationMonths = this._contractDurationMonths;
     this._orderRequestDetails.orderDetails.description = this._description;
     this._orderRequestDetails.orderDetails.billingSiteId = this._billingSiteId;
-    this._orderRequestDetails.orderDetails.costCentreId = this._billingCostCentreId;
+    this._orderRequestDetails.orderDetails.billingCostCentreId = this._billingCostCentreId;
     return this;
   }
 

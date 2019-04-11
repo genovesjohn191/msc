@@ -8,6 +8,7 @@ import { ScrollableDirective } from './scrollable.directive';
 import { StopPropagationDirective } from './stop-propagation.directive';
 import { SetFocusDirective } from './set-focus.directive';
 import { IdDirective } from './id.directive';
+import { NavigateBackwardDirective } from './navigate-backwards.directive';
 import { AlignContentDirective } from './align-content.directive';
 import { AlignDirective } from './align.directive';
 
@@ -31,6 +32,7 @@ import { GreyedOutDirective } from './greyed-out.directive';
     StopPropagationDirective,
     SetFocusDirective,
     IdDirective,
+    NavigateBackwardDirective,
     AlignContentDirective,
     AlignDirective
   ],
@@ -48,6 +50,7 @@ import { GreyedOutDirective } from './greyed-out.directive';
     StopPropagationDirective,
     SetFocusDirective,
     IdDirective,
+    NavigateBackwardDirective,
     AlignContentDirective,
     AlignDirective
   ]

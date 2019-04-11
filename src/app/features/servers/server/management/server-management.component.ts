@@ -167,6 +167,15 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
   }
 
   /**
+   * Navigate to scale managed server page
+   * @param server selected server object reference
+   */
+  public navigateToScaleManagedServer(server: McsServer): void {
+    this._eventDispatcher.dispatch(CoreEvent.serverScaleManageSelected, server.id);
+    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.OrderScaleManagedServer)]);
+  }
+
+  /**
    * Event that emits when the scale has been cancelled
    */
   public onCancelScale(): void {

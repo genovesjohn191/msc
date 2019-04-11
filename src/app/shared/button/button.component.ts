@@ -144,6 +144,7 @@ export class ButtonComponent implements OnInit {
    * Initializes the color based on the button type
    */
   private _initializeColorByType(): void {
+    if (!isNullOrEmpty(this.color)) { return; }
     this.color = this._type === 'raised' ? 'primary' : 'default';
   }
 }

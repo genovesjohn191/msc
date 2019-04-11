@@ -109,6 +109,30 @@
       "email": "Email Address"
     }
   },
+  "orderScaleManagedServer": {
+    "back": "Back",
+    "vm": {
+      "label": "Select the Virtual Machine to scale",
+      "placeholder": "Select a VM",
+      "contextualHelp": "Choose the virtual machine to scale."
+    },
+    "vmDetails": {
+      "stepTitle": "Server Details",
+      "label": "Compute Size",
+      "description": "This server currently has {{ram}} RAM and {{cpu}} vCPU",
+      "contextualHelp": "Choose the memory and vCPU for your server. Click 'Enter custom size' to enter a precise value. Your selection is bound by the remaining compute in your Virtual Data Centre.",
+      "warning": "Scaling the Server will require a restart."
+    },
+    "confirm": {
+      "stepTitle": "Confirm"
+    },
+    "scaling": {
+      "stepTitle": "Go!",
+      "description": "Your server is being scaled and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
+      "dataInProgress": "Preparing the server for scaling. This may take a moment.",
+      "dataError": "Something went wrong while processing your request. Please try again later."
+    }
+  },
   "notification": {
     "leftPanelHeader": "Notification details",
     "backToNotifications": "Back to Notifications"
@@ -532,7 +556,7 @@
   "orderDetailsStep": {
     "stepTitle": "Confirm",
     "header": "Confirm Order",
-    "description": "Confirm the details of your order and then continue.",
+    "description": "Please confirm the details of your order and click Go to submit your items for provisioning.",
     "billingDetails": {
       "header": "Billing Details",
       "contractTermPlaceholder": "Contract Term",
