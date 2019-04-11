@@ -18,7 +18,11 @@ import {
   FormControl
 } from '@angular/forms';
 import { McsServerCreateAddOnInview } from '@app/models';
-import { unsubscribeSafely } from '@app/utilities';
+import {
+  unsubscribeSafely,
+  isNullOrEmpty,
+  getSafeProperty
+} from '@app/utilities';
 import {
   CoreValidators,
   IMcsDataChange
@@ -58,6 +62,9 @@ export class AddOnInviewComponent implements
    * Event that emits whenever there are changes in the data
    */
   public notifyDataChange(): void {
+    let inviewLevel = getSafeProperty(this.fcInview, (obj) => obj.value);
+    if (isNullOrEmpty(inviewLevel)) { return; }
+
     let inviewDetails = new McsServerCreateAddOnInview();
     inviewDetails.inviewLevel = this.fcInview.value;
     this.dataChange.emit(inviewDetails);

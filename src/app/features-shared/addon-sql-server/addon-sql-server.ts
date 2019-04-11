@@ -19,7 +19,11 @@ import {
 } from '@angular/forms';
 import { IMcsDataChange } from '@app/core';
 import { McsServerCreateAddOnSqlServer } from '@app/models';
-import { unsubscribeSafely } from '@app/utilities';
+import {
+  unsubscribeSafely,
+  isNullOrEmpty,
+  getSafeProperty
+} from '@app/utilities';
 
 export type SqlServerOption = {
   category: string,
@@ -60,8 +64,11 @@ export class AddOnSqlServerComponent implements
    * Event that emits whenever there are changes in the data
    */
   public notifyDataChange(): void {
+    let sqlServer = getSafeProperty(this.fcSqlServer, (obj) => obj.value);
+    if (isNullOrEmpty(sqlServer)) { return; }
+
     let sqlServerRef = new McsServerCreateAddOnSqlServer();
-    sqlServerRef.sqlServer = this.fcSqlServer.value;
+    sqlServerRef.sqlServer = sqlServer;
     this.dataChange.emit(sqlServerRef);
   }
 

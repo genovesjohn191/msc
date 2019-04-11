@@ -3,10 +3,7 @@ import {
   deleteArrayRecord,
   isNullOrEmpty
 } from '@app/utilities';
-import {
-  McsOrderItemCreate,
-  McsOrderWorkflow
-} from '@app/models';
+import { McsOrderItemCreate } from '@app/models';
 import { McsOrderRequest } from './mcs-order-request';
 
 export class McsOrderBuilder {
@@ -15,7 +12,6 @@ export class McsOrderBuilder {
   private _billingSiteId: string;
   private _billingCostCentreId: string;
   private _orderItems: McsOrderItemCreate[];
-  private _orderWorkflow: McsOrderWorkflow;
   private _orderRequestDetails: McsOrderRequest;
 
   constructor() {
@@ -67,15 +63,6 @@ export class McsOrderBuilder {
    */
   public setBillingCostCentreId(costCentreId: string): McsOrderBuilder {
     this._billingCostCentreId = costCentreId;
-    return this;
-  }
-
-  /**
-   * Sets the order workflow details
-   * @param workflow Workflow details of the order to be set
-   */
-  public setOrderWorkflow(workflow: McsOrderWorkflow): McsOrderBuilder {
-    this._orderWorkflow = workflow;
     return this;
   }
 
@@ -134,14 +121,6 @@ export class McsOrderBuilder {
    */
   public buildOrderItem(): McsOrderBuilder {
     this._orderRequestDetails.orderDetails.items = this._orderItems;
-    return this;
-  }
-
-  /**
-   * Build the order workflow details of the order
-   */
-  public buildOrderWorkflow(): McsOrderBuilder {
-    this._orderRequestDetails.workflowDetails = this._orderWorkflow;
     return this;
   }
 }

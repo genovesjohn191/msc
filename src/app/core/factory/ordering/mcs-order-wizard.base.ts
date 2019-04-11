@@ -13,9 +13,15 @@ import {
   McsDisposable,
   isNullOrEmpty
 } from '@app/utilities';
-import { McsOrder } from '@app/models';
+import {
+  McsOrder,
+  OrderWorkflowAction,
+  McsOrderWorkflow,
+  RouteKey
+} from '@app/models';
 import { McsOrderBase } from './mcs-order.base';
 import { McsWizardBase } from '../../base/mcs-wizard.base';
+import { McsNavigationService } from '../../services/mcs-navigation.service';
 
 export abstract class McsOrderWizardBase extends McsWizardBase implements McsDisposable {
   public order$: Observable<McsOrder>;
@@ -24,7 +30,10 @@ export abstract class McsOrderWizardBase extends McsWizardBase implements McsDis
   public pricingCalculator: PricingCalculator;
   private _pricingIsHiddenByStep: boolean;
 
-  constructor(private _orderBase: McsOrderBase) {
+  constructor(
+    private _navigationService: McsNavigationService,
+    private _orderBase: McsOrderBase
+  ) {
     super(_orderBase);
     this._subscribeToOrderChanges();
   }
@@ -42,10 +51,35 @@ export abstract class McsOrderWizardBase extends McsWizardBase implements McsDis
   }
 
   /**
+   * Subsmit the order workflow
+   * @param workflow Workflow details to be submitted
+   */
+  public submitOrderWorkflow(workflow: McsOrderWorkflow): void {
+    if (isNullOrEmpty(workflow)) { return; }
+
+    this._orderBase.submitOrderWorkflow(workflow).pipe(
+      tap(() => this.navigateOrderByWorkflowAction(workflow.state))
+    ).subscribe();
+  }
+
+  /**
+   * Navigates the order based on the workflow action triggered
+   * @param workflowAction Workflow action to be navigated
+   */
+  public navigateOrderByWorkflowAction(workflowAction: OrderWorkflowAction): void {
+    let shouldBeRedirected = workflowAction === OrderWorkflowAction.AwaitingApproval ||
+      workflowAction === OrderWorkflowAction.Draft;
+    if (!shouldBeRedirected) { return; }
+
+    this._navigationService.navigateTo(RouteKey.OrderDetails, this._orderBase.order.id);
+  }
+
+  /**
    * Disposes all the resources of the wizard base
    */
   public dispose(): void {
     super.dispose();
+    this._orderBase.dispose();
   }
 
   /**

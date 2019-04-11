@@ -78,7 +78,8 @@
       <section margin-top-xlarge>
         <h3>{{ 'orderDetailsStep.orderDetails.header' | translate }}</h3>
         <mcs-form-field>
-          <input type="text" mcsInput [formControl]="fcDescription">
+          <input type="text" mcsInput [formControl]="fcDescription" #orderDescription
+            (focus)="orderDescription.setSelectionRange(0, orderDescription?.value?.length)">
         </mcs-form-field>
         <p>{{ 'orderDetailsStep.orderDetails.description' | translate }}</p>
 
@@ -166,7 +167,7 @@
             </span><br>
             <a>Macquarie Telecom Pty Ltd terms and conditions.</a>
           </mcs-note>
-          <mcs-note *ngSwitchCase="orderWorkFlowEnum.AwaitingApproval">
+          <mcs-note *ngSwitchCase="orderWorkFlowEnum.Unknown">
             <mcs-form-field>
               <mcs-select [(ngModel)]="selectedServer">
                 <mcs-option [value]="0">New Dedicated Server(120033)</mcs-option>

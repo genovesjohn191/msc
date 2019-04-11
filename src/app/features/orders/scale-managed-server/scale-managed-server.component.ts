@@ -16,7 +16,8 @@ import {
   IMcsFormGroup,
   CoreValidators,
   McsGuid,
-  CoreEvent
+  CoreEvent,
+  McsNavigationService
 } from '@app/core';
 import {
   throwError,
@@ -50,7 +51,6 @@ import {
   McsResourcesRepository,
   McsServersRepository
 } from '@app/services';
-import { ScaleManagedServerService } from './scale-managed-server.service';
 import {
   OrderDetails,
   ServerManageScale
@@ -60,8 +60,12 @@ import {
   FormGroup,
   FormControl
 } from '@angular/forms';
-import { McsFormGroupDirective, ComponentHandlerDirective } from '@app/shared';
+import {
+  McsFormGroupDirective,
+  ComponentHandlerDirective
+} from '@app/shared';
 import { EventBusDispatcherService } from '@app/event-bus';
+import { ScaleManagedServerService } from './scale-managed-server.service';
 
 type ScaleManageProperties = {
   cpuCount: number;
@@ -73,7 +77,7 @@ const SCALE_MANAGE_SERVER_REF_ID = McsGuid.newGuid().toString();
   selector: 'mcs-scale-managed-server',
   templateUrl: 'scale-managed-server.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: []
+  providers: [ScaleManagedServerService]
 })
 
 export class ScaleManagedServerComponent extends McsOrderWizardBase implements OnInit, OnDestroy {
@@ -98,6 +102,7 @@ export class ScaleManagedServerComponent extends McsOrderWizardBase implements O
   private _selectedServerIdHandler: Subscription;
 
   constructor(
+    _navigationService: McsNavigationService,
     private _elementRef: ElementRef,
     private _formBuilder: FormBuilder,
     private _formGroupService: McsFormGroupService,
@@ -108,7 +113,7 @@ export class ScaleManagedServerComponent extends McsOrderWizardBase implements O
     private _errorHandlerService: McsErrorHandlerService,
     private _scaleManagedServerService: ScaleManagedServerService
   ) {
-    super(_scaleManagedServerService);
+    super(_navigationService, _scaleManagedServerService);
     this._registerFormGroups();
     this._registerEvents();
     this._manageScale = new ServerManageScale();
@@ -171,15 +176,19 @@ export class ScaleManagedServerComponent extends McsOrderWizardBase implements O
       isNullOrEmpty(getSafeProperty(server, (obj) => obj.serviceId))) { return; }
 
     this._manageScale = manageScale;
-    this._scaleManagedServerService.addOrUpdateOrderItem(
+    this._scaleManagedServerService.createOrUpdateOrder(
       {
-        itemOrderTypeId: OrderIdType.ScaleManageServer,
-        referenceId: SCALE_MANAGE_SERVER_REF_ID,
-        properties: {
-          cpuCount: manageScale.cpuCount,
-          memoryMB: convertGbToMb(manageScale.memoryGB),
-        } as ScaleManageProperties,
-        serviceId: server.serviceId
+        description: this._scaleManagedServerService.createDefaultOrderDescription('Scale Managed Server'),
+        contractDurationMonths: 12,
+        items: [{
+          itemOrderTypeId: OrderIdType.ScaleManageServer,
+          referenceId: SCALE_MANAGE_SERVER_REF_ID,
+          properties: {
+            cpuCount: manageScale.cpuCount,
+            memoryMB: convertGbToMb(manageScale.memoryGB)
+          } as ScaleManageProperties,
+          serviceId: server.serviceId
+        }]
       }
     );
     this._changeDetectorRef.markForCheck();
@@ -209,7 +218,7 @@ export class ScaleManagedServerComponent extends McsOrderWizardBase implements O
         resourcePath: CoreRoutes.getNavigationPath(RouteKey.ServerDetails)
       }
     } as McsOrderWorkflow;
-    this._scaleManagedServerService.submitOrderWorkflow(workflow).subscribe();
+    this.submitOrderWorkflow(workflow);
   }
 
   /**

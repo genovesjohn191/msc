@@ -41,8 +41,7 @@ export class McsOrderDirector {
     if (isNullOrUndefined(orderBuilder)) { return; }
     orderBuilder
       .buildOrderDetails()
-      .buildOrderItem()
-      .buildOrderWorkflow();
+      .buildOrderItem();
 
     let orderItems = getSafeProperty(orderBuilder,
       (obj) => obj.orderRequestDetails.orderDetails.items
