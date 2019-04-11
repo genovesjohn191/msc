@@ -1,0 +1,105 @@
+<mcs-page header="Scale Managed Server">
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef>
+
+    <!-- Back to Server Details -->
+    <mcs-top-panel-item *mcsTopPanelItemDef no-border>
+      <mcs-action-item mcsAlign="end"
+        mcsNavigateBackward
+        mcsId="navigate-back"
+        mcsEventTracker="navigate-back-click"
+        mcsEventCategory="orders"
+        mcsEventLabel="navigate-back">
+        <mcs-icon [key]="backIconKey" size="small"></mcs-icon>
+        <span>{{'shared.wizard.previous' | translate}}</span>
+      </mcs-action-item>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
+  <mcs-content-panel *mcsContentPanelDef>
+
+    <mcs-wizard header="Wizard Header">
+
+      <!-- Error message -->
+      <ng-container mcsWizardErrorTemplate>
+        <mcs-form-message #formMessage></mcs-form-message>
+      </ng-container>
+
+      <!-- Server Details Step-->
+      <mcs-wizard-step id="server-details-step"
+        [stepTitle]="'orderScaleManagedServer.vmDetails.stepTitle' | translate"
+        customClass="contextual-help-page-wrapper limited-view">
+        <form [formGroup]="fgScaleManageServerDetails" mcsFormGroup>
+          <p>{{ 'orderScaleManagedServer.vm.label' | translate }}</p>
+          <mcs-form-field>
+            <mcs-select [placeholder]="'orderScaleManagedServer.vm.placeholder' | translate"
+              required mcsId="select-server"
+              [formControl]="fcManageServer"
+              (change)="onChangeServer($event)"
+              [mcsContextualHelp]="'orderScaleManagedServer.vm.contextualHelp' | translate">
+              <mcs-option [value]="server" *ngFor="let server of servers$ | async">
+                {{ server.name }}
+              </mcs-option>
+            </mcs-select>
+          </mcs-form-field>
+
+          <div class="action-box" *mcsComponentHandler>
+            <mcs-server-manage-scale #fgManageScale
+              [resource]="resource$ | async"
+              [allowScaleDown]="false"
+              [serverCompute]="fcManageServer.value?.compute"
+              [mcsContextualHelp]="'orderScaleManagedServer.vmDetails.contextualHelp' | translate"
+              (dataChange)="onScaleChanged($event, fcManageServer.value)">
+
+            <ng-container mcsManageScaleHeader>
+              <h2>{{ 'orderScaleManagedServer.vmDetails.label' | translate }}</h2>
+            </ng-container>
+            </mcs-server-manage-scale>
+            <mcs-data-status-warning >
+              <span>{{ 'orderScaleManagedServer.vmDetails.warning' | translate }}</span>
+            </mcs-data-status-warning>
+          </div>
+
+          <div class="action-items">
+            <button mcsButton arrow="right"
+              mcsWizardStepNext
+              (click)="onSubmitScaleDetails()"
+              [disabled]="!formIsValid"
+              mcsId="step-1-next"
+              mcsEventTracker="step-1-next"
+              mcsEventCategory="orders"
+              mcsEventLabel="scale-managed-server">{{ 'shared.wizard.next' | translate }}</button>
+          </div>
+      </form>
+
+      </mcs-wizard-step>
+
+      <!-- Confirm Step  -->
+      <mcs-wizard-step id="confirm-step"
+        [stepTitle]="'orderScaleManagedServer.confirm.stepTitle' | translate"
+        customClass="contextual-help-page-wrapper limited-view">
+          <mcs-step-order-details [order]="order$ | async"
+            [requestState]="dataStatus$ | async"
+            (dataChange)="onServerConfirmOrderChange($event)"
+            (submitOrder)="onSubmitOrder($event)">
+          </mcs-step-order-details>
+        </mcs-wizard-step>
+
+      <!-- Go! Step  -->
+      <mcs-wizard-step id="go-step"
+        stepTitle="Go!"
+        customClass="limited-view">
+        <mcs-step-provisioning [jobs]="jobs$ | async" [requestState]="dataStatus$ | async">
+          <ng-container mcsProvisioningStepDescription>
+            {{ 'orderScaleManagedServer.scaling.description' | translate }}
+          </ng-container>
+
+          <ng-container mcsProvisioningStepInProgress>
+            {{ 'orderScaleManagedServer.scaling.dataInProgress' | translate}}
+          </ng-container>
+        </mcs-step-provisioning>
+      </mcs-wizard-step>
+    </mcs-wizard>
+
+  </mcs-content-panel>
+</mcs-page>

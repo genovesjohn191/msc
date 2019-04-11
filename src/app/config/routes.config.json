@@ -233,6 +233,14 @@
     "requiredFeatureFlag": "EnableOrdering",
     "documentTitle": "Order Details - Macquarie Cloud Services"
   },
+  "orderScaleManagedServer": {
+    "enumKey": "OrderScaleManagedServer",
+    "routePath": "scale-managed-server",
+    "navigationPath": "orders/scale-managed-server",
+    "requiredPermissions": ["OrderEdit"],
+    "requiredFeatureFlag": "EnableManagedServerScale",
+    "documentTitle": "Scale Managed Servers - Macquarie Cloud Services"
+  },
   "otherTools": {
     "enumKey": "OtherTools",
     "routePath": "tools",

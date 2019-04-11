@@ -2,6 +2,7 @@ import { RouteChangeEvent } from './events/route-change.event';
 import { AccountChangeEvent } from './events/account-change.event';
 import { UserChangeEvent } from './events/user-change.event';
 import { SessionTimedOutEvent } from './events/session-timedout.event';
+import { ServerScaleManageSelectedEvent } from './events/server-scale-manage-selected.event';
 import { ProductSelectedEvent } from './events/product-selected.event';
 import { ProductUnSelectedEvent } from './events/product-unselected.event';
 import { OrderStateBusyEvent } from './events/order-state-busy.event';
@@ -35,19 +36,20 @@ import { JobInProgressEvent } from './events/job-in-progress.event';
 import { JobReceiveEvent } from './events/job-receive.event';
 import { JobCurrentUserEvent } from './events/job-current-user.event';
 import { JobResourceCatalogItemCreateEvent } from './events/job-resource-catalog-item-create.event';
+import { JobOrderScaleManagedServerEvent } from './events/job-order-scale-managed-server.event';
 
 export class CoreEvent {
   public static routeChange = new RouteChangeEvent();
   public static accountChange = new AccountChangeEvent();
   public static userChange = new UserChangeEvent();
   public static sessionTimedOut = new SessionTimedOutEvent();
+  public static serverScaleManageSelected = new ServerScaleManageSelectedEvent();
   public static productSelected = new ProductSelectedEvent();
   public static productUnSelected = new ProductUnSelectedEvent();
   public static orderStateBusy = new OrderStateBusyEvent();
   public static orderStateEnded = new OrderStateEndedEvent();
   public static loaderShow = new LoaderShowEvent();
   public static loaderHide = new LoaderHideEvent();
-
   public static jobCurrentUser = new JobCurrentUserEvent();
   public static jobReceive = new JobReceiveEvent();
   public static jobError = new JobErrorEvent();
@@ -74,4 +76,5 @@ export class CoreEvent {
   public static jobServerChangePowerState = new JobServerChangePowerStateEvent();
   public static jobServerResetPassword = new JobServerResetPasswordEvent();
   public static jobResourceCatalogItemCreate = new JobResourceCatalogItemCreateEvent();
+  public static jobOrderScaleManagedServer = new JobOrderScaleManagedServerEvent();
 }

@@ -45,6 +45,17 @@
                     {{ 'serverManagement.manageScale.scale' | translate }}</a>
                 </ng-container>
               </ng-container>
+              <ng-container *mcsAccessControl="[OrderEdit]; feature: 'enableManagedServerScale'">
+                <ng-container *ngIf="!serverDetails.server.isDedicated && !serverDetails.server.isSelfManaged">
+                  <a (click)="navigateToScaleManagedServer(serverDetails.server)"
+                    mcsId="scale-manage-server"
+                    mcsEventTracker="scale-managed-server-click"
+                    mcsEventCategory="orders"
+                    mcsEventLabel="scale-managed-server"
+                    [disabled]="!serverDetails.server.executable">
+                    {{ 'serverManagement.manageScale.scale' | translate }}</a>
+                </ng-container>
+              </ng-container>
             </mcs-item>
 
             <mcs-item>

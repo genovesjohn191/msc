@@ -31,10 +31,10 @@ import {
   isNullOrUndefined
 } from '@app/utilities';
 import {
- CoreValidators,
- IMcsFormGroup,
- IMcsDataChange
-  } from '@app/core';
+  CoreValidators,
+  IMcsFormGroup,
+  IMcsDataChange
+} from '@app/core';
 
 import {
   InputManageType,
@@ -45,10 +45,9 @@ import { ServerManageScale } from './server-manage-scale';
 import { McsFormGroupDirective } from '@app/shared';
 
 // Constants definition
-const DEFAULT_MB = 1024;
 const DEFAULT_MEMORY_MULTIPLIER = 2;
 const DEFAULT_CPU_MULTIPLIER = 2;
-const DEFAULT_MIN_MEMORY = 2048;
+const DEFAULT_MIN_MEMORY = 2;
 const DEFAULT_MIN_CPU = 2;
 
 @Component({
@@ -111,10 +110,10 @@ export class ServerManageScaleComponent
   }
 
   public ngDoCheck() {
-    if (this._previousResourceAvailable !== this.resourceAvailableMemoryMB) {
+    if (this._previousResourceAvailable !== this.resourceAvailableMemoryGB) {
       this._createSliderTable();
       this._reset();
-      this._previousResourceAvailable = this.resourceAvailableMemoryMB;
+      this._previousResourceAvailable = this.resourceAvailableMemoryGB;
     }
   }
 
@@ -150,10 +149,10 @@ export class ServerManageScaleComponent
   }
 
   /**
-   * Returns the minimum memory MB used
+   * Returns the minimum memory GB used
    */
-  public get minimumMemoryMB(): number {
-    return this.allowScaleDown ? DEFAULT_MIN_MEMORY : this.serverMemoryUsedMB;
+  public get minimumMemoryGB(): number {
+    return this.allowScaleDown ? DEFAULT_MIN_MEMORY : this.serverMemoryUsedGB;
   }
 
   /**
@@ -166,9 +165,9 @@ export class ServerManageScaleComponent
   /**
    * Returns the current server memory used
    */
-  public get serverMemoryUsedMB(): number {
+  public get serverMemoryUsedGB(): number {
     return getSafeProperty(this.serverCompute,
-      (obj) => obj.memoryMB, DEFAULT_MIN_MEMORY);
+      (obj) => convertMbToGb(obj.memoryMB), DEFAULT_MIN_MEMORY);
   }
 
   /**
@@ -176,16 +175,16 @@ export class ServerManageScaleComponent
    */
   public get serverCpuUsed(): number {
     return getSafeProperty(this.serverCompute,
-      (obj) => obj.cpuCount * obj.coreCount, DEFAULT_MIN_CPU);
+      (obj) => obj.cpuCount, DEFAULT_MIN_CPU);
   }
 
   /**
-   * Returns the resource available memory in MB
+   * Returns the resource available memory in GB
    */
-  public get resourceAvailableMemoryMB(): number {
+  public get resourceAvailableMemoryGB(): number {
     let resourceMemory = getSafeProperty(this.resource,
-      (obj) => obj.compute.memoryAvailableMB, 0);
-    return resourceMemory + this.serverMemoryUsedMB;
+      (obj) => convertMbToGb(obj.compute.memoryAvailableMB), 0);
+    return resourceMemory + this.serverMemoryUsedGB;
   }
 
   /**
@@ -226,7 +225,7 @@ export class ServerManageScaleComponent
     // Set model data based on management type
     switch (this.inputManageType) {
       case InputManageType.Custom:
-        this._scaleOutput.memoryGB = +this.fcCustomMemory.value * DEFAULT_MB;
+        this._scaleOutput.memoryGB = +this.fcCustomMemory.value;
         this._scaleOutput.cpuCount = +this.fcCustomCpu.value;
         this._scaleOutput.valid = this.fgServerScale.valid;
         break;
@@ -240,7 +239,7 @@ export class ServerManageScaleComponent
     }
     this._scaleOutput.hasChanged = this._scaleOutput.valid
       && (this.serverCpuUsed !== this._scaleOutput.cpuCount
-        || (this.serverMemoryUsedMB * DEFAULT_MB) !== this._scaleOutput.memoryGB);
+        || this.serverMemoryUsedGB !== this._scaleOutput.memoryGB);
 
     // Emit changes
     this.dataChange.emit(this._scaleOutput);
@@ -264,7 +263,7 @@ export class ServerManageScaleComponent
     if (isNullOrEmpty(this.fgServerScale)) { return; }
     this.fgServerScale.reset();
     this.fcCustomCpu.setValue(this.serverCpuUsed);
-    this.fcCustomMemory.setValue(convertMbToGb(this.serverMemoryUsedMB));
+    this.fcCustomMemory.setValue(this.serverMemoryUsedGB);
   }
 
   /**
@@ -273,27 +272,30 @@ export class ServerManageScaleComponent
   private _createSliderTable(): void {
     // Create table definitions
     let table = new Array<ServerManageScale>();
-    let baseMB = DEFAULT_MB;
-    table.push({ memoryGB: baseMB * 2, cpuCount: 2 } as ServerManageScale);
-    table.push({ memoryGB: baseMB * 4, cpuCount: 2 } as ServerManageScale);
-    table.push({ memoryGB: baseMB * 8, cpuCount: 4 } as ServerManageScale);
-    table.push({ memoryGB: baseMB * 16, cpuCount: 4 } as ServerManageScale);
-    table.push({ memoryGB: baseMB * 24, cpuCount: 4 } as ServerManageScale);
-    table.push({ memoryGB: baseMB * 32, cpuCount: 4 } as ServerManageScale);
-    table.push({ memoryGB: baseMB * 64, cpuCount: 8 } as ServerManageScale);
-    table.push({ memoryGB: baseMB * 128, cpuCount: 8 } as ServerManageScale);
-    table.push({ memoryGB: baseMB * 256, cpuCount: 8 } as ServerManageScale);
+    table.push({ memoryGB: 2, cpuCount: 2 } as ServerManageScale);
+    table.push({ memoryGB: 4, cpuCount: 2 } as ServerManageScale);
+    table.push({ memoryGB: 8, cpuCount: 4 } as ServerManageScale);
+    table.push({ memoryGB: 16, cpuCount: 4 } as ServerManageScale);
+    table.push({ memoryGB: 24, cpuCount: 4 } as ServerManageScale);
+    table.push({ memoryGB: 32, cpuCount: 4 } as ServerManageScale);
+    table.push({ memoryGB: 64, cpuCount: 8 } as ServerManageScale);
+    table.push({ memoryGB: 128, cpuCount: 8 } as ServerManageScale);
+    table.push({ memoryGB: 256, cpuCount: 8 } as ServerManageScale);
 
     // Filter applicable values on the table
     this.sliderTable = table.filter((scale) => {
-      return (scale.memoryGB >= this.minimumMemoryMB
-        && scale.memoryGB <= this.resourceAvailableMemoryMB)
+      return (scale.memoryGB >= this.minimumMemoryGB
+        && scale.memoryGB <= this.resourceAvailableMemoryGB)
         && (scale.cpuCount >= this.minimumCpuUsed
           && scale.cpuCount <= this.resourceAvailableCpu);
     });
     if (isNullOrEmpty(this.sliderTable)) {
       this.sliderTable.push({
-        memoryGB: this.resourceAvailableMemoryMB,
+        memoryGB: this.serverMemoryUsedGB,
+        cpuCount: this.serverCpuUsed
+      } as ServerManageScale);
+      this.sliderTable.push({
+        memoryGB: this.resourceAvailableMemoryGB,
         cpuCount: this.resourceAvailableCpu
       } as ServerManageScale);
     }
@@ -317,8 +319,8 @@ export class ServerManageScaleComponent
     // Register custom memory
     this.fcCustomMemory = new FormControl('', [
       CoreValidators.required,
-      (control) => CoreValidators.min(convertMbToGb(this.minimumMemoryMB))(control),
-      (control) => CoreValidators.max(convertMbToGb(this.resourceAvailableMemoryMB))(control),
+      (control) => CoreValidators.min(this.minimumMemoryGB)(control),
+      (control) => CoreValidators.max(this.resourceAvailableMemoryGB)(control),
       CoreValidators.numeric,
       CoreValidators.custom(
         this._memoryInvalidValidator.bind(this),
@@ -329,8 +331,8 @@ export class ServerManageScaleComponent
     // Register custom CPU
     this.fcCustomCpu = new FormControl('', [
       CoreValidators.required,
-      CoreValidators.min(this.minimumCpuUsed),
-      CoreValidators.max(this.resourceAvailableCpu),
+      (control) => CoreValidators.min(this.minimumCpuUsed)(control),
+      (control) => CoreValidators.max(this.resourceAvailableCpu)(control),
       CoreValidators.numeric,
       CoreValidators.custom(
         this._cpuInvalidValidator.bind(this),

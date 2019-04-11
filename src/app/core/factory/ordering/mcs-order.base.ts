@@ -140,7 +140,7 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible,
       .setDescription(orderDetails.description)
       .setContractDuration(orderDetails.contractDurationMonths)
       .setBillingSiteId(orderDetails.billingSiteId)
-      .setBillingCostCentreId(orderDetails.costCentreId)
+      .setBillingCostCentreId(orderDetails.billingCostCentreId)
       .setOrderWorkflow(null);
 
     let orderItems = getSafeProperty(orderDetails, (obj) => obj.items);

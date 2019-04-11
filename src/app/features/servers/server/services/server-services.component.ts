@@ -281,7 +281,6 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
     this._inspectOsUpdateHandler = this._eventDispatcher.addEventListener(
       CoreEvent.jobServerOsUpdateInspect, this._onInspectForAvailableOsUpdates.bind(this)
     );
-
     this._applyOsUpdateHandler = this._eventDispatcher.addEventListener(
       CoreEvent.jobServerOsUpdateApply, this._onApplyServerOsUpdates.bind(this)
     );

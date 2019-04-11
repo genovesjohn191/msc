@@ -16,9 +16,16 @@ import {
   McsServerStorageDeviceUpdate,
   McsServerCreateNic
 } from '@app/models';
+import { ServerDetails } from '../server/server-details';
 
 export const mockServerService = {
 
+  getServerDetails(): Observable<ServerDetails> {
+    return of(new ServerDetails());
+  },
+  getServerId(): string {
+    return 'fake-id-123';
+  },
   selectedServerStream: new Subject<any>(),
   getServer(_id: any): Observable<McsApiSuccessResponse<McsServer>> {
 

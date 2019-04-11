@@ -17,7 +17,7 @@
     <mcs-section [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Auto">
       <div>
         <span>{{ 'serverShared.manageScale.sliderMessage' | translate }} </span>
-        <span>This VDC has {{ resourceAvailableMemoryMB | mcsDataSize: 'MB' }}
+        <span>This VDC has {{ resourceAvailableMemoryGB | mcsDataSize: 'GB' }}
           RAM and {{ resourceAvailableCpu }} vCPU available.</span>
       </div>
 
@@ -27,7 +27,7 @@
           [ngModel]="sliderValueIndex" [ngModelOptions]="{standalone: true}"
           (ngModelChange)="onSliderChanged($event)"></mcs-slider>
         <strong display-block text-center>
-          {{ sliderValue?.memoryGB | mcsDataSize: 'MB' }} {{ 'serverShared.manageScale.ramLabel' | translate }} /
+          {{ sliderValue?.memoryGB | mcsDataSize: 'GB' }} {{ 'serverShared.manageScale.ramLabel' | translate }} /
           {{ sliderValue?.cpuCount | number}} {{ 'serverShared.manageScale.cpuUnit' | translate }}
         </strong>
       </div>
@@ -40,10 +40,10 @@
       <mcs-form-field class="form-field-size-small">
         <input mcsInput placeholder="Enter RAM"
           mcsId="input-ram" [formControl]="fcCustomMemory">
-          <mcs-suffix mcsSuffix>{{ 'serverShared.manageScale.ramUnit' | translate }}</mcs-suffix>
+        <mcs-suffix mcsSuffix>{{ 'serverShared.manageScale.ramUnit' | translate }}</mcs-suffix>
 
         <mcs-hint mcsHint align="start">
-            {{ 'serverShared.manageScale.maximumRam' | translate }}: {{ resourceAvailableMemoryMB | mcsDataSize: 'MB' }}
+            {{ 'serverShared.manageScale.maximumRam' | translate }}: {{ resourceAvailableMemoryGB | mcsDataSize: 'GB' }}
         </mcs-hint>
         <mcs-error mcsError errorState="required">
             {{ 'serverShared.manageScale.errors.ramRequired' | translate }}
@@ -52,10 +52,10 @@
             {{ 'serverShared.manageScale.errors.ramNumeric' | translate }}
         </mcs-error>
         <mcs-error mcsError errorState="min">
-            {{ 'serverShared.manageScale.errors.ramMin' | translate: {min_value:(minimumMemoryMB | mcsDataSize: 'MB')} }}
+            {{ 'serverShared.manageScale.errors.ramMin' | translate: {min_value:(minimumMemoryGB | mcsDataSize: 'GB')} }}
         </mcs-error>
         <mcs-error mcsError errorState="max">
-            {{ 'serverShared.manageScale.errors.ramMax' | translate: {max_value:(resourceAvailableMemoryMB | mcsDataSize: 'MB')} }}
+            {{ 'serverShared.manageScale.errors.ramMax' | translate: {max_value:(resourceAvailableMemoryGB | mcsDataSize: 'GB')} }}
         </mcs-error>
         <mcs-error mcsError errorState="memoryInvalid">
             {{ 'serverShared.manageScale.errors.ramInvalid' | translate: {multiplier: '2'} }}
@@ -65,7 +65,7 @@
       <mcs-form-field class="form-field-size-small">
         <input mcsInput placeholder="Enter CPU"
           mcsId="enter-cpu" [formControl]="fcCustomCpu">
-          <mcs-suffix mcsSuffix>{{ 'serverShared.manageScale.cpuUnit' | translate }}</mcs-suffix>
+        <mcs-suffix mcsSuffix>{{ 'serverShared.manageScale.cpuUnit' | translate }}</mcs-suffix>
 
         <mcs-hint mcsHint align="start">
             {{ 'serverShared.manageScale.maximumCpu' | translate }}: {{ resourceAvailableCpu }} vCPU

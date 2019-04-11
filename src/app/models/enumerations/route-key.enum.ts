@@ -38,6 +38,7 @@ export enum RouteKey {
 
   Orders,
   OrderDetails,
+  OrderScaleManagedServer,
 
   OtherTools,
 

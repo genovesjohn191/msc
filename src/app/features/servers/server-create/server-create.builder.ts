@@ -81,7 +81,7 @@ export class ServerCreateBuilder<T> {
     this._serverCreateService.createOrUpdateOrder({
       billingSiteId: orderDetails.billingSite.id,
       contractDurationMonths: orderDetails.contractDurationMonths,
-      costCentreId: orderDetails.billingCostCentre.id,
+      billingCostCentreId: orderDetails.billingCostCentre.id,
       description: orderDetails.description
     });
   }
