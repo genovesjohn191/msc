@@ -38,6 +38,7 @@ import {
   isNullOrEmpty,
   appendUnitSuffix,
   convertMbToGb,
+  convertGbToMb,
   getSafeProperty,
   unsubscribeSafely
 } from '@app/utilities';
@@ -172,22 +173,22 @@ export class ServerNewComponent
    * Returns the storage warning text
    */
   public get storageWarning(): string {
-    let maxMemoryInGb = Math.floor(convertMbToGb(this.storageMaxMemoryMB));
+    let maxMemoryInGB = Math.floor(this.storageMaxMemoryGB);
 
     return this._translate.instant('serverCreateDetailsStep.newServer.fullStorageSpace', {
-      remaining_memory: appendUnitSuffix(maxMemoryInGb, UnitType.Gigabyte)
+      remaining_memory: appendUnitSuffix(maxMemoryInGB, UnitType.Gigabyte)
     });
   }
 
   /**
-   * Returns the server max available storage measured in MB
+   * Returns the server max available storage measured in GB
    *
    * `@Note`: The value will vary according to selected CPU scale
    */
-  public get storageMaxMemoryMB(): number {
+  public get storageMaxMemoryGB(): number {
     let currentSelectedScale = getSafeProperty(this.manageScale, (obj) => obj.memoryGB);
-    let storageAvailable = getSafeProperty(this.selectedStorage, (obj) => obj.availableMB, 0);
-    return Math.max(0, (storageAvailable - currentSelectedScale));
+    let storageAvailableMB = getSafeProperty(this.selectedStorage, (obj) => obj.availableMB, 0);
+    return Math.max(0, (convertMbToGb(storageAvailableMB) - currentSelectedScale));
   }
 
   /**
@@ -195,7 +196,7 @@ export class ServerNewComponent
    */
   public get currentScaleValue(): number {
     let currentSelectedScale = getSafeProperty(this.manageScale, (obj) => obj.memoryGB);
-    return convertMbToGb(currentSelectedScale);
+    return currentSelectedScale;
   }
 
   /**
@@ -264,7 +265,7 @@ export class ServerNewComponent
 
     // Scale
     serverCreate.cpuCount = this.manageScale.cpuCount;
-    serverCreate.memoryMB = this.manageScale.memoryGB;
+    serverCreate.memoryMB = convertGbToMb(this.manageScale.memoryGB);
 
     // Storage
     serverCreate.storage = new McsServerCreateStorage();
