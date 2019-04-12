@@ -85,6 +85,16 @@
           </mcs-data-cell>
         </ng-container>
 
+        <!-- VDC Column -->
+        <ng-container mcsColumnDef="vdc">
+          <mcs-header-cell *mcsHeaderCellDef hidden-small>
+            {{ columnSettings.vdc.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+            {{ row.resourceName }}
+          </mcs-data-cell>
+        </ng-container>
+
         <!-- Attached To Column -->
         <ng-container mcsColumnDef="attachedTo">
           <mcs-header-cell *mcsHeaderCellDef>
