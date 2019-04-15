@@ -6,7 +6,9 @@ import {
   ElementRef,
   ChangeDetectorRef,
   ViewEncapsulation,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  OnChanges,
+  SimpleChanges
 } from '@angular/core';
 import { CoreDefinition } from '@app/core';
 import {
@@ -29,50 +31,29 @@ export type ButtonType =
   encapsulation: ViewEncapsulation.None,
   host: {
     'class': 'button-wrapper',
-    '[class.primary]': 'color === "primary"',
-    '[class.raised]': 'type === "raised"',
-    '[class.basic]': 'type === "basic"',
-    '[class.icon]': 'type === "icon"',
-    '[class.label-placement-left]': 'labelPlacement === "left"',
-    '[class.label-placement-center]': 'labelPlacement === "center"',
-    '[class.label-placement-right]': 'labelPlacement === "right"',
-    '[class.button-active]': 'active',
-    '[class.button-disabled]': 'disabled'
+    '[class.button-active]': 'active'
   }
 })
 
-export class ButtonComponent implements OnInit {
+export class ButtonComponent implements OnInit, OnChanges {
+  @Input('mcsButton')
+  public type: ButtonType = 'raised';
+
   @Input()
   public arrow: 'up' | 'right';
 
   @Input()
   public labelPlacement: McsPlacementType = 'center';
 
-  @Input('mcsButton')
-  public get type(): ButtonType { return this._type; }
-  public set type(value: ButtonType) {
-    this._type = value || 'raised';
-  }
-  private _type: ButtonType = 'raised';
+  @Input()
+  public size: string;
 
   @Input()
-  public get color(): McsStatusColorType { return this._color; }
-  public set color(value: McsStatusColorType) {
-    this._color = value;
-    this._setColor(this.color);
-  }
-  private _color: McsStatusColorType = 'primary';
-
-  @Input()
-  public set size(value: string) {
-    this._setSize(value);
-  }
+  public color: McsStatusColorType;
 
   @Input()
   public get active(): boolean { return this._active; }
-  public set active(value: boolean) {
-    this._active = coerceBoolean(value);
-  }
+  public set active(value: boolean) { this._active = coerceBoolean(value); }
   private _active: boolean;
 
   @Input()
@@ -85,15 +66,6 @@ export class ButtonComponent implements OnInit {
   public set disabledRipple(value: boolean) { this._disabledRipple = coerceBoolean(value); }
   private _disabledRipple: boolean = false;
 
-  /**
-   * Returns the arrow icon key
-   */
-  public get arrowIconKey(): string {
-    return this.arrow === 'right' ?
-      CoreDefinition.ASSETS_SVG_ARROW_RIGHT_WHITE :
-      CoreDefinition.ASSETS_SVG_ARROW_UP_WHITE;
-  }
-
   constructor(
     protected _renderer: Renderer2,
     protected _elementRef: ElementRef,
@@ -101,11 +73,47 @@ export class ButtonComponent implements OnInit {
   ) { }
 
   public ngOnInit() {
+    this._initializeType();
     this._initializeColorByType();
+    this._setType(this.type);
+    this._setPlacement(this.labelPlacement);
+    this._setSize(this.size);
+    this._setColor(this.color);
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    let typeChanged = changes['type'];
+    if (!isNullOrEmpty(typeChanged)) {
+      this._setType(this.type);
+    }
+
+    let placementChanged = changes['labelPlacement'];
+    if (!isNullOrEmpty(placementChanged)) {
+      this._setPlacement(this.labelPlacement);
+    }
+
+    let sizeChanged = changes['size'];
+    if (!isNullOrEmpty(sizeChanged)) {
+      this._setSize(this.size);
+    }
+
+    let colorChanged = changes['color'];
+    if (!isNullOrEmpty(colorChanged)) {
+      this._setColor(this.color);
+    }
   }
 
   public get hostElement(): HTMLElement {
     return this._elementRef.nativeElement;
+  }
+
+  /**
+   * Returns the arrow icon key
+   */
+  public get arrowIconKey(): string {
+    return this.arrow === 'right' ?
+      CoreDefinition.ASSETS_SVG_ARROW_RIGHT_WHITE :
+      CoreDefinition.ASSETS_SVG_ARROW_UP_WHITE;
   }
 
   /**
@@ -123,12 +131,36 @@ export class ButtonComponent implements OnInit {
   }
 
   /**
+   * Initializes the type of the button
+   */
+  private _initializeType(): void {
+    this.type = isNullOrEmpty(this.type) ? 'raised' : this.type;
+  }
+
+  /**
+   * Initializes the color based on the button type
+   */
+  private _initializeColorByType(): void {
+    if (!isNullOrEmpty(this.color)) { return; }
+    this.color = this.type === 'raised' ? 'primary' : 'default';
+  }
+
+  /**
+   * Sets the type of the button
+   * @param type Type of the button to be set
+   */
+  private _setType(type: string): void {
+    if (isNullOrEmpty(type)) { return; }
+    this._renderer.addClass(this._elementRef.nativeElement, this.type);
+  }
+
+  /**
    * Sets the size of the button (small, medium, large)
    * @param size Size of the button to be set
    */
   private _setSize(size: string): void {
     if (isNullOrEmpty(size)) { return; }
-    this._renderer.addClass(this._elementRef.nativeElement, size);
+    this._renderer.addClass(this._elementRef.nativeElement, this.size);
   }
 
   /**
@@ -141,10 +173,11 @@ export class ButtonComponent implements OnInit {
   }
 
   /**
-   * Initializes the color based on the button type
+   * Sets the label placement of the button
+   * @param alignment Label placement
    */
-  private _initializeColorByType(): void {
-    if (!isNullOrEmpty(this.color)) { return; }
-    this.color = this._type === 'raised' ? 'primary' : 'default';
+  private _setPlacement(alignment: McsPlacementType): void {
+    if (isNullOrEmpty(alignment)) { return; }
+    this._renderer.addClass(this._elementRef.nativeElement, `label-placement-${alignment}`);
   }
 }
