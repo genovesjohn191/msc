@@ -50,6 +50,8 @@ import {
 import { McsFormGroupDirective } from '@app/shared';
 import { MediaUploadService } from '../media-upload.service';
 
+const MEDIA_URL_EXTENSION = ['.iso', '.ovf'];
+
 @Component({
   selector: 'mcs-media-upload-details',
   templateUrl: 'media-upload-details.component.html'
@@ -65,6 +67,7 @@ export class MediaUploadDetailsComponent
 
   public mediaUploading: boolean;
   public urlInfoMessage: string;
+  public mediaUrlExtensions: string[] = MEDIA_URL_EXTENSION;
 
   // Form variables
   public fgMediaUpload: FormGroup;
@@ -72,6 +75,7 @@ export class MediaUploadDetailsComponent
   public fcCatalogs: FormControl;
   public fcMediaName: FormControl;
   public fcMediaUrl: FormControl;
+  public fcMediaUrlExtension: FormControl;
   public fcMediaDescription: FormControl;
 
   private _mediaUrlStatusIconKey: string;
@@ -146,7 +150,7 @@ export class MediaUploadDetailsComponent
     if (this.fcMediaUrl.hasError('url')) { return; }
     this.fcMediaUrl.markAsPending();
     this.mediaUrlStatusIconKey = CoreDefinition.ASSETS_GIF_LOADER_ELLIPSIS;
-    let mediaUrl = this.fcMediaUrl.value;
+    let mediaUrl = this.fcMediaUrl.value + this.fcMediaUrlExtension.value;
 
     this._mediaUploadService.validateUrl(
       this.selectedResourceId,
@@ -265,12 +269,23 @@ export class MediaUploadDetailsComponent
       )
     ]);
 
+    this.fcMediaUrlExtension = new FormControl(this.mediaUrlExtensions[0],
+      [
+        CoreValidators.required,
+      ]
+    );
+    this.fcMediaUrlExtension.valueChanges.subscribe(() => {
+      this.mediaUrlStatusIconKey = undefined;
+      this.urlInfoMessage = undefined;
+    });
+
     this.fcMediaUrl = new FormControl('',
       [
         CoreValidators.required,
         CoreValidators.url
       ]
     );
+
     this.fcMediaUrl.valueChanges.subscribe(() => {
       this.mediaUrlStatusIconKey = undefined;
       this.urlInfoMessage = undefined;
@@ -283,6 +298,7 @@ export class MediaUploadDetailsComponent
       fcCatalogs: this.fcCatalogs,
       fcMediaName: this.fcMediaName,
       fcMediaUrl: this.fcMediaUrl,
+      fcMediaUrlExtension: this.fcMediaUrlExtension,
       fcMediaDescription: this.fcMediaDescription
     });
   }
@@ -323,5 +339,6 @@ export class MediaUploadDetailsComponent
     this.fcMediaDescription.reset();
     this.fcMediaName.reset();
     this.fcMediaUrl.reset();
+    this.fcMediaUrlExtension.setValue(this.mediaUrlExtensions[0]);
   }
 }
