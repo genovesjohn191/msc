@@ -16,16 +16,9 @@ import { ButtonComponent } from './button.component';
   encapsulation: ViewEncapsulation.None,
   host: {
     'class': 'button-wrapper',
-    '[attr.id]': 'id',
-    '[attr.tabindex]': 'disabled ? -1 : 0',
-    '[class.primary]': 'color === "primary"',
-    '[class.raised]': 'type === "raised"',
-    '[class.basic]': 'type === "basic"',
-    '[class.label-placement-left]': 'labelPlacement === "left"',
-    '[class.label-placement-center]': 'labelPlacement === "center"',
-    '[class.label-placement-right]': 'labelPlacement === "right"',
     '[class.button-active]': 'active',
-    '[class.button-disabled]': 'disabled'
+    '[attr.id]': 'id',
+    '[attr.tabindex]': 'disabled ? -1 : 0'
   }
 })
 

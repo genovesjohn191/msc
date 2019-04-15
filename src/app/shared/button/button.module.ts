@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { DirectivesModule } from '../directives/directives.module';
 import { IconModule } from '../icon/icon.module';
 import { RippleModule } from '../ripple/ripple.module';
 import { ButtonComponent } from './button.component';
@@ -15,11 +16,13 @@ import { ButtonDirective } from './button.directive';
   imports: [
     CommonModule,
     IconModule,
-    RippleModule
+    RippleModule,
+    DirectivesModule
   ],
   exports: [
     IconModule,
     RippleModule,
+    DirectivesModule,
     ButtonComponent,
     ButtonLinkComponent,
     ButtonDirective
