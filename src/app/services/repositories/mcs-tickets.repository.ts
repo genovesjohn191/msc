@@ -11,14 +11,22 @@ import {
   McsTicketCreate
 } from '@app/models';
 import { getSafeProperty } from '@app/utilities';
-import { TicketsApiService } from '../api-services/tickets-api.service';
+import {
+  McsApiClientFactory,
+  McsApiTicketsFactory,
+  IMcsApiTicketsService
+} from '@app/api-client';
 import { McsTicketsDataContext } from '../data-context/mcs-tickets-data.context';
 
 @Injectable()
 export class McsTicketsRepository extends McsRepositoryBase<McsTicket> {
+  private readonly _ticketsApiService: IMcsApiTicketsService;
 
-  constructor(private _ticketsApiService: TicketsApiService) {
-    super(new McsTicketsDataContext(_ticketsApiService));
+  constructor(_apiClientFactory: McsApiClientFactory) {
+    super(new McsTicketsDataContext(
+      _apiClientFactory.getService(new McsApiTicketsFactory())
+    ));
+    this._ticketsApiService = _apiClientFactory.getService(new McsApiTicketsFactory());
   }
 
   /**

@@ -20,17 +20,25 @@ import {
   McsApiSuccessResponse,
   McsValidation
 } from '@app/models';
-import { ResourcesApiService } from '../api-services/resources-api.service';
+import {
+  McsApiResourcesFactory,
+  McsApiClientFactory,
+  IMcsApiResourcesService
+} from '@app/api-client';
 import { McsResourcesDataContext } from '../data-context/mcs-resources-data.context';
 
 @Injectable()
 export class McsResourcesRepository extends McsRepositoryBase<McsResource> {
+  private readonly _resourcesApiService: IMcsApiResourcesService;
 
   constructor(
-    private _resourcesApiService: ResourcesApiService,
+    _apiClientFactory: McsApiClientFactory,
     private _accessControlService: McsAccessControlService
   ) {
-    super(new McsResourcesDataContext(_resourcesApiService));
+    super(new McsResourcesDataContext(
+      _apiClientFactory.getService(new McsApiResourcesFactory())
+    ));
+    this._resourcesApiService = _apiClientFactory.getService(new McsApiResourcesFactory());
   }
 
   /**

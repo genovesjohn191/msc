@@ -1,17 +1,3 @@
-/** Services */
-import { FirewallsApiService } from './api-services/firewalls-api.service';
-import { JobsApiService } from './api-services/jobs-api.service';
-import { MediaApiService } from './api-services/media-api.service';
-import { OptionsApiService } from './api-services/options-api.service';
-import { OrdersApiService } from './api-services/orders-api.service';
-import { ProductsApiService } from './api-services/products-api.service';
-import { ResourcesApiService } from './api-services/resources-api.service';
-import { ServersApiService } from './api-services/servers-api.service';
-import { TicketsApiService } from './api-services/tickets-api.service';
-import { ToolsApiService } from './api-services/tools-api.service';
-import { ConsoleApiService } from './api-services/console-api.service';
-import { CompaniesApiService } from './api-services/companies-api.service';
-
 /** New Repositories */
 import { McsFirewallsRepository } from './repositories/mcs-firewalls.repository';
 import { McsJobsRepository } from './repositories/mcs-jobs.repository';
@@ -45,18 +31,7 @@ export const initializableProviders: any[] = [
 ];
 
 export const apiProviders: any[] = [
-  FirewallsApiService,
-  JobsApiService,
-  MediaApiService,
-  OptionsApiService,
-  OrdersApiService,
-  ProductsApiService,
-  ResourcesApiService,
-  ServersApiService,
-  TicketsApiService,
-  ToolsApiService,
-  ConsoleApiService,
-  CompaniesApiService,
+
 ];
 
 export const repositoryProviders: any[] = [

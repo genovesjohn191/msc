@@ -6,17 +6,22 @@ import {
 import { compareDates } from '@app/utilities';
 import { McsJob } from '@app/models';
 import { McsJobsDataContext } from '../data-context/mcs-jobs-data.context';
-import { JobsApiService } from '../api-services/jobs-api.service';
 import { EventBusDispatcherService } from '@app/event-bus';
+import {
+  McsApiClientFactory,
+  McsApiJobsFactory
+} from '@app/api-client';
 
 @Injectable()
 export class McsJobsRepository extends McsRepositoryBase<McsJob> {
 
   constructor(
-    _jobsApiService: JobsApiService,
+    _apiClientFactory: McsApiClientFactory,
     private _eventDispatcher: EventBusDispatcherService
   ) {
-    super(new McsJobsDataContext(_jobsApiService));
+    super(new McsJobsDataContext(
+      _apiClientFactory.getService(new McsApiJobsFactory())
+    ));
     this._registerEvents();
   }
 

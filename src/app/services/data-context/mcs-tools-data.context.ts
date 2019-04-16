@@ -13,12 +13,12 @@ import {
   McsQueryParam,
   McsApiSuccessResponse
 } from '@app/models';
-import { ToolsApiService } from '../api-services/tools-api.service';
+import { IMcsApiToolsService } from '@app/api-client';
 
 export class McsToolsDataContext implements McsDataContext<McsPortal> {
   public totalRecordsCount: number = 0;
 
-  constructor(private _toolsApiService: ToolsApiService) { }
+  constructor(private _toolsApiService: IMcsApiToolsService) { }
 
   /**
    * Get all records from the api service

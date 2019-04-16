@@ -35,7 +35,8 @@ import {
   McsConsole,
   McsJob,
   McsServer,
-  ServerCommand
+  ServerCommand,
+  VmPowerstateCommand
 } from '@app/models';
 import {
   McsServersRepository,
@@ -188,13 +189,13 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
   public executeServerCommand(action: ServerCommand): void {
     if (isNullOrEmpty(action)) { return; }
     this.stopping = action === ServerCommand.Stop;
-    this._serversRepository.putServerCommand(this.server.id, action,
-      {
-        serverId: this.server.id,
-        powerState: this.server.powerState,
-        commandAction: action
+
+    this._serversRepository.sendServerPowerState(this.server.id, {
+      command: VmPowerstateCommand[ServerCommand[action]],
+      clientReferenceObject: {
+        serverId: this.server.id
       }
-    );
+    }).subscribe();
   }
 
   /**

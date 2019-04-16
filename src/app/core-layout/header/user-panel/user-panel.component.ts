@@ -10,19 +10,20 @@ import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import {
   Subject,
-  Observable,
-  Subscription
+  Observable
 } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import {
+  takeUntil,
+  map,
+  shareReplay
+} from 'rxjs/operators';
 import {
   McsJob,
   Breakpoint,
   McsCompany,
-  DataStatus,
   RouteKey,
   McsIdentity
 } from '@app/models';
-/** Services/Providers */
 import {
   CoreRoutes,
   CoreDefinition,
@@ -33,15 +34,11 @@ import {
 import {
   refreshView,
   isNullOrEmpty,
-  addOrUpdateArrayRecord,
-  compareDates,
   unsubscribeSafely
 } from '@app/utilities';
-import {
-  EventBusPropertyListenOn,
-  EventBusDispatcherService
-} from '@app/event-bus';
+import { EventBusPropertyListenOn } from '@app/event-bus';
 import { SwitchAccountService } from '../../shared';
+import { UserPanelService } from './user-panel.service';
 
 const NOTIFICATIONS_COUNT_LIMIT = 3;
 @Component({
@@ -52,7 +49,7 @@ const NOTIFICATIONS_COUNT_LIMIT = 3;
 })
 
 export class UserPanelComponent implements OnInit, OnDestroy {
-  public notifications: McsJob[];
+  public notifications$: Observable<McsJob[]>;
   public hasConnectionError: boolean;
   public deviceType: Breakpoint;
 
@@ -68,32 +65,29 @@ export class UserPanelComponent implements OnInit, OnDestroy {
   @EventBusPropertyListenOn(CoreEvent.accountChange)
   public activeAccount$: Observable<McsCompany>;
 
-  private _currentUserJobHandler: Subscription;
   private _destroySubject = new Subject<void>();
 
   public constructor(
     private _translateService: TranslateService,
     private _router: Router,
-    private _eventDispatcher: EventBusDispatcherService,
     private _browserService: McsBrowserService,
     private _changeDetectorRef: ChangeDetectorRef,
     private _authenticationService: McsAuthenticationService,
-    private _switchAccountService: SwitchAccountService
+    private _switchAccountService: SwitchAccountService,
+    private _userPanelService: UserPanelService
   ) {
     this.hasConnectionError = false;
-    this.notifications = new Array();
     this.deviceType = Breakpoint.Large;
-    this._registerEvents();
   }
 
   public ngOnInit(): void {
-    this._listenToBrowserResize();
-    this._listenToSwitchAccount();
+    this._subscribeToNotificationsChange();
+    this._subscribeToBrowserResize();
+    this._subscribeToSwitchAccount();
   }
 
   public ngOnDestroy(): void {
     unsubscribeSafely(this._destroySubject);
-    unsubscribeSafely(this._currentUserJobHandler);
   }
 
   public get bellIconKey(): string {
@@ -113,28 +107,12 @@ export class UserPanelComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Returns the displayed notifications and ignore those who are already closed
+   * Gets the view more text based on the job list
+   * @param jobs Jobs to be checked for viewing the text
    */
-  public get displayedNotifications(): McsJob[] {
-    return this.notifications.filter((job) => {
-      return job.dataStatus === DataStatus.InProgress;
-    });
-  }
-
-  /**
-   * Returns true when there are active job to be displayed, otherwise false
-   */
-  public get hasNotification(): boolean {
-    return this.displayedNotifications && this.displayedNotifications.length > 0;
-  }
-
-  /**
-   * Returns 'View [totalNotificationsCount - countLimit] More'
-   * if more than [countLimit] notifications are created else just returns 'View More'
-   */
-  public get viewMoreNotificationsText(): string {
-    let showNotificationCount = this.displayedNotifications.length > NOTIFICATIONS_COUNT_LIMIT;
-    let remainingNotificationCount = this.displayedNotifications.length - NOTIFICATIONS_COUNT_LIMIT;
+  public getViewMoreText(jobs: McsJob[]): string {
+    let showNotificationCount = jobs.length > NOTIFICATIONS_COUNT_LIMIT;
+    let remainingNotificationCount = jobs.length - NOTIFICATIONS_COUNT_LIMIT;
 
     return showNotificationCount ? this._translateService.instant(
       'header.userPanel.notifications.viewMoreCount', { count: remainingNotificationCount }
@@ -171,8 +149,8 @@ export class UserPanelComponent implements OnInit, OnDestroy {
   /**
    * Event that emits when notification panel is opened
    */
-  public onOpenNotificationPanel(): void {
-    let displayNotificationsPage = !this.hasNotification
+  public onOpenNotificationPanel(jobs: McsJob[]): void {
+    let displayNotificationsPage = isNullOrEmpty(jobs)
       || this.deviceType !== Breakpoint.Large;
     if (displayNotificationsPage) { this.viewNotificationsPage(); }
 
@@ -182,36 +160,20 @@ export class UserPanelComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Sort the notifications(jobs) in descending order from the date created
+   * Subscribe to notifications changes
    */
-  private _sortNotifications(): void {
-    if (isNullOrEmpty(this.notifications)) { return; }
-    this.notifications.sort((_first: McsJob, _second: McsJob) => {
-      return compareDates(_second.createdOn, _first.createdOn);
-    });
-  }
-
-  /**
-   * Event that emits when the current user job has been received
-   */
-  private _onCurrentUserJob(job: McsJob): void {
-    if (isNullOrEmpty(job)) { return; }
-
-    this.notifications = addOrUpdateArrayRecord(
-      this.notifications,
-      job,
-      false,
-      (_existingJob: McsJob) => {
-        return _existingJob.id === job.id;
-      });
-    this._sortNotifications();
-    this._changeDetectorRef.markForCheck();
+  private _subscribeToNotificationsChange(): void {
+    this.notifications$ = this._userPanelService.notificationsChange().pipe(
+      takeUntil(this._destroySubject),
+      map((notifications) => notifications.filter((notification) => notification.inProgress)),
+      shareReplay(1)
+    );
   }
 
   /**
    * Listener for browser resize
    */
-  private _listenToBrowserResize(): void {
+  private _subscribeToBrowserResize(): void {
     this._browserService.breakpointChange()
       .pipe(takeUntil(this._destroySubject))
       .subscribe((deviceType: Breakpoint) => {
@@ -223,19 +185,9 @@ export class UserPanelComponent implements OnInit, OnDestroy {
   /**
    * Listen when user switch account to update the company name under user name
    */
-  private _listenToSwitchAccount(): void {
+  private _subscribeToSwitchAccount(): void {
     this._switchAccountService.activeAccountStream
       .pipe(takeUntil(this._destroySubject))
       .subscribe(() => this._changeDetectorRef.markForCheck());
-  }
-
-  /**
-   * Registers the events
-   */
-  private _registerEvents(): void {
-    this._currentUserJobHandler = this._eventDispatcher.addEventListener(
-      CoreEvent.jobCurrentUser, this._onCurrentUserJob.bind(this));
-
-    this._eventDispatcher.dispatch(CoreEvent.jobCurrentUser);
   }
 }

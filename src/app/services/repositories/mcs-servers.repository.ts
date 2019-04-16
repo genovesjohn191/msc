@@ -11,7 +11,6 @@ import {
   McsServerSnapshot,
   McsServerCompute,
   McsServerOsUpdates,
-  ServerCommand,
   McsServerRename,
   McsServerStorageDeviceUpdate,
   McsServerCreateNic,
@@ -27,16 +26,25 @@ import {
   McsServerClone,
   McsServerOsUpdatesCategory,
   McsServerOsUpdatesRequest,
-  McsServerOsUpdatesDetails
+  McsServerOsUpdatesDetails,
+  McsServerPowerstateCommand
 } from '@app/models';
-import { ServersApiService } from '../api-services/servers-api.service';
+import {
+  McsApiClientFactory,
+  McsApiServersFactory,
+  IMcsApiServersService
+} from '@app/api-client';
 import { McsServersDataContext } from '../data-context/mcs-servers-data.context';
 
 @Injectable()
 export class McsServersRepository extends McsRepositoryBase<McsServer> {
+  private readonly _serversApiService: IMcsApiServersService;
 
-  constructor(private _serversApiService: ServersApiService) {
-    super(new McsServersDataContext(_serversApiService));
+  constructor(_apiClientFactory: McsApiClientFactory) {
+    super(new McsServersDataContext(
+      _apiClientFactory.getService(new McsApiServersFactory())
+    ));
+    this._serversApiService = _apiClientFactory.getService(new McsApiServersFactory());
   }
 
   /**
@@ -244,6 +252,9 @@ export class McsServersRepository extends McsRepositoryBase<McsServer> {
    * @param serverData Server data to be cloned
    */
   public cloneServer(id: string, serverData: McsServerClone): Observable<McsJob> {
+    serverData.clientReferenceObject = {
+
+    };
     return this._serversApiService.cloneServer(id, serverData).pipe(
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
@@ -475,12 +486,8 @@ export class McsServersRepository extends McsRepositoryBase<McsServer> {
    * @param command Command type (Start, Stop, Restart)
    * @param referenceObject Reference object of the server client to determine the status of job
    */
-  public putServerCommand(
-    id: string,
-    action: ServerCommand,
-    referenceObject: any
-  ): Observable<McsJob> {
-    return this._serversApiService.putServerCommand(id, action, referenceObject).pipe(
+  public sendServerPowerState(id: string, powerstate: McsServerPowerstateCommand): Observable<McsJob> {
+    return this._serversApiService.sendServerPowerState(id, powerstate).pipe(
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }

@@ -26,17 +26,17 @@
 <!-- Notifications Panel template -->
 <ng-template #notificationsContent>
   <ng-container *ngIf="notificationsPopover.componentRef">
-    <div class="notifications-content-wrapper">
+    <div class="notifications-content-wrapper" *ngIf="notifications$ | async as notifications">
       <div class="notification-item">
         <span>{{ 'header.userPanel.notifications.title' | translate }}</span>
       </div>
 
-      <div class="notification-item" *ngIf="!hasNotification">
+      <div class="notification-item" *ngIf="!(notifications | mcsIsNotNullOrEmpty)">
         <span>{{ 'header.userPanel.notifications.noRecord' | translate }}</span>
       </div>
 
       <!-- Jobs -->
-      <div *ngFor="let notification of (displayedNotifications | mcsArrayTakeMax: 3)">
+      <div *ngFor="let notification of (notifications | mcsArrayTakeMax: 3)">
         <mcs-notification-panel
           type="running"
           [notification]="notification">
@@ -49,7 +49,7 @@
           mcsEventTracker="view-notifications"
           mcsEventCategory="navigation"
           mcsEventLabel="user-panel">
-          {{ viewMoreNotificationsText }}
+          {{ getViewMoreText(notifications) }}
         </a>
       </div>
     </div>
@@ -58,16 +58,16 @@
 
 <div class="user-panel-wrapper">
   <!-- Notification bell icon -->
-  <div class="user-panel-item notification-item">
+  <div class="user-panel-item notification-item" *ngIf="notifications$ | async as notifications">
     <a class="icon-content"
       mcsPopover #notificationsPopover="mcsPopover"
-      (onOpen)="onOpenNotificationPanel()"
+      (onOpen)="onOpenNotificationPanel(notifications)"
       maxWidth="350px" padding="none"
       placement="bottom" orientation="left" theme="light" priority="high"
       [content]="notificationsContent">
 
       <mcs-icon [key]="bellIconKey" size="small" color="white"></mcs-icon>
-      <span *ngIf="hasNotification">{{ displayedNotifications.length }}</span>
+      <span *ngIf="notifications | mcsIsNotNullOrEmpty">{{ notifications.length }}</span>
     </a>
   </div>
 

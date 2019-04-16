@@ -7,12 +7,12 @@ import {
   McsJob,
   McsApiSuccessResponse
 } from '@app/models';
-import { JobsApiService } from '../api-services/jobs-api.service';
+import { IMcsApiJobsService } from '@app/api-client';
 
 export class McsJobsDataContext implements McsDataContext<McsJob> {
   public totalRecordsCount: number = 0;
 
-  constructor(private _jobsApiService: JobsApiService) { }
+  constructor(private _jobsApiService: IMcsApiJobsService) { }
 
   /**
    * Get all records from the api service

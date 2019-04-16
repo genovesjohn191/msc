@@ -8,14 +8,22 @@ import {
   McsQueryParam,
   McsFirewallPolicy
 } from '@app/models';
-import { FirewallsApiService } from '../api-services/firewalls-api.service';
+import {
+  McsApiClientFactory,
+  McsApiFirewallsFactory,
+  IMcsApiFirewallsService
+} from '@app/api-client';
 import { McsFirewallsDataContext } from '../data-context/mcs-firewalls-data.context';
 
 @Injectable()
 export class McsFirewallsRepository extends McsRepositoryBase<McsFirewall> {
+  private readonly _firewallsApiService: IMcsApiFirewallsService;
 
-  constructor(private _firewallsApiService: FirewallsApiService) {
-    super(new McsFirewallsDataContext(_firewallsApiService));
+  constructor(_apiClientFactory: McsApiClientFactory) {
+    super(new McsFirewallsDataContext(
+      _apiClientFactory.getService(new McsApiFirewallsFactory())
+    ));
+    this._firewallsApiService = _apiClientFactory.getService(new McsApiFirewallsFactory());
   }
 
   /**

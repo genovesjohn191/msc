@@ -7,12 +7,12 @@ import {
   McsFirewall,
   McsApiSuccessResponse
 } from '@app/models';
-import { FirewallsApiService } from '../api-services/firewalls-api.service';
+import { IMcsApiFirewallsService } from '@app/api-client';
 
 export class McsFirewallsDataContext implements McsDataContext<McsFirewall> {
   public totalRecordsCount: number = 0;
 
-  constructor(private _firewallsApiService: FirewallsApiService) { }
+  constructor(private _firewallsApiService: IMcsApiFirewallsService) { }
 
   /**
    * Get all records from the api service

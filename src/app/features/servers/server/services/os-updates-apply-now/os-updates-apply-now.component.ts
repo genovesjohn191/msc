@@ -81,7 +81,9 @@ export class OsUpdatesApplyNowComponent implements OnInit {
   public applySelectedUpdates(): void {
     let request = new McsServerOsUpdatesRequest();
     request.updates = [];
-    request.clientReferenceObject = { serverId: this.selectedServer.id };
+    request.clientReferenceObject = {
+      serverId: this.selectedServer.id
+    };
     this.selectedNodes.forEach((node) => request.updates.push(node.value.id));
 
     this.applyUpdates.emit({

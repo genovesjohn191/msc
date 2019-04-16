@@ -45,8 +45,9 @@ export class ServerCreateService extends McsOrderBase
   public createSelfManagedServer(serverModel: McsServerCreate | McsServerClone): void {
     if (isNullOrEmpty(serverModel)) { return; }
 
-    serverModel.clientReferenceObject.resourcePath =
-      CoreRoutes.getNavigationPath(RouteKey.ServerDetails);
+    serverModel.clientReferenceObject = {
+      resourcePath: CoreRoutes.getNavigationPath(RouteKey.ServerDetails)
+    };
 
     let serverInstance = serverModel instanceof McsServerCreate ?
       this._createNewSelfManageServer(serverModel) :
@@ -81,8 +82,6 @@ export class ServerCreateService extends McsOrderBase
    */
   private _createCloneSelfManagedServer(serverCloneModel: McsServerClone): Observable<McsJob> {
     if (isNullOrEmpty(serverCloneModel)) { return; }
-    return this._serversRepository.cloneServer(
-      serverCloneModel.clientReferenceObject.serverId, serverCloneModel
-    );
+    return this._serversRepository.cloneServer(serverCloneModel.serverId, serverCloneModel);
   }
 }

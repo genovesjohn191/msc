@@ -4,14 +4,22 @@ import { map } from 'rxjs/operators';
 import { McsRepositoryBase } from '@app/core';
 import { getSafeProperty } from '@app/utilities';
 import { McsConsole } from '@app/models';
+import {
+  McsApiClientFactory,
+  McsApiConsoleFactory,
+  IMcsApiConsoleService
+} from '@app/api-client';
 import { McsConsoleDataContext } from '../data-context/mcs-console-data.context';
-import { ConsoleApiService } from '../api-services/console-api.service';
 
 @Injectable()
 export class McsConsoleRepository extends McsRepositoryBase<McsConsole> {
+  private readonly _consoleApiService: IMcsApiConsoleService;
 
-  constructor(private _consoleApiService: ConsoleApiService) {
-    super(new McsConsoleDataContext(_consoleApiService));
+  constructor(_apiClientFactory: McsApiClientFactory) {
+    super(new McsConsoleDataContext(
+      _apiClientFactory.getService(new McsApiConsoleFactory())
+    ));
+    this._consoleApiService = _apiClientFactory.getService(new McsApiConsoleFactory());
   }
 
   /**

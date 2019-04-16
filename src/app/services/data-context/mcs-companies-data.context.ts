@@ -7,12 +7,12 @@ import {
   McsApiSuccessResponse,
   McsCompany
 } from '@app/models';
-import { CompaniesApiService } from '../api-services/companies-api.service';
+import { IMcsApiCompaniesService } from '@app/api-client';
 
 export class McsCompaniesDataContext implements McsDataContext<McsCompany> {
   public totalRecordsCount: number = 0;
 
-  constructor(private _companiesService: CompaniesApiService) { }
+  constructor(private _companiesService: IMcsApiCompaniesService) { }
 
   /**
    * Get all records from the api service

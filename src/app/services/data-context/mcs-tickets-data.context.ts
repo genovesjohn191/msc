@@ -7,12 +7,12 @@ import {
   McsQueryParam,
   McsApiSuccessResponse
 } from '@app/models';
-import { TicketsApiService } from '../api-services/tickets-api.service';
+import { IMcsApiTicketsService } from '@app/api-client';
 
 export class McsTicketsDataContext implements McsDataContext<McsTicket> {
   public totalRecordsCount: number = 0;
 
-  constructor(private _ticketsApiService: TicketsApiService) { }
+  constructor(private _ticketsApiService: IMcsApiTicketsService) { }
 
   /**
    * Get all records from the api service

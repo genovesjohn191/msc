@@ -69,6 +69,13 @@ export class McsResource extends McsEntityBase {
   }
 
   /**
+   * Returns true when the resource is a self-managed
+   */
+  public get isSelfManaged(): boolean {
+    return this.serviceType === ServiceType.SelfManaged;
+  }
+
+  /**
    * Returns service type label
    */
   public get serviceTypeLabel(): string {
