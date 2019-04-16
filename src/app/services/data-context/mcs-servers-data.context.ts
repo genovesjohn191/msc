@@ -7,12 +7,12 @@ import {
   McsQueryParam,
   McsApiSuccessResponse
 } from '@app/models';
-import { ServersApiService } from '../api-services/servers-api.service';
+import { IMcsApiServersService } from '@app/api-client';
 
 export class McsServersDataContext implements McsDataContext<McsServer> {
   public totalRecordsCount: number = 0;
 
-  constructor(private _serversService: ServersApiService) { }
+  constructor(private _serversService: IMcsApiServersService) { }
 
   /**
    * Get all records from the api service

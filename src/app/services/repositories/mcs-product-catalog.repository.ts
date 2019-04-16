@@ -5,17 +5,22 @@ import {
   CoreDefinition
 } from '@app/core';
 import { McsProductCatalog } from '@app/models';
-import { ProductsApiService } from '../api-services/products-api.service';
+import {
+  McsApiClientFactory,
+  McsApiProductsFactory
+} from '@app/api-client';
 import { McsProductCatalogDataContext } from '../data-context/mcs-product-catalog-data.context';
 
 @Injectable()
 export class McsProductCatalogRepository extends McsRepositoryBase<McsProductCatalog> {
 
   constructor(
-    _productsApiService: ProductsApiService,
+    _apiClientFactory: McsApiClientFactory,
     private _accessControlService: McsAccessControlService
   ) {
-    super(new McsProductCatalogDataContext(_productsApiService));
+    super(new McsProductCatalogDataContext(
+      _apiClientFactory.getService(new McsApiProductsFactory())
+    ));
   }
 
   /**

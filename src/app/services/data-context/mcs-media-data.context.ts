@@ -7,12 +7,12 @@ import {
   McsQueryParam,
   McsApiSuccessResponse
 } from '@app/models';
-import { MediaApiService } from '../api-services/media-api.service';
+import { IMcsApiMediaService } from '@app/api-client';
 
 export class McsMediaDataContext implements McsDataContext<McsResourceMedia> {
   public totalRecordsCount: number = 0;
 
-  constructor(private _mediaApiService: MediaApiService) { }
+  constructor(private _mediaApiService: IMcsApiMediaService) { }
 
   /**
    * Get all records from the api service

@@ -113,7 +113,7 @@ export class ServerCloneComponent
 
     let serverClone = new McsServerClone();
     serverClone.name = this.fcServerName.value;
-    serverClone.clientReferenceObject.serverId = this.fcTargetServer.value.id;
+    serverClone.serverId = this.fcTargetServer.value.id;
     return serverClone;
   }
 

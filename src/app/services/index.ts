@@ -21,9 +21,3 @@ export * from './repositories/mcs-companies.repository';
 
 /** Guards */
 export * from './guards/required-resources.guard';
-
-/**
- * @deprecated TODO: Remove this after refactoring add-ons on server,
- * api-services should not be expose
- */
-export * from './api-services/options-api.service';

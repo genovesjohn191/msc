@@ -8,6 +8,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { AppState } from '@app/app.service';
 import { EventBusTestingModule } from '@app/event-bus/testing';
+import { McsApiClientTestingModule } from '@app/api-client/testing';
 import { CoreConfig } from '../core.config';
 import { coreProviders } from '../core.constants';
 import { MockCoreConfig } from './core-config.mock';
@@ -21,6 +22,7 @@ import { MockCoreConfig } from './core-config.mock';
     RouterTestingModule,
     CookieModule.forRoot(),
     EventBusTestingModule,
+    McsApiClientTestingModule,
     TranslateModule.forRoot()
   ],
   exports: [

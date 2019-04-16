@@ -11,14 +11,22 @@ import {
   McsApiJobRequestBase,
   McsServerAttachMedia
 } from '@app/models';
-import { MediaApiService } from '../api-services/media-api.service';
+import {
+  McsApiClientFactory,
+  McsApiMediaFactory,
+  IMcsApiMediaService
+} from '@app/api-client';
 import { McsMediaDataContext } from '../data-context/mcs-media-data.context';
 
 @Injectable()
 export class McsMediaRepository extends McsRepositoryBase<McsResourceMedia> {
+  private readonly _mediaApiService: IMcsApiMediaService;
 
-  constructor(private _mediaApiService: MediaApiService) {
-    super(new McsMediaDataContext(_mediaApiService));
+  constructor(_apiClientFactory: McsApiClientFactory) {
+    super(new McsMediaDataContext(
+      _apiClientFactory.getService(new McsApiMediaFactory())
+    ));
+    this._mediaApiService = _apiClientFactory.getService(new McsApiMediaFactory());
   }
 
   /**

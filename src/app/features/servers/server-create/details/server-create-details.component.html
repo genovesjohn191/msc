@@ -13,16 +13,18 @@
   </mcs-tab>
 
   <!-- Clone Server Tab -->
-  <mcs-tab [id]="serverCreateTypeEnum.Clone"
-    [label]="'serverCreateDetailsStep.cloneServer.title' | translate">
-    <p>{{'serverCreateDetailsStep.cloneServer.description' | translate }}</p>
+  <ng-container *ngIf="resource.isSelfManaged">
+    <mcs-tab [id]="serverCreateTypeEnum.Clone"
+      [label]="'serverCreateDetailsStep.cloneServer.title' | translate">
+      <p>{{'serverCreateDetailsStep.cloneServer.description' | translate }}</p>
 
-    <ng-container *ngIf="selectedTabIndex === serverCreateTypeEnum.Clone">
-      <mcs-server-clone #serverBase
-        (dataChange)="onChangeCreationDetails()"
-        [serviceType]="resource.serviceType"></mcs-server-clone>
-    </ng-container>
-  </mcs-tab>
+      <ng-container *ngIf="selectedTabIndex === serverCreateTypeEnum.Clone">
+        <mcs-server-clone #serverBase
+          (dataChange)="onChangeCreationDetails()"
+          [serviceType]="resource.serviceType"></mcs-server-clone>
+      </ng-container>
+    </mcs-tab>
+  </ng-container>
 </mcs-tab-group>
 
 <!-- Wizard Actions -->

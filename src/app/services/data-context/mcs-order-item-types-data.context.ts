@@ -7,12 +7,12 @@ import {
   McsQueryParam,
   McsApiSuccessResponse
 } from '@app/models';
-import { OrdersApiService } from '../api-services/orders-api.service';
+import { IMcsApiOrdersService } from '@app/api-client';
 
 export class McsOrderItemTypesDataContext implements McsDataContext<McsOrderItemType> {
   public totalRecordsCount: number = 0;
 
-  constructor(private _ordersApiService: OrdersApiService) { }
+  constructor(private _ordersApiService: IMcsApiOrdersService) { }
 
   /**
    * Get all records from the api service

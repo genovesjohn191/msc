@@ -18,7 +18,8 @@ import {
   McsServer,
   McsJob,
   JobType,
-  DataStatus
+  DataStatus,
+  VmPowerstateCommand
 } from '@app/models';
 import { McsServersRepository } from '@app/services';
 import { EventBusDispatcherService } from '@app/event-bus';
@@ -127,18 +128,17 @@ export class ServersService {
 
       default:
         this.setServerSpinner(data.server);
-        this._serversRepository.putServerCommand(data.server.id, action,
-          {
-            serverId: data.server.id,
-            powerState: data.server.powerState,
-            commandAction: action
+        this._serversRepository.sendServerPowerState(data.server.id, {
+          command: VmPowerstateCommand[ServerCommand[action]],
+          clientReferenceObject: {
+            serverId: data.server.id
+          }
+        }).pipe(
+          catchError((error) => {
+            this.clearServerSpinner(data.server);
+            return throwError(error);
           })
-          .pipe(
-            catchError((error) => {
-              this.clearServerSpinner(data.server);
-              return throwError(error);
-            })
-          ).subscribe();
+        ).subscribe();
         break;
     }
   }

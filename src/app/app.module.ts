@@ -44,6 +44,8 @@ import {
   isNullOrEmpty
 } from './utilities';
 import { McsIdentity } from './models';
+import { McsApiClientConfig } from './api-client/mcs-api-client.config';
+import { McsApiClientModule } from './api-client/mcs-api-client.module';
 
 import '../styles/base.scss';
 
@@ -77,6 +79,12 @@ export function coreConfig(): CoreConfig {
   } as CoreConfig;
 }
 
+export function apiConfig(): McsApiClientConfig {
+  return {
+    apiHost: resolveEnvVar('API_HOST', API_URL)
+  } as McsApiClientConfig;
+}
+
 /**
  * `AppModule` is the main entry point into Angular2's bootstraping process
  */
@@ -99,6 +107,7 @@ export function coreConfig(): CoreConfig {
     }),
 
     CoreModule.forRoot(coreConfig),
+    McsApiClientModule.forRoot(apiConfig),
     EventBusModule.forRoot(),
     ServicesModule.forRoot(),
 

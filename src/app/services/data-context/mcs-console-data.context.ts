@@ -10,12 +10,12 @@ import {
   McsApiSuccessResponse,
   McsConsole
 } from '@app/models';
-import { ConsoleApiService } from '../api-services/console-api.service';
+import { IMcsApiConsoleService } from '@app/api-client';
 
 export class McsConsoleDataContext implements McsDataContext<McsConsole> {
   public totalRecordsCount: number = 0;
 
-  constructor(private _consoleService: ConsoleApiService) { }
+  constructor(private _consoleService: IMcsApiConsoleService) { }
 
   /**
    * Get all records from the api service

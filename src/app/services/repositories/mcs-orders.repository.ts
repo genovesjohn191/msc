@@ -20,17 +20,25 @@ import {
   McsOrderApprover
 } from '@app/models';
 import { EventBusDispatcherService } from '@app/event-bus';
-import { OrdersApiService } from '../api-services/orders-api.service';
+import {
+  McsApiClientFactory,
+  McsApiOrdersFactory,
+  IMcsApiOrdersService
+} from '@app/api-client';
 import { McsOrdersDataContext } from '../data-context/mcs-orders-data.context';
 
 @Injectable()
 export class McsOrdersRepository extends McsRepositoryBase<McsOrder> implements IMcsOrderFactory {
+  private readonly _ordersApiService: IMcsApiOrdersService;
 
   constructor(
-    private _ordersApiService: OrdersApiService,
+    _apiClientFactory: McsApiClientFactory,
     private _eventDispatcher: EventBusDispatcherService
   ) {
-    super(new McsOrdersDataContext(_ordersApiService));
+    super(new McsOrdersDataContext(
+      _apiClientFactory.getService(new McsApiOrdersFactory())
+    ));
+    this._ordersApiService = _apiClientFactory.getService(new McsApiOrdersFactory());
   }
 
   /**

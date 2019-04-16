@@ -7,12 +7,12 @@ import {
   McsApiSuccessResponse,
   McsResource
 } from '@app/models';
-import { ResourcesApiService } from '../api-services/resources-api.service';
+import { IMcsApiResourcesService } from '@app/api-client';
 
 export class McsResourcesDataContext implements McsDataContext<McsResource> {
   public totalRecordsCount: number = 0;
 
-  constructor(private _resourcesApiService: ResourcesApiService) { }
+  constructor(private _resourcesApiService: IMcsApiResourcesService) { }
 
   /**
    * Get all records from the api service

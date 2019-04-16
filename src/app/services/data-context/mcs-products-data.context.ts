@@ -7,12 +7,12 @@ import {
   McsQueryParam,
   McsApiSuccessResponse
 } from '@app/models';
-import { ProductsApiService } from '../api-services/products-api.service';
+import { IMcsApiProductsService } from '@app/api-client';
 
 export class McsProductsDataContext implements McsDataContext<McsProduct> {
   public totalRecordsCount: number = 0;
 
-  constructor(private _productsService: ProductsApiService) { }
+  constructor(private _productsService: IMcsApiProductsService) { }
 
   /**
    * Get all records from the api service
