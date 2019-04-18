@@ -51,71 +51,36 @@
       </mcs-form-field>
 
       <!-- Media Name  -->
-      <mcs-form-field>
-        <input mcsInput #mediaName required mcsSetFocus
-          mcsId="input-media-name"
-          [placeholder]="'mediaUpload.mediaStepDetails.mediaName' | translate" maxlength="25"
-          [formControl]="fcMediaName"
-          [mcsContextualHelp]="'mediaUpload.mediaStepDetails.mediaNameHelp' | translate">
-
-        <mcs-hint mcsHint align="start">
-          <mcs-hint-message type="maxChar"
-            [value]="mediaName.maxLength">
-          </mcs-hint-message>
-        </mcs-hint>
-        <mcs-hint mcsHint align="end">
-          {{ mediaName.value.length }} / {{ mediaName.maxLength }}
-        </mcs-hint>
-
-        <mcs-error mcsError errorState="required">
-          {{ 'mediaUpload.mediaStepDetails.errors.mediaNameRequired' | translate }}
-        </mcs-error>
-        <mcs-error mcsError errorState="mediaNameInvalid">
-          {{ 'mediaUpload.mediaStepDetails.errors.mediaNameInvalid' | translate }}
-        </mcs-error>
-      </mcs-form-field>
-
-      <!-- Media URL  -->
-      <mcs-grid [mcsContextualHelp]="'mediaUpload.mediaStepDetails.mediaUrlHelp' | translate">
+      <mcs-grid [mcsContextualHelp]="'mediaUpload.mediaStepDetails.mediaNameHelp' | translate">
         <mcs-grid-row [gapSize]="7">
           <mcs-grid-column sizeLg="10">
-            <mcs-form-field  >
-              <input mcsInput #mediaUrl required mcsId="input-media-url"
-                [placeholder]="'mediaUpload.mediaStepDetails.mediaUrl' | translate" maxlength="300"
-                [formControl]="fcMediaUrl"
-                (blur)="onBlurMediaUrl()">
+            <mcs-form-field>
+              <input mcsInput #mediaName required mcsSetFocus
+                mcsId="input-media-name"
+                [placeholder]="'mediaUpload.mediaStepDetails.mediaName' | translate" maxlength="25"
+                [formControl]="fcMediaName">
 
-              <mcs-suffix *ngIf="mediaUrlStatusIconKey">
-                <mcs-icon [key]="mediaUrlStatusIconKey" size="small" ></mcs-icon>
-              </mcs-suffix>
-
-              <mcs-hint mcsHint align="start" *ngIf="urlInfoMessage">
-                <mcs-data-status-warning>{{ urlInfoMessage }}</mcs-data-status-warning>
-              </mcs-hint>
-              <mcs-hint mcsHint align="start" *ngIf="!urlInfoMessage">
+              <mcs-hint mcsHint align="start">
                 <mcs-hint-message type="maxChar"
-                  [value]="mediaUrl.maxLength"></mcs-hint-message>
+                  [value]="mediaName.maxLength">
+                </mcs-hint-message>
               </mcs-hint>
               <mcs-hint mcsHint align="end">
-                {{ mediaUrl.value.length }} / {{ mediaUrl.maxLength }}
+                {{ mediaName.value.length }} / {{ mediaName.maxLength }}
               </mcs-hint>
 
               <mcs-error mcsError errorState="required">
-                {{ 'mediaUpload.mediaStepDetails.errors.mediaUrlRequired' | translate }}
+                {{ 'mediaUpload.mediaStepDetails.errors.mediaNameRequired' | translate }}
               </mcs-error>
-              <mcs-error mcsError errorState="url">
-                {{ 'mediaUpload.mediaStepDetails.errors.mediaUrlInvalid' | translate }}
-              </mcs-error>
-              <mcs-error mcsError errorState="urlValidationError">
-                {{ urlInfoMessage }}
+              <mcs-error mcsError errorState="mediaNameInvalid">
+                {{ 'mediaUpload.mediaStepDetails.errors.mediaNameInvalid' | translate }}
               </mcs-error>
             </mcs-form-field>
           </mcs-grid-column>
           <mcs-grid-column sizeLg="2">
             <mcs-form-field>
-              <mcs-select [formControl]="fcMediaUrlExtension"
-                (change)="onBlurMediaUrl()">
-                <mcs-option *ngFor="let ext of mediaUrlExtensions" [value]="ext">
+              <mcs-select [formControl]="fcMediaExtension">
+                <mcs-option *ngFor="let ext of mediaExtensions" [value]="ext">
                   {{ext}}
                 </mcs-option>
               </mcs-select>
@@ -123,6 +88,40 @@
           </mcs-grid-column>
         </mcs-grid-row>
       </mcs-grid>
+
+      <!-- Media URL  -->
+      <mcs-form-field>
+        <input mcsInput #mediaUrl required mcsId="input-media-url"
+          [placeholder]="'mediaUpload.mediaStepDetails.mediaUrl' | translate" maxlength="300"
+          [formControl]="fcMediaUrl"
+          [mcsContextualHelp]="'mediaUpload.mediaStepDetails.mediaUrlHelp' | translate"
+          (blur)="onBlurMediaUrl()">
+
+        <mcs-suffix *ngIf="mediaUrlStatusIconKey">
+          <mcs-icon [key]="mediaUrlStatusIconKey" size="small" ></mcs-icon>
+        </mcs-suffix>
+
+        <mcs-hint mcsHint align="start" *ngIf="urlInfoMessage">
+          <mcs-data-status-warning>{{ urlInfoMessage }}</mcs-data-status-warning>
+        </mcs-hint>
+        <mcs-hint mcsHint align="start" *ngIf="!urlInfoMessage">
+          <mcs-hint-message type="maxChar"
+            [value]="mediaUrl.maxLength"></mcs-hint-message>
+        </mcs-hint>
+        <mcs-hint mcsHint align="end">
+          {{ mediaUrl.value.length }} / {{ mediaUrl.maxLength }}
+        </mcs-hint>
+
+        <mcs-error mcsError errorState="required">
+          {{ 'mediaUpload.mediaStepDetails.errors.mediaUrlRequired' | translate }}
+        </mcs-error>
+        <mcs-error mcsError errorState="url">
+          {{ 'mediaUpload.mediaStepDetails.errors.mediaUrlInvalid' | translate }}
+        </mcs-error>
+        <mcs-error mcsError errorState="urlValidationError">
+          {{ urlInfoMessage }}
+        </mcs-error>
+      </mcs-form-field>
 
       <!-- Media Description  -->
       <mcs-form-field>

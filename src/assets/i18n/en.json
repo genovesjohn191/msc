@@ -294,7 +294,7 @@
       "noAvailableMedia": "No available media to attach."
     },
     "manageScale": {
-      "header": "Managed RAM and vCPU",
+      "header": "Manage RAM and vCPU",
       "description": "Scaling a server allows for adjustment of RAM and vCPU power.",
       "warning": "Scaling the Server will require a restart.",
       "scale": "Scale",
