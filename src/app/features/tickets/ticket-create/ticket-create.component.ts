@@ -23,7 +23,8 @@ import {
   McsErrorHandlerService,
   CoreValidators,
   CoreDefinition,
-  CoreRoutes
+  CoreRoutes,
+  CoreEvent
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -52,6 +53,7 @@ import {
   TicketServiceData,
 } from '../shared';
 import { TicketCreateService } from './ticket-create.service';
+import { EventBusDispatcherService } from '@app/event-bus';
 
 @Component({
   selector: 'mcs-ticket-create',
@@ -126,7 +128,8 @@ export class TicketCreateComponent implements
     private _ticketCreateService: TicketCreateService,
     private _changeDetectorRef: ChangeDetectorRef,
     private _ticketsRepository: McsTicketsRepository,
-    private _errorHandlerService: McsErrorHandlerService
+    private _errorHandlerService: McsErrorHandlerService,
+    private _eventDispatcher: EventBusDispatcherService
   ) {
     this.ticketTypeList = new Array();
     this.services = new Array();
@@ -196,6 +199,7 @@ export class TicketCreateComponent implements
    */
   public onLogTicket(): void {
     // Check all the controls and set the focus on the first invalid control
+    this._eventDispatcher.dispatch(CoreEvent.loaderShow);
     this.fgCreateDirective.validateFormControls(true);
     if (!this.fgCreateDirective.isValid()) { return; }
 
@@ -233,6 +237,7 @@ export class TicketCreateComponent implements
     this.creatingTicket = true;
     this.createTicketSubscription = this._ticketCreateService.createTicket(ticket).pipe(
       finalize(() => {
+        this._eventDispatcher.dispatch(CoreEvent.loaderHide);
         this.fgCreateDirective.resetAllControls();
         this._ticketsRepository.clearData();
       }),
