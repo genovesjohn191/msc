@@ -157,7 +157,8 @@ export class McsJob extends McsEntityBase {
     );
 
     let resourceId = getSafeProperty(completedTask, (obj) => obj.referenceObject.resourceId);
-    return !isNullOrEmpty(resourceId) ? `${resourceDynamicPath}/${resourceId}` : undefined;
+    let hasNoResource = isNullOrEmpty(resourceId) || isNullOrEmpty(resourceDynamicPath);
+    return hasNoResource ? undefined : `${resourceDynamicPath}/${resourceId}`;
   }
 
   /**
