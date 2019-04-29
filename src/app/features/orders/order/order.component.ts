@@ -21,7 +21,8 @@ import {
   takeUntil,
   finalize,
   shareReplay,
-  concatMap
+  concatMap,
+  tap
 } from 'rxjs/operators';
 import { EventBusDispatcherService } from '@app/event-bus';
 import {
@@ -29,17 +30,20 @@ import {
   CoreDefinition,
   McsTableDataSource,
   McsDialogService,
-  CoreEvent
+  CoreEvent,
+  McsNavigationService
 } from '@app/core';
 import {
   unsubscribeSubject,
-  isNullOrEmpty
+  isNullOrEmpty,
+  getSafeProperty
 } from '@app/utilities';
 import {
   McsOrder,
   McsOrderItem,
   OrderWorkflowAction,
-  McsOrderApprover
+  McsOrderApprover,
+  RouteKey
 } from '@app/models';
 import { McsOrdersRepository } from '@app/services';
 import {
@@ -75,6 +79,7 @@ export class OrderComponent implements OnInit, OnDestroy {
     private _eventDispatcher: EventBusDispatcherService,
     private _dialogService: McsDialogService,
     private _errorHandlerService: McsErrorHandlerService,
+    private _navigationService: McsNavigationService,
     private _ordersRepository: McsOrdersRepository
   ) {
     this.orderDetailsView = OrderDetailsView.OrderDetails;
@@ -187,7 +192,11 @@ export class OrderComponent implements OnInit, OnDestroy {
         return this._ordersRepository.createOrderWorkFlow(order.id, {
           state: OrderWorkflowAction.AwaitingApproval,
           approvers: this._orderApprovers.map((approver) => approver.userId)
-        });
+        }).pipe(
+          tap((approvedOrder) => this._navigationService.navigateTo(RouteKey.Notification,
+            getSafeProperty(approvedOrder, (obj) => obj.jobs[0].id))
+          )
+        );
       }),
       finalize(() => {
         this._eventDispatcher.dispatch(CoreEvent.loaderHide);

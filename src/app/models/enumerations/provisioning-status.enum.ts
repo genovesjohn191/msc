@@ -10,6 +10,15 @@ export enum ProvisioningStatus {
   Cancelled = 4
 }
 
+export const provisioningStatusText = {
+  [ProvisioningStatus.Error]: 'Error',
+  [ProvisioningStatus.Unknown]: 'Unknown',
+  [ProvisioningStatus.NotStarted]: 'Not Started',
+  [ProvisioningStatus.InProgress]: 'In Progress',
+  [ProvisioningStatus.Completed]: 'Completed',
+  [ProvisioningStatus.Cancelled]: 'Cancelled',
+};
+
 /**
  * Enumeration serializer and deserializer methods
  */

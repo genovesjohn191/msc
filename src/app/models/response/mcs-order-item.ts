@@ -7,7 +7,8 @@ import {
 } from '../enumerations/order-status.enum';
 import {
   ProvisioningStatus,
-  ProvisioningStatusSerialization
+  ProvisioningStatusSerialization,
+  provisioningStatusText
 } from '../enumerations/provisioning-status.enum';
 import { McsEntityBase } from '../common/mcs-entity.base';
 import { McsOrderCharge } from './mcs-order-charge';
@@ -91,5 +92,12 @@ export class McsOrderItem extends McsEntityBase {
    */
   public get statusLabel(): string {
     return orderStatusText[this.status];
+  }
+
+  /**
+   * Returns the item provisioning status label
+   */
+  public get itemProvisioningStatusLabel(): string {
+    return provisioningStatusText[this.itemProvisioningStatus];
   }
 }
