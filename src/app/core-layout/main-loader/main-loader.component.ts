@@ -19,7 +19,8 @@ import {
 } from 'rxjs/operators';
 import {
   unsubscribeSafely,
-  getRandomNumber
+  getRandomNumber,
+  animateFactory
 } from '@app/utilities';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { CoreEvent } from '@app/core';
@@ -35,6 +36,9 @@ const LOADER_INTERVAL_MS = 500;
   styleUrls: ['./main-loader.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  animations: [
+    animateFactory.fadeOut
+  ],
   host: {
     'class': 'main-loader-wrapper'
   }

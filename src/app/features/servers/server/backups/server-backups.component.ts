@@ -362,7 +362,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
     resourceStorage: McsResourceStorage[],
     storageProfile: string
   ): number {
-    let storage = resourceStorage.find((profile) => {
+    let storage = resourceStorage && resourceStorage.find((profile) => {
       return profile.name === storageProfile;
     });
     return !isNullOrEmpty(storage) ? storage.availableMB : 0;

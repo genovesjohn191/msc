@@ -38,8 +38,6 @@
           {{ item.text }}
         </mcs-radio-button>
       </mcs-radio-button-group>
-
-      <ng-content select="[mcsManageNetworkWarning]"></ng-content>
     </mcs-section>
 
     <!-- IP address custom mode -->
@@ -79,4 +77,6 @@
       </mcs-data-status>
     </mcs-section>
   </div>
+
+  <div><ng-content select="[mcsManageNetworkWarning]"></ng-content></div>
 </form>
