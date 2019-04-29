@@ -1,4 +1,5 @@
-<mcs-progress-bar *ngIf="!hidden"
+<mcs-progress-bar *ngIf="!hidden" [@fadeOut]
+  [ngStyle]="{'height': '2px'}"
   (completed)="onProgressCompleted()"
   [hideBackground]="true" size="xsmall"
   [(ngModel)]="progressValue" [maxValue]="progressMax">

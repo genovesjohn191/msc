@@ -19,8 +19,13 @@ import {
 } from '@app/utilities';
 import {
   McsApiRequestParameter,
-  McsApiErrorResponse
+  McsApiErrorResponse,
+  McsCompany
 } from '@app/models';
+import {
+  McsCookieService,
+  CoreDefinition
+} from '@app/core';
 import { McsApiClientDefinition } from './mcs-api-client.definition';
 import { McsApiClientConfig } from './mcs-api-client.config';
 
@@ -33,6 +38,7 @@ export class McsApiClientHttpService {
 
   constructor(
     private _httpClient: HttpClient,
+    private _cookieService: McsCookieService,
     @Optional() private _config: McsApiClientConfig
   ) { }
 
@@ -190,13 +196,13 @@ export class McsApiClientHttpService {
    * `@Note:` When active account is default, the cookie content for active account is undefined
    * @param headers Header Instance
    */
-  private _setAccountHeader(_headers: Map<string, any>) {
-    // TODO: Think of a better way on how to deal with cookies, since
-    // we're not dependent of core config anymore
-
-    // let activeAccount = this._cookieService.getEncryptedItem<McsCompany>(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
-    // if (isNullOrEmpty(activeAccount)) { return; }
-    // headers.set(ApiClientDefinition.HEADER_COMPANY_ID, activeAccount);
+  private _setAccountHeader(headers: Map<string, any>) {
+    // TODO: This implementation should be called outside of this module.
+    // As of now, we need to call the cookieservice of the coremodule as
+    // a temporary fix because this api client module should be independent
+    let activeAccount = this._cookieService.getEncryptedItem<McsCompany>(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
+    if (isNullOrEmpty(activeAccount)) { return; }
+    headers.set(CoreDefinition.HEADER_COMPANY_ID, activeAccount);
   }
 
   /**

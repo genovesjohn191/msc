@@ -171,6 +171,18 @@ export class StepOrderDetailsComponent
   }
 
   /**
+   * Event that emits when the description was focused
+   * @param input Input element that on focused
+   */
+  public onDescriptionFocus(input: HTMLInputElement): void {
+    let isControlDisabled = getSafeProperty(this.fcDescription, (obj) => obj.disabled);
+    if (isControlDisabled) { return; }
+
+    let textLength = getSafeProperty(input, (obj) => obj.value.length);
+    input.setSelectionRange(0, textLength);
+  }
+
+  /**
    * Event that emits when the order has been changed
    */
   public onDataChange(): void {
@@ -244,8 +256,8 @@ export class StepOrderDetailsComponent
   private _setFormFieldsStatus(): void {
     if (isNullOrEmpty(this.fcDescription)) { return; }
     this.orderIsInProgress ?
-      this.fcDescription.disable({ onlySelf: true }) :
-      this.fcDescription.enable({ onlySelf: true });
+      this.fcDescription.disable() :
+      this.fcDescription.enable();
   }
 
   /**
@@ -317,8 +329,7 @@ export class StepOrderDetailsComponent
       fcBillingEntity: this.fcBillingEntity,
       fcBillingSite: this.fcBillingSite,
       fcBillingCostCenter: this.fcBillingCostCenter,
-      fcDescription: this.fcDescription,
-      fcWorkflowAction: this.fcWorkflowAction
+      fcDescription: this.fcDescription
     });
   }
 
