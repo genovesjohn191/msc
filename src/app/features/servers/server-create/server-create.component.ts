@@ -30,7 +30,8 @@ import {
   ServiceType,
   RouteKey,
   McsResource,
-  McsOrderWorkflow
+  McsOrderWorkflow,
+  OrderWorkflowAction
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -59,6 +60,7 @@ export class ServerCreateComponent extends McsOrderWizardBase
   public resources$: Observable<McsResource[]>;
   public resource$: Observable<McsResource>;
   public faCreationForm: FormArray;
+  public waitingForProvision: boolean = true;
 
   public get backIconKey(): string {
     return CoreDefinition.ASSETS_SVG_CHEVRON_LEFT;
@@ -178,6 +180,7 @@ export class ServerCreateComponent extends McsOrderWizardBase
         resourcePath: CoreRoutes.getNavigationPath(RouteKey.ServerDetails)
       }
     } as McsOrderWorkflow;
+    this.waitingForProvision = submitDetails.workflowAction === OrderWorkflowAction.Submitted;
     this.submitOrderWorkflow(workflow);
   }
 

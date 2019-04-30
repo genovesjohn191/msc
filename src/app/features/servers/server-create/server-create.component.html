@@ -94,7 +94,8 @@
           </ng-container>
 
           <ng-container mcsProvisioningStepInProgress>
-            {{ 'serverCreateProvisioningStep.dataInProgress' | translate}}
+            <span *ngIf="waitingForProvision">{{ 'serverCreateProvisioningStep.dataProvisioning' | translate }}</span>
+            <span *ngIf="!waitingForProvision">{{ 'serverCreateProvisioningStep.savingOrder' | translate }}</span>
           </ng-container>
         </mcs-step-provisioning>
       </mcs-wizard-step>
