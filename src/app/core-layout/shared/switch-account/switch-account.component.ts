@@ -9,7 +9,6 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 import {
   CoreDefinition,
   McsTableListingBase,
@@ -88,7 +87,6 @@ export class SwitchAccountComponent
   public ngAfterViewInit(): void {
     Promise.resolve().then(() => {
       this.initializeDatasource();
-      this._subscribeToActiveCompany();
     });
   }
 
@@ -167,10 +165,6 @@ export class SwitchAccountComponent
     this.dataSource
       .registerSearch(this.search)
       .registerPaginator(this.paginator);
-
-    // Invoke when finished
-    this.dataSource.dataRenderedChange()
-      .subscribe(() => this._removeActiveDefaultAccounts());
     this.changeDetectorRef.markForCheck();
   }
 
@@ -179,26 +173,5 @@ export class SwitchAccountComponent
    */
   protected get columnSettingsKey(): string {
     return null;
-  }
-
-  /**
-   * Listener to active company changes
-   */
-  private _subscribeToActiveCompany(): void {
-    this._switchAccountService.activeAccountStream.pipe(
-      takeUntil(this._destroySubject)
-    ).subscribe(() => this._removeActiveDefaultAccounts());
-  }
-
-  /**
-   * Remove the active account and default account from displayed records
-   */
-  private _removeActiveDefaultAccounts(): void {
-    if (isNullOrEmpty(this.dataSource)) { return; }
-    this.dataSource.deleteRecordBy((record) =>
-      this._switchAccountService.activeAccount.id === record.id
-    );
-    this.dataSource.deleteRecordBy((record) => this.defaultAccount.id === record.id);
-    this.changeDetectorRef.markForCheck();
   }
 }

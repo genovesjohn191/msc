@@ -192,11 +192,7 @@ export class OrderComponent implements OnInit, OnDestroy {
         return this._ordersRepository.createOrderWorkFlow(order.id, {
           state: OrderWorkflowAction.AwaitingApproval,
           approvers: this._orderApprovers.map((approver) => approver.userId)
-        }).pipe(
-          tap((approvedOrder) => this._navigationService.navigateTo(RouteKey.Notification,
-            getSafeProperty(approvedOrder, (obj) => obj.jobs[0].id))
-          )
-        );
+        });
       }),
       finalize(() => {
         this._eventDispatcher.dispatch(CoreEvent.loaderHide);
@@ -289,7 +285,11 @@ export class OrderComponent implements OnInit, OnDestroy {
 
         return this._ordersRepository.createOrderWorkFlow(order.id, {
           state: OrderWorkflowAction.Submitted
-        });
+        }).pipe(
+          tap((approvedOrder) => this._navigationService.navigateTo(RouteKey.Notification,
+            getSafeProperty(approvedOrder, (obj) => obj.jobs[0].id))
+          )
+        );
       }),
       finalize(() => this._eventDispatcher.dispatch(CoreEvent.loaderHide))
     ).subscribe();

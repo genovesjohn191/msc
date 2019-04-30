@@ -42,14 +42,14 @@ export class McsDateTimeService {
    */
   private _createDateTimeTable(): void {
     this._dateTimeMapTable.set('default', 'EEE, dd MMM yyyy, h:mm:ss a');
-    this._dateTimeMapTable.set('short', 'M/d/yy, h:mm a');
-    this._dateTimeMapTable.set('medium', 'MMM d, y, h:mm:ss a');
-    this._dateTimeMapTable.set('long', 'MMMM d, y, h:mm:ss a z');
-    this._dateTimeMapTable.set('full', 'EEEE, MMMM d, y, h:mm:ss a zzzz');
-    this._dateTimeMapTable.set('shortDate', 'M/d/yy');
-    this._dateTimeMapTable.set('mediumDate', 'MMM d, y');
-    this._dateTimeMapTable.set('longDate', 'MMMM d, y');
-    this._dateTimeMapTable.set('fullDate', 'EEEE, MMMM d, y');
+    this._dateTimeMapTable.set('short', 'd/M/yy, h:mm a');
+    this._dateTimeMapTable.set('medium', 'd MMM, y, h:mm:ss a');
+    this._dateTimeMapTable.set('long', 'd MMMM, y, h:mm:ss a z');
+    this._dateTimeMapTable.set('full', 'EEEE, d MMMM, y, h:mm:ss a zzzz');
+    this._dateTimeMapTable.set('shortDate', 'd/M/yy');
+    this._dateTimeMapTable.set('mediumDate', 'd MMM, y');
+    this._dateTimeMapTable.set('longDate', 'd MMMM, y');
+    this._dateTimeMapTable.set('fullDate', 'EEEE, d MMMM, y');
     this._dateTimeMapTable.set('shortTime', 'h:mm a');
     this._dateTimeMapTable.set('mediumTime', 'h:mm:ss a');
     this._dateTimeMapTable.set('longTime', 'h:mm:ss a z');

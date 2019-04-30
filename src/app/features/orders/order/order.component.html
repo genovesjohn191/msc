@@ -104,6 +104,16 @@
                   <span>{{ selectedOrder.createdOn | mcsStdDateFormat }}</span>
                 </mcs-item>
 
+                <mcs-item>
+                  <span>{{ 'order.updatedBy' | translate }}:</span>
+                  <span>{{ selectedOrder.modifiedBy }}</span>
+                </mcs-item>
+
+                <mcs-item>
+                  <span>{{ 'order.updatedOn' | translate }}:</span>
+                  <span>{{ selectedOrder.modifiedOn | mcsStdDateFormat }}</span>
+                </mcs-item>
+
               </mcs-presentation-panel>
             </mcs-grid-column>
 
