@@ -35,6 +35,7 @@
           <mcs-select placeholder="Select a VDC" required
             mcsId="select-resource"
             (change)="onChangeResource($event)"
+            [formControl]="fcResource"
             [mcsContextualHelp]="'serverCreate.vdcDropdownList.helpText' | translate">
 
             <mcs-option-group>
@@ -52,6 +53,7 @@
         <ng-container *ngIf="resource$ | async as selectedResource">
           <mcs-server-create-details #serverDetailsStep
             [resource]="selectedResource"
+            [serverId]="selectedServerId"
             (dataChange)="onServerDetailsChange($event)"
             (dataSubmit)="onServerDetailsSubmit($event)">
           </mcs-server-create-details>

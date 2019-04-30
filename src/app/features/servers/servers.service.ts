@@ -65,7 +65,7 @@ export class ServersService {
       case ServerCommand.Clone:
         this._router.navigate(
           [CoreRoutes.getNavigationPath(RouteKey.ServerCreate)],
-          { queryParams: { clone: data.server.id } }
+          { queryParams: { clone: data.server.id, resource: data.server.platform.resourceId } }
         );
         break;
 
