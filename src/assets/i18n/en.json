@@ -543,18 +543,9 @@
   "serverCreateProvisioningStep": {
     "stepTitle": "Go!",
     "description": "Your server is deploying and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
-    "dataInProgress": "Preparing the server deployment process. This may take a moment.",
+    "savingOrder": "Saving your order. This may take a moment.",
+    "dataProvisioning": "Preparing the server deployment process. This may take a moment.",
     "dataError": "Something went wrong while processing your request. Please try again later."
-  },
-  "serverProvisioningPage": {
-    "header": "Create server status",
-    "description": "Your server is deploying and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
-    "leftPanelHeader": "New server",
-    "creationDetails": "Creation details",
-    "serverHeader": "Server",
-    "noJob": "There are no Job to display for this server.",
-    "loadingJob": "Loading server creation details.",
-    "errorGettingJob": "Sorry, something’s not right. We weren’t able to retrieve the creation details of the server."
   },
   "orderDetailsStep": {
     "stepTitle": "Confirm",

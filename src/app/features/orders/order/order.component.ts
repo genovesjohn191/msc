@@ -192,11 +192,12 @@ export class OrderComponent implements OnInit, OnDestroy {
         return this._ordersRepository.createOrderWorkFlow(order.id, {
           state: OrderWorkflowAction.AwaitingApproval,
           approvers: this._orderApprovers.map((approver) => approver.userId)
-        });
+        }).pipe(
+          finalize(() => this.orderDetailsView = OrderDetailsView.OrderDetails)
+        );
       }),
       finalize(() => {
         this._eventDispatcher.dispatch(CoreEvent.loaderHide);
-        this.orderDetailsView = OrderDetailsView.OrderDetails;
       })
     ).subscribe();
   }
