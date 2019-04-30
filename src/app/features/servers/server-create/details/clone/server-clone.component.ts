@@ -12,10 +12,6 @@ import {
   FormControl
 } from '@angular/forms';
 import {
-  ActivatedRoute,
-  ParamMap
-} from '@angular/router';
-import {
   Subscription,
   throwError,
   Subject
@@ -54,13 +50,15 @@ export class ServerCloneComponent
   @Input()
   public serviceType: ServiceType;
 
+  @Input()
+  public serverId: string;
+
   @Output()
   public dataChange = new EventEmitter<ServerCreateDetailsBase<McsServerClone>>();
 
   public textHelpContent: any;
   public servers: McsServer[];
   public serversSubscription: Subscription;
-  public parameterSubscription: Subscription;
   public dataStatusFactory: McsDataStatusFactory<McsServer[]>;
   public ipAddressStatusFactory: McsDataStatusFactory<McsServer>;
 
@@ -84,7 +82,6 @@ export class ServerCloneComponent
   private _destroySubject = new Subject<void>();
 
   constructor(
-    private _activatedRoute: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef,
     private _serversRepository: McsServersRepository
   ) {
@@ -99,7 +96,6 @@ export class ServerCloneComponent
   }
 
   public ngOnDestroy() {
-    unsubscribeSafely(this.parameterSubscription);
     unsubscribeSafely(this.serversSubscription);
     unsubscribeSafely(this._destroySubject);
   }
@@ -144,7 +140,7 @@ export class ServerCloneComponent
       this.dataStatusFactory.setSuccessful(response);
     });
     this.serversSubscription.add(() => {
-      this._listenToParamChange();
+      this._setTargetServerById();
       this._changeDetectorRef.markForCheck();
     });
   }
@@ -173,23 +169,12 @@ export class ServerCloneComponent
   }
 
   /**
-   * Listen to every change of the parameter
-   */
-  private _listenToParamChange(): void {
-    unsubscribeSafely(this.parameterSubscription);
-    this.parameterSubscription = this._activatedRoute.queryParams
-      .subscribe((params: ParamMap) => {
-        this._setTargetServerById(params['clone']);
-      });
-  }
-
-  /**
    * This will set the target server based on ID provided by parameters
    */
-  private _setTargetServerById(serverId: any): void {
-    let hasServers = !isNullOrEmpty(serverId) && !isNullOrEmpty(this.servers);
+  private _setTargetServerById(): void {
+    let hasServers = !isNullOrEmpty(this.serverId) && !isNullOrEmpty(this.servers);
     if (!hasServers) { return; }
-    let server = this.servers.find((_server) => _server.id === serverId);
+    let server = this.servers.find((_server) => _server.id === this.serverId);
     Promise.resolve().then(() => this.fcTargetServer.setValue(server));
   }
 

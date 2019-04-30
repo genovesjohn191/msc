@@ -21,6 +21,7 @@
       <ng-container *ngIf="selectedTabIndex === serverCreateTypeEnum.Clone">
         <mcs-server-clone #serverBase
           (dataChange)="onChangeCreationDetails()"
+          [serverId]="serverId"
           [serviceType]="resource.serviceType"></mcs-server-clone>
       </ng-container>
     </mcs-tab>

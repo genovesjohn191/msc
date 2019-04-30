@@ -1,6 +1,5 @@
 import {
   Component,
-  OnInit,
   AfterViewInit,
   OnDestroy,
   ChangeDetectorRef,
@@ -19,10 +18,6 @@ import {
   FormArray,
   FormBuilder
 } from '@angular/forms';
-import {
-  ActivatedRoute,
-  ParamMap
-} from '@angular/router';
 import { Subject } from 'rxjs';
 import {
   startWith,
@@ -53,7 +48,7 @@ enum ServerCreateType {
 })
 
 export class ServerCreateDetailsComponent implements
-  OnInit, OnChanges, AfterViewInit, OnDestroy, McsSafeToNavigateAway {
+  OnChanges, AfterViewInit, OnDestroy, McsSafeToNavigateAway {
   public textHelpContent: any;
 
   public faCreationForms: FormArray;
@@ -62,6 +57,9 @@ export class ServerCreateDetailsComponent implements
 
   @Input()
   public resource: McsResource;
+
+  @Input()
+  public serverId: string;
 
   @Output()
   public dataChange = new EventEmitter<Array<ServerCreateDetailsBase<any>>>();
@@ -79,16 +77,11 @@ export class ServerCreateDetailsComponent implements
 
   constructor(
     private _formBuilder: FormBuilder,
-    private _activatedRoute: ActivatedRoute,
     private _elementRef: ElementRef,
     private _changeDetectorRef: ChangeDetectorRef,
     private _formGroupService: McsFormGroupService
   ) {
     this.faCreationForms = this._formBuilder.array([]);
-  }
-
-  public ngOnInit() {
-    this._setInitialTabViewByParam();
   }
 
   public ngAfterViewInit() {
@@ -106,9 +99,15 @@ export class ServerCreateDetailsComponent implements
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    let resourceChange = changes['resource'];
-    if (!isNullOrEmpty(resourceChange)) {
+    let validResourceChange = !isNullOrEmpty(changes['resource']);
+    if (validResourceChange) {
       this._resetTabForms();
+    }
+
+    let validServerIdChange = !isNullOrEmpty(changes['serverId']);
+    if (validServerIdChange) {
+      this.selectedTabIndex = ServerCreateType.Clone;
+      this._changeDetectorRef.markForCheck();
     }
   }
 
@@ -193,21 +192,7 @@ export class ServerCreateDetailsComponent implements
   private _resetTabForms(): void {
     if (!isNullOrEmpty(this._serverDetailsComponent)) {
       this._serverDetailsComponent.recreateComponent();
+      this.selectedTabIndex = ServerCreateType.New;
     }
-  }
-
-  /**
-   * Sets the initial tab view based on the parameter provided
-   */
-  private _setInitialTabViewByParam(): void {
-    this._activatedRoute.queryParams
-      .pipe(takeUntil(this._destroySubject))
-      .subscribe((params: ParamMap) => {
-        let serverId = params['clone'];
-        if (!isNullOrEmpty(serverId)) {
-          this.selectedTabIndex = ServerCreateType.Clone;
-          this._changeDetectorRef.markForCheck();
-        }
-      });
   }
 }

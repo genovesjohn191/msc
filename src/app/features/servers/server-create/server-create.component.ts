@@ -6,16 +6,21 @@ import {
   ChangeDetectorRef,
   ViewChild
 } from '@angular/core';
-import { FormArray } from '@angular/forms';
+import {
+  FormArray,
+  FormControl
+} from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import {
   throwError,
-  Observable
+  Observable,
+  Subject
 } from 'rxjs';
 import {
   catchError,
   shareReplay,
-  tap
+  tap,
+  takeUntil
 } from 'rxjs/operators';
 import { EventBusDispatcherService } from '@app/event-bus';
 import {
@@ -24,7 +29,8 @@ import {
   CoreEvent,
   McsErrorHandlerService,
   McsOrderWizardBase,
-  McsNavigationService
+  McsNavigationService,
+  CoreValidators
 } from '@app/core';
 import {
   ServiceType,
@@ -45,6 +51,10 @@ import { ServerCreateService } from './server-create.service';
 import { ServerCreateDetailsBase } from './details/server-create-details.base';
 import { AddOnDetails } from './addons/addons-model';
 import { ServerCreateBuilder } from './server-create.builder';
+import {
+  ActivatedRoute,
+  ParamMap
+} from '@angular/router';
 
 @Component({
   selector: 'mcs-server-create',
@@ -60,7 +70,9 @@ export class ServerCreateComponent extends McsOrderWizardBase
   public resources$: Observable<McsResource[]>;
   public resource$: Observable<McsResource>;
   public faCreationForm: FormArray;
+  public fcResource: FormControl;
   public waitingForProvision: boolean = true;
+  public selectedServerId: string;
 
   public get backIconKey(): string {
     return CoreDefinition.ASSETS_SVG_CHEVRON_LEFT;
@@ -78,9 +90,12 @@ export class ServerCreateComponent extends McsOrderWizardBase
   private _detailsStep: ServerCreateDetailsComponent;
   private _serverCreateBuilder: ServerCreateBuilder<any>;
 
+  private _destroySubject = new Subject<void>();
+
   constructor(
     _navigationService: McsNavigationService,
     _serverCreateService: ServerCreateService,
+    private _activatedRoute: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef,
     private _translate: TranslateService,
     private _eventDispatcher: EventBusDispatcherService,
@@ -92,7 +107,9 @@ export class ServerCreateComponent extends McsOrderWizardBase
   }
 
   public ngOnInit() {
+    this._registerFormGroup();
     this._subscribeToAllResources();
+    this._setInitialTabViewByParam();
   }
 
   public ngOnDestroy() {
@@ -184,6 +201,11 @@ export class ServerCreateComponent extends McsOrderWizardBase
     this.submitOrderWorkflow(workflow);
   }
 
+  private _registerFormGroup(): void {
+    // Register Form Controls
+    this.fcResource = new FormControl('', [CoreValidators.required]);
+  }
+
   /**
    * Creates the managed/self-managed server according to factory instance
    * @param resource Resource on where to create the server
@@ -234,5 +256,31 @@ export class ServerCreateComponent extends McsOrderWizardBase
    */
   private _onResourceObtained(): void {
     this._eventDispatcher.dispatch(CoreEvent.loaderHide);
+  }
+
+  /**
+   * Sets the initial tab view based on the parameter provided
+   */
+  private _setInitialTabViewByParam(): void {
+    this._activatedRoute.queryParams
+      .pipe(takeUntil(this._destroySubject))
+      .subscribe((params: ParamMap) => {
+
+        let serverId = params['clone'];
+        let serverIdIsValid = !isNullOrEmpty(serverId);
+        this.selectedServerId = serverIdIsValid ? serverId : '';
+
+        let resourceId = params['resource'];
+        let resourceIdIsValid = !isNullOrEmpty(resourceId);
+        if (resourceIdIsValid) {
+          this._resourcesRepository.getByIdAsync(resourceId)
+            .pipe(
+              tap((resource) => {
+                this._changeDetectorRef.markForCheck();
+                this.fcResource.setValue(resource);
+              }))
+            .subscribe();
+        }
+      });
   }
 }
