@@ -227,5 +227,5 @@ export class CoreDefinition {
   public static DEFAULT_PAGE_SIZE = 25;
 
   /** Environment settings */
-  public static LOCALE = 'en-US';
+  public static LOCALE = 'en-AU';
 }

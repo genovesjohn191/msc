@@ -21,8 +21,6 @@ import {
 import {
   isNullOrEmpty,
   unsubscribeSafely,
-  addOrUpdateArrayRecord,
-  deleteArrayRecord,
   isNullOrUndefined
 } from '@app/utilities';
 import { DataStatus } from '@app/models';
@@ -40,7 +38,6 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
   private _searchPredicate: (data: T, keyword: string) => boolean;
 
   private _totalRecordsCount: number;
-  private _addedRecordsCache: T[];
   private _datasourceFuncPointer: DelegateSource<T>;
   private _dataRecords = new BehaviorSubject<T[]>(null);
   private _dataRenderedChange = new BehaviorSubject<T[]>(null);
@@ -51,7 +48,6 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
   private _dataChangeSubject = new Subject<void>();
 
   constructor(private _dataSource?: DatasourceType<T>) {
-    this._addedRecordsCache = [];
     this._totalRecordsCount = 0;
 
     this.updateDatasource(_dataSource);
@@ -187,49 +183,6 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
   }
 
   /**
-   * Add or Update the new record into the datasource
-   * @param newRecord New record to be added/updated
-   * @param predicate Predicated definition on how the addition/update process will work
-   * @param insertIndex Index on where it will be inserted
-   */
-  public addOrUpdateRecord(
-    newRecord: T,
-    predicate?: (record: T) => boolean,
-    insertIndex?: number
-  ): void {
-    // We need to add the additional record on the cache, because there are
-    // instances where in the data is currently obtaining and the actual datasource
-    // will be replaced and the added data will be erased
-    if (isNullOrEmpty(this.dataRecords)) {
-      this._addedRecordsCache = addOrUpdateArrayRecord(
-        this.dataRecords, newRecord, false, predicate);
-    }
-
-    let allRecords = addOrUpdateArrayRecord(
-      this.dataRecords, newRecord, false, predicate, insertIndex);
-    this._updateDataRecords(allRecords);
-
-    if (this._datasourceIsRepository) {
-      (this._dataSource as McsRepository<T>).addOrUpdate(newRecord, insertIndex);
-    }
-    this._setTotalRecordsCountByContext(this.dataRecords);
-  }
-
-  /**
-   * Deletes the record by predicate definition
-   * @param predicate Predicate definition on what to be deleted
-   */
-  public deleteRecordBy(predicate: (record: T) => boolean): void {
-    let allRecords = deleteArrayRecord(this.dataRecords, predicate);
-    this._updateDataRecords(allRecords);
-
-    if (this._datasourceIsRepository) {
-      (this._dataSource as McsRepository<T>).deleteBy(predicate);
-    }
-    this._setTotalRecordsCountByContext(this.dataRecords);
-  }
-
-  /**
    * Data source function pointer
    */
   private _datasourceFunc(): Observable<T[]> {
@@ -348,22 +301,9 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
    * @param dataRecords Datarecords to be filtered
    */
   private _filterData(dataRecords: T[]): T[] {
-    let addedData = this._addedData(dataRecords);
-    let searchedData = this._searchData(addedData);
+    let searchedData = this._searchData(dataRecords);
     let pagedData = this._pageData(searchedData);
     return pagedData;
-  }
-
-  /**
-   * Returns the added datarecords from cache
-   * @param dataRecords Datarecords to be added
-   */
-  private _addedData(dataRecords: T[]): T[] {
-    this._addedRecordsCache.forEach((addedRecord) => {
-      dataRecords = addOrUpdateArrayRecord(
-        dataRecords, addedRecord, false);
-    });
-    return dataRecords;
   }
 
   /**

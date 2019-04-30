@@ -252,9 +252,6 @@ export class McsServersRepository extends McsRepositoryBase<McsServer> {
    * @param serverData Server data to be cloned
    */
   public cloneServer(id: string, serverData: McsServerClone): Observable<McsJob> {
-    serverData.clientReferenceObject = {
-
-    };
     return this._serversApiService.cloneServer(id, serverData).pipe(
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );

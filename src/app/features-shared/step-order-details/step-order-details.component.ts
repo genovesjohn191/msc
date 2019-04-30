@@ -118,7 +118,6 @@ export class StepOrderDetailsComponent
 
     let requestChange = changes['requestState'];
     if (!isNullOrEmpty(requestChange)) {
-      this._setFormFieldsStatus();
       this._setDataChangeStatus();
       this._setTableStatus();
     }
@@ -251,16 +250,6 @@ export class StepOrderDetailsComponent
   }
 
   /**
-   * Sets the form fields status
-   */
-  private _setFormFieldsStatus(): void {
-    if (isNullOrEmpty(this.fcDescription)) { return; }
-    this.orderIsInProgress ?
-      this.fcDescription.disable() :
-      this.fcDescription.enable();
-  }
-
-  /**
    * Sets data column for the corresponding table
    */
   private _setDataColumns(): void {
@@ -278,15 +267,14 @@ export class StepOrderDetailsComponent
   private _initializeOrderDatasource(): void {
     if (isNullOrEmpty(this.order)) { return; }
     let orderItems = Object.assign([], this.order.items);
-    this.orderDatasource.updateDatasource(orderItems);
-
-    this.orderDatasource.addOrUpdateRecord({
+    orderItems.push({
       description: this._translate.instant('orderDetailsStep.orderDetails.totalLabel'),
       charges: {
         monthly: getSafeProperty(this.order, (obj) => obj.charges.monthly, 0),
         oneOff: getSafeProperty(this.order, (obj) => obj.charges.oneOff, 0)
       }
-    } as McsOrderItem);
+    });
+    this.orderDatasource.updateDatasource(orderItems);
   }
 
   /**

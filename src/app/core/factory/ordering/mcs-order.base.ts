@@ -136,7 +136,7 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible,
    * @param description Description of order details
    */
   public createDefaultOrderDescription(description: string): string {
-    let currentDate = formatDate(new Date(), 'shortDate', CoreDefinition.LOCALE);
+    let currentDate = formatDate(new Date(), 'd/M/yy', CoreDefinition.LOCALE);
     return `${description} - ${currentDate}`;
   }
 

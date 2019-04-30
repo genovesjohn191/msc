@@ -6,7 +6,8 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-/** Services */
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import {
   McsTableListingBase,
   McsTableDataSource,
@@ -18,7 +19,7 @@ import {
   McsPortal,
   McsPortalAccess
 } from '@app/models';
-import { isNullOrUndefined } from '@app/utilities';
+import { cloneObject } from '@app/utilities';
 
 @Component({
   selector: 'mcs-tools',
@@ -72,32 +73,32 @@ export class ToolsComponent
    * Initializes the table datasource
    */
   protected initializeDatasource(): void {
-    this.dataSource = new McsTableDataSource(this._toolsRepository);
-    this.dataSource.dataRenderedChange().subscribe((tools) => {
-      if (isNullOrUndefined(tools)) { return; }
-
-      // Add Macquarie View
-      let macquarieView = new McsPortal();
-      macquarieView.name = 'Macquarie View';
-      macquarieView.resourceSpecific = true;
-
-      let macquarieViewPortalAccess = new McsPortalAccess();
-      macquarieViewPortalAccess.name = macquarieView.name;
-      macquarieViewPortalAccess.url = this._coreConfig.macviewUrl;
-      macquarieView.portalAccess = Array(macquarieViewPortalAccess);
-      this.dataSource.addOrUpdateRecord(
-        macquarieView,
-        (item) => item.name === macquarieView.name,
-        0
-      );
-
-      // Remove resource specific
-      tools.slice().forEach((tool) => {
-        if (tool.resourceSpecific) { return; }
-        this.dataSource.deleteRecordBy((item) => item.id === tool.id);
-      });
-    });
+    this.dataSource = new McsTableDataSource(this._getPortalTools.bind(this));
     this.changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Gets all the portal tools from API
+   */
+  private _getPortalTools(): Observable<McsPortal[]> {
+    return this._toolsRepository.getAll().pipe(
+      map((response) => {
+        let macquarieTools: McsPortal[] = [];
+
+        // Add Macquarie View
+        let macquarieView = new McsPortal();
+        macquarieView.name = 'Macquarie View';
+        macquarieView.resourceSpecific = true;
+
+        let macquarieViewPortalAccess = new McsPortalAccess();
+        macquarieViewPortalAccess.name = macquarieView.name;
+        macquarieViewPortalAccess.url = this._coreConfig.macviewUrl;
+        macquarieView.portalAccess = Array(macquarieViewPortalAccess);
+        macquarieTools.push(macquarieView, ...cloneObject(response));
+
+        return macquarieTools.filter((tool) => tool.resourceSpecific);
+      })
+    );
   }
 
   /**
