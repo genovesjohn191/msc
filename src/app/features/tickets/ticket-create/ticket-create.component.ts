@@ -24,14 +24,14 @@ import {
   CoreValidators,
   CoreDefinition,
   CoreRoutes,
-  CoreEvent
+  CoreEvent,
+  IMcsNavigateAwayGuard
 } from '@app/core';
 import {
   isNullOrEmpty,
   replacePlaceholder,
   unsubscribeSafely,
-  animateFactory,
-  McsSafeToNavigateAway
+  animateFactory
 } from '@app/utilities';
 import { McsFormGroupDirective } from '@app/shared';
 import {
@@ -64,19 +64,13 @@ import { EventBusDispatcherService } from '@app/event-bus';
   ]
 })
 
-export class TicketCreateComponent implements
-  OnInit,
-  OnDestroy,
-  McsSafeToNavigateAway {
+export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwayGuard {
 
   public services: TicketService[];
   public isServicesOpen: boolean;
   public textService: string;
   public servicePanelOpen: boolean;
   public creatingTicket: boolean;
-
-  @ViewChild(McsFormGroupDirective)
-  public fgCreateDirective: McsFormGroupDirective;
 
   // Form variables
   public fgCreateTicket: FormGroup;
@@ -96,6 +90,9 @@ export class TicketCreateComponent implements
   // others
   public servicesSubscription: any;
   public createTicketSubscription: any;
+
+  @ViewChild(McsFormGroupDirective)
+  private _formGroup: McsFormGroupDirective;
 
   /**
    * Selected services items field
@@ -137,6 +134,16 @@ export class TicketCreateComponent implements
     this.textService = '';
   }
 
+  public ngOnInit() {
+    this._registerFormGroup();
+    this._setTicketType();
+    this._getServices();
+  }
+
+  public ngOnDestroy() {
+    unsubscribeSafely(this.servicesSubscription);
+  }
+
   public get servicesIconKey(): string {
     return CoreDefinition.ASSETS_SVG_TOGGLE_NAV;
   }
@@ -153,20 +160,8 @@ export class TicketCreateComponent implements
    * Event that triggers when navigating away from the current page
    * and all the inputted setting on the form are checked
    */
-  public safeToNavigateAway(): boolean {
-    return this.fgCreateDirective &&
-      !this.fgCreateDirective.hasDirtyFormControls() ||
-      this.creatingTicket;
-  }
-
-  public ngOnInit() {
-    this._registerFormGroup();
-    this._setTicketType();
-    this._getServices();
-  }
-
-  public ngOnDestroy() {
-    unsubscribeSafely(this.servicesSubscription);
+  public canNavigateAway(): boolean {
+    return this.creatingTicket || !this._formGroup.hasDirtyFormControls();
   }
 
   public convertMaxCharText(text: string, maxchar: number): string {
@@ -200,8 +195,8 @@ export class TicketCreateComponent implements
   public onLogTicket(): void {
     // Check all the controls and set the focus on the first invalid control
     this._eventDispatcher.dispatch(CoreEvent.loaderShow);
-    this.fgCreateDirective.validateFormControls(true);
-    if (!this.fgCreateDirective.isValid()) { return; }
+    this._formGroup.validateFormControls(true);
+    if (!this._formGroup.isValid()) { return; }
 
     let ticket = new McsTicketCreate();
 
@@ -238,7 +233,7 @@ export class TicketCreateComponent implements
     this.createTicketSubscription = this._ticketCreateService.createTicket(ticket).pipe(
       finalize(() => {
         this._eventDispatcher.dispatch(CoreEvent.loaderHide);
-        this.fgCreateDirective.resetAllControls();
+        this._formGroup.resetAllControls();
         this._ticketsRepository.clearData();
       }),
       catchError((error) => {

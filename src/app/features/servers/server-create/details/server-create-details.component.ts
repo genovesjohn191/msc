@@ -24,12 +24,12 @@ import {
   takeUntil
 } from 'rxjs/operators';
 import {
-  McsFormGroupService
+  McsFormGroupService,
+  IMcsNavigateAwayGuard
 } from '@app/core';
 import {
   unsubscribeSubject,
   isNullOrEmpty,
-  McsSafeToNavigateAway,
   getSafeProperty
 } from '@app/utilities';
 import { McsResource } from '@app/models';
@@ -47,10 +47,7 @@ enum ServerCreateType {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class ServerCreateDetailsComponent implements
-  OnChanges, AfterViewInit, OnDestroy, McsSafeToNavigateAway {
-  public textHelpContent: any;
-
+export class ServerCreateDetailsComponent implements OnChanges, AfterViewInit, OnDestroy, IMcsNavigateAwayGuard {
   public faCreationForms: FormArray;
   public selectedTabIndex: ServerCreateType = ServerCreateType.New;
   public serverDeploying: boolean;
@@ -91,7 +88,7 @@ export class ServerCreateDetailsComponent implements
         if (!isNullOrEmpty(this._createServerItems)) {
           this.faCreationForms = this._formBuilder.array([]);
           this._createServerItems.forEach((creationDetails) => {
-            this.faCreationForms.push(creationDetails.getCreationForm());
+            this.faCreationForms.push(creationDetails.getCreationForm().formGroup);
           });
         }
         this._changeDetectorRef.markForCheck();
@@ -127,13 +124,15 @@ export class ServerCreateDetailsComponent implements
   /**
    * Event that emits when navigating away from create server page to other route
    */
-  public safeToNavigateAway(): boolean {
-    if (isNullOrEmpty(this._createServerItems) || this.serverDeploying) { return true; }
-    let dirtyForm = this._createServerItems.find((serverItem) => {
+  public canNavigateAway(): boolean {
+    if (isNullOrEmpty(this._createServerItems)) { return true; }
+
+    let dirtyForms = this._createServerItems.find((serverItem) => {
       let serverCreationForm = serverItem.getCreationForm();
-      return serverCreationForm.touched && serverCreationForm.dirty;
+      let hasDirtyFields = getSafeProperty(serverCreationForm, (obj) => obj.hasDirtyFormControls());
+      return hasDirtyFields;
     });
-    return isNullOrEmpty(dirtyForm);
+    return isNullOrEmpty(dirtyForms);
   }
 
   /**
@@ -160,7 +159,6 @@ export class ServerCreateDetailsComponent implements
   public onSubmitCreationDetails(): void {
     if (!this._validateFormFields()) { return; }
     if (isNullOrEmpty(this._createServerItems)) { return; }
-    this.serverDeploying = true;
     this.dataSubmit.emit(this._createServerItems.map((data) => data));
   }
 

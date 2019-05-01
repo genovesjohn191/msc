@@ -9,6 +9,7 @@ export * from './core.event';
 
 /** Guards */
 export * from './guards/mcs-navigate-away.guard';
+export * from './guards/mcs-navigate-away-guard.interface';
 
 /** Services */
 export * from './services/mcs-api.service';

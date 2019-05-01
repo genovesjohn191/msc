@@ -30,6 +30,7 @@ export abstract class McsWizardBase implements McsDisposable {
   @ViewChild('formMessage')
   public formMessage: FormMessage;
 
+  private _activeStep: IWizardStep;
   private _wizardDestroySubject = new Subject<void>();
 
   constructor(private _wizardContext: IMcsWizard) {
@@ -40,12 +41,19 @@ export abstract class McsWizardBase implements McsDisposable {
   }
 
   /**
+   * Returns the active wizard step
+   */
+  public getActiveWizardStep(): IWizardStep {
+    return this._activeStep || Object.create({});
+  }
+
+  /**
    * Event that emits when the wizard step has been changed
    * @param activeStep Next wizard step
    */
   public onWizardStepChanged(activeStep: IWizardStep): void {
-    let noActiveStep = isNullOrEmpty(activeStep);
-    if (noActiveStep) { return; }
+    this._activeStep = activeStep;
+    if (isNullOrEmpty(this._activeStep)) { return; }
 
     if (activeStep.isLastStep && !isNullOrEmpty(this.formMessage)) {
       this.formMessage.updateConfiguration({

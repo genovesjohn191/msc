@@ -6,11 +6,12 @@ import {
   ChangeDetectorRef,
   ViewChild
 } from '@angular/core';
-import {
-  FormArray,
-  FormControl
-} from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
+import {
+  ActivatedRoute,
+  ParamMap
+} from '@angular/router';
+import { FormControl } from '@angular/forms';
 import {
   throwError,
   Observable,
@@ -30,6 +31,7 @@ import {
   McsErrorHandlerService,
   McsOrderWizardBase,
   McsNavigationService,
+  IMcsNavigateAwayGuard,
   CoreValidators
 } from '@app/core';
 import {
@@ -41,8 +43,7 @@ import {
 } from '@app/models';
 import {
   isNullOrEmpty,
-  getSafeProperty,
-  McsSafeToNavigateAway
+  getSafeProperty
 } from '@app/utilities';
 import { McsResourcesRepository } from '@app/services';
 import { OrderDetails } from '@app/features-shared';
@@ -51,10 +52,6 @@ import { ServerCreateService } from './server-create.service';
 import { ServerCreateDetailsBase } from './details/server-create-details.base';
 import { AddOnDetails } from './addons/addons-model';
 import { ServerCreateBuilder } from './server-create.builder';
-import {
-  ActivatedRoute,
-  ParamMap
-} from '@angular/router';
 
 @Component({
   selector: 'mcs-server-create',
@@ -64,15 +61,14 @@ import {
 })
 
 export class ServerCreateComponent extends McsOrderWizardBase
-  implements OnInit, OnDestroy, McsSafeToNavigateAway {
+  implements OnInit, OnDestroy, IMcsNavigateAwayGuard {
 
   // Other variables
   public resources$: Observable<McsResource[]>;
   public resource$: Observable<McsResource>;
-  public faCreationForm: FormArray;
-  public fcResource: FormControl;
   public waitingForProvision: boolean = true;
   public selectedServerId: string;
+  public fcResource: FormControl;
 
   public get backIconKey(): string {
     return CoreDefinition.ASSETS_SVG_CHEVRON_LEFT;
@@ -131,8 +127,9 @@ export class ServerCreateComponent extends McsOrderWizardBase
   /**
    * Event that emits when navigating away from create server page to other route
    */
-  public safeToNavigateAway(): boolean {
-    return getSafeProperty(this._detailsStep, (obj) => obj.safeToNavigateAway(), true);
+  public canNavigateAway(): boolean {
+    return this.getActiveWizardStep().isLastStep ||
+      getSafeProperty(this._detailsStep, (obj) => obj.canNavigateAway(), true);
   }
 
   /**
@@ -201,8 +198,10 @@ export class ServerCreateComponent extends McsOrderWizardBase
     this.submitOrderWorkflow(workflow);
   }
 
+  /**
+   * Registers all the form controls
+   */
   private _registerFormGroup(): void {
-    // Register Form Controls
     this.fcResource = new FormControl('', [CoreValidators.required]);
   }
 
