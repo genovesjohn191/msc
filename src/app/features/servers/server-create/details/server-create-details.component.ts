@@ -99,12 +99,14 @@ export class ServerCreateDetailsComponent implements
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    let validResourceChange = !isNullOrEmpty(changes['resource']);
+    let resourceIdChange = changes['resource'];
+    let validResourceChange = !isNullOrEmpty(getSafeProperty(resourceIdChange, (obj) => obj.currentValue));
     if (validResourceChange) {
       this._resetTabForms();
     }
 
-    let validServerIdChange = !isNullOrEmpty(changes['serverId']);
+    let serverIdChange = changes['serverId'];
+    let validServerIdChange = !isNullOrEmpty(getSafeProperty(serverIdChange, (obj) => obj.currentValue));
     if (validServerIdChange) {
       this.selectedTabIndex = ServerCreateType.Clone;
       this._changeDetectorRef.markForCheck();
