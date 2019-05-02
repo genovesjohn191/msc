@@ -26,8 +26,9 @@ import { ContextualHelpComponent } from './contextual-help.component';
 @Directive({
   selector: '[mcsContextualHelp]',
   host: {
-    '(focus)': 'show()',
-    '(blur)': 'hide()'
+    '(touchstart)': 'show()',
+    '(mouseenter)': 'show()',
+    '(mouseleave)': 'hide()'
   },
   exportAs: 'mcsContextualHelp'
 })

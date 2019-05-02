@@ -65,6 +65,7 @@ import {
   ServerManageNetwork,
   ServerManageScale,
 } from '@app/features-shared';
+import { McsFormGroupDirective } from '@app/shared';
 import { ServerCreateDetailsBase } from '../server-create-details.base';
 
 const DEFAULT_MANAGE_STORAGE_MINIMUM = 50;
@@ -128,6 +129,9 @@ export class ServerNewComponent
 
   @ViewChild('fgManageNetwork')
   private _fgManageNetwork: IMcsFormGroup;
+
+  @ViewChild(McsFormGroupDirective)
+  private _formGroup: McsFormGroupDirective;
 
   private _destroySubject = new Subject<void>();
 
@@ -284,8 +288,8 @@ export class ServerNewComponent
   /**
    * Returns the creation form group
    */
-  public getCreationForm(): FormGroup {
-    return this.fgNewServer;
+  public getCreationForm(): McsFormGroupDirective {
+    return this._formGroup;
   }
 
   /**

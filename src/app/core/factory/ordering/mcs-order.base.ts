@@ -1,4 +1,3 @@
-import { formatDate } from '@angular/common';
 import {
   Observable,
   Subject,
@@ -12,7 +11,6 @@ import {
   exhaustMap,
   finalize
 } from 'rxjs/operators';
-import { CoreDefinition } from '@app/core';
 import {
   McsDisposable,
   unsubscribeSafely,
@@ -40,6 +38,8 @@ import { McsOrderBuilder } from './mcs-order.builder';
 import { McsOrderRequest } from './mcs-order-request';
 import { McsOrderDirector } from './mcs-order.director';
 import { IMcsOrderFactory } from './mcs-order-factory.interface';
+
+export type OrderType = 'New' | 'Change';
 
 export interface IOrderSubmitDetails {
   description: string;
@@ -135,9 +135,8 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible,
    * Create default order description based on order description
    * @param description Description of order details
    */
-  public createDefaultOrderDescription(description: string): string {
-    let currentDate = formatDate(new Date(), 'd/M/yy', CoreDefinition.LOCALE);
-    return `${description} - ${currentDate}`;
+  public createDefaultOrderDescription(orderType: OrderType, description: string): string {
+    return `${orderType} ${description}`;
   }
 
   /**

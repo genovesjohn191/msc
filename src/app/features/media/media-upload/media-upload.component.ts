@@ -7,12 +7,12 @@ import {
 import { Subject } from 'rxjs';
 import {
   CoreDefinition,
-  McsWizardBase
+  McsWizardBase,
+  IMcsNavigateAwayGuard
 } from '@app/core';
 import {
   unsubscribeSubject,
-  getSafeProperty,
-  McsSafeToNavigateAway
+  getSafeProperty
 } from '@app/utilities';
 import { MediaUploadDetailsComponent } from './details/media-upload-details.component';
 import { MediaUploadService } from './media-upload.service';
@@ -24,16 +24,14 @@ import { MediaUploadService } from './media-upload.service';
 })
 
 export class MediaUploadComponent extends McsWizardBase
-  implements McsSafeToNavigateAway, OnDestroy {
+  implements OnDestroy, IMcsNavigateAwayGuard {
 
   private _destroySubject = new Subject<void>();
 
   @ViewChild(MediaUploadDetailsComponent)
   private _detailsStep: MediaUploadDetailsComponent;
 
-  constructor(
-    _mediaUploadService: MediaUploadService
-  ) {
+  constructor(_mediaUploadService: MediaUploadService) {
     super(_mediaUploadService);
   }
 
@@ -48,7 +46,8 @@ export class MediaUploadComponent extends McsWizardBase
   /**
    * Event that emits when navigating away from media upload page to other route
    */
-  public safeToNavigateAway(): boolean {
-    return getSafeProperty(this._detailsStep, (obj) => obj.safeToNavigateAway(), true);
+  public canNavigateAway(): boolean {
+    return this.getActiveWizardStep().isLastStep ||
+      getSafeProperty(this._detailsStep, (obj) => obj.canNavigateAway(), true);
   }
 }

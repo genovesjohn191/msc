@@ -29,12 +29,12 @@ import {
   McsErrorHandlerService,
   McsFormGroupService,
   CoreRoutes,
-  CoreEvent
+  CoreEvent,
+  IMcsNavigateAwayGuard
 } from '@app/core';
 import {
   unsubscribeSafely,
   isNullOrEmpty,
-  McsSafeToNavigateAway,
   getSafeProperty,
   getUniqueRecords
 } from '@app/utilities';
@@ -57,14 +57,13 @@ const MEDIA_EXTENSIONS = ['.iso', '.ovf'];
 })
 
 export class MediaUploadDetailsComponent
-  implements McsSafeToNavigateAway, OnInit, OnDestroy {
+  implements OnInit, OnDestroy, IMcsNavigateAwayGuard {
 
   public resources$: Observable<McsResource[]>;
   public selectedCatalog$: BehaviorSubject<McsResourceCatalogItem>;
   public selectedResource$: Observable<McsResource>;
   public selectedResourceId: string;
 
-  public mediaUploading: boolean;
   public urlInfoMessage: string;
   public mediaExtensions: string[] = MEDIA_EXTENSIONS;
 
@@ -121,8 +120,8 @@ export class MediaUploadDetailsComponent
   /**
    * Event that emits when navigating away from this component page
    */
-  public safeToNavigateAway(): boolean {
-    return !this._formGroup.hasDirtyFormControls() || this.mediaUploading;
+  public canNavigateAway(): boolean {
+    return !this._formGroup.hasDirtyFormControls();
   }
 
   /**
@@ -203,7 +202,6 @@ export class MediaUploadDetailsComponent
         this._mediaUploadService.setErrors(httpError.errorMessages);
         return throwError(httpError);
       }),
-      tap(() => this.mediaUploading = true),
       finalize(() => this._changeDetectorRef.markForCheck())
     ).subscribe();
   }

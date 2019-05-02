@@ -5,7 +5,8 @@ import {
   Input,
   ChangeDetectorRef,
   Output,
-  EventEmitter
+  EventEmitter,
+  ViewChild
 } from '@angular/core';
 import {
   FormGroup,
@@ -36,6 +37,7 @@ import {
   McsServerClone
 } from '@app/models';
 import { McsServersRepository } from '@app/services';
+import { McsFormGroupDirective } from '@app/shared';
 import { ServerCreateDetailsBase } from '../server-create-details.base';
 
 @Component({
@@ -66,6 +68,9 @@ export class ServerCloneComponent
   public fgCloneServer: FormGroup;
   public fcServerName: FormControl;
   public fcTargetServer: FormControl;
+
+  @ViewChild(McsFormGroupDirective)
+  private _formGroup: McsFormGroupDirective;
 
   /**
    * Returns true when the server is manually assigned IP address
@@ -116,8 +121,8 @@ export class ServerCloneComponent
   /**
    * Returns the creation form group
    */
-  public getCreationForm(): FormGroup {
-    return this.fgCloneServer;
+  public getCreationForm(): McsFormGroupDirective {
+    return this._formGroup;
   }
 
   /**
