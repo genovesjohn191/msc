@@ -37,9 +37,19 @@
               [formControl]="fcManageServer"
               (change)="onChangeServer($event)"
               [mcsContextualHelp]="'orderScaleManagedServer.vm.contextualHelp' | translate">
-              <mcs-option [value]="server" *ngFor="let server of servers$ | async">
-                {{ server.name }}
-              </mcs-option>
+
+              <mcs-option-group>
+                <ng-container *mcsOptionGroupHeader>
+                  <span>{{ 'orderScaleManagedServer.vm.optionGroupLabel' | translate }}</span>
+                </ng-container>
+                <ng-container *ngIf="resources$ | async as resources">
+                  <mcs-option-group [label]="iterator.key" *ngFor="let iterator of resources | mcsMapIterable">
+                    <mcs-option *ngFor="let server of iterator.value" [value]="server">
+                      {{ server.name }}
+                    </mcs-option>
+                  </mcs-option-group>
+                </ng-container>
+              </mcs-option-group>
             </mcs-select>
           </mcs-form-field>
 

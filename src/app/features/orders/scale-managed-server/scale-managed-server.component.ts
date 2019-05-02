@@ -82,7 +82,7 @@ const SCALE_MANAGE_SERVER_REF_ID = McsGuid.newGuid().toString();
 
 export class ScaleManagedServerComponent extends McsOrderWizardBase implements OnInit, OnDestroy {
 
-  public servers$: Observable<McsServer[]>;
+  public resources$: Observable<Map<string, McsServer[]>>;
   public resource$: Observable<McsResource>;
 
   public fgScaleManageServerDetails: FormGroup;
@@ -239,19 +239,31 @@ export class ScaleManagedServerComponent extends McsOrderWizardBase implements O
    * Gets all the server and filters out the manage cloud server
    */
   private _getAllManagedCloudServers(): void {
-    this.servers$ = this._serversRepository.getAll().pipe(
+
+    let resourceMap: Map<string, McsServer[]> = new Map();
+    this.resources$ = this._serversRepository.getAll().pipe(
       map((servers) => {
-        return servers.filter((server) => !server.isSelfManaged && !server.isDedicated);
+        servers.filter((server) => !server.isSelfManaged && !server.isDedicated)
+          .forEach((server) => {
+            let resourceIsExisting = resourceMap.has(server.platform.resourceName);
+            if (resourceIsExisting) {
+              resourceMap.get(server.platform.resourceName).push(server);
+              return;
+            }
+            resourceMap.set(server.platform.resourceName, [server]);
+          });
+
+        return resourceMap;
       }),
       tap(() => {
         this._eventDispatcher.dispatch(CoreEvent.serverScaleManageSelected);
+        this._changeDetectorRef.markForCheck();
       }),
       catchError((error) => {
         this._errorHandlerService.redirectToErrorPage(error.status);
         return throwError(error);
       })
     );
-    this._changeDetectorRef.markForCheck();
   }
 
   /**
@@ -274,7 +286,7 @@ export class ScaleManagedServerComponent extends McsOrderWizardBase implements O
     this._selectedServerIdHandler = this._eventDispatcher.addEventListener(
       CoreEvent.serverScaleManageSelected, this._onSelectedScaleManageServerId.bind(this));
 
-    // // Invoke the event initially
+    // Invoke the event initially
     this._eventDispatcher.dispatch(CoreEvent.serverScaleManageSelected);
   }
 

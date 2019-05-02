@@ -117,6 +117,7 @@
     "vm": {
       "label": "Select the Virtual Machine to scale",
       "placeholder": "Select a VM",
+      "optionGroupLabel": "Virtual Data Centres",
       "contextualHelp": "Choose the virtual machine to scale."
     },
     "vmDetails": {
