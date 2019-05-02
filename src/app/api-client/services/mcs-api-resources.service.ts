@@ -12,7 +12,8 @@ import {
   McsResourceVApp,
   McsResourceCatalogItemCreate,
   McsJob,
-  McsValidation
+  McsValidation,
+  McsResourceCatalog
 } from '@app/models';
 import { serializeObjectToJson } from '@app/utilities';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
@@ -140,13 +141,55 @@ export class McsApiResourcesService implements IMcsApiResourcesService {
   }
 
   /**
-   * Get resource catalog items by ID (MCS API Response)
-   * @param id Resource identification
+   * Get resource catalogs (MCS API Response)
+   * @param resourceId Resource identification
    */
-  public getResourceCatalogItems(id: any):
+  public getResourceCatalogs(resourceId: string):
+    Observable<McsApiSuccessResponse<McsResourceCatalog[]>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/resources/${resourceId}/catalogs`;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsResourceCatalog[]>(McsResourceCatalog, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  /**
+   * Get resource catalog by ID (MCS API Response)
+   * @param resourceId Resource identification
+   * @param catalogId Catalog identification
+   */
+  public getResourceCatalog(resourceId: string, catalogId: string):
+    Observable<McsApiSuccessResponse<McsResourceCatalog>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/resources/${resourceId}/catalogs/${catalogId}`;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsResourceCatalog>(McsResourceCatalog, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  /**
+   * Get resource catalog items by ID (MCS API Response)
+   * @param resourceId Resource identification
+   * @param catalogId Catalog identification
+   */
+  public getResourceCatalogItems(resourceId: string, catalogId: string):
     Observable<McsApiSuccessResponse<McsResourceCatalogItem[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/resources/${id}/catalog-items`;
+    mcsApiRequestParameter.endPoint = `/resources/${resourceId}/catalogs/${catalogId}/items`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -154,6 +197,28 @@ export class McsApiResourcesService implements IMcsApiResourcesService {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
             .deserializeResponse<McsResourceCatalogItem[]>(McsResourceCatalogItem, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  /**
+   * Get resource catalog items by ID (MCS API Response)
+   * @param resourceId Resource identification
+   * @param catalogId Catalog identification
+   * @param itemId Catalog Item identification
+   */
+  public getResourceCatalogItem(resourceId: string, catalogId: string, itemId: string):
+    Observable<McsApiSuccessResponse<McsResourceCatalogItem>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/resources/${resourceId}/catalogs/${catalogId}/items/${itemId}`;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsResourceCatalogItem>(McsResourceCatalogItem, response);
           return apiResponse;
         })
       );
@@ -181,12 +246,13 @@ export class McsApiResourcesService implements IMcsApiResourcesService {
   /**
    * Create the catalog item on the resource id provided
    * @param resourceId Resource Id where the catalog item will be created
+   * @param catalogId Catalog Id where the catalog item will be attached
    * @param createItemData Catalog item data to be used
    */
-  public createCatalogItem(resourceId: string, createItemData: McsResourceCatalogItemCreate):
+  public createResourceCatalogItem(resourceId: string, catalogId: string, createItemData: McsResourceCatalogItemCreate):
     Observable<McsApiSuccessResponse<McsJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/resources/${resourceId}/catalog-items`;
+    mcsApiRequestParameter.endPoint = `/resources/${resourceId}/catalogs/${catalogId}/items`;
     mcsApiRequestParameter.recordData = serializeObjectToJson(createItemData);
 
     return this._mcsApiService.post(mcsApiRequestParameter)
@@ -207,8 +273,7 @@ export class McsApiResourcesService implements IMcsApiResourcesService {
   public validateCatalogItems(resourceId: string, createItemData: McsResourceCatalogItemCreate):
     Observable<McsApiSuccessResponse<McsValidation[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint =
-      `/resources/${resourceId}/catalog-items/payload-validation-requests`;
+    mcsApiRequestParameter.endPoint = `/resources/${resourceId}/catalogs/payload-validation-requests`;
     mcsApiRequestParameter.recordData = serializeObjectToJson(createItemData);
 
     return this._mcsApiService.post(mcsApiRequestParameter)

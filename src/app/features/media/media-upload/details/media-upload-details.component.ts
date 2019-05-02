@@ -12,9 +12,9 @@ import {
 } from '@angular/forms';
 import {
   Subject,
-  BehaviorSubject,
   throwError,
-  Observable
+  Observable,
+  of
 } from 'rxjs';
 import {
   catchError,
@@ -35,22 +35,20 @@ import {
 import {
   unsubscribeSafely,
   isNullOrEmpty,
-  getSafeProperty,
-  getUniqueRecords
+  getSafeProperty
 } from '@app/utilities';
 import { McsResourcesRepository } from '@app/services';
 import {
   McsResource,
   McsResourceCatalogItemCreate,
   CatalogItemType,
-  McsResourceCatalogItem,
   RouteKey,
-  McsApiErrorResponse
+  McsApiErrorResponse,
+  McsResourceCatalog
 } from '@app/models';
 import { McsFormGroupDirective } from '@app/shared';
 import { MediaUploadService } from '../media-upload.service';
 
-const MEDIA_EXTENSIONS = ['.iso', '.ovf'];
 @Component({
   selector: 'mcs-media-upload-details',
   templateUrl: 'media-upload-details.component.html'
@@ -60,12 +58,12 @@ export class MediaUploadDetailsComponent
   implements OnInit, OnDestroy, IMcsNavigateAwayGuard {
 
   public resources$: Observable<McsResource[]>;
-  public selectedCatalog$: BehaviorSubject<McsResourceCatalogItem>;
+  public resourceCatalogs$: Observable<McsResourceCatalog[]>;
   public selectedResource$: Observable<McsResource>;
   public selectedResourceId: string;
 
   public urlInfoMessage: string;
-  public mediaExtensions: string[] = MEDIA_EXTENSIONS;
+  public mediaExtensions$: Observable<string[]>;
 
   // Form variables
   public fgMediaUpload: FormGroup;
@@ -76,17 +74,16 @@ export class MediaUploadDetailsComponent
   public fcMediaExtension: FormControl;
   public fcMediaDescription: FormControl;
 
+  @ViewChild(McsFormGroupDirective)
+  private _formGroup: McsFormGroupDirective;
+  private _destroySubject = new Subject<void>();
+
   private _mediaUrlStatusIconKey: string;
   public get mediaUrlStatusIconKey(): string { return this._mediaUrlStatusIconKey; }
   public set mediaUrlStatusIconKey(value: string) {
     this._mediaUrlStatusIconKey = value;
     this._changeDetectorRef.markForCheck();
   }
-
-  private _destroySubject = new Subject<void>();
-
-  @ViewChild(McsFormGroupDirective)
-  private _formGroup: McsFormGroupDirective;
 
   constructor(
     private _elementRef: ElementRef,
@@ -96,14 +93,13 @@ export class MediaUploadDetailsComponent
     private _errorHandlerService: McsErrorHandlerService,
     private _resourcesRepository: McsResourcesRepository,
     private _mediaUploadService: MediaUploadService
-  ) {
-    this.selectedCatalog$ = new BehaviorSubject(undefined);
-  }
+  ) { }
 
   public ngOnInit() {
     this._registerFormGroup();
     this._subscribeToResourcesDataChange();
     this._subsribeToResources();
+    this._subscribeToMediaExtensions();
   }
 
   public ngOnDestroy() {
@@ -129,16 +125,8 @@ export class MediaUploadDetailsComponent
    */
   public onChangeResource(resource: McsResource): void {
     if (isNullOrEmpty(resource)) { return; }
-    this.selectedResourceId = resource.id;
-    this._subscribeToResourceById(resource.id);
-  }
-
-  /**
-   * Event that emits whenever a catalog item has been change
-   */
-  public onChangeCatalog(_catalog: McsResourceCatalogItem): void {
-    if (isNullOrEmpty(_catalog)) { return; }
-    this.selectedCatalog$.next(_catalog);
+    // this.selectedResourceId = resource.id;
+    this._subscribeToResourceCatalogs(resource.id);
   }
 
   /**
@@ -150,8 +138,10 @@ export class MediaUploadDetailsComponent
     this.mediaUrlStatusIconKey = CoreDefinition.ASSETS_GIF_LOADER_ELLIPSIS;
     let mediaUrl = this.fcMediaUrl.value;
 
+    let selectedResource: McsResource = this.fcResources.value;
+
     this._mediaUploadService.validateUrl(
-      this.selectedResourceId,
+      selectedResource.id,
       mediaUrl
     ).pipe(
       catchError((_httpError: McsApiErrorResponse) => {
@@ -169,33 +159,26 @@ export class MediaUploadDetailsComponent
   }
 
   /**
-   * Filters all unique catalog items from the resource
-   * @param resource Selected resource where to extract the catalog items
-   */
-  public filterUniqueCatalogs(resource: McsResource): McsResourceCatalogItem[] {
-    let catalogItems = getSafeProperty(resource, (obj) => obj.catalogItems, []).slice();
-    catalogItems = getUniqueRecords(catalogItems, (catalog) => catalog.name);
-    return catalogItems;
-  }
-
-  /**
    * Event that emits when the form will be submitted
    */
   public onSubmitMediaUpload(): void {
     if (!this._validateFormFields()) { return; }
 
+    let selectedResource: McsResource = this.fcResources.value;
+    let selectedCatalog: McsResourceCatalog = this.fcCatalogs.value;
+
     let uploadMediaModel = new McsResourceCatalogItemCreate();
     uploadMediaModel.name = this.fcMediaName.value + this.fcMediaExtension.value;
-    uploadMediaModel.catalogName = this.selectedCatalog$.getValue().name;
     uploadMediaModel.url = this.fcMediaUrl.value;
     uploadMediaModel.description = this.fcMediaDescription.value;
     uploadMediaModel.type = CatalogItemType.Media;
     uploadMediaModel.clientReferenceObject = {
-      resourcePath : CoreRoutes.getNavigationPath(RouteKey.Medium)
+      resourcePath: CoreRoutes.getNavigationPath(RouteKey.Medium)
     };
 
     this._mediaUploadService.uploadMedia(
-      this.selectedResourceId,
+      selectedResource.id,
+      selectedCatalog.id,
       uploadMediaModel
     ).pipe(
       catchError((httpError) => {
@@ -204,6 +187,13 @@ export class MediaUploadDetailsComponent
       }),
       finalize(() => this._changeDetectorRef.markForCheck())
     ).subscribe();
+  }
+
+  /**
+   * Subscribes to media extensions
+   */
+  private _subscribeToMediaExtensions(): void {
+    this.mediaExtensions$ = of(['.iso', '.ovf']);
   }
 
   /**
@@ -220,30 +210,15 @@ export class MediaUploadDetailsComponent
     );
   }
 
-  /**
-   * Subscribes to the resource by id
-   * @param resourceId Resource id to be find in the resources
-   */
-  private _subscribeToResourceById(resourceId: string): void {
+  private _subscribeToResourceCatalogs(resourceId: string): void {
+    if (isNullOrEmpty(resourceId)) { return; }
     this._eventDispatcher.dispatch(CoreEvent.loaderShow);
 
-    this.selectedResource$ = this._resourcesRepository.getByIdAsync(
-      resourceId, this._onResourceObtained.bind(this)
-    ).pipe(
+    this.resourceCatalogs$ = this._resourcesRepository.getResourceCatalogs(resourceId).pipe(
       shareReplay(1),
-      catchError((error) => {
-        this._errorHandlerService.redirectToErrorPage(error.status);
-        return throwError(error);
-      }),
-      tap(() => this._resetFormFields())
+      tap(() => this._resetFormFields()),
+      finalize(() => this._eventDispatcher.dispatch(CoreEvent.loaderHide))
     );
-  }
-
-  /**
-   * Event that emits when the resource has been obtained
-   */
-  private _onResourceObtained(): void {
-    this._eventDispatcher.dispatch(CoreEvent.loaderHide);
   }
 
   /**
@@ -267,15 +242,13 @@ export class MediaUploadDetailsComponent
       )
     ]);
 
-    this.fcMediaExtension = new FormControl(this.mediaExtensions[0], [
+    this.fcMediaExtension = new FormControl('', [
       CoreValidators.required
     ]);
-    this.fcMediaUrl = new FormControl('',
-      [
-        CoreValidators.required,
-        CoreValidators.url
-      ]
-    );
+    this.fcMediaUrl = new FormControl('', [
+      CoreValidators.required,
+      CoreValidators.url
+    ]);
     this.fcMediaUrl.valueChanges.subscribe(() => {
       this.mediaUrlStatusIconKey = undefined;
       this.urlInfoMessage = undefined;
@@ -329,6 +302,5 @@ export class MediaUploadDetailsComponent
     this.fcMediaDescription.reset();
     this.fcMediaName.reset();
     this.fcMediaUrl.reset();
-    this.fcMediaExtension.setValue(this.mediaExtensions[0]);
   }
 }

@@ -10,28 +10,19 @@ import {
 } from '../enumerations/catalog-item-type.enum';
 
 export class McsResourceCatalogItem extends McsEntityBase {
-  public name: string;
-  public itemName: string;
-
-  @JsonProperty({
-    type: ServiceType,
-    serializer: ServiceTypeSerialization,
-    deserializer: ServiceTypeSerialization
-  })
-  public type: ServiceType;
+  public name: string = undefined;
 
   @JsonProperty({
     type: CatalogItemType,
     serializer: CatalogItemTypeSerialization,
     deserializer: CatalogItemTypeSerialization
   })
-  public itemType: CatalogItemType;
+  public type: CatalogItemType = undefined;
 
-  constructor() {
-    super();
-    this.name = undefined;
-    this.type = undefined;
-    this.itemType = undefined;
-    this.itemName = undefined;
-  }
+  @JsonProperty({
+    type: ServiceType,
+    serializer: ServiceTypeSerialization,
+    deserializer: ServiceTypeSerialization
+  })
+  public serviceType: ServiceType = undefined;
 }

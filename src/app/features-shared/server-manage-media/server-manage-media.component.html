@@ -1,13 +1,22 @@
-<mcs-section>
+<form [formGroup]="fgCatalog" mcsFormGroup>
   <!-- Media header -->
   <ng-content select="[mcsManageMediaHeader]"></ng-content>
 
   <!-- Media selection -->
   <mcs-form-field>
-    <mcs-select [(ngModel)]="selectedCatalog" placeholder="Select media" mcsId="select-media">
-      <mcs-option *ngFor="let catalog of catalogs" [value]="catalog">
-        {{ catalog.itemName }}
-      </mcs-option>
+    <mcs-select [formControl]="fcCatalogItem" placeholder="Select media" mcsId="select-media">
+
+      <ng-container *ngFor="let catalog of catalogs">
+        <mcs-option-group *ngIf="catalog.items | mcsIsNotNullOrEmpty">
+          <ng-container *mcsOptionGroupHeader>
+            <span>{{ catalog.name }}</span>
+          </ng-container>
+
+          <mcs-option *ngFor="let catalogItem of catalog.items" [value]="catalogItem">
+            {{ catalogItem.name }}
+          </mcs-option>
+        </mcs-option-group>
+      </ng-container>
     </mcs-select>
   </mcs-form-field>
-</mcs-section>
+</form>

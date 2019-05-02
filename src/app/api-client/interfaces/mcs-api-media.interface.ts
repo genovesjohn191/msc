@@ -4,7 +4,6 @@ import {
   McsApiSuccessResponse,
   McsResourceMedia,
   McsResourceMediaServer,
-  McsResourceCatalogItemCreate,
   McsJob,
   McsApiJobRequestBase,
   McsServerAttachMedia
@@ -28,14 +27,6 @@ export interface IMcsApiMediaService {
    * Get the attached servers from the media
    */
   getMediaServers(mediaId: any): Observable<McsApiSuccessResponse<McsResourceMediaServer[]>>;
-
-  /**
-   * An observable method that sends a request to API for uploading media
-   * @param resourceId Resource ID where the media would be uploaded
-   * @param uploadDetails Upload details of the media to be provided
-   */
-  uploadMedia(resourceId: string, uploadDetails: McsResourceCatalogItemCreate):
-    Observable<McsApiSuccessResponse<McsJob>>;
 
   /**
    * Detaches the server to the existing media

@@ -10,21 +10,18 @@ import {
   McsResourceMedia,
   McsResourceMediaServer,
   McsServerAttachMedia,
-  McsResourceCatalogItemCreate,
   McsQueryParam
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiMediaService } from '../interfaces/mcs-api-media.interface';
 import { McsApiServersService } from './mcs-api-servers.service';
-import { McsApiResourcesService } from './mcs-api-resources.service';
 
 @Injectable()
 export class McsApiMediaService implements IMcsApiMediaService {
 
   constructor(
     private _mcsApiService: McsApiClientHttpService,
-    private _serversService: McsApiServersService,
-    private _resourcesService: McsApiResourcesService
+    private _serversService: McsApiServersService
   ) { }
 
   /**
@@ -93,15 +90,6 @@ export class McsApiMediaService implements IMcsApiMediaService {
           return apiResponse;
         })
       );
-  }
-
-  /**
-   * An observable method that sends a request to API for uploading media
-   * @param resourceId Resource ID where the media would be uploaded
-   * @param uploadDetails Upload details of the media to be provided
-   */
-  public uploadMedia(resourceId: string, uploadDetails: McsResourceCatalogItemCreate) {
-    return this._resourcesService.createCatalogItem(resourceId, uploadDetails);
   }
 
   /**

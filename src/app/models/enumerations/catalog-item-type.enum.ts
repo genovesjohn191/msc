@@ -2,8 +2,9 @@ import { McsEnumSerializationBase } from '@app/core';
 import { CacheKey } from 'json-object-mapper';
 
 export enum CatalogItemType {
-  Template = 0,
-  Media = 1
+  Unknown = 0,
+  Template = 1,
+  Media = 2
 }
 
 /**

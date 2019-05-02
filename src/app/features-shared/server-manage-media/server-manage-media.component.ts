@@ -1,19 +1,35 @@
 import {
   Component,
-  OnChanges,
   OnDestroy,
   Input,
   ChangeDetectionStrategy,
   EventEmitter,
   Output,
-  SimpleChanges
+  ChangeDetectorRef,
+  OnInit,
+  ViewChild
 } from '@angular/core';
 import {
-  isNullOrEmpty,
+  FormControl,
+  FormGroup,
+  FormBuilder
+} from '@angular/forms';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import {
   animateFactory,
-  unsubscribeSubject
+  unsubscribeSubject,
+  getSafeProperty
 } from '@app/utilities';
-import { McsResourceCatalogItem } from '@app/models';
+import {
+  McsResourceCatalog
+} from '@app/models';
+import {
+  IMcsDataChange,
+  CoreValidators
+} from '@app/core';
+import { McsFormGroupDirective } from '@app/shared';
+import { ServerManageMedia } from './server-manage-media';
 
 @Component({
   selector: 'mcs-server-manage-media',
@@ -24,43 +40,71 @@ import { McsResourceCatalogItem } from '@app/models';
   ]
 })
 
-export class ServerManageMediaComponent implements OnChanges, OnDestroy {
+export class ServerManageMediaComponent implements OnInit, OnDestroy, IMcsDataChange<ServerManageMedia> {
+  public fgCatalog: FormGroup;
+  public fcCatalogItem: FormControl;
+
+  @Input()
+  public catalogs: McsResourceCatalog[];
 
   @Output()
-  public selectedCatalogChange = new EventEmitter<McsResourceCatalogItem>();
+  public dataChange = new EventEmitter<ServerManageMedia>();
 
-  @Input()
-  public catalogs: McsResourceCatalogItem[];
+  @ViewChild(McsFormGroupDirective)
+  private _formGroup: McsFormGroupDirective;
 
-  @Input()
-  public get selectedCatalog(): McsResourceCatalogItem { return this._selectedCatalog; }
-  public set selectedCatalog(value: McsResourceCatalogItem) {
-    if (this._selectedCatalog !== value) {
-      this._selectedCatalog = value;
-      this.selectedCatalogChange.emit(this._selectedCatalog);
-    }
+  private _mediaOutput: ServerManageMedia;
+  private _destroySubject = new Subject<void>();
+
+  constructor(
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _formBuilder: FormBuilder
+  ) {
+    this._mediaOutput = new ServerManageMedia();
   }
-  private _selectedCatalog: McsResourceCatalogItem;
 
-  public ngOnChanges(changes: SimpleChanges) {
-    let mediasChange = changes['medias'];
-    if (!isNullOrEmpty(mediasChange)) {
-      this._setSelectedCatalog();
-    }
+  public ngOnInit() {
+    this._registerFormGroup();
+    this.notifyDataChange();
   }
 
   public ngOnDestroy() {
-    unsubscribeSubject(this.selectedCatalogChange);
+    unsubscribeSubject(this.dataChange);
   }
 
   /**
-   * Sets the selected catalog if no media selected yet
+   * Returns true when the form is valid
    */
-  private _setSelectedCatalog(): void {
-    if (isNullOrEmpty(this.catalogs)) { return; }
-    let hasSelectedMedia = !isNullOrEmpty(this.selectedCatalog)
-      && !isNullOrEmpty(this.catalogs.find((network) => network === this.selectedCatalog));
-    if (hasSelectedMedia) { return; }
-    this.selectedCatalog = this.catalogs[0];
+  public get isFormValid(): boolean {
+    return getSafeProperty(this._formGroup, (obj) => obj.isValid());
+  }
+
+  /**
+   * Notifes the data change to output parameter
+   */
+  public notifyDataChange() {
+    if (!this.isFormValid) { return; }
+
+    this._mediaOutput.catalogItem = this.fcCatalogItem.value;
+    this.dataChange.emit(this._mediaOutput);
+    this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Registers the form group controls
+   */
+  private _registerFormGroup(): void {
+    // Register form control for catalog item
+    this.fcCatalogItem = new FormControl('', [
+      CoreValidators.required
+    ]);
+    this.fcCatalogItem.valueChanges
+      .pipe(takeUntil(this._destroySubject))
+      .subscribe(() => this.notifyDataChange());
+
+    // Form group settings
+    this.fgCatalog = this._formBuilder.group({
+      fcCatalogItem: this.fcCatalogItem
+    });
   }
 }

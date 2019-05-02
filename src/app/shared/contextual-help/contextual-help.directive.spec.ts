@@ -65,14 +65,14 @@ describe('ContextualHelpDirective', () => {
   }));
 
   /** Test Implementation */
-  describe('focus() Event', () => {
+  describe('hover() Event', () => {
     beforeEach(async(() => {
       component.contextual.ngOnInit();
-      triggerEvent(buttonElement, 'focus');
+      triggerEvent(buttonElement, 'mouseenter');
       fixtureInstance.detectChanges();
     }));
 
-    it(`should open/create the contextual help when the implemented element is on focus`, () => {
+    it(`should open/create the contextual help when the implemented element was hover`, () => {
       let elementExist = document.querySelector('mcs-contextual-help');
       expect(elementExist).not.toBe(null);
     });

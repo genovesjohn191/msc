@@ -47,10 +47,12 @@ import {
   McsResource,
   McsResourceCompute,
   McsResourceCatalogItem,
-  McsServerThumbnail
+  McsServerThumbnail,
+  McsResourceCatalog
 } from '@app/models';
 import {
   ServerManageScale,
+  ServerManageMedia,
   DetachMediaDialogComponent
 } from '@app/features-shared';
 import {
@@ -84,12 +86,12 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
   public serverThumbnail$: Observable<string>;
   public serverMedia$: Observable<McsServerMedia[]>;
   public resourceCompute$: Observable<McsResourceCompute>;
-  public resourceCatalogs$: Observable<McsResourceCatalogItem[]>;
+  public resourceCatalogs$: Observable<McsResourceCatalog[]>;
 
   public manageScale: ServerManageScale;
+  public manageMedia: ServerManageMedia;
   public scaleInProgress: boolean;
   public serverManagementView: ServerManagementView;
-  public selectedCatalog: McsServerMedia;
 
   private _newMedia: McsServerMedia;
   private _destroySubject = new Subject<void>();
@@ -193,6 +195,11 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
     this._changeDetectorRef.markForCheck();
   }
 
+  public onMediaChanged(manageMedia: ServerManageMedia): void {
+    if (isNullOrEmpty(manageMedia)) { return; }
+    this.manageMedia = manageMedia;
+  }
+
   /**
    * View the console page
    */
@@ -276,7 +283,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
     if (isNullOrEmpty(catalog)) { return; }
     // Set reference object to be expected
     let expectedJobObject = {
-      mediaName: catalog.itemName,
+      mediaName: catalog.name,
       serverId: server.id
     };
 
@@ -286,7 +293,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
     this._serversRepository.attachServerMedia(
       server.id,
       {
-        name: catalog.itemName,
+        name: catalog.name,
         clientReferenceObject: expectedJobObject
       })
       .pipe(
@@ -384,7 +391,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
    * Get the resource media list
    */
   private _getResourceCatalogs(resource: McsResource): void {
-    this.resourceCatalogs$ = this._resourcesRespository.getResourceCatalogItems(resource);
+    this.resourceCatalogs$ = this._resourcesRespository.getResourceCatalogs(resource.id);
   }
 
   /**

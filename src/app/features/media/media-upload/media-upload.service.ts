@@ -50,14 +50,12 @@ export class MediaUploadService implements IMcsFallible, IMcsJobManager, IMcsSta
    * @param resourceId Resource ID where the items would be checked
    * @param _url Url to validate
    */
-  public validateUrl(resourceId: string, _url: string):
-    Observable<McsApiSuccessResponse<McsValidation[]>> {
-    let fieldDetails = {
-      name: 'dummy-url-name',
-      catalogName: 'dummy-catalog-name',
-      type: CatalogItemType.Media,
-      url: _url
-    } as McsResourceCatalogItemCreate;
+  public validateUrl(resourceId: string, _url: string): Observable<McsApiSuccessResponse<McsValidation[]>> {
+    let fieldDetails = new McsResourceCatalogItemCreate();
+    fieldDetails.name = 'dummy-url-name';
+    fieldDetails.description = 'dummy-description';
+    fieldDetails.type = CatalogItemType.Media;
+    fieldDetails.url = _url;
     return this._resourcesRepository.validateCatalogItems(resourceId, fieldDetails);
   }
 
@@ -73,11 +71,12 @@ export class MediaUploadService implements IMcsFallible, IMcsJobManager, IMcsSta
   /**
    * An observable method that sends a request to API for uploading media
    * @param resourceId Resource ID where the media would be uploaded
+   * @param catalogId Catalog ID where the media would be attached
    * @param createDetails Creation details of the media to be provided
    */
-  public uploadMedia(resourceId: string, createDetails: McsResourceCatalogItemCreate) {
+  public uploadMedia(resourceId: string, catalogId: string, createDetails: McsResourceCatalogItemCreate) {
     this.setChangeState(DataStatus.InProgress);
-    return this._resourcesRepository.createResourceCatalogItem(resourceId, createDetails)
+    return this._resourcesRepository.createResourceCatalogItem(resourceId, catalogId, createDetails)
       .pipe(
         tap((response) => {
           this.setChangeState(DataStatus.Success);

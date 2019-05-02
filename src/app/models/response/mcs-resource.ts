@@ -2,8 +2,8 @@ import { JsonProperty } from 'json-object-mapper';
 import { McsResourceCompute } from './mcs-resource-compute';
 import { McsResourceStorage } from './mcs-resource-storage';
 import { McsResourceNetwork } from './mcs-resource-network';
-import { McsResourceCatalogItem } from './mcs-resource-catalog-item';
 import { McsResourceVApp } from './mcs-resource-vapp';
+import { McsResourceCatalog } from './mcs-resource-catalog';
 import {
   ServiceType,
   ServiceTypeSerialization,
@@ -32,8 +32,8 @@ export class McsResource extends McsEntityBase {
   @JsonProperty({ type: McsResourceNetwork })
   public networks: McsResourceNetwork[];
 
-  @JsonProperty({ type: McsResourceCatalogItem })
-  public catalogItems: McsResourceCatalogItem[];
+  @JsonProperty({ type: McsResourceCatalog })
+  public catalogs: McsResourceCatalog[];
 
   @JsonProperty({ type: McsResourceVApp })
   public vApps: McsResourceVApp[];
@@ -57,7 +57,7 @@ export class McsResource extends McsEntityBase {
     this.compute = undefined;
     this.storage = undefined;
     this.networks = undefined;
-    this.catalogItems = undefined;
+    this.catalogs = undefined;
     this.vApps = undefined;
     this.serviceId = undefined;
     this.name = undefined;

@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 import { CanDeactivate } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import {
+  getSafeProperty,
+  isNullOrUndefined
+} from '@app/utilities';
 import { IMcsNavigateAwayGuard } from './mcs-navigate-away-guard.interface';
-import { getSafeProperty, isNullOrUndefined } from '@app/utilities';
 
 @Injectable()
 export class McsNavigateAwayGuard implements CanDeactivate<IMcsNavigateAwayGuard> {
