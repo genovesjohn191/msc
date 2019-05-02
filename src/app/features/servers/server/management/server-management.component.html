@@ -368,9 +368,7 @@
       </ng-container>
 
       <div class="action-box" [disabled]="!serverDetails.server.executable">
-        <mcs-server-manage-media [catalogs]="resourceCatalogs$ | async"
-          [(selectedCatalog)]="selectedCatalog">
-
+        <mcs-server-manage-media [catalogs]="resourceCatalogs$ | async" (dataChange)="onMediaChanged($event)">
           <ng-container mcsManageMediaHeader>
             <h2>{{ 'serverManagement.media.attachHeading' | translate }}</h2>
           </ng-container>
@@ -387,8 +385,8 @@
 
           <button mcsButton
             arrow="right" size="small"
-            (click)="attachMedia(serverDetails.server, selectedCatalog)"
-            [disabled]="!selectedCatalog"
+            (click)="attachMedia(serverDetails.server, manageMedia?.catalogItem)"
+            [disabled]="!manageMedia?.catalogItem"
             mcsId="attach-media"
             mcsEventTracker="attach-media"
             mcsEventCategory="server"

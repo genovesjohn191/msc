@@ -333,14 +333,18 @@ export class ServerNewComponent
    */
   private _getCustomTemplates(): void {
     let hasCatalogItems = !isNullOrEmpty(this.resource) &&
-      !isNullOrEmpty(this.resource.catalogItems);
+      !isNullOrEmpty(this.resource.catalogs);
     if (!hasCatalogItems) { return; }
 
-    let filteredCatalogItems = this.resource.catalogItems.filter((catalog) => {
-      return catalog.itemType === CatalogItemType.Template;
+    let catalogItems: McsResourceCatalogItem[];
+    this.resource.catalogs.forEach((catalog) => {
+      catalogItems.push(...catalog.items.filter(
+        (catalogItem) => catalogItem.type === CatalogItemType.Template)
+      );
     });
-    if (!isNullOrEmpty(filteredCatalogItems)) {
-      this.customTemplates = filteredCatalogItems;
+
+    if (!isNullOrEmpty(catalogItems)) {
+      this.customTemplates = catalogItems;
     }
   }
 

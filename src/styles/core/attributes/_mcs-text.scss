@@ -40,6 +40,23 @@
   white-space: pre-wrap !important;
 }
 
+// Breaking
+[text-break-normal] {
+  word-break: normal !important;
+}
+
+[text-break-word] {
+  word-break: break-word !important;
+}
+
+[text-break-all] {
+  word-break: break-all !important;
+}
+
+[text-break-keep-all] {
+  word-break: keep-all !important;
+}
+
 // Transformation
 [text-uppercase] {
   text-transform: uppercase !important;

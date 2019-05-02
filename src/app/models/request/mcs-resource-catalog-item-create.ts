@@ -11,20 +11,9 @@ export class McsResourceCatalogItemCreate extends McsApiJobRequestBase {
     serializer: CatalogItemTypeSerialization,
     deserializer: CatalogItemTypeSerialization
   })
-  public type: CatalogItemType;
-  public name: string;
-  public catalogName: string;
-  public url: string;
-  public storageProfileId: string;
-  public description: string;
+  public type: CatalogItemType = undefined;
 
-  constructor() {
-    super();
-    this.type = undefined;
-    this.name = undefined;
-    this.catalogName = undefined;
-    this.url = undefined;
-    this.storageProfileId = undefined;
-    this.description = undefined;
-  }
+  public name: string = undefined;
+  public url: string = undefined;
+  public description: string = undefined;
 }

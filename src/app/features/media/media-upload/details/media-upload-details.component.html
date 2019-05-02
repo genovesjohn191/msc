@@ -27,10 +27,8 @@
       </mcs-form-field>
 
       <!-- Catalog Select -->
-      <mcs-form-field *ngIf="selectedResource$ | async as selectedResource">
-        <mcs-select [formControl]="fcCatalogs" required
-          mcsId="select-catalog"
-          (change)="onChangeCatalog($event)"
+      <mcs-form-field>
+        <mcs-select [formControl]="fcCatalogs" required mcsId="select-catalog"
           [placeholder]="'mediaUpload.mediaStepDetails.selectCatalog' | translate"
           [mcsContextualHelp]="'mediaUpload.mediaStepDetails.selectCatalogHelp' | translate">
 
@@ -38,7 +36,7 @@
             <ng-container *mcsOptionGroupHeader>
               {{ 'mediaUpload.mediaStepDetails.selectCatalogHeader' | translate }}
             </ng-container>
-            <mcs-option *ngFor="let catalog of filterUniqueCatalogs(selectedResource)"
+            <mcs-option *ngFor="let catalog of resourceCatalogs$ | async"
               [value]="catalog">
               {{ catalog.name }}
             </mcs-option>
@@ -55,8 +53,7 @@
         <mcs-grid-row [gapSize]="7">
           <mcs-grid-column sizeLg="10">
             <mcs-form-field>
-              <input mcsInput #mediaName required mcsSetFocus
-                mcsId="input-media-name"
+              <input mcsInput #mediaName required mcsSetFocus mcsId="input-media-name"
                 [placeholder]="'mediaUpload.mediaStepDetails.mediaName' | translate" maxlength="25"
                 [formControl]="fcMediaName">
 
@@ -79,9 +76,9 @@
           </mcs-grid-column>
           <mcs-grid-column sizeLg="2">
             <mcs-form-field>
-              <mcs-select [formControl]="fcMediaExtension">
-                <mcs-option *ngFor="let ext of mediaExtensions" [value]="ext">
-                  {{ext}}
+              <mcs-select placeholder="ext" [formControl]="fcMediaExtension" required>
+                <mcs-option *ngFor="let extension of mediaExtensions$ | async" [value]="extension">
+                  {{ extension }}
                 </mcs-option>
               </mcs-select>
             </mcs-form-field>

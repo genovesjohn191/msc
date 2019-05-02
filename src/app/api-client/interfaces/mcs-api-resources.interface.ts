@@ -9,7 +9,8 @@ import {
   McsResourceVApp,
   McsResourceCatalogItemCreate,
   McsJob,
-  McsValidation
+  McsValidation,
+  McsResourceCatalog
 } from '@app/models';
 
 export interface IMcsApiResourcesService {
@@ -51,10 +52,34 @@ export interface IMcsApiResourcesService {
   getResourceNetwork(resourceId: any, networkId: any): Observable<McsApiSuccessResponse<McsResourceNetwork>>;
 
   /**
-   * Get resource catalog items by ID (MCS API Response)
-   * @param id Resource identification
+   * Get resource catalogs (MCS API Response)
+   * @param resourceId Resource identification
    */
-  getResourceCatalogItems(id: any): Observable<McsApiSuccessResponse<McsResourceCatalogItem[]>>;
+  getResourceCatalogs(resourceId: string): Observable<McsApiSuccessResponse<McsResourceCatalog[]>>;
+
+  /**
+   * Get resource catalog by ID (MCS API Response)
+   * @param resourceId Resource identification
+   * @param catalogId Catalog identification
+   */
+  getResourceCatalog(resourceId: string, catalogId: string): Observable<McsApiSuccessResponse<McsResourceCatalog>>;
+
+  /**
+   * Get resource catalog items by ID (MCS API Response)
+   * @param resourceId Resource identification
+   * @param catalogId Catalog identification
+   */
+  getResourceCatalogItems(resourceId: string, catalogId: string):
+    Observable<McsApiSuccessResponse<McsResourceCatalogItem[]>>;
+
+  /**
+   * Get resource catalog items by ID (MCS API Response)
+   * @param resourceId Resource identification
+   * @param catalogId Catalog identification
+   * @param itemId Catalog Item identification
+   */
+  getResourceCatalogItem(resourceId: string, catalogId: string, itemId: string):
+    Observable<McsApiSuccessResponse<McsResourceCatalogItem>>;
 
   /**
    * Get resource vApps by ID (MCS API Response)
@@ -65,9 +90,10 @@ export interface IMcsApiResourcesService {
   /**
    * Create the catalog item on the resource id provided
    * @param resourceId Resource Id where the catalog item will be created
+   * @param catalogId Catalog Id where the catalog item will be attached
    * @param createItemData Catalog item data to be used
    */
-  createCatalogItem(resourceId: string, createItemData: McsResourceCatalogItemCreate):
+  createResourceCatalogItem(resourceId: string, catalogId: string, createItemData: McsResourceCatalogItemCreate):
     Observable<McsApiSuccessResponse<McsJob>>;
 
   /**

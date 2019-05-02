@@ -7,7 +7,6 @@ import {
   McsJob,
   McsResourceMedia,
   McsResourceMediaServer,
-  McsResourceCatalogItemCreate,
   McsApiJobRequestBase,
   McsServerAttachMedia
 } from '@app/models';
@@ -44,20 +43,6 @@ export class McsMediaRepository extends McsRepositoryBase<McsResourceMedia> {
           return response.content;
         })
       );
-  }
-
-  /**
-   * An observable method that sends a request to API for uploading media and returns a job
-   * @param resourceId Resource ID where the media would be uploaded
-   * @param uploadDetails Upload details of the media to be provided
-   */
-  public uploadMedia(
-    resourceId: string,
-    uploadDetails: McsResourceCatalogItemCreate
-  ): Observable<McsJob> {
-    return this._mediaApiService.uploadMedia(resourceId, uploadDetails).pipe(
-      map((response) => getSafeProperty(response, (obj) => obj.content))
-    );
   }
 
   /**

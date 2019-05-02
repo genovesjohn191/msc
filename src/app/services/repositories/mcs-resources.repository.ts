@@ -18,7 +18,8 @@ import {
   McsResourceCatalogItemCreate,
   McsJob,
   McsApiSuccessResponse,
-  McsValidation
+  McsValidation,
+  McsResourceCatalog
 } from '@app/models';
 import {
   McsApiResourcesFactory,
@@ -107,20 +108,48 @@ export class McsResourcesRepository extends McsRepositoryBase<McsResource> {
   }
 
   /**
-   * This will obtain the resource catalog items values from API
-   * and update the instance of the data record from source
-   * @param resource Instance of the resource from data records
+   * Get resource catalogs (MCS API Response)
+   * @param resourceId Resource identification
    */
-  public getResourceCatalogItems(resource: McsResource): Observable<McsResourceCatalogItem[]> {
-    return this._resourcesApiService.getResourceCatalogItems(resource.id)
-      .pipe(
-        map((response) => {
-          resource.catalogItems = this.updateRecordProperty(
-            resource.catalogItems, response.content);
-          this.addOrUpdate(resource);
-          return response.content;
-        })
-      );
+  public getResourceCatalogs(resourceId: string): Observable<McsResourceCatalog[]> {
+    return this._resourcesApiService.getResourceCatalogs(resourceId).pipe(
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  /**
+   * Get resource catalog by ID (MCS API Response)
+   * @param resourceId Resource identification
+   * @param catalogId Catalog identification
+   */
+  public getResourceCatalog(resourceId: string, catalogId: string): Observable<McsResourceCatalog> {
+    return this._resourcesApiService.getResourceCatalog(resourceId, catalogId).pipe(
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  /**
+   * Get resource catalog items by ID (MCS API Response)
+   * @param resourceId Resource identification
+   * @param catalogId Catalog identification
+   */
+  public getResourceCatalogItems(resourceId: string, catalogId: string): Observable<McsResourceCatalogItem[]> {
+    return this._resourcesApiService.getResourceCatalogItems(resourceId, catalogId).pipe(
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  /**
+   * Get resource catalog items by ID (MCS API Response)
+   * @param resourceId Resource identification
+   * @param catalogId Catalog identification
+   * @param itemId Catalog Item identification
+   */
+  public getResourceCatalogItem(resourceId: string, catalogId: string, itemId: string):
+    Observable<McsResourceCatalogItem> {
+    return this._resourcesApiService.getResourceCatalogItem(resourceId, catalogId, itemId).pipe(
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
   }
 
   /**
@@ -161,13 +190,15 @@ export class McsResourcesRepository extends McsRepositoryBase<McsResource> {
   /**
    * Creates the resource catalog item on the provided resource id
    * @param resourceId Resource ID where the catalog item will be created
+   * @param catalogId Catalog ID where the catalog item will be attached
    * @param catalogItem Catalog item to be created
    */
   public createResourceCatalogItem(
     resourceId: string,
+    catalogId: string,
     catalogItem: McsResourceCatalogItemCreate
   ): Observable<McsJob> {
-    return this._resourcesApiService.createCatalogItem(resourceId, catalogItem)
+    return this._resourcesApiService.createResourceCatalogItem(resourceId, catalogId, catalogItem)
       .pipe(map((response) => getSafeProperty(response, (obj) => obj.content)));
   }
 

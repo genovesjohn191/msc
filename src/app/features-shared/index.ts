@@ -11,6 +11,7 @@ export * from './server-manage-storage/server-manage-storage';
 export * from './server-manage-storage/server-manage-storage.component';
 export * from './server-manage-network/server-manage-network';
 export * from './server-manage-network/server-manage-network.component';
+export * from './server-manage-media/server-manage-media';
 export * from './server-manage-media/server-manage-media.component';
 export * from './server-manage-scale/server-manage-scale';
 export * from './server-manage-scale/server-manage-scale.component';
