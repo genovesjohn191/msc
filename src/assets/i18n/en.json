@@ -115,7 +115,7 @@
   "orderScaleManagedServer": {
     "back": "Back",
     "vm": {
-      "label": "Select the Virtual Machine to scale",
+      "label": "Please select the server you wish to scale",
       "placeholder": "Select a VM",
       "optionGroupLabel": "Virtual Data Centres",
       "contextualHelp": "Choose the virtual machine to scale."
@@ -125,7 +125,7 @@
       "label": "Compute Size",
       "description": "This server currently has {{ram}} RAM and {{cpu}} vCPU",
       "contextualHelp": "Choose the memory and vCPU for your server. Click 'Enter custom size' to enter a precise value. Your selection is bound by the remaining compute in your Virtual Data Centre.",
-      "warning": "Scaling the Server will require a restart."
+      "warning": "Scaling this server will cause it to restart."
     },
     "confirm": {
       "stepTitle": "Confirm"
@@ -300,7 +300,7 @@
     "manageScale": {
       "header": "Manage RAM and vCPU",
       "description": "Scaling a server allows for adjustment of RAM and vCPU power.",
-      "warning": "Scaling the Server will require a restart.",
+      "warning": "Scaling this server will cause it to restart.",
       "scale": "Scale",
       "cancel": "Cancel",
       "scaling": "Scaling in progress."
