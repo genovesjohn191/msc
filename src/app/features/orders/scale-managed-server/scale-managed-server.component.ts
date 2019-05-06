@@ -190,11 +190,9 @@ export class ScaleManagedServerComponent extends McsOrderWizardBase implements O
 
   /**
    * Event that emits when the scale details is submitted
-   * @param manageScale Manage Scale content
    */
-  public onSubmitScaleDetails(manageScale: ServerManageScale): void {
-    if (isNullOrEmpty(manageScale)) { return; }
-    this._manageScale = manageScale;
+  public onSubmitScaleDetails(): void {
+    if (isNullOrEmpty(this._manageScale)) { return; }
     this._changeDetectorRef.markForCheck();
   }
 
