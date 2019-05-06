@@ -29,8 +29,7 @@ import {
   isNullOrEmpty,
   getSafeProperty,
   unsubscribeSafely,
-  convertGbToMb,
-  convertMbToGb
+  convertGbToMb
 } from '@app/utilities';
 import {
   catchError,
@@ -51,6 +50,7 @@ import {
   McsResourcesRepository,
   McsServersRepository
 } from '@app/services';
+import { EventBusDispatcherService } from '@app/event-bus';
 import {
   OrderDetails,
   ServerManageScale
@@ -64,7 +64,6 @@ import {
   McsFormGroupDirective,
   ComponentHandlerDirective
 } from '@app/shared';
-import { EventBusDispatcherService } from '@app/event-bus';
 import { ScaleManagedServerService } from './scale-managed-server.service';
 
 type ScaleManageProperties = {
@@ -140,7 +139,7 @@ export class ScaleManagedServerComponent extends McsOrderWizardBase implements O
    * Returns true when all forms are valid
    */
   public get formIsValid(): boolean {
-    return this._manageScale.hasChanged && getSafeProperty(this._formGroup, (obj) => obj.isValid());
+    return getSafeProperty(this._formGroup, (obj) => obj.isValid()) && this._manageScale.hasChanged;
   }
 
   /**
@@ -160,9 +159,6 @@ export class ScaleManagedServerComponent extends McsOrderWizardBase implements O
     if (isNullOrEmpty(server) || isNullOrEmpty(server.serviceId)) { return; }
     this._resetScaleManagedServerState();
     this._subscribeResourceById(server.platform.resourceId);
-    this._manageScale.memoryGB = convertMbToGb(server.compute.memoryMB);
-    this._manageScale.cpuCount = server.compute.cpuCount;
-    this._changeDetectorRef.markForCheck();
   }
 
   /**
@@ -271,7 +267,10 @@ export class ScaleManagedServerComponent extends McsOrderWizardBase implements O
    * @param resourceId Resource Id of the resource to get
    */
   private _subscribeResourceById(resourceId: string): void {
-    this.resource$ = this._resourcesRepository.getByIdAsync(resourceId).pipe(
+    this._eventDispatcher.dispatch(CoreEvent.loaderShow);
+    this.resource$ = this._resourcesRepository.getByIdAsync(resourceId,
+      () => this._eventDispatcher.dispatch(CoreEvent.loaderHide)
+    ).pipe(
       tap(() => {
         this._changeDetectorRef.markForCheck();
       }),
