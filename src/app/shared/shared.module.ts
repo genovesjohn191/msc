@@ -48,6 +48,7 @@ import { TagListModule } from './tag-list/tag-list.module';
 import { SelectTagModule } from './select-tag/select-tag.module';
 import { CommentBoxModule } from './comment-box/comment-box.module';
 import { DataStatusModule } from './data-status/data-status.module';
+import { StatusMessageModule } from './status-message/status-message.module';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { ProgressBarModule } from './progress-bar/progress-bar.module';
 import { CapacityBarModule } from './capacity-bar/capacity-bar.module';
@@ -116,6 +117,7 @@ import { PricingCalculatorModule } from './pricing-calculator/pricing-calculator
     SelectTagModule,
     CommentBoxModule,
     DataStatusModule,
+    StatusMessageModule,
     AuthenticationModule,
     ProgressBarModule,
     CapacityBarModule,
@@ -181,6 +183,7 @@ import { PricingCalculatorModule } from './pricing-calculator/pricing-calculator
     SelectTagModule,
     CommentBoxModule,
     DataStatusModule,
+    StatusMessageModule,
     AuthenticationModule,
     ProgressBarModule,
     CapacityBarModule,
