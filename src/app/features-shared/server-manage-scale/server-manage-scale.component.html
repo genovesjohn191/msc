@@ -1,6 +1,7 @@
 <form [formGroup]="fgServerScale" mcsFormGroup>
+  <!-- TODO: Disabled for the moment -->
   <!-- Scale header and switcher -->
-  <mcs-item orientation="separated">
+  <!-- <mcs-item orientation="separated">
     <div><ng-content select="[mcsManageScaleHeader]"></ng-content></div>
     <div>
       <a *ngIf="inputManageType === inputManageTypeEnum.Custom" mcsId
@@ -10,15 +11,13 @@
         (click)="onChangeInputManageType(inputManageTypeEnum.Custom)">
         {{ 'serverShared.manageScale.customSwitch' | translate }}</a>
     </div>
-  </mcs-item>
+  </mcs-item> -->
 
   <div [ngSwitch]="inputManageType">
     <!-- Slider selection mode -->
     <mcs-section [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Auto">
       <div>
         <span>{{ 'serverShared.manageScale.sliderMessage' | translate }} </span>
-        <span>This VDC has {{ resourceAvailableMemoryGB | mcsDataSize: 'GB' }}
-          RAM and {{ resourceAvailableCpu }} vCPU available.</span>
       </div>
 
       <div>
@@ -27,9 +26,21 @@
           [ngModel]="sliderValueIndex" [ngModelOptions]="{standalone: true}"
           (ngModelChange)="onSliderChanged($event)"></mcs-slider>
         <strong display-block text-center>
-          {{ sliderValue?.memoryGB | mcsDataSize: 'GB' }} {{ 'serverShared.manageScale.ramLabel' | translate }} /
-          {{ sliderValue?.cpuCount | number}} {{ 'serverShared.manageScale.cpuUnit' | translate }}
+          {{ 'serverShared.manageScale.sliderSelectedRamCpu' | translate:
+            {
+              ram_value: (sliderValue?.memoryGB | mcsDataSize: 'GB'),
+              cpu_value : (sliderValue?.cpuCount | number)
+            }
+          }}
         </strong>
+        <span display-block text-center>
+          {{ 'serverShared.manageScale.sliderCurrentRamCpu' | translate:
+            {
+              ram_value: (currentServerMemoryGB | mcsDataSize: 'GB'),
+              cpu_value : (currentServerCpu | number)
+            }
+          }}
+        </span>
       </div>
     </mcs-section>
 
@@ -43,7 +54,10 @@
         <mcs-suffix mcsSuffix>{{ 'serverShared.manageScale.ramUnit' | translate }}</mcs-suffix>
 
         <mcs-hint mcsHint align="start">
-            {{ 'serverShared.manageScale.maximumRam' | translate }}: {{ resourceAvailableMemoryGB | mcsDataSize: 'GB' }}
+          <div >
+            {{ 'serverShared.manageScale.minimumRam' | translate: {ram_value: (minimumUsableMemoryGB | mcsDataSize: 'GB')} }}<br/>
+            {{ 'serverShared.manageScale.maximumRam' | translate: {ram_value: (resourceAvailableMemoryGB | mcsDataSize: 'GB')} }}
+          </div>
         </mcs-hint>
         <mcs-error mcsError errorState="required">
             {{ 'serverShared.manageScale.errors.ramRequired' | translate }}
@@ -52,7 +66,7 @@
             {{ 'serverShared.manageScale.errors.ramNumeric' | translate }}
         </mcs-error>
         <mcs-error mcsError errorState="min">
-            {{ 'serverShared.manageScale.errors.ramMin' | translate: {min_value:(minimumMemoryGB | mcsDataSize: 'GB')} }}
+            {{ 'serverShared.manageScale.errors.ramMin' | translate: {min_value:(minimumUsableMemoryGB | mcsDataSize: 'GB')} }}
         </mcs-error>
         <mcs-error mcsError errorState="max">
             {{ 'serverShared.manageScale.errors.ramMax' | translate: {max_value:(resourceAvailableMemoryGB | mcsDataSize: 'GB')} }}
@@ -68,7 +82,10 @@
         <mcs-suffix mcsSuffix>{{ 'serverShared.manageScale.cpuUnit' | translate }}</mcs-suffix>
 
         <mcs-hint mcsHint align="start">
-            {{ 'serverShared.manageScale.maximumCpu' | translate }}: {{ resourceAvailableCpu }} vCPU
+          <div>
+            {{ 'serverShared.manageScale.minimumCpu' | translate: {cpu_value:minimumUsableCpu} }}<br/>
+            {{ 'serverShared.manageScale.maximumCpu' | translate: {cpu_value:resourceAvailableCpu} }}
+          </div>
         </mcs-hint>
         <mcs-error mcsError errorState="required">
             {{ 'serverShared.manageScale.errors.cpuRequired' | translate }}
@@ -77,7 +94,7 @@
             {{ 'serverShared.manageScale.errors.cpuNumeric' | translate }}
         </mcs-error>
         <mcs-error mcsError errorState="min">
-            {{ 'serverShared.manageScale.errors.cpuMin' | translate: {min_value: minimumCpuUsed} }}
+            {{ 'serverShared.manageScale.errors.cpuMin' | translate: {min_value: minimumUsableCpu} }}
         </mcs-error>
         <mcs-error mcsError errorState="max">
             {{ 'serverShared.manageScale.errors.cpuMax' | translate: {max_value: resourceAvailableCpu} }}
