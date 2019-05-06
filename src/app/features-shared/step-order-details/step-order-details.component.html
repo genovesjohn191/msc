@@ -8,69 +8,78 @@
 
         <section>
           <h3>{{ 'orderDetailsStep.billingDetails.header' | translate }}</h3>
-          <mcs-form-field>
-            <mcs-select [formControl]="fcContractTerm"
-              [placeholder]="'orderDetailsStep.billingDetails.contractTermPlaceholder' | translate"
-              [mcsContextualHelp]="'orderDetailsStep.billingDetails.contractTermHelp' | translate">
 
-              <mcs-option [value]="term.value" *ngFor="let term of contractTerms$ | async">
-                {{ term.text }}
-              </mcs-option>
-            </mcs-select>
-
-            <mcs-error mcsError errorState="required">
-              {{ 'orderDetailsStep.billingDetails.contractTermRequired' | translate }}
-            </mcs-error>
-          </mcs-form-field>
-
-          <ng-container *ngIf="billing$ | async as billingDetails">
-            <mcs-form-field>
-              <mcs-select [formControl]="fcBillingEntity"
-                [placeholder]="'orderDetailsStep.billingDetails.entityPlaceholder' | translate"
-                [mcsContextualHelp]="'orderDetailsStep.billingDetails.entityHelp' | translate">
-
-                <mcs-option [value]="billing" *ngFor="let billing of billingDetails">
-                  {{ billing.name }}
-                </mcs-option>
-              </mcs-select>
-
-              <mcs-error mcsError errorState="required">
-                {{ 'orderDetailsStep.billingDetails.entityRequired' | translate }}
-              </mcs-error>
-            </mcs-form-field>
-
-            <mcs-form-field>
-              <mcs-select [formControl]="fcBillingSite"
-                [placeholder]="'orderDetailsStep.billingDetails.sitePlaceholder' | translate"
-                [mcsContextualHelp]="'orderDetailsStep.billingDetails.siteHelp' | translate">
-
-                <mcs-option [value]="billingSite"
-                  *ngFor="let billingSite of fcBillingEntity?.value?.sites">
-                  {{ billingSite.name }}
-                </mcs-option>
-              </mcs-select>
-
-              <mcs-error mcsError errorState="required">
-                {{ 'orderDetailsStep.billingDetails.siteRequired' | translate }}
-              </mcs-error>
-            </mcs-form-field>
-
-            <mcs-form-field>
-              <mcs-select [formControl]="fcBillingCostCenter"
-                [placeholder]="'orderDetailsStep.billingDetails.costCenterPlaceholder' | translate"
-                [mcsContextualHelp]="'orderDetailsStep.billingDetails.costCenterHelp' | translate">
-
-                <mcs-option [value]="costCentre"
-                  *ngFor="let costCentre of fcBillingSite?.value?.costCentres">
-                  {{ costCentre.name }}
-                </mcs-option>
-              </mcs-select>
-
-              <mcs-error mcsError errorState="required">
-                {{ 'orderDetailsStep.billingDetails.costCenterRequired' | translate }}
-              </mcs-error>
-            </mcs-form-field>
+          <ng-container *ngIf="orderType === orderTypeEnum.Change; else orderBillingTemplate">
+            <mcs-data-status-empty >
+              {{ 'orderDetailsStep.billingDetails.changeOrderNote' | translate }}
+            </mcs-data-status-empty>
           </ng-container>
+
+          <ng-template #orderBillingTemplate>
+            <mcs-form-field>
+              <mcs-select [formControl]="fcContractTerm"
+                [placeholder]="'orderDetailsStep.billingDetails.contractTermPlaceholder' | translate"
+                [mcsContextualHelp]="'orderDetailsStep.billingDetails.contractTermHelp' | translate">
+
+                <mcs-option [value]="term.value" *ngFor="let term of contractTerms$ | async">
+                  {{ term.text }}
+                </mcs-option>
+              </mcs-select>
+
+              <mcs-error mcsError errorState="required">
+                {{ 'orderDetailsStep.billingDetails.contractTermRequired' | translate }}
+              </mcs-error>
+            </mcs-form-field>
+
+            <ng-container *ngIf="billing$ | async as billingDetails">
+              <mcs-form-field>
+                <mcs-select [formControl]="fcBillingEntity"
+                  [placeholder]="'orderDetailsStep.billingDetails.entityPlaceholder' | translate"
+                  [mcsContextualHelp]="'orderDetailsStep.billingDetails.entityHelp' | translate">
+
+                  <mcs-option [value]="billing" *ngFor="let billing of billingDetails">
+                    {{ billing.name }}
+                  </mcs-option>
+                </mcs-select>
+
+                <mcs-error mcsError errorState="required">
+                  {{ 'orderDetailsStep.billingDetails.entityRequired' | translate }}
+                </mcs-error>
+              </mcs-form-field>
+
+              <mcs-form-field>
+                <mcs-select [formControl]="fcBillingSite"
+                  [placeholder]="'orderDetailsStep.billingDetails.sitePlaceholder' | translate"
+                  [mcsContextualHelp]="'orderDetailsStep.billingDetails.siteHelp' | translate">
+
+                  <mcs-option [value]="billingSite"
+                    *ngFor="let billingSite of fcBillingEntity?.value?.sites">
+                    {{ billingSite.name }}
+                  </mcs-option>
+                </mcs-select>
+
+                <mcs-error mcsError errorState="required">
+                  {{ 'orderDetailsStep.billingDetails.siteRequired' | translate }}
+                </mcs-error>
+              </mcs-form-field>
+
+              <mcs-form-field>
+                <mcs-select [formControl]="fcBillingCostCenter"
+                  [placeholder]="'orderDetailsStep.billingDetails.costCenterPlaceholder' | translate"
+                  [mcsContextualHelp]="'orderDetailsStep.billingDetails.costCenterHelp' | translate">
+
+                  <mcs-option [value]="costCentre"
+                    *ngFor="let costCentre of fcBillingSite?.value?.costCentres">
+                    {{ costCentre.name }}
+                  </mcs-option>
+                </mcs-select>
+
+                <mcs-error mcsError errorState="required">
+                  {{ 'orderDetailsStep.billingDetails.costCenterRequired' | translate }}
+                </mcs-error>
+              </mcs-form-field>
+            </ng-container>
+          </ng-template>
         </section>
       </section>
 

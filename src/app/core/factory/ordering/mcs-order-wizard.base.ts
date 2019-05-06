@@ -17,7 +17,8 @@ import {
   McsOrder,
   OrderWorkflowAction,
   McsOrderWorkflow,
-  RouteKey
+  RouteKey,
+  McsOrderItemType
 } from '@app/models';
 import { McsOrderBase } from './mcs-order.base';
 import { McsWizardBase } from '../../base/mcs-wizard.base';
@@ -25,6 +26,7 @@ import { McsNavigationService } from '../../services/mcs-navigation.service';
 
 export abstract class McsOrderWizardBase extends McsWizardBase implements McsDisposable {
   public order$: Observable<McsOrder>;
+  public orderItemType$: Observable<McsOrderItemType>;
 
   @ViewChild('pricingCalculator')
   public pricingCalculator: PricingCalculator;
@@ -36,6 +38,7 @@ export abstract class McsOrderWizardBase extends McsWizardBase implements McsDis
   ) {
     super(_orderBase);
     this._subscribeToOrderChanges();
+    this._subscribeToOrderItemTypeChanges();
   }
 
   /**
@@ -90,6 +93,15 @@ export abstract class McsOrderWizardBase extends McsWizardBase implements McsDis
       startWith(null),
       shareReplay(1),
       tap(() => this._setPricingCalculatorVisibility())
+    );
+  }
+
+  /**
+   * Subscribes to order item type changes
+   */
+  private _subscribeToOrderItemTypeChanges(): void {
+    this.orderItemType$ = this._orderBase.orderItemTypeChange().pipe(
+      shareReplay(1)
     );
   }
 

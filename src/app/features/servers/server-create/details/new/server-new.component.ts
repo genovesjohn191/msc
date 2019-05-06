@@ -336,7 +336,7 @@ export class ServerNewComponent
       !isNullOrEmpty(this.resource.catalogs);
     if (!hasCatalogItems) { return; }
 
-    let catalogItems: McsResourceCatalogItem[];
+    let catalogItems: McsResourceCatalogItem[] = [];
     this.resource.catalogs.forEach((catalog) => {
       catalogItems.push(...catalog.items.filter(
         (catalogItem) => catalogItem.type === CatalogItemType.Template)

@@ -2,7 +2,6 @@
 import { McsFirewallsRepository } from './repositories/mcs-firewalls.repository';
 import { McsJobsRepository } from './repositories/mcs-jobs.repository';
 import { McsMediaRepository } from './repositories/mcs-media.repository';
-import { McsOrderItemTypesRepository } from './repositories/mcs-order-item-types.repository';
 import { McsOrdersRepository } from './repositories/mcs-orders.repository';
 import { McsProductCatalogRepository } from './repositories/mcs-product-catalog.repository';
 import { McsProductsRepository } from './repositories/mcs-products.repository';
@@ -38,7 +37,6 @@ export const repositoryProviders: any[] = [
   McsFirewallsRepository,
   McsJobsRepository,
   McsMediaRepository,
-  McsOrderItemTypesRepository,
   McsOrdersRepository,
   McsProductCatalogRepository,
   McsProductsRepository,
