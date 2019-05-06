@@ -86,7 +86,7 @@ export class McsApiOrdersService implements IMcsApiOrdersService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<McsOrderItemType[]>(McsOrder, response);
+            .deserializeResponse<McsOrderItemType[]>(McsOrderItemType, response);
           return apiResponse;
         })
       );
@@ -105,7 +105,7 @@ export class McsApiOrdersService implements IMcsApiOrdersService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<McsOrderItemType>(McsOrder, response);
+            .deserializeResponse<McsOrderItemType>(McsOrderItemType, response);
           return apiResponse;
         })
       );

@@ -174,8 +174,6 @@ export class ScaleManagedServerComponent extends McsOrderWizardBase implements O
     this._manageScale = manageScale;
     this._scaleManagedServerService.createOrUpdateOrder(
       {
-        description: this._scaleManagedServerService.createDefaultOrderDescription('Change', 'Scale Managed Server'),
-        contractDurationMonths: 12,
         items: [{
           itemOrderTypeId: OrderIdType.ScaleManageServer,
           referenceId: SCALE_MANAGE_SERVER_REF_ID,

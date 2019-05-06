@@ -2,14 +2,16 @@ import {
   Observable,
   Subject,
   empty,
-  throwError
+  throwError,
+  BehaviorSubject
 } from 'rxjs';
 import {
   takeUntil,
   tap,
   catchError,
   exhaustMap,
-  finalize
+  finalize,
+  filter
 } from 'rxjs/operators';
 import {
   McsDisposable,
@@ -29,7 +31,10 @@ import {
   McsOrderItemCreate,
   McsJob,
   OrderWorkflowAction,
-  McsApiJobRequestBase
+  McsApiJobRequestBase,
+  McsOrderItemType,
+  orderTypeText,
+  OrderType
 } from '@app/models';
 import { IMcsFallible } from '../../interfaces/mcs-fallible.interface';
 import { IMcsJobManager } from '../../interfaces/mcs-job-manager.interface';
@@ -39,7 +44,7 @@ import { McsOrderRequest } from './mcs-order-request';
 import { McsOrderDirector } from './mcs-order.director';
 import { IMcsOrderFactory } from './mcs-order-factory.interface';
 
-export type OrderType = 'New' | 'Change';
+const DEFAULT_ORDER_DESCRIPTION = 'Macquarie Cloud Services Portal Order';
 
 export interface IOrderSubmitDetails {
   description: string;
@@ -48,8 +53,7 @@ export interface IOrderSubmitDetails {
   billingCostCentreId: string;
 }
 
-export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible,
-  IMcsStateChangeable, McsDisposable {
+export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcsStateChangeable, McsDisposable {
 
   // Order builders and director
   private _orderBuilder: McsOrderBuilder;
@@ -63,17 +67,22 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible,
 
   // Events for controlling events
   private _orderChange = new Subject<McsOrder>();
+  private _orderItemTypeChange = new BehaviorSubject<McsOrderItemType>(null);
   private _orderRequestedSubject = new Subject<void>();
   private _dataStatusChange = new Subject<DataStatus>();
   private _jobsChange = new Subject<McsJob[]>();
   private _errorsChange = new Subject<string[]>();
 
-  constructor(private _orderFactory: IMcsOrderFactory) {
+  constructor(
+    private _orderFactory: IMcsOrderFactory,
+    private _orderItemTypeId: string
+  ) {
     this._workflowMapTable = new Map();
     this._orderBuilder = new McsOrderBuilder();
     this._orderDirector = new McsOrderDirector();
     this._createWorkflowMap();
     this._subscribeAndExecuteNewOrder();
+    this._subscribeToOrderItemType();
   }
 
   /**
@@ -111,6 +120,15 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible,
   }
 
   /**
+   * Event that emits when the order item has been received or changed
+   */
+  public orderItemTypeChange(): Observable<McsOrderItemType> {
+    return this._orderItemTypeChange.asObservable().pipe(
+      filter((response) => !isNullOrEmpty(response))
+    );
+  }
+
+  /**
    * Event that emits when the state of the order has been changed
    */
   public stateChange(): Observable<DataStatus> {
@@ -144,9 +162,17 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible,
    * @param orderDetails The details of the order to be created
    */
   public createOrUpdateOrder(orderDetails: McsOrderCreate): void {
+    let orderItemType = this._orderItemTypeChange.getValue();
+    if (isNullOrEmpty(orderItemType)) {
+      throw new Error('Unable to create an order without order item type.');
+    }
+
+    let orderDescription = orderDetails.description || this._getOrderDescriptionByType(orderItemType);
+    let orderContract = orderItemType.orderType !== OrderType.Change ? orderDetails.contractDurationMonths : null;
+
     this._orderBuilder
-      .setDescription(orderDetails.description)
-      .setContractDuration(orderDetails.contractDurationMonths)
+      .setDescription(orderDescription)
+      .setContractDuration(orderContract)
       .setBillingSiteId(orderDetails.billingSiteId)
       .setBillingCostCentreId(orderDetails.billingCostCentreId);
 
@@ -369,6 +395,17 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible,
   }
 
   /**
+   * Gets the order description based on the order type
+   * @param orderTypeDetails Order type to be checked
+   */
+  private _getOrderDescriptionByType(orderTypeDetails: McsOrderItemType): string {
+    let description = orderTypeDetails.description || DEFAULT_ORDER_DESCRIPTION;
+    let orderTypeLabel = isNullOrEmpty(orderTypeText[orderTypeDetails.orderType]) ?
+      orderTypeText[OrderType.Unknown] : orderTypeText[orderTypeDetails.orderType];
+    return `${orderTypeLabel} ${description}`;
+  }
+
+  /**
    * Sets the request change state according to its status
    * @param state State change of the order if there is ongoing request
    */
@@ -386,5 +423,14 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible,
   private _hasPendingRequest(): boolean {
     return !isNullOrUndefined(this._pendingOrderRequest) &&
       compareJsons(this._inProgressRequest, this._pendingOrderRequest) !== 0;
+  }
+
+  /**
+   * Subscribes to order item type
+   */
+  private _subscribeToOrderItemType(): void {
+    if (isNullOrEmpty(this._orderItemTypeId)) { return; }
+    this._orderFactory.getItemOrderType(this._orderItemTypeId)
+      .subscribe((itemType) => this._orderItemTypeChange.next(itemType));
   }
 }

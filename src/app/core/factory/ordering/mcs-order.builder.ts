@@ -16,7 +16,7 @@ export class McsOrderBuilder {
 
   constructor() {
     this._description = '';
-    this._contractDurationMonths = 0;
+    this._contractDurationMonths = null;
     this._billingSiteId = '';
     this._billingCostCentreId = '';
     this._orderItems = [];

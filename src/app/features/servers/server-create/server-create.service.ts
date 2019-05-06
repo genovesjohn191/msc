@@ -19,7 +19,8 @@ import {
   McsJob,
   McsServerClone,
   RouteKey,
-  DataStatus
+  DataStatus,
+  OrderIdType
 } from '@app/models';
 import {
   McsOrdersRepository,
@@ -35,7 +36,7 @@ export class ServerCreateService extends McsOrderBase
     _ordersRepository: McsOrdersRepository,
     private _serversRepository: McsServersRepository
   ) {
-    super(_ordersRepository);
+    super(_ordersRepository, OrderIdType.CreateManagedServer);
   }
 
   /**

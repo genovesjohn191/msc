@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import {
+  Observable,
+  of
+} from 'rxjs';
 import {
   map,
   tap,
@@ -10,14 +13,18 @@ import {
   IMcsOrderFactory,
   CoreEvent
 } from '@app/core';
-import { getSafeProperty } from '@app/utilities';
+import {
+  getSafeProperty,
+  isNullOrEmpty
+} from '@app/utilities';
 import {
   McsOrder,
   McsOrderWorkflow,
   McsOrderCreate,
   McsOrderItem,
   McsBilling,
-  McsOrderApprover
+  McsOrderApprover,
+  McsOrderItemType
 } from '@app/models';
 import { EventBusDispatcherService } from '@app/event-bus';
 import {
@@ -30,6 +37,7 @@ import { McsOrdersDataContext } from '../data-context/mcs-orders-data.context';
 @Injectable()
 export class McsOrdersRepository extends McsRepositoryBase<McsOrder> implements IMcsOrderFactory {
   private readonly _ordersApiService: IMcsApiOrdersService;
+  private _itemTypesCache: Map<string, McsOrderItemType>;
 
   constructor(
     _apiClientFactory: McsApiClientFactory,
@@ -39,6 +47,7 @@ export class McsOrdersRepository extends McsRepositoryBase<McsOrder> implements 
       _apiClientFactory.getService(new McsApiOrdersFactory())
     ));
     this._ordersApiService = _apiClientFactory.getService(new McsApiOrdersFactory());
+    this._itemTypesCache = new Map();
   }
 
   /**
@@ -121,6 +130,20 @@ export class McsOrdersRepository extends McsRepositoryBase<McsOrder> implements 
   public getOrderApprovers(): Observable<McsOrderApprover[]> {
     return this._ordersApiService.getOrderApprovers().pipe(
       map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  /**
+   * Gets the order item type by id
+   * @param typeId Type id of the order to be obtained
+   */
+  public getItemOrderType(typeId: string): Observable<McsOrderItemType> {
+    let typeFound = this._itemTypesCache.get(typeId);
+    if (!isNullOrEmpty(typeFound)) { return of(typeFound); }
+
+    return this._ordersApiService.getOrderItemType(typeId).pipe(
+      map((response) => getSafeProperty(response, (obj) => obj.content)),
+      tap((response) => this._itemTypesCache.set(typeId, response))
     );
   }
 }

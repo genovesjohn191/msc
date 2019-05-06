@@ -7,7 +7,6 @@ export * from './data-context/mcs-tools-data.context';
 export * from './repositories/mcs-firewalls.repository';
 export * from './repositories/mcs-jobs.repository';
 export * from './repositories/mcs-media.repository';
-export * from './repositories/mcs-order-item-types.repository';
 export * from './repositories/mcs-orders.repository';
 export * from './repositories/mcs-product-catalog.repository';
 export * from './repositories/mcs-products.repository';

@@ -42,7 +42,8 @@ import {
   McsBilling,
   McsBillingSite,
   McsOption,
-  DataStatus
+  DataStatus,
+  OrderType
 } from '@app/models';
 import { McsFormGroupDirective } from '@app/shared';
 import { McsOrdersRepository } from '@app/services';
@@ -56,17 +57,21 @@ import { OrderDetails } from './order-details';
 
 export class StepOrderDetailsComponent
   implements OnInit, OnChanges, AfterViewInit, OnDestroy, IMcsDataChange<OrderDetails> {
-  @Input()
-  public order: McsOrder;
-
-  @Input()
-  public requestState: DataStatus;
 
   @Output()
   public submitOrder = new EventEmitter<OrderDetails>();
 
   @Output()
   public dataChange = new EventEmitter<OrderDetails>();
+
+  @Input()
+  public order: McsOrder;
+
+  @Input()
+  public orderType: OrderType;
+
+  @Input()
+  public requestState: DataStatus;
 
   // Form variables
   public fgOrderBilling: FormGroup;
@@ -82,6 +87,7 @@ export class StepOrderDetailsComponent
   public billing$: Observable<McsBilling[]>;
   public selectedBilling$: Observable<McsBilling>;
   public selectedBillingSite$: Observable<McsBillingSite>;
+  public isChangeOrder$: Observable<boolean>;
 
   public workflowAction: OrderWorkflowAction;
   public orderDatasource: McsTableDataSource<McsOrderItem>;
@@ -100,6 +106,7 @@ export class StepOrderDetailsComponent
     private _ordersRepository: McsOrdersRepository
   ) {
     this.orderDatasource = new McsTableDataSource([]);
+    this.orderType = OrderType.New;
     this._registerFormGroup();
     this._setDataColumns();
   }
@@ -114,6 +121,11 @@ export class StepOrderDetailsComponent
     if (!isNullOrEmpty(orderChange)) {
       this._initializeOrderDatasource();
       this._setOrderDescription();
+    }
+
+    let orderTypeChange = changes['orderType'];
+    if (!isNullOrEmpty(orderTypeChange)) {
+      this._updateFormGroupBytype();
     }
 
     let requestChange = changes['requestState'];
@@ -135,6 +147,10 @@ export class StepOrderDetailsComponent
 
   public get orderWorkFlowEnum(): any {
     return OrderWorkflowAction;
+  }
+
+  public get orderTypeEnum(): any {
+    return OrderType;
   }
 
   /**
@@ -234,6 +250,37 @@ export class StepOrderDetailsComponent
   }
 
   /**
+   * Updates the form group by order type
+   */
+  private _updateFormGroupBytype(): void {
+    this.orderType === OrderType.Change ?
+      this._setOrderChangeFormControls() :
+      this._setOrderNewFormControls();
+  }
+
+  /**
+   * Sets the order type change form controls
+   */
+  private _setOrderChangeFormControls(): void {
+    this.fgOrderBilling.setControl('fcDescription', this.fcDescription);
+    this.fgOrderBilling.removeControl('fcContractTerm');
+    this.fgOrderBilling.removeControl('fcBillingEntity');
+    this.fgOrderBilling.removeControl('fcBillingSite');
+    this.fgOrderBilling.removeControl('fcBillingCostCenter');
+  }
+
+  /**
+   * Sets the order type new form controls
+   */
+  private _setOrderNewFormControls(): void {
+    this.fgOrderBilling.setControl('fcDescription', this.fcDescription);
+    this.fgOrderBilling.setControl('fcContractTerm', this.fcContractTerm);
+    this.fgOrderBilling.setControl('fcBillingEntity', this.fcBillingEntity);
+    this.fgOrderBilling.setControl('fcBillingSite', this.fcBillingSite);
+    this.fgOrderBilling.setControl('fcBillingCostCenter', this.fcBillingCostCenter);
+  }
+
+  /**
    * Sets the table status based on state provided
    */
   private _setTableStatus(): void {
@@ -312,13 +359,7 @@ export class StepOrderDetailsComponent
     ]);
 
     // Register Form Groups using binding
-    this.fgOrderBilling = this._formBuilder.group({
-      fcContractTerm: this.fcContractTerm,
-      fcBillingEntity: this.fcBillingEntity,
-      fcBillingSite: this.fcBillingSite,
-      fcBillingCostCenter: this.fcBillingCostCenter,
-      fcDescription: this.fcDescription
-    });
+    this.fgOrderBilling = this._formBuilder.group([]);
   }
 
   /**
