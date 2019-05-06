@@ -10,9 +10,9 @@
           <h3>{{ 'orderDetailsStep.billingDetails.header' | translate }}</h3>
 
           <ng-container *ngIf="orderType === orderTypeEnum.Change; else orderBillingTemplate">
-            <mcs-data-status-empty >
-              {{ 'orderDetailsStep.billingDetails.changeOrderNote' | translate }}
-            </mcs-data-status-empty>
+            <mcs-status-message type="info">
+                {{ 'orderDetailsStep.billingDetails.changeOrderNote' | translate }}
+            </mcs-status-message>
           </ng-container>
 
           <ng-template #orderBillingTemplate>
