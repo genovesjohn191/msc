@@ -26,12 +26,10 @@ import {
   ActivatedRoute,
   ParamMap
 } from '@angular/router';
-import { EventBusDispatcherService } from '@app/event-bus';
 import {
   McsDataStatusFactory,
   McsErrorHandlerService,
-  CoreDefinition,
-  CoreEvent
+  CoreDefinition
 } from '@app/core';
 import {
   unsubscribeSafely,
@@ -89,7 +87,6 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private _activatedRoute: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _eventDispatcher: EventBusDispatcherService,
     private _errorHandlerService: McsErrorHandlerService,
     private _productService: ProductService,
     private _productsRepository: McsProductsRepository,
@@ -154,11 +151,7 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   private _subscribeToProductById(): void {
     this.selectedProduct$ = this._activatedRoute.paramMap.pipe(
       switchMap((params: ParamMap) => {
-        this._eventDispatcher.dispatch(CoreEvent.loaderShow);
-
-        return this._productsRepository.getByIdAsync(
-          params.get('id'), this._onProductObtained.bind(this)
-        );
+        return this._productsRepository.getByIdAsync(params.get('id'));
       }),
       catchError((error) => {
         this._errorHandlerService.redirectToErrorPage(error.status);
@@ -170,12 +163,5 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
       }),
       shareReplay(1)
     );
-  }
-
-  /**
-   * Event that emits when the product has been obtained
-   */
-  private _onProductObtained(): void {
-    this._eventDispatcher.dispatch(CoreEvent.loaderHide);
   }
 }

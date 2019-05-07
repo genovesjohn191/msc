@@ -263,10 +263,7 @@ export class ScaleManagedServerComponent extends McsOrderWizardBase implements O
    * @param resourceId Resource Id of the resource to get
    */
   private _subscribeResourceById(resourceId: string): void {
-    this._eventDispatcher.dispatch(CoreEvent.loaderShow);
-    this.resource$ = this._resourcesRepository.getByIdAsync(resourceId,
-      () => this._eventDispatcher.dispatch(CoreEvent.loaderHide)
-    ).pipe(
+    this.resource$ = this._resourcesRepository.getByIdAsync(resourceId).pipe(
       tap(() => {
         this._changeDetectorRef.markForCheck();
       }),

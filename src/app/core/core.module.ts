@@ -5,7 +5,7 @@ import {
   SkipSelf
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CookieModule } from 'ngx-cookie';
 import { EventBusDispatcherService } from '@app/event-bus';
 import {
@@ -29,6 +29,7 @@ import { McsNotificationContextService } from './services/mcs-notification-conte
 import { McsErrorHandlerService } from './services/mcs-error-handler.service';
 import { McsNotificationEventsService } from './services/mcs-notification-events.service';
 import { McsRouteSettingsService } from './services/mcs-route-settings.service';
+import { McsHttpClientInterceptor } from './interceptors/mcs-http-client.interceptor';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,12 @@ import { McsRouteSettingsService } from './services/mcs-route-settings.service';
     McsSnackBarRefDirective
   ],
   providers: [
-    ...coreProviders
+    ...coreProviders,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: McsHttpClientInterceptor,
+      multi: true
+    }
   ],
   imports: [
     CommonModule,

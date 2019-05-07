@@ -25,10 +25,10 @@ import {
 import { EventBusDispatcherService } from '@app/event-bus';
 import { CoreEvent } from '@app/core';
 
+const LOADER_MAX_VALUE = 100;
+const LOADER_INTERVAL_MS = 700;
 const LOADER_INITIAL_MIN_VALUE = 5;
-const LOADER_INITIAL_MAX_VALUE = 100;
-const LOADER_MAX_VALUE = 1000;
-const LOADER_INTERVAL_MS = 500;
+const LOADER_INITIAL_MAX_VALUE = LOADER_MAX_VALUE * 0.2;
 
 @Component({
   selector: 'mcs-main-loader',
@@ -78,6 +78,7 @@ export class MainLoaderComponent implements OnInit, OnDestroy {
    */
   public onProgressCompleted(): void {
     this.hidden = true;
+    this.progressValue = 0;
     this._changeDetectorRef.markForCheck();
   }
 
@@ -91,8 +92,16 @@ export class MainLoaderComponent implements OnInit, OnDestroy {
       return;
     }
     this.hidden = false;
-    this.progressValue = getRandomNumber(LOADER_INITIAL_MIN_VALUE, LOADER_INITIAL_MAX_VALUE);
+    this._initializeProgressBar();
     this._updateProgressBar();
+  }
+
+  /**
+   * Initializes the progress bar value
+   */
+  private _initializeProgressBar(): void {
+    if (this.progressValue !== 0) { return; }
+    this.progressValue = getRandomNumber(LOADER_INITIAL_MIN_VALUE, LOADER_INITIAL_MAX_VALUE);
   }
 
   /**
@@ -104,8 +113,11 @@ export class MainLoaderComponent implements OnInit, OnDestroy {
     let progressTimer = timer(LOADER_INTERVAL_MS, LOADER_INTERVAL_MS).pipe(
       takeUntil(this._progressSubject),
       tap(() => {
-        let percentageMax = this.progressMax * 0.9;
-        this.progressValue = getRandomNumber(this.progressValue, percentageMax);
+        let randomProgressValue = Math.round(getRandomNumber(this.progressValue, this.progressValue + 15));
+        this.progressValue = Math.min(
+          Math.max(randomProgressValue, this.progressValue),
+          LOADER_MAX_VALUE * 0.9
+        );
         this._changeDetectorRef.markForCheck();
       })
     );

@@ -28,8 +28,7 @@ import {
   McsRoutingTabBase,
   McsErrorHandlerService,
   McsDataStatusFactory,
-  CoreRoutes,
-  CoreEvent
+  CoreRoutes
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -178,11 +177,7 @@ export class FirewallComponent
    * @param firewallId Firewall identification
    */
   private _subscribeToFirewallById(firewallId: string): void {
-    this.eventDispatcher.dispatch(CoreEvent.loaderShow);
-
-    this.selectedFirewall$ = this._firewallsRepository.getByIdAsync(
-      firewallId, this._onFirewallObtained.bind(this)
-    ).pipe(
+    this.selectedFirewall$ = this._firewallsRepository.getByIdAsync(firewallId).pipe(
       catchError((error) => {
         this._errorHandlerService.redirectToErrorPage(error.status);
         return throwError(error);
@@ -193,12 +188,5 @@ export class FirewallComponent
       }),
       shareReplay(1)
     );
-  }
-
-  /**
-   * Event that emits when the firewall has been obtained
-   */
-  private _onFirewallObtained(): void {
-    this.eventDispatcher.dispatch(CoreEvent.loaderHide);
   }
 }

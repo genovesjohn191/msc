@@ -27,8 +27,7 @@ import {
   McsRoutingTabBase,
   McsDataStatusFactory,
   McsErrorHandlerService,
-  CoreRoutes,
-  CoreEvent
+  CoreRoutes
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -190,11 +189,7 @@ export class VdcComponent
    * @param vdcId VDC identification
    */
   private _subscribesToResourceById(vdcId: string): void {
-    this.eventDispatcher.dispatch(CoreEvent.loaderShow);
-
-    this.selectedResource$ = this._resourcesRepository.getByIdAsync(
-      vdcId, this._onResourceCompleted.bind(this)
-    ).pipe(
+    this.selectedResource$ = this._resourcesRepository.getByIdAsync(vdcId).pipe(
       catchError((error) => {
         this._errorHandlerService.redirectToErrorPage(error.status);
         return throwError(error);
@@ -202,12 +197,5 @@ export class VdcComponent
       tap((response) => { this._vdcService.setSelectedVdc(response); }),
       shareReplay(1)
     );
-  }
-
-  /**
-   * Event that emits when the resource has been completed
-   */
-  private _onResourceCompleted(): void {
-    this.eventDispatcher.dispatch(CoreEvent.loaderHide);
   }
 }

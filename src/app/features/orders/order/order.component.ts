@@ -24,13 +24,11 @@ import {
   concatMap,
   tap
 } from 'rxjs/operators';
-import { EventBusDispatcherService } from '@app/event-bus';
 import {
   McsErrorHandlerService,
   CoreDefinition,
   McsTableDataSource,
   McsDialogService,
-  CoreEvent,
   McsNavigationService
 } from '@app/core';
 import {
@@ -76,7 +74,6 @@ export class OrderComponent implements OnInit, OnDestroy {
     private _activatedRoute: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef,
     private _translate: TranslateService,
-    private _eventDispatcher: EventBusDispatcherService,
     private _dialogService: McsDialogService,
     private _errorHandlerService: McsErrorHandlerService,
     private _navigationService: McsNavigationService,
@@ -187,17 +184,12 @@ export class OrderComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().pipe(
       concatMap((dialogResult) => {
         if (isNullOrEmpty(dialogResult)) { return of(null); }
-        this._eventDispatcher.dispatch(CoreEvent.loaderShow);
-
         return this._ordersRepository.createOrderWorkFlow(order.id, {
           state: OrderWorkflowAction.AwaitingApproval,
           approvers: this._orderApprovers.map((approver) => approver.userId)
         }).pipe(
           finalize(() => this.orderDetailsView = OrderDetailsView.OrderDetails)
         );
-      }),
-      finalize(() => {
-        this._eventDispatcher.dispatch(CoreEvent.loaderHide);
       })
     ).subscribe();
   }
@@ -222,13 +214,10 @@ export class OrderComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().pipe(
       concatMap((dialogResult) => {
         if (isNullOrEmpty(dialogResult)) { return of(null); }
-        this._eventDispatcher.dispatch(CoreEvent.loaderShow);
-
         return this._ordersRepository.createOrderWorkFlow(order.id, {
           state: OrderWorkflowAction.Cancelled
         });
-      }),
-      finalize(() => this._eventDispatcher.dispatch(CoreEvent.loaderHide))
+      })
     ).subscribe();
   }
 
@@ -252,13 +241,10 @@ export class OrderComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().pipe(
       concatMap((dialogResult) => {
         if (isNullOrEmpty(dialogResult)) { return of(null); }
-        this._eventDispatcher.dispatch(CoreEvent.loaderShow);
-
         return this._ordersRepository.createOrderWorkFlow(order.id, {
           state: OrderWorkflowAction.Rejected
         });
-      }),
-      finalize(() => this._eventDispatcher.dispatch(CoreEvent.loaderHide))
+      })
     ).subscribe();
   }
 
@@ -282,8 +268,6 @@ export class OrderComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().pipe(
       concatMap((dialogResult) => {
         if (isNullOrEmpty(dialogResult)) { return of(null); }
-        this._eventDispatcher.dispatch(CoreEvent.loaderShow);
-
         return this._ordersRepository.createOrderWorkFlow(order.id, {
           state: OrderWorkflowAction.Submitted
         }).pipe(
@@ -291,8 +275,7 @@ export class OrderComponent implements OnInit, OnDestroy {
             getSafeProperty(approvedOrder, (obj) => obj.jobs[0].id))
           )
         );
-      }),
-      finalize(() => this._eventDispatcher.dispatch(CoreEvent.loaderHide))
+      })
     ).subscribe();
   }
 
@@ -312,24 +295,13 @@ export class OrderComponent implements OnInit, OnDestroy {
    * Get Order based on the given ID in the provided parameter
    */
   private _subscribeToOrderById(orderId: string): void {
-    this._eventDispatcher.dispatch(CoreEvent.loaderShow);
-
-    this.order$ = this._ordersRepository.getByIdAsync(
-      orderId, this._onOrderObtained.bind(this)
-    ).pipe(
+    this.order$ = this._ordersRepository.getByIdAsync(orderId).pipe(
       catchError((error) => {
         this._errorHandlerService.redirectToErrorPage(error.status);
         return throwError(error);
       }),
       shareReplay(1)
     );
-  }
-
-  /**
-   * Event that emits when an order has been obtained
-   */
-  private _onOrderObtained(): void {
-    this._eventDispatcher.dispatch(CoreEvent.loaderHide);
   }
 
   /**
