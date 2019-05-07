@@ -19,10 +19,7 @@ import {
   ServiceType,
   ServiceTypeSerialization
 } from '../enumerations/service-type.enum';
-import {
-  ServerCommand,
-  serverCommandActiveText
-} from '../enumerations/server-command.enum';
+import { ServerCommand } from '../enumerations/server-command.enum';
 import { McsEntityBase } from '../common/mcs-entity.base';
 import { PlatformType } from '../enumerations/platform-type.enum';
 import { McsServerOsUpdatesDetails } from './mcs-server-os-updates-details';
@@ -155,7 +152,7 @@ export class McsServer extends McsEntityBase {
    */
   public get statusLabel(): string {
     return (this.isProcessing) ?
-      serverCommandActiveText[this.commandAction] :
+      this.processingText :
       vmPowerStateText[this.powerState];
   }
 

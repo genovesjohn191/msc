@@ -5,7 +5,10 @@ import {
   SkipSelf
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import {
+  HttpClientModule,
+  HTTP_INTERCEPTORS
+} from '@angular/common/http';
 import { CookieModule } from 'ngx-cookie';
 import { EventBusDispatcherService } from '@app/event-bus';
 import {
