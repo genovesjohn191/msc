@@ -28,8 +28,7 @@ import {
   CoreDefinition,
   CoreRoutes,
   McsRoutingTabBase,
-  McsDataStatusFactory,
-  CoreEvent
+  McsDataStatusFactory
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -155,11 +154,7 @@ export class MediumComponent
    * @param mediumId Media id to be selected
    */
   private _subscribeToMediaById(mediumId: string): void {
-    this.eventDispatcher.dispatch(CoreEvent.loaderShow);
-
-    this.media$ = this._mediaRepository.getByIdAsync(
-      mediumId, this._onMediaObtained.bind(this)
-    ).pipe(
+    this.media$ = this._mediaRepository.getByIdAsync(mediumId).pipe(
       catchError((error) => {
         this._errorHandlerService.redirectToErrorPage(error.status);
         return throwError(error);
@@ -167,13 +162,6 @@ export class MediumComponent
       tap((media) => this._mediumService.setSelectedMedium(media)),
       shareReplay(1)
     );
-  }
-
-  /**
-   * Event the emits when the media has been obtained
-   */
-  private _onMediaObtained(): void {
-    this.eventDispatcher.dispatch(CoreEvent.loaderHide);
   }
 
   /**

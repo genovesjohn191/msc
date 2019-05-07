@@ -40,8 +40,7 @@ import {
   McsErrorHandlerService,
   McsDataStatusFactory,
   CoreRoutes,
-  McsServerPermission,
-  CoreEvent
+  McsServerPermission
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -274,8 +273,6 @@ export class ServerComponent
    * @param serverId Server ID to be the basis of the server
    */
   private _subscribeToServerDetails(serverId: string): void {
-    this.eventDispatcher.dispatch(CoreEvent.loaderShow);
-
     this.serverDetails$ = this._serversRepository.getByIdAsync(serverId).pipe(
       catchError((error) => {
         this._errorHandlerService.redirectToErrorPage(error.status);
@@ -305,15 +302,6 @@ export class ServerComponent
     let platformIsEmpty = isNullOrEmpty(platform) || isNullOrEmpty(platform.resourceName);
     if (platformIsEmpty) { return of(new McsResource()); }
 
-    return this._resourcesRespository.getByIdAsync(platform.resourceId,
-      this._onResourceObtained.bind(this)
-    );
-  }
-
-  /**
-   * Event that emits when the resource has been obtained
-   */
-  private _onResourceObtained(): void {
-    this.eventDispatcher.dispatch(CoreEvent.loaderHide);
+    return this._resourcesRespository.getByIdAsync(platform.resourceId);
   }
 }

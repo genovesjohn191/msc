@@ -24,7 +24,6 @@ import {
   CoreValidators,
   CoreDefinition,
   CoreRoutes,
-  CoreEvent,
   IMcsNavigateAwayGuard
 } from '@app/core';
 import {
@@ -53,7 +52,6 @@ import {
   TicketServiceData,
 } from '../shared';
 import { TicketCreateService } from './ticket-create.service';
-import { EventBusDispatcherService } from '@app/event-bus';
 
 @Component({
   selector: 'mcs-ticket-create',
@@ -125,8 +123,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     private _ticketCreateService: TicketCreateService,
     private _changeDetectorRef: ChangeDetectorRef,
     private _ticketsRepository: McsTicketsRepository,
-    private _errorHandlerService: McsErrorHandlerService,
-    private _eventDispatcher: EventBusDispatcherService
+    private _errorHandlerService: McsErrorHandlerService
   ) {
     this.ticketTypeList = new Array();
     this.services = new Array();
@@ -194,7 +191,6 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
    */
   public onLogTicket(): void {
     // Check all the controls and set the focus on the first invalid control
-    this._eventDispatcher.dispatch(CoreEvent.loaderShow);
     this._formGroup.validateFormControls(true);
     if (!this._formGroup.isValid()) { return; }
 
@@ -232,7 +228,6 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     this.creatingTicket = true;
     this.createTicketSubscription = this._ticketCreateService.createTicket(ticket).pipe(
       finalize(() => {
-        this._eventDispatcher.dispatch(CoreEvent.loaderHide);
         this._formGroup.resetAllControls();
         this._ticketsRepository.clearData();
       }),

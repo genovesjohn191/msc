@@ -22,14 +22,12 @@ import {
   finalize,
   shareReplay
 } from 'rxjs/operators';
-import { EventBusDispatcherService } from '@app/event-bus';
 import {
   CoreValidators,
   CoreDefinition,
   McsErrorHandlerService,
   McsFormGroupService,
   CoreRoutes,
-  CoreEvent,
   IMcsNavigateAwayGuard
 } from '@app/core';
 import {
@@ -88,7 +86,6 @@ export class MediaUploadDetailsComponent
   constructor(
     private _elementRef: ElementRef,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _eventDispatcher: EventBusDispatcherService,
     private _formGroupService: McsFormGroupService,
     private _errorHandlerService: McsErrorHandlerService,
     private _resourcesRepository: McsResourcesRepository,
@@ -200,8 +197,6 @@ export class MediaUploadDetailsComponent
    * Subscribes to all the resources on the repository
    */
   private _subsribeToResources(): void {
-    this._eventDispatcher.dispatch(CoreEvent.loaderShow);
-
     this.resources$ = this._resourcesRepository.getAll().pipe(
       catchError((error) => {
         this._errorHandlerService.redirectToErrorPage(error.status);
@@ -212,12 +207,9 @@ export class MediaUploadDetailsComponent
 
   private _subscribeToResourceCatalogs(resourceId: string): void {
     if (isNullOrEmpty(resourceId)) { return; }
-    this._eventDispatcher.dispatch(CoreEvent.loaderShow);
-
     this.resourceCatalogs$ = this._resourcesRepository.getResourceCatalogs(resourceId).pipe(
       shareReplay(1),
-      tap(() => this._resetFormFields()),
-      finalize(() => this._eventDispatcher.dispatch(CoreEvent.loaderHide))
+      tap(() => this._resetFormFields())
     );
   }
 

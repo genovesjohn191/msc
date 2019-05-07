@@ -22,8 +22,7 @@ import {
 import { saveAs } from 'file-saver';
 import {
   CoreDefinition,
-  McsErrorHandlerService,
-  CoreEvent
+  McsErrorHandlerService
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -42,7 +41,6 @@ import {
   McsTicketCreateAttachment
 } from '@app/models';
 import { McsTicketsRepository } from '@app/services';
-import { EventBusDispatcherService } from '@app/event-bus';
 
 @Component({
   selector: 'mcs-ticket',
@@ -69,7 +67,6 @@ export class TicketComponent implements OnInit, OnDestroy {
   }
 
   public constructor(
-    private _eventDispatcher: EventBusDispatcherService,
     private _activatedRoute: ActivatedRoute,
     private _ticketsRepository: McsTicketsRepository,
     private _errorHandlerService: McsErrorHandlerService,
@@ -207,11 +204,7 @@ export class TicketComponent implements OnInit, OnDestroy {
    * Subscribe to ticket based on the parameter ID
    */
   private _subscribeToTicketById(ticketId: string): void {
-    this._eventDispatcher.dispatch(CoreEvent.loaderShow);
-
-    this.selectedTicket$ = this._ticketsRepository.getByIdAsync(
-      ticketId, this._onTicketObtained.bind(this)
-    ).pipe(
+    this.selectedTicket$ = this._ticketsRepository.getByIdAsync(ticketId).pipe(
       catchError((error) => {
         this._errorHandlerService.redirectToErrorPage(error.status);
         return throwError(error);
@@ -226,12 +219,5 @@ export class TicketComponent implements OnInit, OnDestroy {
     this._ticketsRepository.dataChange().pipe(
       takeUntil(this._destroySubject)
     ).subscribe(() => this._changeDetectorRef.markForCheck());
-  }
-
-  /**
-   * Event that emits when the ticket has been completed
-   */
-  private _onTicketObtained(): void {
-    this._eventDispatcher.dispatch(CoreEvent.loaderHide);
   }
 }
