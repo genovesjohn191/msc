@@ -63,7 +63,7 @@ import {
 import {
   ServerManageStorage,
   ServerManageNetwork,
-  ServerManageScale,
+  ServerManageScale
 } from '@app/features-shared';
 import { McsFormGroupDirective } from '@app/shared';
 import { ServerCreateDetailsBase } from '../server-create-details.base';

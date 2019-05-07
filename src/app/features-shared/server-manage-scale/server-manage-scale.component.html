@@ -55,8 +55,7 @@
 
         <mcs-hint mcsHint align="start">
           <div >
-            {{ 'serverShared.manageScale.minimumRam' | translate: {ram_value: (minimumUsableMemoryGB | mcsDataSize: 'GB')} }}<br/>
-            {{ 'serverShared.manageScale.maximumRam' | translate: {ram_value: (resourceAvailableMemoryGB | mcsDataSize: 'GB')} }}
+            {{ 'serverShared.manageScale.availableRam' | translate: {ram_value: (resourceAvailableMemoryGB | mcsDataSize: 'GB')} }}
           </div>
         </mcs-hint>
         <mcs-error mcsError errorState="required">
@@ -65,14 +64,17 @@
         <mcs-error mcsError errorState="numeric">
             {{ 'serverShared.manageScale.errors.ramNumeric' | translate }}
         </mcs-error>
+        <mcs-error mcsError errorState="scaleDown">
+            {{ 'serverShared.manageScale.errors.scaledownInvalid' | translate: {service_type: serviceType} }}
+        </mcs-error>
         <mcs-error mcsError errorState="min">
-            {{ 'serverShared.manageScale.errors.ramMin' | translate: {min_value:(minimumUsableMemoryGB | mcsDataSize: 'GB')} }}
+            {{ 'serverShared.manageScale.errors.ramMin' | translate: {min_value:(minimumMemoryGB | mcsDataSize: 'GB')} }}
         </mcs-error>
         <mcs-error mcsError errorState="max">
             {{ 'serverShared.manageScale.errors.ramMax' | translate: {max_value:(resourceAvailableMemoryGB | mcsDataSize: 'GB')} }}
         </mcs-error>
-        <mcs-error mcsError errorState="memoryInvalid">
-            {{ 'serverShared.manageScale.errors.ramInvalid' | translate: {multiplier: '2'} }}
+        <mcs-error mcsError errorState="memoryStep">
+            {{ 'serverShared.manageScale.errors.ramInvalid' | translate: {step: memoryStep} }}
         </mcs-error>
       </mcs-form-field>
 
@@ -83,8 +85,7 @@
 
         <mcs-hint mcsHint align="start">
           <div>
-            {{ 'serverShared.manageScale.minimumCpu' | translate: {cpu_value:minimumUsableCpu} }}<br/>
-            {{ 'serverShared.manageScale.maximumCpu' | translate: {cpu_value:resourceAvailableCpu} }}
+            {{ 'serverShared.manageScale.availableCpu' | translate: {cpu_value:resourceAvailableCpu} }}
           </div>
         </mcs-hint>
         <mcs-error mcsError errorState="required">
@@ -93,14 +94,17 @@
         <mcs-error mcsError errorState="numeric">
             {{ 'serverShared.manageScale.errors.cpuNumeric' | translate }}
         </mcs-error>
+        <mcs-error mcsError errorState="scaleDown">
+            {{ 'serverShared.manageScale.errors.scaledownInvalid' | translate: {service_type: serviceType} }}
+        </mcs-error>
         <mcs-error mcsError errorState="min">
-            {{ 'serverShared.manageScale.errors.cpuMin' | translate: {min_value: minimumUsableCpu} }}
+            {{ 'serverShared.manageScale.errors.cpuMin' | translate: {min_value: minimumCpu} }}
         </mcs-error>
         <mcs-error mcsError errorState="max">
             {{ 'serverShared.manageScale.errors.cpuMax' | translate: {max_value: resourceAvailableCpu} }}
         </mcs-error>
-        <mcs-error mcsError errorState="cpuInvalid">
-            {{ 'serverShared.manageScale.errors.cpuInvalid' | translate: {multiplier: '2'} }}
+        <mcs-error mcsError errorState="cpuStep">
+            {{ 'serverShared.manageScale.errors.cpuInvalid' | translate: {step: cpuStep} }}
         </mcs-error>
       </mcs-form-field>
     </mcs-section>

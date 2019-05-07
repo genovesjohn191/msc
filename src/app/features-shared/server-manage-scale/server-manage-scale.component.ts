@@ -26,9 +26,9 @@ import {
   animateFactory,
   unsubscribeSubject,
   getSafeProperty,
-  coerceBoolean,
   convertMbToGb,
-  isNullOrUndefined
+  isNullOrUndefined,
+  coerceNumber
 } from '@app/utilities';
 import {
   CoreValidators,
@@ -39,14 +39,15 @@ import {
 import {
   InputManageType,
   McsResource,
-  McsServerCompute
+  McsServerCompute,
+  serviceTypeText
 } from '@app/models';
 import { ServerManageScale } from './server-manage-scale';
 import { McsFormGroupDirective } from '@app/shared';
 
 // Constants definition
-const DEFAULT_MEMORY_MULTIPLIER = 2;
-const DEFAULT_CPU_MULTIPLIER = 2;
+const DEFAULT_MEMORY_STEP = 2;
+const DEFAULT_CPU_STEP = 2;
 const DEFAULT_MIN_MEMORY = 2;
 const DEFAULT_MIN_CPU = 2;
 
@@ -82,11 +83,16 @@ export class ServerManageScaleComponent
   public serverCompute?: McsServerCompute;
 
   @Input()
-  public get allowScaleDown(): boolean { return this._allowScaleDown; }
-  public set allowScaleDown(value: boolean) {
-    this._allowScaleDown = coerceBoolean(value);
+  public get minimumCpu(): number { return this._minimumCpu; }
+  public set minimumCpu(value: number) {
+    this._minimumCpu = coerceNumber(value, DEFAULT_MIN_CPU);
   }
-  private _allowScaleDown: boolean;
+
+  @Input()
+  public get minimumMemoryGB(): number { return this._minimumMemoryGB; }
+  public set minimumMemoryGB(value: number) {
+    this._minimumMemoryGB = coerceNumber(value, DEFAULT_MIN_MEMORY);
+  }
 
   @ViewChild(McsFormGroupDirective)
   private _formGroup: McsFormGroupDirective;
@@ -95,6 +101,8 @@ export class ServerManageScaleComponent
   private _scaleOutput = new ServerManageScale();
   private _formControlsMap = new Map<InputManageType, () => void>();
   private _previousResourceAvailable = 0;
+  private _minimumCpu: number = DEFAULT_MIN_CPU;
+  private _minimumMemoryGB: number = DEFAULT_MIN_MEMORY;
 
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
@@ -142,6 +150,14 @@ export class ServerManageScaleComponent
   }
 
   /**
+   * Returns the service type as string
+   */
+  public get serviceType(): string {
+    let serviceType = getSafeProperty(this.resource, (obj) => obj.serviceType, '');
+    return !isNullOrUndefined(serviceType) ? serviceTypeText[serviceType] : '';
+  }
+
+  /**
    * Returns the server input managetype enumeration instance
    */
   public get inputManageTypeEnum(): any {
@@ -149,43 +165,31 @@ export class ServerManageScaleComponent
   }
 
   /**
-   * Returns the minimum memory GB used
+   * Returns the default cpu step
    */
-  public get minimumUsableMemoryGB(): number {
-    if (!this.allowScaleDown) {
-      return this._serverMemoryUsedGB + DEFAULT_MIN_MEMORY;
-    }
-    if (this._serverMemoryUsedGB === DEFAULT_MIN_MEMORY) {
-      return this._serverMemoryUsedGB + DEFAULT_MEMORY_MULTIPLIER;
-    }
-    return DEFAULT_MIN_MEMORY;
+  public get cpuStep(): number {
+    return DEFAULT_CPU_STEP;
   }
 
   /**
-   * Returns the minimum cpu used
+   * Returns the default memory step
    */
-  public get minimumUsableCpu(): number {
-    if (!this.allowScaleDown) {
-      return this._serverCpuUsed + DEFAULT_MIN_CPU;
-    }
-    if (this._serverCpuUsed === DEFAULT_MIN_CPU) {
-      return this._serverCpuUsed + DEFAULT_CPU_MULTIPLIER;
-    }
-    return DEFAULT_MIN_CPU;
+  public get memoryStep(): number {
+    return DEFAULT_MEMORY_STEP;
   }
 
   /**
-   * Returns the current server memory value
+   * Returns the current server memory used
    */
-  public get currentServerMemoryGB(): number {
+  public get serverMemoryUsedGB(): number {
     return getSafeProperty(this.serverCompute,
       (obj) => convertMbToGb(obj.memoryMB), DEFAULT_MIN_MEMORY);
   }
 
   /**
-   * Returns the current server cpu value
+   * Returns the server cpu used
    */
-  public get currentServerCpu(): number {
+  public get serverCpuUsed(): number {
     return getSafeProperty(this.serverCompute,
       (obj) => obj.cpuCount, DEFAULT_MIN_CPU);
   }
@@ -196,9 +200,7 @@ export class ServerManageScaleComponent
   public get resourceAvailableMemoryGB(): number {
     let resourceMemory = getSafeProperty(this.resource,
       (obj) => convertMbToGb(obj.compute.memoryAvailableMB), 0);
-
-    let excessCpu = (resourceMemory + this._serverMemoryUsedGB) % DEFAULT_MEMORY_MULTIPLIER;
-    return resourceMemory + this._serverMemoryUsedGB - excessCpu;
+    return resourceMemory + this.serverMemoryUsedGB;
   }
 
   /**
@@ -207,25 +209,7 @@ export class ServerManageScaleComponent
   public get resourceAvailableCpu(): number {
     let resourceCpu = getSafeProperty(this.resource,
       (obj) => obj.compute.cpuAvailable, 0);
-
-    let excessRam = (resourceCpu + this._serverCpuUsed) % DEFAULT_CPU_MULTIPLIER;
-    return resourceCpu + this._serverCpuUsed - excessRam;
-  }
-
-  /**
-   * Returns the server memory being used
-   */
-  private get _serverMemoryUsedGB(): number {
-    return getSafeProperty(this.serverCompute,
-      (obj) => convertMbToGb(obj.memoryMB), 0);
-  }
-
-  /**
-   * Returns the server cpu being used
-   */
-  private get _serverCpuUsed(): number {
-    return getSafeProperty(this.serverCompute,
-      (obj) => obj.cpuCount, 0);
+    return resourceCpu + this.serverCpuUsed;
   }
 
   /**
@@ -270,8 +254,8 @@ export class ServerManageScaleComponent
         break;
     }
     this._scaleOutput.hasChanged = this._scaleOutput.valid
-      && (this.currentServerCpu !== this._scaleOutput.cpuCount
-        || this.currentServerMemoryGB !== this._scaleOutput.memoryGB);
+      && (this.serverCpuUsed !== this._scaleOutput.cpuCount
+        || this.serverMemoryUsedGB !== this._scaleOutput.memoryGB);
 
     // Emit changes
     this.dataChange.emit(this._scaleOutput);
@@ -296,8 +280,8 @@ export class ServerManageScaleComponent
   private _resetFormGroup(): void {
     if (isNullOrEmpty(this.fgServerScale)) { return; }
     this.fgServerScale.reset();
-    this.fcCustomMemory.setValue(this.currentServerMemoryGB);
-    this.fcCustomCpu.setValue(this.currentServerCpu);
+    this.fcCustomCpu.setValue(this.serverCpuUsed);
+    this.fcCustomMemory.setValue(this.serverMemoryUsedGB);
   }
 
   /**
@@ -318,13 +302,16 @@ export class ServerManageScaleComponent
 
     // Filter applicable values on the table
     this.sliderTable = table.filter((scale) => {
-      return (scale.memoryGB >= this.minimumUsableMemoryGB
+      return (scale.memoryGB >= this.minimumMemoryGB
         && scale.memoryGB <= this.resourceAvailableMemoryGB)
-        && (scale.cpuCount >= this.minimumUsableCpu
+        && (scale.cpuCount >= this.minimumCpu
           && scale.cpuCount <= this.resourceAvailableCpu);
     });
-
     if (isNullOrEmpty(this.sliderTable)) {
+      this.sliderTable.push({
+        memoryGB: this.minimumMemoryGB,
+        cpuCount: this.minimumCpu
+      } as ServerManageScale);
       this.sliderTable.push({
         memoryGB: this.resourceAvailableMemoryGB,
         cpuCount: this.resourceAvailableCpu
@@ -350,25 +337,21 @@ export class ServerManageScaleComponent
     // Register custom memory
     this.fcCustomMemory = new FormControl('', [
       CoreValidators.required,
-      (control) => CoreValidators.min(this.minimumUsableMemoryGB)(control),
-      (control) => CoreValidators.max(this.resourceAvailableMemoryGB)(control),
       CoreValidators.numeric,
-      CoreValidators.custom(
-        this._memoryInvalidValidator.bind(this),
-        'memoryInvalid'
-      )
+      CoreValidators.custom(this._memoryCanScaleDown.bind(this), 'scaleDown'),
+      (control) => CoreValidators.min(DEFAULT_MIN_MEMORY)(control),
+      (control) => CoreValidators.max(this.resourceAvailableMemoryGB)(control),
+      CoreValidators.custom(this._memoryStepIsValid.bind(this), 'memoryStep')
     ]);
 
     // Register custom CPU
     this.fcCustomCpu = new FormControl('', [
       CoreValidators.required,
-      (control) => CoreValidators.min(this.minimumUsableCpu)(control),
-      (control) => CoreValidators.max(this.resourceAvailableCpu)(control),
       CoreValidators.numeric,
-      CoreValidators.custom(
-        this._cpuInvalidValidator.bind(this),
-        'cpuInvalid'
-      )
+      CoreValidators.custom(this._cpuCanScaleDown.bind(this), 'scaleDown'),
+      (control) => CoreValidators.min(DEFAULT_MIN_CPU)(control),
+      (control) => CoreValidators.max(this.resourceAvailableCpu)(control),
+      CoreValidators.custom(this._cpuStepIsValid.bind(this), 'cpuStep')
     ]);
 
     // Create form group and bind the form controls
@@ -409,19 +392,37 @@ export class ServerManageScaleComponent
   }
 
   /**
-   * Returns true when the inputted memory is valid
+   * Returns true if the value is a valid memory step
    * @param inputValue Value to be checked
    */
-  private _memoryInvalidValidator(inputValue: any) {
-    return inputValue % DEFAULT_MEMORY_MULTIPLIER === 0;
+  private _memoryStepIsValid(inputValue: any) {
+    return inputValue % DEFAULT_MEMORY_STEP === 0;
   }
 
   /**
-   * Returns true when the inputted cpu is valid
+   * Returns true if the value is a valid CPU step
    * @param inputValue Value to be checked
    */
-  private _cpuInvalidValidator(inputValue: any) {
-    return inputValue % DEFAULT_CPU_MULTIPLIER === 0;
+  private _cpuStepIsValid(inputValue: any) {
+    return inputValue % DEFAULT_CPU_STEP === 0;
+  }
+
+  /**
+   * Returns true if new value is allowed to be lower than the current cpu value.
+   * @param inputValue Value to be checked
+   */
+  private _cpuCanScaleDown(inputValue: any) {
+    let minimumSameAsDefaultMinimum = DEFAULT_MIN_CPU === this.minimumCpu;
+    return minimumSameAsDefaultMinimum ? minimumSameAsDefaultMinimum : inputValue >= this.minimumCpu;
+  }
+
+  /**
+   * Returns true if new value is allowed to be lower than the current memory value.
+   * @param inputValue Value to be checked
+   */
+  private _memoryCanScaleDown(inputValue: any) {
+    let minimumSameAsDefaultMinimum = DEFAULT_MIN_MEMORY === this.minimumMemoryGB;
+    return minimumSameAsDefaultMinimum ? minimumSameAsDefaultMinimum : inputValue >= this.minimumMemoryGB;
   }
 
   /**
