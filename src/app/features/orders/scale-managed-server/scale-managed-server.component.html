@@ -57,6 +57,8 @@
             <mcs-server-manage-scale #fgManageScale
               [resource]="resource$ | async"
               [serverCompute]="fcManageServer.value?.compute"
+              [minimumCpu]="minimumCpu"
+              [minimumMemoryGB]="minimumMemoryGB"
               [mcsContextualHelp]="'orderScaleManagedServer.vmDetails.contextualHelp' | translate"
               (dataChange)="onScaleChanged($event, fcManageServer.value)">
 

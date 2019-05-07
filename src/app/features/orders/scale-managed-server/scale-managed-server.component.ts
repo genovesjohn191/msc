@@ -29,7 +29,8 @@ import {
   isNullOrEmpty,
   getSafeProperty,
   unsubscribeSafely,
-  convertGbToMb
+  convertGbToMb,
+  convertMbToGb
 } from '@app/utilities';
 import {
   catchError,
@@ -133,6 +134,20 @@ export class ScaleManagedServerComponent extends McsOrderWizardBase implements O
    */
   public get backIconKey(): string {
     return CoreDefinition.ASSETS_SVG_CHEVRON_LEFT;
+  }
+
+  /**
+   * Returns the minimum memory in GB
+   */
+  public get minimumMemoryGB(): number {
+    return convertMbToGb(getSafeProperty(this.fcManageServer.value as McsServer, (obj) => obj.compute.memoryMB, 2));
+  }
+
+  /**
+   * Returns the minimum cpu count
+   */
+  public get minimumCpu(): number {
+    return getSafeProperty(this.fcManageServer.value as McsServer, (obj) => obj.compute.cpuCount, 2);
   }
 
   /**
