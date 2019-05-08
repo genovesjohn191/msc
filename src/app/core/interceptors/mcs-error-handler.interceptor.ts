@@ -77,11 +77,17 @@ export class McsErrorHandlerInterceptor implements ErrorHandler {
    * Creates the httphandler table map
    */
   private _createHttpHandlerTable(): void {
-    this._httpErrorHandlerMap.set(HttpStatusCode.Unauthorized,
-      this._injector.get(McsAuthenticationService).logIn.bind(this)
-    );
+    this._httpErrorHandlerMap.set(HttpStatusCode.Unauthorized, this._navigateToLoginPage.bind(this));
     this._httpErrorHandlerMap.set(HttpStatusCode.Forbidden, this._noopMethod.bind(this));
     this._httpErrorHandlerMap.set(HttpStatusCode.Unprocessable, this._noopMethod.bind(this));
+  }
+
+  /**
+   * Navigate to login page
+   */
+  private _navigateToLoginPage(): void {
+    let authService = this._injector.get(McsAuthenticationService);
+    authService.logIn();
   }
 
   /**
