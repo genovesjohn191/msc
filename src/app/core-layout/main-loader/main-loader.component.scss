@@ -4,6 +4,9 @@ $main-loader-bg-color: transparent;
 $main-loader-height: 2px;
 $main-loader-z-index: $zindex-main-loader;
 
+$main-loader-progress-color: $color-scheme-primary;
+$main-loader-progress-duration: 250ms;
+
 .main-loader-wrapper {
   @include display-flex(row);
   background-color: $main-loader-bg-color;
@@ -12,4 +15,19 @@ $main-loader-z-index: $zindex-main-loader;
   width: 100%;
   height: $main-loader-height;
   z-index: $main-loader-z-index;
+
+  .main-loader-content {
+    position: relative;
+    width: 100%;
+
+    .main-loader-progress {
+      background-color: $color-scheme-primary;
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      animation: none;
+      transform-origin: top left;
+      @include transition($main-loader-progress-duration linear);
+    }
+  }
 }

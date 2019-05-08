@@ -12,9 +12,9 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import {
-  throwError,
   Subject,
-  Subscription
+  Subscription,
+  empty
 } from 'rxjs';
 import {
   catchError,
@@ -316,10 +316,10 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.consoleStatus = VmConsoleStatus.Connecting;
     this._consoleRepository.getServerConsole(serverId).pipe(
-      catchError((error) => {
+      catchError(() => {
         // Handle common error status code
         this.consoleStatus = VmConsoleStatus.Error;
-        return throwError(error);
+        return empty();
       })
     ).subscribe((response: McsConsole) => {
       if (isNullOrEmpty(response)) { return; }
@@ -377,11 +377,12 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   private _getServerById(serverId: any): void {
     if (isNullOrEmpty(this._serverId)) { return; }
-    this._serversRepository.getByIdAsync(serverId)
-      .subscribe((response) => {
-        this.server = response;
-        this._changeDetectorRef.markForCheck();
-      });
+    this._serversRepository.getByIdAsync(serverId).pipe(
+      catchError(() => empty())
+    ).subscribe((response) => {
+      this.server = response;
+      this._changeDetectorRef.markForCheck();
+    });
   }
 
   /**
