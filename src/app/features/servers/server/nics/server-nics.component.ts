@@ -238,7 +238,6 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
       .pipe(
         catchError((error) => {
           this._serversService.clearServerSpinner(server, nicValues);
-          this._errorHandlerService.redirectToErrorPage(error.status);
           return throwError(error);
         })
       ).subscribe();
@@ -270,7 +269,6 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
         .pipe(
           catchError((error) => {
             this._serversService.clearServerSpinner(server);
-            this._errorHandlerService.redirectToErrorPage(error.status);
             return throwError(error);
           })
         ).subscribe();
@@ -296,7 +294,6 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
       .pipe(
         catchError((error) => {
           this._serversService.clearServerSpinner(server);
-          this._errorHandlerService.redirectToErrorPage(error.status);
           return throwError(error);
         })
       ).subscribe();

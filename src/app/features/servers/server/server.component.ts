@@ -37,7 +37,6 @@ import {
   CoreDefinition,
   McsDialogService,
   McsRoutingTabBase,
-  McsErrorHandlerService,
   McsDataStatusFactory,
   CoreRoutes,
   McsServerPermission
@@ -106,8 +105,7 @@ export class ServerComponent
     private _serversRepository: McsServersRepository,
     private _serverService: ServerService,
     private _serversService: ServersService,
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _errorHandlerService: McsErrorHandlerService
+    private _changeDetectorRef: ChangeDetectorRef
   ) {
     super(_eventDispatcher, _activatedRoute);
     this._resourcesKeyMap = new Map();
@@ -274,10 +272,6 @@ export class ServerComponent
    */
   private _subscribeToServerDetails(serverId: string): void {
     this.serverDetails$ = this._serversRepository.getByIdAsync(serverId).pipe(
-      catchError((error) => {
-        this._errorHandlerService.redirectToErrorPage(error.status);
-        return throwError(error);
-      }),
       concatMap((selectedServer) =>
         this._getServerResourceByPlatform(selectedServer.platform).pipe(
           switchMap((selectedResource) =>
@@ -300,8 +294,10 @@ export class ServerComponent
    */
   private _getServerResourceByPlatform(platform: McsServerPlatform): Observable<McsResource> {
     let platformIsEmpty = isNullOrEmpty(platform) || isNullOrEmpty(platform.resourceName);
-    if (platformIsEmpty) { return of(new McsResource()); }
+    if (platformIsEmpty) { return of(null); }
 
-    return this._resourcesRespository.getByIdAsync(platform.resourceId);
+    return this._resourcesRespository.getByIdAsync(platform.resourceId).pipe(
+      catchError(() => of(null))
+    );
   }
 }

@@ -13,12 +13,10 @@ import {
 } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import {
-  throwError,
   Observable,
   Subject
 } from 'rxjs';
 import {
-  catchError,
   shareReplay,
   tap,
   takeUntil
@@ -26,7 +24,6 @@ import {
 import {
   CoreDefinition,
   CoreRoutes,
-  McsErrorHandlerService,
   McsOrderWizardBase,
   McsNavigationService,
   IMcsNavigateAwayGuard,
@@ -92,7 +89,6 @@ export class ServerCreateComponent extends McsOrderWizardBase
     private _activatedRoute: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef,
     private _translate: TranslateService,
-    private _errorHandlerService: McsErrorHandlerService,
     private _resourcesRepository: McsResourcesRepository
   ) {
     super(_navigationService, _serverCreateService);
@@ -221,12 +217,7 @@ export class ServerCreateComponent extends McsOrderWizardBase
    * Gets the list of resources from repository
    */
   private _subscribeToAllResources(): void {
-    this.resources$ = this._resourcesRepository.getResourcesByAccess().pipe(
-      catchError((error) => {
-        this._errorHandlerService.redirectToErrorPage(error.status);
-        return throwError(error);
-      })
-    );
+    this.resources$ = this._resourcesRepository.getResourcesByAccess();
     this._changeDetectorRef.markForCheck();
   }
 

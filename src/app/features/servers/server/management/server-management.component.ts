@@ -14,7 +14,8 @@ import {
   Subject,
   throwError,
   Observable,
-  Subscription
+  Subscription,
+  empty
 } from 'rxjs';
 import {
   takeUntil,
@@ -252,7 +253,6 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
       .pipe(
         catchError((error) => {
           this._serversService.clearServerSpinner(server);
-          this._errorHandlerService.redirectToErrorPage(error.status);
           return throwError(error);
         })
       ).subscribe();
@@ -299,7 +299,6 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
       .pipe(
         catchError((error) => {
           this._serversService.clearServerSpinner(server);
-          this._errorHandlerService.redirectToErrorPage(error.status);
           return throwError(error);
         })
       ).subscribe();
@@ -325,7 +324,6 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
       .pipe(
         catchError((error) => {
           this._serversService.clearServerSpinner(server);
-          this._errorHandlerService.redirectToErrorPage(error.status);
           return throwError(error);
         })
       ).subscribe();
@@ -368,7 +366,8 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
           thumbnailDetails.fileType,
           thumbnailDetails.encoding
         );
-      })
+      }),
+      catchError(() => empty())
     );
   }
 
@@ -383,6 +382,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
    * Get the server resource compute
    */
   private _getResourceCompute(resource: McsResource): void {
+    if (isNullOrEmpty(resource)) { return; }
     this.resourceCompute$ = this._resourcesRespository.getResourceCompute(resource);
     this.resourceCompute$.subscribe();
   }
@@ -391,6 +391,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
    * Get the resource media list
    */
   private _getResourceCatalogs(resource: McsResource): void {
+    if (isNullOrEmpty(resource)) { return; }
     this.resourceCatalogs$ = this._resourcesRespository.getResourceCatalogs(resource.id);
   }
 

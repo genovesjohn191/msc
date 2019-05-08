@@ -87,17 +87,3 @@
     </mcs-item>
   </mcs-section>
 </mcs-presentation-panel>
-
-<!-- Server Backups -->
-<!-- TODO: Remove ngIf when Backups is working -->
-<div *ngIf="false">
-  <h2>{{ 'serverBackups.serverBackups' | translate }}</h2>
-  <p>{{ 'serverBackups.serverBackupsDescription' | translate }}</p>
-  <div>
-    <button mcsButton size="small" [disabled]="true"
-      mcsId
-      mcsEventTracker="request-restore"
-      mcsEventCategory="server"
-      mcsEventLabel="server-details-page">{{ 'serverBackups.requestRestore' | translate }}</button>
-  </div>
-</div>
