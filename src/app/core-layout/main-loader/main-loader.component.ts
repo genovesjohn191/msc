@@ -74,12 +74,11 @@ export class MainLoaderComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Event that emits when the progress bar completed
+   * Returns the progress in scale
    */
-  public onProgressCompleted(): void {
-    this.hidden = true;
-    this.progressValue = 0;
-    this._changeDetectorRef.markForCheck();
+  public getProgressScale() {
+    let scale = this.progressValue / this.progressMax;
+    return { transform: `scaleX(${scale})` };
   }
 
   /**
@@ -131,6 +130,16 @@ export class MainLoaderComponent implements OnInit, OnDestroy {
   private _endProgressBar(): void {
     this.progressValue = LOADER_MAX_VALUE;
     this._progressSubject.next();
+    this._changeDetectorRef.markForCheck();
+    setTimeout(() => this._onProgressCompleted(), 250);
+  }
+
+  /**
+   * Event that emits when the progress bar completed
+   */
+  private _onProgressCompleted(): void {
+    this.hidden = true;
+    this.progressValue = 0;
     this._changeDetectorRef.markForCheck();
   }
 
