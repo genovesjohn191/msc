@@ -11,13 +11,11 @@ import {
 } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import {
-  throwError,
   Subject,
   Observable,
   of
 } from 'rxjs';
 import {
-  catchError,
   takeUntil,
   finalize,
   shareReplay,
@@ -25,7 +23,6 @@ import {
   tap
 } from 'rxjs/operators';
 import {
-  McsErrorHandlerService,
   CoreDefinition,
   McsTableDataSource,
   McsDialogService,
@@ -75,7 +72,6 @@ export class OrderComponent implements OnInit, OnDestroy {
     private _changeDetectorRef: ChangeDetectorRef,
     private _translate: TranslateService,
     private _dialogService: McsDialogService,
-    private _errorHandlerService: McsErrorHandlerService,
     private _navigationService: McsNavigationService,
     private _ordersRepository: McsOrdersRepository
   ) {
@@ -296,10 +292,6 @@ export class OrderComponent implements OnInit, OnDestroy {
    */
   private _subscribeToOrderById(orderId: string): void {
     this.order$ = this._ordersRepository.getByIdAsync(orderId).pipe(
-      catchError((error) => {
-        this._errorHandlerService.redirectToErrorPage(error.status);
-        return throwError(error);
-      }),
       shareReplay(1)
     );
   }

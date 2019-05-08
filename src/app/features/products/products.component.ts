@@ -28,7 +28,6 @@ import {
 } from '@angular/router';
 import {
   McsDataStatusFactory,
-  McsErrorHandlerService,
   CoreDefinition
 } from '@app/core';
 import {
@@ -87,7 +86,6 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private _activatedRoute: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _errorHandlerService: McsErrorHandlerService,
     private _productService: ProductService,
     private _productsRepository: McsProductsRepository,
     private _productCatalogRepository: McsProductCatalogRepository
@@ -152,10 +150,6 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.selectedProduct$ = this._activatedRoute.paramMap.pipe(
       switchMap((params: ParamMap) => {
         return this._productsRepository.getByIdAsync(params.get('id'));
-      }),
-      catchError((error) => {
-        this._errorHandlerService.redirectToErrorPage(error.status);
-        return throwError(error);
       }),
       tap((response) => {
         this._productService.setProduct(response);

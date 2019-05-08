@@ -9,7 +9,6 @@ import {
 } from '@angular/core';
 import {
   CoreDefinition,
-  McsErrorHandlerService,
   McsOrderWizardBase,
   CoreRoutes,
   McsFormGroupService,
@@ -20,7 +19,6 @@ import {
   McsNavigationService
 } from '@app/core';
 import {
-  throwError,
   Observable,
   Subject,
   Subscription
@@ -33,7 +31,6 @@ import {
   convertMbToGb
 } from '@app/utilities';
 import {
-  catchError,
   map,
   tap,
   takeUntil,
@@ -110,7 +107,6 @@ export class ScaleManagedServerComponent extends McsOrderWizardBase implements O
     private _eventDispatcher: EventBusDispatcherService,
     private _resourcesRepository: McsResourcesRepository,
     private _serversRepository: McsServersRepository,
-    private _errorHandlerService: McsErrorHandlerService,
     private _scaleManagedServerService: ScaleManagedServerService
   ) {
     super(_navigationService, _scaleManagedServerService);
@@ -265,10 +261,6 @@ export class ScaleManagedServerComponent extends McsOrderWizardBase implements O
       tap(() => {
         this._eventDispatcher.dispatch(CoreEvent.serverScaleManageSelected);
         this._changeDetectorRef.markForCheck();
-      }),
-      catchError((error) => {
-        this._errorHandlerService.redirectToErrorPage(error.status);
-        return throwError(error);
       })
     );
   }

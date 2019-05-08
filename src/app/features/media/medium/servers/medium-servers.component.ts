@@ -20,7 +20,6 @@ import {
 import { EventBusDispatcherService } from '@app/event-bus';
 import {
   McsDialogService,
-  McsErrorHandlerService,
   McsTableDataSource,
   CoreEvent,
   McsGuid
@@ -71,7 +70,6 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
     private _eventDispatcher: EventBusDispatcherService,
     private _mediaRepository: McsMediaRepository,
     private _dialogService: McsDialogService,
-    private _errorHandlerService: McsErrorHandlerService,
     private _changeDetectorRef: ChangeDetectorRef,
     private _translateService: TranslateService,
   ) {
@@ -192,7 +190,6 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
     ).pipe(
       catchError((error) => {
         this.setSelectedMediumState(medium, false);
-        this._errorHandlerService.redirectToErrorPage(error.status);
         return throwError(error);
       })
     ).subscribe();
@@ -218,7 +215,6 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
       }).pipe(
         catchError((error) => {
           this.setSelectedMediumState(medium, false);
-          this._errorHandlerService.redirectToErrorPage(error.status);
           return throwError(error);
         })
       ).subscribe();

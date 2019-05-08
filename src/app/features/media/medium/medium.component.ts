@@ -24,7 +24,6 @@ import {
   shareReplay
 } from 'rxjs/operators';
 import {
-  McsErrorHandlerService,
   CoreDefinition,
   CoreRoutes,
   McsRoutingTabBase,
@@ -84,7 +83,6 @@ export class MediumComponent
     _activatedRoute: ActivatedRoute,
     private _router: Router,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _errorHandlerService: McsErrorHandlerService,
     private _mediaRepository: McsMediaRepository,
     private _mediumService: MediumService
   ) {
@@ -155,10 +153,6 @@ export class MediumComponent
    */
   private _subscribeToMediaById(mediumId: string): void {
     this.media$ = this._mediaRepository.getByIdAsync(mediumId).pipe(
-      catchError((error) => {
-        this._errorHandlerService.redirectToErrorPage(error.status);
-        return throwError(error);
-      }),
       tap((media) => this._mediumService.setSelectedMedium(media)),
       shareReplay(1)
     );

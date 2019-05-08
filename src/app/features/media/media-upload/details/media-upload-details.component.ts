@@ -25,7 +25,6 @@ import {
 import {
   CoreValidators,
   CoreDefinition,
-  McsErrorHandlerService,
   McsFormGroupService,
   CoreRoutes,
   IMcsNavigateAwayGuard
@@ -87,7 +86,6 @@ export class MediaUploadDetailsComponent
     private _elementRef: ElementRef,
     private _changeDetectorRef: ChangeDetectorRef,
     private _formGroupService: McsFormGroupService,
-    private _errorHandlerService: McsErrorHandlerService,
     private _resourcesRepository: McsResourcesRepository,
     private _mediaUploadService: MediaUploadService
   ) { }
@@ -197,12 +195,7 @@ export class MediaUploadDetailsComponent
    * Subscribes to all the resources on the repository
    */
   private _subsribeToResources(): void {
-    this.resources$ = this._resourcesRepository.getAll().pipe(
-      catchError((error) => {
-        this._errorHandlerService.redirectToErrorPage(error.status);
-        return throwError(error);
-      })
-    );
+    this.resources$ = this._resourcesRepository.getAll();
   }
 
   private _subscribeToResourceCatalogs(resourceId: string): void {

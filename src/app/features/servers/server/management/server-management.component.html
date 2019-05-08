@@ -105,17 +105,18 @@
             </ng-container>
 
             <ng-template #consoleTemplate>
-              <div display-inline-block mcsCursor="pointer"
-                [disabled]="serverDetails.server.isProcessing"
-                (click)="viewConsole(serverDetails.server)"
-                mcsId
-                mcsEventTracker="view-console"
-                mcsEventCategory="server"
-                mcsEventLabel="server-details-page">
-                <div class="image-thumbnail dark" mcsCursor="pointer">
-                  <img display-block full-width [attr.src]="serverThumbnail$ | async"/>
-                </div>
-                <a>{{ 'serverManagement.vmConsole.link' | translate }}</a>
+              <div [disabled]="serverDetails.server.isProcessing">
+                <a mcsCursor="pointer" display-inline-block
+                  orientation="block" mcsId
+                  mcsEventTracker="view-console"
+                  mcsEventCategory="server"
+                  mcsEventLabel="server-details-page"
+                  (click)="viewConsole(serverDetails.server)">
+                  <div class="image-thumbnail dark" mcsCursor="pointer">
+                    <img display-block full-width [attr.src]="serverThumbnail$ | async"/>
+                  </div>
+                  {{ 'serverManagement.vmConsole.link' | translate }}
+                </a>
               </div>
             </ng-template>
           </mcs-presentation-panel>

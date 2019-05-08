@@ -17,18 +17,15 @@ import {
 import { TranslateService } from '@ngx-translate/core';
 import {
   Subscription,
-  throwError,
   Observable,
   of,
   Subject
 } from 'rxjs';
 import {
-  catchError,
   switchMap,
   takeUntil
 } from 'rxjs/operators';
 import {
-  McsErrorHandlerService,
   CoreDefinition,
   CoreValidators,
   IMcsFormGroup
@@ -138,7 +135,6 @@ export class ServerNewComponent
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private _translate: TranslateService,
-    private _errorHandlerService: McsErrorHandlerService,
     private _serversOsRepository: McsServersOsRepository,
     private _resourcesRepository: McsResourcesRepository
   ) {
@@ -297,10 +293,6 @@ export class ServerNewComponent
    */
   private _getServersOs(): void {
     this.operatingSystemsMap$ = this._serversOsRepository.getAll().pipe(
-      catchError((error) => {
-        this._errorHandlerService.redirectToErrorPage(error.status);
-        return throwError(error);
-      }),
       switchMap((_response) => of(this._filterOsGroup(_response)))
     );
   }

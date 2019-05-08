@@ -26,7 +26,6 @@ import {
 import {
   CoreDefinition,
   McsRoutingTabBase,
-  McsErrorHandlerService,
   McsDataStatusFactory,
   CoreRoutes
 } from '@app/core';
@@ -82,7 +81,6 @@ export class FirewallComponent
     _eventDispatcher: EventBusDispatcherService,
     private _router: Router,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _errorHandlerService: McsErrorHandlerService,
     private _firewallsRepository: McsFirewallsRepository,
     private _firewallService: FirewallService
   ) {
@@ -178,10 +176,6 @@ export class FirewallComponent
    */
   private _subscribeToFirewallById(firewallId: string): void {
     this.selectedFirewall$ = this._firewallsRepository.getByIdAsync(firewallId).pipe(
-      catchError((error) => {
-        this._errorHandlerService.redirectToErrorPage(error.status);
-        return throwError(error);
-      }),
       tap((response) => {
         this._firewallService.setSelectedFirewall(response);
         this._changeDetectorRef.markForCheck();

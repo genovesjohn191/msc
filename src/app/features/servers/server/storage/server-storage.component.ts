@@ -255,7 +255,6 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
       .pipe(
         catchError((error) => {
           this._serversService.clearServerSpinner(server);
-          this._errorHandlerService.redirectToErrorPage(error.status);
           return throwError(error);
         })
       ).subscribe();
@@ -287,7 +286,6 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
         .pipe(
           catchError((error) => {
             this._serversService.clearServerSpinner(server);
-            this._errorHandlerService.redirectToErrorPage(error.status);
             return throwError(error);
           })
         ).subscribe();
@@ -313,7 +311,6 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
       .pipe(
         catchError((error) => {
           this._serversService.clearServerSpinner(server);
-          this._errorHandlerService.redirectToErrorPage(error.status);
           return throwError(error);
         })
       ).subscribe();

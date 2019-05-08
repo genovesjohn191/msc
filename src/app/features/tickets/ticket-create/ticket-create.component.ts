@@ -20,7 +20,6 @@ import {
 } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import {
-  McsErrorHandlerService,
   CoreValidators,
   CoreDefinition,
   CoreRoutes,
@@ -122,8 +121,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     private _router: Router,
     private _ticketCreateService: TicketCreateService,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _ticketsRepository: McsTicketsRepository,
-    private _errorHandlerService: McsErrorHandlerService
+    private _ticketsRepository: McsTicketsRepository
   ) {
     this.ticketTypeList = new Array();
     this.services = new Array();
@@ -234,7 +232,6 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
       catchError((error) => {
         unsubscribeSafely(this.createTicketSubscription);
         this._changeDetectorRef.markForCheck();
-        this._errorHandlerService.redirectToErrorPage(error.status);
         return throwError(error);
       })
     ).subscribe(() => this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.Tickets)]));

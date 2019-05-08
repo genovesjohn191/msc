@@ -26,7 +26,6 @@ import {
 import {
   McsRoutingTabBase,
   McsDataStatusFactory,
-  McsErrorHandlerService,
   CoreRoutes
 } from '@app/core';
 import {
@@ -87,7 +86,6 @@ export class VdcComponent
     private _changeDetectorRef: ChangeDetectorRef,
     private _serversRepository: McsServersRepository,
     private _resourcesRepository: McsResourcesRepository,
-    private _errorHandlerService: McsErrorHandlerService,
     private _vdcService: VdcService
   ) {
     super(_eventDispatcher, _activatedRoute);
@@ -190,10 +188,6 @@ export class VdcComponent
    */
   private _subscribesToResourceById(vdcId: string): void {
     this.selectedResource$ = this._resourcesRepository.getByIdAsync(vdcId).pipe(
-      catchError((error) => {
-        this._errorHandlerService.redirectToErrorPage(error.status);
-        return throwError(error);
-      }),
       tap((response) => { this._vdcService.setSelectedVdc(response); }),
       shareReplay(1)
     );

@@ -1,12 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
-import {
-  NgModule,
-  ErrorHandler
-} from '@angular/core';
+import { NgModule } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
-
 import {
   TranslateModule,
   TranslateLoader,
@@ -19,18 +15,10 @@ import { APP_RESOLVER_PROVIDERS } from './app.resolver';
 import { AppState } from './app.service';
 import { appRoutes } from './app.routes';
 import {
-  errorHandlerProvider,
-  setUserIdentity
-} from './app.logger';
-import {
   CoreModule,
-  CoreConfig,
-  CoreEvent
+  CoreConfig
 } from './core';
-import {
-  EventBusModule,
-  EventBusDispatcherService
-} from './event-bus';
+import { EventBusModule } from './event-bus';
 import { ServicesModule } from './services';
 import {
   ConsolePageModule,
@@ -39,11 +27,7 @@ import {
 import { PageNotificationsModule } from './page-notifications';
 import { FeaturesSharedModule } from './features-shared';
 import { SharedModule } from './shared';
-import {
-  resolveEnvVar,
-  isNullOrEmpty
-} from './utilities';
-import { McsIdentity } from './models';
+import { resolveEnvVar } from './utilities';
 import { McsApiClientConfig } from './api-client/mcs-api-client.config';
 import { McsApiClientModule } from './api-client/mcs-api-client.module';
 
@@ -119,50 +103,14 @@ export function apiConfig(): McsApiClientConfig {
   ],
   providers: [
     environment.ENV_PROVIDERS,
-    APP_PROVIDERS,
-    {
-      provide: ErrorHandler,
-      useFactory: errorHandlerProvider
-    }
+    APP_PROVIDERS
   ]
 })
 
 export class AppModule {
 
-  constructor(
-    private _translateService: TranslateService,
-    private _eventDispatcher: EventBusDispatcherService
-  ) {
+  constructor(private _translateService: TranslateService) {
     this._initializeLanguage();
-    this._registerEvents();
-  }
-
-  /**
-   * Register event handlers for app module only
-   */
-  private _registerEvents(): void {
-    this._eventDispatcher.addEventListener(
-      CoreEvent.userChange, this._onUserChanged.bind(this));
-  }
-
-  /**
-   * Event that emits when user has been changed
-   * @param user User emitted
-   */
-  private _onUserChanged(user: McsIdentity): void {
-    if (isNullOrEmpty(user)) { return; }
-    this._initializeRavenSentry(user);
-  }
-
-  /**
-   * Initializes the raven sentry configuration
-   */
-  private _initializeRavenSentry(user: McsIdentity): void {
-    setUserIdentity(
-      user.userId,
-      `${user.firstName} ${user.lastName}`,
-      user.email
-    );
   }
 
   /**

@@ -2,7 +2,8 @@ import {
   ModuleWithProviders,
   NgModule,
   Optional,
-  SkipSelf
+  SkipSelf,
+  ErrorHandler
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -33,6 +34,7 @@ import { McsErrorHandlerService } from './services/mcs-error-handler.service';
 import { McsNotificationEventsService } from './services/mcs-notification-events.service';
 import { McsRouteSettingsService } from './services/mcs-route-settings.service';
 import { McsHttpClientInterceptor } from './interceptors/mcs-http-client.interceptor';
+import { McsErrorHandlerInterceptor } from './interceptors/mcs-error-handler.interceptor';
 
 @NgModule({
   declarations: [
@@ -47,6 +49,10 @@ import { McsHttpClientInterceptor } from './interceptors/mcs-http-client.interce
       provide: HTTP_INTERCEPTORS,
       useClass: McsHttpClientInterceptor,
       multi: true
+    },
+    {
+      provide: ErrorHandler,
+      useClass: McsErrorHandlerInterceptor
     }
   ],
   imports: [

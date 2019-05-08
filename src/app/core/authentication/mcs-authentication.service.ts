@@ -118,7 +118,6 @@ export class McsAuthenticationService {
    * Get the login path based on the saved return url in the appstate
    */
   private _getLoginPath(): string {
-    // TODO : check why the value sometimes return undefined
     let _returnUrl = this._appState.get(CoreDefinition.APPSTATE_RETURN_URL_KEY);
     return `${this._coreConfig.loginUrl}${_returnUrl}`;
   }

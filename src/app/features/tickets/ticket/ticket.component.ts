@@ -10,20 +10,15 @@ import {
   ParamMap
 } from '@angular/router';
 import {
-  throwError,
   Observable,
   Subject
 } from 'rxjs';
 import {
-  catchError,
   finalize,
   takeUntil
 } from 'rxjs/operators';
 import { saveAs } from 'file-saver';
-import {
-  CoreDefinition,
-  McsErrorHandlerService
-} from '@app/core';
+import { CoreDefinition } from '@app/core';
 import {
   isNullOrEmpty,
   unsubscribeSafely
@@ -69,7 +64,6 @@ export class TicketComponent implements OnInit, OnDestroy {
   public constructor(
     private _activatedRoute: ActivatedRoute,
     private _ticketsRepository: McsTicketsRepository,
-    private _errorHandlerService: McsErrorHandlerService,
     private _changeDetectorRef: ChangeDetectorRef
   ) {
     this._downloadingIdList = new Set();
@@ -204,12 +198,7 @@ export class TicketComponent implements OnInit, OnDestroy {
    * Subscribe to ticket based on the parameter ID
    */
   private _subscribeToTicketById(ticketId: string): void {
-    this.selectedTicket$ = this._ticketsRepository.getByIdAsync(ticketId).pipe(
-      catchError((error) => {
-        this._errorHandlerService.redirectToErrorPage(error.status);
-        return throwError(error);
-      })
-    );
+    this.selectedTicket$ = this._ticketsRepository.getByIdAsync(ticketId);
   }
 
   /**
