@@ -81,6 +81,7 @@ export class McsErrorHandlerInterceptor implements ErrorHandler {
       this._injector.get(McsAuthenticationService).logIn.bind(this)
     );
     this._httpErrorHandlerMap.set(HttpStatusCode.Forbidden, this._noopMethod.bind(this));
+    this._httpErrorHandlerMap.set(HttpStatusCode.Unprocessable, this._noopMethod.bind(this));
   }
 
   /**
