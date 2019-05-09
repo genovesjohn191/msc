@@ -132,7 +132,7 @@
           </ng-container>
 
           <!-- Action tab -->
-          <ng-container mcsTabHeaderCustom *mcsAccessControl="serverPermission.VmPowerStateEdit">
+          <ng-container mcsTabHeaderCustom *mcsAccessControl="serverPermission.vmPowerStateEdit">
             <mcs-server-command mcsId="server-command" mcsAlign="end"
               [server]="serverDetails.server" [autoCalculatePosition]="false"
               (onClick)="executeServerCommand(serverDetails.server, $event)">
