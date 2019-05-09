@@ -37,6 +37,7 @@ export class McsServer extends McsEntityBase {
   public portalUrl: string;
   public vCloudId: string;
   public vCenterId: string;
+  public osAutomationSupported: boolean;
 
   @JsonProperty({ type: McsServerVmwareTools })
   public vmwareTools: McsServerVmwareTools;
@@ -108,6 +109,7 @@ export class McsServer extends McsEntityBase {
     this.vCloudId = undefined;
     this.vCenterId = undefined;
     this.vmwareTools = undefined;
+    this.osAutomationSupported = undefined;
   }
 
   /**

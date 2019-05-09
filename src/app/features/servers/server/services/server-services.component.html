@@ -8,7 +8,7 @@
       </ng-container>
       <p>{{ 'serverServices.description' | translate }}</p>
 
-      <mcs-section>
+      <mcs-section *ngIf="serverDetails.server.osAutomationSupported; else osAutomationUnSupported">
         <mcs-form-message #formMessage></mcs-form-message>
 
         <mcs-grid>
@@ -128,6 +128,11 @@
           </mcs-data-status>
         </mcs-grid>
       </mcs-section>
+      <ng-template #osAutomationUnSupported>
+          <mcs-status-message type="info">
+              {{ 'serverServices.osAutomationUnSupported' | translate }}
+          </mcs-status-message>
+      </ng-template>
     </mcs-presentation-panel>
 
     <!-- Os Updates Schedule View -->
