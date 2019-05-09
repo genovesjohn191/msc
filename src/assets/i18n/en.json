@@ -350,6 +350,7 @@
     "label": "Services",
     "title": "Operating System Updates",
     "description": "Keep your server protected by applying regular OS updates.",
+    "osAutomationUnSupported":"This server does not currently support operating system updates via the Portal. Please contact your Macquarie Cloud Services accounts team for more information.",
     "updatesStatusTitleLabel": "Status",
     "updatesAnalysisLabel": "Inspect Now",
     "updatesScheduleTitleLabel": "Jobs",
