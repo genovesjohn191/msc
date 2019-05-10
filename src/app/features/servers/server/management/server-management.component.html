@@ -31,27 +31,16 @@
               <span>{{ serverDetails.server.compute?.memoryMB | mcsDataSize: 'MB' }}</span>
               <span> / </span>
               <span>{{ serverDetails.server.compute?.cpuCount | number }} vCPU</span>
-              <ng-container *mcsAccessControl="serverPermision.vmEdit">
+              <ng-container  *mcsAccessControl="serverPermission.vmScale; feature: serverPermission.vmScaleFeature">
                 <mcs-loader *ngIf="scaleInProgress" size="small"
                   [mcsTooltip]="'serverManagement.manageScale.scaling' | translate"></mcs-loader>
                 <ng-container *ngIf="serverDetails.server.scaleable">
                   <a *ngIf="!scaleInProgress"
-                    (click)="setViewMode(serverManagementViewEnum.ManageScale)"
-                    mcsId
+                    (click)="scaleServer(serverDetails.server)"
+                    mcsId="scale-server"
                     mcsEventTracker="scale-option"
                     mcsEventCategory="server"
                     mcsEventLabel="server-details-page"
-                    [disabled]="!serverDetails.server.executable">
-                    {{ 'serverManagement.manageScale.scale' | translate }}</a>
-                </ng-container>
-              </ng-container>
-              <ng-container *mcsAccessControl="[OrderEdit]; feature: 'enableManagedServerScale'">
-                <ng-container *ngIf="!serverDetails.server.isDedicated && !serverDetails.server.isSelfManaged">
-                  <a (click)="navigateToScaleManagedServer(serverDetails.server)"
-                    mcsId="scale-manage-server"
-                    mcsEventTracker="scale-managed-server-click"
-                    mcsEventCategory="orders"
-                    mcsEventLabel="scale-managed-server"
                     [disabled]="!serverDetails.server.executable">
                     {{ 'serverManagement.manageScale.scale' | translate }}</a>
                 </ng-container>
@@ -130,7 +119,7 @@
             <ng-container mcsPresentationPanelHeader>
               <mcs-item>
                 <h2>{{ 'serverManagement.storage.title' | translate }}</h2>
-                <ng-container *mcsAccessControl="serverPermision.vmEdit">
+                <ng-container *mcsAccessControl="serverPermission.vmEdit">
                   <a *ngIf="!serverDetails.server.isDedicated"
                     [disabled]="!serverDetails.server.executable"
                     (click)="navigateServerDetailsTo(serverDetails.server, routeKeyEnum.ServerDetailsStorage)"
@@ -169,7 +158,7 @@
             <ng-container mcsPresentationPanelHeader>
               <mcs-item>
                 <h2>{{ 'serverManagement.nics.title' | translate }}</h2>
-                <ng-container *mcsAccessControl="serverPermision.vmNicEdit">
+                <ng-container *mcsAccessControl="serverPermission.vmNicEdit">
                   <a *ngIf="!serverDetails.server.isDedicated"
                     [disabled]="!serverDetails.server.executable"
                     (click)="navigateServerDetailsTo(serverDetails.server, routeKeyEnum.ServerDetailsNics)"
@@ -241,7 +230,7 @@
             <ng-container mcsPresentationPanelHeader>
               <mcs-item>
                 <h2>{{ 'serverManagement.media.title' | translate }}</h2>
-                <ng-container *mcsAccessControl="serverPermision.vmEdit">
+                <ng-container *mcsAccessControl="serverPermission.vmEdit">
                   <a (click)="setViewMode(serverManagementViewEnum.ManageMedia)"
                     [disabled]="!serverDetails.server.executable"
                     mcsId="attach-media"
@@ -260,7 +249,7 @@
 
                 <mcs-list-item *ngFor="let media of serverMedia">
                   <mcs-item>
-                    <ng-container *mcsAccessControl="serverPermision.vmEdit">
+                    <ng-container *mcsAccessControl="serverPermission.vmEdit">
                       <mcs-loader *ngIf="mediaIsDetaching(media)" size="small"
                         [mcsTooltip]="serverDetails.server.processingText"></mcs-loader>
 

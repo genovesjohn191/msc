@@ -54,12 +54,19 @@ export class ServersService {
         break;
 
       case ServerCommand.Scale:
-        this._router.navigate([
-          CoreRoutes.getNavigationPath(RouteKey.Servers),
-          data.server.id,
-          CoreRoutes.getNavigationPath(RouteKey.ServerDetailsManagement)
-        ], { queryParams: { scale: true } }
-        );
+
+        if (data.server.isSelfManaged) {
+          this._router.navigate(
+            [CoreRoutes.getNavigationPath(RouteKey.Servers),
+            data.server.id,
+            CoreRoutes.getNavigationPath(RouteKey.ServerDetailsManagement)],
+            { queryParams: { scale: true } }
+          );
+          break;
+        }
+
+        this._eventDispatcher.dispatch(CoreEvent.serverScaleManageSelected, data.server.id);
+        this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.OrderScaleManagedServer)]);
         break;
 
       case ServerCommand.Clone:

@@ -29,7 +29,8 @@ import {
   McsDialogService,
   CoreRoutes,
   McsAccessControlService,
-  CoreEvent
+  CoreEvent,
+  McsServerPermission
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -88,6 +89,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
   public serverMedia$: Observable<McsServerMedia[]>;
   public resourceCompute$: Observable<McsResourceCompute>;
   public resourceCatalogs$: Observable<McsResourceCatalog[]>;
+  public serverPermission: McsServerPermission;
 
   public manageScale: ServerManageScale;
   public manageMedia: ServerManageMedia;
@@ -174,7 +176,11 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
    * Navigate to scale managed server page
    * @param server selected server object reference
    */
-  public navigateToScaleManagedServer(server: McsServer): void {
+  public scaleServer(server: McsServer): void {
+    if (server.isSelfManaged) {
+      this.setViewMode(ServerManagementView.ManageScale);
+      return;
+    }
     this._eventDispatcher.dispatch(CoreEvent.serverScaleManageSelected, server.id);
     this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.OrderScaleManagedServer)]);
   }
@@ -344,6 +350,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
    */
   protected selectionChange(server: McsServer, resource: McsResource): void {
     this.setViewMode(ServerManagementView.None);
+    this.serverPermission = new McsServerPermission(server);
     this._getServerThumbnail(server);
     this._getServerMedia(server);
 

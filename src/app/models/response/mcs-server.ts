@@ -37,7 +37,7 @@ export class McsServer extends McsEntityBase {
   public portalUrl: string;
   public vCloudId: string;
   public vCenterId: string;
-  public osAutomationSupported: boolean;
+  public osAutomationAvailable: boolean;
 
   @JsonProperty({ type: McsServerVmwareTools })
   public vmwareTools: McsServerVmwareTools;
@@ -109,7 +109,7 @@ export class McsServer extends McsEntityBase {
     this.vCloudId = undefined;
     this.vCenterId = undefined;
     this.vmwareTools = undefined;
-    this.osAutomationSupported = undefined;
+    this.osAutomationAvailable = undefined;
   }
 
   /**
@@ -178,7 +178,7 @@ export class McsServer extends McsEntityBase {
    * Returns true when server is scaleable
    */
   public get scaleable(): boolean {
-    return this.executable && this.isSelfManaged && !this.isDedicated;
+    return this.executable && !this.isDedicated;
   }
 
   /**
