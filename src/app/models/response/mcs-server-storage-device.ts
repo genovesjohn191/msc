@@ -1,29 +1,16 @@
-export class McsServerStorageDevice {
-  public id: string;
-  public name: string;
-  public sizeMB: number;
-  public storageDeviceType: string;
-  public storageDeviceInterfaceType: string;
-  public backingVCenter: string;
-  public backingId: string;
-  public storageProfile: string;
-  public wwn: string;
-  public vendor: string;
-  public remoteHost: string;
-  public remotePath: string;
+import { McsEntityBase } from '../common/mcs-entity.base';
 
-  constructor() {
-    this.id = undefined;
-    this.name = undefined;
-    this.sizeMB = undefined;
-    this.storageDeviceType = undefined;
-    this.storageDeviceInterfaceType = undefined;
-    this.backingVCenter = undefined;
-    this.backingId = undefined;
-    this.storageProfile = undefined;
-    this.wwn = undefined;
-    this.vendor = undefined;
-    this.remoteHost = undefined;
-    this.remotePath = undefined;
-  }
+export class McsServerStorageDevice extends McsEntityBase {
+  public name: string = undefined;
+  public sizeMB: number = undefined;
+  public storageDeviceType: string = undefined;
+  public storageDeviceInterfaceType: string = undefined;
+  public backingVCenter: string = undefined;
+  public backingId: string = undefined;
+  public storageProfile: string = undefined;
+  public wwn: string = undefined;
+  public vendor: string = undefined;
+  public remoteHost: string = undefined;
+  public remotePath: string = undefined;
+  public isPrimary: boolean = undefined;
 }

@@ -179,14 +179,6 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   }
 
   /**
-   * Returns true when the storage has atleast 2 disk or more
-   */
-  public canDeleteDisk(server: McsServer): boolean {
-    return isNullOrEmpty(server.storageDevices) ? false :
-      server.storageDevices.length > 1;
-  }
-
-  /**
    * Returns true when user can add disk
    */
   public canAddDisk(server: McsServer, resourceStorages: McsResourceStorage[]): boolean {
