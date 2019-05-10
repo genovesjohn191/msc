@@ -67,19 +67,18 @@
       </a>
     </ng-container>
 
-    <!-- Remove temporarily -->
-    <ng-container *ngIf="server.isSelfManaged">
-      <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Scale)">
-        <a mcsButton="basic" color="white" labelPlacement="left"
-          (click)="onExecuteCommand(serverCommandEnum.Scale)"
-          [disabled]="!server.scaleable"
-          mcsId
-          mcsEventTracker="scale"
-          mcsEventCategory="server"
-          mcsEventLabel="server-command-tool">
-          {{ 'servers.scale' | translate }}
-        </a>
-      </ng-container>
+    <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Scale)">
+      <a mcsButton="basic" color="white" labelPlacement="left"
+        (click)="onExecuteCommand(serverCommandEnum.Scale)"
+        [disabled]="!server.scaleable"
+        mcsId
+        mcsEventTracker="scale"
+        mcsEventCategory="server"
+        mcsEventLabel="server-command-tool"
+        *mcsAccessControl="[]; feature: 'EnableManagedServerScale';
+        validateWhen: !server.isSelfManaged">
+        {{ 'servers.scale' | translate }}
+      </a>
     </ng-container>
 
     <ng-container *ngIf="server.isSelfManaged">
