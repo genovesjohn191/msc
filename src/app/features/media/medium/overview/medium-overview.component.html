@@ -13,6 +13,11 @@
         </mcs-item>
 
         <mcs-item>
+          <span>{{ 'mediaMedium.overview.mediaProperties.vdc' | translate }}:</span>
+          <span [innerHTML]="selectedMedium.resourceName | mcsDataLabel"></span>
+        </mcs-item>
+
+        <mcs-item>
           <span>{{ 'mediaMedium.overview.mediaProperties.status' | translate }}:</span>
           <span [innerHTML]="selectedMedium.statusLabel | mcsDataLabel"></span>
         </mcs-item>
