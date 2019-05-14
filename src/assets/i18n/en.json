@@ -853,6 +853,7 @@
       "mediaProperties": {
         "title": "Media Properties",
         "name": "Name",
+        "vdc": "VDC",
         "status": "Status",
         "dateAdded": "Date Added",
         "description": "Description"
