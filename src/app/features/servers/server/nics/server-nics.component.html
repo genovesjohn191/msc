@@ -1,4 +1,4 @@
- <mcs-presentation-panel mcsId="nics" *ngIf="serverDetails$ | async as serverDetails">
+<mcs-presentation-panel mcsId="nics" *ngIf="serverDetails$ | async as serverDetails">
   <ng-container mcsPresentationPanelHeader>
     <h2>{{ 'serverNics.title' | translate }}</h2>
   </ng-container>
@@ -84,7 +84,7 @@
           <mcs-header-cell *mcsHeaderCellDef class="action-header-cell">
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
-            <mcs-item>
+            <mcs-item *ngIf="serverDetails?.resource?.hasNetworks">
               <span *ngIf="isEditNicEnabled(serverDetails.server, row)">
                 <a [disabled]="!serverDetails.server.executable"
                     (click)="openEditNicWindow(row)"

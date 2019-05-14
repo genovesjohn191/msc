@@ -1,4 +1,5 @@
 import { JsonProperty } from 'json-object-mapper';
+import { isNullOrEmpty } from '@app/utilities';
 import { McsResourceCompute } from './mcs-resource-compute';
 import { McsResourceStorage } from './mcs-resource-storage';
 import { McsResourceNetwork } from './mcs-resource-network';
@@ -66,6 +67,20 @@ export class McsResource extends McsEntityBase {
     this.serviceType = undefined;
     this.availabilityZone = undefined;
     this.portalUrl = undefined;
+  }
+
+  /**
+   * Returns true when the resource has networks
+   */
+  public get hasNetworks(): boolean {
+    return !isNullOrEmpty(this.networks);
+  }
+
+  /**
+   * Returns true when the resource has storage
+   */
+  public get hasStorage(): boolean {
+    return !isNullOrEmpty(this.storage);
   }
 
   /**
