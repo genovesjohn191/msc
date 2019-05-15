@@ -7,6 +7,7 @@ export enum WorkflowStatus {
   Draft,
   AwaitingApproval,
   Submitted,
+  Provisioning,
   Cancelled,
   Rejected
 }
@@ -17,6 +18,7 @@ export const workflowStatusText = {
   [WorkflowStatus.Draft]: 'Draft',
   [WorkflowStatus.AwaitingApproval]: 'Awaiting Approval',
   [WorkflowStatus.Submitted]: 'Submitted',
+  [WorkflowStatus.Provisioning]: 'Provisioning',
   [WorkflowStatus.Cancelled]: 'Cancelled',
   [WorkflowStatus.Rejected]: 'Rejected'
 };
