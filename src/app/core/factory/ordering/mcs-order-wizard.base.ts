@@ -1,4 +1,7 @@
-import { ViewChild } from '@angular/core';
+import {
+  ViewChild,
+  Injector
+} from '@angular/core';
 import { Observable } from 'rxjs';
 import {
   shareReplay,
@@ -23,6 +26,7 @@ import {
 import { McsOrderBase } from './mcs-order.base';
 import { McsWizardBase } from '../../base/mcs-wizard.base';
 import { McsNavigationService } from '../../services/mcs-navigation.service';
+import { McsAccessControlService } from '../../authentication/mcs-access-control.service';
 
 export abstract class McsOrderWizardBase extends McsWizardBase implements McsDisposable {
   public order$: Observable<McsOrder>;
@@ -30,13 +34,18 @@ export abstract class McsOrderWizardBase extends McsWizardBase implements McsDis
 
   @ViewChild('pricingCalculator')
   public pricingCalculator: PricingCalculator;
+
   private _pricingIsHiddenByStep: boolean;
+  private readonly _accessControlService: McsAccessControlService;
+  private readonly _navigationService: McsNavigationService;
 
   constructor(
-    private _navigationService: McsNavigationService,
+    private _injector: Injector,
     private _orderBase: McsOrderBase
   ) {
     super(_orderBase);
+    this._accessControlService = this._injector.get(McsAccessControlService);
+    this._navigationService = this._injector.get(McsNavigationService);
     this._subscribeToOrderChanges();
     this._subscribeToOrderItemTypeChanges();
   }
@@ -100,6 +109,7 @@ export abstract class McsOrderWizardBase extends McsWizardBase implements McsDis
    * Subscribes to order item type changes
    */
   private _subscribeToOrderItemTypeChanges(): void {
+    if (!this._accessControlService.hasAccessToFeature('EnableOrdering')) { return; }
     this.orderItemType$ = this._orderBase.orderItemTypeChange().pipe(
       shareReplay(1)
     );

@@ -134,6 +134,15 @@ export class McsOrdersRepository extends McsRepositoryBase<McsOrder> implements 
   }
 
   /**
+   * Get the order items types (MCS API Response)
+   */
+  public getOrderItemTypes(): Observable<McsOrderItemType[]> {
+    return this._ordersApiService.getOrderItemTypes().pipe(
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  /**
    * Gets the order item type by id
    * @param typeId Type id of the order to be obtained
    */

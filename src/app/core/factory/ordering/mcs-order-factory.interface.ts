@@ -14,5 +14,7 @@ export interface IMcsOrderFactory {
 
   createOrderWorkFlow(orderId: string, workflowDetails: McsOrderWorkflow): Observable<McsOrder>;
 
+  getOrderItemTypes(): Observable<McsOrderItemType[]>;
+
   getItemOrderType(typeId: string): Observable<McsOrderItemType>;
 }

@@ -5,7 +5,8 @@ import {
   ViewChild,
   ElementRef,
   OnInit,
-  OnDestroy
+  OnDestroy,
+  Injector
 } from '@angular/core';
 import {
   CoreDefinition,
@@ -15,8 +16,7 @@ import {
   IMcsFormGroup,
   CoreValidators,
   McsGuid,
-  CoreEvent,
-  McsNavigationService
+  CoreEvent
 } from '@app/core';
 import {
   Observable,
@@ -99,7 +99,7 @@ export class ScaleManagedServerComponent extends McsOrderWizardBase implements O
   private _selectedServerIdHandler: Subscription;
 
   constructor(
-    _navigationService: McsNavigationService,
+    _injector: Injector,
     private _elementRef: ElementRef,
     private _formBuilder: FormBuilder,
     private _formGroupService: McsFormGroupService,
@@ -109,7 +109,7 @@ export class ScaleManagedServerComponent extends McsOrderWizardBase implements O
     private _serversRepository: McsServersRepository,
     private _scaleManagedServerService: ScaleManagedServerService
   ) {
-    super(_navigationService, _scaleManagedServerService);
+    super(_injector, _scaleManagedServerService);
     this._registerFormGroups();
     this._registerEvents();
     this._manageScale = new ServerManageScale();

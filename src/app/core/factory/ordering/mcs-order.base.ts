@@ -11,7 +11,8 @@ import {
   catchError,
   exhaustMap,
   finalize,
-  filter
+  filter,
+  switchMap
 } from 'rxjs/operators';
 import {
   McsDisposable,
@@ -43,6 +44,8 @@ import { McsOrderBuilder } from './mcs-order.builder';
 import { McsOrderRequest } from './mcs-order-request';
 import { McsOrderDirector } from './mcs-order.director';
 import { IMcsOrderFactory } from './mcs-order-factory.interface';
+import { Injector } from '@angular/core';
+import { McsAccessControlService } from '@app/core/authentication/mcs-access-control.service';
 
 const DEFAULT_ORDER_DESCRIPTION = 'Macquarie Cloud Services Portal Order';
 
@@ -72,14 +75,17 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
   private _dataStatusChange = new Subject<DataStatus>();
   private _jobsChange = new Subject<McsJob[]>();
   private _errorsChange = new Subject<string[]>();
+  private readonly _accessControlService: McsAccessControlService;
 
   constructor(
+    private _injector: Injector,
     private _orderFactory: IMcsOrderFactory,
-    private _orderItemTypeId: string
+    private _orderItemProductType: string
   ) {
     this._workflowMapTable = new Map();
     this._orderBuilder = new McsOrderBuilder();
     this._orderDirector = new McsOrderDirector();
+    this._accessControlService = this._injector.get(McsAccessControlService);
     this._createWorkflowMap();
     this._subscribeAndExecuteNewOrder();
     this._subscribeToOrderItemType();
@@ -429,8 +435,18 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
    * Subscribes to order item type
    */
   private _subscribeToOrderItemType(): void {
-    if (isNullOrEmpty(this._orderItemTypeId)) { return; }
-    this._orderFactory.getItemOrderType(this._orderItemTypeId)
-      .subscribe((itemType) => this._orderItemTypeChange.next(itemType));
+    if (!this._accessControlService.hasAccessToFeature('EnableOrdering')) { return; }
+    if (isNullOrEmpty(this._orderItemProductType)) { return; }
+
+    // Get all the orders here
+    this._orderFactory.getOrderItemTypes().pipe(
+      switchMap((orderItems) => {
+        if (isNullOrEmpty(orderItems)) { return; }
+        let orderItemFound: McsOrderItemType = orderItems.find(
+          (item) => item.productOrderType === this._orderItemProductType
+        );
+        return this._orderFactory.getItemOrderType(orderItemFound.id);
+      })
+    ).subscribe((itemType) => this._orderItemTypeChange.next(itemType));
   }
 }
