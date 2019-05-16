@@ -3,7 +3,7 @@ import {
   Observable,
   of,
   BehaviorSubject,
-  throwError
+  empty
 } from 'rxjs';
 import {
   startWith,
@@ -252,9 +252,9 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
 
         return this._datasourceFuncPointer().pipe(
           exhaustMap((records) => of(this._filterData(records))),
-          catchError((error) => {
+          catchError((_error) => {
             this.updateDataStatus(DataStatus.Error);
-            return throwError(error);
+            return empty();
           })
         );
       })
