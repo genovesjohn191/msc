@@ -3,7 +3,7 @@
   <div class="product-megamenu-mobile-wrapper" mcsScrollable>
     <mcs-data-status [dataStatusFactory]="productsStatusFactory">
       <mcs-data-status-success mcsDataSuccess>
-        <ng-container *mcsAccessControl="[]; feature: EnableProductCatalog">
+        <ng-container *mcsAccessControl="[]; feature: 'EnableProductCatalog'">
           <mcs-accordion [multi]="true" *ngIf="selectedProduct$ | async as selectedProduct">
             <mcs-accordion-panel *ngFor="let catalog of productCatalogs">
               <mcs-accordion-panel-header mcsPanelHeaderDef>

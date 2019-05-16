@@ -3,7 +3,7 @@
   <div class="product-megamenu-wrapper" mcsScrollable>
     <mcs-data-status [dataStatusFactory]="productsStatusFactory">
       <mcs-data-status-success mcsDataSuccess>
-        <ng-container *mcsAccessControl="[]; feature: EnableProductCatalog">
+        <ng-container *mcsAccessControl="[]; feature: 'EnableProductCatalog'">
           <mcs-grid *ngIf="selectedProduct$ | async as selectedProduct">
             <mcs-grid-row>
               <ng-container *ngFor="let catalog of productCatalogs; last as isLastItem">

@@ -4,7 +4,8 @@ import {
   OnDestroy,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  ViewChild
+  ViewChild,
+  Injector
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import {
@@ -25,7 +26,6 @@ import {
   CoreDefinition,
   CoreRoutes,
   McsOrderWizardBase,
-  McsNavigationService,
   IMcsNavigateAwayGuard,
   CoreValidators
 } from '@app/core';
@@ -84,14 +84,14 @@ export class ServerCreateComponent extends McsOrderWizardBase
   private _destroySubject = new Subject<void>();
 
   constructor(
-    _navigationService: McsNavigationService,
+    _injector: Injector,
     _serverCreateService: ServerCreateService,
     private _activatedRoute: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef,
     private _translate: TranslateService,
     private _resourcesRepository: McsResourcesRepository
   ) {
-    super(_navigationService, _serverCreateService);
+    super(_injector, _serverCreateService);
     this._serverCreateBuilder = new ServerCreateBuilder(_serverCreateService);
   }
 
