@@ -7,10 +7,14 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
+import {
+  Subject,
+  empty
+} from 'rxjs';
 import {
   takeUntil,
-  map
+  map,
+  catchError
 } from 'rxjs/operators';
 import { ServersService } from './servers.service';
 import {
@@ -336,7 +340,9 @@ export class ServersComponent
           this.changeDetectorRef.markForCheck();
         })
       );
-    managedResources.subscribe(() => createServerResources.subscribe());
+    managedResources.pipe(
+      catchError(() => empty())
+    ).subscribe(() => createServerResources.subscribe());
   }
 
   /**
