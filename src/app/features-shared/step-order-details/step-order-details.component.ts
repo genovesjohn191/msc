@@ -21,9 +21,13 @@ import { TranslateService } from '@ngx-translate/core';
 import {
   Observable,
   Subject,
-  of
+  of,
+  empty
 } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import {
+  takeUntil,
+  catchError
+} from 'rxjs/operators';
 import {
   McsTableDataSource,
   CoreValidators,
@@ -391,7 +395,9 @@ export class StepOrderDetailsComponent
    * Subscribes to order billing details
    */
   private _subscribeToBillingDetails(): void {
-    this.billing$ = this._ordersRepository.getBilling();
+    this.billing$ = this._ordersRepository.getBilling().pipe(
+      catchError(() => empty())
+    );
   }
 
   /**

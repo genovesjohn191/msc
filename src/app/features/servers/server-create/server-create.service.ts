@@ -1,7 +1,4 @@
-import {
-  Injectable,
-  Injector
-} from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
   Observable,
   throwError
@@ -36,11 +33,10 @@ export class ServerCreateService extends McsOrderBase
   implements IMcsJobManager, IMcsFallible, IMcsStateChangeable {
 
   constructor(
-    _injector: Injector,
     _ordersRepository: McsOrdersRepository,
     private _serversRepository: McsServersRepository
   ) {
-    super(_injector, _ordersRepository, OrderIdType.CreateManagedServer);
+    super(_ordersRepository, OrderIdType.CreateManagedServer);
   }
 
   /**
