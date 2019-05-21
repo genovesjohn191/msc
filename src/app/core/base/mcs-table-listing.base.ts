@@ -48,6 +48,7 @@ export abstract class McsTableListingBase<T> {
   }
 
   private _baseDestroySubject = new Subject<void>();
+  private _totalRecordsCount: number = 0;
 
   constructor(
     protected browserService: McsBrowserService,
@@ -62,6 +63,22 @@ export abstract class McsTableListingBase<T> {
   public get isSearching(): boolean {
     return isNullOrEmpty(this.search) ? false :
       this.search.keyword.length > 0;
+  }
+
+  /**
+   * Returns the total records count of the record
+   */
+  public get totalRecordsCount(): number {
+    return Math.max(this._totalRecordsCount, 0);
+  }
+
+  /**
+   * Sets the total records count
+   * @param count Count to be set
+   */
+  public setTotalRecordsCount(count: number): void {
+    this._totalRecordsCount = count;
+    this.changeDetectorRef.markForCheck();
   }
 
   /**

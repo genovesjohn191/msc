@@ -40,6 +40,9 @@ export enum RouteKey {
   OrderDetails,
   OrderScaleManagedServer,
 
+  Internet,
+  InternetDetails,
+
   OtherTools,
 
   HttpErrorPage

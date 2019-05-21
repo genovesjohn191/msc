@@ -47,6 +47,11 @@ export const defaultPageRoutes: Routes = [
       },
       {
         path: '',
+        data: { routeId: RouteKey.Internet },
+        loadChildren: '../../features/internet/internet.module#InternetModule'
+      },
+      {
+        path: '',
         data: { routeId: RouteKey.OtherTools },
         loadChildren: '../../features/tools/tools.module#ToolsModule'
       },

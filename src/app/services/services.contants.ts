@@ -1,3 +1,5 @@
+import { McsApiService } from './mcs-api.service';
+
 /** New Repositories */
 import { McsFirewallsRepository } from './repositories/mcs-firewalls.repository';
 import { McsJobsRepository } from './repositories/mcs-jobs.repository';
@@ -12,6 +14,7 @@ import { McsTicketsRepository } from './repositories/mcs-tickets.repository';
 import { McsToolsRepository } from './repositories/mcs-tools.repository';
 import { McsConsoleRepository } from './repositories/mcs-console.repository';
 import { McsCompaniesRepository } from './repositories/mcs-companies.repository';
+import { McsInternetRepository } from './repositories/mcs-internet.repository';
 
 /** State Managers */
 import { McsJobStateManager } from './state-manager/mcs-job.state-manager';
@@ -47,6 +50,9 @@ export const repositoryProviders: any[] = [
   McsToolsRepository,
   McsConsoleRepository,
   McsCompaniesRepository,
+  McsInternetRepository,
+
+  McsApiService
 ];
 
 export const guardProviders: any[] = [

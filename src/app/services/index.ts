@@ -4,6 +4,7 @@ export * from './services.module';
 export * from './data-context/mcs-tools-data.context';
 
 /** Repositories */
+export * from './mcs-api.service';
 export * from './repositories/mcs-firewalls.repository';
 export * from './repositories/mcs-jobs.repository';
 export * from './repositories/mcs-media.repository';
@@ -17,6 +18,7 @@ export * from './repositories/mcs-tickets.repository';
 export * from './repositories/mcs-tools.repository';
 export * from './repositories/mcs-console.repository';
 export * from './repositories/mcs-companies.repository';
+export * from './repositories/mcs-internet.repository';
 
 /** Guards */
 export * from './guards/required-resources.guard';

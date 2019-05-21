@@ -30,6 +30,7 @@ import { McsCookieService } from '../services/mcs-cookie.service';
 /**
  * Macquarie Portal Api Service class
  * @McsPortalApiService
+ * @deprecated Use  the API-Client Instead
  */
 @Injectable()
 export class McsApiService {

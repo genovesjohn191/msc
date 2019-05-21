@@ -10,7 +10,7 @@ import {
   Subject,
   Observable
 } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, tap, map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import {
   CoreDefinition,
@@ -25,7 +25,10 @@ import {
   isNullOrEmpty,
   unsubscribeSubject
 } from '@app/utilities';
-import { McsJobsRepository } from '@app/services';
+import {
+  McsJobsRepository,
+  McsApiService
+} from '@app/services';
 import {
   McsCompany,
   McsJob,
@@ -58,6 +61,7 @@ export class NotificationsComponent
     _changeDetectorRef: ChangeDetectorRef,
     private _router: Router,
     private _authenticationIdentity: McsAuthenticationIdentity,
+    private _apiService: McsApiService,
     private _jobsRepository: McsJobsRepository
   ) {
     super(_browserService, _changeDetectorRef);
@@ -113,13 +117,27 @@ export class NotificationsComponent
    * Initialize the table datasource according to pagination and search settings
    */
   protected initializeDatasource(): void {
-    this.dataSource = new McsTableDataSource(this._jobsRepository);
+    this.dataSource = new McsTableDataSource(this._getJobs.bind(this));
     this.dataSource
       .registerSearch(this.search)
       .registerPaginator(this.paginator);
 
     this._subscribeToDataUpdate();
     this.changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Get all the jobs
+   */
+  private _getJobs(): Observable<McsJob[]> {
+    return this._apiService.getJobs({
+      pageIndex: this.paginator.pageIndex,
+      pageSize: this.paginator.pageSize,
+      keyword: this.search.keyword
+    }).pipe(
+      tap((apiCollection) => this.setTotalRecordsCount(apiCollection.totalCollectionCount)),
+      map((apiCollection) => apiCollection.collection)
+    );
   }
 
   /**

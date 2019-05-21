@@ -1,0 +1,132 @@
+<mcs-page [header]="'internet.header' | translate">
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef>
+
+    <!-- Order Count -->
+    <mcs-top-panel-item *mcsTopPanelItemDef>
+      <div class="listing-action-wrapper">
+        <div class="total-record-count">
+          <span>{{ totalRecordsCount | mcsPlural:
+                  ('internet.dataSingular' | translate) :
+                  ('internet.dataPlural' | translate) }}
+          </span>
+        </div>
+      </div>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
+  <!-- Left Panel -->
+  <mcs-left-panel *mcsLeftPanelDef="'internet.leftPanelHeader' | translate">
+    <!-- Search -->
+    <mcs-left-panel-item *mcsLeftPanelItemDef>
+      <mcs-search *ngIf="!isMobile" #search mcsId="internet-desktop-search"></mcs-search>
+    </mcs-left-panel-item>
+
+    <!-- Column Filter -->
+    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'internet.filterColumn' | translate" offset="medium">
+      <mcs-filter-selector [key]="columnSettingsKey" #filterSelector
+        (filtersChange)="updateColumnSettings($event)"></mcs-filter-selector>
+    </mcs-left-panel-item>
+  </mcs-left-panel>
+
+  <!-- Content Panel -->
+  <mcs-content-panel *mcsContentPanelDef>
+
+    <div class="listing-table-wrapper">
+
+      <!-- Search -->
+      <mcs-search *ngIf="isMobile" #search mcsId="internet-mobile-search"></mcs-search>
+
+      <!-- Table -->
+      <mcs-table [dataSource]="dataSource" [columnFilter]="filterSelector">
+        <!-- Service Column -->
+        <ng-container mcsColumnDef="service">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ columnSettings.service.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row">
+            <a mcsId="select-internet"
+              mcsEventTracker="navigate-to-internet"
+              mcsEventCategory="internet"
+              mcsEventLabel="internet-listing-page">
+              {{ row.description }}</a>
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Speed Column -->
+        <ng-container mcsColumnDef="speed">
+          <mcs-header-cell *mcsHeaderCellDef hidden-xsmall>
+            {{ columnSettings.speed.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-xsmall>
+            {{ row.portSpeedMbps }} {{ 'internet.speedUnit' | translate }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Plan Column -->
+        <ng-container mcsColumnDef="plan">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ columnSettings.plan.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row">
+            {{ row.serviceLevelLabel }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Zone Column -->
+        <ng-container mcsColumnDef="zone">
+          <mcs-header-cell *mcsHeaderCellDef hidden-xsmall>
+            {{ columnSettings.zone.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-xsmall>
+            <!-- TODO: Remove this once the zone is available in the field -->
+            {{ row.inviewLevelLabel }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Service ID Column -->
+        <ng-container mcsColumnDef="serviceId">
+          <mcs-header-cell *mcsHeaderCellDef hidden-xsmall>
+            {{ columnSettings.serviceId.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-xsmall>
+            {{ row.serviceId }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Data Status Integration -->
+        <ng-container mcsDataStatusDef>
+          <mcs-data-empty *mcsDataEmptyDef>
+            <div class="listing-status-wrapper">
+              <span>{{ 'internet.noOrders' | translate }} </span>
+            </div>
+          </mcs-data-empty>
+          <mcs-data-error *mcsDataErrorDef>
+            <div class="listing-status-wrapper">
+              <span>{{ 'internet.errorMessage' | translate }}</span>
+              <a (click)="retryDatasource()"
+                mcsId
+                mcsEventTracker="retry-internet"
+                mcsEventCategory="order"
+                mcsEventLabel="internet-listing-page">{{ 'internet.retry' | translate }}</a>.
+            </div>
+          </mcs-data-error>
+        </ng-container>
+
+        <!-- Header and Data row -->
+        <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
+        <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"
+          mcsId="internet-row"
+          mcsEventTracker="navigate-to-internet"
+          mcsEventCategory="internet"
+          mcsEventLabel="internet-listing-page"></mcs-data-row>
+      </mcs-table>
+
+      <!-- Paginator -->
+      <mcs-paginator #paginator
+        [hidden]="isSearching"
+        [totalCount]="totalRecordsCount">
+      </mcs-paginator>
+    </div>
+  </mcs-content-panel>
+</mcs-page>
