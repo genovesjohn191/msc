@@ -47,6 +47,17 @@
           {{ 'navigation.firewalls' | translate }}
         </a>
       </ng-container>
+
+      <ng-container *mcsAccessControl="['InternetView']; feature: 'EnableInternetPortView'">
+        <a [mcsRouterLink]="routeKeyEnum.Internet" mcsRouterLinkActive="active"
+          class="sub-navigation-item unstyled-link"
+          mcsId
+          mcsEventTracker="navigate-to-internet"
+          mcsEventCategory="navigation"
+          mcsEventLabel="sub-nav">
+          {{ 'navigation.internet' | translate }}
+        </a>
+      </ng-container>
     </ng-container>
   </div>
 </ng-template>

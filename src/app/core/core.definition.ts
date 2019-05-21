@@ -189,6 +189,7 @@ export class CoreDefinition {
   public static FILTERSELECTOR_FIREWALL_POLICIES_LISTING = 'firewallPolicyFilter';
   public static FILTERSELECTOR_MEDIA_LISTING = 'mediaFilter';
   public static FILTERSELECTOR_ORDER_LISTING = 'orderFilter';
+  public static FILTERSELECTOR_INTERNET_LISTING = 'internetFilter';
 
   /** RegEx Patterns */
   public static REGEX_EMAIL_PATTERN = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;

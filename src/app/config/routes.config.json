@@ -177,6 +177,24 @@
     "requiredPermissions": ["FirewallConfigurationView"],
     "documentTitle": "Firewall Policies - Macquarie Cloud Services"
   },
+  "internet": {
+    "enumCategory": "Network",
+    "enumKey": "Internet",
+    "routePath": "network/internet",
+    "navigationPath": "network/internet",
+    "requiredPermissions": ["InternetView"],
+    "requiredFeatureFlag": "EnableInternetPortView",
+    "documentTitle": "Internet Ports - Macquarie Cloud Services"
+  },
+  "internetDetails": {
+    "enumCategory": "Network",
+    "enumKey": "InternetDetails",
+    "routePath": ":id",
+    "navigationPath": "network/internet",
+    "requiredPermissions": ["Internet"],
+    "requiredFeatureFlag": "EnableInternetPortView",
+    "documentTitle": "Internet Ports Management - Macquarie Cloud Services"
+  },
   "tickets": {
     "enumKey": "Tickets",
     "routePath": "tickets",
