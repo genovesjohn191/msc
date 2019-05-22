@@ -1,9 +1,9 @@
 import { CoreDefinition } from '@app/core';
 
 export class McsQueryParam {
-  public keyword: string;
-  public pageIndex: number;
-  public pageSize: number;
+  public keyword?: string;
+  public pageIndex?: number;
+  public pageSize?: number;
 
   constructor() {
     this.keyword = '';

@@ -24,7 +24,8 @@ import {
   McsOrderItem,
   McsBilling,
   McsOrderApprover,
-  McsOrderItemType
+  McsOrderItemType,
+  McsQueryParam
 } from '@app/models';
 import { EventBusDispatcherService } from '@app/event-bus';
 import {
@@ -135,9 +136,10 @@ export class McsOrdersRepository extends McsRepositoryBase<McsOrder> implements 
 
   /**
    * Get the order items types (MCS API Response)
+   * @param query Query predicate that serves as the parameter of the endpoint
    */
-  public getOrderItemTypes(): Observable<McsOrderItemType[]> {
-    return this._ordersApiService.getOrderItemTypes().pipe(
+  public getOrderItemTypes(query?: McsQueryParam): Observable<McsOrderItemType[]> {
+    return this._ordersApiService.getOrderItemTypes(query).pipe(
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }

@@ -6,33 +6,20 @@ import {
 import { McsEntityBase } from '../common/mcs-entity.base';
 
 export class McsOrderItemType extends McsEntityBase {
-  public elementCode: string;
-  public productCode: string;
+  public elementCode: string = undefined;
+  public productCode: string = undefined;
 
   @JsonProperty({
     type: OrderType,
     serializer: OrderTypeSerialization,
     deserializer: OrderTypeSerialization
   })
-  public orderType: OrderType;
+  public orderType: OrderType = undefined;
 
-  public orderChangeType: string;
-  public productId: string;
-  public productOrderType: string;
-  public automatedProvisioningAvailable: true;
-  public description: string;
-  public provisioningEndpoint: string;
-
-  constructor() {
-    super();
-    this.automatedProvisioningAvailable = undefined;
-    this.description = undefined;
-    this.elementCode = undefined;
-    this.orderChangeType = undefined;
-    this.orderType = undefined;
-    this.productCode = undefined;
-    this.productId = undefined;
-    this.productOrderType = undefined;
-    this.provisioningEndpoint = undefined;
-  }
+  public orderChangeType: string = undefined;
+  public productId: string = undefined;
+  public productOrderType: string = undefined;
+  public automatedProvisioningAvailable: true = undefined;
+  public description: string = undefined;
+  public provisioningEndpoint: string = undefined;
 }

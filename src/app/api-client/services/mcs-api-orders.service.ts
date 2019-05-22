@@ -76,10 +76,19 @@ export class McsApiOrdersService implements IMcsApiOrdersService {
 
   /**
    * Get the order items types (MCS API Response)
+   * @param query Query predicate that serves as the parameter of the endpoint
    */
-  public getOrderItemTypes(): Observable<McsApiSuccessResponse<McsOrderItemType[]>> {
+  public getOrderItemTypes(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsOrderItemType[]>> {
+    // Set default values if null
+    let searchParams = new Map<string, any>();
+    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
+    searchParams.set('page', query.pageIndex);
+    searchParams.set('per_page', query.pageSize);
+    searchParams.set('search_keyword', query.keyword);
+
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/orders/items/types';
+    mcsApiRequestParameter.searchParameters = searchParams;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(

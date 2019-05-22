@@ -12,7 +12,7 @@ import {
   exhaustMap,
   finalize,
   filter,
-  switchMap
+  map
 } from 'rxjs/operators';
 import {
   McsDisposable,
@@ -434,14 +434,8 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
     if (isNullOrEmpty(this._orderItemProductType)) { return; }
 
     // Get all the orders here
-    this._orderFactory.getOrderItemTypes().pipe(
-      switchMap((orderItems) => {
-        if (isNullOrEmpty(orderItems)) { return; }
-        let orderItemFound: McsOrderItemType = orderItems.find(
-          (item) => item.productOrderType === this._orderItemProductType
-        );
-        return this._orderFactory.getItemOrderType(orderItemFound.id);
-      }),
+    this._orderFactory.getOrderItemTypes({ keyword: this._orderItemProductType }).pipe(
+      map((orderItemDetails) => getSafeProperty(orderItemDetails, (obj) => obj[0])),
       catchError(() => empty())
     ).subscribe((itemType) => this._orderItemTypeChange.next(itemType));
   }

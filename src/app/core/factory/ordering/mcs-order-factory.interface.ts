@@ -3,7 +3,8 @@ import {
   McsOrder,
   McsOrderCreate,
   McsOrderWorkflow,
-  McsOrderItemType
+  McsOrderItemType,
+  McsQueryParam
 } from '@app/models';
 
 export interface IMcsOrderFactory {
@@ -14,7 +15,7 @@ export interface IMcsOrderFactory {
 
   createOrderWorkFlow(orderId: string, workflowDetails: McsOrderWorkflow): Observable<McsOrder>;
 
-  getOrderItemTypes(): Observable<McsOrderItemType[]>;
+  getOrderItemTypes(query?: McsQueryParam): Observable<McsOrderItemType[]>;
 
   getItemOrderType(typeId: string): Observable<McsOrderItemType>;
 }
