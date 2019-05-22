@@ -31,7 +31,7 @@ export * from './enumerations/os-updates-schedule-type.enum';
 export * from './enumerations/catalog-item-type.enum';
 export * from './enumerations/ip-allocation-mode.enum';
 export * from './enumerations/platform-type.enum';
-export * from './enumerations/server-type.enum';
+export * from './enumerations/os.enum';
 export * from './enumerations/service-type.enum';
 export * from './enumerations/device-type.enum';
 export * from './enumerations/input-manage-type.enum';

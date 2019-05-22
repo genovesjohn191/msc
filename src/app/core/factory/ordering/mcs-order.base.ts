@@ -174,6 +174,7 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
     this._orderBuilder
       .setDescription(orderDescription)
       .setContractDuration(orderContract)
+      .setBillingEntityId(orderDetails.billingEntityId)
       .setBillingSiteId(orderDetails.billingSiteId)
       .setBillingCostCentreId(orderDetails.billingCostCentreId);
 

@@ -186,7 +186,7 @@ export class ScaleManagedServerComponent extends McsOrderWizardBase implements O
     this._scaleManagedServerService.createOrUpdateOrder(
       {
         items: [{
-          itemOrderTypeId: OrderIdType.ScaleManageServer,
+          itemOrderType: OrderIdType.ScaleManageServer,
           referenceId: SCALE_MANAGE_SERVER_REF_ID,
           properties: {
             cpuCount: manageScale.cpuCount,
@@ -233,8 +233,9 @@ export class ScaleManagedServerComponent extends McsOrderWizardBase implements O
     this._scaleManagedServerService.createOrUpdateOrder({
       contractDurationMonths: orderDetails.contractDurationMonths,
       description: orderDetails.description,
-      billingSiteId: orderDetails.billingSite.id,
-      billingCostCentreId: orderDetails.billingCostCentre.id
+      billingEntityId: orderDetails.billingEntity.id as any,
+      billingSiteId: orderDetails.billingSite.id as any,
+      billingCostCentreId: orderDetails.billingCostCentre.id as any
     });
   }
 

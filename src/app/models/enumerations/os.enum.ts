@@ -1,4 +1,4 @@
-export enum ServerType {
+export enum Os {
   Windows = 'WIN',
   Linux = 'LIN'
 }

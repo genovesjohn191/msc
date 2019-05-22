@@ -191,7 +191,7 @@
     "enumKey": "InternetDetails",
     "routePath": ":id",
     "navigationPath": "network/internet",
-    "requiredPermissions": ["Internet"],
+    "requiredPermissions": ["InternetView"],
     "requiredFeatureFlag": "EnableInternetPortView",
     "documentTitle": "Internet Ports Management - Macquarie Cloud Services"
   },
@@ -256,7 +256,7 @@
     "routePath": "scale-managed-server",
     "navigationPath": "orders/scale-managed-server",
     "requiredPermissions": ["OrderEdit"],
-    "requiredFeatureFlag": "EnableManagedServerScale",
+    "requiredFeatureFlag": "EnableOrderingManagedServerScale",
     "documentTitle": "Scale Managed Servers - Macquarie Cloud Services"
   },
   "otherTools": {

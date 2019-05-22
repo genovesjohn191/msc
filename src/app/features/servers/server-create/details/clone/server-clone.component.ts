@@ -28,13 +28,15 @@ import {
 } from '@app/core';
 import {
   isNullOrEmpty,
-  unsubscribeSafely
+  unsubscribeSafely,
+  getSafeProperty
 } from '@app/utilities';
 import {
   ServiceType,
   IpAllocationMode,
   McsServer,
-  McsServerClone
+  McsServerClone,
+  Os
 } from '@app/models';
 import { McsServersRepository } from '@app/services';
 import { McsFormGroupDirective } from '@app/shared';
@@ -116,6 +118,14 @@ export class ServerCloneComponent
     serverClone.name = this.fcServerName.value;
     serverClone.serverId = this.fcTargetServer.value.id;
     return serverClone;
+  }
+
+  /**
+   * Returns the os type of the server
+   */
+  public getCreationOsType(): Os {
+    let targetServer = getSafeProperty(this.fcTargetServer, (obj) => obj.value) as McsServer;
+    return targetServer.isWindows ? Os.Windows : Os.Linux;
   }
 
   /**

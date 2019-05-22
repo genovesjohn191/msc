@@ -171,7 +171,7 @@ export class McsResourcesRepository extends McsRepositoryBase<McsResource> {
 
   /**
    * Get all the resources based on the access control
-   * @note OrderEdit and EnableCreateManagedServer
+   * @note OrderEdit and EnableOrderingManagedServerCreate
    */
   public getResourcesByAccess(): Observable<McsResource[]> {
     return this.getAll().pipe(
