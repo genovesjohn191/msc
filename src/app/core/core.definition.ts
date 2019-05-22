@@ -27,7 +27,7 @@ export class CoreDefinition {
 
   /** Feature Flags */
   public static FEATURE_FLAG_ENABLE_READ_ONLY_MODE = 'EnableReadOnlyMode';
-  public static FEATURE_FLAG_ENABLE_CREATE_MANAGED_SERVER = 'EnableCreateManagedServer';
+  public static FEATURE_FLAG_ENABLE_CREATE_MANAGED_SERVER = 'EnableOrderingManagedServerCreate';
   public static FEATURE_FLAG_ENABLE_DEDICATED_VMS = 'EnableDedicatedVms';
   public static FEATURE_FLAG_ENABLE_PRODUCT_CATALOG = 'EnableProductCatalog';
   public static FEATURE_FLAG_ENABLE_MEDIA_CATALOG = 'EnableMediaCatalog';

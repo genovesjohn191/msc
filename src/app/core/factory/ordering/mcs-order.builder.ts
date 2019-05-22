@@ -9,16 +9,18 @@ import { McsOrderRequest } from './mcs-order-request';
 export class McsOrderBuilder {
   private _description: string;
   private _contractDurationMonths: number;
-  private _billingSiteId: string;
-  private _billingCostCentreId: string;
+  private _billingEntityId: number;
+  private _billingSiteId: number;
+  private _billingCostCentreId: number;
   private _orderItems: McsOrderItemCreate[];
   private _orderRequestDetails: McsOrderRequest;
 
   constructor() {
     this._description = '';
     this._contractDurationMonths = null;
-    this._billingSiteId = '';
-    this._billingCostCentreId = '';
+    this._billingEntityId = 0;
+    this._billingSiteId = 0;
+    this._billingCostCentreId = 0;
     this._orderItems = [];
     this._orderRequestDetails = new McsOrderRequest();
   }
@@ -49,10 +51,19 @@ export class McsOrderBuilder {
   }
 
   /**
+   * Sets the billing entity id
+   * @param entityId Billing entity id to be set
+   */
+  public setBillingEntityId(entityId: number): McsOrderBuilder {
+    this._billingEntityId = entityId;
+    return this;
+  }
+
+  /**
    * Sets the billing site id
    * @param siteId Billing site id to be set
    */
-  public setBillingSiteId(siteId: string): McsOrderBuilder {
+  public setBillingSiteId(siteId: number): McsOrderBuilder {
     this._billingSiteId = siteId;
     return this;
   }
@@ -61,7 +72,7 @@ export class McsOrderBuilder {
    * Sets the billing cost centre id
    * @param costCentreId Cost centre id to be set
    */
-  public setBillingCostCentreId(costCentreId: string): McsOrderBuilder {
+  public setBillingCostCentreId(costCentreId: number): McsOrderBuilder {
     this._billingCostCentreId = costCentreId;
     return this;
   }
@@ -111,6 +122,7 @@ export class McsOrderBuilder {
   public buildOrderDetails(): McsOrderBuilder {
     this._orderRequestDetails.orderDetails.contractDurationMonths = this._contractDurationMonths;
     this._orderRequestDetails.orderDetails.description = this._description;
+    this._orderRequestDetails.orderDetails.billingEntityId = this._billingEntityId;
     this._orderRequestDetails.orderDetails.billingSiteId = this._billingSiteId;
     this._orderRequestDetails.orderDetails.billingCostCentreId = this._billingCostCentreId;
     return this;

@@ -2,19 +2,12 @@ import { JsonProperty } from 'json-object-mapper';
 import { McsOrderItemCreate } from './mcs-order-item-create';
 
 export class McsOrderCreate {
-  public description?: string;
-  public contractDurationMonths?: number;
-  public billingSiteId?: string;
-  public billingCostCentreId?: string;
+  public description?: string = undefined;
+  public contractDurationMonths?: number = undefined;
+  public billingEntityId?: number = undefined;
+  public billingSiteId?: number = undefined;
+  public billingCostCentreId?: number = undefined;
 
   @JsonProperty({ type: McsOrderItemCreate })
-  public items?: McsOrderItemCreate[];
-
-  constructor() {
-    this.description = undefined;
-    this.contractDurationMonths = undefined;
-    this.items = [];
-    this.billingSiteId = undefined;
-    this.billingCostCentreId = undefined;
-  }
+  public items?: McsOrderItemCreate[] = [];
 }

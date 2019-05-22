@@ -34,7 +34,8 @@ import {
   RouteKey,
   McsResource,
   McsOrderWorkflow,
-  OrderWorkflowAction
+  OrderWorkflowAction,
+  Os
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -103,6 +104,13 @@ export class ServerCreateComponent extends McsOrderWizardBase
 
   public ngOnDestroy() {
     super.dispose();
+  }
+
+  /**
+   * Returns true when the server to create is windows
+   */
+  public get serverCreationOsType(): Os {
+    return getSafeProperty(this._serverCreateBuilder, (obj) => obj.osType);
   }
 
   /**
@@ -209,6 +217,7 @@ export class ServerCreateComponent extends McsOrderWizardBase
     serverDetails.forEach((serverDetail) => {
       this._serverCreateBuilder
         .setServerDetails(serverDetail.getCreationInputs())
+        .setServerOsType(serverDetail.getCreationOsType())
         .createOrUpdateServer();
     });
   }

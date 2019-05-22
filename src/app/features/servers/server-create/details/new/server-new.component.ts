@@ -51,7 +51,8 @@ import {
   McsServerCreateNic,
   McsServerOperatingSystem,
   McsServerCreateOs,
-  OsType
+  OsType,
+  Os
 } from '@app/models';
 import {
   McsServersOsRepository,
@@ -279,6 +280,14 @@ export class ServerNewComponent
     serverCreate.network.ipAddress = this.manageNetwork.customIpAddress;
 
     return serverCreate;
+  }
+
+  /**
+   * Returns the os type of the server
+   */
+  public getCreationOsType(): Os {
+    let imageOsType = getSafeProperty(this.fcImage, (obj) => obj.value.type);
+    return imageOsType === 'WIN' ? Os.Windows : Os.Linux;
   }
 
   /**

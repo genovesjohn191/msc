@@ -3,7 +3,8 @@ import {
   OnDestroy,
   ChangeDetectorRef,
   EventEmitter,
-  Output
+  Output,
+  Input
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import {
@@ -16,6 +17,7 @@ import {
   McsServerCreateAddOnAntiVirus,
   McsServerCreateAddOnSqlServer,
   McsServerCreateAddOnInview,
+  Os,
 } from '@app/models';
 import { AddOnDetails } from './addons-model';
 
@@ -32,6 +34,9 @@ export class ServerCreateAddOnsComponent
   public antiMalwareAddOn = new AddOnDetails<McsServerCreateAddOnAntiVirus>();
   public inviewAddOn = new AddOnDetails<McsServerCreateAddOnInview>();
 
+  @Input()
+  public osType: Os;
+
   @Output()
   public dataChange = new EventEmitter<Array<AddOnDetails<any>>>();
   private _destroySubject = new Subject<void>();
@@ -41,6 +46,13 @@ export class ServerCreateAddOnsComponent
   public ngOnDestroy() {
     unsubscribeSafely(this._destroySubject);
     unsubscribeSafely(this.dataChange);
+  }
+
+  /**
+   * Returns true when the target to create is windows
+   */
+  public get isWindows(): boolean {
+    return this.osType === Os.Windows;
   }
 
   /**

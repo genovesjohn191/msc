@@ -27,8 +27,8 @@ import {
 import { ServerCommand } from '../enumerations/server-command.enum';
 import { McsEntityBase } from '../common/mcs-entity.base';
 import { PlatformType } from '../enumerations/platform-type.enum';
+import { Os } from '../enumerations/os.enum';
 import { McsServerOsUpdatesDetails } from './mcs-server-os-updates-details';
-import { ServerType } from '../enumerations/server-type.enum';
 
 export class McsServer extends McsEntityBase {
   public name: string = undefined;
@@ -305,6 +305,6 @@ export class McsServer extends McsEntityBase {
    * Returns true if the server is windows, false otherwise
    */
   public get isWindows(): boolean {
-    return this.operatingSystem.type === ServerType.Windows;
+    return getSafeProperty(this.operatingSystem, (obj) => obj.type === Os.Windows);
   }
 }

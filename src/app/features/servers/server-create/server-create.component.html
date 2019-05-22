@@ -60,7 +60,7 @@
         </ng-container>
       </mcs-wizard-step>
 
-      <ng-container *mcsAccessControl="[]; feature: 'EnableCreateManagedServer'">
+      <ng-container *mcsAccessControl="[]; feature: 'EnableOrderingManagedServerCreate'">
         <ng-container *ngIf="resource$ | async as resource">
           <!-- Add-ons Step -->
           <mcs-wizard-step id="addon-step"
@@ -68,7 +68,9 @@
             [stepTitle]="'serverCreateAddOnsStep.stepTitle' | translate"
             customClass="contextual-help-page-wrapper limited-view">
 
-            <mcs-server-create-addons (dataChange)="onServerAddOnChange($event)">
+            <mcs-server-create-addons
+              [osType]="serverCreationOsType"
+              (dataChange)="onServerAddOnChange($event)">
             </mcs-server-create-addons>
           </mcs-wizard-step>
 

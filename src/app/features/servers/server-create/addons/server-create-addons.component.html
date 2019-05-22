@@ -10,13 +10,16 @@
   </div>
 
   <!-- SQL Server -->
-  <mcs-collapsible-panel [header]="'serverCreateAddOnsStep.sqlServerAddOn' | translate"
-    (collapseChange)="onToggleSqlServer($event)"
-    [mcsContextualHelp]="'serverCreateAddOnsStep.sqlServerAddOnHelp' | translate">
+  <ng-container *mcsAccessControl="[]; feature: 'EnableOrderingSqlProvision'">
+    <mcs-collapsible-panel *ngIf="isWindows"
+      [header]="'serverCreateAddOnsStep.sqlServerAddOn' | translate"
+      (collapseChange)="onToggleSqlServer($event)"
+      [mcsContextualHelp]="'serverCreateAddOnsStep.sqlServerAddOnHelp' | translate">
 
-    <mcs-addon-sql-server (dataChange)="onChangeSqlServerDetails($event)">
-    </mcs-addon-sql-server>
-  </mcs-collapsible-panel>
+      <mcs-addon-sql-server (dataChange)="onChangeSqlServerDetails($event)">
+      </mcs-addon-sql-server>
+    </mcs-collapsible-panel>
+  </ng-container>
 
   <!-- TODO: Remove this temporarily since they're not yet enabled, or the payload was not finalize
     <mcs-collapsible-panel [header]="'serverCreateAddOnsStep.antiMalwareAddOn' | translate"

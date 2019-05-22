@@ -63,7 +63,7 @@ export class McsServerPermission {
 
   // TODO: rename this class to Access instead of Permission, to add Feature flags
   public get vmScaleFeature(): string {
-    return this._server.isSelfManaged ? '' : 'EnableManagedServerScale';
+    return this._server.isSelfManaged ? '' : 'EnableOrderingManagedServerScale';
   }
 
 }

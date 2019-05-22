@@ -3,7 +3,8 @@ import {
   McsResource,
   ServiceType,
   McsServerCreateAddOnSqlServer,
-  McsServerCreateAddOnInview
+  McsServerCreateAddOnInview,
+  Os
 } from '@app/models';
 import { OrderDetails } from '@app/features-shared';
 import { IServerCreate } from './factory/server-create.interface';
@@ -14,6 +15,7 @@ import { AddOnDetails } from './addons/addons-model';
 export class ServerCreateBuilder<T> {
   private _resource: McsResource;
   private _serviceType: ServiceType;
+  private _serverOsType: Os;
   private _serverDetails: T;
   private _serverCreateInstance: IServerCreate;
   private _serverCreateFactory = new ServerCreateFactory();
@@ -25,6 +27,13 @@ export class ServerCreateBuilder<T> {
    */
   public get isSelfManaged(): boolean {
     return this._serviceType === ServiceType.SelfManaged;
+  }
+
+  /**
+   * Returns true when the target creation is windows platform
+   */
+  public get osType(): Os {
+    return this._serverOsType;
   }
 
   /**
@@ -56,6 +65,15 @@ export class ServerCreateBuilder<T> {
   }
 
   /**
+   * Sets the server os type
+   * @param osType Os type to be created
+   */
+  public setServerOsType(osType: Os): ServerCreateBuilder<T> {
+    this._serverOsType = osType;
+    return this;
+  }
+
+  /**
    * Create or Update the server details to be created
    * @note it will throw an error once there are no details provided
    */
@@ -79,9 +97,10 @@ export class ServerCreateBuilder<T> {
   public setOrderDetails(orderDetails: OrderDetails): void {
     if (isNullOrEmpty(orderDetails)) { return; }
     this._serverCreateService.createOrUpdateOrder({
-      billingSiteId: orderDetails.billingSite.id,
       contractDurationMonths: orderDetails.contractDurationMonths,
-      billingCostCentreId: orderDetails.billingCostCentre.id,
+      billingEntityId: orderDetails.billingEntity.id as any,
+      billingSiteId: orderDetails.billingSite.id as any,
+      billingCostCentreId: orderDetails.billingCostCentre.id as any,
       description: orderDetails.description
     });
   }
@@ -119,7 +138,7 @@ export class ServerCreateBuilder<T> {
     }
 
     this._serverCreateService.addOrUpdateOrderItem({
-      itemOrderTypeId: addOnDetails.typeId,
+      itemOrderType: addOnDetails.typeId,
       referenceId: addOnDetails.referenceId,
       properties: addOnDetails.properties,
       parentReferenceId: this._serverCreateService.orderReferenceId,
