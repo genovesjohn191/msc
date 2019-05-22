@@ -29,8 +29,9 @@ export interface IMcsApiOrdersService {
 
   /**
    * Get the order items types (MCS API Response)
+   * @param query Query predicate that serves as the parameter of the endpoint
    */
-  getOrderItemTypes(): Observable<McsApiSuccessResponse<McsOrderItemType[]>>;
+  getOrderItemTypes(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsOrderItemType[]>>;
 
   /**
    * Get order item type by ID (MCS API Response)
