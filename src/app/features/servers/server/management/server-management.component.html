@@ -298,6 +298,11 @@
               <span>{{ 'serverManagement.serviceInformation.vmWareId' | translate }}:</span>
               <span [innerHTML]="serverDetails.server.instanceId | mcsDataLabel"></span>
             </mcs-item>
+
+            <mcs-item>
+              <span>{{ 'serverManagement.serviceInformation.inviewLevel' | translate }}:</span>
+              <span [innerHTML]="serverDetails.server.inviewLevelLabel | mcsDataLabel"></span>
+            </mcs-item>
           </mcs-presentation-panel>
         </mcs-grid-column>
       </mcs-grid-row>

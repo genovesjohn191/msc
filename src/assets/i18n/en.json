@@ -310,7 +310,8 @@
       "title": "Service Information",
       "vdc": "Resource",
       "serviceId": "Service ID",
-      "vmWareId": "VMWare ID"
+      "vmWareId": "VMWare ID",
+      "inviewLevel": "Inview Level"
     },
     "manageServices": {
       "title": "Manage Services",

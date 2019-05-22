@@ -19,6 +19,11 @@ import {
   ServiceType,
   ServiceTypeSerialization
 } from '../enumerations/service-type.enum';
+import {
+  InviewLevel,
+  InviewLevelSerialization,
+  inviewLevelText
+} from '../enumerations/inview-level.enum';
 import { ServerCommand } from '../enumerations/server-command.enum';
 import { McsEntityBase } from '../common/mcs-entity.base';
 import { PlatformType } from '../enumerations/platform-type.enum';
@@ -26,90 +31,80 @@ import { McsServerOsUpdatesDetails } from './mcs-server-os-updates-details';
 import { ServerType } from '../enumerations/server-type.enum';
 
 export class McsServer extends McsEntityBase {
-  public name: string;
-  public hostname: string;
-  public serviceId: string;
-  public availabilityZone: string;
-  public companyId: string;
-  public ipAddress: string;
-  public instanceId: string;
-  public vApp: string;
-  public portalUrl: string;
-  public vCloudId: string;
-  public vCenterId: string;
-  public osAutomationAvailable: boolean;
+  public name: string = undefined;
+  public hostname: string = undefined;
+  public serviceId: string = undefined;
+  public availabilityZone: string = undefined;
+  public companyId: string = undefined;
+  public ipAddress: string = undefined;
+  public instanceId: string = undefined;
+  public vApp: string = undefined;
+  public portalUrl: string = undefined;
+  public vCloudId: string = undefined;
+  public vCenterId: string = undefined;
+  public osAutomationAvailable: boolean = undefined;
 
   @JsonProperty({ type: McsServerVmwareTools })
-  public vmwareTools: McsServerVmwareTools;
+  public vmwareTools: McsServerVmwareTools = undefined;
 
   @JsonProperty({ type: McsServerPlatform })
-  public platform: McsServerPlatform;
+  public platform: McsServerPlatform = undefined;
 
   @JsonProperty({ type: McsServerNic })
-  public nics: McsServerNic[];
+  public nics: McsServerNic[] = undefined;
 
   @JsonProperty({ type: McsServerStorageDevice })
-  public storageDevices: McsServerStorageDevice[];
+  public storageDevices: McsServerStorageDevice[] = undefined;
 
   @JsonProperty({ type: McsServerMedia })
-  public media: McsServerMedia[];
+  public media: McsServerMedia[] = undefined;
 
   @JsonProperty({ type: McsServerSnapshot })
-  public snapshots: McsServerSnapshot[];
+  public snapshots: McsServerSnapshot[] = undefined;
 
   @JsonProperty({ type: McsServerOperatingSystemSummary })
-  public operatingSystem: McsServerOperatingSystemSummary;
+  public operatingSystem: McsServerOperatingSystemSummary = undefined;
 
   @JsonProperty({ type: McsServerHardware })
-  public hardware: McsServerHardware;
+  public hardware: McsServerHardware = undefined;
 
   @JsonProperty({ type: McsServerCompute })
-  public compute: McsServerCompute;
+  public compute: McsServerCompute = undefined;
 
   @JsonProperty({ type: McsServerCompute })
-  public osUpdateDetails: McsServerOsUpdatesDetails;
+  public osUpdateDetails: McsServerOsUpdatesDetails = undefined;
 
   @JsonProperty({
     type: VmPowerState,
     serializer: VmPowerStateSerialization,
     deserializer: VmPowerStateSerialization
   })
-  public powerState: VmPowerState;
+  public powerState: VmPowerState = undefined;
 
   @JsonProperty({
     type: ServiceType,
     serializer: ServiceTypeSerialization,
     deserializer: ServiceTypeSerialization
   })
-  public serviceType: ServiceType;
+  public serviceType: ServiceType = undefined;
 
-  public commandAction: ServerCommand;
+  @JsonProperty({
+    type: InviewLevel,
+    serializer: InviewLevelSerialization,
+    deserializer: InviewLevelSerialization
+  })
+  public inviewLevel: InviewLevel = undefined;
 
-  constructor() {
-    super();
-    this.name = undefined;
-    this.hostname = undefined;
-    this.serviceId = undefined;
-    this.serviceType = undefined;
-    this.availabilityZone = undefined;
-    this.companyId = undefined;
-    this.ipAddress = undefined;
-    this.instanceId = undefined;
-    this.operatingSystem = undefined;
-    this.hardware = undefined;
-    this.compute = undefined;
-    this.powerState = undefined;
-    this.platform = undefined;
-    this.nics = undefined;
-    this.storageDevices = undefined;
-    this.media = undefined;
-    this.snapshots = undefined;
-    this.vApp = undefined;
-    this.portalUrl = undefined;
-    this.vCloudId = undefined;
-    this.vCenterId = undefined;
-    this.vmwareTools = undefined;
-    this.osAutomationAvailable = undefined;
+  /**
+   * @deprecated this should be removed once the mcs-api-services.ts is finished
+   */
+  public commandAction: ServerCommand = undefined;
+
+  /**
+   * Returns the inview level text content
+   */
+  public get inviewLevelLabel(): string {
+    return inviewLevelText[this.inviewLevel];
   }
 
   /**
