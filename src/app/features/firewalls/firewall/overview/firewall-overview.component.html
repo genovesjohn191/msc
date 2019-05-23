@@ -2,7 +2,7 @@
 <mcs-grid>
   <mcs-grid-row>
     <!-- Firewall Properties -->
-    <mcs-grid-column sizeSm="12">
+    <mcs-grid-column sizeSm="12" sizeLg="6">
       <mcs-presentation-panel mcsId="firewall-properties">
         <ng-container mcsPresentationPanelHeader>
           <h2>{{ 'firewall.overview.properties.title' | translate }}</h2>
@@ -26,7 +26,7 @@
     </mcs-grid-column>
 
     <!-- Support Identifiers -->
-    <mcs-grid-column sizeSm="12">
+    <mcs-grid-column sizeSm="12" sizeLg="6">
       <mcs-presentation-panel mcsId="firewall-identifiers">
         <ng-container mcsPresentationPanelHeader>
           <h2>{{ 'firewall.overview.supportIdentifiers.title' | translate }}</h2>
@@ -43,9 +43,7 @@
         </mcs-item>
       </mcs-presentation-panel>
     </mcs-grid-column>
-  </mcs-grid-row>
 
-  <mcs-grid-row>
     <!-- Status -->
     <mcs-grid-column sizeSm="12" sizeLg="6">
       <mcs-presentation-panel mcsId="firewall-status">
@@ -73,10 +71,10 @@
       </mcs-presentation-panel>
     </mcs-grid-column>
 
-    <!-- Topology -->
+    <!-- UTM Services -->
     <ng-container *ngIf="firewall?.utm?.hasUtmService">
       <mcs-grid-column sizeSm="12" sizeLg="6">
-        <mcs-presentation-panel mcsId="firewall-topology">
+        <mcs-presentation-panel mcsId="firewall-utm-services">
           <ng-container mcsPresentationPanelHeader>
             <h2>{{ 'firewall.overview.utmServices.title' | translate }}</h2>
           </ng-container>
@@ -105,22 +103,22 @@
       </mcs-grid-column>
     </ng-container>
 
-    <!-- HA Role -->
+    <!-- Topology -->
     <mcs-grid-column sizeSm="12" sizeLg="6">
-      <mcs-presentation-panel mcsId="firewall-ha-role">
+      <mcs-presentation-panel mcsId="firewall-topology">
         <ng-container mcsPresentationPanelHeader>
           <h2>{{ 'firewall.overview.topology.title' | translate }}</h2>
         </ng-container>
 
-        <ng-container *ngIf="firewall?.haRole; else noTopologyInfo">
-          <mcs-list spacing="xsmall">
-            <mcs-list-item *ngIf="firewall.haRole">
-              <mcs-item>
-                <span>{{ 'firewall.overview.topology.role' | translate }}:</span>
-                <span>{{ firewall.haRole }}</span>
-              </mcs-item>
-            </mcs-list-item>
-          </mcs-list>
+        <ng-container *ngIf="firewall?.haRole || firewall?.haGroupName; else noTopologyInfo">
+          <mcs-item *ngIf="firewall.haRole">
+            <span>{{ 'firewall.overview.topology.role' | translate }}:</span>
+            <span>{{ firewall.haRole }}</span>
+          </mcs-item>
+          <mcs-item *ngIf="firewall.haGroupName">
+            <span>{{ 'firewall.overview.topology.haGroup' | translate }}:</span>
+            <span>{{ firewall.haGroupName }}</span>
+          </mcs-item>
         </ng-container>
         <ng-template #noTopologyInfo>
           <span read-only>{{ 'firewall.overview.topology.noContentMessage' | translate }}</span>

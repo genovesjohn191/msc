@@ -42,6 +42,7 @@ export class McsFirewall extends McsEntityBase {
   public companyId: string;
   public snmpVersion: string;
   public haRole: string;
+  public haGroupName: string;
   public url: string;
 
   @JsonProperty({ type: McsFirewallPolicy })
@@ -104,6 +105,7 @@ export class McsFirewall extends McsEntityBase {
     this.configurationStatus = undefined;
     this.connectionStatus = undefined;
     this.haMode = undefined;
+    this.haGroupName = undefined;
   }
 
   /**
