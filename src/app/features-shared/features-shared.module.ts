@@ -9,6 +9,7 @@ import { ServerManageMediaComponent } from './server-manage-media/server-manage-
 import { ServerManageNetworkComponent } from './server-manage-network/server-manage-network.component';
 import { ServerManageScaleComponent } from './server-manage-scale/server-manage-scale.component';
 import { ServerManageStorageComponent } from './server-manage-storage/server-manage-storage.component';
+import { VdcManageStorageComponent } from './vdc-manage-storage/vdc-manage-storage.component';
 import { StepOrderDetailsComponent } from './step-order-details/step-order-details.component';
 import { StepProvisioningComponent } from './step-provisioning/step-provisioning.component';
 
@@ -45,6 +46,7 @@ import { SuspendServerDialogComponent } from './server-dialogs/suspend-server/su
     ServerManageStorageComponent,
     StepOrderDetailsComponent,
     StepProvisioningComponent,
+    VdcManageStorageComponent,
 
     CreateSnapshotDialogComponent,
     DeleteNicDialogComponent,
@@ -75,6 +77,7 @@ import { SuspendServerDialogComponent } from './server-dialogs/suspend-server/su
     ServerManageStorageComponent,
     StepOrderDetailsComponent,
     StepProvisioningComponent,
+    VdcManageStorageComponent,
 
     CreateSnapshotDialogComponent,
     DeleteNicDialogComponent,

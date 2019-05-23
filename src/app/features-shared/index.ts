@@ -15,6 +15,8 @@ export * from './server-manage-media/server-manage-media';
 export * from './server-manage-media/server-manage-media.component';
 export * from './server-manage-scale/server-manage-scale';
 export * from './server-manage-scale/server-manage-scale.component';
+export * from './vdc-manage-storage/vdc-manage-storage.component';
+export * from './vdc-manage-storage/vdc-manage-storage';
 export * from './server-dialogs/rename-server/rename-server.dialog';
 export * from './server-dialogs/reset-password/reset-password.dialog';
 export * from './server-dialogs/reset-password-finished/reset-password-finished.dialog';

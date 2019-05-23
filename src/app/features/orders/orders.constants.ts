@@ -4,6 +4,7 @@ import { RouteKey } from '@app/models';
 import { OrdersComponent } from './orders.component';
 import { OrderComponent } from './order/order.component';
 import { ScaleManagedServerComponent } from './scale-managed-server/scale-managed-server.component';
+import { ExpandVdcStorageComponent } from './expand-vdc-storage/expand-vdc-storage.component';
 
 /**
  * List of services for the main module
@@ -17,7 +18,8 @@ export const ordersProviders: any[] = [
 export const ordersRoutesComponents: any[] = [
   OrdersComponent,
   OrderComponent,
-  ScaleManagedServerComponent
+  ScaleManagedServerComponent,
+  ExpandVdcStorageComponent
 ];
 
 /**
@@ -32,6 +34,11 @@ export const ordersRoutes: Routes = [
     path: '',
     component: ScaleManagedServerComponent,
     data: { routeId: RouteKey.OrderScaleManagedServer }
+  },
+  {
+    path: '',
+    component: ExpandVdcStorageComponent,
+    data: { routeId: RouteKey.OrderExpandVdcStorage }
   },
   // Add additional routes above this line
   {

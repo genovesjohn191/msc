@@ -138,6 +138,33 @@
       "dataError": "Something went wrong while processing your request. Please try again later."
     }
   },
+  "orderExpandVdcStorage": {
+    "title": "Expand Vdc Storage",
+    "back": "Back",
+    "vdc": {
+      "label": "VDC",
+      "description": "Please select the vdc you wish to expand",
+      "placeholder": "Select a VDC",
+      "contextualHelp": "Choose the virtual data centre to expand.",
+      "sliderLabel": "Select Storage:",
+      "hints":{
+        "currentStorage": "Current Storage: {{current_storage}}"
+      }
+    },
+    "vdcDetails": {
+      "stepTitle": "VDC Details",
+      "label": "Storage Element",
+      "optionGroupLabel": "Virtual Data Centres",
+      "storageLabel":"Storage",
+      "contextualHelp": "",
+      "fullStorageSpace": "This disk cannot be expanded due to insufficient storage space (0 GB remaining)."
+    },
+    "expanding": {
+      "description": "Description placeholder",
+      "dataInProgress": "data in progress placeholder",
+      "dataError": "Something went wrong while processing your request. Please try again later."
+    }
+  },
   "notification": {
     "leftPanelHeader": "Notification details",
     "backToNotifications": "Back to Notifications"
@@ -822,16 +849,21 @@
     "manageStorage": {
       "label": "Storage",
       "unit": "GB",
+      "selectSize": "Select storage size",
       "sliderSwitch": "Select from slider",
       "sliderMessage": "Select the disk size from a slider.",
       "customSwitch": "Enter custom size",
       "customMessage": "Manually enter the disk size.",
       "maximumStorage": "Maximum storage",
+      "hints": {
+        "initialStorage": "Initial storage: {{value}} GB"
+      },
       "errors": {
         "storageRequired": "Enter storage value.",
         "storageNumeric": "Please enter a valid number.",
         "storageMin": "The minimum value that can be entered is {{min_value}}.",
-        "storageAvailable": "Storage size should not exceed {{available_storage}}."
+        "storageAvailable": "Storage size should not exceed {{available_storage}}.",
+        "storageStep": "Storage size must be a multiple of {{step}}."
       }
     }
   },
@@ -1264,7 +1296,8 @@
       "previous": "Back",
       "next": "Next",
       "cancel": "Cancel",
-      "completed": "Go",
+      "confirm": "Confirm",
+      "completed": "Go!",
       "steps": "STEPS",
       "stepErrorTitle": "Wizard Error",
       "stepErrorMessage": "Unexpected error occured. Please resolve the issue and try again."
@@ -1302,8 +1335,17 @@
       "errorMessage": "Currently unavailable"
     },
     "formField": {
+      "selectLabel": "Select value",
       "hints": {
-        "maxChar": "Max of {{value}} characters"
+        "maxChar": "Max of {{value}} characters",
+        "initialValue": "Initial value: {{initial_value}}{{unit}}"
+      },
+      "errors": {
+        "required": "Enter value.",
+        "numeric": "Please enter a valid number.",
+        "minimum": "The minimum value that can be entered is {{minimum_value}}{{unit}}.",
+        "available": "Value should not exceed {{available}}{{unit}}.",
+        "step": "Value must be a multiple of {{step}}."
       }
     }
   }
