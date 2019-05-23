@@ -1,0 +1,77 @@
+<form [formGroup]="fgInputSlider" mcsFormGroup>
+    <h2>{{ 'serverShared.manageStorage.selectSize' | translate }}</h2>
+
+    <mcs-item orientation="separated">
+      <mcs-form-field class="form-field-size-xsmall">
+        <input mcsInput  required mcsSetFocus
+          [formControl]="fcInput">
+
+        <mcs-suffix mcsSuffix
+          mcsId="manage-storage-suffix"
+          mcsEventTracker="manage-storage-suffix-shown"
+          mcsEventCategory="storage"
+          mcsEventLabel="manage-storage-suffix">{{ unit }}</mcs-suffix>
+        <mcs-hint mcsHint align="start"
+          mcsId="manage-storage-hint-initial-value"
+          mcsEventTracker="manage-storage-hint-initial-value-shown"
+          mcsEventCategory="storage"
+          mcsEventLabel="manage-storage-initial-value">
+          {{ 'serverShared.manageStorage.hints.initialStorage' | translate: { value: initialValue } }}
+        </mcs-hint>
+        <mcs-error mcsError errorState="required"
+          mcsId="manage-storage-error-required"
+          mcsEventTracker="manage-storage-error-required-shown"
+          mcsEventCategory="storage"
+          mcsEventLabel="manage-storage-error-required">
+          {{ 'serverShared.manageStorage.errors.storageRequired' | translate }}
+        </mcs-error>
+        <mcs-error mcsError errorState="numeric"
+          mcsId="manage-storage-error-numeric"
+          mcsEventTracker="manage-storage-error-numeric-shown"
+          mcsEventCategory="storage"
+          mcsEventLabel="manage-storage-error-numeric">
+          {{ 'serverShared.manageStorage.errors.storageNumeric' | translate }}
+        </mcs-error>
+        <mcs-error mcsError errorState="min"
+          mcsId="manage-storage-error-min"
+          mcsEventTracker="manage-storage-error-min-shown"
+          mcsEventCategory="storage"
+          mcsEventLabel="manage-storage-error-min">
+          {{ 'serverShared.manageStorage.errors.storageMin' | translate: { min_value: minimumUsable } }}
+        </mcs-error>
+        <mcs-error mcsError errorState="max"
+          mcsId="manage-storage-error-max"
+          mcsEventTracker="manage-storage-error-max-shown"
+          mcsEventCategory="storage"
+          mcsEventLabel="manage-storage-error-max">
+          {{ 'serverShared.manageStorage.errors.storageAvailable' | translate: { available_storage: maximumUsable } }}
+        </mcs-error>
+        <mcs-error mcsError errorState="step"
+          mcsId="manage-storage-error-step"
+          mcsEventTracker="manage-storage-error-step-shown"
+          mcsEventCategory="storage"
+          mcsEventLabel="manage-storage-error-step">
+          {{ 'serverShared.manageStorage.errors.storageStep' | translate: { step: step } }}
+        </mcs-error>
+      </mcs-form-field>
+    </mcs-item>
+
+    <mcs-slider [min]="minimumDisplayed" [max]="maximumUsable" [step]="step"
+      [ngModel]="sliderModel" [ngModelOptions]="{standalone: true}" (ngModelChange)="onSliderChanged($event)"
+      mcsId="manage-storage-slider"
+      mcsEventTracker="manage-storage-slider-change"
+      mcsEventCategory="storage"
+      mcsEventLabel="manage-storage-slider">
+    </mcs-slider>
+
+    <mcs-item orientation="separated">
+      <span mcsId="manage-storage-slider-minimum"
+        mcsEventTracker="manage-storage-slider-minimum-shown"
+        mcsEventCategory="storage"
+        mcsEventLabel="manage-storage-slider-minimum">{{ minimumDisplayed }} {{ unit }}</span>
+      <span mcsId="manage-storage-slider-maximum"
+        mcsEventTracker="manage-storage-slider-maximum-shown"
+        mcsEventCategory="storage"
+        mcsEventLabel="manage-storage-slider-maximum">{{ maximumUsable }} {{ unit }}</span>
+    </mcs-item>
+</form>

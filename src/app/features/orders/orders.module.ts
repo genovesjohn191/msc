@@ -14,6 +14,7 @@ import { ordersRoutes } from './orders.constants';
 import { OrdersComponent } from './orders.component';
 import { OrderComponent } from './order/order.component';
 import { ScaleManagedServerComponent } from './scale-managed-server/scale-managed-server.component';
+import { ExpandVdcStorageComponent } from './expand-vdc-storage/expand-vdc-storage.component';
 
 @NgModule({
   entryComponents: [
@@ -22,7 +23,8 @@ import { ScaleManagedServerComponent } from './scale-managed-server/scale-manage
   declarations: [
     OrdersComponent,
     OrderComponent,
-    ScaleManagedServerComponent
+    ScaleManagedServerComponent,
+    ExpandVdcStorageComponent
   ],
   imports: [
     RouterModule.forChild(ordersRoutes),

@@ -95,7 +95,10 @@
               mcsEventLabel="vdc-details-page">
               {{ 'serversVdcOverview.storageProfiles.manageLink' | translate }}
             </a>
-          </mcs-item>
+            <!-- TODO: add link to Expand Vdc Storage wizard when api and orch is ready -->
+
+
+        </mcs-item>
         </ng-container>
 
         <span *ngIf="hasLowStorage">{{ storageSummary }}</span>

@@ -259,6 +259,14 @@
     "requiredFeatureFlag": "EnableOrderingManagedServerScale",
     "documentTitle": "Scale Managed Servers - Macquarie Cloud Services"
   },
+  "orderExpandVdcStorage": {
+    "enumKey": "OrderExpandVdcStorage",
+    "routePath": "expand-vdc-storage",
+    "navigationPath": "orders/expand-vdc-storage",
+    "requiredPermissions": ["OrderEdit"],
+    "requiredFeatureFlag": "EnableOrderingVdcStorageExpand",
+    "documentTitle": "Expand Vdc Storage - Macquarie Cloud Services"
+  },
   "otherTools": {
     "enumKey": "OtherTools",
     "routePath": "tools",

@@ -5,7 +5,8 @@ export enum OrderIdType {
   CreateManagedServer = 'servers.vcloud.provision',
   CreateAddOnAntiMalware = 'av.provision',
   CreateAddOnFirewall = 'firewall.provision',
-  ScaleManageServer = 'servers.vcloud.update'
+  ScaleManageServer = 'servers.vcloud.update',
+  ExpandVdcStorage = 'resources.vdc.storage.update',
 }
 
 /**
