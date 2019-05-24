@@ -33,8 +33,6 @@ const VDC_LOW_STORAGE_PERCENTAGE = 85;
 })
 
 export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDestroy {
-  public hasResources: boolean;
-
   public get warningIconKey(): string {
     return CoreDefinition.ASSETS_SVG_WARNING;
   }
@@ -88,7 +86,6 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
 
   public ngOnInit(): void {
     this.initialize();
-    this._validateResources();
   }
 
   public ngOnDestroy(): void {
@@ -178,17 +175,5 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
       return storagePercentage >= VDC_LOW_STORAGE_PERCENTAGE;
     });
     return (!isNullOrEmpty(storages)) ? storages.length : 0;
-  }
-
-  /**
-   * Initialize the server resources based on repository cache
-   * and check whether the resource has self managed type
-   */
-  private _validateResources(): void {
-    this._resourcesRespository.getAll()
-      .subscribe((resources) => {
-        this.hasResources = !isNullOrEmpty(resources);
-        this._changeDetectorRef.markForCheck();
-      });
   }
 }

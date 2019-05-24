@@ -88,7 +88,7 @@
               <span *ngIf="isEditNicEnabled(serverDetails.server, row)">
                 <a [disabled]="!serverDetails.server.executable"
                     (click)="openEditNicWindow(row)"
-                    mcsId
+                    mcsId="edit-nic"
                     mcsEventTracker="edit-nic"
                     mcsEventCategory="server"
                     mcsEventLabel="server-details-page">
@@ -99,7 +99,7 @@
                 <a *ngIf="!row.isPrimary"
                   [disabled]="!serverDetails.server.executable"
                   (click)="deleteNic(serverDetails.server, row)"
-                  mcsId
+                  mcsId="delete-nic"
                   mcsEventTracker="delete-nic"
                   mcsEventCategory="server"
                   mcsEventLabel="server-details-page">
@@ -153,7 +153,7 @@
                 arrow="right" size="small"
                 [disabled]="!inputIsValid"
                 (click)="addNic(serverDetails.server)"
-                mcsId
+                mcsId="add-nic"
                 mcsEventTracker="add-nic"
                 mcsEventCategory="server"
                 mcsEventLabel="server-details-page">
@@ -193,7 +193,7 @@
 
           <div class="action-items">
             <a (click)="closeEditNicWindow()"
-              mcsId
+              mcsId="close-update-nic"
               mcsEventTracker="update-nic-close"
               mcsEventCategory="server"
               mcsEventLabel="server-details-page">Cancel</a>
@@ -201,7 +201,7 @@
               mcsButton arrow="right" size="small"
               [disabled]="!manageNetwork?.hasChanged"
               (click)="updateNic(serverDetails.server)"
-              mcsId
+              mcsId="update-nic"
               mcsEventTracker="update-nic"
               mcsEventCategory="server"
               mcsEventLabel="server-details-page">

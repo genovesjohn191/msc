@@ -20,7 +20,8 @@ import {
   finalize,
   shareReplay,
   concatMap,
-  tap
+  tap,
+  take
 } from 'rxjs/operators';
 import {
   CoreDefinition,
@@ -267,8 +268,9 @@ export class OrderComponent implements OnInit, OnDestroy {
         return this._ordersRepository.createOrderWorkFlow(order.id, {
           state: OrderWorkflowAction.Submitted
         }).pipe(
-          tap((approvedOrder) => this._navigationService.navigateTo(RouteKey.Notification,
-            getSafeProperty(approvedOrder, (obj) => obj.jobs[0].id))
+          tap((approvedOrder) => this._navigationService.navigateTo(
+            RouteKey.Notification,
+            [getSafeProperty(approvedOrder, (obj) => obj.jobs[0].id)])
           )
         );
       })
@@ -279,12 +281,24 @@ export class OrderComponent implements OnInit, OnDestroy {
    * Listens to parameter change
    */
   private _subscribeToParamChange(): void {
-    this._activatedRoute.paramMap
-      .pipe(takeUntil(this._destroySubject))
-      .subscribe((params: ParamMap) => {
-        let orderId = params.get('id');
-        this._subscribeToOrderById(orderId);
-      });
+    this._activatedRoute.paramMap.pipe(
+      takeUntil(this._destroySubject)
+    ).subscribe((params: ParamMap) => {
+      let orderId = params.get('id');
+      this._subscribeToOrderById(orderId);
+
+    });
+
+    this._activatedRoute.queryParams.pipe(
+      take(1)
+    ).subscribe((params: ParamMap) => {
+      if (isNullOrEmpty(params)) { return; }
+
+      let requestingApproval = params['approval-request'];
+      if (requestingApproval) {
+        this.selectApprover();
+      }
+    });
   }
 
   /**
