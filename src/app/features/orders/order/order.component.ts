@@ -295,9 +295,7 @@ export class OrderComponent implements OnInit, OnDestroy {
       if (isNullOrEmpty(params)) { return; }
 
       let requestingApproval = params['approval-request'];
-      if (requestingApproval) {
-        this.selectApprover();
-      }
+      if (requestingApproval) { this.selectApprover(); }
     });
   }
 
