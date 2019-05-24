@@ -1087,6 +1087,7 @@
       "topology": {
         "title": "Topology",
         "role": "Role",
+        "haGroup": "HA Group",
         "noContentMessage": "Topology information is unavailable."
       }
     },

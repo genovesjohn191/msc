@@ -107,18 +107,6 @@ export class FirewallComponent
   }
 
   /**
-   * Returns the firewall group name based on its ipaddress
-   * @param ipAddress Ip address that served as the basis
-   */
-  public getFirewallGroupName(firewallMap: Map<string, McsFirewall[]>, ipAddress: string): string {
-    let firewallGroup = firewallMap && firewallMap.get(ipAddress);
-    if (isNullOrEmpty(firewallGroup)) { return ''; }
-
-    let masterFirewall = firewallGroup.find((firewall) => firewall.haRole === 'Master');
-    return isNullOrEmpty(masterFirewall) ? '' : masterFirewall.managementName;
-  }
-
-  /**
    * Event that emits when the tab is changed in the routing tabgroup
    * @param tab Active tab
    */
@@ -151,9 +139,8 @@ export class FirewallComponent
 
     // Key function pointer for mapping objects
     let keyFn = (item: McsFirewall) => {
-      let resourseName = isNullOrEmpty(item.managementIpAddress) ? '' :
-        item.managementIpAddress;
-      return resourseName;
+      let resourceName = isNullOrEmpty(item.haGroupName) ? '' : item.haGroupName;
+      return resourceName;
     };
 
     // Listen to all records changed
