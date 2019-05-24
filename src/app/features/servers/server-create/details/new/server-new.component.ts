@@ -317,14 +317,13 @@ export class ServerNewComponent
     operatingSystems.forEach((operatingSystem) => {
       if (operatingSystem.serviceType !== this.serviceType) { return; }
 
-      let keyString = operatingSystem.name.split(CoreDefinition.REGEX_SPACE_AND_DASH);
-      if (isNullOrEmpty(keyString)) { return; }
+      if (isNullOrEmpty(operatingSystem.vendor)) { return; }
       let groupedOs: McsServerOperatingSystem[];
 
-      let existingOs = operatingSystemsMap.get(keyString[0]);
+      let existingOs = operatingSystemsMap.get(operatingSystem.vendor);
       groupedOs = isNullOrEmpty(existingOs) ? new Array() : existingOs;
       groupedOs.push(operatingSystem);
-      operatingSystemsMap.set(keyString[0], groupedOs);
+      operatingSystemsMap.set(operatingSystem.vendor, groupedOs);
     });
     return operatingSystemsMap;
   }
