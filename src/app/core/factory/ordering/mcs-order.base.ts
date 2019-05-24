@@ -31,8 +31,6 @@ import {
   ActionStatus,
   McsOrderItemCreate,
   McsJob,
-  OrderWorkflowAction,
-  McsApiJobRequestBase,
   McsOrderItemType,
   orderTypeText,
   OrderType
@@ -59,7 +57,6 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
   // Order builders and director
   private _orderBuilder: McsOrderBuilder;
   private _orderDirector: McsOrderDirector;
-  private _workflowMapTable: Map<OrderWorkflowAction, (jobReference: McsApiJobRequestBase) => Observable<McsOrder>>;
 
   // Order content
   private _createdOrder: McsOrder;
@@ -78,10 +75,8 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
     private _orderFactory: IMcsOrderFactory,
     private _orderItemProductType: string
   ) {
-    this._workflowMapTable = new Map();
     this._orderBuilder = new McsOrderBuilder();
     this._orderDirector = new McsOrderDirector();
-    this._createWorkflowMap();
     this._subscribeAndExecuteNewOrder();
     this._subscribeToOrderItemType();
   }
@@ -208,11 +203,17 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
    * @param workflow Workflow details to be submitted
    */
   public submitOrderWorkflow(workflow: McsOrderWorkflow): Observable<McsOrder> {
-    let executeOrderWorkflow = this._workflowMapTable.get(workflow.state);
-    if (isNullOrEmpty(executeOrderWorkflow)) {
-      throw new Error(`Cannot find the associated workflow state for: ${workflow.state}`);
+    if (isNullOrEmpty(this._createdOrder)) {
+      throw new Error('Cannot submit order workflow because the order has not been created yet.');
     }
-    return executeOrderWorkflow(workflow);
+
+    return this._orderFactory.createOrderWorkFlow(this._createdOrder.id, workflow).pipe(
+      tap((response) => response && this.setJobs(...response.jobs)),
+      catchError((httpError) => {
+        this.setErrors(...httpError.errorMessages);
+        return throwError(httpError);
+      })
+    );
   }
 
   /**
@@ -302,81 +303,6 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
   private _executePendingRequest(): void {
     if (!this._hasPendingRequest()) { return; }
     this._executeOrderRequest(this._pendingOrderRequest).subscribe();
-  }
-
-  /**
-   * Creates the order workflow table map
-   */
-  private _createWorkflowMap(): void {
-    this._workflowMapTable.set(OrderWorkflowAction.Draft, this._draftOrder.bind(this));
-    this._workflowMapTable.set(OrderWorkflowAction.Submitted, this._submitOrder.bind(this));
-    this._workflowMapTable.set(OrderWorkflowAction.Cancelled, this._cancelOrder.bind(this));
-    this._workflowMapTable.set(OrderWorkflowAction.Rejected, this._rejectOrder.bind(this));
-    this._workflowMapTable.set(OrderWorkflowAction.AwaitingApproval,
-      this._sendOrderForApproval.bind(this));
-  }
-
-  /**
-   * Send the order workflow as Draft state
-   * @param jobReference Job Reference to be appended on the workflow
-   */
-  private _draftOrder(jobReference: McsApiJobRequestBase): Observable<McsOrder> {
-    return this._createOrderWorkflow(OrderWorkflowAction.Draft, jobReference);
-  }
-
-  /**
-   * Send the order workflow as Submitted state
-   * @param jobReference Job Reference to be appended on the workflow
-   */
-  private _submitOrder(jobReference: McsApiJobRequestBase): Observable<McsOrder> {
-    return this._createOrderWorkflow(OrderWorkflowAction.Submitted, jobReference);
-  }
-
-  /**
-   * Send the order workflow as Cancelled state
-   * @param jobReference Job Reference to be appended on the workflow
-   */
-  private _cancelOrder(jobReference: McsApiJobRequestBase): Observable<McsOrder> {
-    return this._createOrderWorkflow(OrderWorkflowAction.Cancelled, jobReference);
-  }
-
-  /**
-   * Send the order workflow as Rejected state
-   * @param jobReference Job Reference to be appended on the workflow
-   */
-  private _rejectOrder(jobReference: McsApiJobRequestBase): Observable<McsOrder> {
-    return this._createOrderWorkflow(OrderWorkflowAction.Rejected, jobReference);
-  }
-
-  /**
-   * Send the order workflow as for approval state
-   * @param jobReference Job Reference to be appended on the workflow
-   */
-  private _sendOrderForApproval(jobReference: McsApiJobRequestBase): Observable<McsOrder> {
-    return this._createOrderWorkflow(OrderWorkflowAction.AwaitingApproval, jobReference);
-  }
-
-  /**
-   * Create the order workflow with corresponding update of the order
-   * @param workflowAction Workflow action to be executed
-   * @param referenceObject Reference object of the workflow response
-   */
-  private _createOrderWorkflow(
-    workflowAction: OrderWorkflowAction,
-    referenceObject: McsApiJobRequestBase
-  ): Observable<McsOrder> {
-    let workflowContext = {
-      state: workflowAction,
-      ...referenceObject
-    } as McsOrderWorkflow;
-
-    return this._orderFactory.createOrderWorkFlow(this._createdOrder.id, workflowContext).pipe(
-      tap((response) => response && this.setJobs(...response.jobs)),
-      catchError((httpError) => {
-        this.setErrors(...httpError.errorMessages);
-        return throwError(httpError);
-      })
-    );
   }
 
   /**

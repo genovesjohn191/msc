@@ -69,8 +69,14 @@ export abstract class McsOrderWizardBase extends McsWizardBase implements McsDis
   public submitOrderWorkflow(workflow: McsOrderWorkflow): void {
     if (isNullOrEmpty(workflow)) { return; }
 
+    // We need to send the order as a draft when the request is awaiting approval
+    // and navigate to order details page with approvers as initial display
+    let subjectForApproval = workflow.state === OrderWorkflowAction.AwaitingApproval;
+    if (subjectForApproval) { workflow.state = OrderWorkflowAction.Draft; }
+
     this._orderBase.submitOrderWorkflow(workflow).pipe(
-      tap(() => this.navigateOrderByWorkflowAction(workflow.state))
+      tap(() => this.navigateOrderByWorkflowAction(subjectForApproval ?
+        OrderWorkflowAction.AwaitingApproval : workflow.state))
     ).subscribe();
   }
 
@@ -83,7 +89,11 @@ export abstract class McsOrderWizardBase extends McsWizardBase implements McsDis
       workflowAction === OrderWorkflowAction.Draft;
     if (!shouldBeRedirected) { return; }
 
-    this._navigationService.navigateTo(RouteKey.OrderDetails, this._orderBase.order.id);
+    workflowAction === OrderWorkflowAction.AwaitingApproval ?
+      this._navigationService.navigateTo(RouteKey.OrderDetails, [this._orderBase.order.id], {
+        queryParams: { 'approval-request': true }
+      }) :
+      this._navigationService.navigateTo(RouteKey.OrderDetails, [this._orderBase.order.id]);
   }
 
   /**

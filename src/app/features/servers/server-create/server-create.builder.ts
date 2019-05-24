@@ -98,9 +98,9 @@ export class ServerCreateBuilder<T> {
     if (isNullOrEmpty(orderDetails)) { return; }
     this._serverCreateService.createOrUpdateOrder({
       contractDurationMonths: orderDetails.contractDurationMonths,
-      billingEntityId: orderDetails.billingEntity.id as any,
-      billingSiteId: orderDetails.billingSite.id as any,
-      billingCostCentreId: orderDetails.billingCostCentre.id as any,
+      billingEntityId: orderDetails.billingEntityId,
+      billingSiteId: orderDetails.billingSiteId,
+      billingCostCentreId: orderDetails.billingCostCentreId,
       description: orderDetails.description
     });
   }

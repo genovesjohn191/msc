@@ -233,9 +233,9 @@ export class ScaleManagedServerComponent extends McsOrderWizardBase implements O
     this._scaleManagedServerService.createOrUpdateOrder({
       contractDurationMonths: orderDetails.contractDurationMonths,
       description: orderDetails.description,
-      billingEntityId: orderDetails.billingEntity.id as any,
-      billingSiteId: orderDetails.billingSite.id as any,
-      billingCostCentreId: orderDetails.billingCostCentre.id as any
+      billingEntityId: orderDetails.billingEntityId,
+      billingSiteId: orderDetails.billingSiteId,
+      billingCostCentreId: orderDetails.billingCostCentreId
     });
   }
 

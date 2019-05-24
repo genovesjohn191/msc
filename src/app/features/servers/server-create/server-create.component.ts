@@ -189,12 +189,12 @@ export class ServerCreateComponent extends McsOrderWizardBase
    */
   public onSubmitOrder(submitDetails: OrderDetails): void {
     if (isNullOrEmpty(submitDetails)) { return; }
-    let workflow = {
-      state: submitDetails.workflowAction,
-      clientReferenceObject: {
-        resourcePath: CoreRoutes.getNavigationPath(RouteKey.ServerDetails)
-      }
-    } as McsOrderWorkflow;
+    let workflow = new McsOrderWorkflow();
+    workflow.state = submitDetails.workflowAction;
+    workflow.clientReferenceObject = {
+      resourcePath: CoreRoutes.getNavigationPath(RouteKey.ServerDetails)
+    };
+
     this.waitingForProvision = submitDetails.workflowAction === OrderWorkflowAction.Submitted;
     this.submitOrderWorkflow(workflow);
   }

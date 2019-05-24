@@ -34,7 +34,7 @@
         </ng-container>
 
         <ng-container *mcsAccessControl="['DedicatedVmEdit', 'CloudVmEdit']">
-          <mcs-item *ngIf="hasResources">
+          <mcs-item>
             <button mcsButton size="small"
               (click)="createNewServer()"
               mcsId
@@ -101,41 +101,43 @@
         </mcs-item>
         </ng-container>
 
-        <span *ngIf="hasLowStorage">{{ storageSummary }}</span>
-        <mcs-accordion [multi]="true">
-          <mcs-accordion-panel
-            *ngFor="let storage of selectedVdc.storage; let i = index"
-            [expanded]="i === 0">
-            <mcs-accordion-panel-header mcsPanelHeaderDef>
-              <mcs-icon size="small" [key]="getStorageStatusIconKey(storage)"></mcs-icon>
-              {{ storage.name }}
-            </mcs-accordion-panel-header>
+        <section margin-top-medium>
+          <span *ngIf="hasLowStorage">{{ storageSummary }}</span>
+          <mcs-accordion [multi]="true">
+            <mcs-accordion-panel
+              *ngFor="let storage of selectedVdc.storage; let i = index"
+              [expanded]="i === 0">
+              <mcs-accordion-panel-header mcsPanelHeaderDef>
+                <mcs-icon size="small" [key]="getStorageStatusIconKey(storage)"></mcs-icon>
+                {{ storage.name }}
+              </mcs-accordion-panel-header>
 
-            <mcs-item>
-              <span>{{ 'serversVdcOverview.storageProfiles.status' | translate }}:</span>
-              <span [innerHTML]="storage?.toggleLabel | mcsDataLabel"></span>
-            </mcs-item>
+              <mcs-item>
+                <span>{{ 'serversVdcOverview.storageProfiles.status' | translate }}:</span>
+                <span [innerHTML]="storage?.toggleLabel | mcsDataLabel"></span>
+              </mcs-item>
 
-            <mcs-item *ngIf="storage.iops">
-              <span>{{ 'serversVdcOverview.storageProfiles.tier' | translate }}:</span>
-              <span [innerHTML]="(iopsLabelPlaceholder |
-                mcsTextPlaceholder: 'iops': storage.iops) |
-                mcsDataLabel"></span>
-            </mcs-item>
+              <mcs-item *ngIf="storage.iops">
+                <span>{{ 'serversVdcOverview.storageProfiles.tier' | translate }}:</span>
+                <span [innerHTML]="(iopsLabelPlaceholder |
+                  mcsTextPlaceholder: 'iops': storage.iops) |
+                  mcsDataLabel"></span>
+              </mcs-item>
 
-            <mcs-item>
-              <span>{{ 'serversVdcOverview.storageProfiles.utilisation' | translate }}:</span>
-              <mcs-capacity-bar full-width
-                [(ngModel)]="storage.usedMB"
-                [maxValue]="storage.limitMB"></mcs-capacity-bar>
-            </mcs-item>
+              <mcs-item>
+                <span>{{ 'serversVdcOverview.storageProfiles.utilisation' | translate }}:</span>
+                <mcs-capacity-bar full-width
+                  [(ngModel)]="storage.usedMB"
+                  [maxValue]="storage.limitMB"></mcs-capacity-bar>
+              </mcs-item>
 
-            <mcs-item *ngIf="isStorageProfileLow(storage)">
-              <mcs-icon [key]="warningIconKey"></mcs-icon>
-              <span>{{ 'serversVdcOverview.storageProfiles.lowStorageProfile' | translate }}</span>
-            </mcs-item>
-          </mcs-accordion-panel>
-        </mcs-accordion>
+              <mcs-item *ngIf="isStorageProfileLow(storage)">
+                <mcs-icon [key]="warningIconKey"></mcs-icon>
+                <span>{{ 'serversVdcOverview.storageProfiles.lowStorageProfile' | translate }}</span>
+              </mcs-item>
+            </mcs-accordion-panel>
+          </mcs-accordion>
+        </section>
       </mcs-presentation-panel>
     </mcs-grid-column>
   </mcs-grid-row>
