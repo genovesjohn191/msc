@@ -171,9 +171,11 @@
 
         <ng-container [ngSwitch]="fcWorkflowAction?.value">
           <mcs-note *ngSwitchCase="orderWorkFlowEnum.Submitted">
-            <span read-only>
-              {{ 'orderDetailsStep.orderActions.submitOrderNote' | translate }}
-            </span><br>
+            <span read-only>{{ 'orderDetailsStep.orderActions.submitOrderNote' | translate }}</span><br>
+            <a>{{ 'orderDetailsStep.orderActions.termsCondition' | translate }}</a>
+          </mcs-note>
+          <mcs-note *ngSwitchCase="orderWorkFlowEnum.AwaitingApproval">
+            <span read-only>{{ 'orderDetailsStep.orderActions.submitOrderNote' | translate }}</span><br>
             <a>{{ 'orderDetailsStep.orderActions.termsCondition' | translate }}</a>
           </mcs-note>
           <mcs-note *ngSwitchCase="orderWorkFlowEnum.Unknown">
