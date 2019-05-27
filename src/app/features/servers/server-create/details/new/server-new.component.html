@@ -40,11 +40,11 @@
     </mcs-error>
   </mcs-form-field>
 
-  <!-- Imges Selection -->
+  <!-- Operating System Selection -->
   <mcs-form-field>
     <mcs-select mcsId="select-image"
       [formControl]="fcImage"
-      [placeholder]="'serverCreateDetailsStep.newServer.placeholder.image' | translate"
+      [placeholder]="'serverCreateDetailsStep.newServer.placeholder.operatingSystem' | translate"
       [mcsContextualHelp]="'serverCreateDetailsStep.contextualHelp.serverTemplateField' | translate">
       <!-- Os Group -->
       <mcs-option-group>
@@ -74,7 +74,7 @@
     </mcs-select>
 
     <mcs-error mcsError errorState="required">
-      {{ 'serverCreateDetailsStep.newServer.errors.selectImageRequired' | translate }}
+      {{ 'serverCreateDetailsStep.newServer.errors.selectOsRequired' | translate }}
     </mcs-error>
   </mcs-form-field>
 
