@@ -52,7 +52,8 @@
           <span>{{ 'serverCreateDetailsStep.newServer.headers.os' | translate }}</span>
         </ng-container>
 
-        <mcs-option-group [label]="platform.key"
+        <mcs-option-group mcsId="os-option-group"
+          [label]="platform.key"
           *ngFor="let platform of (operatingSystemsMap$ | async) | mcsMapIterable">
 
           <mcs-option *ngFor="let os of platform.value" [value]="os">
@@ -62,7 +63,7 @@
       </mcs-option-group>
 
       <!-- Template Group -->
-      <mcs-option-group *ngIf="customTemplates">
+      <mcs-option-group mcsId="template-option-group" *ngIf="customTemplates">
         <ng-container *mcsOptionGroupHeader>
           <span>{{ 'serverCreateDetailsStep.newServer.headers.templates' | translate }}</span>
         </ng-container>
