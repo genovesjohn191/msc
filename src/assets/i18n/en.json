@@ -515,7 +515,7 @@
       },
       "placeholder": {
         "vApp": "Select vApp",
-        "image": "Select Image",
+        "operatingSystem": "Select Operating System",
         "network": "Select Network"
       },
       "hints": {
@@ -525,7 +525,7 @@
         "serverNameRequired": "Enter a server name.",
         "invalidServerName": "Server name can only contain letters, numbers or hyphens.",
         "selectVappRequired": "Virtual application is required.",
-        "selectImageRequired": "You must select an image.",
+        "selectOsRequired": "You must select an operating system.",
         "selectNetworkRequired": "You must select a network."
       },
       "noResourceFound": {
