@@ -68,6 +68,7 @@ import { ServerCreateDetailsBase } from '../server-create-details.base';
 
 const DEFAULT_MANAGE_STORAGE_MINIMUM = 50;
 const DEFAULT_SELF_MANAGE_STORAGE_MINIMUM = 30;
+const DEFAULT_OS_VENDOR = 'Other';
 
 @Component({
   selector: 'mcs-server-new',
@@ -316,14 +317,13 @@ export class ServerNewComponent
 
     operatingSystems.forEach((operatingSystem) => {
       if (operatingSystem.serviceType !== this.serviceType) { return; }
-
-      if (isNullOrEmpty(operatingSystem.vendor)) { return; }
+      let osVendor = operatingSystem.vendor || DEFAULT_OS_VENDOR;
       let groupedOs: McsServerOperatingSystem[];
 
-      let existingOs = operatingSystemsMap.get(operatingSystem.vendor);
+      let existingOs = operatingSystemsMap.get(osVendor);
       groupedOs = isNullOrEmpty(existingOs) ? new Array() : existingOs;
       groupedOs.push(operatingSystem);
-      operatingSystemsMap.set(operatingSystem.vendor, groupedOs);
+      operatingSystemsMap.set(osVendor, groupedOs);
     });
     return operatingSystemsMap;
   }
