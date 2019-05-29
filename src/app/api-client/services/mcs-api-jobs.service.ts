@@ -5,7 +5,8 @@ import {
   McsJob,
   McsApiSuccessResponse,
   McsApiRequestParameter,
-  McsQueryParam
+  McsQueryParam,
+  JobStatus
 } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
@@ -41,6 +42,23 @@ export class McsApiJobsService implements IMcsApiJobsService {
           return apiResponse;
         })
       );
+  }
+
+  /**
+   * Get all jobs based on its status
+   * @param statuses Statuses to be filtered
+   */
+  public getJobsByStatus(...statuses: JobStatus[]): Observable<McsApiSuccessResponse<McsJob[]>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/jobs/?status=${statuses.map((status) => `${JobStatus[status]},`)}`;
+
+    return this._mcsApiService.get(mcsApiRequestParameter).pipe(
+      map((response) => {
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse.deserializeResponse<McsJob[]>(McsJob, response);
+        return apiResponse;
+      })
+    );
   }
 
   /**

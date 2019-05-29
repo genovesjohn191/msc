@@ -12,7 +12,9 @@ import {
   McsServerPowerstateCommand,
   McsServerRename,
   McsServerDelete,
-  McsServerPasswordReset
+  McsServerPasswordReset,
+  JobStatus,
+  McsApiSuccessResponse
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -21,7 +23,8 @@ import {
 import {
   IMcsApiServersService,
   McsApiClientFactory,
-  McsApiServersFactory
+  McsApiServersFactory,
+  IMcsApiJobsService
 } from '@app/api-client';
 import { McsJobsRepository } from './repositories/mcs-jobs.repository';
 import { McsInternetRepository } from './repositories/mcs-internet.repository';
@@ -31,6 +34,7 @@ export class McsApiService {
   private readonly _jobsRepository: McsJobsRepository;
   private readonly _internetRepository: McsInternetRepository;
 
+  private readonly _jobsApi: IMcsApiJobsService;
   private readonly _serversApi: IMcsApiServersService;
 
   constructor(_injector: Injector) {
@@ -43,18 +47,19 @@ export class McsApiService {
     this._serversApi = apiClientFactory.getService(new McsApiServersFactory());
   }
 
+  public getJobsByStatus(...statuses: JobStatus[]): Observable<McsApiCollection<McsJob>> {
+    return this._jobsApi.getJobsByStatus(...statuses).pipe(
+      map((response) => this._mapToCollection(response))
+    );
+  }
+
   public getJobs(query: McsQueryParam): Observable<McsApiCollection<McsJob>> {
     let dataCollection = isNullOrEmpty(query) ?
       this._jobsRepository.getAll() :
       this._jobsRepository.filterBy(query);
 
     return dataCollection.pipe(
-      map((response) => {
-        return {
-          collection: response,
-          totalCollectionCount: this._jobsRepository.getTotalRecordsCount()
-        } as McsApiCollection<McsJob>;
-      })
+      map((response) => this._mapToCollection(response, this._jobsRepository.getTotalRecordsCount()))
     );
   }
 
@@ -68,12 +73,7 @@ export class McsApiService {
       this._internetRepository.filterBy(query);
 
     return dataCollection.pipe(
-      map((response) => {
-        return {
-          collection: response,
-          totalCollectionCount: this._internetRepository.getTotalRecordsCount()
-        } as McsApiCollection<McsInternetPort>;
-      })
+      map((response) => this._mapToCollection(response, this._internetRepository.getTotalRecordsCount()))
     );
   }
 
@@ -103,5 +103,37 @@ export class McsApiService {
     return this._serversApi.resetVmPassword(id, details).pipe(
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
+  }
+
+  /**
+   * Map records to the collection list of the api
+   * @param records Records to be converted into collection
+   */
+  private _mapToCollection<T>(records: McsApiSuccessResponse<any>): McsApiCollection<T>;
+
+  /**
+   * Map records to the collection list of the api
+   * @param records Records to be converted into collection
+   * @param totalRecordsCount Total records count of the collection
+   */
+  private _mapToCollection<T>(records: T[], totalRecordsCount?: number): McsApiCollection<T>;
+
+  private _mapToCollection<T>(
+    records: McsApiSuccessResponse<any> | T[],
+    totalRecordsCount?: number
+  ): McsApiCollection<T> {
+
+    let apiCollection = new McsApiCollection<T>();
+    if (records instanceof McsApiSuccessResponse) {
+      apiCollection.collection = records && records.content;
+      apiCollection.totalCollectionCount = records && records.totalCount;
+    } else {
+      apiCollection.collection = records && records;
+      apiCollection.totalCollectionCount = totalRecordsCount;
+    }
+
+    apiCollection.collection = apiCollection.collection || [];
+    apiCollection.totalCollectionCount = apiCollection.totalCollectionCount || 0;
+    return apiCollection;
   }
 }

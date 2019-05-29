@@ -5,7 +5,10 @@ import {
   Observable,
   BehaviorSubject
 } from 'rxjs';
-import { CoreEvent } from '@app/core';
+import {
+  CoreEvent,
+  McsNotificationContextService
+} from '@app/core';
 import { McsJob } from '@app/models';
 import {
   isNullOrEmpty,
@@ -21,8 +24,12 @@ export class UserPanelService implements McsDisposable {
   private _notificationsChange = new BehaviorSubject<McsJob[]>([]);
   private _currentUserJobHandler: Subscription;
 
-  constructor(private _eventDispatcher: EventBusDispatcherService) {
+  constructor(
+    private _eventDispatcher: EventBusDispatcherService,
+    private _notificationContext: McsNotificationContextService
+  ) {
     this._registerEvents();
+    this._notificationContext.getAllActiveJobs().subscribe();
   }
 
   public dispose() {
