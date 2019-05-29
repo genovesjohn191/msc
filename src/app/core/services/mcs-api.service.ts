@@ -30,7 +30,11 @@ import { McsCookieService } from '../services/mcs-cookie.service';
 /**
  * Macquarie Portal Api Service class
  * @McsPortalApiService
- * @deprecated Use  the API-Client Instead
+ * @deprecated Use  the API-Client Instead,
+ * @note before deleting this, make sure the api-client service is working
+ * under notification-context getJobsByStatus and would not cause circular dependency issue
+ * because as of now the cookie service of the core was called under api-client that
+ * creates an issue of circular dependency
  */
 @Injectable()
 export class McsApiService {

@@ -68,7 +68,7 @@ export class McsNotificationContextService implements McsDisposable {
    * Initializes the context instance
    */
   public onInit(): void {
-    this.getAllActiveJobs();
+    this.getAllActiveJobs().subscribe();
     this._createFilteredJobList();
     this._listenToJobChanged();
   }
@@ -84,7 +84,7 @@ export class McsNotificationContextService implements McsDisposable {
    * Get all the current active jobs from API including all the completed
    * job that is not yet past on their due dates
    */
-  public getAllActiveJobs() {
+  public getAllActiveJobs(): Observable<McsJob[]> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/jobs/?status=Pending,Active';
 
@@ -92,13 +92,13 @@ export class McsNotificationContextService implements McsDisposable {
       map((response) => {
         let apiResponse = McsApiSuccessResponse
           .deserializeResponse<McsJob[]>(McsJob, response);
-        return apiResponse ? apiResponse : new McsApiSuccessResponse<McsJob[]>();
+        return apiResponse.content;
       }),
       tap((jobs) => {
-        this._notifications = jobs && jobs.content;
+        this._notifications = jobs;
         this._notificationsStream.next(this._notifications);
       })
-    ).subscribe();
+    );
   }
 
   /**

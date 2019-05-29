@@ -2,7 +2,8 @@ import { Observable } from 'rxjs';
 import {
   McsQueryParam,
   McsApiSuccessResponse,
-  McsJob
+  McsJob,
+  JobStatus
 } from '@app/models';
 
 export interface IMcsApiJobsService {
@@ -12,6 +13,12 @@ export interface IMcsApiJobsService {
    * @param query Query predicate that serves as the parameter of the endpoint
    */
   getJobs(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsJob[]>>;
+
+  /**
+   * Get all jobs based on its status
+   * @param statuses Statuses to be filtered
+   */
+  getJobsByStatus(...status: JobStatus[]): Observable<McsApiSuccessResponse<McsJob[]>>;
 
   /**
    * Get job by ID (MCS API Response)
