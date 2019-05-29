@@ -19,8 +19,6 @@ import {
 import { CoreConfig } from './core.config';
 import { coreProviders } from './core.constants';
 import { CoreEvent } from './core.event';
-import { McsDialogContainerComponent } from './factory/dialog/mcs-dialog-container.component';
-import { McsDialogRefDirective } from './factory/dialog/mcs-dialog-ref.directive';
 import {
   McsSnackBarContainerComponent
 } from './factory/snack-bar/mcs-snack-bar-container.component';
@@ -38,8 +36,6 @@ import { McsErrorHandlerInterceptor } from './interceptors/mcs-error-handler.int
 
 @NgModule({
   declarations: [
-    McsDialogContainerComponent,
-    McsDialogRefDirective,
     McsSnackBarContainerComponent,
     McsSnackBarRefDirective
   ],
@@ -65,7 +61,6 @@ import { McsErrorHandlerInterceptor } from './interceptors/mcs-error-handler.int
     HttpClientModule
   ],
   entryComponents: [
-    McsDialogContainerComponent,
     McsSnackBarContainerComponent
   ]
 })

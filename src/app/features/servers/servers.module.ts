@@ -1,10 +1,9 @@
 import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { SharedModule } from '@app/shared';
 import { FeaturesSharedModule } from '@app/features-shared';
 import { serversRoutes } from './servers.constants';
 import { ServersComponent } from './servers.component';
-/** Shared */
-import { ServerCommandComponent } from './shared';
 /** Server */
 import {
   ServerComponent,
@@ -31,12 +30,10 @@ import {
   VdcStorageComponent
 } from './vdc';
 import { serversProviders } from './servers.constants';
-import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
     ServersComponent,
-    ServerCommandComponent,
     ServerComponent,
     ServerManagementComponent,
     ServerStorageComponent,

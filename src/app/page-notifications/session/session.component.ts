@@ -2,18 +2,22 @@ import {
   Component,
   OnInit
 } from '@angular/core';
-import { filter } from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
 import {
-  SessionIdleDialogComponent,
-  SessionTimeoutDialogComponent
-} from './session-dialogs';
+  filter,
+  tap
+} from 'rxjs/operators';
 import {
   CoreDefinition,
-  McsDialogService,
-  McsDialogRef,
   McsSessionHandlerService
 } from '@app/core';
 import { isNullOrEmpty } from '@app/utilities';
+import {
+  DialogService,
+  DialogMessageConfig,
+  DialogRef
+} from '@app/shared';
+import { SessionIdleDialogComponent } from './session-dialogs';
 
 @Component({
   selector: 'mcs-session',
@@ -21,10 +25,11 @@ import { isNullOrEmpty } from '@app/utilities';
 })
 
 export class SessionComponent implements OnInit {
-  private _sessionIdleDialogRef: McsDialogRef<any>;
+  private _sessionIdleDialogRef: DialogRef<any>;
 
   public constructor(
-    private _dialogService: McsDialogService,
+    private _translateService: TranslateService,
+    private _dialogService: DialogService,
     private _sessionHandlerService: McsSessionHandlerService
   ) { }
 
@@ -60,6 +65,9 @@ export class SessionComponent implements OnInit {
       .subscribe(this._showTimeOutDialog.bind(this));
   }
 
+  /**
+   * Shows the idle dialog
+   */
   private _showIdleDialog(): void {
     this._sessionIdleDialogRef = this._dialogService.open(SessionIdleDialogComponent, {
       id: 'session-idle-dialog',
@@ -75,17 +83,33 @@ export class SessionComponent implements OnInit {
     });
   }
 
+  /**
+   * Closes the idle dialog
+   */
   private _closeIdleDialog(): void {
     if (isNullOrEmpty(this._sessionIdleDialogRef)) { return; }
     this._sessionIdleDialogRef.close(true);
   }
 
+  /**
+   * Shows the timedout dialog
+   */
   private _showTimeOutDialog(): void {
-    this._dialogService.open(SessionTimeoutDialogComponent, {
+    let dialogData = {
+      title: this._translateService.instant(`dialogSessionTimedOut.title`),
+      message: this._translateService.instant(`dialogSessionTimedOut.message`),
+      okText: this._translateService.instant(`dialogSessionTimedOut.signIn`)
+    } as DialogMessageConfig;
+
+    let dialogRef = this._dialogService.openMessage(dialogData, {
       id: 'session-timedout-dialog',
-      size: 'medium',
       backdropColor: 'black',
+      size: 'medium',
       disableClose: true
     });
+
+    dialogRef.afterClosed().pipe(
+      tap(() => this._sessionHandlerService.renewSession())
+    ).subscribe();
   }
 }

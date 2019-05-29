@@ -5,8 +5,8 @@ import {
   McsResourceMedia,
   McsResourceMediaServer,
   McsJob,
-  McsApiJobRequestBase,
-  McsServerAttachMedia
+  McsServerAttachMedia,
+  McsServerDetachMedia
 } from '@app/models';
 
 export interface IMcsApiMediaService {
@@ -34,12 +34,12 @@ export interface IMcsApiMediaService {
    *
    * @param serverId Server Identification to be detached from the media
    * @param mediaId Media Identification where the server will be detached
-   * @param referenceObject Reference object to be returned from the job
+   * @param serverDetails Server details to be detached
    */
   detachServerMedia(
     serverId: any,
     mediaId: any,
-    referenceObject?: McsApiJobRequestBase
+    serverDetails: McsServerDetachMedia
   ): Observable<McsApiSuccessResponse<McsJob>>;
 
   /**

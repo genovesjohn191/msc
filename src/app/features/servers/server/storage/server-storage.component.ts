@@ -21,7 +21,6 @@ import {
 } from 'rxjs/operators';
 import {
   CoreDefinition,
-  McsDialogService,
   McsErrorHandlerService,
   McsTableDataSource,
   McsAccessControlService,
@@ -35,7 +34,11 @@ import {
   getSafeProperty,
   addOrUpdateArrayRecord
 } from '@app/utilities';
-import { ComponentHandlerDirective } from '@app/shared';
+import {
+  ComponentHandlerDirective,
+  DialogService,
+  DialogConfirmation
+} from '@app/shared';
 import {
   McsJob,
   McsResourceStorage,
@@ -50,7 +53,6 @@ import {
 } from '@app/services';
 import { ServerManageStorage } from '@app/features-shared';
 import { EventBusDispatcherService } from '@app/event-bus';
-import { DeleteStorageDialogComponent } from '@app/features-shared';
 import { ServerService } from '../server.service';
 import { ServerDetailsBase } from '../server-details.base';
 import { ServersService } from '../../servers.service';
@@ -132,7 +134,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     private _eventDispatcher: EventBusDispatcherService,
     private _translateService: TranslateService,
     private _serversService: ServersService,
-    private _dialogService: McsDialogService,
+    private _dialogService: DialogService,
   ) {
     super(
       _resourcesRepository,
@@ -257,10 +259,14 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
    * @param disk Storage disk to be deleted
    */
   public deleteDisk(server: McsServer, disk: McsServerStorageDevice): void {
-    let dialogRef = this._dialogService.open(DeleteStorageDialogComponent, {
+    let dialogData = {
       data: disk,
-      size: 'medium'
-    });
+      type: 'warning',
+      title: this._translateService.instant('dialogDetachMedia.title'),
+      message: this._translateService.instant('dialogDetachMedia.message', { storage_name: disk.name })
+    } as DialogConfirmation<McsServerStorageDevice>;
+
+    let dialogRef = this._dialogService.openConfirmation(dialogData);
 
     this.selectedDisk = disk;
     dialogRef.afterClosed().subscribe((result) => {

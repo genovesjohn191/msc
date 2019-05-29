@@ -7,8 +7,8 @@ import {
   McsJob,
   McsResourceMedia,
   McsResourceMediaServer,
-  McsApiJobRequestBase,
-  McsServerAttachMedia
+  McsServerAttachMedia,
+  McsServerDetachMedia
 } from '@app/models';
 import {
   McsApiClientFactory,
@@ -54,9 +54,9 @@ export class McsMediaRepository extends McsRepositoryBase<McsResourceMedia> {
   public detachServerMedia(
     serverId: any,
     mediaId: any,
-    referenceObject?: McsApiJobRequestBase
+    serverDetails?: McsServerDetachMedia
   ): Observable<McsJob> {
-    return this._mediaApiService.detachServerMedia(serverId, mediaId, referenceObject).pipe(
+    return this._mediaApiService.detachServerMedia(serverId, mediaId, serverDetails).pipe(
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }

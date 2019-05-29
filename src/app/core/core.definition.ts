@@ -213,12 +213,6 @@ export class CoreDefinition {
   public static CONSOLE_DEFAULT_WIDTH = 800;
   public static CONSOLE_DEFAULT_HEIGHT = 600;
 
-  /** Dialog Size */
-  public static DIALOG_SIZE_SMALL = '300px';
-  public static DIALOG_SIZE_MEDIUM = '400px';
-  public static DIALOG_SIZE_LARGE = '500px';
-  public static DIALOG_SIZE_XLARGE = '600px';
-
   /** Session count */
   public static SESSION_IDLE_TIME_IN_SECONDS = 720;
   public static SESSION_TIMEOUT_COUNTDOWN_IN_SECONDS = 150;

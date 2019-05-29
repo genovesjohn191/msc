@@ -24,9 +24,13 @@ import {
   McsServerCompute,
   McsServerMedia,
   McsServerAttachMedia,
-  McsApiJobRequestBase,
+  McsServerDelete,
   McsServerSnapshot,
-  McsServerCreateSnapshot,
+  McsServerSnapshotCreate,
+  McsServerDetachMedia,
+  McsServerSnapshotRestore,
+  McsServerSnapshotDelete,
+  McsServerPasswordReset,
 } from '@app/models';
 
 export interface IMcsApiServersService {
@@ -108,9 +112,9 @@ export interface IMcsApiServersService {
   /**
    * Post server reset vm password
    * @param id Server identification
-   * @param referenceObject Reference object to obtain during subscribe
+   * @param resetDetails Server details to be reset
    */
-  resetVmPassword(id: any, referenceObject: any): Observable<McsApiSuccessResponse<McsJob>>;
+  resetVmPassword(id: any, resetDetails: McsServerPasswordReset): Observable<McsApiSuccessResponse<McsJob>>;
 
   /**
    * Renames a server based on the new name provided
@@ -142,9 +146,9 @@ export interface IMcsApiServersService {
   /**
    * This will delete an existing server
    * @param id Server id to delete
-   * @param referenceObject Reference object
+   * @param serverDelete Server delete model details
    */
-  deleteServer(id: string, referenceObject: any): Observable<McsApiSuccessResponse<McsJob>>;
+  deleteServer(id: string, serverDelete: McsServerDelete): Observable<McsApiSuccessResponse<McsJob>>;
 
   /**
    * This will get the server os data from the API
@@ -251,13 +255,12 @@ export interface IMcsApiServersService {
   /**
    * Detaches the server media based on the given server id
    * @param serverId Server Identification
-   * @param mediaId Media Identification
-   * @param referenceObject Reference object to be returned from the job
+   * @param mediaDetails Media Details to be deleted
    */
   detachServerMedia(
-    serverId: any,
-    mediaId: any,
-    referenceObject?: McsApiJobRequestBase
+    serverId: string,
+    mediaId: string,
+    mediaDetails: McsServerDetachMedia
   ): Observable<McsApiSuccessResponse<McsJob>>;
 
   /**
@@ -271,22 +274,20 @@ export interface IMcsApiServersService {
    * @param serverId Server identification
    * @param data Snapshot model to be created
    */
-  createServerSnapshot(id: any, createSnapshot: McsServerCreateSnapshot):
+  createServerSnapshot(id: any, createSnapshot: McsServerSnapshotCreate):
     Observable<McsApiSuccessResponse<McsJob>>;
 
   /**
    * Restores server snapshot
    * @param serverId Server identification
-   * @param referenceObject Reference object of the server client to determine the status of job
+   * @param snapshotRestore Restore details of the snapshot
    */
-  restoreServerSnapshot(id: any, referenceObject?: McsApiJobRequestBase):
-    Observable<McsApiSuccessResponse<McsJob>>;
+  restoreServerSnapshot(id: any, snapshotRestore: McsServerSnapshotRestore): Observable<McsApiSuccessResponse<McsJob>>;
 
   /**
    * Deletes the existing server snapshot
    * @param serverId Server id to where the snapshot will be deleted
-   * @param referenceObject Reference object
+   * @param snapshotDelete Delete details of the snapshot
    */
-  deleteServerSnapshot(id: string, referenceObject?: McsApiJobRequestBase):
-    Observable<McsApiSuccessResponse<McsJob>>;
+  deleteServerSnapshot(id: string, snapshotDelete: McsServerSnapshotDelete): Observable<McsApiSuccessResponse<McsJob>>;
 }

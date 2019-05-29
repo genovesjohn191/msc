@@ -1,5 +1,5 @@
 <mcs-dialog>
-  <mcs-dialog-header>
+  <mcs-dialog-header [hideCloseButton]="disableClose">
     <h1 [innerHTML]="dialogTitle"></h1>
   </mcs-dialog-header>
 
@@ -21,6 +21,6 @@
     <button mcsButton arrow="right"
       size="small" [color]="statusColor"
       (click)="closeDialog()"
-      mcsId="ok-dialog">OK</button>
+      mcsId="ok-dialog">{{ okText }}</button>
   </mcs-dialog-actions>
 </mcs-dialog>

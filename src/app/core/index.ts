@@ -21,7 +21,6 @@ export * from './services/mcs-notification-context.service';
 export * from './services/mcs-notification-events.service';
 export * from './services/mcs-global-element.service';
 export * from './services/mcs-overlay.service';
-export * from './services/mcs-dialog.service';
 export * from './services/mcs-snack-bar.service';
 export * from './services/mcs-scroll-dispatcher.service';
 export * from './services/mcs-viewport.service';
@@ -59,10 +58,6 @@ export * from './authentication/mcs-authentication.identity';
 export * from './authentication/permissions/mcs-server.permission';
 
 /** Factory */
-export * from './factory/dialog/mcs-dialog-ref';
-export * from './factory/dialog/mcs-dialog-config';
-export * from './factory/dialog/mcs-dialog-ref.directive';
-export * from './factory/dialog/mcs-dialog-container.component';
 export * from './factory/snack-bar/mcs-snack-bar-ref';
 export * from './factory/snack-bar/mcs-snack-bar-config';
 export * from './factory/snack-bar/mcs-snack-bar-ref.directive';

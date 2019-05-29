@@ -12,11 +12,11 @@ import {
   map,
   take
 } from 'rxjs/operators';
+import { CoreDefinition } from '@app/core';
 import {
-  MCS_DIALOG_DATA,
-  McsDialogRef,
-  CoreDefinition
-} from '@app/core';
+  DialogRef,
+  DIALOG_DATA
+} from '@app/shared';
 
 @Component({
   selector: 'mcs-session-idle-dialog',
@@ -35,9 +35,9 @@ export class SessionIdleDialogComponent implements OnInit {
   }
 
   constructor(
-    public dialogRef: McsDialogRef<SessionIdleDialogComponent>,
-    @Inject(MCS_DIALOG_DATA) public dialogData: any
-  ) {}
+    public dialogRef: DialogRef<SessionIdleDialogComponent>,
+    @Inject(DIALOG_DATA) public dialogData: any
+  ) { }
 
   public ngOnInit(): void {
     this.countDown = timer(0, 1000).pipe(

@@ -16,9 +16,7 @@ import {
   McsServerCreateNic,
   McsServerUpdate,
   McsServerAttachMedia,
-  McsApiJobRequestBase,
   McsServerThumbnail,
-  McsServerCreateSnapshot,
   McsJob,
   McsServerOsUpdatesSchedule,
   McsServerOsUpdatesScheduleRequest,
@@ -27,7 +25,11 @@ import {
   McsServerOsUpdatesCategory,
   McsServerOsUpdatesRequest,
   McsServerOsUpdatesDetails,
-  McsServerPowerstateCommand
+  McsServerPowerstateCommand,
+  McsServerDetachMedia,
+  McsServerSnapshotRestore,
+  McsServerSnapshotDelete,
+  McsServerSnapshotCreate
 } from '@app/models';
 import {
   McsApiClientFactory,
@@ -355,14 +357,14 @@ export class McsServersRepository extends McsRepositoryBase<McsServer> {
    * Detaches the server media based on the given server id
    * @param serverId Server Identification
    * @param mediaId Media Identification
-   * @param referenceObject Reference object to be returned from the job
+   * @param mediaDetails Media details to be detached
    */
   public detachServerMedia(
     serverId: string,
     mediaId: string,
-    referenceObject?: McsApiJobRequestBase
+    mediaDetails: McsServerDetachMedia
   ): Observable<McsJob> {
-    return this._serversApiService.detachServerMedia(serverId, mediaId, referenceObject).pipe(
+    return this._serversApiService.detachServerMedia(serverId, mediaId, mediaDetails).pipe(
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
@@ -384,7 +386,7 @@ export class McsServersRepository extends McsRepositoryBase<McsServer> {
    */
   public createServerSnapshot(
     serverId: any,
-    data: McsServerCreateSnapshot
+    data: McsServerSnapshotCreate
   ): Observable<McsJob> {
     return this._serversApiService.createServerSnapshot(serverId, data).pipe(
       map((response) => getSafeProperty(response, (obj) => obj.content))
@@ -398,9 +400,9 @@ export class McsServersRepository extends McsRepositoryBase<McsServer> {
    */
   public restoreServerSnapshot(
     serverId: any,
-    referenceObject?: McsApiJobRequestBase
+    snapshotRestore: McsServerSnapshotRestore
   ): Observable<McsJob> {
-    return this._serversApiService.restoreServerSnapshot(serverId, referenceObject).pipe(
+    return this._serversApiService.restoreServerSnapshot(serverId, snapshotRestore).pipe(
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
@@ -412,9 +414,9 @@ export class McsServersRepository extends McsRepositoryBase<McsServer> {
    */
   public deleteServerSnapshot(
     serverId: any,
-    referenceObject?: McsApiJobRequestBase
+    snapshotDelete: McsServerSnapshotDelete
   ): Observable<McsJob> {
-    return this._serversApiService.deleteServerSnapshot(serverId, referenceObject).pipe(
+    return this._serversApiService.deleteServerSnapshot(serverId, snapshotDelete).pipe(
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }

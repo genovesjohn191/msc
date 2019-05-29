@@ -22,11 +22,11 @@ import {
   catchError,
   map
 } from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
 import { EventBusDispatcherService } from '@app/event-bus';
 import {
   McsErrorHandlerService,
   CoreDefinition,
-  McsDialogService,
   CoreRoutes,
   McsAccessControlService,
   CoreEvent,
@@ -50,12 +50,13 @@ import {
   McsResourceCompute,
   McsResourceCatalogItem,
   McsServerThumbnail,
-  McsResourceCatalog
+  McsResourceCatalog,
+  McsServerAttachMedia,
+  McsServerDetachMedia
 } from '@app/models';
 import {
   ServerManageScale,
-  ServerManageMedia,
-  DetachMediaDialogComponent
+  ServerManageMedia
 } from '@app/features-shared';
 import {
   McsServersRepository,
@@ -64,6 +65,10 @@ import {
 import { ServerDetailsBase } from '../server-details.base';
 import { ServerService } from '../server.service';
 import { ServersService } from '../../servers.service';
+import {
+  DialogConfirmation,
+  DialogService
+} from '@app/shared';
 
 // Enumeration
 export enum ServerManagementView {
@@ -112,10 +117,11 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
     _errorHandlerService: McsErrorHandlerService,
     _accessControl: McsAccessControlService,
     private _router: Router,
+    private _translate: TranslateService,
     private _eventDispatcher: EventBusDispatcherService,
     private _serversService: ServersService,
     private _activatedRoute: ActivatedRoute,
-    private _dialogService: McsDialogService
+    private _dialogService: DialogService
   ) {
     super(
       _resourcesRepository,
@@ -270,11 +276,14 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
    */
   public showDetachMediaDialog(server: McsServer, media: McsServerMedia): void {
     if (isNullOrEmpty(media)) { return; }
-    let dialogRef = this._dialogService
-      .open(DetachMediaDialogComponent, {
-        data: media,
-        size: 'medium'
-      });
+    let dialogData = {
+      data: media,
+      type: 'warning',
+      title: this._translate.instant('dialogDetachMedia.title'),
+      message: this._translate.instant('dialogDetachMedia.message', { media_name: media.name })
+    } as DialogConfirmation<McsServerMedia>;
+
+    let dialogRef = this._dialogService.openConfirmation(dialogData);
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) { this.detachMedia(server, media); }
@@ -287,27 +296,21 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
    */
   public attachMedia(server: McsServer, catalog: McsResourceCatalogItem): void {
     if (isNullOrEmpty(catalog)) { return; }
-    // Set reference object to be expected
-    let expectedJobObject = {
-      mediaName: catalog.name,
+    let mediaDetails = new McsServerAttachMedia();
+    mediaDetails.name = catalog.name;
+    mediaDetails.clientReferenceObject = {
       serverId: server.id
     };
 
     // Set initial server status so that the spinner will show up immediately
     this._serversService.setServerSpinner(server);
     this.setViewMode(ServerManagementView.None);
-    this._serversRepository.attachServerMedia(
-      server.id,
-      {
-        name: catalog.name,
-        clientReferenceObject: expectedJobObject
+    this._serversRepository.attachServerMedia(server.id, mediaDetails).pipe(
+      catchError((error) => {
+        this._serversService.clearServerSpinner(server);
+        return throwError(error);
       })
-      .pipe(
-        catchError((error) => {
-          this._serversService.clearServerSpinner(server);
-          return throwError(error);
-        })
-      ).subscribe();
+    ).subscribe();
   }
 
   /**
@@ -316,23 +319,19 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
    */
   public detachMedia(server: McsServer, media: McsServerMedia): void {
     if (isNullOrEmpty(media)) { return; }
-    // Set reference object to be expected
-    let expectedJobObject = {
-      mediaId: media.id,
+    let mediaDetails = new McsServerDetachMedia();
+    mediaDetails.clientReferenceObject = {
       serverId: server.id
     };
 
     // Set initial server status so that the spinner will show up immediately
     this._serversService.setServerSpinner(server);
-    this._serversRepository.detachServerMedia(
-      server.id, media.id,
-      { clientReferenceObject: expectedJobObject })
-      .pipe(
-        catchError((error) => {
-          this._serversService.clearServerSpinner(server);
-          return throwError(error);
-        })
-      ).subscribe();
+    this._serversRepository.detachServerMedia(server.id, media.id, mediaDetails).pipe(
+      catchError((error) => {
+        this._serversService.clearServerSpinner(server);
+        return throwError(error);
+      })
+    ).subscribe();
   }
 
   /**

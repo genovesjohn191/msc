@@ -1,7 +1,11 @@
 import { JsonIgnore } from 'json-object-mapper';
 import { McsApiJobRequestBase } from '../common/mcs-api-job-request-base';
 
-export class McsServerClone extends McsApiJobRequestBase {
+export interface IMcsServerCloneRefObj {
+  serverId: string;
+}
+
+export class McsServerClone extends McsApiJobRequestBase<IMcsServerCloneRefObj> {
   public name: string;
 
   @JsonIgnore()

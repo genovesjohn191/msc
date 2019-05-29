@@ -26,7 +26,6 @@ import {
 } from 'rxjs/operators';
 import {
   CoreValidators,
-  McsDialogService,
   McsDataStatusFactory
 } from '@app/core';
 import {
@@ -48,8 +47,8 @@ import {
 import { McsServersRepository } from '@app/services';
 import {
   DialogConfirmation,
-  DialogConfirmationComponent,
-  McsFormGroupDirective
+  McsFormGroupDirective,
+  DialogService
 } from '@app/shared';
 import { TreeNode } from '@angular/router/src/utils/tree';
 import { OsUpdatesScheduleDetails } from './os-updates-schedule-details';
@@ -185,7 +184,7 @@ export class OsUpdatesScheduleComponent implements OnInit {
   }
 
   constructor(
-    private _dialogService: McsDialogService,
+    private _dialogService: DialogService,
     private _formBuilder: FormBuilder,
     protected _serversRepository: McsServersRepository,
     protected _changeDetectorRef: ChangeDetectorRef,
@@ -618,11 +617,14 @@ export class OsUpdatesScheduleComponent implements OnInit {
     message: string,
     confirmText: string
   ): Observable<any> {
-    let data = {
-      data: server, type: 'warning', title, message, confirmText
+    let dialogData = {
+      data: server,
+      type: 'warning',
+      title,
+      message,
+      confirmText
     } as DialogConfirmation<McsServer>;
-    let dialogRef = this._dialogService.open(DialogConfirmationComponent, { data, size: 'medium' });
-
+    let dialogRef = this._dialogService.openConfirmation(dialogData);
     return dialogRef.afterClosed();
   }
 }

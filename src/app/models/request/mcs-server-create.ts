@@ -4,7 +4,11 @@ import { McsServerCreateNic } from './mcs-server-create-nic';
 import { McsApiJobRequestBase } from '../common/mcs-api-job-request-base';
 import { McsServerCreateOs } from './mcs-server-create-os';
 
-export class McsServerCreate extends McsApiJobRequestBase {
+export interface IMcsServerCreateRefObj {
+  resourcePath: string;
+}
+
+export class McsServerCreate extends McsApiJobRequestBase<IMcsServerCreateRefObj> {
   public platform: string;
   public inviewLevel: string;
   public resource: string;

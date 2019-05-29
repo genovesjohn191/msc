@@ -5,11 +5,9 @@ import {
   ViewEncapsulation,
   ChangeDetectionStrategy
 } from '@angular/core';
-import {
-  CoreDefinition,
-  McsDialogRef
-} from '@app/core';
+import { CoreDefinition } from '@app/core';
 import { coerceBoolean } from '@app/utilities';
+import { DialogRef } from '../dialog-ref/dialog-ref';
 
 @Component({
   selector: 'mcs-dialog-header',
@@ -33,7 +31,7 @@ export class DialogHeaderComponent {
    * when the binding for the dialog is template
    */
   @Input()
-  public set dialogRefTemplate(value: McsDialogRef<any>) {
+  public set dialogRefTemplate(value: DialogRef<any>) {
     this.dialogRef = value;
   }
 
@@ -53,5 +51,5 @@ export class DialogHeaderComponent {
     return CoreDefinition.ASSETS_SVG_CLOSE_BLACK;
   }
 
-  constructor(@Optional() public dialogRef: McsDialogRef<any>) { }
+  constructor(@Optional() public dialogRef: DialogRef<any>) { }
 }

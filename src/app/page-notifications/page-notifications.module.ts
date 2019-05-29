@@ -7,8 +7,7 @@ import { PageNotificationsComponent } from './page-notifications.component';
 import { WebStompComponent } from './web-stomp/web-stomp.component';
 import {
   SessionComponent,
-  SessionIdleDialogComponent,
-  SessionTimeoutDialogComponent
+  SessionIdleDialogComponent
 } from './session';
 
 @NgModule({
@@ -16,8 +15,7 @@ import {
     PageNotificationsComponent,
     WebStompComponent,
     SessionComponent,
-    SessionIdleDialogComponent,
-    SessionTimeoutDialogComponent
+    SessionIdleDialogComponent
   ],
   imports: [
     CommonModule,
@@ -27,8 +25,7 @@ import {
     PageNotificationsComponent
   ],
   entryComponents: [
-    SessionIdleDialogComponent,
-    SessionTimeoutDialogComponent
+    SessionIdleDialogComponent
   ],
 })
 

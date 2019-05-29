@@ -19,16 +19,16 @@ import {
   FileUploader,
   FileItem
 } from 'ng2-file-upload';
-import {
-  McsDialogService,
-  McsDialogRef,
-  CoreDefinition
-} from '@app/core';
+import { CoreDefinition } from '@app/core';
 import { isNullOrEmpty } from '@app/utilities';
 import {
   McsFileInfo,
   McsComment
 } from '@app/models';
+import {
+  DialogService,
+  DialogRef
+} from '../dialog';
 
 @Component({
   selector: 'mcs-comment-box',
@@ -44,7 +44,7 @@ import {
 export class CommentBoxComponent implements OnInit {
   public fileUploader: FileUploader;
   public hasDropZone: boolean;
-  public errorDialogRef: McsDialogRef<any>;
+  public errorDialogRef: DialogRef<any>;
   public fgComment: FormGroup;
   public fcComment: FormControl;
 
@@ -69,7 +69,7 @@ export class CommentBoxComponent implements OnInit {
 
   public constructor(
     private _translateService: TranslateService,
-    private _dialogService: McsDialogService,
+    private _dialogService: DialogService,
     private _changeDetectorRef: ChangeDetectorRef
   ) {
     // Set uploader configuration

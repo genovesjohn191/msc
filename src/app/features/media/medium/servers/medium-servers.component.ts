@@ -19,7 +19,6 @@ import {
 } from 'rxjs/operators';
 import { EventBusDispatcherService } from '@app/event-bus';
 import {
-  McsDialogService,
   McsTableDataSource,
   CoreEvent,
   McsGuid
@@ -31,8 +30,8 @@ import {
   getSafeProperty
 } from '@app/utilities';
 import {
-  DialogConfirmationComponent,
-  DialogConfirmation
+  DialogConfirmation,
+  DialogService
 } from '@app/shared';
 import {
   McsJob,
@@ -69,7 +68,7 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
     _mediumService: MediumService,
     private _eventDispatcher: EventBusDispatcherService,
     private _mediaRepository: McsMediaRepository,
-    private _dialogService: McsDialogService,
+    private _dialogService: DialogService,
     private _changeDetectorRef: ChangeDetectorRef,
     private _translateService: TranslateService,
   ) {
@@ -116,10 +115,7 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
       message: dialogMessage
     } as DialogConfirmation<McsResourceMediaServer>;
 
-    let detachDialogRef = this._dialogService.open(DialogConfirmationComponent, {
-      data: dialogData,
-      size: 'medium'
-    });
+    let detachDialogRef = this._dialogService.openConfirmation(dialogData);
 
     detachDialogRef.afterClosed().subscribe((response) => {
       if (isNullOrEmpty(response)) { return; }

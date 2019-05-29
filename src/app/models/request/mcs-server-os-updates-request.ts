@@ -1,12 +1,10 @@
 import { McsApiJobRequestBase } from '../common/mcs-api-job-request-base';
 
-export class McsServerOsUpdatesRequest extends McsApiJobRequestBase {
-  public category: string[];
-  public updates: string[];
+export interface IMcsServerOsUpdatesRequestRefObj {
+  serverId: string;
+}
 
-  constructor() {
-    super();
-    this.category = undefined;
-    this.updates = undefined;
-  }
+export class McsServerOsUpdatesRequest extends McsApiJobRequestBase<IMcsServerOsUpdatesRequestRefObj> {
+  public category: string[] = undefined;
+  public updates: string[] = undefined;
 }

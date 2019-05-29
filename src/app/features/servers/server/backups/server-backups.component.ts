@@ -9,17 +9,18 @@ import {
 import {
   throwError,
   Observable,
-  Subscription
+  Subscription,
+  of
 } from 'rxjs';
 import {
   catchError,
   map,
-  tap
+  tap,
+  concatMap
 } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 import { EventBusDispatcherService } from '@app/event-bus';
 import {
-  McsDialogService,
   McsDataStatusFactory,
   CoreDefinition,
   McsErrorHandlerService,
@@ -33,7 +34,10 @@ import {
 } from '@app/utilities';
 import {
   StdDateFormatPipe,
-  FormMessage
+  FormMessage,
+  DialogService,
+  DialogConfirmation,
+  DialogMessageConfig
 } from '@app/shared';
 import {
   McsJob,
@@ -42,20 +46,15 @@ import {
   McsServer,
   McsResource,
   McsResourceStorage,
-  McsApiErrorResponse
+  McsApiErrorResponse,
+  McsServerSnapshotRestore,
+  McsServerSnapshotCreate,
+  McsServerSnapshotDelete
 } from '@app/models';
 import {
   McsServersRepository,
   McsResourcesRepository
 } from '@app/services';
-import {
-  ServerSnapshotDialogContent,
-  CreateSnapshotDialogComponent,
-  DeleteSnapshotDialogComponent,
-  RestoreSnapshotDialogComponent,
-  InsufficientStorageSnapshotDialogComponent,
-  DiskConflictSnapshotDialogComponent
-} from '@app/features-shared';
 import { ServerService } from '../server.service';
 import { ServerDetailsBase } from '../server-details.base';
 import { ServersService } from '../../servers.service';
@@ -104,7 +103,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
     private _eventDispatcher: EventBusDispatcherService,
     private _serversService: ServersService,
     private _standardDateFormatPipe: StdDateFormatPipe,
-    private _dialogService: McsDialogService
+    private _dialogService: DialogService
   ) {
     super(
       _resourcesRepository,
@@ -141,26 +140,19 @@ export class ServerBackupsComponent extends ServerDetailsBase
   public createSnapshot(server: McsServer, resource: McsResource): void {
     let dialogType = this._getDialogTypeByVmStorage(server, resource);
 
-    // For sufficient storage show the creation dialog
-    this._showDialog(
-      server,
-      dialogType,
-      () => {
-        if (dialogType !== SnapshotDialogType.Create) { return; }
+    switch (dialogType) {
+      case SnapshotDialogType.Create:
+        this._showCreateSnapshotDialog(server);
+        break;
 
-        this._serversService.setServerSpinner(server);
-        this._serversRepository.createServerSnapshot(server.id, {
-          preserveState: true,
-          preserveMemory: true,
-          clientReferenceObject: { serverId: server.id }
-        }).pipe(
-          catchError((httpError) => {
-            this._serversService.clearServerSpinner(server);
-            this._showErrorMessageByResponse(httpError);
-            return throwError(httpError);
-          })
-        ).subscribe();
-      });
+      case SnapshotDialogType.DiskConflict:
+        this._showDiskConflictDialog();
+        break;
+
+      case SnapshotDialogType.InsufficientStorage:
+        this._showInsufficientDiskDialog(resource);
+        break;
+    }
   }
 
   /**
@@ -169,19 +161,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
    */
   public restoreSnapshot(server: McsServer, snapshot: McsServerSnapshot) {
     if (isNullOrEmpty(snapshot)) { return; }
-
-    this._showDialog(server, SnapshotDialogType.Restore, () => {
-      this._serversService.setServerSpinner(server);
-      this._serversRepository.restoreServerSnapshot(server.id, {
-        clientReferenceObject: { serverId: server.id }
-      }).pipe(
-        catchError((httpError) => {
-          this._serversService.clearServerSpinner(server);
-          this._showErrorMessageByResponse(httpError);
-          return throwError(httpError);
-        })
-      ).subscribe();
-    }, snapshot);
+    this._showRestoreSnapshotDialog(server, snapshot);
   }
 
   /**
@@ -190,19 +170,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
    */
   public deleteSnapshot(server: McsServer, snapshot: McsServerSnapshot) {
     if (isNullOrEmpty(snapshot)) { return; }
-
-    this._showDialog(server, SnapshotDialogType.Delete, () => {
-      this._serversService.setServerSpinner(server);
-      this._serversRepository.deleteServerSnapshot(server.id, {
-        clientReferenceObject: { serverId: server.id }
-      }).pipe(
-        catchError((httpError) => {
-          this._serversService.clearServerSpinner(server);
-          this._showErrorMessageByResponse(httpError);
-          return throwError(httpError);
-        })
-      ).subscribe();
-    }, snapshot);
+    this._showDeleteSnapshotDialog(server, snapshot);
   }
 
   /**
@@ -216,64 +184,139 @@ export class ServerBackupsComponent extends ServerDetailsBase
   }
 
   /**
-   * Show the dialog based on invoker type
-   * @param dialogType Dialog type to invoke
-   * @param dialogCallback Dialog callback were the dialog ended with data
-   * @param _snapshot Optional Snapshot to be inputted
+   * Shows insufficient disk dialog
+   * @param resource Resource to be checked
    */
-  private _showDialog(
-    server: McsServer,
-    dialogType: SnapshotDialogType,
-    dialogCallback: () => void,
-    _snapshot?: McsServerSnapshot
-  ): void {
-    if (isNullOrEmpty(dialogType)) { return; }
+  private _showInsufficientDiskDialog(resource: McsResource): void {
+    let dialogData = {
+      data: resource,
+      type: 'info',
+      title: this._translateService.instant('dialogInsufficientStorageSnapshot.title'),
+      message: this._translateService.instant('dialogInsufficientStorageSnapshot.message', { vdc_name: resource.name })
+    } as DialogMessageConfig;
 
-    let dialogComponent = null;
-    let dialogData = new ServerSnapshotDialogContent();
-    dialogData.serverName = server.name;
-    if (!isNullOrEmpty(_snapshot)) {
-      dialogData.snapshotName = this._standardDateFormatPipe.transform(_snapshot.createdOn);
-    }
-    dialogData.vdcName = server.resourceName;
+    this._dialogService.openMessage(dialogData);
+  }
 
-    // Set the dialog component instance and the callback function
-    switch (dialogType) {
-      case SnapshotDialogType.Create:
-        dialogComponent = CreateSnapshotDialogComponent;
-        break;
+  /**
+   * Shows create snapshot dialog
+   * @param server Server on where to create the snapshot
+   */
+  private _showCreateSnapshotDialog(server: McsServer): void {
+    let dialogData = {
+      data: server,
+      type: 'info',
+      title: this._translateService.instant('dialogCreateSnapshot.title'),
+      message: this._translateService.instant('dialogCreateSnapshot.message', { server_name: server.name })
+    } as DialogConfirmation<McsServer>;
 
-      case SnapshotDialogType.Delete:
-        dialogComponent = DeleteSnapshotDialogComponent;
-        break;
+    let dialogRef = this._dialogService.openConfirmation(dialogData);
 
-      case SnapshotDialogType.Restore:
-        dialogComponent = RestoreSnapshotDialogComponent;
-        break;
+    dialogRef.afterClosed().pipe(
+      concatMap((dialogResult) => {
+        if (isNullOrEmpty(dialogResult)) { return of(null); }
 
-      case SnapshotDialogType.InsufficientStorage:
-        dialogComponent = InsufficientStorageSnapshotDialogComponent;
-        break;
+        let snapshotDetails = new McsServerSnapshotCreate();
+        snapshotDetails.preserveMemory = true;
+        snapshotDetails.preserveState = true;
+        snapshotDetails.clientReferenceObject = {
+          serverId: server.id
+        };
 
-      case SnapshotDialogType.DiskConflict:
-        dialogComponent = DiskConflictSnapshotDialogComponent;
-        break;
-
-      default:
-        return;
-    }
-    // Create dialog and invoke the callback function
-    let dialogRef = this._dialogService.open(dialogComponent, {
-      data: dialogData,
-      size: 'medium'
-    });
-    dialogRef.afterClosed().subscribe((dialogResult) => {
-      if (dialogResult) {
         this._serversService.setServerSpinner(server);
-        this._changeDetectorRef.markForCheck();
-        dialogCallback();
-      }
-    });
+        return this._serversRepository.createServerSnapshot(server.id, snapshotDetails).pipe(
+          catchError((httpError) => {
+            this._serversService.clearServerSpinner(server);
+            this._showErrorMessageByResponse(httpError);
+            return throwError(httpError);
+          })
+        );
+      })
+    ).subscribe();
+  }
+
+  /**
+   * Shows the disk conflict dialog box
+   */
+  private _showDiskConflictDialog(): void {
+    let dialogData = {
+      type: 'info',
+      title: this._translateService.instant('dialogDiskConflictSnapshot.title'),
+      message: this._translateService.instant('dialogDiskConflictSnapshot.message')
+    } as DialogMessageConfig;
+
+    this._dialogService.openMessage(dialogData);
+  }
+
+  private _showDeleteSnapshotDialog(server: McsServer, snapshot: McsServerSnapshot): void {
+    let dialogData = {
+      data: server,
+      type: 'warning',
+      title: this._translateService.instant('dialogDeleteSnapshot.title'),
+      message: this._translateService.instant('dialogDeleteSnapshot.message', {
+        snapshot_name: this._standardDateFormatPipe.transform(snapshot.createdOn)
+      })
+    } as DialogConfirmation<McsServer>;
+
+    let dialogRef = this._dialogService.openConfirmation(dialogData);
+
+    dialogRef.afterClosed().pipe(
+      concatMap((dialogResult) => {
+        if (isNullOrEmpty(dialogResult)) { return of(null); }
+        let snapshotDetails = new McsServerSnapshotDelete();
+        snapshotDetails.clientReferenceObject = {
+          serverId: server.id
+        };
+
+        this._serversService.setServerSpinner(server);
+        return this._serversRepository.deleteServerSnapshot(server.id, snapshotDetails).pipe(
+          catchError((httpError) => {
+            this._serversService.clearServerSpinner(server);
+            this._showErrorMessageByResponse(httpError);
+            return throwError(httpError);
+          })
+        );
+      })
+    ).subscribe();
+  }
+
+  /**
+   * Shows the restore snapshot dialog box
+   * @param server Server on where the snapshot to be restored
+   * @param snapshot Snapshot to be restored
+   */
+  private _showRestoreSnapshotDialog(server: McsServer, snapshot: McsServerSnapshot): void {
+    let dialogData = {
+      data: server,
+      type: 'info',
+      title: this._translateService.instant('dialogRestoreSnapshot.title'),
+      message: this._translateService.instant('dialogRestoreSnapshot.message', {
+        server_name: server.name,
+        snapshot_name: this._standardDateFormatPipe.transform(snapshot.createdOn)
+      })
+    } as DialogConfirmation<McsServer>;
+
+    let dialogRef = this._dialogService.openConfirmation(dialogData);
+
+    dialogRef.afterClosed().pipe(
+      concatMap((dialogResult) => {
+        if (isNullOrEmpty(dialogResult)) { return of(null); }
+
+        let snapshotDetails = new McsServerSnapshotRestore();
+        snapshotDetails.clientReferenceObject = {
+          serverId: server.id
+        };
+
+        this._serversService.setServerSpinner(server);
+        return this._serversRepository.restoreServerSnapshot(server.id, snapshotDetails).pipe(
+          catchError((httpError) => {
+            this._serversService.clearServerSpinner(server);
+            this._showErrorMessageByResponse(httpError);
+            return throwError(httpError);
+          })
+        );
+      })
+    ).subscribe();
   }
 
   /**

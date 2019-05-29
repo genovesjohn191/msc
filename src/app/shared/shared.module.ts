@@ -25,6 +25,7 @@ import { OptionGroupModule } from './option-group/option-group.module';
 import { SelectModule } from './select/select.module';
 import { AccordionModule } from './accordion/accordion.module';
 import { ListModule } from './list/list.module';
+import { OverlayModule } from './overlay/overlay.module';
 import { DialogModule } from './dialog/dialog.module';
 import { SnackBarModule } from './snack-bar/snack-bar.module';
 import { TooltipModule } from './tooltip/tooltip.module';
@@ -94,6 +95,7 @@ import { PricingCalculatorModule } from './pricing-calculator/pricing-calculator
     SelectModule,
     AccordionModule,
     ListModule,
+    OverlayModule,
     DialogModule,
     SnackBarModule,
     TooltipModule,
@@ -160,6 +162,7 @@ import { PricingCalculatorModule } from './pricing-calculator/pricing-calculator
     SelectModule,
     AccordionModule,
     ListModule,
+    OverlayModule,
     DialogModule,
     SnackBarModule,
     TooltipModule,

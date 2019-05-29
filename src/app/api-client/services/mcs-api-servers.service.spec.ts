@@ -133,7 +133,11 @@ describe('ServersApiService', () => {
     it('should reset the VM server through API calls', () => {
       serversApiService.resetVmPassword(
         requestOptions.id,
-        requestOptions.referenceObject
+        {
+          clientReferenceObject: {
+            serverId: requestOptions.id
+          }
+        }
       ).subscribe((response) => {
         expect(response).toBeDefined();
         expect(response.status).toBe(200);
