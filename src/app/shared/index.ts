@@ -16,6 +16,7 @@ export * from './tree';
 export * from './form-message';
 export * from './pricing-calculator';
 export * from './progress-bar';
+export * from './overlay';
 
 /** Expose directives */
 export * from './form-field/form-group.directive';

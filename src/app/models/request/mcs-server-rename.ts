@@ -1,9 +1,9 @@
-export class McsServerRename {
-  public name: string;
-  public clientReferenceObject: any;
+import { McsApiJobRequestBase } from '../common/mcs-api-job-request-base';
 
-  constructor() {
-    this.name = undefined;
-    this.clientReferenceObject = undefined;
-  }
+export interface McsServerRenameRefObj {
+  serverId: string;
+}
+
+export class McsServerRename extends McsApiJobRequestBase<McsServerRenameRefObj> {
+  public name: string = undefined;
 }

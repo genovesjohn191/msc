@@ -6,13 +6,11 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef
 } from '@angular/core';
-import {
-  MCS_DIALOG_DATA,
-  McsDialogRef,
-  McsStatusSettingsBase
-} from '@app/core';
+import { McsStatusSettingsBase } from '@app/core';
 import { McsStatusType } from '@app/utilities';
-import { DialogMessageData } from './dialog-message-data';
+import { DialogMessageConfig } from './dialog-message-config';
+import { DialogRef } from '../dialog-ref/dialog-ref';
+import { DIALOG_DATA } from '../dialog-config';
 
 @Component({
   selector: 'mcs-dialog-message',
@@ -28,25 +26,39 @@ export class DialogMessageComponent extends McsStatusSettingsBase  {
 
   constructor(
     _changeDetectorRef: ChangeDetectorRef,
-    public dialogRef: McsDialogRef<DialogMessageComponent>,
-    @Inject(MCS_DIALOG_DATA) public dialogData: DialogMessageData
+    public dialogRef: DialogRef<DialogMessageComponent>,
+    @Inject(DIALOG_DATA) public dialogData: DialogMessageConfig
   ) {
     super(_changeDetectorRef);
     this.initializeSettings();
   }
 
   /**
-   * Returns the title of the warning dialog
+   * Returns the title of the message dialog
    */
   public get dialogTitle(): string {
     return this.dialogData.title;
   }
 
   /**
-   * Returns the message of the warning dialog
+   * Returns the message of the message dialog
    */
   public get dialogMessage(): string | TemplateRef<any> {
     return this.dialogData.message;
+  }
+
+  /**
+   * Returns true when the close button should be disable
+   */
+  public get disableClose(): boolean {
+    return this.dialogRef.disableClose;
+  }
+
+  /**
+   * Returns the ok text of the message dialog
+   */
+  public get okText(): string {
+    return this.dialogData.okText || 'OK';
   }
 
   /**

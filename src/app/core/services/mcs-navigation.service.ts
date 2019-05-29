@@ -5,7 +5,10 @@ import {
 } from '@angular/router';
 import { RouteKey } from '@app/models';
 import { CoreRoutes } from '../core.routes';
-import { isNullOrEmpty } from '@app/utilities';
+import {
+  isNullOrEmpty,
+  isNullOrUndefined
+} from '@app/utilities';
 
 @Injectable()
 export class McsNavigationService {
@@ -17,7 +20,7 @@ export class McsNavigationService {
    * @param routeKey Routekey to where it navigates
    * @param additionalPaths additional routes to be appended on the url
    */
-  public navigateTo(routeKey: RouteKey, additionalPaths: string[]): void;
+  public navigateTo(routeKey: RouteKey, additionalPaths?: string[]): void;
 
   /**
    * Navigates to routekey definition
@@ -25,8 +28,10 @@ export class McsNavigationService {
    * @param additionalPaths additional routes to be appended on the url
    * @param extras Extras of the route
    */
-  public navigateTo(routeKey: RouteKey, additionalPaths: string[], extras?: NavigationExtras): void;
-  public navigateTo(routeKey: RouteKey, additionalPaths: string[], extras?: NavigationExtras): void {
+  public navigateTo(routeKey: RouteKey, additionalPaths?: string[], extras?: NavigationExtras): void;
+  public navigateTo(routeKey: RouteKey, additionalPaths?: string[], extras?: NavigationExtras): void {
+    if (isNullOrUndefined(additionalPaths)) { additionalPaths = []; }
+
     isNullOrEmpty(extras) ?
       this._router.navigate([CoreRoutes.getNavigationPath(routeKey), ...additionalPaths]) :
       this._router.navigate([CoreRoutes.getNavigationPath(routeKey), ...additionalPaths], extras);

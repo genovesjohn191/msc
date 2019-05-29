@@ -5,8 +5,11 @@ import {
 } from '../enumerations/vm-power-state-command.enum';
 import { JsonProperty } from 'json-object-mapper';
 
-export class McsServerPowerstateCommand extends McsApiJobRequestBase {
+export interface McsServerPowerStateRefObj {
+  serverId: string;
+}
 
+export class McsServerPowerstateCommand extends McsApiJobRequestBase<McsServerPowerStateRefObj> {
   @JsonProperty({
     type: VmPowerstateCommand,
     serializer: VmPowerstateCommandSerialization,

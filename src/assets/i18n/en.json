@@ -29,20 +29,6 @@
     "errorMessage": "Console connection error."
   },
   "pageNotifications": {
-    "sessionHandler": {
-      "sessionIdleDialog": {
-        "title": "Hey, are you still there?",
-        "alert": "We've noticed you've been inactive for a while. Click to continue your session, otherwise you'll be signed out in ",
-        "dataSingular": "second",
-        "dataPlural": "seconds",
-        "confirm": "Continue Session"
-      },
-      "sessionTimeoutDialog": {
-        "title": "Session Timed Out",
-        "alert": "Your session has expired due to inactivity. Click to sign in again.",
-        "confirm": "Sign In"
-      }
-    },
     "webStomp": {
       "connectionError": "We’re experiencing connectivity issues.",
       "connectionSuccess": "Successfully connected.",
@@ -147,7 +133,7 @@
       "placeholder": "Select a VDC",
       "contextualHelp": "Choose the virtual data centre to expand.",
       "sliderLabel": "Select Storage:",
-      "hints":{
+      "hints": {
         "currentStorage": "Current Storage: {{current_storage}}"
       }
     },
@@ -155,7 +141,7 @@
       "stepTitle": "VDC Details",
       "label": "Storage Element",
       "optionGroupLabel": "Virtual Data Centres",
-      "storageLabel":"Storage",
+      "storageLabel": "Storage",
       "contextualHelp": "",
       "fullStorageSpace": "This disk cannot be expanded due to insufficient storage space (0 GB remaining)."
     },
@@ -379,7 +365,7 @@
     "label": "Services",
     "title": "Operating System Updates",
     "description": "Keep your server protected by applying regular OS updates.",
-    "osAutomationNotAvailable":"This server does not currently support operating system updates via the Portal. Please contact your Macquarie Cloud Services accounts team for more information.",
+    "osAutomationNotAvailable": "This server does not currently support operating system updates via the Portal. Please contact your Macquarie Cloud Services accounts team for more information.",
     "updatesStatusTitleLabel": "Status",
     "updatesAnalysisLabel": "Inspect Now",
     "updatesScheduleTitleLabel": "Jobs",
@@ -680,126 +666,6 @@
         "placeholder": "Select inview"
       }
     },
-    "dialogCreateSnapshot": {
-      "title": "New VM Snapshot",
-      "alert": "Capturing a new snapshot will replace any existing snapshots for this VM.",
-      "confirmation": "Are you sure you wish to capture a new snapshot for <strong>{{server_name}}</strong>?",
-      "cancel": "Cancel",
-      "confirm": "Confirm"
-    },
-    "dialogDeleteNic": {
-      "title": "Delete {{nic_name}}",
-      "alert": "This server may need to be restarted before any NIC changes are made effective.",
-      "confirmation": "Are you sure you want to delete this NIC?",
-      "cancel": "Cancel",
-      "confirm": "Yes"
-    },
-    "dialogDeleteServer": {
-      "title": {
-        "single": "Delete Server {{server_name}}",
-        "multiple": "Delete Servers"
-      },
-      "alert": {
-        "single": "Deleting a server cannot be undone. If this is the only remaining server in a vApp, the vApp will also be deleted.",
-        "multiple": "Deleting a server cannot be undone. If any server selected is the only remaining server in a vApp, the vApp will also be deleted."
-      },
-      "confirmation": "Are you sure you wish to continue?",
-      "cancel": "Cancel",
-      "confirm": "Delete"
-    },
-    "dialogDeleteSnapshot": {
-      "title": "Delete {{snapshot_name}}",
-      "alert": "Deleting a snapshot cannot be undone.",
-      "confirmation": "Are you sure you wish to continue?",
-      "cancel": "Cancel",
-      "confirm": "Confirm"
-    },
-    "dialogDeleteStorage": {
-      "title": "Delete {{storage_name}}",
-      "alert": "The data on {{storage_name}} will be lost forever.",
-      "confirmation": "Are you sure you want to delete this volume?",
-      "cancel": "Cancel",
-      "confirm": "Yes"
-    },
-    "dialogDetachMedia": {
-      "title": "Detach {{media_name}} Media",
-      "confirmation": "Are you sure you want to detach this media?",
-      "cancel": "Cancel",
-      "confirm": "Yes"
-    },
-    "dialogDiskConflictSnapshot": {
-      "title": "Disk Conflict",
-      "alert": "A snapshot cannot be captured for this server as it uses a custom, split-profile disk configuration.",
-      "cancel": "Close"
-    },
-    "dialogInsufficientStorageSnapshot": {
-      "title": "Insufficient Storage",
-      "alert": "The VDC {{vdc_name}} does not have enough storage space available in order to capture a snapshot.",
-      "confirmation": "Please remove any unneeded servers or snapshots and then try again.",
-      "cancel": "Close"
-    },
-    "dialogRenameServer": {
-      "title": "Rename Server",
-      "information": "Specify the new name for this server:",
-      "cancel": "Cancel",
-      "rename": "Rename",
-      "hints": {
-        "serverNameMax": "Max of {{max_char}} characters"
-      },
-      "errors": {
-        "required": "Server name is required",
-        "invalidServerName": "Please ensure the new name meets the following criteria: \r\n • Different to the current name\r\n • Between 1 and 15 characters\r\n • No special characters or spaces except - or _"
-      }
-    },
-    "dialogResetPassword": {
-      "title": "Reset Server Password",
-      "poweredOnInfo": "Resetting the server password requires a restart of your server. Are you sure you want to reset the password and restart server <strong>{{server_name}}</strong> now?",
-      "poweredOffInfo": "Are you sure you want to reset the password for <strong>{{server_name}}</strong>?",
-      "cancel": "Cancel",
-      "poweredOnReset": "Reset Password and Restart",
-      "poweredOffReset": "Reset Password"
-    },
-    "dialogResetPasswordFinished": {
-      "title": "Your Server Password",
-      "information": "We've reset the password for server <strong>{{server_name}}</strong>.",
-      "warning": "We won't show you this password again so we've emailed it to you for your reference.",
-      "close": "Close",
-      "username": "Username:",
-      "password": "Password:"
-    },
-    "dialogRestoreSnapshot": {
-      "title": "Restore VM Snapshot",
-      "alert": "Restoring a snapshot replaces data on the VM and cannot be undone. The server will be unavailable until this process is complete.",
-      "confirmation": "Are you sure you wish to restore <strong>{{snapshot_name}}</strong> to <strong>{{server_name}}</strong>?",
-      "cancel": "Cancel",
-      "confirm": "Confirm"
-    },
-    "dialogResumeServer": {
-      "title": {
-        "single": "Resume Server {{server_name}}",
-        "multiple": "Resume Servers"
-      },
-      "alert": {
-        "single": "After you resume a server, you cannot return to the state that the virtual machine was in when you suspended it. To return to the same state repeatedly, you must take a snapshot.",
-        "multiple": "After you resume a server, you cannot return to the state that the virtual machine was in when you suspended it. To return to the same state repeatedly, you must take a snapshot."
-      },
-      "confirmation": "Are you sure you wish to continue?",
-      "cancel": "Cancel",
-      "confirm": "Resume"
-    },
-    "dialogSuspendServer": {
-      "title": {
-        "single": "Suspend Server {{server_name}}",
-        "multiple": "Suspend Servers"
-      },
-      "alert": {
-        "single": "Suspending a server will save its current state and pause any operations that are in progress.",
-        "multiple": "Suspending a server will save its current state and pause any operations that are in progress."
-      },
-      "confirmation": "Are you sure you wish to continue?",
-      "cancel": "Cancel",
-      "confirm": "Suspend"
-    },
     "manageNetwork": {
       "customSwitch": "Enter a custom IP Address",
       "customMessage": "Manually enter an IP address.",
@@ -826,7 +692,7 @@
       "minimumRam": "Minimum RAM: {{ram_value}}",
       "minimumCpu": "Minimum CPU: {{cpu_value}} vCPU",
       "sliderSelectedRamCpu": "{{ram_value}} RAM / {{cpu_value}} vCPU",
-      "sliderCurrentRamCpu":"Current: {{ram_value}} RAM / {{cpu_value}} vCPU",
+      "sliderCurrentRamCpu": "Current: {{ram_value}} RAM / {{cpu_value}} vCPU",
       "customCurrentCpu": "Current vCPU: {{cpu_value}} vCPU",
       "customCurrentRam": "Current RAM: {{ram_value}}",
       "ramLabel": "RAM",
@@ -1350,5 +1216,95 @@
         "step": "Value must be a multiple of {{step}}."
       }
     }
+  },
+  "dialogDetachMedia": {
+    "title": "Detach Media",
+    "message": "Are you sure you want to detach <strong>{{media_name}}</strong>?"
+  },
+  "dialogDeleteNic": {
+    "title": "Delete Nic",
+    "message": "This server may need to be restarted before any NIC changes are made effective.\r\n\nAre you sure you want to delete <strong>{{nic_name}}</strong>?"
+  },
+  "dialogDeleteStorage": {
+    "title": "Delete Storage",
+    "message": "The data on <strong>{{storage_name}}</strong> will be lost forever.\r\n\nAre you sure you want to delete this volume?"
+  },
+  "dialogCreateSnapshot": {
+    "title": "New VM Snapshot",
+    "message": "Capturing a new snapshot will replace any existing snapshots for this VM.\r\n\nAre you sure you wish to capture a new snapshot for <strong>{{server_name}}</strong>?"
+  },
+  "dialogInsufficientStorageSnapshot": {
+    "title": "Insufficient Storage",
+    "message": "The VDC <strong>{{vdc_name}}</strong> does not have enough storage space available in order to capture a snapshot.\r\n\nPlease remove any unneeded servers or snapshots and then try again."
+  },
+  "dialogDiskConflictSnapshot": {
+    "title": "Disk Conflict",
+    "message": "A snapshot cannot be captured for this server as it uses a custom, split-profile disk configuration."
+  },
+  "dialogRestoreSnapshot": {
+    "title": "Restore VM Snapshot",
+    "message": "Restoring a snapshot replaces data on the VM and cannot be undone. The server will be unavailable until this process is complete.\r\n\nAre you sure you wish to restore <strong>{{snapshot_name}}</strong> to <strong>{{server_name}}</strong>?"
+  },
+  "dialogDeleteSnapshot": {
+    "title": "Delete VM Snapshot",
+    "message": "Deleting <strong>{{snapshot_name}}</strong> cannot be undone.\r\n\nAre you sure you wish to continue?"
+  },
+  "dialogSessionIdle": {
+    "title": "Hey, are you still there?",
+    "alert": "We've noticed you've been inactive for a while. Click to continue your session, otherwise you'll be signed out in ",
+    "dataSingular": "second",
+    "dataPlural": "seconds",
+    "confirm": "Continue Session"
+  },
+  "dialogSessionTimedOut": {
+    "title": "Session Timed Out",
+    "message": "Your session has expired due to inactivity. Click to sign in again.",
+    "signIn": "Sign In"
+  },
+  "dialogDeleteServerSingle": {
+    "title": "Delete Servers",
+    "message": "Deleting a server cannot be undone. If this is the only remaining server in a vApp, the vApp will also be deleted.\r\n\nAre you sure you wish to continue?"
+  },
+  "dialogDeleteServerMultiple": {
+    "titleMultiple": "Delete Servers",
+    "messageMultiple": "Deleting a server cannot be undone. If any server selected is the only remaining server in a vApp, the vApp will also be deleted.\r\n\nAre you sure you wish to continue?"
+  },
+  "dialogResumeServerSingle": {
+    "title": "Resume Server",
+    "message": "After you resume a server, you cannot return to the state that the virtual machine was in when you suspended it. To return to the same state repeatedly, you must take a snapshot.\r\n\nAre you sure you wish to continue?"
+  },
+  "dialogResumeServerMultiple": {
+    "title": "Resume Server",
+    "message": "After you resume a server, you cannot return to the state that the virtual machine was in when you suspended it. To return to the same state repeatedly, you must take a snapshot.\r\n\nAre you sure you wish to continue?"
+  },
+  "dialogSuspendServerSingle": {
+    "title": "Suspend Server",
+    "message": "Suspending a server will save its current state and pause any operations that are in progress.\r\n\nAre you sure you wish to continue?"
+  },
+  "dialogSuspendServerMultiple": {
+    "title": "Suspend Servers",
+    "message": "Suspending a server will save its current state and pause any operations that are in progress.\r\n\nAre you sure you wish to continue?"
+  },
+  "dialogResetPassword": {
+    "title": "Reset Server Password",
+    "poweredOnMessage": "Resetting the server password requires a restart of your server.\r\n\nAre you sure you want to reset the password and restart server <strong>{{server_name}}</strong> now?",
+    "poweredOffMessage": "Are you sure you want to reset the password for <strong>{{server_name}}</strong>?"
+  },
+  "dialogRenameServer": {
+    "title": "Rename Server",
+    "information": "Specify the new name for this server:",
+    "cancel": "Cancel",
+    "rename": "Rename",
+    "hints": {
+      "serverNameMax": "Max of {{max_char}} characters"
+    },
+    "errors": {
+      "required": "Server name is required",
+      "invalidServerName": "Please ensure the new name meets the following criteria: \r\n • Different to the current name\r\n • Between 1 and 15 characters\r\n • No special characters or spaces except - or _"
+    }
+  },
+  "dialogResetPasswordFinished": {
+    "title": "Your Server Password",
+    "message": "We've reset the password for server <strong>{{server_name}}</strong>.\r\n\n<strong>Username</strong>: {{username}}\n<strong>Password</strong>: {{password}}\r\n\nWe won't show you this password again so we've emailed it to you for your reference."
   }
 }

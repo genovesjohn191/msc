@@ -5,7 +5,11 @@ import {
   OrderWorkflowActionSerialization
 } from '../enumerations/order-workflow-action.enum';
 
-export class McsOrderWorkflow extends McsApiJobRequestBase {
+export interface IMcsOrderWorkflowRefObj {
+  resourcePath: string;
+}
+
+export class McsOrderWorkflow extends McsApiJobRequestBase<IMcsOrderWorkflowRefObj> {
   @JsonProperty({
     type: OrderWorkflowAction,
     serializer: OrderWorkflowActionSerialization,

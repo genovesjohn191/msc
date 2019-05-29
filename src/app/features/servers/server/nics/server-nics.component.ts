@@ -21,7 +21,6 @@ import {
 } from 'rxjs/operators';
 import {
   CoreDefinition,
-  McsDialogService,
   McsErrorHandlerService,
   McsTableDataSource,
   McsAccessControlService,
@@ -35,7 +34,11 @@ import {
   addOrUpdateArrayRecord,
   getSafeProperty
 } from '@app/utilities';
-import { ComponentHandlerDirective } from '@app/shared';
+import {
+  ComponentHandlerDirective,
+  DialogService,
+  DialogConfirmation
+} from '@app/shared';
 import {
   McsJob,
   McsResourceNetwork,
@@ -49,10 +52,7 @@ import {
   McsResourcesRepository
 } from '@app/services';
 import { EventBusDispatcherService } from '@app/event-bus';
-import {
-  ServerManageNetwork,
-  DeleteNicDialogComponent
-} from '@app/features-shared';
+import { ServerManageNetwork } from '@app/features-shared';
 import { ServerService } from '../server.service';
 import { ServerDetailsBase } from '../server-details.base';
 import { ServersService } from '../../servers.service';
@@ -144,7 +144,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     private _eventDispatcher: EventBusDispatcherService,
     private _translateService: TranslateService,
     private _serversService: ServersService,
-    private _dialogService: McsDialogService
+    private _dialogService: DialogService
   ) {
     super(
       _resourcesRepository,
@@ -248,10 +248,14 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    * @param nic NIC to be deleted
    */
   public deleteNic(server: McsServer, nic: McsServerNic): void {
-    let dialogRef = this._dialogService.open(DeleteNicDialogComponent, {
+    let dialogData = {
       data: nic,
-      size: 'medium'
-    });
+      type: 'warning',
+      title: this._translateService.instant('dialogDeleteNic.title'),
+      message: this._translateService.instant('dialogDeleteNic.message', { nic_name: nic.name })
+    } as DialogConfirmation<McsServerNic>;
+
+    let dialogRef = this._dialogService.openConfirmation(dialogData);
 
     this.selectedNic = nic;
     dialogRef.afterClosed().subscribe((result) => {
@@ -260,8 +264,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
       let nicValues = new McsServerCreateNic();
       nicValues.name = this.selectedNic.logicalNetworkName;
       nicValues.clientReferenceObject = {
-        serverId: server.id,
-        nicId: this.selectedNic.id
+        serverId: server.id
       };
 
       this._serversService.setServerSpinner(server);
@@ -284,8 +287,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     nicValues.ipAllocationMode = this.manageNetwork.ipAllocationMode;
     nicValues.ipAddress = this.manageNetwork.customIpAddress;
     nicValues.clientReferenceObject = {
-      serverId: server.id,
-      nicId: this.selectedNic.id
+      serverId: server.id
     };
 
     this.closeEditNicWindow();

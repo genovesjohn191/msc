@@ -1,10 +1,9 @@
 import { McsApiJobRequestBase } from '../common/mcs-api-job-request-base';
 
-export class McsServerAttachMedia extends McsApiJobRequestBase {
-  public name: string;
+export interface IMcsServerAttachMediaRefObj {
+  serverId: string;
+}
 
-  constructor() {
-    super();
-    this.name = undefined;
-  }
+export class McsServerAttachMedia extends McsApiJobRequestBase<IMcsServerAttachMediaRefObj> {
+  public name: string = undefined;
 }

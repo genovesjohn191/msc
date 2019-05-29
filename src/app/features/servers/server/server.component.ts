@@ -27,15 +27,7 @@ import {
   switchMap
 } from 'rxjs/operators';
 import {
-  ResetPasswordDialogComponent,
-  DeleteServerDialogComponent,
-  RenameServerDialogComponent,
-  SuspendServerDialogComponent,
-  ResumeServerDialogComponent
-} from '@app/features-shared';
-import {
   CoreDefinition,
-  McsDialogService,
   McsRoutingTabBase,
   McsDataStatusFactory,
   CoreRoutes,
@@ -50,7 +42,6 @@ import {
   ComponentHandlerDirective
 } from '@app/shared';
 import {
-  ServerCommand,
   RouteKey,
   McsServer,
   McsServerPlatform,
@@ -63,7 +54,6 @@ import {
 import { EventBusDispatcherService } from '@app/event-bus';
 import { ServerService } from './server.service';
 import { ServersListSource } from '../servers.listsource';
-import { ServersService } from '../servers.service';
 import { ServerDetails } from './server-details';
 
 // Add another group type in here if you have addition tab
@@ -100,11 +90,9 @@ export class ServerComponent
     _eventDispatcher: EventBusDispatcherService,
     _activatedRoute: ActivatedRoute,
     private _router: Router,
-    private _dialogService: McsDialogService,
     private _resourcesRespository: McsResourcesRepository,
     private _serversRepository: McsServersRepository,
     private _serverService: ServerService,
-    private _serversService: ServersService,
     private _changeDetectorRef: ChangeDetectorRef
   ) {
     super(_eventDispatcher, _activatedRoute);
@@ -143,59 +131,6 @@ export class ServerComponent
    */
   public get selectedServerId(): string {
     return this._serverService.getServerId();
-  }
-
-  /**
-   * Execute the server command according to inputs
-   * @param servers Servers to process the action
-   * @param action Action to be execute
-   */
-  public executeServerCommand(serverItem: McsServer, action: ServerCommand): void {
-    if (isNullOrEmpty(serverItem)) { return; }
-    let dialogComponent = null;
-
-    // Set dialog references in case of Reset Password, Delete Server, Rename Server etc...
-    switch (action) {
-      case ServerCommand.ResetVmPassword:
-        dialogComponent = ResetPasswordDialogComponent;
-        break;
-
-      case ServerCommand.Delete:
-        dialogComponent = DeleteServerDialogComponent;
-        break;
-
-      case ServerCommand.Rename:
-        dialogComponent = RenameServerDialogComponent;
-        break;
-
-      case ServerCommand.Suspend:
-        dialogComponent = SuspendServerDialogComponent;
-        break;
-
-      case ServerCommand.Resume:
-        dialogComponent = ResumeServerDialogComponent;
-        break;
-
-      default:
-        this._serversService.executeServerCommand({ server: serverItem }, action);
-        return;
-    }
-
-    // Check if the server action should be execute when the dialog result is true
-    if (!isNullOrEmpty(dialogComponent)) {
-      let dialogRef = this._dialogService.open(dialogComponent, {
-        data: serverItem,
-        size: 'medium'
-      });
-      dialogRef.afterClosed().subscribe((dialogResult) => {
-        if (dialogResult) {
-          this._serversService.executeServerCommand(
-            { server: serverItem, result: dialogResult },
-            action
-          );
-        }
-      });
-    }
   }
 
   /**

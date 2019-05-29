@@ -15,16 +15,16 @@ import {
   FileUploader,
   FileItem
 } from 'ng2-file-upload';
-import {
-  McsDialogService,
-  McsDialogRef,
-  CoreDefinition
-} from '@app/core';
+import { CoreDefinition } from '@app/core';
 import { McsFileInfo } from '@app/models';
 import {
   isNullOrEmpty,
   coerceNumber
 } from '@app/utilities';
+import {
+  DialogRef,
+  DialogService
+} from '../dialog';
 
 const DEFAULT_MAX_FILE_SIZE_IN_MB = 20;
 
@@ -42,7 +42,7 @@ const DEFAULT_MAX_FILE_SIZE_IN_MB = 20;
 export class FileAttachmentComponent implements OnInit {
   public fileUploader: FileUploader;
   public hasDropZone: boolean;
-  public errorDialogRef: McsDialogRef<any>;
+  public errorDialogRef: DialogRef<any>;
 
   @Input()
   public attachedLimit: 'single' | 'multiple';
@@ -66,7 +66,7 @@ export class FileAttachmentComponent implements OnInit {
 
   public constructor(
     private _translateService: TranslateService,
-    private _dialogService: McsDialogService,
+    private _dialogService: DialogService,
     private _changeDetectorRef: ChangeDetectorRef
   ) {
     // Set uploader configuration

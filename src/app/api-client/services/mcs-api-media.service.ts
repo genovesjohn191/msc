@@ -5,12 +5,12 @@ import { isNullOrEmpty } from '@app/utilities';
 import {
   McsApiSuccessResponse,
   McsApiRequestParameter,
-  McsApiJobRequestBase,
   McsJob,
   McsResourceMedia,
   McsResourceMediaServer,
   McsServerAttachMedia,
-  McsQueryParam
+  McsQueryParam,
+  McsServerDetachMedia
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiMediaService } from '../interfaces/mcs-api-media.interface';
@@ -98,14 +98,14 @@ export class McsApiMediaService implements IMcsApiMediaService {
    *
    * @param serverId Server Identification to be detached from the media
    * @param mediaId Media Identification where the server will be detached
-   * @param referenceObject Reference object to be returned from the job
+   * @param serverDetails Server details to be detached
    */
   public detachServerMedia(
     serverId: any,
     mediaId: any,
-    referenceObject?: McsApiJobRequestBase
+    serverDetails: McsServerDetachMedia
   ): Observable<McsApiSuccessResponse<McsJob>> {
-    return this._serversService.detachServerMedia(serverId, mediaId, referenceObject);
+    return this._serversService.detachServerMedia(serverId, mediaId, serverDetails);
   }
 
   /**

@@ -5,8 +5,6 @@ import {
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import {
-  MCS_DIALOG_DATA,
-  McsDialogRef,
   CoreDefinition,
   CoreValidators
 } from '@app/core';
@@ -15,6 +13,10 @@ import {
   isNullOrEmpty
 } from '@app/utilities';
 import { McsServer } from '@app/models';
+import {
+  DIALOG_DATA,
+  DialogRef
+} from '@app/shared';
 
 @Component({
   selector: 'mcs-rename-server-dialog',
@@ -37,8 +39,8 @@ export class RenameServerDialogComponent {
   }
 
   constructor(
-    public dialogRef: McsDialogRef<RenameServerDialogComponent>,
-    @Inject(MCS_DIALOG_DATA) public dialogData
+    public dialogRef: DialogRef<RenameServerDialogComponent>,
+    @Inject(DIALOG_DATA) public dialogData
   ) {
     this.server = this.dialogData as McsServer[][0];
     this._registerFormControl();

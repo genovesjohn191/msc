@@ -10,7 +10,6 @@ import {
   McsApiSuccessResponse,
   McsApiRequestParameter,
   McsJob,
-  McsApiJobRequestBase,
   McsServerCreate,
   McsServerRename,
   McsServerClone,
@@ -23,7 +22,7 @@ import {
   McsServerNic,
   McsServerCreateNic,
   McsServerSnapshot,
-  McsServerCreateSnapshot,
+  McsServerSnapshotCreate,
   McsServerMedia,
   McsServerAttachMedia,
   McsServerCompute,
@@ -33,7 +32,12 @@ import {
   McsServerOsUpdatesSchedule,
   McsServerOsUpdatesDetails,
   McsServerOsUpdatesCategory,
-  McsServerPowerstateCommand
+  McsServerPowerstateCommand,
+  McsServerDetachMedia,
+  McsServerSnapshotRestore,
+  McsServerSnapshotDelete,
+  McsServerPasswordReset,
+  McsServerDelete
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiServersService } from '../interfaces/mcs-api-servers.interface';
@@ -325,15 +329,13 @@ export class McsApiServersService implements IMcsApiServersService {
   /**
    * Post server reset vm password
    * @param id Server identification
-   * @param referenceObject Reference object to obtain during subscribe
+   * @param resetDetails Server details to be reset
    */
-  public resetVmPassword(id: any, referenceObject: any):
+  public resetVmPassword(id: any, resetDetails: McsServerPasswordReset):
     Observable<McsApiSuccessResponse<McsJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${id}/password/reset`;
-    mcsApiRequestParameter.recordData = serializeObjectToJson({
-      clientReferenceObject: referenceObject
-    });
+    mcsApiRequestParameter.recordData = serializeObjectToJson(resetDetails);
 
     return this._mcsApiService.post(mcsApiRequestParameter)
       .pipe(
@@ -440,17 +442,12 @@ export class McsApiServersService implements IMcsApiServersService {
   /**
    * This will delete an existing server
    * @param id Server id to delete
-   * @param referenceObject Reference object
+   * @param deleteDetails Details of the server to be deleted
    */
-  public deleteServer(
-    id: string,
-    referenceObject: any
-  ): Observable<McsApiSuccessResponse<McsJob>> {
+  public deleteServer(id: string, deleteDetails: McsServerDelete): Observable<McsApiSuccessResponse<McsJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${id}`;
-    mcsApiRequestParameter.recordData = serializeObjectToJson({
-      clientReferenceObject: referenceObject
-    });
+    mcsApiRequestParameter.recordData = serializeObjectToJson(deleteDetails);
 
     return this._mcsApiService.delete(mcsApiRequestParameter)
       .pipe(
@@ -757,13 +754,13 @@ export class McsApiServersService implements IMcsApiServersService {
    * @param referenceObject Reference object to be returned from the job
    */
   public detachServerMedia(
-    serverId: any,
-    mediaId: any,
-    referenceObject?: McsApiJobRequestBase
+    serverId: string,
+    mediaId: string,
+    mediaDetails: McsServerDetachMedia
   ): Observable<McsApiSuccessResponse<McsJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${serverId}/media/${mediaId}`;
-    mcsApiRequestParameter.recordData = serializeObjectToJson(referenceObject);
+    mcsApiRequestParameter.recordData = serializeObjectToJson(mediaDetails);
 
     return this._mcsApiService.delete(mcsApiRequestParameter)
       .pipe(
@@ -800,7 +797,7 @@ export class McsApiServersService implements IMcsApiServersService {
    * @param serverId Server identification
    * @param data Snapshot model to be created
    */
-  public createServerSnapshot(id: any, createSnapshot: McsServerCreateSnapshot):
+  public createServerSnapshot(id: any, createSnapshot: McsServerSnapshotCreate):
     Observable<McsApiSuccessResponse<McsJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${id}/snapshots`;
@@ -820,13 +817,13 @@ export class McsApiServersService implements IMcsApiServersService {
   /**
    * Restores server snapshot
    * @param serverId Server identification
-   * @param referenceObject Reference object of the server client to determine the status of job
+   * @param snapshotRestore Restore details of the snapshot
    */
-  public restoreServerSnapshot(id: any, referenceObject?: McsApiJobRequestBase):
+  public restoreServerSnapshot(id: any, snapshotRestore: McsServerSnapshotRestore):
     Observable<McsApiSuccessResponse<McsJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${id}/snapshots/restore`;
-    mcsApiRequestParameter.recordData = serializeObjectToJson(referenceObject);
+    mcsApiRequestParameter.recordData = serializeObjectToJson(snapshotRestore);
 
     return this._mcsApiService.put(mcsApiRequestParameter)
       .pipe(
@@ -842,13 +839,13 @@ export class McsApiServersService implements IMcsApiServersService {
   /**
    * Deletes the existing server snapshot
    * @param serverId Server id to where the snapshot will be deleted
-   * @param referenceObject Reference object
+   * @param snapshotDelete Delete details of the snapshot
    */
-  public deleteServerSnapshot(id: string, referenceObject?: McsApiJobRequestBase):
+  public deleteServerSnapshot(id: string, snapshotDelete: McsServerSnapshotDelete):
     Observable<McsApiSuccessResponse<McsJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${id}/snapshots`;
-    mcsApiRequestParameter.recordData = serializeObjectToJson(referenceObject);
+    mcsApiRequestParameter.recordData = serializeObjectToJson(snapshotDelete);
 
     return this._mcsApiService.delete(mcsApiRequestParameter)
       .pipe(

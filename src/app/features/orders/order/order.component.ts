@@ -26,7 +26,6 @@ import {
 import {
   CoreDefinition,
   McsTableDataSource,
-  McsDialogService,
   McsNavigationService
 } from '@app/core';
 import {
@@ -43,7 +42,7 @@ import {
 } from '@app/models';
 import { McsOrdersRepository } from '@app/services';
 import {
-  DialogConfirmationComponent,
+  DialogService,
   DialogConfirmation
 } from '@app/shared';
 
@@ -72,7 +71,7 @@ export class OrderComponent implements OnInit, OnDestroy {
     private _activatedRoute: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef,
     private _translate: TranslateService,
-    private _dialogService: McsDialogService,
+    private _dialogService: DialogService,
     private _navigationService: McsNavigationService,
     private _ordersRepository: McsOrdersRepository
   ) {
@@ -173,10 +172,7 @@ export class OrderComponent implements OnInit, OnDestroy {
       type: 'info'
     } as DialogConfirmation<McsOrder>;
 
-    let dialogRef = this._dialogService.open(DialogConfirmationComponent, {
-      data: dialogData,
-      size: 'medium'
-    });
+    let dialogRef = this._dialogService.openConfirmation(dialogData);
 
     dialogRef.afterClosed().pipe(
       concatMap((dialogResult) => {
@@ -203,10 +199,7 @@ export class OrderComponent implements OnInit, OnDestroy {
       type: 'error'
     } as DialogConfirmation<McsOrder>;
 
-    let dialogRef = this._dialogService.open(DialogConfirmationComponent, {
-      data: dialogData,
-      size: 'medium'
-    });
+    let dialogRef = this._dialogService.openConfirmation(dialogData);
 
     dialogRef.afterClosed().pipe(
       concatMap((dialogResult) => {
@@ -230,10 +223,7 @@ export class OrderComponent implements OnInit, OnDestroy {
       type: 'error'
     } as DialogConfirmation<McsOrder>;
 
-    let dialogRef = this._dialogService.open(DialogConfirmationComponent, {
-      data: dialogData,
-      size: 'medium'
-    });
+    let dialogRef = this._dialogService.openConfirmation(dialogData);
 
     dialogRef.afterClosed().pipe(
       concatMap((dialogResult) => {
@@ -257,10 +247,7 @@ export class OrderComponent implements OnInit, OnDestroy {
       type: 'info'
     } as DialogConfirmation<McsOrder>;
 
-    let dialogRef = this._dialogService.open(DialogConfirmationComponent, {
-      data: dialogData,
-      size: 'medium'
-    });
+    let dialogRef = this._dialogService.openConfirmation(dialogData);
 
     dialogRef.afterClosed().pipe(
       concatMap((dialogResult) => {

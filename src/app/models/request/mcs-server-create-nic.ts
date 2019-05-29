@@ -5,7 +5,14 @@ import {
 import { JsonProperty } from 'json-object-mapper';
 import { McsApiJobRequestBase } from '../common/mcs-api-job-request-base';
 
-export class McsServerCreateNic extends McsApiJobRequestBase {
+export interface IMcsServerCreateNicRefObj {
+  serverId?: string;
+  nicName?: string;
+  nicIpAllocationMode?: IpAllocationMode;
+  nicIpAddress?: string;
+}
+
+export class McsServerCreateNic extends McsApiJobRequestBase<IMcsServerCreateNicRefObj> {
   public name: string;
 
   @JsonProperty({

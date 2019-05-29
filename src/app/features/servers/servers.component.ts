@@ -9,28 +9,24 @@ import {
 import { Router } from '@angular/router';
 import {
   Subject,
-  empty
+  empty,
+  of,
+  forkJoin
 } from 'rxjs';
 import {
   takeUntil,
   map,
-  catchError
+  catchError,
+  concatMap
 } from 'rxjs/operators';
-import { ServersService } from './servers.service';
-import {
-  ResetPasswordDialogComponent,
-  DeleteServerDialogComponent,
-  RenameServerDialogComponent,
-  SuspendServerDialogComponent,
-  ResumeServerDialogComponent
-} from '@app/features-shared';
+import { TranslateService } from '@ngx-translate/core';
 import {
   CoreDefinition,
   McsBrowserService,
   McsTableListingBase,
-  McsDialogService,
   CoreRoutes,
-  McsTableDataSource
+  McsTableDataSource,
+  McsTableSelection
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -40,15 +36,20 @@ import {
   ServiceType,
   serviceTypeText,
   ServerCommand,
-  Breakpoint,
-  McsSelection,
   RouteKey,
-  McsServer
+  McsServer,
+  VmPowerstateCommand,
+  McsServerDelete
 } from '@app/models';
 import {
   McsResourcesRepository,
-  McsServersRepository
+  McsServersRepository,
+  McsApiService
 } from '@app/services';
+import {
+  DialogConfirmation,
+  DialogService
+} from '@app/shared';
 
 @Component({
   selector: 'mcs-servers',
@@ -60,7 +61,7 @@ export class ServersComponent
   extends McsTableListingBase<McsTableDataSource<McsServer>>
   implements OnInit, AfterViewInit, OnDestroy {
 
-  public selection: McsSelection<McsServer>;
+  public serversSelection: McsTableSelection<McsServer>;
   public hasCreateResources: boolean;
   public hasManagedResource: boolean;
 
@@ -110,13 +111,14 @@ export class ServersComponent
     _browserService: McsBrowserService,
     _changeDetectorRef: ChangeDetectorRef,
     private _router: Router,
-    private _dialogService: McsDialogService,
+    private _translateService: TranslateService,
+    private _apiService: McsApiService,
+    private _dialogService: DialogService,
     private _serversRepository: McsServersRepository,
-    private _resourcesRepository: McsResourcesRepository,
-    private _serversService: ServersService
+    private _resourcesRepository: McsResourcesRepository
   ) {
     super(_browserService, _changeDetectorRef);
-    this.selection = new McsSelection<McsServer>(true);
+    // this.selection = new McsSelection<McsServer>(true);
   }
 
   public ngOnInit() {
@@ -141,129 +143,143 @@ export class ServersComponent
   }
 
   /**
-   * Return true if all the displayed record is selected otherwise false
+   * Returns true when the selected action can be executed
+   * @param propName Property name to be checked
    */
-  public isAllSelected(): boolean {
-    if (isNullOrEmpty(this.dataSource)) { return false; }
-    if (!this.selection.hasValue()) { return false; }
-
-    let selectableRecords = this.dataSource.dataRecords
-      .filter((record) => !record.isProcessing);
-    if (isNullOrEmpty(selectableRecords)) { return false; }
-
-    return selectableRecords.length === this.selection.selected.length;
+  public canExecuteAction(propName: string): boolean {
+    if (isNullOrEmpty(this.serversSelection) || !this.serversSelection.someItemsAreSelected()) { return false; }
+    let someServersCannotExecute = this.serversSelection.getSelectedItems()
+      .find((selectedServer) => !selectedServer[propName]);
+    return !someServersCannotExecute;
   }
 
   /**
-   * Select all displayed record in the table
+   * PoweredOn multiple servers
    */
-  public toggleSelectAll(): void {
-    if (isNullOrEmpty(this.dataSource)) { return; }
-
-    if (this.isAllSelected()) {
-      this.selection.clear();
-    } else {
-      this.dataSource.dataRecords.forEach((record) => {
-        if (!record.isProcessing) {
-          this.selection.select(record);
+  public startMultipleServers(): void {
+    this.serversSelection.getSelectedItems().forEach((server) => {
+      this._apiService.sendServerPowerState(server.id, {
+        command: VmPowerstateCommand.Start,
+        clientReferenceObject: {
+          serverId: server.id
         }
-      });
-    }
-  }
-
-  /**
-   * Returns true when the action can be executed based on the property value
-   * @param propName Property name of the flag
-   */
-  public executableAction(propName: string): boolean {
-    let hasNonExecutable = this.selection.selected.find((selectedServer) => {
-      return !selectedServer[propName];
+      }).subscribe();
     });
-    let canExecute = isNullOrEmpty(hasNonExecutable) && this.selection.hasValue();
-    return canExecute;
+    this.serversSelection.clearAllSelection();
   }
 
   /**
-   * Execute the corresponding action based on top panel commands
-   * @param action Action to be set
+   * Powered off multiple servers selected
    */
-  public executeTopPanelAction(action: ServerCommand) {
-    if (!this.selection.hasValue()) { return; }
-    let selectedServers: McsServer[] = new Array();
-
-    // Get selected servers based on selection model
-    this.selection.selected.forEach((selectedServer) => {
-      let existingServer = this.dataSource.dataRecords
-        .find((data) => data.id === selectedServer.id);
-      selectedServers.push(existingServer);
+  public stopMultipleServers(): void {
+    this.serversSelection.getSelectedItems().forEach((server) => {
+      this._apiService.sendServerPowerState(server.id, {
+        command: VmPowerstateCommand.Stop,
+        clientReferenceObject: {
+          serverId: server.id
+        }
+      }).subscribe();
     });
-
-    // Execute server command
-    this.executeServerCommand(selectedServers, action);
+    this.serversSelection.clearAllSelection();
   }
 
   /**
-   * Execute the server command according to inputs
-   * @param servers Servers to process the action
-   * @param action Action to be execute
+   * Restart Multiple Servers
    */
-  public executeServerCommand(servers: McsServer | McsServer[], action: ServerCommand): void {
-    if (isNullOrEmpty(servers)) { return; }
-    let serverItems: McsServer[] = new Array();
-    let dialogComponent = null;
-    this.selection.clear();
+  public restartMultipleServers(): void {
+    this.serversSelection.getSelectedItems().forEach((server) => {
+      this._apiService.sendServerPowerState(server.id, {
+        command: VmPowerstateCommand.Restart,
+        clientReferenceObject: {
+          serverId: server.id
+        }
+      }).subscribe();
+    });
+    this.serversSelection.clearAllSelection();
+  }
 
-    // Set server items based on instance if it is single or multiple
-    !Array.isArray(servers) ? serverItems.push(servers) : serverItems = servers;
+  /**
+   * Delete multiple servers selected
+   */
+  public deleteMultipleServers(): void {
+    let dialogData = {
+      title: this._translateService.instant('dialogDeleteServerMultiple.title'),
+      message: this._translateService.instant('dialogDeleteServerMultiple.message'),
+      type: 'warning'
+    } as DialogConfirmation<McsServerDelete>;
 
-    // Set dialog references in case of Reset Password, Delete Server, Rename Server etc...
-    switch (action) {
-      case ServerCommand.ResetVmPassword:
-        dialogComponent = ResetPasswordDialogComponent;
-        break;
+    let dialogRef = this._dialogService.openConfirmation(dialogData);
 
-      case ServerCommand.Delete:
-        dialogComponent = DeleteServerDialogComponent;
-        break;
+    dialogRef.afterClosed().pipe(
+      concatMap((dialogResult) => {
+        if (isNullOrEmpty(dialogResult)) { return of(null); }
+        return forkJoin(this.serversSelection.getSelectedItems().map((server) => {
+          let deleteDetails = new McsServerDelete();
+          deleteDetails.clientReferenceObject = {
+            serverId: server.id,
+            isDeleting: true
+          };
+          return this._apiService.deleteServer(server.id, deleteDetails);
+        }));
+      })
+    ).subscribe();
+    this.serversSelection.clearAllSelection();
+  }
 
-      case ServerCommand.Rename:
-        dialogComponent = RenameServerDialogComponent;
-        break;
+  /**
+   * Suspends multiple servers selected
+   */
+  public suspendMultipleServers(): void {
+    let dialogData = {
+      title: this._translateService.instant('dialogSuspendServerMultiple.title'),
+      message: this._translateService.instant('dialogSuspendServerMultiple.message'),
+      type: 'warning'
+    } as DialogConfirmation<any>;
 
-      case ServerCommand.Suspend:
-        dialogComponent = SuspendServerDialogComponent;
-        break;
+    let dialogRef = this._dialogService.openConfirmation(dialogData);
 
-      case ServerCommand.Resume:
-        dialogComponent = ResumeServerDialogComponent;
-        break;
-
-      default:
-        serverItems.forEach((serverItem) => {
-          this._serversService.executeServerCommand({ server: serverItem }, action);
-          this.changeDetectorRef.markForCheck();
-        });
-        return;
-    }
-
-    // Check if the server action should be execute when the dialog result is true
-    if (!isNullOrEmpty(dialogComponent)) {
-      let dialogRef = this._dialogService.open(dialogComponent, {
-        data: servers,
-        size: 'medium'
-      });
-      dialogRef.afterClosed().subscribe((dialogResult) => {
-        if (dialogResult) {
-          serverItems.forEach((serverItem) => {
-            this._serversService.executeServerCommand(
-              { server: serverItem, result: dialogResult },
-              action
-            );
-            this.changeDetectorRef.markForCheck();
+    dialogRef.afterClosed().pipe(
+      concatMap((dialogResult) => {
+        if (isNullOrEmpty(dialogResult)) { return of(null); }
+        return forkJoin(this.serversSelection.getSelectedItems().map((server) => {
+          return this._apiService.sendServerPowerState(server.id, {
+            command: VmPowerstateCommand.Suspend,
+            clientReferenceObject: {
+              serverId: server.id
+            }
           });
-        }
-      });
-    }
+        }));
+      })
+    ).subscribe();
+    this.serversSelection.clearAllSelection();
+  }
+
+  /**
+   * Resume multiple servers selected
+   */
+  public resumeMultipleServers(): void {
+    let dialogData = {
+      title: this._translateService.instant('dialogResumeServerMultiple.title'),
+      message: this._translateService.instant('dialogResumeServerMultiple.message'),
+      type: 'warning'
+    } as DialogConfirmation<any>;
+
+    let dialogRef = this._dialogService.openConfirmation(dialogData);
+
+    dialogRef.afterClosed().pipe(
+      concatMap((dialogResult) => {
+        if (isNullOrEmpty(dialogResult)) { return of(null); }
+        return forkJoin(this.serversSelection.getSelectedItems().map((server) => {
+          return this._apiService.sendServerPowerState(server.id, {
+            command: VmPowerstateCommand.Resume,
+            clientReferenceObject: {
+              serverId: server.id
+            }
+          });
+        }));
+      })
+    ).subscribe();
+    this.serversSelection.clearAllSelection();
   }
 
   /**
@@ -317,6 +333,8 @@ export class ServersComponent
     this.dataSource
       .registerSearch(this.search)
       .registerPaginator(this.paginator);
+
+    this.serversSelection = new McsTableSelection(this.dataSource, true);
     this.changeDetectorRef.markForCheck();
   }
 
@@ -351,10 +369,10 @@ export class ServersComponent
   private _subscribeToBreakpointChanges(): void {
     this.browserService.breakpointChange()
       .pipe(takeUntil(this._destroySubject))
-      .subscribe((deviceType) => {
-        let multipleSelection = !(deviceType === Breakpoint.Small ||
-          deviceType === Breakpoint.XSmall);
-        this.selection = new McsSelection<McsServer>(multipleSelection);
+      .subscribe(() => {
+        if (!isNullOrEmpty(this.serversSelection)) {
+          this.serversSelection.clearAllSelection();
+        }
       });
   }
 

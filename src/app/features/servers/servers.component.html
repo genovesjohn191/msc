@@ -1,6 +1,6 @@
 <mcs-page [header]="'servers.header' | translate">
   <!-- Top Panel -->
-  <mcs-top-panel *mcsTopPanelDef [active]="selection.hasValue()">
+  <mcs-top-panel *mcsTopPanelDef [active]="serversSelection?.someItemsAreSelected()">
 
     <!-- Server Creation -->
     <ng-container *mcsAccessControl="['DedicatedVmEdit', 'CloudVmEdit']">
@@ -24,8 +24,8 @@
       <div class="listing-action-wrapper">
         <mcs-responsive-panel *mcsAccessControl="['DedicatedVmPowerStateEdit','CloudVmPowerStateEdit']">
           <mcs-action-item mcsResponsivePanelItem hidden-small
-            [disabled]="!executableAction('startable')"
-            (click)="executeTopPanelAction(serverCommand.Start)"
+            [disabled]="!canExecuteAction('startable')"
+            (click)="startMultipleServers()"
             mcsId
             mcsEventTracker="start"
             mcsEventCategory="server"
@@ -35,8 +35,8 @@
           </mcs-action-item>
 
           <mcs-action-item mcsResponsivePanelItem hidden-small
-            [disabled]="!executableAction('stoppable')"
-            (click)="executeTopPanelAction(serverCommand.Stop)"
+            [disabled]="!canExecuteAction('stoppable')"
+            (click)="stopMultipleServers()"
             mcsId
             mcsEventTracker="stop"
             mcsEventCategory="server"
@@ -46,8 +46,8 @@
           </mcs-action-item>
 
           <mcs-action-item mcsResponsivePanelItem hidden-small
-            [disabled]="!executableAction('restartable')"
-            (click)="executeTopPanelAction(serverCommand.Restart)"
+            [disabled]="!canExecuteAction('restartable')"
+            (click)="restartMultipleServers()"
             mcsId
             mcsEventTracker="restart"
             mcsEventCategory="server"
@@ -57,8 +57,8 @@
           </mcs-action-item>
 
           <mcs-action-item mcsResponsivePanelItem hidden-small
-            [disabled]="!executableAction('deletable')"
-            (click)="executeTopPanelAction(serverCommand.Delete)"
+            [disabled]="!canExecuteAction('deletable')"
+            (click)="deleteMultipleServers()"
             mcsId
             mcsEventTracker="delete"
             mcsEventCategory="server"
@@ -68,8 +68,8 @@
           </mcs-action-item>
 
           <mcs-action-item mcsResponsivePanelItem hidden-small
-            [disabled]="!executableAction('suspendable')"
-            (click)="executeTopPanelAction(serverCommand.Suspend)"
+            [disabled]="!canExecuteAction('suspendable')"
+            (click)="suspendMultipleServers()"
             mcsId
             mcsEventTracker="suspend"
             mcsEventCategory="server"
@@ -79,8 +79,8 @@
           </mcs-action-item>
 
           <mcs-action-item mcsResponsivePanelItem hidden-small
-            [disabled]="!executableAction('resumable')"
-            (click)="executeTopPanelAction(serverCommand.Resume)"
+            [disabled]="!canExecuteAction('resumable')"
+            (click)="resumeMultipleServers()"
             mcsId
             mcsEventTracker="resume"
             mcsEventCategory="server"
@@ -126,10 +126,10 @@
         <ng-container mcsColumnDef="select" *mcsAccessControl="['DedicatedVmPowerStateEdit','CloudVmPowerStateEdit']">
           <mcs-header-cell *mcsHeaderCellDef
             hidden-small text-center class="action-header-cell">
-            <mcs-checkbox (change)="toggleSelectAll()"
+            <mcs-checkbox (change)="serversSelection?.toggleAllItemsSelection()"
               color="white"
-              [checked]="isAllSelected()"
-              [indeterminate]="selection.hasValue() && !isAllSelected()">
+              [checked]="serversSelection?.allItemsAreSelected()"
+              [indeterminate]="serversSelection?.someItemsAreSelected()">
             </mcs-checkbox>
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row"
@@ -137,9 +137,8 @@
             [disabled]="row.isProcessing"
             mcsCursor="default"
             mcsStopPropagation>
-            <mcs-checkbox
-              [checked]="selection.isSelected(row)"
-              (change)="selection.toggle(row)">
+            <mcs-checkbox [checked]="serversSelection?.isItemSelected(row)"
+              (change)="serversSelection?.toggleItemSelection(row)">
             </mcs-checkbox>
           </mcs-data-cell>
         </ng-container>
@@ -270,8 +269,7 @@
             text-center class="action-data-cell">
             <mcs-server-command mcsId="server-command"
               [server]="row"
-              [excluded]="excludedCommands"
-              (onClick)="executeServerCommand(row, $event)"></mcs-server-command>
+              [excluded]="excludedCommands"></mcs-server-command>
           </mcs-data-cell>
         </ng-container>
 
@@ -307,7 +305,7 @@
         <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"
           mcsCursor="pointer"
           [disabled]="row.isDeleting"
-          [ngClass]="{'active-data-row': selection.isSelected(row)}"
+          [ngClass]="{'active-data-row': serversSelection?.isItemSelected(row)}"
           (click)="navigateToServer(row)"
           mcsId="server-row"
           mcsEventTracker="navigate-to-server"

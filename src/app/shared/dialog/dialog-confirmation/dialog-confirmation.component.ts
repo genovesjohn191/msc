@@ -6,13 +6,11 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef
 } from '@angular/core';
-import {
-  MCS_DIALOG_DATA,
-  McsDialogRef,
-  McsStatusSettingsBase
-} from '@app/core';
+import { McsStatusSettingsBase } from '@app/core';
 import { McsStatusType } from '@app/utilities';
 import { DialogConfirmation } from './dialog-confirmation-data';
+import { DialogRef } from '../dialog-ref/dialog-ref';
+import { DIALOG_DATA } from '../dialog-config';
 
 @Component({
   selector: 'mcs-dialog-confirmation',
@@ -28,8 +26,8 @@ export class DialogConfirmationComponent extends McsStatusSettingsBase {
 
   constructor(
     _changeDetectorRef: ChangeDetectorRef,
-    public dialogRef: McsDialogRef<DialogConfirmationComponent>,
-    @Inject(MCS_DIALOG_DATA) public dialogData: DialogConfirmation<any>
+    public dialogRef: DialogRef<DialogConfirmationComponent>,
+    @Inject(DIALOG_DATA) public dialogData: DialogConfirmation<any>
   ) {
     super(_changeDetectorRef);
     this.initializeSettings();
