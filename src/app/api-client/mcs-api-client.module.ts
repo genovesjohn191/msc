@@ -24,11 +24,11 @@ import { apiClientProviders } from './mcs-api-client.constants';
 
 export class McsApiClientModule {
 
-  public static forRoot(config: () => McsApiClientConfig): ModuleWithProviders {
+  public static forRoot(config: (...deps: any[]) => McsApiClientConfig, injectors?: any[]): ModuleWithProviders {
     return {
       ngModule: McsApiClientModule,
       providers: [
-        { provide: McsApiClientConfig, useFactory: config }
+        { provide: McsApiClientConfig, useFactory: config, deps: injectors }
       ]
     };
   }

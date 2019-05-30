@@ -19,13 +19,8 @@ import {
 } from '@app/utilities';
 import {
   McsApiRequestParameter,
-  McsApiErrorResponse,
-  McsCompany
+  McsApiErrorResponse
 } from '@app/models';
-import {
-  McsCookieService,
-  CoreDefinition
-} from '@app/core';
 import { McsApiClientDefinition } from './mcs-api-client.definition';
 import { McsApiClientConfig } from './mcs-api-client.config';
 
@@ -38,7 +33,6 @@ export class McsApiClientHttpService {
 
   constructor(
     private _httpClient: HttpClient,
-    private _cookieService: McsCookieService,
     @Optional() private _config: McsApiClientConfig
   ) { }
 
@@ -166,7 +160,6 @@ export class McsApiClientHttpService {
     let headers = new Map<string, any>();
 
     this._setDefaultHeaders(headers);
-    this._setAccountHeader(headers);
     this._setOptionalHeaders(headers, optHeaders);
     return convertMapToJsonObject(headers);
   }
@@ -185,24 +178,15 @@ export class McsApiClientHttpService {
    * @param {Headers} headers Header Instance
    */
   private _setDefaultHeaders(headers: Map<string, any>) {
+    if (!isNullOrEmpty(this._config.headers)) {
+      this._config.headers.forEach((value, key) => {
+        headers.set(key, value);
+      });
+      return;
+    }
     headers.set(McsApiClientDefinition.HEADER_ACCEPT, 'application/json');
     headers.set(McsApiClientDefinition.HEADER_CONTENT_TYPE, 'application/json');
     headers.set(McsApiClientDefinition.HEADER_API_VERSION, '1.0');
-  }
-
-  /**
-   * Set account header based on active account
-   *
-   * `@Note:` When active account is default, the cookie content for active account is undefined
-   * @param headers Header Instance
-   */
-  private _setAccountHeader(headers: Map<string, any>) {
-    // TODO: This implementation should be called outside of this module.
-    // As of now, we need to call the cookieservice of the coremodule as
-    // a temporary fix because this api client module should be independent
-    let activeAccount = this._cookieService.getEncryptedItem<McsCompany>(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
-    if (isNullOrEmpty(activeAccount)) { return; }
-    headers.set(CoreDefinition.HEADER_COMPANY_ID, activeAccount);
   }
 
   /**

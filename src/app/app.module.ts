@@ -11,12 +11,13 @@ import {
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { environment } from 'environments/environment';
 import { AppComponent } from './app.component';
-import { APP_RESOLVER_PROVIDERS } from './app.resolver';
 import { AppState } from './app.service';
 import { appRoutes } from './app.routes';
 import {
   CoreModule,
-  CoreConfig
+  CoreConfig,
+  CoreDefinition,
+  McsCookieService
 } from './core';
 import { EventBusModule } from './event-bus';
 import { ServicesModule } from './services';
@@ -33,21 +34,10 @@ import { McsApiClientModule } from './api-client/mcs-api-client.module';
 
 import '../styles/base.scss';
 
-/**
- * Application-Wide Providers
- */
-const APP_PROVIDERS = [
-  ...APP_RESOLVER_PROVIDERS,
-  AppState
-];
-
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
-/**
- * Set Core Configuration based on environment variables
- */
 export function coreConfig(): CoreConfig {
   return {
     apiHost: resolveEnvVar('API_HOST', API_URL),
@@ -63,15 +53,21 @@ export function coreConfig(): CoreConfig {
   } as CoreConfig;
 }
 
-export function apiConfig(): McsApiClientConfig {
+export function apiClientConfig(cookieService: McsCookieService): McsApiClientConfig {
+  let activeAccount = cookieService.getEncryptedItem(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
+  let apiClientHeaders = new Map<string, string>();
+
+  apiClientHeaders.set(CoreDefinition.HEADER_ACCEPT, 'application/json');
+  apiClientHeaders.set(CoreDefinition.HEADER_CONTENT_TYPE, 'application/json');
+  apiClientHeaders.set(CoreDefinition.HEADER_API_VERSION, '1.0');
+  apiClientHeaders.set(CoreDefinition.HEADER_COMPANY_ID, activeAccount as any);
+
   return {
-    apiHost: resolveEnvVar('API_HOST', API_URL)
+    apiHost: resolveEnvVar('API_HOST', API_URL),
+    headers: apiClientHeaders
   } as McsApiClientConfig;
 }
 
-/**
- * `AppModule` is the main entry point into Angular2's bootstraping process
- */
 @NgModule({
   bootstrap: [AppComponent],
   declarations: [
@@ -91,7 +87,7 @@ export function apiConfig(): McsApiClientConfig {
     }),
 
     CoreModule.forRoot(coreConfig),
-    McsApiClientModule.forRoot(apiConfig),
+    McsApiClientModule.forRoot(apiClientConfig, [McsCookieService]),
     EventBusModule.forRoot(),
     ServicesModule.forRoot(),
 
@@ -103,7 +99,7 @@ export function apiConfig(): McsApiClientConfig {
   ],
   providers: [
     environment.ENV_PROVIDERS,
-    APP_PROVIDERS
+    AppState
   ]
 })
 

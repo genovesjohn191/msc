@@ -1,4 +1,4 @@
 export class McsApiClientConfig {
   public apiHost: string;
-  public apiActiveAccountCookieId: string;
+  public headers: Map<string, string>;
 }
