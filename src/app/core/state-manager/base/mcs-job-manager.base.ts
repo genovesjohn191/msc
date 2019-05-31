@@ -6,7 +6,7 @@ import {
   unsubscribeSafely,
   isNullOrEmpty
 } from '@app/utilities';
-import { CoreEvent } from '@app/core';
+import { McsEvent } from '@app/event-manager';
 
 export abstract class McsJobManagerBase implements McsDisposable {
   private _inProgressJobHandler: Subscription;
@@ -71,12 +71,12 @@ export abstract class McsJobManagerBase implements McsDisposable {
    */
   private _registerJobEvents(): void {
     this._inProgressJobHandler = this._eventDispatcher.addEventListener(
-      CoreEvent.jobInProgress, this._onInProgressJob.bind(this));
+      McsEvent.jobInProgress, this._onInProgressJob.bind(this));
 
     this._successfulJobHandler = this._eventDispatcher.addEventListener(
-      CoreEvent.jobSuccessful, this._onCompletedJob.bind(this));
+      McsEvent.jobSuccessful, this._onCompletedJob.bind(this));
 
     this._errorJobHandler = this._eventDispatcher.addEventListener(
-      CoreEvent.jobError, this._onErrorJob.bind(this));
+      McsEvent.jobError, this._onErrorJob.bind(this));
   }
 }

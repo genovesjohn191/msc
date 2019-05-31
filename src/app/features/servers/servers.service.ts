@@ -1,12 +1,46 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { isNullOrEmpty } from '@app/utilities';
-import { McsServer } from '@app/models';
+import {
+  McsServer,
+  McsResource,
+  ServiceType
+} from '@app/models';
+import { McsResourcesRepository } from '@app/services';
+import {
+  McsAccessControlService,
+  CoreDefinition
+} from '@app/core';
 
 /**
  * @deprecated Set the server spinner in the api-service instead.
  */
 @Injectable()
 export class ServersService {
+
+  constructor(
+    private _accessControlService: McsAccessControlService,
+    private _resourcesRepository: McsResourcesRepository
+  ) { }
+
+  /**
+   * Get all the resources based on the access control
+   * @note OrderEdit and EnableOrderingManagedServerCreate
+   */
+  public getResourcesByAccess(): Observable<McsResource[]> {
+    return this._resourcesRepository.getAll().pipe(
+      map((resources) => {
+        let managedResourceIsOn = this._accessControlService.hasAccess(
+          ['OrderEdit'], CoreDefinition.FEATURE_FLAG_ENABLE_CREATE_MANAGED_SERVER);
+
+        return resources.filter(
+          (resource) => resource.serviceType === ServiceType.SelfManaged ||
+            (managedResourceIsOn && resource.serviceType === ServiceType.Managed)
+        );
+      })
+    );
+  }
 
   /**
    * Set the server status to inprogress to display the spinner of corresponding server

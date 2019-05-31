@@ -1,6 +1,6 @@
-import { McsDateSerialization } from '@app/core';
 import { JsonProperty } from 'json-object-mapper';
 import { McsKeyValuePair } from '../common/mcs-key-value-pair';
+import { McsDateSerialization } from '../serialization/mcs-date-serialization';
 
 export class McsIdentity {
   public hashedId: string;

@@ -1,6 +1,5 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { McsDataContext } from '@app/core';
 import { isNullOrEmpty } from '@app/utilities';
 import {
   McsQueryParam,
@@ -8,6 +7,7 @@ import {
   McsCompany
 } from '@app/models';
 import { IMcsApiCompaniesService } from '@app/api-client';
+import { McsDataContext } from '../core/mcs-data-context.interface';
 
 export class McsCompaniesDataContext implements McsDataContext<McsCompany> {
   public totalRecordsCount: number = 0;

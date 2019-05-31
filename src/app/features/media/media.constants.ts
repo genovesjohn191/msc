@@ -1,7 +1,9 @@
 import { Routes } from '@angular/router';
-import { McsNavigateAwayGuard } from '@app/core';
+import {
+  McsNavigateAwayGuard,
+  McsRequiredResourcesGuard
+} from '@app/core';
 import { RouteKey } from '@app/models';
-import { RequiredResourcesGuard } from '@app/services';
 /** Components */
 import { MediaComponent } from './media.component';
 import {
@@ -34,7 +36,7 @@ export const mediaRoutes: Routes = [
   {
     path: '',
     component: MediaUploadComponent,
-    canActivate: [RequiredResourcesGuard],
+    canActivate: [McsRequiredResourcesGuard],
     canDeactivate: [McsNavigateAwayGuard],
     data: { routeId: RouteKey.MediaUpload }
   },

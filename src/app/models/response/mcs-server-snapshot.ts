@@ -1,6 +1,6 @@
 import { JsonProperty } from 'json-object-mapper';
-import { McsDateSerialization } from '@app/core';
 import { McsEntityBase } from '../common/mcs-entity.base';
+import { McsDateSerialization } from '../serialization/mcs-date-serialization';
 
 export class McsServerSnapshot extends McsEntityBase {
   public sizeMB: number;

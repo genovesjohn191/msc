@@ -21,12 +21,11 @@ import {
 import {
   McsJob,
   DataStatus,
-  McsApiRequestParameter,
-  McsApiSuccessResponse,
-  JobType
+  JobType,
+  JobStatus
 } from '@app/models';
+import { McsApiService } from '@app/services';
 import { McsNotificationJobService } from './mcs-notification-job.service';
-import { McsApiService } from './mcs-api.service';
 
 /**
  * MCS notification context service
@@ -85,15 +84,8 @@ export class McsNotificationContextService implements McsDisposable {
    * job that is not yet past on their due dates
    */
   public getAllActiveJobs(): Observable<McsJob[]> {
-    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = '/jobs/?status=Pending,Active';
-
-    return this._apiService.get(mcsApiRequestParameter).pipe(
-      map((response) => {
-        let apiResponse = McsApiSuccessResponse
-          .deserializeResponse<McsJob[]>(McsJob, response);
-        return apiResponse.content;
-      }),
+    return this._apiService.getJobsByStatus(JobStatus.Pending, JobStatus.Active).pipe(
+      map((response) => response.collection),
       tap((jobs) => {
         this._notifications = jobs;
         this._notificationsStream.next(this._notifications);

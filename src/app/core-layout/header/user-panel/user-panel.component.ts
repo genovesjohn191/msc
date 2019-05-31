@@ -27,7 +27,6 @@ import {
 import {
   CoreRoutes,
   CoreDefinition,
-  CoreEvent,
   McsBrowserService,
   McsAuthenticationService
 } from '@app/core';
@@ -37,6 +36,7 @@ import {
   unsubscribeSafely
 } from '@app/utilities';
 import { EventBusPropertyListenOn } from '@app/event-bus';
+import { McsEvent } from '@app/event-manager';
 import { SwitchAccountService } from '../../shared';
 import { UserPanelService } from './user-panel.service';
 
@@ -59,10 +59,10 @@ export class UserPanelComponent implements OnInit, OnDestroy {
   @ViewChild('userPopover')
   public userPopover: any;
 
-  @EventBusPropertyListenOn(CoreEvent.userChange)
+  @EventBusPropertyListenOn(McsEvent.userChange)
   public activeUser$: Observable<McsIdentity>;
 
-  @EventBusPropertyListenOn(CoreEvent.accountChange)
+  @EventBusPropertyListenOn(McsEvent.accountChange)
   public activeAccount$: Observable<McsCompany>;
 
   private _destroySubject = new Subject<void>();

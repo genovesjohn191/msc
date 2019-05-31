@@ -5,6 +5,7 @@ import {
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
+  JobStatus,
   McsInternetPort,
   McsQueryParam,
   McsJob,
@@ -13,8 +14,9 @@ import {
   McsServerRename,
   McsServerDelete,
   McsServerPasswordReset,
-  JobStatus,
-  McsApiSuccessResponse
+  McsApiSuccessResponse,
+  McsIdentity,
+  McsJobConnection
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -24,7 +26,10 @@ import {
   IMcsApiServersService,
   McsApiClientFactory,
   McsApiServersFactory,
-  IMcsApiJobsService
+  IMcsApiJobsService,
+  McsApiJobsFactory,
+  IMcsApiIdentityService,
+  McsApiIdentityFactory
 } from '@app/api-client';
 import { McsJobsRepository } from './repositories/mcs-jobs.repository';
 import { McsInternetRepository } from './repositories/mcs-internet.repository';
@@ -34,8 +39,9 @@ export class McsApiService {
   private readonly _jobsRepository: McsJobsRepository;
   private readonly _internetRepository: McsInternetRepository;
 
-  private readonly _jobsApi: IMcsApiJobsService;
   private readonly _serversApi: IMcsApiServersService;
+  private readonly _jobsApi: IMcsApiJobsService;
+  private readonly _identityApi: IMcsApiIdentityService;
 
   constructor(_injector: Injector) {
     // Register api repositories
@@ -45,6 +51,14 @@ export class McsApiService {
     // Register api services
     let apiClientFactory = _injector.get(McsApiClientFactory);
     this._serversApi = apiClientFactory.getService(new McsApiServersFactory());
+    this._jobsApi = apiClientFactory.getService(new McsApiJobsFactory());
+    this._identityApi = apiClientFactory.getService(new McsApiIdentityFactory());
+  }
+
+  public getIdentity(): Observable<McsIdentity> {
+    return this._identityApi.getIdentity().pipe(
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
   }
 
   public getJobsByStatus(...statuses: JobStatus[]): Observable<McsApiCollection<McsJob>> {
@@ -65,6 +79,12 @@ export class McsApiService {
 
   public getJob(id: string): Observable<McsJob> {
     return this._jobsRepository.getById(id);
+  }
+
+  public getJobConnection(): Observable<McsJobConnection> {
+    return this._jobsApi.getJobConnection().pipe(
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
   }
 
   public getInternetPorts(query: McsQueryParam): Observable<McsApiCollection<McsInternetPort>> {
@@ -117,7 +137,6 @@ export class McsApiService {
    * @param totalRecordsCount Total records count of the collection
    */
   private _mapToCollection<T>(records: T[], totalRecordsCount?: number): McsApiCollection<T>;
-
   private _mapToCollection<T>(
     records: McsApiSuccessResponse<any> | T[],
     totalRecordsCount?: number

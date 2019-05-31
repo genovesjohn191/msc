@@ -7,11 +7,9 @@ import {
 } from '@app/utilities';
 import { McsJob } from '@app/models';
 import { EventBusDispatcherService } from '@app/event-bus';
-import {
-  CoreEvent,
-  IMcsInitializable
-} from '@app/core';
-import { McsJobsRepository } from '../repositories/mcs-jobs.repository';
+import { McsEvent } from '@app/event-manager';
+import { McsJobsRepository } from '@app/services';
+import { IMcsInitializable } from '../interfaces/mcs-initializable.interface';
 
 @Injectable()
 export class McsJobStateManager implements IMcsInitializable, McsDisposable {
@@ -42,7 +40,7 @@ export class McsJobStateManager implements IMcsInitializable, McsDisposable {
    */
   private _registerEvents(): void {
     this._jobReceiveHandler = this._eventDispatcher.addEventListener(
-      CoreEvent.jobReceive, this._onJobReceived.bind(this));
+      McsEvent.jobReceive, this._onJobReceived.bind(this));
   }
 
   /**

@@ -7,8 +7,7 @@ import {
 } from 'rxjs';
 import {
   takeUntil,
-  finalize,
-  map
+  tap
 } from 'rxjs/operators';
 import {
   StompRService,
@@ -26,17 +25,15 @@ import {
 import {
   McsJob,
   McsJobConnection,
-  McsApiSuccessResponse,
   NetworkStatus,
-  McsApiRequestParameter,
   McsIdentity
 } from '@app/models';
 import { EventBusDispatcherService } from '@app/event-bus';
-import { McsApiService } from './mcs-api.service';
+import { McsEvent } from '@app/event-manager';
+import { McsApiService } from '@app/services';
 import { McsLoggerService } from './mcs-logger.service';
 import { McsSessionHandlerService } from './mcs-session-handler.service';
 import { CoreDefinition } from '../core.definition';
-import { CoreEvent } from '../core.event';
 
 const DEFAULT_HEARTBEAT_IN = 0;
 const DEFAULT_HEARTBEAT_OUT = 20000;
@@ -94,40 +91,21 @@ export class McsNotificationJobService implements McsDisposable {
    * Gets the connection details from API and connect to web stomp
    */
   private _connectStomp(): void {
-    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = '/jobs/connection';
-
-    this._apiSubscription = this._apiService.get(mcsApiRequestParameter)
-      .pipe(
-        finalize(() => {
-          this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
-        }),
-        map((response) => {
-          // Deserialize json reponse
-          let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<McsJobConnection>(McsJobConnection, response);
-
-          this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
-          this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
-          this._loggerService.traceInfo(`converted response:`, apiResponse);
-          return apiResponse;
-        })
-      )
-      .subscribe((details) => {
-        if (isNullOrEmpty(details)) {
-          this._loggerService.traceEnd(`No connection details data found.`);
+    this._apiSubscription = this._apiService.getJobConnection().pipe(
+      tap((connection) => {
+        if (isNullOrEmpty(connection)) {
           this.connectionStatus = NetworkStatus.NoData;
           return;
         }
-
-        this._jobConnection = details.content;
+        this._jobConnection = connection;
         this.connectionStatus = NetworkStatus.Connecting;
 
         Promise.resolve().then(() => {
           this._initializeWebstomp();
           this._listenToStateChange();
         });
-      });
+      })
+    ).subscribe();
   }
 
   /**
@@ -264,7 +242,7 @@ export class McsNotificationJobService implements McsDisposable {
    */
   private _registerEvents(): void {
     this._userChangeHandler = this._eventDispatcher.addEventListener(
-      CoreEvent.userChange, this._onUserChanged.bind(this));
+      McsEvent.userChange, this._onUserChanged.bind(this));
   }
 
   /**

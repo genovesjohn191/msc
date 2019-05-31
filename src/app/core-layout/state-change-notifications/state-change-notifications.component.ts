@@ -20,7 +20,7 @@ import {
   isNullOrEmpty
 } from '@app/utilities';
 import { EventBusDispatcherService } from '@app/event-bus';
-import { CoreEvent } from '@app/core/core.event';
+import { McsEvent } from '@app/event-manager';
 
 @Component({
   selector: 'mcs-state-change-notifications',
@@ -127,8 +127,8 @@ export class StateChangeNotificationsComponent implements OnInit, OnDestroy {
    */
   private _registerEvents(): void {
     this._currentUserJobHandler = this._eventDispatcher.addEventListener(
-      CoreEvent.jobCurrentUser, this._onCurrentUserJob.bind(this));
+      McsEvent.jobCurrentUser, this._onCurrentUserJob.bind(this));
 
-    this._eventDispatcher.dispatch(CoreEvent.jobCurrentUser);
+    this._eventDispatcher.dispatch(McsEvent.jobCurrentUser);
   }
 }

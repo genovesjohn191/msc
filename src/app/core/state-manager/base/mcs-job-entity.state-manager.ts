@@ -14,16 +14,14 @@ import {
   getSafeProperty
 } from '@app/utilities';
 import {
-  McsJobManagerBase,
-  McsRepository
-} from '@app/core';
-import {
   McsJob,
   McsEntityBase
 } from '@app/models';
 import { EventBusDispatcherService } from '@app/event-bus';
+import { McsRepository } from '@app/services';
+import { McsJobManagerBase } from './mcs-job-manager.base';
 
-export abstract class McsEntityJobBaseStateManager<T extends McsEntityBase>
+export abstract class McsJobEntityStateManager<T extends McsEntityBase>
   extends McsJobManagerBase implements McsDisposable {
 
   constructor(

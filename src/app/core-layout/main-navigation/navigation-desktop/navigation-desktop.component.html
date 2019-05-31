@@ -65,7 +65,7 @@
 
   <!-- Macquarie Link View -->
   <div class="macquarie-link">
-    <ng-container *ngIf="productCatalogFeatureIsOn; else macquarieViewTemplate">
+    <ng-container *mcsAccessControl="[]; feature: 'EnableProductCatalog'; else: macquarieViewTemplate">
       <a mcsPopover maxWidth="auto"
         [content]="productMegaMenuTemplate"
         theme="light" priority="high"

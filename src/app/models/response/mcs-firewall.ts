@@ -1,6 +1,8 @@
 import { JsonProperty } from 'json-object-mapper';
-import { CoreDefinition } from '@app/core';
-import { isNullOrEmpty } from '@app/utilities';
+import {
+  isNullOrEmpty,
+  CommonDefinition
+} from '@app/utilities';
 import {
   DeviceStatus,
   DeviceStatusSerialization,
@@ -149,7 +151,7 @@ export class McsFirewall extends McsEntityBase {
       case DeviceStatus.Installed:
       case DeviceStatus.Retrieved:
       case DeviceStatus.Reverted:
-        iconKey = CoreDefinition.ASSETS_SVG_STATE_RUNNING;
+        iconKey = CommonDefinition.ASSETS_SVG_STATE_RUNNING;
         break;
 
       case DeviceStatus.Aborted:
@@ -158,7 +160,7 @@ export class McsFirewall extends McsEntityBase {
       case DeviceStatus.SyncFailed:
       case DeviceStatus.Timeout:
       case DeviceStatus.Unknown:
-        iconKey = CoreDefinition.ASSETS_SVG_STATE_STOPPED;
+        iconKey = CommonDefinition.ASSETS_SVG_STATE_STOPPED;
         break;
 
       case DeviceStatus.ChangedConfig:
@@ -168,7 +170,7 @@ export class McsFirewall extends McsEntityBase {
       case DeviceStatus.Retry:
       case DeviceStatus.Sched:
       default:
-        iconKey = CoreDefinition.ASSETS_SVG_STATE_RESTARTING;
+        iconKey = CommonDefinition.ASSETS_SVG_STATE_RESTARTING;
         break;
     }
 
@@ -184,16 +186,16 @@ export class McsFirewall extends McsEntityBase {
 
     switch (this.connectionStatus) {
       case ConnectionStatus.Up:
-        iconKey = CoreDefinition.ASSETS_SVG_STATE_RUNNING;
+        iconKey = CommonDefinition.ASSETS_SVG_STATE_RUNNING;
         break;
 
       case ConnectionStatus.Down:
-        iconKey = CoreDefinition.ASSETS_SVG_STATE_STOPPED;
+        iconKey = CommonDefinition.ASSETS_SVG_STATE_STOPPED;
         break;
 
       case ConnectionStatus.Unknown:
       default:
-        iconKey = CoreDefinition.ASSETS_SVG_STATE_RESTARTING;
+        iconKey = CommonDefinition.ASSETS_SVG_STATE_RESTARTING;
         break;
     }
     return iconKey;
@@ -208,16 +210,16 @@ export class McsFirewall extends McsEntityBase {
 
     switch (this.configurationStatus) {
       case ConfigurationStatus.InSync:
-        iconKey = CoreDefinition.ASSETS_SVG_STATE_RUNNING;
+        iconKey = CommonDefinition.ASSETS_SVG_STATE_RUNNING;
         break;
 
       case ConfigurationStatus.OutOfSync:
-        iconKey = CoreDefinition.ASSETS_SVG_STATE_STOPPED;
+        iconKey = CommonDefinition.ASSETS_SVG_STATE_STOPPED;
         break;
 
       case ConfigurationStatus.Unknown:
       default:
-        iconKey = CoreDefinition.ASSETS_SVG_STATE_RESTARTING;
+        iconKey = CommonDefinition.ASSETS_SVG_STATE_RESTARTING;
         break;
     }
     return iconKey;

@@ -1,5 +1,4 @@
 import { JsonProperty } from 'json-object-mapper';
-import { McsDateSerialization } from '@app/core';
 import { McsEntityBase } from '../common/mcs-entity.base';
 import {
   TicketPriority,
@@ -19,6 +18,7 @@ import { McsTicketComment } from './mcs-ticket-comment';
 import { McsTicketClosureInformation } from './mcs-ticket-closure-information';
 import { McsTicketAttachment } from './mcs-ticket-attachment';
 import { isNullOrEmpty } from '@app/utilities';
+import { McsDateSerialization } from '../serialization/mcs-date-serialization';
 
 export class McsTicket extends McsEntityBase {
   public number: string;

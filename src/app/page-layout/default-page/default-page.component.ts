@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { EventBusDispatcherService } from '@app/event-bus';
-import { CoreEvent } from '@app/core';
+import { McsEvent } from '@app/event-manager';
 import { getSafeProperty } from '@app/utilities';
 import {
   DialogService,
@@ -40,7 +40,7 @@ export class DefaultPageComponent {
    */
   private _registerEvents(): void {
     this._eventDispatcher.addEventListener(
-      CoreEvent.jobServerResetPassword, this._onResetVmPassword.bind(this));
+      McsEvent.jobServerResetPassword, this._onResetVmPassword.bind(this));
   }
 
   /**

@@ -18,7 +18,7 @@ import {
   McsApiErrorResponse,
   HttpStatusCode
 } from '@app/models';
-import { CoreEvent } from '../core.event';
+import { McsEvent } from '@app/event-manager';
 import { McsErrorHandlerService } from '../services/mcs-error-handler.service';
 import { McsAuthenticationService } from '../authentication/mcs-authentication.service';
 
@@ -102,7 +102,7 @@ export class McsErrorHandlerInterceptor implements ErrorHandler {
    */
   private _registerEvents(): void {
     this._eventDispatcher.addEventListener(
-      CoreEvent.userChange, this._onUserChanged.bind(this));
+      McsEvent.userChange, this._onUserChanged.bind(this));
   }
 
   /**

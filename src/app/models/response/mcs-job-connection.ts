@@ -1,5 +1,5 @@
 import { JsonProperty } from 'json-object-mapper';
-import { McsDateSerialization } from '@app/core';
+import { McsDateSerialization } from '../serialization/mcs-date-serialization';
 
 export class McsJobConnection {
   public host: string;

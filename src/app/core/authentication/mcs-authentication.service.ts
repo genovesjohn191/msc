@@ -2,17 +2,13 @@ import { Injectable } from '@angular/core';
 import { Params } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import {
-  McsApiRequestParameter,
-  McsApiSuccessResponse,
-  McsIdentity
-} from '@app/models';
+import { McsIdentity } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
 import { AppState } from '@app/app.service';
+import { McsApiService } from '@app/services';
 import { CoreConfig } from '../core.config';
 import { CoreDefinition } from '../core.definition';
 import { McsCookieService } from '../services/mcs-cookie.service';
-import { McsApiService } from '../services/mcs-api.service';
 import { McsAuthenticationIdentity } from './mcs-authentication.identity';
 
 @Injectable()
@@ -86,23 +82,13 @@ export class McsAuthenticationService {
    * Returns true if user is authenticated, and false if otherwise
    */
   public IsAuthenticated(): Observable<boolean> {
-    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = '/identity';
-
-    return this._apiService.get(mcsApiRequestParameter)
-      .pipe(
-        map((response) => {
-          // Deserialize json reponse
-          let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<McsIdentity>(McsIdentity, response);
-
-          if (apiResponse && apiResponse.content) {
-            this._setUserIdentity(apiResponse.content);
-            return true;
-          }
-          return false;
-        })
-      );
+    return this._apiService.getIdentity().pipe(
+      map((identity) => {
+        if (isNullOrEmpty(identity)) { return false; }
+        this._setUserIdentity(identity);
+        return true;
+      })
+    );
   }
 
   /**

@@ -24,7 +24,8 @@ import {
 import {
   CoreDefinition,
   CoreValidators,
-  McsDataStatusFactory
+  McsDataStatusFactory,
+  CoreRoutes
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -36,7 +37,8 @@ import {
   IpAllocationMode,
   McsServer,
   McsServerClone,
-  Os
+  Os,
+  RouteKey
 } from '@app/models';
 import { McsServersRepository } from '@app/services';
 import { McsFormGroupDirective } from '@app/shared';
@@ -117,6 +119,11 @@ export class ServerCloneComponent
     let serverClone = new McsServerClone();
     serverClone.name = this.fcServerName.value;
     serverClone.serverId = this.fcTargetServer.value.id;
+
+    serverClone.clientReferenceObject = {
+      serverId: serverClone.serverId,
+      resourcePath: CoreRoutes.getNavigationPath(RouteKey.ServerDetails)
+    };
     return serverClone;
   }
 

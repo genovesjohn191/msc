@@ -10,21 +10,19 @@ import {
   unsubscribeSafely
 } from '@app/utilities';
 import {
-  CoreEvent,
-  IMcsInitializable
-} from '@app/core';
-import {
   McsJob,
   McsServer,
   JobType,
   DataStatus
 } from '@app/models';
 import { EventBusDispatcherService } from '@app/event-bus';
-import { McsServersRepository } from '../repositories/mcs-servers.repository';
-import { McsEntityJobBaseStateManager } from './mcs-entity-job-base.state-manager';
+import { McsEvent } from '@app/event-manager';
+import { McsServersRepository } from '@app/services';
+import { IMcsInitializable } from '../interfaces/mcs-initializable.interface';
+import { McsJobEntityStateManager } from './base/mcs-job-entity.state-manager';
 
 @Injectable()
-export class McsServerStateManager extends McsEntityJobBaseStateManager<McsServer>
+export class McsServerStateManager extends McsJobEntityStateManager<McsServer>
   implements IMcsInitializable, McsDisposable {
 
   private _serverCreateHandler: Subscription;
@@ -61,11 +59,10 @@ export class McsServerStateManager extends McsEntityJobBaseStateManager<McsServe
    * @param job Job entity that serves the data of the entity
    */
   protected onUpdateEntityState(server: McsServer, job: McsJob): void {
-    let commandActionTriggered = getSafeProperty(job, (obj) => obj.clientReferenceObject.commandAction);
     let summaryInformation = getSafeProperty(job, (obj) => obj.summaryInformation);
 
+    if (job.type === JobType.DeleteServer) { server.isDisabled = true; }
     server.isProcessing = true;
-    server.commandAction = commandActionTriggered;
     server.processingText = summaryInformation;
     this._entityRepository.addOrUpdate(server);
   }
@@ -77,7 +74,7 @@ export class McsServerStateManager extends McsEntityJobBaseStateManager<McsServe
    */
   protected onClearEntityState(server: McsServer): void {
     server.isProcessing = false;
-    server.commandAction = null;
+    server.isDisabled = false;
     server.processingText = null;
     this._entityRepository.addOrUpdate(server);
   }
@@ -107,12 +104,12 @@ export class McsServerStateManager extends McsEntityJobBaseStateManager<McsServe
    */
   private _registerEvents(): void {
     this._serverCreateHandler = this._eventDispatcher.addEventListener(
-      CoreEvent.jobServerCreate, this._refreshServerListing.bind(this));
+      McsEvent.jobServerCreate, this._refreshServerListing.bind(this));
 
     this._serverCloneHandler = this._eventDispatcher.addEventListener(
-      CoreEvent.jobServerClone, this._refreshServerListing.bind(this));
+      McsEvent.jobServerClone, this._refreshServerListing.bind(this));
 
     this._serverDeleteHandler = this._eventDispatcher.addEventListener(
-      CoreEvent.jobServerDelete, this._refreshServerListing.bind(this));
+      McsEvent.jobServerDelete, this._refreshServerListing.bind(this));
   }
 }

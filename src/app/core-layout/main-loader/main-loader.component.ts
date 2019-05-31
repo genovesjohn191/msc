@@ -23,7 +23,7 @@ import {
   animateFactory
 } from '@app/utilities';
 import { EventBusDispatcherService } from '@app/event-bus';
-import { CoreEvent } from '@app/core';
+import { McsEvent } from '@app/event-manager';
 
 const LOADER_MAX_VALUE = 100;
 const LOADER_INTERVAL_MS = 700;
@@ -148,10 +148,10 @@ export class MainLoaderComponent implements OnInit, OnDestroy {
    */
   private _registerEvents(): void {
     this._showLoaderHandler = this._eventDispatcher.addEventListener(
-      CoreEvent.loaderShow, this._onShowLoader.bind(this));
+      McsEvent.loaderShow, this._onShowLoader.bind(this));
 
     this._hideLoaderHandler = this._eventDispatcher.addEventListener(
-      CoreEvent.loaderHide, this._onHideLoader.bind(this));
+      McsEvent.loaderHide, this._onHideLoader.bind(this));
   }
 
   /**

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { McsRepositoryBase } from '@app/core';
 import { getSafeProperty } from '@app/utilities';
 import {
   McsServer,
@@ -37,6 +36,7 @@ import {
   IMcsApiServersService
 } from '@app/api-client';
 import { McsServersDataContext } from '../data-context/mcs-servers-data.context';
+import { McsRepositoryBase } from '../core/mcs-repository.base';
 
 @Injectable()
 export class McsServersRepository extends McsRepositoryBase<McsServer> {

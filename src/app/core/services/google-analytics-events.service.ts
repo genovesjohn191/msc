@@ -5,8 +5,8 @@ import {
   McsRouteInfo
 } from '@app/models';
 import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/event-manager';
 import { CoreDefinition } from '../core.definition';
-import { CoreEvent } from '../core.event';
 
 declare let dataLayer: any;
 
@@ -100,9 +100,9 @@ export class GoogleAnalyticsEventsService {
    */
   private _registerEvents(): void {
     this._eventDispatcher.addEventListener(
-      CoreEvent.userChange, this._onUserChanged.bind(this));
+      McsEvent.userChange, this._onUserChanged.bind(this));
 
     this._eventDispatcher.addEventListener(
-      CoreEvent.routeChange, this._onRouteChanged.bind(this));
+      McsEvent.routeChange, this._onRouteChanged.bind(this));
   }
 }

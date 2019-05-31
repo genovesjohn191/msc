@@ -15,10 +15,8 @@ import {
   Subscription
 } from 'rxjs';
 import { take } from 'rxjs/operators';
-import {
-  CoreDefinition,
-  CoreEvent
-} from '@app/core';
+import { CoreDefinition } from '@app/core';
+import { McsEvent } from '@app/event-manager';
 import {
   isNullOrEmpty,
   unsubscribeSafely,
@@ -219,7 +217,7 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
    */
   private _registerEvents(): void {
     this._jobReceiveHandler = this._eventDispatcher.addEventListener(
-      CoreEvent.jobReceive, this._onJobReceived.bind(this));
+      McsEvent.jobReceive, this._onJobReceived.bind(this));
   }
 
   /**

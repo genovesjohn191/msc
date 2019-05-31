@@ -1,7 +1,9 @@
 import { Routes } from '@angular/router';
-import { McsNavigateAwayGuard } from '@app/core';
+import {
+  McsNavigateAwayGuard,
+  McsRequiredResourcesGuard
+} from '@app/core';
 import { RouteKey } from '@app/models';
-import { RequiredResourcesGuard } from '@app/services';
 /** Services */
 import { ServerService } from './server/';
 import { ServersService } from './servers.service';
@@ -45,7 +47,7 @@ export const serversRoutes: Routes = [
   {
     path: '',
     component: ServerCreateComponent,
-    canActivate: [RequiredResourcesGuard],
+    canActivate: [McsRequiredResourcesGuard],
     canDeactivate: [McsNavigateAwayGuard],
     data: { routeId: RouteKey.ServerCreate }
   },

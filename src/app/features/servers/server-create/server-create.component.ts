@@ -48,6 +48,7 @@ import { ServerCreateService } from './server-create.service';
 import { ServerCreateDetailsBase } from './details/server-create-details.base';
 import { AddOnDetails } from './addons/addons-model';
 import { ServerCreateBuilder } from './server-create.builder';
+import { ServersService } from '../servers.service';
 
 @Component({
   selector: 'mcs-server-create',
@@ -90,7 +91,8 @@ export class ServerCreateComponent extends McsOrderWizardBase
     private _activatedRoute: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef,
     private _translate: TranslateService,
-    private _resourcesRepository: McsResourcesRepository
+    private _resourcesRepository: McsResourcesRepository,
+    private _serversService: ServersService
   ) {
     super(_injector, _serverCreateService);
     this._serverCreateBuilder = new ServerCreateBuilder(_serverCreateService);
@@ -226,7 +228,7 @@ export class ServerCreateComponent extends McsOrderWizardBase
    * Gets the list of resources from repository
    */
   private _subscribeToAllResources(): void {
-    this.resources$ = this._resourcesRepository.getResourcesByAccess();
+    this.resources$ = this._serversService.getResourcesByAccess();
     this._changeDetectorRef.markForCheck();
   }
 

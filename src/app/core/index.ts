@@ -5,14 +5,13 @@ export * from './core.constants';
 export * from './core.definition';
 export * from './core.validators';
 export * from './core.routes';
-export * from './core.event';
 
 /** Guards */
+export * from './guards/mcs-required-resources.guard';
 export * from './guards/mcs-navigate-away.guard';
 export * from './guards/mcs-navigate-away-guard.interface';
 
 /** Services */
-export * from './services/mcs-api.service';
 export * from './services/mcs-storage.service';
 export * from './services/mcs-cookie.service';
 export * from './services/mcs-browser.service';
@@ -71,22 +70,15 @@ export * from './factory/portal/mcs-portal-template';
 export * from './factory/unique-generators/mcs-guid';
 export * from './factory/unique-generators/mcs-unique-id';
 export * from './factory/data-status/mcs-data-status-factory';
-export * from './factory/serialization/mcs-enum-serialization-base';
-export * from './factory/serialization/mcs-date-serialization';
 export * from './factory/item-list-manager/mcs-item-list-manager';
 export * from './factory/item-list-manager/mcs-item-list-key-manager';
-export * from './factory/ordering/mcs-order-factory.interface';
 export * from './factory/ordering/mcs-order-request';
 export * from './factory/ordering/mcs-order-wizard.base';
 export * from './factory/ordering/mcs-order.base';
 export * from './factory/ordering/mcs-order.builder';
 export * from './factory/ordering/mcs-order.director';
-export * from './factory/job/mcs-job-manager.base';
 
 // Data Access Layer
-export * from './data-access/mcs-data-context.interface';
-export * from './data-access/mcs-repository.interface';
-export * from './data-access/mcs-repository.base';
 export * from './data-access/mcs-table-datasource';
 export * from './data-access/mcs-table-selection';
 

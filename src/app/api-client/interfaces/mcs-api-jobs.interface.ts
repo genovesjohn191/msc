@@ -3,7 +3,8 @@ import {
   McsQueryParam,
   McsApiSuccessResponse,
   McsJob,
-  JobStatus
+  JobStatus,
+  McsJobConnection
 } from '@app/models';
 
 export interface IMcsApiJobsService {
@@ -25,4 +26,9 @@ export interface IMcsApiJobsService {
    * @param id JOB identification
    */
   getJob(id: any): Observable<McsApiSuccessResponse<McsJob>>;
+
+  /**
+   * Get job connection from API
+   */
+  getJobConnection(): Observable<McsApiSuccessResponse<McsJobConnection>>;
 }

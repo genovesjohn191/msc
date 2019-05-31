@@ -7,7 +7,6 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { CoreEvent } from '@app/core';
 import {
   isNullOrEmpty,
   animateFactory,
@@ -19,6 +18,7 @@ import {
   McsRouteInfo
 } from '@app/models';
 import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/event-manager';
 
 @Component({
   selector: 'mcs-sub-navigation',
@@ -78,9 +78,9 @@ export class SubNavigationComponent implements OnInit, OnDestroy {
    */
   private _registerEvents(): void {
     this._routeHandler = this._eventDispatcher.addEventListener(
-      CoreEvent.routeChange, this._onRouteChanged.bind(this));
+      McsEvent.routeChange, this._onRouteChanged.bind(this));
 
-    this._eventDispatcher.dispatch(CoreEvent.routeChange);
+    this._eventDispatcher.dispatch(McsEvent.routeChange);
   }
 
   /**

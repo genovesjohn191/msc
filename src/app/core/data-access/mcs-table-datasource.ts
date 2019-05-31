@@ -24,7 +24,7 @@ import {
   isNullOrUndefined
 } from '@app/utilities';
 import { DataStatus } from '@app/models';
-import { McsRepository } from './mcs-repository.interface';
+import { McsRepository } from '@app/services';
 import { CoreDefinition } from '../core.definition';
 
 type DelegateSource<T> = () => Observable<T[]>;

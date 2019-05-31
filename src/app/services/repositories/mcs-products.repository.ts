@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { McsProduct } from '@app/models';
-import { McsRepositoryBase } from '@app/core';
 import {
   McsApiClientFactory,
   McsApiProductsFactory
 } from '@app/api-client';
 import { McsProductsDataContext } from '../data-context/mcs-products-data.context';
+import { McsRepositoryBase } from '../core/mcs-repository.base';
 
 @Injectable()
 export class McsProductsRepository extends McsRepositoryBase<McsProduct> {

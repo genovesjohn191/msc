@@ -24,10 +24,10 @@ import {
   unsubscribeSafely,
   getSafeProperty
 } from '@app/utilities';
+import { McsEvent } from '@app/event-manager';
 import { McsLoggerService } from './mcs-logger.service';
 import { McsErrorHandlerService } from './mcs-error-handler.service';
 import { McsScrollDispatcherService } from './mcs-scroll-dispatcher.service';
-import { CoreEvent } from '../core.event';
 import { McsAccessControlService } from '../authentication/mcs-access-control.service';
 import { McsAuthenticationService } from '../authentication/mcs-authentication.service';
 import { CoreRoutes } from '../core.routes';
@@ -65,7 +65,7 @@ export class McsRouteSettingsService implements McsDisposable {
    */
   private _registerEvents(): void {
     this._routeHandler = this._eventDispatcher.addEventListener(
-      CoreEvent.routeChange, this._onRouteChanged.bind(this));
+      McsEvent.routeChange, this._onRouteChanged.bind(this));
   }
 
   /**

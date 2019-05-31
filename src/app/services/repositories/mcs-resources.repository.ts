@@ -1,11 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import {
-  McsRepositoryBase,
-  McsAccessControlService,
-  CoreDefinition
-} from '@app/core';
 import { getSafeProperty } from '@app/utilities';
 import {
   McsResource,
@@ -14,7 +9,6 @@ import {
   McsResourceNetwork,
   McsResourceCatalogItem,
   McsResourceVApp,
-  ServiceType,
   McsResourceCatalogItemCreate,
   McsJob,
   McsApiSuccessResponse,
@@ -27,15 +21,13 @@ import {
   IMcsApiResourcesService
 } from '@app/api-client';
 import { McsResourcesDataContext } from '../data-context/mcs-resources-data.context';
+import { McsRepositoryBase } from '../core/mcs-repository.base';
 
 @Injectable()
 export class McsResourcesRepository extends McsRepositoryBase<McsResource> {
   private readonly _resourcesApiService: IMcsApiResourcesService;
 
-  constructor(
-    _apiClientFactory: McsApiClientFactory,
-    private _accessControlService: McsAccessControlService
-  ) {
+  constructor(_apiClientFactory: McsApiClientFactory) {
     super(new McsResourcesDataContext(
       _apiClientFactory.getService(new McsApiResourcesFactory())
     ));
@@ -167,24 +159,6 @@ export class McsResourcesRepository extends McsRepositoryBase<McsResource> {
           return response.content;
         })
       );
-  }
-
-  /**
-   * Get all the resources based on the access control
-   * @note OrderEdit and EnableOrderingManagedServerCreate
-   */
-  public getResourcesByAccess(): Observable<McsResource[]> {
-    return this.getAll().pipe(
-      map((resources) => {
-        let managedResourceIsOn = this._accessControlService.hasAccess(
-          ['OrderEdit'], CoreDefinition.FEATURE_FLAG_ENABLE_CREATE_MANAGED_SERVER);
-
-        return resources.filter(
-          (resource) => resource.serviceType === ServiceType.SelfManaged ||
-            (managedResourceIsOn && resource.serviceType === ServiceType.Managed)
-        );
-      })
-    );
   }
 
   /**

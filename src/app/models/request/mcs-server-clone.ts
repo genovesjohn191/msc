@@ -3,6 +3,7 @@ import { McsApiJobRequestBase } from '../common/mcs-api-job-request-base';
 
 export interface IMcsServerCloneRefObj {
   serverId: string;
+  resourcePath: string;
 }
 
 export class McsServerClone extends McsApiJobRequestBase<IMcsServerCloneRefObj> {

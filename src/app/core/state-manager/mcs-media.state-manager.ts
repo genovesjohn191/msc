@@ -12,13 +12,14 @@ import {
   DataStatus,
   McsResourceMedia
 } from '@app/models';
-import { IMcsInitializable, CoreEvent } from '@app/core';
+import { McsEvent } from '@app/event-manager';
 import { EventBusDispatcherService } from '@app/event-bus';
-import { McsEntityJobBaseStateManager } from './mcs-entity-job-base.state-manager';
-import { McsMediaRepository } from '../repositories/mcs-media.repository';
+import { McsMediaRepository } from '@app/services';
+import { IMcsInitializable } from '../interfaces/mcs-initializable.interface';
+import { McsJobEntityStateManager } from './base/mcs-job-entity.state-manager';
 
 @Injectable()
-export class McsMediaStateManager extends McsEntityJobBaseStateManager<McsResourceMedia>
+export class McsMediaStateManager extends McsJobEntityStateManager<McsResourceMedia>
   implements IMcsInitializable, McsDisposable {
 
   private catalogItemCreateHandler: Subscription;
@@ -87,6 +88,6 @@ export class McsMediaStateManager extends McsEntityJobBaseStateManager<McsResour
    */
   private _registerEvents(): void {
     this.catalogItemCreateHandler = this._eventDispatcher.addEventListener(
-      CoreEvent.jobResourceCatalogItemCreate, this._refreshServerListing.bind(this));
+      McsEvent.jobResourceCatalogItemCreate, this._refreshServerListing.bind(this));
   }
 }

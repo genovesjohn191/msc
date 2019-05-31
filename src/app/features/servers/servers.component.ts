@@ -50,6 +50,7 @@ import {
   DialogConfirmation,
   DialogService
 } from '@app/shared';
+import { ServersService } from './servers.service';
 
 @Component({
   selector: 'mcs-servers',
@@ -114,6 +115,7 @@ export class ServersComponent
     private _translateService: TranslateService,
     private _apiService: McsApiService,
     private _dialogService: DialogService,
+    private _serversService: ServersService,
     private _serversRepository: McsServersRepository,
     private _resourcesRepository: McsResourcesRepository
   ) {
@@ -216,8 +218,7 @@ export class ServersComponent
         return forkJoin(this.serversSelection.getSelectedItems().map((server) => {
           let deleteDetails = new McsServerDelete();
           deleteDetails.clientReferenceObject = {
-            serverId: server.id,
-            isDeleting: true
+            serverId: server.id
           };
           return this._apiService.deleteServer(server.id, deleteDetails);
         }));
@@ -307,7 +308,7 @@ export class ServersComponent
    */
   public navigateToServer(server: McsServer): void {
     // Do not navigate to server details when server is deleting
-    if (isNullOrEmpty(server) || server.isDeleting) { return; }
+    if (isNullOrEmpty(server) || server.isDisabled) { return; }
     this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.Servers), server.id]);
   }
 
@@ -351,7 +352,7 @@ export class ServersComponent
           this.changeDetectorRef.markForCheck();
         })
       );
-    let createServerResources = this._resourcesRepository.getResourcesByAccess()
+    let createServerResources = this._serversService.getResourcesByAccess()
       .pipe(
         map((response) => {
           this.hasCreateResources = !isNullOrEmpty(response);

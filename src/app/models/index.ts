@@ -180,3 +180,7 @@ export * from './common/mcs-option';
 export * from './common/mcs-key-value-pair';
 export * from './common/mcs-route-info';
 export * from './common/mcs-query-param';
+
+/** Serialization */
+export * from './serialization/mcs-date-serialization';
+export * from './serialization/mcs-enum-serialization-base';

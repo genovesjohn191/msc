@@ -13,9 +13,9 @@ import {
   EventBusDispatcherService,
   EventBusState
 } from '@app/event-bus';
+import { McsEvent } from '@app/event-manager';
 import { McsAuthenticationIdentity } from '../authentication/mcs-authentication.identity';
 import { McsNotificationContextService } from './mcs-notification-context.service';
-import { CoreEvent } from '../core.event';
 
 @Injectable()
 export class McsNotificationEventsService {
@@ -67,7 +67,7 @@ export class McsNotificationEventsService {
    * @param job Job to be dispatched
    */
   private _dispatchJobReceiveEvent(job: McsJob): void {
-    this._eventDispatcher.dispatch(CoreEvent.jobReceive, job);
+    this._eventDispatcher.dispatch(McsEvent.jobReceive, job);
   }
 
   /**
@@ -100,7 +100,7 @@ export class McsNotificationEventsService {
     let userStartedTheJob = compareStrings(job.initiatorId,
       this._authenticationIdentity.user.userId) === 0;
     if (userStartedTheJob) {
-      this._eventDispatcher.dispatch(CoreEvent.jobCurrentUser, job);
+      this._eventDispatcher.dispatch(McsEvent.jobCurrentUser, job);
     }
   }
 
@@ -109,28 +109,28 @@ export class McsNotificationEventsService {
    */
   private _createJobTypeEventMap(): void {
     this._jobTypeEventMap = new Map();
-    this._jobTypeEventMap.set(JobType.AttachServerMedia, CoreEvent.jobServerMediaAttach);
-    this._jobTypeEventMap.set(JobType.DetachServerMedia, CoreEvent.jobServerMediaDetach);
-    this._jobTypeEventMap.set(JobType.UpdateServerCompute, CoreEvent.jobServerComputeUpdate);
-    this._jobTypeEventMap.set(JobType.CreateServerDisk, CoreEvent.jobServerDiskCreate);
-    this._jobTypeEventMap.set(JobType.UpdateServerDisk, CoreEvent.jobServerDiskUpdate);
-    this._jobTypeEventMap.set(JobType.DeleteServerDisk, CoreEvent.jobServerDiskDelete);
-    this._jobTypeEventMap.set(JobType.CreateServerNic, CoreEvent.jobServerNicCreate);
-    this._jobTypeEventMap.set(JobType.UpdateServerNic, CoreEvent.jobServerNicUpdate);
-    this._jobTypeEventMap.set(JobType.DeleteServerNic, CoreEvent.jobServerNicDelete);
-    this._jobTypeEventMap.set(JobType.CreateServerSnapshot, CoreEvent.jobServerSnapshotCreate);
-    this._jobTypeEventMap.set(JobType.ApplyServerSnapshot, CoreEvent.jobServerSnapshotApply);
-    this._jobTypeEventMap.set(JobType.DeleteServerSnapshot, CoreEvent.jobServerSnapshotDelete);
-    this._jobTypeEventMap.set(JobType.PerformServerOsUpdateAnalysis, CoreEvent.jobServerOsUpdateInspect);
-    this._jobTypeEventMap.set(JobType.ApplyServerOsUpdates, CoreEvent.jobServerOsUpdateApply);
-    this._jobTypeEventMap.set(JobType.CreateServer, CoreEvent.jobServerCreate);
-    this._jobTypeEventMap.set(JobType.CloneServer, CoreEvent.jobServerClone);
-    this._jobTypeEventMap.set(JobType.RenameServer, CoreEvent.jobServerRename);
-    this._jobTypeEventMap.set(JobType.DeleteServer, CoreEvent.jobServerDelete);
-    this._jobTypeEventMap.set(JobType.ChangeServerPowerState, CoreEvent.jobServerChangePowerState);
-    this._jobTypeEventMap.set(JobType.ResetServerPassword, CoreEvent.jobServerResetPassword);
-    this._jobTypeEventMap.set(JobType.CreateResourceCatalogItem, CoreEvent.jobResourceCatalogItemCreate);
-    this._jobTypeEventMap.set(JobType.OrderScaleManagedServer, CoreEvent.jobOrderScaleManagedServer);
+    this._jobTypeEventMap.set(JobType.AttachServerMedia, McsEvent.jobServerMediaAttach);
+    this._jobTypeEventMap.set(JobType.DetachServerMedia, McsEvent.jobServerMediaDetach);
+    this._jobTypeEventMap.set(JobType.UpdateServerCompute, McsEvent.jobServerComputeUpdate);
+    this._jobTypeEventMap.set(JobType.CreateServerDisk, McsEvent.jobServerDiskCreate);
+    this._jobTypeEventMap.set(JobType.UpdateServerDisk, McsEvent.jobServerDiskUpdate);
+    this._jobTypeEventMap.set(JobType.DeleteServerDisk, McsEvent.jobServerDiskDelete);
+    this._jobTypeEventMap.set(JobType.CreateServerNic, McsEvent.jobServerNicCreate);
+    this._jobTypeEventMap.set(JobType.UpdateServerNic, McsEvent.jobServerNicUpdate);
+    this._jobTypeEventMap.set(JobType.DeleteServerNic, McsEvent.jobServerNicDelete);
+    this._jobTypeEventMap.set(JobType.CreateServerSnapshot, McsEvent.jobServerSnapshotCreate);
+    this._jobTypeEventMap.set(JobType.ApplyServerSnapshot, McsEvent.jobServerSnapshotApply);
+    this._jobTypeEventMap.set(JobType.DeleteServerSnapshot, McsEvent.jobServerSnapshotDelete);
+    this._jobTypeEventMap.set(JobType.PerformServerOsUpdateAnalysis, McsEvent.jobServerOsUpdateInspect);
+    this._jobTypeEventMap.set(JobType.ApplyServerOsUpdates, McsEvent.jobServerOsUpdateApply);
+    this._jobTypeEventMap.set(JobType.CreateServer, McsEvent.jobServerCreate);
+    this._jobTypeEventMap.set(JobType.CloneServer, McsEvent.jobServerClone);
+    this._jobTypeEventMap.set(JobType.RenameServer, McsEvent.jobServerRename);
+    this._jobTypeEventMap.set(JobType.DeleteServer, McsEvent.jobServerDelete);
+    this._jobTypeEventMap.set(JobType.ChangeServerPowerState, McsEvent.jobServerChangePowerState);
+    this._jobTypeEventMap.set(JobType.ResetServerPassword, McsEvent.jobServerResetPassword);
+    this._jobTypeEventMap.set(JobType.CreateResourceCatalogItem, McsEvent.jobResourceCatalogItemCreate);
+    this._jobTypeEventMap.set(JobType.OrderScaleManagedServer, McsEvent.jobOrderScaleManagedServer);
   }
 
   /**
@@ -138,8 +138,8 @@ export class McsNotificationEventsService {
    */
   private _createJobStateEventMap(): void {
     this._jobStateEventMap = new Map();
-    this._jobStateEventMap.set(DataStatus.InProgress, CoreEvent.jobInProgress);
-    this._jobStateEventMap.set(DataStatus.Error, CoreEvent.jobError);
-    this._jobStateEventMap.set(DataStatus.Success, CoreEvent.jobSuccessful);
+    this._jobStateEventMap.set(DataStatus.InProgress, McsEvent.jobInProgress);
+    this._jobStateEventMap.set(DataStatus.Error, McsEvent.jobError);
+    this._jobStateEventMap.set(DataStatus.Success, McsEvent.jobSuccessful);
   }
 }

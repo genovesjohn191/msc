@@ -5,14 +5,12 @@ import {
   unsubscribeSafely,
   isNullOrEmpty
 } from '@app/utilities';
-import {
-  CoreEvent,
-  IMcsInitializable,
-  IMcsProcessable
-} from '@app/core';
+import { McsEvent } from '@app/event-manager';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { McsOrder } from '@app/models';
-import { McsOrdersRepository } from '../repositories/mcs-orders.repository';
+import { McsOrdersRepository } from '@app/services';
+import { IMcsInitializable } from '../interfaces/mcs-initializable.interface';
+import { IMcsProcessable } from '../interfaces/mcs-processable.interface';
 
 @Injectable()
 export class McsOrderStateManager implements IMcsInitializable, IMcsProcessable<McsOrder>, McsDisposable {
@@ -65,10 +63,10 @@ export class McsOrderStateManager implements IMcsInitializable, IMcsProcessable<
    */
   private _registerEvents(): void {
     this._orderInProgressHandler = this._eventDispatcher.addEventListener(
-      CoreEvent.orderStateBusy, this._onStateBusy.bind(this));
+      McsEvent.orderStateBusy, this._onStateBusy.bind(this));
 
     this._orderEndedHandler = this._eventDispatcher.addEventListener(
-      CoreEvent.orderStateEnded, this._onStateEnded.bind(this));
+      McsEvent.orderStateEnded, this._onStateEnded.bind(this));
   }
 
   /**

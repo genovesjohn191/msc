@@ -25,7 +25,7 @@ import {
   unsubscribeSafely
 } from '@app/utilities';
 import { EventBusDispatcherService } from '@app/event-bus';
-import { CoreEvent } from '@app/core/core.event';
+import { McsEvent } from '@app/event-manager';
 
 @Component({
   selector: 'mcs-main-navigation',
@@ -101,9 +101,9 @@ export class MainNavigationComponent implements OnInit, OnDestroy {
    */
   private _registerEvents(): void {
     this._routeHandler = this._eventDispatcher.addEventListener(
-      CoreEvent.routeChange, this._onRouteChanged.bind(this));
+      McsEvent.routeChange, this._onRouteChanged.bind(this));
 
-    this._eventDispatcher.dispatch(CoreEvent.routeChange);
+    this._eventDispatcher.dispatch(McsEvent.routeChange);
   }
 
   /**

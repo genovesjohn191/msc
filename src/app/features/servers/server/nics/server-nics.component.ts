@@ -24,7 +24,6 @@ import {
   McsErrorHandlerService,
   McsTableDataSource,
   McsAccessControlService,
-  CoreEvent,
   McsGuid
 } from '@app/core';
 import {
@@ -51,6 +50,7 @@ import {
   McsServersRepository,
   McsResourcesRepository
 } from '@app/services';
+import { McsEvent } from '@app/event-manager';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { ServerManageNetwork } from '@app/features-shared';
 import { ServerService } from '../server.service';
@@ -349,21 +349,21 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    */
   private _registerEvents(): void {
     this._createNicHandler = this._eventDispatcher.addEventListener(
-      CoreEvent.jobServerNicCreate, this._onCreateServerNic.bind(this)
+      McsEvent.jobServerNicCreate, this._onCreateServerNic.bind(this)
     );
 
     this._updateNicHandler = this._eventDispatcher.addEventListener(
-      CoreEvent.jobServerNicUpdate, this._onUpdateServerNic.bind(this)
+      McsEvent.jobServerNicUpdate, this._onUpdateServerNic.bind(this)
     );
 
     this._deleteNicHandler = this._eventDispatcher.addEventListener(
-      CoreEvent.jobServerNicDelete, this._onUpdateServerNic.bind(this)
+      McsEvent.jobServerNicDelete, this._onUpdateServerNic.bind(this)
     );
 
     // Invoke the event initially
-    this._eventDispatcher.dispatch(CoreEvent.jobServerNicCreate);
-    this._eventDispatcher.dispatch(CoreEvent.jobServerNicUpdate);
-    this._eventDispatcher.dispatch(CoreEvent.jobServerNicDelete);
+    this._eventDispatcher.dispatch(McsEvent.jobServerNicCreate);
+    this._eventDispatcher.dispatch(McsEvent.jobServerNicUpdate);
+    this._eventDispatcher.dispatch(McsEvent.jobServerNicDelete);
   }
 
   /**

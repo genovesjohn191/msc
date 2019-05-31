@@ -5,10 +5,7 @@ import {
   Observable,
   BehaviorSubject
 } from 'rxjs';
-import {
-  CoreEvent,
-  McsNotificationContextService
-} from '@app/core';
+import { McsNotificationContextService } from '@app/core';
 import { McsJob } from '@app/models';
 import {
   isNullOrEmpty,
@@ -17,6 +14,7 @@ import {
   McsDisposable,
   unsubscribeSafely
 } from '@app/utilities';
+import { McsEvent } from '@app/event-manager';
 
 @Injectable()
 export class UserPanelService implements McsDisposable {
@@ -48,9 +46,9 @@ export class UserPanelService implements McsDisposable {
    */
   private _registerEvents(): void {
     this._currentUserJobHandler = this._eventDispatcher.addEventListener(
-      CoreEvent.jobCurrentUser, this._onCurrentUserJob.bind(this));
+      McsEvent.jobCurrentUser, this._onCurrentUserJob.bind(this));
 
-    this._eventDispatcher.dispatch(CoreEvent.jobCurrentUser);
+    this._eventDispatcher.dispatch(McsEvent.jobCurrentUser);
   }
 
   /**
