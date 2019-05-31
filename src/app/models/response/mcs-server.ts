@@ -43,6 +43,7 @@ export class McsServer extends McsEntityBase {
   public vCloudId: string = undefined;
   public vCenterId: string = undefined;
   public osAutomationAvailable: boolean = undefined;
+  public serviceChangeAvailable: boolean = undefined;
 
   @JsonProperty({ type: McsServerVmwareTools })
   public vmwareTools: McsServerVmwareTools = undefined;
@@ -173,7 +174,8 @@ export class McsServer extends McsEntityBase {
    * Returns true when server is scaleable
    */
   public get scaleable(): boolean {
-    return this.executable && !this.isDedicated;
+    let isScaleable = this.executable && !this.isDedicated;
+    return this.isSelfManaged ? isScaleable : isScaleable && this.serviceChangeAvailable;
   }
 
   /**
