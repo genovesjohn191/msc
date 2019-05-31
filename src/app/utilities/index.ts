@@ -26,5 +26,5 @@ export * from './interfaces/mcs-initializer.interface';
 export * from './interfaces/mcs-safe-to-navigate-away.interface';
 export * from './interfaces/mcs-event-handler.interface';
 
-/** Types */
-export * from './types/utilities.types';
+export * from './utilities.types';
+export * from './common.definition';

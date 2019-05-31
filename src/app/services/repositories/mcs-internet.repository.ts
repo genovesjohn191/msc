@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { McsInternetPort } from '@app/models';
-import { McsRepositoryBase } from '@app/core';
 import {
   McsApiClientFactory,
   McsApiInternetFactory
 } from '@app/api-client';
 import { McsInternetDataContext } from '../data-context/mcs-internet-data.context';
+import { McsRepositoryBase } from '../core/mcs-repository.base';
 
 @Injectable()
 export class McsInternetRepository extends McsRepositoryBase<McsInternetPort> {

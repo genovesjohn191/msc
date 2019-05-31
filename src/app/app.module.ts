@@ -28,7 +28,10 @@ import {
 import { PageNotificationsModule } from './page-notifications';
 import { FeaturesSharedModule } from './features-shared';
 import { SharedModule } from './shared';
-import { resolveEnvVar } from './utilities';
+import {
+  resolveEnvVar,
+  isNullOrEmpty
+} from './utilities';
 import { McsApiClientConfig } from './api-client/mcs-api-client.config';
 import { McsApiClientModule } from './api-client/mcs-api-client.module';
 
@@ -60,7 +63,9 @@ export function apiClientConfig(cookieService: McsCookieService): McsApiClientCo
   apiClientHeaders.set(CoreDefinition.HEADER_ACCEPT, 'application/json');
   apiClientHeaders.set(CoreDefinition.HEADER_CONTENT_TYPE, 'application/json');
   apiClientHeaders.set(CoreDefinition.HEADER_API_VERSION, '1.0');
-  apiClientHeaders.set(CoreDefinition.HEADER_COMPANY_ID, activeAccount as any);
+  if (!isNullOrEmpty(activeAccount)) {
+    apiClientHeaders.set(CoreDefinition.HEADER_COMPANY_ID, activeAccount as any);
+  }
 
   return {
     apiHost: resolveEnvVar('API_HOST', API_URL),
@@ -85,11 +90,11 @@ export function apiClientConfig(cookieService: McsCookieService): McsApiClientCo
         deps: [HttpClient]
       }
     }),
+    EventBusModule.forRoot(),
+    ServicesModule.forRoot(),
 
     CoreModule.forRoot(coreConfig),
     McsApiClientModule.forRoot(apiClientConfig, [McsCookieService]),
-    EventBusModule.forRoot(),
-    ServicesModule.forRoot(),
 
     FeaturesSharedModule,
     SharedModule,

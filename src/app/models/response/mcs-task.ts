@@ -1,5 +1,4 @@
 import { JsonProperty } from 'json-object-mapper';
-import { McsDateSerialization } from '@app/core';
 import {
   TaskType,
   TaskTypeSerialization
@@ -10,6 +9,7 @@ import {
 } from '../enumerations/job-status.enum';
 import { DataStatus } from '../enumerations/data-status.enum';
 import { McsEntityBase } from '../common/mcs-entity.base';
+import { McsDateSerialization } from '../serialization/mcs-date-serialization';
 
 export class McsTask extends McsEntityBase {
   public description: string;

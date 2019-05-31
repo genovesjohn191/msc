@@ -16,22 +16,6 @@ import { McsConsoleRepository } from './repositories/mcs-console.repository';
 import { McsCompaniesRepository } from './repositories/mcs-companies.repository';
 import { McsInternetRepository } from './repositories/mcs-internet.repository';
 
-/** State Managers */
-import { McsJobStateManager } from './state-manager/mcs-job.state-manager';
-import { McsServerStateManager } from './state-manager/mcs-server.state-manager';
-import { McsMediaStateManager } from './state-manager/mcs-media.state-manager';
-import { McsOrderStateManager } from './state-manager/mcs-order.state-manager';
-
-/** Guards */
-import { RequiredResourcesGuard } from './guards/required-resources.guard';
-
-export const initializableProviders: any[] = [
-  McsServerStateManager,
-  McsMediaStateManager,
-  McsJobStateManager,
-  McsOrderStateManager
-];
-
 export const apiProviders: any[] = [
 
 ];
@@ -53,8 +37,4 @@ export const repositoryProviders: any[] = [
   McsInternetRepository,
 
   McsApiService
-];
-
-export const guardProviders: any[] = [
-  RequiredResourcesGuard
 ];

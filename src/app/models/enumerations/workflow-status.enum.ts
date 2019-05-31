@@ -1,5 +1,5 @@
-import { McsEnumSerializationBase } from '@app/core';
 import { CacheKey } from 'json-object-mapper';
+import { McsEnumSerializationBase } from '../serialization/mcs-enum-serialization-base';
 
 export enum WorkflowStatus {
   Unknown = 0,

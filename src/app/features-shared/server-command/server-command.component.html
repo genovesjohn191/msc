@@ -126,7 +126,7 @@
     <ng-container *ngIf="getIncludedCommand(serverCommandEnum.ViewVCloud)">
       <a mcsButton="basic" color="white" labelPlacement="left"
         (click)="onExecuteCommand(serverCommandEnum.ViewVCloud)"
-        [disabled]="server.isDeleting"
+        [disabled]="server.isDisabled"
         mcsId
         mcsEventTracker="view-in-portal"
         mcsEventCategory="server"

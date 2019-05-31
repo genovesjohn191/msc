@@ -1,21 +1,13 @@
 import { NgModule } from '@angular/core';
-import { CoreTestingModule } from '@app/core/testing';
 import {
   apiProviders,
-  guardProviders,
-  repositoryProviders,
-  initializableProviders
+  repositoryProviders
 } from '../services.contants';
 
 @NgModule({
-  imports: [
-    CoreTestingModule
-  ],
   providers: [
-    ...initializableProviders,
     ...apiProviders,
-    ...repositoryProviders,
-    ...guardProviders
+    ...repositoryProviders
   ]
 })
 

@@ -27,7 +27,6 @@ import {
 } from '@app/utilities';
 import {
   CoreDefinition,
-  CoreEvent,
   McsSessionHandlerService
 } from '@app/core';
 import {
@@ -43,6 +42,7 @@ import {
   McsConsoleRepository
 } from '@app/services';
 import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/event-manager';
 
 // JQuery script implementation
 require('script-loader!../../../assets/scripts/jquery/jquery-1.12.4.min.js');
@@ -215,7 +215,7 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe((params) => this._paramChangedEventHandler(params));
 
     this._resetVmPasswordHandler = this._eventDispatcher.addEventListener(
-      CoreEvent.jobServerResetPassword, this._resetVmPasswordEventHandler.bind(this));
+      McsEvent.jobServerResetPassword, this._resetVmPasswordEventHandler.bind(this));
   }
 
   /**

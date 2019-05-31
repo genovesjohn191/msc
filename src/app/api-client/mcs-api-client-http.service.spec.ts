@@ -5,16 +5,16 @@ import {
 } from '@angular/core/testing';
 import { HttpTestingController } from '@angular/common/http/testing';
 import { McsApiRequestParameter } from '@app/models';
-import { CoreConfig } from '../core.config';
-import { McsApiService } from '../services/mcs-api.service';
-import { CoreTestingModule } from '../testing';
+import { McsApiClientConfig } from './mcs-api-client.config';
+import { McsApiClientHttpService } from './mcs-api-client-http.service';
+import { McsApiClientTestingModule } from './testing/mcs-api-client-testing.module';
 
-describe('McsApiService', () => {
+describe('McsApiClientHttpService', () => {
 
   /** Stub Services Mock */
   let mockBackend: HttpTestingController;
-  let mcsApiService: McsApiService;
-  let coreConfig: CoreConfig;
+  let apiClientService: McsApiClientHttpService;
+  let apiClientConfig: McsApiClientConfig;
 
   beforeEach(async(() => {
     /** Testbed Reset Module */
@@ -23,15 +23,15 @@ describe('McsApiService', () => {
     /** Testbed Configuration */
     TestBed.configureTestingModule({
       imports: [
-        CoreTestingModule
+        McsApiClientTestingModule
       ]
     });
 
     /** Tesbed Component Compilation and Creation */
     TestBed.compileComponents().then(() => {
       mockBackend = getTestBed().get(HttpTestingController);
-      mcsApiService = getTestBed().get(McsApiService);
-      coreConfig = getTestBed().get(CoreConfig);
+      apiClientService = getTestBed().get(McsApiClientHttpService);
+      apiClientConfig = getTestBed().get(McsApiClientConfig);
     });
   }));
 
@@ -39,9 +39,9 @@ describe('McsApiService', () => {
   describe('getFullUrl', () => {
     it('should return the full URL', () => {
       let inputEndPoint: string = '/servers';
-      let expectedUrl: string = coreConfig.apiHost.concat(inputEndPoint);
+      let expectedUrl: string = apiClientConfig.apiHost.concat(inputEndPoint);
       let actualUrl: string = '';
-      actualUrl = mcsApiService.getFullUrl(inputEndPoint);
+      actualUrl = apiClientService.getFullUrl(inputEndPoint);
       expect(actualUrl).toBe(expectedUrl);
     });
   });
@@ -56,7 +56,7 @@ describe('McsApiService', () => {
       let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
       mcsApiRequestParameter.endPoint = '/servers';
       mcsApiRequestParameter.responseType = 'json';
-      mcsApiService.get(mcsApiRequestParameter)
+      apiClientService.get(mcsApiRequestParameter)
         .subscribe((response) => {
           expect(response).toBeDefined();
           expect(response.status).toBe(200);
@@ -79,7 +79,7 @@ describe('McsApiService', () => {
       mcsApiRequestParameter.endPoint = '/servers';
       mcsApiRequestParameter.responseType = 'json';
 
-      mcsApiService.get(mcsApiRequestParameter)
+      apiClientService.get(mcsApiRequestParameter)
         .subscribe(
           (response) => { expect(response).toBeDefined(); },
           (error) => { expect(error).toBeDefined(); }
@@ -101,7 +101,7 @@ describe('McsApiService', () => {
       mcsApiRequestParameter.recordData = 'title: server';
       mcsApiRequestParameter.responseType = 'json';
 
-      mcsApiService.post(mcsApiRequestParameter)
+      apiClientService.post(mcsApiRequestParameter)
         .subscribe((response) => {
           expect(response).toBeDefined();
           expect(response.status).toBe(201);
@@ -123,7 +123,7 @@ describe('McsApiService', () => {
       mcsApiRequestParameter.endPoint = '/servers';
       mcsApiRequestParameter.responseType = 'json';
 
-      mcsApiService.post(mcsApiRequestParameter)
+      apiClientService.post(mcsApiRequestParameter)
         .subscribe(
           (response) => { expect(response).toBeDefined(); },
           (error) => { expect(error).toBeDefined(); }
@@ -145,7 +145,7 @@ describe('McsApiService', () => {
       mcsApiRequestParameter.recordData = 'title: server';
       mcsApiRequestParameter.responseType = 'json';
 
-      mcsApiService.patch(mcsApiRequestParameter)
+      apiClientService.patch(mcsApiRequestParameter)
         .subscribe((response) => {
           expect(response).toBeDefined();
           expect(response.status).toBe(201);
@@ -167,7 +167,7 @@ describe('McsApiService', () => {
       mcsApiRequestParameter.endPoint = '/servers';
       mcsApiRequestParameter.responseType = 'json';
 
-      mcsApiService.patch(mcsApiRequestParameter)
+      apiClientService.patch(mcsApiRequestParameter)
         .subscribe(
           (response) => { expect(response).toBeDefined(); },
           (error) => { expect(error).toBeDefined(); }
@@ -189,7 +189,7 @@ describe('McsApiService', () => {
       mcsApiRequestParameter.recordData = 'title: server';
       mcsApiRequestParameter.responseType = 'json';
 
-      mcsApiService.put(mcsApiRequestParameter)
+      apiClientService.put(mcsApiRequestParameter)
         .subscribe((response) => {
           expect(response).toBeDefined();
           expect(response.status).toBe(201);
@@ -211,7 +211,7 @@ describe('McsApiService', () => {
       mcsApiRequestParameter.endPoint = '/servers';
       mcsApiRequestParameter.responseType = 'json';
 
-      mcsApiService.put(mcsApiRequestParameter)
+      apiClientService.put(mcsApiRequestParameter)
         .subscribe(
           (response) => { expect(response).toBeDefined(); },
           (error) => { expect(error).toBeDefined(); }
@@ -233,7 +233,7 @@ describe('McsApiService', () => {
       mcsApiRequestParameter.recordData = 'title: server';
       mcsApiRequestParameter.responseType = 'json';
 
-      mcsApiService.delete(mcsApiRequestParameter)
+      apiClientService.delete(mcsApiRequestParameter)
         .subscribe((response) => {
           expect(response).toBeDefined();
           expect(response.status).toBe(201);
@@ -255,7 +255,7 @@ describe('McsApiService', () => {
       mcsApiRequestParameter.endPoint = '/servers';
       mcsApiRequestParameter.responseType = 'json';
 
-      mcsApiService.delete(mcsApiRequestParameter)
+      apiClientService.delete(mcsApiRequestParameter)
         .subscribe(
           (response) => { expect(response).toBeDefined(); },
           (error) => { expect(error).toBeDefined(); }

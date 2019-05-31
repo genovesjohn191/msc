@@ -1,5 +1,4 @@
 import { JsonProperty } from 'json-object-mapper';
-import { McsDateSerialization } from '@app/core';
 import {
   OrderStatus,
   OrderStatusSerialization,
@@ -12,6 +11,7 @@ import {
 } from '../enumerations/provisioning-status.enum';
 import { McsEntityBase } from '../common/mcs-entity.base';
 import { McsOrderCharge } from './mcs-order-charge';
+import { McsDateSerialization } from '../serialization/mcs-date-serialization';
 
 export class McsOrderItem extends McsEntityBase {
   @JsonProperty({

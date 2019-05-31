@@ -1,5 +1,4 @@
 import { JsonProperty } from 'json-object-mapper';
-import { McsDateSerialization } from '@app/core';
 import { McsEntityBase } from '../common/mcs-entity.base';
 import {
   CommentType,
@@ -9,6 +8,7 @@ import {
   CommentCategory,
   CommentCategorySerialization
 } from '../enumerations/comment-category';
+import { McsDateSerialization } from '../serialization/mcs-date-serialization';
 
 export class McsTicketComment extends McsEntityBase {
   public createdBy: string;

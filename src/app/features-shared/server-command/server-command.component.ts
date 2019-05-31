@@ -16,8 +16,7 @@ import {
   CoreDefinition,
   McsUniqueId,
   McsNavigationService,
-  CoreRoutes,
-  CoreEvent
+  CoreRoutes
 } from '@app/core';
 import { isNullOrEmpty } from '@app/utilities';
 import {
@@ -37,6 +36,7 @@ import {
   DialogConfirmation
 } from '@app/shared';
 import { RenameServerDialogComponent } from '@app/features-shared';
+import { McsEvent } from '@app/event-manager';
 
 @Component({
   selector: 'mcs-server-command',
@@ -248,12 +248,9 @@ export class ServerCommandComponent {
    * Delete the server
    */
   private _deleteServer(): void {
-    // TODO: Check on how to put the status of isDeleting to disabled the server when it is deleting
-    // and totally remove the CommandAction in server model
     let deleteDetails = new McsServerDelete();
     deleteDetails.clientReferenceObject = {
-      serverId: this.server.id,
-      isDeleting: true
+      serverId: this.server.id
     };
 
     let dialogData = {
@@ -327,7 +324,7 @@ export class ServerCommandComponent {
       );
       return;
     }
-    this._eventDispatcher.dispatch(CoreEvent.serverScaleManageSelected, this.server.id);
+    this._eventDispatcher.dispatch(McsEvent.serverScaleManageSelected, this.server.id);
     this._navigationService.navigateTo(RouteKey.OrderScaleManagedServer);
   }
 

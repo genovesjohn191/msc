@@ -3,7 +3,6 @@ import {
   of
 } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { McsDataContext } from '@app/core';
 import { isNullOrEmpty } from '@app/utilities';
 import {
   McsQueryParam,
@@ -11,6 +10,7 @@ import {
   McsConsole
 } from '@app/models';
 import { IMcsApiConsoleService } from '@app/api-client';
+import { McsDataContext } from '../core/mcs-data-context.interface';
 
 export class McsConsoleDataContext implements McsDataContext<McsConsole> {
   public totalRecordsCount: number = 0;

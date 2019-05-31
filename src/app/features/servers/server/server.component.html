@@ -50,7 +50,7 @@
 
                   <ng-container *ngFor="let server of (iterator.value | mcsSortArray: serverListSource?.serversSortMethod)">
                     <a [mcsRouterLink]="[routeKeyEnum.ServerDetails, server.id]"
-                      [disabled]="server.isDeleting"
+                      [disabled]="server.isDisabled"
                       mcsId="select-server"
                       mcsEventTracker="select-server"
                       mcsEventCategory="server"

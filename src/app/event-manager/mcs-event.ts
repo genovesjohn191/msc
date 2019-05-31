@@ -38,7 +38,7 @@ import { JobCurrentUserEvent } from './events/job-current-user.event';
 import { JobResourceCatalogItemCreateEvent } from './events/job-resource-catalog-item-create.event';
 import { JobOrderScaleManagedServerEvent } from './events/job-order-scale-managed-server.event';
 
-export class CoreEvent {
+export class McsEvent {
   public static routeChange = new RouteChangeEvent();
   public static accountChange = new AccountChangeEvent();
   public static userChange = new UserChangeEvent();

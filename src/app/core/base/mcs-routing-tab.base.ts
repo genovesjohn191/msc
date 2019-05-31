@@ -8,7 +8,7 @@ import {
 } from '@app/utilities';
 import { McsRouteInfo } from '@app/models';
 import { EventBusDispatcherService } from '@app/event-bus';
-import { CoreEvent } from '../core.event';
+import { McsEvent } from '@app/event-manager';
 
 export abstract class McsRoutingTabBase<T> {
   public selectedRoutingTab: T;
@@ -40,9 +40,9 @@ export abstract class McsRoutingTabBase<T> {
    */
   private _listenToRouteChanged(): void {
     this._routerHandler = this.eventDispatcher.addEventListener(
-      CoreEvent.routeChange, this._onRouteChange.bind(this));
+      McsEvent.routeChange, this._onRouteChange.bind(this));
 
-    this.eventDispatcher.dispatch(CoreEvent.routeChange);
+    this.eventDispatcher.dispatch(McsEvent.routeChange);
   }
 
   /**

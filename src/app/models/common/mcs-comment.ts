@@ -1,4 +1,4 @@
-import { McsFileInfo } from '@app/models';
+import { McsFileInfo } from './mcs-file-info';
 
 export class McsComment {
   public message: string;

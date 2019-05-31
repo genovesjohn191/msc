@@ -1,6 +1,5 @@
 /** Services */
 import { StompRService } from '@stomp/ng2-stompjs';
-import { McsApiService } from './services/mcs-api.service';
 import { McsStorageService } from './services/mcs-storage.service';
 import { McsCookieService } from './services/mcs-cookie.service';
 import { McsBrowserService } from './services/mcs-browser.service';
@@ -35,13 +34,26 @@ import { McsAuthenticationGuard } from './authentication/mcs-authentication.guar
 import { McsAccessControlService } from './authentication/mcs-access-control.service';
 /** Guards */
 import { McsNavigateAwayGuard } from './guards/mcs-navigate-away.guard';
+import { McsRequiredResourcesGuard } from './guards/mcs-required-resources.guard';
+
+/** State Managers */
+import { McsJobStateManager } from './state-manager/mcs-job.state-manager';
+import { McsServerStateManager } from './state-manager/mcs-server.state-manager';
+import { McsMediaStateManager } from './state-manager/mcs-media.state-manager';
+import { McsOrderStateManager } from './state-manager/mcs-order.state-manager';
+
+export const initializableProviders: any[] = [
+  McsServerStateManager,
+  McsMediaStateManager,
+  McsJobStateManager,
+  McsOrderStateManager
+];
 
 /**
  * Array coverage for the core modules
  */
 export const coreProviders: any[] = [
   StompRService,
-  McsApiService,
   McsStorageService,
   McsCookieService,
   McsBrowserService,
@@ -66,6 +78,7 @@ export const coreProviders: any[] = [
   McsAuthenticationGuard,
   McsAccessControlService,
   McsNavigateAwayGuard,
+  McsRequiredResourcesGuard,
   GoogleAnalyticsEventsService,
   McsSessionHandlerService,
   McsComponentHandlerService,

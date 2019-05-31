@@ -6,7 +6,8 @@ import {
   McsApiSuccessResponse,
   McsApiRequestParameter,
   McsQueryParam,
-  JobStatus
+  JobStatus,
+  McsJobConnection
 } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
@@ -50,7 +51,7 @@ export class McsApiJobsService implements IMcsApiJobsService {
    */
   public getJobsByStatus(...statuses: JobStatus[]): Observable<McsApiSuccessResponse<McsJob[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/jobs/?status=${statuses.map((status) => `${JobStatus[status]},`)}`;
+    mcsApiRequestParameter.endPoint = `/jobs/?status=${statuses.map((status) => `${JobStatus[status]}`)}`;
 
     return this._mcsApiService.get(mcsApiRequestParameter).pipe(
       map((response) => {
@@ -74,6 +75,23 @@ export class McsApiJobsService implements IMcsApiJobsService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse.deserializeResponse<McsJob>(McsJob, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  /**
+   * Get job connection from API
+   */
+  public getJobConnection(): Observable<McsApiSuccessResponse<McsJobConnection>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/jobs/connection`;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse.deserializeResponse<McsJobConnection>(McsJobConnection, response);
           return apiResponse;
         })
       );

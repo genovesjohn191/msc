@@ -9,7 +9,6 @@ import {
 } from 'rxjs/operators';
 import {
   McsOrderBase,
-  CoreRoutes,
   IMcsJobManager,
   IMcsFallible,
   IMcsStateChangeable
@@ -18,7 +17,6 @@ import {
   McsServerCreate,
   McsJob,
   McsServerClone,
-  RouteKey,
   DataStatus,
   OrderIdType
 } from '@app/models';
@@ -45,10 +43,6 @@ export class ServerCreateService extends McsOrderBase
    */
   public createSelfManagedServer(serverModel: McsServerCreate | McsServerClone): void {
     if (isNullOrEmpty(serverModel)) { return; }
-
-    serverModel.clientReferenceObject = {
-      resourcePath: CoreRoutes.getNavigationPath(RouteKey.ServerDetails)
-    };
 
     let serverInstance = serverModel instanceof McsServerCreate ?
       this._createNewSelfManageServer(serverModel) :

@@ -23,9 +23,9 @@ import {
   McsIdentity,
   RouteKey
 } from '@app/models';
+import { McsEvent } from '@app/event-manager';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { CoreRoutes } from '../core.routes';
-import { CoreEvent } from '../core.event';
 import { McsLoggerService } from './mcs-logger.service';
 
 @Injectable()
@@ -57,7 +57,7 @@ export class McsRouteHandlerService implements McsDisposable {
    */
   private _registerEvents(): void {
     this._userHandler = this._eventDispatcher.addEventListener(
-      CoreEvent.userChange, this._onUserChanged.bind(this));
+      McsEvent.userChange, this._onUserChanged.bind(this));
   }
 
   /**
@@ -90,7 +90,7 @@ export class McsRouteHandlerService implements McsDisposable {
 
     let activeRoute = CoreRoutes.getRouteInfoByKey(routeId);
     activeRoute.urlAfterRedirects = routeArgs.urlAfterRedirects;
-    this._eventDispatcher.dispatch(CoreEvent.routeChange, activeRoute);
+    this._eventDispatcher.dispatch(McsEvent.routeChange, activeRoute);
   }
 
   /**

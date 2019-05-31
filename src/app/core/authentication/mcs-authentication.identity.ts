@@ -5,8 +5,8 @@ import {
   AccountStatus
 } from '@app/models';
 import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/event-manager';
 import { CoreDefinition } from '../core.definition';
-import { CoreEvent } from '../core.event';
 import { McsCookieService } from '../services/mcs-cookie.service';
 
 @Injectable()
@@ -46,7 +46,7 @@ export class McsAuthenticationIdentity {
    */
   public setActiveUser(identity: McsIdentity): void {
     this._user = identity;
-    this._eventDispatcher.dispatch(CoreEvent.userChange, identity);
+    this._eventDispatcher.dispatch(McsEvent.userChange, identity);
   }
 
   /**
@@ -55,6 +55,6 @@ export class McsAuthenticationIdentity {
    */
   public setActiveAccount(company: McsCompany): void {
     this._activeAccount = company;
-    this._eventDispatcher.dispatch(CoreEvent.accountChange, this._activeAccount);
+    this._eventDispatcher.dispatch(McsEvent.accountChange, this._activeAccount);
   }
 }

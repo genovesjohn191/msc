@@ -1,12 +1,9 @@
 import { JsonProperty } from 'json-object-mapper';
 import {
   isNullOrEmpty,
-  getSafeProperty
+  getSafeProperty,
+  CommonDefinition
 } from '@app/utilities';
-import {
-  McsDateSerialization,
-  CoreDefinition
-} from '@app/core';
 import {
   JobStatus,
   JobStatusSerialization
@@ -19,6 +16,7 @@ import {
 import { DataStatus } from '../enumerations/data-status.enum';
 import { McsEntityBase } from '../common/mcs-entity.base';
 import { McsTask } from './mcs-task';
+import { McsDateSerialization } from '../serialization/mcs-date-serialization';
 
 export class McsJob extends McsEntityBase {
   public initiatorId: string;
@@ -137,11 +135,11 @@ export class McsJob extends McsEntityBase {
    */
   public get dataStatusIconKey(): string {
     if (this.dataStatus === DataStatus.InProgress) {
-      return CoreDefinition.ASSETS_GIF_LOADER_SPINNER;
+      return CommonDefinition.ASSETS_GIF_LOADER_SPINNER;
     }
     return this.dataStatus === DataStatus.Success ?
-      CoreDefinition.ASSETS_SVG_SUCCESS :
-      CoreDefinition.ASSETS_SVG_ERROR;
+      CommonDefinition.ASSETS_SVG_SUCCESS :
+      CommonDefinition.ASSETS_SVG_ERROR;
   }
 
   /**

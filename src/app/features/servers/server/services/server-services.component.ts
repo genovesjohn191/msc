@@ -23,8 +23,7 @@ import {
   CoreDefinition,
   McsAccessControlService,
   McsDataStatusFactory,
-  McsDateTimeService,
-  CoreEvent
+  McsDateTimeService
 } from '@app/core';
 import {
   McsResourcesRepository,
@@ -47,6 +46,7 @@ import {
   DataStatus
 } from '@app/models';
 import { FormMessage } from '@app/shared';
+import { McsEvent } from '@app/event-manager';
 import { ServerDetailsBase } from '../server-details.base';
 import { ServerService } from '../server.service';
 import {
@@ -279,15 +279,15 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
    */
   private _registerEvents(): void {
     this._inspectOsUpdateHandler = this._eventDispatcher.addEventListener(
-      CoreEvent.jobServerOsUpdateInspect, this._onInspectForAvailableOsUpdates.bind(this)
+      McsEvent.jobServerOsUpdateInspect, this._onInspectForAvailableOsUpdates.bind(this)
     );
     this._applyOsUpdateHandler = this._eventDispatcher.addEventListener(
-      CoreEvent.jobServerOsUpdateApply, this._onApplyServerOsUpdates.bind(this)
+      McsEvent.jobServerOsUpdateApply, this._onApplyServerOsUpdates.bind(this)
     );
 
     // Invoke the event initially
-    this._eventDispatcher.dispatch(CoreEvent.jobServerSnapshotCreate);
-    this._eventDispatcher.dispatch(CoreEvent.jobServerSnapshotApply);
+    this._eventDispatcher.dispatch(McsEvent.jobServerSnapshotCreate);
+    this._eventDispatcher.dispatch(McsEvent.jobServerSnapshotApply);
   }
 
   /**

@@ -13,6 +13,7 @@ import { McsApiServersService } from './services/mcs-api-servers.service';
 import { McsApiTicketsService } from './services/mcs-api-tickets.service';
 import { McsApiToolsService } from './services/mcs-api-tools.service';
 import { McsApiInternetService } from './services/mcs-api-internet.service';
+import { McsApiIdentityService } from './services/mcs-api-identity.service';
 
 /**
  * Array coverage for the api client modules
@@ -32,5 +33,6 @@ export const apiClientProviders: any[] = [
   McsApiServersService,
   McsApiTicketsService,
   McsApiToolsService,
-  McsApiInternetService
+  McsApiInternetService,
+  McsApiIdentityService
 ];

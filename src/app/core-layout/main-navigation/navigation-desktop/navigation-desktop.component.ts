@@ -16,9 +16,9 @@ import { catchError } from 'rxjs/operators';
 import {
   CoreRoutes,
   CoreConfig,
-  CoreEvent,
   CoreDefinition,
-  McsDataStatusFactory
+  McsDataStatusFactory,
+  McsAccessControlService
 } from '@app/core';
 import {
   RouteKey,
@@ -34,7 +34,7 @@ import {
   unsubscribeSafely
 } from '@app/utilities';
 import { McsProductCatalogRepository } from '@app/services';
-import { McsAccessControlService } from '@app/core/authentication/mcs-access-control.service';
+import { McsEvent } from '@app/event-manager';
 
 @Component({
   selector: 'mcs-navigation-desktop',
@@ -48,7 +48,7 @@ export class NavigationDesktopComponent implements OnInit, OnDestroy {
   public productCatalogs: McsProductCatalog[];
   public productsStatusFactory: McsDataStatusFactory<McsProductCatalog[]>;
 
-  @EventBusPropertyListenOn(CoreEvent.productSelected)
+  @EventBusPropertyListenOn(McsEvent.productSelected)
   public selectedProduct$: BehaviorSubject<McsProduct>;
 
   public get arrowUpIconKey(): string {
@@ -93,13 +93,6 @@ export class NavigationDesktopComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Returns true when feature flag is on for product catalog
-   */
-  public get productCatalogFeatureIsOn(): boolean {
-    return this._productCatalogRepository.productCatalogFeatureIsOn;
-  }
-
-  /**
    * Navigate to product catalog
    * @param product Product to be navigated
    */
@@ -113,7 +106,7 @@ export class NavigationDesktopComponent implements OnInit, OnDestroy {
    */
   private _registerEvents(): void {
     this._productUnselectedHandler = this._eventDispatcher.addEventListener(
-      CoreEvent.productUnSelected, this._onProductUnSelected.bind(this)
+      McsEvent.productUnSelected, this._onProductUnSelected.bind(this)
     );
   }
 

@@ -304,7 +304,7 @@
         <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
         <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"
           mcsCursor="pointer"
-          [disabled]="row.isDeleting"
+          [disabled]="row.isDisabled"
           [ngClass]="{'active-data-row': serversSelection?.isItemSelected(row)}"
           (click)="navigateToServer(row)"
           mcsId="server-row"

@@ -29,7 +29,6 @@ import {
   CoreDefinition,
   CoreRoutes,
   McsAccessControlService,
-  CoreEvent,
   McsServerPermission
 } from '@app/core';
 import {
@@ -58,6 +57,7 @@ import {
   ServerManageScale,
   ServerManageMedia
 } from '@app/features-shared';
+import { McsEvent } from '@app/event-manager';
 import {
   McsServersRepository,
   McsResourcesRepository
@@ -187,7 +187,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
       this.setViewMode(ServerManagementView.ManageScale);
       return;
     }
-    this._eventDispatcher.dispatch(CoreEvent.serverScaleManageSelected, server.id);
+    this._eventDispatcher.dispatch(McsEvent.serverScaleManageSelected, server.id);
     this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.OrderScaleManagedServer)]);
   }
 
@@ -419,21 +419,21 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
    */
   private _registerEvents(): void {
     this._attachMediaHandler = this._eventDispatcher.addEventListener(
-      CoreEvent.jobServerMediaAttach, this._onAttachMedia.bind(this)
+      McsEvent.jobServerMediaAttach, this._onAttachMedia.bind(this)
     );
 
     this._detachMediaHandler = this._eventDispatcher.addEventListener(
-      CoreEvent.jobServerMediaDetach, this._onDetachMedia.bind(this)
+      McsEvent.jobServerMediaDetach, this._onDetachMedia.bind(this)
     );
 
     this._updateComputeHandler = this._eventDispatcher.addEventListener(
-      CoreEvent.jobServerComputeUpdate, this._onUpdateServerCompute.bind(this)
+      McsEvent.jobServerComputeUpdate, this._onUpdateServerCompute.bind(this)
     );
 
     // Invoke the event initially
-    this._eventDispatcher.dispatch(CoreEvent.jobServerMediaAttach);
-    this._eventDispatcher.dispatch(CoreEvent.jobServerMediaDetach);
-    this._eventDispatcher.dispatch(CoreEvent.jobServerComputeUpdate);
+    this._eventDispatcher.dispatch(McsEvent.jobServerMediaAttach);
+    this._eventDispatcher.dispatch(McsEvent.jobServerMediaDetach);
+    this._eventDispatcher.dispatch(McsEvent.jobServerComputeUpdate);
   }
 
   /**

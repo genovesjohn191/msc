@@ -35,13 +35,13 @@ import {
   orderTypeText,
   OrderType
 } from '@app/models';
+import { McsOrdersRepository } from '@app/services';
 import { IMcsFallible } from '../../interfaces/mcs-fallible.interface';
 import { IMcsJobManager } from '../../interfaces/mcs-job-manager.interface';
 import { IMcsStateChangeable } from '../../interfaces/mcs-state-changeable.interface';
 import { McsOrderBuilder } from './mcs-order.builder';
 import { McsOrderRequest } from './mcs-order-request';
 import { McsOrderDirector } from './mcs-order.director';
-import { IMcsOrderFactory } from './mcs-order-factory.interface';
 
 const DEFAULT_ORDER_DESCRIPTION = 'Macquarie Cloud Services Portal Order';
 
@@ -72,7 +72,7 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
   private _errorsChange = new Subject<string[]>();
 
   constructor(
-    private _orderFactory: IMcsOrderFactory,
+    private _orderFactory: McsOrdersRepository,
     private _orderItemProductType: string
   ) {
     this._orderBuilder = new McsOrderBuilder();

@@ -1,4 +1,4 @@
-import { CoreDefinition } from '@app/core';
+import { CommonDefinition } from '@app/utilities';
 
 export class McsQueryParam {
   public keyword?: string;
@@ -7,7 +7,7 @@ export class McsQueryParam {
 
   constructor() {
     this.keyword = '';
-    this.pageIndex = CoreDefinition.DEFAULT_PAGE_INDEX;
-    this.pageSize = CoreDefinition.DEFAULT_PAGE_SIZE;
+    this.pageIndex = CommonDefinition.DEFAULT_PAGE_INDEX;
+    this.pageSize = CommonDefinition.DEFAULT_PAGE_SIZE;
   }
 }

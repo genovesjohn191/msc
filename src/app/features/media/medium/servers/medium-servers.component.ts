@@ -20,7 +20,6 @@ import {
 import { EventBusDispatcherService } from '@app/event-bus';
 import {
   McsTableDataSource,
-  CoreEvent,
   McsGuid
 } from '@app/core';
 import {
@@ -39,6 +38,7 @@ import {
   McsServer,
   McsResourceMedia
 } from '@app/models';
+import { McsEvent } from '@app/event-manager';
 import { McsMediaRepository } from '@app/services';
 import { MediumService } from '../medium.service';
 import { MediumDetailsBase } from '../medium-details.base';
@@ -221,16 +221,16 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
    */
   private _registerEvents(): void {
     this._attachMediaHandler = this._eventDispatcher.addEventListener(
-      CoreEvent.jobServerMediaAttach, this._onAttachServerMedia.bind(this)
+      McsEvent.jobServerMediaAttach, this._onAttachServerMedia.bind(this)
     );
 
     this._detachMediaHandler = this._eventDispatcher.addEventListener(
-      CoreEvent.jobServerMediaDetach, this._onDetachServerMedia.bind(this)
+      McsEvent.jobServerMediaDetach, this._onDetachServerMedia.bind(this)
     );
 
     // Invoke the event initially
-    this._eventDispatcher.dispatch(CoreEvent.jobServerMediaAttach);
-    this._eventDispatcher.dispatch(CoreEvent.jobServerMediaDetach);
+    this._eventDispatcher.dispatch(McsEvent.jobServerMediaAttach);
+    this._eventDispatcher.dispatch(McsEvent.jobServerMediaDetach);
   }
 
   /**

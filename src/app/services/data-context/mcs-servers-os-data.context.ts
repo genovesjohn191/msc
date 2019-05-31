@@ -6,7 +6,6 @@ import {
   map,
   switchMap
 } from 'rxjs/operators';
-import { McsDataContext } from '@app/core';
 import { isNullOrEmpty } from '@app/utilities';
 import {
   McsServerOperatingSystem,
@@ -14,6 +13,7 @@ import {
   McsApiSuccessResponse
 } from '@app/models';
 import { IMcsApiServersService } from '@app/api-client';
+import { McsDataContext } from '../core/mcs-data-context.interface';
 
 export class McsServersOsDataContext implements McsDataContext<McsServerOperatingSystem> {
   public totalRecordsCount: number = 0;

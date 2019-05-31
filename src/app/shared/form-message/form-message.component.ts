@@ -21,10 +21,10 @@ import {
 } from '@app/utilities';
 import {
   CoreDefinition,
-  McsScrollDispatcherService,
-  CoreEvent
+  McsScrollDispatcherService
 } from '@app/core';
 import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/event-manager';
 import {
   FormMessage,
   FormMessageContent
@@ -67,7 +67,7 @@ export class FormMessageComponent implements OnInit, OnDestroy, FormMessage {
 
   public ngOnInit() {
     this._changeRouteHandler = this._eventbusService.addEventListener(
-      CoreEvent.routeChange, this._onRouteChange.bind(this)
+      McsEvent.routeChange, this._onRouteChange.bind(this)
     );
   }
 

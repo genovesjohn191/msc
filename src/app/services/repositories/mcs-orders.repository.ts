@@ -9,11 +9,6 @@ import {
   finalize
 } from 'rxjs/operators';
 import {
-  McsRepositoryBase,
-  IMcsOrderFactory,
-  CoreEvent
-} from '@app/core';
-import {
   getSafeProperty,
   isNullOrEmpty
 } from '@app/utilities';
@@ -33,10 +28,12 @@ import {
   McsApiOrdersFactory,
   IMcsApiOrdersService
 } from '@app/api-client';
+import { McsEvent } from '@app/event-manager';
 import { McsOrdersDataContext } from '../data-context/mcs-orders-data.context';
+import { McsRepositoryBase } from '../core/mcs-repository.base';
 
 @Injectable()
-export class McsOrdersRepository extends McsRepositoryBase<McsOrder> implements IMcsOrderFactory {
+export class McsOrdersRepository extends McsRepositoryBase<McsOrder> {
   private readonly _ordersApiService: IMcsApiOrdersService;
   private _itemTypesCache: Map<string, McsOrderItemType>;
 
@@ -68,12 +65,12 @@ export class McsOrdersRepository extends McsRepositoryBase<McsOrder> implements 
    * @param workflow Workflow details
    */
   public createOrderWorkFlow(orderId: string, workflow: McsOrderWorkflow): Observable<McsOrder> {
-    this._eventDispatcher.dispatch(CoreEvent.orderStateBusy, orderId);
+    this._eventDispatcher.dispatch(McsEvent.orderStateBusy, orderId);
 
     return this._ordersApiService.createOrderWorkflow(orderId, workflow).pipe(
       map((response) => getSafeProperty(response, (obj) => obj.content)),
       tap((order) => this.addOrUpdate(order)),
-      finalize(() => this._eventDispatcher.dispatch(CoreEvent.orderStateEnded, orderId))
+      finalize(() => this._eventDispatcher.dispatch(McsEvent.orderStateEnded, orderId))
     );
   }
 
@@ -93,12 +90,12 @@ export class McsOrdersRepository extends McsRepositoryBase<McsOrder> implements 
    * @param updatedOrder Updated order details to be set on the existing order
    */
   public updateOrder(orderId: string, updatedOrder: McsOrderCreate): Observable<McsOrder> {
-    this._eventDispatcher.dispatch(CoreEvent.orderStateBusy, orderId);
+    this._eventDispatcher.dispatch(McsEvent.orderStateBusy, orderId);
 
     return this._ordersApiService.updateOrder(orderId, updatedOrder).pipe(
       map((response) => getSafeProperty(response, (obj) => obj.content)),
       tap((order) => this.addOrUpdate(order)),
-      finalize(() => this._eventDispatcher.dispatch(CoreEvent.orderStateEnded, orderId))
+      finalize(() => this._eventDispatcher.dispatch(McsEvent.orderStateEnded, orderId))
     );
   }
 
@@ -107,12 +104,12 @@ export class McsOrdersRepository extends McsRepositoryBase<McsOrder> implements 
    * @param orderId Id of the order to be deleted
    */
   public deleteOrder(orderId: any): Observable<McsOrder> {
-    this._eventDispatcher.dispatch(CoreEvent.orderStateBusy, orderId);
+    this._eventDispatcher.dispatch(McsEvent.orderStateBusy, orderId);
 
     return this._ordersApiService.deleteOrder(orderId).pipe(
       map((response) => getSafeProperty(response, (obj) => obj.content)),
       tap((order) => this.delete(order)),
-      finalize(() => this._eventDispatcher.dispatch(CoreEvent.orderStateEnded, orderId))
+      finalize(() => this._eventDispatcher.dispatch(McsEvent.orderStateEnded, orderId))
     );
   }
 

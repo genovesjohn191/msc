@@ -1,5 +1,5 @@
 import { CacheKey } from 'json-object-mapper';
-import { McsEnumSerializationBase } from '@app/core';
+import { McsEnumSerializationBase } from '../serialization/mcs-enum-serialization-base';
 
 export enum ProductLocationStatus {
   Unknown = 0,

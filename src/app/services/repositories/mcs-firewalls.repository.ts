@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { isNullOrEmpty } from '@app/utilities';
-import { McsRepositoryBase } from '@app/core';
 import {
   McsFirewall,
   McsQueryParam,
@@ -14,6 +13,7 @@ import {
   IMcsApiFirewallsService
 } from '@app/api-client';
 import { McsFirewallsDataContext } from '../data-context/mcs-firewalls-data.context';
+import { McsRepositoryBase } from '../core/mcs-repository.base';
 
 @Injectable()
 export class McsFirewallsRepository extends McsRepositoryBase<McsFirewall> {

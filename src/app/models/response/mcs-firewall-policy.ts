@@ -1,5 +1,5 @@
 import { JsonProperty } from 'json-object-mapper';
-import { CoreDefinition } from '@app/core';
+import { CommonDefinition } from '@app/utilities';
 import {
   policyText,
   PolicyAction,
@@ -62,12 +62,12 @@ export class McsFirewallPolicy extends McsEntityBase {
     let iconKey = '';
     switch (this.action) {
       case PolicyAction.Disabled:
-        iconKey = CoreDefinition.ASSETS_SVG_STATE_STOPPED;
+        iconKey = CommonDefinition.ASSETS_SVG_STATE_STOPPED;
         break;
 
       case PolicyAction.Enabled:
       default:
-        iconKey = CoreDefinition.ASSETS_SVG_STATE_RUNNING;
+        iconKey = CommonDefinition.ASSETS_SVG_STATE_RUNNING;
         break;
     }
     return iconKey;

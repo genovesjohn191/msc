@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { McsRepositoryBase } from '@app/core';
 import { getSafeProperty } from '@app/utilities';
 import {
   McsJob,
@@ -16,6 +15,7 @@ import {
   IMcsApiMediaService
 } from '@app/api-client';
 import { McsMediaDataContext } from '../data-context/mcs-media-data.context';
+import { McsRepositoryBase } from '../core/mcs-repository.base';
 
 @Injectable()
 export class McsMediaRepository extends McsRepositoryBase<McsResourceMedia> {

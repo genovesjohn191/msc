@@ -1,5 +1,5 @@
-import { McsEnumSerializationBase } from '@app/core';
 import { CacheKey } from 'json-object-mapper';
+import { McsEnumSerializationBase } from '@app/models';
 
 export enum TicketActivityType {
   Comment = 0,

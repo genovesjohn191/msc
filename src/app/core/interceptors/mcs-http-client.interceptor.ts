@@ -8,7 +8,7 @@ import {
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { EventBusDispatcherService } from '@app/event-bus';
-import { CoreEvent } from '../core.event';
+import { McsEvent } from '@app/event-manager';
 import { McsGuid } from '../factory/unique-generators/mcs-guid';
 
 @Injectable()
@@ -37,7 +37,7 @@ export class McsHttpClientInterceptor implements HttpInterceptor {
     let hasPendingRequest = this._requestsMap.size !== 0;
 
     hasPendingRequest ?
-      this._eventDispatcher.dispatch(CoreEvent.loaderShow) :
-      this._eventDispatcher.dispatch(CoreEvent.loaderHide);
+      this._eventDispatcher.dispatch(McsEvent.loaderShow) :
+      this._eventDispatcher.dispatch(McsEvent.loaderHide);
   }
 }

@@ -1,6 +1,5 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { McsDataContext } from '@app/core';
 import { isNullOrEmpty } from '@app/utilities';
 import {
   McsTicket,
@@ -8,6 +7,7 @@ import {
   McsApiSuccessResponse
 } from '@app/models';
 import { IMcsApiTicketsService } from '@app/api-client';
+import { McsDataContext } from '../core/mcs-data-context.interface';
 
 export class McsTicketsDataContext implements McsDataContext<McsTicket> {
   public totalRecordsCount: number = 0;

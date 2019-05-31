@@ -1,3 +1,6 @@
+/**
+ * @deprecated Use the common definition instead
+ */
 export class CoreDefinition {
   /** Responsive Browser Width */
   /** These variables should be the same with the css definition */

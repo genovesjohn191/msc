@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { McsRepositoryBase } from '@app/core';
 import {
   McsTicket,
   McsTicketCreateComment,
@@ -17,6 +16,7 @@ import {
   IMcsApiTicketsService
 } from '@app/api-client';
 import { McsTicketsDataContext } from '../data-context/mcs-tickets-data.context';
+import { McsRepositoryBase } from '../core/mcs-repository.base';
 
 @Injectable()
 export class McsTicketsRepository extends McsRepositoryBase<McsTicket> {

@@ -6,7 +6,6 @@ import {
   map,
   switchMap
 } from 'rxjs/operators';
-import { McsDataContext } from '@app/core';
 import { isNullOrEmpty } from '@app/utilities';
 import {
   McsPortal,
@@ -14,6 +13,7 @@ import {
   McsApiSuccessResponse
 } from '@app/models';
 import { IMcsApiToolsService } from '@app/api-client';
+import { McsDataContext } from '../core/mcs-data-context.interface';
 
 export class McsToolsDataContext implements McsDataContext<McsPortal> {
   public totalRecordsCount: number = 0;

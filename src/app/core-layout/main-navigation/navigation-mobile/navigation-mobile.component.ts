@@ -26,7 +26,6 @@ import {
   CoreConfig,
   CoreDefinition,
   CoreRoutes,
-  CoreEvent,
   McsAuthenticationService,
   McsDataStatusFactory,
   McsAccessControlService
@@ -46,6 +45,7 @@ import {
 } from '@app/event-bus';
 import { SlidingPanelComponent } from '@app/shared';
 import { McsProductCatalogRepository } from '@app/services';
+import { McsEvent } from '@app/event-manager';
 
 @Component({
   selector: 'mcs-navigation-mobile',
@@ -75,7 +75,7 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
   @ViewChild('slidingPanel')
   public slidingPanel: SlidingPanelComponent;
 
-  @EventBusPropertyListenOn(CoreEvent.productSelected)
+  @EventBusPropertyListenOn(McsEvent.productSelected)
   public selectedProduct$: Subject<McsProduct>;
 
   public get macviewUrl(): string {
@@ -100,13 +100,6 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
 
   public get closeIconKey(): string {
     return CoreDefinition.ASSETS_SVG_CLOSE_WHITE;
-  }
-
-  /**
-   * Returns true when feature flag is on for product catalog
-   */
-  public get productCatalogFeatureIsOn(): boolean {
-    return this._productCatalogRepository.productCatalogFeatureIsOn;
   }
 
   private _routeChangeHandler: Subscription;
@@ -180,11 +173,11 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
    */
   private _registerEvents(): void {
     this._productUnselectedHandler = this._eventDispatcher.addEventListener(
-      CoreEvent.productUnSelected, this._onProductUnSelected.bind(this)
+      McsEvent.productUnSelected, this._onProductUnSelected.bind(this)
     );
 
     this._routeChangeHandler = this._eventDispatcher.addEventListener(
-      CoreEvent.routeChange, this._onRouteChanged.bind(this)
+      McsEvent.routeChange, this._onRouteChanged.bind(this)
     );
   }
 

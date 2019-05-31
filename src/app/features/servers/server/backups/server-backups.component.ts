@@ -20,12 +20,12 @@ import {
 } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/event-manager';
 import {
   McsDataStatusFactory,
   CoreDefinition,
   McsErrorHandlerService,
-  McsAccessControlService,
-  CoreEvent
+  McsAccessControlService
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -324,21 +324,21 @@ export class ServerBackupsComponent extends ServerDetailsBase
    */
   private _registerEvents(): void {
     this._createSnapshotHandler = this._eventDispatcher.addEventListener(
-      CoreEvent.jobServerSnapshotCreate, this._onCreateServerSnapshot.bind(this)
+      McsEvent.jobServerSnapshotCreate, this._onCreateServerSnapshot.bind(this)
     );
 
     this._applySnapshotHandler = this._eventDispatcher.addEventListener(
-      CoreEvent.jobServerSnapshotApply, this._onUpdateServerSnapshot.bind(this)
+      McsEvent.jobServerSnapshotApply, this._onUpdateServerSnapshot.bind(this)
     );
 
     this._deleteSnapshotHandler = this._eventDispatcher.addEventListener(
-      CoreEvent.jobServerSnapshotDelete, this._onUpdateServerSnapshot.bind(this)
+      McsEvent.jobServerSnapshotDelete, this._onUpdateServerSnapshot.bind(this)
     );
 
     // Invoke the event initially
-    this._eventDispatcher.dispatch(CoreEvent.jobServerSnapshotCreate);
-    this._eventDispatcher.dispatch(CoreEvent.jobServerSnapshotApply);
-    this._eventDispatcher.dispatch(CoreEvent.jobServerSnapshotDelete);
+    this._eventDispatcher.dispatch(McsEvent.jobServerSnapshotCreate);
+    this._eventDispatcher.dispatch(McsEvent.jobServerSnapshotApply);
+    this._eventDispatcher.dispatch(McsEvent.jobServerSnapshotDelete);
 
   }
 
