@@ -247,7 +247,7 @@ export class ScaleManagedServerComponent extends McsOrderWizardBase implements O
     let resourceMap: Map<string, McsServer[]> = new Map();
     this.resources$ = this._serversRepository.getAll().pipe(
       map((servers) => {
-        servers.filter((server) => !server.isSelfManaged && !server.isDedicated)
+        servers.filter((server) => !server.isSelfManaged && !server.isDedicated && server.serviceChangeAvailable)
           .forEach((server) => {
             let resourceIsExisting = resourceMap.has(server.platform.resourceName);
             if (resourceIsExisting) {

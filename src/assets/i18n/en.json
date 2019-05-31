@@ -1266,8 +1266,8 @@
     "message": "Deleting a server cannot be undone. If this is the only remaining server in a vApp, the vApp will also be deleted.\r\n\nAre you sure you wish to continue?"
   },
   "dialogDeleteServerMultiple": {
-    "titleMultiple": "Delete Servers",
-    "messageMultiple": "Deleting a server cannot be undone. If any server selected is the only remaining server in a vApp, the vApp will also be deleted.\r\n\nAre you sure you wish to continue?"
+    "title": "Delete Servers",
+    "message": "Deleting a server cannot be undone. If any server selected is the only remaining server in a vApp, the vApp will also be deleted.\r\n\nAre you sure you wish to continue?"
   },
   "dialogResumeServerSingle": {
     "title": "Resume Server",

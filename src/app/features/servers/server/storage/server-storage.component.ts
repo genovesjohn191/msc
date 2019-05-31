@@ -263,7 +263,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
       data: disk,
       type: 'warning',
       title: this._translateService.instant('dialogDetachMedia.title'),
-      message: this._translateService.instant('dialogDetachMedia.message', { storage_name: disk.name })
+      message: this._translateService.instant('dialogDetachMedia.message', { media_name: disk.name })
     } as DialogConfirmation<McsServerStorageDevice>;
 
     let dialogRef = this._dialogService.openConfirmation(dialogData);
