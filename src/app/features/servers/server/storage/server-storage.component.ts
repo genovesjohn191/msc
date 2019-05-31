@@ -24,7 +24,6 @@ import {
   McsErrorHandlerService,
   McsTableDataSource,
   McsAccessControlService,
-  CoreEvent,
   McsGuid
 } from '@app/core';
 import {
@@ -56,6 +55,7 @@ import { EventBusDispatcherService } from '@app/event-bus';
 import { ServerService } from '../server.service';
 import { ServerDetailsBase } from '../server-details.base';
 import { ServersService } from '../../servers.service';
+import { McsEvent } from '@app/event-manager';
 
 // Enumeration
 export enum ServerDiskMethodType {
@@ -377,21 +377,21 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
    */
   private _registerEvents(): void {
     this._createDiskHandler = this._eventDispatcher.addEventListener(
-      CoreEvent.jobServerDiskCreate, this._onCreateServerDisk.bind(this)
+      McsEvent.jobServerDiskCreate, this._onCreateServerDisk.bind(this)
     );
 
     this._updateDiskHandler = this._eventDispatcher.addEventListener(
-      CoreEvent.jobServerDiskUpdate, this._onUpdateServerDisk.bind(this)
+      McsEvent.jobServerDiskUpdate, this._onUpdateServerDisk.bind(this)
     );
 
     this._deleteDiskHandler = this._eventDispatcher.addEventListener(
-      CoreEvent.jobServerDiskDelete, this._onUpdateServerDisk.bind(this)
+      McsEvent.jobServerDiskDelete, this._onUpdateServerDisk.bind(this)
     );
 
     // Invoke the event initially
-    this._eventDispatcher.dispatch(CoreEvent.jobServerDiskCreate);
-    this._eventDispatcher.dispatch(CoreEvent.jobServerDiskUpdate);
-    this._eventDispatcher.dispatch(CoreEvent.jobServerDiskDelete);
+    this._eventDispatcher.dispatch(McsEvent.jobServerDiskCreate);
+    this._eventDispatcher.dispatch(McsEvent.jobServerDiskUpdate);
+    this._eventDispatcher.dispatch(McsEvent.jobServerDiskDelete);
   }
 
   /**
