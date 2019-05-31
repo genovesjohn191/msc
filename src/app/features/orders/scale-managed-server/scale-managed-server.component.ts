@@ -15,8 +15,7 @@ import {
   McsFormGroupService,
   IMcsFormGroup,
   CoreValidators,
-  McsGuid,
-  CoreEvent
+  McsGuid
 } from '@app/core';
 import {
   Observable,
@@ -63,6 +62,7 @@ import {
   ComponentHandlerDirective
 } from '@app/shared';
 import { ScaleManagedServerService } from './scale-managed-server.service';
+import { McsEvent } from '@app/event-manager';
 
 type ScaleManageProperties = {
   cpuCount: number;
@@ -260,7 +260,7 @@ export class ScaleManagedServerComponent extends McsOrderWizardBase implements O
         return resourceMap;
       }),
       tap(() => {
-        this._eventDispatcher.dispatch(CoreEvent.serverScaleManageSelected);
+        this._eventDispatcher.dispatch(McsEvent.serverScaleManageSelected);
         this._changeDetectorRef.markForCheck();
       })
     );
@@ -284,10 +284,10 @@ export class ScaleManagedServerComponent extends McsOrderWizardBase implements O
    */
   private _registerEvents(): void {
     this._selectedServerIdHandler = this._eventDispatcher.addEventListener(
-      CoreEvent.serverScaleManageSelected, this._onSelectedScaleManageServerId.bind(this));
+      McsEvent.serverScaleManageSelected, this._onSelectedScaleManageServerId.bind(this));
 
     // Invoke the event initially
-    this._eventDispatcher.dispatch(CoreEvent.serverScaleManageSelected);
+    this._eventDispatcher.dispatch(McsEvent.serverScaleManageSelected);
   }
 
   /**
