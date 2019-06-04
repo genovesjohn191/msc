@@ -1252,8 +1252,6 @@
   "dialogSessionIdle": {
     "title": "Hey, are you still there?",
     "alert": "We've noticed you've been inactive for a while. Click to continue your session, otherwise you'll be signed out in ",
-    "dataSingular": "second",
-    "dataPlural": "seconds",
     "confirm": "Continue Session"
   },
   "dialogSessionTimedOut": {
