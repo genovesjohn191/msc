@@ -205,6 +205,7 @@ export class ServersComponent
    */
   public deleteMultipleServers(): void {
     let dialogData = {
+      data: this.serversSelection.getSelectedItems(),
       title: this._translateService.instant('dialogDeleteServerMultiple.title'),
       message: this._translateService.instant('dialogDeleteServerMultiple.message'),
       type: 'warning'
@@ -215,7 +216,7 @@ export class ServersComponent
     dialogRef.afterClosed().pipe(
       concatMap((dialogResult) => {
         if (isNullOrEmpty(dialogResult)) { return of(null); }
-        return forkJoin(this.serversSelection.getSelectedItems().map((server) => {
+        return forkJoin(dialogResult.map((server) => {
           let deleteDetails = new McsServerDelete();
           deleteDetails.clientReferenceObject = {
             serverId: server.id
@@ -232,6 +233,7 @@ export class ServersComponent
    */
   public suspendMultipleServers(): void {
     let dialogData = {
+      data: this.serversSelection.getSelectedItems(),
       title: this._translateService.instant('dialogSuspendServerMultiple.title'),
       message: this._translateService.instant('dialogSuspendServerMultiple.message'),
       type: 'warning'
@@ -242,7 +244,7 @@ export class ServersComponent
     dialogRef.afterClosed().pipe(
       concatMap((dialogResult) => {
         if (isNullOrEmpty(dialogResult)) { return of(null); }
-        return forkJoin(this.serversSelection.getSelectedItems().map((server) => {
+        return forkJoin(dialogResult.map((server) => {
           return this._apiService.sendServerPowerState(server.id, {
             command: VmPowerstateCommand.Suspend,
             clientReferenceObject: {
@@ -260,6 +262,7 @@ export class ServersComponent
    */
   public resumeMultipleServers(): void {
     let dialogData = {
+      data: this.serversSelection.getSelectedItems(),
       title: this._translateService.instant('dialogResumeServerMultiple.title'),
       message: this._translateService.instant('dialogResumeServerMultiple.message'),
       type: 'warning'
@@ -270,7 +273,7 @@ export class ServersComponent
     dialogRef.afterClosed().pipe(
       concatMap((dialogResult) => {
         if (isNullOrEmpty(dialogResult)) { return of(null); }
-        return forkJoin(this.serversSelection.getSelectedItems().map((server) => {
+        return forkJoin(dialogResult.map((server) => {
           return this._apiService.sendServerPowerState(server.id, {
             command: VmPowerstateCommand.Resume,
             clientReferenceObject: {
