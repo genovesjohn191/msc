@@ -11,7 +11,10 @@ import {
   of,
   Observable
 } from 'rxjs';
-import { concatMap } from 'rxjs/operators';
+import {
+  concatMap,
+  tap
+} from 'rxjs/operators';
 import {
   CoreDefinition,
   McsUniqueId,
@@ -265,7 +268,11 @@ export class ServerCommandComponent {
     dialogRef.afterClosed().pipe(
       concatMap((dialogResult) => {
         if (isNullOrEmpty(dialogResult)) { return of(null); }
-        return this._apiService.deleteServer(this.server.id, deleteDetails);
+        return this._apiService.deleteServer(this.server.id, deleteDetails).pipe(
+          tap(() => {
+            this._navigationService.navigateTo(RouteKey.Servers);
+          })
+        );
       })
     ).subscribe();
   }

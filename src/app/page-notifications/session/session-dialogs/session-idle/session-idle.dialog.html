@@ -1,13 +1,13 @@
 <mcs-dialog>
   <mcs-dialog-header [hideCloseButton]="true">
-    <h1>{{ 'pageNotifications.sessionHandler.sessionIdleDialog.title' | translate }}</h1>
+    <h1>{{ 'dialogSessionIdle.title' | translate }}</h1>
   </mcs-dialog-header>
 
   <mcs-dialog-content>
     <mcs-item>
       <mcs-icon [key]="warningIconKey"></mcs-icon>
       <mcs-item orientation="block">
-        <span>{{ 'pageNotifications.sessionHandler.sessionIdleDialog.alert' | translate }}</span>
+        <span>{{ 'dialogSessionIdle.alert' | translate }}</span>
         <span>{{ (countDown | async) | mcsPlural: 'second' }}</span>
       </mcs-item>
     </mcs-item>
@@ -20,7 +20,7 @@
       mcsEventTracker="continue-session-click"
       mcsEventCategory="session"
       mcsEventLabel="continue-session-dialog">
-      {{ 'pageNotifications.sessionHandler.sessionIdleDialog.confirm' | translate }}
+      {{ 'dialogSessionIdle.confirm' | translate }}
     </button>
   </mcs-dialog-actions>
 </mcs-dialog>
