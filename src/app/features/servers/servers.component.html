@@ -126,9 +126,9 @@
         <ng-container mcsColumnDef="select" *mcsAccessControl="['DedicatedVmPowerStateEdit','CloudVmPowerStateEdit']">
           <mcs-header-cell *mcsHeaderCellDef
             hidden-small text-center class="action-header-cell">
-            <mcs-checkbox (change)="serversSelection?.toggleAllItemsSelection()"
+            <mcs-checkbox (change)="toggleAllServersSelection()"
               color="white"
-              [checked]="serversSelection?.allItemsAreSelected()"
+              [checked]="allServersAreSelected()"
               [indeterminate]="serversSelection?.someItemsAreSelected()">
             </mcs-checkbox>
           </mcs-header-cell>
