@@ -120,7 +120,6 @@ export class ServersComponent
     private _resourcesRepository: McsResourcesRepository
   ) {
     super(_browserService, _changeDetectorRef);
-    // this.selection = new McsSelection<McsServer>(true);
   }
 
   public ngOnInit() {
@@ -142,6 +141,24 @@ export class ServersComponent
 
   public get routeKeyEnum(): any {
     return RouteKey;
+  }
+
+  /**
+   * Toggle all the servers
+   * Servers that are processing are excluded
+   */
+  public toggleAllServersSelection() {
+    if (isNullOrEmpty(this.serversSelection)) { return; }
+    this.serversSelection.toggleAllItemsSelection((server) => !server.isProcessing);
+  }
+
+  /**
+   * Returns true if all the servers are selected
+   * Servers that are processing are excluded
+   */
+  public allServersAreSelected() {
+    if (isNullOrEmpty(this.serversSelection)) { return false; }
+    return this.serversSelection.allItemsAreSelected((server) => !server.isProcessing);
   }
 
   /**

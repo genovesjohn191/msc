@@ -72,9 +72,11 @@ export class McsTableSelection<T> {
   /**
    * Returns true when all of the items are selected
    */
-  public allItemsAreSelected(): boolean {
+  public allItemsAreSelected(predicate?: (item: T) => boolean): boolean {
     if (isNullOrEmpty(this._dataSource.dataRecords)) { return false; }
-    return this._dataSource.dataRecords.length === this._selectionModel.selected.length;
+    return !isNullOrEmpty(predicate) ?
+      this._dataSource.dataRecords.filter(predicate).length === this._selectionModel.selected.length :
+      this._dataSource.dataRecords.length === this._selectionModel.selected.length;
   }
 
   /**
@@ -91,7 +93,7 @@ export class McsTableSelection<T> {
    * @param predicate Predicate that will judge if the item should be selectable
    */
   public toggleAllItemsSelection(predicate?: (item: T) => boolean): void {
-    if (this.allItemsAreSelected()) {
+    if (this.allItemsAreSelected(predicate)) {
       this._selectionModel.clear();
       return;
     }
