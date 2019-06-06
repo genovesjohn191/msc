@@ -166,7 +166,7 @@ export class ServersComponent
    * @param propName Property name to be checked
    */
   public canExecuteAction(propName: string): boolean {
-    if (isNullOrEmpty(this.serversSelection) || !this.serversSelection.someItemsAreSelected()) { return false; }
+    if (isNullOrEmpty(this.serversSelection) || !this.serversSelection.hasSelecion()) { return false; }
     let someServersCannotExecute = this.serversSelection.getSelectedItems()
       .find((selectedServer) => !selectedServer[propName]);
     return !someServersCannotExecute;
