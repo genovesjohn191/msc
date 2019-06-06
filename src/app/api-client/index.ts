@@ -16,6 +16,7 @@ export * from './interfaces/mcs-api-tickets.interface';
 export * from './interfaces/mcs-api-tools.interface';
 export * from './interfaces/mcs-api-internet.interface';
 export * from './interfaces/mcs-api-identity.interface';
+export * from './interfaces/mcs-api-system.interface';
 
 export * from './factory/mcs-api-companies.factory';
 export * from './factory/mcs-api-console.factory';
@@ -28,5 +29,6 @@ export * from './factory/mcs-api-resources.factory';
 export * from './factory/mcs-api-servers.factory';
 export * from './factory/mcs-api-tickets.factory';
 export * from './factory/mcs-api-tools.factory';
+export * from './factory/mcs-api-system.factory';
 export * from './factory/mcs-api-internet.factory';
 export * from './factory/mcs-api-identity.factory';

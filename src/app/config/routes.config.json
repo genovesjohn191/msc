@@ -186,6 +186,15 @@
     "requiredFeatureFlag": "EnableInternetPortView",
     "documentTitle": "Internet Ports - Macquarie Cloud Services"
   },
+  "systemMessages": {
+    "enumCategory": "SystemMessages",
+    "enumKey": "SystemMessages",
+    "routePath": "system/messages",
+    "navigationPath": "system/messages",
+    "requiredPermissions": ["SystemMessageView"],
+    "requiredFeatureFlag": "EnableSystemMessages",
+    "documentTitle": "System Messages - Macquarie Cloud Services"
+  },
   "internetDetails": {
     "enumCategory": "Network",
     "enumKey": "InternetDetails",

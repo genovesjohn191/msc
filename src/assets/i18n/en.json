@@ -823,6 +823,19 @@
       "errorGettingServers": "Sorry, something’s not right. We weren’t able to retrieve the list of servers to attach."
     }
   },
+  "systemMessages":{
+    "header": "System Messages",
+    "leftPanelHeader": "Message Filter",
+    "description": "Below is the list of your Macquarie Cloud Services system messages.",
+    "newMessage": "New Message",
+    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of messages.",
+    "noRecordsFoundMessage": "No messages to display.",
+    "retry": "Try again shortly",
+    "filterColumn": "Filter Column",
+    "tableSearch": "Table Search",
+    "dataSingular": "Message",
+    "dataPlural": "Messages"
+  },
   "tickets": {
     "header": "Tickets",
     "leftPanelHeader": "Ticket Filter",
@@ -1120,7 +1133,8 @@
     "tickets": "Tickets",
     "orders": "Orders",
     "manageUsers": "Manage Users",
-    "changePassword": "Change Password"
+    "changePassword": "Change Password",
+    "systemMessage": "System Messages"
   },
   "switchAccount": {
     "header": "Switch Account",

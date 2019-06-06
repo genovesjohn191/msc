@@ -1,0 +1,191 @@
+<mcs-page [header]="'systemMessages.header' | translate">
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef>
+
+    <!-- System Message Action -->
+    <!-- TODO: Temporarily commented out because new message button is not yet created -->
+    <!-- <ng-container *mcsAccessControl="['SystemMessageEdit']">
+      <mcs-top-panel-item *mcsTopPanelItemDef>
+        <ng-container *mcsExclusiveForAccount="'default'">
+          <mcs-action-item (click)="onClickNewMessage()" 
+            mcsId="create-new-message-button" mcsEventTracker="create-new-message"
+            mcsEventCategory="system-message" 
+            mcsEventLabel="system-message-listing-page">
+            <mcs-icon [key]="addIconKey" size="small"></mcs-icon>
+            <span>{{ 'systemMessages.newMessage' | translate }}</span>
+          </mcs-action-item>
+        </ng-container>
+      </mcs-top-panel-item>
+    </ng-container> -->
+
+    <mcs-top-panel-item *mcsTopPanelItemDef overflow-auto>
+      <div class="listing-action-wrapper">
+        <div class="total-record-count">
+          <span>{{ dataSource?.totalRecordsCount | mcsPlural:
+                  ('systemMessages.dataSingular' | translate) : ('systemMessages.dataPlural' | translate) }}
+          </span>
+        </div>
+      </div>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
+  <!-- Left Panel -->
+  <mcs-left-panel *mcsLeftPanelDef="'systemMessages.leftPanelHeader' | translate">
+    <!-- Search -->
+    <mcs-left-panel-item *mcsLeftPanelItemDef>
+      <mcs-search *ngIf="!isMobile" #search mcsId="system-messages-desktop-search"></mcs-search>
+    </mcs-left-panel-item>
+
+    <!-- Column Filter -->
+    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'systemMessages.filterColumn' | translate" offset="medium">
+      <mcs-filter-selector [key]="columnSettingsKey" #filterSelector (filtersChange)="updateColumnSettings($event)">
+      </mcs-filter-selector>
+    </mcs-left-panel-item>
+  </mcs-left-panel>
+
+  <!-- Content Panel -->
+  <mcs-content-panel *mcsContentPanelDef>
+
+    <div class="listing-table-wrapper">
+      <!-- Search -->
+      <mcs-search *ngIf="isMobile" #search mcsId="system-message-mobile-search"></mcs-search>
+
+      <!-- Table -->
+      <mcs-table [dataSource]="dataSource" [columnFilter]="filterSelector">
+        <!-- Start Date Column -->
+        <ng-container mcsColumnDef="start">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ columnSettings.start.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row">
+            {{ row.start | mcsStdDateFormat }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Expiry Column -->
+        <ng-container mcsColumnDef="expiry">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ columnSettings.expiry.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row">
+            {{ row.expiry | mcsStdDateFormat }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Message Column -->
+        <ng-container mcsColumnDef="message">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ columnSettings.message.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row">
+            {{ row.message }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Type Column -->
+        <ng-container mcsColumnDef="type">
+          <mcs-header-cell *mcsHeaderCellDef hidden-small>
+            {{ columnSettings.type.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+            {{ row.typeLabel }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Severity Column -->
+        <ng-container mcsColumnDef="severity">
+          <mcs-header-cell *mcsHeaderCellDef hidden-small>
+            {{ columnSettings.severity.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+            {{ row.severityLabel }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Enabled Column -->
+        <ng-container mcsColumnDef="enabled">
+          <mcs-header-cell *mcsHeaderCellDef hidden-small>
+            {{ columnSettings.enabled.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+            {{ row.enabledLabel }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Created On Column -->
+        <ng-container mcsColumnDef="createdOn">
+          <mcs-header-cell *mcsHeaderCellDef hidden-small>
+            {{ columnSettings.createdOn.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+            {{ row.createdOn | mcsStdDateFormat }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Created By Column -->
+        <ng-container mcsColumnDef="createdBy">
+          <mcs-header-cell *mcsHeaderCellDef hidden-small>
+            {{ columnSettings.createdBy.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+            {{ row.createdBy }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Updated On Column -->
+        <ng-container mcsColumnDef="updatedOn">
+          <mcs-header-cell *mcsHeaderCellDef hidden-small>
+            {{ columnSettings.updatedOn.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+            {{ row.updatedOn | mcsStdDateFormat }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Updated By Column -->
+        <ng-container mcsColumnDef="updatedBy">
+          <mcs-header-cell *mcsHeaderCellDef hidden-small>
+            {{ columnSettings.updatedBy.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+            {{ row.updatedBy }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Data Status Integration -->
+        <ng-container mcsDataStatusDef>
+          <mcs-data-empty *mcsDataEmptyDef>
+            <div class="listing-status-wrapper">
+              <span>{{ 'systemMessages.noRecordsFoundMessage' | translate }} </span>
+              <span *mcsExclusiveForAccount="'default'">
+                <!-- We need to hardcode this instead of putting in the text-config
+                      since it is using link -->
+                Click <a (click)="onClickNewMessage()" mcsId="create-new-message-link"
+                  mcsEventTracker="create-new-message" mcsEventCategory="message"
+                  mcsEventLabel="empty-message-listing-option">here</a> to create new message.
+              </span>
+            </div>
+          </mcs-data-empty>
+          <mcs-data-error *mcsDataErrorDef>
+            <div class="listing-status-wrapper">
+              <span>{{ 'systemMessages.errorMessage' | translate }}</span>
+              <a (click)="retryDatasource()" mcsId="retry-message-data-source"
+                mcsEventTracker="retry-loading-message-list" mcsEventCategory="message"
+                mcsEventLabel="message-listing-page">{{ 'systemMessages.retry' | translate }}</a>.
+            </div>
+          </mcs-data-error>
+        </ng-container>
+
+        <!-- Header and Data row -->
+        <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
+        <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;" mcsCursor="pointer"
+          (click)="navigateToMessage(row)" mcsId="system-message-row" mcsEventTracker="navigate-to-system-message"
+          mcsEventCategory="system-message" mcsEventLabel="system-message-listing-page"></mcs-data-row>
+      </mcs-table>
+
+      <!-- Paginator -->
+      <mcs-paginator #paginator [hidden]="isSearching" [totalCount]="dataSource?.totalRecordsCount">
+      </mcs-paginator>
+    </div>
+  </mcs-content-panel>
+</mcs-page>

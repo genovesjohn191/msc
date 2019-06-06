@@ -12,6 +12,7 @@ import { McsApiResourcesService } from './services/mcs-api-resources.service';
 import { McsApiServersService } from './services/mcs-api-servers.service';
 import { McsApiTicketsService } from './services/mcs-api-tickets.service';
 import { McsApiToolsService } from './services/mcs-api-tools.service';
+import { McsApiSystemService } from './services/mcs-api-system.service';
 import { McsApiInternetService } from './services/mcs-api-internet.service';
 import { McsApiIdentityService } from './services/mcs-api-identity.service';
 
@@ -34,5 +35,6 @@ export const apiClientProviders: any[] = [
   McsApiTicketsService,
   McsApiToolsService,
   McsApiInternetService,
+  McsApiSystemService,
   McsApiIdentityService
 ];
