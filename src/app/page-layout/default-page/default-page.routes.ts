@@ -27,6 +27,11 @@ export const defaultPageRoutes: Routes = [
       },
       {
         path: '',
+        data: { routeId: RouteKey.SystemMessages },
+        loadChildren: '../../features/system/system.module#SystemModule'
+      },
+      {
+        path: '',
         data: { routeId: RouteKey.Media },
         loadChildren: '../../features/media/media.module#MediaModule'
       },

@@ -2,6 +2,7 @@ export * from './services.module';
 
 /** Data context */
 export * from './data-context/mcs-tools-data.context';
+export * from './data-context/mcs-system-messages-data.context';
 
 /** Core */
 export * from './core/mcs-data-context.interface';
@@ -23,3 +24,4 @@ export * from './repositories/mcs-tools.repository';
 export * from './repositories/mcs-console.repository';
 export * from './repositories/mcs-companies.repository';
 export * from './repositories/mcs-internet.repository';
+export * from './repositories/mcs-system-messages.repository';

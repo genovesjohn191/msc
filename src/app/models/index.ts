@@ -53,6 +53,8 @@ export * from './enumerations/product-availability-state.enum';
 export * from './enumerations/inview-level.enum';
 export * from './enumerations/port-status.enum';
 export * from './enumerations/service-level.enum';
+export * from './enumerations/message-type.enum';
+export * from './enumerations/severity.enum';
 
 /** Request */
 export * from './request/mcs-server-create-addon-anti-virus';
@@ -150,6 +152,7 @@ export * from './response/mcs-server-sql-options';
 export * from './response/mcs-server-storage-device';
 export * from './response/mcs-server-thumbnail';
 export * from './response/mcs-server-vmware-tools';
+export * from './response/mcs-system-message';
 export * from './response/mcs-ticket';
 export * from './response/mcs-ticket-attachment';
 export * from './response/mcs-ticket-closure-information';

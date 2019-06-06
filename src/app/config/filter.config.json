@@ -250,5 +250,49 @@
       "text": "Created On",
       "value": true
     }
+  },
+  "systemMessageFilter": {
+    "start": {
+      "text": "Start",
+      "value": true,
+      "exclude": true
+    },
+    "expiry": {
+      "text": "Expiry",
+      "value": true
+    },
+    "message": {
+      "text": "Message",
+      "value": true,
+      "exclude": true
+    },
+    "type": {
+      "text": "Type",
+      "value": true
+    },
+    "severity": {
+      "text": "Severity",
+      "value": true
+    },
+    "enabled": {
+      "text": "Enabled",
+      "value": true
+    },
+    "createdOn": {
+      "text": "Created On",
+      "value": true
+    },
+    "createdBy": {
+      "text": "Created By",
+      "value": true
+    },
+    "updatedOn": {
+      "text": "Updated On",
+      "value": true
+    },
+    "updatedBy": {
+      "text": "Updated By",
+      "value": true
+    }
   }
 }

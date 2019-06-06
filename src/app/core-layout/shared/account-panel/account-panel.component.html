@@ -3,7 +3,7 @@
     <mcs-list-item *mcsAccessControl="['TicketView']">
       <a mcsCursor="pointer" [mcsRouterLink]="routeKeyEnum.Tickets"
         (click)="notifySelectionChange('tickets')"
-        mcsId
+        mcsId="tickets-link"
         mcsEventTracker="navigate-to-tickets"
         mcsEventCategory="navigation"
         mcsEventLabel="user-panel">
@@ -14,7 +14,7 @@
       <ng-container *mcsAccessControl="[]; feature: 'EnableOrdering'; else: macviewOrdersTemplate">
         <a mcsCursor="pointer" [mcsRouterLink]="routeKeyEnum.Orders"
           (click)="notifySelectionChange('orders')"
-          mcsId
+          mcsId="orders-link"
           mcsEventTracker="navigate-to-orders"
           mcsEventCategory="navigation"
           mcsEventLabel="user-panel">
@@ -25,7 +25,7 @@
       <ng-template #macviewOrdersTemplate>
         <a mcsCursor="pointer" [href]="macviewOrdersUrl" target="_blank"
           (click)="notifySelectionChange('orders')"
-          mcsId
+          mcsId="mac-orders-link"
           mcsEventTracker="navigate-to-orders"
           mcsEventCategory="navigation"
           mcsEventLabel="user-panel">
@@ -36,11 +36,21 @@
     <mcs-list-item>
       <a mcsCursor="pointer" [href]="macviewChangePasswordUrl" target="_blank"
         (click)="notifySelectionChange('change-password')"
-        mcsId
+        mcsId="change-password-link"
         mcsEventTracker="navigate-to-change-password"
         mcsEventCategory="navigation"
         mcsEventLabel="user-panel">
         {{ 'accountPanel.changePassword' | translate }}
+      </a>
+    </mcs-list-item>
+    <mcs-list-item *mcsAccessControl="['SystemMessageView']; feature: 'EnableSystemMessages'">
+      <a mcsCursor="pointer" [mcsRouterLink]="routeKeyEnum.SystemMessages"
+        (click)="notifySelectionChange('messages')"
+        mcsId="system-message-link"
+        mcsEventTracker="navigate-to-system-messages"
+        mcsEventCategory="navigation"
+        mcsEventLabel="user-panel">
+        {{ 'accountPanel.systemMessage' | translate }}
       </a>
     </mcs-list-item>
   </mcs-list>

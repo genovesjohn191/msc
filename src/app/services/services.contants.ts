@@ -15,6 +15,7 @@ import { McsToolsRepository } from './repositories/mcs-tools.repository';
 import { McsConsoleRepository } from './repositories/mcs-console.repository';
 import { McsCompaniesRepository } from './repositories/mcs-companies.repository';
 import { McsInternetRepository } from './repositories/mcs-internet.repository';
+import { McsSystemMessagesRepository } from './repositories/mcs-system-messages.repository';
 
 export const apiProviders: any[] = [
 
@@ -35,6 +36,7 @@ export const repositoryProviders: any[] = [
   McsConsoleRepository,
   McsCompaniesRepository,
   McsInternetRepository,
+  McsSystemMessagesRepository,
 
   McsApiService
 ];
