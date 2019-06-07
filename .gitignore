@@ -57,6 +57,9 @@ npm-debug.log
 /compiled/
 dll/
 
+# Test Result #
+/test-result
+
 # Doc #
 /doc/
 /documentation/
