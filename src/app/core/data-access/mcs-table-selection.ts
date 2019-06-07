@@ -89,6 +89,14 @@ export class McsTableSelection<T> {
   }
 
   /**
+   * Returns true when atleast 1 item is selected
+   */
+  public hasSelecion(): boolean {
+    if (isNullOrEmpty(this._dataSource.dataRecords)) { return false; }
+    return this._selectionModel.hasValue();
+  }
+
+  /**
    * Toggle all items selection
    * @param predicate Predicate that will judge if the item should be selectable
    */
