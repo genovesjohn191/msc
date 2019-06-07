@@ -13,8 +13,6 @@ export enum RouteKey {
   ServerCreate,
 
   SystemMessages,
-  SystemMessageDetails,
-  SystemMessageCreate,
 
   VdcDetails,
   VdcDetailsOverview,
