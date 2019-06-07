@@ -5,15 +5,12 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy
 } from '@angular/core';
-import { Router } from '@angular/router';
 import {
   CoreDefinition,
   McsBrowserService,
   McsTableListingBase,
-  CoreRoutes,
   McsTableDataSource
 } from '@app/core';
-import { isNullOrEmpty } from '@app/utilities';
 import {
   RouteKey,
   McsSystemMessage
@@ -40,8 +37,7 @@ export class SystemMessagesComponent
   constructor(
     _browserService: McsBrowserService,
     _changeDetectorRef: ChangeDetectorRef,
-    private _systemMessagesRepository: McsSystemMessagesRepository,
-    private _router: Router
+    private _systemMessagesRepository: McsSystemMessagesRepository
   ) {
     super(_browserService, _changeDetectorRef);
   }
@@ -58,22 +54,6 @@ export class SystemMessagesComponent
 
   public get routeKeyEnum(): any {
     return RouteKey;
-  }
-
-  /**
-   * Navigate to system message details page
-   * @param message System Message to view the details
-   */
-  public navigateToMessage(message: McsSystemMessage): void {
-    if (isNullOrEmpty(message)) { return; }
-    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.SystemMessageDetails), message.id]);
-  }
-
-  /**
-   * This will navigate to system message creation page
-   */
-  public onClickNewMessage(): void {
-    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.SystemMessageCreate)]);
   }
 
   /**

@@ -158,11 +158,11 @@
             <div class="listing-status-wrapper">
               <span>{{ 'systemMessages.noRecordsFoundMessage' | translate }} </span>
               <span *mcsExclusiveForAccount="'default'">
-                <!-- We need to hardcode this instead of putting in the text-config
+                <!--TODO: We need to hardcode this instead of putting in the text-config
                       since it is using link -->
-                Click <a (click)="onClickNewMessage()" mcsId="create-new-message-link"
+                <!-- Click <a (click)="onClickNewMessage()" mcsId="create-new-message-link"
                   mcsEventTracker="create-new-message" mcsEventCategory="message"
-                  mcsEventLabel="empty-message-listing-option">here</a> to create new message.
+                  mcsEventLabel="empty-message-listing-option">here</a> to create new message. -->
               </span>
             </div>
           </mcs-data-empty>
@@ -178,7 +178,7 @@
 
         <!-- Header and Data row -->
         <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
-        <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;" mcsCursor="pointer"
+        <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"
           (click)="navigateToMessage(row)" mcsId="system-message-row" mcsEventTracker="navigate-to-system-message"
           mcsEventCategory="system-message" mcsEventLabel="system-message-listing-page"></mcs-data-row>
       </mcs-table>
