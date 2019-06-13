@@ -32,6 +32,7 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
   // Other variables
   private _allRecordsCount: number = 0;
   private _previouslySearched: string = '';
+  private _detailedItems: Set<string> = new Set();
 
   // Events notifier for live data refresh on the view per subscription
   private _dataClear = new Subject<void>();
@@ -373,9 +374,11 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
    * @param id Id of the record to obtain
    */
   private _getRecordByIdFromContext(id: string): Observable<T> {
+    this._detailedItems.delete(id);
     return this._context.getRecordById(id).pipe(
       tap((item) => {
         this._cacheRecords(item);
+        this._detailedItems.add(item.id);
         this._notifyDataChange();
       })
     );
@@ -393,8 +396,9 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
    * is already exist, the instance will be remained
    */
   private _cacheRecords(...newItems: T[]): void {
+    let updatedItems = newItems && newItems.filter((item) => !this._detailedItems.has(item.id));
     this.dataRecords = mergeArrays(
-      this.dataRecords, newItems,
+      this.dataRecords, updatedItems,
       (firstRecord: T, secondRecord: T) => firstRecord.id === secondRecord.id
     );
   }
