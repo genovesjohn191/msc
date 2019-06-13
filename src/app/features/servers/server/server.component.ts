@@ -23,8 +23,8 @@ import {
   catchError,
   tap,
   shareReplay,
-  concatMap,
-  switchMap
+  switchMap,
+  concatMap
 } from 'rxjs/operators';
 import {
   CoreDefinition,
@@ -35,7 +35,8 @@ import {
 } from '@app/core';
 import {
   isNullOrEmpty,
-  unsubscribeSafely
+  unsubscribeSafely,
+  getSafeProperty
 } from '@app/utilities';
 import {
   Search,
@@ -207,13 +208,14 @@ export class ServerComponent
    */
   private _subscribeToServerDetails(serverId: string): void {
     this.serverDetails$ = this._serversRepository.getByIdAsync(serverId).pipe(
-      concatMap((selectedServer) =>
-        this._getServerResourceByPlatform(selectedServer.platform).pipe(
+      concatMap((selectedServer) => {
+        let resourceId = getSafeProperty(selectedServer, (obj) => obj.platform.resourceId);
+        return this._getServerResourceByPlatform(resourceId).pipe(
           switchMap((selectedResource) =>
             of({ server: selectedServer, resource: selectedResource } as ServerDetails)
           )
-        )
-      ),
+        );
+      }),
       tap((details) => {
         if (isNullOrEmpty(details)) { return; }
         this._serverService.setServerDetails(details);
@@ -227,11 +229,12 @@ export class ServerComponent
    * Gets the server resource based on the server platform data
    * @param platform Platform on what resourceId to be obtained
    */
-  private _getServerResourceByPlatform(platform: McsServerPlatform): Observable<McsResource> {
-    let platformIsEmpty = isNullOrEmpty(platform) || isNullOrEmpty(platform.resourceName);
-    if (platformIsEmpty) { return of(null); }
+  private _getServerResourceByPlatform(resourceId: string): Observable<McsResource> {
+    if (isNullOrEmpty(resourceId)) {
+      throw new Error('Server platform resource id is undefined.');
+    }
 
-    return this._resourcesRespository.getByIdAsync(platform.resourceId).pipe(
+    return this._resourcesRespository.getByIdAsync(resourceId).pipe(
       catchError(() => of(null))
     );
   }
