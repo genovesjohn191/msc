@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-/** Modules */
 import { SharedModule } from '@app/shared';
-/** Components */
+
 import { PageNotificationsComponent } from './page-notifications.component';
 import { WebStompComponent } from './web-stomp/web-stomp.component';
+import { ErrorNotificationComponent } from './error-notification/error-notification.component';
 import {
   SessionComponent,
   SessionIdleDialogComponent
@@ -14,6 +14,7 @@ import {
   declarations: [
     PageNotificationsComponent,
     WebStompComponent,
+    ErrorNotificationComponent,
     SessionComponent,
     SessionIdleDialogComponent
   ],

@@ -21,7 +21,8 @@ import {
   shareReplay,
   concatMap,
   tap,
-  take
+  take,
+  catchError
 } from 'rxjs/operators';
 import {
   CoreDefinition,
@@ -38,7 +39,8 @@ import {
   McsOrderItem,
   OrderWorkflowAction,
   McsOrderApprover,
-  RouteKey
+  RouteKey,
+  McsApiErrorContext
 } from '@app/models';
 import { McsOrdersRepository } from '@app/services';
 import {
@@ -273,7 +275,6 @@ export class OrderComponent implements OnInit, OnDestroy {
     ).subscribe((params: ParamMap) => {
       let orderId = params.get('id');
       this._subscribeToOrderById(orderId);
-
     });
 
     this._activatedRoute.queryParams.pipe(
@@ -291,6 +292,7 @@ export class OrderComponent implements OnInit, OnDestroy {
    */
   private _subscribeToOrderById(orderId: string): void {
     this.order$ = this._ordersRepository.getByIdAsync(orderId).pipe(
+      catchError((error) => McsApiErrorContext.throwPrimaryError(error)),
       shareReplay(1)
     );
   }

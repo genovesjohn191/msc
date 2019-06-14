@@ -16,11 +16,13 @@ import { EventBusDispatcherService } from '@app/event-bus';
 import {
   McsIdentity,
   McsApiErrorResponse,
-  HttpStatusCode
+  HttpStatusCode,
+  McsApiErrorContext,
+  ApiErrorRequester
 } from '@app/models';
 import { McsEvent } from '@app/event-manager';
-import { McsErrorHandlerService } from '../services/mcs-error-handler.service';
 import { McsAuthenticationService } from '../authentication/mcs-authentication.service';
+import { McsErrorHandlerService } from '../services/mcs-error-handler.service';
 
 const RAVEN = require('raven-js');
 
@@ -29,8 +31,8 @@ export class McsErrorHandlerInterceptor implements ErrorHandler {
   private _httpErrorHandlerMap = new Map<HttpStatusCode, () => void>();
 
   constructor(
-    private _eventDispatcher: EventBusDispatcherService,
-    private _injector: Injector
+    private _injector: Injector,
+    private _eventDispatcher: EventBusDispatcherService
   ) {
     this._registerEvents();
     this._createHttpHandlerTable();
@@ -40,10 +42,11 @@ export class McsErrorHandlerInterceptor implements ErrorHandler {
    * Handles the error for HTTP calls and exceptions
    * @param error Error to be handled
    */
-  public handleError(error: HttpErrorResponse | McsApiErrorResponse | any): void {
+  public handleError(error: HttpErrorResponse | McsApiErrorResponse | McsApiErrorContext | any): void {
     let isHttpResponse = (error instanceof HttpResponse) ||
       (error instanceof HttpErrorResponse) ||
-      (error instanceof McsApiErrorResponse);
+      (error instanceof McsApiErrorResponse) ||
+      (error instanceof McsApiErrorContext);
 
     isHttpResponse ?
       this._handlerHttpError(error) :
@@ -54,13 +57,47 @@ export class McsErrorHandlerInterceptor implements ErrorHandler {
    * Handles the http response error
    * @param error Error to be handled
    */
-  private _handlerHttpError(error: McsApiErrorResponse | HttpErrorResponse): void {
-    let errorHandlerFuncPointer = this._httpErrorHandlerMap.get(error.status);
-    if (isNullOrEmpty(errorHandlerFuncPointer)) {
-      this._injector.get(McsErrorHandlerService).redirectToErrorPage(error.status);
+  private _handlerHttpError(error: McsApiErrorContext | McsApiErrorResponse | HttpErrorResponse): void {
+    let isAuthorized = (error instanceof McsApiErrorContext) ?
+      this._isAuthorized(error.details.status) :
+      this._isAuthorized(error.status);
+    if (!isAuthorized) { return; }
+
+    (error instanceof McsApiErrorContext) ?
+      this._handleApiErrorContext(error) :
+      this._handleApiErrorResponse(error);
+  }
+
+  /**
+   * Handles the common api error response
+   * @param error Error to be handled
+   */
+  private _handleApiErrorResponse(error: McsApiErrorResponse | HttpErrorResponse): void {
+    this._eventDispatcher.dispatch(McsEvent.errorShow, error.message);
+  }
+
+  /**
+   * Handles the api error context response
+   * @param error Error to be handled
+   */
+  private _handleApiErrorContext(error: McsApiErrorContext): void {
+    if (error.requester === ApiErrorRequester.Primary) {
+      let errorHandlerService = this._injector.get(McsErrorHandlerService);
+      errorHandlerService.redirectToErrorPage(error.details.status);
       return;
     }
-    errorHandlerFuncPointer();
+    this._eventDispatcher.dispatch(McsEvent.errorShow, error.message);
+  }
+
+  /**
+   * Returns true when the status code is unauthorized
+   * @param status Status to be checked
+   */
+  private _isAuthorized(status: number): boolean {
+    if (status !== HttpStatusCode.Unauthorized) { return true; }
+    let errorHandlerService = this._injector.get(McsErrorHandlerService);
+    errorHandlerService.redirectToErrorPage(status);
+    return false;
   }
 
   /**

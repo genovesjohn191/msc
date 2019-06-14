@@ -4,26 +4,23 @@ import {
   OnDestroy,
   ChangeDetectorRef,
   ChangeDetectionStrategy,
-  ViewChild
+  ViewChild,
+  Injector
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import {
-  throwError,
   Observable,
   Subscription,
   of
 } from 'rxjs';
 import {
-  catchError,
   shareReplay,
   map,
   tap
 } from 'rxjs/operators';
 import {
   CoreDefinition,
-  McsErrorHandlerService,
   McsTableDataSource,
-  McsAccessControlService,
   McsGuid
 } from '@app/core';
 import {
@@ -46,16 +43,9 @@ import {
   McsServer,
   McsResource
 } from '@app/models';
-import {
-  McsServersRepository,
-  McsResourcesRepository
-} from '@app/services';
 import { ServerManageStorage } from '@app/features-shared';
-import { EventBusDispatcherService } from '@app/event-bus';
-import { ServerService } from '../server.service';
-import { ServerDetailsBase } from '../server-details.base';
-import { ServersService } from '../../servers.service';
 import { McsEvent } from '@app/event-manager';
+import { ServerDetailsBase } from '../server-details.base';
 
 // Enumeration
 export enum ServerDiskMethodType {
@@ -125,25 +115,12 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   }
 
   constructor(
-    _resourcesRepository: McsResourcesRepository,
-    _serversRepository: McsServersRepository,
-    _serverService: ServerService,
+    _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
-    _errorHandlerService: McsErrorHandlerService,
-    _accessControl: McsAccessControlService,
-    private _eventDispatcher: EventBusDispatcherService,
     private _translateService: TranslateService,
-    private _serversService: ServersService,
-    private _dialogService: DialogService,
+    private _dialogService: DialogService
   ) {
-    super(
-      _resourcesRepository,
-      _serversRepository,
-      _serverService,
-      _changeDetectorRef,
-      _errorHandlerService,
-      _accessControl
-    );
+    super(_injector, _changeDetectorRef);
     this.disksColumns = [];
     this.disksDataSource = new McsTableDataSource();
     this.manageStorage = new ServerManageStorage();
@@ -244,14 +221,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
       sizeMB: this.manageStorage.sizeMB
     };
 
-    this._serversService.setServerSpinner(server);
-    this._serversRepository.createServerStorage(server.id, diskValues)
-      .pipe(
-        catchError((error) => {
-          this._serversService.clearServerSpinner(server);
-          return throwError(error);
-        })
-      ).subscribe();
+    this.apiService.createServerStorage(server.id, diskValues).subscribe();
   }
 
   /**
@@ -279,14 +249,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
         storageProfile: this.selectedDisk.storageProfile,
         sizeMB: this.selectedDisk.sizeMB
       };
-      this._serversService.setServerSpinner(server);
-      this._serversRepository.deleteServerStorage(server.id, this.selectedDisk.id, diskValues)
-        .pipe(
-          catchError((error) => {
-            this._serversService.clearServerSpinner(server);
-            return throwError(error);
-          })
-        ).subscribe();
+      this.apiService.deleteServerStorage(server.id, this.selectedDisk.id, diskValues).subscribe();
     });
   }
 
@@ -304,14 +267,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     };
 
     this.closeExpandDiskWindow();
-    this._serversService.setServerSpinner(server);
-    this._serversRepository.updateServerStorage(server.id, this.selectedDisk.id, diskValues)
-      .pipe(
-        catchError((error) => {
-          this._serversService.clearServerSpinner(server);
-          return throwError(error);
-        })
-      ).subscribe();
+    this.apiService.updateServerStorage(server.id, this.selectedDisk.id, diskValues).subscribe();
   }
 
   /**
@@ -341,7 +297,8 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   private _updateTableDataSource(server?: McsServer): void {
     let serverDiskDataSource: Observable<McsServerStorageDevice[]>;
     if (!isNullOrEmpty(server)) {
-      serverDiskDataSource = this._serversRepository.getServerDisks(server).pipe(
+      serverDiskDataSource = this.apiService.getServerStorage(server.id).pipe(
+        map((response) => getSafeProperty(response, (obj) => obj.collection)),
         tap((records) => this._serverDisksCache = of(records)));
     }
     let tableDataSource = isNullOrEmpty(this._serverDisksCache) ?
@@ -376,22 +333,22 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
    * Register disk jobs events
    */
   private _registerEvents(): void {
-    this._createDiskHandler = this._eventDispatcher.addEventListener(
+    this._createDiskHandler = this.eventDispatcher.addEventListener(
       McsEvent.jobServerDiskCreate, this._onCreateServerDisk.bind(this)
     );
 
-    this._updateDiskHandler = this._eventDispatcher.addEventListener(
+    this._updateDiskHandler = this.eventDispatcher.addEventListener(
       McsEvent.jobServerDiskUpdate, this._onUpdateServerDisk.bind(this)
     );
 
-    this._deleteDiskHandler = this._eventDispatcher.addEventListener(
+    this._deleteDiskHandler = this.eventDispatcher.addEventListener(
       McsEvent.jobServerDiskDelete, this._onUpdateServerDisk.bind(this)
     );
 
     // Invoke the event initially
-    this._eventDispatcher.dispatch(McsEvent.jobServerDiskCreate);
-    this._eventDispatcher.dispatch(McsEvent.jobServerDiskUpdate);
-    this._eventDispatcher.dispatch(McsEvent.jobServerDiskDelete);
+    this.eventDispatcher.dispatch(McsEvent.jobServerDiskCreate);
+    this.eventDispatcher.dispatch(McsEvent.jobServerDiskUpdate);
+    this.eventDispatcher.dispatch(McsEvent.jobServerDiskDelete);
   }
 
   /**
@@ -454,7 +411,8 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
    */
   private _getResourceStorages(resource: McsResource): void {
     if (isNullOrEmpty(resource)) { return; }
-    this.resourceStorages$ = this._resourcesRespository.getResourceStorage(resource).pipe(
+    this.resourceStorages$ = this.apiService.getResourceStorages(resource.id).pipe(
+      map((response) => getSafeProperty(response, (obj) => obj.collection)),
       shareReplay(1)
     );
   }

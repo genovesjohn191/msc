@@ -1,11 +1,14 @@
 import { Observable } from 'rxjs';
-import { McsQueryParam } from '@app/models';
+import {
+  McsQueryParam,
+  ObtainmentMethod
+} from '@app/models';
 
 export interface McsRepository<T> {
   getAll(): Observable<T[]>;
   filterBy(query: McsQueryParam): Observable<T[]>;
   getBy(predicate: (entity: T) => boolean): Observable<T>;
-  getById(id: string): Observable<T>;
+  getById(id: string, method?: ObtainmentMethod): Observable<T>;
   getByIdAsync(id: string): Observable<T>;
   getByIdAsync(id: string, completedCallback?: () => void): Observable<T>;
   getTotalRecordsCount(): number;

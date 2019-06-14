@@ -38,9 +38,10 @@ import {
   McsServer,
   McsServerClone,
   Os,
-  RouteKey
+  RouteKey,
+  ObtainmentMethod
 } from '@app/models';
-import { McsServersRepository } from '@app/services';
+import { McsApiService } from '@app/services';
 import { McsFormGroupDirective } from '@app/shared';
 import { ServerCreateDetailsBase } from '../server-create-details.base';
 
@@ -92,7 +93,7 @@ export class ServerCloneComponent
 
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
-    private _serversRepository: McsServersRepository
+    private _apiService: McsApiService
   ) {
     super();
     this.dataStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
@@ -148,7 +149,7 @@ export class ServerCloneComponent
   private _getAllServers(): void {
     unsubscribeSafely(this.serversSubscription);
     this.dataStatusFactory.setInProgress();
-    this.serversSubscription = this._serversRepository.getAll().pipe(
+    this.serversSubscription = this._apiService.getServers().pipe(
       catchError((error) => {
         // Handle common error status code
         this.dataStatusFactory.setError();
@@ -156,10 +157,10 @@ export class ServerCloneComponent
       })
     ).subscribe((response) => {
       if (isNullOrEmpty(response)) { return; }
-      this.servers = (response as McsServer[]).filter((server) => {
+      this.servers = response && response.collection.filter((server) => {
         return server.cloneable && server.serviceType === this.serviceType;
       });
-      this.dataStatusFactory.setSuccessful(response);
+      this.dataStatusFactory.setSuccessful(this.servers);
     });
     this.serversSubscription.add(() => {
       this._setTargetServerById();
@@ -176,7 +177,7 @@ export class ServerCloneComponent
 
     this.serverIsManuallyAssignedIp = false;
     this.ipAddressStatusFactory.setInProgress();
-    this._serversRepository.getByIdAsync(serverId).pipe(
+    this._apiService.getServer(serverId, ObtainmentMethod.Async).pipe(
       catchError((error) => {
         this.ipAddressStatusFactory.setSuccessful();
         return throwError(error);

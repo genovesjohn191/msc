@@ -15,7 +15,8 @@ import {
 } from 'rxjs';
 import {
   finalize,
-  takeUntil
+  takeUntil,
+  catchError
 } from 'rxjs/operators';
 import { saveAs } from 'file-saver';
 import { CoreDefinition } from '@app/core';
@@ -33,7 +34,8 @@ import {
   ticketSubTypeText,
   McsTicketAttachment,
   McsTicketCreateComment,
-  McsTicketCreateAttachment
+  McsTicketCreateAttachment,
+  McsApiErrorContext
 } from '@app/models';
 import { McsTicketsRepository } from '@app/services';
 
@@ -198,7 +200,9 @@ export class TicketComponent implements OnInit, OnDestroy {
    * Subscribe to ticket based on the parameter ID
    */
   private _subscribeToTicketById(ticketId: string): void {
-    this.selectedTicket$ = this._ticketsRepository.getByIdAsync(ticketId);
+    this.selectedTicket$ = this._ticketsRepository.getByIdAsync(ticketId).pipe(
+      catchError((error) => McsApiErrorContext.throwPrimaryError(error))
+    );
   }
 
   /**

@@ -36,7 +36,8 @@ import {
 } from '@app/utilities';
 import {
   RouteKey,
-  McsResourceMedia
+  McsResourceMedia,
+  McsApiErrorContext
 } from '@app/models';
 import {
   Search,
@@ -154,6 +155,7 @@ export class MediumComponent
   private _subscribeToMediaById(mediumId: string): void {
     this.media$ = this._mediaRepository.getByIdAsync(mediumId).pipe(
       tap((media) => this._mediumService.setSelectedMedium(media)),
+      catchError((error) => McsApiErrorContext.throwPrimaryError(error)),
       shareReplay(1)
     );
   }

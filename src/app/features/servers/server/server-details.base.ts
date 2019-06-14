@@ -1,12 +1,13 @@
-import { ChangeDetectorRef } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Injector
+} from '@angular/core';
 import {
   Subject,
-  Observable
+  Observable,
+  Subscription
 } from 'rxjs';
-import {
-  takeUntil,
-  tap
-} from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import {
   McsErrorHandlerService,
   McsAccessControlService,
@@ -23,29 +24,37 @@ import {
   McsServer,
   HttpStatusCode
 } from '@app/models';
-import {
-  McsServersRepository,
-  McsResourcesRepository
-} from '@app/services';
-import { ServerService } from '../server/server.service';
+import { McsApiService } from '@app/services';
+import { McsEvent } from '@app/event-manager';
+import { EventBusDispatcherService } from '@app/event-bus';
 import { ServerDetails } from './server-details';
+import { ServerService } from './server.service';
 
 export abstract class ServerDetailsBase {
   public serverDetails$: Observable<ServerDetails>;
   public serverPermision: McsServerPermission;
 
-  private _baseJobSubject = new Subject<void>();
+  protected readonly apiService: McsApiService;
+  protected readonly errorHandler: McsErrorHandlerService;
+  protected readonly accessControl: McsAccessControlService;
+  protected readonly eventDispatcher: EventBusDispatcherService;
+  protected readonly serverService: ServerService;
+
   private _server: McsServer;
+  private _serversDataChangeHandler: Subscription;
+  private _baseJobSubject = new Subject<void>();
 
   constructor(
-    protected _resourcesRespository: McsResourcesRepository,
-    protected _serversRepository: McsServersRepository,
-    protected _serverService: ServerService,
-    protected _changeDetectorRef: ChangeDetectorRef,
-    protected _errorHandlerService: McsErrorHandlerService,
-    protected _accessControlService: McsAccessControlService
+    protected injector: Injector,
+    protected _changeDetectorRef: ChangeDetectorRef
   ) {
-    this._subscribeToServersDataChange();
+    this.apiService = injector.get(McsApiService);
+    this.errorHandler = injector.get(McsErrorHandlerService);
+    this.accessControl = injector.get(McsAccessControlService);
+    this.eventDispatcher = injector.get(EventBusDispatcherService);
+    this.serverService = injector.get(ServerService);
+
+    this._registerDataEvents();
     this._subscribeToServerDetails();
   }
 
@@ -58,25 +67,25 @@ export abstract class ServerDetailsBase {
    */
   protected validateDedicatedFeatureFlag(server: McsServer, featureFlag: string): void {
     if (!server.isDedicated) { return; }
-    let hasAccess = this._accessControlService.hasAccessToFeature(featureFlag);
+    let hasAccess = this.accessControl.hasAccessToFeature(featureFlag);
     if (!hasAccess) {
-      this._errorHandlerService.redirectToErrorPage(HttpStatusCode.Forbidden);
+      this.errorHandler.redirectToErrorPage(HttpStatusCode.Forbidden);
     }
   }
 
   /**
-   * Contains all the methods you need to execute
-   * when the selected server changes
+   * Event that emits when the selection has been changed
+   * @param server Server selected
+   * @param resource Resource of the server selected
    */
   protected abstract selectionChange(server: McsServer, resource: McsResource): void;
 
   /**
-   * Dispose all of the resource from the datasource including all the subscription
-   *
-   * `@Note`: This should be call inside the destroy of the component
+   * Disposes the server details based instance
    */
   protected dispose(): void {
     unsubscribeSafely(this._baseJobSubject);
+    unsubscribeSafely(this._serversDataChangeHandler);
   }
 
   /**
@@ -84,8 +93,8 @@ export abstract class ServerDetailsBase {
    * @param job Emitted job to be checked
    */
   protected serverIsActiveByJob(job: McsJob): boolean {
-    if (isNullOrEmpty(job) || isNullOrEmpty(this._serverService.getServerId())) { return false; }
-    return getSafeProperty(job, (obj) => obj.clientReferenceObject.serverId) === this._serverService.getServerId();
+    if (isNullOrEmpty(job) || isNullOrEmpty(this.serverService.getServerId())) { return false; }
+    return getSafeProperty(job, (obj) => obj.clientReferenceObject.serverId) === this.serverService.getServerId();
   }
 
   /**
@@ -99,7 +108,7 @@ export abstract class ServerDetailsBase {
    * Subscribe to Server Details
    */
   private _subscribeToServerDetails(): void {
-    this.serverDetails$ = this._serverService.getServerDetails().pipe(
+    this.serverDetails$ = this.serverService.getServerDetails().pipe(
       tap((serverDetails) => {
         this._server = serverDetails.server;
         this.serverPermision = new McsServerPermission(this._server);
@@ -109,12 +118,17 @@ export abstract class ServerDetailsBase {
   }
 
   /**
-   * Listen to each servers data update
-   * so that we could refresh the view of the corresponding component
+   * Registers the data events
    */
-  private _subscribeToServersDataChange(): void {
-    this._serversRepository.dataChange()
-      .pipe(takeUntil(this._baseJobSubject))
-      .subscribe(() => this._changeDetectorRef.markForCheck());
+  private _registerDataEvents(): void {
+    this._serversDataChangeHandler = this.eventDispatcher.addEventListener(
+      McsEvent.dataChangeServers, this._onServersDataChanged.bind(this));
+  }
+
+  /**
+   * Event that emits when the server data has been changed
+   */
+  private _onServersDataChanged(): void {
+    this._changeDetectorRef.markForCheck();
   }
 }

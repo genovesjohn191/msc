@@ -3,17 +3,19 @@ import {
   OnInit,
   OnDestroy,
   ChangeDetectorRef,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  Injector
 } from '@angular/core';
+import { map } from 'rxjs/operators';
 import {
   CoreDefinition,
   McsTableDataSource
 } from '@app/core';
-import { TranslateService } from '@ngx-translate/core';
-import { isNullOrEmpty } from '@app/utilities';
+import {
+  isNullOrEmpty,
+  getSafeProperty
+} from '@app/utilities';
 import { McsResourceStorage } from '@app/models';
-import { McsResourcesRepository } from '@app/services';
-import { VdcService } from '../vdc.service';
 import { VdcDetailsBase } from '../vdc-details.base';
 
 @Component({
@@ -42,17 +44,10 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnInit, OnDes
   }
 
   constructor(
-    _resourcesRespository: McsResourcesRepository,
-    _vdcService: VdcService,
+    _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
-    _translateService: TranslateService
   ) {
-    super(
-      _resourcesRespository,
-      _vdcService,
-      _changeDetectorRef,
-      _translateService
-    );
+    super(_injector, _changeDetectorRef);
     this.storageColumns = new Array();
   }
 
@@ -77,7 +72,7 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnInit, OnDes
    */
   private _setDataColumns(): void {
     this.storageColumns = Object.keys(
-      this._translateService.instant('serversVdcStorage.columnHeaders')
+      this.translateService.instant('serversVdcStorage.columnHeaders')
     );
     if (isNullOrEmpty(this.storageColumns)) {
       throw new Error('column definition for storage was not defined');
@@ -89,7 +84,9 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnInit, OnDes
    */
   private _initializeDataSource(): void {
     this.storageDatasource = new McsTableDataSource(
-      this._resourcesRespository.getResourceStorage(this.selectedVdc)
+      this.apiService.getResourceStorages(this.selectedVdc.id).pipe(
+        map((response) => getSafeProperty(response, (obj) => obj.collection))
+      )
     );
   }
 }

@@ -35,13 +35,14 @@ import {
   McsResource,
   McsOrderWorkflow,
   OrderWorkflowAction,
-  Os
+  Os,
+  ObtainmentMethod
 } from '@app/models';
 import {
   isNullOrEmpty,
   getSafeProperty
 } from '@app/utilities';
-import { McsResourcesRepository } from '@app/services';
+import { McsApiService } from '@app/services';
 import { OrderDetails } from '@app/features-shared';
 import { ServerCreateDetailsComponent } from './details/server-create-details.component';
 import { ServerCreateService } from './server-create.service';
@@ -91,7 +92,7 @@ export class ServerCreateComponent extends McsOrderWizardBase
     private _activatedRoute: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef,
     private _translate: TranslateService,
-    private _resourcesRepository: McsResourcesRepository,
+    private _apiService: McsApiService,
     private _serversService: ServersService
   ) {
     super(_injector, _serverCreateService);
@@ -237,7 +238,7 @@ export class ServerCreateComponent extends McsOrderWizardBase
    * @param resourceId Resource Id of the resource to get
    */
   private _subscribeResourceById(resourceId: any): void {
-    this.resource$ = this._resourcesRepository.getByIdAsync(resourceId).pipe(
+    this.resource$ = this._apiService.getResource(resourceId, ObtainmentMethod.Async).pipe(
       tap((resource) => this._serverCreateBuilder.setResource(resource)),
       shareReplay(1)
     );
@@ -258,13 +259,11 @@ export class ServerCreateComponent extends McsOrderWizardBase
         let resourceId = params['resource'];
         let resourceIdIsValid = !isNullOrEmpty(resourceId);
         if (resourceIdIsValid) {
-          this._resourcesRepository.getByIdAsync(resourceId)
-            .pipe(
-              tap((resource) => {
-                this._changeDetectorRef.markForCheck();
-                this.fcResource.setValue(resource);
-              }))
-            .subscribe();
+          this._apiService.getResource(resourceId, ObtainmentMethod.Async).pipe(
+            tap((resource) => {
+              this._changeDetectorRef.markForCheck();
+              this.fcResource.setValue(resource);
+            })).subscribe();
         }
       });
   }

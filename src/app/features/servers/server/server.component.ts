@@ -46,16 +46,15 @@ import {
   RouteKey,
   McsServer,
   McsServerPlatform,
-  McsResource
+  McsResource,
+  McsApiErrorContext,
+  ObtainmentMethod
 } from '@app/models';
-import {
-  McsServersRepository,
-  McsResourcesRepository
-} from '@app/services';
+import { McsApiService } from '@app/services';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { ServerService } from './server.service';
-import { ServersListSource } from '../servers.listsource';
 import { ServerDetails } from './server-details';
+import { ServersListSource } from '../servers.listsource';
 
 // Add another group type in here if you have addition tab
 type tabGroupType = 'management' | 'storage';
@@ -91,8 +90,7 @@ export class ServerComponent
     _eventDispatcher: EventBusDispatcherService,
     _activatedRoute: ActivatedRoute,
     private _router: Router,
-    private _resourcesRespository: McsResourcesRepository,
-    private _serversRepository: McsServersRepository,
+    private _apiService: McsApiService,
     private _serverService: ServerService,
     private _changeDetectorRef: ChangeDetectorRef
   ) {
@@ -171,10 +169,7 @@ export class ServerComponent
    * Initialize list source
    */
   private _initializeListsource(): void {
-    this.serverListSource = new ServersListSource(
-      this._serversRepository,
-      this.search
-    );
+    this.serverListSource = new ServersListSource(this._apiService, this.search);
 
     // Key function pointer for mapping objects
     let keyFn = (item: McsServer) => {
@@ -207,7 +202,8 @@ export class ServerComponent
    * @param serverId Server ID to be the basis of the server
    */
   private _subscribeToServerDetails(serverId: string): void {
-    this.serverDetails$ = this._serversRepository.getByIdAsync(serverId).pipe(
+    this.serverDetails$ = this._apiService.getServer(serverId, ObtainmentMethod.Async).pipe(
+      catchError((error) => McsApiErrorContext.throwPrimaryError(error)),
       concatMap((selectedServer) => {
         let resourceId = getSafeProperty(selectedServer, (obj) => obj.platform.resourceId);
         return this._getServerResourceByPlatform(resourceId).pipe(
@@ -233,8 +229,7 @@ export class ServerComponent
     if (isNullOrEmpty(resourceId)) {
       throw new Error('Server platform resource id is undefined.');
     }
-
-    return this._resourcesRespository.getByIdAsync(resourceId).pipe(
+    return this._apiService.getResource(resourceId, ObtainmentMethod.Async).pipe(
       catchError(() => of(null))
     );
   }

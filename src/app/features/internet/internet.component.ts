@@ -104,8 +104,6 @@ export class InternetComponent
 
   /**
    * Gets the internet port listing based on the pagination and search
-   * @param page Current page of the table
-   * @param search Search keyword of the table
    */
   private _getInternetPorts(): Observable<McsInternetPort[]> {
     return this._apiService.getInternetPorts({

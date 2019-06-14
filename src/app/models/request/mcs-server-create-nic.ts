@@ -10,6 +10,7 @@ export interface IMcsServerCreateNicRefObj {
   nicName?: string;
   nicIpAllocationMode?: IpAllocationMode;
   nicIpAddress?: string;
+  nicId?: string;
 }
 
 export class McsServerCreateNic extends McsApiJobRequestBase<IMcsServerCreateNicRefObj> {

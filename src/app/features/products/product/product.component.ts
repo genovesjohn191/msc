@@ -14,7 +14,8 @@ import {
 } from 'rxjs';
 import {
   tap,
-  switchMap
+  switchMap,
+  catchError
 } from 'rxjs/operators';
 import {
   CoreRoutes,
@@ -33,7 +34,8 @@ import {
   McsProductDownload,
   McsProductDependency,
   McsProductOptionProperty,
-  McsProductOption
+  McsProductOption,
+  McsApiErrorContext
 } from '@app/models';
 import { ProductService } from './product.service';
 
@@ -172,7 +174,9 @@ export class ProductComponent implements OnInit, OnDestroy {
    * Listens to every product selection and refresh the dom
    */
   private _subscribeToSelectedProduct(): void {
-    this.selectedProduct$ = this._productService.selectedProduct();
+    this.selectedProduct$ = this._productService.selectedProduct().pipe(
+      catchError((error) => McsApiErrorContext.throwPrimaryError(error))
+    );
   }
 
   /**

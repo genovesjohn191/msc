@@ -17,7 +17,8 @@ import {
   CoreModule,
   CoreConfig,
   CoreDefinition,
-  McsCookieService
+  McsCookieService,
+  McsGuid
 } from './core';
 import { EventBusModule } from './event-bus';
 import { ServicesModule } from './services';
@@ -38,7 +39,7 @@ import { McsApiClientModule } from './api-client/mcs-api-client.module';
 import '../styles/base.scss';
 
 export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+  return new TranslateHttpLoader(http, './assets/i18n/', `.json?id=${McsGuid.newGuid().toString()}`);
 }
 
 export function coreConfig(): CoreConfig {

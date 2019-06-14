@@ -4,10 +4,9 @@ import {
   OnDestroy,
   ChangeDetectorRef,
   ChangeDetectionStrategy,
+  Injector,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
-import { VdcService } from '../vdc.service';
 import { VdcDetailsBase } from '../vdc-details.base';
 import {
   CoreRoutes,
@@ -22,7 +21,6 @@ import {
   McsResource,
   McsResourceStorage
 } from '@app/models';
-import { McsResourcesRepository } from '@app/services';
 
 const VDC_LOW_STORAGE_PERCENTAGE = 85;
 
@@ -55,7 +53,7 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
   public get storageSummary(): string {
     if (!this.hasLowStorage) { return ''; }
 
-    let status = this._translateService.instant(
+    let status = this.translateService.instant(
       'serversVdcOverview.storageProfiles.lowStorageSummary'
     );
 
@@ -69,18 +67,11 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
   }
 
   constructor(
-    _resourcesRespository: McsResourcesRepository,
-    _vdcService: VdcService,
+    _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
-    _translateService: TranslateService,
     private _router: Router
   ) {
-    super(
-      _resourcesRespository,
-      _vdcService,
-      _changeDetectorRef,
-      _translateService
-    );
+    super(_injector, _changeDetectorRef);
     this.selectedVdc = new McsResource();
   }
 

@@ -14,7 +14,8 @@ import {
 import {
   Subject,
   throwError,
-  Observable
+  Observable,
+  Subscription
 } from 'rxjs';
 import {
   startWith,
@@ -39,10 +40,8 @@ import {
   McsServer,
   McsServerPlatform
 } from '@app/models';
-import {
-  McsResourcesRepository,
-  McsServersRepository
-} from '@app/services';
+import { McsApiService } from '@app/services';
+import { McsEvent } from '@app/event-manager';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { ServersListSource } from '../servers.listsource';
 import { VdcService } from './vdc.service';
@@ -76,6 +75,7 @@ export class VdcComponent
     return RouteKey;
   }
 
+  private _serversDataChangeHandler: Subscription;
   private _destroySubject = new Subject<void>();
   private _resourcesKeyMap: Map<string, McsServerPlatform>;
 
@@ -84,13 +84,13 @@ export class VdcComponent
     _activatedRoute: ActivatedRoute,
     private _router: Router,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _serversRepository: McsServersRepository,
-    private _resourcesRepository: McsResourcesRepository,
+    private _apiService: McsApiService,
     private _vdcService: VdcService
   ) {
     super(_eventDispatcher, _activatedRoute);
     this.listStatusFactory = new McsDataStatusFactory();
     this._resourcesKeyMap = new Map();
+    this._registerEvents();
   }
 
   public ngOnInit() {
@@ -101,14 +101,13 @@ export class VdcComponent
     Promise.resolve().then(() => {
       this.search.searchChangedStream.pipe(startWith(null), takeUntil(this._destroySubject))
         .subscribe(() => this.listStatusFactory.setInProgress());
-      this._serversRepository.dataChange().pipe(takeUntil(this._destroySubject))
-        .subscribe(() => this._changeDetectorRef.markForCheck());
       this._initializeListsource();
     });
   }
 
   public ngOnDestroy() {
     super.onDestroy();
+    unsubscribeSafely(this._serversDataChangeHandler);
     unsubscribeSafely(this._destroySubject);
   }
 
@@ -152,7 +151,7 @@ export class VdcComponent
    */
   private _initializeListsource(): void {
     this.serverListSource = new ServersListSource(
-      this._serversRepository,
+      this._apiService,
       this.search
     );
 
@@ -187,9 +186,24 @@ export class VdcComponent
    * @param vdcId VDC identification
    */
   private _subscribesToResourceById(vdcId: string): void {
-    this.selectedResource$ = this._resourcesRepository.getByIdAsync(vdcId).pipe(
+    this.selectedResource$ = this._apiService.getResource(vdcId).pipe(
       tap((response) => { this._vdcService.setSelectedVdc(response); }),
       shareReplay(1)
     );
+  }
+
+  /**
+   * Registers the data events
+   */
+  private _registerEvents(): void {
+    this._serversDataChangeHandler = this.eventDispatcher.addEventListener(
+      McsEvent.dataChangeServers, this._onServersDataChanged.bind(this));
+  }
+
+  /**
+   * Event that emits when the server data has been changed
+   */
+  private _onServersDataChanged(): void {
+    this._changeDetectorRef.markForCheck();
   }
 }

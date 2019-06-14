@@ -1,6 +1,6 @@
 <mcs-page [header]="'servers.header' | translate">
   <!-- Top Panel -->
-  <mcs-top-panel *mcsTopPanelDef [active]="serversSelection?.someItemsAreSelected()">
+  <mcs-top-panel *mcsTopPanelDef [active]="selection?.someItemsAreSelected()">
 
     <!-- Server Creation -->
     <ng-container *mcsAccessControl="['DedicatedVmEdit', 'CloudVmEdit']">
@@ -91,7 +91,7 @@
         </mcs-responsive-panel>
 
         <div class="total-record-count">
-          <span>{{ dataSource?.totalRecordsCount | mcsPlural:
+          <span>{{ totalRecordsCount | mcsPlural:
                 ('servers.dataSingular' | translate) : ('servers.dataPlural' | translate) }}
           </span>
         </div>
@@ -129,7 +129,7 @@
             <mcs-checkbox (change)="toggleAllServersSelection()"
               color="white"
               [checked]="allServersAreSelected()"
-              [indeterminate]="serversSelection?.someItemsAreSelected()">
+              [indeterminate]="selection?.someItemsAreSelected()">
             </mcs-checkbox>
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row"
@@ -137,8 +137,8 @@
             [disabled]="row.isProcessing"
             mcsCursor="default"
             mcsStopPropagation>
-            <mcs-checkbox [checked]="serversSelection?.isItemSelected(row)"
-              (change)="serversSelection?.toggleItemSelection(row)">
+            <mcs-checkbox [checked]="selection?.isItemSelected(row)"
+              (change)="selection?.toggleItemSelection(row)">
             </mcs-checkbox>
           </mcs-data-cell>
         </ng-container>
@@ -305,7 +305,7 @@
         <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"
           mcsCursor="pointer"
           [disabled]="row.isDisabled"
-          [ngClass]="{'active-data-row': serversSelection?.isItemSelected(row)}"
+          [ngClass]="{'active-data-row': selection?.isItemSelected(row)}"
           (click)="navigateToServer(row)"
           mcsId="server-row"
           mcsEventTracker="navigate-to-server"
@@ -316,7 +316,7 @@
       <!-- Paginator -->
       <mcs-paginator #paginator
         [hidden]="isSearching"
-        [totalCount]="dataSource?.totalRecordsCount">
+        [totalCount]="totalRecordsCount">
       </mcs-paginator>
     </div>
   </mcs-content-panel>
