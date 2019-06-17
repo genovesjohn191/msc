@@ -35,8 +35,7 @@ import {
   McsResource,
   McsOrderWorkflow,
   OrderWorkflowAction,
-  Os,
-  ObtainmentMethod
+  Os
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -238,7 +237,7 @@ export class ServerCreateComponent extends McsOrderWizardBase
    * @param resourceId Resource Id of the resource to get
    */
   private _subscribeResourceById(resourceId: any): void {
-    this.resource$ = this._apiService.getResource(resourceId, ObtainmentMethod.Async).pipe(
+    this.resource$ = this._apiService.getResource(resourceId).pipe(
       tap((resource) => this._serverCreateBuilder.setResource(resource)),
       shareReplay(1)
     );
@@ -259,7 +258,7 @@ export class ServerCreateComponent extends McsOrderWizardBase
         let resourceId = params['resource'];
         let resourceIdIsValid = !isNullOrEmpty(resourceId);
         if (resourceIdIsValid) {
-          this._apiService.getResource(resourceId, ObtainmentMethod.Async).pipe(
+          this._apiService.getResource(resourceId).pipe(
             tap((resource) => {
               this._changeDetectorRef.markForCheck();
               this.fcResource.setValue(resource);

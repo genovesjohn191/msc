@@ -245,12 +245,20 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
   }
 
   /**
-   * Event that emits when the server selection was changed
-   * `@Note:` Base implementation
+   * Event that emits when the selected server has been changed
+   * @param server Server details of the selected record
    */
-  protected selectionChange(_server: McsServer, _resource: McsResource): void {
+  protected serverChange(server: McsServer): void {
     this.serverServicesView = ServerServicesView.Default;
-    this._getServerUpdateDetails(_server.id);
+    this._getServerUpdateDetails(server.id);
+  }
+
+  /**
+   * Event that emtis when the resource has been changed
+   * @param resource Resource details of the selected server
+   */
+  protected resourceChange(_resource: McsResource): void {
+    this._changeDetectorRef.markForCheck();
   }
 
   /**

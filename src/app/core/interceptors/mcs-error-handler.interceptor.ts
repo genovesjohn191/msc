@@ -29,6 +29,7 @@ const RAVEN = require('raven-js');
 @Injectable()
 export class McsErrorHandlerInterceptor implements ErrorHandler {
   private _httpErrorHandlerMap = new Map<HttpStatusCode, () => void>();
+  private _previouslyHandledError: any;
 
   constructor(
     private _injector: Injector,
@@ -58,6 +59,13 @@ export class McsErrorHandlerInterceptor implements ErrorHandler {
    * @param error Error to be handled
    */
   private _handlerHttpError(error: McsApiErrorContext | McsApiErrorResponse | HttpErrorResponse): void {
+    // We need to check the previously handled error because there
+    // are some circumstances where the shareReplay() subscribes
+    // twice and throws an error twice or more.
+    if (this._previouslyHandledError === error) {
+      return;
+    }
+
     let isAuthorized = (error instanceof McsApiErrorContext) ?
       this._isAuthorized(error.details.status) :
       this._isAuthorized(error.status);
@@ -66,6 +74,7 @@ export class McsErrorHandlerInterceptor implements ErrorHandler {
     (error instanceof McsApiErrorContext) ?
       this._handleApiErrorContext(error) :
       this._handleApiErrorResponse(error);
+    this._previouslyHandledError = error;
   }
 
   /**

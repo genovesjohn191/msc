@@ -10,6 +10,7 @@ import {
   map,
   catchError
 } from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
 import {
   JobStatus,
   McsInternetPort,
@@ -58,7 +59,6 @@ import {
   McsResourceVApp,
   McsResourceCatalogItemCreate,
   McsValidation,
-  ObtainmentMethod,
   McsServerOperatingSystem
 } from '@app/models';
 import {
@@ -93,6 +93,7 @@ interface DataChangeEmitter<T> {
 
 @Injectable()
 export class McsApiService {
+  private readonly _translate: TranslateService;
   private readonly _jobsRepository: McsJobsRepository;
   private readonly _internetRepository: McsInternetRepository;
   private readonly _serversRepository: McsServersRepository;
@@ -107,6 +108,7 @@ export class McsApiService {
   private readonly _entitiesDataChangeMap: Array<DataChangeEmitter<any>>;
 
   constructor(_injector: Injector) {
+    this._translate = _injector.get(TranslateService);
     // Register api repositories
     this._jobsRepository = _injector.get(McsJobsRepository);
     this._internetRepository = _injector.get(McsInternetRepository);
@@ -151,8 +153,8 @@ export class McsApiService {
     );
   }
 
-  public getJob(id: string, obtainment?: ObtainmentMethod): Observable<McsJob> {
-    return this._jobsRepository.getById(id, obtainment).pipe(
+  public getJob(id: string): Observable<McsJob> {
+    return this._jobsRepository.getById(id).pipe(
       catchError(this._handleApiClientError.bind(this))
     );
   }
@@ -175,8 +177,8 @@ export class McsApiService {
     );
   }
 
-  public getInternetPort(id: string, obtainment?: ObtainmentMethod): Observable<McsInternetPort> {
-    return this._internetRepository.getById(id, obtainment).pipe(
+  public getInternetPort(id: string): Observable<McsInternetPort> {
+    return this._internetRepository.getById(id).pipe(
       catchError(this._handleApiClientError.bind(this))
     );
   }
@@ -192,9 +194,11 @@ export class McsApiService {
     );
   }
 
-  public getResource(id: string, obtainment?: ObtainmentMethod): Observable<McsResource> {
-    return this._resourcesRepository.getById(id, obtainment).pipe(
-      catchError(this._handleApiClientError.bind(this))
+  public getResource(id: string): Observable<McsResource> {
+    return this._resourcesRepository.getById(id).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getResource'))
+      )
     );
   }
 
@@ -292,8 +296,8 @@ export class McsApiService {
     );
   }
 
-  public getServer(id: string, obtainment?: ObtainmentMethod): Observable<McsServer> {
-    return this._serversRepository.getById(id, obtainment).pipe(
+  public getServer(id: string): Observable<McsServer> {
+    return this._serversRepository.getById(id).pipe(
       catchError(this._handleApiClientError.bind(this))
     );
   }
@@ -548,13 +552,50 @@ export class McsApiService {
   /**
    * Handles the API Client error and rethrow it as an error context
    * @param errorDetails Error details to be rethrow
+   * @param defaultMessage Default message to be displayed
    */
-  private _handleApiClientError(errorDetails: McsApiErrorResponse): Observable<never> {
-    let errorContext = new McsApiErrorContext();
-    errorContext.requester = ApiErrorRequester.None;
-    errorContext.message = getSafeProperty(errorDetails, (obj) => obj.message, '');
-    errorContext.details = errorDetails;
-    return throwError(errorContext);
+  private _handleApiClientError(errorDetails: McsApiErrorContext): Observable<never>;
+  private _handleApiClientError(errorDetails: McsApiErrorResponse, defaultMessage?: string): Observable<never>;
+  private _handleApiClientError(
+    errorDetails: McsApiErrorContext | McsApiErrorResponse,
+    defaultMessage?: string
+  ): Observable<never> {
+    if (errorDetails instanceof McsApiErrorContext) {
+      errorDetails.message = errorDetails.message || defaultMessage;
+      return throwError(errorDetails);
+    } else {
+      let errorContext = new McsApiErrorContext();
+      errorContext.requester = ApiErrorRequester.None;
+      errorContext.message = defaultMessage || getSafeProperty(errorDetails, (obj) => obj.message, '');
+      errorContext.details = errorDetails;
+      return throwError(errorContext);
+    }
+  }
+
+  /**
+   * Map records to the collection list of the api
+   * @param records Records to be converted into collection
+   * @param totalRecordsCount Total records count of the collection
+   */
+  private _mapToCollection<T>(records: McsApiSuccessResponse<any>): McsApiCollection<T>;
+  private _mapToCollection<T>(records: T[], totalRecordsCount?: number): McsApiCollection<T>;
+  private _mapToCollection<T>(
+    records: McsApiSuccessResponse<any> | T[],
+    totalRecordsCount?: number
+  ): McsApiCollection<T> {
+
+    let apiCollection = new McsApiCollection<T>();
+    if (records instanceof McsApiSuccessResponse) {
+      apiCollection.collection = records && records.content;
+      apiCollection.totalCollectionCount = records && records.totalCount;
+    } else {
+      apiCollection.collection = records && records;
+      apiCollection.totalCollectionCount = totalRecordsCount;
+    }
+
+    apiCollection.collection = apiCollection.collection || [];
+    apiCollection.totalCollectionCount = apiCollection.totalCollectionCount || 0;
+    return apiCollection;
   }
 
   /**
@@ -577,36 +618,5 @@ export class McsApiService {
         this._eventDispatcher.dispatch(dataChange.event, entities)
       );
     });
-  }
-
-  /**
-   * Map records to the collection list of the api
-   * @param records Records to be converted into collection
-   */
-  private _mapToCollection<T>(records: McsApiSuccessResponse<any>): McsApiCollection<T>;
-
-  /**
-   * Map records to the collection list of the api
-   * @param records Records to be converted into collection
-   * @param totalRecordsCount Total records count of the collection
-   */
-  private _mapToCollection<T>(records: T[], totalRecordsCount?: number): McsApiCollection<T>;
-  private _mapToCollection<T>(
-    records: McsApiSuccessResponse<any> | T[],
-    totalRecordsCount?: number
-  ): McsApiCollection<T> {
-
-    let apiCollection = new McsApiCollection<T>();
-    if (records instanceof McsApiSuccessResponse) {
-      apiCollection.collection = records && records.content;
-      apiCollection.totalCollectionCount = records && records.totalCount;
-    } else {
-      apiCollection.collection = records && records;
-      apiCollection.totalCollectionCount = totalRecordsCount;
-    }
-
-    apiCollection.collection = apiCollection.collection || [];
-    apiCollection.totalCollectionCount = apiCollection.totalCollectionCount || 0;
-    return apiCollection;
   }
 }

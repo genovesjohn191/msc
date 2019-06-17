@@ -1,4 +1,4 @@
-<ng-container *ngIf="serverDetails$ | async as serverDetails">
+<ng-container *ngIf="server$ | async as server">
   <ng-container [ngSwitch]="serverServicesView">
 
     <!-- Default View -->
@@ -8,7 +8,7 @@
       </ng-container>
       <p>{{ 'serverServices.description' | translate }}</p>
 
-      <mcs-section *ngIf="serverDetails.server.osAutomationAvailable; else osAutomationNotAvailable">
+      <mcs-section *ngIf="server.osAutomationAvailable; else osAutomationNotAvailable">
         <mcs-form-message #formMessage></mcs-form-message>
 
         <mcs-grid>
@@ -41,9 +41,9 @@
                                 mcsEventTracker="os-updates-inspect-server-click"
                                 mcsEventCategory="server"
                                 mcsEventLabel="os-updates-inspect-server"
-                                (click)="inspectForAvailableOsUpdates(serverDetails.server)"
+                                (click)="inspectForAvailableOsUpdates(server)"
                                 *mcsAccessControl="serverPermision.vmPatchManagement"
-                                [disabled]="inspectNowButtonDisabled(serverDetails.server)">
+                                [disabled]="inspectNowButtonDisabled(server)">
                                 {{ 'serverServices.updatesAnalysisLabel' | translate }}
                               </a>
                             </ng-container>
@@ -63,7 +63,7 @@
                       mcsEventCategory="server"
                       mcsEventLabel="os-updates-update-now"
                       (click)="setViewMode(serverServicesViewOption.Unscheduled)"
-                      [disabled]="serverDetails.server.isProcessing">
+                      [disabled]="server.isProcessing">
                       {{ 'serverServices.updatesScheduleRunNowLink' | translate }}
                     </button>
                   </ng-container>
@@ -95,7 +95,7 @@
                                   mcsEventLabel="os-updates-configure-schedule"
                                   *mcsAccessControl="serverPermision.vmPatchManagement"
                                   (click)="setViewMode(serverServicesViewOption.Scheduled)"
-                                  [disabled]="configureButtonDisabled(serverDetails.server)">
+                                  [disabled]="configureButtonDisabled(server)">
                                   {{ 'serverServices.updatesScheduleConfigureLink' | translate }}
                                 </a>
                               </ng-container>
@@ -139,14 +139,14 @@
     <ng-container *ngIf="updatesDetails$ | async as updatesDetails">
       <!-- Unscheduled / Run Now / Update Now -->
       <ng-container [@fadeIn] *ngSwitchCase="serverServicesViewOption.Unscheduled">
-        <mcs-server-os-updates-apply-now [selectedServer]="serverDetails.server" (applyUpdates)="onApplyUpdates($event)">
+        <mcs-server-os-updates-apply-now [selectedServer]="server" (applyUpdates)="onApplyUpdates($event)">
           <ng-container mcsViewServicesTab *ngTemplateOutlet="servicesTabView"></ng-container>
         </mcs-server-os-updates-apply-now>
       </ng-container>
 
       <!-- Scheduled Type Later/RunOnce or Recurring -->
       <ng-container [@fadeIn] *ngSwitchCase="serverServicesViewOption.Scheduled">
-        <mcs-server-os-updates-schedule [selectedServer]="serverDetails.server" (saveSchedule)="onSaveSchedule($event)"
+        <mcs-server-os-updates-schedule [selectedServer]="server" (saveSchedule)="onSaveSchedule($event)"
           (deleteSchedule)="onDeleteSchedule($event)">
           <ng-container mcsViewServicesTab *ngTemplateOutlet="servicesTabView"></ng-container>
         </mcs-server-os-updates-schedule>
@@ -163,7 +163,7 @@
       mcsEventCategory="server"
       mcsEventLabel="os-updates-back-to-services"
       (click)="setViewMode(serverServicesViewOption.Default)"
-      [disabled]="serverDetails.server.isProcessing">
+      [disabled]="server.isProcessing">
       <mcs-item>
         <mcs-icon [key]="chevronLeftKey" size="xsmall"></mcs-icon>
         <span>{{ 'serverServices.label' | translate }}</span>

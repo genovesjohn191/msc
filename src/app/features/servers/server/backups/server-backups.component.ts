@@ -155,13 +155,20 @@ export class ServerBackupsComponent extends ServerDetailsBase
   }
 
   /**
-   * Event that triggers when selection of server was changed
-   *
-   * `@Note:` This is a base class implemenatation
+   * Event that emits when the selected server has been changed
+   * @param server Server details of the selected record
    */
-  protected selectionChange(server: McsServer, _resource: McsResource): void {
+  protected serverChange(server: McsServer): void {
     this.validateDedicatedFeatureFlag(server, 'EnableDedicatedVmSnapshotView');
     this._getServerSnapshots(server);
+  }
+
+  /**
+   * Event that emtis when the resource has been changed
+   * @param resource Resource details of the selected server
+   */
+  protected resourceChange(_resource: McsResource): void {
+    this._changeDetectorRef.markForCheck();
   }
 
   /**

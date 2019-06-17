@@ -56,7 +56,6 @@ export * from './enumerations/service-level.enum';
 export * from './enumerations/message-type.enum';
 export * from './enumerations/severity.enum';
 export * from './enumerations/api-error-requester.enum';
-export * from './enumerations/obtainment-method.enum';
 
 /** Request */
 export * from './request/mcs-server-create-addon-anti-virus';

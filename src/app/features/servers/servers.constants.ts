@@ -16,7 +16,8 @@ import {
   ServerServicesComponent,
   ServerServicesGuard,
   ServerStorageComponent,
-  ServerNicsComponent
+  ServerNicsComponent,
+  ServerResolver
 } from './server';
 import { ServerCreateComponent } from './server-create';
 import {
@@ -33,6 +34,7 @@ export const serversProviders: any[] = [
   ServersService,
   ServerService,
   ServerServicesGuard,
+  ServerResolver,
   VdcService
 ];
 
@@ -55,6 +57,9 @@ export const serversRoutes: Routes = [
     path: '',
     component: ServerComponent,
     data: { routeId: RouteKey.ServerDetails },
+    resolve: {
+      server: ServerResolver
+    },
     children: [
       {
         path: '',

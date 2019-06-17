@@ -2,7 +2,7 @@
 <ng-template let-errorDetails #errorTemplate>
   <div class="error-template-wrapper">
     <mcs-alert type="error" header="Error" full-width>
-      <span>{{ errorDetails?.errorMessage }}</span>
+      <span text-wrap>{{ errorDetails?.errorMessage }}</span>
     </mcs-alert>
 
     <div class="error-template-close">
