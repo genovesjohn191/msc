@@ -450,6 +450,7 @@
     "expandStorageLink": "Expand",
     "deleteStorageLink": "Delete",
     "reachedStorageLimit": "You've reached the maximum number of disks for this server.",
+    "expandStorageLimit": "This disk cannot be expanded due to insufficient storage space (0 GB remaining).",
     "columnHeaders": {
       "storageDevice": "Storage Device",
       "storageProfile": "Storage Profile",
