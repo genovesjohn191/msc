@@ -20,7 +20,8 @@ import {
 import {
   shareReplay,
   tap,
-  takeUntil
+  takeUntil,
+  map
 } from 'rxjs/operators';
 import {
   CoreDefinition,
@@ -228,7 +229,9 @@ export class ServerCreateComponent extends McsOrderWizardBase
    * Gets the list of resources from repository
    */
   private _subscribeToAllResources(): void {
-    this.resources$ = this._serversService.getResourcesByAccess();
+    this.resources$ = this._serversService.getResourcesByAccess().pipe(
+      map((resources) => resources.filter((resource) => !resource.isDedicated))
+    );
     this._changeDetectorRef.markForCheck();
   }
 
