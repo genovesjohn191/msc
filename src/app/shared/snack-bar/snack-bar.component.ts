@@ -21,9 +21,7 @@ import {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    'class': 'snack-bar-wrapper',
-    '[class.snack-bar-dark]': 'theme === "dark"',
-    '[class.snack-light-dark]': 'theme === "light"'
+    'class': 'snack-bar-wrapper'
   }
 })
 

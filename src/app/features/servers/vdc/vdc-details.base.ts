@@ -1,4 +1,7 @@
-import { ChangeDetectorRef } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Injector
+} from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import {
   Subscription,
@@ -11,12 +14,20 @@ import {
   isNullOrEmpty
 } from '@app/utilities';
 import { McsResource } from '@app/models';
-import { McsResourcesRepository } from '@app/services';
+import { McsApiService } from '@app/services';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/event-manager';
 import { VdcService } from '../vdc/vdc.service';
 
 export abstract class VdcDetailsBase {
+
+  protected readonly apiService: McsApiService;
+  protected readonly vdcService: VdcService;
+  protected readonly translateService: TranslateService;
+  protected readonly eventDispatcher: EventBusDispatcherService;
+
   private _vdcSubscription: Subscription;
-  private _resourcesUpdateSubscription: Subscription;
+  private _resourcesDataChangeHandler: Subscription;
   private _destroySubject = new Subject<void>();
 
   /**
@@ -26,28 +37,26 @@ export abstract class VdcDetailsBase {
   public get selectedVdc(): McsResource { return this._selectedVdc; }
   public set selectedVdc(value: McsResource) {
     this._selectedVdc = value;
-    this._changeDetectorRef.markForCheck();
+    this.changeDetectorRef.markForCheck();
   }
 
   /**
    * Returns iops label placeholder
    */
   public get iopsLabelPlaceholder(): string {
-    return this._translateService.instant('serversVdc.iopsLabel');
+    return this.translateService.instant('serversVdc.iopsLabel');
   }
 
   constructor(
-    protected _resourcesRespository: McsResourcesRepository,
-    protected _vdcService: VdcService,
-    protected _changeDetectorRef: ChangeDetectorRef,
-    protected _translateService: TranslateService
+    protected injector: Injector,
+    protected changeDetectorRef: ChangeDetectorRef
   ) {
     this._selectedVdc = new McsResource();
+    this._registerDataEvents();
   }
 
   protected initialize(): void {
     this._listenToSelectedVdcStream();
-    this._listenToResourcesUpdate();
   }
 
   /**
@@ -57,7 +66,7 @@ export abstract class VdcDetailsBase {
    */
   protected dispose(): void {
     unsubscribeSafely(this._vdcSubscription);
-    unsubscribeSafely(this._resourcesUpdateSubscription);
+    unsubscribeSafely(this._resourcesDataChangeHandler);
     unsubscribeSubject(this._destroySubject);
   }
 
@@ -72,24 +81,28 @@ export abstract class VdcDetailsBase {
    * and get its value to vdc variable
    */
   private _listenToSelectedVdcStream(): void {
-    this._vdcSubscription = this._vdcService.selectedVdcStream
+    this._vdcSubscription = this.vdcService.selectedVdcStream
       .pipe(takeUntil(this._destroySubject))
       .subscribe((response) => {
         if (isNullOrEmpty(response)) { return; }
         this._selectedVdc = response;
         this.vdcSelectionChange();
-        this._changeDetectorRef.markForCheck();
+        this.changeDetectorRef.markForCheck();
       });
   }
 
   /**
-   * Listen to each resources data update
-   * so that we could refresh the view of the corresponding component
+   * Registers the data events
    */
-  private _listenToResourcesUpdate(): void {
-    this._resourcesUpdateSubscription = this._resourcesRespository
-      .dataChange()
-      .pipe(takeUntil(this._destroySubject))
-      .subscribe(() => this._changeDetectorRef.markForCheck());
+  private _registerDataEvents(): void {
+    this._resourcesDataChangeHandler = this.eventDispatcher.addEventListener(
+      McsEvent.dataChangeResources, this._onResourcesDataChanged.bind(this));
+  }
+
+  /**
+   * Event that emits when the resources data has been changed
+   */
+  private _onResourcesDataChanged(): void {
+    this.changeDetectorRef.markForCheck();
   }
 }

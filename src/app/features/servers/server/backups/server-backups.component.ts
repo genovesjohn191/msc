@@ -4,7 +4,8 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   ViewChild,
-  OnInit
+  OnInit,
+  Injector
 } from '@angular/core';
 import {
   throwError,
@@ -19,13 +20,10 @@ import {
   concatMap
 } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
-import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/event-manager';
 import {
   McsDataStatusFactory,
-  CoreDefinition,
-  McsErrorHandlerService,
-  McsAccessControlService
+  CoreDefinition
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -51,11 +49,6 @@ import {
   McsServerSnapshotCreate,
   McsServerSnapshotDelete
 } from '@app/models';
-import {
-  McsServersRepository,
-  McsResourcesRepository
-} from '@app/services';
-import { ServerService } from '../server.service';
 import { ServerDetailsBase } from '../server-details.base';
 import { ServersService } from '../../servers.service';
 
@@ -93,26 +86,14 @@ export class ServerBackupsComponent extends ServerDetailsBase
   }
 
   constructor(
-    _resourcesRepository: McsResourcesRepository,
-    _serversRepository: McsServersRepository,
-    _serverService: ServerService,
+    _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
-    _errorHandlerService: McsErrorHandlerService,
-    _accessControl: McsAccessControlService,
     private _translateService: TranslateService,
-    private _eventDispatcher: EventBusDispatcherService,
     private _serversService: ServersService,
     private _standardDateFormatPipe: StdDateFormatPipe,
     private _dialogService: DialogService
   ) {
-    super(
-      _resourcesRepository,
-      _serversRepository,
-      _serverService,
-      _changeDetectorRef,
-      _errorHandlerService,
-      _accessControl
-    );
+    super(_injector, _changeDetectorRef);
     this.dataStatusFactory = new McsDataStatusFactory();
   }
 
@@ -224,7 +205,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
         };
 
         this._serversService.setServerSpinner(server);
-        return this._serversRepository.createServerSnapshot(server.id, snapshotDetails).pipe(
+        return this.apiService.createServerSnapshot(server.id, snapshotDetails).pipe(
           catchError((httpError) => {
             this._serversService.clearServerSpinner(server);
             this._showErrorMessageByResponse(httpError);
@@ -269,7 +250,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
         };
 
         this._serversService.setServerSpinner(server);
-        return this._serversRepository.deleteServerSnapshot(server.id, snapshotDetails).pipe(
+        return this.apiService.deleteServerSnapshot(server.id, snapshotDetails).pipe(
           catchError((httpError) => {
             this._serversService.clearServerSpinner(server);
             this._showErrorMessageByResponse(httpError);
@@ -308,7 +289,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
         };
 
         this._serversService.setServerSpinner(server);
-        return this._serversRepository.restoreServerSnapshot(server.id, snapshotDetails).pipe(
+        return this.apiService.restoreServerSnapshot(server.id, snapshotDetails).pipe(
           catchError((httpError) => {
             this._serversService.clearServerSpinner(server);
             this._showErrorMessageByResponse(httpError);
@@ -323,23 +304,22 @@ export class ServerBackupsComponent extends ServerDetailsBase
    * Register jobs events
    */
   private _registerEvents(): void {
-    this._createSnapshotHandler = this._eventDispatcher.addEventListener(
+    this._createSnapshotHandler = this.eventDispatcher.addEventListener(
       McsEvent.jobServerSnapshotCreate, this._onCreateServerSnapshot.bind(this)
     );
 
-    this._applySnapshotHandler = this._eventDispatcher.addEventListener(
+    this._applySnapshotHandler = this.eventDispatcher.addEventListener(
       McsEvent.jobServerSnapshotApply, this._onUpdateServerSnapshot.bind(this)
     );
 
-    this._deleteSnapshotHandler = this._eventDispatcher.addEventListener(
+    this._deleteSnapshotHandler = this.eventDispatcher.addEventListener(
       McsEvent.jobServerSnapshotDelete, this._onUpdateServerSnapshot.bind(this)
     );
 
     // Invoke the event initially
-    this._eventDispatcher.dispatch(McsEvent.jobServerSnapshotCreate);
-    this._eventDispatcher.dispatch(McsEvent.jobServerSnapshotApply);
-    this._eventDispatcher.dispatch(McsEvent.jobServerSnapshotDelete);
-
+    this.eventDispatcher.dispatch(McsEvent.jobServerSnapshotCreate);
+    this.eventDispatcher.dispatch(McsEvent.jobServerSnapshotApply);
+    this.eventDispatcher.dispatch(McsEvent.jobServerSnapshotDelete);
   }
 
   /**
@@ -375,7 +355,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
    */
   private _getServerSnapshots(server: McsServer): void {
     this.dataStatusFactory.setInProgress();
-    this.snapshot$ = this._serversRepository.getSnapshots(server).pipe(
+    this.snapshot$ = this.apiService.getServerSnapshots(server.id).pipe(
       catchError((error) => {
         this.dataStatusFactory.setError();
         return throwError(error);

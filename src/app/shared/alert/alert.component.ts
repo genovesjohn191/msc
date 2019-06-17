@@ -12,7 +12,8 @@ import { CoreDefinition } from '@app/core';
 import {
   McsStatusType,
   animateFactory,
-  isNullOrEmpty
+  isNullOrEmpty,
+  CommonDefinition
 } from '@app/utilities';
 
 @Component({
@@ -65,6 +66,13 @@ export class AlertComponent {
     private _renderer: Renderer2
   ) {
     this._createIconTable();
+  }
+
+  /**
+   * Returns the close icon key
+   */
+  public get closeIconKey(): string {
+    return CommonDefinition.ASSETS_SVG_CLOSE_BLACK;
   }
 
   /**

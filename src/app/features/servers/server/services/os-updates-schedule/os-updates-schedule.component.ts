@@ -44,7 +44,7 @@ import {
   OsUpdatesScheduleType,
   Day
 } from '@app/models';
-import { McsServersRepository } from '@app/services';
+import { McsApiService } from '@app/services';
 import {
   DialogConfirmation,
   McsFormGroupDirective,
@@ -186,7 +186,7 @@ export class OsUpdatesScheduleComponent implements OnInit {
   constructor(
     private _dialogService: DialogService,
     private _formBuilder: FormBuilder,
-    protected _serversRepository: McsServersRepository,
+    protected _apiService: McsApiService,
     protected _changeDetectorRef: ChangeDetectorRef,
     protected _translateService: TranslateService
   ) {
@@ -419,8 +419,8 @@ export class OsUpdatesScheduleComponent implements OnInit {
    * Get the list of categories of the current server
    */
   private _getOsUpdatesCategories(): Observable<McsServerOsUpdatesCategory[]> {
-    return this._serversRepository.getServerOsUpdatesCategories().pipe(
-      map((response) => response.filter(
+    return this._apiService.getServerOsUpdatesCategories().pipe(
+      map((response) => response && response.collection.filter(
         (category) => category.osType === this.selectedServer.operatingSystem.type)
       ),
       tap((categories) => {
@@ -438,7 +438,7 @@ export class OsUpdatesScheduleComponent implements OnInit {
   private _getScheduleDate(
     categories: McsServerOsUpdatesCategory[]
   ): Observable<McsServerOsUpdatesSchedule> {
-    return this._serversRepository
+    return this._apiService
       .getServerOsUpdatesSchedule(this.selectedServer.id)
       .pipe(
         catchError((error) => {

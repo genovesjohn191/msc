@@ -3,7 +3,8 @@ import {
   ChangeDetectorRef,
   OnDestroy,
   ViewChild,
-  OnInit
+  OnInit,
+  Injector
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import {
@@ -17,18 +18,11 @@ import {
   catchError,
   concatMap
 } from 'rxjs/operators';
-import { EventBusDispatcherService } from '@app/event-bus';
 import {
-  McsErrorHandlerService,
   CoreDefinition,
-  McsAccessControlService,
   McsDataStatusFactory,
   McsDateTimeService
 } from '@app/core';
-import {
-  McsResourcesRepository,
-  McsServersRepository
-} from '@app/services';
 import {
   animateFactory,
   replacePlaceholder,
@@ -48,13 +42,11 @@ import {
 import { FormMessage } from '@app/shared';
 import { McsEvent } from '@app/event-manager';
 import { ServerDetailsBase } from '../server-details.base';
-import { ServerService } from '../server.service';
 import {
   OsUpdatesStatusConfiguration,
   OsUpdatesActionDetails,
   ServerServicesView
 } from './os-updates-status-configuration';
-import { ServersService } from '../../servers.service';
 
 const OS_UPDATE_TIMEZONE = 'Australia/Sydney';
 const OS_UPDATE_DATEFORMAT = "EEEE, d MMMM, yyyy 'at' h:mm a";
@@ -79,25 +71,12 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
   private _formMessage: FormMessage;
 
   constructor(
-    _resourcesRepository: McsResourcesRepository,
-    _serversRepository: McsServersRepository,
-    _serverService: ServerService,
-    _errorHandlerService: McsErrorHandlerService,
-    protected _accessControlService: McsAccessControlService,
-    protected _changeDetectorRef: ChangeDetectorRef,
-    private _eventDispatcher: EventBusDispatcherService,
+    _injector: Injector,
+    _changeDetectorRef: ChangeDetectorRef,
     private _dateTimeService: McsDateTimeService,
-    private _serversService: ServersService,
     private _translateService: TranslateService
   ) {
-    super(
-      _resourcesRepository,
-      _serversRepository,
-      _serverService,
-      _changeDetectorRef,
-      _errorHandlerService,
-      _accessControlService
-    );
+    super(_injector, _changeDetectorRef);
     this.dataStatusFactory = new McsDataStatusFactory();
     this.updateStatusConfiguration = new OsUpdatesStatusConfiguration();
   }
@@ -244,7 +223,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
    */
   public inspectForAvailableOsUpdates(server: McsServer): void {
     this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Analysing);
-    this._serversRepository.inspectServerForAvailableOsUpdates(
+    this.apiService.inspectServerForAvailableOsUpdates(
       server.id, { serverId: server.id }
     ).subscribe();
   }
@@ -278,16 +257,16 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
    * Register jobs/notifications events
    */
   private _registerEvents(): void {
-    this._inspectOsUpdateHandler = this._eventDispatcher.addEventListener(
+    this._inspectOsUpdateHandler = this.eventDispatcher.addEventListener(
       McsEvent.jobServerOsUpdateInspect, this._onInspectForAvailableOsUpdates.bind(this)
     );
-    this._applyOsUpdateHandler = this._eventDispatcher.addEventListener(
+    this._applyOsUpdateHandler = this.eventDispatcher.addEventListener(
       McsEvent.jobServerOsUpdateApply, this._onApplyServerOsUpdates.bind(this)
     );
 
     // Invoke the event initially
-    this._eventDispatcher.dispatch(McsEvent.jobServerSnapshotCreate);
-    this._eventDispatcher.dispatch(McsEvent.jobServerSnapshotApply);
+    this.eventDispatcher.dispatch(McsEvent.jobServerSnapshotCreate);
+    this.eventDispatcher.dispatch(McsEvent.jobServerSnapshotApply);
   }
 
   /**
@@ -344,7 +323,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
   private _getServerUpdateDetails(id: string): void {
 
     this.dataStatusFactory.setInProgress();
-    this.updatesDetails$ = this._serversRepository.getServerOsUpdatesDetails(id).pipe(
+    this.updatesDetails$ = this.apiService.getServerOsUpdatesDetails(id).pipe(
       catchError((error) => {
         this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Error);
         this.dataStatusFactory.setError();
@@ -375,16 +354,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
    * @param request request containing the update ids
    */
   private _applyUpdates(server: McsServer, request: McsServerOsUpdatesRequest): Observable<McsJob> {
-    this._serversService.setServerSpinner(server);
-    return this._serversRepository.updateServerOs(server, request).pipe(
-      catchError((error) => {
-        this._serversService.clearServerSpinner(server);
-        return throwError(error);
-      }),
-      tap(() => {
-        this._serversService.clearServerSpinner(server);
-      })
-    );
+    return this.apiService.updateServerOs(server.id, request);
   }
 
   /**
@@ -397,10 +367,8 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
     request: McsServerOsUpdatesScheduleRequest
   ): Observable<McsServerOsUpdatesSchedule> {
     // TODO : find a better way of saving, currently deleting all then saving the new schedule
-    this._serversService.setServerSpinner(server);
-    return this._serversRepository.deleteServerOsUpdatesSchedule(server.id).pipe(
+    return this.apiService.deleteServerOsUpdatesSchedule(server.id).pipe(
       catchError((httpError) => {
-        this._serversService.clearServerSpinner(server);
         this._formMessage.showMessage('error', {
           messages: httpError.errorMessages,
           fallbackMessage: this._translateService.instant('serverServices.updateErrorMessage')
@@ -408,9 +376,8 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
         return throwError(httpError);
       }),
       concatMap(() => {
-        return this._serversRepository.updateServerOsUpdatesSchedule(server.id, request).pipe(
+        return this.apiService.updateServerOsUpdatesSchedule(server.id, request).pipe(
           tap(() => {
-            this._serversService.clearServerSpinner(server);
             this._formMessage.showMessage('success', {
               messages: this._translateService.instant('serverServices.updateSuccessMessage')
             });
@@ -426,10 +393,8 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
    */
   private _deleteSchedule(server: McsServer): Observable<boolean> {
 
-    this._serversService.setServerSpinner(server);
-    return this._serversRepository.deleteServerOsUpdatesSchedule(server.id).pipe(
+    return this.apiService.deleteServerOsUpdatesSchedule(server.id).pipe(
       catchError((httpError) => {
-        this._serversService.clearServerSpinner(server);
         this._formMessage.showMessage('error', {
           messages: httpError.errorMessages,
           fallbackMessage: this._translateService.instant('serverServices.deleteErrorMessage')
@@ -437,7 +402,6 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
         return throwError(httpError);
       }),
       tap(() => {
-        this._serversService.clearServerSpinner(server);
         this._formMessage.showMessage('success', {
           messages: this._translateService.instant('serverServices.deleteSuccessMessage')
         });

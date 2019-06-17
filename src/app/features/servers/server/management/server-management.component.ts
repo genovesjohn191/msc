@@ -4,6 +4,7 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy,
   OnInit,
+  Injector,
 } from '@angular/core';
 import {
   Router,
@@ -12,7 +13,6 @@ import {
 } from '@angular/router';
 import {
   Subject,
-  throwError,
   Observable,
   Subscription,
   empty
@@ -23,12 +23,9 @@ import {
   map
 } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
-import { EventBusDispatcherService } from '@app/event-bus';
 import {
-  McsErrorHandlerService,
   CoreDefinition,
   CoreRoutes,
-  McsAccessControlService,
   McsServerPermission
 } from '@app/core';
 import {
@@ -36,7 +33,8 @@ import {
   animateFactory,
   getEncodedUrl,
   unsubscribeSafely,
-  convertGbToMb
+  convertGbToMb,
+  getSafeProperty
 } from '@app/utilities';
 import {
   IpAllocationMode,
@@ -46,7 +44,6 @@ import {
   McsServerMedia,
   McsServer,
   McsResource,
-  McsResourceCompute,
   McsResourceCatalogItem,
   McsServerThumbnail,
   McsResourceCatalog,
@@ -59,16 +56,10 @@ import {
 } from '@app/features-shared';
 import { McsEvent } from '@app/event-manager';
 import {
-  McsServersRepository,
-  McsResourcesRepository
-} from '@app/services';
-import { ServerDetailsBase } from '../server-details.base';
-import { ServerService } from '../server.service';
-import { ServersService } from '../../servers.service';
-import {
   DialogConfirmation,
   DialogService
 } from '@app/shared';
+import { ServerDetailsBase } from '../server-details.base';
 
 // Enumeration
 export enum ServerManagementView {
@@ -92,7 +83,6 @@ export enum ServerManagementView {
 export class ServerManagementComponent extends ServerDetailsBase implements OnInit, OnDestroy {
   public serverThumbnail$: Observable<string>;
   public serverMedia$: Observable<McsServerMedia[]>;
-  public resourceCompute$: Observable<McsResourceCompute>;
   public resourceCatalogs$: Observable<McsResourceCatalog[]>;
   public serverPermission: McsServerPermission;
 
@@ -110,27 +100,14 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
   private _updateComputeHandler: Subscription;
 
   constructor(
+    _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
-    _resourcesRepository: McsResourcesRepository,
-    _serversRepository: McsServersRepository,
-    _serverService: ServerService,
-    _errorHandlerService: McsErrorHandlerService,
-    _accessControl: McsAccessControlService,
     private _router: Router,
     private _translate: TranslateService,
-    private _eventDispatcher: EventBusDispatcherService,
-    private _serversService: ServersService,
     private _activatedRoute: ActivatedRoute,
     private _dialogService: DialogService
   ) {
-    super(
-      _resourcesRepository,
-      _serversRepository,
-      _serverService,
-      _changeDetectorRef,
-      _errorHandlerService,
-      _accessControl
-    );
+    super(_injector, _changeDetectorRef);
     this.manageScale = new ServerManageScale();
   }
 
@@ -187,7 +164,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
       this.setViewMode(ServerManagementView.ManageScale);
       return;
     }
-    this._eventDispatcher.dispatch(McsEvent.serverScaleManageSelected, server.id);
+    this.eventDispatcher.dispatch(McsEvent.serverScaleManageSelected, server.id);
     this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.OrderScaleManagedServer)]);
   }
 
@@ -249,9 +226,8 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
     if (isNullOrEmpty(server)) { return; }
 
     // Set initial server status so that the spinner will show up immediately
-    this._serversService.setServerSpinner(server);
     this.setViewMode(ServerManagementView.None);
-    this._serversRepository.updateServerCompute(
+    this.apiService.updateServerCompute(
       server.id,
       {
         memoryMB: convertGbToMb(this.manageScale.memoryGB),
@@ -261,13 +237,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
           memoryMB: convertGbToMb(this.manageScale.memoryGB),
           cpuCount: this.manageScale.cpuCount
         }
-      } as McsServerUpdate)
-      .pipe(
-        catchError((error) => {
-          this._serversService.clearServerSpinner(server);
-          return throwError(error);
-        })
-      ).subscribe();
+      } as McsServerUpdate).subscribe();
   }
 
   /**
@@ -303,14 +273,8 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
     };
 
     // Set initial server status so that the spinner will show up immediately
-    this._serversService.setServerSpinner(server);
     this.setViewMode(ServerManagementView.None);
-    this._serversRepository.attachServerMedia(server.id, mediaDetails).pipe(
-      catchError((error) => {
-        this._serversService.clearServerSpinner(server);
-        return throwError(error);
-      })
-    ).subscribe();
+    this.apiService.attachServerMedia(server.id, mediaDetails).subscribe();
   }
 
   /**
@@ -325,13 +289,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
     };
 
     // Set initial server status so that the spinner will show up immediately
-    this._serversService.setServerSpinner(server);
-    this._serversRepository.detachServerMedia(server.id, media.id, mediaDetails).pipe(
-      catchError((error) => {
-        this._serversService.clearServerSpinner(server);
-        return throwError(error);
-      })
-    ).subscribe();
+    this.apiService.detachServerMedia(server.id, media.id, mediaDetails).subscribe();
   }
 
   /**
@@ -362,7 +320,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
    * Get the current server thumbnail
    */
   private _getServerThumbnail(server: McsServer): void {
-    this.serverThumbnail$ = this._serversRepository.getServerThumbnail(server.id).pipe(
+    this.serverThumbnail$ = this.apiService.getServerThumbnail(server.id).pipe(
       map((thumbnailDetails) => {
         if (isNullOrEmpty(thumbnailDetails)) {
           thumbnailDetails = new McsServerThumbnail();
@@ -381,7 +339,9 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
    * Get the server media
    */
   private _getServerMedia(server: McsServer): void {
-    this.serverMedia$ = this._serversRepository.getServerMedia(server);
+    this.serverMedia$ = this.apiService.getServerMedia(server.id).pipe(
+      map((response) => getSafeProperty(response, (obj) => obj.collection))
+    );
   }
 
   /**
@@ -389,8 +349,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
    */
   private _getResourceCompute(resource: McsResource): void {
     if (isNullOrEmpty(resource)) { return; }
-    this.resourceCompute$ = this._resourcesRespository.getResourceCompute(resource);
-    this.resourceCompute$.subscribe();
+    this.apiService.getResourceCompute(resource.id).subscribe();
   }
 
   /**
@@ -398,7 +357,9 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
    */
   private _getResourceCatalogs(resource: McsResource): void {
     if (isNullOrEmpty(resource)) { return; }
-    this.resourceCatalogs$ = this._resourcesRespository.getResourceCatalogs(resource.id);
+    this.resourceCatalogs$ = this.apiService.getResourceCatalogs(resource.id).pipe(
+      map((response) => getSafeProperty(response, (obj) => obj.collection))
+    );
   }
 
   /**
@@ -418,22 +379,22 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
    * Register jobs/notifications events
    */
   private _registerEvents(): void {
-    this._attachMediaHandler = this._eventDispatcher.addEventListener(
+    this._attachMediaHandler = this.eventDispatcher.addEventListener(
       McsEvent.jobServerMediaAttach, this._onAttachMedia.bind(this)
     );
 
-    this._detachMediaHandler = this._eventDispatcher.addEventListener(
+    this._detachMediaHandler = this.eventDispatcher.addEventListener(
       McsEvent.jobServerMediaDetach, this._onDetachMedia.bind(this)
     );
 
-    this._updateComputeHandler = this._eventDispatcher.addEventListener(
+    this._updateComputeHandler = this.eventDispatcher.addEventListener(
       McsEvent.jobServerComputeUpdate, this._onUpdateServerCompute.bind(this)
     );
 
     // Invoke the event initially
-    this._eventDispatcher.dispatch(McsEvent.jobServerMediaAttach);
-    this._eventDispatcher.dispatch(McsEvent.jobServerMediaDetach);
-    this._eventDispatcher.dispatch(McsEvent.jobServerComputeUpdate);
+    this.eventDispatcher.dispatch(McsEvent.jobServerMediaAttach);
+    this.eventDispatcher.dispatch(McsEvent.jobServerMediaDetach);
+    this.eventDispatcher.dispatch(McsEvent.jobServerComputeUpdate);
   }
 
   /**

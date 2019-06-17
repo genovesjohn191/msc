@@ -12,7 +12,8 @@ import {
 } from 'rxjs';
 import {
   tap,
-  catchError
+  catchError,
+  map
 } from 'rxjs/operators';
 import {
   McsDataStatusFactory,
@@ -22,9 +23,10 @@ import {
   McsServer,
   McsServerOsUpdatesRequest
 } from '@app/models';
-import { McsServersRepository } from '@app/services';
+import { McsApiService } from '@app/services';
 import { TreeNode } from '@app/shared';
 import { ServersService } from '@app/features/servers/servers.service';
+import { getSafeProperty } from '@app/utilities';
 import { OsUpdatesActionDetails } from '../os-updates-status-configuration';
 
 @Component({
@@ -55,7 +57,7 @@ export class OsUpdatesApplyNowComponent implements OnInit {
 
   constructor(
     protected _serversService: ServersService,
-    protected _serversRepository: McsServersRepository,
+    protected _apiService: McsApiService,
     protected _changeDetectorRef: ChangeDetectorRef,
   ) {
     this.applyUpdates = new EventEmitter();
@@ -97,7 +99,8 @@ export class OsUpdatesApplyNowComponent implements OnInit {
    */
   private _initializeTreeSource() {
     this.dataStatusFactory.setInProgress();
-    this.osUpdates$ = this._serversRepository.getServerOsUpdates(this.selectedServer).pipe(
+    this.osUpdates$ = this._apiService.getServerOsUpdates(this.selectedServer.id).pipe(
+      map((response) => getSafeProperty(response, (obj) => obj.collection)),
       tap((osUpdates) => {
         this.dataStatusFactory.setSuccessful(osUpdates);
       }),

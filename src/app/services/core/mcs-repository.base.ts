@@ -6,7 +6,8 @@ import {
 } from 'rxjs';
 import {
   McsEntityBase,
-  McsQueryParam
+  McsQueryParam,
+  ObtainmentMethod
 } from '@app/models';
 import {
   tap,
@@ -86,13 +87,28 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
    * creates a new observable if the data of the record has been changed
    * the observer will be notified
    * @param id Id of the record to be obtained
+   * @param obtainment Method on how the item will be obtained, by default
+   * this method is always getting from cache
    */
-  public getById(id: string): Observable<T> {
-    return this._getRecordByIdFromContext(id);
+  public getById(id: string, obtainment?: ObtainmentMethod): Observable<T> {
+    let recordFound: T = null;
+    if (obtainment === ObtainmentMethod.Async) {
+      recordFound = this.dataRecords.find((item) => item.id === id);
+    }
+
+    let getByIdObserver = !isNullOrEmpty(recordFound) ?
+      this._getRecordByIdFromCache(id) :
+      this._getRecordByIdFromContext(id);
+
+    return getByIdObserver.pipe(
+      switchMap(() => of(this.dataRecords.find((record) => record.id === id))),
+      finalize(() => this._notifyDataChange())
+    );
   }
 
   /**
    * Gets the record based on its id that includes the background update of the record as async
+   * @deprecated use getById instead
    * @param id Id to be obtained
    */
   public getByIdAsync(id: string): Observable<T>;

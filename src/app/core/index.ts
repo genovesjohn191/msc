@@ -46,6 +46,7 @@ export * from './base/mcs-form-field-control.base';
 export * from './base/mcs-list-source.base';
 export * from './base/mcs-status-settings.base';
 export * from './base/mcs-wizard.base';
+export * from './base/mcs-table-listing';
 
 /** Authentication */
 export * from './authentication/mcs-authentication.guard';

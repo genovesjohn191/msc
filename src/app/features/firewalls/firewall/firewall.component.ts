@@ -36,7 +36,8 @@ import {
 import { Search } from '@app/shared';
 import {
   RouteKey,
-  McsFirewall
+  McsFirewall,
+  McsApiErrorContext
 } from '@app/models';
 import { McsFirewallsRepository } from '@app/services';
 import { EventBusDispatcherService } from '@app/event-bus';
@@ -167,6 +168,7 @@ export class FirewallComponent
         this._firewallService.setSelectedFirewall(response);
         this._changeDetectorRef.markForCheck();
       }),
+      catchError((error) => McsApiErrorContext.throwPrimaryError(error)),
       shareReplay(1)
     );
   }

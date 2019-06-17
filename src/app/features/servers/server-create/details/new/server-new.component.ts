@@ -56,16 +56,15 @@ import {
   Os,
   RouteKey
 } from '@app/models';
-import {
-  McsServersOsRepository,
-  McsResourcesRepository
-} from '@app/services';
+import { McsApiService } from '@app/services';
 import {
   ServerManageStorage,
   ServerManageNetwork,
   ServerManageScale
 } from '@app/features-shared';
 import { McsFormGroupDirective } from '@app/shared';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/event-manager';
 import { ServerCreateDetailsBase } from '../server-create-details.base';
 
 const DEFAULT_MANAGE_STORAGE_MINIMUM = 50;
@@ -135,19 +134,20 @@ export class ServerNewComponent
   private _formGroup: McsFormGroupDirective;
 
   private _destroySubject = new Subject<void>();
+  private _resourcesDataChangeHandler: Subscription;
 
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private _translate: TranslateService,
-    private _serversOsRepository: McsServersOsRepository,
-    private _resourcesRepository: McsResourcesRepository
+    private _eventDispatcher: EventBusDispatcherService,
+    private _apiService: McsApiService
   ) {
     super();
+    this._registerDataEvents();
   }
 
   public ngOnInit() {
     this._registerFormGroup();
-    this._subscribeToResourceDataChange();
   }
 
   public ngAfterViewInit() {
@@ -158,6 +158,7 @@ export class ServerNewComponent
 
   public ngOnDestroy() {
     unsubscribeSafely(this._destroySubject);
+    unsubscribeSafely(this._resourcesDataChangeHandler);
   }
 
   public get resourceIsManaged(): boolean {
@@ -309,8 +310,8 @@ export class ServerNewComponent
    * Gets the servers operating systems from repository
    */
   private _getServersOs(): void {
-    this.operatingSystemsMap$ = this._serversOsRepository.getAll().pipe(
-      switchMap((_response) => of(this._filterOsGroup(_response)))
+    this.operatingSystemsMap$ = this._apiService.getServerOs().pipe(
+      switchMap((response) => of(this._filterOsGroup(response && response.collection)))
     );
   }
 
@@ -416,15 +417,6 @@ export class ServerNewComponent
   }
 
   /**
-   * Subscribes to resource data changes and update the DOM
-   */
-  private _subscribeToResourceDataChange(): void {
-    this._resourcesRepository.dataChange().pipe(
-      takeUntil(this._destroySubject)
-    ).subscribe(() => this._changeDetectorRef.markForCheck());
-  }
-
-  /**
    * Notifies the data change on the form
    */
   private _notifyDataChange(): void {
@@ -432,5 +424,21 @@ export class ServerNewComponent
       if (!this.formIsValid) { return; }
       this.dataChange.next(this);
     });
+  }
+
+  /**
+   * Registers the data events
+   */
+  private _registerDataEvents(): void {
+    this._resourcesDataChangeHandler = this._eventDispatcher.addEventListener(
+      McsEvent.dataChangeResources, this._onResourcesDataChanged.bind(this));
+  }
+
+  /**
+   * Event that emits when the server data has been changed
+   */
+  private _onResourcesDataChanged(): void {
+    this._changeDetectorRef.markForCheck();
+    console.log('resource changed');
   }
 }

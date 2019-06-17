@@ -1,0 +1,20 @@
+<!-- Error template -->
+<ng-template let-errorDetails #errorTemplate>
+  <div class="error-template-wrapper">
+    <mcs-alert type="error" header="Error" full-width>
+      <span>{{ errorDetails?.errorMessage }}</span>
+    </mcs-alert>
+
+    <div class="error-template-close">
+      <button mcsButton="icon" mcsId="error-notification-close"
+        (click)="onCloseError(errorDetails)">
+        <mcs-icon [key]="closeIconkey" size="xsmall"></mcs-icon>
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Error list -->
+<ng-container *ngFor="let error of errorList">
+  <ng-container *ngTemplateOutlet="errorTemplate; context: { $implicit: error }"></ng-container>
+</ng-container>

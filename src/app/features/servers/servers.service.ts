@@ -7,7 +7,7 @@ import {
   McsResource,
   ServiceType
 } from '@app/models';
-import { McsResourcesRepository } from '@app/services';
+import { McsApiService } from '@app/services';
 import {
   McsAccessControlService,
   CoreDefinition
@@ -21,7 +21,7 @@ export class ServersService {
 
   constructor(
     private _accessControlService: McsAccessControlService,
-    private _resourcesRepository: McsResourcesRepository
+    private _apiService: McsApiService
   ) { }
 
   /**
@@ -29,12 +29,12 @@ export class ServersService {
    * @note OrderEdit and EnableOrderingManagedServerCreate
    */
   public getResourcesByAccess(): Observable<McsResource[]> {
-    return this._resourcesRepository.getAll().pipe(
+    return this._apiService.getResources().pipe(
       map((resources) => {
         let managedResourceIsOn = this._accessControlService.hasAccess(
           ['OrderEdit'], CoreDefinition.FEATURE_FLAG_ENABLE_CREATE_MANAGED_SERVER);
 
-        return resources.filter(
+        return resources && resources.collection.filter(
           (resource) => resource.serviceType === ServiceType.SelfManaged ||
             (managedResourceIsOn && resource.serviceType === ServiceType.Managed)
         );

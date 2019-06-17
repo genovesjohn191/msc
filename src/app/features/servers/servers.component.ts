@@ -2,7 +2,6 @@ import {
   Component,
   OnInit,
   OnDestroy,
-  AfterViewInit,
   ChangeDetectorRef,
   ChangeDetectionStrategy
 } from '@angular/core';
@@ -11,10 +10,10 @@ import {
   Subject,
   empty,
   of,
-  forkJoin
+  forkJoin,
+  Observable
 } from 'rxjs';
 import {
-  takeUntil,
   map,
   catchError,
   concatMap
@@ -23,10 +22,8 @@ import { TranslateService } from '@ngx-translate/core';
 import {
   CoreDefinition,
   McsBrowserService,
-  McsTableListingBase,
   CoreRoutes,
-  McsTableDataSource,
-  McsTableSelection
+  McsTableListing
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -39,17 +36,20 @@ import {
   RouteKey,
   McsServer,
   VmPowerstateCommand,
-  McsServerDelete
+  McsServerDelete,
+  McsQueryParam,
+  McsApiCollection
 } from '@app/models';
 import {
   McsResourcesRepository,
-  McsServersRepository,
   McsApiService
 } from '@app/services';
 import {
   DialogConfirmation,
   DialogService
 } from '@app/shared';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/event-manager';
 import { ServersService } from './servers.service';
 
 @Component({
@@ -58,11 +58,9 @@ import { ServersService } from './servers.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class ServersComponent
-  extends McsTableListingBase<McsTableDataSource<McsServer>>
-  implements OnInit, AfterViewInit, OnDestroy {
+export class ServersComponent extends McsTableListing<McsServer>
+  implements OnInit, OnDestroy {
 
-  public serversSelection: McsTableSelection<McsServer>;
   public hasCreateResources: boolean;
   public hasManagedResource: boolean;
 
@@ -113,25 +111,18 @@ export class ServersComponent
     _changeDetectorRef: ChangeDetectorRef,
     private _router: Router,
     private _translateService: TranslateService,
+    private _eventDispatcher: EventBusDispatcherService,
     private _apiService: McsApiService,
     private _dialogService: DialogService,
     private _serversService: ServersService,
-    private _serversRepository: McsServersRepository,
     private _resourcesRepository: McsResourcesRepository
   ) {
     super(_browserService, _changeDetectorRef);
+    this._registerEvents();
   }
 
   public ngOnInit() {
     this._setResourcesFlag();
-    this._subscribeToBreakpointChanges();
-    this._subscribeToDataChange();
-  }
-
-  public ngAfterViewInit() {
-    Promise.resolve().then(() => {
-      this.initializeDatasource();
-    });
   }
 
   public ngOnDestroy() {
@@ -148,8 +139,8 @@ export class ServersComponent
    * Servers that are processing are excluded
    */
   public toggleAllServersSelection() {
-    if (isNullOrEmpty(this.serversSelection)) { return; }
-    this.serversSelection.toggleAllItemsSelection((server) => !server.isProcessing);
+    if (isNullOrEmpty(this.selection)) { return; }
+    this.selection.toggleAllItemsSelection((server) => !server.isProcessing);
   }
 
   /**
@@ -157,8 +148,8 @@ export class ServersComponent
    * Servers that are processing are excluded
    */
   public allServersAreSelected() {
-    if (isNullOrEmpty(this.serversSelection)) { return false; }
-    return this.serversSelection.allItemsAreSelected((server) => !server.isProcessing);
+    if (isNullOrEmpty(this.selection)) { return false; }
+    return this.selection.allItemsAreSelected((server) => !server.isProcessing);
   }
 
   /**
@@ -166,8 +157,8 @@ export class ServersComponent
    * @param propName Property name to be checked
    */
   public canExecuteAction(propName: string): boolean {
-    if (isNullOrEmpty(this.serversSelection) || !this.serversSelection.hasSelecion()) { return false; }
-    let someServersCannotExecute = this.serversSelection.getSelectedItems()
+    if (isNullOrEmpty(this.selection) || !this.selection.hasSelecion()) { return false; }
+    let someServersCannotExecute = this.selection.getSelectedItems()
       .find((selectedServer) => !selectedServer[propName]);
     return !someServersCannotExecute;
   }
@@ -176,7 +167,7 @@ export class ServersComponent
    * PoweredOn multiple servers
    */
   public startMultipleServers(): void {
-    this.serversSelection.getSelectedItems().forEach((server) => {
+    this.selection.getSelectedItems().forEach((server) => {
       this._apiService.sendServerPowerState(server.id, {
         command: VmPowerstateCommand.Start,
         clientReferenceObject: {
@@ -184,14 +175,14 @@ export class ServersComponent
         }
       }).subscribe();
     });
-    this.serversSelection.clearAllSelection();
+    this.selection.clearAllSelection();
   }
 
   /**
    * Powered off multiple servers selected
    */
   public stopMultipleServers(): void {
-    this.serversSelection.getSelectedItems().forEach((server) => {
+    this.selection.getSelectedItems().forEach((server) => {
       this._apiService.sendServerPowerState(server.id, {
         command: VmPowerstateCommand.Stop,
         clientReferenceObject: {
@@ -199,14 +190,14 @@ export class ServersComponent
         }
       }).subscribe();
     });
-    this.serversSelection.clearAllSelection();
+    this.selection.clearAllSelection();
   }
 
   /**
    * Restart Multiple Servers
    */
   public restartMultipleServers(): void {
-    this.serversSelection.getSelectedItems().forEach((server) => {
+    this.selection.getSelectedItems().forEach((server) => {
       this._apiService.sendServerPowerState(server.id, {
         command: VmPowerstateCommand.Restart,
         clientReferenceObject: {
@@ -214,7 +205,7 @@ export class ServersComponent
         }
       }).subscribe();
     });
-    this.serversSelection.clearAllSelection();
+    this.selection.clearAllSelection();
   }
 
   /**
@@ -222,7 +213,7 @@ export class ServersComponent
    */
   public deleteMultipleServers(): void {
     let dialogData = {
-      data: this.serversSelection.getSelectedItems(),
+      data: this.selection.getSelectedItems(),
       title: this._translateService.instant('dialogDeleteServerMultiple.title'),
       message: this._translateService.instant('dialogDeleteServerMultiple.message'),
       type: 'warning'
@@ -242,7 +233,7 @@ export class ServersComponent
         }));
       })
     ).subscribe();
-    this.serversSelection.clearAllSelection();
+    this.selection.clearAllSelection();
   }
 
   /**
@@ -250,7 +241,7 @@ export class ServersComponent
    */
   public suspendMultipleServers(): void {
     let dialogData = {
-      data: this.serversSelection.getSelectedItems(),
+      data: this.selection.getSelectedItems(),
       title: this._translateService.instant('dialogSuspendServerMultiple.title'),
       message: this._translateService.instant('dialogSuspendServerMultiple.message'),
       type: 'warning'
@@ -271,7 +262,7 @@ export class ServersComponent
         }));
       })
     ).subscribe();
-    this.serversSelection.clearAllSelection();
+    this.selection.clearAllSelection();
   }
 
   /**
@@ -279,7 +270,7 @@ export class ServersComponent
    */
   public resumeMultipleServers(): void {
     let dialogData = {
-      data: this.serversSelection.getSelectedItems(),
+      data: this.selection.getSelectedItems(),
       title: this._translateService.instant('dialogResumeServerMultiple.title'),
       message: this._translateService.instant('dialogResumeServerMultiple.message'),
       type: 'warning'
@@ -300,7 +291,7 @@ export class ServersComponent
         }));
       })
     ).subscribe();
-    this.serversSelection.clearAllSelection();
+    this.selection.clearAllSelection();
   }
 
   /**
@@ -327,16 +318,8 @@ export class ServersComponent
    * @param server Server to checked the details
    */
   public navigateToServer(server: McsServer): void {
-    // Do not navigate to server details when server is deleting
     if (isNullOrEmpty(server) || server.isDisabled) { return; }
     this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.Servers), server.id]);
-  }
-
-  /**
-   * Retry obtaining datasource from server
-   */
-  public retryDatasource(): void {
-    this.initializeDatasource();
   }
 
   /**
@@ -347,16 +330,11 @@ export class ServersComponent
   }
 
   /**
-   * Initialize the table datasource according to pagination and search settings
+   * Gets the entity listing based on the context
+   * @param query Query to be obtained on the listing
    */
-  protected initializeDatasource(): void {
-    this.dataSource = new McsTableDataSource(this._serversRepository);
-    this.dataSource
-      .registerSearch(this.search)
-      .registerPaginator(this.paginator);
-
-    this.serversSelection = new McsTableSelection(this.dataSource, true);
-    this.changeDetectorRef.markForCheck();
+  protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsServer>> {
+    return this._apiService.getServers(query);
   }
 
   /**
@@ -364,45 +342,37 @@ export class ServersComponent
    * and check whether the resource has self managed type
    */
   private _setResourcesFlag(): void {
-    let managedResources = this._resourcesRepository.getAll()
-      .pipe(
-        map((resources) => {
-          this.hasManagedResource = !!resources.find((_resource) =>
-            _resource.serviceType === ServiceType.Managed);
-          this.changeDetectorRef.markForCheck();
-        })
-      );
-    let createServerResources = this._serversService.getResourcesByAccess()
-      .pipe(
-        map((response) => {
-          this.hasCreateResources = !isNullOrEmpty(response);
-          this.changeDetectorRef.markForCheck();
-        })
-      );
+    let managedResources = this._resourcesRepository.getAll().pipe(
+      map((resources) => {
+        this.hasManagedResource = !!resources.find((_resource) =>
+          _resource.serviceType === ServiceType.Managed);
+        this.changeDetectorRef.markForCheck();
+      })
+    );
+    let createServerResources = this._serversService.getResourcesByAccess().pipe(
+      map((response) => {
+        this.hasCreateResources = !isNullOrEmpty(response);
+        this.changeDetectorRef.markForCheck();
+      })
+    );
     managedResources.pipe(
       catchError(() => empty())
     ).subscribe(() => createServerResources.subscribe());
   }
 
   /**
-   * Listener to device changes
+   * Registers the event listeners
    */
-  private _subscribeToBreakpointChanges(): void {
-    this.browserService.breakpointChange()
-      .pipe(takeUntil(this._destroySubject))
-      .subscribe(() => {
-        if (!isNullOrEmpty(this.serversSelection)) {
-          this.serversSelection.clearAllSelection();
-        }
-      });
+  private _registerEvents(): void {
+    this._eventDispatcher.addEventListener(
+      McsEvent.dataChangeServers, this._onServersDataChange.bind(this));
   }
 
   /**
-   * Listen to data records changes
+   * Event that emits when the data of server has been changed
+   * @param _servers Updated servers information
    */
-  private _subscribeToDataChange(): void {
-    this._serversRepository.dataChange()
-      .pipe(takeUntil(this._destroySubject))
-      .subscribe(() => this.changeDetectorRef.markForCheck());
+  private _onServersDataChange(_servers: McsServer): void {
+    this.changeDetectorRef.markForCheck();
   }
 }

@@ -3,23 +3,25 @@ import {
   merge,
   of
 } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { McsListSourceBase } from '@app/core';
 import {
   compareStrings,
   containsString,
-  isNullOrEmpty
+  isNullOrEmpty,
+  getSafeProperty
 } from '@app/utilities';
 import { Search } from '@app/shared';
 import {
   McsKeyValuePair,
   McsServer
 } from '@app/models';
-import { McsServersRepository } from '@app/services';
+import { McsApiService } from '@app/services';
 
 export class ServersListSource extends McsListSourceBase<McsServer> {
 
   constructor(
-    private _serversRepository: McsServersRepository,
+    private _apiService: McsApiService,
     private _search: Search) {
     super();
   }
@@ -57,7 +59,9 @@ export class ServersListSource extends McsListSourceBase<McsServer> {
    * Get all records from repository
    */
   protected getAllRecords(): Observable<McsServer[]> {
-    return this._serversRepository.getAll();
+    return this._apiService.getServers().pipe(
+      map((response) => getSafeProperty(response, (obj) => obj.collection))
+    );
   }
 
   /**

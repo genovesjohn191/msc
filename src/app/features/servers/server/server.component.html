@@ -56,7 +56,9 @@
                       mcsEventCategory="server"
                       mcsEventLabel="server-list-panel">
 
-                      <mcs-option [value]="server" [selected]="selectedServerId === server.id">
+                      <mcs-option [value]="server"
+                        [disabled]="server.isDisabled"
+                        [selected]="selectedServerId === server.id">
                         <mcs-item>
                           <mcs-icon *ngIf="!server.isProcessing" size="small"
                             [key]="server?.powerStateIconKey"></mcs-icon>

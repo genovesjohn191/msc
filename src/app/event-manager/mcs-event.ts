@@ -9,6 +9,9 @@ import { OrderStateBusyEvent } from './events/order-state-busy.event';
 import { OrderStateEndedEvent } from './events/order-state-ended.event';
 import { LoaderShowEvent } from './events/loader-show.event';
 import { LoaderHideEvent } from './events/loader-hide.event';
+import { ErrorShowEvent } from './events/error-show.event';
+import { DataChangeServersEvent } from './events/data-change-servers.event';
+import { DataChangeResourcesEvent } from './events/data-change-resources.event';
 
 import { JobServerDiskCreateEvent } from './events/job-server-disk-create.event';
 import { JobServerDiskUpdateEvent } from './events/job-server-disk-update.event';
@@ -50,6 +53,10 @@ export class McsEvent {
   public static orderStateEnded = new OrderStateEndedEvent();
   public static loaderShow = new LoaderShowEvent();
   public static loaderHide = new LoaderHideEvent();
+  public static errorShow = new ErrorShowEvent();
+  public static dataChangeServers = new DataChangeServersEvent();
+  public static dataChangeResources = new DataChangeResourcesEvent();
+
   public static jobCurrentUser = new JobCurrentUserEvent();
   public static jobReceive = new JobReceiveEvent();
   public static jobError = new JobErrorEvent();

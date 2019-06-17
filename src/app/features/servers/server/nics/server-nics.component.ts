@@ -5,25 +5,22 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy,
   ViewChild,
+  Injector,
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import {
   Subscription,
-  throwError,
   Observable,
   of
 } from 'rxjs';
 import {
-  catchError,
   shareReplay,
   tap,
   map
 } from 'rxjs/operators';
 import {
   CoreDefinition,
-  McsErrorHandlerService,
   McsTableDataSource,
-  McsAccessControlService,
   McsGuid
 } from '@app/core';
 import {
@@ -46,16 +43,9 @@ import {
   McsServer,
   McsResource
 } from '@app/models';
-import {
-  McsServersRepository,
-  McsResourcesRepository
-} from '@app/services';
 import { McsEvent } from '@app/event-manager';
-import { EventBusDispatcherService } from '@app/event-bus';
 import { ServerManageNetwork } from '@app/features-shared';
-import { ServerService } from '../server.service';
 import { ServerDetailsBase } from '../server-details.base';
-import { ServersService } from '../../servers.service';
 
 // Enumeration
 export enum ServerNicMethodType {
@@ -135,25 +125,12 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   }
 
   constructor(
-    _resourcesRepository: McsResourcesRepository,
-    _serversRepository: McsServersRepository,
-    _serverService: ServerService,
+    _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
-    _errorHandlerService: McsErrorHandlerService,
-    _accessControl: McsAccessControlService,
-    private _eventDispatcher: EventBusDispatcherService,
     private _translateService: TranslateService,
-    private _serversService: ServersService,
     private _dialogService: DialogService
   ) {
-    super(
-      _resourcesRepository,
-      _serversRepository,
-      _serverService,
-      _changeDetectorRef,
-      _errorHandlerService,
-      _accessControl
-    );
+    super(_injector, _changeDetectorRef);
     this.nicsColumns = [];
     this.nicsDataSource = new McsTableDataSource();
     this.manageNetwork = new ServerManageNetwork();
@@ -233,14 +210,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
       nicIpAddress: nicValues.ipAddress
     };
 
-    this._serversService.setServerSpinner(server, nicValues);
-    this._serversRepository.addServerNic(server.id, nicValues)
-      .pipe(
-        catchError((error) => {
-          this._serversService.clearServerSpinner(server, nicValues);
-          return throwError(error);
-        })
-      ).subscribe();
+    this.apiService.addServerNic(server.id, nicValues).subscribe();
   }
 
   /**
@@ -264,17 +234,10 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
       let nicValues = new McsServerCreateNic();
       nicValues.name = this.selectedNic.logicalNetworkName;
       nicValues.clientReferenceObject = {
-        serverId: server.id
+        serverId: server.id,
+        nicId: this.selectedNic.id
       };
-
-      this._serversService.setServerSpinner(server);
-      this._serversRepository.deleteServerNic(server.id, this.selectedNic.id, nicValues)
-        .pipe(
-          catchError((error) => {
-            this._serversService.clearServerSpinner(server);
-            return throwError(error);
-          })
-        ).subscribe();
+      this.apiService.deleteServerNic(server.id, this.selectedNic.id, nicValues).subscribe();
     });
   }
 
@@ -287,18 +250,12 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     nicValues.ipAllocationMode = this.manageNetwork.ipAllocationMode;
     nicValues.ipAddress = this.manageNetwork.customIpAddress;
     nicValues.clientReferenceObject = {
-      serverId: server.id
+      serverId: server.id,
+      nicId: this.selectedNic.id
     };
 
     this.closeEditNicWindow();
-    this._serversService.setServerSpinner(server);
-    this._serversRepository.updateServerNic(server.id, this.selectedNic.id, nicValues)
-      .pipe(
-        catchError((error) => {
-          this._serversService.clearServerSpinner(server);
-          return throwError(error);
-        })
-      ).subscribe();
+    this.apiService.updateServerNic(server.id, this.selectedNic.id, nicValues).subscribe();
   }
 
   /**
@@ -348,22 +305,22 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    * Register jobs/notifications events
    */
   private _registerEvents(): void {
-    this._createNicHandler = this._eventDispatcher.addEventListener(
+    this._createNicHandler = this.eventDispatcher.addEventListener(
       McsEvent.jobServerNicCreate, this._onCreateServerNic.bind(this)
     );
 
-    this._updateNicHandler = this._eventDispatcher.addEventListener(
+    this._updateNicHandler = this.eventDispatcher.addEventListener(
       McsEvent.jobServerNicUpdate, this._onUpdateServerNic.bind(this)
     );
 
-    this._deleteNicHandler = this._eventDispatcher.addEventListener(
+    this._deleteNicHandler = this.eventDispatcher.addEventListener(
       McsEvent.jobServerNicDelete, this._onUpdateServerNic.bind(this)
     );
 
     // Invoke the event initially
-    this._eventDispatcher.dispatch(McsEvent.jobServerNicCreate);
-    this._eventDispatcher.dispatch(McsEvent.jobServerNicUpdate);
-    this._eventDispatcher.dispatch(McsEvent.jobServerNicDelete);
+    this.eventDispatcher.dispatch(McsEvent.jobServerNicCreate);
+    this.eventDispatcher.dispatch(McsEvent.jobServerNicUpdate);
+    this.eventDispatcher.dispatch(McsEvent.jobServerNicDelete);
   }
 
   /**
@@ -372,8 +329,10 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   private _updateTableDataSource(server?: McsServer): void {
     let serverNicsDataSource: Observable<McsServerNic[]>;
     if (!isNullOrEmpty(server)) {
-      serverNicsDataSource = this._serversRepository.getServerNics(server).pipe(
-        tap((records) => this._serverNicsCache = of(records)));
+      serverNicsDataSource = this.apiService.getServerNics(server.id).pipe(
+        map((response) => getSafeProperty(response, (obj) => obj.collection)),
+        tap((records) => this._serverNicsCache = of(records))
+      );
     }
     let tableDataSource = isNullOrEmpty(this._serverNicsCache) ?
       serverNicsDataSource : this._serverNicsCache;
@@ -467,7 +426,8 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    */
   private _getResourceNetworks(resource: McsResource): void {
     if (isNullOrEmpty(resource)) { return; }
-    this.resourceNetworks$ = this._resourcesRespository.getResourceNetworks(resource).pipe(
+    this.resourceNetworks$ = this.apiService.getResourceNetworks(resource.id).pipe(
+      map((response) => getSafeProperty(response, (obj) => obj.collection)),
       shareReplay(1)
     );
   }

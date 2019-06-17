@@ -15,9 +15,13 @@ import {
 } from 'rxjs';
 import {
   takeUntil,
-  shareReplay
+  shareReplay,
+  catchError
 } from 'rxjs/operators';
-import { McsJob } from '@app/models';
+import {
+  McsJob,
+  McsApiErrorContext
+} from '@app/models';
 import { CoreDefinition } from '@app/core';
 import { McsJobsRepository } from '@app/services';
 import { unsubscribeSafely } from '@app/utilities';
@@ -72,7 +76,10 @@ export class NotificationComponent implements OnInit, OnDestroy {
    * Subscribes to job based on the parameter ID
    */
   private _subscribeToJobById(jobId: string): void {
-    this.job$ = this._jobsRepository.getByIdAsync(jobId).pipe(shareReplay());
+    this.job$ = this._jobsRepository.getByIdAsync(jobId).pipe(
+      catchError((error) => McsApiErrorContext.throwPrimaryError(error)),
+      shareReplay(1)
+    );
   }
 
   /**

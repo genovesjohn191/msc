@@ -8,6 +8,7 @@ export * from './table';
 export * from './directives';
 export * from './wizard';
 export * from './dialog';
+export * from './snack-bar';
 export * from './paginator';
 export * from './search';
 export * from './directives';
