@@ -4,17 +4,17 @@ import {
   Observable
 } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
-import { ServerDetails } from './server-details';
+import { McsServer } from '@app/models';
 
 @Injectable()
 export class ServerService {
-  private _serverDetails = new BehaviorSubject<ServerDetails>(null);
+  private _serverDetails = new BehaviorSubject<McsServer>(null);
   private _serverId: string;
 
   /**
    * Returns the selected server as an observable
    */
-  public getServerDetails(): Observable<ServerDetails> {
+  public getServerDetails(): Observable<McsServer> {
     return this._serverDetails.asObservable().pipe(
       distinctUntilChanged()
     );
@@ -24,7 +24,7 @@ export class ServerService {
    * Set the selected server instance including the resource
    * @param server Server to be selected
    */
-  public setServerDetails(serverDetails: ServerDetails): void {
+  public setServerDetails(serverDetails: McsServer): void {
     this._serverDetails.next(serverDetails);
   }
 

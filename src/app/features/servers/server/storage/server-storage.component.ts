@@ -281,13 +281,20 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   }
 
   /**
-   * Event that emits when the server selection was changed
-   * `@Note:` Base implementation
+   * Event that emits when the selected server has been changed
+   * @param server Server details of the selected record
    */
-  protected selectionChange(server: McsServer, resource: McsResource): void {
+  protected serverChange(server: McsServer): void {
     this.validateDedicatedFeatureFlag(server, 'EnableDedicatedVmStorageView');
     this._resetStorageValues();
     this._updateTableDataSource(server);
+  }
+
+  /**
+   * Event that emtis when the resource has been changed
+   * @param resource Resource details of the selected server
+   */
+  protected resourceChange(resource: McsResource): void {
     this._getResourceStorages(resource);
   }
 

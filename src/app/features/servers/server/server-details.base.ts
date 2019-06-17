@@ -3,11 +3,16 @@ import {
   Injector
 } from '@angular/core';
 import {
-  Subject,
   Observable,
   Subscription
 } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import {
+  tap,
+  catchError,
+  shareReplay,
+  switchMap,
+  take
+} from 'rxjs/operators';
 import {
   McsErrorHandlerService,
   McsAccessControlService,
@@ -22,16 +27,18 @@ import {
   McsJob,
   McsResource,
   McsServer,
-  HttpStatusCode
+  HttpStatusCode,
+  McsApiErrorContext
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { McsEvent } from '@app/event-manager';
 import { EventBusDispatcherService } from '@app/event-bus';
-import { ServerDetails } from './server-details';
 import { ServerService } from './server.service';
 
 export abstract class ServerDetailsBase {
-  public serverDetails$: Observable<ServerDetails>;
+  public server$: Observable<McsServer>;
+  public resource$: Observable<McsResource>;
+
   public serverPermision: McsServerPermission;
 
   protected readonly apiService: McsApiService;
@@ -40,9 +47,7 @@ export abstract class ServerDetailsBase {
   protected readonly eventDispatcher: EventBusDispatcherService;
   protected readonly serverService: ServerService;
 
-  private _server: McsServer;
   private _serversDataChangeHandler: Subscription;
-  private _baseJobSubject = new Subject<void>();
 
   constructor(
     protected injector: Injector,
@@ -56,6 +61,7 @@ export abstract class ServerDetailsBase {
 
     this._registerDataEvents();
     this._subscribeToServerDetails();
+    this._subscribeToResourceDetails();
   }
 
   /**
@@ -76,15 +82,19 @@ export abstract class ServerDetailsBase {
   /**
    * Event that emits when the selection has been changed
    * @param server Server selected
-   * @param resource Resource of the server selected
    */
-  protected abstract selectionChange(server: McsServer, resource: McsResource): void;
+  protected abstract serverChange(server: McsServer): void;
+
+  /**
+   * Event that emits when the resource details has been changed
+   * @param resource Resource selected
+   */
+  protected abstract resourceChange(resource: McsResource): void;
 
   /**
    * Disposes the server details based instance
    */
   protected dispose(): void {
-    unsubscribeSafely(this._baseJobSubject);
     unsubscribeSafely(this._serversDataChangeHandler);
   }
 
@@ -108,12 +118,41 @@ export abstract class ServerDetailsBase {
    * Subscribe to Server Details
    */
   private _subscribeToServerDetails(): void {
-    this.serverDetails$ = this.serverService.getServerDetails().pipe(
+    this.server$ = this.serverService.getServerDetails().pipe(
+      take(1),
       tap((serverDetails) => {
-        this._server = serverDetails.server;
-        this.serverPermision = new McsServerPermission(this._server);
-        this.selectionChange(serverDetails.server, serverDetails.resource);
-      })
+        this.serverPermision = new McsServerPermission(serverDetails);
+        this.serverChange(serverDetails);
+      }),
+      shareReplay(1)
+    );
+  }
+
+  /**
+   * Subscribe to Resource Details
+   */
+  private _subscribeToResourceDetails(): void {
+    this.resource$ = this.serverService.getServerDetails().pipe(
+      take(1),
+      switchMap((selectedServer) => {
+        let resourceId = getSafeProperty(selectedServer, (obj) => obj.platform.resourceId);
+        return this._getServerResourceByPlatform(resourceId);
+      }),
+      tap((resourceDetails) => this.resourceChange(resourceDetails)),
+      shareReplay(1)
+    );
+  }
+
+  /**
+   * Gets the server resource based on the server platform data
+   * @param platform Platform on what resourceId to be obtained
+   */
+  private _getServerResourceByPlatform(resourceId: string): Observable<McsResource> {
+    if (isNullOrEmpty(resourceId)) {
+      throw new Error('Server platform resource id is undefined.');
+    }
+    return this.apiService.getResource(resourceId).pipe(
+      catchError((error) => McsApiErrorContext.throwPartialError(error))
     );
   }
 

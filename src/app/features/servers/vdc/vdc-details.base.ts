@@ -51,6 +51,10 @@ export abstract class VdcDetailsBase {
     protected injector: Injector,
     protected changeDetectorRef: ChangeDetectorRef
   ) {
+    this.apiService = injector.get(McsApiService);
+    this.vdcService = injector.get(VdcService);
+    this.translateService = injector.get(TranslateService);
+    this.eventDispatcher = injector.get(EventBusDispatcherService);
     this._selectedVdc = new McsResource();
     this._registerDataEvents();
   }

@@ -1,19 +1,19 @@
 <mcs-page>
   <!-- Page template header -->
   <ng-container *mcsPageHeader>
-    <mcs-item *ngIf="serverDetails$ | async as serverDetails">
+    <mcs-item *ngIf="server$ | async as server">
       <div>
-        <a [mcsRouterLink]="[routeKeyEnum.VdcDetails, serverDetails.server?.platform?.resourceId]"
+        <a [mcsRouterLink]="[routeKeyEnum.VdcDetails, server?.platform?.resourceId]"
           mcsId="select-vdc"
           mcsEventTracker="select-vdc"
           mcsEventCategory="vdc"
           mcsEventLabel="server-details-page">
-          <h1>{{ serverDetails.server?.resourceName }}</h1>
+          <h1>{{ server?.resourceName }}</h1>
         </a>
       </div>
       <mcs-icon [key]="angleDoubleRightIconKey" size="xsmall"></mcs-icon>
       <div>
-        <h1>{{ serverDetails.server?.name }}</h1>
+        <h1>{{ server?.name }}</h1>
       </div>
     </mcs-item>
   </ng-container>
@@ -95,9 +95,9 @@
 
   <mcs-content-panel *mcsContentPanelDef>
     <div class="routing-tab-wrapper" *mcsComponentHandler>
-      <ng-container *ngIf="serverDetails$ | async as serverDetails">
+      <ng-container *ngIf="server$ | async as server">
         <!-- Busy status of the server -->
-        <ng-container *ngIf="serverDetails.server?.isProcessing">
+        <ng-container *ngIf="server?.isProcessing">
           <mcs-busy-ribbon theme="dark" margin-bottom-small>
             <span>{{ 'server.serverBusyLabel' | translate }}</span>
           </mcs-busy-ribbon>
@@ -108,20 +108,20 @@
           <mcs-tab [label]="'serverManagement.label' | translate" id="management"></mcs-tab>
 
           <!-- Services Tab -->
-          <ng-container *ngIf="serverDetails.server?.isManagedVCloud">
+          <ng-container *ngIf="server?.isManagedVCloud">
             <mcs-tab [label]="'serverServices.label' | translate" id="services"
               *mcsAccessControl="[]; feature: 'EnableServerOsUpdates'"></mcs-tab>
           </ng-container>
 
           <!-- Storage Tab -->
           <ng-container *mcsAccessControl="[]; feature: 'EnableDedicatedVmStorageView';
-            validateWhen: serverDetails.server?.isDedicated">
+            validateWhen: server?.isDedicated">
             <mcs-tab [label]="'serverStorage.label' | translate" id="storage"></mcs-tab>
           </ng-container>
 
           <!-- Snapshots Tab -->
           <ng-container *mcsAccessControl="[]; feature: 'EnableDedicatedVmSnapshotView';
-            validateWhen: serverDetails.server?.isDedicated">
+            validateWhen: server?.isDedicated">
             <ng-container *mcsAccessControl="serverPermission.vmSnapshotAccess">
               <mcs-tab [label]="'serverBackups.label' | translate" id="snapshots"></mcs-tab>
             </ng-container>
@@ -129,14 +129,14 @@
 
           <!-- Networks Tab -->
           <ng-container *mcsAccessControl="[]; feature: 'EnableDedicatedVmNicView';
-            validateWhen: serverDetails.server?.isDedicated">
+            validateWhen: server?.isDedicated">
             <mcs-tab [label]="'serverNics.label' | translate" id="nics"></mcs-tab>
           </ng-container>
 
           <!-- Action tab -->
           <ng-container mcsTabHeaderCustom *mcsAccessControl="serverPermission.vmPowerStateEdit">
             <mcs-server-command mcsId="server-command" mcsAlign="end"
-              [server]="serverDetails.server" [autoCalculatePosition]="false">
+              [server]="server" [autoCalculatePosition]="false">
             </mcs-server-command>
           </ng-container>
         </mcs-tab-group>

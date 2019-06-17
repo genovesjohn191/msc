@@ -1,3 +1,6 @@
+/** Tools */
+export * from './tools/guid';
+
 /** Functions */
 export * from './functions/mcs-url.function';
 export * from './functions/mcs-element.function';

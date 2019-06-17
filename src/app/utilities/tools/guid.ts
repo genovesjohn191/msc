@@ -3,19 +3,16 @@ import { isNullOrEmpty } from '@app/utilities';
 const GUID_EMPTY = '00000000-0000-0000-0000-000000000000';
 const GUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
-/**
- * @deprecated Use the Guid instead under utilities
- */
-export class McsGuid {
+export class Guid {
   /**
    * GUID Validator based on regex pattern
    */
   public static validator = new RegExp(GUID_PATTERN);
 
   /**
-   * Generates new guid and return the whole McsGuid class
+   * Generates new guid and return the whole Guid class
    */
-  public static newGuid(): McsGuid {
+  public static newGuid(): Guid {
     let pattern = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
     let currentDateStamp = new Date().getTime();
     if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
@@ -26,30 +23,30 @@ export class McsGuid {
       currentDateStamp = Math.floor(currentDateStamp / 16);
       return (value === 'x' ? randomValues : (randomValues & 0x3 | 0x8)).toString(16);
     });
-    return new McsGuid(generatedGuid);
+    return new Guid(generatedGuid);
   }
 
   /**
    * Returns true when the inputted parameter is GUID
    */
-  public static isGuid(value: string | McsGuid): boolean {
+  public static isGuid(value: string | Guid): boolean {
     if (isNullOrEmpty(value)) { return false; }
-    return (value instanceof McsGuid) ?
-      true : McsGuid.validator.test(value);
+    return (value instanceof Guid) ?
+      true : Guid.validator.test(value);
   }
   private _value: string;
 
   constructor(guidString?: string) {
     this._value = GUID_EMPTY;
-    if (McsGuid.isGuid(guidString)) { this._value = guidString; }
+    if (Guid.isGuid(guidString)) { this._value = guidString; }
   }
 
   /**
    * Returns true when the inputted guid is the same as the instance
    * @param other Other guid to be checked
    */
-  public equals(other: McsGuid): boolean {
-    return McsGuid.isGuid(other) && this._value === other.toString();
+  public equals(other: Guid): boolean {
+    return Guid.isGuid(other) && this._value === other.toString();
   }
 
   /**

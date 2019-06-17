@@ -1,4 +1,4 @@
-<mcs-presentation-panel mcsId="nics" *ngIf="serverDetails$ | async as serverDetails">
+<mcs-presentation-panel mcsId="nics" *ngIf="server$ | async as server">
   <ng-container mcsPresentationPanelHeader>
     <h2>{{ 'serverNics.title' | translate }}</h2>
   </ng-container>
@@ -15,7 +15,7 @@
           <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
             <ng-container *ngIf="nicIsInProgress(row); else nicIndexTemplate">
               <mcs-loader size="small"
-                [mcsTooltip]="serverDetails.server.processingText"
+                [mcsTooltip]="server.processingText"
                 mcsTooltipPosition="right"></mcs-loader>
             </ng-container>
             <ng-template #nicIndexTemplate>
@@ -84,9 +84,9 @@
           <mcs-header-cell *mcsHeaderCellDef class="action-header-cell">
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
-            <mcs-item *ngIf="serverDetails?.resource?.hasNetworks">
-              <span *ngIf="isEditNicEnabled(serverDetails.server, row)">
-                <a [disabled]="!serverDetails.server.executable"
+            <mcs-item *ngIf="(resource$ | async)?.hasNetworks">
+              <span *ngIf="isEditNicEnabled(server, row)">
+                <a [disabled]="!server.executable"
                     (click)="openEditNicWindow(row)"
                     mcsId="edit-nic"
                     mcsEventTracker="edit-nic"
@@ -97,8 +97,8 @@
               </span>
               <span>
                 <a *ngIf="!row.isPrimary"
-                  [disabled]="!serverDetails.server.executable"
-                  (click)="deleteNic(serverDetails.server, row)"
+                  [disabled]="!server.executable"
+                  (click)="deleteNic(server, row)"
                   mcsId="delete-nic"
                   mcsEventTracker="delete-nic"
                   mcsEventCategory="server"
@@ -128,11 +128,11 @@
       <!-- Adding NIC -->
       <ng-container *mcsAccessControl="serverPermision.vmNicEdit">
         <ng-container *ngIf="resourceNetworks$ | async as resourceNetworks">
-          <div class="action-box" *ngIf="canAddNic(serverDetails.server, resourceNetworks)"
-            [@fadeIn] [disabled]="!serverDetails.server.executable">
+          <div class="action-box" *ngIf="canAddNic(server, resourceNetworks)"
+            [@fadeIn] [disabled]="!server.executable">
 
             <mcs-server-manage-network *mcsComponentHandler
-              [resourceId]="serverDetails.resource?.id"
+              [resourceId]="(resource$ | async)?.id"
               [networks]="resourceNetworks"
               (dataChange)="onNetworkChanged($event)"
               [(selectedNetwork)]="selectedNetwork">
@@ -152,7 +152,7 @@
               <button mcsButton
                 arrow="right" size="small"
                 [disabled]="!inputIsValid"
-                (click)="addNic(serverDetails.server)"
+                (click)="addNic(server)"
                 mcsId="add-nic"
                 mcsEventTracker="add-nic"
                 mcsEventCategory="server"
@@ -163,7 +163,7 @@
           </div>
         </ng-container>
 
-        <mcs-data-status-warning *ngIf="hasReachedNicsLimit(serverDetails.server)">
+        <mcs-data-status-warning *ngIf="hasReachedNicsLimit(server)">
           <span>{{ 'serverNics.reachedNetworksLimit' | translate }}</span>
         </mcs-data-status-warning>
       </ng-container>
@@ -172,10 +172,10 @@
     <!-- Edit NIC -->
     <mcs-section [@fadeIn] *ngSwitchCase="serverNicMethodTypeEnum.EditNic">
       <ng-container *ngIf="resourceNetworks$ | async as resourceNetworks">
-        <div class="action-box" [disabled]="!serverDetails.server.executable">
+        <div class="action-box" [disabled]="!server.executable">
           <mcs-server-manage-network
             [networks]="resourceNetworks"
-            [resourceId]="serverDetails.resource?.id"
+            [resourceId]="(resource$ | async)?.id"
             (dataChange)="onNetworkChanged($event)"
             [targetNic]="selectedNic"
             [(selectedNetwork)]="selectedNetwork">
@@ -200,7 +200,7 @@
             <button *mcsAccessControl="serverPermision.vmEdit"
               mcsButton arrow="right" size="small"
               [disabled]="!manageNetwork?.hasChanged"
-              (click)="updateNic(serverDetails.server)"
+              (click)="updateNic(server)"
               mcsId="update-nic"
               mcsEventTracker="update-nic"
               mcsEventCategory="server"

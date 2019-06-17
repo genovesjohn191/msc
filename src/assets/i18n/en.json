@@ -1231,6 +1231,12 @@
       }
     }
   },
+  "apiErrorMessage": {
+    "getServers": "Something went wrong while obtaining servers.",
+    "getServer": "Something went wrong when getting server details.",
+    "getResources": "Something went wrong while obtaining resources.",
+    "getResource": "Something went wrong when getting resource details."
+  },
   "dialogDetachMedia": {
     "title": "Detach Media",
     "message": "Are you sure you want to detach <strong>{{media_name}}</strong>?"

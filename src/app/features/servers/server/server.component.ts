@@ -14,8 +14,7 @@ import {
 import {
   Subject,
   throwError,
-  Observable,
-  of
+  Observable
 } from 'rxjs';
 import {
   startWith,
@@ -23,8 +22,7 @@ import {
   catchError,
   tap,
   shareReplay,
-  switchMap,
-  concatMap
+  map
 } from 'rxjs/operators';
 import {
   CoreDefinition,
@@ -45,15 +43,11 @@ import {
 import {
   RouteKey,
   McsServer,
-  McsServerPlatform,
-  McsResource,
-  McsApiErrorContext,
-  ObtainmentMethod
+  McsServerPlatform
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { ServerService } from './server.service';
-import { ServerDetails } from './server-details';
 import { ServersListSource } from '../servers.listsource';
 
 // Add another group type in here if you have addition tab
@@ -75,7 +69,7 @@ export class ServerComponent
   public search: Search;
 
   public serverPermission: McsServerPermission;
-  public serverDetails$: Observable<ServerDetails>;
+  public server$: Observable<McsServer>;
   public serversMap$: Observable<Map<string, McsServer[]>>;
   public serverListSource: ServersListSource | null;
   public listStatusFactory: McsDataStatusFactory<Map<string, McsServer[]>>;
@@ -101,6 +95,7 @@ export class ServerComponent
 
   public ngOnInit() {
     super.onInit();
+    this._subscribeToServerResolver();
   }
 
   public ngAfterViewInit() {
@@ -152,7 +147,6 @@ export class ServerComponent
     if (isNullOrEmpty(id)) { return; }
     this._resetManagementState();
     this._serverService.setServerId(id);
-    this._subscribeToServerDetails(id);
     this._changeDetectorRef.markForCheck();
   }
 
@@ -201,36 +195,15 @@ export class ServerComponent
    * This will set the active server when data was obtained from repository
    * @param serverId Server ID to be the basis of the server
    */
-  private _subscribeToServerDetails(serverId: string): void {
-    this.serverDetails$ = this._apiService.getServer(serverId, ObtainmentMethod.Async).pipe(
-      catchError((error) => McsApiErrorContext.throwPrimaryError(error)),
-      concatMap((selectedServer) => {
-        let resourceId = getSafeProperty(selectedServer, (obj) => obj.platform.resourceId);
-        return this._getServerResourceByPlatform(resourceId).pipe(
-          switchMap((selectedResource) =>
-            of({ server: selectedServer, resource: selectedResource } as ServerDetails)
-          )
-        );
-      }),
-      tap((details) => {
-        if (isNullOrEmpty(details)) { return; }
-        this._serverService.setServerDetails(details);
-        this.serverPermission = new McsServerPermission(details.server);
+  private _subscribeToServerResolver(): void {
+    this.server$ = this.activatedRoute.data.pipe(
+      map((resolver) => getSafeProperty(resolver, (obj) => obj.server)),
+      tap((server) => {
+        if (isNullOrEmpty(server)) { return; }
+        this._serverService.setServerDetails(server);
+        this.serverPermission = new McsServerPermission(server);
       }),
       shareReplay(1)
-    );
-  }
-
-  /**
-   * Gets the server resource based on the server platform data
-   * @param platform Platform on what resourceId to be obtained
-   */
-  private _getServerResourceByPlatform(resourceId: string): Observable<McsResource> {
-    if (isNullOrEmpty(resourceId)) {
-      throw new Error('Server platform resource id is undefined.');
-    }
-    return this._apiService.getResource(resourceId, ObtainmentMethod.Async).pipe(
-      catchError(() => of(null))
     );
   }
 }

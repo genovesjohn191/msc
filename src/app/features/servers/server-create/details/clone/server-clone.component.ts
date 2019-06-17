@@ -38,8 +38,7 @@ import {
   McsServer,
   McsServerClone,
   Os,
-  RouteKey,
-  ObtainmentMethod
+  RouteKey
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { McsFormGroupDirective } from '@app/shared';
@@ -177,7 +176,7 @@ export class ServerCloneComponent
 
     this.serverIsManuallyAssignedIp = false;
     this.ipAddressStatusFactory.setInProgress();
-    this._apiService.getServer(serverId, ObtainmentMethod.Async).pipe(
+    this._apiService.getServer(serverId).pipe(
       catchError((error) => {
         this.ipAddressStatusFactory.setSuccessful();
         return throwError(error);

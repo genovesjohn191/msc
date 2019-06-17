@@ -1,4 +1,4 @@
-<mcs-presentation-panel mcsId="snapshots" *ngIf="serverDetails$ | async as serverDetails">
+<mcs-presentation-panel mcsId="snapshots" *ngIf="server$ | async as server">
   <ng-container mcsPresentationPanelHeader>
     <h2>{{ 'serverBackups.snapshotHeader' | translate }}</h2>
   </ng-container>
@@ -13,11 +13,11 @@
         </mcs-grid-column>
 
         <mcs-grid-column mcsAlignContent="top-right">
-          <div>
+          <div *ngIf="resource$ | async as resource">
             <button mcsButton
               size="small" arrow="right"
-              [disabled]="!enabledActions(serverDetails.server)"
-              (click)="createSnapshot(serverDetails.server, serverDetails.resource)"
+              [disabled]="!enabledActions(server)"
+              (click)="createSnapshot(server, resource)"
               mcsId
               mcsEventTracker="create-snapshot"
               mcsEventCategory="server"
@@ -33,7 +33,7 @@
     <mcs-item orientation="block">
       <strong>{{ 'serverBackups.snapshots' | translate }}</strong>
       <mcs-item *ngIf="capturingSnapshot">
-        <mcs-loader size="small" [mcsTooltip]="serverDetails.server.processingText"></mcs-loader>
+        <mcs-loader size="small" [mcsTooltip]="server.processingText"></mcs-loader>
         <span>{{ 'serverBackups.creatingSnapshot' | translate }}</span>
       </mcs-item>
 
@@ -44,22 +44,22 @@
               <mcs-grid-column>
                 <mcs-item>
                   <mcs-loader *ngIf="snapshotProcessing" size="small"
-                    [mcsTooltip]="serverDetails.server.processingText"></mcs-loader>
+                    [mcsTooltip]="server.processingText"></mcs-loader>
                   <span>{{ snapshot.createdOn | mcsStdDateFormat }}</span>
                   <span read-only>{{ snapshot.sizeMB | mcsDataSize: 'MB' }}</span>
                 </mcs-item>
               </mcs-grid-column>
 
               <mcs-grid-column mcsAlignContent="middle-right">
-                <mcs-item [disabled]="!enabledActions(serverDetails.server)">
-                  <a (click)="restoreSnapshot(serverDetails.server, snapshot)"
+                <mcs-item [disabled]="!enabledActions(server)">
+                  <a (click)="restoreSnapshot(server, snapshot)"
                     mcsId
                     mcsEventTracker="restore-snapshot"
                     mcsEventCategory="server"
                     mcsEventLabel="server-details-page">
                     {{ 'serverBackups.restoreSnapshot' | translate }}
                   </a>
-                  <a (click)="deleteSnapshot(serverDetails.server, snapshot)"
+                  <a (click)="deleteSnapshot(server, snapshot)"
                     mcsId
                     mcsEventTracker="delete-snapshot"
                     mcsEventCategory="server"

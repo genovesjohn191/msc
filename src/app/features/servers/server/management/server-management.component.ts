@@ -302,15 +302,21 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
   }
 
   /**
-   * Event that emits when the server selection was changed
-   * `@Note:` Base implementation
+   * Event that emits when the selected server has been changed
+   * @param server Server details of the selected record
    */
-  protected selectionChange(server: McsServer, resource: McsResource): void {
+  protected serverChange(server: McsServer): void {
     this.setViewMode(ServerManagementView.None);
     this.serverPermission = new McsServerPermission(server);
     this._getServerThumbnail(server);
     this._getServerMedia(server);
+  }
 
+  /**
+   * Event that emtis when the resource has been changed
+   * @param resource Resource details of the selected server
+   */
+  protected resourceChange(resource: McsResource): void {
     this._getResourceCompute(resource);
     this._getResourceCatalogs(resource);
     this._checkScaleParamMode();
