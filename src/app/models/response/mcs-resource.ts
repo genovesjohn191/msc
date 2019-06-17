@@ -91,6 +91,13 @@ export class McsResource extends McsEntityBase {
   }
 
   /**
+   * Returns true when the current resource is dedicated
+   */
+  public get isDedicated(): boolean {
+    return this.platform === PlatformType.VCenter;
+  }
+
+  /**
    * Returns service type label
    */
   public get serviceTypeLabel(): string {
