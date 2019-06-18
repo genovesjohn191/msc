@@ -170,14 +170,8 @@
         </mcs-item>
 
         <ng-container [ngSwitch]="fcWorkflowAction?.value">
-          <mcs-note *ngSwitchCase="orderWorkFlowEnum.Submitted">
-            <span read-only>{{ 'orderDetailsStep.orderActions.submitOrderNote' | translate }}</span><br>
-            <a>{{ 'orderDetailsStep.orderActions.termsCondition' | translate }}</a>
-          </mcs-note>
-          <mcs-note *ngSwitchCase="orderWorkFlowEnum.AwaitingApproval">
-            <span read-only>{{ 'orderDetailsStep.orderActions.submitOrderNote' | translate }}</span><br>
-            <a>{{ 'orderDetailsStep.orderActions.termsCondition' | translate }}</a>
-          </mcs-note>
+          <mcs-order-agreement *ngSwitchCase="orderWorkFlowEnum.Submitted" orderAgreementType="charges"></mcs-order-agreement>
+          <mcs-order-agreement *ngSwitchCase="orderWorkFlowEnum.AwaitingApproval" orderAgreementType="charges"></mcs-order-agreement>
           <mcs-note *ngSwitchCase="orderWorkFlowEnum.Unknown">
             <mcs-form-field>
               <mcs-select [(ngModel)]="selectedServer">

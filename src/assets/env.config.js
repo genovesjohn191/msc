@@ -10,6 +10,7 @@ window.ENV_CONFIG = {
   logoutUrl: 'MCS_LOGOUT_URL',
   macviewOrdersUrl: 'MCS_MACVIEW_ORDERS_URL',
   macviewChangePasswordUrl: 'MCS_MACVIEW_CHANGE_PASSWORD_URL',
+  termsAndConditionsUrl: 'MCS_TERMS_AND_CONDITIONS_URL',
   sessionExtensionWindowInSeconds: 'MCS_SESSION_EXTENSION_WINDOW_IN_SECONDS',
   imageRoot: 'MCS_IMAGE_ROOT',
   iconRoot: 'MCS_ICON_ROOT',

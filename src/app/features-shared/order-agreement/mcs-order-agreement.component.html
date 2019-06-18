@@ -1,0 +1,5 @@
+<mcs-note>
+  <span read-only [innerHtml]="orderAgreement"> </span>
+  <br *ngIf="wrapAgreement">
+  <a [href]="mcsTermsAndConditions" target="_blank"> {{ 'orderAgreement.termsAndConditions' | translate }}</a>
+</mcs-note>

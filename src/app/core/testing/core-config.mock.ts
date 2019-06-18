@@ -25,4 +25,6 @@ export class MockCoreConfig {
   public manageUsersUrl: string = '#';
 
   public macviewChangePasswordUrl: string = '#';
+
+  public termsAndConditionsUrl: string = '#';
 }

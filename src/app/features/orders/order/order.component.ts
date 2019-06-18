@@ -3,7 +3,9 @@ import {
   OnInit,
   OnDestroy,
   ChangeDetectorRef,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  TemplateRef,
+  ViewChild
 } from '@angular/core';
 import {
   ActivatedRoute,
@@ -45,7 +47,8 @@ import {
 import { McsOrdersRepository } from '@app/services';
 import {
   DialogService,
-  DialogConfirmation
+  DialogConfirmation,
+  DialogRef
 } from '@app/shared';
 
 enum OrderDetailsView {
@@ -65,6 +68,10 @@ export class OrderComponent implements OnInit, OnDestroy {
   public orderItemsColumns: string[];
   public orderItemsDataSource: McsTableDataSource<McsOrderItem>;
   public orderDetailsView: OrderDetailsView;
+  public dialogRef: DialogRef<TemplateRef<any>>;
+
+  @ViewChild('submitDialogTemplate')
+  private _submitDialogTemplate: TemplateRef<any>;
 
   private _orderApprovers: McsOrderApprover[];
   private _destroySubject = new Subject<void>();
@@ -105,6 +112,10 @@ export class OrderComponent implements OnInit, OnDestroy {
 
   public get backIconKey(): string {
     return CoreDefinition.ASSETS_SVG_CHEVRON_LEFT;
+  }
+
+  public get infoIconKey(): string {
+    return CoreDefinition.ASSETS_SVG_INFO;
   }
 
   /**
@@ -239,19 +250,14 @@ export class OrderComponent implements OnInit, OnDestroy {
 
   /**
    * Submit the current order
-   * @param order Order to be cancelled
+   * @param order Order to be submitted
    */
   public submitOrder(order: McsOrder): void {
-    let dialogData = {
-      data: order,
-      title: this._translate.instant('order.submitOrder'),
-      message: this._translate.instant('order.submitOrderMessage', { order: order.description }),
-      type: 'info'
-    } as DialogConfirmation<McsOrder>;
+    this.dialogRef = this._dialogService.open(this._submitDialogTemplate, {
+      size: 'medium'
+    });
 
-    let dialogRef = this._dialogService.openConfirmation(dialogData);
-
-    dialogRef.afterClosed().pipe(
+    this.dialogRef.afterClosed().pipe(
       concatMap((dialogResult) => {
         if (isNullOrEmpty(dialogResult)) { return of(null); }
         return this._ordersRepository.createOrderWorkFlow(order.id, {
@@ -264,6 +270,21 @@ export class OrderComponent implements OnInit, OnDestroy {
         );
       })
     ).subscribe();
+  }
+
+  /**
+   * Confirm and close the submit order dialog box
+   * @param order Order to be submitted
+   */
+  public confirmSubmitOrderDialog(order: McsOrder): void {
+    this.dialogRef.close(order);
+  }
+
+  /**
+   * Close the submit order dialog box
+   */
+  public closeSubmitOrderDialog(): void {
+    this.dialogRef.close();
   }
 
   /**
