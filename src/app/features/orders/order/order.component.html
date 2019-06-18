@@ -260,7 +260,7 @@
 
           <section>
             <mcs-order-approval (dataChange)="onChangeApprover($event)"></mcs-order-approval>
-
+            <mcs-order-agreement orderAgreementType="chargesQuoted"></mcs-order-agreement>
             <div class="action-items">
               <button mcsButton arrow="right" size="small"
                 [disabled]="!hasSelectedApprovers || selectedOrder.isProcessing"
@@ -278,3 +278,35 @@
     </section>
   </mcs-content-panel>
 </mcs-page>
+
+<ng-template #submitDialogTemplate>
+  <mcs-dialog *ngIf="order$ | async as selectedOrder">
+    <mcs-dialog-header [dialogRefTemplate]="dialogRef">
+      <h1>{{ 'dialogSubmitOrder.title' | translate  }}</h1>
+    </mcs-dialog-header>
+
+    <mcs-dialog-content>
+      <mcs-section>
+        <mcs-item>
+          <mcs-icon [key]="infoIconKey"></mcs-icon>
+          <span margin-left-medium [innerHtml]="'dialogSubmitOrder.message' | translate: { order:selectedOrder?.description }"></span>
+        </mcs-item>
+        <mcs-order-agreement orderAgreementType="chargesQuoted" wrapAgreement="false"></mcs-order-agreement>
+      </mcs-section>
+    </mcs-dialog-content>
+
+    <mcs-dialog-actions>
+      <a (click)="closeSubmitOrderDialog()"
+        mcsEventTracker="cancel"
+        mcsEventCategory="order"
+        mcsEventLabel="cancel-submit-order">{{ 'shared.dialog.cancel' | translate }}</a>
+      <button mcsButton arrow="right"
+        size="small" (click)="confirmSubmitOrderDialog(selectedOrder)"
+        mcsEventTracker="confirm-submit-order"
+        mcsEventCategory="order"
+        mcsEventLabel="submit-order-dialog">
+        {{ 'shared.dialog.confirm' | translate }}
+      </button>
+    </mcs-dialog-actions>
+  </mcs-dialog>
+</ng-template>

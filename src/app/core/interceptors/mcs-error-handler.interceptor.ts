@@ -104,8 +104,8 @@ export class McsErrorHandlerInterceptor implements ErrorHandler {
    */
   private _isAuthorized(status: number): boolean {
     if (status !== HttpStatusCode.Unauthorized) { return true; }
-    let errorHandlerService = this._injector.get(McsErrorHandlerService);
-    errorHandlerService.redirectToErrorPage(status);
+    let authService = this._injector.get(McsAuthenticationService);
+    authService.logIn();
     return false;
   }
 

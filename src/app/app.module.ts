@@ -51,6 +51,7 @@ export function coreConfig(): CoreConfig {
     macviewOrdersUrl: resolveEnvVar('MACVIEW_ORDERS_URL', MACVIEW_ORDERS_URL),
     macviewChangePasswordUrl: resolveEnvVar('MACVIEW_CHANGE_PASSWORD_URL',
       MACVIEW_CHANGE_PASSWORD_URL),
+    termsAndConditionsUrl: resolveEnvVar('MCS_TERMS_AND_CONDITIONS_URL'),
     imageRoot: resolveEnvVar('IMAGE_ROOT', IMAGE_URL),
     iconRoot: resolveEnvVar('ICON_ROOT', ICON_URL),
     enryptionKey: resolveEnvVar('EK', EK)

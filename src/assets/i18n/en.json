@@ -375,7 +375,7 @@
     },
     "updatesScheduleRunOnceWarningLabel": "Once this job is complete, you will need to set up a new update schedule.",
     "updatesScheduleConfigureLink": "Configure",
-    "updatesScheduleRunNowLink": "Update Now",
+    "updatesScheduleRunNowLink": "Update Now...",
     "deleteSuccessMessage": "Schedule deleted",
     "deleteErrorMessage": "Schedule could not be deleted at this time",
     "updateSuccessMessage": "Schedule saved",
@@ -600,8 +600,6 @@
     "orderActions": {
       "header": "What would you like to do with this order?",
       "submitOrder": "Submit",
-      "submitOrderNote": "By submitting this order, you agree to these charges and the",
-      "termsCondition": "Macquarie Telecom Pty Ltd terms and conditions.",
       "awaitingApproval": "Submit for approval",
       "saveOrder": "Save as draft",
       "mergeOrder": "Merge",
@@ -615,6 +613,11 @@
   },
   "provisioningStep": {
     "stepTitle": "Go!"
+  },
+  "orderAgreement": {
+    "agreementChargesQuoted": "By submitting this order, you agree to the charges quoted and the ",
+    "agreementCharges": "By submitting this order, you agree to these charges and the ",
+    "termsAndConditions": "Macquarie Telecom Pty Ltd terms and conditions."
   },
   "pricingCalculator": {
     "loading": "Updating charges",
@@ -1175,6 +1178,10 @@
       "deploymentFailed": "Deployment Failed",
       "viewDetails": "View details"
     },
+    "dialog":{
+      "cancel":"Cancel",
+      "confirm":"Confirm"
+    },
     "wizard": {
       "previous": "Back",
       "next": "Next",
@@ -1303,6 +1310,10 @@
   "dialogSuspendServerMultiple": {
     "title": "Suspend Servers",
     "message": "Suspending a server will save its current state and pause any operations that are in progress.\r\n\nAre you sure you wish to continue?"
+  },
+  "dialogSubmitOrder": {
+    "title": "Submit Order",
+    "message": "Are you sure you want to submit order <strong>{{order}}</strong>?"
   },
   "dialogResetPassword": {
     "title": "Reset Server Password",

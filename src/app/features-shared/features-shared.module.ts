@@ -13,6 +13,7 @@ import { ServerManageStorageComponent } from './server-manage-storage/server-man
 import { VdcManageStorageComponent } from './vdc-manage-storage/vdc-manage-storage.component';
 import { StepOrderDetailsComponent } from './step-order-details/step-order-details.component';
 import { StepProvisioningComponent } from './step-provisioning/step-provisioning.component';
+import { OrderAgreementComponent } from './order-agreement/mcs-order-agreement.component';
 
 import { RenameServerDialogComponent } from './server-dialogs/rename-server/rename-server.dialog';
 
@@ -30,8 +31,9 @@ import { RenameServerDialogComponent } from './server-dialogs/rename-server/rena
     StepOrderDetailsComponent,
     StepProvisioningComponent,
     VdcManageStorageComponent,
+    OrderAgreementComponent,
 
-    RenameServerDialogComponent
+    RenameServerDialogComponent,
   ],
   imports: [
     SharedModule
@@ -49,6 +51,8 @@ import { RenameServerDialogComponent } from './server-dialogs/rename-server/rena
     StepOrderDetailsComponent,
     StepProvisioningComponent,
     VdcManageStorageComponent,
+    OrderAgreementComponent,
+
     RenameServerDialogComponent
   ],
   entryComponents: [

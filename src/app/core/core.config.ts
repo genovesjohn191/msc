@@ -85,4 +85,13 @@ export class CoreConfig {
   public set macviewChangePasswordUrl(value: string) {
     this._macviewChangePasswordUrl = value;
   }
+
+  /** Terms and Conditions URL */
+  private _termsAndConditionsUrl: string;
+  public get termsAndConditionsUrl(): string {
+    return this._termsAndConditionsUrl;
+  }
+  public set termsAndConditionsUrl(value: string) {
+    this._termsAndConditionsUrl = value;
+  }
 }
