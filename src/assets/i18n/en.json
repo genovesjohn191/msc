@@ -395,9 +395,9 @@
   "serverServicesOsUpdatesSchedule": {
     "title": "Configure Schedule",
     "description": {
-      "default": "Our system will update the guest OS on this server for you.",
-      "recurring": "Our system will update the guest OS on this server for you. Your server has a recurring update schedule set. See the Recurring option below for details.",
-      "runonce": "Our system will update the guest OS on this server for you. Your server has a one-time update schedule set. See the Later option below for details."
+      "default": "Our system will update the guest OS on this server for you and restart it.",
+      "recurring": " Your server has a recurring update schedule set. See the Recurring option below for details.",
+      "runonce": " Your server has a one-time update schedule set. See the Once option below for details."
     },
     "scheduleTypeLabel": "Schedule Type:",
     "scheduleTypeOption": {

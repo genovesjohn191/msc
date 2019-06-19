@@ -5,7 +5,17 @@
       <ng-content select="[mcsViewServicesTab]"></ng-content>
     </mcs-item>
   </ng-container>
-  <p>{{ description }}</p>
+  <p>
+    <span>{{ 'serverServicesOsUpdatesSchedule.description.default' | translate }}</span>
+    <ng-container *ngIf="hasSchedule">
+      <span *ngIf="isRunOnce; else recurringDescriptionTemplate">
+        {{ 'serverServicesOsUpdatesSchedule.description.runonce' | translate }}
+      </span>
+      <ng-template #recurringDescriptionTemplate>
+        <span>{{ 'serverServicesOsUpdatesSchedule.description.recurring' | translate }}</span>
+      </ng-template>
+    </ng-container>
+  </p>
 
   <mcs-data-status [dataStatusFactory]="configurationStatusFactory">
     <mcs-data-status-success mcsDataSuccess>
@@ -19,8 +29,7 @@
                   <mcs-item orientation="block">
                     <strong>{{ 'serverServicesOsUpdatesSchedule.scheduleTypeLabel' | translate }}</strong>
                     <mcs-radio-button-group [(ngModel)]="scheduleType" [ngModelOptions]="{standalone: true}"
-                      mcsId="schedule-type"
-                      (ngModelChange)="onScheduleTypeChange()">
+                      mcsId="schedule-type" (ngModelChange)="onScheduleTypeChange()">
                       <mcs-radio-button [value]="scheduleTypeOption.RunOnce">
                         {{ 'serverServicesOsUpdatesSchedule.scheduleTypeOption.runonce' | translate }}
                       </mcs-radio-button>
