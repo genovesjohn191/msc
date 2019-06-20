@@ -20,7 +20,8 @@ import {
   catchError,
   tap,
   finalize,
-  shareReplay
+  shareReplay,
+  map
 } from 'rxjs/operators';
 import {
   CoreValidators,
@@ -195,7 +196,9 @@ export class MediaUploadDetailsComponent
    * Subscribes to all the resources on the repository
    */
   private _subsribeToResources(): void {
-    this.resources$ = this._resourcesRepository.getAll();
+    this.resources$ = this._resourcesRepository.getAll().pipe(
+      map((resources) => resources.filter((resource) => !resource.isDedicated))
+    );
   }
 
   private _subscribeToResourceCatalogs(resourceId: string): void {

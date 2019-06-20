@@ -34,7 +34,8 @@ import { McsResourcesRepository } from '@app/services';
 import {
   catchError,
   takeUntil,
-  shareReplay
+  shareReplay,
+  map
 } from 'rxjs/operators';
 import {
   isNullOrEmpty,
@@ -168,7 +169,7 @@ export class ExpandVdcStorageComponent extends McsOrderWizardBase implements OnI
     this._expandVdcStorageService.createOrUpdateOrder({
       contractDurationMonths: orderDetails.contractDurationMonths,
       description: orderDetails.description,
-      billingEntityId : orderDetails.billingEntityId,
+      billingEntityId: orderDetails.billingEntityId,
       billingSiteId: orderDetails.billingSiteId,
       billingCostCentreId: orderDetails.billingCostCentreId
     });
@@ -214,6 +215,7 @@ export class ExpandVdcStorageComponent extends McsOrderWizardBase implements OnI
    */
   private _getAllResources(): void {
     this.resources$ = this._resourcesRepository.getAll().pipe(
+      map((resources) => resources.filter((resource) => !resource.isDedicated)),
       shareReplay(1),
       catchError((error) => {
         this._errorHandlerService.redirectToErrorPage(error.status);
