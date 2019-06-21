@@ -8,21 +8,24 @@ import {
 import {
   distinctUntilChanged,
   tap,
-  catchError
+  catchError,
+  map
 } from 'rxjs/operators';
 import {
   IMcsFallible,
   IMcsStateChangeable,
   IMcsJobManager
 } from '@app/core';
-import { isNullOrEmpty } from '@app/utilities';
-import { McsResourcesRepository } from '@app/services';
+import {
+  isNullOrEmpty,
+  getSafeProperty
+} from '@app/utilities';
+import { McsApiService } from '@app/services';
 import {
   CatalogItemType,
   McsResource,
   McsResourceCatalogItemCreate,
   McsJob,
-  McsApiSuccessResponse,
   McsValidation,
   DataStatus
 } from '@app/models';
@@ -41,7 +44,7 @@ export class MediaUploadService implements IMcsFallible, IMcsJobManager, IMcsSta
   }
   private _selectedResourceChange: BehaviorSubject<McsResource>;
 
-  constructor(private _resourcesRepository: McsResourcesRepository) {
+  constructor(private _apiService: McsApiService) {
     this._selectedResourceChange = new BehaviorSubject(undefined);
   }
 
@@ -50,13 +53,15 @@ export class MediaUploadService implements IMcsFallible, IMcsJobManager, IMcsSta
    * @param resourceId Resource ID where the items would be checked
    * @param _url Url to validate
    */
-  public validateUrl(resourceId: string, _url: string): Observable<McsApiSuccessResponse<McsValidation[]>> {
+  public validateUrl(resourceId: string, _url: string): Observable<McsValidation[]> {
     let fieldDetails = new McsResourceCatalogItemCreate();
     fieldDetails.name = 'dummy-url-name';
     fieldDetails.description = 'dummy-description';
     fieldDetails.type = CatalogItemType.Media;
     fieldDetails.url = _url;
-    return this._resourcesRepository.validateCatalogItems(resourceId, fieldDetails);
+    return this._apiService.validateResourceCatalogItems(resourceId, fieldDetails).pipe(
+      map((response) => getSafeProperty(response, (obj) => obj.collection))
+    );
   }
 
   /**
@@ -76,7 +81,7 @@ export class MediaUploadService implements IMcsFallible, IMcsJobManager, IMcsSta
    */
   public uploadMedia(resourceId: string, catalogId: string, createDetails: McsResourceCatalogItemCreate) {
     this.setChangeState(DataStatus.InProgress);
-    return this._resourcesRepository.createResourceCatalogItem(resourceId, catalogId, createDetails)
+    return this._apiService.createResourceCatalogItem(resourceId, catalogId, createDetails)
       .pipe(
         tap((response) => {
           this.setChangeState(DataStatus.Success);

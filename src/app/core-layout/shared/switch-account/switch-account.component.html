@@ -27,7 +27,7 @@
       <mcs-item read-only full-width>
         <span mcsAlign="start">Company Accounts</span>
         <ng-container *ngIf="dataSource?.dataStatus !== dataStatusEnum.Error">
-          <span>{{ filteredRecordCount }}/{{ dataSource?.totalRecordsCount }}</span>
+          <span>{{ filteredRecordCount }}/{{ totalRecordsCount }}</span>
         </ng-container>
       </mcs-item>
     </ng-container>
@@ -59,7 +59,7 @@
       </div>
       <div *ngSwitchCase="dataStatusEnum.Error">
         <span>{{ 'switchAccount.errorMessage' | translate }}</span>
-        <a (click)="retry()"
+        <a (click)="retryDatasource()"
           mcsId
           mcsEventTracker="retry-loading-account-list"
           mcsEventCategory="navigation"
@@ -71,6 +71,6 @@
   <!-- Paginator that displays when data obtainment was success -->
   <mcs-paginator #paginator
     [hidden]="dataSource?.dataStatus !== dataStatusEnum.Success"
-    [totalCount]="dataSource?.totalRecordsCount">
+    [totalCount]="totalRecordsCount">
   </mcs-paginator>
 </mcs-section>

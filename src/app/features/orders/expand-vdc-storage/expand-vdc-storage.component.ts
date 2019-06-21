@@ -30,7 +30,7 @@ import {
   RouteKey,
   McsOrderWorkflow
 } from '@app/models';
-import { McsResourcesRepository } from '@app/services';
+import { McsApiService } from '@app/services';
 import {
   catchError,
   takeUntil,
@@ -107,7 +107,7 @@ export class ExpandVdcStorageComponent extends McsOrderWizardBase implements OnI
     private _elementRef: ElementRef,
     private _changeDetectorRef: ChangeDetectorRef,
     private _formGroupService: McsFormGroupService,
-    private _resourcesRepository: McsResourcesRepository,
+    private _apiService: McsApiService,
     private _errorHandlerService: McsErrorHandlerService,
   ) {
     super(_injector, _expandVdcStorageService);
@@ -214,13 +214,15 @@ export class ExpandVdcStorageComponent extends McsOrderWizardBase implements OnI
    * Get all the available resources
    */
   private _getAllResources(): void {
-    this.resources$ = this._resourcesRepository.getAll().pipe(
-      map((resources) => resources.filter((resource) => !resource.isDedicated)),
-      shareReplay(1),
+    this.resources$ = this._apiService.getResources().pipe(
+      map((response) => getSafeProperty(response, (obj) => obj.collection)
+        .filter((resource) => !resource.isDedicated)
+      ),
       catchError((error) => {
         this._errorHandlerService.redirectToErrorPage(error.status);
         return throwError(error);
-      })
+      }),
+      shareReplay(1)
     );
   }
 
@@ -230,7 +232,9 @@ export class ExpandVdcStorageComponent extends McsOrderWizardBase implements OnI
    */
   private _getResourceStorages(resource: McsResource): void {
     if (isNullOrEmpty(resource)) { return; }
-    this.resourceStorages$ = this._resourcesRepository.getResourceStorage(resource).pipe(
+
+    this.resourceStorages$ = this._apiService.getResourceStorages(resource.id).pipe(
+      map((response) => getSafeProperty(response, (obj) => obj.collection)),
       shareReplay(1)
     );
   }

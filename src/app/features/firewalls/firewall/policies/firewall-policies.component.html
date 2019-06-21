@@ -21,11 +21,11 @@
           </ng-template>
 
           <!-- Note: Hidden selector to get the actual column during initialization -->
-          <mcs-filter-selector [hidden]="true" [key]="columnSettingsKey"
+          <mcs-filter-selector [hidden]="true" [key]="columnSettingsKey" #filterSelector
             (filtersChange)="updateColumnSettings($event)"></mcs-filter-selector>
 
           <div mcsAlign="end" hidden-small>
-            <span> {{ dataSource?.totalRecordsCount | mcsPlural:
+            <span> {{ totalRecordsCount | mcsPlural:
                ('firewall.policies.dataSingular' | translate) : ('firewall.policies.dataPlural' | translate) }}
             </span>
           </div>
@@ -211,7 +211,7 @@
         <!-- Paginator -->
         <mcs-paginator #paginator
           [hidden]="isSearching"
-          [totalCount]="dataSource?.totalRecordsCount">
+          [totalCount]="totalRecordsCount">
         </mcs-paginator>
       </div>
     </div>

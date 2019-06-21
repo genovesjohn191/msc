@@ -20,7 +20,7 @@ import {
   isNullOrEmpty,
   refreshView
 } from '@app/utilities';
-import { McsCompaniesRepository } from '@app/services';
+import { McsApiService } from '@app/services';
 
 @Injectable()
 export class SwitchAccountService {
@@ -41,7 +41,7 @@ export class SwitchAccountService {
     private _authIdentity: McsAuthenticationIdentity,
     private _accessControlService: McsAccessControlService,
     private _cookieService: McsCookieService,
-    private _companiesRepository: McsCompaniesRepository
+    private _apiService: McsApiService
   ) {
     // Initialize member variables
     this.companies = new Array();
@@ -128,7 +128,7 @@ export class SwitchAccountService {
    * @param accountId Account id to obtain from API
    */
   private _getAccountById(accountId: string): Observable<McsCompany> {
-    return this._companiesRepository.getByIdAsync(accountId).pipe(
+    return this._apiService.getCompany(accountId).pipe(
       tap((account) => {
         this.loadingAccount = false;
         this._activeAccount = account;

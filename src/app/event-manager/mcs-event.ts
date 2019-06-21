@@ -10,8 +10,21 @@ import { OrderStateEndedEvent } from './events/order-state-ended.event';
 import { LoaderShowEvent } from './events/loader-show.event';
 import { LoaderHideEvent } from './events/loader-hide.event';
 import { ErrorShowEvent } from './events/error-show.event';
+
+import { DataChangeProductCatalogEvent } from './events/data-change-product-catalog.event';
 import { DataChangeServersEvent } from './events/data-change-servers.event';
 import { DataChangeResourcesEvent } from './events/data-change-resources.event';
+import { DataChangeToolsEvent } from './events/data-change-tools.event';
+import { DataChangeTicketsEvent } from './events/data-change-tickets.event';
+import { DataChangeSystemMessagesEvent } from './events/data-change-system-messages.event';
+import { DataChangeProductsEvent } from './events/data-change-products.event';
+import { DataChangeOrdersEvent } from './events/data-change-orders.event';
+import { DataChangeMediaEvent } from './events/data-change-media.event';
+import { DataChangeFirewallsEvent } from './events/data-change-firewalls.event';
+import { DataChangeConsoleEvent } from './events/data-change-console.event';
+import { DataChangeCompaniesEvent } from './events/data-change-companies.event';
+import { DataChangeJobsEvent } from './events/data-change-jobs.event';
+import { DataChangeInternetPortsEvent } from './events/data-change-internet-ports.event';
 
 import { JobServerDiskCreateEvent } from './events/job-server-disk-create.event';
 import { JobServerDiskUpdateEvent } from './events/job-server-disk-update.event';
@@ -49,13 +62,27 @@ export class McsEvent {
   public static serverScaleManageSelected = new ServerScaleManageSelectedEvent();
   public static productSelected = new ProductSelectedEvent();
   public static productUnSelected = new ProductUnSelectedEvent();
-  public static orderStateBusy = new OrderStateBusyEvent();
-  public static orderStateEnded = new OrderStateEndedEvent();
   public static loaderShow = new LoaderShowEvent();
   public static loaderHide = new LoaderHideEvent();
   public static errorShow = new ErrorShowEvent();
+
+  public static orderStateBusy = new OrderStateBusyEvent();
+  public static orderStateEnded = new OrderStateEndedEvent();
+
+  public static dataChangeProductCatalog = new DataChangeProductCatalogEvent();
   public static dataChangeServers = new DataChangeServersEvent();
   public static dataChangeResources = new DataChangeResourcesEvent();
+  public static dataChangeTools = new DataChangeToolsEvent();
+  public static dataChangeCompanies = new DataChangeCompaniesEvent();
+  public static dataChangeConsole = new DataChangeConsoleEvent();
+  public static dataChangeFirewalls = new DataChangeFirewallsEvent();
+  public static dataChangeMedia = new DataChangeMediaEvent();
+  public static dataChangeOrders = new DataChangeOrdersEvent();
+  public static dataChangeProducts = new DataChangeProductsEvent();
+  public static dataChangeSystemMessages = new DataChangeSystemMessagesEvent();
+  public static dataChangeTickets = new DataChangeTicketsEvent();
+  public static dataChangeJobs = new DataChangeJobsEvent();
+  public static dataChangeInternetPorts = new DataChangeInternetPortsEvent();
 
   public static jobCurrentUser = new JobCurrentUserEvent();
   public static jobReceive = new JobReceiveEvent();

@@ -8,12 +8,11 @@ import {
 import { McsEvent } from '@app/event-manager';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { McsOrder } from '@app/models';
-import { McsOrdersRepository } from '@app/services';
-import { IMcsInitializable } from '../interfaces/mcs-initializable.interface';
-import { IMcsProcessable } from '../interfaces/mcs-processable.interface';
+import { IMcsProcessable } from '../core/mcs-processable.interface';
+import { McsOrdersRepository } from '../repositories/mcs-orders.repository';
 
 @Injectable()
-export class McsOrderStateManager implements IMcsInitializable, IMcsProcessable<McsOrder>, McsDisposable {
+export class McsOrderStateManager implements IMcsProcessable<McsOrder>, McsDisposable {
 
   private _orderEndedHandler: Subscription;
   private _orderInProgressHandler: Subscription;
@@ -21,12 +20,7 @@ export class McsOrderStateManager implements IMcsInitializable, IMcsProcessable<
   constructor(
     private _eventDispatcher: EventBusDispatcherService,
     private _ordersRepository: McsOrdersRepository
-  ) { }
-
-  /**
-   * Initializes class properties / variables
-   */
-  public initialize(): void {
+  ) {
     this._registerEvents();
   }
 

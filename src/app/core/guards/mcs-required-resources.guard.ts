@@ -12,7 +12,7 @@ import {
   McsResource,
   ServiceType
 } from '@app/models';
-import { McsResourcesRepository } from '@app/services';
+import { McsApiService } from '@app/services';
 import { McsErrorHandlerService } from '../services/mcs-error-handler.service';
 import { McsAccessControlService } from '../authentication/mcs-access-control.service';
 import { CoreDefinition } from '../core.definition';
@@ -21,8 +21,8 @@ import { CoreDefinition } from '../core.definition';
 export class McsRequiredResourcesGuard implements CanActivate {
 
   constructor(
+    private _apiService: McsApiService,
     private _accessControlService: McsAccessControlService,
-    private _resourcesRepository: McsResourcesRepository,
     private _errorHandlerService: McsErrorHandlerService
   ) { }
 
@@ -45,12 +45,12 @@ export class McsRequiredResourcesGuard implements CanActivate {
    * Gets the resources based on access level
    */
   private _getResourcesByAccess(): Observable<McsResource[]> {
-    return this._resourcesRepository.getAll().pipe(
+    return this._apiService.getResources().pipe(
       map((resources) => {
         let managedResourceIsOn = this._accessControlService.hasAccess(
           ['OrderEdit'], CoreDefinition.FEATURE_FLAG_ENABLE_CREATE_MANAGED_SERVER);
 
-        return resources.filter(
+        return resources && resources.collection.filter(
           (resource) => resource.serviceType === ServiceType.SelfManaged ||
             (managedResourceIsOn && resource.serviceType === ServiceType.Managed)
         );

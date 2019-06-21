@@ -95,7 +95,7 @@ export class ServerComponent
 
   public ngOnInit() {
     super.onInit();
-    this._subscribeToServerResolver();
+    this._subscribeToServerResolve();
   }
 
   public ngAfterViewInit() {
@@ -192,10 +192,9 @@ export class ServerComponent
   }
 
   /**
-   * This will set the active server when data was obtained from repository
-   * @param serverId Server ID to be the basis of the server
+   * Subcribes to server resolve
    */
-  private _subscribeToServerResolver(): void {
+  private _subscribeToServerResolve(): void {
     this.server$ = this.activatedRoute.data.pipe(
       map((resolver) => getSafeProperty(resolver, (obj) => obj.server)),
       tap((server) => {

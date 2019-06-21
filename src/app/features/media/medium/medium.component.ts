@@ -21,7 +21,8 @@ import {
   takeUntil,
   startWith,
   tap,
-  shareReplay
+  shareReplay,
+  map
 } from 'rxjs/operators';
 import {
   CoreDefinition,
@@ -36,14 +37,13 @@ import {
 } from '@app/utilities';
 import {
   RouteKey,
-  McsResourceMedia,
-  McsApiErrorContext
+  McsResourceMedia
 } from '@app/models';
 import {
   Search,
   ComponentHandlerDirective
 } from '@app/shared';
-import { McsMediaRepository } from '@app/services';
+import { McsApiService } from '@app/services';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { MediaListSource } from '../media.listsource';
 import { MediumService } from './medium.service';
@@ -84,7 +84,7 @@ export class MediumComponent
     _activatedRoute: ActivatedRoute,
     private _router: Router,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _mediaRepository: McsMediaRepository,
+    private _apiService: McsApiService,
     private _mediumService: MediumService
   ) {
     super(_eventDispatcher, _activatedRoute);
@@ -93,6 +93,7 @@ export class MediumComponent
 
   public ngOnInit() {
     super.onInit();
+    this._subscribeToMediumResolve();
   }
 
   public ngAfterViewInit() {
@@ -142,20 +143,18 @@ export class MediumComponent
   protected onParamIdChanged(id: string) {
     if (isNullOrEmpty(id)) { return; }
     this._mediumService.setMediaId(id);
-    this._subscribeToMediaById(id);
     if (!isNullOrEmpty(this.componentHandler)) {
       this.componentHandler.recreateComponent();
     }
   }
 
   /**
-   * Subscribes to media based on the ID pProvided
-   * @param mediumId Media id to be selected
+   * Subcribes to medium resolve
    */
-  private _subscribeToMediaById(mediumId: string): void {
-    this.media$ = this._mediaRepository.getByIdAsync(mediumId).pipe(
-      tap((media) => this._mediumService.setSelectedMedium(media)),
-      catchError((error) => McsApiErrorContext.throwPrimaryError(error)),
+  private _subscribeToMediumResolve(): void {
+    this.media$ = this.activatedRoute.data.pipe(
+      map((resolver) => getSafeProperty(resolver, (obj) => obj.medium)),
+      tap((medium) => this._mediumService.setSelectedMedium(medium)),
       shareReplay(1)
     );
   }
@@ -165,7 +164,7 @@ export class MediumComponent
    */
   private _initializeListsource(): void {
     this.mediaListSource = new MediaListSource(
-      this._mediaRepository,
+      this._apiService,
       this.search
     );
 

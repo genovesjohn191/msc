@@ -44,14 +44,15 @@ export class McsErrorHandlerInterceptor implements ErrorHandler {
    * @param error Error to be handled
    */
   public handleError(error: HttpErrorResponse | McsApiErrorResponse | McsApiErrorContext | any): void {
-    let isHttpResponse = (error instanceof HttpResponse) ||
-      (error instanceof HttpErrorResponse) ||
-      (error instanceof McsApiErrorResponse) ||
-      (error instanceof McsApiErrorContext);
+    let customError = error.rejection || error;
+    let isHttpResponse = (customError instanceof HttpResponse) ||
+      (customError instanceof HttpErrorResponse) ||
+      (customError instanceof McsApiErrorResponse) ||
+      (customError instanceof McsApiErrorContext);
 
     isHttpResponse ?
-      this._handlerHttpError(error) :
-      this._handleExceptionError(error);
+      this._handlerHttpError(customError) :
+      this._handleExceptionError(customError);
   }
 
   /**

@@ -3,6 +3,7 @@ import { RouteKey } from '@app/models';
 /** Components/Services */
 import { FirewallsComponent } from './firewalls.component';
 import {
+  FirewallResolver,
   FirewallService,
   FirewallComponent,
   FirewallOverviewComponent,
@@ -13,6 +14,7 @@ import {
  * List of services for the main module
  */
 export const firewallProviders: any[] = [
+  FirewallResolver,
   FirewallService
 ];
 
@@ -28,6 +30,9 @@ export const firewallRoutes: Routes = [
     path: '',
     component: FirewallComponent,
     data: { routeId: RouteKey.FirewallDetails },
+    resolve: {
+      firewall: FirewallResolver
+    },
     children: [
       {
         path: '',

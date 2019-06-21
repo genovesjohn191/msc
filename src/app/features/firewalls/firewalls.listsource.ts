@@ -3,6 +3,7 @@ import {
   of,
   merge
 } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { McsListSourceBase } from '@app/core';
 import {
   compareStrings,
@@ -14,12 +15,12 @@ import {
   McsKeyValuePair,
   McsFirewall
 } from '@app/models';
-import { McsFirewallsRepository } from '@app/services';
+import { McsApiService } from '@app/services';
 
 export class FirewallsListSource extends McsListSourceBase<McsFirewall> {
 
   constructor(
-    private _firewallsRepository: McsFirewallsRepository,
+    private _apiService: McsApiService,
     private _search: Search) {
     super();
   }
@@ -57,7 +58,9 @@ export class FirewallsListSource extends McsListSourceBase<McsFirewall> {
    * Get all records from repository
    */
   protected getAllRecords(): Observable<McsFirewall[]> {
-    return this._firewallsRepository.getAll();
+    return this._apiService.getFirewalls().pipe(
+      map((response) => response && response.collection)
+    );
   }
 
   /**

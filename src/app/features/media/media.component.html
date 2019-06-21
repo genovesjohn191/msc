@@ -18,7 +18,7 @@
     <mcs-top-panel-item *mcsTopPanelItemDef [ngStyle]="{overflow: 'auto'}">
       <div class="listing-action-wrapper">
         <div class="total-record-count">
-          <span>{{ dataSource?.totalRecordsCount | mcsPlural:
+          <span>{{ totalRecordsCount | mcsPlural:
               ('media.dataSingular' | translate) : ('media.dataPlural' | translate) }}
           </span>
         </div>
@@ -155,7 +155,7 @@
       <!-- Paginator -->
       <mcs-paginator #paginator
         [hidden]="isSearching"
-        [totalCount]="dataSource?.totalRecordsCount">
+        [totalCount]="totalRecordsCount">
       </mcs-paginator>
     </div>
   </mcs-content-panel>

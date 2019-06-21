@@ -37,10 +37,7 @@ import {
   ServerCommand,
   VmPowerstateCommand
 } from '@app/models';
-import {
-  McsServersRepository,
-  McsConsoleRepository
-} from '@app/services';
+import { McsApiService } from '@app/services';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/event-manager';
 
@@ -113,11 +110,10 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
   private _resetVmPasswordHandler: Subscription;
 
   public constructor(
-    private _consoleRepository: McsConsoleRepository,
+    private _apiService: McsApiService,
     private _translateService: TranslateService,
     private _eventDispatcher: EventBusDispatcherService,
     private _sessionHandler: McsSessionHandlerService,
-    private _serversRepository: McsServersRepository,
     private _activatedRoute: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef
   ) {
@@ -190,7 +186,7 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
     if (isNullOrEmpty(action)) { return; }
     this.stopping = action === ServerCommand.Stop;
 
-    this._serversRepository.sendServerPowerState(this.server.id, {
+    this._apiService.sendServerPowerState(this.server.id, {
       command: VmPowerstateCommand[ServerCommand[action]],
       clientReferenceObject: {
         serverId: this.server.id
@@ -315,7 +311,7 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
     if (isNullOrEmpty(serverId)) { return; }
 
     this.consoleStatus = VmConsoleStatus.Connecting;
-    this._consoleRepository.getServerConsole(serverId).pipe(
+    this._apiService.getServerConsole(serverId).pipe(
       catchError(() => {
         // Handle common error status code
         this.consoleStatus = VmConsoleStatus.Error;
@@ -377,7 +373,7 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   private _getServerById(serverId: any): void {
     if (isNullOrEmpty(this._serverId)) { return; }
-    this._serversRepository.getByIdAsync(serverId).pipe(
+    this._apiService.getServer(serverId).pipe(
       catchError(() => empty())
     ).subscribe((response) => {
       this.server = response;

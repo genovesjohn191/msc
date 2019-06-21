@@ -1,27 +1,23 @@
 import {
   Component,
-  OnDestroy,
-  AfterViewInit,
   ChangeDetectorRef,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  Injector
 } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
-  tap,
-  map
-} from 'rxjs/operators';
-import {
   CoreDefinition,
-  McsBrowserService,
-  McsTableListingBase,
-  McsTableDataSource
+  McsTableListingBase
 } from '@app/core';
 import { isNullOrEmpty } from '@app/utilities';
 import {
   RouteKey,
-  McsInternetPort
+  McsInternetPort,
+  McsQueryParam,
+  McsApiCollection
 } from '@app/models';
 import { McsApiService } from '@app/services';
+import { McsEvent } from '@app/event-manager';
 
 @Component({
   selector: 'mcs-internet',
@@ -29,24 +25,14 @@ import { McsApiService } from '@app/services';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class InternetComponent
-  extends McsTableListingBase<McsTableDataSource<McsInternetPort>>
-  implements AfterViewInit, OnDestroy {
+export class InternetComponent extends McsTableListingBase<McsInternetPort> {
 
   public constructor(
-    _browserService: McsBrowserService,
+    _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
     private _apiService: McsApiService
   ) {
-    super(_browserService, _changeDetectorRef);
-  }
-
-  public ngAfterViewInit() {
-    Promise.resolve().then(() => this.initializeDatasource());
-  }
-
-  public ngOnDestroy() {
-    this.dispose();
+    super(_injector, _changeDetectorRef, McsEvent.dataChangeInternetPorts);
   }
 
   public get routeKeyEnum(): any {
@@ -77,13 +63,6 @@ export class InternetComponent
   }
 
   /**
-   * Retry obtaining datasource from server
-   */
-  public retryDatasource(): void {
-    this.initializeDatasource();
-  }
-
-  /**
    * Returns the column settings key for the filter selector
    */
   protected get columnSettingsKey(): string {
@@ -91,28 +70,10 @@ export class InternetComponent
   }
 
   /**
-   * Initialize the table datasource according to pagination and search settings
+   * Gets the entity listing based on the context
+   * @param query Query to be obtained on the listing
    */
-  protected initializeDatasource(): void {
-    // Set datasource instance
-    this.dataSource = new McsTableDataSource(this._getInternetPorts.bind(this));
-    this.dataSource
-      .registerSearch(this.search)
-      .registerPaginator(this.paginator);
-    this.changeDetectorRef.markForCheck();
-  }
-
-  /**
-   * Gets the internet port listing based on the pagination and search
-   */
-  private _getInternetPorts(): Observable<McsInternetPort[]> {
-    return this._apiService.getInternetPorts({
-      pageIndex: this.paginator.pageIndex,
-      pageSize: this.paginator.pageSize,
-      keyword: this.search.keyword
-    }).pipe(
-      tap((apiCollection) => this.setTotalRecordsCount(apiCollection.totalCollectionCount)),
-      map((apiCollection) => apiCollection.collection)
-    );
+  protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsInternetPort>> {
+    return this._apiService.getInternetPorts(query);
   }
 }

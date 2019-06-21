@@ -41,12 +41,11 @@ export * from './providers/mcs-filter.provider';
 
 /** Base */
 export * from './base/mcs-routing-tab.base';
-export * from './base/mcs-table-listing.base';
 export * from './base/mcs-form-field-control.base';
 export * from './base/mcs-list-source.base';
 export * from './base/mcs-status-settings.base';
 export * from './base/mcs-wizard.base';
-export * from './base/mcs-table-listing';
+export * from './base/mcs-table-listing.base';
 
 /** Authentication */
 export * from './authentication/mcs-authentication.guard';
@@ -92,4 +91,3 @@ export * from './interfaces/mcs-form-group.interface';
 export * from './interfaces/mcs-property.interface';
 export * from './interfaces/mcs-data-change.interface';
 export * from './interfaces/mcs-initializable.interface';
-export * from './interfaces/mcs-processable.interface';

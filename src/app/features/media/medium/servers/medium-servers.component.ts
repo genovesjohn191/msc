@@ -39,7 +39,7 @@ import {
   McsResourceMedia
 } from '@app/models';
 import { McsEvent } from '@app/event-manager';
-import { McsMediaRepository } from '@app/services';
+import { McsApiService } from '@app/services';
 import { MediumService } from '../medium.service';
 import { MediumDetailsBase } from '../medium-details.base';
 import { MediaManageServers } from '../../shared';
@@ -67,7 +67,7 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
   constructor(
     _mediumService: MediumService,
     private _eventDispatcher: EventBusDispatcherService,
-    private _mediaRepository: McsMediaRepository,
+    private _apiService: McsApiService,
     private _dialogService: DialogService,
     private _changeDetectorRef: ChangeDetectorRef,
     private _translateService: TranslateService,
@@ -166,7 +166,9 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
    * Get attached servers from media API
    */
   private _getAttachedServers(medium: McsResourceMedia) {
-    return this._mediaRepository.getMediaServers(medium);
+    return this._apiService.getMediaServers(medium.id).pipe(
+      map((response) => getSafeProperty(response, (obj) => obj.collection))
+    );
   }
 
   /**
@@ -180,7 +182,7 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
     };
 
     this.setSelectedMediumState(medium, true);
-    this._mediaRepository.detachServerMedia(
+    this._apiService.detachServerMedia(
       selectedServerId, medium.id,
       { clientReferenceObject: expectedJobObject }
     ).pipe(
@@ -203,7 +205,7 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
     };
 
     this.setSelectedMediumState(medium, true);
-    this._mediaRepository.attachServerMedia(
+    this._apiService.attachServerMedia(
       serverDetails.id,
       {
         name: medium.name,

@@ -14,12 +14,10 @@ import {
 import {
   Subject,
   Observable,
-  Subscription,
-  empty
+  Subscription
 } from 'rxjs';
 import {
   takeUntil,
-  catchError,
   map
 } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
@@ -164,7 +162,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
       this.setViewMode(ServerManagementView.ManageScale);
       return;
     }
-    this.eventDispatcher.dispatch(McsEvent.serverScaleManageSelected, server.id);
+    this.eventDispatcher.dispatch(McsEvent.serverScaleManageSelected, server);
     this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.OrderScaleManagedServer)]);
   }
 
@@ -336,8 +334,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
           thumbnailDetails.fileType,
           thumbnailDetails.encoding
         );
-      }),
-      catchError(() => empty())
+      })
     );
   }
 

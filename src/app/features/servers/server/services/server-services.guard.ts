@@ -10,13 +10,13 @@ import {
 import { map } from 'rxjs/operators';
 import { McsErrorHandlerService } from '@app/core';
 import { HttpStatusCode } from '@app/models';
-import { McsServersRepository } from '@app/services';
+import { McsApiService } from '@app/services';
 
 @Injectable()
 export class ServerServicesGuard implements CanActivate {
 
   constructor(
-    private _serverRepository: McsServersRepository,
+    private _apiService: McsApiService,
     private _errorHandlerService: McsErrorHandlerService
   ) { }
 
@@ -26,7 +26,7 @@ export class ServerServicesGuard implements CanActivate {
   ): Observable<boolean> | Promise<boolean> | boolean {
 
     let serverId = _route.parent.paramMap.get('id');
-    return this._serverRepository.getByIdAsync(serverId).pipe(
+    return this._apiService.getServer(serverId).pipe(
       map((response) => {
         if (response.isManagedVCloud) {
           return true;

@@ -16,13 +16,14 @@ import {
   McsKeyValuePair,
   McsProductCatalog
 } from '@app/models';
-import { McsProductCatalogRepository } from '@app/services';
+import { McsApiService } from '@app/services';
 
 export class ProductCatalogListSource extends McsListSourceBase<McsProductCatalog> {
 
   constructor(
-    private _catalogRepository: McsProductCatalogRepository,
-    private _search: Search) {
+    private _apiService: McsApiService,
+    private _search: Search
+  ) {
     super();
   }
 
@@ -59,13 +60,13 @@ export class ProductCatalogListSource extends McsListSourceBase<McsProductCatalo
    * Get all records from repository
    */
   protected getAllRecords(): Observable<McsProductCatalog[]> {
-    return this._catalogRepository.getAll()
+    return this._apiService.getProductCatalogs()
       .pipe(
         map((response) => {
           // We need to create a new product object in here
           // because we are eliminating other products that are
           // not in the keyword.
-          return cloneObject<McsProductCatalog[]>(response);
+          return cloneObject<McsProductCatalog[]>(response && response.collection);
         })
       );
   }

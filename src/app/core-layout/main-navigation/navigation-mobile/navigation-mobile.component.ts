@@ -44,7 +44,7 @@ import {
   EventBusDispatcherService
 } from '@app/event-bus';
 import { SlidingPanelComponent } from '@app/shared';
-import { McsProductCatalogRepository } from '@app/services';
+import { McsApiService } from '@app/services';
 import { McsEvent } from '@app/event-manager';
 
 @Component({
@@ -112,7 +112,7 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
     private _eventDispatcher: EventBusDispatcherService,
     private _accessControl: McsAccessControlService,
     private _authenticationService: McsAuthenticationService,
-    private _productCatalogRepository: McsProductCatalogRepository
+    private _apiService: McsApiService
   ) {
     this.switchAccountAnimation = 'collapsed';
     this.productsStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
@@ -202,13 +202,14 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
     this.productsStatusFactory.setInProgress();
     if (!this._accessControl.hasAccessToFeature('EnableProductCatalog')) { return; }
 
-    this._productCatalogRepository.getAll().pipe(
+    this._apiService.getProductCatalogs().pipe(
       catchError((error) => {
         this.productsStatusFactory.setError();
         return throwError(error);
       })
     ).subscribe((response) => {
-      this.productsStatusFactory.setSuccessful(response);
+      let catalogs = response && response.collection;
+      this.productsStatusFactory.setSuccessful(catalogs);
     });
   }
 }

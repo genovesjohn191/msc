@@ -17,9 +17,11 @@ import { McsCompaniesRepository } from './repositories/mcs-companies.repository'
 import { McsInternetRepository } from './repositories/mcs-internet.repository';
 import { McsSystemMessagesRepository } from './repositories/mcs-system-messages.repository';
 
-export const apiProviders: any[] = [
-
-];
+/** State Managers */
+import { McsJobStateManager } from './state-manager/mcs-job.state-manager';
+import { McsMediaStateManager } from './state-manager/mcs-media.state-manager';
+import { McsOrderStateManager } from './state-manager/mcs-order.state-manager';
+import { McsServerStateManager } from './state-manager/mcs-server.state-manager';
 
 export const repositoryProviders: any[] = [
   McsFirewallsRepository,
@@ -37,6 +39,12 @@ export const repositoryProviders: any[] = [
   McsCompaniesRepository,
   McsInternetRepository,
   McsSystemMessagesRepository,
-
   McsApiService
+];
+
+export const stateManagers: any[] = [
+  McsJobStateManager,
+  McsMediaStateManager,
+  McsOrderStateManager,
+  McsServerStateManager
 ];

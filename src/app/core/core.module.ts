@@ -3,8 +3,7 @@ import {
   NgModule,
   Optional,
   SkipSelf,
-  ErrorHandler,
-  Injector
+  ErrorHandler
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -19,10 +18,7 @@ import {
 } from '@app/utilities';
 import { McsEvent } from '@app/event-manager';
 import { CoreConfig } from './core.config';
-import {
-  coreProviders,
-  initializableProviders
-} from './core.constants';
+import { coreProviders } from './core.constants';
 import {
   McsSnackBarContainerComponent
 } from './factory/snack-bar/mcs-snack-bar-container.component';
@@ -37,7 +33,6 @@ import { McsNotificationEventsService } from './services/mcs-notification-events
 import { McsRouteSettingsService } from './services/mcs-route-settings.service';
 import { McsHttpClientInterceptor } from './interceptors/mcs-http-client.interceptor';
 import { McsErrorHandlerInterceptor } from './interceptors/mcs-error-handler.interceptor';
-import { IMcsInitializable } from './interfaces/mcs-initializable.interface';
 
 @NgModule({
   declarations: [
@@ -46,7 +41,6 @@ import { IMcsInitializable } from './interfaces/mcs-initializable.interface';
   ],
   providers: [
     ...coreProviders,
-    ...initializableProviders,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: McsHttpClientInterceptor,
@@ -86,7 +80,6 @@ export class CoreModule {
   }
 
   constructor(
-    private _injector: Injector,
     @Optional() @SkipSelf() parentModule: CoreModule,
     private _eventDispatcher: EventBusDispatcherService,
     private _routerHandler: McsRouteHandlerService,
@@ -102,10 +95,7 @@ export class CoreModule {
       throw new Error(
         'CoreModule is already loaded. Import it in the AppModule only');
     }
-
-    // TODO: Register the providers with initializable interface
     this._registerEvents();
-    this._initializeRequiredProviders();
   }
 
   /**
@@ -147,18 +137,5 @@ export class CoreModule {
       this._routerHandler,
       this._routeSettings
     ];
-  }
-
-  /**
-   * Initializes required providers
-   */
-  private _initializeRequiredProviders(): void {
-    if (isNullOrEmpty(initializableProviders)) { return; }
-
-    initializableProviders.forEach((provider) => {
-      let registeredProvider: IMcsInitializable = this._injector.get(provider);
-      if (isNullOrEmpty(registeredProvider)) { return; }
-      registeredProvider.initialize();
-    });
   }
 }

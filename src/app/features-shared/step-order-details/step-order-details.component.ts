@@ -26,7 +26,8 @@ import {
 } from 'rxjs';
 import {
   takeUntil,
-  catchError
+  catchError,
+  map
 } from 'rxjs/operators';
 import {
   McsTableDataSource,
@@ -50,7 +51,7 @@ import {
   OrderType
 } from '@app/models';
 import { McsFormGroupDirective } from '@app/shared';
-import { McsOrdersRepository } from '@app/services';
+import { McsApiService } from '@app/services';
 import { OrderDetails } from './order-details';
 
 @Component({
@@ -107,7 +108,7 @@ export class StepOrderDetailsComponent
     private _changeDetectorRef: ChangeDetectorRef,
     private _formBuilder: FormBuilder,
     private _translate: TranslateService,
-    private _ordersRepository: McsOrdersRepository
+    private _apiService: McsApiService
   ) {
     this.orderDatasource = new McsTableDataSource([]);
     this.orderType = OrderType.New;
@@ -395,7 +396,8 @@ export class StepOrderDetailsComponent
    * Subscribes to order billing details
    */
   private _subscribeToBillingDetails(): void {
-    this.billing$ = this._ordersRepository.getBilling().pipe(
+    this.billing$ = this._apiService.getBilling().pipe(
+      map((response) => getSafeProperty(response, (obj) => obj.collection)),
       catchError(() => empty())
     );
   }

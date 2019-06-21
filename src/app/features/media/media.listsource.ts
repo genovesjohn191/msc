@@ -3,23 +3,25 @@ import {
   merge,
   of
 } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { McsListSourceBase } from '@app/core';
 import {
   compareStrings,
   isNullOrEmpty,
-  containsString
+  containsString,
+  getSafeProperty
 } from '@app/utilities';
 import { Search } from '@app/shared';
 import {
   McsKeyValuePair,
   McsResourceMedia
 } from '@app/models';
-import { McsMediaRepository } from '@app/services';
+import { McsApiService } from '@app/services';
 
 export class MediaListSource extends McsListSourceBase<McsResourceMedia> {
 
   constructor(
-    private _mediaRepository: McsMediaRepository,
+    private _apiService: McsApiService,
     private _search: Search) {
     super();
   }
@@ -57,7 +59,9 @@ export class MediaListSource extends McsListSourceBase<McsResourceMedia> {
    * Get all records from repository
    */
   protected getAllRecords(): Observable<McsResourceMedia[]> {
-    return this._mediaRepository.getAll();
+    return this._apiService.getMedia().pipe(
+      map((response) => getSafeProperty(response, (obj) => obj.collection))
+    );
   }
 
   /**

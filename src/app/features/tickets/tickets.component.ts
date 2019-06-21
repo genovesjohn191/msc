@@ -1,25 +1,25 @@
 import {
   Component,
-  OnDestroy,
-  AfterViewInit,
   ChangeDetectorRef,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  Injector
 } from '@angular/core';
 import { Router } from '@angular/router';
-/** Services */
+import { Observable } from 'rxjs';
 import {
   CoreDefinition,
-  McsBrowserService,
-  McsTableListingBase,
   CoreRoutes,
-  McsTableDataSource
+  McsTableListingBase
 } from '@app/core';
 import { isNullOrEmpty } from '@app/utilities';
 import {
   RouteKey,
-  McsTicket
+  McsTicket,
+  McsQueryParam,
+  McsApiCollection
 } from '@app/models';
-import { McsTicketsRepository } from '@app/services';
+import { McsApiService } from '@app/services';
+import { McsEvent } from '@app/event-manager';
 
 @Component({
   selector: 'mcs-tickets',
@@ -30,31 +30,19 @@ import { McsTicketsRepository } from '@app/services';
   }
 })
 
-export class TicketsComponent
-  extends McsTableListingBase<McsTableDataSource<McsTicket>>
-  implements AfterViewInit, OnDestroy {
+export class TicketsComponent extends McsTableListingBase<McsTicket> {
+
+  constructor(
+    _injector: Injector,
+    _changeDetectorRef: ChangeDetectorRef,
+    private _apiService: McsApiService,
+    private _router: Router
+  ) {
+    super(_injector, _changeDetectorRef, McsEvent.dataChangeTickets);
+  }
 
   public get addIconKey(): string {
     return CoreDefinition.ASSETS_FONT_PLUS;
-  }
-
-  constructor(
-    _browserService: McsBrowserService,
-    _changeDetectorRef: ChangeDetectorRef,
-    private _ticketsRepository: McsTicketsRepository,
-    private _router: Router
-  ) {
-    super(_browserService, _changeDetectorRef);
-  }
-
-  public ngAfterViewInit() {
-    Promise.resolve().then(() => {
-      this.initializeDatasource();
-    });
-  }
-
-  public ngOnDestroy(): void {
-    this.dispose();
   }
 
   public get routeKeyEnum(): any {
@@ -78,13 +66,6 @@ export class TicketsComponent
   }
 
   /**
-   * Retry obtaining datasource from tickets
-   */
-  public retryDatasource(): void {
-    this.initializeDatasource();
-  }
-
-  /**
    * Returns the column settings key for the filter selector
    */
   protected get columnSettingsKey(): string {
@@ -92,13 +73,10 @@ export class TicketsComponent
   }
 
   /**
-   * Initialize the table datasource according to pagination and search settings
+   * Gets the entity listing based on the context
+   * @param query Query to be obtained on the listing
    */
-  protected initializeDatasource(): void {
-    this.dataSource = new McsTableDataSource(this._ticketsRepository);
-    this.dataSource
-      .registerSearch(this.search)
-      .registerPaginator(this.paginator);
-    this.changeDetectorRef.markForCheck();
+  protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsTicket>> {
+    return this._apiService.getTickets(query);
   }
 }

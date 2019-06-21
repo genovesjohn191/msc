@@ -8,7 +8,7 @@ import {
 import { saveAs } from 'file-saver';
 import { CoreDefinition } from '@app/core';
 import { isNullOrEmpty } from '@app/utilities';
-import { McsTicketsRepository } from '@app/services';
+import { McsApiService } from '@app/services';
 import {
   CommentType,
   McsTicketComment,
@@ -46,7 +46,7 @@ export class TicketActivityComponent {
 
   public constructor(
     private _changeDetectorRef: ChangeDetectorRef,
-    private _ticketsRepository: McsTicketsRepository
+    private _apiService: McsApiService
   ) { }
 
   public get activityIconKey(): string {
@@ -82,7 +82,7 @@ export class TicketActivityComponent {
    */
   public downloadAttachment() {
     this.downloading = true;
-    this._ticketsRepository.getFileAttachment(
+    this._apiService.getFileAttachment(
       this.ticketId, this._activity.id
     ).subscribe((blobResponse) => {
       saveAs(blobResponse, this._activity.content);

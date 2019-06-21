@@ -45,7 +45,7 @@ import {
   McsResourceNetwork,
   McsResourceNetworkIpAddress,
 } from '@app/models';
-import { McsResourcesRepository } from '@app/services';
+import { McsApiService } from '@app/services';
 import { McsFormGroupDirective } from '@app/shared';
 import { ServerManageNetwork } from './server-manage-network';
 
@@ -133,7 +133,7 @@ export class ServerManageNetworkComponent
     private _changeDetectorRef: ChangeDetectorRef,
     private _formBuilder: FormBuilder,
     private _translateService: TranslateService,
-    private _resourcesRepository: McsResourcesRepository
+    private _apiService: McsApiService
   ) {
     this.inputManageType = InputManageType.Auto;
     this.ipAddressItems = new Array();
@@ -263,7 +263,7 @@ export class ServerManageNetworkComponent
     if (isNullOrEmpty(network)) { return; }
 
     this.ipAddressesStatusFactory.setInProgress();
-    this._resourcesRepository.getResourceNetwork(this.resourceId, network.id).pipe(
+    this._apiService.getResourceNetwork(this.resourceId, network.id).pipe(
       finalize(() => this.ipAddressesStatusFactory.setSuccessful(this.ipAddressesInUsed)),
       shareReplay(1)
     ).subscribe((response) => {

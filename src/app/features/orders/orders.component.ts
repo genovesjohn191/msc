@@ -1,24 +1,25 @@
 import {
   Component,
-  OnDestroy,
-  AfterViewInit,
   ChangeDetectorRef,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  Injector
 } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 import {
   CoreDefinition,
-  McsBrowserService,
-  McsTableListingBase,
   CoreRoutes,
-  McsTableDataSource
+  McsTableListingBase
 } from '@app/core';
 import { isNullOrEmpty } from '@app/utilities';
 import {
   RouteKey,
-  McsOrder
+  McsOrder,
+  McsQueryParam,
+  McsApiCollection
 } from '@app/models';
-import { McsOrdersRepository } from '@app/services';
+import { McsEvent } from '@app/event-manager';
+import { McsApiService } from '@app/services';
 
 @Component({
   selector: 'mcs-orders',
@@ -26,25 +27,15 @@ import { McsOrdersRepository } from '@app/services';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class OrdersComponent
-  extends McsTableListingBase<McsTableDataSource<McsOrder>>
-  implements AfterViewInit, OnDestroy {
+export class OrdersComponent extends McsTableListingBase<McsOrder> {
 
   public constructor(
-    _browserService: McsBrowserService,
+    _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
     private _router: Router,
-    private _ordersRepository: McsOrdersRepository
+    private _apiService: McsApiService
   ) {
-    super(_browserService, _changeDetectorRef);
-  }
-
-  public ngAfterViewInit() {
-    Promise.resolve().then(() => this.initializeDatasource());
-  }
-
-  public ngOnDestroy() {
-    this.dispose();
+    super(_injector, _changeDetectorRef, McsEvent.dataChangeOrders);
   }
 
   public get routeKeyEnum(): any {
@@ -75,13 +66,6 @@ export class OrdersComponent
   }
 
   /**
-   * Retry obtaining datasource from server
-   */
-  public retryDatasource(): void {
-    this.initializeDatasource();
-  }
-
-  /**
    * Returns the column settings key for the filter selector
    */
   protected get columnSettingsKey(): string {
@@ -89,14 +73,10 @@ export class OrdersComponent
   }
 
   /**
-   * Initialize the table datasource according to pagination and search settings
+   * Gets the entity listing based on the context
+   * @param query Query to be obtained on the listing
    */
-  protected initializeDatasource(): void {
-    // Set datasource instance
-    this.dataSource = new McsTableDataSource(this._ordersRepository);
-    this.dataSource
-      .registerSearch(this.search)
-      .registerPaginator(this.paginator);
-    this.changeDetectorRef.markForCheck();
+  protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsOrder>> {
+    return this._apiService.getOrders(query);
   }
 }

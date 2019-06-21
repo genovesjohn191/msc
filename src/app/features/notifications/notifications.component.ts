@@ -1,37 +1,25 @@
 import {
   Component,
-  OnDestroy,
-  AfterViewInit,
   ChangeDetectorRef,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  Injector
 } from '@angular/core';
-import {
-  merge,
-  Subject,
-  Observable
-} from 'rxjs';
-import { takeUntil, tap, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import {
   CoreDefinition,
   CoreRoutes,
-  McsBrowserService,
   McsTableListingBase,
-  McsAuthenticationIdentity,
-  McsTableDataSource
+  McsAuthenticationIdentity
 } from '@app/core';
-import {
-  isNullOrEmpty,
-  unsubscribeSubject
-} from '@app/utilities';
-import {
-  McsJobsRepository,
-  McsApiService
-} from '@app/services';
+import { isNullOrEmpty } from '@app/utilities';
+import { McsApiService } from '@app/services';
 import {
   McsCompany,
   McsJob,
-  RouteKey
+  RouteKey,
+  McsQueryParam,
+  McsApiCollection
 } from '@app/models';
 import { EventBusPropertyListenOn } from '@app/event-bus';
 import { McsEvent } from '@app/event-manager';
@@ -43,39 +31,23 @@ import { McsEvent } from '@app/event-manager';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class NotificationsComponent
-  extends McsTableListingBase<McsTableDataSource<McsJob>>
-  implements AfterViewInit, OnDestroy {
+export class NotificationsComponent extends McsTableListingBase<McsJob> {
 
   @EventBusPropertyListenOn(McsEvent.accountChange)
   public activeCompany$: Observable<McsCompany>;
 
-  private _destroySubject = new Subject<void>();
-
-  public get activeCompany(): McsCompany {
-    return this._authenticationIdentity.activeAccount;
-  }
-
   public constructor(
-    _browserService: McsBrowserService,
+    _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
     private _router: Router,
     private _authenticationIdentity: McsAuthenticationIdentity,
-    private _apiService: McsApiService,
-    private _jobsRepository: McsJobsRepository
+    private _apiService: McsApiService
   ) {
-    super(_browserService, _changeDetectorRef);
+    super(_injector, _changeDetectorRef, McsEvent.dataChangeJobs);
   }
 
-  public ngAfterViewInit() {
-    Promise.resolve().then(() => {
-      this.initializeDatasource();
-    });
-  }
-
-  public ngOnDestroy() {
-    this.dispose();
-    unsubscribeSubject(this._destroySubject);
+  public get activeCompany(): McsCompany {
+    return this._authenticationIdentity.activeAccount;
   }
 
   /**
@@ -100,13 +72,6 @@ export class NotificationsComponent
   }
 
   /**
-   * Retry obtaining datasource from notifications
-   */
-  public retryDatasource(): void {
-    this.initializeDatasource();
-  }
-
-  /**
    * Returns the column settings key for the filter selector
    */
   protected get columnSettingsKey(): string {
@@ -114,42 +79,10 @@ export class NotificationsComponent
   }
 
   /**
-   * Initialize the table datasource according to pagination and search settings
+   * Gets the entity listing based on the context
+   * @param query Query to be obtained on the listing
    */
-  protected initializeDatasource(): void {
-    this.dataSource = new McsTableDataSource(this._getJobs.bind(this));
-    this.dataSource
-      .registerSearch(this.search)
-      .registerPaginator(this.paginator);
-
-    this._subscribeToDataUpdate();
-    this.changeDetectorRef.markForCheck();
-  }
-
-  /**
-   * Get all the jobs
-   */
-  private _getJobs(): Observable<McsJob[]> {
-    return this._apiService.getJobs({
-      pageIndex: this.paginator.pageIndex,
-      pageSize: this.paginator.pageSize,
-      keyword: this.search.keyword
-    }).pipe(
-      tap((apiCollection) => this.setTotalRecordsCount(apiCollection.totalCollectionCount)),
-      map((apiCollection) => apiCollection.collection)
-    );
-  }
-
-  /**
-   * Subscribe to data updates that includes the obtainment of the account change
-   */
-  private _subscribeToDataUpdate(): void {
-    let requestUpdate = merge(
-      this._jobsRepository.dataChange(),
-      this.dataSource.dataRenderedChange()
-    );
-
-    requestUpdate.pipe(takeUntil(this._destroySubject))
-      .subscribe(() => this.changeDetectorRef.markForCheck());
+  protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsJob>> {
+    return this._apiService.getJobs(query);
   }
 }

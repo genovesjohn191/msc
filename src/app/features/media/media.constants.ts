@@ -4,23 +4,25 @@ import {
   McsRequiredResourcesGuard
 } from '@app/core';
 import { RouteKey } from '@app/models';
-/** Components */
+
 import { MediaComponent } from './media.component';
 import {
   MediaUploadService,
   MediaUploadComponent
 } from './media-upload';
 import {
+  MediumResolver,
+  MediumService,
   MediumComponent,
   MediumOverviewComponent,
   MediumServersComponent
 } from './medium';
-import { MediumService } from './medium/medium.service';
 
 /**
  * List of services for the main module
  */
 export const mediaProviders: any[] = [
+  MediumResolver,
   MediumService,
   MediaUploadService
 ];
@@ -44,6 +46,9 @@ export const mediaRoutes: Routes = [
     path: '',
     component: MediumComponent,
     data: { routeId: RouteKey.Medium },
+    resolve: {
+      medium: MediumResolver
+    },
     children: [
       {
         path: '',

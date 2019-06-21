@@ -8,14 +8,18 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import { throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import {
+  catchError,
+  map
+} from 'rxjs/operators';
 import { McsDataStatusFactory } from '@app/core';
 import {
   isNullOrEmpty,
-  unsubscribeSubject
+  unsubscribeSubject,
+  getSafeProperty
 } from '@app/utilities';
 import { McsServer } from '@app/models';
-import { McsServersRepository } from '@app/services';
+import { McsApiService } from '@app/services';
 import { MediaManageServers } from './media-manage-servers';
 
 @Component({
@@ -47,7 +51,7 @@ export class MediaManageServersComponent implements OnInit, OnDestroy {
 
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
-    private _serversRepository: McsServersRepository
+    private _apiService: McsApiService
   ) {
     this.dataStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
   }
@@ -65,17 +69,16 @@ export class MediaManageServersComponent implements OnInit, OnDestroy {
    */
   private _getServers(): void {
     this.dataStatusFactory.setInProgress();
-    this._serversRepository.getAll()
-      .pipe(
-        catchError((error) => {
-          this.dataStatusFactory.setError();
-          return throwError(error);
-        })
-      )
-      .subscribe((response) => {
-        this.servers = response;
-        this.dataStatusFactory.setSuccessful(response);
-      });
+    this._apiService.getServers().pipe(
+      catchError((error) => {
+        this.dataStatusFactory.setError();
+        return throwError(error);
+      }),
+      map((response) => getSafeProperty(response, (obj) => obj.collection))
+    ).subscribe((response) => {
+      this.servers = response;
+      this.dataStatusFactory.setSuccessful(response);
+    });
   }
 
   /**

@@ -1,21 +1,22 @@
 import {
   Component,
-  OnDestroy,
-  AfterViewInit,
   ChangeDetectorRef,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  Injector
 } from '@angular/core';
+import { Observable } from 'rxjs';
 import {
   CoreDefinition,
-  McsBrowserService,
-  McsTableListingBase,
-  McsTableDataSource
+  McsTableListingBase
 } from '@app/core';
 import {
   RouteKey,
-  McsSystemMessage
+  McsSystemMessage,
+  McsQueryParam,
+  McsApiCollection
 } from '@app/models';
-import { McsSystemMessagesRepository } from '@app/services';
+import { McsApiService } from '@app/services';
+import { McsEvent } from '@app/event-manager';
 
 @Component({
   selector: 'mcs-system-messages',
@@ -26,41 +27,22 @@ import { McsSystemMessagesRepository } from '@app/services';
   }
 })
 
-export class SystemMessagesComponent
-  extends McsTableListingBase<McsTableDataSource<McsSystemMessage>>
-  implements AfterViewInit, OnDestroy {
-
-  public get addIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_PLUS;
-  }
+export class SystemMessagesComponent extends McsTableListingBase<McsSystemMessage> {
 
   constructor(
-    _browserService: McsBrowserService,
+    _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
-    private _systemMessagesRepository: McsSystemMessagesRepository
+    private _apiService: McsApiService
   ) {
-    super(_browserService, _changeDetectorRef);
-  }
-
-  public ngAfterViewInit() {
-    Promise.resolve().then(() => {
-      this.initializeDatasource();
-    });
-  }
-
-  public ngOnDestroy(): void {
-    this.dispose();
+    super(_injector, _changeDetectorRef, McsEvent.dataChangeSystemMessages);
   }
 
   public get routeKeyEnum(): any {
     return RouteKey;
   }
 
-  /**
-   * Retry obtaining datasource from system messages
-   */
-  public retryDatasource(): void {
-    this.initializeDatasource();
+  public get addIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_PLUS;
   }
 
   /**
@@ -71,13 +53,10 @@ export class SystemMessagesComponent
   }
 
   /**
-   * Initialize the table datasource according to pagination and search settings
+   * Gets the entity listing based on the context
+   * @param query Query to be obtained on the listing
    */
-  protected initializeDatasource(): void {
-    this.dataSource = new McsTableDataSource(this._systemMessagesRepository);
-    this.dataSource
-      .registerSearch(this.search)
-      .registerPaginator(this.paginator);
-    this.changeDetectorRef.markForCheck();
+  protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsSystemMessage>> {
+    return this._apiService.getSystemMessages(query);
   }
 }
