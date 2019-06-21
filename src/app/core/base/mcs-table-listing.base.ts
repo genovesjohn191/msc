@@ -48,12 +48,11 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
   @ViewChild('paginator')
   public paginator: Paginator;
 
-  public selection: McsTableSelection<T>;
-
   // Table variables
-  protected dataSource: McsTableDataSource<T>;
-  protected dataColumns: string[] = [];
-  protected columnSettings: any;
+  public selection: McsTableSelection<T>;
+  public dataSource: McsTableDataSource<T>;
+  public dataColumns: string[] = [];
+  public columnSettings: any;
 
   protected readonly browserService: McsBrowserService;
   protected readonly eventDispatcher: EventBusDispatcherService;

@@ -1,7 +1,5 @@
 import {
   Component,
-  AfterViewInit,
-  OnDestroy,
   Output,
   EventEmitter,
   ChangeDetectorRef,
@@ -43,8 +41,7 @@ import { McsEvent } from '@app/event-manager';
   }
 })
 
-export class SwitchAccountComponent extends McsTableListingBase<McsCompany>
-  implements AfterViewInit, OnDestroy {
+export class SwitchAccountComponent extends McsTableListingBase<McsCompany> {
 
   @Output()
   public selectionChanged: EventEmitter<any>;
