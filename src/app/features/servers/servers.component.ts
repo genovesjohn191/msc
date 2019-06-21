@@ -3,32 +3,26 @@ import {
   OnInit,
   OnDestroy,
   ChangeDetectorRef,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  Injector
 } from '@angular/core';
 import { Router } from '@angular/router';
 import {
-  Subject,
-  empty,
   of,
   forkJoin,
   Observable
 } from 'rxjs';
 import {
   map,
-  catchError,
   concatMap
 } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 import {
   CoreDefinition,
-  McsBrowserService,
   CoreRoutes,
-  McsTableListing
+  McsTableListingBase
 } from '@app/core';
-import {
-  isNullOrEmpty,
-  unsubscribeSubject
-} from '@app/utilities';
+import { isNullOrEmpty } from '@app/utilities';
 import {
   ServiceType,
   serviceTypeText,
@@ -40,10 +34,7 @@ import {
   McsQueryParam,
   McsApiCollection
 } from '@app/models';
-import {
-  McsResourcesRepository,
-  McsApiService
-} from '@app/services';
+import { McsApiService } from '@app/services';
 import {
   DialogConfirmation,
   DialogService
@@ -58,13 +49,11 @@ import { ServersService } from './servers.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class ServersComponent extends McsTableListing<McsServer>
+export class ServersComponent extends McsTableListingBase<McsServer>
   implements OnInit, OnDestroy {
 
   public hasCreateResources: boolean;
   public hasManagedResource: boolean;
-
-  private _destroySubject = new Subject<any>();
 
   public get serverServiceTypeText(): any {
     return serviceTypeText;
@@ -107,17 +96,16 @@ export class ServersComponent extends McsTableListing<McsServer>
   }
 
   public constructor(
-    _browserService: McsBrowserService,
+    _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
     private _router: Router,
     private _translateService: TranslateService,
     private _eventDispatcher: EventBusDispatcherService,
     private _apiService: McsApiService,
     private _dialogService: DialogService,
-    private _serversService: ServersService,
-    private _resourcesRepository: McsResourcesRepository
+    private _serversService: ServersService
   ) {
-    super(_browserService, _changeDetectorRef);
+    super(_injector, _changeDetectorRef, McsEvent.dataChangeServers);
     this._registerEvents();
   }
 
@@ -127,7 +115,6 @@ export class ServersComponent extends McsTableListing<McsServer>
 
   public ngOnDestroy() {
     this.dispose();
-    unsubscribeSubject(this._destroySubject);
   }
 
   public get routeKeyEnum(): any {
@@ -342,9 +329,9 @@ export class ServersComponent extends McsTableListing<McsServer>
    * and check whether the resource has self managed type
    */
   private _setResourcesFlag(): void {
-    let managedResources = this._resourcesRepository.getAll().pipe(
+    let managedResources = this._apiService.getResources().pipe(
       map((resources) => {
-        this.hasManagedResource = !!resources.find((_resource) =>
+        this.hasManagedResource = resources && !!resources.collection.find((_resource) =>
           _resource.serviceType === ServiceType.Managed);
         this.changeDetectorRef.markForCheck();
       })
@@ -355,9 +342,7 @@ export class ServersComponent extends McsTableListing<McsServer>
         this.changeDetectorRef.markForCheck();
       })
     );
-    managedResources.pipe(
-      catchError(() => empty())
-    ).subscribe(() => createServerResources.subscribe());
+    managedResources.subscribe(() => createServerResources.subscribe());
   }
 
   /**

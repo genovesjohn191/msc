@@ -5,24 +5,23 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy
 } from '@angular/core';
-import {
-  ActivatedRoute,
-  ParamMap
-} from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import {
   Observable,
-  Subject
+  Subject,
+  Subscription
 } from 'rxjs';
 import {
   finalize,
-  takeUntil,
-  catchError
+  map,
+  shareReplay
 } from 'rxjs/operators';
 import { saveAs } from 'file-saver';
 import { CoreDefinition } from '@app/core';
 import {
   isNullOrEmpty,
-  unsubscribeSafely
+  unsubscribeSafely,
+  getSafeProperty
 } from '@app/utilities';
 import {
   CommentCategory,
@@ -34,10 +33,11 @@ import {
   ticketSubTypeText,
   McsTicketAttachment,
   McsTicketCreateComment,
-  McsTicketCreateAttachment,
-  McsApiErrorContext
+  McsTicketCreateAttachment
 } from '@app/models';
-import { McsTicketsRepository } from '@app/services';
+import { McsApiService } from '@app/services';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/event-manager';
 
 @Component({
   selector: 'mcs-ticket',
@@ -54,6 +54,29 @@ export class TicketComponent implements OnInit, OnDestroy {
   private _creatingComment = new Subject<boolean>();
   private _ticketDetailsChange = new Subject<void>();
   private _destroySubject = new Subject<void>();
+  private _ticketsDataChangeHandler: Subscription;
+
+  public constructor(
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _activatedRoute: ActivatedRoute,
+    private _apiService: McsApiService,
+    private _eventDispatcher: EventBusDispatcherService
+  ) {
+    this._downloadingIdList = new Set();
+  }
+
+  public ngOnInit() {
+    this.creatingComment$ = this._creatingComment;
+    this._subscribeToTicketResolve();
+    this._registerEvents();
+  }
+
+  public ngOnDestroy() {
+    unsubscribeSafely(this._ticketDetailsChange);
+    unsubscribeSafely(this._creatingComment);
+    unsubscribeSafely(this._destroySubject);
+    unsubscribeSafely(this._ticketsDataChangeHandler);
+  }
 
   public get checkIconKey(): string {
     return CoreDefinition.ASSETS_FONT_CHECK;
@@ -61,26 +84,6 @@ export class TicketComponent implements OnInit, OnDestroy {
 
   public get backIconKey(): string {
     return CoreDefinition.ASSETS_SVG_CHEVRON_LEFT;
-  }
-
-  public constructor(
-    private _activatedRoute: ActivatedRoute,
-    private _ticketsRepository: McsTicketsRepository,
-    private _changeDetectorRef: ChangeDetectorRef
-  ) {
-    this._downloadingIdList = new Set();
-  }
-
-  public ngOnInit() {
-    this.creatingComment$ = this._creatingComment;
-    this._subscribeToTicketsDataChange();
-    this._subscribeToParamId();
-  }
-
-  public ngOnDestroy() {
-    unsubscribeSafely(this._ticketDetailsChange);
-    unsubscribeSafely(this._creatingComment);
-    unsubscribeSafely(this._destroySubject);
   }
 
   /**
@@ -116,7 +119,7 @@ export class TicketComponent implements OnInit, OnDestroy {
     if (isNullOrEmpty(attachment)) { return; }
     this._downloadingIdList.add(attachment.id);
 
-    this._ticketsRepository.getFileAttachment(activeTicket.id, attachment.id)
+    this._apiService.getFileAttachment(activeTicket.id, attachment.id)
       .pipe(
         finalize(() => {
           this._downloadingIdList.delete(attachment.id);
@@ -156,7 +159,7 @@ export class TicketComponent implements OnInit, OnDestroy {
     newComment.type = CommentType.Comments;
     newComment.value = content;
 
-    this._ticketsRepository.createComment(activeTicket, newComment).pipe(
+    this._apiService.createComment(activeTicket.id, newComment).pipe(
       finalize(() => {
         this._creatingComment.next(false);
         this._ticketDetailsChange.next();
@@ -176,7 +179,7 @@ export class TicketComponent implements OnInit, OnDestroy {
     newAttachment.fileName = attachedFile.filename;
     newAttachment.contents = attachedFile.base64Contents;
 
-    this._ticketsRepository.createAttachment(activeTicket, newAttachment).pipe(
+    this._apiService.createAttachment(activeTicket.id, newAttachment).pipe(
       finalize(() => {
         this._ticketDetailsChange.next();
         this._changeDetectorRef.markForCheck();
@@ -185,32 +188,20 @@ export class TicketComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Subscribes to parameter id
+   * Subscribe to ticket resolver
    */
-  private _subscribeToParamId(): void {
-    this._activatedRoute.paramMap.pipe(
-      takeUntil(this._destroySubject)
-    ).subscribe((params: ParamMap) => {
-      let ticketId = params.get('id');
-      this._subscribeToTicketById(ticketId);
-    });
-  }
-
-  /**
-   * Subscribe to ticket based on the parameter ID
-   */
-  private _subscribeToTicketById(ticketId: string): void {
-    this.selectedTicket$ = this._ticketsRepository.getByIdAsync(ticketId).pipe(
-      catchError((error) => McsApiErrorContext.throwPrimaryError(error))
+  private _subscribeToTicketResolve(): void {
+    this.selectedTicket$ = this._activatedRoute.data.pipe(
+      map((resolver) => getSafeProperty(resolver, (obj) => obj.ticket)),
+      shareReplay(1)
     );
   }
 
   /**
-   * Subscribes to ticket data change
+   * Registers the associated events
    */
-  private _subscribeToTicketsDataChange(): void {
-    this._ticketsRepository.dataChange().pipe(
-      takeUntil(this._destroySubject)
-    ).subscribe(() => this._changeDetectorRef.markForCheck());
+  private _registerEvents(): void {
+    this._ticketsDataChangeHandler = this._eventDispatcher.addEventListener(
+      McsEvent.dataChangeTickets, () => this._changeDetectorRef.markForCheck());
   }
 }

@@ -5,26 +5,23 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import {
-  ActivatedRoute,
-  ParamMap
-} from '@angular/router';
-import {
-  Subject,
-  Observable
+  Observable,
+  Subscription
 } from 'rxjs';
 import {
-  takeUntil,
   shareReplay,
-  catchError
+  map
 } from 'rxjs/operators';
-import {
-  McsJob,
-  McsApiErrorContext
-} from '@app/models';
+import { McsJob } from '@app/models';
 import { CoreDefinition } from '@app/core';
-import { McsJobsRepository } from '@app/services';
-import { unsubscribeSafely } from '@app/utilities';
+import {
+  unsubscribeSafely,
+  getSafeProperty
+} from '@app/utilities';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/event-manager';
 
 @Component({
   selector: 'mcs-notification',
@@ -35,21 +32,22 @@ import { unsubscribeSafely } from '@app/utilities';
 export class NotificationComponent implements OnInit, OnDestroy {
   public job$: Observable<McsJob>;
 
-  private _destroySubject = new Subject<void>();
+  private _jobDataChangeHandler: Subscription;
 
   public constructor(
     private _activatedRoute: ActivatedRoute,
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _jobsRepository: McsJobsRepository
-  ) { }
+    private _eventDispatcher: EventBusDispatcherService,
+    private _changeDetectorRef: ChangeDetectorRef
+  ) {
+    this._registerEvents();
+  }
 
   public ngOnInit() {
-    this._subscribeToJobsDataChange();
-    this._subscribeToParamId();
+    this._subscribeToNotificationResolver();
   }
 
   public ngOnDestroy() {
-    unsubscribeSafely(this._destroySubject);
+    unsubscribeSafely(this._jobDataChangeHandler);
   }
 
   public get backIconKey(): string {
@@ -61,33 +59,21 @@ export class NotificationComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Subscribes to parameter id
+   * Subscribes to notification resolver
    */
-  private _subscribeToParamId(): void {
-    this._activatedRoute.paramMap.pipe(
-      takeUntil(this._destroySubject)
-    ).subscribe((params: ParamMap) => {
-      let jobId = params.get('id');
-      this._subscribeToJobById(jobId);
-    });
-  }
-
-  /**
-   * Subscribes to job based on the parameter ID
-   */
-  private _subscribeToJobById(jobId: string): void {
-    this.job$ = this._jobsRepository.getByIdAsync(jobId).pipe(
-      catchError((error) => McsApiErrorContext.throwPrimaryError(error)),
+  private _subscribeToNotificationResolver(): void {
+    this.job$ = this._activatedRoute.data.pipe(
+      map((resolver) => getSafeProperty(resolver, (obj) => obj.notification)),
       shareReplay(1)
     );
   }
 
   /**
-   * Subscribes to jobs data change
+   * Registers the events for data changed
    */
-  private _subscribeToJobsDataChange(): void {
-    this._jobsRepository.dataChange().pipe(
-      takeUntil(this._destroySubject)
-    ).subscribe(() => this._changeDetectorRef.markForCheck());
+  private _registerEvents(): void {
+    this._jobDataChangeHandler = this._eventDispatcher.addEventListener(
+      McsEvent.dataChangeJobs, () => this._changeDetectorRef.markForCheck()
+    );
   }
 }

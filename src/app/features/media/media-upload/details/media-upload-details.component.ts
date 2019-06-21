@@ -35,7 +35,7 @@ import {
   isNullOrEmpty,
   getSafeProperty
 } from '@app/utilities';
-import { McsResourcesRepository } from '@app/services';
+import { McsApiService } from '@app/services';
 import {
   McsResource,
   McsResourceCatalogItemCreate,
@@ -87,13 +87,12 @@ export class MediaUploadDetailsComponent
     private _elementRef: ElementRef,
     private _changeDetectorRef: ChangeDetectorRef,
     private _formGroupService: McsFormGroupService,
-    private _resourcesRepository: McsResourcesRepository,
+    private _apiService: McsApiService,
     private _mediaUploadService: MediaUploadService
   ) { }
 
   public ngOnInit() {
     this._registerFormGroup();
-    this._subscribeToResourcesDataChange();
     this._subsribeToResources();
     this._subscribeToMediaExtensions();
   }
@@ -121,7 +120,6 @@ export class MediaUploadDetailsComponent
    */
   public onChangeResource(resource: McsResource): void {
     if (isNullOrEmpty(resource)) { return; }
-    // this.selectedResourceId = resource.id;
     this._subscribeToResourceCatalogs(resource.id);
   }
 
@@ -150,7 +148,7 @@ export class MediaUploadDetailsComponent
     ).subscribe((response) => {
       this.fcMediaUrl.updateValueAndValidity();
       this.mediaUrlStatusIconKey = CoreDefinition.ASSETS_SVG_SUCCESS;
-      this.urlInfoMessage = getSafeProperty(response, (obj) => obj.content[0].message);
+      this.urlInfoMessage = getSafeProperty(response, (obj) => obj[0].message);
     });
   }
 
@@ -196,16 +194,25 @@ export class MediaUploadDetailsComponent
    * Subscribes to all the resources on the repository
    */
   private _subsribeToResources(): void {
-    this.resources$ = this._resourcesRepository.getAll().pipe(
-      map((resources) => resources.filter((resource) => !resource.isDedicated))
+    this.resources$ = this._apiService.getResources().pipe(
+      map((response) =>
+        getSafeProperty(response, (obj) => obj.collection)
+          .filter((resource) => !resource.isDedicated)
+      )
     );
   }
 
+  /**
+   * Subscribes to resource catalogs
+   * @param resourceId Resource id of the catalogs
+   */
   private _subscribeToResourceCatalogs(resourceId: string): void {
     if (isNullOrEmpty(resourceId)) { return; }
-    this.resourceCatalogs$ = this._resourcesRepository.getResourceCatalogs(resourceId).pipe(
-      shareReplay(1),
-      tap(() => this._resetFormFields())
+
+    this.resourceCatalogs$ = this._apiService.getResourceCatalogs(resourceId).pipe(
+      map((response) => getSafeProperty(response, (obj) => obj.collection)),
+      tap(() => this._resetFormFields()),
+      shareReplay(1)
     );
   }
 
@@ -270,15 +277,6 @@ export class MediaUploadDetailsComponent
     this._formGroupService.touchAllFormFields(this.fgMediaUpload);
     this._formGroupService.scrollToFirstInvalidField(this._elementRef.nativeElement);
     return false;
-  }
-
-  /**
-   * Subscribes to resources data change on the repository
-   */
-  private _subscribeToResourcesDataChange(): void {
-    this._resourcesRepository.dataChange().subscribe(() => {
-      this._changeDetectorRef.markForCheck();
-    });
   }
 
   /**

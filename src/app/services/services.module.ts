@@ -2,16 +2,18 @@ import {
   NgModule,
   Optional,
   SkipSelf,
-  ModuleWithProviders
+  ModuleWithProviders,
+  Injector
 } from '@angular/core';
 import {
-  apiProviders,
+  stateManagers,
   repositoryProviders
 } from './services.contants';
+import { isNullOrEmpty } from '@app/utilities';
 
 @NgModule({
   providers: [
-    ...apiProviders,
+    ...stateManagers,
     ...repositoryProviders
   ]
 })
@@ -25,9 +27,23 @@ export class ServicesModule {
     return { ngModule: ServicesModule };
   }
 
-  constructor(@Optional() @SkipSelf() parentModule: ServicesModule) {
+  constructor(
+    @Optional() @SkipSelf() parentModule: ServicesModule,
+    private _injector: Injector
+  ) {
     if (parentModule) {
       throw new Error('Service is already loaded. Import it in the AppModule only');
     }
+    this._initializeInjectors();
+  }
+
+  /**
+   * Initializes the state managers injectors
+   */
+  private _initializeInjectors(): void {
+    if (isNullOrEmpty(stateManagers)) { return; }
+    stateManagers.forEach((stateManager) => {
+      this._injector.get(stateManager);
+    });
   }
 }

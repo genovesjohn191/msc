@@ -35,7 +35,7 @@ import {
   orderTypeText,
   OrderType
 } from '@app/models';
-import { McsOrdersRepository } from '@app/services';
+import { McsApiService } from '@app/services';
 import { IMcsFallible } from '../../interfaces/mcs-fallible.interface';
 import { IMcsJobManager } from '../../interfaces/mcs-job-manager.interface';
 import { IMcsStateChangeable } from '../../interfaces/mcs-state-changeable.interface';
@@ -72,7 +72,7 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
   private _errorsChange = new Subject<string[]>();
 
   constructor(
-    private _orderFactory: McsOrdersRepository,
+    private _orderApiService: McsApiService,
     private _orderItemProductType: string
   ) {
     this._orderBuilder = new McsOrderBuilder();
@@ -207,7 +207,7 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
       throw new Error('Cannot submit order workflow because the order has not been created yet.');
     }
 
-    return this._orderFactory.createOrderWorkFlow(this._createdOrder.id, workflow).pipe(
+    return this._orderApiService.createOrderWorkFlow(this._createdOrder.id, workflow).pipe(
       tap((response) => response && this.setJobs(...response.jobs)),
       catchError((httpError) => {
         this.setErrors(...httpError.errorMessages);
@@ -310,7 +310,7 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
    * @param orderDetails Details of the order to be created
    */
   private _createOrder(orderDetails: McsOrderCreate): Observable<McsOrder> {
-    return this._orderFactory.createOrder(orderDetails);
+    return this._orderApiService.createOrder(orderDetails);
   }
 
   /**
@@ -319,7 +319,7 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
    * @param orderDetails Updated details of the order to be patched
    */
   private _updateOrder(orderId: string, orderDetails: McsOrderCreate): Observable<McsOrder> {
-    return this._orderFactory.updateOrder(orderId, orderDetails);
+    return this._orderApiService.updateOrder(orderId, orderDetails);
   }
 
   /**
@@ -360,7 +360,7 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
     if (isNullOrEmpty(this._orderItemProductType)) { return; }
 
     // Get all the orders here
-    this._orderFactory.getOrderItemTypes({ keyword: this._orderItemProductType }).pipe(
+    this._orderApiService.getOrderItemTypes({ keyword: this._orderItemProductType }).pipe(
       map((orderItemDetails) => getSafeProperty(orderItemDetails, (obj) => obj[0])),
       catchError(() => empty())
     ).subscribe((itemType) => this._orderItemTypeChange.next(itemType));

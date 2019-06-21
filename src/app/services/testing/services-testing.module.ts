@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import {
-  apiProviders,
+  stateManagers,
   repositoryProviders
 } from '../services.contants';
 
 @NgModule({
   providers: [
-    ...apiProviders,
+    ...stateManagers,
     ...repositoryProviders
   ]
 })

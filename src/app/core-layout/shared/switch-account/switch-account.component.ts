@@ -6,27 +6,31 @@ import {
   EventEmitter,
   ChangeDetectorRef,
   ChangeDetectionStrategy,
-  ViewEncapsulation
+  ViewEncapsulation,
+  Injector
 } from '@angular/core';
-import { Subject } from 'rxjs';
+import {
+  Observable,
+  of
+} from 'rxjs';
 import {
   CoreDefinition,
-  McsTableListingBase,
-  McsTableDataSource,
-  McsBrowserService
+  McsTableListingBase
 } from '@app/core';
 import {
   isNullOrEmpty,
-  getEnumString,
-  unsubscribeSafely
+  getEnumString
 } from '@app/utilities';
 import {
   McsCompany,
   CompanyStatus,
-  DataStatus
+  DataStatus,
+  McsQueryParam,
+  McsApiCollection
 } from '@app/models';
-import { McsCompaniesRepository } from '@app/services';
+import { McsApiService } from '@app/services';
 import { SwitchAccountService } from './switch-account.service';
+import { McsEvent } from '@app/event-manager';
 
 @Component({
   selector: 'mcs-switch-account',
@@ -39,19 +43,26 @@ import { SwitchAccountService } from './switch-account.service';
   }
 })
 
-export class SwitchAccountComponent
-  extends McsTableListingBase<McsTableDataSource<McsCompany>>
+export class SwitchAccountComponent extends McsTableListingBase<McsCompany>
   implements AfterViewInit, OnDestroy {
 
   @Output()
   public selectionChanged: EventEmitter<any>;
 
+  constructor(
+    _injector: Injector,
+    _changeDetectorRef: ChangeDetectorRef,
+    private _switchAccountService: SwitchAccountService,
+    private _apiService: McsApiService
+  ) {
+    super(_injector, _changeDetectorRef, McsEvent.dataChangeCompanies);
+    this.selectionChanged = new EventEmitter();
+  }
+
   // Others
   public get companies(): McsCompany[] {
     return this._switchAccountService.companies;
   }
-
-  private _destroySubject = new Subject<void>();
 
   public get dataStatusEnum(): any {
     return DataStatus;
@@ -72,26 +83,6 @@ export class SwitchAccountComponent
 
   public get arrowRightBueIconKey(): string {
     return CoreDefinition.ASSETS_SVG_ARROW_RIGHT_BLUE;
-  }
-
-  constructor(
-    _browserService: McsBrowserService,
-    _changeDetectorRef: ChangeDetectorRef,
-    private _switchAccountService: SwitchAccountService,
-    private _companiesRepository: McsCompaniesRepository
-  ) {
-    super(_browserService, _changeDetectorRef);
-    this.selectionChanged = new EventEmitter();
-  }
-
-  public ngAfterViewInit(): void {
-    Promise.resolve().then(() => {
-      this.initializeDatasource();
-    });
-  }
-
-  public ngOnDestroy(): void {
-    unsubscribeSafely(this._destroySubject);
   }
 
   public getUserIconKey(status: CompanyStatus) {
@@ -149,29 +140,18 @@ export class SwitchAccountComponent
   }
 
   /**
-   * Retry getting the companies
-   */
-  public retry(): void {
-    this.initializeDatasource();
-  }
-
-  /**
-   * Initialize the table datasource according to pagination and search settings
-   */
-  protected initializeDatasource(): void {
-    if (!this._switchAccountService.hasRequiredPermission()) { return; }
-
-    this.dataSource = new McsTableDataSource(this._companiesRepository);
-    this.dataSource
-      .registerSearch(this.search)
-      .registerPaginator(this.paginator);
-    this.changeDetectorRef.markForCheck();
-  }
-
-  /**
    * Returns the column settings key for the filter selector
    */
   protected get columnSettingsKey(): string {
     return null;
+  }
+
+  /**
+   * Gets the entity listing based on the context
+   * @param query Query to be obtained on the listing
+   */
+  protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsCompany>> {
+    if (!this._switchAccountService.hasRequiredPermission()) { return of(null); }
+    return this._apiService.getCompanies(query);
   }
 }

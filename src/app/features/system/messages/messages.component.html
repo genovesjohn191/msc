@@ -7,9 +7,9 @@
     <!-- <ng-container *mcsAccessControl="['SystemMessageEdit']">
       <mcs-top-panel-item *mcsTopPanelItemDef>
         <ng-container *mcsExclusiveForAccount="'default'">
-          <mcs-action-item (click)="onClickNewMessage()" 
+          <mcs-action-item (click)="onClickNewMessage()"
             mcsId="create-new-message-button" mcsEventTracker="create-new-message"
-            mcsEventCategory="system-message" 
+            mcsEventCategory="system-message"
             mcsEventLabel="system-message-listing-page">
             <mcs-icon [key]="addIconKey" size="small"></mcs-icon>
             <span>{{ 'systemMessages.newMessage' | translate }}</span>
@@ -21,7 +21,7 @@
     <mcs-top-panel-item *mcsTopPanelItemDef overflow-auto>
       <div class="listing-action-wrapper">
         <div class="total-record-count">
-          <span>{{ dataSource?.totalRecordsCount | mcsPlural:
+          <span>{{ totalRecordsCount | mcsPlural:
                   ('systemMessages.dataSingular' | translate) : ('systemMessages.dataPlural' | translate) }}
           </span>
         </div>
@@ -184,7 +184,7 @@
       </mcs-table>
 
       <!-- Paginator -->
-      <mcs-paginator #paginator [hidden]="isSearching" [totalCount]="dataSource?.totalRecordsCount">
+      <mcs-paginator #paginator [hidden]="isSearching" [totalCount]="totalRecordsCount">
       </mcs-paginator>
     </div>
   </mcs-content-panel>

@@ -17,7 +17,7 @@ export class ServerResolver implements Resolve<McsServer> {
 
   constructor(private _apiService: McsApiService) { }
 
-  public resolve(route: ActivatedRouteSnapshot, _state: RouterStateSnapshot): Observable<any> | Promise<any> | any {
+  public resolve(route: ActivatedRouteSnapshot, _state: RouterStateSnapshot): Observable<any> {
     return this._apiService.getServer(route.paramMap.get('id')).pipe(
       catchError((error) => McsApiErrorContext.throwPrimaryError(error))
     );

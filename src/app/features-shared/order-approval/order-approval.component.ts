@@ -8,7 +8,10 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import {
+  takeUntil,
+  map
+} from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 import {
   IMcsDataChange,
@@ -16,8 +19,11 @@ import {
   McsTableSelection
 } from '@app/core';
 import { McsOrderApprover } from '@app/models';
-import { isNullOrEmpty } from '@app/utilities';
-import { McsOrdersRepository } from '@app/services';
+import {
+  isNullOrEmpty,
+  getSafeProperty
+} from '@app/utilities';
+import { McsApiService } from '@app/services';
 
 @Component({
   selector: 'mcs-order-approval',
@@ -42,7 +48,7 @@ export class OrderApprovalComponent implements OnInit, IMcsDataChange<McsOrderAp
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private _translateService: TranslateService,
-    private _ordersRepository: McsOrdersRepository
+    private _apiService: McsApiService
   ) {
     this.approversDataSource = new McsTableDataSource();
     this.approversSelection = new McsTableSelection(this.approversDataSource, true);
@@ -80,7 +86,9 @@ export class OrderApprovalComponent implements OnInit, IMcsDataChange<McsOrderAp
    */
   private _initializeDataSource(): void {
     this.approversDataSource.updateDatasource(
-      this._ordersRepository.getOrderApprovers()
+      this._apiService.getOrderApprovers().pipe(
+        map((response) => getSafeProperty(response, (obj) => obj.collection))
+      )
     );
     this._changeDetectorRef.markForCheck();
   }

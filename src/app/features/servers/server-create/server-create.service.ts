@@ -20,21 +20,15 @@ import {
   DataStatus,
   OrderIdType
 } from '@app/models';
-import {
-  McsOrdersRepository,
-  McsServersRepository
-} from '@app/services';
+import { McsApiService } from '@app/services';
 import { isNullOrEmpty } from '@app/utilities';
 
 @Injectable()
 export class ServerCreateService extends McsOrderBase
   implements IMcsJobManager, IMcsFallible, IMcsStateChangeable {
 
-  constructor(
-    _ordersRepository: McsOrdersRepository,
-    private _serversRepository: McsServersRepository
-  ) {
-    super(_ordersRepository, OrderIdType.CreateManagedServer);
+  constructor(private _apiService: McsApiService) {
+    super(_apiService, OrderIdType.CreateManagedServer);
   }
 
   /**
@@ -68,7 +62,7 @@ export class ServerCreateService extends McsOrderBase
    */
   private _createNewSelfManageServer(serverCreateModel: McsServerCreate): Observable<McsJob> {
     if (isNullOrEmpty(serverCreateModel)) { return; }
-    return this._serversRepository.createServer(serverCreateModel);
+    return this._apiService.createServer(serverCreateModel);
   }
 
   /**
@@ -77,6 +71,6 @@ export class ServerCreateService extends McsOrderBase
    */
   private _createCloneSelfManagedServer(serverCloneModel: McsServerClone): Observable<McsJob> {
     if (isNullOrEmpty(serverCloneModel)) { return; }
-    return this._serversRepository.cloneServer(serverCloneModel.serverId, serverCloneModel);
+    return this._apiService.cloneServer(serverCloneModel.serverId, serverCloneModel);
   }
 }

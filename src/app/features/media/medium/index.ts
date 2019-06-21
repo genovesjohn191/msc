@@ -1,3 +1,4 @@
+export * from './medium.resolver';
 export * from './medium.service';
 export * from './medium.component';
 export * from './overview/medium-overview.component';

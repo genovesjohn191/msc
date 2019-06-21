@@ -8,23 +8,17 @@ import {
 import { McsJob } from '@app/models';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/event-manager';
-import { McsJobsRepository } from '@app/services';
-import { IMcsInitializable } from '../interfaces/mcs-initializable.interface';
+import { McsJobsRepository } from '../repositories/mcs-jobs.repository';
 
 @Injectable()
-export class McsJobStateManager implements IMcsInitializable, McsDisposable {
+export class McsJobStateManager implements McsDisposable {
 
   private _jobReceiveHandler: Subscription;
 
   constructor(
     private _eventDispatcher: EventBusDispatcherService,
     private _jobRepository: McsJobsRepository
-  ) { }
-
-  /**
-   * Initializes the all required variables
-   */
-  public initialize(): void {
+  ) {
     this._registerEvents();
   }
 

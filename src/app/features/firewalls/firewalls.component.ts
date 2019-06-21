@@ -1,24 +1,25 @@
 import {
   Component,
-  OnDestroy,
-  AfterViewInit,
   ChangeDetectorRef,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  Injector
 } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 import {
   CoreDefinition,
-  McsBrowserService,
   McsTableListingBase,
-  CoreRoutes,
-  McsTableDataSource
+  CoreRoutes
 } from '@app/core';
 import { isNullOrEmpty } from '@app/utilities';
 import {
   RouteKey,
-  McsFirewall
+  McsFirewall,
+  McsQueryParam,
+  McsApiCollection
 } from '@app/models';
-import { McsFirewallsRepository } from '@app/services';
+import { McsApiService } from '@app/services';
+import { McsEvent } from '@app/event-manager';
 
 @Component({
   selector: 'mcs-firewalls',
@@ -26,35 +27,23 @@ import { McsFirewallsRepository } from '@app/services';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class FirewallsComponent
-  extends McsTableListingBase<McsTableDataSource<McsFirewall>>
-  implements AfterViewInit, OnDestroy {
-
-  public get cogIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_COG;
-  }
+export class FirewallsComponent extends McsTableListingBase<McsFirewall> {
 
   public constructor(
-    _browserService: McsBrowserService,
+    _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
     private _router: Router,
-    private _firewallsRepository: McsFirewallsRepository
+    private _apiService: McsApiService
   ) {
-    super(_browserService, _changeDetectorRef);
-  }
-
-  public ngAfterViewInit() {
-    Promise.resolve().then(() => {
-      this.initializeDatasource();
-    });
-  }
-
-  public ngOnDestroy() {
-    this.dispose();
+    super(_injector, _changeDetectorRef, McsEvent.dataChangeFirewalls);
   }
 
   public get routeKeyEnum(): any {
     return RouteKey;
+  }
+
+  public get cogIconKey(): string {
+    return CoreDefinition.ASSETS_SVG_COG;
   }
 
   /**
@@ -67,13 +56,6 @@ export class FirewallsComponent
   }
 
   /**
-   * Retry obtaining datasource from firewalls
-   */
-  public retryDatasource(): void {
-    this.initializeDatasource();
-  }
-
-  /**
    * Returns the column settings key for the filter selector
    */
   protected get columnSettingsKey(): string {
@@ -81,14 +63,10 @@ export class FirewallsComponent
   }
 
   /**
-   * Initialize the table datasource according to pagination and search settings
+   * Gets the entity listing based on the context
+   * @param query Query to be obtained on the listing
    */
-  protected initializeDatasource(): void {
-    // Set datasource
-    this.dataSource = new McsTableDataSource(this._firewallsRepository);
-    this.dataSource
-      .registerSearch(this.search)
-      .registerPaginator(this.paginator);
-    this.changeDetectorRef.markForCheck();
+  protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsFirewall>> {
+    return this._apiService.getFirewalls(query);
   }
 }

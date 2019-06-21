@@ -15,16 +15,16 @@ import { TranslateService } from '@ngx-translate/core';
 import {
   Subject,
   Observable,
-  of
+  of,
+  Subscription
 } from 'rxjs';
 import {
-  takeUntil,
   finalize,
   shareReplay,
   concatMap,
   tap,
   take,
-  catchError
+  map
 } from 'rxjs/operators';
 import {
   CoreDefinition,
@@ -34,22 +34,24 @@ import {
 import {
   unsubscribeSubject,
   isNullOrEmpty,
-  getSafeProperty
+  getSafeProperty,
+  unsubscribeSafely
 } from '@app/utilities';
 import {
   McsOrder,
   McsOrderItem,
   OrderWorkflowAction,
   McsOrderApprover,
-  RouteKey,
-  McsApiErrorContext
+  RouteKey
 } from '@app/models';
-import { McsOrdersRepository } from '@app/services';
+import { McsApiService } from '@app/services';
 import {
   DialogService,
   DialogConfirmation,
   DialogRef
 } from '@app/shared';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/event-manager';
 
 enum OrderDetailsView {
   OrderDetails = 0,
@@ -75,14 +77,16 @@ export class OrderComponent implements OnInit, OnDestroy {
 
   private _orderApprovers: McsOrderApprover[];
   private _destroySubject = new Subject<void>();
+  private _orderDataChangeHandler: Subscription;
 
   public constructor(
     private _activatedRoute: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef,
     private _translate: TranslateService,
+    private _eventDispatcher: EventBusDispatcherService,
     private _dialogService: DialogService,
     private _navigationService: McsNavigationService,
-    private _ordersRepository: McsOrdersRepository
+    private _apiService: McsApiService
   ) {
     this.orderDetailsView = OrderDetailsView.OrderDetails;
     this.orderItemsDataSource = new McsTableDataSource();
@@ -90,12 +94,14 @@ export class OrderComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit() {
+    this._subscribeToOrderResolver();
     this._subscribeToParamChange();
-    this._subscribeToDataChange();
+    this._registerOrderDataChangeEvent();
   }
 
   public ngOnDestroy() {
     unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this._orderDataChangeHandler);
   }
 
   public get orderDetailsViewEnum() {
@@ -190,7 +196,7 @@ export class OrderComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().pipe(
       concatMap((dialogResult) => {
         if (isNullOrEmpty(dialogResult)) { return of(null); }
-        return this._ordersRepository.createOrderWorkFlow(order.id, {
+        return this._apiService.createOrderWorkFlow(order.id, {
           state: OrderWorkflowAction.AwaitingApproval,
           approvers: this._orderApprovers.map((approver) => approver.userId)
         }).pipe(
@@ -217,7 +223,7 @@ export class OrderComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().pipe(
       concatMap((dialogResult) => {
         if (isNullOrEmpty(dialogResult)) { return of(null); }
-        return this._ordersRepository.createOrderWorkFlow(order.id, {
+        return this._apiService.createOrderWorkFlow(order.id, {
           state: OrderWorkflowAction.Cancelled
         });
       })
@@ -241,7 +247,7 @@ export class OrderComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().pipe(
       concatMap((dialogResult) => {
         if (isNullOrEmpty(dialogResult)) { return of(null); }
-        return this._ordersRepository.createOrderWorkFlow(order.id, {
+        return this._apiService.createOrderWorkFlow(order.id, {
           state: OrderWorkflowAction.Rejected
         });
       })
@@ -260,7 +266,7 @@ export class OrderComponent implements OnInit, OnDestroy {
     this.dialogRef.afterClosed().pipe(
       concatMap((dialogResult) => {
         if (isNullOrEmpty(dialogResult)) { return of(null); }
-        return this._ordersRepository.createOrderWorkFlow(order.id, {
+        return this._apiService.createOrderWorkFlow(order.id, {
           state: OrderWorkflowAction.Submitted
         }).pipe(
           tap((approvedOrder) => this._navigationService.navigateTo(
@@ -291,13 +297,6 @@ export class OrderComponent implements OnInit, OnDestroy {
    * Listens to parameter change
    */
   private _subscribeToParamChange(): void {
-    this._activatedRoute.paramMap.pipe(
-      takeUntil(this._destroySubject)
-    ).subscribe((params: ParamMap) => {
-      let orderId = params.get('id');
-      this._subscribeToOrderById(orderId);
-    });
-
     this._activatedRoute.queryParams.pipe(
       take(1)
     ).subscribe((params: ParamMap) => {
@@ -309,11 +308,11 @@ export class OrderComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Get Order based on the given ID in the provided parameter
+   * Subscribes to order resolver
    */
-  private _subscribeToOrderById(orderId: string): void {
-    this.order$ = this._ordersRepository.getByIdAsync(orderId).pipe(
-      catchError((error) => McsApiErrorContext.throwPrimaryError(error)),
+  private _subscribeToOrderResolver(): void {
+    this.order$ = this._activatedRoute.data.pipe(
+      map((resolver) => getSafeProperty(resolver, (obj) => obj.order)),
       shareReplay(1)
     );
   }
@@ -327,11 +326,10 @@ export class OrderComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Subscribes to orders data changes
+   * Registers the order data change event
    */
-  private _subscribeToDataChange(): void {
-    this._ordersRepository.dataChange().pipe(
-      takeUntil(this._destroySubject)
-    ).subscribe(() => this._changeDetectorRef.markForCheck());
+  private _registerOrderDataChangeEvent(): void {
+    this._orderDataChangeHandler = this._eventDispatcher.addEventListener(
+      McsEvent.dataChangeOrders, () => this._changeDetectorRef.markForCheck());
   }
 }

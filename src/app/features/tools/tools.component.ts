@@ -1,25 +1,25 @@
 import {
   Component,
   ChangeDetectionStrategy,
-  AfterViewInit,
-  OnDestroy,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  Injector
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
-  McsTableListingBase,
-  McsTableDataSource,
-  McsBrowserService,
-  CoreConfig
+  CoreConfig,
+  McsTableListingBase
 } from '@app/core';
-import { McsToolsRepository } from '@app/services';
+import { McsApiService } from '@app/services';
 import {
   McsPortal,
-  McsPortalAccess
+  McsPortalAccess,
+  McsQueryParam,
+  McsApiCollection
 } from '@app/models';
 import { cloneObject } from '@app/utilities';
+import { McsEvent } from '@app/event-manager';
 
 @Component({
   selector: 'mcs-tools',
@@ -27,38 +27,19 @@ import { cloneObject } from '@app/utilities';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class ToolsComponent
-  extends McsTableListingBase<McsTableDataSource<McsPortal>>
-  implements AfterViewInit, OnDestroy {
+export class ToolsComponent extends McsTableListingBase<McsPortal> {
   public toolDescription: Map<string, string>;
 
   constructor(
-    _browserService: McsBrowserService,
+    _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
     private _coreConfig: CoreConfig,
     private _translateService: TranslateService,
-    private _toolsRepository: McsToolsRepository
+    private _apiService: McsApiService
   ) {
-    super(_browserService, _changeDetectorRef);
+    super(_injector, _changeDetectorRef, McsEvent.dataChangeTools);
     this.dataColumns = ['name', 'resourceSpecific', 'portalAccess'];
-  }
-
-  public ngAfterViewInit(): void {
     this._initializeToolDescriptionMap();
-    Promise.resolve().then(() => {
-      this.initializeDatasource();
-    });
-  }
-
-  public ngOnDestroy(): void {
-    this.dispose();
-  }
-
-  /**
-   * Retry obtaining datasource from tools
-   */
-  public retryDatasource(): void {
-    this.initializeDatasource();
   }
 
   /**
@@ -70,18 +51,11 @@ export class ToolsComponent
   }
 
   /**
-   * Initializes the table datasource
+   * Gets the entity listing based on the context
+   * @param query Query to be obtained on the listing
    */
-  protected initializeDatasource(): void {
-    this.dataSource = new McsTableDataSource(this._getPortalTools.bind(this));
-    this.changeDetectorRef.markForCheck();
-  }
-
-  /**
-   * Gets all the portal tools from API
-   */
-  private _getPortalTools(): Observable<McsPortal[]> {
-    return this._toolsRepository.getAll().pipe(
+  protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsPortal>> {
+    return this._apiService.getPortals(query).pipe(
       map((response) => {
         let macquarieTools: McsPortal[] = [];
 
@@ -94,9 +68,12 @@ export class ToolsComponent
         macquarieViewPortalAccess.name = macquarieView.name;
         macquarieViewPortalAccess.url = this._coreConfig.macviewUrl;
         macquarieView.portalAccess = Array(macquarieViewPortalAccess);
-        macquarieTools.push(macquarieView, ...cloneObject(response));
+        macquarieTools.push(macquarieView, ...cloneObject(response.collection));
 
-        return macquarieTools.filter((tool) => tool.resourceSpecific);
+        let portalCollection = new McsApiCollection<McsPortal>();
+        portalCollection.collection = macquarieTools.filter((tool) => tool.resourceSpecific);
+        portalCollection.totalCollectionCount = portalCollection.collection.length;
+        return portalCollection;
       })
     );
   }

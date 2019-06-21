@@ -1,30 +1,27 @@
 import {
   Component,
   OnInit,
-  OnDestroy,
-  AfterViewInit,
   ChangeDetectorRef,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  Injector
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
   CoreDefinition,
-  McsBrowserService,
-  McsTableListingBase,
   CoreRoutes,
-  McsTableDataSource
+  McsTableListingBase
 } from '@app/core';
 import { isNullOrEmpty } from '@app/utilities';
 import {
   RouteKey,
-  McsResourceMedia
+  McsResourceMedia,
+  McsQueryParam,
+  McsApiCollection
 } from '@app/models';
-import {
-  McsMediaRepository,
-  McsResourcesRepository
-} from '@app/services';
+import { McsApiService } from '@app/services';
+import { McsEvent } from '@app/event-manager';
 
 @Component({
   selector: 'mcs-media',
@@ -32,34 +29,21 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class MediaComponent
-  extends McsTableListingBase<McsTableDataSource<McsResourceMedia>>
-  implements OnInit, AfterViewInit, OnDestroy {
+export class MediaComponent extends McsTableListingBase<McsResourceMedia> implements OnInit {
 
   public hasResources$: Observable<boolean>;
 
   public constructor(
-    _browserService: McsBrowserService,
+    _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
     private _router: Router,
-    private _mediaRepository: McsMediaRepository,
-    private _resourcesRepository: McsResourcesRepository
+    private _apiService: McsApiService
   ) {
-    super(_browserService, _changeDetectorRef);
+    super(_injector, _changeDetectorRef, McsEvent.dataChangeMedia);
   }
 
   public ngOnInit() {
     this._subscribeToResources();
-  }
-
-  public ngAfterViewInit() {
-    Promise.resolve().then(() => {
-      this.initializeDatasource();
-    });
-  }
-
-  public ngOnDestroy() {
-    this.dispose();
   }
 
   /**
@@ -93,13 +77,6 @@ export class MediaComponent
   }
 
   /**
-   * Retry obtaining datasource from server
-   */
-  public retryDatasource(): void {
-    this.initializeDatasource();
-  }
-
-  /**
    * Returns the column settings key for the filter selector
    */
   protected get columnSettingsKey(): string {
@@ -107,21 +84,18 @@ export class MediaComponent
   }
 
   /**
-   * Initialize the table datasource according to pagination and search settings
+   * Gets the entity listing based on the context
+   * @param query Query to be obtained on the listing
    */
-  protected initializeDatasource(): void {
-    this.dataSource = new McsTableDataSource(this._mediaRepository);
-    this.dataSource
-      .registerSearch(this.search)
-      .registerPaginator(this.paginator);
-    this.changeDetectorRef.markForCheck();
+  protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsResourceMedia>> {
+    return this._apiService.getMedia(query);
   }
 
   /**
    * Subscribes to resources to set the flag of has resources
    */
   private _subscribeToResources(): void {
-    this.hasResources$ = this._resourcesRepository.getAll().pipe(
+    this.hasResources$ = this._apiService.getResources().pipe(
       map((resources) => !isNullOrEmpty(resources))
     );
   }

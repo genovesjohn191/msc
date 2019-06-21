@@ -6,7 +6,7 @@
     <mcs-top-panel-item *mcsTopPanelItemDef>
       <div class="listing-action-wrapper">
         <div class="total-record-count">
-          <span>{{ dataSource?.totalRecordsCount | mcsPlural:
+          <span>{{ totalRecordsCount | mcsPlural:
                   ('orders.dataSingular' | translate) :
                   ('orders.dataPlural' | translate) }}
           </span>
@@ -126,7 +126,7 @@
       <!-- Paginator -->
       <mcs-paginator #paginator
         [hidden]="isSearching"
-        [totalCount]="dataSource?.totalRecordsCount">
+        [totalCount]="totalRecordsCount">
       </mcs-paginator>
     </div>
   </mcs-content-panel>

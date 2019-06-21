@@ -26,28 +26,18 @@ import { McsNavigationService } from './services/mcs-navigation.service';
 /** Providers */
 import { McsAssetsProvider } from './providers/mcs-assets.provider';
 import { McsFilterProvider } from './providers/mcs-filter.provider';
+
 /** Authentication */
 import { McsAuthenticationIdentity } from './authentication/mcs-authentication.identity';
 import { McsAuthenticationService } from './authentication/mcs-authentication.service';
 import { McsAuthenticationGuard } from './authentication/mcs-authentication.guard';
+
 /** Access Control */
 import { McsAccessControlService } from './authentication/mcs-access-control.service';
+
 /** Guards */
 import { McsNavigateAwayGuard } from './guards/mcs-navigate-away.guard';
 import { McsRequiredResourcesGuard } from './guards/mcs-required-resources.guard';
-
-/** State Managers */
-import { McsJobStateManager } from './state-manager/mcs-job.state-manager';
-import { McsServerStateManager } from './state-manager/mcs-server.state-manager';
-import { McsMediaStateManager } from './state-manager/mcs-media.state-manager';
-import { McsOrderStateManager } from './state-manager/mcs-order.state-manager';
-
-export const initializableProviders: any[] = [
-  McsServerStateManager,
-  McsMediaStateManager,
-  McsJobStateManager,
-  McsOrderStateManager
-];
 
 /**
  * Array coverage for the core modules

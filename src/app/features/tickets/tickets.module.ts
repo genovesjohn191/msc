@@ -1,12 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '@app/shared';
-/** Components */
 import { TicketActivityComponent } from './shared';
 import { TicketsComponent } from './tickets.component';
 import { TicketComponent } from './ticket/ticket.component';
-/** Create Ticket */
-import { TicketCreateComponent } from './ticket-create';
+import { TicketCreateComponent } from './ticket-create/ticket-create.component';
 import {
   ticketsProviders,
   ticketsRoutes

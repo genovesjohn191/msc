@@ -11,7 +11,8 @@ import {
 import {
   Subject,
   throwError,
-  Observable
+  Observable,
+  Subscription
 } from 'rxjs';
 import {
   startWith,
@@ -43,10 +44,9 @@ import {
   McsProduct,
   McsProductCatalog
 } from '@app/models';
-import {
-  McsProductsRepository,
-  McsProductCatalogRepository
-} from '@app/services';
+import { McsApiService } from '@app/services';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/event-manager';
 import { ProductCatalogListSource } from './products.listsource';
 import { ProductService } from './product/product.service';
 
@@ -73,24 +73,19 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   public selectedProduct$: Observable<McsProduct>;
   public catalogListSource: ProductCatalogListSource | null;
   public listStatusFactory: McsDataStatusFactory<McsProductCatalog[]>;
+
   private _destroySubject = new Subject<void>();
-
-  public get toggleIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_ELLIPSIS_VERTICAL;
-  }
-
-  public get routeKeyEnum(): any {
-    return RouteKey;
-  }
+  private _productsDataChangeHandler: Subscription;
 
   constructor(
     private _activatedRoute: ActivatedRoute,
+    private _eventDispatcher: EventBusDispatcherService,
     private _changeDetectorRef: ChangeDetectorRef,
     private _productService: ProductService,
-    private _productsRepository: McsProductsRepository,
-    private _productCatalogRepository: McsProductCatalogRepository
+    private _apiService: McsApiService
   ) {
     this.listStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
+    this._registerEvents();
   }
 
   public ngOnInit() {
@@ -101,14 +96,21 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
     Promise.resolve().then(() => {
       this.search.searchChangedStream.pipe(startWith(null), takeUntil(this._destroySubject))
         .subscribe(() => this.listStatusFactory.setInProgress());
-      this._productsRepository.dataChange().pipe(takeUntil(this._destroySubject))
-        .subscribe(() => this._changeDetectorRef.markForCheck());
       this._initializeListsource();
     });
   }
 
   public ngOnDestroy() {
     unsubscribeSafely(this._destroySubject);
+    unsubscribeSafely(this._productsDataChangeHandler);
+  }
+
+  public get toggleIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_ELLIPSIS_VERTICAL;
+  }
+
+  public get routeKeyEnum(): any {
+    return RouteKey;
   }
 
   /**
@@ -124,7 +126,7 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   private _initializeListsource(): void {
     this.catalogListSource = new ProductCatalogListSource(
-      this._productCatalogRepository,
+      this._apiService,
       this.search
     );
 
@@ -149,7 +151,7 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   private _subscribeToProductById(): void {
     this.selectedProduct$ = this._activatedRoute.paramMap.pipe(
       switchMap((params: ParamMap) => {
-        return this._productsRepository.getByIdAsync(params.get('id'));
+        return this._apiService.getProduct(params.get('id'));
       }),
       tap((response) => {
         this._productService.setProduct(response);
@@ -157,5 +159,13 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
       }),
       shareReplay(1)
     );
+  }
+
+  /**
+   * Registers the event handlers
+   */
+  private _registerEvents(): void {
+    this._productsDataChangeHandler = this._eventDispatcher.addEventListener(
+      McsEvent.dataChangeProducts, () => this._changeDetectorRef.markForCheck());
   }
 }

@@ -21,7 +21,8 @@ import {
   takeUntil,
   catchError,
   tap,
-  shareReplay
+  shareReplay,
+  map
 } from 'rxjs/operators';
 import {
   CoreDefinition,
@@ -31,15 +32,15 @@ import {
 } from '@app/core';
 import {
   isNullOrEmpty,
-  unsubscribeSafely
+  unsubscribeSafely,
+  getSafeProperty
 } from '@app/utilities';
 import { Search } from '@app/shared';
 import {
   RouteKey,
-  McsFirewall,
-  McsApiErrorContext
+  McsFirewall
 } from '@app/models';
-import { McsFirewallsRepository } from '@app/services';
+import { McsApiService } from '@app/services';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { FirewallService } from './firewall.service';
 import { FirewallsListSource } from '../firewalls.listsource';
@@ -82,7 +83,7 @@ export class FirewallComponent
     _eventDispatcher: EventBusDispatcherService,
     private _router: Router,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _firewallsRepository: McsFirewallsRepository,
+    private _apiService: McsApiService,
     private _firewallService: FirewallService
   ) {
     super(_eventDispatcher, _activatedRoute);
@@ -91,6 +92,7 @@ export class FirewallComponent
 
   public ngOnInit() {
     super.onInit();
+    this._subscribeToFirewallResolve();
   }
 
   public ngAfterViewInit() {
@@ -126,7 +128,6 @@ export class FirewallComponent
    */
   protected onParamIdChanged(id: string): void {
     if (isNullOrEmpty(id)) { return; }
-    this._subscribeToFirewallById(id);
   }
 
   /**
@@ -134,7 +135,7 @@ export class FirewallComponent
    */
   private _initializeListsource(): void {
     this.firewallsListSource = new FirewallsListSource(
-      this._firewallsRepository,
+      this._apiService,
       this.search
     );
 
@@ -159,16 +160,12 @@ export class FirewallComponent
   }
 
   /**
-   * Subscribes to firewall by ID by creating the observable
-   * @param firewallId Firewall identification
+   * Subcribes to firewall resolve
    */
-  private _subscribeToFirewallById(firewallId: string): void {
-    this.selectedFirewall$ = this._firewallsRepository.getByIdAsync(firewallId).pipe(
-      tap((response) => {
-        this._firewallService.setSelectedFirewall(response);
-        this._changeDetectorRef.markForCheck();
-      }),
-      catchError((error) => McsApiErrorContext.throwPrimaryError(error)),
+  private _subscribeToFirewallResolve(): void {
+    this.selectedFirewall$ = this.activatedRoute.data.pipe(
+      map((resolver) => getSafeProperty(resolver, (obj) => obj.firewall)),
+      tap((firewall) => this._firewallService.setSelectedFirewall(firewall)),
       shareReplay(1)
     );
   }

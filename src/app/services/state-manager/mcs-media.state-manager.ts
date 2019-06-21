@@ -14,13 +14,11 @@ import {
 } from '@app/models';
 import { McsEvent } from '@app/event-manager';
 import { EventBusDispatcherService } from '@app/event-bus';
-import { McsMediaRepository } from '@app/services';
-import { IMcsInitializable } from '../interfaces/mcs-initializable.interface';
 import { McsJobEntityStateManager } from './base/mcs-job-entity.state-manager';
+import { McsMediaRepository } from '../repositories/mcs-media.repository';
 
 @Injectable()
-export class McsMediaStateManager extends McsJobEntityStateManager<McsResourceMedia>
-  implements IMcsInitializable, McsDisposable {
+export class McsMediaStateManager extends McsJobEntityStateManager<McsResourceMedia> implements McsDisposable {
 
   private catalogItemCreateHandler: Subscription;
 
@@ -29,12 +27,6 @@ export class McsMediaStateManager extends McsJobEntityStateManager<McsResourceMe
     mediaRepository: McsMediaRepository
   ) {
     super(eventDispatcher, mediaRepository, 'mediaId');
-  }
-
-  /**
-   * Initializes class properties / variables
-   */
-  public initialize(): void {
     this._registerEvents();
   }
 

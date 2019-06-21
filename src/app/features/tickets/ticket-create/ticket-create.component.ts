@@ -45,12 +45,11 @@ import {
   McsTicketCreate,
   McsTicketCreateAttachment
 } from '@app/models';
-import { McsTicketsRepository } from '@app/services';
+import { McsApiService } from '@app/services';
 import {
   TicketService,
   TicketServiceData,
 } from '../shared';
-import { TicketCreateService } from './ticket-create.service';
 
 @Component({
   selector: 'mcs-ticket-create',
@@ -119,9 +118,8 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
 
   constructor(
     private _router: Router,
-    private _ticketCreateService: TicketCreateService,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _ticketsRepository: McsTicketsRepository
+    private _apiService: McsApiService
   ) {
     this.ticketTypeList = new Array();
     this.services = new Array();
@@ -224,10 +222,9 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
 
     // Create ticket
     this.creatingTicket = true;
-    this.createTicketSubscription = this._ticketCreateService.createTicket(ticket).pipe(
+    this.createTicketSubscription = this._apiService.createTicket(ticket).pipe(
       finalize(() => {
         this._formGroup.resetAllControls();
-        this._ticketsRepository.clearData();
       }),
       catchError((error) => {
         unsubscribeSafely(this.createTicketSubscription);
@@ -278,9 +275,9 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
   private _getServices(): void {
     // Get all the data from api in parallel
     this.servicesSubscription = forkJoin([
-      this._ticketCreateService.getServerResources(),
-      this._ticketCreateService.getServers(),
-      this._ticketCreateService.getFirewalls()
+      this._apiService.getResources(),
+      this._apiService.getServers(),
+      this._apiService.getFirewalls()
     ]).subscribe((data) => {
       this._setVdcs(data[0]);
       this._setServers(data[1]);

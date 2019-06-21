@@ -4,7 +4,6 @@ import {
   ChangeDetectorRef,
   ViewChild,
   ElementRef,
-  OnInit,
   OnDestroy,
   Injector
 } from '@angular/core';
@@ -43,10 +42,7 @@ import {
   OrderIdType,
   McsServerCompute
 } from '@app/models';
-import {
-  McsResourcesRepository,
-  McsServersRepository
-} from '@app/services';
+import { McsApiService } from '@app/services';
 import { EventBusDispatcherService } from '@app/event-bus';
 import {
   OrderDetails,
@@ -61,8 +57,8 @@ import {
   McsFormGroupDirective,
   ComponentHandlerDirective
 } from '@app/shared';
-import { ScaleManagedServerService } from './scale-managed-server.service';
 import { McsEvent } from '@app/event-manager';
+import { ScaleManagedServerService } from './scale-managed-server.service';
 
 type ScaleManageProperties = {
   cpuCount: number;
@@ -70,6 +66,7 @@ type ScaleManageProperties = {
 };
 
 const SCALE_MANAGE_SERVER_REF_ID = McsGuid.newGuid().toString();
+
 @Component({
   selector: 'mcs-scale-managed-server',
   templateUrl: 'scale-managed-server.component.html',
@@ -77,7 +74,7 @@ const SCALE_MANAGE_SERVER_REF_ID = McsGuid.newGuid().toString();
   providers: [ScaleManagedServerService]
 })
 
-export class ScaleManagedServerComponent extends McsOrderWizardBase implements OnInit, OnDestroy {
+export class ScaleManagedServerComponent extends McsOrderWizardBase implements OnDestroy {
 
   public resources$: Observable<Map<string, McsServer[]>>;
   public resource$: Observable<McsResource>;
@@ -96,7 +93,8 @@ export class ScaleManagedServerComponent extends McsOrderWizardBase implements O
 
   private _manageScale: ServerManageScale;
   private _destroySubject = new Subject<void>();
-  private _selectedServerIdHandler: Subscription;
+  private _selectedServerHandler: Subscription;
+  private _resourcesDataChangeHandler: Subscription;
 
   constructor(
     _injector: Injector,
@@ -105,8 +103,7 @@ export class ScaleManagedServerComponent extends McsOrderWizardBase implements O
     private _formGroupService: McsFormGroupService,
     private _changeDetectorRef: ChangeDetectorRef,
     private _eventDispatcher: EventBusDispatcherService,
-    private _resourcesRepository: McsResourcesRepository,
-    private _serversRepository: McsServersRepository,
+    private _apiService: McsApiService,
     private _scaleManagedServerService: ScaleManagedServerService
   ) {
     super(_injector, _scaleManagedServerService);
@@ -116,13 +113,10 @@ export class ScaleManagedServerComponent extends McsOrderWizardBase implements O
     this._getAllManagedCloudServers();
   }
 
-  public ngOnInit() {
-    this._subscribeToResourceDataChange();
-  }
-
   public ngOnDestroy() {
     unsubscribeSafely(this._destroySubject);
-    unsubscribeSafely(this._selectedServerIdHandler);
+    unsubscribeSafely(this._selectedServerHandler);
+    unsubscribeSafely(this._resourcesDataChangeHandler);
   }
 
   /**
@@ -245,18 +239,18 @@ export class ScaleManagedServerComponent extends McsOrderWizardBase implements O
   private _getAllManagedCloudServers(): void {
 
     let resourceMap: Map<string, McsServer[]> = new Map();
-    this.resources$ = this._serversRepository.getAll().pipe(
+    this.resources$ = this._apiService.getServers().pipe(
       map((servers) => {
-        servers.filter((server) => !server.isSelfManaged && !server.isDedicated && server.serviceChangeAvailable)
-          .forEach((server) => {
-            let resourceIsExisting = resourceMap.has(server.platform.resourceName);
-            if (resourceIsExisting) {
-              resourceMap.get(server.platform.resourceName).push(server);
-              return;
-            }
-            resourceMap.set(server.platform.resourceName, [server]);
-          });
-
+        servers.collection.filter(
+          (server) => !server.isSelfManaged && !server.isDedicated && server.serviceChangeAvailable
+        ).forEach((server) => {
+          let resourceIsExisting = resourceMap.has(server.platform.resourceName);
+          if (resourceIsExisting) {
+            resourceMap.get(server.platform.resourceName).push(server);
+            return;
+          }
+          resourceMap.set(server.platform.resourceName, [server]);
+        });
         return resourceMap;
       }),
       tap(() => {
@@ -271,10 +265,8 @@ export class ScaleManagedServerComponent extends McsOrderWizardBase implements O
    * @param resourceId Resource Id of the resource to get
    */
   private _subscribeResourceById(resourceId: string): void {
-    this.resource$ = this._resourcesRepository.getByIdAsync(resourceId).pipe(
-      tap(() => {
-        this._changeDetectorRef.markForCheck();
-      }),
+    this.resource$ = this._apiService.getResource(resourceId).pipe(
+      tap(() => this._changeDetectorRef.markForCheck()),
       shareReplay(1)
     );
   }
@@ -283,8 +275,11 @@ export class ScaleManagedServerComponent extends McsOrderWizardBase implements O
    * Register jobs/notifications events
    */
   private _registerEvents(): void {
-    this._selectedServerIdHandler = this._eventDispatcher.addEventListener(
-      McsEvent.serverScaleManageSelected, this._onSelectedScaleManageServerId.bind(this));
+    this._resourcesDataChangeHandler = this._eventDispatcher.addEventListener(
+      McsEvent.dataChangeResources, () => this._changeDetectorRef.markForCheck());
+
+    this._selectedServerHandler = this._eventDispatcher.addEventListener(
+      McsEvent.serverScaleManageSelected, this._onSelectedScaleManagedServer.bind(this));
 
     // Invoke the event initially
     this._eventDispatcher.dispatch(McsEvent.serverScaleManageSelected);
@@ -319,15 +314,9 @@ export class ScaleManagedServerComponent extends McsOrderWizardBase implements O
   /**
    * Event listener whenever a manage server is selected
    */
-  private _onSelectedScaleManageServerId(id: string): void {
-    if (isNullOrEmpty(id)) { return; }
-
-    let selectedServer: McsServer;
-    this._serversRepository.getBy((item) => item.id === id).subscribe((server) => {
-      selectedServer = server;
-    });
-
-    this.fcManageServer.setValue(selectedServer);
+  private _onSelectedScaleManagedServer(server: McsServer): void {
+    if (isNullOrEmpty(server)) { return; }
+    this.fcManageServer.setValue(server);
   }
 
   /**
@@ -348,14 +337,5 @@ export class ScaleManagedServerComponent extends McsOrderWizardBase implements O
     this.fgScaleManageServerDetails.valueChanges.pipe(
       takeUntil(this._destroySubject)
     ).subscribe();
-  }
-
-  /**
-   * Subscribes to resource data changes and update the DOM
-   */
-  private _subscribeToResourceDataChange(): void {
-    this._resourcesRepository.dataChange().pipe(
-      takeUntil(this._destroySubject)
-    ).subscribe(() => this._changeDetectorRef.markForCheck());
   }
 }

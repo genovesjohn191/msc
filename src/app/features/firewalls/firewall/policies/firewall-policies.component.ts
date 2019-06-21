@@ -1,20 +1,21 @@
 import {
   Component,
-  AfterViewInit,
-  OnDestroy,
   ChangeDetectorRef,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  Injector
 } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
   CoreDefinition,
-  McsBrowserService,
-  McsTableListingBase,
-  McsTableDataSource
+  McsTableListingBase
 } from '@app/core';
 import { animateFactory } from '@app/utilities';
-import { McsFirewallPolicy } from '@app/models';
-import { McsFirewallsRepository } from '@app/services';
+import {
+  McsFirewallPolicy,
+  McsQueryParam,
+  McsApiCollection
+} from '@app/models';
+import { McsApiService } from '@app/services';
 import { FirewallService } from '../firewall.service';
 
 // Enumeration
@@ -35,9 +36,7 @@ export enum FirewallPoliciesMode {
   }
 })
 
-export class FirewallPoliciesComponent
-  extends McsTableListingBase<McsTableDataSource<McsFirewallPolicy>>
-  implements AfterViewInit, OnDestroy {
+export class FirewallPoliciesComponent extends McsTableListingBase<McsFirewallPolicy> {
   public selectedFirewallPolicy: McsFirewallPolicy;
 
   public get columnFilterIconKey(): string {
@@ -68,23 +67,13 @@ export class FirewallPoliciesComponent
   }
 
   constructor(
-    _browserService: McsBrowserService,
+    _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
-    private _firewallService: FirewallService,
-    private _firewallsRepository: McsFirewallsRepository
+    private _apiService: McsApiService,
+    private _firewallService: FirewallService
   ) {
-    super(_browserService, _changeDetectorRef);
+    super(_injector, _changeDetectorRef);
     this.selectedFirewallPolicy = new McsFirewallPolicy();
-  }
-
-  public ngAfterViewInit() {
-    Promise.resolve().then(() => {
-      this.initializeDatasource();
-    });
-  }
-
-  public ngOnDestroy() {
-    this.dispose();
   }
 
   /**
@@ -104,13 +93,6 @@ export class FirewallPoliciesComponent
   }
 
   /**
-   * Retry obtaining datasource from firewall policies
-   */
-  public retryDatasource(): void {
-    this.initializeDatasource();
-  }
-
-  /**
    * Returns the column settings key for the filter selector
    */
   protected get columnSettingsKey(): string {
@@ -118,27 +100,10 @@ export class FirewallPoliciesComponent
   }
 
   /**
-   * Initialize the table datasource according to pagination and search settings
+   * Gets the entity listing based on the context
+   * @param query Query to be obtained on the listing
    */
-  protected initializeDatasource(): void {
-    this.dataSource = new McsTableDataSource(this._firewallPoliciesSource.bind(this));
-    this.dataSource
-      .registerSearch(this.search)
-      .registerPaginator(this.paginator);
-    this.changeDetectorRef.markForCheck();
-  }
-
-  /**
-   * Returns the firewall policies
-   */
-  private _firewallPoliciesSource(): Observable<McsFirewallPolicy[]> {
-    return this._firewallsRepository.getFirewallPolicies(
-      this._firewallService.selectedFirewall,
-      {
-        keyword: this.search.keyword,
-        pageIndex: this.paginator.pageIndex,
-        pageSize: this.paginator.pageSize
-      }
-    );
+  protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsFirewallPolicy>> {
+    return this._apiService.getFirewallPolicies(this._firewallService.selectedFirewall.id, query);
   }
 }
