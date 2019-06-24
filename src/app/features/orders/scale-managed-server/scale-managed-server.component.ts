@@ -209,12 +209,13 @@ export class ScaleManagedServerComponent extends McsOrderWizardBase implements O
     if (!this._validateFormFields()) { return; }
     if (isNullOrEmpty(submitDetails)) { return; }
 
-    let workflow = {
-      state: submitDetails.workflowAction,
-      clientReferenceObject: {
-        resourcePath: CoreRoutes.getNavigationPath(RouteKey.ServerDetails)
-      }
-    } as McsOrderWorkflow;
+    let workflow = new McsOrderWorkflow();
+    workflow.state = submitDetails.workflowAction;
+    workflow.clientReferenceObject = {
+      resourcePath: CoreRoutes.getNavigationPath(RouteKey.ServerDetails),
+      resourceDescription: this.progressDescription
+    };
+
     this.submitOrderWorkflow(workflow);
   }
 

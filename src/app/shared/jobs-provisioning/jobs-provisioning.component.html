@@ -1,20 +1,27 @@
 <section>
-  <!-- In Progress Text -->
-  <div *ngIf="loadingTextIsDisplay">
-    <ng-container *ngTemplateOutlet="jobsProvisioningLoadingText?.templateRef"></ng-container>
-  </div>
-
-  <!-- Progress bar -->
-  <ng-container *ngIf="!isProgressbarHidden">
-    <mcs-progress-bar [@fadeIn]
-      [(ngModel)]="progressValue"
-      [maxValue]="progressMax"
-      (completed)="onProgressCompleted()"></mcs-progress-bar>
-  </ng-container>
-
   <!-- Job Details -->
   <section *ngFor="let job of jobs">
-    <h2>{{ job.description }}</h2>
+
+    <!-- Progress Description -->
+    <h2 *ngIf="job.clientReferenceObject?.resourceDescription; else resourceDescriptionTemplate">
+      {{ job.clientReferenceObject.resourceDescription }}
+    </h2>
+    <ng-template #resourceDescriptionTemplate>
+      <h2>{{ job.description }}</h2>
+    </ng-template>
+
+    <!-- In Progress Text -->
+    <div *ngIf="loadingTextIsDisplay">
+      <ng-container *ngTemplateOutlet="jobsProvisioningLoadingText?.templateRef"></ng-container>
+    </div>
+
+    <!-- Progress bar -->
+    <ng-container *ngIf="!isProgressbarHidden">
+      <mcs-progress-bar [@fadeIn]
+        [(ngModel)]="progressValue"
+        [maxValue]="progressMax"
+        (completed)="onProgressCompleted()"></mcs-progress-bar>
+    </ng-container>
 
     <!-- Tasks content -->
     <ng-container *ngIf="job.tasks">

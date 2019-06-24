@@ -89,6 +89,13 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
   }
 
   /**
+   * Returns the created order number
+   */
+  public get orderNo(): string {
+    return this._createdOrder.orderId;
+  }
+
+  /**
    * Returns the main order reference ID
    */
   public get orderReferenceId(): string {
@@ -361,7 +368,7 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
 
     // Get all the orders here
     this._orderApiService.getOrderItemTypes({ keyword: this._orderItemProductType }).pipe(
-      map((orderItemDetails) => getSafeProperty(orderItemDetails, (obj) => obj[0])),
+      map((orderItemDetails) => getSafeProperty(orderItemDetails, (obj) => obj.collection[0])),
       catchError(() => empty())
     ).subscribe((itemType) => this._orderItemTypeChange.next(itemType));
   }

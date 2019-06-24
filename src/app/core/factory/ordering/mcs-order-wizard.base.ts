@@ -8,6 +8,7 @@ import {
   tap,
   startWith
 } from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
 import {
   PricingCalculator,
   IWizardStep
@@ -38,6 +39,7 @@ export abstract class McsOrderWizardBase extends McsWizardBase implements McsDis
   private _pricingIsHiddenByStep: boolean;
   private readonly _accessControlService: McsAccessControlService;
   private readonly _navigationService: McsNavigationService;
+  private readonly _translateService: TranslateService;
 
   constructor(
     private _injector: Injector,
@@ -46,8 +48,19 @@ export abstract class McsOrderWizardBase extends McsWizardBase implements McsDis
     super(_orderBase);
     this._accessControlService = this._injector.get(McsAccessControlService);
     this._navigationService = this._injector.get(McsNavigationService);
+    this._translateService = this._injector.get(TranslateService);
     this._subscribeToOrderChanges();
     this._subscribeToOrderItemTypeChanges();
+  }
+
+  /**
+   * Returns the progress description label with order number for the current order
+   */
+  public get progressDescription(): string {
+    return this._translateService.instant(
+      'provisioningStep.provisioningProgressTitle',
+      { orderNo: this._orderBase.orderNo }
+    );
   }
 
   /**

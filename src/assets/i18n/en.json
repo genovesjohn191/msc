@@ -612,7 +612,8 @@
     }
   },
   "provisioningStep": {
-    "stepTitle": "Go!"
+    "stepTitle": "Go!",
+    "provisioningProgressTitle": "Progress - Order {{orderNo}}"
   },
   "orderAgreement": {
     "agreementChargesQuoted": "By submitting this order, you agree to the charges quoted and the ",
