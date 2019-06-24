@@ -183,13 +183,13 @@ export class ExpandVdcStorageComponent extends McsOrderWizardBase implements OnI
     if (!this._validateFormFields()) { return; }
     if (isNullOrEmpty(submitDetails)) { return; }
 
-    // TODO : creation of orderworkflow object will be change as a whole
-    let workflow = {
-      state: submitDetails.workflowAction,
-      clientReferenceObject: {
-        resourcePath: CoreRoutes.getNavigationPath(RouteKey.VdcDetails)
-      }
-    } as McsOrderWorkflow;
+    let workflow = new McsOrderWorkflow();
+    workflow.state = submitDetails.workflowAction;
+    workflow.clientReferenceObject = {
+      resourcePath: CoreRoutes.getNavigationPath(RouteKey.VdcDetails),
+      resourceDescription: this.progressDescription
+    };
+
     this.submitOrderWorkflow(workflow);
   }
 

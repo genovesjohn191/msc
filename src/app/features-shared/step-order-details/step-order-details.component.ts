@@ -237,11 +237,11 @@ export class StepOrderDetailsComponent
 
     let orderDetails = new OrderDetails();
     orderDetails.description = this.fcDescription.value;
-    orderDetails.contractDurationMonths = this.fcContractTerm.value;
     orderDetails.workflowAction = this.fcWorkflowAction.value;
-    orderDetails.billingEntityId = +getSafeProperty(this.fcBillingEntity, (obj) => obj.value.id);
-    orderDetails.billingSiteId = +getSafeProperty(this.fcBillingSite, (obj) => obj.value.id);
-    orderDetails.billingCostCentreId = +getSafeProperty(this.fcBillingCostCenter, (obj) => obj.value.id);
+    orderDetails.contractDurationMonths = +getSafeProperty(this.fcContractTerm, (obj) => obj.value, 0);
+    orderDetails.billingEntityId = +getSafeProperty(this.fcBillingEntity, (obj) => obj.value.id, 0);
+    orderDetails.billingSiteId = +getSafeProperty(this.fcBillingSite, (obj) => obj.value.id, 0);
+    orderDetails.billingCostCentreId = +getSafeProperty(this.fcBillingCostCenter, (obj) => obj.value.id, 0);
     return orderDetails;
   }
 

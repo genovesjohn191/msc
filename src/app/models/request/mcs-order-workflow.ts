@@ -7,6 +7,7 @@ import {
 
 export interface IMcsOrderWorkflowRefObj {
   resourcePath: string;
+  resourceDescription: string;
 }
 
 export class McsOrderWorkflow extends McsApiJobRequestBase<IMcsOrderWorkflowRefObj> {
