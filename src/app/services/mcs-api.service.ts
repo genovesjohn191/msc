@@ -738,7 +738,7 @@ export class McsApiService {
   public getPortals(query?: McsQueryParam): Observable<McsApiCollection<McsPortal>> {
     return this._mapToEntityRecords(this._toolsRepository, query).pipe(
       catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getTools'))
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getPortals'))
       )
     );
   }
@@ -746,7 +746,7 @@ export class McsApiService {
   public getPortal(id: string): Observable<McsPortal> {
     return this._mapToEntityRecord(this._toolsRepository, id).pipe(
       catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getServer'))
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getPortal'))
       )
     );
   }
