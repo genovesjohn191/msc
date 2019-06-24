@@ -51,7 +51,7 @@
             [mcsContextualHelp]="'ticketCreate.contextualHelp.reference' | translate">
 
           <mcs-hint mcsHint align="start">
-            {{ convertMaxCharText('ticketCreate.hints.reference' | translate, referenceInput.maxLength) }}
+            {{ 'ticketCreate.hints.reference' | translate: { max_char: referenceInput.maxLength } }}
           </mcs-hint>
           <mcs-hint mcsHint align="end">
             {{ referenceInput.value.length }} / {{ referenceInput.maxLength }}
@@ -67,7 +67,7 @@
             [mcsContextualHelp]="'ticketCreate.contextualHelp.summary' | translate">
 
           <mcs-hint mcsHint align="start">
-            {{ convertMaxCharText('ticketCreate.hints.summary' | translate, summaryInput.maxLength) }}
+            {{ 'ticketCreate.hints.summary' | translate: { max_char: summaryInput.maxLength } }}
           </mcs-hint>
           <mcs-hint mcsHint align="end">
             {{ summaryInput.value.length }} / {{ summaryInput.maxLength }}
@@ -86,7 +86,7 @@
             [mcsContextualHelp]="'ticketCreate.contextualHelp.details' | translate"></textarea>
 
           <mcs-hint mcsHint align="start">
-            {{ convertMaxCharText('ticketCreate.hints.details' | translate, detailsInput.maxLength) }}
+            {{ 'ticketCreate.hints.details' | translate: { max_char: detailsInput.maxLength } }}
           </mcs-hint>
           <mcs-hint mcsHint align="end">
             {{ detailsInput.value.length }} / {{ detailsInput.maxLength }}

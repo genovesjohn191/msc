@@ -27,7 +27,6 @@ import {
 } from '@app/core';
 import {
   isNullOrEmpty,
-  replacePlaceholder,
   unsubscribeSafely,
   animateFactory
 } from '@app/utilities';
@@ -43,7 +42,8 @@ import {
   McsResource,
   McsServer,
   McsTicketCreate,
-  McsTicketCreateAttachment
+  McsTicketCreateAttachment,
+  McsApiCollection
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -155,10 +155,6 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
    */
   public canNavigateAway(): boolean {
     return this.creatingTicket || !this._formGroup.hasDirtyFormControls();
-  }
-
-  public convertMaxCharText(text: string, maxchar: number): string {
-    return replacePlaceholder(text, 'max_char', maxchar.toString());
   }
 
   /**
@@ -291,9 +287,9 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
   /**
    * Set the data of VDCs obtained from API
    */
-  private _setVdcs(response: any): void {
+  private _setVdcs(response: McsApiCollection<McsResource>): void {
     if (isNullOrEmpty(response)) { return; }
-    let vdcs = response as McsResource[];
+    let vdcs = response.collection || [];
     let service: TicketService = new TicketService();
 
     service.serviceName = 'VDCs';
@@ -317,9 +313,9 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
   /**
    * Set the data of servers obtained from API
    */
-  private _setServers(response: any): void {
+  private _setServers(response: McsApiCollection<McsServer>): void {
     if (isNullOrEmpty(response)) { return; }
-    let servers = response as McsServer[];
+    let servers = response.collection || [];
     let service: TicketService = new TicketService();
 
     service.serviceName = 'Servers';
@@ -342,9 +338,9 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
   /**
    * Set the data of firewalls obtained from API
    */
-  private _setFirewalls(response: any): void {
+  private _setFirewalls(response: McsApiCollection<McsFirewall>): void {
     if (isNullOrEmpty(response)) { return; }
-    let firewalls = response as McsFirewall[];
+    let firewalls = response.collection || [];
     let service: TicketService = new TicketService();
 
     service.serviceName = 'Firewalls';
