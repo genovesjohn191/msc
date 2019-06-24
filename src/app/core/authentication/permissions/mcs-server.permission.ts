@@ -51,7 +51,8 @@ export class McsServerPermission {
    * Returns the permission for Vm Patch Management
    */
   public get vmPatchManagement(): string[] {
-    return [McsPermission.CloudVmPatchManagement];
+    return this._server.isDedicated ?
+      [McsPermission.DedicatedVmPatchManagement] : [McsPermission.CloudVmPatchManagement];
   }
 
   /**

@@ -40,7 +40,7 @@
     "enumKey": "ServerDetailsServices",
     "routePath": "services",
     "navigationPath": "services",
-    "requiredPermissions": ["CloudVmAccess", "DedicatedVmAccess"],
+    "requiredPermissions": ["CloudVmPatchManagement", "DedicatedVmPatchManagement"],
     "requiredFeatureFlag": "EnableServerOsUpdates",
     "documentTitle": "Server Services - Macquarie Cloud Services"
   },
