@@ -14,6 +14,7 @@ export enum McsPermission {
   DedicatedVmNicEdit = 'DedicatedVmNicEdit',
   DedicatedVmPowerStateEdit = 'DedicatedVmPowerStateEdit',
   DedicatedVmSnapshotAccess = 'DedicatedVmSnapshotAccess',
+  DedicatedVmPatchManagement = 'DedicatedVmPatchManagement',
   DedicatedVmManagementIpView = 'DedicatedVmManagementIpView',
 
   // Firewall
