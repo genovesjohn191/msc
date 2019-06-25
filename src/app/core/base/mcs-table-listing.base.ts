@@ -31,7 +31,8 @@ import {
 } from '@app/models';
 import {
   Search,
-  Paginator
+  Paginator,
+  FilterSelector
 } from '@app/shared';
 import {
   EventBusState,
@@ -47,6 +48,9 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
 
   @ViewChild('paginator')
   public paginator: Paginator;
+
+  @ViewChild('filterSelector')
+  public filterSelector: FilterSelector;
 
   // Table variables
   public selection: McsTableSelection<T>;
@@ -122,6 +126,7 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
     if (isNullOrEmpty(columns)) { return; }
     this.columnSettings = convertMapToJsonObject(columns);
     this.dataColumns = Object.keys(this.columnSettings);
+    this.changeDetectorRef.markForCheck();
   }
 
   /**
