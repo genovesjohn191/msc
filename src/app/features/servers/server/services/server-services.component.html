@@ -8,10 +8,9 @@
       </ng-container>
       <p>{{ 'serverServices.description' | translate }}</p>
 
-      <mcs-section *ngIf="server.osAutomationAvailable; else osAutomationNotAvailable">
+      <mcs-section >
         <mcs-form-message #formMessage></mcs-form-message>
-
-        <mcs-grid>
+        <mcs-grid *ngIf="server.osAutomationAvailable; else osAutomationNotAvailable">
           <mcs-data-status [dataStatusFactory]="dataStatusFactory">
             <mcs-data-status-success mcsDataSuccess>
 
