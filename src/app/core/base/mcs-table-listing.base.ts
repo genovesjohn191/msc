@@ -93,6 +93,9 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
   public ngOnDestroy() {
     unsubscribeSafely(this._baseDestroySubject);
     unsubscribeSafely(this._dataChangeHandler);
+    if (!isNullOrEmpty(this.dataSource)) {
+      this.dataSource.disconnect();
+    }
   }
 
   /**

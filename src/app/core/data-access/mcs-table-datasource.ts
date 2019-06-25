@@ -129,6 +129,7 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
     unsubscribeSafely(this._pagingSubject);
     unsubscribeSafely(this._dataChangeSubject);
     unsubscribeSafely(this._dataStatusChange);
+    this._resetPaginator();
   }
 
   /**

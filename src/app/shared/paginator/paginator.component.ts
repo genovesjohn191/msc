@@ -145,8 +145,7 @@ export class PaginatorComponent implements Paginator, AfterViewInit, OnDestroy {
    * Returns true if more button show be displayed
    */
   public get showMoreButton(): boolean {
-    return this.loading === false
-      && this.hasNextPage;
+    return !this.loading && this.hasNextPage;
   }
 
   /**
