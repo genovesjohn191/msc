@@ -28,7 +28,8 @@ import {
 import {
   isNullOrEmpty,
   getUniqueRecords,
-  unsubscribeSafely
+  unsubscribeSafely,
+  getSafeProperty
 } from '@app/utilities';
 import {
   StdDateFormatPipe,
@@ -367,7 +368,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
         this.dataStatusFactory.setError();
         return throwError(error);
       }),
-      map((snapshots) => snapshots && snapshots[0]),
+      map((snapshots) => getSafeProperty(snapshots, (obj) => obj.collection[0])),
       tap((snapshot) => this.dataStatusFactory.setSuccessful([snapshot]))
     );
   }
