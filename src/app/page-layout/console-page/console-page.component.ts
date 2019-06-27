@@ -42,7 +42,7 @@ import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/event-manager';
 
 // JQuery script implementation
-require('script-loader!../../../assets/scripts/jquery/jquery-1.12.4.min.js');
+require('script-loader!../../../assets/scripts/jquery/jquery-3.4.1.min.js');
 require('script-loader!../../../assets/scripts/jquery/jquery-ui.1.12.1.min.js');
 require('script-loader!../../../assets/scripts/vcloud-js/wmks.min.js');
 declare var $: any;
