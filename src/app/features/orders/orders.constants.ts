@@ -4,7 +4,8 @@ import { OrdersComponent } from './orders.component';
 import { OrderComponent } from './order/order.component';
 import { OrderResolver } from './order/order.resolver';
 import { ScaleManagedServerComponent } from './scale-managed-server/scale-managed-server.component';
-import { ExpandVdcStorageComponent } from './expand-vdc-storage/expand-vdc-storage.component';
+import { VdcStorageExpandComponent } from './vdc-storage-expand/vdc-storage-expand.component';
+import { VdcStorageCreateComponent } from './vdc-storage-new/vdc-storage-new.component';
 
 /**
  * List of services for the main module
@@ -20,7 +21,8 @@ export const ordersRoutesComponents: any[] = [
   OrdersComponent,
   OrderComponent,
   ScaleManagedServerComponent,
-  ExpandVdcStorageComponent
+  VdcStorageExpandComponent,
+  VdcStorageCreateComponent
 ];
 
 /**
@@ -38,8 +40,13 @@ export const ordersRoutes: Routes = [
   },
   {
     path: '',
-    component: ExpandVdcStorageComponent,
-    data: { routeId: RouteKey.OrderExpandVdcStorage }
+    component: VdcStorageExpandComponent,
+    data: { routeId: RouteKey.OrderVdcStorageExpand }
+  },
+  {
+    path: '',
+    component: VdcStorageCreateComponent,
+    data: { routeId: RouteKey.OrderVdcStorageNew }
   },
   // Add additional routes above this line
   {

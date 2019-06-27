@@ -124,7 +124,7 @@
       "dataError": "Something went wrong while processing your request. Please try again later."
     }
   },
-  "orderExpandVdcStorage": {
+  "orderVdcStorageExpand": {
     "title": "Expand Vdc Storage",
     "back": "Back",
     "vdc": {
@@ -132,7 +132,6 @@
       "description": "Please select the vdc you wish to expand",
       "placeholder": "Select a VDC",
       "contextualHelp": "Choose the virtual data centre to expand.",
-      "sliderLabel": "Select Storage:",
       "hints": {
         "currentStorage": "Current Storage: {{current_storage}}"
       }
@@ -146,6 +145,32 @@
       "fullStorageSpace": "This disk cannot be expanded due to insufficient storage space (0 GB remaining)."
     },
     "expanding": {
+      "description": "Description placeholder",
+      "dataInProgress": "data in progress placeholder",
+      "dataError": "Something went wrong while processing your request. Please try again later."
+    }
+  },
+  "orderVdcStorageCreate": {
+    "title": "New Vdc Storage",
+    "back": "Back",
+    "vdc": {
+      "label": "VDC",
+      "description": "Please select the vdc you wish to create a storage from",
+      "placeholder": "Select a VDC",
+      "contextualHelp": "Choose the virtual data centre to create a storage.",
+      "hints":{
+        "currentStorage": "Current Storage: {{current_storage}}"
+      }
+    },
+    "vdcDetails": {
+      "stepTitle": "VDC Details",
+      "label": "Storage Element",
+      "optionGroupLabel": "Virtual Data Centres",
+      "storageLabel":"Storage",
+      "contextualHelp": "",
+      "fullStorageSpace": "This disk cannot be expanded due to insufficient storage space (0 GB remaining)."
+    },
+    "provisioning": {
       "description": "Description placeholder",
       "dataInProgress": "data in progress placeholder",
       "dataError": "Something went wrong while processing your request. Please try again later."

@@ -1,0 +1,115 @@
+<mcs-page [header]="'orderVdcStorageExpand.title' | translate">
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef>
+
+    <!-- Back to VDC Details -->
+    <mcs-top-panel-item *mcsTopPanelItemDef no-border>
+      <mcs-action-item mcsAlign="end"
+        mcsNavigateBackward
+        mcsId="navigate-back"
+        mcsEventTracker="navigate-back-click"
+        mcsEventCategory="orders"
+        mcsEventLabel="navigate-back">
+        <mcs-icon [key]="backIconKey" size="small"></mcs-icon>
+        <span>{{'shared.wizard.previous' | translate}}</span>
+      </mcs-action-item>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
+  <mcs-content-panel *mcsContentPanelDef>
+
+    <mcs-wizard header="Wizard Header">
+
+      <!-- Error message -->
+      <ng-container mcsWizardErrorTemplate>
+        <mcs-form-message #formMessage></mcs-form-message>
+      </ng-container>
+
+      <!-- VDC Details Step-->
+      <mcs-wizard-step id="vdc-details-step"
+        [stepTitle]="'orderVdcStorageExpand.vdcDetails.stepTitle' | translate"
+        customClass="contextual-help-page-wrapper limited-view">
+        <form [formGroup]="fgVdcStorageExpandDetails" mcsFormGroup>
+          <p>{{ 'orderVdcStorageExpand.vdc.description' | translate }}</p>
+          <mcs-form-field>
+            <mcs-select [formControl]="fcResource" required
+              [placeholder]="'orderVdcStorageExpand.vdc.placeholder' | translate"
+              (change)="onChangeResource($event)"
+              [mcsContextualHelp]="'orderVdcStorageExpand.vdc.contextualHelp' | translate"
+              mcsId="select-resource"
+              mcsEventTracker="navigate-back-click"
+              mcsEventCategory="orders"
+              mcsEventLabel="navigate-back">
+
+              <mcs-option *ngFor="let resource of resources$ | async" [value]="resource">
+                {{ resource.name }}
+              </mcs-option>
+            </mcs-select>
+          </mcs-form-field>
+
+          <ng-container *ngIf="resourceStorages$ | async as resourceStorages">
+              <div class="action-box" [@fadeIn]>
+                <mcs-select [formControl]="fcStorageProfile" required
+                  (change)="onChangeStorageProfile($event)"
+                  [placeholder]="'orderVdcStorageExpand.vdc.placeholder' | translate"
+                  mcsId="select-storage"
+                  mcsEventTracker="navigate-back-click"
+                  mcsEventCategory="orders"
+                  mcsEventLabel="navigate-back">
+                  <mcs-option *ngFor="let storage of resourceStorages" [value]="storage">
+                    {{ storage.name }}
+                  </mcs-option>
+                </mcs-select>
+
+                <mcs-vdc-manage-storage #fgManageStorage
+                  [initialValue]="storage"
+                  (dataChange)="onVdcStorageChange($event)">
+                </mcs-vdc-manage-storage>
+
+              </div>
+          </ng-container>
+
+          <div class="action-items">
+            <button mcsButton arrow="right"
+              mcsWizardStepNext
+              (click)="onSubmitExpandDetails()"
+              [disabled]="!formIsValid"
+              mcsId="step-1-next"
+              mcsEventTracker="step-1-next"
+              mcsEventCategory="orders"
+              mcsEventLabel="expand-vdc-storage">{{ 'shared.wizard.next' | translate }}</button>
+          </div>
+        </form>
+
+      </mcs-wizard-step>
+
+      <!-- Confirm Step  -->
+      <mcs-wizard-step id="confirm-step"
+        [stepTitle]="'shared.wizard.confirm' | translate"
+        customClass="contextual-help-page-wrapper limited-view">
+        <mcs-step-order-details [order]="order$ | async"
+          [orderType]="(orderItemType$ | async)?.orderType"
+          [requestState]="dataStatus$ | async"
+          (dataChange)="onVdcConfirmOrderChange($event)"
+          (submitOrder)="onSubmitOrder($event)">
+        </mcs-step-order-details>
+      </mcs-wizard-step>
+
+      <!-- Go! Step  -->
+      <mcs-wizard-step id="go-step"
+        [stepTitle]="'shared.wizard.completed' | translate"
+        customClass="limited-view">
+        <mcs-step-provisioning [jobs]="jobs$ | async" [requestState]="dataStatus$ | async">
+          <ng-container mcsProvisioningStepDescription>
+            {{ 'orderVdcStorageExpand.expanding.description' | translate }}
+          </ng-container>
+
+          <ng-container mcsProvisioningStepInProgress>
+            {{ 'orderVdcStorageExpand.expanding.dataInProgress' | translate}}
+          </ng-container>
+        </mcs-step-provisioning>
+      </mcs-wizard-step>
+    </mcs-wizard>
+
+  </mcs-content-panel>
+</mcs-page>

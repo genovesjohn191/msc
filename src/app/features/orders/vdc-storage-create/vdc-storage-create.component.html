@@ -1,4 +1,4 @@
-<mcs-page [header]="'orderExpandVdcStorage.title' | translate">
+<mcs-page [header]="'orderVdcStorageCreate.title' | translate">
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef>
 
@@ -27,15 +27,15 @@
 
       <!-- VDC Details Step-->
       <mcs-wizard-step id="vdc-details-step"
-        [stepTitle]="'orderExpandVdcStorage.vdcDetails.stepTitle' | translate"
+        [stepTitle]="'orderVdcStorageCreate.vdcDetails.stepTitle' | translate"
         customClass="contextual-help-page-wrapper limited-view">
-        <form [formGroup]="fgExpandVdcStorageDetails" mcsFormGroup>
-          <p>{{ 'orderExpandVdcStorage.vdc.description' | translate }}</p>
+        <form [formGroup]="fgVdcStorageCreateDetails" mcsFormGroup>
+          <p>{{ 'orderVdcStorageCreate.vdc.description' | translate }}</p>
           <mcs-form-field>
             <mcs-select [formControl]="fcResource" required
-              [placeholder]="'orderExpandVdcStorage.vdc.placeholder' | translate"
+              [placeholder]="'orderVdcStorageCreate.vdc.placeholder' | translate"
               (change)="onChangeResource($event)"
-              [mcsContextualHelp]="'orderExpandVdcStorage.vdc.contextualHelp' | translate"
+              [mcsContextualHelp]="'orderVdcStorageCreate.vdc.contextualHelp' | translate"
               mcsId="select-resource"
               mcsEventTracker="navigate-back-click"
               mcsEventCategory="orders"
@@ -49,9 +49,10 @@
 
           <ng-container *ngIf="resourceStorages$ | async as resourceStorages">
               <div class="action-box" [@fadeIn]>
-                <mcs-select [formControl]="fcStorageProfile" required
-                  (change)="onChangeStorageProfile($event)"
-                  [placeholder]="'orderExpandVdcStorage.vdc.placeholder' | translate"
+                <!-- TODO: Change this to Performance Tier Dropdown -->
+                <mcs-select [formControl]="fcPerfomanceTier" required
+                  (change)="onChangePerfomanceTier($event)"
+                  [placeholder]="'orderVdcStorageCreate.vdc.placeholder' | translate"
                   mcsId="select-storage"
                   mcsEventTracker="navigate-back-click"
                   mcsEventCategory="orders"
@@ -62,22 +63,21 @@
                 </mcs-select>
 
                 <mcs-vdc-manage-storage #fgManageStorage
-                  [initialValue]="storage"
+                  [initialValue]="0"
                   (dataChange)="onVdcStorageChange($event)">
                 </mcs-vdc-manage-storage>
-
               </div>
           </ng-container>
 
           <div class="action-items">
             <button mcsButton arrow="right"
               mcsWizardStepNext
-              (click)="onSubmitExpandDetails()"
+              (click)="onSubmitCreateVdcStorageDetails()"
               [disabled]="!formIsValid"
               mcsId="step-1-next"
               mcsEventTracker="step-1-next"
               mcsEventCategory="orders"
-              mcsEventLabel="expand-vdc-storage">{{ 'shared.wizard.next' | translate }}</button>
+              mcsEventLabel="create-vdc-storage">{{ 'shared.wizard.next' | translate }}</button>
           </div>
         </form>
 
@@ -101,11 +101,11 @@
         customClass="limited-view">
         <mcs-step-provisioning [jobs]="jobs$ | async" [requestState]="dataStatus$ | async">
           <ng-container mcsProvisioningStepDescription>
-            {{ 'orderExpandVdcStorage.expanding.description' | translate }}
+            {{ 'orderVdcStorageCreate.provisioning.description' | translate }}
           </ng-container>
 
           <ng-container mcsProvisioningStepInProgress>
-            {{ 'orderExpandVdcStorage.expanding.dataInProgress' | translate}}
+            {{ 'orderVdcStorageCreate.provisioning.dataInProgress' | translate}}
           </ng-container>
         </mcs-step-provisioning>
       </mcs-wizard-step>
