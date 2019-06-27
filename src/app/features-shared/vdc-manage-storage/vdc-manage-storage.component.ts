@@ -66,9 +66,12 @@ export class VdcManageStorageComponent
   }
   public set initialValue(value: number) {
     this._initialValue = isNullOrEmpty(value) ? DEFAULT_MINIMUM : value;
-    this.sliderModel = value;
   }
   private _initialValue: number;
+
+  public get roundedOffInitialValue(): number {
+    return Math.round(this.initialValue * 100) / 100;
+  }
 
   @ViewChild(McsFormGroupDirective)
   private _formGroup: McsFormGroupDirective;
@@ -175,7 +178,7 @@ export class VdcManageStorageComponent
    * Register the input form control element
    */
   private _registerInputFormControl(): void {
-    this.fcInput = new FormControl(this.initialValue, [
+    this.fcInput = new FormControl(this.roundedOffInitialValue, [
       CoreValidators.required,
       CoreValidators.numeric,
       CoreValidators.min(this.minimumUsable),

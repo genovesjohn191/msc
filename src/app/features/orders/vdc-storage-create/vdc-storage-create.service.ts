@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { McsOrderBase } from '@app/core';
-import { McsApiService } from '@app/services';
 import { OrderIdType } from '@app/models';
+import { McsApiService } from '@app/services';
 
 @Injectable()
-export class ExpandVdcStorageService extends McsOrderBase {
+export class VdcStorageCreateService extends McsOrderBase {
 
   constructor(_apiService: McsApiService) {
-    super(_apiService, OrderIdType.ExpandVdcStorage);
+    super(_apiService, OrderIdType.VdcStorageCreate);
   }
 }

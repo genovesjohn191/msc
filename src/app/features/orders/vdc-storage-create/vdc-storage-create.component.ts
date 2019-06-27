@@ -9,6 +9,21 @@ import {
   OnInit
 } from '@angular/core';
 import {
+  FormGroup,
+  FormControl
+} from '@angular/forms';
+import {
+  Observable,
+  throwError,
+  Subject
+} from 'rxjs';
+import {
+  catchError,
+  takeUntil,
+  shareReplay,
+  map
+} from 'rxjs/operators';
+import {
   McsOrderWizardBase,
   CoreDefinition,
   McsErrorHandlerService,
@@ -17,13 +32,6 @@ import {
   CoreRoutes,
   McsFormGroupService
 } from '@app/core';
-
-import { ExpandVdcStorageService } from './expand-vdc-storage.service';
-import {
-  Observable,
-  throwError,
-  Subject
-} from 'rxjs';
 import {
   McsResource,
   McsResourceStorage,
@@ -32,51 +40,42 @@ import {
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
-  catchError,
-  takeUntil,
-  shareReplay,
-  map
-} from 'rxjs/operators';
-import {
   isNullOrEmpty,
   unsubscribeSafely,
   animateFactory,
   getSafeProperty,
   convertMbToGb
 } from '@app/utilities';
-import {
-  FormGroup,
-  FormControl
-} from '@angular/forms';
 import { McsFormGroupDirective } from '@app/shared';
 import {
   OrderDetails,
   VdcManageStorage
 } from '@app/features-shared';
+import { VdcStorageCreateService } from './vdc-storage-create.service';
 
 // TODO: will be added in API integration
-// type ExpandVdcStorageProperties = {
+// type CreateVdcStorageProperties = {
 //   storageMB: number;
 //   storageProfileId: string;
 // };
 
 @Component({
-  selector: 'mcs-expand-vdc-storage',
-  templateUrl: 'expand-vdc-storage.component.html',
+  selector: 'mcs-order-vdc-storage-create',
+  templateUrl: 'vdc-storage-create.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [ExpandVdcStorageService],
+  providers: [VdcStorageCreateService],
   animations: [
     animateFactory.fadeIn
   ],
 })
 
-export class ExpandVdcStorageComponent extends McsOrderWizardBase implements OnInit, OnDestroy {
+export class VdcStorageCreateComponent extends McsOrderWizardBase implements OnInit, OnDestroy {
 
   public resources$: Observable<McsResource[]>;
   public resourceStorages$: Observable<McsResourceStorage[]>;
-  public fgExpandVdcStorageDetails: FormGroup;
+  public fgVdcStorageCreateDetails: FormGroup;
   public fcResource: FormControl;
-  public fcStorageProfile: FormControl;
+  public fcPerfomanceTier: FormControl;
   public storage: number;
 
   /**
@@ -103,14 +102,14 @@ export class ExpandVdcStorageComponent extends McsOrderWizardBase implements OnI
 
   constructor(
     _injector: Injector,
-    private _expandVdcStorageService: ExpandVdcStorageService,
+    private _vdcStorageCreateService: VdcStorageCreateService,
+    private _apiService: McsApiService,
     private _elementRef: ElementRef,
     private _changeDetectorRef: ChangeDetectorRef,
     private _formGroupService: McsFormGroupService,
-    private _apiService: McsApiService,
     private _errorHandlerService: McsErrorHandlerService,
   ) {
-    super(_injector, _expandVdcStorageService);
+    super(_injector, _vdcStorageCreateService);
   }
 
   public ngOnInit() {
@@ -127,7 +126,6 @@ export class ExpandVdcStorageComponent extends McsOrderWizardBase implements OnI
    * @param _value current value of the slider
    */
   public onVdcStorageChange(_value: VdcManageStorage): void {
-    console.log(this.formIsValid);
     // TODO: value of the slider will be coming from here
   }
 
@@ -144,7 +142,7 @@ export class ExpandVdcStorageComponent extends McsOrderWizardBase implements OnI
    * Event that emits whenever a storage profile is selected
    * @param storage selected storage
    */
-  public onChangeStorageProfile(storage: McsResourceStorage) {
+  public onChangePerfomanceTier(storage: McsResourceStorage) {
     if (isNullOrEmpty(storage)) { return; }
     let storageGB = convertMbToGb(storage.usedMB);
     this.storage = storageGB;
@@ -153,9 +151,9 @@ export class ExpandVdcStorageComponent extends McsOrderWizardBase implements OnI
   }
 
   /**
-   * Event that emits when the expand details is submitted
+   * Event that emits when the create vdc storage details is submitted
    */
-  public onSubmitExpandDetails(): void {
+  public onSubmitCreateVdcStorageDetails(): void {
     if (isNullOrEmpty(this.storage)) { return; }
     this._changeDetectorRef.markForCheck();
   }
@@ -166,7 +164,7 @@ export class ExpandVdcStorageComponent extends McsOrderWizardBase implements OnI
    */
   public onVdcConfirmOrderChange(orderDetails: OrderDetails): void {
     if (isNullOrEmpty(orderDetails)) { return; }
-    this._expandVdcStorageService.createOrUpdateOrder({
+    this._vdcStorageCreateService.createOrUpdateOrder({
       contractDurationMonths: orderDetails.contractDurationMonths,
       description: orderDetails.description,
       billingEntityId: orderDetails.billingEntityId,
@@ -206,7 +204,7 @@ export class ExpandVdcStorageComponent extends McsOrderWizardBase implements OnI
    * Touches all the invalid form fields
    */
   private _touchInvalidFields(): void {
-    this._formGroupService.touchAllFormFields(this.fgExpandVdcStorageDetails);
+    this._formGroupService.touchAllFormFields(this.fgVdcStorageCreateDetails);
     this._formGroupService.scrollToFirstInvalidField(this._elementRef.nativeElement);
   }
 
@@ -215,14 +213,12 @@ export class ExpandVdcStorageComponent extends McsOrderWizardBase implements OnI
    */
   private _getAllResources(): void {
     this.resources$ = this._apiService.getResources().pipe(
-      map((response) => getSafeProperty(response, (obj) => obj.collection)
-        .filter((resource) => !resource.isDedicated)
-      ),
+      map((response) => response.collection.filter((resource) => !resource.isDedicated)),
+      shareReplay(1),
       catchError((error) => {
         this._errorHandlerService.redirectToErrorPage(error.status);
         return throwError(error);
-      }),
-      shareReplay(1)
+      })
     );
   }
 
@@ -231,10 +227,10 @@ export class ExpandVdcStorageComponent extends McsOrderWizardBase implements OnI
    * @param resource resource to be search
    */
   private _getResourceStorages(resource: McsResource): void {
+    // TODO: should be get All Performance Tier
     if (isNullOrEmpty(resource)) { return; }
-
     this.resourceStorages$ = this._apiService.getResourceStorages(resource.id).pipe(
-      map((response) => getSafeProperty(response, (obj) => obj.collection)),
+      map((response) => response.collection),
       shareReplay(1)
     );
   }
@@ -245,15 +241,15 @@ export class ExpandVdcStorageComponent extends McsOrderWizardBase implements OnI
   private _registerFormGroup() {
 
     this.fcResource = new FormControl('', [CoreValidators.required]);
-    this.fcStorageProfile = new FormControl('', [CoreValidators.required]);
+    this.fcPerfomanceTier = new FormControl('', [CoreValidators.required]);
 
     // Register Form Groups using binding
-    this.fgExpandVdcStorageDetails = new FormGroup({
+    this.fgVdcStorageCreateDetails = new FormGroup({
       fcResource: this.fcResource,
-      fcStorageProfile: this.fcStorageProfile,
+      fcPerfomanceTier: this.fcPerfomanceTier,
     });
 
-    this.fgExpandVdcStorageDetails.valueChanges.pipe(
+    this.fgVdcStorageCreateDetails.valueChanges.pipe(
       takeUntil(this._destroySubject)
     ).subscribe();
   }
@@ -263,8 +259,8 @@ export class ExpandVdcStorageComponent extends McsOrderWizardBase implements OnI
    */
   private _registerNestedFormGroup() {
     if (!isNullOrEmpty(this._fgManageStorage)) {
-      this.fgExpandVdcStorageDetails.removeControl('fgManageStorage');
-      this.fgExpandVdcStorageDetails.addControl('fgManageStorage',
+      this.fgVdcStorageCreateDetails.removeControl('fgManageStorage');
+      this.fgVdcStorageCreateDetails.addControl('fgManageStorage',
         this._fgManageStorage.getFormGroup().formGroup);
     }
   }

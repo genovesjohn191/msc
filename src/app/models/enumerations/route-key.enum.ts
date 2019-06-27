@@ -41,7 +41,8 @@ export enum RouteKey {
   Orders,
   OrderDetails,
   OrderScaleManagedServer,
-  OrderExpandVdcStorage,
+  OrderVdcStorageExpand,
+  OrderVdcStorageNew,
 
   Internet,
   InternetDetails,
