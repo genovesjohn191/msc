@@ -15,7 +15,7 @@ import { OrdersComponent } from './orders.component';
 import { OrderComponent } from './order/order.component';
 import { ScaleManagedServerComponent } from './scale-managed-server/scale-managed-server.component';
 import { VdcStorageExpandComponent } from './vdc-storage-expand/vdc-storage-expand.component';
-import { VdcStorageCreateComponent } from './vdc-storage-new/vdc-storage-new.component';
+import { VdcStorageCreateComponent } from './vdc-storage-create/vdc-storage-create.component';
 
 @NgModule({
   entryComponents: [
