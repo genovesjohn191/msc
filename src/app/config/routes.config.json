@@ -276,13 +276,13 @@
     "requiredFeatureFlag": "EnableOrderingVdcStorageExpand",
     "documentTitle": "Expand Vdc Storage - Macquarie Cloud Services"
   },
-  "orderVdcStorageNew": {
-    "enumKey": "OrderVdcStorageNew",
-    "routePath": "vdc-storage-new",
-    "navigationPath": "orders/vdc-storage-new",
+  "orderVdcStorageCreate": {
+    "enumKey": "OrderVdcStorageCreate",
+    "routePath": "vdc-storage-create",
+    "navigationPath": "orders/vdc-storage-create",
     "requiredPermissions": ["OrderEdit"],
     "requiredFeatureFlag": "EnableOrderingVdcStorageProvision",
-    "documentTitle": "New Vdc Storage - Macquarie Cloud Services"
+    "documentTitle": "Create Vdc Storage - Macquarie Cloud Services"
   },
   "otherTools": {
     "enumKey": "OtherTools",
