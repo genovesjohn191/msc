@@ -59,9 +59,17 @@ def qualys_app_id = params.QUALYS_APP_ID
 def qualys_auth_record = params.QUALYS_AUTH_RECORD
 def qualys_auth_record_id = params.QUALYS_AUTH_RECORD_ID
 def deploy_after_build = params.DEPLOY_AFTER_BUILD
+def host_docker_bin = params.HOST_DOCKER_BIN
+def docker_path = params.DOCKER_PATH
+def docker_bin = ""
+if (docker_path != null) {
+  docker_bin = "${docker_path}/docker"
+} else {
+  docker_bin = host_docker_bin
+}
 
 echo "Building with the following configuration:"
-echo "\tRegistry: ${params.REGISTRY_LOCATION}\n\tDocker Sock: ${params.HOST_DOCKER_SOCK}\n\tDocker Binary: ${params.HOST_DOCKER_BIN}\n\tKubectl Binary: ${params.HOST_KUBECTL_BIN}"
+echo "\tRegistry: ${params.REGISTRY_LOCATION}\n\tDocker Sock: ${params.HOST_DOCKER_SOCK}\n\tDocker Binary: ${docker_bin}\n\tKubectl Binary: ${params.HOST_KUBECTL_BIN}"
 echo "and using JNLP slave container:"
 echo "\t${jenkins_slave_image_name}"
 
@@ -149,19 +157,19 @@ podTemplate(
                 stage('Build docker image') {
                     sh "yarn install"
                     sh "npm run build:aot:prod"
-                    sh "docker build -t ${image_name}:${image_version} ."
+                    sh "${docker_bin} build -t ${image_name}:${image_version} ."
                 }
                 stage('Publish the docker image') {
                     // See https://cloud.google.com/container-registry/docs/advanced-authentication
                     if (params.GOOGLE_REGISTRY) {
                         echo "Authenticating to upstream docker repository."
-                        sh "set +x && docker login -u _json_key -p \"\$(cat ${service_creds_location}/${service_creds_file})\" https://gcr.io"
+                        sh "set +x && ${docker_bin} login -u _json_key -p \"\$(cat ${service_creds_location}/${service_creds_file})\" https://gcr.io"
                     }
-                    sh "docker tag ${image_name}:${image_version} ${image_name}:latest"
-                    sh "docker tag ${image_name}:${image_version} ${registry_location}/${image_name}:${image_version}"
-                    sh "docker tag ${image_name}:${image_version} ${registry_location}/${image_name}:latest"
-                    sh "docker push ${registry_location}/${image_name}:${image_version}"
-                    sh "docker push ${registry_location}/${image_name}:latest"
+                    sh "${docker_bin} tag ${image_name}:${image_version} ${image_name}:latest"
+                    sh "${docker_bin} tag ${image_name}:${image_version} ${registry_location}/${image_name}:${image_version}"
+                    sh "${docker_bin} tag ${image_name}:${image_version} ${registry_location}/${image_name}:latest"
+                    sh "${docker_bin} push ${registry_location}/${image_name}:${image_version}"
+                    sh "${docker_bin} push ${registry_location}/${image_name}:latest"
                 }
             }
             if (deploy_after_build) {
