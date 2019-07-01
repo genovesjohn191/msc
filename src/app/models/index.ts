@@ -57,6 +57,10 @@ export * from './enumerations/message-type.enum';
 export * from './enumerations/severity.enum';
 export * from './enumerations/api-error-requester.enum';
 
+/** Job References */
+export * from './job-references/mcs-server-job-reference';
+export * from './job-references/mcs-media-job-reference';
+
 /** Request */
 export * from './request/mcs-server-create-addon-anti-virus';
 export * from './request/mcs-server-create-addon-sql-server';
