@@ -36,10 +36,11 @@ export abstract class McsOrderWizardBase extends McsWizardBase implements McsDis
   @ViewChild('pricingCalculator')
   public pricingCalculator: PricingCalculator;
 
+  protected readonly translateService: TranslateService;
+
   private _pricingIsHiddenByStep: boolean;
   private readonly _accessControlService: McsAccessControlService;
   private readonly _navigationService: McsNavigationService;
-  private readonly _translateService: TranslateService;
 
   constructor(
     private _injector: Injector,
@@ -48,7 +49,7 @@ export abstract class McsOrderWizardBase extends McsWizardBase implements McsDis
     super(_orderBase);
     this._accessControlService = this._injector.get(McsAccessControlService);
     this._navigationService = this._injector.get(McsNavigationService);
-    this._translateService = this._injector.get(TranslateService);
+    this.translateService = this._injector.get(TranslateService);
     this._subscribeToOrderChanges();
     this._subscribeToOrderItemTypeChanges();
   }
@@ -57,7 +58,7 @@ export abstract class McsOrderWizardBase extends McsWizardBase implements McsDis
    * Returns the progress description label with order number for the current order
    */
   public get progressDescription(): string {
-    return this._translateService.instant(
+    return this.translateService.instant(
       'provisioningStep.provisioningProgressTitle',
       { orderNo: this._orderBase.orderNo }
     );

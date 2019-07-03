@@ -332,7 +332,7 @@ export class ServerCommandComponent {
       return;
     }
     this._eventDispatcher.dispatch(McsEvent.serverScaleManageSelected, this.server);
-    this._navigationService.navigateTo(RouteKey.OrderScaleManagedServer);
+    this._navigationService.navigateTo(RouteKey.OrderServerManagedScale);
   }
 
   /**

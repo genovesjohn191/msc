@@ -99,7 +99,7 @@
       "email": "Email Address"
     }
   },
-  "orderScaleManagedServer": {
+  "orderServerManagedScale": {
     "back": "Back",
     "vm": {
       "label": "Please select the server you wish to scale",
@@ -125,11 +125,11 @@
     }
   },
   "orderVdcStorageExpand": {
-    "title": "Expand Vdc Storage",
+    "title": "Expand VDC Storage",
     "back": "Back",
     "vdc": {
       "label": "VDC",
-      "description": "Please select the vdc you wish to expand",
+      "description": "Please select the VDC you wish to expand",
       "placeholder": "Select a VDC",
       "contextualHelp": "Choose the virtual data centre to expand.",
       "hints": {
@@ -151,11 +151,11 @@
     }
   },
   "orderVdcStorageCreate": {
-    "title": "New Vdc Storage",
+    "title": "New VDC Storage",
     "back": "Back",
     "vdc": {
       "label": "VDC",
-      "description": "Please select the vdc you wish to create a storage from",
+      "description": "Please select the VDC you wish to create a storage profile for",
       "placeholder": "Select a VDC",
       "contextualHelp": "Choose the virtual data centre to create a storage.",
       "hints":{
@@ -174,6 +174,31 @@
       "description": "Description placeholder",
       "dataInProgress": "data in progress placeholder",
       "dataError": "Something went wrong while processing your request. Please try again later."
+    }
+  },
+  "orderServiceRaiseInview": {
+    "title": "Raise InView Level",
+    "back": "Back",
+    "serviceDetails": {
+      "stepTitle": "Service Details",
+      "service": {
+        "label": "Select the service to raise the InView level for",
+        "placeholder": "Select a service",
+        "contextualHelp": "Select the service you would like to raise the InView level for."
+      },
+      "inview": {
+        "placeholder": "",
+        "contextualHelp": "Select the level of Inview level you want to apply.",
+        "label": {
+          "none": "This service does not currently have InView configured. Please speak to your Macquarie Cloud Services accounts team about enabling InView.",
+          "standard": "The InView level for this service is currently Standard. It will be raised to Premium.",
+          "premium": "The InView Level for this service is currently Premium. This is the highest InView Level."
+        }
+      }
+    },
+    "raise": {
+      "description": "Description placeholder",
+      "dataInProgress": "data in progress placeholder"
     }
   },
   "notification": {
@@ -383,28 +408,42 @@
     "reachedNetworksLimit": "You've reached the maximum number of NICs for this server."
   },
   "serverServices": {
-    "loading": "Loading services information.",
-    "loadingContent": "Loading server os updates details.",
-    "errorGettingServerDetails": "Sorry, something’s not right. We weren’t able to retrieve the os update details of the server.",
-    "formMessageDefaultError": "Something went wrong while processing your request. Please try again later.",
-    "label": "Services",
-    "title": "Operating System Updates",
-    "description": "Keep your server protected by applying regular OS updates.",
-    "osAutomationNotAvailable": "This server does not currently support operating system updates via the Portal. Please contact your Macquarie Cloud Services accounts team for more information.",
-    "updatesStatusTitleLabel": "Status",
-    "updatesAnalysisLabel": "Inspect Now",
-    "updatesScheduleTitleLabel": "Jobs",
-    "updatesScheduleLabel": {
-      "scheduled": "You have an update schedule configured.",
-      "unscheduled": "No update schedule configured."
+    "operatingSystemUpdates": {
+      "loading": "Loading services information.",
+      "loadingContent": "Loading server os updates details.",
+      "errorGettingServerDetails": "Sorry, something’s not right. We weren’t able to retrieve the os update details of the server.",
+      "formMessageDefaultError": "Something went wrong while processing your request. Please try again later.",
+      "label": "Services",
+      "title": "Operating System Updates",
+      "description": "Keep your server protected by applying regular OS updates.",
+      "osAutomationNotAvailable": "This server does not currently support operating system updates via the Portal. Please contact your Macquarie Cloud Services accounts team for more information.",
+      "updatesStatusTitleLabel": "Status",
+      "updatesAnalysisLabel": "Inspect Now",
+      "updatesScheduleTitleLabel": "Jobs",
+      "updatesScheduleLabel": {
+        "scheduled": "You have an update schedule configured.",
+        "unscheduled": "No update schedule configured."
+      },
+      "updatesScheduleRunOnceWarningLabel": "Once this job is complete, you will need to set up a new update schedule.",
+      "updatesScheduleConfigureLink": "Configure",
+      "updatesScheduleRunNowLink": "Update Now...",
+      "deleteSuccessMessage": "Schedule deleted",
+      "deleteErrorMessage": "Schedule could not be deleted at this time",
+      "updateSuccessMessage": "Schedule saved",
+      "updateErrorMessage": "Schedule could not be saved at this time"
     },
-    "updatesScheduleRunOnceWarningLabel": "Once this job is complete, you will need to set up a new update schedule.",
-    "updatesScheduleConfigureLink": "Configure",
-    "updatesScheduleRunNowLink": "Update Now...",
-    "deleteSuccessMessage": "Schedule deleted",
-    "deleteErrorMessage": "Schedule could not be deleted at this time",
-    "updateSuccessMessage": "Schedule saved",
-    "updateErrorMessage": "Schedule could not be saved at this time"
+    "inview": {
+      "title": "InView",
+      "description": "InView gives you powerful infrastructure-level monitoring and alerting.",
+      "inviewLevelLabel": "Inview Level",
+      "inviewLevelDescription": {
+        "premium": "Your server has InView Premium, which grants access to statistics such as uptime, CPU, RAM, disk, network latency and much more.",
+        "standard": "Your server has InView Standard, which grants access to statistics such as CPU usage. Access more statistics such as uptime, RAM, disk, network latency and more by raising your InView level.",
+        "none": "Your server does not currently have InView provisioned. Access statistics such as uptime, CPU, RAM, disk, network latency and more by speaking to your account manager about InView."
+      },
+      "goToinviewButtonLabel": "Go to Inview",
+      "raiseinviewButtonLabel": "Raise InView Level"
+    }
   },
   "serverServicesOsUpdatesApplyNow": {
     "loading": "Loading server os updates.",
@@ -853,7 +892,7 @@
       "errorGettingServers": "Sorry, something’s not right. We weren’t able to retrieve the list of servers to attach."
     }
   },
-  "systemMessages":{
+  "systemMessages": {
     "header": "System Messages",
     "leftPanelHeader": "Message Filter",
     "description": "Below is the list of your Macquarie Cloud Services system messages.",
@@ -1204,9 +1243,9 @@
       "deploymentFailed": "Deployment Failed",
       "viewDetails": "View details"
     },
-    "dialog":{
-      "cancel":"Cancel",
-      "confirm":"Confirm"
+    "dialog": {
+      "cancel": "Cancel",
+      "confirm": "Confirm"
     },
     "wizard": {
       "previous": "Back",

@@ -260,10 +260,10 @@
     "requiredFeatureFlag": "EnableOrdering",
     "documentTitle": "Order Details - Macquarie Cloud Services"
   },
-  "orderScaleManagedServer": {
-    "enumKey": "OrderScaleManagedServer",
-    "routePath": "scale-managed-server",
-    "navigationPath": "orders/scale-managed-server",
+  "orderServerManagedScale": {
+    "enumKey": "OrderServerManagedScale",
+    "routePath": "server-managed-scale",
+    "navigationPath": "orders/server-managed-scale",
     "requiredPermissions": ["OrderEdit"],
     "requiredFeatureFlag": "EnableOrderingManagedServerScale",
     "documentTitle": "Scale Managed Servers - Macquarie Cloud Services"
@@ -283,6 +283,14 @@
     "requiredPermissions": ["OrderEdit"],
     "requiredFeatureFlag": "EnableOrderingVdcStorageProvision",
     "documentTitle": "Create Vdc Storage - Macquarie Cloud Services"
+  },
+  "orderServiceInviewRaise": {
+    "enumKey": "OrderServiceInviewRaise",
+    "routePath": "services/inview",
+    "navigationPath": "orders/services/inview",
+    "requiredPermissions": ["OrderEdit"],
+    "requiredFeatureFlag": "EnableOrderingManagedServerInviewLevelRaise",
+    "documentTitle": "Service Raise Inview Level - Macquarie Cloud Services"
   },
   "otherTools": {
     "enumKey": "OtherTools",

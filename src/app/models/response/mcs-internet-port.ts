@@ -15,19 +15,14 @@ import {
   PortStatusSerialization,
   portStatusText
 } from '../enumerations/port-status.enum';
+import { isNullOrEmpty } from '@app/utilities';
 
 export class McsInternetPort extends McsEntityBase {
   public serviceId: string = undefined;
   public description: string = undefined;
   public portSpeedMbps: number = undefined;
-
-  @JsonProperty({
-    type: InviewLevel,
-    serializer: InviewLevelSerialization,
-    deserializer: InviewLevelSerialization
-  })
-  public inviewLevel: InviewLevel = undefined;
   public subnet: string = undefined;
+  public primaryPort: string = undefined;
 
   @JsonProperty({
     type: ServiceLevel,
@@ -35,7 +30,6 @@ export class McsInternetPort extends McsEntityBase {
     deserializer: ServiceLevelSerialization
   })
   public serviceLevel: ServiceLevel = undefined;
-  public primaryPort: string = undefined;
 
   @JsonProperty({
     type: PortStatus,
@@ -43,6 +37,23 @@ export class McsInternetPort extends McsEntityBase {
     deserializer: PortStatusSerialization
   })
   public status: PortStatus = undefined;
+
+  @JsonProperty({
+    type: InviewLevel,
+    serializer: InviewLevelSerialization,
+    deserializer: InviewLevelSerialization
+  })
+  private inviewLevel: InviewLevel = undefined;
+
+  /**
+   * Returns the inview level
+   */
+  public get inViewLevel(): InviewLevel {
+    if (isNullOrEmpty(this.inviewLevel)) {
+      return InviewLevel.None;
+    }
+    return this.inviewLevel;
+  }
 
   /**
    * Returns the service level label
@@ -62,6 +73,6 @@ export class McsInternetPort extends McsEntityBase {
    * Returns the inview level label
    */
   public get inviewLevelLabel(): string {
-    return inviewLevelText[this.inviewLevel];
+    return inviewLevelText[this.inViewLevel];
   }
 }

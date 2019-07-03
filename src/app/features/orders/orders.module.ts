@@ -13,9 +13,10 @@ import {
 import { ordersRoutes } from './orders.constants';
 import { OrdersComponent } from './orders.component';
 import { OrderComponent } from './order/order.component';
-import { ScaleManagedServerComponent } from './scale-managed-server/scale-managed-server.component';
+import { ServerManagedScaleComponent } from './server-managed-scale/server-managed-scale.component';
 import { VdcStorageExpandComponent } from './vdc-storage-expand/vdc-storage-expand.component';
 import { VdcStorageCreateComponent } from './vdc-storage-create/vdc-storage-create.component';
+import { ServiceInviewRaiseComponent } from './service-inview-raise/service-inview-raise.component';
 
 @NgModule({
   entryComponents: [
@@ -24,9 +25,10 @@ import { VdcStorageCreateComponent } from './vdc-storage-create/vdc-storage-crea
   declarations: [
     OrdersComponent,
     OrderComponent,
-    ScaleManagedServerComponent,
+    ServerManagedScaleComponent,
     VdcStorageExpandComponent,
-    VdcStorageCreateComponent
+    VdcStorageCreateComponent,
+    ServiceInviewRaiseComponent
   ],
   imports: [
     RouterModule.forChild(ordersRoutes),

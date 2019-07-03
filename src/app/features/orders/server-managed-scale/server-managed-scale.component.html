@@ -27,20 +27,20 @@
 
       <!-- Server Details Step-->
       <mcs-wizard-step id="server-details-step"
-        [stepTitle]="'orderScaleManagedServer.vmDetails.stepTitle' | translate"
+        [stepTitle]="'orderServerManagedScale.vmDetails.stepTitle' | translate"
         customClass="contextual-help-page-wrapper limited-view">
-        <form [formGroup]="fgScaleManageServerDetails" mcsFormGroup>
-          <p>{{ 'orderScaleManagedServer.vm.label' | translate }}</p>
+        <form [formGroup]="fgServerManagedScaleDetails" mcsFormGroup>
+          <p>{{ 'orderServerManagedScale.vm.label' | translate }}</p>
           <mcs-form-field>
-            <mcs-select [placeholder]="'orderScaleManagedServer.vm.placeholder' | translate"
+            <mcs-select [placeholder]="'orderServerManagedScale.vm.placeholder' | translate"
               required mcsId="select-server"
               [formControl]="fcManageServer"
               (change)="onChangeServer($event)"
-              [mcsContextualHelp]="'orderScaleManagedServer.vm.contextualHelp' | translate">
+              [mcsContextualHelp]="'orderServerManagedScale.vm.contextualHelp' | translate">
 
               <mcs-option-group>
                 <ng-container *mcsOptionGroupHeader>
-                  <span>{{ 'orderScaleManagedServer.vm.optionGroupLabel' | translate }}</span>
+                  <span>{{ 'orderServerManagedScale.vm.optionGroupLabel' | translate }}</span>
                 </ng-container>
                 <ng-container *ngIf="resources$ | async as resources">
                   <mcs-option-group [label]="iterator.key" *ngFor="let iterator of resources | mcsMapIterable">
@@ -59,15 +59,15 @@
               [serverCompute]="fcManageServer.value?.compute"
               [minimumCpu]="minimumCpu"
               [minimumMemoryGB]="minimumMemoryGB"
-              [mcsContextualHelp]="'orderScaleManagedServer.vmDetails.contextualHelp' | translate"
+              [mcsContextualHelp]="'orderServerManagedScale.vmDetails.contextualHelp' | translate"
               (dataChange)="onScaleChanged($event, fcManageServer.value)">
 
             <ng-container mcsManageScaleHeader>
-              <h2>{{ 'orderScaleManagedServer.vmDetails.label' | translate }}</h2>
+              <h2>{{ 'orderServerManagedScale.vmDetails.label' | translate }}</h2>
             </ng-container>
             </mcs-server-manage-scale>
             <mcs-data-status-warning *ngIf="fcManageServer.value?.isPoweredOn">
-              <span>{{ 'orderScaleManagedServer.vmDetails.warning' | translate }}</span>
+              <span>{{ 'orderServerManagedScale.vmDetails.warning' | translate }}</span>
             </mcs-data-status-warning>
           </div>
 
@@ -87,7 +87,7 @@
 
       <!-- Confirm Step  -->
       <mcs-wizard-step id="confirm-step"
-        [stepTitle]="'orderScaleManagedServer.confirm.stepTitle' | translate"
+        [stepTitle]="'orderServerManagedScale.confirm.stepTitle' | translate"
         customClass="contextual-help-page-wrapper limited-view">
           <mcs-step-order-details [order]="order$ | async"
             [orderType]="(orderItemType$ | async)?.orderType"
@@ -103,11 +103,11 @@
         customClass="limited-view">
         <mcs-step-provisioning [jobs]="jobs$ | async" [requestState]="dataStatus$ | async">
           <ng-container mcsProvisioningStepDescription>
-            {{ 'orderScaleManagedServer.scaling.description' | translate }}
+            {{ 'orderServerManagedScale.scaling.description' | translate }}
           </ng-container>
 
           <ng-container mcsProvisioningStepInProgress>
-            {{ 'orderScaleManagedServer.scaling.dataInProgress' | translate}}
+            {{ 'orderServerManagedScale.scaling.dataInProgress' | translate}}
           </ng-container>
         </mcs-step-provisioning>
       </mcs-wizard-step>

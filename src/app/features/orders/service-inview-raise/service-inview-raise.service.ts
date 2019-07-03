@@ -4,9 +4,9 @@ import { OrderIdType } from '@app/models';
 import { McsApiService } from '@app/services';
 
 @Injectable()
-export class ScaleManagedServerService extends McsOrderBase {
+export class ServiceInviewRaiseService extends McsOrderBase {
 
   constructor(_apiService: McsApiService) {
-    super(_apiService, OrderIdType.ScaleManageServer);
+    super(_apiService, OrderIdType.RaiseInviewLevel);
   }
 }

@@ -52,6 +52,7 @@ export function coreConfig(): CoreConfig {
     macviewChangePasswordUrl: resolveEnvVar('MACVIEW_CHANGE_PASSWORD_URL',
       MACVIEW_CHANGE_PASSWORD_URL),
     termsAndConditionsUrl: resolveEnvVar('MCS_TERMS_AND_CONDITIONS_URL'),
+    inviewUrl: resolveEnvVar('MCS_INVIEW_URL'),
     imageRoot: resolveEnvVar('IMAGE_ROOT', IMAGE_URL),
     iconRoot: resolveEnvVar('ICON_ROOT', ICON_URL),
     enryptionKey: resolveEnvVar('EK', EK)

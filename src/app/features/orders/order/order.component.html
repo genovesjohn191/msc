@@ -135,16 +135,14 @@
                 <mcs-item>
                   <span>{{ 'order.totalOneOffCost' | translate }}:</span>
                   <span>
-                    {{ selectedOrder.charges?.currencySymbol }}
-                    {{ selectedOrder.charges?.oneOff || 0 }}
+                    {{ selectedOrder.charges?.currencySymbol }}{{ selectedOrder.charges?.oneOff || 0 }}
                   </span>
                 </mcs-item>
 
                 <mcs-item>
                   <span>{{ 'order.totalMonthlyCost' | translate }}:</span>
                   <span>
-                    {{ selectedOrder.charges?.currencySymbol }}
-                    {{ selectedOrder.charges?.monthly || 0 }}
+                    {{ selectedOrder.charges?.currencySymbol }}{{ selectedOrder.charges?.monthly || 0 }}
                   </span>
                 </mcs-item>
 
@@ -212,7 +210,7 @@
               {{ 'order.columnHeaders.oneOffCharge' | translate }}
             </mcs-header-cell>
             <mcs-data-cell *mcsDataCellDef="let row">
-              {{ row.charges?.currencySymbol }} {{ row.charges?.oneOff }}
+              {{ row.charges?.currencySymbol }}{{ row.charges?.oneOff }}
             </mcs-data-cell>
           </ng-container>
 
@@ -222,7 +220,7 @@
               {{ 'order.columnHeaders.monthlyCharge' | translate }}
             </mcs-header-cell>
             <mcs-data-cell *mcsDataCellDef="let row">
-              {{ row.charges?.currencySymbol }} {{ row.charges?.monthly }}
+              {{ row.charges?.currencySymbol }}{{ row.charges?.monthly }}
             </mcs-data-cell>
           </ng-container>
 

@@ -94,4 +94,13 @@ export class CoreConfig {
   public set termsAndConditionsUrl(value: string) {
     this._termsAndConditionsUrl = value;
   }
+
+  /** Inview URL */
+  private _inviewUrl: string;
+  public get inviewUrl(): string {
+    return this._inviewUrl;
+  }
+  public set inviewUrl(value: string) {
+    this._inviewUrl = value;
+  }
 }

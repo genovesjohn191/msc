@@ -7,6 +7,7 @@ type environmentName =
   'MACVIEW_ORDERS_URL' |
   'MACVIEW_CHANGE_PASSWORD_URL' |
   'MCS_TERMS_AND_CONDITIONS_URL' |
+  'MCS_INVIEW_URL' |
   'MCS_SESSION_EXTENSION_WINDOW_IN_SECONDS' |
   'SENTRY_DSN' |
   'IMAGE_ROOT' |
@@ -46,6 +47,9 @@ export function resolveEnvVar(envName: environmentName, defaultValue: string = '
       break;
     case 'MCS_TERMS_AND_CONDITIONS_URL':
       overrideValue = window['ENV_CONFIG'].termsAndConditionsUrl;
+      break;
+    case 'MCS_INVIEW_URL':
+      overrideValue = window['ENV_CONFIG'].inviewUrl;
       break;
     case 'MCS_SESSION_EXTENSION_WINDOW_IN_SECONDS':
       overrideValue = window['ENV_CONFIG'].sessionExtensionWindowInSeconds;
