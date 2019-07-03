@@ -3,9 +3,10 @@ import { RouteKey } from '@app/models';
 import { OrdersComponent } from './orders.component';
 import { OrderComponent } from './order/order.component';
 import { OrderResolver } from './order/order.resolver';
-import { ScaleManagedServerComponent } from './scale-managed-server/scale-managed-server.component';
+import { ServerManagedScaleComponent } from './server-managed-scale/server-managed-scale.component';
 import { VdcStorageExpandComponent } from './vdc-storage-expand/vdc-storage-expand.component';
 import { VdcStorageCreateComponent } from './vdc-storage-create/vdc-storage-create.component';
+import { ServiceInviewRaiseComponent } from './service-inview-raise/service-inview-raise.component';
 
 /**
  * List of services for the main module
@@ -20,9 +21,10 @@ export const ordersProviders: any[] = [
 export const ordersRoutesComponents: any[] = [
   OrdersComponent,
   OrderComponent,
-  ScaleManagedServerComponent,
+  ServerManagedScaleComponent,
   VdcStorageExpandComponent,
-  VdcStorageCreateComponent
+  VdcStorageCreateComponent,
+  ServiceInviewRaiseComponent
 ];
 
 /**
@@ -35,8 +37,8 @@ export const ordersRoutes: Routes = [
   },
   {
     path: '',
-    component: ScaleManagedServerComponent,
-    data: { routeId: RouteKey.OrderScaleManagedServer }
+    component: ServerManagedScaleComponent,
+    data: { routeId: RouteKey.OrderServerManagedScale }
   },
   {
     path: '',
@@ -47,6 +49,11 @@ export const ordersRoutes: Routes = [
     path: '',
     component: VdcStorageCreateComponent,
     data: { routeId: RouteKey.OrderVdcStorageCreate }
+  },
+  {
+    path: '',
+    component: ServiceInviewRaiseComponent,
+    data: { routeId: RouteKey.OrderServiceInviewRaise }
   },
   // Add additional routes above this line
   {

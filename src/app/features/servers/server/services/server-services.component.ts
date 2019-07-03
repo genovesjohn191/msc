@@ -6,6 +6,7 @@ import {
   OnInit,
   Injector
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import {
   Observable,
@@ -21,12 +22,16 @@ import {
 import {
   CoreDefinition,
   McsDataStatusFactory,
-  McsDateTimeService
+  McsDateTimeService,
+  CoreRoutes,
+  CoreConfig,
+  McsAuthenticationIdentity
 } from '@app/core';
 import {
   animateFactory,
   replacePlaceholder,
-  unsubscribeSafely
+  unsubscribeSafely,
+  CommonDefinition
 } from '@app/utilities';
 import {
   McsServerOsUpdatesDetails,
@@ -37,7 +42,9 @@ import {
   McsServerOsUpdatesScheduleRequest,
   McsServerOsUpdatesSchedule,
   McsServerOsUpdatesRequest,
-  DataStatus
+  DataStatus,
+  InviewLevel,
+  RouteKey
 } from '@app/models';
 import { FormMessage } from '@app/shared';
 import { McsEvent } from '@app/event-manager';
@@ -66,6 +73,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
   private _inspectOsUpdateHandler: Subscription;
   private _applyOsUpdateHandler: Subscription;
   private _updateStartedDate: Date;
+  private _inviewLabelMap: Map<InviewLevel, string>;
 
   @ViewChild('formMessage')
   private _formMessage: FormMessage;
@@ -73,6 +81,9 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
   constructor(
     _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
+    private _authIdentity: McsAuthenticationIdentity,
+    private _router: Router,
+    private _coreConfig: CoreConfig,
     private _dateTimeService: McsDateTimeService,
     private _translateService: TranslateService
   ) {
@@ -82,6 +93,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
   }
 
   public ngOnInit() {
+    this._populateInviewMap();
     this._registerEvents();
   }
 
@@ -117,8 +129,8 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
    */
   public get updatesScheduleLabel(): string {
     return this.updateStatusConfiguration.hasSchedule ?
-      this._translateService.instant('serverServices.updatesScheduleLabel.scheduled') :
-      this._translateService.instant('serverServices.updatesScheduleLabel.unscheduled');
+      this._translateService.instant('serverServices.operatingSystemUpdates.updatesScheduleLabel.scheduled') :
+      this._translateService.instant('serverServices.operatingSystemUpdates.updatesScheduleLabel.unscheduled');
   }
 
   /**
@@ -245,6 +257,41 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
   }
 
   /**
+   * Returns specific description based on inview level
+   * @param server selected server object reference
+   */
+  public inviewLevelDescription(server: McsServer): string {
+    return this._inviewLabelMap.get(server.inViewLevel);
+  }
+
+  /**
+   * Returns true if the Inview level is not None
+   */
+  public inviewButtonsShown(server: McsServer): boolean {
+    return server.inViewLevel === InviewLevel.None;
+  }
+
+  /**
+   * Returns the macquarie inview url
+   */
+  public inviewUrl(server: McsServer): string {
+    let inviewUrl = replacePlaceholder(
+      CommonDefinition.INVIEW_URL,
+      ['macviewUrl', 'companyId', 'inviewUrl', 'serviceId'],
+      [this._coreConfig.macviewUrl, this._authIdentity.activeAccount.id, this._coreConfig.inviewUrl, server.serviceId]
+    );
+
+    return inviewUrl;
+  }
+
+  /**
+   * Routes the user to the raise inview level ordering page
+   */
+  public raiseInviewLevel(): void {
+    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.OrderServiceInviewRaise)]);
+  }
+
+  /**
    * Event that emits when the selected server has been changed
    * @param server Server details of the selected record
    */
@@ -275,6 +322,22 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
     // Invoke the event initially
     this.eventDispatcher.dispatch(McsEvent.jobServerSnapshotCreate);
     this.eventDispatcher.dispatch(McsEvent.jobServerSnapshotApply);
+  }
+
+  /**
+   * Sets the descriptions of different kind of inview level
+   */
+  private _populateInviewMap(): void {
+    this._inviewLabelMap = new Map();
+    this._inviewLabelMap.set(
+      InviewLevel.None, this._translateService.instant('serverServices.inview.inviewLevelDescription.none')
+    );
+    this._inviewLabelMap.set(
+      InviewLevel.Standard, this._translateService.instant('serverServices.inview.inviewLevelDescription.standard')
+    );
+    this._inviewLabelMap.set(
+      InviewLevel.Premium, this._translateService.instant('serverServices.inview.inviewLevelDescription.premium')
+    );
   }
 
   /**
@@ -379,7 +442,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
       catchError((httpError) => {
         this._formMessage.showMessage('error', {
           messages: httpError.errorMessages,
-          fallbackMessage: this._translateService.instant('serverServices.updateErrorMessage')
+          fallbackMessage: this._translateService.instant('serverServices.operatingSystemUpdates.updateErrorMessage')
         });
         return throwError(httpError);
       }),
@@ -387,7 +450,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
         return this.apiService.updateServerOsUpdatesSchedule(server.id, request).pipe(
           tap(() => {
             this._formMessage.showMessage('success', {
-              messages: this._translateService.instant('serverServices.updateSuccessMessage')
+              messages: this._translateService.instant('serverServices.operatingSystemUpdates.updateSuccessMessage')
             });
           })
         );
@@ -405,13 +468,13 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
       catchError((httpError) => {
         this._formMessage.showMessage('error', {
           messages: httpError.errorMessages,
-          fallbackMessage: this._translateService.instant('serverServices.deleteErrorMessage')
+          fallbackMessage: this._translateService.instant('serverServices.operatingSystemUpdates.deleteErrorMessage')
         });
         return throwError(httpError);
       }),
       tap(() => {
         this._formMessage.showMessage('success', {
-          messages: this._translateService.instant('serverServices.deleteSuccessMessage')
+          messages: this._translateService.instant('serverServices.operatingSystemUpdates.deleteSuccessMessage')
         });
       })
     );

@@ -1,5 +1,9 @@
 export class CommonDefinition {
 
+  // Common Url
+  public static INVIEW_URL =  `{{macviewUrl}}/Bounce.aspx?bounce=1&mvClientID={{companyId}}
+  &mvURL={{inviewUrl}}%2Fframe%2Finview%2Fdata_details.html%3Fservice%3D{{serviceId}};`;
+
   // Page Default
   public static DEFAULT_PAGE_INDEX = 1;
   public static DEFAULT_PAGE_SIZE = 25;

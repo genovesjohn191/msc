@@ -1,6 +1,9 @@
 import { JsonProperty } from 'json-object-mapper';
 import { CoreDefinition } from '@app/core';
-import { getSafeProperty } from '@app/utilities';
+import {
+  getSafeProperty,
+  isNullOrEmpty
+} from '@app/utilities';
 import { McsServerOperatingSystemSummary } from './mcs-server-operating-system-summary';
 import { McsServerHardware } from './mcs-server-hardware';
 import { McsServerCompute } from './mcs-server-compute';
@@ -44,6 +47,11 @@ export class McsServer extends McsEntityBase {
   public vCenterId: string = undefined;
   public osAutomationAvailable: boolean = undefined;
   public serviceChangeAvailable: boolean = undefined;
+
+  /**
+   * @deprecated this should be removed once the mcs-api-services.ts is finished
+   */
+  public commandAction: ServerCommand = undefined;
 
   @JsonProperty({ type: McsServerVmwareTools })
   public vmwareTools: McsServerVmwareTools = undefined;
@@ -94,18 +102,23 @@ export class McsServer extends McsEntityBase {
     serializer: InviewLevelSerialization,
     deserializer: InviewLevelSerialization
   })
-  public inviewLevel: InviewLevel = undefined;
+  private inviewLevel: InviewLevel = undefined;
 
   /**
-   * @deprecated this should be removed once the mcs-api-services.ts is finished
+   * Returns the inview level
    */
-  public commandAction: ServerCommand = undefined;
+  public get inViewLevel(): InviewLevel {
+    if (isNullOrEmpty(this.inviewLevel)) {
+      return InviewLevel.None;
+    }
+    return this.inviewLevel;
+  }
 
   /**
    * Returns the inview level text content
    */
   public get inviewLevelLabel(): string {
-    return inviewLevelText[this.inviewLevel];
+    return inviewLevelText[this.inViewLevel];
   }
 
   /**

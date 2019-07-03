@@ -1,4 +1,4 @@
 export enum AccountStatus {
-  Default = 'default',
-  Impersonator = 'impersonator'
+  Default = 0,
+  Impersonator
 }

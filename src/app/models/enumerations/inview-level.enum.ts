@@ -2,17 +2,15 @@ import { CacheKey } from 'json-object-mapper';
 import { McsEnumSerializationBase } from '../serialization/mcs-enum-serialization-base';
 
 export enum InviewLevel {
-  Unknown = 0,
+  None = 0,
   Standard,
-  Premium,
-  NotApplicable
+  Premium
 }
 
 export const inviewLevelText = {
-  [InviewLevel.Unknown]: 'Unknown',
+  [InviewLevel.None]: 'None',
   [InviewLevel.Standard]: 'Standard',
-  [InviewLevel.Premium]: 'Premium',
-  [InviewLevel.NotApplicable]: 'Not Applicable'
+  [InviewLevel.Premium]: 'Premium'
 };
 
 /**

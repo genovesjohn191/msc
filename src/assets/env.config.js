@@ -12,6 +12,7 @@ window.ENV_CONFIG = {
   macviewChangePasswordUrl: 'MCS_MACVIEW_CHANGE_PASSWORD_URL',
   termsAndConditionsUrl: 'MCS_TERMS_AND_CONDITIONS_URL',
   sessionExtensionWindowInSeconds: 'MCS_SESSION_EXTENSION_WINDOW_IN_SECONDS',
+  inviewUrl: 'MCS_INVIEW_URL',
   imageRoot: 'MCS_IMAGE_ROOT',
   iconRoot: 'MCS_ICON_ROOT',
   ek: 'MCS_EK'

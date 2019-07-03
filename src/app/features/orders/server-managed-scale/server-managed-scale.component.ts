@@ -58,7 +58,7 @@ import {
   ComponentHandlerDirective
 } from '@app/shared';
 import { McsEvent } from '@app/event-manager';
-import { ScaleManagedServerService } from './scale-managed-server.service';
+import { ServerManagedScaleService } from './server-managed-scale.service';
 
 type ScaleManageProperties = {
   cpuCount: number;
@@ -68,18 +68,18 @@ type ScaleManageProperties = {
 const SCALE_MANAGE_SERVER_REF_ID = McsGuid.newGuid().toString();
 
 @Component({
-  selector: 'mcs-scale-managed-server',
-  templateUrl: 'scale-managed-server.component.html',
+  selector: 'mcs-order-server-managed-scale',
+  templateUrl: 'server-managed-scale.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [ScaleManagedServerService]
+  providers: [ServerManagedScaleService]
 })
 
-export class ScaleManagedServerComponent extends McsOrderWizardBase implements OnDestroy {
+export class ServerManagedScaleComponent extends McsOrderWizardBase implements OnDestroy {
 
   public resources$: Observable<Map<string, McsServer[]>>;
   public resource$: Observable<McsResource>;
 
-  public fgScaleManageServerDetails: FormGroup;
+  public fgServerManagedScaleDetails: FormGroup;
   public fcManageServer: FormControl;
 
   @ViewChild('fgManageScale')
@@ -104,7 +104,7 @@ export class ScaleManagedServerComponent extends McsOrderWizardBase implements O
     private _changeDetectorRef: ChangeDetectorRef,
     private _eventDispatcher: EventBusDispatcherService,
     private _apiService: McsApiService,
-    private _scaleManagedServerService: ScaleManagedServerService
+    private _scaleManagedServerService: ServerManagedScaleService
   ) {
     super(_injector, _scaleManagedServerService);
     this._registerFormGroups();
@@ -308,7 +308,7 @@ export class ScaleManagedServerComponent extends McsOrderWizardBase implements O
    * Touches all the invalid form fields
    */
   private _touchInvalidFields(): void {
-    this._formGroupService.touchAllFormFields(this.fgScaleManageServerDetails);
+    this._formGroupService.touchAllFormFields(this.fgServerManagedScaleDetails);
     this._formGroupService.scrollToFirstInvalidField(this._elementRef.nativeElement);
   }
 
@@ -324,18 +324,18 @@ export class ScaleManagedServerComponent extends McsOrderWizardBase implements O
    * Register all form groups
    */
   private _registerFormGroups() {
-    this.fgScaleManageServerDetails = this._formBuilder.group([]);
+    this.fgServerManagedScaleDetails = this._formBuilder.group([]);
     this.fcManageServer = new FormControl('', [CoreValidators.required]);
 
-    this.fgScaleManageServerDetails = new FormGroup({
+    this.fgServerManagedScaleDetails = new FormGroup({
       fcManageServer: this.fcManageServer
     });
 
     if (!isNullOrEmpty(this._fgManageScale)) {
-      this.fgScaleManageServerDetails.addControl('fgManageScale',
+      this.fgServerManagedScaleDetails.addControl('fgManageScale',
         this._fgManageScale.getFormGroup().formGroup);
     }
-    this.fgScaleManageServerDetails.valueChanges.pipe(
+    this.fgServerManagedScaleDetails.valueChanges.pipe(
       takeUntil(this._destroySubject)
     ).subscribe();
   }

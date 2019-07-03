@@ -163,7 +163,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
       return;
     }
     this.eventDispatcher.dispatch(McsEvent.serverScaleManageSelected, server);
-    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.OrderScaleManagedServer)]);
+    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.OrderServerManagedScale)]);
   }
 
   /**
@@ -277,6 +277,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
 
   /**
    * Detaches the media from the selected server
+   * @param server current server selected
    * @param media Media to be detached
    */
   public detachMedia(server: McsServer, media: McsServerMedia): void {
