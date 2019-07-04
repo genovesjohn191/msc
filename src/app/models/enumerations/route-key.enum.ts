@@ -2,6 +2,7 @@ export enum RouteKey {
   Dashboard = 1,
 
   Console,
+  Maintenance,
 
   Servers,
   ServerDetails,

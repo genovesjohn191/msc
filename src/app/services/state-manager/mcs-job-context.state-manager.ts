@@ -82,6 +82,7 @@ export class McsJobContextStateManager extends McsJobManagerBase implements McsD
    */
   private _clearEntityState(job: McsJob): void {
     let entityStrategy = this._getEntityStrategy(job);
+    if (isNullOrEmpty(entityStrategy)) { return; }
 
     this._waitUntilDataReceived(entityStrategy, job).pipe(
       switchMap(() => {
@@ -98,6 +99,7 @@ export class McsJobContextStateManager extends McsJobManagerBase implements McsD
    */
   private _updateEntityState(job: McsJob): void {
     let entityStrategy = this._getEntityStrategy(job);
+    if (isNullOrEmpty(entityStrategy)) { return; }
 
     this._waitUntilDataReceived(entityStrategy, job).pipe(
       switchMap(() => {
@@ -114,6 +116,7 @@ export class McsJobContextStateManager extends McsJobManagerBase implements McsD
    */
   private _updateEntityDetails(job: McsJob): void {
     let entityStrategy = this._getEntityStrategy(job);
+    if (isNullOrEmpty(entityStrategy)) { return; }
 
     entityStrategy.getUpdatedEntityDetails(job).pipe(
       tap(() => this.dispatchJobAfterCompletion(job))
@@ -147,9 +150,6 @@ export class McsJobContextStateManager extends McsJobManagerBase implements McsD
     let strategyFound = this._entityStrategies.find((entity) =>
       !!job.clientReferenceObject[entity.getReferenceObjectKey()]
     );
-    if (isNullOrEmpty(strategyFound)) {
-      throw new Error(`Unable to find the strategy with a job type of ${job.type}`);
-    }
     return strategyFound;
   }
 }

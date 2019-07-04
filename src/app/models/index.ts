@@ -18,6 +18,7 @@ export * from './enumerations/connection-status.enum';
 export * from './enumerations/device-status.enum';
 export * from './enumerations/ha-mode.enum';
 export * from './enumerations/permission.enum';
+export * from './enumerations/feature-flag.enum';
 export * from './enumerations/policy-action.enum';
 export * from './enumerations/policy-nat.enum';
 export * from './enumerations/order-origin.enum';

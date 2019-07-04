@@ -28,6 +28,12 @@
     "stopping": "Window will close in <strong>{{timer}}</strong>.",
     "errorMessage": "Console connection error."
   },
+  "maintenance": {
+    "title": "We'll be back soon!",
+    "message": "We're currently experiencing some issues and are working to resolve them. In the meantime, you can view and manage your services within ",
+    "macViewLink": "MacquarieView.",
+    "team": "- Macquarie Cloud Services Team"
+  },
   "pageNotifications": {
     "webStomp": {
       "connectionError": "We’re experiencing connectivity issues.",
