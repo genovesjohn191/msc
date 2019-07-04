@@ -12,6 +12,11 @@ export const appRoutes: Routes = [
   },
   {
     path: '',
+    loadChildren: './page-layout/maintenance-page/maintenance-page.module#MaintenancePageModule',
+    data: { routeId: RouteKey.Maintenance }
+  },
+  {
+    path: '',
     loadChildren: './page-layout/default-page/default-page.module#DefaultPageModule'
   }
 ];

@@ -1,0 +1,25 @@
+@import "../../../styles/shared/base";
+
+.maintenance-page-wrapper {
+  @include display-flex(row);
+  @include align-items(center);
+  justify-content: center;
+  position: relative;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100%;
+  width: 100%;
+
+  .maintenance-page-content {
+    max-width: 50%;
+    @include display-flex(column);
+    @include set-items-interval($space-small);
+
+    .maintenance-page-title {
+      color: $color-primary-01;
+      @include font-size(40);
+    }
+  }
+}

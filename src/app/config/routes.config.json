@@ -11,6 +11,12 @@
     "navigationPath": "console",
     "documentTitle": "VM Console - Macquarie Cloud Services"
   },
+  "maintenance": {
+    "enumKey": "Maintenance",
+    "routePath": "maintenance",
+    "navigationPath": "maintenance",
+    "documentTitle": "Maintenance - Macquarie Cloud Services"
+  },
   "servers": {
     "enumCategory": "Compute",
     "enumKey": "Servers",

@@ -24,9 +24,9 @@ import { EventBusModule } from './event-bus';
 import { ServicesModule } from './services';
 import {
   ConsolePageModule,
-  DefaultPageModule
+  DefaultPageModule,
+  MaintenancePageModule
 } from './page-layout';
-import { PageNotificationsModule } from './page-notifications';
 import { FeaturesSharedModule } from './features-shared';
 import { SharedModule } from './shared';
 import {
@@ -102,8 +102,8 @@ export function apiClientConfig(cookieService: McsCookieService): McsApiClientCo
     FeaturesSharedModule,
     SharedModule,
     ConsolePageModule,
-    DefaultPageModule,
-    PageNotificationsModule
+    MaintenancePageModule,
+    DefaultPageModule
   ],
   providers: [
     environment.ENV_PROVIDERS,
