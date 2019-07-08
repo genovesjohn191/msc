@@ -22,7 +22,8 @@ import {
   OrderWorkflowAction,
   McsOrderWorkflow,
   RouteKey,
-  McsOrderItemType
+  McsOrderItemType,
+  McsFeatureFlag
 } from '@app/models';
 import { McsOrderBase } from './mcs-order.base';
 import { McsWizardBase } from '../../base/mcs-wizard.base';
@@ -133,7 +134,7 @@ export abstract class McsOrderWizardBase extends McsWizardBase implements McsDis
    * Subscribes to order item type changes
    */
   private _subscribeToOrderItemTypeChanges(): void {
-    if (!this._accessControlService.hasAccessToFeature('EnableOrdering')) { return; }
+    if (!this._accessControlService.hasAccessToFeature(McsFeatureFlag.Ordering)) { return; }
     this.orderItemType$ = this._orderBase.orderItemTypeChange().pipe(
       shareReplay(1)
     );

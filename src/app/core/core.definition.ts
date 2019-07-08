@@ -28,14 +28,6 @@ export class CoreDefinition {
   public static APPSTATE_AUTH_IDENTITY = 'AuthIdentity';
   public static APPSTATE_RETURN_URL_KEY = 'Return-Url';
 
-  /** Feature Flags */
-  public static FEATURE_FLAG_ENABLE_READ_ONLY_MODE = 'EnableReadOnlyMode';
-  public static FEATURE_FLAG_ENABLE_CREATE_MANAGED_SERVER = 'EnableOrderingManagedServerCreate';
-  public static FEATURE_FLAG_ENABLE_DEDICATED_VMS = 'EnableDedicatedVms';
-  public static FEATURE_FLAG_ENABLE_PRODUCT_CATALOG = 'EnableProductCatalog';
-  public static FEATURE_FLAG_ENABLE_MEDIA_CATALOG = 'EnableMediaCatalog';
-  public static FEATURE_FLAG_ENABLE_ORDERING = 'EnableOrdering';
-
   /** Cookie Names */
   public static COOKIE_AUTH_TOKEN = 'JWTBearer';
   public static COOKIE_REFRESH_TOKEN = 'JWTRefresh';

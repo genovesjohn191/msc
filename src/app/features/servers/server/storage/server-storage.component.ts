@@ -41,7 +41,8 @@ import {
   McsServerStorageDevice,
   McsServerStorageDeviceUpdate,
   McsServer,
-  McsResource
+  McsResource,
+  McsFeatureFlag
 } from '@app/models';
 import { ServerManageStorage } from '@app/features-shared';
 import { McsEvent } from '@app/event-manager';
@@ -285,7 +286,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
    * @param server Server details of the selected record
    */
   protected serverChange(server: McsServer): void {
-    this.validateDedicatedFeatureFlag(server, 'EnableDedicatedVmStorageView');
+    this.validateDedicatedFeatureFlag(server, McsFeatureFlag.DedicatedVmStorageView);
     this._resetStorageValues();
     this._updateTableDataSource(server);
   }

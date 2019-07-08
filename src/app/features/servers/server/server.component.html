@@ -110,7 +110,8 @@
           <!-- Services Tab -->
           <ng-container *ngIf="server?.isManagedVCloud">
             <mcs-tab [label]="'serverServices.operatingSystemUpdates.label' | translate" id="services"
-              *mcsAccessControl="serverPermission.vmPatchManagement; feature: 'EnableServerOsUpdates'"></mcs-tab>
+              *mcsAccessControl="serverPermission.vmPatchManagement; feature: ['EnableServerOsUpdates','EnableOrderingManagedServerInviewLevelRaise']">
+            </mcs-tab>
           </ng-container>
 
           <!-- Storage Tab -->

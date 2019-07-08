@@ -41,7 +41,8 @@ import {
   McsServerNic,
   McsServerCreateNic,
   McsServer,
-  McsResource
+  McsResource,
+  McsFeatureFlag
 } from '@app/models';
 import { McsEvent } from '@app/event-manager';
 import { ServerManageNetwork } from '@app/features-shared';
@@ -282,7 +283,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    * @param server Server details of the selected record
    */
   protected serverChange(server: McsServer): void {
-    this.validateDedicatedFeatureFlag(server, 'EnableDedicatedVmNicView');
+    this.validateDedicatedFeatureFlag(server, McsFeatureFlag.DedicatedVmNicView);
     this._resetNetworkValues();
     this._updateTableDataSource(server);
   }

@@ -17,7 +17,7 @@ export class McsAccessControlService {
   /**
    * Checks both permission and feature
    */
-  public hasAccess(requiredPermissions: string[], feature: string): boolean {
+  public hasAccess(requiredPermissions: string[], feature: string | string[]): boolean {
     let user = this._authenticationIdentity.user;
     if (isNullOrEmpty(user)) {
       return false;
@@ -56,24 +56,36 @@ export class McsAccessControlService {
 
   /**
    * Returns true when the given feature flag is turned on
-   * @param feature Feature flag to be checked
-   * @param defaultValue Default value of the feature flag
+   * @param flags Feature flags to be checked
    */
-  public hasAccessToFeature(feature: string, defaultValue: boolean = false): boolean {
-    if (isNullOrEmpty(feature)) { return true; }
-    let user = this._authenticationIdentity.user;
+  public hasAccessToFeature(flags: string | string[]): boolean {
+    if (isNullOrEmpty(flags)) { return true; }
 
-    // Check existing features
-    let features = getSafeProperty<McsIdentity, McsKeyValuePair[]>(
-      user, (obj) => obj.features
-    );
-    if (isNullOrEmpty(features)) { return false; }
+    let userFeatures = this._getUserFeatureFlags();
+    if (isNullOrEmpty(userFeatures)) { return false; }
 
     // Check feature flag
-    let targetFeature = features.find((featureFlag) => {
-      return featureFlag.key.toLowerCase() === feature.toLowerCase();
+    let targetFeature;
+    let featureFlags: string[] = Array.isArray(flags) ? flags : [flags];
+
+    targetFeature = userFeatures.find((userFeature) => {
+      let foundFeatureFlag = featureFlags.find(
+        (featuresFlag) => featuresFlag.toLowerCase() === userFeature.key.toLowerCase() && userFeature.value
+      );
+      return !isNullOrEmpty(foundFeatureFlag);
     });
-    if (isNullOrEmpty(targetFeature)) { return defaultValue; }
-    return targetFeature.value;
+
+    return isNullOrEmpty(targetFeature) ? false : targetFeature.value;
+  }
+
+  /**
+   * Returns the current feature flags the user have
+   */
+  private _getUserFeatureFlags(): McsKeyValuePair[] {
+    let user = this._authenticationIdentity.user;
+    // Check existing features
+    return getSafeProperty<McsIdentity, McsKeyValuePair[]>(
+      user, (obj) => obj.features
+    );
   }
 }

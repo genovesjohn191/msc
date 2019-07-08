@@ -32,7 +32,7 @@ export class McsAuthenticationGuard implements CanActivate {
     return this._authenticationService.IsAuthenticated().pipe(
       map((isAuthenticated) => {
         let maintenanceModeIsActivated = this._accesscontrolService
-          .hasAccessToFeature(McsFeatureFlag.EnableMaintenanceMode);
+          .hasAccessToFeature(McsFeatureFlag.MaintenanceMode);
 
         if (maintenanceModeIsActivated) {
           this._navigationService.navigateTo(RouteKey.Maintenance);

@@ -16,6 +16,7 @@ export * from './enumerations/account-status.enum';
 export * from './enumerations/configuration-status.enum';
 export * from './enumerations/connection-status.enum';
 export * from './enumerations/device-status.enum';
+export * from './enumerations/feature-flag.enum';
 export * from './enumerations/ha-mode.enum';
 export * from './enumerations/permission.enum';
 export * from './enumerations/feature-flag.enum';

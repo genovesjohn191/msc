@@ -23,7 +23,8 @@ import {
 import {
   RouteKey,
   McsProduct,
-  McsProductCatalog
+  McsProductCatalog,
+  McsFeatureFlag
 } from '@app/models';
 import {
   EventBusPropertyListenOn,
@@ -122,7 +123,7 @@ export class NavigationDesktopComponent implements OnInit, OnDestroy {
    */
   private _getProductCatalogs(): void {
     this.productsStatusFactory.setInProgress();
-    if (!this._accessControl.hasAccessToFeature('EnableProductCatalog')) { return; }
+    if (!this._accessControl.hasAccessToFeature(McsFeatureFlag.ProductCatalog)) { return; }
 
     this._apiService.getProductCatalogs().pipe(
       catchError((error) => {
