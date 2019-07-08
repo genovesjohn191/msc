@@ -122,12 +122,6 @@ export class StepOrderDetailsComponent
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
-    let orderChange = changes['order'];
-    if (!isNullOrEmpty(orderChange)) {
-      this._initializeOrderDatasource();
-      this._setOrderDescription();
-    }
-
     let orderTypeChange = changes['orderType'];
     if (!isNullOrEmpty(orderTypeChange)) {
       this._updateFormGroupBytype();
@@ -135,8 +129,14 @@ export class StepOrderDetailsComponent
 
     let requestChange = changes['requestState'];
     if (!isNullOrEmpty(requestChange)) {
-      this._setDataChangeStatus();
+      this._setChangeStatusByRequestState();
       this._setTableStatus();
+    }
+
+    let orderChange = changes['order'];
+    if (!isNullOrEmpty(orderChange)) {
+      this._initializeOrderDatasource();
+      this._setOrderDescription();
     }
   }
 
@@ -251,7 +251,10 @@ export class StepOrderDetailsComponent
   private _setOrderDescription(): void {
     let descriptionCanBeSet = this.hasOrder && !isNullOrEmpty(this.fcDescription);
     if (!descriptionCanBeSet) { return; }
-    this.fcDescription.setValue(this.order.description);
+
+    if (this.fcDescription.value !== this.order.description) {
+      this.fcDescription.setValue(this.order.description);
+    }
   }
 
   /**
@@ -297,7 +300,7 @@ export class StepOrderDetailsComponent
   /**
    * Sets the data change status
    */
-  private _setDataChangeStatus(): void {
+  private _setChangeStatusByRequestState(): void {
     this.dataChangeStatus = this.requestState;
   }
 
@@ -407,7 +410,7 @@ export class StepOrderDetailsComponent
    */
   private _subscribeToDataChange(): void {
     this._formGroup.valueChanges().pipe(
-      takeUntil(this._destroySubject)
+      takeUntil(this._destroySubject),
     ).subscribe(() => this.onDataChange());
   }
 }
