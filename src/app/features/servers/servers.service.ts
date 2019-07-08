@@ -5,13 +5,12 @@ import { isNullOrEmpty } from '@app/utilities';
 import {
   McsServer,
   McsResource,
-  ServiceType
+  ServiceType,
+  McsPermission,
+  McsFeatureFlag
 } from '@app/models';
 import { McsApiService } from '@app/services';
-import {
-  McsAccessControlService,
-  CoreDefinition
-} from '@app/core';
+import { McsAccessControlService } from '@app/core';
 
 /**
  * @deprecated Set the server spinner in the api-service instead.
@@ -32,7 +31,7 @@ export class ServersService {
     return this._apiService.getResources().pipe(
       map((resources) => {
         let managedResourceIsOn = this._accessControlService.hasAccess(
-          ['OrderEdit'], CoreDefinition.FEATURE_FLAG_ENABLE_CREATE_MANAGED_SERVER);
+          [McsPermission.OrderEdit], McsFeatureFlag.OrderingManagedServerCreate);
 
         return resources && resources.collection.filter(
           (resource) => resource.serviceType === ServiceType.SelfManaged ||

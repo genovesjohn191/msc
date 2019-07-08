@@ -48,7 +48,8 @@ import {
   McsApiErrorResponse,
   McsServerSnapshotRestore,
   McsServerSnapshotCreate,
-  McsServerSnapshotDelete
+  McsServerSnapshotDelete,
+  McsFeatureFlag
 } from '@app/models';
 import { ServerDetailsBase } from '../server-details.base';
 import { ServersService } from '../../servers.service';
@@ -160,7 +161,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
    * @param server Server details of the selected record
    */
   protected serverChange(server: McsServer): void {
-    this.validateDedicatedFeatureFlag(server, 'EnableDedicatedVmSnapshotView');
+    this.validateDedicatedFeatureFlag(server, McsFeatureFlag.DedicatedVmSnapshotView);
     this._getServerSnapshots(server);
   }
 

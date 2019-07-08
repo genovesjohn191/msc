@@ -10,12 +10,13 @@ import { isNullOrEmpty } from '@app/utilities';
 import {
   HttpStatusCode,
   McsResource,
-  ServiceType
+  ServiceType,
+  McsPermission,
+  McsFeatureFlag
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { McsErrorHandlerService } from '../services/mcs-error-handler.service';
 import { McsAccessControlService } from '../authentication/mcs-access-control.service';
-import { CoreDefinition } from '../core.definition';
 
 @Injectable()
 export class McsRequiredResourcesGuard implements CanActivate {
@@ -48,7 +49,7 @@ export class McsRequiredResourcesGuard implements CanActivate {
     return this._apiService.getResources().pipe(
       map((resources) => {
         let managedResourceIsOn = this._accessControlService.hasAccess(
-          ['OrderEdit'], CoreDefinition.FEATURE_FLAG_ENABLE_CREATE_MANAGED_SERVER);
+          [McsPermission.OrderEdit], McsFeatureFlag.OrderingManagedServerCreate);
 
         return resources && resources.collection.filter(
           (resource) => resource.serviceType === ServiceType.SelfManaged ||

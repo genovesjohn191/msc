@@ -28,7 +28,7 @@ export class McsMaintenancePageGuard implements CanActivate {
   ): Observable<boolean> | Promise<boolean> | boolean {
 
     let maintenanceModeIsActivated = this._accesscontrolService
-      .hasAccessToFeature(McsFeatureFlag.EnableMaintenanceMode);
+      .hasAccessToFeature(McsFeatureFlag.MaintenanceMode);
 
     if (!maintenanceModeIsActivated) {
       this._errorHandlerService.redirectToErrorPage(HttpStatusCode.NotFound);

@@ -1,6 +1,7 @@
 import {
   McsServer,
-  McsPermission
+  McsPermission,
+  McsFeatureFlag
 } from '@app/models';
 
 export class McsServerPermission {
@@ -64,7 +65,7 @@ export class McsServerPermission {
 
   // TODO: rename this class to Access instead of Permission, to add Feature flags
   public get vmScaleFeature(): string {
-    return this._server.isSelfManaged ? '' : 'EnableOrderingManagedServerScale';
+    return this._server.isSelfManaged ? '' : McsFeatureFlag.OrderingManagedServerScale;
   }
 
 }

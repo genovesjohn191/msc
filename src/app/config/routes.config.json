@@ -47,7 +47,7 @@
     "routePath": "services",
     "navigationPath": "services",
     "requiredPermissions": ["CloudVmPatchManagement", "DedicatedVmPatchManagement"],
-    "requiredFeatureFlag": "EnableServerOsUpdates",
+    "requiredFeatureFlag": ["EnableServerOsUpdates", "EnableOrderingManagedServerInviewLevelRaise"],
     "documentTitle": "Server Services - Macquarie Cloud Services"
   },
   "serverDetailsStorage": {

@@ -29,8 +29,8 @@ export class AccessControlDirective implements OnChanges {
   private _requiredPermission: string[];
 
   @Input('mcsAccessControlFeature')
-  public set feature(featureFlag: string) { this._featureFlag = featureFlag; }
-  private _featureFlag: string;
+  public set feature(featureFlag: string | string[]) { this._featureFlag = featureFlag; }
+  private _featureFlag: string | string[];
 
   @Input('mcsAccessControlValidateWhen')
   public set validateWhen(validateWhen: boolean) {
