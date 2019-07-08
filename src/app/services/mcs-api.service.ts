@@ -9,7 +9,8 @@ import {
 import {
   map,
   catchError,
-  finalize
+  finalize,
+  tap
 } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 import {
@@ -83,7 +84,8 @@ import {
   McsFirewall,
   McsProduct,
   McsProductCatalog,
-  McsSystemMessage
+  McsSystemMessage,
+  McsSystemMessageCreate
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -108,7 +110,9 @@ import {
   McsApiOrdersFactory,
   McsApiMediaFactory,
   McsApiFirewallsFactory,
-  McsApiConsoleFactory
+  McsApiConsoleFactory,
+  McsApiSystemFactory,
+  IMcsApiSystemService
 } from '@app/api-client';
 import {
   EventBusDispatcherService,
@@ -165,6 +169,7 @@ export class McsApiService {
   private readonly _mediaApi: IMcsApiMediaService;
   private readonly _firewallsApi: IMcsApiFirewallsService;
   private readonly _consoleApi: IMcsApiConsoleService;
+  private readonly _systemMessageApi: IMcsApiSystemService;
 
   private readonly _eventDispatcher: EventBusDispatcherService;
   private readonly _entitiesDataChangeMap: Array<DataChangeEmitter<any>>;
@@ -198,6 +203,7 @@ export class McsApiService {
     this._mediaApi = apiClientFactory.getService(new McsApiMediaFactory());
     this._firewallsApi = apiClientFactory.getService(new McsApiFirewallsFactory());
     this._consoleApi = apiClientFactory.getService(new McsApiConsoleFactory());
+    this._systemMessageApi = apiClientFactory.getService(new McsApiSystemFactory());
 
     // Register events
     this._entitiesDataChangeMap = [];
@@ -995,6 +1001,29 @@ export class McsApiService {
     return this._mapToEntityRecord(this._systemMessagesRepository, id).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getSystemMessage'))
+      )
+    );
+  }
+
+  public createSystemMessage(messageData: McsSystemMessageCreate): Observable<McsSystemMessageCreate> {
+    return this._systemMessageApi.createMessage(messageData).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.createMessage'))
+      ),
+      tap(() => {
+        this._eventDispatcher.dispatch(McsEvent.systemMessageCreated, messageData);
+      }),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public validateSystemMessage(
+    messageData: McsSystemMessageCreate
+  ): Observable<McsApiCollection<McsSystemMessage>> {
+    return this._systemMessageApi.validateMessage(messageData).pipe(
+      map((response) => this._mapToCollection(response.content, response.totalCount)),
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.validateMessage'))
       )
     );
   }

@@ -911,6 +911,45 @@
     "dataSingular": "Message",
     "dataPlural": "Messages"
   },
+  "systemMessageCreate": {
+    "header": "New System Message",
+    "typeHeader": "Message Type",
+    "severityHeader": "Severity",
+    "backToSystemMessages": "Back To System Messages",
+    "saveMessage": "Save",
+    "creatingMessage": "Creating message, this may take a few moments.",
+    "hints": {
+      "message": "Max of {{max_char}} characters"
+    },
+    "errors": {
+      "date": "Invalid date format.",
+      "expiry": "Invalid expiry. Date should be present date or later than start date.",
+      "start": "Invalid start. Date should start on present date or later",
+      "message": "You must place a message."
+    },
+    "labels": {
+      "start": "Start ",
+      "expiry": "Expiry ",
+      "type": "Type ",
+      "severity": "Severity ",
+      "message": "Message ",
+      "enabled": "Enabled "
+    },
+    "placeholders": {
+      "start": "Start date",
+      "expiry": "Expiry date",
+      "type": "Choose Type ",
+      "severity": "Choose Severity",
+      "message": "Portal is currently undergoing maintenance."
+    },
+    "contextualHelp": {
+      "start": "Scheduled start time for this message (Sydney Time). Leave this blank if you wish to display it immediately.",
+      "expiry": "Expiry time for this message (Sydney Time). Once the message expires, it will stop displaying. Leave this blank if you do not wish for this message to expire.",
+      "type": "The Type property will define what kind of icon is used alongside the message you choose.",
+      "severity": "Defining a critical alert will cause the Portal to become unavailable to external users while your message is displayed.",
+      "message": "Provide a clear, easy to read message that users will be able to understand.\r\n\n Remember to word this carefully as it will be displayed to all users."
+    }
+  },
   "tickets": {
     "header": "Tickets",
     "leftPanelHeader": "Ticket Filter",
@@ -1492,5 +1531,13 @@
   "dialogResetPasswordFinished": {
     "title": "Your Server Password",
     "message": "We've reset the password for server <strong>{{server_name}}</strong>.\r\n\n<strong>Username</strong>: {{username}}\n<strong>Password</strong>: {{password}}\r\n\nWe won't show you this password again so we've emailed it to you for your reference."
+  },
+  "dialogSaveEnabledMessage": {
+    "title": "Save Message",
+    "message": "Are you sure you wish to continue?\r\nThis message will be displayed to all users and its content cannot be edited after processing."
+  },
+  "dialogSaveConflictMessage": {
+    "title": "Conflicting Message",
+    "message": "Are you sure you wish to continue?\r\nAn existing message is already enabled.\r\n\nSaving this message will cause the conflicting message to be disabled and this message enabled in its place."
   }
 }

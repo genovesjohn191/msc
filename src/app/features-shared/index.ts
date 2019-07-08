@@ -24,3 +24,7 @@ export * from './server-dialogs/rename-server/rename-server.dialog';
 export * from './addon-anti-malware/addon-anti-malware';
 export * from './addon-inview/addon-inview';
 export * from './addon-sql-server/addon-sql-server';
+
+/** System Message */
+export * from './system-message-form/system-message-form.component';
+export * from './system-message-form/system-message-form';

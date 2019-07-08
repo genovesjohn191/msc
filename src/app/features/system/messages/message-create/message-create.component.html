@@ -1,0 +1,40 @@
+<mcs-page [header]="'systemMessageCreate.header' | translate">
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef>
+    <!-- System Message Creation -->
+    <mcs-top-panel-item *mcsTopPanelItemDef no-border>
+      <mcs-action-item mcsAlign="end" 
+        mcsId="back-to-messages"
+        mcsRouterLink="SystemMessages"
+        mcsEventTracker="navigate-to-system-message-listing"
+        mcsEventCategory="system-message"
+        mcsEventLabel="create-new-message-page">
+        <mcs-icon [key]="backIconKey" size="small"></mcs-icon>
+        <span>{{ 'systemMessageCreate.backToSystemMessages' | translate }}</span>
+      </mcs-action-item>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
+  <!-- Content Panel -->
+  <mcs-content-panel *mcsContentPanelDef>
+    <div class="contextual-help-page-wrapper limited-view">
+      
+      <!-- Shared Message Form -->
+      <mcs-system-message-form #fgSystemMessageForm
+        (dataChange)="onFormData($event)" ></mcs-system-message-form>
+      
+      <!-- Message Action -->
+      <div class="action-items">
+        <button mcsButton  
+          mcsId="new-message"
+          [disabled]="!isFormValid" 
+          (click)="onCreateMessage()"
+          mcsEventTracker="submit-new-message"
+          mcsEventCategory="system-message"
+          mcsEventLabel="create-new-message-page">
+          {{ 'systemMessageCreate.saveMessage' | translate }}
+        </button>
+      </div>
+    </div>
+  </mcs-content-panel>
+</mcs-page>

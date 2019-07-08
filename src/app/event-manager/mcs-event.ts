@@ -53,6 +53,8 @@ import { JobReceiveEvent } from './events/job-receive.event';
 import { JobCurrentUserEvent } from './events/job-current-user.event';
 import { JobResourceCatalogItemCreateEvent } from './events/job-resource-catalog-item-create.event';
 import { JobOrderScaleManagedServerEvent } from './events/job-order-scale-managed-server.event';
+import { SystemMessageCreateEvent } from './events/system-message-create.event';
+import { SystemMessageValidateEvent } from './events/system-message-validate.event';
 
 export class McsEvent {
   public static routeChange = new RouteChangeEvent();
@@ -111,4 +113,7 @@ export class McsEvent {
   public static jobServerResetPassword = new JobServerResetPasswordEvent();
   public static jobResourceCatalogItemCreate = new JobResourceCatalogItemCreateEvent();
   public static jobOrderScaleManagedServer = new JobOrderScaleManagedServerEvent();
+
+  public static systemMessageCreated = new SystemMessageCreateEvent();
+  public static systemMessageValidated = new SystemMessageValidateEvent();
 }
