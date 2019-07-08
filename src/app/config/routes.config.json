@@ -201,6 +201,15 @@
     "requiredFeatureFlag": "EnableSystemMessages",
     "documentTitle": "System Messages - Macquarie Cloud Services"
   },
+  "systemMessageCreate": {
+    "enumCategory": "SystemMessages",
+    "enumKey": "SystemMessageCreate",
+    "routePath": "create",
+    "navigationPath": "system/messages/create",
+    "requiredPermissions": ["SystemMessageEdit"],
+    "requiredFeatureFlag": "EnableSystemMessages",
+    "documentTitle": "Create System Message - Macquarie Cloud Services"
+  },
   "internetDetails": {
     "enumCategory": "Network",
     "enumKey": "InternetDetails",

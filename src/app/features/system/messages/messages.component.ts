@@ -5,9 +5,11 @@ import {
   Injector
 } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 import {
   CoreDefinition,
-  McsTableListingBase
+  McsTableListingBase,
+  CoreRoutes
 } from '@app/core';
 import {
   RouteKey,
@@ -32,7 +34,8 @@ export class SystemMessagesComponent extends McsTableListingBase<McsSystemMessag
   constructor(
     _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
-    private _apiService: McsApiService
+    private _apiService: McsApiService,
+    private _router: Router
   ) {
     super(_injector, _changeDetectorRef, McsEvent.dataChangeSystemMessages);
   }
@@ -43,6 +46,13 @@ export class SystemMessagesComponent extends McsTableListingBase<McsSystemMessag
 
   public get addIconKey(): string {
     return CoreDefinition.ASSETS_FONT_PLUS;
+  }
+
+  /**
+   * This will navigate to system message creation page
+   */
+  public onClickNewMessage(): void {
+    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.SystemMessageCreate)]);
   }
 
   /**

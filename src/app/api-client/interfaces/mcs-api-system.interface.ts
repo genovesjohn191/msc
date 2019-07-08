@@ -2,7 +2,8 @@ import { Observable } from 'rxjs';
 import {
   McsSystemMessage,
   McsQueryParam,
-  McsApiSuccessResponse
+  McsApiSuccessResponse,
+  McsSystemMessageCreate
 } from '@app/models';
 
 export interface IMcsApiSystemService {
@@ -17,4 +18,16 @@ export interface IMcsApiSystemService {
    * @param id MESSAGE identification
    */
   getMessage(id: string): Observable<McsApiSuccessResponse<McsSystemMessage>>;
+
+  /**
+   * This will create the new message based on the inputted information
+   * @param messageData Message data to be created
+   */
+  createMessage(messageData: McsSystemMessageCreate): Observable<McsApiSuccessResponse<McsSystemMessageCreate>>;
+
+  /**
+   * This will validate the new message based on the inputted information
+   * @param messageData Message data to be validated
+   */
+  validateMessage(messageData: McsSystemMessageCreate): Observable<McsApiSuccessResponse<McsSystemMessage[]>>;
 }

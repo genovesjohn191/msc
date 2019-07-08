@@ -1,12 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { isNullOrEmpty } from '@app/utilities';
 import {
-  McsQueryParam,
+  isNullOrEmpty,
+  serializeObjectToJson
+} from '@app/utilities';
+import {
   McsApiSuccessResponse,
   McsApiRequestParameter,
-  McsSystemMessage
+  McsSystemMessage,
+  McsSystemMessageCreate,
+  McsQueryParam
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiSystemService } from '../interfaces/mcs-api-system.interface';
@@ -61,6 +65,50 @@ export class McsApiSystemService implements IMcsApiSystemService {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
             .deserializeResponse<McsSystemMessage>(McsSystemMessage, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  /**
+   * This will create the new message based on the inputted information
+   * @param messageData Message data to be created
+   */
+  public createMessage(messageData: McsSystemMessageCreate):
+    Observable<McsApiSuccessResponse<McsSystemMessageCreate>> {
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/system/messages`;
+    mcsApiRequestParameter.recordData = serializeObjectToJson(messageData);
+
+    return this._mcsApiService.post(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsSystemMessageCreate>(McsSystemMessageCreate, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  /**
+   * This will validate the message it has a conflicting messages
+   * @param messageData Message data to be validated
+   */
+  public validateMessage(messageData: McsSystemMessageCreate):
+    Observable<McsApiSuccessResponse<McsSystemMessage[]>> {
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/system/messages/validate-requests';
+    mcsApiRequestParameter.recordData = serializeObjectToJson(messageData);
+
+    return this._mcsApiService.post(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsSystemMessage[]>(McsSystemMessage, response);
           return apiResponse;
         })
       );

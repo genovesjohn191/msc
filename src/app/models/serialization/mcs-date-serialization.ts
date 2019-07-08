@@ -10,7 +10,7 @@ export class McsDateSerialization implements Serializer, Deserializer {
    * Serialize the enumeration based on type provided on the enum type
    */
   public serialize(value: Date): string {
-    return isNullOrEmpty(value) ? '' : value.toISOString();
+    return isNullOrEmpty(value) ? '' : '"' + value.toISOString() + '"';
   }
 
   /**

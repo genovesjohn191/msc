@@ -14,6 +14,7 @@ export enum RouteKey {
   ServerCreate,
 
   SystemMessages,
+  SystemMessageCreate,
 
   VdcDetails,
   VdcDetailsOverview,

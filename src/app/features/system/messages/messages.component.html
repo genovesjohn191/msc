@@ -3,20 +3,18 @@
   <mcs-top-panel *mcsTopPanelDef>
 
     <!-- System Message Action -->
-    <!-- TODO: Temporarily commented out because new message button is not yet created -->
-    <!-- <ng-container *mcsAccessControl="['SystemMessageEdit']">
+    <ng-container *mcsAccessControl="['SystemMessageEdit']">
       <mcs-top-panel-item *mcsTopPanelItemDef>
-        <ng-container *mcsExclusiveForAccount="'default'">
-          <mcs-action-item (click)="onClickNewMessage()"
-            mcsId="create-new-message-button" mcsEventTracker="create-new-message"
-            mcsEventCategory="system-message"
-            mcsEventLabel="system-message-listing-page">
-            <mcs-icon [key]="addIconKey" size="small"></mcs-icon>
-            <span>{{ 'systemMessages.newMessage' | translate }}</span>
-          </mcs-action-item>
-        </ng-container>
+        <mcs-action-item (click)="onClickNewMessage()"
+          mcsId="create-new-message-button" 
+          mcsEventTracker="create-new-message"
+          mcsEventCategory="system-message"
+          mcsEventLabel="system-message-listing-page">
+          <mcs-icon [key]="addIconKey" size="small"></mcs-icon>
+          <span>{{ 'systemMessages.newMessage' | translate }}</span>
+        </mcs-action-item>
       </mcs-top-panel-item>
-    </ng-container> -->
+    </ng-container>
 
     <mcs-top-panel-item *mcsTopPanelItemDef overflow-auto>
       <div class="listing-action-wrapper">
@@ -157,13 +155,11 @@
           <mcs-data-empty *mcsDataEmptyDef>
             <div class="listing-status-wrapper">
               <span>{{ 'systemMessages.noRecordsFoundMessage' | translate }} </span>
-              <span *mcsExclusiveForAccount="'default'">
-                <!--TODO: We need to hardcode this instead of putting in the text-config
-                      since it is using link -->
-                <!-- Click <a (click)="onClickNewMessage()" mcsId="create-new-message-link"
-                  mcsEventTracker="create-new-message" mcsEventCategory="message"
-                  mcsEventLabel="empty-message-listing-option">here</a> to create new message. -->
-              </span>
+              <!--We need to hardcode this instead of putting in the text-config
+                    since it is using link -->
+              Click <a (click)="onClickNewMessage()" mcsId="create-new-message-link"
+                mcsEventTracker="create-new-message" mcsEventCategory="message"
+                mcsEventLabel="empty-message-listing-option">here</a> to create new message.
             </div>
           </mcs-data-empty>
           <mcs-data-error *mcsDataErrorDef>
