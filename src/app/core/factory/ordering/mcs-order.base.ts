@@ -266,9 +266,7 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
   private _subscribeAndExecuteNewOrder(): void {
     this._orderDirector.orderRequestReceived().pipe(
       takeUntil(this._orderRequestedSubject),
-      tap((orderRequest) =>
-        this._pendingOrderRequest = cloneObject(orderRequest)
-      ),
+      tap((orderRequest) => this._pendingOrderRequest = cloneObject(orderRequest)),
       exhaustMap((response) => this._executeOrderRequest(response))
     ).subscribe();
   }
@@ -300,8 +298,23 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
         this.setErrors(...httpError.errorMessages);
         return empty();
       }),
-      finalize(() => this._executePendingRequest())
+      finalize(() => this._onOrderCompletion())
     );
+  }
+
+  /**
+   * Event that emits when the order has been completed
+   */
+  private _onOrderCompletion(): void {
+    this._executePendingRequest();
+    this._clearInProgressRequest();
+  }
+
+  /**
+   * Clears the inprogress request
+   */
+  private _clearInProgressRequest(): void {
+    this._inProgressRequest = null;
   }
 
   /**
