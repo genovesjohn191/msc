@@ -58,6 +58,8 @@ export * from './enumerations/service-level.enum';
 export * from './enumerations/message-type.enum';
 export * from './enumerations/severity.enum';
 export * from './enumerations/api-error-requester.enum';
+export * from './enumerations/internet-plan.enum';
+export * from './enumerations/availability-zone.enum';
 
 /** Job References */
 export * from './job-references/mcs-server-job-reference';

@@ -5,13 +5,10 @@ import {
   RouterStateSnapshot
 } from '@angular/router';
 import { Observable } from 'rxjs';
-import {
-  McsFeatureFlag,
-  HttpStatusCode
-} from '@app/models';
+import { McsFeatureFlag } from '@app/models';
 import {
   McsAccessControlService,
-  McsErrorHandlerService
+  McsNavigationService
 } from '@app/core';
 
 @Injectable()
@@ -19,7 +16,7 @@ export class McsMaintenancePageGuard implements CanActivate {
 
   constructor(
     private _accesscontrolService: McsAccessControlService,
-    private _errorHandlerService: McsErrorHandlerService
+    private _navigationService: McsNavigationService
   ) { }
 
   public canActivate(
@@ -31,7 +28,7 @@ export class McsMaintenancePageGuard implements CanActivate {
       .hasAccessToFeature(McsFeatureFlag.MaintenanceMode);
 
     if (!maintenanceModeIsActivated) {
-      this._errorHandlerService.redirectToErrorPage(HttpStatusCode.NotFound);
+      this._navigationService.navigateRoot('/');
       return false;
     }
     return true;

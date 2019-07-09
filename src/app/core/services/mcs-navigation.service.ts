@@ -42,7 +42,7 @@ export class McsNavigationService {
    * @param routePath Route path to where it navigates
    * @param extras Navigation options
    */
-  public navigateRoot(routePath: string, extras: NavigationExtras): void {
+  public navigateRoot(routePath: string, extras?: NavigationExtras): void {
     this._router.navigateByUrl(routePath, extras);
   }
 }

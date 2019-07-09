@@ -45,11 +45,11 @@
             {{ columnSettings.service.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
-            <a mcsId="select-internet"
+            <span mcsId="select-internet"
               mcsEventTracker="navigate-to-internet"
               mcsEventCategory="internet"
               mcsEventLabel="internet-listing-page">
-              {{ row.description }}</a>
+              {{ row.description }}</span>
           </mcs-data-cell>
         </ng-container>
 
@@ -69,7 +69,7 @@
             {{ columnSettings.plan.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
-            {{ row.serviceLevelLabel }}
+            {{ row.planLabel }}
           </mcs-data-cell>
         </ng-container>
 
@@ -79,8 +79,7 @@
             {{ columnSettings.zone.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" hidden-xsmall>
-            <!-- TODO: Remove this once the zone is available in the field -->
-            {{ row.inviewLevelLabel }}
+            {{ row.availabilityZoneLabel }}
           </mcs-data-cell>
         </ng-container>
 
