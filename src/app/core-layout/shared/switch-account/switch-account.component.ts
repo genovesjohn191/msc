@@ -52,7 +52,7 @@ export class SwitchAccountComponent extends McsTableListingBase<McsCompany> {
     private _switchAccountService: SwitchAccountService,
     private _apiService: McsApiService
   ) {
-    super(_injector, _changeDetectorRef, McsEvent.dataChangeCompanies);
+    super(_injector, _changeDetectorRef, { dataChangeEvent: McsEvent.dataChangeCompanies });
     this.selectionChanged = new EventEmitter();
   }
 

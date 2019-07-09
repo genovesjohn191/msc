@@ -37,7 +37,7 @@ export class ToolsComponent extends McsTableListingBase<McsPortal> {
     private _translateService: TranslateService,
     private _apiService: McsApiService
   ) {
-    super(_injector, _changeDetectorRef, McsEvent.dataChangeTools);
+    super(_injector, _changeDetectorRef, { dataChangeEvent: McsEvent.dataChangeTools });
     this.dataColumns = ['name', 'resourceSpecific', 'portalAccess'];
     this._initializeToolDescriptionMap();
   }

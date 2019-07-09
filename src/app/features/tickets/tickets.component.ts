@@ -38,7 +38,7 @@ export class TicketsComponent extends McsTableListingBase<McsTicket> {
     private _apiService: McsApiService,
     private _router: Router
   ) {
-    super(_injector, _changeDetectorRef, McsEvent.dataChangeTickets);
+    super(_injector, _changeDetectorRef, { dataChangeEvent: McsEvent.dataChangeTickets });
   }
 
   public get addIconKey(): string {

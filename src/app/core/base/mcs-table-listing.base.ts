@@ -42,6 +42,12 @@ import { McsBrowserService } from '../services/mcs-browser.service';
 import { McsTableDataSource } from '../data-access/mcs-table-datasource';
 import { McsTableSelection } from '../data-access/mcs-table-selection';
 
+export interface TableListingConfig<T> {
+  dataChangeEvent?: EventBusState<T[]>;
+  dataClearEvent?: EventBusState<void>;
+  allowMultipleSelection?: boolean;
+}
+
 export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy {
   @ViewChild('search')
   public search: Search;
@@ -66,20 +72,21 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
   private _totalRecordsCount: number = 0;
   private _isMobile: boolean;
   private _dataChangeHandler: Subscription;
+  private _dataClearHandler: Subscription;
 
   constructor(
     protected injector: Injector,
     protected changeDetectorRef: ChangeDetectorRef,
-    protected dataChangeEvent?: EventBusState<T[]>,
-    protected allowMultipleSelection?: boolean
+    protected tableConfig?: TableListingConfig<T>
   ) {
+    tableConfig = tableConfig || {};
     this.dataSource = new McsTableDataSource<T>([]);
-    this.selection = new McsTableSelection(this.dataSource, allowMultipleSelection || true);
+    this.selection = new McsTableSelection(this.dataSource, tableConfig.allowMultipleSelection || true);
 
     this.browserService = injector.get(McsBrowserService);
     this.eventDispatcher = injector.get(EventBusDispatcherService);
 
-    this._registerDataChangeEvent();
+    this._registerDataEvents();
     this._subscribeToDatasourceRendered();
     this._subscribeToBreakpointChange();
   }
@@ -93,6 +100,7 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
   public ngOnDestroy() {
     unsubscribeSafely(this._baseDestroySubject);
     unsubscribeSafely(this._dataChangeHandler);
+    unsubscribeSafely(this._dataClearHandler);
     if (!isNullOrEmpty(this.dataSource)) {
       this.dataSource.disconnect();
     }
@@ -227,20 +235,33 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
   /**
    * Registers data change event handlers
    */
-  private _registerDataChangeEvent(): void {
-    if (isNullOrEmpty(this.dataChangeEvent)) { return; }
+  private _registerDataEvents(): void {
+    if (!isNullOrEmpty(this.tableConfig.dataChangeEvent)) {
+      this._dataChangeHandler = this.eventDispatcher.addEventListener(
+        this.tableConfig.dataChangeEvent, this._onDataChanged.bind(this)
+      );
+    }
 
-    this._dataChangeHandler = this.eventDispatcher.addEventListener(
-      this.dataChangeEvent, this._onDataChanged.bind(this)
-    );
+    if (!isNullOrEmpty(this.tableConfig.dataClearEvent)) {
+      this._dataClearHandler = this.eventDispatcher.addEventListener(
+        this.tableConfig.dataClearEvent, this._onDataClear.bind(this)
+      );
+    }
   }
 
   /**
    * Event that emits when the data on the listing has been changed
-   * @param dataRecords Data records to be listened
+   * @param _dataRecords Data records to be listened
    */
-  private _onDataChanged(dataRecords: T[]): void {
-    if (isNullOrEmpty(dataRecords)) { this.dataSource.refreshDataRecords(); }
+  private _onDataChanged(_dataRecords: T[]): void {
     this.changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Event that emits when the data has been cleared
+   */
+  private _onDataClear(): void {
+    if (isNullOrEmpty(this.dataSource)) { return; }
+    this.dataSource.refreshDataRecords();
   }
 }
