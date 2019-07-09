@@ -26,6 +26,9 @@ import { DataChangeCompaniesEvent } from './events/data-change-companies.event';
 import { DataChangeJobsEvent } from './events/data-change-jobs.event';
 import { DataChangeInternetPortsEvent } from './events/data-change-internet-ports.event';
 
+import { DataClearServersEvent } from './events/data-clear-servers.event';
+import { DataClearMediaEvent } from './events/data-clear-media.event';
+
 import { JobServerDiskCreateEvent } from './events/job-server-disk-create.event';
 import { JobServerDiskUpdateEvent } from './events/job-server-disk-update.event';
 import { JobServerDiskDeleteEvent } from './events/job-server-disk-delete.event';
@@ -85,6 +88,9 @@ export class McsEvent {
   public static dataChangeTickets = new DataChangeTicketsEvent();
   public static dataChangeJobs = new DataChangeJobsEvent();
   public static dataChangeInternetPorts = new DataChangeInternetPortsEvent();
+
+  public static dataClearServers = new DataClearServersEvent();
+  public static dataClearMedia = new DataClearMediaEvent();
 
   public static jobCurrentUser = new JobCurrentUserEvent();
   public static jobReceive = new JobReceiveEvent();

@@ -43,7 +43,7 @@ export class NotificationsComponent extends McsTableListingBase<McsJob> {
     private _authenticationIdentity: McsAuthenticationIdentity,
     private _apiService: McsApiService
   ) {
-    super(_injector, _changeDetectorRef, McsEvent.dataChangeJobs);
+    super(_injector, _changeDetectorRef, { dataChangeEvent: McsEvent.dataChangeJobs });
   }
 
   public get activeCompany(): McsCompany {

@@ -103,7 +103,10 @@ export class ServersComponent extends McsTableListingBase<McsServer>
     private _dialogService: DialogService,
     private _serversService: ServersService
   ) {
-    super(_injector, _changeDetectorRef, McsEvent.dataChangeServers);
+    super(_injector, _changeDetectorRef, {
+      dataChangeEvent: McsEvent.dataChangeServers,
+      dataClearEvent: McsEvent.dataClearServers
+    });
   }
 
   public ngOnInit() {

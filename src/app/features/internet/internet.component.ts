@@ -32,7 +32,7 @@ export class InternetComponent extends McsTableListingBase<McsInternetPort> {
     _changeDetectorRef: ChangeDetectorRef,
     private _apiService: McsApiService
   ) {
-    super(_injector, _changeDetectorRef, McsEvent.dataChangeInternetPorts);
+    super(_injector, _changeDetectorRef, { dataChangeEvent: McsEvent.dataChangeInternetPorts });
   }
 
   public get routeKeyEnum(): any {

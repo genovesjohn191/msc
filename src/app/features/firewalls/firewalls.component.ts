@@ -35,7 +35,7 @@ export class FirewallsComponent extends McsTableListingBase<McsFirewall> {
     private _router: Router,
     private _apiService: McsApiService
   ) {
-    super(_injector, _changeDetectorRef, McsEvent.dataChangeFirewalls);
+    super(_injector, _changeDetectorRef, { dataChangeEvent: McsEvent.dataChangeFirewalls });
   }
 
   public get routeKeyEnum(): any {

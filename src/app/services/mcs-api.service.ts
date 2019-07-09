@@ -136,7 +136,7 @@ import { McsFirewallsRepository } from './repositories/mcs-firewalls.repository'
 import { McsConsoleRepository } from './repositories/mcs-console.repository';
 import { McsCompaniesRepository } from './repositories/mcs-companies.repository';
 
-interface DataChangeEmitter<T> {
+interface DataEmitter<T> {
   eventEmitter: Observable<T>;
   event: EventBusState<any>;
 }
@@ -172,7 +172,7 @@ export class McsApiService {
   private readonly _systemMessageApi: IMcsApiSystemService;
 
   private readonly _eventDispatcher: EventBusDispatcherService;
-  private readonly _entitiesDataChangeMap: Array<DataChangeEmitter<any>>;
+  private readonly _entitiesEventMap: Array<DataEmitter<any>>;
 
   constructor(_injector: Injector) {
     this._translate = _injector.get(TranslateService);
@@ -206,9 +206,9 @@ export class McsApiService {
     this._systemMessageApi = apiClientFactory.getService(new McsApiSystemFactory());
 
     // Register events
-    this._entitiesDataChangeMap = [];
+    this._entitiesEventMap = [];
     this._eventDispatcher = _injector.get(EventBusDispatcherService);
-    this._createEntitySubscribers();
+    this._createEntityEventDispatcher();
   }
 
   public getIdentity(): Observable<McsIdentity> {
@@ -1146,79 +1146,91 @@ export class McsApiService {
   /**
    * Creates the entity subscribers to dispatch in the event bus state
    */
-  private _createEntitySubscribers(): void {
-    this._entitiesDataChangeMap.push({
+  private _createEntityEventDispatcher(): void {
+    // Data Change Events
+    this._entitiesEventMap.push({
       event: McsEvent.dataChangeJobs,
       eventEmitter: this._jobsRepository.dataChange()
     });
 
-    this._entitiesDataChangeMap.push({
+    this._entitiesEventMap.push({
       event: McsEvent.dataChangeServers,
       eventEmitter: this._serversRepository.dataChange()
     });
 
-    this._entitiesDataChangeMap.push({
+    this._entitiesEventMap.push({
       event: McsEvent.dataChangeResources,
       eventEmitter: this._resourcesRepository.dataChange()
     });
 
-    this._entitiesDataChangeMap.push({
+    this._entitiesEventMap.push({
       event: McsEvent.dataChangeTools,
       eventEmitter: this._toolsRepository.dataChange()
     });
 
-    this._entitiesDataChangeMap.push({
+    this._entitiesEventMap.push({
       event: McsEvent.dataChangeTickets,
       eventEmitter: this._ticketsRepository.dataChange()
     });
 
-    this._entitiesDataChangeMap.push({
+    this._entitiesEventMap.push({
       event: McsEvent.dataChangeSystemMessages,
       eventEmitter: this._systemMessagesRepository.dataChange()
     });
 
-    this._entitiesDataChangeMap.push({
+    this._entitiesEventMap.push({
       event: McsEvent.dataChangeProducts,
       eventEmitter: this._productsRepository.dataChange()
     });
 
-    this._entitiesDataChangeMap.push({
+    this._entitiesEventMap.push({
       event: McsEvent.dataChangeProductCatalog,
       eventEmitter: this._productCatalogRepository.dataChange()
     });
 
-    this._entitiesDataChangeMap.push({
+    this._entitiesEventMap.push({
       event: McsEvent.dataChangeOrders,
       eventEmitter: this._ordersRepository.dataChange()
     });
 
-    this._entitiesDataChangeMap.push({
+    this._entitiesEventMap.push({
       event: McsEvent.dataChangeMedia,
       eventEmitter: this._mediaRepository.dataChange()
     });
 
-    this._entitiesDataChangeMap.push({
+    this._entitiesEventMap.push({
       event: McsEvent.dataChangeFirewalls,
       eventEmitter: this._firewallsRepository.dataChange()
     });
 
-    this._entitiesDataChangeMap.push({
+    this._entitiesEventMap.push({
       event: McsEvent.dataChangeConsole,
       eventEmitter: this._consoleRepository.dataChange()
     });
 
-    this._entitiesDataChangeMap.push({
+    this._entitiesEventMap.push({
       event: McsEvent.dataChangeCompanies,
       eventEmitter: this._companiesRepository.dataChange()
     });
 
-    this._entitiesDataChangeMap.push({
+    this._entitiesEventMap.push({
       event: McsEvent.dataChangeInternetPorts,
       eventEmitter: this._internetRepository.dataChange()
     });
 
+    // Data Clear Events
+    this._entitiesEventMap.push({
+      event: McsEvent.dataClearServers,
+      eventEmitter: this._serversRepository.dataClear()
+    });
+
+    this._entitiesEventMap.push({
+      event: McsEvent.dataClearMedia,
+      eventEmitter: this._mediaRepository.dataClear()
+    });
+
     // Dispatch all associated events
-    this._entitiesDataChangeMap.forEach((dataChange) => {
+    this._entitiesEventMap.forEach((dataChange) => {
       dataChange.eventEmitter.subscribe((entities) =>
         this._eventDispatcher.dispatch(dataChange.event, entities)
       );

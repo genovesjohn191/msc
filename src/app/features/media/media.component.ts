@@ -39,7 +39,10 @@ export class MediaComponent extends McsTableListingBase<McsResourceMedia> implem
     private _router: Router,
     private _apiService: McsApiService
   ) {
-    super(_injector, _changeDetectorRef, McsEvent.dataChangeMedia);
+    super(_injector, _changeDetectorRef, {
+      dataChangeEvent: McsEvent.dataChangeMedia,
+      dataClearEvent: McsEvent.dataClearMedia
+    });
   }
 
   public ngOnInit() {

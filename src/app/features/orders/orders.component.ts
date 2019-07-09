@@ -35,7 +35,7 @@ export class OrdersComponent extends McsTableListingBase<McsOrder> {
     private _router: Router,
     private _apiService: McsApiService
   ) {
-    super(_injector, _changeDetectorRef, McsEvent.dataChangeOrders);
+    super(_injector, _changeDetectorRef, { dataChangeEvent: McsEvent.dataChangeOrders });
   }
 
   public get routeKeyEnum(): any {

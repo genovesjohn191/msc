@@ -37,7 +37,7 @@ export class SystemMessagesComponent extends McsTableListingBase<McsSystemMessag
     private _apiService: McsApiService,
     private _router: Router
   ) {
-    super(_injector, _changeDetectorRef, McsEvent.dataChangeSystemMessages);
+    super(_injector, _changeDetectorRef, { dataChangeEvent: McsEvent.dataChangeSystemMessages });
   }
 
   public get routeKeyEnum(): any {
