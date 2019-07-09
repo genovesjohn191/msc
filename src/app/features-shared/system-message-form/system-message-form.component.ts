@@ -49,7 +49,6 @@ export class SystemMessageFormComponent
   implements OnInit, OnDestroy, IMcsFormGroup, IMcsDataChange<SystemMessageForm> {
 
   public dateNow = new Date();
-  public isEnabled: boolean = true;
 
   // Form Variables
   public fgCreateMessage: FormGroup;
@@ -104,13 +103,6 @@ export class SystemMessageFormComponent
    */
   public isValid(): boolean {
     return getSafeProperty(this.fgCreateMessage, (obj) => obj.valid);
-  }
-
-  /**
-   * Change Enabled values
-   */
-  public toggleEnabled(): void {
-    this.isEnabled = !this.isEnabled;
   }
 
   /**
@@ -175,7 +167,7 @@ export class SystemMessageFormComponent
       CoreValidators.required
     ]);
 
-    this.fcEnabled = new FormControl('', [
+    this.fcEnabled = new FormControl(true, [
     ]);
 
     // Register Form Groups using binding
@@ -192,7 +184,6 @@ export class SystemMessageFormComponent
     this.fgCreateMessage.statusChanges
       .pipe(startWith(null), takeUntil(this._destroySubject))
       .subscribe(() => this.notifyDataChange());
-
   }
 
   /**
