@@ -19,7 +19,8 @@ import {
   mergeArrays,
   deleteArrayRecord,
   isNullOrEmpty,
-  clearArrayRecord
+  clearArrayRecord,
+  isNullOrUndefined
 } from '@app/utilities';
 import { McsRepository } from './mcs-repository.interface';
 import { McsDataContext } from './mcs-data-context.interface';
@@ -191,7 +192,7 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
    */
   public dataChange(): Observable<T[]> {
     return this._dataChange.asObservable().pipe(
-      filter((response) => !isNullOrEmpty(response))
+      filter((response) => !isNullOrUndefined(response))
     );
   }
 
@@ -223,8 +224,10 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
    */
   public clearData(): void {
     this._context.totalRecordsCount = 0;
+    this._allRecordsCount = 0;
     clearArrayRecord(this.dataRecords);
     clearArrayRecord(this.filteredRecords);
+    this._notifyDataChange();
     this._dataClear.next();
   }
 

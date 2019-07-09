@@ -237,9 +237,10 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
 
   /**
    * Event that emits when the data on the listing has been changed
-   * @param _dataRecords Data records to be listened
+   * @param dataRecords Data records to be listened
    */
-  private _onDataChanged(_dataRecords: T[]): void {
+  private _onDataChanged(dataRecords: T[]): void {
+    if (isNullOrEmpty(dataRecords)) { this.dataSource.refreshDataRecords(); }
     this.changeDetectorRef.markForCheck();
   }
 }

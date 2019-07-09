@@ -104,9 +104,9 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
    */
   public showDetachDialog(medium: McsResourceMedia, attachedServer: McsResourceMediaServer): void {
     let dialogMessage = this._translateService.instant(
-      'mediaMedium.servers.detachDialog.message', { server_name: attachedServer.name }
+      'mediaServers.detachDialog.message', { server_name: attachedServer.name }
     );
-    let dialogTitle = this._translateService.instant('mediaMedium.servers.detachDialog.title');
+    let dialogTitle = this._translateService.instant('mediaServers.detachDialog.title');
 
     let dialogData = {
       data: attachedServer,
@@ -155,7 +155,7 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
    */
   private _setDataColumns(): void {
     this.serversColumns = Object.keys(
-      this._translateService.instant('mediaMedium.servers.columnHeaders')
+      this._translateService.instant('mediaServers.columnHeaders')
     );
     if (isNullOrEmpty(this.serversColumns)) {
       throw new Error('column definition for disks was not defined');

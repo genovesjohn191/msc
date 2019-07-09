@@ -11,7 +11,7 @@
   </ng-container>
 
   <!-- Left Panel -->
-  <mcs-left-panel *mcsLeftPanelDef="'mediaMedium.leftPanelHeader' | translate">
+  <mcs-left-panel *mcsLeftPanelDef="'mediaDetails.leftPanelHeader' | translate">
     <!-- listing panel -->
     <mcs-left-panel-item *mcsLeftPanelItemDef>
       <div class="listing-panel-wrapper">
@@ -71,10 +71,10 @@
     <div class="routing-tab-wrapper" *mcsComponentHandler>
       <mcs-tab-group [selectedTabId]="selectedRoutingTab" (tabChanged)="onTabChanged($event)">
         <!-- Overview Tab -->
-        <mcs-tab [label]="'mediaMedium.overview.label' | translate" id="overview"></mcs-tab>
+        <mcs-tab [label]="'mediaOverview.label' | translate" id="overview"></mcs-tab>
 
         <!-- Servers Tab -->
-        <mcs-tab [label]="'mediaMedium.servers.label' | translate" id="servers"></mcs-tab>
+        <mcs-tab [label]="'mediaServers.label' | translate" id="servers"></mcs-tab>
       </mcs-tab-group>
 
       <!-- Tab content for routing tab -->

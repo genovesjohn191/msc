@@ -1,6 +1,6 @@
 <mcs-presentation-panel>
   <ng-container mcsPresentationPanelHeader>
-    <h2>{{ 'mediaMedium.servers.title' | translate }}</h2>
+    <h2>{{ 'mediaServers.title' | translate }}</h2>
   </ng-container>
 
   <mcs-section *ngIf="selectedMedium$ | async as selectedMedium">
@@ -8,7 +8,7 @@
       <!-- Name Column -->
       <ng-container mcsColumnDef="name">
         <mcs-header-cell *mcsHeaderCellDef>
-          {{ 'mediaMedium.servers.columnHeaders.name' | translate }}
+          {{ 'mediaServers.columnHeaders.name' | translate }}
         </mcs-header-cell>
         <mcs-data-cell *mcsDataCellDef="let row">
           <mcs-item>
@@ -31,7 +31,7 @@
             mcsEventTracker="detach-action"
             mcsEventCategory="media"
             mcsEventLabel="media-details-page">
-            {{ 'mediaMedium.servers.detachAction' | translate }}
+            {{ 'mediaServers.detachAction' | translate }}
           </a>
         </mcs-data-cell>
       </ng-container>
@@ -39,10 +39,10 @@
       <!-- Data Status Integration -->
       <ng-container mcsDataStatusDef>
         <mcs-data-empty *mcsDataEmptyDef>
-          <span>{{ 'mediaMedium.servers.noMediaServers' | translate }} </span>
+          <span>{{ 'mediaServers.noMediaServers' | translate }} </span>
         </mcs-data-empty>
         <mcs-data-error *mcsDataErrorDef>
-          <span>{{ 'mediaMedium.servers.errorMediaServers' | translate }}</span>
+          <span>{{ 'mediaServers.errorMediaServers' | translate }}</span>
         </mcs-data-error>
       </ng-container>
 
@@ -55,7 +55,7 @@
     <div class="action-box" [disabled]="selectedMedium.isProcessing">
       <mcs-media-manage-servers (dataChange)="onChangeManageServers($event)">
         <ng-container mcsManageServerHeader>
-          <h2>{{ 'mediaMedium.servers.attachServersHeader' | translate }}</h2>
+          <h2>{{ 'mediaServers.attachServersHeader' | translate }}</h2>
         </ng-container>
       </mcs-media-manage-servers>
 
@@ -68,7 +68,7 @@
           mcsEventTracker="attach-server"
           mcsEventCategory="media"
           mcsEventLabel="media-details-page">
-          {{ 'mediaMedium.servers.attachAction' | translate }}
+          {{ 'mediaServers.attachAction' | translate }}
         </button>
       </div>
     </div>

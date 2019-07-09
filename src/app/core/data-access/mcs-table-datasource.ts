@@ -180,6 +180,7 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
    * Refreshes the data records of the table
    */
   public refreshDataRecords(): void {
+    this._resetPaginator();
     this._requestUpdate.next();
   }
 
@@ -225,10 +226,7 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
     this._searchSubject.next();
     this._search.searchChangedStream
       .pipe(takeUntil(this._searchSubject))
-      .subscribe(() => {
-        this._resetPaginator();
-        this._requestUpdate.next();
-      });
+      .subscribe(() => this.refreshDataRecords());
   }
 
   /**
