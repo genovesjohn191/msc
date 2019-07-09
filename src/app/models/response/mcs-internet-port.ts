@@ -1,4 +1,5 @@
 import { JsonProperty } from 'json-object-mapper';
+import { isNullOrEmpty } from '@app/utilities';
 import { McsEntityBase } from '../common/mcs-entity.base';
 import {
   InviewLevel,
@@ -15,7 +16,16 @@ import {
   PortStatusSerialization,
   portStatusText
 } from '../enumerations/port-status.enum';
-import { isNullOrEmpty } from '@app/utilities';
+import {
+  InternetPlan,
+  InternetPlanSerialization,
+  internetPlanText
+} from '../enumerations/internet-plan.enum';
+import {
+  AvailabilityZone,
+  AvailabilityZoneSerialization,
+  availabilityZoneText
+} from '../enumerations/availability-zone.enum';
 
 export class McsInternetPort extends McsEntityBase {
   public serviceId: string = undefined;
@@ -39,11 +49,25 @@ export class McsInternetPort extends McsEntityBase {
   public status: PortStatus = undefined;
 
   @JsonProperty({
+    type: InternetPlan,
+    serializer: InternetPlanSerialization,
+    deserializer: InternetPlanSerialization
+  })
+  public plan: InternetPlan = undefined;
+
+  @JsonProperty({
     type: InviewLevel,
     serializer: InviewLevelSerialization,
     deserializer: InviewLevelSerialization
   })
-  private inviewLevel: InviewLevel = undefined;
+  public inviewLevel: InviewLevel = undefined;
+
+  @JsonProperty({
+    type: AvailabilityZone,
+    serializer: AvailabilityZoneSerialization,
+    deserializer: AvailabilityZoneSerialization
+  })
+  public availabilityZone: AvailabilityZone = undefined;
 
   /**
    * Returns the inview level
@@ -53,6 +77,20 @@ export class McsInternetPort extends McsEntityBase {
       return InviewLevel.None;
     }
     return this.inviewLevel;
+  }
+
+  /**
+   * Returns the plan label
+   */
+  public get planLabel(): string {
+    return internetPlanText[this.plan];
+  }
+
+  /**
+   * Returns the internet zone label
+   */
+  public get availabilityZoneLabel(): string {
+    return availabilityZoneText[this.availabilityZone];
   }
 
   /**
