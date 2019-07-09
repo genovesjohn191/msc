@@ -4,21 +4,21 @@
     <mcs-grid-column sizeSm="12">
       <mcs-presentation-panel mcsId="vdc-properties">
         <ng-container mcsPresentationPanelHeader>
-          <h2>{{ 'serversVdcOverview.vdcProperties.title' | translate }}</h2>
+          <h2>{{ resourceDetailLabels.propertyTitle }}</h2>
         </ng-container>
 
         <mcs-item>
-          <span>{{ 'serversVdcOverview.vdcProperties.serviceType' | translate }}:</span>
+          <span>{{ 'serversVdcOverview.shared.properties.serviceType' | translate }}:</span>
           <span [innerHTML]="selectedVdc?.serviceTypeLabel | mcsDataLabel"></span>
         </mcs-item>
 
         <mcs-item>
-          <span>{{ 'serversVdcOverview.vdcProperties.zone' | translate }}:</span>
+          <span>{{ 'serversVdcOverview.shared.properties.zone' | translate }}:</span>
           <span [innerHTML]="selectedVdc?.availabilityZone | mcsDataLabel"></span>
         </mcs-item>
 
         <mcs-item>
-          <span>{{ 'serversVdcOverview.vdcProperties.configuration' | translate }}:</span>
+          <span>{{ 'serversVdcOverview.shared.properties.configuration' | translate }}:</span>
           <span [innerHTML]="selectedVdc?.compute?.memoryLimitMB | mcsDataSize: 'MB'"></span>
           <span>/</span>
           <span [innerHTML]="selectedVdc?.compute?.cpuLimitMBLabel | mcsDataLabel"></span>
@@ -30,27 +30,29 @@
     <mcs-grid-column sizeSm="12">
       <mcs-presentation-panel mcsId="vdc-vcloud-director">
         <ng-container mcsPresentationPanelHeader>
-          <h2>{{ 'serversVdcOverview.vcloud.title' | translate }}</h2>
+          <h2>{{ resourceDetailLabels.platformTitle }}</h2>
         </ng-container>
 
         <ng-container *mcsAccessControl="['DedicatedVmEdit', 'CloudVmEdit']">
-          <mcs-item>
-            <button mcsButton size="small"
-              (click)="createNewServer()"
-              mcsId
-              mcsEventTracker="new-server"
-              mcsEventCategory="vdc"
-              mcsEventLabel="vdc-details-page">
-              {{ 'serversVdcOverview.vcloud.newServer' | translate }}
-            </button>
-          </mcs-item>
+          <ng-container *ngIf="resourceDetailLabels.newServerButtonShown">
+            <mcs-item>
+              <button mcsButton size="small"
+                (click)="createNewServer()"
+                mcsId
+                mcsEventTracker="new-server"
+                mcsEventCategory="vdc"
+                mcsEventLabel="vdc-details-page">
+                {{ 'serversVdcOverview.vcloud.platform.newServer' | translate }}
+              </button>
+            </mcs-item>
+          </ng-container>
         </ng-container>
         <mcs-item *ngIf="selectedVdc.portalUrl">
           <a [href]="selectedVdc.portalUrl" target="_blank"
             mcsId
             mcsEventTracker="view-in-vcloud"
             mcsEventCategory="vdc"
-            mcsEventLabel="vdc-details-page">{{ 'serversVdcOverview.vcloud.viewVcloud' | translate }}</a>
+            mcsEventLabel="vdc-details-page">{{ resourceDetailLabels.platformLink }}</a>
         </mcs-item>
       </mcs-presentation-panel>
     </mcs-grid-column>
@@ -61,9 +63,9 @@
     <mcs-grid-column sizeSm="12">
       <mcs-presentation-panel mcsId="vdc-network-information">
         <ng-container mcsPresentationPanelHeader>
-          <h2>{{ 'serversVdcOverview.networkInformation.title' | translate }}</h2>
+          <h2>{{ 'serversVdcOverview.shared.network.title' | translate }}</h2>
         </ng-container>
-        <p>{{ 'serversVdcOverview.networkInformation.description' | translate }}</p>
+        <p>{{ 'serversVdcOverview.shared.network.description' | translate }}</p>
 
         <mcs-accordion [multi]="true">
           <mcs-accordion-panel
@@ -71,9 +73,9 @@
             [expanded]="i === 0">
 
             <mcs-accordion-panel-header mcsPanelHeaderDef>{{ network.name }}</mcs-accordion-panel-header>
-            <p>{{ 'serversVdcOverview.networkInformation.itemDescription' | translate }}</p>
+            <p>{{ resourceDetailLabels.networkDescription }}</p>
             <mcs-item>
-              <span>{{ 'serversVdcOverview.networkInformation.gateway' | translate }}:</span>
+              <span>{{ 'serversVdcOverview.shared.network.gateway' | translate }}:</span>
               <span [innerHTML]="network.gateway | mcsDataLabel"></span>
             </mcs-item>
           </mcs-accordion-panel>
@@ -87,18 +89,17 @@
         <ng-container mcsPresentationPanelHeader>
           <mcs-item>
             <mcs-icon *ngIf="hasLowStorage" [key]="warningIconKey"></mcs-icon>
-            <h2>{{ 'serversVdcOverview.storageProfiles.title' | translate }}</h2>
+            <h2>{{ 'serversVdcOverview.shared.storageProfiles.title' | translate }}</h2>
             <a (click)="navigateVdcDetailTo(routeKeyEnum.VdcDetailsStorage)"
               mcsId="navigate-to-storage"
               mcsEventTracker="navigate-to-storage"
               mcsEventCategory="vdc"
               mcsEventLabel="vdc-details-page">
-              {{ 'serversVdcOverview.storageProfiles.manageLink' | translate }}
+              {{ 'serversVdcOverview.shared.storageProfiles.manageLink' | translate }}
             </a>
             <!-- TODO: add link to Expand Vdc Storage wizard when api and orch is ready -->
 
-
-        </mcs-item>
+          </mcs-item>
         </ng-container>
 
         <section margin-top-medium>
@@ -113,19 +114,19 @@
               </mcs-accordion-panel-header>
 
               <mcs-item>
-                <span>{{ 'serversVdcOverview.storageProfiles.status' | translate }}:</span>
+                <span>{{ 'serversVdcOverview.shared.storageProfiles.status' | translate }}:</span>
                 <span [innerHTML]="storage?.toggleLabel | mcsDataLabel"></span>
               </mcs-item>
 
               <mcs-item *ngIf="storage.iops">
-                <span>{{ 'serversVdcOverview.storageProfiles.tier' | translate }}:</span>
+                <span>{{ 'serversVdcOverview.shared.storageProfiles.tier' | translate }}:</span>
                 <span [innerHTML]="(iopsLabelPlaceholder |
                   mcsTextPlaceholder: 'iops': storage.iops) |
                   mcsDataLabel"></span>
               </mcs-item>
 
               <mcs-item>
-                <span>{{ 'serversVdcOverview.storageProfiles.utilisation' | translate }}:</span>
+                <span>{{ 'serversVdcOverview.shared.storageProfiles.utilisation' | translate }}:</span>
                 <mcs-capacity-bar full-width
                   [(ngModel)]="storage.usedMB"
                   [maxValue]="storage.limitMB"></mcs-capacity-bar>
@@ -133,7 +134,7 @@
 
               <mcs-item *ngIf="isStorageProfileLow(storage)">
                 <mcs-icon [key]="warningIconKey"></mcs-icon>
-                <span>{{ 'serversVdcOverview.storageProfiles.lowStorageProfile' | translate }}</span>
+                <span>{{ 'serversVdcOverview.shared.storageProfiles.lowStorageProfile' | translate }}</span>
               </mcs-item>
             </mcs-accordion-panel>
           </mcs-accordion>

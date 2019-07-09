@@ -164,7 +164,7 @@
       "description": "Please select the VDC you wish to create a storage profile for",
       "placeholder": "Select a VDC",
       "contextualHelp": "Choose the virtual data centre to create a storage.",
-      "hints":{
+      "hints": {
         "currentStorage": "Current Storage: {{current_storage}}"
       }
     },
@@ -172,7 +172,7 @@
       "stepTitle": "VDC Details",
       "label": "Storage Element",
       "optionGroupLabel": "Virtual Data Centres",
-      "storageLabel":"Storage",
+      "storageLabel": "Storage",
       "contextualHelp": "",
       "fullStorageSpace": "This disk cannot be expanded due to insufficient storage space (0 GB remaining)."
     },
@@ -249,34 +249,54 @@
   },
   "serversVdcOverview": {
     "label": "Overview",
-    "vdcProperties": {
-      "title": "VDC Properties",
-      "serviceType": "Service Type",
-      "zone": "Zone",
-      "configuration": "Configuration",
-      "scale": "Scale",
-      "scaling": "Scaling"
-    },
     "vcloud": {
-      "title": "vCloud Director Virtual Data Centre",
-      "viewVcloud": "View in VCloud",
-      "newServer": "New Server"
+      "properties": {
+        "title": "VDC Properties"
+      },
+      "platform": {
+        "title": "vCloud Director Virtual Data Centre",
+        "linkLabel": "View in VCloud"
+      },
+      "network": {
+        "itemDescription": "Standard management network for this VDC."
+      }
     },
-    "networkInformation": {
-      "title": "Network Information",
-      "description": "All networks are fully operational",
-      "itemDescription": "Standard management network for this VDC.",
-      "gateway": "Gateway"
+    "vcenter": {
+      "properties": {
+        "title": "Cluster Properties"
+      },
+      "platform": {
+        "title": "vCenter Cluster",
+        "linkLabel": "View in vCenter",
+        "buttonLabel": "New Server"
+      },
+      "network": {
+        "itemDescription": "Standard management network for this cluster."
+      }
     },
-    "storageProfiles": {
-      "title": "Storage Profiles",
-      "manageLink": "Manage",
-      "status": "Status",
-      "tier": "Tier",
-      "iops": "Performance {{iops}}",
-      "utilisation": "Utilisation",
-      "lowStorageSummary": "{{storage_profile_number}} of your storage profiles {{verb}} running low on capacity.",
-      "lowStorageProfile": "You're running low on capacity in this profile."
+    "shared": {
+      "properties": {
+        "serviceType": "Service Type",
+        "zone": "Zone",
+        "configuration": "Configuration",
+        "scale": "Scale",
+        "scaling": "Scaling"
+      },
+      "network": {
+        "title": "Network Information",
+        "description": "All networks are fully operational",
+        "gateway": "Gateway"
+      },
+      "storageProfiles": {
+        "title": "Storage Profiles",
+        "manageLink": "Manage",
+        "status": "Status",
+        "tier": "Tier",
+        "iops": "Performance {{iops}}",
+        "utilisation": "Utilisation",
+        "lowStorageSummary": "{{storage_profile_number}} of your storage profiles {{verb}} running low on capacity.",
+        "lowStorageProfile": "You're running low on capacity in this profile."
+      }
     }
   },
   "serversVdcStorage": {
