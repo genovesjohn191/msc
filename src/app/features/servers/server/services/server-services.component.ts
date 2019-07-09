@@ -25,7 +25,8 @@ import {
   McsDateTimeService,
   CoreRoutes,
   CoreConfig,
-  McsAuthenticationIdentity
+  McsAuthenticationIdentity,
+  McsServerPermission
 } from '@app/core';
 import {
   animateFactory,
@@ -69,6 +70,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
   public updateStatusConfiguration: OsUpdatesStatusConfiguration;
   public updatesDetails$: Observable<McsServerOsUpdatesDetails>;
   public dataStatusFactory: McsDataStatusFactory<McsServerOsUpdatesDetails>;
+  public serverPermission: McsServerPermission;
 
   private _inspectOsUpdateHandler: Subscription;
   private _applyOsUpdateHandler: Subscription;
@@ -268,7 +270,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
    * Returns true if the Inview level is not None
    */
   public inviewButtonsShown(server: McsServer): boolean {
-    return server.inViewLevel === InviewLevel.None;
+    return server.inViewLevel !== InviewLevel.None;
   }
 
   /**
@@ -297,6 +299,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
    */
   protected serverChange(server: McsServer): void {
     this.serverServicesView = ServerServicesView.Default;
+    this.serverPermission = new McsServerPermission(server);
     this._getServerUpdateDetails(server.id);
   }
 

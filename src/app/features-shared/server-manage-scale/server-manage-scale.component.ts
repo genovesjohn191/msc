@@ -200,7 +200,7 @@ export class ServerManageScaleComponent
   public get resourceAvailableMemoryGB(): number {
     let resourceMemory = getSafeProperty(this.resource,
       (obj) => convertMbToGb(obj.compute.memoryAvailableMB), 0);
-    return resourceMemory + this.serverMemoryUsedGB;
+    return isNullOrEmpty(this.serverCompute) ? resourceMemory : resourceMemory + this.serverMemoryUsedGB;
   }
 
   /**
@@ -209,7 +209,7 @@ export class ServerManageScaleComponent
   public get resourceAvailableCpu(): number {
     let resourceCpu = getSafeProperty(this.resource,
       (obj) => obj.compute.cpuAvailable, 0);
-    return resourceCpu + this.serverCpuUsed;
+    return isNullOrEmpty(this.serverCompute) ? resourceCpu : resourceCpu + this.serverCpuUsed;
   }
 
   /**
