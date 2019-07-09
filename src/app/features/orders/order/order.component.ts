@@ -24,7 +24,8 @@ import {
   concatMap,
   tap,
   take,
-  map
+  map,
+  switchMap
 } from 'rxjs/operators';
 import {
   CoreDefinition,
@@ -200,6 +201,7 @@ export class OrderComponent implements OnInit, OnDestroy {
           state: OrderWorkflowAction.AwaitingApproval,
           approvers: this._orderApprovers.map((approver) => approver.userId)
         }).pipe(
+          switchMap(() => this._apiService.getOrder(order.id)),
           finalize(() => this.orderDetailsView = OrderDetailsView.OrderDetails)
         );
       })
@@ -225,7 +227,9 @@ export class OrderComponent implements OnInit, OnDestroy {
         if (isNullOrEmpty(dialogResult)) { return of(null); }
         return this._apiService.createOrderWorkFlow(order.id, {
           state: OrderWorkflowAction.Cancelled
-        });
+        }).pipe(
+          switchMap(() => this._apiService.getOrder(order.id))
+        );
       })
     ).subscribe();
   }
@@ -249,7 +253,9 @@ export class OrderComponent implements OnInit, OnDestroy {
         if (isNullOrEmpty(dialogResult)) { return of(null); }
         return this._apiService.createOrderWorkFlow(order.id, {
           state: OrderWorkflowAction.Rejected
-        });
+        }).pipe(
+          switchMap(() => this._apiService.getOrder(order.id))
+        );
       })
     ).subscribe();
   }
