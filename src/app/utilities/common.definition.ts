@@ -5,8 +5,9 @@ export class CommonDefinition {
   &mvURL={{inviewUrl}}%2Fframe%2Finview%2Fdata_details.html%3Fservice%3D{{serviceId}};`;
 
   // Page Default
-  public static DEFAULT_PAGE_INDEX = 1;
-  public static DEFAULT_PAGE_SIZE = 25;
+  public static PAGE_INDEX_DEFAULT = 1;
+  public static PAGE_SIZE_MIN = 25;
+  public static PAGE_SIZE_MAX = 1000;
 
   // GIF Icons
   public static ASSETS_GIF_LOADER_SPINNER = 'loader-spinner';

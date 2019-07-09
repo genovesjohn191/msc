@@ -206,8 +206,8 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
    */
   private _getEntityCollection(): Observable<T[]> {
     return this.getEntityListing({
-      pageIndex: getSafeProperty(this.paginator, (obj) => obj.pageIndex, CommonDefinition.DEFAULT_PAGE_INDEX),
-      pageSize: getSafeProperty(this.paginator, (obj) => obj.pageSize, CommonDefinition.DEFAULT_PAGE_SIZE),
+      pageIndex: getSafeProperty(this.paginator, (obj) => obj.pageIndex, CommonDefinition.PAGE_INDEX_DEFAULT),
+      pageSize: getSafeProperty(this.paginator, (obj) => obj.pageSize, CommonDefinition.PAGE_SIZE_MIN),
       keyword: getSafeProperty(this.search, (obj) => obj.keyword, '')
     }).pipe(
       tap((apiCollection) => this._setTotalRecordsCount(apiCollection.totalCollectionCount)),

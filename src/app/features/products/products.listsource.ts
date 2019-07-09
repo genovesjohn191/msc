@@ -9,7 +9,8 @@ import {
   compareStrings,
   containsString,
   isNullOrEmpty,
-  cloneObject
+  cloneObject,
+  CommonDefinition
 } from '@app/utilities';
 import { Search } from '@app/shared';
 import {
@@ -60,15 +61,17 @@ export class ProductCatalogListSource extends McsListSourceBase<McsProductCatalo
    * Get all records from repository
    */
   protected getAllRecords(): Observable<McsProductCatalog[]> {
-    return this._apiService.getProductCatalogs()
-      .pipe(
-        map((response) => {
-          // We need to create a new product object in here
-          // because we are eliminating other products that are
-          // not in the keyword.
-          return cloneObject<McsProductCatalog[]>(response && response.collection);
-        })
-      );
+    return this._apiService.getProductCatalogs({
+      pageIndex: CommonDefinition.PAGE_INDEX_DEFAULT,
+      pageSize: CommonDefinition.PAGE_SIZE_MAX
+    }).pipe(
+      map((response) => {
+        // We need to create a new product object in here
+        // because we are eliminating other products that are
+        // not in the keyword.
+        return cloneObject<McsProductCatalog[]>(response && response.collection);
+      })
+    );
   }
 
   /**

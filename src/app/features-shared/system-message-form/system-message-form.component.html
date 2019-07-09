@@ -1,7 +1,7 @@
 <form [formGroup]="fgCreateMessage" mcsFormGroup>
   <!-- Start Date -->
   <mcs-form-field>
-    <input mcsInput mcsSetFocus #startInput 
+    <input mcsInput mcsSetFocus #startInput
       mcsId="inp-start"
       (change)="updateExpiryValidation()"
       [placeholder]="'systemMessageCreate.placeholders.start' | translate"
@@ -40,7 +40,7 @@
 
   <!-- Message Type -->
   <mcs-form-field>
-    <mcs-select 
+    <mcs-select
       mcsId="select-type" required
       [placeholder]="'systemMessageCreate.placeholders.type' | translate"
       [formControl]="fcType"
@@ -63,7 +63,7 @@
 
   <!-- Severity -->
   <mcs-form-field>
-    <mcs-select 
+    <mcs-select
       mcsId="select-severity" required
       [placeholder]="'systemMessageCreate.placeholders.severity' | translate"
       [formControl]="fcSeverity"
@@ -83,7 +83,7 @@
       {{ 'systemMessageCreate.errors.severity' | translate }}
     </mcs-error>
   </mcs-form-field>
-  
+
   <!-- Message -->
   <mcs-form-field>
     <textarea mcsInput rows="3" #messageInput required
@@ -106,9 +106,8 @@
   <!-- Enabled -->
   <mcs-checkbox
     mcsId="inp-enabled"
-    (change)="toggleEnabled()" 
+    (change)="toggleEnabled()"
     [(ngModel)]="isEnabled"
-    [tabindex]="tabindex"
     [formControl]="fcEnabled">
     <h2>{{ 'systemMessageCreate.labels.enabled' | translate }}</h2>
   </mcs-checkbox>
