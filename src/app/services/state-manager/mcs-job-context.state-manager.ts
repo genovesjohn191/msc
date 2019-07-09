@@ -88,7 +88,10 @@ export class McsJobContextStateManager extends McsJobManagerBase implements McsD
     this._waitUntilDataReceived(entityStrategy, job).pipe(
       switchMap(() => {
         return entityStrategy.getExistingEntityDetails(job).pipe(
-          tap((entity) => entityStrategy.clearEntityState(entity, job))
+          tap((entity) => {
+            if (isNullOrEmpty(entity)) { return; }
+            entityStrategy.clearEntityState(entity, job);
+          })
         );
       })
     ).subscribe();
@@ -105,7 +108,10 @@ export class McsJobContextStateManager extends McsJobManagerBase implements McsD
     this._waitUntilDataReceived(entityStrategy, job).pipe(
       switchMap(() => {
         return entityStrategy.getExistingEntityDetails(job).pipe(
-          tap((entity) => entityStrategy.updateEntityState(entity, job))
+          tap((entity) => {
+            if (isNullOrEmpty(entity)) { return; }
+            entityStrategy.updateEntityState(entity, job);
+          })
         );
       })
     ).subscribe();
@@ -148,9 +154,10 @@ export class McsJobContextStateManager extends McsJobManagerBase implements McsD
    * @param type Type of the job to be obtained
    */
   private _getEntityStrategy(job: McsJob): McsJobEntityStrategy<any, any> {
-    let strategyFound = this._entityStrategies.find((entity) =>
-      !!getSafeProperty(job, (obj) => obj.clientReferenceObject[entity.getReferenceObjectKey()])
-    );
+    let strategyFound = this._entityStrategies.find((entity) => {
+      let entityId = getSafeProperty(job, (obj) => obj.clientReferenceObject[entity.getReferenceObjectKey()]);
+      return !isNullOrEmpty(entityId);
+    });
     return strategyFound;
   }
 }

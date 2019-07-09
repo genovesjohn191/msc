@@ -4,32 +4,33 @@
     <mcs-grid-column>
       <mcs-presentation-panel mcsId="media-properties">
         <ng-container mcsPresentationPanelHeader>
-          <h2>{{ 'mediaMedium.overview.mediaProperties.title' | translate }}</h2>
+          <h2>{{ 'mediaOverview.properties.title' | translate }}</h2>
         </ng-container>
 
         <mcs-item>
-          <span>{{ 'mediaMedium.overview.mediaProperties.name' | translate }}:</span>
+          <span>{{ 'mediaOverview.properties.name' | translate }}:</span>
           <span text-break-word [innerHTML]="selectedMedium.name | mcsDataLabel"></span>
         </mcs-item>
 
         <mcs-item>
-          <span>{{ 'mediaMedium.overview.mediaProperties.vdc' | translate }}:</span>
+          <span>{{ 'mediaOverview.properties.vdc' | translate }}:</span>
           <span [innerHTML]="selectedMedium.resourceName | mcsDataLabel"></span>
         </mcs-item>
 
         <mcs-item>
-          <span>{{ 'mediaMedium.overview.mediaProperties.status' | translate }}:</span>
+          <span>{{ 'mediaOverview.properties.status' | translate }}:</span>
           <span [innerHTML]="selectedMedium.statusLabel | mcsDataLabel"></span>
         </mcs-item>
 
         <mcs-item>
-          <span>{{ 'mediaMedium.overview.mediaProperties.dateAdded' | translate }}:</span>
+          <span>{{ 'mediaOverview.properties.dateAdded' | translate }}:</span>
           <span [innerHTML]="selectedMedium.createdOn | mcsStdDateFormat"></span>
         </mcs-item>
 
         <mcs-item>
-          <span>{{ 'mediaMedium.overview.mediaProperties.description' | translate }}:</span>
-          <span [innerHTML]="selectedMedium.description | mcsDataLabel"></span>
+          <span>{{ 'mediaOverview.properties.description' | translate }}:</span>
+          <span [innerHTML]="selectedMedium.description |
+            mcsDataLabel: 'mediaOverview.properties.noDescription' | translate"></span>
         </mcs-item>
       </mcs-presentation-panel>
     </mcs-grid-column>
@@ -38,11 +39,11 @@
     <mcs-grid-column>
       <mcs-presentation-panel mcsId="storage-properties">
         <ng-container mcsPresentationPanelHeader>
-          <h2>{{ 'mediaMedium.overview.storageProperties.title' | translate }}</h2>
+          <h2>{{ 'mediaOverview.storageProperties.title' | translate }}</h2>
         </ng-container>
 
         <mcs-item>
-          <span>{{ 'mediaMedium.overview.storageProperties.size' | translate }}:</span>
+          <span>{{ 'mediaOverview.storageProperties.size' | translate }}:</span>
           <span [innerHTML]="selectedMedium.sizeMB | mcsDataSize: 'MB'"></span>
         </mcs-item>
       </mcs-presentation-panel>

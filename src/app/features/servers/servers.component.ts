@@ -39,7 +39,6 @@ import {
   DialogConfirmation,
   DialogService
 } from '@app/shared';
-import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/event-manager';
 import { ServersService } from './servers.service';
 
@@ -100,13 +99,11 @@ export class ServersComponent extends McsTableListingBase<McsServer>
     _changeDetectorRef: ChangeDetectorRef,
     private _router: Router,
     private _translateService: TranslateService,
-    private _eventDispatcher: EventBusDispatcherService,
     private _apiService: McsApiService,
     private _dialogService: DialogService,
     private _serversService: ServersService
   ) {
     super(_injector, _changeDetectorRef, McsEvent.dataChangeServers);
-    this._registerEvents();
   }
 
   public ngOnInit() {
@@ -343,21 +340,5 @@ export class ServersComponent extends McsTableListingBase<McsServer>
       })
     );
     managedResources.subscribe(() => createServerResources.subscribe());
-  }
-
-  /**
-   * Registers the event listeners
-   */
-  private _registerEvents(): void {
-    this._eventDispatcher.addEventListener(
-      McsEvent.dataChangeServers, this._onServersDataChange.bind(this));
-  }
-
-  /**
-   * Event that emits when the data of server has been changed
-   * @param _servers Updated servers information
-   */
-  private _onServersDataChange(_servers: McsServer): void {
-    this.changeDetectorRef.markForCheck();
   }
 }

@@ -822,39 +822,40 @@
     "dataSingular": "Item",
     "dataPlural": "Items"
   },
-  "mediaMedium": {
-    "leftPanelHeader": "Media Filter",
-    "overview": {
-      "label": "Overview",
-      "mediaProperties": {
-        "title": "Media Properties",
-        "name": "Name",
-        "vdc": "VDC",
-        "status": "Status",
-        "dateAdded": "Date Added",
-        "description": "Description"
-      },
-      "storageProperties": {
-        "title": "Storage Properties",
-        "size": "Size"
-      }
+  "mediaDetails": {
+    "leftPanelHeader": "Media Filter"
+  },
+  "mediaOverview": {
+    "label": "Overview",
+    "properties": {
+      "title": "Media Properties",
+      "name": "Name",
+      "vdc": "VDC",
+      "status": "Status",
+      "dateAdded": "Date Added",
+      "description": "Description",
+      "noDescription": "No description is available for this item."
     },
-    "servers": {
-      "label": "Servers",
-      "title": "Attached Servers",
-      "noMediaServers": "No attached servers to display.",
-      "errorMediaServers": "Sorry, something’s not right. We weren’t able to retrieve the list of attached servers.",
-      "attachServersHeader": "Attach to Media",
-      "attachAction": "Attach",
-      "detachAction": "Detach",
-      "columnHeaders": {
-        "name": "Name",
-        "action": ""
-      },
-      "detachDialog": {
-        "title": "Detach From Server",
-        "message": "Are you sure you want to detach <b>{{server_name}}</b>?"
-      }
+    "storageProperties": {
+      "title": "Storage Properties",
+      "size": "Size"
+    }
+  },
+  "mediaServers": {
+    "label": "Servers",
+    "title": "Attached Servers",
+    "noMediaServers": "No attached servers to display.",
+    "errorMediaServers": "Sorry, something’s not right. We weren’t able to retrieve the list of attached servers.",
+    "attachServersHeader": "Attach to Media",
+    "attachAction": "Attach",
+    "detachAction": "Detach",
+    "columnHeaders": {
+      "name": "Name",
+      "action": ""
+    },
+    "detachDialog": {
+      "title": "Detach From Server",
+      "message": "Are you sure you want to detach <b>{{server_name}}</b>?"
     }
   },
   "mediaUpload": {
