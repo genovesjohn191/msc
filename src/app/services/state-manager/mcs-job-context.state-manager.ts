@@ -18,7 +18,8 @@ import { EventBusDispatcherService } from '@app/event-bus';
 import {
   isNullOrEmpty,
   McsDisposable,
-  unsubscribeSafely
+  unsubscribeSafely,
+  getSafeProperty
 } from '@app/utilities';
 import { McsJobEntityStrategy } from './job-entities/base/mcs-job-entity.strategy';
 import { McsMediaStateManager } from './job-entities/mcs-media.state-manager';
@@ -148,7 +149,7 @@ export class McsJobContextStateManager extends McsJobManagerBase implements McsD
    */
   private _getEntityStrategy(job: McsJob): McsJobEntityStrategy<any, any> {
     let strategyFound = this._entityStrategies.find((entity) =>
-      !!job.clientReferenceObject[entity.getReferenceObjectKey()]
+      !!getSafeProperty(job, (obj) => obj.clientReferenceObject[entity.getReferenceObjectKey()])
     );
     return strategyFound;
   }
