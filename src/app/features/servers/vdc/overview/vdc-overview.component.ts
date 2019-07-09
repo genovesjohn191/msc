@@ -14,15 +14,25 @@ import {
 } from '@app/core';
 import {
   isNullOrEmpty,
-  replacePlaceholder
+  replacePlaceholder,
+  getSafeProperty
 } from '@app/utilities';
 import {
   RouteKey,
   McsResource,
-  McsResourceStorage
+  McsResourceStorage,
+  PlatformType
 } from '@app/models';
 
 const VDC_LOW_STORAGE_PERCENTAGE = 85;
+
+type ResourceDetailLabels = {
+  propertyTitle: string;
+  platformTitle: string;
+  newServerButtonShown: boolean;
+  platformLink: string;
+  networkDescription: string;
+};
 
 @Component({
   selector: 'mcs-vdc-overview',
@@ -31,12 +41,20 @@ const VDC_LOW_STORAGE_PERCENTAGE = 85;
 })
 
 export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDestroy {
+
+  private resourceDetailLabelMap: Map<PlatformType, ResourceDetailLabels>;
+
   public get warningIconKey(): string {
     return CoreDefinition.ASSETS_SVG_WARNING;
   }
 
   public get routeKeyEnum(): any {
     return RouteKey;
+  }
+
+  public get resourceDetailLabels(): ResourceDetailLabels {
+    let platform = getSafeProperty(this.selectedVdc, (obj) => obj.platform, PlatformType.VCloud);
+    return this.resourceDetailLabelMap.get(platform);
   }
 
   /**
@@ -53,11 +71,9 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
   public get storageSummary(): string {
     if (!this.hasLowStorage) { return ''; }
 
-    let status = this.translateService.instant(
-      'serversVdcOverview.storageProfiles.lowStorageSummary'
-    );
-
+    let status = this.translateService.instant('serversVdcOverview.storageProfiles.lowStorageSummary');
     let storageCount = this._getLowStorageCount();
+
     status = replacePlaceholder(status, 'storage_profile_number', `${storageCount}`);
 
     let verb = (storageCount === 1) ? 'is' : 'are';
@@ -73,6 +89,7 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
   ) {
     super(_injector, _changeDetectorRef);
     this.selectedVdc = new McsResource();
+    this._createResourceDetailLabelMap();
   }
 
   public ngOnInit(): void {
@@ -143,6 +160,30 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
    */
   protected vdcSelectionChange(): void {
     // Do the implementation here
+  }
+
+  /**
+   * Initialize the content of resource detail label Map
+   */
+  private _createResourceDetailLabelMap(): void {
+
+    let vcloudLabels: ResourceDetailLabels = {
+      propertyTitle: this.translateService.instant('serversVdcOverview.vcloud.properties.title'),
+      platformTitle: this.translateService.instant('serversVdcOverview.vcloud.platform.title'),
+      newServerButtonShown: true,
+      platformLink: this.translateService.instant('serversVdcOverview.vcloud.platform.linkLabel'),
+      networkDescription: this.translateService.instant('serversVdcOverview.vcloud.network.itemDescription'),
+    };
+    let vcenterLabels: ResourceDetailLabels = {
+      propertyTitle: this.translateService.instant('serversVdcOverview.vcenter.properties.title'),
+      platformTitle: this.translateService.instant('serversVdcOverview.vcenter.platform.title'),
+      newServerButtonShown: false,
+      platformLink: this.translateService.instant('serversVdcOverview.vcenter.platform.linkLabel'),
+      networkDescription: this.translateService.instant('serversVdcOverview.vcenter.network.itemDescription'),
+    };
+    this.resourceDetailLabelMap = new Map();
+    this.resourceDetailLabelMap.set(PlatformType.VCloud, vcloudLabels);
+    this.resourceDetailLabelMap.set(PlatformType.VCenter, vcenterLabels);
   }
 
   /**
