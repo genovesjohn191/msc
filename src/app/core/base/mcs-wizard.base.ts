@@ -109,7 +109,7 @@ export abstract class McsWizardBase implements McsDisposable {
     if (isNullOrUndefined(this.formMessage)) { return; }
     this.formMessage.showMessage('error', {
       messages: errorMessages,
-      fallbackMessage: 'Somethings went wrong while trying to process the request'
+      fallbackMessage: 'Something went wrong while trying to process the request'
     });
   }
 

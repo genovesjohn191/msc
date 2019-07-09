@@ -320,8 +320,8 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
     );
 
     // Invoke the event initially
-    this.eventDispatcher.dispatch(McsEvent.jobServerSnapshotCreate);
-    this.eventDispatcher.dispatch(McsEvent.jobServerSnapshotApply);
+    this.eventDispatcher.dispatch(McsEvent.jobServerOsUpdateInspect);
+    this.eventDispatcher.dispatch(McsEvent.jobServerOsUpdateApply);
   }
 
   /**
