@@ -4,7 +4,7 @@
     <!-- Default View -->
     <section [@fadeIn] *ngSwitchCase="serverServicesViewOption.Default">
       <!-- Operating System Updates -->
-      <mcs-presentation-panel *mcsAccessControl="[]; feature: 'EnableServerOsUpdates'">
+      <mcs-presentation-panel *mcsAccessControl="serverPermission.vmPatchManagement; feature: 'EnableServerOsUpdates'">
         <ng-container mcsPresentationPanelHeader>
           <h2>{{ 'serverServices.operatingSystemUpdates.title' | translate }}</h2>
         </ng-container>
@@ -182,20 +182,22 @@
     </section>
 
     <!-- Os Updates Schedule View -->
-    <ng-container *ngIf="updatesDetails$ | async as updatesDetails">
-      <!-- Unscheduled / Run Now / Update Now -->
-      <ng-container [@fadeIn] *ngSwitchCase="serverServicesViewOption.Unscheduled">
-        <mcs-server-os-updates-apply-now [selectedServer]="server" (applyUpdates)="onApplyUpdates($event)">
-          <ng-container mcsViewServicesTab *ngTemplateOutlet="servicesTabView"></ng-container>
-        </mcs-server-os-updates-apply-now>
-      </ng-container>
+    <ng-container *mcsAccessControl="serverPermission.vmPatchManagement; feature: 'EnableServerOsUpdates'">
+      <ng-container *ngIf="updatesDetails$ | async as updatesDetails">
+        <!-- Unscheduled / Run Now / Update Now -->
+        <ng-container [@fadeIn] *ngSwitchCase="serverServicesViewOption.Unscheduled">
+          <mcs-server-os-updates-apply-now [selectedServer]="server" (applyUpdates)="onApplyUpdates($event)">
+            <ng-container mcsViewServicesTab *ngTemplateOutlet="servicesTabView"></ng-container>
+          </mcs-server-os-updates-apply-now>
+        </ng-container>
 
-      <!-- Scheduled Type Later/RunOnce or Recurring -->
-      <ng-container [@fadeIn] *ngSwitchCase="serverServicesViewOption.Scheduled">
-        <mcs-server-os-updates-schedule [selectedServer]="server" (saveSchedule)="onSaveSchedule($event)"
-          (deleteSchedule)="onDeleteSchedule($event)">
-          <ng-container mcsViewServicesTab *ngTemplateOutlet="servicesTabView"></ng-container>
-        </mcs-server-os-updates-schedule>
+        <!-- Scheduled Type Later/RunOnce or Recurring -->
+        <ng-container [@fadeIn] *ngSwitchCase="serverServicesViewOption.Scheduled">
+          <mcs-server-os-updates-schedule [selectedServer]="server" (saveSchedule)="onSaveSchedule($event)"
+            (deleteSchedule)="onDeleteSchedule($event)">
+            <ng-container mcsViewServicesTab *ngTemplateOutlet="servicesTabView"></ng-container>
+          </mcs-server-os-updates-schedule>
+        </ng-container>
       </ng-container>
     </ng-container>
 
