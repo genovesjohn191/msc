@@ -9,7 +9,8 @@ import {
   compareStrings,
   containsString,
   isNullOrEmpty,
-  getSafeProperty
+  getSafeProperty,
+  CommonDefinition
 } from '@app/utilities';
 import { Search } from '@app/shared';
 import {
@@ -59,7 +60,10 @@ export class ServersListSource extends McsListSourceBase<McsServer> {
    * Get all records from repository
    */
   protected getAllRecords(): Observable<McsServer[]> {
-    return this._apiService.getServers().pipe(
+    return this._apiService.getServers({
+      pageIndex: CommonDefinition.PAGE_INDEX_DEFAULT,
+      pageSize: CommonDefinition.PAGE_SIZE_MAX
+    }).pipe(
       map((response) => getSafeProperty(response, (obj) => obj.collection))
     );
   }

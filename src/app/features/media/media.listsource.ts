@@ -9,7 +9,8 @@ import {
   compareStrings,
   isNullOrEmpty,
   containsString,
-  getSafeProperty
+  getSafeProperty,
+  CommonDefinition
 } from '@app/utilities';
 import { Search } from '@app/shared';
 import {
@@ -59,7 +60,10 @@ export class MediaListSource extends McsListSourceBase<McsResourceMedia> {
    * Get all records from repository
    */
   protected getAllRecords(): Observable<McsResourceMedia[]> {
-    return this._apiService.getMedia().pipe(
+    return this._apiService.getMedia({
+      pageIndex: CommonDefinition.PAGE_INDEX_DEFAULT,
+      pageSize: CommonDefinition.PAGE_SIZE_MAX
+    }).pipe(
       map((response) => getSafeProperty(response, (obj) => obj.collection))
     );
   }

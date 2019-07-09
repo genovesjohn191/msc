@@ -8,7 +8,8 @@ import { McsListSourceBase } from '@app/core';
 import {
   compareStrings,
   isNullOrEmpty,
-  containsString
+  containsString,
+  CommonDefinition
 } from '@app/utilities';
 import { Search } from '@app/shared';
 import {
@@ -58,7 +59,10 @@ export class FirewallsListSource extends McsListSourceBase<McsFirewall> {
    * Get all records from repository
    */
   protected getAllRecords(): Observable<McsFirewall[]> {
-    return this._apiService.getFirewalls().pipe(
+    return this._apiService.getFirewalls({
+      pageIndex: CommonDefinition.PAGE_INDEX_DEFAULT,
+      pageSize: CommonDefinition.PAGE_SIZE_MAX
+    }).pipe(
       map((response) => response && response.collection)
     );
   }
