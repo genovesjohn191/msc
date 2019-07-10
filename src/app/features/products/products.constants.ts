@@ -1,15 +1,16 @@
 import { Routes } from '@angular/router';
-/** Components */
 import { ProductsComponent } from './products.component';
+
 import { ProductComponent } from './product/product.component';
-/** Services */
 import { ProductService } from './product/product.service';
+import { ProductResolver } from './product/product.resolver';
 
 /**
  * List of services for the main module
  */
 export const productsProviders: any[] = [
-  ProductService
+  ProductService,
+  ProductResolver
 ];
 
 /**
@@ -20,7 +21,13 @@ export const productsRoutes: Routes = [
     path: '',
     component: ProductsComponent,
     children: [
-      { path: '', component: ProductComponent }
+      {
+        path: '',
+        component: ProductComponent,
+        resolve: {
+          product: ProductResolver
+        }
+      }
     ]
   }
 ];

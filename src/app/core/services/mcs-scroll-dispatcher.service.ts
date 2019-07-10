@@ -104,6 +104,15 @@ export class McsScrollDispatcherService {
   }
 
   /**
+   * Gets the scrollable parent container of the provided element
+   * @param elementRef Element on where to obtain the scrollable parent container
+   */
+  public getScrollableParentContainer(elementRef: ElementRef | HTMLElement): Scrollable {
+    let scrollableContainers = this.getScrollContainers(elementRef);
+    return scrollableContainers && scrollableContainers[0];
+  }
+
+  /**
    * Returns the scrollable item based it's id
    */
   public getScrollableItemById(id: string): Scrollable {
@@ -160,14 +169,11 @@ export class McsScrollDispatcherService {
     if (isNullOrEmpty(element)) { return; }
 
     // Find the corresponding scrollable element of the given element
-    let scrollableElements = this.getScrollContainers(element);
-    if (isNullOrEmpty(scrollableElements)) { return; }
-
-    // Execute scrolling of element
-    let parentScrollableElement = scrollableElements[scrollableElements.length - 1];
+    let scrollableElement = this.getScrollableParentContainer(element);
+    if (isNullOrEmpty(scrollableElement)) { return; }
 
     this._executeScrollingToElement(
-      parentScrollableElement.getElementRef().nativeElement,
+      scrollableElement.getElementRef().nativeElement,
       element.offsetTop + (offset * -1), duration
     );
   }
