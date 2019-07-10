@@ -15,7 +15,8 @@ import {
 } from '@app/shared';
 import {
   McsDisposable,
-  isNullOrEmpty
+  isNullOrEmpty,
+  getSafeProperty
 } from '@app/utilities';
 import {
   McsOrder,
@@ -59,10 +60,7 @@ export abstract class McsOrderWizardBase extends McsWizardBase implements McsDis
    * Returns the progress description label with order number for the current order
    */
   public get progressDescription(): string {
-    return this.translateService.instant(
-      'provisioningStep.provisioningProgressTitle',
-      { orderNo: this._orderBase.orderNo }
-    );
+    return getSafeProperty(this._orderBase.order, (obj) => obj.progressDescription);
   }
 
   /**

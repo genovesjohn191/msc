@@ -102,6 +102,13 @@ export class McsOrder extends McsEntityBase {
   }
 
   /**
+   * Returns the progress description of the order
+   */
+  public get progressDescription(): string {
+    return `Progress - Order ${this.orderId}`;
+  }
+
+  /**
    * Returns true when order has errors
    */
   public get hasErrors(): boolean {

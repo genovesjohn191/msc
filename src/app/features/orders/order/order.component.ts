@@ -30,7 +30,8 @@ import {
 import {
   CoreDefinition,
   McsTableDataSource,
-  McsNavigationService
+  McsNavigationService,
+  CoreRoutes
 } from '@app/core';
 import {
   unsubscribeSubject,
@@ -273,7 +274,11 @@ export class OrderComponent implements OnInit, OnDestroy {
       concatMap((dialogResult) => {
         if (isNullOrEmpty(dialogResult)) { return of(null); }
         return this._apiService.createOrderWorkFlow(order.id, {
-          state: OrderWorkflowAction.Submitted
+          state: OrderWorkflowAction.Submitted,
+          clientReferenceObject: {
+            resourceDescription: order.progressDescription,
+            resourcePath: CoreRoutes.getNavigationPath(RouteKey.OrderDetails)
+          }
         }).pipe(
           tap((approvedOrder) => this._navigationService.navigateTo(
             RouteKey.Notification,
