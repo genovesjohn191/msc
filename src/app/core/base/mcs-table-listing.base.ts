@@ -77,9 +77,8 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
   constructor(
     protected injector: Injector,
     protected changeDetectorRef: ChangeDetectorRef,
-    protected tableConfig?: TableListingConfig<T>
+    protected tableConfig: TableListingConfig<T> = {}
   ) {
-    tableConfig = tableConfig || {};
     this.dataSource = new McsTableDataSource<T>([]);
     this.selection = new McsTableSelection(this.dataSource, tableConfig.allowMultipleSelection || true);
 
