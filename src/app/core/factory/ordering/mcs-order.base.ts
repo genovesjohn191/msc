@@ -89,13 +89,6 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
   }
 
   /**
-   * Returns the created order number
-   */
-  public get orderNo(): string {
-    return this._createdOrder.orderId;
-  }
-
-  /**
    * Returns the main order reference ID
    */
   public get orderReferenceId(): string {
