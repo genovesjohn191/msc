@@ -351,13 +351,13 @@ export class PopoverDirective implements OnInit, OnDestroy {
     let fitToScreen: boolean = true;
 
     // Get scrollable element associated with the host element
-    let scrollableElemet = this._scrollDispatcher.getScrollContainers(this._elementRef);
+    let scrollableElemet = this._scrollDispatcher.getScrollableParentContainer(this._elementRef);
     if (isNullOrEmpty(scrollableElemet)) { return true; }
 
     // Get the scroll bottom position of the scrollable element to check
     // weather the element is fit to screen
-    let scrollTop = scrollableElemet[0].getElementRef().nativeElement.scrollTop;
-    let scrollLeft = scrollableElemet[0].getElementRef().nativeElement.scrollLeft;
+    let scrollTop = scrollableElemet.getElementRef().nativeElement.scrollTop;
+    let scrollLeft = scrollableElemet.getElementRef().nativeElement.scrollLeft;
     let scrollBottom = scrollTop + window.innerHeight;
     let scrollRight = scrollLeft + window.innerWidth;
 

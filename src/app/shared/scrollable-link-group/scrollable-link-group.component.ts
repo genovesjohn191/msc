@@ -28,6 +28,7 @@ import { ScrollableLinkComponent } from './scrollable-link/scrollable-link.compo
 import {
   ScrollableLinkHeaderComponent
 } from './scrollable-link-header/scrollable-link-header.component';
+import { ScrollableLinkGroup } from './scrollable-link-group.interface';
 
 const DEFAULT_SCROLL_TOP_OFFSET = 50;
 
@@ -42,7 +43,7 @@ const DEFAULT_SCROLL_TOP_OFFSET = 50;
   }
 })
 
-export class ScrollableLinkGroupComponent implements AfterViewInit, AfterContentInit, OnDestroy {
+export class ScrollableLinkGroupComponent implements ScrollableLinkGroup, AfterViewInit, AfterContentInit, OnDestroy {
   @Output()
   public change = new EventEmitter<any>();
 
@@ -82,6 +83,15 @@ export class ScrollableLinkGroupComponent implements AfterViewInit, AfterContent
 
   public ngOnDestroy() {
     unsubscribeSafely(this._destroySubject);
+  }
+
+  /**
+   * Resets the scrollable link group
+   */
+  public reset(): void {
+    if (isNullOrEmpty(this.scrollableLinks)) { return; }
+    this._selectLink(this.scrollableLinks.first);
+    this._selectScrollHeader(this.scrollableLinks.first);
   }
 
   /**
@@ -129,21 +139,19 @@ export class ScrollableLinkGroupComponent implements AfterViewInit, AfterContent
         this.scrollableLinks.first.hideLabel();
     });
   }
-
   /**
    * Subscribe to scroll update location
    */
   private _subscribeToScrollUpdate(): void {
-    let scrollableContainers = this._scrollDispatcherService.getScrollContainers(
+    let scrollableContainer = this._scrollDispatcherService.getScrollableParentContainer(
       this.scrollableLinks.first.hostElement
     );
-    if (isNullOrEmpty(scrollableContainers)) { return; }
-    let scrollableLinkBody = scrollableContainers[scrollableContainers.length - 1];
+    if (isNullOrEmpty(scrollableContainer)) { return; }
 
     // Listen for every scroll position
     this._scrollDispatcherService.scrolled(0, () => {
       if (isNullOrEmpty(this.scrollableLinks)) { return; }
-      let parentScrollTop = scrollableLinkBody.getElementRef().nativeElement.scrollTop;
+      let parentScrollTop = scrollableContainer.getElementRef().nativeElement.scrollTop;
       parentScrollTop += DEFAULT_SCROLL_TOP_OFFSET;
 
       this.scrollableLinks.forEach((item) => {

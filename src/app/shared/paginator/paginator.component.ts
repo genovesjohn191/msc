@@ -198,9 +198,9 @@ export class PaginatorComponent implements Paginator, AfterViewInit, OnDestroy {
    * Listen to each scroll changed
    */
   private _subscribeToScrollChanged(): void {
-    let scrollContainer = this._scrollableDispatcher.getScrollContainers(this._elementRef);
+    let scrollContainer = this._scrollableDispatcher.getScrollableParentContainer(this._elementRef);
     if (isNullOrEmpty(scrollContainer)) { return; }
-    let scrollableParent = scrollContainer[0];
+    let scrollableParent = scrollContainer;
     let scrollableElement = scrollableParent.getElementRef().nativeElement as HTMLElement;
 
     scrollableParent.elementScrolled().pipe(

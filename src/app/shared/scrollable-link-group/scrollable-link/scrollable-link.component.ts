@@ -5,17 +5,13 @@ import {
   ViewEncapsulation,
   ChangeDetectionStrategy,
   ElementRef,
-  ViewChild,
   ChangeDetectorRef
 } from '@angular/core';
 import {
   McsUniqueId,
   McsScrollDispatcherService
 } from '@app/core';
-import {
-  coerceBoolean,
-  isNullOrEmpty
-} from '@app/utilities';
+import { coerceBoolean } from '@app/utilities';
 
 const DEFAULT_CONTENT_OFFSET_FROM_TOP = 50;
 
@@ -50,9 +46,6 @@ export class ScrollableLinkComponent {
   }
   private _active: boolean;
 
-  @ViewChild('headerElement')
-  private _headerElement: ElementRef<any>;
-
   constructor(
     private _elementRef: ElementRef,
     private _changeDetectorRef: ChangeDetectorRef,
@@ -73,9 +66,8 @@ export class ScrollableLinkComponent {
    */
   public scrollIntoView(): void {
     Promise.resolve().then(() => {
-      if (isNullOrEmpty(this._headerElement)) { return; }
-      let headerElement = this._headerElement.nativeElement as HTMLElement;
-      this._scrollDispatcherService.scrollToElement(headerElement, DEFAULT_CONTENT_OFFSET_FROM_TOP);
+      this._scrollDispatcherService.scrollToElement(this.hostElement, DEFAULT_CONTENT_OFFSET_FROM_TOP);
+      this._changeDetectorRef.markForCheck();
     });
   }
 

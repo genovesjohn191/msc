@@ -5,9 +5,13 @@ import {
   ChangeDetectionStrategy,
   ViewEncapsulation,
   Renderer2,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  ViewChild
 } from '@angular/core';
-import { Router } from '@angular/router';
+import {
+  Router,
+  ActivatedRoute
+} from '@angular/router';
 import {
   Observable,
   of
@@ -15,7 +19,8 @@ import {
 import {
   tap,
   switchMap,
-  catchError
+  map,
+  shareReplay
 } from 'rxjs/operators';
 import {
   CoreRoutes,
@@ -34,13 +39,14 @@ import {
   McsProductDownload,
   McsProductDependency,
   McsProductOptionProperty,
-  McsProductOption,
-  McsApiErrorContext
+  McsProductOption
 } from '@app/models';
 import { ProductService } from './product.service';
+import { ScrollableLinkGroup } from '@app/shared';
 
 const MAX_CHAR_LENGTH = 200;
 const PRODUCT_OPTION_TYPE_NUMERIC = 'numeric';
+
 @Component({
   selector: 'mcs-product',
   templateUrl: 'product.component.html',
@@ -68,15 +74,11 @@ export class ProductComponent implements OnInit, OnDestroy {
   public productOptionsColumns = ['name', 'properties', 'options'];
   public userCasesColumns = ['name', 'description'];
 
-  public get cloudIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_CLOUD_BLUE;
-  }
-
-  public get routeKeyEnum(): any {
-    return RouteKey;
-  }
+  @ViewChild('scrollableLinkGroup')
+  private _scrollableLink: ScrollableLinkGroup;
 
   constructor(
+    private _activatedRoute: ActivatedRoute,
     private _router: Router,
     private _renderer: Renderer2,
     private _changeDetectorRef: ChangeDetectorRef,
@@ -84,12 +86,20 @@ export class ProductComponent implements OnInit, OnDestroy {
   ) { }
 
   public ngOnInit() {
-    this._subscribeToSelectedProduct();
+    this._subscribeToProductResolver();
     this._subscribeToTextChange();
   }
 
   public ngOnDestroy() {
     this._productService.removeSelectedProduct();
+  }
+
+  public get cloudIconKey(): string {
+    return CoreDefinition.ASSETS_SVG_CLOUD_BLUE;
+  }
+
+  public get routeKeyEnum(): any {
+    return RouteKey;
   }
 
   /**
@@ -171,11 +181,16 @@ export class ProductComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Listens to every product selection and refresh the dom
+   * Subscribes to product resolver
    */
-  private _subscribeToSelectedProduct(): void {
-    this.selectedProduct$ = this._productService.selectedProduct().pipe(
-      catchError((error) => McsApiErrorContext.throwPrimaryError(error))
+  private _subscribeToProductResolver(): void {
+    this.selectedProduct$ = this._activatedRoute.data.pipe(
+      map((resolver) => getSafeProperty(resolver, (obj) => obj.product)),
+      tap(() => {
+        if (isNullOrEmpty(this._scrollableLink)) { return; }
+        this._scrollableLink.reset();
+      }),
+      shareReplay(1)
     );
   }
 
@@ -183,7 +198,7 @@ export class ProductComponent implements OnInit, OnDestroy {
    * Subscribe to short text change
    */
   private _subscribeToTextChange(): void {
-    this.selectedProductTextContent$ = this._productService.selectedProduct().pipe(
+    this.selectedProductTextContent$ = this.selectedProduct$.pipe(
       switchMap((product) => {
         let createdElement = this._renderer.createElement('div') as HTMLElement;
         createdElement.innerHTML = product.shortDescription;
