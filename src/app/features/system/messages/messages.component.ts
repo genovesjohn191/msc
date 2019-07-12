@@ -19,6 +19,7 @@ import {
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { McsEvent } from '@app/event-manager';
+import { CommonDefinition } from '@app/utilities';
 
 @Component({
   selector: 'mcs-system-messages',
@@ -48,11 +49,8 @@ export class SystemMessagesComponent extends McsTableListingBase<McsSystemMessag
     return CoreDefinition.ASSETS_FONT_PLUS;
   }
 
-  /**
-   * This will navigate to system message creation page
-   */
-  public onClickNewMessage(): void {
-    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.SystemMessageCreate)]);
+  public get timeZone(): string {
+    return CommonDefinition.TIMEZONE_SYDNEY;
   }
 
   /**
@@ -60,6 +58,13 @@ export class SystemMessagesComponent extends McsTableListingBase<McsSystemMessag
    */
   protected get columnSettingsKey(): string {
     return CoreDefinition.FILTERSELECTOR_SYSTEM_MESSAGE_LISTING;
+  }
+
+  /**
+   * This will navigate to system message creation page
+   */
+  public onClickNewMessage(): void {
+    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.SystemMessageCreate)]);
   }
 
   /**

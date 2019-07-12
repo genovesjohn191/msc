@@ -24,13 +24,14 @@ import {
 } from '@app/core';
 import {
   McsSystemMessageCreate,
-  RouteKey,
-  McsDateSerialization
+  RouteKey
 } from '@app/models';
 import {
   unsubscribeSafely,
   isNullOrEmpty,
-  getSafeProperty
+  getSafeProperty,
+  CommonDefinition,
+  formatDateToUTC
 } from '@app/utilities';
 import {
   DialogConfirmation,
@@ -41,6 +42,7 @@ import {
 import { McsApiService } from '@app/services';
 import { SystemMessageForm } from '@app/features-shared';
 
+const SYSTEM_MESSAGE_DATEFORMAT = 'YYYY-MM-DD HH:mm:ss';
 @Component({
   selector: 'mcs-message-create',
   templateUrl: './message-create.component.html',
@@ -53,7 +55,6 @@ export class SystemMessageCreateComponent implements OnDestroy, IMcsNavigateAway
   public startDate: any;
   public expiryDate: any;
   private _systemMessageFormData: McsSystemMessageCreate;
-  private _dateConverter: McsDateSerialization;
   private _hasConfirmedDialog: boolean = false;
   private dialogDataTitle: string;
   private dialogDataMessage: string;
@@ -71,7 +72,6 @@ export class SystemMessageCreateComponent implements OnDestroy, IMcsNavigateAway
     private _apiService: McsApiService
   ) {
     this._systemMessageFormData = new McsSystemMessageCreate();
-    this._dateConverter = new McsDateSerialization();
   }
 
   public ngOnDestroy() {
@@ -107,8 +107,6 @@ export class SystemMessageCreateComponent implements OnDestroy, IMcsNavigateAway
    */
   public onCreateMessage(): void {
     // Check all the controls and set the focus on the first invalid control
-    this._systemMessageFormData.start = this.serializeSystemMessageDates(this._systemMessageFormData.start);
-    this._systemMessageFormData.expiry = this.serializeSystemMessageDates(this._systemMessageFormData.expiry);
     this._apiService.validateSystemMessage(this._systemMessageFormData).pipe(
       concatMap((conflictMessages) => {
         return this._showMessageConfirmationDialog(
@@ -142,8 +140,8 @@ export class SystemMessageCreateComponent implements OnDestroy, IMcsNavigateAway
    * @param systemMessageForm System message form values
    */
   public onFormData(systemMessageForm: SystemMessageForm) {
-    this._systemMessageFormData.start = systemMessageForm.start;
-    this._systemMessageFormData.expiry = systemMessageForm.expiry;
+    this._systemMessageFormData.start = this.serializeSystemMessageDates(systemMessageForm.start);
+    this._systemMessageFormData.expiry = this.serializeSystemMessageDates(systemMessageForm.expiry);
     this._systemMessageFormData.type = systemMessageForm.type;
     this._systemMessageFormData.severity = systemMessageForm.severity;
     this._systemMessageFormData.message = systemMessageForm.message;
@@ -155,7 +153,15 @@ export class SystemMessageCreateComponent implements OnDestroy, IMcsNavigateAway
    * @param date Date to be serialize
    */
   public serializeSystemMessageDates(date: string): string {
-    return getSafeProperty(date, () => this._dateConverter.serialize(new Date(date)).replace(/"/g,''), '');
+    if (isNullOrEmpty(date)) { return ''; }
+    if (!isNaN(Date.parse(date))) {
+      return formatDateToUTC(
+        date,
+        CommonDefinition.TIMEZONE_SYDNEY,
+        SYSTEM_MESSAGE_DATEFORMAT
+      );
+    }
+    return date;
   }
 
   /**
