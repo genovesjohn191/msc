@@ -7,6 +7,7 @@ export enum OrderWorkflowAction {
   Draft,
   AwaitingApproval,
   Submitted,
+  Provisioning,
   Cancelled,
   Rejected
 }
