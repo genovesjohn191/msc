@@ -20,7 +20,7 @@ export class StdDateFormatPipe implements PipeTransform {
    * @param date Date to be formatted
    * @param format Custom format to be the basis of the formatting
    */
-  public transform(date: Date, format: McsDateTimeFormat = 'default'): any {
-    return this._dateTimeService.formatDate(date, format);
+  public transform(date: Date, format: McsDateTimeFormat = 'default', timeZone?: string): any {
+    return this._dateTimeService.formatDate(date, format, timeZone);
   }
 }

@@ -3,7 +3,8 @@ import {
   getTimeDifference,
   getDayDifference,
   compareDates,
-  getExpiryLabel
+  getExpiryLabel,
+  formatDateToUTC
 } from './mcs-date.function';
 
 describe('DATE Functions', () => {
@@ -13,6 +14,15 @@ describe('DATE Functions', () => {
 
       let formattedDate = formatDate(unformattedDate, 'DD MMM, YYYY');
       expect(formattedDate).toEqual('26 Apr, 2017');
+    });
+  });
+
+  describe('formatDateToUTC()', () => {
+    it(`should format the date based on the given string format`, () => {
+      let unformattedDate = 'Tue, 10 Sept 2019, 10:00 AM';
+
+      let formattedDate = formatDateToUTC(unformattedDate,'Australia/Sydney', 'YYYY-MM-DD HH:mm:ss');
+      expect(formattedDate).toEqual('2019-09-10T00:00:00Z');
     });
   });
 

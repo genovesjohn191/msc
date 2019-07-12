@@ -4,6 +4,9 @@ export class CommonDefinition {
   public static INVIEW_URL =  `{{macviewUrl}}/Bounce.aspx?bounce=1&mvClientID={{companyId}}
   &mvURL={{inviewUrl}}%2Fframe%2Finview%2Fdata_details.html%3Fservice%3D{{serviceId}};`;
 
+  // Common Timezone
+  public static TIMEZONE_SYDNEY = `Australia/Sydney`;
+
   // Page Default
   public static PAGE_INDEX_DEFAULT = 1;
   public static PAGE_SIZE_MIN = 25;
