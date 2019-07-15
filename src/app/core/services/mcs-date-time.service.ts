@@ -1,8 +1,12 @@
 import { Injectable } from '@angular/core';
 import { formatDate } from '@angular/common';
-import { isNullOrEmpty } from '@app/utilities';
+import {
+  isNullOrEmpty,
+  convertDateTimezoneToUTC
+} from '@app/utilities';
 import { CoreDefinition } from '../core.definition';
 import * as moment from 'moment-timezone';
+import { McsLoggerService } from './mcs-logger.service';
 
 export type McsDateTimeFormat = 'default' | 'short' | 'medium' | 'long' | 'full' |
   'dashShortDate' | 'shortDate' | 'mediumDate' | 'longDate' | 'fullDate' |
@@ -12,7 +16,7 @@ export type McsDateTimeFormat = 'default' | 'short' | 'medium' | 'long' | 'full'
 export class McsDateTimeService {
   private _dateTimeMapTable = new Map<McsDateTimeFormat, string>();
 
-  constructor() {
+  constructor(private _loggerService: McsLoggerService) {
     this._createDateTimeTable();
   }
 
@@ -35,6 +39,26 @@ export class McsDateTimeService {
       actualFormat = this._dateTimeMapTable.get(formatType as McsDateTimeFormat);
     }
     return formatDate(date.toUTCString(), actualFormat, CoreDefinition.LOCALE, timeZone);
+  }
+
+  /**
+   * Formats the date provided based on the format type
+   * Returns empty string, when the date passed is null or empty
+   * @param date Date to be formatted
+   * @param formatType Format type to follow on the formatting
+   * @param timeZone Timezone to be followed
+   */
+  public formatDateString(date: string, formatType: string, timeZone?: string): string {
+
+    // Converts date to its timezone
+    let dateTimetoTimezone = convertDateTimezoneToUTC(
+      date,
+      timeZone,
+      formatType
+    );
+    this._loggerService.trace(`Date Formatted: ` + dateTimetoTimezone);
+
+    return dateTimetoTimezone.toString();
   }
 
   /**
