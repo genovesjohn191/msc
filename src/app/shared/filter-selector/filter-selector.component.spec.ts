@@ -1,6 +1,5 @@
 import {
   async,
-  inject,
   TestBed
 } from '@angular/core/testing';
 import { EventEmitter } from '@angular/core';
@@ -11,6 +10,7 @@ import {
   McsFilterService
 } from '@app/core';
 import { CoreTestingModule } from '@app/core/testing';
+import { convertJsonToMapObject } from '@app/utilities';
 
 describe('FilterSelectorComponent', () => {
   let mockFlag = 0;
@@ -34,8 +34,8 @@ describe('FilterSelectorComponent', () => {
     }
   };
   let filterProviderMock = {
-    getDefaultFilters(_key: string): any {
-      return filterItems;
+    getFilterSettings(_key: string): any {
+      return convertJsonToMapObject(filterItems);
     }
   };
 
@@ -77,13 +77,6 @@ describe('FilterSelectorComponent', () => {
 
   /** Test Implementation */
   describe('ngOnInit()', () => {
-    it('should call the getItem() of MscStorageService when localStorage is not empty',
-      inject([McsStorageService], (mcsStorageService: McsStorageService) => {
-        spyOn(mcsStorageService, 'getItem');
-        component.ngOnInit();
-        expect(mcsStorageService.getItem).toHaveBeenCalledTimes(1);
-      }));
-
     it('should set the filterItemsMap value when localStorage is not empty', () => {
       component.ngOnInit();
       expect(component.filterItemsMap).not.toEqual(null || undefined);
@@ -97,12 +90,6 @@ describe('FilterSelectorComponent', () => {
       expect(component.filterItemsMap).not.toEqual(null || undefined);
       expect(component.filterItemsMap.get('serverName').text).toEqual(filterText);
       expect(component.filterItemsMap.get('serverName').value).toEqual(true);
-    });
-
-    it('should call the emit() of filtersChange (EventEmitter)', () => {
-      spyOn(component.filtersChange, 'emit');
-      component.ngOnInit();
-      expect(component.filtersChange.emit).toHaveBeenCalled();
     });
   });
 });
