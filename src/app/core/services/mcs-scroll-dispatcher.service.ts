@@ -109,7 +109,22 @@ export class McsScrollDispatcherService {
    */
   public getScrollableParentContainer(elementRef: ElementRef | HTMLElement): Scrollable {
     let scrollableContainers = this.getScrollContainers(elementRef);
-    return scrollableContainers && scrollableContainers[0];
+    let htmlElement: HTMLElement = elementRef instanceof ElementRef ?
+      elementRef.nativeElement : elementRef;
+    if (isNullOrEmpty(scrollableContainers)) { return null; }
+
+    let parentScrollable: Scrollable;
+    let currentElement = htmlElement;
+
+    while (currentElement.parentElement) {
+      parentScrollable = scrollableContainers.find(
+        (item) => item.scrollbarId === currentElement.id
+      );
+      if (!isNullOrEmpty(parentScrollable)) { break; }
+      currentElement = currentElement.parentElement;
+    }
+
+    return parentScrollable;
   }
 
   /**
