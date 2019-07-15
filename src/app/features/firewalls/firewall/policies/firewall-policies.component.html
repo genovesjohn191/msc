@@ -15,14 +15,9 @@
             padding="narrow" [content]="filterSelectorTemplate" mcsCursor="pointer">
           </mcs-icon>
           <ng-template #filterSelectorTemplate>
-            <mcs-filter-selector #filterSelector
-              [key]="columnSettingsKey"
+            <mcs-filter-selector #filterSelector [key]="columnSettingsKey"
               (filtersChange)="updateColumnSettings($event)"></mcs-filter-selector>
           </ng-template>
-
-          <!-- Note: Hidden selector to get the actual column during initialization -->
-          <mcs-filter-selector [hidden]="true" [key]="columnSettingsKey" #filterSelector
-            (filtersChange)="updateColumnSettings($event)"></mcs-filter-selector>
 
           <div mcsAlign="end" hidden-small>
             <span> {{ totalRecordsCount | mcsPlural:

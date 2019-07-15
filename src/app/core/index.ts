@@ -34,10 +34,10 @@ export * from './services/mcs-session-handler.service';
 export * from './services/mcs-component-handler.service';
 export * from './services/mcs-date-time.service';
 export * from './services/mcs-navigation.service';
+export * from './services/mcs-filter.service';
 
 /** Providers */
 export * from './providers/mcs-assets.provider';
-export * from './providers/mcs-filter.provider';
 
 /** Base */
 export * from './base/mcs-routing-tab.base';

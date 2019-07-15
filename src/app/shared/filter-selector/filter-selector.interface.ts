@@ -7,5 +7,5 @@ export interface FilterSelector {
   filtersChange: EventEmitter<Map<string, McsFilterInfo>>;
   removeFilterSelector(key: string): void;
   addFilterSelector(key: string): void;
-  onNotifyGetFilters(): void;
+  onFilterChange(): void;
 }

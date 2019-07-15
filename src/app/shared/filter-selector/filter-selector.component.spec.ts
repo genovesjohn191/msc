@@ -8,7 +8,7 @@ import { FilterSelectorComponent } from './filter-selector.component';
 /** Services */
 import {
   McsStorageService,
-  McsFilterProvider
+  McsFilterService
 } from '@app/core';
 import { CoreTestingModule } from '@app/core/testing';
 
@@ -55,7 +55,7 @@ describe('FilterSelectorComponent', () => {
 
     /** Testbed Onverriding of Provider */
     TestBed.overrideProvider(McsStorageService, { useValue: mscStorageServiceMock });
-    TestBed.overrideProvider(McsFilterProvider, { useValue: filterProviderMock });
+    TestBed.overrideProvider(McsFilterService, { useValue: filterProviderMock });
 
     /** Testbed Onverriding of Components */
     TestBed.overrideComponent(FilterSelectorComponent, {
@@ -90,14 +90,6 @@ describe('FilterSelectorComponent', () => {
       expect(component.filterItemsMap.get('serverName').text).toEqual(filterText);
       expect(component.filterItemsMap.get('serverName').value).toEqual(true);
     });
-
-    it('should call getDefaultFilters() of FilterProvider when localStorage is empty',
-      inject([McsFilterProvider], (filterProvider: McsFilterProvider) => {
-        spyOn(filterProvider, 'getDefaultFilters');
-        mockFlag = 1;
-        component.ngOnInit();
-        expect(filterProvider.getDefaultFilters).toHaveBeenCalledTimes(1);
-      }));
 
     it('should set the filterItemsMap default value when local storage is empty', () => {
       mockFlag = 1;
