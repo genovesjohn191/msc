@@ -39,6 +39,7 @@ import {
   EventBusDispatcherService
 } from '@app/event-bus';
 import { McsBrowserService } from '../services/mcs-browser.service';
+import { McsFilterService } from '../services/mcs-filter.service';
 import { McsTableDataSource } from '../data-access/mcs-table-datasource';
 import { McsTableSelection } from '../data-access/mcs-table-selection';
 
@@ -64,6 +65,7 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
   public dataColumns: string[] = [];
   public columnSettings: any;
 
+  protected readonly filterService: McsFilterService;
   protected readonly browserService: McsBrowserService;
   protected readonly eventDispatcher: EventBusDispatcherService;
 
@@ -82,10 +84,12 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
     this.dataSource = new McsTableDataSource<T>([]);
     this.selection = new McsTableSelection(this.dataSource, tableConfig.allowMultipleSelection || true);
 
+    this.filterService = injector.get(McsFilterService);
     this.browserService = injector.get(McsBrowserService);
     this.eventDispatcher = injector.get(EventBusDispatcherService);
 
     this._registerDataEvents();
+    this._initializeDataColumns();
     this._subscribeToDatasourceRendered();
     this._subscribeToBreakpointChange();
   }
@@ -100,6 +104,7 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
     unsubscribeSafely(this._baseDestroySubject);
     unsubscribeSafely(this._dataChangeHandler);
     unsubscribeSafely(this._dataClearHandler);
+
     if (!isNullOrEmpty(this.dataSource)) {
       this.dataSource.disconnect();
     }
@@ -134,9 +139,7 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
    */
   public updateColumnSettings(columns: Map<string, McsFilterInfo>): void {
     if (isNullOrEmpty(columns)) { return; }
-    this.columnSettings = convertMapToJsonObject(columns);
-    this.dataColumns = Object.keys(this.columnSettings);
-    this.changeDetectorRef.markForCheck();
+    this._setColumnSettings(columns);
   }
 
   /**
@@ -194,6 +197,14 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
   }
 
   /**
+   * Initializes data columns
+   */
+  private _initializeDataColumns(): void {
+    let filterSettings = this.filterService.getFilterSettings(this.columnSettingsKey);
+    this._setColumnSettings(filterSettings);
+  }
+
+  /**
    * Initializes data source based on the entity collection
    */
   private _initializeDataSource(): void {
@@ -220,6 +231,16 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
       tap((apiCollection) => this._setTotalRecordsCount(apiCollection.totalCollectionCount)),
       map((entityCollection) => entityCollection.collection)
     );
+  }
+
+  /**
+   * Sets the updated column settings
+   * @param filterSettings Updated filter settings to be set
+   */
+  private _setColumnSettings(filterSettings: Map<string, McsFilterInfo>): void {
+    this.columnSettings = convertMapToJsonObject(filterSettings);
+    this.dataColumns = Object.keys(this.columnSettings);
+    this.changeDetectorRef.markForCheck();
   }
 
   /**

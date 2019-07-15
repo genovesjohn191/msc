@@ -22,10 +22,10 @@ import { McsSessionHandlerService } from './services/mcs-session-handler.service
 import { McsComponentHandlerService } from './services/mcs-component-handler.service';
 import { McsDateTimeService } from './services/mcs-date-time.service';
 import { McsNavigationService } from './services/mcs-navigation.service';
+import { McsFilterService } from './services/mcs-filter.service';
 
 /** Providers */
 import { McsAssetsProvider } from './providers/mcs-assets.provider';
-import { McsFilterProvider } from './providers/mcs-filter.provider';
 
 /** Authentication */
 import { McsAuthenticationIdentity } from './authentication/mcs-authentication.identity';
@@ -62,7 +62,7 @@ export const coreProviders: any[] = [
   McsLoggerService,
   McsFormGroupService,
   McsAssetsProvider,
-  McsFilterProvider,
+  McsFilterService,
   McsAuthenticationIdentity,
   McsAuthenticationService,
   McsAuthenticationGuard,

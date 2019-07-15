@@ -10,25 +10,14 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 import { Subject } from 'rxjs';
-import {
-  McsStorageService,
-  McsFilterProvider
-} from '@app/core';
+import { McsFilterService } from '@app/core';
 import { McsFilterInfo } from '@app/models';
 import {
   isNullOrEmpty,
-  convertJsonToMapObject,
-  convertMapToJsonObject,
   animateFactory,
   unsubscribeSubject
 } from '@app/utilities';
 import { FilterSelector } from './filter-selector.interface';
-
-type FilterSelectorDetails = {
-  visible: boolean,
-  key: string,
-  item: McsFilterInfo
-};
 
 @Component({
   selector: 'mcs-filter-selector',
@@ -51,26 +40,22 @@ export class FilterSelectorComponent implements OnInit, OnDestroy, FilterSelecto
   @Output()
   public filtersChange: EventEmitter<Map<string, McsFilterInfo>>;
 
-  /** Original record of the filters */
   public filterItemsMap: Map<string, McsFilterInfo>;
-  public displayedItemsMap: Map<string, McsFilterInfo>;
 
-  public displayedSelectors: FilterSelectorDetails[] = [];
   private _destroySubject = new Subject<void>();
+  private _hiddenFilterKeys: Set<string>;
 
   public constructor(
     private _changeDetectorRef: ChangeDetectorRef,
-    private _storageService: McsStorageService,
-    private _filterProvider: McsFilterProvider
+    private _filterService: McsFilterService
   ) {
     this.key = '';
+    this._hiddenFilterKeys = new Set();
     this.filtersChange = new EventEmitter();
   }
 
   public ngOnInit() {
-    this._getFilterItems();
-    this._setDisplayedSelectors();
-    this.onNotifyGetFilters();
+    this.filterItemsMap = this._filterService.getFilterSettings(this.key);
   }
 
   public ngOnDestroy() {
@@ -80,15 +65,19 @@ export class FilterSelectorComponent implements OnInit, OnDestroy, FilterSelecto
   /**
    * Notify the outside subscribers that the filter has been changed
    */
-  public onNotifyGetFilters(): void {
+  public onFilterChange(): void {
     if (isNullOrEmpty(this.filterItemsMap)) { return; }
-    this._storageService.setItem(this.key, convertMapToJsonObject(this.filterItemsMap));
-
-    // Create map for the definition
-    let itemsMap = new Map<string, McsFilterInfo>();
-    this.displayedSelectors.forEach((selector) => itemsMap.set(selector.key, selector.item));
-    this.filtersChange.emit(itemsMap);
+    this._filterService.saveFilterSettings(this.key, this.filterItemsMap);
+    this.filtersChange.emit(this.filterItemsMap);
     this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Returns true when the filter keys is hidden
+   * @param key Key to be checked
+   */
+  public isFilterHidden(key: string): boolean {
+    return this._hiddenFilterKeys.has(key);
   }
 
   /**
@@ -96,9 +85,7 @@ export class FilterSelectorComponent implements OnInit, OnDestroy, FilterSelecto
    * @param key Key to be removed on the record list
    */
   public removeFilterSelector(key: string): void {
-    let recordFound = this.displayedSelectors.find((item) => item.key === key);
-    if (isNullOrEmpty(recordFound)) { return; }
-    recordFound.visible = false;
+    this._hiddenFilterKeys.add(key);
     this._changeDetectorRef.markForCheck();
   }
 
@@ -107,55 +94,7 @@ export class FilterSelectorComponent implements OnInit, OnDestroy, FilterSelecto
    * @param key Key to be added on the filter selector
    */
   public addFilterSelector(key: string): void {
-    let recordFound = this.displayedSelectors.find((item) => item.key === key);
-    if (isNullOrEmpty(recordFound)) { return; }
-    recordFound.visible = true;
+    this._hiddenFilterKeys.delete(key);
     this._changeDetectorRef.markForCheck();
-  }
-
-  /**
-   * Get the filter items in the storage and check if it is updated or not
-   * otherwise get default filter settings
-   */
-  private _getFilterItems(): void {
-    // Get the filter from storage
-    let filterItemsJson = this._storageService.getItem<any>(this.key);
-    if (isNullOrEmpty(filterItemsJson)) {
-      filterItemsJson = this._filterProvider.getDefaultFilters(this.key);
-      this.filterItemsMap = convertJsonToMapObject<McsFilterInfo>(filterItemsJson);
-      return;
-    }
-
-    // Compare the default strin and current string if there are difference
-    let defaultFiltersString = this._convertToComparableString(
-      this._filterProvider.getDefaultFilters(this.key)
-    );
-    let savedFiltersString = this._convertToComparableString(filterItemsJson);
-    let isEqual: boolean = defaultFiltersString === savedFiltersString;
-    if (!isEqual) { filterItemsJson = this._filterProvider.getDefaultFilters(this.key); }
-    this.filterItemsMap = convertJsonToMapObject<McsFilterInfo>(filterItemsJson);
-  }
-
-  /**
-   * Converts the filter items into comparable string
-   * @param filters Filter items to be converted
-   */
-  private _convertToComparableString(filters: any): string {
-    return JSON.stringify(filters)
-      .replace(/,"value":true/gi, '')
-      .replace(/,"value":false/gi, '');
-  }
-
-  /**
-   * Sets the displayed selectors
-   */
-  private _setDisplayedSelectors(): void {
-    this.filterItemsMap.forEach((itemValue, itemKey) => {
-      this.displayedSelectors.push({
-        visible: true,
-        key: itemKey,
-        item: itemValue
-      } as FilterSelectorDetails);
-    });
   }
 }
