@@ -20,7 +20,8 @@ import {
   IMcsNavigateAwayGuard,
   CoreDefinition,
   McsNavigationService,
-  IMcsFormGroup
+  IMcsFormGroup,
+  McsDateTimeService
 } from '@app/core';
 import {
   McsSystemMessageCreate,
@@ -30,8 +31,7 @@ import {
   unsubscribeSafely,
   isNullOrEmpty,
   getSafeProperty,
-  CommonDefinition,
-  formatDateToUTC
+  CommonDefinition
 } from '@app/utilities';
 import {
   DialogConfirmation,
@@ -42,7 +42,7 @@ import {
 import { McsApiService } from '@app/services';
 import { SystemMessageForm } from '@app/features-shared';
 
-const SYSTEM_MESSAGE_DATEFORMAT = 'YYYY-MM-DD HH:mm:ss';
+const SYSTEM_MESSAGE_DATEFORMAT = "yyyy-MM-dd'T'HH:mm:ss z";
 @Component({
   selector: 'mcs-message-create',
   templateUrl: './message-create.component.html',
@@ -69,7 +69,8 @@ export class SystemMessageCreateComponent implements OnDestroy, IMcsNavigateAway
     private _dialogService: DialogService,
     private _navigationService: McsNavigationService,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _apiService: McsApiService
+    private _apiService: McsApiService,
+    private _dateTimeService: McsDateTimeService,
   ) {
     this._systemMessageFormData = new McsSystemMessageCreate();
   }
@@ -155,11 +156,12 @@ export class SystemMessageCreateComponent implements OnDestroy, IMcsNavigateAway
   public serializeSystemMessageDates(date: string): string {
     if (isNullOrEmpty(date)) { return ''; }
     if (!isNaN(Date.parse(date))) {
-      return formatDateToUTC(
+      let datetime = this._dateTimeService.formatDateString(
         date,
-        CommonDefinition.TIMEZONE_SYDNEY,
-        SYSTEM_MESSAGE_DATEFORMAT
+        SYSTEM_MESSAGE_DATEFORMAT,
+        CommonDefinition.TIMEZONE_SYDNEY
       );
+      return datetime;
     }
     return date;
   }

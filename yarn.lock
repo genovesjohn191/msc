@@ -4805,6 +4805,11 @@ lunr@2.3.5:
   version "2.3.5"
   resolved "https://registry.yarnpkg.com/lunr/-/lunr-2.3.5.tgz#7b510bad57e948dfb99a71fdff00c1bf9171bdda"
 
+luxon@^1.17.1:
+  version "1.17.1"
+  resolved "https://registry.yarnpkg.com/luxon/-/luxon-1.17.1.tgz#7261aae6f7a2cc3cf83cbe24c62335cf3a48caad"
+  integrity sha512-+xo7Pj54xwyEzlMdXzDqm60Ewqbn0QqACwfIo6so9M1idUtYQrD7/PHjEFQQmLCBu8wUe2IDC2jrcJJ3Buk4Pw==
+
 macos-release@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/macos-release/-/macos-release-2.0.0.tgz#7dddf4caf79001a851eb4fba7fb6034f251276ab"

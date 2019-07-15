@@ -4,7 +4,7 @@ import {
   getDayDifference,
   compareDates,
   getExpiryLabel,
-  formatDateToUTC
+  convertDateTimezoneToUTC
 } from './mcs-date.function';
 
 describe('DATE Functions', () => {
@@ -17,12 +17,12 @@ describe('DATE Functions', () => {
     });
   });
 
-  describe('formatDateToUTC()', () => {
-    it(`should format the date based on the given string format`, () => {
-      let unformattedDate = 'Tue, 10 Sept 2019, 10:00 AM';
+  describe('convertDateTimezoneToUTC()', () => {
+    it(`should convert date timezone`, () => {
+      let localDateTime = '2019-09-10T10:00:00';
 
-      let formattedDate = formatDateToUTC(unformattedDate,'Australia/Sydney', 'YYYY-MM-DD HH:mm:ss');
-      expect(formattedDate).toEqual('2019-09-10T00:00:00Z');
+      let convertedDateTimezone = convertDateTimezoneToUTC(localDateTime,'Australia/Sydney', "yyyy-MM-dd'T'HH:mm:ss z");
+      expect(convertedDateTimezone.toString()).toEqual('2019-09-10T00:00:00.000Z');
     });
   });
 

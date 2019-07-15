@@ -1,3 +1,4 @@
+let luxon = require('luxon');
 let moment = require('moment');
 let momenttz = require('moment-timezone');
 
@@ -22,7 +23,6 @@ export function formatDate(date: Date, format: string): string {
  * @param date date to convert
  * @param timezone specific timezone of the date
  * @param format desired format of the output date
- * TODO : we can replace this by the moment based angular formatDate
  */
 export function formatDateTimeZone(date: Date, timezone: string, format: string): string {
   let formattedDate: string = '';
@@ -37,17 +37,19 @@ export function formatDateTimeZone(date: Date, timezone: string, format: string)
 }
 
 /**
- * Formats the time to UTC timezone, uses moment-timezone JS
- * @deprecated Use the service instead for common implementation
+ * Converts the time to timezone, uses moment-timezone JS
  * @param date date to convert
  * @param timezone specific timezone of the date
  * @param format desired format of the output date
- * TODO : we can replace this by the moment based angular formatDate
+ * TODO : we can separate the timezone and formatting to UTC
  */
-export function formatDateToUTC(date: string, timezone: string, format: string): string {
-    let localDateTime = moment(new Date(date).toISOString()).format(format);
-    let formattedDate =  moment.tz(localDateTime,timezone).format();
-    return moment(formattedDate).utc().format();
+export function convertDateTimezoneToUTC(date: string, timezone: string, format: string): any {
+  let dateTime = luxon.DateTime;
+  let convertedTimezone = dateTime.fromFormat(date + ' ' + timezone, format, {
+    setZone: true
+  });
+  let formattedDate = convertedTimezone.setZone('UTC', { keepLocalTime: false });
+  return formattedDate;
 }
 
 /**

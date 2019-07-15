@@ -104,6 +104,7 @@
     "ie-shim": "^0.1.0",
     "json-object-mapper": "^1.6.0",
     "karma-junit-reporter": "^1.2.0",
+    "luxon": "^1.17.1",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.23",
     "netmask": "^1.0.6",
