@@ -155,11 +155,15 @@
           <mcs-data-empty *mcsDataEmptyDef>
             <div class="listing-status-wrapper">
               <span>{{ 'systemMessages.noRecordsFoundMessage' | translate }} </span>
+              <span>
               <!--We need to hardcode this instead of putting in the text-config
                     since it is using link -->
-              Click <a (click)="onClickNewMessage()" mcsId="create-new-message-link"
-                mcsEventTracker="create-new-message" mcsEventCategory="message"
+                Click <a (click)="onClickNewMessage()" 
+                mcsId="create-new-message-link"
+                mcsEventTracker="create-new-message" 
+                mcsEventCategory="message"
                 mcsEventLabel="empty-message-listing-option">here</a> to create new message.
+              </span> 
             </div>
           </mcs-data-empty>
           <mcs-data-error *mcsDataErrorDef>

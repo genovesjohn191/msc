@@ -21,7 +21,8 @@ import {
 import {
   CoreValidators,
   IMcsFormGroup,
-  IMcsDataChange
+  IMcsDataChange,
+  McsDateTimeService
 } from '@app/core';
 import {
   McsOption,
@@ -39,6 +40,7 @@ import {
 import { McsFormGroupDirective } from '@app/shared';
 import { SystemMessageForm } from './system-message-form';
 
+const SYSTEM_MESSAGE_DATEFORMAT = 'YYYY-MM-DDTHH:mm';
 @Component({
   selector: 'mcs-system-message-form',
   templateUrl: './system-message-form.component.html',
@@ -74,7 +76,8 @@ export class SystemMessageFormComponent
 
   constructor(
     private _formBuilder: FormBuilder,
-    private _changeDetectorRef: ChangeDetectorRef
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _dateTimeService: McsDateTimeService,
   ) {
     this.messageTypeList = new Array ();
     this.severityList = new Array ();
@@ -138,6 +141,10 @@ export class SystemMessageFormComponent
     this.fcStart = new FormControl('', [
       CoreValidators.custom(
         this._isValidDate.bind(this),
+        'invalidDate'
+      ),
+      CoreValidators.custom(
+        this._isValidDateFormat.bind(this),
         'invalidDateFormat'
       ),
       CoreValidators.custom(
@@ -149,6 +156,10 @@ export class SystemMessageFormComponent
     this.fcExpiry = new FormControl('', [
       CoreValidators.custom(
         this._isValidDate.bind(this),
+        'invalidDate'
+      ),
+      CoreValidators.custom(
+        this._isValidDateFormat.bind(this),
         'invalidDateFormat'
       ),
       CoreValidators.custom(
@@ -231,6 +242,16 @@ export class SystemMessageFormComponent
   private _isValidDate(date: string): boolean {
     if (isNullOrEmpty(date)) { return true; }
     return (!isNaN(Date.parse(date)));
+  }
+
+  /**
+   * Returns true when date format is valid
+   * based on the given format
+   * @param date Inputted value from input box
+   */
+  private _isValidDateFormat(date: string): boolean {
+    if (isNullOrEmpty(date)) { return true; }
+    return (this._dateTimeService.isDateFormatValid(date, SYSTEM_MESSAGE_DATEFORMAT));
   }
 
   /**

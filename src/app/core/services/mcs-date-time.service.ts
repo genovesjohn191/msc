@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { formatDate } from '@angular/common';
 import {
   isNullOrEmpty,
-  convertDateTimezoneToUTC
+  convertDateTimezoneToUTC,
+  isDateFormatValid
 } from '@app/utilities';
 import { CoreDefinition } from '../core.definition';
 import * as moment from 'moment-timezone';
@@ -10,7 +11,7 @@ import { McsLoggerService } from './mcs-logger.service';
 
 export type McsDateTimeFormat = 'default' | 'short' | 'medium' | 'long' | 'full' |
   'dashShortDate' | 'shortDate' | 'mediumDate' | 'longDate' | 'fullDate' |
-  'shortTime' | 'mediumTime' | 'longTime' | 'fullTime';
+  'shortTime' | 'mediumTime' | 'longTime' | 'fullTime' | 'isoDate';
 
 @Injectable()
 export class McsDateTimeService {
@@ -62,6 +63,18 @@ export class McsDateTimeService {
   }
 
   /**
+   * Validates the date time format based on the given date format
+   * @param date date to validate
+   * @param format format of the output date
+   */
+  public isDateFormatValid(date: string, format: string): boolean {
+    let dateFormat = isDateFormatValid(date, format);
+    this._loggerService.trace(`Date format: ` + dateFormat);
+
+    return dateFormat;
+  }
+
+  /**
    * Creates the date time map table associated with the formatting
    */
   private _createDateTimeTable(): void {
@@ -78,5 +91,6 @@ export class McsDateTimeService {
     this._dateTimeMapTable.set('mediumTime', 'h:mm:ss a');
     this._dateTimeMapTable.set('longTime', 'h:mm:ss a z');
     this._dateTimeMapTable.set('fullTime', 'h:mm:ss a zzzz');
+    this._dateTimeMapTable.set('isoDate', 'yyyy-MM-ddTHH:mm');
   }
 }
