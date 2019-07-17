@@ -53,6 +53,16 @@ export function convertDateTimezoneToUTC(date: string, timezone: string, format:
 }
 
 /**
+ * Checks if the date format is the same with the given format
+ * @param date date to convert
+ * @param format desired format of the output date
+ */
+export function isDateFormatValid(date: string, format: string): boolean {
+  let dateFormat = moment(date, format, true);
+  return dateFormat.isValid();
+}
+
+/**
  * Get or calculate time difference in milliseconds
  * @param firstDate First date
  * @param secondDate Second date to be compare in first date

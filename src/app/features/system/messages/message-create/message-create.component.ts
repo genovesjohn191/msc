@@ -42,7 +42,7 @@ import {
 import { McsApiService } from '@app/services';
 import { SystemMessageForm } from '@app/features-shared';
 
-const SYSTEM_MESSAGE_DATEFORMAT = "yyyy-MM-dd'T'HH:mm:ss z";
+const SYSTEM_MESSAGE_DATEFORMAT = "yyyy-MM-dd'T'HH:mm z";
 @Component({
   selector: 'mcs-message-create',
   templateUrl: './message-create.component.html',
@@ -55,7 +55,7 @@ export class SystemMessageCreateComponent implements OnDestroy, IMcsNavigateAway
   public startDate: any;
   public expiryDate: any;
   private _systemMessageFormData: McsSystemMessageCreate;
-  private _hasConfirmedDialog: boolean = false;
+  private _hasConfirmedDialog: boolean;
   private dialogDataTitle: string;
   private dialogDataMessage: string;
   private dialogData: DialogConfirmation<McsSystemMessageCreate>;
@@ -91,16 +91,20 @@ export class SystemMessageCreateComponent implements OnDestroy, IMcsNavigateAway
     return CoreDefinition.ASSETS_SVG_TOGGLE_NAV;
   }
 
+  public get isFormValid(): boolean {
+    return getSafeProperty(this._fgSystemMessagesForm, (obj) => obj.isValid(), false);
+  }
+
+  public get hasDirtyFormControls(): boolean {
+    return getSafeProperty(this._fgSystemMessagesForm, (obj) => obj.getFormGroup().hasDirtyFormControls());
+  }
+
   /**
    * Event that triggers when navigating away from the current page
    * and all the inputted setting on the form are checked
    */
   public canNavigateAway(): boolean {
-    return this._hasConfirmedDialog || this.isFormValid;
-  }
-
-  public get isFormValid(): boolean {
-    return getSafeProperty(this._fgSystemMessagesForm, (obj) => obj.isValid(), false);
+    return this._hasConfirmedDialog || !this.hasDirtyFormControls;
   }
 
   /**

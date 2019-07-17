@@ -1010,16 +1010,12 @@ export class McsApiService {
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.createMessage'))
       ),
-      tap(() => {
-        this._eventDispatcher.dispatch(McsEvent.systemMessageCreated, messageData);
-      }),
+      tap(() => this._eventDispatcher.dispatch(McsEvent.systemMessageCreated, messageData)),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
 
-  public validateSystemMessage(
-    messageData: McsSystemMessageCreate
-  ): Observable<McsApiCollection<McsSystemMessage>> {
+  public validateSystemMessage(messageData: McsSystemMessageCreate): Observable<McsApiCollection<McsSystemMessage>> {
     return this._systemMessageApi.validateMessage(messageData).pipe(
       map((response) => this._mapToCollection(response.content, response.totalCount)),
       catchError((error) =>

@@ -9,10 +9,13 @@
       [mcsContextualHelp]="'systemMessageCreate.contextualHelp.start' | translate">
 
     <mcs-hint mcsHint align="start">
-      {{ dateNow | mcsStdDateFormat }}
+      {{ dateNow | mcsStdDateFormat: 'isoDate' }}
     </mcs-hint>
-    <mcs-error mcsError errorState="invalidDateFormat">
+    <mcs-error mcsError errorState="invalidDate">
       {{ 'systemMessageCreate.errors.date' | translate }}
+    </mcs-error>
+    <mcs-error mcsError errorState="invalidDateFormat">
+      {{ 'systemMessageCreate.errors.dateFormat' | translate }}
     </mcs-error>
     <mcs-error mcsError errorState="invalidStartDate">
       {{ 'systemMessageCreate.errors.start' | translate }}
@@ -28,10 +31,13 @@
       [mcsContextualHelp]="'systemMessageCreate.contextualHelp.expiry' | translate">
 
     <mcs-hint mcsHint align="start">
-      {{ dateNow | mcsStdDateFormat }}
+      {{ dateNow | mcsStdDateFormat: 'isoDate' }}
     </mcs-hint>
-    <mcs-error mcsError errorState="invalidDateFormat">
+    <mcs-error mcsError errorState="invalidDate">
       {{ 'systemMessageCreate.errors.date' | translate }}
+    </mcs-error>
+    <mcs-error mcsError errorState="invalidDateFormat">
+      {{ 'systemMessageCreate.errors.dateFormat' | translate }}
     </mcs-error>
     <mcs-error mcsError errorState="invalidExpiryDate">
       {{ 'systemMessageCreate.errors.expiry' | translate }}

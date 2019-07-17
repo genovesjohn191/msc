@@ -943,7 +943,8 @@
       "message": "Max of {{max_char}} characters"
     },
     "errors": {
-      "date": "Invalid date format.",
+      "date": "Invalid date.",
+      "dateFormat": "Invalid date format.",
       "expiry": "Invalid expiry. Date should be present date or later than start date.",
       "start": "Invalid start. Date should start on present date or later",
       "message": "You must place a message."
