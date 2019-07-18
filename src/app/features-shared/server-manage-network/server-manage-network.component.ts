@@ -96,6 +96,9 @@ export class ServerManageNetworkComponent
   public targetNic: McsServerNic;
 
   @Input()
+  public selectedNetwork: McsResourceNetwork;
+
+  @Input()
   public get disableDynamicIp(): boolean { return this._disableDynamicIp; }
   public set disableDynamicIp(value: boolean) {
     value = coerceBoolean(value);
@@ -107,20 +110,6 @@ export class ServerManageNetworkComponent
     }
   }
   private _disableDynamicIp: boolean;
-
-  @Input()
-  public get selectedNetwork(): McsResourceNetwork { return this._selectedNetwork; }
-  public set selectedNetwork(value: McsResourceNetwork) {
-    if (this._selectedNetwork !== value) {
-      this._selectedNetwork = value;
-      this.selectedNetworkChange.emit(this._selectedNetwork);
-      this._resetFormGroup();
-      this._createNetmaskByNetwork(this._selectedNetwork);
-      this._setInUsedIpAddresses(this._selectedNetwork);
-      this.notifyDataChange();
-    }
-  }
-  private _selectedNetwork: McsResourceNetwork;
 
   @ViewChild(McsFormGroupDirective)
   private _formGroup: McsFormGroupDirective;
@@ -204,6 +193,17 @@ export class ServerManageNetworkComponent
   }
 
   /**
+   * Event listener whenever resource network is changed
+   */
+  public onNetworkChanged(resourceNetwork: McsResourceNetwork) {
+    this.selectedNetworkChange.emit(resourceNetwork);
+    this._resetFormGroup();
+    this._createNetmaskByNetwork(resourceNetwork);
+    this._setInUsedIpAddresses(resourceNetwork);
+    this.notifyDataChange();
+  }
+
+  /**
    * Returns true when the inputted ip-address is inused
    * @param ipAddress Ip address to be checked
    */
@@ -216,8 +216,7 @@ export class ServerManageNetworkComponent
    * Event that emits when an input has been changed
    */
   public notifyDataChange() {
-    let noFormsRegistered = isNullOrEmpty(this.fcCustomIpAddress) ||
-      isNullOrEmpty(this.fcIpAllocationMode);
+    let noFormsRegistered = isNullOrEmpty(this.fcCustomIpAddress) || isNullOrEmpty(this.fcIpAllocationMode);
     if (noFormsRegistered) { return; }
 
     // Set model data based on management type
@@ -226,8 +225,7 @@ export class ServerManageNetworkComponent
         this._networkOutput.network = this.selectedNetwork;
         this._networkOutput.customIpAddress = this.fcCustomIpAddress.value;
         this._networkOutput.ipAllocationMode = IpAllocationMode.Manual;
-        this._networkOutput.valid = this.fcCustomIpAddress.valid &&
-          !isNullOrEmpty(this.selectedNetwork);
+        this._networkOutput.valid = this.fcCustomIpAddress.valid && !isNullOrEmpty(this.selectedNetwork);
         break;
 
       case InputManageType.Auto:
@@ -235,8 +233,7 @@ export class ServerManageNetworkComponent
         this._networkOutput.network = this.selectedNetwork;
         this._networkOutput.customIpAddress = null;
         this._networkOutput.ipAllocationMode = this.fcIpAllocationMode.value;
-        this._networkOutput.valid = this.fcIpAllocationMode.valid &&
-          !isNullOrEmpty(this.selectedNetwork);
+        this._networkOutput.valid = this.fcIpAllocationMode.valid && !isNullOrEmpty(this.selectedNetwork);
         break;
     }
     this._setNetworkHasChangedFlag();

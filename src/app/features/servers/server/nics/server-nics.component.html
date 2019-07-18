@@ -135,7 +135,7 @@
               [resourceId]="(resource$ | async)?.id"
               [networks]="resourceNetworks"
               (dataChange)="onNetworkChanged($event)"
-              [(selectedNetwork)]="selectedNetwork">
+              [selectedNetwork]="selectedNetwork">
 
               <ng-container mcsManageNetworkHeader>
                 <h2>{{ 'serverNics.addHeading' | translate }}</h2>
@@ -178,7 +178,7 @@
             [resourceId]="(resource$ | async)?.id"
             (dataChange)="onNetworkChanged($event)"
             [targetNic]="selectedNic"
-            [(selectedNetwork)]="selectedNetwork">
+            [selectedNetwork]="selectedNetwork">
 
             <ng-container mcsManageNetworkHeader>
               <h2>{{ 'serverNics.editHeading' | translate }} {{ selectedNic.index }}</h2>
@@ -192,7 +192,7 @@
           </mcs-server-manage-network>
 
           <div class="action-items">
-            <a (click)="closeEditNicWindow()"
+            <a (click)="closeEditNicWindow(resourceNetworks)"
               mcsId="close-update-nic"
               mcsEventTracker="update-nic-close"
               mcsEventCategory="server"
@@ -200,7 +200,7 @@
             <button *mcsAccessControl="serverPermision.vmEdit"
               mcsButton arrow="right" size="small"
               [disabled]="!manageNetwork?.hasChanged"
-              (click)="updateNic(server)"
+              (click)="updateNic(server, resourceNetworks)"
               mcsId="update-nic"
               mcsEventTracker="update-nic"
               mcsEventCategory="server"
