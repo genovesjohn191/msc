@@ -19,7 +19,8 @@ import {
   isNullOrEmpty,
   unsubscribeSubject,
   coerceNumber,
-  resolveEnvVar
+  resolveEnvVar,
+  McsEnvironmentVariables
 } from '@app/utilities';
 import { McsIdentity } from '@app/models';
 import { EventBusDispatcherService } from '@app/event-bus';
@@ -342,7 +343,7 @@ export class McsSessionHandlerService {
 
     // Calculate time in seconds before we trigger about to expire event
     let sessionExtensionWindowInSeconds =
-      coerceNumber(resolveEnvVar('MCS_SESSION_EXTENSION_WINDOW_IN_SECONDS'));
+      coerceNumber(resolveEnvVar(McsEnvironmentVariables.McsSessionExtensionWindowInSeconds));
     let extensionCounterInSeconds = 1;
     if (expiryInSeconds > sessionExtensionWindowInSeconds) {
       extensionCounterInSeconds = expiryInSeconds - sessionExtensionWindowInSeconds;

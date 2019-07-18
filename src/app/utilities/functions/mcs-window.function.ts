@@ -1,73 +1,77 @@
-type environmentName =
-  'API_HOST' |
-  'HOST' |
-  'PORT' |
-  'LOGIN_URL' |
-  'LOGOUT_URL' |
-  'MACVIEW_ORDERS_URL' |
-  'MACVIEW_CHANGE_PASSWORD_URL' |
-  'MCS_TERMS_AND_CONDITIONS_URL' |
-  'MCS_INVIEW_URL' |
-  'MCS_SESSION_EXTENSION_WINDOW_IN_SECONDS' |
-  'SENTRY_DSN' |
-  'IMAGE_ROOT' |
-  'ICON_ROOT' |
-  'MACVIEW_URL' |
-  'EK';
+export enum McsEnvironmentVariables {
+  ApiHost = 0,
+  Host,
+  Port,
+  LoginUrl,
+  LogoutUrl,
+  MacviewOrdersUrl,
+  MacviewChangePasswordUrl,
+  McsTermsAndConditionsUrl,
+  McsInviewUrl,
+  McsSessionExtensionWindowInSeconds,
+  SentryDns,
+  ImageRoot,
+  IconRoot,
+  MacviewUrl,
+  Ek
+}
+
 import { isNullOrEmpty } from './mcs-object.function';
 
-export function resolveEnvVar(envName: environmentName, defaultValue: string = ''): string {
-  if (isNullOrEmpty(window['ENV_CONFIG'])) {
+export function resolveEnvVar(envName: McsEnvironmentVariables, defaultValue: string = ''): string {
+
+  let windowEnvironmentConfig = window['ENV_CONFIG'];
+  if (isNullOrEmpty(windowEnvironmentConfig)) {
     return defaultValue;
   }
 
   let overrideValue: string;
 
   switch (envName) {
-    case 'API_HOST':
-      overrideValue = window['ENV_CONFIG'].apiHost;
+    case McsEnvironmentVariables.ApiHost:
+      overrideValue = windowEnvironmentConfig.apiHost;
       break;
-    case 'HOST':
-      overrideValue = window['ENV_CONFIG'].host;
+    case McsEnvironmentVariables.Host:
+      overrideValue = windowEnvironmentConfig.host;
       break;
-    case 'PORT':
-      overrideValue = window['ENV_CONFIG'].port;
+    case McsEnvironmentVariables.Port:
+      overrideValue = windowEnvironmentConfig.port;
       break;
-    case 'LOGIN_URL':
-      overrideValue = window['ENV_CONFIG'].loginUrl;
+    case McsEnvironmentVariables.LoginUrl:
+      overrideValue = windowEnvironmentConfig.loginUrl;
       break;
-    case 'LOGOUT_URL':
-      overrideValue = window['ENV_CONFIG'].logoutUrl;
+    case McsEnvironmentVariables.LogoutUrl:
+      overrideValue = windowEnvironmentConfig.logoutUrl;
       break;
-    case 'MACVIEW_ORDERS_URL':
-      overrideValue = window['ENV_CONFIG'].macviewOrdersUrl;
+    case McsEnvironmentVariables.MacviewOrdersUrl:
+      overrideValue = windowEnvironmentConfig.macviewOrdersUrl;
       break;
-    case 'MACVIEW_CHANGE_PASSWORD_URL':
-      overrideValue = window['ENV_CONFIG'].macviewChangePasswordUrl;
+    case McsEnvironmentVariables.MacviewChangePasswordUrl:
+      overrideValue = windowEnvironmentConfig.macviewChangePasswordUrl;
       break;
-    case 'MCS_TERMS_AND_CONDITIONS_URL':
-      overrideValue = window['ENV_CONFIG'].termsAndConditionsUrl;
+    case McsEnvironmentVariables.McsTermsAndConditionsUrl:
+      overrideValue = windowEnvironmentConfig.termsAndConditionsUrl;
       break;
-    case 'MCS_INVIEW_URL':
-      overrideValue = window['ENV_CONFIG'].inviewUrl;
+    case McsEnvironmentVariables.McsInviewUrl:
+      overrideValue = windowEnvironmentConfig.inviewUrl;
       break;
-    case 'MCS_SESSION_EXTENSION_WINDOW_IN_SECONDS':
-      overrideValue = window['ENV_CONFIG'].sessionExtensionWindowInSeconds;
+    case McsEnvironmentVariables.McsSessionExtensionWindowInSeconds:
+      overrideValue = windowEnvironmentConfig.sessionExtensionWindowInSeconds;
       break;
-    case 'SENTRY_DSN':
-      overrideValue = window['ENV_CONFIG'].sentryDsn;
+    case McsEnvironmentVariables.SentryDns:
+      overrideValue = windowEnvironmentConfig.sentryDsn;
       break;
-    case 'IMAGE_ROOT':
-      overrideValue = window['ENV_CONFIG'].imageRoot;
+    case McsEnvironmentVariables.ImageRoot:
+      overrideValue = windowEnvironmentConfig.imageRoot;
       break;
-    case 'ICON_ROOT':
-      overrideValue = window['ENV_CONFIG'].iconRoot;
+    case McsEnvironmentVariables.IconRoot:
+      overrideValue = windowEnvironmentConfig.iconRoot;
       break;
-    case 'MACVIEW_URL':
-      overrideValue = window['ENV_CONFIG'].macviewUrl;
+    case McsEnvironmentVariables.MacviewUrl:
+      overrideValue = windowEnvironmentConfig.macviewUrl;
       break;
-    case 'EK':
-      overrideValue = window['ENV_CONFIG'].ek;
+    case McsEnvironmentVariables.Ek:
+      overrideValue = windowEnvironmentConfig.ek;
       break;
     default:
       return defaultValue;

@@ -17,39 +17,13 @@ const EvalSourceMapDevToolPlugin = require('webpack/lib/EvalSourceMapDevToolPlug
  */
 module.exports = function (options) {
   const ENV = process.env.ENV = process.env.NODE_ENV = 'development';
-  const API_URL = process.env.MCS_API_URL || undefined;
   const HOST = process.env.MCS_HOST || 'localhost';
   const PORT = process.env.MCS_PORT || '3000';
-  const SENTRY_DSN = process.env.MCS_SENTRY_DSN || undefined;
-  const MACVIEW_URL = process.env.MACVIEW_URL || undefined;
-  const LOGIN_URL = process.env.MCS_LOGIN_URL || undefined;
-  const LOGOUT_URL = process.env.MCS_LOGOUT_URL || undefined;
-  const MACVIEW_ORDERS_URL = process.env.MCS_MACVIEW_MACVIEW_ORDERS_URL || undefined;
-  const MACVIEW_CHANGE_PASSWORD_URL = process.env.MCS_MACVIEW_MACVIEW_CHANGE_PASSWORD_URL || undefined;
-  const ENABLE_PASSING_JWT_IN_URL = process.env.MCS_ENABLE_PASSING_JWT_IN_URL || undefined;
-  const JWT_COOKIE_NAME = process.env.MCS_JWT_COOKIE_NAME || undefined;
-  const JWT_REFRESH_TOKEN_COOKIE_NAME = process.env.MCS_JWT_REFRESH_TOKEN_COOKIE_NAME || undefined;
-  const IMAGE_URL = process.env.MCS_IMAGE_URL || undefined;
-  const ICON_URL = process.env.MCS_ICON_URL || undefined;
-  const EK = process.env.MCS_EK || undefined;
 
   const METADATA = Object.assign({}, buildUtils.DEFAULT_METADATA, {
     host: HOST,
     port: PORT,
     ENV: ENV,
-    API_URL: API_URL,
-    SENTRY_DSN: SENTRY_DSN,
-    MACVIEW_URL: MACVIEW_URL,
-    LOGIN_URL: LOGIN_URL,
-    LOGOUT_URL: LOGOUT_URL,
-    MACVIEW_ORDERS_URL: MACVIEW_ORDERS_URL,
-    MACVIEW_CHANGE_PASSWORD_URL: MACVIEW_CHANGE_PASSWORD_URL,
-    ENABLE_PASSING_JWT_IN_URL: ENABLE_PASSING_JWT_IN_URL,
-    JWT_COOKIE_NAME: JWT_COOKIE_NAME,
-    JWT_REFRESH_TOKEN_COOKIE_NAME: JWT_REFRESH_TOKEN_COOKIE_NAME,
-    IMAGE_URL: IMAGE_URL,
-    ICON_URL: ICON_URL,
-    EK: EK,
     HMR: helpers.hasProcessFlag('hot'),
     PUBLIC: process.env.PUBLIC_DEV || HOST + ':' + PORT
   });

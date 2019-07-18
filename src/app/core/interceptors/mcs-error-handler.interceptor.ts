@@ -10,7 +10,8 @@ import {
 } from '@angular/common/http';
 import {
   resolveEnvVar,
-  isNullOrEmpty
+  isNullOrEmpty,
+  McsEnvironmentVariables
 } from '@app/utilities';
 import { EventBusDispatcherService } from '@app/event-bus';
 import {
@@ -172,6 +173,6 @@ export class McsErrorHandlerInterceptor implements ErrorHandler {
       id: user.userId,
       username: user.fullName
     });
-    RAVEN.config(resolveEnvVar('SENTRY_DSN', SENTRY_DSN)).install();
+    RAVEN.config(resolveEnvVar(McsEnvironmentVariables.SentryDns)).install();
   }
 }

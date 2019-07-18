@@ -6,7 +6,10 @@ import {
   HttpResponse,
   HttpErrorResponse
 } from '@angular/common/http';
-import { resolveEnvVar } from './utilities';
+import {
+  resolveEnvVar,
+  McsEnvironmentVariables
+} from './utilities';
 
 const RAVEN = require('raven-js');
 let ravenInstalled: boolean = false;
@@ -52,6 +55,6 @@ export function setUserIdentity(userId: any, userName: string, userEmail: string
     id: userId,
     username: userName
   });
-  RAVEN.config(resolveEnvVar('SENTRY_DSN', SENTRY_DSN)).install();
+  RAVEN.config(resolveEnvVar(McsEnvironmentVariables.SentryDns)).install();
   ravenInstalled = true;
 }

@@ -174,38 +174,12 @@ module.exports = function (options) {
       // NOTE: when adding more properties make sure you include them in custom-typings.d.ts
       new DefinePlugin({
         'ENV': JSON.stringify(METADATA.ENV),
-        'API_URL': JSON.stringify(METADATA.API_URL),
         'HMR': METADATA.HMR,
         'AOT': METADATA.AOT,
-        'SENTRY_DSN': JSON.stringify(METADATA.SENTRY_DSN),
-        'MACVIEW_URL': JSON.stringify(METADATA.MACVIEW_URL),
-        'LOGIN_URL': JSON.stringify(METADATA.LOGIN_URL),
-        'LOGOUT_URL': JSON.stringify(METADATA.LOGOUT_URL),
-        'MACVIEW_ORDERS_URL': JSON.stringify(METADATA.MACVIEW_ORDERS_URL),
-        'MACVIEW_CHANGE_PASSWORD_URL': JSON.stringify(METADATA.MACVIEW_CHANGE_PASSWORD_URL),
-        'ENABLE_PASSING_JWT_IN_URL': JSON.stringify(METADATA.ENABLE_PASSING_JWT_IN_URL),
-        'JWT_COOKIE_NAME': JSON.stringify(METADATA.JWT_COOKIE_NAME),
-        'JWT_REFRESH_TOKEN_COOKIE_NAME': JSON.stringify(METADATA.JWT_REFRESH_TOKEN_COOKIE_NAME),
-        'IMAGE_URL': JSON.stringify(METADATA.IMAGE_URL),
-        'ICON_URL': JSON.stringify(METADATA.ICON_URL),
-        'EK': JSON.stringify(METADATA.EK),
         'process.env': {
           'ENV': JSON.stringify(METADATA.ENV),
           'NODE_ENV': JSON.stringify(METADATA.ENV),
           'HMR': METADATA.HMR,
-          'API_URL': JSON.stringify(METADATA.API_URL),
-          'SENTRY_DSN': JSON.stringify(METADATA.SENTRY_DSN),
-          'MACVIEW_URL': JSON.stringify(METADATA.MACVIEW_URL),
-          'LOGIN_URL': JSON.stringify(METADATA.LOGIN_URL),
-          'LOGOUT_URL': JSON.stringify(METADATA.LOGOUT_URL),
-          'MACVIEW_ORDERS_URL': JSON.stringify(METADATA.MACVIEW_ORDERS_URL),
-          'MACVIEW_CHANGE_PASSWORD_URL': JSON.stringify(METADATA.MACVIEW_CHANGE_PASSWORD_URL),
-          'ENABLE_PASSING_JWT_IN_URL': JSON.stringify(METADATA.ENABLE_PASSING_JWT_IN_URL),
-          'JWT_COOKIE_NAME': JSON.stringify(METADATA.JWT_COOKIE_NAME),
-          'JWT_REFRESH_TOKEN_COOKIE_NAME': JSON.stringify(METADATA.JWT_REFRESH_TOKEN_COOKIE_NAME),
-          'IMAGE_URL': JSON.stringify(METADATA.IMAGE_URL),
-          'ICON_URL': JSON.stringify(METADATA.ICON_URL),
-          'EK': JSON.stringify(METADATA.EK)
         },
 
         // Needs to be set for zone.js so it does
