@@ -22,6 +22,7 @@ import { McsJobStateManager } from './state-manager/mcs-job.state-manager';
 import { McsOrderStateManager } from './state-manager/mcs-order.state-manager';
 import { McsJobContextStateManager } from './state-manager/mcs-job-context.state-manager';
 import { McsSystemMessageStateManager } from './state-manager/mcs-system.state-manager';
+import { McsTicketStateManager } from './state-manager/mcs-ticket.state-manager';
 
 export const repositoryProviders: any[] = [
   McsFirewallsRepository,
@@ -46,5 +47,6 @@ export const stateManagers: any[] = [
   McsJobStateManager,
   McsOrderStateManager,
   McsJobContextStateManager,
-  McsSystemMessageStateManager
+  McsSystemMessageStateManager,
+  McsTicketStateManager
 ];

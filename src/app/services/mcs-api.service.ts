@@ -786,6 +786,7 @@ export class McsApiService {
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.createTicket'))
       ),
+      tap(() => this._eventDispatcher.dispatch(McsEvent.ticketCreateEvent, ticketData)),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
