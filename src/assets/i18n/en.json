@@ -547,7 +547,7 @@
       "capacity": "Capacity",
       "action": ""
     },
-    "noDisks": "No disks are attached to this server.",
+    "noDisks": "All disks have been removed from this server, rendering it inoperable. New disks cannot be added at this time.",
     "errorGettingDisks": "Sorry, something’s not right. We weren’t able to retrieve the list of disks.",
     "fullStorageSpace": "This disk cannot be created due to insufficient storage space (0 GB remaining)."
   },
