@@ -58,6 +58,7 @@ import { JobResourceCatalogItemCreateEvent } from './events/job-resource-catalog
 import { JobOrderScaleManagedServerEvent } from './events/job-order-scale-managed-server.event';
 import { SystemMessageCreateEvent } from './events/system-message-create.event';
 import { SystemMessageValidateEvent } from './events/system-message-validate.event';
+import { TicketCreateEvent } from './events/ticket-create.event';
 
 export class McsEvent {
   public static routeChange = new RouteChangeEvent();
@@ -122,4 +123,6 @@ export class McsEvent {
 
   public static systemMessageCreated = new SystemMessageCreateEvent();
   public static systemMessageValidated = new SystemMessageValidateEvent();
+
+  public static ticketCreateEvent = new TicketCreateEvent();
 }
