@@ -60,19 +60,6 @@ declare module 'modern-lru' {
 declare var ENV: string;
 declare var HMR: boolean;
 declare var System: SystemJS;
-declare var API_URL: string;
-declare var SENTRY_DSN: string;
-declare var MACVIEW_URL: string;
-declare var LOGIN_URL: string;
-declare var LOGOUT_URL: string;
-declare var MACVIEW_ORDERS_URL: string;
-declare var MACVIEW_CHANGE_PASSWORD_URL: string;
-declare var ENABLE_PASSING_JWT_IN_URL: string;
-declare var JWT_COOKIE_NAME: string;
-declare var JWT_REFRESH_TOKEN_COOKIE_NAME: string;
-declare var IMAGE_URL: string;
-declare var ICON_URL: string;
-declare var EK: string;
 
 interface SystemJS {
   import: (path?: string) => Promise<any>;
@@ -83,19 +70,6 @@ interface GlobalEnvironment {
   HMR: boolean;
   SystemJS: SystemJS;
   System: SystemJS;
-  API_URL: string;
-  SENTRY_DSN: string;
-  MACVIEW_URL: string;
-  LOGIN_URL: string;
-  LOGOUT_URL: string;
-  MACVIEW_ORDERS_URL: string;
-  MACVIEW_CHANGE_PASSWORD_URL: string;
-  ENABLE_PASSING_JWT_IN_URL: string;
-  JWT_COOKIE_NAME: string;
-  JWT_REFRESH_TOKEN_COOKIE_NAME: string;
-  IMAGE_URL: string;
-  ICON_URL: string;
-  EK: string;
 }
 
 interface Es6PromiseLoader {

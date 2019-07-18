@@ -31,7 +31,8 @@ import { FeaturesSharedModule } from './features-shared';
 import { SharedModule } from './shared';
 import {
   resolveEnvVar,
-  isNullOrEmpty
+  isNullOrEmpty,
+  McsEnvironmentVariables
 } from './utilities';
 import { McsApiClientConfig } from './api-client/mcs-api-client.config';
 import { McsApiClientModule } from './api-client/mcs-api-client.module';
@@ -44,18 +45,17 @@ export function createTranslateLoader(http: HttpClient) {
 
 export function coreConfig(): CoreConfig {
   return {
-    apiHost: resolveEnvVar('API_HOST', API_URL),
-    macviewUrl: resolveEnvVar('MACVIEW_URL', MACVIEW_URL),
-    loginUrl: resolveEnvVar('LOGIN_URL', LOGIN_URL),
-    logoutUrl: resolveEnvVar('LOGOUT_URL', LOGOUT_URL),
-    macviewOrdersUrl: resolveEnvVar('MACVIEW_ORDERS_URL', MACVIEW_ORDERS_URL),
-    macviewChangePasswordUrl: resolveEnvVar('MACVIEW_CHANGE_PASSWORD_URL',
-      MACVIEW_CHANGE_PASSWORD_URL),
-    termsAndConditionsUrl: resolveEnvVar('MCS_TERMS_AND_CONDITIONS_URL'),
-    inviewUrl: resolveEnvVar('MCS_INVIEW_URL'),
-    imageRoot: resolveEnvVar('IMAGE_ROOT', IMAGE_URL),
-    iconRoot: resolveEnvVar('ICON_ROOT', ICON_URL),
-    enryptionKey: resolveEnvVar('EK', EK)
+    apiHost: resolveEnvVar(McsEnvironmentVariables.ApiHost),
+    macviewUrl: resolveEnvVar(McsEnvironmentVariables.MacviewUrl),
+    loginUrl: resolveEnvVar(McsEnvironmentVariables.LoginUrl),
+    logoutUrl: resolveEnvVar(McsEnvironmentVariables.LogoutUrl),
+    macviewOrdersUrl: resolveEnvVar(McsEnvironmentVariables.MacviewOrdersUrl),
+    macviewChangePasswordUrl: resolveEnvVar(McsEnvironmentVariables.MacviewChangePasswordUrl),
+    termsAndConditionsUrl: resolveEnvVar(McsEnvironmentVariables.McsTermsAndConditionsUrl),
+    inviewUrl: resolveEnvVar(McsEnvironmentVariables.McsInviewUrl),
+    imageRoot: resolveEnvVar(McsEnvironmentVariables.ImageRoot),
+    iconRoot: resolveEnvVar(McsEnvironmentVariables.IconRoot),
+    enryptionKey: resolveEnvVar(McsEnvironmentVariables.Ek)
   } as CoreConfig;
 }
 
@@ -71,7 +71,7 @@ export function apiClientConfig(cookieService: McsCookieService): McsApiClientCo
   }
 
   return {
-    apiHost: resolveEnvVar('API_HOST', API_URL),
+    apiHost: resolveEnvVar(McsEnvironmentVariables.ApiHost),
     headers: apiClientHeaders
   } as McsApiClientConfig;
 }

@@ -3,11 +3,11 @@ const buildUtils = require('./build-utils');
 
 /**
  * Used to merge webpack configs
-*/
+ */
 const webpackMerge = require('webpack-merge');
 /**
  * The settings that are common to prod and dev
-*/
+ */
 const commonConfig = require('./webpack.common.js');
 
 /**
@@ -24,15 +24,16 @@ const ExposeSassPlugin = require('./expose-sass-plugin');
 
 function getUglifyOptions(supportES2015) {
   const uglifyCompressOptions = {
-    pure_getters: true, /* buildOptimizer */
+    pure_getters: true,
+    /* buildOptimizer */
     // PURE comments work best with 3 passes.
     // See https://github.com/webpack/webpack/issues/2899#issuecomment-317425926.
-    passes: 3         /* buildOptimizer */
+    passes: 3 /* buildOptimizer */
   };
 
   return {
     ecma: supportES2015 ? 6 : 5,
-    warnings: false,    // TODO verbose based on option?
+    warnings: false, // TODO verbose based on option?
     ie8: false,
     mangle: true,
     compress: uglifyCompressOptions,
@@ -45,47 +46,24 @@ function getUglifyOptions(supportES2015) {
 
 module.exports = function (env) {
   const ENV = process.env.NODE_ENV = process.env.ENV = 'production';
-  const API_URL = process.env.MCS_API_URL || undefined;
   const HOST = process.env.MCS_HOST || undefined;
   const PORT = process.env.MCS_PORT || undefined;
-  const SENTRY_DSN = process.env.MCS_SENTRY_DSN || undefined;
-  const MACVIEW_URL = process.env.MACVIEW_URL || undefined;
-  const LOGIN_URL = process.env.MCS_LOGIN_URL || undefined;
-  const LOGOUT_URL = process.env.MCS_LOGOUT_URL || undefined;
-  const MACVIEW_ORDERS_URL = process.env.MCS_MACVIEW_MACVIEW_ORDERS_URL || undefined;
-  const MACVIEW_CHANGE_PASSWORD_URL = process.env.MCS_MACVIEW_MACVIEW_CHANGE_PASSWORD_URL || undefined;
-  const ENABLE_PASSING_JWT_IN_URL = process.env.MCS_ENABLE_PASSING_JWT_IN_URL || undefined;
-  const JWT_COOKIE_NAME = process.env.MCS_JWT_COOKIE_NAME || undefined;
-  const JWT_REFRESH_TOKEN_COOKIE_NAME = process.env.MCS_JWT_REFRESH_TOKEN_COOKIE_NAME || undefined;
-  const IMAGE_URL = process.env.MCS_IMAGE_URL || undefined;
-  const ICON_URL = process.env.MCS_ICON_URL || undefined;
-  const EK = process.env.MCS_EK || undefined;
 
   const supportES2015 = buildUtils.supportES2015(buildUtils.DEFAULT_METADATA.tsConfigPath);
   const METADATA = Object.assign({}, buildUtils.DEFAULT_METADATA, {
     host: HOST,
     port: PORT,
-    API_URL: API_URL,
     ENV: ENV,
-    HMR: false,
-    SENTRY_DSN: SENTRY_DSN,
-    MACVIEW_URL: MACVIEW_URL,
-    LOGIN_URL: LOGIN_URL,
-    LOGOUT_URL: LOGOUT_URL,
-    MACVIEW_ORDERS_URL: MACVIEW_ORDERS_URL,
-    MACVIEW_CHANGE_PASSWORD_URL: MACVIEW_CHANGE_PASSWORD_URL,
-    ENABLE_PASSING_JWT_IN_URL: ENABLE_PASSING_JWT_IN_URL,
-    JWT_COOKIE_NAME: JWT_COOKIE_NAME,
-    JWT_REFRESH_TOKEN_COOKIE_NAME: JWT_REFRESH_TOKEN_COOKIE_NAME,
-    IMAGE_URL: IMAGE_URL,
-    ICON_URL: ICON_URL,
-    EK: EK
+    HMR: false
   });
 
   // set environment suffix so these environments are loaded.
   METADATA.envFileSuffix = METADATA.E2E ? 'e2e.prod' : 'prod';
 
-  return webpackMerge(commonConfig({ env: ENV, metadata: METADATA }), {
+  return webpackMerge(commonConfig({
+    env: ENV,
+    metadata: METADATA
+  }), {
     /**
      * Sets the mode of the webpack
      *
