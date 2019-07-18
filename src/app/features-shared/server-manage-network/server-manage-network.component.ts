@@ -196,6 +196,7 @@ export class ServerManageNetworkComponent
    * Event listener whenever resource network is changed
    */
   public onNetworkChanged(resourceNetwork: McsResourceNetwork) {
+    this.selectedNetwork = resourceNetwork;
     this.selectedNetworkChange.emit(resourceNetwork);
     this._resetFormGroup();
     this._createNetmaskByNetwork(resourceNetwork);
