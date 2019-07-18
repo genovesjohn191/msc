@@ -762,6 +762,9 @@
       }
     },
     "manageNetwork": {
+      "networkPlaceholder": "Select network",
+      "networkGroupLabel": "Networks",
+      "ipAddressLabel": "IP address",
       "customSwitch": "Enter a custom IP Address",
       "customMessage": "Manually enter an IP address.",
       "buttonSwitch": "Select from default",

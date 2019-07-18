@@ -4,10 +4,15 @@
 
   <!-- Network selection -->
   <mcs-form-field>
-    <mcs-select mcsId="select-network" [ngModelOptions]="{standalone: true}"
-      [(ngModel)]="selectedNetwork" placeholder="Select network">
+    <mcs-select mcsId="select-network"
+      [ngModelOptions]="{standalone: true}"
+      [ngModel]="selectedNetwork"
+      (ngModelChange)="onNetworkChanged($event)"
+      [placeholder]="'serverShared.manageNetwork.networkPlaceholder' | translate">
       <mcs-option-group>
-        <ng-container *mcsOptionGroupHeader>Networks</ng-container>
+        <ng-container *mcsOptionGroupHeader>
+          {{ 'serverShared.manageNetwork.networkGroupLabel' | translate }}
+        </ng-container>
         <mcs-option *ngFor="let network of networks" [value]="network">
           {{ network.name }}
         </mcs-option>
@@ -17,7 +22,7 @@
 
   <!-- Network switcher -->
   <mcs-item orientation="separated">
-    <h2 auto-width>IP address</h2>
+    <h2 auto-width>{{ 'serverShared.manageNetwork.ipAddressLabel' | translate }}</h2>
     <div *ngIf="!disableDynamicIp">
       <a *ngIf="inputManageType === inputManageTypeEnum.Custom" mcsId
         (click)="onChangeInputManageType(inputManageTypeEnum.Auto)">

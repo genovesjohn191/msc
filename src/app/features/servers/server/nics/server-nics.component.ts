@@ -192,8 +192,8 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   /**
    * Closes the edit nic window
    */
-  public closeEditNicWindow(): void {
-    this._resetNetworkValues();
+  public closeEditNicWindow(networks: McsResourceNetwork[]): void {
+    this._resetNetworkValues(networks);
   }
 
   /**
@@ -245,7 +245,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   /**
    * Updates the NIC data based on the selected NIC
    */
-  public updateNic(server: McsServer): void {
+  public updateNic(server: McsServer, networks: McsResourceNetwork[]): void {
     let nicValues = new McsServerCreateNic();
     nicValues.name = this.manageNetwork.network.name;
     nicValues.ipAllocationMode = this.manageNetwork.ipAllocationMode;
@@ -255,7 +255,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
       nicId: this.selectedNic.id
     };
 
-    this.closeEditNicWindow();
+    this.closeEditNicWindow(networks);
     this.apiService.updateServerNic(server.id, this.selectedNic.id, nicValues).subscribe();
   }
 
@@ -284,7 +284,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    */
   protected serverChange(server: McsServer): void {
     this.validateDedicatedFeatureFlag(server, McsFeatureFlag.DedicatedVmNicView);
-    this._resetNetworkValues();
+    this._resetNetworkValues([]);
     this._updateTableDataSource(server);
   }
 
@@ -299,11 +299,12 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   /**
    * Reset network form values to initial
    */
-  private _resetNetworkValues(): void {
+  private _resetNetworkValues(networks: McsResourceNetwork[]): void {
     this.nicMethodType = ServerNicMethodType.AddNic;
     this._serverNicsCache = null;
     this.manageNetwork = new ServerManageNetwork();
     this.currentIpAddress = undefined;
+    this.selectedNetwork = isNullOrEmpty(networks) ? null : networks[0];
     if (!isNullOrEmpty(this._componentHandler)) {
       this._componentHandler.recreateComponent();
     }
@@ -365,9 +366,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   private _selectNetworkByName(networkName: string): void {
     if (isNullOrEmpty(networkName)) { return; }
     this.resourceNetworks$.subscribe((resourceNetworks) => {
-      let foundNetwork = resourceNetworks.find((network) => {
-        return network.name === networkName;
-      });
+      let foundNetwork = resourceNetworks.find((network) => network.name === networkName);
       if (!isNullOrEmpty(foundNetwork)) {
         this.selectedNetwork = foundNetwork;
       }
