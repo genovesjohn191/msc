@@ -11,7 +11,10 @@ import {
   CoreRoutes,
   McsTableListingBase
 } from '@app/core';
-import { isNullOrEmpty } from '@app/utilities';
+import {
+  isNullOrEmpty,
+  CommonDefinition
+} from '@app/utilities';
 import {
   RouteKey,
   McsOrder,
@@ -46,7 +49,7 @@ export class OrdersComponent extends McsTableListingBase<McsOrder> {
    * Returns the + icon key
    */
   public get addIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_PLUS;
+    return CommonDefinition.ASSETS_SVG_PLUS;
   }
 
   /**

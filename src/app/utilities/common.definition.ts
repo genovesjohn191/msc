@@ -43,6 +43,8 @@ export class CommonDefinition {
   public static ASSETS_SVG_TOGGLE_NAV = 'toggle-nav';
   public static ASSETS_SVG_STORAGE = 'storage';
   public static ASSETS_SVG_KEYBOARD = 'keyboard';
+  public static ASSETS_SVG_DELETE = 'delete';
+  public static ASSETS_SVG_PLUS = 'plus';
   public static ASSETS_SVG_PLAY = 'play';
   public static ASSETS_SVG_START = 'start';
   public static ASSETS_SVG_RESTART = 'restart';
@@ -114,4 +116,15 @@ export class CommonDefinition {
   public static ASSETS_FONT_TRASH = 'trash-o';
   public static ASSETS_FONT_BULLET = 'circle';
   public static ASSETS_FONT_ELLIPSIS_VERTICAL = 'ellipsis-v';
+
+  /** Filter Selector */
+  public static FILTERSELECTOR_SERVER_LISTING = 'serverFilter';
+  public static FILTERSELECTOR_NOTIFICATIONS_LISTING = 'notificationFilter';
+  public static FILTERSELECTOR_TICKET_LISTING = 'ticketFilter';
+  public static FILTERSELECTOR_FIREWALLS_LISTING = 'firewallFilter';
+  public static FILTERSELECTOR_FIREWALL_POLICIES_LISTING = 'firewallPolicyFilter';
+  public static FILTERSELECTOR_MEDIA_LISTING = 'mediaFilter';
+  public static FILTERSELECTOR_ORDER_LISTING = 'orderFilter';
+  public static FILTERSELECTOR_INTERNET_LISTING = 'internetFilter';
+  public static FILTERSELECTOR_SYSTEM_MESSAGE_LISTING = 'systemMessageFilter';
 }

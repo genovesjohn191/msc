@@ -4,13 +4,17 @@ import { SharedModule } from '@app/shared';
 import { PageNotificationsModule } from '../page-notifications/page-notifications.module';
 
 /** Components */
-import { consolePageRoutes } from './console-page.constants';
+import {
+  consolePageRoutes,
+  consolePageProviders
+} from './console-page.constants';
 import { ConsolePageComponent } from './console-page.component';
 
 @NgModule({
   declarations: [
     ConsolePageComponent
   ],
+  providers: consolePageProviders,
   imports: [
     SharedModule,
     PageNotificationsModule,

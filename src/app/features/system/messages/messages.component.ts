@@ -7,7 +7,6 @@ import {
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import {
-  CoreDefinition,
   McsTableListingBase,
   CoreRoutes
 } from '@app/core';
@@ -46,7 +45,7 @@ export class SystemMessagesComponent extends McsTableListingBase<McsSystemMessag
   }
 
   public get addIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_PLUS;
+    return CommonDefinition.ASSETS_SVG_PLUS;
   }
 
   public get timeZone(): string {
@@ -57,7 +56,7 @@ export class SystemMessagesComponent extends McsTableListingBase<McsSystemMessag
    * Returns the column settings key for the filter selector
    */
   protected get columnSettingsKey(): string {
-    return CoreDefinition.FILTERSELECTOR_SYSTEM_MESSAGE_LISTING;
+    return CommonDefinition.FILTERSELECTOR_SYSTEM_MESSAGE_LISTING;
   }
 
   /**
