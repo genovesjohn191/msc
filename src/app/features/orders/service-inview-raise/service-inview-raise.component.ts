@@ -4,6 +4,7 @@ import {
   OnDestroy,
   Injector,
   ViewChild,
+  ChangeDetectorRef,
 } from '@angular/core';
 import {
   FormGroup,
@@ -13,18 +14,19 @@ import {
 import {
   Subject,
   Observable,
-  throwError
+  Subscription
 } from 'rxjs';
 import {
   map,
-  catchError,
   shareReplay,
   takeUntil
 } from 'rxjs/operators';
 import {
   McsOrderWizardBase,
   CoreDefinition,
-  CoreValidators
+  CoreValidators,
+  McsGuid,
+  CoreRoutes
 } from '@app/core';
 import {
   unsubscribeSafely,
@@ -32,20 +34,25 @@ import {
   isNullOrEmpty
 } from '@app/utilities';
 import { McsApiService } from '@app/services';
+import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/event-manager';
 import {
   McsServer,
-  InviewLevel
+  InviewLevel,
+  OrderIdType,
+  McsOrderWorkflow,
+  RouteKey,
+  inviewLevelText
 } from '@app/models';
 import { McsFormGroupDirective } from '@app/shared';
-import { ServiceInviewRaiseService } from './service-inview-raise.service';
 import { OrderDetails } from '@app/features-shared';
+import { ServiceInviewRaiseService } from './service-inview-raise.service';
 
-// TODO: would be used in the integration to API
-// type RaiseInviewLevelProperties = {
-//   inviewLevel: string;
-// };
+type RaiseInviewLevelProperties = {
+  inviewLevel: string;
+};
 
-// const SERVICE_RAISE_INVIEW_REF_ID = McsGuid.newGuid().toString();
+const SERVICE_RAISE_INVIEW_REF_ID = McsGuid.newGuid().toString();
 
 @Component({
   selector: 'mcs-order-service-inview-raise',
@@ -82,6 +89,20 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
   }
 
   /**
+   * Returns true if the Inview is valid for Ordering, false Otherwise
+   */
+  public get validOrderInviewLevel(): boolean {
+    return this._inviewLevel === InviewLevel.Standard;
+  }
+
+  /**
+   * Returns the currently selected server
+   */
+  public get currentServer(): McsServer {
+    return getSafeProperty(this.fcService, (obj) => obj.value);
+  }
+
+  /**
    * Returns true when the form is valid
    */
   public get formIsValid(): boolean {
@@ -92,6 +113,7 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
   private _formGroup: McsFormGroupDirective;
 
   private _inviewLevel: InviewLevel = InviewLevel.None;
+  private _selectedServerHandler: Subscription;
   private _destroySubject = new Subject<void>();
   private _inviewLevelLabelMap: Map<InviewLevel, string>;
 
@@ -100,29 +122,54 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
     private _serviceInviewRaiseService: ServiceInviewRaiseService,
     private _formBuilder: FormBuilder,
     private _apiService: McsApiService,
+    private _eventDispatcher: EventBusDispatcherService,
+    private _changeDetectorRef: ChangeDetectorRef,
   ) {
     super(_injector, _serviceInviewRaiseService);
     this._populateInviewLevelLabelMap();
     this._registerFormGroups();
+    this._registerEvents();
     this._getAllServices();
   }
 
   public ngOnDestroy(): void {
     unsubscribeSafely(this._destroySubject);
+    unsubscribeSafely(this._selectedServerHandler);
   }
 
   /**
    * Event listener whenever service is change
    */
   public onChangeService(server: McsServer): void {
-    this._inviewLevel = getSafeProperty(server, (obj) => obj.inViewLevel, InviewLevel.None);
+    this._inviewLevel = this._getServerInviewLevel(server);
   }
 
   /**
-   * Event that emits when the user confirms the changes in details step
+   * Event that emits when the raise inview details is submitted
+   */
+  public onSubmitServiceInviewDetails(server: McsServer): void {
+    if (!this.validOrderInviewLevel) { return; }
+
+    this._serviceInviewRaiseService.createOrUpdateOrder(
+      {
+        items: [{
+          itemOrderType: OrderIdType.RaiseInviewLevel,
+          referenceId: SERVICE_RAISE_INVIEW_REF_ID,
+          properties: {
+            inviewLevel: inviewLevelText[InviewLevel.Premium]
+          } as RaiseInviewLevelProperties,
+          serviceId: server.serviceId
+        }]
+      }
+    );
+    this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Event that emits when the server confirm order has been changed
    * @param orderDetails Order details to be set
    */
-  public onSubmitServiceInviewDetails(orderDetails: OrderDetails): void {
+  public onServiceInviewRaiseConfirmOrderChange(orderDetails: OrderDetails): void {
     if (isNullOrEmpty(orderDetails)) { return; }
     this._serviceInviewRaiseService.createOrUpdateOrder({
       contractDurationMonths: orderDetails.contractDurationMonths,
@@ -134,6 +181,35 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
   }
 
   /**
+   * Event that emits when the order is submitted
+   * @param submitDetails order details
+   */
+  public onSubmitOrder(submitDetails: OrderDetails): void {
+    if (isNullOrEmpty(submitDetails)) { return; }
+
+    let workflow = new McsOrderWorkflow();
+    workflow.state = submitDetails.workflowAction;
+    workflow.clientReferenceObject = {
+      resourcePath: CoreRoutes.getNavigationPath(RouteKey.ServerDetails),
+      resourceDescription: this.progressDescription
+    };
+
+    this.submitOrderWorkflow(workflow);
+  }
+
+  /**
+   * Register jobs/notifications events
+   */
+  private _registerEvents(): void {
+
+    this._selectedServerHandler = this._eventDispatcher.addEventListener(
+      McsEvent.serverRaiseInviewSelected, this._onSelectedServer.bind(this));
+
+    // Invoke the event initially
+    this._eventDispatcher.dispatch(McsEvent.serverRaiseInviewSelected);
+  }
+
+  /**
    * Get all the Services
    */
   private _getAllServices(): void {
@@ -142,9 +218,6 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
       map((response) => getSafeProperty(response, (obj) => obj.collection).filter(
         (server) => !server.isSelfManaged && !server.isDedicated && server.serviceChangeAvailable)
       ),
-      catchError((error) => {
-        return throwError(error);
-      }),
       shareReplay(1)
     );
   }
@@ -166,7 +239,7 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
   }
 
   /**
-   * Set ticket type based on selection
+   * Fill out inview level label map based on the type of Inview Level
    */
   private _populateInviewLevelLabelMap(): void {
     this._inviewLevelLabelMap = new Map();
@@ -182,6 +255,21 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
       InviewLevel.Premium,
       this.translateService.instant('orderServiceRaiseInview.serviceDetails.inview.label.premium')
     );
+  }
+
+  /**
+   * Event listener whenever a server is selected
+   */
+  private _onSelectedServer(server: McsServer): void {
+    if (isNullOrEmpty(server)) { return; }
+    this.fcService.setValue(server);
+  }
+
+  /**
+   * Get the inview level from a Server
+   */
+  private _getServerInviewLevel(server: McsServer): InviewLevel {
+    return getSafeProperty(server, (obj) => obj.inViewLevel, InviewLevel.None);
   }
 
 }

@@ -170,7 +170,7 @@
                   mcsEventTracker="raise-inview-level-click"
                   mcsEventCategory="server"
                   mcsEventLabel="raise-inview-level-button"
-                  (click)="raiseInviewLevel()"
+                  (click)="raiseInviewLevel(server)"
                   [disabled]="server.isProcessing">
                   {{ 'serverServices.inview.raiseinviewButtonLabel' | translate }}
                 </button>
