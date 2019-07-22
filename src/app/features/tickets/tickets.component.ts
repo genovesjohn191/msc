@@ -7,11 +7,13 @@ import {
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import {
-  CoreDefinition,
   CoreRoutes,
   McsTableListingBase
 } from '@app/core';
-import { isNullOrEmpty } from '@app/utilities';
+import {
+  isNullOrEmpty,
+  CommonDefinition
+} from '@app/utilities';
 import {
   RouteKey,
   McsTicket,
@@ -42,7 +44,7 @@ export class TicketsComponent extends McsTableListingBase<McsTicket> {
   }
 
   public get addIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_PLUS;
+    return CommonDefinition.ASSETS_SVG_PLUS;
   }
 
   public get routeKeyEnum(): any {
@@ -69,7 +71,7 @@ export class TicketsComponent extends McsTableListingBase<McsTicket> {
    * Returns the column settings key for the filter selector
    */
   protected get columnSettingsKey(): string {
-    return CoreDefinition.FILTERSELECTOR_TICKET_LISTING;
+    return CommonDefinition.FILTERSELECTOR_TICKET_LISTING;
   }
 
   /**

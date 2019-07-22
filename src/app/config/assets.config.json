@@ -67,6 +67,8 @@
     "toggle-nav": "toggle-nav.svg",
     "storage": "storage.svg",
     "keyboard": "keyboard.svg",
+    "delete": "delete.svg",
+    "plus": "plus.svg",
     "play": "play.svg",
     "start": "start.svg",
     "restart": "restart.svg",

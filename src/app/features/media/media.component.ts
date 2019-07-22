@@ -13,7 +13,10 @@ import {
   CoreRoutes,
   McsTableListingBase
 } from '@app/core';
-import { isNullOrEmpty } from '@app/utilities';
+import {
+  isNullOrEmpty,
+  CommonDefinition
+} from '@app/utilities';
 import {
   RouteKey,
   McsResourceMedia,
@@ -53,7 +56,7 @@ export class MediaComponent extends McsTableListingBase<McsResourceMedia> implem
    * Returns the add icon key
    */
   public get addIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_PLUS;
+    return CommonDefinition.ASSETS_SVG_PLUS;
   }
 
   /**

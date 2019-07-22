@@ -20,7 +20,7 @@
   },
   "consolePage": {
     "loading": "Loading VM Console...",
-    "sendCtrlAltDelete": "Send ctrl+alt+del",
+    "sendCtrlAltDelete": "Ctrl + Alt + Del",
     "start": "Start",
     "stop": "Stop",
     "restart": "Restart",

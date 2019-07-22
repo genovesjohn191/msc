@@ -9,7 +9,10 @@ import {
   CoreDefinition,
   McsTableListingBase
 } from '@app/core';
-import { isNullOrEmpty } from '@app/utilities';
+import {
+  isNullOrEmpty,
+  CommonDefinition
+} from '@app/utilities';
 import {
   RouteKey,
   McsInternetPort,
@@ -43,7 +46,7 @@ export class InternetComponent extends McsTableListingBase<McsInternetPort> {
    * Returns the + icon key
    */
   public get addIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_PLUS;
+    return CommonDefinition.ASSETS_SVG_PLUS;
   }
 
   /**

@@ -18,11 +18,13 @@ import {
 } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 import {
-  CoreDefinition,
   CoreRoutes,
   McsTableListingBase
 } from '@app/core';
-import { isNullOrEmpty } from '@app/utilities';
+import {
+  isNullOrEmpty,
+  CommonDefinition
+} from '@app/utilities';
 import {
   ServiceType,
   serviceTypeText,
@@ -67,31 +69,31 @@ export class ServersComponent extends McsTableListingBase<McsServer>
   }
 
   public get addIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_PLUS;
+    return CommonDefinition.ASSETS_SVG_PLUS;
   }
 
   public get startIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_START;
+    return CommonDefinition.ASSETS_SVG_PLAY;
   }
 
   public get stopIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_STOP;
+    return CommonDefinition.ASSETS_SVG_STOP;
   }
 
   public get restartIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_RESTART;
+    return CommonDefinition.ASSETS_SVG_RESTART;
   }
 
   public get deleteIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_CLOSE_BLACK;
+    return CommonDefinition.ASSETS_SVG_DELETE;
   }
 
   public get suspendIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_SUSPEND;
+    return CommonDefinition.ASSETS_SVG_SUSPEND;
   }
 
   public get resumeIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_RESUME;
+    return CommonDefinition.ASSETS_SVG_RESUME;
   }
 
   public constructor(
@@ -313,7 +315,7 @@ export class ServersComponent extends McsTableListingBase<McsServer>
    * Returns the column settings key for the filter selector
    */
   protected get columnSettingsKey(): string {
-    return CoreDefinition.FILTERSELECTOR_SERVER_LISTING;
+    return CommonDefinition.FILTERSELECTOR_SERVER_LISTING;
   }
 
   /**

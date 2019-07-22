@@ -41,6 +41,16 @@ export class IconService {
       icon = this._icons.get(key);
     }
 
+    // Find the record in SVG
+    if (!icon) {
+      iconValue = this._assetsProvider.getSvgIconPath(key);
+      if (iconValue) {
+        icon = {} as any;
+        icon.value = iconValue;
+        icon.type = IconType.Svg;
+      }
+    }
+
     // Find the record in GIF
     if (!icon) {
       iconValue = this._assetsProvider.getGifIconPath(key);
@@ -58,16 +68,6 @@ export class IconService {
         icon = {} as any;
         icon.value = iconValue;
         icon.type = IconType.FontAwesome;
-      }
-    }
-
-    // Find the record in SVG
-    if (!icon) {
-      iconValue = this._assetsProvider.getSvgIconPath(key);
-      if (iconValue) {
-        icon = {} as any;
-        icon.value = iconValue;
-        icon.type = IconType.Svg;
       }
     }
 
