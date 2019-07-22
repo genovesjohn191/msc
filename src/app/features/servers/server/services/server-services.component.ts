@@ -289,7 +289,8 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
   /**
    * Routes the user to the raise inview level ordering page
    */
-  public raiseInviewLevel(): void {
+  public raiseInviewLevel(server: McsServer): void {
+    this.eventDispatcher.dispatch(McsEvent.serverRaiseInviewSelected, server);
     this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.OrderServiceInviewRaise)]);
   }
 

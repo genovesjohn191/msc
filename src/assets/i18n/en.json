@@ -203,8 +203,9 @@
       }
     },
     "raise": {
-      "description": "Description placeholder",
-      "dataInProgress": "data in progress placeholder"
+      "description": "Your server's inview level is being raised and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
+      "dataInProgress": "Preparing the server for raising its inview level. This may take a moment.",
+      "dataError": "Something went wrong while processing your request. Please try again later."
     }
   },
   "notification": {

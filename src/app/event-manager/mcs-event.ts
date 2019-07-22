@@ -59,6 +59,7 @@ import { JobOrderScaleManagedServerEvent } from './events/job-order-scale-manage
 import { SystemMessageCreateEvent } from './events/system-message-create.event';
 import { SystemMessageValidateEvent } from './events/system-message-validate.event';
 import { TicketCreateEvent } from './events/ticket-create.event';
+import { ServerRaiseInviewSelectedEvent } from './events/server-raise-inview-selected.event';
 
 export class McsEvent {
   public static routeChange = new RouteChangeEvent();
@@ -66,6 +67,7 @@ export class McsEvent {
   public static userChange = new UserChangeEvent();
   public static sessionTimedOut = new SessionTimedOutEvent();
   public static serverScaleManageSelected = new ServerScaleManageSelectedEvent();
+  public static serverRaiseInviewSelected = new ServerRaiseInviewSelectedEvent();
   public static productSelected = new ProductSelectedEvent();
   public static productUnSelected = new ProductUnSelectedEvent();
   public static loaderShow = new LoaderShowEvent();
