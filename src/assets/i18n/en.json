@@ -475,7 +475,7 @@
   "serverServicesOsUpdatesApplyNow": {
     "loading": "Loading server os updates.",
     "title": "Apply Updates",
-    "description": "Select the updates or update categories you would like to apply and we will install them on your server for you.",
+    "description": "Select the updates or update categories you would like applied and we will install them on your server for you. Your server will be inspected again after the update process and any newly available updates will be shown.",
     "listLabel": "Which updates should we apply?",
     "listAllSelection": "All Updates",
     "noOsUpdates": "no availabe os updates for this server.",
