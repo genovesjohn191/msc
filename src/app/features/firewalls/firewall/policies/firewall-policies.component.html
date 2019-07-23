@@ -15,7 +15,7 @@
             padding="narrow" [content]="filterSelectorTemplate" mcsCursor="pointer">
           </mcs-icon>
           <ng-template #filterSelectorTemplate>
-            <mcs-filter-selector #filterSelector [key]="columnSettingsKey"
+            <mcs-filter-selector [key]="columnSettingsKey"
               (filtersChange)="updateColumnSettings($event)"></mcs-filter-selector>
           </ng-template>
 
@@ -27,7 +27,7 @@
         </mcs-item>
 
         <!-- Table -->
-        <mcs-table [dataSource]="dataSource" [columnFilter]="filterSelector">
+        <mcs-table #table [dataSource]="dataSource">
           <!-- Action column -->
           <ng-container mcsColumnDef="action">
             <mcs-header-cell *mcsHeaderCellDef hidden-small>

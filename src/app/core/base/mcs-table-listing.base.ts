@@ -32,7 +32,7 @@ import {
 import {
   Search,
   Paginator,
-  FilterSelector
+  Table
 } from '@app/shared';
 import {
   EventBusState,
@@ -50,14 +50,15 @@ export interface TableListingConfig<T> {
 }
 
 export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy {
+
+  @ViewChild('table')
+  public table: Table;
+
   @ViewChild('search')
   public search: Search;
 
   @ViewChild('paginator')
   public paginator: Paginator;
-
-  @ViewChild('filterSelector')
-  public filterSelector: FilterSelector;
 
   // Table variables
   public selection: McsTableSelection<T>;
@@ -240,7 +241,25 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
   private _setColumnSettings(filterSettings: Map<string, McsFilterInfo>): void {
     this.columnSettings = convertMapToJsonObject(filterSettings);
     this.dataColumns = Object.keys(this.columnSettings);
+    this._updateTableColumns(filterSettings);
     this.changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Updates the table columns filter settings
+   * @param filterSettings Filter settings to be updated
+   */
+  private _updateTableColumns(filterSettings: Map<string, McsFilterInfo>): void {
+    if (isNullOrEmpty(filterSettings)) { return; }
+
+    let displayedColumns: string[] = [];
+    filterSettings.forEach((filter, key) => {
+      if (filter.value) { displayedColumns.push(key); }
+    });
+
+    if (!isNullOrEmpty(this.table)) {
+      this.table.showColumns(...displayedColumns);
+    }
   }
 
   /**
