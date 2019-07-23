@@ -25,8 +25,7 @@ import {
   McsOrderWizardBase,
   CoreDefinition,
   CoreValidators,
-  McsGuid,
-  CoreRoutes
+  McsGuid
 } from '@app/core';
 import {
   unsubscribeSafely,
@@ -41,7 +40,6 @@ import {
   InviewLevel,
   OrderIdType,
   McsOrderWorkflow,
-  RouteKey,
   inviewLevelText
 } from '@app/models';
 import { McsFormGroupDirective } from '@app/shared';
@@ -93,13 +91,6 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
    */
   public get validOrderInviewLevel(): boolean {
     return this._inviewLevel === InviewLevel.Standard;
-  }
-
-  /**
-   * Returns the currently selected server
-   */
-  public get currentServer(): McsServer {
-    return getSafeProperty(this.fcService, (obj) => obj.value);
   }
 
   /**
@@ -190,7 +181,6 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
     let workflow = new McsOrderWorkflow();
     workflow.state = submitDetails.workflowAction;
     workflow.clientReferenceObject = {
-      resourcePath: CoreRoutes.getNavigationPath(RouteKey.ServerDetails),
       resourceDescription: this.progressDescription
     };
 
@@ -271,5 +261,4 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
   private _getServerInviewLevel(server: McsServer): InviewLevel {
     return getSafeProperty(server, (obj) => obj.inViewLevel, InviewLevel.None);
   }
-
 }

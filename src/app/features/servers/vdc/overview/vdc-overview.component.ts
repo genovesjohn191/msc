@@ -71,7 +71,7 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
   public get storageSummary(): string {
     if (!this.hasLowStorage) { return ''; }
 
-    let status = this.translateService.instant('serversVdcOverview.storageProfiles.lowStorageSummary');
+    let status = this.translateService.instant('serversVdcOverview.shared.storageProfiles.lowStorageSummary');
     let storageCount = this._getLowStorageCount();
 
     status = replacePlaceholder(status, 'storage_profile_number', `${storageCount}`);

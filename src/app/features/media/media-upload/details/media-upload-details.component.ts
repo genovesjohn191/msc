@@ -27,7 +27,6 @@ import {
   CoreValidators,
   CoreDefinition,
   McsFormGroupService,
-  CoreRoutes,
   IMcsNavigateAwayGuard
 } from '@app/core';
 import {
@@ -40,7 +39,6 @@ import {
   McsResource,
   McsResourceCatalogItemCreate,
   CatalogItemType,
-  RouteKey,
   McsApiErrorResponse,
   McsResourceCatalog
 } from '@app/models';
@@ -166,9 +164,6 @@ export class MediaUploadDetailsComponent
     uploadMediaModel.url = this.fcMediaUrl.value;
     uploadMediaModel.description = this.fcMediaDescription.value;
     uploadMediaModel.type = CatalogItemType.Media;
-    uploadMediaModel.clientReferenceObject = {
-      resourcePath: CoreRoutes.getNavigationPath(RouteKey.Medium)
-    };
 
     this._mediaUploadService.uploadMedia(
       selectedResource.id,

@@ -256,7 +256,8 @@
       },
       "platform": {
         "title": "vCloud Director Virtual Data Centre",
-        "linkLabel": "View in VCloud"
+        "linkLabel": "View in VCloud",
+        "buttonLabel": "New Server"
       },
       "network": {
         "itemDescription": "Standard management network for this VDC."
@@ -268,8 +269,8 @@
       },
       "platform": {
         "title": "vCenter Cluster",
-        "linkLabel": "View in vCenter",
-        "buttonLabel": "New Server"
+        "linkLabel": "View in vCenter"
+
       },
       "network": {
         "itemDescription": "Standard management network for this cluster."

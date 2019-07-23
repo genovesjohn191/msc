@@ -51,7 +51,7 @@
           <div class="action-items">
             <button mcsButton arrow="right"
               mcsWizardStepNext
-              (click)="onSubmitServiceInviewDetails(currentServer)"
+              (click)="onSubmitServiceInviewDetails(fcService?.value)"
               [disabled]="!formIsValid"
               mcsId="step-1-next"
               mcsEventTracker="step-1-next"

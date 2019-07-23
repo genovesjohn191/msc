@@ -29,13 +29,11 @@ import {
   McsErrorHandlerService,
   IMcsFormGroup,
   CoreValidators,
-  CoreRoutes,
   McsFormGroupService
 } from '@app/core';
 import {
   McsResource,
   McsResourceStorage,
-  RouteKey,
   McsOrderWorkflow
 } from '@app/models';
 import { McsApiService } from '@app/services';
@@ -184,7 +182,6 @@ export class VdcStorageCreateComponent extends McsOrderWizardBase implements OnI
     let workflow = new McsOrderWorkflow();
     workflow.state = submitDetails.workflowAction;
     workflow.clientReferenceObject = {
-      resourcePath: CoreRoutes.getNavigationPath(RouteKey.VdcDetails),
       resourceDescription: this.progressDescription
     };
 

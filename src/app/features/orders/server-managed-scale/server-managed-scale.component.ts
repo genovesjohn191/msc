@@ -10,7 +10,6 @@ import {
 import {
   CoreDefinition,
   McsOrderWizardBase,
-  CoreRoutes,
   McsFormGroupService,
   IMcsFormGroup,
   CoreValidators,
@@ -38,7 +37,6 @@ import {
   McsResource,
   McsServer,
   McsOrderWorkflow,
-  RouteKey,
   OrderIdType,
   McsServerCompute
 } from '@app/models';
@@ -212,7 +210,6 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
     let workflow = new McsOrderWorkflow();
     workflow.state = submitDetails.workflowAction;
     workflow.clientReferenceObject = {
-      resourcePath: CoreRoutes.getNavigationPath(RouteKey.ServerDetails),
       resourceDescription: this.progressDescription
     };
 
