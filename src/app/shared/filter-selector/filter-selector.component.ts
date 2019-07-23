@@ -17,7 +17,6 @@ import {
   animateFactory,
   unsubscribeSubject
 } from '@app/utilities';
-import { FilterSelector } from './filter-selector.interface';
 
 @Component({
   selector: 'mcs-filter-selector',
@@ -33,7 +32,7 @@ import { FilterSelector } from './filter-selector.interface';
   }
 })
 
-export class FilterSelectorComponent implements OnInit, OnDestroy, FilterSelector {
+export class FilterSelectorComponent implements OnInit, OnDestroy {
   @Input()
   public key: string;
 
@@ -78,23 +77,5 @@ export class FilterSelectorComponent implements OnInit, OnDestroy, FilterSelecto
    */
   public isFilterHidden(key: string): boolean {
     return this._hiddenFilterKeys.has(key);
-  }
-
-  /**
-   * Remove the filter selector based on the key provided
-   * @param key Key to be removed on the record list
-   */
-  public removeFilterSelector(key: string): void {
-    this._hiddenFilterKeys.add(key);
-    this._changeDetectorRef.markForCheck();
-  }
-
-  /**
-   * Add the filter selector based on the key provided
-   * @param key Key to be added on the filter selector
-   */
-  public addFilterSelector(key: string): void {
-    this._hiddenFilterKeys.delete(key);
-    this._changeDetectorRef.markForCheck();
   }
 }

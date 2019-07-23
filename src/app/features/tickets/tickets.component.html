@@ -39,7 +39,7 @@
 
     <!-- Column Filter -->
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'tickets.filterColumn' | translate" offset="medium">
-      <mcs-filter-selector [key]="columnSettingsKey" #filterSelector
+      <mcs-filter-selector [key]="columnSettingsKey"
         (filtersChange)="updateColumnSettings($event)"></mcs-filter-selector>
     </mcs-left-panel-item>
   </mcs-left-panel>
@@ -52,7 +52,7 @@
       <mcs-search *ngIf="isMobile" #search mcsId="tickets-mobile-search"></mcs-search>
 
       <!-- Table -->
-      <mcs-table [dataSource]="dataSource" [columnFilter]="filterSelector">
+      <mcs-table #table [dataSource]="dataSource">
         <!-- ID Column -->
         <ng-container mcsColumnDef="crispTicketNumber">
           <mcs-header-cell *mcsHeaderCellDef>
