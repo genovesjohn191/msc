@@ -98,6 +98,7 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
   public ngAfterViewInit() {
     Promise.resolve().then(() => {
       this._initializeDataSource();
+      this._initializeDataColumns();
     });
   }
 
@@ -141,6 +142,7 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
   public updateColumnSettings(columns: Map<string, McsFilterInfo>): void {
     if (isNullOrEmpty(columns)) { return; }
     this._setColumnSettings(columns);
+    this._updateTableColumns(columns);
   }
 
   /**
@@ -203,6 +205,7 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
   private _initializeDataColumns(): void {
     let filterSettings = this.filterService.getFilterSettings(this.columnSettingsKey);
     this._setColumnSettings(filterSettings);
+    this._updateTableColumns(filterSettings);
   }
 
   /**
@@ -241,7 +244,6 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
   private _setColumnSettings(filterSettings: Map<string, McsFilterInfo>): void {
     this.columnSettings = convertMapToJsonObject(filterSettings);
     this.dataColumns = Object.keys(this.columnSettings);
-    this._updateTableColumns(filterSettings);
     this.changeDetectorRef.markForCheck();
   }
 
