@@ -1,9 +1,5 @@
 import { JsonProperty } from 'json-object-mapper';
-import {
-  isNullOrEmpty,
-  getSafeProperty,
-  CommonDefinition
-} from '@app/utilities';
+import { CommonDefinition } from '@app/utilities';
 import {
   JobStatus,
   JobStatusSerialization
@@ -29,6 +25,7 @@ export class McsJob extends McsEntityBase {
   public elapsedTimeInSeconds: number;
   public clientReferenceObject: any;
   public batchId: string;
+  public referenceId: string;
 
   @JsonProperty({ type: McsTask })
   public tasks: McsTask[];
@@ -94,6 +91,7 @@ export class McsJob extends McsEntityBase {
     this.updatedOn = undefined;
     this.startedOn = undefined;
     this.endedOn = undefined;
+    this.referenceId = undefined;
   }
 
   /**
@@ -140,23 +138,6 @@ export class McsJob extends McsEntityBase {
     return this.dataStatus === DataStatus.Success ?
       CommonDefinition.ASSETS_SVG_SUCCESS :
       CommonDefinition.ASSETS_SVG_ERROR;
-  }
-
-  /**
-   * Returns the resource link based on the task provided
-   */
-  public get resourceLink(): string {
-    let completedTask = this.tasks && this.tasks.find((task) => {
-      return task.dataStatus === DataStatus.Success
-        && !isNullOrEmpty(task.referenceObject);
-    });
-    let resourceDynamicPath = getSafeProperty(
-      this.clientReferenceObject, (obj) => obj.resourcePath
-    );
-
-    let resourceId = getSafeProperty(completedTask, (obj) => obj.referenceObject.resourceId);
-    let hasNoResource = isNullOrEmpty(resourceId) || isNullOrEmpty(resourceDynamicPath);
-    return hasNoResource ? undefined : `${resourceDynamicPath}/${resourceId}`;
   }
 
   /**

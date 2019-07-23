@@ -15,18 +15,23 @@ import {
   Subscription
 } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { CoreDefinition } from '@app/core';
+import {
+  CoreDefinition,
+  CoreRoutes
+} from '@app/core';
 import { McsEvent } from '@app/event-manager';
 import {
   isNullOrEmpty,
   unsubscribeSafely,
   addOrUpdateArrayRecord,
-  animateFactory
+  animateFactory,
+  getSafeProperty
 } from '@app/utilities';
 import {
   McsJob,
   DataStatus,
-  JobType
+  JobType,
+  RouteKey
 } from '@app/models';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { JobsProvisioningLoadingTextDirective } from './jobs-provisioning-loading-text.directive';
@@ -67,6 +72,7 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
   private _isProgressbarHidden: boolean;
   private _timerSubscription: Subscription;
   private _jobReceiveHandler: Subscription;
+  private _jobTypeRouteMap: Map<JobType, RouteKey>;
 
   public constructor(
     private _changeDetectorRef: ChangeDetectorRef,
@@ -77,6 +83,7 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
     this.progressMax = 0;
     this._excludedProgressJobTypes = new Array();
     this._jobsDiffer = this._iterableDiffers.find([]).create(null);
+    this._createJobTypeRouteMap();
   }
 
   public ngOnInit() {
@@ -165,9 +172,7 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
    * @param status Status of the job/task, which to get the icon key
    */
   public getStatusIconKey(status: DataStatus): string {
-    return status === DataStatus.Success ?
-      CoreDefinition.ASSETS_SVG_SUCCESS :
-      CoreDefinition.ASSETS_SVG_ERROR;
+    return status === DataStatus.Success ? CoreDefinition.ASSETS_SVG_SUCCESS : CoreDefinition.ASSETS_SVG_ERROR;
   }
 
   /**
@@ -176,6 +181,25 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
   public onProgressCompleted(): void {
     this._isProgressbarHidden = true;
     this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Returns the constructed resource link if available
+   */
+  public resourceLink(job: McsJob): string {
+    let completedTask = job.tasks && job.tasks.find((task) => {
+      return task.dataStatus === DataStatus.Success && !isNullOrEmpty(task.referenceObject);
+    });
+
+    let routeKey = this._jobTypeRouteMap.get(job.type);
+    let resourcePath: string;
+    if (!isNullOrEmpty(routeKey)) {
+      resourcePath = CoreRoutes.getNavigationPath(routeKey);
+    }
+
+    let resourceId = getSafeProperty(completedTask, (obj) => obj.referenceObject.resourceId);
+    let hasNoResource = isNullOrEmpty(resourceId) || isNullOrEmpty(resourcePath);
+    return hasNoResource ? undefined : `${resourcePath}/${resourceId}`;
   }
 
   /**
@@ -228,8 +252,7 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
     let inProgressJob = isNullOrEmpty(job) || job.dataStatus === DataStatus.InProgress;
     if (inProgressJob) { return; }
 
-    addOrUpdateArrayRecord(this.jobs, job, true,
-      (_existingJob: McsJob) => _existingJob.id === job.id);
+    addOrUpdateArrayRecord(this.jobs, job, true, (_existingJob: McsJob) => _existingJob.id === job.id);
   }
 
   /**
@@ -285,5 +308,16 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
       this.jobs.filter((job) => !job.isEstimable || !job.inProgress)
     );
     this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Initialize progress bar visibility based on the job data
+   */
+  private _createJobTypeRouteMap(): void {
+    this._jobTypeRouteMap = new Map();
+    this._jobTypeRouteMap.set(JobType.CreateServer, RouteKey.ServerDetails);
+    this._jobTypeRouteMap.set(JobType.CloneServer, RouteKey.ServerDetails);
+    this._jobTypeRouteMap.set(JobType.CreateResourceCatalogItem, RouteKey.Medium);
+    this._jobTypeRouteMap.set(JobType.ProvisionCreateServer, RouteKey.ServerDetails);
   }
 }

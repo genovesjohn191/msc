@@ -5,11 +5,7 @@ import {
 } from '../enumerations/catalog-item-type.enum';
 import { McsApiJobRequestBase } from '../common/mcs-api-job-request-base';
 
-export interface IMcsResourceCatalogItemCreateRefObj {
-  resourcePath: string;
-}
-
-export class McsResourceCatalogItemCreate extends McsApiJobRequestBase<IMcsResourceCatalogItemCreateRefObj> {
+export class McsResourceCatalogItemCreate extends McsApiJobRequestBase<any> {
   @JsonProperty({
     type: CatalogItemType,
     serializer: CatalogItemTypeSerialization,

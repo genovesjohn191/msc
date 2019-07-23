@@ -6,7 +6,6 @@ import {
 } from '../enumerations/order-workflow-action.enum';
 
 export interface IMcsOrderWorkflowRefObj {
-  resourcePath: string;
   resourceDescription: string;
 }
 

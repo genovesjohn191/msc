@@ -28,8 +28,7 @@ import {
 import {
   CoreDefinition,
   CoreValidators,
-  IMcsFormGroup,
-  CoreRoutes
+  IMcsFormGroup
 } from '@app/core';
 import {
   replacePlaceholder,
@@ -53,8 +52,7 @@ import {
   McsServerOperatingSystem,
   McsServerCreateOs,
   OsType,
-  Os,
-  RouteKey
+  Os
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -282,11 +280,6 @@ export class ServerNewComponent
     serverCreate.network.name = this.manageNetwork.network.name;
     serverCreate.network.ipAllocationMode = this.manageNetwork.ipAllocationMode;
     serverCreate.network.ipAddress = this.manageNetwork.customIpAddress;
-
-    // Reference object
-    serverCreate.clientReferenceObject = {
-      resourcePath: CoreRoutes.getNavigationPath(RouteKey.ServerDetails)
-    };
 
     return serverCreate;
   }

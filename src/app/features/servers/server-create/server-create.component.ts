@@ -25,14 +25,12 @@ import {
 } from 'rxjs/operators';
 import {
   CoreDefinition,
-  CoreRoutes,
   McsOrderWizardBase,
   IMcsNavigateAwayGuard,
   CoreValidators
 } from '@app/core';
 import {
   ServiceType,
-  RouteKey,
   McsResource,
   McsOrderWorkflow,
   OrderWorkflowAction,
@@ -195,7 +193,6 @@ export class ServerCreateComponent extends McsOrderWizardBase
     let workflow = new McsOrderWorkflow();
     workflow.state = submitDetails.workflowAction;
     workflow.clientReferenceObject = {
-      resourcePath: CoreRoutes.getNavigationPath(RouteKey.ServerDetails),
       resourceDescription: this.progressDescription
     };
 

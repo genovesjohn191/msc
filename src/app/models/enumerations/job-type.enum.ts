@@ -13,7 +13,8 @@ export enum JobType {
   CloneServer = 100004,
   RenameServer = 100005,
   ProvisionCreateServer = 100006,
-  OrderScaleManagedServer = 100007,
+  ScaleManagedServer = 100007,
+  RaiseManagedServerInviewLevel = 100008,
 
   // Server Snapshot
   CreateServerSnapshot = 100051,
@@ -45,7 +46,8 @@ export enum JobType {
 
   // Os Updates
   PerformServerOsUpdateAnalysis = 100501,
-  ApplyServerOsUpdates = 100502
+  ApplyServerOsUpdates = 100502,
+
 }
 
 export const jobTypeText = {
@@ -71,7 +73,8 @@ export const jobTypeText = {
   [JobType.CreateResourceCatalogItem]: 'New Catalog Media',
   [JobType.PerformServerOsUpdateAnalysis]: 'Perform OS Inspection',
   [JobType.ApplyServerOsUpdates]: 'Apply OS Updates',
-  [JobType.OrderScaleManagedServer]: 'Scale Managed Server',
+  [JobType.ScaleManagedServer]: 'Scale Managed Server',
+  [JobType.RaiseManagedServerInviewLevel]: 'Raise Managed Server Inview Level',
 };
 
 /**
