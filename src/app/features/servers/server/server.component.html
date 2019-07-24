@@ -2,19 +2,15 @@
   <!-- Page template header -->
   <ng-container *mcsPageHeader>
     <mcs-item *ngIf="server$ | async as server">
-      <div>
-        <a [mcsRouterLink]="[routeKeyEnum.VdcDetails, server?.platform?.resourceId]"
-          mcsId="select-vdc"
-          mcsEventTracker="select-vdc"
-          mcsEventCategory="vdc"
-          mcsEventLabel="server-details-page">
-          <h1>{{ server?.resourceName }}</h1>
-        </a>
-      </div>
+      <a [mcsRouterLink]="[routeKeyEnum.VdcDetails, server?.platform?.resourceId]"
+        mcsId="select-vdc"
+        mcsEventTracker="select-vdc"
+        mcsEventCategory="vdc"
+        mcsEventLabel="server-details-page">
+        <h1>{{ server?.resourceName }}</h1>
+      </a>
       <mcs-icon [key]="angleDoubleRightIconKey" size="xsmall"></mcs-icon>
-      <div>
-        <h1>{{ server?.name }}</h1>
-      </div>
+      <h1>{{ server?.name }}</h1>
     </mcs-item>
   </ng-container>
 
