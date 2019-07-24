@@ -13,6 +13,14 @@
 
             <mcs-item>
               <span>{{ 'serverManagement.vmProperties.status' | translate }}:</span>
+
+              <mcs-icon *ngIf="!server.isProcessing" size="small"
+              [key]="server?.powerStateIconKey"></mcs-icon>
+
+              <mcs-loader *ngIf="server.isProcessing" size="small"
+                [mcsTooltip]="server.processingText"
+                mcsTooltipPosition="right"></mcs-loader>
+
               <span [innerHTML]="server.statusLabel | mcsDataLabel"></span>
             </mcs-item>
 

@@ -14,7 +14,8 @@ import {
 import {
   Subject,
   throwError,
-  Observable
+  Observable,
+  Subscription
 } from 'rxjs';
 import {
   startWith,
@@ -47,6 +48,7 @@ import {
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/event-manager';
 import { ServerService } from './server.service';
 import { ServersListSource } from '../servers.listsource';
 
@@ -79,6 +81,7 @@ export class ServerComponent
 
   private _destroySubject = new Subject<void>();
   private _resourcesKeyMap: Map<string, McsServerPlatform>;
+  private _serversDataChangeHandler: Subscription;
 
   constructor(
     _eventDispatcher: EventBusDispatcherService,
@@ -91,6 +94,7 @@ export class ServerComponent
     super(_eventDispatcher, _activatedRoute);
     this._resourcesKeyMap = new Map();
     this.listStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
+    this._registerDataEvents();
   }
 
   public ngOnInit() {
@@ -100,9 +104,10 @@ export class ServerComponent
 
   public ngAfterViewInit() {
     Promise.resolve().then(() => {
-      this.search.searchChangedStream
-        .pipe(startWith(null), takeUntil(this._destroySubject))
-        .subscribe(() => this.listStatusFactory.setInProgress());
+      this.search.searchChangedStream.pipe(
+        startWith(null),
+        takeUntil(this._destroySubject)
+      ).subscribe(() => this.listStatusFactory.setInProgress());
       this._initializeListsource();
     });
   }
@@ -110,6 +115,7 @@ export class ServerComponent
   public ngOnDestroy() {
     super.onDestroy();
     unsubscribeSafely(this._destroySubject);
+    unsubscribeSafely(this._serversDataChangeHandler);
   }
 
   public get angleDoubleRightIconKey(): string {
@@ -204,5 +210,20 @@ export class ServerComponent
       }),
       shareReplay(1)
     );
+  }
+
+  /**
+   * Registers the data events
+   */
+  private _registerDataEvents(): void {
+    this._serversDataChangeHandler = this.eventDispatcher.addEventListener(
+      McsEvent.dataChangeServers, this._onServersDataChanged.bind(this));
+  }
+
+  /**
+   * Event that emits when the server data has been changed
+   */
+  private _onServersDataChanged(): void {
+    this._changeDetectorRef.markForCheck();
   }
 }
