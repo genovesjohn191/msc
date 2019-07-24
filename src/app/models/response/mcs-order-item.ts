@@ -24,7 +24,7 @@ export class McsOrderItem extends McsEntityBase {
   public referenceId: string;
   public parentReferenceId: string;
   public itemId: string;
-  public itemOrderTypeId: string;
+  public itemOrderType: string;
   public parentServiceId: string;
   public billingSite: string;
   public costCentre: string;
@@ -70,7 +70,7 @@ export class McsOrderItem extends McsEntityBase {
     this.createdOn = undefined;
     this.description = undefined;
     this.id = undefined;
-    this.itemOrderTypeId = undefined;
+    this.itemOrderType = undefined;
     this.itemProvisioningStatus = undefined;
     this.jobId = undefined;
     this.modifiedBy = undefined;

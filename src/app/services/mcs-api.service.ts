@@ -898,7 +898,7 @@ export class McsApiService {
     );
   }
 
-  public getItemOrderType(typeId: string): Observable<McsOrderItemType> {
+  public getOrderItemType(typeId: string): Observable<McsOrderItemType> {
     return this._ordersApi.getOrderItemType(typeId).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getItemOrderType'))

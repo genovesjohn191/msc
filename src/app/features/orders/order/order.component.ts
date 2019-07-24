@@ -43,7 +43,8 @@ import {
   McsOrderItem,
   OrderWorkflowAction,
   McsOrderApprover,
-  RouteKey
+  RouteKey,
+  OrderType
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -68,6 +69,7 @@ enum OrderDetailsView {
 export class OrderComponent implements OnInit, OnDestroy {
   // Order items table
   public order$: Observable<McsOrder>;
+  public isOrderTypeChange$: Observable<boolean>;
   public orderItemsColumns: string[];
   public orderItemsDataSource: McsTableDataSource<McsOrderItem>;
   public orderDetailsView: OrderDetailsView;
@@ -322,6 +324,23 @@ export class OrderComponent implements OnInit, OnDestroy {
   private _subscribeToOrderResolver(): void {
     this.order$ = this._activatedRoute.data.pipe(
       map((resolver) => getSafeProperty(resolver, (obj) => obj.order)),
+      shareReplay(1)
+    );
+
+    this.isOrderTypeChange$ = this.order$.pipe(
+      switchMap((order) => {
+        let mainOrderItem = getSafeProperty(order, (obj) => obj.items[0]);
+        if (isNullOrEmpty(mainOrderItem)) {
+          throw new Error(this._translate.instant('order.errorOrderTypeNoOrderItems'));
+        }
+        return this._apiService.getOrderItemTypes({ keyword: mainOrderItem.itemOrderType }).pipe(
+          map((orderTypeDetails) => {
+            let orderDetail = getSafeProperty(orderTypeDetails, (obj) => obj.collection[0]);
+            return !isNullOrEmpty(orderDetail) && orderDetail.orderType === OrderType.Change;
+          }),
+          shareReplay(1)
+        );
+      }),
       shareReplay(1)
     );
   }
