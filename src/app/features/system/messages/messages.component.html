@@ -180,8 +180,11 @@
         <!-- Header and Data row -->
         <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
         <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"
-          mcsId="system-message-row" mcsEventTracker="navigate-to-system-message"
-          mcsEventCategory="system-message" mcsEventLabel="system-message-listing-page"></mcs-data-row>
+          mcsCursor="pointer" (click)="navigateToSystemMessage(row)"
+          mcsId="system-message-row"
+          mcsEventTracker="navigate-to-system-message"
+          mcsEventCategory="system-message"
+          mcsEventLabel="system-message-listing-page"></mcs-data-row>
       </mcs-table>
 
       <!-- Paginator -->

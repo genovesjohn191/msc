@@ -18,7 +18,10 @@ import {
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { McsEvent } from '@app/event-manager';
-import { CommonDefinition } from '@app/utilities';
+import {
+  CommonDefinition,
+  isNullOrEmpty
+} from '@app/utilities';
 
 @Component({
   selector: 'mcs-system-messages',
@@ -57,6 +60,15 @@ export class SystemMessagesComponent extends McsTableListingBase<McsSystemMessag
    */
   protected get columnSettingsKey(): string {
     return CommonDefinition.FILTERSELECTOR_SYSTEM_MESSAGE_LISTING;
+  }
+
+  /**
+   * Navigate to system message edit page
+   * @param message Message to edit the details
+   */
+  public navigateToSystemMessage(message: McsSystemMessage): void {
+    if (isNullOrEmpty(message)) { return; }
+    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.SystemMessageEdit), message.id]);
   }
 
   /**

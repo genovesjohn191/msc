@@ -1,0 +1,43 @@
+<mcs-page [header]="'systemMessageEdit.header' | translate">
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef>
+    <!-- System Message Edit -->
+    <mcs-top-panel-item *mcsTopPanelItemDef no-border>
+      <mcs-action-item mcsAlign="end" 
+        mcsId="back-to-messages"
+        mcsRouterLink="SystemMessages"
+        mcsEventTracker="navigate-to-system-message-listing"
+        mcsEventCategory="system-message"
+        mcsEventLabel="edit-new-message-page">
+        <mcs-icon [key]="backIconKey" size="small"></mcs-icon>
+        <span>{{ 'systemMessageEdit.backToSystemMessages' | translate }}</span>
+      </mcs-action-item>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
+  <!-- Content Panel -->
+  <mcs-content-panel *mcsContentPanelDef>
+    <div class="contextual-help-page-wrapper limited-view">
+      <ng-container *ngIf = "systemMessage$ | async as systemMessage">
+        <!-- Shared Message Form -->
+        <mcs-system-message-form #fgSystemMessageForm
+          (dataChange)="onMessageFormDataChange($event)" 
+          [message]="systemMessage">
+        </mcs-system-message-form>
+        
+        <!-- Message Action -->
+        <div class="action-items">
+          <button mcsButton  
+            mcsId="edit-message"
+            [disabled]="!isFormValid" 
+            (click)="onEditMessage(systemMessage)"
+            mcsEventTracker="submit-edit-message"
+            mcsEventCategory="system-message"
+            mcsEventLabel="edit-message-page">
+            {{ 'systemMessageEdit.saveMessage' | translate }}
+          </button>
+        </div>
+      </ng-container>
+    </div>
+  </mcs-content-panel>
+</mcs-page>

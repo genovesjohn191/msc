@@ -4,21 +4,21 @@
     <input mcsInput mcsSetFocus #startInput
       mcsId="inp-start"
       (change)="updateExpiryValidation()"
-      [placeholder]="'systemMessageCreate.placeholders.start' | translate"
+      [placeholder]="'systemMessageForm.startPlaceholder' | translate"
       [formControl]="fcStart"
-      [mcsContextualHelp]="'systemMessageCreate.contextualHelp.start' | translate">
+      [mcsContextualHelp]="'systemMessageForm.startHelp' | translate">
 
     <mcs-hint mcsHint align="start">
       {{ dateNow | mcsStdDateFormat: 'isoDate' }}
     </mcs-hint>
     <mcs-error mcsError errorState="invalidDate">
-      {{ 'systemMessageCreate.errors.date' | translate }}
+      {{ 'systemMessageForm.errors.date' | translate }}
     </mcs-error>
     <mcs-error mcsError errorState="invalidDateFormat">
-      {{ 'systemMessageCreate.errors.dateFormat' | translate }}
+      {{ 'systemMessageForm.errors.dateFormat' | translate }}
     </mcs-error>
     <mcs-error mcsError errorState="invalidStartDate">
-      {{ 'systemMessageCreate.errors.start' | translate }}
+      {{ 'systemMessageForm.errors.start' | translate }}
     </mcs-error>
   </mcs-form-field>
 
@@ -26,21 +26,21 @@
   <mcs-form-field>
     <input mcsInput #expiryInput
       mcsId="inp-expiry"
-      [placeholder]="'systemMessageCreate.placeholders.expiry' | translate"
+      [placeholder]="'systemMessageForm.expiryPlaceholder' | translate"
       [formControl]="fcExpiry"
-      [mcsContextualHelp]="'systemMessageCreate.contextualHelp.expiry' | translate">
+      [mcsContextualHelp]="'systemMessageForm.expiryHelp' | translate">
 
     <mcs-hint mcsHint align="start">
       {{ dateNow | mcsStdDateFormat: 'isoDate' }}
     </mcs-hint>
     <mcs-error mcsError errorState="invalidDate">
-      {{ 'systemMessageCreate.errors.date' | translate }}
+      {{ 'systemMessageForm.errors.date' | translate }}
     </mcs-error>
     <mcs-error mcsError errorState="invalidDateFormat">
-      {{ 'systemMessageCreate.errors.dateFormat' | translate }}
+      {{ 'systemMessageForm.errors.dateFormat' | translate }}
     </mcs-error>
     <mcs-error mcsError errorState="invalidExpiryDate">
-      {{ 'systemMessageCreate.errors.expiry' | translate }}
+      {{ 'systemMessageForm.errors.expiry' | translate }}
     </mcs-error>
   </mcs-form-field>
 
@@ -48,13 +48,13 @@
   <mcs-form-field>
     <mcs-select
       mcsId="select-type" required
-      [placeholder]="'systemMessageCreate.placeholders.type' | translate"
+      [placeholder]="'systemMessageForm.typePlaceholder' | translate"
       [formControl]="fcType"
-      [mcsContextualHelp]="'systemMessageCreate.contextualHelp.type' | translate">
+      [mcsContextualHelp]="'systemMessageForm.typeHelp' | translate">
 
       <mcs-option-group>
         <ng-container *mcsOptionGroupHeader>
-          {{ 'systemMessageCreate.typeHeader' | translate }}
+          {{ 'systemMessageForm.typeHeader' | translate }}
         </ng-container>
         <mcs-option *ngFor="let messageType of messageTypeList"
           [value]="messageType.value">
@@ -63,7 +63,7 @@
       </mcs-option-group>
     </mcs-select>
     <mcs-error mcsError errorState="required">
-      {{ 'systemMessageCreate.errors.type' | translate }}
+      {{ 'systemMessageForm.errors.type' | translate }}
     </mcs-error>
   </mcs-form-field>
 
@@ -71,13 +71,13 @@
   <mcs-form-field>
     <mcs-select
       mcsId="select-severity" required
-      [placeholder]="'systemMessageCreate.placeholders.severity' | translate"
+      [placeholder]="'systemMessageForm.severityPlaceholder' | translate"
       [formControl]="fcSeverity"
-      [mcsContextualHelp]="'systemMessageCreate.contextualHelp.severity' | translate">
+      [mcsContextualHelp]="'systemMessageForm.severityHelp' | translate">
 
       <mcs-option-group>
         <ng-container *mcsOptionGroupHeader>
-          {{ 'systemMessageCreate.severityHeader' | translate }}
+          {{ 'systemMessageForm.severityHeader' | translate }}
         </ng-container>
         <mcs-option *ngFor="let severity of severityList"
           [value]="severity.value" selected>
@@ -86,7 +86,7 @@
       </mcs-option-group>
     </mcs-select>
     <mcs-error mcsError errorState="required">
-      {{ 'systemMessageCreate.errors.severity' | translate }}
+      {{ 'systemMessageForm.errors.severity' | translate }}
     </mcs-error>
   </mcs-form-field>
 
@@ -94,18 +94,19 @@
   <mcs-form-field>
     <textarea mcsInput rows="3" #messageInput required
       mcsId="inp-message"
-      [placeholder]="'systemMessageCreate.placeholders.message' | translate" maxlength="300"
+      [readonly]="hasEditedMessage"
+      [placeholder]="'systemMessageForm.messagePlaceholder' | translate" maxlength="300"
       [formControl]="fcMessage"
-      [mcsContextualHelp]="'systemMessageCreate.contextualHelp.message' | translate"></textarea>
+      [mcsContextualHelp]="messageContextualHelp"></textarea>
 
     <mcs-hint mcsHint align="start">
-      {{ 'systemMessageCreate.hints.message' | translate: { max_char: messageInput.maxLength } }}
+      {{ 'systemMessageForm.hints.message' | translate: { max_char: messageInput.maxLength } }}
     </mcs-hint>
     <mcs-hint mcsHint align="end">
       {{ messageInput.value.length }} / {{ messageInput.maxLength }}
     </mcs-hint>
     <mcs-error mcsError errorState="required">
-      {{ 'systemMessageCreate.errors.message' | translate }}
+      {{ 'systemMessageForm.errors.message' | translate }}
     </mcs-error>
   </mcs-form-field>
 
@@ -113,6 +114,6 @@
   <mcs-checkbox
     mcsId="inp-enabled"
     [formControl]="fcEnabled">
-    <h2>{{ 'systemMessageCreate.labels.enabled' | translate }}</h2>
+    <h2>{{ 'systemMessageForm.enabledLabel' | translate }}</h2>
   </mcs-checkbox>
 </form>

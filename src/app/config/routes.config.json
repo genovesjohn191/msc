@@ -209,6 +209,15 @@
     "requiredFeatureFlag": "EnableSystemMessages",
     "documentTitle": "Create System Message - Macquarie Cloud Services"
   },
+  "systemMessageEdit": {
+    "enumCategory": "SystemMessages",
+    "enumKey": "SystemMessageEdit",
+    "routePath": ":id",
+    "navigationPath": "system/messages",
+    "requiredPermissions": ["SystemMessageEdit", "SystemMessageView"],
+    "requiredFeatureFlag": "EnableSystemMessages",
+    "documentTitle": "Edit System Message - Macquarie Cloud Services"
+  },
   "internetDetails": {
     "enumCategory": "Network",
     "enumKey": "InternetDetails",
