@@ -111,7 +111,7 @@
     "back": "Back",
     "vm": {
       "label": "Please select the server you wish to scale",
-      "placeholder": "Select a VM",
+      "placeholder": "Select a server",
       "optionGroupLabel": "Virtual Data Centres",
       "contextualHelp": "Choose the virtual machine to scale."
     },
@@ -230,7 +230,7 @@
     "clone": "Clone",
     "delete": "Delete",
     "viewVCloud": "View in vCloud",
-    "resetVmPassword": "Reset VM Password",
+    "resetVmPassword": "Reset Server Password",
     "rename": "Rename",
     "suspend": "Suspend",
     "resume": "Resume",
@@ -328,7 +328,7 @@
     "loading": "Loading snapshots information.",
     "loadingContent": "Loading snapshots.",
     "formMessageDefaultError": "Something went wrong while processing your request. Please try again later.",
-    "snapshotHeader": "VM Snapshot",
+    "snapshotHeader": "Server Snapshot",
     "snapshotDescription": "Snapshots are point-in-time VM-level restore points.\r\n Restoring a snapshot is not reversible, so restore carefully.",
     "snapshots": "Snapshots",
     "noSnapshots": "There are no Snapshots to display for this server.",
@@ -344,7 +344,7 @@
   "serverManagement": {
     "label": "Management",
     "vmProperties": {
-      "title": "VM Properties",
+      "title": "Server Properties",
       "status": "Status",
       "image": "Image",
       "zone": "Zone",
@@ -388,7 +388,7 @@
       "cancel": "Cancel",
       "loadingContent": "Loading list of media.",
       "errorGettingMedias": "Sorry, something’s not right. We weren’t able to retrieve the list of media.",
-      "noContentMessage": "No media is mounted for this server.",
+      "noContentMessage": "No media is attached to this server.",
       "noAvailableMedia": "No available media to attach."
     },
     "manageScale": {
@@ -1482,8 +1482,8 @@
     "message": "The data on <strong>{{storage_name}}</strong> will be lost forever.\r\n\nAre you sure you want to delete this volume?"
   },
   "dialogCreateSnapshot": {
-    "title": "New VM Snapshot",
-    "message": "Capturing a new snapshot will replace any existing snapshots for this VM.\r\n\nAre you sure you wish to capture a new snapshot for <strong>{{server_name}}</strong>?"
+    "title": "New Server Snapshot",
+    "message": "Capturing a new snapshot will replace any existing snapshots for this server.\r\n\nAre you sure you wish to capture a new snapshot for <strong>{{server_name}}</strong>?"
   },
   "dialogInsufficientStorageSnapshot": {
     "title": "Insufficient Storage",
@@ -1494,11 +1494,11 @@
     "message": "A snapshot cannot be captured for this server as it uses a custom, split-profile disk configuration."
   },
   "dialogRestoreSnapshot": {
-    "title": "Restore VM Snapshot",
-    "message": "Restoring a snapshot replaces data on the VM and cannot be undone. The server will be unavailable until this process is complete.\r\n\nAre you sure you wish to restore <strong>{{snapshot_name}}</strong> to <strong>{{server_name}}</strong>?"
+    "title": "Restore Server Snapshot",
+    "message": "Restoring a snapshot replaces data on the server and cannot be undone. The server will be unavailable until this process is complete.\r\n\nAre you sure you wish to restore <strong>{{snapshot_name}}</strong> to <strong>{{server_name}}</strong>?"
   },
   "dialogDeleteSnapshot": {
-    "title": "Delete VM Snapshot",
+    "title": "Delete Server Snapshot",
     "message": "Deleting <strong>{{snapshot_name}}</strong> cannot be undone.\r\n\nAre you sure you wish to continue?"
   },
   "dialogSessionIdle": {
