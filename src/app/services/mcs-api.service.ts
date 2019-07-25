@@ -85,7 +85,8 @@ import {
   McsProduct,
   McsProductCatalog,
   McsSystemMessage,
-  McsSystemMessageCreate
+  McsSystemMessageCreate,
+  McsSystemMessageEdit
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -1022,6 +1023,16 @@ export class McsApiService {
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.validateMessage'))
       )
+    );
+  }
+
+  public editSystemMessage(id: string, messageData: McsSystemMessageEdit): Observable<McsSystemMessageEdit> {
+    return this._systemMessageApi.editMessage(id, messageData).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.editMessage'))
+      ),
+      tap(() => this._eventDispatcher.dispatch(McsEvent.systemMessageEdited, messageData)),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
 

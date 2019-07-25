@@ -1,7 +1,8 @@
 import {
   Component,
   ChangeDetectionStrategy,
-  ViewChild
+  ViewChild,
+  OnInit
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import {
@@ -9,8 +10,10 @@ import {
   Observable
 } from 'rxjs';
 import {
+  concatMap,
   tap,
-  concatMap
+  map,
+  shareReplay
 } from 'rxjs/operators';
 import {
   IMcsNavigateAwayGuard,
@@ -20,8 +23,9 @@ import {
   McsDateTimeService
 } from '@app/core';
 import {
-  McsSystemMessageCreate,
   RouteKey,
+  McsSystemMessageEdit,
+  McsSystemMessage
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -30,22 +34,24 @@ import {
 } from '@app/utilities';
 import {
   DialogConfirmation,
-  DialogService,
+  DialogService
 } from '@app/shared';
 import { McsApiService } from '@app/services';
 import { SystemMessageForm } from '@app/features-shared';
+import { ActivatedRoute } from '@angular/router';
 
 const SYSTEM_MESSAGE_DATEFORMAT = "yyyy-MM-dd'T'HH:mm z";
 @Component({
-  selector: 'mcs-message-create',
-  templateUrl: './message-create.component.html',
+  selector: 'mcs-message-edit',
+  templateUrl: './message-edit.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class SystemMessageCreateComponent implements IMcsNavigateAwayGuard {
+export class SystemMessageEditComponent implements OnInit, IMcsNavigateAwayGuard {
 
-  private _systemMessageFormData: McsSystemMessageCreate;
-  private _isMessageCreated: boolean;
+  public systemMessage$: Observable<McsSystemMessage>;
+  private _systemMessageFormData: McsSystemMessageEdit;
+  private _isMessageEdited: boolean;
 
   @ViewChild('fgSystemMessageForm')
   private _fgSystemMessagesForm: IMcsFormGroup;
@@ -56,8 +62,13 @@ export class SystemMessageCreateComponent implements IMcsNavigateAwayGuard {
     private _navigationService: McsNavigationService,
     private _apiService: McsApiService,
     private _dateTimeService: McsDateTimeService,
+    private _activatedRoute: ActivatedRoute,
   ) {
-    this._systemMessageFormData = new McsSystemMessageCreate();
+    this._systemMessageFormData = new McsSystemMessageEdit();
+  }
+
+  public ngOnInit() {
+    this._subscribeToSystemMessageResolve();
   }
 
   public get servicesIconKey(): string {
@@ -85,11 +96,11 @@ export class SystemMessageCreateComponent implements IMcsNavigateAwayGuard {
    * and all the inputted setting on the form are checked
    */
   public canNavigateAway(): boolean {
-    return this._isMessageCreated || !this.hasDirtyFormControls;
+    return this._isMessageEdited || !this.hasDirtyFormControls;
   }
 
   /**
-   * Triggers when data change occurs on system message form
+   * Get system message form values
    * @param systemMessageForm System message form values
    */
   public onMessageFormDataChange(systemMessageForm: SystemMessageForm) {
@@ -119,27 +130,37 @@ export class SystemMessageCreateComponent implements IMcsNavigateAwayGuard {
   }
 
   /**
-   * Create message according to the inputs
+   * Edit message according to the inputs
+   * @param systemMessage System Message data to be edited
    */
-  public onCreateMessage(): void {
+  public onEditMessage(systemMessage: McsSystemMessage): void {
     this._apiService.validateSystemMessage(this._systemMessageFormData).pipe(
       tap((conflictMessages) => {
-        this._showMessageConfirmationDialog(this._systemMessageFormData, conflictMessages.totalCollectionCount);
+        this._showMessageConfirmationDialog(
+          this._systemMessageFormData,
+          systemMessage.id,
+          conflictMessages.totalCollectionCount,
+          );
       })
-      ).subscribe();
+    ).subscribe();
   }
 
   /**
    * Shows the type of message confirmation dialog
    * based on the inputted values
    * @param message System message form values
+   * @param messageId Id of the system message to be edited
    * @param conflictMessageCount Number of conflict messages
    */
-  private _showMessageConfirmationDialog(message: McsSystemMessageCreate, conflictMessageCount: number): void {
+  private _showMessageConfirmationDialog(
+    message: McsSystemMessageEdit,
+    messageId: string,
+    conflictMessageCount: number
+  ): void {
     if (conflictMessageCount > 0) {
-      this._showSaveConflictDialog(message);
+      this._showSaveConflictDialog(message, messageId);
     } else {
-      this._showSaveDialog(message);
+      this._showSaveDialog(message, messageId);
     }
   }
 
@@ -147,21 +168,22 @@ export class SystemMessageCreateComponent implements IMcsNavigateAwayGuard {
    * Show the save conflict dialog
    * for conflicting messages
    * @param message System message form values
+   * @param messageId Id of the system message to be edited
    */
-  private _showSaveConflictDialog(message: McsSystemMessageCreate): void {
+  private _showSaveConflictDialog(message: McsSystemMessageEdit, messageId: string): void {
     let dialogData = {
       data: message,
       type: 'warning',
-      title: this._translateService.instant('dialogSaveConflictSystemMessageNew.title'),
-      message: this._translateService.instant('dialogSaveConflictSystemMessageNew.message')
-    } as DialogConfirmation<McsSystemMessageCreate>;
+      title: this._translateService.instant('dialogSaveConflictSystemMessageEdit.title'),
+      message: this._translateService.instant('dialogSaveConflictSystemMessageEdit.message')
+    } as DialogConfirmation<McsSystemMessageEdit>;
 
     let dialogRef = this._dialogService.openConfirmation(dialogData);
 
     dialogRef.afterClosed().pipe(
       concatMap((dialogResult) => {
         if (isNullOrEmpty(dialogResult)) { return of(null); }
-        return this._createSystemMessage(this._systemMessageFormData);
+        return this._editSystemMessage(this._systemMessageFormData, messageId);
       })
     ).subscribe();
   }
@@ -170,21 +192,22 @@ export class SystemMessageCreateComponent implements IMcsNavigateAwayGuard {
    * Show the save dialog
    * for none conflicting messages
    * @param message System message form values
+   * @param messageId Id of the system message to be edited
    */
-  private _showSaveDialog(message: McsSystemMessageCreate): void {
+  private _showSaveDialog(message: McsSystemMessageEdit, messageId: string): void {
     let dialogData = {
       data: message,
       type: 'warning',
-      title: this._translateService.instant('dialogSaveSystemMessageNew.title'),
-      message: this._translateService.instant('dialogSaveSystemMessageNew.message')
-    } as DialogConfirmation<McsSystemMessageCreate>;
+      title: this._translateService.instant('dialogSaveSystemMessageEdit.title'),
+      message: this._translateService.instant('dialogSaveSystemMessageEdit.message')
+    } as DialogConfirmation<McsSystemMessageEdit>;
 
     let dialogRef = this._dialogService.openConfirmation(dialogData);
 
     dialogRef.afterClosed().pipe(
       concatMap((dialogResult) => {
         if (isNullOrEmpty(dialogResult)) { return of(null); }
-        return this._createSystemMessage(this._systemMessageFormData);
+        return this._editSystemMessage(this._systemMessageFormData, messageId);
       })
     ).subscribe();
   }
@@ -192,13 +215,25 @@ export class SystemMessageCreateComponent implements IMcsNavigateAwayGuard {
   /**
    * Create System Message based from the inputted data
    * @param message System message form values
+   * @param messageId Id of the system message to be edited
    */
-  private _createSystemMessage(message: McsSystemMessageCreate): Observable<McsSystemMessageCreate> {
-    return this._apiService.createSystemMessage(message).pipe(
+  private _editSystemMessage(message: McsSystemMessageEdit, messageId: string): Observable<McsSystemMessageEdit> {
+    return this._apiService.editSystemMessage(messageId, message).pipe(
       tap(() => {
-        this._isMessageCreated = true;
+        this._isMessageEdited = true;
         this._navigationService.navigateTo(RouteKey.SystemMessages);
       })
     );
   }
+
+  /**
+   * Subscribe to message edit resolver
+   */
+  private _subscribeToSystemMessageResolve(): void {
+    this.systemMessage$ = this._activatedRoute.data.pipe(
+      map((resolver) => getSafeProperty(resolver, (obj) => obj.message)),
+      shareReplay(1)
+    );
+  }
+
 }

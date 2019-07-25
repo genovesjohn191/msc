@@ -6,13 +6,15 @@ import {
   EventEmitter,
   Output,
   OnDestroy,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  Input
 } from '@angular/core';
 import {
   FormGroup,
   FormControl,
   FormBuilder
 } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 import {
   startWith,
@@ -30,17 +32,20 @@ import {
   MessageType,
   severityText,
   Severity,
+  McsSystemMessage,
 } from '@app/models';
 import {
   isNullOrEmpty,
   compareDates,
   unsubscribeSubject,
-  getSafeProperty
+  getSafeProperty,
+  CommonDefinition
 } from '@app/utilities';
 import { McsFormGroupDirective } from '@app/shared';
 import { SystemMessageForm } from './system-message-form';
 
 const SYSTEM_MESSAGE_DATEFORMAT = 'YYYY-MM-DDTHH:mm';
+const SYSTEM_MESSAGE_ISO_DATEFORMAT = 'isoDate';
 @Component({
   selector: 'mcs-system-message-form',
   templateUrl: './system-message-form.component.html',
@@ -51,6 +56,7 @@ export class SystemMessageFormComponent
   implements OnInit, OnDestroy, IMcsFormGroup, IMcsDataChange<SystemMessageForm> {
 
   public dateNow = new Date();
+  public hasEditedMessage: boolean;
 
   // Form Variables
   public fgCreateMessage: FormGroup;
@@ -65,6 +71,9 @@ export class SystemMessageFormComponent
   public messageTypeList: McsOption[];
   public severityList: McsOption[];
 
+  @Input()
+  public message: McsSystemMessage;
+
   @Output()
   public dataChange = new EventEmitter<SystemMessageForm>();
 
@@ -78,9 +87,10 @@ export class SystemMessageFormComponent
     private _formBuilder: FormBuilder,
     private _changeDetectorRef: ChangeDetectorRef,
     private _dateTimeService: McsDateTimeService,
+    private _translateService: TranslateService
   ) {
-    this.messageTypeList = new Array ();
-    this.severityList = new Array ();
+    this.messageTypeList = new Array();
+    this.severityList = new Array();
   }
 
   public ngOnInit() {
@@ -92,6 +102,12 @@ export class SystemMessageFormComponent
 
   public ngOnDestroy() {
     unsubscribeSubject(this._destroySubject);
+  }
+
+  public get messageContextualHelp(): string {
+    return isNullOrEmpty(this.message) ?
+      this._translateService.instant('systemMessageForm.messageCreateHelp') :
+      this._translateService.instant('systemMessageForm.messageEditHelp');
   }
 
   /**
@@ -181,6 +197,8 @@ export class SystemMessageFormComponent
     this.fcEnabled = new FormControl(true, [
     ]);
 
+    this._setFormControlValues();
+
     // Register Form Groups using binding
     this.fgCreateMessage = this._formBuilder.group({
       fcStart: this.fcStart,
@@ -195,6 +213,29 @@ export class SystemMessageFormComponent
     this.fgCreateMessage.statusChanges
       .pipe(startWith(null), takeUntil(this._destroySubject))
       .subscribe(() => this.notifyDataChange());
+  }
+
+  /**
+   * Sets the values of form controls when message is on edit
+   */
+  private _setFormControlValues(): void {
+    if (isNullOrEmpty(this.message)) { return; }
+
+    this.fcStart.setValue(this._dateTimeService.formatDate(
+      this.message.start,
+      SYSTEM_MESSAGE_ISO_DATEFORMAT,
+      CommonDefinition.TIMEZONE_SYDNEY));
+
+    this.fcExpiry.setValue(this._dateTimeService.formatDate(
+      this.message.expiry,
+      SYSTEM_MESSAGE_ISO_DATEFORMAT,
+      CommonDefinition.TIMEZONE_SYDNEY));
+
+    this.fcType.setValue(this.message.type);
+    this.fcSeverity.setValue(this.message.severity);
+    this.fcEnabled.setValue(this.message.enabled);
+    this.fcMessage.setValue(this.message.message);
+    this.hasEditedMessage = true;
   }
 
   /**

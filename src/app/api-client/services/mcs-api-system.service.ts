@@ -10,7 +10,8 @@ import {
   McsApiRequestParameter,
   McsSystemMessage,
   McsSystemMessageCreate,
-  McsQueryParam
+  McsQueryParam,
+  McsSystemMessageEdit
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiSystemService } from '../interfaces/mcs-api-system.interface';
@@ -109,6 +110,28 @@ export class McsApiSystemService implements IMcsApiSystemService {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
             .deserializeResponse<McsSystemMessage[]>(McsSystemMessage, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  /**
+   * Edit system message by ID (MCS API Response)
+   * @param id System Message identification
+   * @param messageData Message to be edited
+   */
+  public editMessage(id: string, messageData: McsSystemMessageEdit):
+    Observable<McsApiSuccessResponse<McsSystemMessageEdit>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/system/messages/${id}`;
+    mcsApiRequestParameter.recordData = serializeObjectToJson(messageData);
+
+    return this._mcsApiService.put(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsSystemMessageEdit>(McsSystemMessageEdit, response);
           return apiResponse;
         })
       );

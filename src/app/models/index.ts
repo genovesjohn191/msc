@@ -94,6 +94,7 @@ export * from './request/mcs-server-snapshot-delete';
 export * from './request/mcs-server-password-reset';
 export * from './request/mcs-server-snapshot-create';
 export * from './request/mcs-system-message-create';
+export * from './request/mcs-system-message-edit';
 export * from './request/mcs-ticket-create';
 export * from './request/mcs-ticket-create-attachment';
 export * from './request/mcs-ticket-create-comment';

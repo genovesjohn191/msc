@@ -59,7 +59,7 @@ import { JobReceiveEvent } from './events/job-receive.event';
 import { JobCurrentUserEvent } from './events/job-current-user.event';
 import { JobResourceCatalogItemCreateEvent } from './events/job-resource-catalog-item-create.event';
 import { SystemMessageCreateEvent } from './events/system-message-create.event';
-import { SystemMessageValidateEvent } from './events/system-message-validate.event';
+import { SystemMessageEditEvent } from './events/system-message-edit.event';
 import { TicketCreateEvent } from './events/ticket-create.event';
 
 export class McsEvent {
@@ -126,7 +126,7 @@ export class McsEvent {
   public static jobResourceCatalogItemCreate = new JobResourceCatalogItemCreateEvent();
 
   public static systemMessageCreated = new SystemMessageCreateEvent();
-  public static systemMessageValidated = new SystemMessageValidateEvent();
+  public static systemMessageEdited = new SystemMessageEditEvent();
 
   public static ticketCreateEvent = new TicketCreateEvent();
 }

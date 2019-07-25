@@ -3,7 +3,8 @@ import {
   McsSystemMessage,
   McsQueryParam,
   McsApiSuccessResponse,
-  McsSystemMessageCreate
+  McsSystemMessageCreate,
+  McsSystemMessageEdit
 } from '@app/models';
 
 export interface IMcsApiSystemService {
@@ -30,4 +31,11 @@ export interface IMcsApiSystemService {
    * @param messageData Message data to be validated
    */
   validateMessage(messageData: McsSystemMessageCreate): Observable<McsApiSuccessResponse<McsSystemMessage[]>>;
+
+  /**
+   * This will edit the message based on the inputted information
+   * @param id MESSAGE identification
+   * @param messageData Message data to be edited
+   */
+  editMessage(id: string, messageData: McsSystemMessageEdit): Observable<McsApiSuccessResponse<McsSystemMessageEdit>>;
 }

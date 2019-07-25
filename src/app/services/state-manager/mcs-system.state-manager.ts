@@ -15,6 +15,7 @@ import { IMcsProcessable } from '../core/mcs-processable.interface';
 export class McsSystemMessageStateManager implements IMcsProcessable<McsSystemMessage>, McsDisposable {
 
   private _systemMessageCreateHandler: Subscription;
+  private _systemMessageEditHandler: Subscription;
 
   constructor(
     private _eventDispatcher: EventBusDispatcherService,
@@ -28,6 +29,7 @@ export class McsSystemMessageStateManager implements IMcsProcessable<McsSystemMe
    */
   public dispose(): void {
     unsubscribeSafely(this._systemMessageCreateHandler);
+    unsubscribeSafely(this._systemMessageEditHandler);
   }
 
   /**
@@ -63,6 +65,8 @@ export class McsSystemMessageStateManager implements IMcsProcessable<McsSystemMe
   private _registerEvents(): void {
     this._systemMessageCreateHandler = this._eventDispatcher.addEventListener(
       McsEvent.systemMessageCreated, this._refreshSystemMessageListing.bind(this));
+    this._systemMessageEditHandler = this._eventDispatcher.addEventListener(
+      McsEvent.systemMessageEdited, this._refreshSystemMessageListing.bind(this));
   }
 
 }
