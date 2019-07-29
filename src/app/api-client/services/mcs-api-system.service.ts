@@ -72,6 +72,33 @@ export class McsApiSystemService implements IMcsApiSystemService {
   }
 
   /**
+   * Get Active System Messages (MCS API Response)
+   * @param query Query predicate that serves as the parameter of the endpoint
+   */
+  public getActiveMessages(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsSystemMessage[]>> {
+    // Set default values if null
+    let searchParams = new Map<string, any>();
+    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
+    searchParams.set('page', query.pageIndex);
+    searchParams.set('per_page', query.pageSize);
+    searchParams.set('search_keyword', query.keyword);
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/system/active-messages';
+    mcsApiRequestParameter.searchParameters = searchParams;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsSystemMessage[]>(McsSystemMessage, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  /**
    * This will create the new message based on the inputted information
    * @param messageData Message data to be created
    */

@@ -33,6 +33,7 @@ import { McsNotificationEventsService } from './services/mcs-notification-events
 import { McsRouteSettingsService } from './services/mcs-route-settings.service';
 import { McsHttpClientInterceptor } from './interceptors/mcs-http-client.interceptor';
 import { McsErrorHandlerInterceptor } from './interceptors/mcs-error-handler.interceptor';
+import { McsSystemMessageHandlerService } from './services/mcs-system-message-handler.service';
 
 @NgModule({
   declarations: [
@@ -84,6 +85,7 @@ export class CoreModule {
     private _eventDispatcher: EventBusDispatcherService,
     private _routerHandler: McsRouteHandlerService,
     private _routeSettings: McsRouteSettingsService,
+    private _systemMessageHandler: McsSystemMessageHandlerService,
     private _notificationJob: McsNotificationJobService,
     private _notificationContext: McsNotificationContextService,
     _notificationEvents: McsNotificationEventsService,
@@ -135,7 +137,8 @@ export class CoreModule {
       this._notificationJob,
       this._notificationContext,
       this._routerHandler,
-      this._routeSettings
+      this._routeSettings,
+      this._systemMessageHandler
     ];
   }
 }

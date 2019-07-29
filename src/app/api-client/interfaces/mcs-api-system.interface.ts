@@ -21,6 +21,12 @@ export interface IMcsApiSystemService {
   getMessage(id: string): Observable<McsApiSuccessResponse<McsSystemMessage>>;
 
   /**
+   * Get all active messages from the API
+   * @param query Query predicate that serves as the parameter of the endpoint
+   */
+  getActiveMessages(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsSystemMessage[]>>;
+
+  /**
    * This will create the new message based on the inputted information
    * @param messageData Message data to be created
    */

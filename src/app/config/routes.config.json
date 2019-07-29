@@ -17,6 +17,12 @@
     "navigationPath": "maintenance",
     "documentTitle": "Maintenance - Macquarie Cloud Services"
   },
+  "system-message": {
+    "enumKey": "SystemMessagePage",
+    "routePath": "system-message",
+    "navigationPath": "system-message",
+    "documentTitle": "System Message - Macquarie Cloud Services"
+  },
   "servers": {
     "enumCategory": "Compute",
     "enumKey": "Servers",

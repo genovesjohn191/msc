@@ -25,7 +25,8 @@ import { ServicesModule } from './services';
 import {
   ConsolePageModule,
   DefaultPageModule,
-  MaintenancePageModule
+  MaintenancePageModule,
+  SystemMessagePageModule
 } from './page-layout';
 import { FeaturesSharedModule } from './features-shared';
 import { SharedModule } from './shared';
@@ -103,6 +104,7 @@ export function apiClientConfig(cookieService: McsCookieService): McsApiClientCo
     SharedModule,
     ConsolePageModule,
     MaintenancePageModule,
+    SystemMessagePageModule,
     DefaultPageModule
   ],
   providers: [
