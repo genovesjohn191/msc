@@ -1007,6 +1007,15 @@ export class McsApiService {
     );
   }
 
+  public getActiveSystemMessages(query?: McsQueryParam): Observable<McsApiCollection<McsSystemMessage>> {
+    return this._systemMessageApi.getActiveMessages(query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getActiveSystemMessages'))
+      ),
+      map((response) => this._mapToCollection(response))
+    );
+  }
+
   public createSystemMessage(messageData: McsSystemMessageCreate): Observable<McsSystemMessageCreate> {
     return this._systemMessageApi.createMessage(messageData).pipe(
       catchError((error) =>

@@ -90,4 +90,11 @@ export class McsSystemMessage extends McsEntityBase {
     return (this.enabled) ? 'Enabled' : 'Disabled';
   }
 
+  /**
+   * Returns true if the severity is Critical, false otherwise
+   */
+  public get isCritical(): boolean {
+    return this.severity === Severity.Critical;
+  }
+
 }

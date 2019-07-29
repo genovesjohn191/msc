@@ -3,6 +3,7 @@ export enum RouteKey {
 
   Console,
   Maintenance,
+  SystemMessagePage,
 
   Servers,
   ServerDetails,
