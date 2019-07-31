@@ -121,7 +121,7 @@
             <div class="listing-status-wrapper">
               <span>{{ 'media.noMedia' | translate }} </span>
               <ng-container *mcsAccessControl="['TemplateEdit']">
-                <span>
+                <span *mcsAccessControl="['TemplateEdit']; feature: 'EnableResourceMediaUpload'">
                   Click <a (click)="navigateToMediaUpload()"
                   mcsEventTracker="upload-media"
                   mcsEventCategory="media"
