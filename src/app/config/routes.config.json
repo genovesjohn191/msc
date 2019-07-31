@@ -21,6 +21,7 @@
     "enumKey": "SystemMessagePage",
     "routePath": "system-message",
     "navigationPath": "system-message",
+    "requiredFeatureFlag": "EnableSystemMessages",
     "documentTitle": "System Message - Macquarie Cloud Services"
   },
   "servers": {

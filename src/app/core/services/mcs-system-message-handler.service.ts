@@ -3,12 +3,14 @@ import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { McsApiService } from '@app/services';
+import { McsFeatureFlag } from '@app/models';
 import { McsEvent } from '@app/event-manager';
 import {
   McsDisposable,
   unsubscribeSafely
 } from '@app/utilities';
 import { McsLoggerService } from './mcs-logger.service';
+import { McsAccessControlService } from '../authentication/mcs-access-control.service';
 
 @Injectable()
 export class McsSystemMessageHandlerService implements McsDisposable {
@@ -17,6 +19,7 @@ export class McsSystemMessageHandlerService implements McsDisposable {
 
   constructor(
     private _eventDispatcher: EventBusDispatcherService,
+    private _accessControlService: McsAccessControlService,
     private _apiService: McsApiService,
     private _loggerService: McsLoggerService
   ) {
@@ -43,11 +46,16 @@ export class McsSystemMessageHandlerService implements McsDisposable {
    * Event that gets notified once there are changes on the route
    */
   private _onRouteChange(): void {
+    let hasSystemMessageFeatureFlag = this._accessControlService.hasAccessToFeature(McsFeatureFlag.SystemMessages);
+
+    // TODO: improve architecture
+    if (!hasSystemMessageFeatureFlag) { return; }
+
     this._apiService.getActiveSystemMessages().pipe(
       map((response) => response.collection)
     ).subscribe((messages) => {
       this._loggerService.traceInfo(`Checking active messages...`);
-      this._loggerService.traceInfo(`Active Messages:`, messages );
+      this._loggerService.traceInfo(`Active Messages:`, messages);
       /**
        * TODO: Check the type and severity of message
        * to determine the system message display
