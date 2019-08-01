@@ -18,7 +18,10 @@ import {
   McsQueryParam,
   McsApiCollection
 } from '@app/models';
-import { cloneObject } from '@app/utilities';
+import {
+  cloneObject,
+  CommonDefinition
+} from '@app/utilities';
 import { McsEvent } from '@app/event-manager';
 
 @Component({
@@ -38,7 +41,6 @@ export class ToolsComponent extends McsTableListingBase<McsPortal> {
     private _apiService: McsApiService
   ) {
     super(_injector, _changeDetectorRef, { dataChangeEvent: McsEvent.dataChangeTools });
-    this.dataColumns = ['name', 'resourceSpecific', 'portalAccess'];
     this._initializeToolDescriptionMap();
   }
 
@@ -46,8 +48,7 @@ export class ToolsComponent extends McsTableListingBase<McsPortal> {
    * Returns the column settings key for the filter selector
    */
   protected get columnSettingsKey(): string {
-    // This is undefined since the table on tools doesnt have filtering of columns
-    return undefined;
+    return CommonDefinition.FILTERSELECTOR_TOOLS_LISTING;
   }
 
   /**

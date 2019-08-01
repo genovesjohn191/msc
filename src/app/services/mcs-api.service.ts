@@ -113,7 +113,9 @@ import {
   McsApiFirewallsFactory,
   McsApiConsoleFactory,
   McsApiSystemFactory,
-  IMcsApiSystemService
+  IMcsApiSystemService,
+  IMcsApiToolsService,
+  McsApiToolsFactory
 } from '@app/api-client';
 import {
   EventBusDispatcherService,
@@ -126,7 +128,6 @@ import { McsJobsRepository } from './repositories/mcs-jobs.repository';
 import { McsInternetRepository } from './repositories/mcs-internet.repository';
 import { McsServersRepository } from './repositories/mcs-servers.repository';
 import { McsResourcesRepository } from './repositories/mcs-resources.repository';
-import { McsToolsRepository } from './repositories/mcs-tools.repository';
 import { McsTicketsRepository } from './repositories/mcs-tickets.repository';
 import { McsSystemMessagesRepository } from './repositories/mcs-system-messages.repository';
 import { McsProductsRepository } from './repositories/mcs-products.repository';
@@ -150,7 +151,6 @@ export class McsApiService {
   private readonly _internetRepository: McsInternetRepository;
   private readonly _serversRepository: McsServersRepository;
   private readonly _resourcesRepository: McsResourcesRepository;
-  private readonly _toolsRepository: McsToolsRepository;
   private readonly _ticketsRepository: McsTicketsRepository;
   private readonly _systemMessagesRepository: McsSystemMessagesRepository;
   private readonly _productsRepository: McsProductsRepository;
@@ -171,6 +171,7 @@ export class McsApiService {
   private readonly _firewallsApi: IMcsApiFirewallsService;
   private readonly _consoleApi: IMcsApiConsoleService;
   private readonly _systemMessageApi: IMcsApiSystemService;
+  private readonly _toolsService: IMcsApiToolsService;
 
   private readonly _eventDispatcher: EventBusDispatcherService;
   private readonly _entitiesEventMap: Array<DataEmitter<any>>;
@@ -182,7 +183,6 @@ export class McsApiService {
     this._internetRepository = _injector.get(McsInternetRepository);
     this._serversRepository = _injector.get(McsServersRepository);
     this._resourcesRepository = _injector.get(McsResourcesRepository);
-    this._toolsRepository = _injector.get(McsToolsRepository);
     this._ticketsRepository = _injector.get(McsTicketsRepository);
     this._systemMessagesRepository = _injector.get(McsSystemMessagesRepository);
     this._productsRepository = _injector.get(McsProductsRepository);
@@ -205,6 +205,7 @@ export class McsApiService {
     this._firewallsApi = apiClientFactory.getService(new McsApiFirewallsFactory());
     this._consoleApi = apiClientFactory.getService(new McsApiConsoleFactory());
     this._systemMessageApi = apiClientFactory.getService(new McsApiSystemFactory());
+    this._toolsService = apiClientFactory.getService(new McsApiToolsFactory());
 
     // Register events
     this._entitiesEventMap = [];
@@ -742,18 +743,11 @@ export class McsApiService {
     );
   }
 
-  public getPortals(query?: McsQueryParam): Observable<McsApiCollection<McsPortal>> {
-    return this._mapToEntityRecords(this._toolsRepository, query).pipe(
+  public getPortals(_query?: McsQueryParam): Observable<McsApiCollection<McsPortal>> {
+    return this._toolsService.getPortals().pipe(
+      map((response) => this._mapToCollection(response.content, response.totalCount)),
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getPortals'))
-      )
-    );
-  }
-
-  public getPortal(id: string): Observable<McsPortal> {
-    return this._mapToEntityRecord(this._toolsRepository, id).pipe(
-      catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getPortal'))
       )
     );
   }
@@ -1178,11 +1172,6 @@ export class McsApiService {
     this._entitiesEventMap.push({
       event: McsEvent.dataChangeResources,
       eventEmitter: this._resourcesRepository.dataChange()
-    });
-
-    this._entitiesEventMap.push({
-      event: McsEvent.dataChangeTools,
-      eventEmitter: this._toolsRepository.dataChange()
     });
 
     this._entitiesEventMap.push({
