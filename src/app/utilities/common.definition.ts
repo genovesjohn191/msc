@@ -126,5 +126,6 @@ export class CommonDefinition {
   public static FILTERSELECTOR_MEDIA_LISTING = 'mediaFilter';
   public static FILTERSELECTOR_ORDER_LISTING = 'orderFilter';
   public static FILTERSELECTOR_INTERNET_LISTING = 'internetFilter';
+  public static FILTERSELECTOR_TOOLS_LISTING = 'toolsFilter';
   public static FILTERSELECTOR_SYSTEM_MESSAGE_LISTING = 'systemMessageFilter';
 }

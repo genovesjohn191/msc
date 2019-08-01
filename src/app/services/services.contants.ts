@@ -11,7 +11,6 @@ import { McsResourcesRepository } from './repositories/mcs-resources.repository'
 import { McsServersOsRepository } from './repositories/mcs-servers-os.repository';
 import { McsServersRepository } from './repositories/mcs-servers.repository';
 import { McsTicketsRepository } from './repositories/mcs-tickets.repository';
-import { McsToolsRepository } from './repositories/mcs-tools.repository';
 import { McsConsoleRepository } from './repositories/mcs-console.repository';
 import { McsCompaniesRepository } from './repositories/mcs-companies.repository';
 import { McsInternetRepository } from './repositories/mcs-internet.repository';
@@ -35,7 +34,6 @@ export const repositoryProviders: any[] = [
   McsServersOsRepository,
   McsServersRepository,
   McsTicketsRepository,
-  McsToolsRepository,
   McsConsoleRepository,
   McsCompaniesRepository,
   McsInternetRepository,
