@@ -230,6 +230,7 @@
     "clone": "Clone",
     "delete": "Delete",
     "viewVCloud": "View in vCloud",
+    "viewVCenter": "View in vCenter",
     "resetVmPassword": "Reset Server Password",
     "rename": "Rename",
     "suspend": "Suspend",
@@ -953,7 +954,7 @@
   },
   "systemMessageForm": {
     "typeHeader": "Message Type",
-    "severityHeader": "Severity",    
+    "severityHeader": "Severity",
     "hints": {
       "message": "Max of {{max_char}} characters"
     },
@@ -1584,5 +1585,5 @@
     "title": "Conflicting Message",
     "message": "Are you sure you wish to continue?\r\nAn existing message is already enabled.\r\n\nSaving this message will cause the conflicting message to be disabled and this message enabled in its place."
   }
-  
+
 }

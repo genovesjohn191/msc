@@ -123,15 +123,15 @@
       </ng-container>
     </ng-container>
 
-    <ng-container *ngIf="getIncludedCommand(serverCommandEnum.ViewVCloud)">
-      <a mcsButton="basic" color="white" labelPlacement="left"
-        (click)="onExecuteCommand(serverCommandEnum.ViewVCloud)"
+    <ng-container *ngIf="getIncludedCommand(serverCommandEnum.ViewPlatform)">
+      <a mcsButton="basic" color="white" labelPlacement="left" *ngIf="server?.portalUrl"
+        (click)="onExecuteCommand(serverCommandEnum.ViewPlatform)"
         [disabled]="server.isDisabled"
         mcsId
         mcsEventTracker="view-in-portal"
         mcsEventCategory="server"
         mcsEventLabel="server-command-tool">
-        {{ 'servers.viewVCloud' | translate }}
+        {{ viewInPlatformLabel }}
       </a>
     </ng-container>
 

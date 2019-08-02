@@ -14,7 +14,7 @@ export enum ServerCommand {
   AttachMedia = 9,
   Suspend = 10,
   Resume = 11,
-  ViewVCloud = 12,
+  ViewPlatform = 12,
 
   // Addition commands for server that is not included on the commandlist of API
   ResetVmPassword = 100
@@ -33,7 +33,7 @@ export const serverCommandText = {
   [ServerCommand.AttachMedia]: 'AttachMedia',
   [ServerCommand.Suspend]: 'Suspend',
   [ServerCommand.Resume]: 'Resume',
-  [ServerCommand.ViewVCloud]: 'ViewVCloud'
+  [ServerCommand.ViewPlatform]: 'ViewPlatform'
 };
 
 export const serverCommandActiveText = {

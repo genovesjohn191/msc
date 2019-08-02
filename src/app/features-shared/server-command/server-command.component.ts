@@ -21,7 +21,10 @@ import {
   McsNavigationService,
   CoreRoutes
 } from '@app/core';
-import { isNullOrEmpty } from '@app/utilities';
+import {
+  isNullOrEmpty,
+  getSafeProperty
+} from '@app/utilities';
 import {
   McsServer,
   ServerCommand,
@@ -90,6 +93,12 @@ export class ServerCommandComponent {
     return ServerCommand;
   }
 
+  public get viewInPlatformLabel(): string {
+    return getSafeProperty(this.server, (obj) => obj.isDedicated, false) ?
+      this._translateService.instant('servers.viewVCenter') :
+      this._translateService.instant('servers.viewVCloud');
+  }
+
   /**
    * Event that emits when the command has been executed
    * @param command Command action to be excuted
@@ -131,7 +140,7 @@ export class ServerCommandComponent {
     this._actionMap.set(ServerCommand.Start, this._startServer.bind(this));
     this._actionMap.set(ServerCommand.Stop, this._stopServer.bind(this));
     this._actionMap.set(ServerCommand.Suspend, this._suspendServer.bind(this));
-    this._actionMap.set(ServerCommand.ViewVCloud, this._viewServerInVCloud.bind(this));
+    this._actionMap.set(ServerCommand.ViewPlatform, this._viewServerInPlatform.bind(this));
   }
 
   /**
@@ -336,9 +345,9 @@ export class ServerCommandComponent {
   }
 
   /**
-   * View the server in vcloud
+   * View the server in either vCenter or vCloud
    */
-  private _viewServerInVCloud(): void {
+  private _viewServerInPlatform(): void {
     window.open(this.server.portalUrl);
   }
 }
