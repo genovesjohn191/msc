@@ -2,7 +2,7 @@
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef>
 
-    <!-- Order Count -->
+    <!-- Internet Ports Count -->
     <mcs-top-panel-item *mcsTopPanelItemDef>
       <div class="listing-action-wrapper">
         <div class="total-record-count">
@@ -97,7 +97,7 @@
         <ng-container mcsDataStatusDef>
           <mcs-data-empty *mcsDataEmptyDef>
             <div class="listing-status-wrapper">
-              <span>{{ 'internet.noOrders' | translate }} </span>
+              <span>{{ 'internet.noInternetPorts' | translate }} </span>
             </div>
           </mcs-data-empty>
           <mcs-data-error *mcsDataErrorDef>
@@ -106,7 +106,7 @@
               <a (click)="retryDatasource()"
                 mcsId
                 mcsEventTracker="retry-internet"
-                mcsEventCategory="order"
+                mcsEventCategory="internet"
                 mcsEventLabel="internet-listing-page">{{ 'internet.retry' | translate }}</a>.
             </div>
           </mcs-data-error>
