@@ -206,7 +206,7 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
    * Sort Records based on predicate definition
    * @param predicate Predicate definition to be the method of sorting
    */
-  public sortRecords(predicate: (first: T, second: T) => number) {
+  public sortRecords(predicate: (first: T, second: T) => number): void {
     this.dataRecords.sort(predicate);
     this._notifyDataChange();
   }

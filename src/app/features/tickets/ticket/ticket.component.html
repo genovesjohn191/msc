@@ -176,7 +176,7 @@
 
               <ng-container *mcsAccessControl="['TicketCommentCreate']">
                 <div *mcsExclusiveForAccount="'default'">
-                  <mcs-comment-box attachedLimit="single" [disabled]="creatingComment$ | async"
+                  <mcs-comment-box attachedLimit="single" [disabled]="selectedTicket.isProcessing"
                     [allowedMimeType]="['image/jpeg', 'image/png', 'image/bmp', 'text/plain']"
                     (onAddComment)="createComment(selectedTicket, $event)">
                   </mcs-comment-box>
