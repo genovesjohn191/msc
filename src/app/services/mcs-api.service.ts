@@ -86,7 +86,9 @@ import {
   McsProductCatalog,
   McsSystemMessage,
   McsSystemMessageCreate,
-  McsSystemMessageEdit
+  McsSystemMessageEdit,
+  McsEntityRequester,
+  EntityRequester
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -521,10 +523,13 @@ export class McsApiService {
   }
 
   public updateServerOs(id: string, updates: McsServerOsUpdatesRequest): Observable<McsJob> {
+    this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.Server, id);
+
     return this._serversApi.updateServerOs(id, updates).pipe(
-      catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.updateServerOs'))
-      ),
+      catchError((error) => {
+        this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.Server, id);
+        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.updateServerOs'));
+      }),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
@@ -533,47 +538,66 @@ export class McsApiService {
     id: string,
     schedule: McsServerOsUpdatesScheduleRequest
   ): Observable<McsServerOsUpdatesSchedule> {
+    this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.Server, id);
+
     return this._serversApi.updateServerOsUpdatesSchedule(id, schedule).pipe(
-      catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.updateServerOsUpdatesSchedule'))
-      ),
+      catchError((error) => {
+        this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.Server, id);
+        return this._handleApiClientError(error,
+          this._translate.instant('apiErrorMessage.updateServerOsUpdatesSchedule'));
+      }),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
 
   public deleteServerOsUpdatesSchedule(id: string): Observable<boolean> {
+    this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.Server, id);
+
     return this._serversApi.deleteServerOsUpdatesSchedule(id).pipe(
-      catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.deleteServerOsUpdatesSchedule'))
-      ),
+      catchError((error) => {
+        this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.Server, id);
+        return this._handleApiClientError(error,
+          this._translate.instant('apiErrorMessage.deleteServerOsUpdatesSchedule'));
+      }),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
 
   // TODO: Change the reference object into a model
   public inspectServerForAvailableOsUpdates(id: string, referenceObject: any): Observable<McsJob> {
+    this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.Server, id);
+
     return this._serversApi.inspectServerForAvailableOsUpdates(id, referenceObject).pipe(
-      catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.inspectServerForAvailableOsUpdates'))
-      ),
+      catchError((error) => {
+        this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.Server, id);
+
+        return this._handleApiClientError(error,
+          this._translate.instant('apiErrorMessage.inspectServerForAvailableOsUpdates'));
+      }),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
 
   public sendServerPowerState(id: string, powerstate: McsServerPowerstateCommand): Observable<McsJob> {
+    this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.Server, id);
+
     return this._serversApi.sendServerPowerState(id, powerstate).pipe(
-      catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.sendServerPowerState'))
-      ),
+      catchError((error) => {
+        this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.Server, id);
+        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.sendServerPowerState'));
+      }),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
 
   public renameServer(id: string, rename: McsServerRename): Observable<McsJob> {
+    this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.Server, id);
+
     return this._serversApi.renameServer(id, rename).pipe(
-      catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.renameServer'))
-      ),
+      catchError((error) => {
+        this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.Server, id);
+        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.renameServer'));
+      }),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
@@ -588,90 +612,117 @@ export class McsApiService {
   }
 
   public cloneServer(id: string, serverData: McsServerClone): Observable<McsJob> {
+    this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.Server, id);
+
     return this._serversApi.cloneServer(id, serverData).pipe(
-      catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.cloneServer'))
-      ),
+      catchError((error) => {
+        this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.Server, id);
+        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.cloneServer'));
+      }),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
 
   public deleteServer(id: string, details: McsServerDelete): Observable<McsJob> {
+    this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.Server, id);
+
     return this._serversApi.deleteServer(id, details).pipe(
-      catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.deleteServer'))
-      ),
+      catchError((error) => {
+        this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.Server, id);
+        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.deleteServer'));
+      }),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
 
   public resetServerPassword(id: string, details: McsServerPasswordReset): Observable<McsJob> {
+    this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.Server, id);
+
     return this._serversApi.resetVmPassword(id, details).pipe(
-      catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.resetServerPassword'))
-      ),
+      catchError((error) => {
+        this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.Server, id);
+        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.resetServerPassword'));
+      }),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
 
   public updateServerStorage(
-    serverId: string,
+    id: string,
     storageId: string,
     storageData: McsServerStorageDeviceUpdate
   ): Observable<McsJob> {
-    return this._serversApi.updateServerStorage(serverId, storageId, storageData).pipe(
-      catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.updateServerStorage'))
-      ),
+    this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.Server, id);
+
+    return this._serversApi.updateServerStorage(id, storageId, storageData).pipe(
+      catchError((error) => {
+        this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.Server, id);
+        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.updateServerStorage'));
+      }),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
 
   public createServerStorage(id: string, storageData: McsServerStorageDeviceUpdate): Observable<McsJob> {
+    this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.Server, id);
+
     return this._serversApi.createServerStorage(id, storageData).pipe(
-      catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.createServerStorage'))
-      ),
+      catchError((error) => {
+        this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.Server, id);
+        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.createServerStorage'));
+      }),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
 
   public addServerNic(id: string, nicData: McsServerCreateNic): Observable<McsJob> {
+    this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.Server, id);
+
     return this._serversApi.addServerNic(id, nicData).pipe(
-      catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.addServerNic'))
-      ),
+      catchError((error) => {
+        this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.Server, id);
+        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.addServerNic'));
+      }),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
 
   public updateServerCompute(id: string, serverData: McsServerUpdate): Observable<McsJob> {
+    this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.Server, id);
+
     return this._serversApi.updateServerCompute(id, serverData).pipe(
-      catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.updateServerCompute'))
-      ),
+      catchError((error) => {
+        this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.Server, id);
+        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.updateServerCompute'));
+      }),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
 
   public attachServerMedia(id: string, mediaData: McsServerAttachMedia): Observable<McsJob> {
+    this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.Server, id);
+
     return this._serversApi.attachServerMedia(id, mediaData).pipe(
-      catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.attachServerMedia'))
-      ),
+      catchError((error) => {
+        this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.Server, id);
+        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.attachServerMedia'));
+      }),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
 
   public detachServerMedia(
-    serverId: string,
+    id: string,
     mediaId: string,
     mediaDetails: McsServerDetachMedia
   ): Observable<McsJob> {
-    return this._serversApi.detachServerMedia(serverId, mediaId, mediaDetails).pipe(
-      catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.detachServerMedia'))
-      ),
+    this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.Server, id);
+
+    return this._serversApi.detachServerMedia(id, mediaId, mediaDetails).pipe(
+      catchError((error) => {
+        this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.Server, id);
+        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.detachServerMedia'));
+      }),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
@@ -686,59 +737,77 @@ export class McsApiService {
   }
 
   public createServerSnapshot(id: string, snapshotData: McsServerSnapshotCreate): Observable<McsJob> {
+    this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.Server, id);
+
     return this._serversApi.createServerSnapshot(id, snapshotData).pipe(
-      catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.createServerSnapshot'))
-      ),
+      catchError((error) => {
+        this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.Server, id);
+        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.createServerSnapshot'));
+      }),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
 
   public restoreServerSnapshot(id: string, snapshotData: McsServerSnapshotRestore): Observable<McsJob> {
+    this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.Server, id);
+
     return this._serversApi.restoreServerSnapshot(id, snapshotData).pipe(
-      catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.restoreServerSnapshot'))
-      ),
+      catchError((error) => {
+        this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.Server, id);
+        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.restoreServerSnapshot'));
+      }),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
 
   public deleteServerSnapshot(id: string, snapshotData: McsServerSnapshotDelete): Observable<McsJob> {
+    this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.Server, id);
+
     return this._serversApi.deleteServerSnapshot(id, snapshotData).pipe(
-      catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.deleteServerSnapshot'))
-      ),
+      catchError((error) => {
+        this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.Server, id);
+        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.deleteServerSnapshot'));
+      }),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
 
-  public updateServerNic(serverId: string, nicId: string, nicData: McsServerCreateNic): Observable<McsJob> {
-    return this._serversApi.updateServerNic(serverId, nicId, nicData).pipe(
-      catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.updateServerNic'))
-      ),
+  public updateServerNic(id: string, nicId: string, nicData: McsServerCreateNic): Observable<McsJob> {
+    this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.Server, id);
+
+    return this._serversApi.updateServerNic(id, nicId, nicData).pipe(
+      catchError((error) => {
+        this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.Server, id);
+        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.updateServerNic'));
+      }),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
 
-  public deleteServerNic(serverId: string, nicId: string, nicData: McsServerCreateNic): Observable<McsJob> {
-    return this._serversApi.deleteServerNic(serverId, nicId, nicData).pipe(
-      catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.deleteServerNic'))
-      ),
+  public deleteServerNic(id: string, nicId: string, nicData: McsServerCreateNic): Observable<McsJob> {
+    this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.Server, id);
+
+    return this._serversApi.deleteServerNic(id, nicId, nicData).pipe(
+      catchError((error) => {
+        this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.Server, id);
+        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.deleteServerNic'));
+      }),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
 
   public deleteServerStorage(
-    serverId: string,
+    id: string,
     storageId: string,
     storageData: McsServerStorageDeviceUpdate
   ): Observable<McsJob> {
-    return this._serversApi.deleteServerStorage(serverId, storageId, storageData).pipe(
-      catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.deleteServerStorage'))
-      ),
+    this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.Server, id);
+
+    return this._serversApi.deleteServerStorage(id, storageId, storageData).pipe(
+      catchError((error) => {
+        this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.Server, id);
+        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.deleteServerStorage'));
+      }),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
@@ -781,25 +850,36 @@ export class McsApiService {
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.createTicket'))
       ),
-      tap(() => this._eventDispatcher.dispatch(McsEvent.ticketCreateEvent, ticketData)),
+      tap(() => this._dispatchRequesterEvent(McsEvent.entityCreatedEvent, EntityRequester.Ticket)),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
 
-  public createComment(id: string, commentData: McsTicketCreateComment): Observable<McsTicketComment> {
+  public createTicketComment(id: string, commentData: McsTicketCreateComment): Observable<McsTicketComment> {
+    this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.Ticket, id);
+
     return this._ticketsApi.createComment(id, commentData).pipe(
-      catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.createComment'))
-      ),
+      catchError((error) => {
+        this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.Ticket, id);
+        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.createComment'));
+      }),
+      tap(() => this._dispatchRequesterEvent(McsEvent.entityUpdatedEvent, EntityRequester.Ticket, id)),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
 
-  public createAttachment(id: string, attachmentData: McsTicketCreateAttachment): Observable<McsTicketAttachment> {
+  public createTicketAttachment(
+    id: string,
+    attachmentData: McsTicketCreateAttachment
+  ): Observable<McsTicketAttachment> {
+    this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.Ticket, id);
+
     return this._ticketsApi.createAttachment(id, attachmentData).pipe(
-      catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.createAttachment'))
-      ),
+      catchError((error) => {
+        this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.Ticket, id);
+        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.createAttachment'));
+      }),
+      tap(() => this._dispatchRequesterEvent(McsEvent.entityUpdatedEvent, EntityRequester.Ticket, id)),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
@@ -846,13 +926,14 @@ export class McsApiService {
   }
 
   public createOrderWorkFlow(id: string, workflow: McsOrderWorkflow): Observable<McsOrder> {
-    this._eventDispatcher.dispatch(McsEvent.orderStateBusy, id);
+    this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.Order, id);
 
     return this._ordersApi.createOrderWorkflow(id, workflow).pipe(
-      catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.createOrderWorkFlow'))
-      ),
-      finalize(() => this._eventDispatcher.dispatch(McsEvent.orderStateEnded, id)),
+      catchError((error) => {
+        this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.Order, id);
+        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.createOrderWorkFlow'));
+      }),
+      tap(() => this._dispatchRequesterEvent(McsEvent.entityUpdatedEvent, EntityRequester.Order, id)),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
@@ -903,25 +984,26 @@ export class McsApiService {
   }
 
   public updateOrder(id: string, updatedOrder: McsOrderCreate): Observable<McsOrder> {
-    this._eventDispatcher.dispatch(McsEvent.orderStateBusy, id);
+    this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.Order, id);
 
     return this._ordersApi.updateOrder(id, updatedOrder).pipe(
-      catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.updateOrder'))
-      ),
-      finalize(() => this._eventDispatcher.dispatch(McsEvent.orderStateEnded, id)),
+      catchError((error) => {
+        this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.Order, id);
+        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.updateOrder'));
+      }),
+      finalize(() => this._dispatchRequesterEvent(McsEvent.entityUpdatedEvent, EntityRequester.Order, id)),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
 
   public deleteOrder(id: string): Observable<McsOrder> {
-    this._eventDispatcher.dispatch(McsEvent.orderStateBusy, id);
+    this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.Order, id);
 
     return this._ordersApi.deleteOrder(id).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.deleteOrder'))
       ),
-      finalize(() => this._eventDispatcher.dispatch(McsEvent.orderStateEnded, id)),
+      finalize(() => this._dispatchRequesterEvent(McsEvent.entityDeletedEvent, EntityRequester.Order, id)),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
@@ -1015,7 +1097,7 @@ export class McsApiService {
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.createMessage'))
       ),
-      tap(() => this._eventDispatcher.dispatch(McsEvent.systemMessageCreated, messageData)),
+      tap(() => this._dispatchRequesterEvent(McsEvent.entityCreatedEvent, EntityRequester.SystemMessage)),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
@@ -1030,11 +1112,14 @@ export class McsApiService {
   }
 
   public editSystemMessage(id: string, messageData: McsSystemMessageEdit): Observable<McsSystemMessageEdit> {
+    this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.SystemMessage, id);
+
     return this._systemMessageApi.editMessage(id, messageData).pipe(
-      catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.editMessage'))
-      ),
-      tap(() => this._eventDispatcher.dispatch(McsEvent.systemMessageEdited, messageData)),
+      catchError((error) => {
+        this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.SystemMessage, id);
+        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.editMessage'));
+      }),
+      tap(() => this._dispatchRequesterEvent(McsEvent.entityUpdatedEvent, EntityRequester.SystemMessage, id)),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
@@ -1069,6 +1154,38 @@ export class McsApiService {
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getProductCatalog'))
       )
     );
+  }
+
+  /**
+   * Dispatch the entity requester event based on the action provided
+   * @param event Event to be dispatched
+   * @param type Type of the entity to be dispatched
+   * @param id Id of the entity to be dispatched
+   * @param message Message of the entity to be dispatched
+   * @param disabled Disabled flag to be acted on the entity
+   */
+  private _dispatchRequesterEvent(
+    event: EventBusState<McsEntityRequester>, type: EntityRequester
+  ): void;
+  private _dispatchRequesterEvent(
+    event: EventBusState<McsEntityRequester>, type: EntityRequester, id: string
+  ): void;
+  private _dispatchRequesterEvent(
+    event: EventBusState<McsEntityRequester>, type: EntityRequester, id: string, message: string
+  ): void;
+  private _dispatchRequesterEvent(
+    action: EventBusState<McsEntityRequester>,
+    type: EntityRequester,
+    id?: string,
+    message?: string,
+    disabled?: boolean
+  ): void {
+    let entityRequester = new McsEntityRequester();
+    entityRequester.id = id;
+    entityRequester.type = type;
+    entityRequester.disabled = disabled;
+    entityRequester.message = message || this._translate.instant('entityState.inProgress');
+    this._eventDispatcher.dispatch(action, entityRequester);
   }
 
   /**

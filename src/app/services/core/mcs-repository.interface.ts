@@ -15,6 +15,8 @@ export interface McsRepository<T> {
   deleteBy(predicate: (entity: T) => boolean);
   deleteById(id: string): void;
 
+  sortRecords(predicate: (first: T, second: T) => number): void;
+
   clearData(): void;
 
   dataChange(): Observable<T[]>;

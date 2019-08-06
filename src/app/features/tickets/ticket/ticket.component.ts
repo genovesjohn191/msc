@@ -48,10 +48,8 @@ import { McsEvent } from '@app/event-manager';
 export class TicketComponent implements OnInit, OnDestroy {
 
   public selectedTicket$: Observable<McsTicket>;
-  public creatingComment$: Observable<boolean>;
 
   private _downloadingIdList: Set<string>;
-  private _creatingComment = new Subject<boolean>();
   private _ticketDetailsChange = new Subject<void>();
   private _destroySubject = new Subject<void>();
   private _ticketsDataChangeHandler: Subscription;
@@ -66,14 +64,12 @@ export class TicketComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit() {
-    this.creatingComment$ = this._creatingComment;
     this._subscribeToTicketResolve();
     this._registerEvents();
   }
 
   public ngOnDestroy() {
     unsubscribeSafely(this._ticketDetailsChange);
-    unsubscribeSafely(this._creatingComment);
     unsubscribeSafely(this._destroySubject);
     unsubscribeSafely(this._ticketsDataChangeHandler);
   }
@@ -138,7 +134,6 @@ export class TicketComponent implements OnInit, OnDestroy {
    */
   public createComment(activeTicket: McsTicket, comment: McsComment) {
     if (isNullOrEmpty(comment)) { return; }
-    this._creatingComment.next(true);
     this._createCommentContent(activeTicket, comment.message);
 
     if (!isNullOrEmpty(comment.attachments)) {
@@ -159,9 +154,8 @@ export class TicketComponent implements OnInit, OnDestroy {
     newComment.type = CommentType.Comments;
     newComment.value = content;
 
-    this._apiService.createComment(activeTicket.id, newComment).pipe(
+    this._apiService.createTicketComment(activeTicket.id, newComment).pipe(
       finalize(() => {
-        this._creatingComment.next(false);
         this._ticketDetailsChange.next();
         this._changeDetectorRef.markForCheck();
       })
@@ -179,7 +173,7 @@ export class TicketComponent implements OnInit, OnDestroy {
     newAttachment.fileName = attachedFile.filename;
     newAttachment.contents = attachedFile.base64Contents;
 
-    this._apiService.createAttachment(activeTicket.id, newAttachment).pipe(
+    this._apiService.createTicketAttachment(activeTicket.id, newAttachment).pipe(
       finalize(() => {
         this._ticketDetailsChange.next();
         this._changeDetectorRef.markForCheck();

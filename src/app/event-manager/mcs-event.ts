@@ -6,11 +6,15 @@ import { ServerManagedScaleSelectedEvent } from './events/server-scale-manage-se
 import { ServerManagedRaiseInviewSelectedEvent } from './events/server-raise-inview-selected.event';
 import { ProductSelectedEvent } from './events/product-selected.event';
 import { ProductUnSelectedEvent } from './events/product-unselected.event';
-import { OrderStateBusyEvent } from './events/order-state-busy.event';
-import { OrderStateEndedEvent } from './events/order-state-ended.event';
 import { LoaderShowEvent } from './events/loader-show.event';
 import { LoaderHideEvent } from './events/loader-hide.event';
 import { ErrorShowEvent } from './events/error-show.event';
+
+import { EntityActiveEvent } from './events/entity-active.event';
+import { EntityClearStateEvent } from './events/entity-clear-state.event';
+import { EntityCreatedEvent } from './events/entity-created.event';
+import { EntityDeletedEvent } from './events/entity-deleted.event';
+import { EntityUpdatedEvent } from './events/entity-updated.event';
 
 import { DataChangeProductCatalogEvent } from './events/data-change-product-catalog.event';
 import { DataChangeServersEvent } from './events/data-change-servers.event';
@@ -58,9 +62,6 @@ import { JobInProgressEvent } from './events/job-in-progress.event';
 import { JobReceiveEvent } from './events/job-receive.event';
 import { JobCurrentUserEvent } from './events/job-current-user.event';
 import { JobResourceCatalogItemCreateEvent } from './events/job-resource-catalog-item-create.event';
-import { SystemMessageCreateEvent } from './events/system-message-create.event';
-import { SystemMessageEditEvent } from './events/system-message-edit.event';
-import { TicketCreateEvent } from './events/ticket-create.event';
 
 export class McsEvent {
   public static routeChange = new RouteChangeEvent();
@@ -75,8 +76,11 @@ export class McsEvent {
   public static loaderHide = new LoaderHideEvent();
   public static errorShow = new ErrorShowEvent();
 
-  public static orderStateBusy = new OrderStateBusyEvent();
-  public static orderStateEnded = new OrderStateEndedEvent();
+  public static entityActiveEvent = new EntityActiveEvent();
+  public static entityClearStateEvent = new EntityClearStateEvent();
+  public static entityUpdatedEvent = new EntityUpdatedEvent();
+  public static entityCreatedEvent = new EntityCreatedEvent();
+  public static entityDeletedEvent = new EntityDeletedEvent();
 
   public static dataChangeProductCatalog = new DataChangeProductCatalogEvent();
   public static dataChangeServers = new DataChangeServersEvent();
@@ -124,9 +128,4 @@ export class McsEvent {
   public static jobServerManagedScaleEvent = new JobServerManagedScaleEvent();
   public static jobServerManagedRaiseInviewLevelEvent = new JobServerManagedRaiseInviewLevelEvent();
   public static jobResourceCatalogItemCreate = new JobResourceCatalogItemCreateEvent();
-
-  public static systemMessageCreated = new SystemMessageCreateEvent();
-  public static systemMessageEdited = new SystemMessageEditEvent();
-
-  public static ticketCreateEvent = new TicketCreateEvent();
 }

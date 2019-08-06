@@ -60,6 +60,7 @@ export * from './enumerations/severity.enum';
 export * from './enumerations/api-error-requester.enum';
 export * from './enumerations/internet-plan.enum';
 export * from './enumerations/availability-zone.enum';
+export * from './enumerations/entity-requester.enum';
 
 /** Job References */
 export * from './job-references/mcs-server-job-reference';
@@ -183,6 +184,7 @@ export * from './common/mcs-api-error';
 export * from './common/mcs-api-collection';
 export * from './common/mcs-api-error-context';
 export * from './common/mcs-entity.base';
+export * from './common/mcs-entity-requester';
 export * from './common/mcs-list-panel-item';
 export * from './common/mcs-size';
 export * from './common/mcs-selection';

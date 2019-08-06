@@ -5,7 +5,10 @@ import {
 import { TranslateService } from '@ngx-translate/core';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/event-manager';
-import { getSafeProperty } from '@app/utilities';
+import {
+  getSafeProperty,
+  isNullOrEmpty
+} from '@app/utilities';
 import {
   DialogService,
   DialogMessageConfig
@@ -49,24 +52,26 @@ export class DefaultPageComponent {
   private _onResetVmPassword(job: McsJob): void {
     let jobIsResetVmPassword = getSafeProperty(job, (obj) => obj.type) === JobType.ResetServerPassword;
     if (!jobIsResetVmPassword) { return; }
+    if (job.dataStatus !== DataStatus.Success) { return; }
 
-    if (job.dataStatus === DataStatus.Success) {
-      let credentialObject: McsServerCredential = job.tasks[0].referenceObject.credential;
-
-      let dialogData = {
-        title: this._translateService.instant('dialogResetPasswordFinished.title'),
-        message: this._translateService.instant('dialogResetPasswordFinished.message', {
-          server_name: credentialObject.server,
-          username: credentialObject.username,
-          password: credentialObject.password
-        }),
-        type: 'info'
-      } as DialogMessageConfig;
-
-      this._dialogService.openMessage(dialogData, {
-        id: 'reset-vm-password-confirmation',
-        disableClose: true
-      });
+    let credentials: McsServerCredential = getSafeProperty(job, (obj) => obj.tasks[0].referenceObject.credential);
+    if (isNullOrEmpty(credentials)) {
+      throw new Error(`Unable to display the dialog of undefined credentials after resetting the password of VM.`);
     }
+
+    let dialogData = {
+      title: this._translateService.instant('dialogResetPasswordFinished.title'),
+      message: this._translateService.instant('dialogResetPasswordFinished.message', {
+        server_name: credentials.server,
+        username: credentials.username,
+        password: credentials.password
+      }),
+      type: 'info'
+    } as DialogMessageConfig;
+
+    this._dialogService.openMessage(dialogData, {
+      id: 'reset-vm-password-confirmation',
+      disableClose: true
+    });
   }
 }

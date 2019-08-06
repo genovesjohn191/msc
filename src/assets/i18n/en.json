@@ -1477,6 +1477,9 @@
     "getProductCatalogs": "Something went wrong while retrieving the list of available products.",
     "getProductCatalog": "Something went wrong while retrieving the list of available products."
   },
+  "entityState": {
+    "inProgress": "Processing request..."
+  },
   "dialogDetachMedia": {
     "title": "Detach Media",
     "message": "Are you sure you want to detach <strong>{{media_name}}</strong>?"
