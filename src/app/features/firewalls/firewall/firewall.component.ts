@@ -25,7 +25,6 @@ import {
   map
 } from 'rxjs/operators';
 import {
-  CoreDefinition,
   McsRoutingTabBase,
   McsDataStatusFactory,
   CoreRoutes
@@ -33,7 +32,8 @@ import {
 import {
   isNullOrEmpty,
   unsubscribeSafely,
-  getSafeProperty
+  getSafeProperty,
+  CommonDefinition
 } from '@app/utilities';
 import { Search } from '@app/shared';
 import {
@@ -69,7 +69,7 @@ export class FirewallComponent
   public search: Search;
 
   public get cogIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_COG;
+    return CommonDefinition.ASSETS_SVG_ELLIPSIS_HORIZONTAL;
   }
 
   public get routeKeyEnum(): any {

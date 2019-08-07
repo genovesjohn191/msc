@@ -97,7 +97,9 @@
     "cloud-blue": "cloud-blue.svg",
     "clock": "clock.svg",
     "block": "block.svg",
-    "check-black": "check.svg"
+    "check-black": "check.svg",
+    "ellipsis-horizontal": "ellipsis-horizontal.svg",
+    "ellipsis-vertical": "ellipsis-vertical.svg"
   },
   "gifIcons": {
     "loader-spinner": "loader-spinner.gif",

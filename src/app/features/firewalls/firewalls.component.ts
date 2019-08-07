@@ -11,7 +11,10 @@ import {
   McsTableListingBase,
   CoreRoutes
 } from '@app/core';
-import { isNullOrEmpty } from '@app/utilities';
+import {
+  isNullOrEmpty,
+  CommonDefinition
+} from '@app/utilities';
 import {
   RouteKey,
   McsFirewall,
@@ -43,7 +46,7 @@ export class FirewallsComponent extends McsTableListingBase<McsFirewall> {
   }
 
   public get cogIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_COG;
+    return CommonDefinition.ASSETS_SVG_ELLIPSIS_HORIZONTAL;
   }
 
   /**

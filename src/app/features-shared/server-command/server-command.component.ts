@@ -16,14 +16,14 @@ import {
   tap
 } from 'rxjs/operators';
 import {
-  CoreDefinition,
   McsUniqueId,
   McsNavigationService,
   CoreRoutes
 } from '@app/core';
 import {
   isNullOrEmpty,
-  getSafeProperty
+  getSafeProperty,
+  CommonDefinition
 } from '@app/utilities';
 import {
   McsServer,
@@ -86,7 +86,7 @@ export class ServerCommandComponent {
   }
 
   public get gearIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_COG;
+    return CommonDefinition.ASSETS_SVG_ELLIPSIS_HORIZONTAL;
   }
 
   public get serverCommandEnum() {
