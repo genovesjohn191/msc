@@ -6,15 +6,13 @@ import {
   ViewChild,
   ChangeDetectionStrategy
 } from '@angular/core';
-import {
-  CoreDefinition,
-  McsUniqueId
-} from '@app/core';
+import { McsUniqueId } from '@app/core';
 import { McsResourceMedia } from '@app/models';
 import {
   MediaCommand,
   mediaCommandText
 } from './media-command.enum';
+import { CommonDefinition } from '@app/utilities';
 
 @Component({
   selector: 'mcs-media-command',
@@ -39,7 +37,7 @@ export class MediaCommandComponent {
   public popoverActionElement: any;
 
   public get gearIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_COG;
+    return CommonDefinition.ASSETS_SVG_ELLIPSIS_HORIZONTAL;
   }
 
   public get mediaCommandAttachText(): string {
