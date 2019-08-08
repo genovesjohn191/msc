@@ -198,6 +198,7 @@
         "placeholder": "",
         "contextualHelp": "Select the level of Inview level you want to apply.",
         "label": {
+          "unavailable": "InView information is not yet available for this server.",
           "none": "This service does not currently have InView configured. Please speak to your Macquarie Cloud Services accounts team about enabling InView.",
           "standard": "The InView level for this service is currently Standard. It will be raised to Premium.",
           "premium": "The InView Level for this service is currently Premium. This is the highest InView Level."
@@ -405,7 +406,8 @@
       "vdc": "Resource",
       "serviceId": "Service ID",
       "vmWareId": "VMWare ID",
-      "inviewLevel": "Inview Level"
+      "inviewLevel": "Inview Level",
+      "inviewLevelUnavailable": "Not yet available"
     },
     "manageServices": {
       "title": "Manage Services",
@@ -468,6 +470,7 @@
       "description": "InView gives you powerful infrastructure-level monitoring and alerting.",
       "inviewLevelLabel": "Inview Level",
       "inviewLevelDescription": {
+        "unavailable": "InView information is not yet available for this server.",
         "premium": "Your server has InView Premium, which grants access to statistics such as uptime, CPU, RAM, disk, network latency and much more.",
         "standard": "Your server has InView Standard, which grants access to statistics such as CPU usage. Access more statistics such as uptime, RAM, disk, network latency and more by raising your InView level.",
         "none": "Your server does not currently have InView provisioned. Access statistics such as uptime, CPU, RAM, disk, network latency and more by speaking to your account manager about InView."
