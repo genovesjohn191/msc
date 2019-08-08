@@ -1522,8 +1522,12 @@
     "message": "Your session has expired due to inactivity. Click to sign in again.",
     "signIn": "Sign In"
   },
+  "dialogStopServerSingle": {
+    "title": "Stop Server",
+    "message": "Stopping server {{server_name}}.\r\n\nAre you sure you wish to continue?"
+  },
   "dialogDeleteServerSingle": {
-    "title": "Delete Servers",
+    "title": "Delete Server",
     "message": "Deleting a server cannot be undone. If this is the only remaining server in a vApp, the vApp will also be deleted.\r\n\nAre you sure you wish to continue?"
   },
   "dialogDeleteServerMultiple": {

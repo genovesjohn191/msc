@@ -22,7 +22,8 @@ import {
   shareReplay,
   share,
   takeUntil,
-  distinctUntilChanged
+  distinctUntilChanged,
+  concatMap
 } from 'rxjs/operators';
 import {
   isNullOrEmpty,
@@ -43,6 +44,10 @@ import { McsEvent } from '@app/event-manager';
 import { ConsolePageFactory } from './factory/console-page-factory';
 import { IConsolePageEntity } from './factory/console-page-entity.interface';
 import { ConsoleStatus } from './console-status';
+import {
+  DialogConfirmation,
+  DialogService
+} from '@app/shared';
 
 const CLOSING_DEFAULT_TIME_IN_SECONDS = 3;
 
@@ -78,6 +83,7 @@ export class ConsolePageComponent implements AfterViewInit, OnDestroy {
   public constructor(
     private _apiService: McsApiService,
     private _translateService: TranslateService,
+    private _dialogService: DialogService,
     private _eventDispatcher: EventBusDispatcherService,
     private _activatedRoute: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef
@@ -160,9 +166,6 @@ export class ConsolePageComponent implements AfterViewInit, OnDestroy {
    * @param server Server to be started
    */
   public stopServer(server: McsServer): void {
-    if (!isNullOrEmpty(this._consolePageInstance)) {
-      this._consolePageInstance.disconnect();
-    }
 
     let powerStateDetails = new McsServerPowerstateCommand();
     powerStateDetails.command = VmPowerstateCommand.Stop;
@@ -170,12 +173,31 @@ export class ConsolePageComponent implements AfterViewInit, OnDestroy {
       serverId: server.id
     };
 
-    this._apiService.sendServerPowerState(server.id, powerStateDetails).pipe(
-      tap(() => {
-        this.isConsoleClose = true;
-        this._changeDetectorRef.markForCheck();
-        if (!isNullOrEmpty(this._intervalId)) { clearInterval(this._intervalId); }
-        this._intervalId = window.setInterval(this._closeWindow.bind(this), 1000);
+    let dialogData = {
+      data: powerStateDetails,
+      title: this._translateService.instant('dialogStopServerSingle.title'),
+      message: this._translateService.instant('dialogStopServerSingle.message', { server_name: server.name }),
+      type: 'info'
+    } as DialogConfirmation<McsServerPowerstateCommand>;
+
+    let dialogRef = this._dialogService.openConfirmation(dialogData);
+
+    dialogRef.afterClosed().pipe(
+      concatMap((dialogResult) => {
+        if (isNullOrEmpty(dialogResult)) { return of(null); }
+
+        if (!isNullOrEmpty(this._consolePageInstance)) {
+          this._consolePageInstance.disconnect();
+        }
+
+        return this._apiService.sendServerPowerState(server.id, powerStateDetails).pipe(
+          tap(() => {
+            this.isConsoleClose = true;
+            this._changeDetectorRef.markForCheck();
+            if (!isNullOrEmpty(this._intervalId)) { clearInterval(this._intervalId); }
+            this._intervalId = window.setInterval(this._closeWindow.bind(this), 1000);
+          })
+        );
       })
     ).subscribe();
   }
