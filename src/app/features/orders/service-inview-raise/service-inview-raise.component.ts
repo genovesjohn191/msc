@@ -73,13 +73,6 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
   }
 
   /**
-   * Returns a specifc label based on inview level
-   */
-  public get inviewLevelLabel(): string {
-    return this._inviewLevelLabelMap.get(this._inviewLevel);
-  }
-
-  /**
    * Returns true if Inview level is either Premium or Standard
    */
   public get isRaiseInviewButtonShown(): boolean {
@@ -188,10 +181,20 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
   }
 
   /**
+   * Returns a specifc label based on inview level
+   */
+  public inviewLevelLabel(server: McsServer): string {
+    if (getSafeProperty(server, (obj) => obj.serviceChangeAvailable, false)) {
+      return this.translateService.instant('orderServiceRaiseInview.serviceDetails.inview.label.unavailable');
+    }
+
+    return this._inviewLevelLabelMap.get(this._inviewLevel);
+  }
+
+  /**
    * Register jobs/notifications events
    */
   private _registerEvents(): void {
-
     this._selectedServerHandler = this._eventDispatcher.addEventListener(
       McsEvent.serverRaiseInviewSelected, this._onSelectedServer.bind(this));
 
@@ -206,7 +209,7 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
     // Managed servers for now, but eventually all Services
     this.services$ = this._apiService.getServers().pipe(
       map((response) => getSafeProperty(response, (obj) => obj.collection).filter(
-        (server) => !server.isSelfManaged && !server.isDedicated && server.serviceChangeAvailable)
+        (server) => !server.isSelfManaged && !server.isDedicated)
       ),
       shareReplay(1)
     );

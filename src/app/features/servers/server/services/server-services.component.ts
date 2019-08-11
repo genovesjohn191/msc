@@ -263,6 +263,10 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
    * @param server selected server object reference
    */
   public inviewLevelDescription(server: McsServer): string {
+    if (!server.serviceChangeAvailable) {
+      return this._translateService.instant('serverServices.inview.inviewLevelDescription.unavailable');
+    }
+
     return this._inviewLabelMap.get(server.inViewLevel);
   }
 
@@ -270,7 +274,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
    * Returns true if the Inview level is not None
    */
   public inviewButtonsShown(server: McsServer): boolean {
-    return server.inViewLevel !== InviewLevel.None;
+    return server.inViewLevel !== InviewLevel.None && server.serviceChangeAvailable;
   }
 
   /**
