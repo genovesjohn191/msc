@@ -37,6 +37,8 @@ export abstract class McsEntityStateManagerBase<T extends McsEntityBase> impleme
 
     this.entityRepository.getBy((item) => item.id === entityId).pipe(
       tap((entity) => {
+        if (isNullOrEmpty(entity)) { return; }
+
         entity.isProcessing = true;
         entity.isDisabled = requester.disabled;
         entity.processingText = requester.message;
@@ -54,6 +56,8 @@ export abstract class McsEntityStateManagerBase<T extends McsEntityBase> impleme
 
     this.entityRepository.getBy((item) => item.id === entityId).pipe(
       tap((entity) => {
+        if (isNullOrEmpty(entity)) { return; }
+
         entity.isProcessing = false;
         entity.isDisabled = false;
         entity.processingText = null;
