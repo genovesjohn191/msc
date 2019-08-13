@@ -45,11 +45,11 @@
             {{ columnSettings.service.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
-            <span mcsId="select-internet"
+            <a [mcsRouterLink]="[routeKeyEnum.InternetDetails, row.id]"
+              mcsId="select-internet"
               mcsEventTracker="navigate-to-internet"
               mcsEventCategory="internet"
-              mcsEventLabel="internet-listing-page">
-              {{ row.description }}</span>
+              mcsEventLabel="internet-listing-page">{{ row.description }}</a>
           </mcs-data-cell>
         </ng-container>
 
@@ -115,6 +115,8 @@
         <!-- Header and Data row -->
         <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
         <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"
+          (click)="navigateToInternet(row)"
+          mcsCursor="pointer"
           mcsId="internet-row"
           mcsEventTracker="navigate-to-internet"
           mcsEventCategory="internet"

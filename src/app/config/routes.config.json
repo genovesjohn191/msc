@@ -171,7 +171,7 @@
     "routePath": ":id",
     "navigationPath": "network/firewalls",
     "requiredPermissions": ["FirewallConfigurationView"],
-    "documentTitle": "Firewall Management - Macquarie Cloud Services"
+    "documentTitle": "Firewall Details - Macquarie Cloud Services"
   },
   "firewallDetailsOverview": {
     "enumCategory": "Network",
@@ -197,6 +197,24 @@
     "requiredPermissions": ["InternetView"],
     "requiredFeatureFlag": "EnableInternetPortView",
     "documentTitle": "Internet Ports - Macquarie Cloud Services"
+  },
+  "internetDetails": {
+    "enumCategory": "Network",
+    "enumKey": "InternetDetails",
+    "routePath": ":id",
+    "navigationPath": "network/internet",
+    "requiredPermissions": ["InternetView"],
+    "requiredFeatureFlag": "EnableInternetPortView",
+    "documentTitle": "Internet Ports Details - Macquarie Cloud Services"
+  },
+  "internetDetailsManagement": {
+    "enumCategory": "Network",
+    "enumKey": "InternetDetailsManagement",
+    "routePath": "management",
+    "navigationPath": "management",
+    "requiredPermissions": ["InternetView"],
+    "requiredFeatureFlag": "EnableInternetPortView",
+    "documentTitle": "Internet Ports Management - Macquarie Cloud Services"
   },
   "systemMessages": {
     "enumCategory": "SystemMessages",
@@ -224,15 +242,6 @@
     "requiredPermissions": ["SystemMessageEdit", "SystemMessageView"],
     "requiredFeatureFlag": "EnableSystemMessages",
     "documentTitle": "Edit System Message - Macquarie Cloud Services"
-  },
-  "internetDetails": {
-    "enumCategory": "Network",
-    "enumKey": "InternetDetails",
-    "routePath": ":id",
-    "navigationPath": "network/internet",
-    "requiredPermissions": ["InternetView"],
-    "requiredFeatureFlag": "EnableInternetPortView",
-    "documentTitle": "Internet Ports Management - Macquarie Cloud Services"
   },
   "tickets": {
     "enumKey": "Tickets",

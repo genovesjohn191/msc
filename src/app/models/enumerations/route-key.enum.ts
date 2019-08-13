@@ -51,6 +51,7 @@ export enum RouteKey {
 
   Internet,
   InternetDetails,
+  InternetDetailsManagement,
 
   OtherTools,
 
