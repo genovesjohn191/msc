@@ -1,0 +1,48 @@
+<mcs-grid *ngIf="selectedInternetPort$ | async as selectedInternetPort">
+    <mcs-grid-row>
+      <!-- Internet Properties -->
+      <mcs-grid-column sizeSm="12" sizeLg="6">
+        <mcs-presentation-panel mcsId="internet-properties">
+          <ng-container mcsPresentationPanelHeader>
+            <h2>{{ 'internetPortManagement.properties.title' | translate }}</h2>
+          </ng-container>
+
+          <mcs-item>
+            <span>{{ 'internetPortManagement.properties.zone' | translate }}:</span>
+            <span [innerHTML]="selectedInternetPort.availabilityZoneLabel | mcsDataLabel"></span>
+          </mcs-item>
+
+          <mcs-item>
+            <span>{{ 'internetPortManagement.properties.portSpeed' | translate }}:</span>
+            <span>{{ 'internetPortManagement.properties.portSpeedValue' | translate: { speed: selectedInternetPort?.portSpeedMbps } }}</span>
+          </mcs-item>
+
+          <mcs-item>
+            <span>{{ 'internetPortManagement.properties.plan' | translate }}:</span>
+            <span ng [innerHTML]="selectedInternetPort.planLabel | mcsDataLabel"></span>
+          </mcs-item>
+        </mcs-presentation-panel>
+      </mcs-grid-column>
+
+      <!-- Service Information -->
+      <mcs-grid-column sizeSm="12" sizeLg="6">
+          <mcs-presentation-panel mcsId="service-information">
+            <ng-container mcsPresentationPanelHeader>
+              <h2>{{ 'internetPortManagement.service.title' | translate }}</h2>
+            </ng-container>
+
+            <mcs-item>
+              <span>{{ 'internetPortManagement.service.serviceId' | translate }}:</span>
+              <span [innerHTML]="selectedInternetPort.serviceId | mcsDataLabel"></span>
+            </mcs-item>
+
+            <mcs-item>
+              <span>{{ 'internetPortManagement.service.inviewLevel' | translate }}:</span>
+              <span [innerHTML]="selectedInternetPort.inviewLevelLabel | mcsDataLabel"></span>
+            </mcs-item>
+
+          </mcs-presentation-panel>
+        </mcs-grid-column>
+
+    </mcs-grid-row>
+  </mcs-grid>

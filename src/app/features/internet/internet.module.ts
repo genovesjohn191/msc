@@ -1,15 +1,21 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '@app/shared';
+import { InternetComponent } from './internet.component';
+import {
+  InternetPortComponent,
+  InternetPortManagementComponent
+} from './internet-port';
 import {
   internetProviders,
-  internetRoutes,
-  internetRoutesComponents
+  internetRoutes
 } from './internet.constants';
 
 @NgModule({
   declarations: [
-    ...internetRoutesComponents
+    InternetComponent,
+    InternetPortComponent,
+    InternetPortManagementComponent
   ],
   imports: [
     RouterModule.forChild(internetRoutes),

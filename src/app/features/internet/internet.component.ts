@@ -4,23 +4,22 @@ import {
   ChangeDetectionStrategy,
   Injector
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import {
   CoreDefinition,
-  McsTableListingBase
+  McsTableListingBase,
+  CoreRoutes
 } from '@app/core';
-import {
-  isNullOrEmpty,
-  CommonDefinition
-} from '@app/utilities';
+import { McsEvent } from '@app/event-manager';
+import { McsApiService } from '@app/services';
 import {
   RouteKey,
   McsInternetPort,
   McsQueryParam,
   McsApiCollection
 } from '@app/models';
-import { McsApiService } from '@app/services';
-import { McsEvent } from '@app/event-manager';
+import { isNullOrEmpty } from '@app/utilities';
 
 @Component({
   selector: 'mcs-internet',
@@ -33,36 +32,23 @@ export class InternetComponent extends McsTableListingBase<McsInternetPort> {
   public constructor(
     _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
+    private _router: Router,
     private _apiService: McsApiService
   ) {
     super(_injector, _changeDetectorRef, { dataChangeEvent: McsEvent.dataChangeInternetPorts });
   }
 
-  public get routeKeyEnum(): any {
+  public get routeKeyEnum(): typeof RouteKey {
     return RouteKey;
   }
 
   /**
-   * Returns the + icon key
-   */
-  public get addIconKey(): string {
-    return CommonDefinition.ASSETS_SVG_PLUS;
-  }
-
-  /**
-   * Creates a new order
-   */
-  public onClickNewOrder(): void {
-    // Do the create order
-  }
-
-  /**
-   * Navigate to order details page
-   * @param order Order to view the details
+   * Navigate to internet details page
+   * @param internet Internet Port to view the details
    */
   public navigateToInternet(internet: McsInternetPort): void {
     if (isNullOrEmpty(internet)) { return; }
-    // TODO: Add the navigation to internet port details here
+    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.InternetDetails), internet.id]);
   }
 
   /**

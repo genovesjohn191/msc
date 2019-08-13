@@ -1145,14 +1145,33 @@
   "internet": {
     "header": "Internet Ports",
     "leftPanelHeader": "Internet Port Filter",
-    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of internet ports.",
+    "loading": "Loading internet ports.",
     "noInternetPorts": "No internet ports to display.",
+    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of internet ports.",
     "retry": "Try again shortly",
     "filterColumn": "Filter Column",
     "tableSearch": "Table Search",
     "dataSingular": "Internet Port",
     "dataPlural": "Internet Ports",
     "speedUnit": "Mbps"
+  },
+  "internetPortDetails": {
+    "leftPanelHeader": "Service Filter"
+  },
+  "internetPortManagement": {
+    "label": "Management",
+    "properties": {
+      "title": "Internet Properties",
+      "zone": "Zone",
+      "portSpeed": "Port Speed",
+      "portSpeedValue": "{{speed}} Mbps",
+      "plan": "Plan"
+    },
+    "service": {
+      "title": "Service Information",
+      "serviceId": "Service ID",
+      "inviewLevel": "InView Level"
+    }
   },
   "products": {
     "header": "Product Catalog",
