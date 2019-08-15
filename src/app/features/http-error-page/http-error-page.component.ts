@@ -27,12 +27,14 @@ import {
 })
 
 export class HttpErrorPageComponent implements OnInit, OnDestroy {
-  public textHeader: string;
   public textContent: any;
+  private _httpErrorTextContentMap: Map<HttpStatusCode, any>;
+  private _destroySubject = new Subject<void>();
 
-  /**
-   * Error code of the current http request
-   */
+  public get httpStatusCodeEnum(): any {
+    return HttpStatusCode;
+  }
+
   public get errorCode(): HttpStatusCode { return this._errorCode; }
   public set errorCode(value: HttpStatusCode) {
     if (this._errorCode !== value) {
@@ -42,15 +44,14 @@ export class HttpErrorPageComponent implements OnInit, OnDestroy {
   }
   private _errorCode: HttpStatusCode = HttpStatusCode.Success;
 
-  private _destroySubject = new Subject<void>();
-  public get httpStatusCodeEnum(): any { return HttpStatusCode; }
-
   public constructor(
     private _locationService: Location,
     private _activatedRoute: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef,
     private _translateService: TranslateService
-  ) { }
+  ) {
+    this._initializeHttpErrorTextContentMap();
+  }
 
   public ngOnInit() {
     this._listenToParamChanges();
@@ -81,7 +82,7 @@ export class HttpErrorPageComponent implements OnInit, OnDestroy {
         if (this.errorCode === 0) {
           this.errorCode = HttpStatusCode.NotFound;
         }
-        this._setTextContent();
+        this._setTextContent(this.errorCode);
       });
   }
 
@@ -96,43 +97,55 @@ export class HttpErrorPageComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Set the text content based on the status code obtained in the parameter
+   * Set the current text content based on the type of error code,
+   * Set to generic if its not in the map
+   * @param errorCode the current error code
    */
-  private _setTextContent(): void {
-    // TODO: can be stored to map, make a configuration class and set the status
-    switch (this.errorCode) {
-      case HttpStatusCode.InternalServerError:
-        this.textContent = this._translateService.instant('pageHttpError.internalServerError');
-        break;
+  private _setTextContent(errorCode: HttpStatusCode): void {
+    this.textContent = this._httpErrorTextContentMap.has(errorCode) ?
+      this._httpErrorTextContentMap.get(errorCode) :
+      this._translateService.instant('pageHttpError.genericError');
 
-      case HttpStatusCode.Unprocessable:
-        this.textContent = this._translateService.instant('pageHttpError.unprocessable');
-        break;
+    this._changeDetectorRef.markForCheck();
+  }
 
-      case HttpStatusCode.ServiceUnavailable:
-        this.textContent = this._translateService.instant('pageHttpError.serviceUnavailable');
-        break;
+  /**
+   * Initialize and populate the values of the http error text content map
+   */
+  private _initializeHttpErrorTextContentMap(): void {
+    this._httpErrorTextContentMap = new Map();
 
-      case HttpStatusCode.Unauthorized:
-        this.textContent = this._translateService.instant('pageHttpError.unauthorized');
-        break;
-
-      case HttpStatusCode.Forbidden:
-        this.textContent = this._translateService.instant('pageHttpError.forbidden');
-        break;
-
-      case HttpStatusCode.ReadOnlyMode:
-        this.textContent = this._translateService.instant('pageHttpError.readOnlyMode');
-        break;
-
-      case HttpStatusCode.NotFound:
-        this.textContent = this._translateService.instant('pageHttpError.notFound');
-        break;
-
-      default:
-        this.textHeader = this.errorCode.toString();
-        this.textContent = this._translateService.instant('pageHttpError.genericError');
-        break;
-    }
+    this._httpErrorTextContentMap.set(
+      HttpStatusCode.Unauthorized,
+      this._translateService.instant('pageHttpError.unauthorized')
+    );
+    this._httpErrorTextContentMap.set(
+      HttpStatusCode.Forbidden,
+      this._translateService.instant('pageHttpError.forbidden')
+    );
+    this._httpErrorTextContentMap.set(
+      HttpStatusCode.NotFound,
+      this._translateService.instant('pageHttpError.notFound')
+    );
+    this._httpErrorTextContentMap.set(
+      HttpStatusCode.NotAllowed,
+      this._translateService.instant('pageHttpError.notFound')
+    );
+    this._httpErrorTextContentMap.set(
+      HttpStatusCode.ReadOnlyMode,
+      this._translateService.instant('pageHttpError.readOnlyMode')
+    );
+    this._httpErrorTextContentMap.set(
+      HttpStatusCode.Unprocessable,
+      this._translateService.instant('pageHttpError.unprocessable')
+    );
+    this._httpErrorTextContentMap.set(
+      HttpStatusCode.InternalServerError,
+      this._translateService.instant('pageHttpError.internalServerError')
+    );
+    this._httpErrorTextContentMap.set(
+      HttpStatusCode.ServiceUnavailable,
+      this._translateService.instant('pageHttpError.serviceUnavailable')
+    );
   }
 }

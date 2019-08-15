@@ -19,7 +19,6 @@ import {
 import { MainLoaderComponent } from './main-loader/main-loader.component';
 import { ContentComponent } from './content/content.component';
 import { FooterComponent } from './footer/footer.component';
-import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
 import {
   HeaderComponent,
   UserPanelComponent
@@ -35,7 +34,6 @@ import { coreLayoutProviders } from './core-layout.constants';
 
 @NgModule({
   declarations: [
-    BreadcrumbsComponent,
     AccountPanelComponent,
     NotificationPanelComponent,
     SwitchAccountComponent,

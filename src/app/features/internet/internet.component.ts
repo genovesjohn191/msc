@@ -4,12 +4,11 @@ import {
   ChangeDetectionStrategy,
   Injector
 } from '@angular/core';
-import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import {
   CoreDefinition,
   McsTableListingBase,
-  CoreRoutes
+  McsNavigationService
 } from '@app/core';
 import { McsEvent } from '@app/event-manager';
 import { McsApiService } from '@app/services';
@@ -32,7 +31,7 @@ export class InternetComponent extends McsTableListingBase<McsInternetPort> {
   public constructor(
     _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
-    private _router: Router,
+    private _navigationService: McsNavigationService,
     private _apiService: McsApiService
   ) {
     super(_injector, _changeDetectorRef, { dataChangeEvent: McsEvent.dataChangeInternetPorts });
@@ -48,7 +47,7 @@ export class InternetComponent extends McsTableListingBase<McsInternetPort> {
    */
   public navigateToInternet(internet: McsInternetPort): void {
     if (isNullOrEmpty(internet)) { return; }
-    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.InternetDetails), internet.id]);
+    this._navigationService.navigateTo(RouteKey.InternetDetails, [internet.id]);
   }
 
   /**

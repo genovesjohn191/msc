@@ -6,7 +6,6 @@ import {
   OnInit,
   Injector
 } from '@angular/core';
-import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import {
   Observable,
@@ -23,10 +22,10 @@ import {
   CoreDefinition,
   McsDataStatusFactory,
   McsDateTimeService,
-  CoreRoutes,
   CoreConfig,
   McsAuthenticationIdentity,
-  McsServerPermission
+  McsServerPermission,
+  McsNavigationService
 } from '@app/core';
 import {
   animateFactory,
@@ -84,7 +83,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
     _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
     private _authIdentity: McsAuthenticationIdentity,
-    private _router: Router,
+    private _navigationService: McsNavigationService,
     private _coreConfig: CoreConfig,
     private _dateTimeService: McsDateTimeService,
     private _translateService: TranslateService
@@ -295,7 +294,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
    */
   public raiseInviewLevel(server: McsServer): void {
     this.eventDispatcher.dispatch(McsEvent.serverRaiseInviewSelected, server);
-    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.OrderServiceInviewRaise)]);
+    this._navigationService.navigateTo(RouteKey.OrderServiceInviewRaise);
   }
 
   /**

@@ -6,7 +6,6 @@ import {
   ChangeDetectionStrategy,
   Injector
 } from '@angular/core';
-import { Router } from '@angular/router';
 import {
   of,
   forkJoin,
@@ -18,8 +17,8 @@ import {
 } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 import {
-  CoreRoutes,
-  McsTableListingBase
+  McsTableListingBase,
+  McsNavigationService
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -99,7 +98,7 @@ export class ServersComponent extends McsTableListingBase<McsServer>
   public constructor(
     _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
-    private _router: Router,
+    private _navigationService: McsNavigationService,
     private _translateService: TranslateService,
     private _apiService: McsApiService,
     private _dialogService: DialogService,
@@ -287,7 +286,7 @@ export class ServersComponent extends McsTableListingBase<McsServer>
    * This will navigate to new server page
    */
   public onClickNewServerButton() {
-    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.ServerCreate)]);
+    this._navigationService.navigateTo(RouteKey.ServerCreate);
   }
 
   /**
@@ -296,10 +295,7 @@ export class ServersComponent extends McsTableListingBase<McsServer>
    */
   public navigateToResource(server: McsServer): void {
     if (isNullOrEmpty(server.platform)) { return; }
-    this._router.navigate([
-      CoreRoutes.getNavigationPath(RouteKey.VdcDetails),
-      server.platform.resourceId
-    ]);
+    this._navigationService.navigateTo(RouteKey.VdcDetails, [server.platform.resourceId]);
   }
 
   /**
@@ -308,7 +304,7 @@ export class ServersComponent extends McsTableListingBase<McsServer>
    */
   public navigateToServer(server: McsServer): void {
     if (isNullOrEmpty(server) || server.isDisabled) { return; }
-    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.Servers), server.id]);
+    this._navigationService.navigateTo(RouteKey.Servers, [server.id]);
   }
 
   /**

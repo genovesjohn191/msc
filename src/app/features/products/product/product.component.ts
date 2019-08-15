@@ -8,10 +8,7 @@ import {
   ChangeDetectorRef,
   ViewChild
 } from '@angular/core';
-import {
-  Router,
-  ActivatedRoute
-} from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import {
   Observable,
   of
@@ -23,8 +20,8 @@ import {
   shareReplay
 } from 'rxjs/operators';
 import {
-  CoreRoutes,
-  CoreDefinition
+  CoreDefinition,
+  McsNavigationService
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -79,7 +76,7 @@ export class ProductComponent implements OnInit, OnDestroy {
 
   constructor(
     private _activatedRoute: ActivatedRoute,
-    private _router: Router,
+    private _navigationService: McsNavigationService,
     private _renderer: Renderer2,
     private _changeDetectorRef: ChangeDetectorRef,
     private _productService: ProductService
@@ -123,7 +120,7 @@ export class ProductComponent implements OnInit, OnDestroy {
    */
   public onClickDependency(dependency: McsProductDependency): void {
     if (isNullOrEmpty(dependency)) { return; }
-    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.ProductDetails), dependency.id]);
+    this._navigationService.navigateTo(RouteKey.ProductDetails, [dependency.id]);
   }
 
   /**

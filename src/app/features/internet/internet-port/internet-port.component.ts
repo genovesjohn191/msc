@@ -7,10 +7,7 @@ import {
   ViewChild,
   ChangeDetectorRef
 } from '@angular/core';
-import {
-  ActivatedRoute,
-  Router
-} from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import {
   Observable,
   Subject,
@@ -26,8 +23,8 @@ import {
 } from 'rxjs/operators';
 import {
   McsRoutingTabBase,
-  CoreRoutes,
-  McsDataStatusFactory
+  McsDataStatusFactory,
+  McsNavigationService
 } from '@app/core';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { McsApiService } from '@app/services';
@@ -65,7 +62,7 @@ export class InternetPortComponent extends McsRoutingTabBase<tabGroupType> imple
 
   constructor(
     private _internetPortService: InternetPortService,
-    private _router: Router,
+    private _navigationService: McsNavigationService,
     private _apiService: McsApiService,
     private _changeDetectorRef: ChangeDetectorRef,
     protected eventDispatcher: EventBusDispatcherService,
@@ -104,11 +101,7 @@ export class InternetPortComponent extends McsRoutingTabBase<tabGroupType> imple
    */
   protected onTabChanged(tab: any) {
     // Navigate route based on current active tab
-    this._router.navigate([
-      CoreRoutes.getNavigationPath(RouteKey.InternetDetails),
-      this.paramId,
-      tab.id
-    ]);
+    this._navigationService.navigateTo(RouteKey.InternetDetails, [this.paramId, tab.id]);
   }
 
   /**

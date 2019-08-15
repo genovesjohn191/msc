@@ -6,11 +6,11 @@ import {
   ChangeDetectionStrategy,
   Injector,
 } from '@angular/core';
-import { Router } from '@angular/router';
 import { VdcDetailsBase } from '../vdc-details.base';
 import {
   CoreRoutes,
-  CoreDefinition
+  CoreDefinition,
+  McsNavigationService
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -85,7 +85,7 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
   constructor(
     _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
-    private _router: Router
+    private _navigationService: McsNavigationService
   ) {
     super(_injector, _changeDetectorRef);
     this.selectedVdc = new McsResource();
@@ -105,11 +105,9 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
    * @param keyRoute Keyroute where to navigate
    */
   public navigateVdcDetailTo(keyRoute: RouteKey): void {
-    this._router.navigate([
-      CoreRoutes.getNavigationPath(RouteKey.VdcDetails),
-      this.selectedVdc.id,
-      CoreRoutes.getNavigationPath(keyRoute)
-    ]);
+    this._navigationService.navigateTo(RouteKey.VdcDetails,
+      [this.selectedVdc.id, CoreRoutes.getNavigationPath(keyRoute)]
+    );
   }
 
   /**
@@ -152,7 +150,7 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
    * Redirects to create new server page
    */
   public createNewServer(): void {
-    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.ServerCreate)]);
+    this._navigationService.navigateTo(RouteKey.ServerCreate);
   }
 
   /**

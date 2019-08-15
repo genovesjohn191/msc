@@ -23,9 +23,6 @@ export class McsResourceMedia extends McsEntityBase {
   })
   public createdOn: Date;
 
-  public isProcessing: boolean;
-  public processingText: string;
-
   constructor() {
     super();
     this.name = undefined;

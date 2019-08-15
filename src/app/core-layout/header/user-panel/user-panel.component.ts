@@ -6,7 +6,6 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy
 } from '@angular/core';
-import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import {
   Subject,
@@ -25,10 +24,10 @@ import {
   McsIdentity
 } from '@app/models';
 import {
-  CoreRoutes,
   CoreDefinition,
   McsBrowserService,
-  McsAuthenticationService
+  McsAuthenticationService,
+  McsNavigationService
 } from '@app/core';
 import {
   refreshView,
@@ -69,7 +68,7 @@ export class UserPanelComponent implements OnInit, OnDestroy {
 
   public constructor(
     private _translateService: TranslateService,
-    private _router: Router,
+    private _navigationService: McsNavigationService,
     private _browserService: McsBrowserService,
     private _changeDetectorRef: ChangeDetectorRef,
     private _authenticationService: McsAuthenticationService,
@@ -123,7 +122,7 @@ export class UserPanelComponent implements OnInit, OnDestroy {
    * Navigate to notifications page to see all the jobs
    */
   public viewNotificationsPage(): void {
-    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.Notifications)]);
+    this._navigationService.navigateTo(RouteKey.Notifications);
   }
 
   /**

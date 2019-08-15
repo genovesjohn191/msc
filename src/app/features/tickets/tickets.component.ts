@@ -4,11 +4,10 @@ import {
   ChangeDetectionStrategy,
   Injector
 } from '@angular/core';
-import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import {
-  CoreRoutes,
-  McsTableListingBase
+  McsTableListingBase,
+  McsNavigationService
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -38,7 +37,7 @@ export class TicketsComponent extends McsTableListingBase<McsTicket> {
     _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
     private _apiService: McsApiService,
-    private _router: Router
+    private _navigationService: McsNavigationService
   ) {
     super(_injector, _changeDetectorRef, { dataChangeEvent: McsEvent.dataChangeTickets });
   }
@@ -57,14 +56,14 @@ export class TicketsComponent extends McsTableListingBase<McsTicket> {
    */
   public navigateToTicket(ticket: McsTicket): void {
     if (isNullOrEmpty(ticket)) { return; }
-    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.TicketDetails), ticket.id]);
+    this._navigationService.navigateTo(RouteKey.TicketDetails, [ticket.id]);
   }
 
   /**
    * This will navigate to ticket creation page
    */
   public onClickNewTicket(): void {
-    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.TicketCreate)]);
+    this._navigationService.navigateTo(RouteKey.TicketCreate);
   }
 
   /**
