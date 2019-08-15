@@ -7,7 +7,6 @@ import {
   Injector,
 } from '@angular/core';
 import {
-  Router,
   ActivatedRoute,
   ParamMap
 } from '@angular/router';
@@ -24,7 +23,8 @@ import { TranslateService } from '@ngx-translate/core';
 import {
   CoreDefinition,
   CoreRoutes,
-  McsServerPermission
+  McsServerPermission,
+  McsNavigationService
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -100,7 +100,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
   constructor(
     _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
-    private _router: Router,
+    private _navigationService: McsNavigationService,
     private _translate: TranslateService,
     private _activatedRoute: ActivatedRoute,
     private _dialogService: DialogService
@@ -158,11 +158,8 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
    * @param keyRoute Keyroute where to navigate
    */
   public navigateServerDetailsTo(server: McsServer, keyRoute: RouteKey): void {
-    this._router.navigate([
-      CoreRoutes.getNavigationPath(RouteKey.ServerDetails),
-      server.id,
-      CoreRoutes.getNavigationPath(keyRoute)
-    ]);
+    this._navigationService.navigateTo(RouteKey.ServerDetails,
+      [server.id, CoreRoutes.getNavigationPath(keyRoute)]);
   }
 
   /**
@@ -175,7 +172,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
       return;
     }
     this.eventDispatcher.dispatch(McsEvent.serverScaleManageSelected, server);
-    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.OrderServerManagedScale)]);
+    this._navigationService.navigateTo(RouteKey.OrderServerManagedScale);
   }
 
   /**

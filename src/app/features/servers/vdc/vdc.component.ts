@@ -7,10 +7,7 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy
 } from '@angular/core';
-import {
-  Router,
-  ActivatedRoute
-} from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import {
   Subject,
   throwError,
@@ -27,7 +24,7 @@ import {
 import {
   McsRoutingTabBase,
   McsDataStatusFactory,
-  CoreRoutes
+  McsNavigationService
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -82,7 +79,7 @@ export class VdcComponent
   constructor(
     _eventDispatcher: EventBusDispatcherService,
     _activatedRoute: ActivatedRoute,
-    private _router: Router,
+    private _navigationService: McsNavigationService,
     private _changeDetectorRef: ChangeDetectorRef,
     private _apiService: McsApiService,
     private _vdcService: VdcService
@@ -119,10 +116,7 @@ export class VdcComponent
     if (isNullOrEmpty(resource.resourceId)) { return; }
 
     this._changeDetectorRef.markForCheck();
-    this._router.navigate([
-      CoreRoutes.getNavigationPath(RouteKey.VdcDetails),
-      resource.resourceId
-    ]);
+    this._navigationService.navigateTo(RouteKey.VdcDetails, [resource.resourceId]);
   }
 
   /**
@@ -130,11 +124,7 @@ export class VdcComponent
    * @param tab Active tab
    */
   protected onTabChanged(tab: any) {
-    this._router.navigate([
-      CoreRoutes.getNavigationPath(RouteKey.VdcDetails),
-      this.paramId,
-      tab.id
-    ]);
+    this._navigationService.navigateTo(RouteKey.VdcDetails, [this.paramId, tab.id]);
   }
 
   /**

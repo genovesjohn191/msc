@@ -4,12 +4,11 @@ import {
   ChangeDetectionStrategy,
   Injector
 } from '@angular/core';
-import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import {
   CoreDefinition,
-  CoreRoutes,
-  McsTableListingBase
+  McsTableListingBase,
+  McsNavigationService
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -35,7 +34,7 @@ export class OrdersComponent extends McsTableListingBase<McsOrder> {
   public constructor(
     _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
-    private _router: Router,
+    private _navigationService: McsNavigationService,
     private _apiService: McsApiService
   ) {
     super(_injector, _changeDetectorRef, { dataChangeEvent: McsEvent.dataChangeOrders });
@@ -65,7 +64,7 @@ export class OrdersComponent extends McsTableListingBase<McsOrder> {
    */
   public navigateToOrder(order: McsOrder): void {
     if (isNullOrEmpty(order)) { return; }
-    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.OrderDetails), order.id]);
+    this._navigationService.navigateTo(RouteKey.OrderDetails, [order.id]);
   }
 
   /**

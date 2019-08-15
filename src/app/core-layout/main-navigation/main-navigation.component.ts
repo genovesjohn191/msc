@@ -6,12 +6,11 @@ import {
   ChangeDetectorRef,
   ViewEncapsulation
 } from '@angular/core';
-import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import {
   CoreDefinition,
-  CoreRoutes,
-  McsAccessControlService
+  McsAccessControlService,
+  McsNavigationService
 } from '@app/core';
 import {
   RouteKey,
@@ -43,7 +42,7 @@ export class MainNavigationComponent implements OnInit, OnDestroy {
   private _routeHandler: Subscription;
 
   public constructor(
-    private _router: Router,
+    private _navigationService: McsNavigationService,
     private _changeDetectorRef: ChangeDetectorRef,
     private _eventDispatcher: EventBusDispatcherService,
     private _accessControlService: McsAccessControlService
@@ -85,7 +84,7 @@ export class MainNavigationComponent implements OnInit, OnDestroy {
    */
   public navigateTo(routeKey: RouteKey): void {
     if (isNullOrEmpty(routeKey)) { return; }
-    this._router.navigate([CoreRoutes.getNavigationPath(routeKey)]);
+    this._navigationService.navigateTo(routeKey);
   }
 
   /**

@@ -4,12 +4,11 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef
 } from '@angular/core';
-import { Router } from '@angular/router';
 import {
   McsAuthenticationService,
   CoreConfig,
   CoreDefinition,
-  CoreRoutes
+  McsNavigationService
 } from '@app/core';
 import { RouteKey } from '@app/models';
 
@@ -22,7 +21,7 @@ import { RouteKey } from '@app/models';
 export class DashboardComponent implements OnInit {
 
   public constructor(
-    private _router: Router,
+    private _navigationService: McsNavigationService,
     private _coreConfig: CoreConfig,
     private _changeDetectorRef: ChangeDetectorRef,
     private _authenticationService: McsAuthenticationService
@@ -61,6 +60,6 @@ export class DashboardComponent implements OnInit {
    * Navigates to create ticket page
    */
   public gotoCreateTicket(): void {
-    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.TicketCreate)]);
+    this._navigationService.navigateTo(RouteKey.TicketCreate);
   }
 }

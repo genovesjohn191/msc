@@ -4,12 +4,11 @@ import {
   ChangeDetectionStrategy,
   Injector
 } from '@angular/core';
-import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import {
   CoreDefinition,
   McsTableListingBase,
-  CoreRoutes
+  McsNavigationService
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -35,7 +34,7 @@ export class FirewallsComponent extends McsTableListingBase<McsFirewall> {
   public constructor(
     _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
-    private _router: Router,
+    private _navigationService: McsNavigationService,
     private _apiService: McsApiService
   ) {
     super(_injector, _changeDetectorRef, { dataChangeEvent: McsEvent.dataChangeFirewalls });
@@ -55,7 +54,7 @@ export class FirewallsComponent extends McsTableListingBase<McsFirewall> {
    */
   public navigateToFirewall(firewall: McsFirewall): void {
     if (isNullOrEmpty(firewall)) { return; }
-    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.FirewallDetails), firewall.id]);
+    this._navigationService.navigateTo(RouteKey.FirewallDetails, [firewall.id]);
   }
 
   /**

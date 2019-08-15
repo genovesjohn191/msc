@@ -7,10 +7,7 @@ import {
   ChangeDetectionStrategy,
   ViewChild
 } from '@angular/core';
-import {
-  Router,
-  ActivatedRoute
-} from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import {
   throwError,
   Subject,
@@ -26,9 +23,9 @@ import {
 } from 'rxjs/operators';
 import {
   CoreDefinition,
-  CoreRoutes,
   McsRoutingTabBase,
-  McsDataStatusFactory
+  McsDataStatusFactory,
+  McsNavigationService
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -82,7 +79,7 @@ export class MediumComponent
   public constructor(
     _eventDispatcher: EventBusDispatcherService,
     _activatedRoute: ActivatedRoute,
-    private _router: Router,
+    private _navigationService: McsNavigationService,
     private _changeDetectorRef: ChangeDetectorRef,
     private _apiService: McsApiService,
     private _mediumService: MediumService
@@ -121,7 +118,7 @@ export class MediumComponent
    * Navigate to media listing
    */
   public gotoMedia(): void {
-    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.Media)]);
+    this._navigationService.navigateTo(RouteKey.Media);
   }
 
   /**
@@ -129,11 +126,7 @@ export class MediumComponent
    * @param tab Active tab
    */
   protected onTabChanged(tab: any) {
-    this._router.navigate([
-      CoreRoutes.getNavigationPath(RouteKey.Medium),
-      this.paramId,
-      tab.id
-    ]);
+    this._navigationService.navigateTo(RouteKey.Medium, [this.paramId, tab.id]);
   }
 
   /**

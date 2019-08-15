@@ -7,10 +7,7 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy
 } from '@angular/core';
-import {
-  Router,
-  ActivatedRoute
-} from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import {
   Subject,
   throwError,
@@ -27,7 +24,7 @@ import {
 import {
   McsRoutingTabBase,
   McsDataStatusFactory,
-  CoreRoutes
+  McsNavigationService
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -81,7 +78,7 @@ export class FirewallComponent
   constructor(
     _activatedRoute: ActivatedRoute,
     _eventDispatcher: EventBusDispatcherService,
-    private _router: Router,
+    private _navigationService: McsNavigationService,
     private _changeDetectorRef: ChangeDetectorRef,
     private _apiService: McsApiService,
     private _firewallService: FirewallService
@@ -115,11 +112,7 @@ export class FirewallComponent
    */
   protected onTabChanged(tab: any) {
     // Navigate route based on current active tab
-    this._router.navigate([
-      CoreRoutes.getNavigationPath(RouteKey.FirewallDetails),
-      this.paramId,
-      tab.id
-    ]);
+    this._navigationService.navigateTo(RouteKey.FirewallDetails, [this.paramId, tab.id]);
   }
 
   /**

@@ -1,7 +1,6 @@
 <div class="http-error-page-content" text-center>
-
   <span class="http-error-page-header">
-    {{ textHeader || textContent?.header  }}
+    {{ textContent?.header  }}
   </span>
   <h2>{{ textContent?.summary }}</h2>
   <div>
@@ -12,7 +11,6 @@
       {{ textContent?.retry }}
     </span>
   </div>
-
   <div [ngSwitch]="errorCode">
     <div *ngSwitchCase="httpStatusCodeEnum.NotFound">
       <ng-container *ngTemplateOutlet="homeButtonTemplate"></ng-container>
@@ -20,17 +18,17 @@
     <div *ngSwitchCase="httpStatusCodeEnum.ServiceUnavailable">
       <ng-container *ngTemplateOutlet="homeButtonTemplate"></ng-container>
     </div>
-    <div *ngSwitchCase="httpStatusCodeEnum.InternalServerError">
-      <ng-container *ngTemplateOutlet="refreshButtonTemplate"></ng-container>
-    </div>
-    <div *ngSwitchCase="httpStatusCodeEnum.Unprocessable">
-      <ng-container *ngTemplateOutlet="refreshButtonTemplate"></ng-container>
-    </div>
     <div *ngSwitchCase="httpStatusCodeEnum.Forbidden">
       <ng-container *ngTemplateOutlet="homeButtonTemplate"></ng-container>
     </div>
     <div *ngSwitchCase="httpStatusCodeEnum.ReadOnlyMode">
       <ng-container *ngTemplateOutlet="homeButtonTemplate"></ng-container>
+    </div>
+    <div *ngSwitchCase="httpStatusCodeEnum.InternalServerError">
+      <ng-container *ngTemplateOutlet="refreshButtonTemplate"></ng-container>
+    </div>
+    <div *ngSwitchCase="httpStatusCodeEnum.Unprocessable">
+      <ng-container *ngTemplateOutlet="refreshButtonTemplate"></ng-container>
     </div>
   </div>
 </div>

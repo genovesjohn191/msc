@@ -5,13 +5,12 @@ import {
   ChangeDetectionStrategy,
   Injector
 } from '@angular/core';
-import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
   CoreDefinition,
-  CoreRoutes,
-  McsTableListingBase
+  McsTableListingBase,
+  McsNavigationService
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -39,7 +38,7 @@ export class MediaComponent extends McsTableListingBase<McsResourceMedia> implem
   public constructor(
     _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
-    private _router: Router,
+    private _navigationService: McsNavigationService,
     private _apiService: McsApiService
   ) {
     super(_injector, _changeDetectorRef, {
@@ -72,14 +71,14 @@ export class MediaComponent extends McsTableListingBase<McsResourceMedia> implem
    */
   public navigateToMedia(media: McsResourceMedia): void {
     if (isNullOrEmpty(media)) { return; }
-    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.Medium), media.id]);
+    this._navigationService.navigateTo(RouteKey.Medium, [media.id]);
   }
 
   /**
    * Navigates to media upload
    */
   public navigateToMediaUpload(): void {
-    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.MediaUpload)]);
+    this._navigationService.navigateTo(RouteKey.MediaUpload);
   }
 
   /**

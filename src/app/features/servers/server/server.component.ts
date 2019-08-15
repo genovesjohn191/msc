@@ -7,10 +7,7 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy
 } from '@angular/core';
-import {
-  Router,
-  ActivatedRoute
-} from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import {
   Subject,
   throwError,
@@ -29,8 +26,8 @@ import {
   CoreDefinition,
   McsRoutingTabBase,
   McsDataStatusFactory,
-  CoreRoutes,
-  McsServerPermission
+  McsServerPermission,
+  McsNavigationService
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -86,7 +83,7 @@ export class ServerComponent
   constructor(
     _eventDispatcher: EventBusDispatcherService,
     _activatedRoute: ActivatedRoute,
-    private _router: Router,
+    private _navigationService: McsNavigationService,
     private _apiService: McsApiService,
     private _serverService: ServerService,
     private _changeDetectorRef: ChangeDetectorRef
@@ -138,11 +135,7 @@ export class ServerComponent
    * @param tab Active tab
    */
   protected onTabChanged(tab: any) {
-    this._router.navigate([
-      CoreRoutes.getNavigationPath(RouteKey.ServerDetails),
-      this.paramId,
-      tab.id
-    ]);
+    this._navigationService.navigateTo(RouteKey.ServerDetails, [this.paramId, tab.id]);
   }
 
   /**

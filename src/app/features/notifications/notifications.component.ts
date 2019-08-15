@@ -5,12 +5,11 @@ import {
   Injector
 } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Router } from '@angular/router';
 import {
   CoreDefinition,
-  CoreRoutes,
   McsTableListingBase,
-  McsAuthenticationIdentity
+  McsAuthenticationIdentity,
+  McsNavigationService
 } from '@app/core';
 import { isNullOrEmpty } from '@app/utilities';
 import { McsApiService } from '@app/services';
@@ -39,7 +38,7 @@ export class NotificationsComponent extends McsTableListingBase<McsJob> {
   public constructor(
     _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
-    private _router: Router,
+    private _navigationService: McsNavigationService,
     private _authenticationIdentity: McsAuthenticationIdentity,
     private _apiService: McsApiService
   ) {
@@ -51,24 +50,12 @@ export class NotificationsComponent extends McsTableListingBase<McsJob> {
   }
 
   /**
-   * This will navigate to specified link, otherwise do nothing
-   * @param url Url to be navigated
-   */
-  public tryNavigateTo(url: string): void {
-    if (isNullOrEmpty(url)) { return; }
-    this._router.navigate([url]);
-  }
-
-  /**
    * Navigates to notification page
    * @param job Notification job on where to go
    */
   public navigateToNotification(job: McsJob): void {
     if (isNullOrEmpty(job)) { return; }
-    this._router.navigate([
-      CoreRoutes.getNavigationPath(RouteKey.Notification),
-      job.id
-    ]);
+    this._navigationService.navigateTo(RouteKey.Notification, [job.id]);
   }
 
   /**

@@ -6,7 +6,6 @@ import {
   ViewEncapsulation,
   ChangeDetectorRef
 } from '@angular/core';
-import { Router } from '@angular/router';
 import {
   throwError,
   BehaviorSubject,
@@ -14,11 +13,11 @@ import {
 } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import {
-  CoreRoutes,
   CoreConfig,
   CoreDefinition,
   McsDataStatusFactory,
-  McsAccessControlService
+  McsAccessControlService,
+  McsNavigationService
 } from '@app/core';
 import {
   RouteKey,
@@ -67,7 +66,7 @@ export class NavigationDesktopComponent implements OnInit, OnDestroy {
   private _productUnselectedHandler: Subscription;
 
   constructor(
-    private _router: Router,
+    private _navigationService: McsNavigationService,
     private _coreConfig: CoreConfig,
     private _changeDetectorRef: ChangeDetectorRef,
     private _eventDispatcher: EventBusDispatcherService,
@@ -99,7 +98,7 @@ export class NavigationDesktopComponent implements OnInit, OnDestroy {
    */
   public gotoProduct(_product: McsProduct) {
     if (isNullOrEmpty(_product)) { return; }
-    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.ProductDetails), _product.id]);
+    this._navigationService.navigateTo(RouteKey.ProductDetails, [_product.id]);
   }
 
   /**

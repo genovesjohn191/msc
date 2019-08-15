@@ -18,12 +18,11 @@ import {
   finalize,
   catchError
 } from 'rxjs/operators';
-import { Router } from '@angular/router';
 import {
   CoreValidators,
   CoreDefinition,
-  CoreRoutes,
-  IMcsNavigateAwayGuard
+  IMcsNavigateAwayGuard,
+  McsNavigationService
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -117,7 +116,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
   }
 
   constructor(
-    private _router: Router,
+    private _navigateService: McsNavigationService,
     private _changeDetectorRef: ChangeDetectorRef,
     private _apiService: McsApiService
   ) {
@@ -227,7 +226,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
         this._changeDetectorRef.markForCheck();
         return throwError(error);
       })
-    ).subscribe(() => this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.Tickets)]));
+    ).subscribe(() => this._navigateService.navigateTo(RouteKey.Tickets));
   }
 
   /**
