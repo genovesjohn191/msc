@@ -1,9 +1,9 @@
+import { ActivatedRoute } from '@angular/router';
 import {
   Component,
   OnInit,
   OnDestroy,
   ViewChild,
-  ChangeDetectorRef,
   ChangeDetectionStrategy
 } from '@angular/core';
 import {
@@ -11,23 +11,27 @@ import {
   FormControl
 } from '@angular/forms';
 import {
-  forkJoin,
-  throwError
+  Observable,
+  BehaviorSubject,
+  Subscription
 } from 'rxjs';
 import {
   finalize,
-  catchError
+  tap,
+  map,
+  shareReplay
 } from 'rxjs/operators';
 import {
   CoreValidators,
-  CoreDefinition,
   IMcsNavigateAwayGuard,
   McsNavigationService
 } from '@app/core';
 import {
   isNullOrEmpty,
   unsubscribeSafely,
-  animateFactory
+  animateFactory,
+  getSafeProperty,
+  CommonDefinition
 } from '@app/utilities';
 import { McsFormGroupDirective } from '@app/shared';
 import {
@@ -37,18 +41,11 @@ import {
   McsFileInfo,
   McsOption,
   RouteKey,
-  McsFirewall,
-  McsResource,
-  McsServer,
   McsTicketCreate,
-  McsTicketCreateAttachment,
-  McsApiCollection
+  McsTicketCreateAttachment
 } from '@app/models';
 import { McsApiService } from '@app/services';
-import {
-  TicketService,
-  TicketServiceData,
-} from '../shared';
+import { TicketService } from '../shared';
 
 @Component({
   selector: 'mcs-ticket-create',
@@ -61,11 +58,13 @@ import {
 
 export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwayGuard {
 
-  public services: TicketService[];
-  public isServicesOpen: boolean;
-  public textService: string;
-  public servicePanelOpen: boolean;
-  public creatingTicket: boolean;
+  public ticketTypeList: McsOption[] = [];
+  public selectedServiceId$: Observable<string>;
+  public servicesSubscription: Subscription;
+
+  public vdcServices$: Observable<TicketService[]>;
+  public serverServices$: Observable<TicketService[]>;
+  public firewallServices$: Observable<TicketService[]>;
 
   // Form variables
   public fgCreateTicket: FormGroup;
@@ -75,113 +74,62 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
   public fcDetails: FormControl;
   public fcService: FormControl;
 
-  // Headline and details
-  public headline: string;
-  public details: string;
-
-  // Ticket Type Dropdown
-  public ticketTypeList: McsOption[];
-
-  // others
-  public servicesSubscription: any;
-  public createTicketSubscription: any;
+  private _fileAttachments: McsFileInfo[];
+  private _creatingTicket$ = new BehaviorSubject<boolean>(false);
 
   @ViewChild(McsFormGroupDirective)
   private _formGroup: McsFormGroupDirective;
 
-  /**
-   * Selected services items field
-   */
-  private _selectedServiceItems: TicketServiceData[];
-  public get selectedServiceItems(): TicketServiceData[] {
-    return this._selectedServiceItems;
-  }
-  public set selectedServiceItems(value: TicketServiceData[]) {
-    if (this._selectedServiceItems !== value) {
-      this._selectedServiceItems = value;
-    }
-  }
-
-  /**
-   * Attachment files list
-   */
-  private _fileAttachments: McsFileInfo[];
-  public get fileAttachments(): McsFileInfo[] {
-    return this._fileAttachments;
-  }
-  public set fileAttachments(value: McsFileInfo[]) {
-    if (this._fileAttachments !== value) {
-      this._fileAttachments = value;
-    }
-  }
-
   constructor(
+    private _activatedRoute: ActivatedRoute,
     private _navigateService: McsNavigationService,
-    private _changeDetectorRef: ChangeDetectorRef,
     private _apiService: McsApiService
   ) {
-    this.ticketTypeList = new Array();
-    this.services = new Array();
-    this.isServicesOpen = false;
-    this.textService = '';
+    this._registerFormGroup();
+    this._setTicketType();
   }
 
   public ngOnInit() {
-    this._registerFormGroup();
-    this._setTicketType();
-    this._getServices();
+    this._subscribesToSelectedService();
+    this._subscribesToVdcServices();
+    this._subscribesToServerServices();
+    this._subscribesToFirewallServices();
   }
 
   public ngOnDestroy() {
     unsubscribeSafely(this.servicesSubscription);
   }
 
-  public get servicesIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_TOGGLE_NAV;
-  }
-
   public get backIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_CHEVRON_LEFT;
-  }
-
-  public get toggleIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_TOGGLE_NAV;
+    return CommonDefinition.ASSETS_SVG_CHEVRON_LEFT;
   }
 
   /**
-   * Event that triggers when navigating away from the current page
-   * and all the inputted setting on the form are checked
+   * Event that emits when creating a ticket
+   */
+  public creatingTicket(): Observable<boolean> {
+    return this._creatingTicket$.asObservable();
+  }
+
+  /**
+   * Event that emits when navigating away from this component page
    */
   public canNavigateAway(): boolean {
-    return this.creatingTicket || !this._formGroup.hasDirtyFormControls();
-  }
-
-  /**
-   * Set the value of the service text tag when the services is selected
-   * @param event Event that return ticket service data
-   */
-  public serviceItemSelectionChanged(_event: any[]) {
-    if (isNullOrEmpty(_event)) { return; }
-
-    this.selectedServiceItems = [];
-    _event.forEach((service) => {
-      this.selectedServiceItems.push(service.value);
-    });
+    return !this._formGroup.hasDirtyFormControls();
   }
 
   /**
    * Set the file attachment when there is changes on the attachment
    * @param attachments Update File attachments
    */
-  public onChangedAttachments(attachments: any): void {
-    this.fileAttachments = attachments;
+  public onChangedAttachments(attachments: McsFileInfo[]): void {
+    this._fileAttachments = attachments;
   }
 
   /**
    * Create ticket according to inputs
    */
   public onLogTicket(): void {
-    // Check all the controls and set the focus on the first invalid control
     this._formGroup.validateFormControls(true);
     if (!this._formGroup.isValid()) { return; }
 
@@ -196,9 +144,9 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     }
 
     // Set Converted File Attachments
-    if (!isNullOrEmpty(this.fileAttachments)) {
+    if (!isNullOrEmpty(this._fileAttachments)) {
       ticket.attachments = new Array();
-      this.fileAttachments.forEach((attachment) => {
+      this._fileAttachments.forEach((attachment) => {
         let attachmentData = new McsTicketCreateAttachment();
 
         attachmentData.fileName = attachment.filename;
@@ -208,25 +156,22 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     }
 
     // Set Service Id List
-    if (!isNullOrEmpty(this.selectedServiceItems)) {
+    if (!isNullOrEmpty(this.fcService.value)) {
       ticket.serviceId = new Array();
-      this.selectedServiceItems.forEach((serviceItem) => {
+      this.fcService.value.forEach((serviceItem) => {
         ticket.serviceId.push(serviceItem.serviceId);
       });
     }
 
     // Create ticket
-    this.creatingTicket = true;
-    this.createTicketSubscription = this._apiService.createTicket(ticket).pipe(
-      finalize(() => {
+    this._creatingTicket$.next(true);
+    this._apiService.createTicket(ticket).pipe(
+      finalize(() => this._creatingTicket$.next(false)),
+      tap(() => {
         this._formGroup.resetAllControls();
-      }),
-      catchError((error) => {
-        unsubscribeSafely(this.createTicketSubscription);
-        this._changeDetectorRef.markForCheck();
-        return throwError(error);
+        this._navigateService.navigateTo(RouteKey.Tickets);
       })
-    ).subscribe(() => this._navigateService.navigateTo(RouteKey.Tickets));
+    ).subscribe();
   }
 
   /**
@@ -238,9 +183,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
       CoreValidators.required
     ]);
 
-    this.fcReference = new FormControl('', [
-      // No checking for reference since user can raise a ticket without reference
-    ]);
+    this.fcReference = new FormControl('', []);
 
     this.fcSummary = new FormControl('', [
       CoreValidators.required
@@ -250,9 +193,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
       CoreValidators.required
     ]);
 
-    this.fcService = new FormControl('', [
-      // No checking for services since user can raise a ticket without service
-    ]);
+    this.fcService = new FormControl('', []);
 
     // Register Form Groups using binding
     this.fgCreateTicket = new FormGroup({
@@ -265,101 +206,6 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
   }
 
   /**
-   * Get the enumerable services in parallel
-   */
-  private _getServices(): void {
-    // Get all the data from api in parallel
-    this.servicesSubscription = forkJoin([
-      this._apiService.getResources(),
-      this._apiService.getServers(),
-      this._apiService.getFirewalls()
-    ]).subscribe((data) => {
-      this._setVdcs(data[0]);
-      this._setServers(data[1]);
-      this._setFirewalls(data[2]);
-    });
-    this.servicesSubscription.add(() => {
-      this._changeDetectorRef.markForCheck();
-    });
-  }
-
-  /**
-   * Set the data of VDCs obtained from API
-   */
-  private _setVdcs(response: McsApiCollection<McsResource>): void {
-    if (isNullOrEmpty(response)) { return; }
-    let vdcs = response.collection || [];
-    let service: TicketService = new TicketService();
-
-    service.serviceName = 'VDCs';
-    vdcs.forEach((vdc) => {
-      // TODO: Waiting for Orch to add serviceId in server resource
-      if (isNullOrEmpty(vdc.name)) { return; }
-      let serviceData = new TicketServiceData();
-
-      serviceData.name = `${serviceTypeText[vdc.serviceType]} VDC (${vdc.name})`;
-      serviceData.isChecked = false;
-      serviceData.serviceId = vdc.name;
-      service.serviceItems.push(serviceData);
-    });
-
-    // Do not include in the services when there is no service item
-    if (!isNullOrEmpty(service.serviceItems)) {
-      this.services.push(service);
-    }
-  }
-
-  /**
-   * Set the data of servers obtained from API
-   */
-  private _setServers(response: McsApiCollection<McsServer>): void {
-    if (isNullOrEmpty(response)) { return; }
-    let servers = response.collection || [];
-    let service: TicketService = new TicketService();
-
-    service.serviceName = 'Servers';
-    servers.forEach((server) => {
-      if (isNullOrEmpty(server.serviceId)) { return; }
-      let serviceData = new TicketServiceData();
-
-      serviceData.name = `${server.name} (${server.serviceId})`;
-      serviceData.isChecked = false;
-      serviceData.serviceId = server.serviceId;
-      service.serviceItems.push(serviceData);
-    });
-
-    // Do not include in the services when there is no service item
-    if (!isNullOrEmpty(service.serviceItems)) {
-      this.services.push(service);
-    }
-  }
-
-  /**
-   * Set the data of firewalls obtained from API
-   */
-  private _setFirewalls(response: McsApiCollection<McsFirewall>): void {
-    if (isNullOrEmpty(response)) { return; }
-    let firewalls = response.collection || [];
-    let service: TicketService = new TicketService();
-
-    service.serviceName = 'Firewalls';
-    firewalls.forEach((firewall) => {
-      if (isNullOrEmpty(firewall.serviceId)) { return; }
-      let serviceData = new TicketServiceData();
-
-      serviceData.name = `${firewall.managementName} (${firewall.serviceId})`;
-      serviceData.isChecked = false;
-      serviceData.serviceId = firewall.serviceId;
-      service.serviceItems.push(serviceData);
-    });
-
-    // Do not include in the services when there is no service item
-    if (!isNullOrEmpty(service.serviceItems)) {
-      this.services.push(service);
-    }
-  }
-
-  /**
    * Set ticket type based on selection
    */
   private _setTicketType(): void {
@@ -369,5 +215,66 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
       ticketSubTypeText[TicketSubType.Enquiry]));
     this.ticketTypeList.push(new McsOption(TicketSubType.TroubleTicket,
       ticketSubTypeText[TicketSubType.TroubleTicket]));
+  }
+
+  /**
+   * Subscribes to selected serviceId
+   */
+  private _subscribesToSelectedService(): void {
+    this.selectedServiceId$ = this._activatedRoute.queryParams.pipe(
+      map((params) => getSafeProperty(params, (obj) => obj.serviceId)),
+      shareReplay(1)
+    );
+  }
+
+  /**
+   * Subscribes to vdc services
+   */
+  private _subscribesToVdcServices(): void {
+    this.vdcServices$ = this._apiService.getResources().pipe(
+      map((response) => {
+        let resources = getSafeProperty(response, (obj) => obj.collection);
+        return resources
+          .filter((resource) => getSafeProperty(resource, (obj) => obj.serviceId))
+          .map((resource) => new TicketService(
+            `${serviceTypeText[resource.serviceType]} VDC (${resource.name})`,
+            resource.name
+          ));
+      })
+    );
+  }
+
+  /**
+   * Subscribes to servers services
+   */
+  private _subscribesToServerServices(): void {
+    this.serverServices$ = this._apiService.getServers().pipe(
+      map((response) => {
+        let servers = getSafeProperty(response, (obj) => obj.collection);
+        return servers
+          .filter((server) => getSafeProperty(server, (obj) => obj.serviceId))
+          .map((server) => new TicketService(
+            `${server.name} (${server.serviceId})`,
+            server.serviceId
+          ));
+      })
+    );
+  }
+
+  /**
+   * Subscribes to firewall services
+   */
+  private _subscribesToFirewallServices(): void {
+    this.firewallServices$ = this._apiService.getFirewalls().pipe(
+      map((response) => {
+        let firewalls = getSafeProperty(response, (obj) => obj.collection);
+        return firewalls
+          .filter((firewall) => getSafeProperty(firewall, (obj) => obj.serviceId))
+          .map((firewall) => new TicketService(
+            `${firewall.managementName} (${firewall.serviceId})`,
+            firewall.serviceId
+          ));
+      })
+    );
   }
 }

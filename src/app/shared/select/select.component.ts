@@ -34,7 +34,8 @@ import {
   startWith,
   takeUntil,
   take,
-  switchMap
+  switchMap,
+  tap
 } from 'rxjs/operators';
 import {
   CoreDefinition,
@@ -60,6 +61,7 @@ import {
   OptionGroupComponent
 } from '../option-group';
 import { SelectTriggerLabelDirective } from './select-trigger-label.directive';
+import { SelectSearchDirective } from './select-search.directive';
 
 const SELECT_PANEL_MAX_HEIGHT = 400;
 const SELECT_ITEM_OFFSET = 7;
@@ -109,6 +111,11 @@ export class SelectComponent extends McsFormFieldControlBase<any>
   public size: 'default' | 'small';
 
   @Input()
+  public get useTags(): boolean { return this._useTags; }
+  public set useTags(value: boolean) { this._useTags = coerceBoolean(value); }
+  private _useTags: boolean;
+
+  @Input()
   public get multiple(): boolean { return this._multiple; }
   public set multiple(value: boolean) { this._multiple = coerceBoolean(value); }
   private _multiple: boolean;
@@ -119,6 +126,9 @@ export class SelectComponent extends McsFormFieldControlBase<any>
   }
   public set disabled(value: boolean) { this._disabled = coerceBoolean(value); }
   private _disabled: boolean = false;
+
+  @ContentChild(SelectSearchDirective)
+  private _search: SelectSearchDirective;
 
   @ContentChildren(OptionComponent, { descendants: true })
   private _options: QueryList<OptionComponent>;
@@ -178,6 +188,10 @@ export class SelectComponent extends McsFormFieldControlBase<any>
     );
   }
 
+  public get hasSelectedOptions(): boolean {
+    return !isNullOrEmpty(this.displayedText);
+  }
+
   public get selectedOptions(): OptionComponent[] {
     return this._options.filter((option) => option.selected);
   }
@@ -212,6 +226,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
   public ngAfterContentInit(): void {
     registerEvent(document, 'click', this._closeOutsideHandler);
     this._initializeKeyboardManager();
+    this._subscribeToSearchChanges();
     this._subscribeToOptionItemsChanges();
   }
 
@@ -325,6 +340,15 @@ export class SelectComponent extends McsFormFieldControlBase<any>
   }
 
   /**
+   * Deselects the option
+   * @param option Option to be unselected
+   */
+  public deselectOption(option: OptionComponent): void {
+    if (isNullOrEmpty(option)) { return; }
+    this._selectOption(option);
+  }
+
+  /**
    * Base implementation of empty checking
    */
   public isEmpty(): boolean {
@@ -339,7 +363,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
    * Event that emits when user has clicked outside the panel
    * @param _event Event details
    */
-  private _onCloseOutside(_event: any) {
+  private _onCloseOutside(_event: any): void {
     if (this._elementRef.nativeElement.contains(_event.target)) { return; }
     this.closePanel();
   }
@@ -348,7 +372,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
    * Selects the item provided by the parameter
    * @param option Item to be selected
    */
-  private _selectOption(option: OptionComponent) {
+  private _selectOption(option: OptionComponent): void {
     // Clear the selection including the value in case the item is null
     // to make way with the changes when formControl.reset() was called
     if (isNullOrEmpty(option)) {
@@ -598,6 +622,23 @@ export class SelectComponent extends McsFormFieldControlBase<any>
   }
 
   /**
+   * Subscribes to search changes
+   */
+  private _subscribeToSearchChanges(): void {
+    if (isNullOrEmpty(this._search)) { return; }
+
+    this._search.searchChange().pipe(
+      takeUntil(this._destroySubject),
+      tap((keyword) => {
+        this._options.forEach((option) => {
+          let optionText = getSafeProperty(option, (obj) => obj.viewValue.toLocaleLowerCase());
+          optionText.includes(keyword && keyword.toLocaleLowerCase()) ? option.show() : option.hide();
+        });
+      })
+    ).subscribe();
+  }
+
+  /**
    * Subscrbies to option item changes
    */
   private _subscribeToOptionItemsChanges(): void {
@@ -608,6 +649,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
       this._enableMultipleSelection();
       this._subscribeToSelectionChange();
       this._initializeSelection();
+      this._changeDetectorRef.markForCheck();
     });
   }
 
@@ -618,9 +660,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
     let resetSubject = merge(this._options.changes, this._destroySubject);
     this._optionsClickEvent.pipe(
       takeUntil(resetSubject)
-    ).subscribe((option) => {
-      this._selectOption(option);
-    });
+    ).subscribe((option) => this._selectOption(option));
   }
 
   /**

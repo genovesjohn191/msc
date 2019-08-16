@@ -1,11 +1,9 @@
-import { TicketServiceData } from './ticket-service-data';
-
 export class TicketService {
-  public serviceName: string;
-  public serviceItems: TicketServiceData[];
+  public id: string;
+  public name: string;
 
-  constructor() {
-    this.serviceName = '';
-    this.serviceItems = new Array();
+  constructor(_name: string, _id: string) {
+    this.id = _id;
+    this.name = _name;
   }
 }

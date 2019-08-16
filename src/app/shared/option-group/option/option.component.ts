@@ -28,6 +28,7 @@ import { McsUniqueId } from '@app/core';
     '[class.option-selected]': 'selected',
     '[class.option-active]': 'active',
     '[class.option-checkable]': 'checkable',
+    '[class.hide-element]': 'hidden',
     '(click)': 'onClickOption()'
   }
 })
@@ -36,7 +37,9 @@ export class OptionComponent implements OnDestroy {
   public selectionChange = new EventEmitter<OptionComponent>();
   public activeChange = new EventEmitter<OptionComponent>();
   public clickChange = new EventEmitter<OptionComponent>();
+  public visibilityChange = new EventEmitter<OptionComponent>();
   public checkable = false;
+  public hidden = false;
 
   @Input()
   public id: string = McsUniqueId.NewId('option');
@@ -81,6 +84,7 @@ export class OptionComponent implements OnDestroy {
     unsubscribeSafely(this.selectionChange);
     unsubscribeSafely(this.activeChange);
     unsubscribeSafely(this.clickChange);
+    unsubscribeSafely(this.visibilityChange);
   }
 
   /**
@@ -133,6 +137,24 @@ export class OptionComponent implements OnDestroy {
    */
   public deselect(): void {
     this.selected = false;
+    this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Shows the option element to make it visible on the DOM
+   */
+  public show(): void {
+    this.hidden = false;
+    this.visibilityChange.next(this);
+    this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Hides the option element only without removing it from the DOM
+   */
+  public hide(): void {
+    this.hidden = true;
+    this.visibilityChange.next(this);
     this._changeDetectorRef.markForCheck();
   }
 
