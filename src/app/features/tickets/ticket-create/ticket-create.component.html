@@ -99,58 +99,40 @@
         <!-- Services -->
         <mcs-section [mcsContextualHelp]="'ticketCreate.contextualHelp.services' | translate" >
           <h2>{{ 'ticketCreate.services' | translate }}</h2>
-          <div>
-            <ng-container *ngIf="services">
-              <mcs-item>
-                <!-- Tags -->
-                <mcs-form-field full-width no-margin>
-                  <mcs-tag-list [placeholder]="'ticketCreate.placeholders.services' | translate"
-                    mcsId="tag-services"
-                    [formControl]="fcService">
 
-                    <mcs-tag *ngFor="let subItem of selectService.selectionSubModel.selected"
-                      [selectable]="true" [removable]="true"
-                      (removed)="selectService.removeSubSelection(subItem)">
-                      {{ subItem.text }}
-                    </mcs-tag>
-                  </mcs-tag-list>
+          <mcs-form-field>
+            <mcs-select mcsId="cta-select-service" [useTags]="true" multiple
+              [placeholder]="'ticketCreate.placeholders.services' | translate"
+              [formControl]="fcService">
 
-                  <mcs-error mcsError errorState="required">
-                    {{ 'ticketCreate.errors.servicesRequired' | translate }}
-                  </mcs-error>
-                </mcs-form-field>
+              <mcs-search mcsSelectSearch></mcs-search>
 
-                <!-- Icon trigger -->
-                <div mcsCursor="pointer" margin-left-small
-                  (click)="servicePanelOpen = !servicePanelOpen" #trigger
-                  mcsId="toggle-service-panel"
-                  mcsEventTracker="toggle-service-panel"
-                  mcsEventCategory="ticket"
-                  mcsEventLabel="create-new-ticket-page">
-                  <mcs-icon [key]="toggleIconKey"></mcs-icon>
-                  <mcs-ripple class="icon-ripple-wrapper"
-                    mcsRipple
-                    [rippleTrigger]="trigger"
-                    [rippleCentered]="true">
-                  </mcs-ripple>
-                </div>
-              </mcs-item>
+              <ng-template #servicesTemplate let-ticketServices let-title="serviceTitle">
+                <mcs-option-group>
+                  <ng-container *mcsOptionGroupLabel>
+                    <span>{{ title }}</span>
+                  </ng-container>
 
-              <div [@expansionVertical]="servicePanelOpen ? 'expanded' : 'collapsed'">
-                <mcs-select-tag #selectService padding-small
-                  (selectionChanged)="serviceItemSelectionChanged($event)">
-                  <mcs-select-tag-main-item *ngFor="let service of services"
-                    [header]="service.serviceName">
+                  <mcs-option *ngFor="let service of ticketServices" [value]="service"
+                    [selected]="(selectedServiceId$ | async) === service.id">
+                    {{ service.name }}
+                  </mcs-option>
+                </mcs-option-group>
+              </ng-template>
 
-                  <mcs-select-tag-sub-item *ngFor="let item of service.serviceItems"
-                    [searchKey]="item.name" [value]="item">
-                    {{ item.name }}
-                  </mcs-select-tag-sub-item>
-                  </mcs-select-tag-main-item>
-                </mcs-select-tag>
-              </div>
-            </ng-container>
-          </div>
+              <ng-container *ngTemplateOutlet="servicesTemplate;
+                context: { $implicit: (vdcServices$ | async), serviceTitle: 'VDCs'}">
+              </ng-container>
+
+              <ng-container *ngTemplateOutlet="servicesTemplate;
+                context: { $implicit: (serverServices$ | async), serviceTitle: 'Servers'}">
+              </ng-container>
+
+              <ng-container *ngTemplateOutlet="servicesTemplate;
+                context: { $implicit: (firewallServices$ | async), serviceTitle: 'Firewalls'}">
+              </ng-container>
+            </mcs-select>
+          </mcs-form-field>
         </mcs-section>
       </form>
 
@@ -166,8 +148,8 @@
 
       <!-- Ticket Action -->
       <div class="action-items">
-        <button mcsButton  arrow="right" mcsId="new-ticket"
-          [disabled]="creatingTicket" (click)="onLogTicket()"
+        <button mcsButton  arrow="right" mcsId="new-ticket" (click)="onLogTicket()"
+          [disabled]="creatingTicket() | async"
           mcsEventTracker="submit-new-ticket"
           mcsEventCategory="ticket"
           mcsEventLabel="create-new-ticket-page">

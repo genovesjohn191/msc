@@ -1,23 +1,42 @@
-<!-- Template binding -->
+<!-- Placeholder template -->
 <ng-template #placeholderTemplate>
   <span read-only>{{ getPlaceholder() }}</span>
+</ng-template>
+
+<!-- Multiple selection template -->
+<ng-template #multipleTemplate>
+  <div>{{ displayedText }}
+    <small read-only *ngIf="selectedOptions?.length > 1">
+      (+{{ selectedOptions.length - 1}} others)</small>
+  </div>
+</ng-template>
+
+<!-- Multiple tags template -->
+<ng-template #multipleTagsTemplate>
+  <mcs-tag-list>
+    <mcs-tag *ngFor="let selectedOption of selectedOptions"
+      [removable]="true" (removed)="deselectOption(selectedOption)">
+      {{ selectedOption.viewValue }}
+    </mcs-tag>
+  </mcs-tag-list>
 </ng-template>
 
 <!-- Selection trigger -->
 <div class="select-trigger" [ngClass]="size"
   mcsCursor="pointer" (click)="toggle()">
 
-  <span *ngIf="displayedText; else placeholderTemplate">
-    <ng-container *ngIf="labelTemplate; else labelContentTemplate">
+  <ng-container *ngIf="hasSelectedOptions; else placeholderTemplate">
+    <ng-container *ngIf="labelTemplate; else contentTemplate">
       <ng-container *ngTemplateOutlet="labelTemplate?.templateRef"></ng-container>
     </ng-container>
-    <ng-template #labelContentTemplate>
-      <div>{{ displayedText }}
-        <small read-only *ngIf="selectedOptions?.length > 1">
-          (+{{ selectedOptions.length - 1}} others)</small>
-      </div>
+
+    <ng-template #contentTemplate>
+      <ng-container *ngIf="useTags; else multipleTemplate">
+        <ng-container *ngTemplateOutlet="multipleTagsTemplate"></ng-container>
+      </ng-container>
     </ng-template>
-  </span>
+  </ng-container>
+
   <mcs-icon size="small" [key]="carretDownIconKey"></mcs-icon>
 </div>
 

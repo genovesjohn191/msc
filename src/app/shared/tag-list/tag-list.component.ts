@@ -20,7 +20,10 @@ import {
   merge,
   Subject
 } from 'rxjs';
-import { startWith, takeUntil } from 'rxjs/operators';
+import {
+  startWith,
+  takeUntil
+} from 'rxjs/operators';
 import {
   ControlValueAccessor,
   FormGroupDirective,

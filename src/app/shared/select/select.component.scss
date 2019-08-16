@@ -1,7 +1,8 @@
 @import "../../../styles/shared/base";
 
+$select-min-height: 40px;
 // Select component trigger wrapper
-$select-trigger-default-padding: $space-small $space-medium;
+$select-trigger-default-padding: 0 $space-medium;
 $select-trigger-small-padding: 0 $space-xsmall;
 $select-trigger-border-color: $color-black;
 $select-trigger-border-radius: $border-radius-small;
@@ -38,6 +39,12 @@ $select-sub-group-expanded-bg-color: $color-white;
     animation-timing-function: ease-out;
     animation-duration: 200ms;
   }
+
+  .select-search-wrapper {
+    max-width: 100%;
+    width: 100%;
+    margin-bottom: $space-small;
+  }
 }
 
 .select-trigger {
@@ -46,6 +53,7 @@ $select-sub-group-expanded-bg-color: $color-white;
   justify-content: space-between;
   border: 1px solid $select-trigger-border-color;
   @include border-radius($select-trigger-border-radius);
+  min-height: $select-min-height;
 
   &.default {
     padding: $select-trigger-default-padding;

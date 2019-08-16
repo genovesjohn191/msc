@@ -53,7 +53,7 @@ export class SelectTagSubItemComponent {
   /**
    * Returns true when the item is selected
    */
-  private _selected: boolean;
+  @Input()
   public get selected(): boolean {
     return this._selected;
   }
@@ -63,6 +63,7 @@ export class SelectTagSubItemComponent {
       this.selectionChanged.emit(this);
     }
   }
+  private _selected: boolean;
 
   /**
    * Returns the text content of the element

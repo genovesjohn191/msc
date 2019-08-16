@@ -121,7 +121,12 @@ export class TagComponent {
   /**
    * Remove the tag from the list and notify output parameter
    */
-  public remove(): void {
+  public remove(mouseEvent?: MouseEvent): void {
+    if (!isNullOrEmpty(mouseEvent)) {
+      mouseEvent.preventDefault();
+      mouseEvent.stopPropagation();
+    }
+
     if (!this.removable) { return; }
     this.removed.emit(this);
     this._changeDetectorRef.markForCheck();

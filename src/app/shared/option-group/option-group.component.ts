@@ -22,7 +22,8 @@ import {
   takeUntil,
   startWith,
   take,
-  switchMap
+  switchMap,
+  tap
 } from 'rxjs/operators';
 import { CoreDefinition } from '@app/core';
 import {
@@ -49,11 +50,13 @@ import { OptionGroupHeaderDirective } from './option-group-header.directive';
     'class': 'option-group-wrapper',
     '[class.option-group-selected]': 'selected',
     '[class.option-group-expanded]': 'panelOpen',
+    '[class.hide-element]': '!hasOptions',
     'role': 'group'
   }
 })
 
 export class OptionGroupComponent implements AfterContentInit, OnDestroy {
+
   @Input()
   public label: string;
 
@@ -100,6 +103,19 @@ export class OptionGroupComponent implements AfterContentInit, OnDestroy {
   });
 
   /**
+   * Combine streams of all the visibility items on options
+   */
+  private readonly _optionsVisibilityChanges: Observable<OptionComponent> = defer(() => {
+    if (!isNullOrEmpty(this._options)) {
+      return merge<OptionComponent>(...this._options.map((option) => option.visibilityChange));
+    }
+    return this._ngZone.onStable.asObservable().pipe(
+      take(1),
+      switchMap(() => this._optionsVisibilityChanges)
+    );
+  });
+
+  /**
    * Returns the caret icon key
    */
   public get caretRightIconKey(): string {
@@ -127,11 +143,12 @@ export class OptionGroupComponent implements AfterContentInit, OnDestroy {
   public ngAfterContentInit(): void {
     this._options.changes
       .pipe(startWith(null), takeUntil(this._destroySubject))
-      .subscribe(() => this._listenToSelectionChange());
+      .subscribe(() => {
+        this._subscribeToSelectionChange();
+        this._subscribeToVisibilityChange();
+      });
 
-    if (!isNullOrEmpty(this.headerTemplate)) {
-      this.openPanel();
-    }
+    if (!isNullOrEmpty(this.headerTemplate)) { this.openPanel(); }
   }
 
   public ngOnDestroy(): void {
@@ -145,6 +162,14 @@ export class OptionGroupComponent implements AfterContentInit, OnDestroy {
     return !isNullOrEmpty(this._options.filter(
       (option) => option.selected || option.active)
     );
+  }
+
+  /**
+   * Returns true when there is atleast 1 option displayed
+   */
+  public get hasOptions(): boolean {
+    return !isNullOrEmpty(this._options.toArray()) &&
+      !isNullOrEmpty(this._options.filter((option) => !option.hidden));
   }
 
   /**
@@ -186,18 +211,19 @@ export class OptionGroupComponent implements AfterContentInit, OnDestroy {
   }
 
   /**
-   * Returns true if the associated option is part of the group
+   * Subscribes to visibilty change event of all the options
    */
-  public hasOption(activeOption: OptionComponent): boolean {
-    let existingOption = this._options.find((_option: OptionComponent) =>
-      _option.id === activeOption.id);
-    return !isNullOrEmpty(existingOption);
+  private _subscribeToVisibilityChange(): void {
+    this._optionsVisibilityChanges.pipe(
+      takeUntil(this._destroySubject),
+      tap(() => this._changeDetectorRef.markForCheck())
+    ).subscribe();
   }
 
   /**
-   * Listen to every selection changed event
+   * Subcribes to every selection changed event
    */
-  private _listenToSelectionChange(): void {
+  private _subscribeToSelectionChange(): void {
     let resetSubject = merge(this._options.changes, this._destroySubject);
     let mergeChanges = merge(this._optionsSelectionChanges, this._optionsActiveChanges);
 

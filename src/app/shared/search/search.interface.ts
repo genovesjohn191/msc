@@ -9,7 +9,7 @@ export interface Search {
   /**
    * Event that emit the changes when search is changed within the time bound
    */
-  searchChangedStream: Subject<any>;
+  searchChangedStream: Subject<Search>;
 
   /**
    * Returns true when user is currently searching, otherwise false

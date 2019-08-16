@@ -8,7 +8,8 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy,
   ViewEncapsulation,
-  ContentChild
+  ContentChild,
+  Output
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import {
@@ -21,8 +22,8 @@ import {
   McsUniqueId
 } from '@app/core';
 import {
-  unsubscribeSubject,
-  isNullOrEmpty
+  isNullOrEmpty,
+  unsubscribeSafely
 } from '@app/utilities';
 import { Search } from './search.interface';
 import { IdDirective } from '../directives';
@@ -41,6 +42,9 @@ import { IdDirective } from '../directives';
 export class SearchComponent implements OnInit, AfterContentInit, OnDestroy, Search {
   @Input()
   public delayInSeconds: number | 'none' = 'none';
+
+  @Output()
+  public searchChange = new EventEmitter<Search>();
 
   /** Interface implementation */
   public generatedId: string;
@@ -74,7 +78,9 @@ export class SearchComponent implements OnInit, AfterContentInit, OnDestroy, Sea
   }
 
   public ngOnDestroy(): void {
-    unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this.searchChangedStream);
+    unsubscribeSafely(this._searchSubject);
+    unsubscribeSafely(this._destroySubject);
   }
 
   public get searchIconKey(): string {
@@ -112,19 +118,17 @@ export class SearchComponent implements OnInit, AfterContentInit, OnDestroy, Sea
    * Creates the search subject for searching
    */
   private _createSearchSubject(): void {
-    this._searchSubject
-      .pipe(
-        takeUntil(this._destroySubject),
-        debounceTime(this.delayInSeconds === 'none' ?
-          CoreDefinition.SEARCH_TIME :
-          (this.delayInSeconds as number * 1000)
-        ),
-        distinctUntilChanged()
-      )
-      .subscribe((searchTerm) => {
-        this.keyword = searchTerm;
-        this._onSearchChanged();
-      });
+    this._searchSubject.pipe(
+      takeUntil(this._destroySubject),
+      debounceTime(this.delayInSeconds === 'none' ?
+        CoreDefinition.SEARCH_TIME :
+        (this.delayInSeconds as number * 1000)
+      ),
+      distinctUntilChanged()
+    ).subscribe((searchTerm) => {
+      this.keyword = searchTerm;
+      this._onSearchChanged();
+    });
   }
 
   /**
@@ -132,6 +136,7 @@ export class SearchComponent implements OnInit, AfterContentInit, OnDestroy, Sea
    */
   private _onSearchChanged() {
     this.showLoading(true);
+    this.searchChange.next(this);
     this.searchChangedStream.emit(this);
     this._changeDetectorRef.markForCheck();
   }

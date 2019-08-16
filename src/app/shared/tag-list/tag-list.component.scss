@@ -6,7 +6,7 @@ $tag-list-placeholder-offset: $space-small;
 // Tag item
 $tag-font-size: 12;
 $tag-padding: 2px $space-small;
-$tag-margin: 2px;
+$tag-margin: 2px 3px;
 $tag-border-radius: $border-radius-small;
 $tag-box-shadow-transition-duration: 280ms;
 $tag-color: $color-white;
@@ -23,7 +23,6 @@ $tag-remove-icon-active-bg-color: $tag-active-bg-color;
   @include display-flex(row);
   @include flex-wrap(wrap);
   @include align-items(baseline);
-  @include set-items-interval($space-xsmall, horizontal);
   width: 100%;
   padding: $tag-list-padding;
   outline: none;
