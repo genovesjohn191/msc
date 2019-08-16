@@ -152,28 +152,32 @@
               </mcs-item>
             </mcs-grid-column>
           </mcs-grid-row>
-          <ng-container *ngIf="inviewButtonsShown(server)">
+          <ng-container *ngIf="raiseInviewButtonsShown(server) || goToInviewButtonsShown(server)">
             <mcs-grid-row *mcsExclusiveForAccount>
               <mcs-item>
-                <a mcsButton size="xsmall"
-                  mcsId="goto-inview-level"
-                  mcsEventTracker="goto-inview-level-click"
-                  mcsEventCategory="server"
-                  mcsEventLabel="goto-inview-level-button"
-                  [href]="inviewUrl(server)"
-                  target="_blank"
-                  [disabled]="server.isProcessing">
-                  {{ 'serverServices.inview.goToinviewButtonLabel' | translate }}
-                </a>
-                <button mcsButton size="xsmall"
-                  mcsId="raise-inview-level"
-                  mcsEventTracker="raise-inview-level-click"
-                  mcsEventCategory="server"
-                  mcsEventLabel="raise-inview-level-button"
-                  (click)="raiseInviewLevel(server)"
-                  [disabled]="server.isProcessing">
-                  {{ 'serverServices.inview.raiseinviewButtonLabel' | translate }}
-                </button>
+                <ng-container *ngIf="goToInviewButtonsShown(server)">
+                  <a mcsButton size="xsmall"
+                    mcsId="goto-inview-level"
+                    mcsEventTracker="goto-inview-level-click"
+                    mcsEventCategory="server"
+                    mcsEventLabel="goto-inview-level-button"
+                    [href]="inviewUrl(server)"
+                    target="_blank"
+                    [disabled]="server.isProcessing">
+                    {{ 'serverServices.inview.goToinviewButtonLabel' | translate }}
+                  </a>
+                </ng-container>
+                <ng-container *ngIf="raiseInviewButtonsShown(server)">
+                  <button mcsButton size="xsmall"
+                    mcsId="raise-inview-level"
+                    mcsEventTracker="raise-inview-level-click"
+                    mcsEventCategory="server"
+                    mcsEventLabel="raise-inview-level-button"
+                    (click)="raiseInviewLevel(server)"
+                    [disabled]="server.isProcessing">
+                    {{ 'serverServices.inview.raiseinviewButtonLabel' | translate }}
+                  </button>
+                </ng-container>
               </mcs-item>
             </mcs-grid-row>
           </ng-container>
