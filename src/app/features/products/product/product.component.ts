@@ -68,7 +68,7 @@ export class ProductComponent implements OnInit, OnDestroy {
   // Table columns
   // TODO: transfer to en.json
   public thresholdColumns = ['description', 'alertThreshold'];
-  public productOptionsColumns = ['name', 'properties', 'options'];
+  public productOptionsColumns = ['name', 'options'];
   public userCasesColumns = ['name', 'description'];
 
   @ViewChild('scrollableLinkGroup')

@@ -145,32 +145,25 @@
             </mcs-data-cell>
           </ng-container>
 
-          <ng-container mcsColumnDef="properties" *ngIf="selectedProduct.hasProductProperties">
-            <mcs-header-cell *mcsHeaderCellDef>
-              Properties
-            </mcs-header-cell>
-            <mcs-data-cell *mcsDataCellDef="let row">
-              <mcs-tag-list>
-                <mcs-tag [removable]="false" *ngFor="let property of getFormattedProperties(row)">
-                    {{ property }}
-                </mcs-tag>
-              </mcs-tag-list>
-            </mcs-data-cell>
-          </ng-container>
-
-          <ng-container mcsColumnDef="options" *ngIf="selectedProduct.hasProductListOptions">
+          <ng-container mcsColumnDef="options" >
             <mcs-header-cell *mcsHeaderCellDef>
               Options
             </mcs-header-cell>
             <mcs-data-cell *mcsDataCellDef="let row">
-              <mcs-tag-list *ngIf="row.listOptions | mcsIsNotNullOrEmpty">
-                <mcs-tag *ngFor="let item of row.listOptions" [removable]="false">
-                  {{ item }}
-                </mcs-tag>
+              <mcs-tag-list>
+                <ng-container *ngIf="selectedProduct.hasProductProperties">
+                  <mcs-tag *ngFor="let property of getFormattedProperties(row)" [removable]="false">
+                    {{ property }}
+                  </mcs-tag>
+                </ng-container>
+                <ng-container *ngIf="selectedProduct.hasProductListOptions">
+                  <mcs-tag *ngFor="let item of row.listOptions" [removable]="false">
+                    {{ item }}
+                  </mcs-tag>
+                </ng-container>
               </mcs-tag-list>
             </mcs-data-cell>
           </ng-container>
-
           <mcs-header-row *mcsHeaderRowDef="productOptionsColumns"></mcs-header-row>
           <mcs-data-row *mcsDataRowDef="let row; columns: productOptionsColumns;"></mcs-data-row>
         </mcs-table>
