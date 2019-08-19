@@ -270,10 +270,17 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
   }
 
   /**
+   * Returns true if the Inview level is Standard only and the Install base is set to true
+   */
+  public raiseInviewButtonsShown(server: McsServer): boolean {
+    return server.isInviewStandard && server.serviceChangeAvailable;
+  }
+
+  /**
    * Returns true if the Inview level is not None
    */
-  public inviewButtonsShown(server: McsServer): boolean {
-    return server.inViewLevel !== InviewLevel.None && server.serviceChangeAvailable;
+  public goToInviewButtonsShown(server: McsServer): boolean {
+    return !server.isInviewNone;
   }
 
   /**

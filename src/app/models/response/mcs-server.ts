@@ -322,4 +322,25 @@ export class McsServer extends McsEntityBase {
   public get isWindows(): boolean {
     return getSafeProperty(this.operatingSystem, (obj) => obj.type === Os.Windows);
   }
+
+  /**
+   * Returns true if the server inview is standard, false otherwise
+   */
+  public get isInviewStandard(): boolean {
+    return this.inViewLevel === InviewLevel.Standard;
+  }
+
+  /**
+   * Returns true if the server inview is premium, false otherwise
+   */
+  public get isInviewPremium(): boolean {
+    return this.inViewLevel === InviewLevel.Premium;
+  }
+
+  /**
+   * Returns true if the server inview is none, false otherwise
+   */
+  public get isInviewNone(): boolean {
+    return this.inViewLevel === InviewLevel.None;
+  }
 }
