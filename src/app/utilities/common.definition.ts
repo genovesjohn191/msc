@@ -76,6 +76,7 @@ export class CommonDefinition {
   public static ASSETS_SVG_BLOCK = 'block';
   public static ASSETS_SVG_ELLIPSIS_VERTICAL = 'ellipsis-vertical';
   public static ASSETS_SVG_ELLIPSIS_HORIZONTAL = 'ellipsis-horizontal';
+  public static ASSETS_SVG_HELP = 'help';
 
   // Font Awesome Icons
   public static ASSETS_FONT_CREDIT_CARD = 'credit-card';

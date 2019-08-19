@@ -123,3 +123,10 @@
     </div>
   </mcs-content-panel>
 </mcs-page>
+
+<mcs-help-widget #helpWidget
+  [serviceId]="(selectedFirewall$ | async)?.serviceId"
+  mcsEventTracker="toggle-help"
+  mcsEventCategory="help"
+  mcsEventLabel="help-panel-firewall">
+</mcs-help-widget>

@@ -19,4 +19,8 @@
   [text-color-#{$color-key}] {
     color: $color-base !important;
   }
+
+  [text-color=#{$color-key}] {
+    color: $color-base !important;
+  }
 }

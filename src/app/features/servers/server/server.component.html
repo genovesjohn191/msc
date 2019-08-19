@@ -146,3 +146,10 @@
     </div>
   </mcs-content-panel>
 </mcs-page>
+
+<mcs-help-widget #helpWidget
+  [serviceId]="(server$ | async)?.serviceId"
+  mcsEventTracker="toggle-help"
+  mcsEventCategory="help"
+  mcsEventLabel="help-panel-servers">
+</mcs-help-widget>

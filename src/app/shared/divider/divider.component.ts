@@ -2,9 +2,13 @@ import {
   Component,
   ChangeDetectionStrategy,
   ViewEncapsulation,
-  Input
+  Input,
+  HostBinding
 } from '@angular/core';
-import { McsOrientationType } from '@app/utilities';
+import {
+  McsOrientationType,
+  McsColorType
+} from '@app/utilities';
 
 @Component({
   selector: 'mcs-divider',
@@ -24,4 +28,12 @@ import { McsOrientationType } from '@app/utilities';
 export class DividerComponent {
   @Input()
   public orientation: McsOrientationType = 'horizontal';
+
+  @Input()
+  public color: McsColorType = 'medium';
+
+  @HostBinding('attr.text-color')
+  public get hostColor(): string {
+    return this.color;
+  }
 }

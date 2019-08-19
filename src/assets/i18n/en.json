@@ -724,6 +724,11 @@
     "oneOffCost": "One-off",
     "totalCost": "Total Cost"
   },
+  "helpWidget": {
+    "title": "Help me...",
+    "assistanceHeader": "Need Assistance?",
+    "raiseTicket": "Raise a ticket"
+  },
   "serverShared": {
     "addOnAntiMalware": {
       "header": "Anti-Malware",
