@@ -3,7 +3,8 @@ import {
   Subject,
   empty,
   throwError,
-  BehaviorSubject
+  BehaviorSubject,
+  of
 } from 'rxjs';
 import {
   takeUntil,
@@ -21,7 +22,8 @@ import {
   getSafeProperty,
   cloneObject,
   compareJsons,
-  isNullOrEmpty
+  isNullOrEmpty,
+  CommonDefinition
 } from '@app/utilities';
 import {
   McsOrderCreate,
@@ -40,7 +42,10 @@ import { IMcsFallible } from '../../interfaces/mcs-fallible.interface';
 import { IMcsJobManager } from '../../interfaces/mcs-job-manager.interface';
 import { IMcsStateChangeable } from '../../interfaces/mcs-state-changeable.interface';
 import { McsOrderBuilder } from './mcs-order.builder';
-import { McsOrderRequest } from './mcs-order-request';
+import {
+  McsOrderRequest,
+  OrderRequester
+} from './mcs-order-request';
 import { McsOrderDirector } from './mcs-order.director';
 
 const DEFAULT_ORDER_DESCRIPTION = 'Macquarie Cloud Services Portal Order';
@@ -157,7 +162,10 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
    * Creates or Update the order details
    * @param orderDetails The details of the order to be created
    */
-  public createOrUpdateOrder(orderDetails: McsOrderCreate): void {
+  public createOrUpdateOrder(
+    orderDetails: McsOrderCreate,
+    orderRequester: OrderRequester = OrderRequester.Client
+  ): void {
     let orderItemType = this._orderItemTypeChange.getValue();
     if (isNullOrEmpty(orderItemType)) {
       throw new Error('Unable to create an order without order item type.');
@@ -171,7 +179,8 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
       .setContractDuration(orderContract)
       .setBillingEntityId(orderDetails.billingEntityId)
       .setBillingSiteId(orderDetails.billingSiteId)
-      .setBillingCostCentreId(orderDetails.billingCostCentreId);
+      .setBillingCostCentreId(orderDetails.billingCostCentreId)
+      .setOrderRequester(orderRequester);
 
     let orderItems = getSafeProperty(orderDetails, (obj) => obj.items);
     if (!isNullOrEmpty(orderItems)) {
@@ -272,6 +281,13 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
   private _executeOrderRequest(requestDetails: McsOrderRequest): Observable<any> {
     let requesterAction = isNullOrUndefined(this._createdOrder) ?
       ActionStatus.Add : ActionStatus.Update;
+
+    // TODO: This changes is for temporary checking of ordering wizard,
+    // remove this if necessary including the OrderRequester enumeration
+    let cancelUpdateRequest = requesterAction === ActionStatus.Update &&
+      requestDetails.orderRequester !== OrderRequester.Billing &&
+      !CommonDefinition.ORDERING_ENABLE_PRICING_CALCULATOR;
+    if (cancelUpdateRequest) { return of(null); }
 
     let requesterFunc = requesterAction === ActionStatus.Add ?
       this._createOrder.bind(this, requestDetails.orderDetails) :

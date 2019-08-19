@@ -1,3 +1,4 @@
+import { OrderRequester } from '@app/core';
 import { isNullOrEmpty } from '@app/utilities';
 import {
   McsResource,
@@ -102,7 +103,7 @@ export class ServerCreateBuilder<T> {
       billingSiteId: orderDetails.billingSiteId,
       billingCostCentreId: orderDetails.billingCostCentreId,
       description: orderDetails.description
-    });
+    }, OrderRequester.Billing);
   }
 
   /**

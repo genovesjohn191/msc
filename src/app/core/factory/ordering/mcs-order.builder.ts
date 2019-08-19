@@ -4,7 +4,10 @@ import {
   isNullOrEmpty
 } from '@app/utilities';
 import { McsOrderItemCreate } from '@app/models';
-import { McsOrderRequest } from './mcs-order-request';
+import {
+  McsOrderRequest,
+  OrderRequester
+} from './mcs-order-request';
 
 export class McsOrderBuilder {
   private _description: string;
@@ -12,6 +15,7 @@ export class McsOrderBuilder {
   private _billingEntityId: number;
   private _billingSiteId: number;
   private _billingCostCentreId: number;
+  private _orderRequester: OrderRequester;
   private _orderItems: McsOrderItemCreate[];
   private _orderRequestDetails: McsOrderRequest;
 
@@ -78,6 +82,15 @@ export class McsOrderBuilder {
   }
 
   /**
+   * Sets the order requester accordingly
+   * @param requester Requester to be set
+   */
+  public setOrderRequester(requester: OrderRequester): McsOrderBuilder {
+    this._orderRequester = requester;
+    return this;
+  }
+
+  /**
    * Add or updates the order item
    * @param orderItem Order item to be added or updated
    */
@@ -125,6 +138,7 @@ export class McsOrderBuilder {
     this._orderRequestDetails.orderDetails.billingEntityId = this._billingEntityId;
     this._orderRequestDetails.orderDetails.billingSiteId = this._billingSiteId;
     this._orderRequestDetails.orderDetails.billingCostCentreId = this._billingCostCentreId;
+    this._orderRequestDetails.orderRequester = this._orderRequester;
     return this;
   }
 
