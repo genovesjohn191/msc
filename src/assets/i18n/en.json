@@ -250,7 +250,8 @@
   },
   "serversVdc": {
     "leftPanelHeader": "Virtual Server Filter",
-    "iopsLabel": "Performance {{iops}}"
+    "iopsLabel": "Performance {{iops}}",
+    "storageRefreshMessage": "Please note that storage utilization may take a few minutes to update after creating, deleting or expanding objects on a storage profile."
   },
   "serversVdcOverview": {
     "label": "Overview",
