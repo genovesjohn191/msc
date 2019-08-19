@@ -15,8 +15,8 @@ import { StepOrderDetailsComponent } from './step-order-details/step-order-detai
 import { StepProvisioningComponent } from './step-provisioning/step-provisioning.component';
 import { OrderAgreementComponent } from './order-agreement/mcs-order-agreement.component';
 import { SystemMessageFormComponent } from './system-message-form/system-message-form.component';
-
 import { RenameServerDialogComponent } from './server-dialogs/rename-server/rename-server.dialog';
+import { HelpWidgetComponent } from './help-widget/help-widget.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +35,7 @@ import { RenameServerDialogComponent } from './server-dialogs/rename-server/rena
     OrderAgreementComponent,
     SystemMessageFormComponent,
     RenameServerDialogComponent,
+    HelpWidgetComponent
   ],
   imports: [
     SharedModule
@@ -54,8 +55,8 @@ import { RenameServerDialogComponent } from './server-dialogs/rename-server/rena
     VdcManageStorageComponent,
     OrderAgreementComponent,
     SystemMessageFormComponent,
-
-    RenameServerDialogComponent
+    RenameServerDialogComponent,
+    HelpWidgetComponent
   ],
   entryComponents: [
     RenameServerDialogComponent

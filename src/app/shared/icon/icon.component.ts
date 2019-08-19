@@ -215,7 +215,7 @@ export class IconComponent implements OnChanges {
 
     // Set the size of the Font Awesome icon based on the font-size
     this._renderer.setStyle(imageElement, 'font-size', this._iconActualSize);
-    this._renderer.setAttribute(parentContainer, `text-color-${this.color}`, '');
+    this._renderer.setAttribute(parentContainer, `text-color`, this.color);
     this._renderer.appendChild(parentContainer, imageElement);
     return of(parentContainer);
   }

@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { SharedModule } from '@app/shared';
+import { FeaturesSharedModule } from '@app/features-shared';
+
 /** Firewalls */
 import {
   firewallProviders,
@@ -24,6 +26,7 @@ import { RouterModule } from '@angular/router';
   ],
   imports: [
     SharedModule,
+    FeaturesSharedModule,
     RouterModule.forChild(firewallRoutes)
   ],
   providers: [

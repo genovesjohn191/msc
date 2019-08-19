@@ -93,3 +93,10 @@
     </div>
   </mcs-content-panel>
 </mcs-page>
+
+<mcs-help-widget #helpWidget
+  [serviceId]="(selectedResource$ | async)?.serviceId"
+  mcsEventTracker="toggle-help"
+  mcsEventCategory="help"
+  mcsEventLabel="help-panel-vdc">
+</mcs-help-widget>

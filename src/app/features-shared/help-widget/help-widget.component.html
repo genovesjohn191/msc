@@ -1,0 +1,31 @@
+<!-- Collapsible content -->
+<div #panelElement [@expansionVertical]="collapse ? 'collapsed' : 'expanded'">
+  <div class="help-widget-panel box-shadow-medium">
+    <div class="help-widget-header">
+      <mcs-item orientation="block">
+        <h3>{{ 'helpWidget.title' | translate }}</h3>
+        <span>{{ 'helpWidget.assistanceHeader' | translate }}</span>
+      </mcs-item>
+    </div>
+
+    <mcs-divider color="dark"></mcs-divider>
+
+    <div class="help-widget-links">
+      <mcs-list>
+        <mcs-item>
+          <a [href]="raiseTicketLink"
+            target="_blank" mcsEventTracker="clicked-raise-a-ticket"
+            mcsEventCategory="help" mcsEventLabel="help-panel">
+            {{ 'helpWidget.raiseTicket' | translate }}
+          </a>
+        </mcs-item>
+      </mcs-list>
+    </div>
+  </div>
+</div>
+
+<!-- Help widget handler -->
+<div class="help-widget-toggle">
+  <mcs-icon [key]="helpIconKey" size="50px"
+    mcsCursor="pointer" (click)="toggleWidget()"></mcs-icon>
+</div>

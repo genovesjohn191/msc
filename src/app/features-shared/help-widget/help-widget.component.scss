@@ -1,0 +1,45 @@
+@import "../../../styles/shared/base";
+
+// Variables
+$help-widget-max-width: 250px;
+$help-widget-offset: $space-large;
+$help-widget-color: $color-white;
+$help-widget-panel-bg-color: rgba($color-black, 0.87);
+$help-widget-panel-padding: $space-medium;
+
+.help-widget-wrapper {
+  @include border-radius($border-radius-small);
+  @include display-flex(column);
+  position: fixed;
+  overflow: hidden;
+  right: $help-widget-offset;
+  bottom: $help-widget-offset;
+  max-width: $help-widget-max-width;
+  width: 100%;
+
+  .help-widget-panel {
+    @include display-flex(column);
+    color: $help-widget-color;
+    background-color: $help-widget-panel-bg-color;
+    margin-bottom: $space-small;
+
+    .help-widget-header {
+      padding: $help-widget-panel-padding;
+    }
+
+    .help-widget-links {
+      padding: $help-widget-panel-padding;
+    }
+  }
+
+  .help-widget-toggle {
+    @include display-flex(row);
+    @include align-items(center);
+    justify-content: flex-end;
+
+    .icon-wrapper {
+      @include border-radius(100%);
+      background-color: $color-black;
+    }
+  }
+}
