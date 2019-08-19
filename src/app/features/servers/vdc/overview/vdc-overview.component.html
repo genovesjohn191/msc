@@ -98,11 +98,11 @@
               {{ 'serversVdcOverview.shared.storageProfiles.manageLink' | translate }}
             </a>
             <!-- TODO: add link to Expand Vdc Storage wizard when api and orch is ready -->
-
           </mcs-item>
         </ng-container>
+        <p>{{ 'serversVdc.storageRefreshMessage' | translate }}</p>
 
-        <section margin-top-medium>
+        <section>
           <span *ngIf="hasLowStorage">{{ storageSummary }}</span>
           <mcs-accordion [multi]="true">
             <mcs-accordion-panel
