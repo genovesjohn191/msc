@@ -29,7 +29,8 @@ import {
   McsErrorHandlerService,
   IMcsFormGroup,
   CoreValidators,
-  McsFormGroupService
+  McsFormGroupService,
+  OrderRequester
 } from '@app/core';
 import {
   McsResource,
@@ -168,7 +169,7 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnI
       billingEntityId: orderDetails.billingEntityId,
       billingSiteId: orderDetails.billingSiteId,
       billingCostCentreId: orderDetails.billingCostCentreId
-    });
+    }, OrderRequester.Billing);
   }
 
   /**

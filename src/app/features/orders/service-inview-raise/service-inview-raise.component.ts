@@ -25,7 +25,8 @@ import {
   McsOrderWizardBase,
   CoreDefinition,
   CoreValidators,
-  McsGuid
+  McsGuid,
+  OrderRequester
 } from '@app/core';
 import {
   unsubscribeSafely,
@@ -161,7 +162,7 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
       billingEntityId: orderDetails.billingEntityId,
       billingSiteId: orderDetails.billingSiteId,
       billingCostCentreId: orderDetails.billingCostCentreId
-    });
+    }, OrderRequester.Billing);
   }
 
   /**

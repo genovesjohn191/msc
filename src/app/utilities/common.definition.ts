@@ -12,6 +12,9 @@ export class CommonDefinition {
   public static PAGE_SIZE_MIN = 25;
   public static PAGE_SIZE_MAX = 1000;
 
+  // Ordering Flags
+  public static ORDERING_ENABLE_PRICING_CALCULATOR = false;
+
   // GIF Icons
   public static ASSETS_GIF_LOADER_SPINNER = 'loader-spinner';
   public static ASSETS_GIF_LOADER_ELLIPSIS = 'loader-ellipsis';

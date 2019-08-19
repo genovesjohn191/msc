@@ -13,7 +13,8 @@ import {
   McsFormGroupService,
   IMcsFormGroup,
   CoreValidators,
-  McsGuid
+  McsGuid,
+  OrderRequester
 } from '@app/core';
 import {
   Observable,
@@ -228,7 +229,7 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
       billingEntityId: orderDetails.billingEntityId,
       billingSiteId: orderDetails.billingSiteId,
       billingCostCentreId: orderDetails.billingCostCentreId
-    });
+    }, OrderRequester.Billing);
   }
 
   /**
