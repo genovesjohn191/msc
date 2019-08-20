@@ -18,5 +18,10 @@ export const appRoutes: Routes = [
   {
     path: '',
     loadChildren: './page-layout/default-page/default-page.module#DefaultPageModule'
+  },
+  {
+    path: '',
+    loadChildren: './page-layout/system-message-page/system-message-page.module#SystemMessagePageModule',
+    data: { routeId: RouteKey.SystemMessagePage }
   }
 ];

@@ -38,7 +38,7 @@ import { McsAccessControlService } from './authentication/mcs-access-control.ser
 /** Guards */
 import { McsNavigateAwayGuard } from './guards/mcs-navigate-away.guard';
 import { McsRequiredResourcesGuard } from './guards/mcs-required-resources.guard';
-import { McsSystemMessageHandlerService } from './services/mcs-system-message-handler.service';
+import { McsSystemMessageService } from './services/mcs-system-message.service';
 
 /**
  * Array coverage for the core modules
@@ -75,5 +75,5 @@ export const coreProviders: any[] = [
   McsComponentHandlerService,
   McsDateTimeService,
   McsNavigationService,
-  McsSystemMessageHandlerService
+  McsSystemMessageService
 ];

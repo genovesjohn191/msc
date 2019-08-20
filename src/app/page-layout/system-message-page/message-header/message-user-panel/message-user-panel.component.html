@@ -1,0 +1,37 @@
+<!-- System Message User Panel Template for popover -->
+<ng-template #systemMessageUserPanel>
+  <div class="system-message-setting-wrapper">
+    <div class="system-message-logout-panel">
+      <a mcsCursor="pointer" (click)="logout($event)"
+        mcsId="system-message-logout"
+        mcsEventTracker="system-message-logout"
+        mcsEventCategory="system-message-navigation"
+        mcsEventLabel="system-message-user-panel">{{ 'header.userPanel.signOut' | translate }}</a>
+    </div>
+  </div>
+</ng-template>
+  
+  
+<div class="system-message-user-panel-wrapper">
+  <div class="system-message-user-panel-item">
+    <mcs-item>
+      <a mcsCursor="pointer"
+        (click)="systemMessagePopover?.toggle()"
+        mcsId="system-message-user-dropdown-toggle"
+        mcsEventTracker="system-message-user-dropdown-toggle"
+        mcsEventCategory="system-message-navigation"
+        mcsEventLabel="system-message-user-panel"
+        mcsStopPropagation>
+        <span hidden-small>{{ (activeUser$ | async)?.fullName }}</span>
+      </a>
+
+      <mcs-icon class="caret-down"
+        [key]="caretDownIconKey" color="white" mcsCursor="pointer"
+
+        mcsPopover #systemMessagePopover="mcsPopover"
+        padding="none" placement="bottom" orientation="left"
+        theme="dark" priority="high"
+        [content]="systemMessageUserPanel" maxWidth="500px"></mcs-icon>
+    </mcs-item>
+  </div>
+</div>

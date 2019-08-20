@@ -109,6 +109,7 @@ export function convertJsonToMapObject<T>(json: string): Map<string, T> {
  * @param content String to checked
  */
 export function isJson(content: string | any): boolean {
+  if (typeof content === 'object') { return true; }
   try {
     JSON.parse(content);
   } catch (e) {
@@ -128,16 +129,8 @@ export function isJson(content: string | any): boolean {
  * @param secondObject Second object to compare
  */
 export function compareJsons<T>(firstObject: T, secondObject: T): number {
-  let firstJsonString: string;
-  let secondJsonString: string;
-
-  if (isNullOrEmpty(firstObject)) {
-    firstJsonString = '';
-    secondJsonString = '';
-  } else {
-    firstJsonString = JSON.stringify(firstObject);
-    secondJsonString = JSON.stringify(secondObject);
-  }
+  let firstJsonString: string = JSON.stringify(firstObject || {});
+  let secondJsonString: string = JSON.stringify(secondObject || {});
 
   if (firstJsonString === secondJsonString) {
     return 0;
