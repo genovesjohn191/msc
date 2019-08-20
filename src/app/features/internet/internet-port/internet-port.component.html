@@ -92,5 +92,11 @@
       </div>
     </div>
   </mcs-content-panel>
-
 </mcs-page>
+
+<mcs-help-widget
+  [serviceId]="(selectedInternetPort$ | async)?.serviceId"
+  mcsEventTracker="toggle-help"
+  mcsEventCategory="help"
+  mcsEventLabel="help-panel-internet-port">
+</mcs-help-widget>

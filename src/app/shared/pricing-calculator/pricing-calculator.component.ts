@@ -9,8 +9,7 @@ import {
 } from '@angular/core';
 import {
   coerceBoolean,
-  animateFactory,
-  CommonDefinition
+  animateFactory
 } from '@app/utilities';
 import {
   CoreDefinition,
@@ -35,7 +34,7 @@ import { PricingCalculator } from './pricing-calculator';
   host: {
     'class': 'pricing-calculator-wrapper box-shadow-medium',
     '[attr.id]': 'id',
-    '[class.hide-element]': 'isPricingHidden'
+    '[class.hide-element]': 'hidden'
   }
 })
 
@@ -65,13 +64,6 @@ export class PricingCalculatorComponent implements PricingCalculator {
   private _collapse: boolean = true;
 
   public constructor(private _changeDetectorRef: ChangeDetectorRef) { }
-
-  /**
-   * Returns true when the pricing calculator should be hidden
-   */
-  public get isPricingHidden(): boolean {
-    return !CommonDefinition.ORDERING_ENABLE_PRICING_CALCULATOR || this.hidden;
-  }
 
   /**
    * Shows the pricing calculator widget

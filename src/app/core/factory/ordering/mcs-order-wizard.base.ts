@@ -16,7 +16,8 @@ import {
 import {
   McsDisposable,
   isNullOrEmpty,
-  getSafeProperty
+  getSafeProperty,
+  CommonDefinition
 } from '@app/utilities';
 import {
   McsOrder,
@@ -145,7 +146,7 @@ export abstract class McsOrderWizardBase extends McsWizardBase implements McsDis
     let noPricingCalculator = isNullOrEmpty(this.pricingCalculator);
     if (noPricingCalculator) { return; }
 
-    if (this._pricingIsHiddenByStep) {
+    if (this._pricingIsHiddenByStep || !CommonDefinition.ORDERING_ENABLE_PRICING_CALCULATOR) {
       this.pricingCalculator.hideWidget();
       return;
     }

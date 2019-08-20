@@ -160,7 +160,8 @@ export class McsFormGroupDirective implements OnInit, OnDestroy {
    * for such checking purposes are not included.
    */
   public isValid(): boolean {
-    if (isNullOrEmpty(this._formGroup)) { return false; }
+    let formsAreMissing = isNullOrEmpty(this._formGroup) || isNullOrEmpty(this.formControls);
+    if (formsAreMissing) { return false; }
 
     let hasInvalid: boolean = false;
     this.formControls.map((formField) => {
