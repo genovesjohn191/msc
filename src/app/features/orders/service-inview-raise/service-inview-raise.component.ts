@@ -185,7 +185,7 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
    * Returns a specifc label based on inview level
    */
   public inviewLevelLabel(server: McsServer): string {
-    if (getSafeProperty(server, (obj) => obj.serviceChangeAvailable, false)) {
+    if (getSafeProperty(server, (obj) => !obj.serviceChangeAvailable, true)) {
       return this.translateService.instant('orderServiceRaiseInview.serviceDetails.inview.label.unavailable');
     }
 
