@@ -10,7 +10,9 @@ import {
   ViewChild,
   AfterViewInit,
   ChangeDetectionStrategy,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  Inject,
+  forwardRef
 } from '@angular/core';
 import {
   FormGroup,
@@ -27,7 +29,8 @@ import {
 import {
   takeUntil,
   catchError,
-  map
+  map,
+  tap
 } from 'rxjs/operators';
 import {
   McsTableDataSource,
@@ -50,7 +53,10 @@ import {
   DataStatus,
   OrderType
 } from '@app/models';
-import { McsFormGroupDirective } from '@app/shared';
+import {
+  WizardStepComponent,
+  McsFormGroupDirective
+} from '@app/shared';
 import { McsApiService } from '@app/services';
 import { OrderDetails } from './order-details';
 
@@ -105,6 +111,7 @@ export class StepOrderDetailsComponent
   private _destroySubject = new Subject<void>();
 
   constructor(
+    @Inject(forwardRef(() => WizardStepComponent)) private _wizardStep: WizardStepComponent,
     private _changeDetectorRef: ChangeDetectorRef,
     private _formBuilder: FormBuilder,
     private _translate: TranslateService,
@@ -143,6 +150,7 @@ export class StepOrderDetailsComponent
   public ngAfterViewInit() {
     Promise.resolve().then(() => {
       this._subscribeToDataChange();
+      this._subscribeToWizardStepActivated();
     });
   }
 
@@ -412,5 +420,15 @@ export class StepOrderDetailsComponent
     this._formGroup.valueChanges().pipe(
       takeUntil(this._destroySubject),
     ).subscribe(() => this.onDataChange());
+  }
+
+  /**
+   * Subscribes to wizard step when activated
+   */
+  private _subscribeToWizardStepActivated(): void {
+    this._wizardStep.activated().pipe(
+      takeUntil(this._destroySubject),
+      tap(() => this.onDataChange())
+    ).subscribe();
   }
 }

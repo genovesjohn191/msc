@@ -7,6 +7,11 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
+import {
+  Subject,
+  Observable
+} from 'rxjs';
+import { filter } from 'rxjs/operators';
 import { McsUniqueId } from '@app/core';
 import { IWizardStep } from './wizard-step.interface';
 
@@ -22,10 +27,6 @@ import { IWizardStep } from './wizard-step.interface';
 })
 
 export class WizardStepComponent implements IWizardStep {
-  public enabled: boolean;
-  public isActive: boolean;
-  public completed: boolean;
-  public isLastStep: boolean;
 
   @Input()
   public id: any = McsUniqueId.NewId('wizard-step');
@@ -43,11 +44,34 @@ export class WizardStepComponent implements IWizardStep {
   @ViewChild(TemplateRef)
   public templateRef: TemplateRef<any>;
 
+  public enabled: boolean;
+  public completed: boolean;
+  public isLastStep: boolean;
+
+  public get isActive(): boolean { return this._isActive; }
+  public set isActive(value: boolean) {
+    if (this._isActive !== value) {
+      this._isActive = value;
+      this._activeChange.next(this._isActive);
+    }
+  }
+  private _isActive: boolean;
+  private _activeChange = new Subject<boolean>();
+
   public constructor() {
     this.stepTitle = '';
     this.isActive = false;
     this.enabled = false;
     this.completed = false;
     this.isLastStep = false;
+  }
+
+  /**
+   * Event that emits when the step has been activated
+   */
+  public activated(): Observable<boolean> {
+    return this._activeChange.asObservable().pipe(
+      filter((activeStatus) => activeStatus)
+    );
   }
 }

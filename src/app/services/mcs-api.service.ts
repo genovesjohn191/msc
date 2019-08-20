@@ -9,7 +9,6 @@ import {
 import {
   map,
   catchError,
-  finalize,
   tap
 } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
@@ -991,7 +990,6 @@ export class McsApiService {
         this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.Order, id);
         return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.updateOrder'));
       }),
-      finalize(() => this._dispatchRequesterEvent(McsEvent.entityUpdatedEvent, EntityRequester.Order, id)),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
@@ -1000,10 +998,11 @@ export class McsApiService {
     this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.Order, id);
 
     return this._ordersApi.deleteOrder(id).pipe(
-      catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.deleteOrder'))
-      ),
-      finalize(() => this._dispatchRequesterEvent(McsEvent.entityDeletedEvent, EntityRequester.Order, id)),
+      catchError((error) => {
+        this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.Order, id);
+        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.deleteOrder'));
+      }),
+      tap(() => this._dispatchRequesterEvent(McsEvent.entityDeletedEvent, EntityRequester.Order, id)),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }

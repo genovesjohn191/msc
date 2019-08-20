@@ -124,7 +124,7 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
    */
   public get isSearching(): boolean {
     return isNullOrEmpty(this.search) ? false :
-      this.search.keyword.length > 0;
+      this.search.keyword && this.search.keyword.length > 0;
   }
 
   /**
