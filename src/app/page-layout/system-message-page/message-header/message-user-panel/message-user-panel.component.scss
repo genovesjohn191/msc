@@ -1,0 +1,52 @@
+@import '../../../../../styles/shared/base';
+
+// System Message Header User-Panel
+$system-message-user-panel-item-padding: 0 $space-xlarge;
+// System Message Popover
+$system-message-user-panel-max-height: 80vh;
+$system-message-user-panel-desktop-min-width: 250px;
+
+// System Message User Panel Layout
+.system-message-user-panel-wrapper {
+  @include display-flex(row);
+  @include align-items(center);
+
+  a {
+    text-decoration: none;
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  .system-message-user-panel-item {
+    padding-right: 0;
+    padding: $system-message-user-panel-item-padding;
+
+    .caret-down {
+      padding-left: $space-xsmall;
+    }
+  }
+}
+
+// Popover for system message user panel
+.system-message-setting-wrapper {
+  @include display-flex(column);
+  background-color: $color-black;
+  color: $color-grey-05;
+  min-width: $system-message-user-panel-desktop-min-width;
+  max-height: $system-message-user-panel-max-height;
+
+  a {
+    color: $color-grey-05;
+    text-decoration: none;
+    &:hover {
+      color: $color-primary-01;
+      text-decoration: none;
+    }
+  }
+
+  .system-message-logout-panel {
+    padding: $space-medium;
+  }
+
+}

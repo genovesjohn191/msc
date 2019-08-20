@@ -19,6 +19,9 @@ export class CommonDefinition {
   public static ASSETS_GIF_LOADER_SPINNER = 'loader-spinner';
   public static ASSETS_GIF_LOADER_ELLIPSIS = 'loader-ellipsis';
 
+  // Images
+  public static ASSETS_IMAGE_MCS_LIGHT_LOGO_SVG = 'light-mcs-logo-svg';
+
   // SVG Icons
   public static ASSETS_SVG_NO_ICON_AVAILABLE = 'no-icon-available';
   public static ASSETS_SVG_CLOSE_BLACK = 'close-black';
@@ -68,6 +71,7 @@ export class CommonDefinition {
   public static ASSETS_SVG_RELOAD = 'reload';
   public static ASSETS_SVG_CLOUD_UPLOAD_BLUE = 'cloud-upload-blue';
   public static ASSETS_SVG_WARNING = 'warning-svg';
+  public static ASSETS_SVG_WARNING_BLUE = 'warning-blue-svg';
   public static ASSETS_SVG_ERROR = 'error-svg';
   public static ASSETS_SVG_DOWNLOAD = 'download';
   public static ASSETS_SVG_DOS_PROMPT_BLUE = 'dos-prompt-blue';

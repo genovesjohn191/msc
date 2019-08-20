@@ -1,1 +1,50 @@
-<!-- TODO: System Message Full Page-->
+
+<mcs-system-message-header class="system-message-header"></mcs-system-message-header>
+
+<div class="system-message-page-content" *ngIf="systemMessage$ | async as systemMessage">
+  <div class="system-message-content">
+    <mcs-icon [key]="warningBlueIconKey" 
+      size="120px"
+      color="primary"></mcs-icon>
+
+    <div class="system-message-page-title">{{ 'systemMessagePage.title' | translate }}</div>
+
+    <mcs-alert type="info" [hideIcon]="true">
+      {{ systemMessage.message }}
+    </mcs-alert>
+    
+    <mcs-alert type="info" [hideIcon]="true" *mcsAccessControl="['SystemMessageView']; else: secondaryAdvisoryLabel">
+      {{ 'systemMessagePage.internalAdvisoryLabel' | translate }}
+    </mcs-alert>
+     
+    <ng-template #secondaryAdvisoryLabel>
+      <mcs-alert type="info" [hideIcon]="true">
+        {{ 'systemMessagePage.secondaryAdvisoryLabel' | translate }}
+      </mcs-alert>
+    </ng-template>   
+
+    <div>
+      <!-- Go to Macquarie Action -->
+      <button mcsButton  
+        mcsId="go-to-macquarie"
+        (click)="goToMacquarieView()"
+        mcsEventTracker="go-to-macquarie"
+        mcsEventCategory="system-message-page"
+        mcsEventLabel="go-to-macquarie-label">
+        {{ 'systemMessagePage.goToMacquarie' | translate }}
+      </button>
+    </div>
+
+    <div *mcsAccessControl="['SystemMessageView']">
+      <!-- Proceed to Portal Action -->
+      <button mcsButton  
+        mcsId="proceed-to-portal"
+        (click)="proceedToPortal(systemMessage)"
+        mcsEventTracker="proceed-to-portal"
+        mcsEventCategory="system-message-page"
+        mcsEventLabel="proceed-to-portal-label">
+        {{ 'systemMessagePage.proceedToPortal' | translate }}
+      </button>
+    </div>
+  </div>
+</div>

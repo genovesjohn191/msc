@@ -13,7 +13,8 @@ import {
   McsStatusType,
   animateFactory,
   isNullOrEmpty,
-  CommonDefinition
+  CommonDefinition,
+  coerceBoolean
 } from '@app/utilities';
 
 @Component({
@@ -49,6 +50,14 @@ export class AlertComponent {
       this._changeDetectorRef.markForCheck();
     }
   }
+
+  @Input()
+  public get hideIcon(): boolean { return this._hideIcon; }
+  public set hideIcon(value: boolean) {
+    this._hideIcon = coerceBoolean(value);
+  }
+
+  private _hideIcon: boolean;
   private _type: McsStatusType;
 
   /**

@@ -5,7 +5,8 @@ import {
   convertJsonToMapObject,
   serializeObjectToJson,
   deserializeJsonToObject,
-  isJson
+  isJson,
+  compareJsons
 } from './mcs-json.function';
 
 // Dummy test object class
@@ -118,6 +119,43 @@ describe('JSON Functions', () => {
       let testObject = 'sample';
       let jsonObject = isJson(testObject);
       expect(jsonObject).toBeFalsy();
+    });
+  });
+
+  describe('compareJsons()', () => {
+    it(`should return 0 when the two objects are the same`, () => {
+      let testObject1 = { name: 'sample' };
+      let testObject2 = { name: 'sample' };
+      let jsonComparisonValue = compareJsons(testObject1, testObject2);
+      expect(jsonComparisonValue).toEqual(0);
+    });
+
+    it(`should return 0 when the two objects are null or undefined`, () => {
+      let testObject1 = null;
+      let testObject2; // value to test is undefined
+      let jsonComparisonValue = compareJsons(testObject1, testObject2);
+      expect(jsonComparisonValue).toEqual(0);
+    });
+
+    it(`should return -1 or 1 correspondingly when one of the object is null or undefined`, () => {
+      let testObject1 = null;
+      let testObject2 = { name: 'sample' };
+      let jsonComparisonValue = compareJsons(testObject1, testObject2);
+      expect(jsonComparisonValue).toEqual(-1);
+    });
+
+    it(`should return -1 when first object is less than second object`, () => {
+      let testObject1 = { name: 'sample' };
+      let testObject2 = { name: 'samplelongervalue' };
+      let jsonComparisonValue = compareJsons(testObject1, testObject2);
+      expect(jsonComparisonValue).toEqual(-1);
+    });
+
+    it(`should return 1 when first object is greater than second object`, () => {
+      let testObject1 = { name: 'samplelongervalue' };
+      let testObject2 = { name: 'sample' };
+      let jsonComparisonValue = compareJsons(testObject1, testObject2);
+      expect(jsonComparisonValue).toEqual(1);
     });
   });
 });

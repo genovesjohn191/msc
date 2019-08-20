@@ -35,6 +35,7 @@ export class CoreDefinition {
   public static COOKIE_SESSION_TIMER = 'mcsSessionTimer';
   public static COOKIE_SESSION_ID = 'mcsSessionId';
   public static COOKIE_USER_STATE_ID = 'mcsStateId';
+  public static COOKIE_ACTIVE_MESSAGE = 'mcsActiveMessage';
 
   /** Query Parameters */
   public static QUERY_PARAM_BEARER = 'bearer';
@@ -117,6 +118,7 @@ export class CoreDefinition {
   public static ASSETS_SVG_RELOAD = 'reload';
   public static ASSETS_SVG_CLOUD_UPLOAD_BLUE = 'cloud-upload-blue';
   public static ASSETS_SVG_WARNING = 'warning-svg';
+  public static ASSETS_SVG_WARNING_BLUE = 'warning-blue-svg';
   public static ASSETS_SVG_ERROR = 'error-svg';
   public static ASSETS_SVG_DOWNLOAD = 'download';
   public static ASSETS_SVG_DOS_PROMPT_BLUE = 'dos-prompt-blue';

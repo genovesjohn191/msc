@@ -28,6 +28,13 @@
     "stopping": "Window will close in <strong>{{timer}}</strong>.",
     "errorMessage": "Console connection error."
   },
+  "systemMessagePage": {
+    "title": "The Portal is currently unavailable",
+    "secondaryAdvisoryLabel": "Customers are advised to use MacquarieView or contact their accounts team for any urgent requests.",
+    "internalAdvisoryLabel": "Internal users may still access the Portal, although some features may not work as expected.",
+    "goToMacquarie": "Go To Macquarie View",
+    "proceedToPortal": "Proceed to the Portal"
+  },
   "maintenance": {
     "title": "We'll be back soon!",
     "message": "We're currently experiencing some issues and are working to resolve them. In the meantime, you can view and manage your services within ",
