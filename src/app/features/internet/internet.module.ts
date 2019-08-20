@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '@app/shared';
+import { FeaturesSharedModule } from '@app/features-shared';
 import { InternetComponent } from './internet.component';
 import {
   InternetPortComponent,
@@ -19,6 +20,7 @@ import {
   ],
   imports: [
     RouterModule.forChild(internetRoutes),
+    FeaturesSharedModule,
     SharedModule
   ],
   providers: [...internetProviders]
