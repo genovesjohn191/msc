@@ -545,6 +545,7 @@ export class McsApiService {
         return this._handleApiClientError(error,
           this._translate.instant('apiErrorMessage.updateServerOsUpdatesSchedule'));
       }),
+      tap(() => this._dispatchRequesterEvent(McsEvent.entityUpdatedEvent, EntityRequester.Server, id)),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
@@ -558,6 +559,7 @@ export class McsApiService {
         return this._handleApiClientError(error,
           this._translate.instant('apiErrorMessage.deleteServerOsUpdatesSchedule'));
       }),
+      tap(() => this._dispatchRequesterEvent(McsEvent.entityUpdatedEvent, EntityRequester.Server, id)),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
@@ -920,6 +922,7 @@ export class McsApiService {
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.createOrder'))
       ),
+      tap(() => this._dispatchRequesterEvent(McsEvent.entityCreatedEvent, EntityRequester.Order)),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
