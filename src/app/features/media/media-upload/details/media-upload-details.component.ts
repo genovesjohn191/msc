@@ -39,8 +39,8 @@ import {
   McsResource,
   McsResourceCatalogItemCreate,
   CatalogItemType,
-  McsApiErrorResponse,
-  McsResourceCatalog
+  McsResourceCatalog,
+  McsApiErrorContext
 } from '@app/models';
 import { McsFormGroupDirective } from '@app/shared';
 import { MediaUploadService } from '../media-upload.service';
@@ -136,10 +136,10 @@ export class MediaUploadDetailsComponent
       selectedResource.id,
       mediaUrl
     ).pipe(
-      catchError((_httpError: McsApiErrorResponse) => {
+      catchError((_httpError: McsApiErrorContext) => {
         if (isNullOrEmpty(_httpError)) { return throwError(_httpError); }
         this.mediaUrlStatusIconKey = CoreDefinition.ASSETS_SVG_ERROR;
-        this.urlInfoMessage = getSafeProperty(_httpError, (obj) => obj.errorMessages[0]);
+        this.urlInfoMessage = getSafeProperty(_httpError, (obj) => obj.details.errorMessages[0]);
         this.fcMediaUrl.setErrors({ urlValidationError: true });
         return throwError(_httpError);
       })
