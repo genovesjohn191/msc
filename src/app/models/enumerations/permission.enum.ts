@@ -38,5 +38,9 @@ export enum McsPermission {
   OrderApprove = 'OrderApprove',
 
   // Accounts
-  CompanyView = 'CompanyView'
+  CompanyView = 'CompanyView',
+
+  // System Message
+  SystemMessageView = 'SystemMessageView',
+  SystemMessageEdit = 'SystemMessageEdit'
 }

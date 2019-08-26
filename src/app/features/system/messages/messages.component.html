@@ -76,7 +76,7 @@
           <mcs-header-cell *mcsHeaderCellDef>
             {{ columnSettings.message.text }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row">
+          <mcs-data-cell *mcsDataCellDef="let row" text-wrap>
             {{ row.message }}
           </mcs-data-cell>
         </ng-container>
@@ -179,12 +179,18 @@
 
         <!-- Header and Data row -->
         <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
-        <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"
-          mcsCursor="pointer" (click)="navigateToSystemMessage(row)"
-          mcsId="system-message-row"
-          mcsEventTracker="navigate-to-system-message"
-          mcsEventCategory="system-message"
-          mcsEventLabel="system-message-listing-page"></mcs-data-row>
+        <div *mcsAccessControl="['SystemMessageEdit']; else: hasNoPermission">
+          <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;" 
+            mcsCursor="pointer"
+            (click)="navigateToSystemMessage(row)"
+            mcsId="system-message-row"
+            mcsEventTracker="navigate-to-system-message"
+            mcsEventCategory="system-message"
+            mcsEventLabel="system-message-listing-page"></mcs-data-row>
+        </div>
+        <ng-template #hasNoPermission>
+          <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"></mcs-data-row>
+        </ng-template>
       </mcs-table>
 
       <!-- Paginator -->
