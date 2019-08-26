@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { isNullOrEmpty } from '@app/utilities';
+
 import { McsAuthenticationIdentity } from '../authentication/mcs-authentication.identity';
 
 @Injectable()
 export class McsStorageService {
 
-  constructor(private _authIdentity: McsAuthenticationIdentity) {
-  }
+  constructor(private _authIdentity: McsAuthenticationIdentity) { }
 
   /**
    * Set item to local storage

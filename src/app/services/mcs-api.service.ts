@@ -123,6 +123,7 @@ import {
   EventBusState
 } from '@app/event-bus';
 import { McsEvent } from '@app/event-manager';
+import { LogClass } from '@app/logger';
 import { McsRepository } from './core/mcs-repository.interface';
 
 import { McsJobsRepository } from './repositories/mcs-jobs.repository';
@@ -145,6 +146,7 @@ interface DataEmitter<T> {
 }
 
 @Injectable()
+@LogClass()
 export class McsApiService {
   private readonly _translate: TranslateService;
 

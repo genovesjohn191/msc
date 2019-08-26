@@ -28,13 +28,18 @@ import {
   compareJsons
 } from '@app/utilities';
 import { RouteKey } from '@app/models';
-import { McsLoggerService } from './mcs-logger.service';
+import {
+  LogClass,
+  LogIgnore
+} from '@app/logger';
+
 import { McsAccessControlService } from '../authentication/mcs-access-control.service';
 import { McsCookieService } from './mcs-cookie.service';
 import { CoreDefinition } from '../core.definition';
 import { McsNavigationService } from './mcs-navigation.service';
 
 @Injectable()
+@LogClass()
 export class McsSystemMessageService implements McsDisposable {
 
   private _activeMessageServiceReference: Observable<McsSystemMessage>;
@@ -47,7 +52,6 @@ export class McsSystemMessageService implements McsDisposable {
     private _eventDispatcher: EventBusDispatcherService,
     private _accessControlService: McsAccessControlService,
     private _apiService: McsApiService,
-    private _loggerService: McsLoggerService,
     private _cookieService: McsCookieService
   ) {
     this._activeMessageChange = new BehaviorSubject<McsSystemMessage>(null);
@@ -99,14 +103,12 @@ export class McsSystemMessageService implements McsDisposable {
   /**
    * Event that gets notified once there are changes on the route
    */
+  @LogIgnore()
   private _onRouteChange(): void {
     let hasSystemMessageFeatureFlag = this._accessControlService.hasAccessToFeature(McsFeatureFlag.SystemMessages);
     if (!hasSystemMessageFeatureFlag) { return; }
 
     this._activeMessageServiceReference.subscribe((message) => {
-      this._loggerService.traceInfo(`Checking active message...`);
-      this._loggerService.traceInfo(`Active Message:`, message);
-
       if (isNullOrEmpty(message) || !message.isCritical) { return; }
 
       let activeSystemMessageCookie = this._cookieService.getEncryptedItem<McsSystemMessage>(

@@ -5,9 +5,9 @@ import {
   convertDateTimezoneToUTC,
   isDateFormatValid
 } from '@app/utilities';
-import { CoreDefinition } from '../core.definition';
+
 import * as moment from 'moment-timezone';
-import { McsLoggerService } from './mcs-logger.service';
+import { CoreDefinition } from '../core.definition';
 
 export type McsDateTimeFormat = 'default' | 'short' | 'medium' | 'long' | 'full' |
   'dashShortDate' | 'shortDate' | 'mediumDate' | 'longDate' | 'fullDate' |
@@ -17,7 +17,7 @@ export type McsDateTimeFormat = 'default' | 'short' | 'medium' | 'long' | 'full'
 export class McsDateTimeService {
   private _dateTimeMapTable = new Map<McsDateTimeFormat, string>();
 
-  constructor(private _loggerService: McsLoggerService) {
+  constructor() {
     this._createDateTimeTable();
   }
 
@@ -57,8 +57,6 @@ export class McsDateTimeService {
       timeZone,
       formatType
     );
-    this._loggerService.trace(`Date Formatted: ` + dateTimetoTimezone);
-
     return dateTimetoTimezone.toString();
   }
 
@@ -68,10 +66,7 @@ export class McsDateTimeService {
    * @param format format of the output date
    */
   public isDateFormatValid(date: string, format: string): boolean {
-    let dateFormat = isDateFormatValid(date, format);
-    this._loggerService.trace(`Date format: ` + dateFormat);
-
-    return dateFormat;
+    return isDateFormatValid(date, format);
   }
 
   /**

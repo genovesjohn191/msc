@@ -4,13 +4,15 @@ import {
   NavigationExtras
 } from '@angular/router';
 import { RouteKey } from '@app/models';
-import { CoreRoutes } from '../core.routes';
 import {
   isNullOrEmpty,
   isNullOrUndefined
 } from '@app/utilities';
+import { LogClass } from '@app/logger';
+import { CoreRoutes } from '../core.routes';
 
 @Injectable()
+@LogClass()
 export class McsNavigationService {
 
   constructor(private _router: Router) { }

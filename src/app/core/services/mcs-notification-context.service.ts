@@ -25,6 +25,7 @@ import {
   JobStatus
 } from '@app/models';
 import { McsApiService } from '@app/services';
+import { LogClass } from '@app/logger';
 import { McsNotificationJobService } from './mcs-notification-job.service';
 
 /**
@@ -33,6 +34,7 @@ import { McsNotificationJobService } from './mcs-notification-job.service';
  * get notified when there are changes on the notification job
  */
 @Injectable()
+@LogClass()
 export class McsNotificationContextService implements McsDisposable {
   private _destroySubject = new Subject<void>();
   private _excludedJobTypes: JobType[];
