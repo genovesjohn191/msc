@@ -403,9 +403,7 @@ export class McsApiService {
     catalogItem: McsResourceCatalogItemCreate
   ): Observable<McsApiCollection<McsValidation>> {
     return this._resourcesApi.validateCatalogItems(id, catalogItem).pipe(
-      catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.validateResourceCatalogItems'))
-      ),
+      catchError((error) => this._handleApiClientError(error)),
       map((response) => this._mapToCollection(response))
     );
   }
