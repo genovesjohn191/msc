@@ -14,10 +14,13 @@ import {
   EventBusState
 } from '@app/event-bus';
 import { McsEvent } from '@app/event-manager';
+import { LogClass } from '@app/logger';
+
 import { McsAuthenticationIdentity } from '../authentication/mcs-authentication.identity';
 import { McsNotificationContextService } from './mcs-notification-context.service';
 
 @Injectable()
+@LogClass()
 export class McsNotificationEventsService {
 
   private _jobTypeEventMap: Map<JobType, EventBusState<McsJob>>;

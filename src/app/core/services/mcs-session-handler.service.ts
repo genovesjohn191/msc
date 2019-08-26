@@ -25,10 +25,11 @@ import {
 import { McsIdentity } from '@app/models';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/event-manager';
+import { LogMethod } from '@app/logger';
+
 import { CoreDefinition } from '../core.definition';
 import { McsAuthenticationIdentity } from '../authentication/mcs-authentication.identity';
 import { McsAuthenticationService } from '../authentication/mcs-authentication.service';
-import { McsLoggerService } from './mcs-logger.service';
 import { McsCookieService } from './mcs-cookie.service';
 
 @Injectable()
@@ -102,10 +103,8 @@ export class McsSessionHandlerService {
     private _eventDispatcher: EventBusDispatcherService,
     private _cookieService: McsCookieService,
     private _authIdentity: McsAuthenticationIdentity,
-    private _authService: McsAuthenticationService,
-    private _loggerService: McsLoggerService
+    private _authService: McsAuthenticationService
   ) {
-
     this._eventDispatcher.addEventListener(
       McsEvent.userChange, this._onUserChanged.bind(this));
   }
@@ -241,21 +240,18 @@ export class McsSessionHandlerService {
   /**
    * Registers all the event handlers
    */
+  @LogMethod()
   private _registerEventHandlers() {
 
     this.onCurrentUserChanged()
       .pipe(takeUntil(this._destroySubject))
       .subscribe(() => {
-        this._loggerService.traceStart(`Change User`);
-        this._loggerService.traceEnd();
         location.reload();
       });
 
     this.onTargetCompanyChanged()
       .pipe(takeUntil(this._destroySubject))
       .subscribe(() => {
-        this._loggerService.traceStart(`Switched Company`);
-        this._loggerService.traceEnd();
         location.reload();
       });
 
@@ -271,6 +267,7 @@ export class McsSessionHandlerService {
   /**
    * Validates the user and remove it from the cookie when the user has been changed
    */
+  @LogMethod()
   private _setUserValidation(identity: McsIdentity) {
     let sessionId = identity.hashedId + identity.expiry;
     let hashedId = this._cookieService.getEncryptedItem(CoreDefinition.COOKIE_SESSION_ID);
@@ -280,20 +277,12 @@ export class McsSessionHandlerService {
   }
 
   private _sessionIdleEventHandler() {
-    this._loggerService.traceStart('Session Is Idle');
-
     this._stopSessionExtensionRequestCountdown();
     this._onSessionActivated.next(false);
-
-    this._loggerService.traceEnd();
   }
 
   private _sessionActivedEventHandler() {
-    this._loggerService.traceStart('Session Active');
-
     this._setupExtendSessionRequestScheduler();
-
-    this._loggerService.traceEnd();
   }
 
   /**
@@ -325,7 +314,6 @@ export class McsSessionHandlerService {
 
     // Trigger timedout event
     if (this.sessionTimedOut) {
-      this._loggerService.traceStart('Session Timed Out');
       this._eventDispatcher.dispatch(McsEvent.sessionTimedOut);
       this._createSessionId();
     }
@@ -333,9 +321,8 @@ export class McsSessionHandlerService {
     this._onSessionTimeOut.next(this.sessionTimedOut);
   }
 
+  @LogMethod()
   private _setupExtendSessionRequestScheduler() {
-    this._loggerService.traceStart('Start Session Extension Countdown');
-
     // Get expiry in seconds
     let now = new Date();
     let expiry = new Date(this._authIdentity.user.expiry);
@@ -348,17 +335,6 @@ export class McsSessionHandlerService {
     if (expiryInSeconds > sessionExtensionWindowInSeconds) {
       extensionCounterInSeconds = expiryInSeconds - sessionExtensionWindowInSeconds;
     }
-
-    this._loggerService.traceInfo(
-      `Session Expiry Date: ${expiry}`);
-    this._loggerService.traceInfo(
-      `Session Expiry: ${expiryInSeconds} seconds`);
-    this._loggerService.traceInfo(
-      `Session Extension Window: ${sessionExtensionWindowInSeconds} seconds`);
-    this._loggerService.traceInfo(
-      `Counting ${extensionCounterInSeconds} seconds until session extension triggers`);
-    this._loggerService.traceEnd();
-
     this._initializeSessionExtensionRequestCountdownTimer(extensionCounterInSeconds);
   }
 
@@ -375,20 +351,15 @@ export class McsSessionHandlerService {
       sessionId, { expires: this._authIdentity.user.expiry });
   }
 
+  @LogMethod()
   private _stopSessionExtensionRequestCountdown() {
-    this._loggerService.traceStart('Stop Session Extension Countdown');
-    this._loggerService.traceInfo(`Session extension countdown is stopped.`);
     this._timerSubject.next();
-    this._loggerService.traceEnd();
   }
 
+  @LogMethod()
   private _requestSessionExtension() {
-    this._loggerService.traceStart('Trigger Session Extension Request');
-    this._loggerService.traceInfo(`Raising session extension request event`);
-    // Do session extension routine here
     this._onRequestSessionExtension.next();
     // TODO: We should setup the scheduler again after successful extension
     // Create a listener to identity expiry changes
-    this._loggerService.traceEnd();
   }
 }

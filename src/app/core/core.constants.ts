@@ -15,7 +15,6 @@ import { McsErrorHandlerService } from './services/mcs-error-handler.service';
 import { McsRouteHandlerService } from './services/mcs-route-handler.service';
 import { McsRouteSettingsService } from './services/mcs-route-settings.service';
 import { McsPlatformService } from './services/mcs-platform.service';
-import { McsLoggerService } from './services/mcs-logger.service';
 import { McsFormGroupService } from './services/mcs-form-group.service';
 import { GoogleAnalyticsEventsService } from './services/google-analytics-events.service';
 import { McsSessionHandlerService } from './services/mcs-session-handler.service';
@@ -60,7 +59,6 @@ export const coreProviders: any[] = [
   McsRouteHandlerService,
   McsRouteSettingsService,
   McsPlatformService,
-  McsLoggerService,
   McsFormGroupService,
   McsAssetsProvider,
   McsFilterService,

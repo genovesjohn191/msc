@@ -33,12 +33,15 @@ import { SharedModule } from './shared';
 import {
   resolveEnvVar,
   isNullOrEmpty,
-  McsEnvironmentVariables
+  McsEnvironmentVariables,
+  CommonDefinition
 } from './utilities';
 import { McsApiClientConfig } from './api-client/mcs-api-client.config';
 import { McsApiClientModule } from './api-client/mcs-api-client.module';
 
 import '../styles/base.scss';
+import { LoggerModule } from './logger/logger.module';
+import { LoggerConfig } from './logger/logger.config';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', `.json?id=${McsGuid.newGuid().toString()}`);
@@ -77,6 +80,11 @@ export function apiClientConfig(cookieService: McsCookieService): McsApiClientCo
   } as McsApiClientConfig;
 }
 
+export function loggerConfig(cookieService: McsCookieService): LoggerConfig {
+  let loggerFlag = cookieService.getEncryptedItem(CommonDefinition.COOKIE_ENABLE_LOGGER);
+  return { enableLogging: loggerFlag || false } as LoggerConfig;
+}
+
 @NgModule({
   bootstrap: [AppComponent],
   declarations: [
@@ -99,6 +107,7 @@ export function apiClientConfig(cookieService: McsCookieService): McsApiClientCo
 
     CoreModule.forRoot(coreConfig),
     McsApiClientModule.forRoot(apiClientConfig, [McsCookieService]),
+    LoggerModule.forRoot(loggerConfig, [McsCookieService]),
 
     FeaturesSharedModule,
     SharedModule,

@@ -6,11 +6,16 @@ import {
 } from '@app/models';
 import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/event-manager';
+import {
+  LogClass,
+  LogIgnore
+} from '@app/logger';
 import { CoreDefinition } from '../core.definition';
 
 declare let dataLayer: any;
 
 @Injectable()
+@LogClass()
 export class GoogleAnalyticsEventsService {
 
   constructor(private _eventDispatcher: EventBusDispatcherService) {
@@ -86,6 +91,7 @@ export class GoogleAnalyticsEventsService {
    * @param pattern Regex Pattern to be execute in masking
    * @param value Value to be checked
    */
+  @LogIgnore()
   private _maskPrivateDataFromUrl(
     url: string,
     pattern: RegExp,

@@ -31,7 +31,11 @@ import {
 import { EventBusDispatcherService } from '@app/event-bus';
 import { McsEvent } from '@app/event-manager';
 import { McsApiService } from '@app/services';
-import { McsLoggerService } from './mcs-logger.service';
+import {
+  LogClass,
+  LogIgnore
+} from '@app/logger';
+
 import { McsSessionHandlerService } from './mcs-session-handler.service';
 import { CoreDefinition } from '../core.definition';
 
@@ -44,6 +48,7 @@ const DEFAULT_HEARTBEAT_OUT = 20000;
  * get notified when there are changes on the websocket (RabbitMQ)
  */
 @Injectable()
+@LogClass()
 export class McsNotificationJobService implements McsDisposable {
   public notificationStream = new BehaviorSubject<McsJob>(null);
   public connectionStatusStream = new Subject<NetworkStatus>();
@@ -67,7 +72,6 @@ export class McsNotificationJobService implements McsDisposable {
   constructor(
     private _eventDispatcher: EventBusDispatcherService,
     private _apiService: McsApiService,
-    private _loggerService: McsLoggerService,
     private _sessionHandlerService: McsSessionHandlerService,
     private _stompService: StompRService
   ) {
@@ -129,8 +133,6 @@ export class McsNotificationJobService implements McsDisposable {
    */
   private _onStompConnected(): void {
     try {
-      this._loggerService.trace(`Web stomp connected.`);
-
       unsubscribeSafely(this._stompSubscription);
       this._stompInstance = this._stompService
         .subscribe(this._jobConnection.destinationRoute);
@@ -139,7 +141,7 @@ export class McsNotificationJobService implements McsDisposable {
         .subscribe(this._onStompMessage.bind(this));
       this.connectionStatus = NetworkStatus.Success;
     } catch (_error) {
-      this._loggerService.trace(`Web stomp subscription encountered error.`);
+      // Do something
     }
   }
 
@@ -147,7 +149,6 @@ export class McsNotificationJobService implements McsDisposable {
    * Event that emits when stomp has error in connecting to rabbitMQ
    */
   private _onStompError(): void {
-    this._loggerService.trace(`Web stomp error.`);
     this.connectionStatus = NetworkStatus.Failed;
   }
 
@@ -155,8 +156,8 @@ export class McsNotificationJobService implements McsDisposable {
    * Event that emits when stomp received message
    * @param message Message to be emiited
    */
+  @LogIgnore()
   private _onStompMessage(message) {
-    this._loggerService.trace(`Rabbitmq Message Received`, message);
     if (message.body) { this._updateNotification(message.body); }
   }
 
@@ -192,7 +193,6 @@ export class McsNotificationJobService implements McsDisposable {
     let updatedNotification: McsJob;
     updatedNotification = deserializeJsonToObject(McsJob, JSON.parse(bodyContent));
     this.notificationStream.next(updatedNotification);
-    this._loggerService.trace(`Job Received`, updatedNotification);
   }
 
   /**

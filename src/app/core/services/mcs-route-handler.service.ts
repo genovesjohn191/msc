@@ -25,10 +25,14 @@ import {
 } from '@app/models';
 import { McsEvent } from '@app/event-manager';
 import { EventBusDispatcherService } from '@app/event-bus';
+import {
+  LogClass,
+  LogIgnore
+} from '@app/logger';
 import { CoreRoutes } from '../core.routes';
-import { McsLoggerService } from './mcs-logger.service';
 
 @Injectable()
+@LogClass()
 export class McsRouteHandlerService implements McsDisposable {
   private _userHandler: Subscription;
   private _destroySubject = new Subject<void>();
@@ -37,8 +41,7 @@ export class McsRouteHandlerService implements McsDisposable {
   constructor(
     private _router: Router,
     private _activatedRoute: ActivatedRoute,
-    private _eventDispatcher: EventBusDispatcherService,
-    private _loggerService: McsLoggerService
+    private _eventDispatcher: EventBusDispatcherService
   ) {
     this._registerEvents();
   }
@@ -66,7 +69,6 @@ export class McsRouteHandlerService implements McsDisposable {
    */
   private _onUserChanged(user: McsIdentity): void {
     if (isNullOrEmpty(user)) { return; }
-    this._loggerService.traceInfo(`Route checking initialized.`);
 
     this._router.events.pipe(
       takeUntil(this._destroySubject),
@@ -97,6 +99,7 @@ export class McsRouteHandlerService implements McsDisposable {
    * Gets the current active route based on the snapshots
    * @param activeRoutes Active routes that have children
    */
+  @LogIgnore()
   private _getCurrentActiveRoute(activeRoutes: ActivatedRouteSnapshot[]): ActivatedRouteSnapshot {
     if (isNullOrEmpty(activeRoutes)) { return null; }
     let activeRoute: ActivatedRouteSnapshot;

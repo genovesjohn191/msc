@@ -7,8 +7,10 @@ import {
   unsubscribeSubject,
   McsDisposable
 } from '@app/utilities';
+import { LogClass } from '@app/logger';
 
 @Injectable()
+@LogClass()
 export class McsErrorHandlerService implements McsDisposable {
   private _destroySubject = new Subject<void>();
 

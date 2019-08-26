@@ -7,6 +7,9 @@ export class CommonDefinition {
   // Common Timezone
   public static TIMEZONE_SYDNEY = `Australia/Sydney`;
 
+  // Cookies
+  public static COOKIE_ENABLE_LOGGER = '_enableMcsObserver';
+
   // Page Default
   public static PAGE_INDEX_DEFAULT = 1;
   public static PAGE_SIZE_MIN = 25;
