@@ -239,7 +239,7 @@
     "enumKey": "SystemMessageEdit",
     "routePath": ":id",
     "navigationPath": "system/messages",
-    "requiredPermissions": ["SystemMessageEdit", "SystemMessageView"],
+    "requiredPermissions": ["SystemMessageEdit"],
     "requiredFeatureFlag": "EnableSystemMessages",
     "documentTitle": "Edit System Message - Macquarie Cloud Services"
   },
