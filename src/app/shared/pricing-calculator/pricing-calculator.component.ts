@@ -32,7 +32,7 @@ import { PricingCalculator } from './pricing-calculator';
   host: {
     'class': 'pricing-calculator-wrapper box-shadow-medium',
     '[attr.id]': 'id',
-    '[class.hide-element]': 'hidden'
+    '[class.hide-element]': 'isHidden'
   }
 })
 
@@ -62,6 +62,13 @@ export class PricingCalculatorComponent implements PricingCalculator {
   private _collapse: boolean = true;
 
   public constructor(private _changeDetectorRef: ChangeDetectorRef) { }
+
+  /**
+   * Returns true when the pricing calculator should be hidden
+   */
+  public get isHidden(): boolean {
+    return this.hidden || !CommonDefinition.ORDERING_ENABLE_PRICING_CALCULATOR;
+  }
 
   /**
    * Shows the pricing calculator widget
