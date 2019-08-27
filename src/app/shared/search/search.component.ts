@@ -17,13 +17,11 @@ import {
   distinctUntilChanged,
   takeUntil
 } from 'rxjs/operators';
-import {
-  CoreDefinition,
-  McsUniqueId
-} from '@app/core';
+import { McsUniqueId } from '@app/core';
 import {
   isNullOrEmpty,
-  unsubscribeSafely
+  unsubscribeSafely,
+  CommonDefinition
 } from '@app/utilities';
 import { Search } from './search.interface';
 import { IdDirective } from '../directives';
@@ -84,7 +82,7 @@ export class SearchComponent implements OnInit, AfterContentInit, OnDestroy, Sea
   }
 
   public get searchIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_SEARCH;
+    return CommonDefinition.ASSETS_FONT_SEARCH;
   }
 
   /**
@@ -121,7 +119,7 @@ export class SearchComponent implements OnInit, AfterContentInit, OnDestroy, Sea
     this._searchSubject.pipe(
       takeUntil(this._destroySubject),
       debounceTime(this.delayInSeconds === 'none' ?
-        CoreDefinition.SEARCH_TIME :
+        CommonDefinition.SEARCH_TIME :
         (this.delayInSeconds as number * 1000)
       ),
       distinctUntilChanged()

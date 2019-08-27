@@ -6,8 +6,10 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import { saveAs } from 'file-saver';
-import { CoreDefinition } from '@app/core';
-import { isNullOrEmpty } from '@app/utilities';
+import {
+  isNullOrEmpty,
+  CommonDefinition
+} from '@app/utilities';
 import { McsApiService } from '@app/services';
 import {
   CommentType,
@@ -51,8 +53,8 @@ export class TicketActivityComponent {
 
   public get activityIconKey(): string {
     return this._activity.type === TicketActivityType.Comment ?
-      CoreDefinition.ASSETS_FONT_COMMENT :
-      CoreDefinition.ASSETS_FONT_ATTACHMENT;
+      CommonDefinition.ASSETS_FONT_COMMENT :
+      CommonDefinition.ASSETS_FONT_ATTACHMENT;
   }
 
   /**

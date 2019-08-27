@@ -24,7 +24,7 @@ import {
 } from '../data';
 import {
   isNullOrEmpty,
-  unsubscribeSubject
+  unsubscribeSafely
 } from '@app/utilities';
 
 @Directive({
@@ -63,7 +63,7 @@ export class ColumnDefDirective implements AfterContentInit, OnDestroy {
   constructor(private _changeDetectorRef: ChangeDetectorRef) { }
 
   public ngOnDestroy(): void {
-    unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this._destroySubject);
   }
 
   public ngAfterContentInit() {

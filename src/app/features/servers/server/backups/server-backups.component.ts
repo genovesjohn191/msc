@@ -21,15 +21,13 @@ import {
 } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 import { McsEvent } from '@app/events';
-import {
-  McsDataStatusFactory,
-  CoreDefinition
-} from '@app/core';
+import { McsDataStatusFactory } from '@app/core';
 import {
   isNullOrEmpty,
   getUniqueRecords,
   unsubscribeSafely,
-  getSafeProperty
+  getSafeProperty,
+  CommonDefinition
 } from '@app/utilities';
 import {
   StdDateFormatPipe,
@@ -52,7 +50,6 @@ import {
   McsFeatureFlag
 } from '@app/models';
 import { ServerDetailsBase } from '../server-details.base';
-import { ServersService } from '../../servers.service';
 
 enum SnapshotDialogType {
   None = 0,
@@ -84,14 +81,13 @@ export class ServerBackupsComponent extends ServerDetailsBase
   private _formMessage: FormMessage;
 
   public get warningIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_WARNING;
+    return CommonDefinition.ASSETS_SVG_WARNING;
   }
 
   constructor(
     _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
     private _translateService: TranslateService,
-    private _serversService: ServersService,
     private _standardDateFormatPipe: StdDateFormatPipe,
     private _dialogService: DialogService
   ) {
@@ -213,10 +209,8 @@ export class ServerBackupsComponent extends ServerDetailsBase
           serverId: server.id
         };
 
-        this._serversService.setServerSpinner(server);
         return this.apiService.createServerSnapshot(server.id, snapshotDetails).pipe(
           catchError((httpError) => {
-            this._serversService.clearServerSpinner(server);
             this._showErrorMessageByResponse(httpError);
             return throwError(httpError);
           })
@@ -258,10 +252,8 @@ export class ServerBackupsComponent extends ServerDetailsBase
           serverId: server.id
         };
 
-        this._serversService.setServerSpinner(server);
         return this.apiService.deleteServerSnapshot(server.id, snapshotDetails).pipe(
           catchError((httpError) => {
-            this._serversService.clearServerSpinner(server);
             this._showErrorMessageByResponse(httpError);
             return throwError(httpError);
           })
@@ -297,10 +289,8 @@ export class ServerBackupsComponent extends ServerDetailsBase
           serverId: server.id
         };
 
-        this._serversService.setServerSpinner(server);
         return this.apiService.restoreServerSnapshot(server.id, snapshotDetails).pipe(
           catchError((httpError) => {
-            this._serversService.clearServerSpinner(server);
             this._showErrorMessageByResponse(httpError);
             return throwError(httpError);
           })

@@ -6,7 +6,7 @@ import {
 } from '@app/models';
 import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import { McsEvent } from '@app/events';
-import { CoreDefinition } from '../core.definition';
+import { CommonDefinition } from '@app/utilities';
 import { McsCookieService } from '../services/mcs-cookie.service';
 
 @Injectable()
@@ -28,7 +28,7 @@ export class McsAuthenticationIdentity {
    */
   public get activeAccountStatus(): AccountStatus {
     let hasActiveAccount = this._cookieService
-      .getEncryptedItem<McsCompany>(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
+      .getEncryptedItem<McsCompany>(CommonDefinition.COOKIE_ACTIVE_ACCOUNT);
     return hasActiveAccount ? AccountStatus.Impersonator : AccountStatus.Default;
   }
 

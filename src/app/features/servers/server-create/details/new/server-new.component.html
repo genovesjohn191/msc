@@ -105,7 +105,11 @@
         <h2>{{ 'serverCreateDetailsStep.newServer.storageLabel' | translate }}</h2>
       </ng-container>
       <ng-container mcsManageStorageWarning>
-        <span>{{ storageWarning }}</span>
+        <span>
+          {{ 'serverCreateDetailsStep.newServer.fullStorageSpace' | translate:
+            { remaining_memory : (warningStorageMemory| mcsDataSize: 'GB')}
+          }}
+        </span>
       </ng-container>
     </mcs-server-manage-storage>
   </div>

@@ -2,14 +2,14 @@ import {
   async,
   TestBed
 } from '@angular/core/testing';
-import { CoreDefinition } from '@app/core';
+import { CommonDefinition } from '@app/utilities';
 import { ServersComponent } from './servers.component';
 import { ServersTestingModule } from './testing';
 
 describe('ServersComponent', () => {
 
   /** Stub Services/Components */
-  CoreDefinition.SEARCH_TIME = 0; // remove delay time
+  CommonDefinition.SEARCH_TIME = 0; // remove delay time
   let component: ServersComponent;
 
   beforeEach(async(() => {

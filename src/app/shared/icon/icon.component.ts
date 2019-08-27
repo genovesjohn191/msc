@@ -13,14 +13,12 @@ import {
   of
 } from 'rxjs';
 import { map } from 'rxjs/operators';
-import {
-  CoreDefinition,
-  McsAssetsProvider
-} from '@app/core';
+import { McsAssetsProvider } from '@app/core';
 import {
   isNullOrEmpty,
   McsSizeType,
-  McsColorType
+  McsColorType,
+  CommonDefinition
 } from '@app/utilities';
 import {
   IconType,
@@ -101,7 +99,7 @@ export class IconComponent implements OnChanges {
     // In case of no icon found.::.
     // Display the no-image availabe icon
     if (isNullOrEmpty(this._icon)) {
-      this._icon = this._iconService.getIconDetails(CoreDefinition.ASSETS_SVG_NO_ICON_AVAILABLE);
+      this._icon = this._iconService.getIconDetails(CommonDefinition.ASSETS_SVG_NO_ICON_AVAILABLE);
     }
   }
 
@@ -110,13 +108,13 @@ export class IconComponent implements OnChanges {
    */
   private _createSizeTable(): void {
     this._iconSizeTable = new Map<McsSizeType, string>();
-    this._iconSizeTable.set('xxsmall', `${CoreDefinition.ICON_SIZE_XXSMALL}px`);
-    this._iconSizeTable.set('xsmall', `${CoreDefinition.ICON_SIZE_XSMALL}px`);
-    this._iconSizeTable.set('small', `${CoreDefinition.ICON_SIZE_SMALL}px`);
-    this._iconSizeTable.set('medium', `${CoreDefinition.ICON_SIZE_MEDIUM}px`);
-    this._iconSizeTable.set('large', `${CoreDefinition.ICON_SIZE_LARGE}px`);
-    this._iconSizeTable.set('xlarge', `${CoreDefinition.ICON_SIZE_XLARGE}px`);
-    this._iconSizeTable.set('xxlarge', `${CoreDefinition.ICON_SIZE_XXLARGE}px`);
+    this._iconSizeTable.set('xxsmall', `${CommonDefinition.ICON_SIZE_XXSMALL}px`);
+    this._iconSizeTable.set('xsmall', `${CommonDefinition.ICON_SIZE_XSMALL}px`);
+    this._iconSizeTable.set('small', `${CommonDefinition.ICON_SIZE_SMALL}px`);
+    this._iconSizeTable.set('medium', `${CommonDefinition.ICON_SIZE_MEDIUM}px`);
+    this._iconSizeTable.set('large', `${CommonDefinition.ICON_SIZE_LARGE}px`);
+    this._iconSizeTable.set('xlarge', `${CommonDefinition.ICON_SIZE_XLARGE}px`);
+    this._iconSizeTable.set('xxlarge', `${CommonDefinition.ICON_SIZE_XXLARGE}px`);
     this._iconSizeTable.set('auto', `auto`);
   }
 

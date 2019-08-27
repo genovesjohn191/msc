@@ -4,7 +4,7 @@ import {
   ComponentFixture
 } from '@angular/core/testing';
 import { DataStatus } from '@app/models';
-import { CoreDefinition } from '@app/core';
+import { CommonDefinition } from '@app/utilities';
 import { PricingCalculatorComponent } from './pricing-calculator.component';
 
 describe('PricingCalculatorComponent', () => {
@@ -65,7 +65,7 @@ describe('PricingCalculatorComponent', () => {
 
   describe('toggleIconKey()', () => {
     it(`should return the toggle icon key`, () => {
-      expect(component.toggleIconKey).toBe(CoreDefinition.ASSETS_FONT_CHEVRON_UP);
+      expect(component.toggleIconKey).toBe(CommonDefinition.ASSETS_FONT_CHEVRON_UP);
     });
   });
 

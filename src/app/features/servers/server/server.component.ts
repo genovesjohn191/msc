@@ -23,7 +23,6 @@ import {
   map
 } from 'rxjs/operators';
 import {
-  CoreDefinition,
   McsRoutingTabBase,
   McsDataStatusFactory,
   McsServerPermission,
@@ -32,7 +31,8 @@ import {
 import {
   isNullOrEmpty,
   unsubscribeSafely,
-  getSafeProperty
+  getSafeProperty,
+  CommonDefinition
 } from '@app/utilities';
 import {
   Search,
@@ -116,7 +116,7 @@ export class ServerComponent
   }
 
   public get angleDoubleRightIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_NEXT_ARROW;
+    return CommonDefinition.ASSETS_SVG_NEXT_ARROW;
   }
 
   public get routeKeyEnum(): any {

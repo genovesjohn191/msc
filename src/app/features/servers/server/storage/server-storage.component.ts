@@ -18,17 +18,15 @@ import {
   map,
   tap
 } from 'rxjs/operators';
-import {
-  CoreDefinition,
-  McsTableDataSource,
-  McsGuid
-} from '@app/core';
+import { McsTableDataSource } from '@app/core';
 import {
   isNullOrEmpty,
   animateFactory,
   unsubscribeSafely,
   getSafeProperty,
-  addOrUpdateArrayRecord
+  addOrUpdateArrayRecord,
+  CommonDefinition,
+  Guid
 } from '@app/utilities';
 import {
   ComponentHandlerDirective,
@@ -58,7 +56,7 @@ export enum ServerDiskMethodType {
 
 // Constants
 const SERVER_MAXIMUM_DISKS = 14;
-const SERVER_DISK_NEW_ID = McsGuid.newGuid().toString();
+const SERVER_DISK_NEW_ID = Guid.newGuid().toString();
 
 @Component({
   selector: 'mcs-server-storage',
@@ -93,7 +91,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   private _componentHandler: ComponentHandlerDirective;
 
   public get storageIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_STORAGE;
+    return CommonDefinition.ASSETS_SVG_STORAGE;
   }
 
   /**

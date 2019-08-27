@@ -19,7 +19,6 @@ import {
   concatMap
 } from 'rxjs/operators';
 import {
-  CoreDefinition,
   McsDataStatusFactory,
   McsDateTimeService,
   CoreConfig,
@@ -108,21 +107,21 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
    * Returns the clock icon key
    */
   public get clockKey(): string {
-    return CoreDefinition.ASSETS_SVG_CLOCK;
+    return CommonDefinition.ASSETS_SVG_CLOCK;
   }
 
   /**
    * Returns the chevron left key
    */
   public get chevronLeftKey(): string {
-    return CoreDefinition.ASSETS_SVG_CHEVRON_LEFT;
+    return CommonDefinition.ASSETS_SVG_CHEVRON_LEFT;
   }
 
   /**
    * Returns the warning svg key
    */
   public get warningSvgKey(): string {
-    return CoreDefinition.ASSETS_SVG_WARNING;
+    return CommonDefinition.ASSETS_SVG_WARNING;
   }
 
   /**

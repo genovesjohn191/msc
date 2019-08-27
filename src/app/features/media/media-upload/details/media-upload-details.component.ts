@@ -25,14 +25,14 @@ import {
 } from 'rxjs/operators';
 import {
   CoreValidators,
-  CoreDefinition,
   McsFormGroupService,
   IMcsNavigateAwayGuard
 } from '@app/core';
 import {
   unsubscribeSafely,
   isNullOrEmpty,
-  getSafeProperty
+  getSafeProperty,
+  CommonDefinition
 } from '@app/utilities';
 import { McsApiService } from '@app/services';
 import {
@@ -127,7 +127,7 @@ export class MediaUploadDetailsComponent
   public onBlurMediaUrl(): void {
     if (this.fcMediaUrl.hasError('url')) { return; }
     this.fcMediaUrl.markAsPending();
-    this.mediaUrlStatusIconKey = CoreDefinition.ASSETS_GIF_LOADER_ELLIPSIS;
+    this.mediaUrlStatusIconKey = CommonDefinition.ASSETS_GIF_LOADER_ELLIPSIS;
     let mediaUrl = this.fcMediaUrl.value;
 
     let selectedResource: McsResource = this.fcResources.value;
@@ -138,14 +138,14 @@ export class MediaUploadDetailsComponent
     ).pipe(
       catchError((_httpError: McsApiErrorContext) => {
         if (isNullOrEmpty(_httpError)) { return throwError(_httpError); }
-        this.mediaUrlStatusIconKey = CoreDefinition.ASSETS_SVG_ERROR;
+        this.mediaUrlStatusIconKey = CommonDefinition.ASSETS_SVG_ERROR;
         this.urlInfoMessage = getSafeProperty(_httpError, (obj) => obj.details.errorMessages[0]);
         this.fcMediaUrl.setErrors({ urlValidationError: true });
         return throwError(_httpError);
       })
     ).subscribe((response) => {
       this.fcMediaUrl.updateValueAndValidity();
-      this.mediaUrlStatusIconKey = CoreDefinition.ASSETS_SVG_SUCCESS;
+      this.mediaUrlStatusIconKey = CommonDefinition.ASSETS_SVG_SUCCESS;
       this.urlInfoMessage = getSafeProperty(response, (obj) => obj[0].message);
     });
   }
@@ -261,7 +261,7 @@ export class MediaUploadDetailsComponent
    * @param inputValue Inputted value from input box
    */
   private _validateMediaName(inputValue: any): boolean {
-    return CoreDefinition.REGEX_MEDIA_NAME_PATTERN.test(inputValue);
+    return CommonDefinition.REGEX_MEDIA_NAME_PATTERN.test(inputValue);
   }
 
   /**

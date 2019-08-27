@@ -19,7 +19,7 @@ import {
 } from 'rxjs/operators';
 import {
   coerceBoolean,
-  unsubscribeSubject
+  unsubscribeSafely
 } from '@app/utilities';
 import { AccordionPanelComponent } from './accordion-panel/accordion-panel.component';
 
@@ -62,7 +62,7 @@ export class AccordionComponent implements AfterContentInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this._destroySubject);
   }
 
   /**

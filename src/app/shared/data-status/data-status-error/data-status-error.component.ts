@@ -3,7 +3,7 @@ import {
   ChangeDetectionStrategy,
   ViewEncapsulation
 } from '@angular/core';
-import { CoreDefinition } from '@app/core';
+import { CommonDefinition } from '@app/utilities';
 
 @Component({
   selector: 'mcs-data-status-error',
@@ -19,6 +19,6 @@ export class DataStatusErrorComponent {
 
   // Returns the error icon key
   public get errorIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_ERROR;
+    return CommonDefinition.ASSETS_SVG_ERROR;
   }
 }

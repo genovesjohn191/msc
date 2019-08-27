@@ -6,7 +6,7 @@ import {
   async,
   TestBed
 } from '@angular/core/testing';
-import { CoreDefinition } from '@app/core';
+import { CommonDefinition } from '@app/utilities';
 import { CoreTestingModule } from '@app/core/testing';
 import { AlertModule } from './alert.module';
 import { AlertComponent } from './alert.component';
@@ -92,22 +92,22 @@ describe('AlertComponent', () => {
   describe('getAlertIconKey()', () => {
     it(`should set the success icon when the alert type is success`, () => {
       expect(component.alertSuccess.iconStatusKey)
-        .toBe(CoreDefinition.ASSETS_SVG_SUCCESS);
+        .toBe(CommonDefinition.ASSETS_SVG_SUCCESS);
     });
 
     it(`should set the error icon when the alert type is error`, () => {
       expect(component.alertError.iconStatusKey)
-        .toBe(CoreDefinition.ASSETS_SVG_ERROR);
+        .toBe(CommonDefinition.ASSETS_SVG_ERROR);
     });
 
     it(`should set the warning icon when the alert type is warning`, () => {
       expect(component.alertWarning.iconStatusKey)
-        .toBe(CoreDefinition.ASSETS_SVG_WARNING);
+        .toBe(CommonDefinition.ASSETS_SVG_WARNING);
     });
 
     it(`should set the info icon when the alert type is info`, () => {
       expect(component.alertInfo.iconStatusKey)
-        .toBe(CoreDefinition.ASSETS_SVG_INFO);
+        .toBe(CommonDefinition.ASSETS_SVG_INFO);
     });
   });
 });

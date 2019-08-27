@@ -15,7 +15,7 @@ import { McsFilterInfo } from '@app/models';
 import {
   isNullOrEmpty,
   animateFactory,
-  unsubscribeSubject
+  unsubscribeSafely
 } from '@app/utilities';
 
 @Component({
@@ -58,7 +58,7 @@ export class FilterSelectorComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy() {
-    unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this._destroySubject);
   }
 
   /**

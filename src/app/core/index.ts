@@ -2,7 +2,6 @@
 export * from './core.module';
 export * from './core.config';
 export * from './core.constants';
-export * from './core.definition';
 export * from './core.validators';
 export * from './core.routes';
 
@@ -67,7 +66,6 @@ export * from './factory/overlay/mcs-overlay-ref';
 export * from './factory/overlay/mcs-overlay-state';
 export * from './factory/portal/mcs-portal-component';
 export * from './factory/portal/mcs-portal-template';
-export * from './factory/unique-generators/mcs-guid';
 export * from './factory/unique-generators/mcs-unique-id';
 export * from './factory/data-status/mcs-data-status-factory';
 export * from './factory/item-list-manager/mcs-item-list-manager';

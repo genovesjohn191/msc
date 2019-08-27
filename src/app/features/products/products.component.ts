@@ -27,13 +27,11 @@ import {
   ActivatedRoute,
   ParamMap
 } from '@angular/router';
-import {
-  McsDataStatusFactory,
-  CoreDefinition
-} from '@app/core';
+import { McsDataStatusFactory } from '@app/core';
 import {
   unsubscribeSafely,
-  isNullOrEmpty
+  isNullOrEmpty,
+  CommonDefinition
 } from '@app/utilities';
 import {
   Search,
@@ -106,7 +104,7 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public get toggleIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_ELLIPSIS_VERTICAL;
+    return CommonDefinition.ASSETS_FONT_ELLIPSIS_VERTICAL;
   }
 
   public get routeKeyEnum(): any {

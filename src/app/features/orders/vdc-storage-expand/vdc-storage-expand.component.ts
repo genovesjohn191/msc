@@ -25,7 +25,6 @@ import {
 } from 'rxjs/operators';
 import {
   McsOrderWizardBase,
-  CoreDefinition,
   McsErrorHandlerService,
   IMcsFormGroup,
   CoreValidators,
@@ -43,7 +42,8 @@ import {
   unsubscribeSafely,
   animateFactory,
   getSafeProperty,
-  convertMbToGb
+  convertMbToGb,
+  CommonDefinition
 } from '@app/utilities';
 import { McsFormGroupDirective } from '@app/shared';
 import {
@@ -81,7 +81,7 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnI
    * Returns the back icon key as string
    */
   public get backIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_CHEVRON_LEFT;
+    return CommonDefinition.ASSETS_SVG_CHEVRON_LEFT;
   }
 
   /**

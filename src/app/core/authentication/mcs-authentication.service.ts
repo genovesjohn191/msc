@@ -3,11 +3,13 @@ import { Params } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { McsIdentity } from '@app/models';
-import { isNullOrEmpty } from '@app/utilities';
+import {
+  isNullOrEmpty,
+  CommonDefinition
+} from '@app/utilities';
 import { AppState } from '@app/app.service';
 import { McsApiService } from '@app/services';
 import { CoreConfig } from '../core.config';
-import { CoreDefinition } from '../core.definition';
 import { McsCookieService } from '../services/mcs-cookie.service';
 import { McsAuthenticationIdentity } from './mcs-authentication.identity';
 
@@ -48,7 +50,7 @@ export class McsAuthenticationService {
    * @param url Url to be set in returnl url
    */
   public updateLoginReturnUrl(url: string): void {
-    this._appState.set(CoreDefinition.APPSTATE_RETURN_URL_KEY, url);
+    this._appState.set(CommonDefinition.APPSTATE_RETURN_URL_KEY, url);
   }
 
   /**
@@ -62,7 +64,7 @@ export class McsAuthenticationService {
 
     // Return token from the bearer snapshots
     if (routeParams) {
-      authToken = routeParams[CoreDefinition.QUERY_PARAM_BEARER];
+      authToken = routeParams[CommonDefinition.QUERY_PARAM_BEARER];
     }
 
     if (authToken) { return authToken; }
@@ -72,7 +74,7 @@ export class McsAuthenticationService {
    * This will delete the content of the cookie that was created by MCS
    */
   public deleteCookieContent(): void {
-    this._cookieService.removeItem(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
+    this._cookieService.removeItem(CommonDefinition.COOKIE_ACTIVE_ACCOUNT);
   }
 
   /**
@@ -97,14 +99,14 @@ export class McsAuthenticationService {
    */
   private _setUserIdentity(identity: McsIdentity) {
     this._authenticationIdentity.setActiveUser(identity);
-    this._cookieService.setItem(CoreDefinition.COOKIE_USER_STATE_ID, identity.hashedId);
+    this._cookieService.setItem(CommonDefinition.COOKIE_USER_STATE_ID, identity.hashedId);
   }
 
   /**
    * Get the login path based on the saved return url in the appstate
    */
   private _getLoginPath(): string {
-    let _returnUrl = this._appState.get(CoreDefinition.APPSTATE_RETURN_URL_KEY);
+    let _returnUrl = this._appState.get(CommonDefinition.APPSTATE_RETURN_URL_KEY);
     return `${this._coreConfig.loginUrl}${_returnUrl}`;
   }
 }

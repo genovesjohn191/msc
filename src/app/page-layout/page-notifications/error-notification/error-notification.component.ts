@@ -6,12 +6,12 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { McsGuid } from '@app/core';
 import {
   unsubscribeSafely,
   CommonDefinition,
   isNullOrEmpty,
-  deleteArrayRecord
+  deleteArrayRecord,
+  Guid
 } from '@app/utilities';
 import { McsEvent } from '@app/events';
 import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
@@ -79,7 +79,7 @@ export class ErrorNotificationComponent implements OnDestroy {
    */
   private _onErrorShow(message: string): void {
     this.errorList.push({
-      id: McsGuid.newGuid().toString(),
+      id: Guid.newGuid().toString(),
       errorMessage: message
     });
     this._changeDetectorRef.markForCheck();

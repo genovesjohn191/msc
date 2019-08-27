@@ -6,13 +6,13 @@ import {
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import {
-  CoreDefinition,
   McsWizardBase,
   IMcsNavigateAwayGuard
 } from '@app/core';
 import {
-  unsubscribeSubject,
-  getSafeProperty
+  unsubscribeSafely,
+  getSafeProperty,
+  CommonDefinition
 } from '@app/utilities';
 import { MediaUploadDetailsComponent } from './details/media-upload-details.component';
 import { MediaUploadService } from './media-upload.service';
@@ -36,11 +36,11 @@ export class MediaUploadComponent extends McsWizardBase
   }
 
   public ngOnDestroy() {
-    unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this._destroySubject);
   }
 
   public get backIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_CHEVRON_LEFT;
+    return CommonDefinition.ASSETS_SVG_CHEVRON_LEFT;
   }
 
   /**

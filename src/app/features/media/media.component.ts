@@ -8,7 +8,6 @@ import {
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
-  CoreDefinition,
   McsTableListingBase,
   McsNavigationService
 } from '@app/core';
@@ -85,7 +84,7 @@ export class MediaComponent extends McsTableListingBase<McsResourceMedia> implem
    * Returns the column settings key for the filter selector
    */
   protected get columnSettingsKey(): string {
-    return CoreDefinition.FILTERSELECTOR_MEDIA_LISTING;
+    return CommonDefinition.FILTERSELECTOR_MEDIA_LISTING;
   }
 
   /**

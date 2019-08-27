@@ -7,7 +7,6 @@ import {
 import { catchError, tap } from 'rxjs/operators';
 import {
   McsAuthenticationIdentity,
-  CoreDefinition,
   McsCookieService,
   McsAccessControlService
 } from '@app/core';
@@ -18,7 +17,8 @@ import {
 } from '@app/models';
 import {
   isNullOrEmpty,
-  refreshView
+  refreshView,
+  CommonDefinition
 } from '@app/utilities';
 import { McsApiService } from '@app/services';
 
@@ -88,7 +88,7 @@ export class SwitchAccountService {
    */
   public setActiveAccount(): void {
     let selectedAccountId = this._cookieService
-      .getEncryptedItem<string>(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
+      .getEncryptedItem<string>(CommonDefinition.COOKIE_ACTIVE_ACCOUNT);
 
     // Set default account function pointer
     let setDefaultAccount: () => void = () => {
@@ -144,12 +144,12 @@ export class SwitchAccountService {
   private _saveAccountIdToCookie(): void {
     if (this.defaultAccount.id !== this._activeAccount.id) {
       this._cookieService.setEncryptedItem<string>(
-        CoreDefinition.COOKIE_ACTIVE_ACCOUNT,
+        CommonDefinition.COOKIE_ACTIVE_ACCOUNT,
         this._activeAccount.id,
         { expires: this._authIdentity.user.expiry }
       );
     } else {
-      this._cookieService.removeItem(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
+      this._cookieService.removeItem(CommonDefinition.COOKIE_ACTIVE_ACCOUNT);
     }
   }
 }

@@ -25,12 +25,12 @@ import {
   switchMap,
   tap
 } from 'rxjs/operators';
-import { CoreDefinition } from '@app/core';
 import {
   animateFactory,
   isNullOrEmpty,
   coerceBoolean,
-  unsubscribeSubject
+  unsubscribeSafely,
+  CommonDefinition
 } from '@app/utilities';
 import { OptionComponent } from './option/option.component';
 import { OptionGroupLabelDirective } from './option-group-label.directive';
@@ -119,7 +119,7 @@ export class OptionGroupComponent implements AfterContentInit, OnDestroy {
    * Returns the caret icon key
    */
   public get caretRightIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_CARET_RIGHT;
+    return CommonDefinition.ASSETS_FONT_CARET_RIGHT;
   }
 
   /**
@@ -152,7 +152,7 @@ export class OptionGroupComponent implements AfterContentInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this._destroySubject);
   }
 
   /**

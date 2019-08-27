@@ -18,17 +18,15 @@ import {
   tap,
   map
 } from 'rxjs/operators';
-import {
-  CoreDefinition,
-  McsTableDataSource,
-  McsGuid
-} from '@app/core';
+import { McsTableDataSource } from '@app/core';
 import {
   isNullOrEmpty,
   unsubscribeSafely,
   animateFactory,
   addOrUpdateArrayRecord,
-  getSafeProperty
+  getSafeProperty,
+  CommonDefinition,
+  Guid
 } from '@app/utilities';
 import {
   ComponentHandlerDirective,
@@ -58,7 +56,7 @@ export enum ServerNicMethodType {
 
 // Constants
 const SERVER_MAXIMUM_NICS = 10;
-const SERVER_NIC_NEW_ID = McsGuid.newGuid().toString();
+const SERVER_NIC_NEW_ID = Guid.newGuid().toString();
 
 @Component({
   selector: 'mcs-server-nics',
@@ -95,7 +93,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   private _componentHandler: ComponentHandlerDirective;
 
   public get checkIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_CHECK;
+    return CommonDefinition.ASSETS_FONT_CHECK;
   }
 
   /**

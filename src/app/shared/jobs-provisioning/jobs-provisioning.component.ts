@@ -15,17 +15,15 @@ import {
   Subscription
 } from 'rxjs';
 import { take } from 'rxjs/operators';
-import {
-  CoreDefinition,
-  CoreRoutes
-} from '@app/core';
+import { CoreRoutes } from '@app/core';
 import { McsEvent } from '@app/events';
 import {
   isNullOrEmpty,
   unsubscribeSafely,
   addOrUpdateArrayRecord,
   animateFactory,
-  getSafeProperty
+  getSafeProperty,
+  CommonDefinition
 } from '@app/utilities';
 import {
   McsJob,
@@ -123,7 +121,7 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
    * Returns the dot icon key
    */
   public get dotIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_BULLET;
+    return CommonDefinition.ASSETS_FONT_BULLET;
   }
 
   /**
@@ -172,7 +170,7 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
    * @param status Status of the job/task, which to get the icon key
    */
   public getStatusIconKey(status: DataStatus): string {
-    return status === DataStatus.Success ? CoreDefinition.ASSETS_SVG_SUCCESS : CoreDefinition.ASSETS_SVG_ERROR;
+    return status === DataStatus.Success ? CommonDefinition.ASSETS_SVG_SUCCESS : CommonDefinition.ASSETS_SVG_ERROR;
   }
 
   /**

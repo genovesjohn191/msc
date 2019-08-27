@@ -1,4 +1,3 @@
-import { CoreDefinition } from '@app/core';
 import {
   OsUpdatesStatus,
   osUpdatesStatusLabel,
@@ -13,7 +12,8 @@ import {
   replacePlaceholder,
   isNullOrEmpty,
   formatTime,
-  parseCronStringToJson
+  parseCronStringToJson,
+  CommonDefinition
 } from '@app/utilities';
 
 type OsUpdatesStatusDetails = {
@@ -204,7 +204,7 @@ export class OsUpdatesStatusConfiguration {
     this._updatesStatusDetailsMap.set(
       OsUpdatesStatus.Unanalysed,
       {
-        icon: CoreDefinition.ASSETS_SVG_STATE_SUSPENDED,
+        icon: CommonDefinition.ASSETS_SVG_STATE_SUSPENDED,
         label: osUpdatesStatusLabel[OsUpdatesStatus.Unanalysed],
         sublabel: osUpdatesStatusSubtitleLabel[OsUpdatesStatus.Unanalysed]
       }
@@ -212,7 +212,7 @@ export class OsUpdatesStatusConfiguration {
     this._updatesStatusDetailsMap.set(
       OsUpdatesStatus.Analysing,
       {
-        icon: CoreDefinition.ASSETS_GIF_LOADER_ELLIPSIS,
+        icon: CommonDefinition.ASSETS_GIF_LOADER_ELLIPSIS,
         label: osUpdatesStatusLabel[OsUpdatesStatus.Analysing],
         sublabel: osUpdatesStatusSubtitleLabel[OsUpdatesStatus.Analysing],
         configureHoverLabel: osUpdatesScheduleConfigureHoverLabel[OsUpdatesStatus.Analysing]
@@ -221,7 +221,7 @@ export class OsUpdatesStatusConfiguration {
     this._updatesStatusDetailsMap.set(
       OsUpdatesStatus.Outdated,
       {
-        icon: CoreDefinition.ASSETS_SVG_STATE_STOPPED,
+        icon: CommonDefinition.ASSETS_SVG_STATE_STOPPED,
         label: osUpdatesStatusLabel[OsUpdatesStatus.Outdated],
         sublabel: osUpdatesStatusSubtitleLabel[OsUpdatesStatus.Outdated]
       }
@@ -229,7 +229,7 @@ export class OsUpdatesStatusConfiguration {
     this._updatesStatusDetailsMap.set(
       OsUpdatesStatus.Updated,
       {
-        icon: CoreDefinition.ASSETS_SVG_STATE_RUNNING,
+        icon: CommonDefinition.ASSETS_SVG_STATE_RUNNING,
         label: osUpdatesStatusLabel[OsUpdatesStatus.Updated],
         sublabel: osUpdatesStatusSubtitleLabel[OsUpdatesStatus.Updated]
       }
@@ -237,7 +237,7 @@ export class OsUpdatesStatusConfiguration {
     this._updatesStatusDetailsMap.set(
       OsUpdatesStatus.Updating,
       {
-        icon: CoreDefinition.ASSETS_GIF_LOADER_ELLIPSIS,
+        icon: CommonDefinition.ASSETS_GIF_LOADER_ELLIPSIS,
         label: osUpdatesStatusLabel[OsUpdatesStatus.Updating],
         sublabel: osUpdatesStatusSubtitleLabel[OsUpdatesStatus.Updating],
         configureHoverLabel: osUpdatesScheduleConfigureHoverLabel[OsUpdatesStatus.Updating]
@@ -246,7 +246,7 @@ export class OsUpdatesStatusConfiguration {
     this._updatesStatusDetailsMap.set(
       OsUpdatesStatus.Error,
       {
-        icon: CoreDefinition.ASSETS_SVG_WARNING,
+        icon: CommonDefinition.ASSETS_SVG_WARNING,
         label: osUpdatesStatusLabel[OsUpdatesStatus.Error],
         sublabel: osUpdatesStatusSubtitleLabel[OsUpdatesStatus.Error]
       }

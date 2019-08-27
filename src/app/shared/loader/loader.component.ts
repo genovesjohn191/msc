@@ -5,11 +5,11 @@ import {
   ChangeDetectionStrategy,
   ElementRef,
 } from '@angular/core';
+import { McsUniqueId } from '@app/core';
 import {
-  CoreDefinition,
-  McsUniqueId
-} from '@app/core';
-import { McsSizeType } from '@app/utilities';
+  McsSizeType,
+  CommonDefinition
+} from '@app/utilities';
 
 // Unique Id that generates during runtime
 type LoaderType = 'spinner' | 'ellipsis';
@@ -45,8 +45,8 @@ export class LoaderComponent {
    */
   public get loaderIconKey(): string {
     return this.type === 'ellipsis' ?
-      CoreDefinition.ASSETS_GIF_LOADER_ELLIPSIS :
-      CoreDefinition.ASSETS_GIF_LOADER_SPINNER;
+      CommonDefinition.ASSETS_GIF_LOADER_ELLIPSIS :
+      CommonDefinition.ASSETS_GIF_LOADER_SPINNER;
   }
 
   /**

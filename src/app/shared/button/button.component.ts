@@ -10,12 +10,12 @@ import {
   OnChanges,
   SimpleChanges
 } from '@angular/core';
-import { CoreDefinition } from '@app/core';
 import {
   isNullOrEmpty,
   coerceBoolean,
   McsStatusColorType,
-  McsPlacementType
+  McsPlacementType,
+  CommonDefinition
 } from '@app/utilities';
 
 export type ButtonType =
@@ -112,8 +112,8 @@ export class ButtonComponent implements OnInit, OnChanges {
    */
   public get arrowIconKey(): string {
     return this.arrow === 'right' ?
-      CoreDefinition.ASSETS_SVG_ARROW_RIGHT_WHITE :
-      CoreDefinition.ASSETS_SVG_ARROW_UP_WHITE;
+      CommonDefinition.ASSETS_SVG_ARROW_RIGHT_WHITE :
+      CommonDefinition.ASSETS_SVG_ARROW_UP_WHITE;
   }
 
   /**

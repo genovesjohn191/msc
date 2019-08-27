@@ -11,13 +11,11 @@ import {
   Observable,
   of
 } from 'rxjs';
-import {
-  CoreDefinition,
-  McsTableListingBase
-} from '@app/core';
+import { McsTableListingBase } from '@app/core';
 import {
   isNullOrEmpty,
-  getEnumString
+  getEnumString,
+  CommonDefinition
 } from '@app/utilities';
 import {
   McsCompany,
@@ -71,15 +69,15 @@ export class SwitchAccountComponent extends McsTableListingBase<McsCompany> {
 
   // Icons
   public get chevronTopIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_CHEVRON_UP;
+    return CommonDefinition.ASSETS_FONT_CHEVRON_UP;
   }
 
   public get arrowUpBueIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_ARROW_UP_BLUE;
+    return CommonDefinition.ASSETS_SVG_ARROW_UP_BLUE;
   }
 
   public get arrowRightBueIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_ARROW_RIGHT_BLUE;
+    return CommonDefinition.ASSETS_SVG_ARROW_RIGHT_BLUE;
   }
 
   public getUserIconKey(status: CompanyStatus) {
@@ -88,18 +86,18 @@ export class SwitchAccountComponent extends McsTableListingBase<McsCompany> {
       case CompanyStatus.Internal:
       case CompanyStatus.Subsidiary:
       case CompanyStatus.Customer:
-        userIcon = CoreDefinition.ASSETS_SVG_PERSON_GREEN;
+        userIcon = CommonDefinition.ASSETS_SVG_PERSON_GREEN;
         break;
 
       case CompanyStatus.Cancelling:
-        userIcon = CoreDefinition.ASSETS_SVG_PERSON_RED;
+        userIcon = CommonDefinition.ASSETS_SVG_PERSON_RED;
         break;
 
       case CompanyStatus.Cancelled:
       case CompanyStatus.Prospect:
       case CompanyStatus.NoLonger:
       default:
-        userIcon = CoreDefinition.ASSETS_SVG_PERSON_YELLOW;
+        userIcon = CommonDefinition.ASSETS_SVG_PERSON_YELLOW;
         break;
     }
     return userIcon;

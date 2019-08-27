@@ -4,13 +4,11 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import {
-  CoreDefinition,
-  CoreValidators
-} from '@app/core';
+import { CoreValidators } from '@app/core';
 import {
   replacePlaceholder,
-  isNullOrEmpty
+  isNullOrEmpty,
+  CommonDefinition
 } from '@app/utilities';
 import { McsServer } from '@app/models';
 import {
@@ -97,7 +95,7 @@ export class RenameServerDialogComponent {
    * @param inputValue New server name
    */
   private _serverNameValidator(inputValue: any): boolean {
-    return CoreDefinition.REGEX_SERVER_NAME_PATTERN.test(inputValue) &&
+    return CommonDefinition.REGEX_SERVER_NAME_PATTERN.test(inputValue) &&
       (this.server && this.server.name !== inputValue);
   }
 }

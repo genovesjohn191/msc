@@ -31,7 +31,7 @@ import {
   isNullOrEmpty,
   coerceNumber,
   animateFactory,
-  unsubscribeSubject,
+  unsubscribeSafely,
   getSafeProperty,
   isNullOrUndefined
 } from '@app/utilities';
@@ -159,7 +159,7 @@ export class ServerManageStorageComponent
   }
 
   public ngOnDestroy() {
-    unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this._destroySubject);
   }
 
   /**

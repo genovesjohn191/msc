@@ -28,9 +28,9 @@ import {
 import {
   isNullOrEmpty,
   getSafeProperty,
-  unsubscribeSafely
+  unsubscribeSafely,
+  CommonDefinition
 } from '@app/utilities';
-import { CoreDefinition } from '@app/core';
 import {
   McsServer,
   VmPowerstateCommand,
@@ -112,19 +112,19 @@ export class ConsolePageComponent implements AfterViewInit, OnDestroy {
   }
 
   public get keyboardIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_KEYBOARD;
+    return CommonDefinition.ASSETS_SVG_KEYBOARD;
   }
 
   public get startIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_START;
+    return CommonDefinition.ASSETS_SVG_START;
   }
 
   public get restartIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_RESTART;
+    return CommonDefinition.ASSETS_SVG_RESTART;
   }
 
   public get stopIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_STOP;
+    return CommonDefinition.ASSETS_SVG_STOP;
   }
 
   public get stoppingText(): string {

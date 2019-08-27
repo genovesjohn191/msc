@@ -14,10 +14,10 @@ import {
 } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { CoreDefinition } from '@app/core';
 import {
-  unsubscribeSubject,
-  animateFactory
+  animateFactory,
+  CommonDefinition,
+  unsubscribeSafely
 } from '@app/utilities';
 import {
   RouteCategory,
@@ -58,7 +58,7 @@ export class SubNavigationMobileComponent implements OnInit, OnDestroy {
    * Returns the toggle icon key
    */
   public get toggleIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_CHEVRON_DOWN;
+    return CommonDefinition.ASSETS_FONT_CHEVRON_DOWN;
   }
 
   /**
@@ -80,7 +80,7 @@ export class SubNavigationMobileComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy() {
-    unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this._destroySubject);
   }
 
   /**

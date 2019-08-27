@@ -7,11 +7,11 @@ import {
   filter,
   tap
 } from 'rxjs/operators';
+import { McsSessionHandlerService } from '@app/core';
 import {
-  CoreDefinition,
-  McsSessionHandlerService
-} from '@app/core';
-import { isNullOrEmpty } from '@app/utilities';
+  isNullOrEmpty,
+  CommonDefinition
+} from '@app/utilities';
 import {
   DialogService,
   DialogMessageConfig,
@@ -71,7 +71,7 @@ export class SessionComponent implements OnInit {
   private _showIdleDialog(): void {
     this._sessionIdleDialogRef = this._dialogService.open(SessionIdleDialogComponent, {
       id: 'session-idle-dialog',
-      data: CoreDefinition.SESSION_TIMEOUT_COUNTDOWN_IN_SECONDS,
+      data: CommonDefinition.SESSION_TIMEOUT_COUNTDOWN_IN_SECONDS,
       size: 'medium',
       backdropColor: 'black',
       disableClose: true

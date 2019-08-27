@@ -18,7 +18,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
   animateFactory,
-  unsubscribeSubject,
+  unsubscribeSafely,
   getSafeProperty
 } from '@app/utilities';
 import {
@@ -69,7 +69,7 @@ export class ServerManageMediaComponent implements OnInit, OnDestroy, IMcsDataCh
   }
 
   public ngOnDestroy() {
-    unsubscribeSubject(this.dataChange);
+    unsubscribeSafely(this.dataChange);
   }
 
   /**

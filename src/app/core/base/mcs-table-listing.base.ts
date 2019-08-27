@@ -18,7 +18,6 @@ import {
 import {
   isNullOrEmpty,
   convertMapToJsonObject,
-  unsubscribeSubject,
   unsubscribeSafely,
   getSafeProperty,
   CommonDefinition
@@ -173,7 +172,7 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
       this.dataColumns = [];
       this.dataColumns = null;
     }
-    unsubscribeSubject(this._baseDestroySubject);
+    unsubscribeSafely(this._baseDestroySubject);
   }
 
   /**

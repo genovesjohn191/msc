@@ -28,7 +28,7 @@ import {
   IMcsNavigateAwayGuard
 } from '@app/core';
 import {
-  unsubscribeSubject,
+  unsubscribeSafely,
   isNullOrEmpty,
   getSafeProperty
 } from '@app/utilities';
@@ -111,7 +111,7 @@ export class ServerCreateDetailsComponent implements OnChanges, AfterViewInit, O
   }
 
   public ngOnDestroy() {
-    unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this._destroySubject);
   }
 
   /**

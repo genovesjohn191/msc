@@ -4,7 +4,7 @@ import {
 } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { UserPanelComponent } from './user-panel.component';
-import { CoreDefinition } from '@app/core';
+import { CommonDefinition } from '@app/utilities';
 import { CoreLayoutTestingModule } from '../../testing';
 
 describe('UserPanelComponent', () => {
@@ -48,19 +48,19 @@ describe('UserPanelComponent', () => {
   /** Test Implementation */
   describe('ngOnInit()', () => {
     it('should return the bell icon definition key', () => {
-      expect(component.bellIconKey).toBe(CoreDefinition.ASSETS_FONT_BELL);
+      expect(component.bellIconKey).toBe(CommonDefinition.ASSETS_FONT_BELL);
     });
 
     it('should return the user icon definition key', () => {
-      expect(component.userIconKey).toBe(CoreDefinition.ASSETS_SVG_USER_WHITE);
+      expect(component.userIconKey).toBe(CommonDefinition.ASSETS_SVG_USER_WHITE);
     });
 
     it('should return the caret down icon definition key', () => {
-      expect(component.caretDownIconKey).toBe(CoreDefinition.ASSETS_FONT_CHEVRON_DOWN);
+      expect(component.caretDownIconKey).toBe(CommonDefinition.ASSETS_FONT_CHEVRON_DOWN);
     });
 
     it('should return the caret right icon definition key', () => {
-      expect(component.logoutIconKey).toBe(CoreDefinition.ASSETS_SVG_LOGOUT_WHITE);
+      expect(component.logoutIconKey).toBe(CommonDefinition.ASSETS_SVG_LOGOUT_WHITE);
     });
   });
 });

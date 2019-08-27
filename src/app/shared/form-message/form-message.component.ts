@@ -17,12 +17,10 @@ import {
   animateFactory,
   McsStatusType,
   unsubscribeSafely,
-  isNullOrEmpty
+  isNullOrEmpty,
+  CommonDefinition
 } from '@app/utilities';
-import {
-  CoreDefinition,
-  McsScrollDispatcherService
-} from '@app/core';
+import { McsScrollDispatcherService } from '@app/core';
 import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import { McsEvent } from '@app/events';
 import {
@@ -76,7 +74,7 @@ export class FormMessageComponent implements OnInit, OnDestroy, FormMessage {
   }
 
   public get bulletIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_BULLET;
+    return CommonDefinition.ASSETS_FONT_BULLET;
   }
 
   /**

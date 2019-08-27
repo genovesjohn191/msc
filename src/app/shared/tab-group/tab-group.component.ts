@@ -21,7 +21,7 @@ import {
 import { McsSelection } from '@app/models';
 import {
   isNullOrEmpty,
-  unsubscribeSubject,
+  unsubscribeSafely,
   getSafeProperty
 } from '@app/utilities';
 import { TabComponent } from './tab/tab.component';
@@ -83,7 +83,7 @@ export class TabGroupComponent implements AfterViewInit, AfterContentInit, OnDes
   }
 
   public ngOnDestroy() {
-    unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this._destroySubject);
   }
 
   /**

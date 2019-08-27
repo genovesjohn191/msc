@@ -15,14 +15,12 @@ import {
   transition,
   trigger
 } from '@angular/animations';
-import {
-  CoreDefinition,
-  McsUniqueId
-} from '@app/core';
+import { McsUniqueId } from '@app/core';
 import { Key } from '@app/models';
 import {
   coerceBoolean,
-  isNullOrEmpty
+  isNullOrEmpty,
+  CommonDefinition
 } from '@app/utilities';
 
 @Component({
@@ -95,8 +93,8 @@ export class TagComponent {
 
   public get removeIconKey(): string {
     return this.selected ?
-      CoreDefinition.ASSETS_SVG_CLOSE_BLACK :
-      CoreDefinition.ASSETS_SVG_CLOSE_WHITE;
+      CommonDefinition.ASSETS_SVG_CLOSE_BLACK :
+      CommonDefinition.ASSETS_SVG_CLOSE_WHITE;
   }
 
   constructor(

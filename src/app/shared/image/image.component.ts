@@ -13,13 +13,11 @@ import {
   of
 } from 'rxjs';
 import { map } from 'rxjs/operators';
-import {
-  CoreDefinition,
-  McsAssetsProvider
-} from '@app/core';
+import { McsAssetsProvider } from '@app/core';
 import {
   isNullOrEmpty,
-  McsSizeType
+  McsSizeType,
+  CommonDefinition
 } from '@app/utilities';
 import {
   Image,
@@ -96,7 +94,7 @@ export class ImageComponent implements OnChanges {
     // Display the no-image availabe image
     if (isNullOrEmpty(this._image)) {
       this._image = this._imageService
-        .getImageDetails(CoreDefinition.ASSETS_SVG_NO_ICON_AVAILABLE);
+        .getImageDetails(CommonDefinition.ASSETS_SVG_NO_ICON_AVAILABLE);
     }
   }
 
@@ -105,12 +103,12 @@ export class ImageComponent implements OnChanges {
    */
   private _createSizeTable(): void {
     this._imageSizeTable = new Map<McsSizeType, string>();
-    this._imageSizeTable.set('xsmall', `${CoreDefinition.IMAGE_SIZE_XSMALL}px`);
-    this._imageSizeTable.set('small', `${CoreDefinition.IMAGE_SIZE_SMALL}px`);
-    this._imageSizeTable.set('medium', `${CoreDefinition.IMAGE_SIZE_MEDIUM}px`);
-    this._imageSizeTable.set('large', `${CoreDefinition.IMAGE_SIZE_LARGE}px`);
-    this._imageSizeTable.set('xlarge', `${CoreDefinition.IMAGE_SIZE_XLARGE}px`);
-    this._imageSizeTable.set('xxlarge', `${CoreDefinition.IMAGE_SIZE_XXLARGE}px`);
+    this._imageSizeTable.set('xsmall', `${CommonDefinition.IMAGE_SIZE_XSMALL}px`);
+    this._imageSizeTable.set('small', `${CommonDefinition.IMAGE_SIZE_SMALL}px`);
+    this._imageSizeTable.set('medium', `${CommonDefinition.IMAGE_SIZE_MEDIUM}px`);
+    this._imageSizeTable.set('large', `${CommonDefinition.IMAGE_SIZE_LARGE}px`);
+    this._imageSizeTable.set('xlarge', `${CommonDefinition.IMAGE_SIZE_XLARGE}px`);
+    this._imageSizeTable.set('xxlarge', `${CommonDefinition.IMAGE_SIZE_XXLARGE}px`);
     this._imageSizeTable.set('auto', `auto`);
   }
 

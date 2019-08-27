@@ -18,15 +18,13 @@ import {
   map
 } from 'rxjs/operators';
 import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
-import {
-  McsTableDataSource,
-  McsGuid
-} from '@app/core';
+import { McsTableDataSource } from '@app/core';
 import {
   isNullOrEmpty,
   addOrUpdateArrayRecord,
   unsubscribeSafely,
-  getSafeProperty
+  getSafeProperty,
+  Guid
 } from '@app/utilities';
 import {
   DialogConfirmation,
@@ -44,7 +42,7 @@ import { MediumService } from '../medium.service';
 import { MediumDetailsBase } from '../medium-details.base';
 import { MediaManageServers } from '../../shared';
 
-const SERVER_MEDIA_NEW_ID = McsGuid.newGuid().toString();
+const SERVER_MEDIA_NEW_ID = Guid.newGuid().toString();
 
 @Component({
   selector: 'mcs-medium-servers',

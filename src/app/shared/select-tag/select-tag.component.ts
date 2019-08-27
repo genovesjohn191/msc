@@ -21,10 +21,10 @@ import {
   startWith,
   takeUntil
 } from 'rxjs/operators';
-import { CoreDefinition } from '@app/core';
 import {
   isNullOrEmpty,
-  unsubscribeSubject
+  unsubscribeSafely,
+  CommonDefinition
 } from '@app/utilities';
 import { Search } from '@app/shared';
 import {
@@ -91,7 +91,7 @@ export class SelectTagComponent implements AfterViewInit, AfterContentInit, OnDe
   }
 
   public get toggleIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_TOGGLE_NAV;
+    return CommonDefinition.ASSETS_SVG_TOGGLE_NAV;
   }
 
   public constructor(private _changeDetectorRef: ChangeDetectorRef) {
@@ -121,7 +121,7 @@ export class SelectTagComponent implements AfterViewInit, AfterContentInit, OnDe
   }
 
   public ngOnDestroy() {
-    unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this._destroySubject);
   }
 
   /**

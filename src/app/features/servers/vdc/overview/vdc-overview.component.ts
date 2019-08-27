@@ -9,13 +9,13 @@ import {
 import { VdcDetailsBase } from '../vdc-details.base';
 import {
   CoreRoutes,
-  CoreDefinition,
   McsNavigationService
 } from '@app/core';
 import {
   isNullOrEmpty,
   replacePlaceholder,
-  getSafeProperty
+  getSafeProperty,
+  CommonDefinition
 } from '@app/utilities';
 import {
   RouteKey,
@@ -45,7 +45,7 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
   private resourceDetailLabelMap: Map<PlatformType, ResourceDetailLabels>;
 
   public get warningIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_WARNING;
+    return CommonDefinition.ASSETS_SVG_WARNING;
   }
 
   public get routeKeyEnum(): any {
@@ -126,11 +126,11 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
     let percentage = this._computeStoragePercentage(storage);
 
     if (percentage <= 75) {
-      iconKey = CoreDefinition.ASSETS_SVG_STATE_RUNNING;
+      iconKey = CommonDefinition.ASSETS_SVG_STATE_RUNNING;
     } else if (percentage >= 75 && percentage <= 85) {
-      iconKey = CoreDefinition.ASSETS_SVG_STATE_RESTARTING;
+      iconKey = CommonDefinition.ASSETS_SVG_STATE_RESTARTING;
     } else {
-      iconKey = CoreDefinition.ASSETS_SVG_STATE_STOPPED;
+      iconKey = CommonDefinition.ASSETS_SVG_STATE_STOPPED;
     }
 
     return iconKey;

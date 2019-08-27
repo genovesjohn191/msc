@@ -26,7 +26,7 @@ import {
 import { Key } from '@app/models';
 import {
   coerceNumber,
-  unsubscribeSubject,
+  unsubscribeSafely,
   McsOrientationType,
   isNullOrUndefined
 } from '@app/utilities';
@@ -122,7 +122,7 @@ export class RadioButtonGroupComponent implements AfterContentInit,
   }
 
   public ngOnDestroy() {
-    unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this._destroySubject);
   }
 
   /**

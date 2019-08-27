@@ -8,15 +8,13 @@ import {
 import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import {
-  CoreDefinition,
-  McsDateTimeService
-} from '@app/core';
+import { McsDateTimeService } from '@app/core';
 import {
   isNullOrEmpty,
   compareDates,
   getExpiryLabel,
-  unsubscribeSubject
+  unsubscribeSafely,
+  CommonDefinition
 } from '@app/utilities';
 import { McsFirewall } from '@app/models';
 import { FirewallService } from '../firewall.service';
@@ -49,7 +47,7 @@ export class FirewallOverviewComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this._destroySubject);
   }
 
   /**
@@ -72,10 +70,10 @@ export class FirewallOverviewComponent implements OnInit, OnDestroy {
    * @param expirationDate Expiration date to be checked
    */
   public getLicenseIconKey(expirationDate: Date): string {
-    if (isNullOrEmpty(expirationDate)) { return CoreDefinition.ASSETS_SVG_STATE_STOPPED; }
+    if (isNullOrEmpty(expirationDate)) { return CommonDefinition.ASSETS_SVG_STATE_STOPPED; }
     return this._isDateExpired(expirationDate) ?
-      CoreDefinition.ASSETS_SVG_STATE_STOPPED :
-      CoreDefinition.ASSETS_SVG_STATE_RUNNING;
+      CommonDefinition.ASSETS_SVG_STATE_STOPPED :
+      CommonDefinition.ASSETS_SVG_STATE_RUNNING;
   }
 
   /**

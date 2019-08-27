@@ -5,7 +5,7 @@ import {
 } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 import { Breakpoint } from '@app/models';
-import { CoreDefinition } from '../core.definition';
+import { CommonDefinition } from '@app/utilities';
 
 @Injectable()
 export class McsBrowserService {
@@ -72,9 +72,9 @@ export class McsBrowserService {
    * Creates breakpoints table
    */
   private _createBreakpoints(): void {
-    this._breakPoints.set(Breakpoint.XSmall, `(min-width: ${CoreDefinition.BREAKPOINT_XSMALL}px)`);
-    this._breakPoints.set(Breakpoint.Small, `(min-width: ${CoreDefinition.BREAKPOINT_SMALL}px)`);
-    this._breakPoints.set(Breakpoint.Medium, `(min-width: ${CoreDefinition.BREAKPOINT_MEDIUM}px)`);
-    this._breakPoints.set(Breakpoint.Large, `(min-width: ${CoreDefinition.BREAKPOINT_LARGE}px)`);
+    this._breakPoints.set(Breakpoint.XSmall, `(min-width: ${CommonDefinition.BREAKPOINT_XSMALL}px)`);
+    this._breakPoints.set(Breakpoint.Small, `(min-width: ${CommonDefinition.BREAKPOINT_SMALL}px)`);
+    this._breakPoints.set(Breakpoint.Medium, `(min-width: ${CommonDefinition.BREAKPOINT_MEDIUM}px)`);
+    this._breakPoints.set(Breakpoint.Large, `(min-width: ${CommonDefinition.BREAKPOINT_LARGE}px)`);
   }
 }

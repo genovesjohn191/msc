@@ -8,12 +8,10 @@ import {
   Component,
   ViewChild
 } from '@angular/core';
-import {
-  CoreDefinition,
-  McsCookieService
-} from '@app/core';
-import { ExclusiveForAccountDirective } from './exclusive-for-account.directive';
+import { McsCookieService } from '@app/core';
 import { CoreTestingModule } from '@app/core/testing';
+import { CommonDefinition } from '@app/utilities';
+import { ExclusiveForAccountDirective } from './exclusive-for-account.directive';
 
 @Component({
   selector: 'mcs-test',
@@ -68,7 +66,7 @@ describe('ExclusiveForAccountDirective', () => {
     it(`should render the element if the provided account type
       and active account type are the same`, () => {
         component.exclusiveForAccount.mcsExclusiveForAccount = 'default';
-        cookieService.removeItem(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
+        cookieService.removeItem(CommonDefinition.COOKIE_ACTIVE_ACCOUNT);
 
         fixtureInstance.changeDetectorRef.markForCheck();
         let element = document.getElementById('mcsAccount');

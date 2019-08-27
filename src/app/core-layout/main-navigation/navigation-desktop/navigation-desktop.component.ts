@@ -14,7 +14,6 @@ import {
 import { catchError } from 'rxjs/operators';
 import {
   CoreConfig,
-  CoreDefinition,
   McsDataStatusFactory,
   McsAccessControlService,
   McsNavigationService
@@ -31,7 +30,8 @@ import {
 } from '@peerlancers/ngx-event-bus';
 import {
   isNullOrEmpty,
-  unsubscribeSafely
+  unsubscribeSafely,
+  CommonDefinition
 } from '@app/utilities';
 import { McsApiService } from '@app/services';
 import { McsEvent } from '@app/events';
@@ -52,11 +52,11 @@ export class NavigationDesktopComponent implements OnInit, OnDestroy {
   public selectedProduct$: BehaviorSubject<McsProduct>;
 
   public get arrowUpIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_ARROW_UP_WHITE;
+    return CommonDefinition.ASSETS_SVG_ARROW_UP_WHITE;
   }
 
   public get caretDownIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_CHEVRON_DOWN;
+    return CommonDefinition.ASSETS_FONT_CHEVRON_DOWN;
   }
 
   public get routeKeyEnum(): any {

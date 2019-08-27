@@ -5,13 +5,11 @@ import {
   ViewEncapsulation,
   ChangeDetectionStrategy
 } from '@angular/core';
-import {
-  CoreDefinition,
-  McsSnackBarRef
-} from '@app/core';
+import { McsSnackBarRef } from '@app/core';
 import {
   coerceBoolean,
-  McsThemeType
+  McsThemeType,
+  CommonDefinition
 } from '@app/utilities';
 
 @Component({
@@ -57,8 +55,8 @@ export class SnackBarComponent {
 
   public get closeIconKey(): string {
     return this.theme === 'dark' ?
-      CoreDefinition.ASSETS_SVG_CLOSE_WHITE :
-      CoreDefinition.ASSETS_SVG_CLOSE_BLACK;
+      CommonDefinition.ASSETS_SVG_CLOSE_WHITE :
+      CommonDefinition.ASSETS_SVG_CLOSE_BLACK;
   }
 
   public get rippleColor(): string {

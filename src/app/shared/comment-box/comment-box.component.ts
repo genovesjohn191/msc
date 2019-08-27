@@ -19,8 +19,10 @@ import {
   FileUploader,
   FileItem
 } from 'ng2-file-upload';
-import { CoreDefinition } from '@app/core';
-import { isNullOrEmpty } from '@app/utilities';
+import {
+  isNullOrEmpty,
+  CommonDefinition
+} from '@app/utilities';
 import {
   McsFileInfo,
   McsComment
@@ -64,7 +66,7 @@ export class CommentBoxComponent implements OnInit {
   public errorDialogTemplate: TemplateRef<any>;
 
   public get errorIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_WARNING;
+    return CommonDefinition.ASSETS_FONT_WARNING;
   }
 
   public constructor(
@@ -94,11 +96,11 @@ export class CommentBoxComponent implements OnInit {
   }
 
   public get attachmentIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_ATTACHMENT;
+    return CommonDefinition.ASSETS_FONT_ATTACHMENT;
   }
 
   public get closeIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_TRASH;
+    return CommonDefinition.ASSETS_FONT_TRASH;
   }
 
   public ngOnInit() {

@@ -16,11 +16,11 @@ import {
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { CoreDefinition } from '@app/core';
 import {
   isNullOrEmpty,
-  unsubscribeSubject,
-  coerceBoolean
+  unsubscribeSafely,
+  coerceBoolean,
+  CommonDefinition
 } from '@app/utilities';
 import { WizardStepComponent } from './wizard-step/wizard-step.component';
 import { WizardTopPanelDefDirective } from './wizard-top-panel/wizard-top-panel-def.directive';
@@ -103,11 +103,11 @@ export class WizardComponent implements AfterContentInit, OnDestroy {
   }
 
   public ngOnDestroy() {
-    unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this._destroySubject);
   }
 
   public get checkIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_CHECK;
+    return CommonDefinition.ASSETS_FONT_CHECK;
   }
 
   /**

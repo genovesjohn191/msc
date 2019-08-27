@@ -11,13 +11,11 @@ import {
   ContentChild,
   AfterContentInit
 } from '@angular/core';
-import {
-  CoreDefinition,
-  McsUniqueId
-} from '@app/core';
+import { McsUniqueId } from '@app/core';
 import {
   coerceBoolean,
-  isNullOrEmpty
+  isNullOrEmpty,
+  CommonDefinition
 } from '@app/utilities';
 import { IdDirective } from '../../directives';
 
@@ -78,8 +76,8 @@ export class RadioButtonComponent implements AfterContentInit {
    * Returns the radio button icon key based on the checked status
    */
   public get radioButtonIconKey(): string {
-    return this.checked ? CoreDefinition.ASSETS_SVG_RADIO_CHECKED :
-      CoreDefinition.ASSETS_SVG_RADIO_UNCHECKED;
+    return this.checked ? CommonDefinition.ASSETS_SVG_RADIO_CHECKED :
+      CommonDefinition.ASSETS_SVG_RADIO_UNCHECKED;
   }
 
   /**

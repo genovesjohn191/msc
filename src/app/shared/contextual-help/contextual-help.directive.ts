@@ -19,7 +19,7 @@ import {
 import {
   isNullOrEmpty,
   coerceBoolean,
-  unsubscribeSubject
+  unsubscribeSafely
 } from '@app/utilities';
 import { ContextualHelpComponent } from './contextual-help.component';
 
@@ -78,7 +78,7 @@ export class ContextualHelpDirective implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this._destroySubject);
     if (this._contextualHelpInstance) {
       this._disposeContextualHelp();
     }

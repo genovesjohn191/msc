@@ -7,11 +7,11 @@ import {
   Input
 } from '@angular/core';
 import { Subject } from 'rxjs';
+import { IMcsDataChange } from '@app/core';
 import {
-  McsGuid,
-  IMcsDataChange
-} from '@app/core';
-import { unsubscribeSafely } from '@app/utilities';
+  unsubscribeSafely,
+  Guid
+} from '@app/utilities';
 import {
   OrderIdType,
   McsServerCreateAddOnAntiVirus,
@@ -21,7 +21,7 @@ import {
 } from '@app/models';
 import { AddOnDetails } from './addons-model';
 
-const ADDON_ANTI_MALWARE_ID = McsGuid.newGuid().toString();
+const ADDON_ANTI_MALWARE_ID = Guid.newGuid().toString();
 
 @Component({
   selector: 'mcs-server-create-addons',

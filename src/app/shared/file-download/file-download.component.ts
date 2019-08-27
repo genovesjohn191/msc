@@ -6,8 +6,11 @@ import {
   ViewEncapsulation,
   Output
 } from '@angular/core';
-import { CoreDefinition } from '@app/core';
-import { coerceNumber, coerceBoolean } from '@app/utilities';
+import {
+  coerceNumber,
+  coerceBoolean,
+  CommonDefinition
+} from '@app/utilities';
 
 @Component({
   selector: 'mcs-file-download',
@@ -49,7 +52,7 @@ export class FileDownloadComponent {
    * Returns the download icon key
    */
   public get downloadIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_DOWNLOAD;
+    return CommonDefinition.ASSETS_SVG_DOWNLOAD;
   }
 
   /**

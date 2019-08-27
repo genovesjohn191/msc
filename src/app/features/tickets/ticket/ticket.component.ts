@@ -17,11 +17,11 @@ import {
   shareReplay
 } from 'rxjs/operators';
 import { saveAs } from 'file-saver';
-import { CoreDefinition } from '@app/core';
 import {
   isNullOrEmpty,
   unsubscribeSafely,
-  getSafeProperty
+  getSafeProperty,
+  CommonDefinition
 } from '@app/utilities';
 import {
   CommentCategory,
@@ -75,11 +75,11 @@ export class TicketComponent implements OnInit, OnDestroy {
   }
 
   public get checkIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_CHECK;
+    return CommonDefinition.ASSETS_FONT_CHECK;
   }
 
   public get backIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_CHEVRON_LEFT;
+    return CommonDefinition.ASSETS_SVG_CHEVRON_LEFT;
   }
 
   /**

@@ -13,8 +13,8 @@ import {
   catchError,
   map
 } from 'rxjs/operators';
-import { CoreDefinition } from './core.definition';
 import { IMcsProperty } from './interfaces/mcs-property.interface';
+import { CommonDefinition } from '@app/utilities';
 
 export class CoreValidators {
 
@@ -25,7 +25,7 @@ export class CoreValidators {
    * { 'ip': true }
    */
   public static ipAddress(control: AbstractControl): ValidationErrors | null {
-    return CoreDefinition.REGEX_IP_PATTERN.test(control.value) ? null : { ipAddress: true };
+    return CommonDefinition.REGEX_IP_PATTERN.test(control.value) ? null : { ipAddress: true };
   }
 
   /**
@@ -35,7 +35,7 @@ export class CoreValidators {
    * { 'numeric': true }
    */
   public static numeric(control: AbstractControl): ValidationErrors | null {
-    return CoreDefinition.REGEX_NUMERIC_PATTERN.test(control.value) ? null : { numeric: true };
+    return CommonDefinition.REGEX_NUMERIC_PATTERN.test(control.value) ? null : { numeric: true };
   }
 
   /**
@@ -45,7 +45,7 @@ export class CoreValidators {
    * { alphaNumeric: true }
    */
   public static alphaNumeric(control: AbstractControl): ValidationErrors | null {
-    return CoreDefinition.REGEX_ALPHANUMERIC_PATTERN.test(control.value) ?
+    return CommonDefinition.REGEX_ALPHANUMERIC_PATTERN.test(control.value) ?
       null : { alphaNumeric: true };
   }
 
@@ -65,7 +65,7 @@ export class CoreValidators {
    * Validator that performs url values validation
    */
   public static url(control: AbstractControl): ValidationErrors | null {
-    return CoreDefinition.REGEX_URL_PATTERN.test(control.value) ?
+    return CommonDefinition.REGEX_URL_PATTERN.test(control.value) ?
       null : { url: true };
   }
 

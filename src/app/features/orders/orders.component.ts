@@ -6,7 +6,6 @@ import {
 } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
-  CoreDefinition,
   McsTableListingBase,
   McsNavigationService
 } from '@app/core';
@@ -71,7 +70,7 @@ export class OrdersComponent extends McsTableListingBase<McsOrder> {
    * Returns the column settings key for the filter selector
    */
   protected get columnSettingsKey(): string {
-    return CoreDefinition.FILTERSELECTOR_ORDER_LISTING;
+    return CommonDefinition.FILTERSELECTOR_ORDER_LISTING;
   }
 
   /**

@@ -22,9 +22,7 @@ import { appRoutes } from './app.routes';
 import {
   CoreModule,
   CoreConfig,
-  CoreDefinition,
-  McsCookieService,
-  McsGuid
+  McsCookieService
 } from './core';
 import { ServicesModule } from './services';
 import {
@@ -39,7 +37,8 @@ import {
   resolveEnvVar,
   isNullOrEmpty,
   McsEnvironmentVariables,
-  CommonDefinition
+  CommonDefinition,
+  Guid
 } from './utilities';
 import { McsApiClientConfig } from './api-client/mcs-api-client.config';
 import { McsApiClientModule } from './api-client/mcs-api-client.module';
@@ -47,7 +46,7 @@ import { McsApiClientModule } from './api-client/mcs-api-client.module';
 import '../styles/base.scss';
 
 export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', `.json?id=${McsGuid.newGuid().toString()}`);
+  return new TranslateHttpLoader(http, './assets/i18n/', `.json?id=${Guid.newGuid().toString()}`);
 }
 
 export function coreConfig(): CoreConfig {
@@ -67,14 +66,14 @@ export function coreConfig(): CoreConfig {
 }
 
 export function apiClientConfig(cookieService: McsCookieService): McsApiClientConfig {
-  let activeAccount = cookieService.getEncryptedItem(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
+  let activeAccount = cookieService.getEncryptedItem(CommonDefinition.COOKIE_ACTIVE_ACCOUNT);
   let apiClientHeaders = new Map<string, string>();
 
-  apiClientHeaders.set(CoreDefinition.HEADER_ACCEPT, 'application/json');
-  apiClientHeaders.set(CoreDefinition.HEADER_CONTENT_TYPE, 'application/json');
-  apiClientHeaders.set(CoreDefinition.HEADER_API_VERSION, '1.0');
+  apiClientHeaders.set(CommonDefinition.HEADER_ACCEPT, 'application/json');
+  apiClientHeaders.set(CommonDefinition.HEADER_CONTENT_TYPE, 'application/json');
+  apiClientHeaders.set(CommonDefinition.HEADER_API_VERSION, '1.0');
   if (!isNullOrEmpty(activeAccount)) {
-    apiClientHeaders.set(CoreDefinition.HEADER_COMPANY_ID, activeAccount as any);
+    apiClientHeaders.set(CommonDefinition.HEADER_COMPANY_ID, activeAccount as any);
   }
 
   return {

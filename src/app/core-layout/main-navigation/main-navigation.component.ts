@@ -8,7 +8,6 @@ import {
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import {
-  CoreDefinition,
   McsAccessControlService,
   McsNavigationService
 } from '@app/core';
@@ -21,7 +20,8 @@ import {
 } from '@app/models';
 import {
   isNullOrEmpty,
-  unsubscribeSafely
+  unsubscribeSafely,
+  CommonDefinition
 } from '@app/utilities';
 import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import { McsEvent } from '@app/events';
@@ -57,7 +57,7 @@ export class MainNavigationComponent implements OnInit, OnDestroy {
   }
 
   public get caretRightIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_CARET_RIGHT;
+    return CommonDefinition.ASSETS_FONT_CARET_RIGHT;
   }
 
   public get routerCategoryEnum(): any {

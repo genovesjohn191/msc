@@ -14,7 +14,7 @@ import {
   addOrUpdateArrayRecord,
   deleteArrayRecord,
   isNullOrEmpty,
-  unsubscribeSubject,
+  unsubscribeSafely,
   getSafeProperty,
   McsDisposable
 } from '@app/utilities';
@@ -78,7 +78,7 @@ export class McsNotificationContextService implements McsDisposable {
    * Disposes all instance of the job context from notifying job
    */
   public dispose(): void {
-    unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this._destroySubject);
   }
 
   /**

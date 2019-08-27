@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { isNullOrEmpty } from '@app/utilities';
 import {
-  McsServer,
   McsResource,
   ServiceType,
   McsPermission,
@@ -12,9 +10,6 @@ import {
 import { McsApiService } from '@app/services';
 import { McsAccessControlService } from '@app/core';
 
-/**
- * @deprecated Set the server spinner in the api-service instead.
- */
 @Injectable()
 export class ServersService {
 
@@ -39,51 +34,5 @@ export class ServersService {
         );
       })
     );
-  }
-
-  /**
-   * Set the server status to inprogress to display the spinner of corresponding server
-   * @param server Server to be set as processing
-   * @param classes Additional classed to set their isProcessing flag
-   */
-  public setServerSpinner(server: McsServer, ...classes: any[]): void {
-    this._setServerExecutionStatus(server, true, ...classes);
-  }
-
-  /**
-   * Clear the server status to hide the spinner of corresponding server
-   * @param server Server to be set as processing
-   * @param classes Additional classed to set their isProcessing flag
-   */
-  public clearServerSpinner(server: McsServer, ...classes: any[]): void {
-    this._setServerExecutionStatus(server, false, ...classes);
-  }
-
-  /**
-   * Set the server execution based on status in order for the
-   * server to load first while waiting for the corresponding job
-   * @param server Server to be set as processing
-   * @param classes Additional classed to set their isProcessing flag
-   */
-  private _setServerExecutionStatus(
-    server: McsServer,
-    status: boolean = true,
-    ...classes: any[]
-  ): void {
-    if (isNullOrEmpty(server)) { return; }
-    server.isProcessing = status;
-    server.processingText = 'Processing request.';
-
-    // Additional instance to set the process flag
-    if (!isNullOrEmpty(classes)) {
-      classes.forEach((param) => {
-        if (isNullOrEmpty(param)) {
-          param = Object.create(param);
-          param.isProcessing = status;
-        } else {
-          param.isProcessing = status;
-        }
-      });
-    }
   }
 }

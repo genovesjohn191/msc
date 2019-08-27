@@ -10,7 +10,6 @@ import {
 import { takeUntil } from 'rxjs/operators';
 import {
   unsubscribeSafely,
-  unsubscribeSubject,
   isNullOrEmpty
 } from '@app/utilities';
 import { McsResource } from '@app/models';
@@ -71,7 +70,7 @@ export abstract class VdcDetailsBase {
   protected dispose(): void {
     unsubscribeSafely(this._vdcSubscription);
     unsubscribeSafely(this._resourcesDataChangeHandler);
-    unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this._destroySubject);
   }
 
   /**

@@ -24,7 +24,6 @@ import {
   map
 } from 'rxjs/operators';
 import {
-  CoreDefinition,
   McsOrderWizardBase,
   IMcsNavigateAwayGuard,
   CoreValidators
@@ -38,7 +37,8 @@ import {
 } from '@app/models';
 import {
   isNullOrEmpty,
-  getSafeProperty
+  getSafeProperty,
+  CommonDefinition
 } from '@app/utilities';
 import { McsApiService } from '@app/services';
 import { OrderDetails } from '@app/features-shared';
@@ -67,7 +67,7 @@ export class ServerCreateComponent extends McsOrderWizardBase
   public fcResource: FormControl;
 
   public get backIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_CHEVRON_LEFT;
+    return CommonDefinition.ASSETS_SVG_CHEVRON_LEFT;
   }
 
   public get serviceTypeEnum() { return ServiceType; }

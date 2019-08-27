@@ -28,15 +28,14 @@ import {
   switchMap
 } from 'rxjs/operators';
 import {
-  CoreDefinition,
   McsTableDataSource,
   McsNavigationService
 } from '@app/core';
 import {
-  unsubscribeSubject,
   isNullOrEmpty,
   getSafeProperty,
-  unsubscribeSafely
+  unsubscribeSafely,
+  CommonDefinition
 } from '@app/utilities';
 import {
   McsOrder,
@@ -103,7 +102,7 @@ export class OrderComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy() {
-    unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this._destroySubject);
     unsubscribeSafely(this._orderDataChangeHandler);
   }
 
@@ -112,19 +111,19 @@ export class OrderComponent implements OnInit, OnDestroy {
   }
 
   public get submitIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_CHECK;
+    return CommonDefinition.ASSETS_SVG_CHECK;
   }
 
   public get cancelIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_BLOCK;
+    return CommonDefinition.ASSETS_SVG_BLOCK;
   }
 
   public get backIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_CHEVRON_LEFT;
+    return CommonDefinition.ASSETS_SVG_CHEVRON_LEFT;
   }
 
   public get infoIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_INFO;
+    return CommonDefinition.ASSETS_SVG_INFO;
   }
 
   /**

@@ -23,7 +23,6 @@ import { catchError } from 'rxjs/operators';
 /** Providers / Services */
 import {
   CoreConfig,
-  CoreDefinition,
   McsAuthenticationService,
   McsDataStatusFactory,
   McsAccessControlService,
@@ -31,7 +30,8 @@ import {
 } from '@app/core';
 import {
   isNullOrEmpty,
-  unsubscribeSafely
+  unsubscribeSafely,
+  CommonDefinition
 } from '@app/utilities';
 import {
   RouteKey,
@@ -83,23 +83,23 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
   }
 
   public get toggleIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_TOGGLE_NAV;
+    return CommonDefinition.ASSETS_SVG_TOGGLE_NAV;
   }
 
   public get arrowUpIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_ARROW_UP_WHITE;
+    return CommonDefinition.ASSETS_SVG_ARROW_UP_WHITE;
   }
 
   public get caretRightIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_CARET_RIGHT;
+    return CommonDefinition.ASSETS_FONT_CARET_RIGHT;
   }
 
   public get caretDownIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_CHEVRON_DOWN;
+    return CommonDefinition.ASSETS_FONT_CHEVRON_DOWN;
   }
 
   public get closeIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_CLOSE_WHITE;
+    return CommonDefinition.ASSETS_SVG_CLOSE_WHITE;
   }
 
   private _routeChangeHandler: Subscription;

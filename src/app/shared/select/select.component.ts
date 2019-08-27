@@ -38,7 +38,6 @@ import {
   tap
 } from 'rxjs/operators';
 import {
-  CoreDefinition,
   McsFormFieldControlBase,
   McsItemListKeyManager,
   McsScrollDispatcherService,
@@ -54,7 +53,8 @@ import {
   coerceNumber,
   animateFactory,
   getSafeProperty,
-  unsubscribeSafely
+  unsubscribeSafely,
+  CommonDefinition
 } from '@app/utilities';
 import {
   OptionComponent,
@@ -179,7 +179,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
   private _closeOutsideHandler = this._onCloseOutside.bind(this);
 
   public get carretDownIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_CARET_DOWN;
+    return CommonDefinition.ASSETS_FONT_CARET_DOWN;
   }
 
   public get displayedText(): string {

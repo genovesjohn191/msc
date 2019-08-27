@@ -3,7 +3,7 @@ import {
   ChangeDetectionStrategy,
   ViewEncapsulation
 } from '@angular/core';
-import { CoreDefinition } from '@app/core';
+import { CommonDefinition } from '@app/utilities';
 
 @Component({
   selector: 'mcs-header',
@@ -19,6 +19,6 @@ import { CoreDefinition } from '@app/core';
 export class HeaderComponent {
 
   public get lightLogoIconKey(): string {
-    return CoreDefinition.ASSETS_IMAGE_MCS_LIGHT_LOGO_SVG;
+    return CommonDefinition.ASSETS_IMAGE_MCS_LIGHT_LOGO_SVG;
   }
 }

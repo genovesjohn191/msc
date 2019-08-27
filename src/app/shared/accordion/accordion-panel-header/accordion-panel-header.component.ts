@@ -6,10 +6,10 @@ import {
   ChangeDetectionStrategy,
   ViewEncapsulation
 } from '@angular/core';
-import { CoreDefinition } from '@app/core';
 import {
   isNullOrEmpty,
-  animateFactory
+  animateFactory,
+  CommonDefinition
 } from '@app/utilities';
 import { AccordionPanelComponent } from '../accordion-panel/accordion-panel.component';
 
@@ -54,7 +54,7 @@ export class AccordionPanelHeaderComponent {
    * Toggle icon key (Chevron right and down)
    */
   public get toggleIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_CHEVRON_DOWN;
+    return CommonDefinition.ASSETS_FONT_CHEVRON_DOWN;
   }
 
   /**
