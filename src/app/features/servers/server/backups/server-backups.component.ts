@@ -20,7 +20,7 @@ import {
   concatMap
 } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
-import { McsEvent } from '@app/event-manager';
+import { McsEvent } from '@app/events';
 import {
   McsDataStatusFactory,
   CoreDefinition

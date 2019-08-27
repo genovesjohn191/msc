@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { EventBusDispatcherService } from '@app/event-bus';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import {
   Subscription,
   Observable,
@@ -14,7 +14,7 @@ import {
   McsDisposable,
   unsubscribeSafely
 } from '@app/utilities';
-import { McsEvent } from '@app/event-manager';
+import { McsEvent } from '@app/events';
 
 @Injectable()
 export class UserPanelService implements McsDisposable {

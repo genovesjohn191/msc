@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { compareDates } from '@app/utilities';
 import { McsJob } from '@app/models';
-import { McsEvent } from '@app/event-manager';
-import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/events';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import {
   McsApiClientFactory,
   McsApiJobsFactory

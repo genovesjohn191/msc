@@ -20,8 +20,8 @@ import {
   unsubscribeSafely,
   getSafeProperty
 } from '@app/utilities';
-import { EventBusDispatcherService } from '@app/event-bus';
-import { McsEvent } from '@app/event-manager';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+import { McsEvent } from '@app/events';
 
 @Component({
   selector: 'mcs-notification',

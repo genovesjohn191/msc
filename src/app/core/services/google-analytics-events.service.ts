@@ -4,12 +4,12 @@ import {
   McsIdentity,
   McsRouteInfo
 } from '@app/models';
-import { EventBusDispatcherService } from '@app/event-bus';
-import { McsEvent } from '@app/event-manager';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+import { McsEvent } from '@app/events';
 import {
   LogClass,
   LogIgnore
-} from '@app/logger';
+} from '@peerlancers/ngx-logger';
 import { CoreDefinition } from '../core.definition';
 
 declare let dataLayer: any;

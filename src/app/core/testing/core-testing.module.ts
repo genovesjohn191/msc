@@ -7,7 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { AppState } from '@app/app.service';
-import { EventBusTestingModule } from '@app/event-bus/testing';
+import { EventBusTestingModule } from '@peerlancers/ngx-event-bus/testing';
 import { McsApiClientTestingModule } from '@app/api-client/testing';
 import { CoreConfig } from '../core.config';
 import { coreProviders } from '../core.constants';

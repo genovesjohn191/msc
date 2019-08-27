@@ -37,7 +37,7 @@ import {
 import {
   EventBusState,
   EventBusDispatcherService
-} from '@app/event-bus';
+} from '@peerlancers/ngx-event-bus';
 import { McsBrowserService } from '../services/mcs-browser.service';
 import { McsFilterService } from '../services/mcs-filter.service';
 import { McsTableDataSource } from '../data-access/mcs-table-datasource';

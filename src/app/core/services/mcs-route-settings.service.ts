@@ -13,7 +13,7 @@ import {
   takeUntil,
   filter
 } from 'rxjs/operators';
-import { EventBusDispatcherService } from '@app/event-bus';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import {
   McsRouteInfo,
   HttpStatusCode
@@ -24,8 +24,8 @@ import {
   unsubscribeSafely,
   getSafeProperty
 } from '@app/utilities';
-import { McsEvent } from '@app/event-manager';
-import { LogClass } from '@app/logger';
+import { McsEvent } from '@app/events';
+import { LogClass } from '@peerlancers/ngx-logger';
 
 import { McsErrorHandlerService } from './mcs-error-handler.service';
 import { McsScrollDispatcherService } from './mcs-scroll-dispatcher.service';

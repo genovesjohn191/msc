@@ -12,9 +12,9 @@ import {
 import {
   EventBusDispatcherService,
   EventBusState
-} from '@app/event-bus';
-import { McsEvent } from '@app/event-manager';
-import { LogClass } from '@app/logger';
+} from '@peerlancers/ngx-event-bus';
+import { McsEvent } from '@app/events';
+import { LogClass } from '@peerlancers/ngx-logger';
 
 import { McsAuthenticationIdentity } from '../authentication/mcs-authentication.identity';
 import { McsNotificationContextService } from './mcs-notification-context.service';

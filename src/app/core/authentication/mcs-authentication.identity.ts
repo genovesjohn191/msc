@@ -4,8 +4,8 @@ import {
   McsIdentity,
   AccountStatus
 } from '@app/models';
-import { EventBusDispatcherService } from '@app/event-bus';
-import { McsEvent } from '@app/event-manager';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+import { McsEvent } from '@app/events';
 import { CoreDefinition } from '../core.definition';
 import { McsCookieService } from '../services/mcs-cookie.service';
 

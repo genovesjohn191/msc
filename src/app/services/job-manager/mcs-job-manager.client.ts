@@ -16,7 +16,7 @@ import {
 import {
   EventBusState,
   EventBusDispatcherService
-} from '@app/event-bus';
+} from '@peerlancers/ngx-event-bus';
 import {
   McsJob,
   JobType,
@@ -31,7 +31,7 @@ import {
   compareDates,
   getSafeProperty
 } from '@app/utilities';
-import { McsEvent } from '@app/event-manager';
+import { McsEvent } from '@app/events';
 import { IMcsJobEntity } from './base/mcs-job-entity.interface';
 import { McsJobsRepository } from '../repositories/mcs-jobs.repository';
 import { McsJobServerManager } from './entities/mcs-job-server.manager';

@@ -10,7 +10,7 @@ import {
   McsTableListingBase,
   McsNavigationService
 } from '@app/core';
-import { McsEvent } from '@app/event-manager';
+import { McsEvent } from '@app/events';
 import { McsApiService } from '@app/services';
 import {
   RouteKey,

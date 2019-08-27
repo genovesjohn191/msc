@@ -13,8 +13,8 @@ import {
   isNullOrEmpty,
   deleteArrayRecord
 } from '@app/utilities';
-import { McsEvent } from '@app/event-manager';
-import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/events';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 
 interface ErrorDetails {
   id: string;

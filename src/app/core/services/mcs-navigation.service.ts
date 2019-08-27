@@ -8,7 +8,7 @@ import {
   isNullOrEmpty,
   isNullOrUndefined
 } from '@app/utilities';
-import { LogClass } from '@app/logger';
+import { LogClass } from '@peerlancers/ngx-logger';
 import { CoreRoutes } from '../core.routes';
 
 @Injectable()

@@ -41,7 +41,7 @@ import {
   ComponentHandlerDirective
 } from '@app/shared';
 import { McsApiService } from '@app/services';
-import { EventBusDispatcherService } from '@app/event-bus';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import { MediaListSource } from '../media.listsource';
 import { MediumService } from './medium.service';
 

@@ -31,8 +31,8 @@ import {
   McsApiErrorContext
 } from '@app/models';
 import { McsApiService } from '@app/services';
-import { McsEvent } from '@app/event-manager';
-import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/events';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import { ServerService } from './server.service';
 
 export abstract class ServerDetailsBase {

@@ -28,13 +28,13 @@ import {
 import {
   EventBusPropertyListenOn,
   EventBusDispatcherService
-} from '@app/event-bus';
+} from '@peerlancers/ngx-event-bus';
 import {
   isNullOrEmpty,
   unsubscribeSafely
 } from '@app/utilities';
 import { McsApiService } from '@app/services';
-import { McsEvent } from '@app/event-manager';
+import { McsEvent } from '@app/events';
 
 @Component({
   selector: 'mcs-navigation-desktop',

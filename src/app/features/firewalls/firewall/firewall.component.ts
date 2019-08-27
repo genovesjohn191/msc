@@ -38,7 +38,7 @@ import {
   McsFirewall
 } from '@app/models';
 import { McsApiService } from '@app/services';
-import { EventBusDispatcherService } from '@app/event-bus';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import { FirewallService } from './firewall.service';
 import { FirewallsListSource } from '../firewalls.listsource';
 

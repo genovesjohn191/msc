@@ -3,9 +3,9 @@ import {
   BehaviorSubject,
   Observable
 } from 'rxjs';
-import { EventBusDispatcherService } from '@app/event-bus';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import { McsProduct } from '@app/models';
-import { McsEvent } from '@app/event-manager';
+import { McsEvent } from '@app/events';
 
 @Injectable()
 export class ProductService {

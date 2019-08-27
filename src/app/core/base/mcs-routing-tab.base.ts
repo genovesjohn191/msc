@@ -7,8 +7,8 @@ import {
   unsubscribeSafely
 } from '@app/utilities';
 import { McsRouteInfo } from '@app/models';
-import { EventBusDispatcherService } from '@app/event-bus';
-import { McsEvent } from '@app/event-manager';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+import { McsEvent } from '@app/events';
 
 export abstract class McsRoutingTabBase<T> {
   public selectedRoutingTab: T;

@@ -17,8 +17,8 @@ import {
   RouteCategory,
   McsRouteInfo
 } from '@app/models';
-import { EventBusDispatcherService } from '@app/event-bus';
-import { McsEvent } from '@app/event-manager';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+import { McsEvent } from '@app/events';
 
 @Component({
   selector: 'mcs-sub-navigation',

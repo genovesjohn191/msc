@@ -20,7 +20,7 @@ import {
   McsQueryParam,
   McsApiCollection
 } from '@app/models';
-import { McsEvent } from '@app/event-manager';
+import { McsEvent } from '@app/events';
 import { McsApiService } from '@app/services';
 
 @Component({

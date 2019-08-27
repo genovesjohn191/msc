@@ -28,7 +28,7 @@ import {
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { SwitchAccountService } from './switch-account.service';
-import { McsEvent } from '@app/event-manager';
+import { McsEvent } from '@app/events';
 
 @Component({
   selector: 'mcs-switch-account',

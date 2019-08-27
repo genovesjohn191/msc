@@ -17,7 +17,7 @@ import {
   tap,
   map
 } from 'rxjs/operators';
-import { EventBusDispatcherService } from '@app/event-bus';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import {
   McsTableDataSource,
   McsGuid
@@ -38,7 +38,7 @@ import {
   McsServer,
   McsResourceMedia
 } from '@app/models';
-import { McsEvent } from '@app/event-manager';
+import { McsEvent } from '@app/events';
 import { McsApiService } from '@app/services';
 import { MediumService } from '../medium.service';
 import { MediumDetailsBase } from '../medium-details.base';

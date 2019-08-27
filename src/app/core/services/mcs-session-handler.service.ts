@@ -23,9 +23,9 @@ import {
   McsEnvironmentVariables
 } from '@app/utilities';
 import { McsIdentity } from '@app/models';
-import { EventBusDispatcherService } from '@app/event-bus';
-import { McsEvent } from '@app/event-manager';
-import { LogMethod } from '@app/logger';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+import { McsEvent } from '@app/events';
+import { LogMethod } from '@peerlancers/ngx-logger';
 
 import { CoreDefinition } from '../core.definition';
 import { McsAuthenticationIdentity } from '../authentication/mcs-authentication.identity';

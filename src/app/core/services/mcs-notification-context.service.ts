@@ -25,7 +25,7 @@ import {
   JobStatus
 } from '@app/models';
 import { McsApiService } from '@app/services';
-import { LogClass } from '@app/logger';
+import { LogClass } from '@peerlancers/ngx-logger';
 import { McsNotificationJobService } from './mcs-notification-job.service';
 
 /**

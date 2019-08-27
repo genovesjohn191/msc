@@ -42,10 +42,10 @@ import {
 import {
   EventBusPropertyListenOn,
   EventBusDispatcherService
-} from '@app/event-bus';
+} from '@peerlancers/ngx-event-bus';
 import { SlidingPanelComponent } from '@app/shared';
 import { McsApiService } from '@app/services';
-import { McsEvent } from '@app/event-manager';
+import { McsEvent } from '@app/events';
 
 @Component({
   selector: 'mcs-navigation-mobile',

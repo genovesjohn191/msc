@@ -22,8 +22,8 @@ import {
   getRandomNumber,
   animateFactory
 } from '@app/utilities';
-import { EventBusDispatcherService } from '@app/event-bus';
-import { McsEvent } from '@app/event-manager';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+import { McsEvent } from '@app/events';
 
 const LOADER_MAX_VALUE = 100;
 const LOADER_INTERVAL_MS = 700;
