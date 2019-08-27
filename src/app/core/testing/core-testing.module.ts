@@ -21,7 +21,7 @@ import { MockCoreConfig } from './core-config.mock';
     HttpClientTestingModule,
     RouterTestingModule,
     CookieModule.forRoot(),
-    EventBusModule,
+    EventBusModule.forRoot(),
     McsApiClientTestingModule,
     TranslateModule.forRoot()
   ],
