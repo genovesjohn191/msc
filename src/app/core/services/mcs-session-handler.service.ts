@@ -17,17 +17,17 @@ import {
 } from 'rxjs/operators';
 import {
   isNullOrEmpty,
-  unsubscribeSubject,
+  unsubscribeSafely,
   coerceNumber,
   resolveEnvVar,
-  McsEnvironmentVariables
+  McsEnvironmentVariables,
+  CommonDefinition
 } from '@app/utilities';
 import { McsIdentity } from '@app/models';
 import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import { McsEvent } from '@app/events';
 import { LogMethod } from '@peerlancers/ngx-logger';
 
-import { CoreDefinition } from '../core.definition';
 import { McsAuthenticationIdentity } from '../authentication/mcs-authentication.identity';
 import { McsAuthenticationService } from '../authentication/mcs-authentication.service';
 import { McsCookieService } from './mcs-cookie.service';
@@ -53,7 +53,7 @@ export class McsSessionHandlerService {
    */
   public get idleTimeInSeconds(): number {
     let cookieSessionIdleTime =
-      coerceNumber(this._cookieService.getItem(CoreDefinition.COOKIE_SESSION_TIMER));
+      coerceNumber(this._cookieService.getItem(CommonDefinition.COOKIE_SESSION_TIMER));
     return Math.min(cookieSessionIdleTime, this._sessionIdleCounter);
   }
 
@@ -62,7 +62,7 @@ export class McsSessionHandlerService {
    */
   public get sessionIsIdle(): boolean {
     return !isDevMode()
-      && (this.idleTimeInSeconds >= CoreDefinition.SESSION_IDLE_TIME_IN_SECONDS
+      && (this.idleTimeInSeconds >= CommonDefinition.SESSION_IDLE_TIME_IN_SECONDS
         || this._sessionIsIdle);
   }
 
@@ -70,10 +70,10 @@ export class McsSessionHandlerService {
    * Returns true is session has timedout
    */
   public get sessionTimedOut(): boolean {
-    let maxIAllowedIdleTimeInSeconds = CoreDefinition.SESSION_IDLE_TIME_IN_SECONDS
-      + CoreDefinition.SESSION_TIMEOUT_COUNTDOWN_IN_SECONDS;
+    let maxIAllowedIdleTimeInSeconds = CommonDefinition.SESSION_IDLE_TIME_IN_SECONDS
+      + CommonDefinition.SESSION_TIMEOUT_COUNTDOWN_IN_SECONDS;
     let hasTimedOutIndicatiorCookie =
-      !isNullOrEmpty(this._cookieService.getItem(CoreDefinition.COOKIE_SESSION_ID));
+      !isNullOrEmpty(this._cookieService.getItem(CommonDefinition.COOKIE_SESSION_ID));
 
     return !isDevMode()
       && (this.idleTimeInSeconds >= maxIAllowedIdleTimeInSeconds
@@ -81,18 +81,18 @@ export class McsSessionHandlerService {
   }
 
   public get sessionActive(): boolean {
-    return (this.idleTimeInSeconds < CoreDefinition.SESSION_IDLE_TIME_IN_SECONDS);
+    return (this.idleTimeInSeconds < CommonDefinition.SESSION_IDLE_TIME_IN_SECONDS);
   }
 
   public get userChanged(): boolean {
     let userId = this._authIdentity.user.hashedId;
-    let stateId = this._cookieService.getItem(CoreDefinition.COOKIE_USER_STATE_ID);
+    let stateId = this._cookieService.getItem(CommonDefinition.COOKIE_USER_STATE_ID);
     return userId !== stateId;
   }
 
   public get targetCompanyChanged(): boolean {
     let cookieTargetCompanyId: string =
-      this._cookieService.getEncryptedItem(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
+      this._cookieService.getEncryptedItem(CommonDefinition.COOKIE_ACTIVE_ACCOUNT);
     let targetCompanyHasChanged = this._previousTargetCompanyId !== cookieTargetCompanyId;
     this._previousTargetCompanyId = cookieTargetCompanyId;
 
@@ -113,8 +113,8 @@ export class McsSessionHandlerService {
    * Stops all sessions
    */
   public stopSessions(): void {
-    unsubscribeSubject(this._destroySubject);
-    unsubscribeSubject(this._timerSubject);
+    unsubscribeSafely(this._destroySubject);
+    unsubscribeSafely(this._timerSubject);
   }
 
   /**
@@ -182,7 +182,7 @@ export class McsSessionHandlerService {
    * Resets session monitoring state and logs out the user
    */
   public renewSession(): void {
-    this._cookieService.removeItem(CoreDefinition.COOKIE_SESSION_ID);
+    this._cookieService.removeItem(CommonDefinition.COOKIE_SESSION_ID);
     this._authService.logOut();
   }
 
@@ -228,7 +228,7 @@ export class McsSessionHandlerService {
 
     // Get current target company to be used for company switch detection
     this._previousTargetCompanyId =
-      this._cookieService.getEncryptedItem(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
+      this._cookieService.getEncryptedItem(CommonDefinition.COOKIE_ACTIVE_ACCOUNT);
 
     this._registerActivityEvents();
     this._initializeSessionStatusObserver();
@@ -270,9 +270,9 @@ export class McsSessionHandlerService {
   @LogMethod()
   private _setUserValidation(identity: McsIdentity) {
     let sessionId = identity.hashedId + identity.expiry;
-    let hashedId = this._cookieService.getEncryptedItem(CoreDefinition.COOKIE_SESSION_ID);
+    let hashedId = this._cookieService.getEncryptedItem(CommonDefinition.COOKIE_SESSION_ID);
     if (sessionId !== hashedId) {
-      this._cookieService.removeItem(CoreDefinition.COOKIE_SESSION_ID);
+      this._cookieService.removeItem(CommonDefinition.COOKIE_SESSION_ID);
     }
   }
 
@@ -294,7 +294,7 @@ export class McsSessionHandlerService {
 
     // Update the cookie
     if (this._sessionIdleCounter >= 1) {
-      this._cookieService.setItem(CoreDefinition.COOKIE_SESSION_TIMER,
+      this._cookieService.setItem(CommonDefinition.COOKIE_SESSION_TIMER,
         this._sessionIdleCounter, { expires: this._authIdentity.user.expiry });
     }
   }
@@ -347,7 +347,7 @@ export class McsSessionHandlerService {
   private _createSessionId() {
     let sessionId = this._authIdentity.user.hashedId + this._authIdentity.user.expiry;
 
-    this._cookieService.setEncryptedItem(CoreDefinition.COOKIE_SESSION_ID,
+    this._cookieService.setEncryptedItem(CommonDefinition.COOKIE_SESSION_ID,
       sessionId, { expires: this._authIdentity.user.expiry });
   }
 

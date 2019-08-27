@@ -17,7 +17,6 @@ import {
 } from 'rxjs/operators';
 import {
   IMcsNavigateAwayGuard,
-  CoreDefinition,
   McsNavigationService,
   IMcsFormGroup,
   McsDateTimeService
@@ -72,15 +71,15 @@ export class SystemMessageEditComponent implements OnInit, IMcsNavigateAwayGuard
   }
 
   public get servicesIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_TOGGLE_NAV;
+    return CommonDefinition.ASSETS_SVG_TOGGLE_NAV;
   }
 
   public get backIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_CHEVRON_LEFT;
+    return CommonDefinition.ASSETS_SVG_CHEVRON_LEFT;
   }
 
   public get toggleIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_TOGGLE_NAV;
+    return CommonDefinition.ASSETS_SVG_TOGGLE_NAV;
   }
 
   public get isFormValid(): boolean {

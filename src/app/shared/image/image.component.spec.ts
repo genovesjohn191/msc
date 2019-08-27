@@ -5,10 +5,10 @@ import {
   ComponentFixture
 } from '@angular/core/testing';
 import { HttpTestingController } from '@angular/common/http/testing';
-import { ImageComponent } from './image.component';
-import { ImageService } from './image.service';
-import { CoreDefinition } from '@app/core';
 import { CoreTestingModule } from '@app/core/testing';
+import { CommonDefinition } from '@app/utilities';
+import { ImageService } from './image.service';
+import { ImageComponent } from './image.component';
 
 describe('ImageComponent', () => {
 
@@ -56,7 +56,7 @@ describe('ImageComponent', () => {
   /** Test Implementation */
   describe('ngOnChanges() when image type is SVG', () => {
     beforeEach(async(() => {
-      component.key = CoreDefinition.ASSETS_IMAGE_MCS_LIGHT_LOGO_SVG;
+      component.key = CommonDefinition.ASSETS_IMAGE_MCS_LIGHT_LOGO_SVG;
       component.size = 'small';
       component.ngOnChanges();
     }));
@@ -87,7 +87,7 @@ describe('ImageComponent', () => {
 
   describe('ngOnChanges() when image type is other type than SVG', () => {
     beforeEach(async(() => {
-      component.key = CoreDefinition.ASSETS_IMAGE_MCS_LIGHT_LOGO;
+      component.key = CommonDefinition.ASSETS_IMAGE_MCS_LIGHT_LOGO;
       component.size = 'small';
       component.ngOnChanges();
     }));

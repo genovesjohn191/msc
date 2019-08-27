@@ -21,11 +21,11 @@ import {
 import {
   isNullOrEmpty,
   unsubscribeSafely,
-  isNullOrUndefined
+  isNullOrUndefined,
+  CommonDefinition
 } from '@app/utilities';
 import { DataStatus } from '@app/models';
 import { McsRepository } from '@app/services';
-import { CoreDefinition } from '../core.definition';
 
 type DelegateSource<T> = () => Observable<T[]>;
 type DatasourceType<T> = McsRepository<T> | T[] | Observable<T[]> | DelegateSource<T>;
@@ -198,8 +198,8 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
 
     return !isNullOrUndefined(this._dataSource) && (this._dataSource as McsRepository<T>).filterBy({
       keyword: this._search && this._search.keyword || '',
-      pageIndex: this._paginator && this._paginator.pageIndex || CoreDefinition.DEFAULT_PAGE_INDEX,
-      pageSize: this._paginator && this._paginator.pageSize || CoreDefinition.DEFAULT_PAGE_SIZE
+      pageIndex: this._paginator && this._paginator.pageIndex || CommonDefinition.DEFAULT_PAGE_INDEX,
+      pageSize: this._paginator && this._paginator.pageSize || CommonDefinition.DEFAULT_PAGE_SIZE
     });
   }
 

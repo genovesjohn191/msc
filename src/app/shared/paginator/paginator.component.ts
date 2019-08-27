@@ -12,22 +12,20 @@ import {
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import {
-  CoreDefinition,
-  McsScrollDispatcherService
-} from '@app/core';
+import { McsScrollDispatcherService } from '@app/core';
 import {
   coerceNumber,
   coerceBoolean,
   isNullOrEmpty,
   triggerEvent,
-  unsubscribeSafely
+  unsubscribeSafely,
+  CommonDefinition
 } from '@app/utilities';
 import { Paginator } from './paginator.interface';
 
 // Constants default
-const PAGINATOR_DEFAULT_PAGE_INDEX = CoreDefinition.DEFAULT_PAGE_INDEX;
-const PAGINATOR_DEFAULT_PAGE_SIZE = CoreDefinition.DEFAULT_PAGE_SIZE;
+const PAGINATOR_DEFAULT_PAGE_INDEX = CommonDefinition.DEFAULT_PAGE_INDEX;
+const PAGINATOR_DEFAULT_PAGE_SIZE = CommonDefinition.DEFAULT_PAGE_SIZE;
 const PAGINATOR_DEFAULT_LOAD_OFFSET = 10;
 
 @Component({
@@ -116,7 +114,7 @@ export class PaginatorComponent implements Paginator, AfterViewInit, OnDestroy {
   }
 
   public get arrowDownIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_CHEVRON_DOWN;
+    return CommonDefinition.ASSETS_FONT_CHEVRON_DOWN;
   }
 
   /**

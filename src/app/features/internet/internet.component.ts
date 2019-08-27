@@ -6,7 +6,6 @@ import {
 } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
-  CoreDefinition,
   McsTableListingBase,
   McsNavigationService
 } from '@app/core';
@@ -18,7 +17,10 @@ import {
   McsQueryParam,
   McsApiCollection
 } from '@app/models';
-import { isNullOrEmpty } from '@app/utilities';
+import {
+  isNullOrEmpty,
+  CommonDefinition
+} from '@app/utilities';
 
 @Component({
   selector: 'mcs-internet',
@@ -54,7 +56,7 @@ export class InternetComponent extends McsTableListingBase<McsInternetPort> {
    * Returns the column settings key for the filter selector
    */
   protected get columnSettingsKey(): string {
-    return CoreDefinition.FILTERSELECTOR_INTERNET_LISTING;
+    return CommonDefinition.FILTERSELECTOR_INTERNET_LISTING;
   }
 
   /**

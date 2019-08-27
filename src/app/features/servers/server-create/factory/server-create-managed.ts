@@ -2,13 +2,12 @@ import {
   OrderIdType,
   McsResource
 } from '@app/models';
-import { McsGuid } from '@app/core';
-import { isNullOrEmpty } from '@app/utilities';
+import { isNullOrEmpty, Guid } from '@app/utilities';
 import { IServerCreate } from './server-create.interface';
 import { ServerCreateService } from '../server-create.service';
 
 export class ServerCreateManaged implements IServerCreate {
-  private _serverReferenceId = McsGuid.newGuid();
+  private _serverReferenceId = Guid.newGuid();
 
   /**
    * Creates the managed server accordingly

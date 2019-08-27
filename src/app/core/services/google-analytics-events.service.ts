@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
-import { isNullOrEmpty } from '@app/utilities';
+import {
+  isNullOrEmpty,
+  CommonDefinition
+} from '@app/utilities';
 import {
   McsIdentity,
   McsRouteInfo
@@ -10,7 +13,6 @@ import {
   LogClass,
   LogIgnore
 } from '@peerlancers/ngx-logger';
-import { CoreDefinition } from '../core.definition';
 
 declare let dataLayer: any;
 
@@ -60,11 +62,11 @@ export class GoogleAnalyticsEventsService {
 
     // Mask UUID from the URL
     let maskedUrl = this._maskPrivateDataFromUrl(
-      activeRoute.urlAfterRedirects, CoreDefinition.REGEX_UUID_PATTERN, '{id}');
+      activeRoute.urlAfterRedirects, CommonDefinition.REGEX_UUID_PATTERN, '{id}');
 
     // Mask JWT Token from the URL
     maskedUrl = this._maskPrivateDataFromUrl(
-      maskedUrl, CoreDefinition.REGEX_BEARER_PATTERN, 'bearer={token}');
+      maskedUrl, CommonDefinition.REGEX_BEARER_PATTERN, 'bearer={token}');
 
     dataLayer.push({
       'event': 'virtualPageView',

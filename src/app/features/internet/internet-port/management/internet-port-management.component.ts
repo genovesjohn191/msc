@@ -6,7 +6,7 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 import { Subject } from 'rxjs';
-import { unsubscribeSubject } from '@app/utilities';
+import { unsubscribeSafely } from '@app/utilities';
 import { InternetPortService } from '../internet-port.service';
 import { InternetPortDetailsBase } from '../internet-details.base';
 
@@ -32,7 +32,7 @@ export class InternetPortManagementComponent extends InternetPortDetailsBase imp
   }
 
   public ngOnDestroy(): void {
-    unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this._destroySubject);
   }
 
   /**

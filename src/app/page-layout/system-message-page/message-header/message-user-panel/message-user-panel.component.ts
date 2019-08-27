@@ -5,12 +5,10 @@ import {
 } from '@angular/core';
 import { Observable } from 'rxjs';
 import { McsIdentity } from '@app/models';
-import {
-  CoreDefinition,
-  McsAuthenticationService,
-} from '@app/core';
+import { McsAuthenticationService } from '@app/core';
 import { EventBusPropertyListenOn } from '@peerlancers/ngx-event-bus';
 import { McsEvent } from '@app/events';
+import { CommonDefinition } from '@app/utilities';
 
 @Component({
   selector: 'mcs-system-message-user-panel',
@@ -30,7 +28,7 @@ export class SystemMessageUserPanelComponent {
   public constructor(private _authenticationService: McsAuthenticationService) { }
 
   public get caretDownIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_CHEVRON_DOWN;
+    return CommonDefinition.ASSETS_FONT_CHEVRON_DOWN;
   }
 
   /**

@@ -23,15 +23,15 @@ import {
 } from 'rxjs/operators';
 import {
   McsOrderWizardBase,
-  CoreDefinition,
   CoreValidators,
-  McsGuid,
   OrderRequester
 } from '@app/core';
 import {
   unsubscribeSafely,
   getSafeProperty,
-  isNullOrEmpty
+  isNullOrEmpty,
+  CommonDefinition,
+  Guid
 } from '@app/utilities';
 import { McsApiService } from '@app/services';
 import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
@@ -51,7 +51,7 @@ type RaiseInviewLevelProperties = {
   inviewLevel: string;
 };
 
-const SERVICE_RAISE_INVIEW_REF_ID = McsGuid.newGuid().toString();
+const SERVICE_RAISE_INVIEW_REF_ID = Guid.newGuid().toString();
 
 @Component({
   selector: 'mcs-order-service-inview-raise',
@@ -70,7 +70,7 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
    * Returns the back icon key as string
    */
   public get backIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_CHEVRON_LEFT;
+    return CommonDefinition.ASSETS_SVG_CHEVRON_LEFT;
   }
 
   /**

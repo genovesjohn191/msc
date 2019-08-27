@@ -12,7 +12,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { HttpStatusCode } from '@app/models';
 import {
-  unsubscribeSubject,
+  unsubscribeSafely,
   isNullOrEmpty
 } from '@app/utilities';
 
@@ -58,7 +58,7 @@ export class HttpErrorPageComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this._destroySubject);
   }
 
   /**

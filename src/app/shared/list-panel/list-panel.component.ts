@@ -17,7 +17,7 @@ import {
 import { takeUntil } from 'rxjs/operators';
 import {
   isNullOrEmpty,
-  unsubscribeSubject
+  unsubscribeSafely
 } from '@app/utilities';
 import { OptionComponent } from '../option-group/option/option.component';
 import { OptionGroupComponent } from '../option-group/option-group.component';
@@ -56,7 +56,7 @@ export class ListPanelComponent implements AfterContentInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this._destroySubject);
   }
 
   /**

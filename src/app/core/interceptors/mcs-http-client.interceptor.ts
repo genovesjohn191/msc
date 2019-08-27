@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import { McsEvent } from '@app/events';
-import { McsGuid } from '../factory/unique-generators/mcs-guid';
+import { Guid } from '@app/utilities';
 
 @Injectable()
 export class McsHttpClientInterceptor implements HttpInterceptor {
@@ -18,7 +18,7 @@ export class McsHttpClientInterceptor implements HttpInterceptor {
   constructor(private _eventDispatcher: EventBusDispatcherService) { }
 
   public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    let pendingRequestId = McsGuid.newGuid().toString();
+    let pendingRequestId = Guid.newGuid().toString();
     this._requestsMap.set(pendingRequestId, request);
     this._setLoadingStatus();
 

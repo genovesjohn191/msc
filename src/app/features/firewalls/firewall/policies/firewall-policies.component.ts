@@ -5,11 +5,11 @@ import {
   Injector
 } from '@angular/core';
 import { Observable } from 'rxjs';
+import { McsTableListingBase } from '@app/core';
 import {
-  CoreDefinition,
-  McsTableListingBase
-} from '@app/core';
-import { animateFactory } from '@app/utilities';
+  animateFactory,
+  CommonDefinition
+} from '@app/utilities';
 import {
   McsFirewallPolicy,
   McsQueryParam,
@@ -40,11 +40,11 @@ export class FirewallPoliciesComponent extends McsTableListingBase<McsFirewallPo
   public selectedFirewallPolicy: McsFirewallPolicy;
 
   public get columnFilterIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_COLUMNS_BLACK;
+    return CommonDefinition.ASSETS_SVG_COLUMNS_BLACK;
   }
 
   public get infoIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_CIRCLE_INFO_BLACK;
+    return CommonDefinition.ASSETS_SVG_CIRCLE_INFO_BLACK;
   }
 
   /**
@@ -96,7 +96,7 @@ export class FirewallPoliciesComponent extends McsTableListingBase<McsFirewallPo
    * Returns the column settings key for the filter selector
    */
   protected get columnSettingsKey(): string {
-    return CoreDefinition.FILTERSELECTOR_FIREWALL_POLICIES_LISTING;
+    return CommonDefinition.FILTERSELECTOR_FIREWALL_POLICIES_LISTING;
   }
 
   /**

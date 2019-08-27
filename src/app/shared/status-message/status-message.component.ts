@@ -4,8 +4,10 @@ import {
   ViewEncapsulation,
   Input
 } from '@angular/core';
-import { CoreDefinition } from '@app/core';
-import { McsStatusType } from '@app/utilities';
+import {
+  McsStatusType,
+  CommonDefinition
+} from '@app/utilities';
 
 @Component({
   selector: 'mcs-status-message',
@@ -38,9 +40,9 @@ export class StatusMessageComponent {
    * Creates the status icon map table
    */
   private _createStatusIconMap(): void {
-    this._statusIconMap.set('info', CoreDefinition.ASSETS_SVG_INFO);
-    this._statusIconMap.set('warning', CoreDefinition.ASSETS_SVG_WARNING);
-    this._statusIconMap.set('success', CoreDefinition.ASSETS_SVG_SUCCESS);
-    this._statusIconMap.set('error', CoreDefinition.ASSETS_SVG_ERROR);
+    this._statusIconMap.set('info', CommonDefinition.ASSETS_SVG_INFO);
+    this._statusIconMap.set('warning', CommonDefinition.ASSETS_SVG_WARNING);
+    this._statusIconMap.set('success', CommonDefinition.ASSETS_SVG_SUCCESS);
+    this._statusIconMap.set('error', CommonDefinition.ASSETS_SVG_ERROR);
   }
 }

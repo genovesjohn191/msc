@@ -11,8 +11,10 @@ import {
   Renderer2,
   ViewContainerRef
 } from '@angular/core';
-import { CoreDefinition } from '@app/core';
-import { isNullOrEmpty } from '@app/utilities';
+import {
+  isNullOrEmpty,
+  CommonDefinition
+} from '@app/utilities';
 import { PageHeaderDirective } from './page-header.directive';
 import {
   ContentPanelDefDirective,
@@ -112,8 +114,8 @@ export class PageComponent implements AfterContentInit {
   }
 
   public get navIconKey(): string {
-    return this.leftPanelIsVisible ? CoreDefinition.ASSETS_SVG_CLOSE_BLACK :
-      CoreDefinition.ASSETS_SVG_NEXT_ARROW;
+    return this.leftPanelIsVisible ? CommonDefinition.ASSETS_SVG_CLOSE_BLACK :
+      CommonDefinition.ASSETS_SVG_NEXT_ARROW;
   }
 
   public ngAfterContentInit(): void {

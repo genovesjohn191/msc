@@ -5,8 +5,10 @@ import {
   ViewEncapsulation,
   ChangeDetectionStrategy
 } from '@angular/core';
-import { CoreDefinition } from '@app/core';
-import { coerceBoolean } from '@app/utilities';
+import {
+  coerceBoolean,
+  CommonDefinition
+} from '@app/utilities';
 import { DialogRef } from '../dialog-ref/dialog-ref';
 
 @Component({
@@ -48,7 +50,7 @@ export class DialogHeaderComponent {
   private _hideCloseButton: boolean = false;
 
   public get closeIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_CLOSE_BLACK;
+    return CommonDefinition.ASSETS_SVG_CLOSE_BLACK;
   }
 
   constructor(@Optional() public dialogRef: DialogRef<any>) { }

@@ -1,11 +1,23 @@
 export class CommonDefinition {
 
-  // Common Url
-  public static INVIEW_URL =  `{{macviewUrl}}/Bounce.aspx?bounce=1&mvClientID={{companyId}}
-  &mvURL={{inviewUrl}}%2Fframe%2Finview%2Fdata_details.html%3Fservice%3D{{serviceId}};`;
+  /** Headers */
+  public static HEADER_ACCEPT = 'Accept';
+  public static HEADER_CONTENT_TYPE = 'Content-Type';
+  public static HEADER_API_VERSION = 'Api-Version';
+  public static HEADER_COMPANY_ID = 'Company-Id';
 
-  // Common Timezone
-  public static TIMEZONE_SYDNEY = `Australia/Sydney`;
+  /** Query Parameters */
+  public static QUERY_PARAM_BEARER = 'bearer';
+
+  /** AppState Properties */
+  public static APPSTATE_RETURN_URL_KEY = 'Return-Url';
+
+  /** Cookie Names */
+  public static COOKIE_ACTIVE_ACCOUNT = 'MCSACC';
+  public static COOKIE_SESSION_TIMER = 'mcsSessionTimer';
+  public static COOKIE_SESSION_ID = 'mcsSessionId';
+  public static COOKIE_USER_STATE_ID = 'mcsStateId';
+  public static COOKIE_ACTIVE_MESSAGE = 'mcsActiveMessage';
 
   // Cookies
   public static COOKIE_ENABLE_LOGGER = '_enableMcsObserver';
@@ -15,8 +27,49 @@ export class CommonDefinition {
   public static PAGE_SIZE_MIN = 25;
   public static PAGE_SIZE_MAX = 1000;
 
+  /** Others */
+  public static SEARCH_TIME = 1000;
+  public static DEFAULT_VIEW_REFRESH_TIME = 50;
+
+  /** Notifications */
+  public static NOTIFICATION_ANIMATION_DELAY = 310;
+  public static NOTIFICATION_COMPLETED_TIMEOUT_IN_MS = 5000;
+  public static NOTIFICATION_FAILED_TIMEOUT_IN_MS = 10000;
+  public static NOTIFICATION_CONNECTION_RETRY_INTERVAL = 10000;
+
+  // Common Url
+  public static INVIEW_URL = `{{macviewUrl}}/Bounce.aspx?bounce=1&mvClientID={{companyId}}
+  &mvURL={{inviewUrl}}%2Fframe%2Finview%2Fdata_details.html%3Fservice%3D{{serviceId}};`;
+
+  // Common Timezone
+  public static TIMEZONE_SYDNEY = `Australia/Sydney`;
+
   // Ordering Flags
   public static ORDERING_ENABLE_PRICING_CALCULATOR = false;
+
+  /** Responsive Browser Width */
+  /** These variables should be the same with the css definition */
+  public static BREAKPOINT_XSMALL = 0;
+  public static BREAKPOINT_SMALL = 543;
+  public static BREAKPOINT_MEDIUM = 720;
+  public static BREAKPOINT_LARGE = 970;
+
+  /** Icons */
+  public static ICON_SIZE_XXSMALL = 5;
+  public static ICON_SIZE_XSMALL = 10;
+  public static ICON_SIZE_SMALL = 15;
+  public static ICON_SIZE_MEDIUM = 20;
+  public static ICON_SIZE_LARGE = 25;
+  public static ICON_SIZE_XLARGE = 30;
+  public static ICON_SIZE_XXLARGE = 40;
+
+  /** Images */
+  public static IMAGE_SIZE_XSMALL = 100;
+  public static IMAGE_SIZE_SMALL = 150;
+  public static IMAGE_SIZE_MEDIUM = 200;
+  public static IMAGE_SIZE_LARGE = 250;
+  public static IMAGE_SIZE_XLARGE = 300;
+  public static IMAGE_SIZE_XXLARGE = 400;
 
   // GIF Icons
   public static ASSETS_GIF_LOADER_SPINNER = 'loader-spinner';
@@ -24,6 +77,10 @@ export class CommonDefinition {
 
   // Images
   public static ASSETS_IMAGE_MCS_LIGHT_LOGO_SVG = 'light-mcs-logo-svg';
+  public static ASSETS_IMAGE_MCS_LIGHT_LOGO = 'light-mcs-logo';
+  public static ASSETS_IMAGE_MCS_DARK_LOGO = 'dark-mcs-logo';
+  public static ASSETS_IMAGE_USER_PERMISSIONS = 'user-permissions';
+  public static ASSETS_IMAGE_PRODUCT_CATALOG_BANNER = 'product-catalog-banner';
 
   // SVG Icons
   public static ASSETS_SVG_NO_ICON_AVAILABLE = 'no-icon-available';
@@ -141,4 +198,29 @@ export class CommonDefinition {
   public static FILTERSELECTOR_INTERNET_LISTING = 'internetFilter';
   public static FILTERSELECTOR_TOOLS_LISTING = 'toolsFilter';
   public static FILTERSELECTOR_SYSTEM_MESSAGE_LISTING = 'systemMessageFilter';
+
+  /** RegEx Patterns */
+  public static REGEX_EMAIL_PATTERN = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+  public static REGEX_IP_PATTERN = /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.|$)){4}$/;
+  public static REGEX_URL_PATTERN
+    = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+  public static REGEX_ALPHANUMERIC_PATTERN = /^[a-zA-Z0-9]+$/;
+  public static REGEX_NUMERIC_PATTERN = /^-?\d*(\.\d+)?$/;
+  public static REGEX_SERVER_NAME_PATTERN = /^[a-zA-Z0-9\-]*$/;
+  public static REGEX_MEDIA_NAME_PATTERN = /^[a-zA-Z0-9\-]*$/;
+  public static REGEX_UUID_PATTERN
+    = /[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/gi;
+  public static REGEX_SPACE_AND_DASH = /([\s-]+)/;
+  public static REGEX_BEARER_PATTERN = /bearer=[^&]*/g;
+
+  /** Session count */
+  public static SESSION_IDLE_TIME_IN_SECONDS = 720;
+  public static SESSION_TIMEOUT_COUNTDOWN_IN_SECONDS = 150;
+
+  /** Paging Setup */
+  public static DEFAULT_PAGE_INDEX = 1;
+  public static DEFAULT_PAGE_SIZE = 25;
+
+  /** Environment settings */
+  public static LOCALE = 'en-AU';
 }

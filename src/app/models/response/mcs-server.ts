@@ -1,8 +1,8 @@
 import { JsonProperty } from 'json-object-mapper';
-import { CoreDefinition } from '@app/core';
 import {
   getSafeProperty,
-  isNullOrEmpty
+  isNullOrEmpty,
+  CommonDefinition
 } from '@app/utilities';
 import { McsServerOperatingSystemSummary } from './mcs-server-operating-system-summary';
 import { McsServerHardware } from './mcs-server-hardware';
@@ -27,7 +27,6 @@ import {
   InviewLevelSerialization,
   inviewLevelText
 } from '../enumerations/inview-level.enum';
-import { ServerCommand } from '../enumerations/server-command.enum';
 import { McsEntityBase } from '../common/mcs-entity.base';
 import { PlatformType } from '../enumerations/platform-type.enum';
 import { Os } from '../enumerations/os.enum';
@@ -47,11 +46,6 @@ export class McsServer extends McsEntityBase {
   public vCenterId: string = undefined;
   public osAutomationAvailable: boolean = undefined;
   public serviceChangeAvailable: boolean = undefined;
-
-  /**
-   * @deprecated this should be removed once the mcs-api-services.ts is finished
-   */
-  public commandAction: ServerCommand = undefined;
 
   @JsonProperty({ type: McsServerVmwareTools })
   public vmwareTools: McsServerVmwareTools = undefined;
@@ -271,23 +265,23 @@ export class McsServer extends McsEntityBase {
       case VmPowerState.Unknown:
       case VmPowerState.Unrecognised:
       case VmPowerState.PoweredOff:
-        stateIconKey = CoreDefinition.ASSETS_SVG_STATE_STOPPED;
+        stateIconKey = CommonDefinition.ASSETS_SVG_STATE_STOPPED;
         break;
 
       case VmPowerState.Resolved:     // Amber
       case VmPowerState.WaitingForInput:
       case VmPowerState.InconsistentState:
       case VmPowerState.Mixed:
-        stateIconKey = CoreDefinition.ASSETS_SVG_STATE_RESTARTING;
+        stateIconKey = CommonDefinition.ASSETS_SVG_STATE_RESTARTING;
         break;
 
       case VmPowerState.Suspended:    // Grey
-        stateIconKey = CoreDefinition.ASSETS_SVG_STATE_SUSPENDED;
+        stateIconKey = CommonDefinition.ASSETS_SVG_STATE_SUSPENDED;
         break;
 
       case VmPowerState.PoweredOn:    // Green
       default:
-        stateIconKey = CoreDefinition.ASSETS_SVG_STATE_RUNNING;
+        stateIconKey = CommonDefinition.ASSETS_SVG_STATE_RUNNING;
         break;
     }
     return stateIconKey;
@@ -306,14 +300,6 @@ export class McsServer extends McsEntityBase {
    */
   public get isDedicated(): boolean {
     return getSafeProperty(this.platform, (obj) => obj.type) === PlatformType.VCenter;
-  }
-
-  /**
-   * Returns true when the current server is deleting
-   */
-  public get isDeleting(): boolean {
-    return this.commandAction === ServerCommand.Delete
-      && this.isProcessing;
   }
 
   /**

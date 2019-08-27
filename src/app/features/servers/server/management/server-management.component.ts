@@ -21,7 +21,6 @@ import {
 } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 import {
-  CoreDefinition,
   CoreRoutes,
   McsServerPermission,
   McsNavigationService
@@ -32,7 +31,8 @@ import {
   getEncodedUrl,
   unsubscribeSafely,
   convertGbToMb,
-  getSafeProperty
+  getSafeProperty,
+  CommonDefinition
 } from '@app/utilities';
 import {
   IpAllocationMode,
@@ -122,11 +122,11 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
   }
 
   public get consoleIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_DOS_PROMPT_GREY;
+    return CommonDefinition.ASSETS_SVG_DOS_PROMPT_GREY;
   }
 
   public get ejectIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_EJECT_BLACK;
+    return CommonDefinition.ASSETS_SVG_EJECT_BLACK;
   }
 
   public get routeKeyEnum(): any {

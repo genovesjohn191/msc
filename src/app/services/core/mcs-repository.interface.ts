@@ -6,8 +6,6 @@ export interface McsRepository<T> {
   filterBy(query: McsQueryParam): Observable<T[]>;
   getBy(predicate: (entity: T) => boolean): Observable<T>;
   getById(id: string): Observable<T>;
-  getByIdAsync(id: string): Observable<T>;
-  getByIdAsync(id: string, completedCallback?: () => void): Observable<T>;
   getTotalRecordsCount(): number;
 
   addOrUpdate(entity: T, insertIndex?: number): void;

@@ -95,33 +95,6 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
   }
 
   /**
-   * Gets the record based on its id that includes the background update of the record as async
-   * @deprecated use getById instead
-   * @param id Id to be obtained
-   */
-  public getByIdAsync(id: string): Observable<T>;
-
-  /**
-   * Gets the record based on its id and notifies the callback once the rendering was finished
-   * @param id Id to be obtained
-   * @param completedCallback Completed callback that triggers when the obtainment was finished
-   */
-  public getByIdAsync(id: string, completedCallback?: () => void): Observable<T>;
-  public getByIdAsync(id: string, completedCallback?: () => void): Observable<T> {
-    let recordFound = this.dataRecords.find((item) => item.id === id);
-    let getByIdObserver = !isNullOrEmpty(recordFound) ?
-      this._getRecordByIdFromCache(id, completedCallback) :
-      this._getRecordByIdFromContext(id).pipe(
-        finalize(() => completedCallback && completedCallback())
-      );
-
-    return getByIdObserver.pipe(
-      switchMap(() => of(this.dataRecords.find((record) => record.id === id))),
-      finalize(() => this._notifyDataChange())
-    );
-  }
-
-  /**
    * Get the record from the current datasource based on the predicate provided
    * @param predicate Predicate of the item that returns true if the record should be obtained
    */
@@ -361,17 +334,6 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
         this._cacheRecords(...newRecords);
       })
     );
-  }
-
-  /**
-   * Get record by ID from cached data
-   * @param id Id of the record to obtain
-   */
-  private _getRecordByIdFromCache(id: string, completedCallback?: (data?: T) => void): Observable<T> {
-    this._getRecordByIdFromContext(id).pipe(
-      finalize(() => completedCallback && completedCallback())
-    ).subscribe();
-    return of(this.dataRecords.find((item) => item.id === id));
   }
 
   /**

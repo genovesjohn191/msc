@@ -15,10 +15,10 @@ import {
   map
 } from 'rxjs/operators';
 import { McsJob } from '@app/models';
-import { CoreDefinition } from '@app/core';
 import {
   unsubscribeSafely,
-  getSafeProperty
+  getSafeProperty,
+  CommonDefinition
 } from '@app/utilities';
 import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import { McsEvent } from '@app/events';
@@ -51,11 +51,11 @@ export class NotificationComponent implements OnInit, OnDestroy {
   }
 
   public get backIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_CHEVRON_LEFT;
+    return CommonDefinition.ASSETS_SVG_CHEVRON_LEFT;
   }
 
   public get dotIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_BULLET;
+    return CommonDefinition.ASSETS_FONT_BULLET;
   }
 
   /**

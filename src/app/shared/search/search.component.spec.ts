@@ -4,9 +4,9 @@ import {
   tick,
   fakeAsync
 } from '@angular/core/testing';
-import { SearchComponent } from './search.component';
-import { CoreDefinition } from '@app/core';
+import { CommonDefinition } from '@app/utilities';
 import { CoreTestingModule } from '@app/core/testing';
+import { SearchComponent } from './search.component';
 
 describe('SearchComponent', () => {
 
@@ -49,7 +49,7 @@ describe('SearchComponent', () => {
   describe('onChangeKeyEvent()', () => {
     it(`should set the keyword to "A".`, fakeAsync(() => {
       component.onChangeKeyEvent('A');
-      tick(CoreDefinition.SEARCH_TIME as number);
+      tick(CommonDefinition.SEARCH_TIME as number);
       expect(component.keyword).toBe('A');
     }));
   });
@@ -57,7 +57,7 @@ describe('SearchComponent', () => {
   describe('onEnterKeyUpEvent()', () => {
     it(`should set the keyword to "B".`, fakeAsync(() => {
       component.onEnterKeyUpEvent('B');
-      tick(CoreDefinition.SEARCH_TIME as number);
+      tick(CommonDefinition.SEARCH_TIME as number);
       expect(component.keyword).toBe('B');
     }));
   });

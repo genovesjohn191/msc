@@ -18,9 +18,9 @@ import {
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
-  unsubscribeSubject,
   refreshView,
-  animateFactory
+  animateFactory,
+  unsubscribeSafely
 } from './utilities';
 
 /*
@@ -70,7 +70,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this._destroySubject);
   }
 
   /**

@@ -8,12 +8,10 @@ import {
   Injector
 } from '@angular/core';
 import {
-  CoreDefinition,
   McsOrderWizardBase,
   McsFormGroupService,
   IMcsFormGroup,
   CoreValidators,
-  McsGuid,
   OrderRequester
 } from '@app/core';
 import {
@@ -26,7 +24,9 @@ import {
   getSafeProperty,
   unsubscribeSafely,
   convertGbToMb,
-  convertMbToGb
+  convertMbToGb,
+  CommonDefinition,
+  Guid
 } from '@app/utilities';
 import {
   map,
@@ -64,7 +64,7 @@ type ScaleManageProperties = {
   memoryMB: number;
 };
 
-const SCALE_MANAGE_SERVER_REF_ID = McsGuid.newGuid().toString();
+const SCALE_MANAGE_SERVER_REF_ID = Guid.newGuid().toString();
 
 @Component({
   selector: 'mcs-order-server-managed-scale',
@@ -122,7 +122,7 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
    * Returns the back icon key as string
    */
   public get backIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_CHEVRON_LEFT;
+    return CommonDefinition.ASSETS_SVG_CHEVRON_LEFT;
   }
 
   /**

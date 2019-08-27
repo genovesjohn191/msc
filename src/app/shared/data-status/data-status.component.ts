@@ -15,7 +15,7 @@ import { McsDataStatusFactory } from '@app/core';
 import {
   isNullOrEmpty,
   animateFactory,
-  unsubscribeSubject
+  unsubscribeSafely
 } from '@app/utilities';
 import { DataStatus } from '@app/models';
 import { DataStatusErrorComponent } from './data-status-error/data-status-error.component';
@@ -72,7 +72,7 @@ export class DataStatusComponent implements OnDestroy {
   ) { }
 
   public ngOnDestroy() {
-    unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this._destroySubject);
   }
 
   public get dataStatusEnum(): any {

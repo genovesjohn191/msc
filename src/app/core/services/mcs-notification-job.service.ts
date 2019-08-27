@@ -19,8 +19,8 @@ import {
   unsubscribeSafely,
   deserializeJsonToObject,
   isNullOrEmpty,
-  unsubscribeSubject,
-  McsDisposable
+  McsDisposable,
+  CommonDefinition
 } from '@app/utilities';
 import {
   McsJob,
@@ -37,7 +37,6 @@ import {
 } from '@peerlancers/ngx-logger';
 
 import { McsSessionHandlerService } from './mcs-session-handler.service';
-import { CoreDefinition } from '../core.definition';
 
 const DEFAULT_HEARTBEAT_IN = 0;
 const DEFAULT_HEARTBEAT_OUT = 20000;
@@ -84,9 +83,9 @@ export class McsNotificationJobService implements McsDisposable {
   public dispose() {
     unsubscribeSafely(this._stompSubscription);
     unsubscribeSafely(this._apiSubscription);
-    unsubscribeSubject(this.connectionStatusStream);
-    unsubscribeSubject(this.notificationStream);
-    unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this.connectionStatusStream);
+    unsubscribeSafely(this.notificationStream);
+    unsubscribeSafely(this._destroySubject);
     unsubscribeSafely(this._userChangeHandler);
     this._disconnectStomp();
   }
@@ -123,7 +122,7 @@ export class McsNotificationJobService implements McsDisposable {
       debug: false,
       heartbeat_in: DEFAULT_HEARTBEAT_IN,
       heartbeat_out: DEFAULT_HEARTBEAT_OUT,
-      reconnect_delay: CoreDefinition.NOTIFICATION_CONNECTION_RETRY_INTERVAL
+      reconnect_delay: CommonDefinition.NOTIFICATION_CONNECTION_RETRY_INTERVAL
     } as StompConfig;
     this._stompService.initAndConnect();
   }

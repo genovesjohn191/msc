@@ -15,11 +15,11 @@ import {
   FileUploader,
   FileItem
 } from 'ng2-file-upload';
-import { CoreDefinition } from '@app/core';
 import { McsFileInfo } from '@app/models';
 import {
   isNullOrEmpty,
-  coerceNumber
+  coerceNumber,
+  CommonDefinition
 } from '@app/utilities';
 import {
   DialogRef,
@@ -61,7 +61,7 @@ export class FileAttachmentComponent implements OnInit {
   private _errorDialogTemplate: TemplateRef<any>;
 
   public get errorIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_WARNING;
+    return CommonDefinition.ASSETS_FONT_WARNING;
   }
 
   public constructor(
@@ -78,11 +78,11 @@ export class FileAttachmentComponent implements OnInit {
   }
 
   public get cloudUploadBlueIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_CLOUD_UPLOAD_BLUE;
+    return CommonDefinition.ASSETS_SVG_CLOUD_UPLOAD_BLUE;
   }
 
   public get closeIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_TRASH;
+    return CommonDefinition.ASSETS_FONT_TRASH;
   }
 
   public ngOnInit() {

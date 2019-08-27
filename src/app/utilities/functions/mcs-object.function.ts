@@ -43,17 +43,6 @@ export function unsubscribeSafely(subscriber: Subscription | Subject<any>): void
 }
 
 /**
- * Unsubscribe the subject to kill its reference
- * @param subject Subject to be killed
- * @deprecated use the unsubscribeSafely instead
- */
-export function unsubscribeSubject(subject: Subject<any>): void {
-  if (isNullOrEmpty(subject)) { return; }
-  subject.next();
-  subject.complete();
-}
-
-/**
  * Update the object data without removing the instance of the source element
  * @param target The target object to copy to.
  * @param source The source object from which to copy records.

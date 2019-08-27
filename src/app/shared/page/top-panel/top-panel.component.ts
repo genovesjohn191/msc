@@ -18,7 +18,7 @@ import {
 } from 'rxjs/operators';
 import {
   coerceBoolean,
-  unsubscribeSubject
+  unsubscribeSafely
 } from '@app/utilities';
 import {
   TopPanelItemPlaceholderDirective
@@ -77,7 +77,7 @@ export class TopPanelComponent implements AfterContentInit, OnDestroy {
   }
 
   public ngOnDestroy() {
-    unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this._destroySubject);
   }
 
   private _setActiveParentElement(value: boolean): void {

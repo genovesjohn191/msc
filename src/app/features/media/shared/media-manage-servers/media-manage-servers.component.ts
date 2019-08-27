@@ -15,7 +15,7 @@ import {
 import { McsDataStatusFactory } from '@app/core';
 import {
   isNullOrEmpty,
-  unsubscribeSubject,
+  unsubscribeSafely,
   getSafeProperty
 } from '@app/utilities';
 import { McsServer } from '@app/models';
@@ -61,7 +61,7 @@ export class MediaManageServersComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy() {
-    unsubscribeSubject(this.dataChange);
+    unsubscribeSafely(this.dataChange);
   }
 
   /**

@@ -6,7 +6,7 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy
 } from '@angular/core';
-import { CoreDefinition } from '@app/core';
+import { CommonDefinition } from '@app/utilities';
 import { McsFirewallPolicy } from '@app/models';
 
 @Component({
@@ -36,7 +36,7 @@ export class FirewallPolicyComponent {
    * Returns the close icon key
    */
   public get closeIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_CLOSE_BLACK;
+    return CommonDefinition.ASSETS_SVG_CLOSE_BLACK;
   }
 
   /**

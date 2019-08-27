@@ -2,7 +2,7 @@ import {
   async,
   TestBed
 } from '@angular/core/testing';
-import { CoreDefinition } from '@app/core';
+import { CommonDefinition } from '@app/utilities';
 import { HeaderComponent } from './header.component';
 
 describe('HeaderComponent', () => {
@@ -40,7 +40,7 @@ describe('HeaderComponent', () => {
   /** Test Implementation */
   describe('ngOnInit()', () => {
     it('should call the getImagePath() of AssetsProvider', () => {
-      expect(component.lightLogoIconKey).toBe(CoreDefinition.ASSETS_IMAGE_MCS_LIGHT_LOGO_SVG);
+      expect(component.lightLogoIconKey).toBe(CommonDefinition.ASSETS_IMAGE_MCS_LIGHT_LOGO_SVG);
     });
   });
 });

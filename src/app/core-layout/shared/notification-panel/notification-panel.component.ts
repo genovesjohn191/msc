@@ -10,13 +10,13 @@ import {
   ChangeDetectorRef,
   ViewEncapsulation
 } from '@angular/core';
-import { CoreDefinition } from '@app/core';
 import {
   McsJob,
   DataStatus,
   RouteKey,
 } from '@app/models';
 import {
+  CommonDefinition,
   refreshView,
   isNullOrEmpty,
   getSafeProperty
@@ -85,11 +85,11 @@ export class NotificationPanelComponent implements OnInit, OnChanges {
   private _timeRemainingInMilliSeconds: number;
 
   public get closeIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_CLOSE_WHITE;
+    return CommonDefinition.ASSETS_SVG_CLOSE_WHITE;
   }
 
   public get bulletIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_BULLET;
+    return CommonDefinition.ASSETS_FONT_BULLET;
   }
 
   public get dataStatusEnum(): any {
@@ -100,8 +100,8 @@ export class NotificationPanelComponent implements OnInit, OnChanges {
     let dataStatus = getSafeProperty(this.notification, (obj) => obj.dataStatus);
     if (dataStatus === DataStatus.InProgress) { return undefined; }
     return dataStatus === DataStatus.Success ?
-      CoreDefinition.NOTIFICATION_COMPLETED_TIMEOUT_IN_MS :
-      CoreDefinition.NOTIFICATION_FAILED_TIMEOUT_IN_MS;
+      CommonDefinition.NOTIFICATION_COMPLETED_TIMEOUT_IN_MS :
+      CommonDefinition.NOTIFICATION_FAILED_TIMEOUT_IN_MS;
   }
 
   public constructor(
@@ -197,7 +197,7 @@ export class NotificationPanelComponent implements OnInit, OnChanges {
       this._ngZone.runOutsideAngular(() => {
         refreshView(() => {
           this.remove.emit(this.notification);
-        }, CoreDefinition.NOTIFICATION_ANIMATION_DELAY);
+        }, CommonDefinition.NOTIFICATION_ANIMATION_DELAY);
       });
     }, timeOut);
   }

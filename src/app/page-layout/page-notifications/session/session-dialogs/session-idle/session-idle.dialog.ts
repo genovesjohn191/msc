@@ -12,7 +12,7 @@ import {
   map,
   take
 } from 'rxjs/operators';
-import { CoreDefinition } from '@app/core';
+import { CommonDefinition } from '@app/utilities';
 import {
   DialogRef,
   DIALOG_DATA
@@ -31,7 +31,7 @@ export class SessionIdleDialogComponent implements OnInit {
   public countDown: Observable<number>;
 
   public get warningIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_WARNING;
+    return CommonDefinition.ASSETS_SVG_WARNING;
   }
 
   constructor(

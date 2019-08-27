@@ -22,14 +22,14 @@ import {
   takeUntil
 } from 'rxjs/operators';
 import {
-  CoreDefinition,
   CoreValidators,
   McsDataStatusFactory
 } from '@app/core';
 import {
   isNullOrEmpty,
   unsubscribeSafely,
-  getSafeProperty
+  getSafeProperty,
+  CommonDefinition
 } from '@app/utilities';
 import {
   ServiceType,
@@ -232,7 +232,7 @@ export class ServerCloneComponent
    * @param inputValue Inputted value from input box
    */
   private _customServerNameValidator(inputValue: any): boolean {
-    return CoreDefinition.REGEX_SERVER_NAME_PATTERN.test(inputValue);
+    return CommonDefinition.REGEX_SERVER_NAME_PATTERN.test(inputValue);
   }
 
   /**

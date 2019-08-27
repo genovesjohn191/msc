@@ -7,13 +7,11 @@ import {
   Injector
 } from '@angular/core';
 import { map } from 'rxjs/operators';
-import {
-  CoreDefinition,
-  McsTableDataSource
-} from '@app/core';
+import { McsTableDataSource } from '@app/core';
 import {
   isNullOrEmpty,
-  getSafeProperty
+  getSafeProperty,
+  CommonDefinition
 } from '@app/utilities';
 import { McsResourceStorage } from '@app/models';
 import { VdcDetailsBase } from '../vdc-details.base';
@@ -32,7 +30,7 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnInit, OnDes
   public storageColumns: string[];
 
   public get storageIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_STORAGE;
+    return CommonDefinition.ASSETS_SVG_STORAGE;
   }
 
   /**

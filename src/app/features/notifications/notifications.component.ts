@@ -6,12 +6,14 @@ import {
 } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
-  CoreDefinition,
   McsTableListingBase,
   McsAuthenticationIdentity,
   McsNavigationService
 } from '@app/core';
-import { isNullOrEmpty } from '@app/utilities';
+import {
+  isNullOrEmpty,
+  CommonDefinition
+} from '@app/utilities';
 import { McsApiService } from '@app/services';
 import {
   McsCompany,
@@ -62,7 +64,7 @@ export class NotificationsComponent extends McsTableListingBase<McsJob> {
    * Returns the column settings key for the filter selector
    */
   protected get columnSettingsKey(): string {
-    return CoreDefinition.FILTERSELECTOR_NOTIFICATIONS_LISTING;
+    return CommonDefinition.FILTERSELECTOR_NOTIFICATIONS_LISTING;
   }
 
   /**

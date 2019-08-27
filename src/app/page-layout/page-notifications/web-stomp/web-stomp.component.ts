@@ -11,10 +11,12 @@ import {
   McsSnackBarService,
   McsNotificationJobService,
   McsSnackBarConfig,
-  CoreDefinition,
   McsNotificationContextService
 } from '@app/core';
-import { isNullOrEmpty } from '@app/utilities';
+import {
+  isNullOrEmpty,
+  CommonDefinition
+} from '@app/utilities';
 import { NetworkStatus } from '@app/models';
 
 const DEFAULT_SUCCESS_SNACKBAR_DURATION = 5000;
@@ -41,7 +43,7 @@ export class WebStompComponent implements OnInit {
    * Returns the check icon key
    */
   public get checkIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_CHECK;
+    return CommonDefinition.ASSETS_FONT_CHECK;
   }
 
   constructor(

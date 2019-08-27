@@ -14,7 +14,6 @@ import {
   FormGroup,
   FormControl
 } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
 import {
   Subscription,
   Observable,
@@ -26,23 +25,21 @@ import {
   takeUntil
 } from 'rxjs/operators';
 import {
-  CoreDefinition,
   CoreValidators,
   IMcsFormGroup
 } from '@app/core';
 import {
   replacePlaceholder,
   isNullOrEmpty,
-  appendUnitSuffix,
   convertMbToGb,
   convertGbToMb,
   getSafeProperty,
-  unsubscribeSafely
+  unsubscribeSafely,
+  CommonDefinition
 } from '@app/utilities';
 import {
   CatalogItemType,
   ServiceType,
-  UnitType,
   McsResource,
   McsResourceStorage,
   McsResourceCatalogItem,
@@ -136,7 +133,6 @@ export class ServerNewComponent
 
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
-    private _translate: TranslateService,
     private _eventDispatcher: EventBusDispatcherService,
     private _apiService: McsApiService
   ) {
@@ -173,14 +169,10 @@ export class ServerNewComponent
   }
 
   /**
-   * Returns the storage warning text
+   * Returns the storage memory value when warning text appear
    */
-  public get storageWarning(): string {
-    let maxMemoryInGB = Math.floor(this.storageMaxMemoryGB);
-
-    return this._translate.instant('serverCreateDetailsStep.newServer.fullStorageSpace', {
-      remaining_memory: appendUnitSuffix(maxMemoryInGB, UnitType.Gigabyte)
-    });
+  public get warningStorageMemory(): number {
+    return Math.floor(this.storageMaxMemoryGB);
   }
 
   /**
@@ -406,7 +398,7 @@ export class ServerNewComponent
    * @param inputValue Inputted value from input box
    */
   private _customServerNameValidator(inputValue: any): boolean {
-    return CoreDefinition.REGEX_SERVER_NAME_PATTERN.test(inputValue);
+    return CommonDefinition.REGEX_SERVER_NAME_PATTERN.test(inputValue);
   }
 
   /**

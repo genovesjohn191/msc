@@ -7,10 +7,10 @@ import {
 import {
   McsAuthenticationService,
   CoreConfig,
-  CoreDefinition,
   McsNavigationService
 } from '@app/core';
 import { RouteKey } from '@app/models';
+import { CommonDefinition } from '@app/utilities';
 
 @Component({
   selector: 'mcs-dashboard',
@@ -32,7 +32,7 @@ export class DashboardComponent implements OnInit {
   }
 
   public get userPermissionsImageKey(): string {
-    return CoreDefinition.ASSETS_IMAGE_USER_PERMISSIONS;
+    return CommonDefinition.ASSETS_IMAGE_USER_PERMISSIONS;
   }
 
   /**

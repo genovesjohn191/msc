@@ -3,11 +3,11 @@ import { formatDate } from '@angular/common';
 import {
   isNullOrEmpty,
   convertDateTimezoneToUTC,
-  isDateFormatValid
+  isDateFormatValid,
+  CommonDefinition
 } from '@app/utilities';
 
 import * as moment from 'moment-timezone';
-import { CoreDefinition } from '../core.definition';
 
 export type McsDateTimeFormat = 'default' | 'short' | 'medium' | 'long' | 'full' |
   'dashShortDate' | 'shortDate' | 'mediumDate' | 'longDate' | 'fullDate' |
@@ -39,7 +39,7 @@ export class McsDateTimeService {
     if (formatFound) {
       actualFormat = this._dateTimeMapTable.get(formatType as McsDateTimeFormat);
     }
-    return formatDate(date.toUTCString(), actualFormat, CoreDefinition.LOCALE, timeZone);
+    return formatDate(date.toUTCString(), actualFormat, CommonDefinition.LOCALE, timeZone);
   }
 
   /**

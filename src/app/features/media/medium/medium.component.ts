@@ -22,7 +22,6 @@ import {
   map
 } from 'rxjs/operators';
 import {
-  CoreDefinition,
   McsRoutingTabBase,
   McsDataStatusFactory,
   McsNavigationService
@@ -30,7 +29,8 @@ import {
 import {
   isNullOrEmpty,
   unsubscribeSafely,
-  getSafeProperty
+  getSafeProperty,
+  CommonDefinition
 } from '@app/utilities';
 import {
   RouteKey,
@@ -107,11 +107,11 @@ export class MediumComponent
   }
 
   public get angleDoubleRightIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_NEXT_ARROW;
+    return CommonDefinition.ASSETS_SVG_NEXT_ARROW;
   }
 
   public get backIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_CHEVRON_LEFT;
+    return CommonDefinition.ASSETS_SVG_CHEVRON_LEFT;
   }
 
   /**

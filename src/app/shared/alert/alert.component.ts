@@ -8,7 +8,6 @@ import {
   Renderer2
 } from '@angular/core';
 import { AnimationEvent } from '@angular/animations';
-import { CoreDefinition } from '@app/core';
 import {
   McsStatusType,
   animateFactory,
@@ -106,7 +105,7 @@ export class AlertComponent {
    */
   private _setIconStatusKeyByType(): void {
     let iconKey = this._iconTableMap.get(this.type);
-    this.iconStatusKey = iconKey || CoreDefinition.ASSETS_SVG_INFO;
+    this.iconStatusKey = iconKey || CommonDefinition.ASSETS_SVG_INFO;
   }
 
   /**
@@ -115,9 +114,9 @@ export class AlertComponent {
   private _createIconTable(): void {
     if (!isNullOrEmpty(this._iconTableMap)) { return; }
     this._iconTableMap = new Map<McsStatusType, string>();
-    this._iconTableMap.set('error', CoreDefinition.ASSETS_SVG_ERROR);
-    this._iconTableMap.set('warning', CoreDefinition.ASSETS_SVG_WARNING);
-    this._iconTableMap.set('info', CoreDefinition.ASSETS_SVG_INFO);
-    this._iconTableMap.set('success', CoreDefinition.ASSETS_SVG_SUCCESS);
+    this._iconTableMap.set('error', CommonDefinition.ASSETS_SVG_ERROR);
+    this._iconTableMap.set('warning', CommonDefinition.ASSETS_SVG_WARNING);
+    this._iconTableMap.set('info', CommonDefinition.ASSETS_SVG_INFO);
+    this._iconTableMap.set('success', CommonDefinition.ASSETS_SVG_SUCCESS);
   }
 }

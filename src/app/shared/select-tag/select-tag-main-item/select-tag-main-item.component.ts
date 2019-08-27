@@ -16,10 +16,8 @@ import {
   transition,
   animate,
 } from '@angular/animations';
-import {
-  CoreDefinition,
-  McsUniqueId
-} from '@app/core';
+import { McsUniqueId } from '@app/core';
+import { CommonDefinition } from '@app/utilities';
 import { SelectTagSubItemComponent } from '../select-tag-sub-item/select-tag-sub-item.component';
 
 @Component({
@@ -73,7 +71,7 @@ export class SelectTagMainItemComponent {
   }
 
   public get caretIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_CARET_RIGHT;
+    return CommonDefinition.ASSETS_FONT_CARET_RIGHT;
   }
 
   public constructor(private _changeDetectorRef: ChangeDetectorRef) {

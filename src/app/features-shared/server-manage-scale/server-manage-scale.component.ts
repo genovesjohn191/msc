@@ -24,7 +24,7 @@ import {
 import {
   isNullOrEmpty,
   animateFactory,
-  unsubscribeSubject,
+  unsubscribeSafely,
   getSafeProperty,
   convertMbToGb,
   isNullOrUndefined,
@@ -132,7 +132,7 @@ export class ServerManageScaleComponent
   }
 
   public ngOnDestroy() {
-    unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this._destroySubject);
   }
 
   /**

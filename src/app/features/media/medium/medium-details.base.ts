@@ -7,7 +7,7 @@ import {
   shareReplay
 } from 'rxjs/operators';
 import {
-  unsubscribeSubject,
+  unsubscribeSafely,
   isNullOrEmpty,
   getSafeProperty
 } from '@app/utilities';
@@ -34,7 +34,7 @@ export abstract class MediumDetailsBase {
    * Destroys all the resources of the base class
    */
   protected destroyBase(): void {
-    unsubscribeSubject(this._baseDestroySubject);
+    unsubscribeSafely(this._baseDestroySubject);
   }
 
   /**

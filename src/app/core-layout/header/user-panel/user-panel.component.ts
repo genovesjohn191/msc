@@ -24,7 +24,6 @@ import {
   McsIdentity
 } from '@app/models';
 import {
-  CoreDefinition,
   McsBrowserService,
   McsAuthenticationService,
   McsNavigationService
@@ -32,7 +31,8 @@ import {
 import {
   refreshView,
   isNullOrEmpty,
-  unsubscribeSafely
+  unsubscribeSafely,
+  CommonDefinition
 } from '@app/utilities';
 import { EventBusPropertyListenOn } from '@peerlancers/ngx-event-bus';
 import { McsEvent } from '@app/events';
@@ -90,19 +90,19 @@ export class UserPanelComponent implements OnInit, OnDestroy {
   }
 
   public get bellIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_BELL;
+    return CommonDefinition.ASSETS_FONT_BELL;
   }
 
   public get userIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_USER_WHITE;
+    return CommonDefinition.ASSETS_SVG_USER_WHITE;
   }
 
   public get caretDownIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_CHEVRON_DOWN;
+    return CommonDefinition.ASSETS_FONT_CHEVRON_DOWN;
   }
 
   public get logoutIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_LOGOUT_WHITE;
+    return CommonDefinition.ASSETS_SVG_LOGOUT_WHITE;
   }
 
   /**

@@ -20,7 +20,7 @@ import {
   registerEvent,
   unregisterEvent,
   coerceBoolean,
-  unsubscribeSubject
+  unsubscribeSafely
 } from '@app/utilities';
 import {
   TooltipComponent,
@@ -126,7 +126,7 @@ export class TooltipDirective implements OnInit, OnDestroy {
 
   public ngOnDestroy(): void {
     this._unregisterEvents();
-    unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this._destroySubject);
     if (this._tooltipInstance) {
       this._disposeTooltip();
     }

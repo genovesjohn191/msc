@@ -12,14 +12,12 @@ import {
   ControlValueAccessor,
   NG_VALUE_ACCESSOR
 } from '@angular/forms';
-import {
-  CoreDefinition,
-  McsUniqueId
-} from '@app/core';
+import { McsUniqueId } from '@app/core';
 import {
   coerceBoolean,
   coerceNumber,
-  McsColorType
+  McsColorType,
+  CommonDefinition
 } from '@app/utilities';
 
 @Component({
@@ -73,9 +71,9 @@ export class CheckboxComponent implements ControlValueAccessor {
 
   public get checkboxIconKey(): string {
     let unCheckedIcon = this.indeterminate ?
-      CoreDefinition.ASSETS_FONT_CHECKBOX_INDETERMINATE :
-      CoreDefinition.ASSETS_FONT_SQUARE_OPEN;
-    return this.checked ? CoreDefinition.ASSETS_FONT_CHECKBOX : unCheckedIcon;
+      CommonDefinition.ASSETS_FONT_CHECKBOX_INDETERMINATE :
+      CommonDefinition.ASSETS_FONT_SQUARE_OPEN;
+    return this.checked ? CommonDefinition.ASSETS_FONT_CHECKBOX : unCheckedIcon;
   }
 
   public constructor(private _changeDetectorRef: ChangeDetectorRef) {

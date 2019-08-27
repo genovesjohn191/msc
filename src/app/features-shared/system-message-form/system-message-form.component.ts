@@ -37,7 +37,7 @@ import {
 import {
   isNullOrEmpty,
   compareDates,
-  unsubscribeSubject,
+  unsubscribeSafely,
   getSafeProperty,
   CommonDefinition
 } from '@app/utilities';
@@ -101,7 +101,7 @@ export class SystemMessageFormComponent
   }
 
   public ngOnDestroy() {
-    unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this._destroySubject);
   }
 
   public get messageContextualHelp(): string {

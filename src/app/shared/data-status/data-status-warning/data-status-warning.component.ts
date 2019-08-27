@@ -3,7 +3,7 @@ import {
   ChangeDetectionStrategy,
   ViewEncapsulation
 } from '@angular/core';
-import { CoreDefinition } from '@app/core';
+import { CommonDefinition } from '@app/utilities';
 
 @Component({
   selector: 'mcs-data-status-warning, mcs-data-status-empty',
@@ -19,6 +19,6 @@ export class DataStatusWarningComponent {
 
   // Returns the warning icon key
   public get warningIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_WARNING;
+    return CommonDefinition.ASSETS_SVG_WARNING;
   }
 }

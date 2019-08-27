@@ -27,13 +27,13 @@ import {
   switchMap
 } from 'rxjs/operators';
 import {
-  CoreDefinition,
   McsViewportService,
   McsUniqueId
 } from '@app/core';
 import {
   isNullOrEmpty,
-  unsubscribeSubject
+  unsubscribeSafely,
+  CommonDefinition
 } from '@app/utilities';
 import {
   ResponsivePanelBarComponent
@@ -83,11 +83,11 @@ export class ResponsivePanelComponent implements AfterViewInit, AfterViewChecked
   private _destroySubject = new Subject<void>();
 
   public get chevronRightKey(): string {
-    return CoreDefinition.ASSETS_FONT_CHEVRON_RIGHT;
+    return CommonDefinition.ASSETS_FONT_CHEVRON_RIGHT;
   }
 
   public get chevronLeftKey(): string {
-    return CoreDefinition.ASSETS_FONT_CHEVRON_LEFT;
+    return CommonDefinition.ASSETS_FONT_CHEVRON_LEFT;
   }
 
   /**
@@ -150,7 +150,7 @@ export class ResponsivePanelComponent implements AfterViewInit, AfterViewChecked
   }
 
   public ngOnDestroy(): void {
-    unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this._destroySubject);
   }
 
   /**

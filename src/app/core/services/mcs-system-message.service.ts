@@ -25,7 +25,8 @@ import {
   unsubscribeSafely,
   isNullOrEmpty,
   getSafeProperty,
-  compareJsons
+  compareJsons,
+  CommonDefinition
 } from '@app/utilities';
 import { RouteKey } from '@app/models';
 import {
@@ -35,7 +36,6 @@ import {
 
 import { McsAccessControlService } from '../authentication/mcs-access-control.service';
 import { McsCookieService } from './mcs-cookie.service';
-import { CoreDefinition } from '../core.definition';
 import { McsNavigationService } from './mcs-navigation.service';
 
 @Injectable()
@@ -112,7 +112,7 @@ export class McsSystemMessageService implements McsDisposable {
       if (isNullOrEmpty(message) || !message.isCritical) { return; }
 
       let activeSystemMessageCookie = this._cookieService.getEncryptedItem<McsSystemMessage>(
-        CoreDefinition.COOKIE_ACTIVE_MESSAGE
+        CommonDefinition.COOKIE_ACTIVE_MESSAGE
       );
 
       let comparisonOutput = compareJsons(message, activeSystemMessageCookie);

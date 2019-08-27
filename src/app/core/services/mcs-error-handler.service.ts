@@ -4,8 +4,8 @@ import {
 } from '@angular/router';
 import { Subject } from 'rxjs';
 import {
-  unsubscribeSubject,
-  McsDisposable
+  McsDisposable,
+  unsubscribeSafely
 } from '@app/utilities';
 import { LogClass } from '@peerlancers/ngx-logger';
 
@@ -20,7 +20,7 @@ export class McsErrorHandlerService implements McsDisposable {
    * Destroys all the resources
    */
   public dispose(): void {
-    unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this._destroySubject);
   }
 
   /**

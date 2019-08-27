@@ -8,9 +8,11 @@ import { ActivatedRoute } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { McsSystemMessage } from '@app/models';
-import { getSafeProperty } from '@app/utilities';
 import {
-  CoreDefinition,
+  getSafeProperty,
+  CommonDefinition
+} from '@app/utilities';
+import {
   McsCookieService,
   CoreConfig
 } from '@app/core';
@@ -41,7 +43,7 @@ export class SystemMessagePageComponent implements OnInit {
   }
 
   public get warningBlueIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_WARNING_BLUE;
+    return CommonDefinition.ASSETS_SVG_WARNING_BLUE;
   }
 
   /**
@@ -49,7 +51,7 @@ export class SystemMessagePageComponent implements OnInit {
    * @param message Active message details
    */
   public proceedToPortal(message: McsSystemMessage): void {
-    this._cookieService.setEncryptedItem<any>(CoreDefinition.COOKIE_ACTIVE_MESSAGE,
+    this._cookieService.setEncryptedItem<any>(CommonDefinition.COOKIE_ACTIVE_MESSAGE,
       message);
     location.reload();
   }

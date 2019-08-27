@@ -19,15 +19,13 @@ import {
   map,
   shareReplay
 } from 'rxjs/operators';
-import {
-  CoreDefinition,
-  McsNavigationService
-} from '@app/core';
+import { McsNavigationService } from '@app/core';
 import {
   isNullOrEmpty,
   animateFactory,
   getSafeProperty,
-  compareStrings
+  compareStrings,
+  CommonDefinition
 } from '@app/utilities';
 import {
   RouteKey,
@@ -92,7 +90,7 @@ export class ProductComponent implements OnInit, OnDestroy {
   }
 
   public get cloudIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_CLOUD_BLUE;
+    return CommonDefinition.ASSETS_SVG_CLOUD_BLUE;
   }
 
   public get routeKeyEnum(): any {

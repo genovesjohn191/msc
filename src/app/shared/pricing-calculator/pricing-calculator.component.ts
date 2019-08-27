@@ -9,12 +9,10 @@ import {
 } from '@angular/core';
 import {
   coerceBoolean,
-  animateFactory
+  animateFactory,
+  CommonDefinition
 } from '@app/utilities';
-import {
-  CoreDefinition,
-  McsUniqueId
-} from '@app/core';
+import { McsUniqueId } from '@app/core';
 import {
   DataStatus,
   McsOrder
@@ -92,7 +90,7 @@ export class PricingCalculatorComponent implements PricingCalculator {
    * Returns the toggle icon key (Chevron up and down)
    */
   public get toggleIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_CHEVRON_UP;
+    return CommonDefinition.ASSETS_FONT_CHEVRON_UP;
   }
 
   /**

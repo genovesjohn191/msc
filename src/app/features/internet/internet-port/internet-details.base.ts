@@ -8,7 +8,7 @@ import {
 } from 'rxjs/operators';
 import { McsInternetPort } from '@app/models';
 import {
-  unsubscribeSubject,
+  unsubscribeSafely,
   isNullOrEmpty
 } from '@app/utilities';
 import { InternetPortService } from './internet-port.service';
@@ -30,7 +30,7 @@ export abstract class InternetPortDetailsBase {
    * Destroys all the resources of the base class
    */
   protected destroyBase(): void {
-    unsubscribeSubject(this._baseDestroySubject);
+    unsubscribeSafely(this._baseDestroySubject);
   }
 
   /**

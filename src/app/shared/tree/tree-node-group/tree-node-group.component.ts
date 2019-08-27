@@ -22,11 +22,11 @@ import {
   takeUntil,
   startWith
 } from 'rxjs/operators';
-import { CoreDefinition } from '@app/core';
 import {
   isNullOrEmpty,
   animateFactory,
-  coerceBoolean
+  coerceBoolean,
+  CommonDefinition
 } from '@app/utilities';
 import { TreeNodeGroupLabelDirective } from './tree-node-group-label.directive';
 import { TreeNodeComponent } from '../tree-node/tree-node.component';
@@ -100,7 +100,7 @@ export class TreeNodeGroupComponent<T> implements AfterContentInit {
    * Returns the caret icon key
    */
   public get caretRightIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_CARET_RIGHT;
+    return CommonDefinition.ASSETS_FONT_CARET_RIGHT;
   }
 
   /**

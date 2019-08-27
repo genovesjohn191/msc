@@ -1,9 +1,9 @@
 import { ChangeDetectorRef } from '@angular/core';
-import { CoreDefinition } from '@app/core';
 import {
   isNullOrEmpty,
   McsStatusType,
-  McsStatusColorType
+  McsStatusColorType,
+  CommonDefinition
 } from '@app/utilities';
 
 export abstract class McsStatusSettingsBase {
@@ -16,7 +16,7 @@ export abstract class McsStatusSettingsBase {
   /**
    * Returns the icon key based on the status
    */
-  public statusIconKey: string = CoreDefinition.ASSETS_SVG_INFO;
+  public statusIconKey: string = CommonDefinition.ASSETS_SVG_INFO;
   private _statusMapTable: Map<McsStatusType, string>;
 
   constructor(private _changeDetectorRef: ChangeDetectorRef) { }
@@ -37,10 +37,10 @@ export abstract class McsStatusSettingsBase {
    */
   private _createStatusMapTable(): void {
     this._statusMapTable = new Map();
-    this._statusMapTable.set('success', CoreDefinition.ASSETS_FONT_CHECK_CIRCLE);
-    this._statusMapTable.set('warning', CoreDefinition.ASSETS_SVG_WARNING);
-    this._statusMapTable.set('error', CoreDefinition.ASSETS_SVG_ERROR);
-    this._statusMapTable.set('info', CoreDefinition.ASSETS_SVG_INFO);
+    this._statusMapTable.set('success', CommonDefinition.ASSETS_FONT_CHECK_CIRCLE);
+    this._statusMapTable.set('warning', CommonDefinition.ASSETS_SVG_WARNING);
+    this._statusMapTable.set('error', CommonDefinition.ASSETS_SVG_ERROR);
+    this._statusMapTable.set('info', CommonDefinition.ASSETS_SVG_INFO);
   }
 
   /**

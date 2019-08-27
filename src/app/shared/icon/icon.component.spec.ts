@@ -5,10 +5,10 @@ import {
   ComponentFixture
 } from '@angular/core/testing';
 import { HttpTestingController } from '@angular/common/http/testing';
+import { CoreTestingModule } from '@app/core/testing';
+import { CommonDefinition } from '@app/utilities';
 import { IconComponent } from './icon.component';
 import { IconService } from './icon.service';
-import { CoreDefinition } from '@app/core';
-import { CoreTestingModule } from '@app/core/testing';
 
 describe('IconComponent', () => {
 
@@ -56,7 +56,7 @@ describe('IconComponent', () => {
   /** Test Implementation */
   describe('ngOnChanges() when icon type is SVG', () => {
     beforeEach(async(() => {
-      component.key = CoreDefinition.ASSETS_SVG_ADD_BLACK;
+      component.key = CommonDefinition.ASSETS_SVG_ADD_BLACK;
       component.size = 'small';
       component.ngOnChanges();
     }));
@@ -87,7 +87,7 @@ describe('IconComponent', () => {
 
   describe('ngOnChanges() when icon type is Font Awesome', () => {
     beforeEach(async(() => {
-      component.key = CoreDefinition.ASSETS_FONT_BELL;
+      component.key = CommonDefinition.ASSETS_FONT_BELL;
       component.size = 'small';
       component.ngOnChanges();
     }));
@@ -109,7 +109,7 @@ describe('IconComponent', () => {
 
   describe('ngOnChanges() when icon type is Image(jpeg, png, gif)', () => {
     beforeEach(async(() => {
-      component.key = CoreDefinition.ASSETS_GIF_LOADER_SPINNER;
+      component.key = CommonDefinition.ASSETS_GIF_LOADER_SPINNER;
       component.size = 'small';
       component.ngOnChanges();
     }));
