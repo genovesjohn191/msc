@@ -391,8 +391,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
    */
   private _resetSelection(): void {
     this._clearOptionsSelection();
-    this.value = undefined;
-    this.stateChanges.next();
+    this._updateFormChanges();
   }
 
   /**
@@ -403,7 +402,15 @@ export class SelectComponent extends McsFormFieldControlBase<any>
     if (isNullOrEmpty(options)) { return; }
 
     options.forEach((item) => item.toggle());
-    this.value = this.selectedOptions.map((selectedOption) => selectedOption.value);
+    this._updateFormChanges();
+  }
+
+  /**
+   * Updates the form changes
+   */
+  private _updateFormChanges(): void {
+    this.value = isNullOrEmpty(this.selectedOptions) ? undefined :
+      this.selectedOptions.map((selectedOption) => selectedOption.value);
     this.stateChanges.next();
   }
 
@@ -416,8 +423,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
 
     this._clearOptionsSelection();
     option.select();
-    this.value = option.value;
-    this.stateChanges.next();
+    this._updateFormChanges();
     this.closePanel();
   }
 
@@ -473,10 +479,10 @@ export class SelectComponent extends McsFormFieldControlBase<any>
    */
   private _initializeSelection(): void {
     Promise.resolve().then(() => {
-      // TODO: Remove the first item selection since we're going to implement the
-      // placeholder when we're dealing with forms; moreover, we can still use the
-      // selected of the option itself :)
-      if (this.multiple) { return; }
+      if (this.multiple && !isNullOrEmpty(this.selectedOptions)) {
+        this._updateFormChanges();
+        return;
+      }
 
       let selectedValue = getSafeProperty(this.ngControl, (obj) => obj.value) || this._value;
       let isFirstItemSelected = this.required && !isNullOrEmpty(this._options)
@@ -647,16 +653,16 @@ export class SelectComponent extends McsFormFieldControlBase<any>
       takeUntil(this._destroySubject)
     ).subscribe(() => {
       this._enableMultipleSelection();
-      this._subscribeToSelectionChange();
+      this._subscribeToClickEvent();
       this._initializeSelection();
       this._changeDetectorRef.markForCheck();
     });
   }
 
   /**
-   * Subscrbies to selection of option changes
+   * Subscrbies to click event of an option
    */
-  private _subscribeToSelectionChange(): void {
+  private _subscribeToClickEvent(): void {
     let resetSubject = merge(this._options.changes, this._destroySubject);
     this._optionsClickEvent.pipe(
       takeUntil(resetSubject)

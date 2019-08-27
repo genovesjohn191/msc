@@ -65,6 +65,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
   public vdcServices$: Observable<TicketService[]>;
   public serverServices$: Observable<TicketService[]>;
   public firewallServices$: Observable<TicketService[]>;
+  public internetPortServices$: Observable<TicketService[]>;
 
   // Form variables
   public fgCreateTicket: FormGroup;
@@ -94,6 +95,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     this._subscribesToVdcServices();
     this._subscribesToServerServices();
     this._subscribesToFirewallServices();
+    this._subscribesToInternetPortServices();
   }
 
   public ngOnDestroy() {
@@ -158,8 +160,8 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     // Set Service Id List
     if (!isNullOrEmpty(this.fcService.value)) {
       ticket.serviceId = new Array();
-      this.fcService.value.forEach((serviceItem) => {
-        ticket.serviceId.push(serviceItem.serviceId);
+      this.fcService.value.forEach((serviceItem: TicketService) => {
+        ticket.serviceId.push(serviceItem.id);
       });
     }
 
@@ -273,6 +275,23 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
           .map((firewall) => new TicketService(
             `${firewall.managementName} (${firewall.serviceId})`,
             firewall.serviceId
+          ));
+      })
+    );
+  }
+
+  /**
+   * Subscribes to internet port services
+   */
+  private _subscribesToInternetPortServices(): void {
+    this.internetPortServices$ = this._apiService.getInternetPorts().pipe(
+      map((response) => {
+        let internetPorts = getSafeProperty(response, (obj) => obj.collection);
+        return internetPorts
+          .filter((internetPort) => getSafeProperty(internetPort, (obj) => obj.serviceId))
+          .map((internetPort) => new TicketService(
+            `${internetPort.description} (${internetPort.serviceId})`,
+            internetPort.serviceId
           ));
       })
     );
