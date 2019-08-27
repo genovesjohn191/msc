@@ -61,8 +61,8 @@ import {
   ServerManageScale
 } from '@app/features-shared';
 import { McsFormGroupDirective } from '@app/shared';
-import { EventBusDispatcherService } from '@app/event-bus';
-import { McsEvent } from '@app/event-manager';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+import { McsEvent } from '@app/events';
 import { ServerCreateDetailsBase } from '../server-create-details.base';
 
 const DEFAULT_MANAGE_STORAGE_MINIMUM = 50;

@@ -28,13 +28,13 @@ import {
   NetworkStatus,
   McsIdentity
 } from '@app/models';
-import { EventBusDispatcherService } from '@app/event-bus';
-import { McsEvent } from '@app/event-manager';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+import { McsEvent } from '@app/events';
 import { McsApiService } from '@app/services';
 import {
   LogClass,
   LogIgnore
-} from '@app/logger';
+} from '@peerlancers/ngx-logger';
 
 import { McsSessionHandlerService } from './mcs-session-handler.service';
 import { CoreDefinition } from '../core.definition';

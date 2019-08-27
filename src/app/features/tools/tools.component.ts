@@ -22,7 +22,7 @@ import {
   cloneObject,
   CommonDefinition
 } from '@app/utilities';
-import { McsEvent } from '@app/event-manager';
+import { McsEvent } from '@app/events';
 
 @Component({
   selector: 'mcs-tools',

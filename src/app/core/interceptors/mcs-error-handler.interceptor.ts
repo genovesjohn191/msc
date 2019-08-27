@@ -13,7 +13,7 @@ import {
   isNullOrEmpty,
   McsEnvironmentVariables
 } from '@app/utilities';
-import { EventBusDispatcherService } from '@app/event-bus';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import {
   McsIdentity,
   McsApiErrorResponse,
@@ -21,7 +21,7 @@ import {
   McsApiErrorContext,
   ApiErrorRequester
 } from '@app/models';
-import { McsEvent } from '@app/event-manager';
+import { McsEvent } from '@app/events';
 import { McsAuthenticationService } from '../authentication/mcs-authentication.service';
 import { McsErrorHandlerService } from '../services/mcs-error-handler.service';
 

@@ -3,8 +3,8 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { EventBusDispatcherService } from '@app/event-bus';
-import { McsEvent } from '@app/event-manager';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+import { McsEvent } from '@app/events';
 import {
   getSafeProperty,
   isNullOrEmpty

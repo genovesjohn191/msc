@@ -39,8 +39,8 @@ import {
   VmPowerState
 } from '@app/models';
 import { McsApiService } from '@app/services';
-import { EventBusDispatcherService } from '@app/event-bus';
-import { McsEvent } from '@app/event-manager';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+import { McsEvent } from '@app/events';
 import { ConsolePageFactory } from './factory/console-page-factory';
 import { IConsolePageEntity } from './factory/console-page-entity.interface';
 import { ConsoleStatus } from './console-status';

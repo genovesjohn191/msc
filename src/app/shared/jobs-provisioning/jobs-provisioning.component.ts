@@ -19,7 +19,7 @@ import {
   CoreDefinition,
   CoreRoutes
 } from '@app/core';
-import { McsEvent } from '@app/event-manager';
+import { McsEvent } from '@app/events';
 import {
   isNullOrEmpty,
   unsubscribeSafely,
@@ -33,7 +33,7 @@ import {
   JobType,
   RouteKey
 } from '@app/models';
-import { EventBusDispatcherService } from '@app/event-bus';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import { JobsProvisioningLoadingTextDirective } from './jobs-provisioning-loading-text.directive';
 
 @Component({

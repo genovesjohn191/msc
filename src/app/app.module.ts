@@ -9,6 +9,12 @@ import {
   TranslateService
 } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import {
+  LoggerModule,
+  LoggerConfig
+} from '@peerlancers/ngx-logger';
+import { EventBusModule } from '@peerlancers/ngx-event-bus';
+
 import { environment } from 'environments/environment';
 import { AppComponent } from './app.component';
 import { AppState } from './app.service';
@@ -20,7 +26,6 @@ import {
   McsCookieService,
   McsGuid
 } from './core';
-import { EventBusModule } from './event-bus';
 import { ServicesModule } from './services';
 import {
   ConsolePageModule,
@@ -40,8 +45,6 @@ import { McsApiClientConfig } from './api-client/mcs-api-client.config';
 import { McsApiClientModule } from './api-client/mcs-api-client.module';
 
 import '../styles/base.scss';
-import { LoggerModule } from './logger/logger.module';
-import { LoggerConfig } from './logger/logger.config';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', `.json?id=${McsGuid.newGuid().toString()}`);

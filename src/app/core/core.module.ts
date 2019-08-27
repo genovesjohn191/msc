@@ -11,12 +11,12 @@ import {
   HTTP_INTERCEPTORS
 } from '@angular/common/http';
 import { CookieModule } from 'ngx-cookie';
-import { EventBusDispatcherService } from '@app/event-bus';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import {
   McsDisposable,
   isNullOrEmpty
 } from '@app/utilities';
-import { McsEvent } from '@app/event-manager';
+import { McsEvent } from '@app/events';
 import { CoreConfig } from './core.config';
 import { coreProviders } from './core.constants';
 import {

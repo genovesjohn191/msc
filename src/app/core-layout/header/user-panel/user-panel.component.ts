@@ -34,8 +34,8 @@ import {
   isNullOrEmpty,
   unsubscribeSafely
 } from '@app/utilities';
-import { EventBusPropertyListenOn } from '@app/event-bus';
-import { McsEvent } from '@app/event-manager';
+import { EventBusPropertyListenOn } from '@peerlancers/ngx-event-bus';
+import { McsEvent } from '@app/events';
 import { SwitchAccountService } from '../../shared';
 import { UserPanelService } from './user-panel.service';
 

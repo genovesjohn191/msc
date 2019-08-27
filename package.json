@@ -93,6 +93,8 @@
     "@nguniversal/express-engine": "^7.1.0",
     "@ngx-translate/core": "^11.0.1",
     "@ngx-translate/http-loader": "^4.0.0",
+    "@peerlancers/ngx-event-bus": "^1.0.1",
+    "@peerlancers/ngx-logger": "^1.0.2",
     "@stomp/ng2-stompjs": "^6.0.1",
     "core-js": "^2.6.4",
     "cron-converter": "^0.0.12",

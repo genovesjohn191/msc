@@ -44,7 +44,7 @@ import {
   McsResource,
   McsFeatureFlag
 } from '@app/models';
-import { McsEvent } from '@app/event-manager';
+import { McsEvent } from '@app/events';
 import { ServerManageNetwork } from '@app/features-shared';
 import { ServerDetailsBase } from '../server-details.base';
 

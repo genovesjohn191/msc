@@ -14,8 +14,8 @@ import {
   McsEntityRequester,
   EntityRequester
 } from '@app/models';
-import { McsEvent } from '@app/event-manager';
-import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/events';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import { IMcsEntityStateManager } from './base/mcs-entity-state-manager.interface';
 import { McsOrderStateManager } from './entities/mcs-order.state-manager';
 import { McsServerStateManager } from './entities/mcs-server.state-manager';

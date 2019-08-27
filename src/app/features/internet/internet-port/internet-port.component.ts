@@ -26,7 +26,7 @@ import {
   McsDataStatusFactory,
   McsNavigationService
 } from '@app/core';
-import { EventBusDispatcherService } from '@app/event-bus';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import { McsApiService } from '@app/services';
 import {
   McsInternetPort,

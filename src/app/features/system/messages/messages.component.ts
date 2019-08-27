@@ -17,7 +17,7 @@ import {
   McsApiCollection
 } from '@app/models';
 import { McsApiService } from '@app/services';
-import { McsEvent } from '@app/event-manager';
+import { McsEvent } from '@app/events';
 import {
   CommonDefinition,
   isNullOrEmpty

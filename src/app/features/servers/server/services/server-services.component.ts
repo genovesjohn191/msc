@@ -47,7 +47,7 @@ import {
   RouteKey
 } from '@app/models';
 import { FormMessage } from '@app/shared';
-import { McsEvent } from '@app/event-manager';
+import { McsEvent } from '@app/events';
 import { ServerDetailsBase } from '../server-details.base';
 import {
   OsUpdatesStatusConfiguration,

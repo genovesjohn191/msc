@@ -13,13 +13,13 @@ import {
   tap,
   filter
 } from 'rxjs/operators';
-import { EventBusDispatcherService } from '@app/event-bus';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import { McsApiService } from '@app/services';
 import {
   McsFeatureFlag,
   McsSystemMessage
 } from '@app/models';
-import { McsEvent } from '@app/event-manager';
+import { McsEvent } from '@app/events';
 import {
   McsDisposable,
   unsubscribeSafely,
@@ -31,7 +31,7 @@ import { RouteKey } from '@app/models';
 import {
   LogClass,
   LogIgnore
-} from '@app/logger';
+} from '@peerlancers/ngx-logger';
 
 import { McsAccessControlService } from '../authentication/mcs-access-control.service';
 import { McsCookieService } from './mcs-cookie.service';

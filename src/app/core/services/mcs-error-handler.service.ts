@@ -7,7 +7,7 @@ import {
   unsubscribeSubject,
   McsDisposable
 } from '@app/utilities';
-import { LogClass } from '@app/logger';
+import { LogClass } from '@peerlancers/ngx-logger';
 
 @Injectable()
 @LogClass()

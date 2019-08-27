@@ -52,7 +52,7 @@ import {
   ServerManageScale,
   ServerManageMedia
 } from '@app/features-shared';
-import { McsEvent } from '@app/event-manager';
+import { McsEvent } from '@app/events';
 import {
   DialogConfirmation,
   DialogService

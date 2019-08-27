@@ -23,12 +23,12 @@ import {
   McsIdentity,
   RouteKey
 } from '@app/models';
-import { McsEvent } from '@app/event-manager';
-import { EventBusDispatcherService } from '@app/event-bus';
+import { McsEvent } from '@app/events';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import {
   LogClass,
   LogIgnore
-} from '@app/logger';
+} from '@peerlancers/ngx-logger';
 import { CoreRoutes } from '../core.routes';
 
 @Injectable()

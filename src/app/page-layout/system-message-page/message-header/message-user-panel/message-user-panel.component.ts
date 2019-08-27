@@ -9,8 +9,8 @@ import {
   CoreDefinition,
   McsAuthenticationService,
 } from '@app/core';
-import { EventBusPropertyListenOn } from '@app/event-bus';
-import { McsEvent } from '@app/event-manager';
+import { EventBusPropertyListenOn } from '@peerlancers/ngx-event-bus';
+import { McsEvent } from '@app/events';
 
 @Component({
   selector: 'mcs-system-message-user-panel',

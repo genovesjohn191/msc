@@ -45,7 +45,7 @@ import {
   McsFeatureFlag
 } from '@app/models';
 import { ServerManageStorage } from '@app/features-shared';
-import { McsEvent } from '@app/event-manager';
+import { McsEvent } from '@app/events';
 import { ServerDetailsBase } from '../server-details.base';
 
 // Enumeration

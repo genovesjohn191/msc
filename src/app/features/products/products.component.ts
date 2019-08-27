@@ -45,8 +45,8 @@ import {
   McsProductCatalog
 } from '@app/models';
 import { McsApiService } from '@app/services';
-import { EventBusDispatcherService } from '@app/event-bus';
-import { McsEvent } from '@app/event-manager';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+import { McsEvent } from '@app/events';
 import { ProductCatalogListSource } from './products.listsource';
 import { ProductService } from './product/product.service';
 

@@ -40,7 +40,7 @@ import {
   DialogConfirmation,
   DialogService
 } from '@app/shared';
-import { McsEvent } from '@app/event-manager';
+import { McsEvent } from '@app/events';
 import { ServersService } from './servers.service';
 
 @Component({

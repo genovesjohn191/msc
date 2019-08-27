@@ -15,8 +15,8 @@ import {
 } from '@app/utilities';
 import { McsResource } from '@app/models';
 import { McsApiService } from '@app/services';
-import { EventBusDispatcherService } from '@app/event-bus';
-import { McsEvent } from '@app/event-manager';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+import { McsEvent } from '@app/events';
 import { VdcService } from '../vdc/vdc.service';
 
 export abstract class VdcDetailsBase {

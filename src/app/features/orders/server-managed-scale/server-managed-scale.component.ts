@@ -42,7 +42,7 @@ import {
   McsServerCompute
 } from '@app/models';
 import { McsApiService } from '@app/services';
-import { EventBusDispatcherService } from '@app/event-bus';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import {
   OrderDetails,
   ServerManageScale
@@ -56,7 +56,7 @@ import {
   McsFormGroupDirective,
   ComponentHandlerDirective
 } from '@app/shared';
-import { McsEvent } from '@app/event-manager';
+import { McsEvent } from '@app/events';
 import { ServerManagedScaleService } from './server-managed-scale.service';
 
 type ScaleManageProperties = {
