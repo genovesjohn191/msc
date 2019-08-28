@@ -33,6 +33,7 @@ import { DataChangeInternetPortsEvent } from './items/data-change-internet-ports
 
 import { DataClearServersEvent } from './items/data-clear-servers.event';
 import { DataClearMediaEvent } from './items/data-clear-media.event';
+import { DataClearSystemMessageEvent } from './items/data-clear-system-messages.event';
 
 import { JobServerDiskCreateEvent } from './items/job-server-disk-create.event';
 import { JobServerDiskUpdateEvent } from './items/job-server-disk-update.event';
@@ -99,6 +100,7 @@ export class McsEvent {
 
   public static dataClearServers = new DataClearServersEvent();
   public static dataClearMedia = new DataClearMediaEvent();
+  public static dataClearSystemMessage = new DataClearSystemMessageEvent();
 
   public static jobCurrentUser = new JobCurrentUserEvent();
   public static jobReceive = new JobReceiveEvent();

@@ -51,6 +51,16 @@
 
       <!-- Table -->
       <mcs-table #table [dataSource]="dataSource">
+        <!-- Message Column -->
+        <ng-container mcsColumnDef="message">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ columnSettings.message.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" text-wrap>
+            {{ row.message }}
+          </mcs-data-cell>
+        </ng-container>
+
         <!-- Start Date Column -->
         <ng-container mcsColumnDef="start">
           <mcs-header-cell *mcsHeaderCellDef>
@@ -68,16 +78,6 @@
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
             {{ row.expiry | mcsStdDateFormat: 'default' : timeZone }}
-          </mcs-data-cell>
-        </ng-container>
-
-        <!-- Message Column -->
-        <ng-container mcsColumnDef="message">
-          <mcs-header-cell *mcsHeaderCellDef>
-            {{ columnSettings.message.text }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" text-wrap>
-            {{ row.message }}
           </mcs-data-cell>
         </ng-container>
 
