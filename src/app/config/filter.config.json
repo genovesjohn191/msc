@@ -269,6 +269,11 @@
     }
   },
   "systemMessageFilter": {
+    "message": {
+      "text": "Message",
+      "value": true,
+      "exclude": true
+    },
     "start": {
       "text": "Start",
       "value": true,
@@ -277,11 +282,6 @@
     "expiry": {
       "text": "Expiry",
       "value": true
-    },
-    "message": {
-      "text": "Message",
-      "value": true,
-      "exclude": true
     },
     "type": {
       "text": "Type",

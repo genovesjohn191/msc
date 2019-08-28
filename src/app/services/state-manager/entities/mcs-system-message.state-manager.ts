@@ -1,9 +1,5 @@
 import { Injector } from '@angular/core';
 import { McsSystemMessage } from '@app/models';
-import {
-  isNullOrEmpty,
-  compareDates
-} from '@app/utilities';
 import { McsSystemMessagesRepository } from '../../repositories/mcs-system-messages.repository';
 import { McsEntityStateManagerBase } from '../base/mcs-entity-state-manager.base';
 import { IMcsEntitySortable } from '../base/mcs-entity-sortable.interface';
@@ -16,10 +12,10 @@ export class McsSystemMessageStateManager extends McsEntityStateManagerBase<McsS
   }
 
   public sortEntityRecords(): void {
-    if (isNullOrEmpty(this.entityRepository)) { return; }
-    let sortPredicate = (firstRecord: McsSystemMessage, secondRecord: McsSystemMessage) => {
-      return compareDates(secondRecord.updatedOn, firstRecord.updatedOn);
-    };
-    this.entityRepository.sortRecords(sortPredicate);
+    /**
+     * TODO: Update the method to be used in implementing the changes
+     * on enabled field of system messages
+     */
+    this.refreshDataCache();
   }
 }

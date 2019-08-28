@@ -1354,6 +1354,11 @@ export class McsApiService {
       eventEmitter: this._mediaRepository.dataClear()
     });
 
+    this._entitiesEventMap.push({
+      event: McsEvent.dataClearSystemMessage,
+      eventEmitter: this._systemMessagesRepository.dataClear()
+    });
+
     // Dispatch all associated events
     this._entitiesEventMap.forEach((dataChange) => {
       dataChange.eventEmitter.subscribe((entities) =>
