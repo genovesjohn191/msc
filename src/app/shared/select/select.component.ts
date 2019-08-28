@@ -391,7 +391,8 @@ export class SelectComponent extends McsFormFieldControlBase<any>
    */
   private _resetSelection(): void {
     this._clearOptionsSelection();
-    this._updateFormChanges();
+    this.value = undefined;
+    this.stateChanges.next();
   }
 
   /**
@@ -402,15 +403,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
     if (isNullOrEmpty(options)) { return; }
 
     options.forEach((item) => item.toggle());
-    this._updateFormChanges();
-  }
-
-  /**
-   * Updates the form changes
-   */
-  private _updateFormChanges(): void {
-    this.value = isNullOrEmpty(this.selectedOptions) ? undefined :
-      this.selectedOptions.map((selectedOption) => selectedOption.value);
+    this.value = this.selectedOptions && this.selectedOptions.map((selectedOption) => selectedOption.value);
     this.stateChanges.next();
   }
 
@@ -423,7 +416,8 @@ export class SelectComponent extends McsFormFieldControlBase<any>
 
     this._clearOptionsSelection();
     option.select();
-    this._updateFormChanges();
+    this.value = option.value;
+    this.stateChanges.next();
     this.closePanel();
   }
 
@@ -480,7 +474,8 @@ export class SelectComponent extends McsFormFieldControlBase<any>
   private _initializeSelection(): void {
     Promise.resolve().then(() => {
       if (this.multiple && !isNullOrEmpty(this.selectedOptions)) {
-        this._updateFormChanges();
+        this.value = this.selectedOptions && this.selectedOptions.map((selectedOption) => selectedOption.value);
+        this.stateChanges.next();
         return;
       }
 

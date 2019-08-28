@@ -1206,7 +1206,7 @@ export class McsApiService {
       return throwError(errorDetails);
     } else {
       let errorContext = new McsApiErrorContext();
-      errorContext.requester = ApiErrorRequester.None;
+      errorContext.requester = ApiErrorRequester.Partial;
       errorContext.message = defaultMessage || getSafeProperty(errorDetails, (obj) => obj.message, '');
       errorContext.details = errorDetails;
       return throwError(errorContext);

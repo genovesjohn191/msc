@@ -14,7 +14,8 @@ import {
   Subject,
   throwError,
   Observable,
-  of
+  of,
+  empty
 } from 'rxjs';
 import {
   catchError,
@@ -136,12 +137,12 @@ export class MediaUploadDetailsComponent
       selectedResource.id,
       mediaUrl
     ).pipe(
-      catchError((_httpError: McsApiErrorContext) => {
-        if (isNullOrEmpty(_httpError)) { return throwError(_httpError); }
+      catchError((httpError: McsApiErrorContext) => {
+        if (isNullOrEmpty(httpError)) { return empty(); }
         this.mediaUrlStatusIconKey = CommonDefinition.ASSETS_SVG_ERROR;
-        this.urlInfoMessage = getSafeProperty(_httpError, (obj) => obj.details.errorMessages[0]);
+        this.urlInfoMessage = getSafeProperty(httpError, (obj) => obj.details.errorMessages[0]);
         this.fcMediaUrl.setErrors({ urlValidationError: true });
-        return throwError(_httpError);
+        return empty();
       })
     ).subscribe((response) => {
       this.fcMediaUrl.updateValueAndValidity();
