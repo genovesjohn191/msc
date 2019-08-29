@@ -148,7 +148,7 @@
         <mcs-item orientation="separated">
           <span>{{ 'orderDetailsStep.orderActions.header' | translate }}</span>
           <mcs-form-field class="form-field-size-small">
-            <mcs-select required [formControl]="fcWorkflowAction">
+            <mcs-select required [formControl]="fcWorkflowAction" mcsId="select-workflow-action">
 
               <ng-container *mcsAccessControl="['OrderApprove']; else requestApprovalTemplate">
                 <mcs-option [value]="orderWorkFlowEnum.Submitted">
@@ -178,7 +178,7 @@
           <mcs-order-agreement *ngSwitchCase="orderWorkFlowEnum.AwaitingApproval" orderAgreementType="charges"></mcs-order-agreement>
           <mcs-note *ngSwitchCase="orderWorkFlowEnum.Unknown">
             <mcs-form-field>
-              <mcs-select [(ngModel)]="selectedServer">
+              <mcs-select [(ngModel)]="selectedServer" mcsId="select-workflow-action-unknown">
                 <mcs-option [value]="0">New Dedicated Server(120033)</mcs-option>
                 <mcs-option [value]="1">EOFS Runout Sale(188837)</mcs-option>
               </mcs-select>
