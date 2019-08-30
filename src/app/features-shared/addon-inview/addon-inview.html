@@ -6,7 +6,7 @@
     <mcs-form-field class="form-field-size-medium">
       <mcs-select required
         [placeholder]="'serverShared.addOnInview.version.placeholder' | translate"
-        [formControl]="fcInview">
+        [formControl]="fcInview" mcsId="select-inview">
 
         <mcs-option *ngFor="let inview of inviewOptions$ | async" [value]="inview">
           {{ inview }}

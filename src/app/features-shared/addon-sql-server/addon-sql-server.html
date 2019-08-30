@@ -6,7 +6,7 @@
     <mcs-form-field class="form-field-size-medium">
       <mcs-select required
         [placeholder]="'serverShared.addOnSqlServer.version.placeholder' | translate"
-        [formControl]="fcSqlServer">
+        [formControl]="fcSqlServer" mcsId="select-sql-server">
 
         <ng-container *ngFor="let sqlOption of sqlServerOptions$ | async">
           <mcs-option-group>
