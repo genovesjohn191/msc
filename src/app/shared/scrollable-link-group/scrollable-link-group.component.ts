@@ -152,7 +152,11 @@ export class ScrollableLinkGroupComponent implements ScrollableLinkGroup, AfterV
     this._scrollDispatcherService.scrolled(0, () => {
       if (isNullOrEmpty(this.scrollableLinks)) { return; }
       let parentScrollTop = scrollableContainer.getElementRef().nativeElement.scrollTop;
-      parentScrollTop += DEFAULT_SCROLL_TOP_OFFSET;
+      let parentScrollClientHeight = scrollableContainer.getElementRef().nativeElement.clientHeight;
+
+      // Calculate the 50% of the parent scroll client height to move the link when it reach the 50% of scroll parent
+      let screenPercentage = (parentScrollClientHeight || DEFAULT_SCROLL_TOP_OFFSET) * 0.50;
+      parentScrollTop += screenPercentage;
 
       this.scrollableLinks.forEach((item) => {
         let linkTop = item.hostElement.offsetTop;
