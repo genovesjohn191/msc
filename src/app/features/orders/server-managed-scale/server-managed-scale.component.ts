@@ -203,15 +203,17 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
   /**
    * Event that emits when data in scale component has been changed
    * @param submitDetails order details
+   * @param managedServerId id of current server selected
    */
-  public onSubmitOrder(submitDetails: OrderDetails): void {
+  public onSubmitOrder(submitDetails: OrderDetails, managedServerId: string): void {
     if (!this._validateFormFields()) { return; }
     if (isNullOrEmpty(submitDetails)) { return; }
 
     let workflow = new McsOrderWorkflow();
     workflow.state = submitDetails.workflowAction;
     workflow.clientReferenceObject = {
-      resourceDescription: this.progressDescription
+      resourceDescription: this.progressDescription,
+      serverId: managedServerId
     };
 
     this.submitOrderWorkflow(workflow);
@@ -275,10 +277,11 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
    */
   private _registerEvents(): void {
     this._resourcesDataChangeHandler = this._eventDispatcher.addEventListener(
-      McsEvent.dataChangeResources, () => this._changeDetectorRef.markForCheck());
-
+      McsEvent.dataChangeResources, () => this._changeDetectorRef.markForCheck()
+    );
     this._selectedServerHandler = this._eventDispatcher.addEventListener(
-      McsEvent.serverScaleManageSelected, this._onSelectedScaleManagedServer.bind(this));
+      McsEvent.serverScaleManageSelected, this._onSelectedScaleManagedServer.bind(this)
+    );
 
     // Invoke the event initially
     this._eventDispatcher.dispatch(McsEvent.serverScaleManageSelected);

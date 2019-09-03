@@ -62,7 +62,7 @@ const SERVICE_RAISE_INVIEW_REF_ID = Guid.newGuid().toString();
 
 export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements OnDestroy {
 
-  public services$: Observable<McsServer[]>;
+  public managedServers$: Observable<McsServer[]>;
   public fgServiceInviewDetails: FormGroup;
   public fcService: FormControl;
 
@@ -91,7 +91,7 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
    * Returns true when the form is valid
    */
   public get formIsValid(): boolean {
-    return getSafeProperty(this._formGroup, (obj) => obj.isValid()) && this._inviewLevel === InviewLevel.Standard;
+    return getSafeProperty(this._formGroup, (obj) => obj.isValid());
   }
 
   @ViewChild(McsFormGroupDirective)
@@ -168,14 +168,16 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
   /**
    * Event that emits when the order is submitted
    * @param submitDetails order details
+   * @param selectedServiceId id of current service selected
    */
-  public onSubmitOrder(submitDetails: OrderDetails): void {
+  public onSubmitOrder(submitDetails: OrderDetails, selectedServiceId: string): void {
     if (isNullOrEmpty(submitDetails)) { return; }
 
     let workflow = new McsOrderWorkflow();
     workflow.state = submitDetails.workflowAction;
     workflow.clientReferenceObject = {
-      resourceDescription: this.progressDescription
+      resourceDescription: this.progressDescription,
+      serviceId: selectedServiceId
     };
 
     this.submitOrderWorkflow(workflow);
@@ -208,7 +210,7 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
    */
   private _getAllServices(): void {
     // Managed servers for now, but eventually all Services
-    this.services$ = this._apiService.getServers().pipe(
+    this.managedServers$ = this._apiService.getServers().pipe(
       map((response) => getSafeProperty(response, (obj) => obj.collection).filter(
         (server) => !server.isSelfManaged && !server.isDedicated)
       ),

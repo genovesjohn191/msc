@@ -41,25 +41,41 @@
               mcsEventCategory="orders"
               mcsEventLabel="select-service">
 
-              <mcs-option *ngFor="let service of services$ | async" [value]="service">
-                {{ service.name }}
-              </mcs-option>
+              <ng-template #servicesTemplate let-services let-title="serviceTitle">
+                <mcs-option-group>
+                  <ng-container *mcsOptionGroupLabel>
+                    <span>{{ title }}</span>
+                  </ng-container>
+
+                  <mcs-option *ngFor="let service of services" [value]="service">
+                    {{ service.name }}
+                  </mcs-option>
+                </mcs-option-group>
+              </ng-template>
+
+              <ng-container *ngTemplateOutlet="servicesTemplate;
+                context: { $implicit: (managedServers$ | async), serviceTitle: 'Servers'}">
+              </ng-container>
+
             </mcs-select>
           </mcs-form-field>
-          <p>{{ inviewLevelLabel(fcService?.value) }}</p>
-
-          <div class="action-items">
-            <button mcsButton arrow="right"
-              mcsWizardStepNext
-              (click)="onSubmitServiceInviewDetails(fcService?.value)"
-              [disabled]="!formIsValid"
-              mcsId="step-1-next"
-              mcsEventTracker="step-1-next"
-              mcsEventCategory="orders"
-              mcsEventLabel="service-inview-raise">{{ 'shared.wizard.next' | translate }}</button>
-          </div>
+          <ng-container *ngIf="fcService?.value?.isProcessing; else contentTemplate">
+            <p text-center>{{ 'orderServiceRaiseInview.serviceDetails.inview.inProcessing' | translate }}</p>
+          </ng-container>
+          <ng-template #contentTemplate>
+            <p>{{ inviewLevelLabel(fcService?.value) }}</p>
+            <div class="action-items">
+              <button mcsButton arrow="right"
+                mcsWizardStepNext
+                (click)="onSubmitServiceInviewDetails(fcService?.value)"
+                [disabled]="!formIsValid || !validOrderInviewLevel"
+                mcsId="step-1-next"
+                mcsEventTracker="step-1-next"
+                mcsEventCategory="orders"
+                mcsEventLabel="service-inview-raise">{{ 'shared.wizard.next' | translate }}</button>
+            </div>
+          </ng-template>
         </form>
-
       </mcs-wizard-step>
 
       <!-- Confirm Step  -->
@@ -70,7 +86,7 @@
           [orderType]="(orderItemType$ | async)?.orderType"
           [requestState]="dataStatus$ | async"
           (dataChange)="onServiceInviewRaiseConfirmOrderChange($event)"
-          (submitOrder)="onSubmitOrder($event)">
+          (submitOrder)="onSubmitOrder($event, fcService?.value?.id)">
         </mcs-step-order-details>
       </mcs-wizard-step>
 

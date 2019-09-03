@@ -127,7 +127,8 @@
       "label": "Compute Size",
       "description": "This server currently has {{ram}} RAM and {{cpu}} vCPU",
       "contextualHelp": "Choose the memory and vCPU for your server. Click 'Enter custom size' to enter a precise value. Your selection is bound by the remaining compute in your Virtual Data Centre.",
-      "warning": "Scaling this server will cause it to restart."
+      "warning": "Scaling this server will cause it to restart.",
+      "inProcessing": "This server is currently busy and cannot be modified at this time."
     },
     "confirm": {
       "stepTitle": "Confirm"
@@ -202,19 +203,18 @@
         "contextualHelp": "Select the service you would like to raise the InView level for."
       },
       "inview": {
-        "placeholder": "",
-        "contextualHelp": "Select the level of Inview level you want to apply.",
         "label": {
           "unavailable": "InView information is not yet available for this server.",
           "none": "This service does not currently have InView configured. Please speak to your Macquarie Cloud Services accounts team about enabling InView.",
           "standard": "The InView level for this service is currently Standard. It will be raised to Premium.",
           "premium": "The InView Level for this service is currently Premium. This is the highest InView Level."
-        }
+        },
+        "inProcessing": "This server is currently busy and cannot be modified at this time."
       }
     },
     "raise": {
-      "description": "Your server's inview level is being raised and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
-      "dataInProgress": "Preparing the server for raising its inview level. This may take a moment.",
+      "description": "Your server's InView level is being raised and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
+      "dataInProgress": "Preparing the server for raising its InView level. This may take a moment.",
       "dataError": "Something went wrong while processing your request. Please try again later."
     }
   },
