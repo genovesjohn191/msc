@@ -53,35 +53,40 @@
             </mcs-select>
           </mcs-form-field>
 
-          <div class="action-box" *mcsComponentHandler>
-            <mcs-server-manage-scale #fgManageScale
-              [resource]="resource$ | async"
-              [serverCompute]="fcManageServer.value?.compute"
-              [minimumCpu]="minimumCpu"
-              [minimumMemoryGB]="minimumMemoryGB"
-              [mcsContextualHelp]="'orderServerManagedScale.vmDetails.contextualHelp' | translate"
-              (dataChange)="onScaleChanged($event, fcManageServer.value)">
+          <ng-container *ngIf="fcManageServer?.value?.isProcessing; else contentTemplate">
+            <p text-center>{{ 'orderServerManagedScale.vmDetails.inProcessing' | translate }}</p>
+          </ng-container>
+          <ng-template #contentTemplate>
+            <div class="action-box" *mcsComponentHandler>
+              <mcs-server-manage-scale #fgManageScale
+                [resource]="resource$ | async"
+                [serverCompute]="fcManageServer?.value?.compute"
+                [minimumCpu]="minimumCpu"
+                [minimumMemoryGB]="minimumMemoryGB"
+                [mcsContextualHelp]="'orderServerManagedScale.vmDetails.contextualHelp' | translate"
+                (dataChange)="onScaleChanged($event, fcManageServer?.value)">
 
-            <ng-container mcsManageScaleHeader>
-              <h2>{{ 'orderServerManagedScale.vmDetails.label' | translate }}</h2>
-            </ng-container>
-            </mcs-server-manage-scale>
-            <mcs-data-status-warning *ngIf="fcManageServer.value?.isPoweredOn">
-              <span>{{ 'orderServerManagedScale.vmDetails.warning' | translate }}</span>
-            </mcs-data-status-warning>
-          </div>
+              <ng-container mcsManageScaleHeader>
+                <h2>{{ 'orderServerManagedScale.vmDetails.label' | translate }}</h2>
+              </ng-container>
+              </mcs-server-manage-scale>
+              <mcs-data-status-warning *ngIf="fcManageServer?.value?.isPoweredOn">
+                <span>{{ 'orderServerManagedScale.vmDetails.warning' | translate }}</span>
+              </mcs-data-status-warning>
+            </div>
 
-          <div class="action-items">
-            <button mcsButton arrow="right"
-              mcsWizardStepNext
-              (click)="onSubmitScaleDetails()"
-              [disabled]="!formIsValid"
-              mcsId="step-1-next"
-              mcsEventTracker="step-1-next"
-              mcsEventCategory="orders"
-              mcsEventLabel="scale-managed-server">{{ 'shared.wizard.next' | translate }}</button>
-          </div>
-      </form>
+            <div class="action-items">
+              <button mcsButton arrow="right"
+                mcsWizardStepNext
+                (click)="onSubmitScaleDetails()"
+                [disabled]="!formIsValid"
+                mcsId="step-1-next"
+                mcsEventTracker="step-1-next"
+                mcsEventCategory="orders"
+                mcsEventLabel="scale-managed-server">{{ 'shared.wizard.next' | translate }}</button>
+            </div>
+          </ng-template>
+        </form>
 
       </mcs-wizard-step>
 
@@ -89,13 +94,13 @@
       <mcs-wizard-step id="confirm-step"
         [stepTitle]="'orderServerManagedScale.confirm.stepTitle' | translate"
         customClass="contextual-help-page-wrapper limited-view">
-          <mcs-step-order-details [order]="order$ | async"
-            [orderType]="(orderItemType$ | async)?.orderType"
-            [requestState]="dataStatus$ | async"
-            (dataChange)="onServerConfirmOrderChange($event)"
-            (submitOrder)="onSubmitOrder($event)">
-          </mcs-step-order-details>
-        </mcs-wizard-step>
+        <mcs-step-order-details [order]="order$ | async"
+          [orderType]="(orderItemType$ | async)?.orderType"
+          [requestState]="dataStatus$ | async"
+          (dataChange)="onServerConfirmOrderChange($event)"
+          (submitOrder)="onSubmitOrder($event, fcManageServer?.value?.id)">
+        </mcs-step-order-details>
+      </mcs-wizard-step>
 
       <!-- Go! Step  -->
       <mcs-wizard-step id="go-step"

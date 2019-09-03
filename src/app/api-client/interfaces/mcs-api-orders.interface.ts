@@ -9,8 +9,8 @@ import {
   McsOrderCreate,
   McsOrderUpdate,
   McsOrderItem,
-  McsOrderWorkflow,
-  McsOrderMerge
+  McsOrderMerge,
+  McsOrderWorkflow
 } from '@app/models';
 
 export interface IMcsApiOrdersService {

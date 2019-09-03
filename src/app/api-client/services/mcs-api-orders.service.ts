@@ -242,9 +242,9 @@ export class McsApiOrdersService implements IMcsApiOrdersService {
   /**
    * Creates the order workflow
    * @param orderData Order data to be created
+   * @param workflowDetails workflow details of the order
    */
-  public createOrderWorkflow(id: any, workflowDetails: McsOrderWorkflow):
-    Observable<McsApiSuccessResponse<McsOrder>> {
+  public createOrderWorkflow(id: any, workflowDetails: McsOrderWorkflow): Observable<McsApiSuccessResponse<McsOrder>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/orders/${id}/workflow`;
     mcsApiRequestParameter.recordData = serializeObjectToJson(workflowDetails);

@@ -229,7 +229,7 @@ export class McsJobManagerClient implements McsDisposable {
       new McsJobServerManager(ActionStatus.Update, this._injector)
     );
     this._jobEntitiesFactory.set(JobType.RaiseManagedServerInviewLevel,
-      new McsJobServerManager(ActionStatus.Update, this._injector)
+      new McsJobServerManager(ActionStatus.Update, this._injector, 'serviceId')
     );
     this._jobEntitiesFactory.set(JobType.CreateServerSnapshot,
       new McsJobServerManager(ActionStatus.Update, this._injector)

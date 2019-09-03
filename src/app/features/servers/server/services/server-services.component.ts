@@ -72,7 +72,9 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
 
   private _inspectOsUpdateHandler: Subscription;
   private _applyOsUpdateHandler: Subscription;
+  private _onRaiseInviewHandler: Subscription;
   private _updateStartedDate: Date;
+  private _raiseInviewInProgress: boolean = false;
   private _inviewLabelMap: Map<InviewLevel, string>;
 
   @ViewChild('formMessage')
@@ -101,6 +103,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
     this.dispose();
     unsubscribeSafely(this._inspectOsUpdateHandler);
     unsubscribeSafely(this._applyOsUpdateHandler);
+    unsubscribeSafely(this._onRaiseInviewHandler);
   }
 
   /**
@@ -261,7 +264,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
    * @param server selected server object reference
    */
   public inviewLevelDescription(server: McsServer): string {
-    if (!server.serviceChangeAvailable) {
+    if (!server.serviceChangeAvailable || this._raiseInviewInProgress) {
       return this._translateService.instant('serverServices.inview.inviewLevelDescription.unavailable');
     }
 
@@ -331,9 +334,13 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
     this._applyOsUpdateHandler = this.eventDispatcher.addEventListener(
       McsEvent.jobServerOsUpdateApply, this._onApplyServerOsUpdates.bind(this)
     );
+    this._onRaiseInviewHandler = this.eventDispatcher.addEventListener(
+      McsEvent.jobServerManagedRaiseInviewLevelEvent, this._onRaiseInviewLevel.bind(this)
+    );
 
     // Invoke the event initially
     this.eventDispatcher.dispatch(McsEvent.jobServerOsUpdateInspect);
+    this.eventDispatcher.dispatch(McsEvent.jobServerOsUpdateApply);
     this.eventDispatcher.dispatch(McsEvent.jobServerOsUpdateApply);
   }
 
@@ -397,6 +404,22 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
       this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Updated);
       this.refreshServerResource();
     }
+    this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Listener for the raise inview level method call
+   * @param job job object reference
+   */
+  private _onRaiseInviewLevel(job: McsJob): void {
+    let serverIsActive = this.serverIsActiveByJob(job);
+    if (!serverIsActive) { return; }
+
+    if (job.inProgress) {
+      this._raiseInviewInProgress = true;
+      return;
+    }
+    this._raiseInviewInProgress = false;
     this._changeDetectorRef.markForCheck();
   }
 

@@ -9,11 +9,11 @@ import { McsJobEntityBase } from '../base/mcs-job-entity.base';
 
 export class McsJobServerManager extends McsJobEntityBase<McsServer> {
 
-  constructor(_actionStatus: ActionStatus, _injector: Injector) {
+  constructor(_actionStatus: ActionStatus, _injector: Injector, private _customJobReferenceId?: string) {
     super(EntityRequester.Server, _injector.get(McsServersRepository), _actionStatus);
   }
 
   protected getJobReferenceId(): string {
-    return 'serverId';
+    return this._customJobReferenceId || 'serverId';
   }
 }
