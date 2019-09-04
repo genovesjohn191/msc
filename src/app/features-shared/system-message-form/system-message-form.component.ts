@@ -6,7 +6,6 @@ import {
   EventEmitter,
   Output,
   OnDestroy,
-  ChangeDetectorRef,
   Input
 } from '@angular/core';
 import {
@@ -17,8 +16,8 @@ import {
 import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 import {
-  startWith,
-  takeUntil
+  takeUntil,
+  tap
 } from 'rxjs/operators';
 import {
   CoreValidators,
@@ -85,7 +84,6 @@ export class SystemMessageFormComponent
 
   constructor(
     private _formBuilder: FormBuilder,
-    private _changeDetectorRef: ChangeDetectorRef,
     private _dateTimeService: McsDateTimeService,
     private _translateService: TranslateService
   ) {
@@ -95,7 +93,6 @@ export class SystemMessageFormComponent
 
   public ngOnInit() {
     this._registerFormGroup();
-    this._onFormChanges();
     this._setMessageTypeList();
     this._setSeverityList();
   }
@@ -146,7 +143,27 @@ export class SystemMessageFormComponent
 
     // Emit changes
     this.dataChange.emit(this._systemMessageForm);
-    this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Returns the message type enumeration instance
+   */
+  public get messageTypeEnum(): any {
+    return MessageType;
+  }
+
+  /**
+   * Sets the severity form control property
+   */
+  private _setSeverityFormControl() {
+    (this.fcType.value === this.messageTypeEnum.Info) ?
+      this.fgCreateMessage.removeControl('fcSeverity') :
+      this.fgCreateMessage.setControl('fcSeverity', this.fcSeverity);
+
+    let hasSeverity = !isNullOrEmpty(this.message) && this.fgCreateMessage.get('fcSeverity');
+    if (hasSeverity) {
+      this.fcSeverity.setValue(this.message.severity);
+    }
   }
 
   /**
@@ -187,7 +204,12 @@ export class SystemMessageFormComponent
     this.fcType = new FormControl('', [
     ]);
 
-    this.fcSeverity = new FormControl('', [
+    this.fcType.valueChanges.pipe(
+      takeUntil(this._destroySubject),
+      tap(() => this._setSeverityFormControl())
+    ).subscribe();
+
+    this.fcSeverity = new FormControl(null, [
     ]);
 
     this.fcMessage = new FormControl('', [
@@ -210,8 +232,8 @@ export class SystemMessageFormComponent
     });
 
     // Create form group and bind the form controls
-    this.fgCreateMessage.statusChanges
-      .pipe(startWith(null), takeUntil(this._destroySubject))
+    this.fgCreateMessage.valueChanges
+      .pipe(takeUntil(this._destroySubject))
       .subscribe(() => this.notifyDataChange());
   }
 
@@ -236,16 +258,6 @@ export class SystemMessageFormComponent
     this.fcEnabled.setValue(this.message.enabled);
     this.fcMessage.setValue(this.message.message);
     this.hasEditedMessage = true;
-  }
-
-  /**
-   * Detects any form field changes and
-   * execute the notify data change
-   */
-  private _onFormChanges(): void {
-    this.fgCreateMessage.valueChanges.subscribe(() => {
-      this.notifyDataChange();
-    });
   }
 
   /**

@@ -68,7 +68,7 @@
   </mcs-form-field>
 
   <!-- Severity -->
-  <mcs-form-field>
+  <mcs-form-field *ngIf="fcType?.value === messageTypeEnum.Alert">
     <mcs-select
       mcsId="select-severity" required
       [placeholder]="'systemMessageForm.severityPlaceholder' | translate"
