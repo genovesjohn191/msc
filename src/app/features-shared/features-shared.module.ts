@@ -5,6 +5,8 @@ import { AddOnAntiMalwareComponent } from './addon-anti-malware/addon-anti-malwa
 import { AddOnInviewComponent } from './addon-inview/addon-inview';
 import { AddOnSqlServerComponent } from './addon-sql-server/addon-sql-server';
 import { OrderApprovalComponent } from './order-approval/order-approval.component';
+import { OrderDashboardComponent } from './order-dashboard/order-dashboard.component';
+import { OrderItemPanelComponent } from './order-dashboard/order-item-panel/order-item-panel.component';
 import { ServerCommandComponent } from './server-command/server-command.component';
 import { ServerManageMediaComponent } from './server-manage-media/server-manage-media.component';
 import { ServerManageNetworkComponent } from './server-manage-network/server-manage-network.component';
@@ -24,6 +26,8 @@ import { HelpWidgetComponent } from './help-widget/help-widget.component';
     AddOnInviewComponent,
     AddOnSqlServerComponent,
     OrderApprovalComponent,
+    OrderDashboardComponent,
+    OrderItemPanelComponent,
     ServerCommandComponent,
     ServerManageMediaComponent,
     ServerManageNetworkComponent,
@@ -45,6 +49,8 @@ import { HelpWidgetComponent } from './help-widget/help-widget.component';
     AddOnInviewComponent,
     AddOnSqlServerComponent,
     OrderApprovalComponent,
+    OrderDashboardComponent,
+    OrderItemPanelComponent,
     ServerCommandComponent,
     ServerManageMediaComponent,
     ServerManageNetworkComponent,

@@ -1314,6 +1314,7 @@
     "profile": "Profile",
     "tickets": "Tickets",
     "orders": "Orders",
+    "makeAChange": "Make a change",
     "manageUsers": "Manage Users",
     "changePassword": "Change Password",
     "systemMessage": "System Messages"

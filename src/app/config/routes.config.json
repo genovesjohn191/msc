@@ -291,6 +291,14 @@
     "requiredFeatureFlag": "EnableOrdering",
     "documentTitle": "Orders - Macquarie Cloud Services"
   },
+  "ordersDashboard": {
+    "enumKey": "OrdersDashboard",
+    "routePath": "dashboard",
+    "navigationPath": "orders/dashboard",
+    "requiredPermissions": ["OrderEdit"],
+    "requiredFeatureFlag": "EnableOrderingOperationsListing",
+    "documentTitle": "Orders Dashboard - Macquarie Cloud Services"
+  },
   "orderDetails": {
     "enumKey": "OrderDetails",
     "routePath": ":id",
