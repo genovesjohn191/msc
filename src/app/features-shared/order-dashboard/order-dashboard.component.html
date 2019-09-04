@@ -1,0 +1,52 @@
+<mcs-grid>
+  <mcs-grid-row>
+    <!-- New Orders -->
+    <mcs-grid-column>
+
+      <section>
+        <h3>New</h3>
+        <mcs-order-item-panel>
+          <ng-container mcsOrderItemHeader>
+            <a (click)="executeOrderProcess($event, 'deployCloudVm')">Deploy a Cloud VM</a>
+          </ng-container>
+          <div>These virtual machines are run and managed by Macquarie Cloud Services.</div>
+        </mcs-order-item-panel>
+      </section>
+    </mcs-grid-column>
+
+    <!-- Change Orders -->
+    <mcs-grid-column>
+
+      <section>
+        <h3>Change</h3>
+        <mcs-order-item-panel>
+          <ng-container mcsOrderItemHeader>
+            <a (click)="executeOrderProcess($event, 'scaleVm')">Scale a Virtual Machine</a>
+          </ng-container>
+          <div>Add more RAM and CPU to a Managed Server.</div>
+        </mcs-order-item-panel>
+
+        <mcs-order-item-panel>
+          <ng-container mcsOrderItemHeader>
+            <a (click)="executeOrderProcess($event, 'raiseInviewLevel')">Raise InView Level</a>
+          </ng-container>
+          <div>Change the InView Level for your service to Premium.</div>
+        </mcs-order-item-panel>
+
+        <mcs-order-item-panel>
+          <ng-container mcsOrderItemHeader>
+            <a (click)="executeOrderProcess($event, 'scaleVdc')">Scale a VDC</a>
+          </ng-container>
+          <div>Add more RAM and CPU to a VDC.</div>
+        </mcs-order-item-panel>
+
+        <mcs-order-item-panel>
+          <ng-container mcsOrderItemHeader>
+            <a (click)="executeOrderProcess($event, 'expandVdcStorage')">Expand storage on a VDC</a>
+          </ng-container>
+          <div>Add more capacity to a VDC Storage Profile.</div>
+        </mcs-order-item-panel>
+      </section>
+    </mcs-grid-column>
+  </mcs-grid-row>
+</mcs-grid>

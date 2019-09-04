@@ -1,8 +1,7 @@
-$link-font:  $base-font;
 $link-hover-color: $color-primary-01;
 
 a {
-  font-family: $link-font;
+  font-family: inherit;
   color: inherit;
   text-decoration: underline;
   @include font-size($font-size-default);

@@ -3,6 +3,7 @@ import { RouteKey } from '@app/models';
 import { OrdersComponent } from './orders.component';
 import { OrderComponent } from './order/order.component';
 import { OrderResolver } from './order/order.resolver';
+import { OrdersDashboardComponent } from './dashboard/orders-dashboard.component';
 import { ServerManagedScaleComponent } from './server-managed-scale/server-managed-scale.component';
 import { VdcStorageExpandComponent } from './vdc-storage-expand/vdc-storage-expand.component';
 import { VdcStorageCreateComponent } from './vdc-storage-create/vdc-storage-create.component';
@@ -18,8 +19,9 @@ export const ordersProviders: any[] = [
 /**
  * List of all the entry components
  */
-export const ordersRoutesComponents: any[] = [
+export const ordersComponents: any[] = [
   OrdersComponent,
+  OrdersDashboardComponent,
   OrderComponent,
   ServerManagedScaleComponent,
   VdcStorageExpandComponent,
@@ -34,6 +36,11 @@ export const ordersRoutes: Routes = [
   {
     path: '',
     component: OrdersComponent
+  },
+  {
+    path: '',
+    component: OrdersDashboardComponent,
+    data: { routeId: RouteKey.OrdersDashboard }
   },
   {
     path: '',
