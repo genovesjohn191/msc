@@ -9,7 +9,8 @@ export enum WorkflowStatus {
   Submitted,
   Provisioning,
   Cancelled,
-  Rejected
+  Rejected,
+  Completed
 }
 
 export const workflowStatusText = {
@@ -20,7 +21,8 @@ export const workflowStatusText = {
   [WorkflowStatus.Submitted]: 'Submitted',
   [WorkflowStatus.Provisioning]: 'Provisioning',
   [WorkflowStatus.Cancelled]: 'Cancelled',
-  [WorkflowStatus.Rejected]: 'Rejected'
+  [WorkflowStatus.Rejected]: 'Rejected',
+  [WorkflowStatus.Completed]: 'Completed',
 };
 
 /**

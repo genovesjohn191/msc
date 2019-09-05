@@ -473,9 +473,11 @@ export class SelectComponent extends McsFormFieldControlBase<any>
    */
   private _initializeSelection(): void {
     Promise.resolve().then(() => {
-      if (this.multiple && !isNullOrEmpty(this.selectedOptions)) {
-        this.value = this.selectedOptions && this.selectedOptions.map((selectedOption) => selectedOption.value);
-        this.stateChanges.next();
+      if (this.multiple) {
+        if (!isNullOrEmpty(this.selectedOptions)) {
+          this.value = this.selectedOptions && this.selectedOptions.map((selectedOption) => selectedOption.value);
+          this.stateChanges.next();
+        }
         return;
       }
 

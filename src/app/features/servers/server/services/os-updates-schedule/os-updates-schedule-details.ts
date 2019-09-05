@@ -1,3 +1,7 @@
+import {
+  Observable,
+  BehaviorSubject
+} from 'rxjs';
 import { Day } from '@app/models';
 import {
   isNullOrEmpty,
@@ -17,10 +21,11 @@ export enum DayFrequency {
 }
 
 export class OsUpdatesScheduleDetails {
-  private _scheduleDays: ScheduleDay[];
   private _time: string;
   private _period: string;
   private _isEveryday: boolean;
+  private _scheduleDays: ScheduleDay[];
+  private _scheduleDaysChange: BehaviorSubject<ScheduleDay[]>;
 
   /**
    * Returns the time of the schedule
@@ -37,20 +42,6 @@ export class OsUpdatesScheduleDetails {
   }
 
   /**
-   * Returns the schedule days array
-   */
-  public get scheduleDays(): ScheduleDay[] {
-    return this._scheduleDays;
-  }
-
-  /**
-   * Returns the array of days selected
-   */
-  public get selectedScheduleDaysAsArray(): number[] {
-    return this._getSelectedScheduleDaysAsArray();
-  }
-
-  /**
    * Returns the number of days that are selected from the schedule days
    */
   public get selectedScheduleDaysCount(): number {
@@ -58,17 +49,10 @@ export class OsUpdatesScheduleDetails {
   }
 
   /**
-   * Returns true if atleast one schedule day is selected
-   */
-  public get hasSelection(): boolean {
-    return this._getSelectedScheduleDays().length > 0;
-  }
-
-  /**
    * Returns true if all of the days are selected
    */
   public get isEveryday(): boolean {
-    let unSelectedDay = this._scheduleDays.find((selection) => !selection.checked);
+    let unSelectedDay = this._scheduleDaysChange.getValue().find((selection) => !selection.checked);
     return this._isEveryday = isNullOrEmpty(unSelectedDay);
   }
 
@@ -80,7 +64,7 @@ export class OsUpdatesScheduleDetails {
     if (this.selectedScheduleDaysCount !== 5) {
       return false;
     }
-    let selectedDays = this._scheduleDays.filter((scheduleDay) => {
+    let selectedDays = this._scheduleDaysChange.getValue().filter((scheduleDay) => {
       return this._dayFallsOnWeekdays(scheduleDay.day) && scheduleDay.checked;
     });
     let hasAllWeekdaysOnly = selectedDays.length === 5 && !this._isEveryday;
@@ -95,7 +79,7 @@ export class OsUpdatesScheduleDetails {
     if (this.selectedScheduleDaysCount !== 2) {
       return false;
     }
-    let selectedDays = this._scheduleDays.filter((scheduleDay) => {
+    let selectedDays = this._scheduleDaysChange.getValue().filter((scheduleDay) => {
       return this._dayFallsOnWeekends(scheduleDay.day) && scheduleDay.checked;
     });
     let hasAllWeekendsOnly = selectedDays.length === 2 && !this._isEveryday;
@@ -103,7 +87,7 @@ export class OsUpdatesScheduleDetails {
   }
 
   constructor(scheduleDays?: ScheduleDay[], time?: string, period?: string) {
-    this._scheduleDays = scheduleDays ? scheduleDays : [
+    this._scheduleDays = !isNullOrEmpty(scheduleDays) ? scheduleDays : [
       { day: Day.Sunday, name: 'Sunday', checked: false },
       { day: Day.Monday, name: 'Monday', checked: false },
       { day: Day.Tuesday, name: 'Tuesday', checked: false },
@@ -112,8 +96,16 @@ export class OsUpdatesScheduleDetails {
       { day: Day.Friday, name: 'Friday', checked: false },
       { day: Day.Saturday, name: 'Saturday', checked: false },
     ];
+    this._scheduleDaysChange = new BehaviorSubject<ScheduleDay[]>(this._scheduleDays);
     this._time = time;
     this._period = period;
+  }
+
+  /**
+   * Returns the schedule day/s as Observable
+   */
+  public scheduleDaysChange(): Observable<ScheduleDay[]> {
+    return this._scheduleDaysChange.asObservable();
   }
 
   /**
@@ -124,6 +116,7 @@ export class OsUpdatesScheduleDetails {
     this._scheduleDays.forEach((scheduleDay) => {
       scheduleDay.checked = !isNullOrUndefined(days.find((day) => (scheduleDay.day === +day)));
     });
+    this._scheduleDaysChange.next(this._scheduleDays);
   }
 
   /**
@@ -134,6 +127,7 @@ export class OsUpdatesScheduleDetails {
     switch (dayFrequency) {
       case DayFrequency.Everyday:
         this._scheduleDays.forEach((scheduleDay) => scheduleDay.checked = true);
+        this._scheduleDaysChange.next(this._scheduleDays);
         break;
 
       case DayFrequency.Weekdays:
@@ -143,6 +137,7 @@ export class OsUpdatesScheduleDetails {
             scheduleDay.checked = true;
           }
         });
+        this._scheduleDaysChange.next(this._scheduleDays);
         break;
 
       case DayFrequency.Weekends:
@@ -152,6 +147,7 @@ export class OsUpdatesScheduleDetails {
             selectionDay.checked = true;
           }
         });
+        this._scheduleDaysChange.next(this._scheduleDays);
         break;
     }
   }
@@ -163,26 +159,14 @@ export class OsUpdatesScheduleDetails {
     this._scheduleDays.forEach((selectionDay) => {
       selectionDay.checked = false;
     });
-  }
-
-  /**
-   * Return an array of the values of the consolidated selected days
-   */
-  private _getSelectedScheduleDaysAsArray(): number[] {
-    let days = [];
-    this._scheduleDays.forEach((scheduleDay) => {
-      if (scheduleDay.checked) {
-        days.push(scheduleDay.day);
-      }
-    });
-    return days;
+    this._scheduleDaysChange.next(this._scheduleDays);
   }
 
   /**
    * Filter all the selected schedule days
    */
   private _getSelectedScheduleDays(): ScheduleDay[] {
-    return this._scheduleDays.filter((scheduleDay) => scheduleDay.checked);
+    return this._scheduleDaysChange.getValue().filter((scheduleDay) => scheduleDay.checked);
   }
 
   /**
