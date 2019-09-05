@@ -890,7 +890,7 @@
     "title": "Attached Servers",
     "noMediaServers": "No attached servers to display.",
     "errorMediaServers": "Sorry, something’s not right. We weren’t able to retrieve the list of attached servers.",
-    "attachServersHeader": "Attach to Media",
+    "attachServersHeader": "Attach to Server",
     "attachAction": "Attach",
     "detachAction": "Detach",
     "columnHeaders": {
@@ -938,6 +938,7 @@
   },
   "mediaShared": {
     "manageServer": {
+      "serverGroupHeader": "Servers",
       "loadingContent": "Loading servers.",
       "noServers": "No servers to attach.",
       "errorGettingServers": "Sorry, something’s not right. We weren’t able to retrieve the list of servers to attach."
