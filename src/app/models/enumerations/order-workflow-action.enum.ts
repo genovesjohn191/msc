@@ -9,7 +9,8 @@ export enum OrderWorkflowAction {
   Submitted,
   Provisioning,
   Cancelled,
-  Rejected
+  Rejected,
+  Completed
 }
 
 /**

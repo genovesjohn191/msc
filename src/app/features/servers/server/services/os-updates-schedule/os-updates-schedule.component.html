@@ -52,8 +52,8 @@
                         <mcs-form-field class="form-field-size-small">
                           <mcs-select mcsId="select-recurring-day-os-updates"
                             [placeholder]="'serverServicesOsUpdatesSchedule.daysPlaceholder.recurring' | translate"
-                            [formControl]="fcRecurringScheduleDay" (change)="toggleScheduleDay()" required multiple>
-                            <mcs-option *ngFor="let scheduleDay of scheduleDetails.scheduleDays" [value]="scheduleDay.day"
+                            [formControl]="fcRecurringScheduleDay" multiple required>
+                            <mcs-option *ngFor="let scheduleDay of (scheduleDaysChange$ | async)" [value]="scheduleDay.day"
                               [selected]="scheduleDay.checked">{{ scheduleDay.name }}</mcs-option>
                           </mcs-select>
                         </mcs-form-field>
@@ -62,8 +62,7 @@
 
                         <!-- Recurring Time Selection -->
                         <mcs-form-field class="form-field-size-xsmall">
-                          <mcs-select mcsId="select-recurring-time-os-updates" [formControl]="fcRecurringScheduleTime"
-                            required>
+                          <mcs-select mcsId="select-recurring-time-os-updates" [formControl]="fcRecurringScheduleTime" required>
                             <mcs-option *ngFor="let timeOption of timeOptions" [value]="timeOption">{{ timeOption }}</mcs-option>
                           </mcs-select>
                         </mcs-form-field>
@@ -96,7 +95,7 @@
                         <!-- TODO : First element is selected -->
                         <mcs-form-field class="form-field-size-small">
                           <mcs-select mcsId="select-runonce-day-os-updates" [formControl]="fcRunOnceScheduleDay" required>
-                            <mcs-option *ngFor="let scheduleDay of scheduleDetails.scheduleDays" [value]="scheduleDay.day"
+                            <mcs-option *ngFor="let scheduleDay of (scheduleDaysChange$ | async)" [value]="scheduleDay.day"
                               [selected]="scheduleDay.checked">{{ scheduleDay.name }}</mcs-option>
                           </mcs-select>
                         </mcs-form-field>

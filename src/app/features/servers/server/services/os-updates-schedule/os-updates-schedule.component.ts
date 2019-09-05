@@ -52,7 +52,10 @@ import {
   DialogService
 } from '@app/shared';
 import { TreeNode } from '@angular/router/src/utils/tree';
-import { OsUpdatesScheduleDetails } from './os-updates-schedule-details';
+import {
+  OsUpdatesScheduleDetails,
+  ScheduleDay
+} from './os-updates-schedule-details';
 import { OsUpdatesActionDetails } from '../os-updates-status-configuration';
 
 @Component({
@@ -74,6 +77,7 @@ export class OsUpdatesScheduleComponent implements OnInit {
   public scheduleType: OsUpdatesScheduleType;
 
   public osUpdatesScheduleConfiguration$: Observable<McsServerOsUpdatesSchedule>;
+  public scheduleDaysChange$: Observable<ScheduleDay[]>;
   public configurationStatusFactory: McsDataStatusFactory<any>;
 
   public timeOptions: string[] = [];
@@ -130,16 +134,11 @@ export class OsUpdatesScheduleComponent implements OnInit {
   public get isRunOnceSaveButtonDisabled(): boolean {
     if (isNullOrEmpty(this._formGroup)) { return true; }
 
-    let hasSelectedCategories = this.runOnceCategories.filter(
-      (category) => category.isSelected
-    ).length > 0;
+    let hasSelectedCategories = this.runOnceCategories.filter((category) => category.isSelected).length > 0;
     let allRequiredFieldsAreSet = hasSelectedCategories && this._formGroup.isValid();
-
     if (!allRequiredFieldsAreSet) { return true; }
 
-    if (this.hasSchedule && this.isRunOnce) {
-      return !this._hasPendingRunOnceScheduleChanges();
-    }
+    if (this.hasSchedule && this.isRunOnce) { return !this._hasPendingRunOnceScheduleChanges(); }
     return false;
   }
 
@@ -149,18 +148,12 @@ export class OsUpdatesScheduleComponent implements OnInit {
   public get isRecurringSaveButtonDisabled(): boolean {
     if (isNullOrEmpty(this._formGroup)) { return true; }
 
-    let hasSelectedCategories = this.recurringCategories.filter(
-      (category) => category.isSelected
-    ).length > 0;
-    let allRequiredFieldsAreSet = hasSelectedCategories &&
-      this.scheduleDetails.hasSelection &&
-      this._formGroup.isValid();
-
+    let hasSelectedCategories = this.recurringCategories.filter((category) => category.isSelected).length > 0;
+    let hasSelectedDays = getSafeProperty(this.fcRecurringScheduleDay, (obj) => obj.value.length > 0, false);
+    let allRequiredFieldsAreSet = hasSelectedCategories && hasSelectedDays && this._formGroup.isValid();
     if (!allRequiredFieldsAreSet) { return true; }
 
-    if (this.hasSchedule && !this.isRunOnce) {
-      return !this._hasPendingRecurringScheduleChanges();
-    }
+    if (this.hasSchedule && !this.isRunOnce) { return !this._hasPendingRecurringScheduleChanges(); }
     return false;
   }
 
@@ -181,6 +174,7 @@ export class OsUpdatesScheduleComponent implements OnInit {
   public ngOnInit() {
     this._initializeFormData();
     this._getOsUpdatesScheduleConfiguration();
+    this.scheduleDaysChange$ = this.scheduleDetails.scheduleDaysChange();
   }
 
   /**
@@ -226,7 +220,7 @@ export class OsUpdatesScheduleComponent implements OnInit {
     request.crontab = this._createCronStringRequest(
       this.fcRecurringScheduleTime.value,
       this.fcRecurringScheduleTimePeriod.value,
-      this.scheduleDetails.selectedScheduleDaysAsArray
+      this.fcRecurringScheduleDay.value
     );
     request.categories = [];
     this.recurringCategories.forEach((category) => {
@@ -264,13 +258,6 @@ export class OsUpdatesScheduleComponent implements OnInit {
         this.deleteSchedule.emit({ server: this.selectedServer });
       })
     ).subscribe();
-  }
-
-  /**
-   * Toggles the schedule day based on checkbox value
-   */
-  public toggleScheduleDay(): void {
-    this.scheduleDetails.setDays(...this.fcRecurringScheduleDay.value);
   }
 
   /**
@@ -547,7 +534,7 @@ export class OsUpdatesScheduleComponent implements OnInit {
     let currentCronSelected = this._createCronStringRequest(
       this.fcRecurringScheduleTime.value,
       this.fcRecurringScheduleTimePeriod.value,
-      this.scheduleDetails.selectedScheduleDaysAsArray
+      this.fcRecurringScheduleDay.value
     );
     let differentCronOption = this.scheduleDate.crontab !== currentCronSelected;
     let differentCategorySelection = this._categorySelectionHasChanged(this.recurringCategories);
