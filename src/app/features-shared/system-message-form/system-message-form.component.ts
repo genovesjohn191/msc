@@ -140,6 +140,9 @@ export class SystemMessageFormComponent
     this._systemMessageForm.severity = this.fcSeverity.value;
     this._systemMessageForm.message = this.fcMessage.value;
     this._systemMessageForm.enabled = this.fcEnabled.value;
+    this._systemMessageForm.valid = this.fgCreateMessage.valid;
+
+    this._setSystemMessageHasChangedFlag();
 
     // Emit changes
     this.dataChange.emit(this._systemMessageForm);
@@ -204,11 +207,6 @@ export class SystemMessageFormComponent
     this.fcType = new FormControl('', [
     ]);
 
-    this.fcType.valueChanges.pipe(
-      takeUntil(this._destroySubject),
-      tap(() => this._setSeverityFormControl())
-    ).subscribe();
-
     this.fcSeverity = new FormControl(null, [
     ]);
 
@@ -230,6 +228,11 @@ export class SystemMessageFormComponent
       fcMessage: this.fcMessage,
       fcEnabled: this.fcEnabled
     });
+
+    this.fcType.valueChanges.pipe(
+      takeUntil(this._destroySubject),
+      tap(() => this._setSeverityFormControl())
+    ).subscribe();
 
     // Create form group and bind the form controls
     this.fgCreateMessage.valueChanges
@@ -258,6 +261,18 @@ export class SystemMessageFormComponent
     this.fcEnabled.setValue(this.message.enabled);
     this.fcMessage.setValue(this.message.message);
     this.hasEditedMessage = true;
+  }
+
+  /**
+   * Form groups and Form controls registration area
+   */
+  private _setSystemMessageHasChangedFlag() {
+    if (isNullOrEmpty(this.message)) { return; }
+    this._systemMessageForm.hasChanged = this._systemMessageForm.valid &&
+      (this.fcEnabled.value !== this.message.enabled
+        || this.fcExpiry.value !== getSafeProperty(this.message, (obj) => obj.expiry, '')
+        || this.fcStart.value !== getSafeProperty(this.message, (obj) => obj.start, '')
+        || this.fcSeverity.value !== this.message.severity || this.fcType.value !== this.message.type);
   }
 
   /**

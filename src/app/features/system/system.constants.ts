@@ -30,6 +30,7 @@ export const systemRoutes: Routes = [
   {
     path: '',
     component: SystemMessageEditComponent,
+    canDeactivate: [McsNavigateAwayGuard],
     data: { routeId: RouteKey.SystemMessageEdit },
     resolve: {
       message: SystemMessageResolver
