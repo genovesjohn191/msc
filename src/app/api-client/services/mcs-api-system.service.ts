@@ -11,7 +11,8 @@ import {
   McsSystemMessage,
   McsSystemMessageCreate,
   McsQueryParam,
-  McsSystemMessageEdit
+  McsSystemMessageEdit,
+  McsSystemMessageValidate
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiSystemService } from '../interfaces/mcs-api-system.interface';
@@ -124,7 +125,7 @@ export class McsApiSystemService implements IMcsApiSystemService {
    * This will validate the message it has a conflicting messages
    * @param messageData Message data to be validated
    */
-  public validateMessage(messageData: McsSystemMessageCreate):
+  public validateMessage(messageData: McsSystemMessageValidate):
     Observable<McsApiSuccessResponse<McsSystemMessage[]>> {
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();

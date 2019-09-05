@@ -1,16 +1,19 @@
 import {
   Component,
   ChangeDetectionStrategy,
-  ViewChild
+  ViewChild,
+  OnDestroy
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import {
   of,
-  Observable
+  Observable,
+  BehaviorSubject
 } from 'rxjs';
 import {
   tap,
-  concatMap
+  finalize,
+  switchMap
 } from 'rxjs/operators';
 import {
   IMcsNavigateAwayGuard,
@@ -25,7 +28,8 @@ import {
 import {
   isNullOrEmpty,
   getSafeProperty,
-  CommonDefinition
+  CommonDefinition,
+  unsubscribeSafely
 } from '@app/utilities';
 import {
   DialogConfirmation,
@@ -33,6 +37,7 @@ import {
 } from '@app/shared';
 import { McsApiService } from '@app/services';
 import { SystemMessageForm } from '@app/features-shared';
+import { McsSystemMessageMapper } from '../message-mapper';
 
 const SYSTEM_MESSAGE_DATEFORMAT = "yyyy-MM-dd'T'HH:mm z";
 @Component({
@@ -41,22 +46,27 @@ const SYSTEM_MESSAGE_DATEFORMAT = "yyyy-MM-dd'T'HH:mm z";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class SystemMessageCreateComponent implements IMcsNavigateAwayGuard {
+export class SystemMessageCreateComponent implements IMcsNavigateAwayGuard, OnDestroy {
 
-  private _systemMessageFormData: McsSystemMessageCreate;
-  private _isMessageCreated: boolean;
+  private _creatingSystemMessage$ = new BehaviorSubject<boolean>(false);
+  private _systemMessageForm: SystemMessageForm;
 
   @ViewChild('fgSystemMessageForm')
   private _fgSystemMessagesForm: IMcsFormGroup;
 
   constructor(
+    private _dateTimeService: McsDateTimeService,
     private _translateService: TranslateService,
     private _dialogService: DialogService,
     private _navigationService: McsNavigationService,
-    private _apiService: McsApiService,
-    private _dateTimeService: McsDateTimeService,
-  ) {
-    this._systemMessageFormData = new McsSystemMessageCreate();
+    private _apiService: McsApiService
+  ) {}
+
+  /**
+   * Destroys all the resources
+   */
+  public ngOnDestroy(): void {
+    unsubscribeSafely(this._creatingSystemMessage$);
   }
 
   public get servicesIconKey(): string {
@@ -84,7 +94,14 @@ export class SystemMessageCreateComponent implements IMcsNavigateAwayGuard {
    * and all the inputted setting on the form are checked
    */
   public canNavigateAway(): boolean {
-    return this._isMessageCreated || !this.hasDirtyFormControls;
+    return !this.hasDirtyFormControls;
+  }
+
+  /**
+   * Event that emits when creating a system message
+   */
+  public creatingSystemMessage(): Observable<boolean> {
+    return this._creatingSystemMessage$.asObservable();
   }
 
   /**
@@ -92,12 +109,8 @@ export class SystemMessageCreateComponent implements IMcsNavigateAwayGuard {
    * @param systemMessageForm System message form values
    */
   public onMessageFormDataChange(systemMessageForm: SystemMessageForm) {
-    this._systemMessageFormData.start = this.serializeSystemMessageDate(systemMessageForm.start);
-    this._systemMessageFormData.expiry = this.serializeSystemMessageDate(systemMessageForm.expiry);
-    this._systemMessageFormData.type = systemMessageForm.type;
-    this._systemMessageFormData.severity = systemMessageForm.severity;
-    this._systemMessageFormData.message = systemMessageForm.message;
-    this._systemMessageFormData.enabled = systemMessageForm.enabled;
+    if (isNullOrEmpty(systemMessageForm)) { return; }
+    this._systemMessageForm = systemMessageForm;
   }
 
   /**
@@ -121,11 +134,31 @@ export class SystemMessageCreateComponent implements IMcsNavigateAwayGuard {
    * Create message according to the inputs
    */
   public onCreateMessage(): void {
-    this._apiService.validateSystemMessage(this._systemMessageFormData).pipe(
-      tap((conflictMessages) => {
-        this._showMessageConfirmationDialog(this._systemMessageFormData, conflictMessages.totalCollectionCount);
-      })
-      ).subscribe();
+    this._fgSystemMessagesForm.getFormGroup().validateFormControls(true);
+    if (!this.isFormValid) { return; }
+
+    this._creatingSystemMessage$.next(true);
+
+    /**
+     * TODO: Improve the logic on serialization of dates
+     * Should be on one place only
+     */
+    this._systemMessageForm.start = this.serializeSystemMessageDate(this._systemMessageForm.start);
+    this._systemMessageForm.expiry = this.serializeSystemMessageDate(this._systemMessageForm.expiry);
+    let systemMessageValidate = McsSystemMessageMapper.mapToValidate(this._systemMessageForm);
+
+    this._apiService.validateSystemMessage(systemMessageValidate).pipe(
+      switchMap((conflictMessages) => {
+        if (isNullOrEmpty(conflictMessages)) { return of(null); }
+        let systemMessageCreate = McsSystemMessageMapper.mapToCreate(this._systemMessageForm);
+
+        return this._showMessageConfirmationDialog(
+          systemMessageCreate,
+          conflictMessages.totalCollectionCount
+        );
+      }),
+      finalize(() => this._creatingSystemMessage$.next(false))
+    ).subscribe();
   }
 
   /**
@@ -134,12 +167,11 @@ export class SystemMessageCreateComponent implements IMcsNavigateAwayGuard {
    * @param message System message form values
    * @param conflictMessageCount Number of conflict messages
    */
-  private _showMessageConfirmationDialog(message: McsSystemMessageCreate, conflictMessageCount: number): void {
-    if (conflictMessageCount > 0) {
-      this._showSaveConflictDialog(message);
-    } else {
-      this._showSaveDialog(message);
-    }
+  private _showMessageConfirmationDialog(
+    message: McsSystemMessageCreate,
+    conflictMessageCount: number
+  ): Observable<McsSystemMessageCreate> {
+    return (conflictMessageCount > 0) ? this._showSaveConflictDialog(message) : this._showSaveDialog(message);
   }
 
   /**
@@ -147,7 +179,7 @@ export class SystemMessageCreateComponent implements IMcsNavigateAwayGuard {
    * for conflicting messages
    * @param message System message form values
    */
-  private _showSaveConflictDialog(message: McsSystemMessageCreate): void {
+  private _showSaveConflictDialog(message: McsSystemMessageCreate): Observable<McsSystemMessageCreate> {
     let dialogData = {
       data: message,
       type: 'warning',
@@ -157,12 +189,12 @@ export class SystemMessageCreateComponent implements IMcsNavigateAwayGuard {
 
     let dialogRef = this._dialogService.openConfirmation(dialogData);
 
-    dialogRef.afterClosed().pipe(
-      concatMap((dialogResult) => {
+    return dialogRef.afterClosed().pipe(
+      switchMap((dialogResult) => {
         if (isNullOrEmpty(dialogResult)) { return of(null); }
-        return this._createSystemMessage(this._systemMessageFormData);
+        return this._createSystemMessage(message);
       })
-    ).subscribe();
+    );
   }
 
   /**
@@ -170,7 +202,7 @@ export class SystemMessageCreateComponent implements IMcsNavigateAwayGuard {
    * for none conflicting messages
    * @param message System message form values
    */
-  private _showSaveDialog(message: McsSystemMessageCreate): void {
+  private _showSaveDialog(message: McsSystemMessageCreate): Observable<McsSystemMessageCreate> {
     let dialogData = {
       data: message,
       type: 'warning',
@@ -180,12 +212,12 @@ export class SystemMessageCreateComponent implements IMcsNavigateAwayGuard {
 
     let dialogRef = this._dialogService.openConfirmation(dialogData);
 
-    dialogRef.afterClosed().pipe(
-      concatMap((dialogResult) => {
+    return dialogRef.afterClosed().pipe(
+      switchMap((dialogResult) => {
         if (isNullOrEmpty(dialogResult)) { return of(null); }
-        return this._createSystemMessage(this._systemMessageFormData);
+        return this._createSystemMessage(message);
       })
-    ).subscribe();
+    );
   }
 
   /**
@@ -195,7 +227,7 @@ export class SystemMessageCreateComponent implements IMcsNavigateAwayGuard {
   private _createSystemMessage(message: McsSystemMessageCreate): Observable<McsSystemMessageCreate> {
     return this._apiService.createSystemMessage(message).pipe(
       tap(() => {
-        this._isMessageCreated = true;
+        this._fgSystemMessagesForm.getFormGroup().resetAllControls();
         this._navigationService.navigateTo(RouteKey.SystemMessages);
       })
     );

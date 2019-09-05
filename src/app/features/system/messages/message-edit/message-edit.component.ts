@@ -2,18 +2,22 @@ import {
   Component,
   ChangeDetectionStrategy,
   ViewChild,
-  OnInit
+  OnInit,
+  OnDestroy,
+  ChangeDetectorRef
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import {
   of,
-  Observable
+  Observable,
+  Subscription
 } from 'rxjs';
 import {
-  concatMap,
   tap,
   map,
-  shareReplay
+  shareReplay,
+  switchMap
 } from 'rxjs/operators';
 import {
   IMcsNavigateAwayGuard,
@@ -29,15 +33,18 @@ import {
 import {
   isNullOrEmpty,
   getSafeProperty,
-  CommonDefinition
+  CommonDefinition,
+  unsubscribeSafely
 } from '@app/utilities';
 import {
   DialogConfirmation,
   DialogService
 } from '@app/shared';
 import { McsApiService } from '@app/services';
+import { McsEvent } from '@app/events';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import { SystemMessageForm } from '@app/features-shared';
-import { ActivatedRoute } from '@angular/router';
+import { McsSystemMessageMapper } from '../message-mapper';
 
 const SYSTEM_MESSAGE_DATEFORMAT = "yyyy-MM-dd'T'HH:mm z";
 @Component({
@@ -46,28 +53,36 @@ const SYSTEM_MESSAGE_DATEFORMAT = "yyyy-MM-dd'T'HH:mm z";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class SystemMessageEditComponent implements OnInit, IMcsNavigateAwayGuard {
+export class SystemMessageEditComponent implements OnInit, IMcsNavigateAwayGuard, OnDestroy {
 
   public systemMessage$: Observable<McsSystemMessage>;
-  private _systemMessageFormData: McsSystemMessageEdit;
-  private _isMessageEdited: boolean;
+  private _systemMessageForm: SystemMessageForm;
+  private _systemMessageDataChangeHandler: Subscription;
 
   @ViewChild('fgSystemMessageForm')
   private _fgSystemMessagesForm: IMcsFormGroup;
 
   constructor(
+    private _dateTimeService: McsDateTimeService,
     private _translateService: TranslateService,
     private _dialogService: DialogService,
     private _navigationService: McsNavigationService,
     private _apiService: McsApiService,
-    private _dateTimeService: McsDateTimeService,
     private _activatedRoute: ActivatedRoute,
-  ) {
-    this._systemMessageFormData = new McsSystemMessageEdit();
-  }
+    private _eventDispatcher: EventBusDispatcherService,
+    private _changeDetectorRef: ChangeDetectorRef,
+  ) {}
 
   public ngOnInit() {
     this._subscribeToSystemMessageResolve();
+    this._registerEvents();
+  }
+
+  /**
+   * Destroys all the resources
+   */
+  public ngOnDestroy(): void {
+    unsubscribeSafely(this._systemMessageDataChangeHandler);
   }
 
   public get servicesIconKey(): string {
@@ -82,8 +97,9 @@ export class SystemMessageEditComponent implements OnInit, IMcsNavigateAwayGuard
     return CommonDefinition.ASSETS_SVG_TOGGLE_NAV;
   }
 
-  public get isFormValid(): boolean {
-    return getSafeProperty(this._fgSystemMessagesForm, (obj) => obj.isValid(), false);
+  public get hasMessageChanged(): boolean {
+    return getSafeProperty(this._fgSystemMessagesForm, (obj) => obj.isValid(), false)
+      && this._systemMessageForm.hasChanged;
   }
 
   public get hasDirtyFormControls(): boolean {
@@ -95,20 +111,16 @@ export class SystemMessageEditComponent implements OnInit, IMcsNavigateAwayGuard
    * and all the inputted setting on the form are checked
    */
   public canNavigateAway(): boolean {
-    return this._isMessageEdited || !this.hasDirtyFormControls;
+    return !this.hasDirtyFormControls;
   }
 
   /**
-   * Get system message form values
+   * Triggers when data change occurs on system message form
    * @param systemMessageForm System message form values
    */
   public onMessageFormDataChange(systemMessageForm: SystemMessageForm) {
-    this._systemMessageFormData.start = this.serializeSystemMessageDate(systemMessageForm.start);
-    this._systemMessageFormData.expiry = this.serializeSystemMessageDate(systemMessageForm.expiry);
-    this._systemMessageFormData.type = systemMessageForm.type;
-    this._systemMessageFormData.severity = systemMessageForm.severity;
-    this._systemMessageFormData.message = systemMessageForm.message;
-    this._systemMessageFormData.enabled = systemMessageForm.enabled;
+    if (isNullOrEmpty(systemMessageForm)) { return; }
+    this._systemMessageForm = systemMessageForm;
   }
 
   /**
@@ -130,16 +142,29 @@ export class SystemMessageEditComponent implements OnInit, IMcsNavigateAwayGuard
 
   /**
    * Edit message according to the inputs
-   * @param systemMessage System Message data to be edited
+   * @param currentMessageId System Message Id to be validated and edited
    */
-  public onEditMessage(systemMessage: McsSystemMessage): void {
-    this._apiService.validateSystemMessage(this._systemMessageFormData).pipe(
-      tap((conflictMessages) => {
-        this._showMessageConfirmationDialog(
-          this._systemMessageFormData,
-          systemMessage.id,
-          conflictMessages.totalCollectionCount,
-          );
+  public onEditMessage(currentMessageId: string): void {
+    if (isNullOrEmpty(currentMessageId)) { return; }
+
+    /**
+     * TODO: Improve the logic on serialization of dates
+     * Should be on one place only
+     */
+    this._systemMessageForm.start = this.serializeSystemMessageDate(this._systemMessageForm.start);
+    this._systemMessageForm.expiry = this.serializeSystemMessageDate(this._systemMessageForm.expiry);
+    let systemMessageValidate = McsSystemMessageMapper.mapToValidate(this._systemMessageForm, currentMessageId);
+
+    this._apiService.validateSystemMessage(systemMessageValidate).pipe(
+      switchMap((conflictMessages) => {
+        if (isNullOrEmpty(conflictMessages)) { return of(null); }
+        let systemMessageEdit = McsSystemMessageMapper.mapToEdit(this._systemMessageForm);
+
+        return this._showMessageConfirmationDialog(
+          systemMessageEdit,
+          currentMessageId,
+          conflictMessages.totalCollectionCount
+        );
       })
     ).subscribe();
   }
@@ -155,12 +180,9 @@ export class SystemMessageEditComponent implements OnInit, IMcsNavigateAwayGuard
     message: McsSystemMessageEdit,
     messageId: string,
     conflictMessageCount: number
-  ): void {
-    if (conflictMessageCount > 0) {
-      this._showSaveConflictDialog(message, messageId);
-    } else {
+  ): Observable<McsSystemMessageEdit> {
+    return (conflictMessageCount > 0) ? this._showSaveConflictDialog(message, messageId) :
       this._showSaveDialog(message, messageId);
-    }
   }
 
   /**
@@ -169,7 +191,7 @@ export class SystemMessageEditComponent implements OnInit, IMcsNavigateAwayGuard
    * @param message System message form values
    * @param messageId Id of the system message to be edited
    */
-  private _showSaveConflictDialog(message: McsSystemMessageEdit, messageId: string): void {
+  private _showSaveConflictDialog(message: McsSystemMessageEdit, messageId: string): Observable<McsSystemMessageEdit> {
     let dialogData = {
       data: message,
       type: 'warning',
@@ -179,12 +201,12 @@ export class SystemMessageEditComponent implements OnInit, IMcsNavigateAwayGuard
 
     let dialogRef = this._dialogService.openConfirmation(dialogData);
 
-    dialogRef.afterClosed().pipe(
-      concatMap((dialogResult) => {
+    return dialogRef.afterClosed().pipe(
+      switchMap((dialogResult) => {
         if (isNullOrEmpty(dialogResult)) { return of(null); }
-        return this._editSystemMessage(this._systemMessageFormData, messageId);
+        return this._editSystemMessage(message, messageId);
       })
-    ).subscribe();
+    );
   }
 
   /**
@@ -193,7 +215,7 @@ export class SystemMessageEditComponent implements OnInit, IMcsNavigateAwayGuard
    * @param message System message form values
    * @param messageId Id of the system message to be edited
    */
-  private _showSaveDialog(message: McsSystemMessageEdit, messageId: string): void {
+  private _showSaveDialog(message: McsSystemMessageEdit, messageId: string): Observable<McsSystemMessageEdit> {
     let dialogData = {
       data: message,
       type: 'warning',
@@ -203,12 +225,12 @@ export class SystemMessageEditComponent implements OnInit, IMcsNavigateAwayGuard
 
     let dialogRef = this._dialogService.openConfirmation(dialogData);
 
-    dialogRef.afterClosed().pipe(
-      concatMap((dialogResult) => {
+    return dialogRef.afterClosed().pipe(
+      switchMap((dialogResult) => {
         if (isNullOrEmpty(dialogResult)) { return of(null); }
-        return this._editSystemMessage(this._systemMessageFormData, messageId);
+        return this._editSystemMessage(message, messageId);
       })
-    ).subscribe();
+    );
   }
 
   /**
@@ -219,7 +241,7 @@ export class SystemMessageEditComponent implements OnInit, IMcsNavigateAwayGuard
   private _editSystemMessage(message: McsSystemMessageEdit, messageId: string): Observable<McsSystemMessageEdit> {
     return this._apiService.editSystemMessage(messageId, message).pipe(
       tap(() => {
-        this._isMessageEdited = true;
+        this._fgSystemMessagesForm.getFormGroup().resetAllControls();
         this._navigationService.navigateTo(RouteKey.SystemMessages);
       })
     );
@@ -235,4 +257,11 @@ export class SystemMessageEditComponent implements OnInit, IMcsNavigateAwayGuard
     );
   }
 
+  /**
+   * Registers the system message data change event
+   */
+  private _registerEvents(): void {
+    this._systemMessageDataChangeHandler = this._eventDispatcher.addEventListener(
+      McsEvent.dataChangeSystemMessages, () => this._changeDetectorRef.markForCheck());
+  }
 }

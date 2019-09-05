@@ -27,7 +27,7 @@
       <div class="action-items">
         <button mcsButton  
           mcsId="new-message"
-          [disabled]="!isFormValid" 
+          [disabled]="creatingSystemMessage() | async" 
           (click)="onCreateMessage()"
           mcsEventTracker="submit-new-message"
           mcsEventCategory="system-message"

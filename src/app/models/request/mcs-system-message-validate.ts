@@ -8,7 +8,8 @@ import {
   SeveritySerialization
 } from '../enumerations/severity.enum';
 
-export class McsSystemMessageEdit {
+export class McsSystemMessageValidate {
+  public id?: string = undefined;
   public enabled: boolean = undefined;
   public start: string = undefined;
   public expiry: string = undefined;

@@ -29,8 +29,8 @@
         <div class="action-items">
           <button mcsButton  
             mcsId="edit-message"
-            [disabled]="!isFormValid" 
-            (click)="onEditMessage(systemMessage)"
+            [disabled]="!hasMessageChanged || systemMessage.isProcessing" 
+            (click)="onEditMessage(systemMessage.id)"
             mcsEventTracker="submit-edit-message"
             mcsEventCategory="system-message"
             mcsEventLabel="edit-message-page">

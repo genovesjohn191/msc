@@ -3,7 +3,8 @@ import {
   Subscription,
   Observable,
   BehaviorSubject,
-  Subject
+  Subject,
+  empty
 } from 'rxjs';
 import {
   map,
@@ -11,7 +12,8 @@ import {
   takeUntil,
   take,
   tap,
-  filter
+  filter,
+  catchError
 } from 'rxjs/operators';
 import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import { McsApiService } from '@app/services';
@@ -81,6 +83,7 @@ export class McsSystemMessageService implements McsDisposable {
   public _registerActiveSystemMessageService() {
     this._activeMessageServiceReference = this._apiService.getActiveSystemMessages().pipe(
       map((response) => getSafeProperty(response, (obj) => obj.collection[0])),
+      catchError(() => empty()),
       share()
     );
 

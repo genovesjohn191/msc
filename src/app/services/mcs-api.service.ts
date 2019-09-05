@@ -9,7 +9,8 @@ import {
 import {
   map,
   catchError,
-  tap
+  tap,
+  finalize
 } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 import {
@@ -86,6 +87,7 @@ import {
   McsSystemMessage,
   McsSystemMessageCreate,
   McsSystemMessageEdit,
+  McsSystemMessageValidate,
   McsEntityRequester,
   EntityRequester
 } from '@app/models';
@@ -927,7 +929,7 @@ export class McsApiService {
     );
   }
 
-  public createOrderWorkFlow( id: string,workflow: McsOrderWorkflow): Observable<McsOrder> {
+  public createOrderWorkFlow(id: string, workflow: McsOrderWorkflow): Observable<McsOrder> {
     this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.Order, id);
 
     return this._ordersApi.createOrderWorkflow(id, workflow).pipe(
@@ -1104,12 +1106,22 @@ export class McsApiService {
     );
   }
 
-  public validateSystemMessage(messageData: McsSystemMessageCreate): Observable<McsApiCollection<McsSystemMessage>> {
+  public validateSystemMessage(messageData: McsSystemMessageValidate): Observable<McsApiCollection<McsSystemMessage>> {
+    if (!isNullOrEmpty(messageData.id)) {
+      this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.SystemMessage, messageData.id);
+    }
+
     return this._systemMessageApi.validateMessage(messageData).pipe(
-      map((response) => this._mapToCollection(response.content, response.totalCount)),
-      catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.validateMessage'))
-      )
+      catchError((error) => {
+        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.validateMessage'));
+      }),
+      finalize(() => {
+        if (!isNullOrEmpty(messageData.id)) {
+          this._dispatchRequesterEvent(
+            McsEvent.entityClearStateEvent, EntityRequester.SystemMessage, messageData.id);
+        }
+      }),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
     );
   }
 
