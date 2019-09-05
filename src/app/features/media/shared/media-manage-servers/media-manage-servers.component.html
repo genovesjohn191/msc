@@ -10,7 +10,7 @@
         <mcs-select [(ngModel)]="selectedServer" placeholder="Select server">
           <mcs-option-group>
             <ng-container *mcsOptionGroupHeader>
-              Servers
+              {{ 'mediaShared.manageServer.serverGroupHeader' | translate }}
             </ng-container>
             <mcs-option *ngFor="let server of servers" [value]="server">
               {{ server.name }}
