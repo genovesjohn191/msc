@@ -159,6 +159,8 @@ export class SystemMessageFormComponent
    * Sets the severity form control property
    */
   private _setSeverityFormControl() {
+    if (isNullOrEmpty(this.fgCreateMessage)) { return; }
+
     (this.fcType.value === this.messageTypeEnum.Info) ?
       this.fgCreateMessage.removeControl('fcSeverity') :
       this.fgCreateMessage.setControl('fcSeverity', this.fcSeverity);
