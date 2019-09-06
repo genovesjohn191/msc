@@ -1,5 +1,6 @@
 <div class="limited-view">
   <div class="contextual-help-page-wrapper">
+
     <!-- Billing Details -->
     <form [formGroup]="fgOrderBilling" mcsFormGroup>
       <section>
@@ -96,7 +97,12 @@
         </mcs-form-field>
         <p>{{ 'orderDetailsStep.orderDetails.description' | translate }}</p>
 
-        <mcs-table [dataSource]="orderDatasource">
+        <!-- Loading animation -->
+        <mcs-busy-ribbon *ngIf="isUpdatingCharges" theme="dark" margin-bottom-small>
+          <span>{{ 'orderDetailsStep.updatingCharges' | translate }}</span>
+        </mcs-busy-ribbon>
+
+        <mcs-table *ngIf="!isUpdatingCharges" [dataSource]="orderDatasource">
           <!-- Description Column -->
           <ng-container mcsColumnDef="description">
             <mcs-header-cell *mcsHeaderCellDef>
@@ -186,7 +192,6 @@
           </mcs-note>
         </ng-container>
       </section>
-
     </form>
 
     <!-- Wizard action -->

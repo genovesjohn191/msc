@@ -170,10 +170,7 @@ export class StepOrderDetailsComponent
    * Returns true when the order has been successfully created and no changes have been made
    */
   public get isNextButtonDisabled(): boolean {
-    return this.requestState === DataStatus.InProgress ||
-      this.requestState === DataStatus.Error ||
-      this.dataChangeStatus === DataStatus.InProgress ||
-      !this.allFormFieldsAreValid;
+    return this.isUpdatingCharges || !this.allFormFieldsAreValid;
   }
 
   /**
@@ -196,6 +193,14 @@ export class StepOrderDetailsComponent
   public get allFormFieldsAreValid(): boolean {
     if (isNullOrEmpty(this._formGroup)) { return false; }
     return this._formGroup.isValid();
+  }
+
+  /**
+   * Returns true when the charges has been updating
+   */
+  public get isUpdatingCharges(): boolean {
+    return (isNullOrEmpty(this.order) && isNullOrUndefined(this.dataChangeStatus)) ||
+      this.dataChangeStatus === DataStatus.InProgress;
   }
 
   /**
@@ -329,6 +334,7 @@ export class StepOrderDetailsComponent
    */
   private _initializeOrderDatasource(): void {
     if (isNullOrEmpty(this.order)) { return; }
+
     let orderItems = Object.assign([], this.order.items);
     orderItems.push({
       description: this._translate.instant('orderDetailsStep.orderDetails.totalLabel'),

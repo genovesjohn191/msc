@@ -24,7 +24,7 @@ import {
   CoreValidators,
   IMcsFormGroup,
   IMcsDataChange
-   } from '@app/core';
+} from '@app/core';
 import {
   convertMbToGb,
   convertGbToMb,
@@ -246,7 +246,8 @@ export class ServerManageStorageComponent
     if (noStorages) { return; }
 
     let targetStorageFound = this.storages.find((storage) =>
-      storage.name === getSafeProperty(this.targetDisk, (obj) => obj.storageProfile));
+      storage.name === getSafeProperty(this.targetDisk, (obj) => obj.storageProfile)
+    );
     let targetStorageToSelect = isNullOrEmpty(targetStorageFound) ?
       this.storages[0] : targetStorageFound;
 
@@ -316,7 +317,9 @@ export class ServerManageStorageComponent
       .subscribe(() => this.notifyDataChange());
 
     // Create form group and bind the form controls
-    this.fgScale = this._formBuilder.group([]);
+    this.fgScale = this._formBuilder.group({
+      fcSelectStorages: this.fcSelectStorages
+    });
     this._registerFormControlsByInputType();
   }
 

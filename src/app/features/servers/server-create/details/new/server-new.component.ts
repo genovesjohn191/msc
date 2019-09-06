@@ -424,6 +424,5 @@ export class ServerNewComponent
    */
   private _onResourcesDataChanged(): void {
     this._changeDetectorRef.markForCheck();
-    console.log('resource changed');
   }
 }
