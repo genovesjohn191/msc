@@ -2,7 +2,7 @@
   <!-- Storage header and switcher -->
   <mcs-item orientation="separated">
     <div><ng-content select="[mcsManageStorageHeader]"></ng-content></div>
-    <div>
+    <div *ngIf="hasAvailableMemory">
       <a *ngIf="inputManageType === inputManageTypeEnum.Custom" mcsId
         (click)="onChangeInputManageType(inputManageTypeEnum.Auto)">
         {{ 'serverShared.manageStorage.sliderSwitch' | translate }}</a>
