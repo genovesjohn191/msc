@@ -40,8 +40,7 @@ import {
 import {
   isNullOrEmpty,
   getSafeProperty,
-  unsubscribeSafely,
-  isNullOrUndefined
+  unsubscribeSafely
 } from '@app/utilities';
 import {
   McsOrder,
@@ -137,7 +136,6 @@ export class StepOrderDetailsComponent
     let requestChange = changes['requestState'];
     if (!isNullOrEmpty(requestChange)) {
       this._setChangeStatusByRequestState();
-      this._setTableStatus();
     }
 
     let orderChange = changes['order'];
@@ -170,7 +168,9 @@ export class StepOrderDetailsComponent
    * Returns true when the order has been successfully created and no changes have been made
    */
   public get isNextButtonDisabled(): boolean {
-    return this.isUpdatingCharges || !this.allFormFieldsAreValid;
+    return this.isUpdatingCharges ||
+      !this.allFormFieldsAreValid ||
+      this.dataChangeStatus === DataStatus.Error;
   }
 
   /**
@@ -199,8 +199,8 @@ export class StepOrderDetailsComponent
    * Returns true when the charges has been updating
    */
   public get isUpdatingCharges(): boolean {
-    return (isNullOrEmpty(this.order) && isNullOrUndefined(this.dataChangeStatus)) ||
-      this.dataChangeStatus === DataStatus.InProgress;
+    return this.dataChangeStatus === DataStatus.InProgress ||
+      (isNullOrEmpty(this.order) && this.dataChangeStatus !== DataStatus.Error);
   }
 
   /**
@@ -220,7 +220,6 @@ export class StepOrderDetailsComponent
    */
   public onDataChange(): void {
     if (!this.allFormFieldsAreValid) { return; }
-    this.dataChangeStatus = DataStatus.InProgress;
     this.notifyDataChange();
   }
 
@@ -240,6 +239,7 @@ export class StepOrderDetailsComponent
    */
   public notifyDataChange(): void {
     this.dataChange.next(this._getOrderDetails());
+    this._changeDetectorRef.markForCheck();
   }
 
   /**
@@ -266,7 +266,7 @@ export class StepOrderDetailsComponent
     if (!descriptionCanBeSet) { return; }
 
     if (this.fcDescription.value !== this.order.description) {
-      this.fcDescription.setValue(this.order.description);
+      this.fcDescription.setValue(this.order.description, { onlySelf: true });
     }
   }
 
@@ -299,15 +299,6 @@ export class StepOrderDetailsComponent
     this.fgOrderBilling.setControl('fcBillingEntity', this.fcBillingEntity);
     this.fgOrderBilling.setControl('fcBillingSite', this.fcBillingSite);
     this.fgOrderBilling.setControl('fcBillingCostCenter', this.fcBillingCostCenter);
-  }
-
-  /**
-   * Sets the table status based on state provided
-   */
-  private _setTableStatus(): void {
-    if (isNullOrUndefined(this.orderDatasource)) { return; }
-    this.orderDatasource.updateDataStatus(this.requestState);
-    this._changeDetectorRef.markForCheck();
   }
 
   /**
@@ -425,7 +416,10 @@ export class StepOrderDetailsComponent
   private _subscribeToDataChange(): void {
     this._formGroup.valueChanges().pipe(
       takeUntil(this._destroySubject),
-    ).subscribe(() => this.onDataChange());
+    ).subscribe(() => {
+      this.dataChangeStatus = DataStatus.InProgress;
+      this.onDataChange();
+    });
   }
 
   /**
