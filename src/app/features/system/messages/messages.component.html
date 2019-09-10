@@ -56,7 +56,10 @@
           <mcs-header-cell *mcsHeaderCellDef>
             {{ columnSettings.message.text }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" text-wrap>
+          <!-- TODO: Add directive for text truncate-->
+          <mcs-data-cell *mcsDataCellDef="let row" 
+            text-ellipsis style="max-width: 250px"
+            title="{{ row.message }}">
             {{ row.message }}
           </mcs-data-cell>
         </ng-container>
