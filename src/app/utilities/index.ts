@@ -25,5 +25,8 @@ export * from './interfaces/mcs-component-type.interface';
 export * from './interfaces/mcs-delegate.interface';
 export * from './interfaces/mcs-disposable.interface';
 
+/** RXJS Operators */
+export * from './rxjs-operators/emitLatestMap';
+
 export * from './utilities.types';
 export * from './common.definition';
