@@ -8,33 +8,6 @@ import {
 import { InnerSubscriber } from 'rxjs/internal/InnerSubscriber';
 import { OuterSubscriber } from 'rxjs/internal/OuterSubscriber';
 
-/**
- * Emits a value from the source Observable, then ignores subsequent values until
- * the previous has been emitted, then emits again the latest value from the subsequent
- * values. The same process will be executed again.
- */
-export function emitLatestMap<T, R>(
-  project: (value: T, index: number) => Observable<R>
-): OperatorFunction<T, R> {
-
-  return (source: Observable<T>) =>
-    source.lift(new EmitLatestMapOperator(project));
-}
-
-class EmitLatestMapOperator<T, R> implements Operator<T, R> {
-  constructor(private project: (value: T, index: number) => Observable<R>) { }
-
-  public call(subscriber: Subscriber<R>, source: any): any {
-    return source.subscribe(new EmitLatestMapSubscriber(subscriber, this.project));
-  }
-}
-
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-// tslint:disable-next-line:max-classes-per-file
 class EmitLatestMapSubscriber<T, R> extends OuterSubscriber<T, R> {
 
   private _index: number = 0;
@@ -106,4 +79,26 @@ class EmitLatestMapSubscriber<T, R> extends OuterSubscriber<T, R> {
     destination.add(innerSubscriber);
     result.subscribe(innerSubscriber);
   }
+}
+
+// tslint:disable-next-line:max-classes-per-file
+class EmitLatestMapOperator<T, R> implements Operator<T, R> {
+  constructor(private project: (value: T, index: number) => Observable<R>) { }
+
+  public call(subscriber: Subscriber<R>, source: any): any {
+    return source.subscribe(new EmitLatestMapSubscriber(subscriber, this.project));
+  }
+}
+
+/**
+ * Emits a value from the source Observable, then ignores subsequent values until
+ * the previous has been emitted, then emits again the latest value from the subsequent
+ * values. The same process will be executed again.
+ */
+export function emitLatestMap<T, R>(
+  project: (value: T, index: number) => Observable<R>
+): OperatorFunction<T, R> {
+
+  return (source: Observable<T>) =>
+    source.lift(new EmitLatestMapOperator(project));
 }
