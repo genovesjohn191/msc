@@ -3,7 +3,6 @@
   <mcs-form-field>
     <input mcsInput mcsSetFocus #startInput
       mcsId="inp-start"
-      (change)="updateExpiryValidation()"
       [placeholder]="'systemMessageForm.startPlaceholder' | translate"
       [formControl]="fcStart"
       [mcsContextualHelp]="'systemMessageForm.startHelp' | translate">
@@ -16,6 +15,9 @@
     </mcs-error>
     <mcs-error mcsError errorState="invalidDateFormat">
       {{ 'systemMessageForm.errors.dateFormat' | translate }}
+    </mcs-error>
+    <mcs-error mcsError errorState="invalidEarlierDate">
+      {{ 'systemMessageForm.errors.earlierDate' | translate }}
     </mcs-error>
     <mcs-error mcsError errorState="invalidStartDate">
       {{ 'systemMessageForm.errors.start' | translate }}
@@ -38,6 +40,9 @@
     </mcs-error>
     <mcs-error mcsError errorState="invalidDateFormat">
       {{ 'systemMessageForm.errors.dateFormat' | translate }}
+    </mcs-error>
+    <mcs-error mcsError errorState="invalidEarlierDate">
+      {{ 'systemMessageForm.errors.earlierDate' | translate }}
     </mcs-error>
     <mcs-error mcsError errorState="invalidExpiryDate">
       {{ 'systemMessageForm.errors.expiry' | translate }}

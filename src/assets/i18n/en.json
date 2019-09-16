@@ -979,13 +979,14 @@
     "errors": {
       "date": "Invalid date.",
       "dateFormat": "Invalid date format.",
-      "expiry": "Invalid expiry. Date should be present date or later than start date.",
-      "start": "Invalid start. Date should start on present date or later",
+      "earlierDate": "Invalid date. Date should not be earlier than the present time.",
+      "expiry": "Invalid expiry. Date should be later than start date.",
+      "start": "Invalid start. Date should be before the expiry date",
       "message": "You must place a message."
     },
     "startLabel": "Start ",
     "startPlaceholder": "Start date",
-    "startHelp": "Scheduled start time for this message (Sydney Time). Leave this blank if you wish to display it immediately.",
+    "startHelp": "Scheduled start time for this message (Sydney Time). Leave this blank if you wish to display your message immediately.",
     "expiryLabel": "Expiry ",
     "expiryPlaceholder": "Expiry date",
     "expiryHelp": "Expiry time for this message (Sydney Time). Once the message expires, it will stop displaying. Leave this blank if you do not wish for this message to expire.",

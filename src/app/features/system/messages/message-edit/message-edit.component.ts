@@ -22,8 +22,7 @@ import {
 import {
   IMcsNavigateAwayGuard,
   McsNavigationService,
-  IMcsFormGroup,
-  McsDateTimeService
+  IMcsFormGroup
 } from '@app/core';
 import {
   RouteKey,
@@ -46,7 +45,6 @@ import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import { SystemMessageForm } from '@app/features-shared';
 import { McsSystemMessageMapper } from '../message-mapper';
 
-const SYSTEM_MESSAGE_DATEFORMAT = "yyyy-MM-dd'T'HH:mm z";
 @Component({
   selector: 'mcs-message-edit',
   templateUrl: './message-edit.component.html',
@@ -63,7 +61,6 @@ export class SystemMessageEditComponent implements OnInit, IMcsNavigateAwayGuard
   private _fgSystemMessagesForm: IMcsFormGroup;
 
   constructor(
-    private _dateTimeService: McsDateTimeService,
     private _translateService: TranslateService,
     private _dialogService: DialogService,
     private _navigationService: McsNavigationService,
@@ -103,7 +100,7 @@ export class SystemMessageEditComponent implements OnInit, IMcsNavigateAwayGuard
   }
 
   public get hasDirtyFormControls(): boolean {
-    return getSafeProperty(this._fgSystemMessagesForm, (obj) => obj.getFormGroup().hasDirtyFormControls());
+    return getSafeProperty(this._fgSystemMessagesForm, (obj) => obj.getFormGroup().hasDirtyFormControls(), false);
   }
 
   /**
@@ -124,35 +121,12 @@ export class SystemMessageEditComponent implements OnInit, IMcsNavigateAwayGuard
   }
 
   /**
-   * Serialize start and expiry date of system message
-   * @param date Date to be serialize
-   */
-  public serializeSystemMessageDate(date: string): string {
-    if (isNullOrEmpty(date)) { return ''; }
-    if (!isNaN(Date.parse(date))) {
-      let datetime = this._dateTimeService.formatDateString(
-        date,
-        SYSTEM_MESSAGE_DATEFORMAT,
-        CommonDefinition.TIMEZONE_SYDNEY
-      );
-      return datetime;
-    }
-    return date;
-  }
-
-  /**
    * Edit message according to the inputs
    * @param currentMessageId System Message Id to be validated and edited
    */
   public onEditMessage(currentMessageId: string): void {
     if (isNullOrEmpty(currentMessageId)) { return; }
 
-    /**
-     * TODO: Improve the logic on serialization of dates
-     * Should be on one place only
-     */
-    this._systemMessageForm.start = this.serializeSystemMessageDate(this._systemMessageForm.start);
-    this._systemMessageForm.expiry = this.serializeSystemMessageDate(this._systemMessageForm.expiry);
     let systemMessageValidate = McsSystemMessageMapper.mapToValidate(this._systemMessageForm, currentMessageId);
 
     this._apiService.validateSystemMessage(systemMessageValidate).pipe(

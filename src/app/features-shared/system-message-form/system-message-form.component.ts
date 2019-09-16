@@ -14,7 +14,10 @@ import {
   FormBuilder
 } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
-import { Subject } from 'rxjs';
+import {
+  Subject,
+  merge
+} from 'rxjs';
 import {
   takeUntil,
   tap
@@ -44,6 +47,7 @@ import { McsFormGroupDirective } from '@app/shared';
 import { SystemMessageForm } from './system-message-form';
 
 const SYSTEM_MESSAGE_DATEFORMAT = 'YYYY-MM-DDTHH:mm';
+const SYSTEM_MESSAGE_TIMEZONE_FORMAT = "yyyy-MM-dd'T'HH:mm z";
 const SYSTEM_MESSAGE_ISO_DATEFORMAT = 'isoDate';
 @Component({
   selector: 'mcs-system-message-form',
@@ -122,20 +126,11 @@ export class SystemMessageFormComponent
   }
 
   /**
-   * Checks the validation of expiry date
-   * form control when there is a change on
-   * start date form control
-   */
-  public updateExpiryValidation(): void {
-    this.fcExpiry.updateValueAndValidity();
-  }
-
-  /**
    * Event that emits when an input has been changed
    */
   public notifyDataChange() {
-    this._systemMessageForm.start = this.fcStart.value;
-    this._systemMessageForm.expiry = this.fcExpiry.value;
+    this._systemMessageForm.start = this._serializeSystemMessageDate(this.fcStart.value);
+    this._systemMessageForm.expiry = this._serializeSystemMessageDate(this.fcExpiry.value);
     this._systemMessageForm.type = this.fcType.value;
     this._systemMessageForm.severity = this.fcSeverity.value;
     this._systemMessageForm.message = this.fcMessage.value;
@@ -178,30 +173,38 @@ export class SystemMessageFormComponent
     // Register Form Controls
     this.fcStart = new FormControl('', [
       CoreValidators.custom(
-        this._isValidDate.bind(this),
+        this._formControlDateValidation.bind(this),
         'invalidDate'
       ),
       CoreValidators.custom(
-        this._isValidDateFormat.bind(this),
+        this._dateFormatValidation.bind(this),
         'invalidDateFormat'
       ),
       CoreValidators.custom(
-        this._isValidStart.bind(this),
-        'invalidStartDate'
+        this._earlierDateValidation.bind(this),
+        'invalidEarlierDate'
       ),
+      CoreValidators.custom(
+        this._startDateValidation.bind(this),
+        'invalidStartDate'
+      )
     ]);
 
     this.fcExpiry = new FormControl('', [
       CoreValidators.custom(
-        this._isValidDate.bind(this),
+        this._formControlDateValidation.bind(this),
         'invalidDate'
       ),
       CoreValidators.custom(
-        this._isValidDateFormat.bind(this),
+        this._dateFormatValidation.bind(this),
         'invalidDateFormat'
       ),
       CoreValidators.custom(
-        this._isValidExpiry.bind(this),
+        this._earlierDateValidation.bind(this),
+        'invalidEarlierDate'
+      ),
+      CoreValidators.custom(
+        this._expiryDateValidation.bind(this),
         'invalidExpiryDate'
       ),
     ]);
@@ -236,10 +239,37 @@ export class SystemMessageFormComponent
       tap(() => this._setSeverityFormControl())
     ).subscribe();
 
+    merge(this.fcStart.valueChanges, this.fcExpiry.valueChanges).pipe(
+      takeUntil(this._destroySubject),
+      tap(() => this._onStartAndExpiryChange())
+    ).subscribe();
+
     // Create form group and bind the form controls
     this.fgCreateMessage.valueChanges
       .pipe(takeUntil(this._destroySubject))
       .subscribe(() => this.notifyDataChange());
+  }
+
+  private _onStartAndExpiryChange(): void {
+    // Check individual
+    let expiryDate = getSafeProperty(this.fcExpiry, (obj) => obj.value);
+    if (isNullOrEmpty(expiryDate)) {
+      this.fcStart.setErrors(null);
+      return;
+    }
+
+    let startDate = getSafeProperty(this.fcStart, (obj) => obj.value);
+    if (isNullOrEmpty(startDate)) {
+      this.fcExpiry.setErrors(null);
+      return;
+    }
+
+    // Compare both start and expiry date
+    let comparisonResult = compareDates(new Date(startDate), new Date(expiryDate));
+    if (comparisonResult < 0) {
+      this.fcStart.setErrors(null);
+      this.fcExpiry.setErrors(null);
+    }
   }
 
   /**
@@ -266,14 +296,40 @@ export class SystemMessageFormComponent
   }
 
   /**
+   * Serialize start and expiry date of system message
+   * @param date Date to be serialize
+   */
+  private _serializeSystemMessageDate(date: string): string {
+    if (isNullOrEmpty(date)) { return ''; }
+    if (!isNaN(Date.parse(date))) {
+      let datetime = this._dateTimeService.formatDateString(
+        date,
+        SYSTEM_MESSAGE_TIMEZONE_FORMAT,
+        CommonDefinition.TIMEZONE_SYDNEY
+      );
+      return datetime;
+    }
+    return date;
+  }
+
+  /**
    * Form groups and Form controls registration area
    */
   private _setSystemMessageHasChangedFlag() {
     if (isNullOrEmpty(this.message)) { return; }
+
+    let startHasChanged = this.fcStart.value !== this._dateTimeService.formatDate(
+      getSafeProperty(this.message, (obj) => obj.start, ''),
+      SYSTEM_MESSAGE_ISO_DATEFORMAT,
+      CommonDefinition.TIMEZONE_SYDNEY);
+
+    let expiryHasChanged = this.fcExpiry.value !== this._dateTimeService.formatDate(
+      getSafeProperty(this.message, (obj) => obj.expiry, ''),
+      SYSTEM_MESSAGE_ISO_DATEFORMAT,
+      CommonDefinition.TIMEZONE_SYDNEY);
+
     this._systemMessageForm.hasChanged = this._systemMessageForm.valid &&
-      (this.fcEnabled.value !== this.message.enabled
-        || this.fcExpiry.value !== getSafeProperty(this.message, (obj) => obj.expiry, '')
-        || this.fcStart.value !== getSafeProperty(this.message, (obj) => obj.start, '')
+      (this.fcEnabled.value !== this.message.enabled || startHasChanged || expiryHasChanged
         || this.fcSeverity.value !== this.message.severity || this.fcType.value !== this.message.type);
   }
 
@@ -306,41 +362,52 @@ export class SystemMessageFormComponent
   }
 
   /**
-   * Returns true when date is valid
+   * Returns true when date inputted for start and expiry is valid
    * @param date Inputted value from input box
    */
-  private _isValidDate(date: string): boolean {
+  private _formControlDateValidation(date: string): boolean {
     if (isNullOrEmpty(date)) { return true; }
     return (!isNaN(Date.parse(date)));
   }
 
   /**
-   * Returns true when date format is valid
+   * Returns true when date format of start and expiry is valid
    * based on the given format
    * @param date Inputted value from input box
    */
-  private _isValidDateFormat(date: string): boolean {
+  private _dateFormatValidation(date: string): boolean {
     if (isNullOrEmpty(date)) { return true; }
     return (this._dateTimeService.isDateFormatValid(date, SYSTEM_MESSAGE_DATEFORMAT));
   }
 
   /**
-   * Returns true when date is present or later date
-   * @param startDate Inputted value from input box
+   * Returns true when date is not earlier than present time
+   * @param date Inputted value from input box
    */
-  private _isValidStart(startDate: string): boolean {
-    if (isNullOrEmpty(startDate)) { return true; }
-    return compareDates(new Date(startDate), this.dateNow) >= 0;
+  private _earlierDateValidation(date: string): boolean {
+    if (isNullOrEmpty(date)) { return true; }
+    return compareDates(new Date(date), this.dateNow) >= 0;
   }
 
   /**
-   * Returns true when date is present or later than start date
+   * Returns true when start date is present date
+   * but not later than expiry date
+   * @param startDate Inputted value from input box
+   */
+  private _startDateValidation(startDate: string): boolean {
+    if (isNullOrEmpty(startDate)) { return true; }
+    let expiryDate = getSafeProperty(this.fcExpiry, (obj) => obj.value);
+    return compareDates(new Date(startDate), new Date(expiryDate)) < 0;
+  }
+
+  /**
+   * Returns true when expiry date is present date or later the start date
    * @param expiryDate Inputted value from input box
    */
-  private _isValidExpiry(expiryDate: string): boolean {
+  private _expiryDateValidation(expiryDate: string): boolean {
     if (isNullOrEmpty(expiryDate)) { return true; }
-    const comparedDates: number = compareDates(new Date(expiryDate), new Date(this.fcStart.value));
-    return (comparedDates > 0 || isNullOrEmpty(this.fcStart.value));
+    let startDate = getSafeProperty(this.fcStart, (obj) => obj.value);
+    return compareDates(new Date(startDate), new Date(expiryDate)) < 0;
   }
 
 }
