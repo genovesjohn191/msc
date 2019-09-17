@@ -40,7 +40,8 @@ import {
   InputManageType,
   McsResource,
   McsServerCompute,
-  serviceTypeText
+  serviceTypeText,
+  Os
 } from '@app/models';
 import { ServerManageScale } from './server-manage-scale';
 import { McsFormGroupDirective } from '@app/shared';
@@ -48,7 +49,8 @@ import { McsFormGroupDirective } from '@app/shared';
 // Constants definition
 const DEFAULT_MEMORY_STEP = 2;
 const DEFAULT_CPU_STEP = 2;
-const DEFAULT_MIN_MEMORY = 2;
+const DEFAULT_MIN_MEMORY_LIN = 2;
+const DEFAULT_MIN_MEMORY_WIN = 4;
 const DEFAULT_MIN_CPU = 2;
 
 @Component({
@@ -83,15 +85,27 @@ export class ServerManageScaleComponent
   public serverCompute?: McsServerCompute;
 
   @Input()
+  public get osType(): Os { return this._osType; }
+  public set osType(value: Os) {
+    if (this._osType !== value) {
+      this._osType = !isNullOrEmpty(value) ? value : Os.Linux;
+      this._minimumMemoryByOsType = this._getMinimumRamByOsType(this._osType);
+      this._resetFormGroup();
+    }
+  }
+
+  @Input()
   public get minimumCpu(): number { return this._minimumCpu; }
   public set minimumCpu(value: number) {
     this._minimumCpu = coerceNumber(value, DEFAULT_MIN_CPU);
   }
 
   @Input()
-  public get minimumMemoryGB(): number { return this._minimumMemoryGB; }
+  public get minimumMemoryGB(): number {
+    return !isNullOrEmpty(this._minimumMemoryGB) ? this._minimumMemoryGB : this._minimumMemoryByOsType;
+  }
   public set minimumMemoryGB(value: number) {
-    this._minimumMemoryGB = coerceNumber(value, DEFAULT_MIN_MEMORY);
+    this._minimumMemoryGB = coerceNumber(value, this._minimumMemoryByOsType);
   }
 
   @ViewChild(McsFormGroupDirective)
@@ -102,7 +116,9 @@ export class ServerManageScaleComponent
   private _formControlsMap = new Map<InputManageType, () => void>();
   private _previousResourceAvailable = 0;
   private _minimumCpu: number = DEFAULT_MIN_CPU;
-  private _minimumMemoryGB: number = DEFAULT_MIN_MEMORY;
+  private _minimumMemoryGB: number;
+  private _minimumMemoryByOsType: number = DEFAULT_MIN_MEMORY_LIN;
+  private _osType: Os = Os.Linux;
 
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
@@ -182,24 +198,21 @@ export class ServerManageScaleComponent
    * Returns the current server memory used
    */
   public get serverMemoryUsedGB(): number {
-    return getSafeProperty(this.serverCompute,
-      (obj) => convertMbToGb(obj.memoryMB), DEFAULT_MIN_MEMORY);
+    return getSafeProperty(this.serverCompute, (obj) => convertMbToGb(obj.memoryMB), this.minimumMemoryGB);
   }
 
   /**
    * Returns the server cpu used
    */
   public get serverCpuUsed(): number {
-    return getSafeProperty(this.serverCompute,
-      (obj) => obj.cpuCount, DEFAULT_MIN_CPU);
+    return getSafeProperty(this.serverCompute, (obj) => obj.cpuCount, this.minimumCpu);
   }
 
   /**
    * Returns the resource available memory in GB
    */
   public get resourceAvailableMemoryGB(): number {
-    let resourceMemory = getSafeProperty(this.resource,
-      (obj) => convertMbToGb(obj.compute.memoryAvailableMB), 0);
+    let resourceMemory = getSafeProperty(this.resource, (obj) => convertMbToGb(obj.compute.memoryAvailableMB), 0);
     return isNullOrEmpty(this.serverCompute) ? resourceMemory : resourceMemory + this.serverMemoryUsedGB;
   }
 
@@ -207,8 +220,7 @@ export class ServerManageScaleComponent
    * Returns the resource available CPU
    */
   public get resourceAvailableCpu(): number {
-    let resourceCpu = getSafeProperty(this.resource,
-      (obj) => obj.compute.cpuAvailable, 0);
+    let resourceCpu = getSafeProperty(this.resource, (obj) => obj.compute.cpuAvailable, 0);
     return isNullOrEmpty(this.serverCompute) ? resourceCpu : resourceCpu + this.serverCpuUsed;
   }
 
@@ -339,7 +351,7 @@ export class ServerManageScaleComponent
       CoreValidators.required,
       CoreValidators.numeric,
       CoreValidators.custom(this._memoryCanScaleDown.bind(this), 'scaleDown'),
-      (control) => CoreValidators.min(DEFAULT_MIN_MEMORY)(control),
+      (control) => CoreValidators.min(this._minimumMemoryByOsType)(control),
       (control) => CoreValidators.max(this.resourceAvailableMemoryGB)(control),
       CoreValidators.custom(this._memoryStepIsValid.bind(this), 'memoryStep')
     ]);
@@ -392,6 +404,13 @@ export class ServerManageScaleComponent
   }
 
   /**
+   * Returns the minimum ram based on the type of Operating System
+   */
+  private _getMinimumRamByOsType(os: Os): number {
+    return os === Os.Linux ? DEFAULT_MIN_MEMORY_LIN : DEFAULT_MIN_MEMORY_WIN;
+  }
+
+  /**
    * Returns true if the value is a valid memory step
    * @param inputValue Value to be checked
    */
@@ -421,7 +440,7 @@ export class ServerManageScaleComponent
    * @param inputValue Value to be checked
    */
   private _memoryCanScaleDown(inputValue: any) {
-    let minimumSameAsDefaultMinimum = DEFAULT_MIN_MEMORY === this.minimumMemoryGB;
+    let minimumSameAsDefaultMinimum = this._minimumMemoryByOsType === this.minimumMemoryGB;
     return minimumSameAsDefaultMinimum ? minimumSameAsDefaultMinimum : inputValue >= this.minimumMemoryGB;
   }
 
