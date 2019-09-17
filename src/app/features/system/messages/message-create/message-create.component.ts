@@ -18,8 +18,7 @@ import {
 import {
   IMcsNavigateAwayGuard,
   McsNavigationService,
-  IMcsFormGroup,
-  McsDateTimeService
+  IMcsFormGroup
 } from '@app/core';
 import {
   McsSystemMessageCreate,
@@ -39,7 +38,6 @@ import { McsApiService } from '@app/services';
 import { SystemMessageForm } from '@app/features-shared';
 import { McsSystemMessageMapper } from '../message-mapper';
 
-const SYSTEM_MESSAGE_DATEFORMAT = "yyyy-MM-dd'T'HH:mm z";
 @Component({
   selector: 'mcs-message-create',
   templateUrl: './message-create.component.html',
@@ -55,7 +53,6 @@ export class SystemMessageCreateComponent implements IMcsNavigateAwayGuard, OnDe
   private _fgSystemMessagesForm: IMcsFormGroup;
 
   constructor(
-    private _dateTimeService: McsDateTimeService,
     private _translateService: TranslateService,
     private _dialogService: DialogService,
     private _navigationService: McsNavigationService,
@@ -86,7 +83,7 @@ export class SystemMessageCreateComponent implements IMcsNavigateAwayGuard, OnDe
   }
 
   public get hasDirtyFormControls(): boolean {
-    return getSafeProperty(this._fgSystemMessagesForm, (obj) => obj.getFormGroup().hasDirtyFormControls());
+    return getSafeProperty(this._fgSystemMessagesForm, (obj) => obj.getFormGroup().hasDirtyFormControls(), false);
   }
 
   /**
@@ -114,23 +111,6 @@ export class SystemMessageCreateComponent implements IMcsNavigateAwayGuard, OnDe
   }
 
   /**
-   * Serialize start and expiry date of system message
-   * @param date Date to be serialize
-   */
-  public serializeSystemMessageDate(date: string): string {
-    if (isNullOrEmpty(date)) { return ''; }
-    if (!isNaN(Date.parse(date))) {
-      let datetime = this._dateTimeService.formatDateString(
-        date,
-        SYSTEM_MESSAGE_DATEFORMAT,
-        CommonDefinition.TIMEZONE_SYDNEY
-      );
-      return datetime;
-    }
-    return date;
-  }
-
-  /**
    * Create message according to the inputs
    */
   public onCreateMessage(): void {
@@ -139,12 +119,6 @@ export class SystemMessageCreateComponent implements IMcsNavigateAwayGuard, OnDe
 
     this._creatingSystemMessage$.next(true);
 
-    /**
-     * TODO: Improve the logic on serialization of dates
-     * Should be on one place only
-     */
-    this._systemMessageForm.start = this.serializeSystemMessageDate(this._systemMessageForm.start);
-    this._systemMessageForm.expiry = this.serializeSystemMessageDate(this._systemMessageForm.expiry);
     let systemMessageValidate = McsSystemMessageMapper.mapToValidate(this._systemMessageForm);
 
     this._apiService.validateSystemMessage(systemMessageValidate).pipe(
