@@ -1,17 +1,17 @@
 <form [formGroup]="fgServerScale" mcsFormGroup>
   <!-- TODO: Disabled for the moment -->
   <!-- Scale header and switcher -->
-  <!-- <mcs-item orientation="separated">
+  <mcs-item orientation="separated">
     <div><ng-content select="[mcsManageScaleHeader]"></ng-content></div>
-    <div>
+    <!-- <div>
       <a *ngIf="inputManageType === inputManageTypeEnum.Custom" mcsId
         (click)="onChangeInputManageType(inputManageTypeEnum.Auto)">
         {{ 'serverShared.manageScale.sliderSwitch' | translate }}</a>
       <a *ngIf="inputManageType === inputManageTypeEnum.Auto" mcsId
         (click)="onChangeInputManageType(inputManageTypeEnum.Custom)">
         {{ 'serverShared.manageScale.customSwitch' | translate }}</a>
-    </div>
-  </mcs-item> -->
+    </div> -->
+  </mcs-item>
 
   <div [ngSwitch]="inputManageType">
     <!-- Slider selection mode -->
