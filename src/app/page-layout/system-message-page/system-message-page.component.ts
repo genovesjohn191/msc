@@ -46,6 +46,10 @@ export class SystemMessagePageComponent implements OnInit {
     return CommonDefinition.ASSETS_SVG_WARNING_BLUE;
   }
 
+  public get macviewUrl(): string {
+    return this._coreConfig.macviewUrl;
+  }
+
   /**
    * Proceeds to Portal page and store cookie of messagesId
    * @param message Active message details

@@ -9,18 +9,14 @@
 
     <div class="system-message-page-title">{{ 'systemMessagePage.title' | translate }}</div>
 
-    <mcs-alert type="info" [hideIcon]="true">
-      {{ systemMessage.message }}
-    </mcs-alert>
+    <span>{{ systemMessage.message }}</span>
     
-    <mcs-alert type="info" [hideIcon]="true" *mcsAccessControl="['SystemMessageView']; else: secondaryAdvisoryLabel">
+    <span *mcsAccessControl="['SystemMessageView']; else: secondaryAdvisoryLabelTemplate">
       {{ 'systemMessagePage.internalAdvisoryLabel' | translate }}
-    </mcs-alert>
+    </span>
      
-    <ng-template #secondaryAdvisoryLabel>
-      <mcs-alert type="info" [hideIcon]="true">
-        {{ 'systemMessagePage.secondaryAdvisoryLabel' | translate }}
-      </mcs-alert>
+    <ng-template #secondaryAdvisoryLabelTemplate>
+      <span [innerHTML]="'systemMessagePage.secondaryAdvisoryLabel' | translate: {macViewUrl: macviewUrl}"></span>
     </ng-template>   
 
     <div>
