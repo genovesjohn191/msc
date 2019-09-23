@@ -31,7 +31,6 @@ import {
   McsOrderItemCreate,
   McsJob,
   McsOrderItemType,
-  orderTypeText,
   OrderType
 } from '@app/models';
 import { McsApiService } from '@app/services';
@@ -324,14 +323,11 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
   }
 
   /**
-   * Gets the order description based on the order type
+   * Gets the order description
    * @param orderTypeDetails Order type to be checked
    */
   private _getOrderDescriptionByType(orderTypeDetails: McsOrderItemType): string {
-    let description = orderTypeDetails.description || DEFAULT_ORDER_DESCRIPTION;
-    let orderTypeLabel = isNullOrEmpty(orderTypeText[orderTypeDetails.orderType]) ?
-      orderTypeText[OrderType.Unknown] : orderTypeText[orderTypeDetails.orderType];
-    return `${orderTypeLabel} ${description}`;
+    return orderTypeDetails.description || DEFAULT_ORDER_DESCRIPTION;
   }
 
   /**

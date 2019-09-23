@@ -13,6 +13,7 @@ import { ServerManageNetworkComponent } from './server-manage-network/server-man
 import { ServerManageScaleComponent } from './server-manage-scale/server-manage-scale.component';
 import { ServerManageStorageComponent } from './server-manage-storage/server-manage-storage.component';
 import { VdcManageStorageComponent } from './vdc-manage-storage/vdc-manage-storage.component';
+import { VdcManageScaleComponent } from './vdc-manage-scale/vdc-manage-scale.component';
 import { StepOrderDetailsComponent } from './step-order-details/step-order-details.component';
 import { StepProvisioningComponent } from './step-provisioning/step-provisioning.component';
 import { OrderAgreementComponent } from './order-agreement/mcs-order-agreement.component';
@@ -36,8 +37,10 @@ import { HelpWidgetComponent } from './help-widget/help-widget.component';
     StepOrderDetailsComponent,
     StepProvisioningComponent,
     VdcManageStorageComponent,
+    VdcManageScaleComponent,
     OrderAgreementComponent,
     SystemMessageFormComponent,
+
     RenameServerDialogComponent,
     HelpWidgetComponent
   ],
@@ -59,6 +62,7 @@ import { HelpWidgetComponent } from './help-widget/help-widget.component';
     StepOrderDetailsComponent,
     StepProvisioningComponent,
     VdcManageStorageComponent,
+    VdcManageScaleComponent,
     OrderAgreementComponent,
     SystemMessageFormComponent,
     RenameServerDialogComponent,

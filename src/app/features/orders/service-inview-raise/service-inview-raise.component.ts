@@ -14,13 +14,15 @@ import {
 import {
   Subject,
   Observable,
-  Subscription
+  Subscription,
+  of
 } from 'rxjs';
 import {
-  map,
   shareReplay,
-  takeUntil
+  takeUntil,
+  switchMap
 } from 'rxjs/operators';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import {
   McsOrderWizardBase,
   CoreValidators,
@@ -34,7 +36,6 @@ import {
   Guid
 } from '@app/utilities';
 import { McsApiService } from '@app/services';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import { McsEvent } from '@app/events';
 import {
   McsServer,
@@ -51,7 +52,13 @@ type RaiseInviewLevelProperties = {
   inviewLevel: string;
 };
 
+interface ServiceGroup {
+  servers: McsServer[];
+  resourceName: string;
+}
+
 const SERVICE_RAISE_INVIEW_REF_ID = Guid.newGuid().toString();
+const RESOURCE_NAME_OTHER = 'Others';
 
 @Component({
   selector: 'mcs-order-service-inview-raise',
@@ -62,7 +69,7 @@ const SERVICE_RAISE_INVIEW_REF_ID = Guid.newGuid().toString();
 
 export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements OnDestroy {
 
-  public managedServers$: Observable<McsServer[]>;
+  public managedServers$: Observable<ServiceGroup[]>;
   public fgServiceInviewDetails: FormGroup;
   public fcService: FormControl;
 
@@ -211,11 +218,37 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
   private _getAllServices(): void {
     // Managed servers for now, but eventually all Services
     this.managedServers$ = this._apiService.getServers().pipe(
-      map((response) => getSafeProperty(response, (obj) => obj.collection).filter(
-        (server) => !server.isSelfManaged && !server.isDedicated)
-      ),
+      switchMap((response) => of(this._createServerArray(response && response.collection))),
       shareReplay(1)
     );
+  }
+
+  /**
+   * Returns an array of servers
+   */
+  private _createServerArray(servers: McsServer[]): ServiceGroup[] {
+    if (isNullOrEmpty(servers)) { return; }
+    let serversGroupArray: ServiceGroup[] = [];
+
+    servers.forEach((server) => {
+      if (server.isSelfManaged || server.isDedicated) { return; }
+      let currentResourceName = server.resourceName || RESOURCE_NAME_OTHER;
+      let groupedServer: ServiceGroup;
+
+      let existingServerGroup = serversGroupArray.find(
+        (serverGroup) => currentResourceName === serverGroup.resourceName
+      );
+      groupedServer = isNullOrEmpty(existingServerGroup) ?
+        { resourceName: currentResourceName, servers: [] } as ServiceGroup
+        : existingServerGroup;
+
+      groupedServer.servers.push(server);
+      if (!existingServerGroup) {
+        serversGroupArray.push(groupedServer);
+      }
+    });
+
+    return serversGroupArray.sort(this._sortByResourceName);
   }
 
   /**
@@ -266,5 +299,20 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
    */
   private _getServerInviewLevel(server: McsServer): InviewLevel {
     return getSafeProperty(server, (obj) => obj.inViewLevel, InviewLevel.None);
+  }
+
+  /**
+   * Method comparator for sorting server group by resource name
+   * Returns -1 if resourceName A is less than resourceName B
+   * Returns 1 if resourceName B is less than resourceName A
+   * Returns 0 resourceName A and resourceName B are equal
+   */
+  private _sortByResourceName(serverA, serverB): number {
+    let resourceNameA = serverA.resourceName.toLowerCase();
+    let resourceNameB = serverB.resourceName.toLowerCase();
+
+    if (resourceNameA < resourceNameB) { return -1; }
+    if (resourceNameA > resourceNameB) { return 1; }
+    return 0;
   }
 }

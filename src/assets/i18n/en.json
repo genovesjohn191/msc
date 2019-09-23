@@ -140,6 +140,25 @@
       "dataError": "Something went wrong while processing your request. Please try again later."
     }
   },
+  "orderVdcScale": {
+    "title": "Scale VDC",
+    "back": "Back",
+    "vdc": {
+      "label": "Please select the VDC you wish to scale",
+      "description": "Please select the VDC you wish to scale",
+      "placeholder": "Select a VDC",
+      "contextualHelp": "Choose the virtual data centre to scale."
+    },
+    "vdcDetails": {
+      "stepTitle": "VDC Details",
+      "contextualHelp": "Choose the memory and vCPU for your VDC."
+    },
+    "provisioning": {
+      "description": "Your VDC is being scaled and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
+      "dataInProgress": "Preparing the vdc for scaling. This may take a moment.",
+      "dataError": "Something went wrong while processing your request. Please try again later."
+    }
+  },
   "orderVdcStorageExpand": {
     "title": "Expand VDC Storage",
     "back": "Back",
@@ -675,7 +694,7 @@
     "stepTitle": "Confirm",
     "header": "Confirm Order",
     "description": "Please confirm the details of your order and click Go to submit your items for provisioning.",
-    "updatingCharges": "Updating charges. This may take a moment.",
+    "updatingCharges": "Calculating charges. This may take a moment.",
     "billingDetails": {
       "header": "Billing Details",
       "changeOrderNote": "The contract term and billing details for this service will not be changed.",
@@ -851,6 +870,39 @@
         "storageMin": "The minimum value that can be entered is {{min_value}}.",
         "storageAvailable": "Storage size should not exceed {{available_storage}}.",
         "storageStep": "Storage size must be a multiple of {{step}}."
+      }
+    }
+  },
+  "vdcShared": {
+    "manageScale": {
+      "sliderSwitch": "Select from slider",
+      "customSwitch": "Enter custom size",
+      "sliderMessage": "Select the RAM and CPU for this VDC from a slider.",
+      "customMessage": "Manually enter the size of RAM and CPU for this VDC.",
+      "availableRam": "Available RAM: {{ram_value}}",
+      "availableCpu": "Available CPU: {{cpu_value}} vCPU",
+      "minimumRam": "Minimum RAM: {{ram_value}}",
+      "minimumCpu": "Minimum CPU: {{cpu_value}} vCPU",
+      "sliderSelectedRamCpu": "{{ram_value}} RAM / {{cpu_value}} vCPU",
+      "sliderCurrentRamCpu": "Current: {{ram_value}} RAM / {{cpu_value}} vCPU",
+      "customCurrentCpu": "Current vCPU: {{cpu_value}} vCPU",
+      "customCurrentRam": "Current RAM: {{ram_value}}",
+      "ramLabel": "RAM",
+      "ramUnit": "GB",
+      "cpuLabel": "vCPUs",
+      "cpuUnit": "vCPU",
+      "errors": {
+        "ramRequired": "Enter RAM value.",
+        "ramNumeric": "Please enter a valid number.",
+        "ramMin": "The minimum value that can be entered is {{min_value}}.",
+        "ramMax": "Memory should not exceed {{max_value}}.",
+        "ramInvalid": "RAM must be a multiple of {{step}} GB.",
+        "cpuRequired": "Enter CPU count.",
+        "cpuNumeric": "Please enter a valid number.",
+        "cpuMin": "The minimum value that can be entered is {{min_value}} vCPUs.",
+        "cpuMax": "The number of vCPUs should not exceed {{max_value}}.",
+        "cpuInvalid": "vCPU must be a multiple of {{step}}.",
+        "ratioInvalid": "CPU/RAM ratio must be {{cpu_value}}:{{ram_value}}."
       }
     }
   },

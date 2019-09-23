@@ -5,6 +5,7 @@ import { OrderComponent } from './order/order.component';
 import { OrderResolver } from './order/order.resolver';
 import { OrdersDashboardComponent } from './dashboard/orders-dashboard.component';
 import { ServerManagedScaleComponent } from './server-managed-scale/server-managed-scale.component';
+import { VdcScaleComponent } from './vdc-scale/vdc-scale.component';
 import { VdcStorageExpandComponent } from './vdc-storage-expand/vdc-storage-expand.component';
 import { VdcStorageCreateComponent } from './vdc-storage-create/vdc-storage-create.component';
 import { ServiceInviewRaiseComponent } from './service-inview-raise/service-inview-raise.component';
@@ -24,6 +25,7 @@ export const ordersComponents: any[] = [
   OrdersDashboardComponent,
   OrderComponent,
   ServerManagedScaleComponent,
+  VdcScaleComponent,
   VdcStorageExpandComponent,
   VdcStorageCreateComponent,
   ServiceInviewRaiseComponent
@@ -46,6 +48,11 @@ export const ordersRoutes: Routes = [
     path: '',
     component: ServerManagedScaleComponent,
     data: { routeId: RouteKey.OrderServerManagedScale }
+  },
+  {
+    path: '',
+    component: VdcScaleComponent,
+    data: { routeId: RouteKey.OrderVdcScale }
   },
   {
     path: '',

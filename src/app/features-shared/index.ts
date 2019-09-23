@@ -18,6 +18,8 @@ export * from './server-manage-scale/server-manage-scale';
 export * from './server-manage-scale/server-manage-scale.component';
 export * from './vdc-manage-storage/vdc-manage-storage.component';
 export * from './vdc-manage-storage/vdc-manage-storage';
+export * from './vdc-manage-scale/vdc-manage-scale.component';
+export * from './vdc-manage-scale/vdc-manage-scale';
 export * from './server-dialogs/rename-server/rename-server.dialog';
 
 /** Add Ons */

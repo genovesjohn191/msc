@@ -47,16 +47,16 @@
             </mcs-select>
           </mcs-form-field>
 
-          <ng-container *ngIf="resourceStorages$ | async as resourceStorages">
+          <ng-container *ngIf="selectedResource$ | async as selectedResource">
               <div class="action-box" [@fadeIn]>
-                <mcs-select [formControl]="fcStorageProfile" required
-                  (change)="onChangeStorageProfile($event)"
+                <mcs-select [formControl]="fcStorage" required
+                  (change)="onChangeStorage($event)"
                   [placeholder]="'orderVdcStorageExpand.vdc.placeholder' | translate"
                   mcsId="select-storage"
                   mcsEventTracker="navigate-back-click"
                   mcsEventCategory="orders"
                   mcsEventLabel="navigate-back">
-                  <mcs-option *ngFor="let storage of resourceStorages" [value]="storage">
+                  <mcs-option *ngFor="let storage of selectedResource.storage" [value]="storage">
                     {{ storage.name }}
                   </mcs-option>
                 </mcs-select>
@@ -72,7 +72,7 @@
           <div class="action-items">
             <button mcsButton arrow="right"
               mcsWizardStepNext
-              (click)="onSubmitExpandDetails()"
+              (click)="onSubmitExpandDetails(fcStorage?.value)"
               [disabled]="!formIsValid"
               mcsId="step-1-next"
               mcsEventTracker="step-1-next"

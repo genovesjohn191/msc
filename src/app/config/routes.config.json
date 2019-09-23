@@ -315,6 +315,14 @@
     "requiredFeatureFlag": "EnableOrderingManagedServerScale",
     "documentTitle": "Scale Managed Servers - Macquarie Cloud Services"
   },
+  "orderVdcScale": {
+    "enumKey": "OrderVdcScale",
+    "routePath": "vdc-scale",
+    "navigationPath": "orders/vdc-scale",
+    "requiredPermissions": ["OrderEdit"],
+    "requiredFeatureFlag": "EnableOrderingVdcComputeScale",
+    "documentTitle": "Scale VDC - Macquarie Cloud Services"
+  },
   "orderVdcStorageExpand": {
     "enumKey": "OrderVdcStorageExpand",
     "routePath": "vdc-storage-expand",

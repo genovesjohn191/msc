@@ -41,20 +41,26 @@
               mcsEventCategory="orders"
               mcsEventLabel="select-service">
 
-              <ng-template #servicesTemplate let-services let-title="serviceTitle">
+              <ng-template #serversTemplate let-serversGroup let-title="serverTitle">
                 <mcs-option-group>
                   <ng-container *mcsOptionGroupLabel>
                     <span>{{ title }}</span>
                   </ng-container>
 
-                  <mcs-option *ngFor="let service of services" [value]="service">
-                    {{ service.name }}
-                  </mcs-option>
+                  <mcs-option-group  mcsId="server-option-group"
+                    [label]="serverGroup.resourceName"
+                    *ngFor="let serverGroup of serversGroup">
+
+                    <mcs-option *ngFor="let server of serverGroup.servers" [value]="server">
+                      {{ server.name }} <span read-only>- {{ server.inviewLevelLabel }}</span>
+                    </mcs-option>
+                  </mcs-option-group>
+
                 </mcs-option-group>
               </ng-template>
 
-              <ng-container *ngTemplateOutlet="servicesTemplate;
-                context: { $implicit: (managedServers$ | async), serviceTitle: 'Servers'}">
+              <ng-container *ngTemplateOutlet="serversTemplate;
+                context: { $implicit: (managedServers$ | async), serverTitle: 'Servers'}">
               </ng-container>
 
             </mcs-select>
