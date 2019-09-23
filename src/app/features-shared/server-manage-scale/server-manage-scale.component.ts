@@ -49,8 +49,8 @@ import { McsFormGroupDirective } from '@app/shared';
 // Constants definition
 const DEFAULT_MEMORY_STEP = 2;
 const DEFAULT_CPU_STEP = 2;
-const DEFAULT_MIN_MEMORY_LIN = 2;
-const DEFAULT_MIN_MEMORY_WIN = 4;
+const DEFAULT_MIN_MEMORY = 2;
+const DEFAULT_MIN_MEMORY_WIN_MANAGED = 4;
 const DEFAULT_MIN_CPU = 2;
 
 @Component({
@@ -89,7 +89,7 @@ export class ServerManageScaleComponent
   public set osType(value: Os) {
     if (this._osType !== value) {
       this._osType = !isNullOrEmpty(value) ? value : Os.Linux;
-      this._minimumMemoryByOsType = this._getMinimumRamByOsType(this._osType);
+      this._minimumMemoryByServerType = this._getMinimumRamByServerType(this._osType);
       this._resetFormGroup();
     }
   }
@@ -102,10 +102,10 @@ export class ServerManageScaleComponent
 
   @Input()
   public get minimumMemoryGB(): number {
-    return !isNullOrEmpty(this._minimumMemoryGB) ? this._minimumMemoryGB : this._minimumMemoryByOsType;
+    return !isNullOrEmpty(this._minimumMemoryGB) ? this._minimumMemoryGB : this._minimumMemoryByServerType;
   }
   public set minimumMemoryGB(value: number) {
-    this._minimumMemoryGB = coerceNumber(value, this._minimumMemoryByOsType);
+    this._minimumMemoryGB = coerceNumber(value, this._minimumMemoryByServerType);
   }
 
   @ViewChild(McsFormGroupDirective)
@@ -117,7 +117,7 @@ export class ServerManageScaleComponent
   private _previousResourceAvailable = 0;
   private _minimumCpu: number = DEFAULT_MIN_CPU;
   private _minimumMemoryGB: number;
-  private _minimumMemoryByOsType: number = DEFAULT_MIN_MEMORY_LIN;
+  private _minimumMemoryByServerType: number = DEFAULT_MIN_MEMORY;
   private _osType: Os = Os.Linux;
 
   constructor(
@@ -351,7 +351,7 @@ export class ServerManageScaleComponent
       CoreValidators.required,
       CoreValidators.numeric,
       CoreValidators.custom(this._memoryCanScaleDown.bind(this), 'scaleDown'),
-      (control) => CoreValidators.min(this._minimumMemoryByOsType)(control),
+      (control) => CoreValidators.min(this._minimumMemoryByServerType)(control),
       (control) => CoreValidators.max(this.resourceAvailableMemoryGB)(control),
       CoreValidators.custom(this._memoryStepIsValid.bind(this), 'memoryStep')
     ]);
@@ -404,10 +404,11 @@ export class ServerManageScaleComponent
   }
 
   /**
-   * Returns the minimum ram based on the type of Operating System
+   * Returns the minimum ram based on the type of Operating System and Service Type
    */
-  private _getMinimumRamByOsType(os: Os): number {
-    return os === Os.Linux ? DEFAULT_MIN_MEMORY_LIN : DEFAULT_MIN_MEMORY_WIN;
+  private _getMinimumRamByServerType(os: Os): number {
+    return os === Os.Windows && getSafeProperty(this.resource, (obj) => !obj.isSelfManaged, false) ?
+      DEFAULT_MIN_MEMORY_WIN_MANAGED : DEFAULT_MIN_MEMORY;
   }
 
   /**
@@ -440,7 +441,7 @@ export class ServerManageScaleComponent
    * @param inputValue Value to be checked
    */
   private _memoryCanScaleDown(inputValue: any) {
-    let minimumSameAsDefaultMinimum = this._minimumMemoryByOsType === this.minimumMemoryGB;
+    let minimumSameAsDefaultMinimum = this._minimumMemoryByServerType === this.minimumMemoryGB;
     return minimumSameAsDefaultMinimum ? minimumSameAsDefaultMinimum : inputValue >= this.minimumMemoryGB;
   }
 

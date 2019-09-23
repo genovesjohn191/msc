@@ -325,6 +325,7 @@
 
       <div class="action-box" [disabled]="!server.executable">
         <mcs-server-manage-scale
+          [osType]="server?.operatingSystem?.type"
           [resource]="resource$ | async"
           [serverCompute]="server.compute"
           (dataChange)="onScaleChanged($event)">
