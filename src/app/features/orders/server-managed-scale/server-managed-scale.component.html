@@ -59,6 +59,7 @@
           <ng-template #contentTemplate>
             <div class="action-box" *mcsComponentHandler>
               <mcs-server-manage-scale #fgManageScale
+                [osType]="fcManageServer?.value?.operatingSystem?.type"
                 [resource]="resource$ | async"
                 [serverCompute]="fcManageServer?.value?.compute"
                 [minimumCpu]="minimumCpu"
