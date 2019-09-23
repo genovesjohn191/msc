@@ -31,6 +31,7 @@ import {
 } from './shared';
 /** Constants */
 import { coreLayoutProviders } from './core-layout.constants';
+import { SystemMessageBannerComponent } from './system-message-banner/system-message-banner.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,8 @@ import { coreLayoutProviders } from './core-layout.constants';
     NavigationMobileComponent,
     SubNavigationComponent,
     SubNavigationDesktopComponent,
-    SubNavigationMobileComponent
+    SubNavigationMobileComponent,
+    SystemMessageBannerComponent
   ],
   imports: [
     CommonModule,
@@ -73,6 +75,7 @@ import { coreLayoutProviders } from './core-layout.constants';
     SubNavigationComponent,
     SubNavigationDesktopComponent,
     SubNavigationMobileComponent,
+    SystemMessageBannerComponent,
     CommonModule,
     FormsModule,
     SharedModule

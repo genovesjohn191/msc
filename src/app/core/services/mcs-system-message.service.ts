@@ -112,7 +112,11 @@ export class McsSystemMessageService implements McsDisposable {
     if (!hasSystemMessageFeatureFlag) { return; }
 
     this._activeMessageServiceReference.subscribe((message) => {
-      if (isNullOrEmpty(message) || !message.isCritical) { return; }
+      if (isNullOrEmpty(message)) {
+        this._eventDispatcher.dispatch(McsEvent.systemMessageHide);
+        return;
+      }
+      this._eventDispatcher.dispatch(McsEvent.systemMessageShow, message);
 
       let activeSystemMessageCookie = this._cookieService.getEncryptedItem<McsSystemMessage>(
         CommonDefinition.COOKIE_ACTIVE_MESSAGE

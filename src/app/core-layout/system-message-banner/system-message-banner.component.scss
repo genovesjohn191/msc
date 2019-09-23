@@ -1,0 +1,10 @@
+@import "../../../styles/shared/base";
+
+$system-message-banner-bg-color: $color-white;
+$system-message-banner-color: $color-black;
+
+.system-message-banner-wrapper {
+  background: $system-message-banner-bg-color;
+  color: $system-message-banner-color;
+  width: 100%;
+}
