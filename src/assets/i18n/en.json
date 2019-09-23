@@ -30,9 +30,9 @@
   },
   "systemMessagePage": {
     "title": "The Portal is currently unavailable",
-    "secondaryAdvisoryLabel": "Customers are advised to use MacquarieView or contact their accounts team for any urgent requests.",
+    "secondaryAdvisoryLabel": "If you have an urgent issue or request, please use <u><a href='{{macViewUrl}}' target='_blank'>MacquarieView</a></u> or contact the <br> HMC for any urgent issues on <strong>1800 789 999</strong>, option 1.",
     "internalAdvisoryLabel": "Internal users may still access the Portal, although some features may not work as expected.",
-    "goToMacquarie": "Go To Macquarie View",
+    "goToMacquarie": "Go To MacquarieView",
     "proceedToPortal": "Proceed to the Portal"
   },
   "maintenance": {
