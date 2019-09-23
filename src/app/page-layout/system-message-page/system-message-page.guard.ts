@@ -37,11 +37,7 @@ export class McsSystemMessagePageGuard implements CanActivate {
       map((response) => {
         let isMessageCritical = getSafeProperty(response,
           (message) => message.isCritical, false);
-        if (!isMessageCritical) {
-          this._navigationService.navigateRoot('/');
-          return false;
-        }
-        return true;
+        return isMessageCritical;
       })
     );
   }

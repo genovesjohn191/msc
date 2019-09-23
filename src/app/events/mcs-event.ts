@@ -9,6 +9,8 @@ import { ProductUnSelectedEvent } from './items/product-unselected.event';
 import { LoaderShowEvent } from './items/loader-show.event';
 import { LoaderHideEvent } from './items/loader-hide.event';
 import { ErrorShowEvent } from './items/error-show.event';
+import { SystemMessageShowEvent } from './items/system-message-show.event';
+import { SystemMessageHideEvent } from './items/system-message-hide.event';
 
 import { EntityActiveEvent } from './items/entity-active.event';
 import { EntityClearStateEvent } from './items/entity-clear-state.event';
@@ -76,6 +78,8 @@ export class McsEvent {
   public static loaderShow = new LoaderShowEvent();
   public static loaderHide = new LoaderHideEvent();
   public static errorShow = new ErrorShowEvent();
+  public static systemMessageShow = new SystemMessageShowEvent();
+  public static systemMessageHide = new SystemMessageHideEvent();
 
   public static entityActiveEvent = new EntityActiveEvent();
   public static entityClearStateEvent = new EntityClearStateEvent();
