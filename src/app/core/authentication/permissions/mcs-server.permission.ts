@@ -67,5 +67,4 @@ export class McsServerPermission {
   public get vmScaleFeature(): string {
     return this._server.isSelfManaged ? '' : McsFeatureFlag.OrderingManagedServerScale;
   }
-
 }

@@ -145,7 +145,7 @@
 
         <mcs-section>
           <mcs-grid-row>
-            <mcs-grid-column sizeLg="9">
+            <mcs-grid-column>
               <mcs-item orientation="block">
                 <strong>{{ 'serverServices.inview.inviewLevelLabel' | translate }}</strong>
                 <p mcsId="raise-inview-level-description">{{inviewLevelDescription(server)}}</p>
@@ -174,7 +174,7 @@
                     mcsEventCategory="server"
                     mcsEventLabel="raise-inview-level-button"
                     (click)="raiseInviewLevel(server)"
-                    [disabled]="server.isProcessing">
+                    [disabled]="server.isProcessing && server.serviceChangeAvailable">
                     {{ 'serverServices.inview.raiseinviewButtonLabel' | translate }}
                   </button>
                 </ng-container>

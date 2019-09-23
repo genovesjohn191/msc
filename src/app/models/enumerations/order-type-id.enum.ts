@@ -6,6 +6,7 @@ export enum OrderIdType {
   CreateAddOnAntiMalware = 'av.provision',
   CreateAddOnFirewall = 'firewall.provision',
   ScaleManageServer = 'servers.vcloud.update',
+  VdcScale = 'resources.vdc.compute.update',
   VdcStorageExpand = 'resources.vdc.storage.update',
   VdcStorageCreate = 'resources.vdc.storage.new',
   RaiseInviewLevel = 'servers.inview.raise',

@@ -33,8 +33,9 @@ import {
 } from '@app/core';
 import {
   McsResource,
-  McsResourceStorage,
-  McsOrderWorkflow
+  McsOrderWorkflow,
+  OrderIdType,
+  McsResourceStorage
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -42,8 +43,9 @@ import {
   unsubscribeSafely,
   animateFactory,
   getSafeProperty,
-  convertMbToGb,
-  CommonDefinition
+  CommonDefinition,
+  Guid,
+  convertMbToGb
 } from '@app/utilities';
 import { McsFormGroupDirective } from '@app/shared';
 import {
@@ -52,12 +54,12 @@ import {
 } from '@app/features-shared';
 import { VdcStorageExpandService } from './vdc-storage-expand.service';
 
-// TODO: will be added in API integration
-// type ExpandVdcStorageProperties = {
-//   storageMB: number;
-//   storageProfileId: string;
-// };
+type ExpandVdcStorageProperties = {
+  storageMB: number;
+  storageProfileId: string;
+};
 
+const VDC_STORAGE_EXPAND_REF_ID = Guid.newGuid().toString();
 @Component({
   selector: 'mcs-order-vdc-storage-expand',
   templateUrl: 'vdc-storage-expand.component.html',
@@ -71,10 +73,10 @@ import { VdcStorageExpandService } from './vdc-storage-expand.service';
 export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnInit, OnDestroy {
 
   public resources$: Observable<McsResource[]>;
-  public resourceStorages$: Observable<McsResourceStorage[]>;
+  public selectedResource$: Observable<McsResource>;
   public fgVdcStorageExpandDetails: FormGroup;
   public fcResource: FormControl;
-  public fcStorageProfile: FormControl;
+  public fcStorage: FormControl;
   public storage: number;
 
   /**
@@ -134,14 +136,14 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnI
    */
   public onChangeResource(resource: McsResource): void {
     if (isNullOrEmpty(resource) || isNullOrEmpty(resource.serviceId)) { return; }
-    this._getResourceStorages(resource);
+    this._getSelectedResource(resource);
   }
 
   /**
    * Event that emits whenever a storage profile is selected
    * @param storage selected storage
    */
-  public onChangeStorageProfile(storage: McsResourceStorage) {
+  public onChangeStorage(storage: McsResourceStorage) {
     if (isNullOrEmpty(storage)) { return; }
     let storageGB = convertMbToGb(storage.usedMB);
     this.storage = storageGB;
@@ -154,6 +156,20 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnI
    */
   public onSubmitExpandDetails(): void {
     if (isNullOrEmpty(this.storage)) { return; }
+    this._vdcStorageExpandService.createOrUpdateOrder(
+      {
+        items: [{
+          itemOrderType: OrderIdType.VdcStorageExpand,
+          referenceId: VDC_STORAGE_EXPAND_REF_ID,
+          properties: {
+            storageMB: this.storage,
+            storageProfileId: ''
+          } as ExpandVdcStorageProperties,
+          // TODO: no final payload yet
+          // serviceId: server.serviceId
+        }]
+      }
+    );
     this._changeDetectorRef.markForCheck();
   }
 
@@ -226,11 +242,10 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnI
    * Get all the selected resources storages
    * @param resource resource to be search
    */
-  private _getResourceStorages(resource: McsResource): void {
+  private _getSelectedResource(resource: McsResource): void {
     if (isNullOrEmpty(resource)) { return; }
 
-    this.resourceStorages$ = this._apiService.getResourceStorages(resource.id).pipe(
-      map((response) => getSafeProperty(response, (obj) => obj.collection)),
+    this.selectedResource$ = this._apiService.getResource(resource.id).pipe(
       shareReplay(1)
     );
   }
@@ -241,12 +256,12 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnI
   private _registerFormGroup() {
 
     this.fcResource = new FormControl('', [CoreValidators.required]);
-    this.fcStorageProfile = new FormControl('', [CoreValidators.required]);
+    this.fcStorage = new FormControl('', [CoreValidators.required]);
 
     // Register Form Groups using binding
     this.fgVdcStorageExpandDetails = new FormGroup({
       fcResource: this.fcResource,
-      fcStorageProfile: this.fcStorageProfile,
+      fcStorage: this.fcStorage,
     });
 
     this.fgVdcStorageExpandDetails.valueChanges.pipe(

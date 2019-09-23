@@ -22,6 +22,14 @@
           <span [innerHTML]="selectedVdc?.compute?.memoryLimitMB | mcsDataSize: 'MB'"></span>
           <span>/</span>
           <span [innerHTML]="selectedVdc?.compute?.cpuLimitMBLabel | mcsDataLabel"></span>
+          <ng-container *mcsAccessControl="[OrderEdit]; feature: 'EnableOrderingVdcComputeScale'">
+            <a (click)="scaleVdc(selectedVdc)"
+              mcsId="scale-vdc"
+              mcsEventTracker="vdc-option"
+              mcsEventCategory="vdc"
+              mcsEventLabel="vdc-details-page">
+              {{ 'serversVdcOverview.shared.properties.scale' | translate }}</a>
+          </ng-container>
         </mcs-item>
       </mcs-presentation-panel>
     </mcs-grid-column>

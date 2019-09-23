@@ -38,8 +38,8 @@ export class CommonDefinition {
   public static NOTIFICATION_CONNECTION_RETRY_INTERVAL = 10000;
 
   // Common Url
-  public static INVIEW_URL = `{{macviewUrl}}/Bounce.aspx?bounce=1&mvClientID={{companyId}}
-  &mvURL={{inviewUrl}}%2Fframe%2Finview%2Fdata_details.html%3Fservice%3D{{serviceId}};`;
+  public static INVIEW_URL = `{{macviewUrl}}/Bounce.aspx?bounce=1&mvClientID={{companyId}}`
+    + `&mvURL={{inviewUrl}}%2Fframe%2Finview%2Fdata_details.html%3Fservice%3D{{serviceId}};`;
 
   // Common Timezone
   public static TIMEZONE_SYDNEY = `Australia/Sydney`;

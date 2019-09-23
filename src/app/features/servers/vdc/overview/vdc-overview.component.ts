@@ -23,6 +23,7 @@ import {
   McsResourceStorage,
   PlatformType
 } from '@app/models';
+import { McsEvent } from '@app/events';
 
 const VDC_LOW_STORAGE_PERCENTAGE = 85;
 
@@ -108,6 +109,15 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
     this._navigationService.navigateTo(RouteKey.VdcDetails,
       [this.selectedVdc.id, CoreRoutes.getNavigationPath(keyRoute)]
     );
+  }
+
+  /**
+   * Navigate to Scale VDC Ordering
+   * @param selectedResource currently selected resource
+   */
+  public scaleVdc(selectedResource: McsResource): void {
+    this.eventDispatcher.dispatch(McsEvent.vdcScaleSelectedEvent, selectedResource);
+    this._navigationService.navigateTo(RouteKey.OrderVdcScale);
   }
 
   /**

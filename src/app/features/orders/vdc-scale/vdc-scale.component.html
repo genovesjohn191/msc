@@ -1,0 +1,107 @@
+<mcs-page [header]="'orderVdcScale.title' | translate">
+    <!-- Top Panel -->
+    <mcs-top-panel *mcsTopPanelDef>
+
+      <!-- Back to VDC Details -->
+      <mcs-top-panel-item *mcsTopPanelItemDef no-border>
+        <mcs-action-item mcsAlign="end"
+          mcsNavigateBackward
+          mcsId="navigate-back"
+          mcsEventTracker="navigate-back-click"
+          mcsEventCategory="orders"
+          mcsEventLabel="navigate-back">
+          <mcs-icon [key]="backIconKey" size="small"></mcs-icon>
+          <span>{{'shared.wizard.previous' | translate}}</span>
+        </mcs-action-item>
+      </mcs-top-panel-item>
+    </mcs-top-panel>
+
+    <mcs-content-panel *mcsContentPanelDef>
+
+      <mcs-wizard header="Wizard Header">
+
+        <!-- Error message -->
+        <ng-container mcsWizardErrorTemplate>
+          <mcs-form-message #formMessage></mcs-form-message>
+        </ng-container>
+
+        <!-- VDC Details Step-->
+        <mcs-wizard-step id="vdc-details-step"
+          [stepTitle]="'orderVdcScale.vdcDetails.stepTitle' | translate"
+          customClass="contextual-help-page-wrapper limited-view">
+          <form [formGroup]="fgVdcScaleDetails" mcsFormGroup>
+            <p>{{ 'orderVdcScale.vdc.label' | translate }}</p>
+            <mcs-form-field>
+              <mcs-select [placeholder]="'orderVdcScale.vdc.placeholder' | translate"
+                required mcsId="select-vdc"
+                [formControl]="fcVdc"
+                (change)="onChangeVdc($event)"
+                [mcsContextualHelp]="'orderVdcScale.vdc.contextualHelp' | translate">
+
+                <ng-container *ngIf="resources$ | async as resources">
+                  <mcs-option *ngFor="let resource of resources" [value]="resource">
+                    {{ resource.name }}
+                  </mcs-option>
+                </ng-container>
+              </mcs-select>
+            </mcs-form-field>
+
+            <ng-container *ngIf="resourceCompute$ | async as resourceCompute">
+              <div class="action-box" *mcsComponentHandler>
+                <mcs-vdc-manage-scale #fgVdcManageScale
+                  [initialMemoryGB]="selectedResourceMemory(resourceCompute)"
+                  [initialCpu]="selectedResourceCpu(resourceCompute)"
+                  [mcsContextualHelp]="'orderVdcScale.vdcDetails.contextualHelp' | translate"
+                  (dataChange)="onScaleChanged($event, fcVdc?.value)">
+
+                  <ng-container mcsVdcManageScaleHeader>
+                    <h2>{{ 'orderVdcScale.vdc.label' | translate }}</h2>
+                  </ng-container>
+                </mcs-vdc-manage-scale>
+              </div>
+            </ng-container>
+
+           <div class="action-items">
+             <button mcsButton arrow="right"
+               mcsWizardStepNext
+               (click)="onSubmitScaleDetails()"
+               [disabled]="!formIsValid"
+               mcsId="step-1-next"
+               mcsEventTracker="step-1-next"
+               mcsEventCategory="orders"
+               mcsEventLabel="scale-vdc">{{ 'shared.wizard.next' | translate }}</button>
+           </div>
+       </form>
+
+       </mcs-wizard-step>
+
+        <!-- Confirm Step  -->
+        <mcs-wizard-step id="confirm-step"
+          [stepTitle]="'shared.wizard.confirm' | translate"
+          customClass="contextual-help-page-wrapper limited-view">
+          <mcs-step-order-details [order]="order$ | async"
+            [orderType]="(orderItemType$ | async)?.orderType"
+            [requestState]="dataStatus$ | async"
+            (dataChange)="onVdcConfirmOrderChange($event)"
+            (submitOrder)="onSubmitOrder($event, fcVdc?.value?.serviceId)">
+          </mcs-step-order-details>
+        </mcs-wizard-step>
+
+        <!-- Go! Step  -->
+        <mcs-wizard-step id="go-step"
+          [stepTitle]="'shared.wizard.completed' | translate"
+          customClass="limited-view">
+          <mcs-step-provisioning [jobs]="jobs$ | async" [requestState]="dataStatus$ | async">
+            <ng-container mcsProvisioningStepDescription>
+              {{ 'orderVdcScale.provisioning.description' | translate }}
+            </ng-container>
+
+            <ng-container mcsProvisioningStepInProgress>
+              {{ 'orderVdcScale.provisioning.dataInProgress' | translate}}
+            </ng-container>
+          </mcs-step-provisioning>
+        </mcs-wizard-step>
+      </mcs-wizard>
+
+    </mcs-content-panel>
+  </mcs-page>
