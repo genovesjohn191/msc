@@ -1,3 +1,4 @@
+
 <mcs-page>
   <!-- Page template header -->
   <ng-container *mcsPageHeader>
@@ -21,70 +22,49 @@
       <div class="listing-panel-wrapper">
         <mcs-search #search mcsId="virtual-listing-panel-search"></mcs-search>
 
-        <mcs-data-status [dataStatusFactory]="listStatusFactory">
-          <mcs-data-status-success mcsDataSuccess>
-
-            <mcs-list-panel>
-              <ng-container *ngFor="let iterator of ((serversMap$ | async) | mcsMapIterable) |
-                mcsSortArray: serverListSource?.sortResourceMethod">
-
-                <mcs-option-group>
-                  <ng-container *mcsOptionGroupLabel>
-                    <ng-container *ngIf="iterator.key?.resourceId">
-                      <a [mcsRouterLink]="[routeKeyEnum.VdcDetails, iterator.key?.resourceId]"
-                        mcsId="select-vdc"
-                        mcsEventTracker="select-vdc"
-                        mcsEventCategory="vdc"
-                        mcsEventLabel="server-list-panel">
-                        {{ iterator.key?.resourceName }}
-                      </a>
-                    </ng-container>
-                    <ng-container *ngIf="!iterator.key?.resourceId">
-                      <span>{{ iterator.key?.resourceName }}</span>
-                    </ng-container>
-                  </ng-container>
-
-                  <ng-container *ngFor="let server of (iterator.value | mcsSortArray: serverListSource?.serversSortMethod)">
-                    <a [mcsRouterLink]="[routeKeyEnum.ServerDetails, server.id]"
-                      [disabled]="server.isDisabled"
-                      mcsId="select-server"
-                      mcsEventTracker="select-server"
-                      mcsEventCategory="server"
-                      mcsEventLabel="server-list-panel">
-
-                      <mcs-option [value]="server"
-                        [disabled]="server.isDisabled"
-                        [selected]="selectedServerId === server.id">
-                        <mcs-item>
-                          <mcs-icon *ngIf="!server.isProcessing" size="small"
-                            [key]="server?.powerStateIconKey"></mcs-icon>
-
-                          <mcs-loader *ngIf="server.isProcessing" size="small"
-                            [mcsTooltip]="server.processingText"
-                            mcsTooltipPosition="right"></mcs-loader>
-
-                          <span text-wrap>{{ server.name }}</span>
-                        </mcs-item>
-                      </mcs-option>
-                    </a>
-                  </ng-container>
-                </mcs-option-group>
+        <mcs-list-panel [dataSource]="listViewDatasource" [config]="listViewConfig?.panelSettings">
+          <ng-container *mcsListPanelContent="let entity">
+            <mcs-option-group>
+              <ng-container *mcsOptionGroupLabel>
+                <a *ngIf="entity.group?.resourceId; else noResourceTemplate"
+                  [mcsRouterLink]="[routeKeyEnum.VdcDetails, entity.group?.resourceId]"
+                  mcsId="select-vdc"
+                  mcsEventTracker="select-vdc"
+                  mcsEventCategory="vdc"
+                  mcsEventLabel="server-list-panel">
+                  {{ entity.group?.resourceName }}
+                </a>
+                <ng-template #noResourceTemplate>
+                  <span>{{ entity.group?.resourceName }}</span>
+                </ng-template>
               </ng-container>
-            </mcs-list-panel>
-          </mcs-data-status-success>
 
-          <mcs-data-status-in-progress mcsDataInProgress>
-            <span>{{ 'servers.loading' | translate }}</span>
-          </mcs-data-status-in-progress>
+              <a *ngFor="let server of entity?.servers"
+                [mcsRouterLink]="[routeKeyEnum.ServerDetails, server.id]"
+                [disabled]="server.isDisabled"
+                mcsId="select-server"
+                mcsEventTracker="select-server"
+                mcsEventCategory="server"
+                mcsEventLabel="server-list-panel">
 
-          <mcs-data-status-empty mcsDataEmpty>
-            <span>{{ 'servers.noServers' | translate }}</span>
-          </mcs-data-status-empty>
+                <mcs-option [value]="server"
+                  [disabled]="server.isDisabled"
+                  [selected]="selectedServerId === server.id">
+                  <mcs-item>
+                    <mcs-icon *ngIf="!server.isProcessing" size="small"
+                      [key]="server?.powerStateIconKey"></mcs-icon>
 
-          <mcs-data-status-error mcsDataError>
-            <span>{{ 'servers.errorMessage' | translate }}</span>
-          </mcs-data-status-error>
-        </mcs-data-status>
+                    <mcs-loader *ngIf="server.isProcessing" size="small"
+                      [mcsTooltip]="server.processingText"
+                      mcsTooltipPosition="right"></mcs-loader>
+
+                    <span text-wrap>{{ server.name }}</span>
+                  </mcs-item>
+                </mcs-option>
+              </a>
+            </mcs-option-group>
+          </ng-container>
+        </mcs-list-panel>
       </div>
     </mcs-left-panel-item>
   </mcs-left-panel>
@@ -99,7 +79,7 @@
           </mcs-busy-ribbon>
         </ng-container>
 
-        <mcs-tab-group [selectedTabId]="selectedRoutingTab" (tabChanged)="onTabChanged($event)">
+        <mcs-tab-group [selectedTabId]="selectedTabId$ | async" (tabChanged)="onTabChanged($event)">
           <!-- Management Tab -->
           <mcs-tab [label]="'serverManagement.label' | translate" id="management"></mcs-tab>
 

@@ -1,9 +1,9 @@
-export class McsPortalAccess {
-  public name: string;
-  public url: string;
+import { JsonProperty } from '@peerlancers/json-serialization';
 
-  constructor() {
-    this.name = undefined;
-    this.url = undefined;
-  }
+export class McsPortalAccess {
+  @JsonProperty()
+  public name: string = undefined;
+
+  @JsonProperty()
+  public url: string = undefined;
 }

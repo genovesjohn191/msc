@@ -93,10 +93,10 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnI
     return getSafeProperty(this._formGroup, (obj) => obj.isValid());
   }
 
-  @ViewChild('fgManageStorage')
+  @ViewChild('fgManageStorage', { static: false })
   private _fgManageStorage: IMcsFormGroup;
 
-  @ViewChild(McsFormGroupDirective)
+  @ViewChild(McsFormGroupDirective, { static: false })
   private _formGroup: McsFormGroupDirective;
 
   private _destroySubject = new Subject<void>();

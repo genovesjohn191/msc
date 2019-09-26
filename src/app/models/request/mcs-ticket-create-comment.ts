@@ -1,4 +1,4 @@
-import { JsonProperty } from 'json-object-mapper';
+import { JsonProperty } from '@peerlancers/json-serialization';
 import {
   CommentType,
   CommentTypeSerialization
@@ -9,25 +9,18 @@ import {
 } from '../enumerations/comment-category';
 
 export class McsTicketCreateComment {
-  public value: string;
+  @JsonProperty()
+  public value: string = undefined;
 
   @JsonProperty({
-    type: CommentCategory,
     serializer: CommentCategorySerialization,
     deserializer: CommentCategorySerialization
   })
-  public category: CommentCategory;
+  public category: CommentCategory = undefined;
 
   @JsonProperty({
-    type: CommentType,
     serializer: CommentTypeSerialization,
     deserializer: CommentTypeSerialization
   })
-  public type: CommentType;
-
-  constructor() {
-    this.category = undefined;
-    this.type = undefined;
-    this.value = undefined;
-  }
+  public type: CommentType = undefined;
 }

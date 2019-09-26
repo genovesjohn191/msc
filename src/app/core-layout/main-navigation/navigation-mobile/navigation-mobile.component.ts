@@ -72,7 +72,7 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
   public productsStatusFactory: McsDataStatusFactory<McsProductCatalog[]>;
   public switchAccountAnimation: string;
 
-  @ViewChild('slidingPanel')
+  @ViewChild('slidingPanel', { static: false })
   public slidingPanel: SlidingPanelComponent;
 
   @EventBusPropertyListenOn(McsEvent.productSelected)
@@ -91,11 +91,11 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
   }
 
   public get caretRightIconKey(): string {
-    return CommonDefinition.ASSETS_FONT_CARET_RIGHT;
+    return CommonDefinition.ASSETS_SVG_CHEVRON_RIGHT;
   }
 
   public get caretDownIconKey(): string {
-    return CommonDefinition.ASSETS_FONT_CHEVRON_DOWN;
+    return CommonDefinition.ASSETS_SVG_CHEVRON_DOWN;
   }
 
   public get closeIconKey(): string {

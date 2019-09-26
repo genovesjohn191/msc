@@ -7,7 +7,7 @@
       <mcs-form-field>
         <mcs-select [formControl]="fcResources" required
           mcsId="select-resource"
-          (change)="onChangeResource($event)"
+          (selectionChange)="onChangeResource($event)"
           [placeholder]="'mediaUpload.mediaStepDetails.selectResources' | translate"
           [mcsContextualHelp]="'mediaUpload.mediaStepDetails.selectResourcesHelp' | translate">
 

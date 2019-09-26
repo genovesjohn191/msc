@@ -71,7 +71,7 @@ export class MediaUploadDetailsComponent
   public fcMediaExtension: FormControl;
   public fcMediaDescription: FormControl;
 
-  @ViewChild(McsFormGroupDirective)
+  @ViewChild(McsFormGroupDirective, { static: false })
   private _formGroup: McsFormGroupDirective;
   private _destroySubject = new Subject<void>();
 

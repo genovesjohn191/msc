@@ -22,7 +22,7 @@ import { TagInputDirective } from './tag-input/tag-input.directive';
   template: ``
 })
 export class TestTagListComponent {
-  @ViewChild(TagListComponent)
+  @ViewChild(TagListComponent, { static: false })
   public tagListComponent: TagListComponent;
 
   @ViewChildren(TagComponent)

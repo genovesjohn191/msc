@@ -66,7 +66,9 @@ export class TreeComponent<T> implements AfterContentInit, OnDestroy {
   constructor(private _ngZone: NgZone) { }
 
   public ngAfterContentInit() {
-    this._subscribeToTreeNodesSelection();
+    Promise.resolve().then(() => {
+      this._subscribeToTreeNodesSelection();
+    });
   }
 
   public ngOnDestroy() {

@@ -52,7 +52,7 @@ export class FormMessageComponent implements OnInit, OnDestroy, FormMessage {
   @Input()
   public config: FormMessageConfig;
 
-  @ViewChild(ComponentHandlerDirective)
+  @ViewChild(ComponentHandlerDirective, { static: false })
   private _alertMessage: ComponentHandlerDirective;
   private _changeRouteHandler: Subscription;
 
@@ -74,7 +74,7 @@ export class FormMessageComponent implements OnInit, OnDestroy, FormMessage {
   }
 
   public get bulletIconKey(): string {
-    return CommonDefinition.ASSETS_FONT_BULLET;
+    return CommonDefinition.ASSETS_SVG_BULLET;
   }
 
   /**

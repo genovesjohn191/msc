@@ -97,7 +97,7 @@ export class PricingCalculatorComponent implements PricingCalculator {
    * Returns the toggle icon key (Chevron up and down)
    */
   public get toggleIconKey(): string {
-    return CommonDefinition.ASSETS_FONT_CHEVRON_UP;
+    return CommonDefinition.ASSETS_SVG_CHEVRON_UP;
   }
 
   /**

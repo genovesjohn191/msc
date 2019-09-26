@@ -61,7 +61,7 @@ export class SystemMessagesComponent extends McsTableListingBase<McsSystemMessag
   /**
    * Returns the column settings key for the filter selector
    */
-  protected get columnSettingsKey(): string {
+  public get columnSettingsKey(): string {
     return CommonDefinition.FILTERSELECTOR_SYSTEM_MESSAGE_LISTING;
   }
 

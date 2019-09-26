@@ -1,11 +1,12 @@
-export class McsServerCredential {
-  public password: string;
-  public server: string;
-  public username: string;
+import { JsonProperty } from '@peerlancers/json-serialization';
 
-  constructor() {
-    this.password = undefined;
-    this.server = undefined;
-    this.username = undefined;
-  }
+export class McsServerCredential {
+  @JsonProperty()
+  public password: string = undefined;
+
+  @JsonProperty()
+  public server: string = undefined;
+
+  @JsonProperty()
+  public username: string = undefined;
 }

@@ -34,15 +34,17 @@ export class SelectSearchDirective implements AfterContentInit, OnDestroy {
 
   public focusReceive = new Subject<void>();
 
-  @ContentChild(SearchComponent)
+  @ContentChild(SearchComponent, { static: false })
   private _search: Search;
 
   private _searchChange = new Subject<string>();
   private _destroySubject = new Subject<void>();
 
   public ngAfterContentInit(): void {
-    this._validateSearchControl();
-    this._subscribeToSearchControl();
+    Promise.resolve().then(() => {
+      this._validateSearchControl();
+      this._subscribeToSearchControl();
+    });
   }
 
   public ngOnDestroy(): void {

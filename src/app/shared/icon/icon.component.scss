@@ -11,4 +11,13 @@
   @include display-flex(row);
   align-items: center;
   background-repeat: no-repeat;
+
+  @each $color-key in map-keys($color-definitions) {
+    $color-object: map-get($color-definitions, $color-key);
+    $color-base: map-get($color-object, base);
+
+    [fill-svg-#{$color-key}] {
+      fill: $color-base !important;
+    }
+  }
 }

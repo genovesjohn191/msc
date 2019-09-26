@@ -1,11 +1,12 @@
-export class McsServerHardware {
-  public type: string;
-  public vendor: string;
-  public serialNumber: string;
+import { JsonProperty } from '@peerlancers/json-serialization';
 
-  constructor() {
-    this.type = undefined;
-    this.vendor = undefined;
-    this.serialNumber = undefined;
-  }
+export class McsServerHardware {
+  @JsonProperty()
+  public type: string = undefined;
+
+  @JsonProperty()
+  public vendor: string = undefined;
+
+  @JsonProperty()
+  public serialNumber: string = undefined;
 }

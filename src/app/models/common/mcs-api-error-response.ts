@@ -1,18 +1,15 @@
-import { JsonProperty } from 'json-object-mapper';
+import { JsonProperty } from '@peerlancers/json-serialization';
 import { McsApiError } from '../common/mcs-api-error';
 
 export class McsApiErrorResponse {
-  public status: number;
-  public message: string;
+  @JsonProperty()
+  public status: number = undefined;
 
-  @JsonProperty({ type: McsApiError })
-  public errors: McsApiError[];
+  @JsonProperty()
+  public message: string = undefined;
 
-  constructor() {
-    this.status = undefined;
-    this.message = undefined;
-    this.errors = undefined;
-  }
+  @JsonProperty({ target: McsApiError })
+  public errors: McsApiError[] = undefined;
 
   /**
    * Returns all the error messages on the response

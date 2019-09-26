@@ -57,11 +57,11 @@ export class FileAttachmentComponent implements OnInit {
   public set maxSizeInMb(value: number) { this._maxSizeInMb = coerceNumber(value, 0); }
   private _maxSizeInMb: number = DEFAULT_MAX_FILE_SIZE_IN_MB;
 
-  @ViewChild('errorDialogTemplate')
+  @ViewChild('errorDialogTemplate', { static: false })
   private _errorDialogTemplate: TemplateRef<any>;
 
   public get errorIconKey(): string {
-    return CommonDefinition.ASSETS_FONT_WARNING;
+    return CommonDefinition.ASSETS_SVG_WARNING;
   }
 
   public constructor(
@@ -82,7 +82,7 @@ export class FileAttachmentComponent implements OnInit {
   }
 
   public get closeIconKey(): string {
-    return CommonDefinition.ASSETS_FONT_TRASH;
+    return CommonDefinition.ASSETS_SVG_DELETE;
   }
 
   public ngOnInit() {

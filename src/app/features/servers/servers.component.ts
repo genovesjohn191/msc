@@ -310,7 +310,7 @@ export class ServersComponent extends McsTableListingBase<McsServer>
   /**
    * Returns the column settings key for the filter selector
    */
-  protected get columnSettingsKey(): string {
+  public get columnSettingsKey(): string {
     return CommonDefinition.FILTERSELECTOR_SERVER_LISTING;
   }
 

@@ -57,7 +57,7 @@ export class SystemMessageEditComponent implements OnInit, IMcsNavigateAwayGuard
   private _systemMessageForm: SystemMessageForm;
   private _systemMessageDataChangeHandler: Subscription;
 
-  @ViewChild('fgSystemMessageForm')
+  @ViewChild('fgSystemMessageForm', { static: false })
   private _fgSystemMessagesForm: IMcsFormGroup;
 
   constructor(

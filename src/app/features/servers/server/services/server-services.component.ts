@@ -55,7 +55,8 @@ import {
 } from './os-updates-status-configuration';
 
 const OS_UPDATE_TIMEZONE = 'Australia/Sydney';
-const OS_UPDATE_DATEFORMAT = "EEEE, d MMMM, yyyy 'at' h:mm a";
+const OS_UPDATE_DATEFORMAT = `EEEE, d MMMM, yyyy 'at' h:mm a`;
+
 @Component({
   selector: 'mcs-server-services',
   templateUrl: './server-services.component.html',
@@ -77,7 +78,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
   private _raiseInviewInProgress: boolean = false;
   private _inviewLabelMap: Map<InviewLevel, string>;
 
-  @ViewChild('formMessage')
+  @ViewChild('formMessage', { static: false })
   private _formMessage: FormMessage;
 
   constructor(

@@ -1,11 +1,12 @@
-export class McsServerThumbnail {
-  public fileType: string;
-  public encoding: string;
-  public file: string;
+import { JsonProperty } from '@peerlancers/json-serialization';
 
-  constructor() {
-    this.fileType = undefined;
-    this.encoding = undefined;
-    this.file = undefined;
-  }
+export class McsServerThumbnail {
+  @JsonProperty()
+  public fileType: string = undefined;
+
+  @JsonProperty()
+  public encoding: string = undefined;
+
+  @JsonProperty()
+  public file: string = undefined;
 }

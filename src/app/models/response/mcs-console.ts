@@ -1,12 +1,10 @@
+import { JsonProperty } from '@peerlancers/json-serialization';
 import { McsEntityBase } from '../common/mcs-entity.base';
 
 export class McsConsole extends McsEntityBase {
-  public url: string;
-  public vmx: string;
+  @JsonProperty()
+  public url: string = undefined;
 
-  constructor() {
-    super();
-    this.url = undefined;
-    this.vmx = undefined;
-  }
+  @JsonProperty()
+  public vmx: string = undefined;
 }

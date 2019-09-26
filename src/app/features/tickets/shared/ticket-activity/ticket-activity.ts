@@ -7,6 +7,13 @@ import {
 
 export class TicketActivity {
 
+  public id: string;
+  public header: string;
+  public content: string;
+  public date: Date;
+  public type: TicketActivityType;
+  public commentType: CommentType;
+
   /**
    * Creates a ticket activity by comment
    * @param comment Comment on where to get the data
@@ -37,11 +44,4 @@ export class TicketActivity {
 
     return activity;
   }
-
-  public id: string;
-  public header: string;
-  public content: string;
-  public date: Date;
-  public type: TicketActivityType;
-  public commentType: CommentType;
 }

@@ -1,11 +1,12 @@
-export class McsServerGuestOs {
-  public name: string;
-  public description: string;
-  public crispCode: string;
+import { JsonProperty } from '@peerlancers/json-serialization';
 
-  constructor() {
-    this.name = undefined;
-    this.description = undefined;
-    this.crispCode = undefined;
-  }
+export class McsServerGuestOs {
+  @JsonProperty()
+  public name: string = undefined;
+
+  @JsonProperty()
+  public description: string = undefined;
+
+  @JsonProperty()
+  public crispCode: string = undefined;
 }

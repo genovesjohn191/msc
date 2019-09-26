@@ -50,7 +50,7 @@ export class RippleRenderer {
     // Remove all previously register event listeners from the trigger element.
     if (this._triggerElement) {
       this._triggerEvents.forEach((fn, type) => {
-        this._triggerElement!.removeEventListener(type, fn);
+        this._triggerElement.removeEventListener(type, fn);
       });
     }
 
@@ -104,7 +104,7 @@ export class RippleRenderer {
     ripple.style.transform = 'scale(1)';
 
     // Exposed reference to the ripple that will be returned.
-    let rippleRef = new RippleRef(this, ripple, config);
+    let rippleRef = new RippleRef(ripple, config);
     rippleRef.state = RippleState.FadingIn;
     this._activeRipples.add(rippleRef);
 
@@ -113,7 +113,7 @@ export class RippleRenderer {
     this.runTimeoutOutsideZone(() => {
       rippleRef.state = RippleState.Visible;
       if (!config.persistent && !this._isMousedown) {
-        rippleRef.fadeOut();
+        this.fadeOutRipple(rippleRef);
       }
     }, duration);
     return rippleRef;
@@ -136,7 +136,7 @@ export class RippleRenderer {
     // Once the ripple faded out, the ripple can be safely removed from the DOM.
     this.runTimeoutOutsideZone(() => {
       rippleRef.state = RippleState.Hidden;
-      rippleEl.parentNode!.removeChild(rippleEl);
+      rippleEl.parentNode.removeChild(rippleEl);
     }, RIPPLE_FADE_OUT_DURATION);
   }
 
@@ -144,7 +144,7 @@ export class RippleRenderer {
    * Fades out all currently active ripples.
    */
   public fadeOutAll() {
-    this._activeRipples.forEach((ripple) => ripple.fadeOut());
+    this._activeRipples.forEach((ripple) => this.fadeOutRipple(ripple));
   }
 
   /**
@@ -165,7 +165,7 @@ export class RippleRenderer {
     // Fade-out all ripples that are completely visible and not persistent.
     this._activeRipples.forEach((ripple) => {
       if (!ripple.config.persistent && ripple.state === RippleState.Visible) {
-        ripple.fadeOut();
+        this.fadeOutRipple(ripple);
       }
     });
   }

@@ -17,59 +17,36 @@
       <div class="listing-panel-wrapper">
         <mcs-search #search></mcs-search>
 
-        <mcs-data-status [dataStatusFactory]="listStatusFactory">
-          <mcs-data-status-success mcsDataSuccess>
-
-            <mcs-list-panel>
-              <ng-container *ngFor="let iterator of ((mediaListing$ | async) | mcsMapIterable) |
-                mcsSortArray: mediaListSource?.catalogSortMethod">
-
-                <mcs-option-group>
-                  <ng-container *mcsOptionGroupLabel>
-                    <span>{{ iterator.key }}</span>
-                  </ng-container>
-
-                  <ng-container *ngFor="let medium of (iterator.value |
-                    mcsSortArray: mediaListSource?.mediaSortMethod)">
-                    <a [mcsRouterLink]="[routeKeyEnum.Media, medium.id]"
-                      mcsId="select-media"
-                      mcsEventTracker="select-media"
-                      mcsEventCategory="media"
-                      mcsEventLabel="media-details-page">
-
-                      <mcs-option [value]="medium"
-                        [selected]="(media$ | async)?.id === medium.id">
-                        <div margin-left-xsmall>
-                          <span text-wrap>{{ medium.name }}</span>
-                        </div>
-                      </mcs-option>
-                    </a>
-                  </ng-container>
-
-                </mcs-option-group>
+        <mcs-list-panel [dataSource]="listViewDatasource" [config]="listViewConfig?.panelSettings">
+          <ng-container *mcsListPanelContent="let entity">
+            <mcs-option-group>
+              <ng-container *mcsOptionGroupLabel>
+                <span>{{ entity.groupName }}</span>
               </ng-container>
-            </mcs-list-panel>
-          </mcs-data-status-success>
 
-          <mcs-data-status-in-progress mcsDataInProgress>
-            <span>{{ 'media.loading' | translate }}</span>
-          </mcs-data-status-in-progress>
+              <a *ngFor="let media of entity.media"
+                [mcsRouterLink]="[routeKeyEnum.Media, media.id]"
+                mcsId="select-media"
+                mcsEventTracker="select-media"
+                mcsEventCategory="media"
+                mcsEventLabel="media-details-page">
 
-          <mcs-data-status-empty mcsDataEmpty>
-            <span>{{ 'media.noMedia' | translate }}</span>
-          </mcs-data-status-empty>
-
-          <mcs-data-status-error mcsDataError>
-            <span>{{ 'media.errorMessage' | translate }}</span>
-          </mcs-data-status-error>
-        </mcs-data-status>
+                <mcs-option [value]="media" [selected]="(media$ | async)?.id === media.id">
+                  <div margin-left-xsmall>
+                    <span text-wrap>{{ media.name }}</span>
+                  </div>
+                </mcs-option>
+              </a>
+            </mcs-option-group>
+          </ng-container>
+        </mcs-list-panel>
       </div>
     </mcs-left-panel-item>
   </mcs-left-panel>
 
   <mcs-content-panel *mcsContentPanelDef>
     <div class="routing-tab-wrapper" *mcsComponentHandler>
-      <mcs-tab-group [selectedTabId]="selectedRoutingTab" (tabChanged)="onTabChanged($event)">
+      <mcs-tab-group [selectedTabId]="selectedTabId$ | async" (tabChanged)="onTabChanged($event)">
         <!-- Overview Tab -->
         <mcs-tab [label]="'mediaOverview.label' | translate" id="overview"></mcs-tab>
 

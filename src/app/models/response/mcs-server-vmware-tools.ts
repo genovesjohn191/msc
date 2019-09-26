@@ -1,4 +1,4 @@
-import { JsonProperty } from 'json-object-mapper';
+import { JsonProperty } from '@peerlancers/json-serialization';
 import {
   RunningStatus,
   RunningStatusSerialization
@@ -9,27 +9,20 @@ import {
 } from '../enumerations/version-status.enum';
 
 export class McsServerVmwareTools {
-  public version: number;
+  @JsonProperty()
+  public version: number = undefined;
 
   @JsonProperty({
-    type: RunningStatus,
     serializer: RunningStatusSerialization,
     deserializer: RunningStatusSerialization
   })
-  public runningStatus: RunningStatus;
+  public runningStatus: RunningStatus = undefined;
 
   @JsonProperty({
-    type: VersionStatus,
     serializer: VersionStatusSerialization,
     deserializer: VersionStatusSerialization
   })
-  public versionStatus: VersionStatus;
-
-  constructor() {
-    this.runningStatus = undefined;
-    this.version = undefined;
-    this.versionStatus = undefined;
-  }
+  public versionStatus: VersionStatus = undefined;
 
   /**
    * Returns true if wmware tools were installed

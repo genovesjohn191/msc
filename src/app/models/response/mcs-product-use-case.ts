@@ -1,11 +1,12 @@
-export class McsProductUseCase {
-  public name: string;
-  public description: string;
-  public displayOrder: string;
+import { JsonProperty } from '@peerlancers/json-serialization';
 
-  constructor() {
-    this.name = undefined;
-    this.description = undefined;
-    this.displayOrder = undefined;
-  }
+export class McsProductUseCase {
+  @JsonProperty()
+  public name: string = undefined;
+
+  @JsonProperty()
+  public description: string = undefined;
+
+  @JsonProperty()
+  public displayOrder: string = undefined;
 }

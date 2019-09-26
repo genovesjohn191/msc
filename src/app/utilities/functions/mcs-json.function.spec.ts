@@ -1,4 +1,5 @@
 import { async } from '@angular/core/testing';
+import { JsonProperty } from '@peerlancers/json-serialization';
 import {
   reviverParser,
   convertMapToJsonObject,
@@ -11,13 +12,11 @@ import {
 
 // Dummy test object class
 export class TestObject {
-  public name: string;
-  public id: string;
+  @JsonProperty()
+  public name: string = undefined;
 
-  constructor() {
-    this.name = undefined;
-    this.id = undefined;
-  }
+  @JsonProperty()
+  public id: string = undefined;
 }
 
 describe('JSON Functions', () => {

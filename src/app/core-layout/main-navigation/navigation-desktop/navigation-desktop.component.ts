@@ -56,7 +56,7 @@ export class NavigationDesktopComponent implements OnInit, OnDestroy {
   }
 
   public get caretDownIconKey(): string {
-    return CommonDefinition.ASSETS_FONT_CHEVRON_DOWN;
+    return CommonDefinition.ASSETS_SVG_CHEVRON_DOWN;
   }
 
   public get routeKeyEnum(): any {

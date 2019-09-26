@@ -92,11 +92,12 @@ const SELECT_ITEM_OFFSET = 7;
 export class SelectComponent extends McsFormFieldControlBase<any>
   implements AfterContentInit, DoCheck, OnChanges, OnDestroy, ControlValueAccessor {
 
-  @ContentChild(SelectTriggerLabelDirective)
+  @ContentChild(SelectTriggerLabelDirective, { static: false })
   public labelTemplate: SelectTriggerLabelDirective;
 
+  /** @deprecated Use the formcontrols.valuechanges instead */
   @Output()
-  public change = new EventEmitter<any>();
+  public selectionChange = new EventEmitter<any>();
 
   @Input()
   public id: string = McsUniqueId.NewId('select');
@@ -127,7 +128,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
   public set disabled(value: boolean) { this._disabled = coerceBoolean(value); }
   private _disabled: boolean = false;
 
-  @ContentChild(SelectSearchDirective)
+  @ContentChild(SelectSearchDirective, { static: false })
   private _search: SelectSearchDirective;
 
   @ContentChildren(OptionComponent, { descendants: true })
@@ -155,7 +156,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
     if (this._value !== value) {
       this._value = value;
       this._onChanged(this._value);
-      this.change.emit(this._value);
+      this.selectionChange.emit(this._value);
       this._changeDetectorRef.markForCheck();
     }
   }
@@ -179,7 +180,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
   private _closeOutsideHandler = this._onCloseOutside.bind(this);
 
   public get carretDownIconKey(): string {
-    return CommonDefinition.ASSETS_FONT_CARET_DOWN;
+    return CommonDefinition.ASSETS_SVG_CHEVRON_DOWN;
   }
 
   public get displayedText(): string {
@@ -224,10 +225,12 @@ export class SelectComponent extends McsFormFieldControlBase<any>
   }
 
   public ngAfterContentInit(): void {
-    registerEvent(document, 'click', this._closeOutsideHandler);
-    this._initializeKeyboardManager();
-    this._subscribeToSearchChanges();
-    this._subscribeToOptionItemsChanges();
+    Promise.resolve().then(() => {
+      registerEvent(document, 'click', this._closeOutsideHandler);
+      this._initializeKeyboardManager();
+      this._subscribeToSearchChanges();
+      this._subscribeToOptionItemsChanges();
+    });
   }
 
   public ngDoCheck(): void {

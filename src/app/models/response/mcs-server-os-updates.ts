@@ -1,18 +1,19 @@
+import { JsonProperty } from '@peerlancers/json-serialization';
 import { McsEntityBase } from '../common/mcs-entity.base';
 
 export class McsServerOsUpdates extends McsEntityBase {
-  public vendorId: string;
-  public category: string;
-  public name: string;
-  public version: string;
-  public properties: any;
+  @JsonProperty()
+  public vendorId: string = undefined;
 
-  constructor() {
-    super();
-    this.vendorId = undefined;
-    this.category = undefined;
-    this.name = undefined;
-    this.version = undefined;
-    this.properties = undefined;
-  }
+  @JsonProperty()
+  public category: string = undefined;
+
+  @JsonProperty()
+  public name: string = undefined;
+
+  @JsonProperty()
+  public version: string = undefined;
+
+  @JsonProperty()
+  public properties: any = undefined;
 }

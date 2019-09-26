@@ -1,4 +1,4 @@
-import { JsonProperty } from 'json-object-mapper';
+import { JsonProperty } from '@peerlancers/json-serialization';
 import { isNullOrEmpty } from '@app/utilities';
 import { McsResourceCompute } from './mcs-resource-compute';
 import { McsResourceStorage } from './mcs-resource-storage';
@@ -18,56 +18,47 @@ import {
 import { McsEntityBase } from '../common/mcs-entity.base';
 
 export class McsResource extends McsEntityBase {
-  public name: string;
-  public serviceId: string;
-  public environmentName: string;
-  public availabilityZone: string;
-  public portalUrl: string;
+  @JsonProperty()
+  public name: string = undefined;
 
-  @JsonProperty({ type: McsResourceCompute })
-  public compute: McsResourceCompute;
+  @JsonProperty()
+  public serviceId: string = undefined;
 
-  @JsonProperty({ type: McsResourceStorage })
-  public storage: McsResourceStorage[];
+  @JsonProperty()
+  public environmentName: string = undefined;
 
-  @JsonProperty({ type: McsResourceNetwork })
-  public networks: McsResourceNetwork[];
+  @JsonProperty()
+  public availabilityZone: string = undefined;
 
-  @JsonProperty({ type: McsResourceCatalog })
-  public catalogs: McsResourceCatalog[];
+  @JsonProperty()
+  public portalUrl: string = undefined;
 
-  @JsonProperty({ type: McsResourceVApp })
-  public vApps: McsResourceVApp[];
+  @JsonProperty({ target: McsResourceCompute })
+  public compute: McsResourceCompute = undefined;
+
+  @JsonProperty({ target: McsResourceStorage })
+  public storage: McsResourceStorage[] = undefined;
+
+  @JsonProperty({ target: McsResourceNetwork })
+  public networks: McsResourceNetwork[] = undefined;
+
+  @JsonProperty({ target: McsResourceCatalog })
+  public catalogs: McsResourceCatalog[] = undefined;
+
+  @JsonProperty({ target: McsResourceVApp })
+  public vApps: McsResourceVApp[] = undefined;
 
   @JsonProperty({
-    type: ServiceType,
     serializer: ServiceTypeSerialization,
     deserializer: ServiceTypeSerialization
   })
-  public serviceType: ServiceType;
+  public serviceType: ServiceType = undefined;
 
   @JsonProperty({
-    type: PlatformType,
     serializer: PlatformTypeSerialization,
     deserializer: PlatformTypeSerialization
   })
-  public platform: PlatformType;
-
-  constructor() {
-    super();
-    this.compute = undefined;
-    this.storage = undefined;
-    this.networks = undefined;
-    this.catalogs = undefined;
-    this.vApps = undefined;
-    this.serviceId = undefined;
-    this.name = undefined;
-    this.platform = undefined;
-    this.environmentName = undefined;
-    this.serviceType = undefined;
-    this.availabilityZone = undefined;
-    this.portalUrl = undefined;
-  }
+  public platform: PlatformType = undefined;
 
   /**
    * Returns true when the resource has networks

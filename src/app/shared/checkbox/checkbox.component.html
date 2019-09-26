@@ -11,15 +11,16 @@
       (change)="onChange($event)"
       (blur)="onBlur()">
 
-    <!-- Ripple Effect -->
-    <mcs-ripple class="checkbox-ripple-wrapper"
-      mcsRipple [rippleTrigger]="checkbox" [rippleCentered]="true">
-    </mcs-ripple>
+    <div class="checkbox-icon">
+      <!-- Ripple Effect -->
+      <mcs-ripple class="checkbox-ripple-wrapper"
+        mcsRipple [rippleTrigger]="checkbox" [rippleCentered]="true">
+      </mcs-ripple>
 
-    <!-- Checkbox Icon -->
-    <mcs-icon class="checkbox-icon"
-      [key]="checkboxIconKey" size="small"
-      [color]="checked || indeterminate ? 'primary' : color"></mcs-icon>
+      <!-- Checkbox Icon -->
+      <mcs-icon [key]="checkboxIconKey" size="small"
+        [color]="checked || indeterminate ? 'primary' : color"></mcs-icon>
+    </div>
   </div>
 
   <!-- Checkbox spacer -->

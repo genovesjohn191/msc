@@ -1,4 +1,3 @@
-import { CacheKey } from 'json-object-mapper';
 import { McsEnumSerializationBase } from '../serialization/mcs-enum-serialization-base';
 
 export enum Breakpoint {
@@ -11,7 +10,6 @@ export enum Breakpoint {
 /**
  * Enumeration serializer and deserializer methods
  */
-@CacheKey('BreakpointSerialization')
 export class BreakpointSerialization
   extends McsEnumSerializationBase<Breakpoint> {
   constructor() { super(Breakpoint); }

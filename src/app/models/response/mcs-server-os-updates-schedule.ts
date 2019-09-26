@@ -1,19 +1,20 @@
+import { JsonProperty } from '@peerlancers/json-serialization';
 import { McsEntityBase } from '../common/mcs-entity.base';
 import { McsServerOsUpdatesCategory } from './mcs-server-os-updates-category';
 
 export class McsServerOsUpdatesSchedule extends McsEntityBase {
-  public serverId: string;
-  public categories: McsServerOsUpdatesCategory[];
-  public updates: any[];
-  public crontab: string;
-  public runOnce: boolean;
+  @JsonProperty()
+  public serverId: string = undefined;
 
-  constructor() {
-    super();
-    this.serverId = undefined;
-    this.categories = undefined;
-    this.updates = undefined;
-    this.crontab = undefined;
-    this.runOnce = true;
-  }
+  @JsonProperty()
+  public categories: McsServerOsUpdatesCategory[] = undefined;
+
+  @JsonProperty()
+  public updates: any[] = undefined;
+
+  @JsonProperty()
+  public crontab: string = undefined;
+
+  @JsonProperty()
+  public runOnce: boolean = undefined;
 }

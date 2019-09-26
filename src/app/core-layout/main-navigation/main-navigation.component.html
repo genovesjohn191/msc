@@ -16,7 +16,7 @@
     <ng-container *ngIf="hasHostingAccess; else dashboardNavTemplate"></ng-container>
     <ng-template #dashboardNavTemplate>
       <div class="navigation-item" routerLinkActive="active">
-        <mcs-icon [key]="caretRightIconKey" color="white"
+        <mcs-icon [key]="caretRightIconKey" color="light"
           size="medium" class="navigation-mobile"></mcs-icon>
         <a [mcsRouterLink]="routeKeyEnum.Dashboard"
           mcsId
@@ -33,7 +33,7 @@
       [class.active]="selectedCategory === routerCategoryEnum.Compute"
       *mcsAccessControl="['DedicatedVmAccess','CloudVmAccess']">
 
-      <mcs-icon [key]="caretRightIconKey" color="white"
+      <mcs-icon [key]="caretRightIconKey" color="light"
         size="medium" class="navigation-mobile"></mcs-icon>
       <a [mcsRouterLink]="routeKeyEnum.Servers" mcsId>
         {{ getCategoryLabel(routerCategoryEnum.Compute) }}
@@ -45,7 +45,7 @@
       [class.active]="selectedCategory === routerCategoryEnum.Network"
       *mcsAccessControl="['FirewallConfigurationView']">
 
-      <mcs-icon [key]="caretRightIconKey" color="white"
+      <mcs-icon [key]="caretRightIconKey" color="light"
         size="medium" class="navigation-mobile"></mcs-icon>
       <a [mcsRouterLink]="routeKeyEnum.Firewalls" mcsId>
         {{ getCategoryLabel(routerCategoryEnum.Network) }}
@@ -54,7 +54,7 @@
 
     <!-- Other Tools -->
     <div class="navigation-item" hidden-small mcsRouterLinkActive="active">
-      <mcs-icon [key]="caretRightIconKey" color="white"
+      <mcs-icon [key]="caretRightIconKey" color="light"
         size="medium" class="navigation-mobile"></mcs-icon>
       <a [mcsRouterLink]="routeKeyEnum.OtherTools"
         mcsId

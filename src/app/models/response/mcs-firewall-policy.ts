@@ -1,4 +1,4 @@
-import { JsonProperty } from 'json-object-mapper';
+import { JsonProperty } from '@peerlancers/json-serialization';
 import { CommonDefinition } from '@app/utilities';
 import {
   policyText,
@@ -12,46 +12,47 @@ import {
 import { McsEntityBase } from '../common/mcs-entity.base';
 
 export class McsFirewallPolicy extends McsEntityBase {
-  public policyId: number;
-  public objectSequence: number;
-  public natIpAddresses: string[];
-  public sourceAddresses: string[];
-  public sourceInterfaces: string[];
-  public destinationAddresses: string[];
-  public destinationInterfaces: string[];
-  public label: string;
-  public service: string[];
-  public schedule: string[];
+  @JsonProperty()
+  public policyId: number = undefined;
+
+  @JsonProperty()
+  public objectSequence: number = undefined;
+
+  @JsonProperty()
+  public natIpAddresses: string[] = undefined;
+
+  @JsonProperty()
+  public sourceAddresses: string[] = undefined;
+
+  @JsonProperty()
+  public sourceInterfaces: string[] = undefined;
+
+  @JsonProperty()
+  public destinationAddresses: string[] = undefined;
+
+  @JsonProperty()
+  public destinationInterfaces: string[] = undefined;
+
+  @JsonProperty()
+  public label: string = undefined;
+
+  @JsonProperty()
+  public service: string[] = undefined;
+
+  @JsonProperty()
+  public schedule: string[] = undefined;
 
   @JsonProperty({
-    type: PolicyAction,
     serializer: PolicyActionSerialization,
     deserializer: PolicyActionSerialization
   })
-  public action: PolicyAction;
+  public action: PolicyAction = undefined;
 
   @JsonProperty({
-    type: PolicyNat,
     serializer: PolicyNatSerialization,
     deserializer: PolicyNatSerialization
   })
-  public nat: PolicyNat;
-
-  constructor() {
-    super();
-    this.policyId = undefined;
-    this.objectSequence = undefined;
-    this.natIpAddresses = undefined;
-    this.sourceAddresses = undefined;
-    this.sourceInterfaces = undefined;
-    this.destinationAddresses = undefined;
-    this.destinationInterfaces = undefined;
-    this.label = undefined;
-    this.service = undefined;
-    this.schedule = undefined;
-    this.action = undefined;
-    this.nat = undefined;
-  }
+  public nat: PolicyNat = undefined;
 
   /**
    * Returns firewall action icon key

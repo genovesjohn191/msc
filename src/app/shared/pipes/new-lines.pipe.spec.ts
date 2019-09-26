@@ -15,10 +15,10 @@ import { NewLinesPipe } from './new-lines.pipe';
   template: ``
 })
 export class TestComponent {
-  @ViewChild('testElement')
+  @ViewChild('testElement', { static: false })
   public testElement: ElementRef;
 
-  @ViewChild(NewLinesPipe)
+  @ViewChild(NewLinesPipe, { static: false })
   public pipe: NewLinesPipe;
 
   public textContent = 'TextWith\nNewLine';

@@ -209,6 +209,9 @@ export class McsNotificationJobService implements McsDisposable {
           case StompState.CLOSED:
           case StompState.DISCONNECTING:
             this._onStompError();
+            unsubscribeSafely(this._stompSubscription);
+            break;
+
           case StompState.TRYING:
           default:
             unsubscribeSafely(this._stompSubscription);

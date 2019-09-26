@@ -27,18 +27,19 @@ export type TooltipColor = 'light' | 'dark';
     animateFactory.scaleIn
   ],
   host: {
-    'class': 'tooltip-wrapper',
-    '[style.zoom]': 'visibility === "visible" ? 1 : null',
-    '(body:click)': 'this.hide()'
+    '[class]': 'hostClass',
+    '[style.zoom]': 'visible === true ? 1 : null',
+    '(body:click)': 'hide()'
   }
 })
 
 export class TooltipComponent {
 
-  @ViewChild('tooltipPanel')
+  @ViewChild('tooltipPanel', { static: false })
   public tooltipPanel: ElementRef;
 
   public message: string;
+  public color: string;
   public transformOrigin: string = 'bottom';
   public hideTimeoutId: any;
 
@@ -62,6 +63,10 @@ export class TooltipComponent {
     this._onHide = new Subject();
   }
 
+  public get hostClass(): string {
+    return `tooltip-wrapper ${this.color || 'dark'}`;
+  }
+
   /**
    * Show the tooltip
    */
@@ -79,7 +84,7 @@ export class TooltipComponent {
   /**
    * Hide the tooltip
    */
-  public hide(delay: number): void {
+  public hide(delay: number = 0): void {
     this.hideTimeoutId = setTimeout(() => {
       this.visible = false;
     }, delay);

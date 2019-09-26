@@ -17,7 +17,7 @@ import { CoreTestingModule } from '@app/core/testing';
   template: ``
 })
 export class TestSelectComponent {
-  @ViewChild(SelectComponent)
+  @ViewChild(SelectComponent, { static: false })
   public selectComponent: SelectComponent;
 
   public selectedValue: any;

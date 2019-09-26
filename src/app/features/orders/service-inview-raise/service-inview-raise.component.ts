@@ -101,7 +101,7 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
     return getSafeProperty(this._formGroup, (obj) => obj.isValid());
   }
 
-  @ViewChild(McsFormGroupDirective)
+  @ViewChild(McsFormGroupDirective, { static: false })
   private _formGroup: McsFormGroupDirective;
 
   private _inviewLevel: InviewLevel = InviewLevel.None;

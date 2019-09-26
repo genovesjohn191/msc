@@ -1,16 +1,16 @@
+import { JsonProperty } from '@peerlancers/json-serialization';
 import { McsEntityBase } from '../common/mcs-entity.base';
 
 export class McsProductDownload extends McsEntityBase {
-  public name: string;
-  public fileType: string;
-  public fileSizeInKB: number;
-  public url: string;
+  @JsonProperty()
+  public name: string = undefined;
 
-  constructor() {
-    super();
-    this.name = undefined;
-    this.fileType = undefined;
-    this.fileSizeInKB = undefined;
-    this.url = undefined;
-  }
+  @JsonProperty()
+  public fileType: string = undefined;
+
+  @JsonProperty()
+  public fileSizeInKB: number = undefined;
+
+  @JsonProperty()
+  public url: string = undefined;
 }

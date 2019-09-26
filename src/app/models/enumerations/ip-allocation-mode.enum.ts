@@ -1,4 +1,3 @@
-import { CacheKey } from 'json-object-mapper';
 import { McsEnumSerializationBase } from '../serialization/mcs-enum-serialization-base';
 
 export enum IpAllocationMode {
@@ -18,7 +17,6 @@ export const ipAllocationModeText = {
 /**
  * Enumeration serializer and deserializer methods
  */
-@CacheKey('IpAllocationModeSerialization')
 export class IpAllocationModeSerialization
   extends McsEnumSerializationBase<IpAllocationMode> {
   constructor() { super(IpAllocationMode); }

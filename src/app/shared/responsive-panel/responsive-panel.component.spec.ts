@@ -15,7 +15,7 @@ import { CoreTestingModule } from '@app/core/testing';
   template: ``
 })
 export class ResponsivePanelTestComponent {
-  @ViewChild(ResponsivePanelComponent)
+  @ViewChild(ResponsivePanelComponent, { static: false })
   public responsivePanelComponent: ResponsivePanelComponent;
 }
 

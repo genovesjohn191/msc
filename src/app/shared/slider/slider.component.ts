@@ -20,7 +20,8 @@ import {
   coerceNumber,
   coerceBoolean,
   registerEvent,
-  unregisterEvent
+  unregisterEvent,
+  getSafeProperty
 } from '@app/utilities';
 
 /** The slider orientation type */
@@ -81,13 +82,13 @@ export class SliderComponent {
    * Event emitted when the slider value has changed.
    */
   @Output()
-  public change = new EventEmitter<any>();
+  public valueChange = new EventEmitter<any>();
 
   /**
    * Event emitted when the slider thumb moves.
    */
   @Output()
-  public input = new EventEmitter<any>();
+  public sliderMove = new EventEmitter<any>();
 
   /**
    * Label text that shows in the thumb label if provided else it is based on the value
@@ -158,7 +159,7 @@ export class SliderComponent {
     this._step = coerceNumber(value, this._min);
     // Check if the step is a whole number, otherwise it will be rounded off.
     if (value && this._step % 1 !== 0) {
-      this._roundLabelTo = this._step.toString().split('.').pop()!.length;
+      this._roundLabelTo = this._step.toString().split('.').pop().length;
     }
     this._changeDetectorRef.markForCheck();
   }
@@ -203,7 +204,7 @@ export class SliderComponent {
   /**
    * Reference to the inner slider wrapper element.
    */
-  @ViewChild('sliderWrapper')
+  @ViewChild('sliderWrapper', { static: false })
   private _sliderWrapper: ElementRef;
 
   /**
@@ -588,14 +589,14 @@ export class SliderComponent {
    * Emits a change event if the current value is different from the last emitted value.
    */
   private _emitChangeEvent() {
-    this.change.emit(this.value);
+    this.valueChange.emit(this.value);
   }
 
   /**
    * Emits an input event when the current value is different from the last emitted value.
    */
   private _emitInputEvent() {
-    this.input.emit(this.value);
+    this.sliderMove.emit(this.value);
   }
 
   /**
@@ -650,9 +651,9 @@ export class SliderComponent {
     let position = new McsPoint();
     // Set position based on event triggered
     position.x = !!(event instanceof MouseEvent) ?
-      event.clientX : event.changedTouches[0].clientX;
+      event.clientX : getSafeProperty(event, (obj) => obj.changedTouches[0].clientX);
     position.y = !!(event instanceof MouseEvent) ?
-      event.clientY : event.changedTouches[0].clientY;
+      event.clientY : getSafeProperty(event, (obj) => obj.changedTouches[0].clientY);
 
     // Return the coordinates of the mouse
     return position;

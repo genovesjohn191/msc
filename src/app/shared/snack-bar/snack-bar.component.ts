@@ -5,12 +5,12 @@ import {
   ViewEncapsulation,
   ChangeDetectionStrategy
 } from '@angular/core';
-import { McsSnackBarRef } from '@app/core';
 import {
   coerceBoolean,
   McsThemeType,
   CommonDefinition
 } from '@app/utilities';
+import { SnackBarRef } from './snack-bar-ref/snack-bar-ref';
 
 @Component({
   selector: 'mcs-snack-bar',
@@ -38,8 +38,8 @@ export class SnackBarComponent {
    * when the binding for the snack bar is template
    */
   @Input()
-  public get snackBarRef(): McsSnackBarRef<any> { return this._snackBarRef; }
-  public set snackBarRef(value: McsSnackBarRef<any>) { this._snackBarRef = value; }
+  public get snackBarRef(): SnackBarRef<any> { return this._snackBarRef; }
+  public set snackBarRef(value: SnackBarRef<any>) { this._snackBarRef = value; }
 
   /**
    * Returns true when the close button is hidden
@@ -63,5 +63,5 @@ export class SnackBarComponent {
     return this.theme === 'dark' ? 'light' : 'dark';
   }
 
-  constructor(@Optional() private _snackBarRef: McsSnackBarRef<any>) { }
+  constructor(@Optional() private _snackBarRef: SnackBarRef<any>) { }
 }

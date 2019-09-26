@@ -1,21 +1,16 @@
-import { JsonProperty } from 'json-object-mapper';
+import { JsonProperty } from '@peerlancers/json-serialization';
 import {
   OsType,
   OsTypeSerialization
 } from '../enumerations/os-type.enum';
 
 export class McsServerCreateOs {
-  public name: string;
+  @JsonProperty()
+  public name: string = undefined;
 
   @JsonProperty({
-    type: OsType,
     serializer: OsTypeSerialization,
     deserializer: OsTypeSerialization
   })
-  public type: OsType;
-
-  constructor() {
-    this.name = undefined;
-    this.type = undefined;
-  }
+  public type: OsType = undefined;
 }

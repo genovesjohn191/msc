@@ -44,8 +44,6 @@ const DEFAULT_SCROLL_TOP_OFFSET = 50;
 })
 
 export class ScrollableLinkGroupComponent implements ScrollableLinkGroup, AfterViewInit, AfterContentInit, OnDestroy {
-  @Output()
-  public change = new EventEmitter<any>();
 
   @ContentChildren(ScrollableLinkComponent)
   public scrollableLinks: QueryList<ScrollableLinkComponent>;
@@ -76,9 +74,11 @@ export class ScrollableLinkGroupComponent implements ScrollableLinkGroup, AfterV
   }
 
   public ngAfterContentInit(): void {
-    this.scrollableLinks.changes
-      .pipe(startWith(null), takeUntil(this._destroySubject))
-      .subscribe(() => this._changeDetectorRef.markForCheck());
+    Promise.resolve().then(() => {
+      this.scrollableLinks.changes
+        .pipe(startWith(null), takeUntil(this._destroySubject))
+        .subscribe(() => this._changeDetectorRef.markForCheck());
+    });
   }
 
   public ngOnDestroy() {
@@ -116,7 +116,6 @@ export class ScrollableLinkGroupComponent implements ScrollableLinkGroup, AfterV
    */
   private _selectLink(link: ScrollableLinkComponent): void {
     if (isNullOrEmpty(link)) { return; }
-    this.change.emit(link);
     this._changeDetectorRef.markForCheck();
   }
 

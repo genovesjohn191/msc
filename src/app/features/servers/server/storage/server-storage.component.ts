@@ -87,7 +87,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   private _updateDiskHandler: Subscription;
   private _deleteDiskHandler: Subscription;
 
-  @ViewChild(ComponentHandlerDirective)
+  @ViewChild(ComponentHandlerDirective, { static: false })
   private _componentHandler: ComponentHandlerDirective;
 
   public get storageIconKey(): string {

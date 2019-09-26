@@ -5,12 +5,8 @@ import { McsResource } from '@app/models';
 
 @Injectable()
 export class VdcService {
-
-  /**
-   * This will notify the subscriber everytime the server is selected or
-   * everytime there are new data from the selected server
-   */
   public selectedVdcStream: BehaviorSubject<McsResource>;
+  private _resourceId: string;
 
   constructor() {
     this.selectedVdcStream = new BehaviorSubject<McsResource>(undefined);
@@ -24,5 +20,19 @@ export class VdcService {
   public setSelectedVdc(selectedVdc: McsResource): void {
     if (isNullOrEmpty(selectedVdc)) { return; }
     this.selectedVdcStream.next(selectedVdc);
+  }
+
+  /**
+   * Sets the resource id of the resource
+   */
+  public setResourceId(resourceId: string): void {
+    this._resourceId = resourceId;
+  }
+
+  /**
+   * Gets the resource id
+   */
+  public getResourceId(): string {
+    return this._resourceId;
   }
 }

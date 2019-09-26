@@ -47,7 +47,7 @@ import { McsFormGroupDirective } from '@app/shared';
 import { SystemMessageForm } from './system-message-form';
 
 const SYSTEM_MESSAGE_DATEFORMAT = 'YYYY-MM-DDTHH:mm';
-const SYSTEM_MESSAGE_TIMEZONE_FORMAT = "yyyy-MM-dd'T'HH:mm z";
+const SYSTEM_MESSAGE_TIMEZONE_FORMAT = `yyyy-MM-dd'T'HH:mm z`;
 const SYSTEM_MESSAGE_ISO_DATEFORMAT = 'isoDate';
 @Component({
   selector: 'mcs-system-message-form',
@@ -80,7 +80,7 @@ export class SystemMessageFormComponent
   @Output()
   public dataChange = new EventEmitter<SystemMessageForm>();
 
-  @ViewChild(McsFormGroupDirective)
+  @ViewChild(McsFormGroupDirective, { static: false })
   public _formGroup: McsFormGroupDirective;
 
   private _destroySubject = new Subject<void>();

@@ -19,10 +19,6 @@ import {
 import { McsEvent } from '@app/events';
 import { CoreConfig } from './core.config';
 import { coreProviders } from './core.constants';
-import {
-  McsSnackBarContainerComponent
-} from './factory/snack-bar/mcs-snack-bar-container.component';
-import { McsSnackBarRefDirective } from './factory/snack-bar/mcs-snack-bar-ref.directive';
 import { GoogleAnalyticsEventsService } from './services/google-analytics-events.service';
 import { McsSessionHandlerService } from './services/mcs-session-handler.service';
 import { McsRouteHandlerService } from './services/mcs-route-handler.service';
@@ -36,10 +32,6 @@ import { McsErrorHandlerInterceptor } from './interceptors/mcs-error-handler.int
 import { McsSystemMessageService } from './services/mcs-system-message.service';
 
 @NgModule({
-  declarations: [
-    McsSnackBarContainerComponent,
-    McsSnackBarRefDirective
-  ],
   providers: [
     ...coreProviders,
     {
@@ -60,9 +52,6 @@ import { McsSystemMessageService } from './services/mcs-system-message.service';
   exports: [
     CommonModule,
     HttpClientModule
-  ],
-  entryComponents: [
-    McsSnackBarContainerComponent
   ]
 })
 

@@ -177,6 +177,7 @@ export class IconComponent implements OnChanges {
 
           svgElement.setAttribute('width', this._iconActualSize);
           svgElement.setAttribute('height', `${actualHeight}px`);
+          svgElement.setAttribute(`fill-svg-${this.color}`, '');
           this._renderer.appendChild(parentContainer, svgElement);
           return parentContainer;
         })

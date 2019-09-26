@@ -1,7 +1,6 @@
-export class McsOrderMerge {
-  public mergeWithOrderId: number;
+import { JsonProperty } from '@peerlancers/json-serialization';
 
-  constructor() {
-    this.mergeWithOrderId = undefined;
-  }
+export class McsOrderMerge {
+  @JsonProperty()
+  public mergeWithOrderId: number = undefined;
 }

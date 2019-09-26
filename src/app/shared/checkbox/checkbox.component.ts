@@ -40,13 +40,13 @@ import {
 
 export class CheckboxComponent implements ControlValueAccessor {
   @Output()
-  public change: EventEmitter<CheckboxComponent> = new EventEmitter();
+  public statusChange: EventEmitter<CheckboxComponent> = new EventEmitter();
 
   @Input()
   public id: string = McsUniqueId.NewId('checkbox');
 
   @Input()
-  public color: McsColorType = 'black';
+  public color: McsColorType = 'dark';
 
   @Input()
   public get indeterminate(): boolean { return this._indeterminate; }
@@ -71,9 +71,9 @@ export class CheckboxComponent implements ControlValueAccessor {
 
   public get checkboxIconKey(): string {
     let unCheckedIcon = this.indeterminate ?
-      CommonDefinition.ASSETS_FONT_CHECKBOX_INDETERMINATE :
-      CommonDefinition.ASSETS_FONT_SQUARE_OPEN;
-    return this.checked ? CommonDefinition.ASSETS_FONT_CHECKBOX : unCheckedIcon;
+      CommonDefinition.ASSETS_SVG_CHECK_BOX_INDETERMINATE :
+      CommonDefinition.ASSETS_SVG_CHECK_BOX_OUTLINE;
+    return this.checked ? CommonDefinition.ASSETS_SVG_CHECK_BOX : unCheckedIcon;
   }
 
   public constructor(private _changeDetectorRef: ChangeDetectorRef) {
@@ -86,7 +86,7 @@ export class CheckboxComponent implements ControlValueAccessor {
   public onClickEvent(_event: MouseEvent) {
     _event.stopPropagation();
     this.toggle();
-    this.change.emit(this);
+    this.statusChange.emit(this);
   }
 
   /**

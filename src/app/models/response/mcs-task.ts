@@ -1,4 +1,4 @@
-import { JsonProperty } from 'json-object-mapper';
+import { JsonProperty } from '@peerlancers/json-serialization';
 import {
   TaskType,
   TaskTypeSerialization
@@ -12,70 +12,59 @@ import { McsEntityBase } from '../common/mcs-entity.base';
 import { McsDateSerialization } from '../serialization/mcs-date-serialization';
 
 export class McsTask extends McsEntityBase {
-  public description: string;
-  public summaryInformation: string;
-  public errorMessage: string;
-  public referenceObject: any;
-  public elapsedTimeInSeconds: number;
-  public ectInSeconds: number;
+  @JsonProperty()
+  public description: string = undefined;
+
+  @JsonProperty()
+  public summaryInformation: string = undefined;
+
+  @JsonProperty()
+  public errorMessage: string = undefined;
+
+  @JsonProperty()
+  public referenceObject: any = undefined;
+
+  @JsonProperty()
+  public elapsedTimeInSeconds: number = undefined;
+
+  @JsonProperty()
+  public ectInSeconds: number = undefined;
 
   @JsonProperty({
-    type: TaskType,
     serializer: TaskTypeSerialization,
     deserializer: TaskTypeSerialization
   })
-  public type: TaskType;
+  public type: TaskType = undefined;
 
   @JsonProperty({
-    type: JobStatus,
     serializer: JobStatusSerialization,
     deserializer: JobStatusSerialization
   })
-  public status: JobStatus;
+  public status: JobStatus = undefined;
 
   @JsonProperty({
-    type: Date,
     serializer: McsDateSerialization,
     deserializer: McsDateSerialization
   })
-  public createdOn: Date;
+  public createdOn: Date = undefined;
 
   @JsonProperty({
-    type: Date,
     serializer: McsDateSerialization,
     deserializer: McsDateSerialization
   })
-  public updatedOn: Date;
+  public updatedOn: Date = undefined;
 
   @JsonProperty({
-    type: Date,
     serializer: McsDateSerialization,
     deserializer: McsDateSerialization
   })
-  public startedOn: Date;
+  public startedOn: Date = undefined;
 
   @JsonProperty({
-    type: Date,
     serializer: McsDateSerialization,
     deserializer: McsDateSerialization
   })
-  public endedOn: Date;
-
-  constructor() {
-    super();
-    this.description = undefined;
-    this.summaryInformation = undefined;
-    this.errorMessage = undefined;
-    this.type = undefined;
-    this.status = undefined;
-    this.referenceObject = undefined;
-    this.createdOn = undefined;
-    this.updatedOn = undefined;
-    this.startedOn = undefined;
-    this.endedOn = undefined;
-    this.elapsedTimeInSeconds = undefined;
-    this.ectInSeconds = undefined;
-  }
+  public endedOn: Date = undefined;
 
   /**
    * Returns the job data status if in progress,

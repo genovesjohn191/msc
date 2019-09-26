@@ -38,8 +38,7 @@ export class McsApiClientHttpService {
 
   /**
    * This method will get the record based on the given id or endpoint
-   * @param {McsApiRequestParameter} apiRequest
-   * MCS Api request consist of endpoint/url, data, headers, params, etc...
+   * @param apiRequest MCS Api request consist of endpoint/url, data, headers, params, etc...
    */
   public get(apiRequest: McsApiRequestParameter): Observable<any> {
     return this._httpClient.get(
@@ -55,8 +54,7 @@ export class McsApiClientHttpService {
 
   /**
    * This method will insert a new record based on the given data
-   * @param {McsApiRequestParameter} apiRequest
-   * MCS Api request consist of endpoint/url, data, headers, params, etc...
+   * @param apiRequest MCS Api request consist of endpoint/url, data, headers, params, etc...
    */
   public post(apiRequest: McsApiRequestParameter): Observable<any> {
     return this._httpClient.post(
@@ -74,8 +72,7 @@ export class McsApiClientHttpService {
   /**
    * This method will update some of the fields of an existing record
    * based on the given data
-   * @param {McsApiRequestParameter} apiRequest
-   * MCS Api request consist of endpoint/url, data, headers, params, etc...
+   * @param apiRequest MCS Api request consist of endpoint/url, data, headers, params, etc...
    */
   public patch(apiRequest: McsApiRequestParameter): Observable<any> {
     return this._httpClient.patch(
@@ -92,8 +89,7 @@ export class McsApiClientHttpService {
 
   /**
    * This method will replace the existing record based on the given data
-   * @param {McsApiRequestParameter} apiRequest
-   * MCS Api request consist of endpoint/url, data, headers, params, etc...
+   * @param apiRequest MCS Api request consist of endpoint/url, data, headers, params, etc...
    */
   public put(apiRequest: McsApiRequestParameter): Observable<any> {
     return this._httpClient.put(
@@ -109,8 +105,7 @@ export class McsApiClientHttpService {
 
   /**
    * The method will delete the corresponding record based on the give ID
-   * @param {McsApiRequestParameter} apiRequest
-   * MCS Api request consist of endpoint/url, data, headers, params, etc...
+   * @param apiRequest MCS Api request consist of endpoint/url, data, headers, params, etc...
    */
   public delete(apiRequest: McsApiRequestParameter): Observable<any> {
     return this._httpClient.request(
@@ -154,7 +149,7 @@ export class McsApiClientHttpService {
 
   /**
    * Get Headers Value
-   * @param {Headers} optHeaders Optional Header
+   * @param optHeaders Optional Header
    */
   private _getHeaders(optHeaders?: Map<string, any>): any {
     let headers = new Map<string, any>();
@@ -175,7 +170,7 @@ export class McsApiClientHttpService {
 
   /**
    * Set Default Headers
-   * @param {Headers} headers Header Instance
+   * @param headers Header Instance
    */
   private _setDefaultHeaders(headers: Map<string, any>) {
     if (!isNullOrEmpty(this._config.headers)) {
@@ -191,8 +186,8 @@ export class McsApiClientHttpService {
 
   /**
    * Set Optional Headers
-   * @param {Headers} headers Header Instance
-   * @param {Headers} optHeaders Optional Header
+   * @param headers Header Instance
+   * @param optHeaders Optional Header
    */
   private _setOptionalHeaders(headers: Map<string, any>, optHeaders: Map<string, any>) {
     if (isNullOrEmpty(optHeaders)) { return; }

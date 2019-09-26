@@ -1,0 +1,27 @@
+<div [hidden]="(dataStatusChange | async) !== dataStatusEnum.Success">
+  <ng-container mcsListPanelContentOutlet></ng-container>
+</div>
+
+<ng-container [ngSwitch]="dataStatusChange | async">
+  <ng-container *ngSwitchCase="dataStatusEnum.Success">
+    <!-- No to display since ViewChild is not working if the parent element has structural directive -->
+  </ng-container>
+
+  <ng-container *ngSwitchCase="dataStatusEnum.InProgress">
+    <mcs-data-status-in-progress mcsDataInProgress>
+      <span>{{ config?.inProgressText || 'Loading...' }}</span>
+    </mcs-data-status-in-progress>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="dataStatusEnum.Error">
+    <mcs-data-status-error mcsDataError>
+      <span>{{ config?.errorText || 'Oops, something went wrong.' }}</span>
+    </mcs-data-status-error>
+  </ng-container>
+
+  <ng-container *ngSwitchDefault>
+    <mcs-data-status-empty mcsDataEmpty>
+      <span>{{ config?.emptyText || 'No records found.' }}</span>
+    </mcs-data-status-empty>
+  </ng-container>
+</ng-container>

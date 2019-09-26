@@ -1,6 +1,6 @@
 @import "../../../styles/shared/base";
 
-$option-group-padding: $space-xsmall $space-small;
+$option-group-padding: $space-xsmall;
 $option-group-hover-color: $hover-bg-color;
 $option-group-active-color: $active-bg-color;
 $option-group-selected-color: $selected-bg-color;
@@ -39,7 +39,7 @@ $option-group-selected-color: $selected-bg-color;
   }
 
   .option-wrapper {
-    padding-left: 25px;
+    padding-left: $space-xlarge;
   }
 }
 

@@ -15,10 +15,10 @@ import { ComponentHandlerDirective } from './component-handler.directive';
   template: ``
 })
 export class TestComponent {
-  @ViewChild('testElement')
+  @ViewChild('testElement', { static: false })
   public testElement: ElementRef;
 
-  @ViewChild(ComponentHandlerDirective)
+  @ViewChild(ComponentHandlerDirective, { static: false })
   public directive: ComponentHandlerDirective;
 }
 

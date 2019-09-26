@@ -1,15 +1,16 @@
+import { JsonProperty } from '@peerlancers/json-serialization';
 import { StatusCode } from '../enumerations/status-code.enum';
 
 export class McsValidation {
-  public referenceId: string;
-  public field: string;
-  public code: StatusCode;
-  public message: string;
+  @JsonProperty()
+  public referenceId: string = undefined;
 
-  constructor() {
-    this.referenceId = undefined;
-    this.field = undefined;
-    this.code = undefined;
-    this.message = undefined;
-  }
+  @JsonProperty()
+  public field: string = undefined;
+
+  @JsonProperty()
+  public code: StatusCode = undefined;
+
+  @JsonProperty()
+  public message: string = undefined;
 }

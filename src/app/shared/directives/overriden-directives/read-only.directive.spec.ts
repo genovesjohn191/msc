@@ -15,10 +15,10 @@ import { ReadOnlyDirective } from './read-only.directive';
   template: ``
 })
 export class TestComponent {
-  @ViewChild('testElement')
+  @ViewChild('testElement', { static: false })
   public testElement: ElementRef;
 
-  @ViewChild(ReadOnlyDirective)
+  @ViewChild(ReadOnlyDirective, { static: false })
   public directive: ReadOnlyDirective;
 }
 

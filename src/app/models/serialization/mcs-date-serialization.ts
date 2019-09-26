@@ -1,16 +1,16 @@
 import {
-  Serializer,
-  Deserializer
-} from 'json-object-mapper';
+  IJsonSerializer,
+  IJsonDeserializer
+} from '@peerlancers/json-serialization';
 import { isNullOrEmpty } from '@app/utilities';
 
-export class McsDateSerialization implements Serializer, Deserializer {
+export class McsDateSerialization implements IJsonSerializer, IJsonDeserializer {
 
   /**
    * Serialize the enumeration based on type provided on the enum type
    */
   public serialize(value: Date): string {
-    return isNullOrEmpty(value) ? '' : '"' + value.toISOString() + '"';
+    return isNullOrEmpty(value) ? '' : value.toISOString();
   }
 
   /**

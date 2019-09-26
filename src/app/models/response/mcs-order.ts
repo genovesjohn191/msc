@@ -1,4 +1,4 @@
-import { JsonProperty } from 'json-object-mapper';
+import { JsonProperty } from '@peerlancers/json-serialization';
 import { isNullOrEmpty } from '@app/utilities';
 import {
   OrderStatus,
@@ -23,83 +23,71 @@ import { McsOrderError } from './mcs-order-error';
 import { McsDateSerialization } from '../serialization/mcs-date-serialization';
 
 export class McsOrder extends McsEntityBase {
-  public orderId: string;
-  public description: string;
-  public companyId: string;
-  public contractDurationMonths: number;
-  public createdBy: string;
-  public itemCount: number;
-  public errorCount: number;
+  @JsonProperty()
+  public orderId: string = undefined;
+
+  @JsonProperty()
+  public description: string = undefined;
+
+  @JsonProperty()
+  public companyId: string = undefined;
+
+  @JsonProperty()
+  public contractDurationMonths: number = undefined;
+
+  @JsonProperty()
+  public createdBy: string = undefined;
+
+  @JsonProperty()
+  public itemCount: number = undefined;
+
+  @JsonProperty()
+  public errorCount: number = undefined;
 
   @JsonProperty({
-    type: WorkflowStatus,
     serializer: WorkflowStatusSerialization,
     deserializer: WorkflowStatusSerialization
   })
-  public workflowState: WorkflowStatus;
+  public workflowState: WorkflowStatus = undefined;
 
   @JsonProperty({
-    type: OrderStatus,
     serializer: OrderStatusSerialization,
     deserializer: OrderStatusSerialization
   })
-  public status: OrderStatus;
+  public status: OrderStatus = undefined;
 
   @JsonProperty({
-    type: OrderOrigin,
     serializer: OrderOriginSerialization,
     deserializer: OrderOriginSerialization
   })
-  public origin: OrderOrigin;
+  public origin: OrderOrigin = undefined;
 
   @JsonProperty({
-    type: Date,
     serializer: McsDateSerialization,
     deserializer: McsDateSerialization
   })
-  public createdOn: Date;
+  public createdOn: Date = undefined;
 
-  public modifiedBy: string;
+  @JsonProperty()
+  public modifiedBy: string = undefined;
 
   @JsonProperty({
-    type: Date,
     serializer: McsDateSerialization,
     deserializer: McsDateSerialization
   })
   public modifiedOn: Date;
 
-  @JsonProperty({ type: McsOrderCharge })
-  public charges: McsOrderCharge;
+  @JsonProperty({ target: McsOrderCharge })
+  public charges: McsOrderCharge = undefined;
 
-  @JsonProperty({ type: McsOrderItem })
-  public items: McsOrderItem[];
+  @JsonProperty({ target: McsOrderItem })
+  public items: McsOrderItem[] = undefined;
 
-  @JsonProperty({ type: McsOrderError })
-  public errors: McsOrderError[];
+  @JsonProperty({ target: McsOrderError })
+  public errors: McsOrderError[] = undefined;
 
-  @JsonProperty({ type: McsJob })
-  public jobs: McsJob[];
-
-  constructor() {
-    super();
-    this.orderId = undefined;
-    this.description = undefined;
-    this.companyId = undefined;
-    this.contractDurationMonths = undefined;
-    this.status = undefined;
-    this.createdBy = undefined;
-    this.createdOn = undefined;
-    this.modifiedBy = undefined;
-    this.modifiedOn = undefined;
-    this.origin = undefined;
-    this.itemCount = undefined;
-    this.errorCount = undefined;
-    this.workflowState = undefined;
-    this.charges = undefined;
-    this.items = undefined;
-    this.errors = undefined;
-    this.jobs = undefined;
-  }
+  @JsonProperty({ target: McsJob })
+  public jobs: McsJob[] = undefined;
 
   /**
    * Returns the progress description of the order

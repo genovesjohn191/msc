@@ -2,49 +2,58 @@ import {
   Component,
   OnInit,
   OnDestroy,
-  ViewChild,
-  AfterViewInit,
   ChangeDetectorRef,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  Injector
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import {
+  ActivatedRoute,
+  ParamMap
+} from '@angular/router';
 import {
   Subject,
-  throwError,
   Observable,
+  of,
   Subscription
 } from 'rxjs';
 import {
-  startWith,
   takeUntil,
-  catchError,
   tap,
-  shareReplay
+  shareReplay,
+  map
 } from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
+
 import {
-  McsRoutingTabBase,
-  McsDataStatusFactory,
-  McsNavigationService
+  McsNavigationService,
+  McsListViewListingBase
 } from '@app/core';
 import {
   isNullOrEmpty,
-  unsubscribeSafely
+  unsubscribeSafely,
+  getSafeProperty,
+  compareStrings
 } from '@app/utilities';
-import { Search } from '@app/shared';
 import {
   McsResource,
   RouteKey,
   McsServer,
-  McsServerPlatform
+  McsServerPlatform,
+  McsQueryParam,
+  McsApiCollection,
+  McsRouteInfo
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { McsEvent } from '@app/events';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
-import { ServersListSource } from '../servers.listsource';
 import { VdcService } from './vdc.service';
 
 // Add another group type in here if you have addition tab
 type tabGroupType = 'overview';
+
+interface McsVdcGroup {
+  group: McsServerPlatform;
+  servers: McsServer[];
+}
 
 @Component({
   selector: 'mcs-vdc',
@@ -54,146 +63,140 @@ type tabGroupType = 'overview';
     'class': 'block'
   }
 })
-export class VdcComponent
-  extends McsRoutingTabBase<tabGroupType>
-  implements OnInit, AfterViewInit, OnDestroy {
-
-  @ViewChild('search')
-  public search: Search;
-
-  public serverListSource: ServersListSource | null;
-  public listStatusFactory: McsDataStatusFactory<Map<string, McsServer[]>>;
-
+export class VdcComponent extends McsListViewListingBase<McsVdcGroup> implements OnInit, OnDestroy {
   public selectedResource$: Observable<McsResource>;
-  public selectedPlatform$: Observable<McsServerPlatform>;
-  public serversMap$: Observable<Map<string, McsServer[]>>;
+  public selectedTabId$: Observable<string>;
 
-  public get routeKeyEnum(): any {
-    return RouteKey;
-  }
-
-  private _serversDataChangeHandler: Subscription;
   private _destroySubject = new Subject<void>();
-  private _resourcesKeyMap: Map<string, McsServerPlatform>;
+  private _routerHandler: Subscription;
 
   constructor(
-    _eventDispatcher: EventBusDispatcherService,
-    _activatedRoute: ActivatedRoute,
+    _injector: Injector,
+    _changeDetectorRef: ChangeDetectorRef,
+    _translate: TranslateService,
+    private _activatedRoute: ActivatedRoute,
     private _navigationService: McsNavigationService,
-    private _changeDetectorRef: ChangeDetectorRef,
     private _apiService: McsApiService,
     private _vdcService: VdcService
   ) {
-    super(_eventDispatcher, _activatedRoute);
-    this.listStatusFactory = new McsDataStatusFactory();
-    this._resourcesKeyMap = new Map();
+    super(_injector, _changeDetectorRef, {
+      dataChangeEvent: McsEvent.dataChangeServers,
+      panelSettings: {
+        inProgressText: _translate.instant('servers.loading'),
+        emptyText: _translate.instant('servers.noServers'),
+        errorText: _translate.instant('servers.errorMessage')
+      }
+    });
     this._registerEvents();
   }
 
   public ngOnInit() {
-    super.onInit();
-  }
-
-  public ngAfterViewInit() {
-    Promise.resolve().then(() => {
-      this.search.searchChangedStream.pipe(startWith(null), takeUntil(this._destroySubject))
-        .subscribe(() => this.listStatusFactory.setInProgress());
-      this._initializeListsource();
-    });
+    this._subscribeToParamChange();
+    this._subscribeToVdcResolve();
+    this.listViewDatasource.registerSortPredicate(this._sortVdcGroupPredicate.bind(this));
   }
 
   public ngOnDestroy() {
-    super.onDestroy();
-    unsubscribeSafely(this._serversDataChangeHandler);
+    super.dispose();
     unsubscribeSafely(this._destroySubject);
+    unsubscribeSafely(this._routerHandler);
   }
 
-  /**
-   * Event that emits when VDC name is selected
-   */
-  public onSelectVdcByName(event: MouseEvent, resource: McsServerPlatform): void {
-    if (!isNullOrEmpty(event)) { event.stopPropagation(); }
-    if (isNullOrEmpty(resource.resourceId)) { return; }
-
-    this._changeDetectorRef.markForCheck();
-    this._navigationService.navigateTo(RouteKey.VdcDetails, [resource.resourceId]);
+  public get routeKeyEnum(): any {
+    return RouteKey;
   }
 
   /**
    * Event that emits when the tab is changed in the routing tabgroup
    * @param tab Active tab
    */
-  protected onTabChanged(tab: any) {
-    this._navigationService.navigateTo(RouteKey.VdcDetails, [this.paramId, tab.id]);
-  }
-
-  /**
-   * Event that emits when the parameter id is changed
-   * @param id Id of the parameter
-   */
-  protected onParamIdChanged(id: string): void {
-    if (isNullOrEmpty(id)) { return; }
-    this._subscribesToResourceById(id);
-  }
-
-  /**
-   * Initialize list source
-   */
-  private _initializeListsource(): void {
-    this.serverListSource = new ServersListSource(
-      this._apiService,
-      this.search
+  public onTabChanged(tab: any): void {
+    this._navigationService.navigateTo(
+      RouteKey.VdcDetails,
+      [this._vdcService.getResourceId(), tab.id as tabGroupType]
     );
+  }
 
-    // Key function pointer for mapping objects
-    let keyFn = (item: McsServer) => {
-      let resourceName = isNullOrEmpty(item.platform) ? 'others' : item.platform.resourceName;
-      let resource: McsServerPlatform = this._resourcesKeyMap.get(resourceName);
-      if (isNullOrEmpty(resource)) {
-        let resourceInstance = new McsServerPlatform();
-        resourceInstance.resourceName = 'Others';
-        resource = !isNullOrEmpty(item.platform.resourceName) ? item.platform : resourceInstance;
-      }
-      this._resourcesKeyMap.set(resourceName, resource);
-      return resource;
-    };
 
-    // Listen to all records changed
-    this.serversMap$ = this.serverListSource.findAllRecordsMapStream(keyFn).pipe(
-      catchError((error) => {
-        this.listStatusFactory.setError();
-        return throwError(error);
-      }),
-      tap((response) => {
-        this.search.showLoading(false);
-        this.listStatusFactory.setSuccessful(response);
+  /**
+   * Gets the entity listing from API
+   */
+  protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsVdcGroup>> {
+    return this._apiService.getServers(query).pipe(
+      map((servers) => {
+        let vdcGroups = new Array<McsVdcGroup>();
+        servers.collection.forEach((server) => {
+          let platform = getSafeProperty(server, (obj) => obj.platform);
+          let noPlatform = isNullOrEmpty(platform) || isNullOrEmpty(platform.resourceName);
+          if (noPlatform) {
+            platform = new McsServerPlatform();
+            platform.resourceId = null;
+            platform.resourceName = 'Others';
+          }
+
+          let groupFound = vdcGroups.find(
+            (serverGroup) => serverGroup.group.resourceName === platform.resourceName
+          );
+          if (!isNullOrEmpty(groupFound)) {
+            groupFound.servers.push(server);
+            return;
+          }
+          vdcGroups.push({
+            group: platform,
+            servers: [server]
+          });
+        });
+
+        let serverGroupsCollection = new McsApiCollection<McsVdcGroup>();
+        serverGroupsCollection.collection = vdcGroups;
+        serverGroupsCollection.totalCollectionCount = vdcGroups.length;
+        return serverGroupsCollection;
       })
     );
   }
 
   /**
-   * This will set the active vdc when data was obtained from repository
-   * @param vdcId VDC identification
+   * Subcribes to parameter change
    */
-  private _subscribesToResourceById(vdcId: string): void {
-    this.selectedResource$ = this._apiService.getResource(vdcId).pipe(
-      tap((response) => { this._vdcService.setSelectedVdc(response); }),
+  private _subscribeToParamChange(): void {
+    this._activatedRoute.paramMap.pipe(
+      takeUntil(this._destroySubject),
+      tap((params: ParamMap) => {
+        let resourceId = params.get('id');
+        if (isNullOrEmpty(resourceId)) { return; }
+        this._vdcService.setResourceId(resourceId);
+      })
+    ).subscribe();
+  }
+
+  /**
+   * Subcribes to VDC resolve
+   */
+  private _subscribeToVdcResolve(): void {
+    this.selectedResource$ = this._activatedRoute.data.pipe(
+      map((resolver) => getSafeProperty(resolver, (obj) => obj.vdc)),
+      tap((vdc) => {
+        if (isNullOrEmpty(vdc)) { return; }
+        this._vdcService.setSelectedVdc(vdc);
+      }),
       shareReplay(1)
     );
   }
 
   /**
-   * Registers the data events
+   * Sorting predicate for group
    */
-  private _registerEvents(): void {
-    this._serversDataChangeHandler = this.eventDispatcher.addEventListener(
-      McsEvent.dataChangeServers, this._onServersDataChanged.bind(this));
+  private _sortVdcGroupPredicate(first: McsVdcGroup, second: McsVdcGroup): number {
+    return compareStrings(first.group.resourceName, second.group.resourceName);
   }
 
   /**
-   * Event that emits when the server data has been changed
+   * Register Event dispatchers
    */
-  private _onServersDataChanged(): void {
-    this._changeDetectorRef.markForCheck();
+  private _registerEvents(): void {
+    this._routerHandler = this.eventDispatcher.addEventListener(
+      McsEvent.routeChange, (routeInfo: McsRouteInfo) =>
+      this.selectedTabId$ = of(routeInfo && routeInfo.routePath)
+    );
   }
 }

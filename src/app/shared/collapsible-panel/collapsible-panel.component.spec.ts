@@ -16,7 +16,7 @@ import { CoreTestingModule } from '../../core/testing';
   template: ``
 })
 export class TestComponent {
-  @ViewChild(CollapsiblePanelComponent)
+  @ViewChild(CollapsiblePanelComponent, { static: false })
   public collapsiblePanelComponent: CollapsiblePanelComponent;
 }
 

@@ -1,9 +1,10 @@
 <!-- Add header or template header -->
-<ng-container *ngIf="headerTemplate">
-  <ng-container *ngTemplateOutlet="headerTemplate.templateRef"></ng-container>
+<ng-container *ngIf="hasCustomHeader; else labelTemplate">
+  <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
 </ng-container>
-<ng-container *ngIf="!headerTemplate">
+
+<ng-template #labelTemplate>
   <span read-only *ngIf="header">{{ header }}</span>
-</ng-container>
+</ng-template>
 
 <ng-content></ng-content>

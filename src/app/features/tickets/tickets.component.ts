@@ -69,7 +69,7 @@ export class TicketsComponent extends McsTableListingBase<McsTicket> {
   /**
    * Returns the column settings key for the filter selector
    */
-  protected get columnSettingsKey(): string {
+  public get columnSettingsKey(): string {
     return CommonDefinition.FILTERSELECTOR_TICKET_LISTING;
   }
 

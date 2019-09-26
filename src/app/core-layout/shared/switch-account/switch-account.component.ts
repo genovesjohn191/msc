@@ -69,7 +69,7 @@ export class SwitchAccountComponent extends McsTableListingBase<McsCompany> {
 
   // Icons
   public get chevronTopIconKey(): string {
-    return CommonDefinition.ASSETS_FONT_CHEVRON_UP;
+    return CommonDefinition.ASSETS_SVG_CHEVRON_UP;
   }
 
   public get arrowUpBueIconKey(): string {
@@ -137,7 +137,7 @@ export class SwitchAccountComponent extends McsTableListingBase<McsCompany> {
   /**
    * Returns the column settings key for the filter selector
    */
-  protected get columnSettingsKey(): string {
+  public get columnSettingsKey(): string {
     return null;
   }
 

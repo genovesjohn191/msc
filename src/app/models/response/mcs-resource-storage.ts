@@ -1,22 +1,24 @@
+import { JsonProperty } from '@peerlancers/json-serialization';
 import { McsEntityBase } from '../common/mcs-entity.base';
 
 export class McsResourceStorage extends McsEntityBase {
-  public name: string;
-  public iops: number;
-  public enabled: boolean;
-  public limitMB: number;
-  public usedMB: number;
-  public availableMB: number;
+  @JsonProperty()
+  public name: string = undefined;
 
-  constructor() {
-    super();
-    this.name = undefined;
-    this.iops = undefined;
-    this.enabled = undefined;
-    this.limitMB = undefined;
-    this.usedMB = undefined;
-    this.availableMB = undefined;
-  }
+  @JsonProperty()
+  public iops: number = undefined;
+
+  @JsonProperty()
+  public enabled: boolean = undefined;
+
+  @JsonProperty()
+  public limitMB: number = undefined;
+
+  @JsonProperty()
+  public usedMB: number = undefined;
+
+  @JsonProperty()
+  public availableMB: number = undefined;
 
   /**
    * Returns storage toggle label

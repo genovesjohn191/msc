@@ -36,8 +36,8 @@
         <span display-block text-center>
           {{ 'serverShared.manageScale.sliderCurrentRamCpu' | translate:
             {
-              ram_value: (currentServerMemoryGB | mcsDataSize: 'GB'),
-              cpu_value : (currentServerCpu | number)
+              ram_value: (serverMemoryUsedGB | mcsDataSize: 'GB'),
+              cpu_value : (serverCpuUsed | number)
             }
           }}
         </span>

@@ -21,7 +21,6 @@ export class TestComponent {
 describe('StateChangeNotificationsComponent', () => {
 
   /** Stub Services/Components */
-  let fixture: any;
   let component: StateChangeNotificationsComponent;
 
   beforeEach(async(() => {
@@ -57,10 +56,11 @@ describe('StateChangeNotificationsComponent', () => {
 
     /** Tesbed Component Compilation and Creation */
     TestBed.compileComponents().then(() => {
-      fixture = TestBed.createComponent(StateChangeNotificationsComponent);
+      let fixture = TestBed.createComponent(StateChangeNotificationsComponent);
       fixture.detectChanges();
 
       component = fixture.componentInstance;
+      component.ngOnInit();
     });
   }));
 
@@ -69,8 +69,7 @@ describe('StateChangeNotificationsComponent', () => {
     it('should position the notification wrapper to bottom left(initially) by default', () => {
       component.placement = 'left';
       expect(component.stateChangeNotificationsElement.nativeElement.style.left).toContain('px');
-      expect(component.stateChangeNotificationsElement.nativeElement.style.right)
-        .not.toContain('px');
+      expect(component.stateChangeNotificationsElement.nativeElement.style.right).not.toContain('px');
     });
   });
 
@@ -79,8 +78,7 @@ describe('StateChangeNotificationsComponent', () => {
       component.placement = 'left';
       component.setPlacement();
       expect(component.stateChangeNotificationsElement.nativeElement.style.left).toContain('px');
-      expect(component.stateChangeNotificationsElement.nativeElement.style.right)
-        .not.toContain('px');
+      expect(component.stateChangeNotificationsElement.nativeElement.style.right).not.toContain('px');
     });
 
     it('should position the notification wrapper to bottom right', () => {

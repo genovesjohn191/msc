@@ -18,10 +18,10 @@ import { SetFocusDirective } from './set-focus.directive';
   template: ``
 })
 export class TestComponent {
-  @ViewChild('testElement')
+  @ViewChild('testElement', { static: false })
   public testElement: ElementRef;
 
-  @ViewChild(SetFocusDirective)
+  @ViewChild(SetFocusDirective, { static: false })
   public directive: SetFocusDirective;
 }
 

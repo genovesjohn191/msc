@@ -15,10 +15,10 @@ import { TextPlaceholderPipe } from './text-placeholder.pipe';
   template: ``
 })
 export class TestComponent {
-  @ViewChild('testElement')
+  @ViewChild('testElement', { static: false })
   public testElement: ElementRef;
 
-  @ViewChild(TextPlaceholderPipe)
+  @ViewChild(TextPlaceholderPipe, { static: false })
   public pipe: TextPlaceholderPipe;
 
   public testString = '{{name}} Test.';

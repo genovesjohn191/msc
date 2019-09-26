@@ -1,14 +1,10 @@
+import { JsonProperty } from '@peerlancers/json-serialization';
 import { McsServerOperatingSystem } from './mcs-server-operating-system';
-import { JsonProperty } from 'json-object-mapper';
 
 export class McsServerGroupedOs {
-  public platform: string;
+  @JsonProperty()
+  public platform: string = undefined;
 
-  @JsonProperty({ type: McsServerOperatingSystem })
-  public os: McsServerOperatingSystem[];
-
-  constructor() {
-    this.platform = undefined;
-    this.os = undefined;
-  }
+  @JsonProperty({ target: McsServerOperatingSystem })
+  public os: McsServerOperatingSystem[] = undefined;
 }

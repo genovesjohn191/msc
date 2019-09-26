@@ -126,19 +126,22 @@
         <ng-container mcsColumnDef="select" *mcsAccessControl="['DedicatedVmPowerStateEdit','CloudVmPowerStateEdit']">
           <mcs-header-cell *mcsHeaderCellDef
             hidden-small text-center class="action-header-cell">
-            <mcs-checkbox (change)="toggleAllServersSelection()"
-              color="white"
+            <mcs-checkbox (statusChange)="toggleAllServersSelection()"
+              color="light"
               [checked]="allServersAreSelected()"
               [indeterminate]="selection?.someItemsAreSelected()">
             </mcs-checkbox>
           </mcs-header-cell>
+
           <mcs-data-cell *mcsDataCellDef="let row"
             hidden-small text-center class="action-data-cell"
             [disabled]="row.isProcessing"
             mcsCursor="default"
             mcsStopPropagation>
-            <mcs-checkbox [checked]="selection?.isItemSelected(row)"
-              (change)="selection?.toggleItemSelection(row)">
+            <mcs-checkbox
+              color="dark"
+              [checked]="selection?.isItemSelected(row)"
+              (statusChange)="selection?.toggleItemSelection(row)">
             </mcs-checkbox>
           </mcs-data-cell>
         </ng-container>

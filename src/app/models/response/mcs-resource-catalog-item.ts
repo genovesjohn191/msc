@@ -1,4 +1,4 @@
-import { JsonProperty } from 'json-object-mapper';
+import { JsonProperty } from '@peerlancers/json-serialization';
 import { McsEntityBase } from '../common/mcs-entity.base';
 import {
   ServiceType,
@@ -10,17 +10,16 @@ import {
 } from '../enumerations/catalog-item-type.enum';
 
 export class McsResourceCatalogItem extends McsEntityBase {
+  @JsonProperty()
   public name: string = undefined;
 
   @JsonProperty({
-    type: CatalogItemType,
     serializer: CatalogItemTypeSerialization,
     deserializer: CatalogItemTypeSerialization
   })
   public type: CatalogItemType = undefined;
 
   @JsonProperty({
-    type: ServiceType,
     serializer: ServiceTypeSerialization,
     deserializer: ServiceTypeSerialization
   })

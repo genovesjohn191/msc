@@ -1,8 +1,7 @@
 @import "../../../styles/shared/base";
 
-$checkbox-icon-size: 13px;
 $checkbox-label-spacer: 8px;
-$checkbox-icon-ripple-size: 15px;
+$checkbox-icon-ripple-size: 13px;
 
 .checkbox-wrapper {
   @include display-inline-flex(row);
@@ -28,19 +27,23 @@ $checkbox-icon-ripple-size: 15px;
   .checkbox-inner-container {
     @include display-flex(row);
     @include align-items(center);
-    width: $checkbox-icon-size;
-    height: $checkbox-icon-size;
 
-    // Override ripple radius effect
-    .checkbox-ripple-wrapper {
-      position: absolute;
-      left: -$checkbox-icon-ripple-size;
-      top: -$checkbox-icon-ripple-size;
-      right: -$checkbox-icon-ripple-size;
-      bottom: -$checkbox-icon-ripple-size;
-      @include border-radius(50%);
-      z-index: 1;
-      pointer-events: none;
+    .checkbox-icon {
+      @include display-flex(row);
+      @include align-items(center);
+      justify-content: center;
+
+      // Override ripple radius effect
+      .checkbox-ripple-wrapper {
+        position: absolute;
+        left: -$checkbox-icon-ripple-size;
+        top: -$checkbox-icon-ripple-size;
+        right: -$checkbox-icon-ripple-size;
+        bottom: -$checkbox-icon-ripple-size;
+        @include border-radius(50%);
+        z-index: 1;
+        pointer-events: none;
+      }
     }
   }
 }

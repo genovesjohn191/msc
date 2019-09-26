@@ -1,9 +1,9 @@
-export class McsServerCreateStorage {
-  public name: string;
-  public sizeMB: number;
+import { JsonProperty } from '@peerlancers/json-serialization';
 
-  constructor() {
-    this.name = '';
-    this.sizeMB = 0;
-  }
+export class McsServerCreateStorage {
+  @JsonProperty()
+  public name: string = undefined;
+
+  @JsonProperty()
+  public sizeMB: number = undefined;
 }

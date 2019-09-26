@@ -2,6 +2,7 @@ import {
   Input,
   Directive,
   OnInit,
+  AfterContentInit,
   OnDestroy,
   ElementRef,
   ViewContainerRef,
@@ -40,34 +41,21 @@ const TOUCHEND_HIDE_DELAY = 1500;
   exportAs: 'mcsTooltip'
 })
 
-export class TooltipDirective implements OnInit, OnDestroy {
+export class TooltipDirective implements OnInit, AfterContentInit, OnDestroy {
 
   /**
    * Tooltip message to be displayed
    */
   @Input('mcsTooltip')
-  public get message(): string {
-    return this._message;
-  }
-  public set message(value: string) {
-    if (this._message !== value) {
-      this._message = value;
-      this._setTooltipMessage(value);
-    }
-  }
-  private _message: string;
+  public message: string;
 
   /**
    * Condition when to display tool tip
    */
   @Input('mcsTooltipShow')
-  public get visible(): boolean {
-    return this._visible;
-  }
+  public get visible(): boolean { return this._visible; }
   public set visible(value: boolean) {
-    if (this._visible !== value) {
-      this._visible = coerceBoolean(value);
-    }
+    if (this._visible !== value) { this._visible = coerceBoolean(value); }
   }
   private _visible: boolean = true;
 
@@ -75,9 +63,7 @@ export class TooltipDirective implements OnInit, OnDestroy {
    * Tool tip position that determines the position of the tooltip
    */
   @Input('mcsTooltipPosition')
-  public get position(): TooltipPosition {
-    return this._position;
-  }
+  public get position(): TooltipPosition { return this._position; }
   public set position(value: TooltipPosition) {
     if (this._position !== value) {
       this._position = value;
@@ -92,14 +78,9 @@ export class TooltipDirective implements OnInit, OnDestroy {
    * Tool tip color to be displayed
    */
   @Input('mcsTooltipColor')
-  public get color(): TooltipColor {
-    return this._color;
-  }
+  public get color(): TooltipColor { return this._color; }
   public set color(value: TooltipColor) {
-    if (this._color !== value) {
-      this._color = value;
-      this._setTooltipColor(value);
-    }
+    if (this._color !== value) { this._color = value; }
   }
   private _color: TooltipColor = 'dark';
 
@@ -124,6 +105,11 @@ export class TooltipDirective implements OnInit, OnDestroy {
     this._moveTooltipToHost();
   }
 
+  public ngAfterContentInit(): void {
+    this._setTooltipMessage(this.message);
+    this._setTooltipColor(this.color);
+  }
+
   public ngOnDestroy(): void {
     this._unregisterEvents();
     unsubscribeSafely(this._destroySubject);
@@ -140,9 +126,10 @@ export class TooltipDirective implements OnInit, OnDestroy {
     if (isNullOrEmpty(this._tooltipInstance)) {
       this._createTooltip();
     }
-    this._setTooltipMessage(this._message);
+
+    this._setTooltipMessage(this.message);
     this._setTooltipColor(this.color);
-    this._tooltipInstance!.show(this.position);
+    this._tooltipInstance.show(this.position);
   }
 
   /**
@@ -169,9 +156,9 @@ export class TooltipDirective implements OnInit, OnDestroy {
    * @param color Color of the tooltip to be displayed
    */
   private _setTooltipColor(color: TooltipColor = 'dark'): void {
-    if (isNullOrEmpty(this._tooltipInstance) ||
-      isNullOrEmpty(this._tooltipInstance.tooltipPanel)) { return; }
-    this._tooltipInstance.tooltipPanel.nativeElement.classList.add(color.toString());
+    if (isNullOrEmpty(this._tooltipInstance)) { return; }
+    // this._tooltipInstance.tooltipPanel.nativeElement.classList.add(color.toString());
+    this._tooltipInstance.color = color;
     this._tooltipInstance.markForCheck();
   }
 
@@ -184,7 +171,7 @@ export class TooltipDirective implements OnInit, OnDestroy {
     this._tooltipInstance = this._overlayRef.attachComponent(portal).instance;
 
     // Close the tooltip when the animation ended
-    this._tooltipInstance!.afterHidden().subscribe(() => {
+    this._tooltipInstance.afterHidden().subscribe(() => {
       if (!isNullOrEmpty(this._tooltipInstance)) {
         this._disposeTooltip();
       }

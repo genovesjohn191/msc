@@ -69,7 +69,7 @@ export class OrdersComponent extends McsTableListingBase<McsOrder> {
   /**
    * Returns the column settings key for the filter selector
    */
-  protected get columnSettingsKey(): string {
+  public get columnSettingsKey(): string {
     return CommonDefinition.FILTERSELECTOR_ORDER_LISTING;
   }
 

@@ -52,10 +52,10 @@ export class UserPanelComponent implements OnInit, OnDestroy {
   public hasConnectionError: boolean;
   public deviceType: Breakpoint;
 
-  @ViewChild('notificationsPopover')
+  @ViewChild('notificationsPopover', { static: false })
   public notificationsPopover: any;
 
-  @ViewChild('userPopover')
+  @ViewChild('userPopover', { static: false })
   public userPopover: any;
 
   @EventBusPropertyListenOn(McsEvent.userChange)
@@ -90,7 +90,7 @@ export class UserPanelComponent implements OnInit, OnDestroy {
   }
 
   public get bellIconKey(): string {
-    return CommonDefinition.ASSETS_FONT_BELL;
+    return CommonDefinition.ASSETS_SVG_NOTIFICATIONS;
   }
 
   public get userIconKey(): string {
@@ -98,7 +98,7 @@ export class UserPanelComponent implements OnInit, OnDestroy {
   }
 
   public get caretDownIconKey(): string {
-    return CommonDefinition.ASSETS_FONT_CHEVRON_DOWN;
+    return CommonDefinition.ASSETS_SVG_CHEVRON_DOWN;
   }
 
   public get logoutIconKey(): string {

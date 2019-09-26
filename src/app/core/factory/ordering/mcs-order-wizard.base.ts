@@ -36,7 +36,7 @@ export abstract class McsOrderWizardBase extends McsWizardBase implements McsDis
   public order$: Observable<McsOrder>;
   public orderItemType$: Observable<McsOrderItemType>;
 
-  @ViewChild('pricingCalculator')
+  @ViewChild('pricingCalculator', { static: false })
   public pricingCalculator: PricingCalculator;
 
   protected readonly translateService: TranslateService;

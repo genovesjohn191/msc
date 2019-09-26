@@ -1,28 +1,26 @@
-import { JsonProperty } from 'json-object-mapper';
+import { JsonProperty } from '@peerlancers/json-serialization';
 import { McsEntityBase } from '../common/mcs-entity.base';
 import { McsDateSerialization } from '../serialization/mcs-date-serialization';
 
 export class McsServerMedia extends McsEntityBase {
-  public name: string;
-  public resourceId: string;
-  public resourceName: string;
-  public catalogName: string;
-  public sizeMB: number;
+  @JsonProperty()
+  public name: string = undefined;
+
+  @JsonProperty()
+  public resourceId: string = undefined;
+
+  @JsonProperty()
+  public resourceName: string = undefined;
+
+  @JsonProperty()
+  public catalogName: string = undefined;
+
+  @JsonProperty()
+  public sizeMB: number = undefined;
 
   @JsonProperty({
-    type: Date,
     serializer: McsDateSerialization,
     deserializer: McsDateSerialization
   })
-  public createdOn: Date;
-
-  constructor() {
-    super();
-    this.name = undefined;
-    this.resourceId = undefined;
-    this.resourceName = undefined;
-    this.catalogName = undefined;
-    this.sizeMB = undefined;
-    this.createdOn = undefined;
-  }
+  public createdOn: Date = undefined;
 }

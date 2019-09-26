@@ -9,7 +9,6 @@ import { WizardComponent } from '../wizard.component';
   selector: 'button[mcsWizardStepPrevious], a[mcsWizardStepPrevious]',
   host: {
     'class': 'wizard-step-previous-button-wrapper',
-    '[type]': 'type',
     '(click)': 'previous()'
   }
 })

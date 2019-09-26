@@ -1,4 +1,3 @@
-import { CacheKey } from 'json-object-mapper';
 import { McsEnumSerializationBase } from '../serialization/mcs-enum-serialization-base';
 
 export enum DeviceType {
@@ -18,7 +17,6 @@ export const deviceTypeText = {
 /**
  * Enumeration serializer and deserializer methods
  */
-@CacheKey('DeviceTypeSerialization')
 export class DeviceTypeSerialization
   extends McsEnumSerializationBase<DeviceType> {
   constructor() { super(DeviceType); }

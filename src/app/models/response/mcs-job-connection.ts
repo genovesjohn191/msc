@@ -1,22 +1,19 @@
-import { JsonProperty } from 'json-object-mapper';
+import { JsonProperty } from '@peerlancers/json-serialization';
 import { McsDateSerialization } from '../serialization/mcs-date-serialization';
 
 export class McsJobConnection {
-  public host: string;
-  public destinationKey: string;
-  public destinationRoute: string;
+  @JsonProperty()
+  public host: string = undefined;
+
+  @JsonProperty()
+  public destinationKey: string = undefined;
+
+  @JsonProperty()
+  public destinationRoute: string = undefined;
 
   @JsonProperty({
-    type: Date,
     serializer: McsDateSerialization,
     deserializer: McsDateSerialization
   })
-  public expiry: Date;
-
-  constructor() {
-    this.host = undefined;
-    this.destinationKey = undefined;
-    this.destinationRoute = undefined;
-    this.expiry = undefined;
-  }
+  public expiry: Date = undefined;
 }

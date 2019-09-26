@@ -1,6 +1,6 @@
 import { isArray } from './mcs-array.function';
-import { ObjectMapper } from 'json-object-mapper';
 import { isNullOrEmpty } from './mcs-object.function';
+import { serialize, deserialize, IJsonObject } from '@peerlancers/json-serialization';
 
 const dateFormat = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/;
 
@@ -21,15 +21,13 @@ export function reviverParser(_key, value): any {
  * Serialize object to json using json-object-mapper
  * @param object Object that will be converted to json
  */
-export function serializeObjectToJson<T>(object: T): string {
-  let convertedJson: string;
-
-  // Check for null input parameter
+export function serializeObjectToJson<T>(object: T): IJsonObject {
+  let convertedJson: IJsonObject;
   if (!object) { return undefined; }
 
   try {
     // Try to convert JSON to Object
-    convertedJson = ObjectMapper.serialize(object) as string;
+    convertedJson = serialize(object);
   } catch (error) {
     convertedJson = undefined;
   }
@@ -41,21 +39,14 @@ export function serializeObjectToJson<T>(object: T): string {
  * @param classType Class type to get the instance from
  * @param json JSON content to be converted as type "T"
  */
-export function deserializeJsonToObject<T>(
-  classType: new () => any,
-  json: any): T {
-  let convertedObject: any;
-
-  // Check for null input parameter
+export function deserializeJsonToObject<T>(classType: new () => any, json: any): T {
+  let convertedObject: T;
   if (!json) { return undefined; }
 
   try {
-    if (isArray(json)) {
-      convertedObject = ObjectMapper.deserializeArray(classType, json) as T[];
-    } else {
-      convertedObject = ObjectMapper.deserialize(classType, json) as T;
-    }
-
+    (convertedObject as any) = !isArray(json) ?
+      deserialize<T>(classType, json) :
+      Array.from(json).map((item) => deserialize<T>(classType, item));
   } catch (error) {
     convertedObject = undefined;
   }

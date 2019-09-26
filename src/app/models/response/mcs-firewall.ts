@@ -1,4 +1,4 @@
-import { JsonProperty } from 'json-object-mapper';
+import { JsonProperty } from '@peerlancers/json-serialization';
 import {
   isNullOrEmpty,
   CommonDefinition
@@ -27,88 +27,92 @@ import { McsFirewallPolicy } from './mcs-firewall-policy';
 import { McsEntityBase } from '../common/mcs-entity.base';
 
 export class McsFirewall extends McsEntityBase {
-  public serviceId: string;
-  public availabilityZone: string;
-  public managementName: string;
-  public managementIpAddress: string;
-  public active: boolean;
-  public hardwareVendor: string;
-  public cpuCount: number;
-  public memoryMB: number;
-  public osType: string;
-  public osVendor: string;
-  public osRelease: string;
-  public osVersion: string;
-  public serialNumber: string;
-  public model: string;
-  public companyId: string;
-  public snmpVersion: string;
-  public haRole: string;
-  public haGroupName: string;
-  public url: string;
+  @JsonProperty()
+  public serviceId: string = undefined;
 
-  @JsonProperty({ type: McsFirewallPolicy })
+  @JsonProperty()
+  public availabilityZone: string = undefined;
+
+  @JsonProperty()
+  public managementName: string = undefined;
+
+  @JsonProperty()
+  public managementIpAddress: string = undefined;
+
+  @JsonProperty()
+  public active: boolean = undefined;
+
+  @JsonProperty()
+  public hardwareVendor: string = undefined;
+
+  @JsonProperty()
+  public cpuCount: number = undefined;
+
+  @JsonProperty()
+  public memoryMB: number = undefined;
+
+  @JsonProperty()
+  public osType: string = undefined;
+
+  @JsonProperty()
+  public osVendor: string = undefined;
+
+  @JsonProperty()
+  public osRelease: string = undefined;
+
+  @JsonProperty()
+  public osVersion: string = undefined;
+
+  @JsonProperty()
+  public serialNumber: string = undefined;
+
+  @JsonProperty()
+  public model: string = undefined;
+
+  @JsonProperty()
+  public companyId: string = undefined;
+
+  @JsonProperty()
+  public snmpVersion: string = undefined;
+
+  @JsonProperty()
+  public haRole: string = undefined;
+
+  @JsonProperty()
+  public haGroupName: string = undefined;
+
+  @JsonProperty()
+  public url: string = undefined;
+
+  @JsonProperty({ target: McsFirewallPolicy })
   public policies: McsFirewallPolicy[];
 
-  @JsonProperty({ type: McsFirewallUtm })
+  @JsonProperty({ target: McsFirewallUtm })
   public utm: McsFirewallUtm;
 
   @JsonProperty({
-    type: HaMode,
     serializer: HaModeSerialization,
     deserializer: HaModeSerialization
   })
   public haMode: HaMode;
 
   @JsonProperty({
-    type: DeviceStatus,
     serializer: DeviceStatusSerialization,
     deserializer: DeviceStatusSerialization
   })
   public deviceStatus: DeviceStatus;
 
   @JsonProperty({
-    type: ConfigurationStatus,
     serializer: ConfigurationStatusSerialization,
     deserializer: ConfigurationStatusSerialization
   })
   public configurationStatus: ConfigurationStatus;
 
   @JsonProperty({
-    type: ConnectionStatus,
     serializer: ConnectionStatusSerialization,
     deserializer: ConnectionStatusSerialization
   })
   public connectionStatus: ConnectionStatus;
-
-  constructor() {
-    super();
-    this.serviceId = undefined;
-    this.availabilityZone = undefined;
-    this.managementName = undefined;
-    this.managementIpAddress = undefined;
-    this.active = undefined;
-    this.hardwareVendor = undefined;
-    this.cpuCount = undefined;
-    this.memoryMB = undefined;
-    this.osType = undefined;
-    this.osVendor = undefined;
-    this.osRelease = undefined;
-    this.osVersion = undefined;
-    this.serialNumber = undefined;
-    this.model = undefined;
-    this.companyId = undefined;
-    this.snmpVersion = undefined;
-    this.haRole = undefined;
-    this.url = undefined;
-    this.policies = undefined;
-    this.utm = undefined;
-    this.deviceStatus = undefined;
-    this.configurationStatus = undefined;
-    this.connectionStatus = undefined;
-    this.haMode = undefined;
-    this.haGroupName = undefined;
-  }
 
   /**
    * Returns the cpu count label

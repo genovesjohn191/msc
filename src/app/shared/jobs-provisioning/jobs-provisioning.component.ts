@@ -48,7 +48,7 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
   public progressMax: number;
   public progressBarHidden: boolean;
 
-  @ContentChild(JobsProvisioningLoadingTextDirective)
+  @ContentChild(JobsProvisioningLoadingTextDirective, { static: false })
   public jobsProvisioningLoadingText: JobsProvisioningLoadingTextDirective;
 
   /**
@@ -121,7 +121,7 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
    * Returns the dot icon key
    */
   public get dotIconKey(): string {
-    return CommonDefinition.ASSETS_FONT_BULLET;
+    return CommonDefinition.ASSETS_SVG_BULLET;
   }
 
   /**

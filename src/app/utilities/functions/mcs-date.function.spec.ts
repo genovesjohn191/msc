@@ -22,7 +22,9 @@ describe('DATE Functions', () => {
     it(`should convert date timezone`, () => {
       let localDateTime = '2019-09-10T10:00:00';
 
-      let convertedDateTimezone = convertDateTimezoneToUTC(localDateTime,'Australia/Sydney', "yyyy-MM-dd'T'HH:mm:ss z");
+      let convertedDateTimezone = convertDateTimezoneToUTC(
+        localDateTime, 'Australia/Sydney', `yyyy-MM-dd'T'HH:mm:ss z`
+      );
       expect(convertedDateTimezone.toString()).toEqual('2019-09-10T00:00:00.000Z');
     });
   });
@@ -31,13 +33,13 @@ describe('DATE Functions', () => {
     it(`should return true when the format of the date is same as the given format`, () => {
       let localDateTime = '2019-09-10T10:00';
 
-      let validatedDateFormat = isDateFormatValid(localDateTime,'YYYY-MM-DDTHH:mm');
+      let validatedDateFormat = isDateFormatValid(localDateTime, 'YYYY-MM-DDTHH:mm');
       expect(validatedDateFormat).toEqual(true);
     });
     it(`should return false when the format of the date is not same as the given format`, () => {
       let localDateTime = 'Tue, 16 Jul 2019, 8:30 AM';
 
-      let validatedDateFormat = isDateFormatValid(localDateTime,'YYYY-MM-DDTHH:mm');
+      let validatedDateFormat = isDateFormatValid(localDateTime, 'YYYY-MM-DDTHH:mm');
       expect(validatedDateFormat).toEqual(false);
     });
   });

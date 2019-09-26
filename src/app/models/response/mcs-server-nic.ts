@@ -1,4 +1,4 @@
-import { JsonProperty } from 'json-object-mapper';
+import { JsonProperty } from '@peerlancers/json-serialization';
 import { isNullOrEmpty } from '@app/utilities';
 import {
   IpAllocationMode,
@@ -13,58 +13,65 @@ import {
 import { McsEntityBase } from '../common/mcs-entity.base';
 
 export class McsServerNic extends McsEntityBase {
-  public vCloudNicId: string;
-  public name: string;
-  public ipAddresses: string[];
-  public vCloudIpAddress: string;
-  public index: number;
-  public isPrimary: boolean;
-  public adminStatus: string;
-  public operStatus: string;
-  public maxSpeed: string;
-  public mtu: number;
-  public macAddress: string;
-  public isSubInterface: boolean;
-  public vlanId: number;
-  public portgroup: string;
-  public portgroupName: string;
-  public logicalNetworkName: string;
+  @JsonProperty()
+  public vCloudNicId: string = undefined;
+
+  @JsonProperty()
+  public name: string = undefined;
+
+  @JsonProperty()
+  public ipAddresses: string[] = undefined;
+
+  @JsonProperty()
+  public vCloudIpAddress: string = undefined;
+
+  @JsonProperty()
+  public index: number = undefined;
+
+  @JsonProperty()
+  public isPrimary: boolean = undefined;
+
+  @JsonProperty()
+  public adminStatus: string = undefined;
+
+  @JsonProperty()
+  public operStatus: string = undefined;
+
+  @JsonProperty()
+  public maxSpeed: string = undefined;
+
+  @JsonProperty()
+  public mtu: number = undefined;
+
+  @JsonProperty()
+  public macAddress: string = undefined;
+
+  @JsonProperty()
+  public isSubInterface: boolean = undefined;
+
+  @JsonProperty()
+  public vlanId: number = undefined;
+
+  @JsonProperty()
+  public portgroup: string = undefined;
+
+  @JsonProperty()
+  public portgroupName: string = undefined;
+
+  @JsonProperty()
+  public logicalNetworkName: string = undefined;
 
   @JsonProperty({
-    type: DeviceType,
     serializer: DeviceTypeSerialization,
     deserializer: DeviceTypeSerialization
   })
-  public deviceType: DeviceType;
+  public deviceType: DeviceType = undefined;
 
   @JsonProperty({
-    type: IpAllocationMode,
     serializer: IpAllocationModeSerialization,
     deserializer: IpAllocationModeSerialization
   })
-  public ipAllocationMode: IpAllocationMode;
-
-  constructor() {
-    super();
-    this.vCloudNicId = undefined;
-    this.name = undefined;
-    this.ipAddresses = undefined;
-    this.vCloudIpAddress = undefined;
-    this.adminStatus = undefined;
-    this.operStatus = undefined;
-    this.maxSpeed = undefined;
-    this.mtu = undefined;
-    this.macAddress = undefined;
-    this.isSubInterface = undefined;
-    this.vlanId = undefined;
-    this.portgroup = undefined;
-    this.portgroupName = undefined;
-    this.logicalNetworkName = undefined;
-    this.deviceType = undefined;
-    this.index = undefined;
-    this.isPrimary = undefined;
-    this.ipAllocationMode = undefined;
-  }
+  public ipAllocationMode: IpAllocationMode = undefined;
 
   /**
    * Returns the ip allocation mode label

@@ -50,7 +50,7 @@ import { TreeNodeComponent } from '../tree-node/tree-node.component';
 export class TreeNodeGroupComponent<T> implements AfterContentInit {
   public panelOpen: boolean;
 
-  @ContentChild(TreeNodeGroupLabelDirective)
+  @ContentChild(TreeNodeGroupLabelDirective, { static: false })
   public labelTemplate: TreeNodeGroupLabelDirective;
 
   @ContentChildren(TreeNodeComponent)
@@ -92,15 +92,17 @@ export class TreeNodeGroupComponent<T> implements AfterContentInit {
   ) { }
 
   public ngAfterContentInit() {
-    this._subscribeToTreeNodesChanges();
-    this._subscribeToTreeNodesSelection();
+    Promise.resolve().then(() => {
+      this._subscribeToTreeNodesChanges();
+      this._subscribeToTreeNodesSelection();
+    });
   }
 
   /**
    * Returns the caret icon key
    */
   public get caretRightIconKey(): string {
-    return CommonDefinition.ASSETS_FONT_CARET_RIGHT;
+    return CommonDefinition.ASSETS_SVG_CHEVRON_RIGHT;
   }
 
   /**

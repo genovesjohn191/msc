@@ -1,9 +1,9 @@
-export class McsTicketCreateAttachment {
-  public fileName: string;
-  public contents: string;
+import { JsonProperty } from '@peerlancers/json-serialization';
 
-  constructor() {
-    this.fileName = undefined;
-    this.contents = undefined;
-  }
+export class McsTicketCreateAttachment {
+  @JsonProperty()
+  public fileName: string = undefined;
+
+  @JsonProperty()
+  public contents: string = undefined;
 }

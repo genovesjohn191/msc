@@ -1,3 +1,4 @@
+import { JsonProperty } from '@peerlancers/json-serialization';
 import { isNullOrEmpty } from '@app/utilities';
 import {
   UnitType,
@@ -5,15 +6,14 @@ import {
 } from '../enumerations/unit-type.enum';
 
 export class McsServerCompute {
-  public cpuCount: number;
-  public coreCount: number;
-  public memoryMB: number;
+  @JsonProperty()
+  public cpuCount: number = undefined;
 
-  constructor() {
-    this.cpuCount = undefined;
-    this.coreCount = undefined;
-    this.memoryMB = undefined;
-  }
+  @JsonProperty()
+  public coreCount: number = undefined;
+
+  @JsonProperty()
+  public memoryMB: number = undefined;
 
   /**
    * Returns cpu count with its unit

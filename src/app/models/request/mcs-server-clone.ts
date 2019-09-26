@@ -1,4 +1,4 @@
-import { JsonIgnore } from 'json-object-mapper';
+import { JsonProperty } from '@peerlancers/json-serialization';
 import { McsApiJobRequestBase } from '../common/mcs-api-job-request-base';
 
 export interface IMcsServerCloneRefObj {
@@ -6,14 +6,7 @@ export interface IMcsServerCloneRefObj {
 }
 
 export class McsServerClone extends McsApiJobRequestBase<IMcsServerCloneRefObj> {
-  public name: string;
-
-  @JsonIgnore()
-  public serverId: string;
-
-  constructor() {
-    super();
-    this.name = undefined;
-    this.serverId = undefined;
-  }
+  @JsonProperty()
+  public name: string = undefined;
+  public serverId: string = undefined;
 }

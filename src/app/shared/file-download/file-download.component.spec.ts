@@ -16,7 +16,7 @@ import { CoreTestingModule } from '@app/core/testing';
   template: ``
 })
 export class TestComponent {
-  @ViewChild(FileDownloadComponent)
+  @ViewChild(FileDownloadComponent, { static: false })
   public fileDownloadComponent: FileDownloadComponent;
 
   public fileType(): string {

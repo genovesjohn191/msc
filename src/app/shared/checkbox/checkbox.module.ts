@@ -5,6 +5,7 @@ import { RippleModule } from '../ripple/ripple.module';
 import { DirectivesModule } from '../directives/directives.module';
 import { IconModule } from '../icon/icon.module';
 import { CheckboxComponent } from './checkbox.component';
+import { ButtonModule } from '../button/button.module';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { CheckboxComponent } from './checkbox.component';
     FormsModule,
     RippleModule,
     DirectivesModule,
-    IconModule
+    IconModule,
+    ButtonModule
   ],
   exports: [
     CheckboxComponent,
@@ -23,7 +25,8 @@ import { CheckboxComponent } from './checkbox.component';
     FormsModule,
     RippleModule,
     DirectivesModule,
-    IconModule
+    IconModule,
+    ButtonModule
   ]
 })
 

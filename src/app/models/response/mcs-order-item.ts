@@ -1,4 +1,4 @@
-import { JsonProperty } from 'json-object-mapper';
+import { JsonProperty } from '@peerlancers/json-serialization';
 import {
   OrderStatus,
   OrderStatusSerialization,
@@ -15,77 +15,76 @@ import { McsDateSerialization } from '../serialization/mcs-date-serialization';
 
 export class McsOrderItem extends McsEntityBase {
   @JsonProperty({
-    type: ProvisioningStatus,
     serializer: ProvisioningStatusSerialization,
     deserializer: ProvisioningStatusSerialization
   })
-  public itemProvisioningStatus: ProvisioningStatus;
-  public automatedProvisioningAvailable: boolean;
-  public referenceId: string;
-  public parentReferenceId: string;
-  public itemId: string;
-  public itemOrderType: string;
-  public parentServiceId: string;
-  public billingSite: string;
-  public costCentre: string;
+  public itemProvisioningStatus: ProvisioningStatus = undefined;
+
+  @JsonProperty()
+  public automatedProvisioningAvailable: boolean = undefined;
+
+  @JsonProperty()
+  public referenceId: string = undefined;
+
+  @JsonProperty()
+  public parentReferenceId: string = undefined;
+
+  @JsonProperty()
+  public itemId: string = undefined;
+
+  @JsonProperty()
+  public itemOrderType: string = undefined;
+
+  @JsonProperty()
+  public parentServiceId: string = undefined;
+
+  @JsonProperty()
+  public billingSite: string = undefined;
+
+  @JsonProperty()
+  public costCentre: string = undefined;
 
   @JsonProperty({
-    type: OrderStatus,
     serializer: OrderStatusSerialization,
     deserializer: OrderStatusSerialization
   })
-  public status: OrderStatus;
+  public status: OrderStatus = undefined;
 
-  public description: string;
-  public createdBy: string;
+  @JsonProperty()
+  public description: string = undefined;
+
+  @JsonProperty()
+  public createdBy: string = undefined;
 
   @JsonProperty({
-    type: Date,
     serializer: McsDateSerialization,
     deserializer: McsDateSerialization
   })
-  public createdOn: Date;
-  public modifiedBy: string;
+  public createdOn: Date = undefined;
+
+  @JsonProperty()
+  public modifiedBy: string = undefined;
 
   @JsonProperty({
-    type: Date,
     serializer: McsDateSerialization,
     deserializer: McsDateSerialization
   })
-  public modifiedOn: Date;
+  public modifiedOn: Date = undefined;
 
-  @JsonProperty({ type: McsOrderCharge })
-  public charges: McsOrderCharge;
+  @JsonProperty({ target: McsOrderCharge })
+  public charges: McsOrderCharge = undefined;
 
-  public properties: any;
-  public jobId: string;
-  public taskId: string;
-  public serviceId: string;
+  @JsonProperty()
+  public properties: any = undefined;
 
-  constructor() {
-    super();
-    this.automatedProvisioningAvailable = undefined;
-    this.charges = undefined;
-    this.createdBy = undefined;
-    this.createdOn = undefined;
-    this.description = undefined;
-    this.id = undefined;
-    this.itemOrderType = undefined;
-    this.itemProvisioningStatus = undefined;
-    this.jobId = undefined;
-    this.modifiedBy = undefined;
-    this.modifiedOn = undefined;
-    this.itemId = undefined;
-    this.parentReferenceId = undefined;
-    this.parentServiceId = undefined;
-    this.billingSite = undefined;
-    this.costCentre = undefined;
-    this.properties = undefined;
-    this.referenceId = undefined;
-    this.serviceId = undefined;
-    this.status = undefined;
-    this.taskId = undefined;
-  }
+  @JsonProperty()
+  public jobId: string = undefined;
+
+  @JsonProperty()
+  public taskId: string = undefined;
+
+  @JsonProperty()
+  public serviceId: string = undefined;
 
   /**
    * Returns the order status label

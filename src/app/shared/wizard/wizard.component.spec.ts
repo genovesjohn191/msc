@@ -15,7 +15,7 @@ import { CoreTestingModule } from '@app/core/testing';
   template: ``
 })
 export class TestWizardComponent {
-  @ViewChild(WizardComponent)
+  @ViewChild(WizardComponent, { static: false })
   public wizardComponent: WizardComponent;
 }
 

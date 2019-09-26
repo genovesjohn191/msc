@@ -1,4 +1,4 @@
-import { JsonProperty } from 'json-object-mapper';
+import { JsonProperty } from '@peerlancers/json-serialization';
 import { CommonDefinition } from '@app/utilities';
 import {
   JobStatus,
@@ -15,84 +15,77 @@ import { McsTask } from './mcs-task';
 import { McsDateSerialization } from '../serialization/mcs-date-serialization';
 
 export class McsJob extends McsEntityBase {
-  public initiatorId: string;
-  public initiatorFullName: string;
-  public initiatorCompanyId: string;
-  public initiatorCompanyName: string;
-  public description: string;
-  public summaryInformation: string;
-  public errorMessage: string;
-  public elapsedTimeInSeconds: number;
-  public clientReferenceObject: any;
-  public batchId: string;
-  public referenceId: string;
+  @JsonProperty()
+  public initiatorId: string = undefined;
 
-  @JsonProperty({ type: McsTask })
-  public tasks: McsTask[];
+  @JsonProperty()
+  public initiatorFullName: string = undefined;
+
+  @JsonProperty()
+  public initiatorCompanyId: string = undefined;
+
+  @JsonProperty()
+  public initiatorCompanyName: string = undefined;
+
+  @JsonProperty()
+  public description: string = undefined;
+
+  @JsonProperty()
+  public summaryInformation: string = undefined;
+
+  @JsonProperty()
+  public errorMessage: string = undefined;
+
+  @JsonProperty()
+  public elapsedTimeInSeconds: number = undefined;
+
+  @JsonProperty()
+  public clientReferenceObject: any = undefined;
+
+  @JsonProperty()
+  public batchId: string = undefined;
+
+  @JsonProperty()
+  public referenceId: string = undefined;
+
+  @JsonProperty({ target: McsTask })
+  public tasks: McsTask[] = undefined;
 
   @JsonProperty({
-    type: JobType,
     serializer: JobTypeSerialization,
     deserializer: JobTypeSerialization
   })
-  public type: JobType;
+  public type: JobType = undefined;
 
   @JsonProperty({
-    type: JobStatus,
     serializer: JobStatusSerialization,
     deserializer: JobStatusSerialization
   })
-  public status: JobStatus;
+  public status: JobStatus = undefined;
 
   @JsonProperty({
-    type: Date,
     serializer: McsDateSerialization,
     deserializer: McsDateSerialization
   })
-  public createdOn: Date;
+  public createdOn: Date = undefined;
 
   @JsonProperty({
-    type: Date,
     serializer: McsDateSerialization,
     deserializer: McsDateSerialization
   })
-  public updatedOn: Date;
+  public updatedOn: Date = undefined;
 
   @JsonProperty({
-    type: Date,
     serializer: McsDateSerialization,
     deserializer: McsDateSerialization
   })
-  public startedOn: Date;
+  public startedOn: Date = undefined;
 
   @JsonProperty({
-    type: Date,
     serializer: McsDateSerialization,
     deserializer: McsDateSerialization
   })
-  public endedOn: Date;
-
-  constructor() {
-    super();
-    this.type = undefined;
-    this.initiatorId = undefined;
-    this.initiatorFullName = undefined;
-    this.initiatorCompanyId = undefined;
-    this.initiatorCompanyName = undefined;
-    this.description = undefined;
-    this.summaryInformation = undefined;
-    this.errorMessage = undefined;
-    this.elapsedTimeInSeconds = undefined;
-    this.tasks = undefined;
-    this.clientReferenceObject = undefined;
-    this.batchId = undefined;
-    this.status = undefined;
-    this.createdOn = undefined;
-    this.updatedOn = undefined;
-    this.startedOn = undefined;
-    this.endedOn = undefined;
-    this.referenceId = undefined;
-  }
+  public endedOn: Date = undefined;
 
   /**
    * Returns the job data status if in progress,

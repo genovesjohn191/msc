@@ -1,4 +1,3 @@
-import { CacheKey } from 'json-object-mapper';
 import { McsEnumSerializationBase } from '../serialization/mcs-enum-serialization-base';
 
 export enum UnitType {
@@ -18,7 +17,6 @@ export const unitTypeText = {
 /**
  * Enumeration serializer and deserializer methods
  */
-@CacheKey('McsUnitTypeSerialization')
 export class McsUnitTypeSerialization
   extends McsEnumSerializationBase<UnitType> {
   constructor() { super(UnitType); }

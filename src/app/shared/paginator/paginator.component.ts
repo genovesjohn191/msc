@@ -84,7 +84,7 @@ export class PaginatorComponent implements Paginator, AfterViewInit, OnDestroy {
   }
   private _enableLoader: boolean;
 
-  @ViewChild('nextButton')
+  @ViewChild('nextButton', { static: false })
   private _nextButton: ElementRef;
 
   private _destroySubject = new Subject<void>();
@@ -114,7 +114,7 @@ export class PaginatorComponent implements Paginator, AfterViewInit, OnDestroy {
   }
 
   public get arrowDownIconKey(): string {
-    return CommonDefinition.ASSETS_FONT_CHEVRON_DOWN;
+    return CommonDefinition.ASSETS_SVG_CHEVRON_DOWN;
   }
 
   /**

@@ -65,7 +65,7 @@ import { SnackBarConfig } from '../snack-bar-config';
 })
 
 export class SnackBarContainerComponent implements OnInit {
-  @ViewChild(SnackBarRefDirective)
+  @ViewChild(SnackBarRefDirective, { static: true })
   public portalHost: SnackBarRefDirective;
 
   /** Emits when an animation state changes. */

@@ -69,7 +69,7 @@ export class ProductComponent implements OnInit, OnDestroy {
   public productOptionsColumns = ['name', 'options'];
   public userCasesColumns = ['name', 'description'];
 
-  @ViewChild('scrollableLinkGroup')
+  @ViewChild('scrollableLinkGroup', { static: false })
   private _scrollableLink: ScrollableLinkGroup;
 
   constructor(

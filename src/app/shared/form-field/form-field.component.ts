@@ -60,7 +60,7 @@ import {
 export class FormFieldComponent implements AfterViewInit, AfterContentInit, AfterContentChecked {
   public subscriptAnimationState: string = '';
 
-  @ContentChild(McsFormFieldControlBase)
+  @ContentChild(McsFormFieldControlBase, { static: false })
   private _controlChild: McsFormFieldControlBase<any>;
 
   @ContentChildren(HintComponent)
@@ -84,37 +84,39 @@ export class FormFieldComponent implements AfterViewInit, AfterContentInit, Afte
   }
 
   public ngAfterContentInit(): void {
-    this._validateControlChild();
-    // Subscribe to any state changes of the control
-    this._controlChild.stateChanges
-      .pipe(startWith(null!))
-      .subscribe(() => {
+    Promise.resolve().then(() => {
+      this._validateControlChild();
+      // Subscribe to any state changes of the control
+      this._controlChild.stateChanges.pipe(
+        startWith(null)
+      ).subscribe(() => {
         this._redisplayErrorMessage();
         this._changeDetectorRef.markForCheck();
       });
 
-    // Subscribe to form control to update the view whenever there are changes
-    let ngControl = this._controlChild.ngControl;
-    if (ngControl && ngControl.valueChanges) {
-      ngControl.valueChanges.subscribe(() => {
-        this._redisplayErrorMessage();
-        this._changeDetectorRef.markForCheck();
-      });
-    }
+      // Subscribe to form control to update the view whenever there are changes
+      let ngControl = this._controlChild.ngControl;
+      if (ngControl && ngControl.valueChanges) {
+        ngControl.valueChanges.subscribe(() => {
+          this._redisplayErrorMessage();
+          this._changeDetectorRef.markForCheck();
+        });
+      }
 
-    // Subscribe to any changes of the hint
-    this._hintChildren.changes
-      .pipe(startWith(null))
-      .subscribe(() => {
+      // Subscribe to any changes of the hint
+      this._hintChildren.changes.pipe(
+        startWith(null)
+      ).subscribe(() => {
         this._changeDetectorRef.markForCheck();
       });
 
-    // Subscribe to any changes of the error
-    this._errorChildren.changes
-      .pipe(startWith(null))
-      .subscribe(() => {
+      // Subscribe to any changes of the error
+      this._errorChildren.changes.pipe(
+        startWith(null)
+      ).subscribe(() => {
         this._changeDetectorRef.markForCheck();
       });
+    });
   }
 
   public ngAfterContentChecked(): void {

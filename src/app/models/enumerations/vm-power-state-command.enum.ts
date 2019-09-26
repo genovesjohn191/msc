@@ -1,4 +1,3 @@
-import { CacheKey } from 'json-object-mapper';
 import { McsEnumSerializationBase } from '../serialization/mcs-enum-serialization-base';
 
 export enum VmPowerstateCommand {
@@ -12,7 +11,6 @@ export enum VmPowerstateCommand {
 /**
  * Enumeration serializer and deserializer methods
  */
-@CacheKey('VmPowerstateCommandSerialization')
 export class VmPowerstateCommandSerialization
   extends McsEnumSerializationBase<VmPowerstateCommand> {
   constructor() { super(VmPowerstateCommand); }

@@ -2,15 +2,15 @@
   <!-- Selection Column -->
   <ng-container mcsColumnDef="select">
     <mcs-header-cell *mcsHeaderCellDef>
-      <mcs-checkbox (change)="approversSelection.toggleAllItemsSelection()"
-        color="white"
+      <mcs-checkbox (statusChange)="approversSelection.toggleAllItemsSelection()"
+        color="light"
         [checked]="approversSelection.allItemsAreSelected()"
         [indeterminate]="approversSelection.someItemsAreSelected()">
       </mcs-checkbox>
     </mcs-header-cell>
     <mcs-data-cell *mcsDataCellDef="let row" text-wrap>
       <mcs-checkbox [checked]="approversSelection.isItemSelected(row)"
-        (change)="approversSelection.toggleItemSelection(row)">
+        (statusChange)="approversSelection.toggleItemSelection(row)">
       </mcs-checkbox>
     </mcs-data-cell>
   </ng-container>

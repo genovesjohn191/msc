@@ -78,7 +78,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
   private _fileAttachments: McsFileInfo[];
   private _creatingTicket$ = new BehaviorSubject<boolean>(false);
 
-  @ViewChild(McsFormGroupDirective)
+  @ViewChild(McsFormGroupDirective, { static: false })
   private _formGroup: McsFormGroupDirective;
 
   constructor(

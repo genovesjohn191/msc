@@ -1,7 +1,6 @@
-export class McsServerCreateAddOnSqlServer {
-  public sqlServer: string;
+import { JsonProperty } from '@peerlancers/json-serialization';
 
-  constructor() {
-    this.sqlServer = undefined;
-  }
+export class McsServerCreateAddOnSqlServer {
+  @JsonProperty()
+  public sqlServer: string = undefined;
 }

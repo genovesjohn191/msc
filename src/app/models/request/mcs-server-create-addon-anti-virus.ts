@@ -1,9 +1,9 @@
-export class McsServerCreateAddOnAntiVirus {
-  public technology: string;
-  public variant: string;
+import { JsonProperty } from '@peerlancers/json-serialization';
 
-  constructor() {
-    this.technology = undefined;
-    this.variant = undefined;
-  }
+export class McsServerCreateAddOnAntiVirus {
+  @JsonProperty()
+  public technology: string = undefined;
+
+  @JsonProperty()
+  public variant: string = undefined;
 }

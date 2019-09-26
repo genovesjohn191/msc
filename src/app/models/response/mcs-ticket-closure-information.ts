@@ -1,24 +1,22 @@
-import { JsonProperty } from 'json-object-mapper';
+import { JsonProperty } from '@peerlancers/json-serialization';
 import { McsDateSerialization } from '../serialization/mcs-date-serialization';
 
 export class McsTicketClosureInformation {
-  public closedBy: string;
-  public closeNotes: string;
-  public closeProblem: string;
-  public closeResolution: string;
+  @JsonProperty()
+  public closedBy: string = undefined;
+
+  @JsonProperty()
+  public closeNotes: string = undefined;
+
+  @JsonProperty()
+  public closeProblem: string = undefined;
+
+  @JsonProperty()
+  public closeResolution: string = undefined;
 
   @JsonProperty({
-    type: Date,
     serializer: McsDateSerialization,
     deserializer: McsDateSerialization
   })
-  public closedAt: Date;
-
-  constructor() {
-    this.closedBy = undefined;
-    this.closedAt = undefined;
-    this.closeNotes = undefined;
-    this.closeProblem = undefined;
-    this.closeResolution = undefined;
-  }
+  public closedAt: Date = undefined;
 }

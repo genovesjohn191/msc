@@ -66,7 +66,7 @@
       placement="bottom" orientation="left" theme="light" priority="high"
       [content]="notificationsContent">
 
-      <mcs-icon [key]="bellIconKey" size="small" color="white"></mcs-icon>
+      <mcs-icon [key]="bellIconKey" size="medium" color="light"></mcs-icon>
       <span *ngIf="notifications | mcsIsNotNullOrEmpty">{{ notifications.length }}</span>
     </a>
   </div>
@@ -91,7 +91,7 @@
 
       <!-- Popover will display here -->
       <mcs-icon class="caret-down"
-        [key]="caretDownIconKey" color="white" mcsCursor="pointer"
+        [key]="caretDownIconKey" color="light" mcsCursor="pointer"
 
         mcsPopover #userPopover="mcsPopover"
         padding="none" placement="bottom" orientation="left"

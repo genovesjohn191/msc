@@ -1,4 +1,4 @@
-import { JsonProperty } from 'json-object-mapper';
+import { JsonProperty } from '@peerlancers/json-serialization';
 import {
   getSafeProperty,
   isNullOrEmpty,
@@ -33,66 +33,88 @@ import { Os } from '../enumerations/os.enum';
 import { McsServerOsUpdatesDetails } from './mcs-server-os-updates-details';
 
 export class McsServer extends McsEntityBase {
+  @JsonProperty()
   public name: string = undefined;
+
+  @JsonProperty()
   public hostname: string = undefined;
+
+  @JsonProperty()
   public serviceId: string = undefined;
+
+  @JsonProperty()
   public availabilityZone: string = undefined;
+
+  @JsonProperty()
   public companyId: string = undefined;
+
+  @JsonProperty()
   public ipAddress: string = undefined;
+
+  @JsonProperty()
   public instanceId: string = undefined;
+
+  @JsonProperty()
   public vApp: string = undefined;
+
+  @JsonProperty()
   public portalUrl: string = undefined;
+
+  @JsonProperty()
   public vCloudId: string = undefined;
+
+  @JsonProperty()
   public vCenterId: string = undefined;
+
+  @JsonProperty()
   public osAutomationAvailable: boolean = undefined;
+
+  @JsonProperty()
   public serviceChangeAvailable: boolean = undefined;
 
-  @JsonProperty({ type: McsServerVmwareTools })
+  @JsonProperty({ target: McsServerVmwareTools })
   public vmwareTools: McsServerVmwareTools = undefined;
 
-  @JsonProperty({ type: McsServerPlatform })
+  @JsonProperty({ target: McsServerPlatform })
   public platform: McsServerPlatform = undefined;
 
-  @JsonProperty({ type: McsServerNic })
+  @JsonProperty({ target: McsServerNic })
   public nics: McsServerNic[] = undefined;
 
-  @JsonProperty({ type: McsServerStorageDevice })
+  @JsonProperty({ target: McsServerStorageDevice })
   public storageDevices: McsServerStorageDevice[] = undefined;
 
-  @JsonProperty({ type: McsServerMedia })
+  @JsonProperty({ target: McsServerMedia })
   public media: McsServerMedia[] = undefined;
 
-  @JsonProperty({ type: McsServerSnapshot })
+  @JsonProperty({ target: McsServerSnapshot })
   public snapshots: McsServerSnapshot[] = undefined;
 
-  @JsonProperty({ type: McsServerOperatingSystemSummary })
+  @JsonProperty({ target: McsServerOperatingSystemSummary })
   public operatingSystem: McsServerOperatingSystemSummary = undefined;
 
-  @JsonProperty({ type: McsServerHardware })
+  @JsonProperty({ target: McsServerHardware })
   public hardware: McsServerHardware = undefined;
 
-  @JsonProperty({ type: McsServerCompute })
+  @JsonProperty({ target: McsServerCompute })
   public compute: McsServerCompute = undefined;
 
-  @JsonProperty({ type: McsServerCompute })
+  @JsonProperty({ target: McsServerCompute })
   public osUpdateDetails: McsServerOsUpdatesDetails = undefined;
 
   @JsonProperty({
-    type: VmPowerState,
     serializer: VmPowerStateSerialization,
     deserializer: VmPowerStateSerialization
   })
   public powerState: VmPowerState = undefined;
 
   @JsonProperty({
-    type: ServiceType,
     serializer: ServiceTypeSerialization,
     deserializer: ServiceTypeSerialization
   })
   public serviceType: ServiceType = undefined;
 
   @JsonProperty({
-    type: InviewLevel,
     serializer: InviewLevelSerialization,
     deserializer: InviewLevelSerialization
   })

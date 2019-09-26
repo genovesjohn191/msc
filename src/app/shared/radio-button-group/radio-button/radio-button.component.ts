@@ -36,7 +36,7 @@ export class RadioButtonComponent implements AfterContentInit {
   public generatedId: string;
 
   @Output()
-  public change = new EventEmitter<RadioButtonComponent>();
+  public selectionChange = new EventEmitter<RadioButtonComponent>();
 
   @Input()
   public name: string;
@@ -56,10 +56,10 @@ export class RadioButtonComponent implements AfterContentInit {
   public set value(value: any) { this._value = value; }
   private _value: any;
 
-  @ViewChild('inputElement')
+  @ViewChild('inputElement', { static: false })
   private _inputElement: ElementRef;
 
-  @ContentChild(IdDirective)
+  @ContentChild(IdDirective, { static: false })
   private _idElement: IdDirective;
 
   constructor(private _changeDetectorRef: ChangeDetectorRef) { }
@@ -109,7 +109,7 @@ export class RadioButtonComponent implements AfterContentInit {
     if (!isNullOrEmpty(event)) {
       event.stopPropagation();
     }
-    this.change.emit(this);
+    this.selectionChange.emit(this);
   }
 
   /**

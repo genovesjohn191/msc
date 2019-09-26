@@ -1,16 +1,16 @@
+import { JsonProperty } from '@peerlancers/json-serialization';
 import { McsEntityBase } from '../common/mcs-entity.base';
 
 export class McsServerOsUpdatesCategory extends McsEntityBase {
-  public categoryId: string;
-  public name: string;
-  public osType: string;
-  public isSelected: boolean;
+  @JsonProperty()
+  public categoryId: string = undefined;
 
-  constructor() {
-    super();
-    this.categoryId = undefined;
-    this.name = undefined;
-    this.osType = undefined;
-    this.isSelected = false;
-  }
+  @JsonProperty()
+  public name: string = undefined;
+
+  @JsonProperty()
+  public osType: string = undefined;
+
+  @JsonProperty()
+  public isSelected: boolean = undefined;
 }

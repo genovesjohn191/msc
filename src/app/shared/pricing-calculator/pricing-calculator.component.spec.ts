@@ -65,7 +65,7 @@ describe('PricingCalculatorComponent', () => {
 
   describe('toggleIconKey()', () => {
     it(`should return the toggle icon key`, () => {
-      expect(component.toggleIconKey).toBe(CommonDefinition.ASSETS_FONT_CHEVRON_UP);
+      expect(component.toggleIconKey).toBe(CommonDefinition.ASSETS_SVG_CHEVRON_UP);
     });
   });
 

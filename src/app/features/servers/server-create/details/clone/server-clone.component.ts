@@ -71,7 +71,7 @@ export class ServerCloneComponent
   public fcServerName: FormControl;
   public fcTargetServer: FormControl;
 
-  @ViewChild(McsFormGroupDirective)
+  @ViewChild(McsFormGroupDirective, { static: false })
   private _formGroup: McsFormGroupDirective;
 
   /**

@@ -1,4 +1,4 @@
-import { JsonProperty } from 'json-object-mapper';
+import { JsonProperty } from '@peerlancers/json-serialization';
 import { isNullOrEmpty } from '@app/utilities';
 import { McsEntityBase } from '../common/mcs-entity.base';
 import { McsProductDependency } from './mcs-product-dependency';
@@ -13,110 +13,110 @@ import {
 } from '../enumerations/product-availability-state.enum';
 
 export class McsProduct extends McsEntityBase {
-  public version: string;
-  public order: number;
-  public parentProductId: string;
-  public description: string;
-  public shortDescription: string;
+  @JsonProperty()
+  public version: string = undefined;
 
-  @JsonProperty({ type: McsProductUseCase })
-  public useCases: McsProductUseCase[];
+  @JsonProperty()
+  public order: number = undefined;
 
-  public pciDetails: string;
-  public featureBenefitMatrix: string;
-  public sowDetails: string;
-  public proposalDetails: string;
-  public competitiveIntelligence: string;
-  public targetMarketInfo: string;
-  public price: string;
-  public retailPrice: string;
-  public recurringPrice: string;
-  public serviceIdPrefix: string;
-  public elementCode: number;
+  @JsonProperty()
+  public parentProductId: string = undefined;
 
-  @JsonProperty({ type: McsProductLocation })
-  public locations: McsProductLocation[];
+  @JsonProperty()
+  public description: string = undefined;
 
-  @JsonProperty({ type: McsProductDependency })
-  public dependentProducts: McsProductDependency[];
+  @JsonProperty()
+  public shortDescription: string = undefined;
 
-  @JsonProperty({ type: McsProductOwner })
-  public primaryOwner: McsProductOwner;
+  @JsonProperty({ target: McsProductUseCase })
+  public useCases: McsProductUseCase[] = undefined;
 
-  @JsonProperty({ type: McsProductOwner })
-  public secondaryOwner: McsProductOwner;
+  @JsonProperty()
+  public pciDetails: string = undefined;
 
-  @JsonProperty({ type: McsProductOwner })
-  public tertiaryOwner: McsProductOwner;
+  @JsonProperty()
+  public featureBenefitMatrix: string = undefined;
 
-  @JsonProperty({ type: McsProductOwner })
-  public architectOwnerPrimary: McsProductOwner;
+  @JsonProperty()
+  public sowDetails: string = undefined;
 
-  @JsonProperty({ type: McsProductOwner })
-  public architectOwnerSecondary: McsProductOwner;
+  @JsonProperty()
+  public proposalDetails: string = undefined;
 
-  @JsonProperty({ type: McsProductOwner })
-  public specialistOwner: McsProductOwner;
+  @JsonProperty()
+  public competitiveIntelligence: string = undefined;
 
-  @JsonProperty({ type: McsProductOption })
-  public productOptions: McsProductOption[];
+  @JsonProperty()
+  public targetMarketInfo: string = undefined;
 
-  public icon: string;
+  @JsonProperty()
+  public price: string = undefined;
 
-  @JsonProperty({ type: McsProductInview })
-  public inviewPremium: McsProductInview[];
+  @JsonProperty()
+  public retailPrice: string = undefined;
 
-  @JsonProperty({ type: McsProductInview })
-  public inviewStandard: McsProductInview[];
+  @JsonProperty()
+  public recurringPrice: string = undefined;
+
+  @JsonProperty()
+  public serviceIdPrefix: string = undefined;
+
+  @JsonProperty()
+  public elementCode: number = undefined;
+
+  @JsonProperty({ target: McsProductLocation })
+  public locations: McsProductLocation[] = undefined;
+
+  @JsonProperty({ target: McsProductDependency })
+  public dependentProducts: McsProductDependency[] = undefined;
+
+  @JsonProperty({ target: McsProductOwner })
+  public primaryOwner: McsProductOwner = undefined;
+
+  @JsonProperty({ target: McsProductOwner })
+  public secondaryOwner: McsProductOwner = undefined;
+
+  @JsonProperty({ target: McsProductOwner })
+  public tertiaryOwner: McsProductOwner = undefined;
+
+  @JsonProperty({ target: McsProductOwner })
+  public architectOwnerPrimary: McsProductOwner = undefined;
+
+  @JsonProperty({ target: McsProductOwner })
+  public architectOwnerSecondary: McsProductOwner = undefined;
+
+  @JsonProperty({ target: McsProductOwner })
+  public specialistOwner: McsProductOwner = undefined;
+
+  @JsonProperty({ target: McsProductOption })
+  public productOptions: McsProductOption[] = undefined;
+
+  @JsonProperty()
+  public icon: string = undefined;
+
+  @JsonProperty({ target: McsProductInview })
+  public inviewPremium: McsProductInview[] = undefined;
+
+  @JsonProperty({ target: McsProductInview })
+  public inviewStandard: McsProductInview[] = undefined;
 
   @JsonProperty({
-    type: ProductAvailabilityState,
     serializer: ProductAvailabilityStateSerialization,
     deserializer: ProductAvailabilityStateSerialization
   })
-  public availabilityState: ProductAvailabilityState;
+  public availabilityState: ProductAvailabilityState = undefined;
 
-  public name: string;
-  public displayOrder: number;
-  public catalogId: string;
-  public categoryId: string;
+  @JsonProperty()
+  public name: string = undefined;
 
-  constructor() {
-    super();
-    this.version = undefined;
-    this.order = undefined;
-    this.shortDescription = undefined;
-    this.description = undefined;
-    this.useCases = undefined;
-    this.pciDetails = undefined;
-    this.featureBenefitMatrix = undefined;
-    this.sowDetails = undefined;
-    this.proposalDetails = undefined;
-    this.competitiveIntelligence = undefined;
-    this.targetMarketInfo = undefined;
-    this.price = undefined;
-    this.retailPrice = undefined;
-    this.recurringPrice = undefined;
-    this.locations = undefined;
-    this.serviceIdPrefix = undefined;
-    this.elementCode = undefined;
-    this.name = undefined;
-    this.displayOrder = undefined;
-    this.catalogId = undefined;
-    this.categoryId = undefined;
-    this.dependentProducts = undefined;
-    this.primaryOwner = undefined;
-    this.secondaryOwner = undefined;
-    this.architectOwnerPrimary = undefined;
-    this.architectOwnerSecondary = undefined;
-    this.specialistOwner = undefined;
-    this.productOptions = undefined;
-    this.inviewPremium = undefined;
-    this.inviewStandard = undefined;
-    this.icon = undefined;
-    this.tertiaryOwner = undefined;
-    this.availabilityState = undefined;
-  }
+  @JsonProperty()
+  public displayOrder: number = undefined;
+
+  @JsonProperty()
+  public catalogId: string = undefined;
+
+  @JsonProperty()
+  public categoryId: string = undefined;
 
   /**
    * Returns true when this product has product list options

@@ -1,4 +1,3 @@
-import { CacheKey } from 'json-object-mapper';
 import { McsEnumSerializationBase } from '../serialization/mcs-enum-serialization-base';
 
 export enum PlatformType {
@@ -16,7 +15,6 @@ export const platformTypeText = {
 /**
  * Enumeration serializer and deserializer methods
  */
-@CacheKey('PlatformTypeSerialization')
 export class PlatformTypeSerialization
   extends McsEnumSerializationBase<PlatformType> {
   constructor() { super(PlatformType); }

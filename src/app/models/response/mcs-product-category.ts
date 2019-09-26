@@ -1,18 +1,14 @@
-import { JsonProperty } from 'json-object-mapper';
+import { JsonProperty } from '@peerlancers/json-serialization';
 import { McsProduct } from './mcs-product';
 import { McsEntityBase } from '../common/mcs-entity.base';
 
 export class McsProductCategory extends McsEntityBase {
-  public name: string;
-  public displayOrder: number;
+  @JsonProperty()
+  public name: string = undefined;
 
-  @JsonProperty({ type: McsProduct })
-  public products: McsProduct[];
+  @JsonProperty()
+  public displayOrder: number = undefined;
 
-  constructor() {
-    super();
-    this.name = undefined;
-    this.displayOrder = undefined;
-    this.products = undefined;
-  }
+  @JsonProperty({ target: McsProduct })
+  public products: McsProduct[] = undefined;
 }

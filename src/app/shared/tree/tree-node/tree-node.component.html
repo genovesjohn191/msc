@@ -3,7 +3,7 @@
 
   <!-- Checkable label -->
   <ng-container *ngIf="checkable; else nonCheckableTemplate">
-    <mcs-checkbox (change)="onTickCheckbox($event)" [checked]="selected">
+    <mcs-checkbox (statusChange)="onTickCheckbox($event)" [checked]="selected">
       <ng-container *ngTemplateOutlet="labelContentTemplate"></ng-container>
     </mcs-checkbox>
   </ng-container>

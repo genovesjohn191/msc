@@ -36,7 +36,7 @@ export class StateChangeNotificationsComponent implements OnInit, OnDestroy {
   @Input()
   public placement: 'left' | 'right';
 
-  @ViewChild('stateChangeNotificationsElement')
+  @ViewChild('stateChangeNotificationsElement', { static: false })
   public stateChangeNotificationsElement: ElementRef;
 
   // Notifications variable

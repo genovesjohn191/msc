@@ -20,7 +20,7 @@ import {
   template: ``
 })
 export class SliderTestComponent {
-  @ViewChild(SliderComponent)
+  @ViewChild(SliderComponent, { static: false })
   public sliderComponent: SliderComponent;
 }
 

@@ -3,16 +3,14 @@ import {
   Input,
   Output,
   EventEmitter,
-  ElementRef,
-  Inject,
-  forwardRef
+  ElementRef
 } from '@angular/core';
+import { Subject } from 'rxjs';
 import { Key } from '@app/models';
 import {
   isNullOrEmpty,
   coerceBoolean
 } from '@app/utilities';
-import { TagListComponent } from '../tag-list.component';
 
 @Directive({
   selector: 'input[mcsTagInput]',
@@ -27,6 +25,10 @@ import { TagListComponent } from '../tag-list.component';
 export class TagInputDirective {
 
   public focused: boolean = false;
+  public receiveFocus = new Subject<void>();
+  public receiveBlur = new Subject<void>();
+  public receiveKeydown = new Subject<KeyboardEvent>();
+
   public inputElement: HTMLInputElement;
 
   @Output('mcsTagInputOnAdd')
@@ -43,14 +45,8 @@ export class TagInputDirective {
   public set separatorKeyCodes(value: number[]) { this._separatorKeyCodes = value; }
   private _separatorKeyCodes: number[] = [Key.Enter];
 
-  constructor(
-    private _elementRef: ElementRef,
-    @Inject(forwardRef(() => TagListComponent)) private _tagListComponent
-  ) {
+  constructor(private _elementRef: ElementRef) {
     this.inputElement = this._elementRef.nativeElement as HTMLInputElement;
-    if (isNullOrEmpty(this._tagListComponent)) {
-      throw new Error('No associated tag list component as parent.');
-    }
   }
 
   /**
@@ -65,7 +61,7 @@ export class TagInputDirective {
    */
   public onFocus(): void {
     this.focused = true;
-    this._tagListComponent.stateChanges.next();
+    this.receiveFocus.next();
   }
 
   /**
@@ -74,12 +70,7 @@ export class TagInputDirective {
   public onBlur(): void {
     if (this.addOnBlur) { this._emitTagEnd(); }
     this.focused = false;
-
-    // Blur the tag list if it is not focused
-    if (!this._tagListComponent.focused) {
-      this._tagListComponent.onBlur();
-    }
-    this._tagListComponent.stateChanges.next();
+    this.receiveBlur.next();
   }
 
   /**
@@ -95,7 +86,7 @@ export class TagInputDirective {
    */
   private _emitTagEnd(_event?: KeyboardEvent) {
     if (!this.inputElement.value && !!_event) {
-      this._tagListComponent.onKeyDown(_event);
+      this.receiveKeydown.next(_event);
     }
 
     // Add the tag when some of the key codes is received

@@ -25,10 +25,10 @@ type offsetType = 'small' | 'medium' | 'large';
 
 export class LeftPanelItemComponent implements AfterContentInit {
 
-  @ViewChild('itemElement')
+  @ViewChild('itemElement', { static: false })
   public itemElement: ElementRef;
 
-  @ContentChild(LeftPanelItemHeaderDirective)
+  @ContentChild(LeftPanelItemHeaderDirective, { static: false })
   public leftPanelItemHeader: LeftPanelItemHeaderDirective;
 
   /**
@@ -58,8 +58,10 @@ export class LeftPanelItemComponent implements AfterContentInit {
   constructor(private _renderer: Renderer2) { }
 
   public ngAfterContentInit(): void {
-    if (!isNullOrEmpty(this.itemElement) && !isNullOrEmpty(this.offset)) {
-      this._renderer.addClass(this.itemElement.nativeElement, `item-offset-${this.offset}`);
-    }
+    Promise.resolve().then(() => {
+      if (!isNullOrEmpty(this.itemElement) && !isNullOrEmpty(this.offset)) {
+        this._renderer.addClass(this.itemElement.nativeElement, `item-offset-${this.offset}`);
+      }
+    });
   }
 }

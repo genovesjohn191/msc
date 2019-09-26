@@ -18,7 +18,7 @@ import { CoreTestingModule } from '@app/core/testing';
   template: ``
 })
 export class TestContextualHelpComponent {
-  @ViewChild(ContextualHelpDirective)
+  @ViewChild(ContextualHelpDirective, { static: false })
   public contextual: ContextualHelpDirective;
 }
 

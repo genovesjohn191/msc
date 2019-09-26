@@ -50,7 +50,7 @@ export class TopPanelComponent implements AfterContentInit, OnDestroy {
   }
   private _active: boolean;
 
-  @ViewChild(TopPanelItemPlaceholderDirective)
+  @ViewChild(TopPanelItemPlaceholderDirective, { static: false })
   private _topPanelItemPlaceholder: TopPanelItemPlaceholderDirective;
 
   @ContentChildren(TopPanelItemDefDirective)
@@ -65,15 +65,17 @@ export class TopPanelComponent implements AfterContentInit, OnDestroy {
   ) { }
 
   public ngAfterContentInit() {
-    this._topPanelItemDefinition.changes
-      .pipe(startWith(null), takeUntil(this._destroySubject))
-      .subscribe(() => {
+    Promise.resolve().then(() => {
+      this._topPanelItemDefinition.changes.pipe(
+        startWith(null), takeUntil(this._destroySubject)
+      ).subscribe(() => {
         this._topPanelItemPlaceholder.viewContainer.clear();
         this._topPanelItemDefinition.forEach((item) => {
           this._topPanelItemPlaceholder.viewContainer.createEmbeddedView(item.template);
         });
         this._changeDetectorRef.markForCheck();
       });
+    });
   }
 
   public ngOnDestroy() {

@@ -1,11 +1,12 @@
-export class McsServerFileSystem {
-  public path: string;
-  public capacityGB: number;
-  public freeSpaceGB: number;
+import { JsonProperty } from '@peerlancers/json-serialization';
 
-  constructor() {
-    this.path = undefined;
-    this.capacityGB = undefined;
-    this.freeSpaceGB = undefined;
-  }
+export class McsServerFileSystem {
+  @JsonProperty()
+  public path: string = undefined;
+
+  @JsonProperty()
+  public capacityGB: number = undefined;
+
+  @JsonProperty()
+  public freeSpaceGB: number = undefined;
 }

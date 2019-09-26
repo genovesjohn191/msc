@@ -1,42 +1,41 @@
-import { JsonProperty } from 'json-object-mapper';
+import { JsonProperty } from '@peerlancers/json-serialization';
+import { isNullOrEmpty } from '@app/utilities';
 import { McsProductFacilityManager } from './mcs-product-facility-manager';
 import {
   ProductLocationStatus,
   ProductLocationStatusSerialization
 } from '../enumerations/product-location-status.enum';
-import { isNullOrEmpty } from '@app/utilities';
 
 export class McsProductLocation {
-  public name: string;
-  public street: string;
-  public city: string;
-  public postCode: string;
-  public country: string;
+  @JsonProperty()
+  public name: string = undefined;
+
+  @JsonProperty()
+  public street: string = undefined;
+
+  @JsonProperty()
+  public city: string = undefined;
+
+  @JsonProperty()
+  public postCode: string = undefined;
+
+  @JsonProperty()
+  public country: string = undefined;
 
   @JsonProperty({
-    type: McsProductFacilityManager,
     serializer: ProductLocationStatusSerialization,
     deserializer: ProductLocationStatusSerialization
   })
-  public status: ProductLocationStatus;
+  public status: ProductLocationStatus = undefined;
 
-  @JsonProperty({ type: McsProductFacilityManager })
-  public facilityManager: McsProductFacilityManager;
+  @JsonProperty({ target: McsProductFacilityManager })
+  public facilityManager: McsProductFacilityManager = undefined;
 
-  public securityPhone: string;
-  public hmcPhone: string;
+  @JsonProperty()
+  public securityPhone: string = undefined;
 
-  constructor() {
-    this.city = undefined;
-    this.country = undefined;
-    this.facilityManager = undefined;
-    this.hmcPhone = undefined;
-    this.name = undefined;
-    this.postCode = undefined;
-    this.securityPhone = undefined;
-    this.status = undefined;
-    this.street = undefined;
-  }
+  @JsonProperty()
+  public hmcPhone: string = undefined;
 
   /**
    * Returns the complete address of the location

@@ -18,7 +18,7 @@ import { CoreTestingModule } from '@app/core/testing';
   template: ``
 })
 export class TestTooltipComponent {
-  @ViewChild(TooltipDirective)
+  @ViewChild(TooltipDirective, { static: false })
   public tooltip: TooltipDirective;
 }
 

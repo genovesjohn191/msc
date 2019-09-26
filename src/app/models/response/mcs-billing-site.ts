@@ -1,20 +1,14 @@
-import { JsonProperty } from 'json-object-mapper';
+import { JsonProperty } from '@peerlancers/json-serialization';
 import { McsEntityBase } from '../common/mcs-entity.base';
 import { McsBillingCostCentre } from './mcs-billing-cost-centre';
 
-export class McsBillingSite extends McsEntityBase  {
-  public name: string;
-  public displayOrder: number;
+export class McsBillingSite extends McsEntityBase {
+  @JsonProperty()
+  public name: string = undefined;
 
-  @JsonProperty({
-    type: McsBillingCostCentre
-  })
+  @JsonProperty()
+  public displayOrder: number = undefined;
+
+  @JsonProperty({ target: McsBillingCostCentre })
   public costCentres: McsBillingCostCentre[];
-
-  constructor() {
-    super();
-    this.name = undefined;
-    this.displayOrder = undefined;
-    this.costCentres = undefined;
-  }
 }

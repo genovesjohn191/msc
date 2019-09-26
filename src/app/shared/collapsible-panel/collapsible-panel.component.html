@@ -1,6 +1,6 @@
 <!-- Collapsible Toggle -->
 <div class="collapsible-panel-toggle">
-  <mcs-checkbox (change)="onCheckboxTick($event)" [tabindex]="tabindex">
+  <mcs-checkbox (statusChange)="onCheckboxTick($event)" [tabindex]="tabindex">
     {{ header }}
   </mcs-checkbox>
 </div>
