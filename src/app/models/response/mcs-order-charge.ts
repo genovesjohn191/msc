@@ -1,11 +1,11 @@
-export class McsOrderCharge {
-  public monthly: number;
-  public oneOff: number;
+import { JsonProperty } from '@peerlancers/json-serialization';
 
-  constructor() {
-    this.monthly = undefined;
-    this.oneOff = undefined;
-  }
+export class McsOrderCharge {
+  @JsonProperty()
+  public monthly: number = undefined;
+
+  @JsonProperty()
+  public oneOff: number = undefined;
 
   /**
    * Returns the currency symbol as USD

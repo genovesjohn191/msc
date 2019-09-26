@@ -78,7 +78,7 @@ export class ServerCreateComponent extends McsOrderWizardBase
   public get resources(): McsResource[] { return this._resources; }
   private _resources: McsResource[];
 
-  @ViewChild('serverDetailsStep')
+  @ViewChild('serverDetailsStep', { static: false })
   private _detailsStep: ServerCreateDetailsComponent;
   private _serverCreateBuilder: ServerCreateBuilder<any>;
 

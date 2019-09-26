@@ -81,13 +81,13 @@ export class VdcScaleComponent extends McsOrderWizardBase implements OnDestroy {
   public fgVdcScaleDetails: FormGroup;
   public fcVdc: FormControl;
 
-  @ViewChild(McsFormGroupDirective)
+  @ViewChild(McsFormGroupDirective, { static: false })
   private _formGroup: McsFormGroupDirective;
 
-  @ViewChild('fgVdcManageScale')
+  @ViewChild('fgVdcManageScale', { static: false })
   private _fgVdcManageScale: IMcsFormGroup;
 
-  @ViewChild(ComponentHandlerDirective)
+  @ViewChild(ComponentHandlerDirective, { static: false })
   private _componentHandler: ComponentHandlerDirective;
 
   private _vdcScale: VdcManageScale;

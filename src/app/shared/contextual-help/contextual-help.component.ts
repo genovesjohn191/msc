@@ -22,7 +22,7 @@ import { animateFactory } from '@app/utilities';
   ],
   host: {
     'class': 'contextual-help-wrapper',
-    '[style.zoom]': 'visibility === "visible" ? 1 : null'
+    '[style.zoom]': 'visible === true ? 1 : null'
   }
 })
 

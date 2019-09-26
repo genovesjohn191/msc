@@ -16,7 +16,7 @@ import { CoreTestingModule } from '@app/core/testing';
   template: ``
 })
 export class TestTableComponent {
-  @ViewChild(TableComponent)
+  @ViewChild(TableComponent, { static: false })
   public tableComponent: TableComponent<any>;
 
   public dataSource: TableDatasource;

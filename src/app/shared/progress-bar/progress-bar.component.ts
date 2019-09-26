@@ -87,7 +87,7 @@ export class ProgressBarComponent implements AfterViewInit, OnDestroy, ControlVa
   }
   private _value: any;
 
-  @ViewChild('progressBarContainer')
+  @ViewChild('progressBarContainer', { static: false })
   private _progressBarContainer: ElementRef;
   private _destroySubject = new Subject<void>();
 

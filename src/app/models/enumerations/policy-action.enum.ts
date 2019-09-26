@@ -1,4 +1,3 @@
-import { CacheKey } from 'json-object-mapper';
 import { McsEnumSerializationBase } from '../serialization/mcs-enum-serialization-base';
 
 export enum PolicyAction {
@@ -14,7 +13,6 @@ export const policyText = {
 /**
  * Enumeration serializer and deserializer methods
  */
-@CacheKey('PolicyActionSerialization')
 export class PolicyActionSerialization
   extends McsEnumSerializationBase<PolicyAction> {
   constructor() { super(PolicyAction); }

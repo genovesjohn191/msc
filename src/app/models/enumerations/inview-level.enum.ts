@@ -1,4 +1,3 @@
-import { CacheKey } from 'json-object-mapper';
 import { McsEnumSerializationBase } from '../serialization/mcs-enum-serialization-base';
 
 export enum InviewLevel {
@@ -16,7 +15,6 @@ export const inviewLevelText = {
 /**
  * Enumeration serializer and deserializer methods
  */
-@CacheKey('InviewLevelSerialization')
 export class InviewLevelSerialization
   extends McsEnumSerializationBase<InviewLevel> {
   constructor() { super(InviewLevel); }

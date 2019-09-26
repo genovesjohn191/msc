@@ -1,13 +1,15 @@
-export class McsApiError {
-  public referenceId: string;
-  public field: string;
-  public code: string;
-  public message: string;
+import { JsonProperty } from '@peerlancers/json-serialization';
 
-  constructor() {
-    this.referenceId = undefined;
-    this.field = undefined;
-    this.code = undefined;
-    this.message = undefined;
-  }
+export class McsApiError {
+  @JsonProperty()
+  public referenceId: string = undefined;
+
+  @JsonProperty()
+  public field: string = undefined;
+
+  @JsonProperty()
+  public code: string = undefined;
+
+  @JsonProperty()
+  public message: string = undefined;
 }

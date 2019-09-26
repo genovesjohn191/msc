@@ -17,7 +17,7 @@ import { DataStatusModule } from './data-status.module';
   template: ``
 })
 export class TestDataStatusComponent {
-  @ViewChild(DataStatusComponent)
+  @ViewChild(DataStatusComponent, { static: false })
   public dataStatusComponent: DataStatusComponent;
   public dataStatus = new McsDataStatusFactory<any>();
 }

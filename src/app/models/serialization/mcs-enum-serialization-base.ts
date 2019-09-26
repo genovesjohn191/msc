@@ -1,16 +1,16 @@
 import {
-  Serializer,
-  Deserializer
-} from 'json-object-mapper';
+  IJsonSerializer,
+  IJsonDeserializer
+} from '@peerlancers/json-serialization';
 
-export class McsEnumSerializationBase<T> implements Serializer, Deserializer {
+export class McsEnumSerializationBase<T> implements IJsonSerializer, IJsonDeserializer {
   constructor(protected enumType: any) { }
 
   /**
    * Serialize the enumeration based on type provided on the enum type
    */
   public serialize(value: T): string {
-    return '"' + this.enumType[value] + '"';
+    return this.enumType[value];
   }
 
   /**

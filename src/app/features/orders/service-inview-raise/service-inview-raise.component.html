@@ -33,7 +33,7 @@
           <p>{{ 'orderServiceRaiseInview.serviceDetails.service.label' | translate }}</p>
           <mcs-form-field>
             <mcs-select [formControl]="fcService" required
-              (change)="onChangeService($event)"
+              (selectionChange)="onChangeService($event)"
               [placeholder]="'orderServiceRaiseInview.serviceDetails.service.placeholder' | translate"
               [mcsContextualHelp]="'orderServiceRaiseInview.serviceDetails.service.contextualHelp' | translate"
               mcsId="select-service"

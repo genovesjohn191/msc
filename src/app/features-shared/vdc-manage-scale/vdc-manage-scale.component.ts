@@ -84,7 +84,7 @@ export class VdcManageScaleComponent
     this._initialMemoryGB = coerceNumber(value, 0);
   }
 
-  @ViewChild(McsFormGroupDirective)
+  @ViewChild(McsFormGroupDirective, { static: false })
   private _formGroup: McsFormGroupDirective;
 
   private _destroySubject = new Subject<void>();

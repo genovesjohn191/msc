@@ -16,7 +16,7 @@ import { CoreTestingModule } from '@app/core/testing';
   template: ``
 })
 export class TestCommentBoxComponent {
-  @ViewChild(CommentBoxComponent)
+  @ViewChild(CommentBoxComponent, { static: false })
   public commentBoxComponent: CommentBoxComponent;
 }
 

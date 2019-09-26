@@ -10,6 +10,7 @@ import { McsEvent } from '@app/events';
 @Injectable()
 export class ProductService {
   private _selectedProduct$ = new BehaviorSubject<McsProduct>(null);
+  private _productId: string;
 
   constructor(private _eventDispatcher: EventBusDispatcherService) { }
 

@@ -257,7 +257,7 @@ export class McsOverlayRef {
     this._backdropElement.classList.add('animation');
 
     this._setBackdropColor();
-    this._overlayElementItem.parentElement!.insertBefore(
+    this._overlayElementItem.parentElement.insertBefore(
       this._backdropElement,
       this._overlayElementItem
     );

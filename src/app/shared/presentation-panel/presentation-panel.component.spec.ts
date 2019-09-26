@@ -14,7 +14,7 @@ import { PresentationPanelComponent } from './presentation-panel.component';
   template: ``
 })
 export class TestComponent {
-  @ViewChild(PresentationPanelComponent)
+  @ViewChild(PresentationPanelComponent, { static: false })
   public presentationComponent: PresentationPanelComponent;
 }
 

@@ -1,52 +1,60 @@
 import {
   Component,
   OnInit,
-  AfterViewInit,
   OnDestroy,
   ChangeDetectorRef,
   ChangeDetectionStrategy,
-  ViewChild
+  ViewChild,
+  Injector
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import {
-  throwError,
+  ActivatedRoute,
+  ParamMap
+} from '@angular/router';
+import {
   Subject,
-  Observable
+  Observable,
+  Subscription,
+  of,
 } from 'rxjs';
 import {
-  catchError,
   takeUntil,
-  startWith,
   tap,
   shareReplay,
   map
 } from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
+
 import {
-  McsRoutingTabBase,
-  McsDataStatusFactory,
-  McsNavigationService
+  McsNavigationService,
+  McsListViewListingBase
 } from '@app/core';
 import {
   isNullOrEmpty,
   unsubscribeSafely,
   getSafeProperty,
-  CommonDefinition
+  CommonDefinition,
+  compareStrings
 } from '@app/utilities';
 import {
   RouteKey,
-  McsResourceMedia
+  McsResourceMedia,
+  McsQueryParam,
+  McsApiCollection,
+  McsRouteInfo
 } from '@app/models';
-import {
-  Search,
-  ComponentHandlerDirective
-} from '@app/shared';
+import { ComponentHandlerDirective } from '@app/shared';
 import { McsApiService } from '@app/services';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
-import { MediaListSource } from '../media.listsource';
+import { McsEvent } from '@app/events';
 import { MediumService } from './medium.service';
 
 // Add another group type in here if you have addition tab
 type tabGroupType = 'overview' | 'servers';
+
+interface McsMediaGroup {
+  groupName: string;
+  media: McsResourceMedia[];
+}
 
 @Component({
   selector: 'mcs-medium',
@@ -54,56 +62,50 @@ type tabGroupType = 'overview' | 'servers';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class MediumComponent
-  extends McsRoutingTabBase<tabGroupType>
-  implements OnInit, AfterViewInit, OnDestroy {
-
-  @ViewChild('search')
-  public search: Search;
-
-  @ViewChild(ComponentHandlerDirective)
-  public componentHandler: ComponentHandlerDirective;
-
+export class MediumComponent extends McsListViewListingBase<McsMediaGroup> implements OnInit, OnDestroy {
   public media$: Observable<McsResourceMedia>;
-  public mediaListing$: Observable<Map<string, McsResourceMedia[]>>;
-  public mediaListSource: MediaListSource | null;
-  public mediaMap: Map<string, McsResourceMedia[]>;
-  public listStatusFactory: McsDataStatusFactory<Map<string, McsResourceMedia[]>>;
+  public selectedTabId$: Observable<string>;
 
   private _destroySubject = new Subject<void>();
+  private _routerHandler: Subscription;
 
-  public get routeKeyEnum(): any {
-    return RouteKey;
-  }
+  @ViewChild(ComponentHandlerDirective, { static: false })
+  private _componentHandler: ComponentHandlerDirective;
 
   public constructor(
-    _eventDispatcher: EventBusDispatcherService,
-    _activatedRoute: ActivatedRoute,
+    _injector: Injector,
+    _changeDetectorRef: ChangeDetectorRef,
+    _translate: TranslateService,
+    private _activatedRoute: ActivatedRoute,
     private _navigationService: McsNavigationService,
-    private _changeDetectorRef: ChangeDetectorRef,
     private _apiService: McsApiService,
     private _mediumService: MediumService
   ) {
-    super(_eventDispatcher, _activatedRoute);
-    this.listStatusFactory = new McsDataStatusFactory(_changeDetectorRef);
+    super(_injector, _changeDetectorRef, {
+      dataChangeEvent: McsEvent.dataChangeMedia,
+      panelSettings: {
+        inProgressText: _translate.instant('media.loading'),
+        emptyText: _translate.instant('media.noMedia'),
+        errorText: _translate.instant('media.errorMessage')
+      }
+    });
+    this._registerEvents();
   }
 
   public ngOnInit() {
-    super.onInit();
-    this._subscribeToMediumResolve();
-  }
-
-  public ngAfterViewInit() {
-    Promise.resolve().then(() => {
-      this.search.searchChangedStream
-        .pipe(startWith(null), takeUntil(this._destroySubject))
-        .subscribe(() => this.listStatusFactory.setInProgress());
-      this._initializeListsource();
-    });
+    this._subscribeToParamChange();
+    this._subscribeToMediaResolve();
+    this.listViewDatasource.registerSortPredicate(this._sortServerGroupPredicate.bind(this));
   }
 
   public ngOnDestroy() {
+    super.dispose();
     unsubscribeSafely(this._destroySubject);
+    unsubscribeSafely(this._routerHandler);
+  }
+
+  public get routeKeyEnum(): any {
+    return RouteKey;
   }
 
   public get angleDoubleRightIconKey(): string {
@@ -125,27 +127,64 @@ export class MediumComponent
    * Event that emits when the tab is changed in the routing tabgroup
    * @param tab Active tab
    */
-  protected onTabChanged(tab: any) {
-    this._navigationService.navigateTo(RouteKey.Medium, [this.paramId, tab.id]);
+  public onTabChanged(tab: any): void {
+    this._navigationService.navigateTo(
+      RouteKey.Medium,
+      [this._mediumService.getMediaId(), tab.id as tabGroupType]
+    );
   }
 
   /**
-   * Event that emits when the parameter id is changed
-   * @param id Id of the parameter
+   * Gets the entity listing from API
    */
-  protected onParamIdChanged(id: string) {
-    if (isNullOrEmpty(id)) { return; }
-    this._mediumService.setMediaId(id);
-    if (!isNullOrEmpty(this.componentHandler)) {
-      this.componentHandler.recreateComponent();
-    }
+  protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsMediaGroup>> {
+    return this._apiService.getMedia(query).pipe(
+      map((mediaList) => {
+        let mediaGroups = new Array<McsMediaGroup>();
+        mediaList.collection.forEach((media) => {
+          let catalogName = getSafeProperty(media, (obj) => obj.catalogName, 'Others');
+          let groupFound = mediaGroups.find((mediaGroup) => mediaGroup.groupName === catalogName);
+          if (!isNullOrEmpty(groupFound)) {
+            groupFound.media.push(media);
+            return;
+          }
+          mediaGroups.push({
+            groupName: catalogName,
+            media: [media]
+          });
+        });
+
+        let mediaGroupsCollection = new McsApiCollection<McsMediaGroup>();
+        mediaGroupsCollection.collection = mediaGroups;
+        mediaGroupsCollection.totalCollectionCount = mediaGroups.length;
+        return mediaGroupsCollection;
+      })
+    );
+  }
+
+  /**
+   * Subcribes to parameter change
+   */
+  private _subscribeToParamChange(): void {
+    this._activatedRoute.paramMap.pipe(
+      takeUntil(this._destroySubject),
+      tap((params: ParamMap) => {
+        let mediaId = params.get('id');
+        if (isNullOrEmpty(mediaId)) { return; }
+
+        this._mediumService.setMediaId(mediaId);
+        if (!isNullOrEmpty(this._componentHandler)) {
+          this._componentHandler.recreateComponent();
+        }
+      })
+    ).subscribe();
   }
 
   /**
    * Subcribes to medium resolve
    */
-  private _subscribeToMediumResolve(): void {
-    this.media$ = this.activatedRoute.data.pipe(
+  private _subscribeToMediaResolve(): void {
+    this.media$ = this._activatedRoute.data.pipe(
       map((resolver) => getSafeProperty(resolver, (obj) => obj.medium)),
       tap((medium) => this._mediumService.setSelectedMedium(medium)),
       shareReplay(1)
@@ -153,30 +192,19 @@ export class MediumComponent
   }
 
   /**
-   * Initializes the list source of the media
+   * Sorting predicate for group
    */
-  private _initializeListsource(): void {
-    this.mediaListSource = new MediaListSource(
-      this._apiService,
-      this.search
-    );
+  private _sortServerGroupPredicate(first: McsMediaGroup, second: McsMediaGroup): number {
+    return compareStrings(first.groupName, second.groupName);
+  }
 
-    // Key function pointer for mapping objects
-    let keyFn = (item: McsResourceMedia) => {
-      return getSafeProperty(item, (obj) => obj.catalogName, 'Others');
-    };
-
-    // Listen to all records changed
-    this.mediaListing$ = this.mediaListSource.findAllRecordsMapStream(keyFn).pipe(
-      catchError((error) => {
-        this.listStatusFactory.setError();
-        return throwError(error);
-      }),
-      tap((response) => {
-        this.search.showLoading(false);
-        this.listStatusFactory.setSuccessful(response);
-      })
+  /**
+   * Register Event dispatchers
+   */
+  private _registerEvents(): void {
+    this._routerHandler = this.eventDispatcher.addEventListener(
+      McsEvent.routeChange, (routeInfo: McsRouteInfo) =>
+      this.selectedTabId$ = of(routeInfo && routeInfo.routePath)
     );
-    this._changeDetectorRef.markForCheck();
   }
 }

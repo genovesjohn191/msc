@@ -4,9 +4,7 @@ import {
 } from 'rxjs';
 import {
   debounceTime,
-  distinctUntilChanged,
-  map,
-  pairwise
+  distinctUntilChanged
 } from 'rxjs/operators';
 import {
   isNullOrUndefined,
@@ -18,39 +16,19 @@ import {
 import { McsOrderBuilder } from './mcs-order.builder';
 import { McsOrderRequest } from './mcs-order-request';
 
-export enum OrderStateChange {
-  NoChanged = 2,
-  Changed = 3
-}
-
 const ORDER_CHANGE_INTERVAL = 3000;
 
 export class McsOrderDirector {
   private _orderRequestReceived = new Subject<McsOrderRequest>();
 
   /**
-   * Event that emits when the order request has been changed
-   * @note The request change has an interval of 3seconds before it was fully checked
+   * Event that emits when the order has been requested
    */
-  public orderRequestChange(): Observable<McsOrderRequest> {
+  public orderRequestReceived(): Observable<McsOrderRequest> {
     return this._orderRequestReceived.pipe(
       debounceTime(ORDER_CHANGE_INTERVAL),
       distinctUntilChanged((prev, next) => {
         return compareJsons(prev, next) === 0;
-      })
-    );
-  }
-
-  /**
-   * Event that emits when the order request has been changed prior
-   * @note The request pre-change doesnt have any delay
-   */
-  public orderRequestStateChange(): Observable<OrderStateChange> {
-    return this._orderRequestReceived.pipe(
-      pairwise(),
-      map(([previousRequest, currentRequest]) => {
-        return compareJsons(previousRequest, currentRequest) === 0 ?
-          OrderStateChange.NoChanged : OrderStateChange.Changed;
       })
     );
   }

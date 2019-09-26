@@ -2,7 +2,7 @@
   <ng-container *ngIf="!isFilterHidden(iterator.key)">
     <mcs-checkbox [@fadeIn] *ngIf="!iterator.value.exclude"
       [(ngModel)]="iterator.value.value"
-      (change)="onFilterChange()" mcsId>
+      (statusChange)="onFilterChange()" mcsId>
       {{ iterator.value.text }}
     </mcs-checkbox>
   </ng-container>

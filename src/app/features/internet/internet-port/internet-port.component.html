@@ -7,80 +7,58 @@
       <div class="listing-panel-wrapper">
         <mcs-search #search mcsId="internet-listing-panel-search"></mcs-search>
 
-        <mcs-data-status [dataStatusFactory]="listStatusFactory">
-          <mcs-data-status-success mcsDataSuccess>
-            <mcs-list-panel>
-              <!-- With ha group (with more than 1 group) -->
-              <ng-container *ngIf="internetListing$ | async as internetMap">
-                <div *ngFor="let iterator of (internetMap | mcsMapIterable) | mcsSortArray: internetListSource?.internetGroupSortMethod" >
+        <mcs-list-panel [dataSource]="listViewDatasource" [config]="listViewConfig?.panelSettings">
+          <ng-container *mcsListPanelContent="let entity">
+            <!-- With grouping -->
+            <ng-container *ngIf="entity.groupName | mcsIsNotNullOrEmpty; else standaloneTemplate">
+              <mcs-option-group>
+                <ng-container *mcsOptionGroupLabel>
+                  <span>{{ entity.groupName }}</span>
+                </ng-container>
 
-                  <ng-container *ngIf="iterator.key; else standalone">
-                    <mcs-option-group *ngIf="iterator.value?.length >= 1 ">
-                      <ng-container *mcsOptionGroupLabel>
-                        <span>{{ iterator.key }}</span>
-                      </ng-container>
+                <a *ngFor="let internetPort of entity.internetPorts"
+                  [mcsRouterLink]="[routeKeyEnum.InternetDetails, internetPort.id]"
+                  mcsId="select-internet-port"
+                  mcsEventTracker="select-internet-port"
+                  mcsEventCategory="internet"
+                  mcsEventLabel="internet-port-list-panel">
 
-                      <ng-container *ngFor="let internetPort of (iterator.value | mcsSortArray: internetListSource?.internetSortMethod)">
-                        <a [mcsRouterLink]="[routeKeyEnum.InternetDetails, internetPort.id]"
-                          mcsId="select-internet-port"
-                          mcsEventTracker="select-internet-port"
-                          mcsEventCategory="internet"
-                          mcsEventLabel="internet-port-list-panel">
+                  <mcs-option [value]="internetPort"
+                    [selected]="(selectedInternetPort$ | async)?.id === internetPort.id">
+                    <mcs-item>
+                      <span>{{ internetPort.description }}</span>
+                    </mcs-item>
+                  </mcs-option>
+                </a>
+              </mcs-option-group>
+            </ng-container>
 
-                          <mcs-option [value]="internetPort"
-                            [selected]="(selectedInternetPort$ | async)?.id === internetPort.id">
-                            <mcs-item>
-                              <span>{{ internetPort.description }}</span>
-                            </mcs-item>
-                          </mcs-option>
-                        </a>
-                      </ng-container>
-                    </mcs-option-group>
-                  </ng-container>
+            <!-- Without grouping -->
+            <ng-template #standaloneTemplate>
+              <a *ngFor="let internetPort of entity.internetPorts"
+                [mcsRouterLink]="[routeKeyEnum.InternetDetails, internetPort.id]"
+                mcsId="select-internet-port"
+                mcsEventTracker="select-internet-port"
+                mcsEventCategory="internet"
+                mcsEventLabel="internet-port-list-panel">
 
-                  <!-- Without zone -->
-                  <ng-template #standalone>
-                    <ng-container *ngFor="let internetPort of (iterator.value | mcsSortArray: internetListSource?.internetSortMethod)">
-                      <a [mcsRouterLink]="[routeKeyEnum.InternetDetails, internetPort.id]"
-                        mcsId="select-internet-port"
-                        mcsEventTracker="select-internet-port"
-                        mcsEventCategory="internet"
-                        mcsEventLabel="internet-port-list-panel">
-
-                        <mcs-option [value]="internetPort"
-                          [selected]="(selectedInternetPort$ | async)?.id === internetPort.id">
-                          <mcs-item>
-                            <span>{{ internetPort.description }}</span>
-                          </mcs-item>
-                        </mcs-option>
-                      </a>
-                    </ng-container>
-                  </ng-template>
-                </div>
-
-              </ng-container>
-            </mcs-list-panel>
-          </mcs-data-status-success>
-
-          <mcs-data-status-in-progress mcsDataInProgress>
-            <span>{{ 'internet.loading' | translate }}</span>
-          </mcs-data-status-in-progress>
-
-          <mcs-data-status-empty mcsDataEmpty>
-            <span>{{ 'internet.noInternetPorts' | translate }}</span>
-          </mcs-data-status-empty>
-
-          <mcs-data-status-error mcsDataError>
-            <span>{{ 'internet.errorMessage' | translate }}</span>
-          </mcs-data-status-error>
-        </mcs-data-status>
+                <mcs-option [value]="internetPort"
+                  [selected]="(selectedInternetPort$ | async)?.id === internetPort.id">
+                  <mcs-item>
+                    <span>{{ internetPort.description }}</span>
+                  </mcs-item>
+                </mcs-option>
+              </a>
+            </ng-template>
+          </ng-container>
+        </mcs-list-panel>
       </div>
     </mcs-left-panel-item>
   </mcs-left-panel>
 
   <mcs-content-panel *mcsContentPanelDef>
     <div class="routing-tab-wrapper" *ngIf="selectedInternetPort$ | async as selectedInternetPort">
-      <mcs-tab-group [selectedTabId]="selectedRoutingTab" (tabChanged)="onTabChanged($event)">
+      <mcs-tab-group [selectedTabId]="selectedTabId$ | async" (tabChanged)="onTabChanged($event)">
         <!-- Management Tab -->
         <mcs-tab [label]="'internetPortManagement.label' | translate" id="management">
         </mcs-tab>

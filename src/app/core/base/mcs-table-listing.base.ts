@@ -50,15 +50,6 @@ export interface TableListingConfig<T> {
 
 export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy {
 
-  @ViewChild('table')
-  public table: Table;
-
-  @ViewChild('search')
-  public search: Search;
-
-  @ViewChild('paginator')
-  public paginator: Paginator;
-
   // Table variables
   public selection: McsTableSelection<T>;
   public dataSource: McsTableDataSource<T>;
@@ -75,6 +66,10 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
   private _isMobile: boolean;
   private _dataChangeHandler: Subscription;
   private _dataClearHandler: Subscription;
+
+  private _search: Search;
+  private _paginator: Paginator;
+  private _table: Table;
 
   constructor(
     protected injector: Injector,
@@ -111,6 +106,29 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
     }
   }
 
+  @ViewChild('search', { static: false })
+  public set search(value: Search) {
+    if (this._search !== value) {
+      this._search = value;
+      this.dataSource.registerSearch(value);
+    }
+  }
+
+  @ViewChild('paginator', { static: false })
+  public set paginator(value: Paginator) {
+    if (this._paginator !== value) {
+      this._paginator = value;
+      this.dataSource.registerPaginator(value);
+    }
+  }
+
+  @ViewChild('table', { static: false })
+  public set table(value: Table) {
+    if (this._table !== value) {
+      this._table = value;
+    }
+  }
+
   /**
    * Returns true when mode is mobile
    */
@@ -122,8 +140,8 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
    * Returns true when search box is currently processing
    */
   public get isSearching(): boolean {
-    return isNullOrEmpty(this.search) ? false :
-      this.search.keyword && this.search.keyword.length > 0;
+    return isNullOrEmpty(this._search) ? false :
+      this._search.keyword && this._search.keyword.length > 0;
   }
 
   /**
@@ -152,12 +170,9 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
     this._initializeDataSource();
   }
 
-  protected abstract getEntityListing(query: McsQueryParam): Observable<McsApiCollection<T>>;
+  public abstract get columnSettingsKey(): string;
 
-  /**
-   * Returns the column settings filter key or the listing table
-   */
-  protected abstract get columnSettingsKey(): string;
+  protected abstract getEntityListing(query: McsQueryParam): Observable<McsApiCollection<T>>;
 
   /**
    * Dispose all of the resource from the datasource including all the subscription
@@ -212,13 +227,6 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
    */
   private _initializeDataSource(): void {
     this.dataSource.updateDatasource(this._getEntityCollection.bind(this));
-
-    if (!isNullOrEmpty(this.search)) {
-      this.dataSource.registerSearch(this.search);
-    }
-    if (!isNullOrEmpty(this.paginator)) {
-      this.dataSource.registerPaginator(this.paginator);
-    }
     this.changeDetectorRef.markForCheck();
   }
 
@@ -227,9 +235,9 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
    */
   private _getEntityCollection(): Observable<T[]> {
     return this.getEntityListing({
-      pageIndex: getSafeProperty(this.paginator, (obj) => obj.pageIndex, CommonDefinition.PAGE_INDEX_DEFAULT),
-      pageSize: getSafeProperty(this.paginator, (obj) => obj.pageSize, CommonDefinition.PAGE_SIZE_MIN),
-      keyword: getSafeProperty(this.search, (obj) => obj.keyword, '')
+      pageIndex: getSafeProperty(this._paginator, (obj) => obj.pageIndex, CommonDefinition.PAGE_INDEX_DEFAULT),
+      pageSize: getSafeProperty(this._paginator, (obj) => obj.pageSize, CommonDefinition.PAGE_SIZE_MIN),
+      keyword: getSafeProperty(this._search, (obj) => obj.keyword, '')
     }).pipe(
       tap((apiCollection) => this._setTotalRecordsCount(apiCollection.totalCollectionCount)),
       map((entityCollection) => entityCollection.collection)
@@ -258,8 +266,8 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
       if (filter.value) { displayedColumns.push(key); }
     });
 
-    if (!isNullOrEmpty(this.table)) {
-      this.table.showColumns(...displayedColumns);
+    if (!isNullOrEmpty(this._table)) {
+      this._table.showColumns(...displayedColumns);
     }
   }
 

@@ -57,7 +57,9 @@ export class GridRowComponent implements AfterContentInit, OnDestroy {
   ) { }
 
   public ngAfterContentInit() {
-    this._subscribesToColumnChanges();
+    Promise.resolve().then(() => {
+      this._subscribesToColumnChanges();
+    });
   }
 
   public ngOnDestroy() {

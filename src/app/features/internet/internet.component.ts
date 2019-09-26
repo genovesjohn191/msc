@@ -55,7 +55,7 @@ export class InternetComponent extends McsTableListingBase<McsInternetPort> {
   /**
    * Returns the column settings key for the filter selector
    */
-  protected get columnSettingsKey(): string {
+  public get columnSettingsKey(): string {
     return CommonDefinition.FILTERSELECTOR_INTERNET_LISTING;
   }
 

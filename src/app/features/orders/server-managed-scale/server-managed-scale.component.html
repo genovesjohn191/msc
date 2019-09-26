@@ -35,7 +35,7 @@
             <mcs-select [placeholder]="'orderServerManagedScale.vm.placeholder' | translate"
               required mcsId="select-server"
               [formControl]="fcManageServer"
-              (change)="onChangeServer($event)"
+              (selectionChange)="onChangeServer($event)"
               [mcsContextualHelp]="'orderServerManagedScale.vm.contextualHelp' | translate">
 
               <mcs-option-group>

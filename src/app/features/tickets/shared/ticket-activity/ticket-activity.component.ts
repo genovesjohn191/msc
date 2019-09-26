@@ -53,8 +53,8 @@ export class TicketActivityComponent {
 
   public get activityIconKey(): string {
     return this._activity.type === TicketActivityType.Comment ?
-      CommonDefinition.ASSETS_FONT_COMMENT :
-      CommonDefinition.ASSETS_FONT_ATTACHMENT;
+      CommonDefinition.ASSETS_SVG_COMMENT :
+      CommonDefinition.ASSETS_SVG_ATTACHMENT;
   }
 
   /**

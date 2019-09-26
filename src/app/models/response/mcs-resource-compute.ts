@@ -1,3 +1,4 @@
+import { JsonProperty } from '@peerlancers/json-serialization';
 import { isNullOrEmpty } from '@app/utilities';
 import {
   UnitType,
@@ -5,25 +6,29 @@ import {
 } from '../enumerations/unit-type.enum';
 
 export class McsResourceCompute {
-  public cpuAllocation: number;
-  public cpuLimit: number;
-  public cpuUsed: number;
-  public cpuAvailable: number;
-  public memoryAllocationMB: number;
-  public memoryLimitMB: number;
-  public memoryUsedMB: number;
-  public memoryAvailableMB: number;
+  @JsonProperty()
+  public cpuAllocation: number = undefined;
 
-  constructor() {
-    this.cpuAllocation = undefined;
-    this.cpuLimit = undefined;
-    this.cpuUsed = undefined;
-    this.cpuAvailable = undefined;
-    this.memoryAllocationMB = undefined;
-    this.memoryLimitMB = undefined;
-    this.memoryUsedMB = undefined;
-    this.memoryAvailableMB = undefined;
-  }
+  @JsonProperty()
+  public cpuLimit: number = undefined;
+
+  @JsonProperty()
+  public cpuUsed: number = undefined;
+
+  @JsonProperty()
+  public cpuAvailable: number = undefined;
+
+  @JsonProperty()
+  public memoryAllocationMB: number = undefined;
+
+  @JsonProperty()
+  public memoryLimitMB: number = undefined;
+
+  @JsonProperty()
+  public memoryUsedMB: number = undefined;
+
+  @JsonProperty()
+  public memoryAvailableMB: number = undefined;
 
   /**
    * Returns the memoryLimitMB with its unit

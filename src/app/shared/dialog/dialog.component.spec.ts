@@ -16,7 +16,7 @@ import { CoreTestingModule } from '@app/core/testing';
   template: ``
 })
 export class TestDialogComponent {
-  @ViewChild(DialogComponent)
+  @ViewChild(DialogComponent, { static: false })
   public dialogComponent: DialogComponent;
 }
 

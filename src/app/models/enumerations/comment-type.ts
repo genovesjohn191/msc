@@ -1,4 +1,3 @@
-import { CacheKey } from 'json-object-mapper';
 import { McsEnumSerializationBase } from '../serialization/mcs-enum-serialization-base';
 
 export enum CommentType {
@@ -14,7 +13,6 @@ export enum CommentType {
 /**
  * Enumeration serializer and deserializer methods
  */
-@CacheKey('CommentTypeSerialization')
 export class CommentTypeSerialization
   extends McsEnumSerializationBase<CommentType> {
   constructor() { super(CommentType); }

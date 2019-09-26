@@ -60,13 +60,13 @@ export class CommentBoxComponent implements OnInit {
   public attachedFilesChanged: EventEmitter<McsFileInfo[]>;
 
   @Output()
-  public onAddComment: EventEmitter<McsComment>;
+  public commentAdded: EventEmitter<McsComment>;
 
-  @ViewChild('errorDialogTemplate')
+  @ViewChild('errorDialogTemplate', { static: false })
   public errorDialogTemplate: TemplateRef<any>;
 
   public get errorIconKey(): string {
-    return CommonDefinition.ASSETS_FONT_WARNING;
+    return CommonDefinition.ASSETS_SVG_WARNING;
   }
 
   public constructor(
@@ -75,7 +75,7 @@ export class CommentBoxComponent implements OnInit {
     private _changeDetectorRef: ChangeDetectorRef
   ) {
     // Set uploader configuration
-    this.onAddComment = new EventEmitter<McsComment>();
+    this.commentAdded = new EventEmitter<McsComment>();
     this.attachedFilesChanged = new EventEmitter<McsFileInfo[]>();
   }
 
@@ -96,11 +96,11 @@ export class CommentBoxComponent implements OnInit {
   }
 
   public get attachmentIconKey(): string {
-    return CommonDefinition.ASSETS_FONT_ATTACHMENT;
+    return CommonDefinition.ASSETS_SVG_ATTACHMENT;
   }
 
   public get closeIconKey(): string {
-    return CommonDefinition.ASSETS_FONT_TRASH;
+    return CommonDefinition.ASSETS_SVG_DELETE;
   }
 
   public ngOnInit() {
@@ -154,7 +154,7 @@ export class CommentBoxComponent implements OnInit {
     // Emit changes when all are valid
     comment.message = this.fcComment.value;
     comment.attachments = await this._getAttachmentsAsync();
-    this.onAddComment.next(comment);
+    this.commentAdded.next(comment);
     this._clearContents();
   }
 

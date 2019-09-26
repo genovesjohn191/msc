@@ -1,23 +1,27 @@
 import {
   Component,
-  OnInit,
   ViewChild,
   TemplateRef,
+  AfterViewInit,
+  OnDestroy
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
-  McsSnackBarRef,
-  McsSnackBarService,
   McsNotificationJobService,
-  McsSnackBarConfig,
   McsNotificationContextService
 } from '@app/core';
 import {
   isNullOrEmpty,
-  CommonDefinition
+  CommonDefinition,
+  unsubscribeSafely
 } from '@app/utilities';
 import { NetworkStatus } from '@app/models';
+import {
+  SnackBarService,
+  SnackBarRef,
+  SnackBarConfig
+} from '@app/shared';
 
 const DEFAULT_SUCCESS_SNACKBAR_DURATION = 5000;
 
@@ -26,14 +30,14 @@ const DEFAULT_SUCCESS_SNACKBAR_DURATION = 5000;
   templateUrl: './web-stomp.component.html'
 })
 
-export class WebStompComponent implements OnInit {
-  public stompErrorStatusBarRef: McsSnackBarRef<any>;
-  public stompSuccessStatusBarRef: McsSnackBarRef<any>;
+export class WebStompComponent implements AfterViewInit, OnDestroy {
+  public stompErrorStatusBarRef: SnackBarRef<any>;
+  public stompSuccessStatusBarRef: SnackBarRef<any>;
 
-  @ViewChild('stompErrorStatusTemplate')
+  @ViewChild('stompErrorStatusTemplate', { static: false })
   private _stompErrorStatusTemplate: TemplateRef<any>;
 
-  @ViewChild('stompSucessStatusTemplate')
+  @ViewChild('stompSucessStatusTemplate', { static: false })
   private _stompSucessStatusTemplate: TemplateRef<any>;
 
   private _encounteredError: boolean;
@@ -43,17 +47,21 @@ export class WebStompComponent implements OnInit {
    * Returns the check icon key
    */
   public get checkIconKey(): string {
-    return CommonDefinition.ASSETS_FONT_CHECK;
+    return CommonDefinition.ASSETS_SVG_CHECK;
   }
 
   constructor(
-    private _snackBarRefService: McsSnackBarService,
+    private _snackBarRefService: SnackBarService,
     private _notificationJobService: McsNotificationJobService,
     private _notificationContext: McsNotificationContextService
   ) { }
 
-  public ngOnInit() {
+  public ngAfterViewInit() {
     this._listenToStompStatus();
+  }
+
+  public ngOnDestroy() {
+    unsubscribeSafely(this._destroySubject);
   }
 
   /**
@@ -105,7 +113,7 @@ export class WebStompComponent implements OnInit {
         duration: DEFAULT_SUCCESS_SNACKBAR_DURATION,
         verticalPlacement: 'bottom',
         horizontalAlignment: 'end'
-      } as McsSnackBarConfig
+      } as SnackBarConfig
     );
   }
 
@@ -121,7 +129,7 @@ export class WebStompComponent implements OnInit {
         id: 'stomp-error-status-bar',
         verticalPlacement: 'bottom',
         horizontalAlignment: 'end'
-      } as McsSnackBarConfig
+      } as SnackBarConfig
     );
   }
 

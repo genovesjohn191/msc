@@ -1,24 +1,23 @@
-import { JsonProperty } from 'json-object-mapper';
+import { JsonProperty } from '@peerlancers/json-serialization';
 import { McsResourceNetworkIpAddress } from './mcs-resource-network-ip-address';
 import { McsEntityBase } from '../common/mcs-entity.base';
 
 export class McsResourceNetwork extends McsEntityBase {
-  public name: string;
-  public serviceId: string;
-  public vlanId: number;
-  public netmask: string;
-  public gateway: string;
+  @JsonProperty()
+  public name: string = undefined;
 
-  @JsonProperty({ type: McsResourceNetworkIpAddress })
-  public ipAddresses: McsResourceNetworkIpAddress[];
+  @JsonProperty()
+  public serviceId: string = undefined;
 
-  constructor() {
-    super();
-    this.name = undefined;
-    this.serviceId = undefined;
-    this.vlanId = undefined;
-    this.netmask = undefined;
-    this.gateway = undefined;
-    this.ipAddresses = undefined;
-  }
+  @JsonProperty()
+  public vlanId: number = undefined;
+
+  @JsonProperty()
+  public netmask: string = undefined;
+
+  @JsonProperty()
+  public gateway: string = undefined;
+
+  @JsonProperty({ target: McsResourceNetworkIpAddress })
+  public ipAddresses: McsResourceNetworkIpAddress[] = undefined;
 }

@@ -34,7 +34,7 @@
           <mcs-form-field>
             <mcs-select [formControl]="fcResource" required
               [placeholder]="'orderVdcStorageExpand.vdc.placeholder' | translate"
-              (change)="onChangeResource($event)"
+              (selectionChange)="onChangeResource($event)"
               [mcsContextualHelp]="'orderVdcStorageExpand.vdc.contextualHelp' | translate"
               mcsId="select-resource"
               mcsEventTracker="navigate-back-click"
@@ -50,7 +50,7 @@
           <ng-container *ngIf="selectedResource$ | async as selectedResource">
               <div class="action-box" [@fadeIn]>
                 <mcs-select [formControl]="fcStorage" required
-                  (change)="onChangeStorage($event)"
+                  (selectionChange)="onChangeStorage($event)"
                   [placeholder]="'orderVdcStorageExpand.vdc.placeholder' | translate"
                   mcsId="select-storage"
                   mcsEventTracker="navigate-back-click"
@@ -72,7 +72,7 @@
           <div class="action-items">
             <button mcsButton arrow="right"
               mcsWizardStepNext
-              (click)="onSubmitExpandDetails(fcStorage?.value)"
+              (click)="onSubmitExpandDetails()"
               [disabled]="!formIsValid"
               mcsId="step-1-next"
               mcsEventTracker="step-1-next"

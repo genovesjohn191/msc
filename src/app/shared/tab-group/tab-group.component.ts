@@ -71,9 +71,11 @@ export class TabGroupComponent implements AfterViewInit, AfterContentInit, OnDes
   }
 
   public ngAfterContentInit(): void {
-    this.tabs.changes.pipe(
-      startWith(null), takeUntil(this._destroySubject)
-    ).subscribe(() => this._changeDetectorRef.markForCheck());
+    Promise.resolve().then(() => {
+      this.tabs.changes.pipe(
+        startWith(null), takeUntil(this._destroySubject)
+      ).subscribe(() => this._changeDetectorRef.markForCheck());
+    });
   }
 
   public ngAfterViewInit() {

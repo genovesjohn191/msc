@@ -67,7 +67,7 @@ export class ConsolePageComponent implements AfterViewInit, OnDestroy {
   public closingTime: number;
   public isConsoleClose: boolean;
 
-  @ViewChild('consoleUiElement')
+  @ViewChild('consoleUiElement', { static: false })
   public consoleUiElement: ElementRef;
 
   private _intervalId: number;

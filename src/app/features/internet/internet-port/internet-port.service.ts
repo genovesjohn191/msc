@@ -16,6 +16,7 @@ import {
 @Injectable()
 export class InternetPortService {
   private _selectedInternetPortChange: BehaviorSubject<McsInternetPort>;
+  private _internetPortId: string;
 
   constructor() {
     this._selectedInternetPortChange = new BehaviorSubject<McsInternetPort>(undefined);
@@ -40,9 +41,17 @@ export class InternetPortService {
   }
 
   /**
+   * Sets the internet port id
+   * @param internetPortId Internet port id to be set
+   */
+  public setInternetPortId(internetPortId: string): void {
+    this._internetPortId = internetPortId;
+  }
+
+  /**
    * Returns the internet port id
    */
   public getInternetPortId(): string {
-    return getSafeProperty(this._selectedInternetPortChange.getValue(), (obj) => obj.id);
+    return this._internetPortId;
   }
 }

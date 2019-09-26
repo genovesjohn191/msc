@@ -10,8 +10,8 @@ export enum OsUpdatesStatus {
 export const osUpdatesStatusLabel = {
   [OsUpdatesStatus.Updated]: 'Your operating system is up to date.',
   [OsUpdatesStatus.Outdated]: 'Your operating system is not up to date.',
-  [OsUpdatesStatus.Analysing]: "We're inspecting your operating system.",
-  [OsUpdatesStatus.Updating]: "We're updating your operating system.",
+  [OsUpdatesStatus.Analysing]: 'We are inspecting your operating system.',
+  [OsUpdatesStatus.Updating]: 'We are updating your operating system.',
   [OsUpdatesStatus.Unanalysed]: 'Your operating system may not be up to date.',
   [OsUpdatesStatus.Error]: 'Unable to retrieve updates information.',
 };

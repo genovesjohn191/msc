@@ -74,7 +74,7 @@ export class OrderComponent implements OnInit, OnDestroy {
   public orderDetailsView: OrderDetailsView;
   public dialogRef: DialogRef<TemplateRef<any>>;
 
-  @ViewChild('submitDialogTemplate')
+  @ViewChild('submitDialogTemplate', { static: false })
   private _submitDialogTemplate: TemplateRef<any>;
 
   private _orderApprovers: McsOrderApprover[];

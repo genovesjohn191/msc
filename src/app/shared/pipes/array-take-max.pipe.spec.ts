@@ -20,7 +20,7 @@ export class TestComponent {
   @ViewChildren('testElement')
   public testElements: QueryList<ElementRef>;
 
-  @ViewChild(ArrayTakeMaxPipe)
+  @ViewChild(ArrayTakeMaxPipe, { static: false })
   public pipe: ArrayTakeMaxPipe;
 
   public sourceArray: string[];

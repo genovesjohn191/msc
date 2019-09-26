@@ -24,7 +24,8 @@ import {
   VdcComponent,
   VdcOverviewComponent,
   VdcStorageComponent,
-  VdcService
+  VdcService,
+  VdcResolver
 } from './vdc';
 
 /**
@@ -35,7 +36,8 @@ export const serversProviders: any[] = [
   ServerService,
   ServerServicesGuard,
   ServerResolver,
-  VdcService
+  VdcService,
+  VdcResolver
 ];
 
 /**
@@ -99,6 +101,9 @@ export const serversRoutes: Routes = [
     path: '',
     component: VdcComponent,
     data: { routeId: RouteKey.VdcDetails },
+    resolve: {
+      vdc: VdcResolver
+    },
     children: [
       {
         path: '',

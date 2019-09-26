@@ -43,7 +43,7 @@
             <mcs-grid-row>
               <mcs-grid-column>
                 <mcs-item>
-                  <mcs-loader *ngIf="snapshotProcessing" size="small"
+                  <mcs-loader *ngIf="capturingSnapshot" size="small"
                     [mcsTooltip]="server.processingText"></mcs-loader>
                   <span>{{ snapshot.createdOn | mcsStdDateFormat }}</span>
                   <span read-only>{{ snapshot.sizeMB | mcsDataSize: 'MB' }}</span>

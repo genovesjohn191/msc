@@ -19,7 +19,7 @@ import { CommonDefinition } from '@app/utilities';
 
 export class SystemMessageUserPanelComponent {
 
-  @ViewChild('systemMessagePopover')
+  @ViewChild('systemMessagePopover', { static: false })
   public systemMessagePopover: any;
 
   @EventBusPropertyListenOn(McsEvent.userChange)
@@ -28,7 +28,7 @@ export class SystemMessageUserPanelComponent {
   public constructor(private _authenticationService: McsAuthenticationService) { }
 
   public get caretDownIconKey(): string {
-    return CommonDefinition.ASSETS_FONT_CHEVRON_DOWN;
+    return CommonDefinition.ASSETS_SVG_CHEVRON_DOWN;
   }
 
   /**

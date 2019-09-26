@@ -34,7 +34,7 @@
         <mcs-form-field>
           <mcs-select placeholder="Select a VDC" required
             mcsId="select-resource"
-            (change)="onChangeResource($event)"
+            (selectionChange)="onChangeResource($event)"
             [formControl]="fcResource"
             [mcsContextualHelp]="'serverCreate.vdcDropdownList.helpText' | translate">
 

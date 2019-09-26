@@ -32,6 +32,7 @@ import { McsEvent } from '@app/events';
 
 export class ToolsComponent extends McsTableListingBase<McsPortal> {
   public toolDescription: Map<string, string>;
+  public tagList = [];
 
   constructor(
     _injector: Injector,
@@ -44,10 +45,15 @@ export class ToolsComponent extends McsTableListingBase<McsPortal> {
     this._initializeToolDescriptionMap();
   }
 
+  public onAddTag(data: string): void {
+    this.tagList.push(data);
+    this.changeDetectorRef.markForCheck();
+  }
+
   /**
    * Returns the column settings key for the filter selector
    */
-  protected get columnSettingsKey(): string {
+  public get columnSettingsKey(): string {
     return CommonDefinition.FILTERSELECTOR_TOOLS_LISTING;
   }
 

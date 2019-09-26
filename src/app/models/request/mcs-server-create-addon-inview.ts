@@ -1,7 +1,6 @@
-export class McsServerCreateAddOnInview {
-  public inviewLevel: string;
+import { JsonProperty } from '@peerlancers/json-serialization';
 
-  constructor() {
-    this.inviewLevel = undefined;
-  }
+export class McsServerCreateAddOnInview {
+  @JsonProperty()
+  public inviewLevel: string = undefined;
 }

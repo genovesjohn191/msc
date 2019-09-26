@@ -18,7 +18,7 @@ import { McsFirewallPolicy } from '@app/models';
 export class FirewallPolicyComponent {
 
   @Output()
-  public close = new EventEmitter<void>();
+  public panelClose = new EventEmitter<void>();
 
   @Input()
   public get firewallPolicy(): McsFirewallPolicy { return this._firewallPolicy; }
@@ -43,6 +43,6 @@ export class FirewallPolicyComponent {
    * Closes the policy window
    */
   public closePolicy(): void {
-    this.close.emit();
+    this.panelClose.emit();
   }
 }

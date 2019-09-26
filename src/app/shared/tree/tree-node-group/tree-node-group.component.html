@@ -8,7 +8,7 @@
 
   <!-- Checkable Template -->
   <ng-container *ngIf="checkable; else nonCheckableTemplate">
-    <mcs-checkbox (change)="onTickCheckbox($event)"
+    <mcs-checkbox (statusChange)="onTickCheckbox($event)"
       [indeterminate]="hasSelectedNode && !allNodesAreSelected"
       [checked]="allNodesAreSelected">
       <ng-container *ngTemplateOutlet="labelContentTemplate"></ng-container>

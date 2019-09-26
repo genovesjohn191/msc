@@ -34,7 +34,7 @@
           <mcs-form-field>
             <mcs-select [formControl]="fcResource" required
               [placeholder]="'orderVdcStorageCreate.vdc.placeholder' | translate"
-              (change)="onChangeResource($event)"
+              (selectionChange)="onChangeResource($event)"
               [mcsContextualHelp]="'orderVdcStorageCreate.vdc.contextualHelp' | translate"
               mcsId="select-resource"
               mcsEventTracker="navigate-back-click"
@@ -51,7 +51,7 @@
               <div class="action-box" [@fadeIn]>
                 <!-- TODO: Change this to Performance Tier Dropdown -->
                 <mcs-select [formControl]="fcPerfomanceTier" required
-                  (change)="onChangePerfomanceTier($event)"
+                  (selectionChange)="onChangePerfomanceTier($event)"
                   [placeholder]="'orderVdcStorageCreate.vdc.placeholder' | translate"
                   mcsId="select-storage"
                   mcsEventTracker="navigate-back-click"

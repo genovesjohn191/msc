@@ -1,4 +1,3 @@
-import { CacheKey } from 'json-object-mapper';
 import { McsEnumSerializationBase } from '../serialization/mcs-enum-serialization-base';
 
 export enum OrderOrigin {
@@ -18,7 +17,6 @@ export const orderOriginText = {
 /**
  * Enumeration serializer and deserializer methods
  */
-@CacheKey('OrderOriginSerialization')
 export class OrderOriginSerialization
   extends McsEnumSerializationBase<OrderOrigin> {
   constructor() { super(OrderOrigin); }

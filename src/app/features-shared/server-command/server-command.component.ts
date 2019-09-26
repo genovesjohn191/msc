@@ -41,8 +41,8 @@ import {
   DialogService,
   DialogConfirmation
 } from '@app/shared';
-import { RenameServerDialogComponent } from '@app/features-shared';
 import { McsEvent } from '@app/events';
+import { RenameServerDialogComponent } from '../server-dialogs/rename-server/rename-server.dialog';
 
 @Component({
   selector: 'mcs-server-command',
@@ -68,7 +68,7 @@ export class ServerCommandComponent {
   @Output()
   public commandExecuted = new EventEmitter<ServerCommand>();
 
-  @ViewChild('popoverActionElement')
+  @ViewChild('popoverActionElement', { static: false })
   public popoverActionElement: any;
 
   private _actionMap = new Map<ServerCommand, () => Observable<any>>();

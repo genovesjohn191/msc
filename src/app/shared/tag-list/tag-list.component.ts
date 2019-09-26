@@ -22,7 +22,8 @@ import {
 } from 'rxjs';
 import {
   startWith,
-  takeUntil
+  takeUntil,
+  tap
 } from 'rxjs/operators';
 import {
   ControlValueAccessor,
@@ -116,7 +117,7 @@ export class TagListComponent extends McsFormFieldControlBase<any>
   /**
    * Tag Input directive
    */
-  @ContentChild(TagInputDirective)
+  @ContentChild(TagInputDirective, { static: false })
   private _tagInput: TagInputDirective;
 
   // Other variables
@@ -147,14 +148,18 @@ export class TagListComponent extends McsFormFieldControlBase<any>
   }
 
   public ngAfterContentInit() {
-    this._items.changes
-      .pipe(startWith(null), takeUntil(this._destroySubject))
-      .subscribe(() => {
-        this._listenToFocusChanges();
-        this._listenToSelectionChanges();
-        this._listenToRemovedChanges();
-        this._setModelValue(this._items.length);
-      });
+    Promise.resolve().then(() => {
+      this._items.changes
+        .pipe(startWith(null), takeUntil(this._destroySubject))
+        .subscribe(() => {
+          this._listenToFocusChanges();
+          this._listenToSelectionChanges();
+          this._listenToRemovedChanges();
+          this._setModelValue(this._items.length);
+        });
+
+      this._subscribeToTagInputEvents();
+    });
   }
 
   public ngDoCheck(): void {
@@ -392,5 +397,30 @@ export class TagListComponent extends McsFormFieldControlBase<any>
     if (tagsCount > 0) { this._onTouched(); }
     this.stateChanges.next();
     this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Subscribes to tag input events
+   */
+  private _subscribeToTagInputEvents(): void {
+    if (isNullOrEmpty(this._tagInput)) { return; }
+
+    this._tagInput.receiveFocus.pipe(
+      takeUntil(this._destroySubject),
+      tap(() => this.stateChanges.next())
+    ).subscribe();
+
+    this._tagInput.receiveBlur.pipe(
+      takeUntil(this._destroySubject),
+      tap(() => {
+        if (!this.focused) { this.onBlur(); }
+        this.stateChanges.next();
+      })
+    ).subscribe();
+
+    this._tagInput.receiveKeydown.pipe(
+      takeUntil(this._destroySubject),
+      tap((keyboardEvent) => this.onKeyDown(keyboardEvent))
+    ).subscribe();
   }
 }

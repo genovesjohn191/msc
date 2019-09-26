@@ -15,13 +15,13 @@ import { PluralPipe } from './plural.pipe';
   template: ``
 })
 export class TestComponent {
-  @ViewChild('testElementSingular')
+  @ViewChild('testElementSingular', { static: false })
   public testElementSingular: ElementRef;
 
-  @ViewChild('testElementPlural')
+  @ViewChild('testElementPlural', { static: false })
   public testElementPlural: ElementRef;
 
-  @ViewChild(PluralPipe)
+  @ViewChild(PluralPipe, { static: false })
   public pipe: PluralPipe;
 
   public singular = 1;

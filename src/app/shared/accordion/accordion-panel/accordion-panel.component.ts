@@ -1,13 +1,12 @@
 import {
   Component,
-  OnInit,
   Input,
   Output,
-  ContentChild,
   ChangeDetectorRef,
   ChangeDetectionStrategy,
   ViewEncapsulation,
-  EventEmitter
+  EventEmitter,
+  AfterContentInit
 } from '@angular/core';
 import {
   isNullOrEmpty,
@@ -15,9 +14,6 @@ import {
   animateFactory
 } from '@app/utilities';
 import { McsUniqueId } from '@app/core';
-import {
-  AccordionPanelHeaderComponent
-} from '../accordion-panel-header/accordion-panel-header.component';
 
 @Component({
   selector: 'mcs-accordion-panel',
@@ -33,14 +29,11 @@ import {
   }
 })
 
-export class AccordionPanelComponent implements OnInit {
+export class AccordionPanelComponent implements AfterContentInit {
   public id: string = McsUniqueId.NewId('accordion-panel');
 
   @Output()
   public selectionChanged = new EventEmitter<any>();
-
-  @ContentChild(AccordionPanelHeaderComponent)
-  public headerPanel: AccordionPanelHeaderComponent;
 
   /**
    * Flag that determines if the panel is open
@@ -71,11 +64,8 @@ export class AccordionPanelComponent implements OnInit {
     this.selectionChanged = new EventEmitter();
   }
 
-  public ngOnInit(): void {
-    // If initially expanded, toggle click method
-    if (this.expanded) {
-      this.toggle();
-    }
+  public ngAfterContentInit(): void {
+    if (this.expanded) { this.toggle(); }
   }
 
   /**
@@ -95,7 +85,7 @@ export class AccordionPanelComponent implements OnInit {
    */
   public openPanel(): void {
     this.panelOpen = true;
-    this.headerPanel.updateView();
+    this._changeDetectorRef.markForCheck();
   }
 
   /**
@@ -103,7 +93,7 @@ export class AccordionPanelComponent implements OnInit {
    */
   public closePanel(): void {
     this.panelOpen = false;
-    this.headerPanel.updateView();
+    this._changeDetectorRef.markForCheck();
   }
 
   private _emitSelectionChanged(): void {

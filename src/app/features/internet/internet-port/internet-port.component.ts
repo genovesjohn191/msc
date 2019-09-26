@@ -3,45 +3,54 @@ import {
   ChangeDetectionStrategy,
   OnInit,
   OnDestroy,
-  AfterViewInit,
-  ViewChild,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  Injector
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import {
+  ActivatedRoute,
+  ParamMap
+} from '@angular/router';
 import {
   Observable,
   Subject,
-  throwError
+  of,
+  Subscription
 } from 'rxjs';
 import {
   map,
   tap,
   shareReplay,
-  startWith,
-  takeUntil,
-  catchError
+  takeUntil
 } from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
+
 import {
-  McsRoutingTabBase,
-  McsDataStatusFactory,
-  McsNavigationService
+  McsNavigationService,
+  McsListViewListingBase
 } from '@app/core';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import { McsApiService } from '@app/services';
 import {
   McsInternetPort,
-  RouteKey
+  RouteKey,
+  McsQueryParam,
+  McsApiCollection,
+  McsRouteInfo
 } from '@app/models';
-import { Search } from '@app/shared';
 import {
   getSafeProperty,
   isNullOrEmpty,
-  unsubscribeSafely
+  unsubscribeSafely,
+  compareStrings
 } from '@app/utilities';
+import { McsEvent } from '@app/events';
 import { InternetPortService } from './internet-port.service';
-import { InternetListSource } from '../internet.listsource';
 
 type tabGroupType = 'Management';
+
+interface McsInternetGroup {
+  groupName: string;
+  internetPorts: McsInternetPort[];
+}
 
 @Component({
   selector: 'mcs-internet-port',
@@ -49,74 +58,107 @@ type tabGroupType = 'Management';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class InternetPortComponent extends McsRoutingTabBase<tabGroupType> implements OnInit, OnDestroy, AfterViewInit {
+export class InternetPortComponent extends McsListViewListingBase<McsInternetGroup> implements OnInit, OnDestroy {
   public selectedInternetPort$: Observable<McsInternetPort>;
-  public internetListing$: Observable<Map<string, McsInternetPort[]>>;
-  public listStatusFactory: McsDataStatusFactory<Map<string, McsInternetPort[]>>;
-  public internetListSource: InternetListSource;
-
-  @ViewChild('search')
-  public search: Search;
+  public selectedTabId$: Observable<string>;
 
   private _destroySubject = new Subject<void>();
+  private _routerHandler: Subscription;
 
   constructor(
-    private _internetPortService: InternetPortService,
+    _injector: Injector,
+    _changeDetectorRef: ChangeDetectorRef,
+    _translate: TranslateService,
+    private _activatedRoute: ActivatedRoute,
     private _navigationService: McsNavigationService,
-    private _apiService: McsApiService,
-    private _changeDetectorRef: ChangeDetectorRef,
-    protected eventDispatcher: EventBusDispatcherService,
-    protected activatedRoute: ActivatedRoute
+    private _internetPortService: InternetPortService,
+    private _apiService: McsApiService
   ) {
-    super(eventDispatcher, activatedRoute);
-    this.listStatusFactory = new McsDataStatusFactory();
+    super(_injector, _changeDetectorRef, {
+      dataChangeEvent: McsEvent.dataChangeInternetPorts,
+      panelSettings: {
+        inProgressText: _translate.instant('internet.loading'),
+        emptyText: _translate.instant('internet.noInternetPorts'),
+        errorText: _translate.instant('internet.errorMessage')
+      }
+    });
+    this._registerEvents();
+  }
+
+  public ngOnInit() {
+    this._subscribeToParamChange();
+    this._subscribeToInternetPortResolve();
+    this.listViewDatasource.registerSortPredicate(this._sortInternetGroupPredicate.bind(this));
+  }
+
+  public ngOnDestroy() {
+    super.dispose();
+    unsubscribeSafely(this._destroySubject);
+    unsubscribeSafely(this._routerHandler);
   }
 
   public get routeKeyEnum(): typeof RouteKey {
     return RouteKey;
   }
 
-  public ngOnInit() {
-    super.onInit();
-    this._subscribeToInternetPortResolve();
-  }
-
-  public ngAfterViewInit() {
-    Promise.resolve().then(() => {
-      this.search.searchChangedStream
-        .pipe(startWith(null), takeUntil(this._destroySubject))
-        .subscribe(() => this.listStatusFactory.setInProgress());
-      this._initializeListsource();
-    });
-  }
-
-  public ngOnDestroy() {
-    super.onDestroy();
-    unsubscribeSafely(this._destroySubject);
-  }
-
   /**
    * Event that emits when the tab is changed in the routing tabgroup
    * @param tab Active tab
    */
-  protected onTabChanged(tab: any) {
-    // Navigate route based on current active tab
-    this._navigationService.navigateTo(RouteKey.InternetDetails, [this.paramId, tab.id]);
+  public onTabChanged(tab: any) {
+    this._navigationService.navigateTo(
+      RouteKey.InternetDetails,
+      [this._internetPortService.getInternetPortId(), tab.id as tabGroupType]
+    );
   }
 
   /**
-   * Event that emits when the parameter id is changed
-   * @param id Id of the parameter
+   * Gets the entity listing from API
    */
-  protected onParamIdChanged(id: string): void {
-    if (isNullOrEmpty(id)) { return; }
+  protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsInternetGroup>> {
+    return this._apiService.getInternetPorts(query).pipe(
+      map((internetPorts) => {
+        let internetPortGroups = new Array<McsInternetGroup>();
+        internetPorts.collection.forEach((internetPort) => {
+          let availabilityZone = getSafeProperty(internetPort, (obj) => obj.availabilityZoneLabel);
+          let groupFound = internetPortGroups.find((internetGroup) => internetGroup.groupName === availabilityZone);
+          if (!isNullOrEmpty(groupFound)) {
+            groupFound.internetPorts.push(internetPort);
+            return;
+          }
+          internetPortGroups.push({
+            groupName: availabilityZone,
+            internetPorts: [internetPort]
+          });
+        });
+
+        let internetGroupsCollection = new McsApiCollection<McsInternetGroup>();
+        internetGroupsCollection.collection = internetPortGroups;
+        internetGroupsCollection.totalCollectionCount = internetPortGroups.length;
+        return internetGroupsCollection;
+      })
+    );
+  }
+
+  /**
+   * Subcribes to parameter change
+   */
+  private _subscribeToParamChange(): void {
+    this._activatedRoute.paramMap.pipe(
+      takeUntil(this._destroySubject),
+      tap((params: ParamMap) => {
+        let mediaId = params.get('id');
+        if (isNullOrEmpty(mediaId)) { return; }
+        this._internetPortService.setInternetPortId(mediaId);
+      })
+    ).subscribe();
   }
 
   /**
    * Subcribes to internet port resolve
    */
   private _subscribeToInternetPortResolve(): void {
-    this.selectedInternetPort$ = this.activatedRoute.data.pipe(
+    this.selectedInternetPort$ = this._activatedRoute.data.pipe(
       map((resolver) => getSafeProperty(resolver, (obj) => obj.internetPort)),
       tap((internetPort: McsInternetPort) => this._internetPortService.setSelectedInternetPort(internetPort)),
       shareReplay(1)
@@ -124,31 +166,19 @@ export class InternetPortComponent extends McsRoutingTabBase<tabGroupType> imple
   }
 
   /**
-   * Initialize list source
+   * Sorting predicate for group
    */
-  private _initializeListsource(): void {
-    this.internetListSource = new InternetListSource(
-      this._apiService,
-      this.search
-    );
+  private _sortInternetGroupPredicate(first: McsInternetGroup, second: McsInternetGroup): number {
+    return compareStrings(first.groupName, second.groupName);
+  }
 
-    // Key function pointer for mapping objects
-    let keyFn = (item: McsInternetPort) => {
-      let resourceName = isNullOrEmpty(item.availabilityZoneLabel) ? '' : item.availabilityZoneLabel;
-      return resourceName;
-    };
-
-    // Listen to all records changed
-    this.internetListing$ = this.internetListSource.findAllRecordsMapStream(keyFn).pipe(
-      catchError((error) => {
-        this.listStatusFactory.setError();
-        return throwError(error);
-      }),
-      tap((response) => {
-        this.search.showLoading(false);
-        this.listStatusFactory.setSuccessful(response);
-      })
+  /**
+   * Register Event dispatchers
+   */
+  private _registerEvents(): void {
+    this._routerHandler = this.eventDispatcher.addEventListener(
+      McsEvent.routeChange, (routeInfo: McsRouteInfo) =>
+      this.selectedTabId$ = of(routeInfo && routeInfo.routePath)
     );
-    this._changeDetectorRef.markForCheck();
   }
 }

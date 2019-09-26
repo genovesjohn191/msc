@@ -57,7 +57,7 @@ export class MainNavigationComponent implements OnInit, OnDestroy {
   }
 
   public get caretRightIconKey(): string {
-    return CommonDefinition.ASSETS_FONT_CARET_RIGHT;
+    return CommonDefinition.ASSETS_SVG_CHEVRON_RIGHT;
   }
 
   public get routerCategoryEnum(): any {

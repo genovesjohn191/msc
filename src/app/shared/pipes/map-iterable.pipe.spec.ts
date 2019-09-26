@@ -20,7 +20,7 @@ export class TestComponent {
   @ViewChildren('testElement')
   public testElements: QueryList<ElementRef>;
 
-  @ViewChild(MapIterablePipe)
+  @ViewChild(MapIterablePipe, { static: false })
   public pipe: MapIterablePipe;
 
   public mapContents = new Map<string, string>();

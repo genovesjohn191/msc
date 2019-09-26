@@ -20,7 +20,7 @@ import { CoreTestingModule } from '@app/core/testing';
   template: ``
 })
 export class TestComponent {
-  @ViewChild(PopoverDirective)
+  @ViewChild(PopoverDirective, { static: false })
   public popover: PopoverDirective;
 }
 
@@ -130,6 +130,7 @@ describe('PopoverDirective', () => {
         right: 50
       };
       triggerEvent(directiveElement.nativeElement, 'click');
+      fixtureInstance.detectChanges();
     }));
 
     it(`should set the orientation of mcs-popover element to left`, () => {
@@ -165,6 +166,7 @@ describe('PopoverDirective', () => {
     beforeEach(async(() => {
       component.popover.trigger = 'manual';
       triggerEvent(directiveElement.nativeElement, 'click');
+      fixtureInstance.detectChanges();
     }));
 
     it(`should call the setRightOrientation()

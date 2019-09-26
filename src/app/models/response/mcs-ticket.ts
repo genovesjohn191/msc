@@ -1,4 +1,5 @@
-import { JsonProperty } from 'json-object-mapper';
+import { JsonProperty } from '@peerlancers/json-serialization';
+import { isNullOrEmpty } from '@app/utilities';
 import { McsEntityBase } from '../common/mcs-entity.base';
 import {
   TicketPriority,
@@ -17,70 +18,89 @@ import {
 import { McsTicketComment } from './mcs-ticket-comment';
 import { McsTicketClosureInformation } from './mcs-ticket-closure-information';
 import { McsTicketAttachment } from './mcs-ticket-attachment';
-import { isNullOrEmpty } from '@app/utilities';
 import { McsDateSerialization } from '../serialization/mcs-date-serialization';
 
 export class McsTicket extends McsEntityBase {
-  public number: string;
-  public crispTicketNumber: string;
-  public requestor: string;
-  public company: string;
-  public shortDescription: string;
-  public description: string;
-  public impact: string;
-  public customerReference: string;
-  public slaDue: string;
-  public serviceId: string[];
-  public assignedTo: string;
-  public queue: string;
-  public updatedBy: string;
+  @JsonProperty()
+  public number: string = undefined;
 
-  @JsonProperty({ type: McsTicketClosureInformation })
-  public closureInformation: McsTicketClosureInformation;
+  @JsonProperty()
+  public crispTicketNumber: string = undefined;
 
-  @JsonProperty({ type: McsTicketAttachment })
-  public attachments: McsTicketAttachment[];
+  @JsonProperty()
+  public requestor: string = undefined;
 
-  @JsonProperty({ type: McsTicketComment })
-  public comments: McsTicketComment[];
+  @JsonProperty()
+  public company: string = undefined;
 
-  @JsonProperty({ type: McsTicket })
-  public childTickets: McsTicket[];
+  @JsonProperty()
+  public shortDescription: string = undefined;
+
+  @JsonProperty()
+  public description: string = undefined;
+
+  @JsonProperty()
+  public impact: string = undefined;
+
+  @JsonProperty()
+  public customerReference: string = undefined;
+
+  @JsonProperty()
+  public slaDue: string = undefined;
+
+  @JsonProperty()
+  public serviceId: string[] = undefined;
+
+  @JsonProperty()
+  public assignedTo: string = undefined;
+
+  @JsonProperty()
+  public queue: string = undefined;
+
+  @JsonProperty()
+  public updatedBy: string = undefined;
+
+  @JsonProperty({ target: McsTicketClosureInformation })
+  public closureInformation: McsTicketClosureInformation = undefined;
+
+  @JsonProperty({ target: McsTicketAttachment })
+  public attachments: McsTicketAttachment[] = undefined;
+
+  @JsonProperty({ target: McsTicketComment })
+  public comments: McsTicketComment[] = undefined;
+
+  @JsonProperty({ target: McsTicket })
+  public childTickets: McsTicket[] = undefined;
 
   @JsonProperty({
-    type: Date,
     serializer: McsDateSerialization,
     deserializer: McsDateSerialization
   })
-  public createdOn: Date;
+  public createdOn: Date = undefined;
 
   @JsonProperty({
-    type: Date,
     serializer: McsDateSerialization,
     deserializer: McsDateSerialization
   })
-  public updatedOn: Date;
+  public updatedOn: Date = undefined;
 
   @JsonProperty({
-    type: TicketPriority,
     serializer: TicketPrioritySerialization,
     deserializer: TicketPrioritySerialization
   })
-  public priority: TicketPriority;
+  public priority: TicketPriority = undefined;
 
   @JsonProperty({
-    type: TicketStatus,
     serializer: TicketStatusSerialization,
     deserializer: TicketStatusSerialization
   })
-  public state: TicketStatus;
+  public state: TicketStatus = undefined;
 
   @JsonProperty({
-    type: TicketSubType,
     serializer: TicketSubTypeSerialization,
     deserializer: TicketSubTypeSerialization
   })
-  public subType: TicketSubType;
+  public subType: TicketSubType = undefined;
 
   constructor() {
     super();

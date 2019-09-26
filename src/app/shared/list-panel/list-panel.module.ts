@@ -1,18 +1,27 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-/** List Panel */
+import { DataStatusModule } from '../data-status/data-status.module';
+
 import { ListPanelComponent } from './list-panel.component';
+import { ListPanelContentDirective } from './list-content/list-panel-content.directive';
+import { ListPanelContentOutletDirective } from './list-content/list-panel-content.outlet';
 
 @NgModule({
   declarations: [
-    ListPanelComponent
+    ListPanelComponent,
+    ListPanelContentDirective,
+    ListPanelContentOutletDirective
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    DataStatusModule
   ],
   exports: [
+    CommonModule,
+    DataStatusModule,
     ListPanelComponent,
-    CommonModule
+    ListPanelContentDirective,
+    ListPanelContentOutletDirective
   ]
 })
 

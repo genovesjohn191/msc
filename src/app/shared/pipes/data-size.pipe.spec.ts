@@ -20,16 +20,16 @@ import {
   template: ``
 })
 export class TestComponent {
-  @ViewChild('testElementKB')
+  @ViewChild('testElementKB', { static: false })
   public testElementKB: ElementRef;
 
-  @ViewChild('testElementMB')
+  @ViewChild('testElementMB', { static: false })
   public testElementMB: ElementRef;
 
-  @ViewChild('testElementGB')
+  @ViewChild('testElementGB', { static: false })
   public testElementGB: ElementRef;
 
-  @ViewChild(DataSizePipe)
+  @ViewChild(DataSizePipe, { static: false })
   public pipe: DataSizePipe;
 
   public kilobyte = 512;

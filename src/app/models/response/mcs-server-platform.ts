@@ -1,25 +1,22 @@
+import { JsonProperty } from '@peerlancers/json-serialization';
 import {
   PlatformType,
   PlatformTypeSerialization
 } from '../enumerations/platform-type.enum';
-import { JsonProperty } from 'json-object-mapper';
 
 export class McsServerPlatform {
-  public resourceId: string;
-  public resourceName: string;
-  public environmentName: string;
+  @JsonProperty()
+  public resourceId: string = undefined;
+
+  @JsonProperty()
+  public resourceName: string = undefined;
+
+  @JsonProperty()
+  public environmentName: string = undefined;
 
   @JsonProperty({
-    type: PlatformType,
     serializer: PlatformTypeSerialization,
     deserializer: PlatformTypeSerialization
   })
-  public type: PlatformType;
-
-  constructor() {
-    this.type = undefined;
-    this.resourceId = undefined;
-    this.resourceName = undefined;
-    this.environmentName = undefined;
-  }
+  public type: PlatformType = undefined;
 }

@@ -58,7 +58,7 @@ export class SubNavigationMobileComponent implements OnInit, OnDestroy {
    * Returns the toggle icon key
    */
   public get toggleIconKey(): string {
-    return CommonDefinition.ASSETS_FONT_CHEVRON_DOWN;
+    return CommonDefinition.ASSETS_SVG_CHEVRON_DOWN;
   }
 
   /**

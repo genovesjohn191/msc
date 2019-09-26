@@ -1,9 +1,9 @@
-export class McsProductInviewThreshold {
-  public defaultAlertThreshold: string;
-  public description: string;
+import { JsonProperty } from '@peerlancers/json-serialization';
 
-  constructor() {
-    this.defaultAlertThreshold = undefined;
-    this.description = undefined;
-  }
+export class McsProductInviewThreshold {
+  @JsonProperty()
+  public defaultAlertThreshold: string = undefined;
+
+  @JsonProperty()
+  public description: string = undefined;
 }

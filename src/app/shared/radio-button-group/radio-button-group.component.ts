@@ -104,7 +104,7 @@ export class RadioButtonGroupComponent implements AfterContentInit,
    * Combine stream of all the selected item child's change event
    */
   public get itemsSelectionChanged(): Observable<RadioButtonComponent> {
-    return merge(...this._radioButtons.map((item) => item.change));
+    return merge(...this._radioButtons.map((item) => item.selectionChange));
   }
 
   public constructor(
@@ -112,13 +112,15 @@ export class RadioButtonGroupComponent implements AfterContentInit,
   ) { }
 
   public ngAfterContentInit() {
-    this._radioButtons.changes
-      .pipe(startWith(null), takeUntil(this._destroySubject))
-      .subscribe(() => {
+    Promise.resolve().then(() => {
+      this._radioButtons.changes.pipe(
+        startWith(null), takeUntil(this._destroySubject)
+      ).subscribe(() => {
         this._listenToSelectionChanges();
         this._initializeSelection();
         this._updateRadioButtonNames();
       });
+    });
   }
 
   public ngOnDestroy() {

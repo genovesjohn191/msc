@@ -62,7 +62,7 @@ export class TabHeaderItemComponent {
   }
   private _active: boolean;
 
-  @ContentChild(ResponsivePanelItemDirective)
+  @ContentChild(ResponsivePanelItemDirective, { static: false })
   private _responsivePanelItem: ResponsivePanelItemDirective;
 
   constructor(

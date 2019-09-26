@@ -5,3 +5,4 @@ export * from './storage/vdc-storage.component';
 
 /** VDC Services */
 export * from './vdc.service';
+export * from './vdc.resolver';

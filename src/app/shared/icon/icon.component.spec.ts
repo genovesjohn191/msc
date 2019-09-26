@@ -85,28 +85,6 @@ describe('IconComponent', () => {
     });
   });
 
-  describe('ngOnChanges() when icon type is Font Awesome', () => {
-    beforeEach(async(() => {
-      component.key = CommonDefinition.ASSETS_FONT_BELL;
-      component.size = 'small';
-      component.ngOnChanges();
-    }));
-
-    it('should create the main component element', () => {
-      expect(fixture.nativeElement).toBeDefined();
-    });
-
-    it('should create the icon container element', () => {
-      let element = document.getElementsByClassName('icon-container');
-      expect(element).not.toBe(null);
-    });
-
-    it('should create the i element for font-awesome icons', () => {
-      let element = document.querySelector('i');
-      expect(element).not.toBe(null);
-    });
-  });
-
   describe('ngOnChanges() when icon type is Image(jpeg, png, gif)', () => {
     beforeEach(async(() => {
       component.key = CommonDefinition.ASSETS_GIF_LOADER_SPINNER;

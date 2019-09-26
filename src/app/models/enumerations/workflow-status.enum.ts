@@ -1,4 +1,3 @@
-import { CacheKey } from 'json-object-mapper';
 import { McsEnumSerializationBase } from '../serialization/mcs-enum-serialization-base';
 
 export enum WorkflowStatus {
@@ -28,7 +27,6 @@ export const workflowStatusText = {
 /**
  * Enumeration serializer and deserializer methods
  */
-@CacheKey('WorkflowStatusSerialization')
 export class WorkflowStatusSerialization
   extends McsEnumSerializationBase<WorkflowStatus> {
   constructor() { super(WorkflowStatus); }

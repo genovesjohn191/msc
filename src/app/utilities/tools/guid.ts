@@ -1,4 +1,4 @@
-import { isNullOrEmpty } from '@app/utilities';
+import { isNullOrEmpty } from '../functions/mcs-object.function';
 
 const GUID_EMPTY = '00000000-0000-0000-0000-000000000000';
 const GUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -8,6 +8,7 @@ export class Guid {
    * GUID Validator based on regex pattern
    */
   public static validator = new RegExp(GUID_PATTERN);
+  private _value: string;
 
   /**
    * Generates new guid and return the whole Guid class
@@ -34,7 +35,6 @@ export class Guid {
     return (value instanceof Guid) ?
       true : Guid.validator.test(value);
   }
-  private _value: string;
 
   constructor(guidString?: string) {
     this._value = GUID_EMPTY;

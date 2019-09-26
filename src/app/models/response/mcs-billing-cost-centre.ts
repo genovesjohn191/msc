@@ -1,14 +1,13 @@
+import { JsonProperty } from '@peerlancers/json-serialization';
 import { McsEntityBase } from '../common/mcs-entity.base';
 
 export class McsBillingCostCentre extends McsEntityBase  {
-  public name: string;
-  public code: string;
-  public displayOrder: number;
+  @JsonProperty()
+  public name: string = undefined;
 
-  constructor() {
-    super();
-    this.name = undefined;
-    this.code = undefined;
-    this.displayOrder = undefined;
-  }
+  @JsonProperty()
+  public code: string = undefined;
+
+  @JsonProperty()
+  public displayOrder: number = undefined;
 }

@@ -75,7 +75,7 @@ export class TicketComponent implements OnInit, OnDestroy {
   }
 
   public get checkIconKey(): string {
-    return CommonDefinition.ASSETS_FONT_CHECK;
+    return CommonDefinition.ASSETS_SVG_CHECK;
   }
 
   public get backIconKey(): string {

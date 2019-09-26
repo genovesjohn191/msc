@@ -89,11 +89,11 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   private _updateNicHandler: Subscription;
   private _deleteNicHandler: Subscription;
 
-  @ViewChild(ComponentHandlerDirective)
+  @ViewChild(ComponentHandlerDirective, { static: false })
   private _componentHandler: ComponentHandlerDirective;
 
   public get checkIconKey(): string {
-    return CommonDefinition.ASSETS_FONT_CHECK;
+    return CommonDefinition.ASSETS_SVG_CHECK;
   }
 
   /**

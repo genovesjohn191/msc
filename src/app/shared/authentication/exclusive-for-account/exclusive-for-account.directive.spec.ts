@@ -18,7 +18,7 @@ import { ExclusiveForAccountDirective } from './exclusive-for-account.directive'
   template: ``
 })
 export class TestComponent {
-  @ViewChild(ExclusiveForAccountDirective)
+  @ViewChild(ExclusiveForAccountDirective, { static: false })
   public exclusiveForAccount: ExclusiveForAccountDirective;
 }
 

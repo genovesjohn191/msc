@@ -1,4 +1,3 @@
-import { CacheKey } from 'json-object-mapper';
 import { McsEnumSerializationBase } from '../serialization/mcs-enum-serialization-base';
 
 export enum InternetPlan {
@@ -18,7 +17,6 @@ export const internetPlanText = {
 /**
  * Enumeration serializer and deserializer methods
  */
-@CacheKey('InternetPlanSerialization')
 export class InternetPlanSerialization
   extends McsEnumSerializationBase<InternetPlan> {
   constructor() { super(InternetPlan); }

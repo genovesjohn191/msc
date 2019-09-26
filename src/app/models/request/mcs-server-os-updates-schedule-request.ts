@@ -1,13 +1,15 @@
-export class McsServerOsUpdatesScheduleRequest {
-  public runOnce: boolean;
-  public crontab: string;
-  public categories: string[];
-  public updates: string[];
+import { JsonProperty } from '@peerlancers/json-serialization';
 
-  constructor() {
-    this.runOnce = undefined;
-    this.crontab = undefined;
-    this.categories = undefined;
-    this.updates = undefined;
-  }
+export class McsServerOsUpdatesScheduleRequest {
+  @JsonProperty()
+  public runOnce: boolean = undefined;
+
+  @JsonProperty()
+  public crontab: string = undefined;
+
+  @JsonProperty()
+  public categories: string[] = undefined;
+
+  @JsonProperty()
+  public updates: string[] = undefined;
 }

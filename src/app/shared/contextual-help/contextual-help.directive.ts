@@ -93,7 +93,7 @@ export class ContextualHelpDirective implements OnInit, OnDestroy {
       this._createContextualHelp();
     }
     this._setMessage(this._message);
-    this._contextualHelpInstance!.show();
+    this._contextualHelpInstance.show();
   }
 
   /**
@@ -124,7 +124,7 @@ export class ContextualHelpDirective implements OnInit, OnDestroy {
     this._contextualHelpInstance = this._globalElementRef.attachComponent(portal).instance;
 
     // Close the contextual help when the animation ended
-    this._contextualHelpInstance!.afterHidden().subscribe(() => {
+    this._contextualHelpInstance.afterHidden().subscribe(() => {
       if (!isNullOrEmpty(this._contextualHelpInstance)) {
         this._disposeContextualHelp();
       }

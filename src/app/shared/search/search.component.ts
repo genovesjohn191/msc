@@ -54,7 +54,7 @@ export class SearchComponent implements OnInit, AfterContentInit, OnDestroy, Sea
   private _searchSubject: Subject<string>;
   private _destroySubject = new Subject<void>();
 
-  @ContentChild(IdDirective)
+  @ContentChild(IdDirective, { static: false })
   private _idElement: IdDirective;
 
   public constructor(private _changeDetectorRef: ChangeDetectorRef) {
@@ -82,7 +82,7 @@ export class SearchComponent implements OnInit, AfterContentInit, OnDestroy, Sea
   }
 
   public get searchIconKey(): string {
-    return CommonDefinition.ASSETS_FONT_SEARCH;
+    return CommonDefinition.ASSETS_SVG_SEARCH;
   }
 
   /**

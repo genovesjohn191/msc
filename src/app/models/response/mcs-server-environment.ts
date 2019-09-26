@@ -1,16 +1,13 @@
+import { JsonProperty } from '@peerlancers/json-serialization';
 import { McsResource } from './mcs-resource';
-import { JsonProperty } from 'json-object-mapper';
 
 export class McsServerEnvironment {
-  public id: string;
-  public name: string;
+  @JsonProperty()
+  public id: string = undefined;
 
-  @JsonProperty({ type: McsResource })
-  public resources: McsResource[];
+  @JsonProperty()
+  public name: string = undefined;
 
-  constructor() {
-    this.id = undefined;
-    this.name = undefined;
-    this.resources = undefined;
-  }
+  @JsonProperty({ target: McsResource })
+  public resources: McsResource[] = undefined;
 }

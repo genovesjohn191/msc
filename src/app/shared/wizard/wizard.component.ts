@@ -66,13 +66,13 @@ export class WizardComponent implements AfterContentInit, OnDestroy {
   public set disabled(value: boolean) { this._disabled = coerceBoolean(value); }
   private _disabled: boolean = false;
 
-  @ViewChild(WizardTopPanelPlaceholderDirective)
+  @ViewChild(WizardTopPanelPlaceholderDirective, { static: false })
   private _topPanelPlaceholder: WizardTopPanelPlaceholderDirective;
 
   @ContentChildren(WizardStepComponent)
   private _wizardSteps: QueryList<WizardStepComponent>;
 
-  @ContentChild(WizardTopPanelDefDirective)
+  @ContentChild(WizardTopPanelDefDirective, { static: false })
   private _topPanelDefDirective: WizardTopPanelDefDirective;
 
   private _destroySubject = new Subject<void>();
@@ -88,15 +88,17 @@ export class WizardComponent implements AfterContentInit, OnDestroy {
   }
 
   public ngAfterContentInit() {
-    this._wizardSteps.changes.pipe(takeUntil(this._destroySubject))
-      .subscribe(() => this._changeDetectorRef.markForCheck());
-    if (!isNullOrEmpty(this.steps)) { this._setActiveStep(this.steps[0]); }
+    Promise.resolve().then(() => {
+      this._wizardSteps.changes.pipe(takeUntil(this._destroySubject))
+        .subscribe(() => this._changeDetectorRef.markForCheck());
+      if (!isNullOrEmpty(this.steps)) { this._setActiveStep(this.steps[0]); }
 
-    // Create the top panel definitions
-    if (!isNullOrEmpty(this._topPanelDefDirective)) {
-      this._topPanelPlaceholder.viewContainer
-        .createEmbeddedView(this._topPanelDefDirective.template);
-    }
+      // Create the top panel definitions
+      if (!isNullOrEmpty(this._topPanelDefDirective)) {
+        this._topPanelPlaceholder.viewContainer
+          .createEmbeddedView(this._topPanelDefDirective.template);
+      }
+    });
 
     // Set text content
     this._changeDetectorRef.markForCheck();
@@ -107,7 +109,7 @@ export class WizardComponent implements AfterContentInit, OnDestroy {
   }
 
   public get checkIconKey(): string {
-    return CommonDefinition.ASSETS_FONT_CHECK;
+    return CommonDefinition.ASSETS_SVG_CHECK;
   }
 
   /**

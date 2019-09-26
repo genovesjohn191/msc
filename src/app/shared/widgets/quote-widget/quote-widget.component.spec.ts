@@ -15,7 +15,7 @@ import { CoreTestingModule } from '@app/core/testing';
   template: ``
 })
 export class TestQuoteWidgetComponent {
-  @ViewChild(QuoteWidgetComponent)
+  @ViewChild(QuoteWidgetComponent, { static: false })
   public quoteWidgetComponent: QuoteWidgetComponent;
 }
 

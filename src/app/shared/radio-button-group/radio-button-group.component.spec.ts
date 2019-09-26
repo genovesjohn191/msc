@@ -16,7 +16,7 @@ import { CoreTestingModule } from '@app/core/testing';
   template: ``
 })
 export class TestRadioButtonGroupComponent {
-  @ViewChild(RadioButtonGroupComponent)
+  @ViewChild(RadioButtonGroupComponent, { static: false })
   public radioButtonGroupComponent: RadioButtonGroupComponent;
 
   public modelValue: any;

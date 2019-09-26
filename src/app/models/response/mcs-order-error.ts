@@ -1,11 +1,12 @@
-export class McsOrderError {
-  public referenceId: string;
-  public errorCode: string;
-  public message: string;
+import { JsonProperty } from '@peerlancers/json-serialization';
 
-  constructor() {
-    this.referenceId = undefined;
-    this.errorCode = undefined;
-    this.message = undefined;
-  }
+export class McsOrderError {
+  @JsonProperty()
+  public referenceId: string = undefined;
+
+  @JsonProperty()
+  public errorCode: string = undefined;
+
+  @JsonProperty()
+  public message: string = undefined;
 }

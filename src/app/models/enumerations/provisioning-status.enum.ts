@@ -1,4 +1,3 @@
-import { CacheKey } from 'json-object-mapper';
 import { McsEnumSerializationBase } from '../serialization/mcs-enum-serialization-base';
 
 export enum ProvisioningStatus {
@@ -22,7 +21,6 @@ export const provisioningStatusText = {
 /**
  * Enumeration serializer and deserializer methods
  */
-@CacheKey('ProvisioningStatusSerialization')
 export class ProvisioningStatusSerialization
   extends McsEnumSerializationBase<ProvisioningStatus> {
   constructor() { super(ProvisioningStatus); }

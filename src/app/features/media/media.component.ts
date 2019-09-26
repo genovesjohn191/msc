@@ -83,7 +83,7 @@ export class MediaComponent extends McsTableListingBase<McsResourceMedia> implem
   /**
    * Returns the column settings key for the filter selector
    */
-  protected get columnSettingsKey(): string {
+  public get columnSettingsKey(): string {
     return CommonDefinition.FILTERSELECTOR_MEDIA_LISTING;
   }
 

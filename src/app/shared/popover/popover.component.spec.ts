@@ -38,14 +38,15 @@ describe('PopoverComponent', () => {
       fixture.detectChanges();
 
       component = fixture.componentInstance;
+      component.ngAfterViewInit();
     });
   }));
 
   /** Test Implementation */
-  describe('ngOnInit() when theme is light', () => {
+  describe('ngAfterViewInit() when theme is light', () => {
     beforeEach(async(() => {
       component.theme = 'light';
-      component.ngOnInit();
+      component.ngAfterViewInit();
     }));
 
     it(`should set the light class to popoverElement`, () => {
@@ -56,10 +57,10 @@ describe('PopoverComponent', () => {
     });
   });
 
-  describe('ngOnInit() when theme is dark', () => {
+  describe('ngAfterViewInit() when theme is dark', () => {
     beforeEach(async(() => {
       component.theme = 'dark';
-      component.ngOnInit();
+      component.ngAfterViewInit();
     }));
 
     it(`should set the dark class to popoverElement`, () => {
@@ -70,13 +71,13 @@ describe('PopoverComponent', () => {
     });
   });
 
-  describe('ngOnInit() when padding is none', () => {
+  describe('ngAfterViewInit() when padding is none', () => {
     beforeEach(async(() => {
       component.padding = 'none';
-      component.ngOnInit();
+      component.ngAfterViewInit();
     }));
 
-    it(`should not set any padding class to contentElement`, () => {
+    it(`should not set no padding to contentElement when it is set to none`, () => {
       let defaultPaddingExist: boolean;
       defaultPaddingExist = component.contentElement.nativeElement
         .classList.contains('default-padding');
@@ -84,10 +85,10 @@ describe('PopoverComponent', () => {
     });
   });
 
-  describe('ngOnInit() when padding is default', () => {
+  describe('ngAfterViewInit() when padding is default', () => {
     beforeEach(async(() => {
       component.padding = 'default';
-      component.ngOnInit();
+      component.ngAfterViewInit();
     }));
 
     it(`should set the default-padding class to contentElement`, () => {
@@ -98,10 +99,10 @@ describe('PopoverComponent', () => {
     });
   });
 
-  describe('ngOnInit() when placement is top', () => {
+  describe('ngAfterViewInit() when placement is top', () => {
     beforeEach(async(() => {
       component.placement = 'top';
-      component.ngOnInit();
+      component.ngAfterViewInit();
     }));
 
     it(`should set the arrow-down class to popoverElement`, () => {
@@ -111,10 +112,10 @@ describe('PopoverComponent', () => {
     });
   });
 
-  describe('ngOnInit() when placement is bottom', () => {
+  describe('ngAfterViewInit() when placement is bottom', () => {
     beforeEach(async(() => {
       component.placement = 'bottom';
-      component.ngOnInit();
+      component.ngAfterViewInit();
     }));
 
     it(`should set the arrow-top class to popoverElement`, () => {
@@ -124,10 +125,10 @@ describe('PopoverComponent', () => {
     });
   });
 
-  describe('ngOnInit() when placement is left', () => {
+  describe('ngAfterViewInit() when placement is left', () => {
     beforeEach(async(() => {
       component.placement = 'left';
-      component.ngOnInit();
+      component.ngAfterViewInit();
     }));
 
     it(`should set the arrow-right class to popoverElement`, () => {
@@ -138,10 +139,10 @@ describe('PopoverComponent', () => {
     });
   });
 
-  describe('ngOnInit() when placement is right', () => {
+  describe('ngAfterViewInit() when placement is right', () => {
     beforeEach(async(() => {
       component.placement = 'right';
-      component.ngOnInit();
+      component.ngAfterViewInit();
     }));
 
     it(`should set the arrow-left class to popoverElement`, () => {

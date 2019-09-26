@@ -1,41 +1,30 @@
-import { JsonProperty } from 'json-object-mapper';
+import { JsonProperty } from '@peerlancers/json-serialization';
 import { McsDateSerialization } from '../serialization/mcs-date-serialization';
 
 export class McsFirewallUtm {
   @JsonProperty({
-    type: Date,
     serializer: McsDateSerialization,
     deserializer: McsDateSerialization
   })
-  public avExpiryDate: Date;
+  public avExpiryDate: Date = undefined;
 
   @JsonProperty({
-    type: Date,
     serializer: McsDateSerialization,
     deserializer: McsDateSerialization
   })
-  public ipsExpiryDate: Date;
+  public ipsExpiryDate: Date = undefined;
 
   @JsonProperty({
-    type: Date,
     serializer: McsDateSerialization,
     deserializer: McsDateSerialization
   })
-  public emailExpiryDate: Date;
+  public emailExpiryDate: Date = undefined;
 
   @JsonProperty({
-    type: Date,
     serializer: McsDateSerialization,
     deserializer: McsDateSerialization
   })
-  public webExpiryDate: Date;
-
-  constructor() {
-    this.avExpiryDate = undefined;
-    this.ipsExpiryDate = undefined;
-    this.emailExpiryDate = undefined;
-    this.webExpiryDate = undefined;
-  }
+  public webExpiryDate: Date = undefined;
 
   /**
    * Returns true if firewall has one or more UTM service

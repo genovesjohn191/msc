@@ -1,4 +1,3 @@
-import { CacheKey } from 'json-object-mapper';
 import { McsEnumSerializationBase } from '../serialization/mcs-enum-serialization-base';
 
 export enum JobType {
@@ -80,7 +79,6 @@ export const jobTypeText = {
 /**
  * Enumeration serializer and deserializer methods
  */
-@CacheKey('JobTypeSerialization')
 export class JobTypeSerialization
   extends McsEnumSerializationBase<JobType> {
   constructor() { super(JobType); }

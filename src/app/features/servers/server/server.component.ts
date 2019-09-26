@@ -3,54 +3,59 @@ import {
   OnInit,
   OnDestroy,
   ViewChild,
-  AfterViewInit,
   ChangeDetectorRef,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  Injector
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import {
+  ActivatedRoute,
+  ParamMap
+} from '@angular/router';
 import {
   Subject,
-  throwError,
   Observable,
-  Subscription
+  Subscription,
+  of
 } from 'rxjs';
 import {
-  startWith,
   takeUntil,
-  catchError,
   tap,
   shareReplay,
   map
 } from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
 import {
-  McsRoutingTabBase,
-  McsDataStatusFactory,
   McsServerPermission,
-  McsNavigationService
+  McsNavigationService,
+  McsListViewListingBase
 } from '@app/core';
 import {
   isNullOrEmpty,
   unsubscribeSafely,
   getSafeProperty,
-  CommonDefinition
+  CommonDefinition,
+  compareStrings
 } from '@app/utilities';
-import {
-  Search,
-  ComponentHandlerDirective
-} from '@app/shared';
+import { ComponentHandlerDirective } from '@app/shared';
 import {
   RouteKey,
   McsServer,
-  McsServerPlatform
+  McsServerPlatform,
+  McsApiCollection,
+  McsQueryParam,
+  McsRouteInfo
 } from '@app/models';
 import { McsApiService } from '@app/services';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import { McsEvent } from '@app/events';
 import { ServerService } from './server.service';
-import { ServersListSource } from '../servers.listsource';
 
 // Add another group type in here if you have addition tab
 type tabGroupType = 'management' | 'storage';
+
+interface McsServerGroup {
+  group: McsServerPlatform;
+  servers: McsServer[];
+}
 
 @Component({
   selector: 'mcs-server',
@@ -60,59 +65,47 @@ type tabGroupType = 'management' | 'storage';
     'class': 'block'
   }
 })
-export class ServerComponent
-  extends McsRoutingTabBase<tabGroupType>
-  implements OnInit, AfterViewInit, OnDestroy {
-
-  @ViewChild('search')
-  public search: Search;
-
-  public serverPermission: McsServerPermission;
+export class ServerComponent extends McsListViewListingBase<McsServerGroup> implements OnInit, OnDestroy {
   public server$: Observable<McsServer>;
-  public serversMap$: Observable<Map<string, McsServer[]>>;
-  public serverListSource: ServersListSource | null;
-  public listStatusFactory: McsDataStatusFactory<Map<string, McsServer[]>>;
-
-  @ViewChild(ComponentHandlerDirective)
-  private _componentHandler: ComponentHandlerDirective;
+  public selectedTabId$: Observable<string>;
+  public serverPermission: McsServerPermission;
 
   private _destroySubject = new Subject<void>();
-  private _resourcesKeyMap: Map<string, McsServerPlatform>;
-  private _serversDataChangeHandler: Subscription;
+  private _routerHandler: Subscription;
+
+  @ViewChild(ComponentHandlerDirective, { static: false })
+  private _componentHandler: ComponentHandlerDirective;
 
   constructor(
-    _eventDispatcher: EventBusDispatcherService,
-    _activatedRoute: ActivatedRoute,
+    _injector: Injector,
+    _changeDetectorRef: ChangeDetectorRef,
+    _translate: TranslateService,
+    private _activatedRoute: ActivatedRoute,
     private _navigationService: McsNavigationService,
     private _apiService: McsApiService,
     private _serverService: ServerService,
-    private _changeDetectorRef: ChangeDetectorRef
   ) {
-    super(_eventDispatcher, _activatedRoute);
-    this._resourcesKeyMap = new Map();
-    this.listStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
-    this._registerDataEvents();
+    super(_injector, _changeDetectorRef, {
+      dataChangeEvent: McsEvent.dataChangeServers,
+      panelSettings: {
+        inProgressText: _translate.instant('servers.loading'),
+        emptyText: _translate.instant('servers.noServers'),
+        errorText: _translate.instant('servers.errorMessage')
+      }
+    });
+    this._registerEvents();
   }
 
   public ngOnInit() {
-    super.onInit();
+    this._subscribeToParamChange();
     this._subscribeToServerResolve();
-  }
-
-  public ngAfterViewInit() {
-    Promise.resolve().then(() => {
-      this.search.searchChangedStream.pipe(
-        startWith(null),
-        takeUntil(this._destroySubject)
-      ).subscribe(() => this.listStatusFactory.setInProgress());
-      this._initializeListsource();
-    });
+    this.listViewDatasource.registerSortPredicate(this._sortServerGroupPredicate.bind(this));
   }
 
   public ngOnDestroy() {
-    super.onDestroy();
+    super.dispose();
     unsubscribeSafely(this._destroySubject);
-    unsubscribeSafely(this._serversDataChangeHandler);
+    unsubscribeSafely(this._routerHandler);
   }
 
   public get angleDoubleRightIconKey(): string {
@@ -134,19 +127,48 @@ export class ServerComponent
    * Event that emits when the tab is changed in the routing tabgroup
    * @param tab Active tab
    */
-  protected onTabChanged(tab: any) {
-    this._navigationService.navigateTo(RouteKey.ServerDetails, [this.paramId, tab.id]);
+  public onTabChanged(tab: any) {
+    this._navigationService.navigateTo(
+      RouteKey.ServerDetails,
+      [this._serverService.getServerId(), tab.id as tabGroupType]
+    );
   }
 
   /**
-   * Event that emits when the parameter id is changed
-   * @param id Id of the parameter
+   * Gets the entity listing from API
    */
-  protected onParamIdChanged(id: string) {
-    if (isNullOrEmpty(id)) { return; }
-    this._resetManagementState();
-    this._serverService.setServerId(id);
-    this._changeDetectorRef.markForCheck();
+  protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsServerGroup>> {
+    return this._apiService.getServers(query).pipe(
+      map((servers) => {
+        let serverGroups = new Array<McsServerGroup>();
+        servers.collection.forEach((server) => {
+          let platform = getSafeProperty(server, (obj) => obj.platform);
+          let noPlatform = isNullOrEmpty(platform) || isNullOrEmpty(platform.resourceName);
+          if (noPlatform) {
+            platform = new McsServerPlatform();
+            platform.resourceId = null;
+            platform.resourceName = 'Others';
+          }
+
+          let groupFound = serverGroups.find(
+            (serverGroup) => serverGroup.group.resourceName === platform.resourceName
+          );
+          if (!isNullOrEmpty(groupFound)) {
+            groupFound.servers.push(server);
+            return;
+          }
+          serverGroups.push({
+            group: platform,
+            servers: [server]
+          });
+        });
+
+        let serverGroupsCollection = new McsApiCollection<McsServerGroup>();
+        serverGroupsCollection.collection = serverGroups;
+        serverGroupsCollection.totalCollectionCount = serverGroups.length;
+        return serverGroupsCollection;
+      })
+    );
   }
 
   /**
@@ -159,42 +181,10 @@ export class ServerComponent
   }
 
   /**
-   * Initialize list source
-   */
-  private _initializeListsource(): void {
-    this.serverListSource = new ServersListSource(this._apiService, this.search);
-
-    // Key function pointer for mapping objects
-    let keyFn = (item: McsServer) => {
-      let resourceName = isNullOrEmpty(item.platform) ? 'Others' : item.platform.resourceName;
-      let resource: McsServerPlatform = this._resourcesKeyMap.get(resourceName);
-      if (isNullOrEmpty(resource)) {
-        let resourceInstance = new McsServerPlatform();
-        resourceInstance.resourceName = 'Others';
-        resource = !isNullOrEmpty(item.platform.resourceName) ? item.platform : resourceInstance;
-      }
-      this._resourcesKeyMap.set(resourceName, resource);
-      return resource;
-    };
-
-    // Listen to all records changed
-    this.serversMap$ = this.serverListSource.findAllRecordsMapStream(keyFn).pipe(
-      catchError((error) => {
-        this.listStatusFactory.setError();
-        return throwError(error);
-      }),
-      tap((response) => {
-        this.search.showLoading(false);
-        this.listStatusFactory.setSuccessful(response);
-      })
-    );
-  }
-
-  /**
    * Subcribes to server resolve
    */
   private _subscribeToServerResolve(): void {
-    this.server$ = this.activatedRoute.data.pipe(
+    this.server$ = this._activatedRoute.data.pipe(
       map((resolver) => getSafeProperty(resolver, (obj) => obj.server)),
       tap((server) => {
         if (isNullOrEmpty(server)) { return; }
@@ -206,17 +196,35 @@ export class ServerComponent
   }
 
   /**
-   * Registers the data events
+   * Subcribes to parameter change
    */
-  private _registerDataEvents(): void {
-    this._serversDataChangeHandler = this.eventDispatcher.addEventListener(
-      McsEvent.dataChangeServers, this._onServersDataChanged.bind(this));
+  private _subscribeToParamChange(): void {
+    this._activatedRoute.paramMap.pipe(
+      takeUntil(this._destroySubject),
+      tap((params: ParamMap) => {
+        let serverId = params.get('id');
+        if (isNullOrEmpty(serverId)) { return; }
+
+        this._resetManagementState();
+        this._serverService.setServerId(serverId);
+      })
+    ).subscribe();
   }
 
   /**
-   * Event that emits when the server data has been changed
+   * Sorting predicate for group
    */
-  private _onServersDataChanged(): void {
-    this._changeDetectorRef.markForCheck();
+  private _sortServerGroupPredicate(first: McsServerGroup, second: McsServerGroup): number {
+    return compareStrings(first.group.resourceName, second.group.resourceName);
+  }
+
+  /**
+   * Register Event dispatchers
+   */
+  private _registerEvents(): void {
+    this._routerHandler = this.eventDispatcher.addEventListener(
+      McsEvent.routeChange, (routeInfo: McsRouteInfo) =>
+      this.selectedTabId$ = of(routeInfo && routeInfo.routePath)
+    );
   }
 }

@@ -60,10 +60,10 @@ export class OptionGroupComponent implements AfterContentInit, OnDestroy {
   @Input()
   public label: string;
 
-  @ContentChild(OptionGroupLabelDirective)
+  @ContentChild(OptionGroupLabelDirective, { static: false })
   public labelTemplate: OptionGroupLabelDirective;
 
-  @ContentChild(OptionGroupHeaderDirective)
+  @ContentChild(OptionGroupHeaderDirective, { static: false })
   public headerTemplate: OptionGroupHeaderDirective;
 
   @ContentChildren(OptionComponent, { descendants: true })
@@ -119,7 +119,7 @@ export class OptionGroupComponent implements AfterContentInit, OnDestroy {
    * Returns the caret icon key
    */
   public get caretRightIconKey(): string {
-    return CommonDefinition.ASSETS_FONT_CARET_RIGHT;
+    return CommonDefinition.ASSETS_SVG_CHEVRON_RIGHT;
   }
 
   /**
@@ -141,14 +141,16 @@ export class OptionGroupComponent implements AfterContentInit, OnDestroy {
   ) { }
 
   public ngAfterContentInit(): void {
-    this._options.changes
-      .pipe(startWith(null), takeUntil(this._destroySubject))
-      .subscribe(() => {
+    Promise.resolve().then(() => {
+      this._options.changes.pipe(
+        startWith(null), takeUntil(this._destroySubject)
+      ).subscribe(() => {
         this._subscribeToSelectionChange();
         this._subscribeToVisibilityChange();
       });
 
-    if (!isNullOrEmpty(this.headerTemplate)) { this.openPanel(); }
+      if (!isNullOrEmpty(this.headerTemplate)) { this.openPanel(); }
+    });
   }
 
   public ngOnDestroy(): void {

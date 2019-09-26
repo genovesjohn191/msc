@@ -1,4 +1,4 @@
-import { JsonProperty } from 'json-object-mapper';
+import { JsonProperty } from '@peerlancers/json-serialization';
 import { McsApiJobRequestBase } from '../common/mcs-api-job-request-base';
 import {
   OrderWorkflowAction,
@@ -13,16 +13,11 @@ export interface IMcsOrderWorkflowRefObj {
 
 export class McsOrderWorkflow extends McsApiJobRequestBase<IMcsOrderWorkflowRefObj> {
   @JsonProperty({
-    type: OrderWorkflowAction,
     serializer: OrderWorkflowActionSerialization,
     deserializer: OrderWorkflowActionSerialization
   })
-  public state: OrderWorkflowAction;
-  public approvers?: string[];
+  public state: OrderWorkflowAction = undefined;
 
-  constructor() {
-    super();
-    this.state = undefined;
-    this.approvers = undefined;
-  }
+  @JsonProperty()
+  public approvers?: string[] = undefined;
 }

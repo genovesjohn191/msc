@@ -1,23 +1,19 @@
-import { JsonProperty } from 'json-object-mapper';
+import { JsonProperty } from '@peerlancers/json-serialization';
 import {
   IpAllocationMode,
   IpAllocationModeSerialization
 } from '../enumerations/ip-allocation-mode.enum';
 
 export class McsResourceNetworkIpAddress {
-  public ipAddress: string;
-  public connectedStatus: boolean;
+  @JsonProperty()
+  public ipAddress: string = undefined;
+
+  @JsonProperty()
+  public connectedStatus: boolean = undefined;
 
   @JsonProperty({
-    type: IpAllocationMode,
     serializer: IpAllocationModeSerialization,
     deserializer: IpAllocationModeSerialization
   })
-  public ipAllocationMode: IpAllocationMode;
-
-  constructor() {
-    this.ipAddress = undefined;
-    this.ipAllocationMode = undefined;
-    this.connectedStatus = undefined;
-  }
+  public ipAllocationMode: IpAllocationMode = undefined;
 }

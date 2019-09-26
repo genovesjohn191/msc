@@ -12,6 +12,10 @@ export interface IMcsApiErrorContext {
 }
 
 export class McsApiErrorContext {
+  public requester: ApiErrorRequester;
+  public details: McsApiErrorResponse;
+  public message: string;
+
   /**
    * Throws a primary error with a custom message according to input
    * @param errorDetails Error details to be re throw
@@ -33,8 +37,4 @@ export class McsApiErrorContext {
     errorDetails.message = customMessage || errorDetails.message;
     return throwError(errorDetails);
   }
-
-  public requester: ApiErrorRequester;
-  public details: McsApiErrorResponse;
-  public message: string;
 }

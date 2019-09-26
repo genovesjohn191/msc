@@ -144,7 +144,7 @@ export class SnackBarService {
     // Attach component, template or string based on portal type
     if (portal instanceof TemplateRef) {
 
-      let templateRef = snackBarContainer.attachTemplate(new PortalTemplate(portal, null!));
+      let templateRef = snackBarContainer.attachTemplate(new PortalTemplate(portal, null));
       snackBarRef.portalInstance = templateRef;
     } else if (typeof portal === 'string') {
 

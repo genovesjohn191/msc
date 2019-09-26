@@ -1,4 +1,4 @@
-import { JsonProperty } from 'json-object-mapper';
+import { JsonProperty } from '@peerlancers/json-serialization';
 import {
   TicketSubType,
   TicketSubTypeSerialization
@@ -6,27 +6,24 @@ import {
 import { McsTicketCreateAttachment } from './mcs-ticket-create-attachment';
 
 export class McsTicketCreate {
-  public shortDescription: string;
-  public description: string;
-  public customerReference: string;
-  public serviceId: string[];
+  @JsonProperty()
+  public shortDescription: string = undefined;
 
-  @JsonProperty({ type: McsTicketCreateAttachment })
-  public attachments: McsTicketCreateAttachment[];
+  @JsonProperty()
+  public description: string = undefined;
+
+  @JsonProperty()
+  public customerReference: string = undefined;
+
+  @JsonProperty()
+  public serviceId: string[] = undefined;
+
+  @JsonProperty({ target: McsTicketCreateAttachment })
+  public attachments: McsTicketCreateAttachment[] = undefined;
 
   @JsonProperty({
-    type: TicketSubType,
     serializer: TicketSubTypeSerialization,
     deserializer: TicketSubTypeSerialization
   })
-  public subType: TicketSubType;
-
-  constructor() {
-    this.subType = undefined;
-    this.shortDescription = undefined;
-    this.description = undefined;
-    this.customerReference = undefined;
-    this.serviceId = undefined;
-    this.attachments = undefined;
-  }
+  public subType: TicketSubType = undefined;
 }

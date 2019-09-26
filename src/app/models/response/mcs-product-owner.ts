@@ -1,11 +1,12 @@
-export class McsProductOwner {
-  public name: string;
-  public email: string;
-  public phone: string;
+import { JsonProperty } from '@peerlancers/json-serialization';
 
-  constructor() {
-    this.name = undefined;
-    this.email = undefined;
-    this.phone = undefined;
-  }
+export class McsProductOwner {
+  @JsonProperty()
+  public name: string = undefined;
+
+  @JsonProperty()
+  public email: string = undefined;
+
+  @JsonProperty()
+  public phone: string = undefined;
 }

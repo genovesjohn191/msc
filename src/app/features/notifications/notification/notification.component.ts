@@ -55,7 +55,7 @@ export class NotificationComponent implements OnInit, OnDestroy {
   }
 
   public get dotIconKey(): string {
-    return CommonDefinition.ASSETS_FONT_BULLET;
+    return CommonDefinition.ASSETS_SVG_BULLET;
   }
 
   /**

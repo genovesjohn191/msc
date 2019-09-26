@@ -59,7 +59,7 @@ export class FirewallsComponent extends McsTableListingBase<McsFirewall> {
   /**
    * Returns the column settings key for the filter selector
    */
-  protected get columnSettingsKey(): string {
+  public get columnSettingsKey(): string {
     return CommonDefinition.FILTERSELECTOR_FIREWALLS_LISTING;
   }
 

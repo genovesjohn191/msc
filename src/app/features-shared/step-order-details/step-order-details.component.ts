@@ -104,7 +104,7 @@ export class StepOrderDetailsComponent
   public orderDataColumns: string[] = [];
   public dataChangeStatus: DataStatus;
 
-  @ViewChild(McsFormGroupDirective)
+  @ViewChild(McsFormGroupDirective, { static: false })
   private _formGroup: McsFormGroupDirective;
 
   private _destroySubject = new Subject<void>();
@@ -266,7 +266,7 @@ export class StepOrderDetailsComponent
     if (!descriptionCanBeSet) { return; }
 
     if (this.fcDescription.value !== this.order.description) {
-      this.fcDescription.setValue(this.order.description);
+      this.fcDescription.setValue(this.order.description, { onlySelf: true });
     }
   }
 
@@ -416,7 +416,10 @@ export class StepOrderDetailsComponent
   private _subscribeToDataChange(): void {
     this._formGroup.valueChanges().pipe(
       takeUntil(this._destroySubject),
-    ).subscribe(() => this.onDataChange());
+    ).subscribe(() => {
+      this.dataChangeStatus = DataStatus.InProgress;
+      this.onDataChange();
+    });
   }
 
   /**

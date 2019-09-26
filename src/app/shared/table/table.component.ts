@@ -99,13 +99,13 @@ export class TableComponent<T> implements Table, OnInit, AfterContentInit, After
   private _destroySubject = new Subject<void>();
   private _dataStatusSubject = new Subject<void>();
 
-  @ViewChild(HeaderPlaceholderDirective)
+  @ViewChild(HeaderPlaceholderDirective, { static: false })
   private _headerRowOutlet: HeaderPlaceholderDirective;
 
-  @ViewChild(DataPlaceholderDirective)
+  @ViewChild(DataPlaceholderDirective, { static: false })
   private _dataRowsOutlet: DataPlaceholderDirective;
 
-  @ViewChild(DataStatusPlaceholderDirective)
+  @ViewChild(DataStatusPlaceholderDirective, { static: false })
   private _dataStatusPlaceholder: DataStatusPlaceholderDirective;
 
   @ContentChildren(ColumnDefDirective)
@@ -118,7 +118,7 @@ export class TableComponent<T> implements Table, OnInit, AfterContentInit, After
   @ContentChildren(DataRowDefDirective)
   private _dataRowDefinitions: QueryList<DataRowDefDirective>;
 
-  @ContentChild(DataStatusDefDirective)
+  @ContentChild(DataStatusDefDirective, { static: false })
   private _dataStatusDefinition: DataStatusDefDirective;
 
   private _columnCountCache: number = 0;
@@ -144,23 +144,27 @@ export class TableComponent<T> implements Table, OnInit, AfterContentInit, After
   }
 
   public ngAfterContentInit() {
-    this._renderUpdatedColumns();
+    Promise.resolve().then(() => {
+      this._renderUpdatedColumns();
 
-    // We need to check if the previous column count is not the same with the current column
-    // since angular always triggered the changes without checking the whole context of it
-    // and it makes the other table acting weird.
-    // TODO: Check with the latest version of angular if this issue was already fixed.
-    this._columnDefinitions.changes.pipe(takeUntil(this._destroySubject)).subscribe((columns) => {
-      if (this._columnCountCache !== columns.length) { this._renderUpdatedColumns(); }
-      this._columnCountCache = columns.length;
+      // We need to check if the previous column count is not the same with the current column
+      // since angular always triggered the changes without checking the whole context of it
+      // and it makes the other table acting weird.
+      // TODO: Check with the latest version of angular if this issue was already fixed.
+      this._columnDefinitions.changes.pipe(takeUntil(this._destroySubject)).subscribe((columns) => {
+        if (this._columnCountCache !== columns.length) { this._renderUpdatedColumns(); }
+        this._columnCountCache = columns.length;
+      });
     });
   }
 
   public ngAfterContentChecked() {
-    if (this._dataSource && !this._dataSourceSubscription) {
-      this._subscribeToDataStatus();
-      this._getDatasourceData();
-    }
+    Promise.resolve().then(() => {
+      if (this._dataSource && !this._dataSourceSubscription) {
+        this._subscribeToDataStatus();
+        this._getDatasourceData();
+      }
+    });
   }
 
   public ngOnDestroy() {
@@ -254,8 +258,6 @@ export class TableComponent<T> implements Table, OnInit, AfterContentInit, After
         if (isNullOrEmpty(this._dataStatusDefinition.dataErrorDef)) { break; }
         this._dataStatusPlaceholder.viewContainer
           .createEmbeddedView(this._dataStatusDefinition.dataErrorDef.template);
-      default:
-        break;
     }
   }
 
@@ -317,7 +319,7 @@ export class TableComponent<T> implements Table, OnInit, AfterContentInit, After
         dataRowViewContainer.remove(adjustedPreviousIndex);
       } else {
         const view = dataRowViewContainer.get(adjustedPreviousIndex);
-        dataRowViewContainer.move(view!, currentIndex);
+        dataRowViewContainer.move(view, currentIndex);
       }
     });
     this._updateDataRowContext();

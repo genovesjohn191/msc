@@ -15,7 +15,7 @@ import { ActionItemModule } from './action-item.module';
   template: ``
 })
 export class TestActionItemComponent {
-  @ViewChild(ActionItemComponent)
+  @ViewChild(ActionItemComponent, { static: false })
   public actionItemComponent: ActionItemComponent;
 }
 

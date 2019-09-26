@@ -1,51 +1,38 @@
 import {
   Component,
   OnInit,
-  AfterViewInit,
   OnDestroy,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
+  Injector
 } from '@angular/core';
-import {
-  Subject,
-  throwError,
-  Observable,
-  Subscription
-} from 'rxjs';
-import {
-  startWith,
-  takeUntil,
-  switchMap,
-  catchError,
-  tap,
-  finalize,
-  shareReplay
-} from 'rxjs/operators';
 import {
   ActivatedRoute,
   ParamMap
 } from '@angular/router';
-import { McsDataStatusFactory } from '@app/core';
 import {
-  unsubscribeSafely,
-  isNullOrEmpty,
-  CommonDefinition
-} from '@app/utilities';
+  Subject,
+  Observable,
+} from 'rxjs';
 import {
-  Search,
-  SlidingPanelComponent
-} from '@app/shared';
+  switchMap,
+  tap,
+  shareReplay
+} from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
+
+import { McsListViewListingBase } from '@app/core';
+import { unsubscribeSafely } from '@app/utilities';
 import {
   RouteKey,
   McsProduct,
-  McsProductCatalog
+  McsProductCatalog,
+  McsQueryParam,
+  McsApiCollection
 } from '@app/models';
 import { McsApiService } from '@app/services';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import { McsEvent } from '@app/events';
-import { ProductCatalogListSource } from './products.listsource';
 import { ProductService } from './product/product.service';
 
 @Component({
@@ -59,52 +46,36 @@ import { ProductService } from './product/product.service';
   }
 })
 
-export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
-
-  @ViewChild('search')
-  public search: Search;
-
-  @ViewChild('slidingPanel')
-  public slidingPanel: SlidingPanelComponent;
-
-  public catalogs$: Observable<McsProductCatalog[]>;
+export class ProductsComponent extends McsListViewListingBase<McsProductCatalog> implements OnInit, OnDestroy {
   public selectedProduct$: Observable<McsProduct>;
-  public catalogListSource: ProductCatalogListSource | null;
-  public listStatusFactory: McsDataStatusFactory<McsProductCatalog[]>;
-
   private _destroySubject = new Subject<void>();
-  private _productsDataChangeHandler: Subscription;
 
   constructor(
+    _injector: Injector,
+    _changeDetectorRef: ChangeDetectorRef,
+    _translate: TranslateService,
     private _activatedRoute: ActivatedRoute,
-    private _eventDispatcher: EventBusDispatcherService,
-    private _changeDetectorRef: ChangeDetectorRef,
     private _productService: ProductService,
     private _apiService: McsApiService
   ) {
-    this.listStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
-    this._registerEvents();
-  }
-
-  public ngOnInit() {
-    this._subscribeToProductById();
-  }
-
-  public ngAfterViewInit() {
-    Promise.resolve().then(() => {
-      this.search.searchChangedStream.pipe(startWith(null), takeUntil(this._destroySubject))
-        .subscribe(() => this.listStatusFactory.setInProgress());
-      this._initializeListsource();
+    super(_injector, _changeDetectorRef, {
+      dataChangeEvent: McsEvent.dataChangeProducts,
+      panelSettings: {
+        inProgressText: _translate.instant('products.loading'),
+        emptyText: _translate.instant('products.noProducts'),
+        errorText: _translate.instant('products.errorMessage')
+      }
     });
   }
 
-  public ngOnDestroy() {
-    unsubscribeSafely(this._destroySubject);
-    unsubscribeSafely(this._productsDataChangeHandler);
+  public ngOnInit() {
+    this._subscribeToParamChange();
+    this._subscribeToParamChange();
   }
 
-  public get toggleIconKey(): string {
-    return CommonDefinition.ASSETS_FONT_ELLIPSIS_VERTICAL;
+  public ngOnDestroy() {
+    super.dispose();
+    unsubscribeSafely(this._destroySubject);
   }
 
   public get routeKeyEnum(): any {
@@ -112,58 +83,20 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /**
-   * Toggles the sliding panel
+   * Gets the entity listing from API
    */
-  public onToggleSlidingPanel(): void {
-    if (isNullOrEmpty(this.slidingPanel)) { return; }
-    this.slidingPanel.toggle();
-  }
-
-  /**
-   * Initializes the list source for product listing
-   */
-  private _initializeListsource(): void {
-    this.catalogListSource = new ProductCatalogListSource(
-      this._apiService,
-      this.search
-    );
-
-    // Listen to all records changed
-    this.catalogs$ = this.catalogListSource.findAllRecordsStream().pipe(
-      catchError((error) => {
-        this.listStatusFactory.setError();
-        return throwError(error);
-      }),
-      tap((response) => {
-        this.search.showLoading(false);
-        this.listStatusFactory.setSuccessful(response);
-      }),
-      finalize(() => this._changeDetectorRef.markForCheck())
-    );
-    this._changeDetectorRef.markForCheck();
+  protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsProductCatalog>> {
+    return this._apiService.getProductCatalogs(query);
   }
 
   /**
    * Listens to every params changed and get the product by id
    */
-  private _subscribeToProductById(): void {
+  private _subscribeToParamChange(): void {
     this.selectedProduct$ = this._activatedRoute.paramMap.pipe(
-      switchMap((params: ParamMap) => {
-        return this._apiService.getProduct(params.get('id'));
-      }),
-      tap((response) => {
-        this._productService.setProduct(response);
-        this._changeDetectorRef.markForCheck();
-      }),
+      switchMap((params: ParamMap) => this._apiService.getProduct(params.get('id'))),
+      tap((response) => this._productService.setProduct(response)),
       shareReplay(1)
     );
-  }
-
-  /**
-   * Registers the event handlers
-   */
-  private _registerEvents(): void {
-    this._productsDataChangeHandler = this._eventDispatcher.addEventListener(
-      McsEvent.dataChangeProducts, () => this._changeDetectorRef.markForCheck());
   }
 }

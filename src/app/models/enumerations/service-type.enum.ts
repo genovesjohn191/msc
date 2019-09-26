@@ -1,4 +1,3 @@
-import { CacheKey } from 'json-object-mapper';
 import { McsEnumSerializationBase } from '../serialization/mcs-enum-serialization-base';
 
 export enum ServiceType {
@@ -15,7 +14,6 @@ export const serviceTypeText = {
 /**
  * Enumeration serializer and deserializer methods
  */
-@CacheKey('ServiceTypeSerialization')
 export class ServiceTypeSerialization
   extends McsEnumSerializationBase<ServiceType> {
   constructor() { super(ServiceType); }

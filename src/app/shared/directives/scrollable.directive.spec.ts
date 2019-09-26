@@ -16,10 +16,10 @@ import { ScrollableDirective } from './scrollable.directive';
   template: ``
 })
 export class TestComponent {
-  @ViewChild('testElement')
+  @ViewChild('testElement', { static: false })
   public testElement: ElementRef;
 
-  @ViewChild(ScrollableDirective)
+  @ViewChild(ScrollableDirective, { static: false })
   public directive: ScrollableDirective;
 }
 

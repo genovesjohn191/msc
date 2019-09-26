@@ -1,4 +1,3 @@
-import { CacheKey } from 'json-object-mapper';
 import { McsEnumSerializationBase } from '../serialization/mcs-enum-serialization-base';
 
 export enum HttpStatusCode {
@@ -17,7 +16,6 @@ export enum HttpStatusCode {
 /**
  * Enumeration serializer and deserializer methods
  */
-@CacheKey('HttpStatusCodeSerialization')
 export class HttpStatusCodeSerialization
   extends McsEnumSerializationBase<HttpStatusCode> {
   constructor() { super(HttpStatusCode); }

@@ -1,32 +1,28 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title><%= htmlWebpackPlugin.options.title %></title>
-  <meta name="description" content="<%= htmlWebpackPlugin.options.title %>">
-  <!-- base url -->
-  <base href="<%= htmlWebpackPlugin.options.metadata.baseUrl %>">
-  <% if (webpackConfig.htmlElements.headTags) { %>
-  <!-- Configured Head Tags  -->
-  <%= webpackConfig.htmlElements.headTags %>
-  <% } %>
+<!doctype html>
+<html lang="en">
 
-  <%= htmlWebpackPlugin.files.webpackManifest %>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <% if (htmlWebpackPlugin.options.metadata.isDevServer && htmlWebpackPlugin.options.metadata.HMR !== true) { %>
-    <!-- Webpack Dev Server reload -->
-    <script src="/webpack-dev-server.js"></script>
-  <% } %>
-  <script src="assets/env.config.js"></script>
-  <script src="assets/scripts/googleTagManager.js"></script>
-  <script src="assets/apm.loader.js"></script>
-</head>
+    <title>Macquarie Cloud Services: Portal</title>
+    <base href="/">
 
-<body>
-  <!-- Web Application Components -->
-  <mcs-app></mcs-app>
-  <!-- Scripts will be injected by webpack here -->
-</body>
+    <link rel="apple-touch-icon" href="/assets/icon/apple-touch-icon.png">
+    <link rel="apple-touch-icon" href="/assets/icon/apple-touch-icon-76x76.png" sizes="76x76">
+    <link rel="apple-touch-icon" href="/assets/icon/apple-touch-icon-120x120.png" sizes="120x120">
+    <link rel="apple-touch-icon" href="/assets/icon/apple-touch-icon-152x152.png" sizes="152x152">
+
+    <link rel="icon" href="/assets/icon/icon-normal.png" sizes="128x128">
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+
+    <script src="assets/env.config.js"></script>
+    <script src="assets/apm.loader.js"></script>
+  </head>
+
+  <body>
+    <mcs-app></mcs-app>
+  </body>
+
 </html>

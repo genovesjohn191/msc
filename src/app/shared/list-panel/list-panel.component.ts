@@ -6,7 +6,14 @@ import {
   ViewEncapsulation,
   ChangeDetectorRef,
   AfterContentInit,
-  OnDestroy
+  OnDestroy,
+  Input,
+  ContentChild,
+  IterableDiffer,
+  IterableDiffers,
+  TrackByFunction,
+  ViewChild,
+  IterableChangeRecord
 } from '@angular/core';
 import {
   Subject,
@@ -14,17 +21,22 @@ import {
   merge,
   defer
 } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, take, tap, shareReplay } from 'rxjs/operators';
 import {
   isNullOrEmpty,
   unsubscribeSafely
 } from '@app/utilities';
 import { OptionComponent } from '../option-group/option/option.component';
 import { OptionGroupComponent } from '../option-group/option-group.component';
+import { McsDataSource } from '../table/mcs-data-source.interface';
+import { DataStatus } from '@app/models';
+import { ListPanelConfig } from './list-panel.config';
+import { ListPanelContentDirective } from './list-content/list-panel-content.directive';
+import { ListPanelContentOutletDirective } from './list-content/list-panel-content.outlet';
 
 @Component({
   selector: 'mcs-list-panel',
-  template: `<ng-content></ng-content>`,
+  templateUrl: './list-panel.component.html',
   styleUrls: ['./list-panel.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -33,13 +45,41 @@ import { OptionGroupComponent } from '../option-group/option-group.component';
   }
 })
 
-export class ListPanelComponent implements AfterContentInit, OnDestroy {
+export class ListPanelComponent<TEntity> implements AfterContentInit, OnDestroy {
+
+  public dataStatusChange: Observable<DataStatus>;
+
+  @Input()
+  public set dataSource(value: McsDataSource<TEntity>) {
+    if (this._dataSource !== value) {
+      this._switchDatasource(value);
+    }
+  }
+  private _dataSource: McsDataSource<TEntity>;
+  private _dataSourceChange = new Subject<void>();
+
+  @Input()
+  public config: ListPanelConfig;
+
+  @Input()
+  public set trackBy(fn: TrackByFunction<TEntity>) { this._trackBy = fn; }
+  public get trackBy(): TrackByFunction<TEntity> { return this._trackBy; }
+  private _trackBy: TrackByFunction<TEntity>;
+
+  @ViewChild(ListPanelContentOutletDirective, { static: false })
+  private _listPanelOutlet: ListPanelContentOutletDirective;
+
+  @ContentChild(ListPanelContentDirective, { static: false })
+  private _listPanelContent: ListPanelContentDirective;
+
   @ContentChildren(OptionGroupComponent, { descendants: true })
   private _optionGroups: QueryList<OptionGroupComponent>;
 
   @ContentChildren(OptionComponent, { descendants: true })
   private _options: QueryList<OptionComponent>;
+
   private _destroySubject = new Subject<void>();
+  private _dataDiffer: IterableDiffer<TEntity>;
 
   /**
    * Combine streams of all option click change
@@ -48,15 +88,31 @@ export class ListPanelComponent implements AfterContentInit, OnDestroy {
     return merge<OptionComponent>(...this._options.map((option) => option.clickChange));
   });
 
-  constructor(private _changeDetectorRef: ChangeDetectorRef) { }
+  constructor(
+    differs: IterableDiffers,
+    private _changeDetectorRef: ChangeDetectorRef
+  ) {
+    this._dataDiffer = differs.find([]).create(this._trackBy);
+  }
 
   public ngAfterContentInit(): void {
-    this._options.changes.pipe(takeUntil(this._destroySubject))
-      .subscribe(() => this._subscribesToOptionsClickEvent());
+    Promise.resolve().then(() => {
+      this._options.changes.pipe(
+        takeUntil(this._destroySubject),
+        tap(() => this._subscribesToOptionsClickEvent())
+      ).subscribe();
+
+      this._validateListPanelContent();
+      this._subscribeToDatasource();
+    });
   }
 
   public ngOnDestroy(): void {
     unsubscribeSafely(this._destroySubject);
+  }
+
+  public get dataStatusEnum(): any {
+    return DataStatus;
   }
 
   /**
@@ -103,5 +159,60 @@ export class ListPanelComponent implements AfterContentInit, OnDestroy {
         optionGroup.closePanel();
       }
     });
+  }
+
+  private _switchDatasource(newDatasource: McsDataSource<TEntity>) {
+    if (isNullOrEmpty(newDatasource)) { return; }
+    this._dataSource = newDatasource;
+    this._dataSourceChange.next();
+    this._subscribeToDataStatus();
+  }
+
+  private _subscribeToDatasource(): void {
+    if (isNullOrEmpty(this._dataSource)) {
+      throw new Error(`Unable to render the list panel without datasource.`);
+    }
+
+    this._dataSource.connect().pipe(
+      takeUntil(this._destroySubject),
+      tap((entities) => this._renderListPanelContent(entities))
+    ).subscribe();
+  }
+
+  private _renderListPanelContent(entities: TEntity[]): void {
+    let dataChanges = this._dataDiffer.diff(entities);
+    if (!dataChanges) { return; }
+
+    let dataViewContainer = this._listPanelOutlet.viewContainer;
+    dataChanges.forEachOperation((
+      item: IterableChangeRecord<any>,
+      adjustedPreviousIndex: number,
+      currentIndex: number
+    ) => {
+      if (item.previousIndex == null) {
+        let context = { $implicit: entities[currentIndex] };
+        this._listPanelOutlet.viewContainer.createEmbeddedView(
+          this._listPanelContent.templateRef, context, currentIndex
+        );
+      } else if (currentIndex == null) {
+        dataViewContainer.remove(adjustedPreviousIndex);
+      } else {
+        const view = dataViewContainer.get(adjustedPreviousIndex);
+        dataViewContainer.move(view, currentIndex);
+      }
+    });
+  }
+
+  private _subscribeToDataStatus(): void {
+    this.dataStatusChange = this._dataSource.dataStatusChange().pipe(
+      takeUntil(this._dataSourceChange),
+      shareReplay(1)
+    );
+  }
+
+  private _validateListPanelContent(): void {
+    if (isNullOrEmpty(this._listPanelContent)) {
+      throw new Error(`List panel content is not defined. Please make sure the template is bind correctly.`);
+    }
   }
 }

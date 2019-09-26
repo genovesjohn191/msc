@@ -108,7 +108,7 @@ export class ServerManageScaleComponent
     this._minimumMemoryGB = coerceNumber(value, this._minimumMemoryByServerType);
   }
 
-  @ViewChild(McsFormGroupDirective)
+  @ViewChild(McsFormGroupDirective, { static: false })
   private _formGroup: McsFormGroupDirective;
 
   private _destroySubject = new Subject<void>();

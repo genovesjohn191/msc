@@ -14,7 +14,7 @@ import {
   LogIgnore
 } from '@peerlancers/ngx-logger';
 
-declare let dataLayer: any;
+declare const dataLayer: any;
 
 @Injectable()
 @LogClass()

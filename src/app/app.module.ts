@@ -15,7 +15,6 @@ import {
 } from '@peerlancers/ngx-logger';
 import { EventBusModule } from '@peerlancers/ngx-event-bus';
 
-import { environment } from 'environments/environment';
 import { AppComponent } from './app.component';
 import { AppState } from './app.service';
 import { appRoutes } from './app.routes';
@@ -119,7 +118,6 @@ export function loggerConfig(cookieService: McsCookieService): LoggerConfig {
     DefaultPageModule
   ],
   providers: [
-    environment.ENV_PROVIDERS,
     AppState
   ]
 })

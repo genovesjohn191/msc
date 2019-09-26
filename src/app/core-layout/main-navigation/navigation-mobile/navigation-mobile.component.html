@@ -64,7 +64,7 @@
           <span>{{ 'navigation.productCatalog' | translate }}</span>
           <span #caretIconElement>
             <mcs-icon [key]="caretDownIconKey"
-              size="medium" color="white"></mcs-icon>
+              size="medium" color="light"></mcs-icon>
           </span>
         </mcs-item>
       </a>
@@ -92,7 +92,7 @@
     <!-- Title -->
     <div class="navigation-mobile-item navigation-mobile-title">
       <h2>{{ 'navigation.title' | translate }}</h2>
-      <mcs-icon [key]="closeIconKey" color="white"
+      <mcs-icon [key]="closeIconKey" color="light"
         mcsCursor="pointer" (click)="close()"></mcs-icon>
     </div>
 
@@ -101,7 +101,7 @@
 
     <!-- Logout Item -->
     <div class="navigation-item">
-      <mcs-icon [key]="caretRightIconKey" color="white"></mcs-icon>
+      <mcs-icon [key]="caretRightIconKey" color="light"></mcs-icon>
       <a mcsCursor="pointer" (click)="logout($event)"
         mcsId
         mcsEventTracker="sign-out"

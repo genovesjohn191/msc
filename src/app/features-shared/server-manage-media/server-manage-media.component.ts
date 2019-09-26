@@ -50,7 +50,7 @@ export class ServerManageMediaComponent implements OnInit, OnDestroy, IMcsDataCh
   @Output()
   public dataChange = new EventEmitter<ServerManageMedia>();
 
-  @ViewChild(McsFormGroupDirective)
+  @ViewChild(McsFormGroupDirective, { static: false })
   private _formGroup: McsFormGroupDirective;
 
   private _mediaOutput: ServerManageMedia;

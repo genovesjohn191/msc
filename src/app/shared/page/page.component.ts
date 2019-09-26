@@ -5,7 +5,7 @@ import {
   ChangeDetectorRef,
   ViewChild,
   ContentChild,
-  AfterContentInit,
+  AfterViewInit,
   ViewEncapsulation,
   ElementRef,
   Renderer2,
@@ -41,18 +41,18 @@ import { PageService } from './page.service';
   }
 })
 
-export class PageComponent implements AfterContentInit {
+export class PageComponent implements AfterViewInit {
 
-  @ViewChild('pageLeftElement')
+  @ViewChild('pageLeftElement', { static: false })
   public pageLeftElement: ElementRef;
 
-  @ViewChild('headerContainer', { read: ViewContainerRef })
+  @ViewChild('headerContainer', { read: ViewContainerRef, static: false })
   public headerContainer: ViewContainerRef;
 
-  @ViewChild('headerText')
+  @ViewChild('headerText', { static: false })
   public headerText: ElementRef;
 
-  @ContentChild(PageHeaderDirective)
+  @ContentChild(PageHeaderDirective, { static: false })
   public headerTemplate: PageHeaderDirective;
 
   @Input()
@@ -86,23 +86,23 @@ export class PageComponent implements AfterContentInit {
   }
 
   /** Placeholder of panel directives */
-  @ViewChild(ContentPanelPlaceholderDirective)
+  @ViewChild(ContentPanelPlaceholderDirective, { static: false })
   private _contentPanelPlaceholder: ContentPanelPlaceholderDirective;
 
-  @ViewChild(LeftPanelPlaceholderDirective)
+  @ViewChild(LeftPanelPlaceholderDirective, { static: false })
   private _leftPanelPlaceholder: LeftPanelPlaceholderDirective;
 
-  @ViewChild(TopPanelPlaceholderDirective)
+  @ViewChild(TopPanelPlaceholderDirective, { static: false })
   private _topPanelPlaceholder: TopPanelPlaceholderDirective;
 
   /** Panel directives definitions */
-  @ContentChild(ContentPanelDefDirective)
+  @ContentChild(ContentPanelDefDirective, { static: false })
   private _contentPanelDefinition: ContentPanelDefDirective;
 
-  @ContentChild(LeftPanelDefDirective)
+  @ContentChild(LeftPanelDefDirective, { static: false })
   private _leftPanelDefinition: LeftPanelDefDirective;
 
-  @ContentChild(TopPanelDefDirective)
+  @ContentChild(TopPanelDefDirective, { static: false })
   private _topPanelDefinition: TopPanelDefDirective;
 
   public constructor(
@@ -118,28 +118,33 @@ export class PageComponent implements AfterContentInit {
       CommonDefinition.ASSETS_SVG_NEXT_ARROW;
   }
 
-  public ngAfterContentInit(): void {
-    if (!isNullOrEmpty(this._contentPanelDefinition)) {
-      this._contentPanelPlaceholder.viewContainer
-        .createEmbeddedView(this._contentPanelDefinition.template);
-    }
+  public ngAfterViewInit(): void {
+    Promise.resolve().then(() => {
+      let contentPanelsAreDefined = !isNullOrEmpty(this._contentPanelDefinition)
+        && !isNullOrEmpty(this._contentPanelPlaceholder);
+      if (contentPanelsAreDefined) {
+        this._contentPanelPlaceholder.viewContainer
+          .createEmbeddedView(this._contentPanelDefinition.template);
+      }
 
-    if (!isNullOrEmpty(this._leftPanelDefinition)) {
-      this._leftPanelPlaceholder.viewContainer
-        .createEmbeddedView(this._leftPanelDefinition.template);
-    } else {
-      this.hasLeftPanel = false;
-    }
+      let leftPanelsAreDefined = !isNullOrEmpty(this._leftPanelDefinition)
+        && !isNullOrEmpty(this._leftPanelPlaceholder);
+      if (leftPanelsAreDefined) {
+        this._leftPanelPlaceholder.viewContainer
+          .createEmbeddedView(this._leftPanelDefinition.template);
+      } else {
+        this.hasLeftPanel = false;
+      }
 
-    if (!isNullOrEmpty(this._topPanelDefinition)) {
-      this._topPanelPlaceholder.viewContainer
-        .createEmbeddedView(this._topPanelDefinition.template);
-    }
+      let topPanelsAreDefined = !isNullOrEmpty(this._topPanelDefinition)
+        && !isNullOrEmpty(this._topPanelPlaceholder);
+      if (topPanelsAreDefined) {
+        this._topPanelPlaceholder.viewContainer
+          .createEmbeddedView(this._topPanelDefinition.template);
+      }
 
-    this._initializeLeftPanelDisplay();
-
-    // Manually triggered change detection strategy
-    this._changeDetectorRef.markForCheck();
+      this._initializeLeftPanelDisplay();
+    });
   }
 
   /**

@@ -16,10 +16,10 @@ import { StdDateFormatPipe } from './std-date-format.pipe';
   template: ``
 })
 export class TestComponent {
-  @ViewChild('testElement')
+  @ViewChild('testElement', { static: false })
   public testElement: ElementRef;
 
-  @ViewChild(StdDateFormatPipe)
+  @ViewChild(StdDateFormatPipe, { static: false })
   public pipe: StdDateFormatPipe;
 
   public testDate = new Date('2018-06-04T05:53:23Z');

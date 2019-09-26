@@ -1,8 +1,8 @@
+import { JsonProperty } from '@peerlancers/json-serialization';
 import {
   IpAllocationMode,
   IpAllocationModeSerialization
 } from '../enumerations/ip-allocation-mode.enum';
-import { JsonProperty } from 'json-object-mapper';
 import { McsApiJobRequestBase } from '../common/mcs-api-job-request-base';
 
 export interface IMcsServerCreateNicRefObj {
@@ -14,20 +14,15 @@ export interface IMcsServerCreateNicRefObj {
 }
 
 export class McsServerCreateNic extends McsApiJobRequestBase<IMcsServerCreateNicRefObj> {
-  public name: string;
+  @JsonProperty()
+  public name: string = undefined;
 
   @JsonProperty({
-    type: IpAllocationMode,
     serializer: IpAllocationModeSerialization,
     deserializer: IpAllocationModeSerialization
   })
-  public ipAllocationMode: IpAllocationMode;
-  public ipAddress: string;
+  public ipAllocationMode: IpAllocationMode = undefined;
 
-  constructor() {
-    super();
-    this.name = undefined;
-    this.ipAllocationMode = undefined;
-    this.ipAddress = undefined;
-  }
+  @JsonProperty()
+  public ipAddress: string = undefined;
 }

@@ -63,13 +63,13 @@ export class ResponsivePanelComponent implements AfterViewInit, AfterViewChecked
   @Input()
   public id: string = McsUniqueId.NewId('responsive-panel');
 
-  @ViewChild('panelItemsMainContainer')
+  @ViewChild('panelItemsMainContainer', { static: false })
   public panelItemsMainContainer: ElementRef;
 
-  @ViewChild('panelItemsSubContainer')
+  @ViewChild('panelItemsSubContainer', { static: false })
   public panelItemsSubContainer: ElementRef;
 
-  @ViewChild(ResponsivePanelBarComponent)
+  @ViewChild(ResponsivePanelBarComponent, { static: false })
   public panelBorderBar: ResponsivePanelBarComponent;
 
   @ContentChildren(ResponsivePanelItemDirective)
@@ -83,11 +83,11 @@ export class ResponsivePanelComponent implements AfterViewInit, AfterViewChecked
   private _destroySubject = new Subject<void>();
 
   public get chevronRightKey(): string {
-    return CommonDefinition.ASSETS_FONT_CHEVRON_RIGHT;
+    return CommonDefinition.ASSETS_SVG_CHEVRON_RIGHT;
   }
 
   public get chevronLeftKey(): string {
-    return CommonDefinition.ASSETS_FONT_CHEVRON_LEFT;
+    return CommonDefinition.ASSETS_SVG_CHEVRON_LEFT;
   }
 
   /**

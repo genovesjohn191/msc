@@ -32,7 +32,7 @@ export class PresentationPanelComponent {
   }
   private _embossed: boolean;
 
-  @ContentChild(PresentationPanelHeaderDirective)
+  @ContentChild(PresentationPanelHeaderDirective, { static: false })
   private _presentationPanelHeader: PresentationPanelHeaderDirective;
 
   /**

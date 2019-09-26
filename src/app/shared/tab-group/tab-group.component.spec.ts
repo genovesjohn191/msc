@@ -15,7 +15,7 @@ import { CoreTestingModule } from '@app/core/testing';
   template: ``
 })
 export class TabGroupTestComponent {
-  @ViewChild(TabGroupComponent)
+  @ViewChild(TabGroupComponent, { static: false })
   public tabGroupComponent: TabGroupComponent;
 }
 

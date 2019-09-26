@@ -15,16 +15,16 @@ import { GreyedOutDirective } from './greyed-out.directive';
   template: ``
 })
 export class TestComponent {
-  @ViewChild('testElement')
+  @ViewChild('testElement', { static: false })
   public testElement: ElementRef;
 
-  @ViewChild('testElementWithTrueCondition')
+  @ViewChild('testElementWithTrueCondition', { static: false })
   public testElementWithTrueCondition: ElementRef;
 
-  @ViewChild('testElementWithFalseCondition')
+  @ViewChild('testElementWithFalseCondition', { static: false })
   public testElementWithFalseCondition: ElementRef;
 
-  @ViewChild(GreyedOutDirective)
+  @ViewChild(GreyedOutDirective, { static: false })
   public directive: GreyedOutDirective;
 
   public testBooleanTrue: boolean = true;

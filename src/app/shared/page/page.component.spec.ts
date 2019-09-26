@@ -15,7 +15,7 @@ import { CoreTestingModule } from '@app/core/testing';
   template: ``
 })
 export class TestPageComponent {
-  @ViewChild(PageComponent)
+  @ViewChild(PageComponent, { static: true })
   public pageComponent: PageComponent;
 }
 
@@ -85,38 +85,6 @@ describe('PageComponent', () => {
       let pageElement: any;
       pageElement = document.querySelector('mcs-page');
       expect(pageElement).not.toBe(null);
-    });
-  });
-
-  describe('ngAfterContentInit()', () => {
-    it(`should create the top panel component`, () => {
-      let topPanelElement: NodeListOf<Element>;
-      topPanelElement = document.querySelectorAll('mcs-top-panel');
-      expect(topPanelElement.length).toBe(1);
-    });
-
-    it(`should create the 2 top panel items component`, () => {
-      let topPanelItems: NodeListOf<Element>;
-      topPanelItems = document.querySelectorAll('mcs-top-panel-item');
-      expect(topPanelItems.length).toBe(2);
-    });
-
-    it(`should create the left panel component`, () => {
-      let leftPanelElement: NodeListOf<Element>;
-      leftPanelElement = document.querySelectorAll('mcs-left-panel');
-      expect(leftPanelElement.length).toBe(1);
-    });
-
-    it(`should create the 2 left panel items component`, () => {
-      let leftPanelItems: NodeListOf<Element>;
-      leftPanelItems = document.querySelectorAll('mcs-left-panel-item');
-      expect(leftPanelItems.length).toBe(2);
-    });
-
-    it(`should create the content panel component`, () => {
-      let contentPanelElement: NodeListOf<Element>;
-      contentPanelElement = document.querySelectorAll('mcs-content-panel');
-      expect(contentPanelElement.length).toBe(1);
     });
   });
 });

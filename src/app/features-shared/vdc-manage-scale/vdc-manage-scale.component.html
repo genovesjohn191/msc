@@ -36,8 +36,8 @@
           <span display-block text-center>
             {{ 'vdcShared.manageScale.sliderCurrentRamCpu' | translate:
               {
-                ram_value: (ramUsedGB | mcsDataSize: 'GB'),
-                cpu_value : (cpuUsed | number)
+                ram_value: (initialMemoryGB | mcsDataSize: 'GB'),
+                cpu_value : (initialCpu | number)
               }
             }}
           </span>

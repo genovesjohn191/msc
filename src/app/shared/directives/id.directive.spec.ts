@@ -15,10 +15,10 @@ import { IdDirective } from './id.directive';
   template: ``
 })
 export class TestComponent {
-  @ViewChild('testElement')
+  @ViewChild('testElement', { static: false })
   public testElement: ElementRef;
 
-  @ViewChild(IdDirective)
+  @ViewChild(IdDirective, { static: false })
   public directive: IdDirective;
 }
 

@@ -74,8 +74,10 @@ export class AlignContentDirective implements OnChanges, AfterContentInit, OnDes
   }
 
   public ngAfterContentInit(): void {
-    this._subscribeToLayoutRequest();
-    this._subscribeToBreakpointChanges();
+    Promise.resolve().then(() => {
+      this._subscribeToLayoutRequest();
+      this._subscribeToBreakpointChanges();
+    });
   }
 
   public ngOnDestroy(): void {

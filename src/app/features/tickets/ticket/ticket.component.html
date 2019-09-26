@@ -178,7 +178,7 @@
                 <div *mcsExclusiveForAccount="'default'">
                   <mcs-comment-box attachedLimit="single" [disabled]="selectedTicket.isProcessing"
                     [allowedMimeType]="['image/jpeg', 'image/png', 'image/bmp', 'text/plain']"
-                    (onAddComment)="createComment(selectedTicket, $event)">
+                    (commentAdded)="createComment(selectedTicket, $event)">
                   </mcs-comment-box>
                 </div>
               </ng-container>

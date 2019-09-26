@@ -1,4 +1,3 @@
-import { CacheKey } from 'json-object-mapper';
 import { McsEnumSerializationBase } from '../serialization/mcs-enum-serialization-base';
 
 export enum TaskType {
@@ -41,7 +40,6 @@ export enum TaskType {
 /**
  * Enumeration serializer and deserializer methods
  */
-@CacheKey('TaskTypeSerialization')
 export class TaskTypeSerialization
   extends McsEnumSerializationBase<TaskType> {
   constructor() { super(TaskType); }

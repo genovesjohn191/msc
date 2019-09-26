@@ -1,5 +1,3 @@
-// TODO: Create each type another file to be consistent with the other design
-
 // Size Type
 export type McsSizeType = 'auto' | 'xxsmall' | 'xsmall' | 'small' |
   'medium' | 'large' | 'xlarge' | 'xxlarge';

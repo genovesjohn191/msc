@@ -17,7 +17,7 @@ import { AccordionModule } from './accordion.module';
   template: ``
 })
 export class TestAccordionComponent {
-  @ViewChild(AccordionComponent)
+  @ViewChild(AccordionComponent, { static: false })
   public accordionComponent: AccordionComponent;
 }
 

@@ -71,7 +71,7 @@ export class SelectTagMainItemComponent {
   }
 
   public get caretIconKey(): string {
-    return CommonDefinition.ASSETS_FONT_CARET_RIGHT;
+    return CommonDefinition.ASSETS_SVG_CHEVRON_RIGHT;
   }
 
   public constructor(private _changeDetectorRef: ChangeDetectorRef) {

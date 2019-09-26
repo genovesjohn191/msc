@@ -32,7 +32,8 @@ import {
   isNullOrEmpty,
   unregisterEvent,
   getElementOffset,
-  unsubscribeSafely
+  unsubscribeSafely,
+  getSafeProperty
 } from '@app/utilities';
 import { PopoverComponent } from './popover.component';
 import { PopoverService } from './popover.service';
@@ -220,6 +221,9 @@ export class PopoverDirective implements OnInit, OnDestroy {
   }
 
   public moveElementPosition(orientation: string) {
+    let isHostElementRendered = getSafeProperty(this.componentRef, (obj) => obj.instance.contentElement.nativeElement);
+    if (isNullOrEmpty(isHostElementRendered)) { return; }
+
     // Update the placement of the component itself
     let placement = this.autoCalculatePosition ? this._getActualPlacement() : this.placement;
     this.componentRef.instance.placement = placement;
@@ -247,7 +251,6 @@ export class PopoverDirective implements OnInit, OnDestroy {
         } else if (orientation === 'right') {
           this.setRightOrientation(targetElementPosition);
         }
-      default:
         break;
     }
   }

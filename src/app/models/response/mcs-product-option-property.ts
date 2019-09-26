@@ -1,11 +1,12 @@
-export class McsProductOptionProperty {
-  public label: string;
-  public value: string;
-  public unit: string;
+import { JsonProperty } from '@peerlancers/json-serialization';
 
-  constructor() {
-    this.label = undefined;
-    this.value = undefined;
-    this.unit = undefined;
-  }
+export class McsProductOptionProperty {
+  @JsonProperty()
+  public label: string = undefined;
+
+  @JsonProperty()
+  public value: string = undefined;
+
+  @JsonProperty()
+  public unit: string = undefined;
 }

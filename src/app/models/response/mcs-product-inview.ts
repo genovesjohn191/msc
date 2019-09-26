@@ -1,18 +1,16 @@
-import { JsonProperty } from 'json-object-mapper';
+import { JsonProperty } from '@peerlancers/json-serialization';
 import { McsProductInviewThreshold } from './mcs-product-inview-threshold';
 
 export class McsProductInview {
-  public name: string;
-  public description: string;
-  public graphUrl: string;
+  @JsonProperty()
+  public name: string = undefined;
 
-  @JsonProperty({ type: McsProductInviewThreshold })
-  public thresholds: McsProductInviewThreshold[];
+  @JsonProperty()
+  public description: string = undefined;
 
-  constructor() {
-    this.description = undefined;
-    this.graphUrl = undefined;
-    this.name = undefined;
-    this.thresholds = undefined;
-  }
+  @JsonProperty()
+  public graphUrl: string = undefined;
+
+  @JsonProperty({ target: McsProductInviewThreshold })
+  public thresholds: McsProductInviewThreshold[] = undefined;
 }

@@ -1,17 +1,21 @@
-export class McsServerOperatingSystemSummary {
-  public vendor: string;
-  public release: string;
-  public version: string;
-  public type: string;
-  public edition: string;
-  public guestOs: string;
+import { JsonProperty } from '@peerlancers/json-serialization';
 
-  constructor() {
-    this.vendor = undefined;
-    this.release = undefined;
-    this.version = undefined;
-    this.type = undefined;
-    this.edition = undefined;
-    this.guestOs = undefined;
-  }
+export class McsServerOperatingSystemSummary {
+  @JsonProperty()
+  public vendor: string = undefined;
+
+  @JsonProperty()
+  public release: string = undefined;
+
+  @JsonProperty()
+  public version: string = undefined;
+
+  @JsonProperty()
+  public type: string = undefined;
+
+  @JsonProperty()
+  public edition: string = undefined;
+
+  @JsonProperty()
+  public guestOs: string = undefined;
 }

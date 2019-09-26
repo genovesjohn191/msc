@@ -56,7 +56,7 @@ export class RouterLinkActiveDirective implements OnInit, OnDestroy, AfterConten
   public ngAfterContentInit(): void {
     Promise.resolve().then(() => {
       this._routerLinks.changes.pipe(
-        startWith(null!), takeUntil(this._destroySubject)
+        startWith(null), takeUntil(this._destroySubject)
       ).subscribe(() => this._updateActiveLinkStatusView());
     });
   }

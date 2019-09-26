@@ -1,4 +1,4 @@
-import { JsonProperty } from 'json-object-mapper';
+import { JsonProperty } from '@peerlancers/json-serialization';
 import { McsDateSerialization } from '../serialization/mcs-date-serialization';
 import { McsEntityBase } from '../common/mcs-entity.base';
 import {
@@ -13,53 +13,58 @@ import {
 } from '../enumerations/severity.enum';
 
 export class McsSystemMessage extends McsEntityBase {
+  @JsonProperty()
   public id: string = undefined;
+
+  @JsonProperty()
   public createdBy: string = undefined;
+
+  @JsonProperty()
   public updatedBy: string = undefined;
+
+  @JsonProperty()
   public enabled: boolean = undefined;
+
+  @JsonProperty()
   public message: string = undefined;
+
+  @JsonProperty()
   public active: boolean = undefined;
 
-  @JsonProperty({ type: McsSystemMessage })
+  @JsonProperty({ target: McsSystemMessage })
   public childSystemMessages: McsSystemMessage[] = undefined;
 
   @JsonProperty({
-    type: Date,
     serializer: McsDateSerialization,
     deserializer: McsDateSerialization
   })
   public start: Date = undefined;
 
   @JsonProperty({
-    type: Date,
     serializer: McsDateSerialization,
     deserializer: McsDateSerialization
   })
   public createdOn: Date = undefined;
 
   @JsonProperty({
-    type: Date,
     serializer: McsDateSerialization,
     deserializer: McsDateSerialization
   })
   public expiry: Date = undefined;
 
   @JsonProperty({
-    type: Date,
     serializer: McsDateSerialization,
     deserializer: McsDateSerialization
   })
   public updatedOn: Date = undefined;
 
   @JsonProperty({
-    type: MessageType,
     serializer: MessageTypeSerialization,
     deserializer: MessageTypeSerialization
   })
   public type: MessageType = undefined;
 
   @JsonProperty({
-    type: Severity,
     serializer: SeveritySerialization,
     deserializer: SeveritySerialization
   })

@@ -192,7 +192,7 @@ export class DialogService {
 
     // Attach component or template based on portal type
     if (portal instanceof TemplateRef) {
-      dialogContainer.attachTemplate(new PortalTemplate(portal, null!, { data: config.data }));
+      dialogContainer.attachTemplate(new PortalTemplate(portal, null, { data: config.data }));
     } else {
       let injector = this._createInjector<T>(config, dialogRef, dialogContainer);
       let contentRef = dialogContainer.attachComponent(

@@ -141,9 +141,9 @@
               </mcs-item>
             </ng-container>
 
-            <ng-container *ngIf="server.storageDevices | mcsIsNotNullOrEmpty; else noDisks">
+            <ng-container *ngIf="server?.storageDevices | mcsIsNotNullOrEmpty; else noDisks">
               <mcs-list spacing="xsmall">
-                <mcs-list-item *ngFor="let storage of server.storageDevices">
+                <mcs-list-item *ngFor="let storage of server?.storageDevices">
                   <mcs-item>
                     <span>{{ storage.name }}:</span>
                     <span [innerHTML]="(storage.sizeMB | mcsDataSize: 'MB') | mcsDataLabel"></span>
@@ -180,9 +180,9 @@
               </mcs-item>
             </ng-container>
 
-            <ng-container *ngIf="server.nics | mcsIsNotNullOrEmpty; else noContentMessage">
+            <ng-container *ngIf="server?.nics | mcsIsNotNullOrEmpty; else noContentMessage">
               <mcs-accordion [multi]="true">
-                <mcs-accordion-panel *ngFor="let nic of server.nics; let i = index"
+                <mcs-accordion-panel *ngFor="let nic of server?.nics; let i = index"
                   [expanded]="i === 0">
                   <mcs-accordion-panel-header mcsPanelHeaderDef>
                     <span>{{ nic.name }}</span>

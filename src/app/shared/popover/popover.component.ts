@@ -1,6 +1,7 @@
 import {
   Component,
   OnInit,
+  AfterViewInit,
   OnDestroy,
   Input,
   Output,
@@ -25,14 +26,14 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class PopoverComponent implements OnInit, OnDestroy {
+export class PopoverComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output()
   public onClickOutsideEvent: EventEmitter<any>;
 
-  @ViewChild('popoverElement')
+  @ViewChild('popoverElement', { static: false })
   public popoverElement: ElementRef;
 
-  @ViewChild('contentElement')
+  @ViewChild('contentElement', { static: false })
   public contentElement: ElementRef;
 
   @HostBinding('attr.role')
@@ -84,11 +85,16 @@ export class PopoverComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this.role = 'tooltip';
-    this._setPriority();
-    this._createArrow();
-    this._setTheme();
-    this._setPadding();
     this._registerEvents();
+  }
+
+  public ngAfterViewInit() {
+    Promise.resolve().then(() => {
+      this._setPriority();
+      this._createArrow();
+      this._setTheme();
+      this._setPadding();
+    });
   }
 
   public ngOnDestroy() {
@@ -106,6 +112,7 @@ export class PopoverComponent implements OnInit, OnDestroy {
 
   private _setTheme() {
     if (!this.theme) { return; }
+    if (isNullOrEmpty(this.popoverElement)) { return; }
     this._renderer.addClass(this.popoverElement.nativeElement, this.theme);
   }
 
@@ -133,6 +140,7 @@ export class PopoverComponent implements OnInit, OnDestroy {
   }
 
   private _createArrow() {
+    if (isNullOrEmpty(this.popoverElement)) { return; }
     switch (this.placement) {
       case 'top':
         this._renderer.addClass(this.popoverElement.nativeElement, 'arrow-down');
@@ -151,7 +159,7 @@ export class PopoverComponent implements OnInit, OnDestroy {
   }
 
   private _clearArrow(): void {
-    if (isNullOrEmpty(this.popoverElement.nativeElement)) { return; }
+    if (isNullOrEmpty(this.popoverElement)) { return; }
     this._renderer.removeClass(this.popoverElement.nativeElement, 'arrow-down');
     this._renderer.removeClass(this.popoverElement.nativeElement, 'arrow-left');
     this._renderer.removeClass(this.popoverElement.nativeElement, 'arrow-right');

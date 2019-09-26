@@ -11,7 +11,8 @@ import {
 } from '@angular/core';
 import {
   McsSizeType,
-  McsOrientationType
+  McsOrientationType,
+  isNullOrEmpty
 } from '@app/utilities';
 import { ListHeaderDirective } from './list-header.directive';
 
@@ -41,7 +42,7 @@ export class ListComponent implements AfterViewInit {
   @Input()
   public itemsOffset: McsSizeType;
 
-  @ContentChild(ListHeaderDirective)
+  @ContentChild(ListHeaderDirective, { static: false })
   public headerTemplate: TemplateRef<any>;
 
   public constructor(
@@ -56,5 +57,9 @@ export class ListComponent implements AfterViewInit {
   public ngAfterViewInit(): void {
     this._renderer.addClass(this._elementRef.nativeElement, this.spacing);
     this._renderer.addClass(this._elementRef.nativeElement, `items-offset-${this.itemsOffset}`);
+  }
+
+  public get hasCustomHeader(): boolean {
+    return isNullOrEmpty(this.headerTemplate);
   }
 }

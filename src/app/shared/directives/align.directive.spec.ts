@@ -16,16 +16,16 @@ import { AlignDirective } from './align.directive';
   template: ``
 })
 export class TestComponent {
-  @ViewChild('startTestElement')
+  @ViewChild('startTestElement', { static: false })
   public startTestElement: ElementRef<HTMLElement>;
 
-  @ViewChild('centerTestElement')
+  @ViewChild('centerTestElement', { static: false })
   public centerTestElement: ElementRef<HTMLElement>;
 
-  @ViewChild('endTestElement')
+  @ViewChild('endTestElement', { static: false })
   public endTestElement: ElementRef<HTMLElement>;
 
-  @ViewChild(AlignDirective)
+  @ViewChild(AlignDirective, { static: false })
   public directive: AlignDirective;
 }
 

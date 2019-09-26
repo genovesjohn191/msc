@@ -63,7 +63,7 @@ export class NotificationsComponent extends McsTableListingBase<McsJob> {
   /**
    * Returns the column settings key for the filter selector
    */
-  protected get columnSettingsKey(): string {
+  public get columnSettingsKey(): string {
     return CommonDefinition.FILTERSELECTOR_NOTIFICATIONS_LISTING;
   }
 

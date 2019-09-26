@@ -1,4 +1,4 @@
-import { JsonProperty } from 'json-object-mapper';
+import { JsonProperty } from '@peerlancers/json-serialization';
 import { isNullOrEmpty } from '@app/utilities';
 import { McsEntityBase } from '../common/mcs-entity.base';
 import {
@@ -28,42 +28,46 @@ import {
 } from '../enumerations/availability-zone.enum';
 
 export class McsInternetPort extends McsEntityBase {
+  @JsonProperty()
   public serviceId: string = undefined;
+
+  @JsonProperty()
   public description: string = undefined;
+
+  @JsonProperty()
   public portSpeedMbps: number = undefined;
+
+  @JsonProperty()
   public subnet: string = undefined;
+
+  @JsonProperty()
   public primaryPort: string = undefined;
 
   @JsonProperty({
-    type: ServiceLevel,
     serializer: ServiceLevelSerialization,
     deserializer: ServiceLevelSerialization
   })
   public serviceLevel: ServiceLevel = undefined;
 
   @JsonProperty({
-    type: PortStatus,
     serializer: PortStatusSerialization,
     deserializer: PortStatusSerialization
   })
   public status: PortStatus = undefined;
 
   @JsonProperty({
-    type: InternetPlan,
     serializer: InternetPlanSerialization,
     deserializer: InternetPlanSerialization
   })
   public plan: InternetPlan = undefined;
 
   @JsonProperty({
-    type: InviewLevel,
     serializer: InviewLevelSerialization,
     deserializer: InviewLevelSerialization
   })
   public inviewLevel: InviewLevel = undefined;
 
   @JsonProperty({
-    type: AvailabilityZone,
     serializer: AvailabilityZoneSerialization,
     deserializer: AvailabilityZoneSerialization
   })

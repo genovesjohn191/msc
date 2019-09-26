@@ -1,20 +1,19 @@
-import { JsonProperty } from 'json-object-mapper';
+import { JsonProperty } from '@peerlancers/json-serialization';
 import { McsProductOptionProperty } from './mcs-product-option-property';
 
 export class McsProductOption {
-  public name: string;
-  public type: string;
-  public displayOrder: string;
-  public listOptions: string[];
+  @JsonProperty()
+  public name: string = undefined;
 
-  @JsonProperty({ type: McsProductOptionProperty })
-  public properties: McsProductOptionProperty[];
+  @JsonProperty()
+  public type: string = undefined;
 
-  constructor() {
-    this.name = undefined;
-    this.type = undefined;
-    this.displayOrder = undefined;
-    this.listOptions = undefined;
-    this.properties = undefined;
-  }
+  @JsonProperty()
+  public displayOrder: string = undefined;
+
+  @JsonProperty()
+  public listOptions: string[] = undefined;
+
+  @JsonProperty({ target: McsProductOptionProperty })
+  public properties: McsProductOptionProperty[] = undefined;
 }

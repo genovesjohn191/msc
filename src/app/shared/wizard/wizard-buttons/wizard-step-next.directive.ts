@@ -12,7 +12,6 @@ import { WizardComponent } from '../wizard.component';
   selector: 'button[mcsWizardStepNext], a[mcsWizardStepNext]',
   host: {
     'class': 'wizard-step-next-button-wrapper',
-    '[type]': 'type',
     '(click)': 'next()'
   }
 })

@@ -53,10 +53,10 @@ export class SelectTagComponent implements AfterViewInit, AfterContentInit, OnDe
   @Output()
   public selectionChanged: EventEmitter<McsOption[]>;
 
-  @ViewChild(SelectTagSubItemPlaceholderDirective)
+  @ViewChild(SelectTagSubItemPlaceholderDirective, { static: false })
   private _subItemsPlaceholder: SelectTagSubItemPlaceholderDirective;
 
-  @ViewChild('search')
+  @ViewChild('search', { static: false })
   private _search: Search;
 
   @ContentChildren(SelectTagMainItemComponent)
@@ -109,15 +109,17 @@ export class SelectTagComponent implements AfterViewInit, AfterContentInit, OnDe
   }
 
   public ngAfterContentInit() {
-    // Listener when user selects the main item
-    this._mainItems.changes
-      .pipe(startWith(null), takeUntil(this._destroySubject))
-      .subscribe(() => this._listenToMainSelectionChange());
+    Promise.resolve().then(() => {
+      // Listener when user selects the main item
+      this._mainItems.changes
+        .pipe(startWith(null), takeUntil(this._destroySubject))
+        .subscribe(() => this._listenToMainSelectionChange());
 
-    // Listener when user selects the sub item
-    this._subItems.changes
-      .pipe(startWith(null), takeUntil(this._destroySubject))
-      .subscribe(() => this._listenToSubSelectionChange());
+      // Listener when user selects the sub item
+      this._subItems.changes
+        .pipe(startWith(null), takeUntil(this._destroySubject))
+        .subscribe(() => this._listenToSubSelectionChange());
+    });
   }
 
   public ngOnDestroy() {

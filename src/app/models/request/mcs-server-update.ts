@@ -1,13 +1,15 @@
-export class McsServerUpdate {
-  public memoryMB: number;
-  public storageMB: number;
-  public cpuCount: number;
-  public clientReferenceObject: any;
+import { JsonProperty } from '@peerlancers/json-serialization';
 
-  constructor() {
-    this.memoryMB = undefined;
-    this.storageMB = undefined;
-    this.cpuCount = undefined;
-    this.clientReferenceObject = undefined;
-  }
+export class McsServerUpdate {
+  @JsonProperty()
+  public memoryMB: number = undefined;
+
+  @JsonProperty()
+  public storageMB: number = undefined;
+
+  @JsonProperty()
+  public cpuCount: number = undefined;
+
+  @JsonProperty()
+  public clientReferenceObject: any = undefined;
 }

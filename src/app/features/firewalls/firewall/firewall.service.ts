@@ -9,6 +9,7 @@ export class FirewallService {
    * everytime there are new data from the selected firewall
    */
   public selectedFirewallChange: BehaviorSubject<McsFirewall>;
+  private _firewallId: string;
 
   /**
    * Get the selected firewall on the listing panel
@@ -28,5 +29,20 @@ export class FirewallService {
   public setSelectedFirewall(firewall: McsFirewall): void {
     this._selectedFirewall = firewall;
     this.selectedFirewallChange.next(firewall);
+  }
+
+  /**
+   * Sets the firewall id based on the provided string
+   * @param firewallId Firewall id to be set
+   */
+  public setFirewallId(firewallId: string): void {
+    this._firewallId = firewallId;
+  }
+
+  /**
+   * Returns the firewall id
+   */
+  public getFirewallId(): string {
+    return this._firewallId;
   }
 }

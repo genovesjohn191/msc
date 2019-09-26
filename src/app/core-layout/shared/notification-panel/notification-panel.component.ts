@@ -89,7 +89,7 @@ export class NotificationPanelComponent implements OnInit, OnChanges {
   }
 
   public get bulletIconKey(): string {
-    return CommonDefinition.ASSETS_FONT_BULLET;
+    return CommonDefinition.ASSETS_SVG_BULLET;
   }
 
   public get dataStatusEnum(): any {

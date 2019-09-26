@@ -10,6 +10,9 @@ import { McsRouteInfo } from '@app/models';
 import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import { McsEvent } from '@app/events';
 
+/**
+ * @deprecated Use the view listing base
+ */
 export abstract class McsRoutingTabBase<T> {
   public selectedRoutingTab: T;
   public paramId: string;

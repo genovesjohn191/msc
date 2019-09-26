@@ -16,7 +16,7 @@ import { TreeNode } from './tree-node/tree-node';
   template: ``
 })
 export class TestComponent {
-  @ViewChild(TreeComponent)
+  @ViewChild(TreeComponent, { static: false })
   public component: TreeComponent<any>;
   public selectedNodes: Array<TreeNode<any>>;
 

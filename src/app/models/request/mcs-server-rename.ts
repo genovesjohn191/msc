@@ -1,3 +1,4 @@
+import { JsonProperty } from '@peerlancers/json-serialization';
 import { McsApiJobRequestBase } from '../common/mcs-api-job-request-base';
 
 export interface McsServerRenameRefObj {
@@ -5,5 +6,6 @@ export interface McsServerRenameRefObj {
 }
 
 export class McsServerRename extends McsApiJobRequestBase<McsServerRenameRefObj> {
+  @JsonProperty()
   public name: string = undefined;
 }

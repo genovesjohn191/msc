@@ -48,7 +48,7 @@ describe('UserPanelComponent', () => {
   /** Test Implementation */
   describe('ngOnInit()', () => {
     it('should return the bell icon definition key', () => {
-      expect(component.bellIconKey).toBe(CommonDefinition.ASSETS_FONT_BELL);
+      expect(component.bellIconKey).toBe(CommonDefinition.ASSETS_SVG_NOTIFICATIONS);
     });
 
     it('should return the user icon definition key', () => {
@@ -56,7 +56,7 @@ describe('UserPanelComponent', () => {
     });
 
     it('should return the caret down icon definition key', () => {
-      expect(component.caretDownIconKey).toBe(CommonDefinition.ASSETS_FONT_CHEVRON_DOWN);
+      expect(component.caretDownIconKey).toBe(CommonDefinition.ASSETS_SVG_CHEVRON_DOWN);
     });
 
     it('should return the caret right icon definition key', () => {

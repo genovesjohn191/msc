@@ -40,6 +40,9 @@ export class ButtonComponent implements OnInit, OnChanges {
   public type: ButtonType = 'raised';
 
   @Input()
+  public id: string;
+
+  @Input()
   public arrow: 'up' | 'right';
 
   @Input()

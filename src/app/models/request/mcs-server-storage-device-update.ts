@@ -1,13 +1,15 @@
-export class McsServerStorageDeviceUpdate {
-  public name: string;
-  public storageProfile: string;
-  public sizeMB: number;
-  public clientReferenceObject: any;
+import { JsonProperty } from '@peerlancers/json-serialization';
 
-  constructor() {
-    this.name = undefined;
-    this.storageProfile = undefined;
-    this.sizeMB = undefined;
-    this.clientReferenceObject = undefined;
-  }
+export class McsServerStorageDeviceUpdate {
+  @JsonProperty()
+  public name: string = undefined;
+
+  @JsonProperty()
+  public storageProfile: string = undefined;
+
+  @JsonProperty()
+  public sizeMB: number = undefined;
+
+  @JsonProperty()
+  public clientReferenceObject: any = undefined;
 }

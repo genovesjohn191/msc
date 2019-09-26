@@ -17,7 +17,6 @@ import { animateFactory } from '@app/utilities';
     animateFactory.fadeOut
   ],
   host: {
-    '[id]': 'id',
     'class': 'loading-wrapper'
   }
 })

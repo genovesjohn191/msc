@@ -7,11 +7,7 @@ import {
 import { IConsolePageEntity } from './console-page-entity.interface';
 import { ConsoleStatus } from '../console-status';
 
-// JQuery script implementation
-require('script-loader!../../../../assets/scripts/jquery/jquery-3.4.1.min.js');
-require('script-loader!../../../../assets/scripts/jquery/jquery-ui.1.12.1.min.js');
-require('script-loader!../../../../assets/scripts/vcloud-js/wmks.min.js');
-declare var $: any;
+declare const $: any;
 
 const OTHER_ELEMENT_WIDTH = 0;
 const OTHER_ELEMENT_HEIGHT = 44;

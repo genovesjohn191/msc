@@ -6,6 +6,8 @@ import {
 } from '@app/models';
 
 export class CoreRoutes {
+  private static _routePathTable: Map<RouteKey, McsRouteInfo>;
+
   /**
    * Gets the route information based on the key provided
    * @param keyPath Router key from where the router information will be extracted
@@ -34,8 +36,6 @@ export class CoreRoutes {
   public static getNavigationPath(keyPath: RouteKey): string {
     return this.getRouteInfoByKey(keyPath).navigationPath;
   }
-
-  private static _routePathTable: Map<RouteKey, McsRouteInfo>;
 
   /**
    * Creates the route path table

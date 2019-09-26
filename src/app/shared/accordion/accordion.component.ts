@@ -54,11 +54,13 @@ export class AccordionComponent implements AfterContentInit, OnDestroy {
   private _multi: boolean;
 
   public ngAfterContentInit(): void {
-    this.panelItems.changes
-      .pipe(startWith(null), takeUntil(this._destroySubject))
-      .subscribe(() => {
+    Promise.resolve().then(() => {
+      this.panelItems.changes.pipe(
+        startWith(null), takeUntil(this._destroySubject)
+      ).subscribe(() => {
         this._listenToSelectionChange();
       });
+    });
   }
 
   public ngOnDestroy(): void {

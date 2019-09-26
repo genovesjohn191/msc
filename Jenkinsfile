@@ -156,7 +156,7 @@ podTemplate(
 
                 stage('Build docker image') {
                     sh "yarn install"
-                    sh "npm run build:aot:prod"
+                    sh "npm run build:prod"
                     sh "${docker_bin} build -t ${image_name}:${image_version} ."
                 }
                 stage('Publish the docker image') {

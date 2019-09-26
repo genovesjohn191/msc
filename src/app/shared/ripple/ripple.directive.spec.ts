@@ -15,7 +15,7 @@ import { RippleModule } from './ripple.module';
   template: ``
 })
 export class TestRippleDirectiveComponent {
-  @ViewChild(RippleDirective)
+  @ViewChild(RippleDirective, { static: false })
   public rippleDirective: RippleDirective;
 }
 

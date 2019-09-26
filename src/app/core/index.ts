@@ -19,7 +19,6 @@ export * from './services/mcs-notification-context.service';
 export * from './services/mcs-notification-events.service';
 export * from './services/mcs-global-element.service';
 export * from './services/mcs-overlay.service';
-export * from './services/mcs-snack-bar.service';
 export * from './services/mcs-scroll-dispatcher.service';
 export * from './services/mcs-viewport.service';
 export * from './services/mcs-error-handler.service';
@@ -41,10 +40,10 @@ export * from './providers/mcs-assets.provider';
 /** Base */
 export * from './base/mcs-routing-tab.base';
 export * from './base/mcs-form-field-control.base';
-export * from './base/mcs-list-source.base';
 export * from './base/mcs-status-settings.base';
 export * from './base/mcs-wizard.base';
 export * from './base/mcs-table-listing.base';
+export * from './base/mcs-listview-listing.base';
 
 /** Authentication */
 export * from './authentication/mcs-authentication.guard';
@@ -56,10 +55,6 @@ export * from './authentication/mcs-authentication.identity';
 export * from './authentication/permissions/mcs-server.permission';
 
 /** Factory */
-export * from './factory/snack-bar/mcs-snack-bar-ref';
-export * from './factory/snack-bar/mcs-snack-bar-config';
-export * from './factory/snack-bar/mcs-snack-bar-ref.directive';
-export * from './factory/snack-bar/mcs-snack-bar-container.component';
 export * from './factory/global-element/mcs-global-element-ref';
 export * from './factory/global-element/mcs-global-element-option';
 export * from './factory/overlay/mcs-overlay-ref';
@@ -77,6 +72,7 @@ export * from './factory/ordering/mcs-order.builder';
 export * from './factory/ordering/mcs-order.director';
 
 // Data Access Layer
+export * from './data-access/mcs-listview-datasource';
 export * from './data-access/mcs-table-datasource';
 export * from './data-access/mcs-table-selection';
 

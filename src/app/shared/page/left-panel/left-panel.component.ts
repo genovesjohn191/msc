@@ -33,17 +33,19 @@ import {
 
 export class LeftPanelComponent implements AfterContentInit {
 
-  @ViewChild(LeftPanelItemPlaceholderDirective)
+  @ViewChild(LeftPanelItemPlaceholderDirective, { static: false })
   private _leftPanelItemPlaceholder: LeftPanelItemPlaceholderDirective;
 
   @ContentChildren(LeftPanelItemDefDirective)
   private _leftPanelItemDefinition: QueryList<LeftPanelItemDefDirective>;
 
   public ngAfterContentInit() {
-    if (!isNullOrEmpty(this._leftPanelItemDefinition)) {
-      this._leftPanelItemDefinition.forEach((item) => {
-        this._leftPanelItemPlaceholder.viewContainer.createEmbeddedView(item.template);
-      });
-    }
+    Promise.resolve().then(() => {
+      if (!isNullOrEmpty(this._leftPanelItemDefinition)) {
+        this._leftPanelItemDefinition.forEach((item) => {
+          this._leftPanelItemPlaceholder.viewContainer.createEmbeddedView(item.template);
+        });
+      }
+    });
   }
 }

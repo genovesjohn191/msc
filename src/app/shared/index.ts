@@ -14,6 +14,7 @@ export * from './search';
 export * from './directives';
 export * from './filter-selector';
 export * from './tree';
+export * from './list-panel';
 export * from './form-message';
 export * from './pricing-calculator';
 export * from './progress-bar';

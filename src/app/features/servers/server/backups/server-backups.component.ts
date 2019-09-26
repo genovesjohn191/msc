@@ -77,7 +77,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
   private _applySnapshotHandler: Subscription;
   private _deleteSnapshotHandler: Subscription;
 
-  @ViewChild('formMessage')
+  @ViewChild('formMessage', { static: false })
   private _formMessage: FormMessage;
 
   public get warningIconKey(): string {
@@ -232,6 +232,11 @@ export class ServerBackupsComponent extends ServerDetailsBase
     this._dialogService.openMessage(dialogData);
   }
 
+  /**
+   * Shows the delete snapshot dialog
+   * @param server Server to be snapshot
+   * @param snapshot Snapshot to be applied
+   */
   private _showDeleteSnapshotDialog(server: McsServer, snapshot: McsServerSnapshot): void {
     let dialogData = {
       data: server,

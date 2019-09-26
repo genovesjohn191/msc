@@ -14,7 +14,7 @@ import { RippleModule } from './ripple.module';
   template: ``
 })
 export class TestRippleComponent {
-  @ViewChild(RippleComponent)
+  @ViewChild(RippleComponent, { static: false })
   public rippleComponent: RippleComponent;
 }
 

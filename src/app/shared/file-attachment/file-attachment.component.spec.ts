@@ -16,7 +16,7 @@ import { CoreTestingModule } from '@app/core/testing';
   template: ``
 })
 export class TestAttachmentComponent {
-  @ViewChild(FileAttachmentComponent)
+  @ViewChild(FileAttachmentComponent, { static: false })
   public attachmentComponent: FileAttachmentComponent;
 }
 

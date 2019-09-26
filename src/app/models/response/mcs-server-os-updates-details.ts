@@ -1,15 +1,18 @@
-export class McsServerOsUpdatesDetails {
-  public id: string;
-  public updateCount: number;
-  public lastInspectDate: string;
-  public crontab: string;
-  public runOnce: boolean;
+import { JsonProperty } from '@peerlancers/json-serialization';
 
-  constructor() {
-    this.id = undefined;
-    this.updateCount = undefined;
-    this.lastInspectDate = undefined;
-    this.crontab = undefined;
-    this.runOnce = true;
-  }
+export class McsServerOsUpdatesDetails {
+  @JsonProperty()
+  public id: string = undefined;
+
+  @JsonProperty()
+  public updateCount: number = undefined;
+
+  @JsonProperty()
+  public lastInspectDate: string = undefined;
+
+  @JsonProperty()
+  public crontab: string = undefined;
+
+  @JsonProperty()
+  public runOnce: boolean = undefined;
 }
