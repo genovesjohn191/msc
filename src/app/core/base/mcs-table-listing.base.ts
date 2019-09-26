@@ -92,7 +92,6 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
   public ngAfterViewInit() {
     Promise.resolve().then(() => {
       this._initializeDataSource();
-      this._initializeDataColumns();
     });
   }
 
@@ -126,6 +125,7 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
   public set table(value: Table) {
     if (this._table !== value) {
       this._table = value;
+      this._initializeDataColumns();
     }
   }
 
