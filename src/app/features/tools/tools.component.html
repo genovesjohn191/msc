@@ -62,15 +62,6 @@
         <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
         <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"></mcs-data-row>
       </mcs-table>
-
-      <button mcsButton="icon">
-        <mcs-icon key="check-box"></mcs-icon>
-      </button>
-
-      <mcs-tag-list>
-        <mcs-tag *ngFor="let item of tagList">{{ item }}</mcs-tag>
-        <input mcsTagInput #inputTemplate (mcsTagInputOnAdd)="onAddTag(inputTemplate.value)">
-      </mcs-tag-list>
     </div>
   </mcs-content-panel>
 </mcs-page>
