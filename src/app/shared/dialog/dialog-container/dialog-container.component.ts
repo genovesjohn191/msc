@@ -53,7 +53,7 @@ import { DialogConfig } from '../dialog-config';
 
 export class DialogContainerComponent {
 
-  @ViewChild(DialogRefDirective, { static: false })
+  @ViewChild(DialogRefDirective, { static: true })
   public portalHost: DialogRefDirective;
 
   /** Emits when an animation state changes. */
