@@ -167,16 +167,18 @@
                     {{ 'serverServices.inview.goToinviewButtonLabel' | translate }}
                   </a>
                 </ng-container>
-                <ng-container *ngIf="raiseInviewButtonsShown(server)">
-                  <button mcsButton size="xsmall"
-                    mcsId="raise-inview-level"
-                    mcsEventTracker="raise-inview-level-click"
-                    mcsEventCategory="server"
-                    mcsEventLabel="raise-inview-level-button"
-                    (click)="raiseInviewLevel(server)"
-                    [disabled]="server.isProcessing && server.serviceChangeAvailable">
-                    {{ 'serverServices.inview.raiseinviewButtonLabel' | translate }}
-                  </button>
+                <ng-container *mcsAccessControl="['OrderEdit']">
+                  <ng-container *ngIf="raiseInviewButtonsShown(server)">
+                    <button mcsButton size="xsmall"
+                      mcsId="raise-inview-level"
+                      mcsEventTracker="raise-inview-level-click"
+                      mcsEventCategory="server"
+                      mcsEventLabel="raise-inview-level-button"
+                      (click)="raiseInviewLevel(server)"
+                      [disabled]="server.isProcessing && server.serviceChangeAvailable">
+                      {{ 'serverServices.inview.raiseinviewButtonLabel' | translate }}
+                    </button>
+                  </ng-container>
                 </ng-container>
               </mcs-item>
             </mcs-grid-row>

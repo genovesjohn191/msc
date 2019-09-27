@@ -226,7 +226,10 @@
           "unavailable": "InView information is not yet available for this server.",
           "none": "This service does not currently have InView configured. Please speak to your Macquarie Cloud Services accounts team about enabling InView.",
           "standard": "The InView level for this service is currently Standard. It will be raised to Premium.",
-          "premium": "The InView Level for this service is currently Premium. This is the highest InView Level."
+          "premium": "The InView level for this service is currently Premium. This is the highest InView level."
+        },
+        "dropdownLabel": {
+          "unavailable": "Not yet available"
         },
         "inProcessing": "This server is currently busy and cannot be modified at this time."
       }
@@ -433,7 +436,7 @@
       "vdc": "Resource",
       "serviceId": "Service ID",
       "vmWareId": "VMWare ID",
-      "inviewLevel": "Inview Level",
+      "inviewLevel": "InView Level",
       "inviewLevelUnavailable": "Not yet available"
     },
     "manageServices": {
@@ -675,7 +678,7 @@
     "antiMalwareAddOnHelp": "Protect systems from malicious software, including signature-based malware detection, behaviour-based malware detection and sandboxing",
     "disasterRecoveryAddOn": "Disaster Recovery",
     "disasterRecoveryAddOnHelp": "Disaster recovery has a lot of benefits including faster recovery, financial saving, scalability, and security",
-    "inviewLevel": "Inview Level",
+    "inviewLevel": "InView Level",
     "inviewLevelHelp": "InView allows you to keep track of your services in realtime – from receiving alerts and reviewing trends, to learning how compute resources are being used at a low level. It gives you full visibility over your servers and also helps you respond to issues more quickly.",
     "sqlServerAddOn": "SQL Server",
     "sqlServerAddOnHelp": "Build intelligent, mission-critical applications using a scalable, hybrid database platform that has everything built in—from in-memory performance and advanced security to in-database analytics."
@@ -796,10 +799,10 @@
       }
     },
     "addOnInview": {
-      "header": "Inview",
+      "header": "InView",
       "version": {
-        "label": "Inview level",
-        "placeholder": "Select inview"
+        "label": "InView Level",
+        "placeholder": "Select InView"
       }
     },
     "manageNetwork": {
