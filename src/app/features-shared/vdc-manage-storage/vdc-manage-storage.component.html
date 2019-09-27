@@ -11,6 +11,7 @@
           mcsEventTracker="manage-storage-suffix-shown"
           mcsEventCategory="storage"
           mcsEventLabel="manage-storage-suffix">{{ unit }}</mcs-suffix>
+
         <mcs-hint mcsHint align="start"
           mcsId="manage-storage-hint-initial-value"
           mcsEventTracker="manage-storage-hint-initial-value-shown"
@@ -18,6 +19,7 @@
           mcsEventLabel="manage-storage-initial-value">
           {{ 'serverShared.manageStorage.hints.initialStorage' | translate: { value: roundedOffInitialValue } }}
         </mcs-hint>
+
         <mcs-error mcsError errorState="required"
           mcsId="manage-storage-error-required"
           mcsEventTracker="manage-storage-error-required-shown"
@@ -25,6 +27,7 @@
           mcsEventLabel="manage-storage-error-required">
           {{ 'serverShared.manageStorage.errors.storageRequired' | translate }}
         </mcs-error>
+
         <mcs-error mcsError errorState="numeric"
           mcsId="manage-storage-error-numeric"
           mcsEventTracker="manage-storage-error-numeric-shown"
@@ -32,6 +35,7 @@
           mcsEventLabel="manage-storage-error-numeric">
           {{ 'serverShared.manageStorage.errors.storageNumeric' | translate }}
         </mcs-error>
+
         <mcs-error mcsError errorState="min"
           mcsId="manage-storage-error-min"
           mcsEventTracker="manage-storage-error-min-shown"
@@ -39,6 +43,7 @@
           mcsEventLabel="manage-storage-error-min">
           {{ 'serverShared.manageStorage.errors.storageMin' | translate: { min_value: minimumUsable } }}
         </mcs-error>
+
         <mcs-error mcsError errorState="max"
           mcsId="manage-storage-error-max"
           mcsEventTracker="manage-storage-error-max-shown"
@@ -46,6 +51,7 @@
           mcsEventLabel="manage-storage-error-max">
           {{ 'serverShared.manageStorage.errors.storageAvailable' | translate: { available_storage: maximumUsable } }}
         </mcs-error>
+
         <mcs-error mcsError errorState="step"
           mcsId="manage-storage-error-step"
           mcsEventTracker="manage-storage-error-step-shown"
