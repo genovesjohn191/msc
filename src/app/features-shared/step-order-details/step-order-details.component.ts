@@ -266,7 +266,7 @@ export class StepOrderDetailsComponent
     if (!descriptionCanBeSet) { return; }
 
     if (this.fcDescription.value !== this.order.description) {
-      this.fcDescription.setValue(this.order.description, { onlySelf: true });
+      this.fcDescription.setValue(this.order.description);
     }
   }
 
@@ -416,10 +416,7 @@ export class StepOrderDetailsComponent
   private _subscribeToDataChange(): void {
     this._formGroup.valueChanges().pipe(
       takeUntil(this._destroySubject),
-    ).subscribe(() => {
-      this.dataChangeStatus = DataStatus.InProgress;
-      this.onDataChange();
-    });
+    ).subscribe(() => this.onDataChange());
   }
 
   /**
