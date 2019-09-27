@@ -26,7 +26,8 @@ import {
   convertGbToMb,
   convertMbToGb,
   CommonDefinition,
-  Guid
+  Guid,
+  createObject
 } from '@app/utilities';
 import {
   map,
@@ -39,7 +40,9 @@ import {
   McsServer,
   McsOrderWorkflow,
   OrderIdType,
-  McsServerCompute
+  McsServerCompute,
+  McsOrderCreate,
+  McsOrderItemCreate
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
@@ -177,17 +180,19 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
 
     this._manageScale = manageScale;
     this._scaleManagedServerService.createOrUpdateOrder(
-      {
-        items: [{
-          itemOrderType: OrderIdType.ScaleManageServer,
-          referenceId: SCALE_MANAGE_SERVER_REF_ID,
-          properties: {
-            cpuCount: manageScale.cpuCount,
-            memoryMB: convertGbToMb(manageScale.memoryGB)
-          } as ScaleManageProperties,
-          serviceId: server.serviceId
-        }]
-      }
+      createObject(McsOrderCreate, {
+        items: [
+          createObject(McsOrderItemCreate, {
+            itemOrderType: OrderIdType.ScaleManageServer,
+            referenceId: SCALE_MANAGE_SERVER_REF_ID,
+            properties: {
+              cpuCount: manageScale.cpuCount,
+              memoryMB: convertGbToMb(manageScale.memoryGB)
+            } as ScaleManageProperties,
+            serviceId: server.serviceId
+          })
+        ]
+      })
     );
     this._changeDetectorRef.markForCheck();
   }
@@ -225,13 +230,16 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
    */
   public onServerConfirmOrderChange(orderDetails: OrderDetails): void {
     if (isNullOrEmpty(orderDetails)) { return; }
-    this._scaleManagedServerService.createOrUpdateOrder({
-      contractDurationMonths: orderDetails.contractDurationMonths,
-      description: orderDetails.description,
-      billingEntityId: orderDetails.billingEntityId,
-      billingSiteId: orderDetails.billingSiteId,
-      billingCostCentreId: orderDetails.billingCostCentreId
-    }, OrderRequester.Billing);
+    this._scaleManagedServerService.createOrUpdateOrder(
+      createObject(McsOrderCreate, {
+        contractDurationMonths: orderDetails.contractDurationMonths,
+        description: orderDetails.description,
+        billingEntityId: orderDetails.billingEntityId,
+        billingSiteId: orderDetails.billingSiteId,
+        billingCostCentreId: orderDetails.billingCostCentreId
+      }),
+      OrderRequester.Billing
+    );
   }
 
   /**

@@ -33,7 +33,8 @@ import {
   VmPowerstateCommand,
   McsServerDelete,
   McsQueryParam,
-  McsApiCollection
+  McsApiCollection,
+  McsServerPowerstateCommand
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -156,12 +157,13 @@ export class ServersComponent extends McsTableListingBase<McsServer>
    */
   public startMultipleServers(): void {
     this.selection.getSelectedItems().forEach((server) => {
-      this._apiService.sendServerPowerState(server.id, {
-        command: VmPowerstateCommand.Start,
-        clientReferenceObject: {
-          serverId: server.id
-        }
-      }).subscribe();
+      let powerState = new McsServerPowerstateCommand();
+      powerState.command = VmPowerstateCommand.Start;
+      powerState.clientReferenceObject = {
+        serverId: server.id
+      };
+
+      this._apiService.sendServerPowerState(server.id, powerState).subscribe();
     });
     this.selection.clearAllSelection();
   }
@@ -171,12 +173,13 @@ export class ServersComponent extends McsTableListingBase<McsServer>
    */
   public stopMultipleServers(): void {
     this.selection.getSelectedItems().forEach((server) => {
-      this._apiService.sendServerPowerState(server.id, {
-        command: VmPowerstateCommand.Stop,
-        clientReferenceObject: {
-          serverId: server.id
-        }
-      }).subscribe();
+      let powerState = new McsServerPowerstateCommand();
+      powerState.command = VmPowerstateCommand.Stop;
+      powerState.clientReferenceObject = {
+        serverId: server.id
+      };
+
+      this._apiService.sendServerPowerState(server.id, powerState).subscribe();
     });
     this.selection.clearAllSelection();
   }
@@ -186,12 +189,13 @@ export class ServersComponent extends McsTableListingBase<McsServer>
    */
   public restartMultipleServers(): void {
     this.selection.getSelectedItems().forEach((server) => {
-      this._apiService.sendServerPowerState(server.id, {
-        command: VmPowerstateCommand.Restart,
-        clientReferenceObject: {
-          serverId: server.id
-        }
-      }).subscribe();
+      let powerState = new McsServerPowerstateCommand();
+      powerState.command = VmPowerstateCommand.Restart;
+      powerState.clientReferenceObject = {
+        serverId: server.id
+      };
+
+      this._apiService.sendServerPowerState(server.id, powerState).subscribe();
     });
     this.selection.clearAllSelection();
   }
@@ -241,12 +245,13 @@ export class ServersComponent extends McsTableListingBase<McsServer>
       concatMap((dialogResult) => {
         if (isNullOrEmpty(dialogResult)) { return of(null); }
         return forkJoin(dialogResult.map((server) => {
-          return this._apiService.sendServerPowerState(server.id, {
-            command: VmPowerstateCommand.Suspend,
-            clientReferenceObject: {
-              serverId: server.id
-            }
-          });
+          let powerState = new McsServerPowerstateCommand();
+          powerState.command = VmPowerstateCommand.Suspend;
+          powerState.clientReferenceObject = {
+            serverId: server.id
+          };
+
+          return this._apiService.sendServerPowerState(server.id, powerState);
         }));
       })
     ).subscribe();
@@ -270,12 +275,13 @@ export class ServersComponent extends McsTableListingBase<McsServer>
       concatMap((dialogResult) => {
         if (isNullOrEmpty(dialogResult)) { return of(null); }
         return forkJoin(dialogResult.map((server) => {
-          return this._apiService.sendServerPowerState(server.id, {
-            command: VmPowerstateCommand.Resume,
-            clientReferenceObject: {
-              serverId: server.id
-            }
-          });
+          let powerState = new McsServerPowerstateCommand();
+          powerState.command = VmPowerstateCommand.Resume;
+          powerState.clientReferenceObject = {
+            serverId: server.id
+          };
+
+          return this._apiService.sendServerPowerState(server.id, powerState);
         }));
       })
     ).subscribe();

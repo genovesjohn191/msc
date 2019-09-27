@@ -105,3 +105,16 @@ export function getSafeProperty<O, T>(
     return valueIfFail;
   }
 }
+
+type FilterProperty<T, K> = T extends K ? T : never;
+/**
+ * Creates an object based on the target element
+ * @target Target instance to be created
+ * @fields Property members of the target class
+ */
+export function createObject<T, K>(target: new (...args: any[]) => T, fields: FilterProperty<T, K>): T {
+  if (isNullOrEmpty(target)) {
+    throw new Error(`Unable to find prototype of ${target} object`);
+  }
+  return Object.assign(new target(), fields);
+}

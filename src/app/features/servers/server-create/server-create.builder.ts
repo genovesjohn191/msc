@@ -1,11 +1,15 @@
 import { OrderRequester } from '@app/core';
-import { isNullOrEmpty } from '@app/utilities';
+import {
+  isNullOrEmpty,
+  createObject
+} from '@app/utilities';
 import {
   McsResource,
   ServiceType,
   McsServerCreateAddOnSqlServer,
   McsServerCreateAddOnInview,
-  Os
+  Os,
+  McsOrderCreate
 } from '@app/models';
 import { OrderDetails } from '@app/features-shared';
 import { IServerCreate } from './factory/server-create.interface';
@@ -97,13 +101,16 @@ export class ServerCreateBuilder<T> {
    */
   public setOrderDetails(orderDetails: OrderDetails): void {
     if (isNullOrEmpty(orderDetails)) { return; }
-    this._serverCreateService.createOrUpdateOrder({
-      contractDurationMonths: orderDetails.contractDurationMonths,
-      billingEntityId: orderDetails.billingEntityId,
-      billingSiteId: orderDetails.billingSiteId,
-      billingCostCentreId: orderDetails.billingCostCentreId,
-      description: orderDetails.description
-    }, OrderRequester.Billing);
+    this._serverCreateService.createOrUpdateOrder(
+      createObject(McsOrderCreate, {
+        contractDurationMonths: orderDetails.contractDurationMonths,
+        billingEntityId: orderDetails.billingEntityId,
+        billingSiteId: orderDetails.billingSiteId,
+        billingCostCentreId: orderDetails.billingCostCentreId,
+        description: orderDetails.description
+      }),
+      OrderRequester.Billing
+    );
   }
 
   /**

@@ -23,7 +23,8 @@ import {
 import {
   isNullOrEmpty,
   getSafeProperty,
-  CommonDefinition
+  CommonDefinition,
+  createObject
 } from '@app/utilities';
 import {
   McsServer,
@@ -147,47 +148,57 @@ export class ServerCommandComponent {
    * Starts the server
    */
   private _startServer(): void {
-    let powerState = new McsServerPowerstateCommand();
-    powerState.command = VmPowerstateCommand.Start;
-    powerState.clientReferenceObject = {
-      serverId: this.server.id
-    };
-    this._apiService.sendServerPowerState(this.server.id, powerState).subscribe();
+    this._apiService.sendServerPowerState(
+      this.server.id,
+      createObject(McsServerPowerstateCommand, {
+        command: VmPowerstateCommand.Start,
+        clientReferenceObject: {
+          serverId: this.server.id
+        }
+      })
+    ).subscribe();
   }
 
   /**
    * Stops the server
    */
   private _stopServer(): void {
-    let powerState = new McsServerPowerstateCommand();
-    powerState.command = VmPowerstateCommand.Stop;
-    powerState.clientReferenceObject = {
-      serverId: this.server.id
-    };
-    this._apiService.sendServerPowerState(this.server.id, powerState).subscribe();
+    this._apiService.sendServerPowerState(
+      this.server.id,
+      createObject(McsServerPowerstateCommand, {
+        command: VmPowerstateCommand.Stop,
+        clientReferenceObject: {
+          serverId: this.server.id
+        }
+      })
+    ).subscribe();
   }
 
   /**
    * Restarts the server
    */
   private _restartServer(): void {
-    let powerState = new McsServerPowerstateCommand();
-    powerState.command = VmPowerstateCommand.Restart;
-    powerState.clientReferenceObject = {
-      serverId: this.server.id
-    };
-    this._apiService.sendServerPowerState(this.server.id, powerState).subscribe();
+    this._apiService.sendServerPowerState(
+      this.server.id,
+      createObject(McsServerPowerstateCommand, {
+        command: VmPowerstateCommand.Restart,
+        clientReferenceObject: {
+          serverId: this.server.id
+        }
+      })
+    ).subscribe();
   }
 
   /**
    * Resumes the server
    */
   private _resumeServer(): void {
-    let powerState = new McsServerPowerstateCommand();
-    powerState.command = VmPowerstateCommand.Resume;
-    powerState.clientReferenceObject = {
-      serverId: this.server.id
-    };
+    let powerState = createObject(McsServerPowerstateCommand, {
+      command: VmPowerstateCommand.Resume,
+      clientReferenceObject: {
+        serverId: this.server.id
+      }
+    });
 
     let dialogData = {
       data: powerState,
@@ -210,11 +221,12 @@ export class ServerCommandComponent {
    * Suspends the server
    */
   private _suspendServer(): void {
-    let powerState = new McsServerPowerstateCommand();
-    powerState.command = VmPowerstateCommand.Suspend;
-    powerState.clientReferenceObject = {
-      serverId: this.server.id
-    };
+    let powerState = createObject(McsServerPowerstateCommand, {
+      command: VmPowerstateCommand.Suspend,
+      clientReferenceObject: {
+        serverId: this.server.id
+      }
+    });
 
     let dialogData = {
       data: powerState,
@@ -246,12 +258,15 @@ export class ServerCommandComponent {
       concatMap((dialogResult) => {
         if (isNullOrEmpty(dialogResult)) { return of(null); }
 
-        let rename = new McsServerRename();
-        rename.name = dialogResult;
-        rename.clientReferenceObject = {
-          serverId: this.server.id
-        };
-        return this._apiService.renameServer(this.server.id, rename);
+        return this._apiService.renameServer(
+          this.server.id,
+          createObject(McsServerRename, {
+            name: dialogResult,
+            clientReferenceObject: {
+              serverId: this.server.id
+            }
+          })
+        );
       })
     ).subscribe();
   }
@@ -260,10 +275,11 @@ export class ServerCommandComponent {
    * Delete the server
    */
   private _deleteServer(): void {
-    let deleteDetails = new McsServerDelete();
-    deleteDetails.clientReferenceObject = {
-      serverId: this.server.id
-    };
+    let deleteDetails = createObject(McsServerDelete, {
+      clientReferenceObject: {
+        serverId: this.server.id
+      }
+    });
 
     let dialogData = {
       data: deleteDetails,
@@ -292,10 +308,11 @@ export class ServerCommandComponent {
   private _resetServerPassword(): void {
     // TODO: Check if userId is still necessary in resetting server password?
     // or can we use the credentials of the job itself
-    let resetDetails = new McsServerPasswordReset();
-    resetDetails.clientReferenceObject = {
-      serverId: this.server.id
-    };
+    let resetDetails = createObject(McsServerPasswordReset, {
+      clientReferenceObject: {
+        serverId: this.server.id
+      }
+    });
 
     let messageContentByState = this.server.isPoweredOff ?
       this._translateService.instant('dialogResetPassword.poweredOffMessage', { server_name: this.server.name }) :
