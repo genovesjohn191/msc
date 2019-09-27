@@ -32,7 +32,6 @@ import { McsEvent } from '@app/events';
 
 export class ToolsComponent extends McsTableListingBase<McsPortal> {
   public toolDescription: Map<string, string>;
-  public tagList = [];
 
   constructor(
     _injector: Injector,
@@ -43,11 +42,6 @@ export class ToolsComponent extends McsTableListingBase<McsPortal> {
   ) {
     super(_injector, _changeDetectorRef, { dataChangeEvent: McsEvent.dataChangeTools });
     this._initializeToolDescriptionMap();
-  }
-
-  public onAddTag(data: string): void {
-    this.tagList.push(data);
-    this.changeDetectorRef.markForCheck();
   }
 
   /**

@@ -10,8 +10,6 @@ import {
   takeUntil,
   tap,
   catchError,
-  exhaustMap,
-  finalize,
   filter,
   map
 } from 'rxjs/operators';
@@ -20,10 +18,9 @@ import {
   unsubscribeSafely,
   isNullOrUndefined,
   getSafeProperty,
-  cloneObject,
-  compareJsons,
   isNullOrEmpty,
-  CommonDefinition
+  CommonDefinition,
+  emitLatestMap
 } from '@app/utilities';
 import {
   McsOrderCreate,
@@ -45,7 +42,10 @@ import {
   McsOrderRequest,
   OrderRequester
 } from './mcs-order-request';
-import { McsOrderDirector } from './mcs-order.director';
+import {
+  McsOrderDirector,
+  OrderStateChange
+} from './mcs-order.director';
 
 const DEFAULT_ORDER_DESCRIPTION = 'Macquarie Cloud Services Portal Order';
 
@@ -64,8 +64,6 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
 
   // Order content
   private _createdOrder: McsOrder;
-  private _pendingOrderRequest: McsOrderRequest;
-  private _inProgressRequest: McsOrderRequest;
 
   // Events for controlling events
   private _orderChange = new Subject<McsOrder>();
@@ -82,6 +80,7 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
     this._orderBuilder = new McsOrderBuilder();
     this._orderDirector = new McsOrderDirector();
     this._subscribeAndExecuteNewOrder();
+    this._subscribeToOrderPreChange();
     this._subscribeToOrderItemType();
   }
 
@@ -265,10 +264,9 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
    * emitted once the previous order was completed.
    */
   private _subscribeAndExecuteNewOrder(): void {
-    this._orderDirector.orderRequestReceived().pipe(
+    this._orderDirector.orderRequestChange().pipe(
       takeUntil(this._orderRequestedSubject),
-      tap((orderRequest) => this._pendingOrderRequest = cloneObject(orderRequest)),
-      exhaustMap((response) => this._executeOrderRequest(response))
+      emitLatestMap((response) => this._executeOrderRequest(response))
     ).subscribe();
   }
 
@@ -293,8 +291,6 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
       this._updateOrder.bind(this, this._createdOrder.id, requestDetails.orderDetails);
 
     this._setRequestChangeState(DataStatus.InProgress);
-    this._inProgressRequest = cloneObject(requestDetails);
-
     return requesterFunc().pipe(
       tap((order) => {
         this._createdOrder = order as McsOrder;
@@ -305,32 +301,8 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
         this._setRequestChangeState(DataStatus.Error);
         this.setErrors(...httpError.errorMessages);
         return empty();
-      }),
-      finalize(() => this._onOrderCompletion())
+      })
     );
-  }
-
-  /**
-   * Event that emits when the order has been completed
-   */
-  private _onOrderCompletion(): void {
-    this._executePendingRequest();
-    this._clearInProgressRequest();
-  }
-
-  /**
-   * Clears the inprogress request
-   */
-  private _clearInProgressRequest(): void {
-    this._inProgressRequest = null;
-  }
-
-  /**
-   * Executes the pending request right after the inprogress request
-   */
-  private _executePendingRequest(): void {
-    if (!this._hasPendingRequest()) { return; }
-    this._executeOrderRequest(this._pendingOrderRequest).subscribe();
   }
 
   /**
@@ -363,19 +335,23 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
    * @param state State change of the order if there is ongoing request
    */
   private _setRequestChangeState(state: DataStatus): void {
-    if (this._hasPendingRequest()) {
-      this.setChangeState(DataStatus.InProgress);
-      return;
-    }
     this.setChangeState(state);
   }
 
   /**
-   * Returns true when the order has a pending request
+   * Subscribes to order pre changed event
    */
-  private _hasPendingRequest(): boolean {
-    return !isNullOrUndefined(this._pendingOrderRequest) &&
-      compareJsons(this._inProgressRequest, this._pendingOrderRequest) !== 0;
+  private _subscribeToOrderPreChange(): void {
+    if (isNullOrEmpty(this._orderDirector)) { return; }
+
+    this._orderDirector.orderRequestStateChange().pipe(
+      takeUntil(this._orderRequestedSubject),
+      tap((orderState) => {
+        orderState === OrderStateChange.Changed ?
+          this._setRequestChangeState(DataStatus.InProgress) :
+          this._setRequestChangeState(DataStatus.Success);
+      }),
+    ).subscribe();
   }
 
   /**
