@@ -33,7 +33,8 @@ import {
   getSafeProperty,
   isNullOrEmpty,
   CommonDefinition,
-  Guid
+  Guid,
+  createObject
 } from '@app/utilities';
 import { McsApiService } from '@app/services';
 import { McsEvent } from '@app/events';
@@ -42,7 +43,9 @@ import {
   InviewLevel,
   OrderIdType,
   McsOrderWorkflow,
-  inviewLevelText
+  inviewLevelText,
+  McsOrderCreate,
+  McsOrderItemCreate
 } from '@app/models';
 import { McsFormGroupDirective } from '@app/shared';
 import { OrderDetails } from '@app/features-shared';
@@ -143,16 +146,18 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
     if (!this.validOrderInviewLevel) { return; }
 
     this._serviceInviewRaiseService.createOrUpdateOrder(
-      {
-        items: [{
-          itemOrderType: OrderIdType.RaiseInviewLevel,
-          referenceId: SERVICE_RAISE_INVIEW_REF_ID,
-          properties: {
-            inviewLevel: inviewLevelText[InviewLevel.Premium]
-          } as RaiseInviewLevelProperties,
-          serviceId: server.serviceId
-        }]
-      }
+      createObject(McsOrderCreate, {
+        items: [
+          createObject(McsOrderItemCreate, {
+            itemOrderType: OrderIdType.RaiseInviewLevel,
+            referenceId: SERVICE_RAISE_INVIEW_REF_ID,
+            properties: {
+              inviewLevel: inviewLevelText[InviewLevel.Premium]
+            } as RaiseInviewLevelProperties,
+            serviceId: server.serviceId
+          })
+        ]
+      })
     );
     this._changeDetectorRef.markForCheck();
   }
@@ -163,13 +168,16 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
    */
   public onServiceInviewRaiseConfirmOrderChange(orderDetails: OrderDetails): void {
     if (isNullOrEmpty(orderDetails)) { return; }
-    this._serviceInviewRaiseService.createOrUpdateOrder({
-      contractDurationMonths: orderDetails.contractDurationMonths,
-      description: orderDetails.description,
-      billingEntityId: orderDetails.billingEntityId,
-      billingSiteId: orderDetails.billingSiteId,
-      billingCostCentreId: orderDetails.billingCostCentreId
-    }, OrderRequester.Billing);
+    this._serviceInviewRaiseService.createOrUpdateOrder(
+      createObject(McsOrderCreate, {
+        contractDurationMonths: orderDetails.contractDurationMonths,
+        description: orderDetails.description,
+        billingEntityId: orderDetails.billingEntityId,
+        billingSiteId: orderDetails.billingSiteId,
+        billingCostCentreId: orderDetails.billingCostCentreId
+      }),
+      OrderRequester.Billing
+    );
   }
 
   /**

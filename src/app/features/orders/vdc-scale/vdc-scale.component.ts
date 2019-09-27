@@ -36,7 +36,8 @@ import {
   McsOrderWorkflow,
   McsResource,
   McsResourceCompute,
-  OrderIdType
+  OrderIdType,
+  McsOrderCreate
 } from '@app/models';
 import {
   getSafeProperty,
@@ -45,7 +46,8 @@ import {
   convertMbToGb,
   CommonDefinition,
   Guid,
-  convertGbToMb
+  convertGbToMb,
+  createObject
 } from '@app/utilities';
 import { McsApiService } from '@app/services';
 import { McsEvent } from '@app/events';
@@ -150,7 +152,7 @@ export class VdcScaleComponent extends McsOrderWizardBase implements OnDestroy {
 
     this._vdcScale = vdcManageScale;
     this._vdcScaleService.createOrUpdateOrder(
-      {
+      createObject(McsOrderCreate, {
         items: [{
           itemOrderType: OrderIdType.VdcScale,
           referenceId: VDC_SCALE_REF_ID,
@@ -160,7 +162,7 @@ export class VdcScaleComponent extends McsOrderWizardBase implements OnDestroy {
           } as VdcScaleProperties,
           serviceId: resource.serviceId
         }]
-      }
+      })
     );
   }
 
@@ -195,13 +197,16 @@ export class VdcScaleComponent extends McsOrderWizardBase implements OnDestroy {
    */
   public onVdcConfirmOrderChange(orderDetails: OrderDetails): void {
     if (isNullOrEmpty(orderDetails)) { return; }
-    this._vdcScaleService.createOrUpdateOrder({
-      contractDurationMonths: orderDetails.contractDurationMonths,
-      description: orderDetails.description,
-      billingEntityId: orderDetails.billingEntityId,
-      billingSiteId: orderDetails.billingSiteId,
-      billingCostCentreId: orderDetails.billingCostCentreId
-    }, OrderRequester.Billing);
+    this._vdcScaleService.createOrUpdateOrder(
+      createObject(McsOrderCreate, {
+        contractDurationMonths: orderDetails.contractDurationMonths,
+        description: orderDetails.description,
+        billingEntityId: orderDetails.billingEntityId,
+        billingSiteId: orderDetails.billingSiteId,
+        billingCostCentreId: orderDetails.billingCostCentreId
+      }),
+      OrderRequester.Billing
+    );
   }
 
   /**

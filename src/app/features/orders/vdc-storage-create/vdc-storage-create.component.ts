@@ -34,7 +34,8 @@ import {
 import {
   McsResource,
   McsResourceStorage,
-  McsOrderWorkflow
+  McsOrderWorkflow,
+  McsOrderCreate
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -43,7 +44,8 @@ import {
   animateFactory,
   getSafeProperty,
   convertMbToGb,
-  CommonDefinition
+  CommonDefinition,
+  createObject
 } from '@app/utilities';
 import { McsFormGroupDirective } from '@app/shared';
 import {
@@ -163,13 +165,16 @@ export class VdcStorageCreateComponent extends McsOrderWizardBase implements OnI
    */
   public onVdcConfirmOrderChange(orderDetails: OrderDetails): void {
     if (isNullOrEmpty(orderDetails)) { return; }
-    this._vdcStorageCreateService.createOrUpdateOrder({
-      contractDurationMonths: orderDetails.contractDurationMonths,
-      description: orderDetails.description,
-      billingEntityId: orderDetails.billingEntityId,
-      billingSiteId: orderDetails.billingSiteId,
-      billingCostCentreId: orderDetails.billingCostCentreId
-    }, OrderRequester.Billing);
+    this._vdcStorageCreateService.createOrUpdateOrder(
+      createObject(McsOrderCreate, {
+        contractDurationMonths: orderDetails.contractDurationMonths,
+        description: orderDetails.description,
+        billingEntityId: orderDetails.billingEntityId,
+        billingSiteId: orderDetails.billingSiteId,
+        billingCostCentreId: orderDetails.billingCostCentreId
+      }),
+      OrderRequester.Billing
+    );
   }
 
   /**

@@ -1,8 +1,14 @@
 import {
   OrderIdType,
-  McsResource
+  McsResource,
+  McsOrderCreate,
+  McsOrderItemCreate
 } from '@app/models';
-import { isNullOrEmpty, Guid } from '@app/utilities';
+import {
+  isNullOrEmpty,
+  Guid,
+  createObject
+} from '@app/utilities';
 import { IServerCreate } from './server-create.interface';
 import { ServerCreateService } from '../server-create.service';
 
@@ -24,14 +30,17 @@ export class ServerCreateManaged implements IServerCreate {
       serverDetails['inviewLevel'] = 'Premium';
     }
 
-    serverCreateService.createOrUpdateOrder({
+    let orderRequest = createObject(McsOrderCreate, {
       contractDurationMonths: 12,
-      items: [{
-        itemOrderType: OrderIdType.CreateManagedServer,
-        referenceId: this._serverReferenceId.toString(),
-        parentServiceId: resource.name,
-        properties: serverDetails
-      }]
+      items: [
+        createObject(McsOrderItemCreate, {
+          itemOrderType: OrderIdType.CreateManagedServer,
+          referenceId: this._serverReferenceId.toString(),
+          parentServiceId: resource.name,
+          properties: serverDetails
+        })
+      ]
     });
+    serverCreateService.createOrUpdateOrder(orderRequest);
   }
 }

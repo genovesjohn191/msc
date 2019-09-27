@@ -35,7 +35,9 @@ import {
   McsResource,
   McsOrderWorkflow,
   OrderIdType,
-  McsResourceStorage
+  McsResourceStorage,
+  McsOrderCreate,
+  McsOrderItemCreate
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -45,7 +47,8 @@ import {
   getSafeProperty,
   CommonDefinition,
   Guid,
-  convertMbToGb
+  convertMbToGb,
+  createObject
 } from '@app/utilities';
 import { McsFormGroupDirective } from '@app/shared';
 import {
@@ -157,18 +160,20 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnI
   public onSubmitExpandDetails(): void {
     if (isNullOrEmpty(this.storage)) { return; }
     this._vdcStorageExpandService.createOrUpdateOrder(
-      {
-        items: [{
-          itemOrderType: OrderIdType.VdcStorageExpand,
-          referenceId: VDC_STORAGE_EXPAND_REF_ID,
-          properties: {
-            storageMB: this.storage,
-            storageProfileId: ''
-          } as ExpandVdcStorageProperties,
-          // TODO: no final payload yet
-          // serviceId: server.serviceId
-        }]
-      }
+      createObject(McsOrderCreate, {
+        items: [
+          createObject(McsOrderItemCreate, {
+            itemOrderType: OrderIdType.VdcStorageExpand,
+            referenceId: VDC_STORAGE_EXPAND_REF_ID,
+            properties: {
+              storageMB: this.storage,
+              storageProfileId: ''
+            } as ExpandVdcStorageProperties,
+            // TODO: no final payload yet
+            // serviceId: server.serviceId
+          })
+        ]
+      })
     );
     this._changeDetectorRef.markForCheck();
   }
@@ -179,13 +184,16 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnI
    */
   public onVdcConfirmOrderChange(orderDetails: OrderDetails): void {
     if (isNullOrEmpty(orderDetails)) { return; }
-    this._vdcStorageExpandService.createOrUpdateOrder({
-      contractDurationMonths: orderDetails.contractDurationMonths,
-      description: orderDetails.description,
-      billingEntityId: orderDetails.billingEntityId,
-      billingSiteId: orderDetails.billingSiteId,
-      billingCostCentreId: orderDetails.billingCostCentreId
-    }, OrderRequester.Billing);
+    this._vdcStorageExpandService.createOrUpdateOrder(
+      createObject(McsOrderCreate, {
+        contractDurationMonths: orderDetails.contractDurationMonths,
+        description: orderDetails.description,
+        billingEntityId: orderDetails.billingEntityId,
+        billingSiteId: orderDetails.billingSiteId,
+        billingCostCentreId: orderDetails.billingCostCentreId
+      }),
+      OrderRequester.Billing
+    );
   }
 
   /**

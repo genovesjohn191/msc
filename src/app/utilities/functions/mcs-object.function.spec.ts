@@ -5,7 +5,8 @@ import {
   unsubscribeSafely,
   updateObjectData,
   getSafeProperty,
-  cloneObject
+  cloneObject,
+  createObject
 } from './mcs-object.function';
 
 describe('OBJECT Functions', () => {
@@ -145,8 +146,8 @@ describe('OBJECT Functions', () => {
       });
   });
 
-  describe('createNewObject()', () => {
-    it('should create a new object based on the source provided', () => {
+  describe('cloneObject()', () => {
+    it('should mutate the provided object', () => {
       class TestClass {
         public name: string;
         public age: string;
@@ -155,6 +156,22 @@ describe('OBJECT Functions', () => {
       let targetInstance = cloneObject(sourceInstance);
       expect(targetInstance).toBeDefined();
       expect(targetInstance).not.toBe(sourceInstance);
+    });
+  });
+
+  describe('createObject()', () => {
+    it('should create a new target object with populated fields', () => {
+      class TestClass {
+        public name: string;
+        public age: string;
+      }
+      let targetInstance = createObject(TestClass, {
+        name: 'Arrian',
+        age: '28'
+      });
+      expect(targetInstance).toBeDefined();
+      expect(targetInstance.name).toBe('Arrian');
+      expect(targetInstance.age).toBe('28');
     });
   });
 });
