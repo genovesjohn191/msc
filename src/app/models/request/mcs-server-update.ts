@@ -5,9 +5,6 @@ export class McsServerUpdate {
   public memoryMB: number = undefined;
 
   @JsonProperty()
-  public storageMB: number = undefined;
-
-  @JsonProperty()
   public cpuCount: number = undefined;
 
   @JsonProperty()
