@@ -61,7 +61,7 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
    */
   public updateDatasource(dataSource: DatasourceType<T>): void {
     this._dataSource = dataSource;
-    this.updateDataStatus(DataStatus.InProgress);
+    this.updateDataStatus(DataStatus.Active);
     this._setDatasourcePointer();
     this.refreshDataRecords();
   }
@@ -247,7 +247,7 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
     this._requestUpdate.pipe(
       startWith(null),
       switchMap(() => {
-        this.updateDataStatus(DataStatus.InProgress);
+        this.updateDataStatus(DataStatus.Active);
 
         return this._datasourceFuncPointer().pipe(
           exhaustMap((records) => of(this._filterData(records))),

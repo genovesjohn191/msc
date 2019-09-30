@@ -46,7 +46,7 @@ export class McsDataStatusFactory<T> {
    */
   public setInProgress(): void {
     this._statusSubscription = new Subscription();
-    this.dataStatus = DataStatus.InProgress;
+    this.dataStatus = DataStatus.Active;
   }
 
   /**

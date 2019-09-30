@@ -52,7 +52,7 @@ export class StepProvisioningComponent implements OnChanges {
    */
   private _setProvisioningStatus(): void {
     let requestHasFinished = this.requestState === DataStatus.Error ||
-      this.requestState === DataStatus.InProgress;
+      this.requestState === DataStatus.Active;
     if (requestHasFinished) {
       this.status$ = of(this.requestState);
       this._changeDetectorRef.markForCheck();
@@ -61,7 +61,7 @@ export class StepProvisioningComponent implements OnChanges {
 
     let waitingForJob = this.requestState === DataStatus.Success && isNullOrEmpty(this.jobs);
     if (waitingForJob) {
-      this.status$ = of(DataStatus.InProgress);
+      this.status$ = of(DataStatus.Active);
       this._changeDetectorRef.markForCheck();
       return;
     }

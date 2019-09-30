@@ -10,7 +10,7 @@
   </ng-container>
 
   <!-- Provisioning while request is in-progress -->
-  <ng-container *ngSwitchCase="dataStatusEnum.InProgress">
+  <ng-container *ngSwitchCase="dataStatusEnum.Active">
     <mcs-data-status-in-progress mcsAlignContent="middle-left">
       <div><ng-content select="[mcsProvisioningStepInProgress]"></ng-content></div>
     </mcs-data-status-in-progress>

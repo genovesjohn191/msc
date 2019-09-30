@@ -80,7 +80,7 @@ export class MediaUploadService implements IMcsFallible, IMcsJobManager, IMcsSta
    * @param createDetails Creation details of the media to be provided
    */
   public uploadMedia(resourceId: string, catalogId: string, createDetails: McsResourceCatalogItemCreate) {
-    this.setChangeState(DataStatus.InProgress);
+    this.setChangeState(DataStatus.Active);
     return this._apiService.createResourceCatalogItem(resourceId, catalogId, createDetails)
       .pipe(
         tap((response) => {

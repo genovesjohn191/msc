@@ -7,7 +7,7 @@
     <!-- No to display since ViewChild is not working if the parent element has structural directive -->
   </ng-container>
 
-  <ng-container *ngSwitchCase="dataStatusEnum.InProgress">
+  <ng-container *ngSwitchCase="dataStatusEnum.Active">
     <mcs-data-status-in-progress mcsDataInProgress>
       <span>{{ config?.inProgressText || 'Loading...' }}</span>
     </mcs-data-status-in-progress>

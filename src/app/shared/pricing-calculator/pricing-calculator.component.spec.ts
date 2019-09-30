@@ -43,7 +43,7 @@ describe('PricingCalculatorComponent', () => {
   /** Test Implementation */
   describe('isInProgress()', () => {
     it(`should return true when the data status is in progress`, () => {
-      component.state = DataStatus.InProgress;
+      component.state = DataStatus.Active;
       expect(component.isInProgress).toBeTruthy();
     });
 

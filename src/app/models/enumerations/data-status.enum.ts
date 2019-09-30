@@ -3,8 +3,9 @@ import { McsEnumSerializationBase } from '../serialization/mcs-enum-serializatio
 export enum DataStatus {
   Error = -1,
   Success = 0,
-  InProgress = 1,
-  Empty = 2
+  PreActive = 1,
+  Active = 2,
+  Empty = 3
 }
 
 /**

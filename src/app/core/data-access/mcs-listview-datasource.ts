@@ -88,7 +88,7 @@ export class McsListViewDatasource<TEntity> implements McsDataSource<TEntity> {
    * @param dataSource New datasource provided
    */
   public updateDatasource(dataSource: DatasourceType<TEntity>): void {
-    this._setDataStatus(DataStatus.InProgress);
+    this._setDataStatus(DataStatus.Active);
     this._setDatasourcePointer(dataSource);
     this.refreshDataRecords();
   }
@@ -189,7 +189,7 @@ export class McsListViewDatasource<TEntity> implements McsDataSource<TEntity> {
       startWith(null),
       filter(() => !isNullOrUndefined(this._dataSource)),
       switchMap(() => {
-        this._setDataStatus(DataStatus.InProgress);
+        this._setDataStatus(DataStatus.Active);
 
         return this._dataSource().pipe(
           exhaustMap((records) => of(this._filterData(records))),

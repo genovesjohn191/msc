@@ -142,7 +142,7 @@ export class McsNotificationEventsService {
    */
   private _createJobStateEventMap(): void {
     this._jobStateEventMap = new Map();
-    this._jobStateEventMap.set(DataStatus.InProgress, McsEvent.jobInProgress);
+    this._jobStateEventMap.set(DataStatus.Active, McsEvent.jobInProgress);
     this._jobStateEventMap.set(DataStatus.Error, McsEvent.jobError);
     this._jobStateEventMap.set(DataStatus.Success, McsEvent.jobSuccessful);
   }

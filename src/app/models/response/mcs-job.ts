@@ -108,7 +108,7 @@ export class McsJob extends McsEntityBase {
       case JobStatus.Pending:
       case JobStatus.Active:
       default:
-        dataStatus = DataStatus.InProgress;
+        dataStatus = DataStatus.Active;
         break;
     }
     return dataStatus;
@@ -118,14 +118,14 @@ export class McsJob extends McsEntityBase {
    * Returns true when the job is currently in progress
    */
   public get inProgress(): boolean {
-    return this.dataStatus === DataStatus.InProgress;
+    return this.dataStatus === DataStatus.Active;
   }
 
   /**
    * Returns the data status icon key based on the status of the job
    */
   public get dataStatusIconKey(): string {
-    if (this.dataStatus === DataStatus.InProgress) {
+    if (this.dataStatus === DataStatus.Active) {
       return CommonDefinition.ASSETS_GIF_LOADER_SPINNER;
     }
     return this.dataStatus === DataStatus.Success ?

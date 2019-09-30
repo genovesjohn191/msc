@@ -31,7 +31,8 @@ import {
   McsOrderItemCreate,
   McsJob,
   McsOrderItemType,
-  OrderType
+  OrderType,
+  McsApiErrorContext
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { IMcsFallible } from '../../interfaces/mcs-fallible.interface';
@@ -66,10 +67,11 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
   private _createdOrder: McsOrder;
 
   // Events for controlling events
+  private _orderStatus: DataStatus;
   private _orderChange = new Subject<McsOrder>();
   private _orderItemTypeChange = new BehaviorSubject<McsOrderItemType>(null);
+  private _dataStatusChange = new BehaviorSubject<DataStatus>(DataStatus.Empty);
   private _orderRequestedSubject = new Subject<void>();
-  private _dataStatusChange = new Subject<DataStatus>();
   private _jobsChange = new Subject<McsJob[]>();
   private _errorsChange = new Subject<string[]>();
 
@@ -184,7 +186,6 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
     if (!isNullOrEmpty(orderItems)) {
       orderItems.forEach((item) => this._orderBuilder.addOrUpdateOrderItem(item));
     }
-    this._orderDirector.construct(this._orderBuilder);
   }
 
   /**
@@ -193,7 +194,6 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
    */
   public addOrUpdateOrderItem(orderItem: McsOrderItemCreate): void {
     this._orderBuilder.addOrUpdateOrderItem(orderItem);
-    this._orderDirector.construct(this._orderBuilder);
   }
 
   /**
@@ -202,6 +202,16 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
    */
   public deleteOrderItemByRefId(orderItemRefId: string): void {
     this._orderBuilder.deleteOrderItemByRefId(orderItemRefId);
+  }
+
+  /**
+   * Submits the order request based on the constructed details
+   * @important The order request will not be submitted once the data is the same as the previous request
+   */
+  public submitOrderRequest(): void {
+    if (isNullOrEmpty(this._orderBuilder)) {
+      throw new Error('Cannot submit the order of undefined order builder.');
+    }
     this._orderDirector.construct(this._orderBuilder);
   }
 
@@ -216,8 +226,8 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
 
     return this._orderApiService.createOrderWorkFlow(this._createdOrder.id, workflow).pipe(
       tap((response) => response && this.setJobs(...response.jobs)),
-      catchError((httpError) => {
-        this.setErrors(...httpError.errorMessages);
+      catchError((httpError: McsApiErrorContext) => {
+        if (!isNullOrEmpty(httpError)) { this.setErrors(...httpError.details.errorMessages); }
         return throwError(httpError);
       })
     );
@@ -290,16 +300,18 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
       this._createOrder.bind(this, requestDetails.orderDetails) :
       this._updateOrder.bind(this, this._createdOrder.id, requestDetails.orderDetails);
 
-    this._setRequestChangeState(DataStatus.InProgress);
+    this._setRequestChangeState(DataStatus.Active);
     return requesterFunc().pipe(
       tap((order) => {
         this._createdOrder = order as McsOrder;
         this._orderChange.next(this._createdOrder);
+        this._orderStatus = DataStatus.Success;
         this._setRequestChangeState(DataStatus.Success);
       }),
-      catchError((httpError) => {
+      catchError((httpError: McsApiErrorContext) => {
+        this._orderStatus = DataStatus.Error;
         this._setRequestChangeState(DataStatus.Error);
-        this.setErrors(...httpError.errorMessages);
+        if (!isNullOrEmpty(httpError)) { this.setErrors(...httpError.details.errorMessages); }
         return empty();
       })
     );
@@ -347,9 +359,9 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
     this._orderDirector.orderRequestStateChange().pipe(
       takeUntil(this._orderRequestedSubject),
       tap((orderState) => {
-        orderState === OrderStateChange.Changed ?
-          this._setRequestChangeState(DataStatus.InProgress) :
-          this._setRequestChangeState(DataStatus.Success);
+        orderState === OrderStateChange.Started ?
+          this._setRequestChangeState(DataStatus.PreActive) :
+          this._setRequestChangeState(this._orderStatus);
       }),
     ).subscribe();
   }

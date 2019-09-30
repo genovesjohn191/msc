@@ -178,6 +178,7 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
       }),
       OrderRequester.Billing
     );
+    this._serviceInviewRaiseService.submitOrderRequest();
   }
 
   /**

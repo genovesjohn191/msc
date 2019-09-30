@@ -240,6 +240,7 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
       }),
       OrderRequester.Billing
     );
+    this._scaleManagedServerService.submitOrderRequest();
   }
 
   /**

@@ -87,7 +87,7 @@ export class McsTask extends McsEntityBase {
       case JobStatus.Pending:
       case JobStatus.Active:
       default:
-        dataStatus = DataStatus.InProgress;
+        dataStatus = DataStatus.Active;
         break;
     }
     return dataStatus;
@@ -97,6 +97,6 @@ export class McsTask extends McsEntityBase {
    * Returns true when the job is currently in progress
    */
   public get inProgress(): boolean {
-    return this.dataStatus === DataStatus.InProgress;
+    return this.dataStatus === DataStatus.Active;
   }
 }

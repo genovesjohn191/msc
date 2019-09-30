@@ -61,16 +61,6 @@ export class IconService {
       }
     }
 
-    // Find the record in Font Awesome
-    if (!icon) {
-      iconValue = this._assetsProvider.getFontAwesomeIconClass(key);
-      if (iconValue) {
-        icon = {} as any;
-        icon.value = iconValue;
-        icon.type = IconType.FontAwesome;
-      }
-    }
-
     // Add icon on the map list
     this._icons.set(key, icon);
     return icon;

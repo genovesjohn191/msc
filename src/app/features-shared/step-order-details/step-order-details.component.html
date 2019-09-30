@@ -90,20 +90,20 @@
 
       <!-- Order Details -->
       <section margin-top-xlarge>
+        <h3>{{ 'orderDetailsStep.orderDetails.header' | translate }}</h3>
+        <mcs-form-field>
+          <input type="text" mcsInput [formControl]="fcDescription" #orderDescription
+            (focus)="onDescriptionFocus(orderDescription)">
+        </mcs-form-field>
+        <p>{{ 'orderDetailsStep.orderDetails.description' | translate }}</p>
+
         <!-- Loading animation -->
         <mcs-busy-ribbon *ngIf="isUpdatingCharges" theme="dark" margin-bottom-small>
           <span>{{ 'orderDetailsStep.updatingCharges' | translate }}</span>
         </mcs-busy-ribbon>
 
         <ng-container *ngIf="!isUpdatingCharges">
-          <h3>{{ 'orderDetailsStep.orderDetails.header' | translate }}</h3>
-          <mcs-form-field [disabled]="orderIsInProgress">
-            <input type="text" mcsInput [formControl]="fcDescription" #orderDescription
-            (focus)="onDescriptionFocus(orderDescription)">
-          </mcs-form-field>
-          <p>{{ 'orderDetailsStep.orderDetails.description' | translate }}</p>
-
-          <mcs-table  [dataSource]="orderDatasource">
+          <mcs-table [dataSource]="orderDatasource">
             <!-- Description Column -->
             <ng-container mcsColumnDef="description">
               <mcs-header-cell *mcsHeaderCellDef>

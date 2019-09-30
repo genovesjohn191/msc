@@ -152,53 +152,10 @@ export class CommonDefinition {
   public static ASSETS_SVG_CHECK_BOX_INDETERMINATE = 'check-box-indeterminate';
   public static ASSETS_SVG_CHEVRON_DOWN = 'chevron-down';
   public static ASSETS_SVG_CHEVRON_UP = 'chevron-up';
-  // public static ASSETS_SVG_CHEVRON_LEFT = 'chevron-left';
   public static ASSETS_SVG_CHEVRON_RIGHT = 'chevron-right';
   public static ASSETS_SVG_COMMENT = 'comment';
   public static ASSETS_SVG_ATTACHMENT = 'attachment';
   public static ASSETS_SVG_BULLET = 'bullet';
-
-  // Font Awesome Icons
-  // public static ASSETS_FONT_CREDIT_CARD = 'credit-card';
-  // public static ASSETS_FONT_SEARCH = 'search';
-  // public static ASSETS_FONT_CHECK = 'check';
-  // public static ASSETS_FONT_CHECK_CIRCLE = 'check-circle';
-  // public static ASSETS_FONT_WARNING = 'warning';
-  // public static ASSETS_FONT_CALENDAR = 'calendar';
-  // public static ASSETS_FONT_INFORMATION = 'info';
-  // public static ASSETS_FONT_INFORMATION_CIRCLE = 'info-circle';
-  // public static ASSETS_FONT_BELL = 'bell';
-  // public static ASSETS_FONT_SQUARE = 'square';
-  // public static ASSETS_FONT_SQUARE_OPEN = 'square-open';
-  // public static ASSETS_FONT_CHECKBOX = 'check-box';
-  // public static ASSETS_FONT_CHECKBOX_OPEN = 'check-box-open';
-  // public static ASSETS_FONT_CHECKBOX_INDETERMINATE = 'check-box-indeterminate';
-  // public static ASSETS_FONT_EXCLAMATION = 'exclamation';
-  // public static ASSETS_FONT_MINUS = 'minus';
-  // public static ASSETS_FONT_PLUS = 'plus';
-  // public static ASSETS_FONT_EMPTY_BOX = 'empty-box';
-  // public static ASSETS_FONT_CIRCLE = 'circle';
-  // public static ASSETS_FONT_CARET_RIGHT = 'caret-right';
-  // public static ASSETS_FONT_CARET_LEFT = 'caret-left';
-  // public static ASSETS_FONT_CARET_DOWN = 'caret-down';
-  // public static ASSETS_FONT_PLAY = 'play';
-  // public static ASSETS_FONT_CLOSE = 'close';
-  // public static ASSETS_FONT_CLOSE_CIRCLE = 'close-circle';
-  // public static ASSETS_FONT_CHEVRON_DOWN = 'chevron-down';
-  // public static ASSETS_FONT_CHEVRON_UP = 'chevron-up';
-  // public static ASSETS_FONT_CHEVRON_LEFT = 'chevron-left';
-  // public static ASSETS_FONT_CHEVRON_RIGHT = 'chevron-right';
-  // public static ASSETS_FONT_GEAR = 'gear';
-  // public static ASSETS_FONT_SIGN_OUT = 'sign-out';
-  // public static ASSETS_FONT_USER = 'user';
-  // public static ASSETS_FONT_INFORMATION_2 = 'info-2';
-  // public static ASSETS_FONT_COMMENT = 'comment';
-  // public static ASSETS_FONT_ATTACHMENT = 'attachment';
-  // public static ASSETS_FONT_NAVBAR = 'navbar';
-  // public static ASSETS_FONT_ANGLE_DOUBLE_RIGHT = 'angle-double-right';
-  // public static ASSETS_FONT_TRASH = 'trash-o';
-  // public static ASSETS_FONT_BULLET = 'circle';
-  // public static ASSETS_FONT_ELLIPSIS_VERTICAL = 'ellipsis-v';
 
   /** Filter Selector */
   public static FILTERSELECTOR_SERVER_LISTING = 'serverFilter';

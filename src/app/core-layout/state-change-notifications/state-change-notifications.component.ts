@@ -111,7 +111,7 @@ export class StateChangeNotificationsComponent implements OnInit, OnDestroy {
    * @param job Job emitted on the current user
    */
   private _onCurrentUserJob(job: McsJob): void {
-    if (isNullOrEmpty(job) || job.dataStatus === DataStatus.InProgress) { return; }
+    if (isNullOrEmpty(job) || job.dataStatus === DataStatus.Active) { return; }
     this.notifications = addOrUpdateArrayRecord(
       this.notifications,
       job,

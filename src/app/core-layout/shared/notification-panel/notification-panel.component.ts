@@ -98,7 +98,7 @@ export class NotificationPanelComponent implements OnInit, OnChanges {
 
   public get timeOutInMilliSeconds(): number {
     let dataStatus = getSafeProperty(this.notification, (obj) => obj.dataStatus);
-    if (dataStatus === DataStatus.InProgress) { return undefined; }
+    if (dataStatus === DataStatus.Active) { return undefined; }
     return dataStatus === DataStatus.Success ?
       CommonDefinition.NOTIFICATION_COMPLETED_TIMEOUT_IN_MS :
       CommonDefinition.NOTIFICATION_FAILED_TIMEOUT_IN_MS;

@@ -42,7 +42,7 @@ export class ServerCreateService extends McsOrderBase
       this._createNewSelfManageServer(serverModel) :
       this._createCloneSelfManagedServer(serverModel);
 
-    this.setChangeState(DataStatus.InProgress);
+    this.setChangeState(DataStatus.Active);
     serverInstance.pipe(
       tap((response) => {
         this.setChangeState(DataStatus.Success);
