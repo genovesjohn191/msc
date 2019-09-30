@@ -32,7 +32,8 @@ import {
   unsubscribeSafely,
   convertGbToMb,
   getSafeProperty,
-  CommonDefinition
+  CommonDefinition,
+  createObject
 } from '@app/utilities';
 import {
   IpAllocationMode,
@@ -234,9 +235,10 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
 
     // Set initial server status so that the spinner will show up immediately
     this.setViewMode(ServerManagementView.None);
+
     this.apiService.updateServerCompute(
       server.id,
-      {
+      createObject(McsServerUpdate, {
         memoryMB: convertGbToMb(this.manageScale.memoryGB),
         cpuCount: this.manageScale.cpuCount,
         clientReferenceObject: {
@@ -244,7 +246,8 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
           memoryMB: convertGbToMb(this.manageScale.memoryGB),
           cpuCount: this.manageScale.cpuCount
         }
-      } as McsServerUpdate).subscribe();
+      })
+    ).subscribe();
   }
 
   /**
