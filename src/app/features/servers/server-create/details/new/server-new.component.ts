@@ -62,7 +62,7 @@ import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import { McsEvent } from '@app/events';
 import { ServerCreateDetailsBase } from '../server-create-details.base';
 
-const DEFAULT_MANAGE_STORAGE_MINIMUM = 50;
+const DEFAULT_MANAGE_STORAGE_MINIMUM = 3;
 const DEFAULT_SELF_MANAGE_STORAGE_MINIMUM = 30;
 const DEFAULT_OS_VENDOR = 'Other';
 

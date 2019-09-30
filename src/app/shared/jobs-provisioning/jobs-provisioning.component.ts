@@ -247,7 +247,7 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
    * @param job New Job received
    */
   private _onJobReceived(job: McsJob): void {
-    let inProgressJob = isNullOrEmpty(job) || job.dataStatus === DataStatus.InProgress;
+    let inProgressJob = isNullOrEmpty(job) || job.dataStatus === DataStatus.Active;
     if (inProgressJob) { return; }
 
     addOrUpdateArrayRecord(this.jobs, job, true, (_existingJob: McsJob) => _existingJob.id === job.id);

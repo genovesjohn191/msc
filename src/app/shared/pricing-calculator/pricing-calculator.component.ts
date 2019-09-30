@@ -90,7 +90,7 @@ export class PricingCalculatorComponent implements PricingCalculator {
    * Returns true when the qidget is in progress
    */
   public get isInProgress(): boolean {
-    return this.state === DataStatus.InProgress;
+    return this.state === DataStatus.Active;
   }
 
   /**

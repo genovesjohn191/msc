@@ -34,7 +34,7 @@
 
         <!-- Notification date -->
         <ng-container [ngSwitch]="notification?.dataStatus">
-          <ng-container *ngSwitchCase="dataStatusEnum.InProgress">
+          <ng-container *ngSwitchCase="dataStatusEnum.Active">
             <small read-only>{{ notification.startedOn | mcsStdDateFormat: 'shortTime' }}</small>
           </ng-container>
           <ng-container *ngSwitchDefault>

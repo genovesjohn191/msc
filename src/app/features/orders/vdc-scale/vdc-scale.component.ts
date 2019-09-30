@@ -207,6 +207,7 @@ export class VdcScaleComponent extends McsOrderWizardBase implements OnDestroy {
       }),
       OrderRequester.Billing
     );
+    this._vdcScaleService.submitOrderRequest();
   }
 
   /**

@@ -122,7 +122,7 @@ export class McsNotificationContextService implements McsDisposable {
    */
   private _removeCompletedJobs(): void {
     deleteArrayRecord(this._notifications, (job: McsJob) => {
-      return job.dataStatus !== DataStatus.InProgress;
+      return job.dataStatus !== DataStatus.Active;
     });
   }
 

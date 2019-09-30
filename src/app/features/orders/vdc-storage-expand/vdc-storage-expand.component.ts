@@ -194,6 +194,7 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnI
       }),
       OrderRequester.Billing
     );
+    this._vdcStorageExpandService.submitOrderRequest();
   }
 
   /**

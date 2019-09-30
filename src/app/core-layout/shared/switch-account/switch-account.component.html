@@ -51,7 +51,7 @@
   <!-- Data obtainment status -->
   <ng-container *ngIf="dataSource?.dataStatus !== dataStatusEnum.Success">
     <mcs-item [ngSwitch]="dataSource?.dataStatus" mcsAlignContent="middle-center">
-      <div *ngSwitchCase="dataStatusEnum.InProgress">
+      <div *ngSwitchCase="dataStatusEnum.Active">
         <mcs-loader size="small"></mcs-loader>
       </div>
       <div *ngSwitchCase="dataStatusEnum.Empty">

@@ -101,6 +101,7 @@ export class ServerCreateBuilder<T> {
    */
   public setOrderDetails(orderDetails: OrderDetails): void {
     if (isNullOrEmpty(orderDetails)) { return; }
+
     this._serverCreateService.createOrUpdateOrder(
       createObject(McsOrderCreate, {
         contractDurationMonths: orderDetails.contractDurationMonths,
@@ -111,6 +112,7 @@ export class ServerCreateBuilder<T> {
       }),
       OrderRequester.Billing
     );
+    this._serverCreateService.submitOrderRequest();
   }
 
   /**

@@ -17,6 +17,6 @@ export class McsDateSerialization implements IJsonSerializer, IJsonDeserializer 
    * Deserialize the enumeration based on type provided on the enum type
    */
   public deserialize(value: string): Date {
-    return new Date(value);
+    return value && new Date(value);
   }
 }

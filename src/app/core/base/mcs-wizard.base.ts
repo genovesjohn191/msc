@@ -85,7 +85,7 @@ export abstract class McsWizardBase implements McsDisposable {
     this._wizardContext.stateChange().pipe(
       takeUntil(this._wizardDestroySubject)
     ).subscribe((state) => {
-      let isWizardProcessCompleted = state === DataStatus.InProgress ||
+      let isWizardProcessCompleted = state === DataStatus.Active ||
         state === DataStatus.Success;
       if (isWizardProcessCompleted) {
         this._hideWizardFormMessage();

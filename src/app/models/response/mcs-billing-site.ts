@@ -10,5 +10,5 @@ export class McsBillingSite extends McsEntityBase {
   public displayOrder: number = undefined;
 
   @JsonProperty({ target: McsBillingCostCentre })
-  public costCentres: McsBillingCostCentre[];
+  public costCentres: McsBillingCostCentre[] = undefined;
 }

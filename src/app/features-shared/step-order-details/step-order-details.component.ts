@@ -50,7 +50,8 @@ import {
   McsBillingSite,
   McsOption,
   DataStatus,
-  OrderType
+  OrderType,
+  McsOrderItemType
 } from '@app/models';
 import {
   WizardStepComponent,
@@ -78,7 +79,7 @@ export class StepOrderDetailsComponent
   public order: McsOrder;
 
   @Input()
-  public orderType: OrderType;
+  public orderItemType: McsOrderItemType;
 
   @Input()
   public requestState: DataStatus;
@@ -117,7 +118,6 @@ export class StepOrderDetailsComponent
     private _apiService: McsApiService
   ) {
     this.orderDatasource = new McsTableDataSource([]);
-    this.orderType = OrderType.New;
     this._registerFormGroup();
     this._setDataColumns();
   }
@@ -128,14 +128,15 @@ export class StepOrderDetailsComponent
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
-    let orderTypeChange = changes['orderType'];
-    if (!isNullOrEmpty(orderTypeChange)) {
+    let orderItemTypeChange = changes['orderItemType'];
+    if (!isNullOrEmpty(orderItemTypeChange)) {
       this._updateFormGroupBytype();
     }
 
     let requestChange = changes['requestState'];
     if (!isNullOrEmpty(requestChange)) {
       this._setChangeStatusByRequestState();
+      this._setInputDescriptionState();
     }
 
     let orderChange = changes['order'];
@@ -146,10 +147,8 @@ export class StepOrderDetailsComponent
   }
 
   public ngAfterViewInit() {
-    Promise.resolve().then(() => {
-      this._subscribeToDataChange();
-      this._subscribeToWizardStepActivated();
-    });
+    this._subscribeToDataChange();
+    this._subscribeToWizardStepActivated();
   }
 
   public ngOnDestroy() {
@@ -168,16 +167,11 @@ export class StepOrderDetailsComponent
    * Returns true when the order has been successfully created and no changes have been made
    */
   public get isNextButtonDisabled(): boolean {
-    return this.isUpdatingCharges ||
+    return isNullOrEmpty(this.order) ||
       !this.allFormFieldsAreValid ||
+      this.dataChangeStatus === DataStatus.PreActive ||
+      this.dataChangeStatus === DataStatus.Active ||
       this.dataChangeStatus === DataStatus.Error;
-  }
-
-  /**
-   * Returns true when the order is currently on-going
-   */
-  public get orderIsInProgress(): boolean {
-    return this.requestState === DataStatus.InProgress;
   }
 
   /**
@@ -199,8 +193,7 @@ export class StepOrderDetailsComponent
    * Returns true when the charges has been updating
    */
   public get isUpdatingCharges(): boolean {
-    return this.dataChangeStatus === DataStatus.InProgress ||
-      (isNullOrEmpty(this.order) && this.dataChangeStatus !== DataStatus.Error);
+    return this.dataChangeStatus === DataStatus.Active;
   }
 
   /**
@@ -262,11 +255,12 @@ export class StepOrderDetailsComponent
    * Sets the order description based on the order details
    */
   private _setOrderDescription(): void {
-    let descriptionCanBeSet = this.hasOrder && !isNullOrEmpty(this.fcDescription);
+    let descriptionCanBeSet = !isNullOrEmpty(this.fcDescription);
     if (!descriptionCanBeSet) { return; }
 
-    if (this.fcDescription.value !== this.order.description) {
-      this.fcDescription.setValue(this.order.description);
+    let desciption = getSafeProperty(this.orderItemType, (obj) => obj.description);
+    if (isNullOrEmpty(this.fcDescription.value)) {
+      this.fcDescription.setValue(desciption);
     }
   }
 
@@ -274,7 +268,8 @@ export class StepOrderDetailsComponent
    * Updates the form group by order type
    */
   private _updateFormGroupBytype(): void {
-    this.orderType === OrderType.Change ?
+    let orderType = getSafeProperty(this.orderItemType, (obj) => obj.orderType, OrderType.Change);
+    orderType === OrderType.Change ?
       this._setOrderChangeFormControls() :
       this._setOrderNewFormControls();
   }
@@ -306,6 +301,15 @@ export class StepOrderDetailsComponent
    */
   private _setChangeStatusByRequestState(): void {
     this.dataChangeStatus = this.requestState;
+  }
+
+  /**
+   * Sets the input description state
+   */
+  private _setInputDescriptionState(): void {
+    this.requestState === DataStatus.Active ?
+      this.fcDescription.disable({ onlySelf: true }) :
+      this.fcDescription.enable({ onlySelf: true });
   }
 
   /**
@@ -379,7 +383,6 @@ export class StepOrderDetailsComponent
    * Subscribes to contract terms
    */
   private _subscribeToContractTerms(): void {
-    // TODO: Need to consider the change order
     this.contractTerms$ = of([
       {
         value: 0,
@@ -416,7 +419,8 @@ export class StepOrderDetailsComponent
   private _subscribeToDataChange(): void {
     this._formGroup.valueChanges().pipe(
       takeUntil(this._destroySubject),
-    ).subscribe(() => this.onDataChange());
+      tap(() => this.onDataChange())
+    ).subscribe();
   }
 
   /**

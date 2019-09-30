@@ -81,7 +81,7 @@
             customClass="contextual-help-page-wrapper limited-view">
 
             <mcs-step-order-details [order]="order$ | async"
-              [orderType]="(orderItemType$ | async)?.orderType"
+              [orderItemType]="orderItemType$ | async"
               [requestState]="dataStatus$ | async"
               (dataChange)="onServerConfirmOrderChange($event)"
               (submitOrder)="onSubmitOrder($event)">

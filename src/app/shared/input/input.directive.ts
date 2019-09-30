@@ -73,9 +73,20 @@ export class InputDirective extends McsFormFieldControlBase<any>
 
   @Input()
   public get disabled(): boolean {
-    return this.ngControl ? this.ngControl.disabled : this._disabled;
+    if (this.ngControl && this.ngControl.disabled !== null) {
+      return this.ngControl.disabled;
+    }
+    return this._disabled;
   }
-  public set disabled(value: boolean) { this._disabled = coerceBoolean(value); }
+  public set disabled(value: boolean) {
+    this._disabled = coerceBoolean(value);
+
+    // Browsers may not fire the blur event if the input is disabled too quickly.
+    // Reset from here to ensure that the element doesn't become stuck.
+    if (this._disabled) {
+      this.focusChanged(false);
+    }
+  }
   private _disabled: boolean = false;
 
   @Input()
