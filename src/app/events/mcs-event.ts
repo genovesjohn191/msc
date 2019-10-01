@@ -5,6 +5,7 @@ import { SessionTimedOutEvent } from './items/session-timedout.event';
 import { ServerManagedScaleSelectedEvent } from './items/server-scale-manage-selected.event';
 import { ServerManagedRaiseInviewSelectedEvent } from './items/server-raise-inview-selected.event';
 import { VdcScaleSelectedEvent } from './items/vdc-scale-selected.event';
+import { VdcStorageExpandSelectedEvent } from './items/vdc-storage-expand-selected.event';
 import { ProductSelectedEvent } from './items/product-selected.event';
 import { ProductUnSelectedEvent } from './items/product-unselected.event';
 import { LoaderShowEvent } from './items/loader-show.event';
@@ -75,6 +76,7 @@ export class McsEvent {
   public static serverScaleManageSelected = new ServerManagedScaleSelectedEvent();
   public static serverRaiseInviewSelected = new ServerManagedRaiseInviewSelectedEvent();
   public static vdcScaleSelectedEvent = new VdcScaleSelectedEvent();
+  public static vdcStorageExpandSelectedEvent = new VdcStorageExpandSelectedEvent();
   public static productSelected = new ProductSelectedEvent();
   public static productUnSelected = new ProductUnSelectedEvent();
   public static loaderShow = new LoaderShowEvent();

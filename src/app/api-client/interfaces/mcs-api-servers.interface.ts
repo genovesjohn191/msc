@@ -31,6 +31,7 @@ import {
   McsServerSnapshotRestore,
   McsServerSnapshotDelete,
   McsServerPasswordReset,
+  McsServerOsUpdatesInspectRequest,
 } from '@app/models';
 
 export interface IMcsApiServersService {
@@ -78,7 +79,10 @@ export interface IMcsApiServersService {
    * Inspect the Server for available updates
    * @param id Server identification
    */
-  inspectServerForAvailableOsUpdates(id: any, referenceObject: any): Observable<McsApiSuccessResponse<McsJob>>;
+  inspectServerForAvailableOsUpdates(
+    id: string,
+    inspectRequest: McsServerOsUpdatesInspectRequest
+  ): Observable<McsApiSuccessResponse<McsJob>>;
 
   /**
    * Get the schedule of the Server OS update

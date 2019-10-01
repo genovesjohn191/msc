@@ -89,7 +89,8 @@ import {
   McsSystemMessageEdit,
   McsSystemMessageValidate,
   McsEntityRequester,
-  EntityRequester
+  EntityRequester,
+  McsServerOsUpdatesInspectRequest
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -566,11 +567,10 @@ export class McsApiService {
     );
   }
 
-  // TODO: Change the reference object into a model
-  public inspectServerForAvailableOsUpdates(id: string, referenceObject: any): Observable<McsJob> {
+  public inspectServerForAvailableOsUpdates(id: string, inspectRequest: McsServerOsUpdatesInspectRequest): Observable<McsJob> {
     this._dispatchRequesterEvent(McsEvent.entityActiveEvent, EntityRequester.Server, id);
 
-    return this._serversApi.inspectServerForAvailableOsUpdates(id, referenceObject).pipe(
+    return this._serversApi.inspectServerForAvailableOsUpdates(id, inspectRequest).pipe(
       catchError((error) => {
         this._dispatchRequesterEvent(McsEvent.entityClearStateEvent, EntityRequester.Server, id);
 

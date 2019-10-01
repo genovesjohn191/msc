@@ -105,13 +105,22 @@
               mcsEventLabel="vdc-details-page">
               {{ 'serversVdcOverview.shared.storageProfiles.manageLink' | translate }}
             </a>
-            <!-- TODO: add link to Expand Vdc Storage wizard when api and orch is ready -->
           </mcs-item>
         </ng-container>
         <p>{{ 'serversVdc.storageRefreshMessage' | translate }}</p>
 
         <section>
-          <span *ngIf="hasLowStorage">{{ storageSummary }}</span>
+          <mcs-item *ngIf="hasLowStorage">
+            <span>{{ storageSummary }}</span>
+            <a (click)="navigateToExpandVdcStorage(selectedVdc)"
+              *mcsAccessControl="['OrderEdit']; feature: 'EnableOrderingVdcStorageExpand'"
+              mcsId="navigate-to-expand-vdc-storage"
+              mcsEventTracker="expand-vdc-storage-click"
+              mcsEventCategory="orders"
+              mcsEventLabel="navigate-to-expand-vdc-storage">
+              {{ 'serversVdcOverview.shared.storageProfiles.expandLink' | translate }}
+            </a>
+          </mcs-item>
           <mcs-accordion [multi]="true">
             <mcs-accordion-panel
               *ngFor="let storage of selectedVdc.storage; let i = index"

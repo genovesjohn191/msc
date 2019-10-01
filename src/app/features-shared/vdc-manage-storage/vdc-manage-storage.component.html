@@ -57,12 +57,12 @@
           mcsEventTracker="manage-storage-error-step-shown"
           mcsEventCategory="storage"
           mcsEventLabel="manage-storage-error-step">
-          {{ 'serverShared.manageStorage.errors.storageStep' | translate: { step: step } }}
+          {{ 'serverShared.manageStorage.errors.storageStep' | translate: { step: validStep } }}
         </mcs-error>
       </mcs-form-field>
     </mcs-item>
 
-    <mcs-slider [min]="minimumDisplayed" [max]="maximumUsable" [step]="step"
+    <mcs-slider [min]="minimumDisplayed" [max]="maximumUsable" [step]="sliderStep"
       [ngModel]="sliderModel" [ngModelOptions]="{standalone: true}" (ngModelChange)="onSliderChanged($event)"
       mcsId="manage-storage-slider"
       mcsEventTracker="manage-storage-slider-change"

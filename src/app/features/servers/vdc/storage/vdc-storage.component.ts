@@ -7,14 +7,24 @@ import {
   Injector
 } from '@angular/core';
 import { map } from 'rxjs/operators';
-import { McsTableDataSource } from '@app/core';
+import {
+  McsTableDataSource,
+  McsNavigationService
+} from '@app/core';
 import {
   isNullOrEmpty,
   getSafeProperty,
-  CommonDefinition
+  CommonDefinition,
+  createObject
 } from '@app/utilities';
-import { McsResourceStorage } from '@app/models';
+import {
+  McsResourceStorage,
+  RouteKey,
+  McsExpandResourceStorage
+} from '@app/models';
+import { McsEvent } from '@app/events';
 import { VdcDetailsBase } from '../vdc-details.base';
+
 
 @Component({
   selector: 'mcs-vdc-storage',
@@ -44,6 +54,7 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnInit, OnDes
   constructor(
     _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
+    private _navigationService: McsNavigationService
   ) {
     super(_injector, _changeDetectorRef);
     this.storageColumns = new Array();
@@ -56,6 +67,17 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnInit, OnDes
 
   public ngOnDestroy() {
     this.dispose();
+  }
+
+  /**
+   * Navigate to Ordering Expand Vdc Storage
+   */
+  public navigateToExpandVdcStorage(mcsResourceStorage: McsResourceStorage): void {
+    this.eventDispatcher.dispatch(
+      McsEvent.vdcStorageExpandSelectedEvent,
+      createObject(McsExpandResourceStorage, { resource: this.selectedVdc, storage: mcsResourceStorage })
+    );
+    this._navigationService.navigateTo(RouteKey.OrderVdcStorageExpand);
   }
 
   /**

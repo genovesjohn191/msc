@@ -37,7 +37,8 @@ import {
   McsServerSnapshotRestore,
   McsServerSnapshotDelete,
   McsServerPasswordReset,
-  McsServerDelete
+  McsServerDelete,
+  McsServerOsUpdatesInspectRequest
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiServersService } from '../interfaces/mcs-api-servers.interface';
@@ -204,15 +205,13 @@ export class McsApiServersService implements IMcsApiServersService {
    * @param id Server identification
    */
   public inspectServerForAvailableOsUpdates(
-    id: any,
-    referenceObject: any
+    id: string,
+    inspectRequest: McsServerOsUpdatesInspectRequest
   ): Observable<McsApiSuccessResponse<McsJob>> {
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${id}/os-updates/analysis-requests`;
-    mcsApiRequestParameter.recordData = serializeObjectToJson({
-      clientReferenceObject: referenceObject
-    });
+    mcsApiRequestParameter.recordData = serializeObjectToJson(inspectRequest);
 
     return this._mcsApiService.post(mcsApiRequestParameter)
       .pipe(
