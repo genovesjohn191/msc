@@ -13,7 +13,7 @@
     <div class="help-widget-links">
       <mcs-list>
         <mcs-item>
-          <a [href]="raiseTicketLink"
+          <a [href]="raiseTicketLink" *mcsAccessControl="['TicketCreate']"
             target="_blank" mcsEventTracker="clicked-raise-a-ticket"
             mcsEventCategory="help" mcsEventLabel="help-panel">
             {{ 'helpWidget.raiseTicket' | translate }}
