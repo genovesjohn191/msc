@@ -3,7 +3,7 @@ import { McsDateTimeService } from '@app/core';
 import { CommonDefinition, isNullOrEmpty, compareDates } from '@app/utilities';
 
 const SYSTEM_MESSAGE_DATEFORMAT = 'YYYY-MM-DDTHH:mm';
-const SYSTEM_MESSAGE_TIMEZONE_FORMAT = "yyyy-MM-dd'T'HH:mm z";
+const SYSTEM_MESSAGE_TIMEZONE_FORMAT = `yyyy-MM-dd'T'HH:mm z`;
 const SYSTEM_MESSAGE_ISO_DATEFORMAT = 'isoDate';
 @Injectable()
 

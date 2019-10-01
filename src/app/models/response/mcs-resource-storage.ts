@@ -5,7 +5,7 @@ export class McsResourceStorage extends McsEntityBase {
 
   @JsonProperty()
   public name: string = undefined;
-  
+
   @JsonProperty()
   public serviceId: string = undefined;
 
