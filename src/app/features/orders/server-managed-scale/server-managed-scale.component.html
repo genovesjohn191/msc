@@ -95,6 +95,7 @@
       <mcs-wizard-step id="confirm-step"
         [stepTitle]="'orderServerManagedScale.confirm.stepTitle' | translate"
         customClass="contextual-help-page-wrapper limited-view">
+
         <mcs-step-order-details [order]="order$ | async"
           [orderItemType]="orderItemType$ | async"
           [requestState]="dataStatus$ | async"
