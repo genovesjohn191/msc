@@ -1035,8 +1035,7 @@
       "date": "Invalid date.",
       "dateFormat": "Invalid date format.",
       "earlierDate": "Invalid date. Date should not be earlier than the present time.",
-      "expiry": "Invalid expiry. Date should be later than start date.",
-      "start": "Invalid start. Date should be before the expiry date",
+      "messageDates": "Invalid date. Start date should be earlier than the expiry date.",
       "message": "You must place a message."
     },
     "startLabel": "Start ",

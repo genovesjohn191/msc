@@ -1,53 +1,51 @@
 <form [formGroup]="fgCreateMessage" mcsFormGroup>
-  <!-- Start Date -->
-  <mcs-form-field>
-    <input mcsInput mcsSetFocus #startInput
-      mcsId="inp-start"
-      [placeholder]="'systemMessageForm.startPlaceholder' | translate"
-      [formControl]="fcStart"
-      [mcsContextualHelp]="'systemMessageForm.startHelp' | translate">
+  <div class="system-message-form-date-group">  
+    <!-- Error message for dates -->
+    <div class="system-message-date-error" padding-bottom-small>
+      <mcs-form-message #formMessage></mcs-form-message>
+    </div>
 
-    <mcs-hint mcsHint align="start">
-      {{ dateNow | mcsStdDateFormat: 'isoDate' }}
-    </mcs-hint>
-    <mcs-error mcsError errorState="invalidDate">
-      {{ 'systemMessageForm.errors.date' | translate }}
-    </mcs-error>
-    <mcs-error mcsError errorState="invalidDateFormat">
-      {{ 'systemMessageForm.errors.dateFormat' | translate }}
-    </mcs-error>
-    <mcs-error mcsError errorState="invalidEarlierDate">
-      {{ 'systemMessageForm.errors.earlierDate' | translate }}
-    </mcs-error>
-    <mcs-error mcsError errorState="invalidStartDate">
-      {{ 'systemMessageForm.errors.start' | translate }}
-    </mcs-error>
-  </mcs-form-field>
+    <!-- Start Date -->
+    <mcs-form-field padding-bottom-small>
+      <input mcsInput mcsSetFocus
+        mcsId="inp-start"
+        [placeholder]="'systemMessageForm.startPlaceholder' | translate"
+        [formControl]="fcStart"
+        [mcsContextualHelp]="'systemMessageForm.startHelp' | translate">
 
-  <!-- Expiry Date -->
-  <mcs-form-field>
-    <input mcsInput #expiryInput
-      mcsId="inp-expiry"
-      [placeholder]="'systemMessageForm.expiryPlaceholder' | translate"
-      [formControl]="fcExpiry"
-      [mcsContextualHelp]="'systemMessageForm.expiryHelp' | translate">
+      <mcs-hint mcsHint align="start">
+        {{ dateNow }}
+      </mcs-hint>
+      <mcs-error mcsError errorState="invalidDate">
+        {{ 'systemMessageForm.errors.date' | translate }}
+      </mcs-error>
+      <mcs-error mcsError errorState="invalidDateFormat">
+        {{ 'systemMessageForm.errors.dateFormat' | translate }}
+      </mcs-error>
+    </mcs-form-field>
 
-    <mcs-hint mcsHint align="start">
-      {{ dateNow | mcsStdDateFormat: 'isoDate' }}
-    </mcs-hint>
-    <mcs-error mcsError errorState="invalidDate">
-      {{ 'systemMessageForm.errors.date' | translate }}
-    </mcs-error>
-    <mcs-error mcsError errorState="invalidDateFormat">
-      {{ 'systemMessageForm.errors.dateFormat' | translate }}
-    </mcs-error>
-    <mcs-error mcsError errorState="invalidEarlierDate">
-      {{ 'systemMessageForm.errors.earlierDate' | translate }}
-    </mcs-error>
-    <mcs-error mcsError errorState="invalidExpiryDate">
-      {{ 'systemMessageForm.errors.expiry' | translate }}
-    </mcs-error>
-  </mcs-form-field>
+    <!-- Expiry Date -->
+    <mcs-form-field>
+      <input mcsInput
+        mcsId="inp-expiry"
+        [placeholder]="'systemMessageForm.expiryPlaceholder' | translate"
+        [formControl]="fcExpiry"
+        [mcsContextualHelp]="'systemMessageForm.expiryHelp' | translate">
+
+      <mcs-hint mcsHint align="start">
+        {{ dateNow }}
+      </mcs-hint>
+      <mcs-error mcsError errorState="invalidDate">
+        {{ 'systemMessageForm.errors.date' | translate }}
+      </mcs-error>
+      <mcs-error mcsError errorState="invalidDateFormat">
+        {{ 'systemMessageForm.errors.dateFormat' | translate }}
+      </mcs-error>
+      <mcs-error mcsError errorState="invalidEarlierDate">
+        {{ 'systemMessageForm.errors.earlierDate' | translate }}
+      </mcs-error>
+    </mcs-form-field>
+  </div>
 
   <!-- Message Type -->
   <mcs-form-field>

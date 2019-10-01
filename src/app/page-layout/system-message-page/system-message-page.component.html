@@ -7,16 +7,16 @@
       size="120px"
       color="primary"></mcs-icon>
 
-    <div class="system-message-page-title">{{ 'systemMessagePage.title' | translate }}</div>
+    <div class="system-message-page-title" text-center>{{ 'systemMessagePage.title' | translate }}</div>
 
-    <span>{{ systemMessage.message }}</span>
+    <span text-center>{{ systemMessage.message }}</span>
     
-    <span *mcsAccessControl="['SystemMessageView']; else: secondaryAdvisoryLabelTemplate">
+    <span *mcsAccessControl="['SystemMessageView']; else: secondaryAdvisoryLabelTemplate" text-center>
       {{ 'systemMessagePage.internalAdvisoryLabel' | translate }}
     </span>
      
     <ng-template #secondaryAdvisoryLabelTemplate>
-      <span [innerHTML]="'systemMessagePage.secondaryAdvisoryLabel' | translate: {macViewUrl: macviewUrl}"></span>
+      <span [innerHTML]="'systemMessagePage.secondaryAdvisoryLabel' | translate: {macViewUrl: macviewUrl}" text-center></span>
     </ng-template>   
 
     <div>
