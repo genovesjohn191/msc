@@ -47,7 +47,6 @@ export class McsErrorHandlerInterceptor implements ErrorHandler {
   public handleError(error: HttpErrorResponse | McsApiErrorResponse | McsApiErrorContext | any): void {
     let customError = error.rejection || error;
     let isHttpResponse = (customError instanceof HttpResponse) ||
-      (customError instanceof HttpErrorResponse) ||
       (customError instanceof McsApiErrorResponse) ||
       (customError instanceof McsApiErrorContext);
 
