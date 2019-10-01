@@ -131,6 +131,7 @@ export class StepOrderDetailsComponent
     let orderItemTypeChange = changes['orderItemType'];
     if (!isNullOrEmpty(orderItemTypeChange)) {
       this._updateFormGroupBytype();
+      this._setOrderDescription();
     }
 
     let requestChange = changes['requestState'];
@@ -142,7 +143,6 @@ export class StepOrderDetailsComponent
     let orderChange = changes['order'];
     if (!isNullOrEmpty(orderChange)) {
       this._initializeOrderDatasource();
-      this._setOrderDescription();
     }
   }
 

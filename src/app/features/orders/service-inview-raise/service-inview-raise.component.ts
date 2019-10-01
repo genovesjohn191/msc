@@ -137,14 +137,8 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
    */
   public onChangeService(server: McsServer): void {
     this._inviewLevel = this._getServerInviewLevel(server);
-  }
 
-  /**
-   * Event that emits when the raise inview details is submitted
-   */
-  public onSubmitServiceInviewDetails(server: McsServer): void {
     if (!this.validOrderInviewLevel) { return; }
-
     this._serviceInviewRaiseService.createOrUpdateOrder(
       createObject(McsOrderCreate, {
         items: [
@@ -159,6 +153,12 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
         ]
       })
     );
+  }
+
+  /**
+   * Event that emits when the raise inview details is submitted
+   */
+  public onSubmitServiceInviewDetails(server: McsServer): void {
     this._changeDetectorRef.markForCheck();
   }
 
