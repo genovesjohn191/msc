@@ -25,8 +25,7 @@ import {
 import {
   CoreValidators,
   IMcsFormGroup,
-  IMcsDataChange,
-  McsDateTimeService
+  IMcsDataChange
 } from '@app/core';
 import {
   McsOption,
@@ -40,15 +39,15 @@ import {
   isNullOrEmpty,
   compareDates,
   unsubscribeSafely,
-  getSafeProperty,
-  CommonDefinition
+  getSafeProperty
 } from '@app/utilities';
-import { McsFormGroupDirective } from '@app/shared';
+import {
+  McsFormGroupDirective,
+  FormMessage
+} from '@app/shared';
 import { SystemMessageForm } from './system-message-form';
+import { SystemMessageFormService } from './system-message-form.service';
 
-const SYSTEM_MESSAGE_DATEFORMAT = 'YYYY-MM-DDTHH:mm';
-const SYSTEM_MESSAGE_TIMEZONE_FORMAT = `yyyy-MM-dd'T'HH:mm z`;
-const SYSTEM_MESSAGE_ISO_DATEFORMAT = 'isoDate';
 @Component({
   selector: 'mcs-system-message-form',
   templateUrl: './system-message-form.component.html',
@@ -58,7 +57,6 @@ const SYSTEM_MESSAGE_ISO_DATEFORMAT = 'isoDate';
 export class SystemMessageFormComponent
   implements OnInit, OnDestroy, IMcsFormGroup, IMcsDataChange<SystemMessageForm> {
 
-  public dateNow = new Date();
   public hasEditedMessage: boolean;
 
   // Form Variables
@@ -83,12 +81,15 @@ export class SystemMessageFormComponent
   @ViewChild(McsFormGroupDirective, { static: false })
   public _formGroup: McsFormGroupDirective;
 
+  @ViewChild('formMessage', { static: false })
+  private _formMessage: FormMessage;
+
   private _destroySubject = new Subject<void>();
   private _systemMessageForm = new SystemMessageForm();
 
   constructor(
     private _formBuilder: FormBuilder,
-    private _dateTimeService: McsDateTimeService,
+    private _systemMessageFormService: SystemMessageFormService,
     private _translateService: TranslateService
   ) {
     this.messageTypeList = new Array();
@@ -112,6 +113,20 @@ export class SystemMessageFormComponent
   }
 
   /**
+   * Returns the message type enumeration instance
+   */
+  public get messageTypeEnum(): any {
+    return MessageType;
+  }
+
+  /**
+   * Returns the formatted current date timezone
+   */
+  public get dateNow(): any {
+    return this._systemMessageFormService.getDateNow;
+  }
+
+  /**
    * Returns the form group
    */
   public getFormGroup(): McsFormGroupDirective {
@@ -129,8 +144,8 @@ export class SystemMessageFormComponent
    * Event that emits when an input has been changed
    */
   public notifyDataChange() {
-    this._systemMessageForm.start = this._serializeSystemMessageDate(this.fcStart.value);
-    this._systemMessageForm.expiry = this._serializeSystemMessageDate(this.fcExpiry.value);
+    this._systemMessageForm.start = this._systemMessageFormService.formatDateToUTC(this.fcStart.value);
+    this._systemMessageForm.expiry = this._systemMessageFormService.formatDateToUTC(this.fcExpiry.value);
     this._systemMessageForm.type = this.fcType.value;
     this._systemMessageForm.severity = this.fcSeverity.value;
     this._systemMessageForm.message = this.fcMessage.value;
@@ -144,16 +159,9 @@ export class SystemMessageFormComponent
   }
 
   /**
-   * Returns the message type enumeration instance
-   */
-  public get messageTypeEnum(): any {
-    return MessageType;
-  }
-
-  /**
    * Sets the severity form control property
    */
-  private _setSeverityFormControl() {
+  private _setSeverityFormControl(): void {
     if (isNullOrEmpty(this.fgCreateMessage)) { return; }
 
     (this.fcType.value === this.messageTypeEnum.Info) ?
@@ -179,14 +187,6 @@ export class SystemMessageFormComponent
       CoreValidators.custom(
         this._dateFormatValidation.bind(this),
         'invalidDateFormat'
-      ),
-      CoreValidators.custom(
-        this._earlierDateValidation.bind(this),
-        'invalidEarlierDate'
-      ),
-      CoreValidators.custom(
-        this._startDateValidation.bind(this),
-        'invalidStartDate'
       )
     ]);
 
@@ -202,11 +202,7 @@ export class SystemMessageFormComponent
       CoreValidators.custom(
         this._earlierDateValidation.bind(this),
         'invalidEarlierDate'
-      ),
-      CoreValidators.custom(
-        this._expiryDateValidation.bind(this),
-        'invalidExpiryDate'
-      ),
+      )
     ]);
 
     this.fcType = new FormControl('', [
@@ -250,26 +246,31 @@ export class SystemMessageFormComponent
       .subscribe(() => this.notifyDataChange());
   }
 
+  /**
+   * Validates the error validation on start and expiry changes
+   */
   private _onStartAndExpiryChange(): void {
     // Check individual
     let expiryDate = getSafeProperty(this.fcExpiry, (obj) => obj.value);
-    if (isNullOrEmpty(expiryDate)) {
-      this.fcStart.setErrors(null);
+    let startDate = getSafeProperty(this.fcStart, (obj) => obj.value, this.dateNow);
+
+    this._setFormMessageConfiguration();
+
+    if (this.fcStart.invalid || this.fcExpiry.invalid) {
+      this._formMessage.hideMessage();
       return;
     }
 
-    let startDate = getSafeProperty(this.fcStart, (obj) => obj.value);
-    if (isNullOrEmpty(startDate)) {
-      this.fcExpiry.setErrors(null);
+    let isValidDates = this._systemMessageFormService.hasPassedDateValidation(startDate, expiryDate, this.dateNow);
+    if (!isValidDates) {
+      this._formMessage.showMessage('error', {
+        messages: this._translateService.instant('systemMessageForm.errors.messageDates')
+      });
       return;
     }
 
-    // Compare both start and expiry date
-    let comparisonResult = compareDates(new Date(startDate), new Date(expiryDate));
-    if (comparisonResult < 0) {
-      this.fcStart.setErrors(null);
-      this.fcExpiry.setErrors(null);
-    }
+    this._formMessage.hideMessage();
+
   }
 
   /**
@@ -278,15 +279,8 @@ export class SystemMessageFormComponent
   private _setFormControlValues(): void {
     if (isNullOrEmpty(this.message)) { return; }
 
-    this.fcStart.setValue(this._dateTimeService.formatDate(
-      this.message.start,
-      SYSTEM_MESSAGE_ISO_DATEFORMAT,
-      CommonDefinition.TIMEZONE_SYDNEY));
-
-    this.fcExpiry.setValue(this._dateTimeService.formatDate(
-      this.message.expiry,
-      SYSTEM_MESSAGE_ISO_DATEFORMAT,
-      CommonDefinition.TIMEZONE_SYDNEY));
+    this.fcStart.setValue(this._systemMessageFormService.formatDateToISO(this.message.start));
+    this.fcExpiry.setValue(this._systemMessageFormService.formatDateToISO(this.message.expiry));
 
     this.fcType.setValue(this.message.type);
     this.fcSeverity.setValue(this.message.severity);
@@ -296,20 +290,12 @@ export class SystemMessageFormComponent
   }
 
   /**
-   * Serialize start and expiry date of system message
-   * @param date Date to be serialize
+   * Set the dismiss button of form message to hidden
    */
-  private _serializeSystemMessageDate(date: string): string {
-    if (isNullOrEmpty(date)) { return ''; }
-    if (!isNaN(Date.parse(date))) {
-      let datetime = this._dateTimeService.formatDateString(
-        date,
-        SYSTEM_MESSAGE_TIMEZONE_FORMAT,
-        CommonDefinition.TIMEZONE_SYDNEY
-      );
-      return datetime;
-    }
-    return date;
+  private _setFormMessageConfiguration(): void {
+    this._formMessage.updateConfiguration({
+      hideDismissButton: true
+    });
   }
 
   /**
@@ -318,15 +304,13 @@ export class SystemMessageFormComponent
   private _setSystemMessageHasChangedFlag() {
     if (isNullOrEmpty(this.message)) { return; }
 
-    let startHasChanged = this.fcStart.value !== this._dateTimeService.formatDate(
-      getSafeProperty(this.message, (obj) => obj.start, ''),
-      SYSTEM_MESSAGE_ISO_DATEFORMAT,
-      CommonDefinition.TIMEZONE_SYDNEY);
+    let startHasChanged = this.fcStart.value !== this._systemMessageFormService.formatDateToISO(
+      getSafeProperty(this.message, (obj) => obj.start, '')
+    );
 
-    let expiryHasChanged = this.fcExpiry.value !== this._dateTimeService.formatDate(
+    let expiryHasChanged = this.fcExpiry.value !== this._systemMessageFormService.formatDateToISO(
       getSafeProperty(this.message, (obj) => obj.expiry, ''),
-      SYSTEM_MESSAGE_ISO_DATEFORMAT,
-      CommonDefinition.TIMEZONE_SYDNEY);
+    );
 
     this._systemMessageForm.hasChanged = this._systemMessageForm.valid &&
       (this.fcEnabled.value !== this.message.enabled || startHasChanged || expiryHasChanged
@@ -367,7 +351,7 @@ export class SystemMessageFormComponent
    */
   private _formControlDateValidation(date: string): boolean {
     if (isNullOrEmpty(date)) { return true; }
-    return (!isNaN(Date.parse(date)));
+    return !isNaN(Date.parse(date));
   }
 
   /**
@@ -377,7 +361,7 @@ export class SystemMessageFormComponent
    */
   private _dateFormatValidation(date: string): boolean {
     if (isNullOrEmpty(date)) { return true; }
-    return (this._dateTimeService.isDateFormatValid(date, SYSTEM_MESSAGE_DATEFORMAT));
+    return this._systemMessageFormService.validateDateFormat(date);
   }
 
   /**
@@ -386,28 +370,8 @@ export class SystemMessageFormComponent
    */
   private _earlierDateValidation(date: string): boolean {
     if (isNullOrEmpty(date)) { return true; }
-    return compareDates(new Date(date), this.dateNow) >= 0;
-  }
-
-  /**
-   * Returns true when start date is present date
-   * but not later than expiry date
-   * @param startDate Inputted value from input box
-   */
-  private _startDateValidation(startDate: string): boolean {
-    if (isNullOrEmpty(startDate)) { return true; }
-    let expiryDate = getSafeProperty(this.fcExpiry, (obj) => obj.value);
-    return compareDates(new Date(startDate), new Date(expiryDate)) < 0;
-  }
-
-  /**
-   * Returns true when expiry date is present date or later the start date
-   * @param expiryDate Inputted value from input box
-   */
-  private _expiryDateValidation(expiryDate: string): boolean {
-    if (isNullOrEmpty(expiryDate)) { return true; }
-    let startDate = getSafeProperty(this.fcStart, (obj) => obj.value);
-    return compareDates(new Date(startDate), new Date(expiryDate)) < 0;
+    let isEarlierDate = compareDates(new Date(date), new Date(this.dateNow)) <= 0;
+    return !isEarlierDate;
   }
 
 }

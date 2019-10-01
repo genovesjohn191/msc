@@ -30,3 +30,4 @@ export * from './addon-sql-server/addon-sql-server';
 /** System Message */
 export * from './system-message-form/system-message-form.component';
 export * from './system-message-form/system-message-form';
+export * from './system-message-form/system-message-form.service';
