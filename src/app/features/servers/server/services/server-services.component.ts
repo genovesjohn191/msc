@@ -39,6 +39,7 @@ import {
   McsResource,
   OsUpdatesStatus,
   McsServerOsUpdatesScheduleRequest,
+  McsServerOsUpdatesInspectRequest,
   McsServerOsUpdatesSchedule,
   McsServerOsUpdatesRequest,
   DataStatus,
@@ -239,9 +240,11 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
    */
   public inspectForAvailableOsUpdates(server: McsServer): void {
     this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Analysing);
-    this.apiService.inspectServerForAvailableOsUpdates(
-      server.id, { serverId: server.id }
-    ).subscribe();
+    let inspectRequest = new McsServerOsUpdatesInspectRequest();
+    inspectRequest.clientReferenceObject = {
+      serverId: server.id
+    };
+    this.apiService.inspectServerForAvailableOsUpdates(server.id, inspectRequest).subscribe();
   }
 
   /**
@@ -342,7 +345,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
     // Invoke the event initially
     this.eventDispatcher.dispatch(McsEvent.jobServerOsUpdateInspect);
     this.eventDispatcher.dispatch(McsEvent.jobServerOsUpdateApply);
-    this.eventDispatcher.dispatch(McsEvent.jobServerOsUpdateApply);
+    this.eventDispatcher.dispatch(McsEvent.jobServerManagedRaiseInviewLevelEvent);
   }
 
   /**

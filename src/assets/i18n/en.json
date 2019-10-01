@@ -155,7 +155,7 @@
     },
     "provisioning": {
       "description": "Your VDC is being scaled and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
-      "dataInProgress": "Preparing the vdc for scaling. This may take a moment.",
+      "dataInProgress": "Preparing the VDC for scaling. This may take a moment.",
       "dataError": "Something went wrong while processing your request. Please try again later."
     }
   },
@@ -166,22 +166,23 @@
       "label": "VDC",
       "description": "Please select the VDC you wish to expand",
       "placeholder": "Select a VDC",
-      "contextualHelp": "Choose the virtual data centre to expand.",
-      "hints": {
-        "currentStorage": "Current Storage: {{current_storage}}"
-      }
+      "contextualHelp": "Choose a VDC."
+    },
+    "vdcStorage": {
+      "placeholder": "Select a VDC Storage",
+      "contextualHelp": "Choose the VDC storage to expand."
     },
     "vdcDetails": {
       "stepTitle": "VDC Details",
       "label": "Storage Element",
       "optionGroupLabel": "Virtual Data Centres",
       "storageLabel": "Storage",
-      "contextualHelp": "",
+      "contextualHelp": "Choose the storage space for your VDC.",
       "fullStorageSpace": "This disk cannot be expanded due to insufficient storage space (0 GB remaining)."
     },
     "expanding": {
-      "description": "Description placeholder",
-      "dataInProgress": "data in progress placeholder",
+      "description": "Your VDC storage is being expanded and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
+      "dataInProgress": "Preparing the VDC storage for expanding. This may take a moment.",
       "dataError": "Something went wrong while processing your request. Please try again later."
     }
   },
@@ -326,6 +327,7 @@
       "storageProfiles": {
         "title": "Storage Profiles",
         "manageLink": "Manage",
+        "expandLink": "Expand",
         "status": "Status",
         "tier": "Tier",
         "iops": "Performance {{iops}}",
@@ -341,7 +343,8 @@
     "columnHeaders": {
       "storageProfile": "Storage Profile",
       "usage": "Usage",
-      "tier": "Tier"
+      "tier": "Tier",
+      "action": ""
     },
     "iopsLabel": "Performance",
     "expandLink": "Expand",

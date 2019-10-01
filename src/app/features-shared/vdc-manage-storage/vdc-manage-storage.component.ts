@@ -35,7 +35,8 @@ import { TranslateService } from '@ngx-translate/core';
 
 const DEFAULT_MAXIMUM = 20480;
 const DEFAULT_MINIMUM = 0;
-const DEFAULT_STEP = 1024;
+const DEFAULT_STEP = 1;
+const SLIDER_STEP = 50;
 
 @Component({
   selector: 'mcs-vdc-manage-storage',
@@ -109,16 +110,18 @@ export class VdcManageStorageComponent
 
   public get unit(): string { return this._translateService.instant('serverShared.manageStorage.unit'); }
 
-  public get step(): number { return DEFAULT_STEP; }
+  public get validStep(): number { return DEFAULT_STEP; }
+
+  public get sliderStep(): number { return SLIDER_STEP; }
 
   public get minimumDisplayed(): number {
-    let storageExcess = this.initialValue % this.step;
+    let storageExcess = this.initialValue % this.validStep;
     let displayedStorage = this.initialValue - storageExcess;
     return displayedStorage >= 0 ? displayedStorage : DEFAULT_MINIMUM;
   }
 
   public get minimumUsable(): number {
-    let usableStorage = Math.ceil(this.initialValue / this.step) * this.step;
+    let usableStorage = Math.ceil(this.initialValue / this.validStep) * this.validStep;
     return usableStorage > 0 ? usableStorage : DEFAULT_MINIMUM;
   }
 
@@ -209,6 +212,6 @@ export class VdcManageStorageComponent
    * @param inputValue Value to be checked
    */
   private _storageStepIsValid(inputValue: any): boolean {
-    return inputValue % this.step === 0;
+    return inputValue % this.validStep === 0;
   }
 }

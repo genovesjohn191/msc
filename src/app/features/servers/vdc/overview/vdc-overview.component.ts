@@ -6,7 +6,6 @@ import {
   ChangeDetectionStrategy,
   Injector,
 } from '@angular/core';
-import { VdcDetailsBase } from '../vdc-details.base';
 import {
   CoreRoutes,
   McsNavigationService
@@ -15,17 +14,21 @@ import {
   isNullOrEmpty,
   replacePlaceholder,
   getSafeProperty,
-  CommonDefinition
+  CommonDefinition,
+  createObject
 } from '@app/utilities';
 import {
   RouteKey,
   McsResource,
   McsResourceStorage,
-  PlatformType
+  PlatformType,
+  McsExpandResourceStorage
 } from '@app/models';
 import { McsEvent } from '@app/events';
+import { VdcDetailsBase } from '../vdc-details.base';
 
-const VDC_LOW_STORAGE_PERCENTAGE = 85;
+const VDC_LOW_CAPACITY_STORAGE_PERCENTAGE = 85;
+const VDC_HIGH_CAPACITY_STORAGE_PERCENTAGE = 75;
 
 type ResourceDetailLabels = {
   propertyTitle: string;
@@ -112,6 +115,18 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
   }
 
   /**
+   * Navigate to Ordering Expand Vdc Storage
+   */
+  public navigateToExpandVdcStorage(selectedResource: McsResource): void {
+    let selectedResourceStorage = getSafeProperty(selectedResource, (obj) => obj.storage[0]);
+    this.eventDispatcher.dispatch(
+      McsEvent.vdcStorageExpandSelectedEvent,
+      createObject(McsExpandResourceStorage, { resource: selectedResource, storage: selectedResourceStorage })
+    );
+    this._navigationService.navigateTo(RouteKey.OrderVdcStorageExpand);
+  }
+
+  /**
    * Navigate to Scale VDC Ordering
    * @param selectedResource currently selected resource
    */
@@ -121,29 +136,21 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
   }
 
   /**
-   * Returns the icon key based on the current status
-   * of the capacity of VDC storage.
-   * Green Icon - If current storage is below 75%
-   * Yellow Icon - If current storage is
-   * greater than or equal to 75%
-   * or less than or equal to 85%
-   * Red Icon - If current storage is more than 85%
+   * Returns the icon key based on the current status of the capacity of VDC storage.
+   * Green Icon - If current storage capacity is high
+   * Yellow Icon - If current storage capacity is between low and high
+   * Red Icon - If current storage capacity is low
    * @param storage VDC Storage
    */
   public getStorageStatusIconKey(storage: McsResourceStorage): string {
-    let iconKey = '';
-
     let percentage = this._computeStoragePercentage(storage);
-
-    if (percentage <= 75) {
-      iconKey = CommonDefinition.ASSETS_SVG_STATE_RUNNING;
-    } else if (percentage >= 75 && percentage <= 85) {
-      iconKey = CommonDefinition.ASSETS_SVG_STATE_RESTARTING;
-    } else {
-      iconKey = CommonDefinition.ASSETS_SVG_STATE_STOPPED;
+    if (percentage <= VDC_HIGH_CAPACITY_STORAGE_PERCENTAGE) {
+      return CommonDefinition.ASSETS_SVG_STATE_RUNNING;
     }
-
-    return iconKey;
+    if (percentage >= VDC_HIGH_CAPACITY_STORAGE_PERCENTAGE && percentage <= VDC_LOW_CAPACITY_STORAGE_PERCENTAGE) {
+      return CommonDefinition.ASSETS_SVG_STATE_RESTARTING;
+    }
+    return CommonDefinition.ASSETS_SVG_STATE_STOPPED;
   }
 
   /**
@@ -153,7 +160,7 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
   public isStorageProfileLow(storage: McsResourceStorage): boolean {
     if (isNullOrEmpty(storage)) { return false; }
 
-    return this._computeStoragePercentage(storage) > 85;
+    return this._computeStoragePercentage(storage) > VDC_LOW_CAPACITY_STORAGE_PERCENTAGE;
   }
 
   /**
@@ -212,7 +219,7 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
 
     let storages = this.selectedVdc.storage.filter((storage) => {
       let storagePercentage = this._computeStoragePercentage(storage);
-      return storagePercentage >= VDC_LOW_STORAGE_PERCENTAGE;
+      return storagePercentage >= VDC_LOW_CAPACITY_STORAGE_PERCENTAGE;
     });
     return (!isNullOrEmpty(storages)) ? storages.length : 0;
   }

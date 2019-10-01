@@ -48,10 +48,11 @@
           </mcs-form-field>
 
           <ng-container *ngIf="selectedResource$ | async as selectedResource">
-              <div class="action-box" [@fadeIn]>
+              <div class="action-box" *mcsComponentHandler>
                 <mcs-select [formControl]="fcStorage" required
                   (selectionChange)="onChangeStorage($event)"
-                  [placeholder]="'orderVdcStorageExpand.vdc.placeholder' | translate"
+                  [placeholder]="'orderVdcStorageExpand.vdcStorage.placeholder' | translate"
+                  [mcsContextualHelp]="'orderVdcStorageExpand.vdcStorage.contextualHelp' | translate"
                   mcsId="select-storage"
                   mcsEventTracker="navigate-back-click"
                   mcsEventCategory="orders"
@@ -62,8 +63,9 @@
                 </mcs-select>
 
                 <mcs-vdc-manage-storage #fgManageStorage
-                  [initialValue]="storage"
-                  (dataChange)="onVdcStorageChange($event)">
+                  [initialValue]="storageGB"
+                  [mcsContextualHelp]="'orderVdcStorageExpand.vdcDetails.contextualHelp' | translate"
+                  (dataChange)="onVdcStorageChange($event, fcResource?.value, fcStorage?.value)">
                 </mcs-vdc-manage-storage>
 
               </div>
@@ -73,7 +75,7 @@
             <button mcsButton arrow="right"
               mcsWizardStepNext
               (click)="onSubmitExpandDetails()"
-              [disabled]="!formIsValid"
+              [disabled]="!formIsValid || !validVdcStorage"
               mcsId="step-1-next"
               mcsEventTracker="step-1-next"
               mcsEventCategory="orders"

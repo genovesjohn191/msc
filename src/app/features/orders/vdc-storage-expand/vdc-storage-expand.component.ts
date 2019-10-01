@@ -5,8 +5,7 @@ import {
   ViewChild,
   ChangeDetectorRef,
   ElementRef,
-  Injector,
-  OnInit
+  Injector
 } from '@angular/core';
 import {
   FormGroup,
@@ -15,7 +14,8 @@ import {
 import {
   Observable,
   throwError,
-  Subject
+  Subject,
+  Subscription
 } from 'rxjs';
 import {
   catchError,
@@ -23,6 +23,7 @@ import {
   shareReplay,
   map
 } from 'rxjs/operators';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import {
   McsOrderWizardBase,
   McsErrorHandlerService,
@@ -37,8 +38,10 @@ import {
   OrderIdType,
   McsResourceStorage,
   McsOrderCreate,
-  McsOrderItemCreate
+  McsOrderItemCreate,
+  McsExpandResourceStorage
 } from '@app/models';
+import { McsEvent } from '@app/events';
 import { McsApiService } from '@app/services';
 import {
   isNullOrEmpty,
@@ -48,18 +51,22 @@ import {
   CommonDefinition,
   Guid,
   convertMbToGb,
+  convertGbToMb,
   createObject
 } from '@app/utilities';
-import { McsFormGroupDirective } from '@app/shared';
+import {
+  McsFormGroupDirective,
+  ComponentHandlerDirective
+} from '@app/shared';
 import {
   OrderDetails,
   VdcManageStorage
 } from '@app/features-shared';
 import { VdcStorageExpandService } from './vdc-storage-expand.service';
 
+
 type ExpandVdcStorageProperties = {
-  storageMB: number;
-  storageProfileId: string;
+  sizeMB: number;
 };
 
 const VDC_STORAGE_EXPAND_REF_ID = Guid.newGuid().toString();
@@ -73,14 +80,16 @@ const VDC_STORAGE_EXPAND_REF_ID = Guid.newGuid().toString();
   ],
 })
 
-export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnInit, OnDestroy {
+export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnDestroy {
 
   public resources$: Observable<McsResource[]>;
   public selectedResource$: Observable<McsResource>;
   public fgVdcStorageExpandDetails: FormGroup;
   public fcResource: FormControl;
   public fcStorage: FormControl;
-  public storage: number;
+  public storageGB: number;
+  private _vdcManageStorage: VdcManageStorage;
+  private _selectedServerHandler: Subscription;
 
   /**
    * Returns the back icon key as string
@@ -96,11 +105,21 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnI
     return getSafeProperty(this._formGroup, (obj) => obj.isValid());
   }
 
+  /**
+   * Returns true when all forms are valid
+   */
+  public get validVdcStorage(): boolean {
+    return this._vdcManageStorage.hasChanged && this._vdcManageStorage.valid;
+  }
+
   @ViewChild('fgManageStorage', { static: false })
   private _fgManageStorage: IMcsFormGroup;
 
   @ViewChild(McsFormGroupDirective, { static: false })
   private _formGroup: McsFormGroupDirective;
+
+  @ViewChild(ComponentHandlerDirective, { static: false })
+  private _componentHandler: ComponentHandlerDirective;
 
   private _destroySubject = new Subject<void>();
 
@@ -108,29 +127,22 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnI
     _injector: Injector,
     private _vdcStorageExpandService: VdcStorageExpandService,
     private _elementRef: ElementRef,
+    private _eventDispatcher: EventBusDispatcherService,
     private _changeDetectorRef: ChangeDetectorRef,
     private _formGroupService: McsFormGroupService,
     private _apiService: McsApiService,
     private _errorHandlerService: McsErrorHandlerService,
   ) {
     super(_injector, _vdcStorageExpandService);
-  }
-
-  public ngOnInit() {
     this._registerFormGroup();
+    this._registerEvents();
+    this._vdcManageStorage = new VdcManageStorage();
     this._getAllResources();
   }
 
   public ngOnDestroy() {
     unsubscribeSafely(this._destroySubject);
-  }
-
-  /**
-   * Event that emits whenever the slider change its value
-   * @param _value current value of the slider
-   */
-  public onVdcStorageChange(_value: VdcManageStorage): void {
-    // TODO: value of the slider will be coming from here
+    unsubscribeSafely(this._selectedServerHandler);
   }
 
   /**
@@ -139,6 +151,7 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnI
    */
   public onChangeResource(resource: McsResource): void {
     if (isNullOrEmpty(resource) || isNullOrEmpty(resource.serviceId)) { return; }
+    this._resetExpandVdcStorageState();
     this._getSelectedResource(resource);
   }
 
@@ -148,9 +161,42 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnI
    */
   public onChangeStorage(storage: McsResourceStorage) {
     if (isNullOrEmpty(storage)) { return; }
-    let storageGB = convertMbToGb(storage.usedMB);
-    this.storage = storageGB;
-    this._registerNestedFormGroup();
+    this.storageGB = convertMbToGb(storage.limitMB);
+    this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Event that emits whenever the slider change its value
+   * @param vdcManageStorage current value of the slider
+   */
+  public onVdcStorageChange(
+    vdcManageStorage: VdcManageStorage,
+    resource: McsResource,
+    storage: McsResourceStorage
+  ): void {
+
+    if (isNullOrEmpty(vdcManageStorage) ||
+      isNullOrEmpty(getSafeProperty(resource, (obj) => obj.serviceId)) ||
+      isNullOrEmpty(getSafeProperty(storage, (obj) => obj.serviceId))) { return; }
+
+    this._vdcManageStorage = vdcManageStorage;
+
+    if (!this._vdcManageStorage.hasChanged || !this._vdcManageStorage.valid) { return; }
+    this._vdcStorageExpandService.createOrUpdateOrder(
+      createObject(McsOrderCreate, {
+        items: [
+          createObject(McsOrderItemCreate, {
+            itemOrderType: OrderIdType.VdcStorageExpand,
+            referenceId: VDC_STORAGE_EXPAND_REF_ID,
+            serviceId: storage.serviceId,
+            parentServiceId: resource.serviceId,
+            properties: {
+              sizeMB: convertGbToMb(this._vdcManageStorage.value)
+            } as ExpandVdcStorageProperties
+          })
+        ]
+      })
+    );
     this._changeDetectorRef.markForCheck();
   }
 
@@ -158,23 +204,7 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnI
    * Event that emits when the expand details is submitted
    */
   public onSubmitExpandDetails(): void {
-    if (isNullOrEmpty(this.storage)) { return; }
-    this._vdcStorageExpandService.createOrUpdateOrder(
-      createObject(McsOrderCreate, {
-        items: [
-          createObject(McsOrderItemCreate, {
-            itemOrderType: OrderIdType.VdcStorageExpand,
-            referenceId: VDC_STORAGE_EXPAND_REF_ID,
-            properties: {
-              storageMB: this.storage,
-              storageProfileId: ''
-            } as ExpandVdcStorageProperties,
-            // TODO: no final payload yet
-            // serviceId: server.serviceId
-          })
-        ]
-      })
-    );
+    if (isNullOrEmpty(this._vdcManageStorage)) { return; }
     this._changeDetectorRef.markForCheck();
   }
 
@@ -212,6 +242,18 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnI
     };
 
     this.submitOrderWorkflow(workflow);
+  }
+
+  /**
+   * Register jobs/notifications events
+   */
+  private _registerEvents(): void {
+    this._selectedServerHandler = this._eventDispatcher.addEventListener(
+      McsEvent.vdcStorageExpandSelectedEvent, this._onSelectedVdcStorageExpand.bind(this)
+    );
+
+    // Invoke the event initially
+    this._eventDispatcher.dispatch(McsEvent.vdcStorageExpandSelectedEvent);
   }
 
   /**
@@ -253,10 +295,19 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnI
    */
   private _getSelectedResource(resource: McsResource): void {
     if (isNullOrEmpty(resource)) { return; }
-
     this.selectedResource$ = this._apiService.getResource(resource.id).pipe(
       shareReplay(1)
     );
+  }
+
+  /**
+   * Event listener whenever a storage is selected for expanding
+   * @param expandResourceStorage obj containing both resource and storage
+   */
+  private _onSelectedVdcStorageExpand(expandResourceStorage: McsExpandResourceStorage): void {
+    if (isNullOrEmpty(expandResourceStorage)) { return; }
+    this.fcResource.setValue(expandResourceStorage.resource);
+    this.fcStorage.setValue(expandResourceStorage.storage);
   }
 
   /**
@@ -273,19 +324,23 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnI
       fcStorage: this.fcStorage,
     });
 
+    if (!isNullOrEmpty(this._fgManageStorage)) {
+      this.fgVdcStorageExpandDetails.removeControl('fgManageStorage');
+      this.fgVdcStorageExpandDetails.addControl('fgManageStorage',
+        this._fgManageStorage.getFormGroup().formGroup);
+    }
+
     this.fgVdcStorageExpandDetails.valueChanges.pipe(
       takeUntil(this._destroySubject)
     ).subscribe();
   }
 
   /**
-   * Register the nested form group elements
+   * Resets the expand vdc storage state
    */
-  private _registerNestedFormGroup() {
-    if (!isNullOrEmpty(this._fgManageStorage)) {
-      this.fgVdcStorageExpandDetails.removeControl('fgManageStorage');
-      this.fgVdcStorageExpandDetails.addControl('fgManageStorage',
-        this._fgManageStorage.getFormGroup().formGroup);
+  private _resetExpandVdcStorageState(): void {
+    if (!isNullOrEmpty(this._componentHandler)) {
+      this._componentHandler.recreateComponent();
     }
   }
 }
