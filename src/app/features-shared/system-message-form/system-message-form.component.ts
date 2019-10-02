@@ -79,11 +79,12 @@ export class SystemMessageFormComponent
   public dataChange = new EventEmitter<SystemMessageForm>();
 
   @ViewChild(McsFormGroupDirective, { static: false })
-  public _formGroup: McsFormGroupDirective;
+  private _formGroup: McsFormGroupDirective;
 
   @ViewChild('formMessage', { static: false })
   private _formMessage: FormMessage;
 
+  private _isValidDates: boolean;
   private _destroySubject = new Subject<void>();
   private _systemMessageForm = new SystemMessageForm();
 
@@ -150,7 +151,7 @@ export class SystemMessageFormComponent
     this._systemMessageForm.severity = this.fcSeverity.value;
     this._systemMessageForm.message = this.fcMessage.value;
     this._systemMessageForm.enabled = this.fcEnabled.value;
-    this._systemMessageForm.valid = this.fgCreateMessage.valid;
+    this._systemMessageForm.valid = this.fgCreateMessage.valid && this._isValidDates;
 
     this._setSystemMessageHasChangedFlag();
 
@@ -261,8 +262,8 @@ export class SystemMessageFormComponent
       return;
     }
 
-    let isValidDates = this._systemMessageFormService.hasPassedDateValidation(startDate, expiryDate, this.dateNow);
-    if (!isValidDates) {
+    this._isValidDates = this._systemMessageFormService.hasPassedDateValidation(startDate, expiryDate, this.dateNow);
+    if (!this._isValidDates) {
       this._formMessage.showMessage('error', {
         messages: this._translateService.instant('systemMessageForm.errors.messageDates')
       });
