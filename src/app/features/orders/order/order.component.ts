@@ -35,7 +35,8 @@ import {
   isNullOrEmpty,
   getSafeProperty,
   unsubscribeSafely,
-  CommonDefinition
+  CommonDefinition,
+  createObject
 } from '@app/utilities';
 import {
   McsOrder,
@@ -43,7 +44,8 @@ import {
   OrderWorkflowAction,
   McsOrderApprover,
   RouteKey,
-  OrderType
+  OrderType,
+  McsOrderWorkflow
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -198,10 +200,13 @@ export class OrderComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().pipe(
       concatMap((dialogResult) => {
         if (isNullOrEmpty(dialogResult)) { return of(null); }
-        return this._apiService.createOrderWorkFlow(order.id, {
-          state: OrderWorkflowAction.AwaitingApproval,
-          approvers: this._orderApprovers.map((approver) => approver.userId)
-        }).pipe(
+        return this._apiService.createOrderWorkFlow(
+          order.id,
+          createObject(McsOrderWorkflow, {
+            state: OrderWorkflowAction.AwaitingApproval,
+            approvers: this._orderApprovers.map((approver) => approver.userId)
+          })
+        ).pipe(
           switchMap(() => this._apiService.getOrder(order.id)),
           finalize(() => this.orderDetailsView = OrderDetailsView.OrderDetails)
         );
@@ -226,9 +231,12 @@ export class OrderComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().pipe(
       concatMap((dialogResult) => {
         if (isNullOrEmpty(dialogResult)) { return of(null); }
-        return this._apiService.createOrderWorkFlow(order.id, {
-          state: OrderWorkflowAction.Cancelled
-        }).pipe(
+        return this._apiService.createOrderWorkFlow(
+          order.id,
+          createObject(McsOrderWorkflow, {
+            state: OrderWorkflowAction.Cancelled
+          })
+        ).pipe(
           switchMap(() => this._apiService.getOrder(order.id))
         );
       })
@@ -252,9 +260,11 @@ export class OrderComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().pipe(
       concatMap((dialogResult) => {
         if (isNullOrEmpty(dialogResult)) { return of(null); }
-        return this._apiService.createOrderWorkFlow(order.id, {
-          state: OrderWorkflowAction.Rejected
-        }).pipe(
+        return this._apiService.createOrderWorkFlow(
+          order.id, createObject(McsOrderWorkflow, {
+            state: OrderWorkflowAction.Rejected
+          })
+        ).pipe(
           switchMap(() => this._apiService.getOrder(order.id))
         );
       })
@@ -273,12 +283,15 @@ export class OrderComponent implements OnInit, OnDestroy {
     this.dialogRef.afterClosed().pipe(
       concatMap((dialogResult) => {
         if (isNullOrEmpty(dialogResult)) { return of(null); }
-        return this._apiService.createOrderWorkFlow(order.id, {
-          state: OrderWorkflowAction.Submitted,
-          clientReferenceObject: {
-            resourceDescription: order.progressDescription
-          }
-        }).pipe(
+        return this._apiService.createOrderWorkFlow(
+          order.id,
+          createObject(McsOrderWorkflow, {
+            state: OrderWorkflowAction.Submitted,
+            clientReferenceObject: {
+              resourceDescription: order.progressDescription
+            }
+          })
+        ).pipe(
           tap((approvedOrder) => this._navigationService.navigateTo(
             RouteKey.Notification,
             [getSafeProperty(approvedOrder, (obj) => obj.jobs[0].id)])
