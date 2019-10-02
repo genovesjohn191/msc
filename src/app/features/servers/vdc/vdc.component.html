@@ -71,7 +71,7 @@
   </mcs-content-panel>
 </mcs-page>
 
-<mcs-help-widget #helpWidget
+<mcs-help-widget *mcsAccessControl="['TicketCreate']"
   [serviceId]="(selectedResource$ | async)?.serviceId"
   mcsEventTracker="toggle-help"
   mcsEventCategory="help"

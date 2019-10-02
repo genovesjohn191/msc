@@ -72,7 +72,7 @@
   </mcs-content-panel>
 </mcs-page>
 
-<mcs-help-widget
+<mcs-help-widget *mcsAccessControl="['TicketCreate']"
   [serviceId]="(selectedInternetPort$ | async)?.serviceId"
   mcsEventTracker="toggle-help"
   mcsEventCategory="help"
