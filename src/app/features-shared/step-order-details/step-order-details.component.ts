@@ -98,7 +98,7 @@ export class StepOrderDetailsComponent
   public billing$: Observable<McsBilling[]>;
   public selectedBilling$: Observable<McsBilling>;
   public selectedBillingSite$: Observable<McsBillingSite>;
-  public isChangeOrder$: Observable<boolean>;
+  public hasExcessUsageFee$: Observable<boolean>;
 
   public workflowAction: OrderWorkflowAction;
   public orderDatasource: McsTableDataSource<McsOrderItem>;
@@ -252,6 +252,16 @@ export class StepOrderDetailsComponent
   }
 
   /**
+   * Updates the form group by order type
+   */
+  private _updateFormGroupBytype(): void {
+    let orderType = getSafeProperty(this.orderItemType, (obj) => obj.orderType, OrderType.Change);
+    orderType === OrderType.Change ?
+      this._setOrderChangeFormControls() :
+      this._setOrderNewFormControls();
+  }
+
+  /**
    * Sets the order description based on the order details
    */
   private _setOrderDescription(): void {
@@ -262,16 +272,6 @@ export class StepOrderDetailsComponent
     if (isNullOrEmpty(this.fcDescription.value)) {
       this.fcDescription.setValue(desciption);
     }
-  }
-
-  /**
-   * Updates the form group by order type
-   */
-  private _updateFormGroupBytype(): void {
-    let orderType = getSafeProperty(this.orderItemType, (obj) => obj.orderType, OrderType.Change);
-    orderType === OrderType.Change ?
-      this._setOrderChangeFormControls() :
-      this._setOrderNewFormControls();
   }
 
   /**

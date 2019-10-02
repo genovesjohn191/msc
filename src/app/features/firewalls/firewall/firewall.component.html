@@ -102,7 +102,7 @@
   </mcs-content-panel>
 </mcs-page>
 
-<mcs-help-widget #helpWidget
+<mcs-help-widget *mcsAccessControl="['TicketCreate']"
   [serviceId]="(selectedFirewall$ | async)?.serviceId"
   mcsEventTracker="toggle-help"
   mcsEventCategory="help"
