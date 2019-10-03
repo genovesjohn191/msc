@@ -35,7 +35,7 @@
               <mcs-select [placeholder]="'orderVdcScale.vdc.placeholder' | translate"
                 required mcsId="select-vdc"
                 [formControl]="fcVdc"
-                (change)="onChangeVdc($event)"
+                (selectionChange)="onChangeVdc($event)"
                 [mcsContextualHelp]="'orderVdcScale.vdc.contextualHelp' | translate">
 
                 <ng-container *ngIf="resources$ | async as resources">
