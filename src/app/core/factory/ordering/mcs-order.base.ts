@@ -225,9 +225,15 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
     }
 
     return this._orderApiService.createOrderWorkFlow(this._createdOrder.id, workflow).pipe(
-      tap((response) => response && this.setJobs(...response.jobs)),
+      tap((response) => {
+        let orderJobs = getSafeProperty(response, (obj) => obj.jobs, []);
+        this.setJobs(...orderJobs);
+      }),
       catchError((httpError: McsApiErrorContext) => {
-        if (!isNullOrEmpty(httpError)) { this.setErrors(...httpError.details.errorMessages); }
+        if (!isNullOrEmpty(httpError)) {
+          let errorMessages = getSafeProperty(httpError, (obj) => obj.details.errorMessages, []);
+          this.setErrors(...errorMessages);
+        }
         return throwError(httpError);
       })
     );
@@ -311,7 +317,11 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
       catchError((httpError: McsApiErrorContext) => {
         this._orderStatus = DataStatus.Error;
         this._setRequestChangeState(DataStatus.Error);
-        if (!isNullOrEmpty(httpError)) { this.setErrors(...httpError.details.errorMessages); }
+
+        if (!isNullOrEmpty(httpError)) {
+          let errorMessages = getSafeProperty(httpError, (obj) => obj.details.errorMessages, []);
+          this.setErrors(...errorMessages);
+        }
         return empty();
       })
     );

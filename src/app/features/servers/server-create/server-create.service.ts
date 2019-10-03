@@ -21,7 +21,10 @@ import {
   OrderIdType
 } from '@app/models';
 import { McsApiService } from '@app/services';
-import { isNullOrEmpty } from '@app/utilities';
+import {
+  isNullOrEmpty,
+  getSafeProperty
+} from '@app/utilities';
 
 @Injectable()
 export class ServerCreateService extends McsOrderBase
@@ -50,7 +53,9 @@ export class ServerCreateService extends McsOrderBase
       }),
       catchError((httpError) => {
         this.setChangeState(DataStatus.Error);
-        this.setErrors(...httpError.errorMessages);
+
+        let errorMessages = getSafeProperty(httpError, (obj) => obj.details.errorMessages, []);
+        this.setErrors(...errorMessages);
         return throwError(httpError);
       })
     ).subscribe();

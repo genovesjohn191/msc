@@ -89,8 +89,11 @@ export abstract class McsOrderWizardBase extends McsWizardBase implements McsDis
     if (subjectForApproval) { workflow.state = OrderWorkflowAction.Draft; }
 
     this._orderBase.submitOrderWorkflow(workflow).pipe(
-      tap(() => this.navigateOrderByWorkflowAction(subjectForApproval ?
-        OrderWorkflowAction.AwaitingApproval : workflow.state))
+      tap(() =>
+        this.navigateOrderByWorkflowAction(
+          subjectForApproval ? OrderWorkflowAction.AwaitingApproval : workflow.state
+        )
+      )
     ).subscribe();
   }
 
