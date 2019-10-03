@@ -89,7 +89,9 @@ export class MediaUploadService implements IMcsFallible, IMcsJobManager, IMcsSta
         }),
         catchError((httpError) => {
           this.setChangeState(DataStatus.Error);
-          this.setErrors(...httpError.errorMessages);
+
+          let errorMessages = getSafeProperty(httpError, (obj) => obj.details.errorMessages, []);
+          this.setErrors(...errorMessages);
           return throwError(httpError);
         })
       );
