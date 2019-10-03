@@ -18,26 +18,24 @@
   <!-- Content Panel -->
   <mcs-content-panel *mcsContentPanelDef>
     <div class="contextual-help-page-wrapper limited-view">
-      <ng-container *ngIf = "systemMessage$ | async as systemMessage">
-        <!-- Shared Message Form -->
-        <mcs-system-message-form #fgSystemMessageForm
-          (dataChange)="onMessageFormDataChange($event)" 
-          [message]="systemMessage">
-        </mcs-system-message-form>
-        
-        <!-- Message Action -->
-        <div class="action-items">
-          <button mcsButton  
-            mcsId="edit-message"
-            [disabled]="!hasMessageChanged || systemMessage.isProcessing" 
-            (click)="onEditMessage(systemMessage.id)"
-            mcsEventTracker="submit-edit-message"
-            mcsEventCategory="system-message"
-            mcsEventLabel="edit-message-page">
-            {{ 'systemMessageEdit.saveMessage' | translate }}
-          </button>
-        </div>
-      </ng-container>
+      <!-- Shared Message Form -->
+      <mcs-system-message-form #fgSystemMessageForm
+        (dataChange)="onMessageFormDataChange($event)" 
+        [message]="systemMessage$ | async">
+      </mcs-system-message-form>
+      
+      <!-- Message Action -->
+      <div class="action-items" *ngIf="systemMessage$ | async as systemMessage">
+        <button mcsButton  
+          mcsId="edit-message"
+          [disabled]="!hasMessageChanged || systemMessage.isProcessing" 
+          (click)="onEditMessage(systemMessage.id)"
+          mcsEventTracker="submit-edit-message"
+          mcsEventCategory="system-message"
+          mcsEventLabel="edit-message-page">
+          {{ 'systemMessageEdit.saveMessage' | translate }}
+        </button>
+      </div>
     </div>
   </mcs-content-panel>
 </mcs-page>

@@ -84,7 +84,7 @@ export class SystemMessageFormComponent
   @ViewChild('formMessage', { static: false })
   private _formMessage: FormMessage;
 
-  private _isValidDates: boolean;
+  private _isValidDates: boolean = true;
   private _destroySubject = new Subject<void>();
   private _systemMessageForm = new SystemMessageForm();
 
@@ -138,7 +138,7 @@ export class SystemMessageFormComponent
    * Returns true when the form group is valid
    */
   public isValid(): boolean {
-    return getSafeProperty(this.fgCreateMessage, (obj) => obj.valid);
+    return getSafeProperty(this.fgCreateMessage, (obj) => obj.valid) && this._isValidDates;
   }
 
   /**
@@ -219,8 +219,6 @@ export class SystemMessageFormComponent
     this.fcEnabled = new FormControl(true, [
     ]);
 
-    this._setFormControlValues();
-
     // Register Form Groups using binding
     this.fgCreateMessage = this._formBuilder.group({
       fcStart: this.fcStart,
@@ -242,9 +240,12 @@ export class SystemMessageFormComponent
     ).subscribe();
 
     // Create form group and bind the form controls
-    this.fgCreateMessage.valueChanges
-      .pipe(takeUntil(this._destroySubject))
-      .subscribe(() => this.notifyDataChange());
+    this.fgCreateMessage.valueChanges.pipe(
+      takeUntil(this._destroySubject),
+      tap(() => this.notifyDataChange())
+    ).subscribe();
+
+    this._setFormControlValues();
   }
 
   /**
@@ -255,6 +256,7 @@ export class SystemMessageFormComponent
     let expiryDate = getSafeProperty(this.fcExpiry, (obj) => obj.value);
     let startDate = getSafeProperty(this.fcStart, (obj) => obj.value, this.dateNow);
 
+    if (isNullOrEmpty(this._formMessage)) { return; }
     this._setFormMessageConfiguration();
 
     if (this.fcStart.invalid || this.fcExpiry.invalid) {
@@ -300,7 +302,7 @@ export class SystemMessageFormComponent
   }
 
   /**
-   * Form groups and Form controls registration area
+   * Sets the value of system message hasChange property
    */
   private _setSystemMessageHasChangedFlag() {
     if (isNullOrEmpty(this.message)) { return; }
