@@ -170,7 +170,8 @@
     },
     "vdcStorage": {
       "placeholder": "Select a VDC Storage",
-      "contextualHelp": "Choose the VDC storage to expand."
+      "contextualHelp": "Choose the VDC storage to expand.",
+      "warningLabel": "This storage profile cannot be expanded."
     },
     "vdcDetails": {
       "stepTitle": "VDC Details",
