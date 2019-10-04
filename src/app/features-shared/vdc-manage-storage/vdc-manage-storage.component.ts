@@ -48,7 +48,7 @@ const SLIDER_STEP = 50;
 })
 
 export class VdcManageStorageComponent
-  implements IMcsDataChange<VdcManageStorage>, OnChanges, OnInit, AfterViewInit, OnDestroy {
+  implements IMcsDataChange<VdcManageStorage>, AfterViewInit, OnDestroy {
 
   // Forms Group
   public fgInputSlider: FormGroup;
@@ -84,17 +84,6 @@ export class VdcManageStorageComponent
     private _formBuilder: FormBuilder,
     private _changeDetectorRef: ChangeDetectorRef,
   ) {
-    this._registerFormGroup();
-  }
-
-  public ngOnChanges(changes: SimpleChanges) {
-    let initialValueChange = changes['initialValue'];
-    if (!isNullOrEmpty(initialValueChange)) {
-      this._registerInputFormControl();
-    }
-  }
-
-  public ngOnInit() {
     this._registerFormGroup();
   }
 
@@ -171,16 +160,6 @@ export class VdcManageStorageComponent
    * Register form group elements
    */
   private _registerFormGroup(): void {
-    // Initialize the input form control
-    this.fcInput = new FormControl('', [CoreValidators.required]);
-
-    this.fgInputSlider = this._formBuilder.group([]);
-  }
-
-  /**
-   * Register the input form control element
-   */
-  private _registerInputFormControl(): void {
     this.fcInput = new FormControl(this.roundedOffInitialValue, [
       CoreValidators.required,
       CoreValidators.numeric,
@@ -188,7 +167,6 @@ export class VdcManageStorageComponent
       CoreValidators.max(this.maximumUsable),
       CoreValidators.custom(this._storageStepIsValid.bind(this), 'step')
     ]);
-    this.fgInputSlider.addControl('fcInput', this.fcInput);
 
     this.fcInput.valueChanges
       .pipe(takeUntil(this._destroySubject))
@@ -196,6 +174,10 @@ export class VdcManageStorageComponent
         this.sliderModel = this.fcInput.value;
         this.notifyDataChange();
       });
+
+    this.fgInputSlider = this._formBuilder.group({
+      fcInput: this.fcInput
+    });
   }
 
   /**

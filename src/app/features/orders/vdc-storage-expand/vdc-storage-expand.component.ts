@@ -88,6 +88,7 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnD
   public fcResource: FormControl;
   public fcStorage: FormControl;
   public storageGB: number;
+  private _selectedStorage: McsResourceStorage;
   private _vdcManageStorage: VdcManageStorage;
   private _selectedServerHandler: Subscription;
 
@@ -109,7 +110,14 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnD
    * Returns true when all forms are valid
    */
   public get validVdcStorage(): boolean {
-    return this._vdcManageStorage.hasChanged && this._vdcManageStorage.valid;
+    return this._vdcManageStorage.hasChanged && this._vdcManageStorage.valid && this.hasStorageServiceId;
+  }
+
+  /**
+   * Returns true the service id of the storage is not null
+   */
+  public get hasStorageServiceId(): boolean {
+    return getSafeProperty(this._selectedStorage, (obj) => !isNullOrEmpty(obj.serviceId), false);
   }
 
   @ViewChild('fgManageStorage', { static: false })
@@ -161,6 +169,7 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnD
    */
   public onChangeStorage(storage: McsResourceStorage) {
     if (isNullOrEmpty(storage)) { return; }
+    this._selectedStorage = storage;
     this.storageGB = convertMbToGb(storage.limitMB);
     this._changeDetectorRef.markForCheck();
   }

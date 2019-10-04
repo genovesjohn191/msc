@@ -502,14 +502,14 @@
     "inview": {
       "title": "InView",
       "description": "InView gives you powerful infrastructure-level monitoring and alerting.",
-      "inviewLevelLabel": "Inview Level",
+      "inviewLevelLabel": "InView Level",
       "inviewLevelDescription": {
         "unavailable": "InView information is not yet available for this server.",
         "premium": "Your server has InView Premium, which grants access to statistics such as uptime, CPU, RAM, disk, network latency and much more.",
         "standard": "Your server has InView Standard, which grants access to statistics such as CPU usage. Access more statistics such as uptime, RAM, disk, network latency and more by raising your InView level.",
         "none": "Your server does not currently have InView provisioned. Access statistics such as uptime, CPU, RAM, disk, network latency and more by speaking to your account manager about InView."
       },
-      "goToinviewButtonLabel": "Go to Inview",
+      "goToinviewButtonLabel": "Go to InView",
       "raiseinviewButtonLabel": "Raise InView Level"
     }
   },
@@ -863,6 +863,7 @@
       "label": "Storage",
       "unit": "GB",
       "selectSize": "Select storage size",
+      "placeholder": "Enter size",
       "sliderSwitch": "Select from slider",
       "sliderMessage": "Select the disk size from a slider.",
       "customSwitch": "Enter custom size",

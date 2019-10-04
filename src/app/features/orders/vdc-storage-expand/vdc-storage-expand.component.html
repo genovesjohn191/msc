@@ -61,17 +61,17 @@
                     {{ storage.name }}
                   </mcs-option>
                 </mcs-select>
-                <span read-only *ngIf="!fcStorage?.value?.serviceId; else fgManageStorageTemplate">
+                <span read-only *ngIf="!hasStorageServiceId; else fgManageStorageTemplate">
                   {{ 'orderVdcStorageExpand.vdcStorage.warningLabel' | translate }}
                 </span>
+
                 <ng-template #fgManageStorageTemplate>
                   <mcs-vdc-manage-storage #fgManageStorage
                     [initialValue]="storageGB"
                     [mcsContextualHelp]="'orderVdcStorageExpand.vdcDetails.contextualHelp' | translate"
                     (dataChange)="onVdcStorageChange($event, fcResource?.value, fcStorage?.value)">
                   </mcs-vdc-manage-storage>
-                </ng-template>
-
+              </ng-template>
               </div>
           </ng-container>
 
