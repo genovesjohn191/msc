@@ -727,7 +727,8 @@
       "columnHeaders": {
         "description": "Description",
         "monthlyCharge": "Monthly Fee",
-        "oneOffCharge": "One-off Charge"
+        "oneOffCharge": "One-off Charge",
+        "excessUsageFeePerGB": "Excess Fee Per GB"
       }
     },
     "orderActions": {

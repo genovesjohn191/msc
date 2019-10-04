@@ -143,6 +143,7 @@ export class StepOrderDetailsComponent
     let orderChange = changes['order'];
     if (!isNullOrEmpty(orderChange)) {
       this._initializeOrderDatasource();
+      this._setExcessUsageFeeFlag();
     }
   }
 
@@ -304,6 +305,17 @@ export class StepOrderDetailsComponent
   }
 
   /**
+   * Sets the excess usage fee flag based on order records
+   */
+  private _setExcessUsageFeeFlag(): void {
+    let orderItems = getSafeProperty(this.order, (obj) => obj.items, []);
+    let excessUsageFound = orderItems.find((item) =>
+      !!getSafeProperty(item, (obj) => obj.charges.excessUsageFeePerGB, 0)
+    );
+    this.hasExcessUsageFee$ = of(!isNullOrEmpty(excessUsageFound));
+  }
+
+  /**
    * Sets the input description state
    */
   private _setInputDescriptionState(): void {
@@ -335,7 +347,8 @@ export class StepOrderDetailsComponent
       description: this._translate.instant('orderDetailsStep.orderDetails.totalLabel'),
       charges: {
         monthly: getSafeProperty(this.order, (obj) => obj.charges.monthly, 0),
-        oneOff: getSafeProperty(this.order, (obj) => obj.charges.oneOff, 0)
+        oneOff: getSafeProperty(this.order, (obj) => obj.charges.oneOff, 0),
+        excessUsageFeePerGB: getSafeProperty(this.order, (obj) => obj.charges.excessUsageFeePerGB, 0)
       }
     });
     this.orderDatasource.updateDatasource(orderItems);
