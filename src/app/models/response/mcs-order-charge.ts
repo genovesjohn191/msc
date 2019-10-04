@@ -7,6 +7,9 @@ export class McsOrderCharge {
   @JsonProperty()
   public oneOff: number = undefined;
 
+  @JsonProperty()
+  public excessUsageFeePerGB: number = undefined;
+
   /**
    * Returns the currency symbol as USD
    */

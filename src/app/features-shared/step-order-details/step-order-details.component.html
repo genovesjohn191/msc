@@ -109,7 +109,7 @@
               <mcs-header-cell *mcsHeaderCellDef>
                 {{ 'orderDetailsStep.orderDetails.columnHeaders.description' | translate }}
               </mcs-header-cell>
-              <mcs-data-cell *mcsDataCellDef="let row">
+              <mcs-data-cell *mcsDataCellDef="let row" text-wrap>
                 <span [innerHTML]="row.description"></span>
               </mcs-data-cell>
             </ng-container>
@@ -131,6 +131,16 @@
               </mcs-header-cell>
               <mcs-data-cell *mcsDataCellDef="let row">
                 ${{ row.charges?.oneOff }}
+              </mcs-data-cell>
+            </ng-container>
+
+            <!-- Excess Usage Fee Per GB Column -->
+            <ng-container mcsColumnDef="excessUsageFeePerGB" *ngIf="hasExcessUsageFee$ | async">
+              <mcs-header-cell *mcsHeaderCellDef>
+                {{ 'orderDetailsStep.orderDetails.columnHeaders.excessUsageFeePerGB' | translate }}
+              </mcs-header-cell>
+              <mcs-data-cell *mcsDataCellDef="let row">
+                ${{ row.charges?.excessUsageFeePerGB }}
               </mcs-data-cell>
             </ng-container>
 

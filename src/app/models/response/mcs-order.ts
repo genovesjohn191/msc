@@ -75,7 +75,7 @@ export class McsOrder extends McsEntityBase {
     serializer: McsDateSerialization,
     deserializer: McsDateSerialization
   })
-  public modifiedOn: Date;
+  public modifiedOn: Date = undefined;
 
   @JsonProperty({ target: McsOrderCharge })
   public charges: McsOrderCharge = undefined;
