@@ -163,9 +163,9 @@ export class VdcManageStorageComponent
     this.fcInput = new FormControl(this.roundedOffInitialValue, [
       CoreValidators.required,
       CoreValidators.numeric,
-      CoreValidators.min(this.minimumUsable),
-      CoreValidators.max(this.maximumUsable),
-      CoreValidators.custom(this._storageStepIsValid.bind(this), 'step')
+      (control) => CoreValidators.min(this.minimumUsable)(control),
+      (control) => CoreValidators.max(this.maximumUsable)(control),
+      (control) => CoreValidators.custom(this._storageStepIsValid.bind(this), 'step')(control)
     ]);
 
     this.fcInput.valueChanges
