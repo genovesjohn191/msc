@@ -82,7 +82,7 @@ export class AddOnInviewComponent implements
   }
 
   /**
-   * Registers all form group on the anti malware
+   * Registers all form group on the inview
    */
   private _registerFormGroup(): void {
     // Register Form Groups using binding

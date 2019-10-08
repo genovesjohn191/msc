@@ -108,7 +108,7 @@ export class AddOnSqlServerComponent implements
   }
 
   /**
-   * Registers all form group on the anti malware
+   * Registers all form group on the sql
    */
   private _registerFormGroup(): void {
     // Register Form Groups using binding
