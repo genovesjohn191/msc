@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { SharedModule } from '@app/shared';
 /** Components */
-import { AddOnAntiMalwareComponent } from './addon-anti-malware/addon-anti-malware';
 import { AddOnInviewComponent } from './addon-inview/addon-inview';
 import { AddOnSqlServerComponent } from './addon-sql-server/addon-sql-server';
 import { OrderApprovalComponent } from './order-approval/order-approval.component';
@@ -24,7 +23,6 @@ import { SystemMessageFormService } from './system-message-form/system-message-f
 
 @NgModule({
   declarations: [
-    AddOnAntiMalwareComponent,
     AddOnInviewComponent,
     AddOnSqlServerComponent,
     OrderApprovalComponent,
@@ -49,7 +47,6 @@ import { SystemMessageFormService } from './system-message-form/system-message-f
     SharedModule
   ],
   exports: [
-    AddOnAntiMalwareComponent,
     AddOnInviewComponent,
     AddOnSqlServerComponent,
     OrderApprovalComponent,

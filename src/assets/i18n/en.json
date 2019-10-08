@@ -678,8 +678,8 @@
     "stepTitle": "Add ons",
     "header": "Add ons",
     "description": "Select the Add-Ons you'd like for this order and specify any relevant configuration options.",
-    "antiMalwareAddOn": "Anti-Malware",
-    "antiMalwareAddOnHelp": "Protect systems from malicious software, including signature-based malware detection, behaviour-based malware detection and sandboxing",
+    "antiVirusAddOn": "Anti-Virus",
+    "antiVirusAddOnHelp": "Protect systems from malicious software, including signature-based malware detection, behaviour-based malware detection and sandboxing",
     "disasterRecoveryAddOn": "Disaster Recovery",
     "disasterRecoveryAddOnHelp": "Disaster recovery has a lot of benefits including faster recovery, financial saving, scalability, and security",
     "inviewLevel": "InView Level",
@@ -766,10 +766,12 @@
     "raiseTicket": "Raise a ticket"
   },
   "serverShared": {
-    "addOnAntiMalware": {
-      "header": "Anti-Malware",
-      "label": "Anti-Malware Service Variant",
-      "placeholder": "Select variant"
+    "addOnAntiVirus": {
+      "header": "Anti-Virus",
+      "template": {
+        "label": "Policy Template",
+        "placeholder": "Select policy template"
+      }
     },
     "addOnDisasterRecovery": {
       "header": "Disaster Recovery",

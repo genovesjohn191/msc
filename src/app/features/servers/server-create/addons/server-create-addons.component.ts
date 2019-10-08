@@ -21,7 +21,7 @@ import {
 } from '@app/models';
 import { AddOnDetails } from './addons-model';
 
-const ADDON_ANTI_MALWARE_ID = Guid.newGuid().toString();
+const ADDON_ANTI_VIRUS_ID = Guid.newGuid().toString();
 
 @Component({
   selector: 'mcs-server-create-addons',
@@ -31,7 +31,7 @@ const ADDON_ANTI_MALWARE_ID = Guid.newGuid().toString();
 export class ServerCreateAddOnsComponent
   implements OnDestroy, IMcsDataChange<Array<AddOnDetails<any>>> {
   public sqlServerAddOn = new AddOnDetails<McsServerCreateAddOnSqlServer>();
-  public antiMalwareAddOn = new AddOnDetails<McsServerCreateAddOnAntiVirus>();
+  public antiVirusAddOn = new AddOnDetails<McsServerCreateAddOnAntiVirus>();
   public inviewAddOn = new AddOnDetails<McsServerCreateAddOnInview>();
 
   @Input()
@@ -56,40 +56,13 @@ export class ServerCreateAddOnsComponent
   }
 
   /**
-   * Event that emits when Sql Server collapse panel has been toggled
-   * @param collapse Collapse flag of the panel
+   * Event that emits when antivirus is selected
+   * @param checkboxRef check
    */
-  public onToggleSqlServer(collapse: boolean): void {
-    this.sqlServerAddOn.selected = !collapse;
-    this.notifyDataChange();
-  }
-
-  /**
-   * Event that emits when antimalware collapse panel has been toggled
-   * @param collapse Collapse flag of the panel
-   */
-  public onToggleAntiMalware(collapse: boolean): void {
-    this.antiMalwareAddOn.selected = !collapse;
-    this.notifyDataChange();
-  }
-
-  /**
-   * Event that emits when anti malware details has been changed
-   * @param antiMalwareDetails Updated Anti malware data
-   */
-  public onChangeAntiMalwareDetails(antiMalwareDetails: McsServerCreateAddOnAntiVirus): void {
-    this.antiMalwareAddOn.properties = antiMalwareDetails;
-    this.antiMalwareAddOn.typeId = OrderIdType.CreateAddOnAntiMalware;
-    this.antiMalwareAddOn.referenceId = ADDON_ANTI_MALWARE_ID;
-    this.notifyDataChange();
-  }
-
-  /**
-   * Event that emits when Sql Server details has been changed
-   * @param sqlServerDetails Updated Sql Server data
-   */
-  public onChangeSqlServerDetails(sqlServerDetails: McsServerCreateAddOnSqlServer): void {
-    this.sqlServerAddOn.properties = sqlServerDetails;
+  public onToggleAntiVirus(checkboxRef: any): void {
+    this.antiVirusAddOn.selected = checkboxRef.checked;
+    this.antiVirusAddOn.typeId = OrderIdType.CreateAddOnAntiVirus;
+    this.antiVirusAddOn.referenceId = ADDON_ANTI_VIRUS_ID;
     this.notifyDataChange();
   }
 
@@ -104,11 +77,29 @@ export class ServerCreateAddOnsComponent
   }
 
   /**
+   * Event that emits when Sql Server collapse panel has been toggled
+   * @param collapse Collapse flag of the panel
+   */
+  public onToggleSqlServer(collapse: boolean): void {
+    this.sqlServerAddOn.selected = !collapse;
+    this.notifyDataChange();
+  }
+
+  /**
+   * Event that emits when Sql Server details has been changed
+   * @param sqlServerDetails Updated Sql Server data
+   */
+  public onChangeSqlServerDetails(sqlServerDetails: McsServerCreateAddOnSqlServer): void {
+    this.sqlServerAddOn.properties = sqlServerDetails;
+    this.notifyDataChange();
+  }
+
+  /**
    * Notifies the changes on the event parameter
    */
   public notifyDataChange(): void {
     this.dataChange.next([
-      this.antiMalwareAddOn,
+      this.antiVirusAddOn,
       this.inviewAddOn,
       this.sqlServerAddOn
     ]);
