@@ -1,0 +1,17 @@
+<form [formGroup]="fgHids">
+
+  <!-- Hids Protection Level -->
+  <mcs-item orientation="separated">
+    <span>{{ 'serverShared.addOnHids.protectionLevel.label' | translate }}:</span>
+    <mcs-form-field class="form-field-size-medium">
+      <mcs-select required
+        [placeholder]="'serverShared.addOnHids.protectionLevel.placeholder' | translate"
+        [formControl]="fcHids">
+
+        <mcs-option *ngFor="let protectionLevel of protectionLevelOptions$ | async" [value]="protectionLevel">
+          {{ protectionLevel }}
+        </mcs-option>
+      </mcs-select>
+    </mcs-form-field>
+  </mcs-item>
+</form>

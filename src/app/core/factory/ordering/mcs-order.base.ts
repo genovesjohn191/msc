@@ -65,6 +65,8 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
 
   // Order content
   private _createdOrder: McsOrder;
+  private _orderReferenceId: string;
+  private _orderServiceId: string;
 
   // Events for controlling events
   private _orderStatus: DataStatus;
@@ -97,20 +99,14 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
    * Returns the main order reference ID
    */
   public get orderReferenceId(): string {
-    return getSafeProperty(this._createdOrder, (obj) => obj.items[0].referenceId) ||
-      getSafeProperty(this._orderBuilder,
-        (obj) => obj.orderRequestDetails.orderDetails.items[0].referenceId
-      );
+    return this._orderReferenceId;
   }
 
   /**
    * Returns the main order service ID
    */
   public get orderServiceId(): string {
-    return getSafeProperty(this._createdOrder, (obj) => obj.items[0].serviceId) ||
-      getSafeProperty(this._orderBuilder,
-        (obj) => obj.orderRequestDetails.orderDetails.items[0].parentServiceId
-      );
+    return this._orderServiceId;
   }
 
   /**
@@ -170,6 +166,9 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
     if (isNullOrEmpty(orderItemType)) {
       throw new Error('Unable to create an order without order item type.');
     }
+
+    this._orderReferenceId = getSafeProperty(orderDetails, (obj) => obj.items[0].referenceId);
+    this._orderServiceId = getSafeProperty(orderDetails, (obj) => obj.items[0].serviceId);
 
     let orderDescription = orderDetails.description || this._getOrderDescriptionByType(orderItemType);
     let orderContract = orderItemType.orderType !== OrderType.Change ? orderDetails.contractDurationMonths : null;

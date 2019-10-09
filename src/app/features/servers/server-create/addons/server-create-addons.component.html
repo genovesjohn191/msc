@@ -7,13 +7,25 @@
     <div class="action-box"
       [mcsContextualHelp]="'serverCreateAddOnsStep.antiVirusAddOnHelp' | translate">
       <mcs-checkbox mcsId="addon-anti-virus"
-        (change)="onToggleAntiVirus($event)">
+        (statusChange)="onToggleAntiVirus($event)">
         {{ 'serverCreateAddOnsStep.antiVirusAddOn' | translate }}
       </mcs-checkbox>
     </div>
   </ng-container>
 
-  <!-- Inview -->
+  <!-- HIDS -->
+  <ng-container *mcsAccessControl="[]; feature: 'EnableOrderingAddonHids'">
+    <mcs-collapsible-panel
+      [header]="'serverShared.addOnHids.header' | translate"
+      (collapseChange)="onToggleHids($event)"
+      [mcsContextualHelp]="'serverCreateAddOnsStep.hidsAddOnHelp' | translate">
+
+      <mcs-addon-hids (dataChange)="onChangeHidsDetails($event)">
+      </mcs-addon-hids>
+    </mcs-collapsible-panel>
+  </ng-container>
+
+  <!-- InView -->
   <div class="action-box"
     [mcsContextualHelp]="'serverCreateAddOnsStep.inviewLevelHelp' | translate">
     <mcs-addon-inview (dataChange)="onChangeInviewDetails($event)">
