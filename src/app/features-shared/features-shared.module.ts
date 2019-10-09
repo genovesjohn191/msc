@@ -3,6 +3,7 @@ import { SharedModule } from '@app/shared';
 /** Components */
 import { AddOnInviewComponent } from './addon-inview/addon-inview';
 import { AddOnSqlServerComponent } from './addon-sql-server/addon-sql-server';
+import { AddOnHidsComponent } from './addon-hids/addon-hids';
 import { OrderApprovalComponent } from './order-approval/order-approval.component';
 import { OrderDashboardComponent } from './order-dashboard/order-dashboard.component';
 import { OrderItemPanelComponent } from './order-dashboard/order-item-panel/order-item-panel.component';
@@ -25,6 +26,7 @@ import { SystemMessageFormService } from './system-message-form/system-message-f
   declarations: [
     AddOnInviewComponent,
     AddOnSqlServerComponent,
+    AddOnHidsComponent,
     OrderApprovalComponent,
     OrderDashboardComponent,
     OrderItemPanelComponent,
@@ -49,6 +51,7 @@ import { SystemMessageFormService } from './system-message-form/system-message-f
   exports: [
     AddOnInviewComponent,
     AddOnSqlServerComponent,
+    AddOnHidsComponent,
     OrderApprovalComponent,
     OrderDashboardComponent,
     OrderItemPanelComponent,

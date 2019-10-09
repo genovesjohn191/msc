@@ -25,6 +25,7 @@ export * from './server-dialogs/rename-server/rename-server.dialog';
 /** Add Ons */
 export * from './addon-inview/addon-inview';
 export * from './addon-sql-server/addon-sql-server';
+export * from './addon-hids/addon-hids';
 
 /** System Message */
 export * from './system-message-form/system-message-form.component';

@@ -685,7 +685,8 @@
     "inviewLevel": "InView Level",
     "inviewLevelHelp": "InView allows you to keep track of your services in realtime – from receiving alerts and reviewing trends, to learning how compute resources are being used at a low level. It gives you full visibility over your servers and also helps you respond to issues more quickly.",
     "sqlServerAddOn": "SQL Server",
-    "sqlServerAddOnHelp": "Build intelligent, mission-critical applications using a scalable, hybrid database platform that has everything built in—from in-memory performance and advanced security to in-database analytics."
+    "sqlServerAddOnHelp": "Build intelligent, mission-critical applications using a scalable, hybrid database platform that has everything built in—from in-memory performance and advanced security to in-database analytics.",
+    "hidsAddOnHelp": "Be one step ahead with our Host Intrusion Detection service."
   },
   "serverCreateConfirmStep": {
     "stepTitle": "Confirm"
@@ -780,17 +781,9 @@
     },
     "addOnHids": {
       "header": "Host Intrusion Detection",
-      "serviceVariant": {
-        "label": "Service Variant",
-        "placeholder": "Select service variant"
-      },
       "protectionLevel": {
         "label": "Protection Level",
         "placeholder": "Select protection level"
-      },
-      "policyTemplate": {
-        "label": "Policy Template",
-        "placeholder": "Select policy template"
       }
     },
     "addOnInfrastructureMonitoring": {
