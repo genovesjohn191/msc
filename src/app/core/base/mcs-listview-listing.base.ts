@@ -112,7 +112,7 @@ export abstract class McsListViewListingBase<TEntity> implements AfterViewInit, 
   private _getEntityCollection(): Observable<TEntity[]> {
     return this.getEntityListing({
       pageIndex: CommonDefinition.PAGE_INDEX_DEFAULT,
-      pageSize: CommonDefinition.PAGE_SIZE_MIN,
+      pageSize: CommonDefinition.PAGE_SIZE_MAX,
       keyword: getSafeProperty(this._search, (obj) => obj.keyword, '')
     }).pipe(
       tap((apiCollection) => this._setTotalRecordsCount(apiCollection.totalCollectionCount)),
