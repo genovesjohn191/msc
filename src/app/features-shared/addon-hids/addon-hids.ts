@@ -75,7 +75,7 @@ export class AddOnHidsComponent implements
    */
   private _subscribeToHidsProtectionLevelOptions(): void {
     // Hardcoded as this values would not change
-    this.protectionLevelOptions$ = of(['Protect','Detect']);
+    this.protectionLevelOptions$ = of(['Protect', 'Detect']);
   }
 
   /**
