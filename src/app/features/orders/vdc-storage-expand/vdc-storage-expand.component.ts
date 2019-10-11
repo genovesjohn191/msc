@@ -5,7 +5,8 @@ import {
   ViewChild,
   ChangeDetectorRef,
   ElementRef,
-  Injector
+  Injector,
+  OnInit
 } from '@angular/core';
 import {
   FormGroup,
@@ -80,7 +81,7 @@ const VDC_STORAGE_EXPAND_REF_ID = Guid.newGuid().toString();
   ],
 })
 
-export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnDestroy {
+export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnInit, OnDestroy {
 
   public resources$: Observable<McsResource[]>;
   public selectedResource$: Observable<McsResource>;
@@ -145,6 +146,9 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnD
     this._registerFormGroup();
     this._registerEvents();
     this._vdcManageStorage = new VdcManageStorage();
+  }
+
+  public ngOnInit() {
     this._getAllResources();
   }
 
