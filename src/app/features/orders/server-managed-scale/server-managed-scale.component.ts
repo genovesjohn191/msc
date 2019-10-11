@@ -5,7 +5,8 @@ import {
   ViewChild,
   ElementRef,
   OnDestroy,
-  Injector
+  Injector,
+  OnInit
 } from '@angular/core';
 import {
   McsOrderWizardBase,
@@ -76,7 +77,7 @@ const SCALE_MANAGE_SERVER_REF_ID = Guid.newGuid().toString();
   providers: [ServerManagedScaleService]
 })
 
-export class ServerManagedScaleComponent extends McsOrderWizardBase implements OnDestroy {
+export class ServerManagedScaleComponent extends McsOrderWizardBase implements OnInit, OnDestroy {
 
   public resources$: Observable<Map<string, McsServer[]>>;
   public resource$: Observable<McsResource>;
@@ -112,6 +113,9 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
     this._registerFormGroups();
     this._registerEvents();
     this._manageScale = new ServerManageScale();
+  }
+
+  public ngOnInit() {
     this._getAllManagedCloudServers();
   }
 

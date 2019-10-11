@@ -5,7 +5,8 @@ import {
   ViewChild,
   ElementRef,
   ChangeDetectionStrategy,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  OnInit
 } from '@angular/core';
 import {
   FormGroup,
@@ -75,7 +76,7 @@ const VDC_SCALE_REF_ID = Guid.newGuid().toString();
   providers: [VdcScaleService]
 })
 
-export class VdcScaleComponent extends McsOrderWizardBase implements OnDestroy {
+export class VdcScaleComponent extends McsOrderWizardBase implements OnInit, OnDestroy {
 
   public resources$: Observable<McsResource[]>;
   public resourceCompute$: Observable<McsResourceCompute>;
@@ -110,6 +111,9 @@ export class VdcScaleComponent extends McsOrderWizardBase implements OnDestroy {
     this._registerFormGroup();
     this._registerEvents();
     this._vdcScale = new VdcManageScale();
+  }
+
+  public ngOnInit() {
     this._getAllResources();
   }
 

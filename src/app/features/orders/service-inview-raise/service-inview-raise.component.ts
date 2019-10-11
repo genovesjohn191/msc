@@ -5,6 +5,7 @@ import {
   Injector,
   ViewChild,
   ChangeDetectorRef,
+  OnInit,
 } from '@angular/core';
 import {
   FormGroup,
@@ -70,7 +71,7 @@ const RESOURCE_NAME_OTHER = 'Others';
   providers: [ServiceInviewRaiseService]
 })
 
-export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements OnDestroy {
+export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements OnInit, OnDestroy {
 
   public managedServers$: Observable<ServiceGroup[]>;
   public fgServiceInviewDetails: FormGroup;
@@ -124,6 +125,9 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
     this._populateInviewLevelLabelMap();
     this._registerFormGroups();
     this._registerEvents();
+  }
+
+  public ngOnInit(): void {
     this._getAllServices();
   }
 

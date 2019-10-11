@@ -162,11 +162,7 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
     orderDetails: McsOrderCreate,
     orderRequester: OrderRequester = OrderRequester.Client
   ): void {
-    let orderItemType = this._orderItemTypeChange.getValue();
-    if (isNullOrEmpty(orderItemType)) {
-      throw new Error('Unable to create an order without order item type.');
-    }
-
+    let orderItemType = this._orderItemTypeChange.getValue() || {} as any;
     this._orderReferenceId = getSafeProperty(orderDetails, (obj) => obj.items[0].referenceId);
     this._orderServiceId = getSafeProperty(orderDetails, (obj) => obj.items[0].serviceId);
 
@@ -385,6 +381,11 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
     this._orderApiService.getOrderItemTypes({ keyword: this._orderItemProductType }).pipe(
       map((orderItemDetails) => getSafeProperty(orderItemDetails, (obj) => obj.collection[0])),
       catchError(() => empty())
-    ).subscribe((itemType) => this._orderItemTypeChange.next(itemType));
+    ).subscribe((itemType) => {
+      if (isNullOrEmpty(itemType)) {
+        throw new Error('Unable to create an order without order item type.');
+      }
+      this._orderItemTypeChange.next(itemType);
+    });
   }
 }
