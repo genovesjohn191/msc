@@ -308,9 +308,9 @@
   dependencies:
     tslib "^1.9.0"
 
-"@peerlancers/json-serialization@^0.0.10":
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/@peerlancers/json-serialization/-/json-serialization-0.0.10.tgz#80be961827c9f21fbdc8fdd16617021753c439d1"
+"@peerlancers/json-serialization@^0.0.13":
+  version "0.0.13"
+  resolved "https://registry.yarnpkg.com/@peerlancers/json-serialization/-/json-serialization-0.0.13.tgz#f1b9bd22032d6e267edd2b7f801c4b7793d46351"
   dependencies:
     reflect-metadata "^0.1.13"
 
