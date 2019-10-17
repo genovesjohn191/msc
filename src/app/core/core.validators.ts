@@ -39,6 +39,16 @@ export class CoreValidators {
   }
 
   /**
+   * Validator that performs decimal values validation
+   *
+   * `@Note` This will produce the following value when false
+   * { 'decimal': true }
+   */
+  public static decimal(control: AbstractControl): ValidationErrors | null {
+    return CommonDefinition.REGEX_DECIMAL_PATTERN.test(control.value) ? null : { decimal: true };
+  }
+
+  /**
    * Validator that performs alpha numeric values validation
    *
    * `@Note` This will produce the following value when false

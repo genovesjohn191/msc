@@ -175,7 +175,8 @@ export class CommonDefinition {
   public static REGEX_URL_PATTERN
     = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
   public static REGEX_ALPHANUMERIC_PATTERN = /^[a-zA-Z0-9]+$/;
-  public static REGEX_NUMERIC_PATTERN = /^-?\d*(\.\d+)?$/;
+  public static REGEX_NUMERIC_PATTERN = /^-?\d*?$/;
+  public static REGEX_DECIMAL_PATTERN = /^-?\d*(\.\d+)?$/;
   public static REGEX_SERVER_NAME_PATTERN = /^[a-zA-Z0-9\-]*$/;
   public static REGEX_MEDIA_NAME_PATTERN = /^[a-zA-Z0-9\-]*$/;
   public static REGEX_UUID_PATTERN
