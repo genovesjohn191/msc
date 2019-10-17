@@ -1,0 +1,147 @@
+{
+  "orderAvailableItemTypes": {
+    "status": 200,
+    "totalCount": 1,
+    "content": [
+      {
+        "id": "ec15fadb-8373-4b03-9b9e-52af8611767b",
+        "name": "Product",
+        "type": "product",
+        "platforms": [
+          {
+            "id": "79d7e398-e1f4-4346-95da-c33cacea961a",
+            "name": "Private Cloud",
+            "type": "private-cloud",
+            "families": [
+              {
+                "id": "be8a3117-a42e-4a08-80bc-5006789322e7",
+                "name": "Compute",
+                "type": "compute",
+                "groups": [
+                  {
+                    "id": "0b386eda-0f56-4e04-a5dd-d5380636fadf",
+                    "name": "Servers",
+                    "type": "Servers",
+                    "availableOrderItemTypes": [
+                      {
+                        "id": "22bceced-dca3-4050-ac8f-1ce8062df5ec",
+                        "productId": "87d085b0-db97-1bc0-da04-3a9e7c961902",
+                        "orderType": "New",
+                        "productOrderType": "servers.vcloud.provision",
+                        "orderName": "Managed Server",
+                        "orderAction": "Deploy a managed server",
+                        "description": "Virtual Data Centre VM Instance",
+                        "automatedProvisioningAvailable": true,
+                        "icon": "",
+                        "displayOrder": 1
+                      },
+                      {
+                        "id": "82193c17-0a0b-46aa-98bc-9b26f9bba0ef",
+                        "productId": "87d085b0-db97-1bc0-da04-3a9e7c961902",
+                        "orderType": "Change",
+                        "productOrderType": "servers.vcloud.update",
+                        "orderName": "Managed Server",
+                        "orderAction": "Scale a managed server compute",
+                        "description": "Scale Virtual Data Centre VM Instance",
+                        "automatedProvisioningAvailable": true,
+                        "icon": "",
+                        "displayOrder": 2
+                      },
+                      {
+                        "id": "e151dc3e-30bd-494c-8a2f-26bc032a963c",
+                        "productId": "87d085b0-db97-1bc0-da04-3a9e7c961902",
+                        "orderType": "Change",
+                        "productOrderType": "servers.inview.raise",
+                        "orderName": "Managed Server",
+                        "orderAction": "Raise inview level of a managed server",
+                        "description": "Raise CVM Inview Level",
+                        "automatedProvisioningAvailable": true,
+                        "icon": "",
+                        "displayOrder": 3
+                      }
+                    ]
+                  },
+                  {
+                    "id": "0cef1495-537e-4b8b-837f-b9f8c0a57378",
+                    "name": "Backup",
+                    "type": "Backup",
+                    "availableOrderItemTypes": [
+                      {
+                        "id": "d5c1298f-534c-4356-8b3a-9db36f8fa80f",
+                        "productId": "8c56aec2-4ff4-1740-45af-cf401310c7d6",
+                        "orderType": "New",
+                        "productOrderType": "backups.server.provision",
+                        "orderName": "Server Backup",
+                        "orderAction": "Provision Server Backup",
+                        "description": "Server Backup",
+                        "automatedProvisioningAvailable": false,
+                        "icon": "",
+                        "displayOrder": 1
+                      },
+                      {
+                        "id": "6ec94ad7-0f09-4bef-97a3-0e0c22c38676",
+                        "productId": "bb094faf-4fc9-93c0-c481-a90f0310c77b",
+                        "orderType": "New",
+                        "productOrderType": "backups.vm.provision",
+                        "orderName": "VM Backup",
+                        "orderAction": "Provision VM Backup",
+                        "description": "VM Backup",
+                        "automatedProvisioningAvailable": false,
+                        "icon": "",
+                        "displayOrder": 2
+                      }
+                    ]
+                  },
+                  {
+                    "id": "6cfb6873-6307-4194-8d85-71ce91b5ec97",
+                    "name": "VDC",
+                    "type": "VDC",
+                    "availableOrderItemTypes": [
+                      {
+                        "id": "6304db7a-7aca-4bf7-aa80-991c26117c8e",
+                        "productId": "6d884cff-4fd0-9700-c61c-a8fe0310c785",
+                        "orderType": "Change",
+                        "productOrderType": "resources.vdc.compute.update",
+                        "orderName": "Scale VDC Compute",
+                        "orderAction": "Scale VDC Compute",
+                        "description": "Scale VDC Compute",
+                        "automatedProvisioningAvailable": true,
+                        "icon": "",
+                        "displayOrder": 1
+                      },
+                      {
+                        "id": "6ade4d8f-2170-411a-8b17-f9e188bb7b16",
+                        "productId": "e95cc62b-4f11-9704-c481-a90f0310c7f2",
+                        "orderType": "Change",
+                        "productOrderType": "resources.vdc.storage.update",
+                        "orderName": "Expand VDC Storage",
+                        "orderAction": "Expand VDC Storage",
+                        "description": "Expand VDC Storage",
+                        "automatedProvisioningAvailable": true,
+                        "icon": "",
+                        "displayOrder": 2
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "b546d299-d8be-4f51-bf5e-36301194ec2c",
+                "name": "Security",
+                "type": "security",
+                "groups": [
+                  {
+                    "id": "1f682dc3-cfe5-45ab-9d1c-ada1482e961b",
+                    "name": "Host Security",
+                    "type": "Host Security",
+                    "availableOrderItemTypes": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

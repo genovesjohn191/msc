@@ -3,7 +3,7 @@ import { McsNavigationService } from '@app/core';
 import { RouteKey } from '@app/models';
 import { IOrderEventStrategy } from '../order-event.strategy';
 
-export class OrderScaleVmEvent implements IOrderEventStrategy {
+export class VdcComputeUpdateEvent implements IOrderEventStrategy {
 
   private _navigationService: McsNavigationService;
 
@@ -12,6 +12,6 @@ export class OrderScaleVmEvent implements IOrderEventStrategy {
   }
 
   public executeEvent(): void {
-    this._navigationService.navigateTo(RouteKey.OrderServerManagedScale);
+    this._navigationService.navigateTo(RouteKey.OrderVdcScale);
   }
 }

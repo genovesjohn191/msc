@@ -5,8 +5,6 @@ import { AddOnInviewComponent } from './addon-inview/addon-inview';
 import { AddOnSqlServerComponent } from './addon-sql-server/addon-sql-server';
 import { AddOnHidsComponent } from './addon-hids/addon-hids';
 import { OrderApprovalComponent } from './order-approval/order-approval.component';
-import { OrderDashboardComponent } from './order-dashboard/order-dashboard.component';
-import { OrderItemPanelComponent } from './order-dashboard/order-item-panel/order-item-panel.component';
 import { ServerCommandComponent } from './server-command/server-command.component';
 import { ServerManageMediaComponent } from './server-manage-media/server-manage-media.component';
 import { ServerManageNetworkComponent } from './server-manage-network/server-manage-network.component';
@@ -28,8 +26,6 @@ import { SystemMessageFormService } from './system-message-form/system-message-f
     AddOnSqlServerComponent,
     AddOnHidsComponent,
     OrderApprovalComponent,
-    OrderDashboardComponent,
-    OrderItemPanelComponent,
     ServerCommandComponent,
     ServerManageMediaComponent,
     ServerManageNetworkComponent,
@@ -53,8 +49,6 @@ import { SystemMessageFormService } from './system-message-form/system-message-f
     AddOnSqlServerComponent,
     AddOnHidsComponent,
     OrderApprovalComponent,
-    OrderDashboardComponent,
-    OrderItemPanelComponent,
     ServerCommandComponent,
     ServerManageMediaComponent,
     ServerManageNetworkComponent,

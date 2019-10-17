@@ -70,7 +70,6 @@ export class ProductsComponent extends McsListViewListingBase<McsProductCatalog>
 
   public ngOnInit() {
     this._subscribeToParamChange();
-    this._subscribeToParamChange();
   }
 
   public ngOnDestroy() {

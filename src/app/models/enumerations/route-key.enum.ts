@@ -43,8 +43,8 @@ export enum RouteKey {
   ProductDetails,
 
   Orders,
-  OrdersDashboard,
   OrderDetails,
+  OrdersDashboard,
   OrderServerManagedScale,
   OrderVdcScale,
   OrderVdcStorageExpand,

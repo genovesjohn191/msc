@@ -3,7 +3,7 @@ import { McsNavigationService } from '@app/core';
 import { RouteKey } from '@app/models';
 import { IOrderEventStrategy } from '../order-event.strategy';
 
-export class OrderScaleVdcEvent implements IOrderEventStrategy {
+export class SecurityHidsProvisionEvent implements IOrderEventStrategy {
 
   private _navigationService: McsNavigationService;
 
@@ -12,6 +12,7 @@ export class OrderScaleVdcEvent implements IOrderEventStrategy {
   }
 
   public executeEvent(): void {
+    // TODO: This feature is not yet implemented
     this._navigationService.navigateTo(RouteKey.OrderVdcStorageExpand);
   }
 }

@@ -10,7 +10,8 @@ import {
   McsOrderUpdate,
   McsOrderItem,
   McsOrderMerge,
-  McsOrderWorkflow
+  McsOrderWorkflow,
+  McsOrderAvailable
 } from '@app/models';
 
 export interface IMcsApiOrdersService {
@@ -40,10 +41,14 @@ export interface IMcsApiOrdersService {
   getOrderItemType(id: any): Observable<McsApiSuccessResponse<McsOrderItemType>>;
 
   /**
-   * Get Order Billing (MCS API Response)
-   * @param query Query predicate that serves as the parameter of the endpoint
+   * Get order Billing (MCS API Response)
    */
   getBilling(): Observable<McsApiSuccessResponse<McsBilling[]>>;
+
+  /**
+   * Get order available item types (MCS API Response)
+   */
+  getOrderAvailableItemTypes(): Observable<McsApiSuccessResponse<McsOrderAvailable[]>>;
 
   /**
    * Get Order Approvers (MCS API Response)

@@ -3,6 +3,7 @@ $link-hover-color: $color-primary-01;
 a {
   font-family: inherit;
   color: inherit;
+  outline: none;
   text-decoration: underline;
   @include font-size($font-size-default);
   @include breakpoint(small) {
