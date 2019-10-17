@@ -116,7 +116,8 @@ export abstract class McsListViewListingBase<TEntity> implements AfterViewInit, 
       keyword: getSafeProperty(this._search, (obj) => obj.keyword, '')
     }).pipe(
       tap((apiCollection) => this._setTotalRecordsCount(apiCollection.totalCollectionCount)),
-      map((entityCollection) => entityCollection.collection)
+      map((entityCollection) => entityCollection.collection),
+      tap(() => this.changeDetectorRef.markForCheck())
     );
   }
 

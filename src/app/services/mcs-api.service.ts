@@ -90,7 +90,8 @@ import {
   McsSystemMessageValidate,
   McsEntityRequester,
   EntityRequester,
-  McsServerOsUpdatesInspectRequest
+  McsServerOsUpdatesInspectRequest,
+  McsOrderAvailable
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -955,6 +956,15 @@ export class McsApiService {
     return this._ordersApi.getBilling().pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getBilling'))
+      ),
+      map((response) => this._mapToCollection(response))
+    );
+  }
+
+  public getOrderAvailableItemTypes(): Observable<McsApiCollection<McsOrderAvailable>> {
+    return this._ordersApi.getOrderAvailableItemTypes().pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getOrderAvailableItemTypes'))
       ),
       map((response) => this._mapToCollection(response))
     );

@@ -291,14 +291,6 @@
     "requiredFeatureFlag": "EnableOrdering",
     "documentTitle": "Orders - Macquarie Cloud Services"
   },
-  "ordersDashboard": {
-    "enumKey": "OrdersDashboard",
-    "routePath": "dashboard",
-    "navigationPath": "orders/dashboard",
-    "requiredPermissions": ["OrderEdit"],
-    "requiredFeatureFlag": "EnableOrderingOperationsListing",
-    "documentTitle": "Orders Dashboard - Macquarie Cloud Services"
-  },
   "orderDetails": {
     "enumKey": "OrderDetails",
     "routePath": ":id",
@@ -306,6 +298,14 @@
     "requiredPermissions": ["OrderView", "OrderEdit", "OrderApprove"],
     "requiredFeatureFlag": "EnableOrdering",
     "documentTitle": "Order Details - Macquarie Cloud Services"
+  },
+  "ordersDashboard": {
+    "enumKey": "OrdersDashboard",
+    "routePath": "dashboard",
+    "navigationPath": "orders/dashboard",
+    "requiredPermissions": ["OrderEdit"],
+    "requiredFeatureFlag": "EnableOrderingOperationsListing",
+    "documentTitle": "Orders Dashboard - Macquarie Cloud Services"
   },
   "orderServerManagedScale": {
     "enumKey": "OrderServerManagedScale",

@@ -1,15 +1,23 @@
 import {
   Directive,
   Input,
-  AfterViewChecked
+  AfterViewChecked,
+  Attribute,
+  Renderer2,
+  ElementRef
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { CoreRoutes } from '@app/core';
 import { RouteKey } from '@app/models';
 import {
   isNullOrEmpty,
-  compareArrays
+  compareArrays,
+  coerceBoolean
 } from '@app/utilities';
+
+export interface IParamObject {
+  [key: string]: any;
+}
 
 @Directive({
   selector: '[mcsRouterLink]',
@@ -22,6 +30,15 @@ import {
 export class RouterLinkDirective implements AfterViewChecked {
   public hrefUrl: string;
 
+  @Input('mcsQueryParams')
+  public queryParams: IParamObject;
+
+  @Input('mcsReplaceUrl')
+  public replaceUrl: boolean;
+
+  @Input('mcsSkipLocationChange')
+  public skipLocationChange: boolean;
+
   @Input('mcsRouterLink')
   public set routerLinkKey(value: any[] | RouteKey | string) {
     Array.isArray(value) ?
@@ -32,7 +49,16 @@ export class RouterLinkDirective implements AfterViewChecked {
   private _previousRouterLink: any[];
   private _routerLink: string;
 
-  constructor(private _router: Router) { }
+  constructor(
+    private _router: Router,
+    @Attribute('tabindex') tabIndex: string,
+    _renderer: Renderer2,
+    _elementRef: ElementRef
+  ) {
+    if (tabIndex == null) {
+      _renderer.setAttribute(_elementRef.nativeElement, 'tabindex', '0');
+    }
+  }
 
   public ngAfterViewChecked() {
     Promise.resolve().then(() => {
@@ -58,7 +84,12 @@ export class RouterLinkDirective implements AfterViewChecked {
       throw new Error(`Could not find the associated routerlink
         ${RouteKey[this.routeLink]}`);
     }
-    this._router.navigate([this.routeLink]);
+
+    let extras = {
+      skipLocationChange: coerceBoolean(this.skipLocationChange),
+      replaceUrl: coerceBoolean(this.replaceUrl),
+    };
+    this._router.navigateByUrl(this.routeLink, extras);
     return false;
   }
 
@@ -76,7 +107,9 @@ export class RouterLinkDirective implements AfterViewChecked {
         isNullOrEmpty(routeKey) ? link : CoreRoutes.getNavigationPath(routeKey)
       );
     });
-    return this._router.createUrlTree(stringUrls).toString();
+    return this._router.createUrlTree(stringUrls, {
+      queryParams: this.queryParams
+    }).toString();
   }
 
   /**

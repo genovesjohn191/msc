@@ -1,0 +1,34 @@
+<section>
+  <h2>{{ 'orderGroups.header' | translate }}</h2>
+  <p>{{ 'orderGroups.description' | translate }}</p>
+
+  <mcs-grid *ngIf="orderGroupDetails$ | async as groupDetails">
+    <mcs-grid-row>
+      <!-- New Orders -->
+      <mcs-grid-column *ngIf="groupDetails.newOrders | mcsIsNotNullOrEmpty">
+        <section>
+          <h3>{{ 'orderGroups.newLabel' | translate }}</h3>
+          <div *ngFor="let newOrder of groupDetails.newOrders">
+            <a (click)="executeOrderAvailable(newOrder.productOrderType)">
+              <h5>{{ newOrder.orderAction }}</h5>
+            </a>
+            <span>{{ newOrder.description }}</span>
+          </div>
+        </section>
+      </mcs-grid-column>
+
+      <!-- Change Orders -->
+      <mcs-grid-column *ngIf="groupDetails.changeOrders | mcsIsNotNullOrEmpty">
+        <section>
+          <h3>{{ 'orderGroups.changeLabel' | translate }}</h3>
+          <div *ngFor="let changeOrder of groupDetails.changeOrders">
+            <a (click)="executeOrderAvailable(changeOrder.productOrderType)">
+              <h5>{{ changeOrder.orderAction }}</h5>
+            </a>
+            <span>{{ changeOrder.description }}</span>
+          </div>
+        </section>
+      </mcs-grid-column>
+    </mcs-grid-row>
+  </mcs-grid>
+</section>

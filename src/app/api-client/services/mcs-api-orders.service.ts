@@ -17,7 +17,8 @@ import {
   McsOrderWorkflow,
   McsBilling,
   McsOrderApprover,
-  McsQueryParam
+  McsQueryParam,
+  McsOrderAvailable
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiOrdersService } from '../interfaces/mcs-api-orders.interface';
@@ -122,7 +123,6 @@ export class McsApiOrdersService implements IMcsApiOrdersService {
 
   /**
    * Get Order Billing (MCS API Response)
-   * @param query Query predicate that serves as the parameter of the endpoint
    */
   public getBilling(): Observable<McsApiSuccessResponse<McsBilling[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
@@ -134,6 +134,24 @@ export class McsApiOrdersService implements IMcsApiOrdersService {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
             .deserializeResponse<McsBilling[]>(McsBilling, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  /**
+   * Get order available item types (MCS API Response)
+   */
+  public getOrderAvailableItemTypes(): Observable<McsApiSuccessResponse<McsOrderAvailable[]>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/orders/available-item-types';
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsOrderAvailable[]>(McsOrderAvailable, response);
           return apiResponse;
         })
       );

@@ -7,11 +7,15 @@ import {
 import { HttpClientModule } from '@angular/common/http';
 import { CookieModule } from 'ngx-cookie';
 import { McsApiClientConfig } from './mcs-api-client.config';
-import { apiClientProviders } from './mcs-api-client.constants';
+import {
+  apiClientProviders,
+  apiClientInterceptors
+} from './mcs-api-client.constants';
 
 @NgModule({
   providers: [
-    ...apiClientProviders
+    ...apiClientProviders,
+    ...apiClientInterceptors
   ],
   imports: [
     HttpClientModule,

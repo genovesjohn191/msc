@@ -1,3 +1,6 @@
+import { Provider } from '@angular/core';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+
 import { McsApiClientHttpService } from './mcs-api-client-http.service';
 import { McsApiClientFactory } from './mcs-api-client.factory';
 
@@ -16,10 +19,9 @@ import { McsApiSystemService } from './services/mcs-api-system.service';
 import { McsApiInternetService } from './services/mcs-api-internet.service';
 import { McsApiIdentityService } from './services/mcs-api-identity.service';
 
-/**
- * Array coverage for the api client modules
- */
-export const apiClientProviders: any[] = [
+import { McsApiMockInterceptor } from './interceptors/mcs-api-mock.interceptor';
+
+export const apiClientProviders: Provider[] = [
   McsApiClientHttpService,
   McsApiClientFactory,
 
@@ -37,4 +39,8 @@ export const apiClientProviders: any[] = [
   McsApiInternetService,
   McsApiSystemService,
   McsApiIdentityService
+];
+
+export const apiClientInterceptors: Provider[] = [
+  { provide: HTTP_INTERCEPTORS, useClass: McsApiMockInterceptor, multi: true },
 ];

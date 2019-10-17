@@ -37,7 +37,8 @@ import {
   isNullOrEmpty,
   McsEnvironmentVariables,
   CommonDefinition,
-  Guid
+  Guid,
+  createObject
 } from './utilities';
 import { McsApiClientConfig } from './api-client/mcs-api-client.config';
 import { McsApiClientModule } from './api-client/mcs-api-client.module';
@@ -75,10 +76,11 @@ export function apiClientConfig(cookieService: McsCookieService): McsApiClientCo
     apiClientHeaders.set(CommonDefinition.HEADER_COMPANY_ID, activeAccount as any);
   }
 
-  return {
+  return createObject(McsApiClientConfig, {
     apiHost: resolveEnvVar(McsEnvironmentVariables.ApiHost),
-    headers: apiClientHeaders
-  } as McsApiClientConfig;
+    headers: apiClientHeaders,
+    enableMockApi: false
+  });
 }
 
 export function loggerConfig(cookieService: McsCookieService): LoggerConfig {

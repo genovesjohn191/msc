@@ -4,6 +4,9 @@ import { OrdersComponent } from './orders.component';
 import { OrderComponent } from './order/order.component';
 import { OrderResolver } from './order/order.resolver';
 import { OrdersDashboardComponent } from './dashboard/orders-dashboard.component';
+import { OrdersDashboardService } from './dashboard/orders-dashboard.service';
+import { OrderGroupComponent } from './dashboard/group/order-group.component';
+
 import { ServerManagedScaleComponent } from './server-managed-scale/server-managed-scale.component';
 import { VdcScaleComponent } from './vdc-scale/vdc-scale.component';
 import { VdcStorageExpandComponent } from './vdc-storage-expand/vdc-storage-expand.component';
@@ -14,7 +17,8 @@ import { ServiceInviewRaiseComponent } from './service-inview-raise/service-invi
  * List of services for the main module
  */
 export const ordersProviders: any[] = [
-  OrderResolver
+  OrderResolver,
+  OrdersDashboardService
 ];
 
 /**
@@ -22,8 +26,9 @@ export const ordersProviders: any[] = [
  */
 export const ordersComponents: any[] = [
   OrdersComponent,
-  OrdersDashboardComponent,
   OrderComponent,
+  OrdersDashboardComponent,
+  OrderGroupComponent,
   ServerManagedScaleComponent,
   VdcScaleComponent,
   VdcStorageExpandComponent,

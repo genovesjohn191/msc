@@ -3,7 +3,7 @@ import { McsNavigationService } from '@app/core';
 import { RouteKey } from '@app/models';
 import { IOrderEventStrategy } from '../order-event.strategy';
 
-export class OrderRaiseInviewLevelEvent implements IOrderEventStrategy {
+export class VmBackupProvisionEvent implements IOrderEventStrategy {
 
   private _navigationService: McsNavigationService;
 
@@ -12,6 +12,7 @@ export class OrderRaiseInviewLevelEvent implements IOrderEventStrategy {
   }
 
   public executeEvent(): void {
-    this._navigationService.navigateTo(RouteKey.OrderServiceInviewRaise);
+    // TODO: Double check the url, seems like it is not right
+    this._navigationService.navigateTo(RouteKey.ServerDetailsBackups);
   }
 }

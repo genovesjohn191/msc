@@ -1,10 +1,38 @@
-<mcs-page header="Add or Change a Service">
+<mcs-page [header]="(orderGroup$ | async)?.name">
+
+  <!-- Left Panel -->
+  <mcs-left-panel *mcsLeftPanelDef="'orderDashboard.leftPanelHeader' | translate">
+    <mcs-left-panel-item *mcsLeftPanelItemDef>
+      <div class="listing-panel-wrapper">
+        <mcs-search #search mcsId="order-dashboard-listing-panel-search"></mcs-search>
+
+        <mcs-list-panel [dataSource]="listViewDatasource" [config]="listViewConfig?.panelSettings">
+          <ng-container *mcsListPanelContent="let family">
+
+            <mcs-option-group [label]="family.name">
+              <mcs-option *ngFor="let group of family.groups" mcsId="select-order-group"
+                [value]="group" [selected]="(orderGroup$ | async)?.id === group.id"
+                (click)="onClickOrderGroup(group)"
+                mcsEventTracker="select-order-group"
+                mcsEventCategory="order-dashboard"
+                mcsEventLabel="order-dashboard-list-panel">
+
+                <mcs-item>
+                  <span>{{ group.name }}</span>
+                </mcs-item>
+              </mcs-option>
+            </mcs-option-group>
+
+          </ng-container>
+        </mcs-list-panel>
+      </div>
+    </mcs-left-panel-item>
+  </mcs-left-panel>
+
   <!-- Content Panel -->
   <mcs-content-panel *mcsContentPanelDef>
-    <p>Macquarie Cloud Services offers a range of managed services, with more being added regularly.</p>
-
     <div class="limited-view">
-      <mcs-order-dashboard></mcs-order-dashboard>
+      <mcs-order-group [orderGroup]="orderGroup$ | async"></mcs-order-group>
     </div>
   </mcs-content-panel>
 </mcs-page>
