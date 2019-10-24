@@ -12,3 +12,27 @@
 [flex-none] {
   @include flex(0);
 }
+
+[align-self-start]{
+  @include align-self(flex-start);
+}
+
+[align-self-center]{
+  @include align-self(center);
+}
+
+[align-self-end]{
+  @include align-self(flex-start);
+}
+
+[justify-self-start]{
+  @include justify-self(flex-start);
+}
+
+[justify-self-center]{
+  @include justify-self(center);
+}
+
+[justify-self-end]{
+  @include justify-self(flex-start);
+}

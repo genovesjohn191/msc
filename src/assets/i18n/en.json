@@ -690,15 +690,34 @@
     "stepTitle": "Add ons",
     "header": "Add ons",
     "description": "Select the Add-Ons you'd like for this order and specify any relevant configuration options.",
-    "antiVirusAddOn": "Anti-Virus",
-    "antiVirusAddOnHelp": "Protect systems from malicious software, including signature-based malware detection, behaviour-based malware detection and sandboxing",
-    "disasterRecoveryAddOn": "Disaster Recovery",
-    "disasterRecoveryAddOnHelp": "Disaster recovery has a lot of benefits including faster recovery, financial saving, scalability, and security",
-    "inviewLevel": "InView Level",
-    "inviewLevelHelp": "InView allows you to keep track of your services in realtime – from receiving alerts and reviewing trends, to learning how compute resources are being used at a low level. It gives you full visibility over your servers and also helps you respond to issues more quickly.",
-    "sqlServerAddOn": "SQL Server",
-    "sqlServerAddOnHelp": "Build intelligent, mission-critical applications using a scalable, hybrid database platform that has everything built in—from in-memory performance and advanced security to in-database analytics.",
-    "hidsAddOnHelp": "Be one step ahead with our Host Intrusion Detection service."
+    "backupVm": {
+      "label": "VM Backup",
+      "contextualHelp": "VM Backup provides complete image-level backup which captures everything."
+    },
+    "backupServer": {
+      "label": "Server Backup",
+      "contextualHelp": "Server Backup provides file-level backup which can be configured in MacquarieView on a fine-grain basis."
+    },
+    "antivirus": {
+      "label": "Anti-Virus",
+      "contextualHelp": "Protect systems from malicious software, including signature-based malware detection, behaviour-based malware detection and sandboxing."
+    },
+    "hids": {
+      "label": "Host Intrusion Detection",
+      "contextualHelp": "Be one step ahead with our Host Intrusion Detection service."
+    },
+    "inviewLevel": {
+      "label": "InView Level",
+      "contextualHelp": "InView allows you to keep track of your services in realtime – from receiving alerts and reviewing trends, to learning how compute resources are being used at a low level. It gives you full visibility over your servers and also helps you respond to issues more quickly."
+    },
+    "disasterRecovery": {
+      "label": "Disaster Recovery",
+      "contextualHelp": "Disaster recovery has a lot of benefits including faster recovery, financial saving, scalability, and security."
+    },
+    "sqlServer": {
+      "label": "SQL Server",
+      "contextualHelp": "Build intelligent, mission-critical applications using a scalable, hybrid database platform that has everything built in—from in-memory performance and advanced security to in-database analytics."
+    }
   },
   "serverCreateConfirmStep": {
     "stepTitle": "Confirm"
@@ -796,6 +815,55 @@
       "protectionLevel": {
         "label": "Protection Level",
         "placeholder": "Select protection level"
+      }
+    },
+    "addOnBackup": {
+      "aggregation": {
+        "label": "Back up my VM to an aggregation target",
+        "optionLabel": "{{serviceId}} - {{retentionPeriod}} Retention.",
+        "tip": "It is recommended that you check your Backup Aggregation Target usage before proceeding. Charges may apply for exceeded quota.",
+        "placeholder": "",
+        "contextualHelp": ""
+      },
+      "retention": {
+        "label": "Keep my backups for",
+        "placeholder": "",
+        "contextualHelp": "Your desired backup retention setting. We can store your backups from 2 weeks, to 7 years."
+      },
+      "inviewLevel": {
+        "label": "InView Level",
+        "placeholder": "",
+        "contextualHelp": "InView allows for detailed monitoring and reporting on statistics such as quota utilization."
+      },
+      "backupSchedule": {
+        "label": "Schedule a backup every day at",
+        "placeholder": "",
+        "contextualHelp": "Choose your desired backup schedule. We recommend selecting a time at which the server will not be in high use."
+      },
+      "dailyQuota": {
+        "label": "Daily backup quota",
+        "placeholder": "",
+        "contextualHelp": "Your desired backup quota, per day. Additional fees may apply if this is exceeded.",
+        "suffix": "GB",
+        "error": {
+          "required": "Enter quota value.",
+          "numeric": "Please enter a valid number.",
+          "minimum": "The minimum quota that can be entered is {{min_value}}.",
+          "maximum": "Quota should not exceed {{max_value}}.",
+          "invalid": "Quota must be a multiple of {{step}} GB."
+        }
+      },
+      "deDuplicationRatio": {
+        "label": "De-Duplication Ratio",
+        "contextualHelp": ""
+      },
+      "databaseSupport": {
+        "label": "Specialised Database Support",
+        "contextualHelp": "Specialised Database Support allows us to ensure that databases are supported correctly during backup."
+      },
+      "backUpScope": {
+        "label": "By default, all files will be backed up. Once your server is ready, backup scope will be configurable on a fine-grain basis in MacquarieView.",
+        "contextualHelp": "Your new server comes clean with an OS installed, so you won't be able to select individual files for backup yet."
       }
     },
     "addOnInfrastructureMonitoring": {
@@ -1530,6 +1598,7 @@
     "createServer": "Something went wrong while creating your server. Please try again.",
     "cloneServer": "Something went wrong while cloning your server. Please try again.",
     "deleteServer": "Something went wrong while deleting your server. Please try again.",
+    "getStorageBackupAggregationTargets": "Something went wrong while retrieving your storage backup aggregation types. Please try again.",
     "resetServerPassword": "Something went wrong while resetting the password for your server. Please try again.",
     "updateServerStorage": "Something went wrong while expanding your disk. Please try again.",
     "createServerStorage": "Something went wrong while creating your disk. Please try again.",

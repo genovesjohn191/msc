@@ -2,13 +2,54 @@
   <h2>{{ 'serverCreateAddOnsStep.header' | translate }}</h2>
   <p>{{ 'serverCreateAddOnsStep.description' | translate }}</p>
 
+  <!-- VM Backup -->
+  <ng-container *mcsAccessControl="[]; feature: 'enableOrderingAddonVmBackup'">
+    <mcs-collapsible-panel
+      mcsId="addon-vm-backup-toggle"
+      mcsEventTracker="server-create-addon-vm-backup-toggle"
+      mcsEventCategory="server-create"
+      mcsEventLabel="server-create-addon-vm-backup-toggle"
+      [mcsContextualHelp]="'serverCreateAddOnsStep.backupVm.contextualHelp' | translate"
+      [header]="'serverCreateAddOnsStep.backupVm.label' | translate"
+      (collapseChange)="onToggleVmBackUp($event)">
+
+      <mcs-addon-backup-vm #fgAddOnBackupVm
+        [aggregationOptions$]="aggregationTargets$"
+        (dataChange)="onChangeVmBackUpDetails($event)">
+      </mcs-addon-backup-vm>
+    </mcs-collapsible-panel>
+  </ng-container>
+
+  <!-- Server Backup -->
+  <ng-container *mcsAccessControl="[]; feature: 'enableOrderingAddonServerBackup'">
+    <mcs-collapsible-panel
+      mcsId="addon-server-backup-toggle"
+      mcsEventTracker="server-create-addon-server-backup-toggle"
+      mcsEventCategory="server-create"
+      mcsEventLabel="server-create-addon-server-backup-toggle"
+      [mcsContextualHelp]="'serverCreateAddOnsStep.backupServer.contextualHelp' | translate"
+      [header]="'serverCreateAddOnsStep.backupServer.label' | translate"
+      (collapseChange)="onToggleServerBackUp($event)">
+
+      <mcs-addon-backup-server #fgAddOnBackupServer
+        [aggregationOptions$]="aggregationTargets$"
+        (dataChange)="onChangeServerBackUpDetails($event)">
+      </mcs-addon-backup-server>
+    </mcs-collapsible-panel>
+  </ng-container>
+
   <!-- Anti Virus -->
   <ng-container *mcsAccessControl="[]; feature: 'enableOrderingAddonAntiVirus'">
     <div class="action-box"
-      [mcsContextualHelp]="'serverCreateAddOnsStep.antiVirusAddOnHelp' | translate">
-      <mcs-checkbox mcsId="addon-anti-virus"
+      [mcsContextualHelp]="'serverCreateAddOnsStep.antivirus.contextualHelp' | translate">
+
+      <mcs-checkbox
+        mcsId="addon-anti-virus-toggle"
+        mcsEventTracker="server-create-addon-anti-virus-toggle"
+        mcsEventCategory="server-create"
+        mcsEventLabel="server-create-addon-anti-virus-toggle"
         (statusChange)="onToggleAntiVirus($event)">
-        {{ 'serverCreateAddOnsStep.antiVirusAddOn' | translate }}
+        {{ 'serverCreateAddOnsStep.antivirus.label' | translate }}
       </mcs-checkbox>
     </div>
   </ng-container>
@@ -16,9 +57,13 @@
   <!-- HIDS -->
   <ng-container *mcsAccessControl="[]; feature: 'EnableOrderingAddonHids'">
     <mcs-collapsible-panel
-      [header]="'serverShared.addOnHids.header' | translate"
-      (collapseChange)="onToggleHids($event)"
-      [mcsContextualHelp]="'serverCreateAddOnsStep.hidsAddOnHelp' | translate">
+      mcsId="addon-hids-toggle"
+      mcsEventTracker="server-create-addon-hids-toggle"
+      mcsEventCategory="server-create"
+      mcsEventLabel="server-create-addon-hids-toggle"
+      [mcsContextualHelp]="'serverCreateAddOnsStep.hids.contextualHelp' | translate"
+      [header]="'serverCreateAddOnsStep.hids.label' | translate"
+      (collapseChange)="onToggleHids($event)">
 
       <mcs-addon-hids (dataChange)="onChangeHidsDetails($event)">
       </mcs-addon-hids>
@@ -27,17 +72,27 @@
 
   <!-- InView -->
   <div class="action-box"
-    [mcsContextualHelp]="'serverCreateAddOnsStep.inviewLevelHelp' | translate">
-    <mcs-addon-inview (dataChange)="onChangeInviewDetails($event)">
+    [mcsContextualHelp]="'serverCreateAddOnsStep.inviewLevel.contextualHelp' | translate">
+
+    <mcs-addon-inview
+      mcsId="addon-inview-select"
+      mcsEventTracker="server-create-addon-inview-select"
+      mcsEventCategory="server-create"
+      mcsEventLabel="server-create-addon-inview-select"
+      (dataChange)="onChangeInviewDetails($event)">
     </mcs-addon-inview>
   </div>
 
   <!-- SQL Server -->
   <ng-container *mcsAccessControl="[]; feature: 'EnableOrderingSqlProvision'">
     <mcs-collapsible-panel *ngIf="isWindows"
-      [header]="'serverCreateAddOnsStep.sqlServerAddOn' | translate"
-      (collapseChange)="onToggleSqlServer($event)"
-      [mcsContextualHelp]="'serverCreateAddOnsStep.sqlServerAddOnHelp' | translate">
+      mcsId="addon-sql-toggle"
+      mcsEventTracker="server-create-addon-sql-toggle"
+      mcsEventCategory="server-create"
+      mcsEventLabel="server-create-addon-sql-toggle"
+      [mcsContextualHelp]="'serverCreateAddOnsStep.sqlServer.contextualHelp' | translate"
+      [header]="'serverCreateAddOnsStep.sqlServer.label' | translate"
+      (collapseChange)="onToggleSqlServer($event)">
 
       <mcs-addon-sql-server (dataChange)="onChangeSqlServerDetails($event)">
       </mcs-addon-sql-server>
@@ -49,6 +104,7 @@
     <a mcsWizardStepPrevious mcsId="step-2-back">{{ 'shared.wizard.previous' | translate }}</a>
     <button mcsButton size="small" arrow="right"
       mcsWizardStepNext
+      [disabled]="!vmBackupAddOnValid() || !serverBackupAddOnValid"
       mcsId="step-2-next">{{ 'shared.wizard.next' | translate }}</button>
   </div>
 </section>

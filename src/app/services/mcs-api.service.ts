@@ -14,6 +14,11 @@ import {
 } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 import {
+  EventBusDispatcherService,
+  EventBusState
+} from '@peerlancers/ngx-event-bus';
+import { LogClass } from '@peerlancers/ngx-logger';
+import {
   JobStatus,
   McsInternetPort,
   McsQueryParam,
@@ -91,15 +96,16 @@ import {
   McsEntityRequester,
   EntityRequester,
   McsServerOsUpdatesInspectRequest,
-  McsOrderAvailable
+  McsOrderAvailable,
+  McsStorageBackUpAggregationTarget
 } from '@app/models';
 import {
   isNullOrEmpty,
   getSafeProperty
 } from '@app/utilities';
 import {
-  IMcsApiServersService,
   McsApiClientFactory,
+  IMcsApiServersService,
   McsApiServersFactory,
   IMcsApiJobsService,
   McsApiJobsFactory,
@@ -108,26 +114,23 @@ import {
   IMcsApiResourcesService,
   McsApiResourcesFactory,
   IMcsApiTicketsService,
-  IMcsApiOrdersService,
-  IMcsApiMediaService,
-  IMcsApiFirewallsService,
-  IMcsApiConsoleService,
   McsApiTicketsFactory,
+  IMcsApiOrdersService,
   McsApiOrdersFactory,
+  IMcsApiMediaService,
   McsApiMediaFactory,
+  IMcsApiFirewallsService,
   McsApiFirewallsFactory,
+  IMcsApiConsoleService,
   McsApiConsoleFactory,
-  McsApiSystemFactory,
   IMcsApiSystemService,
+  McsApiSystemFactory,
   IMcsApiToolsService,
-  McsApiToolsFactory
+  McsApiToolsFactory,
+  IMcsApiStoragesService,
+  McsApiStoragesFactory
 } from '@app/api-client';
-import {
-  EventBusDispatcherService,
-  EventBusState
-} from '@peerlancers/ngx-event-bus';
 import { McsEvent } from '@app/events';
-import { LogClass } from '@peerlancers/ngx-logger';
 import { McsRepository } from './core/mcs-repository.interface';
 
 import { McsJobsRepository } from './repositories/mcs-jobs.repository';
@@ -172,6 +175,7 @@ export class McsApiService {
   private readonly _jobsApi: IMcsApiJobsService;
   private readonly _identityApi: IMcsApiIdentityService;
   private readonly _resourcesApi: IMcsApiResourcesService;
+  private readonly _storagesApi: IMcsApiStoragesService;
   private readonly _ticketsApi: IMcsApiTicketsService;
   private readonly _ordersApi: IMcsApiOrdersService;
   private readonly _mediaApi: IMcsApiMediaService;
@@ -206,6 +210,7 @@ export class McsApiService {
     this._jobsApi = apiClientFactory.getService(new McsApiJobsFactory());
     this._identityApi = apiClientFactory.getService(new McsApiIdentityFactory());
     this._resourcesApi = apiClientFactory.getService(new McsApiResourcesFactory());
+    this._storagesApi = apiClientFactory.getService(new McsApiStoragesFactory());
     this._ticketsApi = apiClientFactory.getService(new McsApiTicketsFactory());
     this._ordersApi = apiClientFactory.getService(new McsApiOrdersFactory());
     this._mediaApi = apiClientFactory.getService(new McsApiMediaFactory());
@@ -813,6 +818,15 @@ export class McsApiService {
         return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.deleteServerStorage'));
       }),
       map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public getStorageBackupAggregationTargets(): Observable<McsApiCollection<McsStorageBackUpAggregationTarget>> {
+    return this._storagesApi.getBackUpAggregationTargets().pipe(
+      catchError((error) => {
+        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getStorageBackupAggregationTargets'));
+      }),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
     );
   }
 

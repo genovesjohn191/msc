@@ -4,26 +4,42 @@ import {
   ChangeDetectorRef,
   EventEmitter,
   Output,
-  Input
+  Input,
+  OnInit,
+  ViewChild
 } from '@angular/core';
-import { Subject } from 'rxjs';
-import { IMcsDataChange } from '@app/core';
+import {
+  Subject,
+  Observable
+} from 'rxjs';
+import { map } from 'rxjs/operators';
+import {
+  IMcsDataChange,
+  IMcsFormGroup
+} from '@app/core';
 import {
   unsubscribeSafely,
-  Guid
+  Guid,
+  getSafeProperty
 } from '@app/utilities';
+import { McsApiService } from '@app/services';
 import {
   OrderIdType,
   McsServerCreateAddOnAntiVirus,
   McsServerCreateAddOnSqlServer,
   McsServerCreateAddOnInview,
   McsServerCreateAddOnHids,
+  McsServerCreateAddOnVmBackup,
+  McsServerCreateAddOnServerBackup,
+  McsStorageBackUpAggregationTarget,
   Os
 } from '@app/models';
 import { AddOnDetails } from './addons-model';
 
 const ADDON_ANTI_VIRUS_ID = Guid.newGuid().toString();
 const ADDON_HIDS_ID = Guid.newGuid().toString();
+const ADDON_VM_BACKUP_ID = Guid.newGuid().toString();
+const ADDON_SERVER_BACKUP_ID = Guid.newGuid().toString();
 
 @Component({
   selector: 'mcs-server-create-addons',
@@ -31,21 +47,39 @@ const ADDON_HIDS_ID = Guid.newGuid().toString();
 })
 
 export class ServerCreateAddOnsComponent
-  implements OnDestroy, IMcsDataChange<Array<AddOnDetails<any>>> {
-  public sqlServerAddOn = new AddOnDetails<McsServerCreateAddOnSqlServer>();
+  implements OnDestroy, OnInit, IMcsDataChange<Array<AddOnDetails<any>>> {
+  public vmBackupAddOn = new AddOnDetails<McsServerCreateAddOnVmBackup>();
+  public serverBackupAddOn = new AddOnDetails<McsServerCreateAddOnServerBackup>();
   public antiVirusAddOn = new AddOnDetails<McsServerCreateAddOnAntiVirus>();
+  public sqlServerAddOn = new AddOnDetails<McsServerCreateAddOnSqlServer>();
   public hidsAddOn = new AddOnDetails<McsServerCreateAddOnHids>();
-
   public inviewAddOn = new AddOnDetails<McsServerCreateAddOnInview>();
+
+  // TODO: api endpoint not existing yet, Type will be updated in the future
+  public aggregationTargets$: Observable<McsStorageBackUpAggregationTarget[]>;
 
   @Input()
   public osType: Os;
 
   @Output()
   public dataChange = new EventEmitter<Array<AddOnDetails<any>>>();
+
+  @ViewChild('fgAddOnBackupVm', { static: false })
+  private _fgAddOnBackupVm: IMcsFormGroup;
+
+  @ViewChild('fgAddOnBackupServer', { static: false })
+  private _fgAddOnBackupServer: IMcsFormGroup;
+
   private _destroySubject = new Subject<void>();
 
-  constructor(private _changeDetectorRef: ChangeDetectorRef) { }
+  constructor(
+    private _apiService: McsApiService,
+    private _changeDetectorRef: ChangeDetectorRef
+  ) { }
+
+  public ngOnInit() {
+    this._getAggregationTarget();
+  }
 
   public ngOnDestroy() {
     unsubscribeSafely(this._destroySubject);
@@ -60,8 +94,66 @@ export class ServerCreateAddOnsComponent
   }
 
   /**
+   * Event that emits when vm backup is selected
+   * @param collapse Collapse flag of the panel
+   */
+  public onToggleVmBackUp(collapse: boolean): void {
+    this.vmBackupAddOn.selected = !collapse;
+    this.vmBackupAddOn.typeId = OrderIdType.CreateAddOnVmBackup;
+    this.vmBackupAddOn.referenceId = ADDON_VM_BACKUP_ID;
+    this.notifyDataChange();
+  }
+
+  /**
+   * Event that emits when vm backup item has been changed
+   * @param vmBackUpContent content to be set
+   */
+  public onChangeVmBackUpDetails(vmBackUpDetails: McsServerCreateAddOnVmBackup): void {
+    this.vmBackupAddOn.properties = vmBackUpDetails;
+    this.notifyDataChange();
+  }
+
+  /**
+   * Returns true if the VM Backup Add On details is valid, false otherwise
+   */
+  public vmBackupAddOnValid(): boolean {
+    return this.vmBackupAddOn.selected ?
+      getSafeProperty(this._fgAddOnBackupVm, (obj) => obj.isValid(), false) :
+      !this.vmBackupAddOn.selected;
+  }
+
+  /**
+   * Event that emits when server backup is selected
+   * @param collapse Collapse flag of the panel
+   */
+  public onToggleServerBackUp(collapse: boolean): void {
+    this.serverBackupAddOn.selected = !collapse;
+    this.serverBackupAddOn.typeId = OrderIdType.CreateAddOnServerBackup;
+    this.serverBackupAddOn.referenceId = ADDON_SERVER_BACKUP_ID;
+    this.notifyDataChange();
+  }
+
+  /**
+   * Event that emits when server backup item has been changed
+   * @param vmBackUpContent content to be set
+   */
+  public onChangeServerBackUpDetails(serverBackUpDetails: McsServerCreateAddOnServerBackup): void {
+    this.serverBackupAddOn.properties = serverBackUpDetails;
+    this.notifyDataChange();
+  }
+
+  /**
+   * Returns true if the VM Backup Add On details is valid, false otherwise
+   */
+  public serverBackupAddOnValid(): boolean {
+    return this.serverBackupAddOn.selected ?
+      getSafeProperty(this._fgAddOnBackupServer, (obj) => obj.isValid(), false) :
+      !this.serverBackupAddOn.selected;
+  }
+
+  /**
    * Event that emits when antivirus is selected
-   * @param checkboxRef check
+   * @param checkboxRef boolean flag coming from the checkbox
    */
   public onToggleAntiVirus(checkboxRef: any): void {
     this.antiVirusAddOn.selected = checkboxRef.checked;
@@ -123,11 +215,23 @@ export class ServerCreateAddOnsComponent
    */
   public notifyDataChange(): void {
     this.dataChange.next([
+      this.serverBackupAddOn,
+      this.vmBackupAddOn,
       this.antiVirusAddOn,
       this.inviewAddOn,
       this.sqlServerAddOn,
       this.hidsAddOn
     ]);
     this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Get the list of aggregation target that will be used in backup
+   */
+  private _getAggregationTarget(): void {
+    this.aggregationTargets$ = this._apiService.getStorageBackupAggregationTargets()
+      .pipe(
+        map((response) => response && response.collection)
+      );
   }
 }

@@ -23,6 +23,7 @@ export * from './vdc-manage-scale/vdc-manage-scale';
 export * from './server-dialogs/rename-server/rename-server.dialog';
 
 /** Add Ons */
+export * from './addon-backup-vm/addon-backup-vm';
 export * from './addon-inview/addon-inview';
 export * from './addon-sql-server/addon-sql-server';
 export * from './addon-hids/addon-hids';
