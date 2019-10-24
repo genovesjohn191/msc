@@ -71,6 +71,8 @@ export * from './request/mcs-server-create-addon-anti-virus';
 export * from './request/mcs-server-create-addon-sql-server';
 export * from './request/mcs-server-create-addon-inview';
 export * from './request/mcs-server-create-addon-hids';
+export * from './request/mcs-server-create-addon-vm-backup';
+export * from './request/mcs-server-create-addon-server-backup';
 
 export * from './request/mcs-order-create';
 export * from './request/mcs-order-item-create';
@@ -149,6 +151,7 @@ export * from './response/mcs-resource-network';
 export * from './response/mcs-resource-network-ip-address';
 export * from './response/mcs-resource-storage';
 export * from './response/mcs-resource-vapp';
+export * from './response/mcs-storage-backup-aggregation-target';
 export * from './response/mcs-server';
 export * from './response/mcs-server-compute';
 export * from './response/mcs-server-credential';

@@ -311,8 +311,20 @@
 //   @include align-self(center);
 // }
 @mixin align-self ($value) {
+  -moz-align-self: $value;
   -webkit-align-self: $value;
   align-self: $value;
+}
+
+// Flex Justify-self
+// Usage:
+// .mcs-flex-self {
+//   @include justify-self(center);
+// }
+@mixin justify-self ($value) {
+  -moz-justify-self: $value;
+  -webkit-justify-self: $value;
+  justify-self: $value;
 }
 
 // Textbox Highlight
