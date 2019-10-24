@@ -52,6 +52,7 @@ const DEFAULT_CPU_STEP = 2;
 const DEFAULT_MIN_MEMORY = 2;
 const DEFAULT_MIN_MEMORY_WIN_MANAGED = 4;
 const DEFAULT_MIN_CPU = 2;
+const DEFAULT_MAX_CPU = 24;
 
 @Component({
   selector: 'mcs-server-manage-scale',
@@ -221,7 +222,8 @@ export class ServerManageScaleComponent
    */
   public get resourceAvailableCpu(): number {
     let resourceCpu = getSafeProperty(this.resource, (obj) => obj.compute.cpuAvailable, 0);
-    return isNullOrEmpty(this.serverCompute) ? resourceCpu : resourceCpu + this.serverCpuUsed;
+    let calculatedCpu = isNullOrEmpty(this.serverCompute) ? resourceCpu : resourceCpu + this.serverCpuUsed;
+    return Math.min(calculatedCpu, DEFAULT_MAX_CPU);
   }
 
   /**
