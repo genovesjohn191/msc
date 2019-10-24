@@ -14,7 +14,7 @@
             [placeholder]="'serverShared.addOnBackup.aggregation.placeholder' | translate"
             [formControl]="fcAggregation">
 
-            <mcs-option *ngFor="let aggregation of aggregationOptions$ | async" [value]="aggregation.retentionPeriod">
+            <mcs-option *ngFor="let aggregation of aggregationOptions" [value]="aggregation.retentionPeriod">
               {{ 'serverShared.addOnBackup.aggregation.optionLabel' | translate: {serviceId: aggregation.serviceId, retentionPeriod: aggregation.retentionPeriod} }}
             </mcs-option>
             <mcs-option [value]="'none'">
@@ -46,7 +46,7 @@
         [placeholder]="'serverShared.addOnBackup.retention.placeholder' | translate"
         [formControl]="fcRetention">
 
-        <mcs-option *ngFor="let retention of retentionOptions | async" [value]="retention.value">
+        <mcs-option *ngFor="let retention of retentionOptions" [value]="retention.value">
           {{ retention.text }}
         </mcs-option>
       </mcs-select>
@@ -66,7 +66,7 @@
         [placeholder]="'serverShared.addOnBackup.inviewLevel.placeholder' | translate"
         [formControl]="fcInview">
 
-        <mcs-option *ngFor="let inviewLevel of inviewLevelOptions | async" [value]="inviewLevel.value">
+        <mcs-option *ngFor="let inviewLevel of inviewLevelOptions" [value]="inviewLevel.value">
           {{ inviewLevel.text }}
         </mcs-option>
       </mcs-select>
@@ -86,7 +86,7 @@
         mcsEventLabel="server-create-addon-backup-schedule-select"
         [formControl]="fcBackupSchedule">
 
-        <mcs-option *ngFor="let scheduleBackup of scheduleBackupOptions | async" [value]="scheduleBackup.value">
+        <mcs-option *ngFor="let scheduleBackup of scheduleBackupOptions" [value]="scheduleBackup.value">
           {{ scheduleBackup.text }}
         </mcs-option>
       </mcs-select>
