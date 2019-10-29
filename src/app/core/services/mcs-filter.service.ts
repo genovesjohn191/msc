@@ -4,7 +4,8 @@ import {
   isNullOrEmpty,
   convertJsonToMapObject,
   convertMapToJsonObject,
-  compareArrays
+  compareArrays,
+  createObject
 } from '@app/utilities';
 import { McsStorageService } from '../services/mcs-storage.service';
 
@@ -22,7 +23,7 @@ export class McsFilterService {
    * Gets the filter settings based on the key
    * @param key Key to be obtained from the settings or saved settings
    */
-  public getFilterSettings(key: string): Map<string, McsFilterInfo> {
+  public getFilterSettings(key: string): McsFilterInfo[] {
     let savedSettings = this._getSavedSettings(key);
     let defaultSettings = this._getDefaultSettings(key);
 
@@ -47,16 +48,17 @@ export class McsFilterService {
    * Gets saved settings
    * @param key Key to be obtained
    */
-  private _getSavedSettings(key: string): Map<string, McsFilterInfo> {
+  private _getSavedSettings(key: string): McsFilterInfo[] {
     let filterItemsJson = this._storageService.getItem<any>(key);
-    return filterItemsJson && convertJsonToMapObject(filterItemsJson);
+    let filterItemsMap = filterItemsJson && convertJsonToMapObject(filterItemsJson);
+    return this._convertMapFiltersToArray(filterItemsMap);
   }
 
   /**
    * Gets the default settings
    * @param key Key to be obtained
    */
-  private _getDefaultSettings(key: string): Map<string, McsFilterInfo> {
+  private _getDefaultSettings(key: string): McsFilterInfo[] {
     let value: any = null;
 
     if (this._filters.has(key)) {
@@ -65,7 +67,24 @@ export class McsFilterService {
       value = this._config[key];
       this._filters.set(key, value);
     }
-    return convertJsonToMapObject(value);
+
+    let mapFilters = value && convertJsonToMapObject(value);
+    return this._convertMapFiltersToArray(mapFilters);
+  }
+
+  private _convertMapFiltersToArray(mapFilters: any): McsFilterInfo[] {
+    if (isNullOrEmpty(mapFilters)) { return; }
+    let convertedFilters = new Array<McsFilterInfo>();
+
+    mapFilters.forEach((filterValue, filterKey) => {
+      convertedFilters.push(
+        createObject<any, McsFilterInfo>(McsFilterInfo, {
+          ...filterValue,
+          id: filterKey
+        })
+      );
+    });
+    return convertedFilters;
   }
 
   /**

@@ -18,7 +18,9 @@ import {
 import { TranslateService } from '@ngx-translate/core';
 import {
   McsTableListingBase,
-  McsNavigationService
+  McsNavigationService,
+  IMcsColumnManager,
+  McsAccessControlService
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -34,7 +36,8 @@ import {
   McsServerDelete,
   McsQueryParam,
   McsApiCollection,
-  McsServerPowerstateCommand
+  McsServerPowerstateCommand,
+  McsFilterInfo
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -51,10 +54,40 @@ import { ServersService } from './servers.service';
 })
 
 export class ServersComponent extends McsTableListingBase<McsServer>
-  implements OnInit, OnDestroy {
+  implements OnInit, OnDestroy, IMcsColumnManager {
 
   public hasCreateResources: boolean;
   public hasManagedResource: boolean;
+  private _columnPermissionMatrix = new Map<string, () => boolean>();
+
+  public constructor(
+    _injector: Injector,
+    _changeDetectorRef: ChangeDetectorRef,
+    private _accessControlService: McsAccessControlService,
+    private _navigationService: McsNavigationService,
+    private _translateService: TranslateService,
+    private _apiService: McsApiService,
+    private _dialogService: DialogService,
+    private _serversService: ServersService
+  ) {
+    super(_injector, _changeDetectorRef, {
+      dataChangeEvent: McsEvent.dataChangeServers,
+      dataClearEvent: McsEvent.dataClearServers
+    });
+    this._createColumnMatrix();
+  }
+
+  public ngOnInit() {
+    this._setResourcesFlag();
+  }
+
+  public ngOnDestroy() {
+    this.dispose();
+  }
+
+  public get routeKeyEnum(): any {
+    return RouteKey;
+  }
 
   public get serverServiceTypeText(): any {
     return serviceTypeText;
@@ -94,33 +127,6 @@ export class ServersComponent extends McsTableListingBase<McsServer>
 
   public get resumeIconKey(): string {
     return CommonDefinition.ASSETS_SVG_RESUME;
-  }
-
-  public constructor(
-    _injector: Injector,
-    _changeDetectorRef: ChangeDetectorRef,
-    private _navigationService: McsNavigationService,
-    private _translateService: TranslateService,
-    private _apiService: McsApiService,
-    private _dialogService: DialogService,
-    private _serversService: ServersService
-  ) {
-    super(_injector, _changeDetectorRef, {
-      dataChangeEvent: McsEvent.dataChangeServers,
-      dataClearEvent: McsEvent.dataClearServers
-    });
-  }
-
-  public ngOnInit() {
-    this._setResourcesFlag();
-  }
-
-  public ngOnDestroy() {
-    this.dispose();
-  }
-
-  public get routeKeyEnum(): any {
-    return RouteKey;
   }
 
   /**
@@ -296,6 +302,15 @@ export class ServersComponent extends McsTableListingBase<McsServer>
   }
 
   /**
+   * Returns true when the column is included in the display
+   */
+  public includeColumn(column: McsFilterInfo): boolean {
+    if (isNullOrEmpty(this._accessControlService)) { return true; }
+    let columnFunc = this._columnPermissionMatrix.get(column.id);
+    return columnFunc ? columnFunc() : true;
+  }
+
+  /**
    * Navigate to server resouce page
    * @param server Server to be used as the data of the page
    */
@@ -347,5 +362,22 @@ export class ServersComponent extends McsTableListingBase<McsServer>
       })
     );
     managedResources.subscribe(() => createServerResources.subscribe());
+  }
+
+  /**
+   * Creates the column permission matrix
+   */
+  private _createColumnMatrix(): void {
+    this._columnPermissionMatrix.set('select',
+      () => this._accessControlService.hasPermission(
+        ['DedicatedVmPowerStateEdit', 'CloudVmPowerStateEdit']
+      )
+    );
+
+    this._columnPermissionMatrix.set('managementIp',
+      () => this._accessControlService.hasPermission(
+        ['DedicatedVmManagementIpView', 'CloudVmManagementIpView']
+      )
+    );
   }
 }

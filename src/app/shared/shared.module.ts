@@ -11,7 +11,7 @@ import { RippleModule } from './ripple/ripple.module';
 import { GridModule } from './grid/grid.module';
 import { ButtonModule } from './button/button.module';
 import { CheckboxModule } from './checkbox/checkbox.module';
-import { FilterSelectorModule } from './filter-selector/filter-selector.module';
+import { ColumnFilterModule } from './column-filter/column-filter.module';
 import { PopoverModule } from './popover/popover.module';
 import { IconModule } from './icon/icon.module';
 import { AlertModule } from './alert/alert.module';
@@ -85,7 +85,7 @@ import { PricingCalculatorModule } from './pricing-calculator/pricing-calculator
     GridModule,
     ButtonModule,
     CheckboxModule,
-    FilterSelectorModule,
+    ColumnFilterModule,
     TableModule,
     ListPanelModule,
     LoaderModule,
@@ -152,7 +152,7 @@ import { PricingCalculatorModule } from './pricing-calculator/pricing-calculator
     GridModule,
     ButtonModule,
     CheckboxModule,
-    FilterSelectorModule,
+    ColumnFilterModule,
     TableModule,
     ListPanelModule,
     LoaderModule,

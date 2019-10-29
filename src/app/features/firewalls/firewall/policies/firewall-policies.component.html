@@ -15,8 +15,8 @@
             padding="narrow" [content]="filterSelectorTemplate" mcsCursor="pointer">
           </mcs-icon>
           <ng-template #filterSelectorTemplate>
-            <mcs-filter-selector [key]="columnSettingsKey"
-              (filtersChange)="updateColumnSettings($event)"></mcs-filter-selector>
+            <mcs-column-filter [filters]="dataFilters"
+              (dataChange)="onColumnFilterChange($event)"></mcs-column-filter>
           </ng-template>
 
           <div mcsAlign="end" hidden-small>

@@ -8,7 +8,8 @@ import {
 } from '@angular/core';
 import {
   CoreRoutes,
-  McsNavigationService
+  McsNavigationService,
+  McsAccessControlService
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -61,6 +62,12 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
     return this.resourceDetailLabelMap.get(platform);
   }
 
+  public get canCreateNewServer(): boolean {
+    let isSelfManaged = getSafeProperty(this.selectedVdc, (obj) => obj.isSelfManaged);
+    let requiredPermissions = isSelfManaged ? ['CloudVmEdit'] : ['OrderEdit', 'OrderApprove'];
+    return this._accessControlService.hasPermission(requiredPermissions);
+  }
+
   /**
    * Returns true if there is a storage with low available memory
    */
@@ -89,6 +96,7 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
   constructor(
     _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
+    private _accessControlService: McsAccessControlService,
     private _navigationService: McsNavigationService
   ) {
     super(_injector, _changeDetectorRef);

@@ -7,7 +7,9 @@ import {
 import { Observable } from 'rxjs';
 import {
   McsTableListingBase,
-  McsNavigationService
+  McsNavigationService,
+  IMcsColumnManager,
+  McsAccessControlService
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -17,7 +19,8 @@ import {
   RouteKey,
   McsFirewall,
   McsQueryParam,
-  McsApiCollection
+  McsApiCollection,
+  McsFilterInfo
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { McsEvent } from '@app/events';
@@ -28,15 +31,21 @@ import { McsEvent } from '@app/events';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class FirewallsComponent extends McsTableListingBase<McsFirewall> {
+export class FirewallsComponent extends McsTableListingBase<McsFirewall> implements IMcsColumnManager {
+
+  private _columnPermissionMatrix = new Map<string, () => boolean>();
 
   public constructor(
     _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
+    private _accessControlService: McsAccessControlService,
     private _navigationService: McsNavigationService,
     private _apiService: McsApiService
   ) {
-    super(_injector, _changeDetectorRef, { dataChangeEvent: McsEvent.dataChangeFirewalls });
+    super(_injector, _changeDetectorRef, {
+      dataChangeEvent: McsEvent.dataChangeFirewalls
+    });
+    this._createColumnMatrix();
   }
 
   public get routeKeyEnum(): any {
@@ -64,10 +73,30 @@ export class FirewallsComponent extends McsTableListingBase<McsFirewall> {
   }
 
   /**
+   * Returns true when the column is included in the display
+   */
+  public includeColumn(column: McsFilterInfo): boolean {
+    if (isNullOrEmpty(this._accessControlService)) { return true; }
+    let columnFunc = this._columnPermissionMatrix.get(column.id);
+    return columnFunc ? columnFunc() : true;
+  }
+
+  /**
    * Gets the entity listing based on the context
    * @param query Query to be obtained on the listing
    */
   protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsFirewall>> {
     return this._apiService.getFirewalls(query);
+  }
+
+  /**
+   * Creates the column permission matrix
+   */
+  private _createColumnMatrix(): void {
+    this._columnPermissionMatrix.set('serialNumber',
+      () => this._accessControlService.hasPermission(
+        ['FirewallSerialNumberView']
+      )
+    );
   }
 }

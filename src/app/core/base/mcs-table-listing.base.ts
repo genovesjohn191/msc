@@ -41,6 +41,7 @@ import { McsBrowserService } from '../services/mcs-browser.service';
 import { McsFilterService } from '../services/mcs-filter.service';
 import { McsTableDataSource } from '../data-access/mcs-table-datasource';
 import { McsTableSelection } from '../data-access/mcs-table-selection';
+import { IMcsColumnManager } from '../interfaces/mcs-column-manager.interface';
 
 export interface TableListingConfig<T> {
   dataChangeEvent?: EventBusState<T[]>;
@@ -48,13 +49,14 @@ export interface TableListingConfig<T> {
   allowMultipleSelection?: boolean;
 }
 
-export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy {
+export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy, IMcsColumnManager {
 
   // Table variables
   public selection: McsTableSelection<T>;
   public dataSource: McsTableDataSource<T>;
   public dataColumns: string[] = [];
-  public columnSettings: any;
+  public dataFilters: McsFilterInfo[] = [];
+  public columnSettings: any = {};
 
   protected readonly filterService: McsFilterService;
   protected readonly browserService: McsBrowserService;
@@ -152,14 +154,13 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
   }
 
   /**
-   * Update the column settings based on filtered selectors
-   * and update the data column of the table together
-   * @param columns New column settings
+   * Event that emits when the filter has been changed
+   * @param updatedFilters New column settings
    */
-  public updateColumnSettings(columns: Map<string, McsFilterInfo>): void {
-    if (isNullOrEmpty(columns)) { return; }
-    this._setColumnSettings(columns);
-    this._updateTableColumns(columns);
+  public onColumnFilterChange(updatedFilters: McsFilterInfo[]): void {
+    if (isNullOrEmpty(updatedFilters)) { return; }
+    this._setColumnSettings(updatedFilters);
+    this._updateTableColumns(updatedFilters);
   }
 
   /**
@@ -168,6 +169,14 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
   public retryDatasource(): void {
     if (isNullOrEmpty(this.dataSource)) { return; }
     this._initializeDataSource();
+  }
+
+  /**
+   * Include the column to selectors
+   * @param column Column to be filtered
+   */
+  public includeColumn(_column: McsFilterInfo): boolean {
+    return true;  // noop
   }
 
   public abstract get columnSettingsKey(): string;
@@ -217,9 +226,11 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
    * Initializes data columns
    */
   private _initializeDataColumns(): void {
-    let filterSettings = this.filterService.getFilterSettings(this.columnSettingsKey);
-    this._setColumnSettings(filterSettings);
-    this._updateTableColumns(filterSettings);
+    let savedSettings = this.filterService.getFilterSettings(this.columnSettingsKey);
+    let filteredColumns = savedSettings.filter(this.includeColumn.bind(this));
+
+    this._setColumnSettings(filteredColumns);
+    this._updateTableColumns(filteredColumns);
   }
 
   /**
@@ -248,9 +259,15 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
    * Sets the updated column settings
    * @param filterSettings Updated filter settings to be set
    */
-  private _setColumnSettings(filterSettings: Map<string, McsFilterInfo>): void {
-    this.columnSettings = convertMapToJsonObject(filterSettings);
-    this.dataColumns = Object.keys(this.columnSettings);
+  private _setColumnSettings(filterSettings: McsFilterInfo[]): void {
+    if (isNullOrEmpty(filterSettings)) { return; }
+
+    this.dataColumns = filterSettings.map((filter) => filter.id);
+
+    this.dataFilters = Array.from(filterSettings);
+    this.dataFilters.forEach((dataFilter) => {
+      this.columnSettings[dataFilter.id] = Object.create(dataFilter);
+    });
     this.changeDetectorRef.markForCheck();
   }
 
@@ -258,12 +275,12 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
    * Updates the table columns filter settings
    * @param filterSettings Filter settings to be updated
    */
-  private _updateTableColumns(filterSettings: Map<string, McsFilterInfo>): void {
+  private _updateTableColumns(filterSettings: McsFilterInfo[]): void {
     if (isNullOrEmpty(filterSettings)) { return; }
 
     let displayedColumns: string[] = [];
-    filterSettings.forEach((filter, key) => {
-      if (filter.value) { displayedColumns.push(key); }
+    filterSettings.forEach((filter) => {
+      if (filter.value) { displayedColumns.push(filter.id); }
     });
 
     if (!isNullOrEmpty(this._table)) {

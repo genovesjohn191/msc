@@ -12,7 +12,6 @@ export * from './snack-bar';
 export * from './paginator';
 export * from './search';
 export * from './directives';
-export * from './filter-selector';
 export * from './tree';
 export * from './list-panel';
 export * from './form-message';

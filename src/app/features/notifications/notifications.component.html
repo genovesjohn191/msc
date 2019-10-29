@@ -23,8 +23,8 @@
 
     <!-- Column Filter -->
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'notifications.filterColumn' | translate" offset="medium">
-      <mcs-filter-selector [key]="columnSettingsKey"
-        (filtersChange)="updateColumnSettings($event)"></mcs-filter-selector>
+      <mcs-column-filter [filters]="dataFilters"
+        (dataChange)="onColumnFilterChange($event)"></mcs-column-filter>
     </mcs-left-panel-item>
   </mcs-left-panel>
 
