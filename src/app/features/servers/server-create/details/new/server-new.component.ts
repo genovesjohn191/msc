@@ -35,7 +35,8 @@ import {
   convertGbToMb,
   getSafeProperty,
   unsubscribeSafely,
-  CommonDefinition
+  CommonDefinition,
+  compareStrings
 } from '@app/utilities';
 import {
   CatalogItemType,
@@ -308,7 +309,9 @@ export class ServerNewComponent
     if (isNullOrEmpty(operatingSystems)) { return; }
     let operatingSystemsMap: Map<string, McsServerOperatingSystem[]> = new Map();
 
-    operatingSystems.forEach((operatingSystem) => {
+    operatingSystems.sort(
+      (osA, osB) => compareStrings(osB.name, osA.name)
+    ).forEach((operatingSystem) => {
       if (operatingSystem.serviceType !== this.serviceType) { return; }
       let osVendor = operatingSystem.vendor || DEFAULT_OS_VENDOR;
       let groupedOs: McsServerOperatingSystem[];
