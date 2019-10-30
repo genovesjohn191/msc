@@ -1,7 +1,0 @@
-@import '../../../styles/shared/base';
-
-.filter-selector-wrapper {
-  @include display-flex(column);
-  justify-content: center;
-  @include set-items-interval($space-small);
-}

@@ -1,9 +1,0 @@
-<ng-container *ngFor="let iterator of (filterItemsMap | mcsMapIterable)">
-  <ng-container *ngIf="!isFilterHidden(iterator.key)">
-    <mcs-checkbox [@fadeIn] *ngIf="!iterator.value.exclude"
-      [(ngModel)]="iterator.value.value"
-      (statusChange)="onFilterChange()" mcsId>
-      {{ iterator.value.text }}
-    </mcs-checkbox>
-  </ng-container>
-</ng-container>

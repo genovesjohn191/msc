@@ -85,3 +85,4 @@ export * from './interfaces/mcs-form-group.interface';
 export * from './interfaces/mcs-property.interface';
 export * from './interfaces/mcs-data-change.interface';
 export * from './interfaces/mcs-initializable.interface';
+export * from './interfaces/mcs-column-manager.interface';

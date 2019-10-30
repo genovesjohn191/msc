@@ -43,10 +43,9 @@
 
         <ng-container *mcsAccessControl="['DedicatedVmEdit', 'CloudVmEdit']">
           <ng-container *ngIf="resourceDetailLabels.newServerButtonShown">
-            <mcs-item>
-              <button mcsButton size="small"
+            <mcs-item *ngIf="canCreateNewServer">
+              <button mcsButton size="small" mcsId
                 (click)="createNewServer()"
-                mcsId
                 mcsEventTracker="new-server"
                 mcsEventCategory="vdc"
                 mcsEventLabel="vdc-details-page">

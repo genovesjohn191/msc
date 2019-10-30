@@ -108,8 +108,8 @@
 
     <!-- Column Filter -->
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'servers.filterColumn' | translate" offset="medium">
-      <mcs-filter-selector [key]="columnSettingsKey"
-        (filtersChange)="updateColumnSettings($event)"></mcs-filter-selector>
+      <mcs-column-filter [filters]="dataFilters"
+        (dataChange)="onColumnFilterChange($event)"></mcs-column-filter>
     </mcs-left-panel-item>
   </mcs-left-panel>
 
@@ -123,7 +123,7 @@
       <!-- Table -->
       <mcs-table #table [dataSource]="dataSource">
         <!-- Selection Column -->
-        <ng-container mcsColumnDef="select" *mcsAccessControl="['DedicatedVmPowerStateEdit','CloudVmPowerStateEdit']">
+        <ng-container mcsColumnDef="select">
           <mcs-header-cell *mcsHeaderCellDef
             hidden-small text-center class="action-header-cell">
             <mcs-checkbox (statusChange)="toggleAllServersSelection()"
@@ -209,7 +209,7 @@
         </ng-container>
 
         <!-- Management IP Column -->
-        <ng-container mcsColumnDef="managementIp" *mcsAccessControl="['CloudVmManagementIpView','DedicatedVmManagementIpView']">
+        <ng-container mcsColumnDef="managementIp">
           <mcs-header-cell *mcsHeaderCellDef hidden-small>
             {{ columnSettings.managementIp.text }}
           </mcs-header-cell>
@@ -229,7 +229,7 @@
         </ng-container>
 
         <!-- Service ID Column -->
-        <ng-container mcsColumnDef="serviceId" *ngIf="hasManagedResource">
+        <ng-container mcsColumnDef="serviceId">
           <mcs-header-cell *mcsHeaderCellDef hidden-small>
             {{ columnSettings.serviceId.text }}
           </mcs-header-cell>
