@@ -34,7 +34,9 @@ import {
     }
   ],
   host: {
-    'class': 'checkbox-wrapper'
+    'class': 'checkbox-wrapper',
+    '[class.checked]': 'checked',
+    '[class.indeterminate]': 'indeterminate'
   }
 })
 

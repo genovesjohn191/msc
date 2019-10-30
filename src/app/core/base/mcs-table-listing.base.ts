@@ -227,7 +227,7 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
    */
   private _initializeDataColumns(): void {
     let savedSettings = this.filterService.getFilterSettings(this.columnSettingsKey);
-    let filteredColumns = savedSettings.filter(this.includeColumn.bind(this));
+    let filteredColumns = savedSettings && savedSettings.filter(this.includeColumn.bind(this));
 
     this._setColumnSettings(filteredColumns);
     this._updateTableColumns(filteredColumns);
