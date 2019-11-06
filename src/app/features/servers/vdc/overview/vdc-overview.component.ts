@@ -1,6 +1,5 @@
 import {
   Component,
-  OnInit,
   OnDestroy,
   ChangeDetectorRef,
   ChangeDetectionStrategy,
@@ -23,7 +22,8 @@ import {
   McsResource,
   McsResourceStorage,
   PlatformType,
-  McsExpandResourceStorage
+  McsExpandResourceStorage,
+  McsPermission
 } from '@app/models';
 import { McsEvent } from '@app/events';
 import { VdcDetailsBase } from '../vdc-details.base';
@@ -45,9 +45,25 @@ type ResourceDetailLabels = {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDestroy {
+export class VdcOverviewComponent extends VdcDetailsBase implements OnDestroy {
+  public resourceDetailLabels: ResourceDetailLabels;
 
-  private resourceDetailLabelMap: Map<PlatformType, ResourceDetailLabels>;
+  private _resourceDetailLabelMap: Map<PlatformType, ResourceDetailLabels>;
+  private _lowestStorageCount: number = 0;
+
+  constructor(
+    _injector: Injector,
+    _changeDetectorRef: ChangeDetectorRef,
+    private _accessControlService: McsAccessControlService,
+    private _navigationService: McsNavigationService
+  ) {
+    super(_injector, _changeDetectorRef);
+    this._createResourceDetailLabelMap();
+  }
+
+  public ngOnDestroy(): void {
+    this.dispose();
+  }
 
   public get warningIconKey(): string {
     return CommonDefinition.ASSETS_SVG_WARNING;
@@ -57,22 +73,11 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
     return RouteKey;
   }
 
-  public get resourceDetailLabels(): ResourceDetailLabels {
-    let platform = getSafeProperty(this.selectedVdc, (obj) => obj.platform, PlatformType.VCloud);
-    return this.resourceDetailLabelMap.get(platform);
-  }
-
-  public get canCreateNewServer(): boolean {
-    let isSelfManaged = getSafeProperty(this.selectedVdc, (obj) => obj.isSelfManaged);
-    let requiredPermissions = isSelfManaged ? ['CloudVmEdit'] : ['OrderEdit', 'OrderApprove'];
-    return this._accessControlService.hasPermission(requiredPermissions);
-  }
-
   /**
    * Returns true if there is a storage with low available memory
    */
   public get hasLowStorage(): boolean {
-    let lowStorageCount = this._getLowStorageCount();
+    let lowStorageCount = this._lowestStorageCount;
     return lowStorageCount > 0;
   }
 
@@ -83,42 +88,33 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
     if (!this.hasLowStorage) { return ''; }
 
     let status = this.translateService.instant('serversVdcOverview.shared.storageProfiles.lowStorageSummary');
-    let storageCount = this._getLowStorageCount();
-
+    let storageCount = this._lowestStorageCount;
     status = replacePlaceholder(status, 'storage_profile_number', `${storageCount}`);
 
     let verb = (storageCount === 1) ? 'is' : 'are';
     status = replacePlaceholder(status, 'verb', verb);
-
     return status;
   }
 
-  constructor(
-    _injector: Injector,
-    _changeDetectorRef: ChangeDetectorRef,
-    private _accessControlService: McsAccessControlService,
-    private _navigationService: McsNavigationService
-  ) {
-    super(_injector, _changeDetectorRef);
-    this.selectedVdc = new McsResource();
-    this._createResourceDetailLabelMap();
-  }
-
-  public ngOnInit(): void {
-    this.initialize();
-  }
-
-  public ngOnDestroy(): void {
-    this.dispose();
+  /**
+   * Returns true when vdc can create new server
+   * @param resource Resource to be checked
+   */
+  public canCreateNewServer(resource: McsResource): boolean {
+    let isSelfManaged = getSafeProperty(resource, (obj) => obj.isSelfManaged);
+    let requiredPermissions = isSelfManaged ?
+      [McsPermission.CloudVmEdit] :
+      [McsPermission.OrderEdit, McsPermission.OrderApprove];
+    return this._accessControlService.hasPermission(requiredPermissions);
   }
 
   /**
    * Navigate details tab into given key route
    * @param keyRoute Keyroute where to navigate
    */
-  public navigateVdcDetailTo(keyRoute: RouteKey): void {
+  public navigateVdcDetailTo(resource, keyRoute: RouteKey): void {
     this._navigationService.navigateTo(RouteKey.VdcDetails,
-      [this.selectedVdc.id, CoreRoutes.getNavigationPath(keyRoute)]
+      [resource.id, CoreRoutes.getNavigationPath(keyRoute)]
     );
   }
 
@@ -167,7 +163,6 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
    */
   public isStorageProfileLow(storage: McsResourceStorage): boolean {
     if (isNullOrEmpty(storage)) { return false; }
-
     return this._computeStoragePercentage(storage) > VDC_LOW_CAPACITY_STORAGE_PERCENTAGE;
   }
 
@@ -181,15 +176,17 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
   /**
    * An abstract method that get notified when the vdc selection has been changed
    */
-  protected vdcSelectionChange(): void {
-    // Do the implementation here
+  protected resourceChange(resource: McsResource): void {
+    let platform = getSafeProperty(resource, (obj) => obj.platform, PlatformType.VCloud);
+    this.resourceDetailLabels = this._resourceDetailLabelMap.get(platform);
+    this._lowestStorageCount = this._getLowStorageCount(resource);
+    this.changeDetectorRef.markForCheck();
   }
 
   /**
    * Initialize the content of resource detail label Map
    */
   private _createResourceDetailLabelMap(): void {
-
     let vcloudLabels: ResourceDetailLabels = {
       propertyTitle: this.translateService.instant('serversVdcOverview.vcloud.properties.title'),
       platformTitle: this.translateService.instant('serversVdcOverview.vcloud.platform.title'),
@@ -197,6 +194,7 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
       platformLink: this.translateService.instant('serversVdcOverview.vcloud.platform.linkLabel'),
       networkDescription: this.translateService.instant('serversVdcOverview.vcloud.network.itemDescription'),
     };
+
     let vcenterLabels: ResourceDetailLabels = {
       propertyTitle: this.translateService.instant('serversVdcOverview.vcenter.properties.title'),
       platformTitle: this.translateService.instant('serversVdcOverview.vcenter.platform.title'),
@@ -204,9 +202,10 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
       platformLink: this.translateService.instant('serversVdcOverview.vcenter.platform.linkLabel'),
       networkDescription: this.translateService.instant('serversVdcOverview.vcenter.network.itemDescription'),
     };
-    this.resourceDetailLabelMap = new Map();
-    this.resourceDetailLabelMap.set(PlatformType.VCloud, vcloudLabels);
-    this.resourceDetailLabelMap.set(PlatformType.VCenter, vcenterLabels);
+
+    this._resourceDetailLabelMap = new Map();
+    this._resourceDetailLabelMap.set(PlatformType.VCloud, vcloudLabels);
+    this._resourceDetailLabelMap.set(PlatformType.VCenter, vcenterLabels);
   }
 
   /**
@@ -222,13 +221,12 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
   /**
    * Get the number of storage that has low remaining memory
    */
-  private _getLowStorageCount(): number {
-    if (isNullOrEmpty(this.selectedVdc.storage)) { return 0; }
-
-    let storages = this.selectedVdc.storage.filter((storage) => {
+  private _getLowStorageCount(resource: McsResource): number {
+    let resourceStorages = getSafeProperty(resource, (obj) => obj.storage) || [];
+    let lowestStorage = resourceStorages.filter((storage) => {
       let storagePercentage = this._computeStoragePercentage(storage);
       return storagePercentage >= VDC_LOW_CAPACITY_STORAGE_PERCENTAGE;
     });
-    return (!isNullOrEmpty(storages)) ? storages.length : 0;
+    return (!isNullOrEmpty(lowestStorage)) ? lowestStorage.length : 0;
   }
 }

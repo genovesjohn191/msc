@@ -46,8 +46,8 @@
       <mcs-header-cell *mcsHeaderCellDef class="action-header-cell">
       </mcs-header-cell>
       <mcs-data-cell *mcsDataCellDef="let row">
-        <mcs-item>
-          <a (click)="navigateToExpandVdcStorage(row)"
+        <mcs-item *ngIf="resource$ | async as resource">
+          <a (click)="navigateToExpandVdcStorage(resource, row)"
             mcsId="navigate-to-expand-vdc-storage"
             mcsEventTracker="expand-vdc-storage-click"
             mcsEventCategory="orders"

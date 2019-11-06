@@ -1,4 +1,4 @@
-<mcs-grid>
+<mcs-grid *ngIf="resource$ | async as resource">
   <mcs-grid-row>
     <!-- VDC Properties -->
     <mcs-grid-column sizeSm="12">
@@ -9,21 +9,21 @@
 
         <mcs-item>
           <span>{{ 'serversVdcOverview.shared.properties.serviceType' | translate }}:</span>
-          <span [innerHTML]="selectedVdc?.serviceTypeLabel | mcsDataLabel"></span>
+          <span [innerHTML]="resource?.serviceTypeLabel | mcsDataLabel"></span>
         </mcs-item>
 
         <mcs-item>
           <span>{{ 'serversVdcOverview.shared.properties.zone' | translate }}:</span>
-          <span [innerHTML]="selectedVdc?.availabilityZone | mcsDataLabel"></span>
+          <span [innerHTML]="resource?.availabilityZone | mcsDataLabel"></span>
         </mcs-item>
 
         <mcs-item>
           <span>{{ 'serversVdcOverview.shared.properties.configuration' | translate }}:</span>
-          <span [innerHTML]="selectedVdc?.compute?.memoryLimitMB | mcsDataSize: 'MB'"></span>
+          <span [innerHTML]="resource?.compute?.memoryLimitMB | mcsDataSize: 'MB'"></span>
           <span>/</span>
-          <span [innerHTML]="selectedVdc?.compute?.cpuLimitMBLabel | mcsDataLabel"></span>
+          <span [innerHTML]="resource?.compute?.cpuLimitMBLabel | mcsDataLabel"></span>
           <ng-container *mcsAccessControl="['OrderEdit']; feature: 'EnableOrderingVdcComputeScale'">
-            <a (click)="scaleVdc(selectedVdc)"
+            <a (click)="scaleVdc(resource)"
               mcsId="scale-vdc"
               mcsEventTracker="vdc-option"
               mcsEventCategory="vdc"
@@ -43,7 +43,7 @@
 
         <ng-container *mcsAccessControl="['DedicatedVmEdit', 'CloudVmEdit']">
           <ng-container *ngIf="resourceDetailLabels.newServerButtonShown">
-            <mcs-item *ngIf="canCreateNewServer">
+            <mcs-item *ngIf="canCreateNewServer(resource)">
               <button mcsButton size="small" mcsId
                 (click)="createNewServer()"
                 mcsEventTracker="new-server"
@@ -54,8 +54,8 @@
             </mcs-item>
           </ng-container>
         </ng-container>
-        <mcs-item *ngIf="selectedVdc.portalUrl">
-          <a [href]="selectedVdc.portalUrl" target="_blank"
+        <mcs-item *ngIf="resource.portalUrl">
+          <a [href]="resource.portalUrl" target="_blank"
             mcsId
             mcsEventTracker="view-in-vcloud"
             mcsEventCategory="vdc"
@@ -76,7 +76,7 @@
 
         <mcs-accordion [multi]="true">
           <mcs-accordion-panel
-            *ngFor="let network of selectedVdc.networks; let i = index"
+            *ngFor="let network of resource.networks; let i = index"
             [expanded]="i === 0">
 
             <mcs-accordion-panel-header mcsPanelHeaderDef>{{ network.name }}</mcs-accordion-panel-header>
@@ -97,7 +97,7 @@
           <mcs-item>
             <mcs-icon *ngIf="hasLowStorage" [key]="warningIconKey"></mcs-icon>
             <h2>{{ 'serversVdcOverview.shared.storageProfiles.title' | translate }}</h2>
-            <a (click)="navigateVdcDetailTo(routeKeyEnum.VdcDetailsStorage)"
+            <a (click)="navigateVdcDetailTo(resource, routeKeyEnum.VdcDetailsStorage)"
               mcsId="navigate-to-storage"
               mcsEventTracker="navigate-to-storage"
               mcsEventCategory="vdc"
@@ -111,7 +111,7 @@
         <section>
           <mcs-item *ngIf="hasLowStorage">
             <span>{{ storageSummary }}</span>
-            <a (click)="navigateToExpandVdcStorage(selectedVdc)"
+            <a (click)="navigateToExpandVdcStorage(resource)"
               *mcsAccessControl="['OrderEdit']; feature: 'EnableOrderingVdcStorageExpand'"
               mcsId="navigate-to-expand-vdc-storage"
               mcsEventTracker="expand-vdc-storage-click"
@@ -122,7 +122,7 @@
           </mcs-item>
           <mcs-accordion [multi]="true">
             <mcs-accordion-panel
-              *ngFor="let storage of selectedVdc.storage; let i = index"
+              *ngFor="let storage of resource.storage; let i = index"
               [expanded]="i === 0">
               <mcs-accordion-panel-header mcsPanelHeaderDef>
                 <mcs-icon size="small" [key]="getStorageStatusIconKey(storage)"></mcs-icon>

@@ -244,7 +244,8 @@
             {{ columnSettings.resource.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
-            <a (click)="navigateToResource(row)"
+            <a [mcsRouterLink]="[routeKeyEnum.VdcDetails, row?.platform?.resourceId]"
+              mcsId mcsStopPropagation
               mcsEventTracker="navigate-to-resource"
               mcsEventCategory="server"
               mcsEventLabel="server-listing-page">
