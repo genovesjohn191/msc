@@ -38,7 +38,9 @@ import {
   McsServerSnapshotDelete,
   McsServerPasswordReset,
   McsServerDelete,
-  McsServerOsUpdatesInspectRequest
+  McsServerOsUpdatesInspectRequest,
+  McsServerBackupVm,
+  McsServerBackupServer
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiServersService } from '../interfaces/mcs-api-servers.interface';
@@ -852,6 +854,46 @@ export class McsApiServersService implements IMcsApiServersService {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
             .deserializeResponse<McsJob>(McsJob, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  /**
+   * Gets the summary of a server's vm backup
+   * @param serverId Server id to where the vm backup will be coming from
+   */
+  public getServerBackupVm(id: string):
+    Observable<McsApiSuccessResponse<McsServerBackupVm>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/servers/${id}/vmbackup`;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsServerBackupVm>(McsServerBackupVm, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  /**
+   * Gets the summary of a server's server backup
+   * @param serverId Server id to where the vm backup will be coming from
+   */
+  public getServerBackupServer(id: string):
+    Observable<McsApiSuccessResponse<McsServerBackupServer>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/servers/${id}/serverbackup`;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsServerBackupServer>(McsServerBackupServer, response);
           return apiResponse;
         })
       );

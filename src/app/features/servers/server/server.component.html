@@ -86,7 +86,7 @@
           <!-- Services Tab -->
           <ng-container *ngIf="server?.isManagedVCloud">
             <mcs-tab [label]="'serverServices.operatingSystemUpdates.label' | translate" id="services"
-              *mcsAccessControl="[]; feature: ['EnableServerOsUpdates','EnableOrderingManagedServerInviewLevelRaise']">
+              *mcsAccessControl="[]; feature: servicesTabFeatureFlag">
             </mcs-tab>
           </ng-container>
 

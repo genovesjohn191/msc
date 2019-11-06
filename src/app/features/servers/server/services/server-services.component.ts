@@ -10,13 +10,15 @@ import { TranslateService } from '@ngx-translate/core';
 import {
   Observable,
   throwError,
-  Subscription
+  Subscription,
+  BehaviorSubject
 } from 'rxjs';
 import {
   tap,
   shareReplay,
   catchError,
-  concatMap
+  concatMap,
+  distinctUntilChanged
 } from 'rxjs/operators';
 import {
   McsDataStatusFactory,
@@ -44,15 +46,17 @@ import {
   McsServerOsUpdatesRequest,
   DataStatus,
   InviewLevel,
-  RouteKey
+  RouteKey,
+  McsServerBackupVm,
+  McsServerBackupServer,
+  ServerServicesView
 } from '@app/models';
 import { FormMessage } from '@app/shared';
 import { McsEvent } from '@app/events';
 import { ServerDetailsBase } from '../server-details.base';
 import {
   OsUpdatesStatusConfiguration,
-  OsUpdatesActionDetails,
-  ServerServicesView
+  OsUpdatesActionDetails
 } from './os-updates-status-configuration';
 
 const OS_UPDATE_TIMEZONE = 'Australia/Sydney';
@@ -69,12 +73,16 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
   public serverServicesView: ServerServicesView;
   public updateStatusConfiguration: OsUpdatesStatusConfiguration;
   public updatesDetails$: Observable<McsServerOsUpdatesDetails>;
+  public serverBackUpVm$: Observable<McsServerBackupVm>;
+  public serverBackUpServer$: Observable<McsServerBackupServer>;
+  public serviceView$: Observable<ServerServicesView>;
   public dataStatusFactory: McsDataStatusFactory<McsServerOsUpdatesDetails>;
   public serverPermission: McsServerPermission;
 
   private _inspectOsUpdateHandler: Subscription;
   private _applyOsUpdateHandler: Subscription;
   private _onRaiseInviewHandler: Subscription;
+  private _serviceViewChange = new BehaviorSubject<ServerServicesView>(ServerServicesView.Default);
   private _updateStartedDate: Date;
   private _raiseInviewInProgress: boolean = false;
   private _inviewLabelMap: Map<InviewLevel, string>;
@@ -99,6 +107,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
   public ngOnInit() {
     this._populateInviewMap();
     this._registerEvents();
+    this._getServiceView();
   }
 
   public ngOnDestroy() {
@@ -194,8 +203,8 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
    * Sets the view type of server services
    * @param viewMode View mode to be set as displayed
    */
-  public setViewMode(viewMode: ServerServicesView) {
-    this.serverServicesView = viewMode;
+  public setViewMode(serviceView: ServerServicesView) {
+    this._serviceViewChange.next(serviceView);
     this._changeDetectorRef.markForCheck();
   }
 
@@ -204,7 +213,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
    * @param actionDetails includes the request data and the server reference
    */
   public onSaveSchedule(actionDetails: OsUpdatesActionDetails): void {
-    this.serverServicesView = ServerServicesView.Default;
+    this._serviceViewChange.next(ServerServicesView.Default);
     this._saveSchedule(actionDetails.server, actionDetails.requestData).pipe(
       tap(() => {
         this.refreshServerResource();
@@ -217,7 +226,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
    * @param actionDetails includes the request data and the server reference
    */
   public onDeleteSchedule(actionDetails: OsUpdatesActionDetails): void {
-    this.serverServicesView = ServerServicesView.Default;
+    this._serviceViewChange.next(ServerServicesView.Default);
     this._deleteSchedule(actionDetails.server).pipe(
       tap(() => {
         this.refreshServerResource();
@@ -230,7 +239,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
    * @param actionDetails includes the request data and the server reference
    */
   public onApplyUpdates(actionDetails: OsUpdatesActionDetails): void {
-    this.serverServicesView = ServerServicesView.Default;
+    this._serviceViewChange.next(ServerServicesView.Default);
     this._applyUpdates(actionDetails.server, actionDetails.requestData).subscribe();
   }
 
@@ -311,13 +320,22 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
   }
 
   /**
+   * Routes the user to the corresponding service view
+   */
+  public onViewChange(serviceView: ServerServicesView): void {
+    this._serviceViewChange.next(serviceView);
+  }
+
+  /**
    * Event that emits when the selected server has been changed
    * @param server Server details of the selected record
    */
   protected serverChange(server: McsServer): void {
-    this.serverServicesView = ServerServicesView.Default;
+    this._serviceViewChange.next(ServerServicesView.Default);
     this.serverPermission = new McsServerPermission(server);
     this._getServerUpdateDetails(server.id);
+    this._getServerBackupVm(server.id);
+    this._getServerBackupServer(server.id);
   }
 
   /**
@@ -361,6 +379,15 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
     );
     this._inviewLabelMap.set(
       InviewLevel.Premium, this._translateService.instant('serverServices.inview.inviewLevelDescription.premium')
+    );
+  }
+
+  /**
+   * Returns the selected server as an observable
+   */
+  private _getServiceView(): void {
+    this.serviceView$ = this._serviceViewChange.asObservable().pipe(
+      distinctUntilChanged()
     );
   }
 
@@ -518,5 +545,21 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
         });
       })
     );
+  }
+
+  /**
+   * Get the vm backup summary of the server
+   * @param id selected server id
+   */
+  private _getServerBackupVm(id: string): void {
+    this.serverBackUpVm$ = this.apiService.getServerBackupVm(id);
+  }
+
+  /**
+   * Get the server backup summary of the server
+   * @param id selected server id
+   */
+  private _getServerBackupServer(id: string): void {
+    this.serverBackUpServer$ = this.apiService.getServerBackupServer(id);
   }
 }

@@ -1,0 +1,33 @@
+<mcs-presentation-panel>
+  <ng-container mcsPresentationPanelHeader>
+    <h2>{{ 'serverServices.serverBackup.title' | translate }}</h2>
+  </ng-container>
+
+  <mcs-section>
+    <mcs-item orientation="block">
+      <mcs-item>
+        <mcs-icon [key]="statusIcon" size="small" mcsId="backup-server-status-icon"></mcs-icon>
+        <div>
+          <span mcsId="backup-server-status-label">{{ statusLabel }}</span><br />
+          <small read-only>
+            <mcs-item orientation="inline">
+              <span mcsId="backup-server-status-sublabel">
+                {{ statusSublabel }}
+              </span>
+              <!-- TODO: to be added when the details view is ready -->
+              <!-- <ng-container *ngIf="statusDetailsLinkFlag">
+                <a mcsId="backup-server-status-details-link"
+                  mcsEventTracker="backup-server-status-details-link-click"
+                  mcsEventCategory="server"
+                  mcsEventLabel="backup-server-status-details-view"
+                  (click)="changeView()">
+                  {{ 'serverServices.serverBackup.detailsLink' | translate }}
+                </a>
+              </ng-container> -->
+            </mcs-item>
+          </small>
+        </div>
+      </mcs-item>
+    </mcs-item>
+  </mcs-section>
+</mcs-presentation-panel>

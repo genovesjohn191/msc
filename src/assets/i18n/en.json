@@ -523,6 +523,14 @@
       },
       "goToinviewButtonLabel": "Go to InView",
       "raiseinviewButtonLabel": "Raise InView Level"
+    },
+    "vmBackup": {
+      "title": "VM Backup",
+      "detailsLink": "See Details"
+    },
+    "serverBackup": {
+      "title": "Server Backup",
+      "detailsLink": "See Details"
     }
   },
   "serverServicesOsUpdatesApplyNow": {
@@ -1598,6 +1606,8 @@
     "createServer": "Something went wrong while creating your server. Please try again.",
     "cloneServer": "Something went wrong while cloning your server. Please try again.",
     "deleteServer": "Something went wrong while deleting your server. Please try again.",
+    "getServerBackupVm": "Something went wrong while retrieving your vm backup for your server. Please try again.",
+    "getServerBackupServer": "Something went wrong while retrieving your server backup for your server. Please try again.",
     "getStorageBackupAggregationTargets": "Something went wrong while retrieving your storage backup aggregation types. Please try again.",
     "resetServerPassword": "Something went wrong while resetting the password for your server. Please try again.",
     "updateServerStorage": "Something went wrong while expanding your disk. Please try again.",

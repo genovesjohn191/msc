@@ -4,7 +4,8 @@ import {
 } from '@angular/core';
 import {
   Observable,
-  throwError
+  throwError,
+  of
 } from 'rxjs';
 import {
   map,
@@ -97,7 +98,10 @@ import {
   EntityRequester,
   McsServerOsUpdatesInspectRequest,
   McsOrderAvailable,
-  McsStorageBackUpAggregationTarget
+  McsStorageBackUpAggregationTarget,
+  McsServerBackupVm,
+  McsServerBackupServer,
+  BackupStatus
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -819,6 +823,36 @@ export class McsApiService {
       }),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
+  }
+
+  public getServerBackupVm(id: string): Observable<McsServerBackupVm> {
+    // return this._serversApi.getServerBackupVm(id).pipe(
+    //   catchError((error) => this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getServerBackupVm'))),
+    //   map((response) => getSafeProperty(response, (obj) => obj.content))
+    // );
+
+    let backup = new McsServerBackupVm();
+    backup.provisioned = true;
+    backup.startTime = '10:00 AM';
+    backup.lastBackupAttempt = '10/10/19';
+    backup.status = BackupStatus.Successful;
+
+    return of(backup);
+  }
+
+  public getServerBackupServer(id: string): Observable<McsServerBackupServer> {
+    // return this._serversApi.getServerBackupServer(id).pipe(
+    //   catchError((error) => this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getServerBackupServer'))),
+    //   map((response) => getSafeProperty(response, (obj) => obj.content))
+    // );
+
+    let backup = new McsServerBackupServer();
+    backup.provisioned = true;
+    backup.startTime = '10:00 AM';
+    backup.lastBackupAttempt = '10/10/19';
+    backup.status = BackupStatus.Successful;
+
+    return of(backup);
   }
 
   public getStorageBackupAggregationTargets(): Observable<McsApiCollection<McsStorageBackUpAggregationTarget>> {

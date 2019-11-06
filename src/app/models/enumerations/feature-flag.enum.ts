@@ -19,11 +19,13 @@ export enum McsFeatureFlag {
   DedicatedVmStorageView = 'EnableDedicatedVmStorageView',
 
   Ordering = 'EnableOrdering',
+  OrderingSqlProvision = 'EnableOrderingSqlProvision',
+  OrderingAddonServerBackup = 'EnableOrderingAddonServerBackup',
+  OrderingAddonVmBackup = 'EnableOrderingAddonVmBackup',
   OrderingManagedServerCreate = 'EnableOrderingManagedServerCreate',
   OrderingManagedServerScale = 'EnableOrderingManagedServerScale',
   OrderingVdcStorageExpand = 'EnableOrderingVdcStorageExpand',
   OrderingVdcStorageProvision = 'EnableOrderingVdcStorageProvision',
-  OrderingSqlProvision = 'EnableOrderingSqlProvision',
   OrderingManagedServerInviewLevelRaise = 'EnableOrderingManagedServerInviewLevelRaise',
 
 }
