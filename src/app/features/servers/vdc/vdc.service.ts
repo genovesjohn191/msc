@@ -1,25 +1,31 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { isNullOrEmpty } from '@app/utilities';
+import {
+  BehaviorSubject,
+  Observable
+} from 'rxjs';
+import { distinctUntilChanged } from 'rxjs/operators';
 import { McsResource } from '@app/models';
 
 @Injectable()
 export class VdcService {
-  public selectedVdcStream: BehaviorSubject<McsResource>;
   private _resourceId: string;
+  private _resourceDetailsChange = new BehaviorSubject<McsResource>(undefined);
 
-  constructor() {
-    this.selectedVdcStream = new BehaviorSubject<McsResource>(undefined);
+  /**
+   * Returns the resource details of the VDC
+   */
+  public getResourceDetails(): Observable<McsResource> {
+    return this._resourceDetailsChange.asObservable().pipe(
+      distinctUntilChanged()
+    );
   }
 
   /**
-   * This will update the selected VDC stream
-   *
-   * @param selectedVdc Selected VDC
+   * Sets the resource details
+   * @param resource Resource details to be set
    */
-  public setSelectedVdc(selectedVdc: McsResource): void {
-    if (isNullOrEmpty(selectedVdc)) { return; }
-    this.selectedVdcStream.next(selectedVdc);
+  public setResourceDetails(resource: McsResource): void {
+    this._resourceDetailsChange.next(resource);
   }
 
   /**

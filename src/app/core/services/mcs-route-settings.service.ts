@@ -1,18 +1,10 @@
 import { Injectable } from '@angular/core';
-import {
-  Router,
-  RouteConfigLoadEnd,
-  Route
-} from '@angular/router';
+import { Route } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import {
   Subscription,
   Subject
 } from 'rxjs';
-import {
-  takeUntil,
-  filter
-} from 'rxjs/operators';
 import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import {
   McsRouteInfo,
@@ -40,7 +32,6 @@ export class McsRouteSettingsService implements McsDisposable {
   private _destroySubject = new Subject<void>();
 
   constructor(
-    private _router: Router,
     private _titleService: Title,
     private _eventDispatcher: EventBusDispatcherService,
     private _errorHandlerService: McsErrorHandlerService,
@@ -48,8 +39,6 @@ export class McsRouteSettingsService implements McsDisposable {
     private _accessControlService: McsAccessControlService,
     private _authenticationService: McsAuthenticationService
   ) {
-    this._initializeMainRoutes();
-    this._initializeLazyRoutes();
     this._registerEvents();
   }
 
@@ -160,32 +149,6 @@ export class McsRouteSettingsService implements McsDisposable {
    */
   private _navigateToNotFoundPage() {
     this._errorHandlerService.redirectToErrorPage(HttpStatusCode.NotFound);
-  }
-
-  /**
-   * Initializes and reset the main routes configuration
-   */
-  private _initializeMainRoutes(): void {
-    this._updateChildrenRoutePath(this._router.config);
-  }
-
-  /**
-   * Initializes the lazy routes module (pre loaded modules)
-   */
-  private _initializeLazyRoutes(): void {
-    this._router.events.pipe(
-      takeUntil(this._destroySubject),
-      filter((event) => event instanceof RouteConfigLoadEnd)
-    ).subscribe((eventArgs: RouteConfigLoadEnd) => {
-
-      // TODO: We need to find a way on how to update the
-      // path of the lazy loaded elements because the corresponding event
-      // in angular was not yet implement, so as of now we gonna use the microtasks.
-      Promise.resolve().then(() => {
-        let routes = getSafeProperty(eventArgs, (obj) => (obj.route as any)._loadedConfig.routes);
-        this._updateChildrenRoutePath(routes);
-      });
-    });
   }
 
   /**

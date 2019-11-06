@@ -6,7 +6,14 @@ import {
   ChangeDetectionStrategy,
   Injector
 } from '@angular/core';
-import { map } from 'rxjs/operators';
+import {
+  Observable,
+  of
+} from 'rxjs';
+import {
+  map,
+  tap
+} from 'rxjs/operators';
 import {
   McsTableDataSource,
   McsNavigationService
@@ -20,11 +27,11 @@ import {
 import {
   McsResourceStorage,
   RouteKey,
-  McsExpandResourceStorage
+  McsExpandResourceStorage,
+  McsResource
 } from '@app/models';
 import { McsEvent } from '@app/events';
 import { VdcDetailsBase } from '../vdc-details.base';
-
 
 @Component({
   selector: 'mcs-vdc-storage',
@@ -39,17 +46,7 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnInit, OnDes
   public storageDatasource: McsTableDataSource<McsResourceStorage>;
   public storageColumns: string[];
 
-  public get storageIconKey(): string {
-    return CommonDefinition.ASSETS_SVG_STORAGE;
-  }
-
-  /**
-   * Returns all the resource storages
-   */
-  public get resourceStorages(): McsResourceStorage[] {
-    return !isNullOrEmpty(this.selectedVdc.storage) ?
-      this.selectedVdc.storage : new Array();
-  }
+  private _storageCache: Observable<McsResourceStorage[]>;
 
   constructor(
     _injector: Injector,
@@ -57,11 +54,11 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnInit, OnDes
     private _navigationService: McsNavigationService
   ) {
     super(_injector, _changeDetectorRef);
-    this.storageColumns = new Array();
+    this.storageColumns = [];
+    this.storageDatasource = new McsTableDataSource();
   }
 
   public ngOnInit() {
-    this.initialize();
     this._setDataColumns();
   }
 
@@ -69,13 +66,19 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnInit, OnDes
     this.dispose();
   }
 
+  public get storageIconKey(): string {
+    return CommonDefinition.ASSETS_SVG_STORAGE;
+  }
+
   /**
    * Navigate to Ordering Expand Vdc Storage
    */
-  public navigateToExpandVdcStorage(mcsResourceStorage: McsResourceStorage): void {
+  public navigateToExpandVdcStorage(resourceDetails: McsResource, resourceStorage: McsResourceStorage): void {
     this.eventDispatcher.dispatch(
       McsEvent.vdcStorageExpandSelectedEvent,
-      createObject(McsExpandResourceStorage, { resource: this.selectedVdc, storage: mcsResourceStorage })
+      createObject(McsExpandResourceStorage, {
+        resource: resourceDetails, storage: resourceStorage
+      })
     );
     this._navigationService.navigateTo(RouteKey.OrderVdcStorageExpand);
   }
@@ -83,8 +86,8 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnInit, OnDes
   /**
    * An abstract method that get notified when the vdc selection has been changed
    */
-  protected vdcSelectionChange(): void {
-    this._initializeDataSource();
+  protected resourceChange(resource: McsResource): void {
+    this._updateTableDataSource(resource);
   }
 
   /**
@@ -100,13 +103,19 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnInit, OnDes
   }
 
   /**
-   * Initializes the data source of the nics table
+   * Initializes the data source of the resource storage table
    */
-  private _initializeDataSource(): void {
-    this.storageDatasource = new McsTableDataSource(
-      this.apiService.getResourceStorages(this.selectedVdc.id).pipe(
-        map((response) => getSafeProperty(response, (obj) => obj.collection))
-      )
-    );
+  private _updateTableDataSource(resource: McsResource): void {
+    let storageApiSource: Observable<McsResourceStorage[]>;
+    if (!isNullOrEmpty(resource)) {
+      storageApiSource = this.apiService.getResourceStorages(resource.id).pipe(
+        map((response) => getSafeProperty(response, (obj) => obj.collection)),
+        tap((records) => this._storageCache = of(records))
+      );
+    }
+
+    let tableDataSource = isNullOrEmpty(this._storageCache) ?
+      storageApiSource : this._storageCache;
+    this.storageDatasource.updateDatasource(tableDataSource);
   }
 }

@@ -177,7 +177,7 @@ export class VdcComponent extends McsListViewListingBase<McsVdcGroup> implements
       map((resolver) => getSafeProperty(resolver, (obj) => obj.vdc)),
       tap((vdc) => {
         if (isNullOrEmpty(vdc)) { return; }
-        this._vdcService.setSelectedVdc(vdc);
+        this._vdcService.setResourceDetails(vdc);
       }),
       shareReplay(1)
     );
