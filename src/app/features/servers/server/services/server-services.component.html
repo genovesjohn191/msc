@@ -1,5 +1,5 @@
 <ng-container *ngIf="server$ | async as server">
-  <ng-container [ngSwitch]="serverServicesView">
+  <ng-container [ngSwitch]="serviceView$ | async">
 
     <!-- Default View -->
     <section [@fadeIn] *ngSwitchCase="serverServicesViewOption.Default">
@@ -63,7 +63,7 @@
                         mcsEventTracker="os-updates-update-now-click"
                         mcsEventCategory="server"
                         mcsEventLabel="os-updates-update-now"
-                        (click)="setViewMode(serverServicesViewOption.Unscheduled)"
+                        (click)="setViewMode(serverServicesViewOption.OsUpdateApplyNow)"
                         [disabled]="server.isProcessing">
                         {{ 'serverServices.operatingSystemUpdates.updatesScheduleRunNowLink' | translate }}
                       </button>
@@ -95,7 +95,7 @@
                                     mcsEventCategory="server"
                                     mcsEventLabel="os-updates-configure-schedule"
                                     *mcsAccessControl="serverPermision.vmPatchManagement"
-                                    (click)="setViewMode(serverServicesViewOption.Scheduled)"
+                                    (click)="setViewMode(serverServicesViewOption.OsUpdateSchedule)"
                                     [disabled]="configureButtonDisabled(server)">
                                     {{ 'serverServices.operatingSystemUpdates.updatesScheduleConfigureLink' | translate }}
                                   </a>
@@ -185,20 +185,45 @@
           </ng-container>
         </mcs-section>
       </mcs-presentation-panel>
+
+      <!-- VM Backup -->
+      <ng-container *mcsAccessControl="[]; feature: 'EnableOrderingAddonVmBackup'">
+        <ng-container *ngIf="serverBackUpVm$ | async as vmBackup">
+          <ng-container *ngIf="vmBackup.provisioned">
+            <mcs-service-backup-vm
+              [serverBackupVm]="vmBackup"
+              (viewChange)="onViewChange($event)">
+            </mcs-service-backup-vm>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+
+      <!-- Server Backup -->
+      <ng-container *mcsAccessControl="[]; feature: 'EnableOrderingAddonServerBackup'">
+        <ng-container *ngIf="serverBackUpServer$ | async as serverBackup">
+          <ng-container *ngIf="serverBackup.provisioned">
+            <mcs-service-backup-server
+              [serverBackupServer]="serverBackup"
+              (viewChange)="onViewChange($event)">
+            </mcs-service-backup-server>
+          </ng-container>
+        </ng-container>
+      </ng-container>
     </section>
 
+    <!-- TODO: Align the switch to easily view the cases -->
     <!-- Os Updates Schedule View -->
     <ng-container *mcsAccessControl="serverPermission.vmPatchManagement; feature: 'EnableServerOsUpdates'">
-      <ng-container *ngIf="updatesDetails$ | async as updatesDetails">
+      <ng-container *ngIf="updatesDetails$ | async">
         <!-- Unscheduled / Run Now / Update Now -->
-        <ng-container [@fadeIn] *ngSwitchCase="serverServicesViewOption.Unscheduled">
+        <ng-container [@fadeIn] *ngSwitchCase="serverServicesViewOption.OsUpdateApplyNow">
           <mcs-server-os-updates-apply-now [selectedServer]="server" (applyUpdates)="onApplyUpdates($event)">
             <ng-container mcsViewServicesTab *ngTemplateOutlet="servicesTabView"></ng-container>
           </mcs-server-os-updates-apply-now>
         </ng-container>
 
         <!-- Scheduled Type Later/RunOnce or Recurring -->
-        <ng-container [@fadeIn] *ngSwitchCase="serverServicesViewOption.Scheduled">
+        <ng-container [@fadeIn] *ngSwitchCase="serverServicesViewOption.OsUpdateSchedule">
           <mcs-server-os-updates-schedule [selectedServer]="server" (saveSchedule)="onSaveSchedule($event)"
             (deleteSchedule)="onDeleteSchedule($event)">
             <ng-container mcsViewServicesTab *ngTemplateOutlet="servicesTabView"></ng-container>

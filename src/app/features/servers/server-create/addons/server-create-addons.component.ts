@@ -83,7 +83,6 @@ export class ServerCreateAddOnsComponent
 
   public ngOnDestroy() {
     unsubscribeSafely(this._destroySubject);
-    unsubscribeSafely(this.dataChange);
   }
 
   /**

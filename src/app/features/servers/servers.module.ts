@@ -13,7 +13,9 @@ import {
   ServerBackupsComponent,
   ServerServicesComponent,
   OsUpdatesScheduleComponent,
-  OsUpdatesApplyNowComponent
+  OsUpdatesApplyNowComponent,
+  ServiceBackupServerComponent,
+  ServiceBackupVmComponent
 } from './server/';
 /** Create Servers */
 import {
@@ -47,6 +49,8 @@ import { serversProviders } from './servers.constants';
     ServerServicesComponent,
     OsUpdatesScheduleComponent,
     OsUpdatesApplyNowComponent,
+    ServiceBackupServerComponent,
+    ServiceBackupVmComponent,
     VdcComponent,
     VdcOverviewComponent,
     VdcStorageComponent

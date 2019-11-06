@@ -43,7 +43,8 @@ import {
   McsServerPlatform,
   McsApiCollection,
   McsQueryParam,
-  McsRouteInfo
+  McsRouteInfo,
+  McsFeatureFlag
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { McsEvent } from '@app/events';
@@ -114,6 +115,14 @@ export class ServerComponent extends McsListViewListingBase<McsServerGroup> impl
 
   public get routeKeyEnum(): any {
     return RouteKey;
+  }
+
+  /**
+   * Returns an array of feature flag for services tab
+   */
+  public get servicesTabFeatureFlag(): McsFeatureFlag[] {
+    return [McsFeatureFlag.ServerOsUpdates, McsFeatureFlag.OrderingManagedServerInviewLevelRaise,
+    McsFeatureFlag.OrderingAddonVmBackup, McsFeatureFlag.OrderingAddonServerBackup];
   }
 
   /**
@@ -224,7 +233,7 @@ export class ServerComponent extends McsListViewListingBase<McsServerGroup> impl
   private _registerEvents(): void {
     this._routerHandler = this.eventDispatcher.addEventListener(
       McsEvent.routeChange, (routeInfo: McsRouteInfo) =>
-      this.selectedTabId$ = of(routeInfo && routeInfo.routePath)
+        this.selectedTabId$ = of(routeInfo && routeInfo.routePath)
     );
   }
 }

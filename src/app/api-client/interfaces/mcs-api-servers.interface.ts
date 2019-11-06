@@ -32,6 +32,8 @@ import {
   McsServerSnapshotDelete,
   McsServerPasswordReset,
   McsServerOsUpdatesInspectRequest,
+  McsServerBackupVm,
+  McsServerBackupServer,
 } from '@app/models';
 
 export interface IMcsApiServersService {
@@ -294,4 +296,16 @@ export interface IMcsApiServersService {
    * @param snapshotDelete Delete details of the snapshot
    */
   deleteServerSnapshot(id: string, snapshotDelete: McsServerSnapshotDelete): Observable<McsApiSuccessResponse<McsJob>>;
+
+  /**
+   * Gets the server vm summary
+   * @param serverId Server id to where the vm backup will be coming from
+   */
+  getServerBackupVm(id: string): Observable<McsApiSuccessResponse<McsServerBackupVm>>;
+
+  /**
+   * Gets the server backup summary
+   * @param serverId Server id to where the server backup will be coming from
+   */
+  getServerBackupServer(id: string): Observable<McsApiSuccessResponse<McsServerBackupServer>>;
 }
