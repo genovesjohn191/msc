@@ -54,10 +54,6 @@ export class AppRoutingModule {
 
   private _constructMainRoutes(): void {
     this._updateChildrenRoutePath(appRoutes);
-
-    // We need to reset the configuration of the main routes because
-    // it was declared initially, unlike the lazy loaded module routes
-    this._router.resetConfig(appRoutes);
   }
 
   private _constructLayoutRoutes(): void {
@@ -90,6 +86,10 @@ export class AppRoutingModule {
       this._updateChildrenRoutePath(child.children);
       this._updateRoutePath(child);
     });
+
+    // We need to reset the configuration of the main routes because
+    // it was declared initially, unlike the lazy loaded module routes
+    this._router.resetConfig(appRoutes);
   }
 
   private _updateRoutePath(route: Route): void {
