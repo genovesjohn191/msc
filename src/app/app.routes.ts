@@ -17,11 +17,11 @@ export const appRoutes: Routes = [
   },
   {
     path: '',
-    loadChildren: './page-layout/default-page/default-page.module#DefaultPageModule'
+    loadChildren: './page-layout/system-message-page/system-message-page.module#SystemMessagePageModule',
+    data: { routeId: RouteKey.SystemMessagePage }
   },
   {
     path: '',
-    loadChildren: './page-layout/system-message-page/system-message-page.module#SystemMessagePageModule',
-    data: { routeId: RouteKey.SystemMessagePage }
+    loadChildren: './page-layout/default-page/default-page.module#DefaultPageModule'
   }
 ];
