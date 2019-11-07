@@ -44,6 +44,7 @@ import { McsApiClientConfig } from './api-client/mcs-api-client.config';
 import { McsApiClientModule } from './api-client/mcs-api-client.module';
 
 import '../styles/base.scss';
+import { AppRoutingModule } from './app.routing.module';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', `.json?id=${Guid.newGuid().toString()}`);
@@ -96,7 +97,7 @@ export function loggerConfig(cookieService: McsCookieService): LoggerConfig {
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    RouterModule.forRoot(appRoutes),
+    AppRoutingModule,
 
     TranslateModule.forRoot({
       loader: {

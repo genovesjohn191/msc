@@ -1,9 +1,14 @@
+import { NgModule } from '@angular/core';
+import {
+  Router,
+  Route,
+  RouterModule
+} from '@angular/router';
+
 import {
   isNullOrEmpty,
   getSafeProperty
 } from '@app/utilities';
-import { Route } from '@angular/router';
-
 import { CoreRoutes } from '@app/core';
 import { appRoutes } from '@app/app.routes';
 
@@ -26,7 +31,20 @@ import { systemRoutes } from '@app/features/system/system.constants';
 import { ticketsRoutes } from '@app/features/tickets/tickets.constants';
 import { toolsRoutes } from '@app/features/tools/tools.constants';
 
-class McsRoutesConfig {
+@NgModule({
+  imports: [
+    RouterModule.forRoot(appRoutes)
+  ],
+  exports: [
+    RouterModule
+  ]
+})
+
+export class AppRoutingModule {
+
+  constructor(private _router: Router) {
+    this.initializeRouters();
+  }
 
   public initializeRouters(): void {
     this._constructMainRoutes();
@@ -36,6 +54,10 @@ class McsRoutesConfig {
 
   private _constructMainRoutes(): void {
     this._updateChildrenRoutePath(appRoutes);
+
+    // We need to reset the configuration of the main routes because
+    // it was declared initially, unlike the lazy loaded module routes
+    this._router.resetConfig(appRoutes);
   }
 
   private _constructLayoutRoutes(): void {
@@ -63,6 +85,7 @@ class McsRoutesConfig {
 
   private _updateChildrenRoutePath(children: Route[]): void {
     if (isNullOrEmpty(children)) { return; }
+
     children.forEach((child) => {
       this._updateChildrenRoutePath(child.children);
       this._updateRoutePath(child);
@@ -81,9 +104,4 @@ class McsRoutesConfig {
         route.redirectTo = dynamicPath;
     }
   }
-}
-
-export function resetRoutesConfig(): void {
-  let mcsRouters = new McsRoutesConfig();
-  mcsRouters.initializeRouters();
 }
