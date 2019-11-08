@@ -321,15 +321,11 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
     this.serverPermission = new McsServerPermission(server);
     this._getServerThumbnail(server);
     this._getServerMedia(server);
-  }
 
-  /**
-   * Event that emtis when the resource has been changed
-   * @param resource Resource details of the selected server
-   */
-  protected resourceChange(resource: McsResource): void {
-    this._getResourceCompute(resource);
-    this._getResourceCatalogs(resource);
+    let resourceId = getSafeProperty(server, (obj) => obj.platform.resourceId);
+    this._getResourceCompute(resourceId);
+    this._getResourceCatalogs(resourceId);
+
     this._checkScaleParamMode();
   }
 
@@ -363,17 +359,19 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
   /**
    * Get the server resource compute
    */
-  private _getResourceCompute(resource: McsResource): void {
-    if (isNullOrEmpty(resource)) { return; }
-    this.apiService.getResourceCompute(resource.id).subscribe();
+  private _getResourceCompute(resourceId: string): void {
+    if (isNullOrEmpty(resourceId)) { return; }
+
+    this.apiService.getResourceCompute(resourceId).subscribe();
   }
 
   /**
    * Get the resource media list
    */
-  private _getResourceCatalogs(resource: McsResource): void {
-    if (isNullOrEmpty(resource)) { return; }
-    this.resourceCatalogs$ = this.apiService.getResourceCatalogs(resource.id).pipe(
+  private _getResourceCatalogs(resourceId: string): void {
+    if (isNullOrEmpty(resourceId)) { return; }
+
+    this.resourceCatalogs$ = this.apiService.getResourceCatalogs(resourceId).pipe(
       map((response) => getSafeProperty(response, (obj) => obj.collection))
     );
   }

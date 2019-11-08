@@ -19,13 +19,11 @@ import {
 import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 import {
-  finalize,
   takeUntil,
   shareReplay
 } from 'rxjs/operators';
 import {
   CoreValidators,
-  McsDataStatusFactory,
   IMcsFormGroup,
   IMcsDataChange
 } from '@app/core';
@@ -73,7 +71,6 @@ export class ServerManageNetworkComponent
   public ipAddressesInUsed: McsResourceNetworkIpAddress[];
   public ipAddressItems: McsOption[];
   public inputManageType: InputManageType;
-  public ipAddressesStatusFactory = new McsDataStatusFactory<McsResourceNetworkIpAddress[]>();
 
   // Form variables
   public fgNetwork: FormGroup;
@@ -143,6 +140,11 @@ export class ServerManageNetworkComponent
     let networksChange = changes['networks'];
     if (!isNullOrEmpty(networksChange)) {
       this._setSelectedNetwork();
+    }
+
+    let resourceIdChange = changes['resourceId'];
+    if (!isNullOrEmpty(resourceIdChange)) {
+      this._setInUsedIpAddresses(this.selectedNetwork);
     }
   }
 
@@ -258,11 +260,10 @@ export class ServerManageNetworkComponent
    * @param network Network currently selected
    */
   private _setInUsedIpAddresses(network: McsResourceNetwork): void {
-    if (isNullOrEmpty(network)) { return; }
+    let hasResourceNetwork = !isNullOrEmpty(this.resourceId) && !isNullOrEmpty(network);
+    if (!hasResourceNetwork) { return; }
 
-    this.ipAddressesStatusFactory.setInProgress();
     this._apiService.getResourceNetwork(this.resourceId, network.id).pipe(
-      finalize(() => this.ipAddressesStatusFactory.setSuccessful(this.ipAddressesInUsed)),
       shareReplay(1)
     ).subscribe((response) => {
       if (isNullOrEmpty(response)) { return; }

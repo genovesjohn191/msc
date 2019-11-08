@@ -287,14 +287,9 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     this.validateDedicatedFeatureFlag(server, McsFeatureFlag.DedicatedVmStorageView);
     this._resetStorageValues();
     this._updateTableDataSource(server);
-  }
 
-  /**
-   * Event that emtis when the resource has been changed
-   * @param resource Resource details of the selected server
-   */
-  protected resourceChange(resource: McsResource): void {
-    this._getResourceStorages(resource);
+    let resourceId = getSafeProperty(server, (obj) => obj.platform.resourceId);
+    this._getResourceStorages(resourceId);
   }
 
   /**
@@ -415,9 +410,10 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   /**
    * Get the resource storage to the selected server
    */
-  private _getResourceStorages(resource: McsResource): void {
-    if (isNullOrEmpty(resource)) { return; }
-    this.resourceStorages$ = this.apiService.getResourceStorages(resource.id).pipe(
+  private _getResourceStorages(resourceId: string): void {
+    if (isNullOrEmpty(resourceId)) { return; }
+
+    this.resourceStorages$ = this.apiService.getResourceStorages(resourceId).pipe(
       map((response) => getSafeProperty(response, (obj) => obj.collection)),
       shareReplay(1)
     );

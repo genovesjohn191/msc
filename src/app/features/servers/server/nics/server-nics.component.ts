@@ -284,14 +284,9 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     this.validateDedicatedFeatureFlag(server, McsFeatureFlag.DedicatedVmNicView);
     this._resetNetworkValues([]);
     this._updateTableDataSource(server);
-  }
 
-  /**
-   * Event that emtis when the resource has been changed
-   * @param resource Resource details of the selected server
-   */
-  protected resourceChange(resource: McsResource): void {
-    this._getResourceNetworks(resource);
+    let resourceId = getSafeProperty(server, (obj) => obj.platform.resourceId);
+    this._getResourceNetworks(resourceId);
   }
 
   /**
@@ -429,9 +424,10 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   /**
    * Get the resource networks from the server
    */
-  private _getResourceNetworks(resource: McsResource): void {
-    if (isNullOrEmpty(resource)) { return; }
-    this.resourceNetworks$ = this.apiService.getResourceNetworks(resource.id).pipe(
+  private _getResourceNetworks(resourceId: string): void {
+    if (isNullOrEmpty(resourceId)) { return; }
+
+    this.resourceNetworks$ = this.apiService.getResourceNetworks(resourceId).pipe(
       map((response) => getSafeProperty(response, (obj) => obj.collection)),
       shareReplay(1)
     );
