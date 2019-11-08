@@ -86,12 +86,6 @@ export abstract class ServerDetailsBase {
   protected abstract serverChange(server: McsServer): void;
 
   /**
-   * Event that emits when the resource details has been changed
-   * @param resource Resource selected
-   */
-  protected abstract resourceChange(resource: McsResource): void;
-
-  /**
    * Disposes the server details based instance
    */
   protected dispose(): void {
@@ -138,7 +132,6 @@ export abstract class ServerDetailsBase {
         let resourceId = getSafeProperty(selectedServer, (obj) => obj.platform.resourceId);
         return this._getServerResourceByPlatform(resourceId);
       }),
-      tap((resourceDetails) => this.resourceChange(resourceDetails)),
       shareReplay(1)
     );
   }

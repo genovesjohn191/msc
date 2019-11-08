@@ -69,17 +69,11 @@
         </mcs-form-field>
       </mcs-item>
 
-      <mcs-data-status [dataStatusFactory]="ipAddressesStatusFactory"
-        *ngIf="isIpAddressInUsed(customInput?.value)">
-        <mcs-data-status-success mcsDataSuccess display-inline-block>
-          <mcs-data-status-warning [@fadeInOut]>
-            <span [innerHTML]="('serverShared.manageNetwork.inUsedEnteredIpMessage' | translate)  | mcsNewLines"></span>
-          </mcs-data-status-warning>
-        </mcs-data-status-success>
-        <mcs-data-status-in-progress mcsDataInProgress>
-          <span>{{ 'serverShared.manageNetwork.loadingIpInUsed' | translate }}</span>
-        </mcs-data-status-in-progress>
-      </mcs-data-status>
+      <ng-container *ngIf="isIpAddressInUsed(customInput?.value)">
+        <mcs-data-status-warning [@fadeInOut]>
+          <span [innerHTML]="('serverShared.manageNetwork.inUsedEnteredIpMessage' | translate)  | mcsNewLines"></span>
+        </mcs-data-status-warning>
+      </ng-container>
     </mcs-section>
   </div>
 

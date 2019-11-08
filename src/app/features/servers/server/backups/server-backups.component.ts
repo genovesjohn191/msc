@@ -162,14 +162,6 @@ export class ServerBackupsComponent extends ServerDetailsBase
   }
 
   /**
-   * Event that emtis when the resource has been changed
-   * @param resource Resource details of the selected server
-   */
-  protected resourceChange(_resource: McsResource): void {
-    this._changeDetectorRef.markForCheck();
-  }
-
-  /**
    * Shows insufficient disk dialog
    * @param resource Resource to be checked
    */
