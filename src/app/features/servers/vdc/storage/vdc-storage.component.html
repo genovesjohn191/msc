@@ -1,8 +1,10 @@
-<mcs-presentation-panel>
+<mcs-presentation-panel *ngIf="resource$ | async as resource">
   <ng-container mcsPresentationPanelHeader>
     <h2>{{ 'serversVdcStorage.title' | translate }}</h2>
   </ng-container>
+
   <p>{{ 'serversVdc.storageRefreshMessage' | translate }}</p>
+
   <mcs-table [dataSource]="storageDatasource">
     <!-- Storage Profile Column -->
     <ng-container mcsColumnDef="storageProfile">
@@ -46,7 +48,7 @@
       <mcs-header-cell *mcsHeaderCellDef class="action-header-cell">
       </mcs-header-cell>
       <mcs-data-cell *mcsDataCellDef="let row">
-        <mcs-item *ngIf="resource$ | async as resource">
+        <mcs-item>
           <a (click)="navigateToExpandVdcStorage(resource, row)"
             mcsId="navigate-to-expand-vdc-storage"
             mcsEventTracker="expand-vdc-storage-click"
