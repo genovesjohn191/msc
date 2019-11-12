@@ -63,15 +63,17 @@
       </mcs-option-group>
 
       <!-- Template Group -->
-      <mcs-option-group mcsId="template-option-group" *ngIf="customTemplates">
-        <ng-container *mcsOptionGroupHeader>
-          <span>{{ 'serverCreateDetailsStep.newServer.headers.templates' | translate }}</span>
-        </ng-container>
+      <ng-container *ngIf="!resourceIsManaged">
+        <mcs-option-group mcsId="template-option-group" *ngIf="customTemplates">
+          <ng-container *mcsOptionGroupHeader>
+            <span>{{ 'serverCreateDetailsStep.newServer.headers.templates' | translate }}</span>
+          </ng-container>
 
-        <mcs-option *ngFor="let template of customTemplates" [value]="template">
-          {{ template.name }}
-        </mcs-option>
-      </mcs-option-group>
+          <mcs-option *ngFor="let template of customTemplates" [value]="template">
+            {{ template.name }}
+          </mcs-option>
+        </mcs-option-group>
+      </ng-container>
     </mcs-select>
 
     <mcs-error mcsError errorState="required">
