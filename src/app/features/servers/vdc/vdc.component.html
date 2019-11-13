@@ -53,7 +53,7 @@
   </mcs-left-panel>
 
   <mcs-content-panel *mcsContentPanelDef>
-    <div class="routing-tab-wrapper">
+    <div class="routing-tab-wrapper" *mcsComponentHandler>
       <mcs-tab-group [selectedTabId]="selectedTabId$ | async" (tabChanged)="onTabChanged($event)">
         <!-- Overview Tab -->
         <mcs-tab [label]="'serversVdcOverview.label' | translate" id="overview">

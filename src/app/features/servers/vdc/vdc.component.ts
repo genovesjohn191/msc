@@ -4,7 +4,8 @@ import {
   OnDestroy,
   ChangeDetectorRef,
   ChangeDetectionStrategy,
-  Injector
+  Injector,
+  ViewChild
 } from '@angular/core';
 import {
   ActivatedRoute,
@@ -45,6 +46,7 @@ import {
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { McsEvent } from '@app/events';
+import { ComponentHandlerDirective } from '@app/shared';
 import { VdcService } from './vdc.service';
 
 // Add another group type in here if you have addition tab
@@ -69,6 +71,9 @@ export class VdcComponent extends McsListViewListingBase<McsVdcGroup> implements
 
   private _destroySubject = new Subject<void>();
   private _routerHandler: Subscription;
+
+  @ViewChild(ComponentHandlerDirective, { static: false })
+  private _componentHandler: ComponentHandlerDirective;
 
   constructor(
     _injector: Injector,
@@ -164,6 +169,8 @@ export class VdcComponent extends McsListViewListingBase<McsVdcGroup> implements
       tap((params: ParamMap) => {
         let resourceId = params.get('id');
         if (isNullOrEmpty(resourceId)) { return; }
+
+        this._resetOverviewState();
         this._vdcService.setResourceId(resourceId);
       })
     ).subscribe();
@@ -188,6 +195,15 @@ export class VdcComponent extends McsListViewListingBase<McsVdcGroup> implements
    */
   private _sortVdcGroupPredicate(first: McsVdcGroup, second: McsVdcGroup): number {
     return compareStrings(first.group.resourceName, second.group.resourceName);
+  }
+
+  /**
+   * Resets overview state
+   */
+  private _resetOverviewState(): void {
+    if (!isNullOrEmpty(this._componentHandler)) {
+      this._componentHandler.recreateComponent();
+    }
   }
 
   /**

@@ -70,9 +70,9 @@ export abstract class VdcDetailsBase {
    */
   private _subscribesToResource(): void {
     this.resource$ = this.vdcService.getResourceDetails().pipe(
+      take(1),
       tap((resourceDetails) => this.resourceChange(resourceDetails)),
-      shareReplay(1),
-      take(1)
+      shareReplay(1)
     );
   }
 

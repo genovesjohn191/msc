@@ -9,7 +9,7 @@ import { McsResource } from '@app/models';
 @Injectable()
 export class VdcService {
   private _resourceId: string;
-  private _resourceDetailsChange = new BehaviorSubject<McsResource>(undefined);
+  private _resourceDetailsChange = new BehaviorSubject<McsResource>(null);
 
   /**
    * Returns the resource details of the VDC
