@@ -186,8 +186,51 @@
         </mcs-section>
       </mcs-presentation-panel>
 
+       <!-- Host Security -->
+       <ng-container *mcsAccessControl="[]; feature: ['EnableAddonHidsView','EnableAddonAntiVirusView']">
+         <ng-container *ngIf="serverHostSecurityDetails$ | async as serverHostSecurityDetails">
+          <mcs-presentation-panel *ngIf="serverHostSecurityDetails?.hids?.provisioned || serverHostSecurityDetails?.antiVirus?.provisioned">
+            <ng-container mcsPresentationPanelHeader>
+              <h2>{{ 'serverServices.hostSecurity.title' | translate }}</h2>
+            </ng-container>
+            <mcs-section>
+              <mcs-presentation-panel>
+                <ng-container mcsPresentationPanelHeader>
+                  <mcs-item>
+                    <mcs-icon [key]="serverHostSecurityDetails.icon" size="small" mcsId="hids-status-icon"></mcs-icon>
+                    <h2>{{ serverHostSecurityDetails.message }}</h2>
+                  </mcs-item>
+                </ng-container>
+                <mcs-section>
+
+                  <!-- Hids -->
+                  <ng-container orientation="block" *mcsAccessControl="[]; feature: 'EnableAddonHidsView'">
+                    <mcs-item *ngIf="serverHostSecurityDetails?.hids?.provisioned">
+                      <mcs-service-hids
+                        [hids]="serverHostSecurityDetails?.hids"
+                        (viewChange)="onViewChange($event)">
+                      </mcs-service-hids>
+                    </mcs-item>
+                  </ng-container>
+
+                  <!-- Anti Virus -->
+                  <ng-container orientation="block" *mcsAccessControl="[]; feature: 'EnableAddonAntiVirusView'">
+                    <mcs-item *ngIf="serverHostSecurityDetails?.antiVirus?.provisioned">
+                      <mcs-service-anti-virus
+                        [antivirus]="serverHostSecurityDetails?.antiVirus"
+                        (viewChange)="onViewChange($event)">
+                      </mcs-service-anti-virus>
+                    </mcs-item>
+                  </ng-container>
+                </mcs-section>
+              </mcs-presentation-panel>
+            </mcs-section>
+          </mcs-presentation-panel>
+        </ng-container>
+      </ng-container>
+
       <!-- VM Backup -->
-      <ng-container *mcsAccessControl="[]; feature: 'EnableOrderingAddonVmBackup'">
+      <ng-container *mcsAccessControl="[]; feature: 'EnableAddonVmBackupView'">
         <ng-container *ngIf="serverBackUpVm$ | async as vmBackup">
           <ng-container *ngIf="vmBackup.provisioned">
             <mcs-service-backup-vm
@@ -199,7 +242,7 @@
       </ng-container>
 
       <!-- Server Backup -->
-      <ng-container *mcsAccessControl="[]; feature: 'EnableOrderingAddonServerBackup'">
+      <ng-container *mcsAccessControl="[]; feature: 'EnableAddonServerBackupView'">
         <ng-container *ngIf="serverBackUpServer$ | async as serverBackup">
           <ng-container *ngIf="serverBackup.provisioned">
             <mcs-service-backup-server

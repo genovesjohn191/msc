@@ -1,0 +1,29 @@
+<mcs-accordion>
+    <mcs-accordion-panel>
+      <mcs-accordion-panel-header mcsPanelHeaderDef>
+        <mcs-item>
+            <mcs-icon [key]="statusIcon" size="small" mcsId="antivirus-status-icon"></mcs-icon>
+          <h2>{{ 'serverServices.antivirus.title' | translate }}</h2>
+        </mcs-item>
+      </mcs-accordion-panel-header>
+      <mcs-item>
+          <div>
+            <small read-only>
+              <mcs-item orientation="inline">
+                <span mcsId="antivirus-status-label">{{ statusLabel }}</span><br />
+                <!-- TODO: to be added when the details view is ready -->
+                <!-- <ng-container *ngIf="statusLogsLinkFlag">
+                  <a mcsId="antivirus-status-logs-link"
+                    mcsEventTracker="antivirus-status-logs-link-click"
+                    mcsEventCategory="server"
+                    mcsEventLabel="antivirus-status-logs-view"
+                    (click)="changeView()">
+                    {{ 'serverServices.antivirus.logsLink' | translate }}
+                  </a>
+                </ng-container> -->
+              </mcs-item>
+            </small>
+          </div>
+      </mcs-item>
+    </mcs-accordion-panel>
+  </mcs-accordion>

@@ -34,6 +34,7 @@ import {
   McsServerOsUpdatesInspectRequest,
   McsServerBackupVm,
   McsServerBackupServer,
+  McsServerHostSecurity,
 } from '@app/models';
 
 export interface IMcsApiServersService {
@@ -308,4 +309,10 @@ export interface IMcsApiServersService {
    * @param serverId Server id to where the server backup will be coming from
    */
   getServerBackupServer(id: string): Observable<McsApiSuccessResponse<McsServerBackupServer>>;
+
+  /**
+   * Gets the server host security details
+   * @param serverId Server id to where the host security will be coming from
+   */
+  getServerHostSecurity(id: string): Observable<McsApiSuccessResponse<McsServerHostSecurity>>;
 }

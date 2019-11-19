@@ -40,7 +40,10 @@ import {
   McsServerDelete,
   McsServerOsUpdatesInspectRequest,
   McsServerBackupVm,
-  McsServerBackupServer
+  McsServerBackupServer,
+  McsServerAntiVirus,
+  McsServerHids,
+  McsServerHostSecurity
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiServersService } from '../interfaces/mcs-api-servers.interface';
@@ -894,6 +897,65 @@ export class McsApiServersService implements IMcsApiServersService {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
             .deserializeResponse<McsServerBackupServer>(McsServerBackupServer, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  /**
+   * Gets the server host security details
+   * @param serverId Server id to where the host security will be coming from
+   */
+  public getServerHostSecurity(id: string): Observable<McsApiSuccessResponse<McsServerHostSecurity>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/servers/${id}/host-security`;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsServerHostSecurity>(McsServerHostSecurity, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  /**
+   * Gets the server anti virus details
+   * @param serverId Server id to where the antivirus will be coming from
+   * TODO: be rename to getServerAntiVirusLogs and add this method to the interface
+   */
+  public getServerAntiVirus(id: string): Observable<McsApiSuccessResponse<McsServerAntiVirus>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/servers/${id}/hostsecurity/av/logs`;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsServerAntiVirus>(McsServerAntiVirus, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  /**
+   * Gets the server hids
+   * @param serverId Server id to where the hids will be coming from
+   * TODO: be rename to getServerHidsLogs and add this method to the interface
+   */
+  public getServerHids(id: string): Observable<McsApiSuccessResponse<McsServerHids>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/servers/${id}/hostsecurity/hids/logs`;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsServerHids>(McsServerHids, response);
           return apiResponse;
         })
       );

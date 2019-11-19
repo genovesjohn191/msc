@@ -15,7 +15,9 @@ import {
   OsUpdatesScheduleComponent,
   OsUpdatesApplyNowComponent,
   ServiceBackupServerComponent,
-  ServiceBackupVmComponent
+  ServiceBackupVmComponent,
+  ServiceAntiVirusComponent,
+  ServiceHidsComponent
 } from './server/';
 /** Create Servers */
 import {
@@ -51,6 +53,8 @@ import { serversProviders } from './servers.constants';
     OsUpdatesApplyNowComponent,
     ServiceBackupServerComponent,
     ServiceBackupVmComponent,
+    ServiceAntiVirusComponent,
+    ServiceHidsComponent,
     VdcComponent,
     VdcOverviewComponent,
     VdcStorageComponent
