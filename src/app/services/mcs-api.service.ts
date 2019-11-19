@@ -101,7 +101,12 @@ import {
   McsStorageBackUpAggregationTarget,
   McsServerBackupVm,
   McsServerBackupServer,
-  BackupStatus
+  McsServerHostSecurity,
+  HostSecurityAgentStatus,
+  McsServerHostSecurityAntiVirus,
+  AntiVirusStatus,
+  McsServerHostSecurityHids,
+  HidsStatus
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -826,33 +831,24 @@ export class McsApiService {
   }
 
   public getServerBackupVm(id: string): Observable<McsServerBackupVm> {
-    // return this._serversApi.getServerBackupVm(id).pipe(
-    //   catchError((error) => this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getServerBackupVm'))),
-    //   map((response) => getSafeProperty(response, (obj) => obj.content))
-    // );
-
-    let backup = new McsServerBackupVm();
-    backup.provisioned = true;
-    backup.startTime = '10:00 AM';
-    backup.lastBackupAttempt = '10/10/19';
-    backup.status = BackupStatus.Successful;
-
-    return of(backup);
+    return this._serversApi.getServerBackupVm(id).pipe(
+      catchError((error) => this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getServerBackupVm'))),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
   }
 
   public getServerBackupServer(id: string): Observable<McsServerBackupServer> {
-    // return this._serversApi.getServerBackupServer(id).pipe(
-    //   catchError((error) => this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getServerBackupServer'))),
-    //   map((response) => getSafeProperty(response, (obj) => obj.content))
-    // );
+    return this._serversApi.getServerBackupServer(id).pipe(
+      catchError((error) => this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getServerBackupServer'))),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
 
-    let backup = new McsServerBackupServer();
-    backup.provisioned = true;
-    backup.startTime = '10:00 AM';
-    backup.lastBackupAttempt = '10/10/19';
-    backup.status = BackupStatus.Successful;
-
-    return of(backup);
+  public getServerHostSecurity(id: string): Observable<McsServerHostSecurity> {
+    return this._serversApi.getServerHostSecurity(id).pipe(
+      catchError((error) => this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getServerHostSecurity'))),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
   }
 
   public getStorageBackupAggregationTargets(): Observable<McsApiCollection<McsStorageBackUpAggregationTarget>> {

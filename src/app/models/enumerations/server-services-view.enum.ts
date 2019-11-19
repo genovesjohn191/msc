@@ -3,9 +3,9 @@ export enum ServerServicesView {
   Default = 'Default',
   OsUpdateApplyNow = 'OsUpdateApplyNow',
   OsUpdateSchedule = 'OsUpdateSchedule',
+  AntiVirus = 'AntiVirus',
+  Hids = 'Hids',
   BackupServer = 'BackupServer',
   BackupVm = 'BackupVm',
   // Inview = 'Inview',
-  // AntiVirus = 'AntiVirus',
-  // Hids = 'Hids'
 }

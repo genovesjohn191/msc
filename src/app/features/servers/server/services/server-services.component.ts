@@ -18,7 +18,8 @@ import {
   shareReplay,
   catchError,
   concatMap,
-  distinctUntilChanged
+  distinctUntilChanged,
+  map
 } from 'rxjs/operators';
 import {
   McsDataStatusFactory,
@@ -38,7 +39,6 @@ import {
   McsServerOsUpdatesDetails,
   McsJob,
   McsServer,
-  McsResource,
   OsUpdatesStatus,
   McsServerOsUpdatesScheduleRequest,
   McsServerOsUpdatesInspectRequest,
@@ -49,7 +49,11 @@ import {
   RouteKey,
   McsServerBackupVm,
   McsServerBackupServer,
-  ServerServicesView
+  ServerServicesView,
+  HostSecurityAgentStatus,
+  hostSecurityAgentStatusLabel,
+  McsServerHostSecurityHids,
+  McsServerHostSecurityAntiVirus
 } from '@app/models';
 import { FormMessage } from '@app/shared';
 import { McsEvent } from '@app/events';
@@ -61,6 +65,14 @@ import {
 
 const OS_UPDATE_TIMEZONE = 'Australia/Sydney';
 const OS_UPDATE_DATEFORMAT = `EEEE, d MMMM, yyyy 'at' h:mm a`;
+
+type ServerHostSecurityStatusDetails = {
+  icon: string;
+  message: string;
+  status: HostSecurityAgentStatus;
+  hids?: McsServerHostSecurityHids;
+  antiVirus?: McsServerHostSecurityAntiVirus;
+};
 
 @Component({
   selector: 'mcs-server-services',
@@ -75,6 +87,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
   public updatesDetails$: Observable<McsServerOsUpdatesDetails>;
   public serverBackUpVm$: Observable<McsServerBackupVm>;
   public serverBackUpServer$: Observable<McsServerBackupServer>;
+  public serverHostSecurityDetails$: Observable<ServerHostSecurityStatusDetails>;
   public serviceView$: Observable<ServerServicesView>;
   public dataStatusFactory: McsDataStatusFactory<McsServerOsUpdatesDetails>;
   public serverPermission: McsServerPermission;
@@ -86,6 +99,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
   private _updateStartedDate: Date;
   private _raiseInviewInProgress: boolean = false;
   private _inviewLabelMap: Map<InviewLevel, string>;
+  private _hostSecurityStatusDetailsMap: Map<HostSecurityAgentStatus, ServerHostSecurityStatusDetails>;
 
   @ViewChild('formMessage', { static: false })
   private _formMessage: FormMessage;
@@ -108,6 +122,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
     this._populateInviewMap();
     this._registerEvents();
     this._getServiceView();
+    this._createStatusMap();
   }
 
   public ngOnDestroy() {
@@ -336,6 +351,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
     this._getServerUpdateDetails(server.id);
     this._getServerBackupVm(server.id);
     this._getServerBackupServer(server.id);
+    this._getServerHostSecurity(server.id);
   }
 
   /**
@@ -447,6 +463,34 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
   }
 
   /**
+   * Initializes the server hids status map
+   */
+  private _createStatusMap(): void {
+    this._hostSecurityStatusDetailsMap = new Map();
+
+    this._hostSecurityStatusDetailsMap.set(HostSecurityAgentStatus.Active, {
+      icon: CommonDefinition.ASSETS_SVG_STATE_RUNNING,
+      message: hostSecurityAgentStatusLabel[HostSecurityAgentStatus.Active],
+      status: HostSecurityAgentStatus.Active
+    });
+    this._hostSecurityStatusDetailsMap.set(HostSecurityAgentStatus.Warning, {
+      icon: CommonDefinition.ASSETS_SVG_STATE_RESTARTING,
+      message: hostSecurityAgentStatusLabel[HostSecurityAgentStatus.Warning],
+      status: HostSecurityAgentStatus.Warning
+    });
+    this._hostSecurityStatusDetailsMap.set(HostSecurityAgentStatus.Inactive, {
+      icon: CommonDefinition.ASSETS_SVG_STATE_SUSPENDED,
+      message: hostSecurityAgentStatusLabel[HostSecurityAgentStatus.Inactive],
+      status: HostSecurityAgentStatus.Inactive
+    });
+    this._hostSecurityStatusDetailsMap.set(HostSecurityAgentStatus.Error, {
+      icon: CommonDefinition.ASSETS_SVG_STATE_STOPPED,
+      message: hostSecurityAgentStatusLabel[HostSecurityAgentStatus.Error],
+      status: HostSecurityAgentStatus.Error
+    });
+  }
+
+  /**
    * Get the latest update details of the server from api
    * @param id job object reference
    */
@@ -553,5 +597,20 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
    */
   private _getServerBackupServer(id: string): void {
     this.serverBackUpServer$ = this.apiService.getServerBackupServer(id);
+  }
+
+  /**
+   * Get the host security details of the server
+   * @param id selected server id
+   */
+  private _getServerHostSecurity(id: string): void {
+    this.serverHostSecurityDetails$ = this.apiService.getServerHostSecurity(id).pipe(
+      map((hostSecurity) => {
+        let hostSecurityDetails = this._hostSecurityStatusDetailsMap.get(hostSecurity.agentStatus);
+        hostSecurityDetails.hids = hostSecurity.hids;
+        hostSecurityDetails.antiVirus = hostSecurity.antiVirus;
+        return hostSecurityDetails;
+      })
+    );
   }
 }
