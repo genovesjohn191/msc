@@ -6,17 +6,17 @@ import { RouteKey } from './models';
  */
 export const appRoutes: Routes = [
   {
-    path: '',
+    path: 'console/:id',
     loadChildren: './page-layout/console-page/console-page.module#ConsolePageModule',
     data: { routeId: RouteKey.Console }
   },
   {
-    path: '',
+    path: 'maintenance',
     loadChildren: './page-layout/maintenance-page/maintenance-page.module#MaintenancePageModule',
     data: { routeId: RouteKey.Maintenance }
   },
   {
-    path: '',
+    path: 'system-message',
     loadChildren: './page-layout/system-message-page/system-message-page.module#SystemMessagePageModule',
     data: { routeId: RouteKey.SystemMessagePage }
   },

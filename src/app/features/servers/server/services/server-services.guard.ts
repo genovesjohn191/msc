@@ -24,7 +24,6 @@ export class ServerServicesGuard implements CanActivate {
     _route: ActivatedRouteSnapshot,
     _state: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean {
-
     let serverId = _route.parent.paramMap.get('id');
     return this._apiService.getServer(serverId).pipe(
       map((response) => {

@@ -26,7 +26,7 @@ export const internetRoutes: Routes = [
   },
 
   {
-    path: '',
+    path: ':id',
     component: InternetPortComponent,
     data: { routeId: RouteKey.InternetDetails },
     resolve: {
@@ -35,12 +35,12 @@ export const internetRoutes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: '',
+        redirectTo: 'management',
         pathMatch: 'full',
         data: { routeId: RouteKey.InternetDetailsManagement }
       },
       {
-        path: '',
+        path: 'management',
         component: InternetPortManagementComponent,
         data: { routeId: RouteKey.InternetDetailsManagement }
       }

@@ -45,38 +45,38 @@ export const ordersRoutes: Routes = [
     component: OrdersComponent
   },
   {
-    path: '',
+    path: 'dashboard',
     component: OrdersDashboardComponent,
     data: { routeId: RouteKey.OrdersDashboard }
   },
   {
-    path: '',
+    path: 'server-managed-scale',
     component: ServerManagedScaleComponent,
     data: { routeId: RouteKey.OrderServerManagedScale }
   },
   {
-    path: '',
+    path: 'vdc-scale',
     component: VdcScaleComponent,
     data: { routeId: RouteKey.OrderVdcScale }
   },
   {
-    path: '',
+    path: 'vdc-storage-expand',
     component: VdcStorageExpandComponent,
     data: { routeId: RouteKey.OrderVdcStorageExpand }
   },
   {
-    path: '',
+    path: 'vdc-storage-create',
     component: VdcStorageCreateComponent,
     data: { routeId: RouteKey.OrderVdcStorageCreate }
   },
   {
-    path: '',
+    path: 'services/inview',
     component: ServiceInviewRaiseComponent,
     data: { routeId: RouteKey.OrderServiceInviewRaise }
   },
   // Add additional routes above this line
   {
-    path: '',
+    path: ':id',
     component: OrderComponent,
     data: { routeId: RouteKey.OrderDetails },
     resolve: {

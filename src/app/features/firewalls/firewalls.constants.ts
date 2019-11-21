@@ -27,7 +27,7 @@ export const firewallRoutes: Routes = [
     component: FirewallsComponent
   },
   {
-    path: '',
+    path: ':id',
     component: FirewallComponent,
     data: { routeId: RouteKey.FirewallDetails },
     resolve: {
@@ -36,17 +36,17 @@ export const firewallRoutes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: '',
+        redirectTo: 'overview',
         pathMatch: 'full',
         data: { routeId: RouteKey.FirewallDetailsOverview }
       },
       {
-        path: '',
+        path: 'overview',
         component: FirewallOverviewComponent,
         data: { routeId: RouteKey.FirewallDetailsOverview }
       },
       {
-        path: '',
+        path: 'policies',
         component: FirewallPoliciesComponent,
         data: { routeId: RouteKey.FirewallDetailsPolicies }
       }

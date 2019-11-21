@@ -21,7 +21,7 @@ export const notificationsRoutes: Routes = [
     component: NotificationsComponent
   },
   {
-    path: '',
+    path: ':id',
     component: NotificationComponent,
     data: { routeId: RouteKey.Notification },
     resolve: {

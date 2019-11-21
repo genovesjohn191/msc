@@ -49,14 +49,14 @@ export const serversRoutes: Routes = [
     component: ServersComponent
   },
   {
-    path: '',
+    path: 'create',
     component: ServerCreateComponent,
     canActivate: [McsRequiredResourcesGuard],
     canDeactivate: [McsNavigateAwayGuard],
     data: { routeId: RouteKey.ServerCreate }
   },
   {
-    path: '',
+    path: ':id',
     component: ServerComponent,
     data: { routeId: RouteKey.ServerDetails },
     resolve: {
@@ -65,40 +65,40 @@ export const serversRoutes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: '',
+        redirectTo: 'management',
         pathMatch: 'full',
         data: { routeId: RouteKey.ServerDetailsManagement }
       },
       {
-        path: '',
+        path: 'management',
         component: ServerManagementComponent,
         data: { routeId: RouteKey.ServerDetailsManagement }
       },
       {
-        path: '',
+        path: 'services',
         component: ServerServicesComponent,
         data: { routeId: RouteKey.ServerDetailsServices },
         canActivate: [ServerServicesGuard]
       },
       {
-        path: '',
+        path: 'storage',
         component: ServerStorageComponent,
         data: { routeId: RouteKey.ServerDetailsStorage }
       },
       {
-        path: '',
+        path: 'nics',
         component: ServerNicsComponent,
         data: { routeId: RouteKey.ServerDetailsNics }
       },
       {
-        path: '',
+        path: 'snapshots',
         component: ServerBackupsComponent,
         data: { routeId: RouteKey.ServerDetailsBackups }
       }
     ]
   },
   {
-    path: '',
+    path: 'vdc/:id',
     component: VdcComponent,
     data: { routeId: RouteKey.VdcDetails },
     resolve: {
@@ -107,17 +107,17 @@ export const serversRoutes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: '',
+        redirectTo: 'overview',
         pathMatch: 'full',
         data: { routeId: RouteKey.VdcDetailsOverview }
       },
       {
-        path: '',
+        path: 'overview',
         component: VdcOverviewComponent,
         data: { routeId: RouteKey.VdcDetailsOverview }
       },
       {
-        path: '',
+        path: 'storage',
         component: VdcStorageComponent,
         data: { routeId: RouteKey.VdcDetailsStorage }
       }

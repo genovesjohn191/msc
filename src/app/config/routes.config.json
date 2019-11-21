@@ -1,25 +1,21 @@
 {
   "dashboard": {
     "enumKey": "Dashboard",
-    "routePath": "dashboard",
     "navigationPath": "dashboard",
     "documentTitle": "Dashboard - Macquarie Cloud Services"
   },
   "console": {
     "enumKey": "Console",
-    "routePath": "console/:id",
     "navigationPath": "console",
     "documentTitle": "VM Console - Macquarie Cloud Services"
   },
   "maintenance": {
     "enumKey": "Maintenance",
-    "routePath": "maintenance",
     "navigationPath": "maintenance",
     "documentTitle": "Maintenance - Macquarie Cloud Services"
   },
   "system-message": {
     "enumKey": "SystemMessagePage",
-    "routePath": "system-message",
     "navigationPath": "system-message",
     "requiredFeatureFlag": "EnableSystemMessages",
     "documentTitle": "System Message - Macquarie Cloud Services"
@@ -27,7 +23,6 @@
   "servers": {
     "enumCategory": "Compute",
     "enumKey": "Servers",
-    "routePath": "compute/virtual",
     "navigationPath": "compute/virtual",
     "requiredPermissions": ["CloudVmAccess", "DedicatedVmAccess"],
     "documentTitle": "Virtual Servers - Macquarie Cloud Services"
@@ -35,7 +30,6 @@
   "serverDetails": {
     "enumCategory": "Compute",
     "enumKey": "ServerDetails",
-    "routePath": ":id",
     "navigationPath": "compute/virtual",
     "requiredPermissions": ["CloudVmAccess", "DedicatedVmAccess"],
     "documentTitle": "Server Details - Macquarie Cloud Services"
@@ -43,7 +37,6 @@
   "serverDetailsManagement": {
     "enumCategory": "Compute",
     "enumKey": "ServerDetailsManagement",
-    "routePath": "management",
     "navigationPath": "management",
     "requiredPermissions": ["CloudVmAccess", "DedicatedVmAccess"],
     "documentTitle": "Server Management - Macquarie Cloud Services"
@@ -51,7 +44,6 @@
   "serverDetailsServices": {
     "enumCategory": "Compute",
     "enumKey": "ServerDetailsServices",
-    "routePath": "services",
     "navigationPath": "services",
     "requiredFeatureFlag": ["EnableServerOsUpdates", "EnableOrderingManagedServerInviewLevelRaise"],
     "documentTitle": "Server Services - Macquarie Cloud Services"
@@ -59,7 +51,6 @@
   "serverDetailsStorage": {
     "enumCategory": "Compute",
     "enumKey": "ServerDetailsStorage",
-    "routePath": "storage",
     "navigationPath": "storage",
     "requiredPermissions": ["CloudVmAccess", "DedicatedVmAccess"],
     "documentTitle": "Server Storage - Macquarie Cloud Services"
@@ -67,7 +58,6 @@
   "serverDetailsBackups": {
     "enumCategory": "Compute",
     "enumKey": "ServerDetailsBackups",
-    "routePath": "snapshots",
     "navigationPath": "snapshots",
     "requiredPermissions": ["CloudVmSnapshotAccess", "DedicatedVmSnapshotAccess"],
     "documentTitle": "Server Snapshots - Macquarie Cloud Services"
@@ -75,7 +65,6 @@
   "serverDetailsNics": {
     "enumCategory": "Compute",
     "enumKey": "ServerDetailsNics",
-    "routePath": "nics",
     "navigationPath": "nics",
     "requiredPermissions": ["CloudVmAccess", "DedicatedVmAccess"],
     "documentTitle": "Server NICs - Macquarie Cloud Services"
@@ -83,7 +72,6 @@
   "serverCreate": {
     "enumCategory": "Compute",
     "enumKey": "ServerCreate",
-    "routePath": "create",
     "navigationPath": "compute/virtual/create",
     "requiredPermissions": ["CloudVmEdit", "DedicatedVmEdit"],
     "documentTitle": "Create Server - Macquarie Cloud Services"
@@ -91,7 +79,6 @@
   "vdcDetails": {
     "enumCategory": "Compute",
     "enumKey": "VdcDetails",
-    "routePath": "vdc/:id",
     "navigationPath": "compute/virtual/vdc",
     "requiredPermissions": ["CloudVmAccess", "DedicatedVmAccess"],
     "documentTitle": "VDC Details - Macquarie Cloud Services"
@@ -99,7 +86,6 @@
   "vdcDetailsOverview": {
     "enumCategory": "Compute",
     "enumKey": "VdcDetailsOverview",
-    "routePath": "overview",
     "navigationPath": "overview",
     "requiredPermissions": ["CloudVmAccess", "DedicatedVmAccess"],
     "documentTitle": "VDC Management - Macquarie Cloud Services"
@@ -107,7 +93,6 @@
   "vdcDetailsStorage": {
     "enumCategory": "Compute",
     "enumKey": "VdcDetailsStorage",
-    "routePath": "storage",
     "navigationPath": "storage",
     "requiredPermissions": ["CloudVmAccess", "DedicatedVmAccess"],
     "documentTitle": "VDC Storage - Macquarie Cloud Services"
@@ -115,7 +100,6 @@
   "media": {
     "enumCategory": "Compute",
     "enumKey": "Media",
-    "routePath": "compute/media",
     "navigationPath": "compute/media",
     "requiredPermissions": ["TemplateView", "CatalogView"],
     "requiredFeatureFlag": "EnableMediaCatalog",
@@ -124,7 +108,6 @@
   "medium": {
     "enumCategory": "Compute",
     "enumKey": "Medium",
-    "routePath": ":id",
     "navigationPath": "compute/media",
     "requiredPermissions": ["TemplateView", "CatalogView"],
     "requiredFeatureFlag": "EnableMediaCatalog",
@@ -133,7 +116,6 @@
   "mediumOverview": {
     "enumCategory": "Compute",
     "enumKey": "MediumOverview",
-    "routePath": "overview",
     "navigationPath": "overview",
     "requiredPermissions": ["TemplateView", "CatalogView"],
     "requiredFeatureFlag": "EnableMediaCatalog",
@@ -142,7 +124,6 @@
   "mediumServers": {
     "enumCategory": "Compute",
     "enumKey": "MediumServers",
-    "routePath": "servers",
     "navigationPath": "servers",
     "requiredPermissions": ["TemplateView", "CatalogView"],
     "requiredFeatureFlag": "EnableMediaCatalog",
@@ -151,7 +132,6 @@
   "mediaUpload": {
     "enumCategory": "Compute",
     "enumKey": "MediaUpload",
-    "routePath": "upload",
     "navigationPath": "compute/media/upload",
     "requiredPermissions": ["TemplateEdit"],
     "requiredFeatureFlag": "EnableResourceMediaUpload",
@@ -160,7 +140,6 @@
   "firewalls": {
     "enumCategory": "Network",
     "enumKey": "Firewalls",
-    "routePath": "network/firewalls",
     "navigationPath": "network/firewalls",
     "requiredPermissions": ["FirewallConfigurationView"],
     "documentTitle": "Firewalls - Macquarie Cloud Services"
@@ -168,7 +147,6 @@
   "firewallDetails": {
     "enumCategory": "Network",
     "enumKey": "FirewallDetails",
-    "routePath": ":id",
     "navigationPath": "network/firewalls",
     "requiredPermissions": ["FirewallConfigurationView"],
     "documentTitle": "Firewall Details - Macquarie Cloud Services"
@@ -176,7 +154,6 @@
   "firewallDetailsOverview": {
     "enumCategory": "Network",
     "enumKey": "FirewallDetailsOverview",
-    "routePath": "overview",
     "navigationPath": "overview",
     "requiredPermissions": ["FirewallConfigurationView"],
     "documentTitle": "Firewall Management - Macquarie Cloudservices"
@@ -184,7 +161,6 @@
   "firewallDetailsPolicies": {
     "enumCategory": "Network",
     "enumKey": "FirewallDetailsPolicies",
-    "routePath": "policies",
     "navigationPath": "policies",
     "requiredPermissions": ["FirewallConfigurationView"],
     "documentTitle": "Firewall Policies - Macquarie Cloud Services"
@@ -192,7 +168,6 @@
   "internet": {
     "enumCategory": "Network",
     "enumKey": "Internet",
-    "routePath": "network/internet",
     "navigationPath": "network/internet",
     "requiredPermissions": ["InternetView"],
     "requiredFeatureFlag": "EnableInternetPortView",
@@ -201,7 +176,6 @@
   "internetDetails": {
     "enumCategory": "Network",
     "enumKey": "InternetDetails",
-    "routePath": ":id",
     "navigationPath": "network/internet",
     "requiredPermissions": ["InternetView"],
     "requiredFeatureFlag": "EnableInternetPortView",
@@ -210,7 +184,6 @@
   "internetDetailsManagement": {
     "enumCategory": "Network",
     "enumKey": "InternetDetailsManagement",
-    "routePath": "management",
     "navigationPath": "management",
     "requiredPermissions": ["InternetView"],
     "requiredFeatureFlag": "EnableInternetPortView",
@@ -219,7 +192,6 @@
   "systemMessages": {
     "enumCategory": "SystemMessages",
     "enumKey": "SystemMessages",
-    "routePath": "system/messages",
     "navigationPath": "system/messages",
     "requiredPermissions": ["SystemMessageView"],
     "requiredFeatureFlag": "EnableSystemMessages",
@@ -228,7 +200,6 @@
   "systemMessageCreate": {
     "enumCategory": "SystemMessages",
     "enumKey": "SystemMessageCreate",
-    "routePath": "create",
     "navigationPath": "system/messages/create",
     "requiredPermissions": ["SystemMessageEdit"],
     "requiredFeatureFlag": "EnableSystemMessages",
@@ -237,7 +208,6 @@
   "systemMessageEdit": {
     "enumCategory": "SystemMessages",
     "enumKey": "SystemMessageEdit",
-    "routePath": ":id",
     "navigationPath": "system/messages",
     "requiredPermissions": ["SystemMessageEdit"],
     "requiredFeatureFlag": "EnableSystemMessages",
@@ -245,47 +215,40 @@
   },
   "tickets": {
     "enumKey": "Tickets",
-    "routePath": "tickets",
     "navigationPath": "tickets",
     "requiredPermissions": ["TicketView"],
     "documentTitle": "Tickets - Macquarie Cloud Services"
   },
   "ticketDetails": {
     "enumKey": "TicketDetails",
-    "routePath": ":id",
     "navigationPath": "tickets",
     "requiredPermissions": ["TicketView"],
     "documentTitle": "Ticket Details - Macquarie Cloud Services"
   },
   "ticketCreate": {
     "enumKey": "TicketCreate",
-    "routePath": "create",
     "navigationPath": "tickets/create",
     "requiredPermissions": ["TicketCreate"],
     "documentTitle": "Create Ticket - Macquarie Cloud Services"
   },
   "notifications": {
     "enumKey": "Notifications",
-    "routePath": "notifications",
     "navigationPath": "notifications",
     "documentTitle": "Notifications - Macquarie Cloud Services"
   },
   "notification": {
     "enumKey": "Notification",
-    "routePath": ":id",
     "navigationPath": "notifications",
     "documentTitle": "Notification - Macquarie Cloud Services"
   },
   "productDetails": {
     "enumKey": "ProductDetails",
-    "routePath": "products/:id",
     "navigationPath": "products",
     "requiredFeatureFlag": "EnableProductCatalog",
     "documentTitle": "Product Details - Macquarie Cloud Services"
   },
   "orders": {
     "enumKey": "Orders",
-    "routePath": "orders",
     "navigationPath": "orders",
     "requiredPermissions": ["OrderView"],
     "requiredFeatureFlag": "EnableOrdering",
@@ -293,7 +256,6 @@
   },
   "orderDetails": {
     "enumKey": "OrderDetails",
-    "routePath": ":id",
     "navigationPath": "orders",
     "requiredPermissions": ["OrderView", "OrderEdit", "OrderApprove"],
     "requiredFeatureFlag": "EnableOrdering",
@@ -301,7 +263,6 @@
   },
   "ordersDashboard": {
     "enumKey": "OrdersDashboard",
-    "routePath": "dashboard",
     "navigationPath": "orders/dashboard",
     "requiredPermissions": ["OrderEdit"],
     "requiredFeatureFlag": "EnableOrderingOperationsListing",
@@ -309,7 +270,6 @@
   },
   "orderServerManagedScale": {
     "enumKey": "OrderServerManagedScale",
-    "routePath": "server-managed-scale",
     "navigationPath": "orders/server-managed-scale",
     "requiredPermissions": ["OrderEdit"],
     "requiredFeatureFlag": "EnableOrderingManagedServerScale",
@@ -317,7 +277,6 @@
   },
   "orderVdcScale": {
     "enumKey": "OrderVdcScale",
-    "routePath": "vdc-scale",
     "navigationPath": "orders/vdc-scale",
     "requiredPermissions": ["OrderEdit"],
     "requiredFeatureFlag": "EnableOrderingVdcComputeScale",
@@ -325,7 +284,6 @@
   },
   "orderVdcStorageExpand": {
     "enumKey": "OrderVdcStorageExpand",
-    "routePath": "vdc-storage-expand",
     "navigationPath": "orders/vdc-storage-expand",
     "requiredPermissions": ["OrderEdit"],
     "requiredFeatureFlag": "EnableOrderingVdcStorageExpand",
@@ -333,7 +291,6 @@
   },
   "orderVdcStorageCreate": {
     "enumKey": "OrderVdcStorageCreate",
-    "routePath": "vdc-storage-create",
     "navigationPath": "orders/vdc-storage-create",
     "requiredPermissions": ["OrderEdit"],
     "requiredFeatureFlag": "EnableOrderingVdcStorageProvision",
@@ -341,7 +298,6 @@
   },
   "orderServiceInviewRaise": {
     "enumKey": "OrderServiceInviewRaise",
-    "routePath": "services/inview",
     "navigationPath": "orders/services/inview",
     "requiredPermissions": ["OrderEdit"],
     "requiredFeatureFlag": "EnableOrderingManagedServerInviewLevelRaise",
@@ -349,13 +305,11 @@
   },
   "otherTools": {
     "enumKey": "OtherTools",
-    "routePath": "tools",
     "navigationPath": "tools",
     "documentTitle": "Other Tools - Macquarie Cloud Services"
   },
   "httpErrorPage": {
     "enumKey": "HttpErrorPage",
-    "routePath": "**",
     "navigationPath": "**",
     "documentTitle": "Error - Macquarie Cloud Services"
   }
