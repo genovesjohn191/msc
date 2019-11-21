@@ -17,7 +17,7 @@
               <mcs-data-status-success mcsDataSuccess>
 
                 <mcs-grid *ngIf="updatesDetails$ | async as updatesDetails">
-                  <!-- Status -->
+                  <!-- Patch -->
                   <mcs-grid-row>
                     <mcs-grid-column>
                       <mcs-service-os-updates-patch
@@ -30,7 +30,7 @@
                     </mcs-grid-column>
                   </mcs-grid-row>
 
-                  <!-- Schedule/Jobs -->
+                  <!-- Schedule -->
                   <mcs-grid-row>
                     <mcs-grid-column>
                       <mcs-service-os-updates-schedule
@@ -164,6 +164,12 @@
       </ng-container>
     </ng-container>
 
+    <!-- Details View Hids -->
+    <ng-container [@fadeIn] *ngSwitchCase="serverServicesViewOption.Hids">
+      <mcs-service-hids-details [serverId]="server?.id">
+        <ng-container mcsViewServicesTab *ngTemplateOutlet="servicesTabView"></ng-container>
+      </mcs-service-hids-details>
+    </ng-container>
   </ng-container>
 
   <!-- Go back to services tab view -->
@@ -176,7 +182,7 @@
       (click)="setViewMode(serverServicesViewOption.Default)"
       [disabled]="server.isProcessing">
       <mcs-item>
-        <mcs-icon [key]="chevronLeftKey" size="xsmall"></mcs-icon>
+        <mcs-icon [key]="chevronLeftKey" size="medium"></mcs-icon>
         <span>{{ 'serverServices.operatingSystemUpdates.label' | translate }}</span>
       </mcs-item>
     </a>

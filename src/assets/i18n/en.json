@@ -543,7 +543,8 @@
         "realtimeScanEnabled": "Continuously scanning for threats",
         "realtimeScanDisabled": "Realtime scan disabled"
       },
-      "logsLink": "View log"
+      "logsLink": "View logs"
+
     },
     "hids": {
       "title": "Host Intrusion Detection",
@@ -551,7 +552,8 @@
         "detect": "Your server will log intrusion attempts.",
         "protect": "Your server will be defended against intrusion attempts."
       },
-      "logsLink": "View log"
+      "logsLink": "View logs"
+
     }
   },
   "serverServicesOsUpdatesApplyNow": {
@@ -604,6 +606,22 @@
     "updateDialogMessage": "Your server already has an update schedule configured. \n \n Are you sure you wish to overwrite this?",
     "deleteDialogTitle": "Delete Existing Schedule",
     "deleteDialogMessage": "Deleting a schedule cannot be undone and will not revert any updates which have been applied. \n \n Are you sure you wish to continue?"
+  },
+  "serverServicesHidsDetails": {
+    "title":"Host Intrusion Detection",
+    "description":"Host Based Intrusion Prevention rules examines payload in the session and application layers of packets (such as DNS, HTTP, SSL, and SMTP), as well as the sequence of those packets according to those higher-layer protocols. \n\nWhen traffic matches a rule or contains content that signals an attack, the Host Intrusion Detection handles it as a possible or confirmed attack, and performs the configured action.",
+    "noContent":"No intrusion attempts have been detected for this server.",
+    "errorContent": "Sorry, something’s not right. We weren’t able to retrieve the host intrusion detection for this server.",
+    "columnHeaders": {
+      "threat": "Threat",
+      "date": "Date",
+      "applicationType": "Application Type",
+      "interface": "Interface",
+      "sourceIp": "Source IP",
+      "destinationIp": "Destination IP",
+      "actionTaken": "Action Taken",
+      "targetType": "Target Type"
+    }
   },
   "serverStorage": {
     "label": "Storage",
@@ -1631,7 +1649,7 @@
     "getServerBackupServer": "Something went wrong while retrieving your server backup for your server. Please try again.",
     "getServerHostSecurity": "Something went wrong while retrieving your host security for your server. Please try again.",
     "getServerAntiVirus": "Something went wrong while retrieving your anti-virus for your server. Please try again.",
-    "getServerHids": "Something went wrong while retrieving your host intrusion detection for your server. Please try again.",
+    "getServerHostSecurityHidsLogs": "Something went wrong while retrieving your host intrusion detection logs for your server. Please try again.",
     "getStorageBackupAggregationTargets": "Something went wrong while retrieving your storage backup aggregation types. Please try again.",
     "resetServerPassword": "Something went wrong while resetting the password for your server. Please try again.",
     "updateServerStorage": "Something went wrong while expanding your disk. Please try again.",

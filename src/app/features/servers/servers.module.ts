@@ -20,6 +20,7 @@ import {
   ServiceBackupVmComponent,
   ServiceAntiVirusComponent,
   ServiceHidsComponent,
+  ServiceHidsDetailsComponent,
   ServiceInviewComponent
 } from './server/';
 /** Create Servers */
@@ -60,6 +61,7 @@ import { serversProviders } from './servers.constants';
     ServiceBackupVmComponent,
     ServiceAntiVirusComponent,
     ServiceHidsComponent,
+    ServiceHidsDetailsComponent,
     ServiceInviewComponent,
     VdcComponent,
     VdcOverviewComponent,

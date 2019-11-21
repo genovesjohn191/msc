@@ -100,7 +100,8 @@ import {
   McsStorageBackUpAggregationTarget,
   McsServerBackupVm,
   McsServerBackupServer,
-  McsServerHostSecurity
+  McsServerHostSecurity,
+  McsServerHostSecurityHidsLog
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -841,6 +842,13 @@ export class McsApiService {
   public getServerHostSecurity(id: string): Observable<McsServerHostSecurity> {
     return this._serversApi.getServerHostSecurity(id).pipe(
       catchError((error) => this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getServerHostSecurity'))),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public getServerHostSecurityHidsLogs(id: string): Observable<McsServerHostSecurityHidsLog> {
+    return this._serversApi.getServerHostSecurityHidsLogs(id).pipe(
+      catchError((error) => this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getServerHostSecurityHidsLogs'))),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }

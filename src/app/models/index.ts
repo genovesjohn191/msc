@@ -183,6 +183,8 @@ export * from './response/mcs-server-os-updates';
 export * from './response/mcs-server-os-updates-details';
 export * from './response/mcs-server-os-updates-schedule';
 export * from './response/mcs-server-os-updates-category';
+export * from './response/mcs-server-host-security-hids-log';
+export * from './response/mcs-server-host-security-hids-log-content';
 export * from './response/mcs-server-snapshot';
 export * from './response/mcs-server-storage-device';
 export * from './response/mcs-server-thumbnail';
