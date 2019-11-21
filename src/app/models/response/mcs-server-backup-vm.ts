@@ -1,24 +1,26 @@
 import { JsonProperty } from '@peerlancers/json-serialization';
+import { McsBackupAttempt } from './mcs-backup-attempt';
+import { McsEntityBase } from '../common/mcs-entity.base';
 import {
-  BackupStatus,
-  BackupStatusSerialization
-} from '../enumerations/backup-status.enum';
+  InviewLevelSerialization,
+  InviewLevel
+} from '../enumerations/inview-level.enum';
 
-export class McsServerBackupVm {
+export class McsServerBackupVm extends McsEntityBase {
 
   @JsonProperty()
   public provisioned: boolean = undefined;
 
   @JsonProperty()
-  public lastBackupAttempt: string = undefined;
+  public lastBackupAttempt: McsBackupAttempt = undefined;
 
   @JsonProperty()
-  public startTime: string = undefined;
+  public serviceId: string = undefined;
 
   @JsonProperty({
-    serializer: BackupStatusSerialization,
-    deserializer: BackupStatusSerialization
+    serializer: InviewLevelSerialization,
+    deserializer: InviewLevelSerialization
   })
-  public status: BackupStatus = BackupStatus.NotStarted;
+  public inviewLevel: InviewLevel = undefined;
 }
 

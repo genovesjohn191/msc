@@ -1,8 +1,8 @@
-<mcs-accordion>
+<mcs-accordion *ngIf="antiVirusDetails$ | async as antiVirusDetails">
     <mcs-accordion-panel>
       <mcs-accordion-panel-header mcsPanelHeaderDef>
         <mcs-item>
-            <mcs-icon [key]="statusIcon" size="small" mcsId="antivirus-status-icon"></mcs-icon>
+            <mcs-icon [key]="antiVirusDetails.icon" size="small" mcsId="antivirus-status-icon"></mcs-icon>
           <h2>{{ 'serverServices.antivirus.title' | translate }}</h2>
         </mcs-item>
       </mcs-accordion-panel-header>
@@ -10,7 +10,7 @@
           <div>
             <small read-only>
               <mcs-item orientation="inline">
-                <span mcsId="antivirus-status-label">{{ statusLabel }}</span><br />
+                <span mcsId="antivirus-status-label">{{ antiVirusDetails.label }}</span><br />
                 <!-- TODO: to be added when the details view is ready -->
                 <!-- <ng-container *ngIf="statusLogsLinkFlag">
                   <a mcsId="antivirus-status-logs-link"

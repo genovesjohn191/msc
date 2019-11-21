@@ -869,7 +869,7 @@ export class McsApiServersService implements IMcsApiServersService {
   public getServerBackupVm(id: string):
     Observable<McsApiSuccessResponse<McsServerBackupVm>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${id}/vmbackup`;
+    mcsApiRequestParameter.endPoint = `/servers/${id}/vm-backup`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -889,7 +889,7 @@ export class McsApiServersService implements IMcsApiServersService {
   public getServerBackupServer(id: string):
     Observable<McsApiSuccessResponse<McsServerBackupServer>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${id}/serverbackup`;
+    mcsApiRequestParameter.endPoint = `/servers/${id}/server-backup`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(

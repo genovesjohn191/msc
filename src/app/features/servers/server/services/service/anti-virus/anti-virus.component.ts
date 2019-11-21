@@ -2,24 +2,30 @@ import {
   OnChanges,
   Input,
   Component,
-  SimpleChanges
+  SimpleChanges,
+  OnInit
 } from '@angular/core';
+import {
+  Observable,
+  BehaviorSubject
+} from 'rxjs';
+import { distinctUntilChanged } from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
 import {
   ServerServicesView,
   AntiVirusStatus,
-  antiVirusStatusLabel,
   McsServerHostSecurityAntiVirus
 } from '@app/models';
 import {
   isNullOrEmpty,
   CommonDefinition
 } from '@app/utilities';
-import { ServiceDetailViewBase } from '../service-detail-view.base';
+import { ServerServiceDetailBase } from '../server-service-detail.base';
+
 
 type ServerAntiVirusStatusDetails = {
   icon: string;
-  label: string;
-  logsLinkFlag: boolean;
+  label?: string;
 };
 
 @Component({
@@ -29,7 +35,7 @@ type ServerAntiVirusStatusDetails = {
     'class': 'block'
   }
 })
-export class ServiceAntiVirusComponent extends ServiceDetailViewBase implements OnChanges {
+export class ServiceAntiVirusComponent extends ServerServiceDetailBase implements OnChanges, OnInit {
 
   @Input()
   public set antivirus(antivirus: McsServerHostSecurityAntiVirus) {
@@ -38,34 +44,53 @@ export class ServiceAntiVirusComponent extends ServiceDetailViewBase implements 
   public get antivirus(): McsServerHostSecurityAntiVirus {
     return this._antivirus;
   }
+  public antiVirusDetails$: Observable<ServerAntiVirusStatusDetails>;
 
   private _antivirusStatusDetailsMap: Map<AntiVirusStatus, ServerAntiVirusStatusDetails>;
-  private _antiVirusStatusDetails: ServerAntiVirusStatusDetails;
   private _antivirus: McsServerHostSecurityAntiVirus;
+  private _antiVirusDetailsChange: BehaviorSubject<ServerAntiVirusStatusDetails>;
 
-  constructor() {
+  constructor(private _translateService: TranslateService) {
     super(ServerServicesView.AntiVirus);
     this._createStatusMap();
-    this._antiVirusStatusDetails = this._antivirusStatusDetailsMap.get(AntiVirusStatus.Warning);
+    let antiVirusStatusDetails = this._antivirusStatusDetailsMap.get(AntiVirusStatus.Inactive);
+    this._antiVirusDetailsChange = new BehaviorSubject(antiVirusStatusDetails);
   }
 
   public ngOnChanges(changes: SimpleChanges) {
     let antivirus = changes['antivirus'];
-    if (!isNullOrEmpty(antivirus)) {
-      this._antiVirusStatusDetails = this._antivirusStatusDetailsMap.get(this._antivirus.status);
+    if (!isNullOrEmpty(antivirus) && this._antivirusStatusDetailsMap.has(this._antivirus.status)) {
+      let antiVirusStatusDetails = this._antivirusStatusDetailsMap.get(this._antivirus.status);
+      antiVirusStatusDetails.label = this._getStatusLabel(this._antivirus);
+
+      this._antiVirusDetailsChange.next(antiVirusStatusDetails);
     }
   }
 
-  public get statusIcon(): string {
-    return this._antiVirusStatusDetails.icon;
+  public ngOnInit() {
+    this._subscribeToAvDetails();
   }
 
-  public get statusLabel(): string {
-    return this._antiVirusStatusDetails.label;
+  /**
+   * Returns the anti virus details as observable
+   */
+  private _subscribeToAvDetails(): void {
+    this.antiVirusDetails$ = this._antiVirusDetailsChange.asObservable().pipe(
+      distinctUntilChanged()
+    );
   }
 
-  public get statusLogsLinkFlag(): boolean {
-    return this._antiVirusStatusDetails.logsLinkFlag;
+  /**
+   * Returns the Status label based on the Status of the av and its properties
+   */
+  private _getStatusLabel(hids: McsServerHostSecurityAntiVirus): string {
+    if (hids.status === AntiVirusStatus.Active && hids.realTimeScanEnabled) {
+      return this._translateService.instant('serverServices.antivirus.activeLabel.realtimeScanEnabled');
+    }
+    if (hids.status === AntiVirusStatus.Active && !hids.realTimeScanEnabled) {
+      return this._translateService.instant('serverServices.antivirus.activeLabel.realtimeScanDisabled');
+    }
+    return hids.statusMessage;
   }
 
   /**
@@ -75,24 +100,16 @@ export class ServiceAntiVirusComponent extends ServiceDetailViewBase implements 
     this._antivirusStatusDetailsMap = new Map();
 
     this._antivirusStatusDetailsMap.set(AntiVirusStatus.Active, {
-      icon: CommonDefinition.ASSETS_SVG_STATE_RUNNING,
-      label: antiVirusStatusLabel[AntiVirusStatus.Active],
-      logsLinkFlag: true
+      icon: CommonDefinition.ASSETS_SVG_STATE_RUNNING
     });
     this._antivirusStatusDetailsMap.set(AntiVirusStatus.Warning, {
-      icon: CommonDefinition.ASSETS_SVG_STATE_RESTARTING,
-      label: antiVirusStatusLabel[AntiVirusStatus.Warning],
-      logsLinkFlag: true
+      icon: CommonDefinition.ASSETS_SVG_STATE_RESTARTING
     });
     this._antivirusStatusDetailsMap.set(AntiVirusStatus.Inactive, {
-      icon: CommonDefinition.ASSETS_SVG_STATE_SUSPENDED,
-      label: antiVirusStatusLabel[AntiVirusStatus.Inactive],
-      logsLinkFlag: true
+      icon: CommonDefinition.ASSETS_SVG_STATE_STOPPED
     });
     this._antivirusStatusDetailsMap.set(AntiVirusStatus.Error, {
-      icon: CommonDefinition.ASSETS_SVG_STATE_STOPPED,
-      label: antiVirusStatusLabel[AntiVirusStatus.Error],
-      logsLinkFlag: true
+      icon: CommonDefinition.ASSETS_SVG_STATE_STOPPED
     });
   }
 }

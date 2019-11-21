@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import {
   McsServerBackupServer,
-  BackupStatus,
+  BackupAttemptStatus,
   backupServerStatusLabel,
   backupStatusSubtitleLabel,
   ServerServicesView
@@ -17,7 +17,7 @@ import {
   getSafeProperty,
   isNullOrEmpty
 } from '@app/utilities';
-import { ServiceDetailViewBase } from '../service-detail-view.base';
+import { ServerServiceDetailBase } from '../server-service-detail.base';
 
 type BackupServerStatusDetails = {
   icon: string;
@@ -33,7 +33,7 @@ type BackupServerStatusDetails = {
     'class': 'block'
   }
 })
-export class ServiceBackupServerComponent extends ServiceDetailViewBase implements OnChanges {
+export class ServiceBackupServerComponent extends ServerServiceDetailBase implements OnChanges {
 
   @Input()
   public set serverBackupServer(serverBackupServer: McsServerBackupServer) {
@@ -43,20 +43,20 @@ export class ServiceBackupServerComponent extends ServiceDetailViewBase implemen
     return this._serverBackupServer;
   }
 
-  private _backupServerStatusDetailsMap: Map<BackupStatus, BackupServerStatusDetails>;
+  private _backupServerStatusDetailsMap: Map<BackupAttemptStatus, BackupServerStatusDetails>;
   private _backupServerStatusDetails: BackupServerStatusDetails;
   private _serverBackupServer: McsServerBackupServer;
 
   constructor() {
     super(ServerServicesView.BackupServer);
     this._createStatusMap();
-    this._backupServerStatusDetails = this._backupServerStatusDetailsMap.get(BackupStatus.NotStarted);
+    this._backupServerStatusDetails = this._backupServerStatusDetailsMap.get(BackupAttemptStatus.NotStarted);
   }
 
   public ngOnChanges(changes: SimpleChanges) {
     let serverBackupChange = changes['serverBackupServer'];
     if (!isNullOrEmpty(serverBackupChange)) {
-      this._backupServerStatusDetails = this._backupServerStatusDetailsMap.get(this._serverBackupServer.status);
+      this._backupServerStatusDetails = this._backupServerStatusDetailsMap.get(this._serverBackupServer.lastBackupAttempt.status);
     }
   }
 
@@ -74,11 +74,7 @@ export class ServiceBackupServerComponent extends ServiceDetailViewBase implemen
   }
 
   public get statusSublabel(): string {
-    return replacePlaceholder(
-      this._backupServerStatusDetails.sublabel,
-      ['lastBackupAttempt', 'startTime'],
-      [this._serverBackupServer.lastBackupAttempt, this._serverBackupServer.startTime]
-    );
+    return replacePlaceholder(this._backupServerStatusDetails.sublabel, 'startTime', this._serverBackupServer.lastBackupAttempt.startedOn);
   }
 
   public get statusDetailsLinkFlag(): boolean {
@@ -91,28 +87,28 @@ export class ServiceBackupServerComponent extends ServiceDetailViewBase implemen
   private _createStatusMap(): void {
     this._backupServerStatusDetailsMap = new Map();
 
-    this._backupServerStatusDetailsMap.set(BackupStatus.Successful, {
+    this._backupServerStatusDetailsMap.set(BackupAttemptStatus.Successful, {
       icon: CommonDefinition.ASSETS_SVG_STATE_RUNNING,
-      label: backupServerStatusLabel[BackupStatus.Successful],
-      sublabel: backupStatusSubtitleLabel[BackupStatus.Successful],
+      label: backupServerStatusLabel[BackupAttemptStatus.Successful],
+      sublabel: backupStatusSubtitleLabel[BackupAttemptStatus.Successful],
       detailsLinkFlag: true
     });
-    this._backupServerStatusDetailsMap.set(BackupStatus.Failed, {
+    this._backupServerStatusDetailsMap.set(BackupAttemptStatus.Failed, {
       icon: CommonDefinition.ASSETS_SVG_STATE_STOPPED,
-      label: backupServerStatusLabel[BackupStatus.Failed],
-      sublabel: backupStatusSubtitleLabel[BackupStatus.Failed],
+      label: backupServerStatusLabel[BackupAttemptStatus.Failed],
+      sublabel: backupStatusSubtitleLabel[BackupAttemptStatus.Failed],
       detailsLinkFlag: true
     });
-    this._backupServerStatusDetailsMap.set(BackupStatus.InProgress, {
+    this._backupServerStatusDetailsMap.set(BackupAttemptStatus.InProgress, {
       icon: CommonDefinition.ASSETS_SVG_STATE_RESTARTING,
-      label: backupServerStatusLabel[BackupStatus.InProgress],
-      sublabel: backupStatusSubtitleLabel[BackupStatus.InProgress],
+      label: backupServerStatusLabel[BackupAttemptStatus.InProgress],
+      sublabel: backupStatusSubtitleLabel[BackupAttemptStatus.InProgress],
       detailsLinkFlag: true
     });
-    this._backupServerStatusDetailsMap.set(BackupStatus.NotStarted, {
+    this._backupServerStatusDetailsMap.set(BackupAttemptStatus.NotStarted, {
       icon: CommonDefinition.ASSETS_SVG_STATE_SUSPENDED,
-      label: backupServerStatusLabel[BackupStatus.NotStarted],
-      sublabel: backupStatusSubtitleLabel[BackupStatus.NotStarted],
+      label: backupServerStatusLabel[BackupAttemptStatus.NotStarted],
+      sublabel: backupStatusSubtitleLabel[BackupAttemptStatus.NotStarted],
       detailsLinkFlag: false
     });
   }

@@ -43,7 +43,8 @@ import {
   McsServerOsUpdatesCategory,
   McsServer,
   OsUpdatesScheduleType,
-  Day
+  Day,
+  ServerServicesAction
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -56,11 +57,11 @@ import {
   OsUpdatesScheduleDetails,
   ScheduleDay
 } from './os-updates-schedule-details';
-import { OsUpdatesActionDetails } from '../os-updates-status-configuration';
+import { ServerServiceActionDetail } from '../../../strategy/server-service-action.context';
 
 @Component({
-  selector: 'mcs-server-os-updates-schedule',
-  templateUrl: './os-updates-schedule.component.html',
+  selector: 'mcs-server-os-updates-schedule-details',
+  templateUrl: './os-updates-schedule-details.component.html',
   host: {
     'class': 'block'
   },
@@ -68,7 +69,7 @@ import { OsUpdatesActionDetails } from '../os-updates-status-configuration';
     animateFactory.fadeIn
   ]
 })
-export class OsUpdatesScheduleComponent implements OnInit {
+export class ServiceOsUpdatesScheduleDetailsComponent implements OnInit {
 
   public recurringCategories: McsServerOsUpdatesCategory[];
   public runOnceCategories: McsServerOsUpdatesCategory[];
@@ -96,10 +97,10 @@ export class OsUpdatesScheduleComponent implements OnInit {
   public selectedServer: McsServer;
 
   @Output()
-  public saveSchedule: EventEmitter<OsUpdatesActionDetails>;
+  public saveSchedule: EventEmitter<ServerServiceActionDetail>;
 
   @Output()
-  public deleteSchedule: EventEmitter<OsUpdatesActionDetails>;
+  public deleteSchedule: EventEmitter<ServerServiceActionDetail>;
 
   @ViewChild(McsFormGroupDirective, { static: false })
   private _formGroup: McsFormGroupDirective;
@@ -193,7 +194,7 @@ export class OsUpdatesScheduleComponent implements OnInit {
     this.runOnceCategories.forEach((category) => {
       if (category.isSelected) { request.categories.push(category.id); }
     });
-    let actionDetails = { server: this.selectedServer, requestData: request };
+    let actionDetails = { server: this.selectedServer, payload: request, action: ServerServicesAction.OsUpdatesScheduleSave };
 
     if (this.hasSchedule) {
       this._showScheduleDialog(
@@ -226,7 +227,7 @@ export class OsUpdatesScheduleComponent implements OnInit {
     this.recurringCategories.forEach((category) => {
       if (category.isSelected) { request.categories.push(category.id); }
     });
-    let actionDetails = { server: this.selectedServer, requestData: request };
+    let actionDetails = { server: this.selectedServer, payload: request, action: ServerServicesAction.OsUpdatesScheduleSave };
 
     if (this.hasSchedule) {
       this._showScheduleDialog(this.selectedServer,
@@ -255,7 +256,7 @@ export class OsUpdatesScheduleComponent implements OnInit {
     ).pipe(
       tap((dialogResult) => {
         if (isNullOrEmpty(dialogResult)) { return of(undefined); }
-        this.deleteSchedule.emit({ server: this.selectedServer });
+        this.deleteSchedule.emit({ server: this.selectedServer, action: ServerServicesAction.OsUpdatesScheduleDelete });
       })
     ).subscribe();
   }
@@ -550,9 +551,7 @@ export class OsUpdatesScheduleComponent implements OnInit {
     if (this._initialScheduleCategoryList.length !== selectedCategories.length) { return true; }
 
     let cloneCategoryList = this._initialScheduleCategoryList.slice();
-    deleteArrayRecord(cloneCategoryList, (item) => {
-      return !!categories.find((record) => record.id === item.id);
-    });
+    deleteArrayRecord(cloneCategoryList, (item) => !!categories.find((record) => record.id === item.id));
 
     return cloneCategoryList.length !== 0;
   }
@@ -568,9 +567,7 @@ export class OsUpdatesScheduleComponent implements OnInit {
   ): McsServerOsUpdatesCategory[] {
     let cloneCategories = categories.slice();
     cloneCategories.forEach((category) => {
-      category.isSelected = !isNullOrEmpty(selectedCategories.find(
-        (selectedCategory) => category.id === selectedCategory.id
-      ));
+      category.isSelected = !isNullOrEmpty(selectedCategories.find((selectedCategory) => category.id === selectedCategory.id));
     });
 
     return categories;

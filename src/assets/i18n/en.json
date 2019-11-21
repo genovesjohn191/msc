@@ -498,14 +498,13 @@
       "osAutomationNotAvailable": "This server does not currently support operating system updates via the Portal. Please contact your Macquarie Cloud Services accounts team for more information.",
       "updatesStatusTitleLabel": "Status",
       "updatesAnalysisLabel": "Inspect Now",
+      "updatesNowButtonLabel": "Update Now...",
       "updatesScheduleTitleLabel": "Jobs",
-      "updatesScheduleLabel": {
-        "scheduled": "You have an update schedule configured.",
-        "unscheduled": "No update schedule configured."
+      "updatesScheduleConfigureHoverLabel": {
+        "updating": "Update in progress.",
+        "analysing": "Inspection in progress."
       },
-      "updatesScheduleRunOnceWarningLabel": "Once this job is complete, you will need to set up a new update schedule.",
       "updatesScheduleConfigureLink": "Configure",
-      "updatesScheduleRunNowLink": "Update Now...",
       "deleteSuccessMessage": "Schedule deleted",
       "deleteErrorMessage": "Schedule could not be deleted at this time",
       "updateSuccessMessage": "Schedule saved",
@@ -540,10 +539,18 @@
     },
     "antivirus": {
       "title": "Anti-Virus",
+      "activeLabel": {
+        "realtimeScanEnabled": "Continuously scanning for threats",
+        "realtimeScanDisabled": "Realtime scan disabled"
+      },
       "logsLink": "View log"
     },
     "hids": {
       "title": "Host Intrusion Detection",
+      "activeLabel": {
+        "detect": "Your server will log intrusion attempts.",
+        "protect": "Your server will be defended against intrusion attempts."
+      },
       "logsLink": "View log"
     }
   },

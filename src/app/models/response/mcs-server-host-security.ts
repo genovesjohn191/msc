@@ -8,7 +8,7 @@ export class McsServerHostSecurity {
   public agentStatus: HostSecurityAgentStatus = undefined;
 
   @JsonProperty()
-  public agentStatusMessages: string = undefined;
+  public agentStatusMessages: string[] = undefined;
 
   @JsonProperty({ target: McsServerHostSecurityAntiVirus })
   public antiVirus: McsServerHostSecurityAntiVirus = undefined;
