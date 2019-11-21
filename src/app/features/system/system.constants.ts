@@ -22,13 +22,13 @@ export const systemRoutes: Routes = [
     component: SystemMessagesComponent
   },
   {
-    path: '',
+    path: 'create',
     component: SystemMessageCreateComponent,
     canDeactivate: [McsNavigateAwayGuard],
     data: { routeId: RouteKey.SystemMessageCreate }
   },
   {
-    path: '',
+    path: ':id',
     component: SystemMessageEditComponent,
     canDeactivate: [McsNavigateAwayGuard],
     data: { routeId: RouteKey.SystemMessageEdit },

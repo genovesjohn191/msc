@@ -25,14 +25,6 @@ import {
 } from './core';
 import { ServicesModule } from './services';
 import {
-  ConsolePageModule,
-  DefaultPageModule,
-  MaintenancePageModule,
-  SystemMessagePageModule
-} from './page-layout';
-import { FeaturesSharedModule } from './features-shared';
-import { SharedModule } from './shared';
-import {
   resolveEnvVar,
   isNullOrEmpty,
   McsEnvironmentVariables,
@@ -110,14 +102,7 @@ export function loggerConfig(cookieService: McsCookieService): LoggerConfig {
 
     CoreModule.forRoot(coreConfig),
     McsApiClientModule.forRoot(apiClientConfig, [McsCookieService]),
-    LoggerModule.forRoot(loggerConfig, [McsCookieService]),
-
-    FeaturesSharedModule,
-    SharedModule,
-    ConsolePageModule,
-    MaintenancePageModule,
-    SystemMessagePageModule,
-    DefaultPageModule
+    LoggerModule.forRoot(loggerConfig, [McsCookieService])
   ],
   providers: [
     AppState

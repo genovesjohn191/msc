@@ -38,7 +38,6 @@ export * from './services/mcs-system-message.service';
 export * from './providers/mcs-assets.provider';
 
 /** Base */
-export * from './base/mcs-routing-tab.base';
 export * from './base/mcs-form-field-control.base';
 export * from './base/mcs-status-settings.base';
 export * from './base/mcs-wizard.base';

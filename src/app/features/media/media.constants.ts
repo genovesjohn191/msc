@@ -36,14 +36,14 @@ export const mediaRoutes: Routes = [
     component: MediaComponent
   },
   {
-    path: '',
+    path: 'upload',
     component: MediaUploadComponent,
     canActivate: [McsRequiredResourcesGuard],
     canDeactivate: [McsNavigateAwayGuard],
     data: { routeId: RouteKey.MediaUpload }
   },
   {
-    path: '',
+    path: ':id',
     component: MediumComponent,
     data: { routeId: RouteKey.Medium },
     resolve: {
@@ -52,17 +52,17 @@ export const mediaRoutes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: '',
+        redirectTo: 'overview',
         pathMatch: 'full',
         data: { routeId: RouteKey.MediumOverview }
       },
       {
-        path: '',
+        path: 'overview',
         component: MediumOverviewComponent,
         data: { routeId: RouteKey.MediumOverview }
       },
       {
-        path: '',
+        path: 'servers',
         component: MediumServersComponent,
         data: { routeId: RouteKey.MediumServers }
       }

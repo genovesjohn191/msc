@@ -203,8 +203,10 @@ export class MediumComponent extends McsListViewListingBase<McsMediaGroup> imple
    */
   private _registerEvents(): void {
     this._routerHandler = this.eventDispatcher.addEventListener(
-      McsEvent.routeChange, (routeInfo: McsRouteInfo) =>
-      this.selectedTabId$ = of(routeInfo && routeInfo.routePath)
-    );
+      McsEvent.routeChange, (routeInfo: McsRouteInfo) => {
+        let tabUrl = routeInfo && routeInfo.urlAfterRedirects;
+        tabUrl = getSafeProperty(tabUrl, (obj) => obj.split('/').reduce((_prev, latest) => latest));
+        this.selectedTabId$ = of(tabUrl);
+      });
   }
 }

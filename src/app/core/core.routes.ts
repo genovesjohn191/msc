@@ -22,14 +22,6 @@ export class CoreRoutes {
   }
 
   /**
-   * Returns the route path of the given router key
-   * @param keyPath Router key from where the path will be obtained
-   */
-  public static getRoutePath(keyPath: RouteKey): string {
-    return this.getRouteInfoByKey(keyPath).routePath;
-  }
-
-  /**
    * Returns the navigation path of the route key
    * @param keyPath Router key from where the path will be obtained
    */
@@ -56,7 +48,6 @@ export class CoreRoutes {
       routeInfo.enumKey = jsonRouteInfo.enumKey &&
         +RouteKey[jsonRouteInfo.enumKey];
       routeInfo.navigationPath = jsonRouteInfo.navigationPath;
-      routeInfo.routePath = jsonRouteInfo.routePath;
       routeInfo.documentTitle = jsonRouteInfo.documentTitle;
       routeInfo.requiredPermissions = jsonRouteInfo.requiredPermissions;
       routeInfo.requiredFeatureFlag = jsonRouteInfo.requiredFeatureFlag;

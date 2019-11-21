@@ -22,13 +22,13 @@ export const ticketsRoutes: Routes = [
     component: TicketsComponent
   },
   {
-    path: '',
+    path: 'create',
     component: TicketCreateComponent,
     canDeactivate: [McsNavigateAwayGuard],
     data: { routeId: RouteKey.TicketCreate }
   },
   {
-    path: '',
+    path: ':id',
     component: TicketComponent,
     data: { routeId: RouteKey.TicketDetails },
     resolve: {
