@@ -8,6 +8,7 @@ export * from './services/service/os-updates-schedule/details/os-updates-schedul
 export * from './services/service/inview/inview.component';
 export * from './services/service/anti-virus/anti-virus.component';
 export * from './services/service/hids/hids.component';
+export * from './services/service/hids-details/hids-details.component';
 export * from './services/service/backup-vm/backup-vm.component';
 export * from './services/service/backup-server/backup-server.component';
 export * from './services/service/anti-virus/anti-virus.component';

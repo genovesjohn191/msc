@@ -35,8 +35,8 @@ import {
   McsServerBackupVm,
   McsServerBackupServer,
   McsServerHostSecurity,
-  McsServerHids,
   McsServerAntiVirus,
+  McsServerHostSecurityHidsLog,
 } from '@app/models';
 
 export interface IMcsApiServersService {
@@ -328,7 +328,6 @@ export interface IMcsApiServersService {
   /**
    * Gets the server hids
    * @param serverId Server id to where the hids will be coming from
-   * TODO: be rename to getServerHidsLogs and add this method to the interface
    */
-  getServerHids(id: string): Observable<McsApiSuccessResponse<McsServerHids>>;
+  getServerHostSecurityHidsLogs(id: string): Observable<McsApiSuccessResponse<McsServerHostSecurityHidsLog>>;
 }

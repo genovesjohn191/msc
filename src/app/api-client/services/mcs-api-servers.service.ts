@@ -42,7 +42,7 @@ import {
   McsServerBackupVm,
   McsServerBackupServer,
   McsServerAntiVirus,
-  McsServerHids,
+  McsServerHostSecurityHidsLog,
   McsServerHostSecurity
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
@@ -942,11 +942,10 @@ export class McsApiServersService implements IMcsApiServersService {
   }
 
   /**
-   * Gets the server hids
+   * Gets the server hids logs
    * @param serverId Server id to where the hids will be coming from
-   * TODO: be rename to getServerHidsLogs and add this method to the interface
    */
-  public getServerHids(id: string): Observable<McsApiSuccessResponse<McsServerHids>> {
+  public getServerHostSecurityHidsLogs(id: string): Observable<McsApiSuccessResponse<McsServerHostSecurityHidsLog>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${id}/hostsecurity/hids/logs`;
 
@@ -955,7 +954,7 @@ export class McsApiServersService implements IMcsApiServersService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<McsServerHids>(McsServerHids, response);
+            .deserializeResponse<McsServerHostSecurityHidsLog>(McsServerHostSecurityHidsLog, response);
           return apiResponse;
         })
       );

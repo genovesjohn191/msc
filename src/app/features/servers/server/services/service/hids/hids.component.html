@@ -11,16 +11,13 @@
           <small read-only>
             <mcs-item orientation="inline">
               <span mcsId="hids-status-label">{{ hidsDetails.label }}</span><br />
-              <!-- TODO: to be added when the details view is ready -->
-              <!-- <ng-container *ngIf="statusLogsLinkFlag">
-                <a mcsId="hids-status-logs-link"
-                  mcsEventTracker="hids-status-logs-link-click"
-                  mcsEventCategory="server"
-                  mcsEventLabel="hids-status-logs-view"
-                  (click)="changeView()">
-                  {{ 'serverServices.hids.logsLink' | translate }}
-                </a>
-              </ng-container> -->
+              <a mcsId="hids-status-logs-link"
+                mcsEventTracker="hids-status-logs-link-click"
+                mcsEventCategory="server"
+                mcsEventLabel="hids-status-logs-view"
+                (click)="changeView()">
+                {{ 'serverServices.hids.logsLink' | translate }}
+              </a>
             </mcs-item>
           </small>
         </div>
