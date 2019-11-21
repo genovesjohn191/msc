@@ -1,7 +1,7 @@
 import { McsEnumSerializationBase } from '../serialization/mcs-enum-serialization-base';
 
 export enum HidsProtectionLevel {
-  Prevent = 1,
+  Protect = 1,
   Detect = 2
 }
 

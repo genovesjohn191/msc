@@ -2,25 +2,31 @@ import {
   OnChanges,
   Input,
   Component,
-  SimpleChanges
+  SimpleChanges,
+  OnInit
 } from '@angular/core';
+import {
+  Observable,
+  BehaviorSubject
+} from 'rxjs';
+import { distinctUntilChanged } from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
 import {
   ServerServicesView,
   HidsStatus,
-  hidsStatusLabel,
-  McsServerHostSecurityHids
+  McsServerHostSecurityHids,
+  HidsProtectionLevel
 } from '@app/models';
 import {
   isNullOrEmpty,
   CommonDefinition
 } from '@app/utilities';
-import { ServiceDetailViewBase } from '../service-detail-view.base';
+import { ServerServiceDetailBase } from '../server-service-detail.base';
 
 
 type ServerHidsStatusDetails = {
   icon: string;
-  label: string;
-  logsLinkFlag: boolean;
+  label?: string;
 };
 
 @Component({
@@ -30,7 +36,7 @@ type ServerHidsStatusDetails = {
     'class': 'block'
   }
 })
-export class ServiceHidsComponent extends ServiceDetailViewBase implements OnChanges {
+export class ServiceHidsComponent extends ServerServiceDetailBase implements OnChanges, OnInit {
 
   @Input()
   public set hids(hids: McsServerHostSecurityHids) {
@@ -39,34 +45,53 @@ export class ServiceHidsComponent extends ServiceDetailViewBase implements OnCha
   public get hids(): McsServerHostSecurityHids {
     return this._hids;
   }
+  public hidsDetails$: Observable<ServerHidsStatusDetails>;
 
   private _hidsStatusDetailsMap: Map<HidsStatus, ServerHidsStatusDetails>;
-  private _hidsStatusDetails: ServerHidsStatusDetails;
   private _hids: McsServerHostSecurityHids;
+  private _hidsDetailsChange: BehaviorSubject<ServerHidsStatusDetails>;
 
-  constructor() {
+  constructor(private _translateService: TranslateService) {
     super(ServerServicesView.Hids);
     this._createStatusMap();
-    this._hidsStatusDetails = this._hidsStatusDetailsMap.get(HidsStatus.Warning);
+    let hidsStatusDetails = this._hidsStatusDetailsMap.get(HidsStatus.Inactive);
+    this._hidsDetailsChange = new BehaviorSubject(hidsStatusDetails);
   }
 
   public ngOnChanges(changes: SimpleChanges) {
     let hids = changes['hids'];
-    if (!isNullOrEmpty(hids)) {
-      this._hidsStatusDetails = this._hidsStatusDetailsMap.get(this._hids.status);
+    if (!isNullOrEmpty(hids) && this._hidsStatusDetailsMap.has(this._hids.status)) {
+      let hidsStatusDetails = this._hidsStatusDetailsMap.get(this._hids.status);
+      hidsStatusDetails.label = this._getStatusLabel(this._hids);
+
+      this._hidsDetailsChange.next(hidsStatusDetails);
     }
   }
 
-  public get statusIcon(): string {
-    return this._hidsStatusDetails.icon;
+  public ngOnInit() {
+    this._subscribeToHidsDetails();
   }
 
-  public get statusLabel(): string {
-    return this._hidsStatusDetails.label;
+  /**
+   * Returns the hids details as observable
+   */
+  private _subscribeToHidsDetails(): void {
+    this.hidsDetails$ = this._hidsDetailsChange.asObservable().pipe(
+      distinctUntilChanged()
+    );
   }
 
-  public get statusLogsLinkFlag(): boolean {
-    return this._hidsStatusDetails.logsLinkFlag;
+  /**
+   * Returns the Status label based on the Status of the hids and its protetion level
+   */
+  private _getStatusLabel(hids: McsServerHostSecurityHids): string {
+    if (hids.status === HidsStatus.Active && hids.mode === HidsProtectionLevel.Protect) {
+      return this._translateService.instant('serverServices.hids.activeLabel.protect');
+    }
+    if (hids.status === HidsStatus.Active && hids.mode === HidsProtectionLevel.Detect) {
+      return this._translateService.instant('serverServices.hids.activeLabel.detect');
+    }
+    return hids.statusMessage;
   }
 
   /**
@@ -76,24 +101,16 @@ export class ServiceHidsComponent extends ServiceDetailViewBase implements OnCha
     this._hidsStatusDetailsMap = new Map();
 
     this._hidsStatusDetailsMap.set(HidsStatus.Active, {
-      icon: CommonDefinition.ASSETS_SVG_STATE_RUNNING,
-      label: hidsStatusLabel[HidsStatus.Active],
-      logsLinkFlag: true
+      icon: CommonDefinition.ASSETS_SVG_STATE_RUNNING
     });
     this._hidsStatusDetailsMap.set(HidsStatus.Warning, {
-      icon: CommonDefinition.ASSETS_SVG_STATE_RESTARTING,
-      label: hidsStatusLabel[HidsStatus.Warning],
-      logsLinkFlag: true
+      icon: CommonDefinition.ASSETS_SVG_STATE_RESTARTING
     });
     this._hidsStatusDetailsMap.set(HidsStatus.Inactive, {
-      icon: CommonDefinition.ASSETS_SVG_STATE_SUSPENDED,
-      label: hidsStatusLabel[HidsStatus.Inactive],
-      logsLinkFlag: true
+      icon: CommonDefinition.ASSETS_SVG_STATE_STOPPED
     });
     this._hidsStatusDetailsMap.set(HidsStatus.Error, {
-      icon: CommonDefinition.ASSETS_SVG_STATE_STOPPED,
-      label: hidsStatusLabel[HidsStatus.Error],
-      logsLinkFlag: true
+      icon: CommonDefinition.ASSETS_SVG_STATE_STOPPED
     });
   }
 }

@@ -23,53 +23,43 @@ import {
 } from 'rxjs/operators';
 import {
   McsDataStatusFactory,
-  McsDateTimeService,
-  CoreConfig,
-  McsAuthenticationIdentity,
   McsServerPermission,
-  McsNavigationService
 } from '@app/core';
 import {
   animateFactory,
-  replacePlaceholder,
   unsubscribeSafely,
-  CommonDefinition
+  CommonDefinition,
+  getSafeProperty,
+  isNullOrEmpty
 } from '@app/utilities';
 import {
   McsServerOsUpdatesDetails,
   McsJob,
   McsServer,
-  OsUpdatesStatus,
   McsServerOsUpdatesScheduleRequest,
-  McsServerOsUpdatesInspectRequest,
   McsServerOsUpdatesSchedule,
-  McsServerOsUpdatesRequest,
   DataStatus,
-  InviewLevel,
-  RouteKey,
   McsServerBackupVm,
   McsServerBackupServer,
   ServerServicesView,
   HostSecurityAgentStatus,
   hostSecurityAgentStatusLabel,
   McsServerHostSecurityHids,
-  McsServerHostSecurityAntiVirus
+  McsServerHostSecurityAntiVirus,
+  JobType
 } from '@app/models';
 import { FormMessage } from '@app/shared';
 import { McsEvent } from '@app/events';
 import { ServerDetailsBase } from '../server-details.base';
 import {
-  OsUpdatesStatusConfiguration,
-  OsUpdatesActionDetails
-} from './os-updates-status-configuration';
-
-const OS_UPDATE_TIMEZONE = 'Australia/Sydney';
-const OS_UPDATE_DATEFORMAT = `EEEE, d MMMM, yyyy 'at' h:mm a`;
+  ServerServiceActionDetail,
+  ServerServiceActionContext
+} from './strategy/server-service-action.context';
 
 type ServerHostSecurityStatusDetails = {
   icon: string;
-  message: string;
   status: HostSecurityAgentStatus;
+  label?: string;
   hids?: McsServerHostSecurityHids;
   antiVirus?: McsServerHostSecurityAntiVirus;
 };
@@ -83,22 +73,21 @@ type ServerHostSecurityStatusDetails = {
 })
 export class ServerServicesComponent extends ServerDetailsBase implements OnInit, OnDestroy {
   public serverServicesView: ServerServicesView;
-  public updateStatusConfiguration: OsUpdatesStatusConfiguration;
   public updatesDetails$: Observable<McsServerOsUpdatesDetails>;
   public serverBackUpVm$: Observable<McsServerBackupVm>;
   public serverBackUpServer$: Observable<McsServerBackupServer>;
   public serverHostSecurityDetails$: Observable<ServerHostSecurityStatusDetails>;
   public serviceView$: Observable<ServerServicesView>;
+  public jobsMap$: Observable<Map<JobType, McsJob>>;
   public dataStatusFactory: McsDataStatusFactory<McsServerOsUpdatesDetails>;
   public serverPermission: McsServerPermission;
 
   private _inspectOsUpdateHandler: Subscription;
   private _applyOsUpdateHandler: Subscription;
-  private _onRaiseInviewHandler: Subscription;
   private _serviceViewChange = new BehaviorSubject<ServerServicesView>(ServerServicesView.Default);
-  private _updateStartedDate: Date;
-  private _raiseInviewInProgress: boolean = false;
-  private _inviewLabelMap: Map<InviewLevel, string>;
+  private _jobsMapChange: BehaviorSubject<Map<JobType, McsJob>>;
+  private _jobsMap: Map<JobType, McsJob>;
+  private _strategyActionContext: ServerServiceActionContext;
   private _hostSecurityStatusDetailsMap: Map<HostSecurityAgentStatus, ServerHostSecurityStatusDetails>;
 
   @ViewChild('formMessage', { static: false })
@@ -107,21 +96,19 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
   constructor(
     _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
-    private _authIdentity: McsAuthenticationIdentity,
-    private _navigationService: McsNavigationService,
-    private _coreConfig: CoreConfig,
-    private _dateTimeService: McsDateTimeService,
     private _translateService: TranslateService
   ) {
     super(_injector, _changeDetectorRef);
+    this._jobsMap = new Map();
+    this._jobsMapChange = new BehaviorSubject<Map<JobType, McsJob>>(this._jobsMap);
+    this._strategyActionContext = new ServerServiceActionContext(_injector);
     this.dataStatusFactory = new McsDataStatusFactory();
-    this.updateStatusConfiguration = new OsUpdatesStatusConfiguration();
   }
 
   public ngOnInit() {
-    this._populateInviewMap();
     this._registerEvents();
-    this._getServiceView();
+    this._subscribeToServiceView();
+    this._subscribeToJobsMap();
     this._createStatusMap();
   }
 
@@ -129,14 +116,6 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
     this.dispose();
     unsubscribeSafely(this._inspectOsUpdateHandler);
     unsubscribeSafely(this._applyOsUpdateHandler);
-    unsubscribeSafely(this._onRaiseInviewHandler);
-  }
-
-  /**
-   * Returns the clock icon key
-   */
-  public get clockKey(): string {
-    return CommonDefinition.ASSETS_SVG_CLOCK;
   }
 
   /**
@@ -147,71 +126,10 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
   }
 
   /**
-   * Returns the warning svg key
-   */
-  public get warningSvgKey(): string {
-    return CommonDefinition.ASSETS_SVG_WARNING;
-  }
-
-  /**
-   * Returns the updates schedule label depending if there is schedule set or not
-   */
-  public get updatesScheduleLabel(): string {
-    return this.updateStatusConfiguration.hasSchedule ?
-      this._translateService.instant('serverServices.operatingSystemUpdates.updatesScheduleLabel.scheduled') :
-      this._translateService.instant('serverServices.operatingSystemUpdates.updatesScheduleLabel.unscheduled');
-  }
-
-  /**
-   * Returns the updates status subtitle label for Updated/Outdated/Error status
-   * also returns the subtitle label for inspected server with status Analysing/Updating
-   */
-  public get updatesStatusSubtitleLabelDefault(): string {
-    if (!this.updateStatusConfiguration.hasBeenInspectedBefore) {
-      return this.updateStatusConfiguration.updatesStatusSubtitleLabel;
-    }
-
-    let formattedDate = this._dateTimeService.formatDate(
-      new Date(this.updateStatusConfiguration.lastInspectedDate),
-      OS_UPDATE_DATEFORMAT,
-      OS_UPDATE_TIMEZONE
-    );
-
-    return replacePlaceholder(
-      this.updateStatusConfiguration.updatesStatusSubtitleLabel,
-      'lastInspectDate',
-      formattedDate
-    );
-  }
-
-  /**
-   * Returns the updates status subtitle label for Updating status
-   */
-  public get updatesStatusSubtitleLabelUpdating(): string {
-    let formattedDate = this._dateTimeService.formatDate(
-      this._updateStartedDate,
-      OS_UPDATE_DATEFORMAT,
-      OS_UPDATE_TIMEZONE
-    );
-
-    return replacePlaceholder(
-      this.updateStatusConfiguration.updatesStatusSubtitleLabel,
-      'dateOfStart',
-      formattedDate);
-  }
-
-  /**
    * Returns the enum type of the server services view
    */
   public get serverServicesViewOption(): typeof ServerServicesView {
     return ServerServicesView;
-  }
-
-  /**
-   * Returns the enum type of the os update status
-   */
-  public get osUpdateStatusOption(): typeof OsUpdatesStatus {
-    return OsUpdatesStatus;
   }
 
   /**
@@ -227,9 +145,9 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
    * Event listener for saving the schedule
    * @param actionDetails includes the request data and the server reference
    */
-  public onSaveSchedule(actionDetails: OsUpdatesActionDetails): void {
+  public onSaveSchedule(actionDetails: ServerServiceActionDetail): void {
     this._serviceViewChange.next(ServerServicesView.Default);
-    this._saveSchedule(actionDetails.server, actionDetails.requestData).pipe(
+    this._saveSchedule(actionDetails.server, actionDetails.payload).pipe(
       tap(() => {
         this.refreshServerResource();
       })
@@ -240,7 +158,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
    * Event listener for deleting the schedule
    * @param actionDetails includes the request data and the server reference
    */
-  public onDeleteSchedule(actionDetails: OsUpdatesActionDetails): void {
+  public onDeleteSchedule(actionDetails: ServerServiceActionDetail): void {
     this._serviceViewChange.next(ServerServicesView.Default);
     this._deleteSchedule(actionDetails.server).pipe(
       tap(() => {
@@ -251,87 +169,20 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
 
   /**
    * Event listener for applying updates on the server
-   * @param actionDetails includes the request data and the server reference
+   * @param detail obj detail reference of the action
    */
-  public onApplyUpdates(actionDetails: OsUpdatesActionDetails): void {
+  public onPatchUpdates(detail: ServerServiceActionDetail): void {
     this._serviceViewChange.next(ServerServicesView.Default);
-    this._applyUpdates(actionDetails.server, actionDetails.requestData).subscribe();
+    this.executeAction(detail);
   }
 
   /**
-   * Checks for available os-update/s
-   * @param server selected server object reference
+   * Execute an action based on the provided type
+   * @param detail obj detail reference of the action
    */
-  public inspectForAvailableOsUpdates(server: McsServer): void {
-    this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Analysing);
-    let inspectRequest = new McsServerOsUpdatesInspectRequest();
-    inspectRequest.clientReferenceObject = {
-      serverId: server.id
-    };
-    this.apiService.inspectServerForAvailableOsUpdates(server.id, inspectRequest).subscribe();
-  }
-
-  /**
-   * Disable the inspect now button if the server is powered off or processing
-   * @param server selected server object reference
-   */
-  public inspectNowButtonDisabled(server: McsServer): boolean {
-    return server.isPoweredOff || server.isProcessing;
-  }
-
-  /**
-   * Disable the configure button if the server is processing, being analyse or update
-   * @param server selected server object reference
-   */
-  public configureButtonDisabled(server: McsServer): boolean {
-    return this.updateStatusConfiguration.configureScheduleButtonDisabled || server.isProcessing;
-  }
-
-  /**
-   * Returns specific description based on inview level
-   * @param server selected server object reference
-   */
-  public inviewLevelDescription(server: McsServer): string {
-    if (!server.serviceChangeAvailable || this._raiseInviewInProgress) {
-      return this._translateService.instant('serverServices.inview.inviewLevelDescription.unavailable');
-    }
-
-    return this._inviewLabelMap.get(server.inViewLevel);
-  }
-
-  /**
-   * Returns true if the Inview level is Standard only and the Install base is set to true
-   */
-  public raiseInviewButtonsShown(server: McsServer): boolean {
-    return server.isInviewStandard && server.serviceChangeAvailable;
-  }
-
-  /**
-   * Returns true if the Inview level is not None
-   */
-  public goToInviewButtonsShown(server: McsServer): boolean {
-    return !server.isInviewNone;
-  }
-
-  /**
-   * Returns the macquarie inview url
-   */
-  public inviewUrl(server: McsServer): string {
-    let inviewUrl = replacePlaceholder(
-      CommonDefinition.INVIEW_URL,
-      ['macviewUrl', 'companyId', 'inviewUrl', 'serviceId'],
-      [this._coreConfig.macviewUrl, this._authIdentity.activeAccount.id, this._coreConfig.inviewUrl, server.serviceId]
-    );
-
-    return inviewUrl;
-  }
-
-  /**
-   * Routes the user to the raise inview level ordering page
-   */
-  public raiseInviewLevel(server: McsServer): void {
-    this.eventDispatcher.dispatch(McsEvent.serverRaiseInviewSelected, server);
-    this._navigationService.navigateTo(RouteKey.OrderServiceInviewRaise);
+  public executeAction(detail: ServerServiceActionDetail): void {
+    this._strategyActionContext.setActionStrategyByType(detail);
+    this._strategyActionContext.executeAction();
   }
 
   /**
@@ -348,7 +199,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
   protected serverChange(server: McsServer): void {
     this._serviceViewChange.next(ServerServicesView.Default);
     this.serverPermission = new McsServerPermission(server);
-    this._getServerUpdateDetails(server.id);
+    this._getServerOsUpdatesDetails(server.id);
     this._getServerBackupVm(server.id);
     this._getServerBackupServer(server.id);
     this._getServerHostSecurity(server.id);
@@ -364,39 +215,10 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
     this._applyOsUpdateHandler = this.eventDispatcher.addEventListener(
       McsEvent.jobServerOsUpdateApply, this._onApplyServerOsUpdates.bind(this)
     );
-    this._onRaiseInviewHandler = this.eventDispatcher.addEventListener(
-      McsEvent.jobServerManagedRaiseInviewLevelEvent, this._onRaiseInviewLevel.bind(this)
-    );
 
     // Invoke the event initially
     this.eventDispatcher.dispatch(McsEvent.jobServerOsUpdateInspect);
     this.eventDispatcher.dispatch(McsEvent.jobServerOsUpdateApply);
-    this.eventDispatcher.dispatch(McsEvent.jobServerManagedRaiseInviewLevelEvent);
-  }
-
-  /**
-   * Sets the descriptions of different kind of inview level
-   */
-  private _populateInviewMap(): void {
-    this._inviewLabelMap = new Map();
-    this._inviewLabelMap.set(
-      InviewLevel.None, this._translateService.instant('serverServices.inview.inviewLevelDescription.none')
-    );
-    this._inviewLabelMap.set(
-      InviewLevel.Standard, this._translateService.instant('serverServices.inview.inviewLevelDescription.standard')
-    );
-    this._inviewLabelMap.set(
-      InviewLevel.Premium, this._translateService.instant('serverServices.inview.inviewLevelDescription.premium')
-    );
-  }
-
-  /**
-   * Returns the selected server as an observable
-   */
-  private _getServiceView(): void {
-    this.serviceView$ = this._serviceViewChange.asObservable().pipe(
-      distinctUntilChanged()
-    );
   }
 
   /**
@@ -404,22 +226,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
    * @param job job object reference
    */
   private _onInspectForAvailableOsUpdates(job: McsJob): void {
-    let serverIsActive = this.serverIsActiveByJob(job);
-    if (!serverIsActive) { return; }
-
-    if (job.dataStatus === DataStatus.Error) {
-      this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Error);
-      return;
-    }
-
-    // Refresh everything when all job is done
-    if (job.inProgress) {
-      this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Analysing);
-    } else {
-      this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Unanalysed);
-      this.refreshServerResource();
-    }
-    this._changeDetectorRef.markForCheck();
+    this._updateJobMap(job);
   }
 
   /**
@@ -427,38 +234,25 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
    * @param job job object reference
    */
   private _onApplyServerOsUpdates(job: McsJob): void {
-    let serverIsActive = this.serverIsActiveByJob(job);
-    if (!serverIsActive) { return; }
-
-    if (job.dataStatus === DataStatus.Error) {
-      this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Error);
-      return;
-    }
-
-    // Refresh everything when all job is done
-    if (job.inProgress) {
-      this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Updating);
-      this._updateStartedDate = job.startedOn;
-    } else {
-      this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Updated);
-      this.refreshServerResource();
-    }
-    this._changeDetectorRef.markForCheck();
+    this._updateJobMap(job);
   }
 
   /**
-   * Listener for the raise inview level method call
+   * Refreshes the resource when the Job received is completed
    * @param job job object reference
    */
-  private _onRaiseInviewLevel(job: McsJob): void {
+  private _updateJobMap(job: McsJob): void {
     let serverIsActive = this.serverIsActiveByJob(job);
     if (!serverIsActive) { return; }
 
-    if (job.inProgress) {
-      this._raiseInviewInProgress = true;
-      return;
+    this._jobsMap.set(job.type, job);
+    this._jobsMapChange.next(this._jobsMap);
+    if (job.dataStatus === DataStatus.Error) { return; }
+
+    // Refresh everything when all job is done
+    if (!job.inProgress) {
+      this.refreshServerResource();
     }
-    this._raiseInviewInProgress = false;
     this._changeDetectorRef.markForCheck();
   }
 
@@ -470,76 +264,30 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
 
     this._hostSecurityStatusDetailsMap.set(HostSecurityAgentStatus.Active, {
       icon: CommonDefinition.ASSETS_SVG_STATE_RUNNING,
-      message: hostSecurityAgentStatusLabel[HostSecurityAgentStatus.Active],
       status: HostSecurityAgentStatus.Active
     });
     this._hostSecurityStatusDetailsMap.set(HostSecurityAgentStatus.Warning, {
       icon: CommonDefinition.ASSETS_SVG_STATE_RESTARTING,
-      message: hostSecurityAgentStatusLabel[HostSecurityAgentStatus.Warning],
       status: HostSecurityAgentStatus.Warning
     });
     this._hostSecurityStatusDetailsMap.set(HostSecurityAgentStatus.Inactive, {
-      icon: CommonDefinition.ASSETS_SVG_STATE_SUSPENDED,
-      message: hostSecurityAgentStatusLabel[HostSecurityAgentStatus.Inactive],
+      icon: CommonDefinition.ASSETS_SVG_STATE_STOPPED,
       status: HostSecurityAgentStatus.Inactive
     });
     this._hostSecurityStatusDetailsMap.set(HostSecurityAgentStatus.Error, {
       icon: CommonDefinition.ASSETS_SVG_STATE_STOPPED,
-      message: hostSecurityAgentStatusLabel[HostSecurityAgentStatus.Error],
       status: HostSecurityAgentStatus.Error
     });
   }
 
-  /**
-   * Get the latest update details of the server from api
-   * @param id job object reference
-   */
-  private _getServerUpdateDetails(id: string): void {
-
-    this.dataStatusFactory.setInProgress();
-    this.updatesDetails$ = this.apiService.getServerOsUpdatesDetails(id).pipe(
-      catchError((error) => {
-        this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Error);
-        this.dataStatusFactory.setError();
-        return throwError(error);
-      }),
-      shareReplay(1),
-      tap((serverOsUpdateDetails) => {
-        this.dataStatusFactory.setSuccessful(serverOsUpdateDetails);
-        this.updateStatusConfiguration.setOsUpdateDetails(serverOsUpdateDetails);
-        if (this.updateStatusConfiguration.status === OsUpdatesStatus.Analysing
-          || this.updateStatusConfiguration.status === OsUpdatesStatus.Updating) {
-          return;
-        }
-        if (!this.updateStatusConfiguration.hasBeenInspectedBefore) {
-          this.updateStatusConfiguration.setOsUpdateStatus(OsUpdatesStatus.Unanalysed);
-          return;
-        }
-        let status = serverOsUpdateDetails.updateCount > 0 ?
-          OsUpdatesStatus.Outdated : OsUpdatesStatus.Updated;
-        this.updateStatusConfiguration.setOsUpdateStatus(status);
-      })
-    );
-  }
-
-  /**
-   * Apply the selected os updates on the server
-   * @param server selected server reference
-   * @param request request containing the update ids
-   */
-  private _applyUpdates(server: McsServer, request: McsServerOsUpdatesRequest): Observable<McsJob> {
-    return this.apiService.updateServerOs(server.id, request);
-  }
 
   /**
    * Save/Update os-update schedule based from serverId and request param
    * @param server selected server reference
    * @param request request containing the cron (schedule)
    */
-  private _saveSchedule(
-    server: McsServer,
-    request: McsServerOsUpdatesScheduleRequest
-  ): Observable<McsServerOsUpdatesSchedule> {
+  private _saveSchedule(server: McsServer, request: McsServerOsUpdatesScheduleRequest): Observable<McsServerOsUpdatesSchedule> {
+    // TODO: extract and put in the appropriate strategy action
     // TODO : find a better way of saving, currently deleting all then saving the new schedule
     return this.apiService.deleteServerOsUpdatesSchedule(server.id).pipe(
       catchError((httpError) => {
@@ -566,7 +314,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
    * @param server selected server reference
    */
   private _deleteSchedule(server: McsServer): Observable<boolean> {
-
+    // TODO: extract and put in the appropriate strategy action
     return this.apiService.deleteServerOsUpdatesSchedule(server.id).pipe(
       catchError((httpError) => {
         this._formMessage.showMessage('error', {
@@ -580,6 +328,40 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
           messages: this._translateService.instant('serverServices.operatingSystemUpdates.deleteSuccessMessage')
         });
       })
+    );
+  }
+
+  /**
+   * Returns the selected server as an observable
+   */
+  private _subscribeToServiceView(): void {
+    this.serviceView$ = this._serviceViewChange.asObservable().pipe(
+      distinctUntilChanged()
+    );
+  }
+
+  /**
+   * Returns the selected server as an observable
+   */
+  private _subscribeToJobsMap(): void {
+    this.jobsMap$ = this._jobsMapChange.asObservable().pipe(
+      distinctUntilChanged()
+    );
+  }
+
+  /**
+   * Get the latest os updates details of the server from api
+   * @param id job object reference
+   */
+  private _getServerOsUpdatesDetails(id: string): void {
+    this.dataStatusFactory.setInProgress();
+    this.updatesDetails$ = this.apiService.getServerOsUpdatesDetails(id).pipe(
+      catchError((error) => {
+        this.dataStatusFactory.setError();
+        return throwError(error);
+      }),
+      shareReplay(1),
+      tap((serverOsUpdateDetails) => this.dataStatusFactory.setSuccessful(serverOsUpdateDetails))
     );
   }
 
@@ -606,10 +388,15 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
   private _getServerHostSecurity(id: string): void {
     this.serverHostSecurityDetails$ = this.apiService.getServerHostSecurity(id).pipe(
       map((hostSecurity) => {
-        let hostSecurityDetails = this._hostSecurityStatusDetailsMap.get(hostSecurity.agentStatus);
-        hostSecurityDetails.hids = hostSecurity.hids;
-        hostSecurityDetails.antiVirus = hostSecurity.antiVirus;
-        return hostSecurityDetails;
+        let agentStatus = getSafeProperty(hostSecurity, (obj) => obj.agentStatus);
+        if (this._hostSecurityStatusDetailsMap.has(agentStatus)) {
+          let hostSecurityDetails: ServerHostSecurityStatusDetails = this._hostSecurityStatusDetailsMap.get(hostSecurity.agentStatus);
+          hostSecurityDetails.label = hostSecurityDetails.status !== HostSecurityAgentStatus.Active ?
+            getSafeProperty(hostSecurity, (obj) => obj.agentStatusMessages[0], hostSecurityDetails.label) : hostSecurityDetails.label;
+          hostSecurityDetails.hids = hostSecurity.hids;
+          hostSecurityDetails.antiVirus = hostSecurity.antiVirus;
+          return hostSecurityDetails;
+        }
       })
     );
   }

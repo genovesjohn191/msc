@@ -9,12 +9,13 @@ import { serverServicesActionMap } from './server-service-action.map';
 
 export type ServerServiceActionDetail = {
   action: ServerServicesAction,
-  server: McsServer
+  server: McsServer,
+  payload?: any
 };
 
 export class ServerServiceActionContext {
   private _eventStrategy: IServerServiceActionStrategy;
-  private _currentServer: McsServer;
+  private _serviceActionDetail: ServerServiceActionDetail;
 
   constructor(private _injector: Injector) { }
 
@@ -22,14 +23,14 @@ export class ServerServiceActionContext {
     let eventStrategy = serverServicesActionMap[serviceActionDetail.action];
     if (isNullOrEmpty(eventStrategy)) {
       throw new Error(`Unable to find strategy for type ${serviceActionDetail.action}.
-        Please make sure you've registered the type in the event map`);
+        Please make sure you've registered the type in the action map`);
     }
     this._eventStrategy = eventStrategy;
-    this._currentServer = serviceActionDetail.server;
+    this._serviceActionDetail = serviceActionDetail;
   }
 
   public executeAction(): void {
     this._eventStrategy.setInjector(this._injector);
-    this._eventStrategy.executeEvent(this._currentServer);
+    this._eventStrategy.executeEvent(this._serviceActionDetail);
   }
 }

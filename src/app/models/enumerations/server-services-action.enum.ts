@@ -1,3 +1,7 @@
 export enum ServerServicesAction {
-  OsUpdateInspect = 'OsUpdateInspect'
+  OsUpdatesInspect = 'OsUpdatesInspect',
+  OsUpdatesPatch = 'OsUpdatesPatch',
+  OsUpdatesScheduleSave = 'OsUpdatesScheduleSave',
+  OsUpdatesScheduleDelete = 'OsUpdatesScheduleDelete',
+  RaiseInviewLevel = 'RaiseInviewLevel',
 }

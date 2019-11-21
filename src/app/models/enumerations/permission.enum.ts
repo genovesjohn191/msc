@@ -22,6 +22,12 @@ export enum McsPermission {
   FirewallPolicyEdit = 'FirewallPolicyEdit',
   FirewallSerialNumberView = 'FirewallSerialNumberView',
 
+  // Server Services
+  AvView = 'AvView',
+  AvEdit = 'AvEdit',
+  HidsView = 'HidsView',
+  HidsEdit = 'HidsEdit',
+
   // vCloud Catalog
   CatalogView = 'CatalogView',
   TemplateView = 'TemplateView',

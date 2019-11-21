@@ -12,12 +12,15 @@ import {
   ServerNicsComponent,
   ServerBackupsComponent,
   ServerServicesComponent,
-  OsUpdatesScheduleComponent,
-  OsUpdatesApplyNowComponent,
+  ServiceOsUpdatesPatchComponent,
+  ServiceOsUpdatesPatchDetailsComponent,
+  ServiceOsUpdatesScheduleComponent,
+  ServiceOsUpdatesScheduleDetailsComponent,
   ServiceBackupServerComponent,
   ServiceBackupVmComponent,
   ServiceAntiVirusComponent,
-  ServiceHidsComponent
+  ServiceHidsComponent,
+  ServiceInviewComponent
 } from './server/';
 /** Create Servers */
 import {
@@ -49,12 +52,15 @@ import { serversProviders } from './servers.constants';
     ServerCloneComponent,
     ServerCreateAddOnsComponent,
     ServerServicesComponent,
-    OsUpdatesScheduleComponent,
-    OsUpdatesApplyNowComponent,
+    ServiceOsUpdatesPatchComponent,
+    ServiceOsUpdatesPatchDetailsComponent,
+    ServiceOsUpdatesScheduleComponent,
+    ServiceOsUpdatesScheduleDetailsComponent,
     ServiceBackupServerComponent,
     ServiceBackupVmComponent,
     ServiceAntiVirusComponent,
     ServiceHidsComponent,
+    ServiceInviewComponent,
     VdcComponent,
     VdcOverviewComponent,
     VdcStorageComponent

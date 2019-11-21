@@ -1,7 +1,7 @@
 import { Injector } from '@angular/core';
-import { McsServer } from '@app/models';
+import { ServerServiceActionDetail } from './server-service-action.context';
 
 export interface IServerServiceActionStrategy {
   setInjector(injector: Injector): void;
-  executeEvent(server: McsServer): void;
+  executeEvent(serviceActionDetail: ServerServiceActionDetail): void;
 }

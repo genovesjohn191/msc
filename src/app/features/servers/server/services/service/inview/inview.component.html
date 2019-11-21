@@ -1,0 +1,48 @@
+<mcs-presentation-panel>
+    <ng-container mcsPresentationPanelHeader>
+      <h2>{{ 'serverServices.inview.title' | translate }}</h2>
+    </ng-container>
+    <p>{{ 'serverServices.inview.description' | translate }}</p>
+
+    <mcs-section>
+      <mcs-grid-row>
+        <mcs-grid-column>
+          <mcs-item orientation="block">
+            <strong>{{ 'serverServices.inview.inviewLevelLabel' | translate }}</strong>
+            <p mcsId="raise-inview-level-description">{{ inviewLevelDescription(server) }}</p>
+          </mcs-item>
+        </mcs-grid-column>
+      </mcs-grid-row>
+      <ng-container *ngIf="raiseInviewButtonsShown(server) || !server.isInviewNone">
+        <mcs-grid-row *mcsExclusiveForAccount>
+          <mcs-item>
+            <ng-container *ngIf="!server.isInviewNone">
+              <a mcsButton size="xsmall"
+                mcsId="goto-inview-level"
+                mcsEventTracker="goto-inview-level-click"
+                mcsEventCategory="server"
+                mcsEventLabel="goto-inview-level-button"
+                [href]="inviewUrl()"
+                target="_blank"
+                [disabled]="server.isProcessing">
+                {{ 'serverServices.inview.goToinviewButtonLabel' | translate }}
+              </a>
+            </ng-container>
+            <ng-container *mcsAccessControl="['OrderEdit']">
+              <ng-container *ngIf="raiseInviewButtonsShown(server)">
+                <button mcsButton size="xsmall"
+                  mcsId="raise-inview-level"
+                  mcsEventTracker="raise-inview-level-click"
+                  mcsEventCategory="server"
+                  mcsEventLabel="raise-inview-level-button"
+                  (click)="onRaiseInviewLevel(server)"
+                  [disabled]="server.isProcessing && server.serviceChangeAvailable">
+                  {{ 'serverServices.inview.raiseinviewButtonLabel' | translate }}
+                </button>
+              </ng-container>
+            </ng-container>
+          </mcs-item>
+        </mcs-grid-row>
+      </ng-container>
+    </mcs-section>
+  </mcs-presentation-panel>

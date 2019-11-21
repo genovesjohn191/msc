@@ -1,13 +1,13 @@
 import { McsEnumSerializationBase } from '../serialization/mcs-enum-serialization-base';
 
-export enum HidsStatus {
+export enum AntiVirusStatus {
   Active = 'active',
   Warning = 'warning',
   Inactive = 'inactive',
   Error = 'error'
 }
 
-export class HidsStatusSerialization
-  extends McsEnumSerializationBase<HidsStatus> {
-  constructor() { super(HidsStatus); }
+export class AntiVirusStatusSerialization
+  extends McsEnumSerializationBase<AntiVirusStatus> {
+  constructor() { super(AntiVirusStatus); }
 }

@@ -21,28 +21,29 @@ import {
 import {
   McsServerOsUpdates,
   McsServer,
-  McsServerOsUpdatesRequest
+  McsServerOsUpdatesRequest,
+  ServerServicesAction
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { TreeNode } from '@app/shared';
 import { ServersService } from '@app/features/servers/servers.service';
 import { getSafeProperty } from '@app/utilities';
-import { OsUpdatesActionDetails } from '../os-updates-status-configuration';
+import { ServerServiceActionDetail } from '../../../strategy/server-service-action.context';
 
 @Component({
-  selector: 'mcs-server-os-updates-apply-now',
-  templateUrl: './os-updates-apply-now.component.html',
+  selector: 'mcs-service-os-updates-patch-details',
+  templateUrl: './os-updates-patch-details.component.html',
   host: {
     'class': 'block'
   }
 })
-export class OsUpdatesApplyNowComponent implements OnInit {
+export class ServiceOsUpdatesPatchDetailsComponent implements OnInit {
 
   @Input()
   public selectedServer: McsServer;
 
   @Output()
-  public applyUpdates: EventEmitter<OsUpdatesActionDetails>;
+  public patchUpdates: EventEmitter<ServerServiceActionDetail>;
 
   public osUpdates$: Observable<McsServerOsUpdates[]>;
   public dataStatusFactory: McsDataStatusFactory<McsServerOsUpdates[]>;
@@ -60,7 +61,7 @@ export class OsUpdatesApplyNowComponent implements OnInit {
     protected _apiService: McsApiService,
     protected _changeDetectorRef: ChangeDetectorRef,
   ) {
-    this.applyUpdates = new EventEmitter();
+    this.patchUpdates = new EventEmitter();
     this.dataStatusFactory = new McsDataStatusFactory();
     this.selectedNodes = new Array<TreeNode<McsServerOsUpdates>>();
   }
@@ -88,9 +89,10 @@ export class OsUpdatesApplyNowComponent implements OnInit {
     };
     this.selectedNodes.forEach((node) => request.updates.push(node.value.id));
 
-    this.applyUpdates.emit({
+    this.patchUpdates.emit({
       server: this.selectedServer,
-      requestData: request
+      action: ServerServicesAction.OsUpdatesPatch,
+      payload: request
     });
   }
 

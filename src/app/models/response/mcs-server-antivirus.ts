@@ -2,7 +2,7 @@ import { JsonProperty } from '@peerlancers/json-serialization';
 import {
   AntiVirusStatus,
   AntiVirusStatusSerialization
-} from '../enumerations/antivirus-status.enum';
+} from '../enumerations/anti-virus-status.enum';
 
 export class McsServerAntiVirus {
   @JsonProperty()
