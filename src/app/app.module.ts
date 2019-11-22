@@ -32,6 +32,7 @@ import {
   Guid,
   createObject
 } from './utilities';
+import { SharedModule } from './shared';
 import { McsApiClientConfig } from './api-client/mcs-api-client.config';
 import { McsApiClientModule } from './api-client/mcs-api-client.module';
 
@@ -103,7 +104,9 @@ export function loggerConfig(cookieService: McsCookieService): LoggerConfig {
 
     CoreModule.forRoot(coreConfig),
     McsApiClientModule.forRoot(apiClientConfig, [McsCookieService]),
-    LoggerModule.forRoot(loggerConfig, [McsCookieService])
+    LoggerModule.forRoot(loggerConfig, [McsCookieService]),
+
+    SharedModule
   ],
   providers: [
     AppState
