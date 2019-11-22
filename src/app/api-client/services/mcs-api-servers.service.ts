@@ -41,7 +41,7 @@ import {
   McsServerOsUpdatesInspectRequest,
   McsServerBackupVm,
   McsServerBackupServer,
-  McsServerAntiVirus,
+  McsServerHostSecurityAvLog,
   McsServerHostSecurityHidsLog,
   McsServerHostSecurity
 } from '@app/models';
@@ -922,11 +922,10 @@ export class McsApiServersService implements IMcsApiServersService {
   }
 
   /**
-   * Gets the server anti virus details
-   * @param serverId Server id to where the antivirus will be coming from
-   * TODO: be rename to getServerAntiVirusLogs and add this method to the interface
+   * Gets the server av logs
+   * @param serverId Server id to where the anti virus will be coming from
    */
-  public getServerAntiVirus(id: string): Observable<McsApiSuccessResponse<McsServerAntiVirus>> {
+  public getServerHostSecurityAvLogs(id: string): Observable<McsApiSuccessResponse<McsServerHostSecurityAvLog>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${id}/hostsecurity/av/logs`;
 
@@ -935,7 +934,7 @@ export class McsApiServersService implements IMcsApiServersService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<McsServerAntiVirus>(McsServerAntiVirus, response);
+            .deserializeResponse<McsServerHostSecurityAvLog>(McsServerHostSecurityAvLog, response);
           return apiResponse;
         })
       );

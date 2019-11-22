@@ -28,7 +28,7 @@ import { McsApiService } from '@app/services';
 import { TreeNode } from '@app/shared';
 import { ServersService } from '@app/features/servers/servers.service';
 import { getSafeProperty } from '@app/utilities';
-import { ServerServiceActionDetail } from '../../../strategy/server-service-action.context';
+import { ServerServiceActionDetail } from '../../strategy/server-service-action.context';
 
 @Component({
   selector: 'mcs-service-os-updates-patch-details',

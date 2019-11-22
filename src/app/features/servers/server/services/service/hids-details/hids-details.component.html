@@ -5,103 +5,128 @@
       <ng-content select="[mcsViewServicesTab]"></ng-content>
     </mcs-item>
   </ng-container>
-  <p>{{ 'serverServicesHidsDetails.description' | translate }}</p>
+  <mcs-grid>
+      <mcs-grid-row>
+        <mcs-grid-column sizeLg="11">
+          <p [innerHTML]="('serverServicesHidsDetails.description' | translate) | mcsNewLines"></p>
+        </mcs-grid-column>
+        <mcs-grid-column sizeLg="1">
+          <mcs-icon mcsStopPropagation [key]="ellipsisKey" size="large"
+            mcsPopover placement="bottom" orientation="left" theme="light"
+            padding="none" [content]="actionContent" mcsCursor="pointer">
+          </mcs-icon>
+          <ng-template #actionContent>
+            <div class="cog-actions-wrapper">
+              <a mcsButton="basic" color="white" labelPlacement="left"
+                target="_blank"
+                [href]="trendDsmLink"
+                mcsId
+                mcsEventTracker="view-in-trend-dsm-hids"
+                mcsEventCategory="server"
+                mcsEventLabel="server-services-view-in-trend-dsm-hids">
+                {{ 'serverServicesHidsDetails.viewInTrendDsmLabel' | translate }}
+              </a>
+            </div>
+          </ng-template>
+        </mcs-grid-column>
+      </mcs-grid-row>
+    </mcs-grid>
 
-  <!-- Table -->
-    <mcs-table [dataSource]="hidsDataSource">
-      <!-- Threat Column -->
-      <ng-container mcsColumnDef="threat">
-        <mcs-header-cell *mcsHeaderCellDef>
-          {{ 'serverServicesHidsDetails.columnHeaders.threat' | translate }}
-        </mcs-header-cell>
-        <mcs-data-cell *mcsDataCellDef="let row" text-wrap>
-          <span text-wrap>{{ row.description }}</span>
-        </mcs-data-cell>
-      </ng-container>
+   <!-- Table -->
+  <mcs-table [dataSource]="hidsDatasource">
+    <!-- Threat Column -->
+    <ng-container mcsColumnDef="threat">
+      <mcs-header-cell *mcsHeaderCellDef>
+        {{ 'serverServicesHidsDetails.columnHeaders.threat' | translate }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row" text-wrap>
+        <span text-wrap>{{ row.description }}</span>
+      </mcs-data-cell>
+    </ng-container>
 
-      <!-- Date Column -->
-      <ng-container mcsColumnDef="date">
-        <mcs-header-cell *mcsHeaderCellDef hidden-small>
-          {{ 'serverServicesHidsDetails.columnHeaders.date' | translate }}
-        </mcs-header-cell>
-        <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
-          <span text-wrap>{{ row.detectedOn }}</span>
-        </mcs-data-cell>
-      </ng-container>
+    <!-- Date Column -->
+    <ng-container mcsColumnDef="date">
+      <mcs-header-cell *mcsHeaderCellDef hidden-small>
+        {{ 'serverServicesHidsDetails.columnHeaders.date' | translate }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+        <span text-wrap>{{ row.detectedOn }}</span>
+      </mcs-data-cell>
+    </ng-container>
 
-      <!-- Application Type Column -->
-      <ng-container mcsColumnDef="applicationType">
-        <mcs-header-cell *mcsHeaderCellDef hidden-small>
-          {{ 'serverServicesHidsDetails.columnHeaders.applicationType' | translate }}
-        </mcs-header-cell>
-        <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
-          <span text-wrap>{{ row.applicationType }}</span>
-        </mcs-data-cell>
-      </ng-container>
+    <!-- Application Type Column -->
+    <ng-container mcsColumnDef="applicationType">
+      <mcs-header-cell *mcsHeaderCellDef hidden-small>
+        {{ 'serverServicesHidsDetails.columnHeaders.applicationType' | translate }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+        <span text-wrap>{{ row.applicationType }}</span>
+      </mcs-data-cell>
+    </ng-container>
 
-      <!-- Interface Column -->
-      <ng-container mcsColumnDef="interface">
-        <mcs-header-cell *mcsHeaderCellDef hidden-small>
-          {{ 'serverServicesHidsDetails.columnHeaders.interface' | translate }}
-        </mcs-header-cell>
-        <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
-          <span text-wrap>{{ row.interface }}</span>
-        </mcs-data-cell>
-      </ng-container>
+    <!-- Interface Type Column -->
+    <ng-container mcsColumnDef="interface">
+      <mcs-header-cell *mcsHeaderCellDef hidden-small>
+        {{ 'serverServicesHidsDetails.columnHeaders.interface' | translate }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+        <span text-wrap>{{ row.interface }}</span>
+      </mcs-data-cell>
+    </ng-container>
 
-      <!--Source IP Column -->
-      <ng-container mcsColumnDef="sourceIp">
-        <mcs-header-cell *mcsHeaderCellDef hidden-small>
-          {{ 'serverServicesHidsDetails.columnHeaders.sourceIp' | translate }}
-        </mcs-header-cell>
-        <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
-          <span text-wrap>{{ row.sourceIpAddress }}</span>
-        </mcs-data-cell>
-      </ng-container>
+    <!-- Source Ip Column -->
+    <ng-container mcsColumnDef="sourceIp">
+      <mcs-header-cell *mcsHeaderCellDef hidden-small>
+        {{ 'serverServicesHidsDetails.columnHeaders.sourceIp' | translate }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+        <span text-wrap>{{ row.sourceIpAddress }}</span>
+      </mcs-data-cell>
+    </ng-container>
 
-      <!-- Destination IP Column -->
-      <ng-container mcsColumnDef="destinationIp">
-        <mcs-header-cell *mcsHeaderCellDef hidden-small>
-          {{ 'serverServicesHidsDetails.columnHeaders.destinationIp' | translate }}
-        </mcs-header-cell>
-        <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
-          <span text-wrap>{{ row.destinationIpAddress }}</span>
-        </mcs-data-cell>
-      </ng-container>
+    <!-- Destination Ip Column -->
+    <ng-container mcsColumnDef="destinationIp">
+      <mcs-header-cell *mcsHeaderCellDef hidden-small>
+        {{ 'serverServicesHidsDetails.columnHeaders.destinationIp' | translate }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+        <span text-wrap>{{ row.destinationIpAddress }}</span>
+      </mcs-data-cell>
+    </ng-container>
 
-      <!-- Action Taken Column -->
-      <ng-container mcsColumnDef="actionTaken">
-        <mcs-header-cell *mcsHeaderCellDef hidden-small>
-          {{ 'serverServicesHidsDetails.columnHeaders.actionTaken' | translate }}
-        </mcs-header-cell>
-        <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
-          <span text-wrap>{{ row.actionTaken }}</span>
-        </mcs-data-cell>
-      </ng-container>
+    <!-- Action Taken Column -->
+    <ng-container mcsColumnDef="actionTaken">
+      <mcs-header-cell *mcsHeaderCellDef hidden-small>
+        {{ 'serverServicesHidsDetails.columnHeaders.actionTaken' | translate }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+        <span text-wrap>{{ row.actionTaken }}</span>
+      </mcs-data-cell>
+    </ng-container>
 
-      <!-- Target Type Column -->
-      <ng-container mcsColumnDef="targetType">
-        <mcs-header-cell *mcsHeaderCellDef hidden-small>
-          {{ 'serverServicesHidsDetails.columnHeaders.targetType' | translate }}
-        </mcs-header-cell>
-        <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
-          <span text-wrap>{{ row.targetType }}</span>
-        </mcs-data-cell>
-      </ng-container>
+    <!-- Target Type Column -->
+    <ng-container mcsColumnDef="targetType">
+      <mcs-header-cell *mcsHeaderCellDef hidden-small>
+        {{ 'serverServicesHidsDetails.columnHeaders.targetType' | translate }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+        <span text-wrap>{{ row.targetType }}</span>
+      </mcs-data-cell>
+    </ng-container>
 
-      <!-- Data Status Integration -->
-      <ng-container mcsDataStatusDef>
-        <mcs-data-empty *mcsDataEmptyDef>
-          <span>{{ 'serverServicesHidsDetails.noContent' | translate }} </span>
-        </mcs-data-empty>
-        <mcs-data-error *mcsDataErrorDef>
-          <span>{{ 'serverServicesHidsDetails.errorContent' | translate }}</span>
-        </mcs-data-error>
-      </ng-container>
+    <!-- Data Status Integration -->
+    <ng-container mcsDataStatusDef>
+      <mcs-data-empty *mcsDataEmptyDef>
+        <span>{{ 'serverServicesHidsDetails.noContent' | translate }} </span>
+      </mcs-data-empty>
+      <mcs-data-error *mcsDataErrorDef>
+        <span>{{ 'serverServicesHidsDetails.errorContent' | translate }}</span>
+      </mcs-data-error>
+    </ng-container>
 
-      <!-- Header and Data row -->
-      <mcs-header-row *mcsHeaderRowDef="hidsColumns"></mcs-header-row>
-      <mcs-data-row *mcsDataRowDef="let row; columns: hidsColumns;"></mcs-data-row>
-    </mcs-table>
+    <!-- Header and Data row -->
+    <mcs-header-row *mcsHeaderRowDef="hidsColumns"></mcs-header-row>
+    <mcs-data-row *mcsDataRowDef="let row; columns: hidsColumns;"></mcs-data-row>
+  </mcs-table>
 
 </mcs-presentation-panel>

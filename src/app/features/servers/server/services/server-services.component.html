@@ -70,7 +70,7 @@
       </ng-container>
 
        <!-- Host Security -->
-       <ng-container *mcsAccessControl="[]; feature: ['EnableAddonHidsView','EnableAddonAntiVirusView']">
+       <ng-container *mcsAccessControl="['HidsView', 'AvView']; feature: ['EnableAddonHidsView','EnableAddonAntiVirusView']">
          <ng-container *ngIf="serverHostSecurityDetails$ | async as serverHostSecurityDetails">
           <mcs-presentation-panel *ngIf="serverHostSecurityDetails?.hids?.provisioned || serverHostSecurityDetails?.antiVirus?.provisioned">
             <ng-container mcsPresentationPanelHeader>
@@ -87,7 +87,7 @@
                 <mcs-section>
 
                   <!-- Hids -->
-                  <ng-container orientation="block" *mcsAccessControl="[]; feature: 'EnableAddonHidsView'">
+                  <ng-container orientation="block" *mcsAccessControl="['HidsView']; feature: 'EnableAddonHidsView'">
                     <mcs-item *ngIf="serverHostSecurityDetails?.hids?.provisioned">
                       <mcs-service-hids
                         [hids]="serverHostSecurityDetails?.hids"
@@ -97,7 +97,7 @@
                   </ng-container>
 
                   <!-- Anti Virus -->
-                  <ng-container orientation="block" *mcsAccessControl="[]; feature: 'EnableAddonAntiVirusView'">
+                  <ng-container orientation="block" *mcsAccessControl="['AvView']; feature: 'EnableAddonAntiVirusView'">
                     <mcs-item *ngIf="serverHostSecurityDetails?.antiVirus?.provisioned">
                       <mcs-service-anti-virus
                         [antivirus]="serverHostSecurityDetails?.antiVirus"
@@ -162,6 +162,13 @@
           </mcs-server-os-updates-schedule-details>
         </ng-container>
       </ng-container>
+    </ng-container>
+
+    <!-- Details View Anti-Virus -->
+    <ng-container [@fadeIn] *ngSwitchCase="serverServicesViewOption.AntiVirus">
+      <mcs-service-anti-virus-details [serverId]="server?.id">
+        <ng-container mcsViewServicesTab *ngTemplateOutlet="servicesTabView"></ng-container>
+      </mcs-service-anti-virus-details>
     </ng-container>
 
     <!-- Details View Hids -->

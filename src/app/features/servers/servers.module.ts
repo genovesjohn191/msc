@@ -19,6 +19,7 @@ import {
   ServiceBackupServerComponent,
   ServiceBackupVmComponent,
   ServiceAntiVirusComponent,
+  ServiceAntiVirusDetailsComponent,
   ServiceHidsComponent,
   ServiceHidsDetailsComponent,
   ServiceInviewComponent
@@ -60,6 +61,7 @@ import { serversProviders } from './servers.constants';
     ServiceBackupServerComponent,
     ServiceBackupVmComponent,
     ServiceAntiVirusComponent,
+    ServiceAntiVirusDetailsComponent,
     ServiceHidsComponent,
     ServiceHidsDetailsComponent,
     ServiceInviewComponent,

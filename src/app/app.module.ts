@@ -51,6 +51,7 @@ export function coreConfig(): CoreConfig {
     macviewChangePasswordUrl: resolveEnvVar(McsEnvironmentVariables.MacviewChangePasswordUrl),
     termsAndConditionsUrl: resolveEnvVar(McsEnvironmentVariables.McsTermsAndConditionsUrl),
     inviewUrl: resolveEnvVar(McsEnvironmentVariables.McsInviewUrl),
+    trendDsmUrl: resolveEnvVar(McsEnvironmentVariables.McsTrendDsmUrl),
     imageRoot: resolveEnvVar(McsEnvironmentVariables.ImageRoot),
     iconRoot: resolveEnvVar(McsEnvironmentVariables.IconRoot),
     enryptionKey: resolveEnvVar(McsEnvironmentVariables.Ek)
