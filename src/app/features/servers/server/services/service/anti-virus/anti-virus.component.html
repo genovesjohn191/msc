@@ -11,8 +11,7 @@
             <small read-only>
               <mcs-item orientation="inline">
                 <span mcsId="antivirus-status-label">{{ antiVirusDetails.label }}</span><br />
-                <!-- TODO: to be added when the details view is ready -->
-                <!-- <ng-container *ngIf="statusLogsLinkFlag">
+                <ng-container *ngIf="statusLogsLinkFlag">
                   <a mcsId="antivirus-status-logs-link"
                     mcsEventTracker="antivirus-status-logs-link-click"
                     mcsEventCategory="server"
@@ -20,7 +19,7 @@
                     (click)="changeView()">
                     {{ 'serverServices.antivirus.logsLink' | translate }}
                   </a>
-                </ng-container> -->
+                </ng-container>
               </mcs-item>
             </small>
           </div>

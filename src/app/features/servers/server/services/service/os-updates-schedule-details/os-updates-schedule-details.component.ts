@@ -57,7 +57,7 @@ import {
   OsUpdatesScheduleDetails,
   ScheduleDay
 } from './os-updates-schedule-details';
-import { ServerServiceActionDetail } from '../../../strategy/server-service-action.context';
+import { ServerServiceActionDetail } from '../../strategy/server-service-action.context';
 
 @Component({
   selector: 'mcs-server-os-updates-schedule-details',

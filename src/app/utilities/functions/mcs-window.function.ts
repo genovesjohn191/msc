@@ -8,6 +8,7 @@ export enum McsEnvironmentVariables {
   MacviewChangePasswordUrl,
   McsTermsAndConditionsUrl,
   McsInviewUrl,
+  McsTrendDsmUrl,
   McsSessionExtensionWindowInSeconds,
   SentryDns,
   ImageRoot,
@@ -54,6 +55,9 @@ export function resolveEnvVar(envName: McsEnvironmentVariables, defaultValue: st
       break;
     case McsEnvironmentVariables.McsInviewUrl:
       overrideValue = windowEnvironmentConfig.inviewUrl;
+      break;
+    case McsEnvironmentVariables.McsTrendDsmUrl:
+      overrideValue = windowEnvironmentConfig.trendDsmUrl;
       break;
     case McsEnvironmentVariables.McsSessionExtensionWindowInSeconds:
       overrideValue = windowEnvironmentConfig.sessionExtensionWindowInSeconds;

@@ -103,4 +103,13 @@ export class CoreConfig {
   public set inviewUrl(value: string) {
     this._inviewUrl = value;
   }
+
+   /** Trend DSM URL */
+   private _trendDsmUrl: string;
+   public get trendDsmUrl(): string {
+     return this._trendDsmUrl;
+   }
+   public set trendDsmUrl(value: string) {
+     this._trendDsmUrl = value;
+   }
 }
