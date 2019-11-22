@@ -2,9 +2,13 @@ import {
   Component,
   ChangeDetectorRef,
   ChangeDetectionStrategy,
-  Injector
+  Injector,
+  OnDestroy
 } from '@angular/core';
-import { Observable } from 'rxjs';
+import {
+  Observable,
+  Subscription
+} from 'rxjs';
 import {
   McsTableListingBase,
   McsAuthenticationIdentity,
@@ -12,7 +16,8 @@ import {
 } from '@app/core';
 import {
   isNullOrEmpty,
-  CommonDefinition
+  CommonDefinition,
+  unsubscribeSafely
 } from '@app/utilities';
 import { McsApiService } from '@app/services';
 import {
@@ -22,7 +27,7 @@ import {
   McsQueryParam,
   McsApiCollection
 } from '@app/models';
-import { EventBusPropertyListenOn } from '@peerlancers/ngx-event-bus';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import { McsEvent } from '@app/events';
 
 @Component({
@@ -32,23 +37,27 @@ import { McsEvent } from '@app/events';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class NotificationsComponent extends McsTableListingBase<McsJob> {
-
-  @EventBusPropertyListenOn(McsEvent.accountChange)
-  public activeCompany$: Observable<McsCompany>;
+export class NotificationsComponent extends McsTableListingBase<McsJob> implements OnDestroy {
+  private _accountChangeHandler: Subscription;
 
   public constructor(
     _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
+    private _eventDispatcher: EventBusDispatcherService,
     private _navigationService: McsNavigationService,
     private _authenticationIdentity: McsAuthenticationIdentity,
     private _apiService: McsApiService
   ) {
     super(_injector, _changeDetectorRef, { dataChangeEvent: McsEvent.dataChangeJobs });
+    this._registerEvents();
   }
 
   public get activeCompany(): McsCompany {
     return this._authenticationIdentity.activeAccount;
+  }
+
+  public ngOnDestroy(): void {
+    unsubscribeSafely(this._accountChangeHandler);
   }
 
   /**
@@ -73,5 +82,14 @@ export class NotificationsComponent extends McsTableListingBase<McsJob> {
    */
   protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsJob>> {
     return this._apiService.getJobs(query);
+  }
+
+  /**
+   * Register the events
+   */
+  private _registerEvents(): void {
+    this._accountChangeHandler = this._eventDispatcher.addEventListener(
+      McsEvent.accountChange, () => this.changeDetectorRef.markForCheck()
+    );
   }
 }

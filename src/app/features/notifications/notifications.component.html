@@ -65,7 +65,7 @@
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
             <span>{{ row.initiatorFullName }}</span><br/>
-            <span read-only *ngIf="(activeCompany$ | async)?.id !== row.initiatorCompanyId">
+            <span read-only *ngIf="activeCompany?.id !== row.initiatorCompanyId">
               {{ 'notifications.account' | translate }}
             </span>
           </mcs-data-cell>
