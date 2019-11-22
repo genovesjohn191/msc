@@ -11,15 +11,13 @@
             <small read-only>
               <mcs-item orientation="inline">
                 <span mcsId="antivirus-status-label">{{ antiVirusDetails.label }}</span><br />
-                <ng-container *ngIf="statusLogsLinkFlag">
-                  <a mcsId="antivirus-status-logs-link"
-                    mcsEventTracker="antivirus-status-logs-link-click"
-                    mcsEventCategory="server"
-                    mcsEventLabel="antivirus-status-logs-view"
-                    (click)="changeView()">
-                    {{ 'serverServices.antivirus.logsLink' | translate }}
-                  </a>
-                </ng-container>
+                <a mcsId="antivirus-status-logs-link"
+                  mcsEventTracker="antivirus-status-logs-link-click"
+                  mcsEventCategory="server"
+                  mcsEventLabel="antivirus-status-logs-view"
+                  (click)="changeView()">
+                  {{ 'serverServices.antivirus.logsLink' | translate }}
+                </a>
               </mcs-item>
             </small>
           </div>
