@@ -5,29 +5,47 @@
   <mcs-grid *ngIf="orderGroupDetails$ | async as groupDetails">
     <mcs-grid-row>
       <!-- New Orders -->
-      <mcs-grid-column *ngIf="groupDetails.newOrders | mcsIsNotNullOrEmpty">
-        <section>
-          <h3>{{ 'orderGroups.newLabel' | translate }}</h3>
-          <div *ngFor="let newOrder of groupDetails.newOrders">
-            <a (click)="executeOrderAvailable(newOrder.productOrderType)">
-              <h5>{{ newOrder.orderAction }}</h5>
-            </a>
-            <span>{{ newOrder.description }}</span>
-          </div>
-        </section>
+      <mcs-grid-column>
+        <mcs-presentation-panel mcsId="new-orders">
+          <ng-container mcsPresentationPanelHeader>
+            <h2>{{ 'orderGroups.newLabel' | translate }}</h2>
+          </ng-container>
+
+          <section *ngIf="groupDetails.newOrders | mcsIsNotNullOrEmpty; else noNewOrdersTemplate">
+            <div padding-bottom-small *ngFor="let newOrder of groupDetails.newOrders">
+              <a (click)="executeOrderAvailable(newOrder.productOrderType)">
+                <span>{{ newOrder.orderAction }}</span>
+              </a><br/>
+              <span read-only>{{ newOrder.description }}</span>
+            </div>
+          </section>
+
+          <ng-template #noNewOrdersTemplate>
+            <span read-only>{{ 'orderGroups.noNewOrdersMessage' | translate }}</span>
+          </ng-template>
+        </mcs-presentation-panel>
       </mcs-grid-column>
 
       <!-- Change Orders -->
-      <mcs-grid-column *ngIf="groupDetails.changeOrders | mcsIsNotNullOrEmpty">
-        <section>
-          <h3>{{ 'orderGroups.changeLabel' | translate }}</h3>
-          <div *ngFor="let changeOrder of groupDetails.changeOrders">
-            <a (click)="executeOrderAvailable(changeOrder.productOrderType)">
-              <h5>{{ changeOrder.orderAction }}</h5>
-            </a>
-            <span>{{ changeOrder.description }}</span>
-          </div>
-        </section>
+      <mcs-grid-column>
+        <mcs-presentation-panel mcsId="change-orders">
+          <ng-container mcsPresentationPanelHeader>
+            <h2>{{ 'orderGroups.changeLabel' | translate }}</h2>
+          </ng-container>
+
+          <section *ngIf="groupDetails.changeOrders | mcsIsNotNullOrEmpty; else noChangeOrdersTemplate">
+            <div padding-bottom-small *ngFor="let changeOrder of groupDetails.changeOrders">
+              <a (click)="executeOrderAvailable(changeOrder.productOrderType)">
+                <span>{{ changeOrder.orderAction }}</span>
+              </a><br/>
+              <span read-only>{{ changeOrder.description }}</span>
+            </div>
+          </section>
+
+          <ng-template #noChangeOrdersTemplate>
+            <span read-only>{{ 'orderGroups.noChangeOrdersMessage' | translate }}</span>
+          </ng-template>
+        </mcs-presentation-panel>
       </mcs-grid-column>
     </mcs-grid-row>
   </mcs-grid>
