@@ -60,6 +60,6 @@ export class ListComponent implements AfterViewInit {
   }
 
   public get hasCustomHeader(): boolean {
-    return isNullOrEmpty(this.headerTemplate);
+    return !isNullOrEmpty(this.headerTemplate);
   }
 }

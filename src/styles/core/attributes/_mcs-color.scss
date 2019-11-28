@@ -11,12 +11,18 @@
   $color-shade: map-get($color-object, shade);
   $color-tint: map-get($color-object, tint);
 
+  // @deprecated: use the fill-color instead
   [color-#{$color-key}] {
     background-color: $color-base !important;
     color: $color-contrast !important;
   }
 
-  [text-color-#{$color-key}] {
+  [fill-color="#{$color-key}"] {
+    background-color: $color-base !important;
+    color: $color-contrast !important;
+  }
+
+  [text-color="#{$color-key}"] {
     color: $color-base !important;
   }
 }
