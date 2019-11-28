@@ -12,6 +12,7 @@ $wizard-top-panel-bg-color: $color-white;
 $wizard-content-panel-large-padding: $content-large-padding;
 $wizard-content-panel-small-padding: $content-small-padding;
 // Step items
+$step-container-z-index: 10;
 $step-header-padding: $space-large;
 $step-header-font-size: 16;
 $step-header-font: $base-font-bold;
@@ -112,11 +113,13 @@ $step-disabled-color: $color-grey-02;
 }
 
 .wizard-steps-desktop {
-  position: absolute;
+  position: fixed;
   height: 100%;
   @include display-flex(column);
   width: $wizard-left-panel-width;
   border-right: 1px solid $wizard-border-color;
+  z-index: $step-container-z-index;
+  background: $color-white;
 
   .wizard-steps-header {
     padding-left: $step-header-padding;

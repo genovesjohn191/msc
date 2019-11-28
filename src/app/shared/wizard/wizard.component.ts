@@ -22,6 +22,7 @@ import {
   coerceBoolean,
   CommonDefinition
 } from '@app/utilities';
+import { McsScrollDispatcherService } from '@app/core';
 import { WizardStepComponent } from './wizard-step/wizard-step.component';
 import { WizardTopPanelDefDirective } from './wizard-top-panel/wizard-top-panel-def.directive';
 import {
@@ -80,7 +81,10 @@ export class WizardComponent implements AfterContentInit, OnDestroy {
     return this._wizardSteps.toArray();
   }
 
-  public constructor(private _changeDetectorRef: ChangeDetectorRef) {
+  public constructor(
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _scrollDispatcher: McsScrollDispatcherService
+  ) {
     this.isCompleted = false;
     this.activeStep = new WizardStepComponent();
     this.stepChange = new EventEmitter<IWizardStep>();
@@ -192,7 +196,22 @@ export class WizardComponent implements AfterContentInit, OnDestroy {
     if (this.activeStepIndex === (this.steps.length - 1)) {
       this.stepsCompleted();
     }
+
+    this._scrollPageToTop();
     this.stepChange.emit(this.activeStep);
     this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Scrolls to top when route has been changed
+   */
+  private _scrollPageToTop(): void {
+    let scrollableElements = this._scrollDispatcher.getScrollableItems();
+    if (isNullOrEmpty(scrollableElements)) { return; }
+
+    scrollableElements.forEach((item) => {
+      let scrollableElement = item.getElementRef().nativeElement;
+      this._scrollDispatcher.scrollToElement(scrollableElement, 0, 0);
+    });
   }
 }
