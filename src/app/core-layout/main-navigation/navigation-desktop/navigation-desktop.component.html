@@ -14,10 +14,8 @@
                     </ng-container>
 
                     <mcs-section>
-                      <mcs-list [header]="category.name"
-                        *ngFor="let category of catalog.categories">
-                        <mcs-list-item *ngFor="let product of category.products">
-
+                      <mcs-list [header]="category.name" *ngFor="let category of catalog.categories">
+                        <mcs-item *ngFor="let product of category.products">
                           <a mcsButton="basic"
                             [mcsGreyedOut]="product.isActiveIncompleteRelease"
                             labelPlacement="left" text-wrap full-width
@@ -29,12 +27,12 @@
                             mcsEventCategory="navigation"
                             mcsEventLabel="main-nav">
                             {{ product.name }}</a>
-
-                        </mcs-list-item>
+                        </mcs-item>
                       </mcs-list>
                     </mcs-section>
                   </mcs-presentation-panel>
                 </mcs-grid-column>
+
                 <mcs-divider *ngIf="!isLastItem" orientation="vertical"></mcs-divider>
               </ng-container>
             </mcs-grid-row>
