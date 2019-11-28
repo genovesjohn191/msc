@@ -23,7 +23,7 @@
                       <mcs-service-os-updates-patch
                         [osUpdatesDetails]="updatesDetails"
                         [server]="server"
-                        [jobsMap]="jobsMap$ | async"
+                        [job]="currentJob$ | async"
                         (inspectAvailableUpdates)="executeAction($event)"
                         (viewChange)="onViewChange($event)">
                       </mcs-service-os-updates-patch>
@@ -36,7 +36,7 @@
                       <mcs-service-os-updates-schedule
                         [osUpdatesDetails]="updatesDetails"
                         [server]="server"
-                        [jobsMap]="jobsMap$ | async"
+                        [job]="currentJob$ | async"
                         (viewChange)="onViewChange($event)">
                       </mcs-service-os-updates-schedule>
                     </mcs-grid-column>
@@ -72,7 +72,7 @@
        <!-- Host Security -->
        <ng-container *mcsAccessControl="['HidsView', 'AvView']; feature: ['EnableAddonHidsView','EnableAddonAntiVirusView']">
          <ng-container *ngIf="serverHostSecurityDetails$ | async as serverHostSecurityDetails">
-          <mcs-presentation-panel *ngIf="serverHostSecurityDetails?.hids?.provisioned || serverHostSecurityDetails?.antiVirus?.provisioned">
+          <mcs-presentation-panel *ngIf="serverHostSecurityDetails?.hids?.enabled || serverHostSecurityDetails?.antiVirus?.enabled">
             <ng-container mcsPresentationPanelHeader>
               <h2>{{ 'serverServices.hostSecurity.title' | translate }}</h2>
             </ng-container>
@@ -88,8 +88,9 @@
 
                   <!-- Hids -->
                   <ng-container orientation="block" *mcsAccessControl="['HidsView']; feature: 'EnableAddonHidsView'">
-                    <mcs-item *ngIf="serverHostSecurityDetails?.hids?.provisioned">
+                    <mcs-item *ngIf="serverHostSecurityDetails?.hids?.enabled">
                       <mcs-service-hids
+                        [server]="server"
                         [hids]="serverHostSecurityDetails?.hids"
                         (viewChange)="onViewChange($event)">
                       </mcs-service-hids>
@@ -98,8 +99,9 @@
 
                   <!-- Anti Virus -->
                   <ng-container orientation="block" *mcsAccessControl="['AvView']; feature: 'EnableAddonAntiVirusView'">
-                    <mcs-item *ngIf="serverHostSecurityDetails?.antiVirus?.provisioned">
+                    <mcs-item *ngIf="serverHostSecurityDetails?.antiVirus?.enabled">
                       <mcs-service-anti-virus
+                        [server]="server"
                         [antivirus]="serverHostSecurityDetails?.antiVirus"
                         (viewChange)="onViewChange($event)">
                       </mcs-service-anti-virus>

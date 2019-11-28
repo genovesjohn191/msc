@@ -4,7 +4,7 @@ import { AntiVirusStatus } from '../enumerations/anti-virus-status.enum';
 export class McsServerHostSecurityAntiVirus {
 
   @JsonProperty()
-  public provisioned: boolean = undefined;
+  public enabled: boolean = undefined;
 
   @JsonProperty()
   public realTimeScanEnabled: boolean = undefined;

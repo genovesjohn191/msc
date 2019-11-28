@@ -2,8 +2,14 @@ import {
   Component,
   Input,
   OnChanges,
-  SimpleChanges
+  SimpleChanges,
+  OnInit
 } from '@angular/core';
+import {
+  BehaviorSubject,
+  Observable
+} from 'rxjs';
+import { distinctUntilChanged } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 import { McsServerPermission } from '@app/core';
 import {
@@ -27,13 +33,18 @@ import {
 } from '@app/utilities';
 import { ServerServiceDetailBase } from '../server-service-detail.base';
 
-
 type OsUpdatesScheduleDetails = {
   label: string;
   type: OsUpdatesScheduleType;
   sublabel?: string;
   warningLabel?: string;
 };
+
+interface OsUpdateScheduleStatus {
+  isUpdating: boolean;
+  isAnalysing: boolean;
+  hasErrors: boolean;
+}
 
 @Component({
   selector: 'mcs-service-os-updates-schedule',
@@ -43,7 +54,7 @@ type OsUpdatesScheduleDetails = {
   }
 })
 
-export class ServiceOsUpdatesScheduleComponent extends ServerServiceDetailBase implements OnChanges {
+export class ServiceOsUpdatesScheduleComponent extends ServerServiceDetailBase implements OnChanges, OnInit {
 
   @Input()
   public set osUpdatesDetails(details: McsServerOsUpdatesDetails) {
@@ -54,29 +65,32 @@ export class ServiceOsUpdatesScheduleComponent extends ServerServiceDetailBase i
   }
 
   @Input()
-  public set jobsMap(jobsMap: Map<JobType, McsJob>) {
-    this._jobsMap = jobsMap;
+  public set job(job: McsJob) {
+    this._job = job;
   }
-  public get jobsMap(): Map<JobType, McsJob> {
-    return this._jobsMap;
+  public get job(): McsJob {
+    return this._job;
   }
 
   public serverPermission: McsServerPermission;
+  public scheduleStatus$: Observable<OsUpdateScheduleStatus>;
 
   private _osUpdatesDetails: McsServerOsUpdatesDetails;
   private _osUpdatesScheduleDetailsMap: Map<OsUpdatesScheduleType, OsUpdatesScheduleDetails>;
   private _osUpdatesScheduleDetails: OsUpdatesScheduleDetails;
-  private _jobsMap: Map<JobType, McsJob>;
-  private _isUpdating: boolean = false;
-  private _isAnalysing: boolean = false;
-  private _hasErrors: boolean = false;
+  private _job: McsJob;
 
-  constructor(
-    private _translateService: TranslateService
-  ) {
+  private _scheduleStatusChange: BehaviorSubject<OsUpdateScheduleStatus>;
+
+  constructor(private _translateService: TranslateService) {
     super(ServerServicesView.OsUpdatesSchedule);
+    this._scheduleStatusChange = new BehaviorSubject<OsUpdateScheduleStatus>({ hasErrors: false, isAnalysing: false, isUpdating: false });
     this._createScheduleMap();
     this._setOsUpdateScheduleByType(OsUpdatesScheduleType.None);
+  }
+
+  public ngOnInit() {
+    this._subscribeToScheduleStatus();
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -85,17 +99,15 @@ export class ServiceOsUpdatesScheduleComponent extends ServerServiceDetailBase i
       this.serverPermission = new McsServerPermission(this.server);
     }
 
-    let jobsMap = changes['jobsMap'];
-    if (!isNullOrEmpty(jobsMap)) {
+    let job = changes['job'];
+    if (!isNullOrEmpty(job) && !isNullOrEmpty(this._job)) {
 
-      if (this._jobsMap.has(JobType.PerformServerOsUpdateAnalysis)) {
-        let job = this._jobsMap.get(JobType.PerformServerOsUpdateAnalysis);
-        this._onInspectForAvailableOsUpdates(job);
+      if (this._job.type === JobType.PerformServerOsUpdateAnalysis) {
+        this._onInspectForAvailableOsUpdates(this._job);
       }
 
-      if (this._jobsMap.has(JobType.ApplyServerOsUpdates)) {
-        let job = this._jobsMap.get(JobType.ApplyServerOsUpdates);
-        this._onApplyServerOsUpdates(job);
+      if (this._job.type === JobType.ApplyServerOsUpdates) {
+        this._onApplyServerOsUpdates(this._job);
       }
     }
 
@@ -117,6 +129,28 @@ export class ServiceOsUpdatesScheduleComponent extends ServerServiceDetailBase i
    */
   public get clockKey(): string {
     return CommonDefinition.ASSETS_SVG_CLOCK;
+  }
+
+  /**
+   * Returns true if the schedule is set to RunOnce
+   */
+  public get isRunOnce(): boolean {
+    return getSafeProperty(this._osUpdatesScheduleDetails, (obj) => obj.type === OsUpdatesScheduleType.RunOnce, false);
+  }
+
+  /**
+   * Returns true if the schedule is set to Recurring
+   */
+  public get isRecurring(): boolean {
+    return getSafeProperty(this._osUpdatesScheduleDetails, (obj) => obj.type === OsUpdatesScheduleType.Recurring, false);
+  }
+
+  /**
+   * Returns true if a schedule is set, false otherwise
+   */
+  public get hasSchedule(): boolean {
+    let cron = getSafeProperty(this._osUpdatesDetails, (obj) => obj.crontab);
+    return !isNullOrEmpty(cron);
   }
 
   /**
@@ -142,63 +176,20 @@ export class ServiceOsUpdatesScheduleComponent extends ServerServiceDetailBase i
   }
 
   /**
+   * Returns true if server status is Outdated or Unanalysed and the update count is atleast 1.
+   */
+  public configureScheduleButtonDisabled(scheduleStatus: OsUpdateScheduleStatus): boolean {
+    return this.server.isProcessing || scheduleStatus.isUpdating || scheduleStatus.isAnalysing;
+  }
+
+  /**
    * Returns the updates schedule configure link hover label
    */
-  public get updatesScheduleConfigureHoverLabel(): string {
-    if (this._isUpdating) {
+  public updatesScheduleConfigureHoverLabel(scheduleStatus: OsUpdateScheduleStatus): string {
+    if (scheduleStatus.isUpdating) {
       return this._translateService.instant('serverServices.operatingSystemUpdates.updatesScheduleConfigureHoverLabel.updating');
     }
     return this._translateService.instant('serverServices.operatingSystemUpdates.updatesScheduleConfigureHoverLabel.analysing');
-  }
-
-  /**
-   * Returns true if the schedule is set to RunOnce
-   */
-  public get isRunOnce(): boolean {
-    return getSafeProperty(this._osUpdatesScheduleDetails, (obj) => obj.type === OsUpdatesScheduleType.RunOnce, false);
-  }
-
-  /**
-   * Returns true if the schedule is set to Recurring
-   */
-  public get isRecurring(): boolean {
-    return getSafeProperty(this._osUpdatesScheduleDetails, (obj) => obj.type === OsUpdatesScheduleType.Recurring, false);
-  }
-
-  /**
-   * Returns true if the server is in the process of running an update
-   */
-  public get isUpdating(): boolean {
-    return this._isUpdating;
-  }
-
-  /**
-   * Returns true if the server is in the process of inspecting available updates
-   */
-  public get isAnalysing(): boolean {
-    return this._isAnalysing;
-  }
-
-  /**
-   * Returns true if any of the jobs have errors
-   */
-  public get hasErrors(): boolean {
-    return this._hasErrors;
-  }
-
-  /**
-   * Returns true if server status is Outdated or Unanalysed and the update count is atleast 1.
-   */
-  public get configureScheduleButtonDisabled(): boolean {
-    return this.server.isProcessing || this._isUpdating || this._isAnalysing;
-  }
-
-  /**
-   * Returns true if a schedule is set, false otherwise
-   */
-  public get hasSchedule(): boolean {
-    let cron = getSafeProperty(this._osUpdatesDetails, (obj) => obj.crontab);
-    return !isNullOrEmpty(cron);
   }
 
   /**
@@ -206,6 +197,15 @@ export class ServiceOsUpdatesScheduleComponent extends ServerServiceDetailBase i
    */
   private _setOsUpdateScheduleByType(type: OsUpdatesScheduleType): void {
     this._osUpdatesScheduleDetails = this._osUpdatesScheduleDetailsMap.get(type);
+  }
+
+  /**
+   * Subscribe to the Schedule Status as an observable
+   */
+  private _subscribeToScheduleStatus(): void {
+    this.scheduleStatus$ = this._scheduleStatusChange.asObservable().pipe(
+      distinctUntilChanged()
+    );
   }
 
   /**
@@ -217,18 +217,15 @@ export class ServiceOsUpdatesScheduleComponent extends ServerServiceDetailBase i
     if (!serverIsActive) { return; }
 
     if (job.dataStatus === DataStatus.Error) {
-      this._hasErrors = true;
-      this._isUpdating = false;
+      this._scheduleStatusChange.next({ hasErrors: true, isAnalysing: false, isUpdating: false });
       return;
     }
 
     if (job.inProgress) {
-      this._isUpdating = true;
-      this._hasErrors = false;
+      this._scheduleStatusChange.next({ hasErrors: false, isAnalysing: false, isUpdating: true });
       return;
     }
-    this._isUpdating = false;
-    this._hasErrors = false;
+    this._scheduleStatusChange.next({ hasErrors: false, isAnalysing: false, isUpdating: false });
   }
 
   /**
@@ -240,18 +237,15 @@ export class ServiceOsUpdatesScheduleComponent extends ServerServiceDetailBase i
     if (!serverIsActive) { return; }
 
     if (job.dataStatus === DataStatus.Error) {
-      this._hasErrors = true;
-      this._isAnalysing = false;
+      this._scheduleStatusChange.next({ hasErrors: true, isAnalysing: false, isUpdating: false });
       return;
     }
 
     if (job.inProgress) {
-      this._isAnalysing = true;
-      this._hasErrors = false;
+      this._scheduleStatusChange.next({ hasErrors: false, isAnalysing: true, isUpdating: false });
       return;
     }
-    this._isAnalysing = false;
-    this._hasErrors = false;
+    this._scheduleStatusChange.next({ hasErrors: false, isAnalysing: false, isUpdating: false });
   }
 
   /**

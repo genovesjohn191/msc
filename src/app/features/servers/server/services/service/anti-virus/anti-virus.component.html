@@ -15,6 +15,7 @@
                   mcsEventTracker="antivirus-status-logs-link-click"
                   mcsEventCategory="server"
                   mcsEventLabel="antivirus-status-logs-view"
+                  [disabled]="server.isProcessing"
                   (click)="changeView()">
                   {{ 'serverServices.antivirus.logsLink' | translate }}
                 </a>

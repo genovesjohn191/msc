@@ -62,11 +62,11 @@ export class ServiceOsUpdatesPatchComponent extends ServerServiceDetailBase impl
   }
 
   @Input()
-  public set jobsMap(jobsMap: Map<JobType, McsJob>) {
-    this._jobsMap = jobsMap;
+  public set job(job: McsJob) {
+    this._job = job;
   }
-  public get jobsMap(): Map<JobType, McsJob> {
-    return this._jobsMap;
+  public get job(): McsJob {
+    return this._job;
   }
 
   @Output()
@@ -77,7 +77,7 @@ export class ServiceOsUpdatesPatchComponent extends ServerServiceDetailBase impl
   private _osUpdatesDetails: McsServerOsUpdatesDetails;
   private _osUpdatesStatusDetailsMap: Map<OsUpdatesPatchStatus, OsUpdatesStatusDetails>;
   private _osUpdatesStatusDetails: OsUpdatesStatusDetails;
-  private _jobsMap: Map<JobType, McsJob>;
+  private _job: McsJob;
   private _updateStartedDate: Date;
 
   constructor(
@@ -96,22 +96,21 @@ export class ServiceOsUpdatesPatchComponent extends ServerServiceDetailBase impl
       this.serverPermission = new McsServerPermission(this.server);
     }
 
-    let jobsMap = changes['jobsMap'];
-    if (!isNullOrEmpty(jobsMap)) {
+    let job = changes['job'];
+    if (!isNullOrEmpty(job) && !isNullOrEmpty(this._job)) {
 
-      if (this._jobsMap.has(JobType.PerformServerOsUpdateAnalysis)) {
-        let job = this._jobsMap.get(JobType.PerformServerOsUpdateAnalysis);
-        this._onInspectForAvailableOsUpdates(job);
+      if (this._job.type === JobType.PerformServerOsUpdateAnalysis) {
+        this._onInspectForAvailableOsUpdates(this._job);
       }
 
-      if (this._jobsMap.has(JobType.ApplyServerOsUpdates)) {
-        let job = this._jobsMap.get(JobType.ApplyServerOsUpdates);
-        this._onApplyServerOsUpdates(job);
+      if (this._job.type === JobType.ApplyServerOsUpdates) {
+        this._onApplyServerOsUpdates(this._job);
       }
     }
 
     let osUpdatesDetails = changes['osUpdatesDetails'];
     if (!isNullOrEmpty(osUpdatesDetails)) {
+      if (this.isAnalysing) { return; }
       if (!this._wasInspectedBefore(this._osUpdatesDetails.lastInspectDate)) {
         this._setOsUpdateDetailsByStatus(OsUpdatesPatchStatus.Unanalysed);
         return;
@@ -141,7 +140,7 @@ export class ServiceOsUpdatesPatchComponent extends ServerServiceDetailBase impl
    */
   public get updatesStatusSubtitleLabel(): string {
 
-    if (this.isUnAnalysed || this.isAnalysingFirstTime) {
+    if (this.isUnAnalysed || this.isAnalysing) {
       return this._osUpdatesStatusDetails.sublabel;
     }
 
@@ -175,13 +174,6 @@ export class ServiceOsUpdatesPatchComponent extends ServerServiceDetailBase impl
    */
   public get isAnalysing(): boolean {
     return this._osUpdatesStatusDetails.status === OsUpdatesPatchStatus.Analysing;
-  }
-
-  /**
-   * Returns true if the update status is Analysing for the First Time
-   */
-  public get isAnalysingFirstTime(): boolean {
-    return this._osUpdatesStatusDetails.status === OsUpdatesPatchStatus.AnalysingFirstTime;
   }
 
   /**
@@ -223,9 +215,7 @@ export class ServiceOsUpdatesPatchComponent extends ServerServiceDetailBase impl
    * Checks for available os-update/s
    */
   public inspectForAvailableOsUpdates(): void {
-    let status = this._wasInspectedBefore(this._osUpdatesDetails.lastInspectDate) ?
-      OsUpdatesPatchStatus.Analysing : OsUpdatesPatchStatus.AnalysingFirstTime;
-    this._setOsUpdateDetailsByStatus(status);
+    this._setOsUpdateDetailsByStatus(OsUpdatesPatchStatus.Analysing);
     let inspectRequest = new McsServerOsUpdatesInspectRequest();
     inspectRequest.clientReferenceObject = {
       serverId: this.server.id
@@ -303,9 +293,7 @@ export class ServiceOsUpdatesPatchComponent extends ServerServiceDetailBase impl
     }
 
     if (job.inProgress) {
-      let status = this._wasInspectedBefore(this._osUpdatesDetails.lastInspectDate) ?
-        OsUpdatesPatchStatus.Analysing : OsUpdatesPatchStatus.AnalysingFirstTime;
-      this._setOsUpdateDetailsByStatus(status);
+      this._setOsUpdateDetailsByStatus(OsUpdatesPatchStatus.Analysing);
     } else {
       this._setOsUpdateDetailsByStatus(OsUpdatesPatchStatus.Unanalysed);
     }
@@ -330,13 +318,6 @@ export class ServiceOsUpdatesPatchComponent extends ServerServiceDetailBase impl
       sublabel: osUpdatesStatusSubtitleLabel[OsUpdatesPatchStatus.Analysing],
       status: OsUpdatesPatchStatus.Analysing,
       configureHoverLabel: osUpdatesScheduleConfigureHoverLabel[OsUpdatesPatchStatus.Analysing]
-    });
-    this._osUpdatesStatusDetailsMap.set(OsUpdatesPatchStatus.AnalysingFirstTime, {
-      icon: CommonDefinition.ASSETS_GIF_LOADER_ELLIPSIS,
-      label: osUpdatesStatusLabel[OsUpdatesPatchStatus.AnalysingFirstTime],
-      sublabel: osUpdatesStatusSubtitleLabel[OsUpdatesPatchStatus.AnalysingFirstTime],
-      status: OsUpdatesPatchStatus.AnalysingFirstTime,
-      configureHoverLabel: osUpdatesScheduleConfigureHoverLabel[OsUpdatesPatchStatus.AnalysingFirstTime]
     });
     this._osUpdatesStatusDetailsMap.set(OsUpdatesPatchStatus.Outdated, {
       icon: CommonDefinition.ASSETS_SVG_STATE_STOPPED,

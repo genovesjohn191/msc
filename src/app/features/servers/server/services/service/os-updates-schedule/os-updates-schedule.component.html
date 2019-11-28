@@ -5,23 +5,21 @@
         <strong>{{ 'serverServices.operatingSystemUpdates.updatesScheduleTitleLabel' | translate }}</strong>
         <mcs-item>
           <mcs-icon [key]="clockKey" size="small"></mcs-icon>
-          <div>
+          <div *ngIf="scheduleStatus$ | async as scheduleStatus">
             <span mcsId="schedule-label">{{ updatesScheduleLabel }}</span><br />
-            <small read-only *ngIf="!hasErrors">
+            <small read-only *ngIf="!scheduleStatus.hasErrors">
               <mcs-item orientation="inline">
                 <span *ngIf="hasSchedule" mcsId="schedule-sublabel">{{ updatesScheduleSubtitleLabel }}</span>
-                <span [mcsTooltip]="updatesScheduleConfigureHoverLabel" [mcsTooltipShow]="isUpdating || isAnalysing">
-                  <ng-container *ngIf="!hasErrors">
-                    <a mcsId="configure-schedule-link"
-                      mcsEventTracker="os-updates-configure-schedule-click"
-                      mcsEventCategory="server"
-                      mcsEventLabel="os-updates-configure-schedule"
-                      *mcsAccessControl="serverPermission.vmPatchManagement"
-                      (click)="changeView()"
-                      [disabled]="configureScheduleButtonDisabled">
-                      {{ 'serverServices.operatingSystemUpdates.updatesScheduleConfigureLink' | translate }}
-                    </a>
-                  </ng-container>
+                <span [mcsTooltip]="updatesScheduleConfigureHoverLabel(scheduleStatus)" [mcsTooltipShow]="scheduleStatus.isUpdating || scheduleStatus.isAnalysing">
+                  <a mcsId="configure-schedule-link"
+                    mcsEventTracker="os-updates-configure-schedule-click"
+                    mcsEventCategory="server"
+                    mcsEventLabel="os-updates-configure-schedule"
+                    *mcsAccessControl="serverPermission.vmPatchManagement"
+                    (click)="changeView()"
+                    [disabled]="configureScheduleButtonDisabled(scheduleStatus)">
+                    {{ 'serverServices.operatingSystemUpdates.updatesScheduleConfigureLink' | translate }}
+                  </a>
                 </span>
               </mcs-item>
             </small>

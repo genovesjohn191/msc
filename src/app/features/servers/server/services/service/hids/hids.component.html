@@ -15,6 +15,7 @@
                 mcsEventTracker="hids-status-logs-link-click"
                 mcsEventCategory="server"
                 mcsEventLabel="hids-status-logs-view"
+                [disabled]="server.isProcessing"
                 (click)="changeView()">
                 {{ 'serverServices.hids.logsLink' | translate }}
               </a>
