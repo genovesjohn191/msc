@@ -797,7 +797,7 @@
   "orderDetailsStep": {
     "stepTitle": "Confirm",
     "header": "Confirm Order",
-    "description": "Please confirm the details of your order and click Go to submit your items for provisioning.",
+    "description": "Please confirm the details of your order.",
     "updatingCharges": "Calculating charges. This may take a moment.",
     "billingDetails": {
       "header": "Billing Details",
