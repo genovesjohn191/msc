@@ -29,8 +29,7 @@ import {
   animateFactory,
   unsubscribeSafely,
   CommonDefinition,
-  getSafeProperty,
-  isNullOrEmpty
+  getSafeProperty
 } from '@app/utilities';
 import {
   McsServerOsUpdatesDetails,
@@ -43,10 +42,8 @@ import {
   McsServerBackupServer,
   ServerServicesView,
   HostSecurityAgentStatus,
-  hostSecurityAgentStatusLabel,
   McsServerHostSecurityHids,
-  McsServerHostSecurityAntiVirus,
-  JobType
+  McsServerHostSecurityAntiVirus
 } from '@app/models';
 import { FormMessage } from '@app/shared';
 import { McsEvent } from '@app/events';
@@ -78,15 +75,14 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
   public serverBackUpServer$: Observable<McsServerBackupServer>;
   public serverHostSecurityDetails$: Observable<ServerHostSecurityStatusDetails>;
   public serviceView$: Observable<ServerServicesView>;
-  public jobsMap$: Observable<Map<JobType, McsJob>>;
+  public currentJob$: Observable<McsJob>;
   public dataStatusFactory: McsDataStatusFactory<McsServerOsUpdatesDetails>;
   public serverPermission: McsServerPermission;
 
   private _inspectOsUpdateHandler: Subscription;
   private _applyOsUpdateHandler: Subscription;
   private _serviceViewChange = new BehaviorSubject<ServerServicesView>(ServerServicesView.Default);
-  private _jobsMapChange: BehaviorSubject<Map<JobType, McsJob>>;
-  private _jobsMap: Map<JobType, McsJob>;
+  private _currentJobMapChange: BehaviorSubject<McsJob>;
   private _strategyActionContext: ServerServiceActionContext;
   private _hostSecurityStatusDetailsMap: Map<HostSecurityAgentStatus, ServerHostSecurityStatusDetails>;
 
@@ -99,8 +95,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
     private _translateService: TranslateService
   ) {
     super(_injector, _changeDetectorRef);
-    this._jobsMap = new Map();
-    this._jobsMapChange = new BehaviorSubject<Map<JobType, McsJob>>(this._jobsMap);
+    this._currentJobMapChange = new BehaviorSubject<McsJob>(null);
     this._strategyActionContext = new ServerServiceActionContext(_injector);
     this.dataStatusFactory = new McsDataStatusFactory();
   }
@@ -245,8 +240,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
     let serverIsActive = this.serverIsActiveByJob(job);
     if (!serverIsActive) { return; }
 
-    this._jobsMap.set(job.type, job);
-    this._jobsMapChange.next(this._jobsMap);
+    this._currentJobMapChange.next(job);
     if (job.dataStatus === DataStatus.Error) { return; }
 
     // Refresh everything when all job is done
@@ -344,7 +338,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
    * Returns the selected server as an observable
    */
   private _subscribeToJobsMap(): void {
-    this.jobsMap$ = this._jobsMapChange.asObservable().pipe(
+    this.currentJob$ = this._currentJobMapChange.asObservable().pipe(
       distinctUntilChanged()
     );
   }

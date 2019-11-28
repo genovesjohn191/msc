@@ -11,7 +11,7 @@ import {
 export class McsServerHostSecurityHids {
 
   @JsonProperty()
-  public provisioned: boolean = undefined;
+  public enabled: boolean = undefined;
 
   @JsonProperty({
     serializer: HidsProtectionLevelSerialization,
