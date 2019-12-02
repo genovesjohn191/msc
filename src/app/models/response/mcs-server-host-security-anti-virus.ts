@@ -1,5 +1,8 @@
 import { JsonProperty } from '@peerlancers/json-serialization';
-import { AntiVirusStatus } from '../enumerations/anti-virus-status.enum';
+import {
+  AntiVirusStatus,
+  AntiVirusStatusSerialization
+} from '../enumerations/anti-virus-status.enum';
 
 export class McsServerHostSecurityAntiVirus {
 
@@ -15,7 +18,10 @@ export class McsServerHostSecurityAntiVirus {
   @JsonProperty()
   public schedule: string = undefined;
 
-  @JsonProperty()
+  @JsonProperty({
+    serializer: AntiVirusStatusSerialization,
+    deserializer: AntiVirusStatusSerialization
+  })
   public status: AntiVirusStatus = undefined;
 
   @JsonProperty()

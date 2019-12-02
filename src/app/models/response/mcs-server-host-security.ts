@@ -1,10 +1,16 @@
 import { JsonProperty } from '@peerlancers/json-serialization';
 import { McsServerHostSecurityAntiVirus } from './mcs-server-host-security-anti-virus';
 import { McsServerHostSecurityHids } from './mcs-server-host-security-hids';
-import { HostSecurityAgentStatus } from '../enumerations/host-security-agent-status.enum';
+import {
+  HostSecurityAgentStatus,
+  HostSecurityAgentStatusSerialization
+} from '../enumerations/host-security-agent-status.enum';
 
 export class McsServerHostSecurity {
-  @JsonProperty()
+  @JsonProperty({
+    serializer: HostSecurityAgentStatusSerialization,
+    deserializer: HostSecurityAgentStatusSerialization
+  })
   public agentStatus: HostSecurityAgentStatus = undefined;
 
   @JsonProperty()
