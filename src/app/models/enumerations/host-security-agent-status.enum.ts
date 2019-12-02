@@ -1,10 +1,10 @@
 import { McsEnumSerializationBase } from '../serialization/mcs-enum-serialization-base';
 
 export enum HostSecurityAgentStatus {
-  Active = 'active',
-  Warning = 'warning',
-  Inactive = 'inactive',
-  Error = 'error'
+  Active = 0,
+  Warning,
+  Inactive,
+  Error
 }
 
 export const hostSecurityAgentStatusLabel = {
