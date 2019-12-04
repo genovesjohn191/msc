@@ -8,6 +8,9 @@ import {
   OnDestroy,
   Input,
   ViewChild,
+  AfterViewInit,
+  OnChanges,
+  SimpleChanges,
 } from '@angular/core';
 import {
   FormControl,
@@ -17,11 +20,7 @@ import {
   takeUntil,
   tap
 } from 'rxjs/operators';
-import {
-  Subject,
-  Observable,
-  of
-} from 'rxjs';
+import { Subject } from 'rxjs';
 import {
   unsubscribeSafely,
   getSafeProperty,
@@ -34,14 +33,17 @@ import {
 } from '@app/core';
 import {
   McsServerCreateAddOnServerBackup,
-  McsOption
+  McsOption,
+  InviewLevel,
+  McsStorageBackUpAggregationTarget,
+  inviewLevelText
 } from '@app/models';
 import { McsFormGroupDirective } from '@app/shared';
 
 const DEFAULT_MAXIMUM = 5120;
 const DEFAULT_MINIMUM = 1;
 const QUOTA_STEP = 1;
-const AGGREGATION_TARGET_NONE = 'none';
+const DEFAULT_RETENTION = '30';
 
 @Component({
   selector: 'mcs-addon-backup-server',
@@ -54,7 +56,7 @@ const AGGREGATION_TARGET_NONE = 'none';
 })
 
 export class AddOnBackupServerComponent implements
-  OnInit, OnDestroy, IMcsDataChange<McsServerCreateAddOnServerBackup>, IMcsFormGroup {
+  OnInit, OnChanges, AfterViewInit, OnDestroy, IMcsDataChange<McsServerCreateAddOnServerBackup>, IMcsFormGroup {
 
   public fgBackUp: FormGroup;
   public fcAggregation: FormControl;
@@ -62,33 +64,43 @@ export class AddOnBackupServerComponent implements
   public fcInview: FormControl;
   public fcBackupSchedule: FormControl;
   public fcDailyQuota: FormControl;
-  public fcDeDuplicationRatio: FormControl;
-  public fcDatabaseSupport: FormControl;
 
   public retentionOptions: McsOption[] = [];
   public inviewLevelOptions: McsOption[] = [];
   public scheduleBackupOptions: McsOption[] = [];
-  public deduplicationRatioOptions: McsOption[] = [];
-  public databaseSupportOptions: McsOption[] = [];
 
   @Output()
   public dataChange = new EventEmitter<McsServerCreateAddOnServerBackup>();
 
   @Input()
-  public aggregationOptions$: Observable<any>;
+  public aggregationTargets: McsStorageBackUpAggregationTarget[];
 
   @ViewChild(McsFormGroupDirective, { static: false })
   private _formGroup: McsFormGroupDirective;
 
   private _destroySubject = new Subject<void>();
 
-  public ngOnInit(): void {
+  public constructor() {
     this._registerFormGroup();
+  }
+
+  public ngOnInit(): void {
     this._subscribeToRetentionOptions();
     this._subscribeToInviewOptions();
     this._subscribeToScheduleBackupOptions();
-    this._subscribeToDeduplicationRatioOptions();
-    this._subscribeToDatabaseSupportOptions();
+  }
+
+  public ngAfterViewInit(): void {
+    this._subscribeToFormChanges();
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    let aggregationTargets = changes['aggregationTargets'];
+    if (!isNullOrEmpty(aggregationTargets)) {
+      let hasAggregationTargets = !isNullOrEmpty(this.aggregationTargets) && this.aggregationTargets.length > 0;
+      hasAggregationTargets ? this.fgBackUp.setControl('fcAggregation', this.fcAggregation) :
+        this.fgBackUp.removeControl('fcAggregation');
+    }
   }
 
   public ngOnDestroy() {
@@ -124,15 +136,15 @@ export class AddOnBackupServerComponent implements
   /**
    * Returns true when the aggregation target list is less than or equal to zero
    */
-  public isAggregationOptionsEmpty(aggregationOptions: any[]): boolean {
-    return getSafeProperty(aggregationOptions, (obj) => obj.length <= 0, true);
+  public isAggregationTargetsEmpty(aggregationTargets: McsStorageBackUpAggregationTarget[]): boolean {
+    return getSafeProperty(aggregationTargets, (obj) => obj.length <= 0, true);
   }
 
   /**
-   * Returns true when the aggregation target is set to None
+   * Returns true when the inview level is Premium
    */
-  public isAggregationTargetNone(aggregationOption: any): boolean {
-    return AGGREGATION_TARGET_NONE === aggregationOption;
+  public isInviewLevelPremium(aggregationTarget: McsStorageBackUpAggregationTarget): boolean {
+    return InviewLevel.Premium === aggregationTarget.inviewLevel;
   }
 
   /**
@@ -141,13 +153,11 @@ export class AddOnBackupServerComponent implements
   public notifyDataChange(): void {
     if (!this.isValid()) { return; }
     let backupDetils = new McsServerCreateAddOnServerBackup();
-    backupDetils.aggregation = this.fcAggregation.value;
-    backupDetils.backupSchedule = this.fcBackupSchedule.value;
-    backupDetils.retention = this.fcRetention.value;
-    backupDetils.inview = this.fcInview.value;
-    backupDetils.dailyQuotaGb = this.fcDailyQuota.value;
-    backupDetils.deDuplicationRatio = this.fcDeDuplicationRatio.value;
-    backupDetils.databaseSupport = this.fcDatabaseSupport.value;
+    backupDetils.backupAggregationTarget = this.fcAggregation.value || null;
+    backupDetils.dailySchedule = this._convertToCron(this.fcBackupSchedule.value);
+    backupDetils.retentionPeriodDays = this.fcRetention.value || null;
+    backupDetils.inviewLevel = this.fcInview.value || null;
+    backupDetils.dailyBackupQuotaGB = this.fcDailyQuota.value || null;
 
     this.dataChange.emit(backupDetils);
   }
@@ -158,8 +168,8 @@ export class AddOnBackupServerComponent implements
   private _registerFormGroup(): void {
     // Register Form Groups using binding
     this.fcAggregation = new FormControl('', [CoreValidators.required]);
-    this.fcRetention = new FormControl('', [CoreValidators.required]);
-    this.fcInview = new FormControl('', [CoreValidators.required]);
+    this.fcRetention = new FormControl(DEFAULT_RETENTION, [CoreValidators.required]);
+    this.fcInview = new FormControl(InviewLevel.Premium, [CoreValidators.required]);
     this.fcBackupSchedule = new FormControl('', [CoreValidators.required]);
     this.fcDailyQuota = new FormControl('', [
       CoreValidators.required,
@@ -168,39 +178,14 @@ export class AddOnBackupServerComponent implements
       (control) => CoreValidators.max(this.maximumQuota)(control),
       (control) => CoreValidators.custom(this._quotaIsValid.bind(this), 'valid')(control)
     ]);
-    this.fcDeDuplicationRatio = new FormControl('', [CoreValidators.required]);
-    this.fcDatabaseSupport = new FormControl('', [CoreValidators.required]);
 
     this.fgBackUp = new FormGroup({
-      fcAggregation: this.fcAggregation,
+      fcAggregation: this.fcBackupSchedule,
+      fcBackupSchedule: this.fcBackupSchedule,
       fcRetention: this.fcRetention,
       fcInview: this.fcInview,
-      fcBackupSchedule: this.fcBackupSchedule,
-      fcDailyQuota: this.fcDailyQuota,
-      fcDeDuplicationRatio: this.fcDeDuplicationRatio,
-      fcDatabaseSupport: this.fcDatabaseSupport,
+      fcDailyQuota: this.fcDailyQuota
     });
-
-    this.fgBackUp.valueChanges.pipe(
-      takeUntil(this._destroySubject),
-      tap(() => this._setRetentionFormControl())
-    ).subscribe();
-
-
-    this.fgBackUp.valueChanges.pipe(
-      takeUntil(this._destroySubject)
-    ).subscribe(this.notifyDataChange.bind(this));
-  }
-
-  /**
-   * Sets the severity form control property
-   */
-  private _setRetentionFormControl(): void {
-    if (isNullOrEmpty(this.fgBackUp)) { return; }
-
-    (this.isAggregationTargetNone(this.fcAggregation.value)) ?
-      this.fgBackUp.removeControl('fcRetention') :
-      this.fgBackUp.setControl('fcRetention', this.fcRetention);
   }
 
   /**
@@ -212,66 +197,87 @@ export class AddOnBackupServerComponent implements
   }
 
   /**
+   * Returns a cron string based on a given time
+   * TODO: extract and put in a generic cron service
+   */
+  private _convertToCron(time: string): string {
+    return `0 ${time} * * *`;
+  }
+
+  /**
+   * Subscribe to the form changes
+   */
+  private _subscribeToFormChanges(): void {
+    this._formGroup.valueChanges().pipe(
+      takeUntil(this._destroySubject),
+      tap(() => this.notifyDataChange())
+    ).subscribe();
+
+    this.fcAggregation.valueChanges.pipe(
+      takeUntil(this._destroySubject),
+      tap(() => this._removeFormControl())
+    ).subscribe();
+  }
+
+  /**
+   * Remove form controls based on the value of aggregation target
+   */
+  private _removeFormControl(): void {
+    let aggregationTargetValue = getSafeProperty(this.fcAggregation, (obj) => obj.value, '');
+
+    if (isNullOrEmpty(aggregationTargetValue)) {
+      this.fgBackUp.setControl('fcRetention', this.fcRetention);
+      this.fgBackUp.setControl('fcDailyQuota', this.fcDailyQuota);
+    } else {
+      this.fgBackUp.removeControl('fcRetention');
+      this.fgBackUp.removeControl('fcDailyQuota');
+    }
+
+    if (this.isInviewLevelPremium(this.fcAggregation.value)) {
+      this.fgBackUp.removeControl('fcInview');
+    } else {
+      this.fgBackUp.setControl('fcInview', this.fcInview);
+    }
+  }
+
+  /**
    * Initialize all the options for retention
    */
   private _subscribeToRetentionOptions(): void {
-    // TODO: temporary value, need to verify with API for final model
-    this.retentionOptions.push(new McsOption('14 Days', '14 Days'));
-    this.retentionOptions.push(new McsOption('30 Days', '30 Days'));
-    this.retentionOptions.push(new McsOption('6 Months', '6 Months'));
-    this.retentionOptions.push(new McsOption('1 Year', '1 Year'));
-    this.retentionOptions.push(new McsOption('2 Year', '2 Year'));
-    this.retentionOptions.push(new McsOption('3 Year', '3 Year'));
-    this.retentionOptions.push(new McsOption('4 Year', '4 Year'));
-    this.retentionOptions.push(new McsOption('5 Year', '5 Year'));
-    this.retentionOptions.push(new McsOption('6 Year', '6 Year'));
-    this.retentionOptions.push(new McsOption('7 Year', '7 Year'));
+    this.retentionOptions.push(new McsOption('14', '14 Days'));
+    this.retentionOptions.push(new McsOption('30', '30 Days'));
+    this.retentionOptions.push(new McsOption('180', '6 Months'));
+    this.retentionOptions.push(new McsOption('365', '1 Year'));
+    this.retentionOptions.push(new McsOption('730', '2 Year'));
+    this.retentionOptions.push(new McsOption('1095', '3 Year'));
+    this.retentionOptions.push(new McsOption('1460', '4 Year'));
+    this.retentionOptions.push(new McsOption('1825', '5 Year'));
+    this.retentionOptions.push(new McsOption('2190', '6 Year'));
+    this.retentionOptions.push(new McsOption('2555', '7 Year'));
   }
 
   /**
    * Initialize all the options for inview
    */
   private _subscribeToInviewOptions(): void {
-    this.inviewLevelOptions.push(new McsOption('Premium', 'Premium'));
-    this.inviewLevelOptions.push(new McsOption('Premium', 'Premium'));
+    this.inviewLevelOptions.push(new McsOption(InviewLevel.Standard, inviewLevelText[InviewLevel.Standard]));
+    this.inviewLevelOptions.push(new McsOption(InviewLevel.Premium, inviewLevelText[InviewLevel.Premium]));
   }
 
   /**
    * Initialize all the options for schedule backup
    */
   private _subscribeToScheduleBackupOptions(): void {
-    // TODO: temporary value, need to verify with API for final model
-    this.scheduleBackupOptions.push(new McsOption('8 PM', '8 PM'));
-    this.scheduleBackupOptions.push(new McsOption('9 PM', '9 PM'));
-    this.scheduleBackupOptions.push(new McsOption('10 PM', '10 PM'));
-    this.scheduleBackupOptions.push(new McsOption('11 PM', '11 PM'));
-    this.scheduleBackupOptions.push(new McsOption('12 AM', '12 AM'));
-    this.scheduleBackupOptions.push(new McsOption('1 AM', '1 AM'));
-    this.scheduleBackupOptions.push(new McsOption('2 AM', '2 AM'));
-    this.scheduleBackupOptions.push(new McsOption('3 AM', '3 AM'));
-    this.scheduleBackupOptions.push(new McsOption('4 AM', '4 AM'));
-    this.scheduleBackupOptions.push(new McsOption('5 AM', '5 AM'));
-    this.scheduleBackupOptions.push(new McsOption('6 AM', '6 AM'));
-  }
-
-  /**
-   * Initialize all the options for deduplication ratio
-   */
-  private _subscribeToDeduplicationRatioOptions(): void {
-    // TODO: temporary value, need to verify with API for final model
-    this.deduplicationRatioOptions.push(new McsOption('MORE-20', 'More than 20'));
-    this.deduplicationRatioOptions.push(new McsOption('LESS-20', '20 or Less'));
-  }
-
-  /**
-   * Initialize all the options for database support
-   */
-  private _subscribeToDatabaseSupportOptions(): void {
-    // TODO: temporary value, need to verify with API for final model
-    this.databaseSupportOptions.push(new McsOption('None', 'None'));
-    this.databaseSupportOptions.push(new McsOption('SQL', 'SQL'));
-    this.databaseSupportOptions.push(new McsOption('Oracle', 'Oracle'));
-    this.databaseSupportOptions.push(new McsOption('Exchange', 'Exchange'));
-    this.databaseSupportOptions.push(new McsOption('SharePoint', 'SharePoint'));
+    this.scheduleBackupOptions.push(new McsOption('20', '8 PM'));
+    this.scheduleBackupOptions.push(new McsOption('21', '9 PM'));
+    this.scheduleBackupOptions.push(new McsOption('22', '10 PM'));
+    this.scheduleBackupOptions.push(new McsOption('23', '11 PM'));
+    this.scheduleBackupOptions.push(new McsOption('0', '12 AM'));
+    this.scheduleBackupOptions.push(new McsOption('1', '1 AM'));
+    this.scheduleBackupOptions.push(new McsOption('2', '2 AM'));
+    this.scheduleBackupOptions.push(new McsOption('3', '3 AM'));
+    this.scheduleBackupOptions.push(new McsOption('4', '4 AM'));
+    this.scheduleBackupOptions.push(new McsOption('5', '5 AM'));
+    this.scheduleBackupOptions.push(new McsOption('6', '6 AM'));
   }
 }

@@ -14,7 +14,7 @@
       (collapseChange)="onToggleVmBackUp($event)">
 
       <mcs-addon-backup-vm #fgAddOnBackupVm
-        [aggregationOptions$]="aggregationTargets$"
+        [aggregationTargets]="aggregationTargets$ | async"
         (dataChange)="onChangeVmBackUpDetails($event)">
       </mcs-addon-backup-vm>
     </mcs-collapsible-panel>
@@ -32,7 +32,7 @@
       (collapseChange)="onToggleServerBackUp($event)">
 
       <mcs-addon-backup-server #fgAddOnBackupServer
-        [aggregationOptions$]="aggregationTargets$"
+        [aggregationTargets]="aggregationTargets$ | async"
         (dataChange)="onChangeServerBackUpDetails($event)">
       </mcs-addon-backup-server>
     </mcs-collapsible-panel>
@@ -104,7 +104,7 @@
     <a mcsWizardStepPrevious mcsId="step-2-back">{{ 'shared.wizard.previous' | translate }}</a>
     <button mcsButton size="small" arrow="right"
       mcsWizardStepNext
-      [disabled]="!vmBackupAddOnValid() || !serverBackupAddOnValid"
+      [disabled]="!isFormValid"
       mcsId="step-2-next">{{ 'shared.wizard.next' | translate }}</button>
   </div>
 </section>
