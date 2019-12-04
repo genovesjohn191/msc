@@ -535,8 +535,10 @@
     },
     "hostSecurity": {
       "title": "Host Security",
-      "agentConfigured": {
-        "title": "Agent Configured"
+      "description": "Keep your server protected from threats using our Host Security services.",
+      "statusLabel": "Overall Status",
+      "activeLabel": {
+        "agentConfigured": "Agent Configured"
       }
     },
     "antivirus": {
@@ -546,16 +548,14 @@
         "realtimeScanDisabled": "Realtime scan disabled"
       },
       "logsLink": "View logs"
-
     },
     "hids": {
       "title": "Host Intrusion Detection",
       "activeLabel": {
         "detect": "Your server will log intrusion attempts.",
-        "protect": "Your server will be defended against intrusion attempts."
+        "protect": "Your server will be protected against intrusion attempts."
       },
       "logsLink": "View logs"
-
     }
   },
   "serverServicesOsUpdatesApplyNow": {
@@ -611,7 +611,7 @@
   },
   "serverServicesAvDetails": {
     "title":"Anti-Virus",
-    "description":"Server Anti-Virus provides both real-time and on-demand protection against threats such as viruses, trojans and spyware. \r \n \nThe table below lists recent threat detection events and their severities (where 1 is the lowest and 6 is the highest).",
+    "description":"Server Anti-Virus provides both real-time and on-demand protection against threats such as viruses, trojans and spyware. \r \nThe table below lists recent threat detection events and their severities (where 1 is the lowest and 6 is the highest).",
     "noContent":"No threats have been identified for this server.",
     "errorContent": "Sorry, something’s not right. We weren’t able to retrieve the anti-virus for this server.",
     "viewInTrendDsmLabel": "View in Trend DSM",
@@ -626,7 +626,7 @@
   },
   "serverServicesHidsDetails": {
     "title":"Host Intrusion Detection",
-    "description":"Host Based Intrusion Prevention rules examines payload in the session and application layers of packets (such as DNS, HTTP, SSL, and SMTP), as well as the sequence of those packets according to those higher-layer protocols. \r \n \nWhen traffic matches a rule or contains content that signals an attack, the Host Intrusion Detection handles it as a possible or confirmed attack, and performs the configured action.",
+    "description":"Host Based Intrusion Prevention rules examines payload in the session and application layers of packets (such as DNS, HTTP, SSL, and SMTP), as well as the sequence of those packets according to those higher-layer protocols. \r \nWhen traffic matches a rule or contains content that signals an attack, the Host Intrusion Detection handles it as a possible or confirmed attack, and performs the configured action.",
     "noContent":"No intrusion attempts have been detected for this server.",
     "errorContent": "Sorry, something’s not right. We weren’t able to retrieve the host intrusion detection for this server.",
     "viewInTrendDsmLabel": "View in Trend DSM",

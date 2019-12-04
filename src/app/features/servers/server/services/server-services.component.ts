@@ -385,8 +385,9 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
         let agentStatus = getSafeProperty(hostSecurity, (obj) => obj.agentStatus);
         if (this._hostSecurityStatusDetailsMap.has(agentStatus)) {
           let hostSecurityDetails: ServerHostSecurityStatusDetails = this._hostSecurityStatusDetailsMap.get(hostSecurity.agentStatus);
-          hostSecurityDetails.label = hostSecurityDetails.status === HostSecurityAgentStatus.Active ?
-            getSafeProperty(hostSecurity, (obj) => obj.agentStatusMessages[0], hostSecurityDetails.label) : hostSecurityDetails.label;
+          let activeLabel = this._translateService.instant('serverServices.hostSecurity.activeLabel.agentConfigured');
+          hostSecurityDetails.label = hostSecurityDetails.status !== HostSecurityAgentStatus.Active ?
+            getSafeProperty(hostSecurity, (obj) => obj.agentStatusMessages[0], '') : activeLabel;
           hostSecurityDetails.hids = hostSecurity.hids;
           hostSecurityDetails.antiVirus = hostSecurity.antiVirus;
           return hostSecurityDetails;

@@ -1,29 +1,23 @@
-<mcs-accordion *ngIf="antiVirusDetails$ | async as antiVirusDetails">
-    <mcs-accordion-panel>
-      <mcs-accordion-panel-header mcsPanelHeaderDef>
+<mcs-grid *ngIf="antiVirusDetails$ | async as antiVirusDetails">
+  <mcs-grid-row>
+    <mcs-grid-column>
+      <mcs-item orientation="block">
+        <strong>{{ 'serverServices.antivirus.title' | translate }}</strong>
         <mcs-item>
-            <mcs-icon [key]="antiVirusDetails.icon" size="small" mcsId="antivirus-status-icon"></mcs-icon>
-          <h2>{{ 'serverServices.antivirus.title' | translate }}</h2>
+          <mcs-icon [key]="antiVirusDetails.icon" size="small" mcsId="antivirus-status-icon"></mcs-icon>
+          <span mcsId="antivirus-status-label">{{ antiVirusDetails.label }}</span>
+          <ng-container *mcsAccessControl="[]; feature: ['EnableAddonAntiVirusDetailsView']">
+            <a mcsId="antivirus-status-logs-link"
+              mcsEventTracker="antivirus-status-logs-link-click"
+              mcsEventCategory="server"
+              mcsEventLabel="antivirus-status-logs-view"
+              [disabled]="server.isProcessing"
+              (click)="changeView()">
+              {{ 'serverServices.antivirus.logsLink' | translate }}
+            </a>
+          </ng-container>
         </mcs-item>
-      </mcs-accordion-panel-header>
-      <mcs-item>
-          <div>
-            <small read-only>
-              <mcs-item orientation="inline">
-                <span mcsId="antivirus-status-label">{{ antiVirusDetails.label }}</span><br />
-                <ng-container *mcsAccessControl="[]; feature: ['EnableAddonAntiVirusDetailsView']">
-                    <a mcsId="antivirus-status-logs-link"
-                    mcsEventTracker="antivirus-status-logs-link-click"
-                    mcsEventCategory="server"
-                    mcsEventLabel="antivirus-status-logs-view"
-                    [disabled]="server.isProcessing"
-                    (click)="changeView()">
-                    {{ 'serverServices.antivirus.logsLink' | translate }}
-                  </a>
-                </ng-container>
-              </mcs-item>
-            </small>
-          </div>
       </mcs-item>
-    </mcs-accordion-panel>
-  </mcs-accordion>
+    </mcs-grid-column>
+  </mcs-grid-row>
+</mcs-grid>
