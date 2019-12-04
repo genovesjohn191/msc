@@ -2,17 +2,17 @@ import { JsonProperty } from '@peerlancers/json-serialization';
 
 export class McsServerCreateAddOnVmBackup {
   @JsonProperty()
-  public aggregation: string = undefined;
+  public backupAggregationTarget: string = undefined;
 
   @JsonProperty()
-  public retention: string = undefined;
+  public retentionPeriodDays: string = undefined;
 
   @JsonProperty()
-  public inview: string = undefined;
+  public inviewLevel: string = undefined;
 
   @JsonProperty()
-  public backupSchedule: string = undefined;
+  public dailySchedule: string = undefined;
 
   @JsonProperty()
-  public dailyQuotaGb: number = undefined;
+  public dailyBackupQuotaGB: number = undefined;
 }

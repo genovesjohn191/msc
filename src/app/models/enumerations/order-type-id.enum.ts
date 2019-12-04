@@ -2,8 +2,8 @@ import { McsEnumSerializationBase } from '../serialization/mcs-enum-serializatio
 
 export enum OrderIdType {
   CreateManagedServer = 'servers.vcloud.provision',
-  CreateAddOnVmBackup = 'vm.backup',
-  CreateAddOnServerBackup = 'server.backup',
+  CreateAddOnVmBackup = 'backups.vm.provision',
+  CreateAddOnServerBackup = 'backups.server.provision',
   CreateAddOnAntiVirus = 'hostsecurity.av.provision',
   CreateAddOnHids = 'hostsecurity.hids.provision',
   CreateAddOnFirewall = 'firewall.provision',

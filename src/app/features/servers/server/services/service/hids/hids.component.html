@@ -11,14 +11,16 @@
           <small read-only>
             <mcs-item orientation="inline">
               <span mcsId="hids-status-label">{{ hidsDetails.label }}</span><br />
-              <a mcsId="hids-status-logs-link"
-                mcsEventTracker="hids-status-logs-link-click"
-                mcsEventCategory="server"
-                mcsEventLabel="hids-status-logs-view"
-                [disabled]="server.isProcessing"
-                (click)="changeView()">
-                {{ 'serverServices.hids.logsLink' | translate }}
-              </a>
+              <ng-container *mcsAccessControl="[]; feature: ['EnableAddonHidsDetailsView']">
+                <a mcsId="hids-status-logs-link"
+                  mcsEventTracker="hids-status-logs-link-click"
+                  mcsEventCategory="server"
+                  mcsEventLabel="hids-status-logs-view"
+                  [disabled]="server.isProcessing"
+                  (click)="changeView()">
+                  {{ 'serverServices.hids.logsLink' | translate }}
+                </a>
+              </ng-container>
             </mcs-item>
           </small>
         </div>

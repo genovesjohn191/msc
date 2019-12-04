@@ -1,9 +1,9 @@
 import { McsEnumSerializationBase } from '../serialization/mcs-enum-serialization-base';
 
 export enum InviewLevel {
-  None = 0,
-  Standard,
-  Premium
+  Standard = 0,
+  Premium,
+  None
 }
 
 export const inviewLevelText = {

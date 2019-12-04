@@ -883,12 +883,23 @@
       }
     },
     "addOnBackup": {
-      "aggregation": {
-        "label": "Back up my VM to an aggregation target",
+      "serverAggregation": {
+        "label": "Back up my files to an aggregation target",
         "optionLabel": "{{serviceId}} - {{retentionPeriod}} Retention.",
+        "optionNoneLabel": "None",
         "tip": "It is recommended that you check your Backup Aggregation Target usage before proceeding. Charges may apply for exceeded quota.",
         "placeholder": "",
-        "contextualHelp": ""
+        "contextualHelp": "",
+        "aggregationTargetPremium": "Your selected Backup Aggregation Target has InView Premium, so this will also be applied to your new Server Backup service."
+      },
+      "vmAggregation": {
+        "label": "Back up my VM to an aggregation target",
+        "optionLabel": "{{serviceId}} - {{retentionPeriod}} Retention.",
+        "optionNoneLabel": "None",
+        "tip": "It is recommended that you check your Backup Aggregation Target usage before proceeding. Charges may apply for exceeded quota.",
+        "placeholder": "",
+        "contextualHelp": "",
+        "aggregationTargetPremium": "Your selected Backup Aggregation Target has InView Premium, so this will also be applied to your new VM Backup service."
       },
       "retention": {
         "label": "Keep my backups for",

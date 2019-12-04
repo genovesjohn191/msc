@@ -1,77 +1,83 @@
 <form [formGroup]="fgBackUp" mcsFormGroup>
 
   <!-- Aggregation Target -->
-  <ng-container *ngIf="aggregationOptions$ | async as aggregationOptions">
-    <ng-container *ngIf="!isAggregationOptionsEmpty(aggregationOptions)">
-      <mcs-item orientation="separated">
-        <span align-self-start>{{ 'serverShared.addOnBackup.aggregation.label' | translate }}:</span>
-        <mcs-form-field class="form-field-size-small">
-          <mcs-select required
-            mcsId="input-addon-backup-aggregation-target"
-            mcsEventTracker="server-create-addon-backup-aggregation-target-select"
-            mcsEventCategory="server-create"
-            mcsEventLabel="server-create-addon-backup-aggregation-target-select"
-            [placeholder]="'serverShared.addOnBackup.aggregation.placeholder' | translate"
-            [formControl]="fcAggregation">
+  <ng-container *ngIf="!isAggregationTargetsEmpty(aggregationTargets)">
+    <mcs-item orientation="separated">
+      <span align-self-start>{{ 'serverShared.addOnBackup.serverAggregation.label' | translate }}:</span>
+      <mcs-form-field class="form-field-size-small">
+        <mcs-select required
+          mcsId="input-addon-backup-aggregation-target"
+          mcsEventTracker="server-create-addon-backup-aggregation-target-select"
+          mcsEventCategory="server-create"
+          mcsEventLabel="server-create-addon-backup-aggregation-target-select"
+          [placeholder]="'serverShared.addOnBackup.serverAggregation.placeholder' | translate"
+          [formControl]="fcAggregation">
 
-            <mcs-option *ngFor="let aggregation of aggregationOptions" [value]="aggregation.retentionPeriod">
-              {{ 'serverShared.addOnBackup.aggregation.optionLabel' | translate: {serviceId: aggregation.serviceId, retentionPeriod: aggregation.retentionPeriod} }}
-            </mcs-option>
-            <mcs-option [value]="'none'">
-              {{ 'None' }}
-            </mcs-option>
-          </mcs-select>
-        </mcs-form-field>
-      </mcs-item>
-      <mcs-item *ngIf="!isAggregationTargetNone(fcAggregation?.value)" padding-bottom-small padding-top-small>
-        <mcs-alert type="info">
-          <small >{{ 'serverShared.addOnBackup.aggregation.tip' | translate }}</small>
-        </mcs-alert>
-      </mcs-item>
-    </ng-container>
+          <mcs-option *ngFor="let aggregation of aggregationTargets" [value]="aggregation.retentionPeriod">
+            {{ 'serverShared.addOnBackup.serverAggregation.optionLabel' | translate: {serviceId: aggregation.serviceId, retentionPeriod: aggregation.retentionPeriod} }}
+          </mcs-option>
+          <mcs-option value="">
+            {{ 'serverShared.addOnBackup.serverAggregation.optionNoneLabel' | translate }}
+          </mcs-option>
+        </mcs-select>
+      </mcs-form-field>
+    </mcs-item>
+    <mcs-item *ngIf="fcAggregation?.value" padding-bottom-small padding-top-small>
+      <mcs-alert type="info">
+        <small >{{ 'serverShared.addOnBackup.serverAggregation.tip' | translate }}</small>
+      </mcs-alert>
+    </mcs-item>
   </ng-container>
 
   <!-- Retention  -->
-  <mcs-item orientation="separated"
-    *ngIf="isAggregationTargetNone(fcAggregation?.value)"
-    [mcsContextualHelp]="'serverShared.addOnBackup.retention.contextualHelp' | translate">
+  <ng-container *ngIf="!fcAggregation?.value">
+    <mcs-item orientation="separated"
+      [mcsContextualHelp]="'serverShared.addOnBackup.retention.contextualHelp' | translate">
 
-    <span align-self-start>{{ 'serverShared.addOnBackup.retention.label' | translate }}:</span>
-    <mcs-form-field class="form-field-size-small">
-      <mcs-select required
-        mcsId="input-addon-backup-retention"
-        mcsEventTracker="server-create-addon-backup-retention-select"
-        mcsEventCategory="server-create"
-        mcsEventLabel="server-create-addon-backup-retention-select"
-        [placeholder]="'serverShared.addOnBackup.retention.placeholder' | translate"
-        [formControl]="fcRetention">
+      <span align-self-start>{{ 'serverShared.addOnBackup.retention.label' | translate }}:</span>
+      <mcs-form-field class="form-field-size-small">
+        <mcs-select required
+          mcsId="input-addon-backup-retention"
+          mcsEventTracker="server-create-addon-backup-retention-select"
+          mcsEventCategory="server-create"
+          mcsEventLabel="server-create-addon-backup-retention-select"
+          [placeholder]="'serverShared.addOnBackup.retention.placeholder' | translate"
+          [formControl]="fcRetention">
 
-        <mcs-option *ngFor="let retention of retentionOptions" [value]="retention.value">
-          {{ retention.text }}
-        </mcs-option>
-      </mcs-select>
-    </mcs-form-field>
-  </mcs-item>
+          <mcs-option *ngFor="let retention of retentionOptions" [value]="retention.value">
+            {{ retention.text }}
+          </mcs-option>
+        </mcs-select>
+      </mcs-form-field>
+    </mcs-item>
+  </ng-container>
 
   <!-- InView Level  -->
-  <mcs-item orientation="separated"
-    [mcsContextualHelp]="'serverShared.addOnBackup.inviewLevel.contextualHelp' | translate">
-    <span align-self-start>{{ 'serverShared.addOnBackup.inviewLevel.label' | translate }}:</span>
-    <mcs-form-field class="form-field-size-small">
-      <mcs-select required
-        mcsId="input-addon-backup-inview"
-        mcsEventTracker="server-create-addon-backup-inview-select"
-        mcsEventCategory="server-create"
-        mcsEventLabel="server-create-addon-backup-inview-select"
-        [placeholder]="'serverShared.addOnBackup.inviewLevel.placeholder' | translate"
-        [formControl]="fcInview">
+  <ng-container *ngIf="!isInviewLevelPremium(fcAggregation?.value); else aggregationTargetPremium">
+    <mcs-item orientation="separated"
+      [mcsContextualHelp]="'serverShared.addOnBackup.inviewLevel.contextualHelp' | translate">
+      <span align-self-start>{{ 'serverShared.addOnBackup.inviewLevel.label' | translate }}:</span>
+      <mcs-form-field class="form-field-size-small">
+        <mcs-select required
+          mcsId="input-addon-backup-inview"
+          mcsEventTracker="server-create-addon-backup-inview-select"
+          mcsEventCategory="server-create"
+          mcsEventLabel="server-create-addon-backup-inview-select"
+          [placeholder]="'serverShared.addOnBackup.inviewLevel.placeholder' | translate"
+          [formControl]="fcInview">
 
-        <mcs-option *ngFor="let inviewLevel of inviewLevelOptions" [value]="inviewLevel.value">
-          {{ inviewLevel.text }}
-        </mcs-option>
-      </mcs-select>
-    </mcs-form-field>
-  </mcs-item>
+          <mcs-option *ngFor="let inviewLevel of inviewLevelOptions" [value]="inviewLevel.value">
+            {{ inviewLevel.text }}
+          </mcs-option>
+        </mcs-select>
+      </mcs-form-field>
+    </mcs-item>
+  </ng-container>
+  <ng-template #aggregationTargetPremium>
+    <mcs-item>
+      <span align-self-start>{{ 'serverShared.addOnBackup.serverAggregation.aggregationTargetPremium' | translate }}</span>
+    </mcs-item>
+  </ng-template>
 
   <!-- BackUp Schedule  -->
   <mcs-item orientation="separated"
@@ -94,73 +100,38 @@
   </mcs-item>
 
   <!-- BackUp Quota  -->
-  <mcs-item orientation="separated"
-    [mcsContextualHelp]="'serverShared.addOnBackup.dailyQuota.contextualHelp' | translate">
-    <span align-self-start>{{ 'serverShared.addOnBackup.dailyQuota.label' | translate }}:</span>
-    <mcs-form-field class="form-field-size-small">
-      <input mcsInput
-        [placeholder]="'serverShared.addOnBackup.dailyQuota.placeholder' | translate"
-        mcsId="input-addon-backup-daily-quota"
-        mcsEventTracker="server-create-addon-backup-daily-quota-select"
-        mcsEventCategory="server-create"
-        mcsEventLabel="server-create-addon-backup-daily-quota-select"
-        [formControl]="fcDailyQuota">
-      <mcs-suffix mcsSuffix>{{ 'serverShared.addOnBackup.dailyQuota.suffix' | translate }}</mcs-suffix>
+  <ng-container *ngIf="!fcAggregation?.value">
+    <mcs-item orientation="separated"
+      [mcsContextualHelp]="'serverShared.addOnBackup.dailyQuota.contextualHelp' | translate">
+      <span align-self-start>{{ 'serverShared.addOnBackup.dailyQuota.label' | translate }}:</span>
+      <mcs-form-field class="form-field-size-small">
+        <input mcsInput
+          [placeholder]="'serverShared.addOnBackup.dailyQuota.placeholder' | translate"
+          mcsId="input-addon-backup-daily-quota"
+          mcsEventTracker="server-create-addon-backup-daily-quota-select"
+          mcsEventCategory="server-create"
+          mcsEventLabel="server-create-addon-backup-daily-quota-select"
+          [formControl]="fcDailyQuota">
+        <mcs-suffix mcsSuffix>{{ 'serverShared.addOnBackup.dailyQuota.suffix' | translate }}</mcs-suffix>
 
-      <mcs-error text-wrap mcsError errorState="required">
-          {{ 'serverShared.addOnBackup.dailyQuota.error.required' | translate }}
-      </mcs-error>
-      <mcs-error text-wrap mcsError errorState="numeric">
-          {{ 'serverShared.addOnBackup.dailyQuota.error.numeric' | translate }}
-      </mcs-error>
-      <mcs-error text-wrap mcsError errorState="min">
-          {{ 'serverShared.addOnBackup.dailyQuota.error.minimum' | translate: {min_value:(minimumQuota | mcsDataSize: 'GB')} }}
-      </mcs-error>
-      <mcs-error text-wrap mcsError errorState="max">
-          {{ 'serverShared.addOnBackup.dailyQuota.error.maximum' | translate: {max_value:(maximumQuota | mcsDataSize: 'GB')} }}
-      </mcs-error>
-      <mcs-error text-wrap mcsError errorState="valid">
-          {{ 'serverShared.addOnBackup.dailyQuota.error.invalid' | translate: {step: stepQuota} }}
-      </mcs-error>
-    </mcs-form-field>
-  </mcs-item>
-
-  <!-- DeDuplication Ratio -->
-  <mcs-item orientation="separated">
-    <span align-self-start>{{ 'serverShared.addOnBackup.deDuplicationRatio.label' | translate }}:</span>
-    <mcs-form-field class="form-field-size-small">
-      <mcs-select required
-        mcsId="input-addon-backup-deduplication-ratio"
-        mcsEventTracker="server-create-addon-backup-deduplication-ratio-select"
-        mcsEventCategory="server-create"
-        mcsEventLabel="server-create-addon-backup-deduplication-ratio-select"
-        [formControl]="fcDeDuplicationRatio">
-
-        <mcs-option *ngFor="let ratio of deduplicationRatioOptions" [value]="ratio.value">
-          {{ ratio.text }}
-        </mcs-option>
-      </mcs-select>
-    </mcs-form-field>
-  </mcs-item>
-
-  <!-- Database Support -->
-  <mcs-item orientation="separated"
-    [mcsContextualHelp]="'serverShared.addOnBackup.databaseSupport.contextualHelp' | translate">
-    <span align-self-start>{{ 'serverShared.addOnBackup.databaseSupport.label' | translate }}:</span>
-    <mcs-form-field class="form-field-size-small">
-      <mcs-select required
-        mcsId="input-addon-backup-database-support-target"
-        mcsEventTracker="server-create-addon-backup-database-support-select"
-        mcsEventCategory="server-create"
-        mcsEventLabel="server-create-addon-backup-database-support-select"
-        [formControl]="fcDatabaseSupport">
-
-        <mcs-option *ngFor="let databaseSupport of databaseSupportOptions" [value]="databaseSupport.value">
-          {{ databaseSupport.text }}
-        </mcs-option>
-      </mcs-select>
-    </mcs-form-field>
-  </mcs-item>
+        <mcs-error text-wrap mcsError errorState="required">
+            {{ 'serverShared.addOnBackup.dailyQuota.error.required' | translate }}
+        </mcs-error>
+        <mcs-error text-wrap mcsError errorState="numeric">
+            {{ 'serverShared.addOnBackup.dailyQuota.error.numeric' | translate }}
+        </mcs-error>
+        <mcs-error text-wrap mcsError errorState="min">
+            {{ 'serverShared.addOnBackup.dailyQuota.error.minimum' | translate: {min_value:(minimumQuota | mcsDataSize: 'GB')} }}
+        </mcs-error>
+        <mcs-error text-wrap mcsError errorState="max">
+            {{ 'serverShared.addOnBackup.dailyQuota.error.maximum' | translate: {max_value:(maximumQuota | mcsDataSize: 'GB')} }}
+        </mcs-error>
+        <mcs-error text-wrap mcsError errorState="valid">
+            {{ 'serverShared.addOnBackup.dailyQuota.error.invalid' | translate: {step: stepQuota} }}
+        </mcs-error>
+      </mcs-form-field>
+    </mcs-item>
+  </ng-container>
 
   <!-- Backup Scope -->
   <mcs-item [mcsContextualHelp]="'serverShared.addOnBackup.backUpScope.contextualHelp' | translate">

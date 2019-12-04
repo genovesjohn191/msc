@@ -55,7 +55,6 @@ export class ServerCreateAddOnsComponent
   public hidsAddOn = new AddOnDetails<McsServerCreateAddOnHids>();
   public inviewAddOn = new AddOnDetails<McsServerCreateAddOnInview>();
 
-  // TODO: api endpoint not existing yet, Type will be updated in the future
   public aggregationTargets$: Observable<McsStorageBackUpAggregationTarget[]>;
 
   @Input()
@@ -93,6 +92,21 @@ export class ServerCreateAddOnsComponent
   }
 
   /**
+   * Returns true when the whole form is valid
+   */
+  public get isFormValid(): boolean {
+    let vmBackupSelected = getSafeProperty(this.vmBackupAddOn, (obj) => obj.selected, false);
+    let vmBackupFormValid = vmBackupSelected ?
+      getSafeProperty(this._fgAddOnBackupVm, (obj) => obj.isValid(), false) : !vmBackupSelected;
+
+    let serverBackupSelected = getSafeProperty(this.serverBackupAddOn, (obj) => obj.selected, false);
+    let serverBackupFormValid = serverBackupSelected ?
+      getSafeProperty(this._fgAddOnBackupServer, (obj) => obj.isValid(), false) : !serverBackupSelected;
+
+    return vmBackupFormValid && serverBackupFormValid;
+  }
+
+  /**
    * Event that emits when vm backup is selected
    * @param collapse Collapse flag of the panel
    */
@@ -113,15 +127,6 @@ export class ServerCreateAddOnsComponent
   }
 
   /**
-   * Returns true if the VM Backup Add On details is valid, false otherwise
-   */
-  public vmBackupAddOnValid(): boolean {
-    return this.vmBackupAddOn.selected ?
-      getSafeProperty(this._fgAddOnBackupVm, (obj) => obj.isValid(), false) :
-      !this.vmBackupAddOn.selected;
-  }
-
-  /**
    * Event that emits when server backup is selected
    * @param collapse Collapse flag of the panel
    */
@@ -139,15 +144,6 @@ export class ServerCreateAddOnsComponent
   public onChangeServerBackUpDetails(serverBackUpDetails: McsServerCreateAddOnServerBackup): void {
     this.serverBackupAddOn.properties = serverBackUpDetails;
     this.notifyDataChange();
-  }
-
-  /**
-   * Returns true if the VM Backup Add On details is valid, false otherwise
-   */
-  public serverBackupAddOnValid(): boolean {
-    return this.serverBackupAddOn.selected ?
-      getSafeProperty(this._fgAddOnBackupServer, (obj) => obj.isValid(), false) :
-      !this.serverBackupAddOn.selected;
   }
 
   /**
@@ -202,7 +198,7 @@ export class ServerCreateAddOnsComponent
 
   /**
    * Event that emits when Hids details has been changed
-   * @param hidsDetails Updated Sql Server data
+   * @param hidsDetails Updated hids details
    */
   public onChangeHidsDetails(hidsDetails: McsServerCreateAddOnHids): void {
     this.hidsAddOn.properties = hidsDetails;
