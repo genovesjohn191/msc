@@ -151,6 +151,7 @@ import { McsMediaRepository } from './repositories/mcs-media.repository';
 import { McsFirewallsRepository } from './repositories/mcs-firewalls.repository';
 import { McsConsoleRepository } from './repositories/mcs-console.repository';
 import { McsCompaniesRepository } from './repositories/mcs-companies.repository';
+import { McsStorageBackupAggregationTargetsRepository } from './repositories/mcs-storage-backup-aggregation-targets.repository';
 
 interface DataEmitter<T> {
   eventEmitter: Observable<T>;
@@ -173,6 +174,7 @@ export class McsApiService {
   private readonly _ordersRepository: McsOrdersRepository;
   private readonly _mediaRepository: McsMediaRepository;
   private readonly _firewallsRepository: McsFirewallsRepository;
+  private readonly _storageBackupAggregationTargetRepository: McsStorageBackupAggregationTargetsRepository;
   private readonly _consoleRepository: McsConsoleRepository;
   private readonly _companiesRepository: McsCompaniesRepository;
 
@@ -206,6 +208,7 @@ export class McsApiService {
     this._ordersRepository = _injector.get(McsOrdersRepository);
     this._mediaRepository = _injector.get(McsMediaRepository);
     this._firewallsRepository = _injector.get(McsFirewallsRepository);
+    this._storageBackupAggregationTargetRepository = _injector.get(McsStorageBackupAggregationTargetsRepository);
     this._consoleRepository = _injector.get(McsConsoleRepository);
     this._companiesRepository = _injector.get(McsCompaniesRepository);
 
@@ -861,8 +864,16 @@ export class McsApiService {
     );
   }
 
-  public getStorageBackupAggregationTargets(): Observable<McsApiCollection<McsStorageBackUpAggregationTarget>> {
-    return this._storagesApi.getBackUpAggregationTargets().pipe(
+  public getStorageBackupAggregationTarget(id: string): Observable<McsStorageBackUpAggregationTarget> {
+    return this._mapToEntityRecord(this._storageBackupAggregationTargetRepository, id).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getStorageBackupAggregationTarget'))
+      )
+    );
+  }
+
+  public getStorageBackupAggregationTargets(query?: McsQueryParam): Observable<McsApiCollection<McsStorageBackUpAggregationTarget>> {
+    return this._storagesApi.getBackUpAggregationTargets(query).pipe(
       catchError((error) => {
         return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getStorageBackupAggregationTargets'));
       }),

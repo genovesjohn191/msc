@@ -1,0 +1,51 @@
+<mcs-page [header]="(selectedAggregationTarget$ | async)?.description">
+
+    <!-- Left Panel -->
+    <mcs-left-panel *mcsLeftPanelDef="'aggregationTarget.leftPanelHeader' | translate">
+      <!-- listing panel -->
+      <mcs-left-panel-item *mcsLeftPanelItemDef>
+        <div class="listing-panel-wrapper">
+          <mcs-search #search mcsId="aggregation-target-listing-panel-search"></mcs-search>
+          <mcs-list-panel [dataSource]="listViewDatasource" [config]="listViewConfig?.panelSettings">
+            <ng-container *mcsListPanelContent="let aggregationTarget">
+              <a [mcsRouterLink]="[routeKeyEnum.BackupAggregationTargetsDetails, aggregationTarget.serviceId]"
+                mcsId="select-aggregation-target"
+                mcsEventTracker="select-aggregation-target"
+                mcsEventCategory="storage"
+                mcsEventLabel="aggregation-target-list-panel">
+                <!-- TODO: change the serviceId to Id -->
+                <mcs-option [value]="aggregationTarget"
+                  [selected]="(selectedAggregationTarget$ | async)?.serviceId === aggregationTarget.serviceId">
+                  <mcs-item>
+                    <span>{{ aggregationTarget.description }}</span>
+                  </mcs-item>
+                </mcs-option>
+              </a>
+            </ng-container>
+          </mcs-list-panel>
+        </div>
+      </mcs-left-panel-item>
+    </mcs-left-panel>
+
+    <mcs-content-panel *mcsContentPanelDef>
+      <div class="routing-tab-wrapper" *ngIf="selectedAggregationTarget$ | async as selectedAggregationTarget">
+        <mcs-tab-group [selectedTabId]="selectedTabId$ | async" (tabChanged)="onTabChanged($event)">
+          <!-- Management Tab -->
+          <mcs-tab [label]="'aggregationTarget.management.label' | translate" id="management">
+          </mcs-tab>
+        </mcs-tab-group>
+
+        <!-- Tab content for routing tab -->
+        <div class="routing-tab-content-wrapper limited-view">
+          <router-outlet></router-outlet>
+        </div>
+      </div>
+    </mcs-content-panel>
+  </mcs-page>
+
+  <mcs-help-widget *mcsAccessControl="['TicketCreate']"
+    [serviceId]="(selectedAggregationTarget$ | async)?.serviceId"
+    mcsEventTracker="toggle-help"
+    mcsEventCategory="help"
+    mcsEventLabel="help-panel-aggregation-target">
+  </mcs-help-widget>

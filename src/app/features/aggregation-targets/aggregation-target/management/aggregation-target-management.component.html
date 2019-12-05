@@ -1,0 +1,41 @@
+<mcs-grid *ngIf="aggregationTarget$ | async as aggregationTarget">
+  <mcs-grid-row>
+    <!-- Aggregation Target Properties -->
+    <mcs-grid-column sizeSm="12" sizeLg="6">
+      <mcs-presentation-panel mcsId="aggregation-target-properties">
+        <ng-container mcsPresentationPanelHeader>
+          <h2>{{ 'aggregationTarget.management.properties.title' | translate }}</h2>
+        </ng-container>
+
+        <mcs-item>
+          <span>{{ 'aggregationTarget.management.properties.retentionPeriod' | translate }}:</span>
+          <span [innerHTML]="aggregationTarget.retentionPeriod | mcsDataLabel"></span>
+        </mcs-item>
+
+        <mcs-item>
+          <span>{{ 'aggregationTarget.management.properties.dailyBackupQuota' | translate }}:</span>
+          <span [innerHTML]="aggregationTarget.dailyBackupQuota | mcsDataLabel"></span>
+        </mcs-item>
+      </mcs-presentation-panel>
+    </mcs-grid-column>
+
+    <!-- Service Information -->
+    <mcs-grid-column sizeSm="12" sizeLg="6">
+      <mcs-presentation-panel mcsId="service-information">
+        <ng-container mcsPresentationPanelHeader>
+          <h2>{{ 'aggregationTarget.management.serviceInformation.title' | translate }}</h2>
+        </ng-container>
+
+        <mcs-item>
+          <span>{{ 'aggregationTarget.management.serviceInformation.serviceId' | translate }}:</span>
+          <span [innerHTML]="aggregationTarget.serviceId | mcsDataLabel"></span>
+        </mcs-item>
+
+        <mcs-item >
+          <span>{{ 'aggregationTarget.management.serviceInformation.inviewLevel' | translate }}:</span>
+          <span [innerHTML]="inviewLevelLabel(aggregationTarget) | mcsDataLabel"></span>
+        </mcs-item>
+      </mcs-presentation-panel>
+    </mcs-grid-column>
+  </mcs-grid-row>
+</mcs-grid>

@@ -3,6 +3,10 @@ export enum McsFeatureFlag {
   SystemMessages = 'EnableSystemMessages',
 
   InternetPortView = 'EnableInternetPortView',
+
+  AddonBackupAggregationTargetDetailsView = 'EnableAddonBackupAggregationTargetDetailsView',
+  AddonBackupAggregationTargetView = 'EnableAddonBackupAggregationTargetView',
+
   ProductCatalog = 'EnableProductCatalog',
 
   ServerOsUpdates = 'EnableServerOsUpdates',

@@ -189,6 +189,27 @@
     "requiredFeatureFlag": "EnableInternetPortView",
     "documentTitle": "Internet Ports Management - Macquarie Cloud Services"
   },
+  "backupAggregationTargets": {
+    "enumCategory": "Storage",
+    "enumKey": "BackupAggregationTargets",
+    "navigationPath": "storage/aggregation-targets",
+    "requiredFeatureFlag": "EnableAddonBackupAggregationTargetView",
+    "documentTitle": "Storage - Macquarie Cloud Services"
+  },
+  "backupAggregationTargetsDetails": {
+    "enumCategory": "Storage",
+    "enumKey": "BackupAggregationTargetsDetails",
+    "navigationPath": "storage/aggregation-targets",
+    "requiredFeatureFlag": "EnableAddonBackupAggregationTargetView",
+    "documentTitle": "Backup Aggregation Targets - Macquarie Cloud Services"
+  },
+  "backupAggregationTargetsDetailsManagement": {
+    "enumCategory": "Storage",
+    "enumKey": "BackupAggregationTargetsDetailsManagement",
+    "navigationPath": "management",
+    "requiredFeatureFlag": "EnableAddonBackupAggregationTargetDetailsView",
+    "documentTitle": "Backup Aggregation Targets - Macquarie Cloud Services"
+  },
   "systemMessages": {
     "enumCategory": "SystemMessages",
     "enumKey": "SystemMessages",
