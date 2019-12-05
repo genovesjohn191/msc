@@ -123,10 +123,10 @@
   "orderGroups": {
     "header": "Add or Change a Service",
     "description": "Macquarie Cloud Services offers a range of managed services, with more being added regularly.",
-    "newLabel": "New",
-    "noNewOrdersMessage": "No new orders available to this service.",
+    "newLabel": "Add",
+    "noNewOrdersMessage": "No Add operations to display.",
     "changeLabel": "Change",
-    "noChangeOrdersMessage": "No change orders available to this service."
+    "noChangeOrdersMessage": "No Change operations to display."
   },
   "orderServerManagedScale": {
     "back": "Back",
