@@ -17,7 +17,12 @@ import {
   getSafeProperty,
   isNullOrEmpty
 } from '@app/utilities';
+import { McsDateTimeService } from '@app/core';
 import { ServerServiceDetailBase } from '../server-service-detail.base';
+
+// TODO: Extract this when the generic date time service is created
+const BACKUP_TIMEZONE = 'Australia/Sydney';
+const BACKUP_DATEFORMAT = `EEEE, d MMMM, yyyy 'at' h:mm a`;
 
 type BackupServerStatusDetails = {
   icon: string;
@@ -47,10 +52,10 @@ export class ServiceBackupServerComponent extends ServerServiceDetailBase implem
   private _backupServerStatusDetails: BackupServerStatusDetails;
   private _serverBackupServer: McsServerBackupServer;
 
-  constructor() {
+  constructor(private _dateTimeService: McsDateTimeService) {
     super(ServerServicesView.BackupServer);
     this._createStatusMap();
-    this._backupServerStatusDetails = this._backupServerStatusDetailsMap.get(BackupAttemptStatus.NotStarted);
+    this._backupServerStatusDetails = this._backupServerStatusDetailsMap.get(BackupAttemptStatus.NeverAttempted);
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -59,7 +64,6 @@ export class ServiceBackupServerComponent extends ServerServiceDetailBase implem
       this._backupServerStatusDetails = this._backupServerStatusDetailsMap.get(this._serverBackupServer.lastBackupAttempt.status);
     }
   }
-
 
   public get isProvisioned(): boolean {
     return getSafeProperty(this._serverBackupServer, (obj) => obj.provisioned, false);
@@ -74,7 +78,12 @@ export class ServiceBackupServerComponent extends ServerServiceDetailBase implem
   }
 
   public get statusSublabel(): string {
-    return replacePlaceholder(this._backupServerStatusDetails.sublabel, 'startTime', this._serverBackupServer.lastBackupAttempt.startedOn);
+    let startTime = this._dateTimeService.formatDate(
+      this._serverBackupServer.lastBackupAttempt.startedOn,
+      BACKUP_DATEFORMAT,
+      BACKUP_TIMEZONE
+    );
+    return replacePlaceholder(this._backupServerStatusDetails.sublabel, 'formattedDate', startTime);
   }
 
   public get statusDetailsLinkFlag(): boolean {
@@ -105,10 +114,10 @@ export class ServiceBackupServerComponent extends ServerServiceDetailBase implem
       sublabel: backupStatusSubtitleLabel[BackupAttemptStatus.InProgress],
       detailsLinkFlag: true
     });
-    this._backupServerStatusDetailsMap.set(BackupAttemptStatus.NotStarted, {
+    this._backupServerStatusDetailsMap.set(BackupAttemptStatus.NeverAttempted, {
       icon: CommonDefinition.ASSETS_SVG_STATE_SUSPENDED,
-      label: backupServerStatusLabel[BackupAttemptStatus.NotStarted],
-      sublabel: backupStatusSubtitleLabel[BackupAttemptStatus.NotStarted],
+      label: backupServerStatusLabel[BackupAttemptStatus.NeverAttempted],
+      sublabel: backupStatusSubtitleLabel[BackupAttemptStatus.NeverAttempted],
       detailsLinkFlag: false
     });
   }

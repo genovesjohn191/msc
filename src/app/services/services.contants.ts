@@ -14,6 +14,7 @@ import { McsTicketsRepository } from './repositories/mcs-tickets.repository';
 import { McsConsoleRepository } from './repositories/mcs-console.repository';
 import { McsCompaniesRepository } from './repositories/mcs-companies.repository';
 import { McsInternetRepository } from './repositories/mcs-internet.repository';
+import { McsStorageBackupAggregationTargetsRepository } from './repositories/mcs-storage-backup-aggregation-targets.repository';
 import { McsSystemMessagesRepository } from './repositories/mcs-system-messages.repository';
 
 /** State Managers */
@@ -30,6 +31,7 @@ export const repositoryProviders: any[] = [
   McsResourcesRepository,
   McsServersOsRepository,
   McsServersRepository,
+  McsStorageBackupAggregationTargetsRepository,
   McsTicketsRepository,
   McsConsoleRepository,
   McsCompaniesRepository,

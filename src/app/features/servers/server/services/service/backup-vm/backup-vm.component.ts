@@ -16,7 +16,12 @@ import {
   replacePlaceholder,
   isNullOrEmpty
 } from '@app/utilities';
+import { McsDateTimeService } from '@app/core';
 import { ServerServiceDetailBase } from '../server-service-detail.base';
+
+// TODO: Extract this when the generic date time service is created
+const BACKUP_TIMEZONE = 'Australia/Sydney';
+const BACKUP_DATEFORMAT = `EEEE, d MMMM, yyyy 'at' h:mm a`;
 
 type BackupVmStatusDetails = {
   icon: string;
@@ -46,10 +51,10 @@ export class ServiceBackupVmComponent extends ServerServiceDetailBase implements
   private _backupVmStatusDetails: BackupVmStatusDetails;
   private _serverBackupVm: McsServerBackupVm;
 
-  constructor() {
+  constructor(private _dateTimeService: McsDateTimeService) {
     super(ServerServicesView.BackupVm);
     this._createStatusMap();
-    this._backupVmStatusDetails = this._backupVmStatusDetailsMap.get(BackupAttemptStatus.NotStarted);
+    this._backupVmStatusDetails = this._backupVmStatusDetailsMap.get(BackupAttemptStatus.NeverAttempted);
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -68,7 +73,12 @@ export class ServiceBackupVmComponent extends ServerServiceDetailBase implements
   }
 
   public get statusSublabel(): string {
-    return replacePlaceholder(this._backupVmStatusDetails.sublabel, 'startTime', this._serverBackupVm.lastBackupAttempt.startedOn);
+    let startTime = this._dateTimeService.formatDate(
+      this._serverBackupVm.lastBackupAttempt.startedOn,
+      BACKUP_DATEFORMAT,
+      BACKUP_TIMEZONE
+    );
+    return replacePlaceholder(this._backupVmStatusDetails.sublabel, 'formattedDate', startTime);
   }
 
   public get statusDetailsLinkFlag(): boolean {
@@ -99,10 +109,10 @@ export class ServiceBackupVmComponent extends ServerServiceDetailBase implements
       sublabel: backupStatusSubtitleLabel[BackupAttemptStatus.InProgress],
       detailsLinkFlag: true
     });
-    this._backupVmStatusDetailsMap.set(BackupAttemptStatus.NotStarted, {
+    this._backupVmStatusDetailsMap.set(BackupAttemptStatus.NeverAttempted, {
       icon: CommonDefinition.ASSETS_SVG_STATE_SUSPENDED,
-      label: backupVmStatusLabel[BackupAttemptStatus.NotStarted],
-      sublabel: backupStatusSubtitleLabel[BackupAttemptStatus.NotStarted],
+      label: backupVmStatusLabel[BackupAttemptStatus.NeverAttempted],
+      sublabel: backupStatusSubtitleLabel[BackupAttemptStatus.NeverAttempted],
       detailsLinkFlag: false
     });
   }

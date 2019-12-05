@@ -1,0 +1,115 @@
+<mcs-page [header]="'aggregationTargets.header' | translate">
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef>
+    <mcs-top-panel-item *mcsTopPanelItemDef>
+      <div class="listing-action-wrapper">
+        <div class="total-record-count">
+          <span>
+            {{ totalRecordsCount | mcsPlural: ('aggregationTargets.dataSingular' | translate) : ('aggregationTargets.dataPlural' | translate) }}
+          </span>
+        </div>
+      </div>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
+  <!-- Left Panel -->
+  <mcs-left-panel *mcsLeftPanelDef="'aggregationTargets.leftPanelHeader' | translate">
+    <!-- Search -->
+    <mcs-left-panel-item *mcsLeftPanelItemDef>
+      <mcs-search *ngIf="!isMobile" #search mcsId="aggregation-targets-desktop-search"></mcs-search>
+    </mcs-left-panel-item>
+
+    <!-- Column Filter -->
+    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'aggregationTargets.filterColumn' | translate" offset="medium">
+      <mcs-column-filter [filters]="dataFilters"
+        (dataChange)="onColumnFilterChange($event)"></mcs-column-filter>
+    </mcs-left-panel-item>
+  </mcs-left-panel>
+
+  <!-- Content Panel -->
+  <mcs-content-panel *mcsContentPanelDef>
+
+    <div class="listing-table-wrapper">
+      <!-- Search -->
+      <mcs-search *ngIf="isMobile" #search mcsId="aggregation-targets-mobile-search"></mcs-search>
+
+      <!-- Table -->
+      <mcs-table #table [dataSource]="dataSource">
+        <!-- Aggregation Target Column -->
+        <ng-container mcsColumnDef="aggregationTarget">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ columnSettings.aggregationTarget.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row">
+            <mcs-item>
+              {{ row.description }}
+            </mcs-item>
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Retention Period Column -->
+        <ng-container mcsColumnDef="retentionPeriod">
+          <mcs-header-cell *mcsHeaderCellDef hidden-small>
+            {{ columnSettings.retentionPeriod.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+            {{ row.retentionPeriod }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- InView Level Column -->
+        <ng-container mcsColumnDef="inviewLevel">
+          <mcs-header-cell *mcsHeaderCellDef hidden-small>
+            {{ columnSettings.inviewLevel.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+            {{ inviewLevelLabel(row.inviewLevel) }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Service ID Column -->
+        <ng-container mcsColumnDef="serviceId">
+          <mcs-header-cell *mcsHeaderCellDef hidden-small>
+            {{ columnSettings.serviceId.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+            {{ row.serviceId }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Data Status Integration -->
+        <ng-container mcsDataStatusDef>
+          <mcs-data-empty *mcsDataEmptyDef>
+            <span>{{ 'aggregationTargets.noData' | translate }}</span>
+          </mcs-data-empty>
+          <mcs-data-error *mcsDataErrorDef>
+            <div class="listing-status-wrapper">
+              <span>{{ 'aggregationTargets.errorMessage' | translate }}</span>
+              <a (click)="retryDatasource()"
+                mcsId
+                mcsEventTracker="retry-loading-aggregation-targets-list"
+                mcsEventCategory="aggregation-targets"
+                mcsEventLabel="aggregation-targets-listing-page">{{ 'aggregationTargets.retry' | translate }}</a>
+            </div>
+          </mcs-data-error>
+        </ng-container>
+
+        <!-- Header and Data row -->
+        <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
+        <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"
+          mcsCursor="pointer"
+          (click)="navigateToAggregationTarget(row)"
+          mcsId="aggregation-targets-row"
+          mcsEventTracker="navigate-to-aggregation-targets"
+          mcsEventCategory="aggregation-targets"
+          mcsEventLabel="aggregation-targets-listing-page"></mcs-data-row>
+      </mcs-table>
+
+      <!-- Paginator -->
+      <mcs-paginator #paginator
+        [hidden]="isSearching"
+        [totalCount]="totalRecordsCount">
+      </mcs-paginator>
+    </div>
+  </mcs-content-panel>
+</mcs-page>

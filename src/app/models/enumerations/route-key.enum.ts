@@ -33,6 +33,10 @@ export enum RouteKey {
   FirewallDetailsOverview,
   FirewallDetailsPolicies,
 
+  BackupAggregationTargets,
+  BackupAggregationTargetsDetails,
+  BackupAggregationTargetsDetailsManagement,
+
   Tickets,
   TicketDetails,
   TicketCreate,

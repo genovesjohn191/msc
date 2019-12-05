@@ -200,6 +200,25 @@
       "value": true
     }
   },
+  "aggregationTargetFilter": {
+    "aggregationTarget": {
+      "text": "Aggregation Target",
+      "value": true,
+      "exclude": true
+    },
+    "retentionPeriod": {
+      "text": "Retention Period",
+      "value": true
+    },
+    "inviewLevel": {
+      "text": "InView Level",
+      "value": true
+    },
+    "serviceId": {
+      "text": "Service ID",
+      "value": true
+    }
+  },
   "toolsFilter": {
     "name": {
       "text": "Portal",

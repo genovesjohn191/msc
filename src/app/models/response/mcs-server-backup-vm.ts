@@ -11,7 +11,7 @@ export class McsServerBackupVm extends McsEntityBase {
   @JsonProperty()
   public provisioned: boolean = undefined;
 
-  @JsonProperty()
+  @JsonProperty({ target: McsBackupAttempt })
   public lastBackupAttempt: McsBackupAttempt = undefined;
 
   @JsonProperty()
@@ -23,4 +23,3 @@ export class McsServerBackupVm extends McsEntityBase {
   })
   public inviewLevel: InviewLevel = undefined;
 }
-

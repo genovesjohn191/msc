@@ -52,6 +52,18 @@
       </a>
     </div>
 
+     <!-- Storage Category -->
+     <div class="navigation-item"
+      [class.active]="selectedCategory === routerCategoryEnum.Storage"
+      *mcsAccessControl="[]; feature: 'EnableAddonBackupAggregationTargetView'">
+
+      <mcs-icon [key]="caretRightIconKey" color="light"
+        size="medium" class="navigation-mobile"></mcs-icon>
+      <a [mcsRouterLink]="routeKeyEnum.BackupAggregationTargets" mcsId>
+        {{ getCategoryLabel(routerCategoryEnum.Storage) }}
+      </a>
+    </div>
+
     <!-- Other Tools -->
     <div class="navigation-item" hidden-small mcsRouterLinkActive="active">
       <mcs-icon [key]="caretRightIconKey" color="light"

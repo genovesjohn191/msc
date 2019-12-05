@@ -56,6 +56,11 @@ export const defaultPageRoutes: Routes = [
         loadChildren: '../../features/internet/internet.module#InternetModule'
       },
       {
+        path: 'storage/aggregation-targets',
+        data: { routeId: RouteKey.BackupAggregationTargets },
+        loadChildren: '../../features/aggregation-targets/aggregation-targets.module#AggregationTargetsModule'
+      },
+      {
         path: 'tools',
         data: { routeId: RouteKey.OtherTools },
         loadChildren: '../../features/tools/tools.module#ToolsModule'
