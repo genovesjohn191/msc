@@ -20,6 +20,7 @@ import {
   isNullOrEmpty
 } from '@app/utilities';
 import { OrderEventContext } from './strategy/order-event.context';
+import { orderEventMap } from './strategy/order-event.map';
 
 interface OrderGroupDetails {
   changeOrders: McsOrderAvailableItemType[];
@@ -61,6 +62,12 @@ export class OrderGroupComponent implements OnChanges {
     let orderAvailableItemTypes = getSafeProperty(this.orderGroup, (obj) => obj.availableOrderItemTypes, []);
 
     orderAvailableItemTypes.forEach((orderItem) => {
+      // Remove the items if they're not registered in the map,
+      // because they need to have own implementation instead of
+      // displaying the error page
+      let registeredEvent = orderEventMap[orderItem.productOrderType];
+      if (isNullOrEmpty(registeredEvent)) { return; }
+
       orderItem.orderType === OrderType.Change ?
         groupDetails.changeOrders.push(orderItem) :
         groupDetails.newOrders.push(orderItem);
