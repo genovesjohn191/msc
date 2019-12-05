@@ -76,39 +76,48 @@
             <ng-container mcsPresentationPanelHeader>
               <h2>{{ 'serverServices.hostSecurity.title' | translate }}</h2>
             </ng-container>
+            <p>{{ 'serverServices.hostSecurity.description' | translate }}</p>
             <mcs-section>
-              <mcs-presentation-panel>
-                <ng-container mcsPresentationPanelHeader>
-                  <mcs-item>
-                    <mcs-icon [key]="serverHostSecurityDetails.icon" size="small" mcsId="hids-status-icon"></mcs-icon>
-                    <h2>{{ serverHostSecurityDetails.label }}</h2>
-                  </mcs-item>
-                </ng-container>
-                <mcs-section>
-
-                  <!-- Hids -->
-                  <ng-container orientation="block" *mcsAccessControl="['HidsView']; feature: 'EnableAddonHidsView'">
-                    <mcs-item *ngIf="serverHostSecurityDetails?.hids?.enabled">
+              <!-- Overall Status -->
+              <mcs-grid>
+                <mcs-grid-row>
+                  <mcs-grid-column>
+                    <mcs-item orientation="block">
+                      <strong>{{ 'serverServices.hostSecurity.statusLabel' | translate }}</strong>
+                      <mcs-item>
+                        <mcs-icon [key]="serverHostSecurityDetails.icon" size="small" mcsId="host-security-status-icon"></mcs-icon>
+                        <div>
+                          <span mcsId="host-security-status-label">{{ serverHostSecurityDetails.label }}</span>
+                        </div>
+                      </mcs-item>
+                    </mcs-item>
+                  </mcs-grid-column>
+                </mcs-grid-row>
+                <!-- Hids -->
+                <ng-container orientation="block" *mcsAccessControl="['HidsView']; feature: 'EnableAddonHidsView'">
+                  <mcs-grid-row *ngIf="serverHostSecurityDetails?.hids?.enabled">
+                    <mcs-grid-column>
                       <mcs-service-hids
                         [server]="server"
                         [hids]="serverHostSecurityDetails?.hids"
                         (viewChange)="onViewChange($event)">
                       </mcs-service-hids>
-                    </mcs-item>
-                  </ng-container>
-
-                  <!-- Anti Virus -->
-                  <ng-container orientation="block" *mcsAccessControl="['AvView']; feature: 'EnableAddonAntiVirusView'">
-                    <mcs-item *ngIf="serverHostSecurityDetails?.antiVirus?.enabled">
+                    </mcs-grid-column>
+                  </mcs-grid-row>
+                </ng-container>
+                <!-- Anti Virus -->
+                <ng-container orientation="block" *mcsAccessControl="['AvView']; feature: 'EnableAddonAntiVirusView'">
+                  <mcs-grid-row *ngIf="serverHostSecurityDetails?.antiVirus?.enabled">
+                    <mcs-grid-column>
                       <mcs-service-anti-virus
                         [server]="server"
                         [antivirus]="serverHostSecurityDetails?.antiVirus"
                         (viewChange)="onViewChange($event)">
                       </mcs-service-anti-virus>
-                    </mcs-item>
-                  </ng-container>
-                </mcs-section>
-              </mcs-presentation-panel>
+                    </mcs-grid-column>
+                  </mcs-grid-row>
+                </ng-container>
+              </mcs-grid>
             </mcs-section>
           </mcs-presentation-panel>
         </ng-container>

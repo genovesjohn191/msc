@@ -1,29 +1,23 @@
-<mcs-accordion *ngIf="hidsDetails$ | async as hidsDetails">
-  <mcs-accordion-panel>
-    <mcs-accordion-panel-header mcsPanelHeaderDef>
-      <mcs-item>
-        <mcs-icon [key]="hidsDetails.icon" size="small" mcsId="hids-status-icon"></mcs-icon>
-        <h2>{{ 'serverServices.hids.title' | translate }}</h2>
+<mcs-grid *ngIf="hidsDetails$ | async as hidsDetails">
+  <mcs-grid-row>
+    <mcs-grid-column>
+      <mcs-item orientation="block">
+        <strong>{{ 'serverServices.hids.title' | translate }}</strong>
+        <mcs-item>
+          <mcs-icon [key]="hidsDetails.icon" size="small" mcsId="hids-status-icon"></mcs-icon>
+          <span mcsId="hids-status-label">{{ hidsDetails.label }}</span>
+          <ng-container *mcsAccessControl="[]; feature: ['EnableAddonHidsDetailsView']">
+            <a mcsId="hids-status-logs-link"
+              mcsEventTracker="hids-status-logs-link-click"
+              mcsEventCategory="server"
+              mcsEventLabel="hids-status-logs-view"
+              [disabled]="server.isProcessing"
+              (click)="changeView()">
+              {{ 'serverServices.hids.logsLink' | translate }}
+            </a>
+          </ng-container>
+        </mcs-item>
       </mcs-item>
-    </mcs-accordion-panel-header>
-    <mcs-item>
-        <div>
-          <small read-only>
-            <mcs-item orientation="inline">
-              <span mcsId="hids-status-label">{{ hidsDetails.label }}</span><br />
-              <ng-container *mcsAccessControl="[]; feature: ['EnableAddonHidsDetailsView']">
-                <a mcsId="hids-status-logs-link"
-                  mcsEventTracker="hids-status-logs-link-click"
-                  mcsEventCategory="server"
-                  mcsEventLabel="hids-status-logs-view"
-                  [disabled]="server.isProcessing"
-                  (click)="changeView()">
-                  {{ 'serverServices.hids.logsLink' | translate }}
-                </a>
-              </ng-container>
-            </mcs-item>
-          </small>
-        </div>
-    </mcs-item>
-  </mcs-accordion-panel>
-</mcs-accordion>
+    </mcs-grid-column>
+  </mcs-grid-row>
+</mcs-grid>

@@ -2,10 +2,10 @@ import { McsEnumSerializationBase } from '../serialization/mcs-enum-serializatio
 
 export enum HidsProtectionLevel {
   Protect = 1,
-  Detect = 2
+  Detect
 }
 
 export class HidsProtectionLevelSerialization
-  extends McsEnumSerializationBase<HidsProtectionLevelSerialization> {
-  constructor() { super(HidsProtectionLevelSerialization); }
+  extends McsEnumSerializationBase<HidsProtectionLevel> {
+  constructor() { super(HidsProtectionLevel); }
 }
