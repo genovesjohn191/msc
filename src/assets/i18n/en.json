@@ -454,7 +454,7 @@
       "title": "Service Information",
       "vdc": "Resource",
       "serviceId": "Service ID",
-      "vmWareId": "VMWare ID",
+      "vmWareId": "VMware ID",
       "inviewLevel": "InView Level",
       "inviewLevelUnavailable": "Not yet available"
     },
