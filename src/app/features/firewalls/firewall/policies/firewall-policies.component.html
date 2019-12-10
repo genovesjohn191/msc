@@ -165,22 +165,6 @@
             </mcs-data-cell>
           </ng-container>
 
-          <!-- Details Column -->
-          <ng-container mcsColumnDef="details">
-            <mcs-header-cell *mcsHeaderCellDef hidden-small>
-              {{ columnSettings.details.text }}
-            </mcs-header-cell>
-            <mcs-data-cell *mcsDataCellDef="let row" text-center hidden-small>
-              <mcs-icon [key]="infoIconKey" size="medium"
-                (click)="showFirewallPolicyDetails(row)"
-                mcsId="select-policy"
-                mcsEventTracker="select-policy"
-                mcsEventCategory="firewall"
-                mcsEventLabel="firewall-details-page"
-                mcsCursor="pointer"></mcs-icon>
-            </mcs-data-cell>
-          </ng-container>
-
           <!-- Data Status Integration -->
           <ng-container mcsDataStatusDef>
             <mcs-data-empty *mcsDataEmptyDef>

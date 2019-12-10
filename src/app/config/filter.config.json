@@ -171,10 +171,6 @@
       "text": "Service",
       "value": true,
       "exclude": true
-    },
-    "details": {
-      "text": "Details",
-      "value": true
     }
   },
   "internetFilter": {

@@ -43,10 +43,6 @@ export class FirewallPoliciesComponent extends McsTableListingBase<McsFirewallPo
     return CommonDefinition.ASSETS_SVG_COLUMNS_BLACK;
   }
 
-  public get infoIconKey(): string {
-    return CommonDefinition.ASSETS_SVG_CIRCLE_INFO_BLACK;
-  }
-
   /**
    * Returns the firewall policies mode enum
    */
