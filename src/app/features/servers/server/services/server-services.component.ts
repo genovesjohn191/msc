@@ -42,8 +42,8 @@ import {
   McsServerBackupServer,
   ServerServicesView,
   HostSecurityAgentStatus,
-  McsServerHostSecurityHids,
-  McsServerHostSecurityAntiVirus
+  McsServerHostSecurityHidsItem,
+  McsServerHostSecurityAntiVirusItem
 } from '@app/models';
 import { FormMessage } from '@app/shared';
 import { McsEvent } from '@app/events';
@@ -57,8 +57,8 @@ type ServerHostSecurityStatusDetails = {
   icon: string;
   status: HostSecurityAgentStatus;
   label?: string;
-  hids?: McsServerHostSecurityHids;
-  antiVirus?: McsServerHostSecurityAntiVirus;
+  hids?: McsServerHostSecurityHidsItem;
+  antiVirus?: McsServerHostSecurityAntiVirusItem;
 };
 
 @Component({

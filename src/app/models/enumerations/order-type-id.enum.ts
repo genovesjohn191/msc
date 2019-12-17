@@ -12,6 +12,8 @@ export enum OrderIdType {
   VdcStorageExpand = 'resources.vdc.storage.update',
   VdcStorageCreate = 'resources.vdc.storage.new',
   RaiseInviewLevel = 'servers.inview.raise',
+  AddAntiVirus = 'hostsecurity.av.provision', // TODO: Verify with API, same order id type with addons
+  AddHids = 'hostsecurity.hids.provision' // TODO: Verify with API, same order id type with addons
 }
 
 /**

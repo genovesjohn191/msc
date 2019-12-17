@@ -1,12 +1,13 @@
 import { JsonProperty } from '@peerlancers/json-serialization';
-import { McsServerHostSecurityAntiVirus } from './mcs-server-host-security-anti-virus';
-import { McsServerHostSecurityHids } from './mcs-server-host-security-hids';
+import { McsServerHostSecurityAntiVirusItem } from './mcs-server-host-security-anti-virus-item';
+import { McsServerHostSecurityHidsItem } from './mcs-server-host-security-hids-item';
 import {
   HostSecurityAgentStatus,
   HostSecurityAgentStatusSerialization
 } from '../enumerations/host-security-agent-status.enum';
+import { McsEntityBase } from '../common/mcs-entity.base';
 
-export class McsServerHostSecurity {
+export class McsServerHostSecurity extends McsEntityBase {
   @JsonProperty({
     serializer: HostSecurityAgentStatusSerialization,
     deserializer: HostSecurityAgentStatusSerialization
@@ -19,9 +20,9 @@ export class McsServerHostSecurity {
   @JsonProperty()
   public provisioned: boolean = undefined;
 
-  @JsonProperty({ target: McsServerHostSecurityAntiVirus })
-  public antiVirus: McsServerHostSecurityAntiVirus = undefined;
+  @JsonProperty({ target: McsServerHostSecurityAntiVirusItem })
+  public antiVirus: McsServerHostSecurityAntiVirusItem = undefined;
 
-  @JsonProperty({ target: McsServerHostSecurityHids })
-  public hids: McsServerHostSecurityHids = undefined;
+  @JsonProperty({ target: McsServerHostSecurityHidsItem })
+  public hids: McsServerHostSecurityHidsItem = undefined;
 }

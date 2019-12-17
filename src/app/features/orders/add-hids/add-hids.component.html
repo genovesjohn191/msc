@@ -1,0 +1,132 @@
+<mcs-page [header]="'orderAddHids.title' | translate">
+    <!-- Top Panel -->
+    <mcs-top-panel *mcsTopPanelDef>
+
+      <!-- Back to Server Details -->
+      <mcs-top-panel-item *mcsTopPanelItemDef no-border>
+        <mcs-action-item mcsAlign="end"
+          mcsNavigateBackward
+          mcsId="navigate-back"
+          mcsEventTracker="navigate-back-click"
+          mcsEventCategory="orders"
+          mcsEventLabel="navigate-back">
+          <mcs-icon [key]="backIconKey" size="small"></mcs-icon>
+          <span>{{'shared.wizard.previous' | translate}}</span>
+        </mcs-action-item>
+      </mcs-top-panel-item>
+    </mcs-top-panel>
+
+    <mcs-content-panel *mcsContentPanelDef>
+
+      <mcs-wizard header="Wizard Header">
+
+        <!-- Error message -->
+        <ng-container mcsWizardErrorTemplate>
+          <mcs-form-message #formMessage></mcs-form-message>
+        </ng-container>
+
+        <!-- Details Step-->
+        <mcs-wizard-step id="server-details-step"
+          [stepTitle]="'orderAddHids.details.stepTitle' | translate"
+          customClass="contextual-help-page-wrapper limited-view">
+          <form [formGroup]="fgAddHidsDetails" mcsFormGroup>
+            <p>{{ 'orderAddHids.details.server.description' | translate }}</p>
+            <mcs-section *mcsComponentHandler>
+              <mcs-form-field [mcsContextualHelp]="'orderAddHids.details.server.contextualHelp' | translate">
+                <!-- TODO: Add multiple selection once ready -->
+                <!-- <mcs-select mcsId="add-hids-select-server" [useTags]="true" multiple
+                  [placeholder]="'orderAddHids.details.server.placeholder' | translate"
+                  [formControl]="fcServer">
+
+                  <mcs-search mcsSelectSearch></mcs-search>
+                  <mcs-option-group>
+                    <ng-container *mcsOptionGroupHeader>
+                      <span>{{ 'orderAddHids.details.server.optionGroupLabel' | translate }}</span>
+                    </ng-container>
+                    <ng-container *ngIf="resources$ | async as resources">
+                      <mcs-option-group [label]="iterator.key" *ngFor="let iterator of resources | mcsMapIterable">
+                        <mcs-option *ngFor="let server of iterator.value" [value]="server">
+                          {{ server.name }}
+                        </mcs-option>
+                      </mcs-option-group>
+                    </ng-container>
+                  </mcs-option-group>
+                </mcs-select> -->
+                <mcs-select mcsId="add-hids-select-server"
+                  [placeholder]="'orderAddHids.details.server.placeholder' | translate"
+                  [formControl]="fcServer">
+
+                  <mcs-search mcsSelectSearch></mcs-search>
+                  <mcs-option-group>
+                    <ng-container *mcsOptionGroupHeader>
+                      <span>{{ 'orderAddHids.details.server.optionGroupLabel' | translate }}</span>
+                    </ng-container>
+                    <ng-container *ngIf="resources$ | async as resources">
+                      <mcs-option-group [label]="iterator.key" *ngFor="let iterator of resources | mcsMapIterable">
+                        <mcs-option *ngFor="let server of iterator.value" [value]="server">
+                          {{ server.name }}
+                        </mcs-option>
+                      </mcs-option-group>
+                    </ng-container>
+                  </mcs-option-group>
+                </mcs-select>
+              </mcs-form-field>
+              <mcs-item orientation="separated">
+                <span>{{ 'orderAddHids.details.protectionLevel.label' | translate }}</span>
+                <mcs-form-field class="form-field-size-medium" [mcsContextualHelp]="'orderAddHids.details.protectionLevel.contextualHelp' | translate">
+                  <mcs-select mcsId="add-hids-select-protection-level"
+                    [formControl]="fcProtectionLevel">
+
+                    <mcs-option *ngFor="let protectionLevel of protectionLevelOptions" [value]="protectionLevel.value">
+                      {{ protectionLevel.text }}
+                    </mcs-option>
+                  </mcs-select>
+                </mcs-form-field>
+              </mcs-item>
+            </mcs-section>
+
+            <div class="action-items">
+              <button mcsButton arrow="right"
+                mcsWizardStepNext
+                (click)="onSubmitHidsDetails(fcServer?.value)"
+                [disabled]="!formIsValid"
+                mcsId="step-1-next"
+                mcsEventTracker="step-1-next"
+                mcsEventCategory="orders"
+                mcsEventLabel="add-hids-next">{{ 'shared.wizard.next' | translate }}</button>
+            </div>
+          </form>
+
+        </mcs-wizard-step>
+
+        <!-- Confirm Step  -->
+        <mcs-wizard-step id="confirm-step"
+          [stepTitle]="'orderAddHids.confirm.stepTitle' | translate"
+          customClass="contextual-help-page-wrapper limited-view">
+
+          <mcs-step-order-details [order]="order$ | async"
+            [orderItemType]="orderItemType$ | async"
+            [requestState]="dataStatus$ | async"
+            (dataChange)="onAddHidsConfirmOrderChange($event)"
+            (submitOrder)="onSubmitOrder($event, fcServer?.value)">
+          </mcs-step-order-details>
+        </mcs-wizard-step>
+
+        <!-- Go! Step  -->
+        <mcs-wizard-step id="go-step"
+          stepTitle="Go!"
+          customClass="limited-view">
+          <mcs-step-provisioning [jobs]="jobs$ | async" [requestState]="dataStatus$ | async">
+            <ng-container mcsProvisioningStepDescription>
+              {{ 'orderAddHids.provisioning.description' | translate }}
+            </ng-container>
+
+            <ng-container mcsProvisioningStepInProgress>
+              {{ 'orderAddHids.provisioning.dataInProgress' | translate}}
+            </ng-container>
+          </mcs-step-provisioning>
+        </mcs-wizard-step>
+      </mcs-wizard>
+
+    </mcs-content-panel>
+  </mcs-page>

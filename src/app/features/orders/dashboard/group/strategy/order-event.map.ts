@@ -8,8 +8,8 @@ import { ServerInviewRaiseEvent } from './events/server-inview-raise.event';
 // import { VmBackupProvisionEvent } from './events/vm-backup-provision.event';
 import { VdcStorageUpdateEvent } from './events/vdc-storage-update.event';
 import { VdcComputeUpdateEvent } from './events/vdc-compute-update.event';
-// import { SecurityHidsProvisionEvent } from './events/security-hids-provision';
-// import { SecurityAvProvisionEvent } from './events/security-av-provision';
+import { SecurityHidsProvisionEvent } from './events/security-hids-provision';
+import { SecurityAvProvisionEvent } from './events/security-av-provision';
 
 export type OrderEventRecord = Record<string, IOrderEventStrategy>;
 
@@ -21,6 +21,7 @@ export const orderEventMap: OrderEventRecord = {
   // 'backups.vm.provision': new VmBackupProvisionEvent(),
   'resources.vdc.storage.update': new VdcStorageUpdateEvent(),
   'resources.vdc.compute.update': new VdcComputeUpdateEvent(),
+  // TODO: add events once api is ready
   // 'hostsecurity.hids.provision': new SecurityHidsProvisionEvent(),
   // 'hostsecurity.av.provision': new SecurityAvProvisionEvent()
 };

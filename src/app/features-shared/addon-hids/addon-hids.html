@@ -5,6 +5,7 @@
     <span>{{ 'serverShared.addOnHids.protectionLevel.label' | translate }}:</span>
     <mcs-form-field class="form-field-size-medium">
       <mcs-select required
+        [mcsContextualHelp]="'serverShared.addOnHids.protectionLevel.contextualHelp' | translate"
         [placeholder]="'serverShared.addOnHids.protectionLevel.placeholder' | translate"
         [formControl]="fcHids">
 

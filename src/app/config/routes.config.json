@@ -324,6 +324,20 @@
     "requiredFeatureFlag": "EnableOrderingManagedServerInviewLevelRaise",
     "documentTitle": "Service Raise Inview Level - Macquarie Cloud Services"
   },
+  "orderAddAntiVirus": {
+    "enumKey": "OrderAddAntiVirus",
+    "navigationPath": "orders/add/anti-virus",
+    "requiredPermissions": ["OrderEdit"],
+    "requiredFeatureFlag": "EnableOrderingAntiVirusProvision",
+    "documentTitle": "Add Anti-Virus - Macquarie Cloud Services"
+  },
+  "orderAddHids": {
+    "enumKey": "OrderAddHids",
+    "navigationPath": "orders/add/host-intrusion-detection",
+    "requiredPermissions": ["OrderEdit"],
+    "requiredFeatureFlag": "EnableOrderingHidsProvision",
+    "documentTitle": "Add Host Intrusion Detection - Macquarie Cloud Services"
+  },
   "otherTools": {
     "enumKey": "OtherTools",
     "navigationPath": "tools",

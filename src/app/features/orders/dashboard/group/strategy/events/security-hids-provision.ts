@@ -12,7 +12,6 @@ export class SecurityHidsProvisionEvent implements IOrderEventStrategy {
   }
 
   public executeEvent(): void {
-    // TODO: This feature is not yet implemented
-    this._navigationService.navigateTo(RouteKey.OrderVdcStorageExpand);
+    this._navigationService.navigateTo(RouteKey.OrderAddHids);
   }
 }

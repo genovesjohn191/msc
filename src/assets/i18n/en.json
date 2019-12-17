@@ -257,6 +257,55 @@
       "dataError": "Something went wrong while processing your request. Please try again later."
     }
   },
+  "orderAddAntiVirus": {
+    "title": "Order Anti-Virus",
+    "back": "Back",
+    "details": {
+      "stepTitle": "Details",
+      "server": {
+        "description": "Please select the server you wish to provision Anti-Virus for:",
+        "contextualHelp": "Select a server to install an Anti-Virus on",
+        "placeholder": "Select a server",
+        "optionGroupLabel": "Virtual Data Centres",
+        "avProvisioned": "AV Provisioned"
+      }
+    },
+    "confirm": {
+      "stepTitle": "Confirm"
+    },
+    "provisioning": {
+      "stepTitle": "Go!",
+      "description": "Your server is being provisioned with anti virus and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
+      "dataInProgress": "Preparing the server for provisioning an antivirus. This may take a moment.",
+      "dataError": "Something went wrong while processing your request. Please try again later."
+    }
+  },
+  "orderAddHids": {
+    "title": "Order Host Intrusion Detection",
+    "back": "Back",
+    "details": {
+      "stepTitle": "Details",
+      "server": {
+        "description": "Please select the server you wish to provision Host Intrusion Detection for:",
+        "contextualHelp": "Select a server to install a Host Intrusion Detection on",
+        "placeholder": "Select a server",
+        "optionGroupLabel": "Virtual Data Centres"
+      },
+      "protectionLevel":{
+        "label":"Protection Level:",
+        "contextualHelp": "Choose Detect if you would like intrusion attempts to be logged. Choose Protect if you would like intrusion attempts to be blocked."
+      }
+    },
+    "confirm": {
+      "stepTitle": "Confirm"
+    },
+    "provisioning": {
+      "stepTitle": "Go!",
+      "description": "Your server is being provisioned with host intrusion detection and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
+      "dataInProgress": "Preparing the server for provisioning host intrusion detection. This may take a moment.",
+      "dataError": "Something went wrong while processing your request. Please try again later."
+    }
+  },
   "notification": {
     "leftPanelHeader": "Notification details",
     "backToNotifications": "Back to Notifications"
@@ -880,7 +929,8 @@
       "header": "Host Intrusion Detection",
       "protectionLevel": {
         "label": "Protection Level",
-        "placeholder": "Select protection level"
+        "placeholder": "Select protection level",
+        "contextualHelp": "Choose Detect if you would like intrusion attempts to be logged. Choose Protect if you would like intrusion attempts to be blocked."
       }
     },
     "addOnBackup": {
@@ -1705,11 +1755,11 @@
     "cloneServer": "Something went wrong while cloning your server. Please try again.",
     "deleteServer": "Something went wrong while deleting your server. Please try again.",
     "getServerBackupVm": "Something went wrong while retrieving your vm backup for your server. Please try again.",
-    "getServerBackupServer": "Something went wrong while retrieving your server backup for your server. Please try again.",
-    "getServerHostSecurity": "Something went wrong while retrieving your host security for your server. Please try again.",
-    "getServerAntiVirus": "Something went wrong while retrieving your anti-virus for your server. Please try again.",
-    "getServerHostSecurityAvLogs": "Something went wrong while retrieving your anti-virus logs for your server. Please try again.",
-    "getServerHostSecurityHidsLogs": "Something went wrong while retrieving your host intrusion detection logs for your server. Please try again.",
+    "getServerBackupServer": "Something went wrong while retrieving the server backup for your server. Please try again.",
+    "getServerHostSecurity": "Something went wrong while retrieving the host security for your server. Please try again.",
+    "getServerHostSecurityAntiVirus": "Something went wrong while retrieving the anti-virus for your server. Please try again.",
+    "getServerHostSecurityAvLogs": "Something went wrong while retrieving the anti-virus logs for your server. Please try again.",
+    "getServerHostSecurityHidsLogs": "Something went wrong while retrieving the host intrusion detection logs for your server. Please try again.",
     "getStorageBackupAggregationTargets": "Something went wrong while retrieving your storage backup aggregation targets. Please try again.",
     "getStorageBackupAggregationTarget": "Something went wrong while retrieving the details for this backup aggregation target.",
     "resetServerPassword": "Something went wrong while resetting the password for your server. Please try again.",

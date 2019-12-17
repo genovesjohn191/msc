@@ -8,7 +8,7 @@ import {
   HidsStatusSerialization
 } from '../enumerations/hids-status.enum';
 
-export class McsServerHostSecurityHids {
+export class McsServerHostSecurityHidsItem {
 
   @JsonProperty()
   public enabled: boolean = undefined;
