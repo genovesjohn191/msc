@@ -5,6 +5,11 @@ export enum HidsProtectionLevel {
   Detect
 }
 
+export const hidsProtectionLevelText = {
+  [HidsProtectionLevel.Protect]: 'Protect',
+  [HidsProtectionLevel.Detect]: 'Detect',
+};
+
 export class HidsProtectionLevelSerialization
   extends McsEnumSerializationBase<HidsProtectionLevel> {
   constructor() { super(HidsProtectionLevel); }

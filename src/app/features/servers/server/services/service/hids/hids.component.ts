@@ -14,7 +14,7 @@ import { TranslateService } from '@ngx-translate/core';
 import {
   ServerServicesView,
   HidsStatus,
-  McsServerHostSecurityHids,
+  McsServerHostSecurityHidsItem,
   HidsProtectionLevel
 } from '@app/models';
 import {
@@ -39,16 +39,16 @@ type ServerHidsStatusDetails = {
 export class ServiceHidsComponent extends ServerServiceDetailBase implements OnChanges, OnInit {
 
   @Input()
-  public set hids(hids: McsServerHostSecurityHids) {
+  public set hids(hids: McsServerHostSecurityHidsItem) {
     this._hids = hids;
   }
-  public get hids(): McsServerHostSecurityHids {
+  public get hids(): McsServerHostSecurityHidsItem {
     return this._hids;
   }
   public hidsDetails$: Observable<ServerHidsStatusDetails>;
 
   private _hidsStatusDetailsMap: Map<HidsStatus, ServerHidsStatusDetails>;
-  private _hids: McsServerHostSecurityHids;
+  private _hids: McsServerHostSecurityHidsItem;
   private _hidsDetailsChange: BehaviorSubject<ServerHidsStatusDetails>;
 
   constructor(private _translateService: TranslateService) {
@@ -84,7 +84,7 @@ export class ServiceHidsComponent extends ServerServiceDetailBase implements OnC
   /**
    * Returns the Status label based on the Status of the hids and its protetion level
    */
-  private _getStatusLabel(hids: McsServerHostSecurityHids): string {
+  private _getStatusLabel(hids: McsServerHostSecurityHidsItem): string {
     if (hids.status === HidsStatus.Active && hids.mode === HidsProtectionLevel.Protect) {
       return this._translateService.instant('serverServices.hids.activeLabel.protect');
     }

@@ -14,7 +14,7 @@ import { TranslateService } from '@ngx-translate/core';
 import {
   ServerServicesView,
   AntiVirusStatus,
-  McsServerHostSecurityAntiVirus
+  McsServerHostSecurityAntiVirusItem
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -38,16 +38,16 @@ type ServerAntiVirusStatusDetails = {
 export class ServiceAntiVirusComponent extends ServerServiceDetailBase implements OnChanges, OnInit {
 
   @Input()
-  public set antivirus(antivirus: McsServerHostSecurityAntiVirus) {
+  public set antivirus(antivirus: McsServerHostSecurityAntiVirusItem) {
     this._antivirus = antivirus;
   }
-  public get antivirus(): McsServerHostSecurityAntiVirus {
+  public get antivirus(): McsServerHostSecurityAntiVirusItem {
     return this._antivirus;
   }
   public antiVirusDetails$: Observable<ServerAntiVirusStatusDetails>;
 
   private _antivirusStatusDetailsMap: Map<AntiVirusStatus, ServerAntiVirusStatusDetails>;
-  private _antivirus: McsServerHostSecurityAntiVirus;
+  private _antivirus: McsServerHostSecurityAntiVirusItem;
   private _antiVirusDetailsChange: BehaviorSubject<ServerAntiVirusStatusDetails>;
 
   constructor(private _translateService: TranslateService) {
@@ -83,7 +83,7 @@ export class ServiceAntiVirusComponent extends ServerServiceDetailBase implement
   /**
    * Returns the Status label based on the Status of the av and its properties
    */
-  private _getStatusLabel(hids: McsServerHostSecurityAntiVirus): string {
+  private _getStatusLabel(hids: McsServerHostSecurityAntiVirusItem): string {
     if (hids.status === AntiVirusStatus.Active && hids.realTimeScanEnabled) {
       return this._translateService.instant('serverServices.antivirus.activeLabel.realtimeScanEnabled');
     }

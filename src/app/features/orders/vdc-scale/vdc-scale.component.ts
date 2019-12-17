@@ -38,7 +38,8 @@ import {
   McsResource,
   McsResourceCompute,
   OrderIdType,
-  McsOrderCreate
+  McsOrderCreate,
+  McsOrderItemCreate
 } from '@app/models';
 import {
   getSafeProperty,
@@ -157,15 +158,17 @@ export class VdcScaleComponent extends McsOrderWizardBase implements OnInit, OnD
     this._vdcScale = vdcManageScale;
     this._vdcScaleService.createOrUpdateOrder(
       createObject(McsOrderCreate, {
-        items: [{
-          itemOrderType: OrderIdType.VdcScale,
-          referenceId: VDC_SCALE_REF_ID,
-          properties: {
-            cpuCount: this._vdcScale.cpuCount,
-            memoryMB: convertGbToMb(this._vdcScale.memoryGB)
-          } as VdcScaleProperties,
-          serviceId: resource.serviceId
-        }]
+        items: [
+          createObject(McsOrderItemCreate, {
+            itemOrderType: OrderIdType.VdcScale,
+            referenceId: VDC_SCALE_REF_ID,
+            properties: {
+              cpuCount: this._vdcScale.cpuCount,
+              memoryMB: convertGbToMb(this._vdcScale.memoryGB)
+            } as VdcScaleProperties,
+            serviceId: resource.serviceId
+          })
+        ]
       })
     );
   }

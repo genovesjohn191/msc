@@ -37,9 +37,9 @@
               (selectionChange)="onChangeResource($event)"
               [mcsContextualHelp]="'orderVdcStorageExpand.vdc.contextualHelp' | translate"
               mcsId="select-resource"
-              mcsEventTracker="navigate-back-click"
+              mcsEventTracker="select-resource-click"
               mcsEventCategory="orders"
-              mcsEventLabel="navigate-back">
+              mcsEventLabel="select-resource">
 
               <mcs-option *ngFor="let resource of resources$ | async" [value]="resource">
                 {{ resource.name }}
@@ -54,9 +54,9 @@
                   [placeholder]="'orderVdcStorageExpand.vdcStorage.placeholder' | translate"
                   [mcsContextualHelp]="'orderVdcStorageExpand.vdcStorage.contextualHelp' | translate"
                   mcsId="select-storage"
-                  mcsEventTracker="navigate-back-click"
+                  mcsEventTracker="select-resource-click"
                   mcsEventCategory="orders"
-                  mcsEventLabel="navigate-back">
+                  mcsEventLabel="select-resource">
                   <mcs-option *ngFor="let storage of selectedResource.storage" [value]="storage">
                     {{ storage.name }}
                   </mcs-option>
