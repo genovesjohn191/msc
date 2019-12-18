@@ -87,6 +87,7 @@ export * from './request/mcs-order-item-create';
 export * from './request/mcs-order-merge';
 export * from './request/mcs-order-update';
 export * from './request/mcs-order-workflow';
+export * from './request/mcs-order-server-backup-add';
 export * from './request/mcs-server-attach-media';
 export * from './request/mcs-server-detach-media';
 export * from './request/mcs-server-delete';

@@ -38,7 +38,8 @@ import {
   inviewLevelText,
   McsOrderItemCreate,
   OrderIdType,
-  McsOptionGroup
+  McsOptionGroup,
+  McsOrderServerBackupAdd
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -55,14 +56,6 @@ import { McsFormGroupDirective } from '@app/shared';
 import { OrderDetails } from '@app/features-shared';
 
 import { AddServerBackupService } from './add-server-backup.service';
-
-interface ServerBackup {
-  backupAggregationTarget: string;
-  retentionPeriodDays: number;
-  inviewLevel: string;  // Enum ?
-  dailySchedule: string;
-  dailyBackupQuotaGB: number;
-}
 
 const DEFAULT_QUOTA_MIN = 1;
 const DEFAULT_QUOTA_MAX = 5120;
@@ -172,7 +165,6 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
       resourceDescription: this.progressDescription,
       serverId: selectedServerId
     };
-
     this.submitOrderWorkflow(workflow);
   }
 
@@ -213,7 +205,7 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
 
   private _onServerBackupChange(): void {
     let server = getSafeProperty(this.fcServers, (obj) => obj.value);
-    let aggregationTarget = getSafeProperty(this.fcAggregation, (obj) => obj.value);
+    let aggregationTarget = getSafeProperty(this.fcAggregation, (obj) => obj.value.serviceId);
     let retention = getSafeProperty(this.fcRetentionList, (obj) => obj.value);
     let inview = getSafeProperty(this.fcInviewLevel, (obj) => obj.value);
     let backupSchedule = getSafeProperty(this.fcBackupList, (obj) => obj.value);
@@ -226,13 +218,13 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
             itemOrderType: OrderIdType.CreateAddOnServerBackup,
             referenceId: ADD_SERVER_BACKUP,
             serviceId: server.serviceId,
-            properties: {
+            properties: createObject(McsOrderServerBackupAdd, {
               backupAggregationTarget: aggregationTarget,
               retentionPeriodDays: retention,
               inviewLevel: inview,
               dailySchedule: buildCron({ minute: '0', hour: backupSchedule }),
               dailyBackupQuotaGB: dailyQuota,
-            } as ServerBackup
+            })
           })
         ]
       })
@@ -273,26 +265,22 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
         response && response.collection.map((aggregationTarget) =>
           createObject(McsOption, { text: aggregationTarget.description, value: aggregationTarget })
         )
-      ),
-      // TODO: Remove catching of error here
-      catchError(() =>
-        of([createObject(McsOption, { text: 'None', value: 'None' })])
       )
     );
   }
 
   private _subscribeToBackupDays(): void {
     this.retentionList$ = of([
-      createObject(McsOption, { text: '14', value: '14 Days' }),
-      createObject(McsOption, { text: '30', value: '30 Days' }),
-      createObject(McsOption, { text: '180', value: '6 Months' }),
-      createObject(McsOption, { text: '365', value: '1 Year' }),
-      createObject(McsOption, { text: '730', value: '2 Years' }),
-      createObject(McsOption, { text: '1095', value: '3 Years' }),
-      createObject(McsOption, { text: '1460', value: '4 Years' }),
-      createObject(McsOption, { text: '1825', value: '5 Years' }),
-      createObject(McsOption, { text: '2190', value: '6 Years' }),
-      createObject(McsOption, { text: '2555', value: '7 Years' })
+      createObject(McsOption, { text: '14 Days', value: '14' }),
+      createObject(McsOption, { text: '30 Days', value: '30' }),
+      createObject(McsOption, { text: '6 Months', value: '180' }),
+      createObject(McsOption, { text: '1 Year', value: '365' }),
+      createObject(McsOption, { text: '2 Years', value: '730' }),
+      createObject(McsOption, { text: '3 Years', value: '1095' }),
+      createObject(McsOption, { text: '4 Years', value: '1460' }),
+      createObject(McsOption, { text: '5 Years', value: '1825' }),
+      createObject(McsOption, { text: '6 Years', value: '2190' }),
+      createObject(McsOption, { text: '7 Years', value: '2555' })
     ]);
   }
 
@@ -305,17 +293,17 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
 
   private _subscribeToBackupTimes(): void {
     this.backupList$ = of([
-      createObject(McsOption, { text: '20', value: '8 PM' }),
-      createObject(McsOption, { text: '21', value: '9 PM' }),
-      createObject(McsOption, { text: '22', value: '10 PM' }),
-      createObject(McsOption, { text: '23', value: '11 PM' }),
-      createObject(McsOption, { text: '0', value: '12 AM' }),
-      createObject(McsOption, { text: '1', value: '1 AM' }),
-      createObject(McsOption, { text: '2', value: '2 AM' }),
-      createObject(McsOption, { text: '3', value: '3 AM' }),
-      createObject(McsOption, { text: '4', value: '4 AM' }),
-      createObject(McsOption, { text: '5', value: '5 AM' }),
-      createObject(McsOption, { text: '6', value: '6 AM' })
+      createObject(McsOption, { text: '8 PM', value: '20' }),
+      createObject(McsOption, { text: '9 PM', value: '21' }),
+      createObject(McsOption, { text: '10 PM', value: '22' }),
+      createObject(McsOption, { text: '11 PM', value: '23' }),
+      createObject(McsOption, { text: '12 AM', value: '0' }),
+      createObject(McsOption, { text: '1 AM', value: '1' }),
+      createObject(McsOption, { text: '2 AM', value: '2' }),
+      createObject(McsOption, { text: '3 AM', value: '3' }),
+      createObject(McsOption, { text: '4 AM', value: '4' }),
+      createObject(McsOption, { text: '5 AM', value: '5' }),
+      createObject(McsOption, { text: '6 AM', value: '6' })
     ]);
   }
 }
