@@ -56,6 +56,7 @@ export enum RouteKey {
   OrderServiceInviewRaise,
   OrderAddAntiVirus,
   OrderAddHids,
+  OrderAddServerBackup,
 
   Internet,
   InternetDetails,

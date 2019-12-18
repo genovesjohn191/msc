@@ -14,7 +14,7 @@ import { VdcStorageCreateComponent } from './vdc-storage-create/vdc-storage-crea
 import { ServiceInviewRaiseComponent } from './service-inview-raise/service-inview-raise.component';
 import { AddAntiVirusComponent } from './add-anti-virus/add-anti-virus.component';
 import { AddHidsComponent } from './add-hids/add-hids.component';
-
+import { AddServerBackupComponent } from './add-server-backup/add-server-backup.component';
 
 /**
  * List of services for the main module
@@ -38,7 +38,8 @@ export const ordersComponents: any[] = [
   VdcStorageCreateComponent,
   ServiceInviewRaiseComponent,
   AddAntiVirusComponent,
-  AddHidsComponent
+  AddHidsComponent,
+  AddServerBackupComponent
 ];
 
 /**
@@ -88,6 +89,11 @@ export const ordersRoutes: Routes = [
     path: 'add/host-intrusion-detection',
     component: AddHidsComponent,
     data: { routeId: RouteKey.OrderAddHids }
+  },
+  {
+    path: 'add/server-backup',
+    component: AddServerBackupComponent,
+    data: { routeId: RouteKey.OrderAddServerBackup }
   },
   // Add additional routes above this line
   {

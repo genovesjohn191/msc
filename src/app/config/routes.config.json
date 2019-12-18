@@ -338,6 +338,13 @@
     "requiredFeatureFlag": "EnableOrderingHidsProvision",
     "documentTitle": "Add Host Intrusion Detection - Macquarie Cloud Services"
   },
+  "orderAddServerBackup": {
+    "enumKey": "OrderAddServerBackup",
+    "navigationPath": "orders/add/server-backup",
+    "requiredPermissions": ["OrderEdit"],
+    "requiredFeatureFlag": "EnableOrderingServerBackupProvision",
+    "documentTitle": "Add Server Backup Provision - Macquarie Cloud Services"
+  },
   "otherTools": {
     "enumKey": "OtherTools",
     "navigationPath": "tools",

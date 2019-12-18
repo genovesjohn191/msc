@@ -306,6 +306,36 @@
       "dataError": "Something went wrong while processing your request. Please try again later."
     }
   },
+  "orderAddServerBackup": {
+    "title": "Server Backup",
+    "detailsStep": {
+      "title": "Details",
+      "serverLabel": "Please select the servers you wish to provision Server Backup for",
+      "serverPlaceholder": "Select server",
+      "serverHelp": "Select one or more servers to install Server Backup on",
+      "aggregation": "Back up my files to an aggregation target",
+      "aggregationPlaceholder": "Select aggregation",
+      "aggregationHelp": "It is recommended that you check your Backup Aggregation Target usage before proceeding.\r\nCharges may apply for exceeded quota.",
+      "retentionList": "Keep my backups for",
+      "retentionListPlaceholder": "Select retetion",
+      "retentionListHelp": "Your desired backup retention setting. We can store your backups from 2 weeks, to 7 years.",
+      "inviewLevel": "InView Level",
+      "inviewLevelPlaceholder": "Select inview",
+      "inviewLevelHelp": "InView allows for detailed monitoring and reporting on statistics such as quota utilization.",
+      "backupList": "Schedule a backup every day at",
+      "backupListPlaceholder": "Select schedule",
+      "backupListHelp": "Choose your desired backup schedule. We recommend selecting a time at which the server will not be in high use.",
+      "dailyQuota": "Daily backup quota",
+      "dailyQuotaPlaceholder": "Enter quota",
+      "dailyQuotaUnit": "GB",
+      "dailyQuotaHelp": "Your desired backup quota, per day. Additional fees may apply if this is exceeded.",
+      "dailyQuotaRequired": "Enter daily quota.",
+      "dailyQuotaNumeric": "Please enter a valid number.",
+      "dailyQuotaMinimum": "The minimum quota that can be entered is {{min_value}}.",
+      "dailyQuotaMaximum": "Quota should not exceed {{max_value}}.",
+      "detailsNote": "By default, all files will be backed up. Once ready, backup scope will be configurable on a fine-grain basis in MacquarieView."
+    }
+  },
   "notification": {
     "leftPanelHeader": "Notification details",
     "backToNotifications": "Back to Notifications"

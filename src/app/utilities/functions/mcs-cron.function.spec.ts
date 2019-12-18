@@ -1,23 +1,9 @@
 import {
-  buildCron,
   buildCronWeekly,
   parseCronStringToJson
 } from './mcs-cron.function';
 
 describe('Cron Utility Functions', () => {
-  describe('buildCron()', () => {
-    it(`should build the cron string based on passed array of values`, () => {
-      let cronString = buildCron([10], [5], [2], [4], [3, 4]);
-      expect(cronString).toEqual('10 5 2 4 3,4');
-    });
-
-    it(`should throw error when one of the input is empty`, () => {
-      expect(
-        () => { buildCron([], [5], [2], [4], [3, 4]); }
-      ).toThrow(new Error('Invalid cron input'));
-    });
-  });
-
   describe('buildCronWeekly()', () => {
     it(`should build the weekly cron string based on passed array of values`, () => {
       let cronString = buildCronWeekly([10], [5], [2, 5, 6]);

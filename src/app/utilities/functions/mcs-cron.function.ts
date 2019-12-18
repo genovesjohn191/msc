@@ -9,37 +9,24 @@ type CronInfo = {
   dayOfWeek: any[],
 };
 
-/**
- * Create the cron string with the proper format
- * @param minute minutes in string
- * @param hour hour in string (should be in 24 hour format)
- * @param dayOfMonth days of the month in string
- * @param month month/s in string
- * @param dayOfWeek comma separated days
- */
-export function buildCron(
-  minute: number[] | string[],
-  hour: number[] | string[],
-  dayOfMonth: number[] | string[],
-  month: number[] | string[],
-  dayOfWeek: number[] | string[]
-): string {
+export interface CronConfig {
+  minute?: string;
+  hour?: string;
+  dayMonth?: string;
+  month?: string;
+  dayWeek?: string;
+}
 
-  if (isNullOrEmpty(minute) ||
-    isNullOrEmpty(hour) ||
-    isNullOrEmpty(dayOfMonth) ||
-    isNullOrEmpty(month) ||
-    isNullOrEmpty(dayOfWeek)) {
-    throw new Error('Invalid cron input');
-  }
+export function buildCron(config: CronConfig) {
+  if (!config) { config = {}; }
+  let cronMinute = config.minute || '*';
+  let cronHour = config.hour || '*';
+  let cronDayMonth = config.dayMonth || '*';
+  let cronMonth = config.month || '*';
+  let cronDayWeek = config.dayWeek || '*';
 
-  let cronRequest = '';
-  cronRequest += minute.join(',');
-  cronRequest += ' ' + hour.join(',');
-  cronRequest += ' ' + dayOfMonth.join(',');
-  cronRequest += ' ' + month.join(',');
-  cronRequest += ' ' + dayOfWeek.join(',');
-
+  let cronRequest: string = '';
+  cronRequest = `${cronMinute} ${cronHour} ${cronDayMonth} ${cronMonth} ${cronDayWeek}`;
   return cronRequest;
 }
 
