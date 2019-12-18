@@ -222,6 +222,7 @@ export * from './common/mcs-filter-info';
 export * from './common/mcs-comment';
 export * from './common/mcs-point';
 export * from './common/mcs-option';
+export * from './common/mcs-option-group';
 export * from './common/mcs-key-value-pair';
 export * from './common/mcs-route-info';
 export * from './common/mcs-query-param';

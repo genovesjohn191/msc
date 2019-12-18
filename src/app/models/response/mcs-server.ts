@@ -261,6 +261,13 @@ export class McsServer extends McsEntityBase {
   }
 
   /**
+   * Returns true when the server can be ordered
+   */
+  public get canProvision(): boolean {
+    return this.isManagedVCloud && this.serviceChangeAvailable;
+  }
+
+  /**
    * Returns true when server is cloneable
    */
   public get cloneable(): boolean {

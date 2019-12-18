@@ -1,0 +1,207 @@
+<mcs-page [header]="'orderAddServerBackup.title' | translate">
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef>
+
+    <!-- Back to previous URL -->
+    <mcs-top-panel-item *mcsTopPanelItemDef no-border>
+      <mcs-action-item mcsAlign="end"
+        mcsNavigateBackward
+        mcsId="navigate-back"
+        mcsEventTracker="navigate-back-click"
+        mcsEventCategory="orders"
+        mcsEventLabel="navigate-back">
+        <mcs-icon [key]="backIconKey" size="small"></mcs-icon>
+        <span>{{ 'shared.wizard.previous' | translate }}</span>
+      </mcs-action-item>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
+  <mcs-content-panel *mcsContentPanelDef>
+
+    <mcs-wizard header="Wizard Header">
+
+      <!-- Error message -->
+      <ng-container mcsWizardErrorTemplate>
+        <mcs-form-message #formMessage></mcs-form-message>
+      </ng-container>
+
+      <!-- VDC Details Step-->
+      <mcs-wizard-step id="server-backup-details-step"
+        [stepTitle]="'orderAddServerBackup.detailsStep.title' | translate"
+        customClass="contextual-help-page-wrapper limited-view">
+
+        <form [formGroup]="fgServerBackup" mcsFormGroup>
+
+          <mcs-item orientation="block">
+            <span align-self-start>{{ 'orderAddServerBackup.detailsStep.serverLabel' | translate }}:</span>
+            <mcs-form-field>
+              <mcs-select [formControl]="fcServers" required
+                [placeholder]="'orderAddServerBackup.detailsStep.serverPlaceholder' | translate"
+                [mcsContextualHelp]="'orderAddServerBackup.detailsStep.serverHelp' | translate"
+                mcsId="select-server"
+                mcsEventTracker="select-server-click"
+                mcsEventCategory="orders"
+                mcsEventLabel="order-details">
+
+                <mcs-search mcsSelectSearch></mcs-search>
+
+                <mcs-option-group *ngFor="let serverGroup of serverGroups$ | async">
+                  <ng-container *mcsOptionGroupLabel>
+                    <span>{{ serverGroup.groupName }}</span>
+                  </ng-container>
+
+                  <mcs-option *ngFor="let server of serverGroup.options" [value]="server.value">
+                    {{ server.text }}
+                  </mcs-option>
+                </mcs-option-group>
+              </mcs-select>
+            </mcs-form-field>
+          </mcs-item>
+
+          <mcs-item orientation="separated">
+            <span align-self-start>{{ 'orderAddServerBackup.detailsStep.aggregation' | translate }}:</span>
+            <mcs-form-field class="form-field-size-small">
+              <mcs-select [formControl]="fcAggregation" required
+                [placeholder]="'orderAddServerBackup.detailsStep.aggregationPlaceholder' | translate"
+                [mcsContextualHelp]="'orderAddServerBackup.detailsStep.aggregationHelp' | translate"
+                mcsId="select-aggregation"
+                mcsEventTracker="select-aggregation-click"
+                mcsEventCategory="orders"
+                mcsEventLabel="order-details">
+
+                <mcs-option *ngFor="let aggregation of aggregations$ | async" [value]="aggregation.value">
+                  {{ aggregation.text }}
+                </mcs-option>
+              </mcs-select>
+            </mcs-form-field>
+          </mcs-item>
+
+          <mcs-item orientation="separated">
+            <span align-self-start>{{ 'orderAddServerBackup.detailsStep.retentionList' | translate }}:</span>
+            <mcs-form-field class="form-field-size-small">
+              <mcs-select [formControl]="fcRetentionList" required
+                [placeholder]="'orderAddServerBackup.detailsStep.retentionListPlaceholder' | translate"
+                [mcsContextualHelp]="'orderAddServerBackup.detailsStep.retentionListHelp' | translate"
+                mcsId="select-retention-period"
+                mcsEventTracker="select-retention-period"
+                mcsEventCategory="orders"
+                mcsEventLabel="order-details">
+
+                <mcs-option *ngFor="let retention of retentionList$ | async" [value]="retention.value">
+                  {{ retention.text }}
+                </mcs-option>
+              </mcs-select>
+            </mcs-form-field>
+          </mcs-item>
+
+          <mcs-item orientation="separated">
+            <span align-self-start>{{ 'orderAddServerBackup.detailsStep.inviewLevel' | translate }}:</span>
+            <mcs-form-field class="form-field-size-small">
+              <mcs-select [formControl]="fcInviewLevel" required
+                [placeholder]="'orderAddServerBackup.detailsStep.inviewLevelPlaceholder' | translate"
+                [mcsContextualHelp]="'orderAddServerBackup.detailsStep.inviewLevelHelp' | translate"
+                mcsId="select-inview-level"
+                mcsEventTracker="select-inview-level"
+                mcsEventCategory="orders"
+                mcsEventLabel="order-details">
+
+                <mcs-option *ngFor="let inviewLevel of inviewLevels$ | async" [value]="inviewLevel.value">
+                  {{ inviewLevel.text }}
+                </mcs-option>
+              </mcs-select>
+            </mcs-form-field>
+          </mcs-item>
+
+          <mcs-item orientation="separated">
+            <span align-self-start>{{ 'orderAddServerBackup.detailsStep.backupList' | translate }}:</span>
+            <mcs-form-field class="form-field-size-small">
+              <mcs-select [formControl]="fcBackupList" required
+                [placeholder]="'orderAddServerBackup.detailsStep.backupListPlaceholder' | translate"
+                [mcsContextualHelp]="'orderAddServerBackup.detailsStep.backupListHelp' | translate"
+                mcsId="select-backup-time"
+                mcsEventTracker="select-backup-time"
+                mcsEventCategory="orders"
+                mcsEventLabel="order-details">
+
+                <mcs-option *ngFor="let backup of backupList$ | async" [value]="backup.value">
+                  {{ backup.text }}
+                </mcs-option>
+              </mcs-select>
+            </mcs-form-field>
+          </mcs-item>
+
+          <mcs-item orientation="separated">
+            <span align-self-start>{{ 'orderAddServerBackup.detailsStep.dailyQuota' | translate }}:</span>
+            <mcs-form-field class="form-field-size-small">
+              <input mcsInput [formControl]="fcDailyQuota" mcsId="input-daily-quota"
+                [placeholder]="'orderAddServerBackup.detailsStep.dailyQuotaPlaceholder' | translate"
+                [mcsContextualHelp]="'orderAddServerBackup.detailsStep.dailyQuotaHelp' | translate">
+
+              <mcs-suffix mcsSuffix>{{ 'orderAddServerBackup.detailsStep.dailyQuotaUnit' | translate }}</mcs-suffix>
+
+              <mcs-error mcsError errorState="required">
+                {{ 'orderAddServerBackup.detailsStep.dailyQuotaRequired' | translate }}
+              </mcs-error>
+
+              <mcs-error mcsError errorState="numeric">
+                {{ 'orderAddServerBackup.detailsStep.dailyQuotaNumeric' | translate }}
+              </mcs-error>
+
+              <mcs-error text-wrap mcsError errorState="min">
+                {{ 'orderAddServerBackup.detailsStep.dailyQuotaMinimum' | translate: { min_value: dailyQuotaMin } }}
+              </mcs-error>
+
+              <mcs-error text-wrap mcsError errorState="max">
+                {{ 'orderAddServerBackup.detailsStep.dailyQuotaMaximum' | translate: { max_value: dailyQuotaMax } }}
+              </mcs-error>
+            </mcs-form-field>
+          </mcs-item>
+
+          <mcs-note>
+            {{ 'orderAddServerBackup.detailsStep.detailsNote' | translate }}
+          </mcs-note>
+
+          <div class="action-items">
+            <button mcsButton arrow="right"
+              mcsWizardStepNext
+              [disabled]="!formIsValid"
+              mcsId="step-1-next"
+              mcsEventTracker="step-1-next"
+              mcsEventCategory="orders"
+              mcsEventLabel="create-server-backup">{{ 'shared.wizard.next' | translate }}</button>
+          </div>
+        </form>
+      </mcs-wizard-step>
+
+      <!-- Confirm Step  -->
+      <mcs-wizard-step id="confirm-step"
+        [stepTitle]="'shared.wizard.confirm' | translate"
+        customClass="contextual-help-page-wrapper limited-view">
+
+        <mcs-step-order-details [order]="order$ | async"
+          [orderItemType]="orderItemType$ | async"
+          [requestState]="dataStatus$ | async"
+          (dataChange)="onServerBackupOrderChange($event)"
+          (submitOrder)="onSubmitOrder($event, fcServers?.value?.id)">
+        </mcs-step-order-details>
+      </mcs-wizard-step>
+
+      <!-- Go! Step  -->
+      <mcs-wizard-step id="go-step"
+        [stepTitle]="'shared.wizard.completed' | translate"
+        customClass="limited-view">
+
+        <mcs-step-provisioning [jobs]="jobs$ | async" [requestState]="dataStatus$ | async">
+          <ng-container mcsProvisioningStepDescription>
+            {{ 'orderVdcStorageCreate.provisioning.description' | translate }}
+          </ng-container>
+
+          <ng-container mcsProvisioningStepInProgress>
+            {{ 'orderVdcStorageCreate.provisioning.dataInProgress' | translate}}
+          </ng-container>
+        </mcs-step-provisioning>
+      </mcs-wizard-step>
+    </mcs-wizard>
+
+  </mcs-content-panel>
+</mcs-page>
