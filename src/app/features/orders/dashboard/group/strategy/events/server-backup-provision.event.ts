@@ -12,7 +12,6 @@ export class ServerBackupProvisionEvent implements IOrderEventStrategy {
   }
 
   public executeEvent(): void {
-    // TODO: Double check the url, seems like it is not right
-    this._navigationService.navigateTo(RouteKey.ServerDetailsBackups);
+    this._navigationService.navigateTo(RouteKey.OrderAddServerBackup);
   }
 }

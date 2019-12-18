@@ -312,7 +312,7 @@
       "title": "Details",
       "serverLabel": "Please select the servers you wish to provision Server Backup for",
       "serverPlaceholder": "Select server",
-      "serverHelp": "Select one or more servers to install Server Backup on",
+      "serverHelp": "Select one or more servers to install Server Backup on.",
       "aggregation": "Back up my files to an aggregation target",
       "aggregationPlaceholder": "Select aggregation",
       "aggregationHelp": "It is recommended that you check your Backup Aggregation Target usage before proceeding.\r\nCharges may apply for exceeded quota.",
