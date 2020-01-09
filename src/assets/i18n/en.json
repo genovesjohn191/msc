@@ -564,7 +564,7 @@
       "action": ""
     },
     "noNics": "There are no NICs to display for this server.",
-    "warningEditingNic": "This server may need to be restarted before any NIC changes are made effective.",
+    "warningEditingNic": "This server will be restarted.",
     "errorGettingNics": "Sorry, something’s not right. We weren’t able to retrieve the list of NICs.",
     "reachedNetworksLimit": "You've reached the maximum number of NICs for this server."
   },
@@ -1855,7 +1855,7 @@
   },
   "dialogDeleteNic": {
     "title": "Delete Nic",
-    "message": "This server may need to be restarted before any NIC changes are made effective.\r\n\nAre you sure you want to delete <strong>{{nic_name}}</strong>?"
+    "message": "This server will be restarted.\r\n\nAre you sure you want to delete <strong>{{nic_name}}</strong>?"
   },
   "dialogDeleteStorage": {
     "title": "Delete Storage",

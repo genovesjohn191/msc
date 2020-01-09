@@ -11,11 +11,12 @@ import { IdDirective } from './id.directive';
 import { NavigateBackwardDirective } from './navigate-backwards.directive';
 import { AlignContentDirective } from './align-content.directive';
 import { AlignDirective } from './align.directive';
+import { GreyedOutDirective } from './greyed-out.directive';
+import { TextTruncateDirective } from './text-truncate.directive';
 
 import { DisabledDirective } from './overriden-directives/disabled.directive';
 import { HiddenDirective } from './overriden-directives/hidden.directive';
 import { ReadOnlyDirective } from './overriden-directives/read-only.directive';
-import { GreyedOutDirective } from './greyed-out.directive';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { GreyedOutDirective } from './greyed-out.directive';
     HiddenDirective,
     CursorDirective,
     GreyedOutDirective,
+    TextTruncateDirective,
     AnimateDirective,
     ScrollableDirective,
     StopPropagationDirective,
@@ -45,6 +47,7 @@ import { GreyedOutDirective } from './greyed-out.directive';
     HiddenDirective,
     CursorDirective,
     GreyedOutDirective,
+    TextTruncateDirective,
     AnimateDirective,
     ScrollableDirective,
     StopPropagationDirective,
