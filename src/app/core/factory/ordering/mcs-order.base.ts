@@ -223,12 +223,14 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
       tap((response) => {
         let orderJobs = getSafeProperty(response, (obj) => obj.jobs, []);
         this.setJobs(...orderJobs);
+        this._setRequestChangeState(DataStatus.Success);
       }),
       catchError((httpError: McsApiErrorContext) => {
         if (!isNullOrEmpty(httpError)) {
           let errorMessages = getSafeProperty(httpError, (obj) => obj.details.errorMessages, []);
           this.setErrors(...errorMessages);
         }
+        this._setRequestChangeState(DataStatus.Error);
         return throwError(httpError);
       })
     );
