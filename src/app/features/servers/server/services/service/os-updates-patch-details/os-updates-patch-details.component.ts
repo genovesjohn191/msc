@@ -26,9 +26,12 @@ import {
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { TreeNode } from '@app/shared';
-import { ServersService } from '@app/features/servers/servers.service';
-import { getSafeProperty } from '@app/utilities';
+import {
+  getSafeProperty,
+  CommonDefinition
+} from '@app/utilities';
 import { ServerServiceActionDetail } from '../../strategy/server-service-action.context';
+import { ServersService } from '../../../../servers.service';
 
 @Component({
   selector: 'mcs-service-os-updates-patch-details',
@@ -101,7 +104,10 @@ export class ServiceOsUpdatesPatchDetailsComponent implements OnInit {
    */
   private _initializeTreeSource() {
     this.dataStatusFactory.setInProgress();
-    this.osUpdates$ = this._apiService.getServerOsUpdates(this.selectedServer.id).pipe(
+    this.osUpdates$ = this._apiService.getServerOsUpdates(this.selectedServer.id, {
+      pageIndex: CommonDefinition.PAGE_INDEX_DEFAULT,
+      pageSize: CommonDefinition.PAGE_SIZE_MAX
+    }).pipe(
       map((response) => getSafeProperty(response, (obj) => obj.collection)),
       tap((osUpdates) => {
         this.dataStatusFactory.setSuccessful(osUpdates);
