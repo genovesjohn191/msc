@@ -18,7 +18,7 @@
 
   <mcs-content-panel *mcsContentPanelDef>
 
-    <mcs-wizard header="Wizard Header">
+    <mcs-wizard (stepChange)="onWizardStepChanged($event)">
 
       <!-- Error message -->
       <ng-container mcsWizardErrorTemplate>
