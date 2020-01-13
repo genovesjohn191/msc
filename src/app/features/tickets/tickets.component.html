@@ -82,7 +82,7 @@
           <mcs-header-cell *mcsHeaderCellDef>
             {{ columnSettings.summary.text }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" text-wrap>
+          <mcs-data-cell *mcsDataCellDef="let row" [mcsTextTruncate]="row.shortDescription">
             <a [mcsRouterLink]="[routeKeyEnum.TicketDetails, row.id]"
             mcsId="select-ticket"
             mcsEventTracker="navigate-to-ticket"
@@ -98,6 +98,16 @@
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
             {{ row.requestor }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Logged On Column -->
+        <ng-container mcsColumnDef="loggedOn">
+          <mcs-header-cell *mcsHeaderCellDef hidden-small>
+            {{ columnSettings.loggedOn.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+            {{ row.createdOn | mcsStdDateFormat }}
           </mcs-data-cell>
         </ng-container>
 
