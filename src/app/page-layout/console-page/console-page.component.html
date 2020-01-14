@@ -60,12 +60,59 @@
               <span>{{ 'consolePage.sendCtrlAltDelete' | translate }}</span>
             </mcs-item>
           </button>
+          <button mcsButton="basic" [disabled]="!serverDetails?.isPoweredOn"
+            #popoverActionElement="mcsPopover" [autoCalculatePosition]="autoCalculatePosition"
+            mcsPopover placement="bottom" orientation="left" maxWidth="auto"
+            theme="light" padding="none" [content]="pasteContent"
+            mcsId="console-page-paste-text-button"
+            mcsEventTracker="console-page-paste-text-click"
+            mcsEventCategory="console"
+            mcsEventLabel="console-page-paste-text-button">
+            <mcs-item>
+              <mcs-icon [key]="clipboardIconKey"></mcs-icon>
+              <span>{{ 'consolePage.pasteText' | translate }}</span>
+            </mcs-item>
+          </button>
         </div>
       </ng-container>
     </ng-container>
   </ng-template>
+
+  <ng-template #pasteContent>
+    <div>
+      <div [style.padding]="'6px'" [style.min-width]="'300px'">
+        <mcs-item>
+          <ng-container *ngIf="!isPasswordType; else passwordType">
+            <textarea mcsId="console-page-paste-text-area" [style.resize]="'vertical'" [style.min-width]="'300px'" [style.min-height]="'100px'"
+              [(ngModel)]="pasteTextValue" [ngModelOptions]="{standalone: true}">
+            </textarea>
+          </ng-container>
+
+          <ng-template #passwordType>
+            <input mcsId="console-page-paste-password" [style.min-width]="'300px'" type="password"
+            [(ngModel)]="pasteTextValue" [ngModelOptions]="{standalone: true}">
+          </ng-template>
+        </mcs-item>
+
+        <mcs-item orientation="separated">
+          <mcs-checkbox [(ngModel)]="isPasswordType">
+            {{ 'consolePage.password' | translate }}
+          </mcs-checkbox>
+          <button mcsButton size="xsmall"
+            mcsId="console-page-paste-button"
+            mcsEventTracker="console-page-paste-click"
+            mcsEventCategory="console"
+            mcsEventLabel="console-page-paste-button"
+            [disabled]="isPasteTextEmpty(pasteTextValue)"
+            (click)="onPasteText(pasteTextValue)">
+            {{ 'consolePage.paste' | translate }}
+          </button>
+        </mcs-item>
+      </div>
+    </div>
+  </ng-template>
 </div>
 
 <!-- Console content -->
-<div class="console-page-content" #consoleUiElement
+<div class="console-page-content" #consoleUiElement tabindex="-1"
   [disabled]="(stateChange | async) !== consoleStatusEnum.Connected"></div>

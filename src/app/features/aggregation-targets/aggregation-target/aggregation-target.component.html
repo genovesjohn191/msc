@@ -8,14 +8,13 @@
           <mcs-search #search mcsId="aggregation-target-listing-panel-search"></mcs-search>
           <mcs-list-panel [dataSource]="listViewDatasource" [config]="listViewConfig?.panelSettings">
             <ng-container *mcsListPanelContent="let aggregationTarget">
-              <a [mcsRouterLink]="[routeKeyEnum.BackupAggregationTargetsDetails, aggregationTarget.serviceId]"
+              <a [mcsRouterLink]="[routeKeyEnum.BackupAggregationTargetsDetails, aggregationTarget.id]"
                 mcsId="select-aggregation-target"
                 mcsEventTracker="select-aggregation-target"
                 mcsEventCategory="storage"
                 mcsEventLabel="aggregation-target-list-panel">
-                <!-- TODO: change the serviceId to Id -->
                 <mcs-option [value]="aggregationTarget"
-                  [selected]="(selectedAggregationTarget$ | async)?.serviceId === aggregationTarget.serviceId">
+                  [selected]="(selectedAggregationTarget$ | async)?.id === aggregationTarget.id">
                   <mcs-item>
                     <span>{{ aggregationTarget.description }}</span>
                   </mcs-item>

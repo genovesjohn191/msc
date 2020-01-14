@@ -70,7 +70,7 @@ export class AggregationTargetsComponent extends McsTableListingBase<McsStorageB
     let hasAggregationTargetFlag = this._accessControlService.hasAccessToFeature(McsFeatureFlag.AddonBackupAggregationTargetDetailsView);
     if (!hasAggregationTargetFlag || isNullOrEmpty(aggregationTarget)) { return; }
 
-    this._navigationService.navigateTo(RouteKey.BackupAggregationTargetsDetails, [aggregationTarget.serviceId]);
+    this._navigationService.navigateTo(RouteKey.BackupAggregationTargetsDetails, [aggregationTarget.id]);
   }
 
   /**

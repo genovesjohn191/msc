@@ -154,6 +154,7 @@ export class CommonDefinition {
   public static ASSETS_SVG_CHEVRON_UP = 'chevron-up';
   public static ASSETS_SVG_CHEVRON_RIGHT = 'chevron-right';
   public static ASSETS_SVG_COMMENT = 'comment';
+  public static ASSETS_SVG_CLIPBOARD = 'clipboard';
   public static ASSETS_SVG_ATTACHMENT = 'attachment';
   public static ASSETS_SVG_BULLET = 'bullet';
 
