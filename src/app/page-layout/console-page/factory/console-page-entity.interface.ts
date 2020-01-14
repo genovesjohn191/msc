@@ -10,5 +10,6 @@ export interface IConsolePageEntity {
   connect(details: McsConsole, container: HTMLElement): void;
   disconnect(): void;
   sendKeyCodes(keyCodes: Key[]): void;
+  sendInputString(value: string): void;
   isControllable(): boolean;
 }

@@ -59,6 +59,15 @@ export class ConsolePageVCloud implements IConsolePageEntity {
   }
 
   /**
+   * Sends input string to the console
+   * @param value string value to be sent
+   */
+  public sendInputString(value: string): void {
+    if (isNullOrEmpty(value)) { return; }
+    this._vmConsoleInstance.wmks('sendInputString', value);
+  }
+
+  /**
    * Returns true when the control of the console can be controlled
    */
   public isControllable(): boolean {

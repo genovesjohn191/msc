@@ -66,9 +66,14 @@ export class ConsolePageComponent implements AfterViewInit, OnDestroy {
   public serverDetails$: Observable<McsServer>;
   public closingTime: number;
   public isConsoleClose: boolean;
+  public pasteTextValue: string;
+  public isPasswordType: boolean;
 
   @ViewChild('consoleUiElement', { static: false })
   public consoleUiElement: ElementRef;
+
+  @ViewChild('popoverActionElement', { static: false })
+  public popoverActionElement: any;
 
   private _intervalId: number;
   private _destroySubject: Subject<void>;
@@ -127,6 +132,10 @@ export class ConsolePageComponent implements AfterViewInit, OnDestroy {
     return CommonDefinition.ASSETS_SVG_STOP;
   }
 
+  public get clipboardIconKey(): string {
+    return CommonDefinition.ASSETS_SVG_CLIPBOARD;
+  }
+
   public get stoppingText(): string {
     return this._translateService.instant(
       'consolePage.stopping', { timer: this.closingTime.toString() }
@@ -148,6 +157,13 @@ export class ConsolePageComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
+   * Returns true when the paste text area is empty, false otherwise
+   */
+  public isPasteTextEmpty(pasteText: string): boolean {
+    return isNullOrEmpty(getSafeProperty(pasteText, (obj) => obj.trim()));
+  }
+
+  /**
    * Event that emits when send request for control + alt + delete is clicked
    */
   public onClickCtrlAltDelete() {
@@ -159,6 +175,21 @@ export class ConsolePageComponent implements AfterViewInit, OnDestroy {
       Key.Alt,
       Key.Delete
     ]);
+  }
+
+  /**
+   * Event that emits when send request for paste text is clicked
+   */
+  public onPasteText(pasteText: string) {
+    if (isNullOrEmpty(this._consolePageInstance)) {
+      throw new Error('Unable to send string value to undefined console instance.');
+    }
+    if (this.popoverActionElement) { this.popoverActionElement.close(); }
+    this._consolePageInstance.sendInputString(pasteText);
+    this._resetPasteTextControls();
+    if (!isNullOrEmpty(this.consoleUiElement.nativeElement)) {
+      this.consoleUiElement.nativeElement.focus();
+    }
   }
 
   /**
@@ -309,5 +340,13 @@ export class ConsolePageComponent implements AfterViewInit, OnDestroy {
         .connect(consoleDetails, this.consoleUiElement.nativeElement)
       )
     ).subscribe();
+  }
+
+  /**
+   * Defaults the value of the Paste Text controLS
+   */
+  private _resetPasteTextControls(): void {
+    this.pasteTextValue = '';
+    this.isPasswordType = false;
   }
 }

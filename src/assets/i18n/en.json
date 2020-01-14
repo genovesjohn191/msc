@@ -22,6 +22,9 @@
   "consolePage": {
     "loading": "Loading VM Console...",
     "sendCtrlAltDelete": "Ctrl + Alt + Del",
+    "pasteText": "Paste Text",
+    "password": "Password",
+    "paste": "Paste",
     "start": "Start",
     "stop": "Stop",
     "restart": "Restart",

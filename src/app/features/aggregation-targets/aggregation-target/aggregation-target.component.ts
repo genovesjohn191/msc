@@ -103,10 +103,7 @@ export class AggregationTargetComponent extends McsListViewListingBase<McsStorag
   }
 
   public navitageToDetails(aggregationTarget: McsStorageBackUpAggregationTarget): void {
-    this._navigationService.navigateTo(
-      RouteKey.BackupAggregationTargetsDetails,
-      [aggregationTarget.serviceId]
-    );
+    this._navigationService.navigateTo(RouteKey.BackupAggregationTargetsDetails, [aggregationTarget.id]);
   }
 
   /**
