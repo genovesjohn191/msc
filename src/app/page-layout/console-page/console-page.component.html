@@ -61,9 +61,8 @@
             </mcs-item>
           </button>
           <button mcsButton="basic" [disabled]="!serverDetails?.isPoweredOn"
-            #popoverActionElement="mcsPopover" [autoCalculatePosition]="autoCalculatePosition"
-            mcsPopover placement="bottom" orientation="left" maxWidth="auto"
-            theme="light" padding="none" [content]="pasteContent"
+            #popoverActionElement="mcsPopover" mcsPopover placement="bottom"
+            orientation="left" maxWidth="auto" theme="light" padding="none" [content]="pasteContent"
             mcsId="console-page-paste-text-button"
             mcsEventTracker="console-page-paste-text-click"
             mcsEventCategory="console"
