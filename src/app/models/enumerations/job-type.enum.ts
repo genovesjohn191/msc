@@ -47,6 +47,8 @@ export enum JobType {
   PerformServerOsUpdateAnalysis = 100501,
   ApplyServerOsUpdates = 100502,
 
+  // Vdc
+  ScaleVdcCompute = 100603,
 }
 
 export const jobTypeText = {
@@ -74,6 +76,7 @@ export const jobTypeText = {
   [JobType.ApplyServerOsUpdates]: 'Apply OS Updates',
   [JobType.ScaleManagedServer]: 'Scale Managed Server',
   [JobType.RaiseManagedServerInviewLevel]: 'Raise Managed Server Inview Level',
+  [JobType.ScaleVdcCompute]: 'Scale VDC',
 };
 
 /**

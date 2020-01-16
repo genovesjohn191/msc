@@ -68,6 +68,7 @@ import { JobInProgressEvent } from './items/job-in-progress.event';
 import { JobReceiveEvent } from './items/job-receive.event';
 import { JobCurrentUserEvent } from './items/job-current-user.event';
 import { JobResourceCatalogItemCreateEvent } from './items/job-resource-catalog-item-create.event';
+import { JobVdcScaleEvent } from './items/job-vdc-scale.event';
 
 export class McsEvent {
   public static routeChange = new RouteChangeEvent();
@@ -139,5 +140,6 @@ export class McsEvent {
   public static jobServerResetPassword = new JobServerResetPasswordEvent();
   public static jobServerManagedScaleEvent = new JobServerManagedScaleEvent();
   public static jobServerManagedRaiseInviewLevelEvent = new JobServerManagedRaiseInviewLevelEvent();
+  public static jobVdcScaleEvent = new JobVdcScaleEvent();
   public static jobResourceCatalogItemCreate = new JobResourceCatalogItemCreateEvent();
 }
