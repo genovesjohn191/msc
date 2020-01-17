@@ -52,6 +52,8 @@
                   [selected]="selectedServerId === server.id">
                   <mcs-item>
                     <mcs-icon *ngIf="!server.isProcessing" size="small"
+                      [mcsTooltip]="server.statusLabel"
+                      mcsTooltipPosition="right"
                       [key]="server?.powerStateIconKey"></mcs-icon>
 
                     <mcs-loader *ngIf="server.isProcessing" size="small"

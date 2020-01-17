@@ -88,31 +88,31 @@ export class McsFirewall extends McsEntityBase {
   public policies: McsFirewallPolicy[];
 
   @JsonProperty({ target: McsFirewallUtm })
-  public utm: McsFirewallUtm;
+  public utm: McsFirewallUtm = undefined;
 
   @JsonProperty({
     serializer: HaModeSerialization,
     deserializer: HaModeSerialization
   })
-  public haMode: HaMode;
+  public haMode: HaMode = undefined;
 
   @JsonProperty({
     serializer: DeviceStatusSerialization,
     deserializer: DeviceStatusSerialization
   })
-  public deviceStatus: DeviceStatus;
+  public deviceStatus: DeviceStatus = undefined;
 
   @JsonProperty({
     serializer: ConfigurationStatusSerialization,
     deserializer: ConfigurationStatusSerialization
   })
-  public configurationStatus: ConfigurationStatus;
+  public configurationStatus: ConfigurationStatus = undefined;
 
   @JsonProperty({
     serializer: ConnectionStatusSerialization,
     deserializer: ConnectionStatusSerialization
   })
-  public connectionStatus: ConnectionStatus;
+  public connectionStatus: ConnectionStatus = undefined;
 
   /**
    * Returns the cpu count label
@@ -124,21 +124,21 @@ export class McsFirewall extends McsEntityBase {
   /**
    * Returns device status label
    */
-  public get deviceStatusLabel() {
+  public get deviceStatusLabel(): string {
     return deviceStatusText[this.deviceStatus];
   }
 
   /**
    * Returns connection status label
    */
-  public get connectionStatusLabel() {
+  public get connectionStatusLabel(): string {
     return connectionStatusText[this.connectionStatus];
   }
 
   /**
    * Returns configuration status label
    */
-  public get configurationStatusLabel() {
+  public get configurationStatusLabel(): string {
     return configurationStatusText[this.configurationStatus];
   }
 

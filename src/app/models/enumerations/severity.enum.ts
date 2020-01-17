@@ -14,6 +14,13 @@ export const severityText = {
   [Severity.Critical]: 'Critical'
 };
 
+export const storageUsageSeverityText = {
+  [Severity.Low]: 'Ample storage space remaining',
+  [Severity.Medium]: 'Moderate storage space remaining',
+  [Severity.High]: 'Low storage space remaining',
+  [Severity.Critical]: 'Critical storage space remaining'
+};
+
 /**
  * Enumeration serializer and deserializer methods
  */

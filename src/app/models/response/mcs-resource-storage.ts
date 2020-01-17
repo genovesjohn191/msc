@@ -1,5 +1,9 @@
 import { JsonProperty } from '@peerlancers/json-serialization';
 import { McsEntityBase } from '../common/mcs-entity.base';
+import {
+  Severity,
+  storageUsageSeverityText
+} from '../enumerations/severity.enum';
 
 export class McsResourceStorage extends McsEntityBase {
 
@@ -29,5 +33,21 @@ export class McsResourceStorage extends McsEntityBase {
    */
   public get toggleLabel(): string {
     return this.enabled ? 'Enabled' : 'Disabled';
+  }
+
+  /**
+   * Returns the used MB status of the storage
+   */
+  public get usedMbStatus(): Severity {
+    let usedMbPercentage = (this.usedMB / this.availableMB) * 100;
+    if (usedMbPercentage <= 75) { return Severity.Low; }
+    return usedMbPercentage >= 85 ? Severity.High : Severity.Medium;
+  }
+
+  /**
+   * Returns the different status text for used MB
+   */
+  public get usedMbStatusText(): string {
+    return storageUsageSeverityText[this.usedMbStatus];
   }
 }
