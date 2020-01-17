@@ -122,17 +122,43 @@
           <div [innerHTML]="selectedProduct.shortDescription"></div>
         </div>
 
+        <!-- Use Cases -->
+        <div class="product-catalog-item" *ngIf="selectedProduct.useCases | mcsIsNotNullOrEmpty">
+          <h2>Use Cases</h2>
+
+          <mcs-table [dataSource]="selectedProduct.useCases" class="limited-view">
+            <ng-container mcsColumnDef="name">
+              <mcs-header-cell *mcsHeaderCellDef>
+                Name
+              </mcs-header-cell>
+              <mcs-data-cell *mcsDataCellDef="let row">
+                {{ row.name }}
+              </mcs-data-cell>
+            </ng-container>
+
+            <ng-container mcsColumnDef="description">
+              <mcs-header-cell *mcsHeaderCellDef>
+                Description
+              </mcs-header-cell>
+              <mcs-data-cell *mcsDataCellDef="let row">
+                <div [ngStyle]="{'white-space': 'normal'}" [innerHTML]="row.description"></div>
+              </mcs-data-cell>
+            </ng-container>
+
+            <mcs-header-row *mcsHeaderRowDef="userCasesColumns"></mcs-header-row>
+            <mcs-data-row *mcsDataRowDef="let row; columns: userCasesColumns;"></mcs-data-row>
+          </mcs-table>
+        </div>
+
         <!-- description -->
-        <div class="product-catalog-item"
-          *ngIf="selectedProduct.description | mcsIsNotNullOrEmpty">
+        <div class="product-catalog-item" *ngIf="selectedProduct.description | mcsIsNotNullOrEmpty">
           <h2>Description</h2>
           <div [innerHTML]="selectedProduct.description"></div>
         </div>
       </div>
 
       <!-- Product Options -->
-      <div class="product-catalog-item"
-        *ngIf="selectedProduct.productOptions | mcsIsNotNullOrEmpty">
+      <div class="product-catalog-item" *ngIf="selectedProduct.productOptions | mcsIsNotNullOrEmpty">
         <h2>Product Options</h2>
 
         <mcs-table [dataSource]="selectedProduct.productOptions" class="limited-view">
@@ -166,35 +192,6 @@
           </ng-container>
           <mcs-header-row *mcsHeaderRowDef="productOptionsColumns"></mcs-header-row>
           <mcs-data-row *mcsDataRowDef="let row; columns: productOptionsColumns;"></mcs-data-row>
-        </mcs-table>
-      </div>
-
-      <!-- Use Cases -->
-      <div class="product-catalog-item"
-        *ngIf="selectedProduct.useCases | mcsIsNotNullOrEmpty">
-        <h2>Use Cases</h2>
-
-        <mcs-table [dataSource]="selectedProduct.useCases" class="limited-view">
-          <ng-container mcsColumnDef="name">
-            <mcs-header-cell *mcsHeaderCellDef>
-              Name
-            </mcs-header-cell>
-            <mcs-data-cell *mcsDataCellDef="let row">
-              {{ row.name }}
-            </mcs-data-cell>
-          </ng-container>
-
-          <ng-container mcsColumnDef="description">
-            <mcs-header-cell *mcsHeaderCellDef>
-              Description
-            </mcs-header-cell>
-            <mcs-data-cell *mcsDataCellDef="let row">
-              <div [ngStyle]="{'white-space': 'normal'}" [innerHTML]="row.description"></div>
-            </mcs-data-cell>
-          </ng-container>
-
-          <mcs-header-row *mcsHeaderRowDef="userCasesColumns"></mcs-header-row>
-          <mcs-data-row *mcsDataRowDef="let row; columns: userCasesColumns;"></mcs-data-row>
         </mcs-table>
       </div>
 

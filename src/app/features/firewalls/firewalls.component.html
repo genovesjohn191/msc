@@ -42,7 +42,9 @@
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
             <mcs-item>
-              <mcs-icon [key]="row.connectionStatusIconKey" size="small"></mcs-icon>
+              <mcs-icon [key]="row.connectionStatusIconKey" size="small"
+                [mcsTooltip]="row.connectionStatusLabel"></mcs-icon>
+
               <a [mcsRouterLink]="[routeKeyEnum.FirewallDetails, row.id]"
                 mcsId="select-firewall"
                 mcsEventTracker="select-firewall"

@@ -146,15 +146,15 @@
           <mcs-data-empty *mcsDataEmptyDef>
             <div class="listing-status-wrapper">
               <span>{{ 'tickets.noRecordsFoundMessage' | translate }} </span>
-              <span *mcsExclusiveForAccount="'default'">
-                <!-- We need to hardcode this instead of putting in the text-config
-                    since it is using link -->
-                Click <a (click)="onClickNewTicket()"
-                mcsId="create-new-ticket"
-                mcsEventTracker="create-new-ticket"
-                mcsEventCategory="ticket"
-                mcsEventLabel="empty-ticket-listing-option">here</a> to create new ticket.
-              </span>
+              <ng-container *mcsAccessControl="['TicketCreate']">
+                <span *mcsExclusiveForAccount="'default'">
+                  Click <a (click)="onClickNewTicket()"
+                  mcsId="create-new-ticket"
+                  mcsEventTracker="create-new-ticket"
+                  mcsEventCategory="ticket"
+                  mcsEventLabel="empty-ticket-listing-option">here</a> to create new ticket.
+                </span>
+              </ng-container>
             </div>
           </mcs-data-empty>
           <mcs-data-error *mcsDataErrorDef>

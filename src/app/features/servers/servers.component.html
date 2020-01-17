@@ -154,7 +154,7 @@
           <mcs-data-cell *mcsDataCellDef="let row">
             <mcs-item>
               <div *ngIf="!row.isProcessing">
-                <mcs-icon [key]="row.powerStateIconKey" size="small"></mcs-icon>
+                <mcs-icon [key]="row.powerStateIconKey" size="small" [mcsTooltip]="row.statusLabel"></mcs-icon>
               </div>
               <div *ngIf="row.isProcessing" [ngStyle]="{'pointer-events': 'auto'}">
                 <mcs-loader size="small" [mcsTooltip]="row.processingText"></mcs-loader>
@@ -283,8 +283,6 @@
             <div class="listing-status-wrapper">
               <span>{{ 'servers.noServers' | translate }} </span>
               <span *ngIf="hasCreateResources && !isSearching">
-                <!-- We need to hardcode this instead of putting in the text-config
-                    since it is using link -->
                 Click <a (click)="onClickNewServerButton()"
                 mcsEventTracker="create-new-server"
                 mcsEventCategory="server"
