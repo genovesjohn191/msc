@@ -39,7 +39,7 @@ export class McsResourceStorage extends McsEntityBase {
    * Returns the used MB status of the storage
    */
   public get usedMbStatus(): Severity {
-    let usedMbPercentage = (this.usedMB / this.availableMB) * 100;
+    let usedMbPercentage = (this.usedMB / this.limitMB) * 100;
     if (usedMbPercentage <= 75) { return Severity.Low; }
     return usedMbPercentage >= 85 ? Severity.High : Severity.Medium;
   }
