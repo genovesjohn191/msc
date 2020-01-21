@@ -132,9 +132,7 @@ export class AddHidsComponent extends McsOrderWizardBase implements OnInit, OnDe
     let resourceMap: Map<string, McsServer[]> = new Map();
     this.resources$ = this._apiService.getServers().pipe(
       map((servers) => {
-        servers.collection.filter(
-          (server) => server.isManagedVCloud && server.serviceChangeAvailable
-        ).forEach((server) => {
+        servers.collection.filter((server) => server.canProvision).forEach((server) => {
           let resourceIsExisting = resourceMap.has(server.platform.resourceName);
           if (resourceIsExisting) {
             resourceMap.get(server.platform.resourceName).push(server);

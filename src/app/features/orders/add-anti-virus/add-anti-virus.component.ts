@@ -156,9 +156,7 @@ export class AddAntiVirusComponent extends McsOrderWizardBase implements OnInit,
 
         return this._apiService.getServers().pipe(
           map((servers) => {
-            servers.collection.filter(
-              (server) => server.isManagedVCloud && server.serviceChangeAvailable
-            ).forEach((server) => {
+            servers.collection.filter((server) => server.canProvision).forEach((server) => {
 
               let serverAvProvisioned = serversAv.collection.find((serverAv) => serverAv.serverId === server.id);
               let resourceIsExisting = resourceMap.has(server.platform.resourceName);
