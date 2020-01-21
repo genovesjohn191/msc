@@ -6,31 +6,31 @@
     </mcs-item>
   </ng-container>
   <mcs-grid>
-      <mcs-grid-row>
-        <mcs-grid-column sizeLg="11">
-          <p [innerHTML]="('serverServicesHidsDetails.description' | translate) | mcsNewLines"></p>
-        </mcs-grid-column>
-        <mcs-grid-column sizeLg="1">
-          <mcs-icon mcsStopPropagation [key]="ellipsisKey" size="large"
-            mcsPopover placement="bottom" orientation="left" theme="light"
-            padding="none" [content]="actionContent" mcsCursor="pointer">
-          </mcs-icon>
-          <ng-template #actionContent>
-            <div class="cog-actions-wrapper">
-              <a mcsButton="basic" color="white" labelPlacement="left"
-                target="_blank"
-                [href]="trendDsmLink"
-                mcsId
-                mcsEventTracker="view-in-trend-dsm-hids"
-                mcsEventCategory="server"
-                mcsEventLabel="server-services-view-in-trend-dsm-hids">
-                {{ 'serverServicesHidsDetails.viewInTrendDsmLabel' | translate }}
-              </a>
-            </div>
-          </ng-template>
-        </mcs-grid-column>
-      </mcs-grid-row>
-    </mcs-grid>
+    <mcs-grid-row>
+      <mcs-grid-column sizeLg="11">
+        <p [innerHTML]="('serverServicesHidsDetails.description' | translate) | mcsNewLines"></p>
+      </mcs-grid-column>
+      <mcs-grid-column sizeLg="1">
+        <mcs-icon mcsStopPropagation [key]="ellipsisKey" size="large"
+          mcsPopover placement="bottom" orientation="left" theme="light"
+          padding="none" [content]="actionContent" mcsCursor="pointer">
+        </mcs-icon>
+        <ng-template #actionContent>
+          <div class="cog-actions-wrapper">
+            <a mcsButton="basic" color="white" labelPlacement="left"
+              target="_blank"
+              [href]="trendDsmLink"
+              mcsId
+              mcsEventTracker="view-in-trend-dsm-hids"
+              mcsEventCategory="server"
+              mcsEventLabel="server-services-view-in-trend-dsm-hids">
+              {{ 'serverServicesHidsDetails.viewInTrendDsmLabel' | translate }}
+            </a>
+          </div>
+        </ng-template>
+      </mcs-grid-column>
+    </mcs-grid-row>
+  </mcs-grid>
 
    <!-- Table -->
   <mcs-table [dataSource]="hidsDatasource">
@@ -50,7 +50,7 @@
         {{ 'serverServicesHidsDetails.columnHeaders.date' | translate }}
       </mcs-header-cell>
       <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
-        <span text-wrap>{{ row.detectedOn }}</span>
+        <span text-wrap>{{ row.detectedOn | mcsStdDateFormat }}</span>
       </mcs-data-cell>
     </ng-container>
 
@@ -104,13 +104,13 @@
       </mcs-data-cell>
     </ng-container>
 
-    <!-- Target Type Column -->
-    <ng-container mcsColumnDef="targetType">
+    <!-- Severity Column -->
+    <ng-container mcsColumnDef="severity">
       <mcs-header-cell *mcsHeaderCellDef hidden-small>
-        {{ 'serverServicesHidsDetails.columnHeaders.targetType' | translate }}
+        {{ 'serverServicesHidsDetails.columnHeaders.severity' | translate }}
       </mcs-header-cell>
       <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
-        <span text-wrap>{{ row.targetType }}</span>
+        <span text-wrap>{{ severityLabel(row.severity) }}</span>
       </mcs-data-cell>
     </ng-container>
 

@@ -858,17 +858,17 @@ export class McsApiService {
     );
   }
 
-  public getServerHostSecurityAvLogs(id: string): Observable<McsServerHostSecurityAvLog> {
+  public getServerHostSecurityAvLogs(id: string): Observable<McsApiCollection<McsServerHostSecurityAvLog>> {
     return this._serversApi.getServerHostSecurityAvLogs(id).pipe(
       catchError((error) => this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getServerHostSecurityAvLogs'))),
-      map((response) => getSafeProperty(response, (obj) => obj.content))
+      map((response) => this._mapToCollection(response.content, response.totalCount))
     );
   }
 
-  public getServerHostSecurityHidsLogs(id: string): Observable<McsServerHostSecurityHidsLog> {
+  public getServerHostSecurityHidsLogs(id: string): Observable<McsApiCollection<McsServerHostSecurityHidsLog>> {
     return this._serversApi.getServerHostSecurityHidsLogs(id).pipe(
       catchError((error) => this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getServerHostSecurityHidsLogs'))),
-      map((response) => getSafeProperty(response, (obj) => obj.content))
+      map((response) => this._mapToCollection(response.content, response.totalCount))
     );
   }
 

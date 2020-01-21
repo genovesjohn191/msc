@@ -1,21 +1,38 @@
 import { JsonProperty } from '@peerlancers/json-serialization';
+import { McsDateSerialization } from '../serialization/mcs-date-serialization';
 import {
-  HidsStatusSerialization,
-  HidsStatus
-} from '../enumerations/hids-status.enum';
-import { McsServerHostSecurityHidsLogContent } from './mcs-server-host-security-hids-log-content';
+  HostSecuritySeveritySerialization,
+  HostSecuritySeverity
+} from '../enumerations/host-security-severity.enum';
 
 export class McsServerHostSecurityHidsLog {
   @JsonProperty()
-  public totalCount: number = undefined;
+  public description: string = undefined;
 
   @JsonProperty({
-    serializer: HidsStatusSerialization,
-    deserializer: HidsStatusSerialization
+    serializer: McsDateSerialization,
+    deserializer: McsDateSerialization
   })
-  public status: HidsStatus = HidsStatus.None;
+  public detectedOn: Date = undefined;
 
-  @JsonProperty({ target: McsServerHostSecurityHidsLogContent })
-  public content: McsServerHostSecurityHidsLogContent[] = undefined;
+  @JsonProperty()
+  public applicationType: string = undefined;
+
+  @JsonProperty()
+  public interface: string = undefined;
+
+  @JsonProperty()
+  public sourceIpAddress: string = undefined;
+
+  @JsonProperty()
+  public destinationIpAddress: string = undefined;
+
+  @JsonProperty()
+  public actionTaken: string = undefined;
+
+  @JsonProperty({
+    serializer: HostSecuritySeveritySerialization,
+    deserializer: HostSecuritySeveritySerialization
+  })
+  public severity: HostSecuritySeverity = undefined;
 }
-

@@ -15,7 +15,6 @@ import {
   tap
 } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
-import { McsServerHostSecurityAvLogContent } from '@app/models';
 import {
   McsTableDataSource,
   CoreConfig
@@ -26,6 +25,7 @@ import {
   getSafeProperty,
   CommonDefinition
 } from '@app/utilities';
+import { McsServerHostSecurityAvLog } from '@app/models';
 
 @Component({
   selector: 'mcs-service-anti-virus-details',
@@ -39,10 +39,10 @@ export class ServiceAntiVirusDetailsComponent implements OnInit, OnChanges {
   @Input()
   public serverId: string;
 
-  public avDatasource: McsTableDataSource<McsServerHostSecurityAvLogContent>;
+  public avDatasource: McsTableDataSource<McsServerHostSecurityAvLog>;
   public avColumns: string[];
 
-  private _avLogsCache: Observable<McsServerHostSecurityAvLogContent[]>;
+  private _avLogsCache: Observable<McsServerHostSecurityAvLog[]>;
 
   constructor(
     private _translateService: TranslateService,
@@ -89,10 +89,10 @@ export class ServiceAntiVirusDetailsComponent implements OnInit, OnChanges {
    * Initializes the data source of the av logs table
    */
   private _updateTableDataSource(serverid: string): void {
-    let avApiSource: Observable<McsServerHostSecurityAvLogContent[]>;
+    let avApiSource: Observable<McsServerHostSecurityAvLog[]>;
     if (!isNullOrEmpty(serverid)) {
       avApiSource = this._apiService.getServerHostSecurityAvLogs(serverid).pipe(
-        map((response) => getSafeProperty(response, (obj) => obj.content)),
+        map((response) => getSafeProperty(response, (obj) => obj.collection)),
         tap((response) => {
           this._avLogsCache = of(response);
         })

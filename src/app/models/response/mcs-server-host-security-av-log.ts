@@ -1,21 +1,22 @@
 import { JsonProperty } from '@peerlancers/json-serialization';
-import {
-  AntiVirusStatus,
-  AntiVirusStatusSerialization
-} from '../enumerations/anti-virus-status.enum';
-import { McsServerHostSecurityAvLogContent } from './mcs-server-host-security-av-log-content';
+import { McsDateSerialization } from '../serialization/mcs-date-serialization';
 
 export class McsServerHostSecurityAvLog {
   @JsonProperty()
-  public totalCount: number = undefined;
+  public description: string = undefined;
 
   @JsonProperty({
-    serializer: AntiVirusStatusSerialization,
-    deserializer: AntiVirusStatusSerialization
+    serializer: McsDateSerialization,
+    deserializer: McsDateSerialization
   })
-  public status: AntiVirusStatus = AntiVirusStatus.None;
+  public detectedOn: Date = undefined;
 
-  @JsonProperty({ target: McsServerHostSecurityAvLogContent })
-  public content: McsServerHostSecurityAvLogContent[] = undefined;
+  @JsonProperty()
+  public path: string = undefined;
+
+  @JsonProperty()
+  public scanType: string = undefined;
+
+  @JsonProperty()
+  public actionTaken: string = undefined;
 }
-

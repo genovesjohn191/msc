@@ -50,7 +50,7 @@
           {{ 'serverServicesAvDetails.columnHeaders.date' | translate }}
         </mcs-header-cell>
         <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
-          <span text-wrap>{{ row.detectedOn }}</span>
+          <span text-wrap>{{ row.detectedOn | mcsStdDateFormat }}</span>
         </mcs-data-cell>
       </ng-container>
 
@@ -81,16 +81,6 @@
         </mcs-header-cell>
         <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
           <span text-wrap>{{ row.actionTaken }}</span>
-        </mcs-data-cell>
-      </ng-container>
-
-      <!-- Severity Column -->
-      <ng-container mcsColumnDef="severity">
-        <mcs-header-cell *mcsHeaderCellDef hidden-small>
-          {{ 'serverServicesAvDetails.columnHeaders.severity' | translate }}
-        </mcs-header-cell>
-        <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
-          <span text-wrap>{{ row.severity }}</span>
         </mcs-data-cell>
       </ng-container>
 

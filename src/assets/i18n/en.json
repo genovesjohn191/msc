@@ -703,8 +703,7 @@
       "date": "Date",
       "path": "Path",
       "scanType": "Scan Type",
-      "actionTaken": "Action Taken",
-      "severity": "Severity"
+      "actionTaken": "Action Taken"
     }
   },
   "serverServicesHidsDetails": {
@@ -721,7 +720,7 @@
       "sourceIp": "Source IP",
       "destinationIp": "Destination IP",
       "actionTaken": "Action Taken",
-      "targetType": "Target Type"
+      "severity": "Severity"
     }
   },
   "serverStorage": {
