@@ -20,12 +20,16 @@ import {
   getSafeProperty,
   CommonDefinition,
 } from '@app/utilities';
-import { McsServerHostSecurityHidsLogContent } from '@app/models';
 import {
   McsTableDataSource,
   CoreConfig
 } from '@app/core';
 import { McsApiService } from '@app/services';
+import {
+  McsServerHostSecurityHidsLog,
+  hostSecuritySeverityText,
+  HostSecuritySeverity
+} from '@app/models';
 
 @Component({
   selector: 'mcs-service-hids-details',
@@ -39,10 +43,10 @@ export class ServiceHidsDetailsComponent implements OnInit, OnChanges {
   @Input()
   public serverId: string;
 
-  public hidsDatasource: McsTableDataSource<McsServerHostSecurityHidsLogContent>;
+  public hidsDatasource: McsTableDataSource<McsServerHostSecurityHidsLog>;
   public hidsColumns: string[];
 
-  private _hidsLogsCache: Observable<McsServerHostSecurityHidsLogContent[]>;
+  private _hidsLogsCache: Observable<McsServerHostSecurityHidsLog[]>;
 
   constructor(
     private _translateService: TranslateService,
@@ -74,6 +78,13 @@ export class ServiceHidsDetailsComponent implements OnInit, OnChanges {
   }
 
   /**
+   * Returns the severity label based on severity enum
+   */
+  public severityLabel(severity: HostSecuritySeverity): string {
+    return hostSecuritySeverityText[severity];
+  }
+
+  /**
    * Sets data column for the corresponding table
    */
   private _setDataColumns(): void {
@@ -89,10 +100,10 @@ export class ServiceHidsDetailsComponent implements OnInit, OnChanges {
    * Initializes the data source of the hids logs table
    */
   private _updateTableDataSource(serverid: string): void {
-    let hidsApiSource: Observable<McsServerHostSecurityHidsLogContent[]>;
+    let hidsApiSource: Observable<McsServerHostSecurityHidsLog[]>;
     if (!isNullOrEmpty(serverid)) {
       hidsApiSource = this._apiService.getServerHostSecurityHidsLogs(serverid).pipe(
-        map((response) => getSafeProperty(response, (obj) => obj.content)),
+        map((response) => getSafeProperty(response, (obj) => obj.collection)),
         tap((response) => {
           this._hidsLogsCache = of(response);
         })

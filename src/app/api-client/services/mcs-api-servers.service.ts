@@ -944,16 +944,16 @@ export class McsApiServersService implements IMcsApiServersService {
    * Gets the server av logs
    * @param serverId Server id to where the anti virus will be coming from
    */
-  public getServerHostSecurityAvLogs(id: string): Observable<McsApiSuccessResponse<McsServerHostSecurityAvLog>> {
+  public getServerHostSecurityAvLogs(id: string): Observable<McsApiSuccessResponse<McsServerHostSecurityAvLog[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${id}/hostsecurity/av/logs`;
+    mcsApiRequestParameter.endPoint = `/servers/${id}/host-security/av/logs`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<McsServerHostSecurityAvLog>(McsServerHostSecurityAvLog, response);
+            .deserializeResponse<McsServerHostSecurityAvLog[]>(McsServerHostSecurityAvLog, response);
           return apiResponse;
         })
       );
@@ -963,16 +963,16 @@ export class McsApiServersService implements IMcsApiServersService {
    * Gets the server hids logs
    * @param serverId Server id to where the hids will be coming from
    */
-  public getServerHostSecurityHidsLogs(id: string): Observable<McsApiSuccessResponse<McsServerHostSecurityHidsLog>> {
+  public getServerHostSecurityHidsLogs(id: string): Observable<McsApiSuccessResponse<McsServerHostSecurityHidsLog[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${id}/hostsecurity/hids/logs`;
+    mcsApiRequestParameter.endPoint = `/servers/${id}/host-security/hids/logs`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<McsServerHostSecurityHidsLog>(McsServerHostSecurityHidsLog, response);
+            .deserializeResponse<McsServerHostSecurityHidsLog[]>(McsServerHostSecurityHidsLog, response);
           return apiResponse;
         })
       );
