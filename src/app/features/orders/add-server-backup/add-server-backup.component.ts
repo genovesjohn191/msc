@@ -22,8 +22,7 @@ import {
   takeUntil,
   map,
   filter,
-  tap,
-  catchError
+  tap
 } from 'rxjs/operators';
 import {
   McsOrderWizardBase,

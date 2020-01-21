@@ -264,7 +264,8 @@ export class McsServer extends McsEntityBase {
    * Returns true when the server can be ordered
    */
   public get canProvision(): boolean {
-    return this.isManagedVCloud && this.serviceChangeAvailable;
+    return this.isManagedVCloud && this.serviceChangeAvailable &&
+      this.osAutomationAvailable && this.isPoweredOn;
   }
 
   /**
