@@ -135,18 +135,22 @@
       </a>
     </ng-container>
 
-    <ng-container *ngIf="getIncludedCommand(serverCommandEnum.ResetVmPassword)">
-      <a mcsButton="basic" color="white" labelPlacement="left"
-        (click)="onExecuteCommand(serverCommandEnum.ResetVmPassword)"
-        [disabled]="!server.canResetPassword"
-        mcsId
-        mcsEventTracker="reset-password"
-        mcsEventCategory="server"
-        mcsEventLabel="server-command-tool"
-        *mcsAccessControl="[]; feature: 'EnableDedicatedVmPasswordReset';
-          validateWhen: server.isDedicated">
-        {{ 'servers.resetVmPassword' | translate }}
-      </a>
+    <ng-container *mcsAccessControl="[]; feature: 'EnableDedicatedVmPasswordReset'; validateWhen: server.isDedicated">
+      <ng-container *mcsAccessControl="[]; feature: 'EnableManagedVmPasswordReset';
+        validateWhen: server.isManagedVCloud">
+
+        <ng-container *ngIf="getIncludedCommand(serverCommandEnum.ResetVmPassword)">
+          <a mcsButton="basic" color="white" labelPlacement="left"
+            (click)="onExecuteCommand(serverCommandEnum.ResetVmPassword)"
+            [disabled]="!server.canResetPassword"
+            mcsId
+            mcsEventTracker="reset-password"
+            mcsEventCategory="server"
+            mcsEventLabel="server-command-tool">
+            {{ 'servers.resetVmPassword' | translate }}
+          </a>
+        </ng-container>
+      </ng-container >
     </ng-container>
   </div>
 </ng-template>
