@@ -70,12 +70,7 @@ export class MediaManageServersComponent implements OnInit, OnDestroy {
    */
   private _getServers(): void {
     this.dataStatusFactory.setInProgress();
-    // TODO: replace the value in the McsApiServersService, McsQueryParam pageSize to MAX
-    // getServers should get all servers even if there is no passed McsQueryParam
-    this._apiService.getServers({
-      pageIndex: CommonDefinition.PAGE_INDEX_DEFAULT,
-      pageSize: CommonDefinition.PAGE_SIZE_MAX
-    }).pipe(
+    this._apiService.getServers().pipe(
       catchError((error) => {
         this.dataStatusFactory.setError();
         return throwError(error);

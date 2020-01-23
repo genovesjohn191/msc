@@ -8,6 +8,6 @@ export class McsQueryParam {
   constructor() {
     this.keyword = '';
     this.pageIndex = CommonDefinition.PAGE_INDEX_DEFAULT;
-    this.pageSize = CommonDefinition.PAGE_SIZE_MIN;
+    this.pageSize = CommonDefinition.PAGE_SIZE_MAX;
   }
 }
