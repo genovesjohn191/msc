@@ -109,9 +109,8 @@ export class AddAntiVirusComponent extends McsOrderWizardBase implements OnInit,
           createObject(McsOrderItemCreate, {
             itemOrderType: OrderIdType.AddAntiVirus,
             referenceId: SERVER_ADD_ANTI_VIRUS_REF_ID,
-            properties: {},
-            // TODO: add the server, integrate with API when ready
-            serviceId: server.serviceId
+            parentServiceId: server.serviceId,
+            properties: {}
           })
         ]
       })
@@ -123,13 +122,16 @@ export class AddAntiVirusComponent extends McsOrderWizardBase implements OnInit,
     this._changeDetectorRef.markForCheck();
   }
 
-  public onSubmitOrder(submitDetails: OrderDetails, _servers: McsServer[]): void {
+  public onSubmitOrder(submitDetails: OrderDetails, server: McsServer): void {
     if (!this._validateFormFields()) { return; }
     if (isNullOrEmpty(submitDetails)) { return; }
 
     let workflow = new McsOrderWorkflow();
     workflow.state = submitDetails.workflowAction;
-    // TODO: add the server, integrate with API when ready
+    workflow.clientReferenceObject = {
+      resourceDescription: this.progressDescription,
+      serviceId: server.serviceId
+    };
 
     this.submitOrderWorkflow(workflow);
   }

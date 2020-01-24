@@ -44,7 +44,8 @@ import {
   McsServerHostSecurityAvLog,
   McsServerHostSecurityHidsLog,
   McsServerHostSecurity,
-  McsServerHostSecurityAntiVirus
+  McsServerHostSecurityAntiVirus,
+  McsServerHostSecurityHids
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiServersService } from '../interfaces/mcs-api-servers.interface';
@@ -954,6 +955,24 @@ export class McsApiServersService implements IMcsApiServersService {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
             .deserializeResponse<McsServerHostSecurityAvLog[]>(McsServerHostSecurityAvLog, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  /**
+   * Gets the server host security hids
+   */
+  public getServerHostSecurityHids(): Observable<McsApiSuccessResponse<McsServerHostSecurityHids[]>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/servers/host-security/hids`;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsServerHostSecurityHids[]>(McsServerHostSecurityHids, response);
           return apiResponse;
         })
       );

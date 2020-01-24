@@ -5,7 +5,6 @@ import {
   OnDestroy,
   ViewChild,
   Injector,
-  ElementRef,
   ChangeDetectorRef
 } from '@angular/core';
 import {
@@ -15,15 +14,18 @@ import {
 } from '@angular/forms';
 import {
   takeUntil,
-  map
+  map,
+  concatMap,
+  filter,
+  tap
 } from 'rxjs/operators';
 import {
   Observable,
-  Subject
+  Subject,
+  zip
 } from 'rxjs';
 import {
   McsOrderWizardBase,
-  McsFormGroupService,
   CoreValidators,
   OrderRequester
 } from '@app/core';
@@ -33,7 +35,10 @@ import {
   McsOrderCreate,
   McsOption,
   HidsProtectionLevel,
-  hidsProtectionLevelText
+  hidsProtectionLevelText,
+  McsOrderItemCreate,
+  OrderIdType,
+  McsOrderServerHidsAdd
 } from '@app/models';
 import { McsFormGroupDirective } from '@app/shared';
 import { McsApiService } from '@app/services';
@@ -42,11 +47,18 @@ import {
   CommonDefinition,
   getSafeProperty,
   isNullOrEmpty,
-  createObject
+  createObject,
+  Guid
 } from '@app/utilities';
 import { OrderDetails } from '@app/features-shared';
 import { AddHidsService } from './add-hids.service';
 
+interface HidsServers {
+  provisioned: boolean;
+  server: McsServer;
+}
+
+const SERVER_ADD_HIDS_REF_ID = Guid.newGuid().toString();
 @Component({
   selector: 'mcs-add-hids',
   templateUrl: 'add-hids.component.html',
@@ -55,7 +67,7 @@ import { AddHidsService } from './add-hids.service';
 })
 
 export class AddHidsComponent extends McsOrderWizardBase implements OnInit, OnDestroy {
-  public resources$: Observable<Map<string, McsServer[]>>;
+  public resources$: Observable<Map<string, HidsServers[]>>;
 
   public fgAddHidsDetails: FormGroup;
   public fcServer: FormControl;
@@ -63,15 +75,19 @@ export class AddHidsComponent extends McsOrderWizardBase implements OnInit, OnDe
   public protectionLevelOptions: McsOption[] = [];
 
   @ViewChild(McsFormGroupDirective, { static: false })
+  public set formGroup(value: McsFormGroupDirective) {
+    if (isNullOrEmpty(value)) { return; }
+
+    this._formGroup = value;
+    this._subscribeToValueChanges();
+  }
   private _formGroup: McsFormGroupDirective;
 
-  private _destroySubject = new Subject<void>();
+  private _valueChangesSubject = new Subject<void>();
 
   constructor(
     _injector: Injector,
-    private _elementRef: ElementRef,
     private _formBuilder: FormBuilder,
-    private _formGroupService: McsFormGroupService,
     private _changeDetectorRef: ChangeDetectorRef,
     private _apiService: McsApiService,
     private _addHidsService: AddHidsService
@@ -86,7 +102,7 @@ export class AddHidsComponent extends McsOrderWizardBase implements OnInit, OnDe
   }
 
   public ngOnDestroy() {
-    unsubscribeSafely(this._destroySubject);
+    unsubscribeSafely(this._valueChangesSubject);
   }
 
   public get backIconKey(): string {
@@ -102,13 +118,15 @@ export class AddHidsComponent extends McsOrderWizardBase implements OnInit, OnDe
     this._changeDetectorRef.markForCheck();
   }
 
-  public onSubmitOrder(submitDetails: OrderDetails, _servers: McsServer[]): void {
-    if (!this._validateFormFields()) { return; }
+  public onSubmitOrder(submitDetails: OrderDetails, server: McsServer): void {
     if (isNullOrEmpty(submitDetails)) { return; }
 
     let workflow = new McsOrderWorkflow();
     workflow.state = submitDetails.workflowAction;
-    // TODO: add the servers, integrate with API when ready
+    workflow.clientReferenceObject = {
+      resourceDescription: this.progressDescription,
+      serviceId: server.serviceId
+    };
     this.submitOrderWorkflow(workflow);
   }
 
@@ -127,34 +145,59 @@ export class AddHidsComponent extends McsOrderWizardBase implements OnInit, OnDe
     this._addHidsService.submitOrderRequest();
   }
 
-  private _subscribeToManagedCloudServers(): void {
+  private _subscribeToValueChanges(): void {
+    this._valueChangesSubject.next();
+    zip(
+      this._formGroup.valueChanges(),
+      this._formGroup.stateChanges()
+    ).pipe(
+      takeUntil(this._valueChangesSubject),
+      filter(() => this.formIsValid),
+      tap(() => this._onServerHidsFormChange())
+    ).subscribe();
+  }
 
-    let resourceMap: Map<string, McsServer[]> = new Map();
-    this.resources$ = this._apiService.getServers().pipe(
-      map((servers) => {
-        servers.collection.filter((server) => server.canProvision).forEach((server) => {
-          let resourceIsExisting = resourceMap.has(server.platform.resourceName);
-          if (resourceIsExisting) {
-            resourceMap.get(server.platform.resourceName).push(server);
-            return;
-          }
-          resourceMap.set(server.platform.resourceName, [server]);
-        });
-        return resourceMap;
+  private _onServerHidsFormChange(): void {
+    let server = getSafeProperty(this.fcServer, (obj) => obj.value);
+    let protectionLevelValue = getSafeProperty(this.fcProtectionLevel, (obj) => obj.value);
+
+    this._addHidsService.createOrUpdateOrder(
+      createObject(McsOrderCreate, {
+        items: [
+          createObject(McsOrderItemCreate, {
+            itemOrderType: OrderIdType.AddHids,
+            referenceId: SERVER_ADD_HIDS_REF_ID,
+            parentServiceId: server.serviceId,
+            properties: createObject(McsOrderServerHidsAdd, {
+              protectionLevel: protectionLevelValue,
+            })
+          })]
       })
     );
-    // TODO: Get the server hids provisioned and flag all provisioned to the /servers result
   }
 
-  private _validateFormFields(): boolean {
-    if (this.formIsValid) { return true; }
-    this._touchInvalidFields();
-    return false;
-  }
+  private _subscribeToManagedCloudServers(): void {
+    let resourceMap: Map<string, HidsServers[]> = new Map();
+    this.resources$ = this._apiService.getServerHostSecurityHids().pipe(
+      concatMap((serversHids) => {
 
-  private _touchInvalidFields(): void {
-    this._formGroupService.touchAllFormFields(this.fgAddHidsDetails);
-    this._formGroupService.scrollToFirstInvalidField(this._elementRef.nativeElement);
+        return this._apiService.getServers().pipe(
+          map((servers) => {
+            servers.collection.filter((server) => server.canProvision).forEach((server) => {
+
+              let serverHidsProvisioned = serversHids.collection.find((serverAv) => serverAv.serverId === server.id);
+              let resourceIsExisting = resourceMap.has(server.platform.resourceName);
+              if (resourceIsExisting) {
+                resourceMap.get(server.platform.resourceName).push({ provisioned: !isNullOrEmpty(serverHidsProvisioned), server });
+                return;
+              }
+              resourceMap.set(server.platform.resourceName, [{ provisioned: !isNullOrEmpty(serverHidsProvisioned), server }]);
+            });
+            return resourceMap;
+          })
+        );
+      })
+    );
   }
 
   private _initializeProtectionLevelOptions(): void {
@@ -163,17 +206,12 @@ export class AddHidsComponent extends McsOrderWizardBase implements OnInit, OnDe
   }
 
   private _registerFormGroups() {
-    this.fgAddHidsDetails = this._formBuilder.group([]);
     this.fcServer = new FormControl('', [CoreValidators.required]);
     this.fcProtectionLevel = new FormControl(HidsProtectionLevel.Detect, [CoreValidators.required]);
 
-    this.fgAddHidsDetails = new FormGroup({
+    this.fgAddHidsDetails = this._formBuilder.group({
       fcServer: this.fcServer,
       fcProtectionLevel: this.fcProtectionLevel,
     });
-
-    this.fgAddHidsDetails.valueChanges.pipe(
-      takeUntil(this._destroySubject)
-    ).subscribe();
   }
 }

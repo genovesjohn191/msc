@@ -103,7 +103,8 @@ import {
   McsServerHostSecurity,
   McsServerHostSecurityHidsLog,
   McsServerHostSecurityAvLog,
-  McsServerHostSecurityAntiVirus
+  McsServerHostSecurityAntiVirus,
+  McsServerHostSecurityHids
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -861,6 +862,13 @@ export class McsApiService {
   public getServerHostSecurityAvLogs(id: string): Observable<McsApiCollection<McsServerHostSecurityAvLog>> {
     return this._serversApi.getServerHostSecurityAvLogs(id).pipe(
       catchError((error) => this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getServerHostSecurityAvLogs'))),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public getServerHostSecurityHids(): Observable<McsApiCollection<McsServerHostSecurityHids>> {
+    return this._serversApi.getServerHostSecurityHids().pipe(
+      catchError((error) => this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getServerHostSecurityHids'))),
       map((response) => this._mapToCollection(response.content, response.totalCount))
     );
   }
