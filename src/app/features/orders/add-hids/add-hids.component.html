@@ -63,8 +63,8 @@
                     </ng-container>
                     <ng-container *ngIf="resources$ | async as resources">
                       <mcs-option-group [label]="iterator.key" *ngFor="let iterator of resources | mcsMapIterable">
-                        <mcs-option *ngFor="let server of iterator.value" [value]="server">
-                          {{ server.name }}
+                        <mcs-option *ngFor="let hidsServer of iterator.value" [value]="hidsServer.server" [disabled]="hidsServer.provisioned">
+                          {{ hidsServer.server.name }} <span *ngIf="hidsServer.provisioned">- {{ 'orderAddHids.details.server.hidsProvisioned' | translate }}</span>
                         </mcs-option>
                       </mcs-option-group>
                     </ng-container>

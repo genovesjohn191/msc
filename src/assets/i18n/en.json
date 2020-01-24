@@ -267,7 +267,7 @@
       "stepTitle": "Details",
       "server": {
         "description": "Please select the server you wish to provision Anti-Virus for:",
-        "contextualHelp": "Select a server to install an Anti-Virus on",
+        "contextualHelp": "Select a server to install Anti-Virus on",
         "placeholder": "Select a server",
         "optionGroupLabel": "Virtual Data Centres",
         "avProvisioned": "AV Provisioned"
@@ -290,9 +290,10 @@
       "stepTitle": "Details",
       "server": {
         "description": "Please select the server you wish to provision Host Intrusion Detection for:",
-        "contextualHelp": "Select a server to install a Host Intrusion Detection on",
+        "contextualHelp": "Select a server to install Host Intrusion Detection on",
         "placeholder": "Select a server",
-        "optionGroupLabel": "Virtual Data Centres"
+        "optionGroupLabel": "Virtual Data Centres",
+        "hidsProvisioned": "HIDS Provisioned"
       },
       "protectionLevel":{
         "label":"Protection Level:",
@@ -968,7 +969,7 @@
     "addOnBackup": {
       "serverAggregation": {
         "label": "Back up my files to an aggregation target",
-        "optionLabel": "{{serviceId}} - {{retentionPeriod}} Retention.",
+        "optionLabel": "{{serviceId}} - {{retentionPeriod}} Retention",
         "optionNoneLabel": "None",
         "tip": "It is recommended that you check your Backup Aggregation Target usage before proceeding. Charges may apply for exceeded quota.",
         "placeholder": "",
@@ -977,7 +978,7 @@
       },
       "vmAggregation": {
         "label": "Back up my VM to an aggregation target",
-        "optionLabel": "{{serviceId}} - {{retentionPeriod}} Retention.",
+        "optionLabel": "{{serviceId}} - {{retentionPeriod}} Retention",
         "optionNoneLabel": "None",
         "tip": "It is recommended that you check your Backup Aggregation Target usage before proceeding. Charges may apply for exceeded quota.",
         "placeholder": "",
@@ -1791,6 +1792,7 @@
     "getServerHostSecurity": "Something went wrong while retrieving the host security for your server. Please try again.",
     "getServerHostSecurityAntiVirus": "Something went wrong while retrieving the anti-virus for your server. Please try again.",
     "getServerHostSecurityAvLogs": "Something went wrong while retrieving the anti-virus logs for your server. Please try again.",
+    "getServerHostSecurityHids": "Something went wrong while retrieving the host intrusion detection for your server. Please try again.",
     "getServerHostSecurityHidsLogs": "Something went wrong while retrieving the host intrusion detection logs for your server. Please try again.",
     "getStorageBackupAggregationTargets": "Something went wrong while retrieving your storage backup aggregation targets. Please try again.",
     "getStorageBackupAggregationTarget": "Something went wrong while retrieving the details for this backup aggregation target.",

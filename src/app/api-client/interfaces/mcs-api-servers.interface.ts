@@ -38,6 +38,7 @@ import {
   McsServerHostSecurityHidsLog,
   McsServerHostSecurityAvLog,
   McsServerHostSecurityAntiVirus,
+  McsServerHostSecurityHids,
 } from '@app/models';
 
 export interface IMcsApiServersService {
@@ -326,13 +327,18 @@ export interface IMcsApiServersService {
 
   /**
    * Gets the server av logs
-   * @param serverId Server id to where the anti virus will be coming from
+   * @param id Server id to where the anti virus will be coming from
    */
   getServerHostSecurityAvLogs(id: string): Observable<McsApiSuccessResponse<McsServerHostSecurityAvLog[]>>;
 
   /**
+   * Gets the server host security hids
+   */
+  getServerHostSecurityHids(): Observable<McsApiSuccessResponse<McsServerHostSecurityHids[]>>;
+
+  /**
    * Gets the server hids logs
-   * @param serverId Server id to where the hids will be coming from
+   * @param id Server id to where the hids will be coming from
    */
   getServerHostSecurityHidsLogs(id: string): Observable<McsApiSuccessResponse<McsServerHostSecurityHidsLog[]>>;
 }
