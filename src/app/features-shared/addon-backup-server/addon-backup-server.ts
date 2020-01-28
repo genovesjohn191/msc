@@ -144,7 +144,7 @@ export class AddOnBackupServerComponent implements
    * Returns true when the inview level is Premium
    */
   public isInviewLevelPremium(aggregationTarget: McsStorageBackUpAggregationTarget): boolean {
-    return InviewLevel.Premium === aggregationTarget.inviewLevel;
+    return InviewLevel.Premium === getSafeProperty(aggregationTarget, (obj) => obj.inviewLevel);
   }
 
   /**

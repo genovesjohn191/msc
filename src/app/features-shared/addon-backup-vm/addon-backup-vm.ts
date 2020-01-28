@@ -143,8 +143,8 @@ export class AddOnBackupVmComponent implements
   /**
    * Returns true when the inview level is Premium
    */
-  public isInviewLevelPremium(target: McsStorageBackUpAggregationTarget): boolean {
-    return InviewLevel.Premium === target.inviewLevel;
+  public isInviewLevelPremium(aggregationTarget: McsStorageBackUpAggregationTarget): boolean {
+    return InviewLevel.Premium === getSafeProperty(aggregationTarget, (obj) => obj.inviewLevel);
   }
 
   /**
