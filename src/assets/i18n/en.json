@@ -278,8 +278,8 @@
     },
     "provisioning": {
       "stepTitle": "Go!",
-      "description": "Your server is being provisioned with anti virus and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
-      "dataInProgress": "Preparing the server for provisioning an antivirus. This may take a moment.",
+      "description": "Anti-Virus is being provisioned for your server and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
+      "dataInProgress": "Preparing to provision Anti-Virus. This may take a moment.",
       "dataError": "Something went wrong while processing your request. Please try again later."
     }
   },
@@ -305,8 +305,8 @@
     },
     "provisioning": {
       "stepTitle": "Go!",
-      "description": "Your server is being provisioned with host intrusion detection and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
-      "dataInProgress": "Preparing the server for provisioning host intrusion detection. This may take a moment.",
+      "description": "Host Intrusion Detection is being provisioned for your server and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
+      "dataInProgress": "Preparing to provision Host Intrusion Detection. This may take a moment.",
       "dataError": "Something went wrong while processing your request. Please try again later."
     }
   },

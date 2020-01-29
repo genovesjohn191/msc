@@ -40,7 +40,7 @@
 
   <!-- Anti Virus -->
   <ng-container *mcsAccessControl="[]; feature: 'enableOrderingAddonAntiVirus'">
-    <div class="action-box"
+    <div class="action-box" [style.padding]="'20px 15px'"
       [mcsContextualHelp]="'serverCreateAddOnsStep.antivirus.contextualHelp' | translate">
 
       <mcs-checkbox
