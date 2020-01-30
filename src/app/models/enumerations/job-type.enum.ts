@@ -2,7 +2,7 @@ import { McsEnumSerializationBase } from '../serialization/mcs-enum-serializatio
 
 export enum JobType {
   Undefined = 0,
-  // System Caching
+  // Caching
   RefreshProductCatalogCache = 1,
 
   // Jobs for "/servers" endpoint must use prefix 100XXX followed by 3 digit number
@@ -14,6 +14,7 @@ export enum JobType {
   ProvisionCreateServer = 100006,
   ScaleManagedServer = 100007,
   RaiseManagedServerInviewLevel = 100008,
+  CloneManagedServer = 100009,
 
   // Server Snapshot
   CreateServerSnapshot = 100051,
@@ -31,7 +32,7 @@ export enum JobType {
   // Server Password
   ResetServerPassword = 100201,
 
-  // Server Network Management
+  // Server NIC Management
   CreateServerNic = 100251,
   UpdateServerNic = 100252,
   DeleteServerNic = 100253,
@@ -43,12 +44,22 @@ export enum JobType {
   // Resource Media
   CreateResourceCatalogItem = 100401,
 
-  // Os Updates
+  // Patching
   PerformServerOsUpdateAnalysis = 100501,
   ApplyServerOsUpdates = 100502,
 
-  // Vdc
+  // VDC Storage
+  ExpandVdcStorage = 100601,
+  ProvisionVdcStorage = 100602,
   ScaleVdcCompute = 100603,
+
+  // Host Security
+  ProvisionAntiVirus = 100604,
+  ProvisionHids = 100605,
+
+  // Backup
+  ProvisionServerBackup = 100606,
+  ProvisionVmBackup = 100607
 }
 
 export const jobTypeText = {
@@ -77,6 +88,8 @@ export const jobTypeText = {
   [JobType.ScaleManagedServer]: 'Scale Managed Server',
   [JobType.RaiseManagedServerInviewLevel]: 'Raise Managed Server Inview Level',
   [JobType.ScaleVdcCompute]: 'Scale VDC',
+  [JobType.ProvisionServerBackup]: 'Backup Server',
+  [JobType.ProvisionVmBackup]: 'Backup VM'
 };
 
 /**

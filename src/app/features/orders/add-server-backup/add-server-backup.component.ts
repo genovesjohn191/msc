@@ -49,12 +49,14 @@ import {
   CommonDefinition,
   createObject,
   Guid,
-  buildCron
+  buildCron,
+  getSafeFormValue
 } from '@app/utilities';
 import { McsFormGroupDirective } from '@app/shared';
 import { OrderDetails } from '@app/features-shared';
 
 import { AddServerBackupService } from './add-server-backup.service';
+import { TranslateService } from '@ngx-translate/core';
 
 const DEFAULT_QUOTA_MIN = 1;
 const DEFAULT_QUOTA_MAX = 5120;
@@ -102,6 +104,7 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
   constructor(
     _injector: Injector,
     private _formBuilder: FormBuilder,
+    private _translate: TranslateService,
     private _serverBackupService: AddServerBackupService,
     private _changeDetectorRef: ChangeDetectorRef,
     private _apiService: McsApiService,
@@ -139,6 +142,14 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
     return DEFAULT_QUOTA_MAX;
   }
 
+  public get hasAggregation(): boolean {
+    return getSafeProperty(this.fcAggregation, (obj) => obj.value) ? true : false;
+  }
+
+  public get isAggregationInviewPremium(): boolean {
+    return getSafeProperty(this.fcAggregation, (obj) => obj.value.inviewLevel) === InviewLevel.Premium;
+  }
+
   public onServerBackupOrderChange(orderDetails: OrderDetails): void {
     if (isNullOrEmpty(orderDetails)) { return; }
 
@@ -169,7 +180,7 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
 
   private _registerFormGroup(): void {
     this.fcServers = new FormControl('', [CoreValidators.required]);
-    this.fcAggregation = new FormControl('', [CoreValidators.required]);
+    this.fcAggregation = new FormControl('', []);
     this.fcRetentionList = new FormControl('', [CoreValidators.required]);
     this.fcInviewLevel = new FormControl('', [CoreValidators.required]);
     this.fcBackupList = new FormControl('', [CoreValidators.required]);
@@ -179,6 +190,25 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
       CoreValidators.min(this.dailyQuotaMin),
       CoreValidators.max(this.dailyQuotaMax)
     ]);
+
+    this.fcAggregation.valueChanges.pipe(
+      tap((value) => {
+        if (isNullOrEmpty(value)) {
+          this.fcRetentionList.enable();
+          this.fcDailyQuota.enable();
+          this.fcInviewLevel.enable();
+
+        } else {
+          this.fcRetentionList.disable();
+          this.fcDailyQuota.disable();
+
+          if (value.inviewLevel === InviewLevel.Premium) {
+            this.fcInviewLevel.disable();
+          }
+        }
+        this._changeDetectorRef.markForCheck();
+      })
+    ).subscribe();
 
     this.fgServerBackup = this._formBuilder.group({
       fcServers: this.fcServers,
@@ -203,12 +233,12 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
   }
 
   private _onServerBackupChange(): void {
-    let server = getSafeProperty(this.fcServers, (obj) => obj.value);
-    let aggregationTarget = getSafeProperty(this.fcAggregation, (obj) => obj.value.serviceId);
-    let retention = getSafeProperty(this.fcRetentionList, (obj) => obj.value);
-    let inview = getSafeProperty(this.fcInviewLevel, (obj) => obj.value);
-    let backupSchedule = getSafeProperty(this.fcBackupList, (obj) => obj.value);
-    let dailyQuota = getSafeProperty(this.fcDailyQuota, (obj) => obj.value);
+    let server = getSafeFormValue(this.fcServers, (obj) => obj.value);
+    let aggregationTarget = getSafeFormValue(this.fcAggregation, (obj) => obj.value.serviceId);
+    let retention = getSafeFormValue(this.fcRetentionList, (obj) => obj.value);
+    let inview = getSafeFormValue(this.fcInviewLevel, (obj) => obj.value);
+    let backupSchedule = getSafeFormValue(this.fcBackupList, (obj) => obj.value);
+    let dailyQuota = getSafeFormValue(this.fcDailyQuota, (obj) => obj.value);
 
     this._serverBackupService.createOrUpdateOrder(
       createObject(McsOrderCreate, {
@@ -216,7 +246,7 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
           createObject(McsOrderItemCreate, {
             itemOrderType: OrderIdType.CreateAddOnServerBackup,
             referenceId: ADD_SERVER_BACKUP,
-            serviceId: server.serviceId,
+            parentServiceId: server.serviceId,
             properties: createObject(McsOrderServerBackupAdd, {
               backupAggregationTarget: aggregationTarget,
               retentionPeriodDays: retention,
@@ -260,11 +290,22 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
 
   private _subscribeToAggregationTargets(): void {
     this.aggregations$ = this._apiService.getStorageBackupAggregationTargets().pipe(
-      map((response) =>
-        response && response.collection.map((aggregationTarget) =>
-          createObject(McsOption, { text: aggregationTarget.description, value: aggregationTarget })
-        )
-      )
+      map((response) => {
+        let aggregationOptions: McsOption[] = [];
+        aggregationOptions.push(createObject(McsOption, {
+          text: 'None',
+          value: null
+        }));
+
+        aggregationOptions.push(...response.collection.map((aggregationTarget) =>
+          createObject(McsOption, {
+            text: this._translate.instant('orderAddServerBackup.detailsStep.aggregationValue',
+              { retention: `${aggregationTarget.serviceId} ${aggregationTarget.retentionPeriod || 0}` }),
+            value: aggregationTarget
+          }))
+        );
+        return aggregationOptions;
+      })
     );
   }
 

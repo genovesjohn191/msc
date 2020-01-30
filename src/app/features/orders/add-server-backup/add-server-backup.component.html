@@ -61,7 +61,7 @@
           <mcs-item orientation="separated">
             <span align-self-start>{{ 'orderAddServerBackup.detailsStep.aggregation' | translate }}:</span>
             <mcs-form-field class="form-field-size-small">
-              <mcs-select [formControl]="fcAggregation" required
+              <mcs-select [formControl]="fcAggregation"
                 [placeholder]="'orderAddServerBackup.detailsStep.aggregationPlaceholder' | translate"
                 [mcsContextualHelp]="'orderAddServerBackup.detailsStep.aggregationHelp' | translate"
                 mcsId="select-aggregation"
@@ -77,39 +77,55 @@
           </mcs-item>
 
           <mcs-item orientation="separated">
-            <span align-self-start>{{ 'orderAddServerBackup.detailsStep.retentionList' | translate }}:</span>
-            <mcs-form-field class="form-field-size-small">
-              <mcs-select [formControl]="fcRetentionList" required
-                [placeholder]="'orderAddServerBackup.detailsStep.retentionListPlaceholder' | translate"
-                [mcsContextualHelp]="'orderAddServerBackup.detailsStep.retentionListHelp' | translate"
-                mcsId="select-retention-period"
-                mcsEventTracker="select-retention-period"
-                mcsEventCategory="orders"
-                mcsEventLabel="order-details">
+            <ng-container *ngIf="hasAggregation; else retentionListTemplate">
+              <mcs-alert type="warning">
+                {{ 'orderAddServerBackup.detailsStep.retentionListWarning' | translate }}
+              </mcs-alert>
+            </ng-container>
 
-                <mcs-option *ngFor="let retention of retentionList$ | async" [value]="retention.value">
-                  {{ retention.text }}
-                </mcs-option>
-              </mcs-select>
-            </mcs-form-field>
+            <ng-template #retentionListTemplate>
+              <span align-self-start>{{ 'orderAddServerBackup.detailsStep.retentionList' | translate }}:</span>
+              <mcs-form-field class="form-field-size-small">
+                <mcs-select [formControl]="fcRetentionList" required
+                  [placeholder]="'orderAddServerBackup.detailsStep.retentionListPlaceholder' | translate"
+                  [mcsContextualHelp]="'orderAddServerBackup.detailsStep.retentionListHelp' | translate"
+                  mcsId="select-retention-period"
+                  mcsEventTracker="select-retention-period"
+                  mcsEventCategory="orders"
+                  mcsEventLabel="order-details">
+
+                  <mcs-option *ngFor="let retention of retentionList$ | async" [value]="retention.value">
+                    {{ retention.text }}
+                  </mcs-option>
+                </mcs-select>
+              </mcs-form-field>
+            </ng-template>
           </mcs-item>
 
           <mcs-item orientation="separated">
-            <span align-self-start>{{ 'orderAddServerBackup.detailsStep.inviewLevel' | translate }}:</span>
-            <mcs-form-field class="form-field-size-small">
-              <mcs-select [formControl]="fcInviewLevel" required
-                [placeholder]="'orderAddServerBackup.detailsStep.inviewLevelPlaceholder' | translate"
-                [mcsContextualHelp]="'orderAddServerBackup.detailsStep.inviewLevelHelp' | translate"
-                mcsId="select-inview-level"
-                mcsEventTracker="select-inview-level"
-                mcsEventCategory="orders"
-                mcsEventLabel="order-details">
+            <ng-container *ngIf="isAggregationInviewPremium; else inviewTemplate">
+              <mcs-alert type="warning">
+                {{ 'orderAddServerBackup.detailsStep.inviewLevelWarning' | translate }}
+              </mcs-alert>
+            </ng-container>
 
-                <mcs-option *ngFor="let inviewLevel of inviewLevels$ | async" [value]="inviewLevel.value">
-                  {{ inviewLevel.text }}
-                </mcs-option>
-              </mcs-select>
-            </mcs-form-field>
+            <ng-template #inviewTemplate>
+              <span align-self-start>{{ 'orderAddServerBackup.detailsStep.inviewLevel' | translate }}:</span>
+              <mcs-form-field class="form-field-size-small">
+                <mcs-select [formControl]="fcInviewLevel" required
+                  [placeholder]="'orderAddServerBackup.detailsStep.inviewLevelPlaceholder' | translate"
+                  [mcsContextualHelp]="'orderAddServerBackup.detailsStep.inviewLevelHelp' | translate"
+                  mcsId="select-inview-level"
+                  mcsEventTracker="select-inview-level"
+                  mcsEventCategory="orders"
+                  mcsEventLabel="order-details">
+
+                  <mcs-option *ngFor="let inviewLevel of inviewLevels$ | async" [value]="inviewLevel.value">
+                    {{ inviewLevel.text }}
+                  </mcs-option>
+                </mcs-select>
+              </mcs-form-field>
+            </ng-template>
           </mcs-item>
 
           <mcs-item orientation="separated">
@@ -130,7 +146,7 @@
             </mcs-form-field>
           </mcs-item>
 
-          <mcs-item orientation="separated">
+          <mcs-item orientation="separated" [hidden]="hasAggregation">
             <span align-self-start>{{ 'orderAddServerBackup.detailsStep.dailyQuota' | translate }}:</span>
             <mcs-form-field class="form-field-size-small">
               <input mcsInput [formControl]="fcDailyQuota" mcsId="input-daily-quota"
@@ -193,11 +209,11 @@
 
         <mcs-step-provisioning [jobs]="jobs$ | async" [requestState]="dataStatus$ | async">
           <ng-container mcsProvisioningStepDescription>
-            {{ 'orderVdcStorageCreate.provisioning.description' | translate }}
+            {{ 'orderAddServerBackup.provisioningStep.description' | translate }}
           </ng-container>
 
           <ng-container mcsProvisioningStepInProgress>
-            {{ 'orderVdcStorageCreate.provisioning.dataInProgress' | translate}}
+            {{ 'orderAddServerBackup.provisioningStep.dataInProgress' | translate}}
           </ng-container>
         </mcs-step-provisioning>
       </mcs-wizard-step>

@@ -318,14 +318,17 @@
       "serverPlaceholder": "Select server",
       "serverHelp": "Select one or more servers to install Server Backup on.",
       "aggregation": "Back up my files to an aggregation target",
+      "aggregationValue": "{{ retention }} Retention",
       "aggregationPlaceholder": "Select aggregation",
       "aggregationHelp": "It is recommended that you check your Backup Aggregation Target usage before proceeding.\r\nCharges may apply for exceeded quota.",
       "retentionList": "Keep my backups for",
       "retentionListPlaceholder": "Select retetion",
       "retentionListHelp": "Your desired backup retention setting. We can store your backups from 2 weeks, to 7 years.",
+      "retentionListWarning": "It is recommended that you check your Backup Aggregation Target usage before proceeding. ​​​​​​​Charges may apply for exceeded quota.",
       "inviewLevel": "InView Level",
       "inviewLevelPlaceholder": "Select inview",
       "inviewLevelHelp": "InView allows for detailed monitoring and reporting on statistics such as quota utilization.",
+      "inviewLevelWarning": "Your selected Backup Aggregation Target has InView Premium, so this will also be applied to your new Server Backup service.",
       "backupList": "Schedule a backup every day at",
       "backupListPlaceholder": "Select schedule",
       "backupListHelp": "Choose your desired backup schedule. We recommend selecting a time at which the server will not be in high use.",
@@ -338,6 +341,10 @@
       "dailyQuotaMinimum": "The minimum quota that can be entered is {{min_value}}.",
       "dailyQuotaMaximum": "Quota should not exceed {{max_value}}.",
       "detailsNote": "By default, all files will be backed up. Once ready, backup scope will be configurable on a fine-grain basis in MacquarieView."
+    },
+    "provisioningStep": {
+      "description": "Your server is being backup and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
+      "dataInProgress": "Preparing the server for backup. This may take a moment."
     }
   },
   "notification": {
