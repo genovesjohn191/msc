@@ -145,6 +145,10 @@ export class AddHidsComponent extends McsOrderWizardBase implements OnInit, OnDe
     this._addHidsService.submitOrderRequest();
   }
 
+  public isResourcesEmpty(resourcesMap: Map<string, HidsServers[]>): boolean {
+    return resourcesMap.size <= 0;
+  }
+
   private _subscribeToValueChanges(): void {
     this._valueChangesSubject.next();
     zip(

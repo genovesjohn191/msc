@@ -14,7 +14,8 @@ import {
 import {
   CommonDefinition,
   replacePlaceholder,
-  isNullOrEmpty
+  isNullOrEmpty,
+  getSafeProperty
 } from '@app/utilities';
 import { McsDateTimeService } from '@app/core';
 import { ServerServiceDetailBase } from '../server-service-detail.base';
@@ -65,11 +66,11 @@ export class ServiceBackupVmComponent extends ServerServiceDetailBase implements
   }
 
   public get statusIcon(): string {
-    return this._backupVmStatusDetails.icon;
+    return getSafeProperty(this._backupVmStatusDetails, (obj) => obj.icon);
   }
 
   public get statusLabel(): string {
-    return this._backupVmStatusDetails.label;
+    return getSafeProperty(this._backupVmStatusDetails, (obj) => obj.label);
   }
 
   public get statusSublabel(): string {
@@ -78,11 +79,11 @@ export class ServiceBackupVmComponent extends ServerServiceDetailBase implements
       BACKUP_DATEFORMAT,
       BACKUP_TIMEZONE
     );
-    return replacePlaceholder(this._backupVmStatusDetails.sublabel, 'formattedDate', startTime);
+    return getSafeProperty(this._backupVmStatusDetails, (obj) => replacePlaceholder(obj.sublabel, 'formattedDate', startTime));
   }
 
   public get statusDetailsLinkFlag(): boolean {
-    return this._backupVmStatusDetails.detailsLinkFlag;
+    return getSafeProperty(this._backupVmStatusDetails, (obj) => obj.detailsLinkFlag);
   }
 
   /**

@@ -231,6 +231,12 @@ export class McsJobManagerClient implements McsDisposable {
     this._jobEntitiesFactory.set(JobType.ScaleVdcCompute,
       new McsJobServerManager(ActionStatus.Update, this._injector)
     );
+    this._jobEntitiesFactory.set(JobType.ProvisionAntiVirus,
+      new McsJobServerManager(ActionStatus.Update, this._injector)
+    );
+    this._jobEntitiesFactory.set(JobType.ProvisionHids,
+      new McsJobServerManager(ActionStatus.Update, this._injector)
+    );
     this._jobEntitiesFactory.set(JobType.RaiseManagedServerInviewLevel,
       new McsJobServerManager(ActionStatus.Update, this._injector, 'serviceId')
     );

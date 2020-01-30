@@ -32,57 +32,63 @@
           <form [formGroup]="fgAddHidsDetails" mcsFormGroup>
             <p>{{ 'orderAddHids.details.server.description' | translate }}</p>
             <mcs-section *mcsComponentHandler>
-              <mcs-form-field [mcsContextualHelp]="'orderAddHids.details.server.contextualHelp' | translate">
-                <!-- TODO: Add multiple selection once ready -->
-                <!-- <mcs-select mcsId="add-hids-select-server" [useTags]="true" multiple
-                  [placeholder]="'orderAddHids.details.server.placeholder' | translate"
-                  [formControl]="fcServer">
+              <ng-container *ngIf="resources$ | async as resources">
+                <mcs-form-field [disabled]="isResourcesEmpty(resources)"
+                  [mcsContextualHelp]="'orderAddHids.details.server.contextualHelp' | translate">
+                  <!-- TODO: Add multiple selection once ready -->
+                  <!-- <mcs-select mcsId="add-hids-select-server" [useTags]="true" multiple
+                    [placeholder]="'orderAddHids.details.server.placeholder' | translate"
+                    [formControl]="fcServer">
 
-                  <mcs-search mcsSelectSearch></mcs-search>
-                  <mcs-option-group>
-                    <ng-container *mcsOptionGroupHeader>
-                      <span>{{ 'orderAddHids.details.server.optionGroupLabel' | translate }}</span>
-                    </ng-container>
-                    <ng-container *ngIf="resources$ | async as resources">
-                      <mcs-option-group [label]="iterator.key" *ngFor="let iterator of resources | mcsMapIterable">
-                        <mcs-option *ngFor="let server of iterator.value" [value]="server">
-                          {{ server.name }}
-                        </mcs-option>
-                      </mcs-option-group>
-                    </ng-container>
-                  </mcs-option-group>
-                </mcs-select> -->
-                <mcs-select mcsId="add-hids-select-server"
-                  [placeholder]="'orderAddHids.details.server.placeholder' | translate"
-                  [formControl]="fcServer">
+                    <mcs-search mcsSelectSearch></mcs-search>
+                    <mcs-option-group>
+                      <ng-container *mcsOptionGroupHeader>
+                        <span>{{ 'orderAddHids.details.server.optionGroupLabel' | translate }}</span>
+                      </ng-container>
+                      <ng-container *ngIf="resources$ | async as resources">
+                        <mcs-option-group [label]="iterator.key" *ngFor="let iterator of resources | mcsMapIterable">
+                          <mcs-option *ngFor="let server of iterator.value" [value]="server">
+                            {{ server.name }}
+                          </mcs-option>
+                        </mcs-option-group>
+                      </ng-container>
+                    </mcs-option-group>
+                  </mcs-select> -->
+                  <mcs-select mcsId="add-hids-select-server"
+                    [placeholder]="'orderAddHids.details.server.placeholder' | translate"
+                    [formControl]="fcServer">
 
-                  <mcs-search mcsSelectSearch></mcs-search>
-                  <mcs-option-group>
-                    <ng-container *mcsOptionGroupHeader>
-                      <span>{{ 'orderAddHids.details.server.optionGroupLabel' | translate }}</span>
-                    </ng-container>
-                    <ng-container *ngIf="resources$ | async as resources">
-                      <mcs-option-group [label]="iterator.key" *ngFor="let iterator of resources | mcsMapIterable">
-                        <mcs-option *ngFor="let hidsServer of iterator.value" [value]="hidsServer.server" [disabled]="hidsServer.provisioned">
-                          {{ hidsServer.server.name }} <span *ngIf="hidsServer.provisioned">- {{ 'orderAddHids.details.server.hidsProvisioned' | translate }}</span>
-                        </mcs-option>
-                      </mcs-option-group>
-                    </ng-container>
-                  </mcs-option-group>
-                </mcs-select>
-              </mcs-form-field>
-              <mcs-item orientation="separated">
-                <span>{{ 'orderAddHids.details.protectionLevel.label' | translate }}</span>
-                <mcs-form-field class="form-field-size-medium" [mcsContextualHelp]="'orderAddHids.details.protectionLevel.contextualHelp' | translate">
-                  <mcs-select mcsId="add-hids-select-protection-level"
-                    [formControl]="fcProtectionLevel">
-
-                    <mcs-option *ngFor="let protectionLevel of protectionLevelOptions" [value]="protectionLevel.value">
-                      {{ protectionLevel.text }}
-                    </mcs-option>
+                    <mcs-search mcsSelectSearch></mcs-search>
+                    <mcs-option-group>
+                      <ng-container *mcsOptionGroupHeader>
+                        <span>{{ 'orderAddHids.details.server.optionGroupLabel' | translate }}</span>
+                      </ng-container>
+                        <mcs-option-group [label]="iterator.key" *ngFor="let iterator of resources | mcsMapIterable">
+                          <mcs-option *ngFor="let hidsServer of iterator.value" [value]="hidsServer.server" [disabled]="hidsServer.provisioned">
+                            {{ hidsServer.server.name }} <span *ngIf="hidsServer.provisioned">- {{ 'orderAddHids.details.server.hidsProvisioned' | translate }}</span>
+                          </mcs-option>
+                        </mcs-option-group>
+                    </mcs-option-group>
                   </mcs-select>
                 </mcs-form-field>
-              </mcs-item>
+                <mcs-item orientation="separated" *ngIf="fcServer?.value">
+                  <span>{{ 'orderAddHids.details.protectionLevel.label' | translate }}</span>
+                  <mcs-form-field class="form-field-size-medium" [mcsContextualHelp]="'orderAddHids.details.protectionLevel.contextualHelp' | translate">
+                    <mcs-select mcsId="add-hids-select-protection-level"
+                      [formControl]="fcProtectionLevel">
+
+                      <mcs-option *ngFor="let protectionLevel of protectionLevelOptions" [value]="protectionLevel.value">
+                        {{ protectionLevel.text }}
+                      </mcs-option>
+                    </mcs-select>
+                  </mcs-form-field>
+                </mcs-item>
+                <ng-container *ngIf="isResourcesEmpty(resources)">
+                  <mcs-alert  type="warning">
+                    <span>{{'orderAddHids.details.server.fallbackLabel' | translate }}</span>
+                  </mcs-alert>
+                </ng-container>
+              </ng-container>
             </mcs-section>
 
             <div class="action-items">

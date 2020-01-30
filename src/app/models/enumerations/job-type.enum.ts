@@ -89,7 +89,9 @@ export const jobTypeText = {
   [JobType.RaiseManagedServerInviewLevel]: 'Raise Managed Server Inview Level',
   [JobType.ScaleVdcCompute]: 'Scale VDC',
   [JobType.ProvisionServerBackup]: 'Backup Server',
-  [JobType.ProvisionVmBackup]: 'Backup VM'
+  [JobType.ProvisionVmBackup]: 'Backup VM',
+  [JobType.ProvisionAntiVirus]: 'New Anti-Virus',
+  [JobType.ProvisionHids]: 'New HIDS',
 };
 
 /**

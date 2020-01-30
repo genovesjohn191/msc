@@ -83,14 +83,14 @@ export class ServiceAntiVirusComponent extends ServerServiceDetailBase implement
   /**
    * Returns the Status label based on the Status of the av and its properties
    */
-  private _getStatusLabel(hids: McsServerHostSecurityAntiVirusItem): string {
-    if (hids.status === AntiVirusStatus.Active && hids.realTimeScanEnabled) {
+  private _getStatusLabel(av: McsServerHostSecurityAntiVirusItem): string {
+    if (av.status === AntiVirusStatus.Active && av.realTimeScanEnabled) {
       return this._translateService.instant('serverServices.antivirus.activeLabel.realtimeScanEnabled');
     }
-    if (hids.status === AntiVirusStatus.Active && !hids.realTimeScanEnabled) {
+    if (av.status === AntiVirusStatus.Active && !av.realTimeScanEnabled) {
       return this._translateService.instant('serverServices.antivirus.activeLabel.realtimeScanDisabled');
     }
-    return hids.statusMessage;
+    return av.statusMessage;
   }
 
   /**

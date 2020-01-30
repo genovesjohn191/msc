@@ -32,46 +32,52 @@
           <form [formGroup]="fgAddAntiVirusDetails" mcsFormGroup>
             <p>{{ 'orderAddAntiVirus.details.server.description' | translate }}</p>
             <mcs-section *mcsComponentHandler>
-              <mcs-form-field [mcsContextualHelp]="'orderAddAntiVirus.details.server.contextualHelp' | translate">
-                <!-- TODO: Add multiple selection once ready -->
-                <!-- <mcs-select mcsId="add-anti-virus-select-server" [useTags]="true" multiple
-                  [placeholder]="'orderAddAntiVirus.details.server.placeholder' | translate"
-                  [formControl]="fcServer">
+              <ng-container *ngIf="resources$ | async as resources">
+                <mcs-form-field [disabled]="isResourcesEmpty(resources)"
+                  [mcsContextualHelp]="'orderAddAntiVirus.details.server.contextualHelp' | translate">
+                  <!-- TODO: Add multiple selection once ready -->
+                  <!-- <mcs-select mcsId="add-anti-virus-select-server" [useTags]="true" multiple
+                    [placeholder]="'orderAddAntiVirus.details.server.placeholder' | translate"
+                    [formControl]="fcServer">
 
-                  <mcs-search mcsSelectSearch></mcs-search>
-                  <mcs-option-group>
-                    <ng-container *mcsOptionGroupHeader>
-                      <span>{{ 'orderAddAntiVirus.details.server.optionGroupLabel' | translate }}</span>
-                    </ng-container>
-                    <ng-container *ngIf="resources$ | async as resources">
-                      <mcs-option-group [label]="iterator.key" *ngFor="let iterator of resources | mcsMapIterable">
-                        <mcs-option *ngFor="let avServer of iterator.value" [value]="avServer.server">
-                          {{ avServer.server.name }}
-                        </mcs-option>
-                      </mcs-option-group>
-                    </ng-container>
-                  </mcs-option-group>
-                </mcs-select> -->
-                <mcs-select mcsId="add-anti-virus-select-server"
-                  (selectionChange)="onChangeServer($event)"
-                  [placeholder]="'orderAddAntiVirus.details.server.placeholder' | translate"
-                  [formControl]="fcServer">
+                    <mcs-search mcsSelectSearch></mcs-search>
+                    <mcs-option-group>
+                      <ng-container *mcsOptionGroupHeader>
+                        <span>{{ 'orderAddAntiVirus.details.server.optionGroupLabel' | translate }}</span>
+                      </ng-container>
+                      <ng-container *ngIf="resources$ | async as resources">
+                        <mcs-option-group [label]="iterator.key" *ngFor="let iterator of resources | mcsMapIterable">
+                          <mcs-option *ngFor="let avServer of iterator.value" [value]="avServer.server">
+                            {{ avServer.server.name }}
+                          </mcs-option>
+                        </mcs-option-group>
+                      </ng-container>
+                    </mcs-option-group>
+                  </mcs-select> -->
+                  <mcs-select mcsId="add-anti-virus-select-server"
+                    (selectionChange)="onChangeServer($event)"
+                    [placeholder]="'orderAddAntiVirus.details.server.placeholder' | translate"
+                    [formControl]="fcServer">
 
-                  <mcs-search mcsSelectSearch></mcs-search>
-                  <mcs-option-group>
-                    <ng-container *mcsOptionGroupHeader>
-                      <span>{{ 'orderAddAntiVirus.details.server.optionGroupLabel' | translate }}</span>
-                    </ng-container>
-                    <ng-container *ngIf="resources$ | async as resources">
+                    <mcs-search mcsSelectSearch></mcs-search>
+                    <mcs-option-group>
+                      <ng-container *mcsOptionGroupHeader>
+                        <span>{{ 'orderAddAntiVirus.details.server.optionGroupLabel' | translate }}</span>
+                      </ng-container>
                       <mcs-option-group [label]="iterator.key" *ngFor="let iterator of resources | mcsMapIterable">
                         <mcs-option *ngFor="let avServer of iterator.value" [value]="avServer.server" [disabled]="avServer.provisioned">
                           {{ avServer.server.name }} <span *ngIf="avServer.provisioned">- {{ 'orderAddAntiVirus.details.server.avProvisioned' | translate }}</span>
                         </mcs-option>
                       </mcs-option-group>
-                    </ng-container>
-                  </mcs-option-group>
-                </mcs-select>
-              </mcs-form-field>
+                    </mcs-option-group>
+                  </mcs-select>
+                </mcs-form-field>
+                <ng-container *ngIf="isResourcesEmpty(resources)">
+                  <mcs-alert  type="warning">
+                    <span>{{'orderAddAntiVirus.details.server.fallbackLabel' | translate }}</span>
+                  </mcs-alert>
+                </ng-container>
+              </ng-container>
             </mcs-section>
 
             <div class="action-items">
