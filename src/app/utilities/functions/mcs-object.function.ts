@@ -2,6 +2,7 @@ import {
   Subscription,
   Subject
 } from 'rxjs';
+import { FormControl } from '@angular/forms';
 
 /**
  * This will check if the inputted object is null/undefined or empty,
@@ -104,6 +105,23 @@ export function getSafeProperty<O, T>(
   } catch (_error) {
     return valueIfFail;
   }
+}
+
+/**
+ * Returns the safe value of the form based on the object to access the deep property
+ * @param formControl Form Object to get deep property
+ * @param predicateOperator Function that returns the deep property
+ * @param valueIfFail Value to return in case if there is no such property
+ */
+export function getSafeFormValue<T>(
+  formControl: FormControl,
+  predicateOperator: (x: FormControl) => T,
+  valueIfFail: any = null
+): T {
+  let isFormControlIncluded = formControl && formControl.enabled;
+  return isFormControlIncluded ?
+    getSafeProperty(formControl, predicateOperator) :
+    valueIfFail;
 }
 
 type FilterProperty<T, K> = T extends K ? T : never;

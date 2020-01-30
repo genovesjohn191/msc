@@ -309,7 +309,7 @@
           [disabled]="row.isDisabled"
           [ngClass]="{'active-data-row': selection?.isItemSelected(row)}"
           (click)="navigateToServer(row)"
-          mcsId="server-row"
+          mcsId="server-{{ row.statusLabel }}"
           mcsEventTracker="navigate-to-server"
           mcsEventCategory="server"
           mcsEventLabel="server-listing-page"></mcs-data-row>

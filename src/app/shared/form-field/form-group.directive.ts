@@ -165,7 +165,7 @@ export class McsFormGroupDirective implements OnInit, OnDestroy {
 
     let hasInvalid: boolean = false;
     this.formControls.map((formField) => {
-      if (!hasInvalid && formField.invalid) {
+      if (!hasInvalid && formField.invalid && formField.enabled) {
         hasInvalid = formField.invalid;
       }
     });
