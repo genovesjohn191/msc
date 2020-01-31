@@ -133,9 +133,11 @@ export class McsNotificationEventsService {
     this._jobTypeEventMap.set(JobType.ChangeServerPowerState, McsEvent.jobServerChangePowerState);
     this._jobTypeEventMap.set(JobType.ResetServerPassword, McsEvent.jobServerResetPassword);
     this._jobTypeEventMap.set(JobType.CreateResourceCatalogItem, McsEvent.jobResourceCatalogItemCreate);
-    this._jobTypeEventMap.set(JobType.ScaleVdcCompute, McsEvent.jobVdcScaleEvent);
     this._jobTypeEventMap.set(JobType.ScaleManagedServer, McsEvent.jobServerManagedScaleEvent);
     this._jobTypeEventMap.set(JobType.RaiseManagedServerInviewLevel, McsEvent.jobServerManagedRaiseInviewLevelEvent);
+    this._jobTypeEventMap.set(JobType.ScaleVdcCompute, McsEvent.jobVdcScaleEvent);
+    this._jobTypeEventMap.set(JobType.ProvisionAntiVirus, McsEvent.jobServerAvAddEvent);
+    this._jobTypeEventMap.set(JobType.ProvisionHids, McsEvent.jobServerHidsAddEvent);
   }
 
   /**

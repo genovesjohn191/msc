@@ -70,11 +70,11 @@ export class ServiceBackupServerComponent extends ServerServiceDetailBase implem
   }
 
   public get statusIcon(): string {
-    return this._backupServerStatusDetails.icon;
+    return getSafeProperty(this._backupServerStatusDetails, (obj) => obj.icon);
   }
 
   public get statusLabel(): string {
-    return this._backupServerStatusDetails.label;
+    return getSafeProperty(this._backupServerStatusDetails, (obj) => obj.label);
   }
 
   public get statusSublabel(): string {
@@ -83,11 +83,11 @@ export class ServiceBackupServerComponent extends ServerServiceDetailBase implem
       BACKUP_DATEFORMAT,
       BACKUP_TIMEZONE
     );
-    return replacePlaceholder(this._backupServerStatusDetails.sublabel, 'formattedDate', startTime);
+    return getSafeProperty(this._backupServerStatusDetails, (obj) => replacePlaceholder(obj.sublabel, 'formattedDate', startTime));
   }
 
   public get statusDetailsLinkFlag(): boolean {
-    return this._backupServerStatusDetails.detailsLinkFlag;
+    return getSafeProperty(this._backupServerStatusDetails, (obj) => obj.detailsLinkFlag);
   }
 
   /**

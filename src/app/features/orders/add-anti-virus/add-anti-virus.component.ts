@@ -101,6 +101,10 @@ export class AddAntiVirusComponent extends McsOrderWizardBase implements OnInit,
     return getSafeProperty(this._formGroup, (obj) => obj.isValid());
   }
 
+  public isResourcesEmpty(resourcesMap: Map<string, AntiVirusServers[]>): boolean {
+    return resourcesMap.size <= 0;
+  }
+
   public onChangeServer(server: McsServer): void {
     if (isNullOrEmpty(server)) { return; }
     this._addAntiVirusService.createOrUpdateOrder(
