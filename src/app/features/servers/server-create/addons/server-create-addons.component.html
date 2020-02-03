@@ -13,10 +13,10 @@
       [header]="'serverCreateAddOnsStep.backupVm.label' | translate"
       (collapseChange)="onToggleVmBackUp($event)">
 
-      <mcs-addon-backup-vm #fgAddOnBackupVm
+      <mcs-server-manage-backup-vm #fgAddOnBackupVm
         [aggregationTargets]="aggregationTargets$ | async"
         (dataChange)="onChangeVmBackUpDetails($event)">
-      </mcs-addon-backup-vm>
+      </mcs-server-manage-backup-vm>
     </mcs-collapsible-panel>
   </ng-container>
 
@@ -31,10 +31,10 @@
       [header]="'serverCreateAddOnsStep.backupServer.label' | translate"
       (collapseChange)="onToggleServerBackUp($event)">
 
-      <mcs-addon-backup-server #fgAddOnBackupServer
+      <mcs-server-manage-backup #fgBackupServer
         [aggregationTargets]="aggregationTargets$ | async"
         (dataChange)="onChangeServerBackUpDetails($event)">
-      </mcs-addon-backup-server>
+      </mcs-server-manage-backup>
     </mcs-collapsible-panel>
   </ng-container>
 

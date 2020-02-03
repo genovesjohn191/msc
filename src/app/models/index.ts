@@ -80,7 +80,6 @@ export * from './request/mcs-server-create-addon-sql-server';
 export * from './request/mcs-server-create-addon-inview';
 export * from './request/mcs-server-create-addon-hids';
 export * from './request/mcs-server-create-addon-vm-backup';
-export * from './request/mcs-server-create-addon-server-backup';
 
 export * from './request/mcs-order-create';
 export * from './request/mcs-order-item-create';

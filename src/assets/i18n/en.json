@@ -978,20 +978,18 @@
     "addOnBackup": {
       "serverAggregation": {
         "label": "Back up my files to an aggregation target",
-        "optionLabel": "{{serviceId}} - {{retentionPeriod}} Retention",
+        "optionLabel": "{{retention}} Retention",
         "optionNoneLabel": "None",
         "tip": "It is recommended that you check your Backup Aggregation Target usage before proceeding. Charges may apply for exceeded quota.",
-        "placeholder": "",
-        "contextualHelp": "",
+        "placeholder": "Select aggregation",
         "aggregationTargetPremium": "Your selected Backup Aggregation Target has InView Premium, so this will also be applied to your new Server Backup service."
       },
       "vmAggregation": {
         "label": "Back up my VM to an aggregation target",
-        "optionLabel": "{{serviceId}} - {{retentionPeriod}} Retention",
+        "optionLabel": "{{retention}} Retention",
         "optionNoneLabel": "None",
         "tip": "It is recommended that you check your Backup Aggregation Target usage before proceeding. Charges may apply for exceeded quota.",
-        "placeholder": "",
-        "contextualHelp": "",
+        "placeholder": "Select aggregation",
         "aggregationTargetPremium": "Your selected Backup Aggregation Target has InView Premium, so this will also be applied to your new VM Backup service."
       },
       "retention": {
@@ -1011,7 +1009,7 @@
       },
       "dailyQuota": {
         "label": "Daily backup quota",
-        "placeholder": "",
+        "placeholder": "Enter quota",
         "contextualHelp": "Your desired backup quota, per day. Additional fees may apply if this is exceeded.",
         "suffix": "GB",
         "error": {
