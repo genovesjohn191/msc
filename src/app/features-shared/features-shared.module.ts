@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { SharedModule } from '@app/shared';
 /** Components */
-import { AddOnBackupVmComponent } from './addon-backup-vm/addon-backup-vm';
-import { AddOnBackupServerComponent } from './addon-backup-server/addon-backup-server';
+import { ServerManageBackupVmComponent } from './server-manage-backup-vm/server-manage-backup-vm';
+import { ServerManageBackupComponent } from './server-manage-backup/server-manage-backup';
 import { AddOnInviewComponent } from './addon-inview/addon-inview';
 import { AddOnSqlServerComponent } from './addon-sql-server/addon-sql-server';
 import { AddOnHidsComponent } from './addon-hids/addon-hids';
@@ -24,8 +24,8 @@ import { SystemMessageFormService } from './system-message-form/system-message-f
 
 @NgModule({
   declarations: [
-    AddOnBackupVmComponent,
-    AddOnBackupServerComponent,
+    ServerManageBackupVmComponent,
+    ServerManageBackupComponent,
     AddOnInviewComponent,
     AddOnSqlServerComponent,
     AddOnHidsComponent,
@@ -49,8 +49,8 @@ import { SystemMessageFormService } from './system-message-form/system-message-f
     SharedModule
   ],
   exports: [
-    AddOnBackupVmComponent,
-    AddOnBackupServerComponent,
+    ServerManageBackupVmComponent,
+    ServerManageBackupComponent,
     AddOnInviewComponent,
     AddOnSqlServerComponent,
     AddOnHidsComponent,

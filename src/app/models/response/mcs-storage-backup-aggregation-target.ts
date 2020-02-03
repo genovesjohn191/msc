@@ -1,7 +1,9 @@
 import { JsonProperty } from '@peerlancers/json-serialization';
 import { McsEntityBase } from '../common/mcs-entity.base';
-import { InviewLevel } from '../enumerations/inview-level.enum';
-import { McsDateSerialization } from '../serialization/mcs-date-serialization';
+import {
+  InviewLevel,
+  InviewLevelSerialization
+} from '../enumerations/inview-level.enum';
 
 
 export class McsStorageBackUpAggregationTarget extends McsEntityBase {
@@ -12,8 +14,8 @@ export class McsStorageBackUpAggregationTarget extends McsEntityBase {
   public description: string = undefined;
 
   @JsonProperty({
-    serializer: McsDateSerialization,
-    deserializer: McsDateSerialization
+    serializer: InviewLevelSerialization,
+    deserializer: InviewLevelSerialization
   })
   public inviewLevel: InviewLevel = undefined;
 

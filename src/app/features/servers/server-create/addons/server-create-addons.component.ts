@@ -30,9 +30,9 @@ import {
   McsServerCreateAddOnInview,
   McsServerCreateAddOnHids,
   McsServerCreateAddOnVmBackup,
-  McsServerCreateAddOnServerBackup,
   McsStorageBackUpAggregationTarget,
-  Os
+  Os,
+  McsOrderServerBackupAdd
 } from '@app/models';
 import { AddOnDetails } from './addons-model';
 
@@ -49,7 +49,7 @@ const ADDON_SERVER_BACKUP_ID = Guid.newGuid().toString();
 export class ServerCreateAddOnsComponent
   implements OnDestroy, OnInit, IMcsDataChange<Array<AddOnDetails<any>>> {
   public vmBackupAddOn = new AddOnDetails<McsServerCreateAddOnVmBackup>();
-  public serverBackupAddOn = new AddOnDetails<McsServerCreateAddOnServerBackup>();
+  public serverBackupAddOn = new AddOnDetails<McsOrderServerBackupAdd>();
   public antiVirusAddOn = new AddOnDetails<McsServerCreateAddOnAntiVirus>();
   public sqlServerAddOn = new AddOnDetails<McsServerCreateAddOnSqlServer>();
   public hidsAddOn = new AddOnDetails<McsServerCreateAddOnHids>();
@@ -66,8 +66,8 @@ export class ServerCreateAddOnsComponent
   @ViewChild('fgAddOnBackupVm', { static: false })
   private _fgAddOnBackupVm: IMcsFormGroup;
 
-  @ViewChild('fgAddOnBackupServer', { static: false })
-  private _fgAddOnBackupServer: IMcsFormGroup;
+  @ViewChild('fgBackupServer', { static: false })
+  private _fgBackupServer: IMcsFormGroup;
 
   private _destroySubject = new Subject<void>();
 
@@ -101,7 +101,7 @@ export class ServerCreateAddOnsComponent
 
     let serverBackupSelected = getSafeProperty(this.serverBackupAddOn, (obj) => obj.selected, false);
     let serverBackupFormValid = serverBackupSelected ?
-      getSafeProperty(this._fgAddOnBackupServer, (obj) => obj.isValid(), false) : !serverBackupSelected;
+      getSafeProperty(this._fgBackupServer, (obj) => obj.isValid(), false) : !serverBackupSelected;
 
     return vmBackupFormValid && serverBackupFormValid;
   }
@@ -141,7 +141,7 @@ export class ServerCreateAddOnsComponent
    * Event that emits when server backup item has been changed
    * @param vmBackUpContent content to be set
    */
-  public onChangeServerBackUpDetails(serverBackUpDetails: McsServerCreateAddOnServerBackup): void {
+  public onChangeServerBackUpDetails(serverBackUpDetails: McsOrderServerBackupAdd): void {
     this.serverBackupAddOn.properties = serverBackUpDetails;
     this.notifyDataChange();
   }
