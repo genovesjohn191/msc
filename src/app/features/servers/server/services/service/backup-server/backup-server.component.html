@@ -1,4 +1,4 @@
-<mcs-presentation-panel>
+<mcs-presentation-panel *ngIf="!isStatusUnknown">
   <ng-container mcsPresentationPanelHeader>
     <h2>{{ 'serverServices.serverBackup.title' | translate }}</h2>
   </ng-container>
@@ -6,7 +6,7 @@
   <mcs-section>
     <mcs-item orientation="block">
       <mcs-item>
-        <mcs-icon [key]="statusIcon" size="small" mcsId="backup-server-status-icon"></mcs-icon>
+        <mcs-icon [key]="statusIcon" size="small" mcsId="backup-server-status-icon" [mcsTooltip]="statusTooltip" [mcsTooltipShow]="statusTooltip"></mcs-icon>
         <div>
           <span mcsId="backup-server-status-label">{{ statusLabel }}</span><br />
           <small read-only>

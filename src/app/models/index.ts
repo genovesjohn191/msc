@@ -32,6 +32,7 @@ export * from './enumerations/os-updates-patch-status.enum';
 export * from './enumerations/os-updates-schedule-type.enum';
 export * from './enumerations/anti-virus-status.enum';
 export * from './enumerations/backup-attempt-status.enum';
+export * from './enumerations/backup-attempt-status-type.enum';
 export * from './enumerations/host-security-severity.enum';
 export * from './enumerations/host-security-agent-status.enum';
 export * from './enumerations/hids-protection-level.enum';
