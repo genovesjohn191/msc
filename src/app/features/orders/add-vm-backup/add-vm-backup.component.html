@@ -1,4 +1,4 @@
-<mcs-page [header]="'orderAddServerBackup.title' | translate">
+<mcs-page [header]="'orderAddVmBackup.title' | translate">
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef>
 
@@ -26,18 +26,18 @@
       </ng-container>
 
       <!-- VDC Details Step-->
-      <mcs-wizard-step id="server-backup-details-step"
-        [stepTitle]="'orderAddServerBackup.detailsStep.title' | translate"
+      <mcs-wizard-step id="vm-backup-details-step"
+        [stepTitle]="'orderAddVmBackup.detailsStep.title' | translate"
         customClass="contextual-help-page-wrapper limited-view">
 
-        <form [formGroup]="fgServerBackup" mcsFormGroup>
+        <form [formGroup]="fgVmBackup" mcsFormGroup>
 
           <mcs-item orientation="block">
-            <span align-self-start>{{ 'orderAddServerBackup.detailsStep.serverLabel' | translate }}:</span>
+            <span align-self-start>{{ 'orderAddVmBackup.detailsStep.serverLabel' | translate }}:</span>
             <mcs-form-field>
               <mcs-select [formControl]="fcServers" required
-                [placeholder]="'orderAddServerBackup.detailsStep.serverPlaceholder' | translate"
-                [mcsContextualHelp]="'orderAddServerBackup.detailsStep.serverHelp' | translate"
+                [placeholder]="'orderAddVmBackup.detailsStep.serverPlaceholder' | translate"
+                [mcsContextualHelp]="'orderAddVmBackup.detailsStep.serverHelp' | translate"
                 mcsId="select-server"
                 mcsEventTracker="select-server-click"
                 mcsEventCategory="orders"
@@ -58,11 +58,11 @@
             </mcs-form-field>
           </mcs-item>
 
-          <mcs-item>
-            <mcs-server-manage-backup #fgManageBackupServer
+          <mcs-item orientation="block">
+            <mcs-server-manage-backup-vm #fgManageBackupVm
               [aggregationTargets]="aggregationTargets$ | async"
-              (dataChange)="onChangeServerBackUpDetails($event)">
-            </mcs-server-manage-backup>
+              (dataChange)="onChangeVmBackUpDetails($event)">
+            </mcs-server-manage-backup-vm>
           </mcs-item>
 
           <div class="action-items">
@@ -72,7 +72,7 @@
               mcsId="step-1-next"
               mcsEventTracker="step-1-next"
               mcsEventCategory="orders"
-              mcsEventLabel="create-server-backup">{{ 'shared.wizard.next' | translate }}</button>
+              mcsEventLabel="create-vm-backup">{{ 'shared.wizard.next' | translate }}</button>
           </div>
         </form>
       </mcs-wizard-step>
@@ -85,7 +85,7 @@
         <mcs-step-order-details [order]="order$ | async"
           [orderItemType]="orderItemType$ | async"
           [requestState]="dataStatus$ | async"
-          (dataChange)="onServerBackupOrderChange($event)"
+          (dataChange)="onVmBackupOrderChange($event)"
           (submitOrder)="onSubmitOrder($event, fcServers?.value?.id)">
         </mcs-step-order-details>
       </mcs-wizard-step>
@@ -97,11 +97,11 @@
 
         <mcs-step-provisioning [jobs]="jobs$ | async" [requestState]="dataStatus$ | async">
           <ng-container mcsProvisioningStepDescription>
-            {{ 'orderAddServerBackup.provisioningStep.description' | translate }}
+            {{ 'orderVdcStorageCreate.provisioning.description' | translate }}
           </ng-container>
 
           <ng-container mcsProvisioningStepInProgress>
-            {{ 'orderAddServerBackup.provisioningStep.dataInProgress' | translate}}
+            {{ 'orderVdcStorageCreate.provisioning.dataInProgress' | translate}}
           </ng-container>
         </mcs-step-provisioning>
       </mcs-wizard-step>

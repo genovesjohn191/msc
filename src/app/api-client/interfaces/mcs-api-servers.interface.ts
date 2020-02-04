@@ -309,10 +309,20 @@ export interface IMcsApiServersService {
   getServerBackupVm(id: string): Observable<McsApiSuccessResponse<McsServerBackupVm>>;
 
   /**
+   * Gets the servers with vm backup provision
+   */
+  getServerBackupVms(): Observable<McsApiSuccessResponse<McsServerBackupVm[]>>;
+
+  /**
    * Gets the server backup summary
    * @param serverId Server id to where the server backup will be coming from
    */
   getServerBackupServer(id: string): Observable<McsApiSuccessResponse<McsServerBackupServer>>;
+
+  /**
+   * Gets the servers with server backup provision
+   */
+  getServerBackupServers(): Observable<McsApiSuccessResponse<McsServerBackupServer[]>>;
 
   /**
    * Gets the server host security details

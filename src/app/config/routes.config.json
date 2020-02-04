@@ -345,6 +345,13 @@
     "requiredFeatureFlag": "EnableOrderingServerBackupProvision",
     "documentTitle": "Add Server Backup Provision - Macquarie Cloud Services"
   },
+  "orderAddVmBackup": {
+    "enumKey": "OrderAddVmBackup",
+    "navigationPath": "orders/add/vm-backup",
+    "requiredPermissions": ["OrderEdit"],
+    "requiredFeatureFlag": "EnableOrderingVmBackupProvision",
+    "documentTitle": "Add VM Backup Provision - Macquarie Cloud Services"
+  },
   "otherTools": {
     "enumKey": "OtherTools",
     "navigationPath": "tools",

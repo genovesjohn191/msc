@@ -79,7 +79,6 @@ export * from './request/mcs-server-create-addon-anti-virus';
 export * from './request/mcs-server-create-addon-sql-server';
 export * from './request/mcs-server-create-addon-inview';
 export * from './request/mcs-server-create-addon-hids';
-export * from './request/mcs-server-create-addon-vm-backup';
 
 export * from './request/mcs-order-create';
 export * from './request/mcs-order-item-create';
@@ -88,6 +87,7 @@ export * from './request/mcs-order-update';
 export * from './request/mcs-order-workflow';
 export * from './request/mcs-order-server-backup-add';
 export * from './request/mcs-order-server-hids-add';
+export * from './request/mcs-order-vm-backup-add';
 export * from './request/mcs-server-attach-media';
 export * from './request/mcs-server-detach-media';
 export * from './request/mcs-server-delete';

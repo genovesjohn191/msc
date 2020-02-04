@@ -1,10 +1,10 @@
 import {
+  OnInit,
+  OnDestroy,
   Component,
   ChangeDetectionStrategy,
-  OnDestroy,
   ViewChild,
-  Injector,
-  OnInit
+  Injector
 } from '@angular/core';
 import {
   FormGroup,
@@ -12,67 +12,66 @@ import {
   FormBuilder
 } from '@angular/forms';
 import {
-  Observable,
   Subject,
+  Observable,
   zip
 } from 'rxjs';
 import {
   takeUntil,
-  map,
   filter,
-  tap
+  tap,
+  map
 } from 'rxjs/operators';
 import {
   McsOrderWizardBase,
-  CoreValidators,
   OrderRequester,
+  CoreValidators,
   IMcsFormGroup
 } from '@app/core';
 import {
-  McsOrderWorkflow,
-  McsOrderCreate,
+  McsOptionGroup,
   McsOption,
+  McsOrderCreate,
+  McsOrderWorkflow,
   McsOrderItemCreate,
   OrderIdType,
-  McsOptionGroup,
-  McsOrderServerBackupAdd,
-  McsStorageBackUpAggregationTarget
+  McsStorageBackUpAggregationTarget,
+  McsOrderVmBackupAdd
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
   isNullOrEmpty,
   unsubscribeSafely,
   Guid,
-  getSafeProperty,
   CommonDefinition,
-  createObject,
-  getSafeFormValue
+  getSafeProperty,
+  createObject
 } from '@app/utilities';
 import { McsFormGroupDirective } from '@app/shared';
 import { OrderDetails } from '@app/features-shared';
-import { AddServerBackupService } from './add-server-backup.service';
+import { AddVmBackupService } from './add-vm-backup.service';
 
-const ADD_SERVER_BACKUP = Guid.newGuid().toString();
+const ADD_VM_BACKUP = Guid.newGuid().toString();
 
 @Component({
-  selector: 'mcs-order-add-server-backup',
-  templateUrl: 'add-server-backup.component.html',
+  selector: 'mcs-order-add-vm-backup',
+  templateUrl: 'add-vm-backup.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [AddServerBackupService]
+  providers: [AddVmBackupService],
 })
 
-export class AddServerBackupComponent extends McsOrderWizardBase implements OnInit, OnDestroy {
+export class AddVmBackupComponent extends McsOrderWizardBase implements OnInit, OnDestroy {
   public serverGroups$: Observable<McsOptionGroup[]>;
   public aggregationTargets$: Observable<McsStorageBackUpAggregationTarget[]>;
 
-  public fgServerBackup: FormGroup;
+  public fgVmBackup: FormGroup;
   public fcServers: FormControl;
 
-  private _serverBackup: McsOrderServerBackupAdd;
+  private _vmBackup: McsOrderVmBackupAdd;
   private _valueChangesSubject = new Subject<void>();
 
-  @ViewChild('fgManageBackupServer', { static: false })
-  private _fgManageBackupServer: IMcsFormGroup;
+  @ViewChild('fgManageBackupVm', { static: false })
+  private _fgManageBackupVm: IMcsFormGroup;
 
   @ViewChild(McsFormGroupDirective, { static: false })
   public set formGroup(value: McsFormGroupDirective) {
@@ -86,10 +85,10 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
   constructor(
     _injector: Injector,
     private _formBuilder: FormBuilder,
-    private _serverBackupService: AddServerBackupService,
+    private _vmBackupService: AddVmBackupService,
     private _apiService: McsApiService,
   ) {
-    super(_injector, _serverBackupService);
+    super(_injector, _vmBackupService);
     this._registerFormGroup();
   }
 
@@ -107,17 +106,17 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
   }
 
   public get formIsValid(): boolean {
-    return getSafeProperty(this._formGroup, (obj) => obj.isValid()) && getSafeProperty(this._fgManageBackupServer, (obj) => obj.isValid());
+    return getSafeProperty(this._formGroup, (obj) => obj.isValid()) && getSafeProperty(this._fgManageBackupVm, (obj) => obj.isValid());
   }
 
-  public onChangeServerBackUpDetails(serverBackUpDetails: McsOrderServerBackupAdd): void {
-    this._serverBackup = serverBackUpDetails;
+  public onChangeVmBackUpDetails(vmBackUpDetails: McsOrderVmBackupAdd): void {
+    this._vmBackup = vmBackUpDetails;
   }
 
-  public onServerBackupOrderChange(orderDetails: OrderDetails): void {
+  public onVmBackupOrderChange(orderDetails: OrderDetails): void {
     if (isNullOrEmpty(orderDetails)) { return; }
 
-    this._serverBackupService.createOrUpdateOrder(
+    this._vmBackupService.createOrUpdateOrder(
       createObject(McsOrderCreate, {
         contractDurationMonths: orderDetails.contractDurationMonths,
         description: orderDetails.description,
@@ -127,7 +126,7 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
       }),
       OrderRequester.Billing
     );
-    this._serverBackupService.submitOrderRequest();
+    this._vmBackupService.submitOrderRequest();
   }
 
   public onSubmitOrder(submitDetails: OrderDetails, selectedServerId: string): void {
@@ -144,15 +143,13 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
 
   private _registerFormGroup(): void {
     this.fcServers = new FormControl('', [CoreValidators.required]);
-
-    if (!isNullOrEmpty(this._fgManageBackupServer)) {
-      this.fgServerBackup.addControl('fgManageBackupServer',
-        this._fgManageBackupServer.getFormGroup().formGroup);
-    }
-
-    this.fgServerBackup = this._formBuilder.group({
-      fcServers: this.fcServers
+    this.fgVmBackup = this._formBuilder.group({
+      fcServers: this.fcServers,
     });
+    if (!isNullOrEmpty(this._fgManageBackupVm)) {
+      this.fgVmBackup.addControl('fgManageBackupVm',
+        this._fgManageBackupVm.getFormGroup().formGroup);
+    }
   }
 
   private _subscribeToValueChanges(): void {
@@ -163,21 +160,21 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
     ).pipe(
       takeUntil(this._valueChangesSubject),
       filter(() => this.formIsValid),
-      tap(() => this._onServerBackupChange())
+      tap(() => this._onVmBackupChange())
     ).subscribe();
   }
 
-  private _onServerBackupChange(): void {
-    let server = getSafeFormValue(this.fcServers, (obj) => obj.value);
+  private _onVmBackupChange(): void {
+    let server = getSafeProperty(this.fcServers, (obj) => obj.value);
 
-    this._serverBackupService.createOrUpdateOrder(
+    this._vmBackupService.createOrUpdateOrder(
       createObject(McsOrderCreate, {
         items: [
           createObject(McsOrderItemCreate, {
-            itemOrderType: OrderIdType.CreateAddOnServerBackup,
-            referenceId: ADD_SERVER_BACKUP,
+            itemOrderType: OrderIdType.CreateAddOnVmBackup,
+            referenceId: ADD_VM_BACKUP,
             parentServiceId: server.serviceId,
-            properties: this._serverBackup
+            properties: this._vmBackup
           })
         ]
       })
@@ -185,7 +182,7 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
   }
 
   private _subscribeToServers(): void {
-    // TODO: map server backup provisioned with server list, call endpoint
+    // TODO: map server vm backup provisioned with server list, call endpoint
     this.serverGroups$ = this._apiService.getServers().pipe(
       map((servers) => {
         let groups: McsOptionGroup[] = [];
