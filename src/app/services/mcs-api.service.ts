@@ -838,10 +838,24 @@ export class McsApiService {
     );
   }
 
+  public getServerBackupVms(): Observable<McsApiCollection<McsServerBackupVm>> {
+    return this._serversApi.getServerBackupVms().pipe(
+      catchError((error) => this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getServerBackupVms'))),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
   public getServerBackupServer(id: string): Observable<McsServerBackupServer> {
     return this._serversApi.getServerBackupServer(id).pipe(
       catchError((error) => this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getServerBackupServer'))),
       map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public getServerBackupServers(id: string): Observable<McsApiCollection<McsServerBackupServer>> {
+    return this._serversApi.getServerBackupServers().pipe(
+      catchError((error) => this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getServerBackupServers'))),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
     );
   }
 

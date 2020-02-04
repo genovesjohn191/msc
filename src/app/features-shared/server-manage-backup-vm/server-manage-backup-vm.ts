@@ -44,11 +44,11 @@ import {
   IMcsFormGroup
 } from '@app/core';
 import {
-  McsServerCreateAddOnVmBackup,
   McsOption,
   InviewLevel,
   McsStorageBackUpAggregationTarget,
-  inviewLevelText
+  inviewLevelText,
+  McsOrderVmBackupAdd
 } from '@app/models';
 import { McsFormGroupDirective } from '@app/shared';
 
@@ -68,7 +68,7 @@ const DEFAULT_RETENTION = '30';
 })
 
 export class ServerManageBackupVmComponent implements
-  OnInit, OnChanges, OnDestroy, IMcsDataChange<McsServerCreateAddOnVmBackup>, IMcsFormGroup {
+  OnInit, OnChanges, OnDestroy, IMcsDataChange<McsOrderVmBackupAdd>, IMcsFormGroup {
 
   public aggregationTargetOptions$: Observable<McsOption[]>;
   public retentionOptions$: Observable<McsOption[]>;
@@ -83,7 +83,7 @@ export class ServerManageBackupVmComponent implements
   public fcDailyQuota: FormControl;
 
   @Output()
-  public dataChange = new EventEmitter<McsServerCreateAddOnVmBackup>();
+  public dataChange = new EventEmitter<McsOrderVmBackupAdd>();
 
   @Input()
   public aggregationTargets: McsStorageBackUpAggregationTarget[];
@@ -179,11 +179,11 @@ export class ServerManageBackupVmComponent implements
    */
   public notifyDataChange(): void {
     if (!this.isValid()) { return; }
-    let backupDetils = new McsServerCreateAddOnVmBackup();
+    let backupDetils = new McsOrderVmBackupAdd();
     backupDetils.backupAggregationTarget = this.fcAggregation.value || null;
     backupDetils.dailySchedule = buildCron({ minute: '0', hour: this.fcBackupSchedule.value });
     backupDetils.retentionPeriodDays = this.fcRetention.enabled ? this.fcRetention.value || null : null;
-    backupDetils.inviewLevel = this.fcInview.enabled ? this.fcInview.value || null : inviewLevelText[InviewLevel.Premium];
+    backupDetils.inviewLevel = this.fcInview.enabled ? this.fcInview.value || null : InviewLevel.Premium;
     backupDetils.dailyBackupQuotaGB = this.fcDailyQuota.enabled ? this.fcDailyQuota.value || null : null;
 
     this.dataChange.emit(backupDetils);
@@ -220,7 +220,7 @@ export class ServerManageBackupVmComponent implements
     // Register Form Groups using binding
     this.fcAggregation = new FormControl(null, []);
     this.fcRetention = new FormControl(DEFAULT_RETENTION, [CoreValidators.required]);
-    this.fcInview = new FormControl(inviewLevelText[InviewLevel.Premium], [CoreValidators.required]);
+    this.fcInview = new FormControl(InviewLevel.Premium, [CoreValidators.required]);
     this.fcBackupSchedule = new FormControl('', [CoreValidators.required]);
     this.fcDailyQuota = new FormControl('', [
       CoreValidators.required,
@@ -315,8 +315,8 @@ export class ServerManageBackupVmComponent implements
    */
   private _subscribeToInviewOptions(): void {
     this.inviewLevelOptions$ = of([
-      createObject(McsOption, { text: inviewLevelText[InviewLevel.Standard], value: inviewLevelText[InviewLevel.Standard] }),
-      createObject(McsOption, { text: inviewLevelText[InviewLevel.Premium], value: inviewLevelText[InviewLevel.Premium] })
+      createObject(McsOption, { text: inviewLevelText[InviewLevel.Standard], value: InviewLevel.Standard }),
+      createObject(McsOption, { text: inviewLevelText[InviewLevel.Premium], value: InviewLevel.Premium })
     ]);
   }
 

@@ -15,6 +15,7 @@ import { ServiceInviewRaiseComponent } from './service-inview-raise/service-invi
 import { AddAntiVirusComponent } from './add-anti-virus/add-anti-virus.component';
 import { AddHidsComponent } from './add-hids/add-hids.component';
 import { AddServerBackupComponent } from './add-server-backup/add-server-backup.component';
+import { AddVmBackupComponent } from './add-vm-backup/add-vm-backup.component';
 
 /**
  * List of services for the main module
@@ -39,7 +40,8 @@ export const ordersComponents: any[] = [
   ServiceInviewRaiseComponent,
   AddAntiVirusComponent,
   AddHidsComponent,
-  AddServerBackupComponent
+  AddServerBackupComponent,
+  AddVmBackupComponent
 ];
 
 /**
@@ -94,6 +96,11 @@ export const ordersRoutes: Routes = [
     path: 'add/server-backup',
     component: AddServerBackupComponent,
     data: { routeId: RouteKey.OrderAddServerBackup }
+  },
+  {
+    path: 'add/vm-backup',
+    component: AddVmBackupComponent,
+    data: { routeId: RouteKey.OrderAddVmBackup }
   },
   // Add additional routes above this line
   {

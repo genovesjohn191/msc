@@ -318,35 +318,20 @@
       "title": "Details",
       "serverLabel": "Please select the servers you wish to provision Server Backup for",
       "serverPlaceholder": "Select server",
-      "serverHelp": "Select one or more servers to install Server Backup on.",
-      "aggregation": "Back up my files to an aggregation target",
-      "aggregationValue": "{{ retention }} Retention",
-      "aggregationPlaceholder": "Select aggregation",
-      "aggregationHelp": "It is recommended that you check your Backup Aggregation Target usage before proceeding.\r\nCharges may apply for exceeded quota.",
-      "retentionList": "Keep my backups for",
-      "retentionListPlaceholder": "Select retetion",
-      "retentionListHelp": "Your desired backup retention setting. We can store your backups from 2 weeks, to 7 years.",
-      "retentionListWarning": "It is recommended that you check your Backup Aggregation Target usage before proceeding. ​​​​​​​Charges may apply for exceeded quota.",
-      "inviewLevel": "InView Level",
-      "inviewLevelPlaceholder": "Select inview",
-      "inviewLevelHelp": "InView allows for detailed monitoring and reporting on statistics such as quota utilization.",
-      "inviewLevelWarning": "Your selected Backup Aggregation Target has InView Premium, so this will also be applied to your new Server Backup service.",
-      "backupList": "Schedule a backup every day at",
-      "backupListPlaceholder": "Select schedule",
-      "backupListHelp": "Choose your desired backup schedule. We recommend selecting a time at which the server will not be in high use.",
-      "dailyQuota": "Daily backup quota",
-      "dailyQuotaPlaceholder": "Enter quota",
-      "dailyQuotaUnit": "GB",
-      "dailyQuotaHelp": "Your desired backup quota, per day. Additional fees may apply if this is exceeded.",
-      "dailyQuotaRequired": "Enter daily quota.",
-      "dailyQuotaNumeric": "Please enter a valid number.",
-      "dailyQuotaMinimum": "The minimum quota that can be entered is {{min_value}}.",
-      "dailyQuotaMaximum": "Quota should not exceed {{max_value}}.",
-      "detailsNote": "By default, all files will be backed up. Once ready, backup scope will be configurable on a fine-grain basis in MacquarieView."
+      "serverHelp": "Select one or more servers to install Server Backup on."
     },
     "provisioningStep": {
       "description": "Your server is being backup and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
       "dataInProgress": "Preparing the server for backup. This may take a moment."
+    }
+  },
+  "orderAddVmBackup": {
+    "title": "VM Backup",
+    "detailsStep": {
+      "title": "Details",
+      "serverLabel": "Please select the servers you wish to provision VM Backup for",
+      "serverPlaceholder": "Select server",
+      "serverHelp": "Select one or more servers to install VM Backup on."
     }
   },
   "notification": {
@@ -1019,14 +1004,6 @@
           "maximum": "Quota should not exceed {{max_value}}.",
           "invalid": "Quota must be a multiple of {{step}} GB."
         }
-      },
-      "deDuplicationRatio": {
-        "label": "De-Duplication Ratio",
-        "contextualHelp": ""
-      },
-      "databaseSupport": {
-        "label": "Specialised Database Support",
-        "contextualHelp": "Specialised Database Support allows us to ensure that databases are supported correctly during backup."
       },
       "backUpScope": {
         "label": "By default, all files will be backed up. Once your server is ready, backup scope will be configurable on a fine-grain basis in MacquarieView.",
@@ -1795,7 +1772,9 @@
     "cloneServer": "Something went wrong while cloning your server. Please try again.",
     "deleteServer": "Something went wrong while deleting your server. Please try again.",
     "getServerBackupVm": "Something went wrong while retrieving your vm backup for your server. Please try again.",
+    "getServerBackupVms": "Something went wrong while retrieving your servers with vm backup provisioned. Please try again.",
     "getServerBackupServer": "Something went wrong while retrieving the server backup for your server. Please try again.",
+    "getServerBackupServers": "Something went wrong while retrieving your servers with server backup provisioned. Please try again.",
     "getServerHostSecurity": "Something went wrong while retrieving the host security for your server. Please try again.",
     "getServerHostSecurityAntiVirus": "Something went wrong while retrieving the Anti-Virus for your server. Please try again.",
     "getServerHostSecurityAvLogs": "Something went wrong while retrieving the Anti-Virus logs for your server. Please try again.",

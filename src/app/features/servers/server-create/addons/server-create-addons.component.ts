@@ -29,10 +29,10 @@ import {
   McsServerCreateAddOnSqlServer,
   McsServerCreateAddOnInview,
   McsServerCreateAddOnHids,
-  McsServerCreateAddOnVmBackup,
   McsStorageBackUpAggregationTarget,
   Os,
-  McsOrderServerBackupAdd
+  McsOrderServerBackupAdd,
+  McsOrderVmBackupAdd
 } from '@app/models';
 import { AddOnDetails } from './addons-model';
 
@@ -48,7 +48,7 @@ const ADDON_SERVER_BACKUP_ID = Guid.newGuid().toString();
 
 export class ServerCreateAddOnsComponent
   implements OnDestroy, OnInit, IMcsDataChange<Array<AddOnDetails<any>>> {
-  public vmBackupAddOn = new AddOnDetails<McsServerCreateAddOnVmBackup>();
+  public vmBackupAddOn = new AddOnDetails<McsOrderVmBackupAdd>();
   public serverBackupAddOn = new AddOnDetails<McsOrderServerBackupAdd>();
   public antiVirusAddOn = new AddOnDetails<McsServerCreateAddOnAntiVirus>();
   public sqlServerAddOn = new AddOnDetails<McsServerCreateAddOnSqlServer>();
@@ -121,7 +121,7 @@ export class ServerCreateAddOnsComponent
    * Event that emits when vm backup item has been changed
    * @param vmBackUpContent content to be set
    */
-  public onChangeVmBackUpDetails(vmBackUpDetails: McsServerCreateAddOnVmBackup): void {
+  public onChangeVmBackUpDetails(vmBackUpDetails: McsOrderVmBackupAdd): void {
     this.vmBackupAddOn.properties = vmBackUpDetails;
     this.notifyDataChange();
   }
