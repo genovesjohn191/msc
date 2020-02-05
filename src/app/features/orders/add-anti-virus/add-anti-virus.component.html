@@ -31,54 +31,48 @@
           customClass="contextual-help-page-wrapper limited-view">
           <form [formGroup]="fgAddAntiVirusDetails" mcsFormGroup>
             <p>{{ 'orderAddAntiVirus.details.server.description' | translate }}</p>
-            <mcs-section *mcsComponentHandler>
-              <ng-container *ngIf="resources$ | async as resources">
-                <mcs-form-field [disabled]="isResourcesEmpty(resources)"
-                  [mcsContextualHelp]="'orderAddAntiVirus.details.server.contextualHelp' | translate">
-                  <!-- TODO: Add multiple selection once ready -->
-                  <!-- <mcs-select mcsId="add-anti-virus-select-server" [useTags]="true" multiple
-                    [placeholder]="'orderAddAntiVirus.details.server.placeholder' | translate"
-                    [formControl]="fcServer">
 
-                    <mcs-search mcsSelectSearch></mcs-search>
-                    <mcs-option-group>
-                      <ng-container *mcsOptionGroupHeader>
-                        <span>{{ 'orderAddAntiVirus.details.server.optionGroupLabel' | translate }}</span>
-                      </ng-container>
-                      <ng-container *ngIf="resources$ | async as resources">
-                        <mcs-option-group [label]="iterator.key" *ngFor="let iterator of resources | mcsMapIterable">
-                          <mcs-option *ngFor="let avServer of iterator.value" [value]="avServer.server">
-                            {{ avServer.server.name }}
-                          </mcs-option>
-                        </mcs-option-group>
-                      </ng-container>
-                    </mcs-option-group>
-                  </mcs-select> -->
-                  <mcs-select mcsId="add-anti-virus-select-server"
-                    (selectionChange)="onChangeServer($event)"
-                    [placeholder]="'orderAddAntiVirus.details.server.placeholder' | translate"
-                    [formControl]="fcServer">
+            <ng-container *ngIf="serverGroups$ | async as serverGroups">
+              <mcs-form-field [disabled]="!serverGroups"
+                [mcsContextualHelp]="'orderAddAntiVirus.details.server.contextualHelp' | translate">
 
-                    <mcs-search mcsSelectSearch></mcs-search>
-                    <mcs-option-group>
-                      <ng-container *mcsOptionGroupHeader>
-                        <span>{{ 'orderAddAntiVirus.details.server.optionGroupLabel' | translate }}</span>
+                <mcs-select mcsId="add-anti-virus-select-server"
+                  (selectionChange)="onChangeServer($event)"
+                  [placeholder]="'orderAddAntiVirus.details.server.placeholder' | translate"
+                  [formControl]="fcServer">
+
+                  <mcs-search mcsSelectSearch></mcs-search>
+
+                    <mcs-option-group *ngFor="let serverGroup of serverGroups">
+                      <ng-container *mcsOptionGroupLabel>
+                        <span>{{ serverGroup.groupName }}</span>
                       </ng-container>
-                      <mcs-option-group [label]="iterator.key" *ngFor="let iterator of resources | mcsMapIterable">
-                        <mcs-option *ngFor="let avServer of iterator.value" [value]="avServer.server" [disabled]="avServer.provisioned">
-                          {{ avServer.server.name }} <span *ngIf="avServer.provisioned">- {{ 'orderAddAntiVirus.details.server.avProvisioned' | translate }}</span>
-                        </mcs-option>
-                      </mcs-option-group>
+
+                      <mcs-option *ngFor="let serverBackupDetails of serverGroup.options"
+                        [value]="serverBackupDetails.value?.entity"
+                        [disabled]="serverBackupDetails.value?.disabled">
+
+                        <span [ngStyle]="{'pointer-events': 'auto'}"
+                          [mcsTooltip]="serverBackupDetails.value?.message"
+                          [mcsTooltipShow]="serverBackupDetails.value?.message"
+                          [mcsTooltipPosition]="'right'">
+                          {{ serverBackupDetails.text }}
+                        </span>
+
+                        <small *ngIf="serverBackupDetails.value?.provisioned" padding-left-small>
+                          {{ 'orderAddAntiVirus.details.server.serverProvisioned' | translate }}
+                        </small>
+                      </mcs-option>
                     </mcs-option-group>
                   </mcs-select>
-                </mcs-form-field>
-                <ng-container *ngIf="isResourcesEmpty(resources)">
-                  <mcs-alert  type="warning">
-                    <span>{{'orderAddAntiVirus.details.server.fallbackLabel' | translate }}</span>
-                  </mcs-alert>
-                </ng-container>
+              </mcs-form-field>
+
+              <ng-container *ngIf="!serverGroups">
+                <mcs-alert type="warning">
+                  <span>{{'orderAddAntiVirus.details.server.fallbackLabel' | translate }}</span>
+                </mcs-alert>
               </ng-container>
-            </mcs-section>
+            </ng-container>
 
             <div class="action-items">
               <button mcsButton arrow="right"
