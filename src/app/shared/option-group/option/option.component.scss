@@ -15,6 +15,10 @@ $option-selected-color: $selected-bg-color;
     pointer-events: none;
   }
 
+  &.option-disabled {
+    cursor: default;
+  }
+
   &.option-selected:not(.option-checkable) {
     background-color: $option-selected-color;
   }

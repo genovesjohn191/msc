@@ -50,8 +50,20 @@
                     <span>{{ serverGroup.groupName }}</span>
                   </ng-container>
 
-                  <mcs-option *ngFor="let server of serverGroup.options" [value]="server.value">
-                    {{ server.text }}
+                  <mcs-option *ngFor="let serverBackupDetails of serverGroup.options"
+                    [value]="serverBackupDetails.value?.entity"
+                    [disabled]="serverBackupDetails.value?.disabled">
+
+                    <span [ngStyle]="{'pointer-events': 'auto'}"
+                      [mcsTooltip]="serverBackupDetails.value?.message"
+                      [mcsTooltipShow]="serverBackupDetails.value?.message"
+                      [mcsTooltipPosition]="'right'">
+                      {{ serverBackupDetails.text }}
+                    </span>
+
+                    <small *ngIf="serverBackupDetails.value?.provisioned" padding-left-small>
+                      {{ 'orderAddServerBackup.detailsStep.serverProvisioned' | translate }}
+                    </small>
                   </mcs-option>
                 </mcs-option-group>
               </mcs-select>

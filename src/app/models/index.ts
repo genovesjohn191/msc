@@ -39,6 +39,7 @@ export * from './enumerations/hids-protection-level.enum';
 export * from './enumerations/hids-status.enum';
 export * from './enumerations/server-services-action.enum';
 export * from './enumerations/server-services-view.enum';
+export * from './enumerations/server-provision-state.enum';
 export * from './enumerations/catalog-item-type.enum';
 export * from './enumerations/ip-allocation-mode.enum';
 export * from './enumerations/platform-type.enum';
@@ -227,6 +228,7 @@ export * from './common/mcs-option-group';
 export * from './common/mcs-key-value-pair';
 export * from './common/mcs-route-info';
 export * from './common/mcs-query-param';
+export * from './common/mcs-entity-provision';
 
 /** Serialization */
 export * from './serialization/mcs-date-serialization';

@@ -271,7 +271,11 @@
         "placeholder": "Select a server",
         "fallbackLabel": "There are currently no servers available to install Anti-Virus on. Please ensure that the server you are targeting is a Managed vCloud server which is running and not in the process of being provisioned.",
         "optionGroupLabel": "Virtual Data Centres",
-        "avProvisioned": "AV Provisioned"
+        "serverProvisioned": "Provisioned",
+        "serverDisabled": "Antivirus cannot be process to this server because {{server_issue}}",
+        "serverPoweredOff": "it is powered off",
+        "serverChangeAvailableFalse": "its currently being provisioned",
+        "serverOsAutomationFalse": "OS Automation is not available"
       }
     },
     "confirm": {
@@ -295,7 +299,11 @@
         "placeholder": "Select a server",
         "fallbackLabel": "There are currently no servers available to install HIDS on. Please ensure that the server you are targeting is a Managed vCloud server which is running and not in the process of being provisioned.",
         "optionGroupLabel": "Virtual Data Centres",
-        "hidsProvisioned": "HIDS Provisioned"
+        "serverProvisioned": "Provisioned",
+        "serverDisabled": "HIDS cannot be process to this server because {{server_issue}}",
+        "serverPoweredOff": "it is powered off",
+        "serverChangeAvailableFalse": "its currently being provisioned",
+        "serverOsAutomationFalse": "OS Automation is not available"
       },
       "protectionLevel":{
         "label":"Protection Level:",
@@ -318,11 +326,16 @@
       "title": "Details",
       "serverLabel": "Please select the servers you wish to provision Server Backup for",
       "serverPlaceholder": "Select server",
-      "serverHelp": "Select one or more servers to install Server Backup on."
+      "serverHelp": "Select one or more servers to install Server Backup on.",
+      "serverProvisioned": "Provisioned",
+      "serverDisabled": "Server backup cannot be process to this server because {{server_issue}}",
+      "serverPoweredOff": "it is powered off",
+      "serverChangeAvailableFalse": "its currently being provisioned",
+      "serverOsAutomationFalse": "OS Automation is not available"
     },
     "provisioningStep": {
-      "description": "Your server is being backup and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
-      "dataInProgress": "Preparing the server for backup. This may take a moment."
+      "description": "Server Backup is being provisioned and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
+      "dataInProgress": "Preparing to provision Server Backup. This may take a moment."
     }
   },
   "orderAddVmBackup": {

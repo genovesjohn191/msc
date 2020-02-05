@@ -17,7 +17,8 @@ import {
   map,
   concatMap,
   filter,
-  tap
+  tap,
+  switchMap
 } from 'rxjs/operators';
 import {
   Observable,
@@ -38,7 +39,11 @@ import {
   hidsProtectionLevelText,
   McsOrderItemCreate,
   OrderIdType,
-  McsOrderServerHidsAdd
+  McsOrderServerHidsAdd,
+  McsOptionGroup,
+  McsEntityProvision,
+  ServerProvisionState,
+  McsServerHostSecurityHids
 } from '@app/models';
 import { McsFormGroupDirective } from '@app/shared';
 import { McsApiService } from '@app/services';
@@ -52,6 +57,7 @@ import {
 } from '@app/utilities';
 import { OrderDetails } from '@app/features-shared';
 import { AddHidsService } from './add-hids.service';
+import { TranslateService } from '@ngx-translate/core';
 
 interface HidsServers {
   provisioned: boolean;
@@ -67,7 +73,7 @@ const SERVER_ADD_HIDS_REF_ID = Guid.newGuid().toString();
 })
 
 export class AddHidsComponent extends McsOrderWizardBase implements OnInit, OnDestroy {
-  public resources$: Observable<Map<string, HidsServers[]>>;
+  public serverGroups$: Observable<McsOptionGroup[]>;
 
   public fgAddHidsDetails: FormGroup;
   public fcServer: FormControl;
@@ -84,16 +90,19 @@ export class AddHidsComponent extends McsOrderWizardBase implements OnInit, OnDe
   private _formGroup: McsFormGroupDirective;
 
   private _valueChangesSubject = new Subject<void>();
+  private _backupProvisionMessageBitMap = new Map<number, string>();
 
   constructor(
     _injector: Injector,
     private _formBuilder: FormBuilder,
     private _changeDetectorRef: ChangeDetectorRef,
+    private _translate: TranslateService,
     private _apiService: McsApiService,
     private _addHidsService: AddHidsService
   ) {
     super(_injector, _addHidsService);
     this._registerFormGroups();
+    this._registerProvisionStateBitmap();
   }
 
   public ngOnInit() {
@@ -181,27 +190,63 @@ export class AddHidsComponent extends McsOrderWizardBase implements OnInit, OnDe
   }
 
   private _subscribeToManagedCloudServers(): void {
-    let resourceMap: Map<string, HidsServers[]> = new Map();
-    this.resources$ = this._apiService.getServerHostSecurityHids().pipe(
-      concatMap((serversHids) => {
+    this.serverGroups$ = this._apiService.getServerHostSecurityHids().pipe(
+      switchMap((hidsCollection) => {
 
         return this._apiService.getServers().pipe(
-          map((servers) => {
-            servers.collection.filter((server) => server.canProvision).forEach((server) => {
+          map((serversCollection) => {
+            let serverGroups: McsOptionGroup[] = [];
+            let hids = getSafeProperty(hidsCollection, (obj) => obj.collection) || [];
+            let servers = getSafeProperty(serversCollection, (obj) => obj.collection) || [];
 
-              let serverHidsProvisioned = serversHids.collection.find((serverAv) => serverAv.serverId === server.id);
-              let resourceIsExisting = resourceMap.has(server.platform.resourceName);
-              if (resourceIsExisting) {
-                resourceMap.get(server.platform.resourceName).push({ provisioned: !isNullOrEmpty(serverHidsProvisioned), server });
+            servers.forEach((server) => {
+              if (!server.canProvision) { return; }
+
+              let platformName = getSafeProperty(server, (obj) => obj.platform.resourceName) || 'Others';
+              let foundGroup = serverGroups.find((serverGroup) => serverGroup.groupName === platformName);
+              let serverBackupDetails = this._createServerBackupDetails(server, hids);
+
+              if (!isNullOrEmpty(foundGroup)) {
+                foundGroup.options.push(
+                  createObject(McsOption, { text: server.name, value: serverBackupDetails })
+                );
                 return;
               }
-              resourceMap.set(server.platform.resourceName, [{ provisioned: !isNullOrEmpty(serverHidsProvisioned), server }]);
+              serverGroups.push(
+                new McsOptionGroup(platformName,
+                  createObject(McsOption, { text: server.name, value: serverBackupDetails })
+                )
+              );
             });
-            return resourceMap;
+            return serverGroups;
           })
         );
       })
     );
+  }
+
+  private _createServerBackupDetails(
+    server: McsServer,
+    hids: McsServerHostSecurityHids[]
+  ): McsEntityProvision<McsServer> {
+    let serverBackupDetails = new McsEntityProvision<McsServer>();
+    serverBackupDetails.entity = server;
+
+    // Return immediately when server has been found
+    let serverHidsFound = hids && hids.find((hid) => hid.serverId === server.id);
+    if (serverHidsFound) {
+      serverBackupDetails.disabled = true;
+      serverBackupDetails.provisioned = true;
+      return serverBackupDetails;
+    }
+
+    let serverProvisionMessage = this._backupProvisionMessageBitMap.get(server.provisionStatusBit);
+    if (isNullOrEmpty(serverProvisionMessage)) { return serverBackupDetails; }
+
+    serverBackupDetails.message = serverProvisionMessage;
+    serverBackupDetails.disabled = true;
+    serverBackupDetails.provisioned = false;
+    return serverBackupDetails;
   }
 
   private _initializeProtectionLevelOptions(): void {
@@ -217,5 +262,38 @@ export class AddHidsComponent extends McsOrderWizardBase implements OnInit, OnDe
       fcServer: this.fcServer,
       fcProtectionLevel: this.fcProtectionLevel,
     });
+  }
+
+  private _registerProvisionStateBitmap(): void {
+    this._backupProvisionMessageBitMap.set(
+      ServerProvisionState.PoweredOff,
+      this._translate.instant('orderAddHids.details.server.serverDisabled', {
+        server_issue: this._translate.instant('orderAddHids.details.server.serverPoweredOff')
+      })
+    );
+
+    this._backupProvisionMessageBitMap.set(
+      ServerProvisionState.ServiceAvailableFalse,
+      this._translate.instant('orderAddHids.details.server.serverDisabled', {
+        server_issue: this._translate.instant('orderAddHids.details.server.serverChangeAvailableFalse')
+      })
+    );
+
+    this._backupProvisionMessageBitMap.set(
+      ServerProvisionState.OsAutomationFalse,
+      this._translate.instant('orderAddHids.details.server.serverDisabled', {
+        server_issue: this._translate.instant('orderAddHids.details.server.serverOsAutomationFalse')
+      })
+    );
+
+    this._backupProvisionMessageBitMap.set(
+      ServerProvisionState.PoweredOff | ServerProvisionState.OsAutomationFalse,
+      this._translate.instant('orderAddHids.details.server.serverDisabled', {
+        server_issue: `
+          ${this._translate.instant('orderAddHids.details.server.serverPoweredOff')} and
+          ${this._translate.instant('orderAddHids.details.server.serverOsAutomationFalse')}
+        `
+      })
+    );
   }
 }

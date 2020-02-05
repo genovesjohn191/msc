@@ -28,6 +28,7 @@ import { McsUniqueId } from '@app/core';
     '[class.option-selected]': 'selected',
     '[class.option-active]': 'active',
     '[class.option-checkable]': 'checkable',
+    '[class.option-disabled]': 'disabled',
     '[class.hide-element]': 'hidden',
     '(click)': 'onClickOption()'
   }
@@ -43,6 +44,11 @@ export class OptionComponent implements OnDestroy {
 
   @Input()
   public id: string = McsUniqueId.NewId('option');
+
+  @Input()
+  public get disabled(): boolean { return this._disabled; }
+  public set disabled(value: boolean) { this._disabled = coerceBoolean(value); }
+  private _disabled: boolean = false;
 
   @Input()
   public value: any;
@@ -121,6 +127,7 @@ export class OptionComponent implements OnDestroy {
    * Event handler that gets emitted when the option was clicked
    */
   public onClickOption(): void {
+    if (this.disabled) { return; }
     this.clickChange.next(this);
   }
 

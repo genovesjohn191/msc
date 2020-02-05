@@ -5,7 +5,6 @@ import {
   InviewLevelSerialization
 } from '../enumerations/inview-level.enum';
 
-
 export class McsStorageBackUpAggregationTarget extends McsEntityBase {
   @JsonProperty()
   public serviceId: string = undefined;

@@ -22,6 +22,8 @@ import {
   filter,
   tap
 } from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
+
 import {
   McsOrderWizardBase,
   CoreValidators,
@@ -36,7 +38,10 @@ import {
   OrderIdType,
   McsOptionGroup,
   McsOrderServerBackupAdd,
-  McsStorageBackUpAggregationTarget
+  McsStorageBackUpAggregationTarget,
+  ServerProvisionState,
+  McsEntityProvision,
+  McsServer
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -70,6 +75,7 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
 
   private _serverBackup: McsOrderServerBackupAdd;
   private _valueChangesSubject = new Subject<void>();
+  private _backupProvisionMessageBitMap = new Map<number, string>();
 
   @ViewChild('fgManageBackupServer', { static: false })
   private _fgManageBackupServer: IMcsFormGroup;
@@ -86,11 +92,13 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
   constructor(
     _injector: Injector,
     private _formBuilder: FormBuilder,
+    private _translate: TranslateService,
     private _serverBackupService: AddServerBackupService,
     private _apiService: McsApiService,
   ) {
     super(_injector, _serverBackupService);
     this._registerFormGroup();
+    this._registerProvisionStateBitmap();
   }
 
   public ngOnInit() {
@@ -155,6 +163,39 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
     });
   }
 
+  private _registerProvisionStateBitmap(): void {
+    this._backupProvisionMessageBitMap.set(
+      ServerProvisionState.PoweredOff,
+      this._translate.instant('orderAddServerBackup.detailsStep.serverDisabled', {
+        server_issue: this._translate.instant('orderAddServerBackup.detailsStep.serverPoweredOff')
+      })
+    );
+
+    this._backupProvisionMessageBitMap.set(
+      ServerProvisionState.ServiceAvailableFalse,
+      this._translate.instant('orderAddServerBackup.detailsStep.serverDisabled', {
+        server_issue: this._translate.instant('orderAddServerBackup.detailsStep.serverChangeAvailableFalse')
+      })
+    );
+
+    this._backupProvisionMessageBitMap.set(
+      ServerProvisionState.OsAutomationFalse,
+      this._translate.instant('orderAddServerBackup.detailsStep.serverDisabled', {
+        server_issue: this._translate.instant('orderAddServerBackup.detailsStep.serverOsAutomationFalse')
+      })
+    );
+
+    this._backupProvisionMessageBitMap.set(
+      ServerProvisionState.PoweredOff | ServerProvisionState.OsAutomationFalse,
+      this._translate.instant('orderAddServerBackup.detailsStep.serverDisabled', {
+        server_issue: `
+          ${this._translate.instant('orderAddServerBackup.detailsStep.serverPoweredOff')} and
+          ${this._translate.instant('orderAddServerBackup.detailsStep.serverOsAutomationFalse')}
+        `
+      })
+    );
+  }
+
   private _subscribeToValueChanges(): void {
     this._valueChangesSubject.next();
     zip(
@@ -195,22 +236,43 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
 
           let platformName = getSafeProperty(server, (obj) => obj.platform.resourceName) || 'Others';
           let foundGroup = groups.find((serverGroup) => serverGroup.groupName === platformName);
+          let serverBackupDetails = this._createServerBackupDetails(server);
 
           if (!isNullOrEmpty(foundGroup)) {
             foundGroup.options.push(
-              createObject(McsOption, { text: server.name, value: server })
+              createObject(McsOption, { text: server.name, value: serverBackupDetails })
             );
             return;
           }
           groups.push(
             new McsOptionGroup(platformName,
-              createObject(McsOption, { text: server.name, value: server })
+              createObject(McsOption, { text: server.name, value: serverBackupDetails })
             )
           );
         });
         return groups;
       })
     );
+  }
+
+  private _createServerBackupDetails(server: McsServer): McsEntityProvision<McsServer> {
+    let serverBackupDetails = new McsEntityProvision<McsServer>();
+    serverBackupDetails.entity = server;
+
+    // TODO: Set the checking here if the server is already provisioned
+    if (false) {
+      serverBackupDetails.disabled = true;
+      serverBackupDetails.provisioned = true;
+      return serverBackupDetails;
+    }
+
+    let serverProvisionMessage = this._backupProvisionMessageBitMap.get(server.provisionStatusBit);
+    if (isNullOrEmpty(serverProvisionMessage)) { return serverBackupDetails; }
+
+    serverBackupDetails.message = serverProvisionMessage;
+    serverBackupDetails.disabled = true;
+    serverBackupDetails.provisioned = false;
+    return serverBackupDetails;
   }
 
   private _subscribeToAggregationTargets(): void {

@@ -31,6 +31,7 @@ import { McsEntityBase } from '../common/mcs-entity.base';
 import { PlatformType } from '../enumerations/platform-type.enum';
 import { Os } from '../enumerations/os.enum';
 import { McsServerOsUpdatesDetails } from './mcs-server-os-updates-details';
+import { ServerProvisionState } from '../enumerations/server-provision-state.enum';
 
 export class McsServer extends McsEntityBase {
   @JsonProperty()
@@ -264,8 +265,7 @@ export class McsServer extends McsEntityBase {
    * Returns true when the server can be ordered
    */
   public get canProvision(): boolean {
-    return this.isManagedVCloud && this.serviceChangeAvailable &&
-      this.osAutomationAvailable && this.isPoweredOn;
+    return this.isManagedVCloud && this.serviceChangeAvailable;
   }
 
   /**
@@ -358,5 +358,17 @@ export class McsServer extends McsEntityBase {
    */
   public get isInviewNone(): boolean {
     return this.inViewLevel === InviewLevel.None;
+  }
+
+  /**
+   * Returns the status provisioning in bit
+   */
+  public get provisionStatusBit(): number {
+    let statusBit: number = 0;
+    if (this.isPoweredOff) { statusBit |= ServerProvisionState.PoweredOff; }
+    if (!this.osAutomationAvailable) { statusBit |= ServerProvisionState.OsAutomationFalse; }
+    if (!this.serviceChangeAvailable) { statusBit |= ServerProvisionState.ServiceAvailableFalse; }
+
+    return statusBit;
   }
 }
