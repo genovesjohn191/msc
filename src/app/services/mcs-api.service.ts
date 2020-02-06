@@ -852,7 +852,7 @@ export class McsApiService {
     );
   }
 
-  public getServerBackupServers(id: string): Observable<McsApiCollection<McsServerBackupServer>> {
+  public getServerBackupServers(): Observable<McsApiCollection<McsServerBackupServer>> {
     return this._serversApi.getServerBackupServers().pipe(
       catchError((error) => this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getServerBackupServers'))),
       map((response) => this._mapToCollection(response.content, response.totalCount))

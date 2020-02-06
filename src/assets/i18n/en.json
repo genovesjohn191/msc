@@ -344,7 +344,16 @@
       "title": "Details",
       "serverLabel": "Please select the servers you wish to provision VM Backup for",
       "serverPlaceholder": "Select server",
-      "serverHelp": "Select one or more servers to install VM Backup on."
+      "serverHelp": "Select one or more servers to install VM Backup on.",
+      "serverProvisioned": "Provisioned",
+      "serverDisabled": "VM backup cannot be process to this server because {{server_issue}}",
+      "serverPoweredOff": "it is powered off",
+      "serverChangeAvailableFalse": "its currently being provisioned",
+      "serverOsAutomationFalse": "OS Automation is not available"
+    },
+    "provisioningStep": {
+      "description": "VM Backup is being provisioned and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
+      "dataInProgress": "Preparing to provision VM Backup. This may take a moment."
     }
   },
   "notification": {

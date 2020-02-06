@@ -20,7 +20,8 @@ import {
   takeUntil,
   map,
   filter,
-  tap
+  tap,
+  switchMap
 } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -41,7 +42,8 @@ import {
   McsStorageBackUpAggregationTarget,
   ServerProvisionState,
   McsEntityProvision,
-  McsServer
+  McsServer,
+  McsServerBackupServer
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -229,41 +231,51 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
   }
 
   private _subscribeToServers(): void {
-    // TODO: map server backup provisioned with server list, call endpoint
-    this.serverGroups$ = this._apiService.getServers().pipe(
-      map((servers) => {
-        let groups: McsOptionGroup[] = [];
+    this.serverGroups$ = this._apiService.getServerBackupServers().pipe(
+      switchMap((backupsCollection) => {
 
-        servers.collection.forEach((server) => {
-          if (!server.canProvision) { return; }
+        return this._apiService.getServers().pipe(
+          map((serversCollection) => {
+            let serverGroups: McsOptionGroup[] = [];
+            let backups = getSafeProperty(backupsCollection, (obj) => obj.collection) || [];
+            let servers = getSafeProperty(serversCollection, (obj) => obj.collection) || [];
 
-          let platformName = getSafeProperty(server, (obj) => obj.platform.resourceName) || 'Others';
-          let foundGroup = groups.find((serverGroup) => serverGroup.groupName === platformName);
-          let serverBackupDetails = this._createServerBackupDetails(server);
+            servers.forEach((server) => {
+              if (!server.canProvision) { return; }
 
-          if (!isNullOrEmpty(foundGroup)) {
-            foundGroup.options.push(
-              createObject(McsOption, { text: server.name, value: serverBackupDetails })
-            );
-            return;
-          }
-          groups.push(
-            new McsOptionGroup(platformName,
-              createObject(McsOption, { text: server.name, value: serverBackupDetails })
-            )
-          );
-        });
-        return groups;
+              let platformName = getSafeProperty(server, (obj) => obj.platform.resourceName) || 'Others';
+              let foundGroup = serverGroups.find((serverGroup) => serverGroup.groupName === platformName);
+              let serverBackupDetails = this._createServerBackupDetails(server, backups);
+
+              if (!isNullOrEmpty(foundGroup)) {
+                foundGroup.options.push(
+                  createObject(McsOption, { text: server.name, value: serverBackupDetails })
+                );
+                return;
+              }
+              serverGroups.push(
+                new McsOptionGroup(platformName,
+                  createObject(McsOption, { text: server.name, value: serverBackupDetails })
+                )
+              );
+            });
+            return serverGroups;
+          })
+        );
       })
     );
   }
 
-  private _createServerBackupDetails(server: McsServer): McsEntityProvision<McsServer> {
+  private _createServerBackupDetails(
+    server: McsServer,
+    backups: McsServerBackupServer[]
+  ): McsEntityProvision<McsServer> {
     let serverBackupDetails = new McsEntityProvision<McsServer>();
     serverBackupDetails.entity = server;
 
-    // TODO: Set the checking here if the server is already provisioned
-    if (false) {
+    // Return immediately when server has been found
+    let serverHidsFound = backups && backups.find((backup) => backup.serverServiceId === server.serviceId);
+    if (serverHidsFound) {
       serverBackupDetails.disabled = true;
       serverBackupDetails.provisioned = true;
       return serverBackupDetails;

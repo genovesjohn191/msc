@@ -134,7 +134,7 @@ export class AddHidsComponent extends McsOrderWizardBase implements OnInit, OnDe
     workflow.state = submitDetails.workflowAction;
     workflow.clientReferenceObject = {
       resourceDescription: this.progressDescription,
-      serviceId: server.serviceId
+      serverId: server.id
     };
     this.submitOrderWorkflow(workflow);
   }
