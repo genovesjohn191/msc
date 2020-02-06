@@ -9,7 +9,8 @@ import {
   McsServerCreateAddOnSqlServer,
   McsServerCreateAddOnInview,
   Os,
-  McsOrderCreate
+  McsOrderCreate,
+  McsOrderItemCreate
 } from '@app/models';
 import { OrderDetails } from '@app/features-shared';
 import { IServerCreate } from './factory/server-create.interface';
@@ -147,13 +148,15 @@ export class ServerCreateBuilder<T> {
       return;
     }
 
-    this._serverCreateService.addOrUpdateOrderItem({
-      itemOrderType: addOnDetails.typeId,
-      referenceId: addOnDetails.referenceId,
-      properties: addOnDetails.properties,
-      parentReferenceId: this._serverCreateService.orderReferenceId,
-      parentServiceId: this._serverCreateService.orderServiceId
-    });
+    this._serverCreateService.addOrUpdateOrderItem(
+      createObject(McsOrderItemCreate, {
+        itemOrderType: addOnDetails.typeId,
+        referenceId: addOnDetails.referenceId,
+        properties: addOnDetails.properties,
+        parentReferenceId: this._serverCreateService.orderReferenceId,
+        parentServiceId: this._serverCreateService.orderServiceId
+      })
+    );
   }
 
   /**

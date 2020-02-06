@@ -17,11 +17,17 @@ import {
   FormGroup,
   FormControl
 } from '@angular/forms';
-import { McsServerCreateAddOnInview } from '@app/models';
+import {
+  McsServerCreateAddOnInview,
+  McsOption,
+  inviewLevelText,
+  InviewLevel
+} from '@app/models';
 import {
   unsubscribeSafely,
   isNullOrEmpty,
-  getSafeProperty
+  getSafeProperty,
+  createObject
 } from '@app/utilities';
 import {
   CoreValidators,
@@ -41,7 +47,7 @@ import {
 export class AddOnInviewComponent implements
   OnInit, OnDestroy, IMcsDataChange<McsServerCreateAddOnInview> {
 
-  public inviewOptions$: Observable<string[]>;
+  public inviewOptions$: Observable<McsOption[]>;
   public fgInview: FormGroup;
   public fcInview: FormControl;
 
@@ -74,10 +80,9 @@ export class AddOnInviewComponent implements
    * Subscribe to inview options
    */
   private _subscribeToInviewOptions(): void {
-    // TODO: This should be obtained on api
     this.inviewOptions$ = of([
-      'Premium',
-      'Standard'
+      createObject(McsOption, { text: inviewLevelText[InviewLevel.Standard], value: InviewLevel.Standard }),
+      createObject(McsOption, { text: inviewLevelText[InviewLevel.Premium], value: InviewLevel.Premium })
     ]);
   }
 

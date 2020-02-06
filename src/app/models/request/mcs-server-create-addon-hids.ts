@@ -1,7 +1,6 @@
-export class McsServerCreateAddOnHids {
-  public protectionLevel: string;
+import { JsonProperty } from '@peerlancers/json-serialization';
 
-  constructor() {
-    this.protectionLevel = undefined;
-  }
+export class McsServerCreateAddOnHids {
+  @JsonProperty()
+  public protectionLevel: string = undefined;
 }
