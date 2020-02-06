@@ -889,8 +889,7 @@ export class McsApiServersService implements IMcsApiServersService {
    */
   public getServerBackupVms(): Observable<McsApiSuccessResponse<McsServerBackupVm[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    // TODO: update endpoint, API not yet ready, this is temporary
-    mcsApiRequestParameter.endPoint = `/servers/vm-backup`;
+    mcsApiRequestParameter.endPoint = `/servers/vm-backups`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -929,8 +928,7 @@ export class McsApiServersService implements IMcsApiServersService {
 public getServerBackupServers():
   Observable<McsApiSuccessResponse<McsServerBackupServer[]>> {
   let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-  // TODO: update endpoint, API not yet ready, this is temporary
-  mcsApiRequestParameter.endPoint = `/servers/server-backup`;
+  mcsApiRequestParameter.endPoint = `/servers/server-backups`;
 
   return this._mcsApiService.get(mcsApiRequestParameter)
     .pipe(

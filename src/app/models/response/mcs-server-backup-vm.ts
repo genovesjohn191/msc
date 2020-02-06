@@ -9,13 +9,16 @@ import {
 export class McsServerBackupVm extends McsEntityBase {
 
   @JsonProperty()
+  public serviceId: string = undefined;
+
+  @JsonProperty()
+  public serverServiceId: string = undefined;
+
+  @JsonProperty()
   public provisioned: boolean = undefined;
 
   @JsonProperty({ target: McsBackupAttempt })
   public lastBackupAttempt: McsBackupAttempt = undefined;
-
-  @JsonProperty()
-  public serviceId: string = undefined;
 
   @JsonProperty({
     serializer: InviewLevelSerialization,

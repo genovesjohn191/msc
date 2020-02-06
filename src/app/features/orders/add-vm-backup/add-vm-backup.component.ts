@@ -20,7 +20,8 @@ import {
   takeUntil,
   filter,
   tap,
-  map
+  map,
+  switchMap
 } from 'rxjs/operators';
 import {
   McsOrderWizardBase,
@@ -36,7 +37,11 @@ import {
   McsOrderItemCreate,
   OrderIdType,
   McsStorageBackUpAggregationTarget,
-  McsOrderVmBackupAdd
+  McsOrderVmBackupAdd,
+  McsServer,
+  McsServerBackupVm,
+  McsEntityProvision,
+  ServerProvisionState
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -50,6 +55,7 @@ import {
 import { McsFormGroupDirective } from '@app/shared';
 import { OrderDetails } from '@app/features-shared';
 import { AddVmBackupService } from './add-vm-backup.service';
+import { TranslateService } from '@ngx-translate/core';
 
 const ADD_VM_BACKUP = Guid.newGuid().toString();
 
@@ -69,6 +75,7 @@ export class AddVmBackupComponent extends McsOrderWizardBase implements OnInit, 
 
   private _vmBackup: McsOrderVmBackupAdd;
   private _valueChangesSubject = new Subject<void>();
+  private _backupProvisionMessageBitMap = new Map<number, string>();
 
   @ViewChild('fgManageBackupVm', { static: false })
   public set fgManageBackupVm(value: IMcsFormGroup) {
@@ -93,11 +100,13 @@ export class AddVmBackupComponent extends McsOrderWizardBase implements OnInit, 
   constructor(
     _injector: Injector,
     private _formBuilder: FormBuilder,
+    private _translate: TranslateService,
     private _vmBackupService: AddVmBackupService,
     private _apiService: McsApiService,
   ) {
     super(_injector, _vmBackupService);
     this._registerFormGroup();
+    this._registerProvisionStateBitmap();
   }
 
   public ngOnInit() {
@@ -156,6 +165,39 @@ export class AddVmBackupComponent extends McsOrderWizardBase implements OnInit, 
     });
   }
 
+  private _registerProvisionStateBitmap(): void {
+    this._backupProvisionMessageBitMap.set(
+      ServerProvisionState.PoweredOff,
+      this._translate.instant('orderAddVmBackup.detailsStep.serverDisabled', {
+        server_issue: this._translate.instant('orderAddVmBackup.detailsStep.serverPoweredOff')
+      })
+    );
+
+    this._backupProvisionMessageBitMap.set(
+      ServerProvisionState.ServiceAvailableFalse,
+      this._translate.instant('orderAddVmBackup.detailsStep.serverDisabled', {
+        server_issue: this._translate.instant('orderAddVmBackup.detailsStep.serverChangeAvailableFalse')
+      })
+    );
+
+    this._backupProvisionMessageBitMap.set(
+      ServerProvisionState.OsAutomationFalse,
+      this._translate.instant('orderAddVmBackup.detailsStep.serverDisabled', {
+        server_issue: this._translate.instant('orderAddVmBackup.detailsStep.serverOsAutomationFalse')
+      })
+    );
+
+    this._backupProvisionMessageBitMap.set(
+      ServerProvisionState.PoweredOff | ServerProvisionState.OsAutomationFalse,
+      this._translate.instant('orderAddVmBackup.detailsStep.serverDisabled', {
+        server_issue: `
+          ${this._translate.instant('orderAddVmBackup.detailsStep.serverPoweredOff')} and
+          ${this._translate.instant('orderAddVmBackup.detailsStep.serverOsAutomationFalse')}
+        `
+      })
+    );
+  }
+
   private _subscribeToValueChanges(): void {
     this._valueChangesSubject.next();
     zip(
@@ -186,32 +228,63 @@ export class AddVmBackupComponent extends McsOrderWizardBase implements OnInit, 
   }
 
   private _subscribeToServers(): void {
-    // TODO: map server vm backup provisioned with server list, call endpoint
-    this.serverGroups$ = this._apiService.getServers().pipe(
-      map((servers) => {
-        let groups: McsOptionGroup[] = [];
+    this.serverGroups$ = this._apiService.getServerBackupVms().pipe(
+      switchMap((backupsCollection) => {
 
-        servers.collection.forEach((server) => {
-          if (!server.canProvision) { return; }
+        return this._apiService.getServers().pipe(
+          map((serversCollection) => {
+            let serverGroups: McsOptionGroup[] = [];
+            let backups = getSafeProperty(backupsCollection, (obj) => obj.collection) || [];
+            let servers = getSafeProperty(serversCollection, (obj) => obj.collection) || [];
 
-          let platformName = getSafeProperty(server, (obj) => obj.platform.resourceName) || 'Others';
-          let foundGroup = groups.find((serverGroup) => serverGroup.groupName === platformName);
+            servers.forEach((server) => {
+              if (!server.canProvision) { return; }
 
-          if (!isNullOrEmpty(foundGroup)) {
-            foundGroup.options.push(
-              createObject(McsOption, { text: server.name, value: server })
-            );
-            return;
-          }
-          groups.push(
-            new McsOptionGroup(platformName,
-              createObject(McsOption, { text: server.name, value: server })
-            )
-          );
-        });
-        return groups;
+              let platformName = getSafeProperty(server, (obj) => obj.platform.resourceName) || 'Others';
+              let foundGroup = serverGroups.find((serverGroup) => serverGroup.groupName === platformName);
+              let serverBackupDetails = this._createServerBackupDetails(server, backups);
+
+              if (!isNullOrEmpty(foundGroup)) {
+                foundGroup.options.push(
+                  createObject(McsOption, { text: server.name, value: serverBackupDetails })
+                );
+                return;
+              }
+              serverGroups.push(
+                new McsOptionGroup(platformName,
+                  createObject(McsOption, { text: server.name, value: serverBackupDetails })
+                )
+              );
+            });
+            return serverGroups;
+          })
+        );
       })
     );
+  }
+
+  private _createServerBackupDetails(
+    server: McsServer,
+    backups: McsServerBackupVm[]
+  ): McsEntityProvision<McsServer> {
+    let serverBackupDetails = new McsEntityProvision<McsServer>();
+    serverBackupDetails.entity = server;
+
+    // Return immediately when server has been found
+    let serverHidsFound = backups && backups.find((backup) => backup.serverServiceId === server.serviceId);
+    if (serverHidsFound) {
+      serverBackupDetails.disabled = true;
+      serverBackupDetails.provisioned = true;
+      return serverBackupDetails;
+    }
+
+    let serverProvisionMessage = this._backupProvisionMessageBitMap.get(server.provisionStatusBit);
+    if (isNullOrEmpty(serverProvisionMessage)) { return serverBackupDetails; }
+
+    serverBackupDetails.message = serverProvisionMessage;
+    serverBackupDetails.disabled = true;
+    serverBackupDetails.provisioned = false;
+    return serverBackupDetails;
   }
 
   private _subscribeToAggregationTargets(): void {

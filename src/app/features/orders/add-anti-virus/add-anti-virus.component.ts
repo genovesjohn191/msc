@@ -144,7 +144,7 @@ export class AddAntiVirusComponent extends McsOrderWizardBase implements OnInit,
     workflow.state = submitDetails.workflowAction;
     workflow.clientReferenceObject = {
       resourceDescription: this.progressDescription,
-      serviceId: server.serviceId
+      serverId: server.id
     };
 
     this.submitOrderWorkflow(workflow);
