@@ -71,7 +71,15 @@ export class AddVmBackupComponent extends McsOrderWizardBase implements OnInit, 
   private _valueChangesSubject = new Subject<void>();
 
   @ViewChild('fgManageBackupVm', { static: false })
-  private _fgManageBackupVm: IMcsFormGroup;
+  public set fgManageBackupVm(value: IMcsFormGroup) {
+    if (isNullOrEmpty(value)) { return; }
+
+    let isRegistered = this.fgVmBackup.contains('fgManageBackupVm');
+    if (isRegistered) { return; }
+    this.fgVmBackup.addControl('fgManageBackupVm',
+      value.getFormGroup().formGroup
+    );
+  }
 
   @ViewChild(McsFormGroupDirective, { static: false })
   public set formGroup(value: McsFormGroupDirective) {
@@ -106,7 +114,7 @@ export class AddVmBackupComponent extends McsOrderWizardBase implements OnInit, 
   }
 
   public get formIsValid(): boolean {
-    return getSafeProperty(this._formGroup, (obj) => obj.isValid()) && getSafeProperty(this._fgManageBackupVm, (obj) => obj.isValid());
+    return getSafeProperty(this._formGroup, (obj) => obj.isValid());
   }
 
   public onChangeVmBackUpDetails(vmBackUpDetails: McsOrderVmBackupAdd): void {
@@ -146,10 +154,6 @@ export class AddVmBackupComponent extends McsOrderWizardBase implements OnInit, 
     this.fgVmBackup = this._formBuilder.group({
       fcServers: this.fcServers,
     });
-    if (!isNullOrEmpty(this._fgManageBackupVm)) {
-      this.fgVmBackup.addControl('fgManageBackupVm',
-        this._fgManageBackupVm.getFormGroup().formGroup);
-    }
   }
 
   private _subscribeToValueChanges(): void {

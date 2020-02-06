@@ -78,7 +78,15 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
   private _backupProvisionMessageBitMap = new Map<number, string>();
 
   @ViewChild('fgManageBackupServer', { static: false })
-  private _fgManageBackupServer: IMcsFormGroup;
+  public set fgManageBackupServer(value: IMcsFormGroup) {
+    if (isNullOrEmpty(value)) { return; }
+
+    let isRegistered = this.fgServerBackup.contains('fgManageBackupServer');
+    if (isRegistered) { return; }
+    this.fgServerBackup.addControl('fgManageBackupServer',
+      value.getFormGroup().formGroup
+    );
+  }
 
   @ViewChild(McsFormGroupDirective, { static: false })
   public set formGroup(value: McsFormGroupDirective) {
@@ -115,7 +123,7 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
   }
 
   public get formIsValid(): boolean {
-    return getSafeProperty(this._formGroup, (obj) => obj.isValid()) && getSafeProperty(this._fgManageBackupServer, (obj) => obj.isValid());
+    return getSafeProperty(this._formGroup, (obj) => obj.isValid());
   }
 
   public onChangeServerBackUpDetails(serverBackUpDetails: McsOrderServerBackupAdd): void {
@@ -152,11 +160,6 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
 
   private _registerFormGroup(): void {
     this.fcServers = new FormControl('', [CoreValidators.required]);
-
-    if (!isNullOrEmpty(this._fgManageBackupServer)) {
-      this.fgServerBackup.addControl('fgManageBackupServer',
-        this._fgManageBackupServer.getFormGroup().formGroup);
-    }
 
     this.fgServerBackup = this._formBuilder.group({
       fcServers: this.fcServers
