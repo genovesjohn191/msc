@@ -40,9 +40,9 @@ export abstract class McsOrderWizardBase extends McsWizardBase implements McsDis
   public pricingCalculator: PricingCalculator;
 
   protected readonly translateService: TranslateService;
+  protected readonly accessControlService: McsAccessControlService;
 
   private _pricingIsHiddenByStep: boolean;
-  private readonly _accessControlService: McsAccessControlService;
   private readonly _navigationService: McsNavigationService;
 
   constructor(
@@ -50,7 +50,7 @@ export abstract class McsOrderWizardBase extends McsWizardBase implements McsDis
     private _orderBase: McsOrderBase
   ) {
     super(_orderBase);
-    this._accessControlService = this._injector.get(McsAccessControlService);
+    this.accessControlService = this._injector.get(McsAccessControlService);
     this._navigationService = this._injector.get(McsNavigationService);
     this.translateService = this._injector.get(TranslateService);
     this._subscribeToOrderChanges();
@@ -136,7 +136,7 @@ export abstract class McsOrderWizardBase extends McsWizardBase implements McsDis
    * Subscribes to order item type changes
    */
   private _subscribeToOrderItemTypeChanges(): void {
-    if (!this._accessControlService.hasAccessToFeature(McsFeatureFlag.Ordering)) { return; }
+    if (!this.accessControlService.hasAccessToFeature(McsFeatureFlag.Ordering)) { return; }
     this.orderItemType$ = this._orderBase.orderItemTypeChange().pipe(
       shareReplay(1)
     );

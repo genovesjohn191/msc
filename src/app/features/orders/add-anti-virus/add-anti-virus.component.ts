@@ -22,8 +22,6 @@ import {
   map,
   switchMap
 } from 'rxjs/operators';
-import { TranslateService } from '@ngx-translate/core';
-
 import {
   McsOrderWizardBase,
   McsFormGroupService,
@@ -40,7 +38,8 @@ import {
   McsEntityProvision,
   McsServerHostSecurityAntiVirus,
   McsOptionGroup,
-  McsOption
+  McsOption,
+  McsPermission
 } from '@app/models';
 import { McsFormGroupDirective } from '@app/shared';
 import { OrderDetails } from '@app/features-shared';
@@ -84,7 +83,6 @@ export class AddAntiVirusComponent extends McsOrderWizardBase implements OnInit,
     _injector: Injector,
     private _elementRef: ElementRef,
     private _formBuilder: FormBuilder,
-    private _translate: TranslateService,
     private _formGroupService: McsFormGroupService,
     private _changeDetectorRef: ChangeDetectorRef,
     private _apiService: McsApiService,
@@ -109,6 +107,10 @@ export class AddAntiVirusComponent extends McsOrderWizardBase implements OnInit,
 
   public get formIsValid(): boolean {
     return getSafeProperty(this._formGroup, (obj) => obj.isValid());
+  }
+
+  public get hasAvPermission(): boolean {
+    return getSafeProperty(this.accessControlService, (obj) => obj.hasPermission([McsPermission.AvView]), false);
   }
 
   public isResourcesEmpty(resourcesMap: Map<string, AntiVirusServers[]>): boolean {
@@ -252,31 +254,31 @@ export class AddAntiVirusComponent extends McsOrderWizardBase implements OnInit,
   private _registerProvisionStateBitmap(): void {
     this._backupProvisionMessageBitMap.set(
       ServerProvisionState.PoweredOff,
-      this._translate.instant('orderAddAntiVirus.details.server.serverDisabled', {
-        server_issue: this._translate.instant('orderAddAntiVirus.details.server.serverPoweredOff')
+      this.translateService.instant('orderAddAntiVirus.details.server.serverDisabled', {
+        server_issue: this.translateService.instant('orderAddAntiVirus.details.server.serverPoweredOff')
       })
     );
 
     this._backupProvisionMessageBitMap.set(
       ServerProvisionState.ServiceAvailableFalse,
-      this._translate.instant('orderAddAntiVirus.details.server.serverDisabled', {
-        server_issue: this._translate.instant('orderAddAntiVirus.details.server.serverChangeAvailableFalse')
+      this.translateService.instant('orderAddAntiVirus.details.server.serverDisabled', {
+        server_issue: this.translateService.instant('orderAddAntiVirus.details.server.serverChangeAvailableFalse')
       })
     );
 
     this._backupProvisionMessageBitMap.set(
       ServerProvisionState.OsAutomationFalse,
-      this._translate.instant('orderAddAntiVirus.details.server.serverDisabled', {
-        server_issue: this._translate.instant('orderAddAntiVirus.details.server.serverOsAutomationFalse')
+      this.translateService.instant('orderAddAntiVirus.details.server.serverDisabled', {
+        server_issue: this.translateService.instant('orderAddAntiVirus.details.server.serverOsAutomationFalse')
       })
     );
 
     this._backupProvisionMessageBitMap.set(
       ServerProvisionState.PoweredOff | ServerProvisionState.OsAutomationFalse,
-      this._translate.instant('orderAddAntiVirus.details.server.serverDisabled', {
+      this.translateService.instant('orderAddAntiVirus.details.server.serverDisabled', {
         server_issue: `
-          ${this._translate.instant('orderAddAntiVirus.details.server.serverPoweredOff')} and
-          ${this._translate.instant('orderAddAntiVirus.details.server.serverOsAutomationFalse')}
+          ${this.translateService.instant('orderAddAntiVirus.details.server.serverPoweredOff')} and
+          ${this.translateService.instant('orderAddAntiVirus.details.server.serverOsAutomationFalse')}
         `
       })
     );

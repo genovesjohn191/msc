@@ -168,13 +168,6 @@ export class ServerManageBackupVmComponent implements
   }
 
   /**
-   * Returns true when the inview level is Premium
-   */
-  public isInviewLevelPremium(aggregationTarget: McsStorageBackUpAggregationTarget): boolean {
-    return InviewLevel.Premium === getSafeProperty(aggregationTarget, (obj) => obj.inviewLevel);
-  }
-
-  /**
    * Event that emits whenever there are changes in the data
    */
   public notifyDataChange(): void {

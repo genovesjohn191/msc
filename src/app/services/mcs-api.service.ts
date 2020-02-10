@@ -104,7 +104,9 @@ import {
   McsServerHostSecurityHidsLog,
   McsServerHostSecurityAvLog,
   McsServerHostSecurityAntiVirus,
-  McsServerHostSecurityHids
+  McsServerHostSecurityHids,
+  McsServerBackupVmDetails,
+  McsServerBackupServerDetails
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -838,6 +840,13 @@ export class McsApiService {
     );
   }
 
+  public getServerBackupVmDetails(id: string): Observable<McsServerBackupVmDetails> {
+    return this._serversApi.getServerBackupVmDetails(id).pipe(
+      catchError((error) => this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getServerBackupVmDetails'))),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
   public getServerBackupVms(): Observable<McsApiCollection<McsServerBackupVm>> {
     return this._serversApi.getServerBackupVms().pipe(
       catchError((error) => this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getServerBackupVms'))),
@@ -848,6 +857,13 @@ export class McsApiService {
   public getServerBackupServer(id: string): Observable<McsServerBackupServer> {
     return this._serversApi.getServerBackupServer(id).pipe(
       catchError((error) => this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getServerBackupServer'))),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public getServerBackupServerDetails(id: string): Observable<McsServerBackupServerDetails> {
+    return this._serversApi.getServerBackupServerDetails(id).pipe(
+      catchError((error) => this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getServerBackupServerDetails'))),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }

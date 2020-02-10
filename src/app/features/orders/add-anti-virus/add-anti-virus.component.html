@@ -30,19 +30,20 @@
           [stepTitle]="'orderAddAntiVirus.details.stepTitle' | translate"
           customClass="contextual-help-page-wrapper limited-view">
           <form [formGroup]="fgAddAntiVirusDetails" mcsFormGroup>
-            <p>{{ 'orderAddAntiVirus.details.server.description' | translate }}</p>
 
-            <ng-container *ngIf="serverGroups$ | async as serverGroups">
-              <mcs-form-field [disabled]="!serverGroups"
-                [mcsContextualHelp]="'orderAddAntiVirus.details.server.contextualHelp' | translate">
+            <ng-container *ngIf="hasAvPermission; else permissionFallbackTemplate">
+              <p>{{ 'orderAddAntiVirus.details.server.description' | translate }}</p>
 
-                <mcs-select mcsId="add-anti-virus-select-server"
-                  (selectionChange)="onChangeServer($event)"
-                  [placeholder]="'orderAddAntiVirus.details.server.placeholder' | translate"
-                  [formControl]="fcServer">
+              <ng-container *ngIf="serverGroups$ | async as serverGroups">
+                <mcs-form-field [disabled]="!serverGroups"
+                  [mcsContextualHelp]="'orderAddAntiVirus.details.server.contextualHelp' | translate">
 
-                  <mcs-search mcsSelectSearch></mcs-search>
+                  <mcs-select mcsId="add-anti-virus-select-server"
+                    (selectionChange)="onChangeServer($event)"
+                    [placeholder]="'orderAddAntiVirus.details.server.placeholder' | translate"
+                    [formControl]="fcServer">
 
+                    <mcs-search mcsSelectSearch></mcs-search>
                     <mcs-option-group *ngFor="let serverGroup of serverGroups">
                       <ng-container *mcsOptionGroupLabel>
                         <span>{{ serverGroup.groupName }}</span>
@@ -65,14 +66,21 @@
                       </mcs-option>
                     </mcs-option-group>
                   </mcs-select>
-              </mcs-form-field>
+                </mcs-form-field>
 
-              <ng-container *ngIf="!serverGroups">
-                <mcs-alert type="warning">
-                  <span>{{'orderAddAntiVirus.details.server.fallbackLabel' | translate }}</span>
-                </mcs-alert>
+                <ng-container *ngIf="!serverGroups">
+                  <mcs-alert type="warning">
+                    <span>{{'orderAddAntiVirus.details.server.serverFallbackLabel' | translate }}</span>
+                  </mcs-alert>
+                </ng-container>
               </ng-container>
             </ng-container>
+
+            <ng-template #permissionFallbackTemplate>
+              <mcs-data-status-warning>
+                <span>{{ 'orderAddAntiVirus.details.server.permissionFallbackLabel' | translate }}</span>
+              </mcs-data-status-warning>
+            </ng-template>
 
             <div class="action-items">
               <button mcsButton arrow="right"
@@ -85,7 +93,6 @@
                 mcsEventLabel="add-anti-virus-next">{{ 'shared.wizard.next' | translate }}</button>
             </div>
           </form>
-
         </mcs-wizard-step>
 
         <!-- Confirm Step  -->

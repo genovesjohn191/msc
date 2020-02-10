@@ -188,6 +188,21 @@
         <ng-container mcsViewServicesTab *ngTemplateOutlet="servicesTabView"></ng-container>
       </mcs-service-hids-details>
     </ng-container>
+
+
+    <!-- Details View VM Backup -->
+    <ng-container [@fadeIn] *ngSwitchCase="serverServicesViewOption.BackupVm">
+      <mcs-service-backup-vm-details [serverId]="server?.id">
+        <ng-container mcsViewServicesTab *ngTemplateOutlet="servicesTabView"></ng-container>
+      </mcs-service-backup-vm-details>
+    </ng-container>
+
+     <!-- Details View Server Backup -->
+     <ng-container [@fadeIn] *ngSwitchCase="serverServicesViewOption.BackupServer">
+      <mcs-service-backup-server-details [serverId]="server?.id">
+        <ng-container mcsViewServicesTab *ngTemplateOutlet="servicesTabView"></ng-container>
+      </mcs-service-backup-server-details>
+    </ng-container>
   </ng-container>
 
   <!-- Go back to services tab view -->
