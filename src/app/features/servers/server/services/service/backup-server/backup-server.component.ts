@@ -8,10 +8,10 @@ import {
   McsServerBackupServer,
   backupStatusTypeSubtitleLabel,
   ServerServicesView,
-  BackupAttemptStatusType,
-  backupAttemptStatusTypeMap,
+  BackupStatusType,
+  backupStatusTypeMap,
   backupServerStatusTypeLabel,
-  backupAttemptStatuLabel
+  backupStatusLabel
 } from '@app/models';
 import {
   CommonDefinition,
@@ -27,7 +27,7 @@ const BACKUP_TIMEZONE = 'Australia/Sydney';
 const BACKUP_DATEFORMAT = `EEEE, d MMMM, yyyy 'at' h:mm a`;
 
 type BackupServerStatusDetails = {
-  status: BackupAttemptStatusType;
+  status: BackupStatusType;
   icon: string;
   label: string;
   sublabel: string;
@@ -51,20 +51,20 @@ export class ServiceBackupServerComponent extends ServerServiceDetailBase implem
     return this._serverBackupServer;
   }
 
-  private _backupServerStatusDetailsMap: Map<BackupAttemptStatusType, BackupServerStatusDetails>;
+  private _backupServerStatusDetailsMap: Map<BackupStatusType, BackupServerStatusDetails>;
   private _backupServerStatusDetails: BackupServerStatusDetails;
   private _serverBackupServer: McsServerBackupServer;
 
   constructor(private _dateTimeService: McsDateTimeService) {
     super(ServerServicesView.BackupServer);
     this._createStatusMap();
-    this._backupServerStatusDetails = this._backupServerStatusDetailsMap.get(BackupAttemptStatusType.NeverAttempted);
+    this._backupServerStatusDetails = this._backupServerStatusDetailsMap.get(BackupStatusType.NeverAttempted);
   }
 
   public ngOnChanges(changes: SimpleChanges) {
     let serverBackupChange = changes['serverBackupServer'];
     if (!isNullOrEmpty(serverBackupChange)) {
-      let statusType: BackupAttemptStatusType = backupAttemptStatusTypeMap[this._serverBackupServer.lastBackupAttempt.status];
+      let statusType: BackupStatusType = backupStatusTypeMap[this._serverBackupServer.lastBackupAttempt.status];
       this._backupServerStatusDetails = this._backupServerStatusDetailsMap.get(statusType);
     }
   }
@@ -78,11 +78,11 @@ export class ServiceBackupServerComponent extends ServerServiceDetailBase implem
   }
 
   public get isStatusUnknown(): boolean {
-    return getSafeProperty(this._backupServerStatusDetails, (obj) => obj.status) === BackupAttemptStatusType.Unknown;
+    return getSafeProperty(this._backupServerStatusDetails, (obj) => obj.status) === BackupStatusType.Unknown;
   }
 
   public get statusTooltip(): string {
-    return getSafeProperty(this._serverBackupServer, (obj) => backupAttemptStatuLabel[obj.lastBackupAttempt.status]);
+    return getSafeProperty(this._serverBackupServer, (obj) => backupStatusLabel[obj.lastBackupAttempt.status]);
   }
 
   public get statusSublabel(): string {
@@ -104,32 +104,32 @@ export class ServiceBackupServerComponent extends ServerServiceDetailBase implem
   private _createStatusMap(): void {
     this._backupServerStatusDetailsMap = new Map();
 
-    this._backupServerStatusDetailsMap.set(BackupAttemptStatusType.Successful, {
-      status: BackupAttemptStatusType.Successful,
+    this._backupServerStatusDetailsMap.set(BackupStatusType.Successful, {
+      status: BackupStatusType.Successful,
       icon: CommonDefinition.ASSETS_SVG_STATE_RUNNING,
-      label: backupServerStatusTypeLabel[BackupAttemptStatusType.Successful],
-      sublabel: backupStatusTypeSubtitleLabel[BackupAttemptStatusType.Successful],
+      label: backupServerStatusTypeLabel[BackupStatusType.Successful],
+      sublabel: backupStatusTypeSubtitleLabel[BackupStatusType.Successful],
       detailsLinkFlag: true
     });
-    this._backupServerStatusDetailsMap.set(BackupAttemptStatusType.Failed, {
-      status: BackupAttemptStatusType.Failed,
+    this._backupServerStatusDetailsMap.set(BackupStatusType.Failed, {
+      status: BackupStatusType.Failed,
       icon: CommonDefinition.ASSETS_SVG_STATE_STOPPED,
-      label: backupServerStatusTypeLabel[BackupAttemptStatusType.Failed],
-      sublabel: backupStatusTypeSubtitleLabel[BackupAttemptStatusType.Failed],
+      label: backupServerStatusTypeLabel[BackupStatusType.Failed],
+      sublabel: backupStatusTypeSubtitleLabel[BackupStatusType.Failed],
       detailsLinkFlag: true
     });
-    this._backupServerStatusDetailsMap.set(BackupAttemptStatusType.InProgress, {
-      status: BackupAttemptStatusType.InProgress,
+    this._backupServerStatusDetailsMap.set(BackupStatusType.InProgress, {
+      status: BackupStatusType.InProgress,
       icon: CommonDefinition.ASSETS_SVG_STATE_RESTARTING,
-      label: backupServerStatusTypeLabel[BackupAttemptStatusType.InProgress],
-      sublabel: backupStatusTypeSubtitleLabel[BackupAttemptStatusType.InProgress],
+      label: backupServerStatusTypeLabel[BackupStatusType.InProgress],
+      sublabel: backupStatusTypeSubtitleLabel[BackupStatusType.InProgress],
       detailsLinkFlag: true
     });
-    this._backupServerStatusDetailsMap.set(BackupAttemptStatusType.NeverAttempted, {
-      status: BackupAttemptStatusType.NeverAttempted,
+    this._backupServerStatusDetailsMap.set(BackupStatusType.NeverAttempted, {
+      status: BackupStatusType.NeverAttempted,
       icon: CommonDefinition.ASSETS_SVG_STATE_SUSPENDED,
-      label: backupServerStatusTypeLabel[BackupAttemptStatusType.NeverAttempted],
-      sublabel: backupStatusTypeSubtitleLabel[BackupAttemptStatusType.NeverAttempted],
+      label: backupServerStatusTypeLabel[BackupStatusType.NeverAttempted],
+      sublabel: backupStatusTypeSubtitleLabel[BackupStatusType.NeverAttempted],
       detailsLinkFlag: false
     });
   }

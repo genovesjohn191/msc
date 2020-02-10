@@ -15,7 +15,6 @@ import {
 import {
   takeUntil,
   map,
-  concatMap,
   filter,
   tap,
   switchMap
@@ -43,7 +42,8 @@ import {
   McsOptionGroup,
   McsEntityProvision,
   ServerProvisionState,
-  McsServerHostSecurityHids
+  McsServerHostSecurityHids,
+  McsPermission
 } from '@app/models';
 import { McsFormGroupDirective } from '@app/shared';
 import { McsApiService } from '@app/services';
@@ -57,7 +57,6 @@ import {
 } from '@app/utilities';
 import { OrderDetails } from '@app/features-shared';
 import { AddHidsService } from './add-hids.service';
-import { TranslateService } from '@ngx-translate/core';
 
 interface HidsServers {
   provisioned: boolean;
@@ -96,7 +95,6 @@ export class AddHidsComponent extends McsOrderWizardBase implements OnInit, OnDe
     _injector: Injector,
     private _formBuilder: FormBuilder,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _translate: TranslateService,
     private _apiService: McsApiService,
     private _addHidsService: AddHidsService
   ) {
@@ -120,6 +118,10 @@ export class AddHidsComponent extends McsOrderWizardBase implements OnInit, OnDe
 
   public get formIsValid(): boolean {
     return getSafeProperty(this._formGroup, (obj) => obj.isValid());
+  }
+
+  public get hasHidsPermission(): boolean {
+    return getSafeProperty(this.accessControlService, (obj) => obj.hasPermission([McsPermission.HidsView]), false);
   }
 
   public onSubmitHidsDetails(server: McsServer): void {
@@ -267,31 +269,31 @@ export class AddHidsComponent extends McsOrderWizardBase implements OnInit, OnDe
   private _registerProvisionStateBitmap(): void {
     this._backupProvisionMessageBitMap.set(
       ServerProvisionState.PoweredOff,
-      this._translate.instant('orderAddHids.details.server.serverDisabled', {
-        server_issue: this._translate.instant('orderAddHids.details.server.serverPoweredOff')
+      this.translateService.instant('orderAddHids.details.server.serverDisabled', {
+        server_issue: this.translateService.instant('orderAddHids.details.server.serverPoweredOff')
       })
     );
 
     this._backupProvisionMessageBitMap.set(
       ServerProvisionState.ServiceAvailableFalse,
-      this._translate.instant('orderAddHids.details.server.serverDisabled', {
-        server_issue: this._translate.instant('orderAddHids.details.server.serverChangeAvailableFalse')
+      this.translateService.instant('orderAddHids.details.server.serverDisabled', {
+        server_issue: this.translateService.instant('orderAddHids.details.server.serverChangeAvailableFalse')
       })
     );
 
     this._backupProvisionMessageBitMap.set(
       ServerProvisionState.OsAutomationFalse,
-      this._translate.instant('orderAddHids.details.server.serverDisabled', {
-        server_issue: this._translate.instant('orderAddHids.details.server.serverOsAutomationFalse')
+      this.translateService.instant('orderAddHids.details.server.serverDisabled', {
+        server_issue: this.translateService.instant('orderAddHids.details.server.serverOsAutomationFalse')
       })
     );
 
     this._backupProvisionMessageBitMap.set(
       ServerProvisionState.PoweredOff | ServerProvisionState.OsAutomationFalse,
-      this._translate.instant('orderAddHids.details.server.serverDisabled', {
+      this.translateService.instant('orderAddHids.details.server.serverDisabled', {
         server_issue: `
-          ${this._translate.instant('orderAddHids.details.server.serverPoweredOff')} and
-          ${this._translate.instant('orderAddHids.details.server.serverOsAutomationFalse')}
+          ${this.translateService.instant('orderAddHids.details.server.serverPoweredOff')} and
+          ${this.translateService.instant('orderAddHids.details.server.serverOsAutomationFalse')}
         `
       })
     );

@@ -39,6 +39,8 @@ import {
   McsServerHostSecurityAvLog,
   McsServerHostSecurityAntiVirus,
   McsServerHostSecurityHids,
+  McsServerBackupVmDetails,
+  McsServerBackupServerDetails,
 } from '@app/models';
 
 export interface IMcsApiServersService {
@@ -309,6 +311,12 @@ export interface IMcsApiServersService {
   getServerBackupVm(id: string): Observable<McsApiSuccessResponse<McsServerBackupVm>>;
 
   /**
+   * Gets the server vm backup details
+   * @param serverId Server id to where the vm backup details will be coming from
+   */
+  getServerBackupVmDetails(id: string): Observable<McsApiSuccessResponse<McsServerBackupVmDetails>>;
+
+  /**
    * Gets the servers with vm backup provision
    */
   getServerBackupVms(): Observable<McsApiSuccessResponse<McsServerBackupVm[]>>;
@@ -318,6 +326,12 @@ export interface IMcsApiServersService {
    * @param serverId Server id to where the server backup will be coming from
    */
   getServerBackupServer(id: string): Observable<McsApiSuccessResponse<McsServerBackupServer>>;
+
+  /**
+   * Gets the server server backup details
+   * @param serverId Server id to where the server backup details will be coming from
+   */
+  getServerBackupServerDetails(id: string): Observable<McsApiSuccessResponse<McsServerBackupServerDetails>>;
 
   /**
    * Gets the servers with server backup provision

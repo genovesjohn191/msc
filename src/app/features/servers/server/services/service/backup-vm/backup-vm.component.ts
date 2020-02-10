@@ -8,10 +8,10 @@ import {
   McsServerBackupVm,
   ServerServicesView,
   backupStatusTypeSubtitleLabel,
-  BackupAttemptStatusType,
-  backupAttemptStatusTypeMap,
+  BackupStatusType,
+  backupStatusTypeMap,
   backupVmStatusTypeLabel,
-  backupAttemptStatuLabel
+  backupStatusLabel
 } from '@app/models';
 import {
   CommonDefinition,
@@ -27,7 +27,7 @@ const BACKUP_TIMEZONE = 'Australia/Sydney';
 const BACKUP_DATEFORMAT = `EEEE, d MMMM, yyyy 'at' h:mm a`;
 
 type BackupVmStatusDetails = {
-  status: BackupAttemptStatusType;
+  status: BackupStatusType;
   icon: string;
   label: string;
   sublabel: string;
@@ -51,20 +51,20 @@ export class ServiceBackupVmComponent extends ServerServiceDetailBase implements
     return this._serverBackupVm;
   }
 
-  private _backupVmStatusDetailsMap: Map<BackupAttemptStatusType, BackupVmStatusDetails>;
+  private _backupVmStatusDetailsMap: Map<BackupStatusType, BackupVmStatusDetails>;
   private _backupVmStatusDetails: BackupVmStatusDetails;
   private _serverBackupVm: McsServerBackupVm;
 
   constructor(private _dateTimeService: McsDateTimeService) {
     super(ServerServicesView.BackupVm);
     this._createStatusMap();
-    this._backupVmStatusDetails = this._backupVmStatusDetailsMap.get(BackupAttemptStatusType.NeverAttempted);
+    this._backupVmStatusDetails = this._backupVmStatusDetailsMap.get(BackupStatusType.NeverAttempted);
   }
 
   public ngOnChanges(changes: SimpleChanges) {
     let vmBackupChange = changes['serverBackupVm'];
     if (!isNullOrEmpty(vmBackupChange)) {
-      let statusType: BackupAttemptStatusType = backupAttemptStatusTypeMap[this._serverBackupVm.lastBackupAttempt.status];
+      let statusType: BackupStatusType = backupStatusTypeMap[this._serverBackupVm.lastBackupAttempt.status];
       this._backupVmStatusDetails = this._backupVmStatusDetailsMap.get(statusType);
     }
   }
@@ -78,11 +78,11 @@ export class ServiceBackupVmComponent extends ServerServiceDetailBase implements
   }
 
   public get isStatusUnknown(): boolean {
-    return getSafeProperty(this._backupVmStatusDetails, (obj) => obj.status) === BackupAttemptStatusType.Unknown;
+    return getSafeProperty(this._backupVmStatusDetails, (obj) => obj.status) === BackupStatusType.Unknown;
   }
 
   public get statusTooltip(): string {
-    return getSafeProperty(this._serverBackupVm, (obj) => backupAttemptStatuLabel[obj.lastBackupAttempt.status]);
+    return getSafeProperty(this._serverBackupVm, (obj) => backupStatusLabel[obj.lastBackupAttempt.status]);
   }
 
   public get statusSublabel(): string {
@@ -104,32 +104,32 @@ export class ServiceBackupVmComponent extends ServerServiceDetailBase implements
   private _createStatusMap(): void {
     this._backupVmStatusDetailsMap = new Map();
 
-    this._backupVmStatusDetailsMap.set(BackupAttemptStatusType.Successful, {
-      status: BackupAttemptStatusType.Successful,
+    this._backupVmStatusDetailsMap.set(BackupStatusType.Successful, {
+      status: BackupStatusType.Successful,
       icon: CommonDefinition.ASSETS_SVG_STATE_RUNNING,
-      label: backupVmStatusTypeLabel[BackupAttemptStatusType.Successful],
-      sublabel: backupStatusTypeSubtitleLabel[BackupAttemptStatusType.Successful],
+      label: backupVmStatusTypeLabel[BackupStatusType.Successful],
+      sublabel: backupStatusTypeSubtitleLabel[BackupStatusType.Successful],
       detailsLinkFlag: true
     });
-    this._backupVmStatusDetailsMap.set(BackupAttemptStatusType.Failed, {
-      status: BackupAttemptStatusType.Failed,
+    this._backupVmStatusDetailsMap.set(BackupStatusType.Failed, {
+      status: BackupStatusType.Failed,
       icon: CommonDefinition.ASSETS_SVG_STATE_STOPPED,
-      label: backupVmStatusTypeLabel[BackupAttemptStatusType.Failed],
-      sublabel: backupStatusTypeSubtitleLabel[BackupAttemptStatusType.Failed],
+      label: backupVmStatusTypeLabel[BackupStatusType.Failed],
+      sublabel: backupStatusTypeSubtitleLabel[BackupStatusType.Failed],
       detailsLinkFlag: true
     });
-    this._backupVmStatusDetailsMap.set(BackupAttemptStatusType.InProgress, {
-      status: BackupAttemptStatusType.InProgress,
+    this._backupVmStatusDetailsMap.set(BackupStatusType.InProgress, {
+      status: BackupStatusType.InProgress,
       icon: CommonDefinition.ASSETS_SVG_STATE_RESTARTING,
-      label: backupVmStatusTypeLabel[BackupAttemptStatusType.InProgress],
-      sublabel: backupStatusTypeSubtitleLabel[BackupAttemptStatusType.InProgress],
+      label: backupVmStatusTypeLabel[BackupStatusType.InProgress],
+      sublabel: backupStatusTypeSubtitleLabel[BackupStatusType.InProgress],
       detailsLinkFlag: true
     });
-    this._backupVmStatusDetailsMap.set(BackupAttemptStatusType.NeverAttempted, {
-      status: BackupAttemptStatusType.NeverAttempted,
+    this._backupVmStatusDetailsMap.set(BackupStatusType.NeverAttempted, {
+      status: BackupStatusType.NeverAttempted,
       icon: CommonDefinition.ASSETS_SVG_STATE_SUSPENDED,
-      label: backupVmStatusTypeLabel[BackupAttemptStatusType.NeverAttempted],
-      sublabel: backupStatusTypeSubtitleLabel[BackupAttemptStatusType.NeverAttempted],
+      label: backupVmStatusTypeLabel[BackupStatusType.NeverAttempted],
+      sublabel: backupStatusTypeSubtitleLabel[BackupStatusType.NeverAttempted],
       detailsLinkFlag: false
     });
   }

@@ -14,16 +14,16 @@
               <span mcsId="backup-server-status-sublabel">
                 {{ statusSublabel }}
               </span>
-              <!-- TODO: to be added when the details view is ready -->
-              <!-- <ng-container *ngIf="statusDetailsLinkFlag">
-                <a mcsId="backup-server-status-details-link"
+              <ng-container *mcsAccessControl="[]; feature: ['EnableAddonServerBackupDetailsView']">
+                <a *ngIf="statusDetailsLinkFlag"
+                  mcsId="backup-server-status-details-link"
                   mcsEventTracker="backup-server-status-details-link-click"
                   mcsEventCategory="server"
                   mcsEventLabel="backup-server-status-details-view"
                   (click)="changeView()">
                   {{ 'serverServices.serverBackup.detailsLink' | translate }}
                 </a>
-              </ng-container> -->
+              </ng-container>
             </mcs-item>
           </small>
         </div>

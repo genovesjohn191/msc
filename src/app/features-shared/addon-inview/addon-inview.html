@@ -8,7 +8,7 @@
         [placeholder]="'serverShared.addOnInview.version.placeholder' | translate"
         [formControl]="fcInview" mcsId="select-inview">
 
-        <mcs-option *ngFor="let inview of inviewOptions$ | async" [value]="inview.value">
+        <mcs-option *ngFor="let inview of inviewLevelOptions$ | async" [value]="inview.value">
           {{ inview.text }}
         </mcs-option>
       </mcs-select>

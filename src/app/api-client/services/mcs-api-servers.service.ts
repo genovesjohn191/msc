@@ -45,7 +45,9 @@ import {
   McsServerHostSecurityHidsLog,
   McsServerHostSecurity,
   McsServerHostSecurityAntiVirus,
-  McsServerHostSecurityHids
+  McsServerHostSecurityHids,
+  McsServerBackupVmDetails,
+  McsServerBackupServerDetails
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiServersService } from '../interfaces/mcs-api-servers.interface';
@@ -885,6 +887,26 @@ export class McsApiServersService implements IMcsApiServersService {
   }
 
   /**
+   * Gets the server vm backup details
+   * @param serverId Server id to where the vm backup details will be coming from
+   */
+  public getServerBackupVmDetails(id: string):
+    Observable<McsApiSuccessResponse<McsServerBackupVmDetails>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/servers/${id}/vm-backup/details`;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsServerBackupVmDetails>(McsServerBackupVmDetails, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  /**
    * Gets the summary of a server's vm backup
    */
   public getServerBackupVms(): Observable<McsApiSuccessResponse<McsServerBackupVm[]>> {
@@ -922,23 +944,43 @@ export class McsApiServersService implements IMcsApiServersService {
       );
   }
 
-/**
- * Gets the servers with server backup provision
- */
-public getServerBackupServers():
-  Observable<McsApiSuccessResponse<McsServerBackupServer[]>> {
-  let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+  /**
+   * Gets the server server backup details
+   * @param serverId Server id to where the server backup details will be coming from
+   */
+  public getServerBackupServerDetails(id: string):
+    Observable<McsApiSuccessResponse<McsServerBackupServerDetails>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/servers/${id}/server-backup/details`;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsServerBackupServerDetails>(McsServerBackupServerDetails, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  /**
+   * Gets the servers with server backup provision
+   */
+  public getServerBackupServers():
+    Observable<McsApiSuccessResponse<McsServerBackupServer[]>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
   mcsApiRequestParameter.endPoint = `/servers/server-backups`;
 
-  return this._mcsApiService.get(mcsApiRequestParameter)
-    .pipe(
-      map((response) => {
-        // Deserialize json reponse
-        let apiResponse = McsApiSuccessResponse
-          .deserializeResponse<McsServerBackupServer[]>(McsServerBackupServer, response);
-        return apiResponse;
-      })
-    );
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsServerBackupServer[]>(McsServerBackupServer, response);
+          return apiResponse;
+        })
+      );
   }
 
   /**

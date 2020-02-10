@@ -47,7 +47,7 @@ import {
 export class AddOnInviewComponent implements
   OnInit, OnDestroy, IMcsDataChange<McsServerCreateAddOnInview> {
 
-  public inviewOptions$: Observable<McsOption[]>;
+  public inviewLevelOptions$: Observable<McsOption[]>;
   public fgInview: FormGroup;
   public fcInview: FormControl;
 
@@ -77,10 +77,10 @@ export class AddOnInviewComponent implements
   }
 
   /**
-   * Subscribe to inview options
+   * Initialize all the options for inview
    */
   private _subscribeToInviewOptions(): void {
-    this.inviewOptions$ = of([
+    this.inviewLevelOptions$ = of([
       createObject(McsOption, { text: inviewLevelText[InviewLevel.Standard], value: InviewLevel.Standard }),
       createObject(McsOption, { text: inviewLevelText[InviewLevel.Premium], value: InviewLevel.Premium })
     ]);

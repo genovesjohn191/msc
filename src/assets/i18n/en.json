@@ -269,7 +269,8 @@
         "description": "Please select the server you wish to provision Anti-Virus for:",
         "contextualHelp": "Select a server to install Anti-Virus on",
         "placeholder": "Select a server",
-        "fallbackLabel": "There are currently no servers available to install Anti-Virus on. Please ensure that the server you are targeting is a Managed vCloud server which is running and not in the process of being provisioned.",
+        "serverFallbackLabel": "There are currently no servers available to install Anti-Virus on. Please ensure that the server you are targeting is a Managed vCloud server which is running and not in the process of being provisioned.",
+        "permissionFallbackLabel": "We're unable to determine which of your servers already have Anti-Virus installed. In order to proceed, you may need to enable the AV User permission in MacquarieView.",
         "optionGroupLabel": "Virtual Data Centres",
         "serverProvisioned": "Provisioned",
         "serverDisabled": "Antivirus cannot be process to this server because {{server_issue}}",
@@ -297,7 +298,8 @@
         "description": "Please select the server you wish to provision Host Intrusion Detection for:",
         "contextualHelp": "Select a server to install Host Intrusion Detection on",
         "placeholder": "Select a server",
-        "fallbackLabel": "There are currently no servers available to install HIDS on. Please ensure that the server you are targeting is a Managed vCloud server which is running and not in the process of being provisioned.",
+        "serverFallbackLabel": "There are currently no servers available to install HIDS on. Please ensure that the server you are targeting is a Managed vCloud server which is running and not in the process of being provisioned.",
+        "permissionFallbackLabel": "We're unable to determine which of your servers already have HIDS installed. In order to proceed, you may need to enable the HIDS User permission in MacquarieView.",
         "optionGroupLabel": "Virtual Data Centres",
         "serverProvisioned": "Provisioned",
         "serverDisabled": "HIDS cannot be process to this server because {{server_issue}}",
@@ -738,6 +740,40 @@
       "destinationIp": "Destination IP",
       "actionTaken": "Action Taken",
       "severity": "Severity"
+    }
+  },
+  "serverServicesVmBackupDetails": {
+    "title":"VM Backup",
+    "description":"VM Backup provides complete image-level backup which captures everything. The table below lists recent backup attempts and their details.",
+    "retentionLabel":"The data retention period for this backup service is {{retention}}.",
+    "inviewLabel":"This service has InView Premium, which grants access to more detailed statistics and graphs.",
+    "noContent":"No backups have been attempted for this server yet. If this server is newly created, you may need to wait until the next scheduled backup.",
+    "errorContent": "Sorry, something’s not right. We weren’t able to retrieve the VM Backup details for this server.",
+    "columnHeaders": {
+      "status": "Status",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "duration": "Duration",
+      "mbModified": "MB Modified",
+      "dataProtectionVolume": "Data Protection Volume"
+    }
+  },
+  "serverServicesServerBackupDetails": {
+    "title":"Server Backup",
+    "description":"Server Backup provides complete image-level backup which captures everything. The table below lists recent backup attempts and their details.",
+    "retentionLabel":"The data retention period for this backup service is {{retention}}.",
+    "inviewLabel":"This service has InView Premium, which grants access to more detailed statistics and graphs.",
+    "noContent":"No backups have been attempted for this server yet. If this server is newly created, you may need to wait until the next scheduled backup.",
+    "errorContent": "Sorry, something’s not right. We weren’t able to retrieve the Server Backup details for this server.",
+    "columnHeaders": {
+      "status": "Status",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "duration": "Duration",
+      "files": "Files",
+      "mbModified": "MB Modified",
+      "dataProtectionVolume": "Data Protection Volume",
+      "deduplicationRatio": "Deduplication Ratio"
     }
   },
   "serverStorage": {
@@ -1794,8 +1830,10 @@
     "cloneServer": "Something went wrong while cloning your server. Please try again.",
     "deleteServer": "Something went wrong while deleting your server. Please try again.",
     "getServerBackupVm": "Something went wrong while retrieving your vm backup for your server. Please try again.",
+    "getServerBackupVmDetails": "Something went wrong while retrieving the vm backup details for your server. Please try again.",
     "getServerBackupVms": "Something went wrong while retrieving your servers with vm backup provisioned. Please try again.",
     "getServerBackupServer": "Something went wrong while retrieving the server backup for your server. Please try again.",
+    "getServerBackupServerDetails": "Something went wrong while retrieving the server backup details for your server. Please try again.",
     "getServerBackupServers": "Something went wrong while retrieving your servers with server backup provisioned. Please try again.",
     "getServerHostSecurity": "Something went wrong while retrieving the host security for your server. Please try again.",
     "getServerHostSecurityAntiVirus": "Something went wrong while retrieving the Anti-Virus for your server. Please try again.",

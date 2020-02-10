@@ -11,7 +11,9 @@ export * from './services/service/anti-virus-details/anti-virus-details.componen
 export * from './services/service/hids/hids.component';
 export * from './services/service/hids-details/hids-details.component';
 export * from './services/service/backup-vm/backup-vm.component';
+export * from './services/service/backup-vm-details/backup-vm-details.component';
 export * from './services/service/backup-server/backup-server.component';
+export * from './services/service/backup-server-details/backup-server-details.component';
 export * from './services/service/anti-virus/anti-virus.component';
 export * from './services/service/hids/hids.component';
 export * from './services/server-services.guard';
