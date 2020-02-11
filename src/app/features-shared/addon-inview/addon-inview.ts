@@ -27,7 +27,8 @@ import {
   unsubscribeSafely,
   isNullOrEmpty,
   getSafeProperty,
-  createObject
+  createObject,
+  getSafeFormValue
 } from '@app/utilities';
 import {
   CoreValidators,
@@ -68,12 +69,12 @@ export class AddOnInviewComponent implements
    * Event that emits whenever there are changes in the data
    */
   public notifyDataChange(): void {
-    let inviewLevel = getSafeProperty(this.fcInview, (obj) => obj.value);
-    if (isNullOrEmpty(inviewLevel)) { return; }
+    let inview = getSafeFormValue(this.fcInview, (obj) => obj.value);
+    if (isNullOrEmpty(inview)) { return; }
 
-    let inviewDetails = new McsServerCreateAddOnInview();
-    inviewDetails.inviewLevel = this.fcInview.value;
-    this.dataChange.emit(inviewDetails);
+    this.dataChange.emit(createObject(McsServerCreateAddOnInview, {
+      inviewLevel: inview
+    }));
   }
 
   /**
