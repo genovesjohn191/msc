@@ -970,7 +970,7 @@ export class McsApiServersService implements IMcsApiServersService {
   public getServerBackupServers():
     Observable<McsApiSuccessResponse<McsServerBackupServer[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-  mcsApiRequestParameter.endPoint = `/servers/server-backups`;
+    mcsApiRequestParameter.endPoint = `/servers/server-backups`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
