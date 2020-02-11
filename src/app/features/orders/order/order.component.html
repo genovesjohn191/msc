@@ -129,10 +129,13 @@
                     <ng-container *ngTemplateOutlet="changeOrderTemplate"></ng-container>
                   </ng-container>
                   <ng-template #contractDurationTemplate>
-                    <span>
+                    <span *ngIf="!isContractDurationZero(selectedOrder.contractDurationMonths); else contractTermCancellationTemplate">
                       {{ selectedOrder.contractDurationMonths }}
                       {{ 'order.contractTermSuffix' | translate }}
                     </span>
+                    <ng-template #contractTermCancellationTemplate>
+                      <span>{{ 'order.contractTermCancellation' | translate }} </span>
+                    </ng-template>
                   </ng-template>
                 </mcs-item>
 

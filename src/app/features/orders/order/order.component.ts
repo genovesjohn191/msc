@@ -136,6 +136,14 @@ export class OrderComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Returns the true if the duration is 0, false otherwise
+   * @param duration contract term duration in months
+   */
+  public isContractDurationZero(duration: number): boolean {
+    return duration === 0;
+  }
+
+  /**
    * Returns the equivalent order item types based on itemTypeId
    * @param typeId Type id to be searched
    */

@@ -36,7 +36,8 @@ import {
   getSafeProperty,
   isNullOrEmpty,
   createObject,
-  buildCron
+  buildCron,
+  getSafeFormValue
 } from '@app/utilities';
 import {
   CoreValidators,
@@ -172,14 +173,14 @@ export class ServerManageBackupVmComponent implements
    */
   public notifyDataChange(): void {
     if (!this.isValid()) { return; }
-    let backupDetils = new McsOrderVmBackupAdd();
-    backupDetils.backupAggregationTarget = this.fcAggregation.value || null;
-    backupDetils.dailySchedule = buildCron({ minute: '0', hour: this.fcBackupSchedule.value });
-    backupDetils.retentionPeriodDays = this.fcRetention.enabled ? this.fcRetention.value || null : null;
-    backupDetils.inviewLevel = this.fcInview.enabled ? this.fcInview.value || null : InviewLevel.Premium;
-    backupDetils.dailyBackupQuotaGB = this.fcDailyQuota.enabled ? this.fcDailyQuota.value || null : null;
 
-    this.dataChange.emit(backupDetils);
+    this.dataChange.emit(createObject(McsOrderVmBackupAdd, {
+      backupAggregationTarget: this.fcAggregation.value || null,
+      dailySchedule: buildCron({ minute: '0', hour: this.fcBackupSchedule.value }),
+      retentionPeriodDays: getSafeFormValue(this.fcRetention, (obj) => obj.value),
+      inviewLevel: getSafeFormValue(this.fcInview, (obj) => obj.value, InviewLevel.Premium),
+      dailyBackupQuotaGB: getSafeFormValue(this.fcDailyQuota, (obj) => obj.value)
+    }));
   }
 
   /**

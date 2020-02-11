@@ -88,6 +88,7 @@
     "charges": "Charges",
     "contractTerm": "Contract Term",
     "contractTermSuffix": "Months",
+    "contractTermCancellation": "30 Day Cancellation",
     "totalOneOffCost": "Total One-Off Cost",
     "totalMonthlyCost": "Total Monthly Cost",
     "lineItemsLabel": "Line Items",

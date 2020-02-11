@@ -50,7 +50,8 @@ import {
   Guid,
   CommonDefinition,
   getSafeProperty,
-  createObject
+  createObject,
+  getSafeFormValue
 } from '@app/utilities';
 import { McsFormGroupDirective } from '@app/shared';
 import { OrderDetails } from '@app/features-shared';
@@ -211,7 +212,7 @@ export class AddVmBackupComponent extends McsOrderWizardBase implements OnInit, 
   }
 
   private _onVmBackupChange(): void {
-    let server = getSafeProperty(this.fcServers, (obj) => obj.value);
+    let server = getSafeFormValue(this.fcServers, (obj) => obj.value);
 
     this._vmBackupService.createOrUpdateOrder(
       createObject(McsOrderCreate, {
