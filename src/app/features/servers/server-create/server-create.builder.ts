@@ -1,7 +1,8 @@
 import { OrderRequester } from '@app/core';
 import {
   isNullOrEmpty,
-  createObject
+  createObject,
+  serializeObjectToJson
 } from '@app/utilities';
 import {
   McsResource,
@@ -186,7 +187,7 @@ export class ServerCreateBuilder<T> {
    * @param serverSql Sql server add on provided
    */
   private _setSqlServerAddOn(serverSql: AddOnDetails<McsServerCreateAddOnSqlServer>): void {
-    this._serverDetails['sqlServer'] = serverSql.properties.sqlServer;
+    this._serverDetails['sqlServer'] = serializeObjectToJson(serverSql.properties.sqlServer);
     this.createOrUpdateServer();
   }
 
@@ -195,7 +196,7 @@ export class ServerCreateBuilder<T> {
    * @param inviewDetails Inview details to be set
    */
   private _setInviewAddOn(inviewDetails: AddOnDetails<McsServerCreateAddOnInview>): void {
-    this._serverDetails['inviewLevel'] = inviewDetails.properties.inviewLevel;
+    this._serverDetails['inviewLevel'] = serializeObjectToJson(inviewDetails.properties.inviewLevel);
     this.createOrUpdateServer();
   }
 }
