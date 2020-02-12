@@ -92,7 +92,7 @@ export class AddOnInviewComponent implements
    */
   private _registerFormGroup(): void {
     // Register Form Groups using binding
-    this.fcInview = new FormControl('', [CoreValidators.required]);
+    this.fcInview = new FormControl(InviewLevel.Premium, [CoreValidators.required]);
 
     this.fgInview = new FormGroup({
       fcInview: this.fcInview

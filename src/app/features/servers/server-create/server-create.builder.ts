@@ -187,7 +187,8 @@ export class ServerCreateBuilder<T> {
    * @param serverSql Sql server add on provided
    */
   private _setSqlServerAddOn(serverSql: AddOnDetails<McsServerCreateAddOnSqlServer>): void {
-    this._serverDetails['sqlServer'] = serializeObjectToJson(serverSql.properties.sqlServer);
+    // TODO: Make this type safe, create a base class with proper properties
+    this._serverDetails['sqlServer'] = serializeObjectToJson(serverSql.properties).sqlServer;
     this.createOrUpdateServer();
   }
 
@@ -196,7 +197,8 @@ export class ServerCreateBuilder<T> {
    * @param inviewDetails Inview details to be set
    */
   private _setInviewAddOn(inviewDetails: AddOnDetails<McsServerCreateAddOnInview>): void {
-    this._serverDetails['inviewLevel'] = serializeObjectToJson(inviewDetails.properties.inviewLevel);
+    // TODO: Make this type safe, create a base class with proper properties
+    this._serverDetails['inviewLevel'] = serializeObjectToJson(inviewDetails.properties).inviewLevel;
     this.createOrUpdateServer();
   }
 }
