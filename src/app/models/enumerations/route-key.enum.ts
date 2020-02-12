@@ -58,6 +58,7 @@ export enum RouteKey {
   OrderAddHids,
   OrderAddServerBackup,
   OrderAddVmBackup,
+  OrderAddBat,
 
   Internet,
   InternetDetails,

@@ -1,0 +1,151 @@
+<mcs-page [header]="'orderAddBat.title' | translate">
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef>
+
+    <!-- Back to previous URL -->
+    <mcs-top-panel-item *mcsTopPanelItemDef no-border>
+      <mcs-action-item mcsAlign="end"
+        mcsNavigateBackward
+        mcsId="navigate-back"
+        mcsEventTracker="navigate-back-click"
+        mcsEventCategory="orders"
+        mcsEventLabel="navigate-back">
+        <mcs-icon [key]="backIconKey" size="small"></mcs-icon>
+        <span>{{ 'shared.wizard.previous' | translate }}</span>
+      </mcs-action-item>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
+  <mcs-content-panel *mcsContentPanelDef>
+
+    <mcs-wizard (stepChange)="onWizardStepChanged($event)">
+
+      <!-- Error message -->
+      <ng-container mcsWizardErrorTemplate>
+        <mcs-form-message #formMessage></mcs-form-message>
+      </ng-container>
+
+      <!-- VDC Details Step-->
+      <mcs-wizard-step id="bat-details-step"
+        [stepTitle]="'orderAddBat.detailsStep.title' | translate"
+        customClass="contextual-help-page-wrapper limited-view">
+
+        <form [formGroup]="fgBat" mcsFormGroup>
+
+          <!-- Aggregation Target -->
+          <mcs-item orientation="separated">
+            <span align-self-start>{{ 'orderAddBat.detailsStep.retentionLabel' | translate }}:</span>
+            <mcs-form-field class="form-field-size-small">
+              <mcs-select required
+                [formControl]="fcRetention"
+                [placeholder]="'orderAddBat.detailsStep.retentionPlaceholder' | translate"
+                [mcsContextualHelp]="'orderAddBat.detailsStep.retentionHelp' | translate"
+                mcsId="select-order-bat-retention"
+                mcsEventTracker="select-retention"
+                mcsEventCategory="order-bat"
+                mcsEventLabel="order-bat-page">
+
+                <mcs-option *ngFor="let retention of retentionOptions$ | async" [value]="retention.value">
+                  {{ retention.text }}
+                </mcs-option>
+              </mcs-select>
+            </mcs-form-field>
+          </mcs-item>
+
+          <!-- InView Level  -->
+          <mcs-item orientation="separated">
+            <span align-self-start>{{ 'orderAddBat.detailsStep.inviewLevelLabel' | translate }}:</span>
+            <mcs-form-field class="form-field-size-small">
+              <mcs-select [formControl]="fcInview" required
+                [placeholder]="'orderAddBat.detailsStep.inviewLevelPlaceholder' | translate"
+                [mcsContextualHelp]="'orderAddBat.detailsStep.inviewLevelHelp' | translate"
+                mcsId="select-order-bat-inview"
+                mcsEventTracker="select-inview-level"
+                mcsEventCategory="order-bat"
+                mcsEventLabel="order-bat-page">
+
+                <mcs-option *ngFor="let inviewLevel of inviewLevelOptions$ | async" [value]="inviewLevel.value">
+                  {{ inviewLevel.text }}
+                </mcs-option>
+              </mcs-select>
+            </mcs-form-field>
+          </mcs-item>
+
+          <!-- BackUp Quota  -->
+          <mcs-item orientation="separated">
+            <span align-self-start>{{ 'orderAddBat.detailsStep.dailyQuotaLabel' | translate }}:</span>
+            <mcs-form-field class="form-field-size-small">
+              <input mcsInput [formControl]="fcDailyQuota"
+                [placeholder]="'orderAddBat.detailsStep.dailyQuotaPlaceholder' | translate"
+                [mcsContextualHelp]="'orderAddBat.detailsStep.dailyQuotaHelp' | translate"
+                mcsId="input-daily-quota"
+                mcsEventTracker="input-daily-quota"
+                mcsEventCategory="order-bat"
+                mcsEventLabel="order-bat-page">
+
+              <mcs-suffix mcsSuffix>{{ 'orderAddBat.detailsStep.dailyQuotaSuffix' | translate }}</mcs-suffix>
+              <mcs-error mcsError errorState="required">
+                {{ 'orderAddBat.detailsStep.dailyQuotaRequired' | translate }}
+              </mcs-error>
+              <mcs-error mcsError errorState="numeric">
+                {{ 'orderAddBat.detailsStep.dailyQuotaNumeric' | translate }}
+              </mcs-error>
+              <mcs-error text-wrap mcsError errorState="min">
+                  {{ 'orderAddBat.detailsStep.dailyQuotaMinimum' | translate: {min_value:(dailyQuotaMin | mcsDataSize: 'GB')} }}
+              </mcs-error>
+              <mcs-error text-wrap mcsError errorState="max">
+                  {{ 'orderAddBat.detailsStep.dailyQuotaMaximum' | translate: {max_value:(dailyQuotaMax | mcsDataSize: 'GB')} }}
+              </mcs-error>
+              <mcs-error text-wrap mcsError errorState="valid">
+                  {{ 'orderAddBat.detailsStep.dailyQuotaInvalid' | translate: {step: stepQuota} }}
+              </mcs-error>
+            </mcs-form-field>
+          </mcs-item>
+
+          <!-- BAT note -->
+          <mcs-note>{{ 'orderAddBat.detailsStep.note' | translate }}</mcs-note>
+
+          <div class="action-items">
+            <button mcsButton arrow="right"
+              mcsWizardStepNext
+              [disabled]="!formIsValid"
+              mcsId="step-1-next"
+              mcsEventTracker="step-1-next"
+              mcsEventCategory="orders"
+              mcsEventLabel="create-bat">{{ 'shared.wizard.next' | translate }}</button>
+          </div>
+        </form>
+      </mcs-wizard-step>
+
+      <!-- Confirm Step  -->
+      <mcs-wizard-step id="confirm-step"
+        [stepTitle]="'shared.wizard.confirm' | translate"
+        customClass="contextual-help-page-wrapper limited-view">
+
+        <mcs-step-order-details [order]="order$ | async"
+          [orderItemType]="orderItemType$ | async"
+          [requestState]="dataStatus$ | async"
+          (dataChange)="onOrderDetailsChange($event)"
+          (submitOrder)="onSubmitOrder($event)">
+        </mcs-step-order-details>
+      </mcs-wizard-step>
+
+      <!-- Go! Step  -->
+      <mcs-wizard-step id="go-step"
+        [stepTitle]="'shared.wizard.completed' | translate"
+        customClass="limited-view">
+
+        <mcs-step-provisioning [jobs]="jobs$ | async" [requestState]="dataStatus$ | async">
+          <ng-container mcsProvisioningStepDescription>
+            {{ 'orderAddBat.provisioningStep.description' | translate }}
+          </ng-container>
+
+          <ng-container mcsProvisioningStepInProgress>
+            {{ 'orderAddBat.provisioningStep.dataInProgress' | translate}}
+          </ng-container>
+        </mcs-step-provisioning>
+      </mcs-wizard-step>
+    </mcs-wizard>
+
+  </mcs-content-panel>
+</mcs-page>

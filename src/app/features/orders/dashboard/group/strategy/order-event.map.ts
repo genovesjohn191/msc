@@ -1,5 +1,3 @@
-// TODO: Remove the comments of all the events that are already implemented
-
 import { IOrderEventStrategy } from './order-event.strategy';
 import { ServerVCloudUpdateEvent } from './events/server-vcloud-update.event';
 import { ServerVCloudCreateEvent } from './events/server-vcloud-create.event';
@@ -10,6 +8,9 @@ import { VdcStorageUpdateEvent } from './events/vdc-storage-update.event';
 import { VdcComputeUpdateEvent } from './events/vdc-compute-update.event';
 import { SecurityHidsProvisionEvent } from './events/security-hids-provision';
 import { SecurityAvProvisionEvent } from './events/security-av-provision';
+
+// TODO: This order doesnt exist in api side yet
+import { BackupAggregationTargetEvent } from './events/backup-aggregation-target.event';
 
 export type OrderEventRecord = Record<string, IOrderEventStrategy>;
 
