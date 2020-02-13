@@ -16,6 +16,7 @@ import { AddAntiVirusComponent } from './add-anti-virus/add-anti-virus.component
 import { AddHidsComponent } from './add-hids/add-hids.component';
 import { AddServerBackupComponent } from './add-server-backup/add-server-backup.component';
 import { AddVmBackupComponent } from './add-vm-backup/add-vm-backup.component';
+import { AddBatComponent } from './add-bat/add-bat.component';
 
 /**
  * List of services for the main module
@@ -41,7 +42,8 @@ export const ordersComponents: any[] = [
   AddAntiVirusComponent,
   AddHidsComponent,
   AddServerBackupComponent,
-  AddVmBackupComponent
+  AddVmBackupComponent,
+  AddBatComponent
 ];
 
 /**
@@ -101,6 +103,11 @@ export const ordersRoutes: Routes = [
     path: 'add/vm-backup',
     component: AddVmBackupComponent,
     data: { routeId: RouteKey.OrderAddVmBackup }
+  },
+  {
+    path: 'add/backup-aggregation-target',
+    component: AddBatComponent,
+    data: { routeId: RouteKey.OrderAddBat }
   },
   // Add additional routes above this line
   {

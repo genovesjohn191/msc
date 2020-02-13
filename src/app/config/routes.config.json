@@ -352,6 +352,13 @@
     "requiredFeatureFlag": "EnableOrderingVmBackupProvision",
     "documentTitle": "Add VM Backup Provision - Macquarie Cloud Services"
   },
+  "orderAddBat": {
+    "enumKey": "orderAddBat",
+    "navigationPath": "orders/add/backup-aggregation-target",
+    "requiredPermissions": ["OrderEdit"],
+    "requiredFeatureFlag": "EnableOrderingBatProvision",
+    "documentTitle": "Add Backup Aggregation Target Provision - Macquarie Cloud Services"
+  },
   "otherTools": {
     "enumKey": "OtherTools",
     "navigationPath": "tools",
