@@ -163,8 +163,6 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
     orderRequester: OrderRequester = OrderRequester.Client
   ): void {
     let orderItemType = this._orderItemTypeChange.getValue() || {} as any;
-    this._orderReferenceId = getSafeProperty(orderDetails, (obj) => obj.items[0].referenceId);
-    this._orderServiceId = getSafeProperty(orderDetails, (obj) => obj.items[0].serviceId);
 
     let orderDescription = orderDetails.description || this._getOrderDescriptionByType(orderItemType);
     let orderContract = orderItemType.orderType !== OrderType.Change ? orderDetails.contractDurationMonths : null;
@@ -179,6 +177,8 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
 
     let orderItems = getSafeProperty(orderDetails, (obj) => obj.items);
     if (!isNullOrEmpty(orderItems)) {
+      this._orderReferenceId = orderItems[0].referenceId;
+      this._orderServiceId =  orderItems[0].serviceId;
       orderItems.forEach((item) => this._orderBuilder.addOrUpdateOrderItem(item));
     }
   }

@@ -2,7 +2,6 @@ import {
   Subscription,
   Subject
 } from 'rxjs';
-import { FormControl } from '@angular/forms';
 
 /**
  * This will check if the inputted object is null/undefined or empty,
@@ -11,7 +10,7 @@ import { FormControl } from '@angular/forms';
  */
 export function isNullOrEmpty<T>(data: T): boolean {
   // Return object in case it is null / undefined already
-  if (data === null || data === undefined) { return true; }
+  if (isNullOrUndefined(data)) { return true; }
   if (data instanceof Array) {
     let actualArrayData = data.filter((record) => !isNullOrUndefined(record));
     return !(actualArrayData ? actualArrayData.length > 0 : false);
