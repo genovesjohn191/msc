@@ -215,18 +215,6 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
   }
 
   /**
-   * Returns a specifc dropdown label based on inview level
-   */
-  public inviewLevelDropdownLabel(server: McsServer): string {
-    if (getSafeProperty(server, (obj) => !obj.serviceChangeAvailable, false)) {
-      return this.translateService.instant('orderServiceRaiseInview.serviceDetails.inview.dropdownLabel.unavailable');
-    }
-
-    return getSafeProperty(server, (obj) => obj.inviewLevelLabel, inviewLevelText[InviewLevel.None]);
-  }
-
-
-  /**
    * Register jobs/notifications events
    */
   private _registerEvents(): void {

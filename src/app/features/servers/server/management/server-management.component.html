@@ -307,7 +307,7 @@
 
             <mcs-item>
               <span>{{ 'serverManagement.serviceInformation.inviewLevel' | translate }}:</span>
-              <span [innerHTML]="serverInviewLevel(server)"></span>
+              <span>{{ server.inviewLevelLabel }}</span>
             </mcs-item>
           </mcs-presentation-panel>
         </mcs-grid-column>
