@@ -143,18 +143,6 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
   }
 
   /**
-   * Return the server inview level
-   * @param server selected server object reference
-   */
-  public serverInviewLevel(server: McsServer): string {
-    let isManageServerWithoutInstallBase = !server.isSelfManaged && !server.serviceChangeAvailable;
-    if (isManageServerWithoutInstallBase) {
-      return this._translate.instant('serverManagement.serviceInformation.inviewLevelUnavailable');
-    }
-    return server.inviewLevelLabel;
-  }
-
-  /**
    * Navigate details tab into given key route
    * @param keyRoute Keyroute where to navigate
    */

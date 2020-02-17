@@ -135,7 +135,8 @@ export class McsServer extends McsEntityBase {
    * Returns the inview level text content
    */
   public get inviewLevelLabel(): string {
-    return inviewLevelText[this.inViewLevel];
+    let isInviewDisplayed = this.isManagedVCloud && this.serviceChangeAvailable;
+    return isInviewDisplayed ? inviewLevelText[this.inviewLevel] : inviewLevelText[InviewLevel.None];
   }
 
   /**
