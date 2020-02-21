@@ -54,16 +54,16 @@
       <!-- Table -->
       <mcs-table #table [dataSource]="dataSource">
         <!-- ID Column -->
-        <ng-container mcsColumnDef="crispTicketNumber">
+        <ng-container mcsColumnDef="ticketNumber">
           <mcs-header-cell *mcsHeaderCellDef>
-            {{ columnSettings.crispTicketNumber.text }}
+            {{ columnSettings.ticketNumber.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
             <a [mcsRouterLink]="[routeKeyEnum.TicketDetails, row.id]"
               mcsId="select-ticket"
               mcsEventTracker="navigate-to-ticke"
               mcsEventCategory="ticket"
-              mcsEventLabel="ticket-listing-page">{{ row.crispTicketNumber }}</a>
+              mcsEventLabel="ticket-listing-page">{{ row.ticketNumber }}</a>
           </mcs-data-cell>
         </ng-container>
 
