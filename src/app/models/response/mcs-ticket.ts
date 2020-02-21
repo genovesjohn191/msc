@@ -25,7 +25,7 @@ export class McsTicket extends McsEntityBase {
   public number: string = undefined;
 
   @JsonProperty()
-  public crispTicketNumber: string = undefined;
+  public ticketNumber: string = undefined;
 
   @JsonProperty()
   public requestor: string = undefined;
@@ -105,7 +105,7 @@ export class McsTicket extends McsEntityBase {
   constructor() {
     super();
     this.number = undefined;
-    this.crispTicketNumber = undefined;
+    this.ticketNumber = undefined;
     this.requestor = undefined;
     this.company = undefined;
     this.shortDescription = undefined;
