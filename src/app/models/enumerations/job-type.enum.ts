@@ -87,6 +87,7 @@ export const jobTypeText = {
   [JobType.ApplyServerOsUpdates]: 'Apply OS Updates',
   [JobType.ScaleManagedServer]: 'Scale Managed Server',
   [JobType.RaiseManagedServerInviewLevel]: 'Raise Managed Server Inview Level',
+  [JobType.ExpandVdcStorage]: 'Expand VDC Storage',
   [JobType.ScaleVdcCompute]: 'Scale VDC',
   [JobType.ProvisionServerBackup]: 'Backup Server',
   [JobType.ProvisionVmBackup]: 'Backup VM',

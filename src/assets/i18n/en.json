@@ -787,7 +787,7 @@
   },
   "serverServicesServerBackupDetails": {
     "title":"Server Backup",
-    "description":"Server Backup provides complete image-level backup which captures everything. The table below lists recent backup attempts and their details.",
+    "description":"Server Backup provides file-level backup which can be configured on a fine-grain basis. The table below lists recent backup attempts and their details.",
     "retentionLabel":"The data retention period for this backup service is {{retention}}.",
     "inviewLabel":"This service has InView Premium, which grants access to more detailed statistics and graphs.",
     "noContent":"No backups have been attempted for this server yet. If this server is newly created, you may need to wait until the next scheduled backup.",
