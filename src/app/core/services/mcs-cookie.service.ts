@@ -2,18 +2,22 @@ import {
   Injectable,
   isDevMode
 } from '@angular/core';
-import {
-  CookieService,
-  CookieOptions
-} from 'ngx-cookie';
+import { CookieService } from 'ngx-cookie-service';
 import {
   isNullOrEmpty,
   isJson
 } from '@app/utilities';
-
 import { CoreConfig } from '../core.config';
 import { McsPlatformService } from '../services/mcs-platform.service';
 let cryptoJS = require('crypto-js');
+
+export interface CookieOptions {
+  expires?: number | Date;
+  path?: string;
+  domain?: string;
+  secure?: boolean;
+  sameSite?: 'Lax' | 'Strict' | 'None';
+}
 
 @Injectable()
 export class McsCookieService {
@@ -40,12 +44,15 @@ export class McsCookieService {
   public setEncryptedItem<T>(
     key: string,
     value: T,
-    options: CookieOptions = { secure: true }
+    options: CookieOptions = { secure: true, sameSite: 'None' }
   ): void {
     // Encrypt the value
     let encrypted: string;
     let securedCookieOptions: CookieOptions = options;
-    securedCookieOptions.secure = this.secured;
+    if (this.secured) {
+      securedCookieOptions.secure = this.secured;
+      securedCookieOptions.sameSite = 'None';
+    }
 
     try {
       if (isJson(value)) {
@@ -62,8 +69,7 @@ export class McsCookieService {
     }
 
     // Save the encrypted data to cookie
-    this._cookieService.put(key, encrypted.toString(),
-      this._getCookieOptions(securedCookieOptions));
+    this._setCookie(key, encrypted.toString(), this._getCookieOptions(securedCookieOptions));
   }
 
   /**
@@ -102,7 +108,7 @@ export class McsCookieService {
   public setItem<T>(
     key: string,
     value: T,
-    options: CookieOptions = { secure: true }
+    options: CookieOptions = { secure: true, sameSite: 'None' }
   ): void {
     let securedCookieOptions: CookieOptions = options;
     securedCookieOptions.secure = this.secured;
@@ -110,8 +116,7 @@ export class McsCookieService {
     let stringValue = isNullOrEmpty(objectValue) ? '' : objectValue.toString();
 
     // Set the content to the cookie
-    this._cookieService.put(key, stringValue,
-      this._getCookieOptions(securedCookieOptions));
+    this._setCookie(key, stringValue, this._getCookieOptions(securedCookieOptions));
   }
 
   /**
@@ -128,8 +133,8 @@ export class McsCookieService {
    * @param key Key of the cookie to removed
    * @param options Options of the cookie
    */
-  public removeItem(key: string, options?: CookieOptions): void {
-    this._cookieService.remove(key, options);
+  public removeItem(key: string, options: CookieOptions = { path: '/' }): void {
+    this._cookieService.delete(key, options.path, options.domain);
   }
 
   /**
@@ -146,5 +151,13 @@ export class McsCookieService {
       cookieOptions.expires = undefined;
     }
     return cookieOptions;
+  }
+
+  private _setCookie(
+    key: string,
+    value: string,
+    options: CookieOptions = { expires: undefined, path: undefined, domain: undefined, secure: true, sameSite: 'None', }
+  ) {
+    this._cookieService.set(key, value, options.expires, options.path, options.domain, options.secure, options.sameSite);
   }
 }

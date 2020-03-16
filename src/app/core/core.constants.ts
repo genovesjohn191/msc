@@ -1,5 +1,6 @@
 /** Services */
 import { StompRService } from '@stomp/ng2-stompjs';
+import { CookieService } from 'ngx-cookie-service';
 import { McsStorageService } from './services/mcs-storage.service';
 import { McsCookieService } from './services/mcs-cookie.service';
 import { McsBrowserService } from './services/mcs-browser.service';
@@ -43,6 +44,7 @@ import { McsSystemMessageService } from './services/mcs-system-message.service';
  */
 export const coreProviders: any[] = [
   StompRService,
+  CookieService,
   McsStorageService,
   McsCookieService,
   McsBrowserService,

@@ -67,7 +67,9 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "fusion:build"
+            "browserTarget": "fusion:build",
+            "port": 443,
+            "host": "dev-portal.macquariecloudservices.com"
           },
           "configurations": {
             "production": {
