@@ -30,6 +30,9 @@ ehthumbs.db
 Icon?
 Thumbs.db
 
+# SSL #
+/ssl/**
+
 # Node Files #
 /node_modules/
 /bower_components/

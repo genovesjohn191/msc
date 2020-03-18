@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --ssl --ssl-key ssl/dev-portal.key --ssl-cert ssl/dev-portal.crt",
     "build": "node --max_old_space_size=3000 ./node_modules/@angular/cli/bin/ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -37,7 +37,7 @@
     "moment-timezone": "^0.5.23",
     "netmask": "^1.0.6",
     "ng2-file-upload": "^1.2.1",
-    "ngx-cookie": "^4.0.2",
+    "ngx-cookie-service": "^3.0.2",
     "raven-js": "^3.26.4",
     "rxjs": "^6.4.0",
     "tslib": "^1.9.0",
