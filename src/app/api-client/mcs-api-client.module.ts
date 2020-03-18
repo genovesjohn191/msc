@@ -5,7 +5,6 @@ import {
   SkipSelf
 } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
-import { CookieModule } from 'ngx-cookie';
 import { McsApiClientConfig } from './mcs-api-client.config';
 import {
   apiClientProviders,
@@ -18,8 +17,7 @@ import {
     ...apiClientInterceptors
   ],
   imports: [
-    HttpClientModule,
-    CookieModule.forRoot()
+    HttpClientModule
   ],
   exports: [
     HttpClientModule

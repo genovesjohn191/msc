@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CookieModule } from 'ngx-cookie';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
@@ -20,7 +19,6 @@ import { MockCoreConfig } from './core-config.mock';
     HttpClientModule,
     HttpClientTestingModule,
     RouterTestingModule,
-    CookieModule.forRoot(),
     EventBusModule.forRoot(),
     McsApiClientTestingModule,
     TranslateModule.forRoot()
