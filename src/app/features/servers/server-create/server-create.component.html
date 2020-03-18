@@ -83,6 +83,7 @@
             <mcs-step-order-details [order]="order$ | async"
               [orderItemType]="orderItemType$ | async"
               [requestState]="dataStatus$ | async"
+              [eventTrack]="orderEventTrack.billingDetailsStep"
               (dataChange)="onServerConfirmOrderChange($event)"
               (submitOrder)="onSubmitOrder($event)">
             </mcs-step-order-details>

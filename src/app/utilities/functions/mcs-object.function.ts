@@ -28,6 +28,14 @@ export function isNullOrUndefined<T>(data: T): boolean {
 }
 
 /**
+ * Returns true if the object has
+ * @param data Data to be checked
+ */
+export function isEmptyObject<T>(obj: T): boolean {
+  return Object.keys(obj).length === 0;
+}
+
+/**
  * This will safely unsubscribe a subscription
  * @param subscriber subscription to unsubscribe
  */

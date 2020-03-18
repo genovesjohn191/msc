@@ -88,7 +88,16 @@ export class AddAntiVirusComponent extends McsOrderWizardBase implements OnInit,
     private _apiService: McsApiService,
     private _addAntiVirusService: AddAntiVirusService
   ) {
-    super(_injector, _addAntiVirusService);
+    super(
+      _injector,
+      _addAntiVirusService,
+      {
+        billingDetailsStep: {
+          category: 'order',
+          label: 'add-antivirus-billing-details-step',
+          action: 'next-button'
+        }
+      });
     this._registerFormGroups();
     this._registerProvisionStateBitmap();
   }

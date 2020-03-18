@@ -108,7 +108,16 @@ export class VdcScaleComponent extends McsOrderWizardBase implements OnInit, OnD
     private _eventDispatcher: EventBusDispatcherService,
     private _errorHandlerService: McsErrorHandlerService,
   ) {
-    super(_injector, _vdcScaleService);
+    super(
+      _injector,
+      _vdcScaleService,
+      {
+        billingDetailsStep: {
+          category: 'order',
+          label: 'scale-vdc-billing-details-step',
+          action: 'next-button'
+        }
+      });
     this._registerFormGroup();
     this._registerEvents();
     this._vdcScale = new VdcManageScale();

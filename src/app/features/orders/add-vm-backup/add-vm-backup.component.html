@@ -97,6 +97,7 @@
         <mcs-step-order-details [order]="order$ | async"
           [orderItemType]="orderItemType$ | async"
           [requestState]="dataStatus$ | async"
+          [eventTrack]="orderEventTrack.billingDetailsStep"
           (dataChange)="onVmBackupOrderChange($event)"
           (submitOrder)="onSubmitOrder($event, fcServers?.value?.id)">
         </mcs-step-order-details>

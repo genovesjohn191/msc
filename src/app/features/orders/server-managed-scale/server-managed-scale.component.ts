@@ -109,7 +109,15 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
     private _apiService: McsApiService,
     private _scaleManagedServerService: ServerManagedScaleService
   ) {
-    super(_injector, _scaleManagedServerService);
+    super(_injector,
+      _scaleManagedServerService,
+      {
+        billingDetailsStep: {
+          category: 'order',
+          label: 'scale-manage-server-billing-details-step',
+          action: 'next-button'
+        }
+      });
     this._registerFormGroups();
     this._registerEvents();
     this._manageScale = new ServerManageScale();

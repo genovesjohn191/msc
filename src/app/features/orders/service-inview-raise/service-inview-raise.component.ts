@@ -121,7 +121,16 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
     private _eventDispatcher: EventBusDispatcherService,
     private _changeDetectorRef: ChangeDetectorRef,
   ) {
-    super(_injector, _serviceInviewRaiseService);
+    super(
+      _injector,
+      _serviceInviewRaiseService,
+      {
+        billingDetailsStep: {
+          category: 'order',
+          label: 'raise-inview-billing-details-step',
+          action: 'next-button'
+        }
+      });
     this._populateInviewLevelLabelMap();
     this._registerFormGroups();
     this._registerEvents();

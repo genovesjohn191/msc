@@ -25,12 +25,17 @@ import {
   McsOrderWorkflow,
   RouteKey,
   McsOrderItemType,
-  McsFeatureFlag
+  McsFeatureFlag,
+  McsEventTrack
 } from '@app/models';
 import { McsOrderBase } from './mcs-order.base';
 import { McsWizardBase } from '../../base/mcs-wizard.base';
 import { McsNavigationService } from '../../services/mcs-navigation.service';
 import { McsAccessControlService } from '../../authentication/mcs-access-control.service';
+interface OrderEventTrack {
+  orderDetailsStep?: McsEventTrack;
+  billingDetailsStep: McsEventTrack;
+}
 
 export abstract class McsOrderWizardBase extends McsWizardBase implements McsDisposable {
   public order$: Observable<McsOrder>;
@@ -47,12 +52,14 @@ export abstract class McsOrderWizardBase extends McsWizardBase implements McsDis
 
   constructor(
     private _injector: Injector,
-    private _orderBase: McsOrderBase
+    private _orderBase: McsOrderBase,
+    public orderEventTrack: OrderEventTrack
   ) {
     super(_orderBase);
     this.accessControlService = this._injector.get(McsAccessControlService);
     this._navigationService = this._injector.get(McsNavigationService);
     this.translateService = this._injector.get(TranslateService);
+    this._setDefaultEventTrackingDetails();
     this._subscribeToOrderChanges();
     this._subscribeToOrderItemTypeChanges();
   }
@@ -158,5 +165,23 @@ export abstract class McsOrderWizardBase extends McsWizardBase implements McsDis
     hasOrder ?
       this.pricingCalculator.showWidget() :
       this.pricingCalculator.hideWidget();
+  }
+
+  private _setDefaultEventTrackingDetails(): void {
+    if (!isNullOrEmpty(this.orderEventTrack) && Object.keys(this.orderEventTrack).length !== 0) {
+      return;
+    }
+    this.orderEventTrack = {
+      orderDetailsStep: {
+        category: 'order',
+        label: 'order-details-step',
+        action: 'next-button'
+      },
+      billingDetailsStep: {
+        category: 'order',
+        label: 'billing-details-step',
+        action: 'next-button'
+      },
+    };
   }
 }
