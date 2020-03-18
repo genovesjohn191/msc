@@ -10,7 +10,6 @@ import {
   HttpClientModule,
   HTTP_INTERCEPTORS
 } from '@angular/common/http';
-import { CookieModule } from 'ngx-cookie';
 import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import {
   McsDisposable,
@@ -46,8 +45,7 @@ import { McsSystemMessageService } from './services/mcs-system-message.service';
   ],
   imports: [
     CommonModule,
-    HttpClientModule,
-    CookieModule.forRoot()
+    HttpClientModule
   ],
   exports: [
     CommonModule,
