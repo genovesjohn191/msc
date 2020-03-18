@@ -51,7 +51,8 @@ import {
   McsOption,
   DataStatus,
   OrderType,
-  McsOrderItemType
+  McsOrderItemType,
+  McsEventTrack
 } from '@app/models';
 import {
   WizardStepComponent,
@@ -83,6 +84,9 @@ export class StepOrderDetailsComponent
 
   @Input()
   public requestState: DataStatus;
+
+  @Input()
+  public eventTrack: McsEventTrack;
 
   // Form variables
   public fgOrderBilling: FormGroup;

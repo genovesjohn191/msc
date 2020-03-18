@@ -142,7 +142,16 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnI
     private _apiService: McsApiService,
     private _errorHandlerService: McsErrorHandlerService,
   ) {
-    super(_injector, _vdcStorageExpandService);
+    super(
+      _injector,
+      _vdcStorageExpandService,
+      {
+        billingDetailsStep: {
+          category: 'order',
+          label: 'expand-vdc-storage-billing-details-step',
+          action: 'next-button'
+        }
+      });
     this._registerFormGroup();
     this._registerEvents();
     this._vdcManageStorage = new VdcManageStorage();

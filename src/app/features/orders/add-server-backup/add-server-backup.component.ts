@@ -105,7 +105,16 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
     private _serverBackupService: AddServerBackupService,
     private _apiService: McsApiService,
   ) {
-    super(_injector, _serverBackupService);
+    super(
+      _injector,
+      _serverBackupService,
+      {
+        billingDetailsStep: {
+          category: 'order',
+          label: 'add-server-backup-billing-details-step',
+          action: 'next-button'
+        }
+      });
     this._registerFormGroup();
     this._registerProvisionStateBitmap();
   }

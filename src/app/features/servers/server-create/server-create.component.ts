@@ -93,7 +93,16 @@ export class ServerCreateComponent extends McsOrderWizardBase
     private _apiService: McsApiService,
     private _serversService: ServersService
   ) {
-    super(_injector, _serverCreateService);
+    super(
+      _injector,
+      _serverCreateService,
+      {
+        billingDetailsStep: {
+          category: 'order',
+          label: 'create-server-billing-details-step',
+          action: 'next-button'
+        }
+      });
     this._serverCreateBuilder = new ServerCreateBuilder(_serverCreateService);
   }
 

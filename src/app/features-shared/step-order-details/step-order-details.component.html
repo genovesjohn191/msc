@@ -212,6 +212,9 @@
       <button mcsButton size="small" arrow="right"
         [disabled]="isNextButtonDisabled"
         mcsId="step-3-next"
+        [mcsEventTracker]="eventTrack.action"
+        [mcsEventCategory]="eventTrack.category"
+        [mcsEventLabel]="eventTrack.label"
         mcsWizardStepNext
         [mcsWizardStepNextWhen]="allFormFieldsAreValid"
         (click)="onClickSubmitOrder()">Next</button>

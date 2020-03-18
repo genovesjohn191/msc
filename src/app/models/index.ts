@@ -217,6 +217,7 @@ export * from './common/mcs-api-error';
 export * from './common/mcs-api-collection';
 export * from './common/mcs-api-error-context';
 export * from './common/mcs-entity.base';
+export * from './common/mcs-event-track';
 export * from './common/mcs-entity-requester';
 export * from './common/mcs-expand-resource-storage';
 export * from './common/mcs-list-panel-item';

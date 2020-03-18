@@ -110,7 +110,16 @@ export class VdcStorageCreateComponent extends McsOrderWizardBase implements OnI
     private _formGroupService: McsFormGroupService,
     private _errorHandlerService: McsErrorHandlerService,
   ) {
-    super(_injector, _vdcStorageCreateService);
+    super(
+      _injector,
+      _vdcStorageCreateService,
+      {
+        billingDetailsStep: {
+          category: 'order',
+          label: 'create-vdc-storage-billing-details-step',
+          action: 'next-button'
+        }
+      });
   }
 
   public ngOnInit() {
