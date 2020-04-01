@@ -166,7 +166,7 @@ export class ServerCommandComponent {
     this._apiService.sendServerPowerState(
       this.server.id,
       createObject(McsServerPowerstateCommand, {
-        command: VmPowerstateCommand.Stop,
+        command: VmPowerstateCommand.PowerOff,
         clientReferenceObject: {
           serverId: this.server.id
         }

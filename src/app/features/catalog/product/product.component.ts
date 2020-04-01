@@ -38,7 +38,6 @@ const PRODUCT_OPTION_TYPE_NUMERIC = 'numeric';
 @Component({
   selector: 'mcs-catalog-product',
   templateUrl: './product.component.html',
-  styleUrls: ['./product.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     'class': 'product-wrapper'

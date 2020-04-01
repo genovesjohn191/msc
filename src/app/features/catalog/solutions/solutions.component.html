@@ -12,7 +12,7 @@
               <mcs-section>
                 <mcs-item *ngFor="let solution of group.solutions">
                   <a mcsButton="basic" labelPlacement="left" text-wrap full-width
-                    (click)="onSolutionChange(solution.id, catalogItem)"
+                    (click)="onSolutionChange(solution.id)"
                     mcsId="select-solution"
                     mcsEventTracker="select-solution"
                     mcsEventCategory="navigation"

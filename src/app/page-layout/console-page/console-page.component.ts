@@ -199,7 +199,7 @@ export class ConsolePageComponent implements AfterViewInit, OnDestroy {
   public stopServer(server: McsServer): void {
 
     let powerStateDetails = new McsServerPowerstateCommand();
-    powerStateDetails.command = VmPowerstateCommand.Stop;
+    powerStateDetails.command = VmPowerstateCommand.PowerOff;
     powerStateDetails.clientReferenceObject = {
       serverId: server.id
     };

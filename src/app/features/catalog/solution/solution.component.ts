@@ -33,7 +33,10 @@ import {
 @Component({
   selector: 'mcs-catalog-solution',
   templateUrl: './solution.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    'class': 'product-wrapper'
+  }
 })
 export class SolutionComponent implements OnInit {
 

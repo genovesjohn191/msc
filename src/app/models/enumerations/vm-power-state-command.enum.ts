@@ -3,9 +3,11 @@ import { McsEnumSerializationBase } from '../serialization/mcs-enum-serializatio
 export enum VmPowerstateCommand {
   Start = 1,
   Restart = 2,
-  Stop = 3,
-  Suspend = 4,
-  Resume = 5
+  Reset = 3,
+  Shutdown = 4,
+  PowerOff = 5,
+  Suspend = 6,
+  Resume = 7
 }
 
 /**
