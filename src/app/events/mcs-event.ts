@@ -6,8 +6,6 @@ import { ServerManagedScaleSelectedEvent } from './items/server-scale-manage-sel
 import { ServerManagedRaiseInviewSelectedEvent } from './items/server-raise-inview-selected.event';
 import { VdcScaleSelectedEvent } from './items/vdc-scale-selected.event';
 import { VdcStorageExpandSelectedEvent } from './items/vdc-storage-expand-selected.event';
-import { ProductSelectedEvent } from './items/product-selected.event';
-import { ProductUnSelectedEvent } from './items/product-unselected.event';
 import { LoaderShowEvent } from './items/loader-show.event';
 import { LoaderHideEvent } from './items/loader-hide.event';
 import { ErrorShowEvent } from './items/error-show.event';
@@ -20,13 +18,11 @@ import { EntityCreatedEvent } from './items/entity-created.event';
 import { EntityDeletedEvent } from './items/entity-deleted.event';
 import { EntityUpdatedEvent } from './items/entity-updated.event';
 
-import { DataChangeProductCatalogEvent } from './items/data-change-product-catalog.event';
 import { DataChangeServersEvent } from './items/data-change-servers.event';
 import { DataChangeResourcesEvent } from './items/data-change-resources.event';
 import { DataChangeToolsEvent } from './items/data-change-tools.event';
 import { DataChangeTicketsEvent } from './items/data-change-tickets.event';
 import { DataChangeSystemMessagesEvent } from './items/data-change-system-messages.event';
-import { DataChangeProductsEvent } from './items/data-change-products.event';
 import { DataChangeOrdersEvent } from './items/data-change-orders.event';
 import { DataChangeMediaEvent } from './items/data-change-media.event';
 import { DataChangeFirewallsEvent } from './items/data-change-firewalls.event';
@@ -82,8 +78,6 @@ export class McsEvent {
   public static serverRaiseInviewSelected = new ServerManagedRaiseInviewSelectedEvent();
   public static vdcScaleSelectedEvent = new VdcScaleSelectedEvent();
   public static vdcStorageExpandSelectedEvent = new VdcStorageExpandSelectedEvent();
-  public static productSelected = new ProductSelectedEvent();
-  public static productUnSelected = new ProductUnSelectedEvent();
   public static loaderShow = new LoaderShowEvent();
   public static loaderHide = new LoaderHideEvent();
   public static errorShow = new ErrorShowEvent();
@@ -96,7 +90,6 @@ export class McsEvent {
   public static entityCreatedEvent = new EntityCreatedEvent();
   public static entityDeletedEvent = new EntityDeletedEvent();
 
-  public static dataChangeProductCatalog = new DataChangeProductCatalogEvent();
   public static dataChangeServers = new DataChangeServersEvent();
   public static dataChangeResources = new DataChangeResourcesEvent();
   public static dataChangeTools = new DataChangeToolsEvent();
@@ -105,7 +98,6 @@ export class McsEvent {
   public static dataChangeFirewalls = new DataChangeFirewallsEvent();
   public static dataChangeMedia = new DataChangeMediaEvent();
   public static dataChangeOrders = new DataChangeOrdersEvent();
-  public static dataChangeProducts = new DataChangeProductsEvent();
   public static dataChangeSystemMessages = new DataChangeSystemMessagesEvent();
   public static dataChangeTickets = new DataChangeTicketsEvent();
   public static dataChangeJobs = new DataChangeJobsEvent();

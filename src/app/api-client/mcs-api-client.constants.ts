@@ -10,7 +10,7 @@ import { McsApiFirewallsService } from './services/mcs-api-firewalls.service';
 import { McsApiJobsService } from './services/mcs-api-jobs.service';
 import { McsApiMediaService } from './services/mcs-api-media.service';
 import { McsApiOrdersService } from './services/mcs-api-orders.service';
-import { McsApiProductsService } from './services/mcs-api-products.service';
+import { McsApiCatalogService } from './services/mcs-api-catalog.service';
 import { McsApiResourcesService } from './services/mcs-api-resources.service';
 import { McsApiServersService } from './services/mcs-api-servers.service';
 import { McsApiStoragesService } from './services/mcs-api-storages.service';
@@ -32,7 +32,7 @@ export const apiClientProviders: Provider[] = [
   McsApiJobsService,
   McsApiMediaService,
   McsApiOrdersService,
-  McsApiProductsService,
+  McsApiCatalogService,
   McsApiResourcesService,
   McsApiServersService,
   McsApiStoragesService,

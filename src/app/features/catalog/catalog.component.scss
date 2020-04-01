@@ -1,0 +1,145 @@
+@import "../../../styles/shared/base";
+
+.catalog-wrapper {
+  display: block;
+
+  // We need to split the serviceId and the header thats why
+  // we need to set the page header into 100%, need to fix this
+  // on relayout of the whole page
+  .page-header {
+    width: 100%;
+  }
+}
+
+
+@import "../../../styles/shared/base";
+@import "../../../styles/core/fonts";
+@import "../../../styles/core/elements/mcs-anchor";
+@import "../../../styles/core/elements/mcs-bold";
+@import "../../../styles/core/elements/mcs-button";
+@import "../../../styles/core/elements/mcs-form-field";
+@import "../../../styles/core/elements/mcs-heading";
+@import "../../../styles/core/elements/mcs-paragraph";
+@import "../../../styles/core/elements/mcs-small";
+@import "../../../styles/core/elements/mcs-strong";
+@import "../../../styles/core/elements/mcs-table";
+
+$product-max-width: 100%;
+$product-catalog-description-max-height: 30px;
+$product-catalog-widget-size: 350px;
+$product-panel-color: $color-grey-08;
+
+.product-wrapper {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  @include display-flex(column);
+  max-width: $product-max-width;
+  max-height: 100%;
+  overflow: hidden;
+
+  // We need to set the margin of headings so that
+  // when the product displays everything will be auto adjust
+  // Note: This is only applicable for product catalog
+  h1, h2, h3, h4, h5, h6 {
+    margin-bottom: $space-small;
+  }
+
+  sup {
+    font-size: x-small;
+    vertical-align: super;
+  }
+}
+
+.product-catalog-description {
+  @include flex(1 0 auto);
+  @include display-flex(column);
+  margin: $space-large $space-medium;
+  margin-bottom: 0;
+  position: relative;
+  max-height: $product-catalog-description-max-height;
+  overflow: hidden;
+
+  &.expanded {
+    height: auto;
+    max-height: unset;
+    overflow: unset;
+  }
+
+  .product-catalog-shorted-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .product-catalog-text {
+    display: block;
+  }
+}
+
+.product-catalog-read-action {
+  @include flex(1 0 auto);
+}
+
+.product-catalog-content {
+  @include flex(1);
+  @include display-flex(column);
+}
+
+.product-catalog-item {
+  margin: 0;
+  margin-bottom: $space-large;
+}
+
+.product-catalog-banner {
+  @include display-flex(column);
+  @include align-items(center);
+  justify-content: center;
+
+  @include breakpoint(small) {
+    position: absolute;
+  }
+}
+
+.product-catalog-widget-wrapper {
+  float: right;
+  @include set-items-interval($space-medium);
+  width: 100%;
+  max-width: $product-catalog-widget-size;
+  margin: $space-large;
+  @include display-flex(column);
+
+  @include breakpoint(small) {
+    float: none;
+    margin: 0;
+  }
+}
+
+// Set the scrollable link numbering based on the scrollable link items
+.scrollable-link-wrapper:not(:only-child) {
+  counter-increment: link-item-count;
+
+  .scroll-link-label {
+    h1:before {
+      content: counter(link-item-count) ". ";
+    }
+  }
+
+  .product-catalog-item {
+    counter-increment: product-catalog-item-count;
+    h2:before {
+      content: counter(link-item-count) "." counter(product-catalog-item-count) ". ";
+    }
+  }
+}
+
+.scrollable-link-wrapper:only-child {
+  .product-catalog-item {
+    counter-increment: product-catalog-item-count;
+    h2:before {
+      content: counter(product-catalog-item-count) ". ";
+    }
+  }
+}

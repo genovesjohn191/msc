@@ -1,0 +1,38 @@
+<ng-container *ngIf="platform$ | async as platform">
+  <!-- With records -->
+  <mcs-grid *ngIf="platform.families | mcsIsNotNullOrEmpty; else emptyTemplate">
+    <mcs-grid-row>
+      <ng-container *ngFor="let family of platform.families; last as isLastItem">
+        <mcs-grid-column>
+          <mcs-presentation-panel>
+            <ng-container mcsPresentationPanelHeader>
+              <h2>{{ family.name }}</h2>
+            </ng-container>
+
+            <mcs-section>
+              <mcs-list [header]="group.name" *ngFor="let group of family.groups">
+                <mcs-item *ngFor="let product of group.products">
+                  <a mcsButton="basic" mcsId="select-product"
+                    [mcsGreyedOut]="product.isActiveIncompleteRelease"
+                    labelPlacement="left" text-wrap full-width
+                    (click)="onProductChange(product.id, catalogItem)"
+                    mcsEventTracker="select-product"
+                    mcsEventCategory="navigation"
+                    mcsEventLabel="main-nav">
+                    {{ product.name }}
+                  </a>
+                </mcs-item>
+              </mcs-list>
+            </mcs-section>
+          </mcs-presentation-panel>
+        </mcs-grid-column>
+        <mcs-divider *ngIf="!isLastItem" orientation="vertical"></mcs-divider>
+      </ng-container>
+    </mcs-grid-row>
+  </mcs-grid>
+
+  <!-- Without records -->
+  <ng-template #emptyTemplate>
+    <p>No products to be displayed.</p>
+  </ng-template>
+</ng-container>

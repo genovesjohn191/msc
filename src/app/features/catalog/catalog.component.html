@@ -1,0 +1,124 @@
+<mcs-page>
+  <!-- Page template header -->
+  <ng-container *mcsPageHeader>
+    <!-- Header -->
+    <ng-container *ngIf="activeCatalogItemDetails$ | async as activeCatalogItem">
+      <mcs-item full-width>
+        <div>
+          <h1>{{ activeCatalogItem?.header?.title }}</h1>
+        </div>
+        <mcs-item mcsAlign="end">
+          <h3 *ngIf="activeCatalogItem?.header?.prefix">{{ activeCatalogItem.header.prefix }}</h3>
+          <span read-only *ngIf="activeCatalogItem?.header?.version">v{{ activeCatalogItem.header.version }}</span>
+        </mcs-item>
+      </mcs-item>
+    </ng-container>
+  </ng-container>
+
+  <!-- Side Menu -->
+  <mcs-left-panel *mcsLeftPanelDef="'catalog.leftPanelHeader' | translate">
+    <!-- Catalog Options -->
+    <ng-container *ngIf="catalogOptions$ | async as catalogOptions">
+
+      <mcs-left-panel-item *mcsLeftPanelItemDef>
+        <mcs-section>
+          <ng-container *ngIf="activeCatalogItemDetails$ | async as activeCatalogItem">
+            <ng-container *ngIf="catalogItemMenu$ | async as catalogItemMenu">
+              <mcs-radio-button-group mcsId="catalog-type" orientation="horizontal" [value]="catalogItemMenu.catalogItem.type">
+                <mcs-radio-button *ngFor="let option of catalogOptions" [value]="option.value.type"
+                  (click)="onCatalogTypeChange(option.value.type, activeCatalogItem.catalogViewType, catalogItemMenu.catalogItem.type)">
+                  {{ option.text }}
+                </mcs-radio-button>
+              </mcs-radio-button-group>
+            </ng-container>
+          </ng-container>
+        </mcs-section>
+      </mcs-left-panel-item>
+
+      <ng-container *ngIf="activeCatalogItemDetails$ | async as activeCatalogItem">
+        <ng-container *ngIf="catalogViewTypeEnum.ProductPlatform === activeCatalogItem.catalogViewType">
+          <ng-container *ngIf="catalogItemMenu$ | async as productCatalogMenu">
+            <mcs-left-panel-item *mcsLeftPanelItemDef>
+              <mcs-section>
+                <strong>{{ 'catalog.platformLabel' | translate | translate }}</strong>
+                <mcs-radio-button-group orientation="vertical" [value]="productCatalogMenu.catalogItem.content.platforms">
+                  <ng-container *ngFor="let platform of sortPlatforms(productCatalogMenu.catalogItem.content.platforms)">
+                    <mcs-item>
+                      <mcs-radio-button *ngIf="platform.families | mcsIsNotNullOrEmpty" mcsId [value]="platform"
+                        (click)="onProductsPlatformChange(platform)">
+                        {{ platform.name }}
+                      </mcs-radio-button>
+                    </mcs-item>
+                  </ng-container>
+                </mcs-radio-button-group>
+              </mcs-section>
+            </mcs-left-panel-item>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+
+      <!-- Catalog Item Selection Panel -->
+      <ng-container *ngIf="catalogItemMenu$ | async as catalogItemMenu">
+        <ng-container *ngIf="activeCatalogItemDetails$ | async as activeCatalogItem">
+          <ng-container *ngIf="catalogItemMenu.showMenu">
+            <mcs-left-panel-item *mcsLeftPanelItemDef [ngStyle]="{'padding-top': 0}">
+              <div class="listing-panel-wrapper">
+                <!-- TODO: Hidden temporarily since the API search is not yet implemented -->
+                <mcs-search [hidden]="true" #search mcsId="products-listing-panel-search"></mcs-search>
+
+                <mcs-list-panel [dataSource]="listviewDatasource" [config]="listViewConfig?.panelSettings">
+                  <ng-container [ngSwitch]="catalogItemMenu.catalogItem.type" *mcsListPanelContent="let entity">
+
+                    <!-- In case of Products -->
+                    <ng-container *ngSwitchCase="catalogTypeEnum.Products">
+                      <mcs-option-group [label]="entity.name">
+
+                        <mcs-option-group [label]="family.name" *ngFor="let family of entity.families">
+                          <mcs-option-group [label]="group.name" *ngFor="let group of family.groups">
+
+                            <a *ngFor="let product of group.products" (click)="onProductChange(product.id)"
+                              mcsId="select-product" mcsEventTracker="select-product"
+                              mcsEventCategory="product products" mcsEventLabel="products-panel">
+
+                              <mcs-option [value]="product" [selected]="activeCatalogItem.id === product.id">
+                                <div margin-left-xsmall>
+                                  <span text-wrap>{{ product.name }}</span>
+                                </div>
+                              </mcs-option>
+                            </a>
+                          </mcs-option-group>
+                        </mcs-option-group>
+                      </mcs-option-group>
+                    </ng-container>
+
+                    <!-- In case of Solutions -->
+                    <ng-container *ngSwitchCase="catalogTypeEnum.Solutions">
+                      <mcs-option-group [label]="entity.name">
+
+                        <a *ngFor="let solution of entity.solutions" (click)="onSolutionChange(solution.id)"
+                          mcsId="select-solution" mcsEventTracker="select-solutions" mcsEventCategory="solution"
+                          mcsEventLabel="group-panel">
+
+                          <mcs-option [value]="solution" [selected]="activeCatalogItem.id === solution.id">
+                            <div margin-left-xsmall>
+                              <span text-wrap>{{ solution.name }}</span>
+                            </div>
+                          </mcs-option>
+                        </a>
+                      </mcs-option-group>
+                    </ng-container>
+                  </ng-container>
+                </mcs-list-panel>
+              </div>
+            </mcs-left-panel-item>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+  </mcs-left-panel>
+
+  <!-- Router-based Content View-->
+  <mcs-content-panel *mcsContentPanelDef>
+    <router-outlet></router-outlet>
+  </mcs-content-panel>
+</mcs-page>

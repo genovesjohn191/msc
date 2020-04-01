@@ -87,8 +87,6 @@ import {
   McsConsole,
   McsCompany,
   McsFirewall,
-  McsProduct,
-  McsProductCatalog,
   McsSystemMessage,
   McsSystemMessageCreate,
   McsSystemMessageEdit,
@@ -106,7 +104,12 @@ import {
   McsServerHostSecurityAntiVirus,
   McsServerHostSecurityHids,
   McsServerBackupVmDetails,
-  McsServerBackupServerDetails
+  McsServerBackupServerDetails,
+  McsCatalog,
+  McsCatalogProductBracket,
+  McsCatalogSolutionBracket,
+  McsCatalogProduct,
+  McsCatalogSolution
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -137,7 +140,9 @@ import {
   IMcsApiToolsService,
   McsApiToolsFactory,
   IMcsApiStoragesService,
-  McsApiStoragesFactory
+  McsApiStoragesFactory,
+  IMcsApiCatalogService,
+  McsApiCatalogFactory
 } from '@app/api-client';
 import { McsEvent } from '@app/events';
 import { McsRepository } from './core/mcs-repository.interface';
@@ -148,8 +153,6 @@ import { McsServersRepository } from './repositories/mcs-servers.repository';
 import { McsResourcesRepository } from './repositories/mcs-resources.repository';
 import { McsTicketsRepository } from './repositories/mcs-tickets.repository';
 import { McsSystemMessagesRepository } from './repositories/mcs-system-messages.repository';
-import { McsProductsRepository } from './repositories/mcs-products.repository';
-import { McsProductCatalogRepository } from './repositories/mcs-product-catalog.repository';
 import { McsOrdersRepository } from './repositories/mcs-orders.repository';
 import { McsMediaRepository } from './repositories/mcs-media.repository';
 import { McsFirewallsRepository } from './repositories/mcs-firewalls.repository';
@@ -173,8 +176,6 @@ export class McsApiService {
   private readonly _resourcesRepository: McsResourcesRepository;
   private readonly _ticketsRepository: McsTicketsRepository;
   private readonly _systemMessagesRepository: McsSystemMessagesRepository;
-  private readonly _productsRepository: McsProductsRepository;
-  private readonly _productCatalogRepository: McsProductCatalogRepository;
   private readonly _ordersRepository: McsOrdersRepository;
   private readonly _mediaRepository: McsMediaRepository;
   private readonly _firewallsRepository: McsFirewallsRepository;
@@ -194,6 +195,7 @@ export class McsApiService {
   private readonly _consoleApi: IMcsApiConsoleService;
   private readonly _systemMessageApi: IMcsApiSystemService;
   private readonly _toolsService: IMcsApiToolsService;
+  private readonly _catalogService: IMcsApiCatalogService;
 
   private readonly _eventDispatcher: EventBusDispatcherService;
   private readonly _entitiesEventMap: Array<DataEmitter<any>>;
@@ -207,8 +209,6 @@ export class McsApiService {
     this._resourcesRepository = _injector.get(McsResourcesRepository);
     this._ticketsRepository = _injector.get(McsTicketsRepository);
     this._systemMessagesRepository = _injector.get(McsSystemMessagesRepository);
-    this._productsRepository = _injector.get(McsProductsRepository);
-    this._productCatalogRepository = _injector.get(McsProductCatalogRepository);
     this._ordersRepository = _injector.get(McsOrdersRepository);
     this._mediaRepository = _injector.get(McsMediaRepository);
     this._firewallsRepository = _injector.get(McsFirewallsRepository);
@@ -230,6 +230,7 @@ export class McsApiService {
     this._consoleApi = apiClientFactory.getService(new McsApiConsoleFactory());
     this._systemMessageApi = apiClientFactory.getService(new McsApiSystemFactory());
     this._toolsService = apiClientFactory.getService(new McsApiToolsFactory());
+    this._catalogService = apiClientFactory.getService(new McsApiCatalogFactory());
 
     // Register events
     this._entitiesEventMap = [];
@@ -1259,37 +1260,66 @@ export class McsApiService {
     );
   }
 
-  public getProducts(query?: McsQueryParam): Observable<McsApiCollection<McsProduct>> {
-    return this._mapToEntityRecords(this._productsRepository, query).pipe(
+  public getCatalog(): Observable<McsCatalog> {
+    return this._catalogService.getCatalog().pipe(
       catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getProducts'))
-      )
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getCatalog'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
 
-  public getProduct(id: string): Observable<McsProduct> {
-    return this._mapToEntityRecord(this._productsRepository, id).pipe(
+  public getCatalogProducts(): Observable<McsCatalogProductBracket> {
+    return this._catalogService.getCatalogProducts().pipe(
       catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getProduct'))
-      )
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getCatalogProducts'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
 
-  public getProductCatalogs(query?: McsQueryParam): Observable<McsApiCollection<McsProductCatalog>> {
-    return this._mapToEntityRecords(this._productCatalogRepository, query).pipe(
+  public getCatalogSolutions(): Observable<McsCatalogSolutionBracket> {
+    return this._catalogService.getCatalogSolutions().pipe(
       catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getProductCatalogs'))
-      )
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getCatalogSolutions'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
 
-  public getProductCatalog(id: string): Observable<McsProductCatalog> {
-    return this._mapToEntityRecord(this._productCatalogRepository, id).pipe(
+  public getCatalogProduct(id: string): Observable<McsCatalogProduct> {
+    return this._catalogService.getCatalogProduct(id).pipe(
       catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getProductCatalog'))
-      )
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getCatalogProduct'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
+
+  public getCatalogSolution(id: string): Observable<McsCatalogSolution> {
+    return this._catalogService.getCatalogSolution(id).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getCatalogSolution'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  // public getProductCatalogs(query?: McsQueryParam): Observable<McsApiCollection<McsProductCatalog>> {
+  //   return this._mapToEntityRecords(this._productCatalogRepository, query).pipe(
+  //     catchError((error) =>
+  //       this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getProductCatalogs'))
+  //     )
+  //   );
+  // }
+
+  // public getProductCatalog(id: string): Observable<McsProductCatalog> {
+  //   return this._mapToEntityRecord(this._productCatalogRepository, id).pipe(
+  //     catchError((error) =>
+  //       this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getProductCatalog'))
+  //     )
+  //   );
+  // }
 
   /**
    * Dispatch the entity requester event based on the action provided
@@ -1434,16 +1464,6 @@ export class McsApiService {
     this._entitiesEventMap.push({
       event: McsEvent.dataChangeSystemMessages,
       eventEmitter: this._systemMessagesRepository.dataChange()
-    });
-
-    this._entitiesEventMap.push({
-      event: McsEvent.dataChangeProducts,
-      eventEmitter: this._productsRepository.dataChange()
-    });
-
-    this._entitiesEventMap.push({
-      event: McsEvent.dataChangeProductCatalog,
-      eventEmitter: this._productCatalogRepository.dataChange()
     });
 
     this._entitiesEventMap.push({

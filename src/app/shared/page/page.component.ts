@@ -43,7 +43,7 @@ import { PageService } from './page.service';
 
 export class PageComponent implements AfterViewInit {
 
-  @ViewChild('pageLeftElement', { static: false })
+  @ViewChild('pageLeftElement', { static: true })
   public pageLeftElement: ElementRef;
 
   @ViewChild('headerContainer', { read: ViewContainerRef, static: false })
