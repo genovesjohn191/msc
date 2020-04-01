@@ -22,13 +22,6 @@ export interface CookieOptions {
 @Injectable()
 export class McsCookieService {
 
-  /**
-   * Returns true if the cookie should be secured
-   */
-  public get secured(): boolean {
-    return !isDevMode();
-  }
-
   constructor(
     private _cookieService: CookieService,
     private _coreConfig: CoreConfig,
@@ -44,13 +37,12 @@ export class McsCookieService {
   public setEncryptedItem<T>(
     key: string,
     value: T,
-    options: CookieOptions = { secure: true, sameSite: 'None' }
+    options: CookieOptions = { secure: true, sameSite: 'Lax' }
   ): void {
     // Encrypt the value
     let encrypted: string;
     let securedCookieOptions: CookieOptions = options;
-    if (this.secured) {
-      securedCookieOptions.secure = this.secured;
+    if (this._devMode) {
       securedCookieOptions.sameSite = 'None';
     }
 
@@ -108,15 +100,17 @@ export class McsCookieService {
   public setItem<T>(
     key: string,
     value: T,
-    options: CookieOptions = { secure: true, sameSite: 'None' }
+    options: CookieOptions = { secure: true, sameSite: 'Lax' }
   ): void {
     let securedCookieOptions: CookieOptions = options;
-    securedCookieOptions.secure = this.secured;
+    if (this._devMode) {
+      securedCookieOptions.sameSite = 'None';
+    }
     let objectValue = isJson(value) ? JSON.stringify(value) : value;
     let stringValue = isNullOrEmpty(objectValue) ? '' : objectValue.toString();
 
     // Set the content to the cookie
-    this._setCookie(key, stringValue, this._getCookieOptions(securedCookieOptions));
+    this._setCookie(key, stringValue, this._getCookieOptions(options));
   }
 
   /**
@@ -153,11 +147,21 @@ export class McsCookieService {
     return cookieOptions;
   }
 
+  /**
+   * Set the cookie with default option if not provided
+   */
   private _setCookie(
     key: string,
     value: string,
-    options: CookieOptions = { expires: undefined, path: undefined, domain: undefined, secure: true, sameSite: 'None', }
+    options: CookieOptions = { expires: undefined, path: undefined, domain: undefined, secure: true, sameSite: 'Lax', }
   ) {
     this._cookieService.set(key, value, options.expires, options.path, options.domain, options.secure, options.sameSite);
+  }
+
+  /**
+   * Returns true if its in Development mode
+   */
+  private _devMode(): boolean {
+    return isDevMode();
   }
 }

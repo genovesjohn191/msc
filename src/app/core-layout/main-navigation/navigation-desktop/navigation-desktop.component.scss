@@ -1,9 +1,5 @@
 @import "../../../../styles/shared/base";
 
-// Product Mega menu
-$product-megamenu-desktop-height: 70vh;
-$product-megamenu-desktop-width: 85vw;
-
 // Items variables
 $navigation-desktop-item-font: $circular-pro-bold;
 $navigation-desktop-item-padding: $space-small $space-medium;
@@ -57,14 +53,5 @@ $navigation-desktop-macquarie-link-bg-color: $color-grey-01;
         color: $navigation-desktop-macquarie-link-color;
       }
     }
-  }
-}
-
-.product-megamenu-wrapper {
-  max-height: $product-megamenu-desktop-height;
-  width: $product-megamenu-desktop-width;
-
-  .product-items {
-    @include align-items(unset);
   }
 }

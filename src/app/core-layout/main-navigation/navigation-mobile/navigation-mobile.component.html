@@ -1,50 +1,3 @@
-<!-- Products Mega Menu Pop-over -->
-<ng-template #productMegaMenuTemplate>
-  <div class="product-megamenu-mobile-wrapper" mcsScrollable>
-    <mcs-data-status [dataStatusFactory]="productsStatusFactory">
-      <mcs-data-status-success mcsDataSuccess>
-        <ng-container *mcsAccessControl="[]; feature: 'EnableProductCatalog'">
-          <mcs-accordion [multi]="true" *ngIf="selectedProduct$ | async as selectedProduct">
-            <mcs-accordion-panel *ngFor="let catalog of productCatalogs">
-              <mcs-accordion-panel-header mcsPanelHeaderDef>
-                {{ catalog.name }}
-              </mcs-accordion-panel-header>
-
-              <mcs-section>
-                <mcs-list [header]="category.name" itemsOffset="small"
-                  *ngFor="let category of catalog.categories">
-                  <mcs-list-item *ngFor="let product of category.products">
-                    <a (click)="gotoProduct(product)"
-                      mcsId="select-product"
-                      [mcsGreyedOut]="product.isActiveIncompleteRelease"
-                      mcsEventTracker="select-product"
-                      mcsEventCategory="navigation"
-                      mcsEventLabel="main-nav"
-                      [ngClass]="{'active': selectedProduct.id === product.id}">
-                      {{ product.name }}</a>
-                  </mcs-list-item>
-                </mcs-list>
-              </mcs-section>
-            </mcs-accordion-panel>
-          </mcs-accordion>
-        </ng-container>
-      </mcs-data-status-success>
-
-      <mcs-data-status-in-progress mcsDataInProgress>
-        <span>{{ 'navigation.loadingProducts' | translate }}</span>
-      </mcs-data-status-in-progress>
-
-      <mcs-data-status-empty mcsDataEmpty>
-        <span>{{ 'navigation.noProducts' | translate }}</span>
-      </mcs-data-status-empty>
-
-      <mcs-data-status-error mcsDataError>
-        <span>{{ 'navigation.errorProducts' | translate }}</span>
-      </mcs-data-status-error>
-    </mcs-data-status>
-  </div>
-</ng-template>
-
 <!-- Main navigation for mobile -->
 <div class="navigation-mobile-wrapper">
   <div class="navigation-mobile-icon">
@@ -53,23 +6,6 @@
 
   <!-- Macquarie Link View -->
   <div class="macquarie-link">
-    <ng-container *mcsAccessControl="[]; feature: 'EnableProductCatalog'; else: macquarieViewTemplate">
-      <a mcsPopover maxWidth="auto"
-        [content]="productMegaMenuTemplate"
-        theme="light" priority="high"
-        placement="bottom" orientation="left"
-        [placementElement]="caretIconElement">
-
-        <mcs-item>
-          <span>{{ 'navigation.productCatalog' | translate }}</span>
-          <span #caretIconElement>
-            <mcs-icon [key]="caretDownIconKey"
-              size="medium" color="light"></mcs-icon>
-          </span>
-        </mcs-item>
-      </a>
-    </ng-container>
-
     <ng-template #macquarieViewTemplate>
       <a [href]="macviewUrl" target="_blank"
         mcsId="macquarie-view"

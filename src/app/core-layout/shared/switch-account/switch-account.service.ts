@@ -146,7 +146,7 @@ export class SwitchAccountService {
       this._cookieService.setEncryptedItem<string>(
         CommonDefinition.COOKIE_ACTIVE_ACCOUNT,
         this._activeAccount.id,
-        { expires: this._authIdentity.user.expiry }
+        { expires: this._authIdentity.user.expiry, sameSite: 'Lax' }
       );
     } else {
       this._cookieService.removeItem(CommonDefinition.COOKIE_ACTIVE_ACCOUNT);

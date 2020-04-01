@@ -11,7 +11,7 @@
     "internet": "Internet",
     "backup": "Backup",
     "tools": "Other Tools",
-    "catalog": "Catalog",
+    "catalog": "Products",
     "signOut": "Sign Out",
     "macquarieView": "MacquarieView",
     "productCatalog": "Products",
@@ -1588,6 +1588,11 @@
     "loading": "Loading Products.",
     "noProducts": "No products to display.",
     "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of products."
+  },
+  "catalog": {
+    "header": "Catalog",
+    "leftPanelHeader": "Catalog",
+    "platformLabel": "Platform"
   },
   "tools": {
     "header": "Other Tools",

@@ -1,0 +1,35 @@
+<ng-container *ngIf="solutionCatalog$ | async as solutionCatalog">
+  <!-- With records -->
+  <mcs-grid *ngIf="solutionCatalog.groups | mcsIsNotNullOrEmpty; else emptyTemplate">
+    <mcs-grid-row>
+      <ng-container *ngFor="let group of solutionCatalog.groups; last as isLastItem">
+        <mcs-grid-column>
+          <ng-container *ngIf="group.solutions | mcsIsNotNullOrEmpty">
+            <mcs-presentation-panel>
+              <ng-container mcsPresentationPanelHeader>
+                <h2>{{ group.name }}</h2>
+              </ng-container>
+              <mcs-section>
+                <mcs-item *ngFor="let solution of group.solutions">
+                  <a mcsButton="basic" labelPlacement="left" text-wrap full-width
+                    (click)="onSolutionChange(solution.id, catalogItem)"
+                    mcsId="select-solution"
+                    mcsEventTracker="select-solution"
+                    mcsEventCategory="navigation"
+                    mcsEventLabel="main-nav">
+                    {{ solution.name }}</a>
+                </mcs-item>
+              </mcs-section>
+            </mcs-presentation-panel>
+          </ng-container>
+        </mcs-grid-column>
+        <mcs-divider *ngIf="!isLastItem" orientation="vertical"></mcs-divider>
+      </ng-container>
+    </mcs-grid-row>
+  </mcs-grid>
+
+  <!-- Without records -->
+  <ng-template #emptyTemplate>
+    <p>No solutions to be displayed.</p>
+  </ng-template>
+</ng-container>

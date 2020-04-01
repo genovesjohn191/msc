@@ -66,9 +66,9 @@ export const defaultPageRoutes: Routes = [
         loadChildren: '../../features/tools/tools.module#ToolsModule'
       },
       {
-        path: 'products/:id',
-        data: { routeId: RouteKey.ProductDetails },
-        loadChildren: '../../features/products/products.module#ProductsModule'
+        path: 'catalog',
+        data: { routeId: RouteKey.Catalog },
+        loadChildren: '../../features/catalog/catalog.module#CatalogModule'
       },
       {
         path: 'orders',

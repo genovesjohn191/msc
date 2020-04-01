@@ -1,0 +1,125 @@
+<ng-container *ngIf="solution$ | async as solution">
+
+  <mcs-scrollable-link-group #scrollableLinkGroup>
+    <mcs-scrollable-link label="All Information">
+
+      <!-- Description -->
+      <div class="product-catalog-item">
+
+        <div class="product-catalog-widget-wrapper">
+          <!-- Ownerships -->
+          <mcs-presentation-panel [hidden]="!solution.hasOwner" [embossed]="true" *mcsAccessControl="['CompanyView']">
+            <ng-container mcsPresentationPanelHeader>
+              <strong>Ownership</strong>
+            </ng-container>
+
+            <mcs-list>
+              <mcs-list-item *ngIf="solution.primaryOwner?.name">
+                <span>{{ solution.primaryOwner.name }} -
+                  <small read-only> Primary Product Owner</small>
+                </span>
+              </mcs-list-item>
+
+              <mcs-list-item *ngIf="solution.secondaryOwner?.name">
+                <span>{{ solution.secondaryOwner.name }} -
+                  <small read-only> Secondary Product Owner</small>
+                </span>
+              </mcs-list-item>
+            </mcs-list>
+          </mcs-presentation-panel>
+
+          <!-- Included products -->
+          <mcs-presentation-panel [embossed]="true" *ngIf="solution.includedProducts | mcsIsNotNullOrEmpty">
+            <ng-container mcsPresentationPanelHeader>
+              <strong>Dependencies</strong>
+            </ng-container>
+
+            <div>
+              <div [ngStyle]="{'float': 'right'}">
+                <mcs-icon size="100px" [key]="cloudIconKey"></mcs-icon>
+              </div>
+              <mcs-item *ngFor="let dependentProduct of solution.includedProducts">
+                <a [mcsRouterLink]="[routeKeyEnum.CatalogSolution, dependentProduct.id]"
+                  mcsId="solution-dependency"
+                  mcsEventTracker="select-solution-dependency"
+                  mcsEventCategory="solution"
+                  mcsEventLabel="solution-list-panel">
+                  {{ dependentProduct.name }}
+                </a>
+              </mcs-item>
+            </div>
+          </mcs-presentation-panel>
+
+          <!-- Locations -->
+          <mcs-presentation-panel [embossed]="true"
+            *ngIf="solution.locations | mcsIsNotNullOrEmpty">
+            <ng-container mcsPresentationPanelHeader>
+              <strong>Locations</strong>
+            </ng-container>
+
+            <mcs-list spacing="small">
+              <mcs-list-item *ngFor="let location of solution.locations">
+                <div>
+                  <span>{{ location.name }}</span><br>
+                  <small read-only>{{ location.fullAddress }}</small>
+                </div>
+              </mcs-list-item>
+            </mcs-list>
+          </mcs-presentation-panel>
+        </div>
+
+        <!-- Short description -->
+        <div *ngIf="solution.shortDescription | mcsIsNotNullOrEmpty" margin-bottom-large>
+          <h2 margin-bottom-medium>Short Description</h2>
+          <div [innerHTML]="solution.shortDescription"></div>
+        </div>
+
+        <!-- Use Cases -->
+        <div class="product-catalog-item" *ngIf="solution.useCases | mcsIsNotNullOrEmpty">
+          <h2 margin-bottom-medium>Use Cases</h2>
+
+          <ng-container *ngFor="let useCase of solution.useCases">
+            <mcs-item orientation="block">
+              <strong>{{ useCase.name }}</strong>
+              <div [innerHTML]="useCase.description"></div>
+            </mcs-item>
+          </ng-container>
+        </div>
+
+        <!-- description -->
+        <div class="product-catalog-item" *ngIf="solution.description | mcsIsNotNullOrEmpty">
+          <h2 margin-bottom-medium>Description</h2>
+          <div [innerHTML]="solution.description"></div>
+        </div>
+      </div>
+
+      <!-- Benefits and Limitations -->
+      <div class="product-catalog-item" *ngIf="solution.benefitsAndLimitations | mcsIsNotNullOrEmpty">
+        <h2>Feature Benefit Matrix</h2>
+
+        <mcs-table [dataSource]="solution.benefitsAndLimitations" class="limited-view">
+          <ng-container mcsColumnDef="benefit">
+            <mcs-header-cell *mcsHeaderCellDef>
+              Benefits/Advantages
+            </mcs-header-cell>
+            <mcs-data-cell *mcsDataCellDef="let row">
+              {{ row.benefit }}
+            </mcs-data-cell>
+          </ng-container>
+
+          <ng-container mcsColumnDef="limitation" >
+            <mcs-header-cell *mcsHeaderCellDef>
+              Limitations/Disadvantages
+            </mcs-header-cell>
+            <mcs-data-cell *mcsDataCellDef="let row">
+              {{ row.limitation }}
+            </mcs-data-cell>
+          </ng-container>
+
+          <mcs-header-row *mcsHeaderRowDef="benefitAndLimitationColumns"></mcs-header-row>
+          <mcs-data-row *mcsDataRowDef="let row; columns: benefitAndLimitationColumns;"></mcs-data-row>
+        </mcs-table>
+      </div>
+    </mcs-scrollable-link>
+  </mcs-scrollable-link-group>
+</ng-container>

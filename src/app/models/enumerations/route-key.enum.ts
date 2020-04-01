@@ -44,7 +44,13 @@ export enum RouteKey {
   Notifications,
   Notification,
 
-  ProductDetails,
+  ProductDetails, // Deprecated
+
+  Catalog,
+  CatalogProductsPlatform,
+  CatalogProduct,
+  CatalogSolution,
+  CatalogSolutions,
 
   Orders,
   OrderDetails,

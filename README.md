@@ -8,19 +8,19 @@
 
 ## Quick start
 
-> Make sure you have Node version >= 5.0 and NPM >= 3
+> Make sure you have Node version >= 5.0 and NPM >= 3, also you have your own self signed certificate, follow this [guide](https://confluence.macquarietelecom.com/display/Hosting/Creating+Self+Signed+Certificate+for+Local+Development) to create one.
 
 1.  Clone repo `git@bitbucket.org:macquariecloudservices/mcs.portal.frontend.git`
 
 2. Change directory to your cloned repo
 
-3. Install the repo with `npm install`
+3. Install the dependencies with `npm install`
 
-3. Start the server `npm start`
+4. Start the server `npm start`
 
-	Use Hot Module Replacement `npm run server:dev:hmr`
+	**Use Hot Module Replacement `npm run server:dev:hmr`
 
-5. Go to [http://0.0.0.0:3000](http://0.0.0.0:3000) or [http://localhost:3000](http://localhost:3000) in your browser
+5. Go to [https://dev-portal.macquariecloudservices.com/](https://dev-portal.macquariecloudservices.com/) in your browser
 
 ## Getting Started
 ### Dependencies
@@ -45,7 +45,7 @@ Once you have those, you should install these globals with `npm install --global
 * `npm run server` to start the dev server in another tab
 
 ## Running the app
-After you have installed all dependencies you can now run the app. Run `npm run server` to start a local server using `webpack-dev-server` which will watch, build (in-memory), and reload for you. The port will be displayed to you as `http://0.0.0.0:3000` (or if you prefer IPv6, if you're using `express` server, then it's `http://[::1]:3000/`).
+After you have installed all dependencies you can now run the app. Run `npm run server` to start a local server using `webpack-dev-server` which will watch, build (in-memory), and reload for you. The port will be displayed to you as `https://dev-portal.macquariecloudservices.com/`.
 
 ## Server
 ### Development
