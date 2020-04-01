@@ -180,7 +180,7 @@ export class ServersComponent extends McsTableListingBase<McsServer>
   public stopMultipleServers(): void {
     this.selection.getSelectedItems().forEach((server) => {
       let powerState = new McsServerPowerstateCommand();
-      powerState.command = VmPowerstateCommand.Stop;
+      powerState.command = VmPowerstateCommand.PowerOff;
       powerState.clientReferenceObject = {
         serverId: server.id
       };
