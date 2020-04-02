@@ -116,7 +116,7 @@ export class VdcStorageCreateComponent extends McsOrderWizardBase implements OnI
       {
         billingDetailsStep: {
           category: 'order',
-          label: 'create-vdc-storage-billing-details-step',
+          label: 'create-vdc-storage-goto-provisioning-step',
           action: 'next-button'
         }
       });

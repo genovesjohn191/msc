@@ -114,7 +114,7 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
       {
         billingDetailsStep: {
           category: 'order',
-          label: 'scale-manage-server-billing-details-step',
+          label: 'scale-manage-server-goto-provisioning-step',
           action: 'next-button'
         }
       });

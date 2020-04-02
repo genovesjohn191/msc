@@ -111,7 +111,7 @@ export class AddVmBackupComponent extends McsOrderWizardBase implements OnInit, 
       {
         billingDetailsStep: {
           category: 'order',
-          label: 'add-vm-backup-billing-details-step',
+          label: 'add-vm-backup-goto-provisioning-step',
           action: 'next-button'
         }
       });

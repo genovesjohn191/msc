@@ -127,7 +127,7 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
       {
         billingDetailsStep: {
           category: 'order',
-          label: 'raise-inview-billing-details-step',
+          label: 'raise-inview-goto-provisioning-step',
           action: 'next-button'
         }
       });

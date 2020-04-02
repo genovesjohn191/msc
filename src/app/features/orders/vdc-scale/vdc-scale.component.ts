@@ -114,7 +114,7 @@ export class VdcScaleComponent extends McsOrderWizardBase implements OnInit, OnD
       {
         billingDetailsStep: {
           category: 'order',
-          label: 'scale-vdc-billing-details-step',
+          label: 'scale-vdc-goto-provisioning-step',
           action: 'next-button'
         }
       });

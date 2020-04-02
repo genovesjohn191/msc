@@ -94,7 +94,7 @@ export class AddAntiVirusComponent extends McsOrderWizardBase implements OnInit,
       {
         billingDetailsStep: {
           category: 'order',
-          label: 'add-antivirus-billing-details-step',
+          label: 'add-antivirus-goto-provisioning-step',
           action: 'next-button'
         }
       });

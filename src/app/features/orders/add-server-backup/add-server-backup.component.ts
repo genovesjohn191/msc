@@ -111,7 +111,7 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
       {
         billingDetailsStep: {
           category: 'order',
-          label: 'add-server-backup-billing-details-step',
+          label: 'add-server-backup-goto-provisioning-step',
           action: 'next-button'
         }
       });
