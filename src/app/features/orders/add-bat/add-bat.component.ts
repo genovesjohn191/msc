@@ -88,7 +88,7 @@ export class AddBatComponent extends McsOrderWizardBase implements OnInit, OnDes
       {
         billingDetailsStep: {
           category: 'order',
-          label: 'add-bat-billing-details-step',
+          label: 'add-bat-goto-provisioning-step',
           action: 'next-button'
         }
       });

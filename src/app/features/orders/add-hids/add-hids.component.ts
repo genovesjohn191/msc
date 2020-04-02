@@ -104,7 +104,7 @@ export class AddHidsComponent extends McsOrderWizardBase implements OnInit, OnDe
       {
         billingDetailsStep: {
           category: 'order',
-          label: 'add-hids-billing-details-step',
+          label: 'add-hids-goto-provisioning-step',
           action: 'next-button'
         }
       });

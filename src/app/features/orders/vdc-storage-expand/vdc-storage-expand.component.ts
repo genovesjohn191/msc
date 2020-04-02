@@ -148,7 +148,7 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnI
       {
         billingDetailsStep: {
           category: 'order',
-          label: 'expand-vdc-storage-billing-details-step',
+          label: 'expand-vdc-storage-goto-provisioning-step',
           action: 'next-button'
         }
       });
