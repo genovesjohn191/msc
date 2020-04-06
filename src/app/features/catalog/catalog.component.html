@@ -26,6 +26,10 @@
             <ng-container *ngIf="catalogItemMenu$ | async as catalogItemMenu">
               <mcs-radio-button-group mcsId="catalog-type" orientation="horizontal" [value]="catalogItemMenu.catalogItem.type">
                 <mcs-radio-button *ngFor="let option of catalogOptions" [value]="option.value.type"
+                  mcsId="select-catalog-type"
+                  mcsEventTracker="catalog-type-option"
+                  mcsEventCategory="catalog"
+                  mcsEventLabel="catalog-side-menu"
                   (click)="onCatalogTypeChange(option.value.type, activeCatalogItem.catalogViewType, catalogItemMenu.catalogItem.type)">
                   {{ option.text }}
                 </mcs-radio-button>
@@ -45,6 +49,10 @@
                   <ng-container *ngFor="let platform of sortPlatforms(productCatalogMenu.catalogItem.content.platforms)">
                     <mcs-item>
                       <mcs-radio-button *ngIf="platform.families | mcsIsNotNullOrEmpty" mcsId [value]="platform"
+                        mcsId="select-product-platform"
+                        mcsEventTracker="catalog-product-platform-option"
+                        mcsEventCategory="catalog"
+                        mcsEventLabel="catalog-side-menu"
                         (click)="onProductsPlatformChange(platform)">
                         {{ platform.name }}
                       </mcs-radio-button>
@@ -77,8 +85,10 @@
                           <mcs-option-group [label]="group.name" *ngFor="let group of family.groups">
 
                             <a *ngFor="let product of group.products" (click)="onProductChange(product.id)"
-                              mcsId="select-product" mcsEventTracker="select-product"
-                              mcsEventCategory="product products" mcsEventLabel="products-panel">
+                              mcsId="select-product"
+                              mcsEventTracker="catalog-list-panel-product"
+                              mcsEventCategory="catalog"
+                              mcsEventLabel="catalog-list-panel">
 
                               <mcs-option [value]="product" [selected]="activeCatalogItem.id === product.id">
                                 <div margin-left-xsmall>
@@ -96,8 +106,10 @@
                       <mcs-option-group [label]="entity.name">
 
                         <a *ngFor="let solution of entity.solutions" (click)="onSolutionChange(solution.id)"
-                          mcsId="select-solution" mcsEventTracker="select-solutions" mcsEventCategory="solution"
-                          mcsEventLabel="group-panel">
+                          mcsId="select-solution"
+                          mcsEventTracker="catalog-list-panel-solution"
+                          mcsEventCategory="catalog"
+                          mcsEventLabel="catalog-list-panel">
 
                           <mcs-option [value]="solution" [selected]="activeCatalogItem.id === solution.id">
                             <div margin-left-xsmall>

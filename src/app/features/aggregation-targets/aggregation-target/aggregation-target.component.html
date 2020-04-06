@@ -10,9 +10,9 @@
             <ng-container *mcsListPanelContent="let aggregationTarget">
               <a [mcsRouterLink]="[routeKeyEnum.BackupAggregationTargetsDetails, aggregationTarget.id]"
                 mcsId="select-aggregation-target"
-                mcsEventTracker="select-aggregation-target"
+                mcsEventTracker="aggregation-targets-list-panel-item"
                 mcsEventCategory="storage"
-                mcsEventLabel="aggregation-target-list-panel">
+                mcsEventLabel="aggregation-target-detail-view-list-panel">
                 <mcs-option [value]="aggregationTarget"
                   [selected]="(selectedAggregationTarget$ | async)?.id === aggregationTarget.id">
                   <mcs-item>
@@ -44,7 +44,7 @@
 
   <mcs-help-widget *mcsAccessControl="['TicketCreate']"
     [serviceId]="(selectedAggregationTarget$ | async)?.serviceId"
-    mcsEventTracker="toggle-help"
+    mcsEventTracker="aggregation-targets-help"
     mcsEventCategory="help"
-    mcsEventLabel="help-panel-aggregation-target">
+    mcsEventLabel="help-panel">
   </mcs-help-widget>

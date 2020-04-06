@@ -41,7 +41,8 @@ export class McsCatalogProductLocation {
    * Returns the complete address of the location
    */
   public get fullAddress(): string {
-    let addressList = [`${this.street} ${this.city}`, this.country, this.postCode];
+    let cityAddress = isNullOrEmpty(this.street) ? this.city : `${this.street} ${this.city}`;
+    let addressList = [cityAddress, this.country, this.postCode];
     addressList = addressList.filter((address) => !isNullOrEmpty(address));
     return addressList.join(', ');
   }
