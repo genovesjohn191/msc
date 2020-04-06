@@ -87,8 +87,8 @@
               <span>{{ 'aggregationTargets.errorMessage' | translate }}</span>
               <a (click)="retryDatasource()"
                 mcsId
-                mcsEventTracker="retry-loading-aggregation-targets-list"
-                mcsEventCategory="aggregation-targets"
+                mcsEventTracker="aggregation-targets-retry-loading-list"
+                mcsEventCategory="storage"
                 mcsEventLabel="aggregation-targets-listing-page">{{ 'aggregationTargets.retry' | translate }}</a>
             </div>
           </mcs-data-error>
@@ -100,9 +100,9 @@
           mcsCursor="pointer"
           (click)="navigateToAggregationTarget(row)"
           mcsId="aggregation-targets-row"
-          mcsEventTracker="navigate-to-aggregation-targets"
-          mcsEventCategory="aggregation-targets"
-          mcsEventLabel="aggregation-targets-listing-page"></mcs-data-row>
+          mcsEventTracker="aggregation-targets-table-item"
+          mcsEventCategory="storage"
+          mcsEventLabel="aggregation-targets-details-page"></mcs-data-row>
       </mcs-table>
 
       <!-- Paginator -->

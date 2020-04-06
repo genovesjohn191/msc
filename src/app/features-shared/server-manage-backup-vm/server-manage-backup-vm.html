@@ -8,10 +8,10 @@
         <mcs-form-field class="form-field-size-small">
           <mcs-select [formControl]="fcAggregation"
             [placeholder]="'serverShared.addOnBackup.vmAggregation.placeholder' | translate"
-            mcsId="addon-backup-vm-aggregation-target"
-            mcsEventTracker="server-create-addon-backup-vm-aggregation-target-select"
-            mcsEventCategory="server-create"
-            mcsEventLabel="server-create-order-details">
+            mcsId="manage-backup-vm-aggregation-target"
+            mcsEventTracker="backup-vm-aggregation-target"
+            mcsEventCategory="order"
+            mcsEventLabel="server-backup-vm">
 
             <mcs-option *ngFor="let aggregationTarget of aggregationTargets" [value]="aggregationTarget.value">
               {{ aggregationTarget.text }}
@@ -37,10 +37,10 @@
         <mcs-select required
           [formControl]="fcRetention"
           [placeholder]="'serverShared.addOnBackup.retention.placeholder' | translate"
-          mcsId="select-addon-backup-vm-retention"
-          mcsEventTracker="server-create-addon-backup-vm-retention-select"
-          mcsEventCategory="server-create"
-          mcsEventLabel="server-create-order-details">
+          mcsId="manage-backup-vm-retention"
+          mcsEventTracker="backup-vm-retention"
+          mcsEventCategory="order"
+          mcsEventLabel="server-backup-vm">
 
           <mcs-option *ngFor="let retention of retentionOptions$ | async" [value]="retention.value">
             {{ retention.text }}
@@ -65,10 +65,10 @@
         <mcs-select [formControl]="fcInview" required
           [placeholder]="'serverShared.addOnBackup.inviewLevel.placeholder' | translate"
           [mcsContextualHelp]="'serverShared.addOnBackup.inviewLevel.contextualHelp' | translate"
-          mcsId="select-addon-backup-vm-inview"
-          mcsEventTracker="server-create-addon-backup-vm-inview-select"
-          mcsEventCategory="server-create"
-          mcsEventLabel="server-create-order-details">
+          mcsId="manage-backup-vm-inview"
+          mcsEventTracker="backup-vm-inview"
+          mcsEventCategory="order"
+          mcsEventLabel="server-backup-vm">
 
           <mcs-option *ngFor="let inviewLevel of inviewLevelOptions$ | async" [value]="inviewLevel.value">
             {{ inviewLevel.text }}
@@ -85,10 +85,10 @@
     <mcs-form-field class="form-field-size-small">
       <mcs-select [formControl]="fcBackupSchedule" required
         [placeholder]="'serverShared.addOnBackup.backupSchedule.placeholder' | translate"
-        mcsId="select-addon-backup-vm-schedule"
-        mcsEventTracker="server-create-addon-backup-vm-schedule-select"
-        mcsEventCategory="server-create"
-        mcsEventLabel="server-create-order-details">
+        mcsId="manage-backup-vm-schedule"
+        mcsEventTracker="backup-vm-schedule"
+        mcsEventCategory="order"
+        mcsEventLabel="server-backup-vm">
 
         <mcs-option *ngFor="let backup of scheduleBackupOptions$ | async" [value]="backup.value">
           {{ backup.text }}
@@ -104,10 +104,10 @@
       <input mcsInput [formControl]="fcDailyQuota"
         [placeholder]="'serverShared.addOnBackup.dailyQuota.placeholder' | translate"
         [mcsContextualHelp]="'serverShared.addOnBackup.dailyQuota.contextualHelp' | translate"
-        mcsId="input-addon-backup-vm-daily-quota"
-        mcsEventTracker="server-create-addon-backup-vm-daily-quota-input"
-        mcsEventCategory="server-create"
-        mcsEventLabel="server-create-order-details">
+        mcsId="manage-backup-vm-daily-quota"
+        mcsEventTracker="backup-vm-daily-quota"
+        mcsEventCategory="order"
+        mcsEventLabel="server-backup-vm">
 
       <mcs-suffix mcsSuffix>{{ 'serverShared.addOnBackup.dailyQuota.suffix' | translate }}</mcs-suffix>
       <mcs-error mcsError errorState="required">

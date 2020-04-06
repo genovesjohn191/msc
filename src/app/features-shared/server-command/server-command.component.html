@@ -12,7 +12,7 @@
         (click)="onExecuteCommand(serverCommandEnum.Start)"
         [disabled]="!server.startable"
         mcsId
-        mcsEventTracker="start"
+        mcsEventTracker="start-server"
         mcsEventCategory="server"
         mcsEventLabel="server-command-tool">
         {{ 'servers.start' | translate }}
@@ -24,7 +24,7 @@
         (click)="onExecuteCommand(serverCommandEnum.Stop)"
         [disabled]="!server.stoppable"
         mcsId
-        mcsEventTracker="stop"
+        mcsEventTracker="stop-server"
         mcsEventCategory="server"
         mcsEventLabel="server-command-tool">
         {{ 'servers.stop' | translate }}
@@ -36,7 +36,7 @@
         (click)="onExecuteCommand(serverCommandEnum.Restart)"
         [disabled]="!server.restartable"
         mcsId
-        mcsEventTracker="restart"
+        mcsEventTracker="restart-server"
         mcsEventCategory="server"
         mcsEventLabel="server-command-tool">
         {{ 'servers.restart' | translate }}
@@ -48,7 +48,7 @@
         (click)="onExecuteCommand(serverCommandEnum.Suspend)"
         [disabled]="!server.suspendable"
         mcsId
-        mcsEventTracker="suspend"
+        mcsEventTracker="suspend-server"
         mcsEventCategory="server"
         mcsEventLabel="server-command-tool">
         {{ 'servers.suspend' | translate }}
@@ -60,7 +60,7 @@
         (click)="onExecuteCommand(serverCommandEnum.Resume)"
         [disabled]="!server.resumable"
         mcsId
-        mcsEventTracker="resume"
+        mcsEventTracker="resume-server"
         mcsEventCategory="server"
         mcsEventLabel="server-command-tool">
         {{ 'servers.resume' | translate }}
@@ -72,7 +72,7 @@
         (click)="onExecuteCommand(serverCommandEnum.Scale)"
         [disabled]="!server.scaleable"
         mcsId
-        mcsEventTracker="scale"
+        mcsEventTracker="scale-server"
         mcsEventCategory="server"
         mcsEventLabel="server-command-tool"
         *mcsAccessControl="[]; feature: 'EnableOrderingManagedServerScale';
@@ -87,7 +87,7 @@
           (click)="onExecuteCommand(serverCommandEnum.Clone)"
           [disabled]="!server.cloneable"
           mcsId
-          mcsEventTracker="clone"
+          mcsEventTracker="clone-server"
           mcsEventCategory="server"
           mcsEventLabel="server-command-tool">
           {{ 'servers.clone' | translate }}
@@ -100,7 +100,7 @@
         (click)="onExecuteCommand(serverCommandEnum.Rename)"
         [disabled]="!server.renameable"
         mcsId
-        mcsEventTracker="rename"
+        mcsEventTracker="rename-server"
         mcsEventCategory="server"
         mcsEventLabel="server-command-tool"
         *mcsAccessControl="[]; feature: 'EnableDedicatedVmRename';
@@ -115,7 +115,7 @@
           (click)="onExecuteCommand(serverCommandEnum.Delete)"
           [disabled]="!server.deletable"
           mcsId
-          mcsEventTracker="delete"
+          mcsEventTracker="delete-server"
           mcsEventCategory="server"
           mcsEventLabel="server-command-tool">
           {{ 'servers.delete' | translate }}
@@ -128,7 +128,7 @@
         (click)="onExecuteCommand(serverCommandEnum.ViewPlatform)"
         [disabled]="server.isDisabled"
         mcsId
-        mcsEventTracker="view-in-portal"
+        mcsEventTracker="view-server-in-portal"
         mcsEventCategory="server"
         mcsEventLabel="server-command-tool">
         {{ viewInPlatformLabel }}
@@ -144,7 +144,7 @@
             (click)="onExecuteCommand(serverCommandEnum.ResetVmPassword)"
             [disabled]="!server.canResetPassword"
             mcsId
-            mcsEventTracker="reset-password"
+            mcsEventTracker="reset-server-password"
             mcsEventCategory="server"
             mcsEventLabel="server-command-tool">
             {{ 'servers.resetVmPassword' | translate }}

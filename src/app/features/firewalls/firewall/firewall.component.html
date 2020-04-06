@@ -19,7 +19,7 @@
                 <a *ngFor="let firewall of entity.firewalls"
                   [mcsRouterLink]="[routeKeyEnum.FirewallDetails, firewall.id]"
                   mcsId="select-firewall"
-                  mcsEventTracker="select-firewall"
+                  mcsEventTracker="select-firewall-with-ha"
                   mcsEventCategory="firewall"
                   mcsEventLabel="firewall-list-panel">
 
@@ -40,7 +40,7 @@
               <a *ngFor="let firewall of entity.firewalls"
               [mcsRouterLink]="[routeKeyEnum.FirewallDetails, firewall.id]"
               mcsId="select-firewall"
-              mcsEventTracker="select-firewall"
+              mcsEventTracker="select-firewall-without-ha"
               mcsEventCategory="firewall"
               mcsEventLabel="firewall-list-panel">
 
@@ -85,7 +85,7 @@
               <a mcsButton="basic" color="white" labelPlacement="left"
                 [href]="selectedFirewall.url" target="_blank"
                 mcsId
-                mcsEventTracker="view-in-portal"
+                mcsEventTracker="view-firewall-in-portal"
                 mcsEventCategory="firewall"
                 mcsEventLabel="firewall-details-page">View in Portal
               </a>
@@ -104,7 +104,7 @@
 
 <mcs-help-widget *mcsAccessControl="['TicketCreate']"
   [serviceId]="(selectedFirewall$ | async)?.serviceId"
-  mcsEventTracker="toggle-help"
+  mcsEventTracker="firewall-help"
   mcsEventCategory="help"
   mcsEventLabel="help-panel-firewall">
 </mcs-help-widget>
