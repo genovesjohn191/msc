@@ -202,41 +202,44 @@
               <mcs-grid-row >
                 <mcs-grid-column sizeSm="12">
                   <h4>{{ inview.name }}</h4>
-                  <p [innerHTML]="inview.description"></p>
-                  <ng-container *ngIf="inview?.thresholds | mcsIsNotNullOrEmpty">
-                    <mcs-table [dataSource]="inview.thresholds">
-                      <!-- Description Column -->
-                      <ng-container mcsColumnDef="description">
-                        <mcs-header-cell *mcsHeaderCellDef>
-                          Description
-                        </mcs-header-cell>
-                        <mcs-data-cell text-wrap *mcsDataCellDef="let row">
-                          {{ row.description }}
-                        </mcs-data-cell>
-                      </ng-container>
-
-                      <!-- Threshold Utilisation Column -->
-                      <ng-container mcsColumnDef="alertThreshold">
-                        <mcs-header-cell *mcsHeaderCellDef>
-                          Alert Threshold
-                        </mcs-header-cell>
-                        <mcs-data-cell text-wrap *mcsDataCellDef="let row">
-                          {{ row.defaultAlertThreshold }}
-                        </mcs-data-cell>
-                      </ng-container>
-
-                      <!-- Header and Data row -->
-                      <mcs-header-row *mcsHeaderRowDef="thresholdColumns"></mcs-header-row>
-                      <mcs-data-row *mcsDataRowDef="let row; columns: thresholdColumns;"></mcs-data-row>
-                    </mcs-table>
-                  </ng-container>
+                  <p [innerHTML]="inview.description" no-margin></p>
                 </mcs-grid-column>
               </mcs-grid-row>
 
-              <mcs-grid-row>
+              <mcs-grid-row no-margin>
                 <mcs-grid-column padding-large
                   *ngIf="inview.graphUrl | mcsIsNotNullOrEmpty" sizeSm="12" sizeLg="4">
                   <img [src]="inview.graphUrl" class="image-responsive">
+                </mcs-grid-column>
+              </mcs-grid-row>
+
+              <mcs-grid-row *ngIf="inview?.thresholds | mcsIsNotNullOrEmpty">
+                <mcs-grid-column>
+                  <mcs-table [dataSource]="inview.thresholds">
+                    <!-- Description Column -->
+                    <ng-container mcsColumnDef="description">
+                      <mcs-header-cell *mcsHeaderCellDef>
+                        Description
+                      </mcs-header-cell>
+                      <mcs-data-cell text-wrap *mcsDataCellDef="let row">
+                        {{ row.description }}
+                      </mcs-data-cell>
+                    </ng-container>
+
+                    <!-- Threshold Utilisation Column -->
+                    <ng-container mcsColumnDef="alertThreshold">
+                      <mcs-header-cell *mcsHeaderCellDef>
+                        Alert Threshold
+                      </mcs-header-cell>
+                      <mcs-data-cell text-wrap *mcsDataCellDef="let row">
+                        {{ row.defaultAlertThreshold }}
+                      </mcs-data-cell>
+                    </ng-container>
+
+                    <!-- Header and Data row -->
+                    <mcs-header-row *mcsHeaderRowDef="thresholdColumns"></mcs-header-row>
+                    <mcs-data-row *mcsDataRowDef="let row; columns: thresholdColumns;"></mcs-data-row>
+                  </mcs-table>
                 </mcs-grid-column>
               </mcs-grid-row>
             </ng-container>
