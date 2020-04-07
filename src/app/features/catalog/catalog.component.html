@@ -92,7 +92,7 @@
 
                               <mcs-option [value]="product" [selected]="activeCatalogItem.id === product.id">
                                 <div margin-left-xsmall>
-                                  <span text-wrap>{{ product.name }}</span>
+                                  <span text-wrap [mcsGreyedOut]="product.isActiveIncompleteRelease">{{ product.name }}</span>
                                 </div>
                               </mcs-option>
                             </a>
@@ -113,6 +113,7 @@
 
                           <mcs-option [value]="solution" [selected]="activeCatalogItem.id === solution.id">
                             <div margin-left-xsmall>
+                              <!-- TODO: adding greying out when endpoint has the correct mapping -->
                               <span text-wrap>{{ solution.name }}</span>
                             </div>
                           </mcs-option>

@@ -31,15 +31,12 @@
           <!-- Included products -->
           <mcs-presentation-panel [embossed]="true" *ngIf="solution.includedProducts | mcsIsNotNullOrEmpty">
             <ng-container mcsPresentationPanelHeader>
-              <strong>Dependencies</strong>
+              <strong>Included Products</strong>
             </ng-container>
 
             <div>
-              <div [ngStyle]="{'float': 'right'}">
-                <mcs-icon size="100px" [key]="cloudIconKey"></mcs-icon>
-              </div>
               <mcs-item *ngFor="let dependentProduct of solution.includedProducts">
-                <a [mcsRouterLink]="[routeKeyEnum.CatalogSolution, dependentProduct.id]"
+                <a [mcsRouterLink]="[routeKeyEnum.CatalogProduct, dependentProduct.id]"
                   mcsId="solution-dependency"
                   mcsEventTracker="select-solution-dependency"
                   mcsEventCategory="catalog"
@@ -95,7 +92,7 @@
 
       <!-- Benefits and Limitations -->
       <div class="product-catalog-item" *ngIf="solution.benefitsAndLimitations | mcsIsNotNullOrEmpty">
-        <h2>Feature Benefit Matrix</h2>
+        <h2>Benefits and Limitations</h2>
 
         <mcs-table [dataSource]="solution.benefitsAndLimitations" class="limited-view">
           <ng-container mcsColumnDef="benefit">
