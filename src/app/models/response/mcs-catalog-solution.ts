@@ -71,4 +71,9 @@ export class McsCatalogSolution extends McsEntityBase {
       getSafeProperty(this.secondaryOwner, (obj) => obj.name);
     return !isNullOrEmpty(ownerName);
   }
+
+  public get isActiveIncompleteRelease(): boolean {
+    if (isNullOrEmpty(this.availabilityState)) { return false; }
+    return this.availabilityState === ProductAvailabilityState.ActiveIncompleteRelease;
+  }
 }

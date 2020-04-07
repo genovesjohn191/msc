@@ -87,7 +87,7 @@
                 <mcs-icon size="100px" [key]="cloudIconKey"></mcs-icon>
               </div>
               <mcs-item *ngFor="let dependentProduct of selectedProduct.dependentProducts">
-                <a [mcsRouterLink]="[routeKeyEnum.ProductDetails, dependentProduct.id]"
+                <a [mcsRouterLink]="[routeKeyEnum.CatalogProduct, dependentProduct.id]"
                   mcsId="product-dependency"
                   mcsEventTracker="select-product-dependency"
                   mcsEventCategory="catalog"
@@ -180,12 +180,11 @@
       </div>
 
       <!-- Feature Benefit Matrix -->
-      <!-- TODO: Not included in the PH1 -->
-      <!-- <div class="product-catalog-item"
+      <div class="product-catalog-item"
         *ngIf="selectedProduct.featureBenefitMatrix | mcsIsNotNullOrEmpty">
         <h2>Feature Benefit Matrix</h2>
         <div [innerHTML]="selectedProduct.featureBenefitMatrix"></div>
-      </div> -->
+      </div>
     </mcs-scrollable-link>
 
     <!-- Monitoring -->
