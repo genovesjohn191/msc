@@ -191,8 +191,8 @@
     <mcs-scrollable-link label="Monitoring"
       *ngIf="selectedProduct.inviewPremium | mcsIsNotNullOrEmpty">
       <div class="product-catalog-item">
+        <!-- TODO: extract all static texts and transfer to translate -->
         <h2>Inview</h2>
-
         <ng-template let-inviews let-title="inviewTitle" #inviewTemplate>
           <h3>{{ title }}</h3>
           <mcs-grid>
@@ -261,11 +261,84 @@
     </mcs-scrollable-link>
 
     <!-- PCI Compliance -->
-    <mcs-scrollable-link label="Compliance"
-      *ngIf="selectedProduct.pciDetails | mcsIsNotNullOrEmpty">
+      <mcs-scrollable-link label="Compliance" *ngIf="selectedProduct.pciDetails | mcsIsNotNullOrEmpty">
       <div class="product-catalog-item">
         <h2>PCI Compliance</h2>
-        <div [innerHTML]="selectedProduct.pciDetails"></div>
+        <mcs-table [dataSource]="sortPciDetails(selectedProduct.pciDetails)">
+          <!-- Raci Column -->
+          <ng-container mcsColumnDef="raci">
+            <mcs-header-cell *mcsHeaderCellDef>
+              RACI
+            </mcs-header-cell>
+            <mcs-data-cell text-wrap *mcsDataCellDef="let row">
+              {{ row.raci }}
+            </mcs-data-cell>
+          </ng-container>
+
+          <!-- MCS Responsibility Definition Column -->
+          <ng-container mcsColumnDef="mcsResponsibilityDefinition">
+            <mcs-header-cell *mcsHeaderCellDef>
+              MCS Responsibility Definition
+            </mcs-header-cell>
+            <mcs-data-cell text-wrap *mcsDataCellDef="let row">
+              {{ row.mcsResponsibilityDefinition }}
+            </mcs-data-cell>
+          </ng-container>
+
+          <!-- Customer Responsibility Definition -->
+          <ng-container mcsColumnDef="customerResponsibilityDefinition">
+            <mcs-header-cell *mcsHeaderCellDef>
+              Customer Responsibility Definition
+            </mcs-header-cell>
+            <mcs-data-cell text-wrap *mcsDataCellDef="let row">
+              {{ row.customerResponsibilityDefinition }}
+            </mcs-data-cell>
+          </ng-container>
+
+          <!-- Not Applicable Justification Column -->
+          <ng-container mcsColumnDef="notApplicableJustification">
+            <mcs-header-cell *mcsHeaderCellDef>
+              Not Applicable Justification
+            </mcs-header-cell>
+            <mcs-data-cell text-wrap *mcsDataCellDef="let row">
+              {{ row.notApplicableJustification }}
+            </mcs-data-cell>
+          </ng-container>
+
+          <!-- Control Column -->
+          <ng-container mcsColumnDef="control">
+            <mcs-header-cell *mcsHeaderCellDef>
+              Control
+            </mcs-header-cell>
+            <mcs-data-cell text-wrap *mcsDataCellDef="let row">
+              {{ row.control }}
+            </mcs-data-cell>
+          </ng-container>
+
+          <!-- Requirement Column -->
+          <ng-container mcsColumnDef="requirement">
+            <mcs-header-cell *mcsHeaderCellDef>
+              Requirement
+            </mcs-header-cell>
+            <mcs-data-cell text-wrap *mcsDataCellDef="let row">
+              {{ row.requirement }}
+            </mcs-data-cell>
+          </ng-container>
+
+          <!-- Version Column -->
+          <ng-container mcsColumnDef="version">
+            <mcs-header-cell *mcsHeaderCellDef>
+              Version
+            </mcs-header-cell>
+            <mcs-data-cell text-wrap *mcsDataCellDef="let row">
+              {{ row.version }}
+            </mcs-data-cell>
+          </ng-container>
+
+          <!-- Header and Data row -->
+          <mcs-header-row *mcsHeaderRowDef="pciComplianceColumns"></mcs-header-row>
+          <mcs-data-row *mcsDataRowDef="let row; columns: pciComplianceColumns;"></mcs-data-row>
+        </mcs-table>
       </div>
     </mcs-scrollable-link>
 
