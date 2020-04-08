@@ -207,6 +207,7 @@ export * from './response/mcs-catalog-product-option-property';
 export * from './response/mcs-catalog-product-use-case';
 export * from './response/mcs-catalog-product-dependency';
 export * from './response/mcs-catalog-product-owner';
+export * from './response/mcs-catalog-product-pci-detail';
 export * from './response/mcs-catalog-product-inview';
 export * from './response/mcs-catalog-product-inview-threshold';
 export * from './response/mcs-catalog-solution';

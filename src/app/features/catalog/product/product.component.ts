@@ -16,7 +16,8 @@ import {
   McsCatalogProduct,
   McsCatalogProductOption,
   McsCatalogProductOptionProperty,
-  CatalogViewType
+  CatalogViewType,
+  McsCatalogProductPciDetail
 } from '@app/models';
 import {
   getSafeProperty,
@@ -48,6 +49,15 @@ export class ProductComponent implements OnInit {
   public product$: Observable<McsCatalogProduct>;
   public productOptionsColumns = ['name', 'options'];
   public thresholdColumns = ['description', 'alertThreshold'];
+  public pciComplianceColumns = [
+    'raci',
+    'mcsResponsibilityDefinition',
+    'customerResponsibilityDefinition',
+    'notApplicableJustification',
+    'control',
+    'requirement',
+    'version'
+  ];
 
   @ViewChild('scrollableLinkGroup', { static: false })
   private _scrollableLink: ScrollableLinkGroup;
@@ -67,6 +77,13 @@ export class ProductComponent implements OnInit {
 
   public get routeKeyEnum(): typeof RouteKey {
     return RouteKey;
+  }
+
+  /**
+   * Returns the sorted Pci Details based on the passed sorting predicate
+   */
+  public sortPciDetails(pciDetails: McsCatalogProductPciDetail[]): McsCatalogProductPciDetail[] {
+    return pciDetails.sort(this._sortPciDetailsPredicate.bind(this));
   }
 
   /**
@@ -140,5 +157,11 @@ export class ProductComponent implements OnInit {
       }),
       shareReplay(1)
     );
+  }
+
+  private _sortPciDetailsPredicate(pciDetailA: McsCatalogProductPciDetail, pciDetailB: McsCatalogProductPciDetail): number {
+    if (pciDetailA.displayOrder < pciDetailB.displayOrder) { return -1; }
+    if (pciDetailA.displayOrder > pciDetailB.displayOrder) { return 1; }
+    return 0;
   }
 }

@@ -39,6 +39,7 @@
         </mcs-section>
       </mcs-left-panel-item>
 
+      <!-- Product Platforms Options -->
       <ng-container *ngIf="activeCatalogItemDetails$ | async as activeCatalogItem">
         <ng-container *ngIf="catalogViewTypeEnum.ProductPlatform === activeCatalogItem.catalogViewType">
           <ng-container *ngIf="catalogItemMenu$ | async as productCatalogMenu">

@@ -7,6 +7,7 @@ import { McsCatalogProductOwner } from './mcs-catalog-product-owner';
 import { McsCatalogProductOption } from './mcs-catalog-product-option';
 import { McsCatalogProductLocation } from './mcs-catalog-product-location';
 import { McsCatalogProductInview } from './mcs-catalog-product-inview';
+import { McsCatalogProductPciDetail } from './mcs-catalog-product-pci-detail';
 import {
   ProductAvailabilityState,
   ProductAvailabilityStateSerialization
@@ -31,8 +32,8 @@ export class McsCatalogProduct extends McsEntityBase {
   @JsonProperty({ target: McsCatalogProductUseCase })
   public useCases: McsCatalogProductUseCase[] = undefined;
 
-  @JsonProperty()
-  public pciDetails: string = undefined;
+  @JsonProperty({ target: McsCatalogProductPciDetail })
+  public pciDetails: McsCatalogProductPciDetail[] = undefined;
 
   @JsonProperty()
   public featureBenefitMatrix: string = undefined;
