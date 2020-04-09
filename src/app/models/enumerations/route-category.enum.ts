@@ -3,7 +3,8 @@ export enum RouteCategory {
   Compute,
   Colocation,
   Network,
-  Storage
+  Storage,
+  MakeAChange
 }
 
 export const routeCategoryText = {
@@ -11,5 +12,6 @@ export const routeCategoryText = {
   [RouteCategory.Compute]: 'Compute',
   [RouteCategory.Colocation]: 'Colocation',
   [RouteCategory.Network]: 'Network',
-  [RouteCategory.Storage]: 'Storage'
+  [RouteCategory.Storage]: 'Storage',
+  [RouteCategory.MakeAChange]: 'MakeAChange',
 };

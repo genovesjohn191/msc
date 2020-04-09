@@ -34,12 +34,6 @@
       </ng-template>
     </mcs-list-item>
 
-    <mcs-list-item *mcsAccessControl="['OrderEdit']; feature: 'EnableOrderingOperationsListing'">
-      <a mcsCursor="pointer" mcsRouterLink="OrdersDashboard">
-        {{ 'accountPanel.makeAChange' | translate }}
-      </a>
-    </mcs-list-item>
-
     <mcs-list-item>
       <a mcsCursor="pointer" [href]="macviewChangePasswordUrl" target="_blank"
         (click)="notifySelectionChange('change-password')"
