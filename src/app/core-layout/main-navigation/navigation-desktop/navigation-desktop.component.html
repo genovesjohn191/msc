@@ -4,19 +4,19 @@
   <!-- Navigation list from template binding -->
   <ng-content></ng-content>
 
-  <!-- Macquarie Link View -->
-  <div class="macquarie-link">
-    <ng-template #macquarieViewTemplate>
-      <a [href]="macviewUrl" target="_blank"
-        mcsId="macquarie-view"
-        mcsEventTracker="macquarie-view"
-        mcsEventCategory="navigation"
-        mcsEventLabel="main-nav">
-        <mcs-item>
-          <mcs-icon [key]="arrowUpIconKey" size="large"></mcs-icon>
-          <span>{{ 'navigation.macquarieView' | translate }}</span>
-        </mcs-item>
-      </a>
-    </ng-template>
+  <!-- Ordering Dashboard Link -->
+  <div class="ordering-dashboard">
+    <ng-container *mcsAccessControl="['OrderEdit']; feature: 'EnableOrderingOperationsListing'">
+      <div class="navigation-item" [class.active]="selectedCategory === routerCategoryEnum.MakeAChange">
+        <a mcsCursor="pointer"
+          mcsId="ordering-dashboard"
+          mcsEventTracker="ordering-dashboard"
+          mcsEventCategory="navigation"
+          mcsEventLabel="main-nav"
+          [mcsRouterLink]="routeKeyEnum.OrdersDashboard">
+          {{ 'navigation.makeAChange' | translate }}
+        </a>
+      </div>
+    </ng-container>
   </div>
 </div>

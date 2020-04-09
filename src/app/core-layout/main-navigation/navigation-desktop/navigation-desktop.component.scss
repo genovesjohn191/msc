@@ -6,9 +6,11 @@ $navigation-desktop-item-padding: $space-small $space-medium;
 $navigation-desktop-item-color: $color-black;
 $navigation-desktop-item-active-bg-color: $color-white;
 
-// Macquarie Link variables
-$navigation-desktop-macquarie-link-color: $color-white;
-$navigation-desktop-macquarie-link-bg-color: $color-grey-01;
+// Ordering Dashboard Link variables
+$navigation-desktop-ordering-dashboard-link-color: $color-white;
+$navigation-desktop-ordering-dashboard-link-bg-color: $color-grey-01;
+$navigation-desktop-ordering-dashboard-link-color-hover: $color-black;
+$navigation-desktop-ordering-dashboard-link-bg-color-hover: $color-white;
 
 // Main desktop navigation
 .navigation-desktop-wrapper {
@@ -29,20 +31,21 @@ $navigation-desktop-macquarie-link-bg-color: $color-grey-01;
     &.active {
       background-color: $navigation-desktop-item-active-bg-color;
       a {
-        color: $navigation-desktop-item-color;
+        color: $navigation-desktop-ordering-dashboard-link-color-hover;
+        background-color: $navigation-desktop-ordering-dashboard-link-bg-color-hover;
       }
     }
   }
 
-  .macquarie-link {
+  .ordering-dashboard {
     cursor: pointer;
     margin-left: auto;
-    background-color: $navigation-desktop-macquarie-link-bg-color;
+    background-color: $navigation-desktop-ordering-dashboard-link-bg-color;
     @include display-flex(row);
     @include align-items(center);
 
     a {
-      color: $navigation-desktop-macquarie-link-color;
+      color: $navigation-desktop-ordering-dashboard-link-color;
       display: block;
       text-decoration: none;
       font-family: $navigation-desktop-item-font;
@@ -50,7 +53,8 @@ $navigation-desktop-macquarie-link-bg-color: $color-grey-01;
 
       &:hover {
         text-decoration: none;
-        color: $navigation-desktop-macquarie-link-color;
+        color: $navigation-desktop-ordering-dashboard-link-color-hover;
+        background-color: $navigation-desktop-ordering-dashboard-link-bg-color-hover;
       }
     }
   }

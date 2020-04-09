@@ -308,6 +308,7 @@
   },
   "ordersDashboard": {
     "enumKey": "OrdersDashboard",
+    "enumCategory": "MakeAChange",
     "navigationPath": "orders/dashboard",
     "requiredPermissions": ["OrderEdit"],
     "requiredFeatureFlag": "EnableOrderingOperationsListing",
@@ -315,6 +316,7 @@
   },
   "orderServerManagedScale": {
     "enumKey": "OrderServerManagedScale",
+    "enumCategory": "MakeAChange",
     "navigationPath": "orders/server-managed-scale",
     "requiredPermissions": ["OrderEdit"],
     "requiredFeatureFlag": "EnableOrderingManagedServerScale",
@@ -322,6 +324,7 @@
   },
   "orderVdcScale": {
     "enumKey": "OrderVdcScale",
+    "enumCategory": "MakeAChange",
     "navigationPath": "orders/vdc-scale",
     "requiredPermissions": ["OrderEdit"],
     "requiredFeatureFlag": "EnableOrderingVdcComputeScale",
@@ -329,6 +332,7 @@
   },
   "orderVdcStorageExpand": {
     "enumKey": "OrderVdcStorageExpand",
+    "enumCategory": "MakeAChange",
     "navigationPath": "orders/vdc-storage-expand",
     "requiredPermissions": ["OrderEdit"],
     "requiredFeatureFlag": "EnableOrderingVdcStorageExpand",
@@ -336,6 +340,7 @@
   },
   "orderVdcStorageCreate": {
     "enumKey": "OrderVdcStorageCreate",
+    "enumCategory": "MakeAChange",
     "navigationPath": "orders/vdc-storage-create",
     "requiredPermissions": ["OrderEdit"],
     "requiredFeatureFlag": "EnableOrderingVdcStorageProvision",
@@ -343,6 +348,7 @@
   },
   "orderServiceInviewRaise": {
     "enumKey": "OrderServiceInviewRaise",
+    "enumCategory": "MakeAChange",
     "navigationPath": "orders/services/inview",
     "requiredPermissions": ["OrderEdit"],
     "requiredFeatureFlag": "EnableOrderingManagedServerInviewLevelRaise",
@@ -350,6 +356,7 @@
   },
   "orderAddAntiVirus": {
     "enumKey": "OrderAddAntiVirus",
+    "enumCategory": "MakeAChange",
     "navigationPath": "orders/add/anti-virus",
     "requiredPermissions": ["OrderEdit"],
     "requiredFeatureFlag": "EnableOrderingAntiVirusProvision",
@@ -357,6 +364,7 @@
   },
   "orderAddHids": {
     "enumKey": "OrderAddHids",
+    "enumCategory": "MakeAChange",
     "navigationPath": "orders/add/host-intrusion-detection",
     "requiredPermissions": ["OrderEdit"],
     "requiredFeatureFlag": "EnableOrderingHidsProvision",
@@ -364,6 +372,7 @@
   },
   "orderAddServerBackup": {
     "enumKey": "OrderAddServerBackup",
+    "enumCategory": "MakeAChange",
     "navigationPath": "orders/add/server-backup",
     "requiredPermissions": ["OrderEdit"],
     "requiredFeatureFlag": "EnableOrderingServerBackupProvision",
@@ -371,6 +380,7 @@
   },
   "orderAddVmBackup": {
     "enumKey": "OrderAddVmBackup",
+    "enumCategory": "MakeAChange",
     "navigationPath": "orders/add/vm-backup",
     "requiredPermissions": ["OrderEdit"],
     "requiredFeatureFlag": "EnableOrderingVmBackupProvision",
@@ -378,6 +388,7 @@
   },
   "orderAddBat": {
     "enumKey": "orderAddBat",
+    "enumCategory": "MakeAChange",
     "navigationPath": "orders/add/backup-aggregation-target",
     "requiredPermissions": ["OrderEdit"],
     "requiredFeatureFlag": "EnableOrderingBatProvision",

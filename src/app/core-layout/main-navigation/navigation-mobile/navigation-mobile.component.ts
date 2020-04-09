@@ -22,9 +22,14 @@ import {
 } from '@app/core';
 import {
   unsubscribeSafely,
-  CommonDefinition
+  CommonDefinition,
+  isNullOrEmpty
 } from '@app/utilities';
-import { RouteKey } from '@app/models';
+import {
+  RouteKey,
+  McsRouteInfo,
+  RouteCategory
+} from '@app/models';
 import { SlidingPanelComponent } from '@app/shared';
 import { McsEvent } from '@app/events';
 
@@ -50,6 +55,7 @@ import { McsEvent } from '@app/events';
 
 export class NavigationMobileComponent implements OnInit, OnDestroy {
   public switchAccountAnimation: string;
+  public selectedCategory: RouteCategory;
 
   @ViewChild('slidingPanel', { static: false })
   public slidingPanel: SlidingPanelComponent;
@@ -80,6 +86,10 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
 
   public get routeKeyEnum(): typeof RouteKey {
     return RouteKey;
+  }
+
+  public get routerCategoryEnum(): any {
+    return RouteCategory;
   }
 
   private _routeChangeHandler: Subscription;
@@ -129,6 +139,7 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
    * Closes the navigation panel
    */
   public close(): void {
+    if (isNullOrEmpty(this.slidingPanel)) { return; }
     this.slidingPanel.close();
   }
 
@@ -139,12 +150,17 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
     this._routeChangeHandler = this._eventDispatcher.addEventListener(
       McsEvent.routeChange, this._onRouteChanged.bind(this)
     );
+    this._eventDispatcher.dispatch(McsEvent.routeChange);
   }
 
   /**
    * Events that gets notified when route has been changed
    */
-  private _onRouteChanged(): void {
+  private _onRouteChanged(routeInfo: McsRouteInfo): void {
+    if (isNullOrEmpty(routeInfo)) { return; }
+    this.selectedCategory = routeInfo.enumCategory;
+    this._changeDetectorRef.markForCheck();
+
     this.close();
   }
 }

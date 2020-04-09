@@ -9,17 +9,20 @@ $navigation-mobile-bg-color: $color-black;
 $navigation-mobile-item-active-bg-color: $color-white;
 $navigation-mobile-icon-padding: $space-small;
 $navigation-mobile-item-font-size: 14;
-// Macquarie Link variables
-$navigation-mobile-macquarie-link-font: $circular-pro-bold;
-$navigation-mobile-macquarie-link-color: $color-white;
-$navigation-mobile-macquarie-link-bg-color: $color-grey-01;
-$navigation-mobile-macquarie-link-padding: $space-small $space-medium;
+// Ordering Dashboard Link variables
+$navigation-mobile-ordering-dashboard-link-font: $circular-pro-bold;
+$navigation-mobile-ordering-dashboard-link-color: $color-white;
+$navigation-mobile-ordering-dashboard-link-bg-color: $color-grey-01;
+$navigation-mobile-ordering-dashboard-link-padding: $space-small $space-medium;
 
 $navigation-mobile-macquarie-item-title-color: $color-white;
 $navigation-mobile-macquarie-item-active-color: $color-white;
 $navigation-mobile-macquarie-item-color: $color-grey-04;
 $navigation-mobile-macquarie-item-border-color: $color-white;
 $navigation-mobile-macquarie-item-font: $circular-pro-bold;
+
+$navigation-mobile-ordering-dashboard-link-color-hover: $color-black;
+$navigation-mobile-ordering-dashboard-link-bg-color-hover: $color-white;
 
 // Main mobile navigation
 .navigation-mobile-wrapper {
@@ -41,23 +44,24 @@ $navigation-mobile-macquarie-item-font: $circular-pro-bold;
     }
   }
 
-  .macquarie-link {
+  .ordering-dashboard {
     cursor: pointer;
     margin-left: auto;
-    background-color: $navigation-mobile-macquarie-link-bg-color;
+    background-color: $navigation-mobile-ordering-dashboard-link-bg-color;
     @include display-flex(row);
     @include align-items(center);
 
     a {
-      color: $navigation-mobile-macquarie-link-color;
+      color: $navigation-mobile-ordering-dashboard-link-color;
       display: block;
       text-decoration: none;
-      font-family: $navigation-mobile-macquarie-link-font;
-      padding: $navigation-mobile-macquarie-link-padding;
+      font-family: $navigation-mobile-ordering-dashboard-link-font;
+      padding: $navigation-mobile-ordering-dashboard-link-padding;
 
       &:hover {
         text-decoration: none;
-        color: $navigation-mobile-macquarie-link-color;
+        color: $navigation-mobile-ordering-dashboard-link-color-hover;
+        background-color: $navigation-mobile-ordering-dashboard-link-bg-color-hover;
       }
     }
   }
@@ -106,7 +110,8 @@ $navigation-mobile-macquarie-item-font: $circular-pro-bold;
     &.active {
       background-color: transparent;
       a {
-        color: $navigation-mobile-macquarie-item-active-color;
+        color: $navigation-mobile-ordering-dashboard-link-color-hover;
+        background-color: $navigation-mobile-ordering-dashboard-link-bg-color-hover;
       }
     }
   }

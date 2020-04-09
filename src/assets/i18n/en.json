@@ -14,6 +14,7 @@
     "catalog": "Products",
     "signOut": "Sign Out",
     "macquarieView": "MacquarieView",
+    "makeAChange": "Make a Change",
     "productCatalog": "Products",
     "loadingProducts": "Loading products.",
     "noProducts": "No products to display.",
@@ -1715,7 +1716,6 @@
     "profile": "Profile",
     "tickets": "Tickets",
     "orders": "Orders",
-    "makeAChange": "Make a change",
     "manageUsers": "Manage Users",
     "changePassword": "Change Password",
     "systemMessage": "System Messages"
