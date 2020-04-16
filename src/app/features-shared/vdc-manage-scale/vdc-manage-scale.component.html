@@ -49,6 +49,39 @@
         <div>{{ 'vdcShared.manageScale.customMessage' | translate }}</div>
 
         <mcs-form-field class="form-field-size-small">
+            <input mcsInput
+              placeholder="Enter CPU"
+              mcsId="enter-cpu"
+              [formControl]="fcCustomCpu"
+              (change)="onCpuChange()">
+            <mcs-suffix mcsSuffix>{{ 'vdcShared.manageScale.cpuUnit' | translate }}</mcs-suffix>
+
+            <mcs-hint mcsHint align="start">
+              <div>
+                {{ 'vdcShared.manageScale.availableCpu' | translate: {cpu_value: cpuAvailable} }}
+              </div>
+            </mcs-hint>
+            <mcs-error mcsError errorState="required">
+                {{ 'vdcShared.manageScale.errors.cpuRequired' | translate }}
+            </mcs-error>
+            <mcs-error mcsError errorState="numeric">
+                {{ 'vdcShared.manageScale.errors.cpuNumeric' | translate }}
+            </mcs-error>
+            <mcs-error mcsError errorState="min">
+                {{ 'vdcShared.manageScale.errors.cpuMin' | translate: {min_value: cpuMin} }}
+            </mcs-error>
+            <mcs-error mcsError errorState="max">
+                {{ 'vdcShared.manageScale.errors.cpuMax' | translate: {max_value: cpuMax} }}
+            </mcs-error>
+            <mcs-error mcsError errorState="cpuStep">
+                {{ 'vdcShared.manageScale.errors.cpuInvalid' | translate: {step: cpuStep} }}
+            </mcs-error>
+            <mcs-error mcsError errorState="cpuRatio">
+                {{ 'vdcShared.manageScale.errors.ratioInvalid' | translate: {cpu_value: cpuRatio, ram_value: ramRatio } }}
+            </mcs-error>
+          </mcs-form-field>
+
+        <mcs-form-field class="form-field-size-small">
           <input mcsInput
             placeholder="Enter RAM"
             mcsId="input-ram"
@@ -78,41 +111,9 @@
           </mcs-error>
           <mcs-error mcsError errorState="ramRatio">
               {{ 'vdcShared.manageScale.errors.ratioInvalid' | translate: {cpu_value: cpuRatio, ram_value: ramRatio } }}
-         </mcs-error>
-        </mcs-form-field>
-
-        <mcs-form-field class="form-field-size-small">
-          <input mcsInput
-            placeholder="Enter CPU"
-            mcsId="enter-cpu"
-            [formControl]="fcCustomCpu"
-            (change)="onCpuChange()">
-          <mcs-suffix mcsSuffix>{{ 'vdcShared.manageScale.cpuUnit' | translate }}</mcs-suffix>
-
-          <mcs-hint mcsHint align="start">
-            <div>
-              {{ 'vdcShared.manageScale.availableCpu' | translate: {cpu_value: cpuAvailable} }}
-            </div>
-          </mcs-hint>
-          <mcs-error mcsError errorState="required">
-              {{ 'vdcShared.manageScale.errors.cpuRequired' | translate }}
-          </mcs-error>
-          <mcs-error mcsError errorState="numeric">
-              {{ 'vdcShared.manageScale.errors.cpuNumeric' | translate }}
-          </mcs-error>
-          <mcs-error mcsError errorState="min">
-              {{ 'vdcShared.manageScale.errors.cpuMin' | translate: {min_value: cpuMin} }}
-          </mcs-error>
-          <mcs-error mcsError errorState="max">
-              {{ 'vdcShared.manageScale.errors.cpuMax' | translate: {max_value: cpuMax} }}
-          </mcs-error>
-          <mcs-error mcsError errorState="cpuStep">
-              {{ 'vdcShared.manageScale.errors.cpuInvalid' | translate: {step: cpuStep} }}
-          </mcs-error>
-          <mcs-error mcsError errorState="cpuRatio">
-              {{ 'vdcShared.manageScale.errors.ratioInvalid' | translate: {cpu_value: cpuRatio, ram_value: ramRatio } }}
           </mcs-error>
         </mcs-form-field>
+
       </mcs-section>
     </div>
   </form>
