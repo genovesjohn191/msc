@@ -19,7 +19,7 @@
                 <a *ngFor="let internetPort of entity.internetPorts"
                   [mcsRouterLink]="[routeKeyEnum.InternetDetails, internetPort.id]"
                   mcsId="select-internet-port"
-                  mcsEventTracker="select-internet-port"
+                  mcsEventTracker="select-internet-port-with-group"
                   mcsEventCategory="internet"
                   mcsEventLabel="internet-port-list-panel">
 
@@ -38,7 +38,7 @@
               <a *ngFor="let internetPort of entity.internetPorts"
                 [mcsRouterLink]="[routeKeyEnum.InternetDetails, internetPort.id]"
                 mcsId="select-internet-port"
-                mcsEventTracker="select-internet-port"
+                mcsEventTracker="select-internet-port-without-group"
                 mcsEventCategory="internet"
                 mcsEventLabel="internet-port-list-panel">
 

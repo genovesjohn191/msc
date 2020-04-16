@@ -47,9 +47,9 @@
           <mcs-data-cell *mcsDataCellDef="let row">
             <a [mcsRouterLink]="[routeKeyEnum.InternetDetails, row.id]"
               mcsId="select-internet"
-              mcsEventTracker="navigate-to-internet"
+              mcsEventTracker="navigate-to-internet-port"
               mcsEventCategory="internet"
-              mcsEventLabel="internet-listing-page">{{ row.description }}</a>
+              mcsEventLabel="internet-port-listing-page">{{ row.description }}</a>
           </mcs-data-cell>
         </ng-container>
 
@@ -105,7 +105,7 @@
               <span>{{ 'internet.errorMessage' | translate }}</span>
               <a (click)="retryDatasource()"
                 mcsId
-                mcsEventTracker="retry-internet"
+                mcsEventTracker="internet-port-retry-loading-list"
                 mcsEventCategory="internet"
                 mcsEventLabel="internet-listing-page">{{ 'internet.retry' | translate }}</a>.
             </div>
@@ -118,7 +118,7 @@
           (click)="navigateToInternet(row)"
           mcsCursor="pointer"
           mcsId="internet-row"
-          mcsEventTracker="navigate-to-internet"
+          mcsEventTracker="navigate-to-internet-row"
           mcsEventCategory="internet"
           mcsEventLabel="internet-listing-page"></mcs-data-row>
       </mcs-table>

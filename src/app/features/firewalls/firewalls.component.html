@@ -47,7 +47,7 @@
 
               <a [mcsRouterLink]="[routeKeyEnum.FirewallDetails, row.id]"
                 mcsId="select-firewall"
-                mcsEventTracker="select-firewall"
+                mcsEventTracker="select-firewall-name"
                 mcsEventCategory="firewall"
                 mcsEventLabel="firewall-listing-page">{{ row.managementName }}</a>
             </mcs-item>
@@ -118,7 +118,7 @@
                   [href]="row.url"
                   target="_blank"
                   mcsId
-                  mcsEventTracker="view-in-portal"
+                  mcsEventTracker="view-firewall-in-portal"
                   mcsEventCategory="firewall"
                   mcsEventLabel="firewall-listing-page">
                   View in Portal

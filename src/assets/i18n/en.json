@@ -171,7 +171,7 @@
     },
     "vdcDetails": {
       "stepTitle": "VDC Details",
-      "contextualHelp": "Choose the memory and vCPU for your VDC."
+      "contextualHelp": "Choose the vCPU and memory for your VDC."
     },
     "provisioning": {
       "description": "Your VDC is being scaled and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
@@ -626,7 +626,7 @@
       "formMessageDefaultError": "Something went wrong while processing your request. Please try again later.",
       "label": "Services",
       "title": "Operating System Updates",
-      "description": "Keep your server protected by applying regular OS updates.",
+      "description": "Keep your server protected by applying regular OS updates. Inspect your server below and we'll check for critical and security updates.",
       "osAutomationNotAvailable": "This server does not currently support operating system updates via the Portal. Please contact your Macquarie Cloud Services accounts team for more information.",
       "updatesStatusTitleLabel": "Status",
       "updatesAnalysisLabel": "Inspect Now",
@@ -1191,14 +1191,14 @@
     "manageScale": {
       "sliderSwitch": "Select from slider",
       "customSwitch": "Enter custom size",
-      "sliderMessage": "Select the RAM and CPU for this VDC from a slider.",
-      "customMessage": "Manually enter the size of RAM and CPU for this VDC.",
+      "sliderMessage": "Select the CPU and RAM for this VDC from a slider.",
+      "customMessage": "Manually enter the CPU and size of RAM for this VDC.",
       "availableRam": "Available RAM: {{ram_value}}",
       "availableCpu": "Available CPU: {{cpu_value}} vCPU",
       "minimumRam": "Minimum RAM: {{ram_value}}",
       "minimumCpu": "Minimum CPU: {{cpu_value}} vCPU",
-      "sliderSelectedRamCpu": "{{ram_value}} RAM / {{cpu_value}} vCPU",
-      "sliderCurrentRamCpu": "Current: {{ram_value}} RAM / {{cpu_value}} vCPU",
+      "sliderSelectedRamCpu": "{{cpu_value}} vCPU / {{ram_value}} RAM",
+      "sliderCurrentRamCpu": "Current: {{cpu_value}} vCPU / {{ram_value}} RAM",
       "customCurrentCpu": "Current vCPU: {{cpu_value}} vCPU",
       "customCurrentRam": "Current RAM: {{ram_value}}",
       "ramLabel": "RAM",
