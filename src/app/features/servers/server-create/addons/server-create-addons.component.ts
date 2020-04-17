@@ -29,7 +29,7 @@ import {
   McsServerCreateAddOnSqlServer,
   McsServerCreateAddOnInview,
   McsServerCreateAddOnHids,
-  McsStorageBackUpAggregationTarget,
+  McsBackUpAggregationTarget,
   Os,
   McsOrderServerBackupAdd,
   McsOrderVmBackupAdd
@@ -55,7 +55,7 @@ export class ServerCreateAddOnsComponent
   public hidsAddOn = new AddOnDetails<McsServerCreateAddOnHids>();
   public inviewAddOn = new AddOnDetails<McsServerCreateAddOnInview>();
 
-  public aggregationTargets$: Observable<McsStorageBackUpAggregationTarget[]>;
+  public aggregationTargets$: Observable<McsBackUpAggregationTarget[]>;
 
   @Input()
   public osType: Os;
@@ -112,7 +112,7 @@ export class ServerCreateAddOnsComponent
    */
   public onToggleVmBackUp(collapse: boolean): void {
     this.vmBackupAddOn.selected = !collapse;
-    this.vmBackupAddOn.typeId = OrderIdType.CreateAddOnVmBackup;
+    this.vmBackupAddOn.typeId = OrderIdType.AddVmBackup;
     this.vmBackupAddOn.referenceId = ADDON_VM_BACKUP_ID;
     this.notifyDataChange();
   }
@@ -132,7 +132,7 @@ export class ServerCreateAddOnsComponent
    */
   public onToggleServerBackUp(collapse: boolean): void {
     this.serverBackupAddOn.selected = !collapse;
-    this.serverBackupAddOn.typeId = OrderIdType.CreateAddOnServerBackup;
+    this.serverBackupAddOn.typeId = OrderIdType.AddServerBackup;
     this.serverBackupAddOn.referenceId = ADDON_SERVER_BACKUP_ID;
     this.notifyDataChange();
   }
@@ -152,7 +152,7 @@ export class ServerCreateAddOnsComponent
    */
   public onToggleAntiVirus(checkboxRef: any): void {
     this.antiVirusAddOn.selected = checkboxRef.checked;
-    this.antiVirusAddOn.typeId = OrderIdType.CreateAddOnAntiVirus;
+    this.antiVirusAddOn.typeId = OrderIdType.AddAntiVirus;
     this.antiVirusAddOn.referenceId = ADDON_ANTI_VIRUS_ID;
     this.notifyDataChange();
   }
@@ -163,7 +163,7 @@ export class ServerCreateAddOnsComponent
    */
   public onToggleHids(collapse: boolean): void {
     this.hidsAddOn.selected = !collapse;
-    this.hidsAddOn.typeId = OrderIdType.CreateAddOnHids;
+    this.hidsAddOn.typeId = OrderIdType.AddHids;
     this.hidsAddOn.referenceId = ADDON_HIDS_ID;
     this.notifyDataChange();
   }
@@ -224,7 +224,7 @@ export class ServerCreateAddOnsComponent
    * Get the list of aggregation target that will be used in backup
    */
   private _getAggregationTarget(): void {
-    this.aggregationTargets$ = this._apiService.getStorageBackupAggregationTargets()
+    this.aggregationTargets$ = this._apiService.getBackupAggregationTargets()
       .pipe(
         map((response) => response && response.collection)
       );

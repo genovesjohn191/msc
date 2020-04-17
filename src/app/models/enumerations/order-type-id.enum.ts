@@ -2,18 +2,17 @@ import { McsEnumSerializationBase } from '../serialization/mcs-enum-serializatio
 
 export enum OrderIdType {
   CreateManagedServer = 'servers.vcloud.provision',
-  CreateAddOnVmBackup = 'backups.vm.provision',
-  CreateAddOnServerBackup = 'backups.server.provision',
-  CreateAddOnAntiVirus = 'hostsecurity.av.provision',
-  CreateAddOnHids = 'hostsecurity.hids.provision',
   CreateAddOnFirewall = 'firewall.provision',
   ScaleManageServer = 'servers.vcloud.update',
   VdcScale = 'resources.vdc.compute.update',
   VdcStorageExpand = 'resources.vdc.storage.update',
   VdcStorageCreate = 'resources.vdc.storage.new',
   RaiseInviewLevel = 'servers.inview.raise',
-  AddAntiVirus = 'hostsecurity.av.provision', // TODO: Verify with API, same order id type with addons
-  AddHids = 'hostsecurity.hids.provision' // TODO: Verify with API, same order id type with addons
+  AddAntiVirus = 'hostsecurity.av.provision',
+  AddHids = 'hostsecurity.hids.provision',
+  AddVmBackup = 'backups.vm.provision',
+  AddServerBackup = 'backups.server.provision',
+  AddBat = 'backups.bat.provision'
 }
 
 /**

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { McsStorageBackUpAggregationTarget } from '@app/models';
+import { McsBackUpAggregationTarget } from '@app/models';
 
 @Injectable()
 export class AggregationTargetService {
@@ -8,27 +8,27 @@ export class AggregationTargetService {
    * This will notify the subscriber everytime the aggregation target is selected or
    * everytime there are new data from the selected aggregation target
    */
-  public selectedAggregationTargetChange: BehaviorSubject<McsStorageBackUpAggregationTarget>;
+  public selectedAggregationTargetChange: BehaviorSubject<McsBackUpAggregationTarget>;
   private _aggregationTargetId: string;
 
   /**
    * Get the selected aggregation target on the listing panel
    */
-  private _selectedAggregationTarget: McsStorageBackUpAggregationTarget;
-  public get selectedAggregationTarget(): McsStorageBackUpAggregationTarget {
+  private _selectedAggregationTarget: McsBackUpAggregationTarget;
+  public get selectedAggregationTarget(): McsBackUpAggregationTarget {
     return this._selectedAggregationTarget;
   }
 
   constructor() {
-    this.selectedAggregationTargetChange = new BehaviorSubject<McsStorageBackUpAggregationTarget>(null);
-    this._selectedAggregationTarget = new McsStorageBackUpAggregationTarget();
+    this.selectedAggregationTargetChange = new BehaviorSubject<McsBackUpAggregationTarget>(null);
+    this._selectedAggregationTarget = new McsBackUpAggregationTarget();
   }
 
   /**
    * Set aggregation target data to the stream (MCS API response)
    * @param id Aggregation target identification
    */
-  public setSelectedAggregationTarget(aggregationTarget: McsStorageBackUpAggregationTarget): void {
+  public setSelectedAggregationTarget(aggregationTarget: McsBackUpAggregationTarget): void {
     this._selectedAggregationTarget = aggregationTarget;
     this.selectedAggregationTargetChange.next(aggregationTarget);
   }

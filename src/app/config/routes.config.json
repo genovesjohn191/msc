@@ -387,7 +387,7 @@
     "documentTitle": "Add VM Backup Provision - Macquarie Cloud Services"
   },
   "orderAddBat": {
-    "enumKey": "orderAddBat",
+    "enumKey": "OrderAddBat",
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/add/backup-aggregation-target",
     "requiredPermissions": ["OrderEdit"],

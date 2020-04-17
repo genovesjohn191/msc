@@ -47,7 +47,7 @@ import {
 import {
   McsOption,
   InviewLevel,
-  McsStorageBackUpAggregationTarget,
+  McsBackUpAggregationTarget,
   inviewLevelText,
   McsOrderServerBackupAdd
 } from '@app/models';
@@ -87,7 +87,7 @@ export class ServerManageBackupComponent implements
   public dataChange = new EventEmitter<McsOrderServerBackupAdd>();
 
   @Input()
-  public aggregationTargets: McsStorageBackUpAggregationTarget[];
+  public aggregationTargets: McsBackUpAggregationTarget[];
 
   @ViewChild(McsFormGroupDirective, { static: false })
   public set formGroup(value: McsFormGroupDirective) {

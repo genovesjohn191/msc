@@ -7,6 +7,6 @@ import { McsApiService } from '@app/services';
 export class AddVmBackupService extends McsOrderBase {
 
   constructor(_apiService: McsApiService) {
-    super(_apiService, OrderIdType.CreateAddOnVmBackup);
+    super(_apiService, OrderIdType.AddVmBackup);
   }
 }

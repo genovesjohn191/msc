@@ -139,6 +139,9 @@ export class McsNotificationEventsService {
     this._jobTypeEventMap.set(JobType.ExpandVdcStorage, McsEvent.jobVdcStorageExpandEvent);
     this._jobTypeEventMap.set(JobType.ProvisionAntiVirus, McsEvent.jobServerAvAddEvent);
     this._jobTypeEventMap.set(JobType.ProvisionHids, McsEvent.jobServerHidsAddEvent);
+    this._jobTypeEventMap.set(JobType.ProvisionServerBackup, McsEvent.jobServerBackupServerAddEvent);
+    this._jobTypeEventMap.set(JobType.ProvisionVmBackup, McsEvent.jobServerBackupVmAddEvent);
+    this._jobTypeEventMap.set(JobType.ManagedServerProvisionBat, McsEvent.jobBackupAggregationTargetAddEvent);
   }
 
   /**

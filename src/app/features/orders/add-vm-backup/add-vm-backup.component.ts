@@ -36,7 +36,7 @@ import {
   McsOrderWorkflow,
   McsOrderItemCreate,
   OrderIdType,
-  McsStorageBackUpAggregationTarget,
+  McsBackUpAggregationTarget,
   McsOrderVmBackupAdd,
   McsServer,
   McsServerBackupVm,
@@ -69,7 +69,7 @@ const ADD_VM_BACKUP = Guid.newGuid().toString();
 
 export class AddVmBackupComponent extends McsOrderWizardBase implements OnInit, OnDestroy {
   public serverGroups$: Observable<McsOptionGroup[]>;
-  public aggregationTargets$: Observable<McsStorageBackUpAggregationTarget[]>;
+  public aggregationTargets$: Observable<McsBackUpAggregationTarget[]>;
 
   public fgVmBackup: FormGroup;
   public fcServers: FormControl;
@@ -227,7 +227,7 @@ export class AddVmBackupComponent extends McsOrderWizardBase implements OnInit, 
       createObject(McsOrderCreate, {
         items: [
           createObject(McsOrderItemCreate, {
-            itemOrderType: OrderIdType.CreateAddOnVmBackup,
+            itemOrderType: OrderIdType.AddVmBackup,
             referenceId: ADD_VM_BACKUP,
             parentServiceId: server.serviceId,
             properties: this._vmBackup
@@ -298,7 +298,7 @@ export class AddVmBackupComponent extends McsOrderWizardBase implements OnInit, 
   }
 
   private _subscribeToAggregationTargets(): void {
-    this.aggregationTargets$ = this._apiService.getStorageBackupAggregationTargets().pipe(
+    this.aggregationTargets$ = this._apiService.getBackupAggregationTargets().pipe(
       map((response) => response && response.collection)
     );
   }

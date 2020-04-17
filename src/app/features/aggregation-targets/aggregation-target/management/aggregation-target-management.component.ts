@@ -15,7 +15,7 @@ import {
   tap
 } from 'rxjs/operators';
 import {
-  McsStorageBackUpAggregationTarget,
+  McsBackUpAggregationTarget,
   inviewLevelText
 } from '@app/models';
 import {
@@ -32,9 +32,9 @@ import { AggregationTargetService } from '../aggregation-target.service';
 })
 
 export class AggregationTargetManagementComponent implements OnInit, OnDestroy {
-  public aggregationTarget$: Observable<McsStorageBackUpAggregationTarget>;
+  public aggregationTarget$: Observable<McsBackUpAggregationTarget>;
 
-  private _aggregationTargetChange = new BehaviorSubject<McsStorageBackUpAggregationTarget>(null);
+  private _aggregationTargetChange = new BehaviorSubject<McsBackUpAggregationTarget>(null);
   private _destroySubject = new Subject<void>();
 
   constructor(private _aggregationTargetService: AggregationTargetService) { }
@@ -60,7 +60,7 @@ export class AggregationTargetManagementComponent implements OnInit, OnDestroy {
   /**
    * Returns the inview level label
    */
-  public inviewLevelLabel(aggregationTarget: McsStorageBackUpAggregationTarget): string {
+  public inviewLevelLabel(aggregationTarget: McsBackUpAggregationTarget): string {
     return inviewLevelText[aggregationTarget.inviewLevel];
   }
 

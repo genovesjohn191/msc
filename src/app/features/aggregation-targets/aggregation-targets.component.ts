@@ -12,7 +12,7 @@ import {
   McsAccessControlService
 } from '@app/core';
 import {
-  McsStorageBackUpAggregationTarget,
+  McsBackUpAggregationTarget,
   McsQueryParam,
   McsApiCollection,
   RouteKey,
@@ -33,7 +33,7 @@ import { McsEvent } from '@app/events';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class AggregationTargetsComponent extends McsTableListingBase<McsStorageBackUpAggregationTarget> implements IMcsColumnManager {
+export class AggregationTargetsComponent extends McsTableListingBase<McsBackUpAggregationTarget> implements IMcsColumnManager {
 
   public constructor(
     _injector: Injector,
@@ -66,7 +66,7 @@ export class AggregationTargetsComponent extends McsTableListingBase<McsStorageB
    * Navigate to aggregation target details page
    * @param aggregationTarget Aggregation Target to view the details
    */
-  public navigateToAggregationTarget(aggregationTarget: McsStorageBackUpAggregationTarget): void {
+  public navigateToAggregationTarget(aggregationTarget: McsBackUpAggregationTarget): void {
     let hasAggregationTargetFlag = this._accessControlService.hasAccessToFeature(McsFeatureFlag.AddonBackupAggregationTargetDetailsView);
     if (!hasAggregationTargetFlag || isNullOrEmpty(aggregationTarget)) { return; }
 
@@ -77,7 +77,7 @@ export class AggregationTargetsComponent extends McsTableListingBase<McsStorageB
    * Gets the entity listing based on the context
    * @param query Query to be obtained on the listing
    */
-  protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsStorageBackUpAggregationTarget>> {
-    return this._apiService.getStorageBackupAggregationTargets(query);
+  protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsBackUpAggregationTarget>> {
+    return this._apiService.getBackupAggregationTargets(query);
   }
 }

@@ -3,7 +3,7 @@ import { McsNavigationService } from '@app/core';
 import { RouteKey } from '@app/models';
 import { IOrderEventStrategy } from '../order-event.strategy';
 
-export class BackupAggregationTargetEvent implements IOrderEventStrategy {
+export class BatProvisionEvent implements IOrderEventStrategy {
 
   private _navigationService: McsNavigationService;
 

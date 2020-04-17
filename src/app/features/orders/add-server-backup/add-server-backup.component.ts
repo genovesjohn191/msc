@@ -38,7 +38,7 @@ import {
   OrderIdType,
   McsOptionGroup,
   McsOrderServerBackupAdd,
-  McsStorageBackUpAggregationTarget,
+  McsBackUpAggregationTarget,
   ServerProvisionState,
   McsEntityProvision,
   McsServer,
@@ -69,7 +69,7 @@ const ADD_SERVER_BACKUP = Guid.newGuid().toString();
 
 export class AddServerBackupComponent extends McsOrderWizardBase implements OnInit, OnDestroy {
   public serverGroups$: Observable<McsOptionGroup[]>;
-  public aggregationTargets$: Observable<McsStorageBackUpAggregationTarget[]>;
+  public aggregationTargets$: Observable<McsBackUpAggregationTarget[]>;
 
   public fgServerBackup: FormGroup;
   public fcServers: FormControl;
@@ -228,7 +228,7 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
       createObject(McsOrderCreate, {
         items: [
           createObject(McsOrderItemCreate, {
-            itemOrderType: OrderIdType.CreateAddOnServerBackup,
+            itemOrderType: OrderIdType.AddServerBackup,
             referenceId: ADD_SERVER_BACKUP,
             parentServiceId: server.serviceId,
             properties: this._serverBackup
@@ -299,7 +299,7 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
   }
 
   private _subscribeToAggregationTargets(): void {
-    this.aggregationTargets$ = this._apiService.getStorageBackupAggregationTargets().pipe(
+    this.aggregationTargets$ = this._apiService.getBackupAggregationTargets().pipe(
       map((response) => response && response.collection)
     );
   }

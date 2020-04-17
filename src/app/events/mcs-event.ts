@@ -58,6 +58,7 @@ import { JobServerChangePowerStateEvent } from './items/job-server-change-powers
 import { JobServerResetPasswordEvent } from './items/job-server-reset-password.event';
 import { JobServerManagedScaleEvent } from './items/job-server-managed-scale.event';
 import { JobServerManagedRaiseInviewLevelEvent } from './items/job-server-managed-raise-inview-level.event';
+import { JobBackupAggregationTargetAddEvent } from './items/job-backup-aggregation-target-add.event';
 import { JobErrorEvent } from './items/job-error.event';
 import { JobSuccessfulEvent } from './items/job-successful.event';
 import { JobInProgressEvent } from './items/job-in-progress.event';
@@ -68,6 +69,8 @@ import { JobVdcScaleEvent } from './items/job-vdc-scale.event';
 import { JobVdcStorageExpandEvent } from './items/job-vdc-storage-expand.event';
 import { JobServerHidsAddEvent } from './items/job-server-hids-add.event';
 import { JobServerAvAddEvent } from './items/job-server-av-add.event';
+import { JobServerBackupServerAddEvent } from './items/job-server-backup-server-add.event';
+import { JobServerBackupVmAddEvent } from './items/job-server-backup-vm-add.event';
 
 export class McsEvent {
   public static routeChange = new RouteChangeEvent();
@@ -135,9 +138,12 @@ export class McsEvent {
   public static jobServerResetPassword = new JobServerResetPasswordEvent();
   public static jobServerManagedScaleEvent = new JobServerManagedScaleEvent();
   public static jobServerManagedRaiseInviewLevelEvent = new JobServerManagedRaiseInviewLevelEvent();
-  public static jobVdcScaleEvent = new JobVdcScaleEvent();
-  public static jobVdcStorageExpandEvent = new JobVdcStorageExpandEvent();
   public static jobServerAvAddEvent = new JobServerAvAddEvent();
   public static jobServerHidsAddEvent = new JobServerHidsAddEvent();
+  public static jobServerBackupServerAddEvent = new JobServerBackupServerAddEvent();
+  public static jobServerBackupVmAddEvent = new JobServerBackupVmAddEvent();
+  public static jobBackupAggregationTargetAddEvent = new JobBackupAggregationTargetAddEvent();
+  public static jobVdcScaleEvent = new JobVdcScaleEvent();
+  public static jobVdcStorageExpandEvent = new JobVdcStorageExpandEvent();
   public static jobResourceCatalogItemCreate = new JobResourceCatalogItemCreateEvent();
 }

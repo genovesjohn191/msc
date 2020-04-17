@@ -6,5 +6,6 @@ export enum EntityRequester {
   Media,
   Ticket,
   Firewall,
-  SystemMessage
+  SystemMessage,
+  BackupAggregationTarget
 }
