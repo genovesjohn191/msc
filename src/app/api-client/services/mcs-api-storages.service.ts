@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
   McsApiSuccessResponse,
-  McsStorageBackUpAggregationTarget,
+  McsBackUpAggregationTarget,
   McsApiRequestParameter,
   McsQueryParam
 } from '@app/models';
@@ -19,7 +19,7 @@ export class McsApiStoragesService implements IMcsApiStoragesService {
   /**
    * Get all the backup aggregation targets
    */
-  public getBackUpAggregationTargets(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsStorageBackUpAggregationTarget[]>> {
+  public getBackUpAggregationTargets(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsBackUpAggregationTarget[]>> {
     // Set default values if null
     let searchParams = new Map<string, any>();
     if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
@@ -34,8 +34,8 @@ export class McsApiStoragesService implements IMcsApiStoragesService {
     return this._mcsApiHttpService.get(requestParameter)
       .pipe(
         map((response) => {
-          return McsApiSuccessResponse.deserializeResponse<McsStorageBackUpAggregationTarget[]>(
-            McsStorageBackUpAggregationTarget, response
+          return McsApiSuccessResponse.deserializeResponse<McsBackUpAggregationTarget[]>(
+            McsBackUpAggregationTarget, response
           );
         })
       );
@@ -45,7 +45,7 @@ export class McsApiStoragesService implements IMcsApiStoragesService {
    * Get all the backup aggregation targets
    * @param id aggregation target identification
    */
-  public getBackUpAggregationTarget(id: any): Observable<McsApiSuccessResponse<McsStorageBackUpAggregationTarget>> {
+  public getBackUpAggregationTarget(id: any): Observable<McsApiSuccessResponse<McsBackUpAggregationTarget>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/storage/backup/aggregation-targets/${id}`;
 
@@ -54,7 +54,7 @@ export class McsApiStoragesService implements IMcsApiStoragesService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<McsStorageBackUpAggregationTarget>(McsStorageBackUpAggregationTarget, response);
+            .deserializeResponse<McsBackUpAggregationTarget>(McsBackUpAggregationTarget, response);
           return apiResponse;
         })
       );

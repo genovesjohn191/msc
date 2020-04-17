@@ -20,7 +20,7 @@ import {
 } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 import {
-  McsStorageBackUpAggregationTarget,
+  McsBackUpAggregationTarget,
   RouteKey,
   McsQueryParam,
   McsApiCollection,
@@ -54,9 +54,9 @@ type tabGroupType = 'management';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class AggregationTargetComponent extends McsListViewListingBase<McsStorageBackUpAggregationTarget> implements OnInit, OnDestroy {
+export class AggregationTargetComponent extends McsListViewListingBase<McsBackUpAggregationTarget> implements OnInit, OnDestroy {
 
-  public selectedAggregationTarget$: Observable<McsStorageBackUpAggregationTarget>;
+  public selectedAggregationTarget$: Observable<McsBackUpAggregationTarget>;
   public selectedTabId$: Observable<string>;
 
   private _destroySubject = new Subject<void>();
@@ -102,7 +102,7 @@ export class AggregationTargetComponent extends McsListViewListingBase<McsStorag
     return RouteKey;
   }
 
-  public navitageToDetails(aggregationTarget: McsStorageBackUpAggregationTarget): void {
+  public navitageToDetails(aggregationTarget: McsBackUpAggregationTarget): void {
     this._navigationService.navigateTo(RouteKey.BackupAggregationTargetsDetails, [aggregationTarget.id]);
   }
 
@@ -135,8 +135,8 @@ export class AggregationTargetComponent extends McsListViewListingBase<McsStorag
   /**
    * Gets the entity listing from API
    */
-  protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsStorageBackUpAggregationTarget>> {
-    return this._apiService.getStorageBackupAggregationTargets(query);
+  protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsBackUpAggregationTarget>> {
+    return this._apiService.getBackupAggregationTargets(query);
   }
 
   /**
@@ -153,7 +153,7 @@ export class AggregationTargetComponent extends McsListViewListingBase<McsStorag
   /**
    * Sorting predicate for group
    */
-  private _sortAggregationTargetPredicate(first: McsStorageBackUpAggregationTarget, second: McsStorageBackUpAggregationTarget): number {
+  private _sortAggregationTargetPredicate(first: McsBackUpAggregationTarget, second: McsBackUpAggregationTarget): number {
     return compareStrings(first.description, second.description);
   }
 

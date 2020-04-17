@@ -6,11 +6,9 @@ import { ServerBackupProvisionEvent } from './events/server-backup-provision.eve
 import { VmBackupProvisionEvent } from './events/vm-backup-provision.event';
 import { VdcStorageUpdateEvent } from './events/vdc-storage-update.event';
 import { VdcComputeUpdateEvent } from './events/vdc-compute-update.event';
-import { SecurityHidsProvisionEvent } from './events/security-hids-provision';
-import { SecurityAvProvisionEvent } from './events/security-av-provision';
-
-// TODO: This order doesnt exist in api side yet
-import { BackupAggregationTargetEvent } from './events/backup-aggregation-target.event';
+import { SecurityHidsProvisionEvent } from './events/security-hids-provision.event';
+import { SecurityAvProvisionEvent } from './events/security-av-provision.event';
+import { BatProvisionEvent } from './events/bat-provision.event';
 
 export type OrderEventRecord = Record<string, IOrderEventStrategy>;
 
@@ -20,6 +18,7 @@ export const orderEventMap: OrderEventRecord = {
   'servers.vcloud.provision': new ServerVCloudCreateEvent(),
   'backups.server.provision': new ServerBackupProvisionEvent(),
   'backups.vm.provision': new VmBackupProvisionEvent(),
+  'backups.bat.provision': new BatProvisionEvent(),
   'resources.vdc.storage.update': new VdcStorageUpdateEvent(),
   'resources.vdc.compute.update': new VdcComputeUpdateEvent(),
   'hostsecurity.hids.provision': new SecurityHidsProvisionEvent(),

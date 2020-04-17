@@ -36,6 +36,7 @@ import { IMcsJobEntity } from './base/mcs-job-entity.interface';
 import { McsJobsRepository } from '../repositories/mcs-jobs.repository';
 import { McsJobServerManager } from './entities/mcs-job-server.manager';
 import { McsJobMediaManager } from './entities/mcs-job-media.manager';
+import { McsJobBackupAggregationTargetManager } from './entities/mcs-job-backup-aggregation-target.manager';
 
 @Injectable()
 export class McsJobManagerClient implements McsDisposable {
@@ -240,6 +241,12 @@ export class McsJobManagerClient implements McsDisposable {
     this._jobEntitiesFactory.set(JobType.ProvisionHids,
       new McsJobServerManager(ActionStatus.Update, this._injector)
     );
+    this._jobEntitiesFactory.set(JobType.ProvisionServerBackup,
+      new McsJobServerManager(ActionStatus.Update, this._injector)
+    );
+    this._jobEntitiesFactory.set(JobType.ProvisionVmBackup,
+      new McsJobServerManager(ActionStatus.Update, this._injector)
+    );
     this._jobEntitiesFactory.set(JobType.RaiseManagedServerInviewLevel,
       new McsJobServerManager(ActionStatus.Update, this._injector, 'serviceId')
     );
@@ -287,6 +294,11 @@ export class McsJobManagerClient implements McsDisposable {
     );
     this._jobEntitiesFactory.set(JobType.ApplyServerOsUpdates,
       new McsJobServerManager(ActionStatus.Update, this._injector)
+    );
+
+    // BAT
+    this._jobEntitiesFactory.set(JobType.ManagedServerProvisionBat,
+      new McsJobBackupAggregationTargetManager(ActionStatus.Add, this._injector)
     );
 
     // Media

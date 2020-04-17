@@ -7,10 +7,7 @@ import {
   ViewChild,
   Input,
   OnDestroy,
-  AfterViewInit,
-  OnChanges,
-  SimpleChanges,
-  OnInit
+  AfterViewInit
 } from '@angular/core';
 import {
   FormGroup,
@@ -33,7 +30,7 @@ import { McsFormGroupDirective } from '@app/shared';
 import { VdcManageStorage } from './vdc-manage-storage';
 import { TranslateService } from '@ngx-translate/core';
 
-const DEFAULT_MAXIMUM = 20480;
+const DEFAULT_MAXIMUM = 1024 * 32;
 const DEFAULT_MINIMUM = 0;
 const DEFAULT_STEP = 1;
 const SLIDER_STEP = 50;

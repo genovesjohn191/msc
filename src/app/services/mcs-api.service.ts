@@ -95,7 +95,7 @@ import {
   EntityRequester,
   McsServerOsUpdatesInspectRequest,
   McsOrderAvailable,
-  McsStorageBackUpAggregationTarget,
+  McsBackUpAggregationTarget,
   McsServerBackupVm,
   McsServerBackupServer,
   McsServerHostSecurity,
@@ -158,7 +158,7 @@ import { McsMediaRepository } from './repositories/mcs-media.repository';
 import { McsFirewallsRepository } from './repositories/mcs-firewalls.repository';
 import { McsConsoleRepository } from './repositories/mcs-console.repository';
 import { McsCompaniesRepository } from './repositories/mcs-companies.repository';
-import { McsStorageBackupAggregationTargetsRepository } from './repositories/mcs-storage-backup-aggregation-targets.repository';
+import { McsBackupAggregationTargetsRepository } from './repositories/mcs-backup-aggregation-targets.repository';
 
 interface DataEmitter<T> {
   eventEmitter: Observable<T>;
@@ -179,7 +179,7 @@ export class McsApiService {
   private readonly _ordersRepository: McsOrdersRepository;
   private readonly _mediaRepository: McsMediaRepository;
   private readonly _firewallsRepository: McsFirewallsRepository;
-  private readonly _storageBackupAggregationTargetRepository: McsStorageBackupAggregationTargetsRepository;
+  private readonly _backupAggregationTargetRepository: McsBackupAggregationTargetsRepository;
   private readonly _consoleRepository: McsConsoleRepository;
   private readonly _companiesRepository: McsCompaniesRepository;
 
@@ -212,7 +212,7 @@ export class McsApiService {
     this._ordersRepository = _injector.get(McsOrdersRepository);
     this._mediaRepository = _injector.get(McsMediaRepository);
     this._firewallsRepository = _injector.get(McsFirewallsRepository);
-    this._storageBackupAggregationTargetRepository = _injector.get(McsStorageBackupAggregationTargetsRepository);
+    this._backupAggregationTargetRepository = _injector.get(McsBackupAggregationTargetsRepository);
     this._consoleRepository = _injector.get(McsConsoleRepository);
     this._companiesRepository = _injector.get(McsCompaniesRepository);
 
@@ -911,18 +911,18 @@ export class McsApiService {
     );
   }
 
-  public getStorageBackupAggregationTarget(id: string): Observable<McsStorageBackUpAggregationTarget> {
-    return this._mapToEntityRecord(this._storageBackupAggregationTargetRepository, id).pipe(
+  public getBackupAggregationTarget(id: string): Observable<McsBackUpAggregationTarget> {
+    return this._mapToEntityRecord(this._backupAggregationTargetRepository, id).pipe(
       catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getStorageBackupAggregationTarget'))
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getBackupAggregationTarget'))
       )
     );
   }
 
-  public getStorageBackupAggregationTargets(query?: McsQueryParam): Observable<McsApiCollection<McsStorageBackUpAggregationTarget>> {
+  public getBackupAggregationTargets(query?: McsQueryParam): Observable<McsApiCollection<McsBackUpAggregationTarget>> {
     return this._storagesApi.getBackUpAggregationTargets(query).pipe(
       catchError((error) => {
-        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getStorageBackupAggregationTargets'));
+        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getBackupAggregationTargets'));
       }),
       map((response) => this._mapToCollection(response.content, response.totalCount))
     );
@@ -1304,22 +1304,6 @@ export class McsApiService {
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
-
-  // public getProductCatalogs(query?: McsQueryParam): Observable<McsApiCollection<McsProductCatalog>> {
-  //   return this._mapToEntityRecords(this._productCatalogRepository, query).pipe(
-  //     catchError((error) =>
-  //       this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getProductCatalogs'))
-  //     )
-  //   );
-  // }
-
-  // public getProductCatalog(id: string): Observable<McsProductCatalog> {
-  //   return this._mapToEntityRecord(this._productCatalogRepository, id).pipe(
-  //     catchError((error) =>
-  //       this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getProductCatalog'))
-  //     )
-  //   );
-  // }
 
   /**
    * Dispatch the entity requester event based on the action provided

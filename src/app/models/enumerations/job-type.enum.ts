@@ -59,7 +59,8 @@ export enum JobType {
 
   // Backup
   ProvisionServerBackup = 100606,
-  ProvisionVmBackup = 100607
+  ProvisionVmBackup = 100607,
+  ManagedServerProvisionBat = 1000608,
 }
 
 export const jobTypeText = {
@@ -93,6 +94,7 @@ export const jobTypeText = {
   [JobType.ProvisionVmBackup]: 'Backup VM',
   [JobType.ProvisionAntiVirus]: 'New Anti-Virus',
   [JobType.ProvisionHids]: 'New HIDS',
+  [JobType.ManagedServerProvisionBat]: 'New Backup Aggregation Target',
 };
 
 /**

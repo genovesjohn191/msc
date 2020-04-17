@@ -34,7 +34,8 @@ import {
   McsOrderItemCreate,
   OrderIdType,
   inviewLevelText,
-  InviewLevel
+  InviewLevel,
+  McsOrderBackupAggregationTargetAdd
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -123,12 +124,10 @@ export class AddBatComponent extends McsOrderWizardBase implements OnInit, OnDes
   public onSubmitOrder(submitDetails: OrderDetails): void {
     if (isNullOrEmpty(submitDetails)) { return; }
 
-    // TODO: Check on what reference object to put here to make the bat busy
     let workflow = new McsOrderWorkflow();
     workflow.state = submitDetails.workflowAction;
     workflow.clientReferenceObject = {
-      resourceDescription: this.progressDescription,
-      // serverId: selectedServerId
+      resourceDescription: this.progressDescription
     };
     this.submitOrderWorkflow(workflow);
   }
@@ -150,8 +149,8 @@ export class AddBatComponent extends McsOrderWizardBase implements OnInit, OnDes
   }
 
   private _registerFormGroup(): void {
-    this.fcRetention = new FormControl('', [CoreValidators.required]);
-    this.fcInview = new FormControl('', [CoreValidators.required]);
+    this.fcRetention = new FormControl(30, [CoreValidators.required]); // Default value is 30 days, refer for the values below
+    this.fcInview = new FormControl(InviewLevel.Premium, [CoreValidators.required]); // Default value Premium
     this.fcDailyQuota = new FormControl('', [
       CoreValidators.required,
       CoreValidators.numeric,
@@ -179,17 +178,17 @@ export class AddBatComponent extends McsOrderWizardBase implements OnInit, OnDes
   }
 
   private _onBatDetailsChange(): void {
-    // TODO: Confirm the payload of the backup aggregation target and populate the
-    // object using form values
-
     this._batService.createOrUpdateOrder(
       createObject(McsOrderCreate, {
         items: [
           createObject(McsOrderItemCreate, {
-            itemOrderType: OrderIdType.CreateAddOnServerBackup,
+            itemOrderType: OrderIdType.AddBat,
             referenceId: ADD_BAT,
-            // parentServiceId: server.serviceId,
-            // properties: this._serverBackup
+            properties: createObject(McsOrderBackupAggregationTargetAdd, {
+              dailyBackupQuotaGB: +this.fcDailyQuota.value,
+              retentionPeriodDays: this.fcRetention.value,
+              inviewLevel: this.fcInview.value
+            })
           })
         ]
       })
@@ -200,17 +199,18 @@ export class AddBatComponent extends McsOrderWizardBase implements OnInit, OnDes
    * Initialize all the options for retention
    */
   private _subscribeToRetentionOptions(): void {
+    // TODO: make a enum or constant for these options
     this.retentionOptions$ = of([
-      createObject(McsOption, { text: '14 Days', value: '14' }),
-      createObject(McsOption, { text: '30 Days', value: '30' }),
-      createObject(McsOption, { text: '6 Months', value: '180' }),
-      createObject(McsOption, { text: '1 Year', value: '365' }),
-      createObject(McsOption, { text: '2 Years', value: '730' }),
-      createObject(McsOption, { text: '3 Years', value: '1095' }),
-      createObject(McsOption, { text: '4 Years', value: '1460' }),
-      createObject(McsOption, { text: '5 Years', value: '1825' }),
-      createObject(McsOption, { text: '6 Years', value: '2190' }),
-      createObject(McsOption, { text: '7 Years', value: '2555' })
+      createObject(McsOption, { text: '14 Days', value: 14 }),
+      createObject(McsOption, { text: '30 Days', value: 30 }),
+      createObject(McsOption, { text: '6 Months', value: 180 }),
+      createObject(McsOption, { text: '1 Year', value: 365 }),
+      createObject(McsOption, { text: '2 Years', value: 730 }),
+      createObject(McsOption, { text: '3 Years', value: 1095 }),
+      createObject(McsOption, { text: '4 Years', value: 1460 }),
+      createObject(McsOption, { text: '5 Years', value: 1825 }),
+      createObject(McsOption, { text: '6 Years', value: 2190 }),
+      createObject(McsOption, { text: '7 Years', value: 2555 })
     ]);
   }
 

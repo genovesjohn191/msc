@@ -47,7 +47,7 @@ import {
 import {
   McsOption,
   InviewLevel,
-  McsStorageBackUpAggregationTarget,
+  McsBackUpAggregationTarget,
   inviewLevelText,
   McsOrderVmBackupAdd
 } from '@app/models';
@@ -87,7 +87,7 @@ export class ServerManageBackupVmComponent implements
   public dataChange = new EventEmitter<McsOrderVmBackupAdd>();
 
   @Input()
-  public aggregationTargets: McsStorageBackUpAggregationTarget[];
+  public aggregationTargets: McsBackUpAggregationTarget[];
 
   @ViewChild(McsFormGroupDirective, { static: false })
   public set formGroup(value: McsFormGroupDirective) {
@@ -164,7 +164,7 @@ export class ServerManageBackupVmComponent implements
   /**
    * Returns true when the aggregation target list is less than or equal to zero
    */
-  public isAggregationTargetsEmpty(aggregationTargets: McsStorageBackUpAggregationTarget[]): boolean {
+  public isAggregationTargetsEmpty(aggregationTargets: McsBackUpAggregationTarget[]): boolean {
     return getSafeProperty(aggregationTargets, (obj) => obj.length <= 0, true);
   }
 

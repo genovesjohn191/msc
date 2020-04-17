@@ -7,7 +7,6 @@ import { McsApiService } from '@app/services';
 export class AddBatService extends McsOrderBase {
 
   constructor(_apiService: McsApiService) {
-    // TODO: Change the type of the BAT
-    super(_apiService, OrderIdType.CreateAddOnServerBackup);
+    super(_apiService, OrderIdType.AddBat);
   }
 }
