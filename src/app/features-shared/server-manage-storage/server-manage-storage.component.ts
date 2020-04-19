@@ -45,6 +45,7 @@ import { ServerManageStorage } from './server-manage-storage';
 
 // Constants
 const DEFAULT_STORAGE_STEPS = 10;
+const DEFAULT_STORAGE_STEPS_MB = 1024;
 
 @Component({
   selector: 'mcs-server-manage-storage',
@@ -107,13 +108,12 @@ export class ServerManageStorageComponent
    * and the deduction value provided by implementation
    */
   public get availableMemory(): number {
-    let maxMemoryInGB = convertMbToGb(
-      getSafeProperty(this.selectedStorage, (obj) => obj.availableMB, 0)
-    );
-    let usedMemoryInGB = convertMbToGb(
-      getSafeProperty(this.targetDisk, (obj) => obj.sizeMB, 0)
-    );
-    return Math.max((maxMemoryInGB + usedMemoryInGB) - this.deductValueGB, 0);
+    let storageProfileAvailableMemoryMB = getSafeProperty(this.selectedStorage, (obj) => obj.availableMB, 0);
+    let diskSizeMB = getSafeProperty(this.targetDisk, (obj) => obj.sizeMB, 0);
+    let totalAvailableMemory = Math.max((storageProfileAvailableMemoryMB + diskSizeMB) - convertGbToMb(this.deductValueGB), 0);
+    let stepExcessMemory = totalAvailableMemory % DEFAULT_STORAGE_STEPS_MB;
+
+    return convertMbToGb(totalAvailableMemory - stepExcessMemory);
   }
 
   /**
