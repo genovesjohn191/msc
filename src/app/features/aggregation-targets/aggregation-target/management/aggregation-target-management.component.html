@@ -14,7 +14,7 @@
 
         <mcs-item>
           <span>{{ 'aggregationTarget.management.properties.dailyBackupQuota' | translate }}:</span>
-          <span [innerHTML]="aggregationTarget.dailyBackupQuota | mcsDataLabel"></span>
+          <span>{{ dailyQuotaInGB(aggregationTarget.dailyBackupQuotaMB)}}</span>
         </mcs-item>
       </mcs-presentation-panel>
     </mcs-grid-column>

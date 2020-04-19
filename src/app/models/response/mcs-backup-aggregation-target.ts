@@ -12,6 +12,9 @@ export class McsBackUpAggregationTarget extends McsEntityBase {
   @JsonProperty()
   public description: string = undefined;
 
+  @JsonProperty()
+  public dailyBackupQuotaMB: number = undefined;
+
   @JsonProperty({
     serializer: InviewLevelSerialization,
     deserializer: InviewLevelSerialization

@@ -39,7 +39,6 @@ import {
   McsServerStorageDevice,
   McsServerStorageDeviceUpdate,
   McsServer,
-  McsResource,
   McsFeatureFlag
 } from '@app/models';
 import { ServerManageStorage } from '@app/features-shared';
