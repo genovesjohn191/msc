@@ -364,6 +364,7 @@
     "title": "Order a Backup Aggregation Target",
     "detailsStep": {
       "title": "Details",
+      "description": "Backup Aggregation Targets (BATs) allow you to combine multiple backup quotas into a single billing construct. A BAT can be used with VM Backup, Server Backup or Colocation Backup services.",
       "retentionLabel": "Keep my backups for",
       "retentionPlaceholder": "Select retention",
       "retentionHelp": "Your desired backup retention setting. We can store your backups from 2 weeks, to 7 years.",
