@@ -89,7 +89,7 @@ export const mockServerService = {
 
     let mcsApiJobMock = new McsJob();
     mcsApiJobMock.id = '5';
-    mcsApiJobMock.type = JobType.CreateServerDisk;
+    mcsApiJobMock.type = JobType.ServerCreateDisk;
     mcsApiJobMock.status = JobStatus.Active;
     mcsApiJobMock.clientReferenceObject = {
       serverId: '52381b70-ed47-4ab5-8f6f-0365d4f76148',
@@ -112,7 +112,7 @@ export const mockServerService = {
 
     let mcsApiJobMock = new McsJob();
     mcsApiJobMock.id = '5';
-    mcsApiJobMock.type = JobType.UpdateServerDisk;
+    mcsApiJobMock.type = JobType.ServerUpdateDisk;
     mcsApiJobMock.status = JobStatus.Active;
     mcsApiJobMock.clientReferenceObject = {
       serverId: '52381b70-ed47-4ab5-8f6f-0365d4f76148',
@@ -133,7 +133,7 @@ export const mockServerService = {
 
     let mcsApiJobMock = new McsJob();
     mcsApiJobMock.id = '5';
-    mcsApiJobMock.type = JobType.UpdateServerDisk;
+    mcsApiJobMock.type = JobType.ServerUpdateDisk;
     mcsApiJobMock.status = JobStatus.Active;
     mcsApiJobMock.clientReferenceObject = {
       serverId: '52381b70-ed47-4ab5-8f6f-0365d4f76148',
@@ -154,7 +154,7 @@ export const mockServerService = {
 
     let mcsApiJobMock = new McsJob();
     mcsApiJobMock.id = '5';
-    mcsApiJobMock.type = JobType.CreateServerNic;
+    mcsApiJobMock.type = JobType.ServerCreateNic;
     mcsApiJobMock.status = JobStatus.Active;
     mcsApiJobMock.clientReferenceObject = {
       serverId: '52381b70-ed47-4ab5-8f6f-0365d4f76148',
@@ -176,7 +176,7 @@ export const mockServerService = {
 
     let mcsApiJobMock = new McsJob();
     mcsApiJobMock.id = '5';
-    mcsApiJobMock.type = JobType.UpdateServerNic;
+    mcsApiJobMock.type = JobType.ServerUpdateNic;
     mcsApiJobMock.status = JobStatus.Active;
     mcsApiJobMock.clientReferenceObject = {
       serverId: '52381b70-ed47-4ab5-8f6f-0365d4f76148',
@@ -199,7 +199,7 @@ export const mockServerService = {
 
     let mcsApiJobMock = new McsJob();
     mcsApiJobMock.id = '5';
-    mcsApiJobMock.type = JobType.DeleteServerNic;
+    mcsApiJobMock.type = JobType.ServerDeleteNic;
     mcsApiJobMock.status = JobStatus.Active;
     mcsApiJobMock.clientReferenceObject = {
       serverId: '52381b70-ed47-4ab5-8f6f-0365d4f76148',

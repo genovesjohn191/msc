@@ -292,7 +292,7 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
    * Creates all the jobs type table
    */
   private _createExcludedProgressJobs(): void {
-    this._excludedProgressJobTypes.push(JobType.CreateResourceCatalogItem);
+    this._excludedProgressJobTypes.push(JobType.ResourceCreateCatalogItem);
   }
 
   /**
@@ -313,9 +313,9 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
    */
   private _createJobTypeRouteMap(): void {
     this._jobTypeRouteMap = new Map();
-    this._jobTypeRouteMap.set(JobType.CreateServer, RouteKey.ServerDetails);
-    this._jobTypeRouteMap.set(JobType.CloneServer, RouteKey.ServerDetails);
-    this._jobTypeRouteMap.set(JobType.CreateResourceCatalogItem, RouteKey.Medium);
-    this._jobTypeRouteMap.set(JobType.ProvisionCreateServer, RouteKey.ServerDetails);
+    this._jobTypeRouteMap.set(JobType.SelfManagedServerCreate, RouteKey.ServerDetails);
+    this._jobTypeRouteMap.set(JobType.SelfManagedServerClone, RouteKey.ServerDetails);
+    this._jobTypeRouteMap.set(JobType.ResourceCreateCatalogItem, RouteKey.Medium);
+    this._jobTypeRouteMap.set(JobType.ManagedServerProvision, RouteKey.ServerDetails);
   }
 }
