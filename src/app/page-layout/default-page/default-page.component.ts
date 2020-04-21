@@ -50,7 +50,7 @@ export class DefaultPageComponent {
    * Event that emits when vm password has been received
    */
   private _onResetVmPassword(job: McsJob): void {
-    let jobIsResetVmPassword = getSafeProperty(job, (obj) => obj.type) === JobType.ResetServerPassword;
+    let jobIsResetVmPassword = getSafeProperty(job, (obj) => obj.type) === JobType.ServerResetPassword;
     if (!jobIsResetVmPassword) { return; }
     if (job.dataStatus !== DataStatus.Success) { return; }
 

@@ -5,36 +5,45 @@ export enum TaskType {
 
   // Core
   // Range 1-2999
-  RefreshProductCatalogCache = 1,
+  CatalogRefreshCache = 1,
 
   // Orchestration
   // Range 3000-4999
-  ChangeServerPowerState = 3000,
-  CreateServer = 3001,
-  UpdateServerCompute = 3002,
-  DeleteServer = 3003,
-  CreateServerSnapshot = 3004,
-  ApplyServerSnapshot = 3005,
-  DeleteServerSnapshot = 3006,
-  CreateServerDisk = 3007,
-  UpdateServerDisk = 3008,
-  DeleteServerDisk = 3009,
-  CloneServer = 3010,
-  ResetServerPassword = 3011,
-  CreateServerNic = 3012,
-  UpdateServerNic = 3013,
-  DeleteServerNic = 3014,
-  AttachServerMedia = 3015,
-  DetachServerMedia = 3016,
-  RenameServer = 3017,
-  CreateResourceCatalogItem = 3018,
-  PerformServerOsUpdateAnalysis = 3019,
-  ApplyServerOsUpdates = 3020,
+  ServerChangePowerState = 3000,
+  SelfManagedServerCreate = 3001,
+  SelfManagedServerUpdateCompute = 3002,
+  SelfManagedServerDelete = 3003,
+  ServerCreateSnapshot = 3004,
+  ServerApplySnapshot = 3005,
+  ServerDeleteSnapshot = 3006,
+  ServerCreateDisk = 3007,
+  ServerUpdateDisk = 3008,
+  ServerDeleteDisk = 3009,
+  SelfManagedServerClone = 3010,
+  ServerResetPassword = 3011,
+  ServerCreateNic = 3012,
+  ServerUpdateNic = 3013,
+  ServerDeleteNic = 3014,
+  ServerAttachMedia = 3015,
+  ServerDetachMedia = 3016,
+  SelfManagedServerRename = 3017,
+  ResourceCreateCatalogItem = 3018,
+  ManagedServerPerformOsUpdateAnalysis = 3019,
+  ManagedServerApplyOsUpdates = 3020,
 
   // Orchestration Ordering
   // Range 5000-6999
-  ProvisionCreateServer = 5000,
-  ProvisionAntiVirusFeature = 5001
+  ManagedServerProvision = 5000,
+  ManagedServerProvisionAntiVirus = 5001,
+  ManagedServerScale = 5002,
+  ManagedServerRaiseInviewLevel = 5003,
+  ManagedServerClone = 5004,
+  VdcExpandStorage = 5005,
+  VdcProvisionStorage = 5006,
+  VdcScaleCompute = 5007,
+  ManagedServerProvisionHids = 5008,
+  ManagedServerProvisionServerBackup = 5009,
+  ManagedServerProvisionVmBackup = 5010,
 }
 
 /**

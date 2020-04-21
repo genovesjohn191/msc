@@ -144,6 +144,6 @@ export class McsJob extends McsEntityBase {
    * Returns true when the job process can be estimated
    */
   public get isEstimable(): boolean {
-    return this.type !== JobType.CreateResourceCatalogItem;
+    return this.type !== JobType.ResourceCreateCatalogItem;
   }
 }

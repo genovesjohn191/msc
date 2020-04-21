@@ -208,91 +208,91 @@ export class McsJobManagerClient implements McsDisposable {
     this._jobEntitiesFactory = new Map();
 
     // Servers
-    this._jobEntitiesFactory.set(JobType.CreateServer,
+    this._jobEntitiesFactory.set(JobType.SelfManagedServerCreate,
       new McsJobServerManager(ActionStatus.Add, this._injector)
     );
-    this._jobEntitiesFactory.set(JobType.UpdateServerCompute,
+    this._jobEntitiesFactory.set(JobType.SelfManagedServerUpdateCompute,
       new McsJobServerManager(ActionStatus.Update, this._injector)
     );
-    this._jobEntitiesFactory.set(JobType.DeleteServer,
+    this._jobEntitiesFactory.set(JobType.SelfManagedServerDelete,
       new McsJobServerManager(ActionStatus.Delete, this._injector)
     );
-    this._jobEntitiesFactory.set(JobType.CloneServer,
+    this._jobEntitiesFactory.set(JobType.SelfManagedServerClone,
       new McsJobServerManager(ActionStatus.Add, this._injector)
     );
-    this._jobEntitiesFactory.set(JobType.RenameServer,
+    this._jobEntitiesFactory.set(JobType.SelfManagedServerRename,
       new McsJobServerManager(ActionStatus.Update, this._injector)
     );
-    this._jobEntitiesFactory.set(JobType.ProvisionCreateServer,
+    this._jobEntitiesFactory.set(JobType.ManagedServerProvision,
       new McsJobServerManager(ActionStatus.Add, this._injector)
     );
-    this._jobEntitiesFactory.set(JobType.ScaleManagedServer,
+    this._jobEntitiesFactory.set(JobType.ManagedServerScale,
       new McsJobServerManager(ActionStatus.Update, this._injector)
     );
-    this._jobEntitiesFactory.set(JobType.ScaleVdcCompute,
+    this._jobEntitiesFactory.set(JobType.VdcScaleCompute,
       new McsJobServerManager(ActionStatus.Update, this._injector)
     );
-    this._jobEntitiesFactory.set(JobType.ExpandVdcStorage,
+    this._jobEntitiesFactory.set(JobType.VdcExpandStorage,
       new McsJobServerManager(ActionStatus.Update, this._injector)
     );
-    this._jobEntitiesFactory.set(JobType.ProvisionAntiVirus,
+    this._jobEntitiesFactory.set(JobType.ManagedServerProvisionAntiVirus,
       new McsJobServerManager(ActionStatus.Update, this._injector)
     );
-    this._jobEntitiesFactory.set(JobType.ProvisionHids,
+    this._jobEntitiesFactory.set(JobType.ManagedServerProvisionHids,
       new McsJobServerManager(ActionStatus.Update, this._injector)
     );
-    this._jobEntitiesFactory.set(JobType.ProvisionServerBackup,
+    this._jobEntitiesFactory.set(JobType.ManagedServerProvisionServerBackup,
       new McsJobServerManager(ActionStatus.Update, this._injector)
     );
-    this._jobEntitiesFactory.set(JobType.ProvisionVmBackup,
+    this._jobEntitiesFactory.set(JobType.ManagedServerProvisionVmBackup,
       new McsJobServerManager(ActionStatus.Update, this._injector)
     );
-    this._jobEntitiesFactory.set(JobType.RaiseManagedServerInviewLevel,
+    this._jobEntitiesFactory.set(JobType.ManagedServerRaiseInviewLevel,
       new McsJobServerManager(ActionStatus.Update, this._injector, 'serviceId')
     );
-    this._jobEntitiesFactory.set(JobType.CreateServerSnapshot,
+    this._jobEntitiesFactory.set(JobType.ServerCreateSnapshot,
       new McsJobServerManager(ActionStatus.Update, this._injector)
     );
-    this._jobEntitiesFactory.set(JobType.ApplyServerSnapshot,
+    this._jobEntitiesFactory.set(JobType.ServerApplySnapshot,
       new McsJobServerManager(ActionStatus.Update, this._injector)
     );
-    this._jobEntitiesFactory.set(JobType.DeleteServerSnapshot,
+    this._jobEntitiesFactory.set(JobType.ServerDeleteSnapshot,
       new McsJobServerManager(ActionStatus.Update, this._injector)
     );
-    this._jobEntitiesFactory.set(JobType.ChangeServerPowerState,
+    this._jobEntitiesFactory.set(JobType.ServerChangePowerState,
       new McsJobServerManager(ActionStatus.Update, this._injector)
     );
-    this._jobEntitiesFactory.set(JobType.CreateServerDisk,
+    this._jobEntitiesFactory.set(JobType.ServerCreateDisk,
       new McsJobServerManager(ActionStatus.Update, this._injector)
     );
-    this._jobEntitiesFactory.set(JobType.UpdateServerDisk,
+    this._jobEntitiesFactory.set(JobType.ServerUpdateDisk,
       new McsJobServerManager(ActionStatus.Update, this._injector)
     );
-    this._jobEntitiesFactory.set(JobType.DeleteServerDisk,
+    this._jobEntitiesFactory.set(JobType.ServerDeleteDisk,
       new McsJobServerManager(ActionStatus.Update, this._injector)
     );
-    this._jobEntitiesFactory.set(JobType.ResetServerPassword,
+    this._jobEntitiesFactory.set(JobType.ServerResetPassword,
       new McsJobServerManager(ActionStatus.Update, this._injector)
     );
-    this._jobEntitiesFactory.set(JobType.CreateServerNic,
+    this._jobEntitiesFactory.set(JobType.ServerCreateNic,
       new McsJobServerManager(ActionStatus.Update, this._injector)
     );
-    this._jobEntitiesFactory.set(JobType.UpdateServerNic,
+    this._jobEntitiesFactory.set(JobType.ServerUpdateNic,
       new McsJobServerManager(ActionStatus.Update, this._injector)
     );
-    this._jobEntitiesFactory.set(JobType.DeleteServerNic,
+    this._jobEntitiesFactory.set(JobType.ServerDeleteNic,
       new McsJobServerManager(ActionStatus.Update, this._injector)
     );
-    this._jobEntitiesFactory.set(JobType.AttachServerMedia,
+    this._jobEntitiesFactory.set(JobType.ServerAttachMedia,
       new McsJobServerManager(ActionStatus.Update, this._injector)
     );
-    this._jobEntitiesFactory.set(JobType.DetachServerMedia,
+    this._jobEntitiesFactory.set(JobType.ServerDetachMedia,
       new McsJobServerManager(ActionStatus.Update, this._injector)
     );
-    this._jobEntitiesFactory.set(JobType.PerformServerOsUpdateAnalysis,
+    this._jobEntitiesFactory.set(JobType.ManagedServerPerformOsUpdateAnalysis,
       new McsJobServerManager(ActionStatus.Update, this._injector)
     );
-    this._jobEntitiesFactory.set(JobType.ApplyServerOsUpdates,
+    this._jobEntitiesFactory.set(JobType.ManagedServerApplyOsUpdates,
       new McsJobServerManager(ActionStatus.Update, this._injector)
     );
 
@@ -302,7 +302,7 @@ export class McsJobManagerClient implements McsDisposable {
     );
 
     // Media
-    this._jobEntitiesFactory.set(JobType.CreateResourceCatalogItem,
+    this._jobEntitiesFactory.set(JobType.ResourceCreateCatalogItem,
       new McsJobMediaManager(ActionStatus.Add, this._injector)
     );
   }

@@ -99,11 +99,11 @@ export class ServiceOsUpdatesPatchComponent extends ServerServiceDetailBase impl
     let job = changes['job'];
     if (!isNullOrEmpty(job) && !isNullOrEmpty(this._job)) {
 
-      if (this._job.type === JobType.PerformServerOsUpdateAnalysis) {
+      if (this._job.type === JobType.ManagedServerPerformOsUpdateAnalysis) {
         this._onInspectForAvailableOsUpdates(this._job);
       }
 
-      if (this._job.type === JobType.ApplyServerOsUpdates) {
+      if (this._job.type === JobType.ManagedServerApplyOsUpdates) {
         this._onApplyServerOsUpdates(this._job);
       }
     }
