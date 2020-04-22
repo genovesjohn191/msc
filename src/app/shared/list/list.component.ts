@@ -43,7 +43,7 @@ export class ListComponent implements AfterViewInit {
   public itemsOffset: McsSizeType;
 
   @ContentChild(ListHeaderDirective, { static: false })
-  public headerTemplate: TemplateRef<any>;
+  public headerTemplate: ListHeaderDirective;
 
   public constructor(
     private _elementRef: ElementRef,
