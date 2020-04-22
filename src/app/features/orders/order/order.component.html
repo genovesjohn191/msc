@@ -23,15 +23,17 @@
 
             <!-- Requires Approval -->
             <ng-template #requiresApprovalTemplate>
-              <mcs-action-item mcsResponsivePanelItem mcsId
-                *ngIf="selectedOrder.requiresApproval"
-                (click)="selectApprover()"
-                mcsEventTracker="submit-for-approval"
-                mcsEventCategory="order"
-                mcsEventLabel="order-details-top-panel">
-                <mcs-icon [key]="submitIconKey"></mcs-icon>
-                <span>{{ 'order.submitForApproval' | translate }}</span>
-              </mcs-action-item>
+              <ng-container *mcsAccessControl="['OrderEdit']">
+                <mcs-action-item mcsResponsivePanelItem mcsId
+                  *ngIf="selectedOrder.requiresApproval"
+                  (click)="selectApprover()"
+                  mcsEventTracker="submit-for-approval"
+                  mcsEventCategory="order"
+                  mcsEventLabel="order-details-top-panel">
+                  <mcs-icon [key]="submitIconKey"></mcs-icon>
+                  <span>{{ 'order.submitForApproval' | translate }}</span>
+                </mcs-action-item>
+              </ng-container>
             </ng-template>
 
             <!-- Reject order -->
@@ -48,15 +50,17 @@
             </ng-container>
 
             <!-- Cancel order -->
-            <mcs-action-item mcsResponsivePanelItem mcsId
-              *ngIf="selectedOrder.cancellable"
-              (click)="cancelOrder(selectedOrder)"
-              mcsEventTracker="cancel-order"
-              mcsEventCategory="order"
-              mcsEventLabel="order-details-top-panel">
-              <mcs-icon [key]="cancelIconKey"></mcs-icon>
-              <span>{{ 'order.cancelOrder' | translate }}</span>
-            </mcs-action-item>
+            <ng-container *mcsAccessControl="['OrderEdit']">
+              <mcs-action-item mcsResponsivePanelItem mcsId
+                *ngIf="selectedOrder.cancellable"
+                (click)="cancelOrder(selectedOrder)"
+                mcsEventTracker="cancel-order"
+                mcsEventCategory="order"
+                mcsEventLabel="order-details-top-panel">
+                <mcs-icon [key]="cancelIconKey"></mcs-icon>
+                <span>{{ 'order.cancelOrder' | translate }}</span>
+              </mcs-action-item>
+            </ng-container>
           </ng-container>
         </mcs-responsive-panel>
       </ng-container>

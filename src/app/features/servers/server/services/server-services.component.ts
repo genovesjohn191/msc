@@ -21,10 +21,7 @@ import {
   distinctUntilChanged,
   map
 } from 'rxjs/operators';
-import {
-  McsDataStatusFactory,
-  McsServerPermission,
-} from '@app/core';
+import { McsDataStatusFactory } from '@app/core';
 import {
   animateFactory,
   unsubscribeSafely,
@@ -77,7 +74,6 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
   public serviceView$: Observable<ServerServicesView>;
   public currentJob$: Observable<McsJob>;
   public dataStatusFactory: McsDataStatusFactory<McsServerOsUpdatesDetails>;
-  public serverPermission: McsServerPermission;
 
   private _inspectOsUpdateHandler: Subscription;
   private _applyOsUpdateHandler: Subscription;
@@ -193,7 +189,6 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
    */
   protected serverChange(server: McsServer): void {
     this._serviceViewChange.next(ServerServicesView.Default);
-    this.serverPermission = new McsServerPermission(server);
     this._getServerOsUpdatesDetails(server.id);
     this._getServerBackupVm(server.id);
     this._getServerBackupServer(server.id);

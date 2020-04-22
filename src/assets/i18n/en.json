@@ -504,23 +504,20 @@
     "leftPanelHeader": "Virtual Server Filter",
     "serverBusyLabel": "This server is currently busy and some actions may be temporarily unavailable."
   },
-  "serverBackups": {
+  "serverSnapshots": {
     "label": "Snapshots",
     "loading": "Loading snapshots information.",
     "loadingContent": "Loading snapshots.",
     "formMessageDefaultError": "Something went wrong while processing your request. Please try again later.",
-    "snapshotHeader": "Server Snapshot",
-    "snapshotDescription": "Snapshots are point-in-time VM-level restore points.\r\n Restoring a snapshot is not reversible, so restore carefully.",
-    "snapshots": "Snapshots",
+    "header": "Server Snapshot",
+    "description": "Snapshots are point-in-time VM-level restore points.\r\n Restoring a snapshot is not reversible, so restore carefully.",
+    "listLabel": "Snapshots",
     "noSnapshots": "There are no Snapshots to display for this server.",
     "errorGettingSnapshots": "Sorry, something’s not right. We weren’t able to retrieve the list of snapshots.",
     "createSnapshot": "Snapshot now",
     "creatingSnapshot": "Capturing Snapshot",
     "restoreSnapshot": "Restore",
-    "deleteSnapshot": "Delete",
-    "serverBackups": "Server Backups",
-    "serverBackupsDescription": "If something's not quite right with your server and you urgently need a restore, we can look into restoring a server-level backup for you.",
-    "requestRestore": "Request a restore"
+    "deleteSnapshot": "Delete"
   },
   "serverManagement": {
     "label": "Management",

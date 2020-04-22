@@ -19,7 +19,7 @@ export * from './services/service/hids/hids.component';
 export * from './services/server-services.guard';
 export * from './storage/server-storage.component';
 export * from './nics/server-nics.component';
-export * from './backups/server-backups.component';
+export * from './snapshots/server-snapshots.component';
 
 export * from './server-details.base';
 export * from './server.service';

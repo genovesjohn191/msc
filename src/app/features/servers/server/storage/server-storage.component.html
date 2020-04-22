@@ -4,7 +4,7 @@
   </ng-container>
 
   <!-- Description -->
-  <ng-container *mcsAccessControl="serverPermision.vmEdit; else noEditableDiskTemplate">
+  <ng-container *mcsAccessControl="serverPermission.vmEdit; else noEditableDiskTemplate">
     <p>{{ 'serverStorage.hasEditableDiskDescription' | translate }}</p>
   </ng-container>
   <ng-template #noEditableDiskTemplate>
@@ -57,7 +57,7 @@
         </ng-container>
 
         <!-- Action Column -->
-        <ng-container mcsColumnDef="action" *mcsAccessControl="serverPermision.vmEdit">
+        <ng-container mcsColumnDef="action" *mcsAccessControl="serverPermission.vmEdit">
           <mcs-header-cell *mcsHeaderCellDef class="action-header-cell">
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
@@ -99,7 +99,7 @@
       </mcs-table>
 
       <!-- Adding Disk -->
-      <ng-container *mcsAccessControl="serverPermision.vmEdit">
+      <ng-container *mcsAccessControl="serverPermission.vmEdit">
         <ng-container *ngIf="resourceStorages$ | async as resourceStorages">
           <div class="action-box" *ngIf="canAddDisk(server, resourceStorages)"
             [@fadeIn] [disabled]="!server.executable">

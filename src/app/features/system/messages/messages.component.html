@@ -155,7 +155,7 @@
           <mcs-data-empty *mcsDataEmptyDef>
             <div class="listing-status-wrapper">
               <span>{{ 'systemMessages.noRecordsFoundMessage' | translate }} </span>
-              <span>
+              <span *mcsAccessControl="['SystemMessageEdit']">
               <!--We need to hardcode this instead of putting in the text-config
                     since it is using link -->
                 Click <a (click)="onClickNewMessage()"

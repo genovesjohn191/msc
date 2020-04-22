@@ -63,8 +63,6 @@
     <!-- Storage Category -->
     <ng-container *mcsAccessControl="[]; feature: 'EnableAddonBackupAggregationTargetView'">
       <ng-container *ngSwitchCase="routeCategoryEnum.Storage">
-
-        <ng-container>
           <a [mcsRouterLink]="routeKeyEnum.BackupAggregationTargets" mcsRouterLinkActive="active"
             class="sub-navigation-item unstyled-link"
             mcsId
@@ -73,7 +71,6 @@
             mcsEventLabel="sub-nav">
             {{ 'navigation.backup' | translate }}
           </a>
-        </ng-container>
       </ng-container>
     </ng-container>
   </div>

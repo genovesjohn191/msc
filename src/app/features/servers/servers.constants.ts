@@ -10,7 +10,7 @@ import { ServersService } from './servers.service';
 /** Components */
 import { ServersComponent } from './servers.component';
 import {
-  ServerBackupsComponent,
+  ServerSnapshotsComponent,
   ServerComponent,
   ServerManagementComponent,
   ServerServicesComponent,
@@ -92,8 +92,8 @@ export const serversRoutes: Routes = [
       },
       {
         path: 'snapshots',
-        component: ServerBackupsComponent,
-        data: { routeId: RouteKey.ServerDetailsBackups }
+        component: ServerSnapshotsComponent,
+        data: { routeId: RouteKey.ServerDetailsSnapshots }
       }
     ]
   },

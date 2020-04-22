@@ -22,7 +22,6 @@ import {
 import { TranslateService } from '@ngx-translate/core';
 import {
   CoreRoutes,
-  McsServerPermission,
   McsNavigationService
 } from '@app/core';
 import {
@@ -42,7 +41,6 @@ import {
   McsServerUpdate,
   McsServerMedia,
   McsServer,
-  McsResource,
   McsResourceCatalogItem,
   McsServerThumbnail,
   McsResourceCatalog,
@@ -83,7 +81,6 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
   public serverThumbnail$: Observable<string>;
   public serverMedia$: Observable<McsServerMedia[]>;
   public resourceCatalogs$: Observable<McsResourceCatalog[]>;
-  public serverPermission: McsServerPermission;
 
   public manageScale: ServerManageScale;
   public manageMedia: ServerManageMedia;
@@ -306,7 +303,6 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
    */
   protected serverChange(server: McsServer): void {
     this.setViewMode(ServerManagementView.None);
-    this.serverPermission = new McsServerPermission(server);
     this._getServerThumbnail(server);
     this._getServerMedia(server);
 

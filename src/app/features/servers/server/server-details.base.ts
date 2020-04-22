@@ -39,7 +39,7 @@ export abstract class ServerDetailsBase {
   public server$: Observable<McsServer>;
   public resource$: Observable<McsResource>;
 
-  public serverPermision: McsServerPermission;
+  public serverPermission: McsServerPermission;
 
   protected readonly apiService: McsApiService;
   protected readonly errorHandler: McsErrorHandlerService;
@@ -115,7 +115,7 @@ export abstract class ServerDetailsBase {
     this.server$ = this.serverService.getServerDetails().pipe(
       take(1),
       tap((serverDetails) => {
-        this.serverPermision = new McsServerPermission(serverDetails);
+        this.serverPermission = new McsServerPermission(serverDetails);
         this.serverChange(serverDetails);
       }),
       shareReplay(1)
