@@ -1,6 +1,6 @@
 <!-- Add header or template header -->
 <ng-container *ngIf="hasCustomHeader; else labelTemplate">
-  <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
+  <ng-container *ngTemplateOutlet="headerTemplate?.templateRef"></ng-container>
 </ng-container>
 
 <ng-template #labelTemplate>

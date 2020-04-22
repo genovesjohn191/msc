@@ -55,9 +55,9 @@
     "requiredPermissions": ["CloudVmAccess", "DedicatedVmAccess"],
     "documentTitle": "Server Storage - Macquarie Cloud Services"
   },
-  "serverDetailsBackups": {
+  "ServerDetailsSnapshots": {
     "enumCategory": "Compute",
-    "enumKey": "ServerDetailsBackups",
+    "enumKey": "ServerDetailsSnapshots",
     "navigationPath": "snapshots",
     "requiredPermissions": ["CloudVmSnapshotAccess", "DedicatedVmSnapshotAccess"],
     "documentTitle": "Server Snapshots - Macquarie Cloud Services"

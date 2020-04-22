@@ -1,6 +1,6 @@
 <mcs-presentation-panel mcsId="snapshots" *ngIf="server$ | async as server">
   <ng-container mcsPresentationPanelHeader>
-    <h2>{{ 'serverBackups.snapshotHeader' | translate }}</h2>
+    <h2>{{ 'serverSnapshots.header' | translate }}</h2>
   </ng-container>
 
   <mcs-section>
@@ -9,32 +9,34 @@
     <mcs-grid>
       <mcs-grid-row>
         <mcs-grid-column>
-          <p [innerHTML]="('serverBackups.snapshotDescription' | translate) | mcsNewLines"></p>
+          <p [innerHTML]="('serverSnapshots.description' | translate) | mcsNewLines"></p>
         </mcs-grid-column>
 
         <mcs-grid-column mcsAlignContent="top-right">
-          <div *ngIf="resource$ | async as resource">
-            <button mcsButton
-              size="small" arrow="right"
-              [disabled]="!enabledActions(server)"
-              (click)="createSnapshot(server, resource)"
-              mcsId
-              mcsEventTracker="create-snapshot"
-              mcsEventCategory="server"
-              mcsEventLabel="server-details-page">
-              {{ 'serverBackups.createSnapshot' | translate }}
-            </button>
-          </div>
+          <ng-container *mcsAccessControl="serverPermission.vmSnapshotAccess">
+            <div *ngIf="resource$ | async as resource">
+              <button mcsButton
+                size="small" arrow="right"
+                [disabled]="!enabledActions(server)"
+                (click)="createSnapshot(server, resource)"
+                mcsId
+                mcsEventTracker="create-snapshot"
+                mcsEventCategory="server"
+                mcsEventLabel="server-details-page">
+                {{ 'serverSnapshots.createSnapshot' | translate }}
+              </button>
+            </div>
+          </ng-container>
         </mcs-grid-column>
       </mcs-grid-row>
     </mcs-grid>
 
     <!-- Snapshots -->
     <mcs-item orientation="block">
-      <strong>{{ 'serverBackups.snapshots' | translate }}</strong>
+      <strong>{{ 'serverSnapshots.listLabel' | translate }}</strong>
       <mcs-item *ngIf="capturingSnapshot">
         <mcs-loader size="small" [mcsTooltip]="server.processingText"></mcs-loader>
-        <span>{{ 'serverBackups.creatingSnapshot' | translate }}</span>
+        <span>{{ 'serverSnapshots.creatingSnapshot' | translate }}</span>
       </mcs-item>
 
       <mcs-data-status [dataStatusFactory]="dataStatusFactory" *ngIf="!capturingSnapshot">
@@ -51,20 +53,20 @@
               </mcs-grid-column>
 
               <mcs-grid-column mcsAlignContent="middle-right">
-                <mcs-item [disabled]="!enabledActions(server)">
+                <mcs-item [disabled]="!enabledActions(server)" *mcsAccessControl="serverPermission.vmSnapshotAccess">
                   <a (click)="restoreSnapshot(server, snapshot)"
                     mcsId
                     mcsEventTracker="restore-snapshot"
                     mcsEventCategory="server"
                     mcsEventLabel="server-details-page">
-                    {{ 'serverBackups.restoreSnapshot' | translate }}
+                    {{ 'serverSnapshots.restoreSnapshot' | translate }}
                   </a>
                   <a (click)="deleteSnapshot(server, snapshot)"
                     mcsId
                     mcsEventTracker="delete-snapshot"
                     mcsEventCategory="server"
                     mcsEventLabel="server-details-page">
-                    {{ 'serverBackups.deleteSnapshot' | translate }}
+                    {{ 'serverSnapshots.deleteSnapshot' | translate }}
                   </a>
                 </mcs-item>
               </mcs-grid-column>
@@ -73,15 +75,15 @@
         </mcs-data-status-success>
 
         <mcs-data-status-in-progress mcsDataInProgress>
-          <span>{{ 'serverBackups.loadingContent' | translate }}</span>
+          <span>{{ 'serverSnapshots.loadingContent' | translate }}</span>
         </mcs-data-status-in-progress>
 
         <mcs-data-status-empty mcsDataEmpty>
-          <span>{{ 'serverBackups.noSnapshots' | translate }}</span>
+          <span>{{ 'serverSnapshots.noSnapshots' | translate }}</span>
         </mcs-data-status-empty>
 
         <mcs-data-status-error mcsDataError>
-          <span>{{ 'serverBackups.errorGettingSnapshots' | translate }}</span>
+          <span>{{ 'serverSnapshots.errorGettingSnapshots' | translate }}</span>
         </mcs-data-status-error>
       </mcs-data-status>
     </mcs-item>

@@ -117,7 +117,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
    * Event that emits when navigating away from this component page
    */
   public canNavigateAway(): boolean {
-    return !this._formGroup.hasDirtyFormControls();
+    return !getSafeProperty(this._formGroup, (obj) => obj.hasDirtyFormControls(), false);
   }
 
   /**

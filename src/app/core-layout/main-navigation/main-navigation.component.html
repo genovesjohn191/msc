@@ -35,7 +35,7 @@
 
       <mcs-icon [key]="caretRightIconKey" color="light"
         size="medium" class="navigation-mobile"></mcs-icon>
-      <a [mcsRouterLink]="routeKeyEnum.Servers" mcsId>
+      <a (click)="navigateToRouteCategoryDefault(routerCategoryEnum.Compute)" mcsId>
         {{ getCategoryLabel(routerCategoryEnum.Compute) }}
       </a>
     </div>
@@ -43,11 +43,11 @@
     <!-- Networking Category -->
     <div class="navigation-item"
       [class.active]="selectedCategory === routerCategoryEnum.Network"
-      *mcsAccessControl="['FirewallConfigurationView']">
+      *mcsAccessControl="['FirewallConfigurationView', 'InternetView']">
 
       <mcs-icon [key]="caretRightIconKey" color="light"
         size="medium" class="navigation-mobile"></mcs-icon>
-      <a [mcsRouterLink]="routeKeyEnum.Firewalls" mcsId>
+      <a (click)="navigateToRouteCategoryDefault(routerCategoryEnum.Network)" mcsId>
         {{ getCategoryLabel(routerCategoryEnum.Network) }}
       </a>
     </div>
@@ -59,7 +59,7 @@
 
       <mcs-icon [key]="caretRightIconKey" color="light"
         size="medium" class="navigation-mobile"></mcs-icon>
-      <a [mcsRouterLink]="routeKeyEnum.BackupAggregationTargets" mcsId>
+      <a (click)="navigateToRouteCategoryDefault(routerCategoryEnum.Storage)" mcsId>
         {{ getCategoryLabel(routerCategoryEnum.Storage) }}
       </a>
     </div>

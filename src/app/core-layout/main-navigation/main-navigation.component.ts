@@ -4,7 +4,8 @@ import {
   OnDestroy,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  ViewEncapsulation
+  ViewEncapsulation,
+  Injector
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import {
@@ -25,6 +26,7 @@ import {
 } from '@app/utilities';
 import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import { McsEvent } from '@app/events';
+import { MenuRouteContext } from './strategy/menu-route.context';
 
 @Component({
   selector: 'mcs-main-navigation',
@@ -40,13 +42,17 @@ import { McsEvent } from '@app/events';
 export class MainNavigationComponent implements OnInit, OnDestroy {
   public selectedCategory: RouteCategory;
   private _routeHandler: Subscription;
+  private _menuRouteContext: MenuRouteContext;
 
   public constructor(
+    _injector: Injector,
     private _navigationService: McsNavigationService,
     private _changeDetectorRef: ChangeDetectorRef,
     private _eventDispatcher: EventBusDispatcherService,
     private _accessControlService: McsAccessControlService
-  ) { }
+  ) {
+    this._menuRouteContext = new MenuRouteContext(_injector);
+  }
 
   public ngOnInit() {
     this._registerEvents();
@@ -85,6 +91,15 @@ export class MainNavigationComponent implements OnInit, OnDestroy {
   public navigateTo(routeKey: RouteKey): void {
     if (isNullOrEmpty(routeKey)) { return; }
     this._navigationService.navigateTo(routeKey);
+  }
+
+  /**
+   * Navigate to the default route of the Category
+   */
+  public navigateToRouteCategoryDefault(routeCategory: RouteCategory): void {
+    if (isNullOrEmpty(routeCategory)) { return; }
+    this._menuRouteContext.setRouteCategory(routeCategory);
+    this._menuRouteContext.navigateToDefaultMenu();
   }
 
   /**

@@ -61,11 +61,11 @@ enum SnapshotDialogType {
 }
 
 @Component({
-  selector: 'mcs-server-backups',
-  templateUrl: './server-backups.component.html',
+  selector: 'mcs-server-snapshots',
+  templateUrl: './server-snapshots.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ServerBackupsComponent extends ServerDetailsBase
+export class ServerSnapshotsComponent extends ServerDetailsBase
   implements OnInit, OnDestroy {
 
   public snapshot$: Observable<McsServerSnapshot>;
@@ -423,7 +423,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
   private _showErrorMessageByResponse(httpResponse: McsApiErrorResponse): void {
     this._formMessage.showMessage('error', {
       messages: httpResponse.errorMessages,
-      fallbackMessage: this._translateService.instant('serverBackups.formMessageDefaultError')
+      fallbackMessage: this._translateService.instant('serverSnapshots.formMessageDefaultError')
     });
   }
 }
