@@ -1,36 +1,40 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable
+} from 'rxjs';
 import { McsBackUpAggregationTarget } from '@app/models';
+import {
+  distinctUntilChanged,
+  filter
+} from 'rxjs/operators';
+import { isNullOrEmpty } from '@app/utilities';
 
 @Injectable()
 export class AggregationTargetService {
-  /**
-   * This will notify the subscriber everytime the aggregation target is selected or
-   * everytime there are new data from the selected aggregation target
-   */
-  public selectedAggregationTargetChange: BehaviorSubject<McsBackUpAggregationTarget>;
+  public _selectedAggregationTargetChange: BehaviorSubject<McsBackUpAggregationTarget>;
   private _aggregationTargetId: string;
 
-  /**
-   * Get the selected aggregation target on the listing panel
-   */
-  private _selectedAggregationTarget: McsBackUpAggregationTarget;
-  public get selectedAggregationTarget(): McsBackUpAggregationTarget {
-    return this._selectedAggregationTarget;
+  constructor() {
+    this._selectedAggregationTargetChange = new BehaviorSubject<McsBackUpAggregationTarget>(null);
   }
 
-  constructor() {
-    this.selectedAggregationTargetChange = new BehaviorSubject<McsBackUpAggregationTarget>(null);
-    this._selectedAggregationTarget = new McsBackUpAggregationTarget();
+  /**
+   * Event that emits when the selected item has been changed
+   */
+  public selectedAggregationTargetChange(): Observable<McsBackUpAggregationTarget> {
+    return this._selectedAggregationTargetChange.asObservable().pipe(
+      distinctUntilChanged(),
+      filter((aggregationTarget) => !isNullOrEmpty(aggregationTarget))
+    );
   }
 
   /**
    * Set aggregation target data to the stream (MCS API response)
-   * @param id Aggregation target identification
+   * @param aggregationTarget selected Aggregation target
    */
   public setSelectedAggregationTarget(aggregationTarget: McsBackUpAggregationTarget): void {
-    this._selectedAggregationTarget = aggregationTarget;
-    this.selectedAggregationTargetChange.next(aggregationTarget);
+    this._selectedAggregationTargetChange.next(aggregationTarget);
   }
 
   /**

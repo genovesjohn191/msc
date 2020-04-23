@@ -2,27 +2,15 @@ import {
   Component,
   ChangeDetectionStrategy,
   OnInit,
-  OnDestroy
+  OnDestroy,
+  ChangeDetectorRef
 } from '@angular/core';
-import {
-  Subject,
-  BehaviorSubject,
-  Observable
-} from 'rxjs';
-import {
-  takeUntil,
-  distinctUntilChanged,
-  tap
-} from 'rxjs/operators';
 import {
   McsBackUpAggregationTarget,
   inviewLevelText
 } from '@app/models';
-import {
-  unsubscribeSafely,
-  isNullOrEmpty
-} from '@app/utilities';
 import { AggregationTargetService } from '../aggregation-target.service';
+import { AggregationTargetDetailsBase } from '../aggregation-target.base';
 
 
 @Component({
@@ -31,30 +19,21 @@ import { AggregationTargetService } from '../aggregation-target.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class AggregationTargetManagementComponent implements OnInit, OnDestroy {
-  public aggregationTarget$: Observable<McsBackUpAggregationTarget>;
+export class AggregationTargetManagementComponent extends AggregationTargetDetailsBase implements OnInit, OnDestroy {
 
-  private _aggregationTargetChange = new BehaviorSubject<McsBackUpAggregationTarget>(null);
-  private _destroySubject = new Subject<void>();
-
-  constructor(private _aggregationTargetService: AggregationTargetService) { }
+  constructor(
+    _aggregationTargetService: AggregationTargetService,
+    private _changeDetectorRef: ChangeDetectorRef,
+  ) {
+    super(_aggregationTargetService);
+  }
 
   public ngOnInit(): void {
-    this._subscribeToAggregationTargetChange();
-    this._listenToAggregationTargetSelection();
+    this.initializeBase();
   }
 
   public ngOnDestroy(): void {
-    unsubscribeSafely(this._destroySubject);
-  }
-
-  /**
-   * Returns the selected server as an observable
-   */
-  private _subscribeToAggregationTargetChange(): void {
-    this.aggregationTarget$ = this._aggregationTargetChange.asObservable().pipe(
-      distinctUntilChanged()
-    );
+    this.destroyBase();
   }
 
   /**
@@ -74,15 +53,9 @@ export class AggregationTargetManagementComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Listens to aggregation target selections
+   * Event that will automatically invoked when the aggregattion selection has been changed
    */
-  private _listenToAggregationTargetSelection(): void {
-    this._aggregationTargetService.selectedAggregationTargetChange
-      .pipe(takeUntil(this._destroySubject),
-        tap((aggregationTarget) => {
-          if (isNullOrEmpty(aggregationTarget)) { return; }
-          this._aggregationTargetChange.next(aggregationTarget);
-        })
-      ).subscribe();
+  protected aggregationTargetSelectionChange(): void {
+    this._changeDetectorRef.markForCheck();
   }
 }
