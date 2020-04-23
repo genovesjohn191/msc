@@ -1,4 +1,6 @@
-<mcs-page [header]="(selectedAggregationTarget$ | async)?.description">
+<ng-container *ngIf="selectedAggregationTarget$ | async as selectedAggregationTarget">
+
+  <mcs-page [header]="selectedAggregationTarget.description">
 
     <!-- Left Panel -->
     <mcs-left-panel *mcsLeftPanelDef="'aggregationTarget.leftPanelHeader' | translate">
@@ -14,7 +16,7 @@
                 mcsEventCategory="storage"
                 mcsEventLabel="aggregation-target-detail-view-list-panel">
                 <mcs-option [value]="aggregationTarget"
-                  [selected]="(selectedAggregationTarget$ | async)?.id === aggregationTarget.id">
+                  [selected]="selectedAggregationTarget.id === aggregationTarget.id">
                   <mcs-item>
                     <span>{{ aggregationTarget.description }}</span>
                   </mcs-item>
@@ -27,7 +29,7 @@
     </mcs-left-panel>
 
     <mcs-content-panel *mcsContentPanelDef>
-      <div class="routing-tab-wrapper" *ngIf="selectedAggregationTarget$ | async as selectedAggregationTarget">
+      <div class="routing-tab-wrapper">
         <mcs-tab-group [selectedTabId]="selectedTabId$ | async" (tabChanged)="onTabChanged($event)">
           <!-- Management Tab -->
           <mcs-tab [label]="'aggregationTarget.management.label' | translate" id="management">
@@ -43,8 +45,10 @@
   </mcs-page>
 
   <mcs-help-widget *mcsAccessControl="['TicketCreate']"
-    [serviceId]="(selectedAggregationTarget$ | async)?.serviceId"
+    [serviceId]="selectedAggregationTarget.serviceId"
     mcsEventTracker="aggregation-targets-help"
     mcsEventCategory="help"
     mcsEventLabel="help-panel">
   </mcs-help-widget>
+
+</ng-container>

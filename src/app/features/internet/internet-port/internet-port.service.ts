@@ -8,10 +8,7 @@ import {
   filter
 } from 'rxjs/operators';
 import { McsInternetPort } from '@app/models';
-import {
-  isNullOrEmpty,
-  getSafeProperty
-} from '@app/utilities';
+import { isNullOrEmpty } from '@app/utilities';
 
 @Injectable()
 export class InternetPortService {
