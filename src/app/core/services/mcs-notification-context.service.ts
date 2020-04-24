@@ -51,7 +51,7 @@ export class McsNotificationContextService implements McsDisposable {
     this._excludedJobTypes = new Array();
     this._notifications = new Array();
     this._notificationsStream = new BehaviorSubject<McsJob[]>(null);
-    if (_accessControlService.hasPermission([McsPermission.JobsView])) {
+    if (_accessControlService.hasPermission([McsPermission.JobView])) {
       this.onInit();
     }
   }
