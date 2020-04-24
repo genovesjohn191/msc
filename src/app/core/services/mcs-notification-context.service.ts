@@ -10,6 +10,7 @@ import {
   tap,
   filter
 } from 'rxjs/operators';
+import { LogClass } from '@peerlancers/ngx-logger';
 import {
   addOrUpdateArrayRecord,
   deleteArrayRecord,
@@ -22,11 +23,12 @@ import {
   McsJob,
   DataStatus,
   JobType,
-  JobStatus
+  JobStatus,
+  McsPermission
 } from '@app/models';
 import { McsApiService } from '@app/services';
-import { LogClass } from '@peerlancers/ngx-logger';
 import { McsNotificationJobService } from './mcs-notification-job.service';
+import { McsAccessControlService } from '../authentication/mcs-access-control.service';
 
 /**
  * MCS notification context service
@@ -42,13 +44,16 @@ export class McsNotificationContextService implements McsDisposable {
   private _notificationsStream: BehaviorSubject<McsJob[]>;
 
   constructor(
+    _accessControlService: McsAccessControlService,
     private _notificationJobService: McsNotificationJobService,
     private _apiService: McsApiService
   ) {
     this._excludedJobTypes = new Array();
     this._notifications = new Array();
     this._notificationsStream = new BehaviorSubject<McsJob[]>(null);
-    this.onInit();
+    if (_accessControlService.hasPermission([McsPermission.JobsView])) {
+      this.onInit();
+    }
   }
 
   /**

@@ -380,7 +380,7 @@
       "dailyQuotaMinimum": "The minimum quota that can be entered is {{min_value}}.",
       "dailyQuotaMaximum": "Quota should not exceed {{max_value}}.",
       "dailyQuotaInvalid": "Quota must be a multiple of {{step}} GB.",
-      "note": "After your Backup Aggregation Target is ready, your existing backup services can be associated with it via MacquarieView."
+      "note": "After your Backup Aggregation Target is ready, you can select it when ordering new Backup services."
     },
     "provisioningStep": {
       "description": "Backup Aggregation Target is being provisioned and will be available shortly. You can track progress from the notifications menu at the top of the portal.",

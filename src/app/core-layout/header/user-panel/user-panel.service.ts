@@ -5,8 +5,14 @@ import {
   Observable,
   BehaviorSubject
 } from 'rxjs';
-import { McsNotificationContextService } from '@app/core';
-import { McsJob } from '@app/models';
+import {
+  McsNotificationContextService,
+  McsAccessControlService
+} from '@app/core';
+import {
+  McsJob,
+  McsPermission
+} from '@app/models';
 import {
   isNullOrEmpty,
   addOrUpdateArrayRecord,
@@ -23,11 +29,14 @@ export class UserPanelService implements McsDisposable {
   private _currentUserJobHandler: Subscription;
 
   constructor(
+    _accessControlService: McsAccessControlService,
     private _eventDispatcher: EventBusDispatcherService,
     private _notificationContext: McsNotificationContextService
   ) {
     this._registerEvents();
-    this._notificationContext.getAllActiveJobs().subscribe();
+    if (_accessControlService.hasPermission([McsPermission.JobsView])) {
+      this._notificationContext.getAllActiveJobs().subscribe();
+    }
   }
 
   public dispose() {

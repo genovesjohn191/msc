@@ -58,18 +58,20 @@
 
 <div class="user-panel-wrapper">
   <!-- Notification bell icon -->
-  <div class="user-panel-item notification-item" *ngIf="notifications$ | async as notifications">
-    <a class="icon-content"
-      mcsPopover #notificationsPopover="mcsPopover"
-      (onOpen)="onOpenNotificationPanel(notifications)"
-      maxWidth="350px" padding="none"
-      placement="bottom" orientation="left" theme="light" priority="high"
-      [content]="notificationsContent">
+  <ng-container *mcsAccessControl="['JobView']">
+    <div class="user-panel-item notification-item" *ngIf="notifications$ | async as notifications">
+      <a class="icon-content"
+        mcsPopover #notificationsPopover="mcsPopover"
+        (onOpen)="onOpenNotificationPanel(notifications)"
+        maxWidth="350px" padding="none"
+        placement="bottom" orientation="left" theme="light" priority="high"
+        [content]="notificationsContent">
 
-      <mcs-icon [key]="bellIconKey" size="medium" color="light"></mcs-icon>
-      <span *ngIf="notifications | mcsIsNotNullOrEmpty">{{ notifications.length }}</span>
-    </a>
-  </div>
+        <mcs-icon [key]="bellIconKey" size="medium" color="light"></mcs-icon>
+        <span *ngIf="notifications | mcsIsNotNullOrEmpty">{{ notifications.length }}</span>
+      </a>
+    </div>
+  </ng-container>
 
   <!-- User icon -->
   <div class="user-panel-item user-item">
