@@ -26,7 +26,8 @@ import {
   McsJob,
   McsJobConnection,
   NetworkStatus,
-  McsIdentity
+  McsIdentity,
+  McsPermission
 } from '@app/models';
 import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import { McsEvent } from '@app/events';
@@ -35,8 +36,8 @@ import {
   LogClass,
   LogIgnore
 } from '@peerlancers/ngx-logger';
-
 import { McsSessionHandlerService } from './mcs-session-handler.service';
+import { McsAccessControlService } from '../authentication/mcs-access-control.service';
 
 const DEFAULT_HEARTBEAT_IN = 0;
 const DEFAULT_HEARTBEAT_OUT = 20000;
@@ -72,6 +73,7 @@ export class McsNotificationJobService implements McsDisposable {
     private _eventDispatcher: EventBusDispatcherService,
     private _apiService: McsApiService,
     private _sessionHandlerService: McsSessionHandlerService,
+    private _accessControlService: McsAccessControlService,
     private _stompService: StompRService
   ) {
     this._registerEvents();
@@ -94,6 +96,10 @@ export class McsNotificationJobService implements McsDisposable {
    * Gets the connection details from API and connect to web stomp
    */
   private _connectStomp(): void {
+
+    let userHasJobPermission = this._accessControlService.hasPermission([McsPermission.JobsView]);
+    if (!userHasJobPermission) { return; }
+
     this._apiSubscription = this._apiService.getJobConnection().pipe(
       tap((connection) => {
         if (isNullOrEmpty(connection)) {
