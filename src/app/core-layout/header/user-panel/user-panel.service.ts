@@ -34,7 +34,7 @@ export class UserPanelService implements McsDisposable {
     private _notificationContext: McsNotificationContextService
   ) {
     this._registerEvents();
-    if (_accessControlService.hasPermission([McsPermission.JobsView])) {
+    if (_accessControlService.hasPermission([McsPermission.JobView])) {
       this._notificationContext.getAllActiveJobs().subscribe();
     }
   }
