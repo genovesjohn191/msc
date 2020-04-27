@@ -139,7 +139,9 @@ export class UserPanelComponent implements OnInit, OnDestroy {
   public clickUser(): void {
     if (isNullOrEmpty(this.userPopover)) { return; }
     refreshView(() => {
-      this.notificationsPopover.close();
+      if (!isNullOrEmpty(this.notificationsPopover)) {
+        this.notificationsPopover.close();
+      }
       this.userPopover.toggle();
       this._changeDetectorRef.markForCheck();
     });
