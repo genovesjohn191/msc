@@ -3,7 +3,7 @@
   <p>{{ 'serverCreateAddOnsStep.description' | translate }}</p>
 
   <!-- VM Backup -->
-  <ng-container *mcsAccessControl="[]; feature: 'enableOrderingAddonVmBackup'">
+  <ng-container *mcsAccessControl="[]; feature: 'EnableOrderingVmBackupProvision'">
     <mcs-collapsible-panel
       mcsId="addon-vm-backup-toggle"
       mcsEventTracker="server-create-addon-vm-backup-toggle"
@@ -21,7 +21,7 @@
   </ng-container>
 
   <!-- Server Backup -->
-  <ng-container *mcsAccessControl="[]; feature: 'enableOrderingAddonServerBackup'">
+  <ng-container *mcsAccessControl="[]; feature: 'EnableOrderingServerBackupProvision'">
     <mcs-collapsible-panel
       mcsId="addon-server-backup-toggle"
       mcsEventTracker="server-create-addon-server-backup-toggle"
@@ -39,7 +39,7 @@
   </ng-container>
 
   <!-- Anti Virus -->
-  <ng-container *mcsAccessControl="[]; feature: 'enableOrderingAddonAntiVirus'">
+  <ng-container *mcsAccessControl="[]; feature: 'EnableOrderingAntiVirusProvision'">
     <div class="action-box" [style.padding]="'20px 15px'"
       [mcsContextualHelp]="'serverCreateAddOnsStep.antivirus.contextualHelp' | translate">
 
@@ -55,7 +55,7 @@
   </ng-container>
 
   <!-- HIDS -->
-  <ng-container *mcsAccessControl="[]; feature: 'EnableOrderingAddonHids'">
+  <ng-container *mcsAccessControl="[]; feature: 'EnableOrderingHidsProvision'">
     <mcs-collapsible-panel
       mcsId="addon-hids-toggle"
       mcsEventTracker="server-create-addon-hids-toggle"

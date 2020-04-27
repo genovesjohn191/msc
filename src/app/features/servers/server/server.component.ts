@@ -122,7 +122,8 @@ export class ServerComponent extends McsListViewListingBase<McsServerGroup> impl
    */
   public get servicesTabFeatureFlag(): McsFeatureFlag[] {
     return [McsFeatureFlag.ServerOsUpdates, McsFeatureFlag.OrderingManagedServerInviewLevelRaise,
-    McsFeatureFlag.OrderingAddonVmBackup, McsFeatureFlag.OrderingAddonServerBackup];
+    McsFeatureFlag.AddonVmBackupView, McsFeatureFlag.AddonServerBackupView,
+    McsFeatureFlag.AddonAntiVirusView, McsFeatureFlag.AddonHidsView];
   }
 
   /**

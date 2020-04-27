@@ -10,17 +10,20 @@
           <ng-container *mcsListPanelContent="let family">
 
             <mcs-option-group [label]="family.name">
-              <mcs-option *ngFor="let group of family.groups" mcsId="select-order-group"
-                [value]="group" [selected]="(orderGroup$ | async)?.id === group.id"
-                (click)="onClickOrderGroup(group)"
-                mcsEventTracker="select-order-group"
-                mcsEventCategory="order-dashboard"
-                mcsEventLabel="order-dashboard-list-panel">
+              <ng-container *ngFor="let group of family.groups">
+                <mcs-option *ngIf="group.availableOrderItemTypes | mcsIsNotNullOrEmpty" mcsId="select-order-group"
+                  [value]="group" [selected]="(orderGroup$ | async)?.id === group.id"
+                  (click)="onClickOrderGroup(group)"
+                  mcsEventTracker="select-order-group"
+                  mcsEventCategory="order-dashboard"
+                  mcsEventLabel="order-dashboard-list-panel">
 
-                <mcs-item>
-                  <span>{{ group.name }}</span>
-                </mcs-item>
-              </mcs-option>
+                  <mcs-item>
+                    <span>{{ group.name }}</span>
+                  </mcs-item>
+                </mcs-option>
+              </ng-container>
+
             </mcs-option-group>
 
           </ng-container>
