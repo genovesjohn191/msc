@@ -115,32 +115,32 @@
             </ng-container>
 
             <!-- Monthly Charge Column -->
-            <ng-container mcsColumnDef="monthlyCharge">
+            <ng-container mcsColumnDef="monthlyCharge" *ngIf="(chargesState$ | async)?.monthly">
               <mcs-header-cell *mcsHeaderCellDef>
                 {{ 'orderDetailsStep.orderDetails.columnHeaders.monthlyCharge' | translate }}
               </mcs-header-cell>
-              <mcs-data-cell *mcsDataCellDef="let row">
-                ${{ row.charges?.monthly }}
+              <mcs-data-cell *mcsDataCellDef="let row" [mcsGreyedOut]="!(row.charges?.monthly | mcsIsNotNullOrUndefined)">
+                {{ row.charges?.monthlyInCurrency }}
               </mcs-data-cell>
             </ng-container>
 
             <!-- One-off Charge Column -->
-            <ng-container mcsColumnDef="oneOffCharge">
+            <ng-container mcsColumnDef="oneOffCharge" *ngIf="(chargesState$ | async)?.oneOff">
               <mcs-header-cell *mcsHeaderCellDef>
                 {{ 'orderDetailsStep.orderDetails.columnHeaders.oneOffCharge' | translate }}
               </mcs-header-cell>
-              <mcs-data-cell *mcsDataCellDef="let row">
-                ${{ row.charges?.oneOff }}
+              <mcs-data-cell *mcsDataCellDef="let row" [mcsGreyedOut]="!(row.charges?.oneOff | mcsIsNotNullOrUndefined)">
+                {{ row.charges?.oneOffInCurrency }}
               </mcs-data-cell>
             </ng-container>
 
             <!-- Excess Usage Fee Per GB Column -->
-            <ng-container mcsColumnDef="excessUsageFeePerGB" *ngIf="hasExcessUsageFee$ | async">
+            <ng-container mcsColumnDef="excessUsageFeePerGB" *ngIf="(chargesState$ | async)?.excessUsagePerGb">
               <mcs-header-cell *mcsHeaderCellDef>
                 {{ 'orderDetailsStep.orderDetails.columnHeaders.excessUsageFeePerGB' | translate }}
               </mcs-header-cell>
-              <mcs-data-cell *mcsDataCellDef="let row">
-                ${{ row.charges?.excessUsageFeePerGB }}
+              <mcs-data-cell *mcsDataCellDef="let row" [mcsGreyedOut]="!(row.charges?.excessUsageFeePerGB | mcsIsNotNullOrUndefined)">
+                {{ row.charges?.excessUsageFeePerGbInCurrency }}
               </mcs-data-cell>
             </ng-container>
 

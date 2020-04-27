@@ -1,4 +1,7 @@
 import { JsonProperty } from '@peerlancers/json-serialization';
+import { isNullOrUndefined } from '@app/utilities';
+
+const DEFAULT_CURRENCY_SYMBOL = '$';
 
 export class McsOrderCharge {
   @JsonProperty()
@@ -15,7 +18,28 @@ export class McsOrderCharge {
    */
   public get currencySymbol(): string {
     // TODO: Need to be confirmed since the currency should depend on the country
-    return '$';
+    return DEFAULT_CURRENCY_SYMBOL;
+  }
+
+  /**
+   * Returns the sum of monthly and oneoff total cost
+   */
+  public get monthlyInCurrency(): string {
+    return this._chargeInCurreny(this.monthly);
+  }
+
+  /**
+   * Returns the sum of monthly and oneoff total cost
+   */
+  public get oneOffInCurrency(): string {
+    return this._chargeInCurreny(this.oneOff);
+  }
+
+  /**
+   * Returns the sum of monthly and oneoff total cost
+   */
+  public get excessUsageFeePerGbInCurrency(): string {
+    return this._chargeInCurreny(this.excessUsageFeePerGB);
   }
 
   /**
@@ -23,5 +47,9 @@ export class McsOrderCharge {
    */
   public get totalCost(): number {
     return this.monthly + this.oneOff;
+  }
+
+  private _chargeInCurreny(fee: number): string {
+    return isNullOrUndefined(fee) ? 'N/A' : `${DEFAULT_CURRENCY_SYMBOL}${fee}`;
   }
 }

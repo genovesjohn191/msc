@@ -11,6 +11,7 @@ import { ArrayCommaSeparatorPipe } from './array-comma-separator.pipe';
 import { PluralPipe } from './plural.pipe';
 import { TextPlaceholderPipe } from './text-placeholder.pipe';
 import { IsNotNullOrEmptyPipe } from './is-not-null-or-empty.pipe';
+import { IsNotNullOrUndefinedPipe } from './is-not-null-or-undefined.pipe';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { IsNotNullOrEmptyPipe } from './is-not-null-or-empty.pipe';
     ArrayCommaSeparatorPipe,
     PluralPipe,
     TextPlaceholderPipe,
-    IsNotNullOrEmptyPipe
+    IsNotNullOrEmptyPipe,
+    IsNotNullOrUndefinedPipe
   ],
   exports: [
     NewLinesPipe,
@@ -37,7 +39,8 @@ import { IsNotNullOrEmptyPipe } from './is-not-null-or-empty.pipe';
     ArrayCommaSeparatorPipe,
     PluralPipe,
     TextPlaceholderPipe,
-    IsNotNullOrEmptyPipe
+    IsNotNullOrEmptyPipe,
+    IsNotNullOrUndefinedPipe
   ],
   providers: [
     DecimalPipe,

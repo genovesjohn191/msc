@@ -24,13 +24,15 @@ import {
   Observable,
   Subject,
   of,
-  empty
+  empty,
+  BehaviorSubject
 } from 'rxjs';
 import {
   takeUntil,
   catchError,
   map,
-  tap
+  tap,
+  shareReplay
 } from 'rxjs/operators';
 import {
   McsTableDataSource,
@@ -40,7 +42,8 @@ import {
 import {
   isNullOrEmpty,
   getSafeProperty,
-  unsubscribeSafely
+  unsubscribeSafely,
+  isNullOrUndefined
 } from '@app/utilities';
 import {
   McsOrder,
@@ -60,6 +63,12 @@ import {
 } from '@app/shared';
 import { McsApiService } from '@app/services';
 import { OrderDetails } from './order-details';
+
+interface ChargesState {
+  monthly: boolean;
+  oneOff: boolean;
+  excessUsagePerGb: boolean;
+}
 
 @Component({
   selector: 'mcs-step-order-details',
@@ -102,7 +111,7 @@ export class StepOrderDetailsComponent
   public billing$: Observable<McsBilling[]>;
   public selectedBilling$: Observable<McsBilling>;
   public selectedBillingSite$: Observable<McsBillingSite>;
-  public hasExcessUsageFee$: Observable<boolean>;
+  public chargesState$: Observable<ChargesState>;
 
   public workflowAction: OrderWorkflowAction;
   public orderDatasource: McsTableDataSource<McsOrderItem>;
@@ -113,6 +122,7 @@ export class StepOrderDetailsComponent
   private _formGroup: McsFormGroupDirective;
 
   private _destroySubject = new Subject<void>();
+  private _chargesStateChange = new BehaviorSubject<ChargesState>({ excessUsagePerGb: false, monthly: false, oneOff: false });
 
   constructor(
     @Inject(forwardRef(() => WizardStepComponent)) private _wizardStep: WizardStepComponent,
@@ -129,6 +139,7 @@ export class StepOrderDetailsComponent
   public ngOnInit() {
     this._subscribeToContractTerms();
     this._subscribeToBillingDetails();
+    this._subscribeToChargesStateChange();
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
@@ -147,7 +158,7 @@ export class StepOrderDetailsComponent
     let orderChange = changes['order'];
     if (!isNullOrEmpty(orderChange)) {
       this._initializeOrderDatasource();
-      this._setExcessUsageFeeFlag();
+      this._setChargesState();
     }
   }
 
@@ -199,6 +210,15 @@ export class StepOrderDetailsComponent
    */
   public get isUpdatingCharges(): boolean {
     return this.dataChangeStatus === DataStatus.Active;
+  }
+
+  /**
+   * Returns the charges flags as observable
+   */
+  private _subscribeToChargesStateChange(): void {
+    this.chargesState$ = this._chargesStateChange.asObservable().pipe(
+      shareReplay(1)
+    );
   }
 
   /**
@@ -311,12 +331,21 @@ export class StepOrderDetailsComponent
   /**
    * Sets the excess usage fee flag based on order records
    */
-  private _setExcessUsageFeeFlag(): void {
+  private _setChargesState(): void {
+    let chargesState: ChargesState = { oneOff: false, monthly: false, excessUsagePerGb: false };
     let orderItems = getSafeProperty(this.order, (obj) => obj.items, []);
-    let excessUsageFound = orderItems.find((item) =>
-      !!getSafeProperty(item, (obj) => obj.charges.excessUsageFeePerGB, 0)
-    );
-    this.hasExcessUsageFee$ = of(!isNullOrEmpty(excessUsageFound));
+
+    orderItems.forEach((orderItem) => {
+      if (chargesState.excessUsagePerGb && chargesState.monthly && chargesState.oneOff) { return; }
+      let excessUsageFee = getSafeProperty(orderItem, (obj) => obj.charges.excessUsageFeePerGB);
+      chargesState.excessUsagePerGb = chargesState.excessUsagePerGb ? chargesState.excessUsagePerGb : !isNullOrUndefined(excessUsageFee);
+      let monthly = getSafeProperty(orderItem, (obj) => obj.charges.monthly);
+      chargesState.monthly = chargesState.monthly ? chargesState.monthly : !isNullOrUndefined(monthly);
+      let oneOff = getSafeProperty(orderItem, (obj) => obj.charges.oneOff);
+      chargesState.oneOff = chargesState.oneOff ? chargesState.oneOff : !isNullOrUndefined(oneOff);
+    });
+
+    this._chargesStateChange.next(chargesState);
   }
 
   /**
@@ -350,9 +379,9 @@ export class StepOrderDetailsComponent
     orderItems.push({
       description: this._translate.instant('orderDetailsStep.orderDetails.totalLabel'),
       charges: {
-        monthly: getSafeProperty(this.order, (obj) => obj.charges.monthly, 0),
-        oneOff: getSafeProperty(this.order, (obj) => obj.charges.oneOff, 0),
-        excessUsageFeePerGB: getSafeProperty(this.order, (obj) => obj.charges.excessUsageFeePerGB, 0)
+        monthly: getSafeProperty(this.order, (obj) => obj.charges.monthly),
+        oneOff: getSafeProperty(this.order, (obj) => obj.charges.oneOff),
+        excessUsageFeePerGB: getSafeProperty(this.order, (obj) => obj.charges.excessUsageFeePerGB)
       }
     });
     this.orderDatasource.updateDatasource(orderItems);
