@@ -45,7 +45,7 @@
     "enumCategory": "Compute",
     "enumKey": "ServerDetailsServices",
     "navigationPath": "services",
-    "requiredFeatureFlag": ["EnableServerOsUpdates", "EnableOrderingManagedServerInviewLevelRaise"],
+    "requiredFeatureFlag": ["EnableServerOsUpdates", "EnableOrderingManagedServerInviewLevelRaise", "EnableAddonHidsView", "EnableAddonAntiVirusView", "EnableAddonVmBackupView", "EnableAddonServerBackupView"],
     "documentTitle": "Server Services - Macquarie Cloud Services"
   },
   "serverDetailsStorage": {
