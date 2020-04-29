@@ -295,7 +295,7 @@ export class McsSessionHandlerService {
     // Update the cookie
     if (this._sessionIdleCounter >= 1) {
       this._cookieService.setItem(CommonDefinition.COOKIE_SESSION_TIMER,
-        this._sessionIdleCounter, { expires: this._authIdentity.user.expiry, sameSite: 'Lax' });
+        this._sessionIdleCounter, { expires: this._authIdentity.user.expiry, sameSite: 'Lax', path: '/' });
     }
   }
 

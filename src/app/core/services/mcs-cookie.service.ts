@@ -100,7 +100,7 @@ export class McsCookieService {
   public setItem<T>(
     key: string,
     value: T,
-    options: CookieOptions = { secure: true, sameSite: 'Lax' }
+    options: CookieOptions = { secure: true, sameSite: 'Lax', path: '/' }
   ): void {
     let securedCookieOptions: CookieOptions = options;
     if (this._devMode) {
