@@ -617,6 +617,9 @@
     "reachedNetworksLimit": "You've reached the maximum number of NICs for this server."
   },
   "serverServices": {
+    "default": {
+      "label": "Services"
+    },
     "operatingSystemUpdates": {
       "loading": "Loading services information.",
       "loadingContent": "Loading server os updates details.",
@@ -655,11 +658,13 @@
     },
     "vmBackup": {
       "title": "VM Backup",
-      "detailsLink": "See Details"
+      "detailsLink": "See Details",
+      "unprovisionedFallback": "Your server does not currently have VM Backup provisioned."
     },
     "serverBackup": {
       "title": "Server Backup",
-      "detailsLink": "See Details"
+      "detailsLink": "See Details",
+      "unprovisionedFallback": "Your server does not currently have Server Backup provisioned."
     },
     "hostSecurity": {
       "title": "Host Security",
@@ -667,7 +672,8 @@
       "statusLabel": "Overall Status",
       "activeLabel": {
         "agentConfigured": "Agent Configured"
-      }
+      },
+      "unprovisionedFallback": "Your server does not currently have Host Security enabled or provisioned."
     },
     "antivirus": {
       "title": "Anti-Virus",

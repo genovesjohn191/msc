@@ -4,7 +4,7 @@
   </ng-container>
 
   <mcs-section>
-    <mcs-item orientation="block">
+    <mcs-item orientation="block" *ngIf="serverBackupVm?.provisioned; else vmBackupUnprovisionedTemplate">
       <mcs-item>
         <mcs-icon [key]="statusIcon" size="small" mcsId="backup-vm-status-icon" [mcsTooltip]="statusTooltip" [mcsTooltipShow]="statusTooltip"></mcs-icon>
         <div>
@@ -29,5 +29,10 @@
         </div>
       </mcs-item>
     </mcs-item>
+    <ng-template #vmBackupUnprovisionedTemplate>
+      <mcs-status-message type="info">
+        {{ 'serverServices.vmBackup.unprovisionedFallback' | translate }}
+      </mcs-status-message>
+    </ng-template>
   </mcs-section>
 </mcs-presentation-panel>

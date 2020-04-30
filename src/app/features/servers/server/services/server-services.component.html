@@ -72,13 +72,13 @@
        <!-- Host Security -->
        <ng-container *mcsAccessControl="['HidsView', 'AvView']; feature: ['EnableAddonHidsView','EnableAddonAntiVirusView']">
          <ng-container *ngIf="serverHostSecurityDetails$ | async as serverHostSecurityDetails">
-          <mcs-presentation-panel *ngIf="serverHostSecurityDetails?.hids?.enabled || serverHostSecurityDetails?.antiVirus?.enabled">
+          <mcs-presentation-panel>
             <ng-container mcsPresentationPanelHeader>
               <h2>{{ 'serverServices.hostSecurity.title' | translate }}</h2>
             </ng-container>
             <p>{{ 'serverServices.hostSecurity.description' | translate }}</p>
-            <mcs-section>
-              <!-- Overall Status -->
+            <!-- Overall Status -->
+            <mcs-section *ngIf="serverHostSecurityDetails?.hids?.enabled || serverHostSecurityDetails?.antiVirus?.enabled; else avHidsUnprovisionedTemplate">
               <mcs-grid>
                 <mcs-grid-row>
                   <mcs-grid-column>
@@ -119,6 +119,11 @@
                 </ng-container>
               </mcs-grid>
             </mcs-section>
+            <ng-template #avHidsUnprovisionedTemplate>
+              <mcs-status-message type="info">
+                {{ 'serverServices.hostSecurity.unprovisionedFallback' | translate }}
+              </mcs-status-message>
+            </ng-template>
           </mcs-presentation-panel>
         </ng-container>
       </ng-container>
@@ -126,24 +131,20 @@
       <!-- VM Backup -->
       <ng-container *mcsAccessControl="[]; feature: 'EnableAddonVmBackupView'">
         <ng-container *ngIf="serverBackUpVm$ | async as vmBackup">
-          <ng-container *ngIf="vmBackup.provisioned">
-            <mcs-service-backup-vm
-              [serverBackupVm]="vmBackup"
-              (viewChange)="onViewChange($event)">
-            </mcs-service-backup-vm>
-          </ng-container>
+          <mcs-service-backup-vm
+            [serverBackupVm]="vmBackup"
+            (viewChange)="onViewChange($event)">
+          </mcs-service-backup-vm>
         </ng-container>
       </ng-container>
 
       <!-- Server Backup -->
       <ng-container *mcsAccessControl="[]; feature: 'EnableAddonServerBackupView'">
         <ng-container *ngIf="serverBackUpServer$ | async as serverBackup">
-          <ng-container *ngIf="serverBackup.provisioned">
-            <mcs-service-backup-server
-              [serverBackupServer]="serverBackup"
-              (viewChange)="onViewChange($event)">
-            </mcs-service-backup-server>
-          </ng-container>
+          <mcs-service-backup-server
+            [serverBackupServer]="serverBackup"
+            (viewChange)="onViewChange($event)">
+          </mcs-service-backup-server>
         </ng-container>
       </ng-container>
     </section>
@@ -216,7 +217,7 @@
       [disabled]="server.isProcessing">
       <mcs-item>
         <mcs-icon [key]="chevronLeftKey" size="medium"></mcs-icon>
-        <span>{{ 'serverServices.operatingSystemUpdates.label' | translate }}</span>
+        <span>{{ 'serverServices.default.label' | translate }}</span>
       </mcs-item>
     </a>
   </ng-template>
