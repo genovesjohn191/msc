@@ -1,7 +1,8 @@
 import { McsEnumSerializationBase } from '../serialization/mcs-enum-serialization-base';
 
 export enum HostSecurityAgentStatus {
-  Active = 0,
+  Unknown = 0,
+  Active,
   Warning,
   Inactive,
   Error

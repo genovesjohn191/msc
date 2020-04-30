@@ -53,6 +53,7 @@ import {
 type ServerHostSecurityStatusDetails = {
   icon: string;
   status: HostSecurityAgentStatus;
+  provisioned?: boolean;
   label?: string;
   hids?: McsServerHostSecurityHidsItem;
   antiVirus?: McsServerHostSecurityAntiVirusItem;
@@ -190,9 +191,9 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
   protected serverChange(server: McsServer): void {
     this._serviceViewChange.next(ServerServicesView.Default);
     this._getServerOsUpdatesDetails(server.id);
+    this._getServerHostSecurity(server.id);
     this._getServerBackupVm(server.id);
     this._getServerBackupServer(server.id);
-    this._getServerHostSecurity(server.id);
   }
 
   /**
@@ -266,6 +267,10 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
     this._hostSecurityStatusDetailsMap.set(HostSecurityAgentStatus.Error, {
       icon: CommonDefinition.ASSETS_SVG_STATE_STOPPED,
       status: HostSecurityAgentStatus.Error
+    });
+    this._hostSecurityStatusDetailsMap.set(HostSecurityAgentStatus.Unknown, {
+      icon: CommonDefinition.ASSETS_SVG_STATE_STOPPED,
+      status: HostSecurityAgentStatus.Unknown
     });
   }
 
@@ -385,6 +390,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
             getSafeProperty(hostSecurity, (obj) => obj.agentStatusMessages[0], '') : activeLabel;
           hostSecurityDetails.hids = hostSecurity.hids;
           hostSecurityDetails.antiVirus = hostSecurity.antiVirus;
+          hostSecurityDetails.provisioned = hostSecurity.provisioned;
           return hostSecurityDetails;
         }
       })
