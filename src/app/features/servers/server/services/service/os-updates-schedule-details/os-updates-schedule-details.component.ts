@@ -76,6 +76,7 @@ export class ServiceOsUpdatesScheduleDetailsComponent implements OnInit {
   public scheduleDetails: OsUpdatesScheduleDetails;
   public scheduleDate: McsServerOsUpdatesSchedule;
   public scheduleType: OsUpdatesScheduleType;
+  public snapshot: boolean = false;
 
   public osUpdatesScheduleConfiguration$: Observable<McsServerOsUpdatesSchedule>;
   public scheduleDaysChange$: Observable<ScheduleDay[]>;
@@ -185,6 +186,7 @@ export class ServiceOsUpdatesScheduleDetailsComponent implements OnInit {
     let request = new McsServerOsUpdatesScheduleRequest();
     let scheduleDayArray = [this.fcRunOnceScheduleDay.value];
     request.runOnce = true; // RunOnce
+    request.snapshot = this.snapshot;
     request.categories = [];
     request.crontab = this._createCronStringRequest(
       this.fcRunOnceScheduleTime.value,
@@ -218,6 +220,7 @@ export class ServiceOsUpdatesScheduleDetailsComponent implements OnInit {
   public saveRecurringSchedule(): void {
     let request = new McsServerOsUpdatesScheduleRequest();
     request.runOnce = false; // Recurring
+    request.snapshot = this.snapshot;
     request.crontab = this._createCronStringRequest(
       this.fcRecurringScheduleTime.value,
       this.fcRecurringScheduleTimePeriod.value,
@@ -470,6 +473,7 @@ export class ServiceOsUpdatesScheduleDetailsComponent implements OnInit {
   private _setInitialScheduleReference(): void {
     if (!this.hasSchedule) { return; }
     this.scheduleType = this.isRunOnce ? OsUpdatesScheduleType.RunOnce : OsUpdatesScheduleType.Recurring;
+    this.snapshot = this.scheduleDate.snapshot;
     this._initialCronJson = parseCronStringToJson(this.scheduleDate.crontab);
     this._initialScheduleCategoryList = this.scheduleDate.categories.slice();
     this._changeDetectorRef.markForCheck();
@@ -525,7 +529,8 @@ export class ServiceOsUpdatesScheduleDetailsComponent implements OnInit {
     );
     let differentCronOption = this.scheduleDate.crontab !== currentCronSelected;
     let differentCategorySelection = this._categorySelectionHasChanged(this.runOnceCategories);
-    return differentCronOption || differentCategorySelection;
+    let differentSnapshotOption = this.snapshot !== this.scheduleDate.snapshot;
+    return differentCronOption || differentCategorySelection || differentSnapshotOption;
   }
 
   /**
@@ -539,7 +544,8 @@ export class ServiceOsUpdatesScheduleDetailsComponent implements OnInit {
     );
     let differentCronOption = this.scheduleDate.crontab !== currentCronSelected;
     let differentCategorySelection = this._categorySelectionHasChanged(this.recurringCategories);
-    return differentCronOption || differentCategorySelection;
+    let differentSnapshotOption = this.snapshot !== this.scheduleDate.snapshot;
+    return differentCronOption || differentCategorySelection || differentSnapshotOption;
   }
 
   /**

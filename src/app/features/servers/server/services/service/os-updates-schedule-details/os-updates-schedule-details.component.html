@@ -124,6 +124,25 @@
                     </mcs-item>
                   </mcs-grid-column>
                 </mcs-grid-row>
+
+                <!-- Snapshot Options -->
+                <mcs-grid-row>
+                  <mcs-grid-column>
+                    <mcs-item orientation="block">
+                      <strong>{{ 'serverServicesOsUpdatesSchedule.snapshotOptionsLabel' | translate }}</strong>
+                      <p>{{ 'serverServicesOsUpdatesSchedule.snapshotOptionsDescription' | translate }}</p>
+                      <mcs-radio-button-group [(ngModel)]="snapshot" [ngModelOptions]="{standalone: true}"
+                        mcsId="schedule-snapshot">
+                        <mcs-radio-button [value]="false">
+                          {{ 'serverServicesOsUpdatesSchedule.snapshotOptions.updateWithoutSnapshot' | translate }}
+                        </mcs-radio-button>
+                        <mcs-radio-button [value]="true">
+                          {{ 'serverServicesOsUpdatesSchedule.snapshotOptions.updateWithSnapshot' | translate }}
+                        </mcs-radio-button>
+                      </mcs-radio-button-group>
+                    </mcs-item>
+                  </mcs-grid-column>
+                </mcs-grid-row>
               </mcs-grid>
             </form>
 

@@ -696,6 +696,15 @@
     "loading": "Loading server os updates.",
     "title": "Apply Updates",
     "description": "Select the updates or update categories you would like applied and we will install them on your server for you. Your server will be inspected again after the update process and any newly available updates will be shown.",
+    "snapshotOptionsLabel": "Snapshot Options:",
+    "snapshotOptionsDescription": "For added assurance, we can snapshot your server before installing updates. This snapshot will persist for 23 hours after it is captured.",
+    "snapshotOptions": {
+      "updateWithoutSnapshot": "Update without snapshot",
+      "updateWithSnapshot": "Snapshot my server before updating"
+    },
+    "deleteSnapshotConfirmText": "Delete Existing Snapshots",
+    "deleteSnapshotDialogTitle": "Existing Snapshot(s) Found",
+    "deleteSnapshotDialogMessage": "One or more snapshots already exist for this server. Would you like to delete these snapshots and proceed?",
     "listLabel": "Which updates should we apply?",
     "listAllSelection": "All Updates",
     "noOsUpdates": "no availabe os updates for this server.",
@@ -719,6 +728,12 @@
     "daysPlaceholder": {
       "runonce": "Select day",
       "recurring": "Select day/s"
+    },
+    "snapshotOptionsLabel": "Snapshot Options:",
+    "snapshotOptionsDescription": "If applicable updates are found for your server, we can snapshot it before installing them. This snapshot will persist for 23 hours after it is captured.",
+    "snapshotOptions": {
+      "updateWithoutSnapshot": "Update without snapshot",
+      "updateWithSnapshot": "Snapshot my server before updating"
     },
     "listLabel": "Which updates should we apply?",
     "listAllSelection": "All Updates",

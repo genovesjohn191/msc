@@ -17,9 +17,9 @@ import {
   tap,
   shareReplay,
   catchError,
-  concatMap,
   distinctUntilChanged,
-  map
+  map,
+  finalize
 } from 'rxjs/operators';
 import { McsDataStatusFactory } from '@app/core';
 import {
@@ -32,7 +32,6 @@ import {
   McsServerOsUpdatesDetails,
   McsJob,
   McsServer,
-  McsServerOsUpdatesScheduleRequest,
   McsServerOsUpdatesSchedule,
   DataStatus,
   McsServerBackupVm,
@@ -40,7 +39,8 @@ import {
   ServerServicesView,
   HostSecurityAgentStatus,
   McsServerHostSecurityHidsItem,
-  McsServerHostSecurityAntiVirusItem
+  McsServerHostSecurityAntiVirusItem,
+  JobType
 } from '@app/models';
 import { FormMessage } from '@app/shared';
 import { McsEvent } from '@app/events';
@@ -139,11 +139,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
    */
   public onSaveSchedule(actionDetails: ServerServiceActionDetail): void {
     this._serviceViewChange.next(ServerServicesView.Default);
-    this._saveSchedule(actionDetails.server, actionDetails.payload).pipe(
-      tap(() => {
-        this.refreshServerResource();
-      })
-    ).subscribe();
+    this._saveSchedule(actionDetails).subscribe();
   }
 
   /**
@@ -152,11 +148,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
    */
   public onDeleteSchedule(actionDetails: ServerServiceActionDetail): void {
     this._serviceViewChange.next(ServerServicesView.Default);
-    this._deleteSchedule(actionDetails.server).pipe(
-      tap(() => {
-        this.refreshServerResource();
-      })
-    ).subscribe();
+    this._deleteSchedule(actionDetails).subscribe();
   }
 
   /**
@@ -174,7 +166,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
    */
   public executeAction(detail: ServerServiceActionDetail): void {
     this._strategyActionContext.setActionStrategyByType(detail);
-    this._strategyActionContext.executeAction();
+    this._strategyActionContext.executeAction().subscribe();
   }
 
   /**
@@ -217,7 +209,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
    * @param job job object reference
    */
   private _onInspectForAvailableOsUpdates(job: McsJob): void {
-    this._updateJobMap(job);
+    this._updateJobMap(job, JobType.ManagedServerPerformOsUpdateAnalysis);
   }
 
   /**
@@ -225,18 +217,20 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
    * @param job job object reference
    */
   private _onApplyServerOsUpdates(job: McsJob): void {
-    this._updateJobMap(job);
+    this._updateJobMap(job, JobType.ManagedServerApplyOsUpdates);
   }
 
   /**
    * Refreshes the resource when the Job received is completed
    * @param job job object reference
    */
-  private _updateJobMap(job: McsJob): void {
+  private _updateJobMap(job: McsJob, jobType: JobType): void {
     let serverIsActive = this.serverIsActiveByJob(job);
     if (!serverIsActive) { return; }
 
-    this._currentJobMapChange.next(job);
+    if (job.type === jobType) {
+      this._currentJobMapChange.next(job);
+    }
     if (job.dataStatus === DataStatus.Error) { return; }
 
     // Refresh everything when all job is done
@@ -277,13 +271,11 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
 
   /**
    * Save/Update os-update schedule based from serverId and request param
-   * @param server selected server reference
-   * @param request request containing the cron (schedule)
+   * @param detail object containing the details of the request
    */
-  private _saveSchedule(server: McsServer, request: McsServerOsUpdatesScheduleRequest): Observable<McsServerOsUpdatesSchedule> {
-    // TODO: extract and put in the appropriate strategy action
-    // TODO : find a better way of saving, currently deleting all then saving the new schedule
-    return this.apiService.deleteServerOsUpdatesSchedule(server.id).pipe(
+  private _saveSchedule(detail: ServerServiceActionDetail): Observable<McsServerOsUpdatesSchedule> {
+    this._strategyActionContext.setActionStrategyByType(detail);
+    return this._strategyActionContext.executeAction<McsServerOsUpdatesSchedule>().pipe(
       catchError((httpError) => {
         this._formMessage.showMessage('error', {
           messages: httpError.errorMessages,
@@ -291,25 +283,24 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
         });
         return throwError(httpError);
       }),
-      concatMap(() => {
-        return this.apiService.updateServerOsUpdatesSchedule(server.id, request).pipe(
-          tap(() => {
-            this._formMessage.showMessage('success', {
-              messages: this._translateService.instant('serverServices.operatingSystemUpdates.updateSuccessMessage')
-            });
-          })
-        );
+      tap(() => {
+        this._formMessage.showMessage('success', {
+          messages: this._translateService.instant('serverServices.operatingSystemUpdates.updateSuccessMessage')
+        });
+      }),
+      finalize(() => {
+        this.refreshServerResource();
       })
     );
   }
 
   /**
    * Deletes the os-update schedule of the server
-   * @param server selected server reference
+   * @param detail object containing the details of the request
    */
-  private _deleteSchedule(server: McsServer): Observable<boolean> {
-    // TODO: extract and put in the appropriate strategy action
-    return this.apiService.deleteServerOsUpdatesSchedule(server.id).pipe(
+  private _deleteSchedule(detail: ServerServiceActionDetail): Observable<boolean> {
+    this._strategyActionContext.setActionStrategyByType(detail);
+    return this._strategyActionContext.executeAction<boolean>().pipe(
       catchError((httpError) => {
         this._formMessage.showMessage('error', {
           messages: httpError.errorMessages,
@@ -321,6 +312,9 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
         this._formMessage.showMessage('success', {
           messages: this._translateService.instant('serverServices.operatingSystemUpdates.deleteSuccessMessage')
         });
+      }),
+      finalize(() => {
+        this.refreshServerResource();
       })
     );
   }

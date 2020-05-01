@@ -6,7 +6,7 @@ import { ServiceOsUpdatesScheduleSaveAction } from './action/os-updates-schedule
 import { ServiceOsUpdatesScheduleDeleteAction } from './action/os-updates-schedule-delete-action';
 import { RaiseInviewLevelAction } from './action/raise-inview-level-action';
 
-export type ServerServicesActionRecord = Record<ServerServicesAction, IServerServiceActionStrategy>;
+export type ServerServicesActionRecord = Record<ServerServicesAction, IServerServiceActionStrategy<any>>;
 
 export const serverServicesActionMap: ServerServicesActionRecord = {
   [ServerServicesAction.OsUpdatesInspect]: new ServiceOsUpdatesInspectAction(),

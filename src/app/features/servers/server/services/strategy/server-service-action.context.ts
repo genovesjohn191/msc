@@ -1,4 +1,5 @@
 import { Injector } from '@angular/core';
+import { Observable } from 'rxjs';
 import { isNullOrEmpty } from '@app/utilities';
 import {
   ServerServicesAction,
@@ -14,7 +15,7 @@ export type ServerServiceActionDetail = {
 };
 
 export class ServerServiceActionContext {
-  private _eventStrategy: IServerServiceActionStrategy;
+  private _eventStrategy: IServerServiceActionStrategy<any>;
   private _serviceActionDetail: ServerServiceActionDetail;
 
   constructor(private _injector: Injector) { }
@@ -29,8 +30,8 @@ export class ServerServiceActionContext {
     this._serviceActionDetail = serviceActionDetail;
   }
 
-  public executeAction(): void {
+  public executeAction<T>(): Observable<T> {
     this._eventStrategy.setInjector(this._injector);
-    this._eventStrategy.executeEvent(this._serviceActionDetail);
+    return this._eventStrategy.executeEvent(this._serviceActionDetail);
   }
 }
