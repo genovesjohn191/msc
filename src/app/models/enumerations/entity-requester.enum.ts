@@ -7,5 +7,6 @@ export enum EntityRequester {
   Ticket,
   Firewall,
   SystemMessage,
-  BackupAggregationTarget
+  BackupAggregationTarget,
+  Resource
 }

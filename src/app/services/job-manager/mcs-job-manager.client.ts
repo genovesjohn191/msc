@@ -37,6 +37,7 @@ import { McsJobsRepository } from '../repositories/mcs-jobs.repository';
 import { McsJobServerManager } from './entities/mcs-job-server.manager';
 import { McsJobMediaManager } from './entities/mcs-job-media.manager';
 import { McsJobBackupAggregationTargetManager } from './entities/mcs-job-backup-aggregation-target.manager';
+import { McsJobResourceManager } from './entities/mcs-job-resource.manager';
 
 @Injectable()
 export class McsJobManagerClient implements McsDisposable {
@@ -229,12 +230,6 @@ export class McsJobManagerClient implements McsDisposable {
     this._jobEntitiesFactory.set(JobType.ManagedServerScale,
       new McsJobServerManager(ActionStatus.Update, this._injector)
     );
-    this._jobEntitiesFactory.set(JobType.VdcScaleCompute,
-      new McsJobServerManager(ActionStatus.Update, this._injector)
-    );
-    this._jobEntitiesFactory.set(JobType.VdcExpandStorage,
-      new McsJobServerManager(ActionStatus.Update, this._injector)
-    );
     this._jobEntitiesFactory.set(JobType.ManagedServerProvisionAntiVirus,
       new McsJobServerManager(ActionStatus.Update, this._injector)
     );
@@ -294,6 +289,14 @@ export class McsJobManagerClient implements McsDisposable {
     );
     this._jobEntitiesFactory.set(JobType.ManagedServerApplyOsUpdates,
       new McsJobServerManager(ActionStatus.Update, this._injector)
+    );
+
+    // VDC
+    this._jobEntitiesFactory.set(JobType.VdcScaleCompute,
+      new McsJobResourceManager(ActionStatus.Update, this._injector)
+    );
+    this._jobEntitiesFactory.set(JobType.VdcExpandStorage,
+      new McsJobResourceManager(ActionStatus.Update, this._injector)
     );
 
     // BAT

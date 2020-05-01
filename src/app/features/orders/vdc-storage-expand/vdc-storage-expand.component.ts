@@ -253,14 +253,15 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnI
    * Event that emits when data in submitted from the wizard
    * @param submitDetails order details
    */
-  public onSubmitOrder(submitDetails: OrderDetails): void {
+  public onSubmitOrder(submitDetails: OrderDetails, resource: McsResource): void {
     if (!this._validateFormFields()) { return; }
     if (isNullOrEmpty(submitDetails)) { return; }
 
     let workflow = new McsOrderWorkflow();
     workflow.state = submitDetails.workflowAction;
     workflow.clientReferenceObject = {
-      resourceDescription: this.progressDescription
+      resourceDescription: this.progressDescription,
+      serviceId: resource.id,
     };
 
     this.submitOrderWorkflow(workflow);

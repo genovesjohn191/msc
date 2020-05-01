@@ -98,7 +98,7 @@
           [requestState]="dataStatus$ | async"
           [eventTrack]="orderEventTrack.billingDetailsStep"
           (dataChange)="onVdcConfirmOrderChange($event)"
-          (submitOrder)="onSubmitOrder($event)">
+          (submitOrder)="onSubmitOrder($event, fcResource?.value)">
         </mcs-step-order-details>
       </mcs-wizard-step>
 
