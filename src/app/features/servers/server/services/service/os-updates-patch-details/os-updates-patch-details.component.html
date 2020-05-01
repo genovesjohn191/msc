@@ -7,6 +7,22 @@
   </ng-container>
   <p>{{ 'serverServicesOsUpdatesApplyNow.description' | translate }}</p>
   <section>
+
+    <!-- Snapshot Options -->
+    <mcs-item orientation="block">
+      <strong>{{ 'serverServicesOsUpdatesApplyNow.snapshotOptionsLabel' | translate }}</strong>
+      <p>{{ 'serverServicesOsUpdatesApplyNow.snapshotOptionsDescription' | translate }}</p>
+      <mcs-radio-button-group [(ngModel)]="snapshot" [ngModelOptions]="{standalone: true}"
+        mcsId="schedule-snapshot">
+        <mcs-radio-button [value]="false">
+          {{ 'serverServicesOsUpdatesApplyNow.snapshotOptions.updateWithoutSnapshot' | translate }}
+        </mcs-radio-button>
+        <mcs-radio-button [value]="true">
+          {{ 'serverServicesOsUpdatesApplyNow.snapshotOptions.updateWithSnapshot' | translate }}
+        </mcs-radio-button>
+      </mcs-radio-button-group>
+    </mcs-item>
+
     <!-- Action Buttons -->
     <mcs-item>
       <strong>

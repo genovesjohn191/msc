@@ -5,6 +5,9 @@ export class McsServerOsUpdatesScheduleRequest {
   public runOnce: boolean = undefined;
 
   @JsonProperty()
+  public snapshot: boolean = undefined;
+
+  @JsonProperty()
   public crontab: string = undefined;
 
   @JsonProperty()

@@ -8,13 +8,16 @@ import {
 } from '@angular/core';
 import {
   Observable,
-  throwError
+  throwError,
+  of
 } from 'rxjs';
 import {
   tap,
   catchError,
-  map
+  map,
+  switchMap
 } from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
 import {
   McsDataStatusFactory,
 } from '@app/core';
@@ -25,10 +28,15 @@ import {
   ServerServicesAction
 } from '@app/models';
 import { McsApiService } from '@app/services';
-import { TreeNode } from '@app/shared';
+import {
+  TreeNode,
+  DialogService,
+  DialogConfirmation
+} from '@app/shared';
 import {
   getSafeProperty,
-  CommonDefinition
+  CommonDefinition,
+  isNullOrEmpty
 } from '@app/utilities';
 import { ServerServiceActionDetail } from '../../strategy/server-service-action.context';
 import { ServersService } from '../../../../servers.service';
@@ -51,6 +59,7 @@ export class ServiceOsUpdatesPatchDetailsComponent implements OnInit {
   public osUpdates$: Observable<McsServerOsUpdates[]>;
   public dataStatusFactory: McsDataStatusFactory<McsServerOsUpdates[]>;
   public selectedNodes: Array<TreeNode<McsServerOsUpdates>>;
+  private snapshot: boolean;
 
   /**
    * Returns true if there are no selected updates, false otherwise
@@ -60,6 +69,8 @@ export class ServiceOsUpdatesPatchDetailsComponent implements OnInit {
   }
 
   constructor(
+    private _dialogService: DialogService,
+    private _translateService: TranslateService,
     protected _serversService: ServersService,
     protected _apiService: McsApiService,
     protected _changeDetectorRef: ChangeDetectorRef,
@@ -85,18 +96,36 @@ export class ServiceOsUpdatesPatchDetailsComponent implements OnInit {
    * Emits an event to Apply the selected os updates on the server
    */
   public applySelectedUpdates(): void {
-    let request = new McsServerOsUpdatesRequest();
-    request.updates = [];
-    request.clientReferenceObject = {
-      serverId: this.selectedServer.id
-    };
-    this.selectedNodes.forEach((node) => request.updates.push(node.value.id));
 
-    this.patchUpdates.emit({
-      server: this.selectedServer,
-      action: ServerServicesAction.OsUpdatesPatch,
-      payload: request
-    });
+    if (!this.snapshot) {
+      this._emitRequest(false);
+      return;
+    }
+
+    this._apiService.getServerSnapshots(this.selectedServer.id).pipe(
+      switchMap((snapshots) => {
+
+        if (snapshots.totalCollectionCount <= 0) {
+          this._emitRequest(true);
+          return of(undefined);
+        }
+
+        let dialogData = {
+          data: this.selectedServer,
+          type: 'warning',
+          title: this._translateService.instant('serverServicesOsUpdatesApplyNow.deleteSnapshotDialogTitle'),
+          message: this._translateService.instant('serverServicesOsUpdatesApplyNow.deleteSnapshotDialogMessage'),
+          confirmText: this._translateService.instant('serverServicesOsUpdatesApplyNow.deleteSnapshotConfirmText')
+        } as DialogConfirmation<McsServer>;
+
+        return this._dialogService.openConfirmation(dialogData).afterClosed().pipe(
+          tap((dialogResult) => {
+            if (isNullOrEmpty(dialogResult)) { return of(undefined); }
+            this._emitRequest(true, true);
+          })
+        );
+      })
+    ).subscribe();
   }
 
   /**
@@ -117,5 +146,20 @@ export class ServiceOsUpdatesPatchDetailsComponent implements OnInit {
         return throwError(error);
       })
     );
+  }
+
+  private _emitRequest(snapshot: boolean, deleteExistingSnapshot: boolean = false): void {
+    let request = new McsServerOsUpdatesRequest();
+    request.clientReferenceObject = { serverId: this.selectedServer.id };
+    request.snapshot = snapshot;
+    request.deleteExistingSnapshot = deleteExistingSnapshot;
+    request.updates = [];
+    this.selectedNodes.forEach((node) => request.updates.push(node.value.id));
+
+    this.patchUpdates.emit({
+      server: this.selectedServer,
+      action: ServerServicesAction.OsUpdatesPatch,
+      payload: request
+    });
   }
 }

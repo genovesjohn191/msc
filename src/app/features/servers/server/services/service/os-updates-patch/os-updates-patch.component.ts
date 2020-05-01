@@ -110,7 +110,7 @@ export class ServiceOsUpdatesPatchComponent extends ServerServiceDetailBase impl
 
     let osUpdatesDetails = changes['osUpdatesDetails'];
     if (!isNullOrEmpty(osUpdatesDetails)) {
-      if (this.isAnalysing) { return; }
+      if (this.isAnalysing || this.isUpdating) { return; }
       if (!this._wasInspectedBefore(this._osUpdatesDetails.lastInspectDate)) {
         this._setOsUpdateDetailsByStatus(OsUpdatesPatchStatus.Unanalysed);
         return;
