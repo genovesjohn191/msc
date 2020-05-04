@@ -37,7 +37,7 @@ export class McsCookieService {
   public setEncryptedItem<T>(
     key: string,
     value: T,
-    options: CookieOptions = { secure: true, sameSite: 'Lax' }
+    options: CookieOptions = { secure: true, sameSite: 'Lax', path: '/' }
   ): void {
     // Encrypt the value
     let encrypted: string;
