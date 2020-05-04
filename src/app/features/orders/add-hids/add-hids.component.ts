@@ -22,7 +22,8 @@ import {
 import {
   Observable,
   Subject,
-  zip
+  zip,
+  Subscription
 } from 'rxjs';
 import {
   McsOrderWizardBase,
@@ -57,6 +58,8 @@ import {
 } from '@app/utilities';
 import { OrderDetails } from '@app/features-shared';
 import { AddHidsService } from './add-hids.service';
+import { McsEvent } from '@app/events';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 
 interface HidsServers {
   provisioned: boolean;
@@ -89,12 +92,14 @@ export class AddHidsComponent extends McsOrderWizardBase implements OnInit, OnDe
   private _formGroup: McsFormGroupDirective;
 
   private _valueChangesSubject = new Subject<void>();
+  private _selectedServerHandler: Subscription;
   private _backupProvisionMessageBitMap = new Map<number, string>();
 
   constructor(
     _injector: Injector,
     private _formBuilder: FormBuilder,
     private _changeDetectorRef: ChangeDetectorRef,
+    private _eventDispatcher: EventBusDispatcherService,
     private _apiService: McsApiService,
     private _addHidsService: AddHidsService
   ) {
@@ -110,6 +115,7 @@ export class AddHidsComponent extends McsOrderWizardBase implements OnInit, OnDe
       });
     this._registerFormGroups();
     this._registerProvisionStateBitmap();
+    this._registerEvents();
   }
 
   public ngOnInit() {
@@ -118,6 +124,7 @@ export class AddHidsComponent extends McsOrderWizardBase implements OnInit, OnDe
   }
 
   public ngOnDestroy() {
+    unsubscribeSafely(this._selectedServerHandler);
     unsubscribeSafely(this._valueChangesSubject);
   }
 
@@ -273,6 +280,19 @@ export class AddHidsComponent extends McsOrderWizardBase implements OnInit, OnDe
       fcServer: this.fcServer,
       fcProtectionLevel: this.fcProtectionLevel,
     });
+  }
+
+  private _registerEvents(): void {
+    this._selectedServerHandler = this._eventDispatcher.addEventListener(
+      McsEvent.serverAddHidsSelected, this._onSelectedServer.bind(this));
+
+    // Invoke the event initially
+    this._eventDispatcher.dispatch(McsEvent.serverAddHidsSelected);
+  }
+
+  private _onSelectedServer(server: McsServer): void {
+    if (isNullOrEmpty(server)) { return; }
+    this.fcServer.setValue(server);
   }
 
   private _registerProvisionStateBitmap(): void {

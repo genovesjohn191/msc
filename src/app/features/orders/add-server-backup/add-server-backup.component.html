@@ -35,7 +35,7 @@
           <mcs-item orientation="block">
             <span align-self-start>{{ 'orderAddServerBackup.detailsStep.serverLabel' | translate }}:</span>
             <mcs-form-field>
-              <mcs-select [formControl]="fcServers"
+              <mcs-select [formControl]="fcServer"
                 [placeholder]="'orderAddServerBackup.detailsStep.serverPlaceholder' | translate"
                 [mcsContextualHelp]="'orderAddServerBackup.detailsStep.serverHelp' | translate"
                 mcsId="select-server"
@@ -99,7 +99,7 @@
           [requestState]="dataStatus$ | async"
           [eventTrack]="orderEventTrack.billingDetailsStep"
           (dataChange)="onServerBackupOrderChange($event)"
-          (submitOrder)="onSubmitOrder($event, fcServers?.value?.id)">
+          (submitOrder)="onSubmitOrder($event, fcServer?.value?.id)">
         </mcs-step-order-details>
       </mcs-wizard-step>
 

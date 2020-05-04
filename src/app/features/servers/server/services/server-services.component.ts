@@ -26,7 +26,8 @@ import {
   animateFactory,
   unsubscribeSafely,
   CommonDefinition,
-  getSafeProperty
+  getSafeProperty,
+  isNullOrEmpty
 } from '@app/utilities';
 import {
   McsServerOsUpdatesDetails,
@@ -40,7 +41,9 @@ import {
   HostSecurityAgentStatus,
   McsServerHostSecurityHidsItem,
   McsServerHostSecurityAntiVirusItem,
-  JobType
+  JobType,
+  ServerServicesAction,
+  ServerProvisionState
 } from '@app/models';
 import { FormMessage } from '@app/shared';
 import { McsEvent } from '@app/events';
@@ -79,6 +82,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
   private _inspectOsUpdateHandler: Subscription;
   private _applyOsUpdateHandler: Subscription;
   private _serviceViewChange = new BehaviorSubject<ServerServicesView>(ServerServicesView.Default);
+  private _hostSecurityProvisionMessageBitMap = new Map<number, string>();
   private _currentJobMapChange: BehaviorSubject<McsJob>;
   private _strategyActionContext: ServerServiceActionContext;
   private _hostSecurityStatusDetailsMap: Map<HostSecurityAgentStatus, ServerHostSecurityStatusDetails>;
@@ -102,6 +106,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
     this._subscribeToServiceView();
     this._subscribeToJobsMap();
     this._createStatusMap();
+    this._registerProvisionStateBitmap();
   }
 
   public ngOnDestroy() {
@@ -122,6 +127,21 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
    */
   public get serverServicesViewOption(): typeof ServerServicesView {
     return ServerServicesView;
+  }
+
+  /**
+   * Returns the enum type of the server service action
+   */
+  public get ServerServicesActionOption(): typeof ServerServicesAction {
+    return ServerServicesAction;
+  }
+
+  /**
+   * Returns a message for the host security section depending on the status of the server
+   */
+  public hostSecurityDisableMessage(server: McsServer): string {
+    if (isNullOrEmpty(server)) { return; }
+    return this._hostSecurityProvisionMessageBitMap.get(server.provisionStatusBit);
   }
 
   /**
@@ -158,6 +178,15 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
   public onPatchUpdates(detail: ServerServiceActionDetail): void {
     this._serviceViewChange.next(ServerServicesView.Default);
     this.executeAction(detail);
+  }
+
+  /**
+   * Event listener whenever user clicks on ordering host security
+   * @param action kind of server action
+   * @param server server obj
+   */
+  public onHostSecurityOrderClick(action: ServerServicesAction, server: McsServer): void {
+    this.executeAction({ action, server });
   }
 
   /**
@@ -388,6 +417,23 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
           return hostSecurityDetails;
         }
       })
+    );
+  }
+
+  private _registerProvisionStateBitmap(): void {
+    this._hostSecurityProvisionMessageBitMap.set(
+      ServerProvisionState.PoweredOff,
+      this._translateService.instant('serverServices.hostSecurity.poweredOff')
+    );
+
+    this._hostSecurityProvisionMessageBitMap.set(
+      ServerProvisionState.ServiceAvailableFalse,
+      this._translateService.instant('serverServices.hostSecurity.provisioning')
+    );
+
+    this._hostSecurityProvisionMessageBitMap.set(
+      ServerProvisionState.isProcessing,
+      this._translateService.instant('serverServices.hostSecurity.processing')
     );
   }
 }

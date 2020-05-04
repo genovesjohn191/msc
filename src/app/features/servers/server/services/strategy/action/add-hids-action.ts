@@ -4,14 +4,13 @@ import {
   of
 } from 'rxjs';
 import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
-import { McsEvent } from '@app/events';
 import { RouteKey } from '@app/models';
+import { McsEvent } from '@app/events';
 import { McsNavigationService } from '@app/core';
 import { IServerServiceActionStrategy } from '../server-service-action.strategy';
 import { ServerServiceActionDetail } from '../server-service-action.context';
 
-export class ServiceRaiseInviewLevelAction implements IServerServiceActionStrategy<void> {
-
+export class ServiceAddHidsAction implements IServerServiceActionStrategy<void> {
   private _navigationService: McsNavigationService;
   private _eventDispatcher: EventBusDispatcherService;
 
@@ -21,8 +20,8 @@ export class ServiceRaiseInviewLevelAction implements IServerServiceActionStrate
   }
 
   public executeEvent(serviceActionDetail: ServerServiceActionDetail): Observable<void> {
-    this._eventDispatcher.dispatch(McsEvent.serverRaiseInviewSelected, serviceActionDetail.server);
-    this._navigationService.navigateTo(RouteKey.OrderServiceInviewRaise);
+    this._eventDispatcher.dispatch(McsEvent.serverAddHidsSelected, serviceActionDetail.server);
+    this._navigationService.navigateTo(RouteKey.OrderAddHids);
     return of(undefined);
   }
 }

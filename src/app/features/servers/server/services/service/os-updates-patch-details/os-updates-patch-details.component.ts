@@ -59,7 +59,7 @@ export class ServiceOsUpdatesPatchDetailsComponent implements OnInit {
   public osUpdates$: Observable<McsServerOsUpdates[]>;
   public dataStatusFactory: McsDataStatusFactory<McsServerOsUpdates[]>;
   public selectedNodes: Array<TreeNode<McsServerOsUpdates>>;
-  private snapshot: boolean;
+  public snapshot: boolean;
 
   /**
    * Returns true if there are no selected updates, false otherwise

@@ -35,7 +35,7 @@
           <mcs-item orientation="block">
             <span align-self-start>{{ 'orderAddVmBackup.detailsStep.serverLabel' | translate }}:</span>
             <mcs-form-field>
-              <mcs-select [formControl]="fcServers"
+              <mcs-select [formControl]="fcServer"
                 [placeholder]="'orderAddVmBackup.detailsStep.serverPlaceholder' | translate"
                 [mcsContextualHelp]="'orderAddVmBackup.detailsStep.serverHelp' | translate"
                 mcsId="select-server"
@@ -99,7 +99,7 @@
           [requestState]="dataStatus$ | async"
           [eventTrack]="orderEventTrack.billingDetailsStep"
           (dataChange)="onVmBackupOrderChange($event)"
-          (submitOrder)="onSubmitOrder($event, fcServers?.value?.id)">
+          (submitOrder)="onSubmitOrder($event, fcServer?.value?.id)">
         </mcs-step-order-details>
       </mcs-wizard-step>
 

@@ -2,8 +2,12 @@ import {
   Component,
   Input,
   OnChanges,
-  SimpleChanges
+  SimpleChanges,
+  EventEmitter,
+  Output,
+  OnInit
 } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import {
   McsServerBackupServer,
   backupStatusTypeSubtitleLabel,
@@ -11,7 +15,10 @@ import {
   BackupStatusType,
   backupStatusTypeMap,
   backupServerStatusTypeLabel,
-  backupStatusLabel
+  backupStatusLabel,
+  McsServer,
+  ServerServicesAction,
+  ServerProvisionState
 } from '@app/models';
 import {
   CommonDefinition,
@@ -21,6 +28,7 @@ import {
 } from '@app/utilities';
 import { McsDateTimeService } from '@app/core';
 import { ServerServiceDetailBase } from '../server-service-detail.base';
+import { ServerServiceActionDetail } from '../../strategy/server-service-action.context';
 
 // TODO: Extract this when the generic date time service is created
 const BACKUP_TIMEZONE = 'Australia/Sydney';
@@ -41,7 +49,7 @@ type BackupServerStatusDetails = {
     'class': 'block'
   }
 })
-export class ServiceBackupServerComponent extends ServerServiceDetailBase implements OnChanges {
+export class ServiceBackupServerComponent extends ServerServiceDetailBase implements OnChanges, OnInit {
 
   @Input()
   public set serverBackupServer(serverBackupServer: McsServerBackupServer) {
@@ -51,14 +59,26 @@ export class ServiceBackupServerComponent extends ServerServiceDetailBase implem
     return this._serverBackupServer;
   }
 
+  @Output()
+  public addServerBackup: EventEmitter<ServerServiceActionDetail>;
+
   private _backupServerStatusDetailsMap: Map<BackupStatusType, BackupServerStatusDetails>;
   private _backupServerStatusDetails: BackupServerStatusDetails;
   private _serverBackupServer: McsServerBackupServer;
+  private _serverBackupProvisionMessageBitMap = new Map<number, string>();
 
-  constructor(private _dateTimeService: McsDateTimeService) {
+  constructor(
+    private _dateTimeService: McsDateTimeService,
+    private _translate: TranslateService
+  ) {
     super(ServerServicesView.BackupServer);
+    this.addServerBackup = new EventEmitter();
     this._createStatusMap();
     this._backupServerStatusDetails = this._backupServerStatusDetailsMap.get(BackupStatusType.NeverAttempted);
+  }
+
+  public ngOnInit() {
+    this._registerProvisionStateBitmap();
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -96,6 +116,35 @@ export class ServiceBackupServerComponent extends ServerServiceDetailBase implem
 
   public get statusDetailsLinkFlag(): boolean {
     return getSafeProperty(this._backupServerStatusDetails, (obj) => obj.detailsLinkFlag);
+  }
+
+  public disableMessage(server: McsServer): string {
+    if (isNullOrEmpty(server)) { return; }
+    return this._serverBackupProvisionMessageBitMap.get(server.provisionStatusBit);
+  }
+
+  public onAddServerBackup(selectedServer: McsServer): void {
+    this.addServerBackup.emit({
+      action: ServerServicesAction.AddServerBackup,
+      server: selectedServer
+    });
+  }
+
+  private _registerProvisionStateBitmap(): void {
+    this._serverBackupProvisionMessageBitMap.set(
+      ServerProvisionState.PoweredOff,
+      this._translate.instant('serverServices.serverBackup.poweredOff')
+    );
+
+    this._serverBackupProvisionMessageBitMap.set(
+      ServerProvisionState.ServiceAvailableFalse,
+      this._translate.instant('serverServices.serverBackup.provisioning')
+    );
+
+    this._serverBackupProvisionMessageBitMap.set(
+      ServerProvisionState.isProcessing,
+      this._translate.instant('serverServices.serverBackup.processing')
+    );
   }
 
   /**
