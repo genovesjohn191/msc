@@ -32,6 +32,17 @@
     <ng-template #serverBackupUnprovisionedTemplate>
       <mcs-status-message type="info">
         {{ 'serverServices.serverBackup.unprovisionedFallback' | translate }}
+        <ng-container *ngIf="server.provisionStatusBit; else serverBackupOrderLinkTemplate">
+          <span>{{ disableMessage(server) }}</span>
+        </ng-container>
+        <ng-template #serverBackupOrderLinkTemplate>
+          <a *mcsAccessControl="['OrderEdit']; feature: ['EnableOrderingServerBackupProvision']"
+          (click)="onAddServerBackup(server)"
+          mcsId="add-new-server-backup"
+          mcsEventTracker="add-new-server-backup"
+          mcsEventCategory="order"
+          mcsEventLabel="server-services">{{ 'serverServices.serverBackup.orderlinkLabel' | translate }}</a>
+        </ng-template>
       </mcs-status-message>
     </ng-template>
   </mcs-section>

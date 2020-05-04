@@ -71,6 +71,10 @@ import { JobServerHidsAddEvent } from './items/job-server-hids-add.event';
 import { JobServerAvAddEvent } from './items/job-server-av-add.event';
 import { JobServerBackupServerAddEvent } from './items/job-server-backup-server-add.event';
 import { JobServerBackupVmAddEvent } from './items/job-server-backup-vm-add.event';
+import { ServerAddAvSelectedEvent } from './items/server-add-av-selected.event';
+import { ServerAddHidsSelectedEvent } from './items/server-add-hids-selected.event';
+import { ServerAddBackupServerSelectedEvent } from './items/server-add-backup-server-selected.event';
+import { ServerAddBackupVmSelectedEvent } from './items/server-add-backup-vm-selected.event';
 
 export class McsEvent {
   public static routeChange = new RouteChangeEvent();
@@ -79,6 +83,10 @@ export class McsEvent {
   public static sessionTimedOut = new SessionTimedOutEvent();
   public static serverScaleManageSelected = new ServerManagedScaleSelectedEvent();
   public static serverRaiseInviewSelected = new ServerManagedRaiseInviewSelectedEvent();
+  public static serverAddAvSelected = new ServerAddAvSelectedEvent();
+  public static serverAddHidsSelected = new ServerAddHidsSelectedEvent();
+  public static serverAddBackupServerSelected = new ServerAddBackupServerSelectedEvent();
+  public static serverAddBackupVmSelected = new ServerAddBackupVmSelectedEvent();
   public static vdcScaleSelectedEvent = new VdcScaleSelectedEvent();
   public static vdcStorageExpandSelectedEvent = new VdcStorageExpandSelectedEvent();
   public static loaderShow = new LoaderShowEvent();

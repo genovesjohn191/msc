@@ -659,12 +659,20 @@
     "vmBackup": {
       "title": "VM Backup",
       "detailsLink": "See Details",
-      "unprovisionedFallback": "Your server does not currently have VM Backup provisioned."
+      "unprovisionedFallback": "VM Backup is not currently ordered for this server, or it has not completed provisioning.",
+      "poweredOff": "This server must be powered on to provision an Add-On.",
+      "provisioning": "This server is still being provisioned and Add-Ons can be installed once it is finished.",
+      "processing": "This server is currently busy and Add-Ons can be installed once its current operation has completed.",
+      "orderlinkLabel": "Click here to order it."
     },
     "serverBackup": {
       "title": "Server Backup",
       "detailsLink": "See Details",
-      "unprovisionedFallback": "Your server does not currently have Server Backup provisioned."
+      "unprovisionedFallback": "Server Backup is not currently ordered for this server, or it has not completed provisioning.",
+      "poweredOff": "This server must be powered on to provision an Add-On.",
+      "provisioning": "This server is still being provisioned and Add-Ons can be installed once it is finished.",
+      "processing": "This server is currently busy and Add-Ons can be installed once its current operation has completed.",
+      "orderlinkLabel": "Click here to order it."
     },
     "hostSecurity": {
       "title": "Host Security",
@@ -673,7 +681,12 @@
       "activeLabel": {
         "agentConfigured": "Agent Configured"
       },
-      "unprovisionedFallback": "Your server does not currently have Host Security enabled or provisioned."
+      "unprovisionedFallback": "Host Security is not currently ordered for this server, or it has not completed provisioning.",
+      "poweredOff": "This server must be powered on to provision an Add-On.",
+      "provisioning": "This server is still being provisioned and Add-Ons can be installed once it is finished.",
+      "processing": "This server is currently busy and Add-Ons can be installed once its current operation has completed.",
+      "avLinkLabel": "Click here to order Anti-Virus",
+      "hidsLinkLabel": "here to order HIDS"
     },
     "antivirus": {
       "title": "Anti-Virus",

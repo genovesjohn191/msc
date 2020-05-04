@@ -14,7 +14,8 @@ import {
 import {
   Observable,
   Subject,
-  zip
+  zip,
+  Subscription
 } from 'rxjs';
 import {
   takeUntil,
@@ -57,6 +58,8 @@ import {
 import { McsFormGroupDirective } from '@app/shared';
 import { OrderDetails } from '@app/features-shared';
 import { AddServerBackupService } from './add-server-backup.service';
+import { McsEvent } from '@app/events';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 
 const ADD_SERVER_BACKUP = Guid.newGuid().toString();
 
@@ -72,10 +75,11 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
   public aggregationTargets$: Observable<McsBackUpAggregationTarget[]>;
 
   public fgServerBackup: FormGroup;
-  public fcServers: FormControl;
+  public fcServer: FormControl;
 
   private _serverBackup: McsOrderServerBackupAdd;
   private _valueChangesSubject = new Subject<void>();
+  private _selectedServerHandler: Subscription;
   private _backupProvisionMessageBitMap = new Map<number, string>();
 
   @ViewChild('fgManageBackupServer', { static: false })
@@ -101,6 +105,7 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
   constructor(
     _injector: Injector,
     private _formBuilder: FormBuilder,
+    private _eventDispatcher: EventBusDispatcherService,
     private _translate: TranslateService,
     private _serverBackupService: AddServerBackupService,
     private _apiService: McsApiService,
@@ -117,6 +122,7 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
       });
     this._registerFormGroup();
     this._registerProvisionStateBitmap();
+    this._registerEvents();
   }
 
   public ngOnInit() {
@@ -126,6 +132,7 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
 
   public ngOnDestroy() {
     unsubscribeSafely(this._valueChangesSubject);
+    unsubscribeSafely(this._selectedServerHandler);
   }
 
   public get backIconKey(): string {
@@ -169,11 +176,24 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
   }
 
   private _registerFormGroup(): void {
-    this.fcServers = new FormControl('', [CoreValidators.required]);
+    this.fcServer = new FormControl('', [CoreValidators.required]);
 
     this.fgServerBackup = this._formBuilder.group({
-      fcServers: this.fcServers
+      fcServer: this.fcServer
     });
+  }
+
+  private _registerEvents(): void {
+    this._selectedServerHandler = this._eventDispatcher.addEventListener(
+      McsEvent.serverAddBackupServerSelected, this._onSelectedServer.bind(this));
+
+    // Invoke the event initially
+    this._eventDispatcher.dispatch(McsEvent.serverAddBackupServerSelected);
+  }
+
+  private _onSelectedServer(server: McsServer): void {
+    if (isNullOrEmpty(server)) { return; }
+    this.fcServer.setValue(server);
   }
 
   private _registerProvisionStateBitmap(): void {
@@ -222,7 +242,7 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
   }
 
   private _onServerBackupChange(): void {
-    let server = getSafeFormValue(this.fcServers, (obj) => obj.value);
+    let server = getSafeFormValue(this.fcServer, (obj) => obj.value);
 
     this._serverBackupService.createOrUpdateOrder(
       createObject(McsOrderCreate, {

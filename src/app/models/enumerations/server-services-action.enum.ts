@@ -4,4 +4,8 @@ export enum ServerServicesAction {
   OsUpdatesScheduleSave = 'OsUpdatesScheduleSave',
   OsUpdatesScheduleDelete = 'OsUpdatesScheduleDelete',
   RaiseInviewLevel = 'RaiseInviewLevel',
+  AddAv = 'AddAv',
+  AddHids = 'AddHids',
+  AddVmBackup = 'AddVmBackup',
+  AddServerBackup = 'AddServerBackup',
 }

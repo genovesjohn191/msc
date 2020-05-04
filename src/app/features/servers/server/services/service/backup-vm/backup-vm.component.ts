@@ -2,8 +2,12 @@ import {
   Component,
   Input,
   OnChanges,
-  SimpleChanges
+  SimpleChanges,
+  EventEmitter,
+  Output,
+  OnInit
 } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import {
   McsServerBackupVm,
   ServerServicesView,
@@ -11,7 +15,10 @@ import {
   BackupStatusType,
   backupStatusTypeMap,
   backupVmStatusTypeLabel,
-  backupStatusLabel
+  backupStatusLabel,
+  McsServer,
+  ServerServicesAction,
+  ServerProvisionState
 } from '@app/models';
 import {
   CommonDefinition,
@@ -21,6 +28,7 @@ import {
 } from '@app/utilities';
 import { McsDateTimeService } from '@app/core';
 import { ServerServiceDetailBase } from '../server-service-detail.base';
+import { ServerServiceActionDetail } from '../../strategy/server-service-action.context';
 
 // TODO: Extract this when the generic date time service is created
 const BACKUP_TIMEZONE = 'Australia/Sydney';
@@ -41,7 +49,7 @@ type BackupVmStatusDetails = {
     'class': 'block'
   }
 })
-export class ServiceBackupVmComponent extends ServerServiceDetailBase implements OnChanges {
+export class ServiceBackupVmComponent extends ServerServiceDetailBase implements OnChanges, OnInit {
 
   @Input()
   public set serverBackupVm(serverBackupVm: McsServerBackupVm) {
@@ -51,14 +59,26 @@ export class ServiceBackupVmComponent extends ServerServiceDetailBase implements
     return this._serverBackupVm;
   }
 
+  @Output()
+  public addVmBackup: EventEmitter<ServerServiceActionDetail>;
+
   private _backupVmStatusDetailsMap: Map<BackupStatusType, BackupVmStatusDetails>;
   private _backupVmStatusDetails: BackupVmStatusDetails;
   private _serverBackupVm: McsServerBackupVm;
+  private _vmBackupProvisionMessageBitMap = new Map<number, string>();
 
-  constructor(private _dateTimeService: McsDateTimeService) {
+  constructor(
+    private _dateTimeService: McsDateTimeService,
+    private _translate: TranslateService
+  ) {
     super(ServerServicesView.BackupVm);
+    this.addVmBackup = new EventEmitter();
     this._createStatusMap();
     this._backupVmStatusDetails = this._backupVmStatusDetailsMap.get(BackupStatusType.NeverAttempted);
+  }
+
+  public ngOnInit() {
+    this._registerProvisionStateBitmap();
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -96,6 +116,35 @@ export class ServiceBackupVmComponent extends ServerServiceDetailBase implements
 
   public get statusDetailsLinkFlag(): boolean {
     return getSafeProperty(this._backupVmStatusDetails, (obj) => obj.detailsLinkFlag);
+  }
+
+  public disableMessage(server: McsServer): string {
+    if (isNullOrEmpty(server)) { return; }
+    return this._vmBackupProvisionMessageBitMap.get(server.provisionStatusBit);
+  }
+
+  public onAddVmBackup(selectedServer: McsServer): void {
+    this.addVmBackup.emit({
+      action: ServerServicesAction.AddVmBackup,
+      server: selectedServer
+    });
+  }
+
+  private _registerProvisionStateBitmap(): void {
+    this._vmBackupProvisionMessageBitMap.set(
+      ServerProvisionState.PoweredOff,
+      this._translate.instant('serverServices.serverBackup.poweredOff')
+    );
+
+    this._vmBackupProvisionMessageBitMap.set(
+      ServerProvisionState.ServiceAvailableFalse,
+      this._translate.instant('serverServices.serverBackup.provisioning')
+    );
+
+    this._vmBackupProvisionMessageBitMap.set(
+      ServerProvisionState.isProcessing,
+      this._translate.instant('serverServices.serverBackup.processing')
+    );
   }
 
   /**

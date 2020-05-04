@@ -32,6 +32,17 @@
     <ng-template #vmBackupUnprovisionedTemplate>
       <mcs-status-message type="info">
         {{ 'serverServices.vmBackup.unprovisionedFallback' | translate }}
+        <ng-container *ngIf="server.provisionStatusBit; else vmBackupOrderLinkTemplate">
+          <span>{{ disableMessage(server) }}</span>
+        </ng-container>
+        <ng-template #vmBackupOrderLinkTemplate>
+          <a *mcsAccessControl="['OrderEdit']; feature: ['EnableOrderingVmBackupProvision']"
+          (click)="onAddVmBackup(server)"
+          mcsId="add-new-vm-backup"
+          mcsEventTracker="add-new-vm-backup"
+          mcsEventCategory="order"
+          mcsEventLabel="server-services">{{ 'serverServices.vmBackup.orderlinkLabel' | translate }}</a>
+        </ng-template>
       </mcs-status-message>
     </ng-template>
   </mcs-section>

@@ -14,7 +14,8 @@ import {
 import {
   Subject,
   Observable,
-  zip
+  zip,
+  Subscription
 } from 'rxjs';
 import {
   takeUntil,
@@ -57,6 +58,8 @@ import { McsFormGroupDirective } from '@app/shared';
 import { OrderDetails } from '@app/features-shared';
 import { AddVmBackupService } from './add-vm-backup.service';
 import { TranslateService } from '@ngx-translate/core';
+import { McsEvent } from '@app/events';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 
 const ADD_VM_BACKUP = Guid.newGuid().toString();
 
@@ -72,10 +75,11 @@ export class AddVmBackupComponent extends McsOrderWizardBase implements OnInit, 
   public aggregationTargets$: Observable<McsBackUpAggregationTarget[]>;
 
   public fgVmBackup: FormGroup;
-  public fcServers: FormControl;
+  public fcServer: FormControl;
 
   private _vmBackup: McsOrderVmBackupAdd;
   private _valueChangesSubject = new Subject<void>();
+  private _selectedServerHandler: Subscription;
   private _backupProvisionMessageBitMap = new Map<number, string>();
 
   @ViewChild('fgManageBackupVm', { static: false })
@@ -102,6 +106,7 @@ export class AddVmBackupComponent extends McsOrderWizardBase implements OnInit, 
     _injector: Injector,
     private _formBuilder: FormBuilder,
     private _translate: TranslateService,
+    private _eventDispatcher: EventBusDispatcherService,
     private _vmBackupService: AddVmBackupService,
     private _apiService: McsApiService,
   ) {
@@ -122,10 +127,12 @@ export class AddVmBackupComponent extends McsOrderWizardBase implements OnInit, 
   public ngOnInit() {
     this._subscribeToServers();
     this._subscribeToAggregationTargets();
+    this._registerEvents();
   }
 
   public ngOnDestroy() {
     unsubscribeSafely(this._valueChangesSubject);
+    unsubscribeSafely(this._selectedServerHandler);
   }
 
   public get backIconKey(): string {
@@ -169,10 +176,23 @@ export class AddVmBackupComponent extends McsOrderWizardBase implements OnInit, 
   }
 
   private _registerFormGroup(): void {
-    this.fcServers = new FormControl('', [CoreValidators.required]);
+    this.fcServer = new FormControl('', [CoreValidators.required]);
     this.fgVmBackup = this._formBuilder.group({
-      fcServers: this.fcServers,
+      fcServer: this.fcServer,
     });
+  }
+
+  private _registerEvents(): void {
+    this._selectedServerHandler = this._eventDispatcher.addEventListener(
+      McsEvent.serverAddBackupVmSelected, this._onSelectedServer.bind(this));
+
+    // Invoke the event initially
+    this._eventDispatcher.dispatch(McsEvent.serverAddBackupVmSelected);
+  }
+
+  private _onSelectedServer(server: McsServer): void {
+    if (isNullOrEmpty(server)) { return; }
+    this.fcServer.setValue(server);
   }
 
   private _registerProvisionStateBitmap(): void {
@@ -221,7 +241,7 @@ export class AddVmBackupComponent extends McsOrderWizardBase implements OnInit, 
   }
 
   private _onVmBackupChange(): void {
-    let server = getSafeFormValue(this.fcServers, (obj) => obj.value);
+    let server = getSafeFormValue(this.fcServer, (obj) => obj.value);
 
     this._vmBackupService.createOrUpdateOrder(
       createObject(McsOrderCreate, {

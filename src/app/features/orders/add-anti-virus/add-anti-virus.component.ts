@@ -15,7 +15,8 @@ import {
 } from '@angular/forms';
 import {
   Observable,
-  Subject
+  Subject,
+  Subscription
 } from 'rxjs';
 import {
   takeUntil,
@@ -53,6 +54,8 @@ import {
   Guid
 } from '@app/utilities';
 import { AddAntiVirusService } from './add-anti-virus.service';
+import { McsEvent } from '@app/events';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 
 interface AntiVirusServers {
   provisioned: boolean;
@@ -77,6 +80,7 @@ export class AddAntiVirusComponent extends McsOrderWizardBase implements OnInit,
   private _formGroup: McsFormGroupDirective;
 
   private _destroySubject = new Subject<void>();
+  private _selectedServerHandler: Subscription;
   private _backupProvisionMessageBitMap = new Map<number, string>();
 
   constructor(
@@ -84,6 +88,7 @@ export class AddAntiVirusComponent extends McsOrderWizardBase implements OnInit,
     private _elementRef: ElementRef,
     private _formBuilder: FormBuilder,
     private _formGroupService: McsFormGroupService,
+    private _eventDispatcher: EventBusDispatcherService,
     private _changeDetectorRef: ChangeDetectorRef,
     private _apiService: McsApiService,
     private _addAntiVirusService: AddAntiVirusService
@@ -100,6 +105,7 @@ export class AddAntiVirusComponent extends McsOrderWizardBase implements OnInit,
       });
     this._registerFormGroups();
     this._registerProvisionStateBitmap();
+    this._registerEvents();
   }
 
   public ngOnInit() {
@@ -107,6 +113,7 @@ export class AddAntiVirusComponent extends McsOrderWizardBase implements OnInit,
   }
 
   public ngOnDestroy() {
+    unsubscribeSafely(this._selectedServerHandler);
     unsubscribeSafely(this._destroySubject);
   }
 
@@ -258,6 +265,19 @@ export class AddAntiVirusComponent extends McsOrderWizardBase implements OnInit,
     this.fgAddAntiVirusDetails.valueChanges.pipe(
       takeUntil(this._destroySubject)
     ).subscribe();
+  }
+
+  private _registerEvents(): void {
+    this._selectedServerHandler = this._eventDispatcher.addEventListener(
+      McsEvent.serverAddAvSelected, this._onSelectedServer.bind(this));
+
+    // Invoke the event initially
+    this._eventDispatcher.dispatch(McsEvent.serverAddAvSelected);
+  }
+
+  private _onSelectedServer(server: McsServer): void {
+    if (isNullOrEmpty(server)) { return; }
+    this.fcServer.setValue(server);
   }
 
   private _registerProvisionStateBitmap(): void {

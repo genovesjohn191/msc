@@ -369,6 +369,7 @@ export class McsServer extends McsEntityBase {
     if (this.isPoweredOff) { statusBit |= ServerProvisionState.PoweredOff; }
     if (!this.osAutomationAvailable) { statusBit |= ServerProvisionState.OsAutomationFalse; }
     if (!this.serviceChangeAvailable) { statusBit |= ServerProvisionState.ServiceAvailableFalse; }
+    if (this.isProcessing) { statusBit |= ServerProvisionState.isProcessing; }
 
     return statusBit;
   }
