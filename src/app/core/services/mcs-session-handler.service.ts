@@ -348,7 +348,7 @@ export class McsSessionHandlerService {
     let sessionId = this._authIdentity.user.hashedId + this._authIdentity.user.expiry;
 
     this._cookieService.setEncryptedItem(CommonDefinition.COOKIE_SESSION_ID,
-      sessionId, { expires: this._authIdentity.user.expiry, sameSite: 'Lax' });
+      sessionId, { expires: this._authIdentity.user.expiry, sameSite: 'Lax', path: '/' });
   }
 
   @LogMethod()
