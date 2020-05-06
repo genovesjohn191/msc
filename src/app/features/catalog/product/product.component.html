@@ -207,8 +207,10 @@
 
               <mcs-grid-row no-margin>
                 <mcs-grid-column padding-large
-                  *ngIf="inview.graphUrl | mcsIsNotNullOrEmpty" sizeSm="12" sizeLg="4">
-                  <img [src]="inview.graphUrl" class="image-responsive">
+                  *ngIf="inview.graphUrl | mcsIsNotNullOrEmpty" sizeSm="12" sizeMd="12" sizeLg="8">
+                  <div>
+                    <img [src]="inview.graphUrl" class="image-inherit">
+                  </div>
                 </mcs-grid-column>
               </mcs-grid-row>
 

@@ -153,7 +153,7 @@ export class McsCookieService {
   private _setCookie(
     key: string,
     value: string,
-    options: CookieOptions = { expires: undefined, path: undefined, domain: undefined, secure: true, sameSite: 'Lax', }
+    options: CookieOptions = { expires: undefined, path: undefined, domain: undefined, secure: true, sameSite: 'Lax' }
   ) {
     this._cookieService.set(key, value, options.expires, options.path, options.domain, options.secure, options.sameSite);
   }
