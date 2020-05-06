@@ -9,6 +9,11 @@ $image-thumbnail-dark-bg-color: $color-black;
   max-width: 100%;
 }
 
+.image-inherit {
+  @extend .image-responsive;
+  width: inherit;
+}
+
 .image-thumbnail {
   height: $image-thumbnail-height;
   width: $image-thumbnail-width;
