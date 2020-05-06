@@ -44,16 +44,14 @@ export class McsNotificationContextService implements McsDisposable {
   private _notificationsStream: BehaviorSubject<McsJob[]>;
 
   constructor(
-    _accessControlService: McsAccessControlService,
+    private _accessControlService: McsAccessControlService,
     private _notificationJobService: McsNotificationJobService,
     private _apiService: McsApiService
   ) {
     this._excludedJobTypes = new Array();
     this._notifications = new Array();
     this._notificationsStream = new BehaviorSubject<McsJob[]>(null);
-    if (_accessControlService.hasPermission([McsPermission.JobView])) {
-      this.onInit();
-    }
+    this.subscribeToActiveJobs();
   }
 
   /**
@@ -73,8 +71,10 @@ export class McsNotificationContextService implements McsDisposable {
   /**
    * Initializes the context instance
    */
-  public onInit(): void {
-    this.getAllActiveJobs().subscribe();
+  public subscribeToActiveJobs(): void {
+    if (this._accessControlService.hasPermission([McsPermission.JobView])) {
+      this.getAllActiveJobs().subscribe();
+    }
     this._createFilteredJobList();
     this._listenToJobChanged();
   }
