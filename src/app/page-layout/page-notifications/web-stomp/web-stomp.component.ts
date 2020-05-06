@@ -86,7 +86,7 @@ export class WebStompComponent implements AfterViewInit, OnDestroy {
         if (stompIsConnected) {
           this._hideStompErrorStatusBar();
           this._showStompSuccessStatusBar();
-          this._notificationContext.onInit();
+          this._notificationContext.subscribeToActiveJobs();
           return;
         }
 
