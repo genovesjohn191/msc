@@ -43,7 +43,7 @@ import {
   McsServerHostSecurityAntiVirusItem,
   JobType,
   ServerServicesAction,
-  ServerProvisionState
+  ServiceOrderState
 } from '@app/models';
 import { FormMessage } from '@app/shared';
 import { McsEvent } from '@app/events';
@@ -82,7 +82,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
   private _inspectOsUpdateHandler: Subscription;
   private _applyOsUpdateHandler: Subscription;
   private _serviceViewChange = new BehaviorSubject<ServerServicesView>(ServerServicesView.Default);
-  private _hostSecurityProvisionMessageBitMap = new Map<number, string>();
+  private _hostSecurityOrderStateMessageMap = new Map<ServiceOrderState, string>();
   private _currentJobMapChange: BehaviorSubject<McsJob>;
   private _strategyActionContext: ServerServiceActionContext;
   private _hostSecurityStatusDetailsMap: Map<HostSecurityAgentStatus, ServerHostSecurityStatusDetails>;
@@ -137,11 +137,18 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
   }
 
   /**
+   * Returns the enum type of the current service order state
+   */
+  public get ServiceOrderStateOption(): typeof ServiceOrderState {
+    return ServiceOrderState;
+  }
+
+  /**
    * Returns a message for the host security section depending on the status of the server
    */
   public hostSecurityDisableMessage(server: McsServer): string {
     if (isNullOrEmpty(server)) { return; }
-    return this._hostSecurityProvisionMessageBitMap.get(server.provisionStatusBit);
+    return this._hostSecurityOrderStateMessageMap.get(server.getServiceOrderState());
   }
 
   /**
@@ -187,6 +194,13 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
    */
   public onHostSecurityOrderClick(action: ServerServicesAction, server: McsServer): void {
     this.executeAction({ action, server });
+  }
+
+  /**
+   * Create a New Ticket with the current server's service Id as parameter
+   */
+  public onCreateNewTicket(server: McsServer): void {
+    this.executeAction({ action: ServerServicesAction.CreateNewTicket, server });
   }
 
   /**
@@ -421,18 +435,23 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
   }
 
   private _registerProvisionStateBitmap(): void {
-    this._hostSecurityProvisionMessageBitMap.set(
-      ServerProvisionState.PoweredOff,
+    this._hostSecurityOrderStateMessageMap.set(
+      ServiceOrderState.PoweredOff,
       this._translateService.instant('serverServices.hostSecurity.poweredOff')
     );
 
-    this._hostSecurityProvisionMessageBitMap.set(
-      ServerProvisionState.ServiceAvailableFalse,
+    this._hostSecurityOrderStateMessageMap.set(
+      ServiceOrderState.OsAutomationNotReady,
+      this._translateService.instant('serverServices.hostSecurity.osAutomationUnavailable')
+    );
+
+    this._hostSecurityOrderStateMessageMap.set(
+      ServiceOrderState.ChangeUnavailable,
       this._translateService.instant('serverServices.hostSecurity.provisioning')
     );
 
-    this._hostSecurityProvisionMessageBitMap.set(
-      ServerProvisionState.isProcessing,
+    this._hostSecurityOrderStateMessageMap.set(
+      ServiceOrderState.Busy,
       this._translateService.instant('serverServices.hostSecurity.processing')
     );
   }
