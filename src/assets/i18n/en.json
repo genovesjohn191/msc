@@ -622,7 +622,7 @@
     },
     "operatingSystemUpdates": {
       "loading": "Loading services information.",
-      "loadingContent": "Loading server os updates details.",
+      "loadingContent": "Loading OS update details.",
       "errorGettingServerDetails": "Sorry, something’s not right. We weren’t able to retrieve the os update details of the server.",
       "formMessageDefaultError": "Something went wrong while processing your request. Please try again later.",
       "label": "Services",
@@ -663,6 +663,8 @@
       "poweredOff": "This server must be powered on to provision an Add-On.",
       "provisioning": "This server is still being provisioned and Add-Ons can be installed once it is finished.",
       "processing": "This server is currently busy and Add-Ons can be installed once its current operation has completed.",
+      "osAutomationUnavailable": "This server does not currently support OS automation, please contact your account team",
+      "raiseTicketLabel": "raise a ticket",
       "orderlinkLabel": "Click here to order it."
     },
     "serverBackup": {
@@ -672,6 +674,8 @@
       "poweredOff": "This server must be powered on to provision an Add-On.",
       "provisioning": "This server is still being provisioned and Add-Ons can be installed once it is finished.",
       "processing": "This server is currently busy and Add-Ons can be installed once its current operation has completed.",
+      "osAutomationUnavailable": "This server does not currently support OS automation, please contact your account team",
+      "raiseTicketLabel": "raise a ticket",
       "orderlinkLabel": "Click here to order it."
     },
     "hostSecurity": {
@@ -681,12 +685,14 @@
       "activeLabel": {
         "agentConfigured": "Agent Configured"
       },
-      "unprovisionedFallback": "Host Security is not currently ordered for this server, or it has not completed provisioning.",
+      "unprovisionedFallback": "Your server does not currently have Host Security provisioned, or it has been disabled in Trend Deep Security Manager.",
       "poweredOff": "This server must be powered on to provision an Add-On.",
       "provisioning": "This server is still being provisioned and Add-Ons can be installed once it is finished.",
       "processing": "This server is currently busy and Add-Ons can be installed once its current operation has completed.",
+      "osAutomationUnavailable": "This server does not currently support OS automation, please contact your account team",
+      "raiseTicketLabel": "raise a ticket",
       "avLinkLabel": "Click here to order Anti-Virus",
-      "hidsLinkLabel": "here to order HIDS"
+      "hidsLinkLabel": "Click here to order HIDS"
     },
     "antivirus": {
       "title": "Anti-Virus",

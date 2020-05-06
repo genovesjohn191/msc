@@ -32,8 +32,18 @@
     <ng-template #serverBackupUnprovisionedTemplate>
       <mcs-status-message type="info">
         {{ 'serverServices.serverBackup.unprovisionedFallback' | translate }}
-        <ng-container *ngIf="server.provisionStatusBit; else serverBackupOrderLinkTemplate">
+        <ng-container *ngIf="disableMessage(server); else serverBackupOrderLinkTemplate">
           <span>{{ disableMessage(server) }}</span>
+          <ng-container *ngIf="server.getServiceOrderState() === ServiceOrderStateOption.OsAutomationNotReady">
+            <ng-container *mcsAccessControl="['TicketCreate']">
+              or
+              <a (click)="onCreateNewTicket()"
+              mcsId="create-new-ticket"
+              mcsEventTracker="create-new-ticket"
+              mcsEventCategory="ticket"
+              mcsEventLabel="server-services">{{ 'serverServices.serverBackup.raiseTicketLabel' | translate }}</a>
+            </ng-container>
+          </ng-container>.
         </ng-container>
         <ng-template #serverBackupOrderLinkTemplate>
           <a *mcsAccessControl="['OrderEdit']; feature: ['EnableOrderingServerBackupProvision']"

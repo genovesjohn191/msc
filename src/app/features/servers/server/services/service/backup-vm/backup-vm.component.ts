@@ -18,7 +18,7 @@ import {
   backupStatusLabel,
   McsServer,
   ServerServicesAction,
-  ServerProvisionState
+  ServiceOrderState
 } from '@app/models';
 import {
   CommonDefinition,
@@ -62,10 +62,13 @@ export class ServiceBackupVmComponent extends ServerServiceDetailBase implements
   @Output()
   public addVmBackup: EventEmitter<ServerServiceActionDetail>;
 
+  @Output()
+  public createNewTicket: EventEmitter<any>;
+
   private _backupVmStatusDetailsMap: Map<BackupStatusType, BackupVmStatusDetails>;
   private _backupVmStatusDetails: BackupVmStatusDetails;
   private _serverBackupVm: McsServerBackupVm;
-  private _vmBackupProvisionMessageBitMap = new Map<number, string>();
+  private _vmBackupOrderStateMessageMap = new Map<ServiceOrderState, string>();
 
   constructor(
     private _dateTimeService: McsDateTimeService,
@@ -73,6 +76,7 @@ export class ServiceBackupVmComponent extends ServerServiceDetailBase implements
   ) {
     super(ServerServicesView.BackupVm);
     this.addVmBackup = new EventEmitter();
+    this.createNewTicket = new EventEmitter();
     this._createStatusMap();
     this._backupVmStatusDetails = this._backupVmStatusDetailsMap.get(BackupStatusType.NeverAttempted);
   }
@@ -118,9 +122,13 @@ export class ServiceBackupVmComponent extends ServerServiceDetailBase implements
     return getSafeProperty(this._backupVmStatusDetails, (obj) => obj.detailsLinkFlag);
   }
 
+  public get ServiceOrderStateOption(): typeof ServiceOrderState {
+    return ServiceOrderState;
+  }
+
   public disableMessage(server: McsServer): string {
     if (isNullOrEmpty(server)) { return; }
-    return this._vmBackupProvisionMessageBitMap.get(server.provisionStatusBit);
+    return this._vmBackupOrderStateMessageMap.get(server.getServiceOrderState());
   }
 
   public onAddVmBackup(selectedServer: McsServer): void {
@@ -130,20 +138,29 @@ export class ServiceBackupVmComponent extends ServerServiceDetailBase implements
     });
   }
 
+  public onCreateNewTicket(): void {
+    this.createNewTicket.next();
+  }
+
   private _registerProvisionStateBitmap(): void {
-    this._vmBackupProvisionMessageBitMap.set(
-      ServerProvisionState.PoweredOff,
-      this._translate.instant('serverServices.serverBackup.poweredOff')
+    this._vmBackupOrderStateMessageMap.set(
+      ServiceOrderState.PoweredOff,
+      this._translate.instant('serverServices.vmBackup.poweredOff')
     );
 
-    this._vmBackupProvisionMessageBitMap.set(
-      ServerProvisionState.ServiceAvailableFalse,
-      this._translate.instant('serverServices.serverBackup.provisioning')
+    this._vmBackupOrderStateMessageMap.set(
+      ServiceOrderState.OsAutomationNotReady,
+      this._translate.instant('serverServices.vmBackup.osAutomationUnavailable')
     );
 
-    this._vmBackupProvisionMessageBitMap.set(
-      ServerProvisionState.isProcessing,
-      this._translate.instant('serverServices.serverBackup.processing')
+    this._vmBackupOrderStateMessageMap.set(
+      ServiceOrderState.ChangeUnavailable,
+      this._translate.instant('serverServices.vmBackup.provisioning')
+    );
+
+    this._vmBackupOrderStateMessageMap.set(
+      ServiceOrderState.Busy,
+      this._translate.instant('serverServices.vmBackup.processing')
     );
   }
 

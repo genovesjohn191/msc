@@ -32,8 +32,10 @@ import { PlatformType } from '../enumerations/platform-type.enum';
 import { Os } from '../enumerations/os.enum';
 import { McsServerOsUpdatesDetails } from './mcs-server-os-updates-details';
 import { ServerProvisionState } from '../enumerations/server-provision-state.enum';
+import { ServiceOrderState } from '../enumerations/service-order-state.enum';
+import { IMcsServiceOrderStateChangeable } from '@app/core';
 
-export class McsServer extends McsEntityBase {
+export class McsServer extends McsEntityBase implements IMcsServiceOrderStateChangeable {
   @JsonProperty()
   public name: string = undefined;
 
@@ -363,6 +365,7 @@ export class McsServer extends McsEntityBase {
 
   /**
    * Returns the status provisioning in bit
+   * TODO: Change this to the new implementation
    */
   public get provisionStatusBit(): number {
     let statusBit: number = 0;
@@ -372,5 +375,23 @@ export class McsServer extends McsEntityBase {
     if (this.isProcessing) { statusBit |= ServerProvisionState.isProcessing; }
 
     return statusBit;
+  }
+
+  /**
+   * Returns the status provisioning in bit
+   */
+  public getServiceOrderState(): ServiceOrderState {
+    if (this.isProcessing) {
+      return ServiceOrderState.Busy;
+    }
+    if (!this.osAutomationAvailable) {
+      return ServiceOrderState.OsAutomationNotReady;
+    }
+    if (!this.serviceChangeAvailable) {
+      return ServiceOrderState.ChangeUnavailable;
+    }
+    if (this.isPoweredOff) {
+      return ServiceOrderState.PoweredOff;
+    }
   }
 }

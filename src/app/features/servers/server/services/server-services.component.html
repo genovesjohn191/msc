@@ -122,18 +122,32 @@
             <ng-template #avHidsUnprovisionedTemplate>
               <mcs-status-message type="info">
                 {{'serverServices.hostSecurity.unprovisionedFallback' | translate }}
-                <ng-container *ngIf="server.provisionStatusBit; else hostSecurityOrderLinkTemplate">
+                <ng-container *ngIf="hostSecurityDisableMessage(server); else hostSecurityOrderLinkTemplate">
                   <span>{{ hostSecurityDisableMessage(server) }}</span>
+                  <ng-container *ngIf="server.getServiceOrderState() === ServiceOrderStateOption.OsAutomationNotReady">
+                    <ng-container *mcsAccessControl="['TicketCreate']">
+                      or
+                      <a (click)="onCreateNewTicket(server)"
+                      mcsId="create-new-ticket"
+                      mcsEventTracker="create-new-ticket"
+                      mcsEventCategory="ticket"
+                      mcsEventLabel="server-services">{{ 'serverServices.hostSecurity.raiseTicketLabel' | translate }}</a>
+                    </ng-container>
+                  </ng-container>.
                 </ng-container>
                 <ng-template #hostSecurityOrderLinkTemplate>
-                  <span *mcsAccessControl="['OrderEdit']; feature: ['EnableAddonAntiVirusView','EnableOrderingHidsProvision']">
-                    <a (click)="onHostSecurityOrderClick(ServerServicesActionOption.AddAv, server)"
+                  <span *mcsAccessControl="['OrderEdit']; feature: ['EnableOrderingAntiVirusProvision','EnableOrderingHidsProvision']">
+                    <a *mcsAccessControl="[]; feature: ['EnableOrderingAntiVirusProvision']"
+                    (click)="onHostSecurityOrderClick(ServerServicesActionOption.AddAv, server)"
                     mcsId="add-new-av"
                     mcsEventTracker="add-new-av"
                     mcsEventCategory="order"
                     mcsEventLabel="server-services">{{ 'serverServices.hostSecurity.avLinkLabel' | translate }}</a>
-                    or
-                    <a (click)="onHostSecurityOrderClick(ServerServicesActionOption.AddHids, server)"
+                    <ng-container *mcsAccessControl="[]; feature: ['EnableOrderingHidsProvision']">
+                      <span *mcsAccessControl="[]; feature: ['EnableOrderingAntiVirusProvision']"> or </span>
+                    </ng-container>
+                    <a *mcsAccessControl="[]; feature: ['EnableOrderingHidsProvision']"
+                    (click)="onHostSecurityOrderClick(ServerServicesActionOption.AddHids, server)"
                     mcsId="add-new-hids"
                     mcsEventTracker="add-new-hids"
                     mcsEventCategory="order"
@@ -153,7 +167,8 @@
             [server]="server"
             [serverBackupVm]="vmBackup"
             (viewChange)="onViewChange($event)"
-            (addVmBackup)="executeAction($event)">
+            (addVmBackup)="executeAction($event)"
+            (createNewTicket)="onCreateNewTicket(server)">
           </mcs-service-backup-vm>
         </ng-container>
       </ng-container>
@@ -165,7 +180,8 @@
             [server]="server"
             [serverBackupServer]="serverBackup"
             (viewChange)="onViewChange($event)"
-            (addServerBackup)="executeAction($event)">
+            (addServerBackup)="executeAction($event)"
+            (createNewTicket)="onCreateNewTicket(server)">
           </mcs-service-backup-server>
         </ng-container>
       </ng-container>

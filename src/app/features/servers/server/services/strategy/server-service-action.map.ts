@@ -9,6 +9,7 @@ import { ServiceAddAvAction } from './action/add-av-action';
 import { ServiceAddHidsAction } from './action/add-hids-action';
 import { ServiceAddBackupVmAction } from './action/add-backup-vm-action';
 import { ServiceAddBackupServerAction } from './action/add-backup-server-action';
+import { ServiceCreateNewTicketAction } from './action/create-new-ticket.actions';
 
 export type ServerServicesActionRecord = Record<ServerServicesAction, IServerServiceActionStrategy<any>>;
 
@@ -21,5 +22,6 @@ export const serverServicesActionMap: ServerServicesActionRecord = {
   [ServerServicesAction.AddAv]: new ServiceAddAvAction(),
   [ServerServicesAction.AddHids]: new ServiceAddHidsAction(),
   [ServerServicesAction.AddServerBackup]: new ServiceAddBackupServerAction(),
-  [ServerServicesAction.AddVmBackup]: new ServiceAddBackupVmAction()
+  [ServerServicesAction.AddVmBackup]: new ServiceAddBackupVmAction(),
+  [ServerServicesAction.CreateNewTicket]: new ServiceCreateNewTicketAction(),
 };

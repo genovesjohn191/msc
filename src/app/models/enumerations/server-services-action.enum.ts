@@ -8,4 +8,5 @@ export enum ServerServicesAction {
   AddHids = 'AddHids',
   AddVmBackup = 'AddVmBackup',
   AddServerBackup = 'AddServerBackup',
+  CreateNewTicket = 'CreateNewTicket',
 }

@@ -18,7 +18,7 @@ import {
   backupStatusLabel,
   McsServer,
   ServerServicesAction,
-  ServerProvisionState
+  ServiceOrderState
 } from '@app/models';
 import {
   CommonDefinition,
@@ -62,10 +62,13 @@ export class ServiceBackupServerComponent extends ServerServiceDetailBase implem
   @Output()
   public addServerBackup: EventEmitter<ServerServiceActionDetail>;
 
+  @Output()
+  public createNewTicket: EventEmitter<any>;
+
   private _backupServerStatusDetailsMap: Map<BackupStatusType, BackupServerStatusDetails>;
   private _backupServerStatusDetails: BackupServerStatusDetails;
   private _serverBackupServer: McsServerBackupServer;
-  private _serverBackupProvisionMessageBitMap = new Map<number, string>();
+  private _serverBackupOrderStateMessageMap = new Map<ServiceOrderState, string>();
 
   constructor(
     private _dateTimeService: McsDateTimeService,
@@ -73,6 +76,7 @@ export class ServiceBackupServerComponent extends ServerServiceDetailBase implem
   ) {
     super(ServerServicesView.BackupServer);
     this.addServerBackup = new EventEmitter();
+    this.createNewTicket = new EventEmitter();
     this._createStatusMap();
     this._backupServerStatusDetails = this._backupServerStatusDetailsMap.get(BackupStatusType.NeverAttempted);
   }
@@ -118,9 +122,13 @@ export class ServiceBackupServerComponent extends ServerServiceDetailBase implem
     return getSafeProperty(this._backupServerStatusDetails, (obj) => obj.detailsLinkFlag);
   }
 
+  public get ServiceOrderStateOption(): typeof ServiceOrderState {
+    return ServiceOrderState;
+  }
+
   public disableMessage(server: McsServer): string {
     if (isNullOrEmpty(server)) { return; }
-    return this._serverBackupProvisionMessageBitMap.get(server.provisionStatusBit);
+    return this._serverBackupOrderStateMessageMap.get(server.getServiceOrderState());
   }
 
   public onAddServerBackup(selectedServer: McsServer): void {
@@ -130,19 +138,28 @@ export class ServiceBackupServerComponent extends ServerServiceDetailBase implem
     });
   }
 
+  public onCreateNewTicket(): void {
+    this.createNewTicket.next();
+  }
+
   private _registerProvisionStateBitmap(): void {
-    this._serverBackupProvisionMessageBitMap.set(
-      ServerProvisionState.PoweredOff,
+    this._serverBackupOrderStateMessageMap.set(
+      ServiceOrderState.PoweredOff,
       this._translate.instant('serverServices.serverBackup.poweredOff')
     );
 
-    this._serverBackupProvisionMessageBitMap.set(
-      ServerProvisionState.ServiceAvailableFalse,
+    this._serverBackupOrderStateMessageMap.set(
+      ServiceOrderState.OsAutomationNotReady,
+      this._translate.instant('serverServices.serverBackup.osAutomationUnavailable')
+    );
+
+    this._serverBackupOrderStateMessageMap.set(
+      ServiceOrderState.ChangeUnavailable,
       this._translate.instant('serverServices.serverBackup.provisioning')
     );
 
-    this._serverBackupProvisionMessageBitMap.set(
-      ServerProvisionState.isProcessing,
+    this._serverBackupOrderStateMessageMap.set(
+      ServiceOrderState.Busy,
       this._translate.instant('serverServices.serverBackup.processing')
     );
   }
