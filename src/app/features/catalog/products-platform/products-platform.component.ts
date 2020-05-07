@@ -65,6 +65,7 @@ export class ProductsPlatformComponent implements OnInit {
           id: platform.id,
           catalogViewType: CatalogViewType.ProductPlatform,
           catalogType: CatalogType.Products,
+          platformType: platform.name,
           header: createObject(CatalogHeader, {
             title: platform.name
           })
