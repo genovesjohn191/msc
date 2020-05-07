@@ -3,7 +3,7 @@ import { McsEnumSerializationBase } from '../serialization/mcs-enum-serializatio
 export enum JobType {
   Undefined = 0,
   // Caching
-  RefreshProductCatalogCache = 1,
+  CatalogRefreshCache  = 1,
 
   // Jobs for "/servers" endpoint must use prefix 100XXX followed by 3 digit number
   SelfManagedServerCreate = 100001,

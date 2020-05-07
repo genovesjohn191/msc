@@ -151,7 +151,7 @@ export class McsNotificationContextService implements McsDisposable {
    */
   private _createFilteredJobList(): void {
     this._excludedJobTypes.push(JobType.Undefined);
-    this._excludedJobTypes.push(JobType.RefreshProductCatalogCache);
+    this._excludedJobTypes.push(JobType.CatalogRefreshCache );
   }
 
   /**
