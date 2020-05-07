@@ -381,17 +381,17 @@ export class McsServer extends McsEntityBase implements IMcsServiceOrderStateCha
    * Returns the status provisioning in bit
    */
   public getServiceOrderState(): ServiceOrderState {
-    if (this.isProcessing) {
-      return ServiceOrderState.Busy;
-    }
-    if (!this.osAutomationAvailable) {
-      return ServiceOrderState.OsAutomationNotReady;
-    }
     if (!this.serviceChangeAvailable) {
       return ServiceOrderState.ChangeUnavailable;
     }
+    if (this.isProcessing) {
+      return ServiceOrderState.Busy;
+    }
     if (this.isPoweredOff) {
       return ServiceOrderState.PoweredOff;
+    }
+    if (!this.osAutomationAvailable) {
+      return ServiceOrderState.OsAutomationNotReady;
     }
   }
 }
