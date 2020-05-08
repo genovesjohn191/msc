@@ -255,7 +255,7 @@ export class ServerNewComponent
       serverCreate.os.name = selectedImage.name;
       serverCreate.os.type = OsType.Image;
     } else {
-      serverCreate.os.name = selectedImage.itemName;
+      serverCreate.os.name = selectedImage.name;
       serverCreate.os.type = OsType.Template;
     }
 
