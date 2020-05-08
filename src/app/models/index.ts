@@ -39,7 +39,6 @@ export * from './enumerations/hids-protection-level.enum';
 export * from './enumerations/hids-status.enum';
 export * from './enumerations/server-services-action.enum';
 export * from './enumerations/server-services-view.enum';
-export * from './enumerations/server-provision-state.enum';
 export * from './enumerations/service-order-state.enum';
 export * from './enumerations/catalog-item-type.enum';
 export * from './enumerations/catalog-view-type.enum';

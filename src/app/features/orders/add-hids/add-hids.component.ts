@@ -42,9 +42,9 @@ import {
   McsOrderServerHidsAdd,
   McsOptionGroup,
   McsEntityProvision,
-  ServerProvisionState,
   McsServerHostSecurityHids,
-  McsPermission
+  McsPermission,
+  ServiceOrderState
 } from '@app/models';
 import { McsFormGroupDirective } from '@app/shared';
 import { McsApiService } from '@app/services';
@@ -93,7 +93,7 @@ export class AddHidsComponent extends McsOrderWizardBase implements OnInit, OnDe
 
   private _valueChangesSubject = new Subject<void>();
   private _selectedServerHandler: Subscription;
-  private _backupProvisionMessageBitMap = new Map<number, string>();
+  private _hidsOrderStateMessageMap = new Map<ServiceOrderState, string>();
 
   constructor(
     _injector: Injector,
@@ -222,17 +222,17 @@ export class AddHidsComponent extends McsOrderWizardBase implements OnInit, OnDe
 
               let platformName = getSafeProperty(server, (obj) => obj.platform.resourceName) || 'Others';
               let foundGroup = serverGroups.find((serverGroup) => serverGroup.groupName === platformName);
-              let serverBackupDetails = this._createServerBackupDetails(server, hids);
+              let hidsDetails = this._createHidsDetails(server, hids);
 
               if (!isNullOrEmpty(foundGroup)) {
                 foundGroup.options.push(
-                  createObject(McsOption, { text: server.name, value: serverBackupDetails })
+                  createObject(McsOption, { text: server.name, value: hidsDetails })
                 );
                 return;
               }
               serverGroups.push(
                 new McsOptionGroup(platformName,
-                  createObject(McsOption, { text: server.name, value: serverBackupDetails })
+                  createObject(McsOption, { text: server.name, value: hidsDetails })
                 )
               );
             });
@@ -243,33 +243,33 @@ export class AddHidsComponent extends McsOrderWizardBase implements OnInit, OnDe
     );
   }
 
-  private _createServerBackupDetails(
+  private _createHidsDetails(
     server: McsServer,
     hids: McsServerHostSecurityHids[]
   ): McsEntityProvision<McsServer> {
-    let serverBackupDetails = new McsEntityProvision<McsServer>();
-    serverBackupDetails.entity = server;
+    let hidsDetails = new McsEntityProvision<McsServer>();
+    hidsDetails.entity = server;
 
     // Return immediately when server has been found
     let serverHidsFound = hids && hids.find((hid) => hid.serverId === server.id);
     if (serverHidsFound) {
-      serverBackupDetails.disabled = true;
-      serverBackupDetails.provisioned = true;
-      return serverBackupDetails;
+      hidsDetails.disabled = true;
+      hidsDetails.provisioned = true;
+      return hidsDetails;
     }
 
-    let serverProvisionMessage = this._backupProvisionMessageBitMap.get(server.provisionStatusBit);
-    if (isNullOrEmpty(serverProvisionMessage)) { return serverBackupDetails; }
+    let serverProvisionMessage = this._hidsOrderStateMessageMap.get(server.getServiceOrderState());
+    if (isNullOrEmpty(serverProvisionMessage)) { return hidsDetails; }
 
-    serverBackupDetails.message = serverProvisionMessage;
-    serverBackupDetails.disabled = true;
-    serverBackupDetails.provisioned = false;
-    return serverBackupDetails;
+    hidsDetails.message = serverProvisionMessage;
+    hidsDetails.disabled = true;
+    hidsDetails.provisioned = false;
+    return hidsDetails;
   }
 
-  private _initializeProtectionLevelOptions(): void {
-    this.protectionLevelOptions.push(new McsOption(HidsProtectionLevel.Protect, hidsProtectionLevelText[HidsProtectionLevel.Protect]));
-    this.protectionLevelOptions.push(new McsOption(HidsProtectionLevel.Detect, hidsProtectionLevelText[HidsProtectionLevel.Detect]));
+  private _onSelectedServer(server: McsServer): void {
+    if (isNullOrEmpty(server)) { return; }
+    this.fcServer.setValue(server);
   }
 
   private _registerFormGroups() {
@@ -290,40 +290,37 @@ export class AddHidsComponent extends McsOrderWizardBase implements OnInit, OnDe
     this._eventDispatcher.dispatch(McsEvent.serverAddHidsSelected);
   }
 
-  private _onSelectedServer(server: McsServer): void {
-    if (isNullOrEmpty(server)) { return; }
-    this.fcServer.setValue(server);
+  private _initializeProtectionLevelOptions(): void {
+    this.protectionLevelOptions.push(new McsOption(HidsProtectionLevel.Protect, hidsProtectionLevelText[HidsProtectionLevel.Protect]));
+    this.protectionLevelOptions.push(new McsOption(HidsProtectionLevel.Detect, hidsProtectionLevelText[HidsProtectionLevel.Detect]));
   }
 
   private _registerProvisionStateBitmap(): void {
-    this._backupProvisionMessageBitMap.set(
-      ServerProvisionState.PoweredOff,
+    this._hidsOrderStateMessageMap.set(
+      ServiceOrderState.PoweredOff,
       this.translateService.instant('orderAddHids.details.server.serverDisabled', {
         server_issue: this.translateService.instant('orderAddHids.details.server.serverPoweredOff')
       })
     );
 
-    this._backupProvisionMessageBitMap.set(
-      ServerProvisionState.ServiceAvailableFalse,
+    this._hidsOrderStateMessageMap.set(
+      ServiceOrderState.ChangeUnavailable,
       this.translateService.instant('orderAddHids.details.server.serverDisabled', {
         server_issue: this.translateService.instant('orderAddHids.details.server.serverChangeAvailableFalse')
       })
     );
 
-    this._backupProvisionMessageBitMap.set(
-      ServerProvisionState.OsAutomationFalse,
+    this._hidsOrderStateMessageMap.set(
+      ServiceOrderState.OsAutomationNotReady,
       this.translateService.instant('orderAddHids.details.server.serverDisabled', {
         server_issue: this.translateService.instant('orderAddHids.details.server.serverOsAutomationFalse')
       })
     );
 
-    this._backupProvisionMessageBitMap.set(
-      ServerProvisionState.PoweredOff | ServerProvisionState.OsAutomationFalse,
+    this._hidsOrderStateMessageMap.set(
+      ServiceOrderState.Busy,
       this.translateService.instant('orderAddHids.details.server.serverDisabled', {
-        server_issue: `
-          ${this.translateService.instant('orderAddHids.details.server.serverPoweredOff')} and
-          ${this.translateService.instant('orderAddHids.details.server.serverOsAutomationFalse')}
-        `
+        server_issue: this.translateService.instant('orderAddHids.details.server.busy')
       })
     );
   }
