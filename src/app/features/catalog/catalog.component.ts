@@ -41,7 +41,7 @@ import {
   unsubscribeSafely,
   isNullOrEmpty,
   getSafeProperty,
-  createObject
+  createObject,
 } from '@app/utilities';
 import { Search } from '@app/shared';
 import {
