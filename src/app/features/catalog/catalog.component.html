@@ -48,16 +48,18 @@
                 <strong>{{ 'catalog.platformLabel' | translate | translate }}</strong>
                 <mcs-radio-button-group orientation="vertical" [value]="activeCatalogItem.platformType">
                   <ng-container *ngFor="let platform of sortPlatforms(productCatalogMenu.catalogItem.content.platforms)">
-                    <mcs-item>
-                      <mcs-radio-button *ngIf="platform.families | mcsIsNotNullOrEmpty" mcsId [value]="platform.name"
-                        mcsId="select-product-platform"
-                        mcsEventTracker="catalog-product-platform-option"
-                        mcsEventCategory="catalog"
-                        mcsEventLabel="catalog-side-menu"
-                        (click)="onProductsPlatformChange(platform)">
-                        {{ platform.name }}
-                      </mcs-radio-button>
-                    </mcs-item>
+                    <ng-container *ngIf="platform.families | mcsIsNotNullOrEmpty">
+                      <mcs-item *ngIf="platform.families | mcsArrayHasElement">
+                        <mcs-radio-button  mcsId [value]="platform"
+                          mcsId="select-product-platform"
+                          mcsEventTracker="catalog-product-platform-option"
+                          mcsEventCategory="catalog"
+                          mcsEventLabel="catalog-side-menu"
+                          (click)="onProductsPlatformChange(platform)">
+                          {{ platform.name }}
+                        </mcs-radio-button>
+                      </mcs-item>
+                    </ng-container>
                   </ng-container>
                 </mcs-radio-button-group>
               </mcs-section>

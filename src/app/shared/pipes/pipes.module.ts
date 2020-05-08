@@ -12,6 +12,7 @@ import { PluralPipe } from './plural.pipe';
 import { TextPlaceholderPipe } from './text-placeholder.pipe';
 import { IsNotNullOrEmptyPipe } from './is-not-null-or-empty.pipe';
 import { IsNotNullOrUndefinedPipe } from './is-not-null-or-undefined.pipe';
+import { ArrayHasElement } from './array-has-element.pipe';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { IsNotNullOrUndefinedPipe } from './is-not-null-or-undefined.pipe';
     PluralPipe,
     TextPlaceholderPipe,
     IsNotNullOrEmptyPipe,
-    IsNotNullOrUndefinedPipe
+    IsNotNullOrUndefinedPipe,
+    ArrayHasElement,
   ],
   exports: [
     NewLinesPipe,
@@ -40,7 +42,8 @@ import { IsNotNullOrUndefinedPipe } from './is-not-null-or-undefined.pipe';
     PluralPipe,
     TextPlaceholderPipe,
     IsNotNullOrEmptyPipe,
-    IsNotNullOrUndefinedPipe
+    IsNotNullOrUndefinedPipe,
+    ArrayHasElement
   ],
   providers: [
     DecimalPipe,
