@@ -24,7 +24,7 @@ import {
   tap,
   switchMap
 } from 'rxjs/operators';
-import { TranslateService } from '@ngx-translate/core';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import {
   McsOrderWizardBase,
   CoreValidators,
@@ -40,10 +40,10 @@ import {
   McsOptionGroup,
   McsOrderServerBackupAdd,
   McsBackUpAggregationTarget,
-  ServerProvisionState,
   McsEntityProvision,
   McsServer,
-  McsServerBackupServer
+  McsServerBackupServer,
+  ServiceOrderState
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -57,9 +57,8 @@ import {
 } from '@app/utilities';
 import { McsFormGroupDirective } from '@app/shared';
 import { OrderDetails } from '@app/features-shared';
-import { AddServerBackupService } from './add-server-backup.service';
 import { McsEvent } from '@app/events';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+import { AddServerBackupService } from './add-server-backup.service';
 
 const ADD_SERVER_BACKUP = Guid.newGuid().toString();
 
@@ -80,7 +79,7 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
   private _serverBackup: McsOrderServerBackupAdd;
   private _valueChangesSubject = new Subject<void>();
   private _selectedServerHandler: Subscription;
-  private _backupProvisionMessageBitMap = new Map<number, string>();
+  private _backupProvisionMessageBitMap = new Map<ServiceOrderState, string>();
 
   @ViewChild('fgManageBackupServer', { static: false })
   public set fgManageBackupServer(value: IMcsFormGroup) {
@@ -106,7 +105,6 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
     _injector: Injector,
     private _formBuilder: FormBuilder,
     private _eventDispatcher: EventBusDispatcherService,
-    private _translate: TranslateService,
     private _serverBackupService: AddServerBackupService,
     private _apiService: McsApiService,
   ) {
@@ -173,60 +171,6 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
       serverId: selectedServerId
     };
     this.submitOrderWorkflow(workflow);
-  }
-
-  private _registerFormGroup(): void {
-    this.fcServer = new FormControl('', [CoreValidators.required]);
-
-    this.fgServerBackup = this._formBuilder.group({
-      fcServer: this.fcServer
-    });
-  }
-
-  private _registerEvents(): void {
-    this._selectedServerHandler = this._eventDispatcher.addEventListener(
-      McsEvent.serverAddBackupServerSelected, this._onSelectedServer.bind(this));
-
-    // Invoke the event initially
-    this._eventDispatcher.dispatch(McsEvent.serverAddBackupServerSelected);
-  }
-
-  private _onSelectedServer(server: McsServer): void {
-    if (isNullOrEmpty(server)) { return; }
-    this.fcServer.setValue(server);
-  }
-
-  private _registerProvisionStateBitmap(): void {
-    this._backupProvisionMessageBitMap.set(
-      ServerProvisionState.PoweredOff,
-      this._translate.instant('orderAddServerBackup.detailsStep.serverDisabled', {
-        server_issue: this._translate.instant('orderAddServerBackup.detailsStep.serverPoweredOff')
-      })
-    );
-
-    this._backupProvisionMessageBitMap.set(
-      ServerProvisionState.ServiceAvailableFalse,
-      this._translate.instant('orderAddServerBackup.detailsStep.serverDisabled', {
-        server_issue: this._translate.instant('orderAddServerBackup.detailsStep.serverChangeAvailableFalse')
-      })
-    );
-
-    this._backupProvisionMessageBitMap.set(
-      ServerProvisionState.OsAutomationFalse,
-      this._translate.instant('orderAddServerBackup.detailsStep.serverDisabled', {
-        server_issue: this._translate.instant('orderAddServerBackup.detailsStep.serverOsAutomationFalse')
-      })
-    );
-
-    this._backupProvisionMessageBitMap.set(
-      ServerProvisionState.PoweredOff | ServerProvisionState.OsAutomationFalse,
-      this._translate.instant('orderAddServerBackup.detailsStep.serverDisabled', {
-        server_issue: `
-          ${this._translate.instant('orderAddServerBackup.detailsStep.serverPoweredOff')} and
-          ${this._translate.instant('orderAddServerBackup.detailsStep.serverOsAutomationFalse')}
-        `
-      })
-    );
   }
 
   private _subscribeToValueChanges(): void {
@@ -302,14 +246,14 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
     serverBackupDetails.entity = server;
 
     // Return immediately when server has been found
-    let serverHidsFound = backups && backups.find((backup) => backup.serverServiceId === server.serviceId);
-    if (serverHidsFound) {
+    let serverBackupFound = backups && backups.find((backup) => backup.serverServiceId === server.serviceId);
+    if (serverBackupFound) {
       serverBackupDetails.disabled = true;
       serverBackupDetails.provisioned = true;
       return serverBackupDetails;
     }
 
-    let serverProvisionMessage = this._backupProvisionMessageBitMap.get(server.provisionStatusBit);
+    let serverProvisionMessage = this._backupProvisionMessageBitMap.get(server.getServiceOrderState());
     if (isNullOrEmpty(serverProvisionMessage)) { return serverBackupDetails; }
 
     serverBackupDetails.message = serverProvisionMessage;
@@ -321,6 +265,57 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
   private _subscribeToAggregationTargets(): void {
     this.aggregationTargets$ = this._apiService.getBackupAggregationTargets().pipe(
       map((response) => response && response.collection)
+    );
+  }
+
+  private _onSelectedServer(server: McsServer): void {
+    if (isNullOrEmpty(server)) { return; }
+    this.fcServer.setValue(server);
+  }
+
+  private _registerFormGroup(): void {
+    this.fcServer = new FormControl('', [CoreValidators.required]);
+
+    this.fgServerBackup = this._formBuilder.group({
+      fcServer: this.fcServer
+    });
+  }
+
+  private _registerEvents(): void {
+    this._selectedServerHandler = this._eventDispatcher.addEventListener(
+      McsEvent.serverAddBackupServerSelected, this._onSelectedServer.bind(this));
+
+    // Invoke the event initially
+    this._eventDispatcher.dispatch(McsEvent.serverAddBackupServerSelected);
+  }
+
+  private _registerProvisionStateBitmap(): void {
+    this._backupProvisionMessageBitMap.set(
+      ServiceOrderState.PoweredOff,
+      this.translateService.instant('orderAddServerBackup.detailsStep.serverDisabled', {
+        server_issue: this.translateService.instant('orderAddServerBackup.detailsStep.serverPoweredOff')
+      })
+    );
+
+    this._backupProvisionMessageBitMap.set(
+      ServiceOrderState.ChangeUnavailable,
+      this.translateService.instant('orderAddServerBackup.detailsStep.serverDisabled', {
+        server_issue: this.translateService.instant('orderAddServerBackup.detailsStep.serverChangeAvailableFalse')
+      })
+    );
+
+    this._backupProvisionMessageBitMap.set(
+      ServiceOrderState.OsAutomationNotReady,
+      this.translateService.instant('orderAddServerBackup.detailsStep.serverDisabled', {
+        server_issue: this.translateService.instant('orderAddServerBackup.detailsStep.serverOsAutomationFalse')
+      })
+    );
+
+    this._backupProvisionMessageBitMap.set(
+      ServiceOrderState.Busy,
+      this.translateService.instant('orderAddServerBackup.detailsStep.serverDisabled', {
+        server_issue: this.translateService.instant('orderAddServerBackup.detailsStep.busy')
+      })
     );
   }
 }

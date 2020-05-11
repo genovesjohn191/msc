@@ -23,6 +23,7 @@ import {
   map,
   switchMap
 } from 'rxjs/operators';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import {
   McsOrderWizardBase,
   McsFormGroupService,
@@ -35,12 +36,12 @@ import {
   McsOrderCreate,
   McsOrderItemCreate,
   OrderIdType,
-  ServerProvisionState,
   McsEntityProvision,
   McsServerHostSecurityAntiVirus,
   McsOptionGroup,
   McsOption,
-  McsPermission
+  McsPermission,
+  ServiceOrderState
 } from '@app/models';
 import { McsFormGroupDirective } from '@app/shared';
 import { OrderDetails } from '@app/features-shared';
@@ -55,7 +56,6 @@ import {
 } from '@app/utilities';
 import { AddAntiVirusService } from './add-anti-virus.service';
 import { McsEvent } from '@app/events';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 
 interface AntiVirusServers {
   provisioned: boolean;
@@ -81,7 +81,7 @@ export class AddAntiVirusComponent extends McsOrderWizardBase implements OnInit,
 
   private _destroySubject = new Subject<void>();
   private _selectedServerHandler: Subscription;
-  private _backupProvisionMessageBitMap = new Map<number, string>();
+  private _avOrderStateMessageMap = new Map<ServiceOrderState, string>();
 
   constructor(
     _injector: Injector,
@@ -198,17 +198,17 @@ export class AddAntiVirusComponent extends McsOrderWizardBase implements OnInit,
 
               let platformName = getSafeProperty(server, (obj) => obj.platform.resourceName) || 'Others';
               let foundGroup = serverGroups.find((serverGroup) => serverGroup.groupName === platformName);
-              let serverBackupDetails = this._createServerBackupDetails(server, avList);
+              let avDetails = this._createAvDetails(server, avList);
 
               if (!isNullOrEmpty(foundGroup)) {
                 foundGroup.options.push(
-                  createObject(McsOption, { text: server.name, value: serverBackupDetails })
+                  createObject(McsOption, { text: server.name, value: avDetails })
                 );
                 return;
               }
               serverGroups.push(
                 new McsOptionGroup(platformName,
-                  createObject(McsOption, { text: server.name, value: serverBackupDetails })
+                  createObject(McsOption, { text: server.name, value: avDetails })
                 )
               );
             });
@@ -219,28 +219,28 @@ export class AddAntiVirusComponent extends McsOrderWizardBase implements OnInit,
     );
   }
 
-  private _createServerBackupDetails(
+  private _createAvDetails(
     server: McsServer,
     avList: McsServerHostSecurityAntiVirus[]
   ): McsEntityProvision<McsServer> {
-    let serverBackupDetails = new McsEntityProvision<McsServer>();
-    serverBackupDetails.entity = server;
+    let avDetails = new McsEntityProvision<McsServer>();
+    avDetails.entity = server;
 
     // Return immediately when server has been found
-    let serverHidsFound = avList && avList.find((av) => av.serverId === server.id);
-    if (serverHidsFound) {
-      serverBackupDetails.disabled = true;
-      serverBackupDetails.provisioned = true;
-      return serverBackupDetails;
+    let serverAvFound = avList && avList.find((av) => av.serverId === server.id);
+    if (serverAvFound) {
+      avDetails.disabled = true;
+      avDetails.provisioned = true;
+      return avDetails;
     }
 
-    let serverProvisionMessage = this._backupProvisionMessageBitMap.get(server.provisionStatusBit);
-    if (isNullOrEmpty(serverProvisionMessage)) { return serverBackupDetails; }
+    let serverProvisionMessage = this._avOrderStateMessageMap.get(server.getServiceOrderState());
+    if (isNullOrEmpty(serverProvisionMessage)) { return avDetails; }
 
-    serverBackupDetails.message = serverProvisionMessage;
-    serverBackupDetails.disabled = true;
-    serverBackupDetails.provisioned = false;
-    return serverBackupDetails;
+    avDetails.message = serverProvisionMessage;
+    avDetails.disabled = true;
+    avDetails.provisioned = false;
+    return avDetails;
   }
 
   private _validateFormFields(): boolean {
@@ -252,6 +252,11 @@ export class AddAntiVirusComponent extends McsOrderWizardBase implements OnInit,
   private _touchInvalidFields(): void {
     this._formGroupService.touchAllFormFields(this.fgAddAntiVirusDetails);
     this._formGroupService.scrollToFirstInvalidField(this._elementRef.nativeElement);
+  }
+
+  private _onSelectedServer(server: McsServer): void {
+    if (isNullOrEmpty(server)) { return; }
+    this.fcServer.setValue(server);
   }
 
   private _registerFormGroups() {
@@ -275,40 +280,32 @@ export class AddAntiVirusComponent extends McsOrderWizardBase implements OnInit,
     this._eventDispatcher.dispatch(McsEvent.serverAddAvSelected);
   }
 
-  private _onSelectedServer(server: McsServer): void {
-    if (isNullOrEmpty(server)) { return; }
-    this.fcServer.setValue(server);
-  }
-
   private _registerProvisionStateBitmap(): void {
-    this._backupProvisionMessageBitMap.set(
-      ServerProvisionState.PoweredOff,
+    this._avOrderStateMessageMap.set(
+      ServiceOrderState.PoweredOff,
       this.translateService.instant('orderAddAntiVirus.details.server.serverDisabled', {
         server_issue: this.translateService.instant('orderAddAntiVirus.details.server.serverPoweredOff')
       })
     );
 
-    this._backupProvisionMessageBitMap.set(
-      ServerProvisionState.ServiceAvailableFalse,
+    this._avOrderStateMessageMap.set(
+      ServiceOrderState.ChangeUnavailable,
       this.translateService.instant('orderAddAntiVirus.details.server.serverDisabled', {
         server_issue: this.translateService.instant('orderAddAntiVirus.details.server.serverChangeAvailableFalse')
       })
     );
 
-    this._backupProvisionMessageBitMap.set(
-      ServerProvisionState.OsAutomationFalse,
+    this._avOrderStateMessageMap.set(
+      ServiceOrderState.OsAutomationNotReady,
       this.translateService.instant('orderAddAntiVirus.details.server.serverDisabled', {
         server_issue: this.translateService.instant('orderAddAntiVirus.details.server.serverOsAutomationFalse')
       })
     );
 
-    this._backupProvisionMessageBitMap.set(
-      ServerProvisionState.PoweredOff | ServerProvisionState.OsAutomationFalse,
+    this._avOrderStateMessageMap.set(
+      ServiceOrderState.Busy,
       this.translateService.instant('orderAddAntiVirus.details.server.serverDisabled', {
-        server_issue: `
-          ${this.translateService.instant('orderAddAntiVirus.details.server.serverPoweredOff')} and
-          ${this.translateService.instant('orderAddAntiVirus.details.server.serverOsAutomationFalse')}
-        `
+        server_issue:  this.translateService.instant('orderAddAntiVirus.details.server.busy')
       })
     );
   }

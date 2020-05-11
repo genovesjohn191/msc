@@ -31,7 +31,6 @@ import { McsEntityBase } from '../common/mcs-entity.base';
 import { PlatformType } from '../enumerations/platform-type.enum';
 import { Os } from '../enumerations/os.enum';
 import { McsServerOsUpdatesDetails } from './mcs-server-os-updates-details';
-import { ServerProvisionState } from '../enumerations/server-provision-state.enum';
 import { ServiceOrderState } from '../enumerations/service-order-state.enum';
 import { IMcsServiceOrderStateChangeable } from '@app/core';
 
@@ -361,20 +360,6 @@ export class McsServer extends McsEntityBase implements IMcsServiceOrderStateCha
    */
   public get isInviewNone(): boolean {
     return this.inViewLevel === InviewLevel.None;
-  }
-
-  /**
-   * Returns the status provisioning in bit
-   * TODO: Change this to the new implementation
-   */
-  public get provisionStatusBit(): number {
-    let statusBit: number = 0;
-    if (this.isPoweredOff) { statusBit |= ServerProvisionState.PoweredOff; }
-    if (!this.osAutomationAvailable) { statusBit |= ServerProvisionState.OsAutomationFalse; }
-    if (!this.serviceChangeAvailable) { statusBit |= ServerProvisionState.ServiceAvailableFalse; }
-    if (this.isProcessing) { statusBit |= ServerProvisionState.isProcessing; }
-
-    return statusBit;
   }
 
   /**

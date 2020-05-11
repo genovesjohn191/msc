@@ -24,6 +24,7 @@ import {
   map,
   switchMap
 } from 'rxjs/operators';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import {
   McsOrderWizardBase,
   OrderRequester,
@@ -42,7 +43,7 @@ import {
   McsServer,
   McsServerBackupVm,
   McsEntityProvision,
-  ServerProvisionState
+  ServiceOrderState
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -55,11 +56,9 @@ import {
   getSafeFormValue
 } from '@app/utilities';
 import { McsFormGroupDirective } from '@app/shared';
+import { McsEvent } from '@app/events';
 import { OrderDetails } from '@app/features-shared';
 import { AddVmBackupService } from './add-vm-backup.service';
-import { TranslateService } from '@ngx-translate/core';
-import { McsEvent } from '@app/events';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 
 const ADD_VM_BACKUP = Guid.newGuid().toString();
 
@@ -80,7 +79,7 @@ export class AddVmBackupComponent extends McsOrderWizardBase implements OnInit, 
   private _vmBackup: McsOrderVmBackupAdd;
   private _valueChangesSubject = new Subject<void>();
   private _selectedServerHandler: Subscription;
-  private _backupProvisionMessageBitMap = new Map<number, string>();
+  private _backupProvisionMessageBitMap = new Map<ServiceOrderState, string>();
 
   @ViewChild('fgManageBackupVm', { static: false })
   public set fgManageBackupVm(value: IMcsFormGroup) {
@@ -105,7 +104,6 @@ export class AddVmBackupComponent extends McsOrderWizardBase implements OnInit, 
   constructor(
     _injector: Injector,
     private _formBuilder: FormBuilder,
-    private _translate: TranslateService,
     private _eventDispatcher: EventBusDispatcherService,
     private _vmBackupService: AddVmBackupService,
     private _apiService: McsApiService,
@@ -175,59 +173,6 @@ export class AddVmBackupComponent extends McsOrderWizardBase implements OnInit, 
     this.submitOrderWorkflow(workflow);
   }
 
-  private _registerFormGroup(): void {
-    this.fcServer = new FormControl('', [CoreValidators.required]);
-    this.fgVmBackup = this._formBuilder.group({
-      fcServer: this.fcServer,
-    });
-  }
-
-  private _registerEvents(): void {
-    this._selectedServerHandler = this._eventDispatcher.addEventListener(
-      McsEvent.serverAddBackupVmSelected, this._onSelectedServer.bind(this));
-
-    // Invoke the event initially
-    this._eventDispatcher.dispatch(McsEvent.serverAddBackupVmSelected);
-  }
-
-  private _onSelectedServer(server: McsServer): void {
-    if (isNullOrEmpty(server)) { return; }
-    this.fcServer.setValue(server);
-  }
-
-  private _registerProvisionStateBitmap(): void {
-    this._backupProvisionMessageBitMap.set(
-      ServerProvisionState.PoweredOff,
-      this._translate.instant('orderAddVmBackup.detailsStep.serverDisabled', {
-        server_issue: this._translate.instant('orderAddVmBackup.detailsStep.serverPoweredOff')
-      })
-    );
-
-    this._backupProvisionMessageBitMap.set(
-      ServerProvisionState.ServiceAvailableFalse,
-      this._translate.instant('orderAddVmBackup.detailsStep.serverDisabled', {
-        server_issue: this._translate.instant('orderAddVmBackup.detailsStep.serverChangeAvailableFalse')
-      })
-    );
-
-    this._backupProvisionMessageBitMap.set(
-      ServerProvisionState.OsAutomationFalse,
-      this._translate.instant('orderAddVmBackup.detailsStep.serverDisabled', {
-        server_issue: this._translate.instant('orderAddVmBackup.detailsStep.serverOsAutomationFalse')
-      })
-    );
-
-    this._backupProvisionMessageBitMap.set(
-      ServerProvisionState.PoweredOff | ServerProvisionState.OsAutomationFalse,
-      this._translate.instant('orderAddVmBackup.detailsStep.serverDisabled', {
-        server_issue: `
-          ${this._translate.instant('orderAddVmBackup.detailsStep.serverPoweredOff')} and
-          ${this._translate.instant('orderAddVmBackup.detailsStep.serverOsAutomationFalse')}
-        `
-      })
-    );
-  }
-
   private _subscribeToValueChanges(): void {
     this._valueChangesSubject.next();
     zip(
@@ -272,17 +217,17 @@ export class AddVmBackupComponent extends McsOrderWizardBase implements OnInit, 
 
               let platformName = getSafeProperty(server, (obj) => obj.platform.resourceName) || 'Others';
               let foundGroup = serverGroups.find((serverGroup) => serverGroup.groupName === platformName);
-              let serverBackupDetails = this._createServerBackupDetails(server, backups);
+              let vmBackupDetails = this._createVmBackupDetails(server, backups);
 
               if (!isNullOrEmpty(foundGroup)) {
                 foundGroup.options.push(
-                  createObject(McsOption, { text: server.name, value: serverBackupDetails })
+                  createObject(McsOption, { text: server.name, value: vmBackupDetails })
                 );
                 return;
               }
               serverGroups.push(
                 new McsOptionGroup(platformName,
-                  createObject(McsOption, { text: server.name, value: serverBackupDetails })
+                  createObject(McsOption, { text: server.name, value: vmBackupDetails })
                 )
               );
             });
@@ -293,33 +238,83 @@ export class AddVmBackupComponent extends McsOrderWizardBase implements OnInit, 
     );
   }
 
-  private _createServerBackupDetails(
+  private _createVmBackupDetails(
     server: McsServer,
     backups: McsServerBackupVm[]
   ): McsEntityProvision<McsServer> {
-    let serverBackupDetails = new McsEntityProvision<McsServer>();
-    serverBackupDetails.entity = server;
+    let vmBackupDetails = new McsEntityProvision<McsServer>();
+    vmBackupDetails.entity = server;
 
     // Return immediately when server has been found
-    let serverHidsFound = backups && backups.find((backup) => backup.serverServiceId === server.serviceId);
-    if (serverHidsFound) {
-      serverBackupDetails.disabled = true;
-      serverBackupDetails.provisioned = true;
-      return serverBackupDetails;
+    let serverBackupFound = backups && backups.find((backup) => backup.serverServiceId === server.serviceId);
+    if (serverBackupFound) {
+      vmBackupDetails.disabled = true;
+      vmBackupDetails.provisioned = true;
+      return vmBackupDetails;
     }
 
-    let serverProvisionMessage = this._backupProvisionMessageBitMap.get(server.provisionStatusBit);
-    if (isNullOrEmpty(serverProvisionMessage)) { return serverBackupDetails; }
+    let serverProvisionMessage = this._backupProvisionMessageBitMap.get(server.getServiceOrderState());
+    if (isNullOrEmpty(serverProvisionMessage)) { return vmBackupDetails; }
 
-    serverBackupDetails.message = serverProvisionMessage;
-    serverBackupDetails.disabled = true;
-    serverBackupDetails.provisioned = false;
-    return serverBackupDetails;
+    vmBackupDetails.message = serverProvisionMessage;
+    vmBackupDetails.disabled = true;
+    vmBackupDetails.provisioned = false;
+    return vmBackupDetails;
   }
 
   private _subscribeToAggregationTargets(): void {
     this.aggregationTargets$ = this._apiService.getBackupAggregationTargets().pipe(
       map((response) => response && response.collection)
+    );
+  }
+
+  private _onSelectedServer(server: McsServer): void {
+    if (isNullOrEmpty(server)) { return; }
+    this.fcServer.setValue(server);
+  }
+
+  private _registerFormGroup(): void {
+    this.fcServer = new FormControl('', [CoreValidators.required]);
+    this.fgVmBackup = this._formBuilder.group({
+      fcServer: this.fcServer,
+    });
+  }
+
+  private _registerEvents(): void {
+    this._selectedServerHandler = this._eventDispatcher.addEventListener(
+      McsEvent.serverAddBackupVmSelected, this._onSelectedServer.bind(this));
+
+    // Invoke the event initially
+    this._eventDispatcher.dispatch(McsEvent.serverAddBackupVmSelected);
+  }
+
+  private _registerProvisionStateBitmap(): void {
+    this._backupProvisionMessageBitMap.set(
+      ServiceOrderState.PoweredOff,
+      this.translateService.instant('orderAddVmBackup.detailsStep.serverDisabled', {
+        server_issue: this.translateService.instant('orderAddVmBackup.detailsStep.serverPoweredOff')
+      })
+    );
+
+    this._backupProvisionMessageBitMap.set(
+      ServiceOrderState.ChangeUnavailable,
+      this.translateService.instant('orderAddVmBackup.detailsStep.serverDisabled', {
+        server_issue: this.translateService.instant('orderAddVmBackup.detailsStep.serverChangeAvailableFalse')
+      })
+    );
+
+    this._backupProvisionMessageBitMap.set(
+      ServiceOrderState.OsAutomationNotReady,
+      this.translateService.instant('orderAddVmBackup.detailsStep.serverDisabled', {
+        server_issue: this.translateService.instant('orderAddVmBackup.detailsStep.serverOsAutomationFalse')
+      })
+    );
+
+    this._backupProvisionMessageBitMap.set(
+      ServiceOrderState.Busy,
+      this.translateService.instant('orderAddVmBackup.detailsStep.serverDisabled', {
+        server_issue: this.translateService.instant('orderAddVmBackup.detailsStep.busy')
+      })
     );
   }
 }

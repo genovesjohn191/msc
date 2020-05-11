@@ -275,10 +275,11 @@
         "permissionFallbackLabel": "We're unable to determine which of your servers already have Anti-Virus installed. In order to proceed, you may need to enable the AV User permission in MacquarieView.",
         "optionGroupLabel": "Virtual Data Centres",
         "serverProvisioned": "Provisioned",
-        "serverDisabled": "Antivirus cannot be process to this server because {{server_issue}}",
+        "serverDisabled": "Antivirus cannot be installed on this server because {{server_issue}}",
         "serverPoweredOff": "it is powered off",
         "serverChangeAvailableFalse": "its currently being provisioned",
-        "serverOsAutomationFalse": "OS Automation is not available"
+        "serverOsAutomationFalse": "OS Automation is not available. Contact your account team or raise a ticket for assistance.",
+        "busy": "it is currently busy. Installation can be performed once its current operation has completed."
       }
     },
     "confirm": {
@@ -304,10 +305,11 @@
         "permissionFallbackLabel": "We're unable to determine which of your servers already have HIDS installed. In order to proceed, you may need to enable the HIDS User permission in MacquarieView.",
         "optionGroupLabel": "Virtual Data Centres",
         "serverProvisioned": "Provisioned",
-        "serverDisabled": "HIDS cannot be process to this server because {{server_issue}}",
+        "serverDisabled": "HIDS cannot be installed on this server because {{server_issue}}",
         "serverPoweredOff": "it is powered off",
         "serverChangeAvailableFalse": "its currently being provisioned",
-        "serverOsAutomationFalse": "OS Automation is not available"
+        "serverOsAutomationFalse": "OS Automation is not available. Contact your account team or raise a ticket for assistance.",
+        "busy": "it is currently busy. Installation can be performed once its current operation has completed."
       },
       "protectionLevel":{
         "label":"Protection Level:",
@@ -332,10 +334,11 @@
       "serverPlaceholder": "Select server",
       "serverHelp": "Select one or more servers to install Server Backup on.",
       "serverProvisioned": "Provisioned",
-      "serverDisabled": "Server backup cannot be process to this server because {{server_issue}}",
+      "serverDisabled": "Server backup cannot be installed on this server because {{server_issue}}",
       "serverPoweredOff": "it is powered off",
       "serverChangeAvailableFalse": "its currently being provisioned",
-      "serverOsAutomationFalse": "OS Automation is not available"
+      "serverOsAutomationFalse": "OS Automation is not available. Contact your account team or raise a ticket for assistance.",
+      "busy": "it is currently busy. Installation can be performed once its current operation has completed."
     },
     "provisioningStep": {
       "description": "Server Backup is being provisioned and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
@@ -350,10 +353,11 @@
       "serverPlaceholder": "Select server",
       "serverHelp": "Select one or more servers to install VM Backup on.",
       "serverProvisioned": "Provisioned",
-      "serverDisabled": "VM backup cannot be process to this server because {{server_issue}}",
+      "serverDisabled": "VM backup cannot be installed on this server because {{server_issue}}",
       "serverPoweredOff": "it is powered off",
       "serverChangeAvailableFalse": "its currently being provisioned",
-      "serverOsAutomationFalse": "OS Automation is not available"
+      "serverOsAutomationFalse": "OS Automation is not available. Contact your account team or raise a ticket for assistance.",
+      "busy": "it is currently busy. Installation can be performed once its current operation has completed."
     },
     "provisioningStep": {
       "description": "VM Backup is being provisioned and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
