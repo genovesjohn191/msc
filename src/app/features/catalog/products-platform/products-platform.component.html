@@ -5,7 +5,7 @@
     <mcs-grid-row>
       <ng-container *ngFor="let family of platform.families; last as isLastItem">
           <mcs-grid-column *ngIf="family.groups | mcsIsNotNullOrEmpty"> 
-            <ng-container *ngIf="family.groups | mcsArrayHasElement">
+            <ng-container *ngIf="family.groups | mcsArrayHasElement: 'products'">
               <mcs-presentation-panel>
                 <ng-container mcsPresentationPanelHeader>
                   <h2>{{ family.name }}</h2>

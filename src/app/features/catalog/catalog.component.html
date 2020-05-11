@@ -49,7 +49,7 @@
                 <mcs-radio-button-group orientation="vertical" [value]="activeCatalogItem.platformType">
                   <ng-container *ngFor="let platform of sortPlatforms(productCatalogMenu.catalogItem.content.platforms)">
                     <ng-container *ngIf="platform.families | mcsIsNotNullOrEmpty">
-                      <mcs-item *ngIf="platform.families | mcsArrayHasElement">
+                      <mcs-item *ngIf="platform.families | mcsArrayHasElement: 'groups'">
                         <mcs-radio-button  mcsId [value]="platform"
                           mcsId="select-product-platform"
                           mcsEventTracker="catalog-product-platform-option"
