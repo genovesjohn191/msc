@@ -92,7 +92,6 @@
                       <mcs-section orientation="horizontal" mcsAlignContent="middle-left">
 
                         <!-- RunOnce Day Selection-->
-                        <!-- TODO : First element is selected -->
                         <mcs-form-field class="form-field-size-small">
                           <mcs-select mcsId="select-runonce-day-os-updates" [formControl]="fcRunOnceScheduleDay" required>
                             <mcs-option *ngFor="let scheduleDay of (scheduleDaysChange$ | async)" [value]="scheduleDay.day"
@@ -126,7 +125,8 @@
                 </mcs-grid-row>
 
                 <!-- Snapshot Options -->
-                <mcs-grid-row>
+                <!-- TODO: Add option once Orch side is ready -->
+                <!-- <mcs-grid-row>
                   <mcs-grid-column>
                     <mcs-item orientation="block">
                       <strong>{{ 'serverServicesOsUpdatesSchedule.snapshotOptionsLabel' | translate }}</strong>
@@ -142,7 +142,7 @@
                       </mcs-radio-button-group>
                     </mcs-item>
                   </mcs-grid-column>
-                </mcs-grid-row>
+                </mcs-grid-row> -->
               </mcs-grid>
             </form>
 
