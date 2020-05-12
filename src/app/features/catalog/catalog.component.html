@@ -50,7 +50,7 @@
                   <ng-container *ngFor="let platform of sortPlatforms(productCatalogMenu.catalogItem.content.platforms)">
                     <ng-container *ngIf="platform.families | mcsIsNotNullOrEmpty">
                       <mcs-item *ngIf="platform.families | mcsArrayHasElement: 'groups'">
-                        <mcs-radio-button  mcsId [value]="platform"
+                        <mcs-radio-button  mcsId [value]="platform.name"
                           mcsId="select-product-platform"
                           mcsEventTracker="catalog-product-platform-option"
                           mcsEventCategory="catalog"
