@@ -59,7 +59,8 @@ export class ServiceOsUpdatesPatchDetailsComponent implements OnInit {
   public osUpdates$: Observable<McsServerOsUpdates[]>;
   public dataStatusFactory: McsDataStatusFactory<McsServerOsUpdates[]>;
   public selectedNodes: Array<TreeNode<McsServerOsUpdates>>;
-  public snapshot: boolean;
+  // TODO: update this once ready in orch side
+  public snapshot: boolean = false;
 
   /**
    * Returns true if there are no selected updates, false otherwise
