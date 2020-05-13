@@ -10,7 +10,8 @@ import {
 import { Subscription } from 'rxjs';
 import {
   McsAccessControlService,
-  McsNavigationService
+  McsNavigationService,
+  McsRouteSettingsService
 } from '@app/core';
 import {
   RouteKey,
@@ -27,6 +28,7 @@ import {
 import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import { McsEvent } from '@app/events';
 import { MenuRouteContext } from './strategy/menu-route.context';
+import { RoutePlatform } from '@app/models/enumerations/route-platform.enum';
 
 @Component({
   selector: 'mcs-main-navigation',
@@ -49,7 +51,8 @@ export class MainNavigationComponent implements OnInit, OnDestroy {
     private _navigationService: McsNavigationService,
     private _changeDetectorRef: ChangeDetectorRef,
     private _eventDispatcher: EventBusDispatcherService,
-    private _accessControlService: McsAccessControlService
+    private _accessControlService: McsAccessControlService,
+    private _routeSettingsService: McsRouteSettingsService
   ) {
     this._menuRouteContext = new MenuRouteContext(_injector);
   }
@@ -64,6 +67,10 @@ export class MainNavigationComponent implements OnInit, OnDestroy {
 
   public get caretRightIconKey(): string {
     return CommonDefinition.ASSETS_SVG_CHEVRON_RIGHT;
+  }
+
+  public get routerPlatformEnum(): any {
+    return RoutePlatform;
   }
 
   public get routerCategoryEnum(): any {
@@ -83,6 +90,14 @@ export class MainNavigationComponent implements OnInit, OnDestroy {
       McsPermission.DedicatedVmAccess,
       McsPermission.FirewallConfigurationView
     ]);
+  }
+
+  public get isPrivateCloudRoute(): boolean {
+    return this._routeSettingsService.isPrivateCloudRoute;
+  }
+
+  public get isPublicCloudRoute(): boolean {
+    return this._routeSettingsService.isPublicCloudRoute;
   }
 
   /**

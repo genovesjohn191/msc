@@ -2,7 +2,8 @@ import { isNullOrEmpty } from '@app/utilities';
 import {
   RouteKey,
   McsRouteInfo,
-  RouteCategory
+  RouteCategory,
+  RoutePlatform
 } from '@app/models';
 
 export class CoreRoutes {
@@ -43,6 +44,8 @@ export class CoreRoutes {
       let jsonRouteInfo = routeConfig[key];
       let routeInfo = new McsRouteInfo();
 
+      routeInfo.enumPlatform = jsonRouteInfo.enumPlatform &&
+        +RoutePlatform[jsonRouteInfo.enumPlatform];
       routeInfo.enumCategory = jsonRouteInfo.enumCategory &&
         +RouteCategory[jsonRouteInfo.enumCategory];
       routeInfo.enumKey = jsonRouteInfo.enumKey &&

@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import {
   BehaviorSubject,
   throwError,
-  Observable
+  Observable,
+  forkJoin
 } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import {
@@ -13,7 +14,8 @@ import {
 import {
   McsCompany,
   DataStatus,
-  McsPermission
+  McsPermission,
+  McsPlatform
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -36,6 +38,7 @@ export class SwitchAccountService {
 
   // Others
   private _activeAccount: McsCompany;
+  private _activePlatform: McsPlatform;
 
   constructor(
     private _authIdentity: McsAuthenticationIdentity,
@@ -65,10 +68,27 @@ export class SwitchAccountService {
   }
 
   /**
+   * Default platform setting
+   */
+  public get defaultPlatform(): McsPlatform {
+    return {
+      hasPrivateCloud: this._authIdentity.platformSettings.hasPrivateCloud,
+      hasPublicCloud: this._authIdentity.platformSettings.hasPublicCloud
+    } as McsPlatform;
+  }
+
+  /**
    * Active account
    */
   public get activeAccount(): McsCompany {
     return isNullOrEmpty(this._activeAccount) ? this.defaultAccount : this._activeAccount;
+  }
+
+  /**
+   * Active platform
+   */
+  public get activePlatform(): McsPlatform {
+    return this._activePlatform;
   }
 
   /**
@@ -94,6 +114,7 @@ export class SwitchAccountService {
     let setDefaultAccount: () => void = () => {
       this.loadingAccount = false;
       this._activeAccount = this.defaultAccount;
+      this._activePlatform = this.defaultPlatform;
       this.activeAccountStream.next(this._activeAccount);
     };
 
@@ -113,6 +134,7 @@ export class SwitchAccountService {
       // Set the default account in case the user doesnt have admin access
       setDefaultAccount();
       this._authIdentity.setActiveAccount(this.defaultAccount);
+      this._authIdentity.setActivePlatform(this.defaultPlatform);
     }
   }
 
@@ -127,12 +149,17 @@ export class SwitchAccountService {
    * Get account by account ID
    * @param accountId Account id to obtain from API
    */
-  private _getAccountById(accountId: string): Observable<McsCompany> {
-    return this._apiService.getCompany(accountId).pipe(
-      tap((account) => {
+  private _getAccountById(accountId: string): Observable<[McsCompany, McsPlatform]> {
+    let accountObservable = this._apiService.getCompany(accountId);
+    let platformObservable = this._apiService.getPlatform();
+
+    return forkJoin([accountObservable, platformObservable]).pipe(
+      tap(results => {
+        this._activeAccount = results[0];
+        this._activePlatform = results[1];
         this.loadingAccount = false;
-        this._activeAccount = account;
         this._authIdentity.setActiveAccount(this._activeAccount);
+        this._authIdentity.setActivePlatform(this._activePlatform);
         this.activeAccountStream.next(this._activeAccount);
       })
     );

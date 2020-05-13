@@ -38,4 +38,6 @@ export enum McsFeatureFlag {
   OrderingVdcStorageExpand = 'EnableOrderingVdcStorageExpand',
   OrderingVdcStorageProvision = 'EnableOrderingVdcStorageProvision',
   OrderingManagedServerInviewLevelRaise = 'EnableOrderingManagedServerInviewLevelRaise',
+
+  PublicCloud = 'EnablePublicCloud'
 }

@@ -72,6 +72,7 @@ export * from './enumerations/api-error-requester.enum';
 export * from './enumerations/internet-plan.enum';
 export * from './enumerations/availability-zone.enum';
 export * from './enumerations/entity-requester.enum';
+export * from './enumerations/route-platform.enum';
 
 /** Job References */
 export * from './job-references/mcs-server-job-reference';
@@ -154,6 +155,7 @@ export * from './response/mcs-resource-network-ip-address';
 export * from './response/mcs-resource-storage';
 export * from './response/mcs-resource-vapp';
 export * from './response/mcs-backup-aggregation-target';
+export * from './response/mcs-platform';
 export * from './response/mcs-server';
 export * from './response/mcs-server-backup-vm';
 export * from './response/mcs-server-backup-vm-log';

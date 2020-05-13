@@ -28,41 +28,49 @@
       </div>
     </ng-template>
 
-    <!-- Compute Category -->
-    <div class="navigation-item"
-      [class.active]="selectedCategory === routerCategoryEnum.Compute"
-      *mcsAccessControl="['DedicatedVmAccess','CloudVmAccess']">
+    <ng-container *ngIf="isPrivateCloudRoute">
+      <!-- ADD PUBLIC CLOUD MENU ITEMS HERE -->
 
-      <mcs-icon [key]="caretRightIconKey" color="light"
-        size="medium" class="navigation-mobile"></mcs-icon>
-      <a (click)="navigateToRouteCategoryDefault(routerCategoryEnum.Compute)" mcsId>
-        {{ getCategoryLabel(routerCategoryEnum.Compute) }}
-      </a>
-    </div>
+      <!-- Compute Category -->
+      <div class="navigation-item"
+        [class.active]="selectedCategory === routerCategoryEnum.Compute"
+        *mcsAccessControl="['DedicatedVmAccess','CloudVmAccess']">
 
-    <!-- Networking Category -->
-    <div class="navigation-item"
-      [class.active]="selectedCategory === routerCategoryEnum.Network"
-      *mcsAccessControl="['FirewallConfigurationView', 'InternetView']">
+        <mcs-icon [key]="caretRightIconKey" color="light"
+          size="medium" class="navigation-mobile"></mcs-icon>
+        <a (click)="navigateToRouteCategoryDefault(routerCategoryEnum.Compute)" mcsId>
+          {{ getCategoryLabel(routerCategoryEnum.Compute) }}
+        </a>
+      </div>
 
-      <mcs-icon [key]="caretRightIconKey" color="light"
-        size="medium" class="navigation-mobile"></mcs-icon>
-      <a (click)="navigateToRouteCategoryDefault(routerCategoryEnum.Network)" mcsId>
-        {{ getCategoryLabel(routerCategoryEnum.Network) }}
-      </a>
-    </div>
+      <!-- Networking Category -->
+      <div class="navigation-item"
+        [class.active]="selectedCategory === routerCategoryEnum.Network"
+        *mcsAccessControl="['FirewallConfigurationView', 'InternetView']">
 
-     <!-- Storage Category -->
-     <div class="navigation-item"
-      [class.active]="selectedCategory === routerCategoryEnum.Storage"
-      *mcsAccessControl="[]; feature: 'EnableAddonBackupAggregationTargetView'">
+        <mcs-icon [key]="caretRightIconKey" color="light"
+          size="medium" class="navigation-mobile"></mcs-icon>
+        <a (click)="navigateToRouteCategoryDefault(routerCategoryEnum.Network)" mcsId>
+          {{ getCategoryLabel(routerCategoryEnum.Network) }}
+        </a>
+      </div>
 
-      <mcs-icon [key]="caretRightIconKey" color="light"
-        size="medium" class="navigation-mobile"></mcs-icon>
-      <a (click)="navigateToRouteCategoryDefault(routerCategoryEnum.Storage)" mcsId>
-        {{ getCategoryLabel(routerCategoryEnum.Storage) }}
-      </a>
-    </div>
+      <!-- Storage Category -->
+      <div class="navigation-item"
+        [class.active]="selectedCategory === routerCategoryEnum.Storage"
+        *mcsAccessControl="[]; feature: 'EnableAddonBackupAggregationTargetView'">
+
+        <mcs-icon [key]="caretRightIconKey" color="light"
+          size="medium" class="navigation-mobile"></mcs-icon>
+        <a (click)="navigateToRouteCategoryDefault(routerCategoryEnum.Storage)" mcsId>
+          {{ getCategoryLabel(routerCategoryEnum.Storage) }}
+        </a>
+      </div>
+    </ng-container>
+    
+    <ng-container *ngIf="isPublicCloudRoute">
+      <!-- ADD PUBLIC CLOUD MENU ITEMS HERE -->
+    </ng-container>
 
     <!-- Other Tools -->
     <div class="navigation-item" hidden-small mcsRouterLinkActive="active">

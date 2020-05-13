@@ -5,6 +5,7 @@
     "documentTitle": "Dashboard - Macquarie Cloud Services"
   },
   "console": {
+    "enumPlatform": "Private",
     "enumKey": "Console",
     "navigationPath": "console",
     "documentTitle": "VM Console - Macquarie Cloud Services"
@@ -21,6 +22,7 @@
     "documentTitle": "System Message - Macquarie Cloud Services"
   },
   "servers": {
+    "enumPlatform": "Private",
     "enumCategory": "Compute",
     "enumKey": "Servers",
     "navigationPath": "compute/virtual",
@@ -28,6 +30,7 @@
     "documentTitle": "Virtual Servers - Macquarie Cloud Services"
   },
   "serverDetails": {
+    "enumPlatform": "Private",
     "enumCategory": "Compute",
     "enumKey": "ServerDetails",
     "navigationPath": "compute/virtual",
@@ -35,6 +38,7 @@
     "documentTitle": "Server Details - Macquarie Cloud Services"
   },
   "serverDetailsManagement": {
+    "enumPlatform": "Private",
     "enumCategory": "Compute",
     "enumKey": "ServerDetailsManagement",
     "navigationPath": "management",
@@ -42,6 +46,7 @@
     "documentTitle": "Server Management - Macquarie Cloud Services"
   },
   "serverDetailsServices": {
+    "enumPlatform": "Private",
     "enumCategory": "Compute",
     "enumKey": "ServerDetailsServices",
     "navigationPath": "services",
@@ -49,6 +54,7 @@
     "documentTitle": "Server Services - Macquarie Cloud Services"
   },
   "serverDetailsStorage": {
+    "enumPlatform": "Private",
     "enumCategory": "Compute",
     "enumKey": "ServerDetailsStorage",
     "navigationPath": "storage",
@@ -56,6 +62,7 @@
     "documentTitle": "Server Storage - Macquarie Cloud Services"
   },
   "ServerDetailsSnapshots": {
+    "enumPlatform": "Private",
     "enumCategory": "Compute",
     "enumKey": "ServerDetailsSnapshots",
     "navigationPath": "snapshots",
@@ -63,6 +70,7 @@
     "documentTitle": "Server Snapshots - Macquarie Cloud Services"
   },
   "serverDetailsNics": {
+    "enumPlatform": "Private",
     "enumCategory": "Compute",
     "enumKey": "ServerDetailsNics",
     "navigationPath": "nics",
@@ -70,6 +78,7 @@
     "documentTitle": "Server NICs - Macquarie Cloud Services"
   },
   "serverCreate": {
+    "enumPlatform": "Private",
     "enumCategory": "Compute",
     "enumKey": "ServerCreate",
     "navigationPath": "compute/virtual/create",
@@ -77,6 +86,7 @@
     "documentTitle": "Create Server - Macquarie Cloud Services"
   },
   "vdcDetails": {
+    "enumPlatform": "Private",
     "enumCategory": "Compute",
     "enumKey": "VdcDetails",
     "navigationPath": "compute/virtual/vdc",
@@ -84,6 +94,7 @@
     "documentTitle": "VDC Details - Macquarie Cloud Services"
   },
   "vdcDetailsOverview": {
+    "enumPlatform": "Private",
     "enumCategory": "Compute",
     "enumKey": "VdcDetailsOverview",
     "navigationPath": "overview",
@@ -91,6 +102,7 @@
     "documentTitle": "VDC Management - Macquarie Cloud Services"
   },
   "vdcDetailsStorage": {
+    "enumPlatform": "Private",
     "enumCategory": "Compute",
     "enumKey": "VdcDetailsStorage",
     "navigationPath": "storage",
@@ -98,6 +110,7 @@
     "documentTitle": "VDC Storage - Macquarie Cloud Services"
   },
   "media": {
+    "enumPlatform": "Private",
     "enumCategory": "Compute",
     "enumKey": "Media",
     "navigationPath": "compute/media",
@@ -106,6 +119,7 @@
     "documentTitle": "Media Catalog - Macquarie Cloud Services"
   },
   "medium": {
+    "enumPlatform": "Private",
     "enumCategory": "Compute",
     "enumKey": "Medium",
     "navigationPath": "compute/media",
@@ -114,6 +128,7 @@
     "documentTitle": "Media Details - Macquarie Cloud Services"
   },
   "mediumOverview": {
+    "enumPlatform": "Private",
     "enumCategory": "Compute",
     "enumKey": "MediumOverview",
     "navigationPath": "overview",
@@ -122,6 +137,7 @@
     "documentTitle": "Media Management - Macquarie Cloud Services"
   },
   "mediumServers": {
+    "enumPlatform": "Private",
     "enumCategory": "Compute",
     "enumKey": "MediumServers",
     "navigationPath": "servers",
@@ -130,6 +146,7 @@
     "documentTitle": "Media Servers - Macquarie Cloud Services"
   },
   "mediaUpload": {
+    "enumPlatform": "Private",
     "enumCategory": "Compute",
     "enumKey": "MediaUpload",
     "navigationPath": "compute/media/upload",
@@ -138,6 +155,7 @@
     "documentTitle": "Upload Media - Macquarie Cloud Services"
   },
   "firewalls": {
+    "enumPlatform": "Private",
     "enumCategory": "Network",
     "enumKey": "Firewalls",
     "navigationPath": "network/firewalls",
@@ -145,6 +163,7 @@
     "documentTitle": "Firewalls - Macquarie Cloud Services"
   },
   "firewallDetails": {
+    "enumPlatform": "Private",
     "enumCategory": "Network",
     "enumKey": "FirewallDetails",
     "navigationPath": "network/firewalls",
@@ -152,6 +171,7 @@
     "documentTitle": "Firewall Details - Macquarie Cloud Services"
   },
   "firewallDetailsOverview": {
+    "enumPlatform": "Private",
     "enumCategory": "Network",
     "enumKey": "FirewallDetailsOverview",
     "navigationPath": "overview",
@@ -159,6 +179,7 @@
     "documentTitle": "Firewall Management - Macquarie Cloudservices"
   },
   "firewallDetailsPolicies": {
+    "enumPlatform": "Private",
     "enumCategory": "Network",
     "enumKey": "FirewallDetailsPolicies",
     "navigationPath": "policies",
@@ -166,6 +187,7 @@
     "documentTitle": "Firewall Policies - Macquarie Cloud Services"
   },
   "internet": {
+    "enumPlatform": "Private",
     "enumCategory": "Network",
     "enumKey": "Internet",
     "navigationPath": "network/internet",
@@ -174,6 +196,7 @@
     "documentTitle": "Internet Ports - Macquarie Cloud Services"
   },
   "internetDetails": {
+    "enumPlatform": "Private",
     "enumCategory": "Network",
     "enumKey": "InternetDetails",
     "navigationPath": "network/internet",
@@ -182,6 +205,7 @@
     "documentTitle": "Internet Ports Details - Macquarie Cloud Services"
   },
   "internetDetailsManagement": {
+    "enumPlatform": "Private",
     "enumCategory": "Network",
     "enumKey": "InternetDetailsManagement",
     "navigationPath": "management",
@@ -190,6 +214,7 @@
     "documentTitle": "Internet Ports Management - Macquarie Cloud Services"
   },
   "backupAggregationTargets": {
+    "enumPlatform": "Private",
     "enumCategory": "Storage",
     "enumKey": "BackupAggregationTargets",
     "navigationPath": "storage/aggregation-targets",
@@ -197,6 +222,7 @@
     "documentTitle": "Storage - Macquarie Cloud Services"
   },
   "backupAggregationTargetsDetails": {
+    "enumPlatform": "Private",
     "enumCategory": "Storage",
     "enumKey": "BackupAggregationTargetsDetails",
     "navigationPath": "storage/aggregation-targets",
@@ -204,6 +230,7 @@
     "documentTitle": "Backup Aggregation Targets - Macquarie Cloud Services"
   },
   "backupAggregationTargetsDetailsManagement": {
+    "enumPlatform": "Private",
     "enumCategory": "Storage",
     "enumKey": "BackupAggregationTargetsDetailsManagement",
     "navigationPath": "management",
@@ -317,6 +344,7 @@
     "documentTitle": "Orders Dashboard - Macquarie Cloud Services"
   },
   "orderServerManagedScale": {
+    "enumPlatform": "Private",
     "enumKey": "OrderServerManagedScale",
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/server-managed-scale",
@@ -325,6 +353,7 @@
     "documentTitle": "Scale Managed Servers - Macquarie Cloud Services"
   },
   "orderVdcScale": {
+    "enumPlatform": "Private",
     "enumKey": "OrderVdcScale",
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/vdc-scale",
@@ -333,6 +362,7 @@
     "documentTitle": "Scale VDC - Macquarie Cloud Services"
   },
   "orderVdcStorageExpand": {
+    "enumPlatform": "Private",
     "enumKey": "OrderVdcStorageExpand",
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/vdc-storage-expand",
@@ -341,6 +371,7 @@
     "documentTitle": "Expand Vdc Storage - Macquarie Cloud Services"
   },
   "orderVdcStorageCreate": {
+    "enumPlatform": "Private",
     "enumKey": "OrderVdcStorageCreate",
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/vdc-storage-create",
@@ -349,6 +380,7 @@
     "documentTitle": "Create Vdc Storage - Macquarie Cloud Services"
   },
   "orderServiceInviewRaise": {
+    "enumPlatform": "Private",
     "enumKey": "OrderServiceInviewRaise",
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/services/inview",
@@ -357,6 +389,7 @@
     "documentTitle": "Service Raise Inview Level - Macquarie Cloud Services"
   },
   "orderAddAntiVirus": {
+    "enumPlatform": "Private",
     "enumKey": "OrderAddAntiVirus",
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/add/anti-virus",
@@ -365,6 +398,7 @@
     "documentTitle": "Add Anti-Virus - Macquarie Cloud Services"
   },
   "orderAddHids": {
+    "enumPlatform": "Private",
     "enumKey": "OrderAddHids",
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/add/host-intrusion-detection",
@@ -373,6 +407,7 @@
     "documentTitle": "Add Host Intrusion Detection - Macquarie Cloud Services"
   },
   "orderAddServerBackup": {
+    "enumPlatform": "Private",
     "enumKey": "OrderAddServerBackup",
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/add/server-backup",
@@ -381,6 +416,7 @@
     "documentTitle": "Add Server Backup Provision - Macquarie Cloud Services"
   },
   "orderAddVmBackup": {
+    "enumPlatform": "Private",
     "enumKey": "OrderAddVmBackup",
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/add/vm-backup",
@@ -389,6 +425,7 @@
     "documentTitle": "Add VM Backup Provision - Macquarie Cloud Services"
   },
   "orderAddBat": {
+    "enumPlatform": "Private",
     "enumKey": "OrderAddBat",
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/add/backup-aggregation-target",
