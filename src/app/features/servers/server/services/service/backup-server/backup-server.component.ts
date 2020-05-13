@@ -18,7 +18,9 @@ import {
   backupStatusLabel,
   McsServer,
   ServerServicesAction,
-  ServiceOrderState
+  ServiceOrderState,
+  RouteKey,
+  McsFeatureFlag
 } from '@app/models';
 import {
   CommonDefinition,
@@ -26,7 +28,10 @@ import {
   getSafeProperty,
   isNullOrEmpty
 } from '@app/utilities';
-import { McsDateTimeService } from '@app/core';
+import {
+  McsDateTimeService,
+  McsAccessControlService
+} from '@app/core';
 import { ServerServiceDetailBase } from '../server-service-detail.base';
 import { ServerServiceActionDetail } from '../../strategy/server-service-action.context';
 
@@ -72,6 +77,7 @@ export class ServiceBackupServerComponent extends ServerServiceDetailBase implem
 
   constructor(
     private _dateTimeService: McsDateTimeService,
+    private _accessControlService: McsAccessControlService,
     private _translate: TranslateService
   ) {
     super(ServerServicesView.BackupServer);
@@ -91,6 +97,10 @@ export class ServiceBackupServerComponent extends ServerServiceDetailBase implem
       let statusType: BackupStatusType = backupStatusTypeMap[this._serverBackupServer.lastBackupAttempt.status];
       this._backupServerStatusDetails = this._backupServerStatusDetailsMap.get(statusType);
     }
+  }
+
+  public get routeKeyEnum(): typeof RouteKey {
+    return RouteKey;
   }
 
   public get statusIcon(): string {
@@ -129,6 +139,10 @@ export class ServiceBackupServerComponent extends ServerServiceDetailBase implem
   public disableMessage(server: McsServer): string {
     if (isNullOrEmpty(server)) { return; }
     return this._serverBackupOrderStateMessageMap.get(server.getServiceOrderState());
+  }
+
+  public hasBatDetailsView(): boolean {
+    return this._accessControlService.hasAccessToFeature([McsFeatureFlag.AddonBackupAggregationTargetDetailsView]);
   }
 
   public onAddServerBackup(selectedServer: McsServer): void {

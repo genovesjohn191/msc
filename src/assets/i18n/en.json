@@ -669,7 +669,10 @@
       "processing": "This server is currently busy and Add-Ons can be installed once its current operation has completed.",
       "osAutomationUnavailable": "This server does not currently support OS automation, please contact your account team",
       "raiseTicketLabel": "raise a ticket",
-      "orderlinkLabel": "Click here to order it."
+      "orderlinkLabel": "Click here to order it.",
+      "batLinkDescription": "This service is linked to a ",
+      "batDefaultLabel": "Backup Aggregation Target ({{serviceId}})",
+      "batLinkLabel": "Backup Aggregation Target"
     },
     "serverBackup": {
       "title": "Server Backup",
@@ -680,7 +683,10 @@
       "processing": "This server is currently busy and Add-Ons can be installed once its current operation has completed.",
       "osAutomationUnavailable": "This server does not currently support OS automation, please contact your account team",
       "raiseTicketLabel": "raise a ticket",
-      "orderlinkLabel": "Click here to order it."
+      "orderlinkLabel": "Click here to order it.",
+      "batLinkDescription": "This service is linked to a ",
+      "batDefaultLabel": "Backup Aggregation Target ({{serviceId}})",
+      "batLinkLabel": "Backup Aggregation Target"
     },
     "hostSecurity": {
       "title": "Host Security",
