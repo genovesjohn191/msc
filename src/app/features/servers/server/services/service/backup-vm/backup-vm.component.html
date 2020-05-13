@@ -26,6 +26,21 @@
               </ng-container>
             </mcs-item>
           </small>
+          <ng-container *ngIf="serverBackupVm?.aggregationTargetServiceId | mcsIsNotNullOrEmpty">
+            {{ 'serverServices.vmBackup.batLinkDescription' | translate }}
+            <ng-container *ngIf="hasBatDetailsView(); else batServiceIdTemplate">
+              <a mcsId="backup-vm-bat-details-link"
+                mcsEventTracker="backup-vm-bat-details-link-click"
+                mcsEventCategory="server"
+                mcsEventLabel="backup-vm-bat-details-view"
+                [mcsRouterLink]="[routeKeyEnum.BackupAggregationTargetsDetails, serverBackupVm?.aggregationTargetId]">
+                {{ 'serverServices.vmBackup.batLinkLabel' | translate }}
+              </a>
+            </ng-container>
+            <ng-template #batServiceIdTemplate>
+              {{ 'serverServices.vmBackup.batDefaultLabel' | translate: { serviceId: serverBackupVm?.aggregationTargetServiceId } }}
+            </ng-template>
+          </ng-container>
         </div>
       </mcs-item>
     </mcs-item>

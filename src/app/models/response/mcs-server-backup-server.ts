@@ -25,5 +25,11 @@ export class McsServerBackupServer extends McsEntityBase {
     deserializer: InviewLevelSerialization
   })
   public inviewLevel: InviewLevel = undefined;
+
+  @JsonProperty()
+  public aggregationTargetId: string = undefined;
+
+  @JsonProperty()
+  public aggregationTargetServiceId: string = undefined;
 }
 

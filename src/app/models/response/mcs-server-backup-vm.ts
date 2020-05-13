@@ -5,7 +5,6 @@ import {
   InviewLevelSerialization,
   InviewLevel
 } from '../enumerations/inview-level.enum';
-import { McsBackUpAggregationTarget } from './mcs-backup-aggregation-target';
 
 export class McsServerBackupVm extends McsEntityBase {
 
@@ -27,6 +26,9 @@ export class McsServerBackupVm extends McsEntityBase {
   })
   public inviewLevel: InviewLevel = undefined;
 
-  @JsonProperty({ target: McsBackUpAggregationTarget })
-  public aggregationTarget: McsBackUpAggregationTarget = undefined;
+  @JsonProperty()
+  public aggregationTargetId: string = undefined;
+
+  @JsonProperty()
+  public aggregationTargetServiceId: string = undefined;
 }
