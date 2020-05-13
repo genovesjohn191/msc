@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Params } from '@angular/router';
-import { Observable } from 'rxjs';
+import {
+  Observable,
+  forkJoin
+} from 'rxjs';
 import { map } from 'rxjs/operators';
 import { McsIdentity } from '@app/models';
 import {
@@ -84,10 +87,16 @@ export class McsAuthenticationService {
    * Returns true if user is authenticated, and false if otherwise
    */
   public IsAuthenticated(): Observable<boolean> {
-    return this._apiService.getIdentity().pipe(
-      map((identity) => {
+    let identityObservable = this._apiService.getIdentity();
+    let platformObservable = this._apiService.getPlatform();
+
+    return forkJoin([identityObservable, platformObservable]).pipe(
+      map(results => {
+        let identity = results[0];
+        let platform = results[1];
         if (isNullOrEmpty(identity)) { return false; }
         this._setUserIdentity(identity);
+        this._authenticationIdentity.setActivePlatform(platform);
         return true;
       })
     );

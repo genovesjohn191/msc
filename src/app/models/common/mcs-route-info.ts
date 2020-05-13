@@ -1,7 +1,9 @@
 import { RouteCategory } from '../enumerations/route-category.enum';
 import { RouteKey } from '../enumerations/route-key.enum';
+import { RoutePlatform } from '../enumerations/route-platform.enum';
 
 export class McsRouteInfo {
+  public enumPlatform?: RoutePlatform;
   public enumCategory?: RouteCategory;
   public enumKey?: RouteKey;
   public navigationPath?: string;

@@ -109,7 +109,8 @@ import {
   McsCatalogProductBracket,
   McsCatalogSolutionBracket,
   McsCatalogProduct,
-  McsCatalogSolution
+  McsCatalogSolution,
+  McsPlatform
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -142,7 +143,9 @@ import {
   IMcsApiStoragesService,
   McsApiStoragesFactory,
   IMcsApiCatalogService,
-  McsApiCatalogFactory
+  McsApiCatalogFactory,
+  McsApiPlatformFactory,
+  IMcsApiPlatformService
 } from '@app/api-client';
 import { McsEvent } from '@app/events';
 import { McsRepository } from './core/mcs-repository.interface';
@@ -185,6 +188,7 @@ export class McsApiService {
 
   private readonly _serversApi: IMcsApiServersService;
   private readonly _jobsApi: IMcsApiJobsService;
+  private readonly _platformApi: IMcsApiPlatformService;
   private readonly _identityApi: IMcsApiIdentityService;
   private readonly _resourcesApi: IMcsApiResourcesService;
   private readonly _storagesApi: IMcsApiStoragesService;
@@ -220,6 +224,7 @@ export class McsApiService {
     let apiClientFactory = _injector.get(McsApiClientFactory);
     this._serversApi = apiClientFactory.getService(new McsApiServersFactory());
     this._jobsApi = apiClientFactory.getService(new McsApiJobsFactory());
+    this._platformApi = apiClientFactory.getService(new McsApiPlatformFactory());
     this._identityApi = apiClientFactory.getService(new McsApiIdentityFactory());
     this._resourcesApi = apiClientFactory.getService(new McsApiResourcesFactory());
     this._storagesApi = apiClientFactory.getService(new McsApiStoragesFactory());
@@ -1017,6 +1022,15 @@ export class McsApiService {
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getCompany'))
       )
+    );
+  }
+
+  public getPlatform(): Observable<McsPlatform> {
+    return this._platformApi.getPlatform().pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getPlatform'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
 

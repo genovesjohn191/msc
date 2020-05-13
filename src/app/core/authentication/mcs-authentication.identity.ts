@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import {
   McsCompany,
   McsIdentity,
-  AccountStatus
+  AccountStatus,
+  McsPlatform
 } from '@app/models';
 import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import { McsEvent } from '@app/events';
@@ -24,6 +25,12 @@ export class McsAuthenticationIdentity {
   public get activeAccount(): McsCompany { return this._activeAccount; }
 
   /**
+   * Platform settings based on target account
+   */
+  private _platformSettings: McsPlatform;
+  public get platformSettings(): McsPlatform { return this._platformSettings; }
+
+  /**
    * Returns the active account current status [default, impersonator]
    */
   public get activeAccountStatus(): AccountStatus {
@@ -37,6 +44,7 @@ export class McsAuthenticationIdentity {
     private _eventDispatcher: EventBusDispatcherService
   ) {
     this._user = new McsIdentity();
+    this._platformSettings = new McsPlatform();
     this._activeAccount = new McsCompany();
   }
 
@@ -56,5 +64,13 @@ export class McsAuthenticationIdentity {
   public setActiveAccount(company: McsCompany): void {
     this._activeAccount = company;
     this._eventDispatcher.dispatch(McsEvent.accountChange, this._activeAccount);
+  }
+
+  /**
+   * Sets the currently active platform settings
+   * @param platform The account platform to be set
+   */
+  public setActivePlatform(platform: McsPlatform): void {
+    this._platformSettings = platform;
   }
 }
