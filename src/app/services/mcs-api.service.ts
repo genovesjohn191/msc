@@ -920,11 +920,15 @@ export class McsApiService {
   }
 
   public getBackupAggregationTargets(query?: McsQueryParam): Observable<McsApiCollection<McsBackUpAggregationTarget>> {
-    return this._storagesApi.getBackUpAggregationTargets(query).pipe(
-      catchError((error) => {
-        return this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getBackupAggregationTargets'));
-      }),
-      map((response) => this._mapToCollection(response.content, response.totalCount))
+    let dataCollection = isNullOrEmpty(query) ?
+      this._backupAggregationTargetRepository.getAll() :
+      this._backupAggregationTargetRepository.filterBy(query);
+
+    return dataCollection.pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getBackupAggregationTargets'))
+      ),
+      map((response) => this._mapToCollection(response, this._backupAggregationTargetRepository.getTotalRecordsCount()))
     );
   }
 
@@ -1478,6 +1482,11 @@ export class McsApiService {
     this._entitiesEventMap.push({
       event: McsEvent.dataChangeInternetPorts,
       eventEmitter: this._internetRepository.dataChange()
+    });
+
+    this._entitiesEventMap.push({
+      event: McsEvent.dataChangeAggregationTargets,
+      eventEmitter: this._backupAggregationTargetRepository.dataChange()
     });
 
     // Data Clear Events
