@@ -1,0 +1,80 @@
+<mcs-presentation-panel mcsId="bat-linked-services" *ngIf="selectedAggregationTarget$ | async as aggregationTarget">
+  <ng-container mcsPresentationPanelHeader>
+    <h2>{{ 'aggregationTarget.linkedServices.label' | translate }}</h2>
+  </ng-container>
+  <p>{{ 'aggregationTarget.linkedServices.description' | translate }}</p>
+
+  <!-- Table -->
+  <mcs-table [dataSource]="batLinkedServicesDatasource">
+    <!-- Associated Server Column -->
+    <ng-container mcsColumnDef="associatedServer">
+      <mcs-header-cell *mcsHeaderCellDef>
+        {{ 'aggregationTarget.linkedServices.columnHeaders.associatedServer' | translate }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row" text-wrap>
+        <a *mcsAccessControl="['CloudVmAccess', 'DedicatedVmAccess']; else: plainServerLabelTemplate"
+          [mcsRouterLink]="[routeKeyEnum.ServerDetails, row.associatedServer?.id]"
+          mcsStopPropagation
+          mcsId="bat-associated-server"
+          mcsEventTracker="bat-associated-server"
+          mcsEventCategory="bat"
+          mcsEventLabel="bat-linked-services">{{ row.associatedServer?.name }}</a>
+        <ng-template #plainServerLabelTemplate>
+          <span>{{ row.associatedServer?.name }}</span>
+        </ng-template>
+      </mcs-data-cell>
+    </ng-container>
+
+    <!-- Service Type Column -->
+    <ng-container mcsColumnDef="serviceType">
+      <mcs-header-cell *mcsHeaderCellDef hidden-small>
+        {{ 'aggregationTarget.linkedServices.columnHeaders.serviceType' | translate }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+        <span text-wrap>{{ row.serviceTypeLabel }}</span>
+      </mcs-data-cell>
+    </ng-container>
+
+    <!-- Service ID Column -->
+    <ng-container mcsColumnDef="serviceId">
+      <mcs-header-cell *mcsHeaderCellDef hidden-small>
+        {{ 'aggregationTarget.linkedServices.columnHeaders.serviceId' | translate }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+        <span text-wrap>{{ row.serviceId }}</span>
+      </mcs-data-cell>
+    </ng-container>
+
+    <!-- Daily Schedule Column -->
+    <ng-container mcsColumnDef="dailySchedule">
+      <mcs-header-cell *mcsHeaderCellDef hidden-small>
+        {{ 'aggregationTarget.linkedServices.columnHeaders.dailySchedule' | translate }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+        <span text-wrap>{{ row.dailySchedule }}</span>
+      </mcs-data-cell>
+    </ng-container>
+
+    <!-- Data Status Integration -->
+    <ng-container mcsDataStatusDef>
+      <mcs-data-empty *mcsDataEmptyDef>
+        <span>{{ 'aggregationTarget.linkedServices.noContent' | translate }} </span>
+      </mcs-data-empty>
+      <mcs-data-error *mcsDataErrorDef>
+        <span>{{ 'aggregationTarget.linkedServices.errorContent' | translate }}</span>
+      </mcs-data-error>
+    </ng-container>
+
+    <!-- Header and Data row -->
+    <mcs-header-row *mcsHeaderRowDef="batLinkedServicesColumns"></mcs-header-row>
+    <mcs-data-row *mcsDataRowDef="let row; columns: batLinkedServicesColumns;"
+      mcsCursor="pointer"
+      [mcsTriggerCursorIf]="hasAccessToService(row)"
+      (click)="navigateToAssociatedServer(row)"
+      mcsId="bat-linked-service-row"
+      mcsEventTracker="bat-linked-service-row"
+      mcsEventCategory="bat"
+      mcsEventLabel="bat-linked-services"></mcs-data-row>
+  </mcs-table>
+
+</mcs-presentation-panel>

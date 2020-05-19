@@ -111,7 +111,8 @@ import {
   McsCatalogProduct,
   McsCatalogSolution,
   McsPlatform,
-  McsLicense
+  McsLicense,
+  McsBatLinkedService
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -141,8 +142,8 @@ import {
   McsApiSystemFactory,
   IMcsApiToolsService,
   McsApiToolsFactory,
-  IMcsApiStoragesService,
-  McsApiStoragesFactory,
+  IMcsApiBatsService,
+  McsApiBatsFactory,
   IMcsApiCatalogService,
   McsApiCatalogFactory,
   McsApiPlatformFactory,
@@ -164,7 +165,7 @@ import { McsMediaRepository } from './repositories/mcs-media.repository';
 import { McsFirewallsRepository } from './repositories/mcs-firewalls.repository';
 import { McsConsoleRepository } from './repositories/mcs-console.repository';
 import { McsCompaniesRepository } from './repositories/mcs-companies.repository';
-import { McsBackupAggregationTargetsRepository } from './repositories/mcs-backup-aggregation-targets.repository';
+import { McsBatsRepository } from './repositories/mcs-bats.repository';
 import { MicsLicensesRepository } from './repositories/mcs-licenses.repository';
 
 interface DataEmitter<T> {
@@ -186,7 +187,7 @@ export class McsApiService {
   private readonly _ordersRepository: McsOrdersRepository;
   private readonly _mediaRepository: McsMediaRepository;
   private readonly _firewallsRepository: McsFirewallsRepository;
-  private readonly _backupAggregationTargetRepository: McsBackupAggregationTargetsRepository;
+  private readonly _batsRepository: McsBatsRepository;
   private readonly _consoleRepository: McsConsoleRepository;
   private readonly _companiesRepository: McsCompaniesRepository;
   private readonly _licensesRepository: MicsLicensesRepository;
@@ -196,7 +197,7 @@ export class McsApiService {
   private readonly _platformApi: IMcsApiPlatformService;
   private readonly _identityApi: IMcsApiIdentityService;
   private readonly _resourcesApi: IMcsApiResourcesService;
-  private readonly _storagesApi: IMcsApiStoragesService;
+  private readonly _batsApi: IMcsApiBatsService;
   private readonly _ticketsApi: IMcsApiTicketsService;
   private readonly _ordersApi: IMcsApiOrdersService;
   private readonly _mediaApi: IMcsApiMediaService;
@@ -222,7 +223,7 @@ export class McsApiService {
     this._ordersRepository = _injector.get(McsOrdersRepository);
     this._mediaRepository = _injector.get(McsMediaRepository);
     this._firewallsRepository = _injector.get(McsFirewallsRepository);
-    this._backupAggregationTargetRepository = _injector.get(McsBackupAggregationTargetsRepository);
+    this._batsRepository = _injector.get(McsBatsRepository);
     this._consoleRepository = _injector.get(McsConsoleRepository);
     this._companiesRepository = _injector.get(McsCompaniesRepository);
     this._licensesRepository = _injector.get(MicsLicensesRepository);
@@ -234,7 +235,7 @@ export class McsApiService {
     this._platformApi = apiClientFactory.getService(new McsApiPlatformFactory());
     this._identityApi = apiClientFactory.getService(new McsApiIdentityFactory());
     this._resourcesApi = apiClientFactory.getService(new McsApiResourcesFactory());
-    this._storagesApi = apiClientFactory.getService(new McsApiStoragesFactory());
+    this._batsApi = apiClientFactory.getService(new McsApiBatsFactory());
     this._ticketsApi = apiClientFactory.getService(new McsApiTicketsFactory());
     this._ordersApi = apiClientFactory.getService(new McsApiOrdersFactory());
     this._mediaApi = apiClientFactory.getService(new McsApiMediaFactory());
@@ -926,7 +927,7 @@ export class McsApiService {
   }
 
   public getBackupAggregationTarget(id: string): Observable<McsBackUpAggregationTarget> {
-    return this._mapToEntityRecord(this._backupAggregationTargetRepository, id).pipe(
+    return this._mapToEntityRecord(this._batsRepository, id).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getBackupAggregationTarget'))
       )
@@ -935,14 +936,23 @@ export class McsApiService {
 
   public getBackupAggregationTargets(query?: McsQueryParam): Observable<McsApiCollection<McsBackUpAggregationTarget>> {
     let dataCollection = isNullOrEmpty(query) ?
-      this._backupAggregationTargetRepository.getAll() :
-      this._backupAggregationTargetRepository.filterBy(query);
+      this._batsRepository.getAll() :
+      this._batsRepository.filterBy(query);
 
     return dataCollection.pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getBackupAggregationTargets'))
       ),
-      map((response) => this._mapToCollection(response, this._backupAggregationTargetRepository.getTotalRecordsCount()))
+      map((response) => this._mapToCollection(response, this._batsRepository.getTotalRecordsCount()))
+    );
+  }
+
+  public getBackupAggregationTargetLinkedServices(id: string): Observable<McsApiCollection<McsBatLinkedService>> {
+    return this._batsApi.getBackUpAggregationTargetLinkedServices(id).pipe(
+      map((response) => this._mapToCollection(response.content, response.totalCount)),
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getBackupAggregationTargetLinkedServices'))
+      )
     );
   }
 
@@ -1521,7 +1531,7 @@ export class McsApiService {
 
     this._entitiesEventMap.push({
       event: McsEvent.dataChangeAggregationTargets,
-      eventEmitter: this._backupAggregationTargetRepository.dataChange()
+      eventEmitter: this._batsRepository.dataChange()
     });
 
     // Data Clear Events

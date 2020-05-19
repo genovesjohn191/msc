@@ -58,7 +58,7 @@
       <!-- Storage Category -->
       <div class="navigation-item"
         [class.active]="selectedCategory === routerCategoryEnum.Storage"
-        *mcsAccessControl="[]; feature: 'EnableAddonBackupAggregationTargetView'">
+        *mcsAccessControl="[]; feature: 'EnableBatView'">
 
         <mcs-icon [key]="caretRightIconKey" color="light"
           size="medium" class="navigation-mobile"></mcs-icon>
@@ -67,7 +67,7 @@
         </a>
       </div>
     </ng-container>
-    
+
     <ng-container *ngIf="isPublicCloudRoute">
       <!-- ADD PUBLIC CLOUD MENU ITEMS HERE -->
       <div class="navigation-item" hidden-small mcsRouterLinkActive="active"

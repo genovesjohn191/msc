@@ -5,14 +5,15 @@ import {
   McsApiSuccessResponse,
   McsBackUpAggregationTarget,
   McsApiRequestParameter,
-  McsQueryParam
+  McsQueryParam,
+  McsBatLinkedService
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
-import { IMcsApiStoragesService } from '../interfaces/mcs-api-storages.interface';
+import { IMcsApiBatsService } from '../interfaces/mcs-api-bats.interface';
 import { isNullOrEmpty } from '@app/utilities';
 
 @Injectable()
-export class McsApiStoragesService implements IMcsApiStoragesService {
+export class McsApiBatsService implements IMcsApiBatsService {
 
   constructor(private _mcsApiHttpService: McsApiClientHttpService) { }
 
@@ -55,6 +56,25 @@ export class McsApiStoragesService implements IMcsApiStoragesService {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
             .deserializeResponse<McsBackUpAggregationTarget>(McsBackUpAggregationTarget, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  /**
+   * Get all the backup aggregation target linked services
+   * @param id aggregation target identification
+   */
+  public getBackUpAggregationTargetLinkedServices(id: any): Observable<McsApiSuccessResponse<McsBatLinkedService[]>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/storage/backup/aggregation-targets/${id}/linked-services`;
+
+    return this._mcsApiHttpService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsBatLinkedService[]>(McsBatLinkedService, response);
           return apiResponse;
         })
       );

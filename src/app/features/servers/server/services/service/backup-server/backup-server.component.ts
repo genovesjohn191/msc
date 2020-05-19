@@ -142,7 +142,7 @@ export class ServiceBackupServerComponent extends ServerServiceDetailBase implem
   }
 
   public hasBatDetailsView(): boolean {
-    return this._accessControlService.hasAccessToFeature([McsFeatureFlag.AddonBackupAggregationTargetDetailsView]);
+    return this._accessControlService.hasAccessToFeature([McsFeatureFlag.BatDetailsView]);
   }
 
   public onAddServerBackup(selectedServer: McsServer): void {

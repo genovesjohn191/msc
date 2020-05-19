@@ -67,10 +67,15 @@ export class AggregationTargetsComponent extends McsTableListingBase<McsBackUpAg
    * @param aggregationTarget Aggregation Target to view the details
    */
   public navigateToAggregationTarget(aggregationTarget: McsBackUpAggregationTarget): void {
-    let hasAggregationTargetFlag = this._accessControlService.hasAccessToFeature(McsFeatureFlag.AddonBackupAggregationTargetDetailsView);
-    if (!hasAggregationTargetFlag || isNullOrEmpty(aggregationTarget)) { return; }
-
+    if (!this.hasAccessToDetailsView() || isNullOrEmpty(aggregationTarget)) { return; }
     this._navigationService.navigateTo(RouteKey.BackupAggregationTargetsDetails, [aggregationTarget.id]);
+  }
+
+  /**
+   * Return true if the user has access to the bat details view
+   */
+  public hasAccessToDetailsView(): boolean {
+    return this._accessControlService.hasAccessToFeature([McsFeatureFlag.BatDetailsView]);
   }
 
   /**
