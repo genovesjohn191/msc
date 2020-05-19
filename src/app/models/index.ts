@@ -218,6 +218,7 @@ export * from './response/mcs-catalog-solution-benefits-and-limitations';
 export * from './response/mcs-catalog-solution-bracket';
 export * from './response/mcs-catalog-solution-group';
 export * from './response/mcs-catalog-solution-product';
+export * from './response/mcs-license';
 
 /** Common */
 export * from './common/mcs-api-search-key';

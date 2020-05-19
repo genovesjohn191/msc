@@ -18,6 +18,7 @@ export * from './interfaces/mcs-api-tools.interface';
 export * from './interfaces/mcs-api-internet.interface';
 export * from './interfaces/mcs-api-identity.interface';
 export * from './interfaces/mcs-api-system.interface';
+export * from './interfaces/mcs-api-licenses.interface';
 export * from './interfaces/mcs-api-platform.interface';
 
 export * from './factory/mcs-api-companies.factory';
@@ -36,3 +37,4 @@ export * from './factory/mcs-api-system.factory';
 export * from './factory/mcs-api-internet.factory';
 export * from './factory/mcs-api-identity.factory';
 export * from './factory/mcs-api-platform.factory';
+export * from './factory/mcs-api-licenses.factory';

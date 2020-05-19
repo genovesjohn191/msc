@@ -71,6 +71,7 @@ export enum RouteKey {
   InternetDetailsManagement,
 
   OtherTools,
+  Licenses,
 
   HttpErrorPage
 }

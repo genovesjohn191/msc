@@ -110,7 +110,8 @@ import {
   McsCatalogSolutionBracket,
   McsCatalogProduct,
   McsCatalogSolution,
-  McsPlatform
+  McsPlatform,
+  McsLicense
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -145,7 +146,9 @@ import {
   IMcsApiCatalogService,
   McsApiCatalogFactory,
   McsApiPlatformFactory,
-  IMcsApiPlatformService
+  IMcsApiPlatformService,
+  IMcsApiLicensesService,
+  McsApiLicensesFactory
 } from '@app/api-client';
 import { McsEvent } from '@app/events';
 import { McsRepository } from './core/mcs-repository.interface';
@@ -162,6 +165,7 @@ import { McsFirewallsRepository } from './repositories/mcs-firewalls.repository'
 import { McsConsoleRepository } from './repositories/mcs-console.repository';
 import { McsCompaniesRepository } from './repositories/mcs-companies.repository';
 import { McsBackupAggregationTargetsRepository } from './repositories/mcs-backup-aggregation-targets.repository';
+import { MicsLicensesRepository } from './repositories/mcs-licenses.repository';
 
 interface DataEmitter<T> {
   eventEmitter: Observable<T>;
@@ -185,6 +189,7 @@ export class McsApiService {
   private readonly _backupAggregationTargetRepository: McsBackupAggregationTargetsRepository;
   private readonly _consoleRepository: McsConsoleRepository;
   private readonly _companiesRepository: McsCompaniesRepository;
+  private readonly _licensesRepository: MicsLicensesRepository;
 
   private readonly _serversApi: IMcsApiServersService;
   private readonly _jobsApi: IMcsApiJobsService;
@@ -200,6 +205,7 @@ export class McsApiService {
   private readonly _systemMessageApi: IMcsApiSystemService;
   private readonly _toolsService: IMcsApiToolsService;
   private readonly _catalogService: IMcsApiCatalogService;
+  private readonly _licensesApi: IMcsApiLicensesService;
 
   private readonly _eventDispatcher: EventBusDispatcherService;
   private readonly _entitiesEventMap: Array<DataEmitter<any>>;
@@ -219,6 +225,7 @@ export class McsApiService {
     this._backupAggregationTargetRepository = _injector.get(McsBackupAggregationTargetsRepository);
     this._consoleRepository = _injector.get(McsConsoleRepository);
     this._companiesRepository = _injector.get(McsCompaniesRepository);
+    this._licensesRepository = _injector.get(MicsLicensesRepository);
 
     // Register api services
     let apiClientFactory = _injector.get(McsApiClientFactory);
@@ -236,6 +243,8 @@ export class McsApiService {
     this._systemMessageApi = apiClientFactory.getService(new McsApiSystemFactory());
     this._toolsService = apiClientFactory.getService(new McsApiToolsFactory());
     this._catalogService = apiClientFactory.getService(new McsApiCatalogFactory());
+    this._licensesApi = apiClientFactory.getService(new McsApiLicensesFactory());
+
 
     // Register events
     this._entitiesEventMap = [];
@@ -1323,6 +1332,18 @@ export class McsApiService {
     );
   }
 
+  public getLicenses(query?: McsQueryParam): Observable<McsApiCollection<McsLicense>> {
+    let dataCollection = isNullOrEmpty(query) ?
+      this._licensesRepository.getAll() :
+      this._licensesRepository.filterBy(query);
+
+    return dataCollection.pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getLicenses'))
+      ),
+      map((response) => this._mapToCollection(response, this._licensesRepository.getTotalRecordsCount()))
+    );
+  }
   /**
    * Dispatch the entity requester event based on the action provided
    * @param event Event to be dispatched

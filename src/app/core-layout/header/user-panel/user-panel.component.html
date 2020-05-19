@@ -57,6 +57,27 @@
 </ng-template>
 
 <div class="user-panel-wrapper">
+  <!-- Platform Options -->
+    <ng-container *mcsAccessControl="['JobView']">
+      <div class="user-panel-item">
+        <ng-container *ngIf="showPlatformButton">
+          <button mcsButton id="platform-change"
+            class="btn-platform-change"
+            size="small"
+            (click)="onChangePlatform()"
+            mcsEventTracker="user-platform"
+            mcsEventCategory="platform"
+            mcsEventLabel="platform-change">
+              <span *ngIf="isPublicRoute else privateCloud">
+                {{'licenses.headerNavigation.privateCloudLabel' | translate}}
+              </span>
+              <ng-template #privateCloud>
+                {{'licenses.headerNavigation.publicCloudLabel' | translate}}
+              </ng-template>
+          </button>
+        </ng-container>
+      </div>
+    </ng-container>
   <!-- Notification bell icon -->
   <ng-container *mcsAccessControl="['JobView']">
     <div class="user-panel-item notification-item" *ngIf="notifications$ | async as notifications">

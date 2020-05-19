@@ -1975,7 +1975,8 @@
     "getProducts": "Something went wrong while retrieving the list of available products.",
     "getProduct": "Something went wrong while retrieving the details for this product.",
     "getProductCatalogs": "Something went wrong while retrieving the list of available products.",
-    "getProductCatalog": "Something went wrong while retrieving the list of available products."
+    "getProductCatalog": "Something went wrong while retrieving the list of available products.",
+    "getLicenses": "Something went wrong while retrieving the list of licenses."
   },
   "entityState": {
     "inProgress": "Processing request..."
@@ -2091,6 +2092,38 @@
   "dialogSaveConflictSystemMessageEdit": {
     "title": "Conflicting Message",
     "message": "Are you sure you wish to continue?\r\nAn existing message is already enabled.\r\n\nSaving this message will cause the conflicting message to be disabled and this message enabled in its place."
+  },
+  "licenses":{
+      "title": "Licenses",
+      "headerNavigation": {
+        "publicCloudLabel": "Access Public Cloud",
+        "privateCloudLabel": "Access Private Cloud"
+      },
+      "topNavigation": {
+        "dataSingular": "License",
+        "dataPlural": "Licenses",
+        "newLicense": "New License"
+      },
+      "navigation":{
+        "back": "Back to Licenses",
+        "next": "Next",
+        "cancel": "Cancel"
+      },
+      "sideNavigation": {
+        "list": {
+          "header": "License Filter",
+          "search": "Table Search",
+          "filter": "Column Filter"
+        },
+        "order": {
+          "details": "Details",
+          "confirm":"Confirm",
+          "go": "Go!"
+        }
+      },
+      "content": {
+        "none": "None"
+      }
   }
 
 }

@@ -72,6 +72,12 @@ $notification-item-label-size: 18px;
       }
     }
   }
+  
+  .btn-platform-change {
+    background-color: $color-black;
+    border: 0.5px solid $color-white;
+  }
+  
 }
 
 // Popover for notifications layout
@@ -117,3 +123,4 @@ $notification-item-label-size: 18px;
     }
   }
 }
+

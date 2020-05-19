@@ -70,6 +70,14 @@
     
     <ng-container *ngIf="isPublicCloudRoute">
       <!-- ADD PUBLIC CLOUD MENU ITEMS HERE -->
+      <div class="navigation-item" hidden-small mcsRouterLinkActive="active"
+        *mcsAccessControl="[]; feature: 'EnablePublicCloud'">
+        <mcs-icon [key]="caretRightIconKey" color="light"
+          size="medium" class="navigation-mobile"></mcs-icon>
+        <a [mcsRouterLink]="routeKeyEnum.Licenses">
+          {{ 'licenses.title' | translate }}
+        </a>
+      </div>
     </ng-container>
 
     <!-- Other Tools -->

@@ -1,0 +1,176 @@
+<mcs-page>
+    <!-- Page template header -->
+    <ng-container *mcsPageHeader>
+        <h1>{{ 'licenses.title' | translate }}</h1>
+    </ng-container>
+   
+    <!-- Top Panel -->
+    <mcs-top-panel *mcsTopPanelDef>
+        <!--TODO: update creation when there's a story for it-->
+        <!-- License Creation -->
+        <ng-container *mcsAccessControl>
+            <ng-container *ngIf="false"><!--hide temporarily-->
+            <mcs-top-panel-item *mcsTopPanelItemDef>
+                <mcs-action-item
+                [disabled] = "true"
+                (click)="onClickNewLicenseButton()"
+                mcsId
+                mcsEventTracker="create-new-license"
+                mcsEventCategory="license"
+                mcsEventLabel="license-listing-top-panel">
+                <mcs-icon [key]="addIconKey"></mcs-icon>
+                <span>{{ 'licenses.topNavigation.newLicense' | translate }}</span>
+                </mcs-action-item>
+            </mcs-top-panel-item>
+            </ng-container>
+        </ng-container>
+
+        <mcs-top-panel-item *mcsTopPanelItemDef>
+            <div class="listing-action-wrapper">
+                <div class="total-record-count">
+                <span>
+                    {{ totalRecordsCount | mcsPlural: ('licenses.topNavigation.dataSingular' | translate) : ('licenses.topNavigation.dataPlural' | translate) }}
+                </span>
+                </div>
+            </div>
+        </mcs-top-panel-item>
+    </mcs-top-panel>
+
+    <!-- Side Menu -->
+    <mcs-left-panel *mcsLeftPanelDef="'licenses.sideNavigation.list.header' | translate">
+        <!-- Column Filter -->
+        <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'licenses.sideNavigation.list.filter' | translate" offset="medium">
+            <mcs-column-filter [filters]="dataFilters"
+            (dataChange)="onColumnFilterChange($event)"></mcs-column-filter> 
+        </mcs-left-panel-item>
+        
+    </mcs-left-panel>
+    
+    <mcs-content-panel *mcsContentPanelDef>
+
+        <div class="listing-table-wrapper">
+            <!-- Search -->
+            <mcs-search *ngIf="isMobile" #search mcsId="license-targets-mobile-search"></mcs-search>
+            <!-- Table -->
+            <mcs-table #table [dataSource]="dataSource">
+                <!-- Header and Data row -->
+                <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
+                <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"></mcs-data-row>
+
+                <!-- Name Column -->
+                <ng-container mcsColumnDef="name">
+                    <mcs-header-cell *mcsHeaderCellDef>
+                    {{ columnSettings.name.text }}
+                    </mcs-header-cell>
+                    <mcs-data-cell *mcsDataCellDef="let row">
+                    <mcs-item>
+                        <span> {{ row.name }}</span>
+                    </mcs-item>
+                    </mcs-data-cell>
+                </ng-container>
+
+                <!-- Quantity Column -->
+                <ng-container mcsColumnDef="quantity">
+                    <mcs-header-cell *mcsHeaderCellDef>
+                    {{ columnSettings.quantity.text }}
+                    </mcs-header-cell>
+                    <mcs-data-cell *mcsDataCellDef="let row">
+                    <mcs-item>
+                        <span> {{ row.quantity }}</span>
+                    </mcs-item>
+                    </mcs-data-cell>
+                </ng-container>
+
+                <!-- Quantity Column -->
+                <ng-container mcsColumnDef="status">
+                    <mcs-header-cell *mcsHeaderCellDef>
+                    {{ columnSettings.status.text }}
+                    </mcs-header-cell>
+                    <mcs-data-cell *mcsDataCellDef="let row">
+                    <mcs-item>
+                        <span> {{ row.status | titlecase }}</span>
+                    </mcs-item>
+                    </mcs-data-cell>
+                </ng-container>
+
+                <!-- Billing Frequency Column -->
+                <ng-container mcsColumnDef="billingCycle">
+                    <mcs-header-cell *mcsHeaderCellDef>
+                    {{ columnSettings.billingCycle.text }}
+                    </mcs-header-cell>
+                    <mcs-data-cell *mcsDataCellDef="let row">
+                    <mcs-item>
+                        <span> {{ row.billingCycle | titlecase }}</span>
+                    </mcs-item>
+                    </mcs-data-cell>
+                </ng-container>
+
+                <!-- Service ID Column -->
+                <ng-container mcsColumnDef="serviceId">
+                    <mcs-header-cell *mcsHeaderCellDef>
+                    {{ columnSettings.serviceId.text }}
+                    </mcs-header-cell>
+                    <mcs-data-cell *mcsDataCellDef="let row">
+                    <mcs-item>
+                        <span> {{ row.serviceId | uppercase }}</span>
+                    </mcs-item>
+                    </mcs-data-cell>
+                </ng-container>
+
+                <!-- Offer ID Column -->
+                <ng-container mcsColumnDef="offerId" *mcsAccessControl="['CompanyView']">
+                    <mcs-header-cell *mcsHeaderCellDef>
+                    {{ columnSettings.offerId.text }}
+                    </mcs-header-cell>
+                    <mcs-data-cell *mcsDataCellDef="let row">
+                    <mcs-item>
+                        <span> {{ row.offerId | uppercase }}</span>
+                    </mcs-item>
+                    </mcs-data-cell>
+                </ng-container>
+                
+                <!-- Provisioning ID Column -->
+                <ng-container mcsColumnDef="pcSubscriptionId">
+                    <mcs-header-cell *mcsHeaderCellDef>
+                    {{ columnSettings.pcSubscriptionId.text }}
+                    </mcs-header-cell>
+                    <mcs-data-cell *mcsDataCellDef="let row">
+                    <mcs-item>
+                        <span> {{ row.pcSubscriptionId | uppercase }}</span>
+                    </mcs-item>
+                    </mcs-data-cell>
+                </ng-container>
+
+                <!-- Subscription ID Column -->
+                <ng-container mcsColumnDef="subscriptionId">
+                    <mcs-header-cell *mcsHeaderCellDef>
+                    {{ columnSettings.subscriptionId.text }}
+                    </mcs-header-cell>
+                    <mcs-data-cell *mcsDataCellDef="let row">
+                    <mcs-item>
+                        <span> {{ row.subscriptionId | uppercase }}</span>
+                    </mcs-item>
+                    </mcs-data-cell>
+                </ng-container>
+
+                <!--TODO: create pipe that displays "None" if value is null, undefined or empty -->
+                <!-- Parent Column -->
+                <ng-container mcsColumnDef="parentId">
+                    <mcs-header-cell *mcsHeaderCellDef>
+                    {{ columnSettings.parentId.text }}
+                    </mcs-header-cell>
+                    <mcs-data-cell *mcsDataCellDef="let row">
+                    <mcs-item>
+                        <ng-container *ngIf="(row.parentId) else NoParentId">
+                            <span> {{  row.parentId | uppercase }}</span>
+                        </ng-container>
+                        <ng-template #NoParentId>
+                            <span>None</span>
+                        </ng-template>
+                    </mcs-item>
+                    </mcs-data-cell>
+                </ng-container>
+            </mcs-table>
+        </div>
+    </mcs-content-panel>
+</mcs-page>

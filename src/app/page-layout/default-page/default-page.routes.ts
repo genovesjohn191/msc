@@ -75,7 +75,11 @@ export const defaultPageRoutes: Routes = [
         data: { routeId: RouteKey.Orders },
         loadChildren: '../../features/orders/orders.module#OrdersModule'
       },
-
+      {
+        path: 'licenses',
+        data: { routeId: RouteKey.Licenses },
+        loadChildren: '../../features/licenses/licenses.module#LicensesModule'
+      },
       // New routes must be added on top of this error route page
       {
         path: '**',

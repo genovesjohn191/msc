@@ -330,5 +330,45 @@
       "text": "Updated By",
       "value": true
     }
+  },
+  "licenseFilter": {
+    "name": {
+      "text": "Name",
+      "value": true,
+      "exclude": true
+    },
+    "quantity": {
+      "text": "Quantity",
+      "value": true,
+      "exclude": true
+    },
+    "status": {
+      "text": "Status",
+      "value": true
+    },
+    "billingCycle": {
+      "text": "Billing Frequency",
+      "value": true
+    },
+    "serviceId": {
+      "text": "Service ID",
+      "value": true
+    },
+    "offerId": {
+      "text": "Offer ID",
+      "value": true
+    },
+    "pcSubscriptionId": {
+      "text": "Provisioning ID",
+      "value": true
+    },
+    "subscriptionId": {
+      "text": "Subscription ID",
+      "value": true
+    },
+    "parentId": {
+      "text": "Parent",
+      "value": true
+    }
   }
 }
