@@ -295,7 +295,7 @@ export class McsSessionHandlerService {
     // Update the cookie
     if (this._sessionIdleCounter >= 1) {
       this._cookieService.setItem(CommonDefinition.COOKIE_SESSION_TIMER,
-        this._sessionIdleCounter, { expires: this._authIdentity.user.expiry, sameSite: 'Lax', path: '/' });
+        this._sessionIdleCounter, { expires: this._authIdentity.user.expiry, sameSite: 'Lax', path: '/', secure: true });
     }
   }
 
@@ -348,7 +348,7 @@ export class McsSessionHandlerService {
     let sessionId = this._authIdentity.user.hashedId + this._authIdentity.user.expiry;
 
     this._cookieService.setEncryptedItem(CommonDefinition.COOKIE_SESSION_ID,
-      sessionId, { expires: this._authIdentity.user.expiry, sameSite: 'Lax', path: '/' });
+      sessionId, { expires: this._authIdentity.user.expiry, sameSite: 'Lax', path: '/', secure: true });
   }
 
   @LogMethod()
