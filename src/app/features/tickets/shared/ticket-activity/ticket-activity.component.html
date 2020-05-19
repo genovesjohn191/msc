@@ -14,7 +14,7 @@
 
   <!-- Comment message -->
   <div>
-    <p *ngIf="!isAttachment" [innerHTML]="ticketActivity.content | mcsNewLines"></p>
+    <p *ngIf="!isAttachment" text-pre-wrap>{{ ticketActivity.content }}</p>
     <p *ngIf="isAttachment">
       <mcs-file-download [downloading]="downloading"
         (download)="downloadAttachment()">
