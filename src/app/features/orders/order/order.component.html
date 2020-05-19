@@ -147,16 +147,16 @@
                 </mcs-item>
 
                 <mcs-item>
-                  <span>{{ 'order.totalOneOffCost' | translate }}:</span>
+                  <span>{{ 'order.totalMonthlyCost' | translate }}:</span>
                   <span>
-                    {{ selectedOrder.charges?.currencySymbol }}{{ selectedOrder.charges?.oneOff || 0 }}
+                    {{ selectedOrder.charges?.currencySymbol }}{{ selectedOrder.charges?.monthly || 0 }}
                   </span>
                 </mcs-item>
 
                 <mcs-item>
-                  <span>{{ 'order.totalMonthlyCost' | translate }}:</span>
+                  <span>{{ 'order.totalOneOffCost' | translate }}:</span>
                   <span>
-                    {{ selectedOrder.charges?.currencySymbol }}{{ selectedOrder.charges?.monthly || 0 }}
+                    {{ selectedOrder.charges?.currencySymbol }}{{ selectedOrder.charges?.oneOff || 0 }}
                   </span>
                 </mcs-item>
 
@@ -228,6 +228,16 @@
             </mcs-data-cell>
           </ng-container>
 
+          <!-- Monthly Charge Column -->
+          <ng-container mcsColumnDef="monthlyCharge">
+            <mcs-header-cell *mcsHeaderCellDef>
+              {{ 'order.columnHeaders.monthlyCharge' | translate }}
+            </mcs-header-cell>
+            <mcs-data-cell *mcsDataCellDef="let row">
+              {{ row.charges?.currencySymbol }}{{ row.charges?.monthly }}
+            </mcs-data-cell>
+          </ng-container>
+
           <!-- One-off Charge Column -->
           <ng-container mcsColumnDef="oneOffCharge">
             <mcs-header-cell *mcsHeaderCellDef>
@@ -238,13 +248,13 @@
             </mcs-data-cell>
           </ng-container>
 
-          <!-- Monthly Charge Column -->
-          <ng-container mcsColumnDef="monthlyCharge">
+          <!-- Excess Fee Per GB Charge Column -->
+          <ng-container mcsColumnDef="excessFeePerGB" *ngIf="(chargesState$ | async)?.excessUsagePerGb">
             <mcs-header-cell *mcsHeaderCellDef>
-              {{ 'order.columnHeaders.monthlyCharge' | translate }}
+              {{ 'order.columnHeaders.excessFeePerGB' | translate }}
             </mcs-header-cell>
-            <mcs-data-cell *mcsDataCellDef="let row">
-              {{ row.charges?.currencySymbol }}{{ row.charges?.monthly }}
+            <mcs-data-cell *mcsDataCellDef="let row" [mcsGreyedOut]="!(row.charges?.excessUsageFeePerGB | mcsIsNotNullOrUndefined)">
+              {{ row.charges?.excessUsageFeePerGbInCurrency }}
             </mcs-data-cell>
           </ng-container>
 

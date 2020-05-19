@@ -99,8 +99,9 @@
       "status": "Status",
       "costCentre": "Cost Centre",
       "billingSite": "Billing Site",
+      "monthlyCharge": "Monthly charge",
       "oneOffCharge": "One-off charge",
-      "monthlyCharge": "Monthly charge"
+      "excessFeePerGB": "Excess Fee Per GB"
     },
     "noOrderItems": "No order items found.",
     "errorOnOrderItems": "Sorry, something’s not right. We weren’t able to retrieve the list of order items.",

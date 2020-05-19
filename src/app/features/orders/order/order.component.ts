@@ -16,7 +16,8 @@ import {
   Subject,
   Observable,
   of,
-  Subscription
+  Subscription,
+  BehaviorSubject
 } from 'rxjs';
 import {
   finalize,
@@ -36,7 +37,8 @@ import {
   getSafeProperty,
   unsubscribeSafely,
   CommonDefinition,
-  createObject
+  createObject,
+  isNullOrUndefined
 } from '@app/utilities';
 import {
   McsOrder,
@@ -61,6 +63,12 @@ enum OrderDetailsView {
   OrderApproval = 1
 }
 
+interface ChargesState {
+  monthly: boolean;
+  oneOff: boolean;
+  excessUsagePerGb: boolean;
+}
+
 @Component({
   selector: 'mcs-order',
   templateUrl: './order.component.html',
@@ -75,6 +83,7 @@ export class OrderComponent implements OnInit, OnDestroy {
   public orderItemsDataSource: McsTableDataSource<McsOrderItem>;
   public orderDetailsView: OrderDetailsView;
   public dialogRef: DialogRef<TemplateRef<any>>;
+  public chargesState$: Observable<ChargesState>;
 
   @ViewChild('submitDialogTemplate', { static: false })
   private _submitDialogTemplate: TemplateRef<any>;
@@ -82,6 +91,7 @@ export class OrderComponent implements OnInit, OnDestroy {
   private _orderApprovers: McsOrderApprover[];
   private _destroySubject = new Subject<void>();
   private _orderDataChangeHandler: Subscription;
+  private _chargesStateChange = new BehaviorSubject<ChargesState>({ excessUsagePerGb: false, monthly: false, oneOff: false });
 
   public constructor(
     private _activatedRoute: ActivatedRoute,
@@ -101,6 +111,7 @@ export class OrderComponent implements OnInit, OnDestroy {
     this._subscribeToOrderResolver();
     this._subscribeToParamChange();
     this._registerOrderDataChangeEvent();
+    this._subscribeToChargesStateChange();
   }
 
   public ngOnDestroy() {
@@ -339,11 +350,23 @@ export class OrderComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Returns the charges flags as observable
+   */
+  private _subscribeToChargesStateChange(): void {
+    this.chargesState$ = this._chargesStateChange.asObservable().pipe(
+      shareReplay(1)
+    );
+  }
+
+  /**
    * Subscribes to order resolver
    */
   private _subscribeToOrderResolver(): void {
     this.order$ = this._activatedRoute.data.pipe(
       map((resolver) => getSafeProperty(resolver, (obj) => obj.order)),
+      tap((order) => {
+        this._setChargesState(order);
+      }),
       shareReplay(1)
     );
 
@@ -363,6 +386,26 @@ export class OrderComponent implements OnInit, OnDestroy {
       }),
       shareReplay(1)
     );
+  }
+
+  /**
+   * Sets the excess usage fee flag based on order records
+   */
+  private _setChargesState(order: McsOrder): void {
+    let chargesState: ChargesState = { oneOff: false, monthly: false, excessUsagePerGb: false };
+    let orderItems = getSafeProperty(order, (obj) => obj.items, []);
+
+    orderItems.forEach((orderItem) => {
+      if (chargesState.excessUsagePerGb && chargesState.monthly && chargesState.oneOff) { return; }
+      let excessUsageFee = getSafeProperty(orderItem, (obj) => obj.charges.excessUsageFeePerGB);
+      chargesState.excessUsagePerGb = chargesState.excessUsagePerGb ? chargesState.excessUsagePerGb : !isNullOrUndefined(excessUsageFee);
+      let monthly = getSafeProperty(orderItem, (obj) => obj.charges.monthly);
+      chargesState.monthly = chargesState.monthly ? chargesState.monthly : !isNullOrUndefined(monthly);
+      let oneOff = getSafeProperty(orderItem, (obj) => obj.charges.oneOff);
+      chargesState.oneOff = chargesState.oneOff ? chargesState.oneOff : !isNullOrUndefined(oneOff);
+    });
+
+    this._chargesStateChange.next(chargesState);
   }
 
   /**
