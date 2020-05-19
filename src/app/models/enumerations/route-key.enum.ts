@@ -36,6 +36,7 @@ export enum RouteKey {
   BackupAggregationTargets,
   BackupAggregationTargetsDetails,
   BackupAggregationTargetsDetailsManagement,
+  BackupAggregationTargetsDetailsLinkedServices,
 
   Tickets,
   TicketDetails,

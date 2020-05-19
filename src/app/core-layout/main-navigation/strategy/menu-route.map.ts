@@ -45,7 +45,7 @@ menuRouteMap.set(RouteCategory.Network, [
 menuRouteMap.set(RouteCategory.Storage, [
   {
     routeKey: RouteKey.BackupAggregationTargets,
-    featureFlag: [McsFeatureFlag.AddonBackupAggregationTargetView],
+    featureFlag: [McsFeatureFlag.BatView],
     permission: []
   }
 ]);

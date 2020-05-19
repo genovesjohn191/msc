@@ -142,7 +142,7 @@ export class ServiceBackupVmComponent extends ServerServiceDetailBase implements
   }
 
   public hasBatDetailsView(): boolean {
-    return this._accessControlService.hasAccessToFeature([McsFeatureFlag.AddonBackupAggregationTargetDetailsView]);
+    return this._accessControlService.hasAccessToFeature([McsFeatureFlag.BatDetailsView]);
   }
 
   public onAddVmBackup(selectedServer: McsServer): void {

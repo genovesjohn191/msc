@@ -2,10 +2,11 @@ import { Observable } from 'rxjs';
 import {
   McsApiSuccessResponse,
   McsBackUpAggregationTarget,
-  McsQueryParam
+  McsQueryParam,
+  McsBatLinkedService
 } from '@app/models';
 
-export interface IMcsApiStoragesService {
+export interface IMcsApiBatsService {
 
   /**
    * Get all the backup aggregation targets
@@ -17,4 +18,10 @@ export interface IMcsApiStoragesService {
    * @param id aggregation target identification
    */
   getBackUpAggregationTarget(id: string): Observable<McsApiSuccessResponse<McsBackUpAggregationTarget>>;
+
+  /**
+   * Get all the backup aggregation target linked services
+   * @param id aggregation target identification
+   */
+  getBackUpAggregationTargetLinkedServices(id: string): Observable<McsApiSuccessResponse<McsBatLinkedService[]>>;
 }

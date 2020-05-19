@@ -218,7 +218,7 @@
     "enumCategory": "Storage",
     "enumKey": "BackupAggregationTargets",
     "navigationPath": "storage/aggregation-targets",
-    "requiredFeatureFlag": "EnableAddonBackupAggregationTargetView",
+    "requiredFeatureFlag": "EnableBatView",
     "documentTitle": "Storage - Macquarie Cloud Services"
   },
   "backupAggregationTargetsDetails": {
@@ -226,7 +226,7 @@
     "enumCategory": "Storage",
     "enumKey": "BackupAggregationTargetsDetails",
     "navigationPath": "storage/aggregation-targets",
-    "requiredFeatureFlag": "EnableAddonBackupAggregationTargetView",
+    "requiredFeatureFlag": "EnableBatView",
     "documentTitle": "Backup Aggregation Targets - Macquarie Cloud Services"
   },
   "backupAggregationTargetsDetailsManagement": {
@@ -234,7 +234,15 @@
     "enumCategory": "Storage",
     "enumKey": "BackupAggregationTargetsDetailsManagement",
     "navigationPath": "management",
-    "requiredFeatureFlag": "EnableAddonBackupAggregationTargetDetailsView",
+    "requiredFeatureFlag": "EnableBatDetailsView",
+    "documentTitle": "Backup Aggregation Targets - Macquarie Cloud Services"
+  },
+  "backupAggregationTargetsDetailsLinkedServices": {
+    "enumPlatform": "Private",
+    "enumCategory": "Storage",
+    "enumKey": "BackupAggregationTargetsDetailsLinkedServices",
+    "navigationPath": "linked-services",
+    "requiredFeatureFlag": "EnableBatLinkedServicesView",
     "documentTitle": "Backup Aggregation Targets - Macquarie Cloud Services"
   },
   "systemMessages": {

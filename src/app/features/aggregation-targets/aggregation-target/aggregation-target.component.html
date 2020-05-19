@@ -34,6 +34,11 @@
           <!-- Management Tab -->
           <mcs-tab [label]="'aggregationTarget.management.label' | translate" id="management">
           </mcs-tab>
+
+          <!-- Linked Services Tab -->
+          <mcs-tab *mcsAccessControl="[]; feature: ['EnableBatLinkedServicesView']"
+            [label]="'aggregationTarget.linkedServices.label' | translate" id="linked-services">
+          </mcs-tab>
         </mcs-tab-group>
 
         <!-- Tab content for routing tab -->

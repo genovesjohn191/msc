@@ -1,6 +1,6 @@
 import { Observable} from 'rxjs';
 import { map } from 'rxjs/operators';
-import { IMcsApiStoragesService } from '@app/api-client';
+import { IMcsApiBatsService } from '@app/api-client';
 import { isNullOrEmpty } from '@app/utilities';
 import {
   McsBackUpAggregationTarget,
@@ -10,10 +10,10 @@ import {
 import { McsDataContext } from '../core/mcs-data-context.interface';
 
 
-export class McsBackupAggregationTargetsDataContext implements McsDataContext<McsBackUpAggregationTarget> {
+export class McsBatsDataContext implements McsDataContext<McsBackUpAggregationTarget> {
   public totalRecordsCount: number = 0;
 
-  constructor(private _storageApiService: IMcsApiStoragesService) { }
+  constructor(private _storageApiService: IMcsApiBatsService) { }
 
   /**
    * Get all records from the api service

@@ -4,8 +4,9 @@ export enum McsFeatureFlag {
 
   InternetPortView = 'EnableInternetPortView',
 
-  AddonBackupAggregationTargetDetailsView = 'EnableAddonBackupAggregationTargetDetailsView',
-  AddonBackupAggregationTargetView = 'EnableAddonBackupAggregationTargetView',
+  BatDetailsView = 'EnableBatDetailsView',
+  BatView = 'EnableBatView',
+  BatLinkedServicesView = 'EnableBatLinkedServicesView',
 
   ProductCatalog = 'EnableProductCatalog',
 

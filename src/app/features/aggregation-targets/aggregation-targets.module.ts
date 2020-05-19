@@ -9,7 +9,8 @@ import {
 import { AggregationTargetsComponent } from './aggregation-targets.component';
 import {
   AggregationTargetComponent,
-  AggregationTargetManagementComponent
+  AggregationTargetManagementComponent,
+  AggregationTargetLinkedServicesComponent
 } from './aggregation-target';
 
 
@@ -17,7 +18,8 @@ import {
   declarations: [
     AggregationTargetsComponent,
     AggregationTargetComponent,
-    AggregationTargetManagementComponent
+    AggregationTargetManagementComponent,
+    AggregationTargetLinkedServicesComponent
   ],
   imports: [
     SharedModule,
