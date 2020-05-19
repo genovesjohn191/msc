@@ -61,7 +61,7 @@ export class McsCookieService {
     }
 
     // Save the encrypted data to cookie
-    this._setCookie(key, encrypted.toString(), this._getCookieOptions(securedCookieOptions));
+    this._setCookie(key, encrypted.toString(), this._filterCookieOptions(securedCookieOptions));
   }
 
   /**
@@ -110,7 +110,7 @@ export class McsCookieService {
     let stringValue = isNullOrEmpty(objectValue) ? '' : objectValue.toString();
 
     // Set the content to the cookie
-    this._setCookie(key, stringValue, this._getCookieOptions(options));
+    this._setCookie(key, stringValue, this._filterCookieOptions(securedCookieOptions));
   }
 
   /**
@@ -135,7 +135,7 @@ export class McsCookieService {
    * Returns the cookie options based on the platform
    * @param cookieOptions Cookie Option to set
    */
-  private _getCookieOptions(cookieOptions: CookieOptions): CookieOptions {
+  private _filterCookieOptions(cookieOptions: CookieOptions): CookieOptions {
     if (isNullOrEmpty(cookieOptions)) { return undefined; }
     // We need to always set the expiry to undefined
     // when it comes to IE because in IE,
@@ -144,6 +144,7 @@ export class McsCookieService {
       cookieOptions.domain = undefined;
       cookieOptions.expires = undefined;
     }
+
     return cookieOptions;
   }
 
