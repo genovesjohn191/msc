@@ -129,7 +129,7 @@
   },
   "orderGroups": {
     "header": "Add or Change a Service",
-    "description": "Macquarie Cloud Services offers a range of managed services, with more being added regularly.",
+    "description": "Add or change an existing service by selecting an operation below. We’re regularly adding more order types to this view.",
     "newLabel": "Add",
     "noNewOrdersMessage": "No Add operations to display.",
     "changeLabel": "Change",

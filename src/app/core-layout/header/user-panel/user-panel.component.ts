@@ -8,8 +8,6 @@ import {
 } from '@angular/core';
 import {
   Router,
-  RouterEvent,
-  NavigationEnd
 } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import {
@@ -20,7 +18,6 @@ import {
   takeUntil,
   map,
   shareReplay,
-  tap
 } from 'rxjs/operators';
 import {
   McsJob,
@@ -34,8 +31,9 @@ import {
   McsBrowserService,
   McsAuthenticationService,
   McsNavigationService,
-  CoreRoutes,
-  McsRouteSettingsService
+  McsRouteSettingsService,
+  McsAuthenticationIdentity,
+  McsAccessControlService,
 } from '@app/core';
 import {
   refreshView,
@@ -47,9 +45,6 @@ import { EventBusPropertyListenOn } from '@peerlancers/ngx-event-bus';
 import { McsEvent } from '@app/events';
 import { SwitchAccountService } from '../../shared';
 import { UserPanelService } from './user-panel.service';
-import { McsAuthenticationIdentity } from '@app/core/authentication/mcs-authentication.identity';
-import { McsAccessControlService } from '@app/core/authentication/mcs-access-control.service';
-
 
 const NOTIFICATIONS_COUNT_LIMIT = 3;
 @Component({

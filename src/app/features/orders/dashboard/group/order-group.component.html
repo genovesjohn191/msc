@@ -14,9 +14,9 @@
           <section *ngIf="groupDetails.newOrders | mcsIsNotNullOrEmpty; else noNewOrdersTemplate">
             <div padding-bottom-small *ngFor="let newOrder of groupDetails.newOrders">
               <a (click)="executeOrderAvailable(newOrder.productOrderType)">
-                <span>{{ newOrder.orderName }}</span>
+                <span>{{ newOrder.orderAction }}</span>
               </a><br/>
-              <span read-only>{{ newOrder.orderAction }}</span>
+              <span read-only>{{ newOrder.orderName }}</span>
             </div>
           </section>
 
@@ -36,9 +36,9 @@
           <section *ngIf="groupDetails.changeOrders | mcsIsNotNullOrEmpty; else noChangeOrdersTemplate">
             <div padding-bottom-small *ngFor="let changeOrder of groupDetails.changeOrders">
               <a (click)="executeOrderAvailable(changeOrder.productOrderType)">
-                <span>{{ changeOrder.orderName }}</span>
+                <span>{{ changeOrder.orderAction }}</span>
               </a><br/>
-              <span read-only>{{ changeOrder.orderAction }}</span>
+              <span read-only>{{ changeOrder.orderName }}</span>
             </div>
           </section>
 
