@@ -170,6 +170,7 @@ export class CommonDefinition {
   public static FILTERSELECTOR_AGGREGATION_TARGETS_LISTING = 'aggregationTargetFilter';
   public static FILTERSELECTOR_TOOLS_LISTING = 'toolsFilter';
   public static FILTERSELECTOR_SYSTEM_MESSAGE_LISTING = 'systemMessageFilter';
+  public static FILTERSELECTOR_LICENSE_LISTING = 'licenseFilter';
 
   /** RegEx Patterns */
   public static REGEX_EMAIL_PATTERN = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;

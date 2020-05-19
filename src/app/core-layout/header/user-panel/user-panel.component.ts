@@ -6,6 +6,11 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy
 } from '@angular/core';
+import {
+  Router,
+  RouterEvent,
+  NavigationEnd
+} from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import {
   Subject,
@@ -14,19 +19,23 @@ import {
 import {
   takeUntil,
   map,
-  shareReplay
+  shareReplay,
+  tap
 } from 'rxjs/operators';
 import {
   McsJob,
   Breakpoint,
   McsCompany,
   RouteKey,
-  McsIdentity
+  McsIdentity,
+  McsFeatureFlag,
 } from '@app/models';
 import {
   McsBrowserService,
   McsAuthenticationService,
-  McsNavigationService
+  McsNavigationService,
+  CoreRoutes,
+  McsRouteSettingsService
 } from '@app/core';
 import {
   refreshView,
@@ -38,6 +47,9 @@ import { EventBusPropertyListenOn } from '@peerlancers/ngx-event-bus';
 import { McsEvent } from '@app/events';
 import { SwitchAccountService } from '../../shared';
 import { UserPanelService } from './user-panel.service';
+import { McsAuthenticationIdentity } from '@app/core/authentication/mcs-authentication.identity';
+import { McsAccessControlService } from '@app/core/authentication/mcs-access-control.service';
+
 
 const NOTIFICATIONS_COUNT_LIMIT = 3;
 @Component({
@@ -63,17 +75,22 @@ export class UserPanelComponent implements OnInit, OnDestroy {
 
   @EventBusPropertyListenOn(McsEvent.accountChange)
   public activeAccount$: Observable<McsCompany>;
+  public showPlatformButton: boolean = false;
+  public isPublicRoute: boolean = false;
 
   private _destroySubject = new Subject<void>();
-
   public constructor(
+    private _mcsRouteSettingsService: McsRouteSettingsService,
+    private _accessControlService: McsAccessControlService,
+    private _authenticationIdentity: McsAuthenticationIdentity,
     private _translateService: TranslateService,
     private _navigationService: McsNavigationService,
     private _browserService: McsBrowserService,
     private _changeDetectorRef: ChangeDetectorRef,
     private _authenticationService: McsAuthenticationService,
     private _switchAccountService: SwitchAccountService,
-    private _userPanelService: UserPanelService
+    private _userPanelService: UserPanelService,
+    private _route: Router,
   ) {
     this.hasConnectionError = false;
     this.deviceType = Breakpoint.Large;
@@ -83,6 +100,7 @@ export class UserPanelComponent implements OnInit, OnDestroy {
     this._subscribeToNotificationsChange();
     this._subscribeToBrowserResize();
     this._subscribeToSwitchAccount();
+    this._initializePlatformButton();
   }
 
   public ngOnDestroy(): void {
@@ -190,5 +208,22 @@ export class UserPanelComponent implements OnInit, OnDestroy {
     this._switchAccountService.activeAccountStream
       .pipe(takeUntil(this._destroySubject))
       .subscribe(() => this._changeDetectorRef.markForCheck());
+  }
+
+  private _initializePlatformButton(): void {
+    this.showPlatformButton = (this._authenticationIdentity.platformSettings.hasPrivateCloud &&
+                                this._authenticationIdentity.platformSettings.hasPublicCloud &&
+                                this._accessControlService.hasAccessToFeature(McsFeatureFlag.PublicCloud));
+    this.isPublicRoute = this._mcsRouteSettingsService.isPublicCloudRoute;
+  }
+
+  public onChangePlatform(): void {
+    if (this.isPublicRoute) {
+      this.isPublicRoute = false;
+      this._navigationService.navigateTo(RouteKey.Servers);
+    } else {
+      this.isPublicRoute = true;
+      this._navigationService.navigateTo(RouteKey.Licenses);
+    }
   }
 }

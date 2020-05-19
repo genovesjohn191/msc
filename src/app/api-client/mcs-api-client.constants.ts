@@ -20,6 +20,7 @@ import { McsApiSystemService } from './services/mcs-api-system.service';
 import { McsApiInternetService } from './services/mcs-api-internet.service';
 import { McsApiIdentityService } from './services/mcs-api-identity.service';
 import { McsApiPlatformService } from './services/mcs-api-platform.service';
+import { McsApiLicensesService } from './services/mcs-api-licenses.service';
 
 import { McsApiMockInterceptor } from './interceptors/mcs-api-mock.interceptor';
 
@@ -42,7 +43,8 @@ export const apiClientProviders: Provider[] = [
   McsApiToolsService,
   McsApiInternetService,
   McsApiSystemService,
-  McsApiIdentityService
+  McsApiIdentityService,
+  McsApiLicensesService
 ];
 
 export const apiClientInterceptors: Provider[] = [

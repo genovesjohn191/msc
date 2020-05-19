@@ -14,6 +14,7 @@ import { McsCompaniesRepository } from './repositories/mcs-companies.repository'
 import { McsInternetRepository } from './repositories/mcs-internet.repository';
 import { McsBackupAggregationTargetsRepository } from './repositories/mcs-backup-aggregation-targets.repository';
 import { McsSystemMessagesRepository } from './repositories/mcs-system-messages.repository';
+import { MicsLicensesRepository } from './repositories/mcs-licenses.repository';
 
 /** State Managers */
 import { McsJobManagerClient } from './job-manager/mcs-job-manager.client';
@@ -33,6 +34,7 @@ export const repositoryProviders: any[] = [
   McsCompaniesRepository,
   McsInternetRepository,
   McsSystemMessagesRepository,
+  MicsLicensesRepository,
   McsApiService
 ];
 
