@@ -1,7 +1,4 @@
-import {
-  Injectable,
-  isDevMode
-} from '@angular/core';
+import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import {
   isNullOrEmpty,
@@ -42,9 +39,6 @@ export class McsCookieService {
     // Encrypt the value
     let encrypted: string;
     let securedCookieOptions: CookieOptions = options;
-    if (this._devMode) {
-      securedCookieOptions.sameSite = 'None';
-    }
 
     try {
       if (isJson(value)) {
@@ -103,9 +97,6 @@ export class McsCookieService {
     options: CookieOptions = { secure: true, sameSite: 'Lax', path: '/' }
   ): void {
     let securedCookieOptions: CookieOptions = options;
-    if (this._devMode) {
-      securedCookieOptions.sameSite = 'None';
-    }
     let objectValue = isJson(value) ? JSON.stringify(value) : value;
     let stringValue = isNullOrEmpty(objectValue) ? '' : objectValue.toString();
 
@@ -157,12 +148,5 @@ export class McsCookieService {
     options: CookieOptions = { expires: undefined, path: undefined, domain: undefined, secure: true, sameSite: 'Lax' }
   ) {
     this._cookieService.set(key, value, options.expires, options.path, options.domain, options.secure, options.sameSite);
-  }
-
-  /**
-   * Returns true if its in Development mode
-   */
-  private _devMode(): boolean {
-    return isDevMode();
   }
 }
