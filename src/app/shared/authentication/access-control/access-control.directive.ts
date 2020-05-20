@@ -25,12 +25,20 @@ import {
  */
 export class AccessControlDirective implements OnChanges {
   @Input('mcsAccessControl')
-  public set requiredPermission(value: string[]) { this._requiredPermission = coerceArray(value); }
-  private _requiredPermission: string[];
+  public set permission(value: string[]) { this._permission = coerceArray(value); }
+  private _permission: string[];
+
+  @Input('mcsAccessControlRequireAllPermissions')
+  public set requireAllPermissions(value: boolean) { this._requireAllPermissions = value; }
+  private _requireAllPermissions: boolean = false;
 
   @Input('mcsAccessControlFeature')
   public set feature(featureFlag: string | string[]) { this._featureFlag = featureFlag; }
   private _featureFlag: string | string[];
+
+  @Input('mcsAccessControlRequireAllFeatureFlags')
+  public set requireAllFeatureFlags(value: boolean) { this._requireAllFeatureFlags = value; }
+  private _requireAllFeatureFlags: boolean = false;
 
   @Input('mcsAccessControlValidateWhen')
   public set validateWhen(validateWhen: boolean) {
@@ -65,7 +73,7 @@ export class AccessControlDirective implements OnChanges {
     }
 
     let hasAccess = this._accessControlService
-      .hasAccess(this._requiredPermission, this._featureFlag);
+      .hasAccess(this._permission, this._featureFlag, this._requireAllPermissions, this._requireAllFeatureFlags);
 
     if (isNullOrEmpty(this._elseTemplate)) {
       hasAccess ?
