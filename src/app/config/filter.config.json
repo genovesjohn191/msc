@@ -356,7 +356,8 @@
     },
     "offerId": {
       "text": "Offer ID",
-      "value": true
+      "value": true,
+      "exclude": true
     },
     "pcSubscriptionId": {
       "text": "Provisioning ID",
