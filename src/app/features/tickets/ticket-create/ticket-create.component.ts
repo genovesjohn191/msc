@@ -66,6 +66,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
   public serverServices$: Observable<TicketService[]>;
   public firewallServices$: Observable<TicketService[]>;
   public internetPortServices$: Observable<TicketService[]>;
+  public batServices$: Observable<TicketService[]>;
 
   // Form variables
   public fgCreateTicket: FormGroup;
@@ -96,6 +97,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     this._subscribesToServerServices();
     this._subscribesToFirewallServices();
     this._subscribesToInternetPortServices();
+    this._subscribesToBatServices();
   }
 
   public ngOnDestroy() {
@@ -293,6 +295,19 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
             `${internetPort.description} (${internetPort.serviceId})`,
             internetPort.serviceId
           ));
+      })
+    );
+  }
+
+  /**
+   * Subscribes to backup aggregation target services
+   */
+  private _subscribesToBatServices(): void {
+    this.batServices$ = this._apiService.getBackupAggregationTargets().pipe(
+      map((response) => {
+        let bats = getSafeProperty(response, (obj) => obj.collection);
+        return bats.filter((bat) => getSafeProperty(bat, (obj) => obj.serviceId))
+          .map((bat) => new TicketService(`${bat.description} (${bat.serviceId})`, bat.serviceId));
       })
     );
   }
