@@ -528,7 +528,7 @@
     "vmProperties": {
       "title": "Server Properties",
       "status": "Status",
-      "image": "Image",
+      "edition": "OS Edition",
       "zone": "Zone",
       "configuration": "Configuration",
       "vmwareTools": "Tools Version",
