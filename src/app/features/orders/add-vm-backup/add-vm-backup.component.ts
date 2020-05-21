@@ -213,7 +213,7 @@ export class AddVmBackupComponent extends McsOrderWizardBase implements OnInit, 
             let servers = getSafeProperty(serversCollection, (obj) => obj.collection) || [];
 
             servers.forEach((server) => {
-              if (!server.canProvision) { return; }
+              if (!server.isManagedVCloud) { return; }
 
               let platformName = getSafeProperty(server, (obj) => obj.platform.resourceName) || 'Others';
               let foundGroup = serverGroups.find((serverGroup) => serverGroup.groupName === platformName);

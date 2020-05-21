@@ -17,9 +17,9 @@
               <ng-container *mcsAccessControl="[]; feature: ['EnableAddonServerBackupDetailsView']">
                 <a *ngIf="statusDetailsLinkFlag"
                   mcsId="backup-server-status-details-link"
-                  mcsEventTracker="backup-server-status-details-link-click"
+                  mcsEventTracker="backup-server-status-details-link"
                   mcsEventCategory="server"
-                  mcsEventLabel="backup-server-status-details-view"
+                  mcsEventLabel="server-services"
                   (click)="changeView()">
                   {{ 'serverServices.serverBackup.detailsLink' | translate }}
                 </a>
@@ -30,9 +30,9 @@
             {{ 'serverServices.serverBackup.batLinkDescription' | translate }}
             <ng-container *ngIf="hasBatDetailsView(); else batServiceIdTemplate">
               <a mcsId="backup-server-bat-details-link"
-                mcsEventTracker="backup-server-bat-details-link-click"
+                mcsEventTracker="backup-server-bat-details-link"
                 mcsEventCategory="server"
-                mcsEventLabel="backup-server-bat-details-view"
+                mcsEventLabel="server-services"
                 [mcsRouterLink]="[routeKeyEnum.BackupAggregationTargetsDetails, serverBackupServer?.aggregationTargetId]">
                 {{ 'serverServices.serverBackup.batLinkLabel' | translate }}
               </a>
@@ -54,7 +54,7 @@
               or
               <a (click)="onCreateNewTicket()"
               mcsId="create-new-ticket"
-              mcsEventTracker="create-new-ticket"
+              mcsEventTracker="raise-a-ticket"
               mcsEventCategory="ticket"
               mcsEventLabel="server-services">{{ 'serverServices.serverBackup.raiseTicketLabel' | translate }}</a>
             </ng-container>.

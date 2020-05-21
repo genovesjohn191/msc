@@ -218,7 +218,7 @@ export class AddHidsComponent extends McsOrderWizardBase implements OnInit, OnDe
             let servers = getSafeProperty(serversCollection, (obj) => obj.collection) || [];
 
             servers.forEach((server) => {
-              if (!server.canProvision) { return; }
+              if (!server.isManagedVCloud) { return; }
 
               let platformName = getSafeProperty(server, (obj) => obj.platform.resourceName) || 'Others';
               let foundGroup = serverGroups.find((serverGroup) => serverGroup.groupName === platformName);
