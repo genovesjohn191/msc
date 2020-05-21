@@ -134,6 +134,16 @@ export class ServerComponent extends McsListViewListingBase<McsServerGroup> impl
   }
 
   /**
+   * Returns the service ID needed for ticket creation depending on the type of server
+   */
+  public getTicketCreationServiceId(server: McsServer): string {
+    if (server.isSelfManaged) {
+      return getSafeProperty(server, (obj) => obj.platform.resourceName, '');
+    }
+    return server.serviceId;
+  }
+
+  /**
    * Event that emits when the tab is changed in the routing tabgroup
    * @param tab Active tab
    */

@@ -130,9 +130,11 @@
   </mcs-content-panel>
 </mcs-page>
 
-<mcs-help-widget *mcsAccessControl="['TicketCreate']"
-  [serviceId]="(server$ | async)?.serviceId"
-  mcsEventTracker="toggle-help"
-  mcsEventCategory="help"
-  mcsEventLabel="help-panel-servers">
-</mcs-help-widget>
+<ng-container *ngIf="server$ | async as server">
+  <mcs-help-widget *mcsAccessControl="['TicketCreate']"
+    [serviceId]="getTicketCreationServiceId(server)"
+    mcsEventTracker="toggle-help"
+    mcsEventCategory="help"
+    mcsEventLabel="help-panel-servers">
+  </mcs-help-widget>
+</ng-container>
