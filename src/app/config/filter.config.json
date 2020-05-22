@@ -360,10 +360,6 @@
       "exclude": true
     },
     "pcSubscriptionId": {
-      "text": "Provisioning ID",
-      "value": true
-    },
-    "subscriptionId": {
       "text": "Subscription ID",
       "value": true
     },

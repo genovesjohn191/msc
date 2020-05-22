@@ -2134,7 +2134,9 @@
         }
       },
       "content": {
-        "none": "None"
+        "none": "None",
+        "noLicenses": "There are no licenses to display.",
+        "error": "Sorry, something’s not right. We weren’t able to retrieve the list of Licenses."
       }
   }
 }
