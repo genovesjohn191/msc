@@ -129,7 +129,20 @@
                     </mcs-data-cell>
                 </ng-container>
                 
+                <!--Temporarily remove this as per the requirement FUSION-4020-->
                 <!-- Provisioning ID Column -->
+                <!-- <ng-container mcsColumnDef="pcSubscriptionId">
+                    <mcs-header-cell *mcsHeaderCellDef>
+                    {{ columnSettings.pcSubscriptionId.text }}
+                    </mcs-header-cell>
+                    <mcs-data-cell *mcsDataCellDef="let row">
+                    <mcs-item>
+                        <span> {{ row.pcSubscriptionId | uppercase }}</span>
+                    </mcs-item>
+                    </mcs-data-cell>
+                </ng-container> -->
+
+                <!-- Subscription ID Column -->
                 <ng-container mcsColumnDef="pcSubscriptionId">
                     <mcs-header-cell *mcsHeaderCellDef>
                     {{ columnSettings.pcSubscriptionId.text }}
@@ -141,19 +154,7 @@
                     </mcs-data-cell>
                 </ng-container>
 
-                <!-- Subscription ID Column -->
-                <ng-container mcsColumnDef="subscriptionId">
-                    <mcs-header-cell *mcsHeaderCellDef>
-                    {{ columnSettings.subscriptionId.text }}
-                    </mcs-header-cell>
-                    <mcs-data-cell *mcsDataCellDef="let row">
-                    <mcs-item>
-                        <span> {{ row.subscriptionId | uppercase }}</span>
-                    </mcs-item>
-                    </mcs-data-cell>
-                </ng-container>
-
-                <!--TODO: create pipe that displays "None" if value is null, undefined or empty -->
+                <!--TODO: improve base class' grid column add new directive to display custom message if value is null, undefined or empty -->
                 <!-- Parent Column -->
                 <ng-container mcsColumnDef="parentId">
                     <mcs-header-cell *mcsHeaderCellDef>
@@ -165,10 +166,20 @@
                             <span> {{  row.parentId | uppercase }}</span>
                         </ng-container>
                         <ng-template #NoParentId>
-                            <span>None</span>
+                            <span>{{'licenses.content.none'}}</span>
                         </ng-template>
                     </mcs-item>
                     </mcs-data-cell>
+                </ng-container>
+
+                <!-- Data Status Integration -->
+                <ng-container mcsDataStatusDef>
+                    <mcs-data-empty *mcsDataEmptyDef>
+                    <span>{{ 'licenses.content.noLicenses' | translate }} </span>
+                    </mcs-data-empty>
+                    <mcs-data-error *mcsDataErrorDef>
+                    <span>{{ 'licenses.content.error' | translate }}</span>
+                    </mcs-data-error>
                 </ng-container>
             </mcs-table>
         </div>
