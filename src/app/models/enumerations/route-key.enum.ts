@@ -67,6 +67,8 @@ export enum RouteKey {
   OrderAddVmBackup,
   OrderAddBat,
 
+  OrderMsLicenseCountChange,
+
   Internet,
   InternetDetails,
   InternetDetailsManagement,

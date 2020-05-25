@@ -177,4 +177,14 @@ export class CoreValidators {
   public static max(maxValue: number): ValidatorFn {
     return Validators.max(maxValue);
   }
+
+  /**
+   * Validator that requires controls to be of multiple of the given value
+   *
+   * `@Note` This will produce the following value when false
+   * {'step': {'step': step, 'actual': control.value}}
+   */
+  public static step(stepValue: number): ValidatorFn {
+    return CoreValidators.custom(((value) => value % stepValue === 0).bind(this), 'step');
+  }
 }

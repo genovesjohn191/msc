@@ -6,7 +6,7 @@ import { McsLicense } from '@app/models';
 import { McsLicensesDataContext } from '../data-context/mcs-licenses-data.context';
 
 @Injectable()
-export class MicsLicensesRepository extends McsRepositoryBase<McsLicense> {
+export class McsLicensesRepository extends McsRepositoryBase<McsLicense> {
 
   constructor(_apiClientFactory: McsApiClientFactory) {
     super(new McsLicensesDataContext(

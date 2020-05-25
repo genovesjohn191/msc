@@ -366,6 +366,11 @@
     "parentId": {
       "text": "Parent",
       "value": true
+    },
+    "action": {
+      "text": "",
+      "value": true,
+      "exclude": true
     }
   }
 }

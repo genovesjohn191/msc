@@ -17,6 +17,7 @@ import { AddHidsComponent } from './add-hids/add-hids.component';
 import { AddServerBackupComponent } from './add-server-backup/add-server-backup.component';
 import { AddVmBackupComponent } from './add-vm-backup/add-vm-backup.component';
 import { AddBatComponent } from './add-bat/add-bat.component';
+import { MsLicenseCountChangeComponent } from './ms-license-count-change/ms-license-count-change.component';
 
 /**
  * List of services for the main module
@@ -43,7 +44,8 @@ export const ordersComponents: any[] = [
   AddHidsComponent,
   AddServerBackupComponent,
   AddVmBackupComponent,
-  AddBatComponent
+  AddBatComponent,
+  MsLicenseCountChangeComponent
 ];
 
 /**
@@ -108,6 +110,11 @@ export const ordersRoutes: Routes = [
     path: 'add/backup-aggregation-target',
     component: AddBatComponent,
     data: { routeId: RouteKey.OrderAddBat }
+  },
+  {
+    path: 'ms-license-count-change',
+    component: MsLicenseCountChangeComponent,
+    data: { routeId: RouteKey.OrderMsLicenseCountChange }
   },
   // Add additional routes above this line
   {

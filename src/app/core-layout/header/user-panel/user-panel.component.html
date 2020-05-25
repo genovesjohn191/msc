@@ -69,10 +69,10 @@
             mcsEventCategory="platform"
             mcsEventLabel="platform-change">
               <span *ngIf="isPublicRoute else privateCloud">
-                {{'licenses.headerNavigation.privateCloudLabel' | translate}}
+                {{'header.userPanel.platform.privateCloudLabel' | translate}}
               </span>
               <ng-template #privateCloud>
-                {{'licenses.headerNavigation.publicCloudLabel' | translate}}
+                {{'header.userPanel.platform.publicCloudLabel' | translate}}
               </ng-template>
           </button>
         </ng-container>

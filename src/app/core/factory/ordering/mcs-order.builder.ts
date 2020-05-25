@@ -130,6 +130,14 @@ export class McsOrderBuilder {
   }
 
   /**
+   * Clear all order items
+   */
+  public clearOrderItems(): McsOrderBuilder {
+    this._orderItems = [];
+    return this;
+  }
+
+  /**
    * Build the generic details of the order
    */
   public buildOrderDetails(): McsOrderBuilder {

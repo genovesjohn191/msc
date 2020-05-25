@@ -1,5 +1,6 @@
 import { JsonProperty } from '@peerlancers/json-serialization';
 import { McsEntityBase } from '../common/mcs-entity.base';
+import { McsDateSerialization } from '../serialization/mcs-date-serialization';
 
 export class McsLicense extends McsEntityBase {
 
@@ -26,6 +27,12 @@ export class McsLicense extends McsEntityBase {
 
   @JsonProperty()
   public billingCycle: string = undefined;
+
+  @JsonProperty({
+    serializer: McsDateSerialization,
+    deserializer: McsDateSerialization
+  })
+  public renewalDate: Date = undefined;
 
   @JsonProperty()
   public parentId: string = undefined;

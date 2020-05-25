@@ -245,6 +245,13 @@
     "requiredFeatureFlag": "EnableBatLinkedServicesView",
     "documentTitle": "Backup Aggregation Targets - Macquarie Cloud Services"
   },
+  "licenses": {
+    "enumPlatform": "Public",
+    "enumKey": "Licenses",
+    "navigationPath": "licenses",
+    "documentTitle": "Licenses - Macquarie Cloud Services",
+    "requiredFeatureFlag": "EnablePublicCloud"
+  },
   "systemMessages": {
     "enumCategory": "SystemMessages",
     "enumKey": "SystemMessages",
@@ -441,17 +448,19 @@
     "requiredFeatureFlag": "EnableOrderingBatProvision",
     "documentTitle": "Add Backup Aggregation Target Provision - Macquarie Cloud Services"
   },
+  "orderMsLicenseCountChange": {
+    "enumPlatform": "Public",
+    "enumKey": "OrderMsLicenseCountChange",
+    "enumCategory": "MakeAChange",
+    "navigationPath": "orders/ms-license-count-change",
+    "requiredPermissions": ["OrderEdit"],
+    "requiredFeatureFlag": "EnableOrderingLicenseCountChange",
+    "documentTitle": "Change Microsoft License Count - Macquarie Cloud Services"
+  },
   "otherTools": {
     "enumKey": "OtherTools",
     "navigationPath": "tools",
     "documentTitle": "Other Tools - Macquarie Cloud Services"
-  },
-  "licenses": {
-    "enumPlatform": "Public",
-    "enumKey": "Licenses",
-    "navigationPath": "licenses",
-    "documentTitle": "Licenses - Macquarie Cloud Services",
-    "requiredFeatureFlag": "EnablePublicCloud"
   },
   "httpErrorPage": {
     "enumKey": "HttpErrorPage",
