@@ -162,11 +162,11 @@
                     </mcs-header-cell>
                     <mcs-data-cell *mcsDataCellDef="let row">
                     <mcs-item>
-                        <ng-container *ngIf="(row.parentId) else NoParentId">
+                        <ng-container *ngIf="(row.parentId); else NoParentId">
                             <span> {{  row.parentId | uppercase }}</span>
                         </ng-container>
                         <ng-template #NoParentId>
-                            <span>{{'licenses.content.none'}}</span>
+                            <span>{{'licenses.content.none' | translate}}</span>
                         </ng-template>
                     </mcs-item>
                     </mcs-data-cell>
