@@ -44,6 +44,8 @@ export enum TaskType {
   ManagedServerProvisionHids = 5008,
   ManagedServerProvisionServerBackup = 5009,
   ManagedServerProvisionVmBackup = 5010,
+
+  PublicCloudLicenseChangeCount = 6000
 }
 
 /**

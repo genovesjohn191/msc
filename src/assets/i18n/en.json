@@ -10,6 +10,7 @@
     "firewalls": "Firewalls",
     "internet": "Internet",
     "backup": "Backup",
+    "licenses": "Licenses",
     "tools": "Other Tools",
     "catalog": "Products",
     "signOut": "Sign Out",
@@ -390,6 +391,36 @@
     "provisioningStep": {
       "description": "Backup Aggregation Target is being provisioned and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
       "dataInProgress": "Preparing to provision Backup Aggregation Target. This may take a moment."
+    }
+  },
+  "orderMsLicenseCountChange": {
+    "title": "Change License Count",
+    "detailsStep": {
+      "title": "Details",
+      "baseLicense": {
+        "label": "Base License",
+        "placeholder": "Select License",
+        "helpText": "Select a base license to modify and increase or decrease the license count. You must have at least 1 license. Please call your Macquarie Cloud Services account manager if you'd like to suspend this subscription.",
+        "licenseCountRequired": "Enter quantity.",
+        "licenseCountNumeric": "Please enter a valid number.",
+        "licenseCountMinimum": "The minimum quantity that can be entered is {{min_value}}.",
+        "licenseCountMaximum": "Quantity should not exceed {{max_value}}.",
+        "licenseCountValid": "Quantity must be a multiple of {{step}}."
+      },
+      "addons": {
+        "label": "Add-Ons",
+        "helpText": "Increase or decrease the license count for this add-on. You must have at least 1 {{unit}}. Please call your Macquarie Cloud Services account manager if you'd like to suspend this subscription."
+      },
+      "description": "This license-based subscription is {{status}} and renews on {{renewalDate}}.",
+      "descriptionNoRenewal": "This license-based subscription is {{status}}.",
+      "serviceId": "Service ID: {{serviceId}}",
+      "msSubscriptionId": "Microsoft Subscription ID: {{msSubscriptionId}}",
+      "provisioningId": "Provisioning ID: {{provisioningId}}",
+      "note": "Please note that prorated charges for the month apply and take effect immediately."
+    },
+    "provisioningStep": {
+      "description": "License Count is being changed and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
+      "dataInProgress": "Preparing to change your License Count. This may take a moment."
     }
   },
   "notification": {
@@ -1643,6 +1674,18 @@
       "errorContent": "Sorry, something’s not right. We weren’t able to retrieve the linked services for this backup aggregation target."
     }
   },
+  "licenses": {
+    "header": "Licenses",
+    "leftPanelHeader": "License Filter",
+    "newLicense": "New License",
+    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of licenses.",
+    "noRecordsFoundMessage": "No licenses to display.",
+    "filterColumn": "Table Filter",
+    "dataSingular": "License",
+    "dataPlural": "Licenses",
+    "noParentIdLabel": "None",
+    "changeLicenseCount": "Change license count"
+  },
   "products": {
     "header": "Product Catalog",
     "leftPanelHeader": "Product Filter",
@@ -1794,6 +1837,10 @@
         "connectionError": "Notification server connection error",
         "viewMoreCount": "View {{count}} more...",
         "viewMore": "View more..."
+      },
+      "platform": {
+        "publicCloudLabel": "Access Public Cloud",
+        "privateCloudLabel": "Access Private Cloud"
       },
       "signOut": "Sign Out"
     }
@@ -2104,39 +2151,5 @@
   "dialogSaveConflictSystemMessageEdit": {
     "title": "Conflicting Message",
     "message": "Are you sure you wish to continue?\r\nAn existing message is already enabled.\r\n\nSaving this message will cause the conflicting message to be disabled and this message enabled in its place."
-  },
-  "licenses":{
-      "title": "Licenses",
-      "headerNavigation": {
-        "publicCloudLabel": "Access Public Cloud",
-        "privateCloudLabel": "Access Private Cloud"
-      },
-      "topNavigation": {
-        "dataSingular": "License",
-        "dataPlural": "Licenses",
-        "newLicense": "New License"
-      },
-      "navigation":{
-        "back": "Back to Licenses",
-        "next": "Next",
-        "cancel": "Cancel"
-      },
-      "sideNavigation": {
-        "list": {
-          "header": "License Filter",
-          "search": "Table Search",
-          "filter": "Column Filter"
-        },
-        "order": {
-          "details": "Details",
-          "confirm":"Confirm",
-          "go": "Go!"
-        }
-      },
-      "content": {
-        "none": "None",
-        "noLicenses": "There are no licenses to display.",
-        "error": "Sorry, something’s not right. We weren’t able to retrieve the list of Licenses."
-      }
   }
 }

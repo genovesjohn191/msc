@@ -1,9 +1,9 @@
 <mcs-page>
     <!-- Page template header -->
     <ng-container *mcsPageHeader>
-        <h1>{{ 'licenses.title' | translate }}</h1>
+        <h1>{{ 'licenses.header' | translate }}</h1>
     </ng-container>
-   
+
     <!-- Top Panel -->
     <mcs-top-panel *mcsTopPanelDef>
         <!--TODO: update creation when there's a story for it-->
@@ -19,7 +19,7 @@
                 mcsEventCategory="license"
                 mcsEventLabel="license-listing-top-panel">
                 <mcs-icon [key]="addIconKey"></mcs-icon>
-                <span>{{ 'licenses.topNavigation.newLicense' | translate }}</span>
+                <span>{{ 'licenses.newLicense' | translate }}</span>
                 </mcs-action-item>
             </mcs-top-panel-item>
             </ng-container>
@@ -29,7 +29,7 @@
             <div class="listing-action-wrapper">
                 <div class="total-record-count">
                 <span>
-                    {{ totalRecordsCount | mcsPlural: ('licenses.topNavigation.dataSingular' | translate) : ('licenses.topNavigation.dataPlural' | translate) }}
+                    {{ totalRecordsCount | mcsPlural: ('licenses.dataSingular' | translate) : ('licenses.dataPlural' | translate) }}
                 </span>
                 </div>
             </div>
@@ -37,15 +37,15 @@
     </mcs-top-panel>
 
     <!-- Side Menu -->
-    <mcs-left-panel *mcsLeftPanelDef="'licenses.sideNavigation.list.header' | translate">
+    <mcs-left-panel *mcsLeftPanelDef="'licenses.leftPanelHeader' | translate">
         <!-- Column Filter -->
-        <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'licenses.sideNavigation.list.filter' | translate" offset="medium">
+        <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'licenses.filterColumn' | translate" offset="medium">
             <mcs-column-filter [filters]="dataFilters"
-            (dataChange)="onColumnFilterChange($event)"></mcs-column-filter> 
+            (dataChange)="onColumnFilterChange($event)"></mcs-column-filter>
         </mcs-left-panel-item>
-        
+
     </mcs-left-panel>
-    
+
     <mcs-content-panel *mcsContentPanelDef>
 
         <div class="listing-table-wrapper">
@@ -128,7 +128,7 @@
                     </mcs-item>
                     </mcs-data-cell>
                 </ng-container>
-                
+
                 <!--Temporarily remove this as per the requirement FUSION-4020-->
                 <!-- Provisioning ID Column -->
                 <!-- <ng-container mcsColumnDef="pcSubscriptionId">
@@ -166,19 +166,43 @@
                             <span> {{  row.parentId | uppercase }}</span>
                         </ng-container>
                         <ng-template #NoParentId>
-                            <span>{{'licenses.content.none' | translate}}</span>
+                            <span>{{'licenses.noParentIdLabel' | translate}}</span>
                         </ng-template>
                     </mcs-item>
+                    </mcs-data-cell>
+                </ng-container>
+
+                <!-- Action Column -->
+                <!-- TODO: Transfer the access control checking in each individual actions once there are additional actions -->
+                <ng-container mcsColumnDef="action" *mcsAccessControl="['OrderEdit']; feature: 'EnableOrderingLicenseCountChange'">
+                    <mcs-header-cell *mcsHeaderCellDef hidden-small></mcs-header-cell>
+                    <mcs-data-cell *mcsDataCellDef="let row" hidden-small text-center>
+                    <mcs-icon mcsStopPropagation [key]="ellipsisIconKey" size="large"
+                        mcsPopover placement="bottom" orientation="left" theme="light"
+                        padding="none" [content]="actionContent" mcsCursor="pointer">
+                    </mcs-icon>
+                    <ng-template #actionContent>
+                        <div class="cog-actions-wrapper">
+                        <a mcsButton="basic" color="white" labelPlacement="left"
+                            (click)="onChangeLicenseCount(row)"
+                            mcsId="license-count-change"
+                            mcsEventTracker="license-count-change"
+                            mcsEventCategory="license"
+                            mcsEventLabel="license-listing">
+                            {{ 'licenses.changeLicenseCount' | translate }}
+                        </a>
+                        </div>
+                    </ng-template>
                     </mcs-data-cell>
                 </ng-container>
 
                 <!-- Data Status Integration -->
                 <ng-container mcsDataStatusDef>
                     <mcs-data-empty *mcsDataEmptyDef>
-                    <span>{{ 'licenses.content.noLicenses' | translate }} </span>
+                    <span>{{ 'licenses.noRecordsFoundMessage' | translate }}</span>
                     </mcs-data-empty>
                     <mcs-data-error *mcsDataErrorDef>
-                    <span>{{ 'licenses.content.error' | translate }}</span>
+                    <span>{{ 'licenses.errorMessage' | translate }}</span>
                     </mcs-data-error>
                 </ng-container>
             </mcs-table>

@@ -61,6 +61,9 @@ export enum JobType {
   ManagedServerProvisionServerBackup = 100606,
   ManagedServerProvisionVmBackup = 100607,
   ManagedServerProvisionBat = 1000608,
+
+  // Microsoft License
+  PublicCloudLicenseChangeCount = 2000001
 }
 
 export const jobTypeText = {
@@ -95,6 +98,7 @@ export const jobTypeText = {
   [JobType.ManagedServerProvisionAntiVirus]: 'New Anti-Virus',
   [JobType.ManagedServerProvisionHids]: 'New HIDS',
   [JobType.ManagedServerProvisionBat]: 'New Backup Aggregation Target',
+  [JobType.PublicCloudLicenseChangeCount]: 'Change License Count',
 };
 
 /**

@@ -38,6 +38,7 @@ import { McsJobServerManager } from './entities/mcs-job-server.manager';
 import { McsJobMediaManager } from './entities/mcs-job-media.manager';
 import { McsJobBackupAggregationTargetManager } from './entities/mcs-job-backup-aggregation-target.manager';
 import { McsJobResourceManager } from './entities/mcs-job-resource.manager';
+import { McsJobLicenseManager } from './entities/mcs-job-license.manager';
 
 @Injectable()
 export class McsJobManagerClient implements McsDisposable {
@@ -307,6 +308,11 @@ export class McsJobManagerClient implements McsDisposable {
     // Media
     this._jobEntitiesFactory.set(JobType.ResourceCreateCatalogItem,
       new McsJobMediaManager(ActionStatus.Add, this._injector)
+    );
+
+    // Microsoft License
+    this._jobEntitiesFactory.set(JobType.PublicCloudLicenseChangeCount,
+      new McsJobLicenseManager(ActionStatus.Update, this._injector)
     );
   }
 }

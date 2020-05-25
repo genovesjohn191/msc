@@ -200,6 +200,13 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
   }
 
   /**
+   * Clear all order items
+   */
+  public clearOrderItems(): void {
+    this._orderBuilder.clearOrderItems();
+  }
+
+  /**
    * Submits the order request based on the constructed details
    * @important The order request will not be submitted once the data is the same as the previous request
    */

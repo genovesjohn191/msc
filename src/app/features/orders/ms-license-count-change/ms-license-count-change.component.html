@@ -1,0 +1,247 @@
+<mcs-page [header]="'orderMsLicenseCountChange.title' | translate">
+    <!-- Top Panel -->
+    <mcs-top-panel *mcsTopPanelDef>
+
+      <!-- Back to previous URL -->
+      <mcs-top-panel-item *mcsTopPanelItemDef no-border>
+        <mcs-action-item mcsAlign="end"
+          mcsNavigateBackward
+          mcsId="navigate-back"
+          mcsEventTracker="navigate-back"
+          mcsEventCategory="order"
+          mcsEventLabel="ms-license-count-change">
+          <mcs-icon [key]="backIconKey" size="small"></mcs-icon>
+          <span>{{ 'shared.wizard.previous' | translate }}</span>
+        </mcs-action-item>
+      </mcs-top-panel-item>
+    </mcs-top-panel>
+
+    <mcs-content-panel *mcsContentPanelDef>
+
+      <mcs-wizard (stepChange)="onWizardStepChanged($event)">
+
+        <!-- Error message -->
+        <ng-container mcsWizardErrorTemplate>
+          <mcs-form-message #formMessage></mcs-form-message>
+        </ng-container>
+
+        <!-- License Count Details Step-->
+        <mcs-wizard-step id="license-count-change-details-step"
+          [stepTitle]="'orderMsLicenseCountChange.detailsStep.title' | translate"
+          customClass="contextual-help-page-wrapper limited-view">
+
+          <form [formGroup]="fgMsLicenseCount" mcsFormGroup>
+
+            <!-- Base License -->
+            <mcs-item orientation="block" *ngIf="childLicensesFcConfig$ | async as childLicensesFcConfig">
+              <h2 align-self-start>{{ 'orderMsLicenseCountChange.detailsStep.baseLicense.label' | translate }}</h2>
+              <mcs-form-field>
+                <mcs-select required
+                  [formControl]="fcLicenses"
+                  [placeholder]="'orderMsLicenseCountChange.detailsStep.baseLicense.placeholder' | translate"
+                  [mcsContextualHelp]="'orderMsLicenseCountChange.detailsStep.baseLicense.helpText' | translate"
+                  (selectionChange)="onChangeLicense($event, childLicensesFcConfig)"
+                  mcsId="select-ms-license"
+                  mcsEventTracker="select-ms-license"
+                  mcsEventCategory="order"
+                  mcsEventLabel="ms-license-count-change">
+
+                  <mcs-option *ngFor="let license of licenses$ | async" [value]="license.value">
+                    {{ license.text }}
+                  </mcs-option>
+                </mcs-select>
+              </mcs-form-field>
+            </mcs-item>
+
+            <mcs-item orientation="block">
+              <mcs-item orientation="block">
+                <span align-self-start *ngIf="fcLicenses?.license?.renewalDate | mcsIsNotNullOrEmpty; else baseNoRenewalTemplate">
+                  {{ 'orderMsLicenseCountChange.detailsStep.description' | translate:
+                    {
+                      status: fcLicenses?.value?.status,
+                      renewalDate:fcLicenses?.value?.renewalDate | mcsStdDateFormat
+                    }
+                  }}
+                </span>
+                <ng-template #baseNoRenewalTemplate>
+                  <span align-self-start>
+                    {{ 'orderMsLicenseCountChange.detailsStep.descriptionNoRenewal' | translate:
+                      {
+                        status: fcLicenses?.value?.status
+                      }
+                    }}
+                  </span>
+                </ng-template>
+              </mcs-item>
+              <mcs-item orientation="block" *ngIf="fcLicenses?.value?.serviceId">
+                <span align-self-start>
+                  {{ 'orderMsLicenseCountChange.detailsStep.serviceId' |  translate:  {serviceId:fcLicenses?.value?.serviceId} }}
+                </span>
+              </mcs-item>
+              <mcs-item orientation="block">
+                <span align-self-start>
+                  {{ 'orderMsLicenseCountChange.detailsStep.msSubscriptionId' |  translate:  {msSubscriptionId:fcLicenses?.value?.subscriptionId} }}
+                </span>
+              </mcs-item>
+              <!-- TODO: Orch side finding a way to add this field -->
+              <!-- <mcs-item orientation="block">
+                <span align-self-start>
+                  {{ 'orderMsLicenseCountChange.detailsStep.provisioningId' |  translate:  {provisioningId:fcLicenses?.value?.pcSubscriptionId} }}
+                </span>
+              </mcs-item> -->
+              <mcs-item orientation="block">
+                <mcs-form-field class="form-field-size-medium">
+                  <input mcsInput [formControl]="fcLicenseCount"
+                    mcsId="input-ms-license-count"
+                    mcsEventTracker="input-ms-license-count"
+                    mcsEventCategory="order"
+                    mcsEventLabel="ms-license-count-change">
+
+                  <mcs-suffix mcsSuffix>{{  fcLicenses?.value?.unit }}</mcs-suffix>
+                  <mcs-error mcsError errorState="required">
+                    {{ 'orderMsLicenseCountChange.detailsStep.baseLicense.licenseCountRequired' | translate }}
+                  </mcs-error>
+                  <mcs-error mcsError errorState="numeric">
+                    {{ 'orderMsLicenseCountChange.detailsStep.baseLicense.licenseCountNumeric' | translate }}
+                  </mcs-error>
+                  <mcs-error text-wrap mcsError errorState="min">
+                      {{ 'orderMsLicenseCountChange.detailsStep.baseLicense.licenseCountMinimum' | translate: { min_value: baseLicenseCountMin } }}
+                  </mcs-error>
+                  <mcs-error text-wrap mcsError errorState="max">
+                      {{ 'orderMsLicenseCountChange.detailsStep.baseLicense.licenseCountMaximum' | translate: { max_value: baseLicenseCountMax } }}
+                  </mcs-error>
+                  <mcs-error text-wrap mcsError errorState="step">
+                      {{ 'orderMsLicenseCountChange.detailsStep.baseLicense.licenseCountValid' | translate: { step: baseLicenseCountStep } }}
+                  </mcs-error>
+                </mcs-form-field>
+              </mcs-item>
+            </mcs-item>
+
+            <!-- AddOns -->
+            <ng-container *ngIf="childLicensesFcConfig$ | async as childLicensesFcConfig">
+              <ng-container *ngIf="childLicensesFcConfig | mcsArrayHasElement">
+                <h2 align-self-start padding-top-medium>{{ 'orderMsLicenseCountChange.detailsStep.addons.label' | translate }}</h2>
+                <ng-container *ngFor="let childLicensesFcItem of childLicensesFcConfig">
+                  <mcs-item orientation="block"
+                    [mcsContextualHelp]="'orderMsLicenseCountChange.detailsStep.addons.helpText' | translate: { unit: childLicensesFcItem?.license?.unit }">
+                    <mcs-item orientation="block">
+                      <strong align-self-start>{{ childLicensesFcItem?.license?.name  }} </strong>
+                    </mcs-item>
+                    <mcs-item orientation="block">
+                      <span align-self-start *ngIf="childLicensesFcItem?.license?.renewalDate | mcsIsNotNullOrEmpty; else noRenewalTemplate">
+                        {{ 'orderMsLicenseCountChange.detailsStep.description' | translate:
+                          {
+                            status: childLicensesFcItem?.license?.status,
+                            renewalDate: childLicensesFcItem?.license?.renewalDate | mcsStdDateFormat
+                          }
+                        }}
+                      </span>
+                      <ng-template #noRenewalTemplate>
+                        <span align-self-start>
+                          {{ 'orderMsLicenseCountChange.detailsStep.descriptionNoRenewal' | translate:
+                            {
+                              status: childLicensesFcItem?.license?.status
+                            }
+                          }}
+                        </span>
+                      </ng-template>
+                    </mcs-item>
+                    <mcs-item orientation="block" *ngIf="childLicensesFcItem?.license?.serviceId">
+                      <span align-self-start>
+                        {{ 'orderMsLicenseCountChange.detailsStep.serviceId' |  translate:  { serviceId: childLicensesFcItem?.license?.serviceId } }}
+                      </span>
+                    </mcs-item>
+                    <mcs-item orientation="block">
+                      <span align-self-start>
+                        {{ 'orderMsLicenseCountChange.detailsStep.msSubscriptionId' |  translate:  { msSubscriptionId: childLicensesFcItem?.license?.subscriptionId } }}
+                      </span>
+                    </mcs-item>
+                    <!-- TODO: Orch side finding a way to add this field -->
+                    <!-- <mcs-item orientation="block">
+                      <span align-self-start>
+                        {{ 'orderMsLicenseCountChange.detailsStep.provisioningId' |  translate:  {provisioningId:fcLicenses?.value?.pcSubscriptionId} }}
+                      </span>
+                    </mcs-item> -->
+                    <mcs-item orientation="block">
+                      <mcs-form-field class="form-field-size-medium">
+                        <input mcsInput [formControl]="getFormControl(childLicensesFcItem?.childFormControlName)"
+                          mcsId="input-ms-license-count"
+                          mcsEventTracker="input-ms-license-count"
+                          mcsEventCategory="order"
+                          mcsEventLabel="ms-license-count-change">
+
+                        <mcs-suffix mcsSuffix>{{  childLicensesFcItem?.license?.unit }}</mcs-suffix>
+                        <mcs-error mcsError errorState="required">
+                          {{ 'orderMsLicenseCountChange.detailsStep.baseLicense.licenseCountRequired' | translate }}
+                        </mcs-error>
+                        <mcs-error mcsError errorState="numeric">
+                          {{ 'orderMsLicenseCountChange.detailsStep.baseLicense.licenseCountNumeric' | translate }}
+                        </mcs-error>
+                        <mcs-error text-wrap mcsError errorState="min">
+                            {{ 'orderMsLicenseCountChange.detailsStep.baseLicense.licenseCountMinimum' | translate: { min_value: baseLicenseCountMin } }}
+                        </mcs-error>
+                        <mcs-error text-wrap mcsError errorState="max">
+                            {{ 'orderMsLicenseCountChange.detailsStep.baseLicense.licenseCountMaximum' | translate: { max_value: baseLicenseCountMax } }}
+                        </mcs-error>
+                        <mcs-error text-wrap mcsError errorState="step">
+                            {{ 'orderMsLicenseCountChange.detailsStep.baseLicense.licenseCountValid' | translate: { step: baseLicenseCountStep } }}
+                        </mcs-error>
+                      </mcs-form-field>
+                    </mcs-item>
+                  </mcs-item>
+                </ng-container>
+              </ng-container>
+            </ng-container>
+
+            <mcs-item padding-top-medium>
+              <mcs-status-message type="info">
+                {{ 'orderMsLicenseCountChange.detailsStep.note' | translate }}
+              </mcs-status-message>
+            </mcs-item>
+
+            <div class="action-items">
+              <button mcsButton arrow="right"
+                mcsWizardStepNext
+                (click)="onSubmitMsLicenseCountChangeDetails(fcLicenses?.value)"
+                [disabled]="!(formIsValid && (licensesHasValueChange$ | async))"
+                mcsId="step-1-next"
+                mcsEventTracker="step-1-next"
+                mcsEventCategory="order"
+                mcsEventLabel="ms-license-count-change">{{ 'shared.wizard.next' | translate }}</button>
+            </div>
+          </form>
+        </mcs-wizard-step>
+
+        <!-- Confirm Step  -->
+        <mcs-wizard-step id="confirm-step"
+          [stepTitle]="'shared.wizard.confirm' | translate"
+          customClass="contextual-help-page-wrapper limited-view">
+
+          <mcs-step-order-details [order]="order$ | async"
+            [orderItemType]="orderItemType$ | async"
+            [requestState]="dataStatus$ | async"
+            [eventTrack]="orderEventTrack.billingDetailsStep"
+            (dataChange)="onOrderDetailsChange($event)"
+            (submitOrder)="onSubmitOrder($event)">
+          </mcs-step-order-details>
+        </mcs-wizard-step>
+
+        <!-- Go! Step  -->
+        <mcs-wizard-step id="go-step"
+          [stepTitle]="'shared.wizard.completed' | translate"
+          customClass="limited-view">
+
+          <mcs-step-provisioning [jobs]="jobs$ | async" [requestState]="dataStatus$ | async">
+            <ng-container mcsProvisioningStepDescription>
+              {{ 'orderMsLicenseCountChange.provisioningStep.description' | translate }}
+            </ng-container>
+
+            <ng-container mcsProvisioningStepInProgress>
+              {{ 'orderMsLicenseCountChange.provisioningStep.dataInProgress' | translate}}
+            </ng-container>
+          </mcs-step-provisioning>
+        </mcs-wizard-step>
+      </mcs-wizard>
+
+    </mcs-content-panel>
+  </mcs-page>

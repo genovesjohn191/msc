@@ -12,7 +12,8 @@ export enum OrderIdType {
   AddHids = 'hostsecurity.hids.provision',
   AddVmBackup = 'backups.vm.provision',
   AddServerBackup = 'backups.server.provision',
-  AddBat = 'backups.bat.provision'
+  AddBat = 'backups.bat.provision',
+  MsLicenseCountChange = 'microsoft.licenseCount.change'
 }
 
 /**

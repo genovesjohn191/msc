@@ -166,7 +166,7 @@ import { McsFirewallsRepository } from './repositories/mcs-firewalls.repository'
 import { McsConsoleRepository } from './repositories/mcs-console.repository';
 import { McsCompaniesRepository } from './repositories/mcs-companies.repository';
 import { McsBatsRepository } from './repositories/mcs-bats.repository';
-import { MicsLicensesRepository } from './repositories/mcs-licenses.repository';
+import { McsLicensesRepository } from './repositories/mcs-licenses.repository';
 
 interface DataEmitter<T> {
   eventEmitter: Observable<T>;
@@ -190,7 +190,7 @@ export class McsApiService {
   private readonly _batsRepository: McsBatsRepository;
   private readonly _consoleRepository: McsConsoleRepository;
   private readonly _companiesRepository: McsCompaniesRepository;
-  private readonly _licensesRepository: MicsLicensesRepository;
+  private readonly _licensesRepository: McsLicensesRepository;
 
   private readonly _serversApi: IMcsApiServersService;
   private readonly _jobsApi: IMcsApiJobsService;
@@ -226,7 +226,7 @@ export class McsApiService {
     this._batsRepository = _injector.get(McsBatsRepository);
     this._consoleRepository = _injector.get(McsConsoleRepository);
     this._companiesRepository = _injector.get(McsCompaniesRepository);
-    this._licensesRepository = _injector.get(MicsLicensesRepository);
+    this._licensesRepository = _injector.get(McsLicensesRepository);
 
     // Register api services
     let apiClientFactory = _injector.get(McsApiClientFactory);
