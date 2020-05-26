@@ -1,4 +1,4 @@
-import { isNullOrEmpty } from '@app/utilities';
+import { isNullOrEmpty, coerceArray } from '@app/utilities';
 import {
   RouteKey,
   McsRouteInfo,
@@ -53,7 +53,9 @@ export class CoreRoutes {
       routeInfo.navigationPath = jsonRouteInfo.navigationPath;
       routeInfo.documentTitle = jsonRouteInfo.documentTitle;
       routeInfo.requiredPermissions = jsonRouteInfo.requiredPermissions;
-      routeInfo.requiredFeatureFlag = jsonRouteInfo.requiredFeatureFlag;
+      routeInfo.requreAllPermissions = jsonRouteInfo.requreAllPermissions;
+      routeInfo.requiredFeatureFlags = coerceArray(jsonRouteInfo.requiredFeatureFlag);
+      routeInfo.requireAllFeatures = jsonRouteInfo.requireAllFeatures;
       this._routePathTable.set(routeInfo.enumKey, routeInfo);
     });
   }

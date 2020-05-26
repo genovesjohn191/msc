@@ -9,6 +9,8 @@ export enum McsFeatureFlag {
   BatLinkedServicesView = 'EnableBatLinkedServicesView',
 
   ProductCatalog = 'EnableProductCatalog',
+  CatalogProductListing = 'EnableCatalogProductListing',
+  CatalogSolutionListing = 'EnableCatalogSolutionListing',
 
   ServerOsUpdates = 'EnableServerOsUpdates',
 

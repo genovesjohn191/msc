@@ -94,17 +94,20 @@
     </div>
 
     <!-- Catalog -->
-    <div class="navigation-item" hidden-small mcsRouterLinkActive="active"
-      *mcsAccessControl="[]; feature: 'EnableProductCatalog'">
-      <mcs-icon [key]="caretRightIconKey" color="light"
-        size="medium" class="navigation-mobile"></mcs-icon>
-      <a [mcsRouterLink]="routeKeyEnum.Catalog"
-        mcsId
-        mcsEventTracker="navigate-to-catalog"
-        mcsEventCategory="navigation"
-        mcsEventLabel="main-nav">
-        {{ 'navigation.catalog' | translate }}
-      </a>
-    </div>
+    <ng-container *mcsAccessControl="[]; feature: 'EnableProductCatalog'">
+      <div class="navigation-item" hidden-small mcsRouterLinkActive="active"
+        *mcsAccessControl="[]; feature: ['EnableCatalogProductListing', 'EnableCatalogSolutionListing']">
+        <mcs-icon [key]="caretRightIconKey" color="light"
+          size="medium" class="navigation-mobile"></mcs-icon>
+        <a [mcsRouterLink]="routeKeyEnum.Catalog"
+          mcsId
+          mcsEventTracker="navigate-to-catalog"
+          mcsEventCategory="navigation"
+          mcsEventLabel="main-nav">
+          {{ 'navigation.catalog' | translate }}
+        </a>
+      </div>
+    </ng-container>
+    
   </ng-template>
 </nav>

@@ -9,7 +9,9 @@ export class McsRouteInfo {
   public navigationPath?: string;
   public routePath?: string;
   public documentTitle?: string;
-  public requiredFeatureFlag?: string;
+  public requiredFeatureFlags?: string[];
+  public requireAllFeatures: boolean = false;
   public requiredPermissions?: string[];
+  public requreAllPermissions: boolean = false;
   public urlAfterRedirects?: string;
 }

@@ -315,25 +315,29 @@
   "catalogProductsPlatform": {
     "enumKey": "CatalogProductsPlatform",
     "navigationPath": "catalog/products/platform",
-    "requiredFeatureFlag": "EnableProductCatalog",
+    "requiredFeatureFlag": ["EnableProductCatalog", "EnableCatalogProductListing"],
+    "requireAllFeatures": true,
     "documentTitle": "Catalog Product Platform - Macquarie Cloud Services"
   },
   "catalogProduct": {
     "enumKey": "CatalogProduct",
     "navigationPath": "catalog/products",
-    "requiredFeatureFlag": "EnableProductCatalog",
+    "requiredFeatureFlag": ["EnableProductCatalog", "EnableCatalogProductListing"],
+    "requireAllFeatures": true,
     "documentTitle": "Catalog Product - Macquarie Cloud Services"
   },
   "catalogSolution": {
     "enumKey": "CatalogSolution",
     "navigationPath": "catalog/solutions",
-    "requiredFeatureFlag": "EnableProductCatalog",
+    "requiredFeatureFlag": ["EnableProductCatalog", "EnableCatalogSolutionListing"],
+    "requireAllFeatures": true,
     "documentTitle": "Catalog Solution - Macquarie Cloud Services"
   },
   "catalogSolutions": {
     "enumKey": "CatalogSolutions",
     "navigationPath": "catalog/solutions",
-    "requiredFeatureFlag": "EnableProductCatalog",
+    "requiredFeatureFlag": ["EnableProductCatalog", "EnableCatalogSolutionListing"],
+    "requireAllFeatures": true,
     "documentTitle": "Catalog Solutions - Macquarie Cloud Services"
   },
   "orders": {
