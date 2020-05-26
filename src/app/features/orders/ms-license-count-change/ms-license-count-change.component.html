@@ -55,7 +55,7 @@
 
             <mcs-item orientation="block">
               <mcs-item orientation="block">
-                <span align-self-start *ngIf="fcLicenses?.license?.renewalDate | mcsIsNotNullOrEmpty; else baseNoRenewalTemplate">
+                <span align-self-start *ngIf="fcLicenses?.value?.renewalDate | mcsIsNotNullOrEmpty; else baseNoRenewalTemplate">
                   {{ 'orderMsLicenseCountChange.detailsStep.description' | translate:
                     {
                       status: fcLicenses?.value?.status,

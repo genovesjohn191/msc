@@ -9,6 +9,7 @@ import { VdcComputeUpdateEvent } from './events/vdc-compute-update.event';
 import { SecurityHidsProvisionEvent } from './events/security-hids-provision.event';
 import { SecurityAvProvisionEvent } from './events/security-av-provision.event';
 import { BatProvisionEvent } from './events/bat-provision.event';
+import { MsLicenseCountChangeEvent } from './events/ms-license-count-change.event';
 
 export type OrderEventRecord = Record<string, IOrderEventStrategy>;
 
@@ -22,5 +23,6 @@ export const orderEventMap: OrderEventRecord = {
   'resources.vdc.storage.update': new VdcStorageUpdateEvent(),
   'resources.vdc.compute.update': new VdcComputeUpdateEvent(),
   'hostsecurity.hids.provision': new SecurityHidsProvisionEvent(),
-  'hostsecurity.av.provision': new SecurityAvProvisionEvent()
+  'hostsecurity.av.provision': new SecurityAvProvisionEvent(),
+  'microsoft.licenseCount.change': new MsLicenseCountChangeEvent()
 };

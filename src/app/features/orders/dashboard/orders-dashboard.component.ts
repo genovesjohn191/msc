@@ -85,11 +85,18 @@ export class OrdersDashboardComponent extends McsListViewListingBase<McsOrderAva
     return this._ordersDashboardService.getOrderAvailableFamilies(query).pipe(
       tap((familyCollection) => {
         let families = getSafeProperty(familyCollection, (obj) => obj.collection, []);
-        let familyWithGroup = families.find((family) => !isNullOrEmpty(family.groups));
-        if (isNullOrEmpty(familyWithGroup)) { return; }
+        let familyWithGroup = families.find((family: McsOrderAvailableFamily) => {
+          return !isNullOrEmpty(family.groups) &&
+            !isNullOrEmpty(family.groups.find((group) => !isNullOrEmpty(group.availableOrderItemTypes)));
+        });
+
+        if (isNullOrEmpty(familyWithGroup)) {
+          this._orderGroupChange.next(new McsOrderAvailableGroup());
+          return;
+        }
 
         // Select intialy when obtained
-        this._orderGroupChange.next(familyWithGroup.groups[0]);
+        this._orderGroupChange.next(familyWithGroup.groups.find((group) => !isNullOrEmpty(group.availableOrderItemTypes)));
       })
     );
   }

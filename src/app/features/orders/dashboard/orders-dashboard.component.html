@@ -4,30 +4,37 @@
   <mcs-left-panel *mcsLeftPanelDef="'orderDashboard.leftPanelHeader' | translate">
     <mcs-left-panel-item *mcsLeftPanelItemDef>
       <div class="listing-panel-wrapper">
-        <mcs-search #search mcsId="order-dashboard-listing-panel-search"></mcs-search>
 
-        <mcs-list-panel [dataSource]="listViewDatasource" [config]="listViewConfig?.panelSettings">
-          <ng-container *mcsListPanelContent="let family">
+        <ng-container *ngIf="orderGroup$ | async as orderGroup">
+          <ng-container *ngIf="orderGroup?.availableOrderItemTypes | mcsArrayHasElement; else noOrderTypesSidePanelTemplate">
+            <mcs-search #search mcsId="order-dashboard-listing-panel-search"></mcs-search>
+            <mcs-list-panel [dataSource]="listViewDatasource" [config]="listViewConfig?.panelSettings">
+              <ng-container *mcsListPanelContent="let family">
 
-            <mcs-option-group [label]="family.name">
-              <ng-container *ngFor="let group of family.groups">
-                <mcs-option *ngIf="group.availableOrderItemTypes | mcsIsNotNullOrEmpty" mcsId="select-order-group"
-                  [value]="group" [selected]="(orderGroup$ | async)?.id === group.id"
-                  (click)="onClickOrderGroup(group)"
-                  mcsEventTracker="select-order-group"
-                  mcsEventCategory="order-dashboard"
-                  mcsEventLabel="order-dashboard-list-panel">
+                <mcs-option-group [label]="family.name">
+                  <ng-container *ngFor="let group of family.groups">
+                    <mcs-option *ngIf="group.availableOrderItemTypes | mcsIsNotNullOrEmpty" mcsId="select-order-group"
+                      [value]="group" [selected]="orderGroup?.id === group.id"
+                      (click)="onClickOrderGroup(group)"
+                      mcsEventTracker="select-order-group"
+                      mcsEventCategory="order-dashboard"
+                      mcsEventLabel="order-dashboard-list-panel">
 
-                  <mcs-item>
-                    <span>{{ group.name }}</span>
-                  </mcs-item>
-                </mcs-option>
+                      <mcs-item>
+                        <span>{{ group.name }}</span>
+                      </mcs-item>
+                    </mcs-option>
+                  </ng-container>
+
+                </mcs-option-group>
+
               </ng-container>
-
-            </mcs-option-group>
-
+            </mcs-list-panel>
           </ng-container>
-        </mcs-list-panel>
+          <ng-template #noOrderTypesSidePanelTemplate>
+          <span>{{'orderDashboard.noOrdersAvailableMenu' | translate}}</span>
+          </ng-template>
+        </ng-container>
       </div>
     </mcs-left-panel-item>
   </mcs-left-panel>
@@ -35,7 +42,14 @@
   <!-- Content Panel -->
   <mcs-content-panel *mcsContentPanelDef>
     <div class="limited-view">
-      <mcs-order-group [orderGroup]="orderGroup$ | async"></mcs-order-group>
+      <ng-container *ngIf="orderGroup$ | async as orderGroup">
+        <ng-container *ngIf="orderGroup?.availableOrderItemTypes | mcsArrayHasElement; else noOrderTypesTemplate">
+          <mcs-order-group [orderGroup]="orderGroup"></mcs-order-group>
+        </ng-container>
+        <ng-template #noOrderTypesTemplate>
+          <span [innerHTML]="('orderDashboard.noOrdersAvailableContent' | translate) | mcsNewLines"></span>
+        </ng-template>
+      </ng-container>
     </div>
   </mcs-content-panel>
 </mcs-page>
