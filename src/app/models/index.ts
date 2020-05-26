@@ -75,6 +75,7 @@ export * from './enumerations/internet-plan.enum';
 export * from './enumerations/availability-zone.enum';
 export * from './enumerations/entity-requester.enum';
 export * from './enumerations/route-platform.enum';
+export * from './enumerations/license-status.enum';
 
 /** Job References */
 export * from './job-references/mcs-server-job-reference';
