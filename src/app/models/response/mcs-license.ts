@@ -1,14 +1,22 @@
 import { JsonProperty } from '@peerlancers/json-serialization';
 import { McsEntityBase } from '../common/mcs-entity.base';
 import { McsDateSerialization } from '../serialization/mcs-date-serialization';
+import {
+  LicenseStatus,
+  LicenseStatusSerialization,
+  licenseStatusText
+} from '../enumerations/license-status.enum';
 
 export class McsLicense extends McsEntityBase {
 
   @JsonProperty()
   public name: string = undefined;
 
-  @JsonProperty()
-  public status: string = undefined;
+  @JsonProperty({
+    serializer: LicenseStatusSerialization,
+    deserializer: LicenseStatusSerialization
+  })
+  public status: LicenseStatus = undefined;
 
   @JsonProperty()
   public serviceId: string = undefined;
@@ -42,4 +50,16 @@ export class McsLicense extends McsEntityBase {
 
   @JsonProperty()
   public pcSubscriptionId: string = undefined;
+
+  public get statusLabel(): string {
+    return licenseStatusText[this.status];
+  }
+
+  public get isPending(): boolean {
+    return this.status === LicenseStatus.Pending;
+  }
+
+  public get isSuspended(): boolean {
+    return this.status === LicenseStatus.Suspended;
+  }
 }

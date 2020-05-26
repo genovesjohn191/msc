@@ -346,10 +346,6 @@
       "text": "Status",
       "value": true
     },
-    "billingCycle": {
-      "text": "Billing Frequency",
-      "value": true
-    },
     "serviceId": {
       "text": "Service ID",
       "value": true

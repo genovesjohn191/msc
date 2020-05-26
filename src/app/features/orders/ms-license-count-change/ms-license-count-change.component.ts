@@ -51,7 +51,8 @@ import {
   McsOrderWorkflow,
   McsOrderCreate,
   OrderIdType,
-  McsOrderItemCreate
+  McsOrderItemCreate,
+  LicenseStatus
 } from '@app/models';
 import { OrderDetails } from '@app/features-shared';
 import { MsLicenseCountChangeService } from './ms-license-count-change.service';
@@ -134,6 +135,10 @@ export class MsLicenseCountChangeComponent extends McsOrderWizardBase implements
     unsubscribeSafely(this._formGroupSubject);
     unsubscribeSafely(this._destroySubject);
     unsubscribeSafely(this._selectedLicenseHandler);
+  }
+
+  public get licenseStatusOption(): typeof LicenseStatus {
+    return LicenseStatus;
   }
 
   public get formIsValid(): boolean {
@@ -351,6 +356,7 @@ export class MsLicenseCountChangeComponent extends McsOrderWizardBase implements
         });
         return licensesOptions;
       }),
+      shareReplay(1),
       tap(() => this._eventDispatcher.dispatch(McsEvent.licenseCountChangeSelectedEvent))
     );
   }

@@ -402,19 +402,28 @@
       "baseLicense": {
         "label": "Base License",
         "placeholder": "Select License",
+        "noLicense": "There are no licenses to display.",
         "helpText": "Select a base license to modify and increase or decrease the license count. You must have at least 1 license. Please call your Macquarie Cloud Services account manager if you'd like to suspend this subscription.",
-        "licenseCountRequired": "Enter quantity.",
-        "licenseCountNumeric": "Please enter a valid number.",
-        "licenseCountMinimum": "The minimum quantity that can be entered is {{min_value}}.",
-        "licenseCountMaximum": "Quantity should not exceed {{max_value}}.",
-        "licenseCountValid": "Quantity must be a multiple of {{step}}."
+        "activeLabel": "This license-based subscription is active and renews on {{renewalDate}}.",
+        "activeLabelNoRenewal": "This license-based subscription is active.",
+        "pendingLabel": "This license-based subscription is currently pending and will be provisioned shortly. This item cannot be changed at this time.",
+        "suspendedLabel": "This license-based subscription is currently suspended. This item cannot be changed at this time. Please contact your accounts team for more information.",
+        "noneStatusLabel": "Status unavailable"
       },
       "addons": {
         "label": "Add-Ons",
-        "helpText": "Increase or decrease the license count for this add-on. You must have at least 1 {{unit}}. Please call your Macquarie Cloud Services account manager if you'd like to suspend this subscription."
+        "helpText": "Increase or decrease the license count for this add-on. You must have at least 1 {{unit}}. Please call your Macquarie Cloud Services account manager if you'd like to suspend this subscription.",
+        "activeLabel": "This add-on is active and renews on {{renewalDate}}.",
+        "activeLabelNoRenewal": "This add-on is active.",
+        "pendingLabel": "This add-on is currently pending and will be provisioned shortly. This item cannot be changed at this time.",
+        "suspendedLabel": "This add-on is currently suspended. This item cannot be changed at this time. Please contact your accounts team for more information.",
+        "noneStatusLabel": "Status unavailable"
       },
-      "description": "This license-based subscription is {{status}} and renews on {{renewalDate}}.",
-      "descriptionNoRenewal": "This license-based subscription is {{status}}.",
+      "licenseCountRequired": "Enter quantity.",
+      "licenseCountNumeric": "Please enter a valid number.",
+      "licenseCountMinimum": "The minimum quantity that can be entered is {{min_value}}.",
+      "licenseCountMaximum": "Quantity should not exceed {{max_value}}.",
+      "licenseCountValid": "Quantity must be a multiple of {{step}}.",
       "serviceId": "Service ID: {{serviceId}}",
       "msSubscriptionId": "Microsoft Subscription ID: {{msSubscriptionId}}",
       "provisioningId": "Provisioning ID: {{provisioningId}}",
