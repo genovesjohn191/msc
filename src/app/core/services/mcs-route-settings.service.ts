@@ -176,7 +176,7 @@ export class McsRouteSettingsService implements McsDisposable {
 
     if (!isNullOrEmpty(_activeRouteDetails.requiredPermissions)) {
       let hasRoutePermission = this._accessControlService
-        .hasPermission(_activeRouteDetails.requiredPermissions);
+        .hasPermission(_activeRouteDetails.requiredPermissions, _activeRouteDetails.requreAllPermissions);
       if (!hasRoutePermission) { this._navigateToForbiddenPage(); }
     }
   }
@@ -188,9 +188,9 @@ export class McsRouteSettingsService implements McsDisposable {
   private _validateRouteFeatureFlag(_activeRouteDetails: McsRouteInfo): void {
     if (isNullOrEmpty(_activeRouteDetails)) { return; }
 
-    if (!isNullOrEmpty(_activeRouteDetails.requiredFeatureFlag)) {
+    if (!isNullOrEmpty(_activeRouteDetails.requiredFeatureFlags)) {
       let featureFlagIsEnabled = this._accessControlService
-        .hasAccessToFeature(_activeRouteDetails.requiredFeatureFlag);
+        .hasAccessToFeature(_activeRouteDetails.requiredFeatureFlags, _activeRouteDetails.requireAllFeatures);
       if (!featureFlagIsEnabled) { this._navigateToNotFoundPage(); }
     }
   }

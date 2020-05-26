@@ -10,11 +10,15 @@ import {
   shareReplay,
   tap
 } from 'rxjs/operators';
-import { McsNavigationService } from '@app/core';
+import {
+  McsNavigationService,
+  McsErrorHandlerService
+} from '@app/core';
 import {
   RouteKey,
   McsCatalogProductPlatform,
-  CatalogViewType
+  CatalogViewType,
+  HttpStatusCode
 } from '@app/models';
 import {
   getSafeProperty,
@@ -40,7 +44,8 @@ export class ProductsPlatformComponent implements OnInit {
   constructor(
     private _activatedRoute: ActivatedRoute,
     private _catalogService: CatalogService,
-    private _navigationService: McsNavigationService
+    private _navigationService: McsNavigationService,
+    private _errorHandlerService: McsErrorHandlerService
   ) { }
 
   public ngOnInit(): void {
@@ -60,7 +65,7 @@ export class ProductsPlatformComponent implements OnInit {
     this.platform$ = this._activatedRoute.data.pipe(
       map((resolver) => getSafeProperty(resolver, (obj) => obj.platform)),
       tap((platform) => {
-        if (isNullOrEmpty(platform)) { return; }
+        if (isNullOrEmpty(platform)) { this._errorHandlerService.redirectToErrorPage(HttpStatusCode.NotFound); }
         this._catalogService.updateActiveCatalogItemDetails(createObject(CatalogItemDetails, {
           id: platform.id,
           catalogViewType: CatalogViewType.ProductPlatform,

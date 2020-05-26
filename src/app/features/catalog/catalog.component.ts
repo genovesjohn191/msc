@@ -28,14 +28,19 @@ import {
   CoreRoutes,
   McsListViewDatasource,
   ListViewListingConfig,
-  McsNavigationService
+  McsNavigationService,
+  McsAccessControlService,
+  McsErrorHandlerService
 } from '@app/core';
 import {
   McsOption,
   RouteKey,
   McsCatalogProductPlatform,
   CatalogViewType,
-  McsCatalogProductBracket
+  McsCatalogProductBracket,
+  McsFeatureFlag,
+  McsCatalogSolutionBracket,
+  HttpStatusCode
 } from '@app/models';
 import {
   unsubscribeSafely,
@@ -81,7 +86,9 @@ export class CatalogComponent<TEntity> implements OnInit, OnDestroy {
     private _activatedRoute: ActivatedRoute,
     private _navigationService: McsNavigationService,
     private _translate: TranslateService,
-    private _catalogService: CatalogService
+    private _catalogService: CatalogService,
+    private _accessControlService: McsAccessControlService,
+    private _errorHandlerService: McsErrorHandlerService
   ) { }
 
   public ngOnInit(): void {
@@ -159,17 +166,22 @@ export class CatalogComponent<TEntity> implements OnInit, OnDestroy {
         let catalog = getSafeProperty(resolver, (obj) => obj.catalog);
         let catalogOptions: McsOption[] = [];
 
-        let products = createObject(CatalogItem, {
-          type: CatalogType.Products,
-          content: catalog.productCatalog
-        });
-        catalogOptions.push(new McsOption(products, catalogTypeText[CatalogType.Products]));
+        if (this._accessControlService.hasAccessToFeature(McsFeatureFlag.CatalogProductListing)) {
+          let products = createObject(CatalogItem, {
+            type: CatalogType.Products,
+            content: catalog.productCatalog
+          });
+          catalogOptions.push(new McsOption(products, catalogTypeText[CatalogType.Products]));
+        }
 
-        let solutions = createObject(CatalogItem, {
-          type: CatalogType.Solutions,
-          content: catalog.solutionCatalog
-        });
-        catalogOptions.push(new McsOption(solutions, catalogTypeText[CatalogType.Solutions]));
+        if (this._accessControlService.hasAccessToFeature(McsFeatureFlag.CatalogSolutionListing)) {
+          let solutions = createObject(CatalogItem, {
+            type: CatalogType.Solutions,
+            content: catalog.solutionCatalog
+          });
+          catalogOptions.push(new McsOption(solutions, catalogTypeText[CatalogType.Solutions]));
+        }
+
         return catalogOptions;
       }),
       tap((response) => {
@@ -228,6 +240,7 @@ export class CatalogComponent<TEntity> implements OnInit, OnDestroy {
   }
 
   private _subscribeToRouterChange(): void {
+
     this._router.events.pipe(
       tap((event: RouterEvent) => {
         if (!(event instanceof NavigationEnd)) { return; }
@@ -253,12 +266,25 @@ export class CatalogComponent<TEntity> implements OnInit, OnDestroy {
     let productCatalog = options.map((option) => option.value).find(
       (item) => item.type === CatalogType.Products
     ) as CatalogItem<McsCatalogProductBracket>;
-    if (isNullOrEmpty(productCatalog)) { return; }
 
-    let firstPlatformWithFamilies = productCatalog.content.platforms
-      .sort(this._sortPlatformPredicate.bind(this))
-      .find((platform) => !isNullOrEmpty(platform.families));
-    this._navigationService.navigateTo(RouteKey.CatalogProductsPlatform, [firstPlatformWithFamilies.id]);
+    if (!isNullOrEmpty(productCatalog)) {
+      let firstPlatformWithFamilies = productCatalog.content.platforms
+        .sort(this._sortPlatformPredicate.bind(this))
+        .find((platform) => !isNullOrEmpty(platform.families));
+      this._navigationService.navigateTo(RouteKey.CatalogProductsPlatform, [firstPlatformWithFamilies.id]);
+      return;
+    }
+
+    let solutionCatalog = options.map((option) => option.value).find(
+      (item) => item.type === CatalogType.Solutions
+    ) as CatalogItem<McsCatalogSolutionBracket>;
+
+    if (!isNullOrEmpty(solutionCatalog)) {
+      this._navigationService.navigateTo(RouteKey.CatalogSolutions);
+      return;
+    }
+
+    this._errorHandlerService.redirectToErrorPage(HttpStatusCode.NotFound);
   }
 
   private _sortPlatformPredicate(platformA, platformB): number {
