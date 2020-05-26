@@ -126,6 +126,8 @@
     "loading": "Loading order available items.",
     "leftPanelHeader": "Order available items",
     "noOrdersAvailable": "No order available items",
+    "noOrdersAvailableMenu": "Nothing to display",
+    "noOrdersAvailableContent": "There are no order operations to display. \r\nYou may not have permission to raise an order, or some of our ordering operations may be temporarily unavilable.",
     "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of order available items."
   },
   "orderGroups": {
