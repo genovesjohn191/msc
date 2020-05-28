@@ -17,7 +17,8 @@ import {
 } from 'rxjs';
 import {
   takeUntil,
-  map
+  map,
+  shareReplay
 } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 import {
@@ -356,7 +357,8 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
     if (isNullOrEmpty(resourceId)) { return; }
 
     this.resourceCatalogs$ = this.apiService.getResourceCatalogs(resourceId).pipe(
-      map((response) => getSafeProperty(response, (obj) => obj.collection))
+      map((response) => getSafeProperty(response, (obj) => obj.collection)),
+      shareReplay(1)
     );
   }
 

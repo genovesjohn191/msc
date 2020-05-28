@@ -613,7 +613,7 @@
       "loadingContent": "Loading list of media.",
       "errorGettingMedias": "Sorry, something’s not right. We weren’t able to retrieve the list of media.",
       "noContentMessage": "No media is attached to this server.",
-      "noAvailableMedia": "No available media to attach."
+      "noAvailableMedia": "There is no media in this VDC's catalogs to display."
     },
     "manageScale": {
       "header": "Manage RAM and vCPU",
@@ -1283,8 +1283,8 @@
       "customSwitch": "Enter custom size",
       "sliderMessage": "Select the CPU and RAM for this VDC from a slider.",
       "customMessage": "Manually enter the CPU and size of RAM for this VDC.",
-      "availableRam": "Available RAM: {{ram_value}}",
-      "availableCpu": "Available CPU: {{cpu_value}} vCPU",
+      "availableRam": "Maximum RAM: {{ram_value}}",
+      "availableCpu": "Maximum CPU: {{cpu_value}} vCPU",
       "minimumRam": "Minimum RAM: {{ram_value}}",
       "minimumCpu": "Minimum CPU: {{cpu_value}} vCPU",
       "sliderSelectedRamCpu": "{{cpu_value}} vCPU / {{ram_value}} RAM",
