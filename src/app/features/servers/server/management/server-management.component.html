@@ -370,11 +370,18 @@
       </ng-container>
 
       <div class="action-box" [disabled]="!server.executable">
-        <mcs-server-manage-media [catalogs]="resourceCatalogs$ | async" (dataChange)="onMediaChanged($event)">
-          <ng-container mcsManageMediaHeader>
-            <h2>{{ 'serverManagement.media.attachHeading' | translate }}</h2>
+        <ng-container *ngIf="resourceCatalogs$ | async as resourceCatalogs">
+          <ng-container *ngIf="resourceCatalogs | mcsArrayHasElement; else noResourceCatalogsTemplate">
+            <mcs-server-manage-media [catalogs]="resourceCatalogs" (dataChange)="onMediaChanged($event)">
+              <ng-container mcsManageMediaHeader>
+                <h2>{{ 'serverManagement.media.attachHeading' | translate }}</h2>
+              </ng-container>
+            </mcs-server-manage-media>
           </ng-container>
-        </mcs-server-manage-media>
+          <ng-template #noResourceCatalogsTemplate>
+            <span>{{ 'serverManagement.media.noAvailableMedia' | translate }}</span>
+          </ng-template>
+        </ng-container>
 
         <div class="action-items">
           <a (click)="setViewMode(serverManagementViewEnum.None)"
