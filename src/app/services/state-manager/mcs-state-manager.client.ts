@@ -23,7 +23,6 @@ import { McsMediaStateManager } from './entities/mcs-media.state-manager';
 import { McsSystemMessageStateManager } from './entities/mcs-system-message.state-manager';
 import { McsTicketStateManager } from './entities/mcs-ticket.state-manager';
 import { McsBackupAggregationTargetStateManager } from './entities/mcs-backup-aggregation-target.state-manager';
-import { McsLicenseStateManager } from './entities/mcs-license.state-manager';
 
 @Injectable()
 export class McsStateManagerClient implements McsDisposable {
@@ -153,6 +152,5 @@ export class McsStateManagerClient implements McsDisposable {
     this._entityFactoryTable.set(EntityRequester.Ticket, new McsTicketStateManager(this._injector));
     this._entityFactoryTable.set(EntityRequester.SystemMessage, new McsSystemMessageStateManager(this._injector));
     this._entityFactoryTable.set(EntityRequester.BackupAggregationTarget, new McsBackupAggregationTargetStateManager(this._injector));
-    this._entityFactoryTable.set(EntityRequester.License, new McsLicenseStateManager(this._injector));
   }
 }
