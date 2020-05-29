@@ -46,6 +46,7 @@ const DEFAULT_MIN_MEMORY = 8;
 const DEFAULT_MIN_CPU = 1;
 const MAX_CPU = 348;
 const MAX_MEMORY = 2784;
+const DEFAULT_SLIDER_STEP = 2;
 
 @Component({
   selector: 'mcs-vdc-manage-scale',
@@ -194,6 +195,13 @@ export class VdcManageScaleComponent
   }
 
   /**
+   * Returns the default step value used on the slider
+   */
+  public get sliderStep(): number {
+    return DEFAULT_SLIDER_STEP;
+  }
+
+  /**
    * Returns min CPU that can be scaled on a vdc
    */
   public get cpuMin(): number {
@@ -235,7 +243,10 @@ export class VdcManageScaleComponent
    */
   public onRamChange(): void {
     if (isNullOrEmpty(this.fcCustomCpu)) { return; }
+    let suggestedCpuCount: number = +this.fcCustomMemory.value / DEFAULT_RATIO_MEMORY;
+    this.fcCustomCpu.setValue(suggestedCpuCount);
     this.fcCustomCpu.updateValueAndValidity();
+    this.fcCustomMemory.updateValueAndValidity();
   }
 
   /**
@@ -243,7 +254,10 @@ export class VdcManageScaleComponent
    */
   public onCpuChange(): void {
     if (isNullOrEmpty(this.fcCustomMemory)) { return; }
+    let suggestedRamInGB: number = +this.fcCustomCpu.value * DEFAULT_RATIO_MEMORY;
+    this.fcCustomMemory.setValue(suggestedRamInGB);
     this.fcCustomMemory.updateValueAndValidity();
+    this.fcCustomCpu.updateValueAndValidity();
   }
 
   /**
@@ -284,9 +298,7 @@ export class VdcManageScaleComponent
     this._resetFormGroup();
     this.sliderValueIndex = 0;
     this.sliderValue = this.sliderTable[this.sliderValueIndex];
-    // TODO: remove and uncomment once slider is enabled
-    this.onChangeInputManageType(InputManageType.Custom);
-    // this.inputManageType = InputManageType.Custom;
+    this.inputManageType = InputManageType.Auto;
   }
 
   /**
@@ -355,7 +367,7 @@ export class VdcManageScaleComponent
     // Create form group and bind the form controls
     this.fgVdcScale = this._formBuilder.group([]);
     this.fgVdcScale.statusChanges
-      .pipe(startWith(null), takeUntil(this._destroySubject))
+      .pipe(startWith(null as string), takeUntil(this._destroySubject))
       .subscribe(() => this.notifyDataChange());
     this._registerFormControlsByInputType();
   }
