@@ -1,7 +1,6 @@
 <form [formGroup]="fgVdcScale" mcsFormGroup>
-    <!-- TODO: Disabled for the moment -->
     <!-- Scale header and switcher -->
-    <!-- <mcs-item orientation="separated">
+    <mcs-item orientation="separated">
       <div><ng-content select="[mcsVdcManageScaleHeader]"></ng-content></div>
       <div>
         <a *ngIf="inputManageType === inputManageTypeEnum.Custom" mcsId
@@ -11,7 +10,7 @@
           (click)="onChangeInputManageType(inputManageTypeEnum.Custom)">
           {{ 'vdcShared.manageScale.customSwitch' | translate }}</a>
       </div>
-    </mcs-item> -->
+    </mcs-item>
 
     <div [ngSwitch]="inputManageType">
       <!-- Slider selection mode -->
@@ -23,6 +22,7 @@
         <div>
           <mcs-slider [min]="0" [max]="(sliderTable?.length - 1)"
             mcsId="slider-storage"
+            [step]="sliderStep"
             [ngModel]="sliderValueIndex" [ngModelOptions]="{standalone: true}"
             (ngModelChange)="onSliderChanged($event)"></mcs-slider>
           <strong display-block text-center>
