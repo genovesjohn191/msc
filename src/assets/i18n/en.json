@@ -196,7 +196,7 @@
     "vdcStorage": {
       "placeholder": "Select a VDC Storage",
       "contextualHelp": "Choose the VDC storage to expand.",
-      "warningLabel": "This storage profile cannot be expanded."
+      "warningLabel": "This storage profile cannot be expanded as it does not have a service ID associated. Please contact your accounts team for assistance."
     },
     "vdcDetails": {
       "stepTitle": "VDC Details",
