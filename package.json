@@ -8,7 +8,7 @@
     "clean": "rm -rf node_modules",
     "reinstall": "npm run clean && npm install",
     "rebuild": "npm run reinstall && npm run build",
-    "test": "ng test",
+    "test": "ng test --browsers=ChromeHeadless --code-coverage --watch=false",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "output:styling": "gulp",
