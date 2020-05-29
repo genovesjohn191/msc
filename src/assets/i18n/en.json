@@ -70,6 +70,7 @@
   },
   "order": {
     "header": "Order #",
+    "approveOrder": "Approve Order",
     "submitOrder": "Submit Order",
     "submitOrderMessage": "Are you sure you want to submit order <strong>{{order}}</strong>?",
     "submitForApproval": "Submit for Approval",
