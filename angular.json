@@ -33,8 +33,7 @@
             "scripts": [
               "src/assets/scripts/jquery/jquery-3.4.1.min.js",
               "src/assets/scripts/jquery/jquery-ui.1.12.1.min.js",
-              "src/assets/scripts/vcloud-js/wmks.min.js",
-              "src/assets/scripts/googleTagManager.js"
+              "src/assets/scripts/vcloud-js/wmks.min.js"
             ]
           },
           "configurations": {
