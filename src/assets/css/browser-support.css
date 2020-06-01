@@ -1,0 +1,15 @@
+body.unsupported {
+    font-family: "Helvetica";
+    font-size: 18px;
+    color: #00bed8;
+    margin: 0;
+    padding: 0;
+}
+
+body.unsupported div {
+    height: 100vh;
+    line-height: 100vh;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
