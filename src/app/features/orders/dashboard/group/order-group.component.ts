@@ -59,7 +59,7 @@ export class OrderGroupComponent implements OnChanges {
 
   private _subscribeToOrderGroup(): void {
     let groupDetails: OrderGroupDetails = { newOrders: [], changeOrders: [] };
-    let orderAvailableItemTypes = getSafeProperty(this.orderGroup, (obj) => obj.availableOrderItemTypes, []);
+    let orderAvailableItemTypes = getSafeProperty(this.orderGroup, (obj) => obj.orderAvailableItemTypes, []);
 
     orderAvailableItemTypes.forEach((orderItem) => {
       // Remove the items if they're not registered in the map,

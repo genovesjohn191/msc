@@ -1,13 +1,20 @@
 import { JsonProperty } from '@peerlancers/json-serialization';
 import { McsOrderAvailableFamily } from './mcs-order-available-family';
 import { McsEntityBase } from '../common/mcs-entity.base';
+import {
+  OrderAvailablePlatformType,
+  OrderAvailablePlatformTypeSerialization
+} from '../enumerations/order-available-platform-type.enum';
 
 export class McsOrderAvailablePlatform extends McsEntityBase {
   @JsonProperty()
   public name: string = undefined;
 
-  @JsonProperty()
-  public type: string = undefined;
+  @JsonProperty({
+    serializer: OrderAvailablePlatformTypeSerialization,
+    deserializer: OrderAvailablePlatformTypeSerialization
+  })
+  public type: OrderAvailablePlatformType = undefined;
 
   @JsonProperty({
     target: McsOrderAvailableFamily
