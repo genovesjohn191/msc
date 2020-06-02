@@ -31,7 +31,7 @@ import {
   McsOrderItemCreate,
   McsJob,
   McsOrderItemType,
-  OrderType,
+  ItemType,
   McsApiErrorContext
 } from '@app/models';
 import { McsApiService } from '@app/services';
@@ -150,8 +150,8 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
    * Create default order description based on order description
    * @param description Description of order details
    */
-  public createDefaultOrderDescription(orderType: OrderType, description: string): string {
-    return `${orderType} ${description}`;
+  public createDefaultOrderDescription(itemType: ItemType, description: string): string {
+    return `${itemType} ${description}`;
   }
 
   /**
@@ -165,7 +165,7 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
     let orderItemType = this._orderItemTypeChange.getValue() || {} as any;
 
     let orderDescription = orderDetails.description || this._getOrderDescriptionByType(orderItemType);
-    let orderContract = orderItemType.orderType !== OrderType.Change ? orderDetails.contractDurationMonths : null;
+    let orderContract = orderItemType.itemType !== ItemType.Change ? orderDetails.contractDurationMonths : null;
 
     this._orderBuilder
       .setDescription(orderDescription)

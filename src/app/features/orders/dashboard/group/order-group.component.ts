@@ -13,7 +13,7 @@ import {
 import {
   McsOrderAvailableGroup,
   McsOrderAvailableItemType,
-  OrderType
+  ItemType
 } from '@app/models';
 import {
   getSafeProperty,
@@ -68,7 +68,7 @@ export class OrderGroupComponent implements OnChanges {
       let registeredEvent = orderEventMap[orderItem.productOrderType];
       if (isNullOrEmpty(registeredEvent)) { return; }
 
-      orderItem.orderType === OrderType.Change ?
+      orderItem.itemType === ItemType.Change ?
         groupDetails.changeOrders.push(orderItem) :
         groupDetails.newOrders.push(orderItem);
     });

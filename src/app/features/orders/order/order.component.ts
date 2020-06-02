@@ -46,7 +46,7 @@ import {
   OrderWorkflowAction,
   McsOrderApprover,
   RouteKey,
-  OrderType,
+  ItemType,
   McsOrderWorkflow
 } from '@app/models';
 import { McsApiService } from '@app/services';
@@ -379,7 +379,7 @@ export class OrderComponent implements OnInit, OnDestroy {
         return this._apiService.getOrderItemTypes({ keyword: mainOrderItem.itemOrderType }).pipe(
           map((orderTypeDetails) => {
             let orderDetail = getSafeProperty(orderTypeDetails, (obj) => obj.collection[0]);
-            return !isNullOrEmpty(orderDetail) && orderDetail.orderType === OrderType.Change;
+            return !isNullOrEmpty(orderDetail) && orderDetail.itemType === ItemType.Change;
           }),
           shareReplay(1)
         );
