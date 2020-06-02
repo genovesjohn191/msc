@@ -29,7 +29,7 @@ export class McsApiResourcesService implements IMcsApiResourcesService {
    */
   public getResources(): Observable<McsApiSuccessResponse<McsResource[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = '/resources';
+    mcsApiRequestParameter.endPoint = '/private-cloud/resources';
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -48,7 +48,7 @@ export class McsApiResourcesService implements IMcsApiResourcesService {
    */
   public getResource(id: any): Observable<McsApiSuccessResponse<McsResource>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/resources/${id}`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/resources/${id}`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -67,7 +67,7 @@ export class McsApiResourcesService implements IMcsApiResourcesService {
    */
   public getResourceCompute(id: any): Observable<McsApiSuccessResponse<McsResourceCompute>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/resources/${id}/compute`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/resources/${id}/compute`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -86,7 +86,7 @@ export class McsApiResourcesService implements IMcsApiResourcesService {
    */
   public getResourceStorage(id: any): Observable<McsApiSuccessResponse<McsResourceStorage[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/resources/${id}/storage`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/resources/${id}/storage`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -106,7 +106,7 @@ export class McsApiResourcesService implements IMcsApiResourcesService {
   public getResourceNetworks(resourceId: any):
     Observable<McsApiSuccessResponse<McsResourceNetwork[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/resources/${resourceId}/networks`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/resources/${resourceId}/networks`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -127,7 +127,7 @@ export class McsApiResourcesService implements IMcsApiResourcesService {
   public getResourceNetwork(resourceId: any, networkId: any):
     Observable<McsApiSuccessResponse<McsResourceNetwork>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/resources/${resourceId}/networks/${networkId}`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/resources/${resourceId}/networks/${networkId}`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -147,7 +147,7 @@ export class McsApiResourcesService implements IMcsApiResourcesService {
   public getResourceCatalogs(resourceId: string):
     Observable<McsApiSuccessResponse<McsResourceCatalog[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/resources/${resourceId}/catalogs`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/resources/${resourceId}/catalogs`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -168,7 +168,7 @@ export class McsApiResourcesService implements IMcsApiResourcesService {
   public getResourceCatalog(resourceId: string, catalogId: string):
     Observable<McsApiSuccessResponse<McsResourceCatalog>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/resources/${resourceId}/catalogs/${catalogId}`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/resources/${resourceId}/catalogs/${catalogId}`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -189,7 +189,7 @@ export class McsApiResourcesService implements IMcsApiResourcesService {
   public getResourceCatalogItems(resourceId: string, catalogId: string):
     Observable<McsApiSuccessResponse<McsResourceCatalogItem[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/resources/${resourceId}/catalogs/${catalogId}/items`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/resources/${resourceId}/catalogs/${catalogId}/items`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -211,7 +211,7 @@ export class McsApiResourcesService implements IMcsApiResourcesService {
   public getResourceCatalogItem(resourceId: string, catalogId: string, itemId: string):
     Observable<McsApiSuccessResponse<McsResourceCatalogItem>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/resources/${resourceId}/catalogs/${catalogId}/items/${itemId}`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/resources/${resourceId}/catalogs/${catalogId}/items/${itemId}`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -230,7 +230,7 @@ export class McsApiResourcesService implements IMcsApiResourcesService {
    */
   public getResourceVApps(id: any): Observable<McsApiSuccessResponse<McsResourceVApp[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/resources/${id}/vapps`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/resources/${id}/vapps`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -252,7 +252,7 @@ export class McsApiResourcesService implements IMcsApiResourcesService {
   public createResourceCatalogItem(resourceId: string, catalogId: string, createItemData: McsResourceCatalogItemCreate):
     Observable<McsApiSuccessResponse<McsJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/resources/${resourceId}/catalogs/${catalogId}/items`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/resources/${resourceId}/catalogs/${catalogId}/items`;
     mcsApiRequestParameter.recordData = serializeObjectToJson(createItemData);
 
     return this._mcsApiService.post(mcsApiRequestParameter)
@@ -273,7 +273,7 @@ export class McsApiResourcesService implements IMcsApiResourcesService {
   public validateCatalogItems(resourceId: string, createItemData: McsResourceCatalogItemCreate):
     Observable<McsApiSuccessResponse<McsValidation[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/resources/${resourceId}/catalogs/payload-validation-requests`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/resources/${resourceId}/catalogs/payload-validation-requests`;
     mcsApiRequestParameter.recordData = serializeObjectToJson(createItemData);
 
     return this._mcsApiService.post(mcsApiRequestParameter)

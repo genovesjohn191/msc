@@ -31,7 +31,7 @@ export class McsApiFirewallsService implements IMcsApiFirewallsService {
     searchParams.set('search_keyword', query.keyword);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = '/firewalls';
+    mcsApiRequestParameter.endPoint = '/private-cloud/firewalls';
     mcsApiRequestParameter.searchParameters = searchParams;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
@@ -51,7 +51,7 @@ export class McsApiFirewallsService implements IMcsApiFirewallsService {
    */
   public getFirewall(id: any): Observable<McsApiSuccessResponse<McsFirewall>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/firewalls/${id}`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/firewalls/${id}`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -82,7 +82,7 @@ export class McsApiFirewallsService implements IMcsApiFirewallsService {
     searchParams.set('search_keyword', query.keyword);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/firewalls/${id}/policies`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/firewalls/${id}/policies`;
     mcsApiRequestParameter.searchParameters = searchParams;
 
     return this._mcsApiService.get(mcsApiRequestParameter)

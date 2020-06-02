@@ -38,7 +38,7 @@ describe('McsApiClientHttpService', () => {
   /** Test Implementation */
   describe('getFullUrl', () => {
     it('should return the full URL', () => {
-      let inputEndPoint: string = '/servers';
+      let inputEndPoint: string = '/private-cloud/servers';
       let expectedUrl: string = apiClientConfig.apiHost.concat(inputEndPoint);
       let actualUrl: string = '';
       actualUrl = apiClientService.getFullUrl(inputEndPoint);
@@ -54,7 +54,7 @@ describe('McsApiClientHttpService', () => {
   describe('get', () => {
     it('should get Observable response', () => {
       let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-      mcsApiRequestParameter.endPoint = '/servers';
+      mcsApiRequestParameter.endPoint = '/private-cloud/servers';
       mcsApiRequestParameter.responseType = 'json';
       apiClientService.get(mcsApiRequestParameter)
         .subscribe((response) => {
@@ -76,7 +76,7 @@ describe('McsApiClientHttpService', () => {
 
     it('should call handleError method when error occured', () => {
       let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-      mcsApiRequestParameter.endPoint = '/servers';
+      mcsApiRequestParameter.endPoint = '/private-cloud/servers';
       mcsApiRequestParameter.responseType = 'json';
 
       apiClientService.get(mcsApiRequestParameter)
@@ -97,7 +97,7 @@ describe('McsApiClientHttpService', () => {
   describe('post', () => {
     it('should insert new entry', () => {
       let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-      mcsApiRequestParameter.endPoint = '/servers/id';
+      mcsApiRequestParameter.endPoint = '/private-cloud/servers/id';
       mcsApiRequestParameter.recordData = 'title: server';
       mcsApiRequestParameter.responseType = 'json';
 
@@ -120,7 +120,7 @@ describe('McsApiClientHttpService', () => {
 
     it('should call handleError method when error occured', () => {
       let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-      mcsApiRequestParameter.endPoint = '/servers';
+      mcsApiRequestParameter.endPoint = '/private-cloud/servers';
       mcsApiRequestParameter.responseType = 'json';
 
       apiClientService.post(mcsApiRequestParameter)
@@ -141,7 +141,7 @@ describe('McsApiClientHttpService', () => {
   describe('patch', () => {
     it('should update some fields of the existing entry', () => {
       let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-      mcsApiRequestParameter.endPoint = '/servers/id';
+      mcsApiRequestParameter.endPoint = '/private-cloud/servers/id';
       mcsApiRequestParameter.recordData = 'title: server';
       mcsApiRequestParameter.responseType = 'json';
 
@@ -164,7 +164,7 @@ describe('McsApiClientHttpService', () => {
 
     it('should call handleError method when error occured', () => {
       let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-      mcsApiRequestParameter.endPoint = '/servers';
+      mcsApiRequestParameter.endPoint = '/private-cloud/servers';
       mcsApiRequestParameter.responseType = 'json';
 
       apiClientService.patch(mcsApiRequestParameter)
@@ -185,7 +185,7 @@ describe('McsApiClientHttpService', () => {
   describe('put', () => {
     it('should save updated to existing entry', () => {
       let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-      mcsApiRequestParameter.endPoint = '/servers/id';
+      mcsApiRequestParameter.endPoint = '/private-cloud/servers/id';
       mcsApiRequestParameter.recordData = 'title: server';
       mcsApiRequestParameter.responseType = 'json';
 
@@ -208,7 +208,7 @@ describe('McsApiClientHttpService', () => {
 
     it('should call handleError method when error occured', () => {
       let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-      mcsApiRequestParameter.endPoint = '/servers';
+      mcsApiRequestParameter.endPoint = '/private-cloud/servers';
       mcsApiRequestParameter.responseType = 'json';
 
       apiClientService.put(mcsApiRequestParameter)
@@ -229,7 +229,7 @@ describe('McsApiClientHttpService', () => {
   describe('delete', () => {
     it('should delete existing entry', () => {
       let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-      mcsApiRequestParameter.endPoint = '/servers/id';
+      mcsApiRequestParameter.endPoint = '/private-cloud/servers/id';
       mcsApiRequestParameter.recordData = 'title: server';
       mcsApiRequestParameter.responseType = 'json';
 
@@ -252,7 +252,7 @@ describe('McsApiClientHttpService', () => {
 
     it('should call handleError method when error occured', () => {
       let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-      mcsApiRequestParameter.endPoint = '/servers';
+      mcsApiRequestParameter.endPoint = '/private-cloud/servers';
       mcsApiRequestParameter.responseType = 'json';
 
       apiClientService.delete(mcsApiRequestParameter)

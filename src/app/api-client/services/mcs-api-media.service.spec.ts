@@ -58,7 +58,7 @@ describe('McsApiMediaService', () => {
 
       // Create request to the backend and expect that the request happened
       let httpMockRequest = httpMock.expectOne(
-        `/resources/media?page=${requestOptions.page}&per_page=${requestOptions.perPage}`
+        `/private-cloud/resources/media?page=${requestOptions.page}&per_page=${requestOptions.perPage}`
       );
       expect(httpMockRequest.request.method).toEqual('GET');
 
@@ -80,7 +80,7 @@ describe('McsApiMediaService', () => {
         });
 
       // Create request to the backend and expect that the request happened
-      let httpMockRequest = httpMock.expectOne(`/resources/media/${requestOptions.id}`);
+      let httpMockRequest = httpMock.expectOne(`/private-cloud/resources/media/${requestOptions.id}`);
       expect(httpMockRequest.request.method).toEqual('GET');
 
       // Create response data and transmit, expect the result should go to subscribe callback
@@ -101,7 +101,7 @@ describe('McsApiMediaService', () => {
         });
 
       // Create request to the backend and expect that the request happened
-      let httpMockRequest = httpMock.expectOne(`/resources/media/${requestOptions.id}/servers`);
+      let httpMockRequest = httpMock.expectOne(`/private-cloud/resources/media/${requestOptions.id}/servers`);
       expect(httpMockRequest.request.method).toEqual('GET');
 
       // Create response data and transmit, expect the result should go to subscribe callback

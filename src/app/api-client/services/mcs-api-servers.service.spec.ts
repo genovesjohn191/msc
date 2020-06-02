@@ -73,7 +73,7 @@ describe('ServersApiService', () => {
 
       // Create request to the backend and expect that the request happened
       let httpRequest = httpMock.expectOne(
-        `/servers?page=${requestOptions.page}&per_page=${requestOptions.perPage}`
+        `/private-cloud/servers?page=${requestOptions.page}&per_page=${requestOptions.perPage}`
       );
       expect(httpRequest.request.method).toEqual('GET');
 
@@ -95,7 +95,7 @@ describe('ServersApiService', () => {
         });
 
       // Create request to the backend and expect that the request happened
-      let mockRequest = httpMock.expectOne(`/servers/${requestOptions.id}`);
+      let mockRequest = httpMock.expectOne(`/private-cloud/servers/${requestOptions.id}`);
       expect(mockRequest.request.method).toEqual('GET');
 
       // Create response data and transmit, expect the result should go to subscribe callback
@@ -118,7 +118,7 @@ describe('ServersApiService', () => {
       });
 
       // Create request to the backend and expect that the request happened
-      let mockRequest = httpMock.expectOne(`/servers/${requestOptions.id}/power`);
+      let mockRequest = httpMock.expectOne(`/private-cloud/servers/${requestOptions.id}/power`);
       expect(mockRequest.request.method).toEqual('PUT');
 
       // Create response data and transmit, expect the result should go to subscribe callback
@@ -145,7 +145,7 @@ describe('ServersApiService', () => {
       });
 
       // Create request to the backend and expect that the request happened
-      let mockRequest = httpMock.expectOne(`/servers/${requestOptions.id}/password/reset`);
+      let mockRequest = httpMock.expectOne(`/private-cloud/servers/${requestOptions.id}/password/reset`);
       expect(mockRequest.request.method).toEqual('POST');
 
       // Create response data and transmit, expect the result should go to subscribe callback
@@ -168,7 +168,7 @@ describe('ServersApiService', () => {
       });
 
       // Create request to the backend and expect that the request happened
-      let mockRequest = httpMock.expectOne(`/servers/${requestOptions.id}/name`);
+      let mockRequest = httpMock.expectOne(`/private-cloud/servers/${requestOptions.id}/name`);
       expect(mockRequest.request.method).toEqual('PUT');
 
       // Create response data and transmit, expect the result should go to subscribe callback
@@ -191,7 +191,7 @@ describe('ServersApiService', () => {
       });
 
       // Create request to the backend and expect that the request happened
-      let mockRequest = httpMock.expectOne(`/servers/${requestOptions.id}/compute`);
+      let mockRequest = httpMock.expectOne(`/private-cloud/servers/${requestOptions.id}/compute`);
       expect(mockRequest.request.method).toEqual('PUT');
 
       // Create response data and transmit, expect the result should go to subscribe callback
@@ -213,7 +213,7 @@ describe('ServersApiService', () => {
       });
 
       // Create request to the backend and expect that the request happened
-      let mockRequest = httpMock.expectOne(`/servers`);
+      let mockRequest = httpMock.expectOne(`/private-cloud/servers`);
       expect(mockRequest.request.method).toEqual('POST');
 
       // Create response data and transmit, expect the result should go to subscribe callback
@@ -236,7 +236,7 @@ describe('ServersApiService', () => {
       });
 
       // Create request to the backend and expect that the request happened
-      let mockRequest = httpMock.expectOne(`/servers/${requestOptions.id}/clone`);
+      let mockRequest = httpMock.expectOne(`/private-cloud/servers/${requestOptions.id}/clone`);
       expect(mockRequest.request.method).toEqual('POST');
 
       // Create response data and transmit, expect the result should go to subscribe callback
@@ -257,7 +257,7 @@ describe('ServersApiService', () => {
         });
 
       // Create request to the backend and expect that the request happened
-      let mockRequest = httpMock.expectOne(`/servers/os`);
+      let mockRequest = httpMock.expectOne(`/private-cloud/servers/os`);
       expect(mockRequest.request.method).toEqual('GET');
 
       // Create response data and transmit, expect the result should go to subscribe callback
@@ -278,7 +278,7 @@ describe('ServersApiService', () => {
         });
 
       // Create request to the backend and expect that the request happened
-      let mockRequest = httpMock.expectOne(`/servers/${requestOptions.id}/disks`);
+      let mockRequest = httpMock.expectOne(`/private-cloud/servers/${requestOptions.id}/disks`);
       expect(mockRequest.request.method).toEqual('GET');
 
       // Create response data and transmit, expect the result should go to subscribe callback
@@ -301,7 +301,7 @@ describe('ServersApiService', () => {
       });
 
       // Create request to the backend and expect that the request happened
-      let mockRequest = httpMock.expectOne(`/servers/${requestOptions.id}/disks`);
+      let mockRequest = httpMock.expectOne(`/private-cloud/servers/${requestOptions.id}/disks`);
       expect(mockRequest.request.method).toEqual('POST');
 
       // Create response data and transmit, expect the result should go to subscribe callback
@@ -326,7 +326,7 @@ describe('ServersApiService', () => {
       });
 
       // Create request to the backend and expect that the request happened
-      let mockRequest = httpMock.expectOne(`/servers/${requestOptions.id}/disks/${storageId}`);
+      let mockRequest = httpMock.expectOne(`/private-cloud/servers/${requestOptions.id}/disks/${storageId}`);
       expect(mockRequest.request.method).toEqual('PUT');
 
       // Create response data and transmit, expect the result should go to subscribe callback
@@ -351,7 +351,7 @@ describe('ServersApiService', () => {
       });
 
       // Create request to the backend and expect that the request happened
-      let mockRequest = httpMock.expectOne(`/servers/${requestOptions.id}/disks/${storageId}`);
+      let mockRequest = httpMock.expectOne(`/private-cloud/servers/${requestOptions.id}/disks/${storageId}`);
       expect(mockRequest.request.method).toEqual('DELETE');
 
       // Create response data and transmit, expect the result should go to subscribe callback
@@ -372,7 +372,7 @@ describe('ServersApiService', () => {
         });
 
       // Create request to the backend and expect that the request happened
-      let mockRequest = httpMock.expectOne(`/servers/${requestOptions.id}/thumbnail`);
+      let mockRequest = httpMock.expectOne(`/private-cloud/servers/${requestOptions.id}/thumbnail`);
       expect(mockRequest.request.method).toEqual('GET');
 
       // Create response data and transmit, expect the result should go to subscribe callback
@@ -393,7 +393,7 @@ describe('ServersApiService', () => {
         });
 
       // Create request to the backend and expect that the request happened
-      let mockRequest = httpMock.expectOne(`/servers/${requestOptions.id}/nics`);
+      let mockRequest = httpMock.expectOne(`/private-cloud/servers/${requestOptions.id}/nics`);
       expect(mockRequest.request.method).toEqual('GET');
 
       // Create response data and transmit, expect the result should go to subscribe callback
@@ -416,7 +416,7 @@ describe('ServersApiService', () => {
       });
 
       // Create request to the backend and expect that the request happened
-      let mockRequest = httpMock.expectOne(`/servers/${requestOptions.id}/nics`);
+      let mockRequest = httpMock.expectOne(`/private-cloud/servers/${requestOptions.id}/nics`);
       expect(mockRequest.request.method).toEqual('POST');
 
       // Create response data and transmit, expect the result should go to subscribe callback
@@ -442,7 +442,7 @@ describe('ServersApiService', () => {
       });
 
       // Create request to the backend and expect that the request happened
-      let mockRequest = httpMock.expectOne(`/servers/${requestOptions.id}/nics/${networkId}`);
+      let mockRequest = httpMock.expectOne(`/private-cloud/servers/${requestOptions.id}/nics/${networkId}`);
       expect(mockRequest.request.method).toEqual('PUT');
 
       // Create response data and transmit, expect the result should go to subscribe callback
@@ -468,7 +468,7 @@ describe('ServersApiService', () => {
       });
 
       // Create request to the backend and expect that the request happened
-      let mockRequest = httpMock.expectOne(`/servers/${requestOptions.id}/nics/${networkId}`);
+      let mockRequest = httpMock.expectOne(`/private-cloud/servers/${requestOptions.id}/nics/${networkId}`);
       expect(mockRequest.request.method).toEqual('DELETE');
 
       // Create response data and transmit, expect the result should go to subscribe callback
@@ -491,7 +491,7 @@ describe('ServersApiService', () => {
       });
 
       // Create request to the backend and expect that the request happened
-      let mockRequest = httpMock.expectOne(`/servers/${requestOptions.id}/media`);
+      let mockRequest = httpMock.expectOne(`/private-cloud/servers/${requestOptions.id}/media`);
       expect(mockRequest.request.method).toEqual('POST');
 
       // Create response data and transmit, expect the result should go to subscribe callback
@@ -517,7 +517,7 @@ describe('ServersApiService', () => {
       });
 
       // Create request to the backend and expect that the request happened
-      let mockRequest = httpMock.expectOne(`/servers/${requestOptions.id}/media/${mediaId}`);
+      let mockRequest = httpMock.expectOne(`/private-cloud/servers/${requestOptions.id}/media/${mediaId}`);
       expect(mockRequest.request.method).toEqual('DELETE');
 
       // Create response data and transmit, expect the result should go to subscribe callback

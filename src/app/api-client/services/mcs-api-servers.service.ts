@@ -74,7 +74,7 @@ export class McsApiServersService implements IMcsApiServersService {
     searchParams.set('search_keyword', query.keyword);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = '/servers';
+    mcsApiRequestParameter.endPoint = '/private-cloud/servers';
     mcsApiRequestParameter.searchParameters = searchParams;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
@@ -94,7 +94,7 @@ export class McsApiServersService implements IMcsApiServersService {
    */
   public getServer(id: any): Observable<McsApiSuccessResponse<McsServer>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${id}`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/${id}`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -124,7 +124,7 @@ export class McsApiServersService implements IMcsApiServersService {
     searchParams.set('search_keyword', query.keyword);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${id}/os-updates`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/${id}/os-updates`;
     mcsApiRequestParameter.searchParameters = searchParams;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
@@ -148,7 +148,7 @@ export class McsApiServersService implements IMcsApiServersService {
   ): Observable<McsApiSuccessResponse<McsServerOsUpdatesDetails>> {
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${id}/os-updates/details`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/${id}/os-updates/details`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -173,7 +173,7 @@ export class McsApiServersService implements IMcsApiServersService {
   ): Observable<McsApiSuccessResponse<McsJob>> {
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${id}/os-updates/apply-requests`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/${id}/os-updates/apply-requests`;
     mcsApiRequestParameter.recordData = serializeObjectToJson(updateRequestDetails);
 
     return this._mcsApiService.post(mcsApiRequestParameter)
@@ -194,7 +194,7 @@ export class McsApiServersService implements IMcsApiServersService {
     : Observable<McsApiSuccessResponse<McsServerOsUpdatesCategory[]>> {
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/os-updates/categories`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/os-updates/categories`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -219,7 +219,7 @@ export class McsApiServersService implements IMcsApiServersService {
   ): Observable<McsApiSuccessResponse<McsJob>> {
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${id}/os-updates/analysis-requests`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/${id}/os-updates/analysis-requests`;
     mcsApiRequestParameter.recordData = serializeObjectToJson(inspectRequest);
 
     return this._mcsApiService.post(mcsApiRequestParameter)
@@ -244,7 +244,7 @@ export class McsApiServersService implements IMcsApiServersService {
   ): Observable<McsApiSuccessResponse<McsServerOsUpdatesSchedule[]>> {
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${id}/os-updates/schedules`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/${id}/os-updates/schedules`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -270,7 +270,7 @@ export class McsApiServersService implements IMcsApiServersService {
   ): Observable<McsApiSuccessResponse<McsServerOsUpdatesSchedule>> {
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${id}/os-updates/schedules`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/${id}/os-updates/schedules`;
     mcsApiRequestParameter.recordData = serializeObjectToJson(schedule);
 
     return this._mcsApiService.post(mcsApiRequestParameter)
@@ -295,7 +295,7 @@ export class McsApiServersService implements IMcsApiServersService {
   ): Observable<McsApiSuccessResponse<boolean>> {
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${id}/os-updates/schedules`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/${id}/os-updates/schedules`;
 
     return this._mcsApiService.delete(mcsApiRequestParameter)
       .pipe(
@@ -320,7 +320,7 @@ export class McsApiServersService implements IMcsApiServersService {
     powerstate: McsServerPowerstateCommand
   ): Observable<McsApiSuccessResponse<McsJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${id}/power`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/${id}/power`;
     mcsApiRequestParameter.recordData = serializeObjectToJson(powerstate);
 
     return this._mcsApiService.put(mcsApiRequestParameter)
@@ -342,7 +342,7 @@ export class McsApiServersService implements IMcsApiServersService {
   public resetVmPassword(id: any, resetDetails: McsServerPasswordReset):
     Observable<McsApiSuccessResponse<McsJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${id}/password/reset`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/${id}/password/reset`;
     mcsApiRequestParameter.recordData = serializeObjectToJson(resetDetails);
 
     return this._mcsApiService.post(mcsApiRequestParameter)
@@ -364,7 +364,7 @@ export class McsApiServersService implements IMcsApiServersService {
   public renameServer(id: any, serverData: McsServerRename):
     Observable<McsApiSuccessResponse<McsJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${id}/name`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/${id}/name`;
     mcsApiRequestParameter.recordData = serializeObjectToJson(serverData);
 
     return this._mcsApiService.put(mcsApiRequestParameter)
@@ -388,7 +388,7 @@ export class McsApiServersService implements IMcsApiServersService {
     serverData: McsServerUpdate
   ): Observable<McsApiSuccessResponse<McsJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${id}/compute`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/${id}/compute`;
     mcsApiRequestParameter.recordData = serializeObjectToJson(serverData);
 
     return this._mcsApiService.put(mcsApiRequestParameter)
@@ -409,7 +409,7 @@ export class McsApiServersService implements IMcsApiServersService {
   public createServer(serverData: McsServerCreate):
     Observable<McsApiSuccessResponse<McsJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = '/servers';
+    mcsApiRequestParameter.endPoint = '/private-cloud/servers';
     mcsApiRequestParameter.recordData = serializeObjectToJson(serverData);
 
     return this._mcsApiService.post(mcsApiRequestParameter)
@@ -433,7 +433,7 @@ export class McsApiServersService implements IMcsApiServersService {
     serverData: McsServerClone
   ): Observable<McsApiSuccessResponse<McsJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${id}/clone`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/${id}/clone`;
     mcsApiRequestParameter.recordData = serializeObjectToJson(serverData);
 
     return this._mcsApiService.post(mcsApiRequestParameter)
@@ -454,7 +454,7 @@ export class McsApiServersService implements IMcsApiServersService {
    */
   public deleteServer(id: string, deleteDetails: McsServerDelete): Observable<McsApiSuccessResponse<McsJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${id}`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/${id}`;
     mcsApiRequestParameter.recordData = serializeObjectToJson(deleteDetails);
 
     return this._mcsApiService.delete(mcsApiRequestParameter)
@@ -473,7 +473,7 @@ export class McsApiServersService implements IMcsApiServersService {
    */
   public getServerOs(): Observable<McsApiSuccessResponse<McsServerOperatingSystem[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = '/servers/os';
+    mcsApiRequestParameter.endPoint = '/private-cloud/servers/os';
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -492,7 +492,7 @@ export class McsApiServersService implements IMcsApiServersService {
   public getServerStorage(serverId: any):
     Observable<McsApiSuccessResponse<McsServerStorageDevice[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${serverId}/disks`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/${serverId}/disks`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -515,7 +515,7 @@ export class McsApiServersService implements IMcsApiServersService {
     storageData: McsServerStorageDeviceUpdate
   ): Observable<McsApiSuccessResponse<McsJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${serverId}/disks`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/${serverId}/disks`;
     mcsApiRequestParameter.recordData = serializeObjectToJson(storageData);
 
     return this._mcsApiService.post(mcsApiRequestParameter)
@@ -541,7 +541,7 @@ export class McsApiServersService implements IMcsApiServersService {
     storageData: McsServerStorageDeviceUpdate
   ): Observable<McsApiSuccessResponse<McsJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${serverId}/disks/${storageId}`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/${serverId}/disks/${storageId}`;
     mcsApiRequestParameter.recordData = serializeObjectToJson(storageData);
 
     return this._mcsApiService.put(mcsApiRequestParameter)
@@ -567,7 +567,7 @@ export class McsApiServersService implements IMcsApiServersService {
     storageData: McsServerStorageDeviceUpdate
   ): Observable<McsApiSuccessResponse<McsJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${serverId}/disks/${storageId}`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/${serverId}/disks/${storageId}`;
     mcsApiRequestParameter.recordData = serializeObjectToJson(storageData);
 
     return this._mcsApiService.delete(mcsApiRequestParameter)
@@ -588,7 +588,7 @@ export class McsApiServersService implements IMcsApiServersService {
    */
   public getServerThumbnail(id: any): Observable<McsApiSuccessResponse<McsServerThumbnail>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${id}/thumbnail`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/${id}/thumbnail`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -606,7 +606,7 @@ export class McsApiServersService implements IMcsApiServersService {
    */
   public getServerNics(serverId: any): Observable<McsApiSuccessResponse<McsServerNic[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${serverId}/nics`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/${serverId}/nics`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -629,7 +629,7 @@ export class McsApiServersService implements IMcsApiServersService {
     nicData: McsServerCreateNic
   ): Observable<McsApiSuccessResponse<McsJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${serverId}/nics`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/${serverId}/nics`;
     mcsApiRequestParameter.recordData = serializeObjectToJson(nicData);
 
     return this._mcsApiService.post(mcsApiRequestParameter)
@@ -655,7 +655,7 @@ export class McsApiServersService implements IMcsApiServersService {
     nicData: McsServerCreateNic
   ): Observable<McsApiSuccessResponse<McsJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${serverId}/nics/${nicId}`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/${serverId}/nics/${nicId}`;
     mcsApiRequestParameter.recordData = serializeObjectToJson(nicData);
 
     return this._mcsApiService.put(mcsApiRequestParameter)
@@ -681,7 +681,7 @@ export class McsApiServersService implements IMcsApiServersService {
     nicData: McsServerCreateNic
   ): Observable<McsApiSuccessResponse<McsJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${serverId}/nics/${nicId}`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/${serverId}/nics/${nicId}`;
     mcsApiRequestParameter.recordData = serializeObjectToJson(nicData);
 
     return this._mcsApiService.delete(mcsApiRequestParameter)
@@ -700,7 +700,7 @@ export class McsApiServersService implements IMcsApiServersService {
    */
   public getServerCompute(serverId: any): Observable<McsApiSuccessResponse<McsServerCompute>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${serverId}/compute`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/${serverId}/compute`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -718,7 +718,7 @@ export class McsApiServersService implements IMcsApiServersService {
    */
   public getServerMedias(serverId: any): Observable<McsApiSuccessResponse<McsServerMedia[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${serverId}/media`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/${serverId}/media`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -741,7 +741,7 @@ export class McsApiServersService implements IMcsApiServersService {
     mediaDetails: McsServerAttachMedia
   ): Observable<McsApiSuccessResponse<McsJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${serverId}/media`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/${serverId}/media`;
     mcsApiRequestParameter.recordData = serializeObjectToJson(mediaDetails);
 
     return this._mcsApiService.post(mcsApiRequestParameter)
@@ -767,7 +767,7 @@ export class McsApiServersService implements IMcsApiServersService {
     mediaDetails: McsServerDetachMedia
   ): Observable<McsApiSuccessResponse<McsJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${serverId}/media/${mediaId}`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/${serverId}/media/${mediaId}`;
     mcsApiRequestParameter.recordData = serializeObjectToJson(mediaDetails);
 
     return this._mcsApiService.delete(mcsApiRequestParameter)
@@ -787,7 +787,7 @@ export class McsApiServersService implements IMcsApiServersService {
    */
   public getServerSnapshots(serverId: any): Observable<McsApiSuccessResponse<McsServerSnapshot[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${serverId}/snapshots`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/${serverId}/snapshots`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -808,7 +808,7 @@ export class McsApiServersService implements IMcsApiServersService {
   public createServerSnapshot(id: any, createSnapshot: McsServerSnapshotCreate):
     Observable<McsApiSuccessResponse<McsJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${id}/snapshots`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/${id}/snapshots`;
     mcsApiRequestParameter.recordData = serializeObjectToJson(createSnapshot);
 
     return this._mcsApiService.post(mcsApiRequestParameter)
@@ -830,7 +830,7 @@ export class McsApiServersService implements IMcsApiServersService {
   public restoreServerSnapshot(id: any, snapshotRestore: McsServerSnapshotRestore):
     Observable<McsApiSuccessResponse<McsJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${id}/snapshots/restore`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/${id}/snapshots/restore`;
     mcsApiRequestParameter.recordData = serializeObjectToJson(snapshotRestore);
 
     return this._mcsApiService.put(mcsApiRequestParameter)
@@ -852,7 +852,7 @@ export class McsApiServersService implements IMcsApiServersService {
   public deleteServerSnapshot(id: string, snapshotDelete: McsServerSnapshotDelete):
     Observable<McsApiSuccessResponse<McsJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${id}/snapshots`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/${id}/snapshots`;
     mcsApiRequestParameter.recordData = serializeObjectToJson(snapshotDelete);
 
     return this._mcsApiService.delete(mcsApiRequestParameter)
@@ -873,7 +873,7 @@ export class McsApiServersService implements IMcsApiServersService {
   public getServerBackupVm(id: string):
     Observable<McsApiSuccessResponse<McsServerBackupVm>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${id}/vm-backup`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/${id}/vm-backup`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -893,7 +893,7 @@ export class McsApiServersService implements IMcsApiServersService {
   public getServerBackupVmDetails(id: string):
     Observable<McsApiSuccessResponse<McsServerBackupVmDetails>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${id}/vm-backup/details`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/${id}/vm-backup/details`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -911,7 +911,7 @@ export class McsApiServersService implements IMcsApiServersService {
    */
   public getServerBackupVms(): Observable<McsApiSuccessResponse<McsServerBackupVm[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/vm-backups`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/vm-backups`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -931,7 +931,7 @@ export class McsApiServersService implements IMcsApiServersService {
   public getServerBackupServer(id: string):
     Observable<McsApiSuccessResponse<McsServerBackupServer>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${id}/server-backup`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/${id}/server-backup`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -951,7 +951,7 @@ export class McsApiServersService implements IMcsApiServersService {
   public getServerBackupServerDetails(id: string):
     Observable<McsApiSuccessResponse<McsServerBackupServerDetails>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${id}/server-backup/details`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/${id}/server-backup/details`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -970,7 +970,7 @@ export class McsApiServersService implements IMcsApiServersService {
   public getServerBackupServers():
     Observable<McsApiSuccessResponse<McsServerBackupServer[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/server-backups`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/server-backups`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -989,7 +989,7 @@ export class McsApiServersService implements IMcsApiServersService {
    */
   public getServerHostSecurity(id: string): Observable<McsApiSuccessResponse<McsServerHostSecurity>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${id}/host-security`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/${id}/host-security`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -1007,7 +1007,7 @@ export class McsApiServersService implements IMcsApiServersService {
    */
   public getServerHostSecurityAntiVirus(): Observable<McsApiSuccessResponse<McsServerHostSecurityAntiVirus[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/host-security/av`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/host-security/av`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -1026,7 +1026,7 @@ export class McsApiServersService implements IMcsApiServersService {
    */
   public getServerHostSecurityAvLogs(id: string): Observable<McsApiSuccessResponse<McsServerHostSecurityAvLog[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${id}/host-security/av/logs`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/${id}/host-security/av/logs`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -1044,7 +1044,7 @@ export class McsApiServersService implements IMcsApiServersService {
    */
   public getServerHostSecurityHids(): Observable<McsApiSuccessResponse<McsServerHostSecurityHids[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/host-security/hids`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/host-security/hids`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -1063,7 +1063,7 @@ export class McsApiServersService implements IMcsApiServersService {
    */
   public getServerHostSecurityHidsLogs(id: string): Observable<McsApiSuccessResponse<McsServerHostSecurityHidsLog[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${id}/host-security/hids/logs`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/${id}/host-security/hids/logs`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(

@@ -38,7 +38,7 @@ export class McsApiMediaService implements IMcsApiMediaService {
     searchParams.set('search_keyword', query.keyword);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = '/resources/media';
+    mcsApiRequestParameter.endPoint = '/private-cloud/resources/media';
     mcsApiRequestParameter.searchParameters = searchParams;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
@@ -58,7 +58,7 @@ export class McsApiMediaService implements IMcsApiMediaService {
    */
   public getMedium(id: any): Observable<McsApiSuccessResponse<McsResourceMedia>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/resources/media/${id}`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/resources/media/${id}`;
 
     mcsApiRequestParameter.responseType = 'json';
 
@@ -79,7 +79,7 @@ export class McsApiMediaService implements IMcsApiMediaService {
   public getMediaServers(mediaId: any):
     Observable<McsApiSuccessResponse<McsResourceMediaServer[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/resources/media/${mediaId}/servers`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/resources/media/${mediaId}/servers`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(

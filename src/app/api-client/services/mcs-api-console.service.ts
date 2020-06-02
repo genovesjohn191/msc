@@ -20,7 +20,7 @@ export class McsApiConsoleService implements IMcsApiConsoleService {
    */
   public getServerConsole(id: string): Observable<McsApiSuccessResponse<McsConsole>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${id}/console`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/servers/${id}/console`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(

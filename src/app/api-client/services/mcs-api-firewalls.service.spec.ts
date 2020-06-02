@@ -56,7 +56,7 @@ describe('McsApiFirewallsService', () => {
 
       // Create request to the backend and expect that the request happened
       let httpRequest = httpMock.expectOne(
-        `/firewalls?page=${requestOptions.page}&per_page=${requestOptions.perPage}`
+        `/private-cloud/firewalls?page=${requestOptions.page}&per_page=${requestOptions.perPage}`
       );
       expect(httpRequest.request.method).toEqual('GET');
 
@@ -78,7 +78,7 @@ describe('McsApiFirewallsService', () => {
         });
 
       // Create request to the backend and expect that the request happened
-      let mockRequest = httpMock.expectOne(`/firewalls/${requestOptions.id}`);
+      let mockRequest = httpMock.expectOne(`/private-cloud/firewalls/${requestOptions.id}`);
       expect(mockRequest.request.method).toEqual('GET');
 
       // Create response data and transmit, expect the result should go to subscribe callback
@@ -104,7 +104,7 @@ describe('McsApiFirewallsService', () => {
         });
 
       // Create request to the backend and expect that the request happened
-      let endpoint = `/firewalls/${requestOptions.id}/policies`
+      let endpoint = `/private-cloud/firewalls/${requestOptions.id}/policies`
         + `?page=${requestOptions.page}`
         + `&per_page=${requestOptions.perPage}`;
 
