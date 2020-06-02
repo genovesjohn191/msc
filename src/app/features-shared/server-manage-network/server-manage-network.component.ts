@@ -50,6 +50,7 @@ import { ServerManageNetwork } from './server-manage-network';
 // Constants
 const DEFAULT_GATEWAY = '192.168.0.1';
 const DEFAULT_NETMASK = '255.255.255.0';
+const DEFAULT_IP_RANGE_LAST = '3';
 
 // Require subnetting javscript class
 const Netmask = require('netmask').Netmask;
@@ -253,6 +254,10 @@ export class ServerManageNetworkComponent
   private _createNetmaskByNetwork(network: McsResourceNetwork): void {
     if (isNullOrEmpty(network)) { return; }
     this.netMask = new Netmask(`${network.gateway}/${network.netmask}`);
+    if (!isNullOrEmpty(this.netMask.last) &&
+        this.netMask.last === network.gateway) {
+      this.netMask.last = this.netMask.last.replace(/.$/, DEFAULT_IP_RANGE_LAST);
+    }
   }
 
   /**
@@ -364,6 +369,7 @@ export class ServerManageNetworkComponent
     clearArrayRecord(this.ipAddressesInUsed);
     if (!isNullOrEmpty(this.fgNetwork)) {
       this.fcCustomIpAddress.reset();
+      this._initializeCurrentView();
     }
   }
 
@@ -402,7 +408,11 @@ export class ServerManageNetworkComponent
     if (this.targetNic.ipAllocationMode !== IpAllocationMode.Manual) {
       this.fcIpAllocationMode.setValue(this.targetNic.ipAllocationMode);
     }
-    this.fcCustomIpAddress.setValue(getSafeProperty(this.targetNic, (obj) => obj.ipAddresses[0]));
+    let currentIpAddress: string = getSafeProperty(this.targetNic, (obj) => obj.ipAddresses[0]);
+    let ipAddress: string = (!isNullOrEmpty(currentIpAddress)) ?
+                            currentIpAddress
+                          : getSafeProperty(this.targetNic, (obj) => obj.vCloudIpAddress);
+    this.fcCustomIpAddress.setValue(ipAddress);
     this._changeDetectorRef.markForCheck();
   }
 
