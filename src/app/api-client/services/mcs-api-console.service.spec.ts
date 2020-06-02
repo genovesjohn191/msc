@@ -50,7 +50,7 @@ describe('McsApiConsoleService', () => {
         });
 
       // Create request to the backend and expect that the request happened
-      let mockRequest = httpMock.expectOne(`/servers/${requestOptions.id}/console`);
+      let mockRequest = httpMock.expectOne(`/private-cloud/servers/${requestOptions.id}/console`);
       expect(mockRequest.request.method).toEqual('GET');
 
       // Create response data and transmit, expect the result should go to subscribe callback

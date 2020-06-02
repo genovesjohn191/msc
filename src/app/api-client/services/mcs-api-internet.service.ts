@@ -29,7 +29,7 @@ export class McsApiInternetService implements IMcsApiInternetService {
     searchParams.set('search_keyword', query.keyword);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = '/networks/internet';
+    mcsApiRequestParameter.endPoint = '/private-cloud/networks/internet';
     mcsApiRequestParameter.searchParameters = searchParams;
 
     return this._apiClientService.get(mcsApiRequestParameter).pipe(
@@ -45,7 +45,7 @@ export class McsApiInternetService implements IMcsApiInternetService {
    */
   public getInternetPort(id: string): Observable<McsApiSuccessResponse<McsInternetPort>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/networks/internet/${id}`;
+    mcsApiRequestParameter.endPoint = `/private-cloud/networks/internet/${id}`;
 
     return this._apiClientService.get(mcsApiRequestParameter).pipe(
       map((response) =>
