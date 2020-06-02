@@ -24,12 +24,10 @@ import {
   Observable,
   Subject,
   of,
-  empty,
   BehaviorSubject
 } from 'rxjs';
 import {
   takeUntil,
-  catchError,
   map,
   tap,
   shareReplay
@@ -456,8 +454,7 @@ export class StepOrderDetailsComponent
    */
   private _subscribeToBillingDetails(): void {
     this.billing$ = this._apiService.getBilling().pipe(
-      map((response) => getSafeProperty(response, (obj) => obj.collection)),
-      catchError(() => empty())
+      map((response) => getSafeProperty(response, (obj) => obj.collection))
     );
   }
 
