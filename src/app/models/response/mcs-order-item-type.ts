@@ -1,8 +1,8 @@
 import { JsonProperty } from '@peerlancers/json-serialization';
 import {
-  OrderType,
-  OrderTypeSerialization
-} from '../enumerations/order-type.enum';
+  ItemType,
+  ItemTypeSerialization
+} from '../enumerations/item-type.enum';
 import { McsEntityBase } from '../common/mcs-entity.base';
 
 export class McsOrderItemType extends McsEntityBase {
@@ -13,10 +13,10 @@ export class McsOrderItemType extends McsEntityBase {
   public productCode: string = undefined;
 
   @JsonProperty({
-    serializer: OrderTypeSerialization,
-    deserializer: OrderTypeSerialization
+    serializer: ItemTypeSerialization,
+    deserializer: ItemTypeSerialization
   })
-  public orderType: OrderType = undefined;
+  public itemType: ItemType = undefined;
 
   @JsonProperty()
   public orderChangeType: string = undefined;

@@ -52,7 +52,7 @@ import {
   McsBillingSite,
   McsOption,
   DataStatus,
-  OrderType,
+  ItemType,
   McsOrderItemType,
   McsEventTrack,
   McsOrderCharge
@@ -176,7 +176,7 @@ export class StepOrderDetailsComponent
   }
 
   public get orderTypeEnum(): any {
-    return OrderType;
+    return ItemType;
   }
 
   /**
@@ -280,8 +280,8 @@ export class StepOrderDetailsComponent
    * Updates the form group by order type
    */
   private _updateFormGroupBytype(): void {
-    let orderType = getSafeProperty(this.orderItemType, (obj) => obj.orderType, OrderType.Change);
-    orderType === OrderType.Change ?
+    let itemType = getSafeProperty(this.orderItemType, (obj) => obj.itemType, ItemType.Change);
+    itemType === ItemType.Change ?
       this._setOrderChangeFormControls() :
       this._setOrderNewFormControls();
   }
