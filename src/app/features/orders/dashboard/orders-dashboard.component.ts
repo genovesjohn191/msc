@@ -87,7 +87,7 @@ export class OrdersDashboardComponent extends McsListViewListingBase<McsOrderAva
         let families = getSafeProperty(familyCollection, (obj) => obj.collection, []);
         let familyWithGroup = families.find((family: McsOrderAvailableFamily) => {
           return !isNullOrEmpty(family.groups) &&
-            !isNullOrEmpty(family.groups.find((group) => !isNullOrEmpty(group.availableOrderItemTypes)));
+            !isNullOrEmpty(family.groups.find((group) => !isNullOrEmpty(group.orderAvailableItemTypes)));
         });
 
         if (isNullOrEmpty(familyWithGroup)) {
@@ -95,8 +95,8 @@ export class OrdersDashboardComponent extends McsListViewListingBase<McsOrderAva
           return;
         }
 
-        // Select intialy when obtained
-        this._orderGroupChange.next(familyWithGroup.groups.find((group) => !isNullOrEmpty(group.availableOrderItemTypes)));
+        // Select initially when obtained
+        this._orderGroupChange.next(familyWithGroup.groups.find((group) => !isNullOrEmpty(group.orderAvailableItemTypes)));
       })
     );
   }
