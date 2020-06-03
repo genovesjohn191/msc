@@ -12,7 +12,7 @@
             <ng-container *mcsOptionGroupHeader>
               {{ 'mediaShared.manageServer.serverGroupHeader' | translate }}
             </ng-container>
-            <mcs-option *ngFor="let server of servers" [value]="server">
+            <mcs-option *ngFor="let server of servers$ | async" [value]="server">
               {{ server.name }}
             </mcs-option>
           </mcs-option-group>
