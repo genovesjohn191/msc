@@ -53,7 +53,7 @@
 
     <!-- Attach servers -->
     <div class="action-box" [disabled]="selectedMedium.isProcessing">
-      <mcs-media-manage-servers (dataChange)="onChangeManageServers($event)">
+      <mcs-media-manage-servers (dataChange)="onChangeManageServers($event)" [media]="selectedMedium">
         <ng-container mcsManageServerHeader>
           <h2>{{ 'mediaServers.attachServersHeader' | translate }}</h2>
         </ng-container>

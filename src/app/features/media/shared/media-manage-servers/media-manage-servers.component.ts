@@ -5,21 +5,28 @@ import {
   Output,
   EventEmitter,
   ChangeDetectorRef,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  Input
 } from '@angular/core';
-import { throwError } from 'rxjs';
+import {
+  throwError,
+  Observable
+} from 'rxjs';
 import {
   catchError,
-  map
+  map,
+  tap
 } from 'rxjs/operators';
 import { McsDataStatusFactory } from '@app/core';
 import {
   isNullOrEmpty,
   unsubscribeSafely,
-  getSafeProperty,
-  CommonDefinition
+  getSafeProperty
 } from '@app/utilities';
-import { McsServer } from '@app/models';
+import {
+  McsServer,
+  McsResourceMedia
+} from '@app/models';
 import { McsApiService } from '@app/services';
 import { MediaManageServers } from './media-manage-servers';
 
@@ -29,11 +36,14 @@ import { MediaManageServers } from './media-manage-servers';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MediaManageServersComponent implements OnInit, OnDestroy {
-  public servers: McsServer[];
+  public servers$: Observable<McsServer[]>;
   public dataStatusFactory: McsDataStatusFactory<McsServer[]>;
 
   @Output()
   public dataChange = new EventEmitter<MediaManageServers>();
+
+  @Input()
+  public media: McsResourceMedia;
 
   private _manageServerOutput = new MediaManageServers();
 
@@ -70,16 +80,19 @@ export class MediaManageServersComponent implements OnInit, OnDestroy {
    */
   private _getServers(): void {
     this.dataStatusFactory.setInProgress();
-    this._apiService.getServers().pipe(
+    this.servers$ = this._apiService.getServers().pipe(
+      map((serversCollection) => {
+        let servers = getSafeProperty(serversCollection, (obj) => obj.collection);
+        return servers.filter((server) => server.platform.resourceName === getSafeProperty(this.media, (obj) => obj.resourceName, ''))
+      }),
+      tap((servers) => {
+        this.dataStatusFactory.setSuccessful(servers);
+      }),
       catchError((error) => {
         this.dataStatusFactory.setError();
         return throwError(error);
-      }),
-      map((response) => getSafeProperty(response, (obj) => obj.collection))
-    ).subscribe((response) => {
-      this.servers = response;
-      this.dataStatusFactory.setSuccessful(response);
-    });
+      })
+    );
   }
 
   /**
