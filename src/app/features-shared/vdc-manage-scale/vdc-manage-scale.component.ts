@@ -47,10 +47,12 @@ const DEFAULT_MIN_CPU = 1;
 const MAX_CPU = 348;
 const MAX_MEMORY = 2784;
 const DEFAULT_SLIDER_STEP = 2;
+const DEFAULT_SLIDER_MIN_VALUE = 0;
 
 @Component({
   selector: 'mcs-vdc-manage-scale',
   templateUrl: 'vdc-manage-scale.component.html',
+  styleUrls: ['./vdc-manage-scale.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     animateFactory.fadeIn
@@ -220,6 +222,21 @@ export class VdcManageScaleComponent
   }
 
   /**
+   * Returns slider max step value
+   */
+  public get sliderMaxStep(): number {
+    let sliderTableMaxLength: number = this.sliderTable.length - 1;
+    return ((sliderTableMaxLength) % 2 === 0) ? sliderTableMaxLength : sliderTableMaxLength - 1;
+  }
+
+  /**
+   * Returns slider min step value
+   */
+  public get sliderMinStep(): number {
+    return DEFAULT_SLIDER_MIN_VALUE;
+  }
+
+  /**
    * Event that emits when the input manage type has been changed
    */
   public onChangeInputManageType(inputManageType: InputManageType) {
@@ -235,6 +252,11 @@ export class VdcManageScaleComponent
   public onSliderChanged(index: number) {
     this.sliderValueIndex = index;
     this.sliderValue = this.sliderTable[this.sliderValueIndex];
+    if (!isNullOrUndefined(this.sliderValue)) {
+      this.fcCustomMemory.setValue(this.sliderValue.memoryGB);
+      this.fcCustomCpu.setValue(this.sliderValue.cpuCount);
+    }
+    this._updateAllFormValidity();
     this.notifyDataChange();
   }
 
@@ -245,8 +267,9 @@ export class VdcManageScaleComponent
     if (isNullOrEmpty(this.fcCustomCpu)) { return; }
     let suggestedCpuCount: number = +this.fcCustomMemory.value / DEFAULT_RATIO_MEMORY;
     this.fcCustomCpu.setValue(suggestedCpuCount);
-    this.fcCustomCpu.updateValueAndValidity();
-    this.fcCustomMemory.updateValueAndValidity();
+    let sliderIndex = this.sliderTable.findIndex((obj => obj.cpuCount === suggestedCpuCount));
+    this.onSliderChanged(sliderIndex);
+    this._updateAllFormValidity();
   }
 
   /**
@@ -256,8 +279,18 @@ export class VdcManageScaleComponent
     if (isNullOrEmpty(this.fcCustomMemory)) { return; }
     let suggestedRamInGB: number = +this.fcCustomCpu.value * DEFAULT_RATIO_MEMORY;
     this.fcCustomMemory.setValue(suggestedRamInGB);
+    let sliderIndex = this.sliderTable.findIndex((obj => obj.memoryGB === suggestedRamInGB));
+    this.onSliderChanged(sliderIndex);
+    this._updateAllFormValidity();
+  }
+
+  /**
+   * Updates form validities
+   */
+  public _updateAllFormValidity(): void {
     this.fcCustomMemory.updateValueAndValidity();
     this.fcCustomCpu.updateValueAndValidity();
+    this.fgVdcScale.updateValueAndValidity();
   }
 
   /**
@@ -267,21 +300,10 @@ export class VdcManageScaleComponent
     let hasNoScaleContent = isNullOrEmpty(this.sliderValue) || isNullOrEmpty(this._scaleOutput);
     if (hasNoScaleContent) { return; }
 
-    // Set model data based on management type
-    switch (this.inputManageType) {
-      case InputManageType.Custom:
-        this._scaleOutput.memoryGB = +this.fcCustomMemory.value;
-        this._scaleOutput.cpuCount = +this.fcCustomCpu.value;
-        this._scaleOutput.valid = this.fgVdcScale.valid;
-        break;
+    this._scaleOutput.memoryGB = this.sliderValue.memoryGB;
+    this._scaleOutput.cpuCount = this.sliderValue.cpuCount;
+    this._scaleOutput.valid = (this.fgVdcScale.valid || (this.fcCustomMemory.valid && this.fcCustomCpu.valid));
 
-      case InputManageType.Auto:
-      default:
-        this._scaleOutput.memoryGB = this.sliderValue.memoryGB;
-        this._scaleOutput.cpuCount = this.sliderValue.cpuCount;
-        this._scaleOutput.valid = true;
-        break;
-    }
     this._scaleOutput.hasChanged = this._scaleOutput.valid
       && (this.initialCpu !== this._scaleOutput.cpuCount
         || this.initialMemoryGB !== this._scaleOutput.memoryGB);
@@ -316,10 +338,9 @@ export class VdcManageScaleComponent
    */
   private _createSliderTable(): void {
     // Create table definitions
-    let tableSize = MAX_CPU - this.initialCpu;
+    let tableSize = MAX_CPU;
     let vdcScaleTable = new Array<VdcManageScale>();
-
-    for (let cpu = this.initialCpu; cpu < tableSize; cpu++) {
+    for (let cpu = this.initialCpu; cpu <= tableSize; cpu++) {
       let vdcManageScaleItem = {
         cpuCount: cpu,
         memoryGB: cpu * this.ramRatio

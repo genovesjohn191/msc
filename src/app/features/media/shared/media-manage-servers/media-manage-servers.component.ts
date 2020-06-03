@@ -83,7 +83,7 @@ export class MediaManageServersComponent implements OnInit, OnDestroy {
     this.servers$ = this._apiService.getServers().pipe(
       map((serversCollection) => {
         let servers = getSafeProperty(serversCollection, (obj) => obj.collection);
-        return servers.filter((server) => server.platform.resourceName === getSafeProperty(this.media, (obj) => obj.resourceName, ''))
+        return servers.filter((server) => server.platform.resourceName === getSafeProperty(this.media, (obj) => obj.resourceName, ''));
       }),
       tap((servers) => {
         this.dataStatusFactory.setSuccessful(servers);

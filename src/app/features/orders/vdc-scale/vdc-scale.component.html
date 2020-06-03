@@ -53,10 +53,6 @@
                   [initialCpu]="selectedResourceCpu(resourceCompute)"
                   [mcsContextualHelp]="'orderVdcScale.vdcDetails.contextualHelp' | translate"
                   (dataChange)="onScaleChanged($event, fcVdc?.value)">
-
-                  <ng-container mcsVdcManageScaleHeader>
-                    <h2>{{ 'orderVdcScale.vdc.label' | translate }}</h2>
-                  </ng-container>
                 </mcs-vdc-manage-scale>
               </div>
             </ng-container>

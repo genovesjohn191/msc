@@ -1307,7 +1307,8 @@
         "cpuMin": "The minimum value that can be entered is {{min_value}} vCPUs.",
         "cpuMax": "The number of vCPUs should not exceed {{max_value}}.",
         "cpuInvalid": "vCPU must be a multiple of {{step}}.",
-        "ratioInvalid": "CPU/RAM ratio must be {{cpu_value}}:{{ram_value}}."
+        "ratioInvalid": "CPU/RAM ratio must be {{cpu_value}}:{{ram_value}}.",
+        "invalidScaleValue": "Please enter a valid value."
       }
     }
   },
