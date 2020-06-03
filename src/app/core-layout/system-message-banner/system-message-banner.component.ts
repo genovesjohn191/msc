@@ -9,7 +9,8 @@ import { Subscription } from 'rxjs';
 import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import {
   McsSystemMessage,
-  Severity
+  Severity,
+  MessageType
 } from '@app/models';
 import {
   unsubscribeSafely,
@@ -90,7 +91,7 @@ export class SystemMessageBannerComponent implements OnDestroy {
    */
   private _setAlertType(message: McsSystemMessage): void {
     if (isNullOrEmpty(message)) { return; }
-    this.alertType = this._alertTypeTableMap.get(message.severity) || 'info';
+    this.alertType = message.type === MessageType.Info ? 'info' : this._alertTypeTableMap.get(message.severity);
   }
 
   /**
@@ -99,9 +100,9 @@ export class SystemMessageBannerComponent implements OnDestroy {
   private _createAlertTypeTable(): void {
     if (!isNullOrEmpty(this._alertTypeTableMap)) { return; }
     this._alertTypeTableMap = new Map<Severity, McsStatusType>();
-    this._alertTypeTableMap.set(Severity.Low, 'info');
+    this._alertTypeTableMap.set(Severity.Low, 'warning');
     this._alertTypeTableMap.set(Severity.Medium, 'warning');
-    this._alertTypeTableMap.set(Severity.High, 'error');
+    this._alertTypeTableMap.set(Severity.High, 'warning');
     this._alertTypeTableMap.set(Severity.Critical, 'error');
   }
 }
