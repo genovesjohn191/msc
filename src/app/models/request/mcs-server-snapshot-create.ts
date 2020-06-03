@@ -1,4 +1,4 @@
-import { JsonProperty } from '@peerlancers/json-serialization';
+import { JsonProperty } from '@app/utilities';
 import { McsApiJobRequestBase } from '../common/mcs-api-job-request-base';
 
 export interface IMcsServerSnapshotCreateRefObj {

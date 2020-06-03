@@ -30,3 +30,6 @@ export * from './rxjs-operators/emitLatestMap';
 
 export * from './utilities.types';
 export * from './common.definition';
+
+/** Json Serializer */
+export * from './json-serializer';

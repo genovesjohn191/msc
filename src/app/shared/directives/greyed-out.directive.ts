@@ -5,8 +5,10 @@ import {
   Renderer2,
   ElementRef
 } from '@angular/core';
-import { coerceBoolean } from '@app/utilities';
-import { isNullOrUndefined } from 'util';
+import {
+  coerceBoolean,
+  isNullOrUndefined
+} from '@app/utilities';
 
 @Directive({
   selector: '[mcsGreyedOut]'

@@ -1,4 +1,4 @@
-import { JsonProperty } from '@peerlancers/json-serialization';
+import { JsonProperty } from '@app/utilities';
 import { McsServerOperatingSystem } from './mcs-server-operating-system';
 
 export class McsServerGroupedOs {

@@ -1,5 +1,5 @@
 import { async } from '@angular/core/testing';
-import { JsonProperty } from '@peerlancers/json-serialization';
+import { JsonProperty } from '@app/utilities';
 import {
   reviverParser,
   convertMapToJsonObject,

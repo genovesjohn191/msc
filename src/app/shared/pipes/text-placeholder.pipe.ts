@@ -2,8 +2,10 @@ import {
   Pipe,
   PipeTransform
 } from '@angular/core';
-import { replacePlaceholder } from '@app/utilities';
-import { isNullOrUndefined } from 'util';
+import {
+  replacePlaceholder,
+  isNullOrUndefined
+} from '@app/utilities';
 
 @Pipe({
   name: 'mcsTextPlaceholder'

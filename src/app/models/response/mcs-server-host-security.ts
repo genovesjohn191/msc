@@ -1,4 +1,4 @@
-import { JsonProperty } from '@peerlancers/json-serialization';
+import { JsonProperty } from '@app/utilities';
 import { McsServerHostSecurityAntiVirusItem } from './mcs-server-host-security-anti-virus-item';
 import { McsServerHostSecurityHidsItem } from './mcs-server-host-security-hids-item';
 import {

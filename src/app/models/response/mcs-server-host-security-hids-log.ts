@@ -1,4 +1,4 @@
-import { JsonProperty } from '@peerlancers/json-serialization';
+import { JsonProperty } from '@app/utilities';
 import { McsDateSerialization } from '../serialization/mcs-date-serialization';
 import {
   HostSecuritySeveritySerialization,

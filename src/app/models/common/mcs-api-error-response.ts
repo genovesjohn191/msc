@@ -1,4 +1,4 @@
-import { JsonProperty } from '@peerlancers/json-serialization';
+import { JsonProperty } from '@app/utilities';
 import { McsApiError } from '../common/mcs-api-error';
 
 export class McsApiErrorResponse {

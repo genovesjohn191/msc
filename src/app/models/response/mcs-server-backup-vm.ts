@@ -1,4 +1,4 @@
-import { JsonProperty } from '@peerlancers/json-serialization';
+import { JsonProperty } from '@app/utilities';
 import { McsBackupAttempt } from './mcs-backup-attempt';
 import { McsEntityBase } from '../common/mcs-entity.base';
 import {

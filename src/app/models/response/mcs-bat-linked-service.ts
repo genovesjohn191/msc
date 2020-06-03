@@ -1,4 +1,4 @@
-import { JsonProperty } from '@peerlancers/json-serialization';
+import { JsonProperty } from '@app/utilities';
 import { McsBatAssociatedServer } from './mcs-bat-associated-server';
 import { McsEntityBase } from '../common/mcs-entity.base';
 import {
