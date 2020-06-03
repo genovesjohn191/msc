@@ -1,7 +1,7 @@
 <form [formGroup]="fgVdcScale" mcsFormGroup>
     <!-- Scale header and switcher -->
     <mcs-item orientation="separated">
-      <div><ng-content select="[mcsVdcManageScaleHeader]"></ng-content></div>
+      <div><!--empty container for spacing--></div>
       <div>
         <a *ngIf="inputManageType === inputManageTypeEnum.Custom" mcsId
           (click)="onChangeInputManageType(inputManageTypeEnum.Auto)">
@@ -20,12 +20,13 @@
         </div>
 
         <div>
-          <mcs-slider [min]="0" [max]="(sliderTable?.length - 1)"
+          <mcs-slider [min]="sliderMinStep" [max]="sliderMaxStep"
             mcsId="slider-storage"
             [step]="sliderStep"
             [ngModel]="sliderValueIndex" [ngModelOptions]="{standalone: true}"
             (ngModelChange)="onSliderChanged($event)"></mcs-slider>
-          <strong display-block text-center>
+          <strong display-block text-center *ngIf="((sliderValue?.cpuCount | mcsIsNotNullOrEmpty) ||
+                                                    (sliderValue?.memoryGB | mcsIsNotNullOrEmpty) ); else invalidCpuRamRatio">
             {{ 'vdcShared.manageScale.sliderSelectedRamCpu' | translate:
               {
                 ram_value: (sliderValue?.memoryGB | mcsDataSize: 'GB'),
@@ -41,6 +42,11 @@
               }
             }}
           </span>
+          <ng-template #invalidCpuRamRatio>
+            <strong display-block text-center class="vdc-scale-error-wrapper">
+                {{ 'vdcShared.manageScale.errors.invalidScaleValue' | translate }}
+            </strong>
+          </ng-template>
         </div>
       </mcs-section>
 
@@ -58,7 +64,7 @@
 
             <mcs-hint mcsHint align="start">
               <div>
-                {{ 'vdcShared.manageScale.availableCpu' | translate: {cpu_value: cpuAvailable} }}
+                {{ 'vdcShared.manageScale.availableCpu' | translate: {cpu_value: cpuMax} }}
               </div>
             </mcs-hint>
             <mcs-error mcsError errorState="required">
@@ -91,7 +97,7 @@
 
           <mcs-hint mcsHint align="start">
             <div >
-              {{ 'vdcShared.manageScale.availableRam' | translate: {ram_value: (ramAvailableGB | mcsDataSize: 'GB')} }}
+              {{ 'vdcShared.manageScale.availableRam' | translate: {ram_value: (ramMax | mcsDataSize: 'GB')} }}
             </div>
           </mcs-hint>
           <mcs-error mcsError errorState="required">
