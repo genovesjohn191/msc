@@ -1,7 +1,7 @@
 import {
   IJsonSerializer,
   IJsonDeserializer
-} from '@peerlancers/json-serialization';
+} from '@app/utilities';
 
 export class McsEnumSerializationBase<T> implements IJsonSerializer, IJsonDeserializer {
   constructor(protected enumType: any) { }

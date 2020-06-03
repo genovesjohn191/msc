@@ -1,6 +1,10 @@
 import { isArray } from './mcs-array.function';
 import { isNullOrEmpty } from './mcs-object.function';
-import { serialize, deserialize, IJsonObject } from '@peerlancers/json-serialization';
+import { serialize } from '../json-serializer/json-serializer';
+import {
+  deserialize,
+  IJsonObject
+} from '../json-serializer/json-deserializer';
 
 const dateFormat = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/;
 

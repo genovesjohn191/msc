@@ -1,4 +1,4 @@
-import { JsonProperty } from '@peerlancers/json-serialization';
+import { JsonProperty } from '@app/utilities';
 import { McsOrderItemCreate } from './mcs-order-item-create';
 
 export class McsOrderCreate {

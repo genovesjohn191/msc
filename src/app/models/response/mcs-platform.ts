@@ -1,5 +1,5 @@
-import { JsonProperty } from '@peerlancers/json-serialization';
 import { McsEntityBase } from '../common/mcs-entity.base';
+import { JsonProperty } from '@app/utilities';
 
 export class McsPlatform extends McsEntityBase {
   @JsonProperty()

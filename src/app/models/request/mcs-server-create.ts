@@ -1,4 +1,4 @@
-import { JsonProperty } from '@peerlancers/json-serialization';
+import { JsonProperty } from '@app/utilities';
 import { McsServerCreateStorage } from './mcs-server-create-storage';
 import { McsServerCreateNic } from './mcs-server-create-nic';
 import { McsApiJobRequestBase } from '../common/mcs-api-job-request-base';

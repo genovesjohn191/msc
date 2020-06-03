@@ -1,4 +1,4 @@
-import { JsonProperty } from '@peerlancers/json-serialization';
+import { JsonProperty } from '@app/utilities';
 import { McsResourceNetworkIpAddress } from './mcs-resource-network-ip-address';
 import { McsEntityBase } from '../common/mcs-entity.base';
 

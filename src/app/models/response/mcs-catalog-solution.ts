@@ -1,4 +1,4 @@
-import { JsonProperty } from '@peerlancers/json-serialization';
+import { JsonProperty } from '@app/utilities';
 import { McsEntityBase } from '../common/mcs-entity.base';
 import { McsCatalogProductUseCase } from './mcs-catalog-product-use-case';
 import { McsCatalogProductLocation } from './mcs-catalog-product-location';

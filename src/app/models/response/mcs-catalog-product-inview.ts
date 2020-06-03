@@ -1,4 +1,4 @@
-import { JsonProperty } from '@peerlancers/json-serialization';
+import { JsonProperty } from '@app/utilities';
 import { McsCatalogProductInviewThreshold } from './mcs-catalog-product-inview-threshold';
 
 export class McsCatalogProductInview {

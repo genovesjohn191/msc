@@ -1,4 +1,4 @@
-import { JsonProperty } from '@peerlancers/json-serialization';
+import { JsonProperty } from '@app/utilities';
 import { StatusCode } from '../enumerations/status-code.enum';
 
 export class McsValidation {

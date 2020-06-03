@@ -1,7 +1,7 @@
 import {
   IJsonSerializer,
   IJsonDeserializer
-} from '@peerlancers/json-serialization';
+} from '@app/utilities';
 import { isNullOrEmpty } from '@app/utilities';
 
 export class McsDateSerialization implements IJsonSerializer, IJsonDeserializer {

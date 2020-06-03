@@ -1,4 +1,4 @@
-import { JsonProperty } from '@peerlancers/json-serialization';
+import { JsonProperty } from '@app/utilities';
 import { isNullOrEmpty } from '@app/utilities';
 import { McsCatalogProductFacilityManager } from './mcs-catalog-product-facility-manager';
 import {

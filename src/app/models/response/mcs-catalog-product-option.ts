@@ -1,4 +1,4 @@
-import { JsonProperty } from '@peerlancers/json-serialization';
+import { JsonProperty } from '@app/utilities';
 import { McsCatalogProductOptionProperty } from './mcs-catalog-product-option-property';
 
 export class McsCatalogProductOption {

@@ -1,4 +1,4 @@
-import { JsonProperty } from '@peerlancers/json-serialization';
+import { JsonProperty } from '@app/utilities';
 import { McsEntityStateBase } from './mcs-entity-state.base';
 
 export abstract class McsEntityBase extends McsEntityStateBase {

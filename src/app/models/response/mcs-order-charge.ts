@@ -1,4 +1,4 @@
-import { JsonProperty } from '@peerlancers/json-serialization';
+import { JsonProperty } from '@app/utilities';
 import { isNullOrUndefined } from '@app/utilities';
 
 const DEFAULT_CURRENCY_SYMBOL = '$';

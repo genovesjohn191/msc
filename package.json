@@ -27,7 +27,6 @@
     "@nguniversal/express-engine": "^7.1.0",
     "@ngx-translate/core": "^11.0.1",
     "@ngx-translate/http-loader": "^4.0.0",
-    "@peerlancers/json-serialization": "^0.0.13",
     "@peerlancers/ngx-event-bus": "^1.0.5",
     "@peerlancers/ngx-logger": "^1.0.6",
     "@stomp/ng2-stompjs": "^6.0.1",
@@ -48,7 +47,7 @@
     "zone.js": "^0.9.1"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.801.2",
+    "@angular-devkit/build-angular": "^0.803.24",
     "@angular/cli": "^8.3.6",
     "@angular/compiler-cli": "^8.2.8",
     "@angular/language-service": "^8.2.8",

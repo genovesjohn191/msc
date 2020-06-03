@@ -17,7 +17,7 @@ import {
   delay,
   dematerialize
 } from 'rxjs/operators';
-import { IJsonObject } from '@peerlancers/json-serialization';
+import { IJsonObject } from '@app/utilities';
 import { McsApiClientConfig } from '../mcs-api-client.config';
 
 @Injectable({ providedIn: 'root' })

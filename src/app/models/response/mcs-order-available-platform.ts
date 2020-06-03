@@ -1,4 +1,4 @@
-import { JsonProperty } from '@peerlancers/json-serialization';
+import { JsonProperty } from '@app/utilities';
 import { McsOrderAvailableFamily } from './mcs-order-available-family';
 import { McsEntityBase } from '../common/mcs-entity.base';
 import {
