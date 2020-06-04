@@ -17,7 +17,12 @@
                 mcsEventCategory="order"
                 mcsEventLabel="order-details-top-panel">
                 <mcs-icon [key]="submitIconKey"></mcs-icon>
-                <span>{{ 'order.approveOrder' | translate }}</span>
+                <ng-container *ngIf="(isInAwaitingApprovalState); else useSubmitOrderLabel">
+                  <span>{{ 'order.approveOrder' | translate }}</span>
+                </ng-container>
+                <ng-template #useSubmitOrderLabel>
+                  <span>{{ 'order.submitOrder' | translate }}</span>
+                </ng-template>
               </mcs-action-item>
             </ng-container>
 

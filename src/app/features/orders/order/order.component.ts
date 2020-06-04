@@ -47,7 +47,8 @@ import {
   McsOrderApprover,
   RouteKey,
   ItemType,
-  McsOrderWorkflow
+  McsOrderWorkflow,
+  WorkflowStatus
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -84,6 +85,7 @@ export class OrderComponent implements OnInit, OnDestroy {
   public orderDetailsView: OrderDetailsView;
   public dialogRef: DialogRef<TemplateRef<any>>;
   public chargesState$: Observable<ChargesState>;
+  public isInAwaitingApprovalState: boolean;
 
   @ViewChild('submitDialogTemplate', { static: false })
   private _submitDialogTemplate: TemplateRef<any>;
@@ -366,6 +368,8 @@ export class OrderComponent implements OnInit, OnDestroy {
       map((resolver) => getSafeProperty(resolver, (obj) => obj.order)),
       tap((order) => {
         this._setChargesState(order);
+        let workflowState = getSafeProperty(order, (obj) => obj.workflowState);
+        this.isInAwaitingApprovalState = (workflowState === WorkflowStatus.AwaitingApproval);
       }),
       shareReplay(1)
     );
