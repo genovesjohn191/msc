@@ -25,8 +25,10 @@
             [step]="sliderStep"
             [ngModel]="sliderValueIndex" [ngModelOptions]="{standalone: true}"
             (ngModelChange)="onSliderChanged($event)"></mcs-slider>
-          <strong display-block text-center *ngIf="((sliderValue?.cpuCount | mcsIsNotNullOrEmpty) ||
-                                                    (sliderValue?.memoryGB | mcsIsNotNullOrEmpty) ); else invalidCpuRamRatio">
+          <strong display-block text-center *ngIf="isSliderStepValid &&
+                                                   (fcCustomMemory.valid ||
+                                                   fcCustomCpu.valid); 
+                                                   else invalidCpuRamRatio">
             {{ 'vdcShared.manageScale.sliderSelectedRamCpu' | translate:
               {
                 ram_value: (sliderValue?.memoryGB | mcsDataSize: 'GB'),
