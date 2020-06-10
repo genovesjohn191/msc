@@ -35,6 +35,7 @@ export class SystemMessageBannerComponent implements OnDestroy {
   public systemMessage: McsSystemMessage;
   public hasActiveMessage: boolean;
   public alertType: string;
+  public icon: string;
 
   private _messageShowHandler: Subscription;
   private _messageHideHandler: Subscription;
@@ -91,7 +92,9 @@ export class SystemMessageBannerComponent implements OnDestroy {
    */
   private _setAlertType(message: McsSystemMessage): void {
     if (isNullOrEmpty(message)) { return; }
-    this.alertType = message.type === MessageType.Info ? 'info' : this._alertTypeTableMap.get(message.severity);
+    this.alertType = this._alertTypeTableMap.get(message.severity) || 'info';
+    let lowSeverityAlert: boolean = message.type === MessageType.Alert && this.alertType === 'info';
+    this.icon = lowSeverityAlert ? 'warning' : this.alertType;
   }
 
   /**
@@ -100,9 +103,9 @@ export class SystemMessageBannerComponent implements OnDestroy {
   private _createAlertTypeTable(): void {
     if (!isNullOrEmpty(this._alertTypeTableMap)) { return; }
     this._alertTypeTableMap = new Map<Severity, McsStatusType>();
-    this._alertTypeTableMap.set(Severity.Low, 'warning');
+    this._alertTypeTableMap.set(Severity.Low, 'info');
     this._alertTypeTableMap.set(Severity.Medium, 'warning');
-    this._alertTypeTableMap.set(Severity.High, 'warning');
+    this._alertTypeTableMap.set(Severity.High, 'error');
     this._alertTypeTableMap.set(Severity.Critical, 'error');
   }
 }
