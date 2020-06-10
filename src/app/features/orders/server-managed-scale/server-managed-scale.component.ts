@@ -69,6 +69,7 @@ type ScaleManageProperties = {
 };
 
 const SCALE_MANAGE_SERVER_REF_ID = Guid.newGuid().toString();
+const DEFAULT_RESOURCE_NAME = 'Others';
 
 @Component({
   selector: 'mcs-order-server-managed-scale',
@@ -264,14 +265,16 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
     this.resources$ = this._apiService.getServers().pipe(
       map((servers) => {
         servers.collection.filter(
-          (server) => !server.isSelfManaged && !server.isDedicated && server.serviceChangeAvailable
+          (server) => !server.isSelfManaged && !server.isDedicated
         ).forEach((server) => {
           let resourceIsExisting = resourceMap.has(server.platform.resourceName);
+          let platformResourceName = (!isNullOrEmpty(server.platform.resourceName)) ? server.platform.resourceName : DEFAULT_RESOURCE_NAME;
           if (resourceIsExisting) {
-            resourceMap.get(server.platform.resourceName).push(server);
+            server.isDisabled = (server.serviceChangeAvailable === false) ? true : false;
+            resourceMap.get(platformResourceName).push(server);
             return;
           }
-          resourceMap.set(server.platform.resourceName, [server]);
+          resourceMap.set(platformResourceName, [server]);
         });
         return resourceMap;
       }),
