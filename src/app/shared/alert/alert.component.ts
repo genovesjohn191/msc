@@ -45,6 +45,7 @@ export class AlertComponent {
   public set type(value: McsStatusType) {
     if (value !== this._type) {
       this._type = value;
+      this._icon = value;
       this._setIconStatusKeyByType();
       this._changeDetectorRef.markForCheck();
     }
@@ -56,6 +57,17 @@ export class AlertComponent {
     this._hideIcon = coerceBoolean(value);
   }
 
+  @Input()
+  public get icon(): McsStatusType { return this._icon; }
+  public set icon(value: McsStatusType) {
+    if (!isNullOrEmpty(value) && value !== this._icon) {
+      this._icon = value;
+      this._setIconStatusKeyByType();
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+
+  private _icon: McsStatusType;
   private _hideIcon: boolean;
   private _type: McsStatusType;
 
@@ -104,7 +116,7 @@ export class AlertComponent {
    * Creates the icon key table
    */
   private _setIconStatusKeyByType(): void {
-    let iconKey = this._iconTableMap.get(this.type);
+    let iconKey = this._iconTableMap.get(this.icon);
     this.iconStatusKey = iconKey || CommonDefinition.ASSETS_SVG_INFO;
   }
 
