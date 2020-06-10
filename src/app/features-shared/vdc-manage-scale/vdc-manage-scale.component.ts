@@ -229,6 +229,10 @@ export class VdcManageScaleComponent
     return ((sliderTableMaxLength) % 2 === 0) ? sliderTableMaxLength : sliderTableMaxLength - 1;
   }
 
+  public get isSliderStepValid(): boolean {
+    return (this.sliderStep % 2 === 0);
+  }
+
   /**
    * Returns slider min step value
    */
@@ -257,7 +261,6 @@ export class VdcManageScaleComponent
       this.fcCustomCpu.setValue(this.sliderValue.cpuCount);
     }
     this._updateAllFormValidity();
-    this.notifyDataChange();
   }
 
   /**
@@ -269,7 +272,6 @@ export class VdcManageScaleComponent
     this.fcCustomCpu.setValue(suggestedCpuCount);
     let sliderIndex = this.sliderTable.findIndex((obj => obj.cpuCount === suggestedCpuCount));
     this.onSliderChanged(sliderIndex);
-    this._updateAllFormValidity();
   }
 
   /**
@@ -281,7 +283,6 @@ export class VdcManageScaleComponent
     this.fcCustomMemory.setValue(suggestedRamInGB);
     let sliderIndex = this.sliderTable.findIndex((obj => obj.memoryGB === suggestedRamInGB));
     this.onSliderChanged(sliderIndex);
-    this._updateAllFormValidity();
   }
 
   /**
@@ -302,7 +303,10 @@ export class VdcManageScaleComponent
 
     this._scaleOutput.memoryGB = this.sliderValue.memoryGB;
     this._scaleOutput.cpuCount = this.sliderValue.cpuCount;
-    this._scaleOutput.valid = (this.fgVdcScale.valid || (this.fcCustomMemory.valid && this.fcCustomCpu.valid));
+
+    this._scaleOutput.valid = this.isSliderStepValid &&
+                              this.fcCustomCpu.valid &&
+                              this.fcCustomMemory.valid;
 
     this._scaleOutput.hasChanged = this._scaleOutput.valid
       && (this.initialCpu !== this._scaleOutput.cpuCount
