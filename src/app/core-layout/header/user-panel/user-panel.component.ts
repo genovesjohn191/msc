@@ -6,13 +6,11 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy
 } from '@angular/core';
-import {
-  Router,
-} from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import {
   Subject,
-  Observable
+  Observable,
+  Subscription
 } from 'rxjs';
 import {
   takeUntil,
@@ -26,6 +24,8 @@ import {
   RouteKey,
   McsIdentity,
   McsFeatureFlag,
+  McsRouteInfo,
+  RoutePlatform,
 } from '@app/models';
 import {
   McsBrowserService,
@@ -41,7 +41,10 @@ import {
   unsubscribeSafely,
   CommonDefinition
 } from '@app/utilities';
-import { EventBusPropertyListenOn } from '@peerlancers/ngx-event-bus';
+import {
+  EventBusPropertyListenOn,
+  EventBusDispatcherService
+} from '@peerlancers/ngx-event-bus';
 import { McsEvent } from '@app/events';
 import { SwitchAccountService } from '../../shared';
 import { UserPanelService } from './user-panel.service';
@@ -73,7 +76,9 @@ export class UserPanelComponent implements OnInit, OnDestroy {
   public showPlatformButton: boolean = false;
   public isPublicRoute: boolean = false;
 
+  private _routeHandler: Subscription;
   private _destroySubject = new Subject<void>();
+
   public constructor(
     private _mcsRouteSettingsService: McsRouteSettingsService,
     private _accessControlService: McsAccessControlService,
@@ -85,7 +90,7 @@ export class UserPanelComponent implements OnInit, OnDestroy {
     private _authenticationService: McsAuthenticationService,
     private _switchAccountService: SwitchAccountService,
     private _userPanelService: UserPanelService,
-    private _route: Router,
+    private _eventDispatcher: EventBusDispatcherService
   ) {
     this.hasConnectionError = false;
     this.deviceType = Breakpoint.Large;
@@ -96,10 +101,12 @@ export class UserPanelComponent implements OnInit, OnDestroy {
     this._subscribeToBrowserResize();
     this._subscribeToSwitchAccount();
     this._initializePlatformButton();
+    this._subscribeToRouteChange();
   }
 
   public ngOnDestroy(): void {
     unsubscribeSafely(this._destroySubject);
+    unsubscribeSafely(this._routeHandler);
   }
 
   public get bellIconKey(): string {
@@ -173,6 +180,10 @@ export class UserPanelComponent implements OnInit, OnDestroy {
     if (mobileMode) { this.notificationsPopover.close(); }
   }
 
+  public onChangePlatform(): void {
+    this._navigationService.navigateTo(this.isPublicRoute ? RouteKey.Servers : RouteKey.Licenses);
+  }
+
   /**
    * Subscribe to notifications changes
    */
@@ -209,16 +220,28 @@ export class UserPanelComponent implements OnInit, OnDestroy {
     this.showPlatformButton = (this._authenticationIdentity.platformSettings.hasPrivateCloud &&
                                 this._authenticationIdentity.platformSettings.hasPublicCloud &&
                                 this._accessControlService.hasAccessToFeature(McsFeatureFlag.PublicCloud));
-    this.isPublicRoute = this._mcsRouteSettingsService.isPublicCloudRoute;
   }
 
-  public onChangePlatform(): void {
-    if (this.isPublicRoute) {
-      this.isPublicRoute = false;
-      this._navigationService.navigateTo(RouteKey.Servers);
-    } else {
-      this.isPublicRoute = true;
-      this._navigationService.navigateTo(RouteKey.Licenses);
+  /**
+   * Registers event handlers
+   */
+  private _subscribeToRouteChange(): void {
+    this._routeHandler = this._eventDispatcher.addEventListener(
+      McsEvent.routeChange, this._onRouteChanged.bind(this));
+  }
+
+  /**
+   * Event that emits when the route has been changed
+   * @param routeInfo Current route information
+   */
+  private _onRouteChanged(routeInfo: McsRouteInfo): void {
+    if (isNullOrEmpty(routeInfo)) { return; }
+
+    let globalRoute: boolean = isNullOrEmpty(routeInfo.enumPlatform) || routeInfo.enumPlatform === RoutePlatform.Global;
+    if (!globalRoute) {
+      this.isPublicRoute = routeInfo.enumPlatform === RoutePlatform.Public;
     }
+
+    this._changeDetectorRef.markForCheck();
   }
 }
