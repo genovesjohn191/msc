@@ -15,14 +15,16 @@ import {
   throwError,
   Observable,
   of,
-  empty
+  empty,
+  BehaviorSubject
 } from 'rxjs';
 import {
   catchError,
   tap,
   finalize,
   shareReplay,
-  map
+  map,
+  distinctUntilChanged
 } from 'rxjs/operators';
 import {
   CoreValidators,
@@ -55,6 +57,7 @@ export class MediaUploadDetailsComponent
   implements OnInit, OnDestroy, IMcsNavigateAwayGuard {
 
   public resources$: Observable<McsResource[]>;
+  public mediaUrlValidationInProgress$: Observable<boolean>;
   public resourceCatalogs$: Observable<McsResourceCatalog[]>;
   public selectedResource$: Observable<McsResource>;
   public selectedResourceId: string;
@@ -73,14 +76,16 @@ export class MediaUploadDetailsComponent
 
   @ViewChild(McsFormGroupDirective, { static: false })
   private _formGroup: McsFormGroupDirective;
+
+  private _mediaUrlValidationInProgressChange = new BehaviorSubject<boolean>(false);
   private _destroySubject = new Subject<void>();
 
-  private _mediaUrlStatusIconKey: string;
   public get mediaUrlStatusIconKey(): string { return this._mediaUrlStatusIconKey; }
   public set mediaUrlStatusIconKey(value: string) {
     this._mediaUrlStatusIconKey = value;
     this._changeDetectorRef.markForCheck();
   }
+  private _mediaUrlStatusIconKey: string;
 
   constructor(
     private _elementRef: ElementRef,
@@ -93,6 +98,7 @@ export class MediaUploadDetailsComponent
   public ngOnInit() {
     this._registerFormGroup();
     this._subsribeToResources();
+    this._subscribeToMediaUrlValidationInProgress();
     this._subscribeToMediaExtensions();
   }
 
@@ -127,10 +133,10 @@ export class MediaUploadDetailsComponent
    */
   public onBlurMediaUrl(): void {
     if (this.fcMediaUrl.hasError('url')) { return; }
+    this._mediaUrlValidationInProgressChange.next(true);
     this.fcMediaUrl.markAsPending();
     this.mediaUrlStatusIconKey = CommonDefinition.ASSETS_GIF_LOADER_ELLIPSIS;
     let mediaUrl = this.fcMediaUrl.value;
-
     let selectedResource: McsResource = this.fcResources.value;
 
     this._mediaUploadService.validateUrl(
@@ -145,6 +151,7 @@ export class MediaUploadDetailsComponent
         return empty();
       })
     ).subscribe((response) => {
+      this._mediaUrlValidationInProgressChange.next(false);
       this.fcMediaUrl.updateValueAndValidity();
       this.mediaUrlStatusIconKey = CommonDefinition.ASSETS_SVG_SUCCESS;
       this.urlInfoMessage = getSafeProperty(response, (obj) => obj[0].message);
@@ -195,6 +202,15 @@ export class MediaUploadDetailsComponent
         getSafeProperty(response, (obj) => obj.collection)
           .filter((resource) => !resource.isDedicated)
       )
+    );
+  }
+
+  /**
+   * Subscribe to media url validation in progress flag
+   */
+  public _subscribeToMediaUrlValidationInProgress(): void {
+    this.mediaUrlValidationInProgress$ = this._mediaUrlValidationInProgressChange.asObservable().pipe(
+      distinctUntilChanged()
     );
   }
 
