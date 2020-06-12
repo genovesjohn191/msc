@@ -251,8 +251,7 @@
       mcsEventTracker="os-updates-back-to-services-click"
       mcsEventCategory="server"
       mcsEventLabel="os-updates-back-to-services"
-      (click)="setViewMode(serverServicesViewOption.Default)"
-      [disabled]="server.isProcessing">
+      (click)="setViewMode(serverServicesViewOption.Default)">
       <mcs-item>
         <mcs-icon [key]="chevronLeftKey" size="medium"></mcs-icon>
         <span>{{ 'serverServices.default.label' | translate }}</span>
