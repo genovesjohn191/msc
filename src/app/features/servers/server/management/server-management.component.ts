@@ -357,7 +357,10 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
     if (isNullOrEmpty(resourceId)) { return; }
 
     this.resourceCatalogs$ = this.apiService.getResourceCatalogs(resourceId).pipe(
-      map((response) => getSafeProperty(response, (obj) => obj.collection)),
+      map((response) => {
+        let catalogs = getSafeProperty(response, (obj) => obj.collection);
+        return catalogs.filter((catalog) => !isNullOrEmpty(catalog.items));
+      }),
       shareReplay(1)
     );
   }
