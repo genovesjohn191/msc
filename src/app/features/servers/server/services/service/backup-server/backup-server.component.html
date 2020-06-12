@@ -63,6 +63,7 @@
         <ng-template #serverBackupOrderLinkTemplate>
           <a *mcsAccessControl="['OrderEdit']; feature: ['EnableOrderingServerBackupProvision']"
           (click)="onAddServerBackup(server)"
+          [disabled]="server.isProcessing"
           mcsId="add-new-server-backup"
           mcsEventTracker="add-new-server-backup"
           mcsEventCategory="order"
