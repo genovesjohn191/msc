@@ -58,10 +58,9 @@
 
 <div class="user-panel-wrapper">
   <!-- Platform Options -->
-    <ng-container *mcsAccessControl="['JobView']">
+    <ng-container *ngIf="showPlatformButton">
       <div class="user-panel-item">
-        <ng-container *ngIf="showPlatformButton">
-          <button mcsButton id="platform-change"
+        <button mcsButton id="platform-change"
             class="btn-platform-change"
             size="small"
             (click)="onChangePlatform()"
@@ -75,7 +74,6 @@
                 {{'header.userPanel.platform.publicCloudLabel' | translate}}
               </ng-template>
           </button>
-        </ng-container>
       </div>
     </ng-container>
   <!-- Notification bell icon -->

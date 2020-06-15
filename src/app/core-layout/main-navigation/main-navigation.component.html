@@ -13,7 +13,7 @@
   <!-- All Routing -->
   <ng-template #navigationList>
     <!-- Dashboard -->
-    <ng-container *ngIf="hasHostingAccess; else dashboardNavTemplate"></ng-container>
+    <ng-container *ngIf="hasDefaultPageAccess; else dashboardNavTemplate"></ng-container>
     <ng-template #dashboardNavTemplate>
       <div class="navigation-item" routerLinkActive="active">
         <mcs-icon [key]="caretRightIconKey" color="light"
