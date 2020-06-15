@@ -7,27 +7,31 @@ import {
 import { Observable } from 'rxjs';
 import {
   McsAccessControlService,
-  McsNavigationService
+  McsNavigationService,
+  McsAuthenticationIdentity
 } from '@app/core';
 import {
   RouteKey,
-  McsPermission
+  McsPermission,
+  McsFeatureFlag,
+  McsIdentity
 } from '@app/models';
 
 @Injectable()
 export class DashboardGuard implements CanActivate {
 
   constructor(
-    private _accesscontrolService: McsAccessControlService,
-    private _navigationService: McsNavigationService
+    private _accessControlService: McsAccessControlService,
+    private _navigationService: McsNavigationService,
+    private _authenticationIdentity: McsAuthenticationIdentity
   ) { }
 
   public canActivate(
     _route: ActivatedRouteSnapshot,
     _state: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean {
-    // Validate VM Access
-    let hasVmAccess = this._accesscontrolService.hasPermission([
+    // Try Navigate to Compute
+    let hasVmAccess = this._accessControlService.hasPermission([
       McsPermission.CloudVmAccess,
       McsPermission.DedicatedVmAccess
     ]);
@@ -36,14 +40,36 @@ export class DashboardGuard implements CanActivate {
       return false;
     }
 
-    // Validate Firewall Access
-    let hasFirewallAccess = this._accesscontrolService.hasPermission([
+    // Try Navigate to Firewalls
+    let hasFirewallAccess = this._accessControlService.hasPermission([
       McsPermission.FirewallConfigurationView
     ]);
     if (hasFirewallAccess) {
       this._navigationService.navigateTo(RouteKey.Firewalls);
       return false;
     }
+
+    // Try Navigate to Licenses
+    let hasPublicCloudAccess = this._authenticationIdentity.platformSettings.hasPublicCloud;
+    if (hasPublicCloudAccess) {
+      this._navigationService.navigateTo(RouteKey.Licenses);
+      return false;
+    }
+
+    // Try Navigate to Product Catalog
+    let hasProductCatalogAccess = this._accessControlService.hasAccessToFeature([
+      McsFeatureFlag.ProductCatalog
+    ]);
+    let hasCatalogListingAccess = this._accessControlService.hasAccessToFeature([
+      McsFeatureFlag.CatalogSolutionListing,
+      McsFeatureFlag.CatalogProductListing,
+    ]);
+    if (hasProductCatalogAccess && hasCatalogListingAccess) {
+      this._navigationService.navigateTo(RouteKey.Catalog);
+      return false;
+    }
+
+    // Default navigate to Dashboard
     return true;
   }
 }

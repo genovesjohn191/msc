@@ -11,14 +11,16 @@ import { Subscription } from 'rxjs';
 import {
   McsAccessControlService,
   McsNavigationService,
-  McsRouteSettingsService
+  McsRouteSettingsService,
+  McsAuthenticationIdentity
 } from '@app/core';
 import {
   RouteKey,
   RouteCategory,
   routeCategoryText,
   McsPermission,
-  McsRouteInfo
+  McsRouteInfo,
+  McsFeatureFlag
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -52,7 +54,8 @@ export class MainNavigationComponent implements OnInit, OnDestroy {
     private _changeDetectorRef: ChangeDetectorRef,
     private _eventDispatcher: EventBusDispatcherService,
     private _accessControlService: McsAccessControlService,
-    private _routeSettingsService: McsRouteSettingsService
+    private _routeSettingsService: McsRouteSettingsService,
+    private _authenticationIdentity: McsAuthenticationIdentity
   ) {
     this._menuRouteContext = new MenuRouteContext(_injector);
   }
@@ -84,12 +87,25 @@ export class MainNavigationComponent implements OnInit, OnDestroy {
   /**
    * Returns true when the user has hosting permission
    */
-  public get hasHostingAccess(): boolean {
-    return this._accessControlService.hasPermission([
+  public get hasDefaultPageAccess(): boolean {
+    let hasPrivateAccess = this._accessControlService.hasPermission([
       McsPermission.CloudVmAccess,
       McsPermission.DedicatedVmAccess,
       McsPermission.FirewallConfigurationView
     ]);
+
+    let hasPublicAccess = this._authenticationIdentity.platformSettings.hasPublicCloud;
+
+    let hasProductCatalogAccess = this._accessControlService.hasAccessToFeature([
+      McsFeatureFlag.ProductCatalog
+    ]);
+    let hasCatalogListingAccess = this._accessControlService.hasAccessToFeature([
+      McsFeatureFlag.CatalogSolutionListing,
+      McsFeatureFlag.CatalogProductListing
+    ]);
+    let hasCatalogAccess = hasProductCatalogAccess && hasCatalogListingAccess;
+
+    return hasPrivateAccess || hasPublicAccess || hasCatalogAccess;
   }
 
   public get isPrivateCloudRoute(): boolean {
