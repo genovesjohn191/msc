@@ -12,16 +12,22 @@
         {{ 'aggregationTarget.linkedServices.columnHeaders.associatedServer' | translate }}
       </mcs-header-cell>
       <mcs-data-cell *mcsDataCellDef="let row" text-wrap>
-        <a *mcsAccessControl="['CloudVmAccess', 'DedicatedVmAccess']; else: plainServerLabelTemplate"
+      <ng-container *mcsAccessControl="['CloudVmAccess', 'DedicatedVmAccess']; else: plainServerLabelTemplate">
+        <a *ngIf="(row.associatedServer?.name | mcsIsNotNullOrEmpty); else plainServerLabelTemplate"
           [mcsRouterLink]="[routeKeyEnum.ServerDetails, row.associatedServer?.id]"
           mcsStopPropagation
           mcsId="bat-associated-server"
           mcsEventTracker="bat-associated-server"
           mcsEventCategory="bat"
           mcsEventLabel="bat-linked-services">{{ row.associatedServer?.name }}</a>
-        <ng-template #plainServerLabelTemplate>
-          <span>{{ row.associatedServer?.name }}</span>
-        </ng-template>
+      </ng-container>
+
+      <ng-template #plainServerLabelTemplate>
+        <span [mcsGreyedOut]="!(row.associatedServer?.name | mcsIsNotNullOrEmpty)">
+          {{ linkedServicePropertyLabel(row.associatedServer?.name) }}
+        </span>
+      </ng-template>
+
       </mcs-data-cell>
     </ng-container>
 
@@ -51,7 +57,7 @@
         {{ 'aggregationTarget.linkedServices.columnHeaders.dailySchedule' | translate }}
       </mcs-header-cell>
       <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
-        <span text-wrap>{{ row.dailySchedule }}</span>
+        <span text-wrap [mcsGreyedOut]="!(row.dailySchedule | mcsIsNotNullOrEmpty)">{{ linkedServicePropertyLabel(row.dailySchedule) }}</span>
       </mcs-data-cell>
     </ng-container>
 
@@ -69,7 +75,7 @@
     <mcs-header-row *mcsHeaderRowDef="batLinkedServicesColumns"></mcs-header-row>
     <mcs-data-row *mcsDataRowDef="let row; columns: batLinkedServicesColumns;"
       mcsCursor="pointer"
-      [mcsTriggerCursorIf]="hasAccessToService(row)"
+      [mcsTriggerCursorIf]="hasAccessToService(row) && row?.associatedServer?.id | mcsIsNotNullOrEmpty"
       (click)="navigateToAssociatedServer(row)"
       mcsId="bat-linked-service-row"
       mcsEventTracker="bat-linked-service-row"

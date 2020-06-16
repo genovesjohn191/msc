@@ -77,14 +77,21 @@ export class AggregationTargetLinkedServicesComponent extends AggregationTargetD
   }
 
   /**
+   * Returns Unknown if the property is empty
+   * @param value value of the property
+   */
+  public linkedServicePropertyLabel(value: string): string {
+    return isNullOrEmpty(value) ? 'Unknown' : value;
+  }
+
+  /**
    * Navigate to aggregation target details page
    * @param aggregationTarget Aggregation Target to view the details
    */
   public navigateToAssociatedServer(linkedService: McsBatLinkedService): void {
-    let associatedServerId = getSafeProperty(linkedService, (obj) => obj.associatedServer.id);
-
     if (!this.hasAccessToService(linkedService)) { return; }
 
+    let associatedServerId = getSafeProperty(linkedService, (obj) => obj.associatedServer.id);
     if (isNullOrEmpty(associatedServerId)) { return; }
     this._navigationService.navigateTo(
       RouteKey.ServerDetails, [associatedServerId, CoreRoutes.getNavigationPath(RouteKey.ServerDetailsServices)]
