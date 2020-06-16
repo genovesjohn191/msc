@@ -342,6 +342,10 @@
       "value": true,
       "exclude": true
     },
+    "unit": {
+      "text": "Unit",
+      "value": true
+    },
     "status": {
       "text": "Status",
       "value": true
