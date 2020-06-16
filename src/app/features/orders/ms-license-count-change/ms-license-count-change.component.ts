@@ -167,11 +167,7 @@ export class MsLicenseCountChangeComponent extends McsOrderWizardBase implements
 
   public onChangeLicense(license: McsLicense, childLicensesFcConfig: LicenseCountFormControlConfig[]): void {
     if (isNullOrEmpty(license)) { return; }
-    let childLicenses = this._licenseCache.filter((licenseCache) => license.id === licenseCache.parentId);
-    this._msLicenseCountChangeService.clearOrderItems();
-    this._removePreviousChildFormControls(childLicensesFcConfig);
-    this._createChildFormControls(childLicenses);
-    this._licensesHasValueChange.next(false);
+    this._resetChildLisences(license, childLicensesFcConfig);
   }
 
   public onSubmitOrder(submitDetails: OrderDetails): void {
@@ -245,6 +241,7 @@ export class MsLicenseCountChangeComponent extends McsOrderWizardBase implements
   }
 
   private _onLicenseCountDetailsChange(): void {
+    this._msLicenseCountChangeService.clearOrderItems();
     let orderItems: McsOrderItemCreate[] = [];
 
     let baseLicenseHasChange = this.fcLicenses.value.quantity !== +this.fcLicenseCount.value;
@@ -258,7 +255,7 @@ export class MsLicenseCountChangeComponent extends McsOrderWizardBase implements
     this._childLicensesFcConfig.forEach((childLicenseConfig) => {
       let childFormControl: AbstractControl = this.fgMsLicenseCount.get(childLicenseConfig.childFormControlName);
       let childFormControlValue = getSafeProperty(childFormControl, (form) => form.value);
-      let hasChange = childLicenseConfig.license.quantity !== childFormControlValue;
+      let hasChange = childLicenseConfig.license.quantity !== +childFormControlValue;
       if (!isNullOrEmpty(childFormControlValue) && hasChange) {
         this._licensesHasValueChange.next(hasChange);
         orderItems.push(
@@ -283,6 +280,15 @@ export class MsLicenseCountChangeComponent extends McsOrderWizardBase implements
         quantity: licenseQuantity
       }
     });
+  }
+
+  private _resetChildLisences(parentLicense: McsLicense, childLicensesFcConfig: LicenseCountFormControlConfig[]): void {
+    let childLicenses = this._licenseCache.filter((licenseCache) => parentLicense.id === licenseCache.parentId);
+    this._msLicenseCountChangeService.clearOrderItems();
+    this._childLicensesFcConfigChange.next([]);
+    this._removePreviousChildFormControls(childLicensesFcConfig);
+    this._createChildFormControls(childLicenses);
+    this._licensesHasValueChange.next(false);
   }
 
   private _removePreviousChildFormControls(childLicensesFcConfig: LicenseCountFormControlConfig[]): void {

@@ -190,6 +190,7 @@ export class McsApiService {
   private readonly _batsRepository: McsBatsRepository;
   private readonly _consoleRepository: McsConsoleRepository;
   private readonly _companiesRepository: McsCompaniesRepository;
+  // TODO : Update to repository once we need to have state management and improve loading
   private readonly _licensesRepository: McsLicensesRepository;
 
   private readonly _serversApi: IMcsApiServersService;
@@ -1343,15 +1344,11 @@ export class McsApiService {
   }
 
   public getLicenses(query?: McsQueryParam): Observable<McsApiCollection<McsLicense>> {
-    let dataCollection = isNullOrEmpty(query) ?
-      this._licensesRepository.getAll() :
-      this._licensesRepository.filterBy(query);
-
-    return dataCollection.pipe(
+    return this._licensesApi.getLicenses(query).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getLicenses'))
       ),
-      map((response) => this._mapToCollection(response, this._licensesRepository.getTotalRecordsCount()))
+      map((response) => this._mapToCollection(response.content, response.totalCount))
     );
   }
   /**
