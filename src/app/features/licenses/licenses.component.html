@@ -81,7 +81,19 @@
                     </mcs-data-cell>
                 </ng-container>
 
-                <!-- Quantity Column -->
+                <!-- Unit Column -->
+                <ng-container mcsColumnDef="unit">
+                    <mcs-header-cell *mcsHeaderCellDef>
+                    {{ columnSettings.unit.text }}
+                    </mcs-header-cell>
+                    <mcs-data-cell *mcsDataCellDef="let row">
+                    <mcs-item>
+                        <span> {{ row.unit }}</span>
+                    </mcs-item>
+                    </mcs-data-cell>
+                </ng-container>
+
+                <!-- Status Column -->
                 <ng-container mcsColumnDef="status">
                     <mcs-header-cell *mcsHeaderCellDef>
                     {{ columnSettings.status.text }}

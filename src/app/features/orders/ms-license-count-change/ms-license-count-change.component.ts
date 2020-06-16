@@ -324,7 +324,7 @@ export class MsLicenseCountChangeComponent extends McsOrderWizardBase implements
 
     // Check if License is Parent
     if (isNullOrEmpty(cachedLicense.parentId)) {
-      this.fcLicenses.setValue(license);
+      this.fcLicenses.setValue(cachedLicense);
       return;
     }
 
