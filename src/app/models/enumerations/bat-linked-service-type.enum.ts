@@ -8,7 +8,7 @@ export enum BatLinkedServiceType {
 
 export const batLinkedServiceTypeText = {
   [BatLinkedServiceType.ServerBackup]: 'Server Backup',
-  [BatLinkedServiceType.VmBackup]: 'Vm Backup',
+  [BatLinkedServiceType.VmBackup]: 'VM Backup',
   [BatLinkedServiceType.RemoteServerBackup]: 'Remote Server Backup'
 };
 
