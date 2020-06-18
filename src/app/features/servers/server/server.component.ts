@@ -27,7 +27,8 @@ import { TranslateService } from '@ngx-translate/core';
 import {
   McsServerPermission,
   McsNavigationService,
-  McsListViewListingBase
+  McsListViewListingBase,
+  McsErrorHandlerService
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -44,7 +45,10 @@ import {
   McsApiCollection,
   McsQueryParam,
   McsRouteInfo,
-  McsFeatureFlag
+  McsFeatureFlag,
+  McsJob,
+  JobStatus,
+  HttpStatusCode
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { McsEvent } from '@app/events';
@@ -73,6 +77,7 @@ export class ServerComponent extends McsListViewListingBase<McsServerGroup> impl
 
   private _destroySubject = new Subject<void>();
   private _routerHandler: Subscription;
+  private _serverDeletedHandler: Subscription;
 
   @ViewChild(ComponentHandlerDirective, { static: false })
   private _componentHandler: ComponentHandlerDirective;
@@ -85,6 +90,7 @@ export class ServerComponent extends McsListViewListingBase<McsServerGroup> impl
     private _navigationService: McsNavigationService,
     private _apiService: McsApiService,
     private _serverService: ServerService,
+    private _errorHandlerService: McsErrorHandlerService
   ) {
     super(_injector, _changeDetectorRef, {
       dataChangeEvent: McsEvent.dataChangeServers,
@@ -105,8 +111,16 @@ export class ServerComponent extends McsListViewListingBase<McsServerGroup> impl
 
   public ngOnDestroy() {
     super.dispose();
+    unsubscribeSafely(this._serverDeletedHandler);
     unsubscribeSafely(this._destroySubject);
     unsubscribeSafely(this._routerHandler);
+  }
+
+  private _onServerDelete(job: McsJob): void {
+    let correctServerId: boolean = getSafeProperty(job, (obj) => obj.clientReferenceObject.serverId) === this._serverService.getServerId();
+    if (correctServerId && job.status === JobStatus.Completed) {
+      this._errorHandlerService.redirectToErrorPage(HttpStatusCode.NotFound);
+    }
   }
 
   public get angleDoubleRightIconKey(): string {
@@ -248,5 +262,9 @@ export class ServerComponent extends McsListViewListingBase<McsServerGroup> impl
         tabUrl = getSafeProperty(tabUrl, (obj) => obj.split('/').reduce((_prev, latest) => latest));
         this.selectedTabId$ = of(tabUrl);
       });
+
+    this._serverDeletedHandler = this.eventDispatcher.addEventListener(
+      McsEvent.jobServerDelete, this._onServerDelete.bind(this)
+    );
   }
 }

@@ -10,4 +10,5 @@ export interface IMcsEntityStateManager<T extends McsEntityBase> extends IMcsEnt
   updateEntityState(entity: McsEntityRequester): void;
   clearEntityState(entity: McsEntityRequester): void;
   refreshDataCache(): void;
+  deleteEntityById(id: string): void;
 }
