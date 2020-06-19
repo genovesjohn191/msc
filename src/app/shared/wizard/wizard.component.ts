@@ -113,7 +113,7 @@ export class WizardComponent implements AfterContentInit, OnDestroy {
   }
 
   public get checkIconKey(): string {
-    return CommonDefinition.ASSETS_SVG_CHECK;
+    return CommonDefinition.ASSETS_SVG_CHECK_BLUE;
   }
 
   /**

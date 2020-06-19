@@ -37,7 +37,7 @@ export abstract class McsStatusSettingsBase {
    */
   private _createStatusMapTable(): void {
     this._statusMapTable = new Map();
-    this._statusMapTable.set('success', CommonDefinition.ASSETS_SVG_CHECK);
+    this._statusMapTable.set('success', CommonDefinition.ASSETS_SVG_CHECK_BLUE);
     this._statusMapTable.set('warning', CommonDefinition.ASSETS_SVG_WARNING);
     this._statusMapTable.set('error', CommonDefinition.ASSETS_SVG_ERROR);
     this._statusMapTable.set('info', CommonDefinition.ASSETS_SVG_INFO);
