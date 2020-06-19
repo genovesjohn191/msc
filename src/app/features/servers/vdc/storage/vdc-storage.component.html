@@ -44,20 +44,22 @@
     </ng-container>
 
     <!-- Action Column -->
-    <ng-container mcsColumnDef="action" *mcsAccessControl="['OrderEdit']; feature: 'EnableOrderingVdcStorageExpand'">
-      <mcs-header-cell *mcsHeaderCellDef class="action-header-cell">
-      </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row">
-        <mcs-item>
-          <a (click)="navigateToExpandVdcStorage(resource, row)"
-            mcsId="navigate-to-expand-vdc-storage"
-            mcsEventTracker="expand-vdc-storage-click"
-            mcsEventCategory="orders"
-            mcsEventLabel="navigate-to-expand-vdc-storage">
-            {{ 'serversVdcStorage.expandLink' | translate }}
-          </a>
-        </mcs-item>
-      </mcs-data-cell>
+    <ng-container *ngIf="resource.scaleable">
+      <ng-container mcsColumnDef="action" *mcsAccessControl="['OrderEdit']; feature: 'EnableOrderingVdcStorageExpand'">
+        <mcs-header-cell *mcsHeaderCellDef class="action-header-cell">
+        </mcs-header-cell>
+        <mcs-data-cell *mcsDataCellDef="let row">
+          <mcs-item>
+            <a (click)="navigateToExpandVdcStorage(resource, row)"
+              mcsId="navigate-to-expand-vdc-storage"
+              mcsEventTracker="expand-vdc-storage-click"
+              mcsEventCategory="orders"
+              mcsEventLabel="navigate-to-expand-vdc-storage">
+              {{ 'serversVdcStorage.expandLink' | translate }}
+            </a>
+          </mcs-item>
+        </mcs-data-cell>
+      </ng-container>
     </ng-container>
 
     <!-- Data Status Integration -->

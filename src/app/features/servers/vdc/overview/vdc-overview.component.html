@@ -22,13 +22,15 @@
           <span [innerHTML]="resource?.compute?.memoryLimitMB | mcsDataSize: 'MB'"></span>
           <span>/</span>
           <span [innerHTML]="resource?.compute?.cpuLimitMBLabel | mcsDataLabel"></span>
-          <ng-container *mcsAccessControl="['OrderEdit']; feature: 'EnableOrderingVdcComputeScale'">
-            <a (click)="scaleVdc(resource)"
-              mcsId="scale-vdc"
-              mcsEventTracker="vdc-option"
-              mcsEventCategory="vdc"
-              mcsEventLabel="vdc-details-page">
-              {{ 'serversVdcOverview.shared.properties.scale' | translate }}</a>
+          <ng-container *ngIf="resource?.scaleable">
+            <ng-container *mcsAccessControl="['OrderEdit']; feature: 'EnableOrderingVdcComputeScale'">
+              <a (click)="scaleVdc(resource)"
+                mcsId="scale-vdc"
+                mcsEventTracker="vdc-option"
+                mcsEventCategory="vdc"
+                mcsEventLabel="vdc-details-page">
+                {{ 'serversVdcOverview.shared.properties.scale' | translate }}</a>
+            </ng-container>
           </ng-container>
         </mcs-item>
       </mcs-presentation-panel>
@@ -98,6 +100,7 @@
             <mcs-icon *ngIf="hasLowStorage" [key]="warningIconKey"></mcs-icon>
             <h2>{{ 'serversVdcOverview.shared.storageProfiles.title' | translate }}</h2>
             <a (click)="navigateVdcDetailTo(resource, routeKeyEnum.VdcDetailsStorage)"
+            *ngIf="resource.scaleable"
               mcsId="navigate-to-storage"
               mcsEventTracker="navigate-to-storage"
               mcsEventCategory="vdc"
