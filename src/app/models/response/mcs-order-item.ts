@@ -60,6 +60,12 @@ export class McsOrderItem extends McsEntityBase {
     serializer: McsDateSerialization,
     deserializer: McsDateSerialization
   })
+  public schedule: Date = undefined;
+
+  @JsonProperty({
+    serializer: McsDateSerialization,
+    deserializer: McsDateSerialization
+  })
   public createdOn: Date = undefined;
 
   @JsonProperty()

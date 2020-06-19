@@ -108,6 +108,7 @@ export class OrderComponent implements OnInit, OnDestroy {
     this.orderItemsDataSource = new McsTableDataSource();
     this.setOrderItemsColumn();
   }
+  private _hasManualSchedule: boolean;
 
   public ngOnInit() {
     this._subscribeToOrderResolver();
@@ -141,11 +142,22 @@ export class OrderComponent implements OnInit, OnDestroy {
     return CommonDefinition.ASSETS_SVG_INFO;
   }
 
+  public get hasManualSchedule(): boolean {
+    return this._hasManualSchedule;
+  }
+
   /**
    * Returns true when there are selected approvers
    */
   public get hasSelectedApprovers(): boolean {
     return !isNullOrEmpty(this._orderApprovers);
+  }
+
+  /**
+   * Returns true when there are selected approvers
+   */
+  public getSchedule(schedule: Date ): string {
+    return isNullOrEmpty(schedule) ? 'ASAP' : schedule.toString();
   }
 
   /**
@@ -172,8 +184,18 @@ export class OrderComponent implements OnInit, OnDestroy {
    */
   public getOrderItemsDatasource(order: McsOrder): McsTableDataSource<McsOrderItem> {
     if (isNullOrEmpty(order)) { return undefined; }
+    this._identifyIfManualScheduleIsRequired(order.items);
     this.orderItemsDataSource.updateDatasource(order.items);
     return this.orderItemsDataSource;
+  }
+
+  private _identifyIfManualScheduleIsRequired(orderItems: McsOrderItem[]): void {
+    this._hasManualSchedule = false;
+    orderItems.forEach(item => {
+      if (!isNullOrEmpty(item.schedule)) {
+        this._hasManualSchedule = true;
+      }
+    });
   }
 
   /**
