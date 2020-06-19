@@ -129,7 +129,7 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
   }
 
   /**
-   * Delete a record to the repository based on the entity provided
+   * Delete a record from the repository based on the entity provided
    * @param entity Entity to be deleted
    */
   public delete(entity: T): void {
@@ -140,7 +140,7 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
   }
 
   /**
-   * Delete a record to the repository based on the id provided
+   * Delete a record from the repository based on the id provided
    * @param id id of the entity to be deleted
    */
   public deleteById(id: string): void {
@@ -149,7 +149,7 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
   }
 
   /**
-   * Delete a record to the repository based on the predicate definition
+   * Delete a record from the repository based on the predicate definition
    * @param predicate Predicate definition on which to delete the record
    */
   public deleteBy(predicate: (entity: T) => boolean) {

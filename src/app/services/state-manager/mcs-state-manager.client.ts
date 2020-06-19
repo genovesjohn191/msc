@@ -119,6 +119,8 @@ export class McsStateManagerClient implements McsDisposable {
   private _onEntityDeleted(payload: McsEntityRequester): void {
     let entityFactory = this._getEntityFactory(getSafeProperty(payload, (obj) => obj.type));
     if (isNullOrEmpty(entityFactory)) { return; }
+
+    entityFactory.deleteEntityById(payload.id);
     entityFactory.refreshDataCache();
   }
 

@@ -19,6 +19,10 @@ export abstract class McsEntityStateManagerBase<T extends McsEntityBase> impleme
     this.entityRepository = _injector.get(_repoInstance);
   }
 
+  public deleteEntityById(id: string): void {
+    this.entityRepository.deleteById(id);
+  }
+
   /**
    * Gets the updated entity details
    * @param id Id of the entity to be obtained
