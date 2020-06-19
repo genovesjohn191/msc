@@ -140,6 +140,7 @@ export class CommonDefinition {
   public static ASSETS_SVG_CLOUD_BLUE = 'cloud-blue';
   public static ASSETS_SVG_CLOCK = 'clock';
   public static ASSETS_SVG_CHECK = 'check';
+  public static ASSETS_SVG_CHECK_BLUE = 'check-blue';
   public static ASSETS_SVG_BLOCK = 'block';
   public static ASSETS_SVG_ELLIPSIS_VERTICAL = 'ellipsis-vertical';
   public static ASSETS_SVG_ELLIPSIS_HORIZONTAL = 'ellipsis-horizontal';

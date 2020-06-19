@@ -16,7 +16,7 @@
                 mcsEventTracker="submit-order"
                 mcsEventCategory="order"
                 mcsEventLabel="order-details-top-panel">
-                <mcs-icon [key]="submitIconKey" color="black"></mcs-icon>
+                <mcs-icon [key]="submitIconKey" size="medium" color="black"></mcs-icon>
                 <ng-container *ngIf="(isInAwaitingApprovalState); else useSubmitOrderLabel">
                   <span>{{ 'order.approveOrder' | translate }}</span>
                 </ng-container>
@@ -35,7 +35,7 @@
                   mcsEventTracker="submit-for-approval"
                   mcsEventCategory="order"
                   mcsEventLabel="order-details-top-panel">
-                  <mcs-icon [key]="submitIconKey" color="black"></mcs-icon>
+                  <mcs-icon [key]="submitIconKey" size="medium" color="black"></mcs-icon>
                   <span>{{ 'order.submitForApproval' | translate }}</span>
                 </mcs-action-item>
               </ng-container>
