@@ -103,6 +103,8 @@ export class McsOrderItem extends McsEntityBase {
    * Returns the item provisioning status label
    */
   public get itemProvisioningStatusLabel(): string {
-    return provisioningStatusText[this.itemProvisioningStatus];
+    return (this.itemProvisioningStatus === ProvisioningStatus.Unknown) ?
+           orderStatusText[this.status] :
+           provisioningStatusText[this.itemProvisioningStatus];
   }
 }

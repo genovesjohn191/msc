@@ -114,7 +114,10 @@ export class McsOrder extends McsEntityBase {
    * Returns the workflow status label
    */
   public get workflowStatusLabel(): string {
-    return workflowStatusText[this.workflowState];
+    let workflowStateLabel: string = (this.origin === OrderOrigin.Crisp ||
+                                     this.origin === OrderOrigin.MacquarieView) ?
+                                      orderStatusText[this.status] : workflowStatusText[this.workflowState];
+    return workflowStateLabel;
   }
 
   /**
