@@ -103,7 +103,8 @@
       "billingSite": "Billing Site",
       "monthlyCharge": "Monthly charge",
       "oneOffCharge": "One-off charge",
-      "excessFeePerGB": "Excess Fee Per GB"
+      "excessFeePerGB": "Excess Fee Per GB",
+      "schedule": "Schedule"
     },
     "noOrderItems": "No order items found.",
     "errorOnOrderItems": "Sorry, something’s not right. We weren’t able to retrieve the list of order items.",

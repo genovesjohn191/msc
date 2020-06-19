@@ -193,6 +193,16 @@
             </mcs-data-cell>
           </ng-container>
 
+          <!-- Schedule -->
+          <ng-container mcsColumnDef="schedule" *ngIf="hasManualSchedule">
+            <mcs-header-cell *mcsHeaderCellDef>
+              {{ 'order.columnHeaders.schedule' | translate }}
+            </mcs-header-cell>
+            <mcs-data-cell *mcsDataCellDef="let row">
+              <span text-wrap>{{ getSchedule(row.schedule | mcsStdDateFormat) }}</span>
+            </mcs-data-cell>
+          </ng-container>
+
           <!-- Status -->
           <ng-container mcsColumnDef="status">
             <mcs-header-cell *mcsHeaderCellDef>
