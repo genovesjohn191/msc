@@ -101,4 +101,11 @@ export class McsResource extends McsEntityBase {
   public get platformLabel(): string {
     return platformTypeText[this.platform];
   }
+
+  /**
+   * Returns true when resource is scaleable
+   */
+  public get scaleable(): boolean {
+    return !this.isDedicated;
+  }
 }
