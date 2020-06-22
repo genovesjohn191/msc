@@ -19,7 +19,7 @@ export class McsApiToolsService implements IMcsApiToolsService {
    */
   public getPortals(): Observable<McsApiSuccessResponse<McsPortal[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = '/private-cloud/portals';
+    mcsApiRequestParameter.endPoint = '/portals';
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
