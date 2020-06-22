@@ -22,7 +22,8 @@ import { McsApiService } from '@app/services';
 import {
   getSafeProperty,
   createObject,
-  isNullOrEmpty
+  isNullOrEmpty,
+  cloneObject
 } from '@app/utilities';
 
 @Injectable()
@@ -101,7 +102,14 @@ export class OrdersDashboardService {
       platform.families.forEach((family) => {
         if (family.name.toLocaleLowerCase().includes(query.keyword)) {
           filteredFamilies.push(family);
+          return;
         }
+        let familyFilteredGroup = family.groups.filter((group) => group.name.toLocaleLowerCase().includes(query.keyword))
+
+        if (isNullOrEmpty(familyFilteredGroup)) { return; }
+        let newFamily = cloneObject(family);
+        newFamily.groups = familyFilteredGroup;
+        filteredFamilies.push(newFamily);
       });
     });
     return filteredFamilies;

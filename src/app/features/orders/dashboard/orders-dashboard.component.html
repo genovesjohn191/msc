@@ -6,8 +6,8 @@
       <div class="listing-panel-wrapper">
 
         <ng-container *ngIf="orderGroup$ | async as orderGroup">
-          <ng-container *ngIf="orderGroup?.orderAvailableItemTypes | mcsArrayHasElement; else noOrderTypesSidePanelTemplate">
-            <mcs-search #search mcsId="order-dashboard-listing-panel-search"></mcs-search>
+          <mcs-search #search mcsId="order-dashboard-listing-panel-search"></mcs-search>
+            <ng-container *ngIf="orderGroup?.orderAvailableItemTypes | mcsArrayHasElement; else noOrderTypesSidePanelTemplate">
             <mcs-list-panel [dataSource]="listViewDatasource" [config]="listViewConfig?.panelSettings">
               <ng-container *mcsListPanelContent="let family">
 
@@ -25,14 +25,15 @@
                       </mcs-item>
                     </mcs-option>
                   </ng-container>
-
                 </mcs-option-group>
 
               </ng-container>
             </mcs-list-panel>
           </ng-container>
           <ng-template #noOrderTypesSidePanelTemplate>
-          <span>{{'orderDashboard.noOrdersAvailableMenu' | translate}}</span>
+            <mcs-item>
+              <span>{{'orderDashboard.noOrdersAvailableMenu' | translate}}</span>
+            </mcs-item>
           </ng-template>
         </ng-container>
       </div>
