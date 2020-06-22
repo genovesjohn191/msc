@@ -104,7 +104,7 @@ export class OrdersDashboardService {
           filteredFamilies.push(family);
           return;
         }
-        let familyFilteredGroup = family.groups.filter((group) => group.name.toLocaleLowerCase().includes(query.keyword))
+        let familyFilteredGroup = family.groups.filter((group) => group.name.toLocaleLowerCase().includes(query.keyword));
 
         if (isNullOrEmpty(familyFilteredGroup)) { return; }
         let newFamily = cloneObject(family);
