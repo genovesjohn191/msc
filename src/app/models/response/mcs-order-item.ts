@@ -1,9 +1,12 @@
-import { JsonProperty } from '@app/utilities';
 import {
-  OrderStatus,
-  OrderStatusSerialization,
-  orderStatusText
-} from '../enumerations/order-status.enum';
+JsonProperty,
+isNullOrEmpty
+} from '@app/utilities';
+import {
+  OrderItemStatus,
+  OrderItemStatusSerialization,
+  orderItemStatusText
+} from '../enumerations/order-item-status.enum';
 import {
   ProvisioningStatus,
   ProvisioningStatusSerialization,
@@ -45,10 +48,10 @@ export class McsOrderItem extends McsEntityBase {
   public costCentre: string = undefined;
 
   @JsonProperty({
-    serializer: OrderStatusSerialization,
-    deserializer: OrderStatusSerialization
+    serializer: OrderItemStatusSerialization,
+    deserializer: OrderItemStatusSerialization
   })
-  public status: OrderStatus = undefined;
+  public status: OrderItemStatus = undefined;
 
   @JsonProperty()
   public description: string = undefined;
@@ -96,15 +99,19 @@ export class McsOrderItem extends McsEntityBase {
    * Returns the order status label
    */
   public get statusLabel(): string {
-    return orderStatusText[this.status];
+    return orderItemStatusText[this.status];
   }
 
   /**
    * Returns the item provisioning status label
    */
   public get itemProvisioningStatusLabel(): string {
-    return (this.itemProvisioningStatus === ProvisioningStatus.Unknown) ?
-           orderStatusText[this.status] :
-           provisioningStatusText[this.itemProvisioningStatus];
+    let result = (this.itemProvisioningStatus === ProvisioningStatus.Unknown) ?
+                  orderItemStatusText[this.status] :
+                  provisioningStatusText[this.itemProvisioningStatus];
+    if (isNullOrEmpty(result)) {
+      result = provisioningStatusText[ProvisioningStatus.Unknown];
+    }
+    return result;
   }
 }
