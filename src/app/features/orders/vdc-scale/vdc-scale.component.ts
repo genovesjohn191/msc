@@ -321,6 +321,7 @@ export class VdcScaleComponent extends McsOrderWizardBase implements OnInit, OnD
    */
   private _resetScaleVdcState(): void {
     if (!isNullOrEmpty(this._componentHandler)) {
+      this._vdcScale.hasChanged = false;
       this._componentHandler.recreateComponent();
     }
   }
