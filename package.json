@@ -6,13 +6,13 @@
     "start": "ng serve --ssl --ssl-key ssl/dev-portal.key --ssl-cert ssl/dev-portal.crt",
     "build": "node --max_old_space_size=3000 ./node_modules/@angular/cli/bin/ng build",
     "clean": "rm -rf node_modules",
-    "reinstall": "npm run clean && npm install",
-    "rebuild": "npm run reinstall && npm run build",
+    "reinstall": "yarn run clean && yarn install",
+    "rebuild": "yarn run reinstall && yarn run build",
     "test": "ng test --browsers=ChromeHeadless --code-coverage --watch=false",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "output:styling": "gulp",
-    "build:prod": "node --max_old_space_size=3000 ./node_modules/@angular/cli/bin/ng build --configuration=production && npm run output:styling"
+    "build:prod": "node --max_old_space_size=3000 ./node_modules/@angular/cli/bin/ng build --configuration=production && yarn run output:styling"
   },
   "private": true,
   "dependencies": {
