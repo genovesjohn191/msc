@@ -129,7 +129,7 @@
             </mcs-item>
 
             <!-- AddOns -->
-            <ng-container *ngIf="!(fcLicenses?.value?.isPending || fcLicenses?.value?.isSuspended)">
+            <mcs-item orientation="block" [disabled]="fcLicenses?.value?.isPending || fcLicenses?.value?.isSuspended">
               <ng-container *ngIf="childLicensesFcConfig$ | async as childLicensesFcConfig">
                 <ng-container *ngIf="childLicensesFcConfig | mcsArrayHasElement">
                   <h2 align-self-start padding-top-medium>{{ 'orderMsLicenseCountChange.detailsStep.addons.label' | translate }}</h2>
@@ -209,7 +209,7 @@
                   </ng-container>
                 </ng-container>
               </ng-container>
-            </ng-container>
+            </mcs-item>
 
             <mcs-item padding-top-medium *ngIf="(licenses$ | async) | mcsArrayHasElement">
               <mcs-status-message type="info">

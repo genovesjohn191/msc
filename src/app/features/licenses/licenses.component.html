@@ -177,7 +177,7 @@
                 <ng-container mcsColumnDef="action" *mcsAccessControl="['OrderEdit']; feature: 'EnableOrderingLicenseCountChange'">
                     <mcs-header-cell *mcsHeaderCellDef hidden-small></mcs-header-cell>
                     <mcs-data-cell *mcsDataCellDef="let row" hidden-small text-center>
-                        <ng-container *ngIf="!(row.isPending || row.isSuspended)">
+                        <ng-container *ngIf="!isLicenseDisabled(dataSource?.dataRecords, row)">
                             <mcs-icon mcsStopPropagation [key]="ellipsisIconKey" size="large"
                                 mcsPopover placement="bottom" orientation="left" theme="light"
                                 padding="none" [content]="actionContent" mcsCursor="pointer">
