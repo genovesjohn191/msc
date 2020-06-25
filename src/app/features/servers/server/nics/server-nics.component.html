@@ -56,13 +56,17 @@
         </ng-container>
 
         <!-- IP Mode Column -->
-        <ng-container mcsColumnDef="ipMode">
+        <ng-container mcsColumnDef="ipMode"> 
           <mcs-header-cell *mcsHeaderCellDef hidden-small>
             {{ 'serverNics.columnHeaders.ipMode' | translate }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
-            <span [innerHTML]="row.ipAllocationModeLabel | mcsDataLabel"></span>
-          </mcs-data-cell>
+            <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+              <ng-container *ngIf="isVMWareToolsInstalled; else notInstalled">
+                <ng-container *ngIf="isVMWareToolsRunning; else notRunning">
+                  <span [innerHTML]="row.ipAllocationModeLabel | mcsDataLabel"></span>
+                </ng-container>
+              </ng-container>
+            </mcs-data-cell>
         </ng-container>
 
         <!-- IP Addresses Column -->
@@ -70,14 +74,30 @@
           <mcs-header-cell *mcsHeaderCellDef>
             {{ 'serverNics.columnHeaders.ipAddresses' | translate }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row">
-            <mcs-list spacing="none">
-              <mcs-list-item *ngFor="let ipAddress of row.logicalIpAddresses">
-                <span [innerHTML]="ipAddress | mcsDataLabel"></span>
-              </mcs-list-item>
-            </mcs-list>
+          <mcs-data-cell *mcsDataCellDef="let row"  hidden-small>
+            <ng-container *ngIf="isVMWareToolsInstalled; else notInstalled">
+              <ng-container *ngIf="isVMWareToolsRunning; else notRunning">
+                <mcs-list spacing="none">
+                  <mcs-list-item *ngFor="let ipAddress of row.logicalIpAddresses">
+                    <span [innerHTML]="ipAddress | mcsDataLabel"></span>
+                  </mcs-list-item>
+                </mcs-list>
+              </ng-container>
+            </ng-container>
           </mcs-data-cell>
         </ng-container>
+        
+        <ng-template #notRunning>
+          <mcs-data-status-empty [mcsTooltip]="'serverManagement.nics.nicsUnavailableNotRunningTooltip' | translate">
+            {{ 'serverManagement.nics.nicsUnavailableNotRunning' | translate }}
+          </mcs-data-status-empty>
+        </ng-template>
+        
+        <ng-template #notInstalled>
+          <mcs-data-status-empty [mcsTooltip]="'serverManagement.nics.nicsUnavailableNotInstalledTooltip' | translate">
+            {{ 'serverManagement.nics.nicsUnavailableNotInstalled' | translate }}
+          </mcs-data-status-empty>
+        </ng-template>
 
         <!-- Action Column -->
         <ng-container mcsColumnDef="action" *mcsAccessControl="serverPermission.vmNicEdit">
@@ -162,7 +182,6 @@
             </div>
           </div>
         </ng-container>
-
         <mcs-data-status-warning *ngIf="hasReachedNicsLimit(server)">
           <span>{{ 'serverNics.reachedNetworksLimit' | translate }}</span>
         </mcs-data-status-warning>

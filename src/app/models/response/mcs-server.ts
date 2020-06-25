@@ -33,6 +33,9 @@ import { Os } from '../enumerations/os.enum';
 import { McsServerOsUpdatesDetails } from './mcs-server-os-updates-details';
 import { ServiceOrderState } from '../enumerations/service-order-state.enum';
 import { IMcsServiceOrderStateChangeable } from '@app/core';
+import { RunningStatus } from '../enumerations/running-status.enum';
+import { isNullOrUndefined } from 'util';
+import { VersionStatus } from '../enumerations/version-status.enum';
 
 export class McsServer extends McsEntityBase implements IMcsServiceOrderStateChangeable {
   @JsonProperty()
@@ -378,5 +381,23 @@ export class McsServer extends McsEntityBase implements IMcsServiceOrderStateCha
     if (!this.osAutomationAvailable) {
       return ServiceOrderState.OsAutomationNotReady;
     }
+  }
+
+  /**
+   * Returns the status if vmware is installed
+   */
+  public get isVMWareToolsInstalled(): boolean {
+    return (((this.vmwareTools.version !== -1) &&
+            !isNullOrUndefined(this.vmwareTools.runningStatus) &&
+            !isNullOrUndefined(this.vmwareTools.versionStatus)) &&
+            this.vmwareTools.versionStatus !== VersionStatus.NotInstalled);
+  }
+
+  /**
+   * Returns the status if vmware is running
+   */
+  public get isVMWareToolsRunning(): boolean {
+    return ((this.vmwareTools.runningStatus === RunningStatus.Running) &&
+            this.isVMWareToolsInstalled === true);
   }
 }

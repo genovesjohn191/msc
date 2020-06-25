@@ -180,48 +180,61 @@
               </mcs-item>
             </ng-container>
 
-            <ng-container *ngIf="server?.nics | mcsIsNotNullOrEmpty; else noContentMessage">
-              <mcs-accordion [multi]="true">
-                <mcs-accordion-panel *ngFor="let nic of server?.nics; let i = index"
-                  [expanded]="i === 0">
-                  <mcs-accordion-panel-header mcsPanelHeaderDef>
-                    <span>{{ nic.name }}</span>
-                    <span *ngIf="nic.isPrimary">({{ 'serverManagement.nics.primary' | translate }})</span>
-                  </mcs-accordion-panel-header>
-
-                  <mcs-item>
-                    <span>{{ 'serverManagement.nics.ipAllocationMode' | translate }}:</span>
-                    <span>{{ nic.ipAllocationModeLabel }}</span>
-                  </mcs-item>
-                  <mcs-item>
-                    <span>{{ 'serverManagement.nics.ipAddresses' | translate }}:</span>
-                    <ng-container *ngIf="nic.logicalIpAddresses; else noIpAddressTemplate">
-                      <mcs-list spacing="auto">
-                        <mcs-list-item *ngFor="let item of nic.logicalIpAddresses">
-                          {{ item }}
-                        </mcs-list-item>
-                      </mcs-list>
-                    </ng-container>
-
-                    <ng-template #noIpAddressTemplate>
-                      <span read-only [ngSwitch]="nic?.ipAllocationMode">
-                        <ng-container *ngSwitchCase="ipAllocationModeEnum.Dhcp">
-                          {{ 'serverManagement.nics.dhcpLabel' | translate }}
+            <ng-container *ngIf="(server.isVMWareToolsInstalled); else warningMessage">
+              <ng-container *ngIf="(server.isVMWareToolsRunning); else notRunning">
+                <ng-container *ngIf="server?.nics | mcsIsNotNullOrEmpty; else noContentMessage">
+                  <mcs-accordion [multi]="true">
+                    <mcs-accordion-panel *ngFor="let nic of server?.nics; let i = index"
+                      [expanded]="i === 0">
+                      <mcs-accordion-panel-header mcsPanelHeaderDef>
+                        <span>{{ nic.name }}</span>
+                        <span *ngIf="nic.isPrimary">({{ 'serverManagement.nics.primary' | translate }})</span>
+                      </mcs-accordion-panel-header>
+                      <mcs-item>
+                        <span>{{ 'serverManagement.nics.ipAllocationMode' | translate }}:</span>
+                        <span>{{ nic.ipAllocationModeLabel }}</span>
+                      </mcs-item>
+                      <mcs-item>
+                        <span>{{ 'serverManagement.nics.ipAddresses' | translate }}:</span>
+                        <ng-container *ngIf="nic.logicalIpAddresses; else noIpAddressTemplate">
+                          <mcs-list spacing="auto">
+                            <mcs-list-item *ngFor="let item of nic.logicalIpAddresses">
+                              {{ item }}
+                            </mcs-list-item>
+                          </mcs-list>
                         </ng-container>
-                        <ng-container *ngSwitchDefault>
-                          {{ 'serverManagement.nics.staticLabel' | translate }}
-                        </ng-container>
-                      </span>
-                    </ng-template>
-                  </mcs-item>
-                </mcs-accordion-panel>
-              </mcs-accordion>
+                        <ng-template #noIpAddressTemplate>
+                          <span read-only [ngSwitch]="nic?.ipAllocationMode">
+                            <ng-container *ngSwitchCase="ipAllocationModeEnum.Dhcp">
+                              {{ 'serverManagement.nics.dhcpLabel' | translate }}
+                            </ng-container>
+                            <ng-container *ngSwitchDefault>
+                              {{ 'serverManagement.nics.staticLabel' | translate }}
+                            </ng-container>
+                          </span>
+                        </ng-template>
+                      </mcs-item>
+                    </mcs-accordion-panel>
+                  </mcs-accordion>
+                </ng-container>
+                <ng-template #noContentMessage>
+                  <mcs-data-status-empty>
+                    {{ 'serverManagement.nics.noContentMessage' | translate }}
+                  </mcs-data-status-empty>
+                </ng-template>
+              </ng-container>
+              <ng-template #notRunning>
+                <mcs-data-status-empty [mcsTooltip]="'serverManagement.nics.nicsUnavailableNotRunningTooltip' | translate">
+                  {{ 'serverManagement.nics.nicsUnavailableNotRunning' | translate }}
+                </mcs-data-status-empty>
+              </ng-template>
             </ng-container>
-
-            <ng-template #noContentMessage>
-              <mcs-data-status-empty>
-                {{ 'serverManagement.nics.noContentMessage' | translate }}
-              </mcs-data-status-empty>
+            <ng-template #warningMessage>
+              <ng-container>
+                <mcs-data-status-empty [mcsTooltip]="'serverManagement.nics.nicsUnavailableNotInstalledTooltip' | translate">
+                  {{ 'serverManagement.nics.nicsUnavailableNotInstalled' | translate }}
+                </mcs-data-status-empty>
+              </ng-container>
             </ng-template>
           </mcs-presentation-panel>
         </mcs-grid-column>

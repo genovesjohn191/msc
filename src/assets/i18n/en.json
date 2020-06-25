@@ -593,7 +593,11 @@
       "ipAddresses": "IP Addresses",
       "dhcpLabel": "Automatically assigned",
       "staticLabel": "Unable to obtain",
-      "noContentMessage": "There are no NICs for this server."
+      "noContentMessage": "There are no NICs for this server.",
+      "nicsUnavailableNotInstalledTooltip": "Unavailable because VMWare tools is not installed.",
+      "nicsUnavailableNotRunningTooltip": "Unavailable because VMWare tools is not running.",
+      "nicsUnavailableNotInstalled": "VMWare Tools Not Installed.",
+      "nicsUnavailableNotRunning": "VMWare Tools Not Running."
     },
     "storage": {
       "title": "Storage",
