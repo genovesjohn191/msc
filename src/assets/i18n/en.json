@@ -97,7 +97,6 @@
     "lineItemsLabel": "Line Items",
     "columnHeaders": {
       "description": "Item Description",
-      "quantity": "Quantity",
       "status": "Status",
       "costCentre": "Cost Centre",
       "billingSite": "Billing Site",
