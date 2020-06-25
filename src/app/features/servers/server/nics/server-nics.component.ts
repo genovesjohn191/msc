@@ -89,6 +89,9 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   private _updateNicHandler: Subscription;
   private _deleteNicHandler: Subscription;
 
+  public isVMWareToolsInstalled: boolean;
+  public isVMWareToolsRunning: boolean;
+
   @ViewChild(ComponentHandlerDirective, { static: false })
   private _componentHandler: ComponentHandlerDirective;
 
@@ -287,6 +290,9 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
 
     let resourceId = getSafeProperty(server, (obj) => obj.platform.resourceId);
     this._getResourceNetworks(resourceId);
+
+    this.isVMWareToolsInstalled = server.isVMWareToolsInstalled;
+    this.isVMWareToolsRunning = server.isVMWareToolsRunning;
   }
 
   /**
