@@ -182,17 +182,6 @@
             </mcs-data-cell>
           </ng-container>
 
-          <!-- Quantity -->
-          <!-- TODO: Under confirmation on how line items could be merged -->
-          <ng-container mcsColumnDef="quantity">
-            <mcs-header-cell *mcsHeaderCellDef>
-              {{ 'order.columnHeaders.quantity' | translate }}
-            </mcs-header-cell>
-            <mcs-data-cell *mcsDataCellDef="let row">
-              <span text-wrap>1</span>
-            </mcs-data-cell>
-          </ng-container>
-
           <!-- Schedule -->
           <ng-container mcsColumnDef="schedule" *ngIf="hasManualSchedule">
             <mcs-header-cell *mcsHeaderCellDef>
