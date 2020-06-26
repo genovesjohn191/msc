@@ -98,13 +98,14 @@ export class OrdersDashboardService {
 
   private _filterByOrderFamily(platforms: McsOrderAvailablePlatform[], query: McsQueryParam): McsOrderAvailableFamily[] {
     let filteredFamilies: McsOrderAvailableFamily[] = [];
+    let keyword = query.keyword.toLocaleLowerCase();
     platforms.forEach((platform) => {
       platform.families.forEach((family) => {
-        if (family.name.toLocaleLowerCase().includes(query.keyword)) {
+        if (family.name.toLocaleLowerCase().includes(keyword)) {
           filteredFamilies.push(family);
           return;
         }
-        let familyFilteredGroup = family.groups.filter((group) => group.name.toLocaleLowerCase().includes(query.keyword));
+        let familyFilteredGroup = family.groups.filter((group) => group.name.toLocaleLowerCase().includes(keyword));
 
         if (isNullOrEmpty(familyFilteredGroup)) { return; }
         let newFamily = cloneObject(family);
