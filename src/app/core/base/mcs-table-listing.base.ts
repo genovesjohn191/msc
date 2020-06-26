@@ -46,6 +46,7 @@ import { IMcsColumnManager } from '../interfaces/mcs-column-manager.interface';
 export interface TableListingConfig<T> {
   dataChangeEvent?: EventBusState<T[]>;
   dataClearEvent?: EventBusState<void>;
+  entityDeleteEvent?: EventBusState<any>;
   allowMultipleSelection?: boolean;
 }
 
@@ -68,6 +69,7 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
   private _isMobile: boolean;
   private _dataChangeHandler: Subscription;
   private _dataClearHandler: Subscription;
+  private _entityDeleteHandler: Subscription;
 
   private _search: Search;
   private _paginator: Paginator;
@@ -101,6 +103,7 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
     unsubscribeSafely(this._baseDestroySubject);
     unsubscribeSafely(this._dataChangeHandler);
     unsubscribeSafely(this._dataClearHandler);
+    unsubscribeSafely(this._entityDeleteHandler);
 
     if (!isNullOrEmpty(this.dataSource)) {
       this.dataSource.disconnect();
@@ -310,6 +313,12 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
     if (!isNullOrEmpty(this.tableConfig.dataClearEvent)) {
       this._dataClearHandler = this.eventDispatcher.addEventListener(
         this.tableConfig.dataClearEvent, this._onDataClear.bind(this)
+      );
+    }
+
+    if (!isNullOrEmpty(this.tableConfig.entityDeleteEvent)) {
+      this._entityDeleteHandler = this.eventDispatcher.addEventListener(
+        this.tableConfig.entityDeleteEvent, this._initializeDataSource.bind(this)
       );
     }
   }
