@@ -36,6 +36,8 @@ import { McsListViewDatasource } from '../data-access/mcs-listview-datasource';
 
 export interface ListViewListingConfig {
   dataChangeEvent?: EventBusState<any>;
+  dataAddEvent?: EventBusState<any>;
+  dataDeleteEvent?: EventBusState<any>;
   panelSettings?: ListPanelConfig;
 }
 
@@ -128,6 +130,18 @@ export abstract class McsListViewListingBase<TEntity> implements AfterViewInit, 
     if (!isNullOrEmpty(this.listViewConfig.dataChangeEvent)) {
       this._dataChangeHandler = this.eventDispatcher.addEventListener(
         this.listViewConfig.dataChangeEvent, this._onDataChanged.bind(this)
+      );
+    }
+
+    if (!isNullOrEmpty(this.listViewConfig.dataAddEvent)) {
+      this._dataChangeHandler = this.eventDispatcher.addEventListener(
+        this.listViewConfig.dataAddEvent, this._initializeDatasource.bind(this)
+      );
+    }
+
+    if (!isNullOrEmpty(this.listViewConfig.dataDeleteEvent)) {
+      this._dataChangeHandler = this.eventDispatcher.addEventListener(
+        this.listViewConfig.dataDeleteEvent, this._initializeDatasource.bind(this)
       );
     }
   }

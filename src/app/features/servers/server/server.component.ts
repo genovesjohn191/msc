@@ -94,6 +94,8 @@ export class ServerComponent extends McsListViewListingBase<McsServerGroup> impl
   ) {
     super(_injector, _changeDetectorRef, {
       dataChangeEvent: McsEvent.dataChangeServers,
+      dataAddEvent: McsEvent.entityCreatedEvent,
+      dataDeleteEvent: McsEvent.entityDeletedEvent,
       panelSettings: {
         inProgressText: _translate.instant('servers.loading'),
         emptyText: _translate.instant('servers.noServers'),

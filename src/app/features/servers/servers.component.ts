@@ -72,7 +72,8 @@ export class ServersComponent extends McsTableListingBase<McsServer>
   ) {
     super(_injector, _changeDetectorRef, {
       dataChangeEvent: McsEvent.dataChangeServers,
-      dataClearEvent: McsEvent.dataClearServers
+      dataClearEvent: McsEvent.dataClearServers,
+      entityDeleteEvent: McsEvent.entityDeletedEvent
     });
     this._createColumnMatrix();
   }
