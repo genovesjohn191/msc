@@ -187,6 +187,7 @@ export class McsApiService {
   private readonly _ordersRepository: McsOrdersRepository;
   private readonly _mediaRepository: McsMediaRepository;
   private readonly _firewallsRepository: McsFirewallsRepository;
+  // TODO : Update to repository once we need to have state management and improve loading
   private readonly _batsRepository: McsBatsRepository;
   private readonly _consoleRepository: McsConsoleRepository;
   private readonly _companiesRepository: McsCompaniesRepository;
@@ -928,23 +929,18 @@ export class McsApiService {
   }
 
   public getBackupAggregationTarget(id: string): Observable<McsBackUpAggregationTarget> {
-    return this._mapToEntityRecord(this._batsRepository, id).pipe(
-      catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getBackupAggregationTarget'))
-      )
+    return this._batsApi.getBackUpAggregationTarget(id).pipe(
+      catchError((error) => this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getBackupAggregationTarget'))),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
 
   public getBackupAggregationTargets(query?: McsQueryParam): Observable<McsApiCollection<McsBackUpAggregationTarget>> {
-    let dataCollection = isNullOrEmpty(query) ?
-      this._batsRepository.getAll() :
-      this._batsRepository.filterBy(query);
-
-    return dataCollection.pipe(
+    return this._batsApi.getBackUpAggregationTargets(query).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getBackupAggregationTargets'))
       ),
-      map((response) => this._mapToCollection(response, this._batsRepository.getTotalRecordsCount()))
+      map((response) => this._mapToCollection(response.content, response.totalCount))
     );
   }
 
