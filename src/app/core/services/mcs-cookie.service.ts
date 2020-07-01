@@ -62,21 +62,23 @@ export class McsCookieService {
    * Get the encrypted cookie and returns the decrypted content
    * @param key Key of the cookie to decrypt
    */
-  public getEncryptedItem<T>(key: string): T {
+  public getEncryptedItem<T>(key: string, tryParseJson: boolean = true): T {
     let decryptedData: any;
     let cookieData = this._cookieService.get(key);
     if (isNullOrEmpty(cookieData)) { return undefined; }
-
     try {
       // Decrypt the cookie content as object
       let bytes = cryptoJS.AES.decrypt(
         cookieData.toString(),
         this._coreConfig.enryptionKey);
-
-      if (isJson(bytes)) {
-        decryptedData = JSON.parse(bytes.toString(cryptoJS.enc.Utf8));
-      } else {
+      if (!tryParseJson) {
         decryptedData = bytes.toString(cryptoJS.enc.Utf8);
+      } else {
+        if (isJson(bytes)) {
+          decryptedData = JSON.parse(bytes.toString(cryptoJS.enc.Utf8));
+        } else {
+          decryptedData = bytes.toString(cryptoJS.enc.Utf8);
+        }
       }
     } catch (error) {
       // Get the normal cookie content when conversion to UTF has error
