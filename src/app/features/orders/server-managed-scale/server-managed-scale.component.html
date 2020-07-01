@@ -38,56 +38,58 @@
               (selectionChange)="onChangeServer($event)"
               [mcsContextualHelp]="'orderServerManagedScale.vm.contextualHelp' | translate">
 
-              <mcs-option-group>
-                <ng-container *mcsOptionGroupHeader>
-                  <span>{{ 'orderServerManagedScale.vm.optionGroupLabel' | translate }}</span>
+              <mcs-search mcsSelectSearch></mcs-search>
+
+              <mcs-option-group *ngFor="let serverGroup of (serverGroups$ | async)">
+                <ng-container *mcsOptionGroupLabel>
+                  <span>{{ serverGroup.groupName }}</span>
                 </ng-container>
-                <ng-container *ngIf="resources$ | async as resources">
-                  <mcs-option-group [label]="iterator.key" *ngFor="let iterator of resources | mcsMapIterable">
-                    <mcs-option *ngFor="let server of iterator.value" [value]="server"
-                                [disabled]="server.isDisabled">
-                      {{ server.name }}
-                    </mcs-option>
-                  </mcs-option-group>
-                </ng-container>
+
+                <mcs-option *ngFor="let server of serverGroup.options"
+                  [value]="server.value?.entity"
+                  [disabled]="server.value?.disabled">
+
+                  <span [ngStyle]="{'pointer-events': 'auto'}"
+                    [mcsTooltip]="server.value?.message"
+                    [mcsTooltipShow]="server.value?.message"
+                    mcsTooltipPosition="right">
+                    {{ server.text }}
+                  </span>
+
+                </mcs-option>
               </mcs-option-group>
             </mcs-select>
           </mcs-form-field>
 
-          <ng-container *ngIf="fcManageServer?.value?.isProcessing; else contentTemplate">
-            <p text-center>{{ 'orderServerManagedScale.vmDetails.inProcessing' | translate }}</p>
-          </ng-container>
-          <ng-template #contentTemplate>
-            <div class="action-box" *mcsComponentHandler>
-              <mcs-server-manage-scale #fgManageScale
-                [osType]="fcManageServer?.value?.operatingSystem?.type"
-                [resource]="resource$ | async"
-                [serverCompute]="fcManageServer?.value?.compute"
-                [minimumCpu]="minimumCpu"
-                [minimumMemoryGB]="minimumMemoryGB"
-                [mcsContextualHelp]="'orderServerManagedScale.vmDetails.contextualHelp' | translate"
-                (dataChange)="onScaleChanged($event, fcManageServer?.value)">
+          <div class="action-box" *mcsComponentHandler>
+            <mcs-server-manage-scale #fgManageScale
+              [osType]="fcManageServer?.value?.operatingSystem?.type"
+              [resource]="resource$ | async"
+              [serverCompute]="fcManageServer?.value?.compute"
+              [minimumCpu]="minimumCpu"
+              [minimumMemoryGB]="minimumMemoryGB"
+              [mcsContextualHelp]="'orderServerManagedScale.vmDetails.contextualHelp' | translate"
+              (dataChange)="onScaleChanged($event, fcManageServer?.value)">
 
-                <ng-container mcsManageScaleHeader>
-                  <h2>{{ 'orderServerManagedScale.vmDetails.label' | translate }}</h2>
-                </ng-container>
-              </mcs-server-manage-scale>
-              <mcs-data-status-warning *ngIf="fcManageServer?.value?.isPoweredOn">
-                <span>{{ 'orderServerManagedScale.vmDetails.warning' | translate }}</span>
-              </mcs-data-status-warning>
-            </div>
+              <ng-container mcsManageScaleHeader>
+                <h2>{{ 'orderServerManagedScale.vmDetails.label' | translate }}</h2>
+              </ng-container>
+            </mcs-server-manage-scale>
+            <mcs-data-status-warning *ngIf="fcManageServer?.value?.isPoweredOn">
+              <span>{{ 'orderServerManagedScale.vmDetails.warning' | translate }}</span>
+            </mcs-data-status-warning>
+          </div>
 
-            <div class="action-items">
-              <button mcsButton arrow="right"
-                mcsWizardStepNext
-                (click)="onSubmitScaleDetails()"
-                [disabled]="!formIsValid"
-                mcsId="step-1-next"
-                mcsEventTracker="step-1-next"
-                mcsEventCategory="orders"
-                mcsEventLabel="scale-managed-server">{{ 'shared.wizard.next' | translate }}</button>
-            </div>
-          </ng-template>
+          <div class="action-items">
+            <button mcsButton arrow="right"
+              mcsWizardStepNext
+              (click)="onSubmitScaleDetails()"
+              [disabled]="!formIsValid"
+              mcsId="step-1-next"
+              mcsEventTracker="step-1-next"
+              mcsEventCategory="orders"
+              mcsEventLabel="scale-managed-server">{{ 'shared.wizard.next' | translate }}</button>
+          </div>
         </form>
 
       </mcs-wizard-step>

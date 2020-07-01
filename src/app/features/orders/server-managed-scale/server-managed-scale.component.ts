@@ -9,13 +9,6 @@ import {
   OnInit
 } from '@angular/core';
 import {
-  McsOrderWizardBase,
-  McsFormGroupService,
-  IMcsFormGroup,
-  CoreValidators,
-  OrderRequester
-} from '@app/core';
-import {
   Observable,
   Subject,
   Subscription
@@ -36,6 +29,14 @@ import {
   takeUntil,
   shareReplay
 } from 'rxjs/operators';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+import {
+  McsOrderWizardBase,
+  McsFormGroupService,
+  IMcsFormGroup,
+  CoreValidators,
+  OrderRequester
+} from '@app/core';
 import {
   McsResource,
   McsServer,
@@ -43,10 +44,13 @@ import {
   OrderIdType,
   McsServerCompute,
   McsOrderCreate,
-  McsOrderItemCreate
+  McsOrderItemCreate,
+  McsOptionGroup,
+  McsEntityProvision,
+  ServiceOrderState,
+  McsOption
 } from '@app/models';
 import { McsApiService } from '@app/services';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import {
   OrderDetails,
   ServerManageScale
@@ -69,7 +73,7 @@ type ScaleManageProperties = {
 };
 
 const SCALE_MANAGE_SERVER_REF_ID = Guid.newGuid().toString();
-const DEFAULT_RESOURCE_NAME = 'Others';
+const OTHERS_RESOURCE_NAME = 'Others';
 
 @Component({
   selector: 'mcs-order-server-managed-scale',
@@ -80,7 +84,7 @@ const DEFAULT_RESOURCE_NAME = 'Others';
 
 export class ServerManagedScaleComponent extends McsOrderWizardBase implements OnInit, OnDestroy {
 
-  public resources$: Observable<Map<string, McsServer[]>>;
+  public serverGroups$: Observable<McsOptionGroup[]>;
   public resource$: Observable<McsResource>;
 
   public fgServerManagedScaleDetails: FormGroup;
@@ -99,6 +103,7 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
   private _destroySubject = new Subject<void>();
   private _selectedServerHandler: Subscription;
   private _resourcesDataChangeHandler: Subscription;
+  private _scaleServerOrderStateMessageMap = new Map<ServiceOrderState, string>();
 
   constructor(
     _injector: Injector,
@@ -125,7 +130,8 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
   }
 
   public ngOnInit() {
-    this._getAllManagedCloudServers();
+    this._registerProvisionStateMap();
+    this._subscribeToManagedCloudServers();
   }
 
   public ngOnDestroy() {
@@ -178,7 +184,7 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
   public onChangeServer(server: McsServer): void {
     if (isNullOrEmpty(server) || isNullOrEmpty(server.serviceId)) { return; }
     this._resetScaleManagedServerState();
-    this._subscribeResourceById(server.platform.resourceId);
+    this._subscribeToResourceById(server.platform.resourceId);
   }
 
   /**
@@ -259,37 +265,57 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
   /**
    * Gets all the server and filters out the manage cloud server
    */
-  private _getAllManagedCloudServers(): void {
+  private _subscribeToManagedCloudServers(): void {
+    this.serverGroups$ = this._apiService.getServers().pipe(
+      map((serversCollection) => {
+        let serverGroups: McsOptionGroup[] = [];
+        let servers = getSafeProperty(serversCollection, (obj) => obj.collection) || [];
 
-    let resourceMap: Map<string, McsServer[]> = new Map();
-    this.resources$ = this._apiService.getServers().pipe(
-      map((servers) => {
-        servers.collection.filter(
-          (server) => !server.isSelfManaged && !server.isDedicated
-        ).forEach((server) => {
-          let resourceIsExisting = resourceMap.has(server.platform.resourceName);
-          let platformResourceName = (!isNullOrEmpty(server.platform.resourceName)) ? server.platform.resourceName : DEFAULT_RESOURCE_NAME;
-          if (resourceIsExisting) {
-            server.isDisabled = (server.serviceChangeAvailable === false) ? true : false;
-            resourceMap.get(platformResourceName).push(server);
+        servers.forEach((server) => {
+          if (!server.isManagedVCloud) { return; }
+
+          let platformName = getSafeProperty(server, (obj) => obj.platform.resourceName) || OTHERS_RESOURCE_NAME;
+          let foundGroup = serverGroups.find((serverGroup) => serverGroup.groupName === platformName);
+          let serverDetails = this._createManageServerDetails(server);
+
+          if (!isNullOrEmpty(foundGroup)) {
+            foundGroup.options.push(createObject(McsOption, { text: server.name, value: serverDetails }));
             return;
           }
-          resourceMap.set(platformResourceName, [server]);
+          serverGroups.push(
+            new McsOptionGroup(platformName, createObject(McsOption, { text: server.name, value: serverDetails }))
+          );
         });
-        return resourceMap;
-      }),
-      tap(() => {
-        this._eventDispatcher.dispatch(McsEvent.serverScaleManageSelected);
-        this._changeDetectorRef.markForCheck();
+        return serverGroups;
       })
     );
+  }
+
+  /**
+   * Creata manage server details based on its status
+   */
+  private _createManageServerDetails(server: McsServer): McsEntityProvision<McsServer> {
+    let serverDetails = new McsEntityProvision<McsServer>();
+    serverDetails.entity = server;
+
+    // Return immediately when server is not disable
+    let isServerDisable = !server.serviceChangeAvailable || server.isProcessing;
+    if (!isServerDisable) {
+      serverDetails.disabled = false;
+      return serverDetails;
+    }
+
+    let serverOrderState = !server.serviceChangeAvailable ? ServiceOrderState.ChangeUnavailable : ServiceOrderState.Busy;
+    serverDetails.message = this._scaleServerOrderStateMessageMap.get(serverOrderState);
+    serverDetails.disabled = true;
+    return serverDetails;
   }
 
   /**
    * Gets the resource based on ID provided
    * @param resourceId Resource Id of the resource to get
    */
-  private _subscribeResourceById(resourceId: string): void {
+  private _subscribeToResourceById(resourceId: string): void {
     this.resource$ = this._apiService.getResource(resourceId).pipe(
       tap(() => this._changeDetectorRef.markForCheck()),
       shareReplay(1)
@@ -363,5 +389,20 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
     this.fgServerManagedScaleDetails.valueChanges.pipe(
       takeUntil(this._destroySubject)
     ).subscribe();
+  }
+
+  /**
+   * Create state message map for server details
+   */
+  private _registerProvisionStateMap(): void {
+    this._scaleServerOrderStateMessageMap.set(
+      ServiceOrderState.Busy,
+      this.translateService.instant('orderServerManagedScale.vmDetails.busy')
+    );
+
+    this._scaleServerOrderStateMessageMap.set(
+      ServiceOrderState.ChangeUnavailable,
+      this.translateService.instant('orderServerManagedScale.vmDetails.serverChangeAvailableFalse')
+    );
   }
 }

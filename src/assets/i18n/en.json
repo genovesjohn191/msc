@@ -153,7 +153,8 @@
       "description": "This server currently has {{ram}} RAM and {{cpu}} vCPU",
       "contextualHelp": "Choose the memory and vCPU for your server. Click 'Enter custom size' to enter a precise value. Your selection is bound by the remaining compute in your Virtual Data Centre.",
       "warning": "Scaling this server will cause it to restart.",
-      "inProcessing": "This server is currently busy and cannot be modified at this time."
+      "serverChangeAvailableFalse": "This server cannot be modified because it is currently being provisioned.",
+      "busy": "This server cannot be scaled because it is currently busy. Scaling can be performed once its current operation has completed."
     },
     "confirm": {
       "stepTitle": "Confirm"
