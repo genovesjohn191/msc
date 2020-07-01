@@ -26,6 +26,7 @@ import {
   McsFeatureFlag,
   McsRouteInfo,
   RoutePlatform,
+  McsPermission,
 } from '@app/models';
 import {
   McsBrowserService,
@@ -181,7 +182,37 @@ export class UserPanelComponent implements OnInit, OnDestroy {
   }
 
   public onChangePlatform(): void {
-    this._navigationService.navigateTo(this.isPublicRoute ? RouteKey.Servers : RouteKey.Licenses);
+    let publicDefaultRoute: RouteKey = RouteKey.Licenses;
+    let privateDefaultRoute: RouteKey = this._resolveDefaultPrivateCloudRoute();
+    this._navigationService.navigateTo(this.isPublicRoute ? privateDefaultRoute : publicDefaultRoute);
+    if (this.isPublicRoute) {
+      this.isPublicRoute = false;
+      this._changeDetectorRef.markForCheck();
+      this._navigationService.navigateTo(privateDefaultRoute);
+    } else {
+      this._navigationService.navigateTo(publicDefaultRoute);
+    }
+  }
+
+  private _resolveDefaultPrivateCloudRoute(): RouteKey {
+    let hasVmAccess = this._accessControlService.hasPermission([
+      McsPermission.CloudVmAccess,
+      McsPermission.DedicatedVmAccess
+    ]);
+    let hasFirewallAccess = this._accessControlService.hasPermission([
+      McsPermission.FirewallConfigurationView
+    ]);
+    let defaultRoute =
+      hasVmAccess ? RouteKey.Servers :
+      hasFirewallAccess ? RouteKey.Firewalls :
+      RouteKey.OtherTools;
+
+    if (this.isPublicRoute) {
+      // We want to force a change to private cloud context if we end up navigating to other tools which is a global route
+      this._mcsRouteSettingsService.selectedPlatform = RoutePlatform.Private;
+    }
+
+    return defaultRoute;
   }
 
   /**

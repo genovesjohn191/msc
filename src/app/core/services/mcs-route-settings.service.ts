@@ -56,6 +56,11 @@ export class McsRouteSettingsService implements McsDisposable {
     return this._selectedPlatform;
   }
 
+  public set selectedPlatform(value: RoutePlatform) {
+    this._previousSelectedPlatform = value;
+    this._selectedPlatform = value;
+  }
+
   public get hasPrivateCloudPlatform(): boolean {
     return this._identity.platformSettings.hasPrivateCloud;
   }
