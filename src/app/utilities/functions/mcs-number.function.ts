@@ -27,3 +27,11 @@ export function compareNumbers(firstNumber: number, secondNumber: number): numbe
 export function getRandomNumber(minValue: number, maxValue: number): number {
   return Math.random() * (maxValue - minValue) + minValue;
 }
+
+/**
+ * Transform a number to a string formatted value with the desired decimal place
+ * @param numberToTransform number to transform
+ */
+export function transformNumberToDecimal(numberToTransform: number, decimalPlaces: number): string {
+  return numberToTransform.toFixed(2);
+}
