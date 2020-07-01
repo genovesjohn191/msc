@@ -189,7 +189,7 @@ export class CommonDefinition {
   public static REGEX_BEARER_PATTERN = /bearer=[^&]*/g;
 
   /** Session count */
-  public static SESSION_IDLE_TIME_IN_SECONDS = 300;
+  public static SESSION_IDLE_TIME_IN_SECONDS = 900;
   public static SESSION_TIMEOUT_COUNTDOWN_IN_SECONDS = 10;
 
   /** Paging Setup */

@@ -30,33 +30,38 @@ export class DashboardGuard implements CanActivate {
     _route: ActivatedRouteSnapshot,
     _state: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean {
-    // Try Navigate to Compute
-    let hasVmAccess = this._accessControlService.hasPermission([
-      McsPermission.CloudVmAccess,
-      McsPermission.DedicatedVmAccess
-    ]);
-    if (hasVmAccess) {
-      this._navigationService.navigateTo(RouteKey.Servers);
-      return false;
+
+    // Try Navigate to Private Cloud Default Page
+    let hasPrivateCloudAccess = this._authenticationIdentity.platformSettings.hasPrivateCloud;
+    if (hasPrivateCloudAccess) {
+      // Try Navigate to Compute
+      let hasVmAccess = this._accessControlService.hasPermission([
+        McsPermission.CloudVmAccess,
+        McsPermission.DedicatedVmAccess
+      ]);
+      if (hasVmAccess) {
+        this._navigationService.navigateTo(RouteKey.Servers);
+        return false;
+      }
+
+      // Try Navigate to Firewalls
+      let hasFirewallAccess = this._accessControlService.hasPermission([
+        McsPermission.FirewallConfigurationView
+      ]);
+      if (hasFirewallAccess) {
+        this._navigationService.navigateTo(RouteKey.Firewalls);
+        return false;
+      }
     }
 
-    // Try Navigate to Firewalls
-    let hasFirewallAccess = this._accessControlService.hasPermission([
-      McsPermission.FirewallConfigurationView
-    ]);
-    if (hasFirewallAccess) {
-      this._navigationService.navigateTo(RouteKey.Firewalls);
-      return false;
-    }
-
-    // Try Navigate to Licenses
+    // Try Navigate to Public Cloud Default Page
     let hasPublicCloudAccess = this._authenticationIdentity.platformSettings.hasPublicCloud;
     if (hasPublicCloudAccess) {
       this._navigationService.navigateTo(RouteKey.Licenses);
       return false;
     }
 
-    // Try Navigate to Product Catalog
+    // Try Navigate to Global Default Page
     let hasProductCatalogAccess = this._accessControlService.hasAccessToFeature([
       McsFeatureFlag.ProductCatalog
     ]);
