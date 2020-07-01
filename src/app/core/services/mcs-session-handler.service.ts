@@ -72,12 +72,12 @@ export class McsSessionHandlerService {
   public get sessionTimedOut(): boolean {
     let maxIAllowedIdleTimeInSeconds = CommonDefinition.SESSION_IDLE_TIME_IN_SECONDS
       + CommonDefinition.SESSION_TIMEOUT_COUNTDOWN_IN_SECONDS;
-    let hasTimedOutIndicatiorCookie =
+    let hasTimedOutIndicatorCookie =
       !isNullOrEmpty(this._cookieService.getItem(CommonDefinition.COOKIE_SESSION_ID));
 
     return !isDevMode()
       && (this.idleTimeInSeconds >= maxIAllowedIdleTimeInSeconds
-        || hasTimedOutIndicatiorCookie);
+        || hasTimedOutIndicatorCookie);
   }
 
   public get sessionActive(): boolean {
@@ -270,7 +270,7 @@ export class McsSessionHandlerService {
   @LogMethod()
   private _setUserValidation(identity: McsIdentity) {
     let sessionId = identity.hashedId + identity.expiry;
-    let hashedId = this._cookieService.getEncryptedItem(CommonDefinition.COOKIE_SESSION_ID);
+    let hashedId = this._cookieService.getEncryptedItem(CommonDefinition.COOKIE_SESSION_ID, false);
     if (sessionId !== hashedId) {
       this._cookieService.removeItem(CommonDefinition.COOKIE_SESSION_ID);
     }
