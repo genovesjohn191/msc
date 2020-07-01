@@ -1,5 +1,8 @@
 import { JsonProperty } from '@app/utilities';
-import { isNullOrUndefined } from '@app/utilities';
+import {
+  transformNumberToDecimal,
+  isNullOrUndefined
+ } from '@app/utilities';
 
 const DEFAULT_CURRENCY_SYMBOL = '$';
 
@@ -50,6 +53,6 @@ export class McsOrderCharge {
   }
 
   private _chargeInCurreny(fee: number): string {
-    return isNullOrUndefined(fee) ? 'N/A' : `${DEFAULT_CURRENCY_SYMBOL}${fee}`;
+    return isNullOrUndefined(fee) ? 'N/A' : `${DEFAULT_CURRENCY_SYMBOL}${transformNumberToDecimal(fee, 2)}`;
   }
 }
