@@ -38,4 +38,10 @@ export class McsOrderAvailableItemType extends McsEntityBase {
 
   @JsonProperty()
   public displayOrder: number = undefined;
+
+  @JsonProperty()
+  public standardLeadTimeHours: number = undefined;
+
+  @JsonProperty()
+  public acceleratedLeadTimeHours: number = undefined;
 }

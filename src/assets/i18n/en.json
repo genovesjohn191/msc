@@ -1058,6 +1058,7 @@
     "header": "Confirm Order",
     "description": "Please confirm the details of your order.",
     "updatingCharges": "Calculating charges. This may take a moment.",
+    "leadTimeNote": "Our standard lead time of {{ standardLeadTimeHours }} hours for this request ensures we have time to get the right engineer for the task.",
     "billingDetails": {
       "header": "Billing Details",
       "changeOrderNote": "The contract term and billing details for this service will not be changed.",
