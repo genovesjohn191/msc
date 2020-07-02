@@ -55,7 +55,8 @@ import {
   ItemType,
   McsOrderItemType,
   McsEventTrack,
-  McsOrderCharge
+  McsOrderCharge,
+  DeliveryType
 } from '@app/models';
 import {
   WizardStepComponent,
@@ -104,6 +105,7 @@ export class StepOrderDetailsComponent
   public fcBillingSite: FormControl;
   public fcBillingCostCenter: FormControl;
   public fcDescription: FormControl;
+  public fcDeliveryType: FormControl;
   public fcWorkflowAction: FormControl;
 
   // Others
@@ -145,7 +147,7 @@ export class StepOrderDetailsComponent
   public ngOnChanges(changes: SimpleChanges): void {
     let orderItemTypeChange = changes['orderItemType'];
     if (!isNullOrEmpty(orderItemTypeChange)) {
-      this._updateFormGroupBytype();
+      this._updateFormGroupByType();
       this._setOrderDescription();
     }
 
@@ -175,8 +177,24 @@ export class StepOrderDetailsComponent
     return OrderWorkflowAction;
   }
 
+  public get deliveryTypeEnum(): any {
+    return DeliveryType;
+  }
+
   public get orderTypeEnum(): any {
     return ItemType;
+  }
+
+  public get hasLeadTimeOptions(): boolean {
+    return !isNullOrEmpty(this.standardLeadTimeHours) && !isNullOrEmpty(this.acceleratedLeadTimeHours);
+  }
+
+  public get standardLeadTimeHours(): number {
+    return getSafeProperty(this.orderItemType, (obj) => obj.standardLeadTimeHours, 0);
+  }
+
+  public get acceleratedLeadTimeHours(): number {
+    return getSafeProperty(this.orderItemType, (obj) => obj.acceleratedLeadTimeHours, 0);
   }
 
   /**
@@ -269,6 +287,9 @@ export class StepOrderDetailsComponent
     let orderDetails = new OrderDetails();
     orderDetails.description = this.fcDescription.value;
     orderDetails.workflowAction = this.fcWorkflowAction.value;
+    if (this.hasLeadTimeOptions) {
+      orderDetails.deliveryType = +getSafeProperty(this.fcDeliveryType, (obj) => obj.value, 0);
+    }
     orderDetails.contractDurationMonths = +getSafeProperty(this.fcContractTerm, (obj) => obj.value, 0);
     orderDetails.billingEntityId = +getSafeProperty(this.fcBillingEntity, (obj) => obj.value.id, 0);
     orderDetails.billingSiteId = +getSafeProperty(this.fcBillingSite, (obj) => obj.value.id, 0);
@@ -279,7 +300,7 @@ export class StepOrderDetailsComponent
   /**
    * Updates the form group by order type
    */
-  private _updateFormGroupBytype(): void {
+  private _updateFormGroupByType(): void {
     let itemType = getSafeProperty(this.orderItemType, (obj) => obj.itemType, ItemType.Change);
     itemType === ItemType.Change ?
       this._setOrderChangeFormControls() :
@@ -304,6 +325,7 @@ export class StepOrderDetailsComponent
    */
   private _setOrderChangeFormControls(): void {
     this.fgOrderBilling.setControl('fcDescription', this.fcDescription);
+    this.fgOrderBilling.setControl('fcDeliveryType', this.fcDeliveryType);
     this.fgOrderBilling.removeControl('fcContractTerm');
     this.fgOrderBilling.removeControl('fcBillingEntity');
     this.fgOrderBilling.removeControl('fcBillingSite');
@@ -315,6 +337,7 @@ export class StepOrderDetailsComponent
    */
   private _setOrderNewFormControls(): void {
     this.fgOrderBilling.setControl('fcDescription', this.fcDescription);
+    this.fgOrderBilling.setControl('fcDeliveryType', this.fcDeliveryType);
     this.fgOrderBilling.setControl('fcContractTerm', this.fcContractTerm);
     this.fgOrderBilling.setControl('fcBillingEntity', this.fcBillingEntity);
     this.fgOrderBilling.setControl('fcBillingSite', this.fcBillingSite);
@@ -413,6 +436,11 @@ export class StepOrderDetailsComponent
 
     // Description settings
     this.fcDescription = new FormControl('', [
+      CoreValidators.required
+    ]);
+
+    // Delivery type
+    this.fcDeliveryType = new FormControl(DeliveryType.Standard, [
       CoreValidators.required
     ]);
 

@@ -8,6 +8,7 @@ export * from './enumerations/job-status.enum';
 export * from './enumerations/task-type.enum';
 export * from './enumerations/data-status.enum';
 export * from './enumerations/day.enum';
+export * from './enumerations/delivery-type.enum';
 export * from './enumerations/company-status.enum';
 export * from './enumerations/unit-type.enum';
 export * from './enumerations/route-category.enum';

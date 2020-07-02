@@ -59,6 +59,9 @@ export class McsOrderItem extends McsEntityBase {
   @JsonProperty()
   public createdBy: string = undefined;
 
+  @JsonProperty()
+  public deliveryType: string = undefined;
+
   @JsonProperty({
     serializer: McsDateSerialization,
     deserializer: McsDateSerialization

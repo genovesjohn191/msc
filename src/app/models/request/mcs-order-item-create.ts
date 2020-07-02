@@ -17,5 +17,8 @@ export class McsOrderItemCreate {
   public parentReferenceId?: string = undefined;
 
   @JsonProperty()
+  public deliveryType?: string = undefined;
+
+  @JsonProperty()
   public properties?: any = undefined;
 }
