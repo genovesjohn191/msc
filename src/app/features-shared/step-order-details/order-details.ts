@@ -1,4 +1,4 @@
-import { OrderWorkflowAction } from '@app/models';
+import { OrderWorkflowAction, DeliveryType } from '@app/models';
 
 export class OrderDetails {
   public description: string;
@@ -7,4 +7,5 @@ export class OrderDetails {
   public billingEntityId: number;
   public billingSiteId: number;
   public billingCostCentreId: number;
+  public deliveryType: DeliveryType;
 }

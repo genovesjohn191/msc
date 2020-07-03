@@ -161,8 +161,25 @@
         </ng-container>
       </section>
 
-      <!-- Order Actions -->
+      <!-- Order Options -->
       <section margin-top-xlarge>
+        <mcs-item orientation="separated" *ngIf="hasLeadTimeOptions">
+          <span>{{ 'orderDetailsStep.deliveryType.header' | translate }}</span>
+          <mcs-form-field class="form-field-size-small">
+            <mcs-select required [formControl]="fcDeliveryType" mcsId="select-delivery-type">
+
+              <ng-container>
+                <mcs-option [value]="deliveryTypeEnum.Standard">
+                  {{ 'orderDetailsStep.deliveryType.standardOption' | translate: {standardLeadTimeHours: standardLeadTimeHours} }}
+                </mcs-option>
+                <mcs-option [value]="deliveryTypeEnum.Accelerated">
+                  {{ 'orderDetailsStep.deliveryType.acceleratedOption' | translate: {acceleratedLeadTimeHours: acceleratedLeadTimeHours} }}
+                </mcs-option>
+              </ng-container>
+            </mcs-select>
+          </mcs-form-field>
+        </mcs-item>
+        
         <mcs-item orientation="separated">
           <span>{{ 'orderDetailsStep.orderActions.header' | translate }}</span>
           <mcs-form-field class="form-field-size-small">

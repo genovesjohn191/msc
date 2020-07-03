@@ -1088,6 +1088,11 @@
         "excessUsageFeePerGB": "Excess Fee Per GB"
       }
     },
+    "deliveryType" : {
+      "header": "Desired delivery type",
+      "standardOption": "Standard - {{standardLeadTimeHours}} hours",
+      "acceleratedOption": "Accelerated - {{acceleratedLeadTimeHours}} hours"
+    },
     "orderActions": {
       "header": "What would you like to do with this order?",
       "submitOrder": "Submit",
