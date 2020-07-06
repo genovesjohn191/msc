@@ -222,7 +222,7 @@ export class McsSessionHandlerService {
         this._triggerEvents();
       });
 
-      this._sessionStarted = true;
+    this._sessionStarted = true;
   }
 
   /**
