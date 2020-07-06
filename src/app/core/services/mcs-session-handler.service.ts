@@ -316,6 +316,7 @@ export class McsSessionHandlerService {
     if (this.sessionTimedOut) {
       this._eventDispatcher.dispatch(McsEvent.sessionTimedOut);
       this._createSessionId();
+      this.stopSessions();
     }
 
     this._onSessionTimeOut.next(this.sessionTimedOut);
