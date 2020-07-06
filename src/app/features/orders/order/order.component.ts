@@ -110,7 +110,7 @@ export class OrderComponent implements OnInit, OnDestroy {
     this.orderItemsDataSource = new McsTableDataSource();
     this.setOrderItemsColumn();
   }
-  private _hasManualSchedule: boolean;
+  private _hasDeadline: boolean;
   private _hasDeliveryTypeOptions: boolean;
 
   public ngOnInit() {
@@ -145,8 +145,8 @@ export class OrderComponent implements OnInit, OnDestroy {
     return CommonDefinition.ASSETS_SVG_INFO;
   }
 
-  public get hasManualSchedule(): boolean {
-    return this._hasManualSchedule;
+  public get hasDeadline(): boolean {
+    return this._hasDeadline;
   }
 
   public get hasDeliveryTypeOptions(): boolean {
@@ -161,10 +161,10 @@ export class OrderComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Returns schedule field value
+   * Returns deadline field value
    */
-  public getSchedule(schedule: Date ): string {
-    return isNullOrEmpty(schedule) ? 'ASAP' : schedule.toString();
+  public getDeadline(deadline: Date ): string {
+    return isNullOrEmpty(deadline) ? 'ASAP' : deadline.toString();
   }
 
   /**
@@ -198,17 +198,17 @@ export class OrderComponent implements OnInit, OnDestroy {
    */
   public getOrderItemsDatasource(order: McsOrder): McsTableDataSource<McsOrderItem> {
     if (isNullOrEmpty(order)) { return undefined; }
-    this._identifyIfManualScheduleIsRequired(order.items);
+    this._identifyIfDeadlineIsRequired(order.items);
     this._identifyIfDeliveryTypeIsRequired(order.items);
     this.orderItemsDataSource.updateDatasource(order.items);
     return this.orderItemsDataSource;
   }
 
-  private _identifyIfManualScheduleIsRequired(orderItems: McsOrderItem[]): void {
-    this._hasManualSchedule = false;
+  private _identifyIfDeadlineIsRequired(orderItems: McsOrderItem[]): void {
+    this._hasDeadline = false;
     orderItems.forEach(item => {
       if (!isNullOrEmpty(item.schedule)) {
-        this._hasManualSchedule = true;
+        this._hasDeadline = true;
       }
     });
   }

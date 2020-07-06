@@ -262,13 +262,13 @@
             </mcs-data-error>
           </ng-container>
 
-          <!-- Schedule -->
-          <ng-container mcsColumnDef="schedule" *ngIf="hasManualSchedule">
+          <!-- Deadline -->
+          <ng-container mcsColumnDef="schedule" *ngIf="hasDeadline">
             <mcs-header-cell *mcsHeaderCellDef>
-              {{ 'order.columnHeaders.schedule' | translate }}
+              {{ 'order.columnHeaders.deadline' | translate }}
             </mcs-header-cell>
             <mcs-data-cell *mcsDataCellDef="let row">
-              <span text-wrap>{{ getSchedule(row.schedule | mcsStdDateFormat) }}</span>
+              <span text-wrap>{{ getDeadline(row.schedule | mcsStdDateFormat) }}</span>
             </mcs-data-cell>
           </ng-container>
 

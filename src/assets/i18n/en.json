@@ -103,7 +103,7 @@
       "monthlyCharge": "Monthly charge",
       "oneOffCharge": "One-off charge",
       "excessFeePerGB": "Excess Fee Per GB",
-      "schedule": "Schedule",
+      "deadline": "Deadline",
       "deliveryType": "Delivery Type"
     },
     "noOrderItems": "No order items found.",
