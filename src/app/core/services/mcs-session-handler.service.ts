@@ -37,6 +37,7 @@ export class McsSessionHandlerService {
   private _sessionIdleCounter: number = 0;
   private _sessionIsIdle: boolean = false;
   private _previousTargetCompanyId: string;
+  private _sessionStarted: boolean = false;
 
   // Events subject
   private _onTargetCompanyChanged = new Subject<boolean>();
@@ -210,12 +211,18 @@ export class McsSessionHandlerService {
    * Setup a timer that monitors user activity changes
    */
   private _initializeSessionStatusObserver(): void {
+    if (this._sessionStarted) {
+      return;
+    }
+
     interval(1000)
       .pipe(takeUntil(this._destroySubject))
       .subscribe(() => {
         this._updateSessionIdleCounter();
         this._triggerEvents();
       });
+
+      this._sessionStarted = true;
   }
 
   /**
