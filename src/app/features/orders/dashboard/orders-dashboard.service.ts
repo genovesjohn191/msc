@@ -29,6 +29,7 @@ import {
 @Injectable()
 export class OrdersDashboardService {
   private _orderPlatforms: McsApiCollection<McsOrderAvailablePlatform>;
+  private _orderFamilies: McsOrderAvailableFamily[];
   private _selectedOrderGroupChange = new BehaviorSubject<McsOrderAvailableGroup>(null);
 
   constructor(
@@ -60,9 +61,9 @@ export class OrdersDashboardService {
   }
 
   public getOrderAvailableFamilies(query?: McsQueryParam): Observable<McsApiCollection<McsOrderAvailableFamily>> {
-    let orderFamilies = isNullOrEmpty(this._orderPlatforms) ? this._getOrderFamiliesFromPlatformApi() :
-      of(this._orderPlatforms).pipe(
-        map((platforms) => this._filterByOrderFamily(platforms.collection, query))
+    let orderFamilies = isNullOrEmpty(this._orderFamilies) ? this._getOrderFamiliesFromPlatformApi() :
+      of(this._orderFamilies).pipe(
+        map((families) => this._filterByOrderFamily(families, query))
       );
 
     return orderFamilies.pipe(
@@ -86,33 +87,45 @@ export class OrdersDashboardService {
       map((available) => {
         let availablePlatforms = getSafeProperty(available, (obj) => obj.collection);
         let families: McsOrderAvailableFamily[] = [];
+        let familyMap = new Map<string, McsOrderAvailableFamily>();
 
         availablePlatforms.forEach((platform) => {
           families.push(...platform.families);
         });
 
-        return families;
-      })
+        families.forEach((family) => {
+
+          let familyIsExisting = familyMap.has(family.name);
+          if (familyIsExisting) {
+            let currentFamilyFromMap = familyMap.get(family.name);
+            currentFamilyFromMap.groups = [...currentFamilyFromMap.groups, ...family.groups];
+            return;
+          }
+          familyMap.set(family.name, family);
+        });
+
+        return Array.from(familyMap.values());
+      }),
+      tap((families) => this._orderFamilies = families)
     );
   }
 
-  private _filterByOrderFamily(platforms: McsOrderAvailablePlatform[], query: McsQueryParam): McsOrderAvailableFamily[] {
+  private _filterByOrderFamily(families: McsOrderAvailableFamily[], query: McsQueryParam): McsOrderAvailableFamily[] {
     let filteredFamilies: McsOrderAvailableFamily[] = [];
     let keyword = query.keyword.toLocaleLowerCase();
-    platforms.forEach((platform) => {
-      platform.families.forEach((family) => {
-        if (family.name.toLocaleLowerCase().includes(keyword)) {
-          filteredFamilies.push(family);
-          return;
-        }
-        let familyFilteredGroup = family.groups.filter((group) => group.name.toLocaleLowerCase().includes(keyword));
+    families.forEach((family) => {
+      if (family.name.toLocaleLowerCase().includes(keyword)) {
+        filteredFamilies.push(family);
+        return;
+      }
+      let familyFilteredGroup = family.groups.filter((group) => group.name.toLocaleLowerCase().includes(keyword));
 
-        if (isNullOrEmpty(familyFilteredGroup)) { return; }
-        let newFamily = cloneObject(family);
-        newFamily.groups = familyFilteredGroup;
-        filteredFamilies.push(newFamily);
-      });
+      if (isNullOrEmpty(familyFilteredGroup)) { return; }
+      let newFamily = cloneObject(family);
+      newFamily.groups = familyFilteredGroup;
+      filteredFamilies.push(newFamily);
     });
+
     return filteredFamilies;
   }
 
