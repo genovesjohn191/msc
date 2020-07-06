@@ -48,7 +48,9 @@ import {
   RouteKey,
   ItemType,
   McsOrderWorkflow,
-  WorkflowStatus
+  WorkflowStatus,
+  DeliveryType,
+  deliveryTypeText
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -109,6 +111,7 @@ export class OrderComponent implements OnInit, OnDestroy {
     this.setOrderItemsColumn();
   }
   private _hasManualSchedule: boolean;
+  private _hasDeliveryTypeOptions: boolean;
 
   public ngOnInit() {
     this._subscribeToOrderResolver();
@@ -146,6 +149,10 @@ export class OrderComponent implements OnInit, OnDestroy {
     return this._hasManualSchedule;
   }
 
+  public get hasDeliveryTypeOptions(): boolean {
+    return this._hasDeliveryTypeOptions;
+  }
+
   /**
    * Returns true when there are selected approvers
    */
@@ -154,10 +161,17 @@ export class OrderComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Returns true when there are selected approvers
+   * Returns schedule field value
    */
   public getSchedule(schedule: Date ): string {
     return isNullOrEmpty(schedule) ? 'ASAP' : schedule.toString();
+  }
+
+  /**
+   * Returns delivery type field value
+   */
+  public getDeliveryType(deliveryType?: DeliveryType ): string {
+    return isNullOrEmpty(deliveryType) ? 'N/A' : deliveryTypeText[deliveryType];
   }
 
   /**
@@ -185,6 +199,7 @@ export class OrderComponent implements OnInit, OnDestroy {
   public getOrderItemsDatasource(order: McsOrder): McsTableDataSource<McsOrderItem> {
     if (isNullOrEmpty(order)) { return undefined; }
     this._identifyIfManualScheduleIsRequired(order.items);
+    this._identifyIfDeliveryTypeIsRequired(order.items);
     this.orderItemsDataSource.updateDatasource(order.items);
     return this.orderItemsDataSource;
   }
@@ -194,6 +209,15 @@ export class OrderComponent implements OnInit, OnDestroy {
     orderItems.forEach(item => {
       if (!isNullOrEmpty(item.schedule)) {
         this._hasManualSchedule = true;
+      }
+    });
+  }
+
+  private _identifyIfDeliveryTypeIsRequired(orderItems: McsOrderItem[]): void {
+    this._hasDeliveryTypeOptions = false;
+    orderItems.forEach(item => {
+      if (!isNullOrEmpty(item.deliveryType)) {
+        this._hasDeliveryTypeOptions = true;
       }
     });
   }

@@ -15,6 +15,7 @@ import {
 import { McsEntityBase } from '../common/mcs-entity.base';
 import { McsOrderCharge } from './mcs-order-charge';
 import { McsDateSerialization } from '../serialization/mcs-date-serialization';
+import { DeliveryType, DeliveryTypeSerialization } from '../enumerations/delivery-type.enum';
 
 export class McsOrderItem extends McsEntityBase {
   @JsonProperty({
@@ -59,8 +60,11 @@ export class McsOrderItem extends McsEntityBase {
   @JsonProperty()
   public createdBy: string = undefined;
 
-  @JsonProperty()
-  public deliveryType: string = undefined;
+  @JsonProperty({
+    serializer: DeliveryTypeSerialization,
+    deserializer: DeliveryTypeSerialization
+  })
+  public deliveryType: DeliveryType = undefined;
 
   @JsonProperty({
     serializer: McsDateSerialization,
