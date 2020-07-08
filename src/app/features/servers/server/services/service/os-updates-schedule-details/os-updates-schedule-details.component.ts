@@ -76,7 +76,6 @@ export class ServiceOsUpdatesScheduleDetailsComponent implements OnInit {
   public scheduleDetails: OsUpdatesScheduleDetails;
   public scheduleDate: McsServerOsUpdatesSchedule;
   public scheduleType: OsUpdatesScheduleType;
-  // TODO: update this once ready in orch side
   public snapshot: boolean = false;
 
   public osUpdatesScheduleConfiguration$: Observable<McsServerOsUpdatesSchedule>;

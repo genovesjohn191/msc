@@ -125,8 +125,7 @@
                 </mcs-grid-row>
 
                 <!-- Snapshot Options -->
-                <!-- TODO: Add option once Orch side is ready -->
-                <!-- <mcs-grid-row>
+                <mcs-grid-row *mcsAccessControl="[]; feature: 'EnableServerOsUpdatesSnapshot'">
                   <mcs-grid-column>
                     <mcs-item orientation="block">
                       <strong>{{ 'serverServicesOsUpdatesSchedule.snapshotOptionsLabel' | translate }}</strong>
@@ -142,7 +141,7 @@
                       </mcs-radio-button-group>
                     </mcs-item>
                   </mcs-grid-column>
-                </mcs-grid-row> -->
+                </mcs-grid-row>
               </mcs-grid>
             </form>
 
