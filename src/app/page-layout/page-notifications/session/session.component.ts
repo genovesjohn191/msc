@@ -34,11 +34,17 @@ export class SessionComponent implements OnInit {
   ) { }
 
   public ngOnInit() {
+    this._ensureSessionIsActive();
     this._listenToSessionIdle();
     this._listenToSessionResumed();
     this._listenToSessionTimedOut();
   }
 
+  private _ensureSessionIsActive(): void {
+    if (this._sessionHandlerService.sessionTimedOut) {
+      this._showTimeOutDialog();
+    }
+  }
   /**
    * Listen to session idle
    */
@@ -95,6 +101,7 @@ export class SessionComponent implements OnInit {
    * Shows the timedout dialog
    */
   private _showTimeOutDialog(): void {
+    this._closeIdleDialog();
     let dialogData = {
       title: this._translateService.instant(`dialogSessionTimedOut.title`),
       message: this._translateService.instant(`dialogSessionTimedOut.message`),
