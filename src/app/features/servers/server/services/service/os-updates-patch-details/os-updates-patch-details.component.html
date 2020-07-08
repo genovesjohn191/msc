@@ -9,8 +9,7 @@
   <section>
 
     <!-- Snapshot Options -->
-    <!-- TODO: Add option once Orch side is ready -->
-    <!-- <mcs-item orientation="block">
+    <mcs-item orientation="block" *mcsAccessControl="[]; feature: 'EnableServerOsUpdatesSnapshot'">
       <strong>{{ 'serverServicesOsUpdatesApplyNow.snapshotOptionsLabel' | translate }}</strong>
       <p>{{ 'serverServicesOsUpdatesApplyNow.snapshotOptionsDescription' | translate }}</p>
       <mcs-radio-button-group [(ngModel)]="snapshot" [ngModelOptions]="{standalone: true}"
@@ -22,7 +21,7 @@
           {{ 'serverServicesOsUpdatesApplyNow.snapshotOptions.updateWithSnapshot' | translate }}
         </mcs-radio-button>
       </mcs-radio-button-group>
-    </mcs-item> -->
+    </mcs-item>
 
     <!-- Action Buttons -->
     <mcs-item>
