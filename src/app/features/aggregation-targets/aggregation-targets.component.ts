@@ -83,6 +83,8 @@ export class AggregationTargetsComponent extends McsTableListingBase<McsBackUpAg
    * @param query Query to be obtained on the listing
    */
   protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsBackUpAggregationTarget>> {
+    // TODO: add the auto pagination when repository pattern is implemented
+    query.pageSize = 1000;
     return this._apiService.getBackupAggregationTargets(query);
   }
 }
