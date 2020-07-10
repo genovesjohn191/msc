@@ -437,6 +437,37 @@
       "dataInProgress": "Preparing to change your License Count. This may take a moment."
     }
   },
+  "orderMsRequestChange": {
+    "title": "Place a Service Request",
+    "detailsStep": {
+      "title": "Details",
+      "description": "You can use this wizard to request a custom change to your Azure services. Please provide the details of your request below.\r\n\n Our standard lead time of 24 hours for this request ensures we have time to get the right engineer for the task. For expedited delivery, our accelerated lead time is 4 hours.",
+      "serviceLabel": "Service",
+      "previous": "Back",
+      "serviceSubscriptionId": "Subscription ID: {{subscriptionId}}",
+      "servicePlaceholder": "Select a Service",
+      "complexityPlaceholder": "Select Complexity",
+      "categoryPlaceholder": "Select a Category",
+      "servicesLabel": "Services",
+      "nullServiceIdToolTip": "A change cannot be requested for this service at this time. Please contact your account team for more information.",
+      "resourcesLabel": "Resources",
+      "categoryLabel": "Category",
+      "complexityLabel": "Complexity",
+      "complexityDescription": "This will affect the cost of your request. We'll contact you and get your approval if we need to recategorize this after your request is submitted.",
+      "complexityContextualHelp": "Please note, your request may need to be delayed or resubmitted if the complexity provided does not match the nature of the work required",
+      "contactUsLabel": "Would you like us to contact you before and after the change?",
+      "contactUsDescription": "You will be contacted on the telephone number you have provided in your user profile ({{phone_number}}). If you select yes and we are unable to contact you, the change will not be applied.",
+      "customerReferenceNumberLabel": "Customer reference number",
+      "requestDescriptionLabel": "Request description",
+      "requestDescriptionMax": "Max of {{max_char}} characters."
+    },
+    "errors": {
+      "complexity": "You must select a complexity",
+      "category": "You must select a category",
+      "requestDescriptionRequired": "Enter request description.",
+      "orderCreationError": "An problem occured while creating the order. Please try again later."
+    }
+  },
   "notification": {
     "leftPanelHeader": "Notification details",
     "backToNotifications": "Back to Notifications"
@@ -1112,6 +1143,11 @@
     "stepTitle": "Go!",
     "provisioningProgressTitle": "Progress - Order {{orderNo}}"
   },
+  "orderCompletedStep": {
+    "successMessage": "Order {{orderNo}} has been successfully submitted.",
+    "linkInstruction": "Click here",
+    "linkLabel": " to view full order details."
+  },
   "orderAgreement": {
     "agreementChargesQuoted": "By submitting this order, you agree to the charges quoted and the ",
     "agreementCharges": "By submitting this order, you agree to these charges and the ",
@@ -1709,7 +1745,8 @@
     "dataSingular": "License",
     "dataPlural": "Licenses",
     "noParentIdLabel": "None",
-    "changeLicenseCount": "Change license count"
+    "changeLicenseCount": "Change license count",
+    "requestServiceChange": "Change service"
   },
   "products": {
     "header": "Product Catalog",
@@ -2060,7 +2097,10 @@
     "getProduct": "Something went wrong while retrieving the details for this product.",
     "getProductCatalogs": "Something went wrong while retrieving the list of available products.",
     "getProductCatalog": "Something went wrong while retrieving the list of available products.",
-    "getLicenses": "Something went wrong while retrieving the list of licenses."
+    "getLicenses": "Something went wrong while retrieving the list of licenses.",
+    "getAccount": "Something went wrong while retrieving your account details. Please try again.",
+    "getAzureResources": "Something went wrong while retrieving the list of azure resources. Please try again.",
+    "getSubscriptions": "Something went wrong while retrieving the list of subscriptions. Please try again."
   },
   "entityState": {
     "inProgress": "Processing request..."

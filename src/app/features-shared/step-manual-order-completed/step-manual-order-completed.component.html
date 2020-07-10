@@ -1,0 +1,25 @@
+<section>
+    <ng-container *ngIf="(!hasError); else showErrorMessage">
+        <h3>
+            <mcs-status-message type="success" mcsAlignContent="middle-left">
+                {{'orderCompletedStep.successMessage' | translate: { orderNo: orderId } }}
+            </mcs-status-message>
+        </h3>
+
+        <ng-container>
+            <div  mcsAlignContent="middle-left">
+                <a (click)="onOrderIdClick()">
+                    <strong>{{'orderCompletedStep.linkInstruction' | translate}}</strong>
+                </a>
+                {{'orderCompletedStep.linkLabel' | translate}}
+            </div>
+        </ng-container>
+    </ng-container>
+    <ng-template #showErrorMessage>
+        <h3>
+            <mcs-status-message type="error" mcsAlignContent="middle-left">
+                {{'orderCompletedStep.errors.orderCreationError' | translate }}
+            </mcs-status-message>
+        </h3>
+    </ng-template>
+</section>

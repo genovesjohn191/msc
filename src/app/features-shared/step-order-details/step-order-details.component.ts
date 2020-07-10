@@ -401,11 +401,11 @@ export class StepOrderDetailsComponent
     let orderItems = Object.assign([], this.order.items);
     orderItems.push({
       description: this._translate.instant('orderDetailsStep.orderDetails.totalLabel'),
-      charges: createObject(McsOrderCharge, {
+      charges: createObject(McsOrderCharge, new Object({
         monthly: getSafeProperty(this.order, (obj) => obj.charges.monthly),
         oneOff: getSafeProperty(this.order, (obj) => obj.charges.oneOff),
         excessUsageFeePerGB: getSafeProperty(this.order, (obj) => obj.charges.excessUsageFeePerGB),
-      })
+      }))
     });
     this.orderDatasource.updateDatasource(orderItems);
   }

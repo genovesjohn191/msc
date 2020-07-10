@@ -1,4 +1,5 @@
 const regex = /\w\S*/g;
+const DEFAULT_PHONENUMBER_REGEX: RegExp = /^(\d{4})(\d{3})(\d{3})$/;
 
 /**
  * This will return the inputted string to proper casing
@@ -135,4 +136,25 @@ export function containsString(source: string, target: string): boolean {
  */
 export function convertSpacesToDash(source: string): string {
   return source.replace(/\s+/g, '-').toLowerCase();
+}
+
+/**
+ * Returns the converted string numbers to phone number
+ */
+export function formatStringToPhoneNumber(source: string, customFormatRegex: RegExp = null): string {
+    let result: string = null;
+    let trimmedNumberString = source.replace(/\D/g, '');
+    let matches = null;
+
+    if (customFormatRegex) {
+        matches = trimmedNumberString.match(customFormatRegex);
+    } else {
+        matches = trimmedNumberString.match(DEFAULT_PHONENUMBER_REGEX);
+    }
+
+    if (matches) {
+       result = matches.filter((match, index) => (index > 0)).join(' ');
+    }
+
+    return result;
 }

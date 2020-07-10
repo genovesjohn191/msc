@@ -78,8 +78,16 @@ export class LicensesComponent extends McsTableListingBase<McsLicense> implement
    * Navigate to ordering license count change
    */
   public onChangeLicenseCount(license: McsLicense): void {
-    this._eventDispatcher.dispatch(McsEvent.licenseCountChangeSelectedEvent, license);
+    this._eventDispatcher.dispatch(McsEvent.serviceRequestChangeSelectedEvent, license);
     this._navigationService.navigateTo(RouteKey.OrderMsLicenseCountChange);
+  }
+
+  /**
+   * Navigate to microsoft service request change
+   */
+  public onChangeLicenseService(license: McsLicense): void {
+    this._eventDispatcher.dispatch(McsEvent.serviceRequestChangeSelectedEvent, license);
+    this._navigationService.navigateTo(RouteKey.OrderMsRequestChange);
   }
 
   /**
