@@ -1,0 +1,180 @@
+<mcs-page [header]="'orderMsRequestChange.title' | translate">
+    <!-- Top Panel -->
+    <mcs-top-panel *mcsTopPanelDef>
+
+      <!-- Back to previous URL -->
+      <mcs-top-panel-item *mcsTopPanelItemDef no-border>
+        <mcs-action-item mcsAlign="end"
+          mcsNavigateBackward
+          mcsId="navigate-back"
+          mcsEventTracker="navigate-back-click"
+          mcsEventCategory="orders"
+          mcsEventLabel="ms-service-change-request">
+          <mcs-icon [key]="backIconKey" size="small"></mcs-icon>
+          <span>{{ 'orderMsRequestChange.detailsStep.previous' | translate }}</span>
+        </mcs-action-item>
+      </mcs-top-panel-item>
+    </mcs-top-panel>
+
+    <mcs-content-panel *mcsContentPanelDef>
+
+      <mcs-wizard (stepChange)="onWizardStepChanged($event)">
+
+        <!-- Error message -->
+        <ng-container mcsWizardErrorTemplate>
+          <mcs-form-message #formMessage></mcs-form-message>
+        </ng-container>
+
+        <!-- Service Details Step-->
+        <mcs-wizard-step id="ms-service-change-details-step"
+          [stepTitle]="'orderMsRequestChange.detailsStep.title' | translate"
+          customClass="contextual-help-page-wrapper limited-view">
+
+          <form [formGroup]="fgMsServiceChange" mcsFormGroup>
+              <mcs-item>
+                <p [innerHTML]="('orderMsRequestChange.detailsStep.description' | translate) | mcsNewLines"></p>
+              </mcs-item>
+              
+              <!-- Services Selection -->
+              <mcs-item orientation="block">
+                <mcs-form-field>
+                  <mcs-select mcsId="select-service"
+                    mcsEventTracker="select-ms-service"
+                    mcsEventCategory="order"
+                    mcsEventLabel="ms-service-change-request"
+                    [formControl]="fcMsService"
+                    [placeholder]="'orderMsRequestChange.detailsStep.servicePlaceholder' | translate"
+                    (selectionChange)="onChangeService($event)">
+                    <ng-container>
+                        <mcs-option *ngFor="let subscription of subscriptions$ | async" [value]="subscription.value"
+                        [disabled]="!(subscription.value.serviceId | mcsIsNotNullOrEmpty)">
+                          <span 
+                            [ngStyle]="{'pointer-events': 'auto'}"
+                            [mcsTooltip]="'orderMsRequestChange.detailsStep.nullServiceIdToolTip' | translate"
+                            [mcsTooltipShow]="!(subscription.value.serviceId | mcsIsNotNullOrEmpty)"
+                            [mcsTooltipPosition]="'right'">
+                            {{ subscription.text }}
+                          </span>
+                        </mcs-option>
+                    </ng-container>
+                  </mcs-select>
+                </mcs-form-field>
+                <span *ngIf="!(fcMsService.pristine)">{{ 'orderMsRequestChange.detailsStep.serviceSubscriptionId' | 
+                  translate: { subscriptionId:  (fcMsService?.value.uuid | mcsIsNotNullOrEmpty) ? fcMsService?.value.subscriptionId : fcMsService?.value.id } }}</span>
+              </mcs-item>
+
+              <!-- Category  -->
+              <mcs-item orientation="block">
+                <span align-self-start>{{ 'orderMsRequestChange.detailsStep.categoryLabel' | translate }}</span>
+                <mcs-form-field>
+                  <mcs-select [formControl]="fcCategory" 
+                    mcsId="select-ms-service-category"
+                    mcsEventTracker="select-ms-service-category"
+                    mcsEventCategory="order"
+                    mcsEventLabel="ms-service-change-request"
+                    (selectionChange)="onChangeCategory($event)"
+                    [placeholder]="'orderMsRequestChange.detailsStep.categoryPlaceholder' | translate">
+                    <mcs-search mcsSelectSearch></mcs-search>
+                    <mcs-option *ngFor="let category of categoryOptions$ | async" [value]="category.value">
+                      {{ category.text }}
+                    </mcs-option>
+                  </mcs-select>
+                  <mcs-error mcsError errorState="required">
+                    {{ 'orderMsRequestChange.errors.category' | translate }}
+                  </mcs-error>
+                </mcs-form-field>
+              </mcs-item>
+
+              <!-- Contact -->
+              <mcs-item orientation="block">
+                <span align-self-start>{{ 'orderMsRequestChange.detailsStep.contactUsLabel' | translate }}</span>
+           
+                  <ng-container *ngIf="contactOptions$ | async as contactOptions">
+                    <mcs-radio-button-group orientation="horizontal" [formControl]="fcContact">
+                      <mcs-radio-button *ngFor="let contact of contactOptions" [value]="contact.value"
+                        mcsId="select-ms-service-contact"
+                        mcsEventTracker="select-ms-service-contact"
+                        mcsEventCategory="order"
+                        mcsEventLabel="ms-service-change-request"
+                        (click)="onMsServiceContactChange(contact)"
+                        >
+                        {{ contact.text }}
+                      </mcs-radio-button>
+                    </mcs-radio-button-group>
+                  </ng-container>
+                  <ng-container *ngIf="account$ | async as currentAccount">
+                    <!-- TODO: add a new shared directive for coloring font elements-->
+                    <span [mcsGreyedOut]="true">{{ 'orderMsRequestChange.detailsStep.contactUsDescription' | translate: { phone_number: currentAccount.phoneNumber } }}</span>
+                  </ng-container>
+              </mcs-item>
+
+              <!-- Customer Reference Number  -->
+              <mcs-item orientation="block">
+                <span align-self-start>{{ 'orderMsRequestChange.detailsStep.customerReferenceNumberLabel' | translate }}:</span>
+                <mcs-form-field>
+                  <input mcsInput [formControl]="fcCustomerReference"
+                    mcsId="input-ms-service-customer-reference"
+                    mcsEventTracker="input-ms-service-customer-reference"
+                    mcsEventCategory="order"
+                    mcsEventLabel="ms-service-change-request">
+                </mcs-form-field>
+              </mcs-item>
+
+              <!-- Request Description -->
+              <mcs-item orientation="block">
+                <span align-self-start>{{ 'orderMsRequestChange.detailsStep.requestDescriptionLabel' | translate }}:</span>
+                <mcs-form-field>
+                  <textarea mcsInput [rows]="descriptionVisibleRows" #requestDescriptionInput required
+                    mcsId="input-ms-service-request-description"
+                    [maxlength]="maxDescriptionLength"
+                    [placeholder]="'orderMsRequestChange.detailsStep.requestDescriptionMax' | translate: { max_char: requestDescriptionInput.maxLength }"
+                    [formControl]="fcRequestDescription"></textarea>
+
+                  <mcs-hint mcsHint align="start">
+                    {{ 'orderMsRequestChange.detailsStep.requestDescriptionMax' | translate: { max_char: requestDescriptionInput.maxLength } }}
+                  </mcs-hint>
+                  <mcs-hint mcsHint align="end">
+                    {{ requestDescriptionInput.value.length }} / {{ requestDescriptionInput.maxLength }}
+                  </mcs-hint>
+                  <mcs-error mcsError errorState="required">
+                    {{ 'orderMsRequestChange.errors.requestDescriptionRequired' | translate }}
+                  </mcs-error>
+                </mcs-form-field>
+              </mcs-item>
+
+              <div class="action-items">
+                <button mcsButton arrow="right"
+                  mcsWizardStepNext
+                  (click)="onNextClick(fcMsService?.value)"
+                  [disabled]="(!formIsValid || fcMsService.pristine || fcRequestDescription.pristine)"
+                  mcsId="step-1-next"
+                  mcsEventTracker="step-1-next"
+                  mcsEventCategory="orders"
+                  mcsEventLabel="ms-service-change-request">{{ 'shared.wizard.next' | translate }}</button>
+              </div>
+            </form>
+        </mcs-wizard-step>
+
+        <!-- Confirm Step  -->
+        <mcs-wizard-step id="confirm-step"
+          [stepTitle]="'shared.wizard.confirm' | translate"
+          customClass="contextual-help-page-wrapper limited-view">
+          <mcs-step-order-details [order]="order$ | async"
+            [orderItemType]="orderItemType$ | async"
+            [requestState]="dataStatus$ | async"
+            [eventTrack]="orderEventTrack.billingDetailsStep"
+            (dataChange)="onMsServiceRequestOrderChange($event)"
+            (submitOrder)="onSubmitOrder($event, fcMsService?.value.serviceId)">
+          </mcs-step-order-details>
+        </mcs-wizard-step>
+
+        <!-- Go! Step  -->
+        <mcs-wizard-step id="go-step"
+          [stepTitle]="'shared.wizard.completed' | translate"
+          customClass="limited-view">
+         <mcs-step-manual-order-completed [order]="order$ | async"></mcs-step-manual-order-completed>
+        </mcs-wizard-step>
+      </mcs-wizard>
+
+    </mcs-content-panel>
+  </mcs-page>

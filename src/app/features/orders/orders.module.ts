@@ -12,9 +12,9 @@ import { ordersRoutes } from './orders.constants';
 @NgModule({
   declarations: ordersComponents,
   imports: [
-    RouterModule.forChild(ordersRoutes),
     SharedModule,
-    FeaturesSharedModule
+    FeaturesSharedModule,
+    RouterModule.forChild(ordersRoutes),
   ],
   providers: [...ordersProviders]
 })

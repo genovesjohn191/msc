@@ -228,6 +228,9 @@ export * from './response/mcs-catalog-solution-bracket';
 export * from './response/mcs-catalog-solution-group';
 export * from './response/mcs-catalog-solution-product';
 export * from './response/mcs-license';
+export * from './response/mcs-account';
+export * from './response/mcs-azure-resource';
+export * from './response/mcs-subscription';
 
 /** Common */
 export * from './common/mcs-api-search-key';

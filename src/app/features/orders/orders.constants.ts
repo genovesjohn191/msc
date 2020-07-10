@@ -18,6 +18,7 @@ import { AddServerBackupComponent } from './add-server-backup/add-server-backup.
 import { AddVmBackupComponent } from './add-vm-backup/add-vm-backup.component';
 import { AddBatComponent } from './add-bat/add-bat.component';
 import { MsLicenseCountChangeComponent } from './ms-license-count-change/ms-license-count-change.component';
+import { MsRequestChangeComponent } from './ms-request-change/ms-request-change.component';
 
 /**
  * List of services for the main module
@@ -45,7 +46,8 @@ export const ordersComponents: any[] = [
   AddServerBackupComponent,
   AddVmBackupComponent,
   AddBatComponent,
-  MsLicenseCountChangeComponent
+  MsLicenseCountChangeComponent,
+  MsRequestChangeComponent
 ];
 
 /**
@@ -115,6 +117,11 @@ export const ordersRoutes: Routes = [
     path: 'ms-license-count-change',
     component: MsLicenseCountChangeComponent,
     data: { routeId: RouteKey.OrderMsLicenseCountChange }
+  },
+  {
+    path: 'ms-request-change',
+    component: MsRequestChangeComponent,
+    data: { routeId: RouteKey.OrderMsRequestChange }
   },
   // Add additional routes above this line
   {

@@ -6,7 +6,8 @@ import {
   getRecordCountLabel,
   compareStrings,
   containsString,
-  convertSpacesToDash
+  convertSpacesToDash,
+  formatStringToPhoneNumber
 } from './mcs-string.function';
 
 describe('STRING Functions', () => {
@@ -98,6 +99,12 @@ describe('STRING Functions', () => {
     it(`should return the converted string spaces into dash.`, () => {
       let result = convertSpacesToDash('Something to check');
       expect(result).toBeTruthy('something-to-check');
+    });
+  });
+  describe('formatStringToPhoneNumber()', () => {
+    it(`should format the string to phone number format`, () => {
+      let result = formatStringToPhoneNumber('1111222333');
+      expect(result).toBeTruthy('1111 222 333');
     });
   });
 });

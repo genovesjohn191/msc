@@ -167,7 +167,6 @@
           <span>{{ 'orderDetailsStep.deliveryType.header' | translate }}</span>
           <mcs-form-field class="form-field-size-small">
             <mcs-select required [formControl]="fcDeliveryType" mcsId="select-delivery-type">
-
               <ng-container>
                 <mcs-option [value]="deliveryTypeEnum.Standard">
                   {{ 'orderDetailsStep.deliveryType.standardOption' | translate: {standardLeadTimeHours: standardLeadTimeHours} }}

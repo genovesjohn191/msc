@@ -192,6 +192,16 @@
                                         mcsEventLabel="license-listing">
                                         {{ 'licenses.changeLicenseCount' | translate }}
                                     </a>
+                                    <ng-container *mcsAccessControl="['OrderEdit']; feature: 'EnableOrderingMicrosoftRequestChange'">
+                                        <a mcsButton="basic" color="white" labelPlacement="left"
+                                            (click)="onChangeLicenseService(row)"
+                                            mcsId="license-service-change"
+                                            mcsEventTracker="license-service-change"
+                                            mcsEventCategory="license"
+                                            mcsEventLabel="license-listing">
+                                            {{ 'licenses.requestServiceChange' | translate }}
+                                        </a>
+                                    </ng-container>
                                 </div>
                             </ng-template>
                         </ng-container>

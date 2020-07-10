@@ -461,6 +461,15 @@
     "requiredFeatureFlag": "EnableOrderingLicenseCountChange",
     "documentTitle": "Change Microsoft License Count - Macquarie Cloud Services"
   },
+  "orderMsRequestChange": {
+    "enumPlatform": "Public",
+    "enumKey": "OrderMsRequestChange",
+    "enumCategory": "MakeAChange",
+    "navigationPath": "orders/ms-request-change",
+    "requiredPermissions": ["OrderEdit"],
+    "requiredFeatureFlag": "EnableOrderingMicrosoftRequestChange",
+    "documentTitle": "Microsoft Place Service Request - Macquarie Cloud Services"
+  },
   "otherTools": {
     "enumKey": "OtherTools",
     "navigationPath": "tools",

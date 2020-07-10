@@ -17,6 +17,7 @@ import { VdcManageStorageComponent } from './vdc-manage-storage/vdc-manage-stora
 import { VdcManageScaleComponent } from './vdc-manage-scale/vdc-manage-scale.component';
 import { StepOrderDetailsComponent } from './step-order-details/step-order-details.component';
 import { StepProvisioningComponent } from './step-provisioning/step-provisioning.component';
+import { StepManualOrderCompletedComponent } from './step-manual-order-completed/step-manual-order-completed.component';
 import { OrderAgreementComponent } from './order-agreement/mcs-order-agreement.component';
 import { SystemMessageFormComponent } from './system-message-form/system-message-form.component';
 import { RenameServerDialogComponent } from './server-dialogs/rename-server/rename-server.dialog';
@@ -39,6 +40,7 @@ import { SystemMessageFormService } from './system-message-form/system-message-f
     ServerManageStorageComponent,
     StepOrderDetailsComponent,
     StepProvisioningComponent,
+    StepManualOrderCompletedComponent,
     VdcManageStorageComponent,
     VdcManageScaleComponent,
     OrderAgreementComponent,
@@ -65,6 +67,7 @@ import { SystemMessageFormService } from './system-message-form/system-message-f
     ServerManageStorageComponent,
     StepOrderDetailsComponent,
     StepProvisioningComponent,
+    StepManualOrderCompletedComponent,
     VdcManageStorageComponent,
     VdcManageScaleComponent,
     OrderAgreementComponent,

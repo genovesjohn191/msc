@@ -20,6 +20,9 @@ export * from './interfaces/mcs-api-identity.interface';
 export * from './interfaces/mcs-api-system.interface';
 export * from './interfaces/mcs-api-licenses.interface';
 export * from './interfaces/mcs-api-platform.interface';
+export * from './interfaces/mcs-api-account.interface';
+export * from './interfaces/mcs-api-azure-resource.interface';
+export * from './interfaces/mcs-api-subscriptions.interface';
 
 export * from './factory/mcs-api-companies.factory';
 export * from './factory/mcs-api-console.factory';
@@ -38,3 +41,6 @@ export * from './factory/mcs-api-internet.factory';
 export * from './factory/mcs-api-identity.factory';
 export * from './factory/mcs-api-platform.factory';
 export * from './factory/mcs-api-licenses.factory';
+export * from './factory/mcs-api-account.factory';
+export * from './factory/mcs-api-azure-resources.factory';
+export * from './factory/mcs-api-subscriptions.factory';

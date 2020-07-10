@@ -13,7 +13,8 @@ export enum OrderIdType {
   AddVmBackup = 'backups.vm.provision',
   AddServerBackup = 'backups.server.provision',
   AddBat = 'backups.bat.provision',
-  MsLicenseCountChange = 'microsoft.licenseCount.change'
+  MsLicenseCountChange = 'microsoft.licenseCount.change',
+  MsRequestChange = 'microsoft.subscription.requestChange'
 }
 
 /**
