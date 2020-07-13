@@ -1,5 +1,7 @@
 
-import { async, TestBed, getTestBed } from '@angular/core/testing';
+import { async,
+  TestBed,
+  getTestBed } from '@angular/core/testing';
 import { CoreTestingModule } from '@app/core/testing';
 import { compareDates } from '@app/utilities';
 import { SystemMessageFormService } from './system-message-form.service';
@@ -7,8 +9,8 @@ import { FeaturesSharedModule } from '../features-shared.module';
 
 describe(`System Message Form Method`, () => {
   let systemMessageFormService: SystemMessageFormService;
-
   beforeEach(async(() => {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 12000;
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 
