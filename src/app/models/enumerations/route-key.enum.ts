@@ -61,6 +61,7 @@ export enum RouteKey {
   OrderVdcStorageExpand,
   OrderVdcStorageCreate,
   OrderServiceInviewRaise,
+  OrderServiceCustomChange,
   OrderAddAntiVirus,
   OrderAddHids,
   OrderAddServerBackup,

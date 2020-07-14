@@ -1,0 +1,186 @@
+<mcs-page [header]="'orderServiceCustomChange.title' | translate">
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef>
+
+    <!-- Back to Server Details -->
+    <mcs-top-panel-item *mcsTopPanelItemDef no-border>
+      <mcs-action-item mcsAlign="end"
+        mcsNavigateBackward
+        mcsId="navigate-back"
+        mcsEventTracker="navigate-back-click"
+        mcsEventCategory="orders"
+        mcsEventLabel="navigate-back">
+        <mcs-icon [key]="backIconKey" size="small"></mcs-icon>
+        <span>{{'shared.wizard.previous' | translate}}</span>
+      </mcs-action-item>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
+  <mcs-content-panel *mcsContentPanelDef>
+
+    <mcs-wizard (stepChange)="onWizardStepChanged($event)">
+
+      <!-- Error message -->
+      <ng-container mcsWizardErrorTemplate>
+        <mcs-form-message #formMessage></mcs-form-message>
+      </ng-container>
+
+      <!-- Details Step-->
+      <mcs-wizard-step id="request-details-step"
+        [stepTitle]="'orderServiceCustomChange.requestDetails.stepTitle' | translate"
+        customClass="contextual-help-page-wrapper limited-view">
+        <form [formGroup]="fgCustomChangeDetails" mcsFormGroup>
+
+          <mcs-item orientation="block">
+            <p>{{'orderServiceCustomChange.requestDetails.description' | translate}}</p>
+            <ng-container *mcsAccessControl="['TicketCreate']">
+              <p>
+                <span>
+                  {{'orderServiceCustomChange.requestDetails.raiseTicketLabel' | translate}}
+                </span>
+                <a [mcsRouterLink]="[routeKeyEnum.TicketCreate]"
+                  mcsId="raise-a-ticket"
+                  mcsEventTracker="raise-a-ticket"
+                  mcsEventCategory="ticket"
+                  mcsEventLabel="order-custom-change-page">{{'shared.links.hereLabel' | translate}}</a>.
+              </p>
+            </ng-container>
+            <p>{{'orderServiceCustomChange.requestDetails.leadTimeLabel' | translate}}</p>
+          </mcs-item>
+
+          <!-- Service -->
+          <mcs-item orientation='block'>
+            <mcs-form-field>
+              <mcs-select [formControl]="fcService" required
+                [placeholder]="'orderServiceCustomChange.requestDetails.service.placeholder' | translate"
+                mcsId="select-service"
+                mcsEventTracker="select-service"
+                mcsEventCategory="order"
+                mcsEventLabel="order-custom-change-page">
+
+                <ng-template #servicesTemplate let-customChangeServices let-title="serviceTitle">
+                  <mcs-option-group>
+                    <ng-container *mcsOptionGroupLabel>
+                      <span>{{ title }}</span>
+                    </ng-container>
+
+                    <mcs-option *ngFor="let service of customChangeServices" [value]="service.serviceId">
+                      {{ service.name }}
+                    </mcs-option>
+                  </mcs-option-group>
+                </ng-template>
+
+                <ng-container *ngTemplateOutlet="servicesTemplate;
+                  context: { $implicit: (vdcServices$ | async), serviceTitle: 'VDCs'}">
+                </ng-container>
+
+                <ng-container *ngTemplateOutlet="servicesTemplate;
+                  context: { $implicit: (serverServices$ | async), serviceTitle: 'Servers'}">
+                </ng-container>
+
+                <ng-container *ngTemplateOutlet="servicesTemplate;
+                  context: { $implicit: (firewallServices$ | async), serviceTitle: 'Firewalls'}">
+                </ng-container>
+
+                <ng-container *ngTemplateOutlet="servicesTemplate;
+                  context: { $implicit: (internetPortServices$ | async), serviceTitle: 'Internet Ports'}">
+                </ng-container>
+
+                <ng-container *ngTemplateOutlet="servicesTemplate;
+                  context: { $implicit: (batServices$ | async), serviceTitle: 'Backup Aggregation Targets'}">
+                </ng-container>
+              </mcs-select>
+            </mcs-form-field>
+          </mcs-item>
+
+          <!-- Change Description -->
+          <mcs-item orientation='block'>
+            <mcs-form-field>
+              <textarea mcsInput rows="3" #changeDescriptionInput required
+                mcsId="input-change-description"
+                mcsEventTracker="input-change-description"
+                mcsEventCategory="order"
+                mcsEventLabel="order-custom-change-page"
+                [placeholder]="'orderServiceCustomChange.requestDetails.changeDescription.placeholder' | translate" maxlength="4000"
+                [formControl]="fcChangeDescription"></textarea>
+
+              <mcs-hint mcsHint align="start">
+                {{ 'orderServiceCustomChange.requestDetails.changeDescription.hint' | translate: { max_char: changeDescriptionInput?.maxLength } }}
+              </mcs-hint>
+              <mcs-hint mcsHint align="end">
+                {{ changeDescriptionInput?.value?.length }} / {{ changeDescriptionInput?.maxLength }}
+              </mcs-hint>
+              <mcs-error mcsError errorState="required">
+                {{ 'orderServiceCustomChange.requestDetails.changeDescription.errorRequired' | translate }}
+              </mcs-error>
+            </mcs-form-field>
+          </mcs-item>
+
+          <!-- Change Objective -->
+          <mcs-item orientation='block'>
+            <mcs-form-field>
+              <textarea mcsInput rows="3" #changeObjectiveInput required
+                mcsId="input-change-objective"
+                mcsEventTracker="input-change-objective"
+                mcsEventCategory="order"
+                mcsEventLabel="order-custom-change-page"
+                [placeholder]="'orderServiceCustomChange.requestDetails.changeObjective.placeholder' | translate" maxlength="4000"
+                [formControl]="fcChangeObjective"></textarea>
+
+              <mcs-hint mcsHint align="start">
+                {{ 'orderServiceCustomChange.requestDetails.changeObjective.hint' | translate: { max_char: changeObjectiveInput?.maxLength } }}
+              </mcs-hint>
+              <mcs-hint mcsHint align="end">
+                {{ changeObjectiveInput?.value?.length }} / {{ changeObjectiveInput?.maxLength }}
+              </mcs-hint>
+              <mcs-error mcsError errorState="required">
+                {{ 'orderServiceCustomChange.requestDetails.changeObjective.errorRequired' | translate }}
+              </mcs-error>
+            </mcs-form-field>
+          </mcs-item>
+
+          <!-- SMAC Shared Form -->
+          <mcs-item orientation="block">
+            <mcs-smac-shared-form #fgSmacSharedForm
+              [testCasePlaceholder]="'orderServiceCustomChange.requestDetails.testCases.placeholder' | translate"
+              [phoneNumber]="(account$ | async)?.phoneNumber"
+              (dataChange)="onChangeSharedForm($event)">
+            </mcs-smac-shared-form>
+          </mcs-item>
+
+          <div class="action-items">
+            <button mcsButton arrow="right"
+              mcsWizardStepNext
+              [disabled]="!formIsValid"
+              mcsId="step-1-next"
+              mcsEventTracker="step-1-next"
+              mcsEventCategory="orders"
+              mcsEventLabel="service-custom-change-next">{{ 'shared.wizard.next' | translate }}</button>
+          </div>
+        </form>
+      </mcs-wizard-step>
+
+      <!-- Confirm Step  -->
+      <mcs-wizard-step id="confirm-step"
+        [stepTitle]="'shared.wizard.confirm' | translate"
+        customClass="contextual-help-page-wrapper limited-view">
+
+        <mcs-step-order-details [order]="order$ | async"
+          [orderItemType]="orderItemType$ | async"
+          [requestState]="dataStatus$ | async"
+          [eventTrack]="orderEventTrack.billingDetailsStep"
+          (dataChange)="onOrderDetailsDataChange($event)"
+          (submitOrder)="onSubmitOrder($event)">
+        </mcs-step-order-details>
+      </mcs-wizard-step>
+
+      <!-- Go! Step  -->
+      <mcs-wizard-step id="go-step"
+        [stepTitle]="'shared.wizard.completed' | translate"
+        customClass="limited-view">
+        <mcs-step-manual-order-completed [order]="order$ | async"></mcs-step-manual-order-completed>
+      </mcs-wizard-step>
+    </mcs-wizard>
+
+  </mcs-content-panel>
+</mcs-page>

@@ -407,6 +407,15 @@
     "requiredFeatureFlag": "EnableOrderingManagedServerInviewLevelRaise",
     "documentTitle": "Service Raise Inview Level - Macquarie Cloud Services"
   },
+  "orderServiceCustomChange": {
+    "enumPlatform": "Private",
+    "enumKey": "OrderServiceCustomChange",
+    "enumCategory": "MakeAChange",
+    "navigationPath": "orders/services/custom-change",
+    "requiredPermissions": ["OrderEdit"],
+    "requiredFeatureFlag": "EnableOrderingServiceCustomRequest",
+    "documentTitle": "Custom Change Service - Macquarie Cloud Services"
+  },
   "orderAddAntiVirus": {
     "enumPlatform": "Private",
     "enumKey": "OrderAddAntiVirus",

@@ -12,6 +12,7 @@ import { VdcScaleComponent } from './vdc-scale/vdc-scale.component';
 import { VdcStorageExpandComponent } from './vdc-storage-expand/vdc-storage-expand.component';
 import { VdcStorageCreateComponent } from './vdc-storage-create/vdc-storage-create.component';
 import { ServiceInviewRaiseComponent } from './service-inview-raise/service-inview-raise.component';
+import { ServiceCustomChangeComponent } from './service-custom-change/service-custom-change.component';
 import { AddAntiVirusComponent } from './add-anti-virus/add-anti-virus.component';
 import { AddHidsComponent } from './add-hids/add-hids.component';
 import { AddServerBackupComponent } from './add-server-backup/add-server-backup.component';
@@ -41,6 +42,7 @@ export const ordersComponents: any[] = [
   VdcStorageExpandComponent,
   VdcStorageCreateComponent,
   ServiceInviewRaiseComponent,
+  ServiceCustomChangeComponent,
   AddAntiVirusComponent,
   AddHidsComponent,
   AddServerBackupComponent,
@@ -87,6 +89,11 @@ export const ordersRoutes: Routes = [
     path: 'services/inview',
     component: ServiceInviewRaiseComponent,
     data: { routeId: RouteKey.OrderServiceInviewRaise }
+  },
+  {
+    path: 'services/custom-change',
+    component: ServiceCustomChangeComponent,
+    data: { routeId: RouteKey.OrderServiceCustomChange }
   },
   {
     path: 'add/anti-virus',

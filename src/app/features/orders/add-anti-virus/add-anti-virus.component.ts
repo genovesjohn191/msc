@@ -64,7 +64,7 @@ interface AntiVirusServers {
 
 const SERVER_ADD_ANTI_VIRUS_REF_ID = Guid.newGuid().toString();
 @Component({
-  selector: 'mcs-add-anti-virus',
+  selector: 'mcs-order-add-anti-virus',
   templateUrl: 'add-anti-virus.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [AddAntiVirusService]

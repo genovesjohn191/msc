@@ -67,6 +67,7 @@ import { DividerModule } from './divider/divider.module';
 import { TreeModule } from './tree/tree.module';
 import { SectionModule } from './section/section.module';
 import { PricingCalculatorModule } from './pricing-calculator/pricing-calculator.module';
+import { DynamicListModule } from './dynamic-list/dynamic-list.module';
 
 @NgModule({
   imports: [
@@ -134,7 +135,8 @@ import { PricingCalculatorModule } from './pricing-calculator/pricing-calculator
     DividerModule,
     TreeModule,
     SectionModule,
-    PricingCalculatorModule
+    PricingCalculatorModule,
+    DynamicListModule
   ],
   exports: [
     CommonModule,
@@ -201,7 +203,8 @@ import { PricingCalculatorModule } from './pricing-calculator/pricing-calculator
     DividerModule,
     TreeModule,
     SectionModule,
-    PricingCalculatorModule
+    PricingCalculatorModule,
+    DynamicListModule
   ]
 })
 

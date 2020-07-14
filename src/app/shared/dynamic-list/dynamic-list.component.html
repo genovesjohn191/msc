@@ -1,0 +1,54 @@
+<ng-container *ngIf="list$ | async as list">
+  <div class="dynamic-list-content">
+    <mcs-form-field [disabled]="isMaximum(list)">
+      <input mcsInput type="text" #inputItemFc [placeholder]="placeholder" (keyup.enter)="onEnterAddItem($event, inputItemFc.value, list)">
+      <mcs-icon [key]="addIconKey" size="small" mcsCursor="pointer" (click)="addListItem(inputItemFc.value, list)"></mcs-icon>
+    </mcs-form-field>
+
+    <!-- TODO: good feature in the future -->
+    <!-- <mcs-item orientation="separated" class="list-menu">
+      <a *ngIf="resettable" (click)="reset()" mcsCursor="pointer" theme="light" border="none" padding="none">
+        <mcs-item orientation="inline">
+          <mcs-icon [key]="resetKey" size="small" ></mcs-icon>
+          <span>Reset</span>
+        </mcs-item>
+      </a>
+      <span><ng-content select="[mcsHint]"></ng-content></span>
+    </mcs-item> -->
+
+    <div class="list" margin-top-xsmall>
+      <mcs-item
+        orientation='separated'
+        *ngFor="let listItem of list; index as i; first as first; last as last"
+        class="list-item" padding-left-small>
+        <!-- TODO: Add TrackBy if list is expected to be large -->
+        <div text-wrap class="content" >{{listItem?.value}}</div>
+        <div class="action-icons">
+          <button mcsButton="icon" theme="light" padding="none">
+            <mcs-icon #upcion
+              [key]="moveUpKey"
+              size="small"
+              mcsCursor="pointer"
+              [disabled]="first"
+              (click)="moveUpListItem(i, list)"></mcs-icon>
+          </button>
+          <button mcsButton="icon" theme="light" padding="none">
+            <mcs-icon
+              [key]="moveDownKey"
+              size="small"
+              mcsCursor="pointer"
+              [disabled]="last"
+              (click)="moveDownListItem(i, list)"></mcs-icon>
+          </button>
+          <button mcsButton="icon" theme="light" padding="none">
+              <mcs-icon
+              [key]="removeIconKey"
+              size="small"
+              mcsCursor="pointer"
+              (click)="removeListItem(listItem.id, list)"></mcs-icon>
+          </button>
+        </div>
+      </mcs-item>
+    </div>
+  </div>
+</ng-container>

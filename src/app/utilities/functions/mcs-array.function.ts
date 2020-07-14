@@ -202,6 +202,19 @@ export function getUniqueRecords<T>(sourceArray: T[], predicate: (item: T) => an
 }
 
 /**
+ * Move a record inside an array into the specified index using a combination of splices
+ * @param sourceArray Source array to move the record from
+ * @param sourceIndex the index of the record to be move
+ * @param destinationIndex the expected destination index of the record after moving
+ */
+export function moveRecordByIndex<T>(sourceArray: T[], sourceIndex: number, destinationIndex: number): void {
+  if (isNullOrEmpty(sourceArray)) { return; }
+
+  let removedRecord = sourceArray.splice(sourceIndex, 1)[0];
+  sourceArray.splice(destinationIndex, 0, removedRecord);
+}
+
+/**
  * Returns true when the representation object is an array, otherwise false
  * @param object Object to be checked
  */
