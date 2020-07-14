@@ -1790,8 +1790,7 @@
     "dataSingular": "License",
     "dataPlural": "Licenses",
     "noParentIdLabel": "None",
-    "changeLicenseCount": "Change license count",
-    "requestServiceChange": "Change service"
+    "changeLicenseCount": "Change license count"
   },
   "products": {
     "header": "Product Catalog",
