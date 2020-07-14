@@ -6,7 +6,8 @@ import {
   compareArrays,
   getArrayCount,
   getUniqueRecords,
-  isArray
+  isArray,
+  moveRecordByIndex
 } from './mcs-array.function';
 
 // Dummy class
@@ -308,6 +309,27 @@ describe('ARRAY Functions', () => {
 
       let uniqueRecords = getUniqueRecords(listItems, (item) => item.value);
       expect(uniqueRecords).not.toEqual(listItems);
+    });
+  });
+
+  describe('moveRecordByIndex()', () => {
+    it(`should move record to specified index`, () => {
+      let expectedValue = 'Im the moving record';
+      let expectedIndex = 2;
+      let listItems = [
+        new TestStructure('0', expectedValue),
+        new TestStructure('1', 'hello1'),
+        new TestStructure('2', 'hello2')
+      ];
+      const [testItem1, testItem2, testItem3] = listItems;
+
+      let sourceIndex = 0;
+      let destinationIndex = 2;
+      moveRecordByIndex(listItems, sourceIndex, destinationIndex);
+      let resultIndex = listItems.findIndex((testStructure) => testStructure.value === expectedValue);
+
+      expect(testItem1.value).toEqual(expectedValue);
+      expect(resultIndex).toEqual(expectedIndex);
     });
   });
 

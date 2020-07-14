@@ -106,6 +106,8 @@ export class CommonDefinition {
   public static ASSETS_SVG_ARROW_RIGHT_BLUE = 'arrow-right-blue';
   public static ASSETS_SVG_ARROW_UP_WHITE = 'arrow-up-white';
   public static ASSETS_SVG_ARROW_UP_BLUE = 'arrow-up-blue';
+  public static ASSETS_SVG_ARROW_UP_SORT_BLACK = 'arrow-up-sort-black';
+  public static ASSETS_SVG_ARROW_DOWN_SORT_BLACK = 'arrow-down-sort-black';
   public static ASSETS_SVG_TOGGLE_NAV = 'toggle-nav';
   public static ASSETS_SVG_STORAGE = 'storage';
   public static ASSETS_SVG_KEYBOARD = 'keyboard';
@@ -113,6 +115,7 @@ export class CommonDefinition {
   public static ASSETS_SVG_PLUS = 'plus';
   public static ASSETS_SVG_PLAY = 'play';
   public static ASSETS_SVG_START = 'start';
+  public static ASSETS_SVG_RESET = 'reset';
   public static ASSETS_SVG_RESTART = 'restart';
   public static ASSETS_SVG_STOP = 'stop';
   public static ASSETS_SVG_SUSPEND = 'suspend';

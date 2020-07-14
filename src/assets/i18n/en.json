@@ -269,6 +269,37 @@
       "dataError": "Something went wrong while processing your request. Please try again later."
     }
   },
+  "orderServiceCustomChange": {
+    "title": "Custom Change",
+    "back": "Back",
+    "requestDetails": {
+      "stepTitle": "Request Details",
+      "description": "You can use this wizard to request a custom, non-standard change to your services. Please provide the details of your request below.",
+      "raiseTicketLabel": "If you are experiencing issues with your service, raise a ticket​​​​​​​",
+      "leadTimeLabel": "Our standard lead time of 120 hours for this request ensures we have time to get the right engineer for the task.",
+      "service": {
+        "placeholder": "Select a service to change"
+      },
+      "changeDescription": {
+        "placeholder": "What change would you like applied?",
+        "hint": "Max of {{max_char}} characters",
+        "errorRequired": "Description of change must be entered."
+      },
+      "changeObjective": {
+        "placeholder": "What is the objective of this change?",
+        "hint": "Max of {{max_char}} characters",
+        "errorRequired": "Objective of change must be entered."
+      },
+      "testCases": {
+        "placeholder": "What test cases would you like us to execute after the change?"
+      }
+    },
+    "provisioning": {
+      "description": "Your service is being updated and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
+      "dataInProgress": "Preparing to custom change your service. This may take a moment.",
+      "dataError": "Something went wrong while processing your request. Please try again later."
+    }
+  },
   "orderAddAntiVirus": {
     "title": "Order Anti-Virus",
     "back": "Back",
@@ -289,11 +320,7 @@
         "busy": "it is currently busy. Installation can be performed once its current operation has completed."
       }
     },
-    "confirm": {
-      "stepTitle": "Confirm"
-    },
     "provisioning": {
-      "stepTitle": "Go!",
       "description": "Anti-Virus is being provisioned for your server and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
       "dataInProgress": "Preparing to provision Anti-Virus. This may take a moment.",
       "dataError": "Something went wrong while processing your request. Please try again later."
@@ -323,11 +350,7 @@
         "contextualHelp": "Choose Detect if you would like intrusion attempts to be logged. Choose Protect if you would like intrusion attempts to be blocked."
       }
     },
-    "confirm": {
-      "stepTitle": "Confirm"
-    },
     "provisioning": {
-      "stepTitle": "Go!",
       "description": "Host Intrusion Detection is being provisioned for your server and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
       "dataInProgress": "Preparing to provision Host Intrusion Detection. This may take a moment.",
       "dataError": "Something went wrong while processing your request. Please try again later."
@@ -1120,7 +1143,7 @@
         "excessUsageFeePerGB": "Excess Fee Per GB"
       }
     },
-    "deliveryType" : {
+    "deliveryType": {
       "header": "Desired delivery type",
       "standardOption": "Standard - {{standardLeadTimeHours}} hours",
       "acceleratedOption": "Accelerated - {{acceleratedLeadTimeHours}} hours"
@@ -1357,6 +1380,28 @@
         "cpuInvalid": "vCPU must be a multiple of {{step}}.",
         "ratioInvalid": "CPU/RAM ratio must be {{cpu_value}}:{{ram_value}}.",
         "invalidScaleValue": "Please enter a valid value."
+      }
+    }
+  },
+  "smacShared": {
+    "form": {
+      "testCases": {
+        "placeholder": "What test cases would you like us to execute after the change?"
+      },
+      "contact": {
+        "label": "Would you like us to contact you before and after the change?",
+        "description": "You will be contacted on the telephone number you have provided in your user profile ({{phone_number}}). \nIf you select yes and we are unable to contact you, the change will not be applied",
+        "options": {
+          "yes": "Yes",
+          "no": "No"
+        }
+      },
+      "customerReference": {
+        "placeholder": "Customer reference number"
+      },
+      "notes": {
+        "placeholder": "Are there any further details you would like us to know?",
+        "hint": "Max of {{max_char}} characters"
       }
     }
   },
@@ -1986,6 +2031,9 @@
         "available": "Value should not exceed {{available}}{{unit}}.",
         "step": "Value must be a multiple of {{step}}."
       }
+    },
+    "links": {
+      "hereLabel": "here"
     }
   },
   "apiErrorMessage": {

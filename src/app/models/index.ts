@@ -81,6 +81,10 @@ export * from './enumerations/availability-zone.enum';
 export * from './enumerations/entity-requester.enum';
 export * from './enumerations/route-platform.enum';
 export * from './enumerations/license-status.enum';
+export * from './enumerations/license-category.enum';
+export * from './enumerations/license-complexity.enum';
+export * from './enumerations/delivery-type.enum';
+export * from './enumerations/form-response.enum';
 
 /** Job References */
 export * from './job-references/mcs-server-job-reference';
@@ -101,6 +105,7 @@ export * from './request/mcs-order-server-backup-add';
 export * from './request/mcs-order-server-hids-add';
 export * from './request/mcs-order-vm-backup-add';
 export * from './request/mcs-order-backup-aggregation-target-add';
+export * from './request/mcs-order-service-custom-change';
 export * from './request/mcs-server-attach-media';
 export * from './request/mcs-server-detach-media';
 export * from './request/mcs-server-delete';

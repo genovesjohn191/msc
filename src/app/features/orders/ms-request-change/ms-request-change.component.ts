@@ -53,27 +53,19 @@ import {
   McsOrderCreate,
   McsOrderItemCreate,
   OrderIdType,
-  McsSubscription
+  McsSubscription,
+  Category,
+  Complexity,
+  FormResponse,
+  deliveryTypeText,
+  categoryText,
+  complexityText,
+  formResponseText
 } from '@app/models';
 import { MsRequestChangeService } from './ms-request-change.service';
 import { McsApiService } from '@app/services';
 import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import { McsEvent } from '@app/events';
-import {
-  Category,
-  categoryText
-} from '@app/models/enumerations/license-category.enum';
-import {
-  deliveryTypeText,
-} from '@app/models/enumerations/delivery-type.enum';
-import {
-  FormResponse,
-  formResponseText
-} from '@app/models/enumerations/form-response.enum';
-import {
-  Complexity,
-  complexityText
-} from '@app/models/enumerations/license-complexity.enum';
 
 const MAX_DESCRIPTION_LENGTH = 850;
 const VISIBILE_ROWS = 3;

@@ -97,7 +97,7 @@
 
         <!-- Confirm Step  -->
         <mcs-wizard-step id="confirm-step"
-          [stepTitle]="'orderAddAntiVirus.confirm.stepTitle' | translate"
+          [stepTitle]="'shared.wizard.confirm' | translate"
           customClass="contextual-help-page-wrapper limited-view">
 
           <mcs-step-order-details [order]="order$ | async"
@@ -111,7 +111,7 @@
 
         <!-- Go! Step  -->
         <mcs-wizard-step id="go-step"
-          stepTitle="Go!"
+          [stepTitle]="'shared.wizard.completed' | translate"
           customClass="limited-view">
           <mcs-step-provisioning [jobs]="jobs$ | async" [requestState]="dataStatus$ | async">
             <ng-container mcsProvisioningStepDescription>

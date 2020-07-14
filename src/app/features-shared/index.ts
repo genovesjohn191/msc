@@ -30,6 +30,10 @@ export * from './addon-inview/addon-inview';
 export * from './addon-sql-server/addon-sql-server';
 export * from './addon-hids/addon-hids';
 
+/** SMACs */
+export * from './smac-shared-form/smac-shared-form.component';
+export * from './smac-shared-form/smac-shared-details';
+
 /** System Message */
 export * from './system-message-form/system-message-form.component';
 export * from './system-message-form/system-message-form';

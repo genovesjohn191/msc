@@ -68,7 +68,7 @@ interface HidsServers {
 
 const SERVER_ADD_HIDS_REF_ID = Guid.newGuid().toString();
 @Component({
-  selector: 'mcs-add-hids',
+  selector: 'mcs-order-add-hids',
   templateUrl: 'add-hids.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [AddHidsService]

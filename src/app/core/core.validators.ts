@@ -187,4 +187,24 @@ export class CoreValidators {
   public static step(stepValue: number): ValidatorFn {
     return CoreValidators.custom(((value) => value % stepValue === 0).bind(this), 'step');
   }
+
+  /**
+   * Validator that requires controls to be required given the value is an array
+   */
+  public static requiredArray(control: AbstractControl): ValidationErrors | null {
+    return control.value.length <= 0 ? { requiredArray: true } : null;
+  }
+
+  /**
+   * Validator that requires controls to be in range of minimum and maximum given the value is an array
+   *
+   * `@Note` This will produce the following value when false
+   * {'rangeArray': {'actual': control.value, 'min': minimumValueForTheControl, 'max': maximumValueForTheControl}}
+   */
+  public static rangeArray(minimum: number, maximum: number): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      let error = { rangeArray: { actual: control.value.length, min: minimum, max: maximum } };
+      return control.value.length < +minimum || control.value.length > +maximum ? error : null;
+    };
+  }
 }
