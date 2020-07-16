@@ -1104,7 +1104,6 @@
   "serverCreateProvisioningStep": {
     "stepTitle": "Go!",
     "description": "Your server is deploying and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
-    "savingOrder": "Saving your order. This may take a moment.",
     "dataProvisioning": "Preparing the server deployment process. This may take a moment.",
     "dataError": "Something went wrong while processing your request. Please try again later."
   },
@@ -1164,12 +1163,24 @@
   },
   "provisioningStep": {
     "stepTitle": "Go!",
-    "provisioningProgressTitle": "Progress - Order {{orderNo}}"
+    "provisioningProgressTitle": "Progress - Order {{orderNo}}",
+    "savingOrder": "Saving your order. This may take a moment..."
   },
   "orderCompletedStep": {
-    "successMessage": "Order {{orderNo}} has been successfully submitted.",
     "linkInstruction": "Click here",
-    "linkLabel": " to view full order details."
+    "linkLabel": " to view your order.",
+    "success": {
+      "draftOrder": "Order #{orderId} has been successfully saved.",
+      "submitOrder": "Order #{{orderNo}} has been successfully submitted."
+    },
+    "inProgress": {
+      "draftOrder": "Saving your order. This may take a moment...",
+      "submitOrder": "Submitting your order. This may take a moment..."
+    },
+    "errors": {
+      "draftOrder": "An error occurred while saving your order. Please try again.",
+      "submitOrder": "An error occurred while submitting your order. Please try again."
+    }
   },
   "orderAgreement": {
     "agreementChargesQuoted": "By submitting this order, you agree to the charges quoted and the ",

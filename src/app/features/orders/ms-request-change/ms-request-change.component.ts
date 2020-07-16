@@ -18,17 +18,16 @@ import {
   zip,
   Observable,
   of,
-  Subscription,
-  BehaviorSubject
+  Subscription
 } from 'rxjs';
 import {
   filter,
   tap,
   takeUntil,
   map,
-  shareReplay,
-  distinctUntilChanged
+  shareReplay
 } from 'rxjs/operators';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import {
   McsOrderWizardBase,
   CoreValidators,
@@ -46,6 +45,8 @@ import {
 } from '@app/utilities';
 import { McsFormGroupDirective } from '@app/shared';
 import { OrderDetails } from '@app/features-shared';
+import { McsApiService } from '@app/services';
+import { McsEvent } from '@app/events';
 import {
   McsOrderWorkflow,
   McsOption,
@@ -63,9 +64,6 @@ import {
   formResponseText
 } from '@app/models';
 import { MsRequestChangeService } from './ms-request-change.service';
-import { McsApiService } from '@app/services';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
-import { McsEvent } from '@app/events';
 
 const MAX_DESCRIPTION_LENGTH = 850;
 const VISIBILE_ROWS = 3;
@@ -208,7 +206,7 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
     this._msRequestChangeService.submitOrderRequest();
   }
 
-  onNextClick(service: McsSubscription): void {
+  public onNextClick(service: McsSubscription): void {
     if (isNullOrEmpty(service)) { return; }
     this._changeDetectorRef.markForCheck();
   }
@@ -256,6 +254,7 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
     this._formGroupService.touchAllFormFields(this.fgMsServiceChange);
     this._formGroupService.scrollToFirstInvalidField(this._elementRef.nativeElement);
   }
+
   private _isPhoneConfirmationRequired(isRequired: FormResponse): boolean {
     return (isRequired === FormResponse.Yes);
   }
@@ -265,10 +264,7 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
     this.fcCategory = new FormControl('', [CoreValidators.required]);
     this.fcContact = new FormControl('', [CoreValidators.required]);
     this.fcCustomerReference = new FormControl('');
-    this.fcRequestDescription = new FormControl('', [
-      CoreValidators.required,
-      (control) => CoreValidators.max(MAX_DESCRIPTION_LENGTH)(control)
-    ]);
+    this.fcRequestDescription = new FormControl('', []);
 
     this.fgMsServiceChange = this._formBuilder.group({
       fcMsService: this.fcMsService,
@@ -314,8 +310,8 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
 
   private _mapEnumToOption(enumeration: Category, enumText: any): McsOption[] {
     let options = Object.values(enumeration)
-        .filter((objValue) => (typeof objValue === 'number'))
-        .map(objValue => createObject(McsOption, { text: enumText[objValue] , value: objValue }));
+      .filter((objValue) => (typeof objValue === 'number'))
+      .map(objValue => createObject(McsOption, { text: enumText[objValue], value: objValue }));
     return options;
   }
 
@@ -329,15 +325,15 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
   }
 
   private _subscribeToSubscriptions(): void {
-    this.subscriptions$ =  this._apiService.getSubscriptions().pipe(
+    this.subscriptions$ = this._apiService.getSubscriptions().pipe(
       map((subscriptionCollection) => {
         let subscriptions = getSafeProperty(subscriptionCollection, (obj) => obj.collection) || [];
         let subscriptionOptions: McsOption[] = [];
         subscriptions.forEach((subscription) => {
           let textValue = (!isNullOrEmpty(subscription.serviceId)) ? `${subscription.friendlyName} - ${subscription.serviceId}`
-                                                                   : `${subscription.friendlyName}`;
+            : `${subscription.friendlyName}`;
           subscriptionOptions.push(createObject(McsOption,
-            { text: textValue , value: subscription }));
+            { text: textValue, value: subscription }));
         });
         return subscriptionOptions;
       }),

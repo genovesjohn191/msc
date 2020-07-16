@@ -112,7 +112,8 @@
           </ng-container>
 
           <ng-container mcsProvisioningStepInProgress>
-            {{ 'orderVdcStorageExpand.expanding.dataInProgress' | translate}}
+            <span *ngIf="orderIsToBeSubmitted">{{ 'orderVdcStorageExpand.expanding.dataInProgress' | translate }}</span>
+            <span *ngIf="!orderIsToBeSubmitted">{{ 'provisioningStep.savingOrder' | translate }}</span>
           </ng-container>
         </mcs-step-provisioning>
       </mcs-wizard-step>

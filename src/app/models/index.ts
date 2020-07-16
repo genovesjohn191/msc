@@ -32,6 +32,7 @@ export * from './enumerations/order-status.enum';
 export * from './enumerations/order-type-id.enum';
 export * from './enumerations/item-type.enum';
 export * from './enumerations/order-workflow-action.enum';
+export * from './enumerations/order-workflow-submit-status.enum';
 export * from './enumerations/os-type.enum';
 export * from './enumerations/os-updates-patch-status.enum';
 export * from './enumerations/os-updates-schedule-type.enum';

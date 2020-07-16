@@ -62,7 +62,6 @@ export class ServerCreateComponent extends McsOrderWizardBase
   // Other variables
   public resources$: Observable<McsResource[]>;
   public resource$: Observable<McsResource>;
-  public waitingForProvision: boolean = true;
   public selectedServerId: string;
   public fcResource: FormControl;
 
@@ -204,8 +203,6 @@ export class ServerCreateComponent extends McsOrderWizardBase
     workflow.clientReferenceObject = {
       resourceDescription: this.progressDescription
     };
-
-    this.waitingForProvision = submitDetails.workflowAction === OrderWorkflowAction.Submitted;
     this.submitOrderWorkflow(workflow);
   }
 

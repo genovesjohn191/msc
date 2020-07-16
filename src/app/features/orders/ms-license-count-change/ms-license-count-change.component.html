@@ -255,7 +255,8 @@
             </ng-container>
 
             <ng-container mcsProvisioningStepInProgress>
-              {{ 'orderMsLicenseCountChange.provisioningStep.dataInProgress' | translate}}
+              <span *ngIf="orderIsToBeSubmitted">{{ 'orderMsLicenseCountChange.provisioningStep.dataInProgress' | translate }}</span>
+              <span *ngIf="!orderIsToBeSubmitted">{{ 'provisioningStep.savingOrder' | translate }}</span>
             </ng-container>
           </mcs-step-provisioning>
         </mcs-wizard-step>
