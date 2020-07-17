@@ -2,6 +2,7 @@ import { RouteChangeEvent } from './items/route-change.event';
 import { AccountChangeEvent } from './items/account-change.event';
 import { UserChangeEvent } from './items/user-change.event';
 import { SessionTimedOutEvent } from './items/session-timedout.event';
+import { NewRecordsRetrievedEvent } from './items/new-records-retrieved.event';
 import { ServerManagedScaleSelectedEvent } from './items/server-scale-manage-selected.event';
 import { ServerManagedRaiseInviewSelectedEvent } from './items/server-raise-inview-selected.event';
 import { VdcScaleSelectedEvent } from './items/vdc-scale-selected.event';
@@ -84,6 +85,7 @@ export class McsEvent {
   public static accountChange = new AccountChangeEvent();
   public static userChange = new UserChangeEvent();
   public static sessionTimedOut = new SessionTimedOutEvent();
+  public static newRecordsRetrieved = new NewRecordsRetrievedEvent();
   public static serverScaleManageSelected = new ServerManagedScaleSelectedEvent();
   public static serverRaiseInviewSelected = new ServerManagedRaiseInviewSelectedEvent();
   public static serverAddAvSelected = new ServerAddAvSelectedEvent();

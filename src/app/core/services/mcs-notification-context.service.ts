@@ -29,6 +29,8 @@ import {
 import { McsApiService } from '@app/services';
 import { McsNotificationJobService } from './mcs-notification-job.service';
 import { McsAccessControlService } from '../authentication/mcs-access-control.service';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+import { McsEvent } from '@app/events';
 
 /**
  * MCS notification context service
@@ -46,12 +48,14 @@ export class McsNotificationContextService implements McsDisposable {
   constructor(
     private _accessControlService: McsAccessControlService,
     private _notificationJobService: McsNotificationJobService,
-    private _apiService: McsApiService
+    private _apiService: McsApiService,
+    private _eventDispatcher: EventBusDispatcherService
   ) {
     this._excludedJobTypes = new Array();
     this._notifications = new Array();
     this._notificationsStream = new BehaviorSubject<McsJob[]>(null);
     this.subscribeToActiveJobs();
+    this._registerEvents();
   }
 
   /**
@@ -98,6 +102,15 @@ export class McsNotificationContextService implements McsDisposable {
         this._notificationsStream.next(this._notifications);
       })
     );
+  }
+
+  private _registerEvents(): void {
+    this._eventDispatcher.addEventListener(
+      McsEvent.newRecordsRetrieved, this._resendActiveJobs.bind(this));
+  }
+
+  private _resendActiveJobs(): void {
+    this.getAllActiveJobs().subscribe();
   }
 
   /**
