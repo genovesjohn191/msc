@@ -1,4 +1,8 @@
 import { JsonProperty } from '@app/utilities';
+import {
+  DeliveryType,
+  DeliveryTypeSerialization
+} from '../enumerations/delivery-type.enum';
 
 export class McsOrderItemCreate {
   @JsonProperty()
@@ -16,8 +20,11 @@ export class McsOrderItemCreate {
   @JsonProperty()
   public parentReferenceId?: string = undefined;
 
-  @JsonProperty()
-  public deliveryType?: string = undefined;
+  @JsonProperty({
+    serializer: DeliveryTypeSerialization,
+    deserializer: DeliveryTypeSerialization
+  })
+  public deliveryType?: DeliveryType = undefined;
 
   @JsonProperty()
   public properties?: any = undefined;

@@ -43,20 +43,17 @@
                     mcsEventCategory="order"
                     mcsEventLabel="ms-service-change-request"
                     [formControl]="fcMsService"
-                    [placeholder]="'orderMsRequestChange.detailsStep.servicePlaceholder' | translate"
-                    (selectionChange)="onChangeService($event)">
-                    <ng-container>
-                        <mcs-option *ngFor="let subscription of subscriptions$ | async" [value]="subscription.value"
-                        [disabled]="!(subscription.value.serviceId | mcsIsNotNullOrEmpty)">
-                          <span
-                            [ngStyle]="{'pointer-events': 'auto'}"
-                            [mcsTooltip]="'orderMsRequestChange.detailsStep.nullServiceIdToolTip' | translate"
-                            [mcsTooltipShow]="!(subscription.value.serviceId | mcsIsNotNullOrEmpty)"
-                            [mcsTooltipPosition]="'right'">
-                            {{ subscription.text }}
-                          </span>
-                        </mcs-option>
-                    </ng-container>
+                    [placeholder]="'orderMsRequestChange.detailsStep.servicePlaceholder' | translate">
+                    <mcs-option *ngFor="let subscription of subscriptions$ | async"
+                      [value]="subscription.value"
+                      [disabled]="!(subscription.value.serviceId | mcsIsNotNullOrEmpty)">
+                        <span [ngStyle]="{'pointer-events': 'auto'}"
+                          [mcsTooltip]="'orderMsRequestChange.detailsStep.nullServiceIdToolTip' | translate"
+                          [mcsTooltipShow]="!(subscription.value.serviceId | mcsIsNotNullOrEmpty)"
+                          [mcsTooltipPosition]="'right'">
+                          {{ subscription.text }}
+                        </span>
+                    </mcs-option>
                   </mcs-select>
                 </mcs-form-field>
                 <span *ngIf="!(fcMsService.pristine)">{{ 'orderMsRequestChange.detailsStep.serviceSubscriptionId' |
@@ -72,7 +69,6 @@
                     mcsEventTracker="select-ms-service-category"
                     mcsEventCategory="order"
                     mcsEventLabel="ms-service-change-request"
-                    (selectionChange)="onChangeCategory($event)"
                     [placeholder]="'orderMsRequestChange.detailsStep.categoryPlaceholder' | translate">
                     <mcs-search mcsSelectSearch></mcs-search>
                     <mcs-option *ngFor="let category of categoryOptions$ | async" [value]="category.value">
@@ -95,9 +91,7 @@
                         mcsId="select-ms-service-contact"
                         mcsEventTracker="select-ms-service-contact"
                         mcsEventCategory="order"
-                        mcsEventLabel="ms-service-change-request"
-                        (click)="onMsServiceContactChange(contact)"
-                        >
+                        mcsEventLabel="ms-service-change-request">
                         {{ contact.text }}
                       </mcs-radio-button>
                     </mcs-radio-button-group>
@@ -145,7 +139,6 @@
               <div class="action-items">
                 <button mcsButton arrow="right"
                   mcsWizardStepNext
-                  (click)="onNextClick(fcMsService?.value)"
                   [disabled]="(!formIsValid || fcMsService.pristine || fcRequestDescription.pristine)"
                   mcsId="step-1-next"
                   mcsEventTracker="step-1-next"
@@ -163,7 +156,7 @@
             [orderItemType]="orderItemType$ | async"
             [requestState]="dataStatus$ | async"
             [eventTrack]="orderEventTrack.billingDetailsStep"
-            (dataChange)="onMsServiceRequestOrderChange($event)"
+            (dataChange)="onOrderDetailsDataChange($event)"
             (submitOrder)="onSubmitOrder($event, fcMsService?.value.serviceId)">
           </mcs-step-order-details>
         </mcs-wizard-step>

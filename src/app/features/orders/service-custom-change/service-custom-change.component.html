@@ -101,7 +101,8 @@
                 mcsEventTracker="input-change-description"
                 mcsEventCategory="order"
                 mcsEventLabel="order-custom-change-page"
-                [placeholder]="'orderServiceCustomChange.requestDetails.changeDescription.placeholder' | translate" maxlength="4000"
+                [maxlength]="defaultMaxlength"
+                [placeholder]="'orderServiceCustomChange.requestDetails.changeDescription.placeholder' | translate"
                 [formControl]="fcChangeDescription"></textarea>
 
               <mcs-hint mcsHint align="start">
@@ -124,7 +125,8 @@
                 mcsEventTracker="input-change-objective"
                 mcsEventCategory="order"
                 mcsEventLabel="order-custom-change-page"
-                [placeholder]="'orderServiceCustomChange.requestDetails.changeObjective.placeholder' | translate" maxlength="4000"
+                [maxlength]="defaultMaxlength"
+                [placeholder]="'orderServiceCustomChange.requestDetails.changeObjective.placeholder' | translate"
                 [formControl]="fcChangeObjective"></textarea>
 
               <mcs-hint mcsHint align="start">

@@ -58,6 +58,7 @@ import { McsFormGroupDirective } from '@app/shared';
 import { ServiceCustomChangeService } from './service-custom-change.service';
 
 const SERVICE_CUSTOM_CHANGE = Guid.newGuid().toString();
+const TEXTAREA_MAXLENGTH_DEFAULT = 850;
 
 // TODO: create a base class or an interface for all the services of portal
 interface CustomChangeService {
@@ -161,6 +162,10 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
     return RouteKey;
   }
 
+  public get defaultMaxlength(): number {
+    return TEXTAREA_MAXLENGTH_DEFAULT;
+  }
+
   /**
    * Event listener when there is a change in Shared SMAC Form
    */
@@ -182,7 +187,8 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
         billingSiteId: orderDetails.billingSiteId,
         billingCostCentreId: orderDetails.billingCostCentreId
       }),
-      OrderRequester.Billing
+      OrderRequester.Billing,
+      orderDetails.deliveryType
     );
     this._customChangeService.submitOrderRequest();
   }
@@ -227,14 +233,14 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
     ).pipe(
       takeUntil(this._formGroupSubject),
       filter(() => this.formIsValid),
-      tap(() => this._onCustomChangeDetailsChange())
+      tap(() => this._onCustomChangeDetailsFormChange())
     ).subscribe();
   }
 
   /**
    * Event listener whenever there is a change in the form
    */
-  private _onCustomChangeDetailsChange(): void {
+  private _onCustomChangeDetailsFormChange(): void {
     this._customChangeService.createOrUpdateOrder(
       createObject(McsOrderCreate, {
         items: [

@@ -1,6 +1,6 @@
 import {
-JsonProperty,
-isNullOrEmpty
+  JsonProperty,
+  isNullOrEmpty
 } from '@app/utilities';
 import {
   OrderItemStatus,
@@ -15,7 +15,10 @@ import {
 import { McsEntityBase } from '../common/mcs-entity.base';
 import { McsOrderCharge } from './mcs-order-charge';
 import { McsDateSerialization } from '../serialization/mcs-date-serialization';
-import { DeliveryType, DeliveryTypeSerialization } from '../enumerations/delivery-type.enum';
+import {
+  DeliveryType,
+  DeliveryTypeSerialization
+} from '../enumerations/delivery-type.enum';
 
 export class McsOrderItem extends McsEntityBase {
   @JsonProperty({
@@ -114,8 +117,8 @@ export class McsOrderItem extends McsEntityBase {
    */
   public get itemProvisioningStatusLabel(): string {
     let result = (this.itemProvisioningStatus === ProvisioningStatus.Unknown) ?
-                  orderItemStatusText[this.status] :
-                  provisioningStatusText[this.itemProvisioningStatus];
+      orderItemStatusText[this.status] :
+      provisioningStatusText[this.itemProvisioningStatus];
     if (isNullOrEmpty(result)) {
       result = provisioningStatusText[ProvisioningStatus.Unknown];
     }

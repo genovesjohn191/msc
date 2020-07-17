@@ -32,7 +32,8 @@ import {
   McsJob,
   McsOrderItemType,
   ItemType,
-  McsApiErrorContext
+  McsApiErrorContext,
+  DeliveryType
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { IMcsFallible } from '../../interfaces/mcs-fallible.interface';
@@ -160,7 +161,8 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
    */
   public createOrUpdateOrder(
     orderDetails: McsOrderCreate,
-    orderRequester: OrderRequester = OrderRequester.Client
+    orderRequester: OrderRequester = OrderRequester.Client,
+    orderDeliveryType?: DeliveryType
   ): void {
     let orderItemType = this._orderItemTypeChange.getValue() || {} as any;
 
@@ -175,10 +177,14 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
       .setBillingCostCentreId(orderDetails.billingCostCentreId)
       .setOrderRequester(orderRequester);
 
+    if (!isNullOrUndefined(orderDeliveryType)) {
+      this._orderBuilder.setOrderItemDeliveryType(orderDeliveryType);
+    }
+
     let orderItems = getSafeProperty(orderDetails, (obj) => obj.items);
     if (!isNullOrEmpty(orderItems)) {
       this._orderReferenceId = orderItems[0].referenceId;
-      this._orderServiceId =  orderItems[0].serviceId;
+      this._orderServiceId = orderItems[0].serviceId;
       orderItems.forEach((item) => this._orderBuilder.addOrUpdateOrderItem(item));
     }
   }

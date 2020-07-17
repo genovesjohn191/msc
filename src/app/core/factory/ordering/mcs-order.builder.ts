@@ -3,7 +3,10 @@ import {
   deleteArrayRecord,
   isNullOrEmpty
 } from '@app/utilities';
-import { McsOrderItemCreate } from '@app/models';
+import {
+  McsOrderItemCreate,
+  DeliveryType
+} from '@app/models';
 import {
   McsOrderRequest,
   OrderRequester
@@ -87,6 +90,15 @@ export class McsOrderBuilder {
    */
   public setOrderRequester(requester: OrderRequester): McsOrderBuilder {
     this._orderRequester = requester;
+    return this;
+  }
+
+  /**
+   * Sets the order items delivery type
+   * @param deliveryType delivery type value
+   */
+  public setOrderItemDeliveryType(deliveryType: DeliveryType): McsOrderBuilder {
+    this._orderItems.forEach((item) => item.deliveryType = deliveryType);
     return this;
   }
 
