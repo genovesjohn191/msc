@@ -6,13 +6,15 @@ import {
 } from '@app/api-client';
 import { McsFirewallsDataContext } from '../data-context/mcs-firewalls-data.context';
 import { McsRepositoryBase } from '../core/mcs-repository.base';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 
 @Injectable()
 export class McsFirewallsRepository extends McsRepositoryBase<McsFirewall> {
 
-  constructor(_apiClientFactory: McsApiClientFactory) {
-    super(new McsFirewallsDataContext(
-      _apiClientFactory.getService(new McsApiFirewallsFactory())
-    ));
+  constructor(_apiClientFactory: McsApiClientFactory, _eventDispatcher: EventBusDispatcherService) {
+    super(
+      new McsFirewallsDataContext(_apiClientFactory.getService(new McsApiFirewallsFactory())),
+      _eventDispatcher
+    );
   }
 }

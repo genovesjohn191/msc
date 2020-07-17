@@ -93,8 +93,6 @@ export class McsJobManagerClient implements McsDisposable {
     let entityFactory = this._getEntityFactory(getSafeProperty(job, (obj) => obj.type));
     if (isNullOrEmpty(entityFactory)) { return; }
 
-    if (entityFactory.getActionMethod() === ActionStatus.Add) { return; }
-
     this._waitUntilDataReceived(entityFactory, job).pipe(
       switchMap(() => entityFactory.getEntityIdByJob(job)),
       tap((entityId) => {

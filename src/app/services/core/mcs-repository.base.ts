@@ -23,6 +23,8 @@ import {
 } from '@app/utilities';
 import { McsRepository } from './mcs-repository.interface';
 import { McsDataContext } from './mcs-data-context.interface';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+import { McsEvent } from '@app/events';
 
 export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsRepository<T> {
 
@@ -38,7 +40,9 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
   private _dataClear = new Subject<void>();
   private _dataChange = new BehaviorSubject<T[]>(null);
 
-  constructor(private _context: McsDataContext<T>) { }
+  constructor(
+    private _context: McsDataContext<T>,
+    private _eventDispatcher: EventBusDispatcherService = null) { }
 
   /**
    * Get all records from the repository and creates a new observable
@@ -244,6 +248,8 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
         this._allRecordsCount = this._context.totalRecordsCount;
         this._updateFilteredRecords(newFilteredRecords);
         this._cacheRecords(...newFilteredRecords);
+
+        this._sendRecordsUpdateNotice();
       })
     );
   }
@@ -275,7 +281,16 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
         this._updateFilteredRecords(newFilteredRecords);
       })
     );
+
+    this._sendRecordsUpdateNotice();
+
     return searchedRecords;
+  }
+
+  private _sendRecordsUpdateNotice() {
+    if (!isNullOrEmpty(this._eventDispatcher)) {
+      this._eventDispatcher.dispatch(McsEvent.newRecordsRetrieved);
+    }
   }
 
   /**

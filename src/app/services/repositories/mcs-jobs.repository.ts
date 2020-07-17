@@ -13,13 +13,12 @@ import { McsRepositoryBase } from '../core/mcs-repository.base';
 @Injectable()
 export class McsJobsRepository extends McsRepositoryBase<McsJob> {
 
-  constructor(
-    _apiClientFactory: McsApiClientFactory,
-    private _eventDispatcher: EventBusDispatcherService
-  ) {
-    super(new McsJobsDataContext(
-      _apiClientFactory.getService(new McsApiJobsFactory())
-    ));
+  private _dispatcher: EventBusDispatcherService;
+
+  constructor(_apiClientFactory: McsApiClientFactory, _eventDispatcher: EventBusDispatcherService) {
+    super(new McsJobsDataContext(_apiClientFactory.getService(new McsApiJobsFactory())));
+
+    this._dispatcher = _eventDispatcher;
     this._registerEvents();
   }
 
@@ -27,7 +26,7 @@ export class McsJobsRepository extends McsRepositoryBase<McsJob> {
    * Register the job events
    */
   private _registerEvents(): void {
-    this._eventDispatcher.addEventListener(McsEvent.jobReceive, this._onJobReceive.bind(this));
+    this._dispatcher.addEventListener(McsEvent.jobReceive, this._onJobReceive.bind(this));
   }
 
   /**
