@@ -24,7 +24,7 @@ $none: 0;
         border: $list-item-border;
         min-height: $list-item-min-height;
         margin-bottom: $space-xsmall;
-        padding-right: $space-medium;
+        padding-right: $none;
 
         &:last-child {
           margin-bottom: $none;
@@ -41,10 +41,11 @@ $none: 0;
         div.action-icons {
           @include display-flex(row);
           @include align-items(center);
-        }
-
-        mcs-icon {
-          padding: 0 $space-xsmall;
+          button{
+            mcs-icon {
+              padding: $none $space-xsmall;
+            }
+          }
         }
       }
     }

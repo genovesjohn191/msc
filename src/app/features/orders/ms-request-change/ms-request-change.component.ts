@@ -4,9 +4,7 @@ import {
   OnDestroy,
   Component,
   Injector,
-  ViewChild,
-  ChangeDetectorRef,
-  ElementRef
+  ViewChild
 } from '@angular/core';
 import {
   FormGroup,
@@ -31,8 +29,7 @@ import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import {
   McsOrderWizardBase,
   CoreValidators,
-  OrderRequester,
-  McsFormGroupService
+  OrderRequester
 } from '@app/core';
 import {
   CommonDefinition,
@@ -61,7 +58,8 @@ import {
   deliveryTypeText,
   categoryText,
   complexityText,
-  formResponseText
+  formResponseText,
+  DeliveryType
 } from '@app/models';
 import { MsRequestChangeService } from './ms-request-change.service';
 
@@ -142,13 +140,10 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
 
   constructor(
     _injector: Injector,
-    private _elementRef: ElementRef,
     private _msRequestChangeService: MsRequestChangeService,
     private _formBuilder: FormBuilder,
     private _apiService: McsApiService,
-    private _eventDispatcher: EventBusDispatcherService,
-    private _formGroupService: McsFormGroupService,
-    private _changeDetectorRef: ChangeDetectorRef
+    private _eventDispatcher: EventBusDispatcherService
   ) {
     super(
       _injector,
@@ -176,43 +171,47 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
     unsubscribeSafely(this._selectedServiceHandler);
   }
 
-  public onMsServiceRequestOrderChange(orderDetails: OrderDetails): void {
-    if (isNullOrEmpty(orderDetails)) { return; }
-    if (!this.formIsValid) { return; }
+  /**
+   * Event listener whenever there is a change in billing information and delivery type
+   */
+  public onOrderDetailsDataChange(orderDetails: OrderDetails): void {
+    if (isNullOrEmpty(orderDetails) || !this.formIsValid) { return; }
     this._msRequestChangeService.createOrUpdateOrder(
       createObject(McsOrderCreate, {
+        contractDurationMonths: orderDetails.contractDurationMonths,
+        description: orderDetails.description,
+        billingEntityId: orderDetails.billingEntityId,
         billingSiteId: orderDetails.billingSiteId,
         billingCostCentreId: orderDetails.billingCostCentreId,
         items: [
+          // Recreate whole order item to passed the new Delivery type
           createObject(McsOrderItemCreate, {
             itemOrderType: OrderIdType.MsRequestChange,
             referenceId: MS_REQUEST_SERVICE_CHANGE,
             serviceId: this.fcMsService.value.serviceId,
-            deliveryType: deliveryTypeText[orderDetails.deliveryType],
+            deliveryType: orderDetails.deliveryType,
             properties: {
               category: categoryText[this.fcCategory.value],
-              complexity: complexityText[Complexity.Simple], // temporarily set complexity value to simple by default
+              complexity: complexityText[Complexity.Simple],
               phoneConfirmationRequired: this._isPhoneConfirmationRequired(this.fcContact.value),
               customerReferenceNumber: this.fcCustomerReference.value,
               requestDescription: this.fcRequestDescription.value,
-              deliveryType: deliveryTypeText[orderDetails.deliveryType]
+              deliveryType: deliveryTypeText[orderDetails.deliveryType],
             } as MsRequestChangeProperties
           })
         ]
       }),
-      OrderRequester.Billing
+      OrderRequester.Billing,
+      orderDetails.deliveryType
     );
 
     this._msRequestChangeService.submitOrderRequest();
   }
 
-  public onNextClick(service: McsSubscription): void {
-    if (isNullOrEmpty(service)) { return; }
-    this._changeDetectorRef.markForCheck();
-  }
-
+  /**
+   * Event listener whenever the order is submitted from the order details step
+   */
   public onSubmitOrder(submitDetails: OrderDetails, serviceID: string): void {
-    if (!this._validateFormFields()) { return; }
     if (isNullOrEmpty(submitDetails)) { return; }
 
     let workflow = new McsOrderWorkflow();
@@ -224,41 +223,34 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
     this.submitOrderWorkflow(workflow);
   }
 
-  public onMsServiceContactChange(selectedContactOption: McsOption) {
-    if (isNullOrEmpty(selectedContactOption)) { return; }
-    this.fcContact.setValue(selectedContactOption);
-  }
-
-  public onChangeService(service: McsSubscription): void {
-    if (isNullOrEmpty(service)) { return; }
-    this.fcMsService.setValue(service);
-  }
-
-  public onChangeCategory(selectedCategory: McsOption): void {
-    if (isNullOrEmpty(selectedCategory)) { return; }
-    this.fcCategory.setValue(selectedCategory);
-  }
-
-  public onChangeComplexity(selectedComplexity: McsOption): void {
-    if (isNullOrEmpty(selectedComplexity)) { return; }
-    this.fcComplexity.setValue(selectedComplexity);
-  }
-
-  private _validateFormFields(): boolean {
-    if (this.formIsValid) { return true; }
-    this._touchInvalidFields();
-    return false;
-  }
-
-  private _touchInvalidFields(): void {
-    this._formGroupService.touchAllFormFields(this.fgMsServiceChange);
-    this._formGroupService.scrollToFirstInvalidField(this._elementRef.nativeElement);
-  }
-
+  /**
+   * Returns true if the Response is Yes, false otherwise
+   */
   private _isPhoneConfirmationRequired(isRequired: FormResponse): boolean {
     return (isRequired === FormResponse.Yes);
   }
 
+  /**
+   * Event listener whenever a service is selected for a change request
+   */
+  private _onSelectedServiceRequestChange(service: McsSubscription): void {
+    if (isNullOrEmpty(service)) { return; }
+    this.fcMsService.setValue(service);
+  }
+
+  /**
+   * Maps enumeration to Options Array
+   */
+  private _mapEnumToOption(enumeration: Category, enumText: any): McsOption[] {
+    let options = Object.values(enumeration)
+      .filter((objValue) => (typeof objValue === 'number'))
+      .map(objValue => createObject(McsOption, { text: enumText[objValue], value: objValue }));
+    return options;
+  }
+
+  /**
+   * Register all form groups
+   */
   private _registerFormGroup(): void {
     this.fcMsService = new FormControl('', [CoreValidators.required]);
     this.fcCategory = new FormControl('', [CoreValidators.required]);
@@ -275,6 +267,9 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
     });
   }
 
+  /**
+   * Subscribe to form changes
+   */
   private _subscribeToValueChanges(): void {
     this._formGroupSubject.next();
     zip(
@@ -282,8 +277,35 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
       this._formGroup.stateChanges()
     ).pipe(
       takeUntil(this._formGroupSubject),
-      filter(() => this.formIsValid)
+      filter(() => this.formIsValid),
+      tap(() => this._onServiceRequestDetailsFormChange())
     ).subscribe();
+  }
+
+  /**
+   * Event listener whenever there is a change in the form
+   */
+  private _onServiceRequestDetailsFormChange(): void {
+    this._msRequestChangeService.createOrUpdateOrder(
+      createObject(McsOrderCreate, {
+        items: [
+          createObject(McsOrderItemCreate, {
+            itemOrderType: OrderIdType.MsRequestChange,
+            referenceId: MS_REQUEST_SERVICE_CHANGE,
+            serviceId: this.fcMsService.value.serviceId,
+            deliveryType: DeliveryType.Standard, // set to Standard as default
+            properties: {
+              category: categoryText[this.fcCategory.value],
+              complexity: complexityText[Complexity.Simple], // temporarily set complexity value to simple by default
+              phoneConfirmationRequired: this._isPhoneConfirmationRequired(this.fcContact.value),
+              customerReferenceNumber: this.fcCustomerReference.value,
+              requestDescription: this.fcRequestDescription.value,
+              deliveryType: deliveryTypeText[DeliveryType.Standard] // set to Standard as default
+            } as MsRequestChangeProperties
+          })
+        ]
+      })
+    );
   }
 
   /**
@@ -295,11 +317,11 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
 
   /**
    * Initialize the options for complexity control
+   * TODO: implement once complexity is ready
    */
   private _subscribeToComplexityOptions(): void {
     this.complexityOptions$ = of(this._mapEnumToOption(this.complexityEnum, complexityText));
   }
-
 
   /**
    * Initialize the options for contact control
@@ -308,13 +330,9 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
     this.contactOptions$ = of(this._mapEnumToOption(this.formResponseEnum, formResponseText));
   }
 
-  private _mapEnumToOption(enumeration: Category, enumText: any): McsOption[] {
-    let options = Object.values(enumeration)
-      .filter((objValue) => (typeof objValue === 'number'))
-      .map(objValue => createObject(McsOption, { text: enumText[objValue], value: objValue }));
-    return options;
-  }
-
+  /**
+   * Subscribe and get Account Details from API
+   */
   private _subscribeToAccount(): void {
     this.account$ = this._apiService.getAccount().pipe(
       map((response) => {
@@ -324,6 +342,9 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
     );
   }
 
+  /**
+   * Subscribe and get Subscriptions from API
+   */
   private _subscribeToSubscriptions(): void {
     this.subscriptions$ = this._apiService.getSubscriptions().pipe(
       map((subscriptionCollection) => {
@@ -342,9 +363,12 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
     );
   }
 
+  /**
+   * Register all external event listeners
+   */
   private _registerEvents(): void {
     this._selectedServiceHandler = this._eventDispatcher.addEventListener(
-      McsEvent.serviceRequestChangeSelectedEvent, () => this.onChangeService.bind(this));
+      McsEvent.serviceRequestChangeSelectedEvent, this._onSelectedServiceRequestChange.bind(this));
   }
 }
 

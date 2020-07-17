@@ -163,7 +163,7 @@
 
       <!-- Order Options -->
       <section margin-top-xlarge>
-        <mcs-item orientation="separated" *ngIf="hasLeadTimeOptions">
+        <mcs-item orientation="separated" *ngIf="hasLeadTimeOptions" [disabled]="isUpdatingCharges">
           <span>{{ 'orderDetailsStep.deliveryType.header' | translate }}</span>
           <mcs-form-field class="form-field-size-small">
             <mcs-select required [formControl]="fcDeliveryType" mcsId="select-delivery-type">
@@ -178,8 +178,8 @@
             </mcs-select>
           </mcs-form-field>
         </mcs-item>
-        
-        <mcs-item orientation="separated">
+
+        <mcs-item orientation="separated" [disabled]="isUpdatingCharges">
           <span>{{ 'orderDetailsStep.orderActions.header' | translate }}</span>
           <mcs-form-field class="form-field-size-small">
             <mcs-select required [formControl]="fcWorkflowAction" mcsId="select-workflow-action">
