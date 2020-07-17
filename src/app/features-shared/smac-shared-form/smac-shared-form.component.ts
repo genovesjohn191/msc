@@ -40,6 +40,7 @@ import {
 import { McsFormGroupDirective } from '@app/shared';
 import { SmacSharedDetails } from './smac-shared-details';
 
+const NOTES_MAXLENGTH = 850;
 
 @Component({
   selector: 'mcs-smac-shared-form',
@@ -89,6 +90,10 @@ export class SmacSharedFormComponent implements IMcsFormGroup, OnInit, OnDestroy
 
   public ngOnDestroy(): void {
     unsubscribeSafely(this._valueChangesSubject);
+  }
+
+  public get notesMaxLength(): number {
+    return NOTES_MAXLENGTH;
   }
 
   /**

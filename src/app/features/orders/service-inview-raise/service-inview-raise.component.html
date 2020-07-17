@@ -107,7 +107,8 @@
           </ng-container>
 
           <ng-container mcsProvisioningStepInProgress>
-            {{ 'orderServiceRaiseInview.raise.dataInProgress' | translate}}
+            <span *ngIf="orderIsToBeSubmitted">{{ 'orderServiceRaiseInview.raise.dataInProgress' | translate }}</span>
+            <span *ngIf="!orderIsToBeSubmitted">{{ 'provisioningStep.savingOrder' | translate }}</span>
           </ng-container>
         </mcs-step-provisioning>
       </mcs-wizard-step>

@@ -4,7 +4,9 @@ import {
 } from '@angular/core';
 import {
   McsOrder,
-  RouteKey} from '@app/models';
+  RouteKey,
+  OrderWorkflowSubmitStatus
+} from '@app/models';
 import { McsNavigationService } from '@app/core';
 import { getSafeProperty } from '@app/utilities';
 
@@ -14,18 +16,20 @@ import { getSafeProperty } from '@app/utilities';
 })
 
 export class StepManualOrderCompletedComponent {
-
   @Input()
   public order: McsOrder;
 
-  constructor( private _navigationService: McsNavigationService) { }
+  @Input()
+  public orderWorkflowSubmitStatus: OrderWorkflowSubmitStatus;
+
+  constructor(private _navigationService: McsNavigationService) { }
+
+  public get orderWorkflowSubmitStatusEnum(): typeof OrderWorkflowSubmitStatus {
+    return OrderWorkflowSubmitStatus;
+  }
 
   public get orderId(): string {
     return getSafeProperty(this.order, (obj) => obj.orderId);
-  }
-
-  public get hasError(): boolean {
-    return getSafeProperty(this.order, (obj) => obj.hasErrors);
   }
 
   public onOrderIdClick(): void {

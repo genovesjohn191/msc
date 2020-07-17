@@ -1,25 +1,63 @@
-<section>
-    <ng-container *ngIf="(!hasError); else showErrorMessage">
-        <h3>
-            <mcs-status-message type="success" mcsAlignContent="middle-left">
-                {{'orderCompletedStep.successMessage' | translate: { orderNo: orderId } }}
-            </mcs-status-message>
-        </h3>
+<ng-container [ngSwitch]="orderWorkflowSubmitStatus">
 
-        <ng-container>
-            <div  mcsAlignContent="middle-left">
-                <a (click)="onOrderIdClick()">
-                    <strong>{{'orderCompletedStep.linkInstruction' | translate}}</strong>
-                </a>
-                {{'orderCompletedStep.linkLabel' | translate}}
-            </div>
-        </ng-container>
-    </ng-container>
-    <ng-template #showErrorMessage>
-        <h3>
-            <mcs-status-message type="error" mcsAlignContent="middle-left">
-                {{'orderCompletedStep.errors.orderCreationError' | translate }}
-            </mcs-status-message>
-        </h3>
-    </ng-template>
-</section>
+  <!-- Message when Order was Successfully Submitted -->
+  <ng-container *ngSwitchCase="orderWorkflowSubmitStatusEnum.SuccessfulSubmit">
+    <h3>
+      <mcs-status-message type="success" mcsAlignContent="middle-left">
+        {{ 'orderCompletedStep.success.submitOrder' | translate: { orderNo: orderId } }}
+      </mcs-status-message>
+    </h3>
+    <ng-container *ngTemplateOutlet="orderDetailsLinkTemplate"></ng-container>
+  </ng-container>
+
+  <!-- Message when Order was Successfully Saved as Draft -->
+  <ng-container *ngSwitchCase="orderWorkflowSubmitStatusEnum.SavedAsDraft">
+    <h3>
+      <mcs-status-message type="success" mcsAlignContent="middle-left">
+        {{ 'orderCompletedStep.success.draftOrder' | translate }}
+      </mcs-status-message>
+    </h3>
+  </ng-container>
+
+  <!-- Message when Order is in progress for Submission -->
+  <ng-container *ngSwitchCase="orderWorkflowSubmitStatusEnum.InProgressSubmit">
+    <mcs-data-status-in-progress mcsAlignContent="middle-left">
+      <div> {{ 'orderCompletedStep.inProgress.submitOrder' | translate }} </div>
+    </mcs-data-status-in-progress>
+  </ng-container>
+
+  <!-- Message when Order is in progress for Save as Draft -->
+  <ng-container *ngSwitchCase="orderWorkflowSubmitStatusEnum.SavingAsDraft">
+    <mcs-data-status-in-progress mcsAlignContent="middle-left">
+      <div> {{ 'orderCompletedStep.inProgress.draftOrder' | translate }} </div>
+    </mcs-data-status-in-progress>
+  </ng-container>
+
+  <!-- Message when Order has failed when Saving as Draft -->
+  <ng-container *ngSwitchCase="orderWorkflowSubmitStatusEnum.FailedDraft">
+    <h3>
+      <mcs-status-message type="error" mcsAlignContent="middle-left">
+        {{'orderCompletedStep.errors.draftOrder' | translate }}
+      </mcs-status-message>
+    </h3>
+  </ng-container>
+
+  <!-- Message when Order has failed in Submission -->
+  <ng-container *ngSwitchCase="orderWorkflowSubmitStatusEnum.FailedSubmit">
+    <h3>
+      <mcs-status-message type="error" mcsAlignContent="middle-left">
+        {{'orderCompletedStep.errors.submitOrder' | translate }}
+      </mcs-status-message>
+    </h3>
+  </ng-container>
+</ng-container>
+
+<!-- Go to Order Details Link Template -->
+<ng-template #orderDetailsLinkTemplate>
+  <div mcsAlignContent="middle-left">
+    <a (click)="onOrderIdClick()">
+      <strong>{{'orderCompletedStep.linkInstruction' | translate}}</strong>
+    </a>
+    {{'orderCompletedStep.linkLabel' | translate}}
+  </div>
+</ng-template>

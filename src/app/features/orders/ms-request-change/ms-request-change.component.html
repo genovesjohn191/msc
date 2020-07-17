@@ -34,7 +34,7 @@
               <mcs-item>
                 <p [innerHTML]="('orderMsRequestChange.detailsStep.description' | translate) | mcsNewLines"></p>
               </mcs-item>
-              
+
               <!-- Services Selection -->
               <mcs-item orientation="block">
                 <mcs-form-field>
@@ -48,7 +48,7 @@
                     <ng-container>
                         <mcs-option *ngFor="let subscription of subscriptions$ | async" [value]="subscription.value"
                         [disabled]="!(subscription.value.serviceId | mcsIsNotNullOrEmpty)">
-                          <span 
+                          <span
                             [ngStyle]="{'pointer-events': 'auto'}"
                             [mcsTooltip]="'orderMsRequestChange.detailsStep.nullServiceIdToolTip' | translate"
                             [mcsTooltipShow]="!(subscription.value.serviceId | mcsIsNotNullOrEmpty)"
@@ -59,7 +59,7 @@
                     </ng-container>
                   </mcs-select>
                 </mcs-form-field>
-                <span *ngIf="!(fcMsService.pristine)">{{ 'orderMsRequestChange.detailsStep.serviceSubscriptionId' | 
+                <span *ngIf="!(fcMsService.pristine)">{{ 'orderMsRequestChange.detailsStep.serviceSubscriptionId' |
                   translate: { subscriptionId:  (fcMsService?.value.uuid | mcsIsNotNullOrEmpty) ? fcMsService?.value.subscriptionId : fcMsService?.value.id } }}</span>
               </mcs-item>
 
@@ -67,7 +67,7 @@
               <mcs-item orientation="block">
                 <span align-self-start>{{ 'orderMsRequestChange.detailsStep.categoryLabel' | translate }}</span>
                 <mcs-form-field>
-                  <mcs-select [formControl]="fcCategory" 
+                  <mcs-select [formControl]="fcCategory"
                     mcsId="select-ms-service-category"
                     mcsEventTracker="select-ms-service-category"
                     mcsEventCategory="order"
@@ -88,7 +88,7 @@
               <!-- Contact -->
               <mcs-item orientation="block">
                 <span align-self-start>{{ 'orderMsRequestChange.detailsStep.contactUsLabel' | translate }}</span>
-           
+
                   <ng-container *ngIf="contactOptions$ | async as contactOptions">
                     <mcs-radio-button-group orientation="horizontal" [formControl]="fcContact">
                       <mcs-radio-button *ngFor="let contact of contactOptions" [value]="contact.value"
@@ -172,7 +172,10 @@
         <mcs-wizard-step id="go-step"
           [stepTitle]="'shared.wizard.completed' | translate"
           customClass="limited-view">
-         <mcs-step-manual-order-completed [order]="order$ | async"></mcs-step-manual-order-completed>
+          <mcs-step-manual-order-completed
+            [order]="order$ | async"
+            [orderWorkflowSubmitStatus]="orderWorkflowSubmitStatus$ | async">
+          </mcs-step-manual-order-completed>
         </mcs-wizard-step>
       </mcs-wizard>
 

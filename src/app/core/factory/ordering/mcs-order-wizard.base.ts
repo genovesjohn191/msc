@@ -2,11 +2,17 @@ import {
   ViewChild,
   Injector
 } from '@angular/core';
-import { Observable } from 'rxjs';
+import {
+  Observable,
+  BehaviorSubject,
+  throwError
+} from 'rxjs';
 import {
   shareReplay,
   tap,
-  startWith
+  startWith,
+  distinctUntilChanged,
+  catchError
 } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 import {
@@ -26,7 +32,8 @@ import {
   RouteKey,
   McsOrderItemType,
   McsFeatureFlag,
-  McsEventTrack
+  McsEventTrack,
+  OrderWorkflowSubmitStatus
 } from '@app/models';
 import { McsOrderBase } from './mcs-order.base';
 import { McsWizardBase } from '../../base/mcs-wizard.base';
@@ -40,6 +47,7 @@ interface OrderEventTrack {
 export abstract class McsOrderWizardBase extends McsWizardBase implements McsDisposable {
   public order$: Observable<McsOrder>;
   public orderItemType$: Observable<McsOrderItemType>;
+  public orderWorkflowSubmitStatus$: Observable<OrderWorkflowSubmitStatus>;
 
   @ViewChild('pricingCalculator', { static: false })
   public pricingCalculator: PricingCalculator;
@@ -48,6 +56,8 @@ export abstract class McsOrderWizardBase extends McsWizardBase implements McsDis
   protected readonly accessControlService: McsAccessControlService;
 
   private _pricingIsHiddenByStep: boolean;
+  private _orderWorkflowSubmitStatusChange: BehaviorSubject<OrderWorkflowSubmitStatus>;
+  private _currentWorkflowState: OrderWorkflowAction = OrderWorkflowAction.Unknown;
   private readonly _navigationService: McsNavigationService;
 
   constructor(
@@ -59,9 +69,11 @@ export abstract class McsOrderWizardBase extends McsWizardBase implements McsDis
     this.accessControlService = this._injector.get(McsAccessControlService);
     this._navigationService = this._injector.get(McsNavigationService);
     this.translateService = this._injector.get(TranslateService);
+    this._orderWorkflowSubmitStatusChange = new BehaviorSubject(OrderWorkflowSubmitStatus.NeverAttempted);
     this._setDefaultEventTrackingDetails();
     this._subscribeToOrderChanges();
     this._subscribeToOrderItemTypeChanges();
+    this._subscribeToOrderWorkflowSubmitStatusChange();
   }
 
   /**
@@ -69,6 +81,20 @@ export abstract class McsOrderWizardBase extends McsWizardBase implements McsDis
    */
   public get progressDescription(): string {
     return getSafeProperty(this._orderBase.order, (obj) => obj.progressDescription);
+  }
+
+  /**
+   * Returns true if the order is to be submitted
+   */
+  public get orderIsToBeSubmitted(): boolean {
+    return this._currentWorkflowState === OrderWorkflowAction.Submitted;
+  }
+
+  /**
+   * Returns true if the order is draft or awaiting for approval
+   */
+  public get orderIsDraft(): boolean {
+    return this._currentWorkflowState === OrderWorkflowAction.AwaitingApproval || this._currentWorkflowState === OrderWorkflowAction.Draft;
   }
 
   /**
@@ -92,15 +118,21 @@ export abstract class McsOrderWizardBase extends McsWizardBase implements McsDis
 
     // We need to send the order as a draft when the request is awaiting approval
     // and navigate to order details page with approvers as initial display
+    this._currentWorkflowState = workflow.state;
     let subjectForApproval = workflow.state === OrderWorkflowAction.AwaitingApproval;
     if (subjectForApproval) { workflow.state = OrderWorkflowAction.Draft; }
 
+    this._setWorkflowSubmitStatus(OrderWorkflowSubmitStatus.SavingAsDraft, OrderWorkflowSubmitStatus.InProgressSubmit);
     this._orderBase.submitOrderWorkflow(workflow).pipe(
-      tap(() =>
-        this.navigateOrderByWorkflowAction(
-          subjectForApproval ? OrderWorkflowAction.AwaitingApproval : workflow.state
-        )
-      )
+      tap(() => {
+        this._currentWorkflowState = subjectForApproval ? OrderWorkflowAction.AwaitingApproval : workflow.state;
+        this._setWorkflowSubmitStatus(OrderWorkflowSubmitStatus.SavedAsDraft, OrderWorkflowSubmitStatus.SuccessfulSubmit);
+        this.navigateOrderByWorkflowAction(this._currentWorkflowState);
+      }),
+      catchError((error) => {
+        this._setWorkflowSubmitStatus(OrderWorkflowSubmitStatus.FailedDraft, OrderWorkflowSubmitStatus.FailedSubmit);
+        return throwError(error);
+      })
     ).subscribe();
   }
 
@@ -109,10 +141,7 @@ export abstract class McsOrderWizardBase extends McsWizardBase implements McsDis
    * @param workflowAction Workflow action to be navigated
    */
   public navigateOrderByWorkflowAction(workflowAction: OrderWorkflowAction): void {
-    let shouldBeRedirected = workflowAction === OrderWorkflowAction.AwaitingApproval ||
-      workflowAction === OrderWorkflowAction.Draft;
-    if (!shouldBeRedirected) { return; }
-
+    if (!this.orderIsDraft) { return; }
     workflowAction === OrderWorkflowAction.AwaitingApproval ?
       this._navigationService.navigateTo(RouteKey.OrderDetails, [this._orderBase.order.id], {
         queryParams: { 'approval-request': true }
@@ -150,6 +179,15 @@ export abstract class McsOrderWizardBase extends McsWizardBase implements McsDis
   }
 
   /**
+   * Subscribes to order item type changes
+   */
+  private _subscribeToOrderWorkflowSubmitStatusChange(): void {
+    this.orderWorkflowSubmitStatus$ = this._orderWorkflowSubmitStatusChange.asObservable().pipe(
+      distinctUntilChanged()
+    );
+  }
+
+  /**
    * Sets the pricing calculator visibility
    */
   private _setPricingCalculatorVisibility(): void {
@@ -167,6 +205,17 @@ export abstract class McsOrderWizardBase extends McsWizardBase implements McsDis
       this.pricingCalculator.hideWidget();
   }
 
+  /**
+   * Sets the workflow submit status based on submit type, final and draft
+   */
+  private _setWorkflowSubmitStatus(draftStatusToSet: OrderWorkflowSubmitStatus, submitStatusToSet: OrderWorkflowSubmitStatus): void {
+    let status = this.orderIsDraft ? draftStatusToSet : submitStatusToSet;
+    this._orderWorkflowSubmitStatusChange.next(status);
+  }
+
+  /**
+   * Sets the default event tracking details for an order
+   */
   private _setDefaultEventTrackingDetails(): void {
     if (!isNullOrEmpty(this.orderEventTrack) && Object.keys(this.orderEventTrack).length !== 0) {
       return;

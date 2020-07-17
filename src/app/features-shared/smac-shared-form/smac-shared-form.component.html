@@ -52,7 +52,7 @@
         mcsEventTracker="input-notes"
         mcsEventCategory="order"
         mcsEventLabel="order-shared-smac-form"
-        maxlength="4000"
+        [maxlength]="notesMaxLength"
         [placeholder]="'smacShared.form.notes.placeholder' | translate"
         [formControl]="fcNotes"></textarea>
 

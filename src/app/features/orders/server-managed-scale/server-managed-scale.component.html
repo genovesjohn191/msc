@@ -118,7 +118,8 @@
           </ng-container>
 
           <ng-container mcsProvisioningStepInProgress>
-            {{ 'orderServerManagedScale.scaling.dataInProgress' | translate}}
+            <span *ngIf="orderIsToBeSubmitted">{{ 'orderServerManagedScale.scaling.dataInProgress' | translate }}</span>
+            <span *ngIf="!orderIsToBeSubmitted">{{ 'provisioningStep.savingOrder' | translate }}</span>
           </ng-container>
         </mcs-step-provisioning>
       </mcs-wizard-step>
