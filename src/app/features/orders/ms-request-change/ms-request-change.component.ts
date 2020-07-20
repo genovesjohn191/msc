@@ -69,7 +69,6 @@ const MS_REQUEST_SERVICE_CHANGE = Guid.newGuid().toString();
 type MsRequestChangeProperties = {
   category: number;
   complexity: string;
-  deliveryType: string;
   phoneConfirmationRequired: boolean;
   customerReferenceNumber: string;
   requestDescription: string;
@@ -175,31 +174,14 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
    * Event listener whenever there is a change in billing information and delivery type
    */
   public onOrderDetailsDataChange(orderDetails: OrderDetails): void {
-    if (isNullOrEmpty(orderDetails) || !this.formIsValid) { return; }
+    if (isNullOrEmpty(orderDetails)) { return; }
     this._msRequestChangeService.createOrUpdateOrder(
       createObject(McsOrderCreate, {
         contractDurationMonths: orderDetails.contractDurationMonths,
         description: orderDetails.description,
         billingEntityId: orderDetails.billingEntityId,
         billingSiteId: orderDetails.billingSiteId,
-        billingCostCentreId: orderDetails.billingCostCentreId,
-        items: [
-          // Recreate whole order item to passed the new Delivery type
-          createObject(McsOrderItemCreate, {
-            itemOrderType: OrderIdType.MsRequestChange,
-            referenceId: MS_REQUEST_SERVICE_CHANGE,
-            serviceId: this.fcMsService.value.serviceId,
-            deliveryType: orderDetails.deliveryType,
-            properties: {
-              category: categoryText[this.fcCategory.value],
-              complexity: complexityText[Complexity.Simple],
-              phoneConfirmationRequired: this._isPhoneConfirmationRequired(this.fcContact.value),
-              customerReferenceNumber: this.fcCustomerReference.value,
-              requestDescription: this.fcRequestDescription.value,
-              deliveryType: deliveryTypeText[orderDetails.deliveryType],
-            } as MsRequestChangeProperties
-          })
-        ]
+        billingCostCentreId: orderDetails.billingCostCentreId
       }),
       OrderRequester.Billing,
       orderDetails.deliveryType
@@ -299,8 +281,7 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
               complexity: complexityText[Complexity.Simple], // temporarily set complexity value to simple by default
               phoneConfirmationRequired: this._isPhoneConfirmationRequired(this.fcContact.value),
               customerReferenceNumber: this.fcCustomerReference.value,
-              requestDescription: this.fcRequestDescription.value,
-              deliveryType: deliveryTypeText[DeliveryType.Standard] // set to Standard as default
+              requestDescription: this.fcRequestDescription.value
             } as MsRequestChangeProperties
           })
         ]

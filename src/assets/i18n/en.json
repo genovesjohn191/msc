@@ -1163,14 +1163,14 @@
   },
   "provisioningStep": {
     "stepTitle": "Go!",
-    "provisioningProgressTitle": "Progress - Order {{orderNo}}",
+    "provisioningProgressTitle": "Progress - Order #{{orderNo}}",
     "savingOrder": "Saving your order. This may take a moment..."
   },
   "orderCompletedStep": {
     "linkInstruction": "Click here",
     "linkLabel": " to view your order.",
     "success": {
-      "draftOrder": "Order #{orderId} has been successfully saved.",
+      "draftOrder": "Order #{{orderNo}} has been successfully saved.",
       "submitOrder": "Order #{{orderNo}} has been successfully submitted."
     },
     "inProgress": {

@@ -163,9 +163,9 @@
 
       <!-- Order Options -->
       <section margin-top-xlarge>
-        <mcs-item orientation="separated" *ngIf="hasLeadTimeOptions" [disabled]="isUpdatingCharges">
+        <mcs-item orientation="separated" *ngIf="hasLeadTimeOptions">
           <span>{{ 'orderDetailsStep.deliveryType.header' | translate }}</span>
-          <mcs-form-field class="form-field-size-small">
+          <mcs-form-field class="form-field-size-small" [disabled]="isUpdatingCharges">
             <mcs-select required [formControl]="fcDeliveryType" mcsId="select-delivery-type">
               <ng-container>
                 <mcs-option [value]="deliveryTypeEnum.Standard">
@@ -179,9 +179,9 @@
           </mcs-form-field>
         </mcs-item>
 
-        <mcs-item orientation="separated" [disabled]="isUpdatingCharges">
+        <mcs-item orientation="separated">
           <span>{{ 'orderDetailsStep.orderActions.header' | translate }}</span>
-          <mcs-form-field class="form-field-size-small">
+          <mcs-form-field class="form-field-size-small" [disabled]="isUpdatingCharges">
             <mcs-select required [formControl]="fcWorkflowAction" mcsId="select-workflow-action">
 
               <ng-container *mcsAccessControl="['OrderApprove']; else requestApprovalTemplate">

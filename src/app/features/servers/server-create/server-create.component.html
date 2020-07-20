@@ -102,9 +102,16 @@
           </ng-container>
 
           <ng-container mcsProvisioningStepInProgress>
-            <span *ngIf="orderIsToBeSubmitted">{{ 'serverCreateProvisioningStep.dataProvisioning' | translate }}</span>
-            <span *ngIf="!orderIsToBeSubmitted">{{ 'provisioningStep.savingOrder' | translate }}</span>
+            <ng-container *ngIf="resource$ | async as resource">
+              <ng-container *ngIf="resource?.serviceType === serviceTypeEnum.Managed && !orderIsToBeSubmitted; else provisionMessageTemplate">
+                <span>{{ 'provisioningStep.savingOrder' | translate }}</span>
+              </ng-container>
+              <ng-template #provisionMessageTemplate>
+                <span>{{ 'serverCreateProvisioningStep.dataProvisioning' | translate }}</span>
+              </ng-template>
+            </ng-container>
           </ng-container>
+
         </mcs-step-provisioning>
       </mcs-wizard-step>
     </mcs-wizard>
