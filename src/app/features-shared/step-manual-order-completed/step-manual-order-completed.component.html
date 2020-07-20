@@ -14,7 +14,7 @@
   <ng-container *ngSwitchCase="orderWorkflowSubmitStatusEnum.SavedAsDraft">
     <h3>
       <mcs-status-message type="success" mcsAlignContent="middle-left">
-        {{ 'orderCompletedStep.success.draftOrder' | translate }}
+        {{ 'orderCompletedStep.success.draftOrder' | translate: { orderNo: orderId } }}
       </mcs-status-message>
     </h3>
   </ng-container>
@@ -35,26 +35,18 @@
 
   <!-- Message when Order has failed when Saving as Draft -->
   <ng-container *ngSwitchCase="orderWorkflowSubmitStatusEnum.FailedDraft">
-    <h3>
-      <mcs-status-message type="error" mcsAlignContent="middle-left">
-        {{'orderCompletedStep.errors.draftOrder' | translate }}
-      </mcs-status-message>
-    </h3>
+    <div> {{'orderCompletedStep.errors.draftOrder' | translate }} </div>
   </ng-container>
 
   <!-- Message when Order has failed in Submission -->
   <ng-container *ngSwitchCase="orderWorkflowSubmitStatusEnum.FailedSubmit">
-    <h3>
-      <mcs-status-message type="error" mcsAlignContent="middle-left">
-        {{'orderCompletedStep.errors.submitOrder' | translate }}
-      </mcs-status-message>
-    </h3>
+    <div> {{'orderCompletedStep.errors.submitOrder' | translate }} </div>
   </ng-container>
 </ng-container>
 
 <!-- Go to Order Details Link Template -->
 <ng-template #orderDetailsLinkTemplate>
-  <div mcsAlignContent="middle-left">
+  <div mcsAlignContent="middle-left" margin-top-medium>
     <a (click)="onOrderIdClick()">
       <strong>{{'orderCompletedStep.linkInstruction' | translate}}</strong>
     </a>
