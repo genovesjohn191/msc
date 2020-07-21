@@ -237,6 +237,8 @@ export * from './response/mcs-license';
 export * from './response/mcs-account';
 export * from './response/mcs-azure-resource';
 export * from './response/mcs-subscription';
+export * from './response/mcs-report-generic-item';
+
 
 /** Common */
 export * from './common/mcs-api-search-key';

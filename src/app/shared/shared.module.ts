@@ -10,6 +10,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { RippleModule } from './ripple/ripple.module';
 import { GridModule } from './grid/grid.module';
 import { ButtonModule } from './button/button.module';
+import { ChartModule } from './chart/chart.module';
 import { CheckboxModule } from './checkbox/checkbox.module';
 import { ColumnFilterModule } from './column-filter/column-filter.module';
 import { PopoverModule } from './popover/popover.module';
@@ -85,6 +86,7 @@ import { DynamicListModule } from './dynamic-list/dynamic-list.module';
     ImageModule,
     GridModule,
     ButtonModule,
+    ChartModule,
     CheckboxModule,
     ColumnFilterModule,
     TableModule,
@@ -153,6 +155,7 @@ import { DynamicListModule } from './dynamic-list/dynamic-list.module';
     ImageModule,
     GridModule,
     ButtonModule,
+    ChartModule,
     CheckboxModule,
     ColumnFilterModule,
     TableModule,

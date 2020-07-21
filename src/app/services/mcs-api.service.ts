@@ -116,6 +116,7 @@ import {
   McsAccount,
   McsAzureResource,
   McsSubscription,
+  McsReportGenericItem,
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -159,6 +160,8 @@ import {
   McsApiAzureResourceFactory,
   McsApiSubscriptionsFactory,
   IMcsApiSubscriptionsService,
+  IMcsApiReportsService,
+  McsApiReportsFactory,
 } from '@app/api-client';
 import { McsEvent } from '@app/events';
 import { McsRepository } from './core/mcs-repository.interface';
@@ -228,6 +231,7 @@ export class McsApiService {
   private readonly _accountApi: IMcsApiAccountService;
   private readonly _azureResourceApi: IMcsApiAzureResourceService;
   private readonly _subscriptionsApi: IMcsApiSubscriptionsService;
+  private readonly _reportsApi: IMcsApiReportsService;
 
   private readonly _eventDispatcher: EventBusDispatcherService;
   private readonly _entitiesEventMap: Array<DataEmitter<any>>;
@@ -272,6 +276,7 @@ export class McsApiService {
     this._accountApi = apiClientFactory.getService(new McsApiAccountFactory());
     this._azureResourceApi = apiClientFactory.getService(new McsApiAzureResourceFactory());
     this._subscriptionsApi = apiClientFactory.getService(new McsApiSubscriptionsFactory());
+    this._reportsApi = apiClientFactory.getService(new McsApiReportsFactory());
 
     // Register events
     this._entitiesEventMap = [];
@@ -1393,7 +1398,34 @@ export class McsApiService {
   public getSubscriptions(): Observable<McsApiCollection<McsSubscription>> {
     return this._subscriptionsApi.getSubscriptions().pipe(
       catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getAzureResources'))
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getSubscriptions'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public getServicesCostOverviewReport(periodStart?: string, periodEnd?: string): Observable<McsApiCollection<McsReportGenericItem>> {
+    return this._reportsApi.getServicesCostOverviewReport(periodStart, periodEnd).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getServicesCostOverviewReport'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public getVirtualMachineBreakdownReport(periodStart?: string, periodEnd?: string): Observable<McsApiCollection<McsReportGenericItem>> {
+    return this._reportsApi.getVirtualMachineBreakdownReport(periodStart, periodEnd).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getVirtualMachineBreakdownReport'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public getPerformanceReport(periodStart?: string, periodEnd?: string): Observable<McsApiCollection<McsReportGenericItem>> {
+    return this._reportsApi.getPerformanceReport(periodStart, periodEnd).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getPerformanceReport'))
       ),
       map((response) => this._mapToCollection(response.content, response.totalCount))
     );
