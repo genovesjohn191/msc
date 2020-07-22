@@ -20,6 +20,7 @@ export * from './pricing-calculator';
 export * from './progress-bar';
 export * from './overlay';
 export * from './scrollable-link-group';
+export * from './datetimepicker';
 
 /** Expose directives */
 export * from './form-field/form-group.directive';
