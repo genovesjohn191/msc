@@ -11,6 +11,28 @@
     </mcs-dynamic-list>
   </mcs-item>
 
+  <!-- Notes -->
+  <mcs-item orientation='block'>
+    <span align-self-start>{{ 'smacShared.form.notes.label' | translate }}:</span>
+    <mcs-form-field>
+      <textarea mcsInput rows="3" #notesInput
+        mcsId="input-notes"
+        mcsEventTracker="input-notes"
+        mcsEventCategory="order"
+        mcsEventLabel="order-shared-smac-form"
+        [maxlength]="notesMaxLength"
+        [placeholder]="'smacShared.form.notes.placeholder' | translate"
+        [formControl]="fcNotes"></textarea>
+
+      <mcs-hint mcsHint align="start">
+        {{ 'smacShared.form.notes.hint' | translate: { max_char: notesInput?.maxLength } }}
+      </mcs-hint>
+      <mcs-hint mcsHint align="end">
+        {{ notesInput?.value?.length }} / {{ notesInput?.maxLength }}
+      </mcs-hint>
+    </mcs-form-field>
+  </mcs-item>
+  
   <!-- Contact -->
   <mcs-item orientation="block">
     <span align-self-start>{{ 'smacShared.form.contact.label' | translate }}</span>
@@ -41,27 +63,6 @@
         mcsEventTracker="input-customer-reference"
         mcsEventCategory="order"
         mcsEventLabel="order-shared-smac-form">
-    </mcs-form-field>
-  </mcs-item>
-
-  <!-- Notes -->
-  <mcs-item orientation='block'>
-    <mcs-form-field>
-      <textarea mcsInput rows="3" #notesInput
-        mcsId="input-notes"
-        mcsEventTracker="input-notes"
-        mcsEventCategory="order"
-        mcsEventLabel="order-shared-smac-form"
-        [maxlength]="notesMaxLength"
-        [placeholder]="'smacShared.form.notes.placeholder' | translate"
-        [formControl]="fcNotes"></textarea>
-
-      <mcs-hint mcsHint align="start">
-        {{ 'smacShared.form.notes.hint' | translate: { max_char: notesInput?.maxLength } }}
-      </mcs-hint>
-      <mcs-hint mcsHint align="end">
-        {{ notesInput?.value?.length }} / {{ notesInput?.maxLength }}
-      </mcs-hint>
     </mcs-form-field>
   </mcs-item>
 </form>

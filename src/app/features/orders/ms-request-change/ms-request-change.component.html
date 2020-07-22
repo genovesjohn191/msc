@@ -81,65 +81,30 @@
                 </mcs-form-field>
               </mcs-item>
 
-              <!-- Contact -->
+              <!-- Resource Identifier -->
               <mcs-item orientation="block">
-                <span align-self-start>{{ 'orderMsRequestChange.detailsStep.contactUsLabel' | translate }}</span>
-
-                  <ng-container *ngIf="contactOptions$ | async as contactOptions">
-                    <mcs-radio-button-group orientation="horizontal" [formControl]="fcContact">
-                      <mcs-radio-button *ngFor="let contact of contactOptions" [value]="contact.value"
-                        mcsId="select-ms-service-contact"
-                        mcsEventTracker="select-ms-service-contact"
-                        mcsEventCategory="order"
-                        mcsEventLabel="ms-service-change-request">
-                        {{ contact.text }}
-                      </mcs-radio-button>
-                    </mcs-radio-button-group>
-                  </ng-container>
-                  <ng-container *ngIf="account$ | async as currentAccount">
-                    <!-- TODO: add a new shared directive for coloring font elements-->
-                    <span [mcsGreyedOut]="true">{{ 'orderMsRequestChange.detailsStep.contactUsDescription' | translate: { phone_number: currentAccount.phoneNumber } }}</span>
-                  </ng-container>
-              </mcs-item>
-
-              <!-- Customer Reference Number  -->
-              <mcs-item orientation="block">
-                <span align-self-start>{{ 'orderMsRequestChange.detailsStep.customerReferenceNumberLabel' | translate }}:</span>
+                <span align-self-start>{{ 'orderMsRequestChange.detailsStep.resourceIdentifierLabel' | translate }}:</span>
                 <mcs-form-field>
-                  <input mcsInput [formControl]="fcCustomerReference"
-                    mcsId="input-ms-service-customer-reference"
-                    mcsEventTracker="input-ms-service-customer-reference"
-                    mcsEventCategory="order"
-                    mcsEventLabel="ms-service-change-request">
+                  <input mcsInput [formControl]="fcResourceIdentifier"
+                    mcsId="input-ms-service-resource-identifier">
+                    <mcs-error mcsError errorState="required">
+                      {{ 'orderMsRequestChange.errors.resourceIdentifierRequired' | translate }}
+                    </mcs-error>
                 </mcs-form-field>
               </mcs-item>
 
-              <!-- Request Description -->
+              <!-- SMAC Shared Form -->
               <mcs-item orientation="block">
-                <span align-self-start>{{ 'orderMsRequestChange.detailsStep.requestDescriptionLabel' | translate }}:</span>
-                <mcs-form-field>
-                  <textarea mcsInput [rows]="descriptionVisibleRows" #requestDescriptionInput required
-                    mcsId="input-ms-service-request-description"
-                    [maxlength]="maxDescriptionLength"
-                    [placeholder]="'orderMsRequestChange.detailsStep.requestDescriptionMax' | translate: { max_char: requestDescriptionInput.maxLength }"
-                    [formControl]="fcRequestDescription"></textarea>
-
-                  <mcs-hint mcsHint align="start">
-                    {{ 'orderMsRequestChange.detailsStep.requestDescriptionMax' | translate: { max_char: requestDescriptionInput.maxLength } }}
-                  </mcs-hint>
-                  <mcs-hint mcsHint align="end">
-                    {{ requestDescriptionInput.value.length }} / {{ requestDescriptionInput.maxLength }}
-                  </mcs-hint>
-                  <mcs-error mcsError errorState="required">
-                    {{ 'orderMsRequestChange.errors.requestDescriptionRequired' | translate }}
-                  </mcs-error>
-                </mcs-form-field>
+                <mcs-smac-shared-form #fgSmacSharedForm
+                  [phoneNumber]="(account$ | async)?.phoneNumber"
+                  (dataChange)="onChangeSharedForm($event)">
+                </mcs-smac-shared-form>
               </mcs-item>
 
               <div class="action-items">
                 <button mcsButton arrow="right"
                   mcsWizardStepNext
-                  [disabled]="(!formIsValid || fcMsService.pristine || fcRequestDescription.pristine)"
+                  [disabled]="!formIsValid && fgSmacSharedForm.isValid()"
                   mcsId="step-1-next"
                   mcsEventTracker="step-1-next"
                   mcsEventCategory="orders"
