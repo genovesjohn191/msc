@@ -2042,6 +2042,11 @@
     },
     "links": {
       "hereLabel": "here"
+    },
+    "datetimepicker": {
+      "datepickerLabel": "Choose a date",
+      "label": "Required deadline",
+      "contextualHelp": "Select a deadline for this operation. One of our friendly engineers will contact you if the deadline you have chosen is unavailable."
     }
   },
   "apiErrorMessage": {

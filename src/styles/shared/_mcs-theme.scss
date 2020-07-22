@@ -1,0 +1,30 @@
+
+@import '~@angular/material/theming';
+@include mat-core();
+
+// custom pallete 
+$mcs-black: (
+    50: #000000,
+    100: #0A0A0A,
+    200: #101010,
+    300: #1B1B1B,
+    400: #262626,
+    contrast: (
+        50: $black-87-opacity,
+        100: $black-87-opacity,
+        200: $black-87-opacity,
+        300: $black-87-opacity,
+        400: $black-87-opacity,
+    )
+);
+
+$mcs-primary: mat-palette($mat-cyan);
+$mcs-accent: mat-palette($mcs-black);
+$mcs-warn: mat-palette($mat-red);
+$mcs-theme: mat-light-theme($mcs-primary, $mcs-accent, $mcs-warn);
+
+@include angular-material-theme($mcs-theme);
+
+.mcs-overlay-theme {
+  z-index: 1500;
+}

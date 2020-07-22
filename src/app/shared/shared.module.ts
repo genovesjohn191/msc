@@ -69,6 +69,7 @@ import { TreeModule } from './tree/tree.module';
 import { SectionModule } from './section/section.module';
 import { PricingCalculatorModule } from './pricing-calculator/pricing-calculator.module';
 import { DynamicListModule } from './dynamic-list/dynamic-list.module';
+import { DateTimePickerModule } from './datetimepicker/datetimepicker.module';
 
 @NgModule({
   imports: [
@@ -138,7 +139,8 @@ import { DynamicListModule } from './dynamic-list/dynamic-list.module';
     TreeModule,
     SectionModule,
     PricingCalculatorModule,
-    DynamicListModule
+    DynamicListModule,
+    DateTimePickerModule
   ],
   exports: [
     CommonModule,
@@ -207,7 +209,8 @@ import { DynamicListModule } from './dynamic-list/dynamic-list.module';
     TreeModule,
     SectionModule,
     PricingCalculatorModule,
-    DynamicListModule
+    DynamicListModule,
+    DateTimePickerModule
   ]
 })
 
