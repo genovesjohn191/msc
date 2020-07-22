@@ -2,6 +2,7 @@
 export * from './shared.module';
 
 /** Shared */
+export * from './chart';
 export * from './button';
 export * from './pipes';
 export * from './table';

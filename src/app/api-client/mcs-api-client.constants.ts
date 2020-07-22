@@ -26,6 +26,7 @@ import { McsApiMockInterceptor } from './interceptors/mcs-api-mock.interceptor';
 import { McsApiAccountService } from './services/mcs-api-account.service';
 import { McsApiAzureResourceService } from './services/mcs-api-azure-resource.service';
 import { McsApiSubscriptionsService } from './services/mcs-api-subscriptions.service';
+import { McsApiReportsService } from './services/mcs-api-reports.service';
 
 export const apiClientProviders: Provider[] = [
   McsApiClientHttpService,
@@ -50,7 +51,8 @@ export const apiClientProviders: Provider[] = [
   McsApiLicensesService,
   McsApiAccountService,
   McsApiAzureResourceService,
-  McsApiSubscriptionsService
+  McsApiSubscriptionsService,
+  McsApiReportsService
 ];
 
 export const apiClientInterceptors: Provider[] = [
