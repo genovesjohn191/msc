@@ -29,7 +29,8 @@ import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import {
   McsOrderWizardBase,
   CoreValidators,
-  OrderRequester
+  OrderRequester,
+  IMcsFormGroup
 } from '@app/core';
 import {
   CommonDefinition,
@@ -41,7 +42,10 @@ import {
   formatStringToPhoneNumber
 } from '@app/utilities';
 import { McsFormGroupDirective } from '@app/shared';
-import { OrderDetails } from '@app/features-shared';
+import {
+   OrderDetails,
+   SmacSharedDetails
+  } from '@app/features-shared';
 import { McsApiService } from '@app/services';
 import { McsEvent } from '@app/events';
 import {
@@ -55,7 +59,6 @@ import {
   Category,
   Complexity,
   FormResponse,
-  deliveryTypeText,
   categoryText,
   complexityText,
   formResponseText,
@@ -72,6 +75,7 @@ type MsRequestChangeProperties = {
   phoneConfirmationRequired: boolean;
   customerReferenceNumber: string;
   requestDescription: string;
+  resourceIdent: string;
 };
 
 @Component({
@@ -87,9 +91,7 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
   public fcMsService: FormControl;
   public fcCategory: FormControl;
   public fcComplexity: FormControl;
-  public fcContact: FormControl;
-  public fcCustomerReference: FormControl;
-  public fcRequestDescription: FormControl;
+  public fcResourceIdentifier: FormControl;
 
   public categoryOptions$: Observable<McsOption[]>;
   public complexityOptions$: Observable<McsOption[]>;
@@ -100,6 +102,7 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
   private _formGroup: McsFormGroupDirective;
   private _formGroupSubject = new Subject<void>();
   private _selectedServiceHandler: Subscription;
+  private _smacSharedDetails: SmacSharedDetails;
 
   public get backIconKey(): string {
     return CommonDefinition.ASSETS_SVG_CHEVRON_LEFT;
@@ -137,6 +140,17 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
     this._subscribeToValueChanges();
   }
 
+  @ViewChild('fgSmacSharedForm', { static: false })
+  public set fgSmacSharedForm(value: IMcsFormGroup) {
+    if (isNullOrEmpty(value)) { return; }
+
+    let isRegistered = this.fgMsServiceChange.contains('fgSmacSharedForm');
+    if (isRegistered) { return; }
+    this.fgMsServiceChange.addControl('fgSmacSharedForm',
+      value.getFormGroup().formGroup
+    );
+  }
+
   constructor(
     _injector: Injector,
     private _msRequestChangeService: MsRequestChangeService,
@@ -154,6 +168,7 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
           action: 'next-button'
         }
       });
+    this._smacSharedDetails = new SmacSharedDetails();
     this._registerFormGroup();
   }
 
@@ -205,6 +220,14 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
     this.submitOrderWorkflow(workflow);
   }
 
+
+  /**
+   * Event listener when there is a change in Shared SMAC Form
+   */
+  public onChangeSharedForm(formDetails: SmacSharedDetails): void {
+    this._smacSharedDetails = formDetails;
+  }
+
   /**
    * Returns true if the Response is Yes, false otherwise
    */
@@ -236,16 +259,12 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
   private _registerFormGroup(): void {
     this.fcMsService = new FormControl('', [CoreValidators.required]);
     this.fcCategory = new FormControl('', [CoreValidators.required]);
-    this.fcContact = new FormControl('', [CoreValidators.required]);
-    this.fcCustomerReference = new FormControl('');
-    this.fcRequestDescription = new FormControl('', []);
+    this.fcResourceIdentifier = new FormControl('', [CoreValidators.required]);
 
     this.fgMsServiceChange = this._formBuilder.group({
       fcMsService: this.fcMsService,
       fcCategory: this.fcCategory,
-      fcContact: this.fcContact,
-      fcCustomerReference: this.fcCustomerReference,
-      fcRequestDescription: this.fcRequestDescription,
+      fcResourceIdentifier: this.fcResourceIdentifier
     });
   }
 
@@ -279,9 +298,10 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
             properties: {
               category: categoryText[this.fcCategory.value],
               complexity: complexityText[Complexity.Simple], // temporarily set complexity value to simple by default
-              phoneConfirmationRequired: this._isPhoneConfirmationRequired(this.fcContact.value),
-              customerReferenceNumber: this.fcCustomerReference.value,
-              requestDescription: this.fcRequestDescription.value
+              phoneConfirmationRequired: this._smacSharedDetails.contactAfterChange,
+              customerReferenceNumber: this._smacSharedDetails.referenceNumber,
+              requestDescription: this._smacSharedDetails.notes,
+              resourceIdent: this.fcResourceIdentifier.value
             } as MsRequestChangeProperties
           })
         ]

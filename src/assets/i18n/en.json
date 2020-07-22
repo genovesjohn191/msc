@@ -478,17 +478,14 @@
       "complexityLabel": "Complexity",
       "complexityDescription": "This will affect the cost of your request. We'll contact you and get your approval if we need to recategorize this after your request is submitted.",
       "complexityContextualHelp": "Please note, your request may need to be delayed or resubmitted if the complexity provided does not match the nature of the work required",
-      "contactUsLabel": "Would you like us to contact you before and after the change?",
-      "contactUsDescription": "You will be contacted on the telephone number you have provided in your user profile ({{phone_number}}). If you select yes and we are unable to contact you, the change will not be applied.",
-      "customerReferenceNumberLabel": "Customer reference number",
-      "requestDescriptionLabel": "Request description",
-      "requestDescriptionMax": "Max of {{max_char}} characters."
+      "resourceIdentifierLabel": "Resource Identifier"
     },
     "errors": {
       "complexity": "You must select a complexity",
       "category": "You must select a category",
       "requestDescriptionRequired": "Enter request description.",
-      "orderCreationError": "An problem occured while creating the order. Please try again later."
+      "orderCreationError": "An problem occured while creating the order. Please try again later.",
+      "resourceIdentifierRequired": "Please enter a resource identifier"
     }
   },
   "notification": {
@@ -1411,6 +1408,7 @@
         "placeholder": "Customer reference number"
       },
       "notes": {
+        "label": "Request description",
         "placeholder": "Are there any further details you would like us to know?",
         "hint": "Max of {{max_char}} characters"
       }
