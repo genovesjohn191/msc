@@ -34,7 +34,7 @@ export class McsIdentity {
     serializer: McsDateSerialization,
     deserializer: McsDateSerialization
   })
-  public expiry: Date;
+  public expiry: Date = undefined;
 
   /**
    * Returns the full name of the user
