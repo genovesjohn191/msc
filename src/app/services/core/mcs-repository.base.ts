@@ -279,6 +279,11 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
       tap((newFilteredRecords) => {
         this._allRecordsCount = this._context.totalRecordsCount;
         this._updateFilteredRecords(newFilteredRecords);
+
+        // Ensure new entities are added to repository
+        newFilteredRecords.forEach(entity => {
+          this.addOrUpdate(entity);
+        });
       })
     );
 

@@ -20,7 +20,8 @@ import {
   convertMapToJsonObject,
   unsubscribeSafely,
   getSafeProperty,
-  CommonDefinition
+  CommonDefinition,
+  cloneObject
 } from '@app/utilities';
 import {
   McsFilterInfo,
@@ -318,8 +319,17 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
 
     if (!isNullOrEmpty(this.tableConfig.entityDeleteEvent)) {
       this._entityDeleteHandler = this.eventDispatcher.addEventListener(
-        this.tableConfig.entityDeleteEvent, this._initializeDataSource.bind(this)
+        this.tableConfig.entityDeleteEvent, this._onDelete.bind(this)
       );
+    }
+  }
+
+  private _onDelete(): void {
+    if (this.isSearching) {
+      // TODO: need to update search result
+      this._initializeDataSource();
+    } else {
+      this._initializeDataSource();
     }
   }
 
