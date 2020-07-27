@@ -44,7 +44,8 @@ module.exports = function (config) {
         '--headless',
         '--disable-gpu',
         '--disable-translate',
-        '--disable-extensions']
+        '--disable-extensions',
+        "--js-flags=--max-old-space-size=3000"]
       }
     },
     browserNoActivityTimeout: 120000,
