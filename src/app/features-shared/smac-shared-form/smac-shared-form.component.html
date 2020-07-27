@@ -1,27 +1,27 @@
 <form [formGroup]="fgSmacSharedForm" mcsFormGroup>
   <!-- Test Cases -->
-  <mcs-item orientation='block'>
+  <mcs-item orientation='block' *ngIf="config?.testCaseConfig?.isIncluded">
     <mcs-dynamic-list
       mcsId="list-test-cases"
       mcsEventTracker="list-test-cases"
       mcsEventCategory="order"
       mcsEventLabel="order-shared-smac-form"
-      [placeholder]="testCasePlaceholder"
+      [placeholder]="config?.testCaseConfig?.placeholder"
       [formControl]="fcTestCases">
     </mcs-dynamic-list>
   </mcs-item>
 
   <!-- Notes -->
-  <mcs-item orientation='block'>
-    <span align-self-start>{{ 'smacShared.form.notes.label' | translate }}:</span>
+  <mcs-item orientation='block' *ngIf="config?.notesConfig?.isIncluded">
+    <span align-self-start>{{ config?.notesConfig?.label }}</span>
     <mcs-form-field>
       <textarea mcsInput rows="3" #notesInput
         mcsId="input-notes"
         mcsEventTracker="input-notes"
         mcsEventCategory="order"
         mcsEventLabel="order-shared-smac-form"
-        [maxlength]="notesMaxLength"
-        [placeholder]="'smacShared.form.notes.placeholder' | translate"
+        [maxlength]="config?.notesConfig?.maxlength"
+        [placeholder]="config?.notesConfig?.placeholder"
         [formControl]="fcNotes"></textarea>
 
       <mcs-hint mcsHint align="start">
@@ -30,12 +30,15 @@
       <mcs-hint mcsHint align="end">
         {{ notesInput?.value?.length }} / {{ notesInput?.maxLength }}
       </mcs-hint>
+      <mcs-error mcsError errorState="required">
+        {{ 'smacShared.form.notes.errors.required' | translate }}
+      </mcs-error>
     </mcs-form-field>
   </mcs-item>
-  
+
   <!-- Contact -->
-  <mcs-item orientation="block">
-    <span align-self-start>{{ 'smacShared.form.contact.label' | translate }}</span>
+  <mcs-item orientation="block" *ngIf="config?.contactConfig?.isIncluded">
+    <span align-self-start>{{ config?.contactConfig?.label }}</span>
 
       <ng-container *ngIf="contactOptions$ | async as contactOptions">
         <mcs-radio-button-group orientation="horizontal" [formControl]="fcContact">
@@ -48,17 +51,18 @@
           </mcs-radio-button>
         </mcs-radio-button-group>
       </ng-container>
-      <ng-container *ngIf="phoneNumber">
+      <ng-container *ngIf="config.contactConfig.phoneNumber">
         <!-- TODO: add a new shared directive for coloring font elements-->
-        <span [mcsGreyedOut]="true">{{ 'smacShared.form.contact.description' | translate: { phone_number: phoneNumber } }}</span>
+        <span [mcsGreyedOut]="true">{{ 'smacShared.form.contact.description' | translate: { phone_number: config?.contactConfig?.phoneNumber } }}</span>
       </ng-container>
   </mcs-item>
 
   <!-- Customer Reference Number -->
-  <mcs-item orientation='block'>
+  <mcs-item orientation='block' *ngIf="config?.customerReferenceConfig?.isIncluded">
+    <span align-self-start>{{ config?.customerReferenceConfig?.label }}</span>
     <mcs-form-field>
-      <input mcsInput [formControl]="fcCustomerReference"
-        [placeholder]="'smacShared.form.customerReference.placeholder' | translate"
+      <input mcsInput
+        [formControl]="fcCustomerReference"
         mcsId="input-customer-reference"
         mcsEventTracker="input-customer-reference"
         mcsEventCategory="order"

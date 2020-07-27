@@ -1394,7 +1394,16 @@
   "smacShared": {
     "form": {
       "testCases": {
+        "label": "",
         "placeholder": "What test cases would you like us to execute after the change?"
+      },
+      "notes": {
+        "label": "Request description",
+        "placeholder": "Are there any further details you would like us to know?",
+        "hint": "Max of {{max_char}} characters",
+        "errors": {
+          "required": "Please enter request description."
+        }
       },
       "contact": {
         "label": "Would you like us to contact you before and after the change?",
@@ -1405,12 +1414,8 @@
         }
       },
       "customerReference": {
+        "label": "Customer reference number",
         "placeholder": "Customer reference number"
-      },
-      "notes": {
-        "label": "Request description",
-        "placeholder": "Are there any further details you would like us to know?",
-        "hint": "Max of {{max_char}} characters"
       }
     }
   },

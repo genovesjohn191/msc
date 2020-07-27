@@ -109,8 +109,8 @@ export class VdcScaleComponent extends McsOrderWizardBase implements OnInit, OnD
     private _errorHandlerService: McsErrorHandlerService,
   ) {
     super(
-      _injector,
       _vdcScaleService,
+      _injector,
       {
         billingDetailsStep: {
           category: 'order',

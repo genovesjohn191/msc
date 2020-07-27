@@ -122,8 +122,8 @@ export class ServiceInviewRaiseComponent extends McsOrderWizardBase implements O
     private _changeDetectorRef: ChangeDetectorRef,
   ) {
     super(
-      _injector,
       _serviceInviewRaiseService,
+      _injector,
       {
         billingDetailsStep: {
           category: 'order',

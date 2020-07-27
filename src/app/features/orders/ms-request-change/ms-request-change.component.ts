@@ -43,15 +43,15 @@ import {
 } from '@app/utilities';
 import { McsFormGroupDirective } from '@app/shared';
 import {
-   OrderDetails,
-   SmacSharedDetails
-  } from '@app/features-shared';
+  OrderDetails,
+  SmacSharedDetails,
+  SmacSharedFormConfig
+} from '@app/features-shared';
 import { McsApiService } from '@app/services';
 import { McsEvent } from '@app/events';
 import {
   McsOrderWorkflow,
   McsOption,
-  McsAccount,
   McsOrderCreate,
   McsOrderItemCreate,
   OrderIdType,
@@ -96,8 +96,8 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
   public categoryOptions$: Observable<McsOption[]>;
   public complexityOptions$: Observable<McsOption[]>;
   public contactOptions$: Observable<McsOption[]>;
-  public account$ = new Observable<McsAccount>();
-  public subscriptions$ = new Observable<McsOption[]>();
+  public subscriptions$: Observable<McsOption[]>;
+  public smacSharedFormConfig$: Observable<SmacSharedFormConfig>;
 
   private _formGroup: McsFormGroupDirective;
   private _formGroupSubject = new Subject<void>();
@@ -159,8 +159,8 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
     private _eventDispatcher: EventBusDispatcherService
   ) {
     super(
-      _injector,
       _msRequestChangeService,
+      _injector,
       {
         billingDetailsStep: {
           category: 'order',
@@ -176,7 +176,7 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
     this._subscribeToCategoryOptions();
     this._subscribeToContactOptions();
     this._subscribeToSubscriptions();
-    this._subscribeToAccount();
+    this._subscribeToSmacSharedFormConfig();
     this._registerEvents();
   }
 
@@ -220,19 +220,11 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
     this.submitOrderWorkflow(workflow);
   }
 
-
   /**
    * Event listener when there is a change in Shared SMAC Form
    */
   public onChangeSharedForm(formDetails: SmacSharedDetails): void {
     this._smacSharedDetails = formDetails;
-  }
-
-  /**
-   * Returns true if the Response is Yes, false otherwise
-   */
-  private _isPhoneConfirmationRequired(isRequired: FormResponse): boolean {
-    return (isRequired === FormResponse.Yes);
   }
 
   /**
@@ -332,13 +324,17 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
   }
 
   /**
-   * Subscribe and get Account Details from API
+   * Subscribe to Smac Shared Form Config
    */
-  private _subscribeToAccount(): void {
-    this.account$ = this._apiService.getAccount().pipe(
+  private _subscribeToSmacSharedFormConfig(): void {
+    this.smacSharedFormConfig$ = this._apiService.getAccount().pipe(
       map((response) => {
-        response.phoneNumber = formatStringToPhoneNumber(response.phoneNumber);
-        return response;
+        let testCaseConfig = { isIncluded: false };
+        let notesConfig = { isIncluded: true, validators: [CoreValidators.required] };
+        let contactConfig = { isIncluded: true, phoneNumber: formatStringToPhoneNumber(response.phoneNumber) };
+
+        let config = new SmacSharedFormConfig(this._injector, testCaseConfig, notesConfig, contactConfig);
+        return config;
       })
     );
   }

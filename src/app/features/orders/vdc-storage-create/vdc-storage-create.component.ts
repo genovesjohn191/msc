@@ -111,8 +111,8 @@ export class VdcStorageCreateComponent extends McsOrderWizardBase implements OnI
     private _errorHandlerService: McsErrorHandlerService,
   ) {
     super(
-      _injector,
       _vdcStorageCreateService,
+      _injector,
       {
         billingDetailsStep: {
           category: 'order',

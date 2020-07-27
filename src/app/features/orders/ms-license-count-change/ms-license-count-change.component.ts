@@ -111,7 +111,9 @@ export class MsLicenseCountChangeComponent extends McsOrderWizardBase implements
     private _changeDetectorRef: ChangeDetectorRef,
     private _msLicenseCountChangeService: MsLicenseCountChangeService
   ) {
-    super(_injector, _msLicenseCountChangeService,
+    super(
+      _msLicenseCountChangeService,
+      _injector,
       {
         billingDetailsStep: {
           category: 'order',

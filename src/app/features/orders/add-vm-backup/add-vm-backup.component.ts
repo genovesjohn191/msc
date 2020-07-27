@@ -109,8 +109,8 @@ export class AddVmBackupComponent extends McsOrderWizardBase implements OnInit, 
     private _apiService: McsApiService,
   ) {
     super(
-      _injector,
       _vmBackupService,
+      _injector,
       {
         billingDetailsStep: {
           category: 'order',

@@ -6,12 +6,14 @@ import {
   EventEmitter,
   OnDestroy,
   ViewChild,
-  Input
+  Input,
+  Injector
 } from '@angular/core';
 import {
   FormGroup,
   FormControl,
-  FormBuilder
+  FormBuilder,
+  ValidatorFn
 } from '@angular/forms';
 import {
   Observable,
@@ -30,8 +32,7 @@ import {
   unsubscribeSafely,
   getSafeProperty,
   isNullOrEmpty,
-  createObject,
-  getSafeFormValue
+  createObject
 } from '@app/utilities';
 import {
   CoreValidators,
@@ -39,6 +40,7 @@ import {
 } from '@app/core';
 import { McsFormGroupDirective } from '@app/shared';
 import { SmacSharedDetails } from './smac-shared-details';
+import { SmacSharedFormConfig } from './smac-shared-form-config';
 
 const NOTES_MAXLENGTH = 850;
 
@@ -62,10 +64,21 @@ export class SmacSharedFormComponent implements IMcsFormGroup, OnInit, OnDestroy
   public dataChange = new EventEmitter<SmacSharedDetails>();
 
   @Input()
-  public testCasePlaceholder: string;
+  public phoneNumber: string;
 
   @Input()
-  public phoneNumber: string;
+  public set config(value: SmacSharedFormConfig) {
+    if (isNullOrEmpty(value)) { return; }
+    this._config = value;
+    this._config.validatorsMap.forEach((validators: ValidatorFn[], key: string) => {
+      if (getSafeProperty(this.fgSmacSharedForm, (obj) => obj.controls[key])) {
+        this.fgSmacSharedForm.controls[key].setValidators(validators);
+        this.fgSmacSharedForm.controls[key].updateValueAndValidity();
+      }
+    });
+  }
+  public get config(): SmacSharedFormConfig { return this._config; }
+  private _config: SmacSharedFormConfig;
 
   @ViewChild(McsFormGroupDirective, { static: false })
   public set formGroup(value: McsFormGroupDirective) {
@@ -79,13 +92,19 @@ export class SmacSharedFormComponent implements IMcsFormGroup, OnInit, OnDestroy
   private _valueChangesSubject = new Subject<void>();
 
   constructor(
+    _injector: Injector,
     private _formBuilder: FormBuilder,
     private _translate: TranslateService
-  ) { }
+  ) {
+    this._registerFormGroup();
+
+    if (isNullOrEmpty(this._config)) {
+      this._config = new SmacSharedFormConfig(_injector);
+    }
+  }
 
   public ngOnInit(): void {
     this._subscribeToContactOptions();
-    this._registerFormGroup();
   }
 
   public ngOnDestroy(): void {
@@ -117,10 +136,10 @@ export class SmacSharedFormComponent implements IMcsFormGroup, OnInit, OnDestroy
     if (!this.isValid()) { return; }
 
     this.dataChange.emit(createObject(SmacSharedDetails, {
-      testCases: this.fcTestCases.value || [],
-      contactAfterChange: this.fcContact.value,
-      referenceNumber: getSafeFormValue(this.fcCustomerReference, (obj) => obj.value),
-      notes: getSafeFormValue(this.fcNotes, (obj) => obj.value)
+      testCases: getSafeProperty(this.fgSmacSharedForm.controls['fcTestCases'], (obj) => obj.value),
+      notes: getSafeProperty(this.fgSmacSharedForm.controls['fcNotes'], (obj) => obj.value),
+      contactAfterChange: getSafeProperty(this.fgSmacSharedForm.controls['fcContact'], (obj) => obj.value),
+      referenceNumber: getSafeProperty(this.fgSmacSharedForm.controls['fcCustomerReference'], (obj) => obj.value)
     }));
   }
 
@@ -129,15 +148,15 @@ export class SmacSharedFormComponent implements IMcsFormGroup, OnInit, OnDestroy
    */
   private _registerFormGroup(): void {
     this.fcTestCases = new FormControl([], [CoreValidators.rangeArray(0, 20)]);
-    this.fcContact = new FormControl(true, [CoreValidators.required]);
-    this.fcCustomerReference = new FormControl('', []);
     this.fcNotes = new FormControl('', []);
+    this.fcContact = new FormControl(this._translate.instant('smacShared.form.contact.options.yes'), [CoreValidators.required]);
+    this.fcCustomerReference = new FormControl('', []);
 
     this.fgSmacSharedForm = this._formBuilder.group({
       fcTestCases: this.fcTestCases,
+      fcNotes: this.fcNotes,
       fcContact: this.fcContact,
-      fcCustomerReference: this.fcCustomerReference,
-      fcNotes: this.fcNotes
+      fcCustomerReference: this.fcCustomerReference
     });
   }
 
