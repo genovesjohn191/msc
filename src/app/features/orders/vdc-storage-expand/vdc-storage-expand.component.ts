@@ -143,8 +143,8 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnI
     private _errorHandlerService: McsErrorHandlerService,
   ) {
     super(
-      _injector,
       _vdcStorageExpandService,
+      _injector,
       {
         billingDetailsStep: {
           category: 'order',

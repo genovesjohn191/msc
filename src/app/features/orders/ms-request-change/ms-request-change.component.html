@@ -83,7 +83,7 @@
 
               <!-- Resource Identifier -->
               <mcs-item orientation="block">
-                <span align-self-start>{{ 'orderMsRequestChange.detailsStep.resourceIdentifierLabel' | translate }}:</span>
+                <span align-self-start>{{ 'orderMsRequestChange.detailsStep.resourceIdentifierLabel' | translate }}</span>
                 <mcs-form-field>
                   <input mcsInput [formControl]="fcResourceIdentifier"
                     mcsId="input-ms-service-resource-identifier">
@@ -96,7 +96,7 @@
               <!-- SMAC Shared Form -->
               <mcs-item orientation="block">
                 <mcs-smac-shared-form #fgSmacSharedForm
-                  [phoneNumber]="(account$ | async)?.phoneNumber"
+                  [config]="smacSharedFormConfig$ | async"
                   (dataChange)="onChangeSharedForm($event)">
                 </mcs-smac-shared-form>
               </mcs-item>
@@ -104,7 +104,7 @@
               <div class="action-items">
                 <button mcsButton arrow="right"
                   mcsWizardStepNext
-                  [disabled]="!formIsValid && fgSmacSharedForm.isValid()"
+                  [disabled]="!(formIsValid && fgSmacSharedForm?.isValid())"
                   mcsId="step-1-next"
                   mcsEventTracker="step-1-next"
                   mcsEventCategory="orders"

@@ -93,8 +93,8 @@ export class ServerCreateComponent extends McsOrderWizardBase
     private _serversService: ServersService
   ) {
     super(
-      _injector,
       _serverCreateService,
+      _injector,
       {
         billingDetailsStep: {
           category: 'order',

@@ -52,7 +52,8 @@ import {
 } from '@app/models';
 import {
   OrderDetails,
-  SmacSharedDetails
+  SmacSharedDetails,
+  SmacSharedFormConfig
 } from '@app/features-shared';
 import { McsFormGroupDirective } from '@app/shared';
 import { ServiceCustomChangeService } from './service-custom-change.service';
@@ -79,17 +80,14 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
   public fcService: FormControl;
   public fcChangeDescription: FormControl;
   public fcChangeObjective: FormControl;
-  public fcTestCases: FormControl;
-  public fcContact: FormControl;
-  public fcCustomerReference: FormControl;
-  public fcNotes: FormControl;
 
   public vdcServices$: Observable<CustomChangeService[]>;
   public serverServices$: Observable<CustomChangeService[]>;
   public firewallServices$: Observable<CustomChangeService[]>;
   public internetPortServices$: Observable<CustomChangeService[]>;
   public batServices$: Observable<CustomChangeService[]>;
-  public account$ = new Observable<McsAccount>();
+  public account$: Observable<McsAccount>;
+  public smacSharedFormConfig$: Observable<SmacSharedFormConfig>;
 
   public contactOptions$: Observable<McsOption[]>;
 
@@ -123,8 +121,8 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
     private _apiService: McsApiService
   ) {
     super(
-      _injector,
       _customChangeService,
+      _injector,
       {
         billingDetailsStep: {
           category: 'order',
@@ -142,8 +140,7 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
     this._subscribeToFirewallServices();
     this._subscribeToInternetPortServices();
     this._subscribeToBatServices();
-    this._subscribeToAccount();
-    this._subscribeToContactOptions();
+    this._subscribeToSmacSharedFormConfig();
   }
 
   public ngOnDestroy() {
@@ -353,24 +350,16 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
   }
 
   /**
-   * Subscribe to Account Details
+   * Subscribe to Smac Shared Form Config
    */
-  private _subscribeToAccount(): void {
-    this.account$ = this._apiService.getAccount().pipe(
+  private _subscribeToSmacSharedFormConfig(): void {
+    this.smacSharedFormConfig$ = this._apiService.getAccount().pipe(
       map((response) => {
+        let smacSharedFormConfig = new SmacSharedFormConfig(this._injector);
         response.phoneNumber = formatStringToPhoneNumber(response.phoneNumber);
-        return response;
+        smacSharedFormConfig.contactConfig.phoneNumber = response.phoneNumber;
+        return smacSharedFormConfig;
       })
     );
-  }
-
-  /**
-   * Initialize all the options for contact
-   */
-  private _subscribeToContactOptions(): void {
-    this.contactOptions$ = of([
-      createObject(McsOption, { text: 'Yes', value: true }),
-      createObject(McsOption, { text: 'No', value: false })
-    ]);
   }
 }

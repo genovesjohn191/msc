@@ -144,8 +144,7 @@
           <!-- SMAC Shared Form -->
           <mcs-item orientation="block">
             <mcs-smac-shared-form #fgSmacSharedForm
-              [testCasePlaceholder]="'orderServiceCustomChange.requestDetails.testCases.placeholder' | translate"
-              [phoneNumber]="(account$ | async)?.phoneNumber"
+              [config]="smacSharedFormConfig$ | async"
               (dataChange)="onChangeSharedForm($event)">
             </mcs-smac-shared-form>
           </mcs-item>
@@ -153,7 +152,7 @@
           <div class="action-items">
             <button mcsButton arrow="right"
               mcsWizardStepNext
-              [disabled]="!formIsValid"
+              [disabled]="!(formIsValid && fgSmacSharedForm?.isValid())"
               mcsId="step-1-next"
               mcsEventTracker="step-1-next"
               mcsEventCategory="orders"

@@ -85,7 +85,9 @@ export class AddBatComponent extends McsOrderWizardBase implements OnInit, OnDes
     private _formBuilder: FormBuilder,
     private _batService: AddBatService
   ) {
-    super(_injector, _batService,
+    super(
+      _batService,
+      _injector,
       {
         billingDetailsStep: {
           category: 'order',

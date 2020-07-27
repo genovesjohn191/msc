@@ -104,8 +104,8 @@ export class AddHidsComponent extends McsOrderWizardBase implements OnInit, OnDe
     private _addHidsService: AddHidsService
   ) {
     super(
-      _injector,
       _addHidsService,
+      _injector,
       {
         billingDetailsStep: {
           category: 'order',

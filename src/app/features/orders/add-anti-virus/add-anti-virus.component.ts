@@ -94,8 +94,8 @@ export class AddAntiVirusComponent extends McsOrderWizardBase implements OnInit,
     private _addAntiVirusService: AddAntiVirusService
   ) {
     super(
-      _injector,
       _addAntiVirusService,
+      _injector,
       {
         billingDetailsStep: {
           category: 'order',

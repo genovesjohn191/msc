@@ -33,6 +33,7 @@ export * from './addon-hids/addon-hids';
 /** SMACs */
 export * from './smac-shared-form/smac-shared-form.component';
 export * from './smac-shared-form/smac-shared-details';
+export * from './smac-shared-form/smac-shared-form-config';
 
 /** System Message */
 export * from './system-message-form/system-message-form.component';

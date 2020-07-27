@@ -109,8 +109,8 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
     private _apiService: McsApiService,
   ) {
     super(
-      _injector,
       _serverBackupService,
+      _injector,
       {
         billingDetailsStep: {
           category: 'order',

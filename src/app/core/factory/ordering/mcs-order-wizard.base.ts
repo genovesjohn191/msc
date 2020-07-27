@@ -61,8 +61,8 @@ export abstract class McsOrderWizardBase extends McsWizardBase implements McsDis
   private readonly _navigationService: McsNavigationService;
 
   constructor(
-    private _injector: Injector,
     private _orderBase: McsOrderBase,
+    protected _injector: Injector,
     public orderEventTrack: OrderEventTrack
   ) {
     super(_orderBase);
