@@ -19,6 +19,9 @@
   @else if $point == xsmall {
     @media screen and (max-width: $xsmall-platform-width) { @content; }
   }
+  @else {
+    @media screen and (max-width: $point) { @content; }
+  }
 }
 
 // Clearfix

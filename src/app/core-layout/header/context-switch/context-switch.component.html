@@ -1,0 +1,22 @@
+<ng-container *ngIf="showPlatformButton">
+  <div class="context-switch-wrapper">
+    <div class="standard-switch" *ngIf="!mobileView">
+      <div class="item-wrapper" [ngClass]="{'selected': isPrivateCloudRoute}">
+        <a (click)="switchToPrivateCloud()">Private <span>Cloud</span></a>
+      </div>
+      <div class="item-wrapper" [ngClass]="{'selected': isPublicCloudRoute}">
+        <a (click)="switchToPublicCloud()">Public <span>Cloud</span></a>
+      </div>
+    </div>
+    <div class="mobile-switch" *ngIf="mobileView">
+      <div class="navigation-item">
+        <a (click)="switchToPrivateCloud()" [ngClass]="{'selected': isPrivateCloudRoute}">
+          {{'header.userPanel.platform.privateCloudLabel' | translate}}
+        </a>
+        <a (click)="switchToPublicCloud()" [ngClass]="{'selected': isPublicCloudRoute}">
+          {{'header.userPanel.platform.publicCloudLabel' | translate}}
+        </a>
+      </div>
+    </div>
+  </div>
+</ng-container>

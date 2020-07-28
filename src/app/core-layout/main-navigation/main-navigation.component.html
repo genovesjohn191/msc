@@ -14,6 +14,7 @@
   <ng-template #navigationList>
     <!-- Dashboard -->
     <ng-container *ngIf="hasDefaultPageAccess; else dashboardNavTemplate"></ng-container>
+
     <ng-template #dashboardNavTemplate>
       <div class="navigation-item" routerLinkActive="active">
         <mcs-icon [key]="caretRightIconKey" color="light"
@@ -29,7 +30,7 @@
     </ng-template>
 
     <ng-container *ngIf="isPrivateCloudRoute">
-      <!-- ADD PUBLIC CLOUD MENU ITEMS HERE -->
+      <!-- ADD PRIVATE CLOUD MENU ITEMS HERE -->
 
       <!-- Compute Category -->
       <div class="navigation-item"
@@ -70,8 +71,10 @@
 
     <ng-container *ngIf="isPublicCloudRoute">
       <!-- ADD PUBLIC CLOUD MENU ITEMS HERE -->
-      <div class="navigation-item" hidden-small mcsRouterLinkActive="active"
+      <div class="navigation-item"
+        mcsRouterLinkActive="active"
         *mcsAccessControl="[]; feature: 'EnablePublicCloud'">
+
         <mcs-icon [key]="caretRightIconKey" color="light"
           size="medium" class="navigation-mobile"></mcs-icon>
         <a [mcsRouterLink]="routeKeyEnum.Licenses">
@@ -79,7 +82,7 @@
         </a>
       </div>
     </ng-container>
-
+    
     <!-- Other Tools -->
     <div class="navigation-item" hidden-small mcsRouterLinkActive="active">
       <mcs-icon [key]="caretRightIconKey" color="light"
@@ -108,6 +111,5 @@
         </a>
       </div>
     </ng-container>
-    
   </ng-template>
 </nav>
