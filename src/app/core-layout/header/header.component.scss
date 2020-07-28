@@ -20,4 +20,10 @@ $header-small-padding: $space-medium;
     padding-left: $header-small-padding;
     padding-right: $header-small-padding;
   }
+
+  .context-switch {
+    @include breakpoint(small) {
+      display: none;
+    }
+  }
 }

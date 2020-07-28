@@ -1959,8 +1959,8 @@
         "viewMore": "View more..."
       },
       "platform": {
-        "publicCloudLabel": "Access Public Cloud",
-        "privateCloudLabel": "Access Private Cloud"
+        "publicCloudLabel": "Public Cloud",
+        "privateCloudLabel": "Private Cloud"
       },
       "signOut": "Sign Out"
     }

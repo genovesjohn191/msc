@@ -21,7 +21,8 @@ import { ContentComponent } from './content/content.component';
 import { FooterComponent } from './footer/footer.component';
 import {
   HeaderComponent,
-  UserPanelComponent
+  UserPanelComponent,
+  ContextSwitchComponent
 } from './header';
 import {
   AccountPanelComponent,
@@ -44,6 +45,7 @@ import { SystemMessageBannerComponent } from './system-message-banner/system-mes
     FooterComponent,
     HeaderComponent,
     UserPanelComponent,
+    ContextSwitchComponent,
     StateChangeNotificationsComponent,
     MainNavigationComponent,
     NavigationDesktopComponent,
@@ -68,6 +70,7 @@ import { SystemMessageBannerComponent } from './system-message-banner/system-mes
     FooterComponent,
     HeaderComponent,
     UserPanelComponent,
+    ContextSwitchComponent,
     StateChangeNotificationsComponent,
     MainNavigationComponent,
     NavigationDesktopComponent,
