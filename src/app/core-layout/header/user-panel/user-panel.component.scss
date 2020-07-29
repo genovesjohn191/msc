@@ -18,6 +18,7 @@ $notification-item-label-size: 18px;
 // User panel layout
 .user-panel-wrapper {
   @include display-flex(row);
+  white-space: nowrap;
   align-items: center;
 
   a {
