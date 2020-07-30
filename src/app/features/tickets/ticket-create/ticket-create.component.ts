@@ -67,6 +67,8 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
   public firewallServices$: Observable<TicketService[]>;
   public internetPortServices$: Observable<TicketService[]>;
   public batServices$: Observable<TicketService[]>;
+  public licenses$: Observable<TicketService[]>;
+  public azureServices$: Observable<TicketService[]>;
 
   // Form variables
   public fgCreateTicket: FormGroup;
@@ -98,6 +100,8 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     this._subscribesToFirewallServices();
     this._subscribesToInternetPortServices();
     this._subscribesToBatServices();
+    this._subscribesToLicenses();
+    this._subscribesToAzureServices();
   }
 
   public ngOnDestroy() {
@@ -308,6 +312,32 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
         let bats = getSafeProperty(response, (obj) => obj.collection);
         return bats.filter((bat) => getSafeProperty(bat, (obj) => obj.serviceId))
           .map((bat) => new TicketService(`${bat.description} (${bat.serviceId})`, bat.serviceId));
+      })
+    );
+  }
+
+  /**
+   * Subscribes to licenses
+   */
+  private _subscribesToLicenses(): void {
+    this.licenses$ = this._apiService.getLicenses().pipe(
+      map((response) => {
+        let licenses = getSafeProperty(response, (obj) => obj.collection);
+        return licenses.filter((license) => getSafeProperty(license, (obj) => obj.serviceId))
+          .map((license) => new TicketService(`${license.name} (${license.serviceId})`, license.serviceId));
+      })
+    );
+  }
+
+  /**
+   * Subscribes to azure services
+   */
+  private _subscribesToAzureServices(): void {
+    this.azureServices$ = this._apiService.getAzureServices().pipe(
+      map((response) => {
+        let azureServices = getSafeProperty(response, (obj) => obj.collection);
+        return azureServices.filter((service) => getSafeProperty(service, (obj) => obj.serviceId))
+          .map((service) => new TicketService(`${service.friendlyName} (${service.serviceId})`, service.serviceId));
       })
     );
   }

@@ -6,20 +6,20 @@ import {
   McsApiSuccessResponse,
   McsQueryParam,
   McsApiRequestParameter,
-  McsSubscription
+  McsAzureService
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
-import { IMcsApiSubscriptionsService } from '../interfaces/mcs-api-subscriptions.interface';
+import { IMcsApiAzureServicesService } from '../interfaces/mcs-api-azure-services.interface';
 
 @Injectable()
-export class McsApiSubscriptionsService implements IMcsApiSubscriptionsService {
+export class McsApiAzureServicesService implements IMcsApiAzureServicesService {
 
   constructor(private _mcsApiHttpService: McsApiClientHttpService) { }
 
   /**
    * Gets all the subscriptions
    */
-  public getSubscriptions(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsSubscription[]>> {
+  public getAzureServices(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsAzureService[]>> {
      // Set default values if null
     let searchParams = new Map<string, any>();
     if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
@@ -33,8 +33,8 @@ export class McsApiSubscriptionsService implements IMcsApiSubscriptionsService {
     return this._mcsApiHttpService.get(requestParameter)
       .pipe(
         map((response) => {
-          return McsApiSuccessResponse.deserializeResponse<McsSubscription[]>(
-            McsSubscription, response
+          return McsApiSuccessResponse.deserializeResponse<McsAzureService[]>(
+            McsAzureService, response
         );
       })
     );
@@ -42,15 +42,15 @@ export class McsApiSubscriptionsService implements IMcsApiSubscriptionsService {
   /**
    * Gets a subscription by id
    */
-  public getSubscriptionById(id: string): Observable<McsApiSuccessResponse<McsSubscription>> {
+  public getAzureServiceById(id: string): Observable<McsApiSuccessResponse<McsAzureService>> {
     let requestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     requestParameter.endPoint = `/public-cloud/services/${id}`;
 
     return this._mcsApiHttpService.get(requestParameter)
       .pipe(
         map((response) => {
-          return McsApiSuccessResponse.deserializeResponse<McsSubscription>(
-            McsSubscription, response
+          return McsApiSuccessResponse.deserializeResponse<McsAzureService>(
+            McsAzureService, response
           );
       })
     );

@@ -1,24 +1,24 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { isNullOrEmpty } from '@app/utilities';
+import { IMcsApiAzureServicesService } from '@app/api-client';
 import {
   McsQueryParam,
   McsApiSuccessResponse,
-  McsSubscription
+  McsAzureService
 } from '@app/models';
 import { McsDataContext } from '../core/mcs-data-context.interface';
-import { IMcsApiSubscriptionsService } from '@app/api-client';
 
-export class McsSubscriptionsDataContext implements McsDataContext<McsSubscription> {
+export class McsAzureServicesDataContext implements McsDataContext<McsAzureService> {
   public totalRecordsCount: number = 0;
 
-  constructor(private _subscriptionService: IMcsApiSubscriptionsService) { }
+  constructor(private _azureServicesService: IMcsApiAzureServicesService) { }
 
   /**
    * Get all records from the api service
    */
-  public getAllRecords(): Observable<McsSubscription[]> {
-    return this._subscriptionService.getSubscriptions().pipe(
+  public getAllRecords(): Observable<McsAzureService[]> {
+    return this._azureServicesService.getAzureServices().pipe(
       map((response) => this._getApiContentResponse(response))
     );
   }
@@ -27,8 +27,8 @@ export class McsSubscriptionsDataContext implements McsDataContext<McsSubscripti
    * Get subscription by id
    * @param id username to get the record from
    */
-  public getRecordById(id: string): Observable<McsSubscription> {
-    return this._subscriptionService.getSubscriptionById(id).pipe(
+  public getRecordById(id: string): Observable<McsAzureService> {
+    return this._azureServicesService.getAzureServiceById(id).pipe(
       map((response) => this._getApiContentResponse(response))
     );
   }
@@ -37,8 +37,8 @@ export class McsSubscriptionsDataContext implements McsDataContext<McsSubscripti
    * Filters the records based on the query provided
    * @param query Query to be sent to API to query the data
    */
-  public filterRecords(_query: McsQueryParam): Observable<McsSubscription[]> {
-    return this._subscriptionService.getSubscriptions(_query).pipe(
+  public filterRecords(_query: McsQueryParam): Observable<McsAzureService[]> {
+    return this._azureServicesService.getAzureServices(_query).pipe(
       map((response) => this._getApiContentResponse(response))
     );
   }

@@ -115,7 +115,7 @@ import {
   McsBatLinkedService,
   McsAccount,
   McsAzureResource,
-  McsSubscription,
+  McsAzureService,
   McsReportGenericItem,
 } from '@app/models';
 import {
@@ -156,10 +156,10 @@ import {
   McsApiLicensesFactory,
   IMcsApiAccountService,
   McsApiAccountFactory,
-  IMcsApiAzureResourceService,
+  IMcsApiAzureResourcesService,
   McsApiAzureResourceFactory,
-  McsApiSubscriptionsFactory,
-  IMcsApiSubscriptionsService,
+  IMcsApiAzureServicesService,
+  McsApiAzureServicesFactory,
   IMcsApiReportsService,
   McsApiReportsFactory,
 } from '@app/api-client';
@@ -180,9 +180,8 @@ import { McsCompaniesRepository } from './repositories/mcs-companies.repository'
 import { McsBatsRepository } from './repositories/mcs-bats.repository';
 import { McsLicensesRepository } from './repositories/mcs-licenses.repository';
 import { McsAccountRepository } from './repositories/mcs-account.repository';
-import { McsAzureResourceRepository } from './repositories/mcs-azure-resource.repository';
-import { McsSubscriptionsRepository } from './repositories/mcs-subscriptions.repository';
-import { McsApiSubscriptionsService } from '@app/api-client/services/mcs-api-subscriptions.service';
+import { McsAzureResourcesRepository } from './repositories/mcs-azure-resources.repository';
+import { McsAzureServicesRepository } from './repositories/mcs-azure-services.repository';
 
 interface DataEmitter<T> {
   eventEmitter: Observable<T>;
@@ -210,8 +209,8 @@ export class McsApiService {
   // TODO : Update to repository once we need to have state management and improve loading
   private readonly _licensesRepository: McsLicensesRepository;
   private readonly _accountRepository: McsAccountRepository;
-  private readonly _azureResourceRepository: McsAzureResourceRepository;
-  private readonly _subscriptionRepository: McsSubscriptionsRepository;
+  private readonly _azureResourceRepository: McsAzureResourcesRepository;
+  private readonly _azureServicesRepository: McsAzureServicesRepository;
 
   private readonly _serversApi: IMcsApiServersService;
   private readonly _jobsApi: IMcsApiJobsService;
@@ -229,8 +228,8 @@ export class McsApiService {
   private readonly _catalogService: IMcsApiCatalogService;
   private readonly _licensesApi: IMcsApiLicensesService;
   private readonly _accountApi: IMcsApiAccountService;
-  private readonly _azureResourceApi: IMcsApiAzureResourceService;
-  private readonly _subscriptionsApi: IMcsApiSubscriptionsService;
+  private readonly _azureResourcesApi: IMcsApiAzureResourcesService;
+  private readonly _azureServicesApi: IMcsApiAzureServicesService;
   private readonly _reportsApi: IMcsApiReportsService;
 
   private readonly _eventDispatcher: EventBusDispatcherService;
@@ -253,8 +252,8 @@ export class McsApiService {
     this._companiesRepository = _injector.get(McsCompaniesRepository);
     this._licensesRepository = _injector.get(McsLicensesRepository);
     this._accountRepository = _injector.get(McsAccountRepository);
-    this._azureResourceRepository = _injector.get(McsAzureResourceRepository);
-    this._subscriptionRepository = _injector.get(McsSubscriptionsRepository);
+    this._azureResourceRepository = _injector.get(McsAzureResourcesRepository);
+    this._azureServicesRepository = _injector.get(McsAzureServicesRepository);
 
     // Register api services
     let apiClientFactory = _injector.get(McsApiClientFactory);
@@ -274,8 +273,8 @@ export class McsApiService {
     this._catalogService = apiClientFactory.getService(new McsApiCatalogFactory());
     this._licensesApi = apiClientFactory.getService(new McsApiLicensesFactory());
     this._accountApi = apiClientFactory.getService(new McsApiAccountFactory());
-    this._azureResourceApi = apiClientFactory.getService(new McsApiAzureResourceFactory());
-    this._subscriptionsApi = apiClientFactory.getService(new McsApiSubscriptionsFactory());
+    this._azureResourcesApi = apiClientFactory.getService(new McsApiAzureResourceFactory());
+    this._azureServicesApi = apiClientFactory.getService(new McsApiAzureServicesFactory());
     this._reportsApi = apiClientFactory.getService(new McsApiReportsFactory());
 
     // Register events
@@ -1387,7 +1386,7 @@ export class McsApiService {
   }
 
   public getAzureResources(): Observable<McsApiCollection<McsAzureResource>> {
-    return this._azureResourceApi.getAzureResources().pipe(
+    return this._azureResourcesApi.getAzureResources().pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getAzureResources'))
       ),
@@ -1395,10 +1394,10 @@ export class McsApiService {
     );
   }
 
-  public getSubscriptions(): Observable<McsApiCollection<McsSubscription>> {
-    return this._subscriptionsApi.getSubscriptions().pipe(
+  public getAzureServices(): Observable<McsApiCollection<McsAzureService>> {
+    return this._azureServicesApi.getAzureServices().pipe(
       catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getSubscriptions'))
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getAzureServices'))
       ),
       map((response) => this._mapToCollection(response.content, response.totalCount))
     );

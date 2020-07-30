@@ -5,7 +5,7 @@ import {
   McsQueryParam
 } from '@app/models';
 
-export interface IMcsApiAzureResourceService {
+export interface IMcsApiAzureResourcesService {
 
   /**
    * Gets all azure resources
