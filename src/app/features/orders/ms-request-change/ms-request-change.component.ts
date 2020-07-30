@@ -55,7 +55,7 @@ import {
   McsOrderCreate,
   McsOrderItemCreate,
   OrderIdType,
-  McsSubscription,
+  McsAzureService,
   Category,
   Complexity,
   FormResponse,
@@ -96,7 +96,7 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
   public categoryOptions$: Observable<McsOption[]>;
   public complexityOptions$: Observable<McsOption[]>;
   public contactOptions$: Observable<McsOption[]>;
-  public subscriptions$: Observable<McsOption[]>;
+  public azureServices$: Observable<McsOption[]>;
   public smacSharedFormConfig$: Observable<SmacSharedFormConfig>;
 
   private _formGroup: McsFormGroupDirective;
@@ -230,7 +230,7 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
   /**
    * Event listener whenever a service is selected for a change request
    */
-  private _onSelectedServiceRequestChange(service: McsSubscription): void {
+  private _onSelectedServiceRequestChange(service: McsAzureService): void {
     if (isNullOrEmpty(service)) { return; }
     this.fcMsService.setValue(service);
   }
@@ -343,7 +343,7 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
    * Subscribe and get Subscriptions from API
    */
   private _subscribeToSubscriptions(): void {
-    this.subscriptions$ = this._apiService.getSubscriptions().pipe(
+    this.azureServices$ = this._apiService.getAzureServices().pipe(
       map((subscriptionCollection) => {
         let subscriptions = getSafeProperty(subscriptionCollection, (obj) => obj.collection) || [];
         let subscriptionOptions: McsOption[] = [];

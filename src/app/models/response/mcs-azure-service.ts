@@ -1,7 +1,7 @@
-import { McsEntityBase } from '../common/mcs-entity.base';
 import { JsonProperty } from '@app/utilities';
+import { McsEntityBase } from '../common/mcs-entity.base';
 
-export class McsSubscription extends McsEntityBase {
+export class McsAzureService extends McsEntityBase {
 
   @JsonProperty()
   public uuid: string = undefined;
@@ -11,5 +11,4 @@ export class McsSubscription extends McsEntityBase {
 
   @JsonProperty()
   public friendlyName: string = undefined;
-
 }

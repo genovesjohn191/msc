@@ -7,12 +7,12 @@ import {
   McsAzureResource,
   McsQueryParam
 } from '@app/models';
-import { McsApiClientHttpService } from '../mcs-api-client-http.service';
-import { IMcsApiAzureResourceService } from '../interfaces/mcs-api-azure-resource.interface';
 import { isNullOrEmpty } from '@app/utilities';
+import { McsApiClientHttpService } from '../mcs-api-client-http.service';
+import { IMcsApiAzureResourcesService } from '../interfaces/mcs-api-azure-resources.interface';
 
 @Injectable()
-export class McsApiAzureResourceService implements IMcsApiAzureResourceService {
+export class McsApiAzureResourcesService implements IMcsApiAzureResourcesService {
 
   constructor(private _mcsApiHttpService: McsApiClientHttpService) { }
 
@@ -45,6 +45,7 @@ export class McsApiAzureResourceService implements IMcsApiAzureResourceService {
    */
   public getAzureResourceById(resourceId: string): Observable<McsApiSuccessResponse<McsAzureResource>> {
     let requestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    // TODO: not implemented in API yet
     requestParameter.endPoint = `/public-cloud/azureresources/${resourceId}`;
 
     return this._mcsApiHttpService.get(requestParameter)

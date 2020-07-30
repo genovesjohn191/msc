@@ -139,6 +139,14 @@
               <ng-container *ngTemplateOutlet="servicesTemplate;
                 context: { $implicit: (batServices$ | async), serviceTitle: 'Backup Aggregation Targets'}">
               </ng-container>
+
+              <ng-container *ngTemplateOutlet="servicesTemplate;
+                context: { $implicit: (licenses$ | async), serviceTitle: 'Licenses'}">
+              </ng-container>
+
+              <ng-container *ngTemplateOutlet="servicesTemplate;
+                context: { $implicit: (azureServices$ | async), serviceTitle: 'Azure Services'}">
+              </ng-container>
             </mcs-select>
           </mcs-form-field>
         </mcs-section>

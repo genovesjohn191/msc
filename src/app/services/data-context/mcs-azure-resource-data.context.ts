@@ -6,19 +6,19 @@ import {
   McsApiSuccessResponse,
   McsAzureResource
 } from '@app/models';
+import { IMcsApiAzureResourcesService } from '@app/api-client';
 import { McsDataContext } from '../core/mcs-data-context.interface';
-import { IMcsApiAzureResourceService } from '@app/api-client';
 
 export class McsAzureResourceDataContext implements McsDataContext<McsAzureResource> {
   public totalRecordsCount: number = 0;
 
-  constructor(private _azureResourceService: IMcsApiAzureResourceService) { }
+  constructor(private _azureResourcesService: IMcsApiAzureResourcesService) { }
 
   /**
    * Get all records from the api service
    */
   public getAllRecords(): Observable<McsAzureResource[]> {
-    return this._azureResourceService.getAzureResources().pipe(
+    return this._azureResourcesService.getAzureResources().pipe(
       map((response) => this._getApiContentResponse(response))
     );
   }
@@ -28,7 +28,7 @@ export class McsAzureResourceDataContext implements McsDataContext<McsAzureResou
    * @param resourceId username to get the record from
    */
   public getRecordById(resourceId: string): Observable<McsAzureResource> {
-    return this._azureResourceService.getAzureResourceById(resourceId).pipe(
+    return this._azureResourcesService.getAzureResourceById(resourceId).pipe(
       map((response) => this._getApiContentResponse(response))
     );
   }
@@ -37,7 +37,7 @@ export class McsAzureResourceDataContext implements McsDataContext<McsAzureResou
    * @param query Query to be sent to API to query the data
    */
   public filterRecords(query: McsQueryParam): Observable<McsAzureResource[]> {
-    return this._azureResourceService.getAzureResources(query).pipe(
+    return this._azureResourcesService.getAzureResources(query).pipe(
       map((response) => this._getApiContentResponse(response))
     );
   }

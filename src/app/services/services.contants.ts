@@ -16,8 +16,8 @@ import { McsBatsRepository } from './repositories/mcs-bats.repository';
 import { McsSystemMessagesRepository } from './repositories/mcs-system-messages.repository';
 import { McsLicensesRepository } from './repositories/mcs-licenses.repository';
 import { McsAccountRepository } from './repositories/mcs-account.repository';
-import { McsAzureResourceRepository } from './repositories/mcs-azure-resource.repository';
-import { McsSubscriptionsRepository } from './repositories/mcs-subscriptions.repository';
+import { McsAzureResourcesRepository } from './repositories/mcs-azure-resources.repository';
+import { McsAzureServicesRepository } from './repositories/mcs-azure-services.repository';
 
 /** State Managers */
 import { McsJobManagerClient } from './job-manager/mcs-job-manager.client';
@@ -39,8 +39,8 @@ export const repositoryProviders: any[] = [
   McsSystemMessagesRepository,
   McsLicensesRepository,
   McsAccountRepository,
-  McsAzureResourceRepository,
-  McsSubscriptionsRepository,
+  McsAzureResourcesRepository,
+  McsAzureServicesRepository,
   McsApiService
 ];
 

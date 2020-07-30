@@ -5,14 +5,14 @@ import {
 } from '@angular/core/testing';
 import { HttpTestingController } from '@angular/common/http/testing';
 /** Services and Models */
-import { McsApiAzureResourceService } from './mcs-api-azure-resource.service';
+import { McsApiAzureResourcesService } from './mcs-api-azure-resources.service';
 import { McsApiClientTestingModule } from '../testing';
 
 describe('AccountApiService', () => {
 
     /** Stub Services Mock */
     let httpMock: HttpTestingController;
-    let azureResourcesService: McsApiAzureResourceService;
+    let azureResourcesService: McsApiAzureResourcesService;
 
     beforeEach(async(() => {
         /** Testbed Reset Module */
@@ -28,7 +28,7 @@ describe('AccountApiService', () => {
         /** Tesbed Component Compilation and Creation */
         TestBed.compileComponents().then(() => {
             httpMock = getTestBed().get(HttpTestingController);
-            azureResourcesService = getTestBed().get(McsApiAzureResourceService);
+            azureResourcesService = getTestBed().get(McsApiAzureResourcesService);
         });
     }));
 

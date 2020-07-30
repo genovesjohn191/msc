@@ -44,14 +44,14 @@
                     mcsEventLabel="ms-service-change-request"
                     [formControl]="fcMsService"
                     [placeholder]="'orderMsRequestChange.detailsStep.servicePlaceholder' | translate">
-                    <mcs-option *ngFor="let subscription of subscriptions$ | async"
-                      [value]="subscription.value"
-                      [disabled]="!(subscription.value.serviceId | mcsIsNotNullOrEmpty)">
+                    <mcs-option *ngFor="let azureService of azureServices$ | async"
+                      [value]="azureService.value"
+                      [disabled]="!(azureService.value.serviceId | mcsIsNotNullOrEmpty)">
                         <span [ngStyle]="{'pointer-events': 'auto'}"
                           [mcsTooltip]="'orderMsRequestChange.detailsStep.nullServiceIdToolTip' | translate"
-                          [mcsTooltipShow]="!(subscription.value.serviceId | mcsIsNotNullOrEmpty)"
+                          [mcsTooltipShow]="!(azureService.value.serviceId | mcsIsNotNullOrEmpty)"
                           [mcsTooltipPosition]="'right'">
-                          {{ subscription.text }}
+                          {{ azureService.text }}
                         </span>
                     </mcs-option>
                   </mcs-select>

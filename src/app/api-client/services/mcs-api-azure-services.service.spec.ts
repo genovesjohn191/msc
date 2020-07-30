@@ -5,14 +5,14 @@ import {
 } from '@angular/core/testing';
 import { HttpTestingController } from '@angular/common/http/testing';
 /** Services and Models */
-import { McsApiSubscriptionsService } from './mcs-api-subscriptions.service';
+import { McsApiAzureServicesService } from './mcs-api-azure-services.service';
 import { McsApiClientTestingModule } from '../testing';
 
 describe('SubscriptionsApiService', () => {
 
     /** Stub Services Mock */
     let httpMock: HttpTestingController;
-    let subscriptionService: McsApiSubscriptionsService;
+    let subscriptionService: McsApiAzureServicesService;
 
     beforeEach(async(() => {
         /** Testbed Reset Module */
@@ -28,14 +28,14 @@ describe('SubscriptionsApiService', () => {
         /** Tesbed Component Compilation and Creation */
         TestBed.compileComponents().then(() => {
             httpMock = getTestBed().get(HttpTestingController);
-            subscriptionService = getTestBed().get(McsApiSubscriptionsService);
+            subscriptionService = getTestBed().get(McsApiAzureServicesService);
         });
     }));
 
     /** Test Implementation */
-    describe('getSubscriptions()', () => {
+    describe('getAzureServices()', () => {
         it('should get all subscription from API calls', () => {
-            subscriptionService.getSubscriptions().subscribe((response) => {
+            subscriptionService.getAzureServices().subscribe((response) => {
                 expect(response).not.toBeNull();
                 expect(response).toBeDefined();
                 expect(response.status).toBe(200);
