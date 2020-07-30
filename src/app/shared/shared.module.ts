@@ -13,6 +13,7 @@ import { ButtonModule } from './button/button.module';
 import { ChartModule } from './chart/chart.module';
 import { CheckboxModule } from './checkbox/checkbox.module';
 import { ColumnFilterModule } from './column-filter/column-filter.module';
+import { CtaListModule } from './cta-list/cta-list.module';
 import { PopoverModule } from './popover/popover.module';
 import { IconModule } from './icon/icon.module';
 import { AlertModule } from './alert/alert.module';
@@ -140,7 +141,8 @@ import { DateTimePickerModule } from './datetimepicker/datetimepicker.module';
     SectionModule,
     PricingCalculatorModule,
     DynamicListModule,
-    DateTimePickerModule
+    DateTimePickerModule,
+    CtaListModule
   ],
   exports: [
     CommonModule,
@@ -210,7 +212,8 @@ import { DateTimePickerModule } from './datetimepicker/datetimepicker.module';
     SectionModule,
     PricingCalculatorModule,
     DynamicListModule,
-    DateTimePickerModule
+    DateTimePickerModule,
+    CtaListModule
   ]
 })
 

@@ -1,0 +1,41 @@
+@import "../../../styles/shared/base";
+
+$large-icon-width: 42px;
+$compact-icon-width: 22px;
+
+.cta-list-wrapper {
+  .items-container {
+    .item-wrapper {
+      
+      .icon {
+        min-width: $large-icon-width;
+
+        &.compact {
+          min-width: $compact-icon-width;
+        }
+
+        mcs-icon {
+          margin-bottom: auto
+        }
+      }
+
+      &:not(:first-child) {
+        margin-top: $space-medium;
+      }
+
+      @include display-flex(row);
+
+      .content-wrapper {
+        margin-left: $space-large;
+
+        h5, p {
+          margin-bottom: $space-xsmall
+        }
+
+        h5 {
+          line-height: 1rem;
+        }
+      }
+    }
+  }
+}

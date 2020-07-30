@@ -1,5 +1,7 @@
 export enum RouteKey {
   Dashboard = 1,
+  ReportOverview,
+  ReportInsights,
 
   Console,
   Maintenance,

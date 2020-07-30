@@ -1,15 +1,21 @@
 import { NgModule } from '@angular/core';
 import { BarChartComponent } from './bar-chart/bar-chart.component';
 import { ChartDataService } from './chart-data.service';
+import { BarChart2Component } from './bar-chart2/bar-chart2.component';
+import { NgApexchartsModule } from 'ng-apexcharts';
 
 @NgModule({
-  imports: [],
+  imports: [ NgApexchartsModule ],
   declarations: [
-    BarChartComponent
+    BarChartComponent,
+    BarChart2Component
   ],
-  exports: [BarChartComponent],
+  exports: [
+    BarChartComponent,
+    BarChart2Component
+  ],
   providers: [
-    ChartDataService
+    ChartDataService,
   ]
 })
 export class ChartModule { }

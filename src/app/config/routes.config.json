@@ -4,6 +4,18 @@
     "navigationPath": "dashboard",
     "documentTitle": "Dashboard - Macquarie Cloud Services"
   },
+  "reportOverview": {
+    "enumKey": "ReportOverview",
+    "enumCategory": "Dashboard",
+    "navigationPath": "dashboard/overview",
+    "documentTitle": "Overview - Macquarie Cloud Services"
+  },
+  "reportInsights": {
+    "enumKey": "ReportInsights",
+    "enumCategory": "Dashboard",
+    "navigationPath": "dashboard/insights",
+    "documentTitle": "Insights - Macquarie Cloud Services"
+  },
   "console": {
     "enumPlatform": "Private",
     "enumKey": "Console",

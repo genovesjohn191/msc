@@ -1,5 +1,6 @@
 /** Modules */
 export * from './features-shared.module';
+export * from './report-widget/report-widget.module';
 
 /** Wizard Steps */
 export * from './step-order-details/order-details';

@@ -1,0 +1,32 @@
+<div class="cta-list-wrapper">
+  <div class="items-container">
+    <div class="item-wrapper" *ngFor="let listItem of data">
+      <div class="icon" [ngClass]="{'compact': isCompact}">
+        <mcs-icon *ngIf="hasValue(listItem.icon)" [key]="listItem.icon" color="light" size="{{ iconSize }}"></mcs-icon>
+      </div>
+      <div class="content-wrapper">
+        <div *ngIf="hasValue(listItem.title)">
+          <a href="{{ listItem.titleLink }}"
+            mcsId
+            mcsEventTracker="{{ listItem.titleLinkEvent?.tracker }}"
+            mcsEventCategory="{{ listItem.titleLinkEvent?.category }}"
+            mcsEventLabel="{{ listItem.titleLinkEvent?.label }}">
+            <h5>{{ listItem.title }}</h5>
+          </a>
+        </div>
+        <div *ngIf="hasValue(listItem.description)">
+          <p [innerHTML]="listItem.description"></p>
+        </div>
+        <div *ngIf="hasValue(listItem.ctaLabel)">
+          <a href="{{ listItem.ctaLink }}"
+            mcsId
+            mcsEventTracker="{{ listItem.ctaLinkEvent?.tracker }}"
+            mcsEventCategory="{{ listItem.ctaLinkEvent?.category }}"
+            mcsEventLabel="{{ listItem.ctaLinkEvent?.label }}">
+            <span>{{ listItem.ctaLabel }}</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

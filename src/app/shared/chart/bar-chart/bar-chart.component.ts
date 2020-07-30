@@ -6,15 +6,13 @@ import {
     ElementRef,
     Input,
     AfterViewInit,
-    OnDestroy,
     OnChanges,
     SimpleChanges
 } from '@angular/core';
 import Chart from 'chart.js';
-import { isNullOrEmpty, unsubscribeSafely } from '@app/utilities';
+import { isNullOrEmpty } from '@app/utilities';
 import { ChartItem } from '../chart-item.interface';
 import { ChartDataService } from '../chart-data.service';
-import { BehaviorSubject } from 'rxjs';
 
 @Component({
     selector: 'mcs-bar-chart',
@@ -29,6 +27,12 @@ import { BehaviorSubject } from 'rxjs';
 export class BarChartComponent implements AfterViewInit, OnChanges {
   @Input()
   public data: ChartItem[];
+
+  @Input()
+  public isHorizontal: boolean = false;
+
+  @Input()
+  public showLegend: boolean = true;
 
   @Input()
   public title: string;
@@ -76,7 +80,7 @@ export class BarChartComponent implements AfterViewInit, OnChanges {
   private initializeChart(chartData: any): void {
     let ctx = this._output.nativeElement.getContext('2d');
     this._chart = new Chart(ctx, {
-      type: 'bar',
+      type: this.isHorizontal ? 'horizontalBar' : 'bar',
       data: chartData,
       options: {
         title: {
@@ -88,6 +92,9 @@ export class BarChartComponent implements AfterViewInit, OnChanges {
           mode: 'index',
           intersect: false
         },
+        legend: {
+          display: this.showLegend,
+        },
         responsive: true,
         scales: {
           xAxes: [{
@@ -96,6 +103,9 @@ export class BarChartComponent implements AfterViewInit, OnChanges {
               display: !isNullOrEmpty(this.xLabel),
               labelString: this.xLabel,
               fontFamily: 'Circular-Pro-Bold'
+            },
+            ticks: {
+              suggestedMin: 0
             }
           }],
           yAxes: [{
@@ -104,6 +114,9 @@ export class BarChartComponent implements AfterViewInit, OnChanges {
               display: !isNullOrEmpty(this.yLabel),
               labelString: this.yLabel,
               fontFamily: 'Circular-Pro-Bold'
+            },
+            ticks: {
+              suggestedMin: 0
             }
           }]
         }

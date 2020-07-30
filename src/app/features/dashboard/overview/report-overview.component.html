@@ -1,0 +1,26 @@
+<mcs-page header="Overview">
+  <!-- Content Panel -->
+  <mcs-content-panel *mcsContentPanelDef class="full-width" style="background-color: rgb(235, 235, 235);">
+    <div class="report-wrapper">
+      <div class="widget-wrapper">
+        <mcs-grid>
+          <mcs-grid-row>
+            <mcs-grid-column sizeSm="12" sizeMd="6" sizeLg="4">            
+              <mcs-services-overview-widget></mcs-services-overview-widget>
+              <mcs-azure-resources-widget></mcs-azure-resources-widget>
+              <mcs-resource-changes-widget></mcs-resource-changes-widget>
+            </mcs-grid-column>
+            <mcs-grid-column sizeSm="12" sizeMd="6" sizeLg="4">
+              <mcs-cost-recommendations-widget></mcs-cost-recommendations-widget>
+              <mcs-change-requests-widget></mcs-change-requests-widget>
+            </mcs-grid-column>
+            <mcs-grid-column sizeSm="12" sizeMd="6" sizeLg="4" >
+              <mcs-contact-us-widget></mcs-contact-us-widget>
+              <mcs-bar-chart2></mcs-bar-chart2>
+            </mcs-grid-column>
+          </mcs-grid-row>
+        </mcs-grid>
+      </div>
+    </div>
+  </mcs-content-panel>
+</mcs-page>
