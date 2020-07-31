@@ -1,5 +1,6 @@
 export enum McsFeatureFlag {
   MaintenanceMode = 'EnableMaintenanceMode',
+  ExperimentalFeatures = 'EnableExperimentalFeatures',
   SystemMessages = 'EnableSystemMessages',
 
   InternetPortView = 'EnableInternetPortView',
