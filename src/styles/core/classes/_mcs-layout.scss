@@ -27,6 +27,17 @@
   }
 }
 
+// TODO: This is an experimental view, we may change the whole app to use this
+// after some testing
+.limited-wide-view {
+  @include flex(0 0 auto !important); // Force the page to not apply flex auto
+  max-width: $limited-wide-view-width;
+
+  @include breakpoint(medium) {
+    width: 100%;  
+  }
+}
+
 // Disabled element
 .disabled-element {
   opacity: 0.4 !important;

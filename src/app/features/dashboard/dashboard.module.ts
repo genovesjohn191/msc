@@ -6,13 +6,19 @@ import {
   dashboardProviders,
   dashboardRoutes
 } from './dashboard.constants';
+import { ReportOverviewComponent } from './overview';
+import { ReportInsightsComponent } from './insights';
+import { ReportWidgetModule } from '@app/features-shared';
 
 @NgModule({
   declarations: [
-    DashboardComponent
+    DashboardComponent,
+    ReportOverviewComponent,
+    ReportInsightsComponent,
   ],
   imports: [
     SharedModule,
+    ReportWidgetModule,
     RouterModule.forChild(dashboardRoutes)
   ],
   providers: [

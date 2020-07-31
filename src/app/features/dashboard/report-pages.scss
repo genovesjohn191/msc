@@ -1,0 +1,19 @@
+@import "../../../styles/shared/base";
+
+.report-wrapper {
+  .widget-wrapper {
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  h1 {
+    color: $color-primary-01;
+  }
+
+  .chart {
+    padding: 30px;
+    margin-bottom: 20px;
+    background-color: $color-white;
+  }
+}
