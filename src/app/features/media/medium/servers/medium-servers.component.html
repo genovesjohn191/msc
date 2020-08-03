@@ -26,7 +26,7 @@
         </mcs-header-cell>
         <mcs-data-cell *mcsDataCellDef="let row">
           <a (click)="showDetachDialog(selectedMedium, row)"
-            [disabled]="selectedMedium.isProcessing"
+            [disabled]="mediaIsProcessing(selectedMedium)"
             mcsId
             mcsEventTracker="detach-action"
             mcsEventCategory="media"
@@ -52,7 +52,7 @@
     </mcs-table>
 
     <!-- Attach servers -->
-    <div class="action-box" [disabled]="selectedMedium.isProcessing">
+    <div class="action-box" [disabled]="mediaIsProcessing(selectedMedium)">
       <mcs-media-manage-servers (dataChange)="onChangeManageServers($event)" [media]="selectedMedium">
         <ng-container mcsManageServerHeader>
           <h2>{{ 'mediaServers.attachServersHeader' | translate }}</h2>
