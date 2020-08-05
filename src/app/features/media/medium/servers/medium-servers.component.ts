@@ -58,6 +58,7 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
   private _newAttachServer: McsResourceMediaServer;
   private _inProgressServerId: string;
   private _serverDatasourceCache: Observable<McsResourceMediaServer[]>;
+  private _mediaInProgressByJob: boolean = false;
 
   private _attachMediaHandler: Subscription;
   private _detachMediaHandler: Subscription;
@@ -85,6 +86,10 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
     super.destroyBase();
     unsubscribeSafely(this._attachMediaHandler);
     unsubscribeSafely(this._detachMediaHandler);
+  }
+
+  public mediaIsProcessing(media: McsResourceMedia): boolean {
+    return media.isProcessing && this._mediaInProgressByJob;
   }
 
   /**
@@ -115,10 +120,12 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
 
     let detachDialogRef = this._dialogService.openConfirmation(dialogData);
 
-    detachDialogRef.afterClosed().subscribe((response) => {
-      if (isNullOrEmpty(response)) { return; }
-      this._detachServer(medium, response.id);
-    });
+    detachDialogRef.afterClosed().pipe(
+      tap((response) => {
+        if (isNullOrEmpty(response)) { return; }
+        this._detachServer(medium, response.id);
+      })
+    ).subscribe();
   }
 
   /**
@@ -246,6 +253,7 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
       this._newAttachServer = null;
       this._serverDatasourceCache = null;
       this.initializeBase();
+      this._mediaInProgressByJob = false;
       this._changeDetectorRef.markForCheck();
       return;
     }
@@ -255,6 +263,8 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
     this._newAttachServer.id = SERVER_MEDIA_NEW_ID;
     this._newAttachServer.name = job.clientReferenceObject.serverName;
     this._updateTableDataSource();
+    this._mediaInProgressByJob = true;
+    this._changeDetectorRef.markForCheck();
   }
 
   /**
@@ -268,10 +278,15 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
     // Refresh everything when job is done
     if (!job.inProgress) {
       this._inProgressServerId = null;
+      this._mediaInProgressByJob = false;
+      this._changeDetectorRef.markForCheck();
+      return;
     }
 
     // Add in progress jobs
     this._inProgressServerId = job.clientReferenceObject.serverId;
+    this._mediaInProgressByJob = true;
+    this._changeDetectorRef.markForCheck();
   }
 
   /**
