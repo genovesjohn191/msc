@@ -16,7 +16,8 @@ import {
 import {
   FormGroup,
   FormControl,
-  FormBuilder
+  FormBuilder,
+  ValidatorFn
 } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -81,12 +82,7 @@ export class ServerManageStorageComponent
 
   @Input()
   public get minValueGB(): number {
-    let exactMinValue = convertMbToGb(getSafeProperty(this.targetDisk, (obj) => obj.sizeMB, 0));
-    exactMinValue += this._minValueGB;
-
-    let dividedValue = Math.floor(exactMinValue / DEFAULT_STORAGE_STEPS);
-    let isExactByStep = (exactMinValue % DEFAULT_STORAGE_STEPS) === 0;
-    return isExactByStep ? exactMinValue : (dividedValue + 1) * DEFAULT_STORAGE_STEPS;
+    return this._computeMinValue();
   }
   public set minValueGB(value: number) { this._minValueGB = coerceNumber(value); }
   private _minValueGB: number = 0;
@@ -197,6 +193,7 @@ export class ServerManageStorageComponent
    */
   public onChangeInputManageType(inputManageType: InputManageType) {
     this.inputManageType = inputManageType;
+    this.minValueGB = this._computeMinValue();
     this._registerFormControlsByInputType();
     this.notifyDataChange();
   }
@@ -236,6 +233,20 @@ export class ServerManageStorageComponent
     // Emit changes
     this.dataChange.emit(this._storageOutput);
     this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Returns the computed storage min value in GB based on input type
+   */
+  private _computeMinValue(): number {
+    let exactMinValue = convertMbToGb(getSafeProperty(this.targetDisk, (obj) => obj.sizeMB, 0));
+    if (this.inputManageType === InputManageType.Custom) {
+      return exactMinValue + 1;
+    } else {
+      let dividedValue = Math.floor(exactMinValue / DEFAULT_STORAGE_STEPS);
+      let isExactByStep = (exactMinValue % DEFAULT_STORAGE_STEPS) === 0;
+      return isExactByStep ? exactMinValue : (dividedValue + 1) * DEFAULT_STORAGE_STEPS;
+    }
   }
 
   /**
@@ -292,26 +303,13 @@ export class ServerManageStorageComponent
    */
   private _registerFormGroup(): void {
     // Register form control for custom storage
-    this.fcCustomStorage = new FormControl('', [
-      CoreValidators.required,
-      CoreValidators.numeric,
-      CoreValidators.min(this.minValueGB),
-      CoreValidators.custom(
-        this._customStorageValidator.bind(this),
-        'storageAvailable'
-      )
-    ]);
+    this.fcCustomStorage = new FormControl('', this._setValidatorFunctionsForCustomInput());
     this.fcCustomStorage.valueChanges
       .pipe(takeUntil(this._destroySubject))
       .subscribe(() => this.notifyDataChange());
 
     // Register form control for selection of storage
-    this.fcSelectStorages = new FormControl('', [
-      CoreValidators.custom(
-        this._maxStorageChecking.bind(this),
-        'storageAvailable'
-      )
-    ]);
+    this.fcSelectStorages = new FormControl('', this._setValidatorFunctionsForAutoScaler());
     this.fcSelectStorages.valueChanges
       .pipe(takeUntil(this._destroySubject))
       .subscribe(() => this.notifyDataChange());
@@ -341,15 +339,45 @@ export class ServerManageStorageComponent
    */
   private _registerAutoFormControls(): void {
     this.fgScale.removeControl('fcCustomStorage');
+    this.fcSelectStorages.setValidators(this._setValidatorFunctionsForAutoScaler());
+    this.fcSelectStorages.updateValueAndValidity();
   }
 
   /**
    * Registers custom settings associated form controls
    */
   private _registerCustomFormControls(): void {
+    this.fcCustomStorage.setValidators(this._setValidatorFunctionsForCustomInput());
+    this.fcCustomStorage.updateValueAndValidity();
     this.fgScale.setControl('fcCustomStorage', this.fcCustomStorage);
   }
 
+  /**
+   * Returns the custom validator associated for custom input control
+   */
+  private _setValidatorFunctionsForCustomInput(): ValidatorFn[] {
+    return [
+      CoreValidators.required,
+      CoreValidators.numeric,
+      CoreValidators.min(this.minValueGB),
+      CoreValidators.custom(
+        this._customStorageValidator.bind(this),
+        'storageAvailable'
+      )
+    ];
+  }
+
+  /**
+   * Returns the custom validator associated for auto scaler control
+   */
+  private _setValidatorFunctionsForAutoScaler(): ValidatorFn[] {
+    return [
+      CoreValidators.custom(
+        this._maxStorageChecking.bind(this),
+        'storageAvailable'
+      )
+    ];
+  }
   /**
    * Return true when the input value is valid
    * @param inputValue Input value to be checked
