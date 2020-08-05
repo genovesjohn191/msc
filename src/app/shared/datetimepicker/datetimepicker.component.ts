@@ -36,20 +36,24 @@ import {
   ErrorStateMatcher,
   unsubscribeSafely,
   isNullOrEmpty,
-  compareDates} from '@app/utilities';
+  compareDates,
+  coerceArray,
+  getCurrentDate,
+  addMonthsToDate} from '@app/utilities';
 import { distinctUntilChanged } from 'rxjs/operators';
+import { NgxMatDateFormats, NGX_MAT_DATE_FORMATS, NgxMatDateAdapter } from '@angular-material-components/datetime-picker';
 
-const CURERNTYEAR = new Date().getFullYear();
-const DEFAULT_MAXIMUM_DATE = new Date(CURERNTYEAR + 1, 11, 31);
-const MCS_DATE_FORMATS: MatDateFormats = {
-  ...MAT_NATIVE_DATE_FORMATS,
+const CURRENT_DATE = getCurrentDate();
+const DEFAULT_MAXIMUM_DATE = addMonthsToDate(CURRENT_DATE, 6);
+const MCS_DATE_FORMATS: NgxMatDateFormats = {
+  parse: {
+    dateInput: 'LL'
+  },
   display: {
-    ...MAT_NATIVE_DATE_FORMATS.display,
-    dateInput: {
-      year: 'numeric',
-      month: 'numeric',
-      day: 'numeric',
-    } as Intl.DateTimeFormatOptions,
+    dateInput: 'MM/DD/YYYY hh:mm A',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
   }
 };
 const DEFAULT_LOCALE = 'en-AU';
@@ -73,7 +77,7 @@ const DEFAULT_LABEL = 'Choose a date';
       useExisting: forwardRef(() => DateTimePickerComponent),
       multi: true
     },
-    {provide: MAT_DATE_FORMATS, useValue: MCS_DATE_FORMATS},
+  { provide: NGX_MAT_DATE_FORMATS, useValue: MCS_DATE_FORMATS },
   ]
 })
 export class DateTimePickerComponent  extends McsFormFieldControlBase<any> implements ControlValueAccessor, Validator, OnInit, OnDestroy {
@@ -83,7 +87,7 @@ export class DateTimePickerComponent  extends McsFormFieldControlBase<any> imple
   private _dateChange: BehaviorSubject<Date>;
 
   constructor(private _overlayContainer: OverlayContainer,
-              private _adapter: DateAdapter<any>,
+              private _adapter: NgxMatDateAdapter<any>,
               _elementRef: ElementRef,
               @Optional() _parentForm: NgForm,
               @Optional() _parentFormGroup: FormGroupDirective) {
@@ -139,7 +143,6 @@ export class DateTimePickerComponent  extends McsFormFieldControlBase<any> imple
   public get minDate(): Date {
     return this._minDate;
   }
-
   public set minDate(min: Date) {
     if (min.getDay < new Date().getDay) {
       throw new Error('Declared minimum date count should not be later than or equal to current date');
@@ -149,6 +152,7 @@ export class DateTimePickerComponent  extends McsFormFieldControlBase<any> imple
     }
     this._minDate = min;
   }
+
   @Input()
   public get maxDate(): Date {
     return this._maxDate;
@@ -160,7 +164,42 @@ export class DateTimePickerComponent  extends McsFormFieldControlBase<any> imple
     this._maxDate = max;
   }
 
+  @Input()
+  public get showTimePicker(): boolean {
+    return this._showTimePicker;
+  }
+  public set showTimePicker(value: boolean) { this._showTimePicker = coerceBoolean(value); }
 
+
+  @Input()
+  public get stepHour(): number {
+    return this._stepHour;
+  }
+  public set stepHour(step: number) {
+    if (step <= 0) { throw new Error('Hour step should be greater than 0'); }
+    this._stepHour = step;
+  }
+
+  @Input()
+  public get stepMinute(): number {
+    return this._stepMinute;
+  }
+  public set stepMinute(step: number) {
+    if (step <= 0) { throw new Error('Minute step should be greater than 0'); }
+    this._stepMinute = step;
+  }
+
+  @Input()
+  public get defaultTime(): number[] {
+    return this._defaultTime;
+  }
+  public set defaultTime(value: number[]) { this._defaultTime = coerceArray(value); }
+
+  private _defaultMinutes: number = (CURRENT_DATE.getMinutes() >= 30) ? 0 : 30;
+  private _defaultTime: number[] = [CURRENT_DATE.getHours(), this._defaultMinutes];
+  private _showTimePicker: boolean = true;
+  private _stepHour: number;
+  private _stepMinute: number;
   private _label: string;
   private _value: Date;
   private _disabled: boolean = false;
@@ -178,8 +217,8 @@ export class DateTimePickerComponent  extends McsFormFieldControlBase<any> imple
     unsubscribeSafely(this.dateChanged);
   }
 
-  public onDateTimePickerChange(event: MatDatepickerInputEvent<Date>) {
-    this.value = event.value;
+  public onDateTimePickerChange(event: MatDatepickerInputEvent<any>) {
+    this.value = event.value.toDate();
     this.dateChanged.emit(event.value);
   }
 
@@ -193,10 +232,10 @@ export class DateTimePickerComponent  extends McsFormFieldControlBase<any> imple
     return isNullOrEmpty(this.value);
   }
 
-  public writeValue(value: Date): void {
+  public writeValue(value: any): void {
     if (isNullOrEmpty(value)) { return; }
-    this._value = new Date(value.toUTCString());
-    this._dateChange.next(this._value);
+    this.value = new Date(value);
+    this._dateChange.next(this.value);
   }
 
   /**

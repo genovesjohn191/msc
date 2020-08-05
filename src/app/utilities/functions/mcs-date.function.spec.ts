@@ -5,7 +5,14 @@ import {
   compareDates,
   getExpiryLabel,
   convertDateTimezoneToUTC,
-  isDateFormatValid
+  isDateFormatValid,
+  getCurrentDate,
+  getDayinMonth,
+  getMonth,
+  getYear,
+  addDaysToDate,
+  addHoursToDate,
+  addMonthsToDate
 } from './mcs-date.function';
 
 describe('DATE Functions', () => {
@@ -119,6 +126,88 @@ describe('DATE Functions', () => {
       let expiry = new Date('2017-04-26 01:10:45');
       let expiredLabel = getExpiryLabel(expiry);
       expect(expiredLabel).toBe(getExpiryLabel(expiry));
+    });
+  });
+
+  describe('getCurrentDate()', () => {
+    it(`should return current day`, () => {
+      let expectedDate = new Date();
+      let actualDate = getCurrentDate();
+      let result = compareDates(expectedDate, actualDate);
+      expect(result).toBe(0);
+    });
+  });
+
+  describe('getDayinMonth()', () => {
+    it(`should return correct date`, () => {
+      let expectedDate = new Date().getDate();
+      let actualDate = getDayinMonth();
+      expect(actualDate).toBe(expectedDate);
+    });
+  });
+
+  describe('getMonth()', () => {
+    it(`given no parameter should return current month`, () => {
+      let expectedMonth: number = new Date().getMonth() + 1;
+      let actualMonth: number = getMonth();
+      expect(actualMonth).toBe(expectedMonth);
+    });
+    it(`given parameter should return correct month`, () => {
+      let testDate = new Date(2021, 12, 31);
+      let expectedMonth: number = testDate.getMonth() + 1;
+      let actualMonth: number = getMonth(testDate);
+      expect(actualMonth).toBe(expectedMonth);
+    });
+  });
+
+  describe('getYear()', () => {
+    it(`given no parameter should return current year`, () => {
+      let expectedYear: number = new Date().getFullYear();
+      let actualYear: number = getYear();
+      expect(actualYear).toBe(expectedYear);
+    });
+    it(`given parameter should return correct year`, () => {
+      let testDate = new Date(2021, 12, 31);
+      let expectedYear: number = testDate.getFullYear();
+      let actualYear: number = getYear(testDate);
+      expect(actualYear).toBe(expectedYear);
+    });
+  });
+
+  describe('addDaysToDate()', () => {
+    it(`should return correct date when incremented`, () => {
+      let dayIncrement = 5;
+      let testDate1 = new Date(getYear(), getMonth(), getDayinMonth());
+      let testDate2 = new Date(getYear(), getMonth(), getDayinMonth());
+      let expectedDate = new Date(testDate2.setDate(testDate2.getDate() + dayIncrement));
+      let actualDate = addDaysToDate(testDate1, 5);
+      let result = compareDates(actualDate, expectedDate);
+      expect(result).toBe(0);
+    });
+  });
+
+  describe('addHoursToDate()', () => {
+    it(`should return correct date hours`, () => {
+      let hourIncrement = 5;
+      let testDate = new Date(getYear(), getMonth(), getDayinMonth());
+      let expectedDate = new Date(getYear(), getMonth(), getDayinMonth(), hourIncrement);
+      let actualDate = addHoursToDate(testDate, 5);
+
+      expect(actualDate.getHours()).toBe(expectedDate.getHours());
+      expect(getYear(actualDate)).toBe(getYear(expectedDate));
+      expect(getMonth(actualDate)).toBe(getMonth(expectedDate));
+      expect(getDayinMonth(actualDate)).toBe(getDayinMonth(expectedDate));
+    });
+  });
+
+  describe('addMonthsToDate()', () => {
+    it(`should return correct added months`, () => {
+      let monthIncrement = 6;
+      let testDate = new Date(getYear(), getMonth(), getDayinMonth());
+      let expectedDate =  new Date(getYear(), getMonth() + monthIncrement, getDayinMonth());
+      let actualDate = addMonthsToDate(testDate, 6);
+      let result = compareDates(actualDate, expectedDate);
+      expect(result).toBe(0);
     });
   });
 });

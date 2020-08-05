@@ -3,6 +3,23 @@
 
 $material-default-gray: rgba(0, 0, 0, 0.38);
 
+.mat-datepicker-content {
+  .mat-icon-button:hover {
+    color: $primary-bg-color!important;
+  }
+
+  .mat-button:disabled, button[disabled] {
+    background-color: $light-bg-color!important;
+    color:$readonly-color;
+    pointer-events: none;
+  }
+
+  .mat-button:hover {
+    background-color: $primary-bg-color;
+    color: $light-bg-color;
+
+  }
+}
 .mat-form-field-wrapper {
     max-width: 198px!important;
 }

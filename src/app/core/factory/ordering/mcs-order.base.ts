@@ -162,7 +162,8 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
   public createOrUpdateOrder(
     orderDetails: McsOrderCreate,
     orderRequester: OrderRequester = OrderRequester.Client,
-    orderDeliveryType?: DeliveryType
+    orderDeliveryType?: DeliveryType,
+    schedule?: Date
   ): void {
     let orderItemType = this._orderItemTypeChange.getValue() || {} as any;
 
@@ -179,6 +180,10 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
 
     if (!isNullOrUndefined(orderDeliveryType)) {
       this._orderBuilder.setOrderItemDeliveryType(orderDeliveryType);
+    }
+
+    if (!isNullOrUndefined(schedule)) {
+      this._orderBuilder.setOrderItemSchedule(schedule);
     }
 
     let orderItems = getSafeProperty(orderDetails, (obj) => obj.items);

@@ -1,13 +1,23 @@
-<mat-form-field appearance="fill">
-  <mat-label *ngIf="(label)">{{ label }}</mat-label>
-  <input matInput 
-  [matDatepicker]="picker" 
-  color="primary"
-  [min]="minDate" 
-  [max]="maxDate" 
-  [required]="required" 
-  [disabled]="disabled" 
-  (dateChange)="onDateTimePickerChange($event)">
-  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-  <mat-datepicker [startAt]="value" [disabled]="disabled" #picker></mat-datepicker>
+<mat-form-field>
+  <input matInput [ngxMatDatetimePicker]="picker" [placeholder]="label"
+    [min]="minDate"
+    [max]="maxDate"
+    [readOnly]="true"
+    [disabled]="disabled"
+    [required]="required"
+    (dateInput)="onDateTimePickerChange($event)"
+    color="primary">
+  <mat-datepicker-toggle
+   [disabled]="disabled"
+   matSuffix [for]="picker">
+  </mat-datepicker-toggle>
+  <ngx-mat-datetime-picker #picker
+  [showSpinners]="true"
+  [startAt]="minDate"
+  [defaultTime]="defaultTime"
+  [showSeconds]="false"
+  [stepHour]="stepHour"
+  [stepMinute]="stepMinute"
+  [enableMeridian]="true">
+  </ngx-mat-datetime-picker>
 </mat-form-field>

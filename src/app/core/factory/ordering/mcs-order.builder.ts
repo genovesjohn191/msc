@@ -103,6 +103,15 @@ export class McsOrderBuilder {
   }
 
   /**
+   * Sets the order items schedule
+   * @param schedule schedule date value
+   */
+  public setOrderItemSchedule(schedule: Date): McsOrderBuilder {
+    this._orderItems.forEach((item) => item.schedule = schedule);
+    return this;
+  }
+
+  /**
    * Add or updates the order item
    * @param orderItem Order item to be added or updated
    */

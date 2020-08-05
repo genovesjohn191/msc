@@ -30,7 +30,8 @@ import {
   takeUntil,
   map,
   tap,
-  shareReplay
+  shareReplay,
+  distinctUntilChanged
 } from 'rxjs/operators';
 import {
   McsTableDataSource,
@@ -42,7 +43,11 @@ import {
   getSafeProperty,
   unsubscribeSafely,
   isNullOrUndefined,
-  createObject
+  createObject,
+  getCurrentDate,
+  addDaysToDate,
+  addHoursToDate,
+  addMonthsToDate
 } from '@app/utilities';
 import {
   McsOrder,
@@ -70,6 +75,13 @@ interface ChargesState {
   oneOff: boolean;
   excessUsagePerGb: boolean;
 }
+
+const CURRENT_DATE = getCurrentDate();
+const DATE_TOMORROW = addDaysToDate(CURRENT_DATE, 1);
+const MIN_DATE = addHoursToDate(DATE_TOMORROW, 1);
+const MAX_DATE = addMonthsToDate(CURRENT_DATE, 6);
+const STEP_HOUR: number = 1;
+const STEP_MINUTE: number = 30;
 
 @Component({
   selector: 'mcs-step-order-details',
@@ -107,6 +119,7 @@ export class StepOrderDetailsComponent
   public fcDescription: FormControl;
   public fcDeliveryType: FormControl;
   public fcWorkflowAction: FormControl;
+  public fcSchedule: FormControl;
 
   // Others
   public contractTerms$: Observable<McsOption[]>;
@@ -114,6 +127,7 @@ export class StepOrderDetailsComponent
   public selectedBilling$: Observable<McsBilling>;
   public selectedBillingSite$: Observable<McsBillingSite>;
   public chargesState$: Observable<ChargesState>;
+  public selectedDate$ = new Observable<Date>();
 
   public workflowAction: OrderWorkflowAction;
   public orderDatasource: McsTableDataSource<McsOrderItem>;
@@ -125,6 +139,7 @@ export class StepOrderDetailsComponent
 
   private _destroySubject = new Subject<void>();
   private _chargesStateChange = new BehaviorSubject<ChargesState>({ excessUsagePerGb: false, monthly: false, oneOff: false });
+  private _dateHasChanged = new BehaviorSubject<Date>(new Date());
 
   constructor(
     @Inject(forwardRef(() => WizardStepComponent)) private _wizardStep: WizardStepComponent,
@@ -142,6 +157,7 @@ export class StepOrderDetailsComponent
     this._subscribeToContractTerms();
     this._subscribeToBillingDetails();
     this._subscribeToChargesStateChange();
+    this._subscribeToDateChange();
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
@@ -195,6 +211,22 @@ export class StepOrderDetailsComponent
 
   public get acceleratedLeadTimeHours(): number {
     return getSafeProperty(this.orderItemType, (obj) => obj.acceleratedLeadTimeHours, 0);
+  }
+
+  public get stepHour(): number {
+    return STEP_HOUR;
+  }
+
+  public get stepMinute(): number {
+    return STEP_MINUTE;
+  }
+
+  public get minDate(): Date {
+    return MIN_DATE;
+  }
+
+  public get maxDate(): Date {
+    return  MAX_DATE;
   }
 
   /**
@@ -271,6 +303,17 @@ export class StepOrderDetailsComponent
   }
 
   /**
+   * Date change event
+   * @param selectedDate: raw date time picker obj to be converted to date
+   */
+  public onDateChanged(selectedDate: any): void {
+    if (isNullOrEmpty(selectedDate)) { return; }
+    let convertedDate = selectedDate.toDate();
+    this.fcSchedule.setValue(convertedDate);
+    this._dateHasChanged.next(convertedDate);
+    this.notifyDataChange();
+  }
+  /**
    * Notifies the data change event
    */
   public notifyDataChange(): void {
@@ -288,7 +331,9 @@ export class StepOrderDetailsComponent
     orderDetails.description = this.fcDescription.value;
     orderDetails.workflowAction = this.fcWorkflowAction.value;
     if (this.hasLeadTimeOptions) {
+      let convertedDate = getSafeProperty(this.fcSchedule, (obj) => obj.value);
       orderDetails.deliveryType = +getSafeProperty(this.fcDeliveryType, (obj) => obj.value, 0);
+      orderDetails.schedule = new Date(convertedDate.toUTCString());
     }
     orderDetails.contractDurationMonths = +getSafeProperty(this.fcContractTerm, (obj) => obj.value, 0);
     orderDetails.billingEntityId = +getSafeProperty(this.fcBillingEntity, (obj) => obj.value.id, 0);
@@ -326,6 +371,7 @@ export class StepOrderDetailsComponent
   private _setOrderChangeFormControls(): void {
     this.fgOrderBilling.setControl('fcDescription', this.fcDescription);
     this.fgOrderBilling.setControl('fcDeliveryType', this.fcDeliveryType);
+    this.fgOrderBilling.setControl('fcSchedule', this.fcSchedule);
     this.fgOrderBilling.removeControl('fcContractTerm');
     this.fgOrderBilling.removeControl('fcBillingEntity');
     this.fgOrderBilling.removeControl('fcBillingSite');
@@ -338,6 +384,7 @@ export class StepOrderDetailsComponent
   private _setOrderNewFormControls(): void {
     this.fgOrderBilling.setControl('fcDescription', this.fcDescription);
     this.fgOrderBilling.setControl('fcDeliveryType', this.fcDeliveryType);
+    this.fgOrderBilling.setControl('fcSchedule', this.fcSchedule);
     this.fgOrderBilling.setControl('fcContractTerm', this.fcContractTerm);
     this.fgOrderBilling.setControl('fcBillingEntity', this.fcBillingEntity);
     this.fgOrderBilling.setControl('fcBillingSite', this.fcBillingSite);
@@ -449,6 +496,11 @@ export class StepOrderDetailsComponent
       CoreValidators.required
     ]);
 
+    // Schedule
+    this.fcSchedule = new FormControl(this.minDate, [
+      CoreValidators.required,
+    ]);
+
     // Register Form Groups using binding
     this.fgOrderBilling = this._formBuilder.group([]);
   }
@@ -504,5 +556,11 @@ export class StepOrderDetailsComponent
       takeUntil(this._destroySubject),
       tap(() => this.onDataChange())
     ).subscribe();
+  }
+
+  private _subscribeToDateChange(): void {
+      this.selectedDate$ = this._dateHasChanged.asObservable().pipe(
+        distinctUntilChanged()
+       );
   }
 }
