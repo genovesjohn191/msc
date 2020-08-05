@@ -8,4 +8,5 @@ export class OrderDetails {
   public billingSiteId: number;
   public billingCostCentreId: number;
   public deliveryType: DeliveryType;
+  public schedule: Date;
 }

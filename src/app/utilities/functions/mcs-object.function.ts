@@ -74,9 +74,11 @@ export function cloneObject<T>(sourceObject: T): T {
     } else {
       target = source;
     }
-    Object.assign(target, source);
 
-    if (typeof target === 'object') {
+    Object.assign(target, source);
+    if (target instanceof Date) {
+      target = source;
+    } else if (typeof target === 'object') {
       let objectKeys = Object.keys(target);
 
       objectKeys.forEach((fieldKey) => {

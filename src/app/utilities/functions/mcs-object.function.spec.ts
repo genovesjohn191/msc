@@ -173,5 +173,12 @@ describe('OBJECT Functions', () => {
       expect(targetInstance.name).toBe('Arrian');
       expect(targetInstance.age).toBe('28');
     });
+
+    it('should successfully create a new target object given date source object', () => {
+      let testDate = new Date();
+      let targetInstance = cloneObject(testDate);
+      expect(targetInstance).toBeDefined();
+      expect(targetInstance instanceof Date).toBe(true);
+    });
   });
 });

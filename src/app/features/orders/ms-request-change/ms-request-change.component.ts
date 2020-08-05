@@ -39,7 +39,9 @@ import {
   getSafeProperty,
   createObject,
   Guid,
-  formatStringToPhoneNumber
+  formatStringToPhoneNumber,
+  getCurrentDate,
+  addDaysToDate
 } from '@app/utilities';
 import { McsFormGroupDirective } from '@app/shared';
 import {
@@ -98,6 +100,7 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
   public contactOptions$: Observable<McsOption[]>;
   public azureServices$: Observable<McsOption[]>;
   public smacSharedFormConfig$: Observable<SmacSharedFormConfig>;
+  public selectedScheduleDate: Date;
 
   private _formGroup: McsFormGroupDirective;
   private _formGroupSubject = new Subject<void>();
@@ -186,7 +189,7 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
   }
 
   /**
-   * Event listener whenever there is a change in billing information and delivery type
+   * Event listener whenever there is a change in billing information, delivery type or schedule
    */
   public onOrderDetailsDataChange(orderDetails: OrderDetails): void {
     if (isNullOrEmpty(orderDetails)) { return; }
@@ -199,7 +202,8 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
         billingCostCentreId: orderDetails.billingCostCentreId
       }),
       OrderRequester.Billing,
-      orderDetails.deliveryType
+      orderDetails.deliveryType,
+      orderDetails.schedule
     );
 
     this._msRequestChangeService.submitOrderRequest();
@@ -287,6 +291,7 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
             referenceId: MS_REQUEST_SERVICE_CHANGE,
             serviceId: this.fcMsService.value.serviceId,
             deliveryType: DeliveryType.Standard, // set to Standard as default
+            schedule: addDaysToDate(getCurrentDate(), 1),
             properties: {
               category: categoryText[this.fcCategory.value],
               complexity: complexityText[Complexity.Simple], // temporarily set complexity value to simple by default

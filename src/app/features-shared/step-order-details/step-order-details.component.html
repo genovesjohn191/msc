@@ -207,6 +207,25 @@
           </mcs-form-field>
         </mcs-item>
 
+        <!--Schedule-->
+        <mcs-item orientation="separated" *ngIf="hasLeadTimeOptions" [disabled]="isUpdatingCharges">
+          <span>{{ 'shared.datetimepicker.label' | translate }}</span>
+           <mcs-datetimepicker
+              [required]="true"
+              [showTimePicker]="true"
+              [stepHour]="stepHour"
+              [stepMinute]="stepMinute"
+              [formControl]="fcSchedule"
+              [value]="selectedDate$ | async"
+              (dateChanged)="onDateChanged($event)"
+              label="{{'shared.datetimepicker.datepickerLabel' | translate}}"
+              [minDate]="minDate"
+              [maxDate]="maxDate" 
+              mcsId="mcs-datetimepicker"
+              [mcsContextualHelp]="'shared.datetimepicker.contextualHelp' | translate">
+          </mcs-datetimepicker>
+       </mcs-item>
+
         <ng-container [ngSwitch]="fcWorkflowAction?.value">
           <mcs-order-agreement *ngSwitchCase="orderWorkFlowEnum.Submitted" orderAgreementType="charges"></mcs-order-agreement>
           <mcs-order-agreement *ngSwitchCase="orderWorkFlowEnum.AwaitingApproval" orderAgreementType="charges"></mcs-order-agreement>

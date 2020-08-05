@@ -145,3 +145,62 @@ export function formatTime(
   }
   return convertedTime;
 }
+
+/**
+ * Gets the current date
+ */
+export function getCurrentDate(): Date {
+  return new Date();
+}
+
+/**
+ * Gets the day in month of a specific date, if none is specified would return the current day in month
+ * @param date date to get day in month
+ */
+export function getDayinMonth(date: Date = new Date()): number {
+  return date.getDate();
+}
+
+/**
+ * Gets the month of a specific date, if none is specified would return the current month
+ * @param date date to get month
+ */
+export function getMonth(date: Date = new Date()): number {
+  return date.getMonth() + 1; // zero based
+}
+
+/**
+ * Gets the year of a specific date, if none is specified would return the current year
+ * @param date date to get year
+ */
+export function getYear(date: Date = new Date()): number {
+  return date.getFullYear();
+}
+
+/**
+ * Adds time to a specific date
+ * @param date date to increment
+ * @param hours number of hours to add, default to 1
+ */
+export function addHoursToDate(date: Date, hours: number = 1): Date {
+  return new Date(date.setHours(date.getHours() + hours));
+}
+
+
+/**
+ * Adds day to a specific date
+ * @param date date to increment
+ * @param days number of days to add, default to 1
+ */
+export function addDaysToDate(date: Date, days: number = 1): Date {
+  return  new Date(date.setDate(date.getDate() + days));
+}
+
+/**
+ * Adds months to a specific date
+ * @param date date to increment
+ * @param months number of months to add, default to 1
+ */
+export function addMonthsToDate(date: Date, months: number = 1): Date {
+  return  new Date(date.setMonth(date.getMonth() + months));
+}

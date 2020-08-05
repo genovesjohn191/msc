@@ -3,6 +3,7 @@ import {
   DeliveryType,
   DeliveryTypeSerialization
 } from '../enumerations/delivery-type.enum';
+import { McsDateSerialization } from '../serialization/mcs-date-serialization';
 
 export class McsOrderItemCreate {
   @JsonProperty()
@@ -25,6 +26,12 @@ export class McsOrderItemCreate {
     deserializer: DeliveryTypeSerialization
   })
   public deliveryType?: DeliveryType = undefined;
+
+  @JsonProperty({
+    serializer: McsDateSerialization,
+    deserializer: McsDateSerialization
+  })
+  public schedule?: Date = undefined;
 
   @JsonProperty()
   public properties?: any = undefined;
