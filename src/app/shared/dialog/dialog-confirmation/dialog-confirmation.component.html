@@ -6,7 +6,7 @@
   <mcs-dialog-content>
     <div class="dialog-content-body">
       <mcs-icon [key]="statusIconKey" class="dialog-content-icon"></mcs-icon>
-      <div class="dialog-content-message">
+      <div class="dialog-content-message" text-break-word>
         <ng-container *ngIf="isMessageTemplate; else messageTemplate">
           <ng-container *ngTemplateOutlet="dialogMessage"></ng-container>
         </ng-container>
