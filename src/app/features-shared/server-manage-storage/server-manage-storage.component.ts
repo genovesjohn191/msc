@@ -239,16 +239,51 @@ export class ServerManageStorageComponent
    * Returns the computed storage min value in GB based on input type
    */
   private _computeMinValue(): number {
-    let exactMinValue = convertMbToGb(getSafeProperty(this.targetDisk, (obj) => obj.sizeMB, 0));
+    let isNewServer: boolean = this._isTargetDiskUnvailable();
+    let currentStorageSize: number = this._getCurrentStorageSize();
+    let storageStepsFromValue = this._computeStorageStepsByStorageValue(currentStorageSize);
+    let isExactByStep = this._isValueExactByStep(currentStorageSize);
+    let computedMinValue: number;
+
     if (this.inputManageType === InputManageType.Custom) {
-      return exactMinValue + 1;
+      computedMinValue = (isNewServer) ? this._minValueGB : currentStorageSize + 1;
     } else {
-      let dividedValue = Math.floor(exactMinValue / DEFAULT_STORAGE_STEPS);
-      let isExactByStep = (exactMinValue % DEFAULT_STORAGE_STEPS) === 0;
-      return isExactByStep ? exactMinValue : (dividedValue + 1) * DEFAULT_STORAGE_STEPS;
+      if (isNewServer) { currentStorageSize += this._minValueGB; }
+      computedMinValue = isExactByStep ? currentStorageSize : (storageStepsFromValue + 1) * DEFAULT_STORAGE_STEPS;
     }
+
+    return computedMinValue;
   }
 
+  /**
+   * Checks if target disk prop is available, could be used for differentiating new disk vs disk expansion
+   */
+  private _isTargetDiskUnvailable(): boolean {
+    return isNullOrUndefined(this.targetDisk);
+  }
+
+  /**
+   * Returns the current storage value in GB
+   */
+  private _getCurrentStorageSize(): number {
+    return convertMbToGb(getSafeProperty(this.targetDisk, (obj) => obj.sizeMB, 0));
+  }
+
+  /**
+   * Returns the scaler steps based on the default storage steps configured and the storage value
+   * @param storageValue: current disk storage value
+   */
+  private _computeStorageStepsByStorageValue(storageValue: number): number {
+    return Math.floor(storageValue / DEFAULT_STORAGE_STEPS);
+  }
+
+  /**
+   * Checks whether the current storage value has correct ratio based from default storage steps
+   * @param storageValue: current disk storage value
+   */
+  private _isValueExactByStep(storageValue: number): boolean {
+    return ((storageValue % DEFAULT_STORAGE_STEPS) === 0);
+  }
   /**
    * Sets the selected storage if no storage selected
    */
@@ -274,7 +309,14 @@ export class ServerManageStorageComponent
    * Sets the custom storage value if not yet provided
    */
   private _setCustomStorageValue(): void {
-    this.fcCustomStorage.setValue(this.minValueGB);
+    let computedCustomStorageValue: number;
+    if (this._isTargetDiskUnvailable()) {
+      computedCustomStorageValue = this.minValueGB;
+    }  else {
+      let currentStorageSize = this._getCurrentStorageSize();
+      computedCustomStorageValue = currentStorageSize;
+    }
+    this.fcCustomStorage.setValue(computedCustomStorageValue);
     this._changeDetectorRef.markForCheck();
   }
 
@@ -348,8 +390,8 @@ export class ServerManageStorageComponent
    */
   private _registerCustomFormControls(): void {
     this.fcCustomStorage.setValidators(this._setValidatorFunctionsForCustomInput());
-    this.fcCustomStorage.updateValueAndValidity();
     this.fgScale.setControl('fcCustomStorage', this.fcCustomStorage);
+    this.fcCustomStorage.updateValueAndValidity();
   }
 
   /**
