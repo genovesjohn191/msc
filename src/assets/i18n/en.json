@@ -2248,7 +2248,7 @@
   "dialogResetPassword": {
     "title": "Reset Server Password",
     "poweredOnMessage": "Resetting the server password requires a restart of your server.\r\n\nAre you sure you want to reset the password and restart server <strong>{{server_name}}</strong> now?",
-    "poweredOffMessage": "Are you sure you want to reset the password for <strong>{{server_name}}</strong>?\r\n\nPlease note that this will cause VMware guest customization to run, which may reset network settings and restart the VM."
+    "poweredOffMessage": "Are you sure you want to reset the password for <strong>{{server_name}}</strong>?\r\n\nPlease note that this will cause VMware guest customization to run, which may reset network settings and restart the VM."
   },
   "dialogRenameServer": {
     "title": "Rename Server",
