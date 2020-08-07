@@ -1,0 +1,125 @@
+<mcs-page [header]="'orderHostedDnsChange.title' | translate">
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef>
+
+    <!-- Back to Server Details -->
+    <mcs-top-panel-item *mcsTopPanelItemDef no-border>
+      <mcs-action-item mcsAlign="end" mcsNavigateBackward mcsId="navigate-back" mcsEventTracker="navigate-back-click"
+        mcsEventCategory="orders" mcsEventLabel="navigate-back">
+        <mcs-icon [key]="backIconKey" size="small"></mcs-icon>
+        <span>{{'shared.wizard.previous' | translate}}</span>
+      </mcs-action-item>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
+  <mcs-content-panel *mcsContentPanelDef>
+
+    <mcs-wizard (stepChange)="onWizardStepChanged($event)">
+
+      <!-- Error message -->
+      <ng-container mcsWizardErrorTemplate>
+        <mcs-form-message #formMessage></mcs-form-message>
+      </ng-container>
+
+      <!-- Details Step-->
+      <mcs-wizard-step id="request-details-step"
+        [stepTitle]="'orderHostedDnsChange.requestDetails.stepTitle' | translate"
+        customClass="contextual-help-page-wrapper limited-view">
+
+        <form [formGroup]="fgDnsChangeDetails" mcsFormGroup>
+          <mcs-item orientation="block">
+            <p>{{'orderHostedDnsChange.requestDetails.description' | translate}}</p>
+            <p>{{'orderHostedDnsChange.requestDetails.leadTime' | translate}}</p>
+          </mcs-item>
+
+          <!-- DNS Service -->
+          <mcs-item orientation='block'>
+            <mcs-form-field *ngIf="networkDnsOptions$ | async as networkDnsOptions; noNetworkDnsTemplate">
+              <mcs-select [formControl]="fcDnsService" required
+                [placeholder]="'orderHostedDnsChange.requestDetails.dnsService.placeholder' | translate"
+                [mcsContextualHelp]="'orderHostedDnsChange.requestDetails.dnsService.helptext' | translate"
+                mcsId="select-dns-service" mcsEventTracker="select-dns-service" mcsEventCategory="order"
+                mcsEventLabel="order-hosted-dns-change-page">
+
+                <mcs-option *ngFor="let networkDnsOption of networkDnsOptions" [value]="networkDnsOption.value.serviceId">
+                  {{ networkDnsOption.text }}
+                </mcs-option>
+              </mcs-select>
+            </mcs-form-field>
+            <ng-template #noNetworkDnsTemplate>
+              <p> <span>{{ 'orderHostedDnsChange.requestDetails.dnsService.fallback' | translate }}</span>
+                <ng-container *mcsAccessControl="['TicketCreate']">
+                  <span> {{'orderHostedDnsChange.requestDetails.dnsService.raiseTicketPrefix' | translate }} </span>
+                  <a [mcsRouterLink]="[routeKeyEnum.TicketCreate]" mcsId="raise-a-ticket"
+                    mcsEventTracker="raise-a-ticket" mcsEventCategory="ticket"
+                    mcsEventLabel="order-hosted-dns-change-page">{{ 'orderHostedDnsChange.requestDetails.dnsService.raiseTicketLink' | translate }}</a>
+                  <span> {{'orderHostedDnsChange.requestDetails.dnsService.raiseTicketSuffix' | translate }} </span>
+                </ng-container>.
+              </p>
+            </ng-template>
+          </mcs-item>
+
+          <!-- Changes To Apply Form -->
+          <mcs-item orientation="block">
+            <div> {{ 'orderHostedDnsChange.requestDetails.desiredChange.label' | translate }} </div>
+
+            <div formArrayName="faChangeToApply">
+
+              <mcs-accordion [multi]="true">
+                <mcs-accordion-panel *ngFor="let formItem of faChangeToApply?.controls; index as i" [expanded]="i === 0" margin-top-small>
+                  <mcs-accordion-panel-header mcsPanelHeaderDef>
+                    <span>{{ getFormControl(formItem, 'fcActionType').value }}</span>
+                    <span> - {{ getFormControl(formItem, 'fcRecordType').value }}</span>
+                    <span *ngIf="getFormControl(formItem, 'fcHostName').value"> - {{ getFormControl(formItem, 'fcHostName').value }}</span>
+                  </mcs-accordion-panel-header>
+                  <mcs-order-hosted-dns-change-to-apply
+                    [formGroup]="formItem"
+                    (dataChange)="onChangeToApplyFormDataChange()">
+                  </mcs-order-hosted-dns-change-to-apply>
+                  <mcs-item orientation="separated" margin-top-small *ngIf="isChangeItemRemovable(faChangeToApply?.controls?.length)">
+                    <button mcsButton color="error" (click)="removeChangeItem(i)">{{ 'orderHostedDnsChange.requestDetails.desiredChange.removeItemLabel' | translate }}</button>
+                  </mcs-item>
+
+                </mcs-accordion-panel>
+              </mcs-accordion>
+            </div>
+
+            <div class="action-items" margin-top-medium margin-bottom-none>
+              <button mcsButton (click)="addChangeItem()">{{ 'orderHostedDnsChange.requestDetails.desiredChange.addItemLabel' | translate }}</button>
+            </div>
+          </mcs-item>
+
+          <!-- SMAC Shared Form -->
+          <mcs-item orientation="block">
+            <mcs-smac-shared-form #fgSmacSharedForm [config]="smacSharedFormConfig$ | async"
+              (dataChange)="onChangeSharedForm($event)">
+            </mcs-smac-shared-form>
+          </mcs-item>
+
+          <div class="action-items">
+            <button mcsButton arrow="right" mcsWizardStepNext [disabled]="!formIsValid" mcsId="step-1-next"
+              mcsEventTracker="step-1-next" mcsEventCategory="orders"
+              mcsEventLabel="order-hosted-dns-change-next">{{ 'shared.wizard.next' | translate }}</button>
+          </div>
+        </form>
+      </mcs-wizard-step>
+
+      <!-- Confirm Step  -->
+      <mcs-wizard-step id="confirm-step" [stepTitle]="'shared.wizard.confirm' | translate"
+        customClass="contextual-help-page-wrapper limited-view">
+
+        <mcs-step-order-details [order]="order$ | async" [orderItemType]="orderItemType$ | async"
+          [requestState]="dataStatus$ | async" [eventTrack]="orderEventTrack.billingDetailsStep"
+          (dataChange)="onOrderDetailsDataChange($event)" (submitOrder)="onSubmitOrder($event)">
+        </mcs-step-order-details>
+      </mcs-wizard-step>
+
+      <!-- Go! Step  -->
+      <mcs-wizard-step id="go-step" [stepTitle]="'shared.wizard.completed' | translate" customClass="limited-view">
+        <mcs-step-manual-order-completed [order]="order$ | async"
+          [orderWorkflowSubmitStatus]="orderWorkflowSubmitStatus$ | async">
+        </mcs-step-manual-order-completed>
+      </mcs-wizard-step>
+    </mcs-wizard>
+  </mcs-content-panel>
+</mcs-page>

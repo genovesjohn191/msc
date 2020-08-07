@@ -18,6 +18,7 @@ import { McsApiTicketsService } from './services/mcs-api-tickets.service';
 import { McsApiToolsService } from './services/mcs-api-tools.service';
 import { McsApiSystemService } from './services/mcs-api-system.service';
 import { McsApiInternetService } from './services/mcs-api-internet.service';
+import { McsApiNetworkDnsService } from './services/mcs-api-network-dns.service';
 import { McsApiIdentityService } from './services/mcs-api-identity.service';
 import { McsApiPlatformService } from './services/mcs-api-platform.service';
 import { McsApiLicensesService } from './services/mcs-api-licenses.service';
@@ -46,6 +47,7 @@ export const apiClientProviders: Provider[] = [
   McsApiTicketsService,
   McsApiToolsService,
   McsApiInternetService,
+  McsApiNetworkDnsService,
   McsApiSystemService,
   McsApiIdentityService,
   McsApiLicensesService,

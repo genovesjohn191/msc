@@ -152,6 +152,10 @@ export class McsFormGroupDirective implements OnInit, OnDestroy {
     this._formGroupService.scrollToFirstInvalidField(this._elementRef.nativeElement);
   }
 
+  public updateValueAndValidity(): void {
+    this._formGroup.form.updateValueAndValidity();
+  }
+
   /**
    * Return true when all the form controls are valid, otherwise false
    *

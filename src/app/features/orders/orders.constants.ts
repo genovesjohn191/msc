@@ -13,6 +13,8 @@ import { VdcStorageExpandComponent } from './vdc-storage-expand/vdc-storage-expa
 import { VdcStorageCreateComponent } from './vdc-storage-create/vdc-storage-create.component';
 import { ServiceInviewRaiseComponent } from './service-inview-raise/service-inview-raise.component';
 import { ServiceCustomChangeComponent } from './service-custom-change/service-custom-change.component';
+import { HostedDnsChangeComponent } from './hosted-dns-change/hosted-dns-change.component';
+import { ChangeToApplyComponent } from './hosted-dns-change/change-to-apply/change-to-apply.component';
 import { AddAntiVirusComponent } from './add-anti-virus/add-anti-virus.component';
 import { AddHidsComponent } from './add-hids/add-hids.component';
 import { AddServerBackupComponent } from './add-server-backup/add-server-backup.component';
@@ -43,6 +45,8 @@ export const ordersComponents: any[] = [
   VdcStorageCreateComponent,
   ServiceInviewRaiseComponent,
   ServiceCustomChangeComponent,
+  HostedDnsChangeComponent,
+  ChangeToApplyComponent,
   AddAntiVirusComponent,
   AddHidsComponent,
   AddServerBackupComponent,
@@ -94,6 +98,11 @@ export const ordersRoutes: Routes = [
     path: 'services/custom-change',
     component: ServiceCustomChangeComponent,
     data: { routeId: RouteKey.OrderServiceCustomChange }
+  },
+  {
+    path: 'hosted-dns-change',
+    component: HostedDnsChangeComponent,
+    data: { routeId: RouteKey.OrderHostedDnsChange }
   },
   {
     path: 'add/anti-virus',

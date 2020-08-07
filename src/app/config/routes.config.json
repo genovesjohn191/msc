@@ -430,6 +430,15 @@
     "requiredFeatureFlag": "EnableOrderingServiceCustomRequest",
     "documentTitle": "Custom Change Service - Macquarie Cloud Services"
   },
+  "orderHostedDnsChange": {
+    "enumPlatform": "Private",
+    "enumKey": "OrderHostedDnsChange",
+    "enumCategory": "MakeAChange",
+    "navigationPath": "orders/hosted-dns-change",
+    "requiredPermissions": ["OrderEdit"],
+    "requiredFeatureFlag": "EnableOrderingDnsCustomRequest",
+    "documentTitle": "Hosted DNS Change - Macquarie Cloud Services"
+  },
   "orderAddAntiVirus": {
     "enumPlatform": "Private",
     "enumKey": "OrderAddAntiVirus",

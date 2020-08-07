@@ -86,6 +86,7 @@ export * from './enumerations/license-category.enum';
 export * from './enumerations/license-complexity.enum';
 export * from './enumerations/delivery-type.enum';
 export * from './enumerations/form-response.enum';
+export * from './enumerations/dns-record-type.enum';
 
 /** Job References */
 export * from './job-references/mcs-server-job-reference';
@@ -107,6 +108,7 @@ export * from './request/mcs-order-server-hids-add';
 export * from './request/mcs-order-vm-backup-add';
 export * from './request/mcs-order-backup-aggregation-target-add';
 export * from './request/mcs-order-service-custom-change';
+export * from './request/mcs-order-hosted-dns-change';
 export * from './request/mcs-server-attach-media';
 export * from './request/mcs-server-detach-media';
 export * from './request/mcs-server-delete';
@@ -214,6 +216,8 @@ export * from './response/mcs-portal-access';
 export * from './response/mcs-portal';
 export * from './response/mcs-validation';
 export * from './response/mcs-internet-port';
+export * from './response/mcs-network-dns-base';
+export * from './response/mcs-network-dns-summary';
 export * from './response/mcs-catalog';
 export * from './response/mcs-catalog-product';
 export * from './response/mcs-catalog-product-bracket';
@@ -265,6 +269,7 @@ export * from './common/mcs-option';
 export * from './common/mcs-option-group';
 export * from './common/mcs-key-value-pair';
 export * from './common/mcs-route-info';
+export * from './common/mcs-service-base';
 export * from './common/mcs-query-param';
 export * from './common/mcs-entity-provision';
 

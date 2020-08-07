@@ -12,6 +12,7 @@ import { BatProvisionEvent } from './events/bat-provision.event';
 import { MsLicenseCountChangeEvent } from './events/ms-license-count-change.event';
 import { MsServiceRequestChangeEvent } from './events/ms-service-request-change.event';
 import { ServiceCustomChangeEvent } from './events/service-custom-change.event';
+import { HostedDnsChangeEvent } from './events/hosted-dns-change.event';
 
 export type OrderEventRecord = Record<string, IOrderEventStrategy>;
 
@@ -28,5 +29,6 @@ export const orderEventMap: OrderEventRecord = {
   'hostsecurity.av.provision': new SecurityAvProvisionEvent(),
   'microsoft.licenseCount.change': new MsLicenseCountChangeEvent(),
   'microsoft.subscription.requestChange': new MsServiceRequestChangeEvent(),
-  'services.customRequest': new ServiceCustomChangeEvent()
+  'services.customRequest': new ServiceCustomChangeEvent(),
+  'dns.customChange': new HostedDnsChangeEvent()
 };

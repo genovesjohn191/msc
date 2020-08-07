@@ -43,7 +43,7 @@
 <!-- Group Items container -->
 <div>
   <div [@transformVertical]="panelOpen ? 'transform' : 'void'"
-    mcsScrollable class="select-group-panel-wrapper">
+    mcsScrollable [class]="'select-group-panel-wrapper option-view-size-'+optionViewCount">
     <ng-content></ng-content>
   </div>
 </div>
