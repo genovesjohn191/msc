@@ -1,32 +1,55 @@
 import {
-    Component,
-    ChangeDetectionStrategy,
-    ViewEncapsulation,
-    ViewChild,
-    ElementRef,
-    Input,
-    AfterViewInit,
-    OnChanges,
-    SimpleChanges
+  Component,
+  ChangeDetectionStrategy,
+  ViewEncapsulation,
+  ViewChild,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  ChangeDetectorRef
 } from '@angular/core';
-import Chart from 'chart.js';
 import { isNullOrEmpty } from '@app/utilities';
 import { ChartItem } from '../chart-item.interface';
 import { ChartDataService } from '../chart-data.service';
+import {
+  ChartComponent,
+  ApexAxisChartSeries,
+  ApexChart,
+  ApexXAxis,
+  ApexPlotOptions,
+  ApexDataLabels,
+  ApexStroke,
+  ApexYAxis,
+  ApexLegend
+} from 'ng-apexcharts';
+
+export type ChartOptions = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  dataLabels: ApexDataLabels;
+  plotOptions: ApexPlotOptions;
+  xaxis: ApexXAxis;
+  yaxis: ApexYAxis;
+  stroke: ApexStroke;
+  legend: ApexLegend;
+};
 
 @Component({
-    selector: 'mcs-bar-chart',
-    templateUrl: './bar-chart.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
-    host: {
-      'class': 'bar-chart-layout-wrapper'
-    }
+  selector: 'mcs-bar-chart',
+  templateUrl: './bar-chart.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  host: {
+    'class': 'bar-chart-layout-wrapper'
+  }
 })
 
-export class BarChartComponent implements AfterViewInit, OnChanges {
+export class BarChartComponent implements OnChanges {
   @Input()
   public data: ChartItem[];
+
+  @Input()
+  public dataLabels: boolean = false;
 
   @Input()
   public isHorizontal: boolean = false;
@@ -44,83 +67,98 @@ export class BarChartComponent implements AfterViewInit, OnChanges {
   public xLabel: string;
 
   @Input()
+  public yAxisDataFormatter: (val: number, opts?: any) => string;
+
+  @Input()
+  public xAxisDataFormatter: (value: string, timestamp?: number) => string;
+
+  @Input()
   public stacked: boolean = false;
 
-  @ViewChild('output', { static: true })
-  private _output: ElementRef;
+  @ViewChild('chart', { static: true }) chart: ChartComponent;
+  public chartOptions: Partial<ChartOptions>;
 
-  private _chart: Chart;
-
-  public constructor(private _chartDataService: ChartDataService) { }
+  public constructor(
+    private _chartDataService: ChartDataService,
+    private _changeDetectorRef: ChangeDetectorRef
+  ) {
+    this.chartOptions = {
+      legend: {
+        position: 'top',
+        horizontalAlign: 'left',
+        offsetX: 40
+      },
+      chart: {
+        type: 'bar',
+        stacked: this.stacked
+      },
+      stroke: {
+        show: true,
+        width: 1,
+        colors: ['#fff']
+      },
+    };
+  }
 
   public ngOnChanges(changes: SimpleChanges): void {
-    let dataChanges = changes['data'];
-    if (!isNullOrEmpty(dataChanges)) {
-      this.updateChart(this.data);
+    if (!isNullOrEmpty(changes['data'])) {
+      this.updateApexData(this.data);
     }
+
+    this._changeDetectorRef.markForCheck();
   }
 
-  public ngAfterViewInit(): void {
-    this.updateChart(this.data);
-  }
-
-  private updateChart(value: ChartItem[]): void {
+  private updateApexData(value: ChartItem[]): void {
     if (isNullOrEmpty(value)) {
       return;
     }
 
-    if (isNullOrEmpty(this._chart)) {
-      this.initializeChart(this._chartDataService.convertToChartData(value));
-    } else {
-      this._chart.data = this._chartDataService.convertToChartData(value);
-      this._chart.update();
-    }
-  }
+    let data = this._chartDataService.convertToApexChartData(value);
 
-  private initializeChart(chartData: any): void {
-    let ctx = this._output.nativeElement.getContext('2d');
-    this._chart = new Chart(ctx, {
-      type: this.isHorizontal ? 'horizontalBar' : 'bar',
-      data: chartData,
-      options: {
+    this.chartOptions = {
+      series: data.series,
+      chart: {
+        type: 'bar',
+        stacked: this.stacked
+      },
+      xaxis: {
+        categories: data.categories,
         title: {
-          display: !isNullOrEmpty(this.title),
-          text: this.title,
-          position: 'top'
+          text: this.xLabel
         },
-        tooltips: {
-          mode: 'index',
-          intersect: false
-        },
-        legend: {
-          display: this.showLegend,
-        },
-        responsive: true,
-        scales: {
-          xAxes: [{
-            stacked: this.stacked,
-            scaleLabel : {
-              display: !isNullOrEmpty(this.xLabel),
-              labelString: this.xLabel,
-              fontFamily: 'Circular-Pro-Bold'
-            },
-            ticks: {
-              suggestedMin: 0
-            }
-          }],
-          yAxes: [{
-            stacked: this.stacked,
-            scaleLabel : {
-              display: !isNullOrEmpty(this.yLabel),
-              labelString: this.yLabel,
-              fontFamily: 'Circular-Pro-Bold'
-            },
-            ticks: {
-              suggestedMin: 0
-            }
-          }]
+        labels: {
+          formatter: this.xAxisDataFormatter
         }
+      },
+      yaxis: {
+        title: {
+          text: this.yLabel
+        },
+        labels: {
+          formatter: this.yAxisDataFormatter
+        }
+      },
+      plotOptions: {
+        bar: {
+          horizontal: this.isHorizontal,
+          dataLabels: {
+            position: 'top'
+          }
+        }
+      },
+      dataLabels: {
+        enabled: this.dataLabels,
+        offsetX: -6,
+        style: {
+          fontSize: '11px',
+          colors: ['#fff']
+        }
+      },
+      legend: {
+        position: 'top',
+        horizontalAlign: 'left',
+        offsetX: 40
       }
-    });
+    };
   }
 }

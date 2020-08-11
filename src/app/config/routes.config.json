@@ -8,6 +8,7 @@
     "enumKey": "ReportOverview",
     "enumCategory": "Dashboard",
     "navigationPath": "dashboard/overview",
+    "enumPlatform": "Public",
     "documentTitle": "Overview - Macquarie Cloud Services",
     "requiredFeatureFlag": "EnableExperimentalFeatures"
   },
@@ -15,6 +16,7 @@
     "enumKey": "ReportInsights",
     "enumCategory": "Dashboard",
     "navigationPath": "dashboard/insights",
+    "enumPlatform": "Public",
     "documentTitle": "Insights - Macquarie Cloud Services",
     "requiredFeatureFlag": "EnableExperimentalFeatures"
   },
@@ -355,15 +357,17 @@
     "documentTitle": "Catalog Solutions - Macquarie Cloud Services"
   },
   "orders": {
-    "enumKey": "Orders",
-    "navigationPath": "orders",
+    "enumKey": "OrdersHistory",
+    "enumCategory": "Orders",
+    "navigationPath": "orders/history",
     "requiredPermissions": ["OrderView"],
     "requiredFeatureFlag": "EnableOrdering",
     "documentTitle": "Orders - Macquarie Cloud Services"
   },
   "orderDetails": {
     "enumKey": "OrderDetails",
-    "navigationPath": "orders",
+    "enumCategory": "Orders",
+    "navigationPath": "orders/history",
     "requiredPermissions": ["OrderView", "OrderEdit", "OrderApprove"],
     "requiredFeatureFlag": "EnableOrdering",
     "documentTitle": "Order Details - Macquarie Cloud Services"

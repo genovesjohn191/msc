@@ -79,9 +79,11 @@ import { ServerAddBackupServerSelectedEvent } from './items/server-add-backup-se
 import { ServerAddBackupVmSelectedEvent } from './items/server-add-backup-vm-selected.event';
 import { LicenseCountChangeSelectedEvent } from './items/license-count-change-selected.event';
 import { ServiceRequestChangeSelectedEvent } from './items/service-request-change-selected.event';
+import { NavToggleEvent } from './items/nav-toggle-event';
 
 export class McsEvent {
   public static routeChange = new RouteChangeEvent();
+  public static navToggle = new NavToggleEvent();
   public static accountChange = new AccountChangeEvent();
   public static userChange = new UserChangeEvent();
   public static sessionTimedOut = new SessionTimedOutEvent();

@@ -1,2 +1,16 @@
 <!-- Router Link Output -->
-<router-outlet></router-outlet>
+<router-outlet *isExperimental="false"></router-outlet>
+<mcs-grid class="full-height" *isExperimental="true">
+  <mcs-grid-row class="full-height">
+    <mcs-grid-column class="vertical-nav-wrapper" [ngClass]="showNav ? 'expanded': 'collapsed'">
+      <div class="scroller">
+        <mcs-navigation></mcs-navigation>
+      </div>
+    </mcs-grid-column>
+    <mcs-grid-column class="full-height full-width">
+      <div class="overlay" [ngClass]="showNav ? 'expanded' : 'collapsed'" (click)="toggleNav()">
+      </div>
+      <router-outlet></router-outlet>
+    </mcs-grid-column>
+  </mcs-grid-row>
+</mcs-grid>

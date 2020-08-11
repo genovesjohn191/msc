@@ -4,6 +4,7 @@ import {
 } from '@angular/core/testing';
 import { CommonDefinition } from '@app/utilities';
 import { HeaderComponent } from './header.component';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 
 describe('HeaderComponent', () => {
 
@@ -18,6 +19,8 @@ describe('HeaderComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         HeaderComponent
+      ], providers: [
+        EventBusDispatcherService
       ]
     });
 

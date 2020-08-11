@@ -71,7 +71,8 @@ export class SubNavigationComponent implements OnInit, OnDestroy {
   public get showSubNavigation(): boolean {
     return !isNullOrEmpty(this.activeRouteCategory)
       && this.activeRouteCategory !== RouteCategory.None
-      && this.activeRouteCategory !== RouteCategory.MakeAChange;
+      && this.activeRouteCategory !== RouteCategory.MakeAChange
+      && this.activeRouteCategory !== RouteCategory.Orders;
   }
 
   /**

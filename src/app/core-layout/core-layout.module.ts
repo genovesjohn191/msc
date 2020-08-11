@@ -8,7 +8,8 @@ import { StateChangeNotificationsComponent } from './state-change-notifications'
 import {
   MainNavigationComponent,
   NavigationDesktopComponent,
-  NavigationMobileComponent
+  NavigationMobileComponent,
+  NavigationComponent
 } from './main-navigation';
 import {
   SubNavigationComponent,
@@ -48,6 +49,7 @@ import { SystemMessageBannerComponent } from './system-message-banner/system-mes
     ContextSwitchComponent,
     StateChangeNotificationsComponent,
     MainNavigationComponent,
+    NavigationComponent,
     NavigationDesktopComponent,
     NavigationMobileComponent,
     SubNavigationComponent,
@@ -73,6 +75,7 @@ import { SystemMessageBannerComponent } from './system-message-banner/system-mes
     ContextSwitchComponent,
     StateChangeNotificationsComponent,
     MainNavigationComponent,
+    NavigationComponent,
     NavigationDesktopComponent,
     NavigationMobileComponent,
     SubNavigationComponent,

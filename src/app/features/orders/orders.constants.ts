@@ -22,11 +22,13 @@ import { AddVmBackupComponent } from './add-vm-backup/add-vm-backup.component';
 import { AddBatComponent } from './add-bat/add-bat.component';
 import { MsLicenseCountChangeComponent } from './ms-license-count-change/ms-license-count-change.component';
 import { MsRequestChangeComponent } from './ms-request-change/ms-request-change.component';
+import { OrdersGuard } from './orders.guard';
 
 /**
  * List of services for the main module
  */
 export const ordersProviders: any[] = [
+  OrdersGuard,
   OrderResolver,
   OrdersDashboardService
 ];
@@ -62,7 +64,13 @@ export const ordersComponents: any[] = [
 export const ordersRoutes: Routes = [
   {
     path: '',
-    component: OrdersComponent
+    component: OrdersComponent,
+    canActivate: [ OrdersGuard ]
+  },
+  {
+    path: 'history',
+    component: OrdersComponent,
+    data: { routeId: RouteKey.OrdersHistory }
   },
   {
     path: 'dashboard',
@@ -141,7 +149,7 @@ export const ordersRoutes: Routes = [
   },
   // Add additional routes above this line
   {
-    path: ':id',
+    path: 'history/:id',
     component: OrderComponent,
     data: { routeId: RouteKey.OrderDetails },
     resolve: {

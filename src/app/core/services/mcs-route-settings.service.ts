@@ -8,7 +8,8 @@ import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import {
   McsRouteInfo,
   HttpStatusCode,
-  RoutePlatform
+  RoutePlatform,
+  McsFeatureFlag
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -130,6 +131,10 @@ export class McsRouteSettingsService implements McsDisposable {
     let globallyAccessibleRoutePlatform: boolean =
       isNullOrEmpty(routeInfo.enumPlatform) || routeInfo.enumPlatform === RoutePlatform.Global;
     let noPreviouSelectedPlatform = isNullOrEmpty(this._previousSelectedPlatform);
+
+    if (this._accessControlService.hasAccessToFeature(McsFeatureFlag.ExperimentalFeatures)) {
+      globallyAccessibleRoutePlatform = false; // No need to force global routes to specific context
+    }
 
     // Public or Private Route
     if (!globallyAccessibleRoutePlatform) {

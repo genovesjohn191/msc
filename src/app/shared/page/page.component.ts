@@ -29,6 +29,9 @@ import {
   TopPanelPlaceholderDirective
 } from './top-panel';
 import { PageService } from './page.service';
+import { AccessControlDirective } from '../authentication/access-control/access-control.directive';
+import { McsAccessControlService } from '@app/core';
+import { McsFeatureFlag } from '@app/models';
 
 @Component({
   selector: 'mcs-page',
@@ -108,7 +111,8 @@ export class PageComponent implements AfterViewInit {
   public constructor(
     private _renderer: Renderer2,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _pageService: PageService
+    private _pageService: PageService,
+    private _accessControlService: McsAccessControlService
   ) {
     this.hasLeftPanel = true;
   }
@@ -141,6 +145,10 @@ export class PageComponent implements AfterViewInit {
       if (topPanelsAreDefined) {
         this._topPanelPlaceholder.viewContainer
           .createEmbeddedView(this._topPanelDefinition.template);
+      }
+
+      if (this._accessControlService.hasAccessToFeature(McsFeatureFlag.ExperimentalFeatures)) {
+        this._pageService.leftPanelIsVisible = false; // TODO: This should be overideable per instance
       }
 
       this._initializeLeftPanelDisplay();

@@ -1,0 +1,281 @@
+<nav>
+  <div class="nav-wrapper">
+    <ul>
+      <!-- Temp Dashboard -->
+      <li *ngIf="!hasDefaultPageAccess">
+        <a [mcsRouterLink]="routeKeyEnum.Dashboard"
+          mcsRouterLinkActive="active"
+          mcsId
+          mcsEventTracker="navigate-to-dashboard"
+          mcsEventCategory="navigation"
+          mcsEventLabel="main-nav">
+          {{ 'navigation.dashboard' | translate }}
+        </a>
+      </li>
+      <!-- Private Cloud -->
+      <li *ngIf="hasPrivateCloudAccess">
+        <a (click)="toggleThis('showPrivateCloudMenu')"
+          [class.active]="isPrivateCloudRoute"
+          mcsId>
+          {{ 'navigation.privateCloud.label' | translate }}
+          <mcs-icon [key]="showPrivateCloudMenu ? caretUpIconKey : caretDownIconKey" color="light" size="small"></mcs-icon>
+        </a>
+        <ul *ngIf="showPrivateCloudMenu">
+          <!-- Compute -->
+          <li *mcsAccessControl="['DedicatedVmAccess','CloudVmAccess']">
+            <a (click)="toggleThis('showComputeSubmenu')"
+              [class.active]="selectedCategory === routerCategoryEnum.Compute"
+              mcsId="compute-link">
+              {{ 'navigation.privateCloud.compute.label' | translate }}
+              <mcs-icon [key]="showComputeSubmenu ? caretUpIconKey : caretDownIconKey" color="light" size="small"></mcs-icon>
+            </a>
+            <ul [class.hidden]="!showComputeSubmenu">
+              <!-- Virtual -->
+              <li>
+                <a [mcsRouterLink]="routeKeyEnum.Servers"
+                  mcsRouterLinkActive="active"
+                  class="sub-navigation-item unstyled-link"
+                  mcsId="virtual-link"
+                  mcsEventTracker="navigate-to-servers"
+                  mcsEventCategory="navigation"
+                  mcsEventLabel="main-nav">
+                  {{ 'navigation.privateCloud.compute.virtual' | translate }}
+                </a>
+              </li>
+              <!-- Media -->
+              <li *mcsAccessControl="['TemplateView','CatalogView']; feature: 'EnableMediaCatalog'">
+                <a [mcsRouterLink]="routeKeyEnum.Media"
+                  mcsRouterLinkActive="active"
+                  class="sub-navigation-item unstyled-link"
+                  mcsId="media-link"
+                  mcsEventTracker="navigate-to-medias"
+                  mcsEventCategory="navigation"
+                  mcsEventLabel="sub-nav">
+                  {{ 'navigation.privateCloud.compute.media' | translate }}
+                </a>
+              </li>
+            </ul>
+          </li>
+          <!-- Network -->
+          <li *mcsAccessControl="['FirewallConfigurationView', 'InternetView']">
+            <a (click)="toggleThis('showNetworkSubmenu')"
+              [class.active]="selectedCategory === routerCategoryEnum.Network"
+              mcsId="network-link">
+              {{ 'navigation.privateCloud.network.label' | translate }}
+              <mcs-icon [key]="showNetworkSubmenu ? caretUpIconKey : caretDownIconKey" color="light" size="small"></mcs-icon>
+            </a>
+            <ul [class.hidden]="!showNetworkSubmenu">
+              <!-- Firewalls -->
+              <li *mcsAccessControl="['FirewallConfigurationView']">
+                <a [mcsRouterLink]="routeKeyEnum.Firewalls"
+                  mcsRouterLinkActive="active"
+                  class="sub-navigation-item unstyled-link"
+                  mcsId="firewalls-link"
+                  mcsEventTracker="navigate-to-firewalls"
+                  mcsEventCategory="navigation"
+                  mcsEventLabel="sub-nav">
+                  {{ 'navigation.privateCloud.network.firewalls' | translate }}
+                </a>
+              </li>
+              <!-- Internet -->
+              <li *mcsAccessControl="['InternetView']; feature: 'EnableInternetPortView'">
+                <a [mcsRouterLink]="routeKeyEnum.Internet"
+                  mcsRouterLinkActive="active"
+                  class="sub-navigation-item unstyled-link"
+                  mcsId="internet-link"
+                  mcsEventTracker="navigate-to-internet"
+                  mcsEventCategory="navigation"
+                  mcsEventLabel="sub-nav">
+                  {{ 'navigation.privateCloud.network.internet' | translate }}
+                </a>
+              </li>
+            </ul>
+          </li>
+          <!-- Storage -->
+          <li *mcsAccessControl="[]; feature: 'EnableBatView'">
+            <a (click)="toggleThis('showStorageSubmenu')"
+              [class.active]="selectedCategory === routerCategoryEnum.Storage"
+              mcsId="storage-link">
+              {{ 'navigation.privateCloud.storage.label' | translate }}
+              <mcs-icon [key]="showStorageSubmenu ? caretUpIconKey : caretDownIconKey" color="light" size="small"></mcs-icon>
+            </a>
+            <ul [class.hidden]="!showStorageSubmenu">
+              <!-- Backup -->
+              <li>
+                <a [mcsRouterLink]="routeKeyEnum.BackupAggregationTargets"
+                  mcsRouterLinkActive="active"
+                  class="sub-navigation-item unstyled-link"
+                  mcsId="backup-link"
+                  mcsEventTracker="navigate-to-backup-aggregation-targets"
+                  mcsEventCategory="navigation"
+                  mcsEventLabel="sub-nav">
+                  {{ 'navigation.privateCloud.storage.backup' | translate }}
+                </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <!-- Public Cloud -->
+      <li *ngIf="hasPublicCloudAccess">
+        <a (click)="toggleThis('showPublicCloudMenu')"
+          [class.active]="isPublicCloudRoute"
+          mcsId="public-cloud-access-link">
+          {{ 'navigation.publicCloud.label' | translate }}
+          <mcs-icon [key]="showPublicCloudMenu ? caretUpIconKey : caretDownIconKey" color="light" size="small"></mcs-icon>
+        </a>
+        <ul *ngIf="showPublicCloudMenu">
+          <!-- Dashboard -->
+          <li *isExperimental="true">
+            <a (click)="toggleThis('showDashboardSubmenu')"
+              [class.active]="selectedCategory === routerCategoryEnum.Dashboard"
+              mcsId="dashboard-link">
+              {{ 'navigation.publicCloud.dashboard.label' | translate }}
+              <mcs-icon [key]="showDashboardSubmenu ? caretUpIconKey : caretDownIconKey" color="light" size="small"></mcs-icon>
+            </a>
+            <ul [class.hidden]="!showDashboardSubmenu">
+              <!-- Overview -->
+              <li>
+                <a [mcsRouterLink]="routeKeyEnum.ReportOverview"
+                  mcsRouterLinkActive="active"
+                  class="sub-navigation-item unstyled-link"
+                  mcsId="overview-link"
+                  mcsEventTracker="navigate-to-dashboard-overview"
+                  mcsEventCategory="navigation"
+                  mcsEventLabel="main-nav">
+                  {{ 'navigation.publicCloud.dashboard.overview' | translate }}
+                </a>
+              </li>
+              <!-- Insights -->
+              <li>
+                <a [mcsRouterLink]="routeKeyEnum.ReportInsights"
+                  mcsRouterLinkActive="active"
+                  class="sub-navigation-item unstyled-link"
+                  mcsId="insights-link"
+                  mcsEventTracker="navigate-to-dashboard-insights"
+                  mcsEventCategory="navigation"
+                  mcsEventLabel="sub-nav">
+                  {{ 'navigation.publicCloud.dashboard.insights' | translate }}
+                </a>
+              </li>
+            </ul>
+          </li>
+          <!-- Licenses -->
+          <li *mcsAccessControl="[]; feature: 'EnablePublicCloud'">
+            <a [mcsRouterLink]="routeKeyEnum.Licenses"
+              mcsId="licenses-link"
+              mcsEventTracker="navigate-to-licenses"
+              mcsEventCategory="navigation"
+              mcsEventLabel="main-nav"
+              mcsRouterLinkActive="active">
+              {{ 'navigation.licenses' | translate }}
+            </a>
+          </li>
+        </ul>
+      </li>
+      <!-- Tools -->
+      <li hidden-small>
+        <a [mcsRouterLink]="routeKeyEnum.OtherTools"
+          mcsId="other-tools-link"
+          mcsEventTracker="navigate-to-other-tools"
+          mcsEventCategory="navigation"
+          mcsEventLabel="main-nav"
+          mcsRouterLinkActive="active">
+          {{ 'navigation.tools' | translate }}
+        </a>
+      </li>
+      <!-- Catalog -->
+      <ng-container *mcsAccessControl="[]; feature: 'EnableProductCatalog'" >
+        <li *mcsAccessControl="[]; feature: ['EnableCatalogProductListing', 'EnableCatalogSolutionListing']" hidden-small>
+          <a [mcsRouterLink]="routeKeyEnum.Catalog"
+            mcsId="catalog-link"
+            mcsEventTracker="navigate-to-catalog"
+            mcsEventCategory="navigation"
+            mcsEventLabel="main-nav"
+            mcsRouterLinkActive="active">
+            {{ 'navigation.catalog' | translate }}
+          </a>
+        </li>
+      </ng-container>
+      <!-- Orders -->
+      <li *mcsAccessControl="['OrderView']">
+        <ng-container *mcsAccessControl="[]; feature: 'EnableOrdering'; else: macviewOrdersTemplate">
+          <a (click)="toggleThis('showOrdersMenu')"
+            [class.active]="selectedCategory === routerCategoryEnum.Orders || selectedCategory === routerCategoryEnum.MakeAChange"
+            mcsId="orders-link">
+            {{ 'navigation.orders.label' | translate }}
+            <mcs-icon [key]="showOrdersMenu ? caretUpIconKey : caretDownIconKey" color="light" size="small"></mcs-icon>
+          </a>
+        </ng-container>
+  
+        <ng-template #macviewOrdersTemplate>
+          <a [href]="macviewOrdersUrl"
+            target="_blank"
+            mcsId="mac-orders-link"
+            mcsEventTracker="navigate-to-macview-orders"
+            mcsEventCategory="navigation"
+            mcsEventLabel="main-nav">
+            {{ 'navigation.orders.label' | translate }}
+          </a>
+        </ng-template>
+
+        <ul *ngIf="showOrdersMenu">
+          <!-- Dashboard -->
+          <li *mcsAccessControl="['OrderEdit']; feature: 'EnableOrderingOperationsListing'">
+            <a [mcsRouterLink]="routeKeyEnum.OrdersDashboard"
+              mcsId="make-a-change-link"
+              mcsEventTracker="navigate-to-order-dashboard"
+              mcsEventCategory="navigation"
+              mcsEventLabel="main-nav"
+              mcsRouterLinkActive="active">
+              {{ 'navigation.orders.dashboard' | translate }}
+            </a>
+          </li>
+          <!-- History -->
+          <li *mcsAccessControl="[]; feature: 'EnableOrdering'">
+            <a [mcsRouterLink]="routeKeyEnum.OrdersHistory"
+              mcsId="orders-history-link"
+              mcsEventTracker="navigate-to-orders-history"
+              mcsEventCategory="navigation"
+              mcsEventLabel="main-nav"
+              mcsRouterLinkActive="active">
+              {{ 'navigation.orders.history' | translate }}
+            </a>
+          </li>
+        </ul>
+      </li>
+      <!-- Tickets -->
+      <li *mcsAccessControl="['TicketView']">
+        <a [mcsRouterLink]="routeKeyEnum.Tickets"
+          mcsId="tickets-link"
+          mcsEventTracker="navigate-to-tickets"
+          mcsEventCategory="navigation"
+          mcsEventLabel="main-nav"
+          mcsRouterLinkActive="active">
+          {{ 'accountPanel.tickets' | translate }}
+        </a>
+      </li>
+      <!-- System Message -->
+      <li *mcsAccessControl="['SystemMessageView']; feature: 'EnableSystemMessages'">
+        <a [mcsRouterLink]="routeKeyEnum.SystemMessages"
+          mcsId="system-message-link"
+          mcsEventTracker="navigate-to-system-messages"
+          mcsEventCategory="navigation"
+          mcsEventLabel="main-nav"
+          mcsRouterLinkActive="active">
+          {{ 'accountPanel.systemMessage' | translate }}
+        </a>
+      </li>
+      <!-- Logout -->
+      <li>
+        <a mcsCursor="pointer" (click)="logout($event)"
+          mcsId="signout-link"
+          mcsEventTracker="sign-out"
+          mcsEventCategory="navigation"
+          mcsEventLabel="main-nav">
+          {{ 'navigation.signOut' | translate }}
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>

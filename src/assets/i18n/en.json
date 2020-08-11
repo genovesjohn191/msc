@@ -1,6 +1,43 @@
 {
   "navigation": {
     "title": "Macquarie Cloud Services Portal",
+    "privateCloud": {
+      "label": "Private Cloud",
+      "compute": {
+        "label": "Compute",
+        "virtual": "Virtual",
+        "media": "Media"
+      },
+      "network": {
+        "label": "Network",
+        "firewalls": "Firewalls",
+        "internet": "Internet"
+      },
+      "storage": {
+        "label": "Storage",
+        "backup": "Backup"
+      }
+    },
+    "publicCloud": {
+      "label": "Public Cloud",
+      "dashboard": {
+        "label": "Dashboard",
+        "overview": "Overview",
+        "insights": "Insights"
+      },
+      "licenses": "Licenses"
+    },
+    "tools": "Other Tools",
+    "catalog": "Products",
+    "orders": {
+      "label": "Orders",
+      "dashboard": "Dashboard",
+      "history": "History"
+    },
+    "tickets": "Tickets",
+    "systemMessage": "System Message",
+    "signOut": "Sign Out",
+
     "dashboard": "Dashboard",
     "virtual": "Virtual",
     "medias": "Media",
@@ -11,9 +48,6 @@
     "internet": "Internet",
     "backup": "Backup",
     "licenses": "Licenses",
-    "tools": "Other Tools",
-    "catalog": "Products",
-    "signOut": "Sign Out",
     "macquarieView": "MacquarieView",
     "makeAChange": "Make a Change",
     "productCatalog": "Products",

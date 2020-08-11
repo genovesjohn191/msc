@@ -281,7 +281,7 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
    */
   private _createChangeToApplyForm(): FormGroup {
     let formControls = ChangeToApplyFactory.createChangeFormControls(ActionType.Add);
-    let form = this._formBuilder.group({ fcActionType: [ActionType.Add, [CoreValidators.required]] })
+    let form = this._formBuilder.group({ fcActionType: [ActionType.Add, [CoreValidators.required]] });
     formControls.forEach((item) => {
       form.setControl(item.controlName, item.control);
     });

@@ -13,6 +13,7 @@ import { AlignContentDirective } from './align-content.directive';
 import { AlignDirective } from './align.directive';
 import { GreyedOutDirective } from './greyed-out.directive';
 import { TextTruncateDirective } from './text-truncate.directive';
+import { IsExperimentalDirective } from './is-experimental.directive';
 
 import { DisabledDirective } from './overriden-directives/disabled.directive';
 import { HiddenDirective } from './overriden-directives/hidden.directive';
@@ -20,6 +21,7 @@ import { ReadOnlyDirective } from './overriden-directives/read-only.directive';
 
 @NgModule({
   declarations: [
+    IsExperimentalDirective,
     ComponentHandlerDirective,
     RouterLinkDirective,
     RouterLinkActiveDirective,
@@ -39,6 +41,7 @@ import { ReadOnlyDirective } from './overriden-directives/read-only.directive';
     AlignDirective
   ],
   exports: [
+    IsExperimentalDirective,
     ComponentHandlerDirective,
     RouterLinkDirective,
     RouterLinkActiveDirective,
