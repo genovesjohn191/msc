@@ -208,7 +208,9 @@
         </mcs-item>
 
         <!--Schedule-->
-        <mcs-item orientation="separated" *ngIf="hasLeadTimeOptions" [disabled]="isUpdatingCharges">
+        <mcs-item orientation="separated"
+          *ngIf="(hasLeadTimeOptions && showSchedule)"
+          [disabled]="isUpdatingCharges">
           <span>{{ 'shared.datetimepicker.label' | translate }}</span>
            <mcs-datetimepicker
               [required]="true"

@@ -1,4 +1,6 @@
-import { JsonProperty } from '@app/utilities';
+import {
+  JsonProperty,
+  isNullOrEmpty } from '@app/utilities';
 import {
   ItemType,
   ItemTypeSerialization
@@ -41,4 +43,14 @@ export class McsOrderItemType extends McsEntityBase {
 
   @JsonProperty()
   public acceleratedLeadTimeHours: number = undefined;
+
+  @JsonProperty()
+  public isSchedulable: boolean = undefined;
+
+  /**
+   * Returns whether the order item has lead time options
+   */
+  public get hasLeadTimeOptions(): boolean {
+    return !isNullOrEmpty(this.standardLeadTimeHours) && !isNullOrEmpty(this.acceleratedLeadTimeHours);
+  }
 }
