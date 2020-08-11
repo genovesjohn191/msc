@@ -1,15 +1,31 @@
 <!-- Macquarie Logo -->
+<div class="navigation-icon" *isExperimental="true">
+  <mcs-icon [key]="toggleIconKey" size="medium" (click)="toggleNav()"></mcs-icon>
+</div>
 <a [mcsRouterLink]="['/']"
   mcsId="header-logo"
   mcsEventTracker="header-logo"
   mcsEventCategory="navigation"
   mcsEventLabel="user-panel">
-  <mcs-image size="small" [key]="lightLogoIconKey"></mcs-image>
+  <mcs-image size="small" [key]="lightLogoIconKey" *isExperimental="false"></mcs-image>
+  <mcs-image size="175px" [key]="lightLogoIconKey" *isExperimental="true"></mcs-image>
 </a>
 
-<mcs-context-switch class="context-switch"></mcs-context-switch>
+<mcs-context-switch class="context-switch" *isExperimental="false"></mcs-context-switch>
 
 <!-- User panel content -->
-<div mcsAlign="end">
+<div mcsAlign="end" class="user-panel-wrapper">
+  <ng-container *mcsAccessControl="['OrderEdit']; feature: 'EnableOrderingOperationsListing'">
+    <div class="make-a-change" [class.active]="selectedCategory === routerCategoryEnum.MakeAChange" *isExperimental="true">
+      <a mcsCursor="pointer"
+        mcsId="ordering-dashboard"
+        mcsEventTracker="ordering-dashboard"
+        mcsEventCategory="navigation"
+        mcsEventLabel="header-link"
+        [mcsRouterLink]="routeKeyEnum.OrdersDashboard">
+        {{ 'navigation.makeAChange' | translate }}
+      </a>
+    </div>
+  </ng-container>
   <mcs-user-panel></mcs-user-panel>
 </div>

@@ -50,9 +50,9 @@ export class CommonDefinition {
   /** Responsive Browser Width */
   /** These variables should be the same with the css definition */
   public static BREAKPOINT_XSMALL = 0;
-  public static BREAKPOINT_SMALL = 543;
-  public static BREAKPOINT_MEDIUM = 720;
-  public static BREAKPOINT_LARGE = 970;
+  public static BREAKPOINT_SMALL = 544;
+  public static BREAKPOINT_MEDIUM = 721;
+  public static BREAKPOINT_LARGE = 971;
 
   /** Icons */
   public static ICON_SIZE_XXSMALL = 7;
@@ -109,6 +109,7 @@ export class CommonDefinition {
   public static ASSETS_SVG_ARROW_UP_SORT_BLACK = 'arrow-up-sort-black';
   public static ASSETS_SVG_ARROW_DOWN_SORT_BLACK = 'arrow-down-sort-black';
   public static ASSETS_SVG_TOGGLE_NAV = 'toggle-nav';
+  public static ASSETS_SVG_TOGGLE_NAV_BLUE = 'toggle-nav-blue';
   public static ASSETS_SVG_STORAGE = 'storage';
   public static ASSETS_SVG_KEYBOARD = 'keyboard';
   public static ASSETS_SVG_DELETE = 'delete';

@@ -1,6 +1,66 @@
 @import '../../../styles/shared/base';
 
+$top-offset: $shared-header-panel-height;
+$desktop-nav-width: $nav-wide-screen-width !important;
+$nav-width: $nav-default-width !important;
+$overlay-color: rgba(0,0,0,0.5);
+
 :host {
   display: block;
   z-index: $zindex-content;
+
+  .grid-row-wrapper {
+    justify-content: flex-start;
+  }
+
+  .vertical-nav-wrapper {
+    max-width: $desktop-nav-width;
+    overflow-x: hidden;
+
+    @include breakpoint(medium) {
+      position: absolute;
+      height: 100%;
+      z-index: $zindex-navigation;
+      min-width: $nav-width;
+    }
+
+    .scroller {
+      height: calc(100vh - #{$top-offset});
+      width: 150%;
+      overflow-y: auto;
+    }
+  }
+
+  .full-height {
+    height: 100%;
+  }
+
+  .full-width {
+    max-width: 100% !important;
+  }
+
+  .overlay {
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+    position: absolute;
+    background-color: $overlay-color;
+
+    &.expanded {
+      display: none;
+
+      @include breakpoint(medium) {
+        display: block;    
+      }
+    }
+  }
+
+  .collapsed {
+    display: none;
+  }
+
+  .expanded {
+    display: block;
+  }
 }

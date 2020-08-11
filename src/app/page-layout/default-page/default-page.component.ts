@@ -28,7 +28,6 @@ import {
 })
 
 export class DefaultPageComponent {
-
   constructor(
     private _translateService: TranslateService,
     private _eventDispatcher: EventBusDispatcherService,

@@ -56,6 +56,7 @@ export enum RouteKey {
   CatalogSolutions,
 
   Orders,
+  OrdersHistory,
   OrderDetails,
   OrdersDashboard,
   OrderServerManagedScale,

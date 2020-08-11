@@ -6,16 +6,9 @@
         <h1>1. Costs</h1>
         <br />
         <div class="chart">
-          <h2>1.1 Services Overview (Chartjs)</h2>
+          <h2>1.1 Services Overview</h2>
           <br />
           <mcs-bar-chart [data]="data$ | async" [stacked]="true" yLabel="Total Cost(s)" xLabel="Months"></mcs-bar-chart>
-          <br />
-          <span>Forcasts the next month based on the previous 12</span>
-        </div>
-        <div class="chart">
-          <h2>1.1 Services Overview (Apexchart)</h2>
-          <br />
-          <mcs-bar-chart2 [data]="data$ | async" [stacked]="true" yLabel="Total Cost(s)" xLabel="Months"></mcs-bar-chart2>
           <br />
           <span>Forcasts the next month based on the previous 12</span>
         </div>
@@ -28,14 +21,9 @@
         <h1>2. Tech Review</h1>
         <br />
         <div class="chart">
-          <h2>2.2 Performance and Scalability (Chartjs)</h2>
+          <h2>2.2 Performance and Scalability</h2>
           <br />
-          <mcs-bar-chart [data]="data3$ | async" yLabel="Avg % Used" xLabel="Days"></mcs-bar-chart>
-        </div>
-        <div class="chart">
-          <h2>2.2 Performance and Scalability (Apexchart)</h2>
-          <br />
-          <mcs-bar-chart2 [data]="data3$ | async" yLabel="Avg % Used" xLabel="Days" [yAxisDataFormatter]="percentFormatter"></mcs-bar-chart2>
+          <mcs-bar-chart [data]="data3$ | async" yLabel="Avg % Used" xLabel="Days" [yAxisDataFormatter]="percentFormatter"></mcs-bar-chart>
         </div>
       </div>
     </div>

@@ -26,4 +26,46 @@ $header-small-padding: $space-medium;
       display: none;
     }
   }
+
+  .user-panel-wrapper {
+    @include display-flex(row);
+    height: 100%;
+
+    .make-a-change {
+      @include breakpoint(medium) {
+        display: none;
+      }
+
+      color: $color-black;
+      vertical-align: middle;
+      background-color: $color-primary-01;
+
+      &.active,
+      &:hover {
+        background-color: $color-white;
+      }
+
+      a {
+        padding: 18px;
+        display: block;
+        height: 100%;
+        text-decoration: none;
+        @include font-size($font-size-large);
+        font-family: $circular-pro-bold;
+      }
+    }
+  }
+
+  .navigation-icon {
+    @include breakpoint(medium) {
+      @include display-flex(row);
+    }
+
+    cursor: pointer;
+    align-items: center;
+
+    mcs-icon {
+      padding-right: $space-large;
+    }
+  }
 }

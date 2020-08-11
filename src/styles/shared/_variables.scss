@@ -186,7 +186,7 @@ $button-font-weight: 500;
 // Shared settings for the page
 $shared-top-panel-size: 50px;
 $shared-left-panel-size: 275px;
-$shared-header-panel-height: 80px;
+$shared-header-panel-height: 60px; // TODO: NewNavChange to 60px
 $shared-navigation-panel-height: 45px;
 $shared-notification-title-font-size: 30;
 
@@ -207,3 +207,7 @@ $primary-bg-color: $color-primary-01;
 $hover-bg-color: $color-grey-07;
 $selected-bg-color: rgba($color-grey-06, 0.8);
 $active-bg-color: rgba($color-grey-06, 0.4);
+
+// Navigation
+$nav-default-width: 280px;
+$nav-wide-screen-width: 250px;
