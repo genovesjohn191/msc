@@ -61,7 +61,8 @@ import {
   McsOrderItemType,
   McsEventTrack,
   McsOrderCharge,
-  DeliveryType
+  DeliveryType,
+  WorkflowStatus
 } from '@app/models';
 import {
   WizardStepComponent,
@@ -202,7 +203,7 @@ export class StepOrderDetailsComponent
   }
 
   public get hasLeadTimeOptions(): boolean {
-    return !isNullOrEmpty(this.standardLeadTimeHours) && !isNullOrEmpty(this.acceleratedLeadTimeHours);
+    return getSafeProperty(this.orderItemType, (obj) => obj.hasLeadTimeOptions, false);
   }
 
   public get standardLeadTimeHours(): number {
@@ -260,6 +261,19 @@ export class StepOrderDetailsComponent
    */
   public get isUpdatingCharges(): boolean {
     return this.dataChangeStatus === DataStatus.Active;
+  }
+
+  /**
+   * Checks if schedule control should be shown
+   */
+  public get showSchedule(): boolean {
+    let isStandardDelivery =  (this.fcDeliveryType.value === DeliveryType.Standard);
+    let isWorkFlowSubmitOrAwaiting = (this.fcWorkflowAction.value === WorkflowStatus.AwaitingApproval
+                                      || this.fcWorkflowAction.value === WorkflowStatus.Submitted);
+    let isSchedulable =  getSafeProperty(this.orderItemType, (obj) => obj.isSchedulable, false);
+    let result = (isStandardDelivery && isWorkFlowSubmitOrAwaiting && isSchedulable);
+
+    return result;
   }
 
   /**
