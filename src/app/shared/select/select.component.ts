@@ -112,6 +112,13 @@ export class SelectComponent extends McsFormFieldControlBase<any>
   public size: 'default' | 'small';
 
   @Input()
+  public get optionViewCount(): number { return this._optionViewCount; }
+  public set optionViewCount(value: number) {
+    this._optionViewCount = coerceNumber(value);
+  }
+  private _optionViewCount: number = 0;
+
+  @Input()
   public get useTags(): boolean { return this._useTags; }
   public set useTags(value: boolean) { this._useTags = coerceBoolean(value); }
   private _useTags: boolean;
@@ -178,6 +185,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
   private _openPanelKeyEventsMap = new Map<Key, (_event) => void>();
   private _destroySubject = new Subject<void>();
   private _closeOutsideHandler = this._onCloseOutside.bind(this);
+  private _optionViewHeightPx: string;
 
   public get carretDownIconKey(): string {
     return CommonDefinition.ASSETS_SVG_CHEVRON_DOWN;
@@ -195,6 +203,10 @@ export class SelectComponent extends McsFormFieldControlBase<any>
 
   public get selectedOptions(): OptionComponent[] {
     return this._options.filter((option) => option.selected);
+  }
+
+  public get optionViewHeightPx(): string {
+    return this._optionViewHeightPx;
   }
 
   private readonly _optionsClickEvent: Observable<OptionComponent> = defer(() => {

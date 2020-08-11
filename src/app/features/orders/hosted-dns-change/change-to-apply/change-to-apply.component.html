@@ -1,0 +1,112 @@
+<!-- Changes To Apply Form -->
+<form [formGroup]="formGroup" mcsFormGroup>
+
+    <mcs-grid [mcsContextualHelp]="'orderHostedDnsChange.requestDetails.desiredChange.helptext' | translate">
+      <mcs-grid-row [gapSize]="4">
+        <mcs-grid-column sizeLg="6">
+          <mcs-form-field>
+            <mcs-select [formControl]="formGroup?.controls['fcActionType']" required
+              (selectionChange)="onActionTypeSelectionChange($event)"
+              mcsId="select-order-hosted-dns-change-action-type"
+              mcsEventTracker="select-order-hosted-dns-change-action-type"
+              mcsEventCategory="order"
+              mcsEventLabel="order-hosted-dns-change-page">
+
+              <mcs-option *ngFor="let actionType of actionTypeOptions$ | async" [value]="actionType.value">
+                {{ actionType.text }}
+              </mcs-option>
+            </mcs-select>
+          </mcs-form-field>
+        </mcs-grid-column>
+        <mcs-grid-column sizeLg="6">
+          <mcs-form-field>
+            <mcs-select [formControl]="formGroup?.controls['fcRecordType']" required #recordType
+              [optionViewCount]='3'
+              (selectionChange)="onRecordTypeSelectionChange($event)"
+              mcsId="select-order-hosted-dns-change-record-type"
+              mcsEventTracker="select-order-hosted-dns-change-record-type"
+              mcsEventCategory="order"
+              mcsEventLabel="order-hosted-dns-change-page">
+
+              <mcs-option *ngFor="let recordType of recordTypeOptions$ | async" [value]="recordType.value">
+                {{ recordType.text }}
+              </mcs-option>
+            </mcs-select>
+          </mcs-form-field>
+        </mcs-grid-column>
+      </mcs-grid-row>
+
+      <mcs-grid-row [gapSize]="4" margin-top-small>
+        <mcs-grid-column sizeLg="6">
+          <mcs-form-field>
+            <input mcsInput
+              [formControl]="formGroup?.controls['fcHostName']"
+              [placeholder]="'orderHostedDnsChange.requestDetails.desiredChange.hostname.placeholder' | translate"
+              mcsId="input-order-hosted-dns-change-hostname">
+            <mcs-error mcsError errorState="required">
+              {{ 'orderHostedDnsChange.requestDetails.desiredChange.hostname.errorRequired' | translate }}
+            </mcs-error>
+          </mcs-form-field>
+        </mcs-grid-column>
+        <mcs-grid-column sizeLg="6">
+          <mcs-form-field>
+            <input mcsInput
+              [formControl]="formGroup?.controls['fcTarget']"
+              [placeholder]="targetPlaceholder(recordType?.value)"
+              mcsId="input-order-hosted-dns-change-target">
+              <mcs-error mcsError errorState="required" >
+               <ng-container *ngIf="isTxtRecordType(recordType?.value); else notTxtRecordErrorTemplate">
+                 {{ 'orderHostedDnsChange.requestDetails.desiredChange.target.errorRequiredValue' | translate }}
+               </ng-container>
+               <ng-template #notTxtRecordErrorTemplate>
+                    {{ 'orderHostedDnsChange.requestDetails.desiredChange.target.errorRequired' | translate }}
+                </ng-template>
+              </mcs-error>
+          </mcs-form-field>
+        </mcs-grid-column>
+      </mcs-grid-row>
+
+      <mcs-grid-row [gapSize]="4" margin-top-small>
+        <mcs-grid-column sizeLg="6" *ngIf="isMxRecordType(recordType?.value)">
+          <mcs-form-field>
+            <input mcsInput
+              [formControl]="formGroup?.controls['fcPriority']" #priorityControl
+              [placeholder]="'orderHostedDnsChange.requestDetails.desiredChange.priority.placeholder' | translate"
+              mcsId="input-order-hosted-dns-change-priority">
+              <mcs-error mcsError errorState="required">
+                {{ 'orderHostedDnsChange.requestDetails.desiredChange.priority.errorRequired' | translate }}
+              </mcs-error>
+              <mcs-error mcsError errorState="numeric">
+                {{ 'orderHostedDnsChange.requestDetails.desiredChange.priority.errorNumeric' | translate }}
+              </mcs-error>
+              <mcs-error text-wrap mcsError errorState="min">
+                {{ 'orderHostedDnsChange.requestDetails.desiredChange.priority.errorMin' | translate: {min_value: formGroup?.controls['fcPriority']?.errors?.min?.min } }}
+              </mcs-error>
+              <mcs-error text-wrap mcsError errorState="max">
+                {{ 'orderHostedDnsChange.requestDetails.desiredChange.priority.errorMax' | translate: {max_value: formGroup?.controls['fcPriority']?.errors?.max?.max } }}
+              </mcs-error>
+          </mcs-form-field>
+        </mcs-grid-column>
+        <mcs-grid-column sizeLg="6">
+          <mcs-form-field>
+            <input mcsInput
+              [formControl]="formGroup?.controls['fcTtl']" #ttlControl
+              [placeholder]="'orderHostedDnsChange.requestDetails.desiredChange.ttl.placeholder' | translate"
+              mcsId="input-order-hosted-dns-change-ttl">
+              <mcs-error mcsError errorState="required">
+                {{ 'orderHostedDnsChange.requestDetails.desiredChange.ttl.errorRequired' | translate }}
+              </mcs-error>
+              <mcs-error mcsError errorState="numeric">
+                {{ 'orderHostedDnsChange.requestDetails.desiredChange.ttl.errorNumeric' | translate }}
+              </mcs-error>
+              <mcs-error text-wrap mcsError errorState="min">
+                {{ 'orderHostedDnsChange.requestDetails.desiredChange.ttl.errorMin' | translate: {min_value: formGroup?.controls['fcTtl']?.errors?.min?.min } }}
+              </mcs-error>
+               <mcs-error text-wrap mcsError errorState="max">
+                {{ 'orderHostedDnsChange.requestDetails.desiredChange.ttl.errorMax' | translate: {max_value: formGroup?.controls['fcTtl']?.errors?.max?.max } }}
+              </mcs-error>
+          </mcs-form-field>
+        </mcs-grid-column>
+      </mcs-grid-row>
+    </mcs-grid>
+  </form>

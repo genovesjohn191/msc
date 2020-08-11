@@ -117,6 +117,7 @@ import {
   McsAzureResource,
   McsAzureService,
   McsReportGenericItem,
+  McsNetworkDnsSummary,
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -162,6 +163,8 @@ import {
   McsApiAzureServicesFactory,
   IMcsApiReportsService,
   McsApiReportsFactory,
+  IMcsApiNetworkDnsService,
+  McsApiNetworkDnsFactory,
 } from '@app/api-client';
 import { McsEvent } from '@app/events';
 import { McsRepository } from './core/mcs-repository.interface';
@@ -222,6 +225,7 @@ export class McsApiService {
   private readonly _ordersApi: IMcsApiOrdersService;
   private readonly _mediaApi: IMcsApiMediaService;
   private readonly _firewallsApi: IMcsApiFirewallsService;
+  private readonly _networkDnsApi: IMcsApiNetworkDnsService;
   private readonly _consoleApi: IMcsApiConsoleService;
   private readonly _systemMessageApi: IMcsApiSystemService;
   private readonly _toolsService: IMcsApiToolsService;
@@ -267,6 +271,7 @@ export class McsApiService {
     this._ordersApi = apiClientFactory.getService(new McsApiOrdersFactory());
     this._mediaApi = apiClientFactory.getService(new McsApiMediaFactory());
     this._firewallsApi = apiClientFactory.getService(new McsApiFirewallsFactory());
+    this._networkDnsApi = apiClientFactory.getService(new McsApiNetworkDnsFactory());
     this._consoleApi = apiClientFactory.getService(new McsApiConsoleFactory());
     this._systemMessageApi = apiClientFactory.getService(new McsApiSystemFactory());
     this._toolsService = apiClientFactory.getService(new McsApiToolsFactory());
@@ -349,6 +354,15 @@ export class McsApiService {
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getInternetPort'))
       )
+    );
+  }
+
+  public getNetworkDnss(query?: McsQueryParam): Observable<McsApiCollection<McsNetworkDnsSummary>> {
+    return this._networkDnsApi.getNetworkDnss(query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNetworkDnss'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
     );
   }
 

@@ -128,13 +128,16 @@ $space-large: 20px;
 $space-medium: 15px;
 $space-small: 10px;
 $space-xsmall: 5px;
+$space-none: 0px;
 
 $space-breakpoints: (
+  none: $space-none,
   xsmall: $space-xsmall,
   small: $space-small,
   medium: $space-medium,
   large: $space-large,
   xlarge: $space-xlarge,
+  xxlarge: $space-xxlarge,
 ) !default;
 
 // Directions

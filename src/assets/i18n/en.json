@@ -300,6 +300,73 @@
       "dataError": "Something went wrong while processing your request. Please try again later."
     }
   },
+  "orderHostedDnsChange": {
+    "title": "Hosted DNS Change",
+    "back": "Back",
+    "requestDetails": {
+      "stepTitle": "Request Details",
+      "description": "You can use this wizard to request a custom record change to your Primary DNS service.",
+      "leadTime": "Our standard lead time of {{lead_time}} hours for this request ensures we have time to get the right engineer for the task.",
+      "dnsService": {
+        "placeholder": "Select a DNS service",
+        "helptext": "Select a Primary DNS service to request a change for",
+        "fallback": "There are no applicable services to display, or you do not have the necessary permissions required to view them. Please contact your account team",
+        "raiseTicketPrefix": "or ",
+        "raiseTicketLink": "raise a ticket",
+        "raiseTicketSuffix": " if this is unexpected"
+      },
+      "changesToApply": {
+        "label": "Changes to apply",
+        "tableHelptext": "Changes you require will be listed here. Enter the details of the change you require in the fields below",
+        "columnHeaders": {
+          "actionType": "Action",
+          "recordType": "Type",
+          "name": "Name",
+          "value": "Value",
+          "priority": "Priority",
+          "ttl": "TTL (Seconds)",
+          "action": ""
+        },
+        "noContent": "no Content Placeholder",
+        "errorContent": "error Placeholder"
+      },
+      "desiredChange": {
+        "label": "What changes would you like made?",
+        "helptext": "Provide the details of the change you require here",
+        "hostname": {
+          "placeholder": "Hostname",
+          "errorRequired": "Enter Hostname."
+        },
+        "target": {
+          "placeholder": "Target",
+          "placeholderValue": "Value",
+          "errorRequired": "Enter Target.",
+          "errorRequiredValue": "Enter Value."
+        },
+        "priority": {
+          "placeholder": "Priority",
+          "errorRequired": "Enter Priority.",
+          "errorNumeric": "Please enter a valid number.",
+          "errorMin": "The minimum value that can be entered is {{min_value}}.",
+          "errorMax": "Priority should not exceed {{max_value}}."
+        },
+        "ttl": {
+          "placeholder": "TTL (Seconds)",
+          "errorRequired": "Enter TTL.",
+          "errorNumeric": "Please enter a valid number.",
+          "errorMin": "The minimum value that can be entered is {{min_value}}.",
+          "errorMax": "TTL should not exceed {{max_value}}."
+        },
+        "addItemLabel": "Additional change",
+        "removeItemLabel": "Delete change"
+      }
+    },
+    "provisioning": {
+      "description": "Your service is being updated and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
+      "dataInProgress": "Preparing to custom change your service. This may take a moment.",
+      "dataError": "Something went wrong while processing your request. Please try again later."
+    }
+  },
   "orderAddAntiVirus": {
     "title": "Order Anti-Virus",
     "back": "Back",
@@ -2062,6 +2129,7 @@
     "getJobConnection": "Something went wrong while retrieving your notifications.",
     "getInternetPorts": "Something went wrong while retrieving your internet services.",
     "getInternetPort": "Something went wrong while retrieving your internet service.",
+    "getNetworkDnss": "Something went wrong while retrieving your Network DNS.",
     "getResources": "Something went wrong while retrieving your services.",
     "getResource": "Something went wrong while retrieving your service information.",
     "getResourceCompute": "Something went wrong while retrieving your service information.",

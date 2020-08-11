@@ -17,6 +17,8 @@ $select-group-wrapper-padding: $space-small 0;
 $select-group-wrapper-border-color: $select-group-panel-border-color;
 // Select Item
 $select-item-min-width: 100px;
+$select-item-height: 29;
+$select-item-vertical-padding: 2*$space-small;
 $select-item-padding: $space-xsmall $space-small;
 $select-item-sub-group-padding: 0 $space-small;
 $select-item-hover-color: $color-grey-07;
@@ -79,4 +81,11 @@ $select-sub-group-expanded-bg-color: $color-white;
     0 1px 10px 0 rgba($select-sub-group-box-shadow, 0.12)
   ));
   max-height: $select-group-panel-wrapper-max-height;
+
+}
+
+@for $i from 1 through 10 {
+  .option-view-size-#{$i} {
+    height: $i * $select-item-height + $select-item-vertical-padding;
+  }
 }
