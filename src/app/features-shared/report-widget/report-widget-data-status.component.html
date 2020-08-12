@@ -1,0 +1,14 @@
+<div class="data-wrapper">
+  <div style="text-align: center;">
+    <mcs-loader type="ellipsis" *ngIf="processing; else done"></mcs-loader>
+  </div>
+  
+  <ng-template #done>
+    <ng-content *ngIf="!hasError; else error"></ng-content>
+    <ng-template #error>
+      <mcs-status-message type="error">
+        {{ 'reports.widgets.errorMessage' | translate }}<a style="margin-left: 5px;" mcsId (click)="tryAgain()">{{ 'reports.widgets.retryLabel' | translate }}</a>
+      </mcs-status-message>
+    </ng-template>
+  </ng-template>
+</div>

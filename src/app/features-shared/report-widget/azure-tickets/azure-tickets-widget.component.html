@@ -1,0 +1,102 @@
+<div class="widget">
+  <h3>
+    {{ 'reports.widgets.azureTicketsWidget.title' | translate }}
+    <ng-container *mcsAccessControl="['TicketCreate']">
+      <span *mcsExclusiveForAccount="'default'">
+        Click <a style="float: right;" (click)="onClickNewTicket()"
+        mcsId
+        mcsEventTracker="create-new-ticket"
+        mcsEventCategory="ticket"
+        mcsEventLabel="azure-tickets-widget">
+        {{ 'reports.widgets.azureTicketsWidget.newTicketLinkLabel' | translate }}
+      </a>
+      </span>
+    </ng-container>
+  </h3>
+  <div>
+    <mcs-report-widget-data-status type="info" [processing]="processing" [hasError]="hasError" (retry)="retry()">
+      <div *ngIf="empty; else tickets">
+        <mcs-status-message type="info">
+          {{ 'reports.widgets.azureTicketsWidget.empty' | translate }}
+        </mcs-status-message>
+      </div>
+      <ng-template #tickets>
+        <!-- Table -->
+        <mcs-table #table [dataSource]="dataSource">
+          <!-- Summary Column -->
+          <ng-container mcsColumnDef="summary">
+            <mcs-header-cell *mcsHeaderCellDef>
+              {{ columnSettings.summary.text }}
+            </mcs-header-cell>
+            <mcs-data-cell *mcsDataCellDef="let row" [mcsTextTruncate]="row.shortDescription">
+              <a [mcsRouterLink]="[routeKeyEnum.TicketDetails, row.id]"
+              mcsId="select-ticket"
+              mcsEventTracker="navigate-to-ticket"
+              mcsEventCategory="ticket"
+              mcsEventLabel="ticket-listing-page">{{ row.shortDescription }}</a>
+            </mcs-data-cell>
+          </ng-container>
+  
+          <!-- Last Updated Date Column -->
+          <ng-container mcsColumnDef="lastUpdatedDate">
+            <mcs-header-cell *mcsHeaderCellDef hidden-small>
+              {{ columnSettings.lastUpdatedDate.text }}
+            </mcs-header-cell>
+            <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+              {{ row.updatedOn | mcsStdDateFormat }}
+            </mcs-data-cell>
+          </ng-container>
+  
+          <!-- Data Status Integration -->
+          <ng-container mcsDataStatusDef>
+            <mcs-data-empty *mcsDataEmptyDef>
+              <div class="listing-status-wrapper">
+                <span>{{ 'reports.widgets.azureTicketsWidget.empty' | translate }}</span>
+                <ng-container *mcsAccessControl="['TicketCreate']">
+                  <span *mcsExclusiveForAccount="'default'">
+                    Click <a (click)="onClickNewTicket()"
+                    mcsId
+                    mcsEventTracker="create-new-ticket"
+                    mcsEventCategory="ticket"
+                    mcsEventLabel="azure-tickets-widget">here</a> to create new ticket.
+                  </span>
+                </ng-container>
+              </div>
+            </mcs-data-empty>
+            <mcs-data-error *mcsDataErrorDef>
+              <div class="listing-status-wrapper">
+                <span>{{ 'tickets.errorMessage' | translate }}</span>
+                <a (click)="retryDatasource()"
+                  mcsId
+                  mcsEventTracker="retry-loading-ticket-list"
+                  mcsEventCategory="ticket"
+                  mcsEventLabel="azure-tickets-widget">{{ 'tickets.retry' | translate }}</a>.
+              </div>
+            </mcs-data-error>
+          </ng-container>
+  
+          <!-- Header and Data row -->
+          <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
+          <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"
+            mcsCursor="pointer" (click)="navigateToTicket(row)"
+            mcsId="ticket-row"
+            mcsEventTracker="navigate-to-ticket"
+            mcsEventCategory="reports-widget"
+            mcsEventLabel="azure-tickets-widget"></mcs-data-row>
+        </mcs-table>
+
+        <!-- More -->
+        <div style="text-align: center; padding: 10px 0;" *ngIf="hasMore">
+          <a
+            (click)="navigateToTicketListing()"
+            mcsId
+            mcsEventTracker="navigate-to-ticket-listing"
+            mcsEventCategory="reports-widget"
+            mcsEventLabel="azure-tickets-widget">
+            {{ 'reports.widgets.azureTicketsWidget.moreTicketsLinkLabel' | translate }}
+          </a>
+        </div>
+      </ng-template>
+    </mcs-report-widget-data-status>
+  </div>
+</div>

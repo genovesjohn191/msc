@@ -20,8 +20,10 @@ import {
   ApexDataLabels,
   ApexStroke,
   ApexYAxis,
-  ApexLegend
+  ApexLegend,
+  ApexTitleSubtitle
 } from 'ng-apexcharts';
+import { Title } from '@angular/platform-browser';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -32,6 +34,7 @@ export type ChartOptions = {
   yaxis: ApexYAxis;
   stroke: ApexStroke;
   legend: ApexLegend;
+  title: ApexTitleSubtitle;
 };
 
 @Component({

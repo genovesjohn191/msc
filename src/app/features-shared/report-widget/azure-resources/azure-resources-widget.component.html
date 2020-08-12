@@ -1,9 +1,17 @@
 <div class="widget">
   <h3>
-    Azure Resources 
-    <a href="#" style="float: right;"><span>View in CloudHealth</span></a>
+    {{ 'reports.widgets.azureResourcesWidget.title' | translate }}
+    <a
+      href="#"
+      style="float: right;"
+      mcsId
+      mcsEventTracker="navigate-to-cloudhealth"
+      mcsEventCategory="cloudhealth"
+      mcsEventLabel="azure-resources-widget">
+        <span>{{ 'reports.widgets.azureResourcesWidget.cloudHealthLinkLabel' | translate }}</span>
+    </a>
   </h3>
-  <div class="data-wrapper">
+  <mcs-report-widget-data-status type="info" [processing]="processing" [hasError]="hasError" (retry)="getData()">
     <mcs-bar-chart [data]="data$ | async" [showLegend]="false"></mcs-bar-chart>
-  </div>
+  </mcs-report-widget-data-status>
 </div>

@@ -4,13 +4,11 @@ import { map } from 'rxjs/operators';
 import {
   McsApiSuccessResponse,
   McsApiRequestParameter,
-  McsPlatform,
-  McsQueryParam,
-  McsReportGenericItem
+  McsReportGenericItem,
+  McsReportIntegerData
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiReportsService } from '../interfaces/mcs-api-reports.interface';
-import { isNullOrEmpty } from '@app/utilities';
 
 @Injectable()
 export class McsApiReportsService implements IMcsApiReportsService {
@@ -73,6 +71,18 @@ export class McsApiReportsService implements IMcsApiReportsService {
       .pipe(
         map((response) => {
           return McsApiSuccessResponse.deserializeResponse<McsReportGenericItem[]>(McsReportGenericItem, response);
+        })
+      );
+  }
+
+  public getAzureResourcesReport(): Observable<McsApiSuccessResponse<McsReportIntegerData[]>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/public-cloud/reports/azure-resources';
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          return McsApiSuccessResponse.deserializeResponse<McsReportIntegerData[]>(McsReportIntegerData, response);
         })
       );
   }

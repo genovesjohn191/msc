@@ -89,6 +89,22 @@
       "connectionRefreshButton": "REFRESH"
     }
   },
+  "reports" : {
+    "widgets": {
+      "errorMessage": "Something went wrong while retrieving your data.",
+      "retryLabel": "Try Again",
+      "azureResourcesWidget": {
+        "title": "Azure Resources",
+        "cloudHealthLinkLabel": "View in CloudHealth"
+      },
+      "azureTicketsWidget": {
+        "title": "Azure Tickets",
+        "newTicketLinkLabel": "New",
+        "moreTicketsLinkLabel": "View All",
+        "empty": "No open tickets."
+      }
+    }
+  },
   "orders": {
     "header": "Orders",
     "leftPanelHeader": "Order Filter",

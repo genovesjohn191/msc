@@ -53,6 +53,11 @@ export class GridColumnComponent implements OnInit, OnDestroy {
   public set sizeLg(value: number) { this._sizeLg = coerceNumber(value, 0); }
   private _sizeLg: number;
 
+  @Input()
+  public get sizeWd(): number { return this._sizeWd; }
+  public set sizeWd(value: number) { this._sizeWd = coerceNumber(value, 0); }
+  private _sizeWd: number;
+
   private _breakpoint: Breakpoint;
   private _destroySubject = new Subject<void>();
   private _sizesTableMap = new Map<Breakpoint, number>();
@@ -140,6 +145,7 @@ export class GridColumnComponent implements OnInit, OnDestroy {
     this._sizesTableMap.set(Breakpoint.Small, this.sizeSm);
     this._sizesTableMap.set(Breakpoint.Medium, this.sizeMd);
     this._sizesTableMap.set(Breakpoint.Large, this.sizeLg);
+    this._sizesTableMap.set(Breakpoint.Wide, this.sizeWd);
   }
 
   /**

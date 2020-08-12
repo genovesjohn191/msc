@@ -6,11 +6,15 @@ import { ServicesOverviewWidgetComponent } from './services-overview/services-ov
 import { CostRecommendationsWidgetComponent } from './cost-recommendations/cost-recommendations-widget.component';
 import { AzureResourcesWidgetComponent } from './azure-resources/azure-resources-widget.component';
 import { ResourceChangesWidgetComponent } from './resource-changes/resource-changes-widget.component';
+import { ReportWidgetDataStatusComponent } from './report-widget-data-status.component';
+import { AzureTicketsWidgetComponent } from './azure-tickets/azure-tickets-widget.component';
 
 @NgModule({
   imports: [ SharedModule ],
   declarations: [
+    ReportWidgetDataStatusComponent,
     AzureResourcesWidgetComponent,
+    AzureTicketsWidgetComponent,
     ChangeRequestWidgetComponent,
     ContactUsWidgetComponent,
     CostRecommendationsWidgetComponent,
@@ -19,11 +23,13 @@ import { ResourceChangesWidgetComponent } from './resource-changes/resource-chan
   ],
   exports: [
     AzureResourcesWidgetComponent,
+    AzureTicketsWidgetComponent,
     ChangeRequestWidgetComponent,
     ContactUsWidgetComponent,
     CostRecommendationsWidgetComponent,
     ResourceChangesWidgetComponent,
-    ServicesOverviewWidgetComponent
+    ServicesOverviewWidgetComponent,
+    ReportWidgetDataStatusComponent
   ]
 })
 export class ReportWidgetModule { }

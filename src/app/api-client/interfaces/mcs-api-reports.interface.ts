@@ -1,7 +1,8 @@
 import { Observable } from 'rxjs';
 import {
   McsApiSuccessResponse,
-  McsReportGenericItem
+  McsReportGenericItem,
+  McsReportIntegerData
 } from '@app/models';
 
 export interface IMcsApiReportsService {
@@ -10,4 +11,6 @@ export interface IMcsApiReportsService {
   getVirtualMachineBreakdownReport(periodStart?: string, periodEnd?: string): Observable<McsApiSuccessResponse<McsReportGenericItem[]>>;
 
   getPerformanceReport(periodStart?: string, periodEnd?: string): Observable<McsApiSuccessResponse<McsReportGenericItem[]>>;
+
+  getAzureResourcesReport(): Observable<McsApiSuccessResponse<McsReportIntegerData[]>>;
 }

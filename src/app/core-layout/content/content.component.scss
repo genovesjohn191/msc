@@ -26,7 +26,6 @@ $overlay-color: rgba(0,0,0,0.5);
 
     .scroller {
       height: calc(100vh - #{$top-offset});
-      width: 150%;
       overflow-y: auto;
     }
   }
