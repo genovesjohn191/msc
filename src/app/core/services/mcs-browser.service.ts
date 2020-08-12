@@ -76,5 +76,6 @@ export class McsBrowserService {
     this._breakPoints.set(Breakpoint.Small, `(min-width: ${CommonDefinition.BREAKPOINT_SMALL}px)`);
     this._breakPoints.set(Breakpoint.Medium, `(min-width: ${CommonDefinition.BREAKPOINT_MEDIUM}px)`);
     this._breakPoints.set(Breakpoint.Large, `(min-width: ${CommonDefinition.BREAKPOINT_LARGE}px)`);
+    this._breakPoints.set(Breakpoint.Wide, `(min-width: ${CommonDefinition.BREAKPOINT_WIDE}px)`);
   }
 }

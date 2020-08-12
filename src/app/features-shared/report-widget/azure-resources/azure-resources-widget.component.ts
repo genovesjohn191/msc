@@ -1,7 +1,20 @@
-import { Component, ChangeDetectionStrategy, Input, ViewEncapsulation, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CommonDefinition } from '@app/utilities';
-import { BehaviorSubject, Observable } from 'rxjs';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ViewEncapsulation,
+  OnInit,
+  ChangeDetectorRef,
+  OnDestroy
+} from '@angular/core';
+import {
+  BehaviorSubject,
+  Observable,
+  throwError
+} from 'rxjs';
 import { ChartItem } from '@app/shared';
+import { McsReportingService } from '@app/core/services/mcs-reporting.service';
+import { catchError } from 'rxjs/operators';
+import { unsubscribeSafely } from '@app/utilities';
 
 @Component({
   selector: 'mcs-azure-resources-widget',
@@ -14,40 +27,44 @@ import { ChartItem } from '@app/shared';
   }
 })
 
-export class AzureResourcesWidgetComponent implements OnInit {
+export class AzureResourcesWidgetComponent implements OnInit, OnDestroy {
   public data$: Observable<ChartItem[]>;
   public dataBehavior: BehaviorSubject<ChartItem[]>;
+  public hasError: boolean = false;
+  public processing: boolean = true;
 
-  public constructor(private _changeDetectorRef: ChangeDetectorRef) {
+  public constructor(
+    private _changeDetectorRef: ChangeDetectorRef,
+    private reportingService: McsReportingService) {
   }
 
   public ngOnInit() {
-    let data = [
-      {
-        name: 'Jul 2020',
-        xValue: 'Virtual Machines',
-        yValue: 4,
-      },
-      {
-        name: 'Jul 2020',
-        xValue: 'Virtual Networks',
-        yValue: 2,
-      },
-      {
-        name: 'Jul 2020',
-        xValue: 'Managed Disks',
-        yValue: 6,
-      },
-      {
-        name: 'Jul 2020',
-        xValue: 'IP Addresses',
-        yValue: 4,
-      }
-    ];
-
     this.dataBehavior = new BehaviorSubject<ChartItem[]>(null);
-    this._changeDetectorRef.markForCheck();
     this.data$ = this.dataBehavior.asObservable();
-    this.dataBehavior.next(data);
+
+    this.getData();
+  }
+
+  public ngOnDestroy(): void {
+    unsubscribeSafely(this.dataBehavior);
+  }
+
+  public getData(): void {
+    this.hasError = false;
+    this.processing = true;
+    this._changeDetectorRef.markForCheck();
+
+    this.reportingService.getAzureServicesReport()
+    .pipe(catchError(() => {
+      this.hasError = true;
+      this.processing = false;
+      this._changeDetectorRef.markForCheck();
+      return throwError('Azure resources endpoint failed.');
+    }))
+    .subscribe((result) => {
+      this.dataBehavior.next(result);
+      this.processing = false;
+      this._changeDetectorRef.markForCheck();
+    });
   }
 }

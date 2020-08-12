@@ -118,6 +118,7 @@ import {
   McsAzureService,
   McsReportGenericItem,
   McsNetworkDnsSummary,
+  McsReportIntegerData,
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -1439,6 +1440,15 @@ export class McsApiService {
     return this._reportsApi.getPerformanceReport(periodStart, periodEnd).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getPerformanceReport'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public getAzureResourcesReport(): Observable<McsApiCollection<McsReportIntegerData>> {
+    return this._reportsApi.getAzureResourcesReport().pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getAzureResourcesReport'))
       ),
       map((response) => this._mapToCollection(response.content, response.totalCount))
     );

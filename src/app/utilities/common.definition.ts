@@ -53,6 +53,7 @@ export class CommonDefinition {
   public static BREAKPOINT_SMALL = 544;
   public static BREAKPOINT_MEDIUM = 721;
   public static BREAKPOINT_LARGE = 971;
+  public static BREAKPOINT_WIDE = 1920;
 
   /** Icons */
   public static ICON_SIZE_XXSMALL = 7;

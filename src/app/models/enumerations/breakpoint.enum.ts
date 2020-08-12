@@ -4,7 +4,8 @@ export enum Breakpoint {
   XSmall = 1,
   Small = 2,
   Medium = 4,
-  Large = 8
+  Large = 8,
+  Wide = 10
 }
 
 /**
