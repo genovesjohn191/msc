@@ -61,6 +61,9 @@ export class PageComponent implements AfterViewInit {
   @Input()
   public header: string;
 
+  @Input()
+  public leftPanelExpandedByDefault: boolean = false;
+
   /**
    * Determine weather the left panel is collapsed
    */
@@ -148,7 +151,7 @@ export class PageComponent implements AfterViewInit {
       }
 
       if (this._accessControlService.hasAccessToFeature(McsFeatureFlag.ExperimentalFeatures)) {
-        this._pageService.leftPanelIsVisible = false; // TODO: This should be overideable per instance
+        this._pageService.leftPanelIsVisible = this.leftPanelExpandedByDefault; // TODO: New Nav 
       }
 
       this._initializeLeftPanelDisplay();
