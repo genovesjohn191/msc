@@ -174,9 +174,9 @@ export class IconComponent implements OnChanges {
           let svgViewBox = (svgElement as SVGSVGElement).viewBox;
           let svgRatio = svgViewBox.baseVal.height / svgViewBox.baseVal.width;
           let actualHeight = +(this._iconActualSize.replace('px', '')) * svgRatio;
-
           svgElement.setAttribute('width', this._iconActualSize);
           svgElement.setAttribute('height', `${actualHeight}px`);
+          this._clearSvgFillColor(svgElement);
           svgElement.setAttribute(`fill-svg-${this.color}`, '');
           this._renderer.appendChild(parentContainer, svgElement);
           return parentContainer;
@@ -226,5 +226,16 @@ export class IconComponent implements OnChanges {
     if (this._iconContainer) {
       this._renderer.removeChild(this._elementRef.nativeElement, this._iconContainer);
     }
+  }
+
+  private _clearSvgFillColor(element: SVGElement): void {
+    let colors: string[] = [
+      'primary' , 'secondary' , 'tertiary',
+      'success' , 'warning' , 'danger',
+      'light' , 'medium' , 'dark' , 'black'];
+
+    colors.forEach(color => {
+      element.removeAttribute(`fill-svg-${color}`);
+    });
   }
 }
