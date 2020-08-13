@@ -75,6 +75,7 @@ interface ChargesState {
   monthly: boolean;
   oneOff: boolean;
   excessUsagePerGb: boolean;
+  hourly: boolean;
 }
 
 const CURRENT_DATE = getCurrentDate();
@@ -128,7 +129,7 @@ export class StepOrderDetailsComponent
   public selectedBilling$: Observable<McsBilling>;
   public selectedBillingSite$: Observable<McsBillingSite>;
   public chargesState$: Observable<ChargesState>;
-  public selectedDate$ = new Observable<Date>();
+  public selectedDate$ = new Observable<Date>();
 
   public workflowAction: OrderWorkflowAction;
   public orderDatasource: McsTableDataSource<McsOrderItem>;
@@ -139,8 +140,10 @@ export class StepOrderDetailsComponent
   private _formGroup: McsFormGroupDirective;
 
   private _destroySubject = new Subject<void>();
-  private _chargesStateChange = new BehaviorSubject<ChargesState>({ excessUsagePerGb: false, monthly: false, oneOff: false });
-  private _dateHasChanged = new BehaviorSubject<Date>(new Date());
+  private _chargesStateChange = new BehaviorSubject<ChargesState>(
+    { excessUsagePerGb: false, monthly: false, oneOff: false, hourly: false }
+  );
+  private _dateHasChanged = new BehaviorSubject<Date>(new Date());
 
   constructor(
     @Inject(forwardRef(() => WizardStepComponent)) private _wizardStep: WizardStepComponent,
@@ -227,7 +230,7 @@ export class StepOrderDetailsComponent
   }
 
   public get maxDate(): Date {
-    return  MAX_DATE;
+    return MAX_DATE;
   }
 
   /**
@@ -320,13 +323,14 @@ export class StepOrderDetailsComponent
    * Date change event
    * @param selectedDate: raw date time picker obj to be converted to date
    */
-  public onDateChanged(selectedDate: any): void {
+  public onDateChanged(selectedDate: any): void {
     if (isNullOrEmpty(selectedDate)) { return; }
     let convertedDate = selectedDate.toDate();
-    this.fcSchedule.setValue(convertedDate);
-    this._dateHasChanged.next(convertedDate);
+    this.fcSchedule.setValue(convertedDate);
+    this._dateHasChanged.next(convertedDate);
     this.notifyDataChange();
-  }
+  }
+
   /**
    * Notifies the data change event
    */
@@ -416,7 +420,7 @@ export class StepOrderDetailsComponent
    * Sets the excess usage fee flag based on order records
    */
   private _setChargesState(): void {
-    let chargesState: ChargesState = { oneOff: false, monthly: false, excessUsagePerGb: false };
+    let chargesState: ChargesState = { oneOff: false, monthly: false, excessUsagePerGb: false, hourly: false };
     let orderItems = getSafeProperty(this.order, (obj) => obj.items, []);
 
     orderItems.forEach((orderItem) => {
@@ -427,6 +431,8 @@ export class StepOrderDetailsComponent
       chargesState.monthly = chargesState.monthly ? chargesState.monthly : !isNullOrUndefined(monthly);
       let oneOff = getSafeProperty(orderItem, (obj) => obj.charges.oneOff);
       chargesState.oneOff = chargesState.oneOff ? chargesState.oneOff : !isNullOrUndefined(oneOff);
+      let hourly = getSafeProperty(orderItem, (obj) => obj.charges.hourly);
+      chargesState.hourly = chargesState.hourly ? chargesState.hourly : !isNullOrUndefined(hourly);
     });
 
     this._chargesStateChange.next(chargesState);
@@ -464,6 +470,7 @@ export class StepOrderDetailsComponent
       description: this._translate.instant('orderDetailsStep.orderDetails.totalLabel'),
       charges: createObject(McsOrderCharge, new Object({
         monthly: getSafeProperty(this.order, (obj) => obj.charges.monthly),
+        hourly: getSafeProperty(this.order, (obj) => obj.charges.hourly),
         oneOff: getSafeProperty(this.order, (obj) => obj.charges.oneOff),
         excessUsageFeePerGB: getSafeProperty(this.order, (obj) => obj.charges.excessUsageFeePerGB),
       }))
@@ -572,9 +579,9 @@ export class StepOrderDetailsComponent
     ).subscribe();
   }
 
-  private _subscribeToDateChange(): void {
-      this.selectedDate$ = this._dateHasChanged.asObservable().pipe(
-        distinctUntilChanged()
-       );
+  private _subscribeToDateChange(): void {
+    this.selectedDate$ = this._dateHasChanged.asObservable().pipe(
+      distinctUntilChanged()
+    );
   }
 }

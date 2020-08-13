@@ -124,6 +124,16 @@
               </mcs-data-cell>
             </ng-container>
 
+            <!-- Hourly Charge Column -->
+            <ng-container mcsColumnDef="hourlyCharge" *ngIf="(chargesState$ | async)?.hourly">
+              <mcs-header-cell *mcsHeaderCellDef>
+                {{ 'orderDetailsStep.orderDetails.columnHeaders.hourlyCharge' | translate }}
+              </mcs-header-cell>
+              <mcs-data-cell *mcsDataCellDef="let row" [mcsGreyedOut]="!(row.charges?.hourly | mcsIsNotNullOrUndefined)">
+                {{ row.charges?.hourlyInCurrency }}
+              </mcs-data-cell>
+            </ng-container>
+
             <!-- One-off Charge Column -->
             <ng-container mcsColumnDef="oneOffCharge" *ngIf="(chargesState$ | async)?.oneOff">
               <mcs-header-cell *mcsHeaderCellDef>
@@ -222,7 +232,7 @@
               (dateChanged)="onDateChanged($event)"
               label="{{'shared.datetimepicker.datepickerLabel' | translate}}"
               [minDate]="minDate"
-              [maxDate]="maxDate" 
+              [maxDate]="maxDate"
               mcsId="mcs-datetimepicker"
               [mcsContextualHelp]="'shared.datetimepicker.contextualHelp' | translate">
           </mcs-datetimepicker>

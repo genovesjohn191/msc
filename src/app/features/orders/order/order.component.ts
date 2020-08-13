@@ -68,6 +68,7 @@ enum OrderDetailsView {
 
 interface ChargesState {
   monthly: boolean;
+  hourly: boolean;
   oneOff: boolean;
   excessUsagePerGb: boolean;
 }
@@ -95,7 +96,9 @@ export class OrderComponent implements OnInit, OnDestroy {
   private _orderApprovers: McsOrderApprover[];
   private _destroySubject = new Subject<void>();
   private _orderDataChangeHandler: Subscription;
-  private _chargesStateChange = new BehaviorSubject<ChargesState>({ excessUsagePerGb: false, monthly: false, oneOff: false });
+  private _chargesStateChange = new BehaviorSubject<ChargesState>(
+    { excessUsagePerGb: false, monthly: false, oneOff: false, hourly: false }
+  );
 
   public constructor(
     private _activatedRoute: ActivatedRoute,
@@ -163,14 +166,14 @@ export class OrderComponent implements OnInit, OnDestroy {
   /**
    * Returns deadline field value
    */
-  public getDeadline(deadline: Date ): string {
+  public getDeadline(deadline: Date): string {
     return isNullOrEmpty(deadline) ? 'ASAP' : deadline.toString();
   }
 
   /**
    * Returns delivery type field value
    */
-  public getDeliveryType(deliveryType?: DeliveryType ): string {
+  public getDeliveryType(deliveryType?: DeliveryType): string {
     return isNullOrEmpty(deliveryType) ? 'N/A' : deliveryTypeText[deliveryType];
   }
 
@@ -442,7 +445,7 @@ export class OrderComponent implements OnInit, OnDestroy {
    * Sets the excess usage fee flag based on order records
    */
   private _setChargesState(order: McsOrder): void {
-    let chargesState: ChargesState = { oneOff: false, monthly: false, excessUsagePerGb: false };
+    let chargesState: ChargesState = { oneOff: false, monthly: false, excessUsagePerGb: false, hourly: false };
     let orderItems = getSafeProperty(order, (obj) => obj.items, []);
 
     orderItems.forEach((orderItem) => {
@@ -453,6 +456,8 @@ export class OrderComponent implements OnInit, OnDestroy {
       chargesState.monthly = chargesState.monthly ? chargesState.monthly : !isNullOrUndefined(monthly);
       let oneOff = getSafeProperty(orderItem, (obj) => obj.charges.oneOff);
       chargesState.oneOff = chargesState.oneOff ? chargesState.oneOff : !isNullOrUndefined(oneOff);
+      let hourly = getSafeProperty(orderItem, (obj) => obj.charges.hourly);
+      chargesState.hourly = chargesState.hourly ? chargesState.hourly : !isNullOrUndefined(hourly);
     });
 
     this._chargesStateChange.next(chargesState);

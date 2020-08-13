@@ -151,6 +151,7 @@
       "costCentre": "Cost Centre",
       "billingSite": "Billing Site",
       "monthlyCharge": "Monthly charge",
+      "hourlyCharge": "Hourly charge",
       "oneOffCharge": "One-off charge",
       "excessFeePerGB": "Excess Fee Per GB",
       "deadline": "Deadline",
@@ -1252,6 +1253,7 @@
       "columnHeaders": {
         "description": "Description",
         "monthlyCharge": "Monthly Fee",
+        "hourlyCharge": "Hourly Charge",
         "oneOffCharge": "One-off Charge",
         "excessUsageFeePerGB": "Excess Fee Per GB"
       }
