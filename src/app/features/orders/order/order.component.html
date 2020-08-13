@@ -228,7 +228,17 @@
               {{ 'order.columnHeaders.monthlyCharge' | translate }}
             </mcs-header-cell>
             <mcs-data-cell *mcsDataCellDef="let row">
-              {{ row.charges?.currencySymbol }}{{ row.charges?.monthly | number: '1.2' }}
+              {{ row.charges?.monthlyInCurrency }}
+            </mcs-data-cell>
+          </ng-container>
+
+          <!-- Hourly Charge Column -->
+          <ng-container mcsColumnDef="hourlyCharge" *ngIf="(chargesState$ | async)?.hourly">
+            <mcs-header-cell *mcsHeaderCellDef>
+              {{ 'order.columnHeaders.hourlyCharge' | translate }}
+            </mcs-header-cell>
+            <mcs-data-cell *mcsDataCellDef="let row">
+              {{ row.charges?.hourlyInCurrency }}
             </mcs-data-cell>
           </ng-container>
 
@@ -238,7 +248,7 @@
               {{ 'order.columnHeaders.oneOffCharge' | translate }}
             </mcs-header-cell>
             <mcs-data-cell *mcsDataCellDef="let row">
-              {{ row.charges?.currencySymbol }}{{ row.charges?.oneOff | number: '1.2' }}
+              {{ row.charges?.oneOffInCurrency }}
             </mcs-data-cell>
           </ng-container>
 

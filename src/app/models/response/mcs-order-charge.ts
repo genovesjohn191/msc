@@ -16,6 +16,9 @@ export class McsOrderCharge {
   @JsonProperty()
   public excessUsageFeePerGB: number = undefined;
 
+  @JsonProperty()
+  public hourly: number = undefined;
+
   /**
    * Returns the currency symbol as USD
    */
@@ -25,24 +28,31 @@ export class McsOrderCharge {
   }
 
   /**
-   * Returns the sum of monthly and oneoff total cost
+   * Returns the monthly fee with currency
    */
   public get monthlyInCurrency(): string {
     return this._chargeInCurreny(this.monthly);
   }
 
   /**
-   * Returns the sum of monthly and oneoff total cost
+   * Returns the one off fee with currency
    */
   public get oneOffInCurrency(): string {
     return this._chargeInCurreny(this.oneOff);
   }
 
   /**
-   * Returns the sum of monthly and oneoff total cost
+   * Returns the excess usage per gb fee with currency
    */
   public get excessUsageFeePerGbInCurrency(): string {
     return this._chargeInCurreny(this.excessUsageFeePerGB);
+  }
+
+  /**
+   * Returns the hourly fee with currency
+   */
+  public get hourlyInCurrency(): string {
+    return this._chargeInCurreny(this.hourly);
   }
 
   /**
