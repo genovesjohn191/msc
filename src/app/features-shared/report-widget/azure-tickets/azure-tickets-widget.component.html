@@ -3,13 +3,13 @@
     {{ 'reports.widgets.azureTicketsWidget.title' | translate }}
     <ng-container *mcsAccessControl="['TicketCreate']">
       <span *mcsExclusiveForAccount="'default'">
-        Click <a style="float: right;" (click)="onClickNewTicket()"
-        mcsId
-        mcsEventTracker="create-new-ticket"
-        mcsEventCategory="ticket"
-        mcsEventLabel="azure-tickets-widget">
-        {{ 'reports.widgets.azureTicketsWidget.newTicketLinkLabel' | translate }}
-      </a>
+        <a style="float: right;" (click)="onClickNewTicket()"
+          mcsId
+          mcsEventTracker="create-new-ticket"
+          mcsEventCategory="ticket"
+          mcsEventLabel="azure-tickets-widget">
+          {{ 'reports.widgets.azureTicketsWidget.newTicketLinkLabel' | translate }}
+        </a>
       </span>
     </ng-container>
   </h3>
