@@ -60,7 +60,7 @@
         </ng-container>
       </mcs-wizard-step>
 
-      <ng-container *mcsAccessControl="[]; feature: 'EnableOrderingManagedServerCreate'">
+      <ng-container *mcsAccessControl="[]; feature: ['EnableOrdering', 'EnableOrderingManagedServerCreate']; requireAllFeatureFlags: true">
         <ng-container *ngIf="resource$ | async as resource">
           <!-- Add-ons Step -->
           <mcs-wizard-step id="addon-step"

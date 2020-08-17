@@ -26,7 +26,7 @@ export class ServersService {
     return this._apiService.getResources().pipe(
       map((resources) => {
         let managedResourceIsOn = this._accessControlService.hasAccess(
-          [McsPermission.OrderEdit], McsFeatureFlag.OrderingManagedServerCreate);
+          [McsPermission.OrderEdit], [McsFeatureFlag.Ordering, McsFeatureFlag.OrderingManagedServerCreate], true, true);
 
         return resources && resources.collection.filter(
           (resource) => resource.serviceType === ServiceType.SelfManaged ||
