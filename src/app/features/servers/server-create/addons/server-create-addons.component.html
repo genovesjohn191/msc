@@ -3,7 +3,7 @@
   <p>{{ 'serverCreateAddOnsStep.description' | translate }}</p>
 
   <!-- VM Backup -->
-  <ng-container *mcsAccessControl="[]; feature: 'EnableOrderingVmBackupProvision'">
+  <ng-container *mcsAccessControl="[]; feature: ['EnableOrdering', 'EnableOrderingVmBackupProvision']; requireAllFeatureFlags: true">
     <mcs-collapsible-panel
       mcsId="addon-vm-backup-toggle"
       mcsEventTracker="server-create-addon-vm-backup-toggle"
@@ -21,7 +21,7 @@
   </ng-container>
 
   <!-- Server Backup -->
-  <ng-container *mcsAccessControl="[]; feature: 'EnableOrderingServerBackupProvision'">
+  <ng-container *mcsAccessControl="[]; feature: ['EnableOrdering', 'EnableOrderingServerBackupProvision']; requireAllFeatureFlags: true">
     <mcs-collapsible-panel
       mcsId="addon-server-backup-toggle"
       mcsEventTracker="server-create-addon-server-backup-toggle"
@@ -39,7 +39,7 @@
   </ng-container>
 
   <!-- Anti Virus -->
-  <ng-container *mcsAccessControl="[]; feature: 'EnableOrderingAntiVirusProvision'">
+  <ng-container *mcsAccessControl="[]; feature: ['EnableOrdering', 'EnableOrderingAntiVirusProvision']; requireAllFeatureFlags: true">
     <div class="action-box" [style.padding]="'20px 15px'"
       [mcsContextualHelp]="'serverCreateAddOnsStep.antivirus.contextualHelp' | translate">
 
@@ -55,7 +55,7 @@
   </ng-container>
 
   <!-- HIDS -->
-  <ng-container *mcsAccessControl="[]; feature: 'EnableOrderingHidsProvision'">
+  <ng-container *mcsAccessControl="[]; feature: ['EnableOrdering', 'EnableOrderingHidsProvision']; requireAllFeatureFlags: true">
     <mcs-collapsible-panel
       mcsId="addon-hids-toggle"
       mcsEventTracker="server-create-addon-hids-toggle"
@@ -84,7 +84,7 @@
   </div>
 
   <!-- SQL Server -->
-  <ng-container *mcsAccessControl="[]; feature: 'EnableOrderingSqlProvision'">
+  <ng-container *mcsAccessControl="[]; feature: ['EnableOrdering', 'EnableOrderingSqlProvision']; requireAllFeatureFlags: true">
     <mcs-collapsible-panel *ngIf="isWindows"
       mcsId="addon-sql-toggle"
       mcsEventTracker="server-create-addon-sql-toggle"

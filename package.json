@@ -9,6 +9,7 @@
     "reinstall": "yarn run clean && yarn install",
     "rebuild": "yarn run reinstall && yarn run build",
     "test": "ng test --browsers=ChromeHeadless --code-coverage --watch=false",
+    "test:watch": "ng test --browsers=ChromeHeadless --code-coverage --watch=true",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "output:styling": "gulp",

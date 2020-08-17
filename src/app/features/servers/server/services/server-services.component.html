@@ -62,7 +62,7 @@
       </mcs-presentation-panel>
 
       <!-- InView -->
-      <ng-container *mcsAccessControl="[]; feature: 'EnableOrderingManagedServerInviewLevelRaise'">
+      <ng-container *mcsAccessControl="[]; feature: ['EnableOrdering', 'EnableOrderingManagedServerInviewLevelRaise']; requireAllFeatureFlags: true">
         <mcs-service-inview
           [server]="server"
           (raiseInviewLevel)="executeAction($event)">
@@ -136,23 +136,25 @@
                   </ng-container>
                 </ng-container>
                 <ng-template #hostSecurityOrderLinkTemplate>
-                  <span *mcsAccessControl="['OrderEdit']; feature: ['EnableOrderingAntiVirusProvision','EnableOrderingHidsProvision']">
-                    <a *mcsAccessControl="[]; feature: ['EnableOrderingAntiVirusProvision']"
-                    (click)="onHostSecurityOrderClick(ServerServicesActionOption.AddAv, server)"
-                    mcsId="add-new-av"
-                    mcsEventTracker="add-new-av"
-                    mcsEventCategory="order"
-                    mcsEventLabel="server-services">{{ 'serverServices.hostSecurity.avLinkLabel' | translate }}</a>
-                    <ng-container *mcsAccessControl="[]; feature: ['EnableOrderingHidsProvision']">
-                      <span *mcsAccessControl="[]; feature: ['EnableOrderingAntiVirusProvision']"> or </span>
-                    </ng-container>
-                    <a *mcsAccessControl="[]; feature: ['EnableOrderingHidsProvision']"
-                    (click)="onHostSecurityOrderClick(ServerServicesActionOption.AddHids, server)"
-                    mcsId="add-new-hids"
-                    mcsEventTracker="add-new-hids"
-                    mcsEventCategory="order"
-                    mcsEventLabel="server-services">{{ 'serverServices.hostSecurity.hidsLinkLabel' | translate }}</a>
-                  </span>
+                  <ng-container *mcsAccessControl="[]; feature: ['EnableOrdering']">
+                    <span *mcsAccessControl="['OrderEdit']; feature: ['EnableOrderingAntiVirusProvision','EnableOrderingHidsProvision']">
+                      <a *mcsAccessControl="[]; feature: ['EnableOrderingAntiVirusProvision']"
+                      (click)="onHostSecurityOrderClick(ServerServicesActionOption.AddAv, server)"
+                      mcsId="add-new-av"
+                      mcsEventTracker="add-new-av"
+                      mcsEventCategory="order"
+                      mcsEventLabel="server-services">{{ 'serverServices.hostSecurity.avLinkLabel' | translate }}</a>
+                      <ng-container *mcsAccessControl="[]; feature: ['EnableOrderingHidsProvision']">
+                        <span *mcsAccessControl="[]; feature: ['EnableOrderingAntiVirusProvision']"> or </span>
+                      </ng-container>
+                      <a *mcsAccessControl="[]; feature: ['EnableOrderingHidsProvision']"
+                      (click)="onHostSecurityOrderClick(ServerServicesActionOption.AddHids, server)"
+                      mcsId="add-new-hids"
+                      mcsEventTracker="add-new-hids"
+                      mcsEventCategory="order"
+                      mcsEventLabel="server-services">{{ 'serverServices.hostSecurity.hidsLinkLabel' | translate }}</a>
+                    </span>
+                  </ng-container>
                 </ng-template>
               </mcs-status-message>
             </ng-template>
