@@ -45,7 +45,7 @@
 
     <!-- Action Column -->
     <ng-container *ngIf="resource.scaleable">
-      <ng-container mcsColumnDef="action" *mcsAccessControl="['OrderEdit']; feature: 'EnableOrderingVdcStorageExpand'">
+      <ng-container mcsColumnDef="action" *mcsAccessControl="['OrderEdit']; feature: ['EnableOrdering', 'EnableOrderingVdcStorageExpand']; requireAllFeatureFlags: true">
         <mcs-header-cell *mcsHeaderCellDef class="action-header-cell">
         </mcs-header-cell>
         <mcs-data-cell *mcsDataCellDef="let row">

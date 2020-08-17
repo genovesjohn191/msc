@@ -75,8 +75,8 @@
         mcsEventTracker="scale-server"
         mcsEventCategory="server"
         mcsEventLabel="server-command-tool"
-        *mcsAccessControl="[]; feature: 'EnableOrderingManagedServerScale';
-        validateWhen: !server.isSelfManaged">
+        *mcsAccessControl="[]; feature: ['EnableOrdering',
+          'EnableOrderingManagedServerScale']; requireAllFeatureFlags: true; validateWhen: !server.isSelfManaged">
         {{ 'servers.scale' | translate }}
       </a>
     </ng-container>

@@ -61,7 +61,7 @@
           </ng-container>
         </ng-container>
         <ng-template #vmBackupOrderLinkTemplate>
-          <a *mcsAccessControl="['OrderEdit']; feature: ['EnableOrderingVmBackupProvision']"
+          <a *mcsAccessControl="['OrderEdit']; feature: ['EnableOrdering', 'EnableOrderingVmBackupProvision']; requireAllFeatureFlags: true"
           (click)="onAddVmBackup(server)"
           [disabled]="server.isProcessing"
           mcsId="add-new-vm-backup"
