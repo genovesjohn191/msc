@@ -16,4 +16,13 @@
       text-decoration: none;
     }
   }
+
+  .account-info {
+    margin-bottom: 5px;
+    display: none;
+
+    @include breakpoint(small) {
+      display: block;
+    }
+  }
 }

@@ -1,11 +1,10 @@
 <div class="account-panel-wrapper">
   <mcs-list header="Account">
-    <div>
+    <div class="account-info">
       <h5>{{ (activeUser$ | async)?.fullName }}</h5>
       <ng-container *ngIf="activeAccount$ | async as activeAccount">
         <small class="user-info" read-only>{{ activeAccount.name }}</small>
       </ng-container>
-      <br />
       <br />
     </div>
 
