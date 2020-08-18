@@ -1,5 +1,6 @@
 <!-- Router Link Output -->
-<mcs-grid class="full-height">
+<router-outlet *isExperimental="false"></router-outlet>
+<mcs-grid class="full-height" *isExperimental="true">
   <mcs-grid-row class="full-height">
     <mcs-grid-column class="vertical-nav-wrapper" [ngClass]="showNav ? 'expanded': 'collapsed'">
       <div class="scroller">

@@ -10,7 +10,7 @@
     "navigationPath": "dashboard/overview",
     "enumPlatform": "Public",
     "documentTitle": "Overview - Macquarie Cloud Services",
-    "requiredFeatureFlag": "EnableExperimentalFeatures"
+    "requiredFeatureFlag": "EnablePublicCloudDashboard"
   },
   "reportInsights": {
     "enumKey": "ReportInsights",
@@ -18,7 +18,7 @@
     "navigationPath": "dashboard/insights",
     "enumPlatform": "Public",
     "documentTitle": "Insights - Macquarie Cloud Services",
-    "requiredFeatureFlag": "EnableExperimentalFeatures"
+    "requiredFeatureFlag": "EnablePublicCloudDashboard"
   },
   "console": {
     "enumPlatform": "Private",
