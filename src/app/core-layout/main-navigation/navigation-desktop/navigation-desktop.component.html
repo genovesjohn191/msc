@@ -6,7 +6,7 @@
 
   <!-- Ordering Dashboard Link -->
   <div class="ordering-dashboard">
-    <ng-container *mcsAccessControl="['OrderEdit']; feature: 'EnableOrderingOperationsListing'">
+    <ng-container *mcsAccessControl="['OrderEdit']; feature: ['EnableOrdering', 'EnableOrderingOperationsListing']; requireAllFeatureFlags: true">
       <div class="navigation-item" [class.active]="selectedCategory === routerCategoryEnum.MakeAChange">
         <a mcsCursor="pointer"
           mcsId="ordering-dashboard"
