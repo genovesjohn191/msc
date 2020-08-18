@@ -39,7 +39,7 @@
               <span>{{ server.compute?.memoryMB | mcsDataSize: 'MB' }}</span>
               <span> / </span>
               <span>{{ server.compute?.cpuCount | number }} vCPU</span>
-              <ng-container  *mcsAccessControl="serverPermission.vmScale; feature: serverPermission.vmScaleFeature">
+              <ng-container  *mcsAccessControl="serverPermission.vmScale; feature: serverPermission.vmScaleFeature; requireAllFeatureFlags: true">
                 <mcs-loader *ngIf="scaleInProgress" size="small"
                   [mcsTooltip]="'serverManagement.manageScale.scaling' | translate"></mcs-loader>
                 <ng-container *ngIf="server.scaleable">
