@@ -100,16 +100,17 @@ export class LicensesComponent extends McsTableListingBase<McsLicense> implement
   }
 
   /**
-   * Returns true if the selected license has a suspended or pending parent license
+   * Returns true if the selected license is suspended, pending or trial license,
+   * Also check its parent if it has similar status
    */
   public isLicenseDisabled(licenses: McsLicense[], currentLicense: McsLicense): boolean {
     if (isNullOrEmpty(currentLicense)) { return true; }
-    if (isNullOrEmpty(currentLicense.parentServiceId)) { return currentLicense.isPending || currentLicense.isSuspended; }
+    if (isNullOrEmpty(currentLicense.parentServiceId)) { return !currentLicense.isChangeable; }
 
     let parentLicense = licenses.find((license) => license.serviceId === currentLicense.parentServiceId);
     if (isNullOrEmpty(parentLicense)) { return true; }
 
-    return parentLicense.isPending || parentLicense.isSuspended || currentLicense.isPending || currentLicense.isSuspended;
+    return !parentLicense.isChangeable || !currentLicense.isChangeable;
   }
 
   /**
