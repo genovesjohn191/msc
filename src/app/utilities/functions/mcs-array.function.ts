@@ -221,3 +221,15 @@ export function moveRecordByIndex<T>(sourceArray: T[], sourceIndex: number, dest
 export function isArray(object: any): boolean {
   return Object.prototype.toString.call(object) === '[object Array]';
 }
+
+/**
+ * Returns an array of values plucked from the properties of source array object
+ * @param sourceArray list of objects
+ * @param propertyName name of the property to be plucked
+ */
+export function pluck(sourceArray: any[], propertyName: string): Array<any> {
+  if (isArray(sourceArray) && propertyName) {
+    let pluckedObject = sourceArray.map(obj => obj[propertyName]);
+    return pluckedObject;
+  }
+}

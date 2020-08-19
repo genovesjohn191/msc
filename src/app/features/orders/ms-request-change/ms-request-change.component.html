@@ -60,36 +60,59 @@
                   translate: { subscriptionId:  (fcMsService?.value.uuid | mcsIsNotNullOrEmpty) ? fcMsService?.value.subscriptionId : fcMsService?.value.id } }}</span>
               </mcs-item>
 
-              <!-- Category  -->
+              <!-- Azure Product  -->
               <mcs-item orientation="block">
-                <span align-self-start>{{ 'orderMsRequestChange.detailsStep.categoryLabel' | translate }}</span>
+                <span align-self-start>{{ 'orderMsRequestChange.detailsStep.azureProductLabel' | translate }}</span>
                 <mcs-form-field>
-                  <mcs-select [formControl]="fcCategory"
-                    mcsId="select-ms-service-category"
-                    mcsEventTracker="select-ms-service-category"
+                  <mcs-select [formControl]="fcAzureProduct"
+                    mcsId="select-ms-service-azure-product"
+                    mcsEventTracker="select-ms-service-azure-product"
                     mcsEventCategory="order"
                     mcsEventLabel="ms-service-change-request"
-                    [placeholder]="'orderMsRequestChange.detailsStep.categoryPlaceholder' | translate">
+                    [mcsContextualHelp]="'orderMsRequestChange.detailsStep.azureProductContextualHelp' | translate"
+                    [placeholder]="'orderMsRequestChange.detailsStep.azureProductPlaceHolder' | translate">
                     <mcs-search mcsSelectSearch></mcs-search>
-                    <mcs-option *ngFor="let category of categoryOptions$ | async" [value]="category.value">
-                      {{ category.text }}
+                    <mcs-option *ngFor="let product of azureProductOptions$ | async" [value]="product.value">
+                      {{ product.text }}
                     </mcs-option>
                   </mcs-select>
                   <mcs-error mcsError errorState="required">
                     {{ 'orderMsRequestChange.errors.category' | translate }}
                   </mcs-error>
                 </mcs-form-field>
+                <ng-container *ngIf="isOtherProductSelected">
+                  <p [mcsGreyedOut]="true">
+                    {{ 'orderMsRequestChange.detailsStep.otherAdvisoryLabel' | translate }}
+                  </p>
+                </ng-container>
               </mcs-item>
-
-              <!-- Resource Identifier -->
+           
+              <!-- Azure Resources -->
               <mcs-item orientation="block">
-                <span align-self-start>{{ 'orderMsRequestChange.detailsStep.resourceIdentifierLabel' | translate }}</span>
+                <span align-self-start>{{ 'orderMsRequestChange.detailsStep.azureResourcesLabel' | translate }}</span>
                 <mcs-form-field>
-                  <input mcsInput [formControl]="fcResourceIdentifier"
-                    mcsId="input-ms-service-resource-identifier">
-                    <mcs-error mcsError errorState="required">
-                      {{ 'orderMsRequestChange.errors.resourceIdentifierRequired' | translate }}
-                    </mcs-error>
+                  <mcs-select [formControl]="fcAzureResource"
+                    mcsId="select-ms-service-azure-resource"
+                    mcsEventTracker="select-ms-service-azure-resource"
+                    mcsEventCategory="order"
+                    mcsEventLabel="ms-service-change-request"
+                    [mcsContextualHelp]="'orderMsRequestChange.detailsStep.azureResourcesContextHelp' | translate"
+                    [placeholder]="'orderMsRequestChange.detailsStep.azureResourcesPlaceHolder' | translate"
+                    multiple
+                    [multiSelectLimit]="maxSelectionLimit">
+                    <mcs-search mcsSelectSearch></mcs-search>
+                    <mcs-option *ngFor="let resource of azureResourcesOptions$ | async" [value]="resource.value">
+                      <span [ngStyle]="{'pointer-events': 'auto'}"
+                      [mcsTooltip]="resource.value?.azureId"
+                      [mcsTooltipShow]="resource.value?.azureId"
+                      [mcsTooltipPosition]="'right'">
+                      {{ resource.text }}
+                      </span>
+                    </mcs-option>
+                  </mcs-select>
+                  <mcs-error mcsError errorState="required">
+                    {{ 'orderMsRequestChange.errors.resourceIdentifierRequired' | translate }}
+                  </mcs-error>
                 </mcs-form-field>
               </mcs-item>
 

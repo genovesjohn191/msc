@@ -154,7 +154,7 @@
       "hourlyCharge": "Hourly charge",
       "oneOffCharge": "One-off charge",
       "excessFeePerGB": "Excess Fee Per GB",
-      "deadline": "Deadline",
+      "schedule": "Schedule",
       "deliveryType": "Delivery Type"
     },
     "noOrderItems": "No order items found.",
@@ -588,22 +588,26 @@
       "serviceSubscriptionId": "Subscription ID: {{subscriptionId}}",
       "servicePlaceholder": "Select a Service",
       "complexityPlaceholder": "Select Complexity",
-      "categoryPlaceholder": "Select a Category",
+      "azureProductPlaceHolder": "Select an Azure Product",
+      "azureResourcesPlaceHolder": "Select an Azure Resource",
+      "otherAdvisoryLabel": "By selecting 'Other', you are requesting a change or support (Azure Essentials) for a Microsoft service outside the scope of our managed services.\r\n\nTo fulfil this service request, we will rely on Microsoft for advice in relation to your request and relay that advice back to you for the purpose of provisioning, configuring (Azure Managed or Essentials) or support (Azure Essentials).",
       "servicesLabel": "Services",
       "nullServiceIdToolTip": "A change cannot be requested for this service at this time. Please contact your account team for more information.",
+      "azureResourcesLabel": "Azure Resources",
+      "azureResourcesContextHelp": "Select up to 5 Azure resources this request relates to",
       "resourcesLabel": "Resources",
-      "categoryLabel": "Category",
+      "azureProductLabel": "Azure Product",
+      "azureProductContextualHelp": "The main Azure product this service request relates to",
       "complexityLabel": "Complexity",
       "complexityDescription": "This will affect the cost of your request. We'll contact you and get your approval if we need to recategorize this after your request is submitted.",
-      "complexityContextualHelp": "Please note, your request may need to be delayed or resubmitted if the complexity provided does not match the nature of the work required",
-      "resourceIdentifierLabel": "Resource Identifier"
+      "complexityContextualHelp": "Please note, your request may need to be delayed or resubmitted if the complexity provided does not match the nature of the work required"
     },
     "errors": {
       "complexity": "You must select a complexity",
       "category": "You must select a category",
       "requestDescriptionRequired": "Enter request description.",
       "orderCreationError": "An problem occured while creating the order. Please try again later.",
-      "resourceIdentifierRequired": "Please enter a resource identifier"
+      "resourceIdentifierRequired": "Please select an azure resource"
     }
   },
   "notification": {
@@ -2169,8 +2173,8 @@
     },
     "datetimepicker": {
       "datepickerLabel": "Choose a date",
-      "label": "Required schedule",
-      "contextualHelp": "Select a schedule for this operation. One of our friendly engineers will contact you if the deadline you have chosen is unavailable."
+      "label": "Schedule",
+      "contextualHelp": "Select a schedule for this operation. One of our friendly engineers will contact you if the schedule you have chosen is unavailable."
     }
   },
   "apiErrorMessage": {

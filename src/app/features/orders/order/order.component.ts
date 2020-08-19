@@ -113,7 +113,7 @@ export class OrderComponent implements OnInit, OnDestroy {
     this.orderItemsDataSource = new McsTableDataSource();
     this.setOrderItemsColumn();
   }
-  private _hasDeadline: boolean;
+  private _hasSchedule: boolean;
   private _hasDeliveryTypeOptions: boolean;
 
   public ngOnInit() {
@@ -148,8 +148,8 @@ export class OrderComponent implements OnInit, OnDestroy {
     return CommonDefinition.ASSETS_SVG_INFO;
   }
 
-  public get hasDeadline(): boolean {
-    return this._hasDeadline;
+  public get hasSchedule(): boolean {
+    return this._hasSchedule;
   }
 
   public get hasDeliveryTypeOptions(): boolean {
@@ -164,10 +164,10 @@ export class OrderComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Returns deadline field value
+   * Returns schedule field value
    */
-  public getDeadline(deadline: Date): string {
-    return isNullOrEmpty(deadline) ? 'ASAP' : deadline.toString();
+  public getSchedule(schedule: Date): string {
+    return isNullOrEmpty(schedule) ? 'ASAP' : schedule.toString();
   }
 
   /**
@@ -208,10 +208,10 @@ export class OrderComponent implements OnInit, OnDestroy {
   }
 
   private _identifyIfDeadlineIsRequired(orderItems: McsOrderItem[]): void {
-    this._hasDeadline = false;
+    this._hasSchedule = false;
     orderItems.forEach(item => {
       if (!isNullOrEmpty(item.schedule)) {
-        this._hasDeadline = true;
+        this._hasSchedule = true;
       }
     });
   }

@@ -17,4 +17,7 @@ export class McsAzureResource extends McsEntityBase {
 
   @JsonProperty()
   public subscriptionId: string = undefined;
+
+  @JsonProperty()
+  public azureId: string = undefined;
 }
