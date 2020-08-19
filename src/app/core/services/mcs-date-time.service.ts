@@ -11,7 +11,7 @@ import * as moment from 'moment-timezone';
 
 export type McsDateTimeFormat = 'default' | 'short' | 'medium' | 'long' | 'full' |
   'dashShortDate' | 'shortDate' | 'mediumDate' | 'longDate' | 'fullDate' |
-  'shortTime' | 'mediumTime' | 'longTime' | 'fullTime' | 'isoDate';
+  'shortTime' | 'mediumTime' | 'longTime' | 'fullTime' | 'isoDate' | 'friendly';
 
 @Injectable()
 export class McsDateTimeService {
@@ -33,12 +33,18 @@ export class McsDateTimeService {
     if (!isNullOrEmpty(timeZone)) {
       timeZone = moment(date).tz(timeZone).format('Z');
     }
+
+    if (formatType === 'friendly') {
+      return moment(date).fromNow();
+    }
+
     let actualFormat = isNullOrEmpty(formatType) ? 'default' : formatType;
 
     let formatFound = this._dateTimeMapTable.has(formatType as McsDateTimeFormat);
     if (formatFound) {
       actualFormat = this._dateTimeMapTable.get(formatType as McsDateTimeFormat);
     }
+
     return formatDate(date.toUTCString(), actualFormat, CommonDefinition.LOCALE, timeZone);
   }
 
