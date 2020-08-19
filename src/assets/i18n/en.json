@@ -550,6 +550,7 @@
         "helpText": "Select a base license to modify and increase or decrease the license count. You must have at least 1 license. Please call your Macquarie Cloud Services account manager if you'd like to suspend this subscription.",
         "activeLabel": "This license-based subscription is active and renews on {{renewalDate}}.",
         "activeLabelNoRenewal": "This license-based subscription is active.",
+        "trialLabel": "This license-based subscription is currently subscribed to on a trial basis. This item cannot be changed at this time. Please contact your accounts team for more information.",
         "pendingLabel": "This license-based subscription is currently pending and will be provisioned shortly. This item cannot be changed at this time.",
         "suspendedLabel": "This license-based subscription is currently suspended. This item cannot be changed at this time. Please contact your accounts team for more information.",
         "noneStatusLabel": "Status unavailable"
@@ -559,6 +560,7 @@
         "helpText": "Increase or decrease the license count for this add-on. You must have at least 1 {{unit}}. Please call your Macquarie Cloud Services account manager if you'd like to suspend this subscription.",
         "activeLabel": "This add-on is active and renews on {{renewalDate}}.",
         "activeLabelNoRenewal": "This add-on is active.",
+        "trialLabel": "This license-based subscription is currently subscribed to on a trial basis. This item cannot be changed at this time. Please contact your accounts team for more information.",
         "pendingLabel": "This add-on is currently pending and will be provisioned shortly. This item cannot be changed at this time.",
         "suspendedLabel": "This add-on is currently suspended. This item cannot be changed at this time. Please contact your accounts team for more information.",
         "noneStatusLabel": "Status unavailable"

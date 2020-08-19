@@ -51,6 +51,9 @@ export class McsLicense extends McsEntityBase {
   @JsonProperty()
   public pcSubscriptionId: string = undefined;
 
+  @JsonProperty()
+  public isTrial: boolean = undefined;
+
   public get statusLabel(): string {
     return licenseStatusText[this.status];
   }
@@ -61,5 +64,9 @@ export class McsLicense extends McsEntityBase {
 
   public get isSuspended(): boolean {
     return this.status === LicenseStatus.Suspended;
+  }
+
+  public get isChangeable(): boolean {
+    return !this.isSuspended && !this.isPending && !this.isTrial;
   }
 }

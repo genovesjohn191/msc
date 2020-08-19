@@ -60,29 +60,36 @@
             </mcs-item>
 
             <mcs-item orientation="block" *ngIf="(licenses$ | async) | mcsArrayHasElement">
-              <ng-container [ngSwitch]="fcLicenses?.value?.status">
-                <mcs-item orientation="block" *ngSwitchCase="licenseStatusOption.Active">
-                  <span align-self-start *ngIf="fcLicenses?.value?.renewalDate | mcsIsNotNullOrEmpty; else baseNoRenewalTemplate">
-                    {{ 'orderMsLicenseCountChange.detailsStep.baseLicense.activeLabel' | translate:
-                      { renewalDate: fcLicenses?.value?.renewalDate | mcsStdDateFormat }
-                    }}
-                  </span>
-                  <ng-template #baseNoRenewalTemplate>
-                    <span align-self-start>
-                      {{ 'orderMsLicenseCountChange.detailsStep.baseLicense.activeLabelNoRenewal' | translate }}
+              <ng-container *ngIf="!fcLicenses?.value?.isTrial; else baseTrialTemplate">
+                <ng-container [ngSwitch]="fcLicenses?.value?.status">
+                  <mcs-item orientation="block" *ngSwitchCase="licenseStatusOption.Active">
+                    <span align-self-start *ngIf="fcLicenses?.value?.renewalDate | mcsIsNotNullOrEmpty; else baseNoRenewalTemplate">
+                      {{ 'orderMsLicenseCountChange.detailsStep.baseLicense.activeLabel' | translate:
+                        { renewalDate: fcLicenses?.value?.renewalDate | mcsStdDateFormat }
+                      }}
                     </span>
-                  </ng-template>
-                </mcs-item>
-                <mcs-item *ngSwitchCase="licenseStatusOption.Pending">
-                  <span align-self-start>{{ 'orderMsLicenseCountChange.detailsStep.baseLicense.pendingLabel'  | translate }}</span>
-                </mcs-item>
-                <mcs-item *ngSwitchCase="licenseStatusOption.Suspended">
-                  <span align-self-start>{{ 'orderMsLicenseCountChange.detailsStep.baseLicense.suspendedLabel'  | translate }}</span>
-                </mcs-item>
-                <mcs-item *ngSwitchDefault>
-                  <span>{{ 'orderMsLicenseCountChange.detailsStep.baseLicense.noneStatusLabel' | translate }}</span>
-                </mcs-item>
+                    <ng-template #baseNoRenewalTemplate>
+                      <span align-self-start>
+                        {{ 'orderMsLicenseCountChange.detailsStep.baseLicense.activeLabelNoRenewal' | translate }}
+                      </span>
+                    </ng-template>
+                  </mcs-item>
+                  <mcs-item *ngSwitchCase="licenseStatusOption.Pending">
+                    <span align-self-start>{{ 'orderMsLicenseCountChange.detailsStep.baseLicense.pendingLabel'  | translate }}</span>
+                  </mcs-item>
+                  <mcs-item *ngSwitchCase="licenseStatusOption.Suspended">
+                    <span align-self-start>{{ 'orderMsLicenseCountChange.detailsStep.baseLicense.suspendedLabel'  | translate }}</span>
+                  </mcs-item>
+                  <mcs-item *ngSwitchDefault>
+                    <span>{{ 'orderMsLicenseCountChange.detailsStep.baseLicense.noneStatusLabel' | translate }}</span>
+                  </mcs-item>
+                </ng-container>
               </ng-container>
+              <ng-template #baseTrialTemplate>
+                <mcs-item >
+                  <span>{{ 'orderMsLicenseCountChange.detailsStep.baseLicense.trialLabel' | translate }}</span>
+                </mcs-item>
+              </ng-template>
               <mcs-item orientation="block" *ngIf="fcLicenses?.value?.serviceId">
                 <span align-self-start>
                   {{ 'orderMsLicenseCountChange.detailsStep.serviceId' |  translate:  {serviceId:fcLicenses?.value?.serviceId} }}
@@ -101,7 +108,7 @@
               </mcs-item> -->
               <mcs-item orientation="block">
                 <mcs-form-field class="form-field-size-medium"
-                  [disabled]="fcLicenses?.value?.isPending || fcLicenses?.value?.isSuspended">
+                  [disabled]="!fcLicenses?.value?.isChangeable">
                   <input mcsInput [formControl]="fcLicenseCount"
                     mcsId="input-ms-license-count"
                     mcsEventTracker="input-ms-license-count"
@@ -129,7 +136,7 @@
             </mcs-item>
 
             <!-- AddOns -->
-            <mcs-item orientation="block" [disabled]="fcLicenses?.value?.isPending || fcLicenses?.value?.isSuspended">
+            <mcs-item orientation="block" [disabled]="!fcLicenses?.value?.isChangeable">
               <ng-container *ngIf="childLicensesFcConfig$ | async as childLicensesFcConfig">
                 <ng-container *ngIf="childLicensesFcConfig | mcsArrayHasElement">
                   <h2 align-self-start padding-top-medium>{{ 'orderMsLicenseCountChange.detailsStep.addons.label' | translate }}</h2>
@@ -139,29 +146,36 @@
                       <mcs-item orientation="block">
                         <strong align-self-start>{{ childLicensesFcItem?.license?.name  }} </strong>
                       </mcs-item>
-                      <ng-container [ngSwitch]="childLicensesFcItem?.license?.status">
-                        <mcs-item orientation="block" *ngSwitchCase="licenseStatusOption.Active">
-                          <span align-self-start *ngIf="fcLicenses?.value?.renewalDate | mcsIsNotNullOrEmpty; else baseNoRenewalTemplate">
-                            {{ 'orderMsLicenseCountChange.detailsStep.addons.activeLabel' | translate:
-                              { renewalDate: childLicensesFcItem?.license?.renewalDate | mcsStdDateFormat }
-                            }}
-                          </span>
-                          <ng-template #baseNoRenewalTemplate>
-                            <span align-self-start>
-                              {{ 'orderMsLicenseCountChange.detailsStep.addons.activeLabelNoRenewal' | translate }}
+                      <ng-container *ngIf="!childLicensesFcItem?.license?.isTrial; else addOnTrialTemplate">
+                        <ng-container [ngSwitch]="childLicensesFcItem?.license?.status">
+                          <mcs-item orientation="block" *ngSwitchCase="licenseStatusOption.Active">
+                            <span align-self-start *ngIf="fcLicenses?.value?.renewalDate | mcsIsNotNullOrEmpty; else baseNoRenewalTemplate">
+                              {{ 'orderMsLicenseCountChange.detailsStep.addons.activeLabel' | translate:
+                                { renewalDate: childLicensesFcItem?.license?.renewalDate | mcsStdDateFormat }
+                              }}
                             </span>
-                          </ng-template>
-                        </mcs-item>
-                        <mcs-item *ngSwitchCase="licenseStatusOption.Pending">
-                          <span align-self-start>{{ 'orderMsLicenseCountChange.detailsStep.addons.pendingLabel' | translate }}</span>
-                        </mcs-item>
-                        <mcs-item *ngSwitchCase="licenseStatusOption.Suspended">
-                          <span align-self-start>{{ 'orderMsLicenseCountChange.detailsStep.addons.suspendedLabel' | translate }}</span>
-                        </mcs-item>
-                        <mcs-item *ngSwitchDefault>
-                          <span>{{ 'orderMsLicenseCountChange.detailsStep.addons.noneStatusLabel' | translate }}</span>
-                        </mcs-item>
+                            <ng-template #baseNoRenewalTemplate>
+                              <span align-self-start>
+                                {{ 'orderMsLicenseCountChange.detailsStep.addons.activeLabelNoRenewal' | translate }}
+                              </span>
+                            </ng-template>
+                          </mcs-item>
+                          <mcs-item *ngSwitchCase="licenseStatusOption.Pending">
+                            <span align-self-start>{{ 'orderMsLicenseCountChange.detailsStep.addons.pendingLabel' | translate }}</span>
+                          </mcs-item>
+                          <mcs-item *ngSwitchCase="licenseStatusOption.Suspended">
+                            <span align-self-start>{{ 'orderMsLicenseCountChange.detailsStep.addons.suspendedLabel' | translate }}</span>
+                          </mcs-item>
+                          <mcs-item *ngSwitchDefault>
+                            <span>{{ 'orderMsLicenseCountChange.detailsStep.addons.noneStatusLabel' | translate }}</span>
+                          </mcs-item>
+                        </ng-container>
                       </ng-container>
+                      <ng-template #addOnTrialTemplate>
+                        <mcs-item >
+                          <span>{{ 'orderMsLicenseCountChange.detailsStep.addons.trialLabel' | translate }}</span>
+                        </mcs-item>
+                      </ng-template>
                       <mcs-item orientation="block" *ngIf="childLicensesFcItem?.license?.serviceId">
                         <span align-self-start>
                           {{ 'orderMsLicenseCountChange.detailsStep.serviceId' |  translate:  { serviceId: childLicensesFcItem?.license?.serviceId } }}
@@ -180,7 +194,7 @@
                       </mcs-item> -->
                       <mcs-item orientation="block">
                         <mcs-form-field class="form-field-size-medium"
-                          [disabled]="childLicensesFcItem?.license?.isPending || childLicensesFcItem?.license?.isSuspended">
+                          [disabled]="!childLicensesFcItem?.license?.isChangeable">
                           <input mcsInput [formControl]="getFormControl(childLicensesFcItem?.childFormControlName)"
                             mcsId="input-ms-license-count"
                             mcsEventTracker="input-ms-license-count"
