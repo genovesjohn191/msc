@@ -28,22 +28,25 @@
             <mcs-header-cell *mcsHeaderCellDef>
               {{ columnSettings.summary.text }}
             </mcs-header-cell>
-            <mcs-data-cell *mcsDataCellDef="let row" [mcsTextTruncate]="row.shortDescription">
+            <mcs-data-cell *mcsDataCellDef="let row" [mcsTextTruncate]="row.shortDescription" mcsTextTruncateSize="100px">
+              <mcs-icon [key]="getStatusIcon(row.stateLabel)" size="small" [mcsTooltip]="row.stateLabel" style="margin-right: 5px;"></mcs-icon>
               <a [mcsRouterLink]="[routeKeyEnum.TicketDetails, row.id]"
-              mcsId="select-ticket"
-              mcsEventTracker="navigate-to-ticket"
-              mcsEventCategory="ticket"
-              mcsEventLabel="ticket-listing-page">{{ row.shortDescription }}</a>
+                mcsId="select-ticket"
+                mcsEventTracker="navigate-to-ticket"
+                mcsEventCategory="ticket"
+                mcsEventLabel="ticket-listing-page">
+                  {{ row.shortDescription }}
+              </a>
             </mcs-data-cell>
           </ng-container>
   
           <!-- Last Updated Date Column -->
           <ng-container mcsColumnDef="lastUpdatedDate">
             <mcs-header-cell *mcsHeaderCellDef hidden-small>
-              {{ columnSettings.lastUpdatedDate.text }}
+              Updated On
             </mcs-header-cell>
             <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
-              {{ row.updatedOn | mcsStdDateFormat }}
+              {{ row.updatedOn | mcsStdDateFormat: 'friendly' }}
             </mcs-data-cell>
           </ng-container>
   

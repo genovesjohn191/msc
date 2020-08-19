@@ -98,7 +98,7 @@
         "cloudHealthLinkLabel": "View in CloudHealth"
       },
       "azureTicketsWidget": {
-        "title": "Azure Tickets",
+        "title": "Open Azure Tickets",
         "newTicketLinkLabel": "New",
         "moreTicketsLinkLabel": "View All",
         "empty": "No open tickets."

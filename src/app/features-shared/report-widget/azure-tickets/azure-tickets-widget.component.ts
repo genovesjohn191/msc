@@ -25,7 +25,9 @@ import {
   McsTicket,
   McsQueryParam,
   McsApiCollection,
-  RouteKey
+  RouteKey,
+  TicketStatus,
+  ticketStatusText
 } from '@app/models';
 import {
   CommonDefinition,
@@ -45,7 +47,7 @@ import {
 })
 
 export class AzureTicketsWidgetComponent extends McsTableListingBase<McsTicket>implements OnInit, OnDestroy {
-
+  private _ticketStatusIconMap = new Map<string, string>();
   private _destroySubject = new Subject<void>();
   private _maxTicketsToDisplay: number = 5;
 
@@ -68,6 +70,7 @@ export class AzureTicketsWidgetComponent extends McsTableListingBase<McsTicket>i
     private _apiService: McsApiService,
     private _navigationService: McsNavigationService) {
       super(_injector, _changeDetectorRef, { dataChangeEvent: McsEvent.dataChangeTickets });
+      this.setTicketStatusIconMap();
   }
 
   public ngOnInit() {
@@ -117,9 +120,22 @@ export class AzureTicketsWidgetComponent extends McsTableListingBase<McsTicket>i
     this._navigationService.navigateTo(RouteKey.TicketCreate);
   }
 
+  public getStatusIcon(status: string): string {
+    return this._ticketStatusIconMap.get(status);
+  }
+
   protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsTicket>> {
     // These will be updated once we have the correct filter...
     query.pageSize = this._maxTicketsToDisplay;
     return this._apiService.getTickets(query);
+  }
+
+  private setTicketStatusIconMap(): void {
+    this._ticketStatusIconMap.set(ticketStatusText[TicketStatus.Closed], CommonDefinition.ASSETS_SVG_STATE_SUSPENDED);
+    this._ticketStatusIconMap.set(ticketStatusText[TicketStatus.New], CommonDefinition.ASSETS_SVG_STATE_RUNNING);
+    this._ticketStatusIconMap.set(ticketStatusText[TicketStatus.InProgress], CommonDefinition.ASSETS_SVG_STATE_RESTARTING);
+    this._ticketStatusIconMap.set(ticketStatusText[TicketStatus.AwaitingCustomer], CommonDefinition.ASSETS_SVG_STATE_RESTARTING);
+    this._ticketStatusIconMap.set(ticketStatusText[TicketStatus.WaitForRfo], CommonDefinition.ASSETS_SVG_STATE_RESTARTING);
+    this._ticketStatusIconMap.set(ticketStatusText[TicketStatus.WaitingForTaskCompletion], CommonDefinition.ASSETS_SVG_STATE_RESTARTING);
   }
 }
