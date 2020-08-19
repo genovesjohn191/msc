@@ -41,7 +41,8 @@ import {
   Guid,
   formatStringToPhoneNumber,
   getCurrentDate,
-  addDaysToDate
+  addDaysToDate,
+  pluck
 } from '@app/utilities';
 import { McsFormGroupDirective } from '@app/shared';
 import {
@@ -58,10 +59,10 @@ import {
   McsOrderItemCreate,
   OrderIdType,
   McsAzureService,
-  Category,
+  AzureProducts,
   Complexity,
   FormResponse,
-  categoryText,
+  azureProductsText,
   complexityText,
   formResponseText,
   DeliveryType
@@ -71,13 +72,15 @@ import { MsRequestChangeService } from './ms-request-change.service';
 const MAX_DESCRIPTION_LENGTH = 850;
 const VISIBILE_ROWS = 3;
 const MS_REQUEST_SERVICE_CHANGE = Guid.newGuid().toString();
+const MULTI_SELECT_LIMIT = 5;
+
 type MsRequestChangeProperties = {
-  category: number;
   complexity: string;
+  category: string;
+  resourceIdent: string;
   phoneConfirmationRequired: boolean;
   customerReferenceNumber: string;
   requestDescription: string;
-  resourceIdent: string;
 };
 
 @Component({
@@ -91,11 +94,12 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
 
   public fgMsServiceChange: FormGroup;
   public fcMsService: FormControl;
-  public fcCategory: FormControl;
+  public fcAzureProduct: FormControl;
   public fcComplexity: FormControl;
-  public fcResourceIdentifier: FormControl;
+  public fcAzureResource: FormControl;
 
-  public categoryOptions$: Observable<McsOption[]>;
+  public azureProductOptions$: Observable<McsOption[]>;
+  public azureResourcesOptions$: Observable<McsOption[]>;
   public complexityOptions$: Observable<McsOption[]>;
   public contactOptions$: Observable<McsOption[]>;
   public azureServices$: Observable<McsOption[]>;
@@ -115,8 +119,8 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
     return getSafeProperty(this._formGroup, (obj) => obj.isValid());
   }
 
-  public get categoryEnum(): any {
-    return Category;
+  public get azureProductsEnum(): any {
+    return AzureProducts;
   }
 
   public get complexityEnum(): any {
@@ -129,6 +133,15 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
 
   public get maxDescriptionLength(): number {
     return MAX_DESCRIPTION_LENGTH;
+  }
+
+  public get maxSelectionLimit(): number {
+    return MULTI_SELECT_LIMIT;
+  }
+
+
+  public get isOtherProductSelected(): boolean {
+    return this.fcAzureProduct.value === AzureProducts.Other;
   }
 
   public get descriptionVisibleRows(): number {
@@ -176,7 +189,8 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
   }
 
   public ngOnInit(): void {
-    this._subscribeToCategoryOptions();
+    this._subscribeToAzureProductOptions();
+    this._subscribeToAzureResources();
     this._subscribeToContactOptions();
     this._subscribeToSubscriptions();
     this._subscribeToSmacSharedFormConfig();
@@ -242,7 +256,7 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
   /**
    * Maps enumeration to Options Array
    */
-  private _mapEnumToOption(enumeration: Category, enumText: any): McsOption[] {
+  private _mapEnumToOption(enumeration: AzureProducts, enumText: any): McsOption[] {
     let options = Object.values(enumeration)
       .filter((objValue) => (typeof objValue === 'number'))
       .map(objValue => createObject(McsOption, { text: enumText[objValue], value: objValue }));
@@ -254,13 +268,13 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
    */
   private _registerFormGroup(): void {
     this.fcMsService = new FormControl('', [CoreValidators.required]);
-    this.fcCategory = new FormControl('', [CoreValidators.required]);
-    this.fcResourceIdentifier = new FormControl('', [CoreValidators.required]);
+    this.fcAzureProduct = new FormControl('', [CoreValidators.required]);
+    this.fcAzureResource = new FormControl('', [CoreValidators.required]);
 
     this.fgMsServiceChange = this._formBuilder.group({
       fcMsService: this.fcMsService,
-      fcCategory: this.fcCategory,
-      fcResourceIdentifier: this.fcResourceIdentifier
+      fcAzureProduct: this.fcAzureProduct,
+      fcAzureResource: this.fcAzureResource
     });
   }
 
@@ -283,6 +297,10 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
    * Event listener whenever there is a change in the form
    */
   private _onServiceRequestDetailsFormChange(): void {
+    let selectedResources = pluck(this.fcAzureResource.value, 'azureId');
+    let resourcesString = selectedResources.join();
+    resourcesString = isNullOrEmpty(resourcesString) ? null : resourcesString.replace(/,/gi, `/n/n`);
+
     this._msRequestChangeService.createOrUpdateOrder(
       createObject(McsOrderCreate, {
         items: [
@@ -293,12 +311,12 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
             deliveryType: DeliveryType.Standard, // set to Standard as default
             schedule: addDaysToDate(getCurrentDate(), 1),
             properties: {
-              category: categoryText[this.fcCategory.value],
               complexity: complexityText[Complexity.Simple], // temporarily set complexity value to simple by default
+              category: azureProductsText[this.fcAzureProduct.value],
+              resourceIdent: resourcesString,
               phoneConfirmationRequired: this._smacSharedDetails.contactAfterChange,
               customerReferenceNumber: this._smacSharedDetails.referenceNumber,
-              requestDescription: this._smacSharedDetails.notes,
-              resourceIdent: this.fcResourceIdentifier.value
+              requestDescription: this._smacSharedDetails.notes
             } as MsRequestChangeProperties
           })
         ]
@@ -309,8 +327,8 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
   /**
    * Initialize the options for category control
    */
-  private _subscribeToCategoryOptions(): void {
-    this.categoryOptions$ = of(this._mapEnumToOption(this.categoryEnum, categoryText));
+  private _subscribeToAzureProductOptions(): void {
+    this.azureProductOptions$ = of(this._mapEnumToOption(this.azureProductsEnum, azureProductsText));
   }
 
   /**
@@ -364,6 +382,26 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
       tap(() => this._eventDispatcher.dispatch(McsEvent.serviceRequestChangeSelectedEvent))
     );
   }
+
+  /**
+   * Subscribe and get Azure Resources from API
+   */
+  private _subscribeToAzureResources(): void {
+    this.azureResourcesOptions$ = this._apiService.getAzureResources().pipe(
+      map((resourcesCollection) => {
+        let resources = getSafeProperty(resourcesCollection, (obj) => obj.collection) || [];
+        let resourceOptions: McsOption[] = [];
+        resources.forEach((resource) => {
+          let textValue = `${resource.name}`;
+          resourceOptions.push(createObject(McsOption, { text: textValue, value: resource }));
+        });
+        return resourceOptions;
+      }),
+      shareReplay(1),
+      tap(() => this._eventDispatcher.dispatch(McsEvent.serviceRequestChangeSelectedEvent))
+    );
+  }
+
 
   /**
    * Register all external event listeners

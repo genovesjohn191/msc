@@ -73,7 +73,7 @@ const SELECT_ITEM_OFFSET = 7;
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
-    { provide: McsFormFieldControlBase, useExisting: SelectComponent }
+    { provide: McsFormFieldControlBase, useExisting: SelectComponent },
   ],
   animations: [
     animateFactory.transformVertical
@@ -153,6 +153,11 @@ export class SelectComponent extends McsFormFieldControlBase<any>
   public get tabindex(): number { return this._tabindex; }
   public set tabindex(value: number) { this._tabindex = coerceNumber(value); }
   private _tabindex: number = 0;
+
+  @Input()
+  public get multiSelectLimit(): number { return this._multiSelectLimit; }
+  public set multiSelectLimit(value: number) { this._multiSelectLimit = coerceNumber(value); }
+  private _multiSelectLimit: number = 0;
 
   /**
    * Base value implementation of value accessor
@@ -417,11 +422,67 @@ export class SelectComponent extends McsFormFieldControlBase<any>
   private _selectMultipleOptions(...options: OptionComponent[]): void {
     if (isNullOrEmpty(options)) { return; }
 
-    options.forEach((item) => item.toggle());
-    this.value = this.selectedOptions && this.selectedOptions.map((selectedOption) => selectedOption.value);
-    this.stateChanges.next();
+    options.forEach((item) => {
+        this._checkMultiSelectOptionLimit(item);
+    });
   }
 
+  /**
+   * Checks whether the multiselect dropdown has reached its limit
+   * @param option Item to checked
+   */
+  private _checkMultiSelectOptionLimit(option: OptionComponent): void {
+    let isBelowSelectionLimit = this.selectedOptions.length < this.multiSelectLimit || this.multiSelectLimit === 0;
+
+    if (isBelowSelectionLimit) {
+      option.toggle();
+      this.value = this.selectedOptions && this.selectedOptions.map((selectedOption) => selectedOption.value);
+      this._disableNotSelectedOptions();
+      this.stateChanges.next();
+    }  else {
+      if (option.selected === true) {
+        this._removeFromSelectedOptions(option);
+      }
+    }
+  }
+
+  /**
+   * Disable other options that are not selected on the multi select dropdown when limit was reached
+   */
+  private _disableNotSelectedOptions(): void {
+    if (this.selectedOptions.length === this.multiSelectLimit) {
+      this._options.forEach((_option) => {
+        _option.disabled = (this.selectedOptions.find((selectedOption) => selectedOption.value === _option.value)) ?
+        false : true;
+      });
+    }
+  }
+
+  /**
+   * Removes an option from the list of options selected
+   * @param option Item to be removed
+   */
+  private _removeFromSelectedOptions(option: OptionComponent): void {
+    let optionToRemove = this.selectedOptions.find((selectedOption) => selectedOption.value === option.value);
+    if (!isNullOrEmpty(optionToRemove)) {
+      let optionIndex = this.selectedOptions.indexOf(optionToRemove);
+      if (optionIndex > -1) {
+        this.selectedOptions.splice(optionIndex);
+      }
+      option.toggle();
+      this._enableAllOptions();
+      this.stateChanges.next();
+    }
+  }
+
+  /**
+   * Enable multiselect options
+   */
+  private _enableAllOptions(): void {
+    this._options.forEach((_option) => {
+      _option.disabled = false;
+    });
+  }
   /**
    * Selects on single entity and always close the panel
    * @param option Item to be selected

@@ -17,6 +17,8 @@ $option-selected-color: $selected-bg-color;
 
   &.option-disabled {
     cursor: default;
+    font-style: italic;
+    opacity: 0.5;
   }
 
   &.option-selected:not(.option-checkable) {

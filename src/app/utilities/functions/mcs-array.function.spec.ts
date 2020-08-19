@@ -7,7 +7,8 @@ import {
   getArrayCount,
   getUniqueRecords,
   isArray,
-  moveRecordByIndex
+  moveRecordByIndex,
+  pluck
 } from './mcs-array.function';
 
 // Dummy class
@@ -347,6 +348,24 @@ describe('ARRAY Functions', () => {
     it(`should return false when supplied object is not an array`, () => {
       let listItems: TestStructure;
       expect(isArray(listItems)).toBeFalsy();
+    });
+  });
+
+  describe('pluck()', () => {
+    it(`should return an array of values when supplied with valid property name and array source`, () => {
+      let listItems: TestStructure[] = [
+        new TestStructure('1', 'test1'),
+        new TestStructure('2', 'test2')
+      ];
+      const [item1, item2] = listItems;
+
+      let expectedValues = [item1.value, item2.value];
+      expect(pluck(listItems, 'value')).toEqual(expectedValues);
+    });
+
+    it(`should return undefined when supplied parameters are invalid`, () => {
+      let listItems: TestStructure[];
+      expect(pluck(listItems, null)).toBeUndefined();
     });
   });
 });

@@ -50,7 +50,7 @@ const MCS_DATE_FORMATS: NgxMatDateFormats = {
     dateInput: 'LL'
   },
   display: {
-    dateInput: 'MM/DD/YYYY hh:mm A',
+    dateInput: 'DD/MM/YYYY hh:mm A',
     monthYearLabel: 'MMM YYYY',
     dateA11yLabel: 'LL',
     monthYearA11yLabel: 'MMMM YYYY',
