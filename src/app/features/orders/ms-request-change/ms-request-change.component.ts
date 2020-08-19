@@ -41,7 +41,6 @@ import {
   Guid,
   formatStringToPhoneNumber,
   getCurrentDate,
-  addDaysToDate,
   pluck
 } from '@app/utilities';
 import { McsFormGroupDirective } from '@app/shared';
@@ -309,7 +308,7 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
             referenceId: MS_REQUEST_SERVICE_CHANGE,
             serviceId: this.fcMsService.value.serviceId,
             deliveryType: DeliveryType.Standard, // set to Standard as default
-            schedule: addDaysToDate(getCurrentDate(), 1),
+            schedule: getCurrentDate(),
             properties: {
               complexity: complexityText[Complexity.Simple], // temporarily set complexity value to simple by default
               category: azureProductsText[this.fcAzureProduct.value],
