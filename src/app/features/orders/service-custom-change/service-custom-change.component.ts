@@ -30,7 +30,8 @@ import {
   isNullOrEmpty,
   createObject,
   unsubscribeSafely,
-  formatStringToPhoneNumber
+  formatStringToPhoneNumber,
+  getCurrentDate
 } from '@app/utilities';
 import {
   McsOrderWizardBase,
@@ -48,7 +49,8 @@ import {
   McsOrderServiceCustomChange,
   McsOption,
   McsAccount,
-  RouteKey
+  RouteKey,
+  DeliveryType
 } from '@app/models';
 import {
   OrderDetails,
@@ -185,7 +187,8 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
         billingCostCentreId: orderDetails.billingCostCentreId
       }),
       OrderRequester.Billing,
-      orderDetails.deliveryType
+      orderDetails.deliveryType,
+      orderDetails.schedule
     );
     this._customChangeService.submitOrderRequest();
   }
@@ -245,6 +248,8 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
             serviceId: this.fcService.value,
             itemOrderType: OrderIdType.ServiceCustomChange,
             referenceId: SERVICE_CUSTOM_CHANGE,
+            deliveryType: DeliveryType.Standard, // set to Standard as default
+            schedule: getCurrentDate(),
             properties: createObject(McsOrderServiceCustomChange, {
               change: this.fcChangeDescription.value,
               changeObjective: this.fcChangeObjective.value,
