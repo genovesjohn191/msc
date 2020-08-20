@@ -2,13 +2,11 @@
   <input matInput [ngxMatDatetimePicker]="picker" [placeholder]="label"
     [min]="minDate"
     [max]="maxDate"
-    [readOnly]="true"
-    [disabled]="disabled"
+    disabled
     [required]="required"
     (dateInput)="onDateTimePickerChange($event)"
     color="primary">
   <mat-datepicker-toggle
-   [disabled]="disabled"
    matSuffix [for]="picker">
   </mat-datepicker-toggle>
   <ngx-mat-datetime-picker #picker
@@ -18,6 +16,7 @@
   [showSeconds]="false"
   [stepHour]="stepHour"
   [stepMinute]="stepMinute"
-  [enableMeridian]="true">
+  [enableMeridian]="true"
+  disabled="false">
   </ngx-mat-datetime-picker>
 </mat-form-field>

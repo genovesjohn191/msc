@@ -23,6 +23,18 @@ $material-default-gray: rgba(0, 0, 0, 0.38);
 .mat-form-field-wrapper {
     max-width: 198px!important;
 }
+
+.mat-form-field-appearance-legacy.mat-form-field-disabled .mat-form-field-underline {
+  background-position: 0!important;;
+  background-color: $color-black!important;;
+}
+.mat-form-field-appearance-legacy.mat-form-field-disabled .mat-form-field-underline {
+  background-image: none!important;
+}
+.mat-input-element:disabled, .mat-form-field-type-mat-native-select.mat-form-field-disabled .mat-form-field-infix::after{
+  color: $color-black!important;
+}
+
 .datetimepicker-wrapper {
     margin: $space-xsmall;
 }
