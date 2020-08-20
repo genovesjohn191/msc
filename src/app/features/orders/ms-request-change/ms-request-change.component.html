@@ -81,9 +81,9 @@
                   </mcs-error>
                 </mcs-form-field>
                 <ng-container *ngIf="isOtherProductSelected">
-                  <p [mcsGreyedOut]="true">
-                    {{ 'orderMsRequestChange.detailsStep.otherAdvisoryLabel' | translate }}
-                  </p>
+                  <span [mcsGreyedOut]="true"
+                    [innerHTML]="('orderMsRequestChange.detailsStep.otherAdvisoryLabel' | translate)">
+                  </span>
                 </ng-container>
               </mcs-item>
            
