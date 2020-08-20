@@ -2,4 +2,8 @@
 
 .grid-wrapper {
   @include display-flex(column);
+
+  @include print() {
+    display: inherit !important;
+  }
 }

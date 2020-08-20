@@ -55,6 +55,11 @@ html {
   body {
     height: 100%;
     overflow: hidden;
+    @include print() {
+      height: auto;
+      overflow-y: visible;
+    }
+
     font-family: $font-default;
     color: $color-black;
     @include font-size($font-size-default);
@@ -62,4 +67,19 @@ html {
       @include font-size($font-size-small);
     }
   }
+
+  .hide-on-print {
+    @include print() {
+      display: none !important;
+    }
+  }
+  
+  img {
+    @include print() {
+      page-break-before: auto !important;
+      page-break-after: auto !important;
+      page-break-inside: avoid !important;
+    }
+  }
+  
 }

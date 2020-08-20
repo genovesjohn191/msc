@@ -17,6 +17,9 @@ $scrollable-link-label-color: $color-primary-01;
   @include flex(auto);
   position: relative;
   overflow: hidden;
+  @include print() {
+    overflow: visible !important;
+  }
 }
 
 .scrollable-link-wrapper {
@@ -50,4 +53,9 @@ $scrollable-link-label-color: $color-primary-01;
   @include display-flex(column);
   @include flex(1);
   padding: $scrollable-link-padding;
+
+  @include print() {
+    overflow: visible !important;
+    padding: 0;
+  }
 }

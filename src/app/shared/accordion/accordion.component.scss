@@ -66,6 +66,9 @@ $accordion-panel-content-padding: $space-medium 22px;
 
   .accordion-content-panel-wrapper {
     overflow: hidden;
+    @include print() {
+      overflow: visible !important;
+    }
 
     .accordion-content-panel {
       @include flex(1 1 auto);

@@ -2,7 +2,7 @@
 <router-outlet *isExperimental="false"></router-outlet>
 <mcs-grid class="full-height" *isExperimental="true">
   <mcs-grid-row class="full-height">
-    <mcs-grid-column class="vertical-nav-wrapper" [ngClass]="showNav ? 'expanded': 'collapsed'">
+    <mcs-grid-column class="vertical-nav-wrapper hide-on-print" [ngClass]="showNav ? 'expanded': 'collapsed'">
       <div class="scroller">
         <mcs-navigation></mcs-navigation>
       </div>
