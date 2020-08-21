@@ -39,12 +39,23 @@ $product-panel-color: $color-grey-08;
   max-width: $product-max-width;
   max-height: 100%;
   overflow: hidden;
+  @include print() {
+    overflow: visible !important;
+    position: inherit !important;
+    max-height: inherit;
+  }
 
   // We need to set the margin of headings so that
   // when the product displays everything will be auto adjust
   // Note: This is only applicable for product catalog
   h1, h2, h3, h4, h5, h6 {
     margin-bottom: $space-small;
+  }
+
+  h1 {
+    @include print() {
+      margin-top: $space-large;
+    }
   }
 
   sup {
@@ -61,6 +72,9 @@ $product-panel-color: $color-grey-08;
   position: relative;
   max-height: $product-catalog-description-max-height;
   overflow: hidden;
+  @include print() {
+    overflow: visible !important;
+  }
 
   &.expanded {
     height: auto;
@@ -71,6 +85,9 @@ $product-panel-color: $color-grey-08;
   .product-catalog-shorted-text {
     white-space: nowrap;
     overflow: hidden;
+    @include print() {
+      overflow: visible !important;
+    }
     text-overflow: ellipsis;
   }
 
@@ -105,6 +122,10 @@ $product-panel-color: $color-grey-08;
 
 .product-catalog-widget-wrapper {
   float: right;
+  @include print() {
+    float: none;
+    margin-left: 0;
+  }
   @include set-items-interval($space-medium);
   width: 100%;
   max-width: $product-catalog-widget-size;
@@ -141,5 +162,17 @@ $product-panel-color: $color-grey-08;
     h2:before {
       content: counter(product-catalog-item-count) ". ";
     }
+  }
+}
+
+.scrollable-link-body {
+  @include print() {
+    margin-left: $space-large;
+  }
+}
+
+.scrollable-link-group-header-wrapper {
+  @include print() {
+    display: none !important;
   }
 }

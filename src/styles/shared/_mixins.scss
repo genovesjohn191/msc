@@ -5,6 +5,7 @@
 //   @include breakpoint(large) { width: 60%; }
 //   @include breakpoint(medium) { width: 80%; }
 //   @include breakpoint(small) { width: 95%; }
+//   @include breakpoint(xsmall) { width: 100%; }
 // }
 @mixin breakpoint($point) {
   @if $point == large {
@@ -22,6 +23,16 @@
   @else {
     @media screen and (max-width: $point) { @content; }
   }
+}
+
+// Responsive Print
+// Usage:
+// .page-wrap {
+//   width: 75%;
+//   @include print() { width: 100%; }
+// }
+@mixin print() {
+  @media print { @content; }
 }
 
 // Clearfix

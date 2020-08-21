@@ -27,6 +27,10 @@ $overlay-color: rgba(0,0,0,0.5);
     .scroller {
       height: calc(100vh - #{$top-offset});
       overflow-y: auto;
+
+      @include print() {
+        overflow-y: inherit;
+      }
     }
   }
 
@@ -50,7 +54,11 @@ $overlay-color: rgba(0,0,0,0.5);
       display: none;
 
       @include breakpoint(medium) {
-        display: block;    
+        display: block;
+
+        @include print() {
+          display: none !important;
+        }
       }
     }
   }

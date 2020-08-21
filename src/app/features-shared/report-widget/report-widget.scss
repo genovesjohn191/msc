@@ -3,12 +3,23 @@
 $shadow-effect: 1px solid #e3e3e3;
 
 .widget-box {
+  @include print() {
+    page-break-before: auto !important;
+    page-break-after: auto !important;
+    page-break-inside: avoid !important;
+  }
+
   .widget {
     margin-bottom: $space-large;
     padding: $space-large;
     background-color: $color-white;
     border-bottom: $shadow-effect;
     border-right: $shadow-effect;
+
+    @include print() {
+      border-bottom: none;
+      border-right: none;
+    }
 
     &>h3 {
       margin-bottom: 10px;

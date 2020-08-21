@@ -9,6 +9,9 @@
 
 [overflow-hidden] {
   overflow: hidden !important;
+  @include print() {
+    overflow: visible !important;
+  }
 }
 
 [overflow-visible] {
@@ -17,4 +20,7 @@
 
 [overflow-scroll] {
   overflow: scroll !important;
+  @include print() {
+    overflow: visible !important;
+  }
 }

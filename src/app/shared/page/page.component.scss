@@ -27,6 +27,10 @@ $left-panel-navigation-collapse-padding: 6px;
 
 .page-wrapper {
   position: absolute;
+  @include print() {
+    position: inherit;
+    overflow: visible !important;
+  }
   @include display-flex(row);
   justify-content: flex-start;
   width: 100%;
@@ -34,6 +38,10 @@ $left-panel-navigation-collapse-padding: 6px;
 
   .page-left-wrapper {
     overflow: hidden;
+    @include print() {
+      display: none;
+    }
+
     @include display-flex(column);
     @include flex(none);
     @include transition(0.3s);
@@ -112,6 +120,10 @@ $left-panel-navigation-collapse-padding: 6px;
   .page-right-wrapper {
     position: relative;
     overflow: hidden;
+    @include print() {
+      width: 100%;
+      overflow: visible !important;
+    }
     @include display-flex(column);
     @include flex(auto);
 
@@ -124,6 +136,9 @@ $left-panel-navigation-collapse-padding: 6px;
       height: $top-panel-height;
       background-color: $top-panel-bg-color;
       overflow: hidden;
+      @include print() {
+        overflow: visible !important;
+      }
 
       &.active {
         border-bottom: 1px solid $color-primary-00;
@@ -131,6 +146,10 @@ $left-panel-navigation-collapse-padding: 6px;
 
       .page-header {
         padding: $page-header-padding;
+
+        @include print() {
+          padding: 0 0;
+        }
         @include display-flex(row);
         @include align-items(center);
       }
@@ -140,6 +159,9 @@ $left-panel-navigation-collapse-padding: 6px;
         @include display-flex(row);
         @include align-items(center);
         overflow: hidden;
+        @include print() {
+          overflow: visible !important;
+        }
 
         .top-panel-item-wrapper {
           @include display-flex(row);
@@ -164,6 +186,10 @@ $left-panel-navigation-collapse-padding: 6px;
       @include display-flex(row);
       @include flex(1);
       overflow: hidden;
+      @include print() {
+        display: block !important;
+        overflow: visible !important;
+      }
 
       .content-panel {
         @include flex(1);
@@ -174,6 +200,11 @@ $left-panel-navigation-collapse-padding: 6px;
 
         @include breakpoint(small) {
           padding: $content-small-padding;
+        }
+
+        @include print() {
+          overflow: visible !important;
+          padding: 0;
         }
       }
     }

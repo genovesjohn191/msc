@@ -3,7 +3,9 @@
     {{ 'reports.widgets.azureTicketsWidget.title' | translate }}
     <ng-container *mcsAccessControl="['TicketCreate']">
       <span *mcsExclusiveForAccount="'default'">
-        <a style="float: right;" (click)="onClickNewTicket()"
+        <a style="float: right;"
+          class="hide-on-print"
+          (click)="onClickNewTicket()"
           mcsId
           mcsEventTracker="create-new-ticket"
           mcsEventCategory="ticket"
@@ -91,6 +93,7 @@
         <!-- More -->
         <div style="text-align: center; padding: 10px 0;" *ngIf="hasMore">
           <a
+            class="hide-on-print"
             (click)="navigateToTicketListing()"
             mcsId
             mcsEventTracker="navigate-to-ticket-listing"

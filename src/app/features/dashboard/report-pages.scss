@@ -1,10 +1,27 @@
 @import "../../../styles/shared/base";
 
+mcs-content-panel {
+  background-color: rgb(235, 235, 235);
+  @include print() {
+    background-color: transparent;
+  }
+}
 .report-wrapper {
   .widget-wrapper {
     max-width: 1863px;
     margin-left: auto;
     margin-right: auto;
+
+    @include print() {
+      mcs-grid-row, mcs-grid-column {
+        display: block !important;
+      }
+      mcs-grid-column {
+        width: 721px !important;
+        max-width: 721px !important;
+        margin-top: 0 !important;
+      }
+    }
   }
 
   h1 {

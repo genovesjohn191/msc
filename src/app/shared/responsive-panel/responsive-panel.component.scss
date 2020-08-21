@@ -13,6 +13,9 @@ $responsive-panel-bar-transition-style: cubic-bezier(0.35, 0, 0.25, 1);
 .responsive-panel-wrapper {
   position: relative;
   overflow: hidden;
+  @include print() {
+    overflow: visible !important;
+  }
   @include flex(1);
   @include display-flex(row);
 
@@ -42,6 +45,9 @@ $responsive-panel-bar-transition-style: cubic-bezier(0.35, 0, 0.25, 1);
     @include display-flex(row);
     @include flex(1 1 auto);
     overflow: hidden;
+    @include print() {
+      overflow: visible !important;
+    }
 
     .responsive-panel-action-list {
       position: relative;

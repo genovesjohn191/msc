@@ -99,7 +99,7 @@ $table-information-border-color: $color-grey-05;
 .mcs-table-footer-wrapper {
   mcs-data-empty,
   mcs-data-error,
-  .mcs-data-loading, {
+  .mcs-data-loading {
     margin-top: $space-small;
     @include display-flex(row);
     @include align-items(center);
