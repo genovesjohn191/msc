@@ -135,6 +135,14 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
     }
   }
 
+  public get pageIndex(): number {
+    return getSafeProperty(this._paginator, (obj) => obj.pageIndex, CommonDefinition.PAGE_INDEX_DEFAULT);
+  }
+
+  public get pageSize(): number {
+    return getSafeProperty(this._paginator, (obj) => obj.pageSize, CommonDefinition.PAGE_SIZE_MIN);
+  }
+
   /**
    * Returns true when mode is mobile
    */
@@ -148,6 +156,10 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
   public get isSearching(): boolean {
     return isNullOrEmpty(this._search) ? false :
       this._search.keyword && this._search.keyword.length > 0;
+  }
+
+  public get hasNextPage(): boolean {
+    return this.totalRecordsCount > (this.pageIndex * this.pageSize);
   }
 
   /**
@@ -250,8 +262,8 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
    */
   private _getEntityCollection(): Observable<T[]> {
     return this.getEntityListing({
-      pageIndex: getSafeProperty(this._paginator, (obj) => obj.pageIndex, CommonDefinition.PAGE_INDEX_DEFAULT),
-      pageSize: getSafeProperty(this._paginator, (obj) => obj.pageSize, CommonDefinition.PAGE_SIZE_MIN),
+      pageIndex: this.pageIndex,
+      pageSize: this.pageSize,
       keyword: getSafeProperty(this._search, (obj) => obj.keyword, '')
     }).pipe(
       tap((apiCollection) => this._setTotalRecordsCount(apiCollection.totalCollectionCount)),

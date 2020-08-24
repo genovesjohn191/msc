@@ -154,7 +154,7 @@
 
       <!-- Paginator -->
       <mcs-paginator #paginator
-        [hidden]="isSearching"
+        [hidden]="!hasNextPage"
         [totalCount]="totalRecordsCount">
       </mcs-paginator>
     </div>
