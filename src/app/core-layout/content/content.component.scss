@@ -42,6 +42,10 @@ $overlay-color: rgba(0,0,0,0.5);
     max-width: 100% !important;
   }
 
+  .content-column {
+    height: calc(100vh - #{$top-offset});
+  }
+
   .overlay {
     display: none;
     width: 100vw;
