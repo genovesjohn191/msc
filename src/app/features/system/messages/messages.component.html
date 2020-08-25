@@ -193,7 +193,7 @@
       </mcs-table>
 
       <!-- Paginator -->
-      <mcs-paginator #paginator [hidden]="isSearching" [totalCount]="totalRecordsCount">
+      <mcs-paginator #paginator [hidden]="!hasNextPage" [totalCount]="totalRecordsCount">
       </mcs-paginator>
     </div>
   </mcs-content-panel>

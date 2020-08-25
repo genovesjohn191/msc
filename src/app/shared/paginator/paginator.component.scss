@@ -11,5 +11,6 @@
     @include set-items-interval($space-xsmall, horizontal);
     cursor: pointer;
     border-bottom: 1px solid $color-black;
+    margin-bottom: $space-large;
   }
 }
