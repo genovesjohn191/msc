@@ -72,6 +72,7 @@ const MAX_DESCRIPTION_LENGTH = 850;
 const VISIBILE_ROWS = 3;
 const MS_REQUEST_SERVICE_CHANGE = Guid.newGuid().toString();
 const MULTI_SELECT_LIMIT = 5;
+const LOADING_TEXT = 'loading';
 
 type MsRequestChangeProperties = {
   complexity: string;
@@ -147,6 +148,26 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
     return VISIBILE_ROWS;
   }
 
+  public get enableAzureResources(): boolean {
+    return this._enableAzureResources;
+  }
+  public set enableAzureResources(value: boolean) {
+    this._enableAzureResources = value;
+  }
+  private _enableAzureResources: boolean = false;
+
+  public get loadingText(): string {
+    return LOADING_TEXT;
+  }
+
+  public get loadingInProgress(): boolean {
+    return this._isLoading;
+  }
+  public set loadingInProgress(value: boolean) {
+    this._isLoading = value;
+  }
+  private _isLoading = false;
+
   @ViewChild(McsFormGroupDirective, { static: false })
   public set formGroup(value: McsFormGroupDirective) {
     if (isNullOrEmpty(value)) { return; }
@@ -189,7 +210,6 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
 
   public ngOnInit(): void {
     this._subscribeToAzureProductOptions();
-    this._subscribeToAzureResources();
     this._subscribeToContactOptions();
     this._subscribeToSubscriptions();
     this._subscribeToSmacSharedFormConfig();
@@ -250,6 +270,14 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
   private _onSelectedServiceRequestChange(service: McsAzureService): void {
     if (isNullOrEmpty(service)) { return; }
     this.fcMsService.setValue(service);
+  }
+
+  private _resetAzureResources(service: McsAzureService): void {
+    this._subscribeToAzureResources(service.id);
+  }
+
+   public onServiceChange(service: McsAzureService): void {
+    this._resetAzureResources(service);
   }
 
   /**
@@ -385,7 +413,8 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
   /**
    * Subscribe and get Azure Resources from API
    */
-  private _subscribeToAzureResources(): void {
+  private _subscribeToAzureResources(subscriptionId: string = null): void {
+    this.loadingInProgress = true;
     this.azureResourcesOptions$ = this._apiService.getAzureResources().pipe(
       map((resourcesCollection) => {
         let resources = getSafeProperty(resourcesCollection, (obj) => obj.collection) || [];
@@ -397,7 +426,11 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
         return resourceOptions;
       }),
       shareReplay(1),
-      tap(() => this._eventDispatcher.dispatch(McsEvent.serviceRequestChangeSelectedEvent))
+      tap(() => {
+         this._eventDispatcher.dispatch(McsEvent.serviceRequestChangeSelectedEvent);
+         this.enableAzureResources = true;
+         this.loadingInProgress = false;
+      })
     );
   }
 

@@ -43,6 +43,7 @@
                     mcsEventCategory="order"
                     mcsEventLabel="ms-service-change-request"
                     [formControl]="fcMsService"
+                    (selectionChange)="onServiceChange($event)"
                     [placeholder]="'orderMsRequestChange.detailsStep.servicePlaceholder' | translate">
                     <mcs-option *ngFor="let azureService of azureServices$ | async"
                       [value]="azureService.value"
@@ -99,6 +100,7 @@
                     [mcsContextualHelp]="'orderMsRequestChange.detailsStep.azureResourcesContextHelp' | translate"
                     [placeholder]="'orderMsRequestChange.detailsStep.azureResourcesPlaceHolder' | translate"
                     multiple
+                    [disabled]="!enableAzureResources"
                     [multiSelectLimit]="maxSelectionLimit">
                     <mcs-search mcsSelectSearch></mcs-search>
                     <mcs-option *ngFor="let resource of azureResourcesOptions$ | async" [value]="resource.value">
@@ -110,6 +112,11 @@
                       </span>
                     </mcs-option>
                   </mcs-select>
+                  <ng-container *ngIf="loadingInProgress">
+                    <mcs-loader size="small"
+                      [mcsTooltip]="loadingText"
+                      mcsTooltipPosition="right"></mcs-loader>
+                  </ng-container>
                   <mcs-error mcsError errorState="required">
                     {{ 'orderMsRequestChange.errors.resourceIdentifierRequired' | translate }}
                   </mcs-error>

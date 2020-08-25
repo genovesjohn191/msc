@@ -1400,12 +1400,16 @@ export class McsApiService {
     );
   }
 
-  public getAzureResources(): Observable<McsApiCollection<McsAzureResource>> {
-    return this._azureResourcesApi.getAzureResources().pipe(
+  public getAzureResources(query?: McsQueryParam): Observable<McsApiCollection<McsAzureResource>> {
+    let azureResources = isNullOrEmpty(query) ?
+    this._azureResourceRepository.getAll() :
+    this._azureResourceRepository.filterBy(query);
+
+    return azureResources.pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getAzureResources'))
       ),
-      map((response) => this._mapToCollection(response.content, response.totalCount))
+      map((response) => this._mapToCollection(response, this._azureResourceRepository.getTotalRecordsCount()))
     );
   }
 
