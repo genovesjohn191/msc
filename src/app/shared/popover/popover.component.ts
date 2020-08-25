@@ -44,7 +44,7 @@ export class PopoverComponent implements OnInit, AfterViewInit, OnDestroy {
   public maxWidth;
 
   @Input()
-  public priority: 'low' | 'medium' | 'high';
+  public priority: 'low' | 'medium' | 'high' | 'max';
 
   @Input()
   public padding: 'default' | 'narrow' | 'none';

@@ -149,10 +149,10 @@ $direction-breakpoints: (
 ) !default;
 
 // Z-index
-$zindex-main-loader: 1600;
-$zindex-header: 1500;
-$zindex-navigation: 1400;
-$zindex-content: 1300;
+$zindex-main-loader: 2100;
+$zindex-header: 2000;
+$zindex-navigation: 1900;
+$zindex-content: 1000;
 
 $zindex-sliding-panel: 800;
 $zindex-select: 800;
@@ -162,10 +162,11 @@ $zindex-loader: 900;
 $zindex-popover-low: 500;
 $zindex-popover-medium: 1000;
 $zindex-popover-high: 1500;
+$zindex-popover-max: 2000;
 
 // Top priorities
-$zindex-overlay: 2000;
-$zindex-notifications: 2000;
+$zindex-overlay: 2500;
+$zindex-notifications: 2400;
 
 // Opacity
 $disabled-opacity: 0.65;
