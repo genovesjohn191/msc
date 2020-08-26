@@ -38,6 +38,7 @@
 @import "classes/mcs-global-element";
 @import "classes/mcs-overlay";
 @import "classes/mcs-scrollbar";
+@import "classes/mcs-print";
 @import "classes/mcs-ripple";
 @import "classes/mcs-image";
 @import "classes/mcs-cog-action";
@@ -68,18 +69,7 @@ html {
     }
   }
 
-  .hide-on-print {
-    @include print() {
-      display: none !important;
-    }
-  }
-  
   img {
-    @include print() {
-      page-break-before: auto !important;
-      page-break-after: auto !important;
-      page-break-inside: avoid !important;
-    }
+    @extend .no-break-on-print;
   }
-  
 }
