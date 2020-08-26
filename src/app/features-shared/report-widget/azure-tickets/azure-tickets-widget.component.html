@@ -45,7 +45,7 @@
           <!-- Last Updated Date Column -->
           <ng-container mcsColumnDef="lastUpdatedDate">
             <mcs-header-cell *mcsHeaderCellDef hidden-small>
-              Updated On
+              Last Updated
             </mcs-header-cell>
             <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
               {{ row.updatedOn | mcsStdDateFormat: 'friendly' }}

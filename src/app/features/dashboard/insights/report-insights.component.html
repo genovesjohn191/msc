@@ -3,9 +3,9 @@
   <mcs-content-panel *mcsContentPanelDef>
     <div class="report-wrapper limited-wide-view">
       <div class="content-wrapper">
-        <h1>1. Costs</h1>
-        <br />
         <div class="chart no-break-on-print">
+          <h1>1. Costs</h1>
+          <br />
           <h2>1.1 Services Overview</h2>
           <br />
           <mcs-bar-chart [data]="data$ | async" [stacked]="true" yLabel="Total Cost(s)" xLabel="Months"></mcs-bar-chart>
@@ -18,9 +18,9 @@
           <mcs-bar-chart [data]="data2$ | async" [stacked]="true" yLabel="# VMs by Usage" xLabel="Months"></mcs-bar-chart>
         </div>
 
-        <h1>2. Tech Review</h1>
-        <br />
         <div class="chart no-break-on-print">
+          <h1>2. Tech Review</h1>
+          <br />
           <h2>2.2 Performance and Scalability</h2>
           <br />
           <mcs-bar-chart [data]="data3$ | async" yLabel="Avg % Used" xLabel="Days" [yAxisDataFormatter]="percentFormatter"></mcs-bar-chart>
