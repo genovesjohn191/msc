@@ -8,8 +8,11 @@
 //   @include breakpoint(xsmall) { width: 100%; }
 // }
 @mixin breakpoint($point) {
-  @if $point == large {
-    @media screen and (min-width: $large-platform-width) { @content; }
+  @if $point == wide {
+    @media screen and (min-width: $wide-platform-min-width) { @content; }
+  }
+  @else if $point == large {
+    @media screen and (max-width: $large-platform-width) { @content; }
   }
   @else if $point == medium {
     @media screen and (max-width: $medium-platform-width) { @content; }

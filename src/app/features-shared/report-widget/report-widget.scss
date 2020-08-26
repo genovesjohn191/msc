@@ -2,7 +2,7 @@
 
 $shadow-effect: 1px solid #e3e3e3;
 
-.widget-box {  
+.widget-box {
   .widget {
     margin-bottom: $space-large;
     padding: $space-large;
@@ -11,6 +11,9 @@ $shadow-effect: 1px solid #e3e3e3;
     border-right: $shadow-effect;
 
     @include print() {
+      page-break-before: auto !important;
+      page-break-after: auto !important;
+      page-break-inside: avoid !important;
       border-bottom: none;
       border-right: none;
     }

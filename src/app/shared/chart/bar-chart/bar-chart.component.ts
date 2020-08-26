@@ -23,7 +23,6 @@ import {
   ApexLegend,
   ApexTitleSubtitle
 } from 'ng-apexcharts';
-import { Title } from '@angular/platform-browser';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -86,20 +85,50 @@ export class BarChartComponent implements OnChanges {
     private _changeDetectorRef: ChangeDetectorRef
   ) {
     this.chartOptions = {
+      series: [],
+      chart: {
+        type: 'bar',
+        stacked: this.stacked,
+        height: 500
+      },
+      xaxis: {
+        categories: [],
+        title: {
+          text: this.xLabel
+        },
+        labels: {
+          formatter: this.xAxisDataFormatter
+        }
+      },
+      yaxis: {
+        title: {
+          text: this.yLabel
+        },
+        labels: {
+          formatter: this.yAxisDataFormatter
+        }
+      },
+      plotOptions: {
+        bar: {
+          horizontal: this.isHorizontal,
+          dataLabels: {
+            position: 'top'
+          }
+        }
+      },
+      dataLabels: {
+        enabled: this.dataLabels,
+        offsetX: -6,
+        style: {
+          fontSize: '11px',
+          colors: ['#fff']
+        }
+      },
       legend: {
         position: 'top',
         horizontalAlign: 'left',
         offsetX: 40
-      },
-      chart: {
-        type: 'bar',
-        stacked: this.stacked
-      },
-      stroke: {
-        show: true,
-        width: 1,
-        colors: ['#fff']
-      },
+      }
     };
   }
 
