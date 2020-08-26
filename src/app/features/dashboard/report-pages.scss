@@ -7,6 +7,13 @@ mcs-content-panel {
   }
 }
 .report-wrapper {
+  
+  @include print() {
+    width: 721px !important;
+    max-width: 721px !important;
+  }
+
+
   .widget-wrapper {
     max-width: 1863px;
     margin-left: auto;
@@ -26,10 +33,20 @@ mcs-content-panel {
 
   h1 {
     color: $color-primary-01;
+
+    @include print() {
+      margin-top: $space-medium;
+    }
   }
 
   .chart {
+    width: 1100px;
     padding: 30px;
+
+    @include print() {
+      width: 1100px;
+      padding: 0;
+    }
     margin-bottom: 20px;
     background-color: $color-white;
   }
