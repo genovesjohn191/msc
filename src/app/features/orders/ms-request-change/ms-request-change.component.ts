@@ -415,7 +415,7 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
    */
   private _subscribeToAzureResources(subscriptionId: string = null): void {
     this.loadingInProgress = true;
-    this.azureResourcesOptions$ = this._apiService.getAzureResources().pipe(
+    this.azureResourcesOptions$ = this._apiService.getAzureResourcesBySubscriptionId(subscriptionId).pipe(
       map((resourcesCollection) => {
         let resources = getSafeProperty(resourcesCollection, (obj) => obj.collection) || [];
         let resourceOptions: McsOption[] = [];

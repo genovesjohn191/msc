@@ -1413,6 +1413,15 @@ export class McsApiService {
     );
   }
 
+  public getAzureResourcesBySubscriptionId(subscriptionId?: string): Observable<McsApiCollection<McsAzureResource>> {
+    return this._azureResourcesApi.getAzureResourcesBySubscriptionId(subscriptionId).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getAzureResources'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
   public getAzureServices(): Observable<McsApiCollection<McsAzureService>> {
     return this._azureServicesApi.getAzureServices().pipe(
       catchError((error) =>

@@ -63,7 +63,7 @@
         mcsPopover #notificationsPopover="mcsPopover"
         (onOpen)="onOpenNotificationPanel(notifications)"
         maxWidth="350px" padding="none"
-        placement="bottom" orientation="left" theme="light" priority="high"
+        placement="bottom" orientation="left" theme="light" priority="max"
         [content]="notificationsContent">
 
         <mcs-icon [key]="bellIconKey" size="medium" color="light"></mcs-icon>
@@ -96,7 +96,7 @@
 
         mcsPopover #userPopover="mcsPopover"
         padding="none" placement="bottom" orientation="left"
-        theme="dark" priority="high"
+        theme="dark" priority="max"
         [content]="userSettings" maxWidth="500px"></mcs-icon>
     </mcs-item>
   </div>

@@ -90,7 +90,13 @@
            
               <!-- Azure Resources -->
               <mcs-item orientation="block">
-                <span align-self-start>{{ 'orderMsRequestChange.detailsStep.azureResourcesLabel' | translate }}</span>
+                <span align-self-start>{{ 'orderMsRequestChange.detailsStep.azureResourcesLabel' | translate }}
+                  <ng-container *ngIf="loadingInProgress">
+                    <mcs-loader size="small"
+                      [mcsTooltip]="loadingText"
+                      mcsTooltipPosition="right"></mcs-loader>
+                  </ng-container>
+                </span>
                 <mcs-form-field>
                   <mcs-select [formControl]="fcAzureResource"
                     mcsId="select-ms-service-azure-resource"
@@ -112,11 +118,6 @@
                       </span>
                     </mcs-option>
                   </mcs-select>
-                  <ng-container *ngIf="loadingInProgress">
-                    <mcs-loader size="small"
-                      [mcsTooltip]="loadingText"
-                      mcsTooltipPosition="right"></mcs-loader>
-                  </ng-container>
                   <mcs-error mcsError errorState="required">
                     {{ 'orderMsRequestChange.errors.resourceIdentifierRequired' | translate }}
                   </mcs-error>

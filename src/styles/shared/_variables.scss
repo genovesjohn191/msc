@@ -150,24 +150,22 @@ $direction-breakpoints: (
 ) !default;
 
 // Z-index
-$zindex-main-loader: 2100;
-$zindex-header: 2000;
-$zindex-navigation: 1900;
-$zindex-content: 1000;
+$zindex-main-loader: 2500;
+$zindex-header: 1750;
+$zindex-navigation: 1750;
+$zindex-content: 500;
 
-$zindex-sliding-panel: 800;
-$zindex-select: 800;
-$zindex-dropdown: 800;
-$zindex-loader-container: 800;
-$zindex-loader: 900;
-$zindex-popover-low: 500;
-$zindex-popover-medium: 1000;
+$zindex-sliding-panel: 1750;
+$zindex-select: 750;
+$zindex-loader: 1000;
+$zindex-popover-low: 1000;
+$zindex-popover-medium: 1250;
 $zindex-popover-high: 1500;
-$zindex-popover-max: 2000;
+$zindex-popover-max: 1750;
 
 // Top priorities
-$zindex-overlay: 2500;
-$zindex-notifications: 2400;
+$zindex-overlay: 3000;
+$zindex-notifications: 2750;
 
 // Opacity
 $disabled-opacity: 0.65;
