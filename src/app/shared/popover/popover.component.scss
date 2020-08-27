@@ -23,6 +23,9 @@ $popover-border-radius: 2px;
   &.priority-high {
     z-index: $zindex-popover-high;
   }
+  &.priority-max {
+    z-index: $zindex-popover-max;
+  }
 }
 
 @mixin popover-container($text-color, $background-color, $border-color: "transparent") {

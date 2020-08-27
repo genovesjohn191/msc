@@ -51,7 +51,7 @@ export class PopoverDirective implements OnInit, OnDestroy {
   public autoCalculatePosition: boolean;
 
   @Input()
-  public priority: 'low' | 'medium' | 'high';
+  public priority: 'low' | 'medium' | 'high' | 'max';
 
   @Input()
   public content: TemplateRef<any>;
