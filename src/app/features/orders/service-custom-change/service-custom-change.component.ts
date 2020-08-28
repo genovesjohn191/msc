@@ -20,8 +20,7 @@ import {
 import {
   Subject,
   Observable,
-  zip,
-  of
+  zip
 } from 'rxjs';
 import {
   Guid,
@@ -363,6 +362,7 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
         let smacSharedFormConfig = new SmacSharedFormConfig(this._injector);
         response.phoneNumber = formatStringToPhoneNumber(response.phoneNumber);
         smacSharedFormConfig.contactConfig.phoneNumber = response.phoneNumber;
+        smacSharedFormConfig.notesConfig.label = this.translateService.instant('orderServiceCustomChange.requestDetails.additionalNotes.label');
         return smacSharedFormConfig;
       })
     );
