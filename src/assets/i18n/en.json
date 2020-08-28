@@ -1310,8 +1310,8 @@
   },
   "orderAgreement": {
     "agreementChargesQuoted": "By submitting this order, you agree to the charges quoted and the ",
-    "agreementCharges": "By submitting this order, you agree to these charges and the ",
-    "termsAndConditions": "Macquarie Telecom Pty Ltd terms and conditions."
+    "agreementCharges": "By submitting this order, you agree to these charges and our ",
+    "termsAndConditions": "terms and conditions."
   },
   "pricingCalculator": {
     "loading": "Updating charges",
