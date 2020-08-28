@@ -343,6 +343,9 @@
       },
       "testCases": {
         "placeholder": "What test cases would you like us to execute after the change?"
+      },
+      "additionalNotes": {
+        "label": "Additional Details"
       }
     },
     "provisioning": {

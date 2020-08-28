@@ -326,7 +326,7 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
   private _onServiceRequestDetailsFormChange(): void {
     let selectedResources = pluck(this.fcAzureResource.value, 'azureId');
     let resourcesString = selectedResources.join();
-    resourcesString = isNullOrEmpty(resourcesString) ? null : resourcesString.replace(/,/gi, `/n/n`);
+    resourcesString = isNullOrEmpty(resourcesString) ? null : resourcesString.replace(/,/gi, `\n\n`);
 
     this._msRequestChangeService.createOrUpdateOrder(
       createObject(McsOrderCreate, {
