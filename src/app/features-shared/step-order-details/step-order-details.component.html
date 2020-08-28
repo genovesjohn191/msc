@@ -173,7 +173,7 @@
 
       <!-- Order Options -->
       <section margin-top-xlarge>
-        <mcs-item orientation="separated" *ngIf="hasLeadTimeOptions">
+        <mcs-item orientation="separated" *ngIf="hasLeadTimeOptions" [mcsContextualHelp]="'orderDetailsStep.deliveryType.helptext' | translate">
           <span>{{ 'orderDetailsStep.deliveryType.header' | translate }}</span>
           <mcs-form-field class="form-field-size-small" [disabled]="isUpdatingCharges">
             <mcs-select required [formControl]="fcDeliveryType" mcsId="select-delivery-type">

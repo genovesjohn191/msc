@@ -1270,7 +1270,8 @@
     "deliveryType": {
       "header": "Desired delivery type",
       "standardOption": "Standard - {{standardLeadTimeHours}} hours",
-      "acceleratedOption": "Accelerated - {{acceleratedLeadTimeHours}} hours"
+      "acceleratedOption": "Accelerated - {{acceleratedLeadTimeHours}} hours",
+      "helptext": "Select your desired delivery type. \r\n\nStandard requests are actioned within business hours. \r\nAcceleration is provided on a best-efforts basis and incurs additional charges regardless of whether any schedule specified is met."
     },
     "orderActions": {
       "header": "What would you like to do with this order?",
