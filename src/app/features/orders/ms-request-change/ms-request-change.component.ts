@@ -77,7 +77,7 @@ const LOADING_TEXT = 'loading';
 type MsRequestChangeProperties = {
   complexity: string;
   category: string;
-  resourceIdent: string;
+  resourceIdentifiers: string[];
   phoneConfirmationRequired: boolean;
   customerReferenceNumber: string;
   requestDescription: string;
@@ -325,9 +325,6 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
    */
   private _onServiceRequestDetailsFormChange(): void {
     let selectedResources = pluck(this.fcAzureResource.value, 'azureId');
-    let resourcesString = selectedResources.join();
-    resourcesString = isNullOrEmpty(resourcesString) ? null : resourcesString.replace(/,/gi, `\n\n`);
-
     this._msRequestChangeService.createOrUpdateOrder(
       createObject(McsOrderCreate, {
         items: [
@@ -340,7 +337,7 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
             properties: {
               complexity: complexityText[Complexity.Simple], // temporarily set complexity value to simple by default
               category: azureProductsText[this.fcAzureProduct.value],
-              resourceIdent: resourcesString,
+              resourceIdentifiers: selectedResources,
               phoneConfirmationRequired: this._smacSharedDetails.contactAfterChange,
               customerReferenceNumber: this._smacSharedDetails.referenceNumber,
               requestDescription: this._smacSharedDetails.notes
