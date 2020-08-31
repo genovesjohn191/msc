@@ -45,7 +45,7 @@ export class McsDateTimeService {
       actualFormat = this._dateTimeMapTable.get(formatType as McsDateTimeFormat);
     }
 
-    return formatDate(date.toUTCString(), actualFormat, CommonDefinition.LOCALE, timeZone);
+    return formatDate(date.toString(), actualFormat, CommonDefinition.LOCALE, timeZone);
   }
 
   /**
