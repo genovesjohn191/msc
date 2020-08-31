@@ -41,7 +41,8 @@ export function formatDateTimeZone(date: Date, timezone: string, format: string)
  * @param date date to convert
  * @param timezone specific timezone of the date
  * @param format desired format of the output date
- * TODO : we can separate the timezone and formatting to UTC
+ * TODO : we can separate the timezone and formatting to UTC,
+ * consider replacing luxon with moment timezone to decrease dependencies
  */
 export function convertDateTimezoneToUTC(date: string, timezone: string, format: string): any {
   let dateTime = luxon.DateTime;

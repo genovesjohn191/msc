@@ -173,7 +173,6 @@
                 </ng-container>
 
                 <!-- Action Column -->
-                <!-- TODO: Transfer the access control checking in each individual actions once there are additional actions -->
                 <ng-container mcsColumnDef="action"
                   *mcsAccessControl="['OrderEdit']; feature: ['EnableOrdering', 'EnableOrderingLicenseCountChange']; requireAllFeatureFlags: true">
                     <mcs-header-cell *mcsHeaderCellDef hidden-small></mcs-header-cell>

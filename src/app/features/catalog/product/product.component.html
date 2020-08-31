@@ -1,34 +1,5 @@
+<!-- TODO: extract all static texts and transfer to translate -->
 <ng-container *ngIf="product$ | async as selectedProduct">
-
-  <!-- Short description -->
-  <!-- TODO: Temporarily Removed for the demo -->
-  <!-- <ng-container *ngIf="selectedProductTextContent$ | async as shortTextContent">
-    <div class="product-catalog-description" *ngIf="selectedProduct.shortDescription"
-      [ngClass]="{'expanded': shortDescriptionExpanded}">
-
-      <ng-container *ngIf="!shortDescriptionExpanded; else shortDescriptionTemplate">
-        <span class="product-catalog-shorted-text">
-          {{ shortTextContent }}</span>
-      </ng-container>
-      <ng-template #shortDescriptionTemplate>
-        <div [@fadeIn] class="product-catalog-text">
-          <div [innerHTML]="selectedProduct.shortDescription"></div>
-        </div>
-      </ng-template>
-    </div>
-
-    <div class="product-catalog-read-action">
-      <button mcsButton="basic" *ngIf="showMoreButtonIsDisplayed"
-        (click)="toggleShortDescription()">
-        <ng-container *ngIf="!shortDescriptionExpanded; else showLessTemplate">
-          [Read More]
-        </ng-container>
-        <ng-template #showLessTemplate>
-          [Read Less]
-        </ng-template>
-      </button>
-    </div>
-  </ng-container> -->
   <mcs-scrollable-link-group #scrollableLinkGroup>
     <mcs-scrollable-link label="All Information">
 
@@ -191,7 +162,6 @@
     <mcs-scrollable-link label="Monitoring"
       *ngIf="selectedProduct.inviewPremium | mcsIsNotNullOrEmpty">
       <div class="product-catalog-item">
-        <!-- TODO: extract all static texts and transfer to translate -->
         <h2>Inview</h2>
         <ng-template let-inviews let-title="inviewTitle" #inviewTemplate>
           <h3>{{ title }}</h3>
@@ -345,7 +315,6 @@
     </mcs-scrollable-link>
 
     <!-- More -->
-    <!-- TODO: Not included on PH1. and no corresponding field for downloads -->
     <mcs-scrollable-link label="More"
       *ngIf="selectedProduct.downloads | mcsIsNotNullOrEmpty">
       <div class="product-catalog-item">

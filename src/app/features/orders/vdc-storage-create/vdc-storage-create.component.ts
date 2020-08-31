@@ -54,12 +54,6 @@ import {
 } from '@app/features-shared';
 import { VdcStorageCreateService } from './vdc-storage-create.service';
 
-// TODO: will be added in API integration
-// type CreateVdcStorageProperties = {
-//   storageMB: number;
-//   storageProfileId: string;
-// };
-
 @Component({
   selector: 'mcs-order-vdc-storage-create',
   templateUrl: 'vdc-storage-create.component.html',
@@ -136,7 +130,6 @@ export class VdcStorageCreateComponent extends McsOrderWizardBase implements OnI
    * @param _value current value of the slider
    */
   public onVdcStorageChange(_value: VdcManageStorage): void {
-    // TODO: value of the slider will be coming from here
   }
 
   /**
@@ -240,7 +233,6 @@ export class VdcStorageCreateComponent extends McsOrderWizardBase implements OnI
    * @param resource resource to be search
    */
   private _getResourceStorages(resource: McsResource): void {
-    // TODO: should be get All Performance Tier
     if (isNullOrEmpty(resource)) { return; }
     this.resourceStorages$ = this._apiService.getResourceStorages(resource.id).pipe(
       map((response) => response.collection),

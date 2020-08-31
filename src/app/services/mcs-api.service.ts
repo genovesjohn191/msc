@@ -119,6 +119,11 @@ import {
   McsReportGenericItem,
   McsNetworkDnsSummary,
   McsReportIntegerData,
+  McsColocationRack,
+  McsColocationAntenna,
+  McsColocationCustomDevice,
+  McsColocationRoom,
+  McsColocationStandardSqm,
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -166,6 +171,8 @@ import {
   McsApiReportsFactory,
   IMcsApiNetworkDnsService,
   McsApiNetworkDnsFactory,
+  IMcsApiColocationsService,
+  McsApiColocationsFactory,
 } from '@app/api-client';
 import { McsEvent } from '@app/events';
 import { McsRepository } from './core/mcs-repository.interface';
@@ -206,11 +213,9 @@ export class McsApiService {
   private readonly _ordersRepository: McsOrdersRepository;
   private readonly _mediaRepository: McsMediaRepository;
   private readonly _firewallsRepository: McsFirewallsRepository;
-  // TODO : Update to repository once we need to have state management and improve loading
   private readonly _batsRepository: McsBatsRepository;
   private readonly _consoleRepository: McsConsoleRepository;
   private readonly _companiesRepository: McsCompaniesRepository;
-  // TODO : Update to repository once we need to have state management and improve loading
   private readonly _licensesRepository: McsLicensesRepository;
   private readonly _accountRepository: McsAccountRepository;
   private readonly _azureResourceRepository: McsAzureResourcesRepository;
@@ -235,6 +240,7 @@ export class McsApiService {
   private readonly _accountApi: IMcsApiAccountService;
   private readonly _azureResourcesApi: IMcsApiAzureResourcesService;
   private readonly _azureServicesApi: IMcsApiAzureServicesService;
+  private readonly _colocationServicesApi: IMcsApiColocationsService;
   private readonly _reportsApi: IMcsApiReportsService;
 
   private readonly _eventDispatcher: EventBusDispatcherService;
@@ -281,6 +287,7 @@ export class McsApiService {
     this._accountApi = apiClientFactory.getService(new McsApiAccountFactory());
     this._azureResourcesApi = apiClientFactory.getService(new McsApiAzureResourceFactory());
     this._azureServicesApi = apiClientFactory.getService(new McsApiAzureServicesFactory());
+    this._colocationServicesApi = apiClientFactory.getService(new McsApiColocationsFactory());
     this._reportsApi = apiClientFactory.getService(new McsApiReportsFactory());
 
     // Register events
@@ -996,6 +1003,51 @@ export class McsApiService {
     );
   }
 
+  public getColocationRacks(): Observable<McsApiCollection<McsColocationRack>> {
+    return this._colocationServicesApi.getColocationRacks().pipe(
+      map((response) => this._mapToCollection(response.content, response.totalCount)),
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getColocationRacks'))
+      )
+    );
+  }
+
+  public getColocationAntennas(): Observable<McsApiCollection<McsColocationAntenna>> {
+    return this._colocationServicesApi.getColocationAntennas().pipe(
+      map((response) => this._mapToCollection(response.content, response.totalCount)),
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getColocationAntennas'))
+      )
+    );
+  }
+
+  public getColocationCustomDevices(): Observable<McsApiCollection<McsColocationCustomDevice>> {
+    return this._colocationServicesApi.getColocationCustomDevices().pipe(
+      map((response) => this._mapToCollection(response.content, response.totalCount)),
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getColocationCustomDevices'))
+      )
+    );
+  }
+
+  public getColocationRooms(): Observable<McsApiCollection<McsColocationRoom>> {
+    return this._colocationServicesApi.getColocationRooms().pipe(
+      map((response) => this._mapToCollection(response.content, response.totalCount)),
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getColocationRooms'))
+      )
+    );
+  }
+
+  public getColocationStandardSqms(): Observable<McsApiCollection<McsColocationStandardSqm>> {
+    return this._colocationServicesApi.getColocationStandardSqms().pipe(
+      map((response) => this._mapToCollection(response.content, response.totalCount)),
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getColocationStandardSqms'))
+      )
+    );
+  }
+
   public getPortals(_query?: McsQueryParam): Observable<McsApiCollection<McsPortal>> {
     return this._toolsService.getPortals().pipe(
       map((response) => this._mapToCollection(response.content, response.totalCount)),
@@ -1418,7 +1470,7 @@ export class McsApiService {
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getAzureResources'))
       ),
-      map((response) => this._mapToCollection(response.content, response.totalCount))
+      map((response) => this._mapToCollection(response.content, this._azureResourceRepository.getTotalRecordsCount()))
     );
   }
 

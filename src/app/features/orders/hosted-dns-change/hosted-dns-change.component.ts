@@ -317,7 +317,7 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
    * Subscribe to vdc services
    */
   private _subscribeToNetworkDns(): void {
-    // TODO: call the API when ready
+    // Live
     // this.networkDnsOptions$ = this._apiService.getNetworkDnss().pipe(
     //   map((dnsCollection) => {
     //     let dnsList = getSafeProperty(dnsCollection, (obj) => obj.collection) || [];
@@ -330,7 +330,7 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
     //   shareReplay(1),
     // );
 
-
+    // Demo / Mock
     let dnsOptions: McsOption[] = [];
     dnsOptions.push(createObject(McsOption, { text: 'DNS 1', value: { 'serviceId': 'dns1' } }));
     dnsOptions.push(createObject(McsOption, { text: 'DNS 2', value: { 'serviceId': 'dns2' } }));

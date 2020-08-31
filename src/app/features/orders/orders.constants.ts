@@ -14,6 +14,7 @@ import { VdcStorageCreateComponent } from './vdc-storage-create/vdc-storage-crea
 import { ServiceInviewRaiseComponent } from './service-inview-raise/service-inview-raise.component';
 import { ServiceCustomChangeComponent } from './service-custom-change/service-custom-change.component';
 import { HostedDnsChangeComponent } from './hosted-dns-change/hosted-dns-change.component';
+import { ColocationStaffEscortComponent } from './colocation-staff-escort/colocation-staff-escort.component';
 import { ChangeToApplyComponent } from './hosted-dns-change/change-to-apply/change-to-apply.component';
 import { AddAntiVirusComponent } from './add-anti-virus/add-anti-virus.component';
 import { AddHidsComponent } from './add-hids/add-hids.component';
@@ -48,6 +49,7 @@ export const ordersComponents: any[] = [
   ServiceInviewRaiseComponent,
   ServiceCustomChangeComponent,
   HostedDnsChangeComponent,
+  ColocationStaffEscortComponent,
   ChangeToApplyComponent,
   AddAntiVirusComponent,
   AddHidsComponent,
@@ -111,6 +113,11 @@ export const ordersRoutes: Routes = [
     path: 'hosted-dns-change',
     component: HostedDnsChangeComponent,
     data: { routeId: RouteKey.OrderHostedDnsChange }
+  },
+  {
+    path: 'colocation/staff-escort',
+    component: ColocationStaffEscortComponent,
+    data: { routeId: RouteKey.OrderColocationStaffEscort }
   },
   {
     path: 'add/anti-virus',

@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { DataStatus } from '@app/models';
 
-// TODO: This should put in place of shared components utilities
+// TODO: This should transfered app/utilities/interfaces
 export interface McsDataSource<T> {
   connect(): Observable<T[]>;
   disconnect(): void;

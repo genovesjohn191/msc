@@ -306,8 +306,6 @@ export class ServerCommandComponent {
    * Resets the server password
    */
   private _resetServerPassword(): void {
-    // TODO: Check if userId is still necessary in resetting server password?
-    // or can we use the credentials of the job itself
     let resetDetails = createObject(McsServerPasswordReset, {
       clientReferenceObject: {
         serverId: this.server.id

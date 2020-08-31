@@ -201,7 +201,7 @@ export class AddBatComponent extends McsOrderWizardBase implements OnInit, OnDes
    * Initialize all the options for retention
    */
   private _subscribeToRetentionOptions(): void {
-    // TODO: make a enum or constant for these options
+    // TODO: make a enum or constant for these options, duplicate code in VM and Server Backup, create common source data
     this.retentionOptions$ = of([
       createObject(McsOption, { text: '14 Days', value: 14 }),
       createObject(McsOption, { text: '30 Days', value: 30 }),

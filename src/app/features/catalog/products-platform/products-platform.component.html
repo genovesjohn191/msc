@@ -1,10 +1,9 @@
 <ng-container *ngIf="platform$ | async as platform">
   <!-- With records -->
-  <!-- TODO: extract all static texts and transfer to translate -->
   <mcs-grid *ngIf="platform.families | mcsIsNotNullOrEmpty; else emptyTemplate">
     <mcs-grid-row>
       <ng-container *ngFor="let family of platform.families; last as isLastItem">
-          <mcs-grid-column *ngIf="family.groups | mcsIsNotNullOrEmpty"> 
+          <mcs-grid-column *ngIf="family.groups | mcsIsNotNullOrEmpty">
             <ng-container *ngIf="family.groups | mcsArrayHasElement: 'products'">
               <mcs-presentation-panel>
                 <ng-container mcsPresentationPanelHeader>

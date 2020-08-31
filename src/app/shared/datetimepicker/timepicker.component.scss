@@ -1,0 +1,53 @@
+@import "../../../styles/shared/base";
+@import "../../../styles/shared/mixins";
+
+.timepicker-wrapper {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 40px;
+  padding: $space-xsmall;
+
+  .ngx-mat-timepicker .table {
+    margin: 0;
+
+    .tbody {
+
+      tr {
+        border-bottom: none;
+
+        td {
+          padding: 0;
+
+          &.meridian button.mat-button {
+            color: $primary-bg-color;
+            width: 25px;
+            height: 25px;
+            line-height: 24px;
+
+            span.mat-button-wrapper {
+              font-size: 90%;
+            }
+          }
+
+          .mat-form-field-wrapper {
+            padding: 0;
+
+            .mat-form-field-underline {
+              bottom: 0;
+            }
+
+            .mat-form-field-infix {
+              margin: 0;
+              border: 0;
+
+              .mat-input-element {
+                padding: 0;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -24,6 +24,7 @@ export * from './interfaces/mcs-api-platform.interface';
 export * from './interfaces/mcs-api-account.interface';
 export * from './interfaces/mcs-api-azure-resources.interface';
 export * from './interfaces/mcs-api-azure-services.interface';
+export * from './interfaces/mcs-api-colocations.interface';
 export * from './interfaces/mcs-api-reports.interface';
 
 export * from './factory/mcs-api-companies.factory';
@@ -47,4 +48,5 @@ export * from './factory/mcs-api-licenses.factory';
 export * from './factory/mcs-api-account.factory';
 export * from './factory/mcs-api-azure-resources.factory';
 export * from './factory/mcs-api-azure-services.factory';
+export * from './factory/mcs-api-colocations.factory';
 export * from './factory/mcs-api-reports.factory';

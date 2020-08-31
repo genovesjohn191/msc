@@ -13,6 +13,7 @@ import { MsLicenseCountChangeEvent } from './events/ms-license-count-change.even
 import { MsServiceRequestChangeEvent } from './events/ms-service-request-change.event';
 import { ServiceCustomChangeEvent } from './events/service-custom-change.event';
 import { HostedDnsChangeEvent } from './events/hosted-dns-change.event';
+import { ColocationStaffEscortEvent } from './events/colocation-staff-escort.event';
 
 export type OrderEventRecord = Record<string, IOrderEventStrategy>;
 
@@ -30,5 +31,6 @@ export const orderEventMap: OrderEventRecord = {
   'microsoft.licenseCount.change': new MsLicenseCountChangeEvent(),
   'microsoft.subscription.requestChange': new MsServiceRequestChangeEvent(),
   'services.customRequest': new ServiceCustomChangeEvent(),
-  'dns.customChange': new HostedDnsChangeEvent()
+  'dns.customChange': new HostedDnsChangeEvent(),
+  'colocation.staffEscort': new ColocationStaffEscortEvent(),
 };

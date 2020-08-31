@@ -283,7 +283,7 @@ export class ServerManageScaleComponent
     this._resetFormGroup();
     this.sliderValueIndex = 0;
     this.sliderValue = this.sliderTable[this.sliderValueIndex];
-    // TODO: remove and uncomment once slider is enabled
+    // TODO: remove and uncomment once slider is enabled, slider value not working consistently
     this.onChangeInputManageType(InputManageType.Custom);
     // this.inputManageType = InputManageType.Custom;
   }

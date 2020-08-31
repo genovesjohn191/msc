@@ -88,10 +88,6 @@ export class McsSystemMessage extends McsEntityBase {
    * Returns the enabled label
    */
   public get enabledLabel(): string {
-    /**
-     * TODO: In future, we can still improve this
-     * by using icons for frontend instead of enabled/disabled
-     */
     return (this.enabled) ? 'Enabled' : 'Disabled';
   }
 

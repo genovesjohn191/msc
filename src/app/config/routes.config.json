@@ -451,6 +451,16 @@
     "requireAllFeatures": true,
     "documentTitle": "Hosted DNS Change - Macquarie Cloud Services"
   },
+"orderColocationStaffEscort": {
+    "enumPlatform": "Private",
+    "enumKey": "OrderColocationStaffEscort",
+    "enumCategory": "MakeAChange",
+    "navigationPath": "orders/colocation/staff-escort",
+    "requiredPermissions": ["OrderEdit"],
+    "requiredFeatureFlag": "EnableOrderingColocationStaffEscort",
+    "documentTitle": "Colocation Staff Escort - Macquarie Cloud Services"
+  },
+
   "orderAddAntiVirus": {
     "enumPlatform": "Private",
     "enumKey": "OrderAddAntiVirus",

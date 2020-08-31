@@ -200,7 +200,6 @@ export class CatalogComponent<TEntity> implements OnInit, OnDestroy {
   }
 
   private _getEntities(): Observable<TEntity[]> {
-    // TODO: The searching is not yet available in API.
     //  When the searching is available in API, you need to change the map to switchMap
     // to call on API catalogs/products/{query} or catalogs/solutions/{query}
     // and provide the query

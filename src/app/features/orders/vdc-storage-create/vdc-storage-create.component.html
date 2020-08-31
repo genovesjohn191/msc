@@ -49,7 +49,6 @@
 
           <ng-container *ngIf="resourceStorages$ | async as resourceStorages">
               <div class="action-box" [@fadeIn]>
-                <!-- TODO: Change this to Performance Tier Dropdown -->
                 <mcs-select [formControl]="fcPerfomanceTier" required
                   (selectionChange)="onChangePerfomanceTier($event)"
                   [placeholder]="'orderVdcStorageCreate.vdc.placeholder' | translate"

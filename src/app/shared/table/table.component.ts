@@ -150,7 +150,7 @@ export class TableComponent<T> implements Table, OnInit, AfterContentInit, After
       // We need to check if the previous column count is not the same with the current column
       // since angular always triggered the changes without checking the whole context of it
       // and it makes the other table acting weird.
-      // TODO: Check with the latest version of angular if this issue was already fixed.
+      // TODO: Check with the Angular 10 after update if this issue was already fixed.
       this._columnDefinitions.changes.pipe(takeUntil(this._destroySubject)).subscribe((columns) => {
         if (this._columnCountCache !== columns.length) { this._renderUpdatedColumns(); }
         this._columnCountCache = columns.length;

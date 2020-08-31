@@ -52,7 +52,7 @@
         </mcs-radio-button-group>
       </ng-container>
       <ng-container *ngIf="config.contactConfig.phoneNumber">
-        <!-- TODO: add a new shared directive for coloring font elements-->
+        <!-- TODO: add a new shared directive / global color classes for coloring font elements-->
         <span [mcsGreyedOut]="true">{{ 'smacShared.form.contact.description' | translate: { phone_number: config?.contactConfig?.phoneNumber } }}</span>
       </ng-container>
   </mcs-item>

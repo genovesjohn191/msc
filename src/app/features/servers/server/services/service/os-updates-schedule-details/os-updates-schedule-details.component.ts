@@ -356,7 +356,7 @@ export class ServiceOsUpdatesScheduleDetailsComponent implements OnInit {
     this.fgSchedule = this._formBuilder.group([]);
 
     // Initialize Time and Period selections
-    // TODO : can be created by loop
+    // TODO : Change to Timepicker
     this.timeOptions = this._translateService.instant('serverServicesOsUpdatesSchedule.timeSelection').split(',');
     this.dayPeriodOptions = this._translateService.instant('serverServicesOsUpdatesSchedule.dayPeriod').split(',');
   }

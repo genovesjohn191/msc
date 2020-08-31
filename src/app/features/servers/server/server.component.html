@@ -101,7 +101,6 @@
           <!-- Snapshots Tab -->
           <ng-container *mcsAccessControl="[]; feature: 'EnableDedicatedVmSnapshotView';
             validateWhen: server?.isDedicated">
-            <!-- TODO: remove the permission check after having the change in get endpoint in API -->
             <ng-container *mcsAccessControl="serverPermission.vmSnapshotAccess;">
               <mcs-tab [label]="'serverSnapshots.label' | translate" id="snapshots"></mcs-tab>
             </ng-container>

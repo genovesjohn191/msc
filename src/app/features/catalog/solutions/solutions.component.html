@@ -1,5 +1,4 @@
 <ng-container *ngIf="solutionCatalog$ | async as solutionCatalog">
-  <!-- TODO: extract all static texts and transfer to translate -->
   <!-- With records -->
   <mcs-grid *ngIf="solutionCatalog.groups | mcsIsNotNullOrEmpty; else emptyTemplate">
     <mcs-grid-row>

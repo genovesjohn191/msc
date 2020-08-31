@@ -203,11 +203,13 @@ describe('DATE Functions', () => {
   describe('addMonthsToDate()', () => {
     it(`should return correct added months`, () => {
       let monthIncrement = 6;
-      let testDate = new Date(getYear(), getMonth(), getDayinMonth());
-      let expectedDate =  new Date(getYear(), getMonth() + monthIncrement, getDayinMonth());
-      let actualDate = addMonthsToDate(testDate, 6);
-      let result = compareDates(actualDate, expectedDate);
-      expect(result).toBe(0);
+      let testDate = new Date(2020, 1, 1);
+
+      let actualDate = addMonthsToDate(testDate, monthIncrement);
+
+      expect(actualDate.getFullYear()).toBe(testDate.getFullYear());
+      expect(actualDate.getMonth()).toBe(testDate.getMonth());
+      expect(actualDate.getDate()).toBe(testDate.getDate());
     });
   });
 });

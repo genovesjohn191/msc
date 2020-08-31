@@ -209,33 +209,28 @@
               <mcs-option [value]="orderWorkFlowEnum.Draft">
                 {{ 'orderDetailsStep.orderActions.saveOrder' | translate }}
               </mcs-option>
-              <!-- TODO: Put this on-hold since merge was not implemented on the API -->
-              <!-- <mcs-option [value]="orderWorkFlowEnum.Merge">
-                {{ 'orderDetailsStep.orderActions.mergeOrder' | translate }}
-              </mcs-option> -->
             </mcs-select>
           </mcs-form-field>
         </mcs-item>
 
-        <!--Schedule-->
-        <mcs-item orientation="separated"
-          *ngIf="(hasLeadTimeOptions && showSchedule)"
-          [disabled]="isUpdatingCharges">
-          <span>{{ 'shared.datetimepicker.label' | translate }}</span>
-           <mcs-datetimepicker
-              [required]="false"
-              [showTimePicker]="true"
-              [stepHour]="stepHour"
-              [stepMinute]="stepMinute"
-              [formControl]="fcSchedule"
-              [value]="selectedDate$ | async"
-              (dateChanged)="onDateChanged($event)"
-              label="{{'shared.datetimepicker.datepickerLabel' | translate}}"
-              [minDate]="minDate"
-              [maxDate]="maxDate"
-              mcsId="mcs-datetimepicker"
-              [mcsContextualHelp]="'shared.datetimepicker.contextualHelp' | translate">
+      <!--Schedule-->
+      <mcs-item orientation="separated"
+        *ngIf="(hasLeadTimeOptions && showSchedule)"
+        [disabled]="isUpdatingCharges">
+        <span>{{ 'shared.datetimepicker.label' | translate }}</span>
+        <mcs-form-field>
+          <mcs-datetimepicker
+            [required]="false"
+            [stepHour]="stepHour"
+            [stepMinute]="stepMinute"
+            [formControl]="fcSchedule"
+            label="{{'shared.datetimepicker.datepickerLabel' | translate}}"
+            [minDate]="minimumScheduleDate$ | async"
+            [maxDate]="maxDate"
+            mcsId="mcs-datetimepicker"
+            [mcsContextualHelp]="'shared.datetimepicker.contextualHelp' | translate">
           </mcs-datetimepicker>
+        </mcs-form-field>
        </mcs-item>
 
         <ng-container [ngSwitch]="fcWorkflowAction?.value">

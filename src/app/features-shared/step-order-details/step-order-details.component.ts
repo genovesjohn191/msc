@@ -129,7 +129,7 @@ export class StepOrderDetailsComponent
   public selectedBilling$: Observable<McsBilling>;
   public selectedBillingSite$: Observable<McsBillingSite>;
   public chargesState$: Observable<ChargesState>;
-  public selectedDate$ = new Observable<Date>();
+  public minimumScheduleDate$: Observable<Date>;
 
   public workflowAction: OrderWorkflowAction;
   public orderDatasource: McsTableDataSource<McsOrderItem>;
@@ -143,7 +143,6 @@ export class StepOrderDetailsComponent
   private _chargesStateChange = new BehaviorSubject<ChargesState>(
     { excessUsagePerGb: false, monthly: false, oneOff: false, hourly: false }
   );
-  private _dateHasChanged = new BehaviorSubject<Date>(new Date());
 
   constructor(
     @Inject(forwardRef(() => WizardStepComponent)) private _wizardStep: WizardStepComponent,
@@ -161,7 +160,6 @@ export class StepOrderDetailsComponent
     this._subscribeToContractTerms();
     this._subscribeToBillingDetails();
     this._subscribeToChargesStateChange();
-    this._subscribeToDateChange();
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
@@ -169,6 +167,7 @@ export class StepOrderDetailsComponent
     if (!isNullOrEmpty(orderItemTypeChange)) {
       this._updateFormGroupByType();
       this._setOrderDescription();
+      this._updateMinimumScheduleDate();
     }
 
     let requestChange = changes['requestState'];
@@ -270,22 +269,13 @@ export class StepOrderDetailsComponent
    * Checks if schedule control should be shown
    */
   public get showSchedule(): boolean {
-    let isStandardDelivery =  (this.fcDeliveryType.value === DeliveryType.Standard);
+    let isStandardDelivery = (this.fcDeliveryType.value === DeliveryType.Standard);
     let isWorkFlowSubmitOrAwaiting = (this.fcWorkflowAction.value === WorkflowStatus.AwaitingApproval
-                                      || this.fcWorkflowAction.value === WorkflowStatus.Submitted);
-    let isSchedulable =  getSafeProperty(this.orderItemType, (obj) => obj.isSchedulable, false);
+      || this.fcWorkflowAction.value === WorkflowStatus.Submitted);
+    let isSchedulable = getSafeProperty(this.orderItemType, (obj) => obj.isSchedulable, false);
     let result = (isStandardDelivery && isWorkFlowSubmitOrAwaiting && isSchedulable);
 
     return result;
-  }
-
-  /**
-   * Returns the charges flags as observable
-   */
-  private _subscribeToChargesStateChange(): void {
-    this.chargesState$ = this._chargesStateChange.asObservable().pipe(
-      shareReplay(1)
-    );
   }
 
   /**
@@ -320,18 +310,6 @@ export class StepOrderDetailsComponent
   }
 
   /**
-   * Date change event
-   * @param selectedDate: raw date time picker obj to be converted to date
-   */
-  public onDateChanged(selectedDate: any): void {
-    if (isNullOrEmpty(selectedDate)) { return; }
-    let convertedDate = selectedDate.toDate();
-    this.fcSchedule.setValue(convertedDate);
-    this._dateHasChanged.next(convertedDate);
-    this.notifyDataChange();
-  }
-
-  /**
    * Notifies the data change event
    */
   public notifyDataChange(): void {
@@ -349,9 +327,8 @@ export class StepOrderDetailsComponent
     orderDetails.description = this.fcDescription.value;
     orderDetails.workflowAction = this.fcWorkflowAction.value;
     if (this.hasLeadTimeOptions) {
-      let convertedDate = getSafeProperty(this.fcSchedule, (obj) => obj.value);
       orderDetails.deliveryType = +getSafeProperty(this.fcDeliveryType, (obj) => obj.value, 0);
-      orderDetails.schedule = new Date(convertedDate.toUTCString());
+      orderDetails.schedule = getSafeProperty(this.fcSchedule, (obj) => obj.value);
     }
     orderDetails.contractDurationMonths = +getSafeProperty(this.fcContractTerm, (obj) => obj.value, 0);
     orderDetails.billingEntityId = +getSafeProperty(this.fcBillingEntity, (obj) => obj.value.id, 0);
@@ -365,9 +342,7 @@ export class StepOrderDetailsComponent
    */
   private _updateFormGroupByType(): void {
     let itemType = getSafeProperty(this.orderItemType, (obj) => obj.itemType, ItemType.Change);
-    itemType === ItemType.Change ?
-      this._setOrderChangeFormControls() :
-      this._setOrderNewFormControls();
+    itemType === ItemType.Change ? this._setOrderChangeFormControls() : this._setOrderNewFormControls();
   }
 
   /**
@@ -482,47 +457,15 @@ export class StepOrderDetailsComponent
    * Form groups and Form controls registration area
    */
   private _registerFormGroup(): void {
-    // Contract term settings
-    this.fcContractTerm = new FormControl('', [
-      CoreValidators.required
-    ]);
+    this.fcContractTerm = new FormControl('', [CoreValidators.required]);
+    this.fcBillingEntity = new FormControl('', [CoreValidators.required]);
+    this.fcBillingSite = new FormControl('', [CoreValidators.required]);
+    this.fcBillingCostCenter = new FormControl('', [CoreValidators.required]);
+    this.fcDescription = new FormControl('', [CoreValidators.required]);
+    this.fcDeliveryType = new FormControl(DeliveryType.Standard, [CoreValidators.required]);
+    this.fcWorkflowAction = new FormControl(OrderWorkflowAction.Submitted, [CoreValidators.required]);
+    this.fcSchedule = new FormControl(this.minDate, [CoreValidators.required]);
 
-    // Billing entity settings
-    this.fcBillingEntity = new FormControl('', [
-      CoreValidators.required
-    ]);
-
-    // Billing site settings
-    this.fcBillingSite = new FormControl('', [
-      CoreValidators.required
-    ]);
-
-    // Billing cost centre settings
-    this.fcBillingCostCenter = new FormControl('', [
-      CoreValidators.required
-    ]);
-
-    // Description settings
-    this.fcDescription = new FormControl('', [
-      CoreValidators.required
-    ]);
-
-    // Delivery type
-    this.fcDeliveryType = new FormControl(DeliveryType.Standard, [
-      CoreValidators.required
-    ]);
-
-    // Workflow actions
-    this.fcWorkflowAction = new FormControl(OrderWorkflowAction.Submitted, [
-      CoreValidators.required
-    ]);
-
-    // Schedule
-    this.fcSchedule = new FormControl(this.minDate, [
-      CoreValidators.required,
-    ]);
-
-    // Register Form Groups using binding
     this.fgOrderBilling = this._formBuilder.group([]);
   }
 
@@ -548,6 +491,15 @@ export class StepOrderDetailsComponent
         text: this._translate.instant('orderDetailsStep.orderActions.contractTerms.36Months')
       }
     ]);
+  }
+
+  /**
+   * Returns the charges flags as observable
+   */
+  private _subscribeToChargesStateChange(): void {
+    this.chargesState$ = this._chargesStateChange.asObservable().pipe(
+      shareReplay(1)
+    );
   }
 
   /**
@@ -579,9 +531,12 @@ export class StepOrderDetailsComponent
     ).subscribe();
   }
 
-  private _subscribeToDateChange(): void {
-    this.selectedDate$ = this._dateHasChanged.asObservable().pipe(
-      distinctUntilChanged()
+  /**
+   * Subscribes to order item type
+   */
+  private _updateMinimumScheduleDate(): void {
+    this.minimumScheduleDate$ = of(
+      addHoursToDate(MIN_DATE, this.standardLeadTimeHours)
     );
   }
 }
