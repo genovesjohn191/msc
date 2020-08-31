@@ -118,6 +118,11 @@
                       </span>
                     </mcs-option>
                   </mcs-select>
+                  <ng-container *ngIf="loadingInProgress">
+                    <mcs-loader size="small"
+                      [mcsTooltip]="loadingText"
+                      mcsTooltipPosition="right"></mcs-loader>
+                  </ng-container>
                   <mcs-error mcsError errorState="required">
                     {{ 'orderMsRequestChange.errors.resourceIdentifierRequired' | translate }}
                   </mcs-error>

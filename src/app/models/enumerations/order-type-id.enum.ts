@@ -9,6 +9,7 @@ export enum OrderIdType {
   VdcStorageCreate = 'resources.vdc.storage.new',
   RaiseInviewLevel = 'servers.inview.raise',
   ServiceCustomChange = 'services.customRequest',
+  ColocationStaffEscort = 'colocation.staffEscort',
   AddAntiVirus = 'hostsecurity.av.provision',
   AddHids = 'hostsecurity.hids.provision',
   AddVmBackup = 'backups.vm.provision',

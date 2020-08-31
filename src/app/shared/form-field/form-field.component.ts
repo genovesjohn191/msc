@@ -8,7 +8,8 @@ import {
   QueryList,
   ChangeDetectorRef,
   ChangeDetectionStrategy,
-  ViewEncapsulation
+  ViewEncapsulation,
+  Input
 } from '@angular/core';
 import {
   animate,
@@ -59,6 +60,9 @@ import {
 
 export class FormFieldComponent implements AfterViewInit, AfterContentInit, AfterContentChecked {
   public subscriptAnimationState: string = '';
+
+  @Input()
+  public borderless: boolean = false;
 
   @ContentChild(McsFormFieldControlBase, { static: false })
   private _controlChild: McsFormFieldControlBase<any>;

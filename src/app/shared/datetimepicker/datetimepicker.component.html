@@ -1,22 +1,32 @@
 <mat-form-field>
-  <input matInput [ngxMatDatetimePicker]="picker" [placeholder]="label"
+  <input matInput #pickerInput
+    [hidden]="true"
+    [ngxMatDatetimePicker]="picker"
+    [placeholder]="label"
     [min]="minDate"
     [max]="maxDate"
-    disabled
     [required]="required"
     (dateInput)="onDateTimePickerChange($event)"
+    (blur)="onBlurInput()"
     color="primary">
+  <ng-container *ngIf="dateString$ | async as dateString">
+    <span *ngIf="!valueIsNullOrEmpty(dateString); else placeholderTemplate" class="mcs-datetimepicker-label content">{{ dateString }}</span>
+    <ng-template #placeholderTemplate>
+      <span class="mcs-datetimepicker-label">{{ placeholder }} <span *ngIf="required">*</span> </span>
+    </ng-template>
+  </ng-container>
   <mat-datepicker-toggle
    matSuffix [for]="picker">
   </mat-datepicker-toggle>
   <ngx-mat-datetime-picker #picker
-  [showSpinners]="true"
-  [startAt]="minDate"
-  [defaultTime]="defaultTime"
-  [showSeconds]="false"
-  [stepHour]="stepHour"
-  [stepMinute]="stepMinute"
-  [enableMeridian]="true"
-  disabled="false">
+    (closed)="onCloseCalendar()"
+    [showSpinners]="true"
+    [startAt]="minDate"
+    [defaultTime]="defaultTime"
+    [hideTime]="hideTime"
+    [showSeconds]="false"
+    [stepHour]="stepHour"
+    [stepMinute]="stepMinute"
+    [enableMeridian]="enableMeridian">
   </ngx-mat-datetime-picker>
 </mat-form-field>

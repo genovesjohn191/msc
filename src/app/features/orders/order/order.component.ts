@@ -190,8 +190,6 @@ export class OrderComponent implements OnInit, OnDestroy {
    * @param typeId Type id to be searched
    */
   public getOderTypeById(typeId: string): string {
-    // TODO: return the type description from API
-    // once the endpoint for /order/items/type is done
     return typeId;
   }
 

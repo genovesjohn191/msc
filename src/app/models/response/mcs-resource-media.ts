@@ -20,7 +20,7 @@ export class McsResourceMedia extends McsEntityBase {
   public sizeMB: number = undefined;
 
   @JsonProperty()
-  public status: string = undefined;      // TODO: This should be enumeration
+  public status: string = undefined;
 
   @JsonProperty()
   public description: string = undefined;

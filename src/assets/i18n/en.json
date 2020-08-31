@@ -421,6 +421,91 @@
       "dataError": "Something went wrong while processing your request. Please try again later."
     }
   },
+  "orderColocationStaffEscort": {
+    "title": "Request Intellicentre Staff Escort",
+    "back": "Back",
+    "requestDetails": {
+      "stepTitle": "Request Details",
+      "description": "You can use this wizard to request attended access to one of our Intellicentres in the case that work needs to be carried out which our Remote Hands service cannot achieve.",
+      "descriptionNote": "Please note, all requests will be accommodated to our best efforts, though we may contact the person attending should your booking not be possible at the requested time. In this case, the option will be given to reschedule or cancel the request.",
+      "colocationService": {
+        "placeholder": "Select a service",
+        "helptext": "Select the service which relates to this request. If multiple services are associated with the work you need carried out, select the service which best relates to your request",
+        "fallback": "There are no applicable services to display, or you do not have the necessary permissions required to view them. Please contact your account team",
+        "raiseTicketPrefix": " or ",
+        "raiseTicketLink": "raise a ticket",
+        "raiseTicketSuffix": " if this is unexpected"
+      },
+      "attendanceLabel": "Attendance Details",
+      "escortee": {
+        "placeholder": "Who requires the escort?",
+        "helptext": "If this escort is for yourself, we'll contact you using the information on your user account. Otherwise, please provide the contact information of the third-party that requires the escort."
+      },
+      "name": {
+        "label": "Name",
+        "errorRequired": "Enter Name"
+      },
+      "organization": {
+        "label": "Organization",
+        "errorRequired": "Enter Organization"
+      },
+      "jobTitle": {
+        "label": "Job Title",
+        "errorRequired": "Enter Job Title"
+      },
+      "mobile": {
+        "label": "Mobile Number",
+        "errorRequired": "Enter Mobile Number"
+      },
+      "email": {
+        "label": "Email Address",
+        "errorRequired": "Enter Email Address"
+      },
+      "attendanceDate": {
+        "label": "Date of attendance",
+        "helptext": "Specify the date you wish to book this staff escort for",
+        "errorRequired": "Date of attendance must be entered."
+      },
+      "arrivalTime": {
+        "label": "Arrival time",
+        "helptext": "Specify the time you or the third party will be arriving for the staff escort. Please note, if the person to be escorted arrives on site later than the booked time, attendance may not be granted"
+      },
+      "exitTime": {
+        "label": "Exit time",
+        "helptext": "If known, specify the time you or the third-party will be leaving.",
+        "errorMinimumTime": "Exit time should be atleast 30 minutes later than the Arrival time"
+      },
+      "activitiesLabel": "Activities",
+      "workToPerform": {
+        "label": "Work to be performed",
+        "helptext": "Specify the work you need to carry out, in general terms",
+        "hint": "Max of {{max_char}} characters",
+        "errorRequired": "Work to be performed must be entered.",
+        "placeholder": "Work to be performed"
+      },
+      "toolsRequired": {
+        "label": "Tools required to be provided by us",
+        "helptext": "Specify any tools you need us to provide in order to complete this work. For example, a trolley.",
+        "placeholder": ""
+      },
+      "reason": {
+        "label": "Reason this work cannot be performed by Remote Hands",
+        "helptext": "Specify the reason this work cannot be performed by our Remote Hands request.",
+        "hint": "Max of {{max_char}} characters",
+        "errorRequired": "Reason must be entered.",
+        "placeholder": "Reason this work cannot be performed by Remote Hands"
+      },
+      "referenceNumber": {
+        "label": "Customer reference number",
+        "placeholder": ""
+      }
+    },
+    "provisioning": {
+      "description": "Your request is being processed. You can track progress from the notifications menu at the top of the portal.",
+      "dataInProgress": "Preparing your request. This may take a moment.",
+      "dataError": "Something went wrong while processing your request. Please try again later."
+    }
+  },
   "orderAddAntiVirus": {
     "title": "Order Anti-Virus",
     "back": "Back",
@@ -2240,6 +2325,11 @@
     "getBackupAggregationTargets": "Something went wrong while retrieving your storage Backup Aggregation Targets. Please try again.",
     "getBackupAggregationTarget": "Something went wrong while retrieving the details for this backup aggregation target.",
     "getBackupAggregationTargetLinkedServices": "Something went wrong while retrieving the linked services for this Backup Aggregation Target.",
+    "getColocationRacks": "Something went wrong while retrieving your colocation racks.",
+    "getColocationAntennas": "Something went wrong while retrieving your colocation antennas.",
+    "getColocationCustomDevices": "Something went wrong while retrieving your colocation custom devices.",
+    "getColocationRooms": "Something went wrong while retrieving your colocation rooms.",
+    "getColocationStandardSqms": "Something went wrong while retrieving your colocation standard square metres.",
     "resetServerPassword": "Something went wrong while resetting the password for your server. Please try again.",
     "updateServerStorage": "Something went wrong while expanding your disk. Please try again.",
     "createServerStorage": "Something went wrong while creating your disk. Please try again.",

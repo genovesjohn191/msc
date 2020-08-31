@@ -1,6 +1,8 @@
 import {
   compareNumbers,
-  transformNumberToDecimal
+  transformNumberToDecimal,
+  floorByStep,
+  ceilByStep
 } from './mcs-number.function';
 
 describe('NUMBER Functions', () => {
@@ -39,6 +41,42 @@ describe('NUMBER Functions', () => {
         let testNumber: number = 5;
         let result = transformNumberToDecimal(testNumber, 2);
         expect(result).toBe('5.00');
+      });
+    });
+  });
+
+  describe('floorByStep()', () => {
+    describe('given a number', () => {
+      it(`should return floored number based on step`, () => {
+        let testNumber: number = 7;
+        let testStep: number = 3;
+        let result = floorByStep(testNumber, testStep);
+        expect(result).toBe(6);
+      });
+
+      it(`should return floored whole number based on step`, () => {
+        let testNumber: number = 10.5;
+        let testStep: number = 3;
+        let result = floorByStep(testNumber, testStep);
+        expect(result).toBe(9);
+      });
+    });
+  });
+
+  describe('ceilByStep()', () => {
+    describe('given a number', () => {
+      it(`should return ceiled number based on step`, () => {
+        let testNumber: number = 7;
+        let testStep: number = 3;
+        let result = ceilByStep(testNumber, testStep);
+        expect(result).toBe(9);
+      });
+
+      it(`should return ceiled whole number based on step`, () => {
+        let testNumber: number = 10.5;
+        let testStep: number = 3;
+        let result = ceilByStep(testNumber, testStep);
+        expect(result).toBe(12);
       });
     });
   });

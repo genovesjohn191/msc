@@ -76,7 +76,7 @@ export class AddOnSqlServerComponent implements
    * Subscribe to sql server options
    */
   private _subscribeToSqlServerOptions(): void {
-    // TODO: This should be obtained on api
+    // TODO: This should be obtained on api, ask business
     this.sqlServerOptions$ = of([
       {
         category: 'Web',

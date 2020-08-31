@@ -203,8 +203,33 @@ export class CoreValidators {
    */
   public static rangeArray(minimum: number, maximum: number): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      let error = { rangeArray: { actual: control.value.length, min: minimum, max: maximum } };
+      let error = { 'rangeArray': { actual: control.value.length, min: minimum, max: maximum } };
       return control.value.length < +minimum || control.value.length > +maximum ? error : null;
+    };
+  }
+
+  /**
+   * Validator that requires time picker controls to be greater than the provided value
+   *
+   * `@Note` This will produce the following value when false
+   * {'minimumTime': {'actual': control.value, 'min': minimumTime}}
+   */
+  public static minimumTime(minimumTime: [number, number]): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      let error = { minimumTime: true };
+      // let error = { 'minimumTime': { actual: control.value, min: minimumTime } };
+      let hourValue = control.value[0];
+      let minuteValue = control.value[1];
+
+      if (hourValue < +minimumTime[0]) {
+        return error;
+      }
+
+      if (hourValue === +minimumTime[0]) {
+        return minuteValue < +minimumTime[1] ? error : null;
+      }
+
+      return null;
     };
   }
 }

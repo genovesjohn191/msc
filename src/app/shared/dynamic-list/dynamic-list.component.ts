@@ -59,7 +59,6 @@ interface DynamicListItem {
   styleUrls: ['./dynamic-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  animations: [ /* TODO: Add Animations */],
   providers: [
     { provide: McsFormFieldControlBase, useExisting: DynamicListComponent },
     {
@@ -83,7 +82,7 @@ export class DynamicListComponent extends McsFormFieldControlBase<any> implement
   public list$: Observable<DynamicListItem[]>;
 
   private _templateListChange: BehaviorSubject<DynamicListItem[]>;
-  private _validators: Function[] = [];
+  private _validators: Map<string, Function>;
   private _listCache: any[] = [];
 
   @Output()
@@ -191,6 +190,7 @@ export class DynamicListComponent extends McsFormFieldControlBase<any> implement
     super(_elementRef.nativeElement, _parentFormGroup || _parentForm);
     this._templateListChange = new BehaviorSubject([]);
     this.listChange = new EventEmitter();
+    this._validators = new Map();
   }
 
   public ngOnInit(): void {
@@ -199,11 +199,11 @@ export class DynamicListComponent extends McsFormFieldControlBase<any> implement
 
   public ngOnChanges(changes: SimpleChanges): void {
     if (changes.minimum || changes.maximum) {
-      this._validators.push(CoreValidators.rangeArray(this.minimum, this.maximum));
+      this._validators.set('rangeArray', CoreValidators.rangeArray(this.minimum, this.maximum));
     }
 
     if (changes.required) {
-      this._validators.push(CoreValidators.requiredArray);
+      this._validators.set('required', CoreValidators.requiredArray);
     }
   }
 
@@ -220,8 +220,9 @@ export class DynamicListComponent extends McsFormFieldControlBase<any> implement
    */
   public validate(_control: FormControl): ValidationErrors | null {
     let errors = {};
-    this._validators.forEach((error) => {
-      errors = { ...errors, ...error };
+    Array.from(this._validators.values()).forEach((validationFn) => {
+      let errorInValidator = validationFn(_control);
+      errors = { ...errors, ...errorInValidator };
     });
     return errors;
   }

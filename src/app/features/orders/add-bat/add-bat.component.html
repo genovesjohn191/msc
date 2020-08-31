@@ -77,10 +77,10 @@
           <!-- BackUp Quota  -->
           <mcs-item orientation="separated">
             <span align-self-start>{{ 'orderAddBat.detailsStep.dailyQuotaLabel' | translate }}:</span>
-            <mcs-form-field class="form-field-size-small">
+            <mcs-form-field class="form-field-size-small"
+              [mcsContextualHelp]="'orderAddBat.detailsStep.dailyQuotaHelp' | translate">
               <input mcsInput [formControl]="fcDailyQuota"
                 [placeholder]="'orderAddBat.detailsStep.dailyQuotaPlaceholder' | translate"
-                [mcsContextualHelp]="'orderAddBat.detailsStep.dailyQuotaHelp' | translate"
                 mcsId="input-daily-quota"
                 mcsEventTracker="input-daily-quota"
                 mcsEventCategory="order-bat"

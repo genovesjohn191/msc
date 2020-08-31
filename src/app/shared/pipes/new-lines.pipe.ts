@@ -4,9 +4,6 @@ import {
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 
-// TODO: This pipe must be generic.
-// It should convert Text Area content into readable view
-
 @Pipe({
   name: 'mcsNewLines'
 })

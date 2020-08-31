@@ -47,7 +47,6 @@ export class AggregationTargetManagementComponent extends AggregationTargetDetai
    * Returns the value of daily quota in GB with unit
    */
   public dailyQuotaInGB(quotaMb: number): string {
-    // TODO: change once crisp side is fix and/or final
     let dataConversion = 1000;
     return `${quotaMb / dataConversion} GB`;
   }

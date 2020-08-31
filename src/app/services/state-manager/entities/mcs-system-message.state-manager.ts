@@ -12,10 +12,6 @@ export class McsSystemMessageStateManager extends McsEntityStateManagerBase<McsS
   }
 
   public sortEntityRecords(): void {
-    /**
-     * TODO: Update the method to be used in implementing the changes
-     * on enabled field of system messages
-     */
     this.refreshDataCache();
   }
 }
