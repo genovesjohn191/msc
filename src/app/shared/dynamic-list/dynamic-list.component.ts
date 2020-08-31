@@ -46,7 +46,7 @@ import {
 } from '@app/core';
 
 const DEFAULT_MINIMUM_ITEM = 0;
-const DEFAULT_MAXIMUM_ITEM = 20;
+const DEFAULT_MAXIMUM_ITEM = 10;
 
 interface DynamicListItem {
   id: string;
