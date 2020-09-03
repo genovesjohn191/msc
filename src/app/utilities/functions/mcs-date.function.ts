@@ -184,7 +184,9 @@ export function getYear(date: Date = new Date()): number {
  * @param hours number of hours to add, default to 1
  */
 export function addHoursToDate(date: Date, hours: number = 1): Date {
-  return new Date(date.setHours(date.getHours() + hours));
+  let resultDate = new Date(date);
+  resultDate.setHours(date.getHours() + hours);
+  return resultDate;
 }
 
 
@@ -194,7 +196,9 @@ export function addHoursToDate(date: Date, hours: number = 1): Date {
  * @param days number of days to add, default to 1
  */
 export function addDaysToDate(date: Date, days: number = 1): Date {
-  return  new Date(date.setDate(date.getDate() + days));
+  let resultDate = new Date(date);
+  resultDate.setDate(date.getDate() + days);
+  return resultDate;
 }
 
 /**
@@ -203,5 +207,7 @@ export function addDaysToDate(date: Date, days: number = 1): Date {
  * @param months number of months to add, default to 1
  */
 export function addMonthsToDate(date: Date, months: number = 1): Date {
-  return  new Date(date.setMonth(date.getMonth() + months));
+  let resultDate = new Date(date);
+  resultDate.setMonth(date.getMonth() + months);
+  return resultDate;
 }

@@ -248,7 +248,7 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
             itemOrderType: OrderIdType.ServiceCustomChange,
             referenceId: SERVICE_CUSTOM_CHANGE,
             deliveryType: DeliveryType.Standard, // set to Standard as default
-            schedule: getCurrentDate(),
+            schedule: getCurrentDate().toISOString(),
             properties: createObject(McsOrderServiceCustomChange, {
               change: this.fcChangeDescription.value,
               changeObjective: this.fcChangeObjective.value,

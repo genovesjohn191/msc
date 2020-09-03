@@ -31,6 +31,9 @@ import {
   NGX_MAT_DATE_FORMATS,
   NgxMatDateAdapter
 } from '@angular-material-components/datetime-picker';
+import * as momenttz from 'moment-timezone';
+import * as moment from 'moment';
+import { Moment } from 'moment';
 import {
   McsUniqueId,
   McsFormFieldControlBase
@@ -54,9 +57,9 @@ import {
   DEFAULT_MIN_STEP,
   DEFAULT_TIMEZONE,
   DEFAULT_DATE_FORMAT,
-  DEFAULT_DATETIME_FORMAT
+  DEFAULT_DATETIME_FORMAT,
+  DATETIMEZONE_CONVERTER_FORMAT
 } from './datetimepicker.constants';
-import { formatDate } from '@angular/common';
 
 const CURRENT_DATE = getCurrentDate();
 const DEFAULT_MAXIMUM_DATE = addMonthsToDate(CURRENT_DATE, 6);
@@ -80,8 +83,7 @@ export class DateTimePickerComponent extends McsFormFieldControlBase<any>
 
   public dateString$: Observable<string>;
 
-  private _dateChange: BehaviorSubject<Date>;
-  private _defaultMinutes: number = (CURRENT_DATE.getMinutes() >= 30) ? 0 : 30;
+  private _dateChange: BehaviorSubject<Moment>;
 
   @Output()
   public dateChanged: EventEmitter<Date> = new EventEmitter<Date>();
@@ -103,7 +105,8 @@ export class DateTimePickerComponent extends McsFormFieldControlBase<any>
   public set value(selectedDate: Date) {
     if (this._value !== selectedDate) {
       this._value = selectedDate;
-      this._dateChange.next(this._value);
+      let momentDate = this._createDateWithProperTimezone(this._value);
+      this._dateChange.next(momentDate);
     }
   }
   private _value: Date;
@@ -174,10 +177,13 @@ export class DateTimePickerComponent extends McsFormFieldControlBase<any>
   @Input()
   public get defaultTime(): number[] { return this._defaultTime; }
   public set defaultTime(value: number[]) { this._defaultTime = coerceArray(value); }
-  private _defaultTime: number[] = [CURRENT_DATE.getHours(), this._defaultMinutes];
+  private _defaultTime: number[];
 
   @Input()
   public dateFormat: string;
+
+  @Input()
+  public timezone: string = DEFAULT_TIMEZONE;
 
   constructor(
     private _adapter: NgxMatDateAdapter<any>,
@@ -194,7 +200,7 @@ export class DateTimePickerComponent extends McsFormFieldControlBase<any>
     _overlayContainer.getContainerElement().classList.add('mcs-overlay-theme');
     this._adapter.setLocale(DEFAULT_LOCALE);
     this.dateChanged = new EventEmitter();
-    this._dateChange = new BehaviorSubject(new Date());
+    this._dateChange = new BehaviorSubject(moment());
   }
 
   public ngOnInit(): void {
@@ -214,8 +220,9 @@ export class DateTimePickerComponent extends McsFormFieldControlBase<any>
 
   public onDateTimePickerChange(event: MatDatepickerInputEvent<any>) {
     this.value = getSafeProperty(event.value, (obj) => obj.toDate());
-    this.dateChanged.emit(this.value);
-    this._propagateChange(this.value);
+    let convertedDate = this._createDateWithProperTimezone(this.value).utc().toDate();
+    this.dateChanged.emit(convertedDate);
+    this._propagateChange(convertedDate);
     this._onTouched();
   }
 
@@ -239,8 +246,11 @@ export class DateTimePickerComponent extends McsFormFieldControlBase<any>
 
   public writeValue(value: Date): void {
     if (isNullOrEmpty(value)) { return; }
-    this._propagateChange(value);
-    this._dateChange.next(value);
+    let convertedDate = this._createDateWithProperTimezone(value);
+    this._dateChange.next(convertedDate);
+    this._propagateChange(convertedDate.utc().toDate());
+    let convertedDateInTimezone = convertedDate.clone().tz(this.timezone);
+    this.defaultTime = [convertedDateInTimezone.hours(), convertedDateInTimezone.minutes()];
   }
 
   public valueIsNullOrEmpty(value: string): boolean {
@@ -268,10 +278,20 @@ export class DateTimePickerComponent extends McsFormFieldControlBase<any>
     return this._hideTime ? DEFAULT_DATE_FORMAT : DEFAULT_DATETIME_FORMAT;
   }
 
+  private _createDateWithProperTimezone(value: Date): Moment {
+    moment.locale(DEFAULT_LOCALE);
+    moment.tz.setDefault(this.timezone);
+    let formattedDate = moment(value).clone().format(DATETIMEZONE_CONVERTER_FORMAT);
+    let momentObj = momenttz.tz(formattedDate, this.timezone);
+    return momentObj;
+  }
+
   private _subscribeToDateChange(): void {
     this.dateString$ = this._dateChange.asObservable().pipe(
       distinctUntilChanged(),
-      map((date) => formatDate(date.toUTCString(), this._getDefaultDateTimeFormat(), DEFAULT_LOCALE, DEFAULT_TIMEZONE))
+      map((momentDate) => {
+        return momentDate.clone().tz(this.timezone).format(this._getDefaultDateTimeFormat());
+      })
     );
   }
 

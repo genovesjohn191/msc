@@ -163,7 +163,7 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
     orderDetails: McsOrderCreate,
     orderRequester: OrderRequester = OrderRequester.Client,
     orderDeliveryType?: DeliveryType,
-    schedule?: Date
+    schedule?: string
   ): void {
     let orderItemType = this._orderItemTypeChange.getValue() || {} as any;
 

@@ -30,8 +30,7 @@ import {
   takeUntil,
   map,
   tap,
-  shareReplay,
-  distinctUntilChanged
+  shareReplay
 } from 'rxjs/operators';
 import {
   McsTableDataSource,
@@ -328,7 +327,7 @@ export class StepOrderDetailsComponent
     orderDetails.workflowAction = this.fcWorkflowAction.value;
     if (this.hasLeadTimeOptions) {
       orderDetails.deliveryType = +getSafeProperty(this.fcDeliveryType, (obj) => obj.value, 0);
-      orderDetails.schedule = getSafeProperty(this.fcSchedule, (obj) => obj.value);
+      orderDetails.schedule = getSafeProperty(this.fcSchedule, (obj) => obj.value as Date, new Date()).toISOString();
     }
     orderDetails.contractDurationMonths = +getSafeProperty(this.fcContractTerm, (obj) => obj.value, 0);
     orderDetails.billingEntityId = +getSafeProperty(this.fcBillingEntity, (obj) => obj.value.id, 0);
@@ -536,7 +535,19 @@ export class StepOrderDetailsComponent
    */
   private _updateMinimumScheduleDate(): void {
     this.minimumScheduleDate$ = of(
-      addHoursToDate(MIN_DATE, this.standardLeadTimeHours)
+      addHoursToDate(this.minDate, this.standardLeadTimeHours)
+    ).pipe(
+      map((date) => {
+        let minutes = date.getMinutes() > this.stepMinute ? 0 : this.stepMinute;
+        date.setMinutes(minutes);
+        if (minutes <= 0) {
+          date = addHoursToDate(date, 1);
+        }
+        return date;
+      }),
+      tap((date) => {
+        this.fcSchedule.setValue(date);
+      })
     );
   }
 }

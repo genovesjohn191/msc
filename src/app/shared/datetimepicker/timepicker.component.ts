@@ -110,7 +110,7 @@ export class TimePickerComponent extends McsFormFieldControlBase<any> implements
     if (step <= 0) { throw new Error('Hour step should be greater than 0'); }
     this._stepHour = step;
   }
-  private _stepHour: number = 1;
+  private _stepHour: number = DEFAULT_HOUR_STEP;
 
   @Input()
   public get stepMinute(): number { return this._stepMinute; }
@@ -118,7 +118,7 @@ export class TimePickerComponent extends McsFormFieldControlBase<any> implements
     if (step <= 0) { throw new Error('Minute step should be greater than 0'); }
     this._stepMinute = step;
   }
-  private _stepMinute: number = 1;
+  private _stepMinute: number = DEFAULT_MIN_STEP;
 
   public get showSeconds(): boolean { return this._showSeconds; }
   private _showSeconds: boolean = false; // Do not show seconds

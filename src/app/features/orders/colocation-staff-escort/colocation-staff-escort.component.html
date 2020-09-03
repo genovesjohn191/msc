@@ -118,84 +118,86 @@
           </mcs-item>
 
           <ng-container *ngIf="isEscorteeSomeoneElse(fcEscortee?.value)">
-            <!-- Name -->
             <mcs-item orientation="block">
-              <span align-self-start>{{ 'orderColocationStaffEscort.requestDetails.name.label' | translate }}</span>
-              <mcs-form-field>
-                <input mcsInput [formControl]="fcName"
-                  mcsId="input-name"
-                  mcsEventTracker="input-name"
-                  mcsEventCategory="order-collocation-staff-escort"
-                  mcsEventLabel="order-collocation-staff-escort-page">
+              <!-- Name -->
+              <mcs-item orientation="block">
+                <span align-self-start>{{ 'orderColocationStaffEscort.requestDetails.name.label' | translate }}</span>
+                <mcs-form-field>
+                  <input mcsInput [formControl]="fcName"
+                    mcsId="input-name"
+                    mcsEventTracker="input-name"
+                    mcsEventCategory="order-collocation-staff-escort"
+                    mcsEventLabel="order-collocation-staff-escort-page">
 
-                <mcs-error mcsError errorState="required">
-                  {{ 'orderColocationStaffEscort.requestDetails.name.errorRequired' | translate }}
-                </mcs-error>
-              </mcs-form-field>
-            </mcs-item>
+                  <mcs-error mcsError errorState="required">
+                    {{ 'orderColocationStaffEscort.requestDetails.name.errorRequired' | translate }}
+                  </mcs-error>
+                </mcs-form-field>
+              </mcs-item>
 
-            <!-- Organization -->
-            <mcs-item orientation="block">
-              <span align-self-start>{{ 'orderColocationStaffEscort.requestDetails.organization.label' | translate }}</span>
-              <mcs-form-field>
-                <input mcsInput [formControl]="fcOrganization"
-                  mcsId="input-organization"
-                  mcsEventTracker="input-organization"
-                  mcsEventCategory="order-collocation-staff-escort"
-                  mcsEventLabel="order-collocation-staff-escort-page">
+              <!-- Organization -->
+              <mcs-item orientation="block">
+                <span align-self-start>{{ 'orderColocationStaffEscort.requestDetails.organization.label' | translate }}</span>
+                <mcs-form-field>
+                  <input mcsInput [formControl]="fcOrganization"
+                    mcsId="input-organization"
+                    mcsEventTracker="input-organization"
+                    mcsEventCategory="order-collocation-staff-escort"
+                    mcsEventLabel="order-collocation-staff-escort-page">
 
-                <mcs-error mcsError errorState="required">
-                  {{ 'orderColocationStaffEscort.requestDetails.organization.errorRequired' | translate }}
-                </mcs-error>
-              </mcs-form-field>
-            </mcs-item>
+                  <mcs-error mcsError errorState="required">
+                    {{ 'orderColocationStaffEscort.requestDetails.organization.errorRequired' | translate }}
+                  </mcs-error>
+                </mcs-form-field>
+              </mcs-item>
 
-            <!-- Job Title -->
-            <mcs-item orientation="block">
-              <span align-self-start>{{ 'orderColocationStaffEscort.requestDetails.jobTitle.label' | translate }}</span>
-              <mcs-form-field >
-                <input mcsInput [formControl]="fcJobTitle"
-                  mcsId="input-job-title"
-                  mcsEventTracker="input-job-title"
-                  mcsEventCategory="order-collocation-staff-escort"
-                  mcsEventLabel="order-collocation-staff-escort-page">
+              <!-- Job Title -->
+              <mcs-item orientation="block">
+                <span align-self-start>{{ 'orderColocationStaffEscort.requestDetails.jobTitle.label' | translate }}</span>
+                <mcs-form-field >
+                  <input mcsInput [formControl]="fcJobTitle"
+                    mcsId="input-job-title"
+                    mcsEventTracker="input-job-title"
+                    mcsEventCategory="order-collocation-staff-escort"
+                    mcsEventLabel="order-collocation-staff-escort-page">
 
-                <mcs-error mcsError errorState="required">
-                  {{ 'orderColocationStaffEscort.requestDetails.jobTitle.errorRequired' | translate }}
-                </mcs-error>
-              </mcs-form-field>
-            </mcs-item>
+                  <mcs-error mcsError errorState="required">
+                    {{ 'orderColocationStaffEscort.requestDetails.jobTitle.errorRequired' | translate }}
+                  </mcs-error>
+                </mcs-form-field>
+              </mcs-item>
 
-            <!-- Mobile Number -->
-            <mcs-item orientation="block">
-              <span align-self-start>{{ 'orderColocationStaffEscort.requestDetails.mobile.label' | translate }}</span>
-              <mcs-form-field>
-                <input mcsInput [formControl]="fcMobile"
-                  mcsId="input-mobile"
-                  mcsEventTracker="input-mobile"
-                  mcsEventCategory="order-collocation-staff-escort"
-                  mcsEventLabel="order-collocation-staff-escort-page">
+              <!-- Mobile Number -->
+              <mcs-item orientation="block">
+                <span align-self-start>{{ 'orderColocationStaffEscort.requestDetails.mobile.label' | translate }}</span>
+                <mcs-form-field>
+                  <input mcsInput [formControl]="fcMobile"
+                    mcsId="input-mobile"
+                    mcsEventTracker="input-mobile"
+                    mcsEventCategory="order-collocation-staff-escort"
+                    mcsEventLabel="order-collocation-staff-escort-page">
 
-                <mcs-error mcsError errorState="required">
-                  {{ 'orderColocationStaffEscort.requestDetails.mobile.errorRequired' | translate }}
-                </mcs-error>
-              </mcs-form-field>
-            </mcs-item>
+                  <mcs-error mcsError errorState="required">
+                    {{ 'orderColocationStaffEscort.requestDetails.mobile.errorRequired' | translate }}
+                  </mcs-error>
+                </mcs-form-field>
+              </mcs-item>
 
-            <!-- Email Address -->
-            <mcs-item orientation="block">
-              <span align-self-start>{{ 'orderColocationStaffEscort.requestDetails.email.label' | translate }}</span>
-              <mcs-form-field >
-                <input mcsInput [formControl]="fcEmail"
-                  mcsId="input-email"
-                  mcsEventTracker="input-email"
-                  mcsEventCategory="order-collocation-staff-escort"
-                  mcsEventLabel="order-collocation-staff-escort-page">
+              <!-- Email Address -->
+              <mcs-item orientation="block">
+                <span align-self-start>{{ 'orderColocationStaffEscort.requestDetails.email.label' | translate }}</span>
+                <mcs-form-field >
+                  <input mcsInput [formControl]="fcEmail"
+                    mcsId="input-email"
+                    mcsEventTracker="input-email"
+                    mcsEventCategory="order-collocation-staff-escort"
+                    mcsEventLabel="order-collocation-staff-escort-page">
 
-                <mcs-error mcsError errorState="required">
-                  {{ 'orderColocationStaffEscort.requestDetails.email.errorRequired' | translate }}
-                </mcs-error>
-              </mcs-form-field>
+                  <mcs-error mcsError errorState="required">
+                    {{ 'orderColocationStaffEscort.requestDetails.email.errorRequired' | translate }}
+                  </mcs-error>
+                </mcs-form-field>
+              </mcs-item>
             </mcs-item>
           </ng-container>
 
