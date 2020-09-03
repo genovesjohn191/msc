@@ -27,11 +27,8 @@ export class McsOrderItemCreate {
   })
   public deliveryType?: DeliveryType = undefined;
 
-  @JsonProperty({
-    serializer: McsDateSerialization,
-    deserializer: McsDateSerialization
-  })
-  public schedule?: Date = undefined;
+  @JsonProperty()
+  public schedule?: string = undefined;
 
   @JsonProperty()
   public properties?: any = undefined;

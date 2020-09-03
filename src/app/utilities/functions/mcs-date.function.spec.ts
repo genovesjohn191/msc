@@ -208,7 +208,7 @@ describe('DATE Functions', () => {
       let actualDate = addMonthsToDate(testDate, monthIncrement);
 
       expect(actualDate.getFullYear()).toBe(testDate.getFullYear());
-      expect(actualDate.getMonth()).toBe(testDate.getMonth());
+      expect(actualDate.getMonth()).toBe(testDate.getMonth() + monthIncrement);
       expect(actualDate.getDate()).toBe(testDate.getDate());
     });
   });

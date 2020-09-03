@@ -30,7 +30,8 @@ import {
   McsOrderWizardBase,
   CoreValidators,
   OrderRequester,
-  IMcsFormGroup
+  IMcsFormGroup,
+  McsDateTimeService
 } from '@app/core';
 import {
   CommonDefinition,
@@ -276,7 +277,7 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
     this._subscribeToAzureResources(service.id);
   }
 
-   public onServiceChange(service: McsAzureService): void {
+  public onServiceChange(service: McsAzureService): void {
     this._resetAzureResources(service);
   }
 
@@ -333,7 +334,7 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
             referenceId: MS_REQUEST_SERVICE_CHANGE,
             serviceId: this.fcMsService.value.serviceId,
             deliveryType: DeliveryType.Standard, // set to Standard as default
-            schedule: getCurrentDate(),
+            schedule: getCurrentDate().toISOString(),
             properties: {
               complexity: complexityText[Complexity.Simple], // temporarily set complexity value to simple by default
               category: azureProductsText[this.fcAzureProduct.value],
@@ -424,13 +425,12 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
       }),
       shareReplay(1),
       tap(() => {
-         this._eventDispatcher.dispatch(McsEvent.serviceRequestChangeSelectedEvent);
-         this.enableAzureResources = true;
-         this.loadingInProgress = false;
+        this._eventDispatcher.dispatch(McsEvent.serviceRequestChangeSelectedEvent);
+        this.enableAzureResources = true;
+        this.loadingInProgress = false;
       })
     );
   }
-
 
   /**
    * Register all external event listeners

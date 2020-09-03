@@ -261,12 +261,11 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
   /**
    * Format the schedule based on the attendance date and arrival time
    */
-  private _formatSchedule(attendanceDate: Date, arrivalTime: [number, number]): Date {
+  private _formatSchedule(attendanceDate: Date, arrivalTime: [number, number]): string {
     if (isNullOrEmpty(attendanceDate) || isNullOrEmpty(arrivalTime)) { return; }
-    let formatDate = new Date(attendanceDate);
-    formatDate.setHours(arrivalTime[0]);
-    formatDate.setMinutes(arrivalTime[1]);
-    return formatDate;
+    attendanceDate.setHours(arrivalTime[0]);
+    attendanceDate.setMinutes(arrivalTime[1]);
+    return attendanceDate.toISOString();
   }
 
   /**
