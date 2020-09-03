@@ -1,8 +1,8 @@
 import { McsEnumSerializationBase } from '../serialization/mcs-enum-serialization-base';
 
 export enum DeliveryType {
-  Standard,
-  Accelerated
+  Standard = 1,
+  Accelerated = 2
 }
 
 export const deliveryTypeText = {
