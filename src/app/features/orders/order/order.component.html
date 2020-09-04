@@ -278,7 +278,12 @@
               {{ 'order.columnHeaders.schedule' | translate }}
             </mcs-header-cell>
             <mcs-data-cell *mcsDataCellDef="let row">
-              <span text-wrap>{{ getSchedule(row.schedule) | mcsStdDateFormat }}</span>
+              <ng-container *ngIf="row.schedule | mcsIsNotNullOrEmpty; else showASAP">
+                <span text-wrap>{{ row.schedule.toString() | mcsStdDateFormat }}</span>
+              </ng-container>
+              <ng-template #showASAP>
+                <span text-wrap>{{ 'order.noSchedule' | translate }}</span>
+              </ng-template>
             </mcs-data-cell>
           </ng-container>
 

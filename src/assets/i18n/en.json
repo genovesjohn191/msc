@@ -163,7 +163,8 @@
     "submitForApprovalHeader": "Submit for Approval",
     "submitForApprovalDescription": "Please select one or more preferred approvers below and they will be notified of this request via email.",
     "backToDetails": "Details",
-    "btnSubmitForApproval": "Submit"
+    "btnSubmitForApproval": "Submit",
+    "noSchedule": "ASAP"
   },
   "orderApproval": {
     "noApprovers": "No Approvers",

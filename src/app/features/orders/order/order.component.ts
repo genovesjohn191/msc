@@ -164,13 +164,6 @@ export class OrderComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Returns schedule field value
-   */
-  public getSchedule(schedule: Date): string {
-    return isNullOrEmpty(schedule) ? 'ASAP' : schedule.toString();
-  }
-
-  /**
    * Returns delivery type field value
    */
   public getDeliveryType(deliveryType?: DeliveryType): string {

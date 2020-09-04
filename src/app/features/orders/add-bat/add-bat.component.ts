@@ -48,6 +48,10 @@ import {
 import { McsFormGroupDirective } from '@app/shared';
 import { OrderDetails } from '@app/features-shared';
 import { AddBatService } from './add-bat.service';
+import {
+  retentionOptionText,
+  RetentionOption
+} from '@app/models/enumerations/retention-option.enum';
 
 const DEFAULT_QUOTA_MIN = 1;
 const DEFAULT_QUOTA_MAX = 5120;
@@ -203,16 +207,16 @@ export class AddBatComponent extends McsOrderWizardBase implements OnInit, OnDes
   private _subscribeToRetentionOptions(): void {
     // TODO: make a enum or constant for these options, duplicate code in VM and Server Backup, create common source data
     this.retentionOptions$ = of([
-      createObject(McsOption, { text: '14 Days', value: 14 }),
-      createObject(McsOption, { text: '30 Days', value: 30 }),
-      createObject(McsOption, { text: '6 Months', value: 180 }),
-      createObject(McsOption, { text: '1 Year', value: 365 }),
-      createObject(McsOption, { text: '2 Years', value: 730 }),
-      createObject(McsOption, { text: '3 Years', value: 1095 }),
-      createObject(McsOption, { text: '4 Years', value: 1460 }),
-      createObject(McsOption, { text: '5 Years', value: 1825 }),
-      createObject(McsOption, { text: '6 Years', value: 2190 }),
-      createObject(McsOption, { text: '7 Years', value: 2555 })
+      createObject(McsOption, { text: retentionOptionText[RetentionOption.FourteenDays], value: RetentionOption.FourteenDays }),
+      createObject(McsOption, { text: retentionOptionText[RetentionOption.ThirtyDays], value:  RetentionOption.ThirtyDays }),
+      createObject(McsOption, { text: retentionOptionText[RetentionOption.SixMonths], value:  RetentionOption.SixMonths }),
+      createObject(McsOption, { text: retentionOptionText[RetentionOption.OneYear], value:  RetentionOption.OneYear }),
+      createObject(McsOption, { text: retentionOptionText[RetentionOption.TwoYears], value:  RetentionOption.TwoYears }),
+      createObject(McsOption, { text: retentionOptionText[RetentionOption.ThreeYears], value:  RetentionOption.ThreeYears }),
+      createObject(McsOption, { text: retentionOptionText[RetentionOption.FourYears], value:  RetentionOption.FourYears }),
+      createObject(McsOption, { text: retentionOptionText[RetentionOption.FiveYears], value:  RetentionOption.FiveYears }),
+      createObject(McsOption, { text: retentionOptionText[RetentionOption.SixYears], value:  RetentionOption.SixYears }),
+      createObject(McsOption, { text: retentionOptionText[RetentionOption.SevenYears], value:  RetentionOption.SevenYears }),
     ]);
   }
 
