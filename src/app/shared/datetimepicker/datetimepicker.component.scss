@@ -3,7 +3,19 @@
 
 $material-default-gray: rgba(0, 0, 0, 0.38);
 
+.mat-button:disabled, button[disabled] {
+  background-color: $light-bg-color !important;
+  color: $readonly-color!important;
+  pointer-events: none!important;
+}
+
+.mat-button:hover {
+  background-color: $primary-bg-color!important;
+  color: $light-bg-color!important;
+}
+
 .datetimepicker-wrapper{
+
   .mcs-datetimepicker-label {
     width: 100%;
     height: 100%;
@@ -20,18 +32,6 @@ $material-default-gray: rgba(0, 0, 0, 0.38);
     .mat-icon-button:hover {
       color: $primary-bg-color !important;
     }
-
-    .mat-button:disabled, button[disabled] {
-      background-color: $light-bg-color !important;
-      color: $readonly-color;
-      pointer-events: none;
-    }
-
-    .mat-button:hover {
-      background-color: $primary-bg-color;
-      color: $light-bg-color;
-    }
-
     .time-container {
       padding-top: 0px !important;
     }

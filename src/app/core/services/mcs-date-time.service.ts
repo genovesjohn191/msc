@@ -28,24 +28,27 @@ export class McsDateTimeService {
    * @param formatType Format type to follow on the formatting
    * @param timeZone Timezone to be followed
    */
-  public formatDate(date: Date, formatType: McsDateTimeFormat | string, timeZone?: string): string {
+  public formatDate(date: Date, formatType: McsDateTimeFormat | string, timeZone?: string, locale?: string): string {
     if (isNullOrEmpty(date)) { return ''; }
-    if (!isNullOrEmpty(timeZone)) {
-      timeZone = moment(date).tz(timeZone).format('Z');
-    }
 
-    if (formatType === 'friendly') {
-      return moment(date).fromNow();
-    }
+    locale = isNullOrEmpty(locale) ? CommonDefinition.LOCALE : locale;
+    timeZone = isNullOrEmpty(timeZone) ? CommonDefinition.TIMEZONE_SYDNEY : timeZone;
+
+    moment.locale(locale);
 
     let actualFormat = isNullOrEmpty(formatType) ? 'default' : formatType;
+    if (actualFormat === 'friendly') {
+      return moment(date).fromNow();
+    }
 
     let formatFound = this._dateTimeMapTable.has(formatType as McsDateTimeFormat);
     if (formatFound) {
       actualFormat = this._dateTimeMapTable.get(formatType as McsDateTimeFormat);
     }
 
-    return formatDate(date.toString(), actualFormat, CommonDefinition.LOCALE, timeZone);
+    let utcDateTime = moment.utc(date);
+    let convertedDate = utcDateTime.clone().tz(timeZone);
+    return convertedDate.format(actualFormat);
   }
 
   /**
@@ -79,19 +82,19 @@ export class McsDateTimeService {
    * Creates the date time map table associated with the formatting
    */
   private _createDateTimeTable(): void {
-    this._dateTimeMapTable.set('default', 'EEE, dd MMM yyyy, h:mm:ss a');
-    this._dateTimeMapTable.set('short', 'd/M/yy, h:mm a');
-    this._dateTimeMapTable.set('medium', 'd MMM, y, h:mm:ss a');
-    this._dateTimeMapTable.set('long', 'd MMMM, y, h:mm:ss a z');
-    this._dateTimeMapTable.set('full', 'EEEE, d MMMM, y, h:mm:ss a zzzz');
-    this._dateTimeMapTable.set('shortDate', 'd/M/yy');
-    this._dateTimeMapTable.set('mediumDate', 'd MMM, y');
-    this._dateTimeMapTable.set('longDate', 'd MMMM, y');
-    this._dateTimeMapTable.set('fullDate', 'EEEE, d MMMM, y');
-    this._dateTimeMapTable.set('shortTime', 'h:mm a');
-    this._dateTimeMapTable.set('mediumTime', 'h:mm:ss a');
-    this._dateTimeMapTable.set('longTime', 'h:mm:ss a z');
-    this._dateTimeMapTable.set('fullTime', 'h:mm:ss a zzzz');
+    this._dateTimeMapTable.set('default', 'ddd, DD MMM YYYY, h:mm:ss A');
+    this._dateTimeMapTable.set('short', 'D/M/YY, h:mm A');
+    this._dateTimeMapTable.set('medium', 'D MMM, y, h:mm:ss A');
+    this._dateTimeMapTable.set('long', 'D MMMM, y, h:mm:ss A Z');
+    this._dateTimeMapTable.set('full', 'dddd, D MMMM, y, h:mm:ss A ZZ');
+    this._dateTimeMapTable.set('shortDate', 'D/M/yy');
+    this._dateTimeMapTable.set('mediumDate', 'D MMM, y');
+    this._dateTimeMapTable.set('longDate', 'D MMMM, y');
+    this._dateTimeMapTable.set('fullDate', 'dddd, D MMMM, y');
+    this._dateTimeMapTable.set('shortTime', 'h:mm A');
+    this._dateTimeMapTable.set('mediumTime', 'h:mm:ss A');
+    this._dateTimeMapTable.set('longTime', 'h:mm:ss A Z');
+    this._dateTimeMapTable.set('fullTime', 'h:mm:ss A ZZ');
     this._dateTimeMapTable.set('isoDate', 'yyyy-MM-ddTHH:mm');
   }
 }

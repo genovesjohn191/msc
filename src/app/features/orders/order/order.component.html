@@ -278,7 +278,7 @@
               {{ 'order.columnHeaders.schedule' | translate }}
             </mcs-header-cell>
             <mcs-data-cell *mcsDataCellDef="let row">
-              <span text-wrap>{{ getSchedule(row.schedule | mcsStdDateFormat) }}</span>
+              <span text-wrap>{{ getSchedule(row.schedule) | mcsStdDateFormat }}</span>
             </mcs-data-cell>
           </ng-container>
 
