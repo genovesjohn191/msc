@@ -52,6 +52,10 @@ import {
   McsOrderServerBackupAdd
 } from '@app/models';
 import { McsFormGroupDirective } from '@app/shared';
+import {
+  scheduleBackupOptionText,
+  ScheduleBackupOption
+} from '@app/models/enumerations/schedule-backup-options.enum';
 
 const DEFAULT_QUOTA_MIN = 1;
 const DEFAULT_QUOTA_MAX = 5120;
@@ -319,17 +323,17 @@ export class ServerManageBackupComponent implements
    */
   private _subscribeToScheduleBackupOptions(): void {
     this.scheduleBackupOptions$ = of([
-      createObject(McsOption, { text: '8 PM', value: '20' }),
-      createObject(McsOption, { text: '9 PM', value: '21' }),
-      createObject(McsOption, { text: '10 PM', value: '22' }),
-      createObject(McsOption, { text: '11 PM', value: '23' }),
-      createObject(McsOption, { text: '12 AM', value: '0' }),
-      createObject(McsOption, { text: '1 AM', value: '1' }),
-      createObject(McsOption, { text: '2 AM', value: '2' }),
-      createObject(McsOption, { text: '3 AM', value: '3' }),
-      createObject(McsOption, { text: '4 AM', value: '4' }),
-      createObject(McsOption, { text: '5 AM', value: '5' }),
-      createObject(McsOption, { text: '6 AM', value: '6' })
+      createObject(McsOption, { text: scheduleBackupOptionText[ScheduleBackupOption.EigthPM], value: ScheduleBackupOption.EigthPM }),
+      createObject(McsOption, { text: scheduleBackupOptionText[ScheduleBackupOption.NinePM], value: ScheduleBackupOption.NinePM }),
+      createObject(McsOption, { text: scheduleBackupOptionText[ScheduleBackupOption.TenPM], value: ScheduleBackupOption.TenPM }),
+      createObject(McsOption, { text: scheduleBackupOptionText[ScheduleBackupOption.ElevenPM], value: ScheduleBackupOption.ElevenPM }),
+      createObject(McsOption, { text: scheduleBackupOptionText[ScheduleBackupOption.TwelveAM], value: ScheduleBackupOption.TwelveAM }),
+      createObject(McsOption, { text: scheduleBackupOptionText[ScheduleBackupOption.OneAM], value: ScheduleBackupOption.OneAM }),
+      createObject(McsOption, { text: scheduleBackupOptionText[ScheduleBackupOption.TwoAM], value: ScheduleBackupOption.TwoAM }),
+      createObject(McsOption, { text: scheduleBackupOptionText[ScheduleBackupOption.ThreeAM], value: ScheduleBackupOption.ThreeAM }),
+      createObject(McsOption, { text: scheduleBackupOptionText[ScheduleBackupOption.FourAM], value: ScheduleBackupOption.FourAM }),
+      createObject(McsOption, { text: scheduleBackupOptionText[ScheduleBackupOption.FiveAM], value: ScheduleBackupOption.FiveAM }),
+      createObject(McsOption, { text: scheduleBackupOptionText[ScheduleBackupOption.SixAM], value: ScheduleBackupOption.SixAM }),
     ]);
   }
 }
