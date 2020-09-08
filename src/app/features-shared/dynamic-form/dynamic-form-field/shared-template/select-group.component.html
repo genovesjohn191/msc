@@ -1,0 +1,33 @@
+<mat-form-field appearance="outline" [hintLabel]="data.hint"
+    [matBadge]="hasError ? '!' : ''"
+    matBadgePosition="before" 
+    matBadgeColor="warn"
+    matBadgeSize="small"
+    [matTooltip]="hasError ? 'Failed to load options' : ''"
+    matTooltipPosition="above">
+  <mat-label [attr.for]="data.key" >{{ isLoading ? 'Loading...' : data.label}}</mat-label>
+
+  <mat-select 
+      (selectionChange)="valueChange($event)"
+      [(value)]="data.value" 
+      [id]="data.key"
+      [required]="data.validators?.required">
+    <mat-option *ngIf="!data.validators?.required">-- None --</mat-option>
+    <mat-optgroup *ngFor="let group of data.options" [label]="group.name" [disabled]="group.disabled">
+      <mat-option *ngFor="let opt of group.options" [value]="opt.key">
+        {{opt.value}}
+      </mat-option>
+    </mat-optgroup>
+  </mat-select>
+
+  <mat-spinner *ngIf="isLoading" class="spinner" diameter="20" matSuffix></mat-spinner>
+
+  <button mat-icon-button matSuffix
+    (click)="retrieveOptions()"
+    *ngIf="hasError"
+    matTooltip="Retry"
+    matTooltipPosition="above">
+    <mat-icon color="primary">refresh</mat-icon>
+  </button>
+
+</mat-form-field>

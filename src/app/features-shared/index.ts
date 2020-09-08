@@ -1,6 +1,7 @@
 /** Modules */
 export * from './features-shared.module';
 export * from './report-widget/report-widget.module';
+export * from './dynamic-form/dynamic-form.module';
 
 /** Wizard Steps */
 export * from './step-order-details/order-details';
@@ -40,3 +41,6 @@ export * from './smac-shared-form/smac-shared-form-config';
 export * from './system-message-form/system-message-form.component';
 export * from './system-message-form/system-message-form';
 export * from './system-message-form/system-message-form.service';
+
+/** Dynamic Form */
+export * from './dynamic-form/dynamic-form-field-data.interface';

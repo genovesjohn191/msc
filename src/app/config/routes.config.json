@@ -4,6 +4,12 @@
     "navigationPath": "dashboard",
     "documentTitle": "Dashboard - Macquarie Cloud Services"
   },
+  "demo": {
+    "enumKey": "Demo",
+    "navigationPath": "demo",
+    "documentTitle": "Demo Page",
+    "requiredFeatureFlag": "EnableExperimentalFeatures"
+  },
   "reportOverview": {
     "enumKey": "ReportOverview",
     "enumCategory": "Dashboard",

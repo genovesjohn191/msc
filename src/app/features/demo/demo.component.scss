@@ -1,0 +1,12 @@
+@import "../../../styles/shared/base";
+
+.form-wrapper {
+  width: 50vw;
+
+  @include breakpoint(medium) {
+    width: 100%;
+  }
+  
+  display: flex;
+  flex-direction: column;
+}

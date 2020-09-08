@@ -1,0 +1,6 @@
+@import "../../../../../styles/shared/base";
+
+.more {
+  opacity: 0.75;
+  @include font-size(0.75em);
+}

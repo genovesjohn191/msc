@@ -22,10 +22,20 @@ export class CoreValidators {
    * Validator that performs ip address validation
    *
    * `@Note` This will produce the following value when false
-   * { 'ip': true }
+   * { 'ipAddress': true }
    */
   public static ipAddress(control: AbstractControl): ValidationErrors | null {
     return CommonDefinition.REGEX_IP_PATTERN.test(control.value) ? null : { ipAddress: true };
+  }
+
+  /**
+   * Validator that performs hostname validation
+   *
+   * `@Note` This will produce the following value when false
+   * { 'hostName': true }
+   */
+  public static hostName(control: AbstractControl): ValidationErrors | null {
+    return CommonDefinition.REGEX_SERVER_NAME_PATTERN.test(control.value) ? null : { hostName: true };
   }
 
   /**
@@ -77,6 +87,17 @@ export class CoreValidators {
   public static url(control: AbstractControl): ValidationErrors | null {
     return CommonDefinition.REGEX_URL_PATTERN.test(control.value) ?
       null : { url: true };
+  }
+
+  /**
+   * Validator that performs domain validation
+   * e.g. of valid values
+   *  xn--stackoverflow.com
+   *  stackoverflow.xn--com
+   *  stackoverflow.co.uk
+   */
+  public static domain(control: AbstractControl): ValidationErrors | null {
+    return CommonDefinition.REGEX_DOMAIN_PATTERN.test(control.value) ? null : { domain: true };
   }
 
   /**

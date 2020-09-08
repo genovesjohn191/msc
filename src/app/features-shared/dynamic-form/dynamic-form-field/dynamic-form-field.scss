@@ -1,0 +1,43 @@
+@import "../../../../styles/shared/base";
+
+.mat-form-field {
+  width: 300px;
+  
+  @include breakpoint(medium) {
+    width: 100%;
+  }
+
+  .mat-form-field-subscript-wrapper {
+    left: 300px !important;
+    top: 0 !important;
+  }
+  
+  .select-placeholder-container {
+    display: flex;
+    align-items: center;
+  
+    span {
+      flex: 1;
+    }
+  }
+
+  input.number {
+    text-align: right;
+    margin-right: 8px;;
+    -moz-appearance: textfield;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      display: none;
+    }
+  }
+
+  .prefix,
+  .suffix {
+    color: $color-grey-02;
+  }
+
+  .suffix {
+    padding-left: .3em;
+  }
+}

@@ -1,0 +1,29 @@
+<mat-form-field appearance="outline" [hintLabel]="data.hint">
+  <mat-label [attr.for]="data.key">{{data.label}}</mat-label>
+
+  <input 
+    #control matInput 
+    [id]="data.key"
+    [placeholder]="data.placeholder"
+    [(ngModel)]="data.value"
+    (input)="valueChange($event)"
+    [required]="data.validators?.required"
+    [maxlength]="data.validators?.maxlength"
+    [minlength]="data.validators?.minlength"
+    [readonly]="data.readonly">
+  <button mat-icon-button matSuffix 
+    (click)="copy(control)"
+    matTooltip="Copy to clipboard"
+    matTooltipPosition="above">
+    <mat-icon color="primary">content_copy</mat-icon>
+  </button>
+  <button mat-icon-button matPrefix
+    (click)="generate()"
+    matTooltip="Generate random string"
+    matTooltipPosition="above">
+    <mat-icon>refresh</mat-icon>
+  </button>
+  
+  <mat-hint align="end" *ngIf="data.validators?.maxlength > 0">{{control.value?.length || 0}}/{{ data.validators?.maxlength }}</mat-hint>
+</mat-form-field>
+  

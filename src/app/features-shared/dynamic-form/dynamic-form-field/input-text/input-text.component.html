@@ -1,0 +1,18 @@
+<mat-form-field appearance="outline" [hintLabel]="data.hint">
+  <mat-label [attr.for]="data.key">{{data.label}}</mat-label>
+
+  <input 
+    #control matInput 
+    type="text"
+    [id]="data.key"
+    [placeholder]="data.placeholder"
+    [(ngModel)]="data.value"
+    (input)="valueChange($event)"
+    [required]="data.validators?.required"
+    [maxlength]="data.validators?.maxlength"
+    [minlength]="data.validators?.minlength"
+    [pattern]="data.pattern">
+  <mat-hint align="end" *ngIf="data.validators?.maxlength > 0">{{control.value?.length || 0}}/{{ data.validators?.maxlength }}</mat-hint>
+
+</mat-form-field>
+  
