@@ -172,7 +172,6 @@ export abstract class McsOrderWizardBase extends McsWizardBase implements McsDis
    * Subscribes to order item type changes
    */
   private _subscribeToOrderItemTypeChanges(): void {
-    if (!this.accessControlService.hasAccessToFeature(McsFeatureFlag.Ordering)) { return; }
     this.orderItemType$ = this._orderBase.orderItemTypeChange().pipe(
       shareReplay(1)
     );

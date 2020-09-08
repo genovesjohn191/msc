@@ -4,7 +4,7 @@
     <!-- Default View -->
     <section [@fadeIn] *ngSwitchCase="serverServicesViewOption.Default">
       <!-- Operating System Updates -->
-      <mcs-presentation-panel *mcsAccessControl="serverPermission.vmPatchManagement; feature: 'EnableServerOsUpdates'">
+      <mcs-presentation-panel *mcsAccessControl="serverPermission.vmPatchManagement;">
         <ng-container mcsPresentationPanelHeader>
           <h2>{{ 'serverServices.operatingSystemUpdates.title' | translate }}</h2>
         </ng-container>
@@ -62,15 +62,13 @@
       </mcs-presentation-panel>
 
       <!-- InView -->
-      <ng-container *mcsAccessControl="[]; feature: ['EnableOrdering', 'EnableOrderingManagedServerInviewLevelRaise']; requireAllFeatureFlags: true">
-        <mcs-service-inview
-          [server]="server"
-          (raiseInviewLevel)="executeAction($event)">
-        </mcs-service-inview>
-      </ng-container>
+      <mcs-service-inview
+        [server]="server"
+        (raiseInviewLevel)="executeAction($event)">
+      </mcs-service-inview>
 
        <!-- Host Security -->
-       <ng-container *mcsAccessControl="['HidsView', 'AvView']; feature: ['EnableAddonHidsView','EnableAddonAntiVirusView']">
+       <ng-container *mcsAccessControl="['HidsView', 'AvView'];">
          <ng-container *ngIf="serverHostSecurityDetails$ | async as serverHostSecurityDetails">
           <mcs-presentation-panel>
             <ng-container mcsPresentationPanelHeader>
@@ -94,7 +92,7 @@
                   </mcs-grid-column>
                 </mcs-grid-row>
                 <!-- Hids -->
-                <ng-container orientation="block" *mcsAccessControl="['HidsView']; feature: 'EnableAddonHidsView'">
+                <ng-container orientation="block" *mcsAccessControl="['HidsView'];">
                   <mcs-grid-row *ngIf="serverHostSecurityDetails?.hids?.enabled">
                     <mcs-grid-column>
                       <mcs-service-hids
@@ -106,7 +104,7 @@
                   </mcs-grid-row>
                 </ng-container>
                 <!-- Anti Virus -->
-                <ng-container orientation="block" *mcsAccessControl="['AvView']; feature: 'EnableAddonAntiVirusView'">
+                <ng-container orientation="block" *mcsAccessControl="['AvView'];">
                   <mcs-grid-row *ngIf="serverHostSecurityDetails?.antiVirus?.enabled">
                     <mcs-grid-column>
                       <mcs-service-anti-virus
@@ -136,25 +134,21 @@
                   </ng-container>
                 </ng-container>
                 <ng-template #hostSecurityOrderLinkTemplate>
-                  <ng-container *mcsAccessControl="[]; feature: ['EnableOrdering']">
-                    <span *mcsAccessControl="['OrderEdit']; feature: ['EnableOrderingAntiVirusProvision','EnableOrderingHidsProvision']">
-                      <a *mcsAccessControl="[]; feature: ['EnableOrderingAntiVirusProvision']"
-                      (click)="onHostSecurityOrderClick(ServerServicesActionOption.AddAv, server)"
-                      mcsId="add-new-av"
-                      mcsEventTracker="add-new-av"
-                      mcsEventCategory="order"
-                      mcsEventLabel="server-services">{{ 'serverServices.hostSecurity.avLinkLabel' | translate }}</a>
-                      <ng-container *mcsAccessControl="[]; feature: ['EnableOrderingHidsProvision']">
-                        <span *mcsAccessControl="[]; feature: ['EnableOrderingAntiVirusProvision']"> or </span>
-                      </ng-container>
-                      <a *mcsAccessControl="[]; feature: ['EnableOrderingHidsProvision']"
-                      (click)="onHostSecurityOrderClick(ServerServicesActionOption.AddHids, server)"
-                      mcsId="add-new-hids"
-                      mcsEventTracker="add-new-hids"
-                      mcsEventCategory="order"
-                      mcsEventLabel="server-services">{{ 'serverServices.hostSecurity.hidsLinkLabel' | translate }}</a>
-                    </span>
-                  </ng-container>
+                  <span *mcsAccessControl="['OrderEdit'];">
+                    <a
+                    (click)="onHostSecurityOrderClick(ServerServicesActionOption.AddAv, server)"
+                    mcsId="add-new-av"
+                    mcsEventTracker="add-new-av"
+                    mcsEventCategory="order"
+                    mcsEventLabel="server-services">{{ 'serverServices.hostSecurity.avLinkLabel' | translate }}</a>
+                    <span> or </span>
+                    <a
+                    (click)="onHostSecurityOrderClick(ServerServicesActionOption.AddHids, server)"
+                    mcsId="add-new-hids"
+                    mcsEventTracker="add-new-hids"
+                    mcsEventCategory="order"
+                    mcsEventLabel="server-services">{{ 'serverServices.hostSecurity.hidsLinkLabel' | translate }}</a>
+                  </span>
                 </ng-template>
               </mcs-status-message>
             </ng-template>
@@ -163,35 +157,31 @@
       </ng-container>
 
       <!-- VM Backup -->
-      <ng-container *mcsAccessControl="[]; feature: 'EnableAddonVmBackupView'">
-        <ng-container *ngIf="serverBackUpVm$ | async as vmBackup">
-          <mcs-service-backup-vm
-            [server]="server"
-            [serverBackupVm]="vmBackup"
-            (viewChange)="onViewChange($event)"
-            (addVmBackup)="executeAction($event)"
-            (createNewTicket)="onCreateNewTicket(server)">
-          </mcs-service-backup-vm>
-        </ng-container>
+      <ng-container *ngIf="serverBackUpVm$ | async as vmBackup">
+        <mcs-service-backup-vm
+          [server]="server"
+          [serverBackupVm]="vmBackup"
+          (viewChange)="onViewChange($event)"
+          (addVmBackup)="executeAction($event)"
+          (createNewTicket)="onCreateNewTicket(server)">
+        </mcs-service-backup-vm>
       </ng-container>
 
       <!-- Server Backup -->
-      <ng-container *mcsAccessControl="[]; feature: 'EnableAddonServerBackupView'">
-        <ng-container *ngIf="serverBackUpServer$ | async as serverBackup">
-          <mcs-service-backup-server
-            [server]="server"
-            [serverBackupServer]="serverBackup"
-            (viewChange)="onViewChange($event)"
-            (addServerBackup)="executeAction($event)"
-            (createNewTicket)="onCreateNewTicket(server)">
-          </mcs-service-backup-server>
-        </ng-container>
+      <ng-container *ngIf="serverBackUpServer$ | async as serverBackup">
+        <mcs-service-backup-server
+          [server]="server"
+          [serverBackupServer]="serverBackup"
+          (viewChange)="onViewChange($event)"
+          (addServerBackup)="executeAction($event)"
+          (createNewTicket)="onCreateNewTicket(server)">
+        </mcs-service-backup-server>
       </ng-container>
     </section>
 
     <!-- Details View Os Updates Patch -->
     <ng-container [@fadeIn] *ngSwitchCase="serverServicesViewOption.OsUpdatesPatch">
-      <ng-container *mcsAccessControl="serverPermission.vmPatchManagement; feature: 'EnableServerOsUpdates'">
+      <ng-container *mcsAccessControl="serverPermission.vmPatchManagement;">
         <ng-container *ngIf="updatesDetails$ | async">
           <mcs-service-os-updates-patch-details
             [selectedServer]="server"
@@ -204,7 +194,7 @@
 
     <!-- Details View Os Updates Schedule -->
     <ng-container [@fadeIn] *ngSwitchCase="serverServicesViewOption.OsUpdatesSchedule">
-      <ng-container *mcsAccessControl="serverPermission.vmPatchManagement; feature: 'EnableServerOsUpdates'">
+      <ng-container *mcsAccessControl="serverPermission.vmPatchManagement;">
         <ng-container *ngIf="updatesDetails$ | async">
           <mcs-server-os-updates-schedule-details
             [selectedServer]="server"

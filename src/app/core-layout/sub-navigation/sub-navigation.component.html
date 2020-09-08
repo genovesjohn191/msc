@@ -48,7 +48,7 @@
         </a>
       </ng-container>
 
-      <ng-container *mcsAccessControl="['InternetView']; feature: 'EnableInternetPortView'">
+      <ng-container *mcsAccessControl="['InternetView'];">
         <a [mcsRouterLink]="routeKeyEnum.Internet" mcsRouterLinkActive="active"
           class="sub-navigation-item unstyled-link"
           mcsId
@@ -61,7 +61,7 @@
     </ng-container>
 
     <!-- Storage Category -->
-    <ng-container *mcsAccessControl="[]; feature: 'EnableBatView'">
+    <ng-container>
       <ng-container *ngSwitchCase="routeCategoryEnum.Storage">
           <a [mcsRouterLink]="routeKeyEnum.BackupAggregationTargets" mcsRouterLinkActive="active"
             class="sub-navigation-item unstyled-link"

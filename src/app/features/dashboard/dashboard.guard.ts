@@ -12,9 +12,7 @@ import {
 } from '@app/core';
 import {
   RouteKey,
-  McsPermission,
-  McsFeatureFlag,
-  McsIdentity
+  McsPermission
 } from '@app/models';
 
 @Injectable()
@@ -61,20 +59,7 @@ export class DashboardGuard implements CanActivate {
       return false;
     }
 
-    // Try Navigate to Global Default Page
-    let hasProductCatalogAccess = this._accessControlService.hasAccessToFeature([
-      McsFeatureFlag.ProductCatalog
-    ]);
-    let hasCatalogListingAccess = this._accessControlService.hasAccessToFeature([
-      McsFeatureFlag.CatalogSolutionListing,
-      McsFeatureFlag.CatalogProductListing,
-    ]);
-    if (hasProductCatalogAccess && hasCatalogListingAccess) {
-      this._navigationService.navigateTo(RouteKey.Catalog);
-      return false;
-    }
-
-    // Default navigate to Dashboard
-    return true;
+    this._navigationService.navigateTo(RouteKey.Catalog);
+    return false;
   }
 }

@@ -141,10 +141,6 @@ export class ServiceBackupVmComponent extends ServerServiceDetailBase implements
     return this._vmBackupOrderStateMessageMap.get(server.getServiceOrderState());
   }
 
-  public hasBatDetailsView(): boolean {
-    return this._accessControlService.hasAccessToFeature([McsFeatureFlag.BatDetailsView]);
-  }
-
   public onAddVmBackup(selectedServer: McsServer): void {
     this.addVmBackup.emit({
       action: ServerServicesAction.AddVmBackup,

@@ -98,7 +98,7 @@
         <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
         <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"
           mcsCursor="pointer"
-          [mcsTriggerCursorIf]="hasAccessToDetailsView()"
+          [mcsTriggerCursorIf]="true"
           (click)="navigateToAggregationTarget(row)"
           mcsId="aggregation-targets-row"
           mcsEventTracker="aggregation-targets-table-item"

@@ -3,43 +3,39 @@
   <p>{{ 'serverCreateAddOnsStep.description' | translate }}</p>
 
   <!-- VM Backup -->
-  <ng-container *mcsAccessControl="[]; feature: ['EnableOrdering', 'EnableOrderingVmBackupProvision']; requireAllFeatureFlags: true">
-    <mcs-collapsible-panel
-      mcsId="addon-vm-backup-toggle"
-      mcsEventTracker="server-create-addon-vm-backup-toggle"
-      mcsEventCategory="server-create"
-      mcsEventLabel="server-create-addon-vm-backup-toggle"
-      [mcsContextualHelp]="'serverCreateAddOnsStep.backupVm.contextualHelp' | translate"
-      [header]="'serverCreateAddOnsStep.backupVm.label' | translate"
-      (collapseChange)="onToggleVmBackUp($event)">
+  <mcs-collapsible-panel
+    mcsId="addon-vm-backup-toggle"
+    mcsEventTracker="server-create-addon-vm-backup-toggle"
+    mcsEventCategory="server-create"
+    mcsEventLabel="server-create-addon-vm-backup-toggle"
+    [mcsContextualHelp]="'serverCreateAddOnsStep.backupVm.contextualHelp' | translate"
+    [header]="'serverCreateAddOnsStep.backupVm.label' | translate"
+    (collapseChange)="onToggleVmBackUp($event)">
 
-      <mcs-server-manage-backup-vm #fgAddOnBackupVm
-        [aggregationTargets]="aggregationTargets$ | async"
-        (dataChange)="onChangeVmBackUpDetails($event)">
-      </mcs-server-manage-backup-vm>
-    </mcs-collapsible-panel>
-  </ng-container>
+    <mcs-server-manage-backup-vm #fgAddOnBackupVm
+      [aggregationTargets]="aggregationTargets$ | async"
+      (dataChange)="onChangeVmBackUpDetails($event)">
+    </mcs-server-manage-backup-vm>
+  </mcs-collapsible-panel>
 
   <!-- Server Backup -->
-  <ng-container *mcsAccessControl="[]; feature: ['EnableOrdering', 'EnableOrderingServerBackupProvision']; requireAllFeatureFlags: true">
-    <mcs-collapsible-panel
-      mcsId="addon-server-backup-toggle"
-      mcsEventTracker="server-create-addon-server-backup-toggle"
-      mcsEventCategory="server-create"
-      mcsEventLabel="server-create-addon-server-backup-toggle"
-      [mcsContextualHelp]="'serverCreateAddOnsStep.backupServer.contextualHelp' | translate"
-      [header]="'serverCreateAddOnsStep.backupServer.label' | translate"
-      (collapseChange)="onToggleServerBackUp($event)">
+  <mcs-collapsible-panel
+    mcsId="addon-server-backup-toggle"
+    mcsEventTracker="server-create-addon-server-backup-toggle"
+    mcsEventCategory="server-create"
+    mcsEventLabel="server-create-addon-server-backup-toggle"
+    [mcsContextualHelp]="'serverCreateAddOnsStep.backupServer.contextualHelp' | translate"
+    [header]="'serverCreateAddOnsStep.backupServer.label' | translate"
+    (collapseChange)="onToggleServerBackUp($event)">
 
-      <mcs-server-manage-backup #fgBackupServer
-        [aggregationTargets]="aggregationTargets$ | async"
-        (dataChange)="onChangeServerBackUpDetails($event)">
-      </mcs-server-manage-backup>
-    </mcs-collapsible-panel>
-  </ng-container>
+    <mcs-server-manage-backup #fgBackupServer
+      [aggregationTargets]="aggregationTargets$ | async"
+      (dataChange)="onChangeServerBackUpDetails($event)">
+    </mcs-server-manage-backup>
+  </mcs-collapsible-panel>
 
   <!-- Anti Virus -->
-  <ng-container *mcsAccessControl="[]; feature: ['EnableOrdering', 'EnableOrderingAntiVirusProvision']; requireAllFeatureFlags: true">
+  <ng-container>
     <div class="action-box" [style.padding]="'20px 15px'"
       [mcsContextualHelp]="'serverCreateAddOnsStep.antivirus.contextualHelp' | translate">
 
@@ -55,7 +51,7 @@
   </ng-container>
 
   <!-- HIDS -->
-  <ng-container *mcsAccessControl="[]; feature: ['EnableOrdering', 'EnableOrderingHidsProvision']; requireAllFeatureFlags: true">
+  <ng-container>
     <mcs-collapsible-panel
       mcsId="addon-hids-toggle"
       mcsEventTracker="server-create-addon-hids-toggle"
@@ -84,20 +80,18 @@
   </div>
 
   <!-- SQL Server -->
-  <ng-container *mcsAccessControl="[]; feature: ['EnableOrdering', 'EnableOrderingSqlProvision']; requireAllFeatureFlags: true">
-    <mcs-collapsible-panel *ngIf="isWindows"
-      mcsId="addon-sql-toggle"
-      mcsEventTracker="server-create-addon-sql-toggle"
-      mcsEventCategory="server-create"
-      mcsEventLabel="server-create-addon-sql-toggle"
-      [mcsContextualHelp]="'serverCreateAddOnsStep.sqlServer.contextualHelp' | translate"
-      [header]="'serverCreateAddOnsStep.sqlServer.label' | translate"
-      (collapseChange)="onToggleSqlServer($event)">
+  <mcs-collapsible-panel *ngIf="isWindows"
+    mcsId="addon-sql-toggle"
+    mcsEventTracker="server-create-addon-sql-toggle"
+    mcsEventCategory="server-create"
+    mcsEventLabel="server-create-addon-sql-toggle"
+    [mcsContextualHelp]="'serverCreateAddOnsStep.sqlServer.contextualHelp' | translate"
+    [header]="'serverCreateAddOnsStep.sqlServer.label' | translate"
+    (collapseChange)="onToggleSqlServer($event)">
 
-      <mcs-addon-sql-server (dataChange)="onChangeSqlServerDetails($event)">
-      </mcs-addon-sql-server>
-    </mcs-collapsible-panel>
-  </ng-container>
+    <mcs-addon-sql-server (dataChange)="onChangeSqlServerDetails($event)">
+    </mcs-addon-sql-server>
+  </mcs-collapsible-panel>
 
   <!-- Wizard Actions -->
   <div class="action-items">

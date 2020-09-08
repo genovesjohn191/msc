@@ -37,7 +37,7 @@ menuRouteMap.set(RouteCategory.Network, [
   },
   {
     routeKey: RouteKey.Internet,
-    featureFlag: [McsFeatureFlag.InternetPortView],
+    featureFlag: [],
     permission: [McsPermission.InternetView]
   }
 ]);
@@ -45,7 +45,7 @@ menuRouteMap.set(RouteCategory.Network, [
 menuRouteMap.set(RouteCategory.Storage, [
   {
     routeKey: RouteKey.BackupAggregationTargets,
-    featureFlag: [McsFeatureFlag.BatView],
+    featureFlag: [],
     permission: []
   }
 ]);

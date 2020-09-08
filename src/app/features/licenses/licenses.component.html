@@ -174,7 +174,7 @@
 
                 <!-- Action Column -->
                 <ng-container mcsColumnDef="action"
-                  *mcsAccessControl="['OrderEdit']; feature: ['EnableOrdering', 'EnableOrderingLicenseCountChange']; requireAllFeatureFlags: true">
+                  *mcsAccessControl="['OrderEdit'];">
                     <mcs-header-cell *mcsHeaderCellDef hidden-small></mcs-header-cell>
                     <mcs-data-cell *mcsDataCellDef="let row" hidden-small text-center>
                         <ng-container *ngIf="!isLicenseDisabled(dataSource?.dataRecords, row)">

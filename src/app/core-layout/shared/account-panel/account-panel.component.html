@@ -19,27 +19,14 @@
       </a>
     </mcs-list-item>
     <mcs-list-item *mcsAccessControl="['OrderView']">
-      <ng-container *mcsAccessControl="[]; feature: 'EnableOrdering'; else: macviewOrdersTemplate">
-        <a mcsCursor="pointer" [mcsRouterLink]="routeKeyEnum.OrdersHistory"
-          (click)="notifySelectionChange('orders')"
-          mcsId="orders-link"
-          mcsEventTracker="navigate-to-orders"
-          mcsEventCategory="navigation"
-          mcsEventLabel="user-panel">
-          {{ 'accountPanel.orders' | translate }}
-        </a>
-      </ng-container>
-
-      <ng-template #macviewOrdersTemplate>
-        <a mcsCursor="pointer" [href]="macviewOrdersUrl" target="_blank"
-          (click)="notifySelectionChange('orders')"
-          mcsId="mac-orders-link"
-          mcsEventTracker="navigate-to-macview-orders"
-          mcsEventCategory="navigation"
-          mcsEventLabel="user-panel">
-          {{ 'accountPanel.orders' | translate }}
-        </a>
-      </ng-template>
+      <a mcsCursor="pointer" [mcsRouterLink]="routeKeyEnum.OrdersHistory"
+        (click)="notifySelectionChange('orders')"
+        mcsId="orders-link"
+        mcsEventTracker="navigate-to-orders"
+        mcsEventCategory="navigation"
+        mcsEventLabel="user-panel">
+        {{ 'accountPanel.orders' | translate }}
+      </a>
     </mcs-list-item>
 
     <mcs-list-item>

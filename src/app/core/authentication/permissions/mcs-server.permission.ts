@@ -62,9 +62,4 @@ export class McsServerPermission {
   public get vmScale(): string[] {
     return this._server.isSelfManaged ? this.vmNicEdit : [McsPermission.OrderEdit];
   }
-
-  // TODO: rename this class to Access instead of Permission, to add Feature flags
-  public get vmScaleFeature(): string[] {
-    return this._server.isSelfManaged ? [] : [McsFeatureFlag.OrderingManagedServerScale, McsFeatureFlag.Ordering];
-  }
 }

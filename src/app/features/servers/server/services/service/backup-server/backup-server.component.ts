@@ -141,10 +141,6 @@ export class ServiceBackupServerComponent extends ServerServiceDetailBase implem
     return this._serverBackupOrderStateMessageMap.get(server.getServiceOrderState());
   }
 
-  public hasBatDetailsView(): boolean {
-    return this._accessControlService.hasAccessToFeature([McsFeatureFlag.BatDetailsView]);
-  }
-
   public onAddServerBackup(selectedServer: McsServer): void {
     this.addServerBackup.emit({
       action: ServerServicesAction.AddServerBackup,
