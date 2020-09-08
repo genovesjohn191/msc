@@ -223,3 +223,13 @@ export function createSvgElement(svgContent: string): SVGElement {
 export function isElementVisible(element: HTMLElement): boolean {
   return !isNullOrEmpty(element) && !isNullOrEmpty(element.offsetParent);
 }
+
+/**
+ * Copy text from element to clipboard
+ * @param element element returned by #some-id
+ */
+export function copyToClipboard(element: any): void {
+  element.select();
+  element.setSelectionRange(0, 99999);
+  document.execCommand('copy');
+}

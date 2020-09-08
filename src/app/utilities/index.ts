@@ -2,6 +2,7 @@
 export * from './tools/guid';
 
 /** Functions */
+export * from './functions/mcs-crypto.function';
 export * from './functions/mcs-url.function';
 export * from './functions/mcs-element.function';
 export * from './functions/mcs-json.function';

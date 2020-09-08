@@ -1,0 +1,18 @@
+<mat-form-field appearance="outline" [hintLabel]="data.hint">
+  <mat-label [attr.for]="data.key">{{data.label}}</mat-label>
+  
+  <input 
+    #control matInput 
+    type="number"
+    class="number"
+    [id]="data.key"
+    [placeholder]="data.placeholder"
+    [(ngModel)]="data.value"
+    (input)="valueChange($event)"
+    [required]="data.validators?.required"
+    [min]="data.validators?.min"
+    [max]="data.validators?.max">
+  <span matPrefix class="prefix"  *ngIf="data.suffix">{{data.prefix}}</span>
+  <span matSuffix class="suffix" *ngIf="data.suffix">{{data.suffix}}</span>
+</mat-form-field>
+  

@@ -1,0 +1,13 @@
+<mat-form-field appearance="outline" [hintLabel]="data.hint">
+  <mat-label [attr.for]="data.key">{{data.label}}</mat-label>
+  
+  <mat-select (selectionChange)="valueChange($event)"
+    [(value)]="data.value" 
+    [id]="data.key"
+    [required]="data.validators?.required">
+    <mat-option *ngIf="!data.validators?.required">-- None --</mat-option>
+    <mat-option *ngFor="let opt of data.options" [value]="opt.key" [disabled]="opt.disabled">
+      {{ opt.value }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>

@@ -8,7 +8,8 @@ export enum ServiceType {
 
 export const serviceTypeText = {
   [ServiceType.Managed]: 'Managed',
-  [ServiceType.SelfManaged]: 'Self-Managed'
+  [ServiceType.SelfManaged]: 'Self-Managed',
+  [ServiceType.Public]: 'Public',
 };
 
 /**
