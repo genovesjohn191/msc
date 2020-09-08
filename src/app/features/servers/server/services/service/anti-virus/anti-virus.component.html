@@ -6,16 +6,14 @@
         <mcs-item>
           <mcs-icon [key]="antiVirusDetails.icon" size="small" mcsId="antivirus-status-icon"></mcs-icon>
           <span mcsId="antivirus-status-label">{{ antiVirusDetails.label }}</span>
-          <ng-container *mcsAccessControl="[]; feature: ['EnableAddonAntiVirusDetailsView']">
-            <a mcsId="antivirus-status-logs-link"
-              mcsEventTracker="antivirus-status-logs-link-click"
-              mcsEventCategory="server"
-              mcsEventLabel="antivirus-status-logs-view"
-              [disabled]="server.isProcessing"
-              (click)="changeView()">
-              {{ 'serverServices.antivirus.logsLink' | translate }}
-            </a>
-          </ng-container>
+          <a mcsId="antivirus-status-logs-link"
+            mcsEventTracker="antivirus-status-logs-link-click"
+            mcsEventCategory="server"
+            mcsEventLabel="antivirus-status-logs-view"
+            [disabled]="server.isProcessing"
+            (click)="changeView()">
+            {{ 'serverServices.antivirus.logsLink' | translate }}
+          </a>
         </mcs-item>
       </mcs-item>
     </mcs-grid-column>

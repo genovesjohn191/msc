@@ -20,13 +20,12 @@ export class ServersService {
 
   /**
    * Get all the resources based on the access control
-   * @note OrderEdit and EnableOrderingManagedServerCreate
+   * @note OrderEdit
    */
   public getResourcesByAccess(): Observable<McsResource[]> {
     return this._apiService.getResources().pipe(
       map((resources) => {
-        let managedResourceIsOn = this._accessControlService.hasAccess(
-          [McsPermission.OrderEdit], [McsFeatureFlag.Ordering, McsFeatureFlag.OrderingManagedServerCreate], true, true);
+        let managedResourceIsOn = this._accessControlService.hasPermission([McsPermission.OrderEdit]);
 
         return resources && resources.collection.filter(
           (resource) => resource.serviceType === ServiceType.SelfManaged ||

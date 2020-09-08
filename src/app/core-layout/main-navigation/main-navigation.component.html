@@ -58,8 +58,7 @@
 
       <!-- Storage Category -->
       <div class="navigation-item"
-        [class.active]="selectedCategory === routerCategoryEnum.Storage"
-        *mcsAccessControl="[]; feature: 'EnableBatView'">
+        [class.active]="selectedCategory === routerCategoryEnum.Storage">
 
         <mcs-icon [key]="caretRightIconKey" color="light"
           size="medium" class="navigation-mobile"></mcs-icon>
@@ -72,8 +71,7 @@
     <ng-container *ngIf="isPublicCloudRoute">
       <!-- ADD PUBLIC CLOUD MENU ITEMS HERE -->
       <div class="navigation-item"
-        mcsRouterLinkActive="active"
-        *mcsAccessControl="[]; feature: 'EnablePublicCloud'">
+        mcsRouterLinkActive="active">
 
         <mcs-icon [key]="caretRightIconKey" color="light"
           size="medium" class="navigation-mobile"></mcs-icon>
@@ -97,19 +95,16 @@
     </div>
 
     <!-- Catalog -->
-    <ng-container *mcsAccessControl="[]; feature: 'EnableProductCatalog'">
-      <div class="navigation-item" hidden-small mcsRouterLinkActive="active"
-        *mcsAccessControl="[]; feature: ['EnableCatalogProductListing', 'EnableCatalogSolutionListing']">
-        <mcs-icon [key]="caretRightIconKey" color="light"
-          size="medium" class="navigation-mobile"></mcs-icon>
-        <a [mcsRouterLink]="routeKeyEnum.Catalog"
-          mcsId
-          mcsEventTracker="navigate-to-catalog"
-          mcsEventCategory="navigation"
-          mcsEventLabel="main-nav">
-          {{ 'navigation.catalog' | translate }}
-        </a>
-      </div>
-    </ng-container>
+    <div class="navigation-item" hidden-small mcsRouterLinkActive="active">
+      <mcs-icon [key]="caretRightIconKey" color="light"
+        size="medium" class="navigation-mobile"></mcs-icon>
+      <a [mcsRouterLink]="routeKeyEnum.Catalog"
+        mcsId
+        mcsEventTracker="navigate-to-catalog"
+        mcsEventCategory="navigation"
+        mcsEventLabel="main-nav">
+        {{ 'navigation.catalog' | translate }}
+      </a>
+    </div>
   </ng-template>
 </nav>

@@ -48,8 +48,7 @@ export class McsRequiredResourcesGuard implements CanActivate {
   private _getResourcesByAccess(): Observable<McsResource[]> {
     return this._apiService.getResources().pipe(
       map((resources) => {
-        let managedResourceIsOn = this._accessControlService.hasAccess(
-          [McsPermission.OrderEdit], McsFeatureFlag.OrderingManagedServerCreate);
+        let managedResourceIsOn = this._accessControlService.hasPermission([McsPermission.OrderEdit]);
 
         return resources && resources.collection.filter(
           (resource) => resource.serviceType === ServiceType.SelfManaged ||

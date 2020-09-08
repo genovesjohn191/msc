@@ -23,7 +23,7 @@
           <span>/</span>
           <span [innerHTML]="resource?.compute?.cpuLimitMBLabel | mcsDataLabel"></span>
           <ng-container *ngIf="resource?.scaleable">
-            <ng-container *mcsAccessControl="['OrderEdit']; feature: ['EnableOrdering', 'EnableOrderingVdcComputeScale']; requireAllFeatureFlags: true">
+            <ng-container *mcsAccessControl="['OrderEdit'];">
               <a (click)="scaleVdc(resource)"
                 mcsId="scale-vdc"
                 mcsEventTracker="vdc-option"
@@ -115,7 +115,7 @@
           <mcs-item *ngIf="hasLowStorage">
             <span>{{ storageSummary }}</span>
             <a (click)="navigateToExpandVdcStorage(resource)"
-              *mcsAccessControl="['OrderEdit']; feature: ['EnableOrdering', 'EnableOrderingVdcStorageExpand']; requireAllFeatureFlags: true"
+              *mcsAccessControl="['OrderEdit'];"
               mcsId="navigate-to-expand-vdc-storage"
               mcsEventTracker="expand-vdc-storage-click"
               mcsEventCategory="orders"

@@ -14,32 +14,25 @@
               <span mcsId="backup-server-status-sublabel">
                 {{ statusSublabel }}
               </span>
-              <ng-container *mcsAccessControl="[]; feature: ['EnableAddonServerBackupDetailsView']">
-                <a *ngIf="statusDetailsLinkFlag"
-                  mcsId="backup-server-status-details-link"
-                  mcsEventTracker="backup-server-status-details-link"
-                  mcsEventCategory="server"
-                  mcsEventLabel="server-services"
-                  (click)="changeView()">
-                  {{ 'serverServices.serverBackup.detailsLink' | translate }}
-                </a>
-              </ng-container>
+              <a *ngIf="statusDetailsLinkFlag"
+                mcsId="backup-server-status-details-link"
+                mcsEventTracker="backup-server-status-details-link"
+                mcsEventCategory="server"
+                mcsEventLabel="server-services"
+                (click)="changeView()">
+                {{ 'serverServices.serverBackup.detailsLink' | translate }}
+              </a>
             </mcs-item>
           </small>
           <ng-container *ngIf="serverBackupServer?.aggregationTargetServiceId | mcsIsNotNullOrEmpty">
             {{ 'serverServices.serverBackup.batLinkDescription' | translate }}
-            <ng-container *ngIf="hasBatDetailsView(); else batServiceIdTemplate">
-              <a mcsId="backup-server-bat-details-link"
-                mcsEventTracker="backup-server-bat-details-link"
-                mcsEventCategory="server"
-                mcsEventLabel="server-services"
-                [mcsRouterLink]="[routeKeyEnum.BackupAggregationTargetsDetails, serverBackupServer?.aggregationTargetId]">
-                {{ 'serverServices.serverBackup.batLinkLabel' | translate }}
-              </a>
-            </ng-container>
-            <ng-template #batServiceIdTemplate>
-              {{ 'serverServices.serverBackup.batDefaultLabel' | translate: { serviceId: serverBackupServer?.aggregationTargetServiceId } }}
-            </ng-template>
+            <a mcsId="backup-server-bat-details-link"
+              mcsEventTracker="backup-server-bat-details-link"
+              mcsEventCategory="server"
+              mcsEventLabel="server-services"
+              [mcsRouterLink]="[routeKeyEnum.BackupAggregationTargetsDetails, serverBackupServer?.aggregationTargetId]">
+              {{ 'serverServices.serverBackup.batLinkLabel' | translate }}
+            </a>
           </ng-container>
         </div>
       </mcs-item>
@@ -61,7 +54,7 @@
           </ng-container>
         </ng-container>
         <ng-template #serverBackupOrderLinkTemplate>
-          <a *mcsAccessControl="['OrderEdit']; feature: ['EnableOrdering', 'EnableOrderingServerBackupProvision']; requireAllFeatureFlags: true"
+          <a *mcsAccessControl="['OrderEdit'];"
           (click)="onAddServerBackup(server)"
           [disabled]="server.isProcessing"
           mcsId="add-new-server-backup"

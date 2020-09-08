@@ -138,16 +138,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
     let hasPublicAccess = this._authenticationIdentity.platformSettings.hasPublicCloud;
 
-    let hasProductCatalogAccess = this._accessControlService.hasAccessToFeature([
-      McsFeatureFlag.ProductCatalog
-    ]);
-    let hasCatalogListingAccess = this._accessControlService.hasAccessToFeature([
-      McsFeatureFlag.CatalogSolutionListing,
-      McsFeatureFlag.CatalogProductListing
-    ]);
-    let hasCatalogAccess = hasProductCatalogAccess && hasCatalogListingAccess;
-
-    return hasPrivateAccess || hasPublicAccess || hasCatalogAccess;
+    return hasPrivateAccess || hasPublicAccess;
   }
 
   public get isPrivateCloudRoute(): boolean {

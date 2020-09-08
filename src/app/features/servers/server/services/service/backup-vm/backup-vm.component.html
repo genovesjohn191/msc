@@ -14,32 +14,25 @@
               <span mcsId="backup-vm-status-sublabel">
                 {{ statusSublabel }}
               </span>
-              <ng-container *mcsAccessControl="[]; feature: ['EnableAddonVmBackupDetailsView']">
-                <a *ngIf="statusDetailsLinkFlag"
-                  mcsId="backup-vm-status-details-link"
-                  mcsEventTracker="backup-vm-status-details-link"
-                  mcsEventCategory="server"
-                  mcsEventLabel="server-services"
-                  (click)="changeView()">
-                  {{ 'serverServices.vmBackup.detailsLink' | translate }}
-                </a>
-              </ng-container>
+              <a *ngIf="statusDetailsLinkFlag"
+                mcsId="backup-vm-status-details-link"
+                mcsEventTracker="backup-vm-status-details-link"
+                mcsEventCategory="server"
+                mcsEventLabel="server-services"
+                (click)="changeView()">
+                {{ 'serverServices.vmBackup.detailsLink' | translate }}
+              </a>
             </mcs-item>
           </small>
           <ng-container *ngIf="serverBackupVm?.aggregationTargetServiceId | mcsIsNotNullOrEmpty">
             {{ 'serverServices.vmBackup.batLinkDescription' | translate }}
-            <ng-container *ngIf="hasBatDetailsView(); else batServiceIdTemplate">
-              <a mcsId="backup-vm-bat-details-link"
-                mcsEventTracker="backup-vm-bat-details-link"
-                mcsEventCategory="server"
-                mcsEventLabel="server-services"
-                [mcsRouterLink]="[routeKeyEnum.BackupAggregationTargetsDetails, serverBackupVm?.aggregationTargetId]">
-                {{ 'serverServices.vmBackup.batLinkLabel' | translate }}
-              </a>
-            </ng-container>
-            <ng-template #batServiceIdTemplate>
-              {{ 'serverServices.vmBackup.batDefaultLabel' | translate: { serviceId: serverBackupVm?.aggregationTargetServiceId } }}
-            </ng-template>
+            <a mcsId="backup-vm-bat-details-link"
+              mcsEventTracker="backup-vm-bat-details-link"
+              mcsEventCategory="server"
+              mcsEventLabel="server-services"
+              [mcsRouterLink]="[routeKeyEnum.BackupAggregationTargetsDetails, serverBackupVm?.aggregationTargetId]">
+              {{ 'serverServices.vmBackup.batLinkLabel' | translate }}
+            </a>
           </ng-container>
         </div>
       </mcs-item>
@@ -61,7 +54,7 @@
           </ng-container>
         </ng-container>
         <ng-template #vmBackupOrderLinkTemplate>
-          <a *mcsAccessControl="['OrderEdit']; feature: ['EnableOrdering', 'EnableOrderingVmBackupProvision']; requireAllFeatureFlags: true"
+          <a *mcsAccessControl="['OrderEdit'];"
           (click)="onAddVmBackup(server)"
           [disabled]="server.isProcessing"
           mcsId="add-new-vm-backup"

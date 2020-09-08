@@ -166,13 +166,11 @@ export class CatalogComponent<TEntity> implements OnInit, OnDestroy {
         let catalog = getSafeProperty(resolver, (obj) => obj.catalog);
         let catalogOptions: McsOption[] = [];
 
-        if (this._accessControlService.hasAccessToFeature(McsFeatureFlag.CatalogProductListing)) {
-          let products = createObject(CatalogItem, {
-            type: CatalogType.Products,
-            content: catalog.productCatalog
-          });
-          catalogOptions.push(new McsOption(products, catalogTypeText[CatalogType.Products]));
-        }
+        let products = createObject(CatalogItem, {
+          type: CatalogType.Products,
+          content: catalog.productCatalog
+        });
+        catalogOptions.push(new McsOption(products, catalogTypeText[CatalogType.Products]));
 
         if (this._accessControlService.hasAccessToFeature(McsFeatureFlag.CatalogSolutionListing)) {
           let solutions = createObject(CatalogItem, {

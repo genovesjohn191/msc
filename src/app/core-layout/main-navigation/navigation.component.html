@@ -78,7 +78,7 @@
                 </a>
               </li>
               <!-- Internet -->
-              <li *mcsAccessControl="['InternetView']; feature: 'EnableInternetPortView'">
+              <li *mcsAccessControl="['InternetView'];">
                 <a [mcsRouterLink]="routeKeyEnum.Internet"
                   mcsRouterLinkActive="active"
                   class="sub-navigation-item unstyled-link"
@@ -92,7 +92,7 @@
             </ul>
           </li>
           <!-- Storage -->
-          <li *mcsAccessControl="[]; feature: 'EnableBatView'">
+          <li>
             <a (click)="toggleThis('showStorageSubmenu')"
               [class.active]="selectedCategory === routerCategoryEnum.Storage"
               mcsId="storage-link">
@@ -161,7 +161,7 @@
             </ul>
           </li>
           <!-- Licenses -->
-          <li *mcsAccessControl="[]; feature: 'EnablePublicCloud'">
+          <li>
             <a [mcsRouterLink]="routeKeyEnum.Licenses"
               mcsId="licenses-link"
               mcsEventTracker="navigate-to-licenses"
@@ -185,43 +185,28 @@
         </a>
       </li>
       <!-- Catalog -->
-      <ng-container *mcsAccessControl="[]; feature: 'EnableProductCatalog'" >
-        <li *mcsAccessControl="[]; feature: ['EnableCatalogProductListing', 'EnableCatalogSolutionListing']" hidden-small>
-          <a [mcsRouterLink]="routeKeyEnum.Catalog"
-            mcsId="catalog-link"
-            mcsEventTracker="navigate-to-catalog"
-            mcsEventCategory="navigation"
-            mcsEventLabel="main-nav"
-            mcsRouterLinkActive="active">
-            {{ 'navigation.catalog' | translate }}
-          </a>
-        </li>
-      </ng-container>
+      <li hidden-small>
+        <a [mcsRouterLink]="routeKeyEnum.Catalog"
+          mcsId="catalog-link"
+          mcsEventTracker="navigate-to-catalog"
+          mcsEventCategory="navigation"
+          mcsEventLabel="main-nav"
+          mcsRouterLinkActive="active">
+          {{ 'navigation.catalog' | translate }}
+        </a>
+      </li>
       <!-- Orders -->
       <li *mcsAccessControl="['OrderView']">
-        <ng-container *mcsAccessControl="[]; feature: 'EnableOrdering'; else: macviewOrdersTemplate">
-          <a (click)="toggleThis('showOrdersMenu')"
-            [class.active]="selectedCategory === routerCategoryEnum.Orders || selectedCategory === routerCategoryEnum.MakeAChange"
-            mcsId="orders-link">
-            {{ 'navigation.orders.label' | translate }}
-            <mcs-icon [key]="showOrdersMenu ? caretUpIconKey : caretDownIconKey" color="light" size="small"></mcs-icon>
-          </a>
-        </ng-container>
-  
-        <ng-template #macviewOrdersTemplate>
-          <a [href]="macviewOrdersUrl"
-            target="_blank"
-            mcsId="mac-orders-link"
-            mcsEventTracker="navigate-to-macview-orders"
-            mcsEventCategory="navigation"
-            mcsEventLabel="main-nav">
-            {{ 'navigation.orders.label' | translate }}
-          </a>
-        </ng-template>
+        <a (click)="toggleThis('showOrdersMenu')"
+          [class.active]="selectedCategory === routerCategoryEnum.Orders || selectedCategory === routerCategoryEnum.MakeAChange"
+          mcsId="orders-link">
+          {{ 'navigation.orders.label' | translate }}
+          <mcs-icon [key]="showOrdersMenu ? caretUpIconKey : caretDownIconKey" color="light" size="small"></mcs-icon>
+        </a>
 
         <ul *ngIf="showOrdersMenu">
           <!-- Dashboard -->
-          <li *mcsAccessControl="['OrderEdit']; feature: 'EnableOrderingOperationsListing'">
+          <li *mcsAccessControl="['OrderEdit'];">
             <a [mcsRouterLink]="routeKeyEnum.OrdersDashboard"
               mcsId="make-a-change-link"
               mcsEventTracker="navigate-to-order-dashboard"
@@ -232,16 +217,14 @@
             </a>
           </li>
           <!-- History -->
-          <li *mcsAccessControl="[]; feature: 'EnableOrdering'">
-            <a [mcsRouterLink]="routeKeyEnum.OrdersHistory"
-              mcsId="orders-history-link"
-              mcsEventTracker="navigate-to-orders-history"
-              mcsEventCategory="navigation"
-              mcsEventLabel="main-nav"
-              mcsRouterLinkActive="active">
-              {{ 'navigation.orders.history' | translate }}
-            </a>
-          </li>
+          <a [mcsRouterLink]="routeKeyEnum.OrdersHistory"
+            mcsId="orders-history-link"
+            mcsEventTracker="navigate-to-orders-history"
+            mcsEventCategory="navigation"
+            mcsEventLabel="main-nav"
+            mcsRouterLinkActive="active">
+            {{ 'navigation.orders.history' | translate }}
+          </a>
         </ul>
       </li>
       <!-- Tickets -->

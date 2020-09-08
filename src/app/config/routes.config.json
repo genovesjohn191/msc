@@ -72,7 +72,6 @@
     "enumCategory": "Compute",
     "enumKey": "ServerDetailsServices",
     "navigationPath": "services",
-    "requiredFeatureFlag": ["EnableServerOsUpdates", "EnableOrderingManagedServerInviewLevelRaise", "EnableAddonHidsView", "EnableAddonAntiVirusView", "EnableAddonVmBackupView", "EnableAddonServerBackupView"],
     "documentTitle": "Server Services - Macquarie Cloud Services"
   },
   "serverDetailsStorage": {
@@ -214,7 +213,6 @@
     "enumKey": "Internet",
     "navigationPath": "network/internet",
     "requiredPermissions": ["InternetView"],
-    "requiredFeatureFlag": "EnableInternetPortView",
     "documentTitle": "Internet Ports - Macquarie Cloud Services"
   },
   "internetDetails": {
@@ -223,7 +221,6 @@
     "enumKey": "InternetDetails",
     "navigationPath": "network/internet",
     "requiredPermissions": ["InternetView"],
-    "requiredFeatureFlag": "EnableInternetPortView",
     "documentTitle": "Internet Ports Details - Macquarie Cloud Services"
   },
   "internetDetailsManagement": {
@@ -232,7 +229,6 @@
     "enumKey": "InternetDetailsManagement",
     "navigationPath": "management",
     "requiredPermissions": ["InternetView"],
-    "requiredFeatureFlag": "EnableInternetPortView",
     "documentTitle": "Internet Ports Management - Macquarie Cloud Services"
   },
   "backupAggregationTargets": {
@@ -240,7 +236,6 @@
     "enumCategory": "Storage",
     "enumKey": "BackupAggregationTargets",
     "navigationPath": "storage/aggregation-targets",
-    "requiredFeatureFlag": "EnableBatView",
     "documentTitle": "Storage - Macquarie Cloud Services"
   },
   "backupAggregationTargetsDetails": {
@@ -248,7 +243,6 @@
     "enumCategory": "Storage",
     "enumKey": "BackupAggregationTargetsDetails",
     "navigationPath": "storage/aggregation-targets",
-    "requiredFeatureFlag": "EnableBatView",
     "documentTitle": "Backup Aggregation Targets - Macquarie Cloud Services"
   },
   "backupAggregationTargetsDetailsManagement": {
@@ -256,7 +250,6 @@
     "enumCategory": "Storage",
     "enumKey": "BackupAggregationTargetsDetailsManagement",
     "navigationPath": "management",
-    "requiredFeatureFlag": "EnableBatDetailsView",
     "documentTitle": "Backup Aggregation Targets - Macquarie Cloud Services"
   },
   "backupAggregationTargetsDetailsLinkedServices": {
@@ -264,15 +257,13 @@
     "enumCategory": "Storage",
     "enumKey": "BackupAggregationTargetsDetailsLinkedServices",
     "navigationPath": "linked-services",
-    "requiredFeatureFlag": "EnableBatLinkedServicesView",
     "documentTitle": "Backup Aggregation Targets - Macquarie Cloud Services"
   },
   "licenses": {
     "enumPlatform": "Public",
     "enumKey": "Licenses",
     "navigationPath": "licenses",
-    "documentTitle": "Licenses - Macquarie Cloud Services",
-    "requiredFeatureFlag": "EnablePublicCloud"
+    "documentTitle": "Licenses - Macquarie Cloud Services"
   },
   "systemMessages": {
     "enumCategory": "SystemMessages",
@@ -331,34 +322,29 @@
   "catalog": {
     "enumKey": "Catalog",
     "navigationPath": "catalog",
-    "requiredFeatureFlag": "EnableProductCatalog",
     "documentTitle": "Catalog - Macquarie Cloud Services"
   },
   "catalogProductsPlatform": {
     "enumKey": "CatalogProductsPlatform",
     "navigationPath": "catalog/products/platform",
-    "requiredFeatureFlag": ["EnableProductCatalog", "EnableCatalogProductListing"],
-    "requireAllFeatures": true,
     "documentTitle": "Catalog Product Platform - Macquarie Cloud Services"
   },
   "catalogProduct": {
     "enumKey": "CatalogProduct",
     "navigationPath": "catalog/products",
-    "requiredFeatureFlag": ["EnableProductCatalog", "EnableCatalogProductListing"],
-    "requireAllFeatures": true,
     "documentTitle": "Catalog Product - Macquarie Cloud Services"
   },
   "catalogSolution": {
     "enumKey": "CatalogSolution",
     "navigationPath": "catalog/solutions",
-    "requiredFeatureFlag": ["EnableProductCatalog", "EnableCatalogSolutionListing"],
+    "requiredFeatureFlag": ["EnableCatalogSolutionListing"],
     "requireAllFeatures": true,
     "documentTitle": "Catalog Solution - Macquarie Cloud Services"
   },
   "catalogSolutions": {
     "enumKey": "CatalogSolutions",
     "navigationPath": "catalog/solutions",
-    "requiredFeatureFlag": ["EnableProductCatalog", "EnableCatalogSolutionListing"],
+    "requiredFeatureFlag": ["EnableCatalogSolutionListing"],
     "requireAllFeatures": true,
     "documentTitle": "Catalog Solutions - Macquarie Cloud Services"
   },
@@ -367,7 +353,6 @@
     "enumCategory": "Orders",
     "navigationPath": "orders/history",
     "requiredPermissions": ["OrderView"],
-    "requiredFeatureFlag": "EnableOrdering",
     "documentTitle": "Orders - Macquarie Cloud Services"
   },
   "orderDetails": {
@@ -375,7 +360,6 @@
     "enumCategory": "Orders",
     "navigationPath": "orders/history",
     "requiredPermissions": ["OrderView", "OrderEdit", "OrderApprove"],
-    "requiredFeatureFlag": "EnableOrdering",
     "documentTitle": "Order Details - Macquarie Cloud Services"
   },
   "ordersDashboard": {
@@ -383,8 +367,6 @@
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/dashboard",
     "requiredPermissions": ["OrderEdit"],
-    "requiredFeatureFlag": ["EnableOrdering", "EnableOrderingOperationsListing"],
-    "requireAllFeatures": true,
     "documentTitle": "Orders Dashboard - Macquarie Cloud Services"
   },
   "orderServerManagedScale": {
@@ -393,8 +375,6 @@
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/server-managed-scale",
     "requiredPermissions": ["OrderEdit"],
-    "requiredFeatureFlag": ["EnableOrdering", "EnableOrderingManagedServerScale"],
-    "requireAllFeatures": true,
     "documentTitle": "Scale Managed Servers - Macquarie Cloud Services"
   },
   "orderVdcScale": {
@@ -403,8 +383,6 @@
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/vdc-scale",
     "requiredPermissions": ["OrderEdit"],
-    "requiredFeatureFlag": ["EnableOrdering", "EnableOrderingVdcComputeScale"],
-    "requireAllFeatures": true,
     "documentTitle": "Scale VDC - Macquarie Cloud Services"
   },
   "orderVdcStorageExpand": {
@@ -413,8 +391,6 @@
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/vdc-storage-expand",
     "requiredPermissions": ["OrderEdit"],
-    "requiredFeatureFlag": ["EnableOrdering", "EnableOrderingVdcStorageExpand"],
-    "requireAllFeatures": true,
     "documentTitle": "Expand Vdc Storage - Macquarie Cloud Services"
   },
   "orderVdcStorageCreate": {
@@ -423,7 +399,7 @@
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/vdc-storage-create",
     "requiredPermissions": ["OrderEdit"],
-    "requiredFeatureFlag": ["EnableOrdering", "EnableOrderingVdcStorageProvision"],
+    "requiredFeatureFlag": ["EnableOrderingVdcStorageProvision"],
     "requireAllFeatures": true,
     "documentTitle": "Create Vdc Storage - Macquarie Cloud Services"
   },
@@ -433,8 +409,6 @@
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/services/inview",
     "requiredPermissions": ["OrderEdit"],
-    "requiredFeatureFlag": ["EnableOrdering", "EnableOrderingManagedServerInviewLevelRaise"],
-    "requireAllFeatures": true,
     "documentTitle": "Service Raise Inview Level - Macquarie Cloud Services"
   },
   "orderServiceCustomChange": {
@@ -443,7 +417,7 @@
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/services/custom-change",
     "requiredPermissions": ["OrderEdit"],
-    "requiredFeatureFlag": ["EnableOrdering", "EnableOrderingServiceCustomRequest"],
+    "requiredFeatureFlag": ["EnableOrderingServiceCustomRequest"],
     "requireAllFeatures": true,
     "documentTitle": "Custom Change Service - Macquarie Cloud Services"
   },
@@ -453,7 +427,7 @@
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/hosted-dns-change",
     "requiredPermissions": ["OrderEdit"],
-    "requiredFeatureFlag": ["EnableOrdering", "EnableOrderingDnsCustomRequest"],
+    "requiredFeatureFlag": ["EnableOrderingDnsCustomRequest"],
     "requireAllFeatures": true,
     "documentTitle": "Hosted DNS Change - Macquarie Cloud Services"
   },
@@ -473,8 +447,6 @@
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/add/anti-virus",
     "requiredPermissions": ["OrderEdit"],
-    "requiredFeatureFlag": ["EnableOrdering", "EnableOrderingAntiVirusProvision"],
-    "requireAllFeatures": true,
     "documentTitle": "Add Anti-Virus - Macquarie Cloud Services"
   },
   "orderAddHids": {
@@ -483,8 +455,6 @@
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/add/host-intrusion-detection",
     "requiredPermissions": ["OrderEdit"],
-    "requiredFeatureFlag": ["EnableOrdering", "EnableOrderingHidsProvision"],
-    "requireAllFeatures": true,
     "documentTitle": "Add Host Intrusion Detection - Macquarie Cloud Services"
   },
   "orderAddServerBackup": {
@@ -493,8 +463,6 @@
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/add/server-backup",
     "requiredPermissions": ["OrderEdit"],
-    "requiredFeatureFlag": ["EnableOrdering", "EnableOrderingServerBackupProvision"],
-    "requireAllFeatures": true,
     "documentTitle": "Add Server Backup Provision - Macquarie Cloud Services"
   },
   "orderAddVmBackup": {
@@ -503,8 +471,6 @@
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/add/vm-backup",
     "requiredPermissions": ["OrderEdit"],
-    "requiredFeatureFlag": ["EnableOrdering", "EnableOrderingVmBackupProvision"],
-    "requireAllFeatures": true,
     "documentTitle": "Add VM Backup Provision - Macquarie Cloud Services"
   },
   "orderAddBat": {
@@ -513,8 +479,6 @@
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/add/backup-aggregation-target",
     "requiredPermissions": ["OrderEdit"],
-    "requiredFeatureFlag": ["EnableOrdering", "EnableOrderingBatProvision"],
-    "requireAllFeatures": true,
     "documentTitle": "Add Backup Aggregation Target Provision - Macquarie Cloud Services"
   },
   "orderMsLicenseCountChange": {
@@ -523,8 +487,6 @@
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/ms-license-count-change",
     "requiredPermissions": ["OrderEdit"],
-    "requiredFeatureFlag": ["EnableOrdering", "EnableOrderingLicenseCountChange"],
-    "requireAllFeatures": true,
     "documentTitle": "Change Microsoft License Count - Macquarie Cloud Services"
   },
   "orderMsRequestChange": {
@@ -533,7 +495,7 @@
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/ms-request-change",
     "requiredPermissions": ["OrderEdit"],
-    "requiredFeatureFlag": ["EnableOrdering", "EnableOrderingMicrosoftRequestChange"],
+    "requiredFeatureFlag": ["EnableOrderingMicrosoftRequestChange"],
     "requireAllFeatures": true,
     "documentTitle": "Microsoft Place Service Request - Macquarie Cloud Services"
   },

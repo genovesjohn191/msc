@@ -15,7 +15,7 @@
 
 <!-- User panel content -->
 <div mcsAlign="end" class="user-panel-wrapper">
-  <ng-container *mcsAccessControl="['OrderEdit']; feature: ['EnableOrdering', 'EnableOrderingOperationsListing']; requireAllFeatureFlags: true">
+  <ng-container *mcsAccessControl="['OrderEdit'];">
     <div class="make-a-change" [class.active]="selectedCategory === routerCategoryEnum.MakeAChange" *isExperimental="true">
       <a mcsCursor="pointer"
         mcsId="ordering-dashboard"

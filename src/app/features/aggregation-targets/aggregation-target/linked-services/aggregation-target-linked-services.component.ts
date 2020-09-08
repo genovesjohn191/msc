@@ -35,10 +35,6 @@ import {
 import { AggregationTargetService } from '../aggregation-target.service';
 import { AggregationTargetDetailsBase } from '../aggregation-target.base';
 
-interface LinkedServicesConfig {
-  featureFlags: McsFeatureFlag[];
-}
-
 @Component({
   selector: 'mcs-aggregation-target-linked-services',
   templateUrl: './aggregation-target-linked-services.component.html',
@@ -50,7 +46,6 @@ export class AggregationTargetLinkedServicesComponent extends AggregationTargetD
   public batLinkedServicesDatasource: McsTableDataSource<McsBatLinkedService>;
   public batLinkedServicesColumns: string[];
   private _batLinkedServicesCache: Observable<McsBatLinkedService[]>;
-  private _linkedServicesConfigMap: Map<BatLinkedServiceType, LinkedServicesConfig>;
 
   constructor(
     _aggregationTargetService: AggregationTargetService,
@@ -63,13 +58,11 @@ export class AggregationTargetLinkedServicesComponent extends AggregationTargetD
     super(_aggregationTargetService);
     this.batLinkedServicesColumns = [];
     this.batLinkedServicesDatasource = new McsTableDataSource();
-    this._linkedServicesConfigMap = new Map();
   }
 
   public ngOnInit() {
     this.initializeBase();
     this._setDataColumns();
-    this._createLinkedServicesConfigMap();
   }
 
   public get routeKeyEnum(): typeof RouteKey {
@@ -102,11 +95,7 @@ export class AggregationTargetLinkedServicesComponent extends AggregationTargetD
    * Return true if the user has access to the selected linked service
    */
   public hasAccessToService(linkedService: McsBatLinkedService): boolean {
-    let linkedServiceConfig = this._linkedServicesConfigMap.get(linkedService.serviceType);
-    return this._accessControlService.hasAccess(
-      [McsPermission.CloudVmAccess, McsPermission.DedicatedVmAccess],
-      linkedServiceConfig.featureFlags
-    );
+    return this._accessControlService.hasPermission([McsPermission.CloudVmAccess, McsPermission.DedicatedVmAccess]);
   }
 
   /**
@@ -147,13 +136,5 @@ export class AggregationTargetLinkedServicesComponent extends AggregationTargetD
       batLinkedServicesApiSource : this._batLinkedServicesCache;
     this.batLinkedServicesDatasource.updateDatasource(tableDataSource);
     this._changeDetectorRef.markForCheck();
-  }
-
-  /**
-   * Initializes the linked service config map
-   */
-  private _createLinkedServicesConfigMap(): void {
-    this._linkedServicesConfigMap.set(BatLinkedServiceType.VmBackup, { featureFlags: [McsFeatureFlag.AddonVmBackupView] });
-    this._linkedServicesConfigMap.set(BatLinkedServiceType.ServerBackup, { featureFlags: [McsFeatureFlag.AddonServerBackupView] });
   }
 }

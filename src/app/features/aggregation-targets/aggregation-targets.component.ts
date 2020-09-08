@@ -8,8 +8,7 @@ import { Observable } from 'rxjs';
 import {
   McsTableListingBase,
   IMcsColumnManager,
-  McsNavigationService,
-  McsAccessControlService
+  McsNavigationService
 } from '@app/core';
 import {
   McsBackUpAggregationTarget,
@@ -17,8 +16,7 @@ import {
   McsApiCollection,
   RouteKey,
   InviewLevel,
-  inviewLevelText,
-  McsFeatureFlag
+  inviewLevelText
 } from '@app/models';
 import {
   CommonDefinition,
@@ -38,7 +36,6 @@ export class AggregationTargetsComponent extends McsTableListingBase<McsBackUpAg
   public constructor(
     _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
-    private _accessControlService: McsAccessControlService,
     private _navigationService: McsNavigationService,
     private _apiService: McsApiService
   ) {
@@ -67,15 +64,8 @@ export class AggregationTargetsComponent extends McsTableListingBase<McsBackUpAg
    * @param aggregationTarget Aggregation Target to view the details
    */
   public navigateToAggregationTarget(aggregationTarget: McsBackUpAggregationTarget): void {
-    if (!this.hasAccessToDetailsView() || isNullOrEmpty(aggregationTarget)) { return; }
+    if (isNullOrEmpty(aggregationTarget)) { return; }
     this._navigationService.navigateTo(RouteKey.BackupAggregationTargetsDetails, [aggregationTarget.id]);
-  }
-
-  /**
-   * Return true if the user has access to the bat details view
-   */
-  public hasAccessToDetailsView(): boolean {
-    return this._accessControlService.hasAccessToFeature([McsFeatureFlag.BatDetailsView]);
   }
 
   /**

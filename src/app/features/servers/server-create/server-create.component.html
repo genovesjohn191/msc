@@ -60,35 +60,33 @@
         </ng-container>
       </mcs-wizard-step>
 
-      <ng-container *mcsAccessControl="[]; feature: ['EnableOrdering', 'EnableOrderingManagedServerCreate']; requireAllFeatureFlags: true">
-        <ng-container *ngIf="resource$ | async as resource">
-          <!-- Add-ons Step -->
-          <mcs-wizard-step id="addon-step"
-            *ngIf="resource?.serviceType === serviceTypeEnum.Managed"
-            [stepTitle]="'serverCreateAddOnsStep.stepTitle' | translate"
-            customClass="contextual-help-page-wrapper limited-view">
+      <ng-container *ngIf="resource$ | async as resource">
+        <!-- Add-ons Step -->
+        <mcs-wizard-step id="addon-step"
+          *ngIf="resource?.serviceType === serviceTypeEnum.Managed"
+          [stepTitle]="'serverCreateAddOnsStep.stepTitle' | translate"
+          customClass="contextual-help-page-wrapper limited-view">
 
-            <mcs-server-create-addons
-              [osType]="serverCreationOsType"
-              (dataChange)="onServerAddOnChange($event)">
-            </mcs-server-create-addons>
-          </mcs-wizard-step>
+          <mcs-server-create-addons
+            [osType]="serverCreationOsType"
+            (dataChange)="onServerAddOnChange($event)">
+          </mcs-server-create-addons>
+        </mcs-wizard-step>
 
-          <!-- Confirm Step  -->
-          <mcs-wizard-step id="confirm-step"
-            *ngIf="resource?.serviceType === serviceTypeEnum.Managed"
-            [stepTitle]="'serverCreateConfirmStep.stepTitle' | translate"
-            customClass="contextual-help-page-wrapper limited-view">
+        <!-- Confirm Step  -->
+        <mcs-wizard-step id="confirm-step"
+          *ngIf="resource?.serviceType === serviceTypeEnum.Managed"
+          [stepTitle]="'serverCreateConfirmStep.stepTitle' | translate"
+          customClass="contextual-help-page-wrapper limited-view">
 
-            <mcs-step-order-details [order]="order$ | async"
-              [orderItemType]="orderItemType$ | async"
-              [requestState]="dataStatus$ | async"
-              [eventTrack]="orderEventTrack.billingDetailsStep"
-              (dataChange)="onServerConfirmOrderChange($event)"
-              (submitOrder)="onSubmitOrder($event)">
-            </mcs-step-order-details>
-          </mcs-wizard-step>
-        </ng-container>
+          <mcs-step-order-details [order]="order$ | async"
+            [orderItemType]="orderItemType$ | async"
+            [requestState]="dataStatus$ | async"
+            [eventTrack]="orderEventTrack.billingDetailsStep"
+            (dataChange)="onServerConfirmOrderChange($event)"
+            (submitOrder)="onSubmitOrder($event)">
+          </mcs-step-order-details>
+        </mcs-wizard-step>
       </ng-container>
 
       <!-- Go! Step  -->

@@ -1,20 +1,11 @@
 export enum McsFeatureFlag {
   MaintenanceMode = 'EnableMaintenanceMode',
-  ExperimentalFeatures = 'EnableExperimentalFeatures',
-  PublicCloudDashboard = 'EnablePublicCloudDashboard',
   SystemMessages = 'EnableSystemMessages',
+  ExperimentalFeatures = 'EnableExperimentalFeatures',
 
-  InternetPortView = 'EnableInternetPortView',
+  PublicCloudDashboard = 'EnablePublicCloudDashboard',
 
-  BatDetailsView = 'EnableBatDetailsView',
-  BatView = 'EnableBatView',
-  BatLinkedServicesView = 'EnableBatLinkedServicesView',
-
-  ProductCatalog = 'EnableProductCatalog',
-  CatalogProductListing = 'EnableCatalogProductListing',
   CatalogSolutionListing = 'EnableCatalogSolutionListing',
-
-  ServerOsUpdates = 'EnableServerOsUpdates',
 
   MediaCatalog = 'EnableMediaCatalog',
   ResourceMediaUpload = 'EnableResourceMediaUpload',
@@ -27,25 +18,6 @@ export enum McsFeatureFlag {
   DedicatedVmNicView = 'EnableDedicatedVmNicView',
   DedicatedVmStorageView = 'EnableDedicatedVmStorageView',
 
-  AddonHidsView = 'EnableAddonHidsView',
-  AddonAntiVirusView = 'EnableAddonAntiVirusView',
-  AddonVmBackupView = 'EnableAddonVmBackupView',
-  AddonServerBackupView = 'EnableAddonServerBackupView',
-
-  Ordering = 'EnableOrdering',
-  OrderingSqlProvision = 'EnableOrderingSqlProvision',
-  OrderingServerBackupProvision = 'EnableOrderingServerBackupProvision',
-  OrderingVmBackupProvision = 'EnableOrderingVmBackupProvision',
-  OrderingAntiVirusProvision = 'EnableOrderingAntiVirusProvision',
-  OrderingHidsProvision = 'EnableOrderingHidsProvision',
-  OrderingManagedServerCreate = 'EnableOrderingManagedServerCreate',
-  OrderingManagedServerScale = 'EnableOrderingManagedServerScale',
-  OrderingVdcStorageExpand = 'EnableOrderingVdcStorageExpand',
   OrderingVdcStorageProvision = 'EnableOrderingVdcStorageProvision',
-  OrderingManagedServerInviewLevelRaise = 'EnableOrderingManagedServerInviewLevelRaise',
-
-  OrderingLicenseCountChange = 'EnableOrderingLicenseCountChange',
   OrderingMicrosoftRequestChange = 'EnableOrderingMicrosoftRequestChange',
-
-  PublicCloud = 'EnablePublicCloud'
 }

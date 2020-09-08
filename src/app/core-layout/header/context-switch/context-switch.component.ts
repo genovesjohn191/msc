@@ -110,8 +110,7 @@ export class ContextSwitchComponent implements OnInit, OnDestroy {
 
   private _initializePlatformButton(): void {
     this.showPlatformButton = (this._authenticationIdentity.platformSettings.hasPrivateCloud &&
-                                this._authenticationIdentity.platformSettings.hasPublicCloud &&
-                                this._accessControlService.hasAccessToFeature(McsFeatureFlag.PublicCloud));
+                                this._authenticationIdentity.platformSettings.hasPublicCloud);
   }
 
   private _subscribeToRouteChange(): void {
