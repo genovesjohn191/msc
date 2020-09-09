@@ -327,7 +327,9 @@ export class StepOrderDetailsComponent
     orderDetails.workflowAction = this.fcWorkflowAction.value;
     if (this.hasLeadTimeOptions) {
       orderDetails.deliveryType = +getSafeProperty(this.fcDeliveryType, (obj) => obj.value, 0);
-      orderDetails.schedule = getSafeProperty(this.fcSchedule, (obj) => obj.value as Date, new Date()).toISOString();
+      orderDetails.schedule = (orderDetails.deliveryType === DeliveryType.Accelerated) ?
+                              addHoursToDate(new Date(), this.acceleratedLeadTimeHours).toISOString()
+                            : getSafeProperty(this.fcSchedule, (obj) => obj.value as Date, new Date()).toISOString();
     }
     orderDetails.contractDurationMonths = +getSafeProperty(this.fcContractTerm, (obj) => obj.value, 0);
     orderDetails.billingEntityId = +getSafeProperty(this.fcBillingEntity, (obj) => obj.value.id, 0);
