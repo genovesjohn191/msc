@@ -3,7 +3,7 @@
 
 $material-default-gray: rgba(0, 0, 0, 0.38);
 
-.mat-button:disabled, button[disabled] {
+.mat-button:disabled {
   background-color: $light-bg-color !important;
   color: $readonly-color!important;
   pointer-events: none!important;
