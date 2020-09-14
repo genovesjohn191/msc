@@ -78,8 +78,7 @@ interface ChargesState {
 }
 
 const CURRENT_DATE = getCurrentDate();
-const DATE_TOMORROW = addDaysToDate(CURRENT_DATE, 1);
-const MIN_DATE = addHoursToDate(DATE_TOMORROW, 1);
+const MIN_DATE = CURRENT_DATE;
 const MAX_DATE = addMonthsToDate(CURRENT_DATE, 6);
 const STEP_HOUR: number = 1;
 const STEP_MINUTE: number = 30;
@@ -540,7 +539,7 @@ export class StepOrderDetailsComponent
       addHoursToDate(this.minDate, this.standardLeadTimeHours)
     ).pipe(
       map((date) => {
-        let minutes = date.getMinutes() > this.stepMinute ? 0 : this.stepMinute;
+        let minutes = new Date().getMinutes() > this.stepMinute ? 0 : this.stepMinute;
         date.setMinutes(minutes);
         if (minutes <= 0) {
           date = addHoursToDate(date, 1);
