@@ -183,7 +183,10 @@ export class DateTimePickerComponent extends McsFormFieldControlBase<any>
   public dateFormat: string;
 
   @Input()
-  public timezone: string = DEFAULT_TIMEZONE;
+  public timezone: string = moment.tz.guess();
+
+  @Input()
+  public locale: string = moment.locale();
 
   constructor(
     private _adapter: NgxMatDateAdapter<any>,
@@ -279,7 +282,7 @@ export class DateTimePickerComponent extends McsFormFieldControlBase<any>
   }
 
   private _createDateWithProperTimezone(value: Date): Moment {
-    moment.locale(DEFAULT_LOCALE);
+    moment.locale(this.locale);
     moment.tz.setDefault(this.timezone);
     let formattedDate = moment(value).clone().format(DATETIMEZONE_CONVERTER_FORMAT);
     let momentObj = momenttz.tz(formattedDate, this.timezone);

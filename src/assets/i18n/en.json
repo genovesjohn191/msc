@@ -1359,7 +1359,7 @@
       "helptext": "Select your desired delivery type. \r\n\nStandard requests are actioned within business hours. \r\nAcceleration is provided on a best-efforts basis and incurs additional charges regardless of whether any schedule specified is met."
     },
     "schedule": {
-      "helptext": "Select a schedule for this operation (Sydney Time). One of our friendly engineers will contact you if the schedule you have chosen is unavailable."
+      "helptext": "Select a schedule for this operation. One of our friendly engineers will contact you if the schedule you have chosen is unavailable."
     },
     "orderActions": {
       "header": "What would you like to do with this order?",

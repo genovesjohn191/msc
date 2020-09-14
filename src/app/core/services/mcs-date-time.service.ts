@@ -31,8 +31,8 @@ export class McsDateTimeService {
   public formatDate(date: Date, formatType: McsDateTimeFormat | string, timeZone?: string, locale?: string): string {
     if (isNullOrEmpty(date)) { return ''; }
 
-    locale = isNullOrEmpty(locale) ? CommonDefinition.LOCALE : locale;
-    timeZone = isNullOrEmpty(timeZone) ? CommonDefinition.TIMEZONE_SYDNEY : timeZone;
+    locale = isNullOrEmpty(locale) ? moment.locale() : locale;
+    timeZone = isNullOrEmpty(timeZone) ? moment.tz.guess() : timeZone;
 
     moment.locale(locale);
 
