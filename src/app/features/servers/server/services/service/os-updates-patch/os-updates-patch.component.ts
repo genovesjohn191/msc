@@ -32,8 +32,8 @@ import {
 import { ServerServiceDetailBase } from '../server-service-detail.base';
 import { ServerServiceActionDetail } from '../../strategy/server-service-action.context';
 
-const OS_UPDATE_TIMEZONE = 'Australia/Sydney';
-const OS_UPDATE_DATEFORMAT = `EEEE, d MMMM, yyyy 'at' h:mm a`;
+const OS_UPDATE_TIMEZONE = CommonDefinition.TIMEZONE_SYDNEY;
+const OS_UPDATE_DATEFORMAT = `dddd, D MMMM, YYYY [at] h:mm a`;
 
 type OsUpdatesStatusDetails = {
   icon: string;

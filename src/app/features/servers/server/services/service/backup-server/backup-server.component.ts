@@ -36,8 +36,8 @@ import { ServerServiceDetailBase } from '../server-service-detail.base';
 import { ServerServiceActionDetail } from '../../strategy/server-service-action.context';
 
 // TODO: Extract this when the generic date time service is created
-const BACKUP_TIMEZONE = 'Australia/Sydney';
-const BACKUP_DATEFORMAT = `EEEE, d MMMM, yyyy 'at' h:mm a`;
+const BACKUP_TIMEZONE = CommonDefinition.TIMEZONE_SYDNEY;
+const BACKUP_DATEFORMAT = `dddd, D MMMM, YYYY [at] h:mm a`;
 
 type BackupServerStatusDetails = {
   status: BackupStatusType;
