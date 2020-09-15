@@ -279,7 +279,7 @@
             </mcs-header-cell>
             <mcs-data-cell *mcsDataCellDef="let row">
               <ng-container *ngIf="row.schedule | mcsIsNotNullOrEmpty; else showASAP">
-                <span text-wrap>{{ row.schedule.toString() | mcsStdDateFormat }}</span>
+                <span text-wrap>{{ row.schedule | mcsStdDateFormat }}</span>
               </ng-container>
               <ng-template #showASAP>
                 <span text-wrap>{{ 'order.noSchedule' | translate }}</span>
