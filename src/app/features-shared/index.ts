@@ -40,7 +40,6 @@ export * from './smac-shared-form/smac-shared-form-config';
 /** System Message */
 export * from './system-message-form/system-message-form.component';
 export * from './system-message-form/system-message-form';
-export * from './system-message-form/system-message-form.service';
 
 /** Dynamic Form */
 export * from './dynamic-form/dynamic-form-field-data.interface';

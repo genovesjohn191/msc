@@ -25,7 +25,8 @@ import {
 import {
   CoreValidators,
   IMcsFormGroup,
-  IMcsDataChange
+  IMcsDataChange,
+  McsDateTimeService
 } from '@app/core';
 import {
   McsOption,
@@ -39,14 +40,18 @@ import {
   isNullOrEmpty,
   compareDates,
   unsubscribeSafely,
-  getSafeProperty
+  getSafeProperty,
+  getCurrentDate,
+  CommonDefinition
 } from '@app/utilities';
 import {
   McsFormGroupDirective,
   FormMessage
 } from '@app/shared';
 import { SystemMessageForm } from './system-message-form';
-import { SystemMessageFormService } from './system-message-form.service';
+
+const SYSTEM_MESSAGE_DATE_FORMAT = `YYYY-MM-DD[T]hh:mm`;
+const SYSTEM_MESSAGE_FORMAT_NAME = `isoDate`;
 
 @Component({
   selector: 'mcs-system-message-form',
@@ -90,8 +95,8 @@ export class SystemMessageFormComponent
 
   constructor(
     private _formBuilder: FormBuilder,
-    private _systemMessageFormService: SystemMessageFormService,
-    private _translateService: TranslateService
+    private _translateService: TranslateService,
+    private _dateTimeService: McsDateTimeService
   ) {
     this.messageTypeList = new Array();
     this.severityList = new Array();
@@ -123,8 +128,8 @@ export class SystemMessageFormComponent
   /**
    * Returns the formatted current date timezone
    */
-  public get dateNow(): any {
-    return this._systemMessageFormService.getDateNow;
+  public get dateNow(): Date {
+    return getCurrentDate();
   }
 
   /**
@@ -145,8 +150,10 @@ export class SystemMessageFormComponent
    * Event that emits when an input has been changed
    */
   public notifyDataChange() {
-    this._systemMessageForm.start = this._systemMessageFormService.formatDateToUTC(this.fcStart.value);
-    this._systemMessageForm.expiry = this._systemMessageFormService.formatDateToUTC(this.fcExpiry.value);
+    this._systemMessageForm.start = this._dateTimeService.formatDate(this.fcStart.value,
+                                                                    'isoDate', CommonDefinition.TIMEZONE_SYDNEY);
+    this._systemMessageForm.expiry = this._dateTimeService.formatDate(this.fcExpiry.value,
+                                                                    'isoDate', CommonDefinition.TIMEZONE_SYDNEY);
     this._systemMessageForm.type = this.fcType.value;
     this._systemMessageForm.severity = this.fcSeverity.value;
     this._systemMessageForm.message = this.fcMessage.value;
@@ -264,7 +271,7 @@ export class SystemMessageFormComponent
       return;
     }
 
-    this._isValidDates = this._systemMessageFormService.hasPassedDateValidation(startDate, expiryDate, this.dateNow);
+    this._isValidDates = this.hasPassedDateValidation(startDate, expiryDate, this.dateNow.toString());
     if (!this._isValidDates) {
       this._formMessage.showMessage('error', {
         messages: this._translateService.instant('systemMessageForm.errors.messageDates')
@@ -282,8 +289,12 @@ export class SystemMessageFormComponent
   private _setFormControlValues(): void {
     if (isNullOrEmpty(this.message)) { return; }
 
-    this.fcStart.setValue(this._systemMessageFormService.formatDateToISO(this.message.start));
-    this.fcExpiry.setValue(this._systemMessageFormService.formatDateToISO(this.message.expiry));
+    this.fcStart.setValue(this._dateTimeService.formatDate(this.message.start,
+                                                          SYSTEM_MESSAGE_FORMAT_NAME,
+                                                          CommonDefinition.TIMEZONE_SYDNEY));
+    this.fcExpiry.setValue(this._dateTimeService.formatDate(this.message.expiry,
+                                                          SYSTEM_MESSAGE_FORMAT_NAME,
+                                                          CommonDefinition.TIMEZONE_SYDNEY));
 
     this.fcType.setValue(this.message.type);
     this.fcSeverity.setValue(this.message.severity);
@@ -307,13 +318,9 @@ export class SystemMessageFormComponent
   private _setSystemMessageHasChangedFlag() {
     if (isNullOrEmpty(this.message)) { return; }
 
-    let startHasChanged = this.fcStart.value !== this._systemMessageFormService.formatDateToISO(
-      getSafeProperty(this.message, (obj) => obj.start, '')
-    );
+    let startHasChanged = this.fcStart.value !== getSafeProperty(this.message, (obj) => obj.start, '');
 
-    let expiryHasChanged = this.fcExpiry.value !== this._systemMessageFormService.formatDateToISO(
-      getSafeProperty(this.message, (obj) => obj.expiry, ''),
-    );
+    let expiryHasChanged = this.fcExpiry.value !== getSafeProperty(this.message, (obj) => obj.expiry, '');
 
     this._systemMessageForm.hasChanged = this._systemMessageForm.valid &&
       (this.fcEnabled.value !== this.message.enabled || startHasChanged || expiryHasChanged
@@ -364,7 +371,7 @@ export class SystemMessageFormComponent
    */
   private _dateFormatValidation(date: string): boolean {
     if (isNullOrEmpty(date)) { return true; }
-    return this._systemMessageFormService.validateDateFormat(date);
+    return this._dateTimeService.isDateFormatValid(date, SYSTEM_MESSAGE_DATE_FORMAT);
   }
 
   /**
@@ -375,6 +382,36 @@ export class SystemMessageFormComponent
     if (isNullOrEmpty(date)) { return true; }
     let isEarlierDate = compareDates(new Date(date), new Date(this.dateNow)) <= 0;
     return !isEarlierDate;
+  }
+
+  /**
+   * Returns true when inputted date is greater than present date
+   * @param date Inputted date of system message
+   * @param presentDate Current Date Timezone
+   */
+  private isGreaterThanPresentDate(date: string, presentDate?: string): boolean {
+    if (isNullOrEmpty(date)) { return false; }
+    if (isNullOrEmpty(presentDate)) { presentDate = this.dateNow.toString(); }
+
+    let comparisonResult = compareDates(new Date(date), new Date(presentDate)) > 0;
+    return comparisonResult;
+  }
+
+  /**
+   * Returns true when passed all conditions for date validation
+   * @param startDate Start date of system message
+   * @param expiryDate Expiry date of system message
+   * @param presentDate Current date timezone
+   */
+  private hasPassedDateValidation(startDate: string, expiryDate: string, presentDate?: string): boolean {
+    if (isNullOrEmpty(expiryDate)) { return true; }
+    if (isNullOrEmpty(startDate)) { startDate = this.dateNow.toString(); }
+    if (isNullOrEmpty(presentDate)) { presentDate = this.dateNow.toString(); }
+
+    let isStartLessExpiry = compareDates(new Date(startDate), new Date(expiryDate)) < 0;
+    let isValidExpiry = this.isGreaterThanPresentDate(expiryDate, presentDate);
+
+    return isStartLessExpiry && isValidExpiry;
   }
 
 }

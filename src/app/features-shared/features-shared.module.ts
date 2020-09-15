@@ -22,7 +22,6 @@ import { OrderAgreementComponent } from './order-agreement/mcs-order-agreement.c
 import { SystemMessageFormComponent } from './system-message-form/system-message-form.component';
 import { RenameServerDialogComponent } from './server-dialogs/rename-server/rename-server.dialog';
 import { HelpWidgetComponent } from './help-widget/help-widget.component';
-import { SystemMessageFormService } from './system-message-form/system-message-form.service';
 import { SmacSharedFormComponent } from './smac-shared-form/smac-shared-form.component';
 
 @NgModule({
@@ -81,7 +80,6 @@ import { SmacSharedFormComponent } from './smac-shared-form/smac-shared-form.com
     RenameServerDialogComponent
   ],
   providers: [
-    SystemMessageFormService
   ]
 })
 
