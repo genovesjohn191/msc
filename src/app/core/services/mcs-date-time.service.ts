@@ -95,6 +95,6 @@ export class McsDateTimeService {
     this._dateTimeMapTable.set('mediumTime', 'h:mm:ss A');
     this._dateTimeMapTable.set('longTime', 'h:mm:ss A Z');
     this._dateTimeMapTable.set('fullTime', 'h:mm:ss A ZZ');
-    this._dateTimeMapTable.set('isoDate', 'yyyy-MM-ddTHH:mm');
+    this._dateTimeMapTable.set('isoDate', 'YYYY-MM-DD[T]HH:mm');
   }
 }
