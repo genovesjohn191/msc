@@ -59,7 +59,7 @@ export function convertDateTimezoneToUTC(date: string, timezone: string, format:
  * @param format desired format of the output date
  */
 export function isDateFormatValid(date: string, format: string): boolean {
-  let dateFormat = moment(date, format, true);
+  let dateFormat = moment(date, format);
   return dateFormat.isValid();
 }
 

@@ -14,7 +14,7 @@
         [mcsContextualHelp]="'systemMessageForm.startHelp' | translate">
 
       <mcs-hint mcsHint align="start">
-        {{ dateNow }}
+        {{ dateNow | mcsStdDateFormat: 'isoDate' }}
       </mcs-hint>
       <mcs-error mcsError errorState="invalidDate">
         {{ 'systemMessageForm.errors.date' | translate }}
@@ -33,7 +33,7 @@
         [mcsContextualHelp]="'systemMessageForm.expiryHelp' | translate">
 
       <mcs-hint mcsHint align="start">
-        {{ dateNow }}
+        {{ dateNow | mcsStdDateFormat: 'isoDate' }}
       </mcs-hint>
       <mcs-error mcsError errorState="invalidDate">
         {{ 'systemMessageForm.errors.date' | translate }}
