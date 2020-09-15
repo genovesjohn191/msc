@@ -50,7 +50,7 @@ import {
 } from '@app/shared';
 import { SystemMessageForm } from './system-message-form';
 
-const SYSTEM_MESSAGE_DATE_FORMAT = `YYYY-MM-DD[T]hh:mm`;
+const SYSTEM_MESSAGE_DATE_FORMAT = `YYYY-MM-DD[T]HH:mm`;
 const SYSTEM_MESSAGE_FORMAT_NAME = `isoDate`;
 
 @Component({
@@ -150,10 +150,8 @@ export class SystemMessageFormComponent
    * Event that emits when an input has been changed
    */
   public notifyDataChange() {
-    this._systemMessageForm.start = this._dateTimeService.formatDate(this.fcStart.value,
-                                                                    'isoDate', CommonDefinition.TIMEZONE_SYDNEY);
-    this._systemMessageForm.expiry = this._dateTimeService.formatDate(this.fcExpiry.value,
-                                                                    'isoDate', CommonDefinition.TIMEZONE_SYDNEY);
+    this._systemMessageForm.start = new Date(this.fcStart.value).toUTCString();
+    this._systemMessageForm.expiry = new Date(this.fcExpiry.value).toUTCString();
     this._systemMessageForm.type = this.fcType.value;
     this._systemMessageForm.severity = this.fcSeverity.value;
     this._systemMessageForm.message = this.fcMessage.value;
@@ -290,11 +288,9 @@ export class SystemMessageFormComponent
     if (isNullOrEmpty(this.message)) { return; }
 
     this.fcStart.setValue(this._dateTimeService.formatDate(this.message.start,
-                                                          SYSTEM_MESSAGE_FORMAT_NAME,
-                                                          CommonDefinition.TIMEZONE_SYDNEY));
+                                                          SYSTEM_MESSAGE_FORMAT_NAME));
     this.fcExpiry.setValue(this._dateTimeService.formatDate(this.message.expiry,
-                                                          SYSTEM_MESSAGE_FORMAT_NAME,
-                                                          CommonDefinition.TIMEZONE_SYDNEY));
+                                                          SYSTEM_MESSAGE_FORMAT_NAME));
 
     this.fcType.setValue(this.message.type);
     this.fcSeverity.setValue(this.message.severity);
@@ -410,7 +406,6 @@ export class SystemMessageFormComponent
 
     let isStartLessExpiry = compareDates(new Date(startDate), new Date(expiryDate)) < 0;
     let isValidExpiry = this.isGreaterThanPresentDate(expiryDate, presentDate);
-
     return isStartLessExpiry && isValidExpiry;
   }
 

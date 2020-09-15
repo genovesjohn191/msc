@@ -66,7 +66,7 @@
             {{ columnSettings.start.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
-            {{ row.start | mcsStdDateFormat: 'default' : timeZone }}
+            {{ row.start | mcsStdDateFormat: 'default' }}
           </mcs-data-cell>
         </ng-container>
 
@@ -76,7 +76,7 @@
             {{ columnSettings.expiry.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
-            {{ row.expiry | mcsStdDateFormat: 'default' : timeZone }}
+            {{ row.expiry | mcsStdDateFormat: 'default' }}
           </mcs-data-cell>
         </ng-container>
 
@@ -116,7 +116,7 @@
             {{ columnSettings.createdOn.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
-            {{ row.createdOn | mcsStdDateFormat: 'default' : timeZone }}
+            {{ row.createdOn | mcsStdDateFormat: 'default' }}
           </mcs-data-cell>
         </ng-container>
 
@@ -136,7 +136,7 @@
             {{ columnSettings.updatedOn.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
-            {{ row.updatedOn | mcsStdDateFormat: 'default' : timeZone }}
+            {{ row.updatedOn | mcsStdDateFormat: 'default' }}
           </mcs-data-cell>
         </ng-container>
 
