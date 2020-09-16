@@ -1,0 +1,202 @@
+<mcs-page [header]="'orderRemoteHands.title' | translate">
+    <!-- Top Panel -->
+    <mcs-top-panel *mcsTopPanelDef>
+
+      <!-- Back to previous URL -->
+      <mcs-top-panel-item *mcsTopPanelItemDef no-border>
+        <mcs-action-item mcsAlign="end"
+          mcsNavigateBackward
+          mcsId="navigate-back"
+          mcsEventTracker="navigate-back-click"
+          mcsEventCategory="orders"
+          mcsEventLabel="ms-service-change-request">
+          <mcs-icon [key]="backIconKey" size="small"></mcs-icon>
+          <span>{{ 'orderRemoteHands.detailsStep.previous' | translate }}</span>
+        </mcs-action-item>
+      </mcs-top-panel-item>
+    </mcs-top-panel>
+
+    <mcs-content-panel *mcsContentPanelDef>
+
+      <mcs-wizard>
+
+        <!-- Error message -->
+        <ng-container mcsWizardErrorTemplate>
+          <mcs-form-message #formMessage></mcs-form-message>
+        </ng-container>
+
+        <!-- Details Step-->
+        <mcs-wizard-step id="ms-service-change-details-step"
+          [stepTitle]="'orderRemoteHands.detailsStep.stepTitle' | translate"
+          customClass="contextual-help-page-wrapper limited-view">
+
+          <form [formGroup]="fgRemoteHands" mcsFormGroup>
+            <ng-container>
+              <mcs-item [mcsGreyedOut]="true" [hidden]="loadingInProgress">
+                <p [innerHTML]="('orderRemoteHands.detailsStep.description' | translate: { leadTimeHours: remoteHandsStandardLeadTimeHours } ) | mcsNewLines"></p>
+              </mcs-item>
+            </ng-container>
+
+              <!-- Rack Service Selection -->
+              <mcs-item orientation="block">
+                <ng-container *ngIf="loadingInProgress">
+                  <mcs-loader size="small"
+                    [mcsTooltip]="loadingText"
+                    mcsTooltipPosition="right"></mcs-loader>
+                </ng-container>
+                <mcs-form-field  *ngIf="!loadingInProgress">
+                  <mcs-select mcsId="rack-service"
+                    mcsEventTracker="select-rack-service"
+                    mcsEventCategory="order"
+                    mcsEventLabel="colocation-remote-hands"
+                    [formControl]="fcRackService"
+                    [disabled]="!hasServiceToDisplay"
+                    [placeholder]="'orderRemoteHands.detailsStep.rackServicePlaceholder' | translate"
+                    [mcsContextualHelp]="'orderRemoteHands.detailsStep.rackServiceHelpText' | translate">
+                    <mcs-option-group *ngFor="let colocationGroup of colocationGroups" >
+                      <ng-container *mcsOptionGroupLabel>
+                        <span>{{ colocationGroup?.groupName }}</span>
+                      </ng-container>
+                      <mcs-option   *ngFor="let service of colocationGroup.options"  [value]="service.value">
+                        {{ service.text }}
+                      </mcs-option>
+                    </mcs-option-group>
+                  </mcs-select>
+                  <mcs-error 
+                        mcsError errorState="required"
+                        [innerHTML]="('orderRemoteHands.errors.rackServiceRequired' | translate)">
+                  </mcs-error>
+                </mcs-form-field>
+                <span
+                  [mcsGreyedOut]="true"
+                  *ngIf="!hasServiceToDisplay && !loadingInProgress"
+                  [innerHTML]="('orderRemoteHands.errors.rackServiceNotAvailable' | translate)">
+                </span>
+              </mcs-item>
+              <hr/>
+            <span align-self-start>{{'orderRemoteHands.detailsStep.locationDetailsLabel' | translate}}</span>
+            <!-- Floor Level -->
+            <mcs-item orientation='block'>
+              <mcs-form-field>
+                <input mcsInput
+                  [formControl]="fcFloorLevel"
+                  mcsId="input-floor-level"
+                  mcsEventTracker="nput-floor-level"
+                  mcsEventCategory="order"
+                  mcsEventLabel="order-remote-hands"
+                  [placeholder]="'orderRemoteHands.detailsStep.floorLevelPlaceholder' | translate"
+                  [mcsContextualHelp]="'orderRemoteHands.detailsStep.floorLevelHelpText' | translate">
+                  <mcs-error mcsError errorState="required">
+                    {{ 'orderRemoteHands.errors.floorLevel' | translate }}
+                  </mcs-error>
+              </mcs-form-field>
+            </mcs-item>
+
+            <!-- Rack Number -->
+            <mcs-item orientation='block'>
+              <mcs-form-field>
+                <input mcsInput
+                  [formControl]="fcRackNumber"
+                  mcsId="input-rack-number"
+                  mcsEventTracker="input-rack-number"
+                  mcsEventCategory="order"
+                  mcsEventLabel="order-remote-hands"
+                  [placeholder]="'orderRemoteHands.detailsStep.rackNumberPlaceholder' | translate"
+                  [mcsContextualHelp]="'orderRemoteHands.detailsStep.rackNumberHelpText' | translate">
+                  <mcs-error mcsError errorState="required">
+                     {{ 'orderRemoteHands.errors.rackNumber' | translate }}
+                  </mcs-error>
+                </mcs-form-field>
+            </mcs-item>
+
+            <!-- Location Selection -->
+              <mcs-item orientation="block">
+                <mcs-form-field>
+                  <mcs-select mcsId="selec-box-location"
+                    mcsEventTracker="select-box-location"
+                    mcsEventCategory="order"
+                    mcsEventLabel="colocation-remote-hands"
+                    [formControl]="fcCabinetLocation"
+                    [placeholder]="'orderRemoteHands.detailsStep.locationPlaceholder' | translate"
+                    [mcsContextualHelp]="'orderRemoteHands.detailsStep.locationDetailsHelpText' | translate">
+                    <mcs-option *ngFor="let location of cabinetLocationOption$ | async" [value]="location.value">
+                      {{ location.text }}
+                    </mcs-option>
+                  </mcs-select>
+                  <mcs-error mcsError errorState="required">
+                    {{ 'orderRemoteHands.errors.location' | translate }}
+                  </mcs-error>
+                </mcs-form-field>
+              </mcs-item>
+        
+            <!-- Remote Hands Instructions -->
+            <mcs-item orientation="block">
+              <mcs-form-field>
+                <textarea
+                  mcsId="input-remote-hands-instructions"
+                  mcsEventTracker="input-remote-hands-instructions"
+                  mcsEventCategory="order"
+                  mcsEventLabel="colocation-remote-hands"
+                  mcsInput [rows]="instructionVisibleRows"
+                  [formControl]="fcInstruction"
+                  [maxlength]="maxInstructionsLength"
+                  [placeholder]="'orderRemoteHands.detailsStep.instructionsPlaceholder' | translate"
+                  [mcsContextualHelp]="'orderRemoteHands.detailsStep.instructionsHelpText' | translate"></textarea>
+                <mcs-hint mcsHint align="start">
+                  {{ 'shared.formField.hints.maxChar' | translate: { value: maxInstructionsLength } }}
+                </mcs-hint>
+                <mcs-hint mcsHint align="end">
+                  {{ fcInstruction?.value?.length }} / {{ maxInstructionsLength }}
+                </mcs-hint>
+                <mcs-error mcsError errorState="required">
+                  {{ 'orderRemoteHands.errors.instructions' | translate }}
+                </mcs-error>
+              </mcs-form-field>
+            </mcs-item>
+
+              <!-- SMAC Shared Form -->
+              <mcs-item orientation="block">
+                <mcs-smac-shared-form #fgSmacSharedForm
+                [config]="smacSharedFormConfig$ | async"
+                (dataChange)="onChangeSharedForm($event)">
+                </mcs-smac-shared-form>
+              </mcs-item>
+
+              <div class="action-items">
+                <button mcsButton arrow="right"
+                  mcsWizardStepNext
+                  [disabled]="!(formIsValid && fgSmacSharedForm?.isValid())"
+                  mcsId="step-1-next"
+                  mcsEventTracker="step-1-next"
+                  mcsEventCategory="orders"
+                  mcsEventLabel="colocation-remote-hands">{{ 'shared.wizard.next' | translate }}</button>
+              </div>
+            </form>
+        </mcs-wizard-step>
+
+        <!-- Confirm Step  -->
+        <mcs-wizard-step id="confirm-step"
+          [stepTitle]="'shared.wizard.confirm' | translate"
+          customClass="contextual-help-page-wrapper limited-view">
+          <mcs-step-order-details [order]="order$ | async"
+          [orderItemType]="orderItemType$ | async"
+          [requestState]="dataStatus$ | async"
+          [eventTrack]="orderEventTrack.billingDetailsStep"
+          (dataChange)="onOrderDetailsDataChange($event)"
+          (submitOrder)="onSubmitOrder($event, fcRackService?.value.serviceId)">
+          </mcs-step-order-details>
+        </mcs-wizard-step>
+
+        <!-- Go! Step  -->
+        <mcs-wizard-step id="go-step"
+          [stepTitle]="'shared.wizard.completed' | translate"
+          customClass="limited-view">
+          <mcs-step-manual-order-completed
+            [order]="order$ | async"
+            [orderWorkflowSubmitStatus]="orderWorkflowSubmitStatus$ | async">
+          </mcs-step-manual-order-completed>
+        </mcs-wizard-step>
+      </mcs-wizard>
+
+    </mcs-content-panel>
+  </mcs-page>

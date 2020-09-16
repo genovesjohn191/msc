@@ -680,7 +680,7 @@
       "complexityPlaceholder": "Select Complexity",
       "azureProductPlaceHolder": "Select an Azure Product",
       "azureResourcesPlaceHolder": "Select an Azure Resource",
-      "otherAdvisoryLabel": "By selecting 'Other', you are requesting a change or support (Azure Essentials) for a Microsoft service outside the scope of our managed services.<br/><br/> To fulfil this service request, we will rely on Microsoft for advice in relation to your request and relay that advice back to you for the purpose of provisioning, configuring (Azure Managed or Essentials) or support (Azure Essentials).",
+      "otherAdvisoryLabel": "By selecting 'Other', you are requesting a change or support (Azure Essentials) for a Microsoft service outside the scope of our managed services.\r\n\n To fulfil this service request, we will rely on Microsoft for advice in relation to your request and relay that advice back to you for the purpose of provisioning, configuring (Azure Managed or Essentials) or support (Azure Essentials).",
       "servicesLabel": "Services",
       "nullServiceIdToolTip": "A change cannot be requested for this service at this time. Please contact your account team for more information.",
       "azureResourcesLabel": "Azure Resources",
@@ -698,6 +698,36 @@
       "requestDescriptionRequired": "Enter request description.",
       "orderCreationError": "An problem occured while creating the order. Please try again later.",
       "resourceIdentifierRequired": "Please select an azure resource"
+    }
+  },
+  "orderRemoteHands": {
+    "title": "Request Remote Hands",
+    "detailsStep": {
+      "stepTitle": "Request Details",
+      "previous": "Back",
+      "description": "You can use this wizard to request that physical datacentre activities be carried out by a Macquarie Cloud Services engineer.<br/><br/> Our standard lead time of {{leadTimeHours}} hours for this request ensures we have time to get the right engineer for the task.",
+      "locationDetailsLabel": "Location Details",
+      "notesLabel": "Notes",
+      "rackServiceHelpText": "Select the service you would like to request remote hands for",
+      "floorLevelHelpText": "Specify which floor level the work is required on",
+      "rackNumberHelpText": "Specify the row number and rack identifier relating to the work required (e.g. 1D)",
+      "locationDetailsHelpText": "Specify where in the cabinet your the work is required",
+      "instructionsHelpText":"Specify the exact instructions needed to perform this work correctly",
+      "testCasesInstructionsHelpText":"List any test cases you need us to run after this work is completed, in chronological order",
+      "rackServicePlaceholder": "Select a service",
+      "locationPlaceholder": "Location within cabinet",
+      "instructionsPlaceholder": "Remote hands instructions",
+      "floorLevelPlaceholder": "Floor Level",
+      "rackNumberPlaceholder": "Row number and rack",
+      "testCasesInstructionsPlaceholder": "What test cases would you like us to execute after the operation?"
+    },
+    "errors": {
+      "rackServiceRequired" : "Service is required",
+      "location": "Cabinet location is required",
+      "floorLevel": "Floor number is required",
+      "rackNumber": "Row and rack number required",
+      "instructions": "Instructions are required",
+      "rackServiceNotAvailable": "There are no applicable services to display, or you do not have the necessary permissions required to view them. Please contact your account team or raise a ticket if this is unexpected."
     }
   },
   "notification": {

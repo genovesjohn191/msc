@@ -14,6 +14,7 @@ import { MsServiceRequestChangeEvent } from './events/ms-service-request-change.
 import { ServiceCustomChangeEvent } from './events/service-custom-change.event';
 import { HostedDnsChangeEvent } from './events/hosted-dns-change.event';
 import { ColocationStaffEscortEvent } from './events/colocation-staff-escort.event';
+import { ColocationRemoteHandsEvent } from './events/colocation-remote-hands.event';
 
 export type OrderEventRecord = Record<string, IOrderEventStrategy>;
 
@@ -33,4 +34,5 @@ export const orderEventMap: OrderEventRecord = {
   'services.customRequest': new ServiceCustomChangeEvent(),
   'dns.customChange': new HostedDnsChangeEvent(),
   'colocation.staffEscort': new ColocationStaffEscortEvent(),
+  'colocation.remoteHands': new ColocationRemoteHandsEvent()
 };

@@ -23,6 +23,7 @@ import { AddVmBackupComponent } from './add-vm-backup/add-vm-backup.component';
 import { AddBatComponent } from './add-bat/add-bat.component';
 import { MsLicenseCountChangeComponent } from './ms-license-count-change/ms-license-count-change.component';
 import { MsRequestChangeComponent } from './ms-request-change/ms-request-change.component';
+import { RemoteHandsComponent } from './remote-hands/remote-hands.component';
 import { OrdersGuard } from './orders.guard';
 
 /**
@@ -57,7 +58,8 @@ export const ordersComponents: any[] = [
   AddVmBackupComponent,
   AddBatComponent,
   MsLicenseCountChangeComponent,
-  MsRequestChangeComponent
+  MsRequestChangeComponent,
+  RemoteHandsComponent
 ];
 
 /**
@@ -153,6 +155,11 @@ export const ordersRoutes: Routes = [
     path: 'ms-request-change',
     component: MsRequestChangeComponent,
     data: { routeId: RouteKey.OrderMsRequestChange }
+  },
+  {
+    path: 'remote-hands',
+    component: RemoteHandsComponent,
+    data: { routeId: RouteKey.OrderRemoteHands }
   },
   // Add additional routes above this line
   {
