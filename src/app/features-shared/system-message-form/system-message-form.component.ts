@@ -150,8 +150,8 @@ export class SystemMessageFormComponent
    * Event that emits when an input has been changed
    */
   public notifyDataChange() {
-    this._systemMessageForm.start = new Date(this.fcStart.value).toUTCString();
-    this._systemMessageForm.expiry = new Date(this.fcExpiry.value).toUTCString();
+    this._systemMessageForm.start = (isNullOrEmpty(this.fcStart.value)) ? '' : new Date(this.fcStart.value).toUTCString();
+    this._systemMessageForm.expiry = (isNullOrEmpty(this.fcExpiry.value)) ? '' : new Date(this.fcExpiry.value).toUTCString();
     this._systemMessageForm.type = this.fcType.value;
     this._systemMessageForm.severity = this.fcSeverity.value;
     this._systemMessageForm.message = this.fcMessage.value;
