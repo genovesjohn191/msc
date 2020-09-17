@@ -499,6 +499,13 @@
     "requireAllFeatures": true,
     "documentTitle": "Microsoft Place Service Request - Macquarie Cloud Services"
   },
+  "orderRemoteHands": {
+    "enumPlatform": "Private",
+    "enumKey": "OrderRemoteHands",
+    "enumCategory": "MakeAChange",
+    "navigationPath": "orders/remote-hands",
+    "requiredPermissions": ["OrderEdit"]
+  },
   "otherTools": {
     "enumKey": "OtherTools",
     "navigationPath": "tools",
