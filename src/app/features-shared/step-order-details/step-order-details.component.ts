@@ -328,7 +328,9 @@ export class StepOrderDetailsComponent
       orderDetails.deliveryType = +getSafeProperty(this.fcDeliveryType, (obj) => obj.value, 0);
       orderDetails.schedule = (orderDetails.deliveryType === DeliveryType.Accelerated) ?
                               addHoursToDate(new Date(), this.acceleratedLeadTimeHours).toISOString()
-                            : getSafeProperty(this.fcSchedule, (obj) => obj.value as Date, new Date()).toISOString();
+                            : getSafeProperty(this.fcSchedule, (obj) => obj.value as Date,
+                                                                        addHoursToDate(new Date(),
+                                                                        this.standardLeadTimeHours)).toISOString();
     }
     orderDetails.contractDurationMonths = +getSafeProperty(this.fcContractTerm, (obj) => obj.value, 0);
     orderDetails.billingEntityId = +getSafeProperty(this.fcBillingEntity, (obj) => obj.value.id, 0);
