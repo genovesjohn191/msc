@@ -8,18 +8,24 @@ import { AzureResourcesWidgetComponent } from './azure-resources/azure-resources
 import { ResourceChangesWidgetComponent } from './resource-changes/resource-changes-widget.component';
 import { ReportWidgetDataStatusComponent } from './report-widget-data-status.component';
 import { AzureTicketsWidgetComponent } from './azure-tickets/azure-tickets-widget.component';
+import { ServicesCostOverviewWidgetComponent } from './services-cost-overview/services-cost-overview-widget.component';
+import { VirtualMachineBreakdownWidgetComponent } from './virtual-machine-breakdown/virtual-machine-breakdown-widget.component';
+import { PerformanceAndScalabilityWidgetComponent } from './performance-and-scalability/performance-and-scalability-widget.component';
 
 @NgModule({
   imports: [ SharedModule ],
   declarations: [
-    ReportWidgetDataStatusComponent,
     AzureResourcesWidgetComponent,
     AzureTicketsWidgetComponent,
     ChangeRequestWidgetComponent,
     ContactUsWidgetComponent,
     CostRecommendationsWidgetComponent,
+    PerformanceAndScalabilityWidgetComponent,
+    ReportWidgetDataStatusComponent,
     ResourceChangesWidgetComponent,
-    ServicesOverviewWidgetComponent
+    ServicesCostOverviewWidgetComponent,
+    ServicesOverviewWidgetComponent,
+    VirtualMachineBreakdownWidgetComponent
   ],
   exports: [
     AzureResourcesWidgetComponent,
@@ -27,9 +33,12 @@ import { AzureTicketsWidgetComponent } from './azure-tickets/azure-tickets-widge
     ChangeRequestWidgetComponent,
     ContactUsWidgetComponent,
     CostRecommendationsWidgetComponent,
+    PerformanceAndScalabilityWidgetComponent,
+    ReportWidgetDataStatusComponent,
     ResourceChangesWidgetComponent,
+    ServicesCostOverviewWidgetComponent,
     ServicesOverviewWidgetComponent,
-    ReportWidgetDataStatusComponent
+    VirtualMachineBreakdownWidgetComponent
   ]
 })
 export class ReportWidgetModule { }

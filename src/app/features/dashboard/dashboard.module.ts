@@ -9,6 +9,7 @@ import {
 import { ReportOverviewComponent } from './overview';
 import { ReportInsightsComponent } from './insights';
 import { ReportWidgetModule } from '@app/features-shared';
+import { MatFormFieldModule, MatGridListModule, MatSelectModule } from '@angular/material';
 
 @NgModule({
   declarations: [

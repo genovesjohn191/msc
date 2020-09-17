@@ -16,6 +16,17 @@ $shadow-effect: 1px solid #e3e3e3;
       page-break-inside: avoid !important;
       border-bottom: none;
       border-right: none;
+
+      .apexcharts-toolbar {
+        display: none;
+      }
+    }
+
+    &.flat {
+      margin-bottom: 0;
+      padding: 0;
+      border-bottom: none;
+      border-right: none;
     }
 
     &>h3 {

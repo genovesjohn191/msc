@@ -1,0 +1,5 @@
+<div class="widget flat">
+  <mcs-report-widget-data-status type="info" [processing]="processing" [hasError]="hasError" (retry)="getData()">
+    <mcs-bar-chart [data]="data$ | async" [stacked]="true" yLabel="# VMs by Usage" xLabel="Months"></mcs-bar-chart>
+  </mcs-report-widget-data-status>
+</div>
