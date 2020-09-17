@@ -8,6 +8,7 @@
       </div>
     </mcs-grid-column>
     <mcs-grid-column class="full-height full-width content-column">
+      <mcs-system-message-banner class="system-message-banner hide-on-print"></mcs-system-message-banner>
       <div class="overlay" [ngClass]="showNav ? 'expanded' : 'collapsed'" (click)="toggleNav()">
       </div>
       <router-outlet></router-outlet>
