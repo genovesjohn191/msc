@@ -127,7 +127,7 @@ export class BarChartComponent implements OnChanges {
       legend: {
         position: 'top',
         horizontalAlign: 'left',
-        offsetX: 40
+        offsetX: 0
       }
     };
   }

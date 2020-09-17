@@ -1,12 +1,14 @@
 import {
   Component,
-  OnInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef
 } from '@angular/core';
-import { McsReportingService } from '@app/core/services/mcs-reporting.service';
-import { ChartItem } from '@app/shared';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { ReportPeriod } from '@app/features-shared/report-widget';
+
+interface PeriodOption {
+  label: string;
+  period: ReportPeriod;
+}
 
 @Component({
   selector: 'mcs-report-insights',
@@ -18,40 +20,68 @@ import { Observable, BehaviorSubject } from 'rxjs';
   }
 })
 
-export class ReportInsightsComponent implements OnInit {
-  public data$: Observable<ChartItem[]>;
-  public dataBehavior: BehaviorSubject<ChartItem[]>;
-  public data2$: Observable<ChartItem[]>;
-  public dataBehavior2: BehaviorSubject<ChartItem[]>;
-  public data3$: Observable<ChartItem[]>;
-  public dataBehavior3: BehaviorSubject<ChartItem[]>;
+export class ReportInsightsComponent {
+  public periodOptions: PeriodOption[];
+  public monthOptions: PeriodOption[];
 
-  public constructor(
-    private reportingService: McsReportingService,
-    private _changeDetectorRef: ChangeDetectorRef
-  ) { }
-
-  public percentFormatter(val) {
-    return val + '%';
+  public set selectedPeriod(value: PeriodOption) {
+    this._selectedPeriod = value;
+    this._changeDetector.markForCheck();
+  }
+  public get selectedPeriod(): PeriodOption {
+    return this._selectedPeriod;
   }
 
-  public ngOnInit() {
-    this.dataBehavior = new BehaviorSubject<ChartItem[]>(null);
-    this.dataBehavior2 = new BehaviorSubject<ChartItem[]>(null);
-    this.dataBehavior3 = new BehaviorSubject<ChartItem[]>(null);
-    this._changeDetectorRef.markForCheck();
-    this.data$ = this.dataBehavior.asObservable();
-    this.data2$ = this.dataBehavior2.asObservable();
-    this.data3$ = this.dataBehavior3.asObservable();
+  public set selectedPerformanceMonth(value: PeriodOption) {
+    this._selectedPerformanceMonth = value;
+    this._changeDetector.markForCheck();
+  }
+  public get selectedPerformanceMonth(): PeriodOption {
+    return this._selectedPerformanceMonth;
+  }
 
-    this.reportingService.getServicesCostOverviewReport().subscribe((result) => {
-      this.dataBehavior.next(result);
-    });
-    this.reportingService.getVirtualMachineBreakdownReport().subscribe((result) => {
-      this.dataBehavior2.next(result);
-    });
-    this.reportingService.getPerformanceReport().subscribe((result) => {
-      this.dataBehavior3.next(result);
-    });
+  private _selectedPeriod: PeriodOption;
+  private _selectedPerformanceMonth: PeriodOption;
+
+  public constructor(private _changeDetector: ChangeDetectorRef) {
+    this._createPeriodOptions();
+  }
+
+  private _createPeriodOptions(): void {
+    const months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
+    ];
+
+    this.periodOptions = Array<PeriodOption>();
+    this.monthOptions = Array<PeriodOption>();
+
+    for (let ctr = 0; ctr < 13; ctr++) {
+
+      let from = new Date(new Date().setMonth(new Date().getMonth() - (12 + ctr)));
+      let until = new Date(new Date().setMonth(new Date().getMonth() - ctr));
+
+      let label = ctr === 0 ? 'Current Month' : months[until.getMonth()];
+
+      let period = {from, until};
+
+      if (ctr < 4) {
+        this.periodOptions.push({label, period});
+      }
+      this.monthOptions.push({label, period});
+    }
+
+    this.selectedPeriod = this.periodOptions[0];
+    this.selectedPerformanceMonth = this.monthOptions[0];
   }
 }
