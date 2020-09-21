@@ -223,7 +223,8 @@ export class StepOrderDetailsComponent
   }
 
   public get minDate(): Date {
-    return MIN_DATE;
+    return addHoursToDate(new Date(),
+    this.standardLeadTimeHours);
   }
 
   public get maxDate(): Date {
@@ -325,10 +326,14 @@ export class StepOrderDetailsComponent
     orderDetails.description = this.fcDescription.value;
     orderDetails.workflowAction = this.fcWorkflowAction.value;
     if (this.hasLeadTimeOptions) {
+      let standardLeadTimeHour = (this.showSchedule === true) ?
+                                  getSafeProperty(this.fcSchedule, (obj) => obj.value as Date, this.minDate).toISOString() :
+                                  this.minDate.toISOString();
+
       orderDetails.deliveryType = +getSafeProperty(this.fcDeliveryType, (obj) => obj.value, 0);
       orderDetails.schedule = (orderDetails.deliveryType === DeliveryType.Accelerated) ?
                               addHoursToDate(new Date(), this.acceleratedLeadTimeHours).toISOString()
-                            : getSafeProperty(this.fcSchedule, (obj) => obj.value as Date, new Date()).toISOString();
+                            : standardLeadTimeHour;
     }
     orderDetails.contractDurationMonths = +getSafeProperty(this.fcContractTerm, (obj) => obj.value, 0);
     orderDetails.billingEntityId = +getSafeProperty(this.fcBillingEntity, (obj) => obj.value.id, 0);
@@ -536,7 +541,7 @@ export class StepOrderDetailsComponent
    */
   private _updateMinimumScheduleDate(): void {
     this.minimumScheduleDate$ = of(
-      addHoursToDate(this.minDate, this.standardLeadTimeHours)
+      this.minDate
     ).pipe(
       map((date) => {
         let minutes = new Date().getMinutes() > this.stepMinute ? 0 : this.stepMinute;
