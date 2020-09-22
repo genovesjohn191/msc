@@ -19,6 +19,7 @@ interface SmacSharedContactConfig extends SmacSharedContactBase {
 
 interface SmacSharedNotesConfig extends SmacSharedContactBase {
   maxlength?: number;
+  isRequired?: boolean;
 }
 
 export class SmacSharedFormConfig {
@@ -82,6 +83,7 @@ export class SmacSharedFormConfig {
           this._translate.instant('smacShared.form.notes.label')),
         validators: getSafeProperty(notesConfig, (obj) => obj.validators, []),
         maxlength: getSafeProperty(notesConfig, (obj) => obj.maxlength, TEXTAREA_MAXLENGTH_DEFAULT),
+        isRequired: getSafeProperty(notesConfig, (obj) => obj.isRequired, false)
       };
       this._validatorsMap.set('fcNotes', this.notesConfig.validators);
     }

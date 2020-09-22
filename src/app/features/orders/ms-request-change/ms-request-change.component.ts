@@ -68,6 +68,7 @@ import {
   DeliveryType
 } from '@app/models';
 import { MsRequestChangeService } from './ms-request-change.service';
+import { TranslateService } from '@ngx-translate/core';
 
 const MAX_DESCRIPTION_LENGTH = 850;
 const VISIBILE_ROWS = 3;
@@ -169,6 +170,10 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
   }
   private _isLoading = false;
 
+  public get requestDescriptionPlaceHolder(): string {
+    return this._translateService.instant('orderMsRequestChange.detailsStep.requestDescriptionPlaceholder');
+  }
+
   @ViewChild(McsFormGroupDirective, { static: false })
   public set formGroup(value: McsFormGroupDirective) {
     if (isNullOrEmpty(value)) { return; }
@@ -193,7 +198,8 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
     private _msRequestChangeService: MsRequestChangeService,
     private _formBuilder: FormBuilder,
     private _apiService: McsApiService,
-    private _eventDispatcher: EventBusDispatcherService
+    private _eventDispatcher: EventBusDispatcherService,
+    private _translateService: TranslateService
   ) {
     super(
       _msRequestChangeService,
@@ -378,7 +384,9 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
     this.smacSharedFormConfig$ = this._apiService.getAccount().pipe(
       map((response) => {
         let testCaseConfig = { isIncluded: false };
-        let notesConfig = { isIncluded: true, validators: [CoreValidators.required] };
+        let notesConfig = { isIncluded: true, validators: [CoreValidators.required],
+                            placeholder: this.requestDescriptionPlaceHolder,
+                            isRequired: true };
         let contactConfig = { isIncluded: true, phoneNumber: formatStringToPhoneNumber(response.phoneNumber) };
 
         let config = new SmacSharedFormConfig(this._injector, testCaseConfig, notesConfig, contactConfig);

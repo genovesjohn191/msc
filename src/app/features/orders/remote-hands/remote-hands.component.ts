@@ -241,7 +241,7 @@ export class RemoteHandsComponent  extends McsOrderWizardBase  implements OnInit
     this.smacSharedFormConfig$ = this._apiService.getAccount().pipe(
       map((response) => {
         let testCaseConfig = { isIncluded: true, placeholder: this.testCasePlaceHolder };
-        let notesConfig = { isIncluded: true, label: this.notesLabel };
+        let notesConfig = { isIncluded: true, label: this.notesLabel, isRequired: false };
         let contactConfig = { isIncluded: true, phoneNumber: formatStringToPhoneNumber(response.phoneNumber) };
 
         let config = new SmacSharedFormConfig(this._injector, testCaseConfig, notesConfig, contactConfig);
