@@ -52,7 +52,8 @@
                     [formControl]="fcRackService"
                     [disabled]="!hasServiceToDisplay"
                     [placeholder]="'orderRemoteHands.detailsStep.rackServicePlaceholder' | translate"
-                    [mcsContextualHelp]="'orderRemoteHands.detailsStep.rackServiceHelpText' | translate">
+                    [mcsContextualHelp]="'orderRemoteHands.detailsStep.rackServiceHelpText' | translate"
+                    required>
                     <mcs-option-group *ngFor="let colocationGroup of colocationGroups" >
                       <ng-container *mcsOptionGroupLabel>
                         <span>{{ colocationGroup?.groupName }}</span>
@@ -85,7 +86,8 @@
                   mcsEventCategory="order"
                   mcsEventLabel="order-remote-hands"
                   [placeholder]="'orderRemoteHands.detailsStep.floorLevelPlaceholder' | translate"
-                  [mcsContextualHelp]="'orderRemoteHands.detailsStep.floorLevelHelpText' | translate">
+                  [mcsContextualHelp]="'orderRemoteHands.detailsStep.floorLevelHelpText' | translate"
+                  required>
                   <mcs-error mcsError errorState="required">
                     {{ 'orderRemoteHands.errors.floorLevel' | translate }}
                   </mcs-error>
@@ -102,7 +104,8 @@
                   mcsEventCategory="order"
                   mcsEventLabel="order-remote-hands"
                   [placeholder]="'orderRemoteHands.detailsStep.rackNumberPlaceholder' | translate"
-                  [mcsContextualHelp]="'orderRemoteHands.detailsStep.rackNumberHelpText' | translate">
+                  [mcsContextualHelp]="'orderRemoteHands.detailsStep.rackNumberHelpText' | translate"
+                  required>
                   <mcs-error mcsError errorState="required">
                      {{ 'orderRemoteHands.errors.rackNumber' | translate }}
                   </mcs-error>
@@ -118,7 +121,8 @@
                     mcsEventLabel="colocation-remote-hands"
                     [formControl]="fcCabinetLocation"
                     [placeholder]="'orderRemoteHands.detailsStep.locationPlaceholder' | translate"
-                    [mcsContextualHelp]="'orderRemoteHands.detailsStep.locationDetailsHelpText' | translate">
+                    [mcsContextualHelp]="'orderRemoteHands.detailsStep.locationDetailsHelpText' | translate"
+                    required>
                     <mcs-option *ngFor="let location of cabinetLocationOption$ | async" [value]="location.value">
                       {{ location.text }}
                     </mcs-option>
@@ -141,7 +145,8 @@
                   [formControl]="fcInstruction"
                   [maxlength]="maxInstructionsLength"
                   [placeholder]="'orderRemoteHands.detailsStep.instructionsPlaceholder' | translate"
-                  [mcsContextualHelp]="'orderRemoteHands.detailsStep.instructionsHelpText' | translate"></textarea>
+                  [mcsContextualHelp]="'orderRemoteHands.detailsStep.instructionsHelpText' | translate"
+                  required></textarea>
                 <mcs-hint mcsHint align="start">
                   {{ 'shared.formField.hints.maxChar' | translate: { value: maxInstructionsLength } }}
                 </mcs-hint>
