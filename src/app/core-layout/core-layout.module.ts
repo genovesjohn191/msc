@@ -54,8 +54,7 @@ import { SystemMessageBannerComponent } from './system-message-banner/system-mes
     NavigationMobileComponent,
     SubNavigationComponent,
     SubNavigationDesktopComponent,
-    SubNavigationMobileComponent,
-    SystemMessageBannerComponent
+    SubNavigationMobileComponent
   ],
   imports: [
     CommonModule,
@@ -81,7 +80,6 @@ import { SystemMessageBannerComponent } from './system-message-banner/system-mes
     SubNavigationComponent,
     SubNavigationDesktopComponent,
     SubNavigationMobileComponent,
-    SystemMessageBannerComponent,
     CommonModule,
     FormsModule,
     SharedModule
