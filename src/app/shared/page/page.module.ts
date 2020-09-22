@@ -32,10 +32,13 @@ import {
   ContentPanelDefDirective,
   ContentPanelPlaceholderDirective
 } from './content-panel';
+import { SystemMessageBannerComponent } from '@app/core-layout/system-message-banner/system-message-banner.component';
+import { AlertModule } from '../alert/alert.module';
 
 @NgModule({
   declarations: [
     PageComponent,
+    SystemMessageBannerComponent,
     PageHeaderDirective,
     LeftPanelComponent,
     LeftPanelDefDirective,
@@ -56,12 +59,14 @@ import {
   ],
   imports: [
     CommonModule,
+    AlertModule,
     DirectivesModule,
     IconModule,
     LoadingModule
   ],
   exports: [
     PageComponent,
+    SystemMessageBannerComponent,
     PageHeaderDirective,
     LeftPanelComponent,
     LeftPanelDefDirective,
