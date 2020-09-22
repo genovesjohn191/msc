@@ -22,7 +22,8 @@
         mcsEventLabel="order-shared-smac-form"
         [maxlength]="config?.notesConfig?.maxlength"
         [placeholder]="config?.notesConfig?.placeholder"
-        [formControl]="fcNotes"></textarea>
+        [formControl]="fcNotes"
+        [required]="config?.notesConfig?.isRequired"></textarea>
 
       <mcs-hint mcsHint align="start">
         {{ 'smacShared.form.notes.hint' | translate: { max_char: notesInput?.maxLength } }}

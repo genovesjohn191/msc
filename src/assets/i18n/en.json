@@ -680,6 +680,7 @@
       "complexityPlaceholder": "Select Complexity",
       "azureProductPlaceHolder": "Select an Azure Product",
       "azureResourcesPlaceHolder": "Select an Azure Resource",
+      "requestDescriptionPlaceholder": "What change would you like applied?",
       "otherAdvisoryLabel": "By selecting 'Other', you are requesting a change or support (Azure Essentials) for a Microsoft service outside the scope of our managed services.\r\n\n To fulfil this service request, we will rely on Microsoft for advice in relation to your request and relay that advice back to you for the purpose of provisioning, configuring (Azure Managed or Essentials) or support (Azure Essentials).",
       "servicesLabel": "Services",
       "nullServiceIdToolTip": "A change cannot be requested for this service at this time. Please contact your account team for more information.",
