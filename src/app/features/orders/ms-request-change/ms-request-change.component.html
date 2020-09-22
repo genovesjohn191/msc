@@ -66,6 +66,7 @@
                 <span align-self-start>{{ 'orderMsRequestChange.detailsStep.azureProductLabel' | translate }}</span>
                 <mcs-form-field>
                   <mcs-select [formControl]="fcAzureProduct"
+                    required
                     mcsId="select-ms-service-azure-product"
                     mcsEventTracker="select-ms-service-azure-product"
                     mcsEventCategory="order"
@@ -107,7 +108,8 @@
                     [placeholder]="'orderMsRequestChange.detailsStep.azureResourcesPlaceHolder' | translate"
                     multiple
                     [disabled]="!enableAzureResources"
-                    [multiSelectLimit]="maxSelectionLimit">
+                    [multiSelectLimit]="maxSelectionLimit"
+                    required>
                     <mcs-search mcsSelectSearch></mcs-search>
                     <mcs-option *ngFor="let resource of azureResourcesOptions$ | async" [value]="resource.value">
                       <span [ngStyle]="{'pointer-events': 'auto'}"
