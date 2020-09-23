@@ -124,8 +124,6 @@ export class McsSystemMessageService implements McsDisposable {
 
       let comparisonOutput = compareJsons(message, activeSystemMessageCookie);
       if (comparisonOutput === 0) { return; }
-
-      this._activeMessageChange.next(message);
     });
   }
 }
