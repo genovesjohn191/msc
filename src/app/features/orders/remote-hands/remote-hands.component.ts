@@ -361,7 +361,9 @@ export class RemoteHandsComponent  extends McsOrderWizardBase  implements OnInit
     this.fgRemoteHands = this._formBuilder.group({
       fcRackService: this.fcRackService,
       fcCabinetLocation: this.fcCabinetLocation,
-      fcInstruction: this.fcInstruction
+      fcInstruction: this.fcInstruction,
+      fcFloorLevel: this.fcFloorLevel,
+      fcRackNumber: this.fcRackNumber
     });
   }
 
