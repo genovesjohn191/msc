@@ -1,6 +1,7 @@
 import { McsEnumSerializationBase } from '../serialization/mcs-enum-serialization-base';
 
 export enum AzureProducts {
+  Unknown = 0,
   AppService = 1,
   ApplicationGateway = 2,
   ArchiveStorage = 3,
