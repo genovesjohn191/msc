@@ -27,6 +27,7 @@
           <h2>1.1 Services Overview</h2>
           <br />
           <mcs-services-cost-overview-widget [period]="selectedPeriod.period"></mcs-services-cost-overview-widget>
+          <br />
           <h2>1.2 Virtual Machine Breakdown</h2>
           <br />
           <mcs-virtual-machine-breakdown-widget [period]="selectedPeriod.period"></mcs-virtual-machine-breakdown-widget>
@@ -49,7 +50,7 @@
           </div>
 
           <br />
-          <mcs-performance-and-scalability-widget [period]="selectedPerformanceMonth.period"></mcs-performance-and-scalability-widget>
+          <mcs-performance-and-scalability-widget [period]="selectedPerformanceMonth?.period"></mcs-performance-and-scalability-widget>
         </div>
       </div>
     </div>

@@ -2,14 +2,15 @@ import { DynamicFormFieldDataBase } from '../../dynamic-form-field-data.base';
 import {
   DynamicFormFieldOnChangeEvent,
   DynamicFormFieldType,
-  DynamicFormFieldTemplate
+  DynamicFormFieldTemplate,
+  DynamicFormControlSettings
 } from '../../dynamic-form-field-data.interface';
 
 export class DynamicSelectVdcField extends DynamicFormFieldDataBase {
   // Overrides
   public type: DynamicFormFieldType = 'select-vdc';
   public template: DynamicFormFieldTemplate = 'select-vdc';
-  public onChangeEvent: DynamicFormFieldOnChangeEvent = 'resource-change';
+  public eventName: DynamicFormFieldOnChangeEvent = 'resource-change';
 
   public constructor(options: {
     key: string;
@@ -18,9 +19,10 @@ export class DynamicSelectVdcField extends DynamicFormFieldDataBase {
     value?: string;
     hint?: string;
     order?: number;
-    onChangeEvent?: DynamicFormFieldOnChangeEvent;
+    eventName?: DynamicFormFieldOnChangeEvent;
     dependents?: string[];
     validators?: { required?: boolean; };
+    settings?: DynamicFormControlSettings;
   }) {
     super(options);
   }

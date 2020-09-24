@@ -21,9 +21,9 @@ export const defaultPageRoutes: Routes = [
         loadChildren: '../../features/dashboard/dashboard.module#DashboardModule'
       },
       {
-        path: 'demo',
-        data: { routeId: RouteKey.Demo },
-        loadChildren: '../../features/demo/demo.module#DemoModule'
+        path: 'launch-pad',
+        data: { routeId: RouteKey.LaunchPad },
+        loadChildren: '../../features/launch-pad/launch-pad.module#LaunchPadModule'
       },
       {
         path: 'compute/virtual',

@@ -1,6 +1,13 @@
-<div class="form-group" [formGroup]="form" >
+<form [formGroup]="form">
+  <mat-slide-toggle
+    *ngIf="hasMoreFields && !hideMoreFieldsToggle"
+    (change)="setFieldVisiblity($event.checked)"
+    color="primary">
+    Show More Options
+  </mat-slide-toggle>
+  
   <div *ngFor="let input of controlDataItems" class="form-row">
-    <div  [ngSwitch]="input.template" >
+    <div  [ngSwitch]="input.template">
       <mat-error *ngIf="!isValid(input.key)">
         {{ getErrorMessage(input.key) }}
       </mat-error>
@@ -8,6 +15,10 @@
       <mcs-dff-input-text-field *ngSwitchCase="'input-text'"
         #control [formControlName]="input.key" [data] ="input" (dataChange)="onDataChange($event)">
       </mcs-dff-input-text-field>
+
+      <mcs-dff-input-hidden-field *ngSwitchCase="'input-hidden'"
+        #control [formControlName]="input.key" [data] ="input" (dataChange)="onDataChange($event)">
+      </mcs-dff-input-hidden-field>
 
       <mcs-dff-input-number-field *ngSwitchCase="'input-number'"
         #control [formControlName]="input.key" [data] ="input" (dataChange)="onDataChange($event)">
@@ -46,18 +57,4 @@
       </mcs-dff-select-vdc-field>
     </div>
   </div>
-
-  <br />
-  <button mat-raised-button color="primary" [disabled]="!form.valid" (click)="submitForm()">Submit</button>
-  <br />
-  <br />
-  <br />
-  <span>Form Status: </span> <strong>{{formStatus}}</strong>
-  <h3>Payload</h3>
-  <textarea cols="30" rows="10" 
-    style="width: 500px; min-height: 30rem; font-family: 'Lucida Console', Monaco, monospace;
-    font-size: 1rem; border: none; position: fixed;
-    top: 120px;
-    right: 200px;
-    line-height: 1.2;">{{ payLoad }}</textarea>
-</div>
+</form>

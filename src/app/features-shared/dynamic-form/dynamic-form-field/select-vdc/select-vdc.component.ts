@@ -22,7 +22,7 @@ import {
   serviceTypeText } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
-  DynamicFormFieldDataChange,
+  DynamicFormFieldDataChangeEventParam,
   FlatOption,
   GroupedOption
 } from '../../dynamic-form-field-data.interface';
@@ -58,8 +58,8 @@ export class DynamicSelectVdcComponent extends DynamicSelectFieldComponentBase<M
     super(_changeDetectorRef);
   }
 
-  public onFormDataChange(params: DynamicFormFieldDataChange) {
-    switch (params.onChangeEvent) {
+  public onFormDataChange(params: DynamicFormFieldDataChangeEventParam) {
+    switch (params.eventName) {
       case 'az-change':
         this._az = params.value;
         this.filterOptions();
@@ -114,7 +114,7 @@ export class DynamicSelectVdcComponent extends DynamicSelectFieldComponentBase<M
   public valueChange(val: any): void {
     this.dataChange.emit({
       value: this.collection.find((item) => item.name === this.data.value),
-      onChangeEvent: this.data.onChangeEvent,
+      eventName: this.data.eventName,
       dependents: this.data.dependents
     });
     this.propagateChange(this.data.value);

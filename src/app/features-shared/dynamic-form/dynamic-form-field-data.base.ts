@@ -2,25 +2,27 @@ import {
   DynamicFormFieldData,
   DynamicFormFieldType,
   DynamicFormFieldOnChangeEvent,
-  DynamicFormFieldDataChange,
   DynamicFormFieldTemplate,
   FlatOption,
-  GroupedOption
+  GroupedOption,
+  DynamicFormControlValidator,
+  DynamicFormControlSettings
 } from './dynamic-form-field-data.interface';
 
-export class DynamicFormFieldDataBase implements DynamicFormFieldData, DynamicFormFieldDataChange {
+export class DynamicFormFieldDataBase implements DynamicFormFieldData {
   public type: DynamicFormFieldType;
   public template: DynamicFormFieldTemplate;
   public key: string;
   public label: string;
   public placeholder: string;
   public value?: any;
-  public onChangeEvent?: DynamicFormFieldOnChangeEvent;
+  public eventName?: DynamicFormFieldOnChangeEvent;
   public dependents?: string[];
   public options?: FlatOption[] | GroupedOption[];
   public hint?: string;
   public order?: number;
-  public validators?: { required?: boolean; minlength?: number; maxlength?: number; min?: number; max?: number; };
+  public validators?: DynamicFormControlValidator;
+  public settings?: DynamicFormControlSettings;
   public prefix?: string;
   public suffix?: string;
 
@@ -32,9 +34,10 @@ export class DynamicFormFieldDataBase implements DynamicFormFieldData, DynamicFo
     options?: FlatOption[] | GroupedOption[];
     hint?: string;
     order?: number;
-    onChangeEvent?: DynamicFormFieldOnChangeEvent;
+    eventName?: DynamicFormFieldOnChangeEvent;
     dependents?: string[];
-    validators?: { required?: boolean; minlength?: number; maxlength?: number; min?: number; max?: number; };
+    validators?: DynamicFormControlValidator;
+    settings?: DynamicFormControlSettings;
     prefix?: string;
     suffix?: string;
   }) {
@@ -45,9 +48,10 @@ export class DynamicFormFieldDataBase implements DynamicFormFieldData, DynamicFo
     this.options = options.options || [];
     this.hint = options.hint || '';
     this.order = options.order === undefined ? 1 : options.order;
-    this.onChangeEvent = options.onChangeEvent || '';
+    this.eventName = options.eventName || '';
     this.dependents = options.dependents || [];
     this.validators = options.validators;
+    this.settings = options.settings;
     this.prefix = options.prefix || '';
     this.suffix = options.suffix || '';
 

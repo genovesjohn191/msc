@@ -12,12 +12,14 @@
     [minlength]="data.validators?.minlength"
     [readonly]="data.readonly">
   <button mat-icon-button matSuffix 
+    type="button"
     (click)="copy(control)"
     matTooltip="Copy to clipboard"
     matTooltipPosition="above">
     <mat-icon color="primary">content_copy</mat-icon>
   </button>
   <button mat-icon-button matPrefix
+    type="button"
     (click)="generate()"
     matTooltip="Generate random string"
     matTooltipPosition="above">

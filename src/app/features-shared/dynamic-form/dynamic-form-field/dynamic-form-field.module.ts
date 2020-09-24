@@ -25,6 +25,7 @@ import { DynamicInputRandomComponent } from './input-random/input-random.compone
 import { DynamicSelectGroupComponent } from './select-group/select-group.component';
 import { DynamicSelectStorageProfileComponent } from './select-storage-profile/select-storage-profile.component';
 import { DynamicSelectNetworkComponent } from './select-network/select-network.component';
+import { DynamicInputHiddenComponent } from './input-hidden/input-hidden.component';
 
 @NgModule({
   imports: [
@@ -43,6 +44,7 @@ import { DynamicSelectNetworkComponent } from './select-network/select-network.c
   ],
   declarations: [
     DynamicInputNumberComponent,
+    DynamicInputHiddenComponent,
     DynamicInputTextComponent,
     DynamicInputRandomComponent,
     DynamicSelectComponent,
@@ -55,6 +57,7 @@ import { DynamicSelectNetworkComponent } from './select-network/select-network.c
   ],
   exports: [
     DynamicInputNumberComponent,
+    DynamicInputHiddenComponent,
     DynamicInputTextComponent,
     DynamicInputRandomComponent,
     DynamicSelectComponent,

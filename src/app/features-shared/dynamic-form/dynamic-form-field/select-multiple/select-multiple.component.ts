@@ -7,7 +7,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Observable } from 'rxjs';
 
 import {
-  DynamicFormFieldDataChange,
+  DynamicFormFieldDataChangeEventParam,
   GroupedOption,
   FlatOption
 } from '../../dynamic-form-field-data.interface';
@@ -35,7 +35,7 @@ export class DynamicSelectMultipleComponent extends DynamicSelectFieldComponentB
     super(_changeDetectorRef);
   }
 
-  public onFormDataChange(params: DynamicFormFieldDataChange): void {
+  public onFormDataChange(params: DynamicFormFieldDataChangeEventParam): void {
     throw new Error('Method not implemented.');
   }
 

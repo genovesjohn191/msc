@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { isNullOrEmpty } from '@app/utilities';
 import { ChartItem } from '../chart-item.interface';
-import { ChartDataService } from '../chart-data.service';
+import { ChartData, ChartDataService } from '../chart-data.service';
 import {
   ChartComponent,
   ApexAxisChartSeries,
@@ -39,6 +39,7 @@ export type ChartOptions = {
 @Component({
   selector: 'mcs-bar-chart',
   templateUrl: './bar-chart.component.html',
+  styleUrls: ['../chart.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   host: {
@@ -80,6 +81,8 @@ export class BarChartComponent implements OnChanges {
   @ViewChild('chart', { static: true }) chart: ChartComponent;
   public chartOptions: Partial<ChartOptions>;
 
+  public hasData: boolean = false;
+
   public constructor(
     private _chartDataService: ChartDataService,
     private _changeDetectorRef: ChangeDetectorRef
@@ -89,7 +92,7 @@ export class BarChartComponent implements OnChanges {
       chart: {
         type: 'bar',
         stacked: this.stacked,
-        height: 500
+        height: '500px'
       },
       xaxis: {
         categories: [],
@@ -141,17 +144,22 @@ export class BarChartComponent implements OnChanges {
   }
 
   private updateApexData(value: ChartItem[]): void {
-    if (isNullOrEmpty(value)) {
-      return;
+    this.hasData = false;
+    let data: ChartData = {
+      series: [],
+      categories: []
+    };
+    if (!isNullOrEmpty(value)) {
+      this.hasData = true;
+      data = this._chartDataService.convertToApexChartData(value);
     }
-
-    let data = this._chartDataService.convertToApexChartData(value);
 
     this.chartOptions = {
       series: data.series,
       chart: {
         type: 'bar',
-        stacked: this.stacked
+        stacked: this.stacked,
+        height: 'auto'
       },
       xaxis: {
         categories: data.categories,

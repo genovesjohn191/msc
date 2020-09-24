@@ -1,0 +1,17 @@
+<mat-expansion-panel [expanded]="required" (opened)="openPanel()" (closed)="closePanel()" hideToggle="true">
+  <mat-expansion-panel-header style="position: relative;">
+    <mat-panel-title>
+      <h1>{{ title }}</h1>
+    </mat-panel-title>
+    <mat-panel-description style="position: absolute; right: 0;">
+      <div>
+        <mat-icon *ngIf="required && !valid && !panelOpenState" color="warn" matTooltip="This workflow is required">info</mat-icon>
+        <mat-icon *ngIf="!panelOpenState && !required">add</mat-icon>
+        <mat-icon *ngIf="panelOpenState && !required">close</mat-icon>
+      </div>
+    </mat-panel-description>
+  </mat-expansion-panel-header>
+
+  <mcs-dynamic-form #form [controlDataItems]="fieldData"></mcs-dynamic-form>
+
+</mat-expansion-panel>

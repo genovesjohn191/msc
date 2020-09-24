@@ -16,7 +16,7 @@ import {
   McsServerOperatingSystem
 } from '@app/models';
 import {
-  DynamicFormFieldDataChange,
+  DynamicFormFieldDataChangeEventParam,
   GroupedOption,
   FlatOption
 } from '../../dynamic-form-field-data.interface';
@@ -51,8 +51,8 @@ export class DynamicSelectOsComponent extends DynamicSelectFieldComponentBase<Mc
     super(_changeDetectorRef);
   }
 
-  public onFormDataChange(params: DynamicFormFieldDataChange): void {
-    switch (params.onChangeEvent) {
+  public onFormDataChange(params: DynamicFormFieldDataChangeEventParam): void {
+    switch (params.eventName) {
       case 'resource-change':
         this._resource = params.value as McsResource;
         this.filterOptions();

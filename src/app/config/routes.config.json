@@ -4,11 +4,11 @@
     "navigationPath": "dashboard",
     "documentTitle": "Dashboard - Macquarie Cloud Services"
   },
-  "demo": {
-    "enumKey": "Demo",
-    "navigationPath": "demo",
-    "documentTitle": "Demo Page",
-    "requiredFeatureFlag": "EnableExperimentalFeatures"
+  "launchPad": {
+    "enumKey": "LaunchPad",
+    "navigationPath": "launch-pad",
+    "documentTitle": "Launch Pad",
+    "requiredFeatureFlag": "EnableLaunchPad"
   },
   "reportOverview": {
     "enumKey": "ReportOverview",

@@ -3,7 +3,8 @@ import {
   DynamicFormFieldOnChangeEvent,
   DynamicFormFieldType,
   DynamicFormFieldTemplate,
-  FlatOption
+  FlatOption,
+  DynamicFormControlSettings
 } from '../../dynamic-form-field-data.interface';
 
 export class DynamicSelectField extends DynamicFormFieldDataBase {
@@ -20,9 +21,10 @@ export class DynamicSelectField extends DynamicFormFieldDataBase {
     value?: string;
     hint?: string;
     order?: number;
-    onChangeEvent?: DynamicFormFieldOnChangeEvent;
+    eventName?: DynamicFormFieldOnChangeEvent;
     dependents?: string[];
     validators?: { required?: boolean; };
+    settings?: DynamicFormControlSettings;
   }) {
     super(options);
   }
