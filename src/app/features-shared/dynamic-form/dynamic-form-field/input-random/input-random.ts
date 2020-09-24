@@ -24,7 +24,7 @@ export class DynamicInputRandomField extends DynamicFormFieldDataBase {
     value?: string;
     hint?: string;
     order?: number;
-    onChangeEvent?: DynamicFormFieldOnChangeEvent;
+    eventName?: DynamicFormFieldOnChangeEvent;
     dependents?: string[];
     validators?: { required?: boolean; minlength?: number; maxlength?: number; };
     readonly: boolean;

@@ -1,0 +1,64 @@
+<mcs-page header="Launch Pad Page">
+  <!-- Content Panel -->
+  <mcs-content-panel *mcsContentPanelDef>
+    <mat-vertical-stepper [linear]="true" #stepper>
+      <mat-step [stepControl]="stepControl">
+        <ng-template matStepLabel>Create workflow</ng-template>
+        <mcs-launch-pad-workflow-group #workflows [config]="config$ | async"></mcs-launch-pad-workflow-group>
+
+        <br />
+        <button mat-raised-button matStepperNext color="primary" [disabled]="!valid" (click)="addToWorkflow()">
+          <mat-icon>navigate_next</mat-icon>
+          Next
+        </button>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>Confirm</ng-template>
+        <div>
+          <table>
+            <tr style="text-align: left;">
+              <th>Type</th>
+              <th>Service ID</th>
+              <th>Parent Service ID</th>
+              <th>Payload</th>
+            </tr>
+            <tr *ngFor="let payload of workflowPayload">
+              <td>
+                {{ payload.type }}
+              </td>
+              <td>
+                {{ payload.serviceId }}
+              </td>
+              <td>
+                {{ payload.parentServiceId }}
+              </td>
+              <td>
+                {{ parse(payload.properties) }}
+              </td>
+            </tr>
+          </table>
+        </div>
+        <br />
+        <div>
+          <button mat-button matStepperPrevious>
+            Back
+          </button>
+          <button mat-raised-button matStepperNext color="primary">
+            <mat-icon>playlist_play</mat-icon>
+            Run Workflow
+          </button>
+        </div>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>Provision</ng-template>
+        <br />
+        <h1>Working on your request...</h1>
+        <br />
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        <br />
+        <p>Provisioning new CVM</p>
+      </mat-step>
+
+    </mat-vertical-stepper>    
+  </mcs-content-panel>
+</mcs-page>

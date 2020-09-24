@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import { DynamicFormFieldDataChange } from '../../dynamic-form-field-data.interface';
+import { DynamicFormFieldDataChangeEventParam } from '../../dynamic-form-field-data.interface';
 import { DynamicTextFieldComponentBase } from '../dynamic-text-field-component.base';
 import { DynamicInputNumberField } from './input-number';
 
@@ -26,7 +26,7 @@ import { DynamicInputNumberField } from './input-number';
 export class DynamicInputNumberComponent extends DynamicTextFieldComponentBase {
   public data: DynamicInputNumberField;
 
-  public onFormDataChange(params: DynamicFormFieldDataChange): void {
+  public onFormDataChange(params: DynamicFormFieldDataChangeEventParam): void {
     throw new Error('Method not implemented.');
   }
 }

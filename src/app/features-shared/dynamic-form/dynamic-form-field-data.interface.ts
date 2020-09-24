@@ -4,11 +4,15 @@ export interface DynamicFormFieldData {
   key: string;
   label: string;
   placeholder: string;
+  value?: any;
   options?: FlatOption[] | GroupedOption[];
   pattern?: any;
   hint?: string;
   order?: number;
   validators?: DynamicFormControlValidator;
+  settings?: DynamicFormControlSettings;
+  eventName?: DynamicFormFieldOnChangeEvent;
+  dependents?: string[];
 }
 
 export interface FlatOption {
@@ -33,14 +37,20 @@ export interface DynamicFormControlValidator {
   max?: number;
 }
 
-export interface DynamicFormFieldDataChange {
-  value?: any;
-  onChangeEvent?: DynamicFormFieldOnChangeEvent;
-  dependents?: string[];
+export interface DynamicFormControlSettings {
+  hidden?: boolean;
+  preserve?: boolean;
+}
+
+export interface DynamicFormFieldDataChangeEventParam {
+  eventName: DynamicFormFieldOnChangeEvent;
+  value: any;
+  dependents: string[];
 }
 
 export type DynamicFormFieldType =
   'textbox-domain'
+  | 'textbox-hidden'
   | 'textbox-host-name'
   | 'textbox-input'
   | 'textbox-ip'
@@ -56,6 +66,7 @@ export type DynamicFormFieldType =
 
 export type DynamicFormFieldTemplate =
   'input-text'
+  | 'input-hidden'
   | 'input-number'
   | 'input-random'
   | 'select'

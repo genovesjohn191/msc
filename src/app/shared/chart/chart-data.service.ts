@@ -7,7 +7,7 @@ interface Series {
   data: number[];
 }
 
-interface ChartData {
+export interface ChartData {
   categories: string[];
   series: Series[];
 }

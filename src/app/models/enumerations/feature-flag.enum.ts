@@ -1,6 +1,7 @@
 export enum McsFeatureFlag {
   MaintenanceMode = 'EnableMaintenanceMode',
   SystemMessages = 'EnableSystemMessages',
+  LaunchPad = 'EnableLauncPad',
   ExperimentalFeatures = 'EnableExperimentalFeatures',
 
   PublicCloudDashboard = 'EnablePublicCloudDashboard',

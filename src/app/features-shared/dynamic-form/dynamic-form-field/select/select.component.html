@@ -1,4 +1,4 @@
-<mat-form-field appearance="outline" [hintLabel]="data.hint">
+<mat-form-field appearance="outline" [hintLabel]="data.hint" *ngIf="isVisible()">
   <mat-label [attr.for]="data.key">{{data.label}}</mat-label>
   
   <mat-select (selectionChange)="valueChange($event)"

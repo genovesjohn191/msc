@@ -17,7 +17,7 @@ export class DynamicInputHostNameField extends DynamicInputTextField {
     value?: string;
     hint?: string;
     order?: number;
-    onChangeEvent?: DynamicFormFieldOnChangeEvent;
+    eventName?: DynamicFormFieldOnChangeEvent;
     dependents?: string[];
     validators?: { required?: boolean; minlength?: number; maxlength?: number; };
   }) {

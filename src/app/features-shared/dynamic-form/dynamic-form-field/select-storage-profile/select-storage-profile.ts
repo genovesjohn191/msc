@@ -17,7 +17,7 @@ export class DynamicSelectStorageProfileField extends DynamicFormFieldDataBase {
     value?: string;
     hint?: string;
     order?: number;
-    onChangeEvent?: DynamicFormFieldOnChangeEvent;
+    eventName?: DynamicFormFieldOnChangeEvent;
     dependents?: string[];
     validators?: { required?: boolean; };
   }) {

@@ -12,6 +12,17 @@
           {{ 'navigation.dashboard' | translate }}
         </a>
       </li>
+      <!-- Launch Pad -->
+      <li *mcsAccessControl="[]; feature: 'EnableLaunchPad'">
+        <a [mcsRouterLink]="routeKeyEnum.LaunchPad"
+          mcsRouterLinkActive="active"
+          mcsId
+          mcsEventTracker="navigate-to-launch-pad"
+          mcsEventCategory="navigation"
+          mcsEventLabel="main-nav">
+          LAUNCH PAD
+        </a>
+      </li>
       <!-- Private Cloud -->
       <li *ngIf="hasPrivateCloudAccess">
         <a (click)="toggleThis('showPrivateCloudMenu')"

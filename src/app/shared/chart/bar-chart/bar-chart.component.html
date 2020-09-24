@@ -1,5 +1,6 @@
 <div class="bar-chart-layout-wrapper">
-  <apx-chart
+  <apx-chart 
+    [class.hidden]="!hasData"
     [series]="chartOptions.series"
     [chart]="chartOptions.chart"
     [dataLabels]="chartOptions.dataLabels"
@@ -10,4 +11,7 @@
     [legend]="chartOptions.legend"
     [title]="chartOptions.title">
   </apx-chart>
+  <mcs-status-message type="info" [class.hidden]="hasData">
+    No data found
+  </mcs-status-message>
 </div>

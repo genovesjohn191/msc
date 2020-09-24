@@ -1,13 +1,15 @@
 import {
   DynamicFormFieldData,
-  DynamicFormFieldDataChange
+  DynamicFormFieldDataChangeEventParam
 } from './dynamic-form-field-data.interface';
 import { EventEmitter } from '@angular/core';
 
 export interface DynamicFormField {
   data: DynamicFormFieldData;
 
-  dataChange: EventEmitter<DynamicFormFieldDataChange>;
+  dataChange: EventEmitter<DynamicFormFieldDataChangeEventParam>;
 
-  onFormDataChange(params: DynamicFormFieldDataChange): void;
+  onFormDataChange(params: DynamicFormFieldDataChangeEventParam): void;
+
+  clearFormFields(reuseValue: boolean): void;
 }

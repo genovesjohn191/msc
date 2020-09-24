@@ -1,11 +1,9 @@
 @import "../../../styles/shared/base";
 
-.form-field {
-  .mat-form-field {
-    width: 100%;
-  
-    input {
-      width: 100%;
-    }
+.cta-wrapper {
+  margin-top: $space-large;
+
+  button:not(:first-child) {
+    margin-left: $space-small;
   }
 }

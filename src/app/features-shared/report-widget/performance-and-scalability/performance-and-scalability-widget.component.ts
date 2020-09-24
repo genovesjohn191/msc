@@ -14,7 +14,10 @@ import {
 import { catchError } from 'rxjs/operators';
 
 import { ChartItem } from '@app/shared';
-import { unsubscribeSafely } from '@app/utilities';
+import {
+  isNullOrEmpty,
+  unsubscribeSafely
+} from '@app/utilities';
 import { McsReportingService } from '@app/core/services/mcs-reporting.service';
 import { ReportPeriod } from '../report-period.interface';
 
@@ -32,19 +35,21 @@ import { ReportPeriod } from '../report-period.interface';
 export class PerformanceAndScalabilityWidgetComponent implements OnInit, OnDestroy {
   @Input()
   public set period(value: ReportPeriod) {
-    this._startPeriod = `${value.from.getFullYear()}-${value.from.getMonth() + 1}`;
-    this._endPeriod = `${value.until.getFullYear()}-${value.until.getMonth() + 1}`;
+    if (!isNullOrEmpty(value)) {
+      this._startPeriod = `${value.from.getFullYear()}-${value.from.getMonth() + 1}`;
+      this._endPeriod = `${value.until.getFullYear()}-${value.until.getMonth() + 1}`;
+    }
+
     this.getData();
   }
-
 
   public data$: Observable<ChartItem[]>;
   public dataBehavior: BehaviorSubject<ChartItem[]>;
   public hasError: boolean = false;
   public processing: boolean = true;
 
-  private _startPeriod: string;
-  private _endPeriod: string;
+  private _startPeriod: string = '';
+  private _endPeriod: string = '';
 
   public constructor(
     private _changeDetectorRef: ChangeDetectorRef,

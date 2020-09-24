@@ -3,7 +3,8 @@ import {
   ViewChildren,
   QueryList,
   OnInit,
-  Component
+  Component,
+  ChangeDetectorRef
 } from '@angular/core';
 import {
   FormGroup,
@@ -16,45 +17,150 @@ import { isNullOrEmpty } from '@app/utilities';
 import { CoreValidators } from '@app/core';
 import {
   DynamicFormFieldData,
-  DynamicFormFieldDataChange
+  DynamicFormFieldDataChangeEventParam
 } from './dynamic-form-field-data.interface';
 import { DynamicFormField } from './dynamic-form-field.interface';
 import { DynamicFormFieldDataBase } from './dynamic-form-field-data.base';
 
 @Component({
   selector: 'mcs-dynamic-form',
-  templateUrl: './dynamic-form.component.html'
+  templateUrl: './dynamic-form.component.html',
+  styleUrls: ['./dynamic-form.scss']
 })
 export class DynamicFormComponent implements OnInit {
   @Input()
   public controlDataItems: DynamicFormFieldDataBase[];
 
+  @Input()
+  public hideMoreFieldsToggle: boolean = false;
+
   @ViewChildren('control')
   public controls: QueryList<DynamicFormField>;
 
+  public hasMoreFields: boolean = false;
   public form: FormGroup;
-  public submitted: boolean;
-  public payLoad: string = '';
-  public formStatus: string = '';
+
   private customValidatorMap: Map<string, ValidatorFn[]>;
 
+  public constructor(private _changeDetectorRef: ChangeDetectorRef) {}
+
   public ngOnInit() {
-    this.createCustomValidationMap();
-
-    const formGroup = {};
-
-    this.controlDataItems.forEach(formControl => {
-      let validators: ValidatorFn[] = this.getValidators(formControl);
-      formGroup[formControl.key] = new FormControl(formControl.value || '', validators);
-    });
-
-    this.form = new FormGroup(formGroup);
-
-    this.onChanges();
-    this.submitForm();
+    this._createCustomValidationMap();
+    this.form = this.buildForm();
   }
 
-  private getValidators(controlData: DynamicFormFieldData): ValidatorFn[] {
+  private buildForm(): FormGroup {
+    const formGroup = {};
+    this.controlDataItems.forEach(formControl => {
+      let validators: ValidatorFn[] = this._getValidators(formControl);
+      formGroup[formControl.key] = new FormControl(formControl.value || '', validators);
+
+      if (!this.hasMoreFields && formControl.settings && formControl.settings.hidden) {
+        this.hasMoreFields = true;
+      }
+    });
+
+    return new FormGroup(formGroup);
+  }
+
+  public GetRawValue(): any {
+    return this.form.getRawValue();
+  }
+
+  // Notify all dependent fields if data has change
+  public onDataChange(params: DynamicFormFieldDataChangeEventParam): void {
+    if (isNullOrEmpty(params.dependents) || isNullOrEmpty(params.eventName)) {
+      return;
+    }
+    this.controls.forEach(control => {
+      if (params.dependents.indexOf(control.data.key) > -1) {
+        control.onFormDataChange(params);
+      }
+    });
+  }
+
+  /**
+   * Reset the all fields that do not preserve values
+   * @param preserveValues set to false if you want value preserving fields to be cleared
+   */
+  public resetForm(preserveValues: boolean = true): void {
+    this.controls.forEach(control => {
+      control.clearFormFields(preserveValues);
+    });
+
+    this._changeDetectorRef.markForCheck();
+  }
+
+  public isValid(key: string) {
+    if (!this.form.controls[key].dirty && !this.form.controls[key].touched) {
+      return true;
+    }
+
+    return this.form.controls[key].valid;
+  }
+
+  // Generic error messages for validations
+  public getErrorMessage(key: string): string {
+    if (this.form.controls[key].hasError('required')) {
+      return 'You must enter a value';
+    }
+    if (this.form.controls[key].hasError('minlength')) {
+      return 'You must enter a minimum of ' + this.form.controls[key].errors.minlength.requiredLength + ' characters';
+    }
+    if (this.form.controls[key].hasError('min')) {
+      return 'Must not be less than' + this.form.controls[key].errors.min.min;
+    }
+    if (this.form.controls[key].hasError('max')) {
+      return 'Must not exceed ' + this.form.controls[key].errors.max.max;
+    }
+    if (this.form.controls[key].hasError('ipAddress')) {
+      return 'Incorrect IP address format';
+    }
+    if (this.form.controls[key].hasError('domain')) {
+      return 'Incorrect domain format';
+    }
+    if (this.form.controls[key].hasError('hostName')) {
+      return 'Incorrect host name format';
+    }
+  }
+
+  public markAsTouched(): void {
+    this._markThisAsTouched(this.form);
+  }
+
+  public setFieldVisiblity(visible: boolean) {
+    this.setHiddenFieldsVisibility(visible);
+  }
+
+  private setHiddenFieldsVisibility(visible: boolean): void {
+    this.controls.forEach(control => {
+      if (!isNullOrEmpty(control.data.settings)) {
+        control.data.settings.hidden = !visible;
+      }
+    });
+
+    this._changeDetectorRef.markForCheck();
+  }
+
+  private _markThisAsTouched(formGroup: FormGroup): void {
+    (Object as any).values(formGroup.controls).forEach((control) => {
+      control.markAsTouched();
+
+      if (control.controls) {
+        this._markThisAsTouched(control);
+      }
+    });
+  }
+
+  private _createCustomValidationMap() {
+    this.customValidatorMap = new Map<string, ValidatorFn[]>();
+
+    this.customValidatorMap.set('textbox-host-name', [CoreValidators.hostName]);
+    this.customValidatorMap.set('textbox-domain', [CoreValidators.domain]);
+    this.customValidatorMap.set('textbox-ip', [CoreValidators.ipAddress]);
+  }
+
+  private _getValidators(controlData: DynamicFormFieldData): ValidatorFn[] {
     let validators: ValidatorFn[] = [];
 
     if (isNullOrEmpty(controlData)) {
@@ -89,68 +195,5 @@ export class DynamicFormComponent implements OnInit {
     }
 
     return validators;
-  }
-
-  public onDataChange(params: DynamicFormFieldDataChange): void {
-    if (isNullOrEmpty(params.dependents) || isNullOrEmpty(params.onChangeEvent)) {
-      return;
-    }
-    this.controls.forEach(control => {
-      if (params.dependents.indexOf(control.data.key) > -1) {
-        control.onFormDataChange(params);
-      }
-    });
-  }
-
-  public submitForm() {
-    this.formStatus = this.form.valid ? 'VALID' : 'INVALID';
-    this.payLoad = JSON.stringify(this.form.getRawValue(), undefined, 4);
-  }
-
-  public isValid(key: string) {
-    if (!this.form.controls[key].dirty && !this.form.controls[key].touched) {
-      return true;
-    }
-
-    return this.form.controls[key].valid;
-  }
-
-  // Generic error messages
-  public getErrorMessage(key: string): string {
-    if (this.form.controls[key].hasError('required')) {
-      return 'You must enter a value';
-    }
-    if (this.form.controls[key].hasError('minlength')) {
-      return 'You must enter a minimum of ' + this.form.controls[key].errors.minlength.requiredLength + ' characters';
-    }
-    if (this.form.controls[key].hasError('min')) {
-      return 'Must not be less than' + this.form.controls[key].errors.min.min;
-    }
-    if (this.form.controls[key].hasError('max')) {
-      return 'Must not exceed ' + this.form.controls[key].errors.max.max;
-    }
-    if (this.form.controls[key].hasError('ipAddress')) {
-      return 'Incorrect IP address format';
-    }
-    if (this.form.controls[key].hasError('domain')) {
-      return 'Incorrect domain format';
-    }
-    if (this.form.controls[key].hasError('hostName')) {
-      return 'Incorrect host name format';
-    }
-  }
-
-  public onChanges(): void {
-    this.form.valueChanges.subscribe(val => {
-      this.submitForm();
-    });
-  }
-
-  private createCustomValidationMap() {
-    this.customValidatorMap = new Map<string, ValidatorFn[]>();
-
-    this.customValidatorMap.set('textbox-host-name', [CoreValidators.hostName]);
-    this.customValidatorMap.set('textbox-domain', [CoreValidators.domain]);
-    this.customValidatorMap.set('textbox-ip', [CoreValidators.ipAddress]);
   }
 }

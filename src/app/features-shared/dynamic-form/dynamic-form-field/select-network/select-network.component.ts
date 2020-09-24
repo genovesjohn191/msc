@@ -17,7 +17,7 @@ import {
   McsResourceNetwork
 } from '@app/models';
 import {
-  DynamicFormFieldDataChange,
+  DynamicFormFieldDataChangeEventParam,
   FlatOption
 } from '../../dynamic-form-field-data.interface';
 import { DynamicSelectNetworkField } from './select-network';
@@ -51,8 +51,8 @@ export class DynamicSelectNetworkComponent extends DynamicSelectFieldComponentBa
     super(_changeDetectorRef);
   }
 
-  public onFormDataChange(params: DynamicFormFieldDataChange): void {
-    switch (params.onChangeEvent) {
+  public onFormDataChange(params: DynamicFormFieldDataChangeEventParam): void {
+    switch (params.eventName) {
       case 'resource-change':
         this._resource = params.value as McsResource;
         this.retrieveOptions();
