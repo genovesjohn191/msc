@@ -1,6 +1,10 @@
 {
   "navigation": {
     "title": "Macquarie Cloud Services Portal",
+    "launchPad": {
+      "label": "Launch Pad",
+      "crispOrders": "CRISP Orders"
+    },
     "privateCloud": {
       "label": "Private Cloud",
       "compute": {
@@ -53,6 +57,10 @@
     "loadingProducts": "Loading products.",
     "noProducts": "No products to display.",
     "errorProducts": "Sorry, something’s not right. We weren’t able to retrieve the list of products."
+  },
+  "launchPadCrispOrders": {
+    "header": "Run Workflow",
+    "filterHeader": "CRISP Elements"
   },
   "consolePage": {
     "loading": "Loading VM Console...",

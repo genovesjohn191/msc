@@ -1,9 +1,6 @@
 import { DynamicFormFieldDataBase } from '@app/features-shared/dynamic-form';
+import { LaunchPadWorkflowGroupType } from './workflow-selector.service';
 import { LaunchPadWorkflowType } from './workflow.interface';
-
-export type LaunchPadWorkflowGroupType =
-    'new-cvm'
-  | 'old-cvm';
 
 export interface WorkflowSettings {
   type: LaunchPadWorkflowType;

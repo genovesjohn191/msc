@@ -1,12 +1,14 @@
 import { Routes } from '@angular/router';
-import { LaunchPadComponent } from './launch-pad.component';
+import { RouteKey } from '@app/models';
+import { CrispOrdersWorkflowComponent } from './crisp-orders/crisp-orders.component';
 
 /**
  * List of routes for the main module
  */
 export const launchPadRoutes: Routes = [
   {
-    path: '',
-    component: LaunchPadComponent
+    path: 'crisp-orders',
+    component: CrispOrdersWorkflowComponent,
+    data: { routeId: RouteKey.LaunchPadCrispOrders }
   }
 ];

@@ -4,14 +4,14 @@ import {
   serverBackupForm
 } from '../forms';
 import {
-  LaunchPadWorkflowGroupType,
   WorkflowGroup,
   WorkflowSettings
 } from '../workflow-group.interface';
+import { LaunchPadWorkflowGroupType } from '../workflow-selector.service';
 
 
 export class NewCvmWorkflowGroup implements WorkflowGroup {
-  public type: LaunchPadWorkflowGroupType = 'new-cvm';
+  public type: LaunchPadWorkflowGroupType = 'provision-vm';
 
   public parent: WorkflowSettings = {
     type: 'servers.newcvm',

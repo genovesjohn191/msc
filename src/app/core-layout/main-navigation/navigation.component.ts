@@ -47,6 +47,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
   public selectedCategory: RouteCategory;
   private _routeHandler: Subscription;
   private _navInitialized: boolean = false;
+  private _showLaunchPadMenu: boolean;
   private _showPrivateCloudMenu: boolean;
   private _showPublicCloudMenu: boolean;
   private _showComputeSubmenu: boolean;
@@ -54,6 +55,10 @@ export class NavigationComponent implements OnInit, OnDestroy {
   private _showStorageSubmenu: boolean;
   private _showDashboardSubmenu: boolean;
   private _showOrdersMenu: boolean;
+
+  public get showLaunchPadMenu(): boolean {
+    return this._showLaunchPadMenu;
+  }
 
   public get showPrivateCloudMenu(): boolean {
     return this._showPrivateCloudMenu;
@@ -195,6 +200,11 @@ export class NavigationComponent implements OnInit, OnDestroy {
    * and expands the current route
    */
   private initializeNavigation() {
+    this._showLaunchPadMenu = (this._navInitialized && this._showLaunchPadMenu)
+      ? this._showLaunchPadMenu
+      : this._accessControlService.hasAccessToFeature([McsFeatureFlag.LaunchPad])
+      && this.selectedCategory === RouteCategory.LaunchPad;
+
     this._showPrivateCloudMenu = (this._navInitialized && this._showPrivateCloudMenu)
       ? this._showPrivateCloudMenu
       : this.hasPrivateCloudAccess && this.isPrivateCloudRoute;

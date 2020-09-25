@@ -1,13 +1,14 @@
 import {
   Component,
-  ChangeDetectionStrategy, ViewChild, ChangeDetectorRef
+  ChangeDetectionStrategy,
+  ViewChild,
+  Input
 } from '@angular/core';
 import { FormArray } from '@angular/forms';
 import { isNullOrEmpty } from '@app/utilities';
-import { Observable, of } from 'rxjs';
-import { LaunchPadWorkflowGroupComponent } from './core/workflow-group.component';
-import { Workflow } from './core/workflow.interface';
-import { WorkflowGroupLaunchSettings } from './core/workflow.service';
+import { LaunchPadWorkflowGroupComponent } from './workflow-group.component';
+import { Workflow } from './workflow.interface';
+import { LaunchPadSetting } from './workflow.service';
 
 @Component({
   selector: 'mcs-launch-pad',
@@ -19,12 +20,13 @@ export class LaunchPadComponent {
   @ViewChild('workflows', { static: false})
   protected workflows: LaunchPadWorkflowGroupComponent;
 
-  public config$: Observable<WorkflowGroupLaunchSettings>;
+  @Input()
+  public config: LaunchPadSetting;
 
   public workflowPayload: Workflow[] = [];
 
   constructor() {
-    this.createWorkflowGroup({type: 'new-cvm', serviceId: 'MVC222222', parentServiceId: 'test2'});
+    // this.createWorkflowGroup({type: 'new-cvm', serviceId: 'MVC222222', parentServiceId: 'test2'});
   }
 
   public get valid(): boolean {
@@ -39,10 +41,6 @@ export class LaunchPadComponent {
       return null;
     }
     return new FormArray(this.workflows.forms);
-  }
-
-  public createWorkflowGroup(settings: WorkflowGroupLaunchSettings): void {
-    this.config$ = of(settings);
   }
 
   public addAnother(): void {
@@ -62,15 +60,18 @@ export class LaunchPadComponent {
         this.workflowPayload.push(payload);
       }
     });
+  }
 
-    console.log(this.workflowPayload);
+  public parse(payload: any): string {
+    return JSON.stringify(payload, null, 2);
   }
 
   private _deleteChildren(parentReferenceId: string): void {
     this.workflowPayload = this.workflowPayload.filter(payload => payload.parentReferenceId !== parentReferenceId);
   }
 
-  public parse(payload: any): string {
-    return JSON.stringify(payload, null, 2);
+  private _removeFromWorkflow(referenceId: string): void {
+    this.workflowPayload = this.workflowPayload.filter(payload => payload.referenceId !== referenceId);
+    this._deleteChildren(referenceId);
   }
 }

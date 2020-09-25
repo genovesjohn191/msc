@@ -12,7 +12,7 @@ import { LaunchPadWorkflowComponent } from './workflow.component';
 import { LaunchPadWorkflow } from './workflow';
 import {
   LaunchPadWorkflowService,
-  WorkflowGroupLaunchSettings
+  LaunchPadSetting
 } from './workflow.service';
 import { WorkflowGroupDirective } from './workflow-group.directive';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
@@ -33,7 +33,7 @@ export class LaunchPadWorkflowGroupComponent implements OnDestroy {
   public title: string;
 
   @Input()
-  public set config(value: WorkflowGroupLaunchSettings) {
+  public set config(value: LaunchPadSetting) {
     if (isNullOrEmpty(value)) {
       return;
     }
@@ -106,7 +106,7 @@ export class LaunchPadWorkflowGroupComponent implements OnDestroy {
     });
   }
 
-  private _renderWorkflowGroup(config: WorkflowGroupLaunchSettings): void {
+  private _renderWorkflowGroup(config: LaunchPadSetting): void {
     let workflowGroup: LaunchPadWorkflow[] = this._workflowService.getWorkflowGroup(config);
     this.title = workflowGroup[0].title + ` [${config.serviceId}]`;
 

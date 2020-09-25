@@ -14,14 +14,25 @@
       </li>
       <!-- Launch Pad -->
       <li *mcsAccessControl="[]; feature: 'EnableLaunchPad'">
-        <a [mcsRouterLink]="routeKeyEnum.LaunchPad"
-          mcsRouterLinkActive="active"
-          mcsId
-          mcsEventTracker="navigate-to-launch-pad"
-          mcsEventCategory="navigation"
-          mcsEventLabel="main-nav">
-          LAUNCH PAD
+        <a (click)="toggleThis('showLaunchPadMenu')"
+          [class.active]="selectedCategory === routerCategoryEnum.LaunchPad"
+          mcsId>
+          {{ 'navigation.launchPad.label' | translate }}
+          <mcs-icon [key]="showLaunchPadMenu ? caretUpIconKey : caretDownIconKey" color="light" size="small"></mcs-icon>
         </a>
+        <ul *ngIf="showLaunchPadMenu">
+          <!-- CRISP Orders -->
+          <li>
+            <a [mcsRouterLink]="routeKeyEnum.LaunchPadCrispOrders"
+              mcsId="launch-pad-crisp-orders-link"
+              mcsEventTracker="navigate-to-launch-pad-crisp-orders"
+              mcsEventCategory="navigation"
+              mcsEventLabel="main-nav"
+              mcsRouterLinkActive="active">
+              {{ 'navigation.launchPad.crispOrders' | translate }}
+            </a>
+          </li>
+        </ul>
       </li>
       <!-- Private Cloud -->
       <li *ngIf="hasPrivateCloudAccess">

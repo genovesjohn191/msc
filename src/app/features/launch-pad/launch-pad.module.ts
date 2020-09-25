@@ -3,57 +3,21 @@ import { RouterModule } from '@angular/router';
 import { SharedModule } from '@app/shared';
 /** Components */
 import { launchPadRoutes } from './launch-pad.constants';
-import { LaunchPadComponent } from './launch-pad.component';
-import { LaunchPadService } from './launch-pad.service';
-import { DynamicFormModule } from '@app/features-shared/dynamic-form';
-import { LaunchPadWorkflowService } from './core/workflow.service';
-import { WorkflowGroupDirective } from './core/workflow-group.directive';
 import { LaunchPadWorkflowGroupComponent } from './core/workflow-group.component';
-import { WorkflowGroupFactory } from './core/workflow-group.factory';
-import {
-  MatButtonModule,
-  MatCardModule,
-  MatExpansionModule,
-  MatFormFieldModule,
-  MatIconModule,
-  MatProgressBarModule,
-  MatStepperModule,
-  MatTableModule,
-  MatTooltipModule
-} from '@angular/material';
-import { LaunchPadWorkflowComponent } from './core/workflow.component';
+import { CrispOrdersWorkflowComponent } from './crisp-orders/crisp-orders.component';
+import { LaunchPadCoreModule } from './core/launch-pad-core.module';
 
 @NgModule({
   declarations: [
-    LaunchPadComponent,
-    LaunchPadWorkflowGroupComponent,
-    WorkflowGroupDirective,
-    LaunchPadWorkflowComponent
+    CrispOrdersWorkflowComponent
   ],
   exports: [
-    LaunchPadWorkflowGroupComponent,
-    WorkflowGroupDirective,
-    LaunchPadWorkflowComponent
+    LaunchPadWorkflowGroupComponent
   ],
   imports: [
     SharedModule,
-    DynamicFormModule,
-    MatExpansionModule,
-    MatIconModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatIconModule,
-    MatProgressBarModule,
-    MatStepperModule,
-    MatTooltipModule,
+    LaunchPadCoreModule,
     RouterModule.forChild(launchPadRoutes)
-  ],
-  entryComponents: [ LaunchPadWorkflowComponent ],
-  providers: [
-    DynamicFormModule,
-    LaunchPadService,
-    LaunchPadWorkflowService,
-    WorkflowGroupFactory
   ]
 })
 

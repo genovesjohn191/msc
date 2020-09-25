@@ -4,13 +4,15 @@ import {
 } from '@angular/core';
 import { LaunchPadWorkflow } from './workflow';
 import { WorkflowGroupFactory } from './workflow-group.factory';
-import { LaunchPadWorkflowGroupType, WorkflowGroup } from './workflow-group.interface';
+import { WorkflowGroup } from './workflow-group.interface';
 import { NewCvmWorkflowGroup } from './workflow-groups/new-cvm-workflow-group';
+import { LaunchPadWorkflowGroupType } from './workflow-selector.service';
 
-export interface WorkflowGroupLaunchSettings {
+export interface LaunchPadSetting {
   type: LaunchPadWorkflowGroupType;
   serviceId?: string;
   parentServiceId?: string;
+  referenceId?: string;
 }
 
 @Injectable()
@@ -21,17 +23,18 @@ export class LaunchPadWorkflowService {
     this._createWorkflowGroupMap();
   }
 
-  public getWorkflowGroup(config: WorkflowGroupLaunchSettings): LaunchPadWorkflow[] {
+  public getWorkflowGroup(config: LaunchPadSetting): LaunchPadWorkflow[] {
     let workflowGroupType = this.workflowGroupMap.get(config.type);
     return this._workflowGroupFactory.createWorkflowGroup({
       workflowGroup: new workflowGroupType(),
       serviceId: config.serviceId,
-      parentServiceId: config.parentServiceId
+      parentServiceId: config.parentServiceId,
+      referenceId: config.referenceId,
     });
   }
 
   private _createWorkflowGroupMap(): void {
     this.workflowGroupMap = new Map<LaunchPadWorkflowGroupType, Type<WorkflowGroup>>();
-    this.workflowGroupMap.set('new-cvm', NewCvmWorkflowGroup);
+    this.workflowGroupMap.set('provision-vm', NewCvmWorkflowGroup);
   }
 }
