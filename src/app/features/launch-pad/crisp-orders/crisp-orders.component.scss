@@ -1,0 +1,21 @@
+@import "../../../../styles/shared/base";
+
+.crisp-elements-tree {
+  ul,
+  li {
+    margin-top: 0;
+    margin-bottom: 0;
+    list-style-type: none;
+  }
+  .mat-tree-node {
+    min-height: 40px;
+
+    &:hover {
+      background-color: $color-grey-07;
+    }
+  }
+
+  .hide {
+    display: none;
+  }
+}

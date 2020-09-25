@@ -5,6 +5,19 @@ import {
   FormsModule,
   ReactiveFormsModule
 } from '@angular/forms';
+import {
+  MatBottomSheetModule,
+  MatButtonModule,
+  MatExpansionModule,
+  MatFormFieldModule,
+  MatIconModule,
+  MatListModule,
+  MatProgressBarModule,
+  MatSlideToggleModule,
+  MatStepperModule,
+  MatTooltipModule,
+  MatTreeModule
+} from '@angular/material';
 import { TranslateModule } from '@ngx-translate/core';
 /** Modules */
 import { RippleModule } from './ripple/ripple.module';
@@ -142,7 +155,20 @@ import { DateTimePickerModule } from './datetimepicker/datetimepicker.module';
     PricingCalculatorModule,
     DynamicListModule,
     DateTimePickerModule,
-    CtaListModule
+    CtaListModule,
+
+    // Angular Material
+    MatBottomSheetModule,
+    MatButtonModule,
+    MatExpansionModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatListModule,
+    MatProgressBarModule,
+    MatSlideToggleModule,
+    MatStepperModule,
+    MatTooltipModule,
+    MatTreeModule
   ],
   exports: [
     CommonModule,
@@ -213,7 +239,20 @@ import { DateTimePickerModule } from './datetimepicker/datetimepicker.module';
     PricingCalculatorModule,
     DynamicListModule,
     DateTimePickerModule,
-    CtaListModule
+    CtaListModule,
+
+    // Angular Material
+    MatBottomSheetModule,
+    MatButtonModule,
+    MatExpansionModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatListModule,
+    MatProgressBarModule,
+    MatSlideToggleModule,
+    MatStepperModule,
+    MatTooltipModule,
+    MatTreeModule
   ]
 })
 

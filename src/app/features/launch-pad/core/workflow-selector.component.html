@@ -1,0 +1,9 @@
+<mat-nav-list>
+  <a *ngFor="let item of items" mat-list-item (click)="openLink($event)">
+    <mat-icon style="transform: scale(2);">
+      {{ item.icon }}
+    </mat-icon>
+    <span mat-line>{{ item.name }}</span>
+    <span mat-line>{{ item.description }}</span>
+  </a>
+</mat-nav-list>

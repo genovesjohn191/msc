@@ -1,6 +1,7 @@
 export enum RouteKey {
   Dashboard = 1,
   LaunchPad,
+  LaunchPadCrispOrders,
   ReportOverview,
   ReportInsights,
 

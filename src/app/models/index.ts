@@ -30,6 +30,7 @@ export * from './enumerations/order-available-platform-type.enum';
 export * from './enumerations/order-origin.enum';
 export * from './enumerations/order-status.enum';
 export * from './enumerations/order-type-id.enum';
+export * from './enumerations/product-type.enum';
 export * from './enumerations/item-type.enum';
 export * from './enumerations/order-workflow-action.enum';
 export * from './enumerations/order-workflow-submit-status.enum';
