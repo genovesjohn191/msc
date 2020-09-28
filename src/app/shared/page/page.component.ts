@@ -150,9 +150,7 @@ export class PageComponent implements AfterViewInit {
           .createEmbeddedView(this._topPanelDefinition.template);
       }
 
-      if (this._accessControlService.hasAccessToFeature(McsFeatureFlag.ExperimentalFeatures)) {
-        this._pageService.leftPanelIsVisible = this.leftPanelExpandedByDefault;
-      }
+      this._pageService.leftPanelIsVisible = this.leftPanelExpandedByDefault;
 
       this._initializeLeftPanelDisplay();
     });

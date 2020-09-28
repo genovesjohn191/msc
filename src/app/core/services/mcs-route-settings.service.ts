@@ -8,8 +8,7 @@ import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import {
   McsRouteInfo,
   HttpStatusCode,
-  RoutePlatform,
-  McsFeatureFlag
+  RoutePlatform
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -28,7 +27,6 @@ import { McsAuthenticationIdentity } from '../authentication/mcs-authentication.
 @Injectable()
 @LogClass()
 export class McsRouteSettingsService implements McsDisposable {
-  private _previousSelectedPlatform: RoutePlatform;
   private _routeHandler: Subscription;
   private _destroySubject = new Subject<void>();
   private _selectedPlatform: RoutePlatform;
@@ -58,7 +56,6 @@ export class McsRouteSettingsService implements McsDisposable {
   }
 
   public set selectedPlatform(value: RoutePlatform) {
-    this._previousSelectedPlatform = value;
     this._selectedPlatform = value;
   }
 
@@ -128,30 +125,7 @@ export class McsRouteSettingsService implements McsDisposable {
   private _determineCurrentPlatform(routeInfo: McsRouteInfo) {
     if (!this._hasPlatformAccess(routeInfo)) { return; }
 
-    let globallyAccessibleRoutePlatform: boolean =
-      isNullOrEmpty(routeInfo.enumPlatform) || routeInfo.enumPlatform === RoutePlatform.Global;
-    let noPreviouSelectedPlatform = isNullOrEmpty(this._previousSelectedPlatform);
-
-    if (this._accessControlService.hasAccessToFeature(McsFeatureFlag.ExperimentalFeatures)) {
-      globallyAccessibleRoutePlatform = false; // No need to force global routes to specific context
-    }
-
-    // Public or Private Route
-    if (!globallyAccessibleRoutePlatform) {
-      this._selectedPlatform = routeInfo.enumPlatform;
-      this._previousSelectedPlatform = this.selectedPlatform;
-      return;
-    }
-
-    // Globally Accessible Route
-    // Try to set default platform if no previous route platform detected
-    if (noPreviouSelectedPlatform) {
-      this._previousSelectedPlatform =
-        this.hasPrivateCloudPlatform ? RoutePlatform.Private
-        : this.hasPublicCloudPlatform ? RoutePlatform.Public
-        : RoutePlatform.Global;
-      this._selectedPlatform = this._previousSelectedPlatform;
-    }
+    this._selectedPlatform = routeInfo.enumPlatform;
   }
 
   /**
