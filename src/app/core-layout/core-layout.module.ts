@@ -5,25 +5,14 @@ import { FormsModule } from '@angular/forms';
 import { SharedModule } from '@app/shared';
 /** Multiple Components */
 import { StateChangeNotificationsComponent } from './state-change-notifications';
-import {
-  MainNavigationComponent,
-  NavigationDesktopComponent,
-  NavigationMobileComponent,
-  NavigationComponent
-} from './main-navigation';
-import {
-  SubNavigationComponent,
-  SubNavigationDesktopComponent,
-  SubNavigationMobileComponent
-} from './sub-navigation';
+import { NavigationComponent } from './main-navigation';
 /** Layout Components */
 import { MainLoaderComponent } from './main-loader/main-loader.component';
 import { ContentComponent } from './content/content.component';
 import { FooterComponent } from './footer/footer.component';
 import {
   HeaderComponent,
-  UserPanelComponent,
-  ContextSwitchComponent
+  UserPanelComponent
 } from './header';
 import {
   AccountPanelComponent,
@@ -33,7 +22,6 @@ import {
 } from './shared';
 /** Constants */
 import { coreLayoutProviders } from './core-layout.constants';
-import { SystemMessageBannerComponent } from './system-message-banner/system-message-banner.component';
 
 @NgModule({
   declarations: [
@@ -46,15 +34,8 @@ import { SystemMessageBannerComponent } from './system-message-banner/system-mes
     FooterComponent,
     HeaderComponent,
     UserPanelComponent,
-    ContextSwitchComponent,
     StateChangeNotificationsComponent,
-    MainNavigationComponent,
-    NavigationComponent,
-    NavigationDesktopComponent,
-    NavigationMobileComponent,
-    SubNavigationComponent,
-    SubNavigationDesktopComponent,
-    SubNavigationMobileComponent
+    NavigationComponent
   ],
   imports: [
     CommonModule,
@@ -71,15 +52,8 @@ import { SystemMessageBannerComponent } from './system-message-banner/system-mes
     FooterComponent,
     HeaderComponent,
     UserPanelComponent,
-    ContextSwitchComponent,
     StateChangeNotificationsComponent,
-    MainNavigationComponent,
     NavigationComponent,
-    NavigationDesktopComponent,
-    NavigationMobileComponent,
-    SubNavigationComponent,
-    SubNavigationDesktopComponent,
-    SubNavigationMobileComponent,
     CommonModule,
     FormsModule,
     SharedModule
