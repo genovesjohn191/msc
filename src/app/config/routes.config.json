@@ -511,7 +511,16 @@
     "enumKey": "OrderRemoteHands",
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/remote-hands",
-    "requiredPermissions": ["OrderEdit"]
+    "requiredPermissions": ["OrderEdit"],
+    "documentTitle": "Request Remote Hands - Macquarie Cloud Services"
+  },
+  "orderServerRequestPatch": {
+    "enumPlatform": "Private",
+    "enumKey": "OrderServerRequestPatch",
+    "enumCategory": "MakeAChange",
+    "navigationPath": "orders/request-patch",
+    "requiredPermissions": ["OrderEdit"],
+    "documentTitle": "Request a Patch - Macquarie Cloud Services"
   },
   "otherTools": {
     "enumKey": "OtherTools",

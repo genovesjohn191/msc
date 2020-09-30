@@ -80,6 +80,7 @@ import { ServerAddBackupVmSelectedEvent } from './items/server-add-backup-vm-sel
 import { LicenseCountChangeSelectedEvent } from './items/license-count-change-selected.event';
 import { ServiceRequestChangeSelectedEvent } from './items/service-request-change-selected.event';
 import { NavToggleEvent } from './items/nav-toggle-event';
+import { ServerRequestPatchSelectedEvent } from './items/server-request-patch-selected.event';
 
 export class McsEvent {
   public static routeChange = new RouteChangeEvent();
@@ -96,6 +97,7 @@ export class McsEvent {
   public static serverAddBackupVmSelected = new ServerAddBackupVmSelectedEvent();
   public static licenseCountChangeSelectedEvent = new LicenseCountChangeSelectedEvent();
   public static serviceRequestChangeSelectedEvent = new ServiceRequestChangeSelectedEvent();
+  public static serverRequestPatchSelectedEvent = new ServerRequestPatchSelectedEvent();
   public static vdcScaleSelectedEvent = new VdcScaleSelectedEvent();
   public static vdcStorageExpandSelectedEvent = new VdcStorageExpandSelectedEvent();
   public static loaderShow = new LoaderShowEvent();

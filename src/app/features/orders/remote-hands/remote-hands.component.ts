@@ -180,7 +180,7 @@ export class RemoteHandsComponent  extends McsOrderWizardBase  implements OnInit
       {
         billingDetailsStep: {
           category: 'order',
-          label: 'ms-service-change-goto-provisioning-step',
+          label: 'request-patch-goto-provisioning-step',
           action: 'next-button'
         }
       }
@@ -218,6 +218,7 @@ export class RemoteHandsComponent  extends McsOrderWizardBase  implements OnInit
         if (isNullOrEmpty(response)) { return; }
         response.forEach((colocationResponseCollection) => {
           let colocationArray = getSafeProperty(colocationResponseCollection, (obj) => obj.collection);
+          if (isNullOrEmpty(colocationArray)) { return; }
           let colocationGroupName =  pluck(colocationArray, 'colocationGroup').find(_c => (!isNullOrUndefined(_c)));
           let optionsArray = new Array<McsOption>();
           this._mapArrayToOption(colocationArray, optionsArray);

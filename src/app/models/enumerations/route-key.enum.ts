@@ -77,6 +77,7 @@ export enum RouteKey {
   OrderMsLicenseCountChange,
   OrderMsRequestChange,
   OrderRemoteHands,
+  OrderServerRequestPatch,
 
   Internet,
   InternetDetails,

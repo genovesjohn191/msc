@@ -15,6 +15,7 @@ import { ServiceCustomChangeEvent } from './events/service-custom-change.event';
 import { HostedDnsChangeEvent } from './events/hosted-dns-change.event';
 import { ColocationStaffEscortEvent } from './events/colocation-staff-escort.event';
 import { ColocationRemoteHandsEvent } from './events/colocation-remote-hands.event';
+import { ServerPatchRequestEvent } from './events/server-request-patch.event';
 
 export type OrderEventRecord = Record<string, IOrderEventStrategy>;
 
@@ -22,6 +23,7 @@ export const orderEventMap: OrderEventRecord = {
   'servers.vcloud.update': new ServerVCloudUpdateEvent(),
   'servers.inview.raise': new ServerInviewRaiseEvent(),
   'servers.vcloud.provision': new ServerVCloudCreateEvent(),
+  'servers.patchRequest': new ServerPatchRequestEvent(),
   'backups.server.provision': new ServerBackupProvisionEvent(),
   'backups.vm.provision': new VmBackupProvisionEvent(),
   'backups.bat.provision': new BatProvisionEvent(),
