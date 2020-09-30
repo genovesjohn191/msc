@@ -145,14 +145,12 @@ export class BarChartComponent implements OnChanges {
 
   private updateApexData(value: ChartItem[]): void {
     this.hasData = false;
-    let data: ChartData = {
-      series: [],
-      categories: []
-    };
-    if (!isNullOrEmpty(value)) {
-      this.hasData = true;
-      data = this._chartDataService.convertToApexChartData(value);
+    if (isNullOrEmpty(value)) {
+      return;
     }
+
+    this.hasData = true;
+    let data: ChartData = this._chartDataService.convertToApexChartData(value);
 
     this.chartOptions = {
       series: data.series,

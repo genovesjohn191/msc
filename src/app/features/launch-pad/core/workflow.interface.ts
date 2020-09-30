@@ -1,5 +1,7 @@
 export type LaunchPadWorkflowType =
     'servers.newcvm'
+  | 'servers.changecvm'
+  | 'servers.av'
   | 'servers.backup'
   | 'servers.hids';
 

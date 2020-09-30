@@ -24,6 +24,8 @@ import {
 } from '@app/utilities';
 import { DynamicFormField } from '../dynamic-form-field.interface';
 import { DynamicTextFieldComponentBase } from './dynamic-text-field-component.base';
+import { isNull } from 'util';
+import { ThrowStmt } from '@angular/compiler';
 
 export abstract class DynamicSelectFieldComponentBase<T>
   extends DynamicTextFieldComponentBase
@@ -31,7 +33,6 @@ export abstract class DynamicSelectFieldComponentBase<T>
 
   public isLoading: boolean = false;
   public hasError: boolean = false;
-  public collection$: Observable<T[]>;
 
   protected destroySubject: Subject<void> = new Subject<void>();
   private _initialized: boolean = false;
@@ -75,13 +76,24 @@ export abstract class DynamicSelectFieldComponentBase<T>
     this.data.options = this.filter(this.collection);
 
     this._endProcess();
-    this._initialized = true;
 
     // Auto select during options update
-    let fileIsRequired = this.data.validators && this.data.validators.required;
+    this._preselectOption();
+
+    this._initialized = true;
+  }
+
+  protected abstract callService(): Observable<T[]>;
+
+  protected abstract filter(collection: T[]): FlatOption[] | GroupedOption[];
+
+  private _preselectOption(): void {
+    let isRequiredField = this.data.validators && this.data.validators.required;
+    // TODO: Need to check for grouped options too if only 1 option is available
     let hasSingleOption = this.data.options.length === 1;
 
-    if (fileIsRequired && hasSingleOption) {
+    // Preselect option if has only one option and field is required
+    if (isRequiredField && hasSingleOption) {
       if (this.data.options[0].type === 'flat') {
         this.data.value = (this.data.options[0] as FlatOption).value;
       } else {
@@ -90,15 +102,35 @@ export abstract class DynamicSelectFieldComponentBase<T>
 
       this.valueChange(this.data.value);
     }
+
+    // Set to default initial value if has multiple options and not yet initialized
+
+    let hasMultipleOptions = this.data.options.length > 1;
+    if (hasMultipleOptions && !isNullOrEmpty(this.data.initialValue)) {
+      let isSelectable = false;
+      if (this.data.options[0].type === 'flat') {
+        isSelectable = !isNullOrEmpty((this.data.options as FlatOption[]).find((opt) => opt.key === this.data.initialValue
+        ));
+      } else {
+        (this.data.options as GroupedOption[]).forEach((opt) => {
+          isSelectable = !isNullOrEmpty((opt.options as FlatOption[]).find((item) =>
+            item.key === this.data.initialValue));
+
+          if (isSelectable) {
+            return;
+          }
+        });
+      }
+
+      if (isSelectable) {
+        this._resetOptions(this.data.initialValue);
+      }
+    }
   }
 
-  protected abstract callService(): Observable<T[]>;
-
-  protected abstract filter(collection: T[]): FlatOption[] | GroupedOption[];
-
   // Resets the options and selected value and propagate changes
-  private _resetOptions(): void {
-    this.data.value = '';
+  private _resetOptions(val: any = ''): void {
+    this.data.value = val;
     this.valueChange(this.data.value);
   }
 

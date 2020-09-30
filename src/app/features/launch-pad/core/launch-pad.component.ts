@@ -2,13 +2,14 @@ import {
   Component,
   ChangeDetectionStrategy,
   ViewChild,
-  Input
+  Input, OnDestroy
 } from '@angular/core';
 import { FormArray } from '@angular/forms';
+import { MatVerticalStepper } from '@angular/material';
 import { isNullOrEmpty } from '@app/utilities';
 import { LaunchPadWorkflowGroupComponent } from './workflow-group.component';
+import { LaunchPadSetting } from './workflow-selector.service';
 import { Workflow } from './workflow.interface';
-import { LaunchPadSetting } from './workflow.service';
 
 @Component({
   selector: 'mcs-launch-pad',
@@ -16,17 +17,32 @@ import { LaunchPadSetting } from './workflow.service';
   styleUrls: ['./launch-pad.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LaunchPadComponent {
+export class LaunchPadComponent implements OnDestroy {
+  @ViewChild('stepper', { static: false})
+  protected stepper: MatVerticalStepper;
+
   @ViewChild('workflows', { static: false})
   protected workflows: LaunchPadWorkflowGroupComponent;
 
   @Input()
-  public config: LaunchPadSetting;
+  public set config(value: LaunchPadSetting) {
+    this.workflowPayload = [];
+    if (this.stepper) {
+      this.stepper.reset();
+    }
+    this._config = value;
+  }
+
+  public get config(): LaunchPadSetting {
+    return this._config;
+  }
 
   public workflowPayload: Workflow[] = [];
 
-  constructor() {
-    // this.createWorkflowGroup({type: 'new-cvm', serviceId: 'MVC222222', parentServiceId: 'test2'});
+  private _config: LaunchPadSetting;
+
+  public ngOnDestroy(): void {
+    // TODO: implement
   }
 
   public get valid(): boolean {

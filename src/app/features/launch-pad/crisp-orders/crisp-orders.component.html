@@ -14,9 +14,8 @@
         <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
           <li class="mat-tree-node">
             <!-- use a disabled button to provide padding for tree leaf -->
-            <button mat-button (click)="clickNode()">
-              {{node.name}}
-            </button>
+            <mcs-workflow-selector-launcher [config]="node.config" (selected)="clickNode($event)">
+            </mcs-workflow-selector-launcher>
           </li>
         </mat-tree-node>
 
@@ -30,7 +29,11 @@
                   {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
                 </mat-icon>
               </button>
-              {{node.name}}
+              <mcs-workflow-selector-launcher *ngIf="node?.config; else nonClickable" [config]="node.config" (selected)="clickNode($event)">
+              </mcs-workflow-selector-launcher>
+              <ng-template #nonClickable>
+                {{node.name}}
+              </ng-template >
             </div>
             <ul [class.hide]="!treeControl.isExpanded(node)">
               <ng-container matTreeNodeOutlet></ng-container>
@@ -44,6 +47,24 @@
 
   <!-- Content Panel -->
   <mcs-content-panel *mcsContentPanelDef>
-    <mcs-launch-pad #launchPad [config]="config$ | async"></mcs-launch-pad>
+    <mcs-launch-pad #launchPad [config]="config" *ngIf="config; else workflowList"></mcs-launch-pad>
+
+    <ng-template #workflowList>
+      <mat-grid-list cols="2" rowHeight="2:1" >
+        <mat-grid-tile>
+          List of workflows...
+        </mat-grid-tile>
+        <mat-grid-tile>
+          List of workflows...
+        </mat-grid-tile>
+        <mat-grid-tile>
+          List of workflows...
+        </mat-grid-tile>
+        <mat-grid-tile>
+          List of workflows...
+        </mat-grid-tile>
+      </mat-grid-list>
+    </ng-template>
+    
   </mcs-content-panel>
 </mcs-page>

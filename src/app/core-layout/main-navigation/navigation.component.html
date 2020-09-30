@@ -12,7 +12,7 @@
           {{ 'navigation.dashboard' | translate }}
         </a>
       </li>
-      <!-- Launch Pad -->
+      <!-- LAUNCH Pad -->
       <li *mcsAccessControl="[]; feature: 'EnableLaunchPad'">
         <a (click)="toggleThis('showLaunchPadMenu')"
           [class.active]="selectedCategory === routerCategoryEnum.LaunchPad"

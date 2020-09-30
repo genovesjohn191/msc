@@ -16,6 +16,7 @@ export class DynamicFormFieldDataBase implements DynamicFormFieldData {
   public label: string;
   public placeholder: string;
   public value?: any;
+  public initialValue?: any;
   public eventName?: DynamicFormFieldOnChangeEvent;
   public dependents?: string[];
   public options?: FlatOption[] | GroupedOption[];
@@ -45,6 +46,7 @@ export class DynamicFormFieldDataBase implements DynamicFormFieldData {
     this.label = options.label || '';
     this.placeholder = options.placeholder || '';
     this.value = options.value || '';
+    this.initialValue = this.value;
     this.options = options.options || [];
     this.hint = options.hint || '';
     this.order = options.order === undefined ? 1 : options.order;

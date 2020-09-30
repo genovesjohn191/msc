@@ -10,10 +10,12 @@ import { LaunchPadWorkflowSelectorComponent } from './workflow-selector.componen
 import { LaunchPadWorkflowService } from './workflow.service';
 import { LaunchPadWorkflowSelectorService } from './workflow-selector.service';
 import { WorkflowGroupFactory } from './workflow-group.factory';
+import { WorkflowSelectorLauncherComponent } from './workflow-selector-launcher.component';
 
 @NgModule({
   declarations: [
     LaunchPadComponent,
+    WorkflowSelectorLauncherComponent,
     LaunchPadWorkflowGroupComponent,
     WorkflowGroupDirective,
     LaunchPadWorkflowComponent,
@@ -21,6 +23,7 @@ import { WorkflowGroupFactory } from './workflow-group.factory';
   ],
   exports: [
     LaunchPadComponent,
+    WorkflowSelectorLauncherComponent,
     LaunchPadWorkflowGroupComponent,
     WorkflowGroupDirective,
     LaunchPadWorkflowComponent,

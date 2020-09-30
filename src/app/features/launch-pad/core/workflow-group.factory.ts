@@ -11,7 +11,7 @@ export class WorkflowGroupFactory {
       referenceId?: string;
       serviceId?: string;
       parentServiceId?: string;
-      parentParams?: [{ key: string, value: any }];
+      parentParams?: { key: string, value: any }[];
     }): LaunchPadWorkflow[] {
 
     let workflows: LaunchPadWorkflow[] = [];

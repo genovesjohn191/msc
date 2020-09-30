@@ -11,12 +11,12 @@ import { Guid, isNullOrEmpty } from '@app/utilities';
 import { LaunchPadWorkflowComponent } from './workflow.component';
 import { LaunchPadWorkflow } from './workflow';
 import {
-  LaunchPadWorkflowService,
-  LaunchPadSetting
+  LaunchPadWorkflowService
 } from './workflow.service';
 import { WorkflowGroupDirective } from './workflow-group.directive';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { Workflow } from './workflow.interface';
+import { LaunchPadSetting } from './workflow-selector.service';
 
 @Component({
   selector: 'mcs-launch-pad-workflow-group',
@@ -31,6 +31,7 @@ export class LaunchPadWorkflowGroupComponent implements OnDestroy {
   public componentRef: ComponentRef<any>;
 
   public title: string;
+  public serviceId: string;
 
   @Input()
   public set config(value: LaunchPadSetting) {
@@ -108,8 +109,13 @@ export class LaunchPadWorkflowGroupComponent implements OnDestroy {
 
   private _renderWorkflowGroup(config: LaunchPadSetting): void {
     let workflowGroup: LaunchPadWorkflow[] = this._workflowService.getWorkflowGroup(config);
-    this.title = workflowGroup[0].title + ` [${config.serviceId}]`;
+    this.serviceId = config.serviceId || config.parentServiceId;
 
+    if (!isNullOrEmpty(this.workflowComponentRef)) {
+      this.workflowComponentRef.forEach((ref) => {
+        ref.destroy();
+      });
+    }
     this.workflowComponentRef = [];
     this.workflowGroup.viewContainerRef.clear();
 

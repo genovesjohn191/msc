@@ -48,6 +48,7 @@ export class LaunchPadWorkflow implements Workflow {
       let field = this.properties.find((property) => param.key === property.key);
       if (!isNullOrEmpty(field)) {
         field.value = param.value;
+        field.initialValue = param.value;
       }
     });
   }
