@@ -1,0 +1,133 @@
+<mcs-page [header]="'serverRequestPatch.title' | translate">
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef>
+
+    <!-- Back to previous URL -->
+    <mcs-top-panel-item *mcsTopPanelItemDef no-border>
+      <mcs-action-item mcsAlign="end"
+        mcsNavigateBackward
+        mcsId="navigate-back"
+        mcsEventTracker="navigate-back-click"
+        mcsEventCategory="orders"
+        mcsEventLabel="server-request-patch">
+        <mcs-icon [key]="backIconKey" size="small"></mcs-icon>
+        <span>{{ 'serverRequestPatch.detailsStep.previous' | translate }}</span>
+      </mcs-action-item>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
+  <mcs-content-panel *mcsContentPanelDef>
+
+    <mcs-wizard>
+
+      <!-- Error message -->
+      <ng-container mcsWizardErrorTemplate>
+        <mcs-form-message #formMessage></mcs-form-message>
+      </ng-container>
+
+      <!-- Details Step-->
+      <mcs-wizard-step id="request-patch-details-step"
+        [stepTitle]="'serverRequestPatch.detailsStep.stepTitle' | translate"
+        customClass="contextual-help-page-wrapper limited-view">
+
+        <form [formGroup]="fgRequestPatch" mcsFormGroup>
+          <ng-container>
+            <mcs-item [mcsGreyedOut]="true">
+              <p [innerHTML]="('serverRequestPatch.detailsStep.description' | translate) | mcsNewLines"></p>
+            </mcs-item>
+            <mcs-item [mcsGreyedOut]="true" [hidden]="loadingInProgress">
+              <p [innerHTML]="('shared.formField.standardLeadTimeHours' | translate: { leadTimeHours: requestPatchLeadTimeHours })"></p>
+            </mcs-item>
+          </ng-container>
+
+          <!-- Managed Servers -->
+            <mcs-item orientation="block">
+              <mcs-form-field>
+                <mcs-select mcsId="select-box-location"
+                  mcsEventTracker="select-box-location"
+                  mcsEventCategory="order"
+                  mcsEventLabel="server-request-patch"
+                  [formControl]="fcServers"
+                  [placeholder]="'serverRequestPatch.detailsStep.managedServerPlaceholder' | translate"
+                  [mcsContextualHelp]="'serverRequestPatch.detailsStep.managedServerHelpText' | translate"
+                  required>
+                  <mcs-option [value]=""></mcs-option>
+                  <mcs-option *ngFor="let server of managedServers$ | async" [value]="server.value">
+                    {{ server.text }}
+                  </mcs-option>
+                </mcs-select>
+                <mcs-error mcsError errorState="required">
+                  {{ 'serverRequestPatch.errors.serverRequired' | translate }}
+                </mcs-error>
+              </mcs-form-field>
+            </mcs-item>
+      
+          <!-- Exclusions -->
+          <mcs-item orientation="block">
+            <mcs-form-field>
+              <textarea
+                mcsId="input-request-patch-exclusions"
+                mcsEventTracker="input-request-patch-exclusions"
+                mcsEventCategory="order"
+                mcsEventLabel="server-request-patch"
+                mcsInput [rows]="instructionVisibleRows"
+                [formControl]="fcExclusions"
+                [maxlength]="maxInstructionsLength"
+                [placeholder]="'serverRequestPatch.detailsStep.exclusionsPlaceholder' | translate"
+                [mcsContextualHelp]="'serverRequestPatch.detailsStep.exclusionsHelpText' | translate">
+              </textarea>
+              <mcs-hint mcsHint align="start">
+                {{ 'shared.formField.hints.maxChar' | translate: { value: maxInstructionsLength } }}
+              </mcs-hint>
+              <mcs-hint mcsHint align="end">
+                {{ fcExclusions?.value?.length }} / {{ maxInstructionsLength }}
+              </mcs-hint>
+            </mcs-form-field>
+          </mcs-item>
+
+            <!-- SMAC Shared Form -->
+            <mcs-item orientation="block">
+              <mcs-smac-shared-form #fgSmacSharedForm
+              [config]="smacSharedFormConfig$ | async"
+              (dataChange)="onChangeSharedForm($event)">
+              </mcs-smac-shared-form>
+            </mcs-item>
+
+            <div class="action-items">
+              <button mcsButton arrow="right"
+                mcsWizardStepNext
+                [disabled]="!(formIsValid && fgSmacSharedForm?.isValid())"
+                mcsId="step-1-next"
+                mcsEventTracker="step-1-next"
+                mcsEventCategory="orders"
+                mcsEventLabel="server-request-patch">{{ 'shared.wizard.next' | translate }}</button>
+            </div>
+          </form>
+      </mcs-wizard-step>
+
+      <!-- Confirm Step  -->
+      <mcs-wizard-step id="confirm-step"
+        [stepTitle]="'shared.wizard.confirm' | translate"
+        customClass="contextual-help-page-wrapper limited-view">
+        <mcs-step-order-details [order]="order$ | async"
+        [orderItemType]="orderItemType$ | async"
+        [requestState]="dataStatus$ | async"
+        [eventTrack]="orderEventTrack.billingDetailsStep"
+        (dataChange)="onOrderDetailsDataChange($event)"
+        (submitOrder)="onSubmitOrder($event, fcServers?.value.serviceId)">
+        </mcs-step-order-details>
+      </mcs-wizard-step>
+
+      <!-- Go! Step  -->
+      <mcs-wizard-step id="go-step"
+        [stepTitle]="'shared.wizard.completed' | translate"
+        customClass="limited-view">
+        <mcs-step-manual-order-completed
+          [order]="order$ | async"
+          [orderWorkflowSubmitStatus]="orderWorkflowSubmitStatus$ | async">
+        </mcs-step-manual-order-completed>
+      </mcs-wizard-step>
+    </mcs-wizard>
+
+  </mcs-content-panel>
+</mcs-page>

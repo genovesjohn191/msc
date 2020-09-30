@@ -739,6 +739,26 @@
       "rackServiceNotAvailable": "There are no applicable services to display, or you do not have the necessary permissions required to view them. Please contact your account team or raise a ticket if this is unexpected."
     }
   },
+  "serverRequestPatch": {
+    "title": "Request a Patch",
+    "detailsStep": {
+      "stepTitle": "Request Details",
+      "previous": "Back",
+      "description": "You can use this wizard to request OS updates be manually installed on your server. We'll take a snapshot of your server and patch it for you.",
+      "contactDetailsLabel": "Would you like us to contact you before and after patching?",
+      "notesLabel": "Notes",
+      "serversLabel": "Servers",
+      "managedServerPlaceholder": "Select server",
+      "exclusionsPlaceholder": "Exclusions",
+      "testCasesInstructionsPlaceholder": "What test cases would you like us to execute after patching?",
+      "customerReferenceNumberPlaceHolder": "Customer reference number",
+      "managedServerHelpText": "Select the server you would like patched",
+      "exclusionsHelpText": "By default, we will install all available patches for your server. Please specify which updates you would like excluded, if applicable."
+    },
+    "errors": {
+      "serverRequired" : "Server is required"
+    }
+  },
   "notification": {
     "leftPanelHeader": "Notification details",
     "backToNotifications": "Back to Notifications"
@@ -2293,6 +2313,7 @@
         "maxChar": "Max of {{value}} characters",
         "initialValue": "Initial value: {{initial_value}}{{unit}}"
       },
+      "standardLeadTimeHours": "Our standard lead time of {{leadTimeHours}} hours for this request ensures we have time to get the right engineer for the task.",
       "errors": {
         "required": "Enter value.",
         "numeric": "Please enter a valid number.",

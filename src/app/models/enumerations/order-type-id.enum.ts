@@ -18,7 +18,8 @@ export enum OrderIdType {
   MsLicenseCountChange = 'microsoft.licenseCount.change',
   MsRequestChange = 'microsoft.subscription.requestChange',
   HostedDnsChange = 'dns.customChange',
-  ColocationRemoteHands = 'colocation.remoteHands'
+  ColocationRemoteHands = 'colocation.remoteHands',
+  ServerRequestPatch = 'servers.patchRequest'
 }
 
 /**
