@@ -4,7 +4,7 @@ import {
   QueryList,
   OnInit,
   Component,
-  ChangeDetectorRef
+  ChangeDetectorRef, OnDestroy
 } from '@angular/core';
 import {
   FormGroup,
@@ -27,7 +27,7 @@ import { DynamicFormFieldDataBase } from './dynamic-form-field-data.base';
   templateUrl: './dynamic-form.component.html',
   styleUrls: ['./dynamic-form.scss']
 })
-export class DynamicFormComponent implements OnInit {
+export class DynamicFormComponent implements OnInit, OnDestroy {
   @Input()
   public controlDataItems: DynamicFormFieldDataBase[];
 
@@ -47,6 +47,11 @@ export class DynamicFormComponent implements OnInit {
   public ngOnInit() {
     this._createCustomValidationMap();
     this.form = this.buildForm();
+  }
+
+  public ngOnDestroy(): void {
+    // TODO: implement
+
   }
 
   private buildForm(): FormGroup {
@@ -69,9 +74,12 @@ export class DynamicFormComponent implements OnInit {
 
   // Notify all dependent fields if data has change
   public onDataChange(params: DynamicFormFieldDataChangeEventParam): void {
-    if (isNullOrEmpty(params.dependents) || isNullOrEmpty(params.eventName)) {
+    if (isNullOrEmpty(params.dependents)
+    || isNullOrEmpty(params.eventName)
+    || isNullOrEmpty(this.controls)) {
       return;
     }
+
     this.controls.forEach(control => {
       if (params.dependents.indexOf(control.data.key) > -1) {
         control.onFormDataChange(params);

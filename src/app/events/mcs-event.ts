@@ -80,6 +80,7 @@ import { ServerAddBackupVmSelectedEvent } from './items/server-add-backup-vm-sel
 import { LicenseCountChangeSelectedEvent } from './items/license-count-change-selected.event';
 import { ServiceRequestChangeSelectedEvent } from './items/service-request-change-selected.event';
 import { NavToggleEvent } from './items/nav-toggle-event';
+import { LaunchPadWorkflowInitEvent } from './items/launch-pad-workflow-init.event';
 import { ServerRequestPatchSelectedEvent } from './items/server-request-patch-selected.event';
 
 export class McsEvent {
@@ -166,4 +167,6 @@ export class McsEvent {
   public static jobVdcStorageExpandEvent = new JobVdcStorageExpandEvent();
   public static jobResourceCatalogItemCreate = new JobResourceCatalogItemCreateEvent();
   public static jobMsLicenseCountChangeEvent = new JobMsLicenseCountChangeEvent();
+
+  public static launchPadWorkflowInitEvent = new LaunchPadWorkflowInitEvent();
 }

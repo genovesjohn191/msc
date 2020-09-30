@@ -1,14 +1,14 @@
 @import "../../../../styles/shared/base";
 
 .mat-form-field {
-  width: 300px;
+  width: 400px;
   
   @include breakpoint(medium) {
     width: 100%;
   }
 
   .mat-form-field-subscript-wrapper {
-    left: 300px !important;
+    left: 400px !important;
     top: 0 !important;
   }
   

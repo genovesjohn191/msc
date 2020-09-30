@@ -1,6 +1,6 @@
 import {
   hidsForm,
-  newCvmForm,
+  provisionVmForm,
   serverBackupForm
 } from '../forms';
 import {
@@ -10,13 +10,13 @@ import {
 import { LaunchPadWorkflowGroupType } from '../workflow-selector.service';
 
 
-export class NewCvmWorkflowGroup implements WorkflowGroup {
+export class ProvisionVmWorkflowGroup implements WorkflowGroup {
   public type: LaunchPadWorkflowGroupType = 'provision-vm';
 
   public parent: WorkflowSettings = {
     type: 'servers.newcvm',
-    title: 'New CVM',
-    properties: newCvmForm
+    title: 'Provision Virtual Machine',
+    properties: provisionVmForm
   };
 
   public children: WorkflowSettings[] = [

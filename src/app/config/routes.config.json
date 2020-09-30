@@ -7,14 +7,14 @@
   "launchPad": {
     "enumKey": "LaunchPad",
     "navigationPath": "launch-pad",
-    "documentTitle": "Launch Pad",
+    "documentTitle": "LAUNCH Pad",
     "requiredFeatureFlag": "EnableLaunchPad"
   },
   "launchPadCrispOrders": {
     "enumKey": "LaunchPadCrispOrders",
     "enumCategory": "LaunchPad",
     "navigationPath": "launch-pad/crisp-orders",
-    "documentTitle": "Launch Pad - Crisp Orders",
+    "documentTitle": "LAUNCH Pad - Crisp Orders",
     "requiredFeatureFlag": "EnableLaunchPad"
   },
   "reportOverview": {

@@ -1,7 +1,7 @@
 import { DynamicFormFieldDataBase } from '../../dynamic-form-field-data.base';
 import {
   DynamicFormFieldType,
-  DynamicFormFieldTemplate
+  DynamicFormFieldTemplate, DynamicFormFieldOnChangeEvent
 } from '../../dynamic-form-field-data.interface';
 
 export class DynamicInputHiddenField extends DynamicFormFieldDataBase {
@@ -12,6 +12,8 @@ export class DynamicInputHiddenField extends DynamicFormFieldDataBase {
   public constructor(options: {
     key: string;
     value?: string;
+    eventName?: DynamicFormFieldOnChangeEvent;
+    dependents?: string[];
   }) {
     super(options);
   }

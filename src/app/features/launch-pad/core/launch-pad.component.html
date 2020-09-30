@@ -37,8 +37,8 @@
     </div>
     <br />
     <div>
-      <button mat-button matStepperPrevious>
-        Back
+      <button mat-button matStepperPrevious (click)="addAnother()">
+        Add Another
       </button>
       <button mat-raised-button matStepperNext color="primary">
         <mat-icon>playlist_play</mat-icon>
@@ -53,7 +53,8 @@
     <br />
     <mat-progress-bar mode="indeterminate"></mat-progress-bar>
     <br />
-    <p>Provisioning new CVM</p>
+    
+    <p>Provisioning VM</p>
   </mat-step>
 
 </mat-vertical-stepper>

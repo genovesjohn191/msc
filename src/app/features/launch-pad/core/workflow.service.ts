@@ -5,15 +5,9 @@ import {
 import { LaunchPadWorkflow } from './workflow';
 import { WorkflowGroupFactory } from './workflow-group.factory';
 import { WorkflowGroup } from './workflow-group.interface';
-import { NewCvmWorkflowGroup } from './workflow-groups/new-cvm-workflow-group';
-import { LaunchPadWorkflowGroupType } from './workflow-selector.service';
-
-export interface LaunchPadSetting {
-  type: LaunchPadWorkflowGroupType;
-  serviceId?: string;
-  parentServiceId?: string;
-  referenceId?: string;
-}
+import { ProvisionVmWorkflowGroup } from './workflows/provision-vm-workflow';
+import { LaunchPadSetting, LaunchPadWorkflowGroupType } from './workflow-selector.service';
+import { ChangeVmWorkflowGroup, ProvisionAvWorkflowGroup } from './workflows';
 
 @Injectable()
 export class LaunchPadWorkflowService {
@@ -30,11 +24,14 @@ export class LaunchPadWorkflowService {
       serviceId: config.serviceId,
       parentServiceId: config.parentServiceId,
       referenceId: config.referenceId,
+      parentParams: config.properties
     });
   }
 
   private _createWorkflowGroupMap(): void {
     this.workflowGroupMap = new Map<LaunchPadWorkflowGroupType, Type<WorkflowGroup>>();
-    this.workflowGroupMap.set('provision-vm', NewCvmWorkflowGroup);
+    this.workflowGroupMap.set('provision-vm', ProvisionVmWorkflowGroup);
+    this.workflowGroupMap.set('change-vm', ChangeVmWorkflowGroup);
+    this.workflowGroupMap.set('provision-av', ProvisionAvWorkflowGroup);
   }
 }

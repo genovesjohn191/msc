@@ -36,7 +36,7 @@ export abstract class DynamicTextFieldComponentBase implements DynamicFormField,
   }
 
   private clearValue(): void {
-    this.data.value = '';
+    this.data.value = this.data.initialValue;
     this.valueChange(this.data.value);
   }
 

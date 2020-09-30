@@ -1,7 +1,7 @@
 import {
   Component,
   ChangeDetectionStrategy,
-  Input, ViewChild
+  Input, ViewChild, OnDestroy
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
@@ -22,7 +22,7 @@ import { LaunchPadWorkflowType, Workflow } from './workflow.interface';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class LaunchPadWorkflowComponent {
+export class LaunchPadWorkflowComponent implements OnDestroy {
   @ViewChild('form', { static: false})
   protected form: DynamicFormComponent;
 
@@ -58,6 +58,10 @@ export class LaunchPadWorkflowComponent {
 
   public get included(): boolean {
     return this.required || this.panelOpenState === true;
+  }
+
+  public ngOnDestroy(): void {
+    this.form.ngOnDestroy();
   }
 
   public openPanel(): void {
