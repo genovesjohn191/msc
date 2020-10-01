@@ -11,6 +11,12 @@ import {
   zip
 } from 'rxjs';
 import {
+  takeUntil,
+  filter,
+  tap,
+  map
+} from 'rxjs/operators';
+import {
   FormControl,
   FormGroup,
   FormBuilder} from '@angular/forms';
@@ -26,7 +32,8 @@ import {
   McsOrderItemCreate,
   OrderIdType,
   DeliveryType,
-  McsOrderWorkflow, McsOptionGroup, McsServer
+  McsOrderWorkflow,
+  RouteKey
 } from '@app/models';
 import {
   SmacSharedFormConfig,
@@ -44,12 +51,6 @@ import {
   formatStringToPhoneNumber,
   unsubscribeSafely
 } from '@app/utilities';
-import {
-  takeUntil,
-  filter,
-  tap,
-  map
-} from 'rxjs/operators';
 import { ServerRequestPatchService } from './server-request-patch.service';
 import { McsApiService } from '@app/services';
 import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
@@ -122,8 +123,11 @@ export class ServerRequestPatchComponent  extends McsOrderWizardBase  implements
   public set loadingInProgress(value: boolean) {
     this._isLoading = value;
   }
-  private _isLoading = false;
+  public get routeKeyEnum(): typeof RouteKey {
+    return RouteKey;
+  }
 
+  private _isLoading = false;
 
   @ViewChild(McsFormGroupDirective, { static: false })
   public set formGroup(value: McsFormGroupDirective) {
