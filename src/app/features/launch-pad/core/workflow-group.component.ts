@@ -11,12 +11,12 @@ import { Guid, isNullOrEmpty } from '@app/utilities';
 import { LaunchPadWorkflowComponent } from './workflow.component';
 import { LaunchPadWorkflow } from './workflow';
 import {
-  LaunchPadWorkflowService
-} from './workflow.service';
-import { WorkflowGroupDirective } from './workflow-group.directive';
+  WorkflowService
+} from './workflows/workflow.service';
+import { WorkflowGroupDirective } from './workflows/workflow-group.directive';
 import { FormGroup } from '@angular/forms';
-import { Workflow } from './workflow.interface';
-import { LaunchPadSetting } from './workflow-selector.service';
+import { Workflow } from './workflows/workflow.interface';
+import { WorkflowGroupConfig } from './workflows/workflow-group.interface';
 
 @Component({
   selector: 'mcs-launch-pad-workflow-group',
@@ -34,7 +34,7 @@ export class LaunchPadWorkflowGroupComponent implements OnDestroy {
   public serviceId: string;
 
   @Input()
-  public set config(value: LaunchPadSetting) {
+  public set config(value: WorkflowGroupConfig) {
     if (isNullOrEmpty(value)) {
       return;
     }
@@ -46,7 +46,7 @@ export class LaunchPadWorkflowGroupComponent implements OnDestroy {
 
   constructor(
     private _componentFactoryResolver: ComponentFactoryResolver,
-    private _workflowService: LaunchPadWorkflowService) { }
+    private _workflowService: WorkflowService) { }
 
   public ngOnDestroy() {
     this.workflowComponentRef.forEach(ref => {
@@ -107,7 +107,7 @@ export class LaunchPadWorkflowGroupComponent implements OnDestroy {
     });
   }
 
-  private _renderWorkflowGroup(config: LaunchPadSetting): void {
+  private _renderWorkflowGroup(config: WorkflowGroupConfig): void {
     let workflowGroup: LaunchPadWorkflow[] = this._workflowService.getWorkflowGroup(config);
     this.serviceId = config.serviceId || config.parentServiceId;
 
@@ -118,6 +118,11 @@ export class LaunchPadWorkflowGroupComponent implements OnDestroy {
     }
     this.workflowComponentRef = [];
     this.workflowGroup.viewContainerRef.clear();
+
+    if (isNullOrEmpty(workflowGroup)) {
+      console.log('No workflow group found.');
+      return;
+    }
 
     workflowGroup.forEach(workflow => {
       this._renderWorkflow(workflow);

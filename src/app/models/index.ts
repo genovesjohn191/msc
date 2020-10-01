@@ -90,6 +90,7 @@ export * from './enumerations/delivery-type.enum';
 export * from './enumerations/form-response.enum';
 export * from './enumerations/dns-record-type.enum';
 export * from './enumerations/order-cabinet-location.enum';
+export * from './enumerations/workflow-type.enum';
 
 /** Job References */
 export * from './job-references/mcs-server-job-reference';

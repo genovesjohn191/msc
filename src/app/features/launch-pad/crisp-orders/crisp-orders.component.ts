@@ -8,11 +8,11 @@ import { McsEvent } from '@app/events';
 import { ProductType } from '@app/models';
 import { isNullOrEmpty, unsubscribeSafely } from '@app/utilities';
 import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
-import { Observable, of, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { LaunchPadComponent } from '../core';
-import { LaunchPadWorkflowSelectorComponent } from '../core/workflow-selector.component';
-import { LaunchPadSetting, WorkflowSelectorConfig } from '../core/workflow-selector.service';
-import { Workflow } from '../core/workflow.interface';
+import { LaunchPadWorkflowSelectorComponent, WorkflowSelectorConfig } from '../core/workflow-selector.component';
+import { WorkflowGroupConfig } from '../core/workflows/workflow-group.interface';
+import { Workflow } from '../core/workflows/workflow.interface';
 
 interface OrderItemNode {
   name: string;
@@ -30,14 +30,14 @@ const TREE_DATA: OrderItemNode[] = [
           {
             name: 'MXCVM1111111',
             config: {
-              name: 'MXCVM1111111',
+              label: 'MXCVM1111111',
               type: ProductType.VirtualManagedServer,
               parentServiceId: 'MXCVM1111111',
             },
             children: [{
               name: 'HIDS',
               config: {
-                name: 'HIDS',
+                label: 'HIDS',
                 type: ProductType.ServerHostIntrusionPreventionSystem,
               }
             }]
@@ -55,7 +55,7 @@ const TREE_DATA: OrderItemNode[] = [
           {
             name: 'webserver01',
             config: {
-              name: 'webserver01',
+              label: 'webserver01',
               serviceId: 'MXCVM2222222',
               type: ProductType.VirtualManagedServer,
               properties: [
@@ -79,7 +79,7 @@ const TREE_DATA: OrderItemNode[] = [
           {
             name: 'Add Anti-Virus',
             config: {
-              name: 'Add Anti-Virus',
+              label: 'Add Anti-Virus',
               parentServiceId: 'MXCVM2222222',
               type: ProductType.ServerAntiVirus
             }
@@ -100,7 +100,7 @@ export class CrispOrdersWorkflowComponent implements OnDestroy {
   @ViewChild('launchPad', { static: false})
   protected launchPad: LaunchPadComponent;
 
-  public config: LaunchPadSetting;
+  public config: WorkflowGroupConfig;
   public workflowPayload: Workflow[] = [];
   public treeControl = new NestedTreeControl<OrderItemNode>(node => node.children);
   public dataSource = new MatTreeNestedDataSource<OrderItemNode>();
@@ -127,7 +127,7 @@ export class CrispOrdersWorkflowComponent implements OnDestroy {
       McsEvent.launchPadWorkflowInitEvent, this._initLaunchPad.bind(this));
   }
 
-  private _initLaunchPad(config: LaunchPadSetting): void {
+  private _initLaunchPad(config: WorkflowGroupConfig): void {
     this.config = config;
     this._changeDetectorRef.markForCheck();
   }

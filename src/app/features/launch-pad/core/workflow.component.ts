@@ -9,8 +9,9 @@ import {
   DynamicFormComponent,
   DynamicFormFieldDataBase
 } from '@app/features-shared/dynamic-form';
+import { WorkflowIdType } from '@app/models';
 import { LaunchPadWorkflow } from './workflow';
-import { LaunchPadWorkflowType, Workflow } from './workflow.interface';
+import { Workflow } from './workflows/workflow.interface';
 
 @Component({
   selector: 'mcs-launch-pad-workflow',
@@ -30,7 +31,7 @@ export class LaunchPadWorkflowComponent implements OnDestroy {
   public title: string;
 
   @Input()
-  public type: LaunchPadWorkflowType;
+  public type: WorkflowIdType;
 
   @Input()
   public referenceId: string;
@@ -83,7 +84,7 @@ export class LaunchPadWorkflowComponent implements OnDestroy {
 
     // Return valid workflow structure
     return {
-      type: this.type,
+      id: this.type,
       referenceId: this.referenceId,
       parentReferenceId: this.parentReferenceId,
       serviceId: this.serviceId,
@@ -107,7 +108,7 @@ export class LaunchPadWorkflowComponent implements OnDestroy {
   public load(workflow: LaunchPadWorkflow): void {
     this.title = workflow.title;
     this.required = workflow.required;
-    this.type = workflow.type;
+    this.type = workflow.id;
     this.referenceId = workflow.referenceId;
     this.parentReferenceId = workflow.parentReferenceId;
     this.serviceId = workflow.serviceId;

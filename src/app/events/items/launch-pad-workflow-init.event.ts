@@ -1,7 +1,7 @@
+import { WorkflowGroupConfig } from '@app/features/launch-pad/core/workflows/workflow-group.interface';
 import { EventBusState } from '@peerlancers/ngx-event-bus';
-import { LaunchPadSetting } from '@app/features/launch-pad/core/workflow-selector.service';
 
-export class LaunchPadWorkflowInitEvent extends EventBusState<LaunchPadSetting> {
+export class LaunchPadWorkflowInitEvent extends EventBusState<WorkflowGroupConfig> {
   constructor() {
     super('LaunchPadWorkflowInitEvent');
   }
