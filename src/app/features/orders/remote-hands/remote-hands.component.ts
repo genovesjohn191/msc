@@ -28,7 +28,8 @@ import {
   OrderIdType,
   DeliveryType,
   McsOrderWorkflow,
-  McsOptionGroup} from '@app/models';
+  McsOptionGroup,
+  RouteKey} from '@app/models';
 import {
   SmacSharedFormConfig,
   SmacSharedDetails,
@@ -40,7 +41,6 @@ import {
   createObject,
   Guid,
   isNullOrEmpty,
-  addDaysToDate,
   getCurrentDate,
   formatStringToPhoneNumber,
   unsubscribeSafely,
@@ -54,7 +54,6 @@ import {
   filter,
   tap,
   map,
-  shareReplay
 } from 'rxjs/operators';
 import { RemoteHandsService } from './remote-hands.service';
 import { McsApiService } from '@app/services';
@@ -98,6 +97,7 @@ export class RemoteHandsComponent  extends McsOrderWizardBase  implements OnInit
   public cabinetLocationOption$: Observable<McsOption[]>;
   public smacSharedFormConfig$: Observable<SmacSharedFormConfig>;
   public remoteHandsStandardLeadTimeHours: number;
+  public hasServiceToDisplay: boolean;
 
   private _formGroup: McsFormGroupDirective;
   private _formGroupSubject = new Subject<void>();
@@ -139,13 +139,15 @@ export class RemoteHandsComponent  extends McsOrderWizardBase  implements OnInit
     return this._isLoading;
   }
   public set loadingInProgress(value: boolean) {
-    this._isLoading = value;
+    if (this._isLoading !== value) {
+      this._isLoading = value;
+    }
   }
-  private _isLoading = false;
 
-  public get hasServiceToDisplay(): boolean {
-    return (this.colocationGroups.length > 0);
+  public get routeKeyEnum(): typeof RouteKey {
+    return RouteKey;
   }
+  private _isLoading: boolean;
 
   @ViewChild(McsFormGroupDirective, { static: false })
   public set formGroup(value: McsFormGroupDirective) {
@@ -180,7 +182,7 @@ export class RemoteHandsComponent  extends McsOrderWizardBase  implements OnInit
       {
         billingDetailsStep: {
           category: 'order',
-          label: 'request-patch-goto-provisioning-step',
+          label: 'remote-hands-goto-provisioning-step',
           action: 'next-button'
         }
       }
@@ -224,6 +226,7 @@ export class RemoteHandsComponent  extends McsOrderWizardBase  implements OnInit
           this._mapArrayToOption(colocationArray, optionsArray);
           this.colocationGroups.push(createObject(McsOptionGroup, { groupName: colocationGroupName, options: optionsArray}));
         });
+        this.hasServiceToDisplay = (this.colocationGroups.length > 0) ? true : false;
         this.loadingInProgress = false;
     });
   }
