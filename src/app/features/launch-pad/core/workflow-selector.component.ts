@@ -5,13 +5,23 @@ import {
   MAT_BOTTOM_SHEET_DATA
 } from '@angular/material';
 import { McsEvent } from '@app/events';
+import { ProductType } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
 import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import {
   LaunchPadWorkflowSelectorService,
-  WorkflowSelectorConfig,
   WorkflowSelectorItem
 } from './workflow-selector.service';
+import { WorkflowGroupId } from './workflows/workflow-groups/workflow-group-type.enum';
+import { WorkflowService } from './workflows/workflow.service';
+
+export interface WorkflowSelectorConfig {
+  type: ProductType;
+  label: string;
+  serviceId?: string;
+  parentServiceId?: string;
+  properties?: { key: string, value: any }[];
+}
 
 @Component({
   selector: 'mcs-launch-pad-workflow-selector',
@@ -19,24 +29,22 @@ import {
 })
 export class LaunchPadWorkflowSelectorComponent {
 
-  public items: WorkflowSelectorItem[] = [];
-
-  private config: WorkflowSelectorConfig;
+  public options: WorkflowSelectorItem[] = [];
 
   constructor(
     private _workflowSelectorService: LaunchPadWorkflowSelectorService,
+    private _workflowService: WorkflowService,
     private _bottomSheetRef: MatBottomSheetRef<LaunchPadWorkflowSelectorComponent>,
     private _eventDispatcher: EventBusDispatcherService,
     @Inject(MAT_BOTTOM_SHEET_DATA) public data: WorkflowSelectorConfig
   ) {
-    this.config = data;
-    this.setOptions(data);
+    this._setOptions(data);
   }
 
-  public openLink(event: MatListItem): void {
-    let type: any = event._getHostElement().dataset.type;
+  public showWorkflow(element: MatListItem): void {
+    let id: WorkflowGroupId = WorkflowGroupId[element._getHostElement().dataset.id];
     this._eventDispatcher.dispatch(McsEvent.launchPadWorkflowInitEvent, {
-      type,
+      id,
       serviceId: this.data.serviceId,
       parentServiceId: this.data.parentServiceId,
       properties: this.data.properties
@@ -44,19 +52,15 @@ export class LaunchPadWorkflowSelectorComponent {
     this._bottomSheetRef.dismiss();
   }
 
-  private setOptions(data: WorkflowSelectorConfig): void {
-    this.items = [];
+  public getWorkflowGroupId(index: number): string {
+    return WorkflowGroupId[index];
+  }
 
-    let workflowGroups = this._workflowSelectorService.workflowSelectionGroups.get(data.type);
-    if (isNullOrEmpty(workflowGroups)) {
+  private _setOptions(data: WorkflowSelectorConfig): void {
+    let workflowGroupIds = this._workflowService.getWorkflowGroupIdsByProductType(data.type);
+    if (isNullOrEmpty(workflowGroupIds)) {
       return;
     }
-
-    workflowGroups.forEach(workflowGroup => {
-      let item = this._workflowSelectorService.workflowSelectionGroupItems.get(workflowGroup);
-      if (!isNullOrEmpty(item)) {
-        this.items.push(item);
-      }
-    });
+    this.options = this._workflowSelectorService.getOptionsById(workflowGroupIds);
   }
 }

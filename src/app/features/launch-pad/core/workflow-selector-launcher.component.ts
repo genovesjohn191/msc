@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { WorkflowSelectorConfig } from './workflow-selector.service';
+import { WorkflowSelectorConfig } from './workflow-selector.component';
 
 @Component({
   selector: 'mcs-workflow-selector-launcher',

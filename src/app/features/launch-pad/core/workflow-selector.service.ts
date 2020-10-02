@@ -1,102 +1,33 @@
 import {
-  Injectable,
-  Type
+  Injectable
 } from '@angular/core';
-import { ProductType } from '@app/models';
-import { WorkflowGroup } from './workflow-group.interface';
-import { ChangeVmWorkflowGroup, ProvisionVmWorkflowGroup } from './workflows';
-
-export type LaunchPadWorkflowGroupType =
-    'provision-vm'
-  | 'change-vm'
-  | 'deprovision-vm'
-  | 'provision-hids'
-  | 'provision-av';
-
-export interface LaunchPadSetting {
-  type: LaunchPadWorkflowGroupType;
-  serviceId?: string;
-  parentServiceId?: string;
-  referenceId?: string;
-  properties?: { key: string, value: any }[];
-}
-
-export interface WorkflowSelectorConfig {
-  type: ProductType;
-  name: string;
-  serviceId?: string;
-  parentServiceId?: string;
-  properties?: { key: string, value: any }[];
-}
+import { isNullOrEmpty } from '@app/utilities';
+import { workflowOptions } from './workflow-options.map';
+import { WorkflowGroupId } from './workflows/workflow-groups/workflow-group-type.enum';
 
 export interface WorkflowSelectorItem {
   name: string;
+  id: WorkflowGroupId;
   description: string;
-  type: LaunchPadWorkflowGroupType;
   icon: string;
 }
 
 @Injectable()
 export class LaunchPadWorkflowSelectorService {
-  public workflowGroups: Map<LaunchPadWorkflowGroupType, Type<WorkflowGroup>>;
-  public workflowSelectionGroups: Map<ProductType, LaunchPadWorkflowGroupType[]>;
-  public workflowSelectionGroupItems: Map<LaunchPadWorkflowGroupType, WorkflowSelectorItem>;
+  public getOptionsById(ids: WorkflowGroupId[]): WorkflowSelectorItem[] {
+    let items: WorkflowSelectorItem[] = [];
 
-  public constructor() {
-    this._initializeWorkflowGroups();
-    this._initializeSelectionGroups();
-    this._initializeSelectionGroupItems();
-  }
+    if (isNullOrEmpty(ids)) {
+      return items;
+    }
 
-  private _initializeWorkflowGroups(): void {
-    this.workflowGroups = new Map<LaunchPadWorkflowGroupType, Type<WorkflowGroup>>();
-    this.workflowGroups.set('provision-vm', ProvisionVmWorkflowGroup);
-    this.workflowGroups.set('change-vm', ChangeVmWorkflowGroup);
-  }
+    ids.forEach(id => {
+      let option = workflowOptions.get(id);
+      if (!isNullOrEmpty(option)) {
+        items.push(option);
+      }
+    });
 
-  private _initializeSelectionGroups(): void {
-    this.workflowSelectionGroups = new Map<ProductType, LaunchPadWorkflowGroupType[]>();
-    this.workflowSelectionGroups.set(ProductType.VirtualManagedServer, [
-      'provision-vm',
-      'change-vm',
-      'deprovision-vm',
-    ]);
-    this.workflowSelectionGroups.set(ProductType.ServerAntiVirus, [
-      'provision-av'
-    ]);
-  }
-
-  private _initializeSelectionGroupItems(): void {
-    this.workflowSelectionGroupItems = new Map<LaunchPadWorkflowGroupType, WorkflowSelectorItem>();
-    this.workflowSelectionGroupItems.set('provision-vm', {
-      name: 'Provision VM',
-      type: 'provision-vm',
-      description: 'Lorem ipsum dolor sit amet.',
-      icon: 'add',
-    });
-    this.workflowSelectionGroupItems.set('change-vm', {
-      name: 'Change VM',
-      type: 'change-vm',
-      description: 'Lorem ipsum dolor sit amet.',
-      icon: 'edit',
-    });
-    this.workflowSelectionGroupItems.set('deprovision-vm', {
-      name: 'Deprovision VM',
-      type: 'change-vm',
-      description: 'Lorem ipsum dolor sit amet.',
-      icon: 'remove',
-    });
-    this.workflowSelectionGroupItems.set('provision-hids', {
-      name: 'Provision HIDS',
-      type: 'change-vm',
-      description: 'Lorem ipsum dolor sit amet.',
-      icon: 'add',
-    });
-    this.workflowSelectionGroupItems.set('provision-av', {
-      name: 'Provision Anti-Virus',
-      type: 'provision-av',
-      description: 'Lorem ipsum dolor sit amet.',
-      icon: 'add',
-    });
+    return items;
   }
 }

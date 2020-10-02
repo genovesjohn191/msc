@@ -8,8 +8,8 @@ import { FormArray } from '@angular/forms';
 import { MatVerticalStepper } from '@angular/material';
 import { isNullOrEmpty } from '@app/utilities';
 import { LaunchPadWorkflowGroupComponent } from './workflow-group.component';
-import { LaunchPadSetting } from './workflow-selector.service';
-import { Workflow } from './workflow.interface';
+import { WorkflowGroupConfig } from './workflows/workflow-group.interface';
+import { Workflow } from './workflows/workflow.interface';
 
 @Component({
   selector: 'mcs-launch-pad',
@@ -25,7 +25,7 @@ export class LaunchPadComponent implements OnDestroy {
   protected workflows: LaunchPadWorkflowGroupComponent;
 
   @Input()
-  public set config(value: LaunchPadSetting) {
+  public set config(value: WorkflowGroupConfig) {
     this.workflowPayload = [];
     if (this.stepper) {
       this.stepper.reset();
@@ -33,13 +33,13 @@ export class LaunchPadComponent implements OnDestroy {
     this._config = value;
   }
 
-  public get config(): LaunchPadSetting {
+  public get config(): WorkflowGroupConfig {
     return this._config;
   }
 
   public workflowPayload: Workflow[] = [];
 
-  private _config: LaunchPadSetting;
+  private _config: WorkflowGroupConfig;
 
   public ngOnDestroy(): void {
     // TODO: implement
