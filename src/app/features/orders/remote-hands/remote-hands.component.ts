@@ -192,6 +192,7 @@ export class RemoteHandsComponent  extends McsOrderWizardBase  implements OnInit
 
 
   public ngOnInit(): void {
+    this.loadingInProgress = true;
     this._registerFormGroup();
     this._subscribeToLeadTimeHours();
     this._subscribeToRackServices();
@@ -209,7 +210,6 @@ export class RemoteHandsComponent  extends McsOrderWizardBase  implements OnInit
    * Initialize the options for rack services control
    */
   private _subscribeToRackServices(): void {
-      this.loadingInProgress = true;
       forkJoin(
           [this._apiService.getColocationRacks(),
           this._apiService.getColocationAntennas(),
@@ -401,10 +401,8 @@ export class RemoteHandsComponent  extends McsOrderWizardBase  implements OnInit
   }
 
   private _subscribeToLeadTimeHours(): void {
-    this.loadingInProgress = true;
     this.orderItemType$.subscribe(order => {
       this.remoteHandsStandardLeadTimeHours = order.standardLeadTimeHours;
-      this.loadingInProgress = false;
     });
   }
 

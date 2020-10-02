@@ -31,16 +31,21 @@
         customClass="contextual-help-page-wrapper limited-view">
 
         <form [formGroup]="fgRequestPatch" mcsFormGroup>
-          <ng-container>
-            <mcs-item [mcsGreyedOut]="true">
-              <p [innerHTML]="('serverRequestPatch.detailsStep.description' | translate) | mcsNewLines"></p>
-            </mcs-item>
-            <mcs-item [mcsGreyedOut]="true" [hidden]="loadingInProgress">
-              <p [innerHTML]="('shared.formField.standardLeadTimeHours' | translate: { leadTimeHours: requestPatchLeadTimeHours })"></p>
-            </mcs-item>
-          </ng-container>
-
           <!-- Managed Servers -->
+          <ng-container *ngIf="loadingInProgress; else serverTemplate">
+            <mcs-loader size="small"
+              [mcsTooltip]="loadingText"
+              mcsTooltipPosition="right"></mcs-loader>
+          </ng-container>
+          <ng-template #serverTemplate>
+            <ng-container>
+              <mcs-item [mcsGreyedOut]="true">
+                <p [innerHTML]="('serverRequestPatch.detailsStep.description' | translate) | mcsNewLines"></p>
+              </mcs-item>
+              <mcs-item [mcsGreyedOut]="true">
+                <p [innerHTML]="('shared.formField.standardLeadTimeHours' | translate: { leadTimeHours: requestPatchLeadTimeHours })"></p>
+              </mcs-item>
+            </ng-container>
             <mcs-item orientation="block">
               <mcs-form-field>
                 <mcs-select mcsId="select-box-location"
@@ -48,12 +53,12 @@
                   mcsEventCategory="order"
                   mcsEventLabel="server-request-patch"
                   [formControl]="fcServers"
-                  [disabled]="!((managedServers$ | async)?.length > 0)"
+                  [disabled]="!(managedServers.length > 0)"
                   [placeholder]="'serverRequestPatch.detailsStep.managedServerPlaceholder' | translate"
                   [mcsContextualHelp]="'serverRequestPatch.detailsStep.managedServerHelpText' | translate"
                   required>
                    <mcs-option [value]=""></mcs-option>
-                  <mcs-option *ngFor="let server of managedServers$ | async" [value]="server.value">
+                  <mcs-option *ngFor="let server of managedServers" [value]="server.value">
                     {{ server.text }}
                   </mcs-option>
                 </mcs-select>
@@ -61,7 +66,7 @@
                   {{ 'serverRequestPatch.errors.serverRequired' | translate }}
                 </mcs-error>
               </mcs-form-field>
-              <ng-container  *ngIf="!((managedServers$ | async)?.length > 0)">
+              <ng-container  *ngIf="!(managedServers.length > 0)">
                 <p [mcsGreyedOut]="true"> <span>{{ 'smacShared.fallback.description' | translate }}</span>
                   <ng-container *mcsAccessControl="['TicketCreate']">
                     <span> {{'smacShared.fallback.raiseTicketPrefix' | translate }} </span>
@@ -73,7 +78,7 @@
                 </p>
               </ng-container>
             </mcs-item>
-      
+          </ng-template>
           <!-- Exclusions -->
           <mcs-item orientation="block">
             <mcs-form-field>
