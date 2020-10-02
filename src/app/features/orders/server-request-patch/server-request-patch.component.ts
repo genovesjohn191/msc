@@ -60,6 +60,7 @@ import { TranslateService } from '@ngx-translate/core';
 const MAX_INSTRUCTIONS_LENGTH = 850;
 const VISIBILE_ROWS = 3;
 const REQUEST_PATCH_ID = Guid.newGuid().toString();
+const LOADING_TEXT = 'loading';
 
 type PatchRequestProperties = {
   exclusions: '',
@@ -82,7 +83,7 @@ export class ServerRequestPatchComponent  extends McsOrderWizardBase  implements
 
   public smacSharedFormConfig$: Observable<SmacSharedFormConfig>;
   public requestPatchLeadTimeHours: number;
-  public managedServers$: Observable<McsOption[]>;
+  public managedServers: McsOption[] = [];
 
   private _formGroup: McsFormGroupDirective;
   private _formGroupSubject = new Subject<void>();
@@ -123,11 +124,14 @@ export class ServerRequestPatchComponent  extends McsOrderWizardBase  implements
   public set loadingInProgress(value: boolean) {
     this._isLoading = value;
   }
+  private _isLoading = false;
+
   public get routeKeyEnum(): typeof RouteKey {
     return RouteKey;
   }
-
-  private _isLoading = false;
+  public get loadingText(): string {
+    return LOADING_TEXT;
+  }
 
   @ViewChild(McsFormGroupDirective, { static: false })
   public set formGroup(value: McsFormGroupDirective) {
@@ -172,11 +176,12 @@ export class ServerRequestPatchComponent  extends McsOrderWizardBase  implements
 
 
   public ngOnInit(): void {
+    this.loadingInProgress = true;
     this._registerFormGroup();
-    this._registerEvents();
     this._subscribeToLeadTimeHours();
-    this._subscribeToSmacSharedFormConfig();
     this._subscribeToManagedServer();
+    this._subscribeToSmacSharedFormConfig();
+    this._registerEvents();
   }
 
   public ngOnDestroy(): void {
@@ -289,24 +294,20 @@ export class ServerRequestPatchComponent  extends McsOrderWizardBase  implements
   }
 
   private _subscribeToManagedServer(): void {
-    this.managedServers$ = this._apiService.getServers().pipe(
-      map((serversCollection) => {
+   this._apiService.getServers().subscribe(
+      (serversCollection) => {
         let servers = getSafeProperty(serversCollection, (obj) => obj.collection) || [];
-        let options: McsOption[] = [];
         servers.forEach((server) => {
           if (!server.isManagedVCloud) { return; }
-          options.push(createObject(McsOption, { text: server.name, value: server }));
+          this.managedServers.push(createObject(McsOption, { text: server.name, value: server }));
         });
-        return options;
-      })
-    );
+        this.loadingInProgress = false;
+      });
   }
 
   private _subscribeToLeadTimeHours(): void {
-    this.loadingInProgress = true;
     this.orderItemType$.subscribe(order => {
       this.requestPatchLeadTimeHours = order.standardLeadTimeHours;
-      this.loadingInProgress = false;
     });
   }
 
