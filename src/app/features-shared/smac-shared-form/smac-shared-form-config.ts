@@ -10,6 +10,7 @@ interface SmacSharedContactBase {
   isIncluded: boolean;
   placeholder?: string;
   label?: string;
+  helpText?: string;
   validators?: ValidatorFn[];
 }
 
@@ -68,6 +69,8 @@ export class SmacSharedFormConfig {
           this._translate.instant('smacShared.form.testCases.placeholder')),
         label: getSafeProperty(testCaseConfig, (obj) => obj.label,
           this._translate.instant('smacShared.form.testCases.label')),
+        helpText: getSafeProperty(testCaseConfig, (obj) => obj.helpText,
+          this._translate.instant('smacShared.form.testCases.helpText')),
         validators: getSafeProperty(testCaseConfig, (obj) => obj.validators, [CoreValidators.rangeArray(0, 20)])
       };
       this._validatorsMap.set('fcTestCases', this.testCaseConfig.validators);
@@ -81,6 +84,8 @@ export class SmacSharedFormConfig {
           this._translate.instant('smacShared.form.notes.placeholder')),
         label: getSafeProperty(notesConfig, (obj) => obj.label,
           this._translate.instant('smacShared.form.notes.label')),
+        helpText: getSafeProperty(notesConfig, (obj) => obj.helpText,
+          this._translate.instant('smacShared.form.notes.helpText')),
         validators: getSafeProperty(notesConfig, (obj) => obj.validators, []),
         maxlength: getSafeProperty(notesConfig, (obj) => obj.maxlength, TEXTAREA_MAXLENGTH_DEFAULT),
         isRequired: getSafeProperty(notesConfig, (obj) => obj.isRequired, false)

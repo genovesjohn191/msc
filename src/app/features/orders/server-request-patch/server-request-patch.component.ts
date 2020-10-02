@@ -114,6 +114,10 @@ export class ServerRequestPatchComponent  extends McsOrderWizardBase  implements
     return this._translateService.instant('serverRequestPatch.detailsStep.customerReferenceNumberPlaceHolder');
   }
 
+  public get notesHelpText(): string {
+    return this._translateService.instant('serverRequestPatch.detailsStep.notesHelpText');
+  }
+
   public get notesLabel(): string {
     return this._translateService.instant('serverRequestPatch.detailsStep.notesLabel');
   }
@@ -193,7 +197,7 @@ export class ServerRequestPatchComponent  extends McsOrderWizardBase  implements
     this.smacSharedFormConfig$ = this._apiService.getAccount().pipe(
       map((response) => {
         let testCaseConfig = { isIncluded: true, placeholder: this.testCasePlaceHolder };
-        let notesConfig = { isIncluded: true, isRequired: false, label: this.notesLabel };
+        let notesConfig = { isIncluded: true, isRequired: false, label: this.notesLabel, helpText: this.notesHelpText };
         let contactConfig = { isIncluded: true, phoneNumber: formatStringToPhoneNumber(response.phoneNumber) };
         let customerRefConfig = {isIncluded: true, isRequired: false, placeholder: this.customerReferenceNumberPlaceHolder};
         let config = new SmacSharedFormConfig(this._injector, testCaseConfig, notesConfig, contactConfig, customerRefConfig);
