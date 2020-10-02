@@ -132,6 +132,10 @@ export class RemoteHandsComponent  extends McsOrderWizardBase  implements OnInit
     return this._translateService.instant('orderRemoteHands.detailsStep.notesLabel');
   }
 
+  public get testCasesHelpText(): string {
+    return this._translateService.instant('orderRemoteHands.detailsStep.testCasesInstructionsHelpText');
+  }
+
   public get loadingText(): string {
     return LOADING_TEXT;
   }
@@ -244,7 +248,7 @@ export class RemoteHandsComponent  extends McsOrderWizardBase  implements OnInit
   private _subscribeToSmacSharedFormConfig(): void {
     this.smacSharedFormConfig$ = this._apiService.getAccount().pipe(
       map((response) => {
-        let testCaseConfig = { isIncluded: true, placeholder: this.testCasePlaceHolder };
+        let testCaseConfig = { isIncluded: true, placeholder: this.testCasePlaceHolder, helpText: this.testCasesHelpText };
         let notesConfig = { isIncluded: true, label: this.notesLabel, isRequired: false };
         let contactConfig = { isIncluded: true, phoneNumber: formatStringToPhoneNumber(response.phoneNumber) };
 

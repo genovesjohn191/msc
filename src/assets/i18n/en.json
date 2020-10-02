@@ -752,7 +752,8 @@
       "testCasesInstructionsPlaceholder": "What test cases would you like us to execute after patching?",
       "customerReferenceNumberPlaceHolder": "Customer reference number",
       "managedServerHelpText": "Select the server you would like patched",
-      "exclusionsHelpText": "By default, we will install all available patches for your server. Please specify which updates you would like excluded, if applicable."
+      "exclusionsHelpText": "By default, we will install all available patches for your server. Please specify which updates you would like excluded, if applicable.",
+      "notesHelpText": "Please let us know if you have any additional servers you need patched and if applicable, a specific sequence you'd like them patched in"
     },
     "errors": {
       "serverRequired" : "Server is required"
@@ -1670,11 +1671,13 @@
     "form": {
       "testCases": {
         "label": "",
-        "placeholder": "What test cases would you like us to execute after the change?"
+        "placeholder": "What test cases would you like us to execute after the change?",
+        "helpText": "List any test cases you need us to run after this work is completed, in chronological order"
       },
       "notes": {
         "label": "Request description",
         "placeholder": "Are there any further details you would like us to know?",
+        "helpText": "Please let us know if you have any additional details you would like us to know.",
         "hint": "Max of {{max_char}} characters",
         "errors": {
           "required": "Please enter request description."

@@ -7,6 +7,7 @@
       mcsEventCategory="order"
       mcsEventLabel="order-shared-smac-form"
       [placeholder]="config?.testCaseConfig?.placeholder"
+      [mcsContextualHelp]="config?.testCaseConfig.helpText"
       [formControl]="fcTestCases">
     </mcs-dynamic-list>
   </mcs-item>
@@ -22,6 +23,7 @@
         mcsEventLabel="order-shared-smac-form"
         [maxlength]="config?.notesConfig?.maxlength"
         [placeholder]="config?.notesConfig?.placeholder"
+        [mcsContextualHelp]="config?.notesConfig.helpText"
         [formControl]="fcNotes"
         [required]="config?.notesConfig?.isRequired"></textarea>
 
