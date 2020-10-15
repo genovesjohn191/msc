@@ -1,14 +1,15 @@
 import {
-  async,
-  TestBed,
-  ComponentFixture
-} from '@angular/core/testing';
-import {
   Component,
-  ViewChild,
-  ElementRef
+  ElementRef,
+  ViewChild
 } from '@angular/core';
+import {
+  waitForAsync,
+  ComponentFixture,
+  TestBed
+} from '@angular/core/testing';
 import { triggerEvent } from '@app/utilities';
+
 import { StopPropagationDirective } from './stop-propagation.directive';
 
 @Component({
@@ -43,7 +44,7 @@ describe('StopPropagationDirective', () => {
   let component: TestComponent;
   let fixtureInstance: ComponentFixture<TestComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 
@@ -78,7 +79,7 @@ describe('StopPropagationDirective', () => {
 
   /** Test Implementation */
   describe('childClick()', () => {
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       triggerEvent(component.childElement.nativeElement, 'click');
     }));
 
@@ -92,7 +93,7 @@ describe('StopPropagationDirective', () => {
   });
 
   describe('parentClick()', () => {
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       triggerEvent(component.parentElement.nativeElement, 'click');
     }));
 

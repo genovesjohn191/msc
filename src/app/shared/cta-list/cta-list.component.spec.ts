@@ -1,7 +1,8 @@
 import {
-  async,
+  waitForAsync,
   TestBed
 } from '@angular/core/testing';
+
 import { CtaListComponent } from './cta-list.component';
 
 describe('CheckboxComponent', () => {
@@ -9,7 +10,7 @@ describe('CheckboxComponent', () => {
   /** Stub Services/Components */
   let component: CtaListComponent;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

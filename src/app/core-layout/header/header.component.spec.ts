@@ -1,17 +1,18 @@
 import {
-  async,
+  waitForAsync,
   TestBed
 } from '@angular/core/testing';
 import { CommonDefinition } from '@app/utilities';
-import { HeaderComponent } from './header.component';
 import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+
+import { HeaderComponent } from './header.component';
 
 describe('HeaderComponent', () => {
 
   /** Stub Services/Components */
   let component: HeaderComponent;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

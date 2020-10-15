@@ -1,33 +1,34 @@
-import {
-  ModuleWithProviders,
-  NgModule,
-  Optional,
-  SkipSelf,
-  ErrorHandler
-} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   HttpClientModule,
   HTTP_INTERCEPTORS
 } from '@angular/common/http';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import {
-  McsDisposable,
-  isNullOrEmpty
-} from '@app/utilities';
+  ErrorHandler,
+  ModuleWithProviders,
+  NgModule,
+  Optional,
+  SkipSelf
+} from '@angular/core';
 import { McsEvent } from '@app/events';
+import {
+  isNullOrEmpty,
+  McsDisposable
+} from '@app/utilities';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+
 import { CoreConfig } from './core.config';
 import { coreProviders } from './core.constants';
-import { GoogleAnalyticsEventsService } from './services/google-analytics-events.service';
-import { McsSessionHandlerService } from './services/mcs-session-handler.service';
-import { McsRouteHandlerService } from './services/mcs-route-handler.service';
-import { McsNotificationJobService } from './services/mcs-notification-job.service';
-import { McsNotificationContextService } from './services/mcs-notification-context.service';
-import { McsErrorHandlerService } from './services/mcs-error-handler.service';
-import { McsNotificationEventsService } from './services/mcs-notification-events.service';
-import { McsRouteSettingsService } from './services/mcs-route-settings.service';
-import { McsHttpClientInterceptor } from './interceptors/mcs-http-client.interceptor';
 import { McsErrorHandlerInterceptor } from './interceptors/mcs-error-handler.interceptor';
+import { McsHttpClientInterceptor } from './interceptors/mcs-http-client.interceptor';
+import { GoogleAnalyticsEventsService } from './services/google-analytics-events.service';
+import { McsErrorHandlerService } from './services/mcs-error-handler.service';
+import { McsNotificationContextService } from './services/mcs-notification-context.service';
+import { McsNotificationEventsService } from './services/mcs-notification-events.service';
+import { McsNotificationJobService } from './services/mcs-notification-job.service';
+import { McsRouteHandlerService } from './services/mcs-route-handler.service';
+import { McsRouteSettingsService } from './services/mcs-route-settings.service';
+import { McsSessionHandlerService } from './services/mcs-session-handler.service';
 import { McsSystemMessageService } from './services/mcs-system-message.service';
 
 @NgModule({
@@ -58,7 +59,7 @@ export class CoreModule {
    * Use this method in your root module to provide the CoreModule
    * and it should only be derived once
    */
-  public static forRoot(config: () => CoreConfig): ModuleWithProviders {
+  public static forRoot(config: () => CoreConfig): ModuleWithProviders<CoreModule> {
     return {
       ngModule: CoreModule,
       providers: [

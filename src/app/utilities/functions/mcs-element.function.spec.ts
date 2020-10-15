@@ -1,13 +1,14 @@
-import { async } from '@angular/core/testing';
+import { waitForAsync } from '@angular/core/testing';
+
 import {
+  createSvgElement,
   getElementOffset,
   getElementPosition,
   getElementPositionFromHost,
   getElementStyle,
   getOffsetParent,
-  removeAllChildren,
-  createSvgElement,
-  isElementVisible
+  isElementVisible,
+  removeAllChildren
 } from './mcs-element.function';
 
 describe('McsElementFunction', () => {
@@ -36,7 +37,7 @@ describe('McsElementFunction', () => {
     return createdElement;
   }
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     // Cleanup body element
     let elementNodes = document.getElementsByTagName('body');
     for (let idxNode = 0; idxNode < elementNodes.length; idxNode++) {
@@ -57,7 +58,7 @@ describe('McsElementFunction', () => {
     document.body.style.width = '2000px';
   }));
 
-  afterEach(async(() => {
+  afterEach(waitForAsync(() => {
     document.body.removeChild(element);
     document.documentElement.style.margin = documentMargin;
     document.body.style.margin = bodyMargin;
@@ -179,7 +180,7 @@ describe('McsElementFunction', () => {
   describe('getElementPositionFromHost()', () => {
     let hostElement: HTMLElement;
     let targetElement: HTMLElement;
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       hostElement = element;
       targetElement = createElement(50, 100, 10, 20);
       document.body.appendChild(targetElement);

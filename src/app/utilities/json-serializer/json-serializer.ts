@@ -1,9 +1,9 @@
+import { IJsonObject } from './json-deserializer';
 import {
   getPropertyMetadata,
   isArray,
   isPrimitiveType
 } from './json-helper';
-import { IJsonObject } from './json-deserializer';
 
 /**
  * Serializes the target object instance to json object
@@ -17,7 +17,7 @@ export function serialize<TEntity extends any>(targetInstance: TEntity): IJsonOb
 
   return !isArray(targetInstance) ?
     serializeObject(targetInstance) :
-    targetInstance.map((rawObject) => serializeObject(rawObject));
+    (targetInstance as any).map((rawObject) => serializeObject(rawObject));
 }
 
 function serializeObject(targetInstance: any): any {

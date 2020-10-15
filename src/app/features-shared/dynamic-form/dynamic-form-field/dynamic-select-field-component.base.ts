@@ -1,32 +1,33 @@
 import {
-  OnInit,
+  throwError,
+  Observable,
+  Subject
+} from 'rxjs';
+import {
+  catchError,
+  takeUntil
+} from 'rxjs/operators';
+
+import {
   ChangeDetectorRef,
-  OnDestroy
+  Component,
+  OnDestroy,
+  OnInit
 } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import {
-  Subject,
-  Observable,
-  throwError
-} from 'rxjs';
-import {
-  takeUntil,
-  catchError
-} from 'rxjs/operators';
+  isNullOrEmpty,
+  unsubscribeSafely
+} from '@app/utilities';
 
 import {
   FlatOption,
   GroupedOption
 } from '../dynamic-form-field-data.interface';
-import {
-  isNullOrEmpty,
-  unsubscribeSafely
-} from '@app/utilities';
 import { DynamicFormField } from '../dynamic-form-field.interface';
 import { DynamicTextFieldComponentBase } from './dynamic-text-field-component.base';
-import { isNull } from 'util';
-import { ThrowStmt } from '@angular/compiler';
 
+@Component({ template: '' })
 export abstract class DynamicSelectFieldComponentBase<T>
   extends DynamicTextFieldComponentBase
   implements DynamicFormField, ControlValueAccessor, OnInit, OnDestroy {
@@ -35,17 +36,15 @@ export abstract class DynamicSelectFieldComponentBase<T>
   public hasError: boolean = false;
 
   protected destroySubject: Subject<void> = new Subject<void>();
-  private _initialized: boolean = false;
   protected collection: T[] = [];
+  private _initialized: boolean = false;
 
   constructor(private _changeDetectorRef: ChangeDetectorRef) {
     super();
   }
 
   public ngOnInit(): void {
-    if (isNullOrEmpty(this.data.options)) {
-      this.retrieveOptions();
-    }
+    this._initialize();
   }
 
   public ngOnDestroy(): void {
@@ -62,15 +61,15 @@ export abstract class DynamicSelectFieldComponentBase<T>
           this._endProcess(true);
           return throwError('OS retrieval failed.');
         }))
-      .subscribe((collection) => {
-        this.collection = collection;
+      .subscribe((response) => {
+        this.collection = response;
         this.filterOptions();
       });
   }
 
   public filterOptions(): void {
     if (this._initialized && !isNullOrEmpty(this.data.value)) {
-      this._resetOptions();
+      this._setValue();
     }
 
     this.data.options = this.filter(this.collection);
@@ -94,13 +93,14 @@ export abstract class DynamicSelectFieldComponentBase<T>
 
     // Preselect option if has only one option and field is required
     if (isRequiredField && hasSingleOption) {
+      let selectedValue: any = '';
       if (this.data.options[0].type === 'flat') {
-        this.data.value = (this.data.options[0] as FlatOption).value;
+        selectedValue = (this.data.options[0] as FlatOption).value;
       } else {
-        this.data.value = ((this.data.options[0] as GroupedOption).options[0] as FlatOption).value;
+        selectedValue = ((this.data.options[0] as GroupedOption).options[0] as FlatOption).value;
       }
 
-      this.valueChange(this.data.value);
+      this._setValue(selectedValue);
     }
 
     // Set to default initial value if has multiple options and not yet initialized
@@ -123,13 +123,18 @@ export abstract class DynamicSelectFieldComponentBase<T>
       }
 
       if (isSelectable) {
-        this._resetOptions(this.data.initialValue);
+        this._setValue(this.data.initialValue);
       }
     }
   }
 
-  // Resets the options and selected value and propagate changes
-  private _resetOptions(val: any = ''): void {
+  private _initialize(): void {
+    if (isNullOrEmpty(this.data.options)) {
+      this.retrieveOptions();
+    }
+  }
+
+  private _setValue(val: any = ''): void {
     this.data.value = val;
     this.valueChange(this.data.value);
   }

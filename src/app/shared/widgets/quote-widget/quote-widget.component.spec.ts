@@ -3,12 +3,13 @@ import {
   ViewChild
 } from '@angular/core';
 import {
-  async,
+  waitForAsync,
   TestBed
 } from '@angular/core/testing';
-import { QuoteWidgetComponent } from './quote-widget.component';
-import { WidgetsModule } from '../widgets.module';
 import { CoreTestingModule } from '@app/core/testing';
+
+import { WidgetsModule } from '../widgets.module';
+import { QuoteWidgetComponent } from './quote-widget.component';
 
 @Component({
   selector: 'mcs-test-quote-widget',
@@ -24,7 +25,7 @@ describe('QuoteWidgetComponent', () => {
   /** Stub Services/Components */
   let component: TestQuoteWidgetComponent;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

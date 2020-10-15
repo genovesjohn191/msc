@@ -1,16 +1,16 @@
-import {
-  async,
-  TestBed,
-  getTestBed
-} from '@angular/core/testing';
 import { HttpTestingController } from '@angular/common/http/testing';
-/** Services and Models */
-import { McsApiConsoleService } from './mcs-api-console.service';
+import {
+  waitForAsync,
+  TestBed
+} from '@angular/core/testing';
 import {
   McsApiSuccessResponse,
   McsConsole
 } from '@app/models';
+
 import { McsApiClientTestingModule } from '../testing';
+/** Services and Models */
+import { McsApiConsoleService } from './mcs-api-console.service';
 
 describe('McsApiConsoleService', () => {
 
@@ -21,7 +21,7 @@ describe('McsApiConsoleService', () => {
     id: '459'
   };
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 
@@ -34,8 +34,8 @@ describe('McsApiConsoleService', () => {
 
     /** Testbed Component Compilation and Creation */
     TestBed.compileComponents().then(() => {
-      httpMock = getTestBed().get(HttpTestingController);
-      consoleService = getTestBed().get(McsApiConsoleService);
+      httpMock = TestBed.inject(HttpTestingController);
+      consoleService = TestBed.inject(McsApiConsoleService);
     });
   }));
 

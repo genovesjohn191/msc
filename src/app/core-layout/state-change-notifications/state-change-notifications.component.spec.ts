@@ -1,13 +1,14 @@
 import {
-  async,
-  TestBed,
-} from '@angular/core/testing';
-import {
   Component,
   Input
 } from '@angular/core';
-import { StateChangeNotificationsComponent } from './state-change-notifications.component';
+import {
+  waitForAsync,
+  TestBed
+} from '@angular/core/testing';
+
 import { CoreLayoutTestingModule } from '../testing';
+import { StateChangeNotificationsComponent } from './state-change-notifications.component';
 
 @Component({
   selector: 'mcs-state-change-notification',
@@ -23,7 +24,7 @@ describe('StateChangeNotificationsComponent', () => {
   /** Stub Services/Components */
   let component: StateChangeNotificationsComponent;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

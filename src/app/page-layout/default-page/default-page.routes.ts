@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { McsAuthenticationGuard } from '@app/core';
 import { RouteKey } from '@app/models';
+
 import { DefaultPageComponent } from './default-page.component';
 
 export const defaultPageRoutes: Routes = [
@@ -18,78 +19,78 @@ export const defaultPageRoutes: Routes = [
       {
         path: 'dashboard',
         data: { routeId: RouteKey.Dashboard },
-        loadChildren: '../../features/dashboard/dashboard.module#DashboardModule'
+        loadChildren: () => import('../../features/dashboard/dashboard.module').then(m => m.DashboardModule)
       },
       {
         path: 'launch-pad',
         data: { routeId: RouteKey.LaunchPad },
-        loadChildren: '../../features/launch-pad/launch-pad.module#LaunchPadModule'
+        loadChildren: () => import('../../features/launch-pad/launch-pad.module').then(m => m.LaunchPadModule)
       },
       {
         path: 'compute/virtual',
         data: { routeId: RouteKey.Servers },
-        loadChildren: '../../features/servers/servers.module#ServersModule'
+        loadChildren: () => import('../../features/servers/servers.module').then(m => m.ServersModule)
       },
       {
         path: 'system/messages',
         data: { routeId: RouteKey.SystemMessages },
-        loadChildren: '../../features/system/system.module#SystemModule'
+        loadChildren: () => import('../../features/system/system.module').then(m => m.SystemModule)
       },
       {
         path: 'compute/media',
         data: { routeId: RouteKey.Media },
-        loadChildren: '../../features/media/media.module#MediaModule'
+        loadChildren: () => import('../../features/media/media.module').then(m => m.MediaModule)
       },
       {
         path: 'tickets',
         data: { routeId: RouteKey.Tickets },
-        loadChildren: '../../features/tickets/tickets.module#TicketsModule'
+        loadChildren: () => import('../../features/tickets/tickets.module').then(m => m.TicketsModule)
       },
       {
         path: 'notifications',
         data: { routeId: RouteKey.Notifications },
-        loadChildren: '../../features/notifications/notifications.module#NotificationsModule'
+        loadChildren: () => import('../../features/notifications/notifications.module').then(m => m.NotificationsModule)
       },
       {
         path: 'network/firewalls',
         data: { routeId: RouteKey.Firewalls },
-        loadChildren: '../../features/firewalls/firewalls.module#FirewallsModule'
+        loadChildren: () => import('../../features/firewalls/firewalls.module').then(m => m.FirewallsModule)
       },
       {
         path: 'network/internet',
         data: { routeId: RouteKey.Internet },
-        loadChildren: '../../features/internet/internet.module#InternetModule'
+        loadChildren: () => import('../../features/internet/internet.module').then(m => m.InternetModule)
       },
       {
         path: 'storage/aggregation-targets',
         data: { routeId: RouteKey.BackupAggregationTargets },
-        loadChildren: '../../features/aggregation-targets/aggregation-targets.module#AggregationTargetsModule'
+        loadChildren: () => import('../../features/aggregation-targets/aggregation-targets.module').then(m => m.AggregationTargetsModule)
       },
       {
         path: 'tools',
         data: { routeId: RouteKey.OtherTools },
-        loadChildren: '../../features/tools/tools.module#ToolsModule'
+        loadChildren: () => import('../../features/tools/tools.module').then(m => m.ToolsModule)
       },
       {
         path: 'catalog',
         data: { routeId: RouteKey.Catalog },
-        loadChildren: '../../features/catalog/catalog.module#CatalogModule'
+        loadChildren: () => import('../../features/catalog/catalog.module').then(m => m.CatalogModule)
       },
       {
         path: 'orders',
         data: { routeId: RouteKey.Orders },
-        loadChildren: '../../features/orders/orders.module#OrdersModule'
+        loadChildren: () => import('../../features/orders/orders.module').then(m => m.OrdersModule)
       },
       {
         path: 'licenses',
         data: { routeId: RouteKey.Licenses },
-        loadChildren: '../../features/licenses/licenses.module#LicensesModule'
+        loadChildren: () => import('../../features/licenses/licenses.module').then(m => m.LicensesModule)
       },
       // New routes must be added on top of this error route page
       {
         path: '**',
         data: { routeId: RouteKey.HttpErrorPage },
-        loadChildren: '../../features/http-error-page/http-error-page.module#HttpErrorPageModule'
+        loadChildren: () => import('../../features/http-error-page/http-error-page.module').then(m => m.HttpErrorPageModule)
       }
     ]
   }

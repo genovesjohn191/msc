@@ -1,12 +1,12 @@
-import {
-    async,
-    TestBed,
-    getTestBed
-} from '@angular/core/testing';
 import { HttpTestingController } from '@angular/common/http/testing';
+import {
+  waitForAsync,
+  TestBed
+} from '@angular/core/testing';
+
+import { McsApiClientTestingModule } from '../testing';
 /** Services and Models */
 import { McsApiAzureResourcesService } from './mcs-api-azure-resources.service';
-import { McsApiClientTestingModule } from '../testing';
 
 describe('AccountApiService', () => {
 
@@ -14,7 +14,7 @@ describe('AccountApiService', () => {
     let httpMock: HttpTestingController;
     let azureResourcesService: McsApiAzureResourcesService;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         /** Testbed Reset Module */
         TestBed.resetTestingModule();
 
@@ -27,8 +27,8 @@ describe('AccountApiService', () => {
 
         /** Tesbed Component Compilation and Creation */
         TestBed.compileComponents().then(() => {
-            httpMock = getTestBed().get(HttpTestingController);
-            azureResourcesService = getTestBed().get(McsApiAzureResourcesService);
+            httpMock = TestBed.inject(HttpTestingController);
+            azureResourcesService = TestBed.inject(McsApiAzureResourcesService);
         });
     }));
 

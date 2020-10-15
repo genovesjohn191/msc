@@ -1,19 +1,20 @@
 import {
-  async,
-  TestBed,
-  ComponentFixture
-} from '@angular/core/testing';
-import {
   Component,
-  ViewChild,
-  DebugElement
+  DebugElement,
+  ViewChild
 } from '@angular/core';
-import { triggerEvent } from '@app/utilities';
+import {
+  waitForAsync,
+  ComponentFixture,
+  TestBed
+} from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { CoreTestingModule } from '@app/core/testing';
+import { triggerEvent } from '@app/utilities';
 
+import { OverlayService } from '../overlay';
 import { PopoverDirective } from './popover.directive';
 import { PopoverModule } from './popover.module';
-import { CoreTestingModule } from '@app/core/testing';
 
 @Component({
   selector: 'mcs-test',
@@ -31,7 +32,7 @@ describe('PopoverDirective', () => {
   let directiveElement: DebugElement;
   let fixtureInstance: ComponentFixture<TestComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 
@@ -43,6 +44,9 @@ describe('PopoverDirective', () => {
       imports: [
         CoreTestingModule,
         PopoverModule
+      ],
+      providers: [
+        OverlayService
       ]
     });
 
@@ -78,7 +82,7 @@ describe('PopoverDirective', () => {
 
   /** Test Implementation */
   describe('click() Event', () => {
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       triggerEvent(directiveElement.nativeElement, 'click');
       fixtureInstance.detectChanges();
     }));
@@ -97,7 +101,7 @@ describe('PopoverDirective', () => {
   });
 
   describe('mouseenter:mouseleave() Event', () => {
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       component.popover.trigger = 'hover';
       component.popover.ngOnInit();
       triggerEvent(directiveElement.nativeElement, 'mouseenter');
@@ -119,7 +123,7 @@ describe('PopoverDirective', () => {
 
   describe('orientation() of the mcs-popover element', () => {
     let elementPosition: ClientRect;
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       component.popover.trigger = 'manual';
       elementPosition = {
         width: 100,
@@ -163,7 +167,7 @@ describe('PopoverDirective', () => {
   });
 
   describe('moveElementPosition()', () => {
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       component.popover.trigger = 'manual';
       triggerEvent(directiveElement.nativeElement, 'click');
       fixtureInstance.detectChanges();

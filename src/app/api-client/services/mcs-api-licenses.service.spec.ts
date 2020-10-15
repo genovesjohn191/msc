@@ -1,12 +1,12 @@
-import {
-    async,
-    TestBed,
-    getTestBed
-} from '@angular/core/testing';
 import { HttpTestingController } from '@angular/common/http/testing';
+import {
+  waitForAsync,
+  TestBed
+} from '@angular/core/testing';
+
+import { McsApiClientTestingModule } from '../testing';
 /** Services and Models */
 import { McsApiLicensesService } from './mcs-api-licenses.service';
-import { McsApiClientTestingModule } from '../testing';
 
 describe('LicensessApiService', () => {
 
@@ -14,7 +14,7 @@ describe('LicensessApiService', () => {
     let httpMock: HttpTestingController;
     let licensesApiService: McsApiLicensesService;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         /** Testbed Reset Module */
         TestBed.resetTestingModule();
 
@@ -27,8 +27,8 @@ describe('LicensessApiService', () => {
 
         /** Tesbed Component Compilation and Creation */
         TestBed.compileComponents().then(() => {
-            httpMock = getTestBed().get(HttpTestingController);
-            licensesApiService = getTestBed().get(McsApiLicensesService);
+            httpMock = TestBed.inject(HttpTestingController);
+            licensesApiService = TestBed.inject(McsApiLicensesService);
         });
     }));
 

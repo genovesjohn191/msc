@@ -1,7 +1,8 @@
 import {
   Component,
   ChangeDetectionStrategy,
-  Input, ViewChild, OnDestroy
+  Input,
+  ViewChild
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
@@ -10,8 +11,8 @@ import {
   DynamicFormFieldDataBase
 } from '@app/features-shared/dynamic-form';
 import { WorkflowIdType } from '@app/models';
-import { LaunchPadWorkflow } from './workflow';
-import { Workflow } from './workflows/workflow.interface';
+import { LaunchPadWorkflow } from '../workflows/workflow';
+import { Workflow } from '../workflows/workflow.interface';
 
 @Component({
   selector: 'mcs-launch-pad-workflow',
@@ -23,7 +24,7 @@ import { Workflow } from './workflows/workflow.interface';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class LaunchPadWorkflowComponent implements OnDestroy {
+export class LaunchPadWorkflowComponent {
   @ViewChild('form', { static: false})
   protected form: DynamicFormComponent;
 
@@ -61,10 +62,6 @@ export class LaunchPadWorkflowComponent implements OnDestroy {
     return this.required || this.panelOpenState === true;
   }
 
-  public ngOnDestroy(): void {
-    this.form.ngOnDestroy();
-  }
-
   public openPanel(): void {
     this.panelOpenState = true;
   }
@@ -84,7 +81,7 @@ export class LaunchPadWorkflowComponent implements OnDestroy {
 
     // Return valid workflow structure
     return {
-      id: this.type,
+      type: this.type,
       referenceId: this.referenceId,
       parentReferenceId: this.parentReferenceId,
       serviceId: this.serviceId,
@@ -108,7 +105,7 @@ export class LaunchPadWorkflowComponent implements OnDestroy {
   public load(workflow: LaunchPadWorkflow): void {
     this.title = workflow.title;
     this.required = workflow.required;
-    this.type = workflow.id;
+    this.type = workflow.type;
     this.referenceId = workflow.referenceId;
     this.parentReferenceId = workflow.parentReferenceId;
     this.serviceId = workflow.serviceId;

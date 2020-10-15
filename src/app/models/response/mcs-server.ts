@@ -1,41 +1,42 @@
-import { JsonProperty } from '@app/utilities';
+import { IMcsServiceOrderStateChangeable } from '@app/core';
 import {
   getSafeProperty,
   isNullOrEmpty,
-  CommonDefinition
+  isNullOrUndefined,
+  CommonDefinition,
+  JsonProperty
 } from '@app/utilities';
-import { McsServerOperatingSystemSummary } from './mcs-server-operating-system-summary';
-import { McsServerHardware } from './mcs-server-hardware';
-import { McsServerCompute } from './mcs-server-compute';
-import { McsServerPlatform } from './mcs-server-platform';
-import { McsServerMedia } from './mcs-server-media';
-import { McsServerStorageDevice } from './mcs-server-storage-device';
-import { McsServerNic } from './mcs-server-nic';
-import { McsServerVmwareTools } from './mcs-server-vmware-tools';
-import { McsServerSnapshot } from './mcs-server-snapshot';
+
+import { McsEntityBase } from '../common/mcs-entity.base';
 import {
-  VmPowerState,
-  VmPowerStateSerialization,
-  vmPowerStateText
-} from '../enumerations/vm-power-state.enum';
+  inviewLevelText,
+  InviewLevel,
+  InviewLevelSerialization
+} from '../enumerations/inview-level.enum';
+import { Os } from '../enumerations/os.enum';
+import { PlatformType } from '../enumerations/platform-type.enum';
+import { RunningStatus } from '../enumerations/running-status.enum';
+import { ServiceOrderState } from '../enumerations/service-order-state.enum';
 import {
   ServiceType,
   ServiceTypeSerialization
 } from '../enumerations/service-type.enum';
-import {
-  InviewLevel,
-  InviewLevelSerialization,
-  inviewLevelText
-} from '../enumerations/inview-level.enum';
-import { McsEntityBase } from '../common/mcs-entity.base';
-import { PlatformType } from '../enumerations/platform-type.enum';
-import { Os } from '../enumerations/os.enum';
-import { McsServerOsUpdatesDetails } from './mcs-server-os-updates-details';
-import { ServiceOrderState } from '../enumerations/service-order-state.enum';
-import { IMcsServiceOrderStateChangeable } from '@app/core';
-import { RunningStatus } from '../enumerations/running-status.enum';
-import { isNullOrUndefined } from 'util';
 import { VersionStatus } from '../enumerations/version-status.enum';
+import {
+  vmPowerStateText,
+  VmPowerState,
+  VmPowerStateSerialization
+} from '../enumerations/vm-power-state.enum';
+import { McsServerCompute } from './mcs-server-compute';
+import { McsServerHardware } from './mcs-server-hardware';
+import { McsServerMedia } from './mcs-server-media';
+import { McsServerNic } from './mcs-server-nic';
+import { McsServerOperatingSystemSummary } from './mcs-server-operating-system-summary';
+import { McsServerOsUpdatesDetails } from './mcs-server-os-updates-details';
+import { McsServerPlatform } from './mcs-server-platform';
+import { McsServerSnapshot } from './mcs-server-snapshot';
+import { McsServerStorageDevice } from './mcs-server-storage-device';
+import { McsServerVmwareTools } from './mcs-server-vmware-tools';
 
 export class McsServer extends McsEntityBase implements IMcsServiceOrderStateChangeable {
   @JsonProperty()

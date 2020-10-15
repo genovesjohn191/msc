@@ -1,15 +1,15 @@
-import {
-  async,
-  TestBed,
-  getTestBed
-} from '@angular/core/testing';
 import { HttpTestingController } from '@angular/common/http/testing';
+import {
+  waitForAsync,
+  TestBed
+} from '@angular/core/testing';
 import {
   McsApiSuccessResponse,
   McsFirewall
 } from '@app/models';
-import { McsApiFirewallsService } from './mcs-api-firewalls.service';
+
 import { McsApiClientTestingModule } from '../testing';
+import { McsApiFirewallsService } from './mcs-api-firewalls.service';
 
 describe('McsApiFirewallsService', () => {
 
@@ -23,7 +23,7 @@ describe('McsApiFirewallsService', () => {
     id: '459'
   };
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 
@@ -36,8 +36,8 @@ describe('McsApiFirewallsService', () => {
 
     /** Tesbed Component Compilation and Creation */
     TestBed.compileComponents().then(() => {
-      httpMock = getTestBed().get(HttpTestingController);
-      firewallsService = getTestBed().get(McsApiFirewallsService);
+      httpMock = TestBed.inject(HttpTestingController);
+      firewallsService = TestBed.inject(McsApiFirewallsService);
     });
   }));
 

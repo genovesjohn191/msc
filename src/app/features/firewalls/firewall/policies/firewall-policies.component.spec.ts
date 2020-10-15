@@ -1,19 +1,20 @@
 import {
-  async,
+  waitForAsync,
   TestBed
 } from '@angular/core/testing';
-import { FirewallPoliciesComponent } from './firewall-policies.component';
+
 import {
-  FirewallsTestingModule,
-  mockFirewallService
+  mockFirewallService,
+  FirewallsTestingModule
 } from '../../testing';
 import { FirewallService } from '../firewall.service';
+import { FirewallPoliciesComponent } from './firewall-policies.component';
 
 describe('FirewallOverviewComponent', () => {
   /** Stub Services/Components */
   let component: FirewallPoliciesComponent;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

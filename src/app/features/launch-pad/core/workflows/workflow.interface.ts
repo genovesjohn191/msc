@@ -9,7 +9,7 @@ export interface WorkflowConfig {
 }
 
 export interface Workflow {
-  id: WorkflowIdType;
+  type: WorkflowIdType;
   referenceId: string;
   parentReferenceId?: string;
   serviceId?: string;

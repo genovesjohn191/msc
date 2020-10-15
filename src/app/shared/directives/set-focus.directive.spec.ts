@@ -1,16 +1,17 @@
 import {
-  async,
-  TestBed,
+  Component,
+  ElementRef,
+  ViewChild
+} from '@angular/core';
+import {
   fakeAsync,
   tick,
-  ComponentFixture
+  waitForAsync,
+  ComponentFixture,
+  TestBed
 } from '@angular/core/testing';
-import {
-  Component,
-  ViewChild,
-  ElementRef
-} from '@angular/core';
 import { CommonDefinition } from '@app/utilities';
+
 import { SetFocusDirective } from './set-focus.directive';
 
 @Component({
@@ -31,7 +32,7 @@ describe('SetFocusDirective', () => {
   let component: TestComponent;
   let fixtureInstance: ComponentFixture<TestComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

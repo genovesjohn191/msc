@@ -3,13 +3,14 @@ import {
   ViewChild
 } from '@angular/core';
 import {
-  async,
+  waitForAsync,
   TestBed
 } from '@angular/core/testing';
-import { CommonDefinition } from '@app/utilities';
 import { CoreTestingModule } from '@app/core/testing';
-import { AlertModule } from './alert.module';
+import { CommonDefinition } from '@app/utilities';
+
 import { AlertComponent } from './alert.component';
+import { AlertModule } from './alert.module';
 
 @Component({
   selector: 'mcs-test-alert',
@@ -34,7 +35,7 @@ describe('AlertComponent', () => {
   /** Stub Services/Components */
   let component: TestAlertComponent;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

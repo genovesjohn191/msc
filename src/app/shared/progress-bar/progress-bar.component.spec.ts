@@ -3,14 +3,15 @@ import {
   ViewChild
 } from '@angular/core';
 import {
-  async,
-  TestBed,
-  ComponentFixture
+  waitForAsync,
+  ComponentFixture,
+  TestBed
 } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { CoreTestingModule } from '@app/core/testing';
-import { ProgressBarModule } from './progress-bar.module';
+
 import { ProgressBarComponent } from './progress-bar.component';
+import { ProgressBarModule } from './progress-bar.module';
 
 @Component({
   selector: 'mcs-test',
@@ -30,7 +31,7 @@ describe('ProgressBarComponent', () => {
   let component: TestComponent;
   let fixture: ComponentFixture<TestComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

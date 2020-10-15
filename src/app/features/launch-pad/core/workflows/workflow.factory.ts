@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Guid, isNullOrEmpty } from '@app/utilities';
-import { LaunchPadWorkflow } from '../workflow';
+import { cloneDeep, Guid, isNullOrEmpty } from '@app/utilities';
+import { LaunchPadWorkflow } from './workflow';
 import { WorkflowGroup } from './workflow-group.interface';
 import { WorkflowConfig } from './workflow.interface';
 
@@ -18,10 +18,8 @@ export class WorkflowFactory {
   public createWorkflows(options: NewWorkflowGroupConfig): LaunchPadWorkflow[] {
     let workflows: LaunchPadWorkflow[] = [];
 
-    // Create parent workflow
     let parentWorkflow = this._createParentWorkflow(options);
     workflows.push(parentWorkflow);
-
     this._appendChildWorkflows(parentWorkflow.serviceId, options.workflowGroup.children, workflows);
 
     return workflows;
@@ -35,7 +33,9 @@ export class WorkflowFactory {
       parentServiceId: config.parentServiceId || '',
       title: config.workflowGroup.parent.title,
       required: true,
-      properties: config.workflowGroup.parent.form,
+      // Clone the form
+      properties: cloneDeep(config.workflowGroup.parent.form),
+      // Pass initial values
       params: config.parentParams
     });
   }
@@ -49,7 +49,10 @@ export class WorkflowFactory {
           parentReferenceId: parentServiceId,
           title: child.title,
           required: child.required,
-          properties: child.form
+          // Clone the form
+          properties: cloneDeep(child.form)
+          // Pass initial values
+
         });
         workflows.push(childWorkflow);
       });

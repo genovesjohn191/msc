@@ -1,5 +1,5 @@
 import { ProductType } from '@app/models';
-import { WorkflowGroupId } from './workflow-group-type.enum';
+import { WorkflowGroupId } from './workflow-groups/workflow-group-type.enum';
 
 // Workflow: Assign workflow groups to product types
 export const productWorkflowGroupsMap: Map<ProductType, number[]> = new Map([

@@ -4,19 +4,20 @@ import {
   ViewChild,
   ComponentFactoryResolver,
   ComponentRef,
-  OnDestroy, Input
+  Input
 } from '@angular/core';
 
-import { Guid, isNullOrEmpty } from '@app/utilities';
-import { LaunchPadWorkflowComponent } from './workflow.component';
-import { LaunchPadWorkflow } from './workflow';
 import {
-  WorkflowService
-} from './workflows/workflow.service';
-import { WorkflowGroupDirective } from './workflows/workflow-group.directive';
+  Guid,
+  isNullOrEmpty
+} from '@app/utilities';
+import { LaunchPadWorkflowComponent } from './workflow.component';
+import { LaunchPadWorkflow } from '../workflows/workflow';
+import { WorkflowService } from '../workflows/workflow.service';
+import { WorkflowGroupDirective } from '../workflows/workflow-group.directive';
 import { FormGroup } from '@angular/forms';
-import { Workflow } from './workflows/workflow.interface';
-import { WorkflowGroupConfig } from './workflows/workflow-group.interface';
+import { Workflow } from '../workflows/workflow.interface';
+import { WorkflowGroupConfig } from '../workflows/workflow-group.interface';
 
 @Component({
   selector: 'mcs-launch-pad-workflow-group',
@@ -25,12 +26,13 @@ import { WorkflowGroupConfig } from './workflows/workflow-group.interface';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class LaunchPadWorkflowGroupComponent implements OnDestroy {
+export class LaunchPadWorkflowGroupComponent {
   public workflowComponentRef: ComponentRef<LaunchPadWorkflowComponent>[] = [];
 
   public componentRef: ComponentRef<any>;
 
   public title: string;
+
   public serviceId: string;
 
   @Input()
@@ -42,17 +44,11 @@ export class LaunchPadWorkflowGroupComponent implements OnDestroy {
   }
 
    @ViewChild(WorkflowGroupDirective, {static: true})
-   workflowGroup: WorkflowGroupDirective;
+   public workflowGroup: WorkflowGroupDirective;
 
   constructor(
     private _componentFactoryResolver: ComponentFactoryResolver,
     private _workflowService: WorkflowService) { }
-
-  public ngOnDestroy() {
-    this.workflowComponentRef.forEach(ref => {
-      ref.destroy();
-    });
-  }
 
   /**
    * Returns validity of combined workflow
@@ -93,14 +89,15 @@ export class LaunchPadWorkflowGroupComponent implements OnDestroy {
   }
 
   public reset(): void {
-    let newParentReferenceId = Guid.newGuid().toString();
+    let parentReferenceId = Guid.newGuid().toString();
+
     this.workflowComponentRef.forEach(ref => {
       // Set new reference IDs
       if (isNullOrEmpty(ref.instance.parentReferenceId)) {
-        ref.instance.referenceId = newParentReferenceId;
+        ref.instance.referenceId = parentReferenceId;
       } else {
         ref.instance.referenceId = Guid.newGuid().toString();
-        ref.instance.parentReferenceId = newParentReferenceId;
+        ref.instance.parentReferenceId = parentReferenceId;
       }
 
       ref.instance.reset();
@@ -108,31 +105,27 @@ export class LaunchPadWorkflowGroupComponent implements OnDestroy {
   }
 
   private _renderWorkflowGroup(config: WorkflowGroupConfig): void {
-    let workflowGroup: LaunchPadWorkflow[] = this._workflowService.getWorkflowGroup(config);
+    let workflows: LaunchPadWorkflow[] = this._workflowService.getWorkflowGroup(config);
     this.serviceId = config.serviceId || config.parentServiceId;
 
-    if (!isNullOrEmpty(this.workflowComponentRef)) {
-      this.workflowComponentRef.forEach((ref) => {
-        ref.destroy();
-      });
-    }
+    // Clear references and instances of existing workflow
     this.workflowComponentRef = [];
     this.workflowGroup.viewContainerRef.clear();
 
-    if (isNullOrEmpty(workflowGroup)) {
+    if (isNullOrEmpty(workflows)) {
       console.log('No workflow group found.');
       return;
     }
 
-    workflowGroup.forEach(workflow => {
+    // Render workflows
+    workflows.forEach(workflow => {
       this._renderWorkflow(workflow);
     });
   }
 
   private _renderWorkflow(param: LaunchPadWorkflow): void {
-    const componentFactory = this._componentFactoryResolver.resolveComponentFactory(LaunchPadWorkflowComponent);
-    const viewContainerRef = this.workflowGroup.viewContainerRef;
-    const componentRef = viewContainerRef.createComponent<LaunchPadWorkflowComponent>(componentFactory);
+    let componentFactory = this._componentFactoryResolver.resolveComponentFactory(LaunchPadWorkflowComponent);
+    let componentRef = this.workflowGroup.viewContainerRef.createComponent<LaunchPadWorkflowComponent>(componentFactory);
 
     // Set workflow settings
     componentRef.instance.load(param);

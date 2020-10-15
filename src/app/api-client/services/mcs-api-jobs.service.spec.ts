@@ -1,16 +1,16 @@
-import {
-  async,
-  TestBed,
-  getTestBed
-} from '@angular/core/testing';
 import { HttpTestingController } from '@angular/common/http/testing';
-/** Services and Models */
-import { McsApiJobsService } from './mcs-api-jobs.service';
+import {
+  waitForAsync,
+  TestBed
+} from '@angular/core/testing';
 import {
   McsApiSuccessResponse,
   McsJob
 } from '@app/models';
+
 import { McsApiClientTestingModule } from '../testing';
+/** Services and Models */
+import { McsApiJobsService } from './mcs-api-jobs.service';
 
 describe('McsApiJobsService', () => {
 
@@ -24,7 +24,7 @@ describe('McsApiJobsService', () => {
     id: 459
   };
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 
@@ -37,8 +37,8 @@ describe('McsApiJobsService', () => {
 
     /** Testbed Component Compilation and Creation */
     TestBed.compileComponents().then(() => {
-      httpMock = getTestBed().get(HttpTestingController);
-      jobsApiService = getTestBed().get(McsApiJobsService);
+      httpMock = TestBed.inject(HttpTestingController);
+      jobsApiService = TestBed.inject(McsApiJobsService);
     });
   }));
 

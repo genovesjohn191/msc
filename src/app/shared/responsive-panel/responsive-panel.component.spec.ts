@@ -3,12 +3,13 @@ import {
   ViewChild
 } from '@angular/core';
 import {
-  async,
+  waitForAsync,
   TestBed
 } from '@angular/core/testing';
+import { CoreTestingModule } from '@app/core/testing';
+
 import { ResponsivePanelComponent } from './responsive-panel.component';
 import { ResponsivePanelModule } from './responsive-panel.module';
-import { CoreTestingModule } from '@app/core/testing';
 
 @Component({
   selector: 'mcs-test-responsive-panel',
@@ -24,7 +25,7 @@ describe('ResponsivePanelComponent', () => {
   /** Stub Services/Components */
   let component: ResponsivePanelTestComponent;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

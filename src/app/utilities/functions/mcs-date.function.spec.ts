@@ -1,18 +1,17 @@
 import {
-  formatDate,
-  getTimeDifference,
-  getDayDifference,
-  compareDates,
-  getExpiryLabel,
-  convertDateTimezoneToUTC,
-  isDateFormatValid,
-  getCurrentDate,
-  getDayinMonth,
-  getMonth,
-  getYear,
   addDaysToDate,
   addHoursToDate,
-  addMonthsToDate
+  addMonthsToDate,
+  compareDates,
+  convertDateTimezoneToUTC,
+  formatDate,
+  getDayinMonth,
+  getDayDifference,
+  getExpiryLabel,
+  getMonth,
+  getTimeDifference,
+  getYear,
+  isDateFormatValid
 } from './mcs-date.function';
 
 describe('DATE Functions', () => {
@@ -126,15 +125,6 @@ describe('DATE Functions', () => {
       let expiry = new Date('2017-04-26 01:10:45');
       let expiredLabel = getExpiryLabel(expiry);
       expect(expiredLabel).toBe(getExpiryLabel(expiry));
-    });
-  });
-
-  describe('getCurrentDate()', () => {
-    it(`should return current day`, () => {
-      let expectedDate = new Date();
-      let actualDate = getCurrentDate();
-      let result = compareDates(expectedDate, actualDate);
-      expect(result).toBe(0);
     });
   });
 

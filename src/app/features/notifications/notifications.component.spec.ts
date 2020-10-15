@@ -1,10 +1,11 @@
 import {
-  async,
+  waitForAsync,
   TestBed
 } from '@angular/core/testing';
 import { CommonDefinition } from '@app/utilities';
-import { NotificationsTestingModule } from './testing';
+
 import { NotificationsComponent } from './notifications.component';
+import { NotificationsTestingModule } from './testing';
 
 describe('NotificationsComponent', () => {
 
@@ -12,7 +13,7 @@ describe('NotificationsComponent', () => {
   CommonDefinition.SEARCH_TIME = 0;
   let component: NotificationsComponent;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

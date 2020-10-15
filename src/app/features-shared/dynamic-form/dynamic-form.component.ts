@@ -4,7 +4,7 @@ import {
   QueryList,
   OnInit,
   Component,
-  ChangeDetectorRef, OnDestroy
+  ChangeDetectorRef
 } from '@angular/core';
 import {
   FormGroup,
@@ -27,7 +27,7 @@ import { DynamicFormFieldDataBase } from './dynamic-form-field-data.base';
   templateUrl: './dynamic-form.component.html',
   styleUrls: ['./dynamic-form.scss']
 })
-export class DynamicFormComponent implements OnInit, OnDestroy {
+export class DynamicFormComponent implements OnInit {
   @Input()
   public controlDataItems: DynamicFormFieldDataBase[];
 
@@ -47,11 +47,6 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
   public ngOnInit() {
     this._createCustomValidationMap();
     this.form = this.buildForm();
-  }
-
-  public ngOnDestroy(): void {
-    // TODO: implement
-
   }
 
   private buildForm(): FormGroup {

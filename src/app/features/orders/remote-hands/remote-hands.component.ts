@@ -1,66 +1,74 @@
 import {
-  Component,
-  OnInit,
-  OnDestroy,
-  ViewChild,
-  Injector} from '@angular/core';
-import {
-  Observable,
-  Subject,
-  Subscription,
+  forkJoin,
   of,
   zip,
-  forkJoin} from 'rxjs';
+  Observable,
+  Subject,
+  Subscription
+} from 'rxjs';
 import {
+  filter,
+  map,
+  takeUntil,
+  tap
+} from 'rxjs/operators';
+
+import {
+  Component,
+  Injector,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
+import {
+  FormBuilder,
   FormControl,
-  FormGroup,
-  FormBuilder} from '@angular/forms';
+  FormGroup
+} from '@angular/forms';
 import {
-  McsOrderWizardBase,
   CoreValidators,
-  OrderRequester,
-  IMcsFormGroup
+  IMcsFormGroup,
+  McsOrderWizardBase,
+  OrderRequester
 } from '@app/core';
+import { McsEvent } from '@app/events';
 import {
+  OrderDetails,
+  SmacSharedDetails,
+  SmacSharedFormConfig
+} from '@app/features-shared';
+import {
+  DeliveryType,
   McsOption,
+  McsOptionGroup,
   McsOrderCreate,
   McsOrderItemCreate,
-  OrderIdType,
-  DeliveryType,
   McsOrderWorkflow,
-  McsOptionGroup,
-  RouteKey} from '@app/models';
+  OrderIdType,
+  RouteKey
+} from '@app/models';
 import {
-  SmacSharedFormConfig,
-  SmacSharedDetails,
-  OrderDetails} from '@app/features-shared';
+  orderRemoteHandsCabinetLocationText,
+  OrderCabinetLocation
+} from '@app/models/enumerations/order-cabinet-location.enum';
+import { McsApiService } from '@app/services';
 import { McsFormGroupDirective } from '@app/shared';
 import {
-  CommonDefinition,
-  getSafeProperty,
   createObject,
-  Guid,
-  isNullOrEmpty,
-  getCurrentDate,
   formatStringToPhoneNumber,
+  getCurrentDate,
+  getSafeProperty,
+  isNullOrEmpty,
+  isNullOrUndefined,
+  pluck,
   unsubscribeSafely,
-  pluck} from '@app/utilities';
-import {
-  OrderCabinetLocation,
-  orderRemoteHandsCabinetLocationText
-} from '@app/models/enumerations/order-cabinet-location.enum';
-import {
-  takeUntil,
-  filter,
-  tap,
-  map,
-} from 'rxjs/operators';
-import { RemoteHandsService } from './remote-hands.service';
-import { McsApiService } from '@app/services';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
-import { McsEvent } from '@app/events';
-import { isNullOrUndefined } from 'util';
+  CommonDefinition,
+  Guid
+} from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+
+import { RemoteHandsService } from './remote-hands.service';
 
 const MAX_INSTRUCTIONS_LENGTH = 850;
 const VISIBILE_ROWS = 3;

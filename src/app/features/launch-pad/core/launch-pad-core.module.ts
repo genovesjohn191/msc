@@ -4,15 +4,15 @@ import { SharedModule } from '@app/shared';
 import { DynamicFormModule } from '@app/features-shared/dynamic-form';
 
 import { WorkflowService } from './workflows/workflow.service';
-import { LaunchPadWorkflowSelectorService } from './workflow-selector.service';
+import { LaunchPadWorkflowSelectorService } from './layout/workflow-selector.service';
 import { WorkflowGroupDirective } from './workflows/workflow-group.directive';
 import { WorkflowFactory } from './workflows/workflow.factory';
 
-import { LaunchPadComponent } from './launch-pad.component';
-import { LaunchPadWorkflowGroupComponent } from './workflow-group.component';
-import { LaunchPadWorkflowComponent } from './workflow.component';
-import { LaunchPadWorkflowSelectorComponent } from './workflow-selector.component';
-import { WorkflowSelectorLauncherComponent } from './workflow-selector-launcher.component';
+import { LaunchPadComponent } from './launch-pad-core.component';
+import { LaunchPadWorkflowComponent } from './layout//workflow.component';
+import { LaunchPadWorkflowSelectorComponent } from './layout//workflow-selector.component';
+import { WorkflowSelectorLauncherComponent } from './layout//workflow-selector-launcher.component';
+import { LaunchPadWorkflowGroupComponent } from './layout/workflow-group.component';
 
 @NgModule({
   declarations: [

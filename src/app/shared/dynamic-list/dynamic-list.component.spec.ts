@@ -1,27 +1,28 @@
+import { CommonModule } from '@angular/common';
 import {
   Component,
-  ViewChild,
   DebugElement,
   ElementRef,
-  OnInit
+  OnInit,
+  ViewChild
 } from '@angular/core';
 import {
-  async,
-  TestBed,
-  ComponentFixture
+  waitForAsync,
+  ComponentFixture,
+  TestBed
 } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import {
-  FormGroup,
-  FormControl,
   FormsModule,
+  FormControl,
+  FormGroup,
   ReactiveFormsModule
 } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { CoreValidators } from '@app/core';
 import { CoreTestingModule } from '@app/core/testing';
+
 import { DynamicListComponent } from './dynamic-list.component';
 import { DynamicListModule } from './dynamic-list.module';
-import { CoreValidators } from '@app/core';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'mcs-test-dynamic-list',
@@ -59,7 +60,7 @@ describe('DynamicListComponent', () => {
   let inputFcHappyPath: ElementRef;
   let addIconElementHappyPath: ElementRef;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

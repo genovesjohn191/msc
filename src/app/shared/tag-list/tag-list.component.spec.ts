@@ -1,21 +1,22 @@
 import {
   Component,
+  QueryList,
   ViewChild,
-  ViewChildren,
-  QueryList
+  ViewChildren
 } from '@angular/core';
 import {
-  async,
-  TestBed,
-  ComponentFixture
+  waitForAsync,
+  ComponentFixture,
+  TestBed
 } from '@angular/core/testing';
 import { CoreTestingModule } from '@app/core/testing';
 import { triggerEvent } from '@app/utilities';
+
 import { FormFieldModule } from '../form-field/form-field.module';
-import { TagListComponent } from './tag-list.component';
-import { TagComponent } from './tag/tag.component';
-import { TagListModule } from './tag-list.module';
 import { TagInputDirective } from './tag-input/tag-input.directive';
+import { TagListComponent } from './tag-list.component';
+import { TagListModule } from './tag-list.module';
+import { TagComponent } from './tag/tag.component';
 
 @Component({
   selector: 'mcs-test-chip-list',
@@ -59,7 +60,7 @@ describe('TagListComponent', () => {
   let component: TestTagListComponent;
   let fixture: ComponentFixture<TestTagListComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

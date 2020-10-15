@@ -1,11 +1,11 @@
 import {
-  async,
-  TestBed,
-  getTestBed
+  waitForAsync,
+  TestBed
 } from '@angular/core/testing';
-import { McsStorageService } from './mcs-storage.service';
+
 import { McsAuthenticationIdentity } from '../authentication/mcs-authentication.identity';
 import { CoreTestingModule } from '../testing';
+import { McsStorageService } from './mcs-storage.service';
 
 describe('McsStorageService', () => {
 
@@ -14,7 +14,7 @@ describe('McsStorageService', () => {
   let key: string = 'key_test';
   let userId: string = 'F500120501';
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 
@@ -37,7 +37,7 @@ describe('McsStorageService', () => {
 
     /** Testbed Component Compilation and Creation */
     TestBed.compileComponents().then(() => {
-      mcsStorageService = getTestBed().get(McsStorageService);
+      mcsStorageService = TestBed.inject(McsStorageService);
     });
   }));
 

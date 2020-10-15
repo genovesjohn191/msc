@@ -1,20 +1,21 @@
-import {
-  Directive,
-  Input,
-  Renderer2,
-  ElementRef,
-  AfterViewInit,
-  OnDestroy
-} from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+
+import {
+  AfterViewInit,
+  Directive,
+  ElementRef,
+  Input,
+  OnDestroy,
+  Renderer2
+} from '@angular/core';
 import {
   McsBrowserService,
   McsUniqueId
 } from '@app/core';
 import {
-  McsAlignmentType,
-  isNullOrEmpty
+  isNullOrEmpty,
+  McsAlignmentType
 } from '@app/utilities';
 
 @Directive({

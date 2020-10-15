@@ -1,15 +1,15 @@
 import {
-  async,
-  TestBed,
-  getTestBed
+  waitForAsync,
+  TestBed
 } from '@angular/core/testing';
+
 import { AppState } from './app.service';
 
 describe('AppState', () => {
   /** Stub Services Mock */
   let appState: AppState;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 
@@ -22,7 +22,7 @@ describe('AppState', () => {
 
     /** Testbed Component Compilation and Creation */
     TestBed.compileComponents().then(() => {
-      appState = getTestBed().get(AppState);
+      appState = TestBed.inject(AppState);
     });
   }));
 

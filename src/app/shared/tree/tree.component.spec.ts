@@ -3,13 +3,14 @@ import {
   ViewChild
 } from '@angular/core';
 import {
-  async,
+  waitForAsync,
   TestBed
 } from '@angular/core/testing';
 import { CoreTestingModule } from '@app/core/testing';
+
+import { TreeNode } from './tree-node/tree-node';
 import { TreeComponent } from './tree.component';
 import { TreeModule } from './tree.module';
-import { TreeNode } from './tree-node/tree-node';
 
 @Component({
   selector: 'mcs-test',
@@ -30,7 +31,7 @@ describe('TreeComponent', () => {
   /** Stub Services/Components */
   let testComponent: TestComponent;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

@@ -2,12 +2,13 @@ import {
   Component,
   ViewChild
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import {
-  async,
+  waitForAsync,
   TestBed
 } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
 import { CoreTestingModule } from '@app/core/testing';
+
 import { ButtonComponent } from './button.component';
 import { ButtonModule } from './button.module';
 
@@ -22,7 +23,7 @@ export class TestButtonComponent {
 
 describe('ButtonComponent', () => {
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

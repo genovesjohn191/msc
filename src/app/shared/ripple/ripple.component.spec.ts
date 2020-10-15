@@ -3,9 +3,10 @@ import {
   ViewChild
 } from '@angular/core';
 import {
-  async,
+  waitForAsync,
   TestBed
 } from '@angular/core/testing';
+
 import { RippleComponent } from './ripple.component';
 import { RippleModule } from './ripple.module';
 
@@ -20,7 +21,7 @@ export class TestRippleComponent {
 
 describe('RippleComponent', () => {
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

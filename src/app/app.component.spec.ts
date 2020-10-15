@@ -1,19 +1,19 @@
 import {
-  async,
-  TestBed,
-  ComponentFixture
+  waitForAsync,
+  ComponentFixture,
+  TestBed
 } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
 // Load the implementations that should be tested
 import { AppComponent } from './app.component';
-import { RouterTestingModule } from '@angular/router/testing';
 import { CoreTestingModule } from './core/testing';
 
 describe(`AppComponent`, () => {
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
 
     /** Testbed Configuration */
     TestBed.configureTestingModule({

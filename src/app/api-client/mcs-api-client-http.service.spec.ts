@@ -1,12 +1,12 @@
-import {
-  async,
-  TestBed,
-  getTestBed
-} from '@angular/core/testing';
 import { HttpTestingController } from '@angular/common/http/testing';
+import {
+  waitForAsync,
+  TestBed
+} from '@angular/core/testing';
 import { McsApiRequestParameter } from '@app/models';
-import { McsApiClientConfig } from './mcs-api-client.config';
+
 import { McsApiClientHttpService } from './mcs-api-client-http.service';
+import { McsApiClientConfig } from './mcs-api-client.config';
 import { McsApiClientTestingModule } from './testing/mcs-api-client-testing.module';
 
 describe('McsApiClientHttpService', () => {
@@ -16,7 +16,7 @@ describe('McsApiClientHttpService', () => {
   let apiClientService: McsApiClientHttpService;
   let apiClientConfig: McsApiClientConfig;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 
@@ -29,9 +29,9 @@ describe('McsApiClientHttpService', () => {
 
     /** Tesbed Component Compilation and Creation */
     TestBed.compileComponents().then(() => {
-      mockBackend = getTestBed().get(HttpTestingController);
-      apiClientService = getTestBed().get(McsApiClientHttpService);
-      apiClientConfig = getTestBed().get(McsApiClientConfig);
+      mockBackend = TestBed.inject(HttpTestingController);
+      apiClientService = TestBed.inject(McsApiClientHttpService);
+      apiClientConfig = TestBed.inject(McsApiClientConfig);
     });
   }));
 
@@ -47,7 +47,7 @@ describe('McsApiClientHttpService', () => {
   });
 
   /** We need to call verify to make sure there is no pending request in each request */
-  afterEach(async((() => {
+  afterEach(waitForAsync((() => {
     mockBackend.verify();
   })));
 

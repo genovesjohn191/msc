@@ -3,11 +3,12 @@ import {
   ViewChild
 } from '@angular/core';
 import {
-  async,
+  waitForAsync,
   TestBed
 } from '@angular/core/testing';
-import { PresentationPanelModule } from './presentation-panel.module';
+
 import { PresentationPanelComponent } from './presentation-panel.component';
+import { PresentationPanelModule } from './presentation-panel.module';
 
 @Component({
   selector: 'mcs-test',
@@ -20,7 +21,7 @@ export class TestComponent {
 
 describe('PresentationPanelComponent', () => {
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

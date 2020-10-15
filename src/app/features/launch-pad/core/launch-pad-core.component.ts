@@ -1,20 +1,22 @@
 import {
-  Component,
   ChangeDetectionStrategy,
-  ViewChild,
-  Input, OnDestroy
+  Component,
+  Input,
+  OnDestroy,
+  ViewChild
 } from '@angular/core';
 import { FormArray } from '@angular/forms';
-import { MatVerticalStepper } from '@angular/material';
+import { MatVerticalStepper } from '@angular/material/stepper';
 import { isNullOrEmpty } from '@app/utilities';
-import { LaunchPadWorkflowGroupComponent } from './workflow-group.component';
+
+import { LaunchPadWorkflowGroupComponent } from './layout/workflow-group.component';
 import { WorkflowGroupConfig } from './workflows/workflow-group.interface';
 import { Workflow } from './workflows/workflow.interface';
 
 @Component({
   selector: 'mcs-launch-pad',
-  templateUrl: './launch-pad.component.html',
-  styleUrls: ['./launch-pad.component.scss'],
+  templateUrl: './launch-pad-core.component.html',
+  styleUrls: ['./launch-pad-core.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LaunchPadComponent implements OnDestroy {

@@ -1,17 +1,18 @@
 import {
-  async,
-  TestBed,
-  ComponentFixture
-} from '@angular/core/testing';
-import {
   Component,
   ViewChild
 } from '@angular/core';
+import {
+  waitForAsync,
+  ComponentFixture,
+  TestBed
+} from '@angular/core/testing';
+import { CoreTestingModule } from '@app/core/testing';
 import { triggerEvent } from '@app/utilities';
 
+import { OverlayService } from '../overlay/overlay.service';
 import { TooltipDirective } from './tooltip.directive';
 import { TooltipModule } from './tooltip.module';
-import { CoreTestingModule } from '@app/core/testing';
 
 @Component({
   selector: 'mcs-test-tooltip',
@@ -29,7 +30,7 @@ describe('TooltipDirective', () => {
   let buttonElement: any;
   let fixtureInstance: ComponentFixture<TestTooltipComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 
@@ -41,6 +42,9 @@ describe('TooltipDirective', () => {
       imports: [
         CoreTestingModule,
         TooltipModule
+      ],
+      providers: [
+        OverlayService
       ]
     });
 
@@ -67,7 +71,7 @@ describe('TooltipDirective', () => {
 
   /** Test Implementation */
   describe('mouseenter:mouseleave() Event', () => {
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       component.tooltip.ngOnInit();
       triggerEvent(buttonElement, 'mouseenter');
       fixtureInstance.detectChanges();

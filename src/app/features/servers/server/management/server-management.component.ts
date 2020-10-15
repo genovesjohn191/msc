@@ -1,62 +1,64 @@
 import {
-  Component,
-  OnDestroy,
-  ChangeDetectorRef,
+  Observable,
+  Subject,
+  Subscription
+} from 'rxjs';
+import {
+  map,
+  shareReplay,
+  takeUntil
+} from 'rxjs/operators';
+
+import {
   ChangeDetectionStrategy,
-  OnInit,
+  ChangeDetectorRef,
+  Component,
   Injector,
+  OnDestroy,
+  OnInit
 } from '@angular/core';
 import {
   ActivatedRoute,
   ParamMap
 } from '@angular/router';
 import {
-  Subject,
-  Observable,
-  Subscription
-} from 'rxjs';
-import {
-  takeUntil,
-  map,
-  shareReplay
-} from 'rxjs/operators';
-import { TranslateService } from '@ngx-translate/core';
-import {
   CoreRoutes,
   McsNavigationService
 } from '@app/core';
+import { McsEvent } from '@app/events';
 import {
-  isNullOrEmpty,
-  animateFactory,
-  getEncodedUrl,
-  unsubscribeSafely,
-  convertGbToMb,
-  getSafeProperty,
-  CommonDefinition,
-  createObject
-} from '@app/utilities';
+  ServerManageMedia,
+  ServerManageScale
+} from '@app/features-shared';
 import {
   IpAllocationMode,
   McsJob,
-  RouteKey,
-  McsServerUpdate,
-  McsServerMedia,
-  McsServer,
-  McsResourceCatalogItem,
-  McsServerThumbnail,
   McsResourceCatalog,
+  McsResourceCatalogItem,
+  McsServer,
   McsServerAttachMedia,
-  McsServerDetachMedia
+  McsServerDetachMedia,
+  McsServerMedia,
+  McsServerThumbnail,
+  McsServerUpdate,
+  RouteKey
 } from '@app/models';
-import {
-  ServerManageScale,
-  ServerManageMedia
-} from '@app/features-shared';
-import { McsEvent } from '@app/events';
 import {
   DialogConfirmation,
   DialogService
 } from '@app/shared';
+import {
+  animateFactory,
+  convertGbToMb,
+  createObject,
+  getEncodedUrl,
+  getSafeProperty,
+  isNullOrEmpty,
+  unsubscribeSafely,
+  CommonDefinition
+} from '@app/utilities';
+import { TranslateService } from '@ngx-translate/core';
+
 import { ServerDetailsBase } from '../server-details.base';
 
 // Enumeration
@@ -282,7 +284,8 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
     if (isNullOrEmpty(media)) { return; }
     let mediaDetails = new McsServerDetachMedia();
     mediaDetails.clientReferenceObject = {
-      serverId: server.id
+      serverId: server.id,
+      mediaId: media.id
     };
 
     // Set initial server status so that the spinner will show up immediately

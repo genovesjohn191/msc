@@ -1,16 +1,16 @@
-import {
-  async,
-  TestBed,
-  getTestBed
-} from '@angular/core/testing';
 import { HttpTestingController } from '@angular/common/http/testing';
+import {
+  waitForAsync,
+  TestBed
+} from '@angular/core/testing';
 /** Services and Models */
 import {
   McsApiSuccessResponse,
   McsTicket
 } from '@app/models';
-import { McsApiTicketsService } from './mcs-api-tickets.service';
+
 import { McsApiClientTestingModule } from '../testing';
+import { McsApiTicketsService } from './mcs-api-tickets.service';
 
 describe('McsApiTicketsService', () => {
 
@@ -24,7 +24,7 @@ describe('McsApiTicketsService', () => {
     id: 459
   };
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 
@@ -37,8 +37,8 @@ describe('McsApiTicketsService', () => {
 
     /** Testbed Component Compilation and Creation */
     TestBed.compileComponents().then(() => {
-      httpMock = getTestBed().get(HttpTestingController);
-      ticketsService = getTestBed().get(McsApiTicketsService);
+      httpMock = TestBed.inject(HttpTestingController);
+      ticketsService = TestBed.inject(McsApiTicketsService);
     });
   }));
 

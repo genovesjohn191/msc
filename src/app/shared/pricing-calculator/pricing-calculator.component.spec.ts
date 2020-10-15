@@ -1,17 +1,18 @@
 import {
-  async,
-  TestBed,
-  ComponentFixture
+  waitForAsync,
+  ComponentFixture,
+  TestBed
 } from '@angular/core/testing';
 import { DataStatus } from '@app/models';
 import { CommonDefinition } from '@app/utilities';
+
 import { PricingCalculatorComponent } from './pricing-calculator.component';
 
 describe('PricingCalculatorComponent', () => {
   let component: PricingCalculatorComponent;
   let fixture: ComponentFixture<PricingCalculatorComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

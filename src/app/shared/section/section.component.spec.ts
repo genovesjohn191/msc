@@ -1,8 +1,9 @@
 import {
-  async,
+  waitForAsync,
   TestBed
 } from '@angular/core/testing';
 import { CoreTestingModule } from '@app/core/testing';
+
 import { SectionComponent } from './section.component';
 
 describe('SectionComponent', () => {
@@ -10,7 +11,7 @@ describe('SectionComponent', () => {
   /** Stub Services/Components */
   let component: SectionComponent;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

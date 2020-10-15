@@ -2,6 +2,7 @@ import {
   Subscription,
   Subject
 } from 'rxjs';
+import _ from 'lodash';
 
 /**
  * This will check if the inputted object is null/undefined or empty,
@@ -93,6 +94,14 @@ export function cloneObject<T>(sourceObject: T): T {
     return target;
   };
   return memberwiseClone(sourceObject);
+}
+
+/**
+ * Deep clone the object using lodash
+ * @param sourceObject Source object to copy
+ */
+export function cloneDeep<T>(sourceObject: T): T {
+  return _.cloneDeep(sourceObject);
 }
 
 /**

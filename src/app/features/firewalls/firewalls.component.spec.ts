@@ -1,10 +1,11 @@
 import {
-  async,
+  waitForAsync,
   TestBed
 } from '@angular/core/testing';
 import { CommonDefinition } from '@app/utilities';
-import { FirewallsTestingModule } from './testing';
+
 import { FirewallsComponent } from './firewalls.component';
+import { FirewallsTestingModule } from './testing';
 
 describe('FirewallsComponent', () => {
 
@@ -12,7 +13,7 @@ describe('FirewallsComponent', () => {
   CommonDefinition.SEARCH_TIME = 0; // remove delay time
   let component: FirewallsComponent;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

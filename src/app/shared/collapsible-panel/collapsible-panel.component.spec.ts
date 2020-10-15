@@ -2,14 +2,15 @@ import {
   Component,
   ViewChild
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import {
-  async,
+  waitForAsync,
   TestBed
 } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+
+import { CoreTestingModule } from '../../core/testing';
 import { CollapsiblePanelComponent } from './collapsible-panel.component';
 import { CollapsiblePanelModule } from './collapsible-panel.module';
-import { CoreTestingModule } from '../../core/testing';
 
 @Component({
   selector: 'mcs-test',
@@ -25,7 +26,7 @@ describe('CollapsiblePanelComponent', () => {
   /** Stub Services/Components */
   let component: TestComponent;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 
@@ -73,7 +74,7 @@ describe('CollapsiblePanelComponent', () => {
   });
 
   describe('onCheckboxTick() when value is true', () => {
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       component.collapsiblePanelComponent.onCheckboxTick({ checked: true });
     }));
 
@@ -83,7 +84,7 @@ describe('CollapsiblePanelComponent', () => {
   });
 
   describe('onCheckboxTick() when value is false', () => {
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       component.collapsiblePanelComponent.onCheckboxTick({ checked: false });
     }));
 

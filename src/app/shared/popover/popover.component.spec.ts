@@ -1,5 +1,5 @@
 import {
-  async,
+  waitForAsync,
   TestBed
 } from '@angular/core/testing';
 
@@ -10,7 +10,7 @@ describe('PopoverComponent', () => {
   /** Stub Services/Components */
   let component: PopoverComponent;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 
@@ -44,7 +44,7 @@ describe('PopoverComponent', () => {
 
   /** Test Implementation */
   describe('ngAfterViewInit() when theme is light', () => {
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       component.theme = 'light';
       component.ngAfterViewInit();
     }));
@@ -58,7 +58,7 @@ describe('PopoverComponent', () => {
   });
 
   describe('ngAfterViewInit() when theme is dark', () => {
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       component.theme = 'dark';
       component.ngAfterViewInit();
     }));
@@ -72,7 +72,7 @@ describe('PopoverComponent', () => {
   });
 
   describe('ngAfterViewInit() when padding is none', () => {
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       component.padding = 'none';
       component.ngAfterViewInit();
     }));
@@ -86,7 +86,7 @@ describe('PopoverComponent', () => {
   });
 
   describe('ngAfterViewInit() when padding is default', () => {
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       component.padding = 'default';
       component.ngAfterViewInit();
     }));
@@ -100,7 +100,7 @@ describe('PopoverComponent', () => {
   });
 
   describe('ngAfterViewInit() when placement is top', () => {
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       component.placement = 'top';
       component.ngAfterViewInit();
     }));
@@ -113,7 +113,7 @@ describe('PopoverComponent', () => {
   });
 
   describe('ngAfterViewInit() when placement is bottom', () => {
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       component.placement = 'bottom';
       component.ngAfterViewInit();
     }));
@@ -126,7 +126,7 @@ describe('PopoverComponent', () => {
   });
 
   describe('ngAfterViewInit() when placement is left', () => {
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       component.placement = 'left';
       component.ngAfterViewInit();
     }));
@@ -140,7 +140,7 @@ describe('PopoverComponent', () => {
   });
 
   describe('ngAfterViewInit() when placement is right', () => {
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       component.placement = 'right';
       component.ngAfterViewInit();
     }));

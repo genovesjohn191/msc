@@ -1,13 +1,14 @@
 import {
-  async,
-  TestBed,
-  ComponentFixture
-} from '@angular/core/testing';
-import {
   Component,
-  ViewChild,
-  ElementRef
+  ElementRef,
+  ViewChild
 } from '@angular/core';
+import {
+  waitForAsync,
+  ComponentFixture,
+  TestBed
+} from '@angular/core/testing';
+
 import { IsNotNullOrUndefinedPipe } from './is-not-null-or-undefined.pipe';
 
 @Component({
@@ -42,7 +43,7 @@ describe('IsNotNullOrUndefinedPipe', () => {
   let component: TestComponent;
   let fixtureInstance: ComponentFixture<TestComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

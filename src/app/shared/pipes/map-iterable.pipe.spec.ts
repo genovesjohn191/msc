@@ -1,15 +1,16 @@
 import {
-  async,
-  TestBed,
-  ComponentFixture
-} from '@angular/core/testing';
-import {
   Component,
-  ViewChild,
-  ViewChildren,
   ElementRef,
-  QueryList
+  QueryList,
+  ViewChild,
+  ViewChildren
 } from '@angular/core';
+import {
+  waitForAsync,
+  ComponentFixture,
+  TestBed
+} from '@angular/core/testing';
+
 import { MapIterablePipe } from './map-iterable.pipe';
 
 @Component({
@@ -38,7 +39,7 @@ describe('MapIterablePipe', () => {
   let component: TestComponent;
   let fixtureInstance: ComponentFixture<TestComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

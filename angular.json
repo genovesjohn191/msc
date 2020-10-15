@@ -35,6 +35,13 @@
               "src/assets/scripts/jquery/jquery-ui.1.12.1.min.js",
               "src/assets/scripts/vcloud-js/wmks.min.js",
               "src/assets/scripts/googleTagManager.js"
+            ],
+            "allowedCommonJsDependencies": [
+              "hammerjs",
+              "hashids",
+              "util",
+              "@stomp/rx-stomp",
+              "file-saver"
             ]
           },
           "configurations": {
@@ -45,22 +52,25 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
-              "optimization": false,
+              "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
               "extractCss": true,
               "namedChunks": false,
               "aot": true,
-              "extractLicenses": false,
-              "statsJson": false,
-              "progress": false,
-              "vendorChunk": true,
-              "buildOptimizer": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
+                  "maximumWarning": "5mb",
+                  "maximumError": "8mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "10kb",
+                  "maximumError": "15kb"
                 }
               ]
             }

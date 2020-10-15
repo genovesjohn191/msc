@@ -1,17 +1,17 @@
 import {
-  async,
-  TestBed,
-  ComponentFixture
-} from '@angular/core/testing';
-import {
   Component,
   ViewChild
 } from '@angular/core';
+import {
+  waitForAsync,
+  ComponentFixture,
+  TestBed
+} from '@angular/core/testing';
+import { CoreTestingModule } from '@app/core/testing';
 import { triggerEvent } from '@app/utilities';
 
 import { ContextualHelpDirective } from './contextual-help.directive';
 import { ContextualHelpModule } from './contextual-help.module';
-import { CoreTestingModule } from '@app/core/testing';
 
 @Component({
   selector: 'mcs-test-contextualhelp',
@@ -29,7 +29,7 @@ describe('ContextualHelpDirective', () => {
   let buttonElement: any;
   let fixtureInstance: ComponentFixture<TestContextualHelpComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 
@@ -66,7 +66,7 @@ describe('ContextualHelpDirective', () => {
 
   /** Test Implementation */
   describe('hover() Event', () => {
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       component.contextual.ngOnInit();
       triggerEvent(buttonElement, 'mouseenter');
       fixtureInstance.detectChanges();

@@ -3,12 +3,13 @@ import {
   ViewChild
 } from '@angular/core';
 import {
-  async,
+  waitForAsync,
   TestBed
 } from '@angular/core/testing';
-import { WizardModule } from './wizard.module';
-import { WizardComponent } from './wizard.component';
 import { CoreTestingModule } from '@app/core/testing';
+
+import { WizardComponent } from './wizard.component';
+import { WizardModule } from './wizard.module';
 
 @Component({
   selector: 'mcs-wizard-test',
@@ -24,7 +25,7 @@ describe('WizardComponent', () => {
   /** Stub Services/Components */
   let component: TestWizardComponent;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

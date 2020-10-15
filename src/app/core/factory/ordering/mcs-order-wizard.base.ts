@@ -1,49 +1,56 @@
 import {
-  ViewChild,
-  Injector
-} from '@angular/core';
-import {
-  Observable,
+  throwError,
   BehaviorSubject,
-  throwError
+  Observable
 } from 'rxjs';
 import {
-  shareReplay,
-  tap,
-  startWith,
+  catchError,
   distinctUntilChanged,
-  catchError
+  shareReplay,
+  startWith,
+  tap
 } from 'rxjs/operators';
-import { TranslateService } from '@ngx-translate/core';
+
 import {
-  PricingCalculator,
-  IWizardStep
+  Component,
+  Inject,
+  InjectionToken,
+  Injector,
+  ViewChild
+} from '@angular/core';
+import {
+  McsEventTrack,
+  McsOrder,
+  McsOrderItemType,
+  McsOrderWorkflow,
+  OrderWorkflowAction,
+  OrderWorkflowSubmitStatus,
+  RouteKey
+} from '@app/models';
+import {
+  IWizardStep,
+  PricingCalculator
 } from '@app/shared';
 import {
-  McsDisposable,
-  isNullOrEmpty,
   getSafeProperty,
-  CommonDefinition
+  isNullOrEmpty,
+  CommonDefinition,
+  McsDisposable
 } from '@app/utilities';
-import {
-  McsOrder,
-  OrderWorkflowAction,
-  McsOrderWorkflow,
-  RouteKey,
-  McsOrderItemType,
-  McsFeatureFlag,
-  McsEventTrack,
-  OrderWorkflowSubmitStatus
-} from '@app/models';
-import { McsOrderBase } from './mcs-order.base';
+import { TranslateService } from '@ngx-translate/core';
+
+import { McsAccessControlService } from '../../authentication/mcs-access-control.service';
 import { McsWizardBase } from '../../base/mcs-wizard.base';
 import { McsNavigationService } from '../../services/mcs-navigation.service';
-import { McsAccessControlService } from '../../authentication/mcs-access-control.service';
+import { McsOrderBase } from './mcs-order.base';
+
 interface OrderEventTrack {
   orderDetailsStep?: McsEventTrack;
   billingDetailsStep: McsEventTrack;
 }
+export const ORDEREVENTTRACK_INJECTION = new InjectionToken<OrderEventTrack>('OrderEventTrack');
 
+@Component({ template: ''})
 export abstract class McsOrderWizardBase extends McsWizardBase implements McsDisposable {
   public order$: Observable<McsOrder>;
   public orderItemType$: Observable<McsOrderItemType>;
@@ -63,9 +70,10 @@ export abstract class McsOrderWizardBase extends McsWizardBase implements McsDis
   constructor(
     private _orderBase: McsOrderBase,
     protected _injector: Injector,
-    public orderEventTrack: OrderEventTrack
+    @Inject(ORDEREVENTTRACK_INJECTION) public orderEventTrack: OrderEventTrack
   ) {
     super(_orderBase);
+
     this.accessControlService = this._injector.get(McsAccessControlService);
     this._navigationService = this._injector.get(McsNavigationService);
     this.translateService = this._injector.get(TranslateService);

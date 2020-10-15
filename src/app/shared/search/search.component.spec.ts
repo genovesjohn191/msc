@@ -1,11 +1,12 @@
 import {
-  async,
-  TestBed,
+  fakeAsync,
   tick,
-  fakeAsync
+  waitForAsync,
+  TestBed
 } from '@angular/core/testing';
-import { CommonDefinition } from '@app/utilities';
 import { CoreTestingModule } from '@app/core/testing';
+import { CommonDefinition } from '@app/utilities';
+
 import { SearchComponent } from './search.component';
 
 describe('SearchComponent', () => {
@@ -13,7 +14,7 @@ describe('SearchComponent', () => {
   /** Stub Services/Components */
   let component: SearchComponent;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

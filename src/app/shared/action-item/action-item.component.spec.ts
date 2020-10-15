@@ -3,10 +3,11 @@ import {
   ViewChild
 } from '@angular/core';
 import {
-  async,
+  waitForAsync,
   TestBed
 } from '@angular/core/testing';
 import { CoreTestingModule } from '@app/core/testing';
+
 import { ActionItemComponent } from './action-item.component';
 import { ActionItemModule } from './action-item.module';
 
@@ -20,7 +21,7 @@ export class TestActionItemComponent {
 }
 
 describe('ActionItemComponent', () => {
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

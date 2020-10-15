@@ -3,12 +3,13 @@ import {
   ViewChild
 } from '@angular/core';
 import {
-  async,
-  TestBed,
-  ComponentFixture
+  waitForAsync,
+  ComponentFixture,
+  TestBed
 } from '@angular/core/testing';
-import { triggerEvent } from '@app/utilities';
 import { CoreTestingModule } from '@app/core/testing';
+import { triggerEvent } from '@app/utilities';
+
 import { AccordionComponent } from './accordion.component';
 import { AccordionModule } from './accordion.module';
 
@@ -26,7 +27,7 @@ describe('AccordionComponent', () => {
   /** Stub Services/Components */
   let fixtureInstance: ComponentFixture<TestAccordionComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 
@@ -130,7 +131,7 @@ describe('AccordionComponent', () => {
     let elements: any;
     let firstElement: any;
     let secondElement: any;
-    beforeEach(async((() => {
+    beforeEach(waitForAsync((() => {
       accordionElement = document.querySelector('.single-selection');
       elements = accordionElement.querySelectorAll('mcs-accordion-panel-header');
       firstElement = elements[0];
@@ -158,7 +159,7 @@ describe('AccordionComponent', () => {
     let elements: any;
     let firstElement: any;
     let secondElement: any;
-    beforeEach(async((() => {
+    beforeEach(waitForAsync((() => {
       accordionElement = document.querySelector('.multiple-selection');
       elements = accordionElement.querySelectorAll('mcs-accordion-panel-header');
       firstElement = elements[0];

@@ -1,14 +1,14 @@
-import {
-  async,
-  TestBed,
-  getTestBed,
-  ComponentFixture
-} from '@angular/core/testing';
 import { HttpTestingController } from '@angular/common/http/testing';
+import {
+  waitForAsync,
+  ComponentFixture,
+  TestBed
+} from '@angular/core/testing';
 import { CoreTestingModule } from '@app/core/testing';
 import { CommonDefinition } from '@app/utilities';
-import { ImageService } from './image.service';
+
 import { ImageComponent } from './image.component';
+import { ImageService } from './image.service';
 
 describe('ImageComponent', () => {
 
@@ -17,7 +17,7 @@ describe('ImageComponent', () => {
   let fixture: ComponentFixture<ImageComponent>;
   let component: ImageComponent;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 
@@ -45,7 +45,7 @@ describe('ImageComponent', () => {
 
     /** Tesbed Component Compilation and Creation */
     TestBed.compileComponents().then(() => {
-      httpMock = getTestBed().get(HttpTestingController);
+      httpMock = TestBed.inject(HttpTestingController);
       fixture = TestBed.createComponent(ImageComponent);
       fixture.detectChanges();
 
@@ -55,7 +55,7 @@ describe('ImageComponent', () => {
 
   /** Test Implementation */
   describe('ngOnChanges() when image type is SVG', () => {
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       component.key = CommonDefinition.ASSETS_IMAGE_MCS_LIGHT_LOGO_SVG;
       component.size = 'small';
       component.ngOnChanges();
@@ -86,7 +86,7 @@ describe('ImageComponent', () => {
   });
 
   describe('ngOnChanges() when image type is other type than SVG', () => {
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       component.key = CommonDefinition.ASSETS_IMAGE_MCS_LIGHT_LOGO;
       component.size = 'small';
       component.ngOnChanges();
