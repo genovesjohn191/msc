@@ -1,18 +1,19 @@
 import {
-  async,
-  TestBed,
+  discardPeriodicTasks,
   fakeAsync,
-  discardPeriodicTasks
+  waitForAsync,
+  TestBed
 } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { JobsProvisioningComponent } from './jobs-provisioning.component';
-import { getEnumString } from '@app/utilities';
+import { CoreTestingModule } from '@app/core/testing';
 import {
-  McsJob,
   JobStatus,
+  McsJob,
   McsTask
 } from '@app/models';
-import { CoreTestingModule } from '@app/core/testing';
+import { getEnumString } from '@app/utilities';
+
+import { JobsProvisioningComponent } from './jobs-provisioning.component';
 
 describe('JobsProvisioningComponent', () => {
 
@@ -46,7 +47,7 @@ describe('JobsProvisioningComponent', () => {
     return notification;
   };
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

@@ -1,27 +1,29 @@
+import {
+  NgxMatDatetimePickerModule,
+  NgxMatNativeDateModule,
+  NgxMatTimepickerModule
+} from '@angular-material-components/datetime-picker';
+import { NgxMatMomentModule } from '@angular-material-components/moment-adapter';
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import {
   FormsModule,
   ReactiveFormsModule
 } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
 import {
-  MatButtonModule,
-  MatDatepickerModule,
-  MatInputModule,
   MatNativeDateModule,
-  MatFormFieldModule,
   NativeDateModule
-} from '@angular/material';
-import { NgxMatMomentModule } from '@angular-material-components/moment-adapter';
-import {
-  NgxMatDatetimePickerModule,
-  NgxMatTimepickerModule,
-  NgxMatNativeDateModule
-} from '@angular-material-components/datetime-picker';
+} from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+
 import { DateTimePickerComponent } from './datetimepicker.component';
-import { TimePickerComponent } from './timepicker.component';
 import { MinimumTimeValidatorDirective } from './minimum-time-validator.directive';
 import { RequiredValidatorDirective } from './required-validator.directive';
+import { TimePickerComponent } from './timepicker.component';
+
 @NgModule({
   declarations: [
     DateTimePickerComponent,

@@ -1,18 +1,19 @@
 import {
-  async,
+  waitForAsync,
   TestBed
 } from '@angular/core/testing';
-import { TranslateService } from '@ngx-translate/core';
-import { UserPanelComponent } from './user-panel.component';
 import { CommonDefinition } from '@app/utilities';
+import { TranslateService } from '@ngx-translate/core';
+
 import { CoreLayoutTestingModule } from '../../testing';
+import { UserPanelComponent } from './user-panel.component';
 
 describe('UserPanelComponent', () => {
 
   /** Stub Services/Components */
   let component: UserPanelComponent;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

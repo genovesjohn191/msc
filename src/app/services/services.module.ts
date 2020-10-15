@@ -1,15 +1,17 @@
 import {
+  Injector,
+  ModuleWithProviders,
   NgModule,
   Optional,
-  SkipSelf,
-  ModuleWithProviders,
-  Injector
+  Provider,
+  SkipSelf
 } from '@angular/core';
-import {
-  stateManagers,
-  repositoryProviders
-} from './services.contants';
 import { isNullOrEmpty } from '@app/utilities';
+
+import {
+  repositoryProviders,
+  stateManagers
+} from './services.contants';
 
 @NgModule({
   providers: [
@@ -23,7 +25,7 @@ export class ServicesModule {
    * Use this method in your root module to provide the ServicesModule
    * and it should only be derived once
    */
-  public static forRoot(): ModuleWithProviders {
+  public static forRoot(): ModuleWithProviders<ServicesModule> {
     return { ngModule: ServicesModule };
   }
 
@@ -43,7 +45,7 @@ export class ServicesModule {
   private _initializeInjectors(): void {
     if (isNullOrEmpty(stateManagers)) { return; }
     stateManagers.forEach((stateManager) => {
-      this._injector.get(stateManager);
+      this._injector.get<Provider>(stateManager as any);
     });
   }
 }

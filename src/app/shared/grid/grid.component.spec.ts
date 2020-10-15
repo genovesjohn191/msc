@@ -3,10 +3,11 @@ import {
   ViewChild
 } from '@angular/core';
 import {
-  async,
+  waitForAsync,
   TestBed
 } from '@angular/core/testing';
 import { CoreTestingModule } from '@app/core/testing';
+
 import { GridComponent } from './grid.component';
 import { GridModule } from './grid.module';
 
@@ -20,7 +21,7 @@ export class TestComponent {
 }
 
 describe('GridComponent', () => {
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

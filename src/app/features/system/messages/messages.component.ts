@@ -8,13 +8,15 @@ import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import {
   McsTableListingBase,
-  CoreRoutes
+  CoreRoutes,
+  McsAccessControlService
 } from '@app/core';
 import {
   RouteKey,
   McsSystemMessage,
   McsQueryParam,
-  McsApiCollection
+  McsApiCollection,
+  McsPermission
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { McsEvent } from '@app/events';
@@ -37,6 +39,7 @@ export class SystemMessagesComponent extends McsTableListingBase<McsSystemMessag
   constructor(
     _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
+    private _accessControlService: McsAccessControlService,
     private _apiService: McsApiService,
     private _router: Router
   ) {
@@ -56,6 +59,10 @@ export class SystemMessagesComponent extends McsTableListingBase<McsSystemMessag
 
   public get timeZone(): string {
     return CommonDefinition.TIMEZONE_SYDNEY;
+  }
+
+  public get hasSystemMessageEditAccess(): boolean {
+    return this._accessControlService.hasPermission([McsPermission.SystemMessageEdit]);
   }
 
   /**

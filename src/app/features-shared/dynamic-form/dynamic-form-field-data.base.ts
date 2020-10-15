@@ -28,7 +28,7 @@ export class DynamicFormFieldDataBase implements DynamicFormFieldData {
   public suffix?: string;
 
   constructor(options: {
-    key?: string;
+    key: string;
     label?: string;
     placeholder?: string;
     value?: any;

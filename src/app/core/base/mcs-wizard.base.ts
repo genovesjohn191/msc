@@ -1,28 +1,38 @@
-import { ViewChild } from '@angular/core';
 import {
-  Subject,
-  Observable
+  Observable,
+  Subject
 } from 'rxjs';
 import {
-  takeUntil,
-  shareReplay
+  shareReplay,
+  takeUntil
 } from 'rxjs/operators';
+
+import {
+  Component,
+  Inject,
+  ViewChild
+} from '@angular/core';
+import {
+  DataStatus,
+  McsJob
+} from '@app/models';
 import {
   FormMessage,
   IWizardStep
 } from '@app/shared';
 import {
-  isNullOrUndefined,
   isNullOrEmpty,
-  McsDisposable,
-  unsubscribeSafely
+  isNullOrUndefined,
+  unsubscribeSafely,
+  McsDisposable
 } from '@app/utilities';
-import {
-  DataStatus,
-  McsJob
-} from '@app/models';
-import { IMcsWizard } from '../interfaces/mcs-wizard.interface';
 
+import {
+  IMcsWizard,
+  MCSWIZARD_INJECTION
+} from '../interfaces/mcs-wizard.interface';
+
+@Component({ template: '' })
 export abstract class McsWizardBase implements McsDisposable {
   public jobs$: Observable<McsJob[]>;
   public dataStatus$: Observable<DataStatus>;
@@ -33,7 +43,7 @@ export abstract class McsWizardBase implements McsDisposable {
   private _activeStep: IWizardStep;
   private _wizardDestroySubject = new Subject<void>();
 
-  constructor(private _wizardContext: IMcsWizard) {
+  constructor(@Inject(MCSWIZARD_INJECTION) private _wizardContext: IMcsWizard) {
     this._subscribeToErrorResponse();
     this._subscribeToStateChange();
     this._subscribeToDataStateChanges();

@@ -3,12 +3,13 @@ import {
   ViewChild
 } from '@angular/core';
 import {
-  async,
+  waitForAsync,
   TestBed
 } from '@angular/core/testing';
+import { CoreTestingModule } from '@app/core/testing';
+
 import { TabGroupComponent } from './tab-group.component';
 import { TabGroupModule } from './tab-group.module';
-import { CoreTestingModule } from '@app/core/testing';
 
 @Component({
   selector: 'mcs-test-tab-group',
@@ -24,7 +25,7 @@ describe('TabGroupComponent', () => {
   /** Stub Services/Components */
   let component: TabGroupTestComponent;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 
@@ -90,7 +91,7 @@ describe('TabGroupComponent', () => {
   });
 
   describe('selectTab()', () => {
-    beforeEach(async((() => {
+    beforeEach(waitForAsync((() => {
       component.tabGroupComponent.onClickTab(
         component.tabGroupComponent.tabs.toArray()[1]
       );

@@ -1,7 +1,8 @@
 import {
-  async,
+  waitForAsync,
   TestBed
 } from '@angular/core/testing';
+
 import { CapacityBarComponent } from './capacity-bar.component';
 
 describe('CapacityBarComponent', () => {
@@ -9,7 +10,7 @@ describe('CapacityBarComponent', () => {
   /** Stub Services/Components */
   let component: CapacityBarComponent;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

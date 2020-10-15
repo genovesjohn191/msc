@@ -1,18 +1,19 @@
 import {
-  async,
   inject,
+  waitForAsync,
   TestBed
 } from '@angular/core/testing';
-import { FooterComponent } from './footer.component';
+
 import { McsAssetsProvider } from '../../core';
 import { CoreLayoutTestingModule } from '../testing';
+import { FooterComponent } from './footer.component';
 
 describe('FooterComponent', () => {
 
   /** Stub Services/Components */
   let component: FooterComponent;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

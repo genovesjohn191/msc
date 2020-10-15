@@ -1,28 +1,29 @@
-import {
-  async,
-  TestBed,
-  getTestBed
-} from '@angular/core/testing';
 import { HttpTestingController } from '@angular/common/http/testing';
-/** Services and Models */
-import { McsApiServersService } from './mcs-api-servers.service';
 import {
-  McsJob,
+  waitForAsync,
+  TestBed
+} from '@angular/core/testing';
+import {
   McsApiSuccessResponse,
+  McsJob,
   McsServer,
-  McsServerThumbnail,
-  McsServerUpdate,
+  McsServerAttachMedia,
+  McsServerClone,
+  McsServerCreate,
+  McsServerCreateNic,
+  McsServerDetachMedia,
+  McsServerNic,
+  McsServerOperatingSystem,
   McsServerPowerstateCommand,
   McsServerStorageDevice,
   McsServerStorageDeviceUpdate,
-  McsServerNic,
-  McsServerCreateNic,
-  McsServerCreate,
-  McsServerClone,
-  McsServerOperatingSystem,
-  McsServerAttachMedia
+  McsServerThumbnail,
+  McsServerUpdate
 } from '@app/models';
+
 import { McsApiClientTestingModule } from '../testing';
+/** Services and Models */
+import { McsApiServersService } from './mcs-api-servers.service';
 
 describe('ServersApiService', () => {
 
@@ -40,7 +41,7 @@ describe('ServersApiService', () => {
     }
   };
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 
@@ -53,8 +54,8 @@ describe('ServersApiService', () => {
 
     /** Tesbed Component Compilation and Creation */
     TestBed.compileComponents().then(() => {
-      httpMock = getTestBed().get(HttpTestingController);
-      serversApiService = getTestBed().get(McsApiServersService);
+      httpMock = TestBed.inject(HttpTestingController);
+      serversApiService = TestBed.inject(McsApiServersService);
     });
   }));
 
@@ -509,7 +510,7 @@ describe('ServersApiService', () => {
       serversApiService.detachServerMedia(
         requestOptions.id,
         mediaId,
-        new McsServerAttachMedia()
+        new McsServerDetachMedia()
       ).subscribe((response) => {
         expect(response).toBeDefined();
         expect(response.status).toBe(200);

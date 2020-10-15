@@ -3,17 +3,18 @@ import {
   ViewChild
 } from '@angular/core';
 import {
-  async,
+  waitForAsync,
   TestBed
 } from '@angular/core/testing';
-import { SliderComponent } from './slider.component';
-import { SliderModule } from './slider.module';
 import { Key } from '@app/models';
 import {
-  triggerEvent,
+  createKeyboardEvent,
   createMouseEvent,
-  createKeyboardEvent
+  triggerEvent
 } from '@app/utilities';
+
+import { SliderComponent } from './slider.component';
+import { SliderModule } from './slider.module';
 
 @Component({
   selector: 'mcs-test-slider',
@@ -30,7 +31,7 @@ describe('SliderComponent', () => {
   let component: SliderTestComponent;
   let padding: number = 8; // padding of the slider component
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 
@@ -95,7 +96,7 @@ describe('SliderComponent', () => {
   });
 
   describe('onClick()', () => {
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       triggerEvent(component.sliderComponent.hostElement, 'mouseenter');
     }));
 
@@ -120,7 +121,7 @@ describe('SliderComponent', () => {
   });
 
   describe('onSlideStart()', () => {
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       triggerEvent(component.sliderComponent.hostElement, 'mouseenter');
     }));
 
@@ -145,7 +146,7 @@ describe('SliderComponent', () => {
   });
 
   describe('onSlide()', () => {
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       triggerEvent(component.sliderComponent.hostElement, 'mouseenter');
       triggerEvent(component.sliderComponent.hostElement, 'mousedown');
     }));
@@ -164,7 +165,7 @@ describe('SliderComponent', () => {
   });
 
   describe('onSlideEnd()', () => {
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       triggerEvent(component.sliderComponent.hostElement, 'mouseenter');
       triggerEvent(component.sliderComponent.hostElement, 'mousedown');
     }));
@@ -185,7 +186,7 @@ describe('SliderComponent', () => {
   });
 
   describe('onKeyDown()', () => {
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       triggerEvent(component.sliderComponent.hostElement, 'mouseenter');
     }));
 

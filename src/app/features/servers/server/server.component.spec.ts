@@ -1,20 +1,21 @@
 import { EventEmitter } from '@angular/core';
 import {
-  async,
+  waitForAsync,
   TestBed
 } from '@angular/core/testing';
-import { ServerComponent } from './server.component';
-import {
-  ServersTestingModule,
-  mockServerService
-} from '../testing';
+
 import { ServerService } from '../server/server.service';
+import {
+  mockServerService,
+  ServersTestingModule
+} from '../testing';
+import { ServerComponent } from './server.component';
 
 describe('ServerComponent', () => {
   /** Stub Services/Components */
   let component: ServerComponent;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

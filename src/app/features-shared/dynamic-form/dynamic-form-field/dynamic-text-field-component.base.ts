@@ -1,14 +1,17 @@
 import {
-  Input,
+  Component,
   EventEmitter,
+  Input,
   Output
 } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { isNullOrEmpty } from '@app/utilities';
-import { DynamicFormField } from '../dynamic-form-field.interface';
-import { DynamicFormFieldDataChangeEventParam } from '../dynamic-form-field-data.interface';
-import { DynamicFormFieldDataBase } from '../dynamic-form-field-data.base';
 
+import { DynamicFormFieldDataBase } from '../dynamic-form-field-data.base';
+import { DynamicFormFieldDataChangeEventParam } from '../dynamic-form-field-data.interface';
+import { DynamicFormField } from '../dynamic-form-field.interface';
+
+@Component({ template: '' })
 export abstract class DynamicTextFieldComponentBase implements DynamicFormField, ControlValueAccessor {
   @Input()
   public data: DynamicFormFieldDataBase;
@@ -31,12 +34,12 @@ export abstract class DynamicTextFieldComponentBase implements DynamicFormField,
   public clearFormFields(reuseValue: boolean): void {
     let preserveValue = reuseValue && this.data.settings && this.data.settings.preserve;
     if (!preserveValue) {
-      this.clearValue();
+      this._resetValue('');
     }
   }
 
-  private clearValue(): void {
-    this.data.value = this.data.initialValue;
+  private _resetValue(value: any): void {
+    this.data.value = value;
     this.valueChange(this.data.value);
   }
 

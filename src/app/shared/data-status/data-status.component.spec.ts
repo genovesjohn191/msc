@@ -3,12 +3,13 @@ import {
   ViewChild
 } from '@angular/core';
 import {
-  async,
-  TestBed,
-  ComponentFixture
+  waitForAsync,
+  ComponentFixture,
+  TestBed
 } from '@angular/core/testing';
 import { McsDataStatusFactory } from '@app/core';
 import { CoreTestingModule } from '@app/core/testing';
+
 import { DataStatusComponent } from './data-status.component';
 import { DataStatusModule } from './data-status.module';
 
@@ -27,7 +28,7 @@ describe('DataStatusComponent', () => {
   let fixture: ComponentFixture<TestDataStatusComponent>;
   let component: TestDataStatusComponent;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

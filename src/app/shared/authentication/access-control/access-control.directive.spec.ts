@@ -1,22 +1,22 @@
 import {
-  async,
-  TestBed,
-  getTestBed,
-  ComponentFixture,
-  fakeAsync,
-  tick,
-  discardPeriodicTasks
-} from '@angular/core/testing';
-import {
   Component,
   ViewChild
 } from '@angular/core';
+import {
+  discardPeriodicTasks,
+  fakeAsync,
+  tick,
+  waitForAsync,
+  ComponentFixture,
+  TestBed
+} from '@angular/core/testing';
 import { McsAuthenticationIdentity } from '@app/core';
+import { CoreTestingModule } from '@app/core/testing';
 import {
   McsIdentity,
   McsKeyValuePair
 } from '@app/models';
-import { CoreTestingModule } from '@app/core/testing';
+
 import { AccessControlDirective } from './access-control.directive';
 
 @Component({
@@ -35,7 +35,7 @@ describe('AccessControlDirective', () => {
   let fixtureInstance: ComponentFixture<TestComponent>;
   let mcsAuthenticationIdentity: McsAuthenticationIdentity;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 
@@ -64,7 +64,7 @@ describe('AccessControlDirective', () => {
       fixtureInstance = TestBed.createComponent(TestComponent);
       fixtureInstance.detectChanges();
       component = fixtureInstance.componentInstance;
-      mcsAuthenticationIdentity = getTestBed().get(McsAuthenticationIdentity);
+      mcsAuthenticationIdentity = TestBed.inject(McsAuthenticationIdentity);
     });
   }));
 

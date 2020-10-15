@@ -178,18 +178,14 @@
 
         <!-- Header and Data row -->
         <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
-        <div *mcsAccessControl="['SystemMessageEdit']; else: hasNoPermission">
           <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"
             mcsCursor="pointer"
-            (click)="navigateToSystemMessage(row)"
+            [mcsTriggerCursorIf]="hasSystemMessageEditAccess"
+            (click)="hasSystemMessageEditAccess ? navigateToSystemMessage(row) : null;"
             mcsId="system-message-row"
             mcsEventTracker="navigate-to-system-message"
             mcsEventCategory="system-message"
             mcsEventLabel="system-message-listing-page"></mcs-data-row>
-        </div>
-        <ng-template #hasNoPermission>
-          <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"></mcs-data-row>
-        </ng-template>
       </mcs-table>
 
       <!-- Paginator -->

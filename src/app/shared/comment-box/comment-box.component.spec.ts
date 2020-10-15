@@ -3,13 +3,14 @@ import {
   ViewChild
 } from '@angular/core';
 import {
-  async,
-  TestBed,
-  ComponentFixture
+  waitForAsync,
+  ComponentFixture,
+  TestBed
 } from '@angular/core/testing';
+import { CoreTestingModule } from '@app/core/testing';
+
 import { CommentBoxComponent } from './comment-box.component';
 import { CommentBoxModule } from './comment-box.module';
-import { CoreTestingModule } from '@app/core/testing';
 
 @Component({
   selector: 'mcs-test-comment-box',
@@ -26,7 +27,7 @@ describe('CommentBoxComponent', () => {
   let component: TestCommentBoxComponent;
   let fixtureInstance: ComponentFixture<TestCommentBoxComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

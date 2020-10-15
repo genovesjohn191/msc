@@ -2,15 +2,16 @@ import {
   Component,
   ViewChild
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import {
-  async,
+  waitForAsync,
   TestBed
 } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { CoreTestingModule } from '@app/core/testing';
 import { triggerEvent } from '@app/utilities';
+
 import { SelectComponent } from './select.component';
 import { SelectModule } from './select.module';
-import { CoreTestingModule } from '@app/core/testing';
 
 @Component({
   selector: 'mcs-test-select',
@@ -33,7 +34,7 @@ describe('SelectComponent', () => {
   /** Stub Services/Components */
   let component: TestSelectComponent;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 
@@ -87,7 +88,7 @@ describe('SelectComponent', () => {
   });
 
   describe('modelValue()', () => {
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       component.selectComponent.value = 'pizza-1';
     }));
 
@@ -97,7 +98,7 @@ describe('SelectComponent', () => {
   });
 
   describe('openPanel()', () => {
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       component.selectComponent.openPanel();
     }));
 
@@ -107,7 +108,7 @@ describe('SelectComponent', () => {
   });
 
   describe('closePanel()', () => {
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       component.selectComponent.closePanel();
     }));
 

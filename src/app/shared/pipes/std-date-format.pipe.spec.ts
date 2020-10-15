@@ -1,14 +1,15 @@
 import {
-  async,
-  TestBed,
-  ComponentFixture
-} from '@angular/core/testing';
-import {
   Component,
-  ViewChild,
-  ElementRef
+  ElementRef,
+  ViewChild
 } from '@angular/core';
+import {
+  waitForAsync,
+  ComponentFixture,
+  TestBed
+} from '@angular/core/testing';
 import { CoreTestingModule } from '@app/core/testing';
+
 import { StdDateFormatPipe } from './std-date-format.pipe';
 
 @Component({
@@ -31,7 +32,7 @@ describe('StdDateFormatPipe', () => {
   let component: TestComponent;
   let fixtureInstance: ComponentFixture<TestComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

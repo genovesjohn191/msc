@@ -1,16 +1,16 @@
 import {
-  async,
-  TestBed,
-  getTestBed,
-  ComponentFixture
-} from '@angular/core/testing';
-import {
   Component,
   ViewChild
 } from '@angular/core';
+import {
+  waitForAsync,
+  ComponentFixture,
+  TestBed
+} from '@angular/core/testing';
 import { McsCookieService } from '@app/core';
 import { CoreTestingModule } from '@app/core/testing';
 import { CommonDefinition } from '@app/utilities';
+
 import { ExclusiveForAccountDirective } from './exclusive-for-account.directive';
 
 @Component({
@@ -29,7 +29,7 @@ describe('ExclusiveForAccountDirective', () => {
   let fixtureInstance: ComponentFixture<TestComponent>;
   let cookieService: McsCookieService;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 
@@ -57,7 +57,7 @@ describe('ExclusiveForAccountDirective', () => {
     TestBed.compileComponents().then(() => {
       fixtureInstance = TestBed.createComponent(TestComponent);
       fixtureInstance.detectChanges();
-      cookieService = getTestBed().get(McsCookieService);
+      cookieService = TestBed.inject(McsCookieService);
       component = fixtureInstance.componentInstance;
     });
   }));

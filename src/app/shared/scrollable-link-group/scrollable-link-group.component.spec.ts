@@ -3,12 +3,13 @@ import {
   ViewChild
 } from '@angular/core';
 import {
-  async,
+  waitForAsync,
   TestBed
 } from '@angular/core/testing';
 import { CoreTestingModule } from '@app/core/testing';
-import { ScrollableLinkGroupModule } from './scrollable-link-group.module';
+
 import { ScrollableLinkGroupComponent } from './scrollable-link-group.component';
+import { ScrollableLinkGroupModule } from './scrollable-link-group.module';
 
 @Component({
   selector: 'mcs-test',
@@ -24,7 +25,7 @@ describe('ScrollableLinkGroupComponent', () => {
   /** Stub Services/Components */
   let component: TestComponent;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

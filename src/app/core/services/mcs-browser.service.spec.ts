@@ -1,17 +1,17 @@
 import {
-  async,
-  TestBed,
-  getTestBed
+  waitForAsync,
+  TestBed
 } from '@angular/core/testing';
-import { CoreTestingModule } from '../testing';
+
 import { McsBrowserService } from '../services/mcs-browser.service';
+import { CoreTestingModule } from '../testing';
 
 describe('MscBrowserService', () => {
 
   /** Stub Services Mock */
   let mcsBrowserService: McsBrowserService;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 
@@ -24,7 +24,7 @@ describe('MscBrowserService', () => {
 
     /** Tesbed Component Compilation and Creation */
     TestBed.compileComponents().then(() => {
-      mcsBrowserService = getTestBed().get(McsBrowserService);
+      mcsBrowserService = TestBed.inject(McsBrowserService);
     });
   }));
 

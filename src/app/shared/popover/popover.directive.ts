@@ -1,40 +1,39 @@
+import { Subscription } from 'rxjs';
+
 import {
+  ComponentRef,
   Directive,
   ElementRef,
-  ViewContainerRef,
-  NgZone,
-  OnInit,
-  OnDestroy,
+  EventEmitter,
   Input,
+  NgZone,
+  OnDestroy,
+  OnInit,
   Output,
   TemplateRef,
-  ComponentRef,
-  EventEmitter
+  ViewContainerRef
 } from '@angular/core';
 import {
-  Router,
-  // import as RouterEvent to avoid confusion with the DOM Event
   Event as RouterEvent,
-  NavigationEnd
+  NavigationEnd,
+  Router
 } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { McsScrollDispatcherService } from '@app/core';
 import {
-  McsScrollDispatcherService,
-  McsOverlayService,
-  McsOverlayRef,
-  McsOverlayState,
-  McsPortalComponent
-} from '@app/core';
-import {
-  getElementPositionFromHost,
-  getElementPosition,
-  registerEvent,
-  isNullOrEmpty,
-  unregisterEvent,
   getElementOffset,
-  unsubscribeSafely,
-  getSafeProperty
+  getElementPosition,
+  getElementPositionFromHost,
+  getSafeProperty,
+  isNullOrEmpty,
+  registerEvent,
+  unregisterEvent,
+  unsubscribeSafely
 } from '@app/utilities';
+
+import { OverlayConfig } from '../overlay/overlay-config';
+import { OverlayRef } from '../overlay/overlay-ref';
+import { OverlayService } from '../overlay/overlay.service';
+import { PortalComponent } from '../portal-template/portal-component';
 import { PopoverComponent } from './popover.component';
 import { PopoverService } from './popover.service';
 
@@ -87,7 +86,7 @@ export class PopoverDirective implements OnInit, OnDestroy {
   public componentRef: ComponentRef<PopoverComponent>;
   public zoneSubscription: Subscription;
   private _routerSubscription: Subscription;
-  private _overlayRef: McsOverlayRef;
+  private _overlayRef: OverlayRef;
 
   /**
    * Event handler references
@@ -102,7 +101,7 @@ export class PopoverDirective implements OnInit, OnDestroy {
     private _ngZone: NgZone,
     private _router: Router,
     private _scrollDispatcher: McsScrollDispatcherService,
-    private _overlayService: McsOverlayService,
+    private _overlayService: OverlayService,
     private _popoverService: PopoverService
   ) {
     // Set default values for Inputs
@@ -149,13 +148,13 @@ export class PopoverDirective implements OnInit, OnDestroy {
     this._removeActivePopover();
 
     // Create overlay element
-    let overlayState = new McsOverlayState();
+    let overlayState = new OverlayConfig();
     overlayState.hasBackdrop = false;
     overlayState.pointerEvents = 'auto';
     this._overlayRef = this._overlayService.create(overlayState);
 
     // Create template portal and attach to overlay
-    let portalComponent = new McsPortalComponent(
+    let portalComponent = new PortalComponent(
       PopoverComponent, this._viewContainerRef, this.content
     );
 

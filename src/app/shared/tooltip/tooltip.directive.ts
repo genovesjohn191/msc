@@ -1,32 +1,32 @@
-import {
-  Input,
-  Directive,
-  OnInit,
-  AfterContentInit,
-  OnDestroy,
-  ElementRef,
-  ViewContainerRef,
-  NgZone
-} from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+
 import {
-  McsOverlayRef,
-  McsOverlayState,
-  McsOverlayService,
-  McsPortalComponent
-} from '@app/core';
+  AfterContentInit,
+  Directive,
+  ElementRef,
+  Input,
+  NgZone,
+  OnDestroy,
+  OnInit,
+  ViewContainerRef
+} from '@angular/core';
 import {
+  coerceBoolean,
   isNullOrEmpty,
   registerEvent,
   unregisterEvent,
-  coerceBoolean,
   unsubscribeSafely
 } from '@app/utilities';
+
+import { OverlayConfig } from '../overlay/overlay-config';
+import { OverlayRef } from '../overlay/overlay-ref';
+import { OverlayService } from '../overlay/overlay.service';
+import { PortalComponent } from '../portal-template/portal-component';
 import {
+  TooltipColor,
   TooltipComponent,
-  TooltipPosition,
-  TooltipColor
+  TooltipPosition
 } from './tooltip.component';
 
 // Contant declaration
@@ -85,7 +85,7 @@ export class TooltipDirective implements OnInit, AfterContentInit, OnDestroy {
   private _color: TooltipColor = 'dark';
 
   // Others declaration
-  private _overlayRef: McsOverlayRef | null;
+  private _overlayRef: OverlayRef | null;
   private _tooltipInstance: TooltipComponent | null;
   private _destroySubject = new Subject<any>();
 
@@ -96,7 +96,7 @@ export class TooltipDirective implements OnInit, AfterContentInit, OnDestroy {
   constructor(
     private _elementRef: ElementRef,
     private _viewContainerRef: ViewContainerRef,
-    private _overlayService: McsOverlayService,
+    private _overlayService: OverlayService,
     private _ngZone: NgZone
   ) { }
 
@@ -167,7 +167,7 @@ export class TooltipDirective implements OnInit, AfterContentInit, OnDestroy {
    */
   private _createTooltip(): void {
     this._overlayRef = this._createOverlay();
-    let portal = new McsPortalComponent(TooltipComponent, this._viewContainerRef);
+    let portal = new PortalComponent(TooltipComponent, this._viewContainerRef);
     this._tooltipInstance = this._overlayRef.attachComponent(portal).instance;
 
     // Close the tooltip when the animation ended
@@ -192,9 +192,9 @@ export class TooltipDirective implements OnInit, AfterContentInit, OnDestroy {
   /**
    * Create the overlay of the tooltip
    */
-  private _createOverlay(): McsOverlayRef {
-    let overlayRef: McsOverlayRef;
-    let overlayState = new McsOverlayState();
+  private _createOverlay(): OverlayRef {
+    let overlayRef: OverlayRef;
+    let overlayState = new OverlayConfig();
 
     // Create overlay element
     overlayState.hasBackdrop = false;

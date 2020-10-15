@@ -1,19 +1,23 @@
+import { Subject } from 'rxjs';
+
 import {
-  ComponentFactoryResolver,
   ApplicationRef,
+  ComponentFactoryResolver,
   ComponentRef,
   EmbeddedViewRef,
+  Injector,
   NgZone,
-  Injector
+  TemplateRef
 } from '@angular/core';
-import { Subject } from 'rxjs';
 import {
+  getElementPositionFromHost,
+  getSafeProperty,
   isNullOrEmpty,
   registerEvent,
-  getElementPositionFromHost,
-  McsPlacementType,
-  McsAlignmentType
+  McsAlignmentType,
+  McsPlacementType
 } from '@app/utilities';
+
 import { PortalComponent } from '../portal-template/portal-component';
 import { PortalTemplate } from '../portal-template/portal-template';
 import { OverlayConfig } from './overlay-config';
@@ -62,22 +66,33 @@ export class OverlayRef {
   public attachComponent<T>(portal: PortalComponent<T>): ComponentRef<T> {
     if (isNullOrEmpty(portal)) { return undefined; }
 
-    let componentFactory = this._componentFactoryResolver.resolveComponentFactory(portal.component);
+    let componentFactoryResolver = portal.componentFactoryResolver || this._componentFactoryResolver;
+    let componentFactory = componentFactoryResolver.resolveComponentFactory(portal.component);
+    let componentInjector = portal.injector || getSafeProperty(portal, obj => obj.viewContainerRef.injector);
     let componentRef: ComponentRef<T>;
 
     // Use the viewcontainerref of the component if specified, otherwise use the componentFactory
     if (portal.viewContainerRef) {
+      let templateRootNodes = null;
+
+      // This will be created only once the content of the portal host was defined, otherwise it will skipped
+      if (!isNullOrEmpty(portal.templateRef)) {
+        let templateRefDetails = portal.viewContainerRef.createEmbeddedView(portal.templateRef as TemplateRef<T>);
+        templateRootNodes = [getSafeProperty(templateRefDetails, obj => obj.rootNodes)];
+      }
+
       componentRef = portal.viewContainerRef.createComponent(
         componentFactory,
         portal.viewContainerRef.length,
-        portal.injector || portal.viewContainerRef.parentInjector,
-        portal.getAttachmentNodes()
+        componentInjector,
+        templateRootNodes
       );
+
       this._setDisposeFunc(() => componentRef.destroy());
     } else {
-      componentRef = componentFactory.create(
-        portal.injector || this._injector);
+      componentRef = componentFactory.create(portal.injector || this._injector);
       this._applicationRef.attachView(componentRef.hostView);
+
       this._setDisposeFunc(() => {
         this._applicationRef.detachView(componentRef.hostView);
         componentRef.destroy();

@@ -1,7 +1,7 @@
 import {
-  ViewContainerRef,
   Injector,
-  TemplateRef
+  TemplateRef,
+  ViewContainerRef
 } from '@angular/core';
 import { McsComponentType } from '@app/utilities';
 
@@ -30,6 +30,19 @@ export class McsPortalComponent<T> {
    * Return the equivalent templateRef attachment nodes
    */
   public getAttachmentNodes(): any[] {
+    // if (!this.viewContainerRef || !this.templateRef) { return undefined; }
+    // let contentViewNodes: any[] = new Array();
+    // let attachmentNodes = this.viewContainerRef
+    //   .createEmbeddedView(this.templateRef as TemplateRef<T>)
+    //   .rootNodes;
+
+    // contentViewNodes.push(attachmentNodes);
+    // return contentViewNodes;
+
+    // TODO(apascual): Issue here https://github.com/angular/angular/issues/35412
+    // Working Sample: https://ng-run.com/edit/pG94AVIEWn4rN2eA2rXT
+    // Do not create the child elements using ViewContainerRef, instead, use the ComponentFactory
+
     if (!this.viewContainerRef || !this.templateRef) { return undefined; }
     let contentViewNodes: any[] = new Array();
     let attachmentNodes = this.viewContainerRef
@@ -38,5 +51,6 @@ export class McsPortalComponent<T> {
 
     contentViewNodes.push(attachmentNodes);
     return contentViewNodes;
+
   }
 }

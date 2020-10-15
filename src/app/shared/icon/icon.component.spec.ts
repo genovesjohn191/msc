@@ -1,12 +1,12 @@
-import {
-  async,
-  TestBed,
-  getTestBed,
-  ComponentFixture
-} from '@angular/core/testing';
 import { HttpTestingController } from '@angular/common/http/testing';
+import {
+  waitForAsync,
+  ComponentFixture,
+  TestBed
+} from '@angular/core/testing';
 import { CoreTestingModule } from '@app/core/testing';
 import { CommonDefinition } from '@app/utilities';
+
 import { IconComponent } from './icon.component';
 import { IconService } from './icon.service';
 
@@ -17,7 +17,7 @@ describe('IconComponent', () => {
   let fixture: ComponentFixture<IconComponent>;
   let component: IconComponent;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 
@@ -45,7 +45,7 @@ describe('IconComponent', () => {
 
     /** Tesbed Component Compilation and Creation */
     TestBed.compileComponents().then(() => {
-      httpMock = getTestBed().get(HttpTestingController);
+      httpMock = TestBed.inject(HttpTestingController);
       fixture = TestBed.createComponent(IconComponent);
       fixture.detectChanges();
 
@@ -55,7 +55,7 @@ describe('IconComponent', () => {
 
   /** Test Implementation */
   describe('ngOnChanges() when icon type is SVG', () => {
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       component.key = CommonDefinition.ASSETS_SVG_ADD_BLACK;
       component.size = 'small';
       component.ngOnChanges();
@@ -86,7 +86,7 @@ describe('IconComponent', () => {
   });
 
   describe('ngOnChanges() when icon type is Image(jpeg, png, gif)', () => {
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       component.key = CommonDefinition.ASSETS_GIF_LOADER_SPINNER;
       component.size = 'small';
       component.ngOnChanges();

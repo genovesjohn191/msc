@@ -61,7 +61,7 @@ export class DynamicSelectVdcComponent extends DynamicSelectFieldComponentBase<M
     switch (params.eventName) {
       case 'az-change':
         this._az = params.value;
-        this.filterOptions();
+        this.retrieveOptions();
     }
   }
 

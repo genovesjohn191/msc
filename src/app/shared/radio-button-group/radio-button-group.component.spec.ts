@@ -2,14 +2,15 @@ import {
   Component,
   ViewChild
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import {
-  async,
+  waitForAsync,
   TestBed
 } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { CoreTestingModule } from '@app/core/testing';
+
 import { RadioButtonGroupComponent } from './radio-button-group.component';
 import { RadioButtonGroupModule } from './radio-button-group.module';
-import { CoreTestingModule } from '@app/core/testing';
 
 @Component({
   selector: 'mcs-test-radio-button-group',
@@ -27,7 +28,7 @@ describe('RadioButtonGroupComponent', () => {
   /** Stub Services/Components */
   let component: TestRadioButtonGroupComponent;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

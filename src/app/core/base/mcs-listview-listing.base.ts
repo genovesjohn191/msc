@@ -1,37 +1,42 @@
 import {
-  ViewChild,
-  AfterViewInit,
-  Injector,
-  ChangeDetectorRef
-} from '@angular/core';
-import {
-  Observable,
   BehaviorSubject,
+  Observable,
   Subscription
 } from 'rxjs';
 import {
-  tap,
-  map
+  map,
+  tap
 } from 'rxjs/operators';
+
 import {
-  Search,
-  ListPanelConfig
-} from '@app/shared';
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  Inject,
+  InjectionToken,
+  Injector,
+  ViewChild
+} from '@angular/core';
 import {
-  McsQueryParam,
-  McsApiCollection
+  McsApiCollection,
+  McsQueryParam
 } from '@app/models';
 import {
-  CommonDefinition,
+  ListPanelConfig,
+  Search
+} from '@app/shared';
+import {
   getSafeProperty,
-  McsDisposable,
+  isNullOrEmpty,
   unsubscribeSafely,
-  isNullOrEmpty
+  CommonDefinition,
+  McsDisposable
 } from '@app/utilities';
 import {
-  EventBusState,
-  EventBusDispatcherService
+  EventBusDispatcherService,
+  EventBusState
 } from '@peerlancers/ngx-event-bus';
+
 import { McsListViewDatasource } from '../data-access/mcs-listview-datasource';
 
 export interface ListViewListingConfig {
@@ -40,7 +45,9 @@ export interface ListViewListingConfig {
   dataDeleteEvent?: EventBusState<any>;
   panelSettings?: ListPanelConfig;
 }
+export const LISTVIEWCONFIG_INJECTION = new InjectionToken<ListViewListingConfig>('ListViewListingConfig');
 
+@Component({ template: ''})
 export abstract class McsListViewListingBase<TEntity> implements AfterViewInit, McsDisposable {
 
   public listViewDatasource = new McsListViewDatasource<TEntity>();
@@ -55,7 +62,7 @@ export abstract class McsListViewListingBase<TEntity> implements AfterViewInit, 
   constructor(
     protected injector: Injector,
     protected changeDetectorRef: ChangeDetectorRef,
-    public listViewConfig: ListViewListingConfig = {}
+    @Inject(LISTVIEWCONFIG_INJECTION) public listViewConfig: ListViewListingConfig = {}
   ) {
     this.eventDispatcher = injector.get(EventBusDispatcherService);
     this._registerDataEvents();

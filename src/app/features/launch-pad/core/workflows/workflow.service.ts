@@ -4,10 +4,10 @@ import { isNullOrEmpty } from '@app/utilities';
 
 import { WorkflowGroupConfig } from './workflow-group.interface';
 import { WorkflowFactory } from './workflow.factory';
-import { LaunchPadWorkflow } from '../workflow';
+import { LaunchPadWorkflow } from './workflow';
 import { WorkflowGroupId } from './workflow-groups/workflow-group-type.enum';
-import { workflowGroupMap } from './workflow-groups/workflow-group.map';
-import { productWorkflowGroupsMap } from './workflow-groups/product-workflow-groups.map';
+import { workflowGroupMap } from './workflow-group.map';
+import { productWorkflowGroupsMap } from './product-workflow-groups.map';
 
 @Injectable()
 export class WorkflowService {

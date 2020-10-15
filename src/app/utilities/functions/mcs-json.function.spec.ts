@@ -1,13 +1,14 @@
-import { async } from '@angular/core/testing';
+import { waitForAsync } from '@angular/core/testing';
 import { JsonProperty } from '@app/utilities';
+
 import {
-  reviverParser,
-  convertMapToJsonObject,
+  compareJsons,
   convertJsonToMapObject,
-  serializeObjectToJson,
+  convertMapToJsonObject,
   deserializeJsonToObject,
   isJson,
-  compareJsons
+  reviverParser,
+  serializeObjectToJson
 } from './mcs-json.function';
 
 // Dummy test object class
@@ -70,7 +71,7 @@ describe('JSON Functions', () => {
 
   describe('convertMapToJsonObject()', () => {
     let testObject = new Map<string, string>();
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       testObject.set('first', 'value1');
       testObject.set('second', 'value2');
     }));
@@ -85,7 +86,7 @@ describe('JSON Functions', () => {
 
   describe('convertJsonToMapObject()', () => {
     let testObject: any;
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       testObject = JSON.parse('{"serverName": {"text": "server name", "value": true} }');
     }));
 

@@ -1,19 +1,23 @@
-import { Component, Inject } from '@angular/core';
+import {
+  Component,
+  Inject
+} from '@angular/core';
 import {
   MatBottomSheetRef,
-  MatListItem,
   MAT_BOTTOM_SHEET_DATA
-} from '@angular/material';
+} from '@angular/material/bottom-sheet';
+import { MatListItem } from '@angular/material/list';
 import { McsEvent } from '@app/events';
 import { ProductType } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
 import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+
 import {
   LaunchPadWorkflowSelectorService,
   WorkflowSelectorItem
 } from './workflow-selector.service';
-import { WorkflowGroupId } from './workflows/workflow-groups/workflow-group-type.enum';
-import { WorkflowService } from './workflows/workflow.service';
+import { WorkflowGroupId } from '../workflows/workflow-groups/workflow-group-type.enum';
+import { WorkflowService } from '../workflows/workflow.service';
 
 export interface WorkflowSelectorConfig {
   type: ProductType;

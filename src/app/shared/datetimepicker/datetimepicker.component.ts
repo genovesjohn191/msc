@@ -1,66 +1,68 @@
+
+import 'moment-timezone';
+
 import {
-  Component,
-  Output,
-  EventEmitter,
-  Input,
-  ChangeDetectionStrategy,
-  ViewEncapsulation,
-  OnDestroy,
-  ElementRef,
-  Optional,
-  OnInit,
-  DoCheck,
-  Self
-} from '@angular/core';
-import { MatDatepickerInputEvent } from '@angular/material';
-import { OverlayContainer } from '@angular/cdk/overlay';
-import {
-  FormGroupDirective,
-  NgForm,
-  NgControl
-} from '@angular/forms';
-import {
-  Observable,
-  BehaviorSubject
+  BehaviorSubject,
+  Observable
 } from 'rxjs';
 import {
   distinctUntilChanged,
   map
 } from 'rxjs/operators';
+
 import {
-  NGX_MAT_DATE_FORMATS,
-  NgxMatDateAdapter
+  NgxMatDateAdapter,
+  NGX_MAT_DATE_FORMATS
 } from '@angular-material-components/datetime-picker';
-import * as momenttz from 'moment-timezone';
-import * as moment from 'moment';
-import { Moment } from 'moment';
+import { OverlayContainer } from '@angular/cdk/overlay';
 import {
-  McsUniqueId,
-  McsFormFieldControlBase
+  ChangeDetectionStrategy,
+  Component,
+  DoCheck,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Optional,
+  Output,
+  Self,
+  ViewEncapsulation
+} from '@angular/core';
+import {
+  FormGroupDirective,
+  NgControl,
+  NgForm
+} from '@angular/forms';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import {
+  McsFormFieldControlBase,
+  McsUniqueId
 } from '@app/core';
 import {
-  coerceBoolean,
-  ErrorStateMatcher,
-  unsubscribeSafely,
-  isNullOrEmpty,
-  compareDates,
-  coerceArray,
-  getCurrentDate,
   addMonthsToDate,
-  getSafeProperty
+  coerceArray,
+  coerceBoolean,
+  compareDates,
+  getCurrentDate,
+  getSafeProperty,
+  isNullOrEmpty,
+  unsubscribeSafely,
+  ErrorStateMatcher
 } from '@app/utilities';
+
 import {
-  MCS_DATE_FORMATS,
-  DEFAULT_LOCALE,
-  DEFAULT_LABEL,
-  DEFAULT_HOUR_STEP,
-  DEFAULT_MIN_STEP,
-  DEFAULT_TIMEZONE,
+  DATETIMEZONE_CONVERTER_FORMAT,
   DEFAULT_DATE_FORMAT,
   DEFAULT_DATETIME_FORMAT,
-  DATETIMEZONE_CONVERTER_FORMAT
+  DEFAULT_HOUR_STEP,
+  DEFAULT_LABEL,
+  DEFAULT_LOCALE,
+  DEFAULT_MIN_STEP,
+  MCS_DATE_FORMATS
 } from './datetimepicker.constants';
 
+const moment = require('moment-timezone');
 const CURRENT_DATE = getCurrentDate();
 const DEFAULT_MAXIMUM_DATE = addMonthsToDate(CURRENT_DATE, 6);
 
@@ -83,7 +85,7 @@ export class DateTimePickerComponent extends McsFormFieldControlBase<any>
 
   public dateString$: Observable<string>;
 
-  private _dateChange: BehaviorSubject<Moment>;
+  private _dateChange: BehaviorSubject<moment.Moment>;
 
   @Output()
   public dateChanged: EventEmitter<Date> = new EventEmitter<Date>();
@@ -252,7 +254,7 @@ export class DateTimePickerComponent extends McsFormFieldControlBase<any>
     let convertedDate = this._createDateWithProperTimezone(value);
     this._dateChange.next(convertedDate);
     this._propagateChange(convertedDate.utc().toDate());
-    let convertedDateInTimezone = convertedDate.clone().tz(this.timezone);
+    let convertedDateInTimezone = moment(convertedDate).tz(this.timezone);
     this.defaultTime = [convertedDateInTimezone.hours(), convertedDateInTimezone.minutes()];
   }
 
@@ -281,19 +283,19 @@ export class DateTimePickerComponent extends McsFormFieldControlBase<any>
     return this._hideTime ? DEFAULT_DATE_FORMAT : DEFAULT_DATETIME_FORMAT;
   }
 
-  private _createDateWithProperTimezone(value: Date): Moment {
+  private _createDateWithProperTimezone(value: Date): moment.Moment {
     moment.locale(this.locale);
     moment.tz.setDefault(this.timezone);
     let formattedDate = moment(value).clone().format(DATETIMEZONE_CONVERTER_FORMAT);
-    let momentObj = momenttz.tz(formattedDate, this.timezone);
+    let momentObj = moment.tz(formattedDate, this.timezone);
     return momentObj;
   }
 
   private _subscribeToDateChange(): void {
     this.dateString$ = this._dateChange.asObservable().pipe(
       distinctUntilChanged(),
-      map((momentDate) => {
-        return momentDate.clone().tz(this.timezone).format(this._getDefaultDateTimeFormat());
+      map((momentDate: moment.Moment) => {
+        return moment(momentDate).tz(this.timezone).format(this._getDefaultDateTimeFormat());
       })
     );
   }

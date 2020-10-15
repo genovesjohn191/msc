@@ -1,17 +1,17 @@
-import {
-  async,
-  TestBed,
-  getTestBed
-} from '@angular/core/testing';
 import { HttpTestingController } from '@angular/common/http/testing';
-/** Services and Models */
-import { McsApiMediaService } from './mcs-api-media.service';
+import {
+  waitForAsync,
+  TestBed
+} from '@angular/core/testing';
 import {
   McsApiSuccessResponse,
   McsResourceMedia,
   McsResourceMediaServer
 } from '@app/models';
+
 import { McsApiClientTestingModule } from '../testing';
+/** Services and Models */
+import { McsApiMediaService } from './mcs-api-media.service';
 
 describe('McsApiMediaService', () => {
 
@@ -25,7 +25,7 @@ describe('McsApiMediaService', () => {
     id: 459
   };
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 
@@ -38,8 +38,8 @@ describe('McsApiMediaService', () => {
 
     /** Testbed Component Compilation and Creation */
     TestBed.compileComponents().then(() => {
-      httpMock = getTestBed().get(HttpTestingController);
-      mediaApiService = getTestBed().get(McsApiMediaService);
+      httpMock = TestBed.inject(HttpTestingController);
+      mediaApiService = TestBed.inject(McsApiMediaService);
     });
   }));
 

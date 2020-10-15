@@ -3,9 +3,10 @@ import {
   ViewChild
 } from '@angular/core';
 import {
-  async,
+  waitForAsync,
   TestBed
 } from '@angular/core/testing';
+
 import { ItemComponent } from './item.component';
 import { ItemModule } from './item.module';
 
@@ -19,7 +20,7 @@ export class TestComponent {
 }
 
 describe('ItemComponent', () => {
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

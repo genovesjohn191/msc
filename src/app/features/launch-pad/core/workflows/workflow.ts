@@ -1,10 +1,10 @@
 import { DynamicFormFieldDataBase } from '@app/features-shared/dynamic-form';
 import { WorkflowIdType } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
-import { Workflow } from './workflows/workflow.interface';
+import { Workflow } from './workflow.interface';
 
 export class LaunchPadWorkflow implements Workflow {
-  public id: WorkflowIdType;
+  public type: WorkflowIdType;
   public referenceId: string;
   public parentReferenceId?: string;
   public serviceId?: string;
@@ -26,7 +26,7 @@ export class LaunchPadWorkflow implements Workflow {
   }) {
     this.title = options.title;
     this.required = options.required || false;
-    this.id = options.type;
+    this.type = options.type;
     this.referenceId = options.referenceId;
     this.parentReferenceId = options.parentReferenceId || '';
     this.serviceId = options.serviceId;

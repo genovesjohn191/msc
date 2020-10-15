@@ -1,5 +1,5 @@
 import {
-  async,
+  waitForAsync,
   TestBed
 } from '@angular/core/testing';
 
@@ -10,7 +10,7 @@ describe('WizardStepComponent', () => {
   /** Stub Services/Components */
   let component: WizardStepComponent;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

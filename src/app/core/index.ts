@@ -18,7 +18,6 @@ export * from './services/mcs-notification-job.service';
 export * from './services/mcs-notification-context.service';
 export * from './services/mcs-notification-events.service';
 export * from './services/mcs-global-element.service';
-export * from './services/mcs-overlay.service';
 export * from './services/mcs-scroll-dispatcher.service';
 export * from './services/mcs-viewport.service';
 export * from './services/mcs-error-handler.service';
@@ -56,8 +55,6 @@ export * from './authentication/permissions/mcs-server.permission';
 /** Factory */
 export * from './factory/global-element/mcs-global-element-ref';
 export * from './factory/global-element/mcs-global-element-option';
-export * from './factory/overlay/mcs-overlay-ref';
-export * from './factory/overlay/mcs-overlay-state';
 export * from './factory/portal/mcs-portal-component';
 export * from './factory/portal/mcs-portal-template';
 export * from './factory/unique-generators/mcs-unique-id';

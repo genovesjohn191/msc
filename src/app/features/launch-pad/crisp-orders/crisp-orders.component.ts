@@ -1,16 +1,28 @@
+import { Subscription } from 'rxjs';
+
 import { NestedTreeControl } from '@angular/cdk/tree';
 import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
-  ChangeDetectionStrategy, ViewChild, ChangeDetectorRef, OnDestroy
+  OnDestroy,
+  ViewChild
 } from '@angular/core';
-import { MatBottomSheet, MatTreeNestedDataSource } from '@angular/material';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { McsEvent } from '@app/events';
 import { ProductType } from '@app/models';
-import { isNullOrEmpty, unsubscribeSafely } from '@app/utilities';
+import {
+  isNullOrEmpty,
+  unsubscribeSafely
+} from '@app/utilities';
 import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
-import { Subscription } from 'rxjs';
-import { LaunchPadComponent } from '../core';
-import { LaunchPadWorkflowSelectorComponent, WorkflowSelectorConfig } from '../core/workflow-selector.component';
+
+import { LaunchPadComponent } from '../core/launch-pad-core.component';
+import {
+  LaunchPadWorkflowSelectorComponent,
+  WorkflowSelectorConfig
+} from '../core/layout/workflow-selector.component';
 import { WorkflowGroupConfig } from '../core/workflows/workflow-group.interface';
 import { Workflow } from '../core/workflows/workflow.interface';
 

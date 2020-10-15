@@ -1,48 +1,51 @@
 import {
-  ChangeDetectorRef,
-  ViewChild,
-  AfterViewInit,
-  OnDestroy,
-  Injector
-} from '@angular/core';
-import {
-  Subject,
   Observable,
+  Subject,
   Subscription
 } from 'rxjs';
 import {
+  map,
   takeUntil,
-  tap,
-  map
+  tap
 } from 'rxjs/operators';
+
 import {
-  isNullOrEmpty,
-  convertMapToJsonObject,
-  unsubscribeSafely,
-  getSafeProperty,
-  CommonDefinition,
-  cloneObject
-} from '@app/utilities';
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  Inject,
+  InjectionToken,
+  Injector,
+  OnDestroy,
+  ViewChild
+} from '@angular/core';
 import {
-  McsFilterInfo,
   Breakpoint,
   McsApiCollection,
+  McsFilterInfo,
   McsQueryParam
 } from '@app/models';
 import {
-  Search,
   Paginator,
+  Search,
   Table
 } from '@app/shared';
 import {
-  EventBusState,
-  EventBusDispatcherService
+  getSafeProperty,
+  isNullOrEmpty,
+  unsubscribeSafely,
+  CommonDefinition
+} from '@app/utilities';
+import {
+  EventBusDispatcherService,
+  EventBusState
 } from '@peerlancers/ngx-event-bus';
-import { McsBrowserService } from '../services/mcs-browser.service';
-import { McsFilterService } from '../services/mcs-filter.service';
+
 import { McsTableDataSource } from '../data-access/mcs-table-datasource';
 import { McsTableSelection } from '../data-access/mcs-table-selection';
 import { IMcsColumnManager } from '../interfaces/mcs-column-manager.interface';
+import { McsBrowserService } from '../services/mcs-browser.service';
+import { McsFilterService } from '../services/mcs-filter.service';
 
 export interface TableListingConfig<T> {
   dataChangeEvent?: EventBusState<T[]>;
@@ -51,6 +54,9 @@ export interface TableListingConfig<T> {
   allowMultipleSelection?: boolean;
 }
 
+export const TABLELISTINGCONFIG_INJECTION = new InjectionToken<TableListingConfig<any>>('TableListingConfig');
+
+@Component({ template: ''})
 export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy, IMcsColumnManager {
 
   // Table variables
@@ -79,7 +85,7 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
   constructor(
     protected injector: Injector,
     protected changeDetectorRef: ChangeDetectorRef,
-    protected tableConfig: TableListingConfig<T> = {}
+    @Inject(TABLELISTINGCONFIG_INJECTION) protected tableConfig: TableListingConfig<T> = {}
   ) {
     this.dataSource = new McsTableDataSource<T>([]);
     this.selection = new McsTableSelection(this.dataSource, tableConfig.allowMultipleSelection || true);

@@ -3,13 +3,14 @@ import {
   ViewChild
 } from '@angular/core';
 import {
-  async,
+  waitForAsync,
   TestBed
 } from '@angular/core/testing';
+import { CoreTestingModule } from '@app/core/testing';
+
 import { TableComponent } from './table.component';
 import { TableModule } from './table.module';
 import { TableDatasource } from './testing';
-import { CoreTestingModule } from '@app/core/testing';
 
 @Component({
   selector: 'mcs-test-table',
@@ -29,7 +30,7 @@ describe('TableComponent', () => {
 
   /** Stub Services/Components */
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

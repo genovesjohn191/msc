@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+
 import { RouteKey } from './models';
 
 /**
@@ -7,21 +8,21 @@ import { RouteKey } from './models';
 export const appRoutes: Routes = [
   {
     path: 'console/:id',
-    loadChildren: './page-layout/console-page/console-page.module#ConsolePageModule',
+    loadChildren: () => import('./page-layout/console-page/console-page.module').then(m => m.ConsolePageModule),
     data: { routeId: RouteKey.Console }
   },
   {
     path: 'maintenance',
-    loadChildren: './page-layout/maintenance-page/maintenance-page.module#MaintenancePageModule',
+    loadChildren: () => import('./page-layout/maintenance-page/maintenance-page.module').then(m => m.MaintenancePageModule),
     data: { routeId: RouteKey.Maintenance }
   },
   {
     path: 'system-message',
-    loadChildren: './page-layout/system-message-page/system-message-page.module#SystemMessagePageModule',
+    loadChildren: () => import('./page-layout/system-message-page/system-message-page.module').then(m => m.SystemMessagePageModule),
     data: { routeId: RouteKey.SystemMessagePage }
   },
   {
     path: '',
-    loadChildren: './page-layout/default-page/default-page.module#DefaultPageModule'
+    loadChildren: () => import('./page-layout/default-page/default-page.module').then(m => m.DefaultPageModule)
   }
 ];

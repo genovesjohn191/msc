@@ -1,18 +1,20 @@
 import {
+  Component,
   EventEmitter,
-  Output,
-  Input
+  Input,
+  Output
 } from '@angular/core';
 import {
-  ServerServicesView,
+  McsJob,
   McsServer,
-  McsJob
+  ServerServicesView
 } from '@app/models';
 import {
-  isNullOrEmpty,
-  getSafeProperty
+  getSafeProperty,
+  isNullOrEmpty
 } from '@app/utilities';
 
+@Component({ template: '' })
 export abstract class ServerServiceDetailBase {
 
   @Input()

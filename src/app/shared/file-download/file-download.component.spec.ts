@@ -2,14 +2,15 @@ import {
   Component,
   ViewChild
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import {
-  async,
+  waitForAsync,
   TestBed
 } from '@angular/core/testing';
-import { FileDownloadModule } from './file-download.module';
-import { FileDownloadComponent } from './file-download.component';
+import { FormsModule } from '@angular/forms';
 import { CoreTestingModule } from '@app/core/testing';
+
+import { FileDownloadComponent } from './file-download.component';
+import { FileDownloadModule } from './file-download.module';
 
 @Component({
   selector: 'mcs-test',
@@ -33,7 +34,7 @@ describe('FileDownloadComponent', () => {
   /** Stub Services/Components */
   let component: TestComponent;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

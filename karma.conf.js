@@ -14,6 +14,12 @@ module.exports = function (config) {
       require('@angular-devkit/build-angular/plugins/karma')
     ],
     client: {
+      // Since we are only getting the actual result of unit in console,
+      // it's okay to set this flag to TRUE. However,
+      // in debugging mode you can set this flag to false
+      // to show the relative output in your local browser.
+      // Related issue on Some of your tests did a full page reload!
+      // https://github.com/karma-runner/karma/issues/3560
       clearContext: false // leave Jasmine Spec Runner output visible in browser
     },
     coverageIstanbulReporter: {
@@ -35,7 +41,6 @@ module.exports = function (config) {
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
-    autoWatch: true,
     browsers: ['Chrome', 'ChromeHeadless', 'ChromeHeadlessCI'],
     customLaunchers: {
       ChromeHeadlessCI: {
@@ -50,6 +55,7 @@ module.exports = function (config) {
     },
     browserNoActivityTimeout: 120000,
     singleRun: true,
+    autoWatch: false,
     restartOnFileChange: true
   });
 };

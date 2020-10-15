@@ -1,13 +1,14 @@
 import {
-  async,
+  waitForAsync,
   TestBed
 } from '@angular/core/testing';
+
 import { FirewallsTestingModule } from '../../testing';
 import { FirewallOverviewComponent } from './firewall-overview.component';
 
 describe('FirewallOverviewComponent', () => {
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

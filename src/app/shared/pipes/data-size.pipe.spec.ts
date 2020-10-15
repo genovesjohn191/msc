@@ -1,19 +1,20 @@
-import {
-  async,
-  TestBed,
-  ComponentFixture
-} from '@angular/core/testing';
 import { DecimalPipe } from '@angular/common';
 import {
   Component,
-  ViewChild,
-  ElementRef
+  ElementRef,
+  ViewChild
 } from '@angular/core';
-import { DataSizePipe } from './data-size.pipe';
+import {
+  waitForAsync,
+  ComponentFixture,
+  TestBed
+} from '@angular/core/testing';
 import {
   convertKbToMb,
   convertMbToGb
 } from '@app/utilities';
+
+import { DataSizePipe } from './data-size.pipe';
 
 @Component({
   selector: 'mcs-test',
@@ -43,7 +44,7 @@ describe('DataSizePipe', () => {
   let component: TestComponent;
   let fixtureInstance: ComponentFixture<TestComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

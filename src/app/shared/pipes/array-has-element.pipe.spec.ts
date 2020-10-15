@@ -1,13 +1,14 @@
 import {
-  async,
-  TestBed,
-  ComponentFixture
-} from '@angular/core/testing';
-import {
-Component,
-ViewChild,
-ElementRef
+  Component,
+  ElementRef,
+  ViewChild
 } from '@angular/core';
+import {
+  waitForAsync,
+  ComponentFixture,
+  TestBed
+} from '@angular/core/testing';
+
 import { ArrayHasElement } from './array-has-element.pipe';
 
 @Component({
@@ -62,7 +63,7 @@ describe('ArrayHasElementPipe', () => {
 let component: TestComponent;
 let fixtureInstance: ComponentFixture<TestComponent>;
 
-beforeEach(async(() => {
+beforeEach(waitForAsync(() => {
   /** Testbed Reset Module */
   TestBed.resetTestingModule();
 

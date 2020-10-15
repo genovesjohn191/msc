@@ -1,12 +1,12 @@
-import {
-    async,
-    TestBed,
-    getTestBed
-} from '@angular/core/testing';
 import { HttpTestingController } from '@angular/common/http/testing';
+import {
+  waitForAsync,
+  TestBed
+} from '@angular/core/testing';
+
+import { McsApiClientTestingModule } from '../testing';
 /** Services and Models */
 import { McsApiAzureServicesService } from './mcs-api-azure-services.service';
-import { McsApiClientTestingModule } from '../testing';
 
 describe('SubscriptionsApiService', () => {
 
@@ -14,7 +14,7 @@ describe('SubscriptionsApiService', () => {
     let httpMock: HttpTestingController;
     let subscriptionService: McsApiAzureServicesService;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         /** Testbed Reset Module */
         TestBed.resetTestingModule();
 
@@ -27,8 +27,8 @@ describe('SubscriptionsApiService', () => {
 
         /** Tesbed Component Compilation and Creation */
         TestBed.compileComponents().then(() => {
-            httpMock = getTestBed().get(HttpTestingController);
-            subscriptionService = getTestBed().get(McsApiAzureServicesService);
+            httpMock = TestBed.inject(HttpTestingController);
+            subscriptionService = TestBed.inject(McsApiAzureServicesService);
         });
     }));
 

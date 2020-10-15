@@ -1,14 +1,15 @@
+import { HttpClientModule } from '@angular/common/http';
 import {
   ModuleWithProviders,
   NgModule,
   Optional,
   SkipSelf
 } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+
 import { McsApiClientConfig } from './mcs-api-client.config';
 import {
-  apiClientProviders,
-  apiClientInterceptors
+  apiClientInterceptors,
+  apiClientProviders
 } from './mcs-api-client.constants';
 
 @NgModule({
@@ -26,7 +27,10 @@ import {
 
 export class McsApiClientModule {
 
-  public static forRoot(config: (...args: any[]) => McsApiClientConfig, injectors?: any[]): ModuleWithProviders {
+  public static forRoot(
+    config: (...args: any[]) => McsApiClientConfig,
+    injectors?: any[]
+  ): ModuleWithProviders<McsApiClientModule> {
     return {
       ngModule: McsApiClientModule,
       providers: [

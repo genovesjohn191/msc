@@ -3,13 +3,14 @@ import {
   ViewChild
 } from '@angular/core';
 import {
-  async,
-  TestBed,
-  ComponentFixture
+  waitForAsync,
+  ComponentFixture,
+  TestBed
 } from '@angular/core/testing';
+import { CoreTestingModule } from '@app/core/testing';
+
 import { FileAttachmentComponent } from './file-attachment.component';
 import { FileAttachmentModule } from './file-attachment.module';
-import { CoreTestingModule } from '@app/core/testing';
 
 @Component({
   selector: 'mcs-test-attachment',
@@ -26,7 +27,7 @@ describe('AttachmentComponent', () => {
   let component: TestAttachmentComponent;
   let fixtureInstance: ComponentFixture<TestAttachmentComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

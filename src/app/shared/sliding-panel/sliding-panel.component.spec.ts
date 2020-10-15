@@ -3,9 +3,10 @@ import {
   ViewChild
 } from '@angular/core';
 import {
-  async,
+  waitForAsync,
   TestBed
 } from '@angular/core/testing';
+
 import { SlidingPanelComponent } from './sliding-panel.component';
 import { SlidingPanelModule } from './sliding-panel.module';
 
@@ -23,7 +24,7 @@ describe('SlidingPanelComponent', () => {
   /** Stub Services/Components */
   let component: TestSlidingPanelComponent;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

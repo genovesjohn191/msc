@@ -1,8 +1,9 @@
 import {
-  async,
+  waitForAsync,
   TestBed
 } from '@angular/core/testing';
 import { CoreTestingModule } from '@app/core/testing';
+
 import { PaginatorComponent } from './paginator.component';
 import { Paginator } from './paginator.interface';
 
@@ -16,7 +17,7 @@ describe('PaginatorComponent', () => {
     pageSize: 10
   } as Paginator;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 
