@@ -15,7 +15,7 @@ import { SlidingPanelModule } from './sliding-panel.module';
   template: ``
 })
 export class TestSlidingPanelComponent {
-  @ViewChild(SlidingPanelComponent, { static: false })
+  @ViewChild(SlidingPanelComponent)
   public slidingPanelComponent: SlidingPanelComponent;
 }
 

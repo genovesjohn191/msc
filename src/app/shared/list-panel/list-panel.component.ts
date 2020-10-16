@@ -66,10 +66,10 @@ export class ListPanelComponent<TEntity> implements AfterContentInit, OnDestroy 
   public get trackBy(): TrackByFunction<TEntity> { return this._trackBy; }
   private _trackBy: TrackByFunction<TEntity>;
 
-  @ViewChild(ListPanelContentOutletDirective, { static: false })
+  @ViewChild(ListPanelContentOutletDirective)
   private _listPanelOutlet: ListPanelContentOutletDirective;
 
-  @ContentChild(ListPanelContentDirective, { static: false })
+  @ContentChild(ListPanelContentDirective)
   private _listPanelContent: ListPanelContentDirective;
 
   @ContentChildren(OptionGroupComponent, { descendants: true })

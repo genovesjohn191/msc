@@ -16,16 +16,16 @@ selector: 'mcs-test',
 template: ``
 })
 export class TestComponent {
-@ViewChild('testElement1', { static: false })
+@ViewChild('testElement1')
 public testElement1: ElementRef;
 
-@ViewChild('testElement2', { static: false })
+@ViewChild('testElement2')
 public testElement2: ElementRef;
 
-@ViewChild('testElement3', { static: false })
+@ViewChild('testElement3')
 public testElement3: ElementRef;
 
-@ViewChild(ArrayHasElement, { static: false })
+@ViewChild(ArrayHasElement)
 public pipe: ArrayHasElement;
 
 public textValue1: Array<string> = ['one', 'two', 'three'];

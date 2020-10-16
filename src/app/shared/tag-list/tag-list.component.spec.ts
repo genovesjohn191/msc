@@ -23,7 +23,7 @@ import { TagComponent } from './tag/tag.component';
   template: ``
 })
 export class TestTagListComponent {
-  @ViewChild(TagListComponent, { static: false })
+  @ViewChild(TagListComponent)
   public tagListComponent: TagListComponent;
 
   @ViewChildren(TagComponent)

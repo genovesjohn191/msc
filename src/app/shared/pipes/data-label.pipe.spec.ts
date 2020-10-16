@@ -16,13 +16,13 @@ import { DataLabelPipe } from './data-label.pipe';
   template: ``
 })
 export class TestComponent {
-  @ViewChild('testElementEmptyData', { static: false })
+  @ViewChild('testElementEmptyData')
   public testElementEmptyData: ElementRef;
 
-  @ViewChild('testElementSampleData', { static: false })
+  @ViewChild('testElementSampleData')
   public testElementSampleData: ElementRef;
 
-  @ViewChild(DataLabelPipe, { static: false })
+  @ViewChild(DataLabelPipe)
   public pipe: DataLabelPipe;
 
   public emptyData = '';

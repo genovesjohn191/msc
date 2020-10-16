@@ -117,7 +117,7 @@ export class TagListComponent extends McsFormFieldControlBase<any>
   /**
    * Tag Input directive
    */
-  @ContentChild(TagInputDirective, { static: false })
+  @ContentChild(TagInputDirective)
   private _tagInput: TagInputDirective;
 
   // Other variables

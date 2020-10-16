@@ -16,19 +16,19 @@ import { IsNotNullOrUndefinedPipe } from './is-not-null-or-undefined.pipe';
   template: ``
 })
 export class TestComponent {
-  @ViewChild('testElement1', { static: false })
+  @ViewChild('testElement1')
   public testElement1: ElementRef;
 
-  @ViewChild('testElement2', { static: false })
+  @ViewChild('testElement2')
   public testElement2: ElementRef;
 
-  @ViewChild('testElement3', { static: false })
+  @ViewChild('testElement3')
   public testElement3: ElementRef;
 
-  @ViewChild('testElement4', { static: false })
+  @ViewChild('testElement4')
   public testElement4: ElementRef;
 
-  @ViewChild(IsNotNullOrUndefinedPipe, { static: false })
+  @ViewChild(IsNotNullOrUndefinedPipe)
   public pipe: IsNotNullOrUndefinedPipe;
 
   public textValue1 = 'sample data';

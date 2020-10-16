@@ -16,10 +16,10 @@ import { DisabledDirective } from './disabled.directive';
   template: ``
 })
 export class TestComponent {
-  @ViewChild('testElement', { static: false })
+  @ViewChild('testElement')
   public testElement: ElementRef;
 
-  @ViewChild(DisabledDirective, { static: false })
+  @ViewChild(DisabledDirective)
   public directive: DisabledDirective;
 }
 

@@ -17,7 +17,7 @@ import { TableDatasource } from './testing';
   template: ``
 })
 export class TestTableComponent {
-  @ViewChild(TableComponent, { static: false })
+  @ViewChild(TableComponent)
   public tableComponent: TableComponent<any>;
 
   public dataSource: TableDatasource;

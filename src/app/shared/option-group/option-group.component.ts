@@ -60,10 +60,10 @@ export class OptionGroupComponent implements AfterContentInit, OnDestroy {
   @Input()
   public label: string;
 
-  @ContentChild(OptionGroupLabelDirective, { static: false })
+  @ContentChild(OptionGroupLabelDirective)
   public labelTemplate: OptionGroupLabelDirective;
 
-  @ContentChild(OptionGroupHeaderDirective, { static: false })
+  @ContentChild(OptionGroupHeaderDirective)
   public headerTemplate: OptionGroupHeaderDirective;
 
   @ContentChildren(OptionComponent, { descendants: true })

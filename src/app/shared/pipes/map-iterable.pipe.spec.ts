@@ -21,7 +21,7 @@ export class TestComponent {
   @ViewChildren('testElement')
   public testElements: QueryList<ElementRef>;
 
-  @ViewChild(MapIterablePipe, { static: false })
+  @ViewChild(MapIterablePipe)
   public pipe: MapIterablePipe;
 
   public mapContents = new Map<string, string>();

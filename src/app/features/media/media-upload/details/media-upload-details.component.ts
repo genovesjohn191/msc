@@ -74,7 +74,7 @@ export class MediaUploadDetailsComponent
   public fcMediaExtension: FormControl;
   public fcMediaDescription: FormControl;
 
-  @ViewChild(McsFormGroupDirective, { static: false })
+  @ViewChild(McsFormGroupDirective)
   private _formGroup: McsFormGroupDirective;
 
   private _mediaUrlValidationInProgressChange = new BehaviorSubject<boolean>(false);

@@ -16,7 +16,7 @@ import { QuoteWidgetComponent } from './quote-widget.component';
   template: ``
 })
 export class TestQuoteWidgetComponent {
-  @ViewChild(QuoteWidgetComponent, { static: false })
+  @ViewChild(QuoteWidgetComponent)
   public quoteWidgetComponent: QuoteWidgetComponent;
 }
 

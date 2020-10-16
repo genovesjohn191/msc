@@ -16,7 +16,7 @@ import { ResponsivePanelModule } from './responsive-panel.module';
   template: ``
 })
 export class ResponsivePanelTestComponent {
-  @ViewChild(ResponsivePanelComponent, { static: false })
+  @ViewChild(ResponsivePanelComponent)
   public responsivePanelComponent: ResponsivePanelComponent;
 }
 

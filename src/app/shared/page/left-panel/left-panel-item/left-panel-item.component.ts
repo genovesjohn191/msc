@@ -25,10 +25,10 @@ type offsetType = 'small' | 'medium' | 'large';
 
 export class LeftPanelItemComponent implements AfterContentInit {
 
-  @ViewChild('itemElement', { static: false })
+  @ViewChild('itemElement')
   public itemElement: ElementRef;
 
-  @ContentChild(LeftPanelItemHeaderDirective, { static: false })
+  @ContentChild(LeftPanelItemHeaderDirective)
   public leftPanelItemHeader: LeftPanelItemHeaderDirective;
 
   /**

@@ -42,7 +42,7 @@ export class ListComponent implements AfterViewInit {
   @Input()
   public itemsOffset: McsSizeType;
 
-  @ContentChild(ListHeaderDirective, { static: false })
+  @ContentChild(ListHeaderDirective)
   public headerTemplate: ListHeaderDirective;
 
   public constructor(

@@ -49,7 +49,7 @@ export class SystemMessageCreateComponent implements IMcsNavigateAwayGuard, OnDe
   private _creatingSystemMessage$ = new BehaviorSubject<boolean>(false);
   private _systemMessageForm: SystemMessageForm;
 
-  @ViewChild('fgSystemMessageForm', { static: false })
+  @ViewChild('fgSystemMessageForm')
   private _fgSystemMessagesForm: IMcsFormGroup;
 
   constructor(

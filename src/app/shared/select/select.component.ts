@@ -92,7 +92,7 @@ const SELECT_ITEM_OFFSET = 7;
 export class SelectComponent extends McsFormFieldControlBase<any>
   implements AfterContentInit, DoCheck, OnChanges, OnDestroy, ControlValueAccessor {
 
-  @ContentChild(SelectTriggerLabelDirective, { static: false })
+  @ContentChild(SelectTriggerLabelDirective)
   public labelTemplate: SelectTriggerLabelDirective;
 
   /** @deprecated Use the formcontrols.valuechanges instead */
@@ -135,7 +135,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
   public set disabled(value: boolean) { this._disabled = coerceBoolean(value); }
   private _disabled: boolean = false;
 
-  @ContentChild(SelectSearchDirective, { static: false })
+  @ContentChild(SelectSearchDirective)
   private _search: SelectSearchDirective;
 
   @ContentChildren(OptionComponent, { descendants: true })

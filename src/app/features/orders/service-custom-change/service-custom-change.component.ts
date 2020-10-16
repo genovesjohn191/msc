@@ -94,7 +94,7 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
 
   private _smacSharedDetails: SmacSharedDetails;
 
-  @ViewChild('fgSmacSharedForm', { static: false })
+  @ViewChild('fgSmacSharedForm')
   public set fgSmacSharedForm(value: IMcsFormGroup) {
     if (isNullOrEmpty(value)) { return; }
 
@@ -105,7 +105,7 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
     );
   }
 
-  @ViewChild(McsFormGroupDirective, { static: false })
+  @ViewChild(McsFormGroupDirective)
   public set formGroup(value: McsFormGroupDirective) {
     if (isNullOrEmpty(value)) { return; }
 

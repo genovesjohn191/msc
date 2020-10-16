@@ -21,7 +21,7 @@ export class TestComponent {
   @ViewChildren('testElement')
   public testElements: QueryList<ElementRef>;
 
-  @ViewChild(ArrayTakeMaxPipe, { static: false })
+  @ViewChild(ArrayTakeMaxPipe)
   public pipe: ArrayTakeMaxPipe;
 
   public sourceArray: string[];

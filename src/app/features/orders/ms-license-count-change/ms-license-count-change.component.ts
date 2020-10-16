@@ -93,7 +93,7 @@ export class MsLicenseCountChangeComponent extends McsOrderWizardBase implements
   private _childLicensesFcConfig: LicenseCountFormControlConfig[] = [];
   private _licenseCache: McsLicense[] = [];
 
-  @ViewChild(McsFormGroupDirective, { static: false })
+  @ViewChild(McsFormGroupDirective)
   public set formGroup(value: McsFormGroupDirective) {
     if (isNullOrEmpty(value)) { return; }
 

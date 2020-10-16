@@ -24,7 +24,7 @@ import { IsExperimentalDirective } from './is-experimental.directive';
   template: ``
 })
 export class TestComponent {
-  @ViewChild(IsExperimentalDirective, { static: false })
+  @ViewChild(IsExperimentalDirective)
   public isExperimental: IsExperimentalDirective;
 }
 

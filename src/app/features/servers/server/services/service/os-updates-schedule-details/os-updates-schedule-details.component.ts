@@ -103,7 +103,7 @@ export class ServiceOsUpdatesScheduleDetailsComponent implements OnInit {
   @Output()
   public deleteSchedule: EventEmitter<ServerServiceActionDetail>;
 
-  @ViewChild(McsFormGroupDirective, { static: false })
+  @ViewChild(McsFormGroupDirective)
   private _formGroup: McsFormGroupDirective;
 
   private _initialScheduleCategoryList: McsServerOsUpdatesCategory[];

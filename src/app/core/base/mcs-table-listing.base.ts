@@ -117,7 +117,7 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
     }
   }
 
-  @ViewChild('search', { static: false })
+  @ViewChild('search')
   public set search(value: Search) {
     if (this._search !== value) {
       this._search = value;
@@ -125,7 +125,7 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
     }
   }
 
-  @ViewChild('paginator', { static: false })
+  @ViewChild('paginator')
   public set paginator(value: Paginator) {
     if (this._paginator !== value) {
       this._paginator = value;
@@ -133,7 +133,7 @@ export abstract class McsTableListingBase<T> implements AfterViewInit, OnDestroy
     }
   }
 
-  @ViewChild('table', { static: false })
+  @ViewChild('table')
   public set table(value: Table) {
     if (this._table !== value) {
       this._table = value;

@@ -99,13 +99,13 @@ export class TableComponent<T> implements Table, OnInit, AfterContentInit, After
   private _destroySubject = new Subject<void>();
   private _dataStatusSubject = new Subject<void>();
 
-  @ViewChild(HeaderPlaceholderDirective, { static: false })
+  @ViewChild(HeaderPlaceholderDirective)
   private _headerRowOutlet: HeaderPlaceholderDirective;
 
-  @ViewChild(DataPlaceholderDirective, { static: false })
+  @ViewChild(DataPlaceholderDirective)
   private _dataRowsOutlet: DataPlaceholderDirective;
 
-  @ViewChild(DataStatusPlaceholderDirective, { static: false })
+  @ViewChild(DataStatusPlaceholderDirective)
   private _dataStatusPlaceholder: DataStatusPlaceholderDirective;
 
   @ContentChildren(ColumnDefDirective)
@@ -118,7 +118,7 @@ export class TableComponent<T> implements Table, OnInit, AfterContentInit, After
   @ContentChildren(DataRowDefDirective)
   private _dataRowDefinitions: QueryList<DataRowDefDirective>;
 
-  @ContentChild(DataStatusDefDirective, { static: false })
+  @ContentChild(DataStatusDefDirective)
   private _dataStatusDefinition: DataStatusDefDirective;
 
   private _columnCountCache: number = 0;

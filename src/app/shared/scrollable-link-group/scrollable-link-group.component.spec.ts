@@ -16,7 +16,7 @@ import { ScrollableLinkGroupModule } from './scrollable-link-group.module';
   template: ``
 })
 export class TestComponent {
-  @ViewChild(ScrollableLinkGroupComponent, { static: false })
+  @ViewChild(ScrollableLinkGroupComponent)
   public scrollableLinkComponent: ScrollableLinkGroupComponent;
 }
 

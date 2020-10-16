@@ -84,7 +84,7 @@ export class PaginatorComponent implements Paginator, AfterViewInit, OnDestroy {
   }
   private _enableLoader: boolean;
 
-  @ViewChild('nextButton', { static: false })
+  @ViewChild('nextButton')
   private _nextButton: ElementRef;
 
   private _destroySubject = new Subject<void>();

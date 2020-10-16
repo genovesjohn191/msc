@@ -17,7 +17,7 @@ import { CommentBoxModule } from './comment-box.module';
   template: ``
 })
 export class TestCommentBoxComponent {
-  @ViewChild(CommentBoxComponent, { static: false })
+  @ViewChild(CommentBoxComponent)
   public commentBoxComponent: CommentBoxComponent;
 }
 

@@ -17,7 +17,7 @@ import { FileDownloadModule } from './file-download.module';
   template: ``
 })
 export class TestComponent {
-  @ViewChild(FileDownloadComponent, { static: false })
+  @ViewChild(FileDownloadComponent)
   public fileDownloadComponent: FileDownloadComponent;
 
   public fileType(): string {

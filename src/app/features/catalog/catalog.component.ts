@@ -104,7 +104,7 @@ export class CatalogComponent<TEntity> implements OnInit, OnDestroy {
     unsubscribeSafely(this._destroySubject);
   }
 
-  @ViewChild('search', { static: false })
+  @ViewChild('search')
   public set search(value: Search) {
     if (this._search !== value) {
       this._search = value;

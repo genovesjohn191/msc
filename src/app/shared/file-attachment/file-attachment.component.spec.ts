@@ -17,7 +17,7 @@ import { FileAttachmentModule } from './file-attachment.module';
   template: ``
 })
 export class TestAttachmentComponent {
-  @ViewChild(FileAttachmentComponent, { static: false })
+  @ViewChild(FileAttachmentComponent)
   public attachmentComponent: FileAttachmentComponent;
 }
 

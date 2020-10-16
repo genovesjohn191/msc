@@ -18,7 +18,7 @@ import { SelectModule } from './select.module';
   template: ``
 })
 export class TestSelectComponent {
-  @ViewChild(SelectComponent, { static: false })
+  @ViewChild(SelectComponent)
   public selectComponent: SelectComponent;
 
   public selectedValue: any;

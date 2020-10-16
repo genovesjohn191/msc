@@ -72,7 +72,7 @@ export class VdcComponent extends McsListViewListingBase<McsVdcGroup> implements
   private _destroySubject = new Subject<void>();
   private _routerHandler: Subscription;
 
-  @ViewChild(ComponentHandlerDirective, { static: false })
+  @ViewChild(ComponentHandlerDirective)
   private _componentHandler: ComponentHandlerDirective;
 
   constructor(

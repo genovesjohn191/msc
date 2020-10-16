@@ -48,7 +48,7 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
   public progressMax: number;
   public progressBarHidden: boolean;
 
-  @ContentChild(JobsProvisioningLoadingTextDirective, { static: false })
+  @ContentChild(JobsProvisioningLoadingTextDirective)
   public jobsProvisioningLoadingText: JobsProvisioningLoadingTextDirective;
 
   /**

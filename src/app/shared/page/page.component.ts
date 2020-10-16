@@ -29,9 +29,7 @@ import {
   TopPanelPlaceholderDirective
 } from './top-panel';
 import { PageService } from './page.service';
-import { AccessControlDirective } from '../authentication/access-control/access-control.directive';
 import { McsAccessControlService } from '@app/core';
-import { McsFeatureFlag } from '@app/models';
 
 @Component({
   selector: 'mcs-page',
@@ -52,10 +50,10 @@ export class PageComponent implements AfterViewInit {
   @ViewChild('headerContainer', { read: ViewContainerRef, static: false })
   public headerContainer: ViewContainerRef;
 
-  @ViewChild('headerText', { static: false })
+  @ViewChild('headerText')
   public headerText: ElementRef;
 
-  @ContentChild(PageHeaderDirective, { static: false })
+  @ContentChild(PageHeaderDirective)
   public headerTemplate: PageHeaderDirective;
 
   @Input()
@@ -92,23 +90,23 @@ export class PageComponent implements AfterViewInit {
   }
 
   /** Placeholder of panel directives */
-  @ViewChild(ContentPanelPlaceholderDirective, { static: false })
+  @ViewChild(ContentPanelPlaceholderDirective)
   private _contentPanelPlaceholder: ContentPanelPlaceholderDirective;
 
-  @ViewChild(LeftPanelPlaceholderDirective, { static: false })
+  @ViewChild(LeftPanelPlaceholderDirective)
   private _leftPanelPlaceholder: LeftPanelPlaceholderDirective;
 
-  @ViewChild(TopPanelPlaceholderDirective, { static: false })
+  @ViewChild(TopPanelPlaceholderDirective)
   private _topPanelPlaceholder: TopPanelPlaceholderDirective;
 
   /** Panel directives definitions */
-  @ContentChild(ContentPanelDefDirective, { static: false })
+  @ContentChild(ContentPanelDefDirective)
   private _contentPanelDefinition: ContentPanelDefDirective;
 
-  @ContentChild(LeftPanelDefDirective, { static: false })
+  @ContentChild(LeftPanelDefDirective)
   private _leftPanelDefinition: LeftPanelDefDirective;
 
-  @ContentChild(TopPanelDefDirective, { static: false })
+  @ContentChild(TopPanelDefDirective)
   private _topPanelDefinition: TopPanelDefDirective;
 
   public constructor(

@@ -17,7 +17,7 @@ import { ButtonModule } from './button.module';
   template: ``
 })
 export class TestButtonComponent {
-  @ViewChild(ButtonComponent, { static: false })
+  @ViewChild(ButtonComponent)
   public buttonComponent: ButtonComponent;
 }
 

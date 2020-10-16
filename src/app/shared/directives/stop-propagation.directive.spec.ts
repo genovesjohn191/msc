@@ -20,13 +20,13 @@ export class TestComponent {
   public parentFlag: boolean = false;
   public childFlag: boolean = false;
 
-  @ViewChild('parentElement', { static: false })
+  @ViewChild('parentElement')
   public parentElement: ElementRef;
 
-  @ViewChild('childElement', { static: false })
+  @ViewChild('childElement')
   public childElement: ElementRef;
 
-  @ViewChild(StopPropagationDirective, { static: false })
+  @ViewChild(StopPropagationDirective)
   public directive: StopPropagationDirective;
 
   public parentClick(): void {

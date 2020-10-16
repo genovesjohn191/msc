@@ -18,7 +18,7 @@ import { ContextualHelpModule } from './contextual-help.module';
   template: ``
 })
 export class TestContextualHelpComponent {
-  @ViewChild(ContextualHelpDirective, { static: false })
+  @ViewChild(ContextualHelpDirective)
   public contextual: ContextualHelpDirective;
 }
 

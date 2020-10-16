@@ -62,7 +62,7 @@ export class CommentBoxComponent implements OnInit {
   @Output()
   public commentAdded: EventEmitter<McsComment>;
 
-  @ViewChild('errorDialogTemplate', { static: false })
+  @ViewChild('errorDialogTemplate')
   public errorDialogTemplate: TemplateRef<any>;
 
   public get errorIconKey(): string {

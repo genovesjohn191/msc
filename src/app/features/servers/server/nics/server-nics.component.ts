@@ -92,7 +92,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   public isVMWareToolsInstalled: boolean;
   public isVMWareToolsRunning: boolean;
 
-  @ViewChild(ComponentHandlerDirective, { static: false })
+  @ViewChild(ComponentHandlerDirective)
   private _componentHandler: ComponentHandlerDirective;
 
   public get checkIconKey(): string {

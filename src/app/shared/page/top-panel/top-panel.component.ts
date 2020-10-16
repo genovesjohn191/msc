@@ -50,7 +50,7 @@ export class TopPanelComponent implements AfterContentInit, OnDestroy {
   }
   private _active: boolean;
 
-  @ViewChild(TopPanelItemPlaceholderDirective, { static: false })
+  @ViewChild(TopPanelItemPlaceholderDirective)
   private _topPanelItemPlaceholder: TopPanelItemPlaceholderDirective;
 
   @ContentChildren(TopPanelItemDefDirective)

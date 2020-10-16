@@ -29,10 +29,10 @@ import { DynamicListModule } from './dynamic-list.module';
   template: ``
 })
 export class TestDynamicListComponent implements OnInit {
-  @ViewChild('testDynamicListHappyPath', { static: false })
+  @ViewChild('testDynamicListHappyPath')
   public dynamicListHappyPath: DynamicListComponent;
 
-  @ViewChild('testDynamicListValidation', { static: false })
+  @ViewChild('testDynamicListValidation')
   public dynamicListValidation: DynamicListComponent;
 
   public testFG: FormGroup;

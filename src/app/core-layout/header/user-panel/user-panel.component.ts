@@ -53,10 +53,10 @@ export class UserPanelComponent implements OnInit, OnDestroy {
   public hasConnectionError: boolean;
   public deviceType: Breakpoint;
 
-  @ViewChild('notificationsPopover', { static: false })
+  @ViewChild('notificationsPopover')
   public notificationsPopover: any;
 
-  @ViewChild('userPopover', { static: false })
+  @ViewChild('userPopover')
   public userPopover: any;
 
   @EventBusPropertyListenOn(McsEvent.userChange)

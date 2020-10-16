@@ -26,10 +26,10 @@ import { Workflow } from '../../workflows/workflow.interface';
 })
 
 export class LaunchPadWorkflowComponent {
-  @ViewChild('panel', { static: false})
+  @ViewChild('panel')
   public panel: MatExpansionPanel;
 
-  @ViewChild('form', { static: false})
+  @ViewChild('form')
   protected form: DynamicFormComponent;
 
   @Input()

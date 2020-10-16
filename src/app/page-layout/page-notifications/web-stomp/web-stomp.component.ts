@@ -34,10 +34,10 @@ export class WebStompComponent implements AfterViewInit, OnDestroy {
   public stompErrorStatusBarRef: SnackBarRef<any>;
   public stompSuccessStatusBarRef: SnackBarRef<any>;
 
-  @ViewChild('stompErrorStatusTemplate', { static: false })
+  @ViewChild('stompErrorStatusTemplate')
   private _stompErrorStatusTemplate: TemplateRef<any>;
 
-  @ViewChild('stompSucessStatusTemplate', { static: false })
+  @ViewChild('stompSucessStatusTemplate')
   private _stompSucessStatusTemplate: TemplateRef<any>;
 
   private _encounteredError: boolean;

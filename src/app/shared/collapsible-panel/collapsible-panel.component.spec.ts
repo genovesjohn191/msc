@@ -17,7 +17,7 @@ import { CollapsiblePanelModule } from './collapsible-panel.module';
   template: ``
 })
 export class TestComponent {
-  @ViewChild(CollapsiblePanelComponent, { static: false })
+  @ViewChild(CollapsiblePanelComponent)
   public collapsiblePanelComponent: CollapsiblePanelComponent;
 }
 

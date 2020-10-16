@@ -82,7 +82,7 @@ export class AddHidsComponent extends McsOrderWizardBase implements OnInit, OnDe
   public fcProtectionLevel: FormControl;
   public protectionLevelOptions: McsOption[] = [];
 
-  @ViewChild(McsFormGroupDirective, { static: false })
+  @ViewChild(McsFormGroupDirective)
   public set formGroup(value: McsFormGroupDirective) {
     if (isNullOrEmpty(value)) { return; }
 

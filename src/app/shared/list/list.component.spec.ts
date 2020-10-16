@@ -15,7 +15,7 @@ import { ListModule } from './list.module';
   template: ``
 })
 export class TestListComponent {
-  @ViewChild(ListComponent, { static: false })
+  @ViewChild(ListComponent)
   public listComponent: ListComponent;
 }
 

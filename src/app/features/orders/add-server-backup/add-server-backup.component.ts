@@ -81,7 +81,7 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
   private _selectedServerHandler: Subscription;
   private _backupProvisionMessageBitMap = new Map<ServiceOrderState, string>();
 
-  @ViewChild('fgManageBackupServer', { static: false })
+  @ViewChild('fgManageBackupServer')
   public set fgManageBackupServer(value: IMcsFormGroup) {
     if (isNullOrEmpty(value)) { return; }
 
@@ -92,7 +92,7 @@ export class AddServerBackupComponent extends McsOrderWizardBase implements OnIn
     );
   }
 
-  @ViewChild(McsFormGroupDirective, { static: false })
+  @ViewChild(McsFormGroupDirective)
   public set formGroup(value: McsFormGroupDirective) {
     if (isNullOrEmpty(value)) { return; }
 

@@ -16,10 +16,10 @@ import { AnimateDirective } from './animation.directive';
   template: ``
 })
 export class TestComponent {
-  @ViewChild('testElement', { static: false })
+  @ViewChild('testElement')
   public testElement: ElementRef;
 
-  @ViewChild(AnimateDirective, { static: false })
+  @ViewChild(AnimateDirective)
   public directive: AnimateDirective;
 }
 

@@ -69,7 +69,7 @@ export class ServerCommandComponent {
   @Output()
   public commandExecuted = new EventEmitter<ServerCommand>();
 
-  @ViewChild('popoverActionElement', { static: false })
+  @ViewChild('popoverActionElement')
   public popoverActionElement: any;
 
   private _actionMap = new Map<ServerCommand, () => Observable<any>>();

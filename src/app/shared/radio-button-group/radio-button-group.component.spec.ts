@@ -17,7 +17,7 @@ import { RadioButtonGroupModule } from './radio-button-group.module';
   template: ``
 })
 export class TestRadioButtonGroupComponent {
-  @ViewChild(RadioButtonGroupComponent, { static: false })
+  @ViewChild(RadioButtonGroupComponent)
   public radioButtonGroupComponent: RadioButtonGroupComponent;
 
   public modelValue: any;

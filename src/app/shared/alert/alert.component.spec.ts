@@ -17,16 +17,16 @@ import { AlertModule } from './alert.module';
   template: ``
 })
 export class TestAlertComponent {
-  @ViewChild('alertSuccess', { static: false })
+  @ViewChild('alertSuccess')
   public alertSuccess: AlertComponent;
 
-  @ViewChild('alertError', { static: false })
+  @ViewChild('alertError')
   public alertError: AlertComponent;
 
-  @ViewChild('alertWarning', { static: false })
+  @ViewChild('alertWarning')
   public alertWarning: AlertComponent;
 
-  @ViewChild('alertInfo', { static: false })
+  @ViewChild('alertInfo')
   public alertInfo: AlertComponent;
 }
 

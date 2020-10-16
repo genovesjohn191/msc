@@ -16,10 +16,10 @@ import { HiddenDirective } from './hidden.directive';
   template: ``
 })
 export class TestComponent {
-  @ViewChild('testElement', { static: false })
+  @ViewChild('testElement')
   public testElement: ElementRef;
 
-  @ViewChild(HiddenDirective, { static: false })
+  @ViewChild(HiddenDirective)
   public directive: HiddenDirective;
 
   public flag: boolean;

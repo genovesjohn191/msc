@@ -16,10 +16,10 @@ import { CursorDirective } from './cursor.directive';
   template: ``
 })
 export class TestComponent {
-  @ViewChild('testElement', { static: false })
+  @ViewChild('testElement')
   public testElement: ElementRef;
 
-  @ViewChild(CursorDirective, { static: false })
+  @ViewChild(CursorDirective)
   public directive: CursorDirective;
 }
 

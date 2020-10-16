@@ -33,7 +33,7 @@ export class MediaCommandComponent {
   @Output()
   public onClick: EventEmitter<MediaCommand> = new EventEmitter();
 
-  @ViewChild('popoverActionElement', { static: false })
+  @ViewChild('popoverActionElement')
   public popoverActionElement: any;
 
   public get gearIconKey(): string {

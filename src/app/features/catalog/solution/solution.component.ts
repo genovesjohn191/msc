@@ -44,7 +44,7 @@ export class SolutionComponent implements OnInit {
 
   public benefitAndLimitationColumns = ['benefit', 'limitation'];
 
-  @ViewChild('scrollableLinkGroup', { static: false })
+  @ViewChild('scrollableLinkGroup')
   private _scrollableLink: ScrollableLinkGroup;
 
   constructor(

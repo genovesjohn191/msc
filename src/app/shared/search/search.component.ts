@@ -54,7 +54,7 @@ export class SearchComponent implements OnInit, AfterContentInit, OnDestroy, Sea
   private _searchSubject: Subject<string>;
   private _destroySubject = new Subject<void>();
 
-  @ContentChild(IdDirective, { static: false })
+  @ContentChild(IdDirective)
   private _idElement: IdDirective;
 
   public constructor(private _changeDetectorRef: ChangeDetectorRef) {

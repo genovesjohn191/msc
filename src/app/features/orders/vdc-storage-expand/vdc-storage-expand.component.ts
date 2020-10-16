@@ -121,13 +121,13 @@ export class VdcStorageExpandComponent extends McsOrderWizardBase implements OnI
     return getSafeProperty(this._selectedStorage, (obj) => !isNullOrEmpty(obj.serviceId), false);
   }
 
-  @ViewChild('fgManageStorage', { static: false })
+  @ViewChild('fgManageStorage')
   private _fgManageStorage: IMcsFormGroup;
 
-  @ViewChild(McsFormGroupDirective, { static: false })
+  @ViewChild(McsFormGroupDirective)
   private _formGroup: McsFormGroupDirective;
 
-  @ViewChild(ComponentHandlerDirective, { static: false })
+  @ViewChild(ComponentHandlerDirective)
   private _componentHandler: ComponentHandlerDirective;
 
   private _destroySubject = new Subject<void>();
