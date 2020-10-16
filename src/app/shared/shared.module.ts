@@ -4,15 +4,24 @@ import {
   FormsModule,
   ReactiveFormsModule
 } from '@angular/forms';
-import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
+import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
+import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatCardModule } from '@angular/material/card';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
+import { MatOptionModule } from '@angular/material/core';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTreeModule } from '@angular/material/tree';
@@ -158,15 +167,25 @@ import { WizardModule } from './wizard/wizard.module';
     CtaListModule,
 
     // Angular Material
-    MatBottomSheetModule,
+    MatBadgeModule,
     MatButtonModule,
+    MatBottomSheetModule,
+    MatButtonToggleModule,
+    MatCardModule,
+    MatDialogModule,
     MatExpansionModule,
     MatFormFieldModule,
     MatGridListModule,
     MatIconModule,
+    MatInputModule,
     MatListModule,
+    MatOptionModule,
     MatProgressBarModule,
+    MatProgressSpinnerModule,
+    MatSelectModule,
     MatSlideToggleModule,
+    MatSnackBarModule,
+    MatProgressSpinnerModule,
     MatStepperModule,
     MatTooltipModule,
     MatTreeModule
@@ -243,15 +262,25 @@ import { WizardModule } from './wizard/wizard.module';
     CtaListModule,
 
     // Angular Material
-    MatBottomSheetModule,
+    MatBadgeModule,
     MatButtonModule,
+    MatBottomSheetModule,
+    MatButtonToggleModule,
+    MatCardModule,
+    MatDialogModule,
     MatExpansionModule,
     MatFormFieldModule,
     MatGridListModule,
     MatIconModule,
+    MatInputModule,
     MatListModule,
+    MatOptionModule,
     MatProgressBarModule,
+    MatProgressSpinnerModule,
+    MatSelectModule,
     MatSlideToggleModule,
+    MatSnackBarModule,
+    MatProgressSpinnerModule,
     MatStepperModule,
     MatTooltipModule,
     MatTreeModule

@@ -1,9 +1,8 @@
 <mat-nav-list>
   <a *ngFor="let opt of options" #selectorItem mat-list-item (click)="showWorkflow(selectorItem)" [attr.data-id]="getWorkflowGroupId(opt.id)">
-    <!-- <mat-icon style="transform: scale(2);">
-      {{ item.icon }}
-    </mat-icon> -->
-    <span mat-line>{{ opt.name }}</span>
-    <span mat-line>{{ opt.description }}</span>
+    <div>
+      <span mat-line> {{ opt.name }}</span>
+      <span mat-line>{{ opt.description }}</span>
+    </div>
   </a>
 </mat-nav-list>

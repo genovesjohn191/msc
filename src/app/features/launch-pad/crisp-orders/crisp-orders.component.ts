@@ -1,100 +1,109 @@
-import { Subscription } from 'rxjs';
 
 import { NestedTreeControl } from '@angular/cdk/tree';
 import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
+  ChangeDetectionStrategy,
   OnDestroy,
-  ViewChild
+  ViewChild,
+  ChangeDetectorRef
 } from '@angular/core';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
-import { McsEvent } from '@app/events';
-import { ProductType } from '@app/models';
-import {
-  isNullOrEmpty,
-  unsubscribeSafely
-} from '@app/utilities';
+import { Subscription } from 'rxjs';
 import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 
-import { LaunchPadComponent } from '../core/launch-pad-core.component';
+import { IMcsNavigateAwayGuard } from '@app/core';
+import { McsEvent } from '@app/events';
+import { ProductType } from '@app/models/enumerations/product-type.enum';
 import {
+  unsubscribeSafely,
+  isNullOrEmpty }
+  from '@app/utilities';
+
+  import {
+  LaunchPadComponent,
   LaunchPadWorkflowSelectorComponent,
-  WorkflowSelectorConfig
-} from '../core/layout/workflow-selector.component';
-import { WorkflowGroupConfig } from '../core/workflows/workflow-group.interface';
-import { Workflow } from '../core/workflows/workflow.interface';
+  WorkflowSelectorConfig,
+  WorkflowGroupConfig
+} from '../core';
 
-interface OrderItemNode {
-  name: string;
-  config?: WorkflowSelectorConfig;
-  children?: OrderItemNode[];
-}
-
-const TREE_DATA: OrderItemNode[] = [
+const TREE_DATA: WorkflowSelectorConfig[] = [
   {
-    name: '#00001 - New Managed Server',
+    label: '#00001 - New Managed Server',
     children: [
       {
-        name: 'Virtual Machines',
+        label: 'Virtual Machines',
         children: [
           {
-            name: 'MXCVM1111111',
-            config: {
-              label: 'MXCVM1111111',
-              type: ProductType.VirtualManagedServer,
-              parentServiceId: 'MXCVM1111111',
-            },
-            children: [{
-              name: 'HIDS',
-              config: {
+            label: 'new-server01',
+            serviceId: 'MXCVM1111111',
+            type: ProductType.VirtualManagedServer,
+            properties: [
+              { key: 'zone', value: 'LB1' },
+              { key: 'pod', value: 'POD2' },
+              { key: 'subZone', value: 'Management' },
+              { key: 'vCloudInstance', value: 'vcloud101' },
+              { key: 'vdc', value: 'M1VDC28603002' },
+              { key: 'network', value: 'Customer_104220-V1009-APP-M1VLN279999001'},
+              { key: 'hostName', value: 'new-server01' },
+              { key: 'cpu', value: 4 },
+              { key: 'ram', value: 9 },
+              { key: 'disk', value: 66 }
+            ],
+            children: [
+              {
                 label: 'HIDS',
                 type: ProductType.ServerHostIntrusionPreventionSystem,
-              }
-            }]
+                properties: [
+                  { key: 'mode', value: 'protect' }
+                ]
+              },
+              {
+                label: 'Backup',
+                type: ProductType.VmBackup,
+                properties: [
+                  { key: 'retention', value: '7 Days' },
+                  { key: 'dailyQuota', value: 33 },
+                ]
+              },
+            ]
           }
         ]
       }
     ]
   },
   {
-    name: '#00002 - Change Managed Server',
+    label: '#00002 - Change Managed Server',
     children: [
       {
-        name: 'Virtual Machines',
+        label: 'Virtual Machines',
         children: [
           {
-            name: 'webserver01',
-            config: {
-              label: 'webserver01',
-              serviceId: 'MXCVM2222222',
-              type: ProductType.VirtualManagedServer,
-              properties: [
-                { key: 'zone', value: 'LB1' },
-                { key: 'pod', value: 'POD2' },
-                { key: 'subZone', value: 'Management' },
-                { key: 'vdc', value: 'M1VDC28603002' },
-                { key: 'hostName', value: 'webserver01' },
-                { key: 'cpu', value: 2 },
-                { key: 'network', value: 'Customer_104220-V1009-APP-M1VLN279999001'},
-                { key: 'ram', value: 8 },
-                { key: 'disk', value: 50 }
-              ]
-            }
+            label: 'webserver01',
+            serviceId: 'MXCVM2222222',
+            type: ProductType.VirtualManagedServer,
+            properties: [
+              { key: 'zone', value: 'LB1' },
+              { key: 'pod', value: 'POD2' },
+              { key: 'subZone', value: 'Management' },
+              { key: 'vCloudInstance', value: 'vcloud101' },
+              { key: 'vdc', value: 'M1VDC28603002' },
+              { key: 'hostName', value: 'webserver01' },
+              { key: 'cpu', value: 2 },
+              { key: 'network', value: 'Customer_104220-V1009-APP-M1VLN279999001'},
+              { key: 'ram', value: 8 },
+              { key: 'disk', value: 50 }
+            ]
           }
         ]
       },
       {
-        name: 'Host Security',
+        label: 'Host Security',
         children: [
           {
-            name: 'Add Anti-Virus',
-            config: {
-              label: 'Add Anti-Virus',
-              parentServiceId: 'MXCVM2222222',
-              type: ProductType.ServerAntiVirus
-            }
+            label: 'Add Anti-Virus',
+            serviceId: 'MXCVM2222222',
+            type: ProductType.ServerAntiVirus
           }
         ]
       }
@@ -108,15 +117,14 @@ const TREE_DATA: OrderItemNode[] = [
   styleUrls: ['./crisp-orders.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CrispOrdersWorkflowComponent implements OnDestroy {
-  @ViewChild('launchPad', { static: false})
+export class CrispOrdersWorkflowComponent implements OnDestroy, IMcsNavigateAwayGuard {
+  @ViewChild('launchPad')
   protected launchPad: LaunchPadComponent;
 
   public config: WorkflowGroupConfig;
-  public workflowPayload: Workflow[] = [];
-  public treeControl = new NestedTreeControl<OrderItemNode>(node => node.children);
-  public dataSource = new MatTreeNestedDataSource<OrderItemNode>();
-
+  public treeControl = new NestedTreeControl<WorkflowSelectorConfig>(node => node.children);
+  public dataSource = new MatTreeNestedDataSource<WorkflowSelectorConfig>();
+  public companyId = '556';
   private _initHandler: Subscription;
 
   constructor(
@@ -132,17 +140,15 @@ export class CrispOrdersWorkflowComponent implements OnDestroy {
     unsubscribeSafely(this._initHandler);
   }
 
-  public hasChild = (_: number, node: OrderItemNode) => !!node.children && node.children.length > 0;
+  public canNavigateAway(): boolean {
+    if (isNullOrEmpty(this.launchPad)) {
+      return true;
+    }
 
-  private _registerEvents(): void {
-    this._initHandler = this._eventDispatcher.addEventListener(
-      McsEvent.launchPadWorkflowInitEvent, this._initLaunchPad.bind(this));
+    return this.launchPad.canNavigateAway();
   }
 
-  private _initLaunchPad(config: WorkflowGroupConfig): void {
-    this.config = config;
-    this._changeDetectorRef.markForCheck();
-  }
+  public hasChild = (_: number, node: WorkflowSelectorConfig) => !!node.children && node.children.length > 0;
 
   public get valid(): boolean {
     if (isNullOrEmpty(this.launchPad)) {
@@ -157,5 +163,15 @@ export class CrispOrdersWorkflowComponent implements OnDestroy {
 
   public clickNode(config: WorkflowSelectorConfig): void {
     this._bottomSheet.open(LaunchPadWorkflowSelectorComponent, { data: config });
+  }
+
+  private _registerEvents(): void {
+    this._initHandler = this._eventDispatcher.addEventListener(
+      McsEvent.launchPadWorkflowInitEvent, this._initLaunchPad.bind(this));
+  }
+
+  private _initLaunchPad(config: WorkflowGroupConfig): void {
+    this.config = config;
+    this._changeDetectorRef.markForCheck();
   }
 }

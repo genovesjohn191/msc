@@ -38,7 +38,8 @@ export const provisionVmForm: DynamicFormFieldDataBase[] = [
       { key: 'POD1', value: 'POD1'},
       { key: 'POD2', value: 'POD2'}
     ],
-    hint: 'POD in Availability Zone'
+    hint: 'POD in Availability Zone',
+    settings: { preserve: true }
   }),
   new DynamicSelectField({
     key: 'subZone',
@@ -70,17 +71,20 @@ export const provisionVmForm: DynamicFormFieldDataBase[] = [
     label: 'Org Virtual Data Center',
     dependents: ['os', 'storage', 'network'],
     validators: { required: true },
-    hint: 'e.g M2VDC270011'
+    hint: 'e.g M2VDC270011',
+    settings: { preserve: true }
   }),
   new DynamicSelectStorageProfileField({
     key: 'storage',
     label: 'Storage Profile',
-    validators: { required: true }
+    validators: { required: true },
+    settings: { preserve: true }
   }),
   new DynamicSelectNetworkField({
     key: 'network',
     label: 'Network Name',
-    validators: { required: true }
+    validators: { required: true },
+    settings: { preserve: true }
   }),
   new DynamicInputHostNameField({
     key: 'hostName',
@@ -95,7 +99,8 @@ export const provisionVmForm: DynamicFormFieldDataBase[] = [
     placeholder: 'Enter number of core',
     validators: { required: true, min: 1, max: 100 },
     hint: 'Allowed value is 1-100',
-    suffix: 'vCPU'
+    suffix: 'vCPU',
+    settings: { preserve: true }
   }),
   new DynamicInputNumberField({
     key: 'ram',
@@ -103,7 +108,8 @@ export const provisionVmForm: DynamicFormFieldDataBase[] = [
     placeholder: 'Enter vApp memory',
     validators: { required: true, min: 1, max: 2000 },
     hint: 'Allowed value is 1-2000',
-    suffix: 'GB'
+    suffix: 'GB',
+    settings: { preserve: true }
   }),
   new DynamicInputNumberField({
     key: 'disk',
@@ -111,7 +117,8 @@ export const provisionVmForm: DynamicFormFieldDataBase[] = [
     placeholder: 'Enter disk size',
     validators: { required: true, min: 10, max: 100000 },
     hint: 'Allowed value is 10-100000',
-    suffix: 'GB'
+    suffix: 'GB',
+    settings: { preserve: true }
   }),
   // new DynamicInputRandomField({
   //   key: 'intAdminPassword',

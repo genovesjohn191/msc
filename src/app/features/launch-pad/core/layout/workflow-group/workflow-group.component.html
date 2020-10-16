@@ -1,0 +1,20 @@
+<div style="width: 500px;">
+  <mat-form-field appearance="outline">
+    <mat-label>Service ID</mat-label>
+    <mat-select required [value]="serviceId" (selectionChange)="serviceIdChanged($event)">
+      <mat-option>Service ID</mat-option>
+      <mat-option value="MXCVM1111111"><small>CRISP</small> | MXCVM1111111</mat-option>
+      <mat-option value="MXCVM2222222"><small>CRISP</small> | MXCVM2222222</mat-option>
+      <mat-option value="MXCVM3333333"><small>CRISP</small> | MXCVM3333333</mat-option>
+      <mat-option value="MXCVM4444444"><small>CRISP</small> | MXCVM4444444</mat-option>
+      <mat-option value="MXCVM5555555"><small>CMDB</small> | MXCVM5555555</mat-option>
+      <mat-option value="MXCVM6666666"><small>CMDB</small> | MXCVM6666666</mat-option>
+      <mat-option value="MXCVM7777777"><small>CMDB</small> | MXCVM7777777</mat-option>
+      <mat-option value="MXCVM8888888"><small>CMDB</small> | MXCVM8888888</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-accordion multi>
+    <ng-template workflowGroup></ng-template>
+  </mat-accordion>
+</div>

@@ -1,6 +1,6 @@
 import { McsEnumSerializationBase } from '../serialization/mcs-enum-serialization-base';
 
-export enum WorkflowIdType {
+export enum WorkflowType {
   ProvisionVm = 'servers.vcloud.provision',
   ChangeVm = 'servers.vcloud.update',
   DeprovisionVm = 'servers.vcloud.deprovision',
@@ -13,7 +13,7 @@ export enum WorkflowIdType {
 /**
  * Enumeration serializer and deserializer methods
  */
-export class WorkflowIdTypeSerialization
-  extends McsEnumSerializationBase<WorkflowIdType> {
-  constructor() { super(WorkflowIdType); }
+export class WorkflowTypeSerialization
+  extends McsEnumSerializationBase<WorkflowType> {
+  constructor() { super(WorkflowType); }
 }

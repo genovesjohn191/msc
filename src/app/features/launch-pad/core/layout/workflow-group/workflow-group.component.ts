@@ -4,7 +4,8 @@ import {
   ViewChild,
   ComponentFactoryResolver,
   ComponentRef,
-  Input
+  Input,
+  OnInit
 } from '@angular/core';
 
 import {
@@ -12,12 +13,13 @@ import {
   isNullOrEmpty
 } from '@app/utilities';
 import { LaunchPadWorkflowComponent } from './workflow.component';
-import { LaunchPadWorkflow } from '../workflows/workflow';
-import { WorkflowService } from '../workflows/workflow.service';
-import { WorkflowGroupDirective } from '../workflows/workflow-group.directive';
-import { FormGroup } from '@angular/forms';
-import { Workflow } from '../workflows/workflow.interface';
-import { WorkflowGroupConfig } from '../workflows/workflow-group.interface';
+import { LaunchPadWorkflow } from '../../workflows/workflow';
+import { WorkflowService } from '../../workflows/workflow.service';
+import { WorkflowGroupDirective } from '../../workflows/workflow-group.directive';
+import { Workflow } from '../../workflows/workflow.interface';
+import { WorkflowGroupConfig } from '../../workflows/workflow-group.interface';
+import { Subject } from 'rxjs';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
   selector: 'mcs-launch-pad-workflow-group',
@@ -26,7 +28,7 @@ import { WorkflowGroupConfig } from '../workflows/workflow-group.interface';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class LaunchPadWorkflowGroupComponent {
+export class LaunchPadWorkflowGroupComponent implements OnInit {
   public workflowComponentRef: ComponentRef<LaunchPadWorkflowComponent>[] = [];
 
   public componentRef: ComponentRef<any>;
@@ -36,6 +38,9 @@ export class LaunchPadWorkflowGroupComponent {
   public serviceId: string;
 
   @Input()
+  public companyId: string;
+
+  @Input()
   public set config(value: WorkflowGroupConfig) {
     if (isNullOrEmpty(value)) {
       return;
@@ -43,35 +48,70 @@ export class LaunchPadWorkflowGroupComponent {
     this._renderWorkflowGroup(value);
   }
 
-   @ViewChild(WorkflowGroupDirective, {static: true})
-   public workflowGroup: WorkflowGroupDirective;
+  @Input()
+  protected loadWorkflowNotifier: Subject<Workflow[]>;
+
+  @ViewChild(WorkflowGroupDirective, {static: true})
+  public workflowGroup: WorkflowGroupDirective;
 
   constructor(
     private _componentFactoryResolver: ComponentFactoryResolver,
     private _workflowService: WorkflowService) { }
 
+  public ngOnInit(): void {
+    if (!isNullOrEmpty(this.loadWorkflowNotifier)) {
+      this.loadWorkflowNotifier.subscribe((workflows) => this._loadWorkflowGroup(workflows));
+    }
+
+    console.log(this.companyId);
+  }
+
+  private _loadWorkflowGroup(workflows: Workflow[]): void {
+    if (isNullOrEmpty(workflows)) {
+      return;
+    }
+
+    // Load and edit each workflow
+    let parentReferenceId: string = '';
+
+    this.workflowComponentRef.forEach(ref => {
+      // WARNING: Workflow - This will not handle similar types in a group
+      let workflowIndex = workflows.findIndex((workflow) => workflow.type === ref.instance.type);
+
+      let includeWorkflow = workflowIndex >= 0;
+      if (!includeWorkflow) {
+        ref.instance.referenceId = Guid.newGuid().toString();
+        ref.instance.parentReferenceId = parentReferenceId;
+        ref.instance.close();
+        return;
+      }
+
+      // Set Service ID for the workflow group
+      let isParentWorkflow = !isNullOrEmpty(workflows[workflowIndex].serviceId);
+      if (isParentWorkflow) {
+        parentReferenceId = workflows[workflowIndex].referenceId;
+        this.serviceId = workflows[workflowIndex].serviceId;
+      }
+
+      // Load values to form
+      ref.instance.load(workflows[workflowIndex]);
+    });
+  }
+
   /**
    * Returns validity of combined workflow
    */
   public get valid(): boolean {
-    let valid: boolean = true;
+    let validForm = true;
+    let validServiceId: boolean = !isNullOrEmpty(this.serviceId);
+
     this.workflowComponentRef.forEach(ref => {
       if (ref.instance.included && !ref.instance.valid) {
-        valid = false;
+        validForm = false;
       }
     });
 
-    return valid;
-  }
-
-  public get forms(): FormGroup[] {
-    let formArray: FormGroup[]  = [];
-    this.workflowComponentRef.forEach(ref => {
-      if (ref.instance.included) {
-        formArray.push(ref.instance.formGroup);
-      }
-    });
-    return formArray;
+    return validForm && validServiceId;
   }
 
   /**
@@ -80,11 +120,12 @@ export class LaunchPadWorkflowGroupComponent {
   public get payload(): Workflow[] {
     let payloadItems: Workflow[] = [];
     this.workflowComponentRef.forEach(ref => {
-      let payload = ref.instance.GetRawValue();
+      let payload = ref.instance.getRawValue();
       if (!isNullOrEmpty(payload)) {
         payloadItems.push(payload);
       }
     });
+
     return payloadItems;
   }
 
@@ -104,9 +145,22 @@ export class LaunchPadWorkflowGroupComponent {
     });
   }
 
+  public serviceIdChanged(event: MatSelectChange): void {
+    this.serviceId = event.value;
+    this._updateServiceId(this.serviceId);
+  }
+
+  private _updateServiceId(serviceId: string): void {
+    this.workflowComponentRef.forEach(ref => {
+      if (!isNullOrEmpty(ref.instance.serviceId)) {
+        ref.instance.serviceId = serviceId ;
+      }
+    });
+  }
+
   private _renderWorkflowGroup(config: WorkflowGroupConfig): void {
     let workflows: LaunchPadWorkflow[] = this._workflowService.getWorkflowGroup(config);
-    this.serviceId = config.serviceId || config.parentServiceId;
+    this.serviceId = config.parent.serviceId;
 
     // Clear references and instances of existing workflow
     this.workflowComponentRef = [];
@@ -116,7 +170,6 @@ export class LaunchPadWorkflowGroupComponent {
       console.log('No workflow group found.');
       return;
     }
-
     // Render workflows
     workflows.forEach(workflow => {
       this._renderWorkflow(workflow);
@@ -128,7 +181,10 @@ export class LaunchPadWorkflowGroupComponent {
     let componentRef = this.workflowGroup.viewContainerRef.createComponent<LaunchPadWorkflowComponent>(componentFactory);
 
     // Set workflow settings
-    componentRef.instance.load(param);
+    componentRef.instance.initialize(param);
+    if (param.hasValueOverride) {
+      componentRef.instance.open();
+    }
 
     this.workflowComponentRef.push(componentRef);
   }

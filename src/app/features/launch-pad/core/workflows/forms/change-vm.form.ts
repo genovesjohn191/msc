@@ -38,7 +38,9 @@ export const changeVmForm: DynamicFormFieldDataBase[] = [
       { key: 'POD1', value: 'POD1'},
       { key: 'POD2', value: 'POD2'}
     ],
-    hint: 'POD in Availability Zone'
+    value: 'POD1',
+    hint: 'POD in Availability Zone',
+    settings: { preserve: true }
   }),
   new DynamicSelectField({
     key: 'subZone',
@@ -58,28 +60,32 @@ export const changeVmForm: DynamicFormFieldDataBase[] = [
     label: 'vCloud Instance',
     options: [
       { key: 'vcloud', value: 'vcloud'},
-      { key: 'vcloud101.', value: 'vcloud101'},
-      { key: 'vcloud202.', value: 'vcloud202'},
+      { key: 'vcloud101', value: 'vcloud101'},
+      { key: 'vcloud202', value: 'vcloud202'},
       { key: 'vcloud4.', value: 'vcloud4'}
     ],
-    value: 'vcloud'
+    value: 'vcloud202',
+    settings: { preserve: true }
   }),
   new DynamicSelectVdcField({
     key: 'vdc',
     label: 'Org Virtual Data Center',
     dependents: ['os', 'storage', 'network'],
     validators: { required: true },
-    hint: 'e.g M2VDC270011'
+    hint: 'e.g M2VDC270011',
+    settings: { preserve: true }
   }),
   new DynamicSelectStorageProfileField({
     key: 'storage',
     label: 'Storage Profile',
-    validators: { required: true }
+    validators: { required: true },
+    settings: { preserve: true }
   }),
   new DynamicSelectNetworkField({
     key: 'network',
     label: 'Network Name',
-    validators: { required: true }
+    validators: { required: true },
+    settings: { preserve: true }
   }),
   new DynamicInputHostNameField({
     key: 'hostName',

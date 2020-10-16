@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { McsNavigateAwayGuard } from '@app/core';
 import { RouteKey } from '@app/models';
 import { CrispOrdersWorkflowComponent } from './crisp-orders/crisp-orders.component';
 
@@ -9,6 +10,7 @@ export const launchPadRoutes: Routes = [
   {
     path: 'crisp-orders',
     component: CrispOrdersWorkflowComponent,
-    data: { routeId: RouteKey.LaunchPadCrispOrders }
+    data: { routeId: RouteKey.LaunchPadCrispOrders },
+    canDeactivate: [McsNavigateAwayGuard],
   }
 ];

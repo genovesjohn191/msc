@@ -1,0 +1,28 @@
+<div style="margin-bottom: 16px;">
+  <button mat-button (click)="accordion.openAll()">Expand All</button>
+  <button mat-button (click)="accordion.closeAll()">Collapse All</button>
+</div>
+
+<mat-accordion #accordion="matAccordion" multi displayMode="flat" class="workflow-provision-panel">
+  <mat-expansion-panel *ngFor="let payload of workflows" [class.parent]="payload.serviceId" [expanded]="true">
+    <mat-expansion-panel-header style="position: relative;">
+      <mat-panel-title>
+        <h3>{{ payload.title }}</h3>
+      </mat-panel-title>
+      <mat-panel-description>
+        {{ payload.serviceId }}
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <div>
+      <mat-progress-bar mode="indeterminate" value="40"></mat-progress-bar>
+      <br />
+      <p>
+        13-10-2020 07:30:20 Something is done
+      </p>
+      <p>
+        13-10-2020 07:30:20 Something is done
+      </p>
+    </div>
+  </mat-expansion-panel>
+</mat-accordion>

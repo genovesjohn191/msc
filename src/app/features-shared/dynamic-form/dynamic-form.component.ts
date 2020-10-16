@@ -4,7 +4,7 @@ import {
   QueryList,
   OnInit,
   Component,
-  ChangeDetectorRef
+  ChangeDetectorRef, AfterViewInit
 } from '@angular/core';
 import {
   FormGroup,
@@ -27,7 +27,7 @@ import { DynamicFormFieldDataBase } from './dynamic-form-field-data.base';
   templateUrl: './dynamic-form.component.html',
   styleUrls: ['./dynamic-form.scss']
 })
-export class DynamicFormComponent implements OnInit {
+export class DynamicFormComponent implements OnInit, AfterViewInit {
   @Input()
   public controlDataItems: DynamicFormFieldDataBase[];
 
@@ -41,40 +41,38 @@ export class DynamicFormComponent implements OnInit {
   public form: FormGroup;
 
   private customValidatorMap: Map<string, ValidatorFn[]>;
+  private dataChangeEventQueue: DynamicFormFieldDataChangeEventParam[] = [];
 
   public constructor(private _changeDetectorRef: ChangeDetectorRef) {}
 
   public ngOnInit() {
     this._createCustomValidationMap();
-    this.form = this.buildForm();
+    this.form = this._buildForm();
   }
 
-  private buildForm(): FormGroup {
-    const formGroup = {};
-    this.controlDataItems.forEach(formControl => {
-      let validators: ValidatorFn[] = this._getValidators(formControl);
-      formGroup[formControl.key] = new FormControl(formControl.value || '', validators);
-
-      if (!this.hasMoreFields && formControl.settings && formControl.settings.hidden) {
-        this.hasMoreFields = true;
-      }
-    });
-
-    return new FormGroup(formGroup);
+  public ngAfterViewInit() {
+    this._invokeQueuedEvents();
   }
 
-  public GetRawValue(): any {
+  public getRawValue(): any {
     return this.form.getRawValue();
   }
 
-  // Notify all dependent fields if data has change
+  // Notify all dependent field controls if data has change
   public onDataChange(params: DynamicFormFieldDataChangeEventParam): void {
-    if (isNullOrEmpty(params.dependents)
-    || isNullOrEmpty(params.eventName)
-    || isNullOrEmpty(this.controls)) {
+    let valid = !isNullOrEmpty(params.dependents) && !isNullOrEmpty(params.eventName);
+    if (!valid) {
       return;
     }
 
+    // Add event to queue if not controls are not ready
+    let controlReady = !isNullOrEmpty(this.controls);
+    if (!controlReady) {
+      this.dataChangeEventQueue.push(params);
+      return;
+    }
+
+    // Trigger data change event
     this.controls.forEach(control => {
       if (params.dependents.indexOf(control.data.key) > -1) {
         control.onFormDataChange(params);
@@ -89,6 +87,22 @@ export class DynamicFormComponent implements OnInit {
   public resetForm(preserveValues: boolean = true): void {
     this.controls.forEach(control => {
       control.clearFormFields(preserveValues);
+    });
+
+    this._changeDetectorRef.markForCheck();
+  }
+
+  public setValues(properties: any): void {
+    if (isNullOrEmpty(properties)) {
+      this.resetForm(false);
+    }
+
+    this.controls.forEach(control => {
+      let value = properties[control.data.key];
+
+      if (!isNullOrEmpty(value)) {
+        control.setValue(value);
+      }
     });
 
     this._changeDetectorRef.markForCheck();
@@ -145,6 +159,20 @@ export class DynamicFormComponent implements OnInit {
     this._changeDetectorRef.markForCheck();
   }
 
+  private _buildForm(): FormGroup {
+    const formGroup = {};
+    this.controlDataItems.forEach(formControl => {
+      let validators: ValidatorFn[] = this._getValidators(formControl);
+      formGroup[formControl.key] = new FormControl(formControl.value || '', validators);
+
+      if (!this.hasMoreFields && formControl.settings && formControl.settings.hidden) {
+        this.hasMoreFields = true;
+      }
+    });
+
+    return new FormGroup(formGroup);
+  }
+
   private _markThisAsTouched(formGroup: FormGroup): void {
     (Object as any).values(formGroup.controls).forEach((control) => {
       control.markAsTouched();
@@ -198,5 +226,11 @@ export class DynamicFormComponent implements OnInit {
     }
 
     return validators;
+  }
+
+  private _invokeQueuedEvents(): void {
+    while (this.dataChangeEventQueue.length > 0) {
+      this.onDataChange(this.dataChangeEventQueue.shift());
+    }
   }
 }

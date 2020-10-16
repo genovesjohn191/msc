@@ -1,15 +1,23 @@
 import { Injectable } from '@angular/core';
-import { cloneDeep, Guid, isNullOrEmpty } from '@app/utilities';
+import { WorkflowType } from '@app/models';
+
+import {
+  cloneDeep,
+  Guid,
+  isNullOrEmpty } from '@app/utilities';
 import { LaunchPadWorkflow } from './workflow';
-import { WorkflowGroup } from './workflow-group.interface';
-import { WorkflowConfig } from './workflow.interface';
+import {
+  WorkflowGroup,
+  WorkflowGroupConfig
+} from './workflow-group.interface';
+import {
+  WorkflowConfig,
+  WorkflowData
+} from './workflow.interface';
 
 interface NewWorkflowGroupConfig {
   workflowGroup: WorkflowGroup;
-  referenceId?: string;
-  serviceId?: string;
-  parentServiceId?: string;
-  parentParams?: { key: string, value: any }[];
+  config: WorkflowGroupConfig;
 }
 
 @Injectable()
@@ -20,42 +28,68 @@ export class WorkflowFactory {
 
     let parentWorkflow = this._createParentWorkflow(options);
     workflows.push(parentWorkflow);
-    this._appendChildWorkflows(parentWorkflow.serviceId, options.workflowGroup.children, workflows);
+    this._appendChildWorkflows(
+      workflows,
+      parentWorkflow.referenceId,
+      options.workflowGroup.children,
+      options.config.children);
 
     return workflows;
   }
 
-  private _createParentWorkflow(config: NewWorkflowGroupConfig): LaunchPadWorkflow {
+  private _createParentWorkflow(options: NewWorkflowGroupConfig): LaunchPadWorkflow {
     return new LaunchPadWorkflow({
-      type: config.workflowGroup.parent.id,
-      referenceId: config.referenceId  || Guid.newGuid().toString(),
-      serviceId: config.serviceId || '',
-      parentServiceId: config.parentServiceId || '',
-      title: config.workflowGroup.parent.title,
+      type: options.workflowGroup.parent.id,
+      referenceId: options.config.parent.referenceId  || Guid.newGuid().toString(),
+      serviceId: options.config.parent.serviceId || '',
+      title: options.workflowGroup.parent.title,
       required: true,
-      // Clone the form
-      properties: cloneDeep(config.workflowGroup.parent.form),
-      // Pass initial values
-      params: config.parentParams
+      // Clone the form to ensure data is not persisted
+      properties: cloneDeep(options.workflowGroup.parent.form),
+      data: options.config.parent.propertyOverrides
     });
   }
 
-  private _appendChildWorkflows(parentServiceId: string, config: WorkflowConfig[], workflows: LaunchPadWorkflow[]): void {
+  private _appendChildWorkflows(
+    workflows: LaunchPadWorkflow[],
+    parentId: string,
+    config: WorkflowConfig[],
+    data: WorkflowData[]
+  ): void {
+
     if (!isNullOrEmpty(config)) {
+
       config.forEach((child) => {
+        // Resolve data override
+        let dataOverride = this._resolveOverrideData(child.id, data);
+
         let childWorkflow = new LaunchPadWorkflow({
           type: child.id,
           referenceId: Guid.newGuid().toString(),
-          parentReferenceId: parentServiceId,
+          parentReferenceId: parentId,
           title: child.title,
           required: child.required,
-          // Clone the form
-          properties: cloneDeep(child.form)
-          // Pass initial values
+          // Clone the form to ensure data is not persisted
+          properties: cloneDeep(child.form),
+          data: dataOverride
 
         });
         workflows.push(childWorkflow);
       });
     }
+  }
+
+  private _resolveOverrideData(id: WorkflowType, data: WorkflowData[]): { key: string, value: any }[] {
+    let propertyOverrides = [];
+    if (isNullOrEmpty(data)) {
+      return propertyOverrides;
+    }
+
+    let result = data.find((conf) => conf.id === id);
+    if (!isNullOrEmpty(result)) {
+      propertyOverrides = result.propertyOverrides;
+    }
+
+    return propertyOverrides;
   }
 }

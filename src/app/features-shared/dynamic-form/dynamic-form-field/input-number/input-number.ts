@@ -2,7 +2,7 @@ import { DynamicFormFieldDataBase } from '../../dynamic-form-field-data.base';
 import {
   DynamicFormFieldOnChangeEvent,
   DynamicFormFieldType,
-  DynamicFormFieldTemplate
+  DynamicFormFieldTemplate, DynamicFormControlSettings
 } from '../../dynamic-form-field-data.interface';
 
 export class DynamicInputNumberField extends DynamicFormFieldDataBase {
@@ -14,7 +14,7 @@ export class DynamicInputNumberField extends DynamicFormFieldDataBase {
     key: string;
     label: string;
     placeholder: string;
-    value?: string;
+    value?: number;
     hint?: string;
     order?: number;
     onChangeEvent?: DynamicFormFieldOnChangeEvent;
@@ -22,6 +22,7 @@ export class DynamicInputNumberField extends DynamicFormFieldDataBase {
     validators?: { required?: boolean; min?: number; max?: number; };
     prefix?: string;
     suffix?: string;
+    settings?: DynamicFormControlSettings;
   }) {
     super(options);
   }

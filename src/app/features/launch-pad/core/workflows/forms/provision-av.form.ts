@@ -11,6 +11,7 @@ export const provisionAvForm: DynamicFormFieldDataBase[] = [
     options: [
       { key: 'standard', value: 'Standard'},
       { key: 'premium', value: 'Premium'}
-    ]
+    ],
+    settings: { preserve: true }
   })
 ];

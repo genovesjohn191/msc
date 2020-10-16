@@ -13,7 +13,9 @@ export const serverBackupForm: DynamicFormFieldDataBase[] = [
     options: [
       { key: '7 Days', value: '7 Days'},
       { key: '30 Days', value: '30 Days'}
-    ]
+    ],
+    value: '30 Days',
+    settings: { preserve: true }
   }),
   new DynamicInputNumberField({
     key: 'dailyQuota',
@@ -21,6 +23,8 @@ export const serverBackupForm: DynamicFormFieldDataBase[] = [
     placeholder: 'Enter backup size limit',
     validators: { required: true, min: 1, max: 100 },
     hint: 'Allowed value is 1-100',
-    suffix: 'GB'
+    suffix: 'GB',
+    value: 10,
+    settings: { preserve: true }
   })
 ];

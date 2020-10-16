@@ -2,7 +2,8 @@ import { DynamicFormFieldDataBase } from '../../dynamic-form-field-data.base';
 import {
   DynamicFormFieldOnChangeEvent,
   DynamicFormFieldType,
-  DynamicFormFieldTemplate
+  DynamicFormFieldTemplate,
+  DynamicFormControlSettings
 } from '../../dynamic-form-field-data.interface';
 
 export class DynamicSelectStorageProfileField extends DynamicFormFieldDataBase {
@@ -20,6 +21,7 @@ export class DynamicSelectStorageProfileField extends DynamicFormFieldDataBase {
     eventName?: DynamicFormFieldOnChangeEvent;
     dependents?: string[];
     validators?: { required?: boolean; };
+    settings?: DynamicFormControlSettings;
   }) {
     super(options);
   }

@@ -4,15 +4,16 @@ import {
   Input,
   ViewChild
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { MatExpansionPanel } from '@angular/material/expansion';
 
 import {
   DynamicFormComponent,
   DynamicFormFieldDataBase
 } from '@app/features-shared/dynamic-form';
-import { WorkflowIdType } from '@app/models';
-import { LaunchPadWorkflow } from '../workflows/workflow';
-import { Workflow } from '../workflows/workflow.interface';
+import { WorkflowType } from '@app/models';
+import { isNullOrEmpty } from '@app/utilities';
+import { LaunchPadWorkflow } from '../../workflows/workflow';
+import { Workflow } from '../../workflows/workflow.interface';
 
 @Component({
   selector: 'mcs-launch-pad-workflow',
@@ -25,6 +26,9 @@ import { Workflow } from '../workflows/workflow.interface';
 })
 
 export class LaunchPadWorkflowComponent {
+  @ViewChild('panel', { static: false})
+  public panel: MatExpansionPanel;
+
   @ViewChild('form', { static: false})
   protected form: DynamicFormComponent;
 
@@ -32,7 +36,7 @@ export class LaunchPadWorkflowComponent {
   public title: string;
 
   @Input()
-  public type: WorkflowIdType;
+  public type: WorkflowType;
 
   @Input()
   public referenceId: string;
@@ -44,29 +48,24 @@ export class LaunchPadWorkflowComponent {
   public serviceId?: string;
 
   @Input()
-  public parentServiceId?: string;
-
-  @Input()
   public fieldData: DynamicFormFieldDataBase[];
 
   @Input()
   public required: boolean = false;
 
-  public panelOpenState: boolean = false;
+  public openPanelByDefault: boolean = false;
 
-  public get formGroup(): FormGroup {
-    return this.form.form;
-  }
+  public panelOpenState: boolean = false;
 
   public get included(): boolean {
     return this.required || this.panelOpenState === true;
   }
 
-  public openPanel(): void {
+  public panelOpened(): void {
     this.panelOpenState = true;
   }
 
-  public closePanel(): void {
+  public panelClosed(): void {
     this.panelOpenState = false;
 
     if (this.required) {
@@ -74,7 +73,7 @@ export class LaunchPadWorkflowComponent {
     }
   }
 
-  public GetRawValue(): Workflow {
+  public getRawValue(): Workflow {
     if (!this.included) {
       return null;
     }
@@ -82,12 +81,34 @@ export class LaunchPadWorkflowComponent {
     // Return valid workflow structure
     return {
       type: this.type,
+      title: this.title,
       referenceId: this.referenceId,
       parentReferenceId: this.parentReferenceId,
       serviceId: this.serviceId,
-      parentServiceId: this.parentServiceId,
-      properties: this.form.GetRawValue()
+      properties: this.form.getRawValue()
     };
+  }
+
+  public load(workflow: Workflow): void {
+    if (!isNullOrEmpty(workflow.serviceId)) {
+      this.serviceId = workflow.serviceId;
+    }
+
+    this.title = workflow.title;
+    this.type = workflow.type;
+    this.referenceId = workflow.referenceId;
+    this.parentReferenceId = workflow.parentReferenceId;
+    this.serviceId = workflow.serviceId;
+
+    // Set fields
+    this.form.setValues(workflow.properties);
+    this.open();
+  }
+
+  public close(): void {
+    if (!isNullOrEmpty(this.panel)) {
+      this.panel.close();
+    }
   }
 
   public get valid(): boolean {
@@ -102,14 +123,21 @@ export class LaunchPadWorkflowComponent {
     this.form.resetForm();
   }
 
-  public load(workflow: LaunchPadWorkflow): void {
+  public open(): void {
+    this.openPanelByDefault = true;
+
+    if (!isNullOrEmpty(this.panel)) {
+      this.panel.open();
+    }
+  }
+
+  public initialize(workflow: LaunchPadWorkflow): void {
     this.title = workflow.title;
     this.required = workflow.required;
     this.type = workflow.type;
     this.referenceId = workflow.referenceId;
     this.parentReferenceId = workflow.parentReferenceId;
     this.serviceId = workflow.serviceId;
-    this.parentServiceId = workflow.parentServiceId;
     this.fieldData = workflow.properties;
   }
 }
