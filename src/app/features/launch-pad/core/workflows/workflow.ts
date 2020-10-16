@@ -1,28 +1,27 @@
 import { DynamicFormFieldDataBase } from '@app/features-shared/dynamic-form';
-import { WorkflowIdType } from '@app/models';
+import { WorkflowType } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
 import { Workflow } from './workflow.interface';
 
 export class LaunchPadWorkflow implements Workflow {
-  public type: WorkflowIdType;
+  public type: WorkflowType;
   public referenceId: string;
   public parentReferenceId?: string;
   public serviceId?: string;
-  public parentServiceId?: string;
   public title: string;
   public required: boolean = false;
   public properties: DynamicFormFieldDataBase[];
+  public hasValueOverride: boolean = false;
 
   public constructor(options: {
-    type: WorkflowIdType,
+    type: WorkflowType,
     title: string,
     referenceId: string,
     required?: boolean,
     serviceId?: string,
-    parentServiceId?: string,
     parentReferenceId?: string,
     properties: DynamicFormFieldDataBase[],
-    params?: { key: string, value: any }[]
+    data?: { key: string, value: any }[]
   }) {
     this.title = options.title;
     this.required = options.required || false;
@@ -30,17 +29,27 @@ export class LaunchPadWorkflow implements Workflow {
     this.referenceId = options.referenceId;
     this.parentReferenceId = options.parentReferenceId || '';
     this.serviceId = options.serviceId;
-    this.parentServiceId = options.parentServiceId || '';
     this.properties = options.properties;
 
-    this.setDefaultValues(options.params);
+    this._setDefaultValues(options.data);
   }
 
-  private setDefaultValues(params?: { key: string, value: any }[]): void {
-    if (isNullOrEmpty(params)) {
-      return;
+  private _setDefaultValues(params?: { key: string, value: any }[]): void {
+    this.hasValueOverride = !isNullOrEmpty(params);
+    if (this.hasValueOverride) {
+      this._overrideDefaultValues(params);
+    } else {
+      this._resetDefaultValues();
     }
+  }
 
+  private _resetDefaultValues(): void {
+    this.properties.forEach((prop) => {
+      prop.initialValue = '';
+    });
+  }
+
+  private _overrideDefaultValues(params: { key: string, value: any }[]): void {
     params.forEach((param) => {
       if (isNullOrEmpty(param.key) || isNullOrEmpty(param.value)) {
         return;

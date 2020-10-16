@@ -1,18 +1,30 @@
 import { DynamicFormFieldDataBase } from '@app/features-shared/dynamic-form';
-import { WorkflowIdType } from '@app/models';
+import {
+  ProductType,
+  WorkflowType
+} from '@app/models';
 
 export interface WorkflowConfig {
-  id: WorkflowIdType;
+  id: WorkflowType;
+  productType: ProductType;
   title: string;
-  required?: boolean;
   form: DynamicFormFieldDataBase[];
+  required?: boolean;
+}
+
+export interface WorkflowData {
+  id: WorkflowType;
+  serviceId?: string;
+  referenceId?: string;
+  propertyOverrides?: { key: string, value: any }[];
 }
 
 export interface Workflow {
-  type: WorkflowIdType;
+  type: WorkflowType;
+  title: string;
   referenceId: string;
   parentReferenceId?: string;
   serviceId?: string;
-  parentServiceId?: string;
-  properties: any[];
+  properties: any;
+  hasValueOverride?: boolean;
 }

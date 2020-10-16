@@ -38,6 +38,11 @@ export abstract class DynamicTextFieldComponentBase implements DynamicFormField,
     }
   }
 
+  public setValue(value: any): void {
+    this.data.initialValue = value;
+    this._resetValue(value);
+  }
+
   private _resetValue(value: any): void {
     this.data.value = value;
     this.valueChange(this.data.value);

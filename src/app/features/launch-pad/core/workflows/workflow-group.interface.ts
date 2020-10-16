@@ -1,15 +1,22 @@
 import { WorkflowGroupId } from './workflow-groups/workflow-group-type.enum';
-import { WorkflowConfig } from './workflow.interface';
+import {
+  Workflow,
+  WorkflowConfig,
+  WorkflowData
+} from './workflow.interface';
 
 export interface WorkflowGroupConfig {
   id: WorkflowGroupId;
-  serviceId?: string;
-  parentServiceId?: string;
-  referenceId?: string;
-  properties?: { key: string, value: any }[];
+  parent: WorkflowData;
+  children: WorkflowData[];
 }
 
 export interface WorkflowGroup {
   parent: WorkflowConfig;
   children?: WorkflowConfig[];
+}
+
+export interface WorkflowGroupSaveState {
+  config: WorkflowGroupConfig;
+  workflows: Workflow[];
 }

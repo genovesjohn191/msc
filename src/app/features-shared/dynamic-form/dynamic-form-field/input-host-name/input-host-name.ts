@@ -1,5 +1,6 @@
 import { CommonDefinition } from '@app/utilities';
 import {
+  DynamicFormControlSettings,
   DynamicFormFieldOnChangeEvent,
   DynamicFormFieldType
 } from '../../dynamic-form-field-data.interface';
@@ -20,6 +21,7 @@ export class DynamicInputHostNameField extends DynamicInputTextField {
     eventName?: DynamicFormFieldOnChangeEvent;
     dependents?: string[];
     validators?: { required?: boolean; minlength?: number; maxlength?: number; };
+    settings?: DynamicFormControlSettings;
   }) {
     super(options);
   }

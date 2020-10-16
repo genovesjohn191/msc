@@ -1,60 +1,79 @@
 <mat-vertical-stepper [linear]="true" #stepper>
-  <mat-step [stepControl]="stepControl">
+  <!-- Form -->
+
+  <mat-step [editable]="!isProvisioning" [completed]="false" [optional]="validForProvisioning">
     <ng-template matStepLabel>Create workflow</ng-template>
-    <mcs-launch-pad-workflow-group #workflows [config]="config"></mcs-launch-pad-workflow-group>
+    <mcs-launch-pad-workflow-group #workflowGroup [config]="config" [companyId]="companyId" [loadWorkflowNotifier]="editWorkflowGroup"></mcs-launch-pad-workflow-group>
 
     <br />
-    <button mat-raised-button matStepperNext color="primary" [disabled]="!valid" (click)="addToWorkflow()">
-      <mat-icon>navigate_next</mat-icon>
-      Next
+    <button *ngIf="isEditing || validForProvisioning" mat-button (click)="cancelEditing()">
+      Cancel
+    </button>
+    <button mat-raised-button color="primary" [disabled]="!valid" (click)="addOrUpdate()">
+      <mat-icon>{{ isNewWorkflowGroup ? 'playlist_add' : 'playlist_add_check' }} </mat-icon>
+      {{ isNewWorkflowGroup ? 'Add Workflow' : 'Save Changes' }}
     </button>
   </mat-step>
-  <mat-step>
+
+  <!-- Confirmation -->
+  <mat-step [editable]="!isProvisioning" [completed]="false">
     <ng-template matStepLabel>Confirm</ng-template>
-    <div>
-      <table>
-        <tr style="text-align: left;">
-          <th>Type</th>
-          <th>Service ID</th>
-          <th>Parent Service ID</th>
-          <th>Payload</th>
-        </tr>
-        <tr *ngFor="let payload of workflowPayload">
-          <td>
-            {{ payload.type }}
-          </td>
-          <td>
-            {{ payload.serviceId }}
-          </td>
-          <td>
-            {{ payload.parentServiceId }}
-          </td>
-          <td>
-            {{ parse(payload.properties) }}
-          </td>
-        </tr>
-      </table>
+    <div class="workflow-group-wrapper">
+      <div style="margin-bottom: 16px;">
+        <button mat-button (click)="confirmPayloadViewer.openAll()">Expand All</button>
+        <button mat-button (click)="confirmPayloadViewer.closeAll()">Collapse All</button>
+      </div>
+
+      <mat-accordion #confirmPayloadViewer="matAccordion" multi displayMode="flat">
+        <mat-expansion-panel [class.new]="isNew(payload.referenceId)" [class.parent]="payload.serviceId" *ngFor="let payload of workflows" [expanded]="isNew(payload.referenceId)">
+          <mat-expansion-panel-header style="position: relative;">
+            <mat-panel-title>
+              <h3>{{ payload.title }}</h3>
+            </mat-panel-title>
+            <mat-panel-description >
+              {{ payload.serviceId }}
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <mcs-workflow-json-viewer [obj]="clone(payload)"></mcs-workflow-json-viewer>
+          <div>
+            <button mat-icon-button aria-label="Remove"
+              matTooltip="{{ payload.serviceId ? 'Remove this and related workflows' : 'Remove this workflow' }}"
+              (click)="remove(payload.referenceId)">
+              <mat-icon>{{ payload.serviceId ? 'delete_sweep' : 'delete' }}</mat-icon>
+            </button>
+            <button
+              *ngIf="payload.serviceId"
+              mat-icon-button aria-label="Remove"
+              matTooltip="Edit this and related workflows"
+              (click)="editWorkflow(payload.referenceId)">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+
     </div>
     <br />
     <div>
-      <button mat-button matStepperPrevious (click)="addAnother()">
-        Add Another
+      <button mat-button (click)="addAnother()">
+        {{ validForProvisioning ? 'Add Another' : 'Add Workflow' }}
       </button>
-      <button mat-raised-button matStepperNext color="primary">
+      <button *ngIf="validForProvisioning" mat-raised-button color="primary" (click)="runWorkflow()">
         <mat-icon>playlist_play</mat-icon>
         Run Workflow
       </button>
     </div>
   </mat-step>
+
+  <!-- Provisioning -->
   <mat-step>
     <ng-template matStepLabel>Provision</ng-template>
-    <br />
-    <h1>Working on your request...</h1>
-    <br />
-    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-    <br />
-    
-    <p>Provisioning VM</p>
+
+    <div class="workflow-group-wrapper">
+      <mcs-launch-pad-workflow-provision-state [workflows]="workflows"></mcs-launch-pad-workflow-provision-state>
+    </div>
+
   </mat-step>
 
 </mat-vertical-stepper>

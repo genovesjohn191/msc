@@ -12,4 +12,6 @@ export interface DynamicFormField {
   onFormDataChange(params: DynamicFormFieldDataChangeEventParam): void;
 
   clearFormFields(reuseValue: boolean): void;
+
+  setValue(value: any): void;
 }

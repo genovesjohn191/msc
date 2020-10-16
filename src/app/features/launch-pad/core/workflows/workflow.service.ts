@@ -7,7 +7,7 @@ import { WorkflowFactory } from './workflow.factory';
 import { LaunchPadWorkflow } from './workflow';
 import { WorkflowGroupId } from './workflow-groups/workflow-group-type.enum';
 import { workflowGroupMap } from './workflow-group.map';
-import { productWorkflowGroupsMap } from './product-workflow-groups.map';
+import { productWorkflowGroupMap } from './product-workflow-group.map';
 
 @Injectable()
 export class WorkflowService {
@@ -18,16 +18,14 @@ export class WorkflowService {
     if (isNullOrEmpty(workflowGroup)) {
       return [];
     }
+
     return this._workflowFactory.createWorkflows({
       workflowGroup: new workflowGroup(),
-      serviceId: config.serviceId,
-      parentServiceId: config.parentServiceId,
-      referenceId: config.referenceId,
-      parentParams: config.properties
+      config
     });
   }
 
   public getWorkflowGroupIdsByProductType(type: ProductType): WorkflowGroupId[] {
-    return productWorkflowGroupsMap.get(type);
+    return productWorkflowGroupMap.get(type);
   }
 }

@@ -5,19 +5,20 @@ import { SharedModule } from '@app/shared';
 import { launchPadRoutes } from './launch-pad.constants';
 import { CrispOrdersWorkflowComponent } from './crisp-orders/crisp-orders.component';
 import { LaunchPadCoreModule } from './core/launch-pad-core.module';
-import { LaunchPadWorkflowGroupComponent } from './core/layout/workflow-group.component';
+import { McsStorageService } from '@app/core';
 
 @NgModule({
   declarations: [
-    CrispOrdersWorkflowComponent
+    CrispOrdersWorkflowComponent,
   ],
-  exports: [
-    LaunchPadWorkflowGroupComponent
-  ],
+  exports: [ ],
   imports: [
     SharedModule,
     LaunchPadCoreModule,
     RouterModule.forChild(launchPadRoutes)
+  ],
+  providers: [
+    McsStorageService
   ]
 })
 

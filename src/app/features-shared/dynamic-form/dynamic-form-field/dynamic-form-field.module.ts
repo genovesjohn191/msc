@@ -26,18 +26,7 @@ import { DynamicSelectComponent } from './select/select.component';
 
 @NgModule({
   imports: [
-    SharedModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatBadgeModule,
-    MatButtonModule,
-    MatButtonToggleModule,
-    MatIconModule,
-    MatInputModule,
-    MatOptionModule,
-    MatProgressSpinnerModule,
-    MatSelectModule,
-    MatTooltipModule
+    SharedModule
   ],
   declarations: [
     DynamicInputNumberComponent,

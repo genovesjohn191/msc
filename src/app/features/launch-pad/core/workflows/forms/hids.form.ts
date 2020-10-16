@@ -6,12 +6,13 @@ import {
 
 export const hidsForm: DynamicFormFieldDataBase[] = [
   new DynamicSelectField({
-    key: 'hids',
+    key: 'mode',
     label: 'Mode',
     validators: { required: true },
     options: [
       { key: 'detect', value: 'Detect'},
       { key: 'protect', value: 'Protect'}
-    ]
+    ],
+    settings: { preserve: false }
   })
 ];
