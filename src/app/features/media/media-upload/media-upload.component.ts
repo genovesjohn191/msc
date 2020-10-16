@@ -28,7 +28,7 @@ export class MediaUploadComponent extends McsWizardBase
 
   private _destroySubject = new Subject<void>();
 
-  @ViewChild(MediaUploadDetailsComponent, { static: false })
+  @ViewChild(MediaUploadDetailsComponent)
   private _detailsStep: MediaUploadDetailsComponent;
 
   constructor(_mediaUploadService: MediaUploadService) {

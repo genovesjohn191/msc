@@ -28,7 +28,7 @@ export class SelectTagSubItemComponent {
   @Output()
   public selectionChanged = new EventEmitter<SelectTagSubItemComponent>();
 
-  @ViewChild(TemplateRef, { static: false })
+  @ViewChild(TemplateRef)
   public templateRef: TemplateRef<any>;
 
   @Input()

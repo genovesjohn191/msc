@@ -159,7 +159,7 @@ export class DynamicListComponent extends McsFormFieldControlBase<any> implement
   }
   private _maximum: number = DEFAULT_MAXIMUM_ITEM;
 
-  @ViewChild('inputItemFc', { static: false })
+  @ViewChild('inputItemFc')
   public inputItemFc: ElementRef;
 
   public get addIconKey(): string {

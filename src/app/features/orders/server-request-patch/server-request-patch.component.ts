@@ -137,7 +137,7 @@ export class ServerRequestPatchComponent  extends McsOrderWizardBase  implements
     return LOADING_TEXT;
   }
 
-  @ViewChild(McsFormGroupDirective, { static: false })
+  @ViewChild(McsFormGroupDirective)
   public set formGroup(value: McsFormGroupDirective) {
     if (isNullOrEmpty(value)) { return; }
 
@@ -145,7 +145,7 @@ export class ServerRequestPatchComponent  extends McsOrderWizardBase  implements
     this._subscribeToValueChanges();
   }
 
-  @ViewChild('fgSmacSharedForm', { static: false })
+  @ViewChild('fgSmacSharedForm')
   public set fgSmacSharedForm(value: IMcsFormGroup) {
     if (isNullOrEmpty(value)) { return; }
 

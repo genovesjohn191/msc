@@ -17,7 +17,7 @@ import { DialogModule } from './dialog.module';
   template: ``
 })
 export class TestDialogComponent {
-  @ViewChild(DialogComponent, { static: false })
+  @ViewChild(DialogComponent)
   public dialogComponent: DialogComponent;
 }
 

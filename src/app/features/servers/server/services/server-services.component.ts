@@ -87,7 +87,7 @@ export class ServerServicesComponent extends ServerDetailsBase implements OnInit
   private _strategyActionContext: ServerServiceActionContext;
   private _hostSecurityStatusDetailsMap: Map<HostSecurityAgentStatus, ServerHostSecurityStatusDetails>;
 
-  @ViewChild('formMessage', { static: false })
+  @ViewChild('formMessage')
   private _formMessage: FormMessage;
 
   constructor(

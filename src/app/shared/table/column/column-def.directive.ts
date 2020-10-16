@@ -32,10 +32,10 @@ import {
 })
 
 export class ColumnDefDirective implements AfterContentInit, OnDestroy {
-  @ContentChild(HeaderCellDefDirective, { static: false })
+  @ContentChild(HeaderCellDefDirective)
   public headerCellDef: HeaderCellDefDirective;
 
-  @ContentChild(DataCellDefDirective, { static: false })
+  @ContentChild(DataCellDefDirective)
   public dataCellDef: DataCellDefDirective;
 
   @ContentChildren(HeaderCellComponent)

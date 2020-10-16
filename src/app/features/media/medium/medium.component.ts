@@ -69,7 +69,7 @@ export class MediumComponent extends McsListViewListingBase<McsMediaGroup> imple
   private _destroySubject = new Subject<void>();
   private _routerHandler: Subscription;
 
-  @ViewChild(ComponentHandlerDirective, { static: false })
+  @ViewChild(ComponentHandlerDirective)
   private _componentHandler: ComponentHandlerDirective;
 
   public constructor(

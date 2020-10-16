@@ -85,13 +85,13 @@ export class VdcScaleComponent extends McsOrderWizardBase implements OnInit, OnD
   public fgVdcScaleDetails: FormGroup;
   public fcVdc: FormControl;
 
-  @ViewChild(McsFormGroupDirective, { static: false })
+  @ViewChild(McsFormGroupDirective)
   private _formGroup: McsFormGroupDirective;
 
-  @ViewChild('fgVdcManageScale', { static: false })
+  @ViewChild('fgVdcManageScale')
   private _fgVdcManageScale: IMcsFormGroup;
 
-  @ViewChild(ComponentHandlerDirective, { static: false })
+  @ViewChild(ComponentHandlerDirective)
   private _componentHandler: ComponentHandlerDirective;
 
   private _vdcScale: VdcManageScale;

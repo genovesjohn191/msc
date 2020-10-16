@@ -57,7 +57,7 @@ export class FileAttachmentComponent implements OnInit {
   public set maxSizeInMb(value: number) { this._maxSizeInMb = coerceNumber(value, 0); }
   private _maxSizeInMb: number = DEFAULT_MAX_FILE_SIZE_IN_MB;
 
-  @ViewChild('errorDialogTemplate', { static: false })
+  @ViewChild('errorDialogTemplate')
   private _errorDialogTemplate: TemplateRef<any>;
 
   public get errorIconKey(): string {

@@ -16,10 +16,10 @@ import { NewLinesPipe } from './new-lines.pipe';
   template: ``
 })
 export class TestComponent {
-  @ViewChild('testElement', { static: false })
+  @ViewChild('testElement')
   public testElement: ElementRef;
 
-  @ViewChild(NewLinesPipe, { static: false })
+  @ViewChild(NewLinesPipe)
   public pipe: NewLinesPipe;
 
   public textContent = 'TextWith\nNewLine';

@@ -69,10 +69,10 @@ export class ConsolePageComponent implements AfterViewInit, OnDestroy {
   public pasteTextValue: string;
   public isPasswordType: boolean;
 
-  @ViewChild('consoleUiElement', { static: false })
+  @ViewChild('consoleUiElement')
   public consoleUiElement: ElementRef;
 
-  @ViewChild('popoverActionElement', { static: false })
+  @ViewChild('popoverActionElement')
   public popoverActionElement: any;
 
   private _intervalId: number;

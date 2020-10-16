@@ -80,7 +80,7 @@ export class SmacSharedFormComponent implements IMcsFormGroup, OnInit, OnDestroy
   public get config(): SmacSharedFormConfig { return this._config; }
   private _config: SmacSharedFormConfig;
 
-  @ViewChild(McsFormGroupDirective, { static: false })
+  @ViewChild(McsFormGroupDirective)
   public set formGroup(value: McsFormGroupDirective) {
     if (isNullOrEmpty(value)) { return; }
 

@@ -83,10 +83,10 @@ export class SystemMessageFormComponent
   @Output()
   public dataChange = new EventEmitter<SystemMessageForm>();
 
-  @ViewChild(McsFormGroupDirective, { static: false })
+  @ViewChild(McsFormGroupDirective)
   private _formGroup: McsFormGroupDirective;
 
-  @ViewChild('formMessage', { static: false })
+  @ViewChild('formMessage')
   private _formMessage: FormMessage;
 
   private _isValidDates: boolean = true;

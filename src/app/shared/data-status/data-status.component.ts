@@ -36,7 +36,7 @@ import { DataStatusErrorComponent } from './data-status-error/data-status-error.
 
 export class DataStatusComponent implements OnDestroy {
 
-  @ContentChild(DataStatusErrorComponent, { static: false })
+  @ContentChild(DataStatusErrorComponent)
   public errorTemplate: DataStatusErrorComponent;
 
   @Input()

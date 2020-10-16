@@ -67,7 +67,7 @@ export class ServerCreateDetailsComponent implements OnChanges, AfterViewInit, O
   @ViewChildren('serverBase')
   private _createServerItems: QueryList<ServerCreateDetailsBase<any>>;
 
-  @ViewChild(ComponentHandlerDirective, { static: false })
+  @ViewChild(ComponentHandlerDirective)
   private _serverDetailsComponent: ComponentHandlerDirective;
 
   private _destroySubject = new Subject<void>();

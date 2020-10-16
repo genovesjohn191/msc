@@ -16,13 +16,13 @@ import { TextPhoneNumberFormatPipe } from './text-phonenumber-format.pipe';
   template: ``
 })
 export class TestComponent {
-  @ViewChild('testElement', { static: false })
+  @ViewChild('testElement')
   public testElement: ElementRef;
 
-  @ViewChild('testElementForCustomRegex', { static: false })
+  @ViewChild('testElementForCustomRegex')
   public testElementForCustomRegex: ElementRef;
 
-  @ViewChild(TextPhoneNumberFormatPipe, { static: false })
+  @ViewChild(TextPhoneNumberFormatPipe)
   public pipe: TextPhoneNumberFormatPipe;
 
   public testPhoneNumberString = '1111222333';

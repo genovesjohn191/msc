@@ -16,7 +16,7 @@ import { WizardModule } from './wizard.module';
   template: ``
 })
 export class TestWizardComponent {
-  @ViewChild(WizardComponent, { static: false })
+  @ViewChild(WizardComponent)
   public wizardComponent: WizardComponent;
 }
 

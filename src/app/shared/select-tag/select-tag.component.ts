@@ -53,10 +53,10 @@ export class SelectTagComponent implements AfterViewInit, AfterContentInit, OnDe
   @Output()
   public selectionChanged: EventEmitter<McsOption[]>;
 
-  @ViewChild(SelectTagSubItemPlaceholderDirective, { static: false })
+  @ViewChild(SelectTagSubItemPlaceholderDirective)
   private _subItemsPlaceholder: SelectTagSubItemPlaceholderDirective;
 
-  @ViewChild('search', { static: false })
+  @ViewChild('search')
   private _search: Search;
 
   @ContentChildren(SelectTagMainItemComponent)

@@ -12,9 +12,9 @@ import { DataErrorDefDirective } from './data-error/data-error-def.directive';
 
 export class DataStatusDefDirective {
 
-  @ContentChild(DataEmptyDefDirective, { static: false })
+  @ContentChild(DataEmptyDefDirective)
   public dataEmptyDef: DataEmptyDefDirective;
 
-  @ContentChild(DataErrorDefDirective, { static: false })
+  @ContentChild(DataErrorDefDirective)
   public dataErrorDef: DataErrorDefDirective;
 }

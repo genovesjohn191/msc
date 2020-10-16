@@ -17,7 +17,7 @@ import { AlignContentDirective } from './align-content.directive';
   template: ``
 })
 export class TestComponent {
-  @ViewChild(AlignContentDirective, { static: false })
+  @ViewChild(AlignContentDirective)
   public directive: AlignContentDirective;
 }
 

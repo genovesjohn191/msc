@@ -41,7 +41,7 @@ export class WizardStepComponent implements IWizardStep {
   @Input()
   public stepControl: AbstractControl;
 
-  @ViewChild(TemplateRef, { static: false })
+  @ViewChild(TemplateRef)
   public templateRef: TemplateRef<any>;
 
   public enabled: boolean;

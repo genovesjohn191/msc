@@ -59,7 +59,7 @@ export class ChangeToApplyComponent implements IMcsFormGroup, OnInit, OnDestroy 
   @Input()
   public formGroup: FormGroup;
 
-  @ViewChild(McsFormGroupDirective, { static: false })
+  @ViewChild(McsFormGroupDirective)
   public set formGroupRef(value: McsFormGroupDirective) {
     if (isNullOrEmpty(value)) { return; }
 

@@ -90,7 +90,7 @@ export class OrderComponent implements OnInit, OnDestroy {
   public chargesState$: Observable<ChargesState>;
   public isInAwaitingApprovalState: boolean;
 
-  @ViewChild('submitDialogTemplate', { static: false })
+  @ViewChild('submitDialogTemplate')
   private _submitDialogTemplate: TemplateRef<any>;
 
   private _orderApprovers: McsOrderApprover[];

@@ -102,7 +102,7 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
   public escorteeOptions$: Observable<McsOption[]>;
 
 
-  @ViewChild(McsFormGroupDirective, { static: false })
+  @ViewChild(McsFormGroupDirective)
   public set formGroup(value: McsFormGroupDirective) {
     if (isNullOrEmpty(value)) { return; }
 

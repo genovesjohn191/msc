@@ -17,7 +17,7 @@ import { TreeModule } from './tree.module';
   template: ``
 })
 export class TestComponent {
-  @ViewChild(TreeComponent, { static: false })
+  @ViewChild(TreeComponent)
   public component: TreeComponent<any>;
   public selectedNodes: Array<TreeNode<any>>;
 

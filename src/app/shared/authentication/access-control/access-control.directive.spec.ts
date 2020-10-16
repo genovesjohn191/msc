@@ -24,7 +24,7 @@ import { AccessControlDirective } from './access-control.directive';
   template: ``
 })
 export class TestComponent {
-  @ViewChild(AccessControlDirective, { static: false })
+  @ViewChild(AccessControlDirective)
   public accessControl: AccessControlDirective;
 }
 

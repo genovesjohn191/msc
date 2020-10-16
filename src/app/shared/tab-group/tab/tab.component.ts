@@ -36,10 +36,10 @@ export class TabComponent implements AfterViewInit {
   @Input()
   public label: string;
 
-  @ContentChild(TabLabelDirective, { static: false })
+  @ContentChild(TabLabelDirective)
   public labelTemplate: TabLabelDirective;
 
-  @ViewChild(TemplateRef, { static: false })
+  @ViewChild(TemplateRef)
   private _content: TemplateRef<any>;
 
   constructor(private _viewContainerRef: ViewContainerRef) { }

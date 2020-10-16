@@ -59,7 +59,7 @@ export class ProductComponent implements OnInit {
     'version'
   ];
 
-  @ViewChild('scrollableLinkGroup', { static: false })
+  @ViewChild('scrollableLinkGroup')
   private _scrollableLink: ScrollableLinkGroup;
 
   constructor(

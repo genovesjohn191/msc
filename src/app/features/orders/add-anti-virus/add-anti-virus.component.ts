@@ -76,7 +76,7 @@ export class AddAntiVirusComponent extends McsOrderWizardBase implements OnInit,
   public fgAddAntiVirusDetails: FormGroup;
   public fcServer: FormControl;
 
-  @ViewChild(McsFormGroupDirective, { static: false })
+  @ViewChild(McsFormGroupDirective)
   private _formGroup: McsFormGroupDirective;
 
   private _destroySubject = new Subject<void>();

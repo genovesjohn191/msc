@@ -16,7 +16,7 @@ import { TabGroupModule } from './tab-group.module';
   template: ``
 })
 export class TabGroupTestComponent {
-  @ViewChild(TabGroupComponent, { static: false })
+  @ViewChild(TabGroupComponent)
   public tabGroupComponent: TabGroupComponent;
 }
 

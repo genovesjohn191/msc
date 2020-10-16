@@ -92,7 +92,7 @@ export class ServerManageStorageComponent
   public set deductValueGB(value: number) { this._deductValueGB = coerceNumber(value); }
   private _deductValueGB: number = 0;
 
-  @ViewChild(McsFormGroupDirective, { static: false })
+  @ViewChild(McsFormGroupDirective)
   private _formGroup: McsFormGroupDirective;
 
   private _destroySubject = new Subject<void>();

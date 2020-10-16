@@ -77,7 +77,7 @@ export class ServerSnapshotsComponent extends ServerDetailsBase
   private _applySnapshotHandler: Subscription;
   private _deleteSnapshotHandler: Subscription;
 
-  @ViewChild('formMessage', { static: false })
+  @ViewChild('formMessage')
   private _formMessage: FormMessage;
 
   public get warningIconKey(): string {

@@ -79,7 +79,7 @@ export class ServerComponent extends McsListViewListingBase<McsServerGroup> impl
   private _routerHandler: Subscription;
   private _serverDeletedHandler: Subscription;
 
-  @ViewChild(ComponentHandlerDirective, { static: false })
+  @ViewChild(ComponentHandlerDirective)
   private _componentHandler: ComponentHandlerDirective;
 
   constructor(

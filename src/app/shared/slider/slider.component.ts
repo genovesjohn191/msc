@@ -204,7 +204,7 @@ export class SliderComponent {
   /**
    * Reference to the inner slider wrapper element.
    */
-  @ViewChild('sliderWrapper', { static: false })
+  @ViewChild('sliderWrapper')
   private _sliderWrapper: ElementRef;
 
   /**

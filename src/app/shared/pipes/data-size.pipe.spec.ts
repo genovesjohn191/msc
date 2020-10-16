@@ -21,16 +21,16 @@ import { DataSizePipe } from './data-size.pipe';
   template: ``
 })
 export class TestComponent {
-  @ViewChild('testElementKB', { static: false })
+  @ViewChild('testElementKB')
   public testElementKB: ElementRef;
 
-  @ViewChild('testElementMB', { static: false })
+  @ViewChild('testElementMB')
   public testElementMB: ElementRef;
 
-  @ViewChild('testElementGB', { static: false })
+  @ViewChild('testElementGB')
   public testElementGB: ElementRef;
 
-  @ViewChild(DataSizePipe, { static: false })
+  @ViewChild(DataSizePipe)
   public pipe: DataSizePipe;
 
   public kilobyte = 512;

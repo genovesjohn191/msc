@@ -52,7 +52,7 @@ export class FormMessageComponent implements OnInit, OnDestroy, FormMessage {
   @Input()
   public config: FormMessageConfig;
 
-  @ViewChild(ComponentHandlerDirective, { static: false })
+  @ViewChild(ComponentHandlerDirective)
   private _alertMessage: ComponentHandlerDirective;
   private _changeRouteHandler: Subscription;
 

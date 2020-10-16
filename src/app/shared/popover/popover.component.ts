@@ -30,10 +30,10 @@ export class PopoverComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output()
   public onClickOutsideEvent: EventEmitter<any>;
 
-  @ViewChild('popoverElement', { static: false })
+  @ViewChild('popoverElement')
   public popoverElement: ElementRef;
 
-  @ViewChild('contentElement', { static: false })
+  @ViewChild('contentElement')
   public contentElement: ElementRef;
 
   @HostBinding('attr.role')

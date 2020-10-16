@@ -21,7 +21,7 @@ import { SliderModule } from './slider.module';
   template: ``
 })
 export class SliderTestComponent {
-  @ViewChild(SliderComponent, { static: false })
+  @ViewChild(SliderComponent)
   public sliderComponent: SliderComponent;
 }
 

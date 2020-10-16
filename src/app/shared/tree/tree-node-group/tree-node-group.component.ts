@@ -50,7 +50,7 @@ import { TreeNodeComponent } from '../tree-node/tree-node.component';
 export class TreeNodeGroupComponent<T> implements AfterContentInit {
   public panelOpen: boolean;
 
-  @ContentChild(TreeNodeGroupLabelDirective, { static: false })
+  @ContentChild(TreeNodeGroupLabelDirective)
   public labelTemplate: TreeNodeGroupLabelDirective;
 
   @ContentChildren(TreeNodeComponent)

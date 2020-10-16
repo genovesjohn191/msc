@@ -16,7 +16,7 @@ import { GridModule } from './grid.module';
   template: ``
 })
 export class TestComponent {
-  @ViewChild(GridComponent, { static: false })
+  @ViewChild(GridComponent)
   public targetComponent: GridComponent;
 }
 

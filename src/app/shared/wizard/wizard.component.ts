@@ -67,13 +67,13 @@ export class WizardComponent implements AfterContentInit, OnDestroy {
   public set disabled(value: boolean) { this._disabled = coerceBoolean(value); }
   private _disabled: boolean = false;
 
-  @ViewChild(WizardTopPanelPlaceholderDirective, { static: false })
+  @ViewChild(WizardTopPanelPlaceholderDirective)
   private _topPanelPlaceholder: WizardTopPanelPlaceholderDirective;
 
   @ContentChildren(WizardStepComponent)
   private _wizardSteps: QueryList<WizardStepComponent>;
 
-  @ContentChild(WizardTopPanelDefDirective, { static: false })
+  @ContentChild(WizardTopPanelDefDirective)
   private _topPanelDefDirective: WizardTopPanelDefDirective;
 
   private _destroySubject = new Subject<void>();

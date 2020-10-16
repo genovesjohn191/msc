@@ -56,10 +56,10 @@ export class RadioButtonComponent implements AfterContentInit {
   public set value(value: any) { this._value = value; }
   private _value: any;
 
-  @ViewChild('inputElement', { static: false })
+  @ViewChild('inputElement')
   private _inputElement: ElementRef;
 
-  @ContentChild(IdDirective, { static: false })
+  @ContentChild(IdDirective)
   private _idElement: IdDirective;
 
   constructor(private _changeDetectorRef: ChangeDetectorRef) { }

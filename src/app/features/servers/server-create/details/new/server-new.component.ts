@@ -117,16 +117,16 @@ export class ServerNewComponent
   }
   private _resource: McsResource;
 
-  @ViewChild('fgManageScale', { static: false })
+  @ViewChild('fgManageScale')
   private _fgManageScale: IMcsFormGroup;
 
-  @ViewChild('fgManageStorage', { static: false })
+  @ViewChild('fgManageStorage')
   private _fgManageStorage: IMcsFormGroup;
 
-  @ViewChild('fgManageNetwork', { static: false })
+  @ViewChild('fgManageNetwork')
   private _fgManageNetwork: IMcsFormGroup;
 
-  @ViewChild(McsFormGroupDirective, { static: false })
+  @ViewChild(McsFormGroupDirective)
   private _formGroup: McsFormGroupDirective;
 
   private _destroySubject = new Subject<void>();

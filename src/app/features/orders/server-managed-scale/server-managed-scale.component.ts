@@ -90,13 +90,13 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
   public fgServerManagedScaleDetails: FormGroup;
   public fcManageServer: FormControl;
 
-  @ViewChild('fgManageScale', { static: false })
+  @ViewChild('fgManageScale')
   private _fgManageScale: IMcsFormGroup;
 
-  @ViewChild(McsFormGroupDirective, { static: false })
+  @ViewChild(McsFormGroupDirective)
   private _formGroup: McsFormGroupDirective;
 
-  @ViewChild(ComponentHandlerDirective, { static: false })
+  @ViewChild(ComponentHandlerDirective)
   private _componentHandler: ComponentHandlerDirective;
 
   private _manageScale: ServerManageScale;

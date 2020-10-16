@@ -37,7 +37,7 @@ export abstract class McsWizardBase implements McsDisposable {
   public jobs$: Observable<McsJob[]>;
   public dataStatus$: Observable<DataStatus>;
 
-  @ViewChild('formMessage', { static: false })
+  @ViewChild('formMessage')
   public formMessage: FormMessage;
 
   private _activeStep: IWizardStep;

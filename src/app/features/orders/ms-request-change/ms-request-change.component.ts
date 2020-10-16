@@ -174,7 +174,7 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
     return this._translateService.instant('orderMsRequestChange.detailsStep.requestDescriptionPlaceholder');
   }
 
-  @ViewChild(McsFormGroupDirective, { static: false })
+  @ViewChild(McsFormGroupDirective)
   public set formGroup(value: McsFormGroupDirective) {
     if (isNullOrEmpty(value)) { return; }
 
@@ -182,7 +182,7 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
     this._subscribeToValueChanges();
   }
 
-  @ViewChild('fgSmacSharedForm', { static: false })
+  @ViewChild('fgSmacSharedForm')
   public set fgSmacSharedForm(value: IMcsFormGroup) {
     if (isNullOrEmpty(value)) { return; }
 

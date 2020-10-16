@@ -74,7 +74,7 @@ export class AddBatComponent extends McsOrderWizardBase implements OnInit, OnDes
   public fcInview: FormControl;
   public fcDailyQuota: FormControl;
 
-  @ViewChild(McsFormGroupDirective, { static: false })
+  @ViewChild(McsFormGroupDirective)
   public set formGroup(value: McsFormGroupDirective) {
     if (isNullOrEmpty(value)) { return; }
 

@@ -62,7 +62,7 @@ export class CollapsiblePanelComponent {
   }
   private _collapse: boolean = true;
 
-  @ViewChild('panelElement', { static: false })
+  @ViewChild('panelElement')
   private _panelElement: ElementRef;
 
   public constructor(

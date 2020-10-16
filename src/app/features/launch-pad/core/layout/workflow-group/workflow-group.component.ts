@@ -27,7 +27,6 @@ import { MatSelectChange } from '@angular/material/select';
   styleUrls: ['./workflow-group.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-
 export class LaunchPadWorkflowGroupComponent implements OnInit {
   public workflowComponentRef: ComponentRef<LaunchPadWorkflowComponent>[] = [];
 
@@ -62,8 +61,6 @@ export class LaunchPadWorkflowGroupComponent implements OnInit {
     if (!isNullOrEmpty(this.loadWorkflowNotifier)) {
       this.loadWorkflowNotifier.subscribe((workflows) => this._loadWorkflowGroup(workflows));
     }
-
-    console.log(this.companyId);
   }
 
   private _loadWorkflowGroup(workflows: Workflow[]): void {

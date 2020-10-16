@@ -63,10 +63,10 @@ export class ServerCreateAddOnsComponent
   @Output()
   public dataChange = new EventEmitter<Array<AddOnDetails<any>>>();
 
-  @ViewChild('fgAddOnBackupVm', { static: false })
+  @ViewChild('fgAddOnBackupVm')
   private _fgAddOnBackupVm: IMcsFormGroup;
 
-  @ViewChild('fgBackupServer', { static: false })
+  @ViewChild('fgBackupServer')
   private _fgBackupServer: IMcsFormGroup;
 
   private _destroySubject = new Subject<void>();

@@ -19,7 +19,7 @@ import { CommonDefinition } from '@app/utilities';
 
 export class SystemMessageUserPanelComponent {
 
-  @ViewChild('systemMessagePopover', { static: false })
+  @ViewChild('systemMessagePopover')
   public systemMessagePopover: any;
 
   @EventBusPropertyListenOn(McsEvent.userChange)

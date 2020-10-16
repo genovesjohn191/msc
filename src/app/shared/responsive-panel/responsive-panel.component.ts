@@ -63,13 +63,13 @@ export class ResponsivePanelComponent implements AfterViewInit, AfterViewChecked
   @Input()
   public id: string = McsUniqueId.NewId('responsive-panel');
 
-  @ViewChild('panelItemsMainContainer', { static: false })
+  @ViewChild('panelItemsMainContainer')
   public panelItemsMainContainer: ElementRef;
 
-  @ViewChild('panelItemsSubContainer', { static: false })
+  @ViewChild('panelItemsSubContainer')
   public panelItemsSubContainer: ElementRef;
 
-  @ViewChild(ResponsivePanelBarComponent, { static: false })
+  @ViewChild(ResponsivePanelBarComponent)
   public panelBorderBar: ResponsivePanelBarComponent;
 
   @ContentChildren(ResponsivePanelItemDirective)

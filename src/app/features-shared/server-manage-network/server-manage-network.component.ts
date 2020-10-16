@@ -109,7 +109,7 @@ export class ServerManageNetworkComponent
   }
   private _disableDynamicIp: boolean;
 
-  @ViewChild(McsFormGroupDirective, { static: false })
+  @ViewChild(McsFormGroupDirective)
   private _formGroup: McsFormGroupDirective;
 
   private _networkOutput = new ServerManageNetwork();

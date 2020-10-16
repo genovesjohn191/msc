@@ -16,13 +16,13 @@ import { IsNotNullOrEmptyPipe } from './is-not-null-or-empty.pipe';
   template: ``
 })
 export class TestComponent {
-  @ViewChild('testElement1', { static: false })
+  @ViewChild('testElement1')
   public testElement1: ElementRef;
 
-  @ViewChild('testElement2', { static: false })
+  @ViewChild('testElement2')
   public testElement2: ElementRef;
 
-  @ViewChild(IsNotNullOrEmptyPipe, { static: false })
+  @ViewChild(IsNotNullOrEmptyPipe)
   public pipe: IsNotNullOrEmptyPipe;
 
   public textValue1 = 'sample data';

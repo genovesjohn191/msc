@@ -21,7 +21,7 @@ import { PopoverModule } from './popover.module';
   template: ``
 })
 export class TestComponent {
-  @ViewChild(PopoverDirective, { static: false })
+  @ViewChild(PopoverDirective)
   public popover: PopoverDirective;
 }
 

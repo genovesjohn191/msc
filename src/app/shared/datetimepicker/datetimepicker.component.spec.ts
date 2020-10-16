@@ -20,7 +20,7 @@ import { DateTimePickerModule } from './datetimepicker.module';
   template: ``
 })
 export class TestDateTimePickerComponent implements OnInit {
-  @ViewChild(DateTimePickerComponent, { static: false })
+  @ViewChild(DateTimePickerComponent)
   public testCalendar: DateTimePickerComponent;
   public ngOnInit(): void {
   }

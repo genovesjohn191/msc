@@ -134,7 +134,7 @@ export class StepOrderDetailsComponent
   public orderDataColumns: string[] = [];
   public dataChangeStatus: DataStatus;
 
-  @ViewChild(McsFormGroupDirective, { static: false })
+  @ViewChild(McsFormGroupDirective)
   private _formGroup: McsFormGroupDirective;
 
   private _destroySubject = new Subject<void>();

@@ -34,7 +34,7 @@ export class SelectSearchDirective implements AfterContentInit, OnDestroy {
 
   public focusReceive = new Subject<void>();
 
-  @ContentChild(SearchComponent, { static: false })
+  @ContentChild(SearchComponent)
   private _search: Search;
 
   private _searchChange = new Subject<string>();

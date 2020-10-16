@@ -19,7 +19,7 @@ import { TooltipModule } from './tooltip.module';
   template: ``
 })
 export class TestTooltipComponent {
-  @ViewChild(TooltipDirective, { static: false })
+  @ViewChild(TooltipDirective)
   public tooltip: TooltipDirective;
 }
 

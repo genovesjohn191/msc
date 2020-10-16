@@ -161,7 +161,7 @@ export class RemoteHandsComponent  extends McsOrderWizardBase  implements OnInit
   }
   private _isLoading: boolean;
 
-  @ViewChild(McsFormGroupDirective, { static: false })
+  @ViewChild(McsFormGroupDirective)
   public set formGroup(value: McsFormGroupDirective) {
     if (isNullOrEmpty(value)) { return; }
 
@@ -169,7 +169,7 @@ export class RemoteHandsComponent  extends McsOrderWizardBase  implements OnInit
     this._subscribeToValueChanges();
   }
 
-  @ViewChild('fgSmacSharedForm', { static: false })
+  @ViewChild('fgSmacSharedForm')
   public set fgSmacSharedForm(value: IMcsFormGroup) {
     if (isNullOrEmpty(value)) { return; }
 

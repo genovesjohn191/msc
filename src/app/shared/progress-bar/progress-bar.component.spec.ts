@@ -18,7 +18,7 @@ import { ProgressBarModule } from './progress-bar.module';
   template: ``
 })
 export class TestComponent {
-  @ViewChild(ProgressBarComponent, { static: false })
+  @ViewChild(ProgressBarComponent)
   public progressbarComponent: ProgressBarComponent;
 
   public progressValue: number = 10;

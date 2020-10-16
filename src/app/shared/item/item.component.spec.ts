@@ -15,7 +15,7 @@ import { ItemModule } from './item.module';
   template: ``
 })
 export class TestComponent {
-  @ViewChild(ItemComponent, { static: false })
+  @ViewChild(ItemComponent)
   public targetComponent: ItemComponent;
 }
 

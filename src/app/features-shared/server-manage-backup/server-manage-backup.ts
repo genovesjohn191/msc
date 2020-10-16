@@ -93,7 +93,7 @@ export class ServerManageBackupComponent implements
   @Input()
   public aggregationTargets: McsBackUpAggregationTarget[];
 
-  @ViewChild(McsFormGroupDirective, { static: false })
+  @ViewChild(McsFormGroupDirective)
   public set formGroup(value: McsFormGroupDirective) {
     if (isNullOrEmpty(value)) { return; }
 

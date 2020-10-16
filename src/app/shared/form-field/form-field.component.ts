@@ -64,7 +64,7 @@ export class FormFieldComponent implements AfterViewInit, AfterContentInit, Afte
   @Input()
   public borderless: boolean = false;
 
-  @ContentChild(McsFormFieldControlBase, { static: false })
+  @ContentChild(McsFormFieldControlBase)
   private _controlChild: McsFormFieldControlBase<any>;
 
   @ContentChildren(HintComponent)

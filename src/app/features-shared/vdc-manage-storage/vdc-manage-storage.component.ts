@@ -71,7 +71,7 @@ export class VdcManageStorageComponent
     return Math.round(this.initialValue * 100) / 100;
   }
 
-  @ViewChild(McsFormGroupDirective, { static: false })
+  @ViewChild(McsFormGroupDirective)
   private _formGroup: McsFormGroupDirective;
 
   private _destroySubject = new Subject<void>();

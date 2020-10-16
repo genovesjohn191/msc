@@ -35,7 +35,7 @@ export type TooltipColor = 'light' | 'dark';
 
 export class TooltipComponent {
 
-  @ViewChild('tooltipPanel', { static: false })
+  @ViewChild('tooltipPanel')
   public tooltipPanel: ElementRef;
 
   public message: string;
