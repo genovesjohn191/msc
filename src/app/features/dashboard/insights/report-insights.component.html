@@ -4,7 +4,7 @@
     <div class="report-wrapper limited-wide-view">
       <div class="content-wrapper">
         <div class="hide-on-print options-container">
-          <div style="padding-top: 10px;">
+          <div style="padding-top: 20px;">
             <span>
               Insights gives you visibility into your Azure environment, powered by
               <a href="#">
@@ -12,12 +12,15 @@
               </a>
             </span>
           </div>
-          <div style="background-color: white; width: 150px;">
-            <mcs-select [(ngModel)]="selectedPeriod">
-              <mcs-option *ngFor="let opt of periodOptions" [value]="opt">
-                {{ opt.label }}
-              </mcs-option>
-            </mcs-select>
+          <div>
+            <mat-form-field appearance="outline">
+              <mat-label>Subscriptions</mat-label>
+              <mat-select multiple [(value)]="subscriptionIdsFilter">
+                <mat-option *ngFor="let subscription of subscriptions" [value]="subscription.id">
+                  {{ subscription.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
           </div>
         </div>
 
@@ -26,11 +29,11 @@
           <br />
           <h2>1.1 Services Overview</h2>
           <br />
-          <mcs-services-cost-overview-widget [period]="selectedPeriod.period"></mcs-services-cost-overview-widget>
+          <mcs-services-cost-overview-widget [subscriptionIds]="subscriptionIdsFilter"></mcs-services-cost-overview-widget>
           <br />
           <h2>1.2 Virtual Machine Breakdown</h2>
           <br />
-          <mcs-virtual-machine-breakdown-widget [period]="selectedPeriod.period"></mcs-virtual-machine-breakdown-widget>
+          <mcs-virtual-machine-breakdown-widget [subscriptionIds]="subscriptionIdsFilter"></mcs-virtual-machine-breakdown-widget>
         </div>
 
         <div class="chart no-break-on-print">
@@ -40,17 +43,20 @@
             <div style="padding-top: 10px;">
               <h2>2.2 Performance and Scalability</h2>
             </div>
-            <div class="hide-on-print" style="width: 150px;">
-              <mcs-select [(ngModel)]="selectedPerformanceMonth">
-                <mcs-option *ngFor="let opt of monthOptions" [value]="opt">
-                  {{ opt.label }}
-                </mcs-option>
-              </mcs-select>
+            <div class="hide-on-print">
+              <mat-form-field appearance="outline">
+                <mat-label>Month</mat-label>
+                <mat-select [(ngModel)]="selectedPerformanceMonth">
+                  <mat-option *ngFor="let opt of monthOptions" [value]="opt">
+                    {{ opt.label }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
             </div>
           </div>
 
           <br />
-          <mcs-performance-and-scalability-widget [period]="selectedPerformanceMonth?.period"></mcs-performance-and-scalability-widget>
+          <mcs-performance-and-scalability-widget [config]="serviceCostConfig"></mcs-performance-and-scalability-widget>
         </div>
       </div>
     </div>
