@@ -124,6 +124,7 @@ import {
   McsColocationCustomDevice,
   McsColocationRoom,
   McsColocationStandardSqm,
+  McsReportSubscription,
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -1483,8 +1484,22 @@ export class McsApiService {
     );
   }
 
-  public getServicesCostOverviewReport(periodStart?: string, periodEnd?: string): Observable<McsApiCollection<McsReportGenericItem>> {
-    return this._reportsApi.getServicesCostOverviewReport(periodStart, periodEnd).pipe(
+  public getSubscriptions(): Observable<McsApiCollection<McsReportSubscription>> {
+    return this._reportsApi.getSubscriptions().pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getSubscriptions'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public getServicesCostOverviewReport(
+    periodStart?: string,
+    periodEnd?: string,
+    subscriptionIds?: string[]
+  ): Observable<McsApiCollection<McsReportGenericItem>> {
+
+    return this._reportsApi.getServicesCostOverviewReport(periodStart, periodEnd, subscriptionIds).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getServicesCostOverviewReport'))
       ),
@@ -1492,8 +1507,13 @@ export class McsApiService {
     );
   }
 
-  public getVirtualMachineBreakdownReport(periodStart?: string, periodEnd?: string): Observable<McsApiCollection<McsReportGenericItem>> {
-    return this._reportsApi.getVirtualMachineBreakdownReport(periodStart, periodEnd).pipe(
+  public getVirtualMachineBreakdownReport(
+    periodStart?: string,
+    periodEnd?: string,
+    subscriptionIds?: string[]
+  ): Observable<McsApiCollection<McsReportGenericItem>> {
+
+    return this._reportsApi.getVirtualMachineBreakdownReport(periodStart, periodEnd, subscriptionIds).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getVirtualMachineBreakdownReport'))
       ),
@@ -1501,8 +1521,13 @@ export class McsApiService {
     );
   }
 
-  public getPerformanceReport(periodStart?: string, periodEnd?: string): Observable<McsApiCollection<McsReportGenericItem>> {
-    return this._reportsApi.getPerformanceReport(periodStart, periodEnd).pipe(
+  public getPerformanceReport(
+    periodStart?: string,
+    periodEnd?: string,
+    subscriptionIds?: string[]
+  ): Observable<McsApiCollection<McsReportGenericItem>> {
+
+    return this._reportsApi.getPerformanceReport(periodStart, periodEnd, subscriptionIds).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getPerformanceReport'))
       ),

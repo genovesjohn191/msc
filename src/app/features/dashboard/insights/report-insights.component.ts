@@ -1,9 +1,15 @@
 import {
   Component,
   ChangeDetectionStrategy,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  OnDestroy
 } from '@angular/core';
-import { ReportPeriod } from '@app/features-shared/report-widget';
+import { McsReportingService } from '@app/core/services/mcs-reporting.service';
+import { PerformanceAndScalabilityWidgetConfig, ReportPeriod } from '@app/features-shared/report-widget';
+import { McsReportSubscription } from '@app/models';
+import { unsubscribeSafely } from '@app/utilities';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 
 interface PeriodOption {
   label: string;
@@ -34,77 +40,87 @@ const months = [
     'class': 'report-insights-wrapper'
   }
 })
-
-export class ReportInsightsComponent {
-  public periodOptions: PeriodOption[];
+export class ReportInsightsComponent implements OnDestroy {
   public monthOptions: PeriodOption[];
-  private initialize: boolean = false;
-  public set selectedPeriod(value: PeriodOption) {
-    this._selectedPeriod = value;
-    if (this.initialize) {
-      this._createMonthOptions();
-    }
-    this._changeDetector.markForCheck();
-    this.initialize = true;
-  }
-  public get selectedPeriod(): PeriodOption {
-    return this._selectedPeriod;
-  }
 
   public set selectedPerformanceMonth(value: PeriodOption) {
     this._selectedPerformanceMonth = value;
+    this.serviceCostConfig = {
+      period: this._selectedPerformanceMonth.period.from,
+      subscriptionIds: this.subscriptionIdsFilter
+    };
+
     this._changeDetector.markForCheck();
   }
+
   public get selectedPerformanceMonth(): PeriodOption {
     return this._selectedPerformanceMonth;
   }
 
-  private _selectedPeriod: PeriodOption;
-  private _selectedPerformanceMonth: PeriodOption;
+  public set subscriptionIdsFilter(value: string[]) {
+    this._subscriptionFilterChange.next(value);
+  }
 
-  public constructor(private _changeDetector: ChangeDetectorRef) {
-    this._createPeriodOptions();
+  public get subscriptionIdsFilter(): string[] {
+    return this._subscriptionIdsFilter;
+  }
+  public _subscriptionIdsFilter: string[] = [];
+
+  public serviceCostConfig: PerformanceAndScalabilityWidgetConfig;
+
+  public subscriptions: McsReportSubscription[];
+  private _subscriptionFilterChange = new BehaviorSubject<string[]>([]);
+  private _selectedPerformanceMonth: PeriodOption;
+  private _subscriptionSubject = new Subject();
+
+  public constructor(private reportService: McsReportingService, private _changeDetector: ChangeDetectorRef) {
+    this._getSubscriptions();
     this._createMonthOptions();
+    this._listenToSubscriptionFilterChange();
+  }
+
+  public ngOnDestroy(): void {
+    unsubscribeSafely(this._subscriptionSubject);
+  }
+
+  private _getSubscriptions(): void {
+    this.reportService.getSubscriptions()
+    .pipe(
+      takeUntil(this._subscriptionSubject))
+    .subscribe((data) => {
+      this.subscriptions = data;
+      this._changeDetector.markForCheck();
+    });
+  }
+
+  private _listenToSubscriptionFilterChange(): void {
+    this._subscriptionFilterChange
+    .pipe(
+      debounceTime(2000),
+      distinctUntilChanged((arr1: string[], arr2: string[]) =>
+        JSON.stringify(arr1) === JSON.stringify(arr2)))
+    .subscribe((subscriptionIds) => {
+      this._subscriptionIdsFilter = subscriptionIds;
+      this._changeDetector.markForCheck();
+    });
   }
 
   private _createMonthOptions(): void {
     this.monthOptions = Array<PeriodOption>();
-    let currentYear = new Date().getFullYear();
-    let maxDate = this._selectedPeriod.period.until.toDateString();
+    let currentDate = new Date();
+    let currentYear = currentDate.getFullYear();
 
     for (let ctr = 0; ctr < 12; ctr++) {
-
-      let from = new Date(new Date(maxDate).setMonth(new Date(maxDate).getMonth() - ctr));
-      let until = from;
-      let label = months[until.getMonth()];
-      if (currentYear !== until.getFullYear()) {
-        label += ` ${until.getFullYear()}`;
+      let from = new Date(new Date().setMonth(currentDate.getMonth() - ctr));
+      let label = months[from.getMonth()];
+      if (currentYear !== from.getFullYear()) {
+        label += ` ${from.getFullYear()}`;
       }
-      let period = {from, until};
+      let period = { from, until: from };
 
       this.monthOptions.push({label, period});
     }
 
     this.selectedPerformanceMonth = this.monthOptions[0];
-  }
-
-  private _createPeriodOptions(): void {
-    this.periodOptions = Array<PeriodOption>();
-    let currentYear = new Date().getFullYear();
-
-    for (let ctr = 0; ctr < 4; ctr++) {
-
-      let from = new Date(new Date().setMonth(new Date().getMonth() - (12 + ctr)));
-      let until = new Date(new Date().setMonth(new Date().getMonth() - ctr));
-      let label = ctr === 0 ? 'Current Month' : months[until.getMonth()];
-      if (currentYear !== until.getFullYear()) {
-        label += ` ${until.getFullYear()}`;
-      }
-      let period = {from, until};
-
-      this.periodOptions.push({label, period});
-    }
-
-    this._selectedPeriod = this.periodOptions[0];
   }
 }

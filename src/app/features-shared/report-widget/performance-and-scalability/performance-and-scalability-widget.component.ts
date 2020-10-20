@@ -14,12 +14,13 @@ import {
 import { catchError } from 'rxjs/operators';
 
 import { ChartItem } from '@app/shared';
-import {
-  isNullOrEmpty,
-  unsubscribeSafely
-} from '@app/utilities';
+import { isNullOrEmpty, unsubscribeSafely } from '@app/utilities';
 import { McsReportingService } from '@app/core/services/mcs-reporting.service';
-import { ReportPeriod } from '../report-period.interface';
+
+export interface PerformanceAndScalabilityWidgetConfig {
+  period: Date,
+  subscriptionIds: string[];
+}
 
 @Component({
   selector: 'mcs-performance-and-scalability-widget',
@@ -34,11 +35,14 @@ import { ReportPeriod } from '../report-period.interface';
 
 export class PerformanceAndScalabilityWidgetComponent implements OnInit, OnDestroy {
   @Input()
-  public set period(value: ReportPeriod) {
-    if (!isNullOrEmpty(value)) {
-      this._startPeriod = `${value.from.getFullYear()}-${value.from.getMonth() + 1}`;
-      this._endPeriod = `${value.until.getFullYear()}-${value.until.getMonth() + 1}`;
-    }
+  public set config(value: PerformanceAndScalabilityWidgetConfig) {
+    let validValue = !isNullOrEmpty(value)
+      && JSON.stringify(this._config) !== JSON.stringify(value);
+    if (!validValue) { return; }
+
+    this._config = value;
+    this._startPeriod = `${value.period.getFullYear()}-${value.period.getMonth() + 1}`;
+    this._endPeriod = `${value.period.getFullYear()}-${value.period.getMonth() + 1}`;
 
     this.getData();
   }
@@ -48,13 +52,11 @@ export class PerformanceAndScalabilityWidgetComponent implements OnInit, OnDestr
   public hasError: boolean = false;
   public processing: boolean = true;
 
+  private _config: PerformanceAndScalabilityWidgetConfig;
   private _startPeriod: string = '';
   private _endPeriod: string = '';
 
-  public constructor(
-    private _changeDetectorRef: ChangeDetectorRef,
-    private reportingService: McsReportingService) {
-  }
+  public constructor(private _changeDetectorRef: ChangeDetectorRef, private reportingService: McsReportingService) {}
 
   public ngOnInit() {
     this.dataBehavior = new BehaviorSubject<ChartItem[]>(null);
@@ -70,7 +72,7 @@ export class PerformanceAndScalabilityWidgetComponent implements OnInit, OnDestr
     this.processing = true;
     this._changeDetectorRef.markForCheck();
 
-    this.reportingService.getPerformanceReport(this._startPeriod, this._endPeriod)
+    this.reportingService.getPerformanceReport(this._startPeriod, this._endPeriod, this._config.subscriptionIds)
     .pipe(catchError(() => {
       this.hasError = true;
       this.processing = false;

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { McsReportGenericItem, McsReportIntegerData } from '@app/models';
+import { McsReportGenericItem, McsReportIntegerData, McsReportSubscription } from '@app/models';
 import { McsApiService } from '@app/services';
 import { ChartItem } from '@app/shared/chart';
 
@@ -10,24 +10,32 @@ export class McsReportingService {
 
   constructor(private _apiService: McsApiService) { }
 
+  public getSubscriptions(): Observable<McsReportSubscription[]> {
+    return this._apiService.getSubscriptions()
+      .pipe(map((resources) => resources.collection));
+  }
+
   public getServicesCostOverviewReport(
     startPeriod: string = '',
-    endPeriod: string = ''): Observable<ChartItem[]> {
-    return this._apiService.getServicesCostOverviewReport(startPeriod, endPeriod)
+    endPeriod: string = '',
+    subscriptionIds: string[] = []): Observable<ChartItem[]> {
+    return this._apiService.getServicesCostOverviewReport(startPeriod, endPeriod, subscriptionIds)
       .pipe(map((resources) => this._convertGenericItemToChartItem(resources.collection)));
   }
 
   public getVirtualMachineBreakdownReport(
     startPeriod: string = '',
-    endPeriod: string = ''): Observable<ChartItem[]> {
-    return this._apiService.getVirtualMachineBreakdownReport(startPeriod, endPeriod)
+    endPeriod: string = '',
+    subscriptionIds: string[] = []): Observable<ChartItem[]> {
+    return this._apiService.getVirtualMachineBreakdownReport(startPeriod, endPeriod, subscriptionIds)
       .pipe(map((resources) => this._convertGenericItemToChartItem(resources.collection)));
   }
 
   public getPerformanceReport(
     startPeriod: string = '',
-    endPeriod: string = ''): Observable<ChartItem[]> {
-    return this._apiService.getPerformanceReport(startPeriod, endPeriod)
+    endPeriod: string = '',
+    subscriptionIds: string[] = []): Observable<ChartItem[]> {
+    return this._apiService.getPerformanceReport(startPeriod, endPeriod, subscriptionIds)
       .pipe(map((resources) => this._convertGenericItemToChartItem(resources.collection)));
   }
 

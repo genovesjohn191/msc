@@ -5,23 +5,41 @@ import {
   McsApiSuccessResponse,
   McsApiRequestParameter,
   McsReportGenericItem,
-  McsReportIntegerData
+  McsReportIntegerData,
+  McsReportSubscription
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiReportsService } from '../interfaces/mcs-api-reports.interface';
+import { isNullOrEmpty } from '@app/utilities';
 
 @Injectable()
 export class McsApiReportsService implements IMcsApiReportsService {
 
   constructor(private _mcsApiService: McsApiClientHttpService) { }
 
+  public getSubscriptions(): Observable<McsApiSuccessResponse<McsReportSubscription[]>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/public-cloud/reports/subscriptions';
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          return McsApiSuccessResponse.deserializeResponse<McsReportSubscription[]>(McsReportSubscription, response);
+        })
+      );
+  }
+
   public getServicesCostOverviewReport(
     periodStart?: string,
-    periodEnd?: string): Observable<McsApiSuccessResponse<McsReportGenericItem[]>> {
+    periodEnd?: string,
+    subscriptionIds?: string[]): Observable<McsApiSuccessResponse<McsReportGenericItem[]>> {
 
     let searchParams = new Map<string, any>();
     searchParams.set('period_start', periodStart);
     searchParams.set('period_end', periodEnd);
+    if (!isNullOrEmpty(subscriptionIds)) {
+      searchParams.set('subscription_ids', subscriptionIds.join());
+    }
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/public-cloud/reports/services-cost-overview';
@@ -37,11 +55,15 @@ export class McsApiReportsService implements IMcsApiReportsService {
 
   public getVirtualMachineBreakdownReport(
     periodStart?: string,
-    periodEnd?: string): Observable<McsApiSuccessResponse<McsReportGenericItem[]>> {
+    periodEnd?: string,
+    subscriptionIds?: string[]): Observable<McsApiSuccessResponse<McsReportGenericItem[]>> {
 
     let searchParams = new Map<string, any>();
     searchParams.set('period_start', periodStart);
     searchParams.set('period_end', periodEnd);
+    if (!isNullOrEmpty(subscriptionIds)) {
+      searchParams.set('subscription_ids', subscriptionIds.join());
+    }
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/public-cloud/reports/virtual-machine-breakdown';
@@ -57,11 +79,15 @@ export class McsApiReportsService implements IMcsApiReportsService {
 
   public getPerformanceReport(
     periodStart?: string,
-    periodEnd?: string): Observable<McsApiSuccessResponse<McsReportGenericItem[]>> {
+    periodEnd?: string,
+    subscriptionIds?: string[]): Observable<McsApiSuccessResponse<McsReportGenericItem[]>> {
 
     let searchParams = new Map<string, any>();
     searchParams.set('period_start', periodStart);
     searchParams.set('period_end', periodEnd);
+    if (!isNullOrEmpty(subscriptionIds)) {
+      searchParams.set('subscription_ids', subscriptionIds.join());
+    }
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/public-cloud/reports/performance';

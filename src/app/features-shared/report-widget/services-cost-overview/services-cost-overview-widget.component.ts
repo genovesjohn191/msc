@@ -35,12 +35,12 @@ import { ReportPeriod } from '../report-period.interface';
 
 export class ServicesCostOverviewWidgetComponent implements OnInit, OnDestroy {
   @Input()
-  public set period(value: ReportPeriod) {
-    if (!isNullOrEmpty(value)) {
-      this._startPeriod = `${value.from.getFullYear()}-${value.from.getMonth() + 1}`;
-      this._endPeriod = `${value.until.getFullYear()}-${value.until.getMonth() + 1}`;
+  public set subscriptionIds(value: string[]) {
+    if (value === this._subscriptionIds) {
+      return;
     }
 
+    this._subscriptionIds = value;
     this.getData();
   }
 
@@ -49,12 +49,12 @@ export class ServicesCostOverviewWidgetComponent implements OnInit, OnDestroy {
   public hasError: boolean = false;
   public processing: boolean = true;
 
+  private _subscriptionIds: string[] = [];
   private _startPeriod: string = '';
   private _endPeriod: string = '';
 
-  public constructor(
-    private _changeDetector: ChangeDetectorRef,
-    private reportingService: McsReportingService) {
+  public constructor(private _changeDetector: ChangeDetectorRef, private reportingService: McsReportingService) {
+    this._initializePeriod();
   }
 
   public ngOnInit() {
@@ -71,7 +71,7 @@ export class ServicesCostOverviewWidgetComponent implements OnInit, OnDestroy {
     this.processing = true;
     this._changeDetector.markForCheck();
 
-    this.reportingService.getServicesCostOverviewReport(this._startPeriod, this._endPeriod)
+    this.reportingService.getServicesCostOverviewReport(this._startPeriod, this._endPeriod, this._subscriptionIds)
     .pipe(catchError(() => {
       this.hasError = true;
       this.processing = false;
@@ -83,5 +83,13 @@ export class ServicesCostOverviewWidgetComponent implements OnInit, OnDestroy {
       this.processing = false;
       this._changeDetector.markForCheck();
     });
+  }
+
+  private _initializePeriod(): void {
+    let from = new Date(new Date().setMonth(new Date().getMonth() - 12));
+    let until = new Date(new Date().setMonth(new Date().getMonth()));
+
+    this._startPeriod = `${from.getFullYear()}-${from.getMonth() + 1}`;
+    this._endPeriod = `${until.getFullYear()}-${until.getMonth() + 1}`;
   }
 }
