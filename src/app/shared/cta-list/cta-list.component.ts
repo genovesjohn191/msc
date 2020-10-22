@@ -20,6 +20,7 @@ export interface CtaItem {
   description?: string;
   ctaLabel?: string;
   ctaLink?: string;
+  ctaLinkTooltip?: string;
   ctaLinkEvent?: CtaLinkEvent;
 }
 

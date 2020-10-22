@@ -6,7 +6,8 @@ import {
   McsApiRequestParameter,
   McsReportGenericItem,
   McsReportIntegerData,
-  McsReportSubscription
+  McsReportSubscription,
+  McsReportCostRecommendations
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiReportsService } from '../interfaces/mcs-api-reports.interface';
@@ -109,6 +110,21 @@ export class McsApiReportsService implements IMcsApiReportsService {
       .pipe(
         map((response) => {
           return McsApiSuccessResponse.deserializeResponse<McsReportIntegerData[]>(McsReportIntegerData, response);
+        })
+      );
+  }
+
+  public getCostRecommendations(): Observable<McsApiSuccessResponse<McsReportCostRecommendations>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/public-cloud/reports/cost-recommendations ';
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsReportCostRecommendations>(McsReportCostRecommendations, response);
+          return apiResponse;
         })
       );
   }

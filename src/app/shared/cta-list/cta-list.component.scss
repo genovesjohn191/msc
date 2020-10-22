@@ -6,16 +6,15 @@ $compact-icon-width: 22px;
 .cta-list-wrapper {
   .items-container {
     .item-wrapper {
-      
+      margin-bottom: $space-large;
+
       .icon {
-        min-width: $large-icon-width;
+        font-size: 46px;
+        margin-top: 15px;
 
         &.compact {
-          min-width: $compact-icon-width;
-        }
-
-        mcs-icon {
-          margin-bottom: auto
+          font-size: 30px;
+          margin-top: 0;
         }
       }
 
@@ -26,6 +25,7 @@ $compact-icon-width: 22px;
       @include display-flex(row);
 
       .content-wrapper {
+        width: 100%;
         margin-left: $space-large;
 
         h5, p {

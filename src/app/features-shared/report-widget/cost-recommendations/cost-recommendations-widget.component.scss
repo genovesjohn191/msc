@@ -1,0 +1,99 @@
+@import "../../../../styles/shared/base";
+
+.placeholder-content {
+  height: 100px;
+  margin-bottom: 30px;
+
+  $left-offset: 45px;
+  $spacer: 12px;
+  $text-height: 20px;
+
+  &_item {
+    width: 100%;
+    height: 20px;
+    position: absolute;
+    background: #fff;
+    z-index: 2;
+
+    &:after,
+    &:before {
+      width: inherit;
+      height: inherit;
+      content: '';
+      position: absolute;
+    }
+
+    &:nth-child(1) {
+      top: 0;
+      width: 20px;
+      left: $left-offset;
+      height: 100px;
+    }
+
+    &:nth-child(2) {
+      top: 50px;
+      width: 45px;
+      left: 0;
+      height: 50px;
+    }
+
+    &:nth-child(3) {
+      top: $text-height;
+      left: $left-offset;
+      width: calc(100% - #{$left-offset});
+      height: $spacer;
+    }
+
+    &:nth-child(4) {
+      top: 68px;
+      left: $left-offset;
+      width: calc(100% - #{$left-offset});
+      height: $spacer;
+    }
+
+    &:nth-child(5) {
+      top: 0;
+      right: 0;
+      width: 40%;
+      height: $text-height;
+    }
+  }
+}
+
+.text-overlay {
+  text-align: center;
+  position: absolute;
+  color: $color-black;
+  width: 100%;
+  z-index: 1;
+}
+
+.good {
+  .mat-progress-bar-fill::after {
+    background-color: #4caf50;
+  }
+
+  .mat-progress-bar-buffer {
+    background-color: #c8e6c9;
+  }
+}
+
+.warning {
+  .mat-progress-bar-fill::after {
+    background-color: #ff9800;
+  }
+
+  .mat-progress-bar-buffer {
+    background-color: #ffe0b2;
+  }
+}
+
+.over {
+  .mat-progress-bar-fill::after {
+    background-color: #f44336;
+  }
+
+  .mat-progress-bar-buffer {
+    background-color: #ffcdd2;
+  }
+}

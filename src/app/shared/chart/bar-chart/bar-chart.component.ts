@@ -92,7 +92,17 @@ export class BarChartComponent implements OnChanges {
       chart: {
         type: 'bar',
         stacked: this.stacked,
-        height: '500px'
+        height: '500px',
+        animations: {
+          speed: 10,
+          animateGradually: {
+            enabled: false
+          },
+          dynamicAnimation: {
+            enabled: true,
+            speed: 10
+          }
+        }
       },
       xaxis: {
         categories: [],

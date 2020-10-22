@@ -1,6 +1,37 @@
 <div class="widget">
   <h3>Make a change</h3>
   <div class="data-wrapper">
-    <mcs-cta-list [data]="data$ | async"></mcs-cta-list>
+    <mcs-cta-list>
+      <mcs-cta-list-panel icon="connect_without_contact">
+        <mcs-cta-list-header link="servers">
+          <a href="{{ azureServiceRequestLink }}">
+            Azure Service Request
+          </a>
+        </mcs-cta-list-header>
+        <mcs-cta-list-body>
+          Request a change to resources in a subscription in your Azure Environment.
+        </mcs-cta-list-body>
+      </mcs-cta-list-panel>
+      <mcs-cta-list-panel icon="ballot">
+        <mcs-cta-list-header link="servers">
+          <a href="{{ changeLicenseCountLink }}">
+            Change License subscription count
+          </a>
+        </mcs-cta-list-header>
+        <mcs-cta-list-body>
+          Change the number of licenses against a subscription.
+        </mcs-cta-list-body>
+      </mcs-cta-list-panel>
+      <mcs-cta-list-panel icon="cloud_circle">
+        <mcs-cta-list-header link="servers">
+          <a href="{{ changeManagedDnsLink }}">
+            Change Macquarie-managed DNS zone
+          </a>
+        </mcs-cta-list-header>
+        <mcs-cta-list-body>
+          Manage DNS zones in MacquarieView.
+        </mcs-cta-list-body>
+      </mcs-cta-list-panel>
+    </mcs-cta-list>
   </div>
 </div>
