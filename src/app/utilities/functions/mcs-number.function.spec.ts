@@ -2,7 +2,8 @@ import {
   compareNumbers,
   transformNumberToDecimal,
   floorByStep,
-  ceilByStep
+  ceilByStep,
+  currencyFormat
 } from './mcs-number.function';
 
 describe('NUMBER Functions', () => {
@@ -77,6 +78,35 @@ describe('NUMBER Functions', () => {
         let testStep: number = 3;
         let result = ceilByStep(testNumber, testStep);
         expect(result).toBe(12);
+      });
+    });
+  });
+
+  describe('currencyFormat()', () => {
+    describe('given postive value', () => {
+      it(`should return formatted result`, () => {
+        let testNumber: number = 123456.12;
+        let expected: string = '$123,456.12';
+        let result = currencyFormat(testNumber);
+        expect(result).toBe(expected);
+      });
+    });
+
+    describe('given invalid input', () => {
+      it(`should return $0.00`, () => {
+        let testNumber: number;
+        let expected: string = '$0.00';
+        let result = currencyFormat(testNumber);
+        expect(result).toBe(expected);
+      });
+    });
+
+    describe('given negative value', () => {
+      it(`should return formatted result`, () => {
+        let testNumber: number = -1223.66;
+        let expected: string = '-$1,223.66';
+        let result = currencyFormat(testNumber);
+        expect(result).toBe(expected);
       });
     });
   });

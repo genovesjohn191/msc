@@ -38,7 +38,7 @@ export class McsDateTimeService {
 
     let actualFormat = isNullOrEmpty(formatType) ? 'default' : formatType;
     if (actualFormat === 'friendly') {
-      return moment(date).fromNow();
+      return moment(date).fromNow().replace('a day ago', 'yesterday');
     }
 
     let formatFound = this._dateTimeMapTable.has(formatType as McsDateTimeFormat);

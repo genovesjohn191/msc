@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { McsReportGenericItem, McsReportIntegerData, McsReportSubscription } from '@app/models';
+import { McsReportCostRecommendations, McsReportGenericItem, McsReportIntegerData, McsReportSubscription } from '@app/models';
 import { McsApiService } from '@app/services';
 import { ChartItem } from '@app/shared/chart';
 
@@ -42,6 +42,10 @@ export class McsReportingService {
   public getAzureServicesReport(): Observable<ChartItem[]> {
     return this._apiService.getAzureResourcesReport()
       .pipe(map((resources) => this._convertIntegerDataToChartItem(resources.collection)));
+  }
+
+  public getCostRecommendations(): Observable<McsReportCostRecommendations> {
+    return this._apiService.getCostRecommendations();
   }
 
   private _convertIntegerDataToChartItem(items: McsReportIntegerData[]): ChartItem[] {

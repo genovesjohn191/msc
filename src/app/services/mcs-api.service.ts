@@ -125,6 +125,7 @@ import {
   McsColocationRoom,
   McsColocationStandardSqm,
   McsReportSubscription,
+  McsReportCostRecommendations,
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -1541,6 +1542,15 @@ export class McsApiService {
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getAzureResourcesReport'))
       ),
       map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public getCostRecommendations(): Observable<McsReportCostRecommendations> {
+    return this._reportsApi.getCostRecommendations().pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getCostRecommendations'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
 

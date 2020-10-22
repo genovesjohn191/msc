@@ -1,0 +1,8 @@
+<div class="item-wrapper">
+  <div *ngIf="hasIcon" class="icon" [class.compact]="compact">
+    <mat-icon [inline]="true">{{ icon }}</mat-icon>
+  </div>
+  <div class="content-wrapper">
+    <ng-content></ng-content>
+  </div>
+</div>

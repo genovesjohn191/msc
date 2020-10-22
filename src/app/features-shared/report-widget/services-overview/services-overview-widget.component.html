@@ -1,6 +1,28 @@
 <div class="widget">
   <h3>Services Overview</h3>
   <div class="data-wrapper">
-    <mcs-cta-list [data]="data$ | async" isCompact="true"></mcs-cta-list>
+    <mcs-cta-list>
+      <mcs-cta-list-panel icon="cloud_done" compact="true">
+        <mcs-cta-list-action>
+          <a href="#">
+            3 Azure subscriptions
+          </a>
+        </mcs-cta-list-action>
+      </mcs-cta-list-panel>
+      <mcs-cta-list-panel icon="cloud_queue" compact="true">
+        <mcs-cta-list-action>
+          <a href="#">
+            10 License subscription
+          </a>
+        </mcs-cta-list-action>
+      </mcs-cta-list-panel>
+      <mcs-cta-list-panel icon="cloud_download" compact="true">
+        <mcs-cta-list-action>
+          <a href="#">
+            1 Software subscription
+          </a>
+        </mcs-cta-list-action>
+      </mcs-cta-list-panel>
+    </mcs-cta-list>
   </div>
 </div>

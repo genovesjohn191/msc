@@ -1,6 +1,27 @@
 <div class="widget">
   <h3>Contact us</h3>
   <div class="data-wrapper">
-    <mcs-cta-list [data]="data$ | async"></mcs-cta-list>
+    <mcs-cta-list>
+      <mcs-cta-list-panel icon="contacts">
+        <mcs-cta-list-body>
+          Solution Delivery Manager<br />Jane Gee<br />0488 871 123
+        </mcs-cta-list-body>
+        <mcs-cta-list-action>
+          <a href="mailto:jgee@macquariecloudservices.com">
+            jgee@macquariecloudservices.com
+          </a>
+        </mcs-cta-list-action>
+      </mcs-cta-list-panel>
+      <mcs-cta-list-panel icon="contacts">
+        <mcs-cta-list-body>
+          Account Manager<br />John Vicor<br />0488 871 123
+        </mcs-cta-list-body>
+        <mcs-cta-list-action>
+          <a href="mailto:jvicor@macquariecloudservices.com">
+            jvicor@macquariecloudservices.com
+          </a>
+        </mcs-cta-list-action>
+      </mcs-cta-list-panel>
+    </mcs-cta-list>
   </div>
 </div>

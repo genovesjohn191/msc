@@ -1,6 +1,86 @@
 <div class="widget">
   <h3>Cost and Recommendations</h3>
   <div class="data-wrapper">
-    <mcs-cta-list [data]="data$ | async"></mcs-cta-list>
+    <div *ngIf="processing; else done">
+      <div class="placeholder-content">
+        <div class="placeholder-content_item"></div>
+        <div class="placeholder-content_item"></div>
+        <div class="placeholder-content_item"></div>
+        <div class="placeholder-content_item"></div>
+        <div class="placeholder-content_item"></div>
+      </div>
+      <div class="placeholder-content">
+        <div class="placeholder-content_item"></div>
+        <div class="placeholder-content_item"></div>
+        <div class="placeholder-content_item"></div>
+        <div class="placeholder-content_item"></div>
+        <div class="placeholder-content_item"></div>
+      </div>
+    </div>
+
+    <ng-template #done>
+      <div *ngIf="!hasError; else error">
+        <mcs-cta-list>
+          <mcs-cta-list-panel icon="attach_money">
+            <mcs-cta-list-header>
+              Actual vs Budget
+            </mcs-cta-list-header>
+            <mcs-cta-list-body>
+              <div style="width: 100%; position: relative;">
+                <div class="text-overlay">
+                  <span>{{ moneyFormat(actual) }} / {{ moneyFormat(budget) }} ({{ costPercentage }}%)</span>
+                </div>
+                <mat-progress-bar class="{{ costColor }}" mode="determinate" value="{{ costPercentage }}" style="height: 20px;"></mat-progress-bar>
+                <br />
+                <small>Refreshed {{ costRecommendations.updatedOn | mcsStdDateFormat: 'friendly' }}</small>
+              </div>
+
+            </mcs-cta-list-body>
+            <mcs-cta-list-action>
+              <a
+                mcsId
+                mcsEventTracker="navigate-to-cloudhealth-budget"
+                mcsEventCategory="navigation"
+                mcsEventLabel="cost-and-recommendations-link"
+                href="https://apps.cloudhealthtech.com/ui/budgets/">
+                Update your budget
+              </a>
+            </mcs-cta-list-action>
+          </mcs-cta-list-panel>
+
+          <mcs-cta-list-panel icon="connect_without_contact">
+            <mcs-cta-list-header link="servers">
+              Operational Monthly Savings
+            </mcs-cta-list-header>
+            <mcs-cta-list-body>
+              Up to <strong>{{ potentialOperationalSavings }}</strong> could be saved by optimising underutilised resources.
+            </mcs-cta-list-body>
+            <mcs-cta-list-action>
+              <a href="{{ azureServiceRequestLink }}"
+                matTooltip="We'll work with you to optimise your environment."
+                matTooltipPosition="right">
+                Optimise
+              </a>
+            </mcs-cta-list-action>
+            <mcs-cta-list-body>
+              <br />
+              Up to <strong>{{ potentialRightsizingSavings }}</strong> could be saved by rightsizing virtual machines.
+            </mcs-cta-list-body>
+            <mcs-cta-list-action>
+              <a href="{{ azureServiceRequestLink }}"
+                matTooltip="We'll work with you to rightsize the VMs in your environment."
+                matTooltipPosition="right">
+                Rightsize
+              </a>
+            </mcs-cta-list-action>
+          </mcs-cta-list-panel>
+        </mcs-cta-list>
+      </div>
+      <ng-template #error>
+        <mcs-status-message type="error">
+          {{ 'reports.widgets.errorMessage' | translate }}<a style="margin-left: 5px;" mcsId (click)="getData()">{{ 'reports.widgets.retryLabel' | translate }}</a>
+        </mcs-status-message>
+    </ng-template>
+    </ng-template>
   </div>
 </div>

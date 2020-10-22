@@ -1,6 +1,7 @@
 import { Observable } from 'rxjs';
 import {
   McsApiSuccessResponse,
+  McsReportCostRecommendations,
   McsReportGenericItem,
   McsReportIntegerData,
   McsReportSubscription
@@ -25,4 +26,6 @@ export interface IMcsApiReportsService {
     subscriptionIds?: string[]): Observable<McsApiSuccessResponse<McsReportGenericItem[]>>;
 
   getAzureResourcesReport(): Observable<McsApiSuccessResponse<McsReportIntegerData[]>>;
+
+  getCostRecommendations(): Observable<McsApiSuccessResponse<McsReportCostRecommendations>>;
 }

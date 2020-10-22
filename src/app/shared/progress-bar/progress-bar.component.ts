@@ -73,6 +73,12 @@ export class ProgressBarComponent implements AfterViewInit, OnDestroy, ControlVa
   public set maxValue(value: number) { this._maxValue = coerceNumber(value); }
   private _maxValue: number;
 
+  @Input()
+  public valueFormatter: (val: number) => string;
+
+  @Input()
+  public usePercentage: boolean = true;
+
   /**
    * Model Value of the Progressbar (Two way binding)
    */

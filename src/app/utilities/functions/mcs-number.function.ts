@@ -1,3 +1,5 @@
+import { isNullOrEmpty } from './mcs-object.function';
+
 /**
  * Compare 2 numbers and return the corresponding comparison value
  * 1 = First number is greater than second number
@@ -52,4 +54,21 @@ export function floorByStep(value: number, step: number): number {
  */
 export function ceilByStep(value: number, step: number): number {
   return Math.ceil(value / step) * step;
+}
+
+/**
+ * Returns a currency format in USD e.g. $4,500.20
+ * @param value The number to format
+ */
+export function currencyFormat(value: number): string {
+  if (isNullOrEmpty(value)) {
+    return '$0.00';
+  }
+
+  let formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD'
+  });
+
+  return formatter.format(value);
 }
