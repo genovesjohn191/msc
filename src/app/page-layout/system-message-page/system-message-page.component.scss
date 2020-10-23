@@ -7,7 +7,7 @@
   .system-message-header {
     @include flex(0 0 auto);
   }
-  
+
   .system-message-page-content {
     @include display-flex(column);
     @include align-items(center);
@@ -21,11 +21,11 @@
       @include set-items-interval($space-medium);
       justify-content: center;
     }
-    
+
     .system-message-page-title {
       @include font-size($shared-notification-title-font-size);
-      color: $color-primary-01;
+      color: $color-scheme-primary;
     }
-  
+
   }
 }

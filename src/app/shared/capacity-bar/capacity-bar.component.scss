@@ -5,8 +5,8 @@ $capacity-bar-height: 17px;
 $capacity-bar-min-width: 100px;
 $capacity-bar-border-radius: 3px;
 $capacity-bar-wrapper-bg-color: $color-primary-02;
-$capacity-bar-bg-color-default: $color-primary-01;
-$capacity-bar-bg-color-low: $color-red-00;
+$capacity-bar-bg-color-default: $color-scheme-primary;
+$capacity-bar-bg-color-low: $color-scheme-danger;
 $capacity-bar-label-color-low: $color-white;
 
 .capacity-bar-wrapper {

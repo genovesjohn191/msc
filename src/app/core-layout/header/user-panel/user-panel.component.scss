@@ -10,7 +10,7 @@ $user-panel-switch-account-mobile-width: 80vw;
 $user-panel-switch-account-desktop-min-width: 250px;
 $user-panel-switch-account-desktop-width: 400px;
 // Notification item variables
-$notification-item-label-bg-color: $color-primary-01;
+$notification-item-label-bg-color: $color-scheme-primary;
 $notification-item-label-color: $color-black;
 $notification-item-label-font: $base-font-bold;
 $notification-item-label-size: 18px;
@@ -73,12 +73,12 @@ $notification-item-label-size: 18px;
       }
     }
   }
-  
+
   .btn-platform-change {
     background-color: $color-black;
     border: 0.5px solid $color-white;
   }
-  
+
 }
 
 // Popover for notifications layout
@@ -105,7 +105,7 @@ $notification-item-label-size: 18px;
     color: $color-grey-05;
     text-decoration: none;
     &:hover {
-      color: $color-primary-01;
+      color: $color-scheme-primary;
       text-decoration: none;
     }
   }
