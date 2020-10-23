@@ -7,11 +7,14 @@ import {
   OnDestroy
 } from '@angular/core';
 import {
+  of,
   Subject,
   throwError
 } from 'rxjs';
 import {
   catchError,
+  concatMap,
+  delay,
   takeUntil
 } from 'rxjs/operators';
 
@@ -45,17 +48,19 @@ export class CostRecommendationsWidgetComponent implements OnInit, OnDestroy {
   private _destroySubject = new Subject<void>();
 
   public get actual(): number {
-    return this.costRecommendations.actual;
+    return this.costRecommendations.actual < 0 ? 0 : this.costRecommendations.actual;
   }
 
   public get budget(): number {
-    return this.costRecommendations.budget;
+    return this.costRecommendations.budget < 0 ? 0 : this.costRecommendations.budget;
   }
 
   public get costPercentage(): number {
-    let percentage = (this.actual / this.budget) * 100;
+    if (this.budget === 0) {
+      return 0;
+    }
 
-    return Math.ceil(percentage);
+    return Math.ceil((this.actual / this.budget) * 100);
   }
 
   public get costColor(): string {
@@ -107,8 +112,8 @@ export class CostRecommendationsWidgetComponent implements OnInit, OnDestroy {
       }),
       takeUntil(this._destroySubject))
     .subscribe((response) => {
-      this.costRecommendations = response;
       this.processing = false;
+      this.costRecommendations = response;
       this._changeDetectorRef.markForCheck();
     });
   }

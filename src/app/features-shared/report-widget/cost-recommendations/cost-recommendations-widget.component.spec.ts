@@ -119,9 +119,9 @@ describe('CostRecommendationsWidgetComponent', () => {
       expect(component.costColor).toBe('good');
     });
 
-    it('good negative value should round off correctly', () => {
+    it('negative values value should return 0', () => {
       component.costRecommendations = {
-        budget: 1000,
+        budget: -1000,
         actual: -500,
         variance: 0,
         potentialOperationalSavings: 1000,
@@ -129,7 +129,41 @@ describe('CostRecommendationsWidgetComponent', () => {
         updatedOn: '',
       };
 
-      expect(component.costPercentage).toBe(-50);
+      expect(component.costPercentage).toBe(0);
+      expect(component.actual).toBe(0);
+      expect(component.budget).toBe(0);
+      expect(component.costColor).toBe('good');
+    });
+
+    it('budget is negative value should round off to 0', () => {
+      component.costRecommendations = {
+        budget: -1000,
+        actual: 1000,
+        variance: 0,
+        potentialOperationalSavings: 1000,
+        potentialRightsizingSavings: 1000,
+        updatedOn: '',
+      };
+
+      expect(component.costPercentage).toBe(0);
+      expect(component.actual).toBe(1000);
+      expect(component.budget).toBe(0);
+      expect(component.costColor).toBe('good');
+    });
+
+    it('actual is negative value should round off to 0', () => {
+      component.costRecommendations = {
+        budget: 1000,
+        actual: -1000,
+        variance: 0,
+        potentialOperationalSavings: 1000,
+        potentialRightsizingSavings: 1000,
+        updatedOn: '',
+      };
+
+      expect(component.costPercentage).toBe(0);
+      expect(component.actual).toBe(0);
+      expect(component.budget).toBe(1000);
       expect(component.costColor).toBe('good');
     });
   });
