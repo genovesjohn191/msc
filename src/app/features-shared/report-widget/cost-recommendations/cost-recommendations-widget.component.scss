@@ -70,30 +70,30 @@
 
 .good {
   .mat-progress-bar-fill::after {
-    background-color: #4caf50;
+    background-color: $color-scheme-success;
   }
 
   .mat-progress-bar-buffer {
-    background-color: #c8e6c9;
+    background-color: $color-green-01;
   }
 }
 
 .warning {
   .mat-progress-bar-fill::after {
-    background-color: #ff9800;
+    background-color: $color-scheme-warning;
   }
 
   .mat-progress-bar-buffer {
-    background-color: #ffe0b2;
+    background-color: $color-yellow-01;
   }
 }
 
 .over {
   .mat-progress-bar-fill::after {
-    background-color: #f44336;
+    background-color: $color-scheme-danger;
   }
 
   .mat-progress-bar-buffer {
-    background-color: #ffcdd2;
+    background-color: $color-red-01;
   }
 }

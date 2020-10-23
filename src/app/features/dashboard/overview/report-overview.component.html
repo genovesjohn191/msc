@@ -3,23 +3,29 @@
   <mcs-content-panel *mcsContentPanelDef class="full-width">
     <div class="report-wrapper">
       <div class="widget-wrapper">
-        <mcs-grid>
-          <mcs-grid-row>
-            <mcs-grid-column sizeSm="12" sizeMd="12" sizeLg="6" sizeWd="4">
-              <mcs-services-overview-widget></mcs-services-overview-widget>
-              <mcs-azure-resources-widget></mcs-azure-resources-widget>
-            </mcs-grid-column>
-            <mcs-grid-column sizeSm="12" sizeMd="12" sizeLg="6" sizeWd="4">
-              <mcs-cost-recommendations-widget></mcs-cost-recommendations-widget>
-              <mcs-change-requests-widget class="hide-on-print"></mcs-change-requests-widget>
-              <mcs-contact-us-widget></mcs-contact-us-widget>
-            </mcs-grid-column>
-            <mcs-grid-column sizeSm="12" sizeMd="12" sizeLg="6" sizeWd="4">
-              <mcs-resource-changes-widget></mcs-resource-changes-widget>
-              <mcs-azure-tickets-widget></mcs-azure-tickets-widget>
-            </mcs-grid-column>
-          </mcs-grid-row>
-        </mcs-grid>
+        <ul cdkDropList>
+          <li cdkDrag>
+            <mcs-services-overview-widget></mcs-services-overview-widget>
+          </li>
+          <li>
+            <mcs-azure-resources-widget></mcs-azure-resources-widget>
+          </li>
+          <li>
+            <mcs-cost-recommendations-widget></mcs-cost-recommendations-widget>
+          </li>
+          <li>
+            <mcs-change-requests-widget class="hide-on-print" *mcsAccessControl="['OrderEdit'];"></mcs-change-requests-widget>
+          </li>
+          <li>
+            <mcs-contact-us-widget></mcs-contact-us-widget>
+          </li>
+          <li>
+            <mcs-resource-changes-widget></mcs-resource-changes-widget>
+          </li>
+          <li>
+            <mcs-azure-tickets-widget></mcs-azure-tickets-widget>
+          </li>
+        </ul>
       </div>
     </div>
   </mcs-content-panel>

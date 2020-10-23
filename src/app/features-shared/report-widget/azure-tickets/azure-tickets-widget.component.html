@@ -5,7 +5,7 @@
       <span *mcsExclusiveForAccount="'default'">
         <a style="float: right;"
           class="hide-on-print"
-          (click)="onClickNewTicket()"
+          href="{{ newTicketLink }}"
           mcsId
           mcsEventTracker="create-new-ticket"
           mcsEventCategory="ticket"
@@ -31,17 +31,17 @@
               {{ columnSettings.summary.text }}
             </mcs-header-cell>
             <mcs-data-cell *mcsDataCellDef="let row" [mcsTextTruncate]="row.shortDescription" mcsTextTruncateSize="100px">
-              <mcs-icon [key]="getStatusIcon(row.stateLabel)" size="small" [mcsTooltip]="row.stateLabel" style="margin-right: 5px;"></mcs-icon>
+              <mcs-icon [key]="getStatusIcon(row.stateLabel)" size="small" style="margin-right: 5px;"></mcs-icon>
               <a [mcsRouterLink]="[routeKeyEnum.TicketDetails, row.id]"
                 mcsId="select-ticket"
                 mcsEventTracker="navigate-to-ticket"
                 mcsEventCategory="ticket"
                 mcsEventLabel="ticket-listing-page">
-                  {{ row.shortDescription }}
+                {{ row.shortDescription }}
               </a>
             </mcs-data-cell>
           </ng-container>
-  
+
           <!-- Last Updated Date Column -->
           <ng-container mcsColumnDef="lastUpdatedDate">
             <mcs-header-cell *mcsHeaderCellDef hidden-small>
@@ -51,7 +51,7 @@
               {{ row.updatedOn | mcsStdDateFormat: 'friendly' }}
             </mcs-data-cell>
           </ng-container>
-  
+
           <!-- Data Status Integration -->
           <ng-container mcsDataStatusDef>
             <mcs-data-empty *mcsDataEmptyDef>
@@ -59,7 +59,7 @@
                 <span>{{ 'reports.widgets.azureTicketsWidget.empty' | translate }}</span>
                 <ng-container *mcsAccessControl="['TicketCreate']">
                   <span *mcsExclusiveForAccount="'default'">
-                    Click <a (click)="onClickNewTicket()"
+                    Click <a href="{{ newTicketLink }}"
                     mcsId
                     mcsEventTracker="create-new-ticket"
                     mcsEventCategory="ticket"
@@ -79,11 +79,12 @@
               </div>
             </mcs-data-error>
           </ng-container>
-  
+
           <!-- Header and Data row -->
           <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
           <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"
-            mcsCursor="pointer" (click)="navigateToTicket(row)"
+            (click)="navigateToTicket(row)"
+            mcsCursor="pointer"
             mcsId="ticket-row"
             mcsEventTracker="navigate-to-ticket"
             mcsEventCategory="reports-widget"
@@ -94,7 +95,7 @@
         <div style="text-align: center; padding: 10px 0;" *ngIf="hasMore">
           <a
             class="hide-on-print"
-            (click)="navigateToTicketListing()"
+            href="{{ ticketListingLink }}"
             mcsId
             mcsEventTracker="navigate-to-ticket-listing"
             mcsEventCategory="reports-widget"

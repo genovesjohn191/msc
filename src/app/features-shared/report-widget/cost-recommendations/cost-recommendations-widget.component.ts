@@ -31,6 +31,7 @@ export class CostRecommendationsWidgetComponent implements OnInit {
     return this.costRecommendations.budget;
   }
 
+  // TODO: Unit test
   public get costPercentage(): number {
     let percentage = (this.actual / this.budget) * 100;
     if (percentage < 0) {
@@ -40,6 +41,7 @@ export class CostRecommendationsWidgetComponent implements OnInit {
     return Math.round(percentage);
   }
 
+  // TODO: Unit test
   public get costColor(): string {
     let cost = this.costPercentage;
     if (cost > 100) { return 'over'; }
