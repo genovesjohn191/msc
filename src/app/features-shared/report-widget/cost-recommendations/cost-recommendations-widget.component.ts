@@ -1,11 +1,30 @@
-import { Component, ChangeDetectionStrategy, Input, ViewEncapsulation, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CommonDefinition, currencyFormat } from '@app/utilities';
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
-import { CtaItem } from '@app/shared/cta-list/cta-list.component';
-import { McsReportingService } from '@app/core/services/mcs-reporting.service';
-import { catchError } from 'rxjs/operators';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ViewEncapsulation,
+  OnInit,
+  ChangeDetectorRef,
+  OnDestroy
+} from '@angular/core';
+import {
+  Subject,
+  throwError
+} from 'rxjs';
+import {
+  catchError,
+  takeUntil
+} from 'rxjs/operators';
+
+import {
+  currencyFormat,
+  unsubscribeSafely
+} from '@app/utilities';
+import {
+  McsReportCostRecommendations,
+  RouteKey
+} from '@app/models';
 import { CoreRoutes } from '@app/core';
-import { McsReportCostRecommendations, RouteKey } from '@app/models';
+import { McsReportingService } from '@app/core/services/mcs-reporting.service';
 
 @Component({
   selector: 'mcs-cost-recommendations-widget',
@@ -18,10 +37,12 @@ import { McsReportCostRecommendations, RouteKey } from '@app/models';
   }
 })
 
-export class CostRecommendationsWidgetComponent implements OnInit {
+export class CostRecommendationsWidgetComponent implements OnInit, OnDestroy {
   public processing: boolean = false;
   public hasError: boolean = false;
   public costRecommendations: McsReportCostRecommendations;
+
+  private _destroySubject = new Subject<void>();
 
   public get actual(): number {
     return this.costRecommendations.actual;
@@ -31,21 +52,16 @@ export class CostRecommendationsWidgetComponent implements OnInit {
     return this.costRecommendations.budget;
   }
 
-  // TODO: Unit test
   public get costPercentage(): number {
     let percentage = (this.actual / this.budget) * 100;
-    if (percentage < 0) {
-      percentage = 0;
-    }
 
-    return Math.round(percentage);
+    return Math.ceil(percentage);
   }
 
-  // TODO: Unit test
   public get costColor(): string {
     let cost = this.costPercentage;
-    if (cost > 100) { return 'over'; }
-    else if (cost >= 85) { return 'warning'; }
+    if (cost > 100) { return 'danger'; }
+    else if (cost >= 85) { return 'warn'; }
     return 'good';
   }
 
@@ -69,6 +85,10 @@ export class CostRecommendationsWidgetComponent implements OnInit {
     this.getCostRecommendations();
   }
 
+  public ngOnDestroy(): void {
+    unsubscribeSafely(this._destroySubject);
+  }
+
   public moneyFormat(value: number): string {
     return currencyFormat(value);
   }
@@ -78,12 +98,14 @@ export class CostRecommendationsWidgetComponent implements OnInit {
     this.hasError = false;
 
     this._reportingService.getCostRecommendations()
-    .pipe(catchError(() => {
-      this.hasError = true;
-      this.processing = false;
-      this._changeDetectorRef.markForCheck();
-      return throwError('Cost and recommendations endpoint failed.');
-    }))
+    .pipe(
+      catchError(() => {
+        this.hasError = true;
+        this.processing = false;
+        this._changeDetectorRef.markForCheck();
+        return throwError('Cost and recommendations endpoint failed.');
+      }),
+      takeUntil(this._destroySubject))
     .subscribe((response) => {
       this.costRecommendations = response;
       this.processing = false;

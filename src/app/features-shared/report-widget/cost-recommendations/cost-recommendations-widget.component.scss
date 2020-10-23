@@ -78,7 +78,7 @@
   }
 }
 
-.warning {
+.warn {
   .mat-progress-bar-fill::after {
     background-color: $color-scheme-warning;
   }
@@ -88,7 +88,7 @@
   }
 }
 
-.over {
+.danger {
   .mat-progress-bar-fill::after {
     background-color: $color-scheme-danger;
   }
