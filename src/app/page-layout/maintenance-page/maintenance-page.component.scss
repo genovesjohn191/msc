@@ -18,7 +18,7 @@
     @include set-items-interval($space-small);
 
     .maintenance-page-title {
-      color: $color-primary-01;
+      color: $color-scheme-primary;
       @include font-size(40);
     }
   }

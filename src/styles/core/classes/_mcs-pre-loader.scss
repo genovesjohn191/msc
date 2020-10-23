@@ -29,7 +29,7 @@ $spinner-thickness: 10px;
     margin-left: -($spinner-size * 0.5);
     margin-top: -($spinner-size * 0.5);
 
-    border: $spinner-thickness solid $color-primary-01;
+    border: $spinner-thickness solid $color-scheme-primary;
     border-radius: 50%;
     border-top: $spinner-thickness solid transparent;
     width: $spinner-size;

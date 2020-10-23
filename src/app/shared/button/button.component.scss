@@ -13,10 +13,10 @@ $button-default-font-size: 12;
 $button-medium-font-size: 14;
 // Theme colors
 $button-white-bg-color: $color-white;
-$button-primary-bg-color: $color-primary-01;
-$button-success-bg-color: $color-green-00;
-$button-warning-bg-color: $color-yellow-00;
-$button-error-bg-color: $color-red-00;
+$button-primary-bg-color: $color-scheme-primary;
+$button-success-bg-color: $color-scheme-success;
+$button-warning-bg-color: $color-scheme-warning;
+$button-error-bg-color: $color-scheme-danger;
 
 // Reset button settings mixin
 @mixin mcs-button-reset {

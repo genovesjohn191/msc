@@ -58,7 +58,7 @@ mcs-content-panel {
   }
 
   h1 {
-    color: $color-primary-01;
+    color: $color-scheme-primary;
 
     @include print() {
       margin-top: $space-medium;

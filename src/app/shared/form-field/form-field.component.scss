@@ -3,7 +3,7 @@
 // Form field content
 $form-field-content-min-height: 40px;
 $form-field-content-focus-color: $color-primary-00;
-$form-field-content-error-color: $color-red-00;
+$form-field-content-error-color: $color-scheme-danger;
 $form-field-content-border-width: 1px;
 $form-field-content-border-style: solid;
 $form-field-content-border-color: $color-black;
@@ -13,7 +13,7 @@ $form-field-content-bg-color: $color-white;
 $form-field-content-input-offset-right: $space-xlarge;
 // Form field messages
 $form-field-message-top-offset: 6px;
-$form-field-error-message-color: $color-red-00;
+$form-field-error-message-color: $color-scheme-danger;
 $form-field-error-hint-color: rgba($color-black, 0.54);
 
 // Form field main wrapper

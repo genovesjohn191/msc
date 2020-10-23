@@ -10,7 +10,7 @@ $scrollable-link-header-font-size: 16;
 $scrollable-link-header-font: $base-font-bold;
 // Scrollable link body
 $scrollable-link-padding: $space-large;
-$scrollable-link-label-color: $color-primary-01;
+$scrollable-link-label-color: $color-scheme-primary;
 
 .scrollable-link-group-wrapper {
   @include display-flex(column);
