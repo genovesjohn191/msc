@@ -32,9 +32,12 @@ $color-grey-05: #e3e3e3;
 $color-grey-06: #e1e1e1;
 $color-grey-07: #f4f4f4;
 $color-grey-08: #f7f7f7;
-$color-green-00: #21b21e;
+$color-green-00: #4caf50;
+$color-green-01: #c8e6c9;
 $color-yellow-00: #efc225;
-$color-red-00: #ed1d2b;
+$color-yellow-01: #ffe0b2;
+$color-red-00: #f44336;
+$color-red-01: #ffcdd2;
 
 // Color scheme (Needs to be expose in the future preference)
 $color-scheme-primary: $color-primary-01 !default;
@@ -109,7 +112,7 @@ $limited-view-width: 800px;
 $limited-wide-view-width: 2560px;
 
 // Responsive Dimension Settings
-$wide-platform-min-width: 971px;
+$wide-platform-min-width: 1500px;
 $large-platform-width: 970px;
 $medium-platform-width: 720px;
 $small-platform-width: 543px;
@@ -120,6 +123,7 @@ $screen-breakpoints: (
   small: $small-platform-width,
   medium: $medium-platform-width,
   large: $large-platform-width,
+  wide: $wide-platform-min-width,
 ) !default;
 
 // Spacer

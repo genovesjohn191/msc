@@ -548,3 +548,9 @@
   -webkit-backface-visibility: $value;
   backface-visibility: $value;
 }
+
+@mixin column-count($value) {
+  column-count: $value;
+  -webkit-column-count: $value;
+  -moz-column-count: $value;
+}

@@ -18,6 +18,7 @@ import {
 } from 'rxjs/operators';
 import { McsApiService } from '@app/services';
 import {
+  CoreRoutes,
   McsNavigationService,
   McsTableListingBase } from '@app/core';
 import { McsEvent } from '@app/events';
@@ -64,6 +65,14 @@ export class AzureTicketsWidgetComponent extends McsTableListingBase<McsTicket>i
     return CommonDefinition.FILTERSELECTOR_TICKET_LISTING;
   }
 
+  public get ticketListingLink(): string {
+    return CoreRoutes.getNavigationPath(RouteKey.Tickets);
+  }
+
+  public get newTicketLink(): string {
+    return CoreRoutes.getNavigationPath(RouteKey.TicketCreate);
+  }
+
   public constructor(
     _injector: Injector,
     private _changeDetectorRef: ChangeDetectorRef,
@@ -107,21 +116,17 @@ export class AzureTicketsWidgetComponent extends McsTableListingBase<McsTicket>i
       });
   }
 
-  public navigateToTicket(ticket: McsTicket): void {
-    if (isNullOrEmpty(ticket)) { return; }
-    this._navigationService.navigateTo(RouteKey.TicketDetails, [ticket.id]);
-  }
-
-  public navigateToTicketListing(): void {
-    this._navigationService.navigateTo(RouteKey.Tickets);
-  }
-
-  public onClickNewTicket(): void {
-    this._navigationService.navigateTo(RouteKey.TicketCreate);
+  public getTicketDetailsLink(ticket: McsTicket): string {
+    return CoreRoutes.getNavigationPath(RouteKey.TicketDetails) + `/${ticket.id}`;
   }
 
   public getStatusIcon(status: string): string {
     return this._ticketStatusIconMap.get(status);
+  }
+
+  public navigateToTicket(ticket: McsTicket): void {
+    if (isNullOrEmpty(ticket)) { return; }
+    this._navigationService.navigateTo(RouteKey.TicketDetails, [ticket.id]);
   }
 
   protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsTicket>> {
