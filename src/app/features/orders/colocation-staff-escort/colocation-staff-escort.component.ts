@@ -37,8 +37,6 @@ import {
   createObject,
   getCurrentDate,
   addMonthsToDate,
-  addDaysToDate,
-  addHoursToDate
 } from '@app/utilities';
 import { McsFormGroupDirective } from '@app/shared';
 import { McsApiService } from '@app/services';
@@ -51,24 +49,25 @@ import {
   McsOption,
   colocationEscorteeText,
   ColocationEscortee,
-  McsServiceBase
+  McsServiceBase,
+  McsAccount,
+  McsCompany,
+  DeliveryType
 } from '@app/models';
 import { OrderDetails } from '@app/features-shared';
 import { ColocationStaffEscortService } from './colocation-staff-escort.service';
 import { McsOrderColocationStaffEscort } from '@app/models/request/mcs-order-colocation-staff-escort';
+import { SwitchAccountService } from '@app/core-layout/shared';
 
 const COLOCATION_STAFF_ESCORT = Guid.newGuid().toString();
 const TEXTAREA_MAXLENGTH_DEFAULT = 850;
-const CURRENT_DATE = getCurrentDate();
-const DATE_TOMORROW = addDaysToDate(CURRENT_DATE, 1);
-const MIN_DATE = addHoursToDate(DATE_TOMORROW, 1);
-const MAX_DATE = addMonthsToDate(CURRENT_DATE, 6);
+const MAX_HOUR = 23;
+const MAX_DATE = addMonthsToDate(getCurrentDate(), 12);
 const STEP_HOUR: number = 1;
 const STEP_MINUTE: number = 30;
 const DEFAULT_ARRIVAL_EXIT_TIME_RANGE = 4;
-const ARRIVAL_TIME_CEIL: [number, number] = [23, 30];
-const EXIT_TIME_FLOOR: [number, number] = [0, 30];
-
+const ARRIVAL_TIME_MAX: [number, number] = [23, 0];
+const EXIT_TIME_MAX: [number, number] = [23, STEP_MINUTE];
 @Component({
   selector: 'mcs-order-colocation-staff-escort',
   templateUrl: 'colocation-staff-escort.component.html',
@@ -93,7 +92,7 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
   public fcToolsRequired: FormControl;
   public fcReason: FormControl;
   public fcReferenceNumber: FormControl;
-
+  public staffEscortStandardLeadTimeHours: number;
   public colocationRacks$: Observable<McsServiceBase[]>;
   public colocationAntennas$: Observable<McsServiceBase[]>;
   public colocationCustomDevices$: Observable<McsServiceBase[]>;
@@ -111,12 +110,15 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
   }
   private _formGroup: McsFormGroupDirective;
   private _formGroupSubject = new Subject<void>();
+  private _userAccount: McsAccount = new McsAccount();
+  private _company: McsCompany = new McsCompany();
 
   constructor(
     _injector: Injector,
     private _colocationStaffEscortService: ColocationStaffEscortService,
     private _formBuilder: FormBuilder,
-    private _apiService: McsApiService
+    private _apiService: McsApiService,
+    private _switchAccountService: SwitchAccountService,
   ) {
     super(
       _colocationStaffEscortService,
@@ -132,6 +134,8 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
   }
 
   public ngOnInit(): void {
+    this._subscribeToLeadTimeHours();
+    this._getUserIdentityAndAccountDetails();
     this._subscribeToEscorteeOptions();
     this._subscribeToColocationRacks();
     this._subscribeToColocationAntennas();
@@ -164,6 +168,14 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
     return ColocationEscortee;
   }
 
+  public get minDate(): Date {
+    return getCurrentDate();
+  }
+
+  public get maxDate(): Date {
+    return MAX_DATE;
+  }
+
   public get stepHour(): number {
     return STEP_HOUR;
   }
@@ -171,38 +183,47 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
   public get stepMinute(): number {
     return STEP_MINUTE;
   }
-
+  // TO DO: for unit test
   public get defaultArrivalTime(): [number, number] {
-    return [MIN_DATE.getHours(), MIN_DATE.getMinutes()];
+    let arrivalHour =  this.minDate.getHours() + DEFAULT_ARRIVAL_EXIT_TIME_RANGE ;
+    let arrivalMinutes = this.minDate.getMinutes();
+    if (arrivalMinutes >= STEP_MINUTE) {
+      arrivalHour = arrivalHour+1;
+      arrivalMinutes = 0;
+    }
+    else{
+      arrivalMinutes = STEP_MINUTE;
+    }
+    return  (arrivalHour > MAX_HOUR) ? [23, 0] :  [arrivalHour, arrivalMinutes];
   }
 
+  // TO DO: for unit test
   public get defaultExitTime(): [number, number] {
-    let exitHours = MIN_DATE.getHours() + DEFAULT_ARRIVAL_EXIT_TIME_RANGE;
-    let maxHour = 23;
-    return exitHours > maxHour ? [23, 59] : [exitHours, MIN_DATE.getMinutes()];
+    let exitHours = this.defaultArrivalTime[0] + DEFAULT_ARRIVAL_EXIT_TIME_RANGE;
+    let exitMinutes = this.defaultArrivalTime[1];
+    return exitHours > MAX_HOUR ? [23, 30] : [exitHours, exitMinutes];
   }
 
-  public get minDate(): Date {
-    return MIN_DATE;
+  public get maxArrivalTime(): [number, number] {
+    return ARRIVAL_TIME_MAX;
   }
 
-  public get maxDate(): Date {
-    return MAX_DATE;
+  public get maxExitTime(): [number, number] {
+    return EXIT_TIME_MAX;
   }
-
-  public get arrivalTimeCeil(): [number, number] {
-    return ARRIVAL_TIME_CEIL;
+  // TO DO: for unit Tests
+  public get minExitTime(): [number, number] {
+    let minTime =  this.fcArrivalTime.value;
+    if(isNullOrEmpty(minTime)){ return; }
+    return [minTime[0], minTime[1] + STEP_MINUTE];
   }
-
-  public get exitTimeFloor(): [number, number] {
-    return EXIT_TIME_FLOOR;
-  }
-
   public isEscorteeSomeoneElse(escortee: ColocationEscortee): boolean {
     return escortee === ColocationEscortee.SomeoneElse;
   }
 
   public onEscorteeChange(escortee: ColocationEscortee): void {
+    this._resetAttendeeFields();
+    this._getUserIdentityAndAccountDetails();
     if (this.isEscorteeSomeoneElse(escortee)) {
       this.fcName.enable();
       this.fcOrganization.enable();
@@ -210,17 +231,24 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
       this.fcMobile.enable();
       this.fcEmail.enable();
       return;
+    } else {
+      this.fcName.disable();
+      this.fcOrganization.disable();
+      this.fcJobTitle.disable();
+      this.fcMobile.disable();
+      this.fcEmail.disable();
     }
-
-    this.fcName.disable();
-    this.fcOrganization.disable();
-    this.fcJobTitle.disable();
-    this.fcMobile.disable();
-    this.fcEmail.disable();
   }
 
-  public onTimeChange(_value: [number, number]): void {
+  public onArrivalTimeChange(_value: [number, number]): void {
+    this.fcArrivalTime.setValue(_value);
+    this.fcArrivalTime.updateValueAndValidity();
     this.fcExitTime.updateValueAndValidity();
+  }
+  public onExitTimeChange(_value: [number, number]): void {
+    this.fcExitTime.setValue(_value);
+    this.fcExitTime.updateValueAndValidity();
+    this.fcArrivalTime.updateValueAndValidity();
   }
 
   /**
@@ -281,15 +309,18 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
    * Register all form groups
    */
   private _registerFormGroups() {
+
     this.fcColocationService = new FormControl('', [CoreValidators.required]);
     this.fcEscortee = new FormControl('', [CoreValidators.required]);
     this.fcName = new FormControl('', [CoreValidators.required]);
     this.fcOrganization = new FormControl('', [CoreValidators.required]);
     this.fcJobTitle = new FormControl('', [CoreValidators.required]);
-    this.fcMobile = new FormControl('', [CoreValidators.required]);
-    this.fcEmail = new FormControl('', [CoreValidators.required, CoreValidators.email]);
+    this.fcMobile = new FormControl('', [CoreValidators.required,
+                                        CoreValidators.pattern(CommonDefinition.REGEX_MOBILE_NUMBER_PATTERN),
+                                        CoreValidators.maxLength(12)]);
+    this.fcEmail = new FormControl('', [CoreValidators.required, CoreValidators.pattern(CommonDefinition.REGEX_EMAIL_PATTERN)]);
     this.fcAttendanceDate = new FormControl(this.minDate, []);
-    this.fcArrivalTime = new FormControl(this.defaultArrivalTime, [CoreValidators.required]);
+    this.fcArrivalTime = new FormControl(this.defaultArrivalTime,[CoreValidators.required]);
     this.fcExitTime = new FormControl(this.defaultExitTime, [CoreValidators.required]);
     this.fcWorkToPerform = new FormControl('', [CoreValidators.required]);
     this.fcToolsRequired = new FormControl('', []);
@@ -333,6 +364,7 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
    * Event listener whenever there is a change in the form
    */
   private _onColocationStaffEscortFormChange(): void {
+    let isEscorteeSomeoneElse = this.isEscorteeSomeoneElse(this.fcEscortee.value);
     this._colocationStaffEscortService.createOrUpdateOrder(
       createObject(McsOrderCreate, {
         items: [
@@ -340,12 +372,15 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
             serviceId: this.fcColocationService.value,
             itemOrderType: OrderIdType.ColocationStaffEscort,
             referenceId: COLOCATION_STAFF_ESCORT,
+            deliveryType: DeliveryType.Standard,
+            schedule: this.fcAttendanceDate.value,
             properties: createObject(McsOrderColocationStaffEscort, {
-              anttendeeName: this.fcEscortee.value,
-              attendeeOrganization: this.fcOrganization.value,
-              attendeeJobTitle: this.fcJobTitle.value,
-              attendeeMobileNumber: this.fcMobile.value,
-              attendeeEmailAddress: this.fcEmail.value,
+              attendeeName: (isEscorteeSomeoneElse) ? colocationEscorteeText[this.fcEscortee.value] :
+                            `${this._userAccount.firstName} ${this._userAccount.lastName}`,
+              attendeeOrganization: (isEscorteeSomeoneElse) ? this.fcOrganization.value : this._company.name,
+              attendeeJobTitle: (isEscorteeSomeoneElse) ? this.fcJobTitle.value : this._userAccount.jobTitle,
+              attendeeMobileNumber: this._validatePhoneNumber(this.fcMobile.value),
+              attendeeEmailAddress: (isEscorteeSomeoneElse) ? this.fcEmail.value : this._userAccount.emailAddress,
               arrivalDate: this.fcAttendanceDate.value,
               arrivalTime: this._formatTime(this.fcArrivalTime.value),
               exitTime: this._formatTime(this.fcExitTime.value),
@@ -448,5 +483,51 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
       createObject(McsOption, { text: colocationEscorteeText[ColocationEscortee.MySelf], value: ColocationEscortee.MySelf }),
       createObject(McsOption, { text: colocationEscorteeText[ColocationEscortee.SomeoneElse], value: ColocationEscortee.SomeoneElse })
     ]);
+  }
+
+  private _getUserIdentityAndAccountDetails(): void {
+    this._company = this._switchAccountService.activeAccount;
+    this._apiService.getAccount().subscribe(
+      (response) => {
+        this._userAccount.firstName = response.firstName;
+        this._userAccount.lastName = response.lastName;
+        this._userAccount.phoneNumber = response.phoneNumber;
+        this._userAccount.emailAddress = response.emailAddress;
+        this._userAccount.jobTitle =  isNullOrEmpty(response.jobTitle) ? CommonDefinition.OTHER_TEXT : response.jobTitle;
+        return this._userAccount;
+      });
+  }
+
+  private _resetAttendeeFields(): void {
+    this.fcName.setValue('');
+    this.fcOrganization.setValue('');
+    this.fcJobTitle.setValue('');
+    this.fcMobile.setValue('');
+    this.fcEmail.setValue('');
+  }
+
+  private _subscribeToLeadTimeHours(): void {
+    this.orderItemType$.subscribe(order => {
+      this.staffEscortStandardLeadTimeHours = order.standardLeadTimeHours;
+    });
+  }
+  // TO DO: for unit test
+  private _validatePhoneNumber(phoneNumberForChecking: string) {
+    let userPhoneNumber: string = this._userAccount.phoneNumber;
+    if (this.isEscorteeSomeoneElse(this.fcEscortee.value)) {
+      let userInputNumber = this.fcMobile.value.replace(/\D/g, '');
+      if(userInputNumber.startsWith('0')){
+        return userInputNumber.slice(-10);
+      }
+      else if (userInputNumber.length >= 10){
+        let removedCountryCode = userInputNumber.slice(-9);
+        let zero = '0';
+        removedCountryCode = zero.concat(removedCountryCode);
+        return removedCountryCode;
+      }
+    }
+    else {
+      return userPhoneNumber;
+    }
   }
 }

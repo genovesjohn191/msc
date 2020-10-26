@@ -6,7 +6,6 @@
   position: relative;
   width: 100%;
   height: 40px;
-  padding: $space-xsmall;
 
   .ngx-mat-timepicker .table {
     margin: 0;
@@ -31,15 +30,15 @@
           }
 
           .mat-form-field-wrapper {
-            padding: 0;
+            padding: 0!important;
 
             .mat-form-field-underline {
               bottom: 0;
             }
 
             .mat-form-field-infix {
-              margin: 0;
-              border: 0;
+              margin: 0!important;
+              border: 0!important;
 
               .mat-input-element {
                 padding: 0;
@@ -49,5 +48,19 @@
         }
       }
     }
+  }
+  .mat-form-field-wrapper {
+    padding: 0px;
+  }
+  .mat-form-field-inflix,
+  .mat-form-field-appearance-legacy .mat-form-field-infix {
+    padding: 0px;
+  }
+  .mat-form-field-appearance-legacy .mat-form-field-underline {
+    bottom: 0em;
+    top: 2.25em;
+  }
+  input {
+    padding: 0px!important;
   }
 }

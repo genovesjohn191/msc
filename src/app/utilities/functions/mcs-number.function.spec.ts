@@ -1,8 +1,8 @@
 import {
   compareNumbers,
   transformNumberToDecimal,
-  floorByStep,
-  ceilByStep,
+  minimizeByStepValue,
+  maximizeByStepValue,
   currencyFormat
 } from './mcs-number.function';
 
@@ -46,37 +46,37 @@ describe('NUMBER Functions', () => {
     });
   });
 
-  describe('floorByStep()', () => {
+  describe('minimizeByStepValue()', () => {
     describe('given a number', () => {
-      it(`should return floored number based on step`, () => {
+      it(`should return minimum number based on step`, () => {
         let testNumber: number = 7;
         let testStep: number = 3;
-        let result = floorByStep(testNumber, testStep);
+        let result = minimizeByStepValue(testNumber, testStep);
         expect(result).toBe(6);
       });
 
-      it(`should return floored whole number based on step`, () => {
+      it(`should return minimum whole number based on step`, () => {
         let testNumber: number = 10.5;
         let testStep: number = 3;
-        let result = floorByStep(testNumber, testStep);
+        let result = minimizeByStepValue(testNumber, testStep);
         expect(result).toBe(9);
       });
     });
   });
 
-  describe('ceilByStep()', () => {
+  describe('maximizeByStepValue()', () => {
     describe('given a number', () => {
-      it(`should return ceiled number based on step`, () => {
+      it(`should return max number based on step`, () => {
         let testNumber: number = 7;
         let testStep: number = 3;
-        let result = ceilByStep(testNumber, testStep);
+        let result = maximizeByStepValue(testNumber, testStep);
         expect(result).toBe(9);
       });
 
       it(`should return ceiled whole number based on step`, () => {
         let testNumber: number = 10.5;
         let testStep: number = 3;
-        let result = ceilByStep(testNumber, testStep);
+        let result = maximizeByStepValue(testNumber, testStep);
         expect(result).toBe(12);
       });
     });

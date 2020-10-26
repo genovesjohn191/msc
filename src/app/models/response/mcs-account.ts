@@ -21,5 +21,8 @@ export class McsAccount extends McsEntityBase {
 
   @JsonProperty()
   public phoneNumber: string = undefined;
+
+  @JsonProperty()
+  public jobTitle: string = undefined;
 }
 

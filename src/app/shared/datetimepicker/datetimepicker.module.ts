@@ -20,6 +20,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
 import { DateTimePickerComponent } from './datetimepicker.component';
+import { MaximumTimeValidatorDirective } from './maximum-time-validator.directive';
 import { MinimumTimeValidatorDirective } from './minimum-time-validator.directive';
 import { RequiredValidatorDirective } from './required-validator.directive';
 import { TimePickerComponent } from './timepicker.component';
@@ -29,6 +30,7 @@ import { TimePickerComponent } from './timepicker.component';
     DateTimePickerComponent,
     TimePickerComponent,
     MinimumTimeValidatorDirective,
+    MaximumTimeValidatorDirective,
     RequiredValidatorDirective
   ],
   imports: [
@@ -50,6 +52,7 @@ import { TimePickerComponent } from './timepicker.component';
     DateTimePickerComponent,
     TimePickerComponent,
     MinimumTimeValidatorDirective,
+    MaximumTimeValidatorDirective,
     RequiredValidatorDirective
   ]
 })

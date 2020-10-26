@@ -4,7 +4,7 @@ import { McsDateSerialization } from '../serialization/mcs-date-serialization';
 export class McsOrderColocationStaffEscort {
 
   @JsonProperty()
-  public anttendeeName: string = undefined;
+  public attendeeName: string = undefined;
 
   @JsonProperty()
   public attendeeOrganization: string = undefined;

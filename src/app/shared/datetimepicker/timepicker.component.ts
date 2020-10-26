@@ -33,15 +33,16 @@ import {
   coerceBoolean,
   isNullOrUndefined,
   getCurrentDate,
-  floorByStep
+  minimizeByStepValue,
+  compareArrays
 } from '@app/utilities';
 import {
   MCS_DATE_FORMATS,
   DEFAULT_LOCALE,
   DEFAULT_HOUR_STEP,
   DEFAULT_MIN_STEP,
-  DEFAULT_FLOOR_TIME,
-  DEFAULT_CEIL_TIME
+  DEFAULT_MIN_TIME,
+  DEFAULT_MAX_TIME
 } from './datetimepicker.constants';
 
 const CURRENT_DATE = getCurrentDate();
@@ -73,11 +74,10 @@ export class TimePickerComponent extends McsFormFieldControlBase<any> implements
   @Input()
   public get value(): [number, number] { return this._value; }
   public set value(time: [number, number]) {
-    if (this._value !== time) {
+    if (compareArrays(this._value, time) === 0) { return; }
       this._value = time;
       this.dateModel.hour(time[0]);
       this.dateModel.minute(time[1]);
-    }
   }
   private _value: [number, number] = [CURRENT_DATE.getHours(), CURRENT_DATE.getMinutes()];
 
@@ -129,14 +129,10 @@ export class TimePickerComponent extends McsFormFieldControlBase<any> implements
   private _showSpinners: boolean = false;
 
   @Input()
-  public get floorTime(): [number, number] { return this._floorTime; }
-  public set floorTime(time: [number, number]) { this._floorTime = time; }
-  private _floorTime: [number, number] = DEFAULT_FLOOR_TIME;
+  public  minTime: [number, number] = DEFAULT_MIN_TIME;
 
   @Input()
-  public get ceilTime(): [number, number] { return this._ceilTime; }
-  public set ceilTime(time: [number, number]) { this._ceilTime = time; }
-  private _ceilTime: [number, number] = DEFAULT_CEIL_TIME;
+  public maxTime: [number, number] = DEFAULT_MAX_TIME;
 
   constructor(
     private _adapter: NgxMatDateAdapter<any>,
@@ -168,10 +164,10 @@ export class TimePickerComponent extends McsFormFieldControlBase<any> implements
   public onModelChange(value: moment.Moment): void {
     this.dateModel = value;
     let dateObj: Date = this.dateModel.toDate();
-    let timeObj: [number, number] = this._getValidTime(dateObj.getHours(), dateObj.getMinutes());
+    let timeObj: [number, number] = [dateObj.getHours(), dateObj.getMinutes()];
 
-    this._propagateChange(timeObj);
     this.timeChange.emit(timeObj);
+    this._propagateChange(timeObj);
     this._changeRefDetector.markForCheck();
     this._onTouched();
   }
@@ -211,33 +207,33 @@ export class TimePickerComponent extends McsFormFieldControlBase<any> implements
   }
 
   private _getValidTime(hour: number, minute: number): [number, number] {
-    let normalizeHour = floorByStep(hour, this.stepHour);
-    let normalizeMinute = floorByStep(minute, this.stepMinute);
+    let normalizeHour = minimizeByStepValue(hour, this.stepHour);
+    let normalizeMinute = minimizeByStepValue(minute, this.stepMinute);
     let resultTime: [number, number] = [normalizeHour, normalizeMinute];
-    resultTime = this._getValidFloorTime(resultTime);
-    resultTime = this._getValidCeilTime(resultTime);
+    resultTime = this._getValidMinTime(resultTime);
+    resultTime = this._getValidMaxTime(resultTime);
 
     return resultTime;
   }
+  // TO DO: for unit test
+  private _getValidMinTime(time: [number, number]): [number, number] {
+    let isHourValueLessThanFloorHour = time[0] < this.minTime[0];
+    if (isHourValueLessThanFloorHour) { return this.minTime; }
 
-  private _getValidFloorTime(time: [number, number]): [number, number] {
-    let isHourValueLessThanFloorHour = time[0] < this.floorTime[0];
-    if (isHourValueLessThanFloorHour) { return this.floorTime; }
-
-    let isHourValueEqualFloorHour = time[0] === this.floorTime[0];
-    let isMinuteValueLessThanFloorMinute = time[1] < this.floorTime[1];
-    if (isHourValueEqualFloorHour && isMinuteValueLessThanFloorMinute) { return this.floorTime; }
+    let isHourValueEqualFloorHour = time[0] === this.minTime[0];
+    let isMinuteValueLessThanFloorMinute = time[1] < this.minTime[1];
+    if (isHourValueEqualFloorHour && isMinuteValueLessThanFloorMinute) { return this.minTime; }
 
     return time;
   }
+  // TO DO: for unit test
+  private _getValidMaxTime(time: [number, number]): [number, number] {
+    let isHourValueMoreThanCeilHour = time[0] > this.maxTime[0];
+    if (isHourValueMoreThanCeilHour) { return this.maxTime; }
 
-  private _getValidCeilTime(time: [number, number]): [number, number] {
-    let isHourValueMoreThanCeilHour = time[0] > this.ceilTime[0];
-    if (isHourValueMoreThanCeilHour) { return this.ceilTime; }
-
-    let isHourValueEqualCeilHour = time[0] === this.ceilTime[0];
-    let isMinuteValueMoreThanCeilMinute = time[1] > this.ceilTime[1];
-    if (isHourValueEqualCeilHour && isMinuteValueMoreThanCeilMinute) { return this.ceilTime; }
+    let isHourValueEqualCeilHour = time[0] === this.maxTime[0];
+    let isMinuteValueMoreThanCeilMinute = time[1] > this.maxTime[1];
+    if (isHourValueEqualCeilHour && isMinuteValueMoreThanCeilMinute) { return this.maxTime; }
 
     return time;
   }

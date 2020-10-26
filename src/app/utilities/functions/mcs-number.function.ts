@@ -40,19 +40,19 @@ export function transformNumberToDecimal(numberToTransform: number, decimalPlace
 
 /**
  * Returns the nearest number less or equal to the provided number based on the step/divisor
- * @param value number to get the floor
+ * @param value number to get the min value
  * @param step step or the divisor where the number provided be divisible of
  */
-export function floorByStep(value: number, step: number): number {
+export function minimizeByStepValue(value: number, step: number): number {
   return Math.floor(value / step) * step;
 }
 
 /**
  * Returns the nearest number greater or equal to the provided number based on the step/divisor
- * @param value number to get the ceil
+ * @param value number to get the max value
  * @param step step or the divisor where the number provided be divisible of
  */
-export function ceilByStep(value: number, step: number): number {
+export function maximizeByStepValue(value: number, step: number): number {
   return Math.ceil(value / step) * step;
 }
 
