@@ -128,7 +128,6 @@
                     mcsEventTracker="input-name"
                     mcsEventCategory="order-collocation-staff-escort"
                     mcsEventLabel="order-collocation-staff-escort-page">
-
                   <mcs-error mcsError errorState="required">
                     {{ 'orderColocationStaffEscort.requestDetails.name.errorRequired' | translate }}
                   </mcs-error>
@@ -144,7 +143,6 @@
                     mcsEventTracker="input-organization"
                     mcsEventCategory="order-collocation-staff-escort"
                     mcsEventLabel="order-collocation-staff-escort-page">
-
                   <mcs-error mcsError errorState="required">
                     {{ 'orderColocationStaffEscort.requestDetails.organization.errorRequired' | translate }}
                   </mcs-error>
@@ -160,7 +158,6 @@
                     mcsEventTracker="input-job-title"
                     mcsEventCategory="order-collocation-staff-escort"
                     mcsEventLabel="order-collocation-staff-escort-page">
-
                   <mcs-error mcsError errorState="required">
                     {{ 'orderColocationStaffEscort.requestDetails.jobTitle.errorRequired' | translate }}
                   </mcs-error>
@@ -175,10 +172,17 @@
                     mcsId="input-mobile"
                     mcsEventTracker="input-mobile"
                     mcsEventCategory="order-collocation-staff-escort"
-                    mcsEventLabel="order-collocation-staff-escort-page">
-
+                    mcsEventLabel="order-collocation-staff-escort-page"
+                    [mcsContextualHelp]="'orderColocationStaffEscort.requestDetails.mobile.helpText' | translate"
+                    [placeholder]="'orderColocationStaffEscort.requestDetails.mobile.placeHolder' | translate">
+                  <mcs-error mcsError errorState="pattern">
+                    {{ 'orderColocationStaffEscort.requestDetails.mobile.errorFormat' | translate }}
+                  </mcs-error>
                   <mcs-error mcsError errorState="required">
                     {{ 'orderColocationStaffEscort.requestDetails.mobile.errorRequired' | translate }}
+                  </mcs-error>
+                  <mcs-error mcsError errorState="maxlength">
+                    {{ 'orderColocationStaffEscort.requestDetails.mobile.errorFormat' | translate }}
                   </mcs-error>
                 </mcs-form-field>
               </mcs-item>
@@ -192,9 +196,11 @@
                     mcsEventTracker="input-email"
                     mcsEventCategory="order-collocation-staff-escort"
                     mcsEventLabel="order-collocation-staff-escort-page">
-
                   <mcs-error mcsError errorState="required">
                     {{ 'orderColocationStaffEscort.requestDetails.email.errorRequired' | translate }}
+                  </mcs-error>
+                  <mcs-error mcsError errorState="pattern">
+                    {{ 'orderColocationStaffEscort.requestDetails.email.errorEmailFormat' | translate }}
                   </mcs-error>
                 </mcs-form-field>
               </mcs-item>
@@ -232,14 +238,21 @@
               <mcs-timepicker
                 [formControl]="fcArrivalTime"
                 [stepHour]="stepHour"
-                [stepMinute]="30"
-                [ceilTime]="arrivalTimeCeil"
-                (timeChange)="onTimeChange($event)"
+                [stepMinute]="stepMinute"
+                [maximumTime]="maxArrivalTime"
+                [minimumTime]="defaultArrivalTime"
+                (timeChange)="onArrivalTimeChange($event)"
                 mcsId="input-arrival-time"
                 mcsEventTracker="input-arrival-time"
                 mcsEventCategory="order-collocation-staff-escort"
                 mcsEventLabel="order-collocation-staff-escort-page">
               </mcs-timepicker>
+              <mcs-error mcsError errorState="minimumTime" text-wrap>
+                {{ 'orderColocationStaffEscort.requestDetails.arrivalTime.errorMinimumTime' | translate: { standardLeadTimeHours: staffEscortStandardLeadTimeHours }  }}
+              </mcs-error>
+              <mcs-error mcsError errorState="maximumTime" text-wrap>
+                {{ 'orderColocationStaffEscort.requestDetails.arrivalTime.errorMaximumTime' | translate }}
+              </mcs-error>
             </mcs-form-field>
           </mcs-item>
 
@@ -251,9 +264,10 @@
               <mcs-timepicker
                 [formControl]="fcExitTime"
                 [stepHour]="stepHour"
-                [stepMinute]="30"
-                [floorTime]="exitTimeFloor"
-                [minimumTime]="fcArrivalTime?.value"
+                [stepMinute]="stepMinute"
+                [minimumTime]="minExitTime"
+                [maximumTime]="maxExitTime"
+                (timeChange)="onExitTimeChange($event)"
                 mcsId="input-exit-time"
                 mcsEventTracker="input-exit-time"
                 mcsEventCategory="order-collocation-staff-escort"
@@ -261,6 +275,9 @@
               </mcs-timepicker>
               <mcs-error mcsError errorState="minimumTime" text-wrap>
                 {{ 'orderColocationStaffEscort.requestDetails.exitTime.errorMinimumTime' | translate }}
+              </mcs-error>
+              <mcs-error mcsError errorState="maximumTime" text-wrap>
+                {{ 'orderColocationStaffEscort.requestDetails.exitTime.errorMaximumTime' | translate }}
               </mcs-error>
             </mcs-form-field>
           </mcs-item><br><hr><br>

@@ -463,11 +463,15 @@
       },
       "mobile": {
         "label": "Mobile Number",
-        "errorRequired": "Enter Mobile Number"
+        "errorRequired": "Mobile number is required",
+        "errorFormat": "Invalid mobile number format",
+        "helpText": "Please input your mobile number using either one of the following formats: +61400000000, 61400000000 or just your 10 digit mobile number",
+        "placeHolder": "e.g. +61400000000 or your 10 digit mobile number"
       },
       "email": {
-        "label": "Email Address",
-        "errorRequired": "Enter Email Address"
+        "label": "E-mail address is reqruired",
+        "errorRequired": "Enter Email Address",
+        "errorEmailFormat": "Invalid e-mail address format"
       },
       "attendanceDate": {
         "label": "Date of attendance",
@@ -476,12 +480,15 @@
       },
       "arrivalTime": {
         "label": "Arrival time",
-        "helptext": "Specify the time you or the third party will be arriving for the staff escort. Please note, if the person to be escorted arrives on site later than the booked time, attendance may not be granted"
+        "helptext": "Specify the time you or the third party will be arriving for the staff escort. Please note, if the person to be escorted arrives on site later than the booked time, attendance may not be granted",
+        "errorMinimumTime": "Arrival time should be greater than {{standardLeadTimeHours}} arrival time",
+        "errorMaximumTime": "Arrival time should not be later than 23:00"
       },
       "exitTime": {
         "label": "Exit time",
         "helptext": "If known, specify the time you or the third-party will be leaving.",
-        "errorMinimumTime": "Exit time should be atleast 30 minutes later than the Arrival time"
+        "errorMinimumTime": "Exit time should be 30 minutes later than arrival time",
+        "errorMaximumTime": "Exit time should not be later than 23:30"
       },
       "activitiesLabel": "Activities",
       "workToPerform": {
@@ -1697,7 +1704,7 @@
       }
     },
     "fallback": {
-      "description": "There are no applicable service to display, or you do not have the necessary permissions required to view them. Please contact your account team",
+      "description": "There are no applicable services to display, or you do not have the necessary permissions required to view them. Please contact your account team",
       "raiseTicketPrefix": " or ",
       "raiseTicketLink": "raise a ticket",
       "raiseTicketSuffix": " if this is unexpected."

@@ -34,7 +34,7 @@ export const orderEventMap: OrderEventRecord = {
   'microsoft.licenseCount.change': new MsLicenseCountChangeEvent(),
   'microsoft.subscription.requestChange': new MsServiceRequestChangeEvent(),
   'services.customRequest': new ServiceCustomChangeEvent(),
-  'dns.customChange': new HostedDnsChangeEvent(),
+  'dns.customRequest': new HostedDnsChangeEvent(),
   'colocation.staffEscort': new ColocationStaffEscortEvent(),
   'colocation.remoteHands': new ColocationRemoteHandsEvent()
 };

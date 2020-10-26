@@ -233,24 +233,56 @@ export class CoreValidators {
    * Validator that requires time picker controls to be greater than the provided value
    *
    * `@Note` This will produce the following value when false
-   * {'minimumTime': {'actual': control.value, 'min': minimumTime}}
+   * {'minimumTime': {'min': minimumTime}}
    */
+    // TO DO: for unit test
   public static minimumTime(minimumTime: [number, number]): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       let error = { minimumTime: true };
-      // let error = { 'minimumTime': { actual: control.value, min: minimumTime } };
-      let hourValue = control.value[0];
-      let minuteValue = control.value[1];
+      let validTime = (Array.isArray(control.value) || control.value.length === 2) && (minimumTime.length === 2);
+      let validValues = (control.value.every(value => ((value !== undefined) && (value !== null)))
+                                         && minimumTime.every(value => ((value !== undefined) && (value !== null))));
 
-      if (hourValue < +minimumTime[0]) {
-        return error;
-      }
+      if (!validTime || !validValues) { return error; }
 
-      if (hourValue === +minimumTime[0]) {
-        return minuteValue < +minimumTime[1] ? error : null;
-      }
 
-      return null;
+      let currentHour = control.value[0];
+      let currentMinutes = control.value[1];
+      let minHour =  minimumTime[0];
+      let minMinutes = minimumTime[1];
+
+      let minTime = (60 * minHour) + minMinutes;
+      let currentTime = (60 * currentHour) + currentMinutes;
+
+      return (currentTime < minTime) ? error : null;
+    };
+  }
+  // TO DO: for unit test
+  /**
+   * Validator that requires time picker controls to be less than the provided value
+   *
+   * `@Note` This will produce the following value when false
+   * {'maximumTime': {'max': maximumTime}}
+   */
+  public static maximumTime(maximumTime: [number, number]): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      let error = { maximumTime: true };
+      let validTime = (Array.isArray(control.value) || control.value.length === 2) && (control.value.length === 2);
+      let validValues = (control.value.every(value => ((value !== undefined) && (value !== null)))
+                                         && maximumTime.every(value => ((value !== undefined) && (value !== null))));
+
+      if (!validTime || !validValues) { return error; }
+
+      let currentHour = control.value[0];
+      let currentMinutes = control.value[1];
+      let maxHour =  maximumTime[0];
+      let maxMinutes = maximumTime[1];
+
+      let maxTime = (60 * maxHour) + maxMinutes;
+      let currentTime = (60 * currentHour) + currentMinutes;
+
+      return (currentTime > maxTime) ? error : null;
+
     };
   }
 }
