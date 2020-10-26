@@ -1,31 +1,33 @@
-import {
-  Component,
-  Input,
-  Output,
-  OnDestroy,
-  EventEmitter,
-  ViewChildren,
-  ContentChildren,
-  QueryList,
-  AfterViewInit,
-  AfterContentInit,
-  ChangeDetectorRef,
-  ViewEncapsulation,
-  ChangeDetectionStrategy
-} from '@angular/core';
 import { Subject } from 'rxjs';
 import {
   startWith,
   takeUntil
 } from 'rxjs/operators';
+
+import {
+  AfterContentInit,
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ContentChildren,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  Output,
+  QueryList,
+  ViewChildren,
+  ViewEncapsulation
+} from '@angular/core';
 import { McsSelection } from '@app/models';
 import {
+  getSafeProperty,
   isNullOrEmpty,
-  unsubscribeSafely,
-  getSafeProperty
+  unsubscribeSafely
 } from '@app/utilities';
-import { TabComponent } from './tab/tab.component';
+
 import { TabHeaderItemComponent } from './tab-header-item/tab-header-item.component';
+import { TabComponent } from './tab/tab.component';
 
 @Component({
   selector: 'mcs-tab-group',
@@ -73,14 +75,16 @@ export class TabGroupComponent implements AfterViewInit, AfterContentInit, OnDes
   public ngAfterContentInit(): void {
     Promise.resolve().then(() => {
       this.tabs.changes.pipe(
-        startWith(null), takeUntil(this._destroySubject)
+        startWith(null as any),
+        takeUntil(this._destroySubject)
       ).subscribe(() => this._changeDetectorRef.markForCheck());
     });
   }
 
   public ngAfterViewInit() {
     this._tabHeaders.changes.pipe(
-      startWith(null), takeUntil(this._destroySubject)
+      startWith(null as any),
+      takeUntil(this._destroySubject)
     ).subscribe(() => this._initializeSelection());
   }
 

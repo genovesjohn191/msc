@@ -1,34 +1,34 @@
-import {
-  Component,
-  AfterContentInit,
-  ContentChildren,
-  QueryList,
-  Input,
-  Output,
-  OnDestroy,
-  ViewChild,
-  TemplateRef,
-  EventEmitter,
-  ChangeDetectorRef,
-  ViewEncapsulation,
-  ChangeDetectionStrategy,
-  ContentChild
-} from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+
 import {
+  AfterContentInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ContentChild,
+  ContentChildren,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  Output,
+  QueryList,
+  TemplateRef,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
+import { McsScrollDispatcherService } from '@app/core';
+import {
+  coerceBoolean,
   isNullOrEmpty,
   unsubscribeSafely,
-  coerceBoolean,
   CommonDefinition
 } from '@app/utilities';
-import { McsScrollDispatcherService } from '@app/core';
+
 import { WizardStepComponent } from './wizard-step/wizard-step.component';
-import { WizardTopPanelDefDirective } from './wizard-top-panel/wizard-top-panel-def.directive';
-import {
-  WizardTopPanelPlaceholderDirective
-} from './wizard-top-panel/wizard-top-panel-placeholder.directive';
 import { IWizardStep } from './wizard-step/wizard-step.interface';
+import { WizardTopPanelDefDirective } from './wizard-top-panel/wizard-top-panel-def.directive';
+import { WizardTopPanelPlaceholderDirective } from './wizard-top-panel/wizard-top-panel-placeholder.directive';
 
 @Component({
   selector: 'mcs-wizard',
@@ -120,16 +120,10 @@ export class WizardComponent implements AfterContentInit, OnDestroy {
    * Event that triggers when the next button is clicked
    */
   public next(): void {
-    let wizardStepFormIsValid = (!isNullOrEmpty(this.activeStep.stepControl)
-      && this.activeStep.stepControl.valid)
-      || isNullOrEmpty(this.activeStep.stepControl);
-
-    if (wizardStepFormIsValid) {
-      this.activeStep.completed = true;
-      let nextStep: WizardStepComponent = this.steps[
-        Math.min(this.activeStepIndex + 1, this.steps.length)];
-      this._setActiveStep(nextStep);
-    }
+    this.activeStep.completed = true;
+    let nextStep: WizardStepComponent = this.steps[
+      Math.min(this.activeStepIndex + 1, this.steps.length)];
+    this._setActiveStep(nextStep);
   }
 
   /**

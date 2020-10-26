@@ -1,18 +1,19 @@
 import {
-  Component,
-  Input,
-  ViewChild,
-  TemplateRef,
-  ViewEncapsulation,
-  ChangeDetectionStrategy
-} from '@angular/core';
-import { AbstractControl } from '@angular/forms';
-import {
-  Subject,
-  Observable
+  Observable,
+  Subject
 } from 'rxjs';
 import { filter } from 'rxjs/operators';
+
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  TemplateRef,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
 import { McsUniqueId } from '@app/core';
+
 import { IWizardStep } from './wizard-step.interface';
 
 @Component({
@@ -36,10 +37,6 @@ export class WizardStepComponent implements IWizardStep {
 
   @Input()
   public customClass: string;
-
-  /** @deprecated Use the nextWhen instead */
-  @Input()
-  public stepControl: AbstractControl;
 
   @ViewChild(TemplateRef)
   public templateRef: TemplateRef<any>;

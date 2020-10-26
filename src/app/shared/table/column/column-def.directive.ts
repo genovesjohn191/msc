@@ -1,31 +1,33 @@
-import {
-  Directive,
-  Input,
-  OnDestroy,
-  ContentChild,
-  ContentChildren,
-  QueryList,
-  ChangeDetectorRef,
-  AfterContentInit
-} from '@angular/core';
 import { Subject } from 'rxjs';
 import {
   startWith,
   takeUntil
 } from 'rxjs/operators';
-/** Directives */
+
 import {
-  HeaderCellDefDirective,
-  HeaderCellComponent
-} from '../header';
-import {
-  DataCellDefDirective,
-  DataCellComponent
-} from '../data';
+  AfterContentInit,
+  ChangeDetectorRef,
+  ContentChild,
+  ContentChildren,
+  Directive,
+  Input,
+  OnDestroy,
+  QueryList
+} from '@angular/core';
 import {
   isNullOrEmpty,
   unsubscribeSafely
 } from '@app/utilities';
+
+import {
+  DataCellComponent,
+  DataCellDefDirective
+} from '../data';
+/** Directives */
+import {
+  HeaderCellComponent,
+  HeaderCellDefDirective
+} from '../header';
 
 @Directive({
   selector: '[mcsColumnDef]'
@@ -69,12 +71,12 @@ export class ColumnDefDirective implements AfterContentInit, OnDestroy {
   public ngAfterContentInit() {
     Promise.resolve().then(() => {
       this._headerCellsComponent.changes.pipe(
-        startWith(null),
+        startWith(null as any),
         takeUntil(this._destroySubject)
       ).subscribe(() => this._updateColumnVisibility());
 
       this._dataCellsComponent.changes.pipe(
-        startWith(null),
+        startWith(null as any),
         takeUntil(this._destroySubject)
       ).subscribe(() => this._updateColumnVisibility());
     });

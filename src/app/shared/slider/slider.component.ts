@@ -1,27 +1,25 @@
 import {
+  forwardRef,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
+  ElementRef,
+  EventEmitter,
   Input,
   Output,
   ViewChild,
-  EventEmitter,
-  ElementRef,
-  forwardRef,
-  ChangeDetectorRef,
-  ViewEncapsulation,
-  ChangeDetectionStrategy
+  ViewEncapsulation
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { McsPoint } from '@app/models';
 import {
-  Key,
-  McsPoint
-} from '@app/models';
-import {
-  isNullOrEmpty,
-  coerceNumber,
   coerceBoolean,
+  coerceNumber,
+  getSafeProperty,
+  isNullOrEmpty,
   registerEvent,
   unregisterEvent,
-  getSafeProperty
+  KeyboardKey
 } from '@app/utilities';
 
 /** The slider orientation type */
@@ -454,25 +452,26 @@ export class SliderComponent {
 
     // Check key code and increment/decrement the slider value
     let oldValue = this.value;
-    switch (event.keyCode) {
-      case Key.PageUp:
+
+    switch (event.keyboardKey()) {
+      case KeyboardKey.PageUp:
         this._increment(10);
         break;
-      case Key.PageDown:
+      case KeyboardKey.PageDown:
         this._increment(-10);
         break;
-      case Key.End:
+      case KeyboardKey.End:
         this.value = this.max;
         break;
-      case Key.Home:
+      case KeyboardKey.Home:
         this.value = this.min;
         break;
-      case Key.DownArrow:
-      case Key.LeftArrow:
+      case KeyboardKey.DownArrow:
+      case KeyboardKey.LeftArrow:
         this._increment(-1);
         break;
-      case Key.RightArrow:
-      case Key.UpArrow:
+      case KeyboardKey.RightArrow:
+      case KeyboardKey.UpArrow:
         this._increment(1);
         break;
       default:

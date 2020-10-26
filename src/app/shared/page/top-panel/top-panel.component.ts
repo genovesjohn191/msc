@@ -1,31 +1,29 @@
-import {
-  Component,
-  Input,
-  ChangeDetectorRef,
-  ChangeDetectionStrategy,
-  ViewChild,
-  ContentChildren,
-  AfterContentInit,
-  OnDestroy,
-  QueryList,
-  ElementRef,
-  Renderer2
-} from '@angular/core';
 import { Subject } from 'rxjs';
 import {
   startWith,
   takeUntil
 } from 'rxjs/operators';
+
+import {
+  AfterContentInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ContentChildren,
+  ElementRef,
+  Input,
+  OnDestroy,
+  QueryList,
+  Renderer2,
+  ViewChild
+} from '@angular/core';
 import {
   coerceBoolean,
   unsubscribeSafely
 } from '@app/utilities';
-import {
-  TopPanelItemPlaceholderDirective
-} from './top-panel-item/top-panel-item-placeholder.directive';
-import {
-  TopPanelItemDefDirective
-} from './top-panel-item/top-panel-item-def.directive';
+
+import { TopPanelItemDefDirective } from './top-panel-item/top-panel-item-def.directive';
+import { TopPanelItemPlaceholderDirective } from './top-panel-item/top-panel-item-placeholder.directive';
 
 @Component({
   selector: 'mcs-top-panel',
@@ -67,7 +65,8 @@ export class TopPanelComponent implements AfterContentInit, OnDestroy {
   public ngAfterContentInit() {
     Promise.resolve().then(() => {
       this._topPanelItemDefinition.changes.pipe(
-        startWith(null), takeUntil(this._destroySubject)
+        startWith(null as any),
+        takeUntil(this._destroySubject)
       ).subscribe(() => {
         this._topPanelItemPlaceholder.viewContainer.clear();
         this._topPanelItemDefinition.forEach((item) => {

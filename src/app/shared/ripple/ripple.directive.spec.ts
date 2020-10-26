@@ -3,10 +3,11 @@ import {
   ViewChild
 } from '@angular/core';
 import {
-  async,
+  waitForAsync,
   TestBed
 } from '@angular/core/testing';
 import { CoreTestingModule } from '@app/core/testing';
+
 import { RippleDirective } from './ripple.directive';
 import { RippleModule } from './ripple.module';
 
@@ -20,7 +21,7 @@ export class TestRippleDirectiveComponent {
 }
 
 describe('RippleDirective', () => {
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

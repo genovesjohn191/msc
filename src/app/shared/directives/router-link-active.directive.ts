@@ -1,34 +1,34 @@
 import {
-  Directive,
-  Input,
-  OnInit,
+  BehaviorSubject,
+  Subject
+} from 'rxjs';
+import {
+  filter,
+  takeUntil,
+  tap
+} from 'rxjs/operators';
+
+import {
   AfterContentInit,
-  ContentChildren,
+  Directive,
   ElementRef,
-  Renderer2,
-  QueryList,
-  OnDestroy
+  Input,
+  OnDestroy,
+  OnInit,
+  Renderer2
 } from '@angular/core';
 import {
-  Router,
-  NavigationEnd
+  NavigationEnd,
+  Router
 } from '@angular/router';
-import { Subject } from 'rxjs';
-import {
-  takeUntil,
-  startWith,
-  filter
-} from 'rxjs/operators';
 import {
   isNullOrEmpty,
   unsubscribeSafely
 } from '@app/utilities';
-import { RouterLinkDirective } from './router-link.directive';
 
 @Directive({
   selector: '[mcsRouterLinkActive]',
 })
-
 export class RouterLinkActiveDirective implements OnInit, OnDestroy, AfterContentInit {
   @Input('mcsRouterLinkActive')
   public set routerLinkActive(value: string | string[]) {
@@ -37,27 +37,25 @@ export class RouterLinkActiveDirective implements OnInit, OnDestroy, AfterConten
   }
   private _routerClasses: string[];
 
-  @ContentChildren(RouterLinkDirective, { descendants: true })
-  private _routerLinks: QueryList<RouterLinkDirective>;
-
   private _savedActiveLinkStatus: boolean;
   private _destroySubject = new Subject<void>();
+  private _routerLinkChanges = new BehaviorSubject<string>(null);
 
   constructor(
     private _router: Router,
-    private _elementRef: ElementRef,
+    private _elementRef: ElementRef<HTMLElement>,
     private _renderer: Renderer2
   ) { }
 
   public ngOnInit(): void {
-    this._listenToRouterChanges();
+    this._subscribeToRouterLinksChange();
+    this._subscribeToRouterChange();
   }
 
   public ngAfterContentInit(): void {
-    Promise.resolve().then(() => {
-      this._routerLinks.changes.pipe(
-        startWith(null), takeUntil(this._destroySubject)
-      ).subscribe(() => this._updateActiveLinkStatusView());
+    setTimeout(() => {
+      let routerLink = this._elementRef.nativeElement.getAttribute('href');
+      this._routerLinkChanges.next(routerLink);
     });
   }
 
@@ -65,19 +63,21 @@ export class RouterLinkActiveDirective implements OnInit, OnDestroy, AfterConten
     unsubscribeSafely(this._destroySubject);
   }
 
-  /**
-   * Listens to every change of router url
-   */
-  private _listenToRouterChanges(): void {
+  private _subscribeToRouterChange(): void {
     this._router.events.pipe(
       takeUntil(this._destroySubject),
       filter((event) => event instanceof NavigationEnd)
     ).subscribe(() => this._updateActiveLinkStatusView());
   }
 
-  /**
-   * Updates the active link status view according to active route
-   */
+  private _subscribeToRouterLinksChange(): void {
+    this._routerLinkChanges.pipe(
+      takeUntil(this._destroySubject),
+      filter(link => !isNullOrEmpty(link)),
+      tap(() => this._updateActiveLinkStatusView())
+    ).subscribe();
+  }
+
   private _updateActiveLinkStatusView(): void {
     let stateIsUpdated = isNullOrEmpty(this._routerClasses) || !this._router.navigated;
     if (stateIsUpdated) { return; }
@@ -93,17 +93,10 @@ export class RouterLinkActiveDirective implements OnInit, OnDestroy, AfterConten
     });
   }
 
-  /**
-   * Returns true when some of the associated routes is active
-   */
   private get hasActiveRoute(): boolean {
-    return !!this._routerLinks.find((link) =>
-      this._router.isActive(link.routeLink, false));
+    return this._router.isActive(this._routerLinkChanges.getValue(), false);
   }
 
-  /**
-   * Clears the active classes of the associated element
-   */
   private _clearActiveClasses(): void {
     if (isNullOrEmpty(this._routerClasses)) { return; }
     this._routerClasses.forEach((_class) => {
@@ -111,9 +104,6 @@ export class RouterLinkActiveDirective implements OnInit, OnDestroy, AfterConten
     });
   }
 
-  /**
-   * Applies the active class of the associated elements
-   */
   private _applyActiveClasses(): void {
     if (isNullOrEmpty(this._routerClasses)) { return; }
     this._routerClasses.forEach((_class) => {

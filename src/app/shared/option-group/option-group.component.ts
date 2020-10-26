@@ -1,40 +1,42 @@
 import {
-  Component,
-  Input,
-  QueryList,
-  ElementRef,
-  ContentChild,
-  ContentChildren,
-  ChangeDetectionStrategy,
-  ViewEncapsulation,
-  ChangeDetectorRef,
-  AfterContentInit,
-  OnDestroy,
-  NgZone
-} from '@angular/core';
-import {
-  Subject,
-  Observable,
+  defer,
   merge,
-  defer
+  Observable,
+  Subject
 } from 'rxjs';
 import {
-  takeUntil,
   startWith,
-  take,
   switchMap,
+  take,
+  takeUntil,
   tap
 } from 'rxjs/operators';
+
+import {
+  AfterContentInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ContentChild,
+  ContentChildren,
+  ElementRef,
+  Input,
+  NgZone,
+  OnDestroy,
+  QueryList,
+  ViewEncapsulation
+} from '@angular/core';
 import {
   animateFactory,
-  isNullOrEmpty,
   coerceBoolean,
+  isNullOrEmpty,
   unsubscribeSafely,
   CommonDefinition
 } from '@app/utilities';
-import { OptionComponent } from './option/option.component';
-import { OptionGroupLabelDirective } from './option-group-label.directive';
+
 import { OptionGroupHeaderDirective } from './option-group-header.directive';
+import { OptionGroupLabelDirective } from './option-group-label.directive';
+import { OptionComponent } from './option/option.component';
 
 @Component({
   selector: 'mcs-option-group',
@@ -143,7 +145,8 @@ export class OptionGroupComponent implements AfterContentInit, OnDestroy {
   public ngAfterContentInit(): void {
     Promise.resolve().then(() => {
       this._options.changes.pipe(
-        startWith(null), takeUntil(this._destroySubject)
+        startWith(null as any),
+        takeUntil(this._destroySubject)
       ).subscribe(() => {
         this._subscribeToSelectionChange();
         this._subscribeToVisibilityChange();
@@ -230,7 +233,7 @@ export class OptionGroupComponent implements AfterContentInit, OnDestroy {
     let mergeChanges = merge(this._optionsSelectionChanges, this._optionsActiveChanges);
 
     mergeChanges.pipe(
-      startWith(null),
+      startWith(null as any),
       takeUntil(resetSubject)
     ).subscribe(() => {
       !this.hasSelectedOption ? this.closePanel() : this.openPanel();

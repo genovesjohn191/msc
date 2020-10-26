@@ -1,36 +1,37 @@
-import { Injectable } from '@angular/core';
 import {
-  Subscription,
-  Observable,
   BehaviorSubject,
+  EMPTY,
+  Observable,
   Subject,
-  empty
+  Subscription
 } from 'rxjs';
 import {
+  catchError,
+  filter,
   map,
   share,
-  takeUntil,
   take,
-  tap,
-  filter,
-  catchError
+  takeUntil,
+  tap
 } from 'rxjs/operators';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
-import { McsApiService } from '@app/services';
-import {
-  McsFeatureFlag,
-  McsSystemMessage
-} from '@app/models';
+
+import { Injectable } from '@angular/core';
 import { McsEvent } from '@app/events';
 import {
-  McsDisposable,
-  unsubscribeSafely,
-  isNullOrEmpty,
-  getSafeProperty,
+  McsFeatureFlag,
+  McsSystemMessage,
+  RouteKey
+} from '@app/models';
+import { McsApiService } from '@app/services';
+import {
   compareJsons,
-  CommonDefinition
+  getSafeProperty,
+  isNullOrEmpty,
+  unsubscribeSafely,
+  CommonDefinition,
+  McsDisposable
 } from '@app/utilities';
-import { RouteKey } from '@app/models';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import {
   LogClass,
   LogIgnore
@@ -83,7 +84,7 @@ export class McsSystemMessageService implements McsDisposable {
   public _registerActiveSystemMessageService() {
     this._activeMessageServiceReference = this._apiService.getActiveSystemMessages().pipe(
       map((response) => getSafeProperty(response, (obj) => obj.collection[0])),
-      catchError(() => empty()),
+      catchError(() => EMPTY),
       share()
     );
 

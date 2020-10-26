@@ -1,34 +1,32 @@
-import {
-  Component,
-  Output,
-  OnDestroy,
-  EventEmitter,
-  ViewChildren,
-  ContentChildren,
-  QueryList,
-  AfterViewInit,
-  AfterContentInit,
-  ChangeDetectorRef,
-  ViewEncapsulation,
-  ChangeDetectionStrategy
-} from '@angular/core';
 import { Subject } from 'rxjs';
 import {
+  distinctUntilChanged,
   startWith,
-  takeUntil,
-  distinctUntilChanged
+  takeUntil
 } from 'rxjs/operators';
+
+import {
+  AfterContentInit,
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ContentChildren,
+  OnDestroy,
+  QueryList,
+  ViewChildren,
+  ViewEncapsulation
+} from '@angular/core';
 import { McsScrollDispatcherService } from '@app/core';
 import {
+  getSafeProperty,
   isNullOrEmpty,
-  unsubscribeSafely,
-  getSafeProperty
+  unsubscribeSafely
 } from '@app/utilities';
-import { ScrollableLinkComponent } from './scrollable-link/scrollable-link.component';
-import {
-  ScrollableLinkHeaderComponent
-} from './scrollable-link-header/scrollable-link-header.component';
+
 import { ScrollableLinkGroup } from './scrollable-link-group.interface';
+import { ScrollableLinkHeaderComponent } from './scrollable-link-header/scrollable-link-header.component';
+import { ScrollableLinkComponent } from './scrollable-link/scrollable-link.component';
 
 const DEFAULT_SCROLL_TOP_OFFSET = 50;
 
@@ -62,7 +60,8 @@ export class ScrollableLinkGroupComponent implements ScrollableLinkGroup, AfterV
   public ngAfterViewInit() {
     Promise.resolve().then(() => {
       this._scrollableHeaders.changes.pipe(
-        startWith(null), takeUntil(this._destroySubject)
+        startWith(null as any),
+        takeUntil(this._destroySubject)
       ).subscribe(() => {
         this._initializeSelection();
         this._hideSingleScrollLinkLabel();
@@ -75,9 +74,10 @@ export class ScrollableLinkGroupComponent implements ScrollableLinkGroup, AfterV
 
   public ngAfterContentInit(): void {
     Promise.resolve().then(() => {
-      this.scrollableLinks.changes
-        .pipe(startWith(null), takeUntil(this._destroySubject))
-        .subscribe(() => this._changeDetectorRef.markForCheck());
+      this.scrollableLinks.changes.pipe(
+        startWith(null as any),
+        takeUntil(this._destroySubject)
+      ).subscribe(() => this._changeDetectorRef.markForCheck());
     });
   }
 

@@ -1,36 +1,37 @@
+import { Subscription } from 'rxjs';
+
 import {
-  Component,
-  OnInit,
-  OnDestroy,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  ViewEncapsulation,
-  Injector
+  Component,
+  Injector,
+  OnDestroy,
+  OnInit,
+  ViewEncapsulation
 } from '@angular/core';
-import { Subscription } from 'rxjs';
 import {
+  CoreConfig,
   McsAccessControlService,
-  McsRouteSettingsService,
   McsAuthenticationIdentity,
-  CoreConfig
+  McsRouteSettingsService
 } from '@app/core';
+import { McsAuthenticationService } from '@app/core/authentication/mcs-authentication.service';
+import { McsEvent } from '@app/events';
 import {
-  RouteKey,
-  RouteCategory,
   routeCategoryText,
+  McsFeatureFlag,
   McsPermission,
   McsRouteInfo,
-  McsFeatureFlag
+  RouteCategory,
+  RouteKey
 } from '@app/models';
+import { RoutePlatform } from '@app/models/enumerations/route-platform.enum';
 import {
   isNullOrEmpty,
   unsubscribeSafely,
   CommonDefinition
 } from '@app/utilities';
 import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
-import { McsEvent } from '@app/events';
-import { RoutePlatform } from '@app/models/enumerations/route-platform.enum';
-import { McsAuthenticationService } from '@app/core/authentication/mcs-authentication.service';
 
 @Component({
   selector: 'mcs-navigation',
@@ -188,7 +189,6 @@ export class NavigationComponent implements OnInit, OnDestroy {
     if (isNullOrEmpty(routeInfo)) { return; }
 
     this.selectedCategory = routeInfo.enumCategory;
-
     // Expands current route
     this.initializeNavigation();
 

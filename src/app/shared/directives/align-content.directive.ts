@@ -1,23 +1,24 @@
-import {
-  Directive,
-  ElementRef,
-  OnDestroy,
-  OnChanges,
-  AfterContentInit,
-  Input,
-  SimpleChanges,
-  Renderer2
-} from '@angular/core';
 import { Subject } from 'rxjs';
 import {
-  takeUntil,
-  startWith
+  startWith,
+  takeUntil
 } from 'rxjs/operators';
+
+import {
+  AfterContentInit,
+  Directive,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnDestroy,
+  Renderer2,
+  SimpleChanges
+} from '@angular/core';
 import { McsBrowserService } from '@app/core';
 import {
-  unsubscribeSafely,
+  getElementStyle,
   isNullOrEmpty,
-  getElementStyle
+  unsubscribeSafely
 } from '@app/utilities';
 
 enum Direction {
@@ -197,7 +198,7 @@ export class AlignContentDirective implements OnChanges, AfterContentInit, OnDes
    */
   private _subscribeToLayoutRequest(): void {
     this._layoutRequestChange.pipe(
-      startWith(null),
+      startWith(null as void),
       takeUntil(this._destroySubject)
     ).subscribe(() => {
       this._validateAlignment();

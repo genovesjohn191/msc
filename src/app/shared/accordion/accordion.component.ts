@@ -1,26 +1,28 @@
 import {
-  Component,
-  Input,
-  QueryList,
-  ChangeDetectionStrategy,
-  ViewEncapsulation,
-  OnDestroy,
-  AfterContentInit,
-  ContentChildren
-} from '@angular/core';
-import {
-  Observable,
   merge,
+  Observable,
   Subject
 } from 'rxjs';
 import {
   startWith,
   takeUntil
 } from 'rxjs/operators';
+
+import {
+  AfterContentInit,
+  ChangeDetectionStrategy,
+  Component,
+  ContentChildren,
+  Input,
+  OnDestroy,
+  QueryList,
+  ViewEncapsulation
+} from '@angular/core';
 import {
   coerceBoolean,
   unsubscribeSafely
 } from '@app/utilities';
+
 import { AccordionPanelComponent } from './accordion-panel/accordion-panel.component';
 
 @Component({
@@ -56,7 +58,8 @@ export class AccordionComponent implements AfterContentInit, OnDestroy {
   public ngAfterContentInit(): void {
     Promise.resolve().then(() => {
       this.panelItems.changes.pipe(
-        startWith(null), takeUntil(this._destroySubject)
+        startWith(null as any),
+        takeUntil(this._destroySubject)
       ).subscribe(() => {
         this._listenToSelectionChange();
       });

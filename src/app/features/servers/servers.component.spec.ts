@@ -1,8 +1,9 @@
 import {
-  async,
+  waitForAsync,
   TestBed
 } from '@angular/core/testing';
 import { CommonDefinition } from '@app/utilities';
+
 import { ServersComponent } from './servers.component';
 import { ServersTestingModule } from './testing';
 
@@ -12,7 +13,7 @@ describe('ServersComponent', () => {
   CommonDefinition.SEARCH_TIME = 0; // remove delay time
   let component: ServersComponent;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
 

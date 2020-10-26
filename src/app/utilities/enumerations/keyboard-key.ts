@@ -1,4 +1,4 @@
-export enum Key {
+export enum KeyboardKey {
   Backspace = 8,
   Tab = 9,
   Enter = 13,

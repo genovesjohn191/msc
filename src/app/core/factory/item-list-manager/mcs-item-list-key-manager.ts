@@ -1,7 +1,11 @@
-import { QueryList } from '@angular/core';
 import { Subject } from 'rxjs';
-import { isNullOrEmpty } from '@app/utilities';
-import { Key } from '@app/models';
+
+import { QueryList } from '@angular/core';
+import {
+  isNullOrEmpty,
+  KeyboardKey
+} from '@app/utilities';
+
 import { McsItemListManager } from '../item-list-manager/mcs-item-list-manager';
 
 export class McsItemListKeyManager<T> extends McsItemListManager<T> {
@@ -10,7 +14,7 @@ export class McsItemListKeyManager<T> extends McsItemListManager<T> {
    */
   public tabPressed: Subject<number> = new Subject();
 
-  private _keyEventMaps = new Map<Key, () => void>();
+  private _keyEventMaps = new Map<KeyboardKey, () => void>();
 
   constructor(_items: QueryList<T>) {
     super(_items);
@@ -24,9 +28,9 @@ export class McsItemListKeyManager<T> extends McsItemListManager<T> {
   public onKeyDown(_event: KeyboardEvent): void {
     if (isNullOrEmpty(_event)) { return; }
     // Invoke corresponding event when key code was found
-    let keyCodeExist = this._keyEventMaps.has(_event.keyCode);
+    let keyCodeExist = this._keyEventMaps.has(_event.keyboardKey());
     if (keyCodeExist) {
-      this._keyEventMaps.get(_event.keyCode)();
+      this._keyEventMaps.get(_event.keyboardKey())();
       _event.preventDefault();
     }
   }
@@ -35,19 +39,19 @@ export class McsItemListKeyManager<T> extends McsItemListManager<T> {
    * Registers the keyboard events based on their specific functionalities
    */
   private _registerKeyboardEvents(): void {
-    this._keyEventMaps.set(Key.DownArrow, this.setNextItemActive.bind(this));
-    this._keyEventMaps.set(Key.RightArrow, this.setNextItemActive.bind(this));
-    this._keyEventMaps.set(Key.UpArrow, this.setPreviousItemActive.bind(this));
-    this._keyEventMaps.set(Key.LeftArrow, this.setPreviousItemActive.bind(this));
-    this._keyEventMaps.set(Key.Home, this.setFirstItemActive.bind(this));
-    this._keyEventMaps.set(Key.End, this.setLastItemActive.bind(this));
-    this._keyEventMaps.set(Key.Tab, this._notifyTabPressed.bind(this));
+    this._keyEventMaps.set(KeyboardKey.DownArrow, this.setNextItemActive.bind(this));
+    this._keyEventMaps.set(KeyboardKey.RightArrow, this.setNextItemActive.bind(this));
+    this._keyEventMaps.set(KeyboardKey.UpArrow, this.setPreviousItemActive.bind(this));
+    this._keyEventMaps.set(KeyboardKey.LeftArrow, this.setPreviousItemActive.bind(this));
+    this._keyEventMaps.set(KeyboardKey.Home, this.setFirstItemActive.bind(this));
+    this._keyEventMaps.set(KeyboardKey.End, this.setLastItemActive.bind(this));
+    this._keyEventMaps.set(KeyboardKey.Tab, this._notifyTabPressed.bind(this));
   }
 
   /**
    * Notify tab subscribers when tab is pressed
    */
   private _notifyTabPressed(): void {
-    this.tabPressed.next(Key.Tab);
+    this.tabPressed.next(KeyboardKey.Tab);
   }
 }

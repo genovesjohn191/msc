@@ -1,15 +1,16 @@
+import { Subject } from 'rxjs';
+
 import {
   Directive,
-  Input,
-  Output,
+  ElementRef,
   EventEmitter,
-  ElementRef
+  Input,
+  Output
 } from '@angular/core';
-import { Subject } from 'rxjs';
-import { Key } from '@app/models';
 import {
+  coerceBoolean,
   isNullOrEmpty,
-  coerceBoolean
+  KeyboardKey
 } from '@app/utilities';
 
 @Directive({
@@ -43,7 +44,7 @@ export class TagInputDirective {
   @Input('mcsTagInputSeparatorKeys')
   public get separatorKeyCodes(): number[] { return this._separatorKeyCodes; }
   public set separatorKeyCodes(value: number[]) { this._separatorKeyCodes = value; }
-  private _separatorKeyCodes: number[] = [Key.Enter];
+  private _separatorKeyCodes: number[] = [KeyboardKey.Enter];
 
   constructor(private _elementRef: ElementRef) {
     this.inputElement = this._elementRef.nativeElement as HTMLInputElement;
@@ -91,7 +92,7 @@ export class TagInputDirective {
 
     // Add the tag when some of the key codes is received
     let keyCodeReceived = isNullOrEmpty(_event) ||
-      this.separatorKeyCodes.indexOf(_event.keyCode) > -1;
+      this.separatorKeyCodes.indexOf(_event.keyboardKey()) > -1;
     if (keyCodeReceived) {
       this._tagInputOnAdd.emit(this);
       if (!isNullOrEmpty(_event)) {

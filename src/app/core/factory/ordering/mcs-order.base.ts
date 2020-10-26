@@ -1,49 +1,51 @@
 import {
-  Observable,
-  Subject,
-  empty,
+  of,
   throwError,
   BehaviorSubject,
-  of
+  EMPTY,
+  Observable,
+  Subject
 } from 'rxjs';
 import {
-  takeUntil,
-  tap,
   catchError,
   filter,
-  map
+  map,
+  takeUntil,
+  tap
 } from 'rxjs/operators';
+
 import {
-  McsDisposable,
-  unsubscribeSafely,
-  isNullOrUndefined,
-  getSafeProperty,
-  isNullOrEmpty,
-  CommonDefinition,
-  emitLatestMap
-} from '@app/utilities';
-import {
-  McsOrderCreate,
-  McsOrder,
-  McsOrderWorkflow,
-  DataStatus,
   ActionStatus,
-  McsOrderItemCreate,
-  McsJob,
-  McsOrderItemType,
+  DataStatus,
+  DeliveryType,
   ItemType,
   McsApiErrorContext,
-  DeliveryType
+  McsJob,
+  McsOrder,
+  McsOrderCreate,
+  McsOrderItemCreate,
+  McsOrderItemType,
+  McsOrderWorkflow
 } from '@app/models';
 import { McsApiService } from '@app/services';
+import {
+  emitLatestMap,
+  getSafeProperty,
+  isNullOrEmpty,
+  isNullOrUndefined,
+  unsubscribeSafely,
+  CommonDefinition,
+  McsDisposable
+} from '@app/utilities';
+
 import { IMcsFallible } from '../../interfaces/mcs-fallible.interface';
 import { IMcsJobManager } from '../../interfaces/mcs-job-manager.interface';
 import { IMcsStateChangeable } from '../../interfaces/mcs-state-changeable.interface';
-import { McsOrderBuilder } from './mcs-order.builder';
 import {
   McsOrderRequest,
   OrderRequester
 } from './mcs-order-request';
+import { McsOrderBuilder } from './mcs-order.builder';
 import {
   McsOrderDirector,
   OrderStateChange
@@ -337,7 +339,7 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
           let errorMessages = getSafeProperty(httpError, (obj) => obj.details.errorMessages, []);
           this.setErrors(...errorMessages);
         }
-        return empty();
+        return EMPTY;
       })
     );
   }
@@ -400,7 +402,7 @@ export abstract class McsOrderBase implements IMcsJobManager, IMcsFallible, IMcs
     // Get all the orders here
     this._orderApiService.getOrderItemTypes({ keyword: this._orderItemProductType }).pipe(
       map((orderItemDetails) => getSafeProperty(orderItemDetails, (obj) => obj.collection[0])),
-      catchError(() => empty())
+      catchError(() => EMPTY)
     ).subscribe((itemType) => {
       if (isNullOrEmpty(itemType)) {
         throw new Error('Unable to create an order without order item type.');

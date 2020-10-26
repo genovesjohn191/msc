@@ -1,40 +1,42 @@
-import {
-  Component,
-  OnInit,
-  AfterViewInit,
-  Output,
-  OnDestroy,
-  Input,
-  ViewChild,
-  ChangeDetectorRef,
-  ChangeDetectionStrategy,
-  EventEmitter
-} from '@angular/core';
-import {
-  FormGroup,
-  FormControl,
-  FormBuilder
-} from '@angular/forms';
 import { Subject } from 'rxjs';
 import {
   startWith,
   takeUntil
 } from 'rxjs/operators';
+
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup
+} from '@angular/forms';
+import {
+  CoreValidators,
+  IMcsDataChange,
+  IMcsFormGroup
+} from '@app/core';
+import { InputManageType } from '@app/models';
+import { McsFormGroupDirective } from '@app/shared';
 import {
   animateFactory,
   coerceNumber,
   getSafeProperty,
-  isNullOrUndefined,
   isNullOrEmpty,
+  isNullOrUndefined,
   unsubscribeSafely
 } from '@app/utilities';
-import {
-  IMcsFormGroup,
-  IMcsDataChange,
-  CoreValidators
-} from '@app/core';
-import { InputManageType } from '@app/models';
-import { McsFormGroupDirective } from '@app/shared';
+
 import { VdcManageScale } from './vdc-manage-scale';
 
 // Constants definition
@@ -305,8 +307,8 @@ export class VdcManageScaleComponent
     this._scaleOutput.cpuCount = this.sliderValue.cpuCount;
 
     this._scaleOutput.valid = this.isSliderStepValid &&
-                              this.fcCustomCpu.valid &&
-                              this.fcCustomMemory.valid;
+      this.fcCustomCpu.valid &&
+      this.fcCustomMemory.valid;
 
     this._scaleOutput.hasChanged = this._scaleOutput.valid
       && (this.initialCpu !== this._scaleOutput.cpuCount
@@ -391,9 +393,10 @@ export class VdcManageScaleComponent
 
     // Create form group and bind the form controls
     this.fgVdcScale = this._formBuilder.group([]);
-    this.fgVdcScale.statusChanges
-      .pipe(startWith(null as string), takeUntil(this._destroySubject))
-      .subscribe(() => this.notifyDataChange());
+    this.fgVdcScale.statusChanges.pipe(
+      startWith(null as string),
+      takeUntil(this._destroySubject)
+    ).subscribe(() => this.notifyDataChange());
     this._registerFormControlsByInputType();
   }
 
