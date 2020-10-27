@@ -78,9 +78,11 @@
         </mcs-cta-list>
       </div>
       <ng-template #error>
-        <mcs-status-message type="error">
-          {{ 'reports.widgets.errorMessage' | translate }}<a style="margin-left: 5px;" mcsId (click)="getData()">{{ 'reports.widgets.retryLabel' | translate }}</a>
-        </mcs-status-message>
+        <div class="error-wrapper">
+          <mcs-status-message type="error">
+            {{ 'reports.widgets.errorMessage' | translate }}<a style="margin-left: 5px;" mcsId (click)="getCostRecommendations()">{{ 'reports.widgets.retryLabel' | translate }}</a>
+          </mcs-status-message>
+        </div>
     </ng-template>
     </ng-template>
   </div>

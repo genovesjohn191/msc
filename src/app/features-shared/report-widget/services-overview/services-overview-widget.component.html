@@ -4,23 +4,52 @@
     <mcs-cta-list>
       <mcs-cta-list-panel icon="cloud_done" compact="true">
         <mcs-cta-list-action>
-          <a href="#">
-            3 Azure subscriptions
+          <a *ngIf="!azureSubscriptionInfo.processing && !azureSubscriptionInfo.hasError; else processing1"  href="{{ azureSubscriptionInfo.link }}">
+            {{ azureSubscriptionInfo.count }} {{ azureSubscriptionInfo.description }}
           </a>
+          <ng-template #processing1>
+            <span *ngIf="!azureSubscriptionInfo.hasError; else error1">{{ azureSubscriptionInfo.count }} {{ azureSubscriptionInfo.description }}</span>
+            <ng-template #error1>
+              <small  read-only>
+                Failed to retrieve Azure subscriptions.
+                <a (click)="getAzureSubscriptionInfo()"><small>Try Again</small></a>
+              </small>
+            </ng-template>
+          </ng-template>
         </mcs-cta-list-action>
       </mcs-cta-list-panel>
+
       <mcs-cta-list-panel icon="cloud_queue" compact="true">
         <mcs-cta-list-action>
-          <a href="#">
-            10 License subscription
+          <a *ngIf="!licenseSubscriptionInfo.processing && !licenseSubscriptionInfo.hasError; else processing2"  href="{{ licenseSubscriptionInfo.link }}">
+            {{ licenseSubscriptionInfo.count }} {{ licenseSubscriptionInfo.description }}
           </a>
+          <ng-template #processing2>
+            <span *ngIf="!licenseSubscriptionInfo.hasError; else error2">{{ licenseSubscriptionInfo.count }} {{ licenseSubscriptionInfo.description }}</span>
+            <ng-template #error2>
+              <small read-only>
+                Failed to retrieve license subscriptions.
+                <a (click)="getLicenseSubscriptionInfo()"><small>Try Again</small></a>
+              </small>
+            </ng-template>
+          </ng-template>
         </mcs-cta-list-action>
       </mcs-cta-list-panel>
+
       <mcs-cta-list-panel icon="cloud_download" compact="true">
         <mcs-cta-list-action>
-          <a href="#">
-            1 Software subscription
+          <a *ngIf="!softwareSubscriptionInfo.processing && !softwareSubscriptionInfo.hasError; else processing3"  href="{{ softwareSubscriptionInfo.link }}">
+            {{ softwareSubscriptionInfo.count }} {{ softwareSubscriptionInfo.description }}
           </a>
+          <ng-template #processing3>
+            <span *ngIf="!softwareSubscriptionInfo.hasError; else error3">{{ softwareSubscriptionInfo.count }} {{ softwareSubscriptionInfo.description }}</span>
+            <ng-template #error3>
+              <small  read-only>
+                Failed to retrieve software subscriptions.
+                <a (click)="getSoftwareSubscriptionInfo()"><small>Try Again</small></a>
+              </small>
+            </ng-template>
+          </ng-template>
         </mcs-cta-list-action>
       </mcs-cta-list-panel>
     </mcs-cta-list>

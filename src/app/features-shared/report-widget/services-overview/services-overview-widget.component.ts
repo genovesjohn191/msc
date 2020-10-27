@@ -1,7 +1,24 @@
-import { Component, ChangeDetectionStrategy, Input, ViewEncapsulation, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CommonDefinition } from '@app/utilities';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { CtaItem } from '@app/shared/cta-list/cta-list.component';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ViewEncapsulation,
+  OnInit,
+  ChangeDetectorRef
+} from '@angular/core';
+import { CoreRoutes } from '@app/core';
+import { RouteKey } from '@app/models';
+import { McsReportingService } from '@app/core/services/mcs-reporting.service';
+import { NumberValueAccessor } from '@angular/forms';
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
+
+interface ServiceInfo {
+  description: string;
+  count: number;
+  hasError: boolean;
+  processing: boolean;
+  link: string;
+}
 
 @Component({
   selector: 'mcs-services-overview-widget',
@@ -15,35 +32,85 @@ import { CtaItem } from '@app/shared/cta-list/cta-list.component';
 })
 
 export class ServicesOverviewWidgetComponent implements OnInit {
-  public data$: Observable<CtaItem[]>;
-  public dataBehavior: BehaviorSubject<CtaItem[]>;
-
-  public constructor(private _changeDetectorRef: ChangeDetectorRef) {
+  public get hasError(): boolean {
+    return this.azureSubscriptionInfo.hasError
+      || this.licenseSubscriptionInfo.hasError
+      || this.softwareSubscriptionInfo.hasError;
   }
 
-  public ngOnInit() {
-    let data = [
-      {
-        icon: CommonDefinition.ASSETS_SVG_INFO,
-        ctaLabel: '3 Azure subscriptions',
-        ctaLink: 'https://www.google.com'
-      },
-      {
-        icon: CommonDefinition.ASSETS_SVG_INFO,
-        ctaLabel: '10 License subscription',
-        ctaLink: 'https://www.google.com'
-      },
-      {
-        icon: CommonDefinition.ASSETS_SVG_INFO,
-        ctaLabel: '1 Software subscription',
-        ctaLink: 'https://www.google.com'
-      },
-    ];
+  public azureSubscriptionInfo: ServiceInfo;
 
-    this.dataBehavior = new BehaviorSubject<CtaItem[]>(null);
-    this._changeDetectorRef.markForCheck();
-    this.data$ = this.dataBehavior.asObservable();
-    this.dataBehavior.next(data);
+  public licenseSubscriptionInfo: ServiceInfo;
+
+  public softwareSubscriptionInfo: ServiceInfo;
+
+  public constructor(private _changeDetector: ChangeDetectorRef, private _reportingService: McsReportingService) { }
+
+  public ngOnInit(): void {
+    this.getAzureSubscriptionInfo();
+    this.getLicenseSubscriptionInfo();
+    this.getSoftwareSubscriptionInfo();
+  }
+
+  public getAzureSubscriptionInfo(): void {
+    this.azureSubscriptionInfo = {
+      description: 'Azure subscriptions',
+      count: 0,
+      processing: true,
+      hasError: false,
+      link: CoreRoutes.getNavigationPath(RouteKey.Licenses)
+    };
+    this._changeDetector.markForCheck();
+
+    this._reportingService.azureSubscriptionCount
+    .pipe(catchError(() => {
+      this.azureSubscriptionInfo.hasError = true;
+      this.azureSubscriptionInfo.processing = false;
+      this._changeDetector.markForCheck();
+      return throwError('Azure subscriptions endpoint failed.');
+    }))
+    .subscribe((count) => {
+      this.azureSubscriptionInfo.count = count;
+      this.azureSubscriptionInfo.processing = false;
+      this._changeDetector.markForCheck();
+    });
+  }
+
+  public getLicenseSubscriptionInfo(): void {
+    this.licenseSubscriptionInfo = {
+      description: 'License subscriptions',
+      count: 0,
+      processing: true,
+      hasError: false,
+      link: CoreRoutes.getNavigationPath(RouteKey.Licenses)
+    };
+    this._changeDetector.markForCheck();
+
+    this._reportingService.licenseSubscriptionCount
+    .pipe(catchError(() => {
+      this.licenseSubscriptionInfo.hasError = true;
+      this.licenseSubscriptionInfo.processing = false;
+      this._changeDetector.markForCheck();
+      return throwError('Licenses endpoint failed.');
+    }))
+    .subscribe((count) => {
+      this.licenseSubscriptionInfo.count = count;
+      this.licenseSubscriptionInfo.processing = false;
+      this._changeDetector.markForCheck();
+    });
+  }
+
+  public getSoftwareSubscriptionInfo(): void {
+    this.softwareSubscriptionInfo = {
+      description: 'Software subscriptions',
+      count: 0,
+      processing: false, // change to true if loading from actual data
+      hasError: false,
+      link: CoreRoutes.getNavigationPath(RouteKey.Licenses)
+    };
+    this._changeDetector.markForCheck();
+
+    // TODO: get software subs
   }
 }
 

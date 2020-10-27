@@ -7,9 +7,11 @@
   <ng-template #done>
     <ng-content *ngIf="!hasError; else error"></ng-content>
     <ng-template #error>
-      <mcs-status-message type="error">
-        {{ 'reports.widgets.errorMessage' | translate }}<a style="margin-left: 5px;" mcsId (click)="tryAgain()">{{ 'reports.widgets.retryLabel' | translate }}</a>
-      </mcs-status-message>
+      <div class="error-wrapper">
+        <mcs-status-message type="error">
+          {{ 'reports.widgets.errorMessage' | translate }}<a style="margin-left: 5px;" mcsId (click)="tryAgain()">{{ 'reports.widgets.retryLabel' | translate }}</a>
+        </mcs-status-message>
+      </div>
     </ng-template>
   </ng-template>
 </div>

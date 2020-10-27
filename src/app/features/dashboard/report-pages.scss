@@ -39,6 +39,9 @@ mcs-content-panel {
       list-style: none;
       margin: 0;
       padding: 0;
+      @include print() {
+        @include column-count(1);
+      }
       @include column-count(2);
 
       @include breakpoint(wide) {
@@ -50,9 +53,9 @@ mcs-content-panel {
       }
 
       li {
-        -webkit-column-break-inside: avoid;
-        page-break-inside: avoid;
-        break-inside: avoid;
+        margin-top: 0;
+        margin-bottom: 0;
+        @include break(avoid);
       }
     }
   }

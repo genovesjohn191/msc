@@ -16,6 +16,7 @@ import { McsReportingService } from '@app/core/services/mcs-reporting.service';
 import { catchError } from 'rxjs/operators';
 import { unsubscribeSafely } from '@app/utilities';
 
+const maxResourcesToDisplay = 10;
 @Component({
   selector: 'mcs-azure-resources-widget',
   templateUrl: './azure-resources-widget.component.html',
@@ -62,6 +63,7 @@ export class AzureResourcesWidgetComponent implements OnInit, OnDestroy {
       return throwError('Azure resources endpoint failed.');
     }))
     .subscribe((result) => {
+      result = result.slice(0, maxResourcesToDisplay);
       this.dataBehavior.next(result);
       this.processing = false;
       this._changeDetectorRef.markForCheck();
