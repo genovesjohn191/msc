@@ -549,8 +549,24 @@
   backface-visibility: $value;
 }
 
+// Sets the column count for ul
+// Usage:
+// ul {
+//   @include column-count(2);
+// }
 @mixin column-count($value) {
   column-count: $value;
   -webkit-column-count: $value;
   -moz-column-count: $value;
+}
+
+// Sets the break behavior of an element
+// Usage:
+// li {
+//   @include break(avoid);
+// }
+@mixin break($value) {
+  -webkit-column-break-inside: $value;
+  page-break-inside: $value;
+  break-inside: $value;
 }

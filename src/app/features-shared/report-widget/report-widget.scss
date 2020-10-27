@@ -10,6 +10,10 @@ $shadow-effect: 1px solid #e3e3e3;
     border-bottom: $shadow-effect;
     border-right: $shadow-effect;
 
+    .error-wrapper {
+      margin: $space-large 0;
+    }
+
     @include print() {
       page-break-before: auto !important;
       page-break-after: auto !important;

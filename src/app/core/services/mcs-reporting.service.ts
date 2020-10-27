@@ -1,18 +1,31 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { McsReportCostRecommendations, McsReportGenericItem, McsReportIntegerData, McsReportSubscription } from '@app/models';
 import { McsApiService } from '@app/services';
 import { ChartItem } from '@app/shared/chart';
+import { isNullOrEmpty } from '@app/utilities';
 
 @Injectable()
 export class McsReportingService {
+
+  public get azureSubscriptionCount(): Observable<number> {
+    return this._apiService.getSubscriptions()
+      .pipe(map((resources) => resources.totalCollectionCount));
+  }
+
+  public get licenseSubscriptionCount(): Observable<number> {
+    return this._apiService.getLicenses()
+      .pipe(map((resources) => resources.totalCollectionCount));
+  }
 
   constructor(private _apiService: McsApiService) { }
 
   public getSubscriptions(): Observable<McsReportSubscription[]> {
     return this._apiService.getSubscriptions()
-      .pipe(map((resources) => resources.collection));
+      .pipe(map((resources) => {
+        return resources.collection;
+      }));
   }
 
   public getServicesCostOverviewReport(
@@ -41,7 +54,13 @@ export class McsReportingService {
 
   public getAzureServicesReport(): Observable<ChartItem[]> {
     return this._apiService.getAzureResourcesReport()
-      .pipe(map((resources) => this._convertIntegerDataToChartItem(resources.collection)));
+      .pipe(map((resources) => {
+        let items: McsReportIntegerData[] = [];
+        if (!isNullOrEmpty(resources.collection)) {
+          items = resources.collection.sort((a, b) => b.value - a.value);
+        }
+        return this._convertIntegerDataToChartItem(items);
+      }));
   }
 
   public getCostRecommendations(): Observable<McsReportCostRecommendations> {
