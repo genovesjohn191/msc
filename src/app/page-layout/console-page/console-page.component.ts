@@ -1,53 +1,55 @@
 import {
-  Component,
-  AfterViewInit,
-  OnDestroy,
-  ElementRef,
-  ViewChild,
-  ViewEncapsulation,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef
-} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
-import {
-  Subscription,
-  Observable,
   of,
-  Subject
+  Observable,
+  Subject,
+  Subscription
 } from 'rxjs';
 import {
-  map,
-  tap,
-  shareReplay,
-  share,
-  takeUntil,
+  concatMap,
   distinctUntilChanged,
-  concatMap
+  map,
+  share,
+  shareReplay,
+  takeUntil,
+  tap
 } from 'rxjs/operators';
+
 import {
-  isNullOrEmpty,
-  getSafeProperty,
-  unsubscribeSafely,
-  CommonDefinition
-} from '@app/utilities';
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnDestroy,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { McsEvent } from '@app/events';
 import {
   McsServer,
-  VmPowerstateCommand,
-  Key,
   McsServerPowerstateCommand,
+  VmPowerstateCommand,
   VmPowerState
 } from '@app/models';
 import { McsApiService } from '@app/services';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
-import { McsEvent } from '@app/events';
-import { ConsolePageFactory } from './factory/console-page-factory';
-import { IConsolePageEntity } from './factory/console-page-entity.interface';
-import { ConsoleStatus } from './console-status';
 import {
   DialogConfirmation,
   DialogService
 } from '@app/shared';
+import {
+  getSafeProperty,
+  isNullOrEmpty,
+  unsubscribeSafely,
+  CommonDefinition,
+  KeyboardKey
+} from '@app/utilities';
+import { TranslateService } from '@ngx-translate/core';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+
+import { ConsoleStatus } from './console-status';
+import { IConsolePageEntity } from './factory/console-page-entity.interface';
+import { ConsolePageFactory } from './factory/console-page-factory';
 
 const CLOSING_DEFAULT_TIME_IN_SECONDS = 3;
 
@@ -171,9 +173,9 @@ export class ConsolePageComponent implements AfterViewInit, OnDestroy {
       throw new Error('Unable to send keys of undefined console instance.');
     }
     this._consolePageInstance.sendKeyCodes([
-      Key.Ctrl,
-      Key.Alt,
-      Key.Delete
+      KeyboardKey.Ctrl,
+      KeyboardKey.Alt,
+      KeyboardKey.Delete
     ]);
   }
 

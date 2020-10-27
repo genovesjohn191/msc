@@ -1,51 +1,53 @@
 import {
-  Component,
-  OnInit,
-  OnDestroy,
-  ChangeDetectorRef,
-  ElementRef,
-  ViewChild
-} from '@angular/core';
-import {
-  FormGroup,
-  FormControl
-} from '@angular/forms';
-import {
-  Subject,
-  throwError,
-  Observable,
   of,
-  empty,
-  BehaviorSubject
+  throwError,
+  BehaviorSubject,
+  EMPTY,
+  Observable,
+  Subject
 } from 'rxjs';
 import {
   catchError,
-  tap,
+  distinctUntilChanged,
   finalize,
-  shareReplay,
   map,
-  distinctUntilChanged
+  shareReplay,
+  tap
 } from 'rxjs/operators';
+
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
+import {
+  FormControl,
+  FormGroup
+} from '@angular/forms';
 import {
   CoreValidators,
-  McsFormGroupService,
-  IMcsNavigateAwayGuard
+  IMcsNavigateAwayGuard,
+  McsFormGroupService
 } from '@app/core';
 import {
-  unsubscribeSafely,
-  isNullOrEmpty,
+  CatalogItemType,
+  McsApiErrorContext,
+  McsResource,
+  McsResourceCatalog,
+  McsResourceCatalogItemCreate
+} from '@app/models';
+import { McsApiService } from '@app/services';
+import { McsFormGroupDirective } from '@app/shared';
+import {
   getSafeProperty,
+  isNullOrEmpty,
+  unsubscribeSafely,
   CommonDefinition
 } from '@app/utilities';
-import { McsApiService } from '@app/services';
-import {
-  McsResource,
-  McsResourceCatalogItemCreate,
-  CatalogItemType,
-  McsResourceCatalog,
-  McsApiErrorContext
-} from '@app/models';
-import { McsFormGroupDirective } from '@app/shared';
+
 import { MediaUploadService } from '../media-upload.service';
 
 @Component({
@@ -144,11 +146,11 @@ export class MediaUploadDetailsComponent
       mediaUrl
     ).pipe(
       catchError((httpError: McsApiErrorContext) => {
-        if (isNullOrEmpty(httpError)) { return empty(); }
+        if (isNullOrEmpty(httpError)) { return EMPTY; }
         this.mediaUrlStatusIconKey = CommonDefinition.ASSETS_SVG_ERROR;
         this.urlInfoMessage = getSafeProperty(httpError, (obj) => obj.details.errorMessages[0]);
         this.fcMediaUrl.setErrors({ urlValidationError: true });
-        return empty();
+        return EMPTY;
       })
     ).subscribe((response) => {
       this._mediaUrlValidationInProgressChange.next(false);

@@ -6,11 +6,11 @@ import {
   waitForAsync,
   TestBed
 } from '@angular/core/testing';
-import { Key } from '@app/models';
 import {
   createKeyboardEvent,
   createMouseEvent,
-  triggerEvent
+  triggerEvent,
+  KeyboardKey
 } from '@app/utilities';
 
 import { SliderComponent } from './slider.component';
@@ -191,52 +191,52 @@ describe('SliderComponent', () => {
     }));
 
     it(`should set the value to 10 when right arrow key is pressed`, () => {
-      let event = createKeyboardEvent(Key.RightArrow);
+      let event = createKeyboardEvent(KeyboardKey.RightArrow);
       triggerEvent(component.sliderComponent.hostElement, event);
       expect(component.sliderComponent.value).toBe(10);
     });
 
     it(`should set the value to 10 when up arrow key is pressed`, () => {
-      let event = createKeyboardEvent(Key.UpArrow);
+      let event = createKeyboardEvent(KeyboardKey.UpArrow);
       triggerEvent(component.sliderComponent.hostElement, event);
       expect(component.sliderComponent.value).toBe(10);
     });
 
     it(`should set the value to 0 when left arrow key is pressed`, () => {
-      let event = createKeyboardEvent(Key.LeftArrow);
+      let event = createKeyboardEvent(KeyboardKey.LeftArrow);
       component.sliderComponent.value = 10;
       triggerEvent(component.sliderComponent.hostElement, event);
       expect(component.sliderComponent.value).toBe(0);
     });
 
     it(`should set the value to 0 when down arrow key is pressed`, () => {
-      let event = createKeyboardEvent(Key.LeftArrow);
+      let event = createKeyboardEvent(KeyboardKey.LeftArrow);
       component.sliderComponent.value = 10;
       triggerEvent(component.sliderComponent.hostElement, event);
       expect(component.sliderComponent.value).toBe(0);
     });
 
     it(`should increment the value by 10 when page up key is pressed`, () => {
-      let event = createKeyboardEvent(Key.PageUp);
+      let event = createKeyboardEvent(KeyboardKey.PageUp);
       triggerEvent(component.sliderComponent.hostElement, event);
       expect(component.sliderComponent.value).toBe(100);
     });
 
     it(`should decrement the value by 10 when page down key is pressed`, () => {
-      let event = createKeyboardEvent(Key.PageDown);
+      let event = createKeyboardEvent(KeyboardKey.PageDown);
       component.sliderComponent.value = component.sliderComponent.max;
       triggerEvent(component.sliderComponent.hostElement, event);
       expect(component.sliderComponent.value).toBe(100);
     });
 
     it(`should set the value to maximum when end key is pressed`, () => {
-      let event = createKeyboardEvent(Key.End);
+      let event = createKeyboardEvent(KeyboardKey.End);
       triggerEvent(component.sliderComponent.hostElement, event);
       expect(component.sliderComponent.value).toBe(component.sliderComponent.max);
     });
 
     it(`should set the value to minimum when home key is pressed`, () => {
-      let event = createKeyboardEvent(Key.Home);
+      let event = createKeyboardEvent(KeyboardKey.Home);
       triggerEvent(component.sliderComponent.hostElement, event);
       expect(component.sliderComponent.value).toBe(component.sliderComponent.min);
     });

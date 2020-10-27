@@ -1,11 +1,13 @@
 import { Subject } from 'rxjs';
-import { isNullOrEmpty } from '@app/utilities';
+
+import { McsConsole } from '@app/models';
 import {
-  McsConsole,
-  Key
-} from '@app/models';
-import { IConsolePageEntity } from './console-page-entity.interface';
+  isNullOrEmpty,
+  KeyboardKey
+} from '@app/utilities';
+
 import { ConsoleStatus } from '../console-status';
+import { IConsolePageEntity } from './console-page-entity.interface';
 
 export class ConsolePageVCenter implements IConsolePageEntity {
 
@@ -49,7 +51,7 @@ export class ConsolePageVCenter implements IConsolePageEntity {
    * Sends key codes to the console
    * @param keyCodes Key codes to be sent
    */
-  public sendKeyCodes(keyCodes: Key[]): void {
+  public sendKeyCodes(keyCodes: KeyboardKey[]): void {
     if (isNullOrEmpty(keyCodes)) { return; }
   }
 

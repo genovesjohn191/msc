@@ -1,50 +1,51 @@
-import {
-  Component,
-  OnInit,
-  DoCheck,
-  OnDestroy,
-  Input,
-  ChangeDetectionStrategy,
-  EventEmitter,
-  Output,
-  ChangeDetectorRef,
-  ViewChild,
-  AfterViewInit
-} from '@angular/core';
-import {
-  FormGroup,
-  FormControl,
-  FormBuilder
-} from '@angular/forms';
 import { Subject } from 'rxjs';
 import {
   startWith,
   takeUntil
 } from 'rxjs/operators';
-import {
-  isNullOrEmpty,
-  animateFactory,
-  unsubscribeSafely,
-  getSafeProperty,
-  convertMbToGb,
-  isNullOrUndefined,
-  coerceNumber
-} from '@app/utilities';
-import {
-  CoreValidators,
-  IMcsFormGroup,
-  IMcsDataChange
-} from '@app/core';
 
 import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  DoCheck,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup
+} from '@angular/forms';
+import {
+  CoreValidators,
+  IMcsDataChange,
+  IMcsFormGroup
+} from '@app/core';
+import {
+  serviceTypeText,
   InputManageType,
   McsResource,
   McsServerCompute,
-  serviceTypeText,
   Os
 } from '@app/models';
-import { ServerManageScale } from './server-manage-scale';
 import { McsFormGroupDirective } from '@app/shared';
+import {
+  animateFactory,
+  coerceNumber,
+  convertMbToGb,
+  getSafeProperty,
+  isNullOrEmpty,
+  isNullOrUndefined,
+  unsubscribeSafely
+} from '@app/utilities';
+
+import { ServerManageScale } from './server-manage-scale';
 
 // Constants definition
 const DEFAULT_MEMORY_STEP = 2;
@@ -370,9 +371,10 @@ export class ServerManageScaleComponent
 
     // Create form group and bind the form controls
     this.fgServerScale = this._formBuilder.group([]);
-    this.fgServerScale.statusChanges
-      .pipe(startWith(null), takeUntil(this._destroySubject))
-      .subscribe(() => this.notifyDataChange());
+    this.fgServerScale.statusChanges.pipe(
+      startWith(null as any),
+      takeUntil(this._destroySubject)
+      ).subscribe(() => this.notifyDataChange());
     this._registerFormControlsByInputType();
   }
 

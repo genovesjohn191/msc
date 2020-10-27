@@ -1,38 +1,39 @@
-import {
-  Injectable,
-  TemplateRef,
-  ComponentRef,
-  Injector,
-  ReflectiveInjector
-} from '@angular/core';
 import { Subject } from 'rxjs';
+
+import {
+  ComponentRef,
+  Injectable,
+  Injector,
+  TemplateRef
+} from '@angular/core';
 import {
   isNullOrEmpty,
   registerEvent,
   unregisterEvent,
+  KeyboardKey,
   McsComponentType
 } from '@app/utilities';
-import { Key } from '@app/models';
+
 import {
-  OverlayService,
+  OverlayConfig,
   OverlayRef,
-  OverlayConfig
+  OverlayService
 } from '../overlay';
-import { DialogRef } from './dialog-ref/dialog-ref';
+import {
+  PortalComponent,
+  PortalTemplate
+} from '../portal-template';
 import {
   DialogConfig,
   DIALOG_CONTAINER,
   DIALOG_DATA
 } from './dialog-config';
-import { DialogContainerComponent } from './dialog-container/dialog-container.component';
-import {
-  PortalComponent,
-  PortalTemplate
-} from '../portal-template';
-import { DialogConfirmationComponent } from './dialog-confirmation/dialog-confirmation.component';
 import { DialogConfirmation } from './dialog-confirmation/dialog-confirmation-data';
+import { DialogConfirmationComponent } from './dialog-confirmation/dialog-confirmation.component';
+import { DialogContainerComponent } from './dialog-container/dialog-container.component';
 import { DialogMessageConfig } from './dialog-message/dialog-message-config';
 import { DialogMessageComponent } from './dialog-message/dialog-message.component';
+import { DialogRef } from './dialog-ref/dialog-ref';
 
 @Injectable()
 export class DialogService {
@@ -218,11 +219,13 @@ export class DialogService {
     dialogContainer: DialogContainerComponent
   ): Injector {
 
-    return ReflectiveInjector.resolveAndCreate([
-      { provide: DialogRef, useValue: dialogRef },
-      { provide: DIALOG_CONTAINER, useValue: dialogContainer },
-      { provide: DIALOG_DATA, useValue: config.data }
-    ]);
+    return Injector.create({
+      providers: [
+        { provide: DialogRef, useValue: dialogRef },
+        { provide: DIALOG_CONTAINER, useValue: dialogContainer },
+        { provide: DIALOG_DATA, useValue: config.data }
+      ]
+    });
   }
 
   /**
@@ -232,7 +235,7 @@ export class DialogService {
   private _onKeyDown(event: KeyboardEvent): void {
     if (isNullOrEmpty(this._openDialogs)) { return; }
 
-    if (event.keyCode === Key.Escape) {
+    if (event.keyboardKey() === KeyboardKey.Escape) {
       let topDialog = this._openDialogs[this._openDialogs.length - 1];
       if (!topDialog.disableClose) {
         topDialog.close();

@@ -1,20 +1,22 @@
+import { Subscription } from 'rxjs';
+
 import {
-  ComponentFactoryResolver,
   ApplicationRef,
+  ComponentFactoryResolver,
   ComponentRef,
   EmbeddedViewRef,
   Injector
 } from '@angular/core';
-import { Subscription } from 'rxjs';
 import {
-  isNullOrEmpty,
   getElementPositionFromHost,
+  isNullOrEmpty,
   unsubscribeSafely
 } from '@app/utilities';
-import { McsGlobalElementOption } from './mcs-global-element-option';
+
 import { McsScrollDispatcherService } from '../../services/mcs-scroll-dispatcher.service';
 import { McsPortalComponent } from '../portal/mcs-portal-component';
 import { McsPortalTemplate } from '../portal/mcs-portal-template';
+import { McsGlobalElementOption } from './mcs-global-element-option';
 
 // placement type enumerations
 type PlacementAttribute = {
@@ -60,7 +62,7 @@ export class McsGlobalElementRef {
       componentRef = portal.viewContainerRef.createComponent(
         componentFactory,
         portal.viewContainerRef.length,
-        portal.injector || portal.viewContainerRef.parentInjector,
+        portal.injector,
         portal.getAttachmentNodes()
       );
       this._setDisposeFunc(() => componentRef.destroy());

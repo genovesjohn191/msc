@@ -2,7 +2,6 @@
 export * from './enumerations/network-status.enum';
 export * from './enumerations/breakpoint.enum';
 export * from './enumerations/http-status-code.enum';
-export * from './enumerations/key.enum';
 export * from './enumerations/job-type.enum';
 export * from './enumerations/job-status.enum';
 export * from './enumerations/task-type.enum';

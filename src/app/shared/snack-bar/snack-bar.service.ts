@@ -1,29 +1,30 @@
-import {
-  Injectable,
-  TemplateRef,
-  ComponentRef,
-  Injector,
-  InjectionToken,
-  ReflectiveInjector,
-} from '@angular/core';
 import { Subject } from 'rxjs';
+
 import {
-  isNullOrEmpty,
+  ComponentRef,
+  Injectable,
+  InjectionToken,
+  Injector,
+  TemplateRef
+} from '@angular/core';
+import {
   clearArrayRecord,
+  isNullOrEmpty,
   McsComponentType
 } from '@app/utilities';
+
 import {
-  OverlayService,
+  OverlayConfig,
   OverlayRef,
-  OverlayConfig
+  OverlayService
 } from '../overlay';
 import {
   PortalComponent,
   PortalTemplate
 } from '../portal-template';
+import { SnackBarConfig } from './snack-bar-config';
 import { SnackBarContainerComponent } from './snack-bar-container/snack-bar-container.component';
 import { SnackBarRef } from './snack-bar-ref/snack-bar-ref';
-import { SnackBarConfig } from './snack-bar-config';
 
 // Injection token definition list for snackbar
 export const SNACKBAR_DATA = new InjectionToken<any>('SnackBarData');
@@ -175,11 +176,13 @@ export class SnackBarService {
     snackBarContainer: SnackBarContainerComponent
   ): Injector {
 
-    return ReflectiveInjector.resolveAndCreate([
-      { provide: SnackBarRef, useValue: snackBarRef },
-      { provide: SNACKBAR_CONTAINER, useValue: snackBarContainer },
-      { provide: SNACKBAR_DATA, useValue: config.data }
-    ]);
+    return Injector.create({
+      providers: [
+        { provide: SnackBarRef, useValue: snackBarRef },
+        { provide: SNACKBAR_CONTAINER, useValue: snackBarContainer },
+        { provide: SNACKBAR_DATA, useValue: config.data }
+      ]
+    });
   }
 
   /**

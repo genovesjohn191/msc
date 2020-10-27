@@ -1,46 +1,44 @@
 import {
-  Component,
-  Input,
-  ChangeDetectionStrategy,
-  ViewEncapsulation,
-  ElementRef,
-  ChangeDetectorRef,
-  Renderer2,
-  AfterViewInit,
-  AfterViewChecked,
-  OnDestroy,
-  ContentChildren,
-  QueryList,
-  ViewChild,
-  NgZone
-} from '@angular/core';
-import {
-  Observable,
-  Subject,
+  defer,
   merge,
-  defer
+  Observable,
+  Subject
 } from 'rxjs';
 import {
   startWith,
-  takeUntil,
+  switchMap,
   take,
-  switchMap
+  takeUntil
 } from 'rxjs/operators';
+
 import {
-  McsViewportService,
-  McsUniqueId
+  AfterViewChecked,
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ContentChildren,
+  ElementRef,
+  Input,
+  NgZone,
+  OnDestroy,
+  QueryList,
+  Renderer2,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
+import {
+  McsUniqueId,
+  McsViewportService
 } from '@app/core';
 import {
   isNullOrEmpty,
   unsubscribeSafely,
   CommonDefinition
 } from '@app/utilities';
-import {
-  ResponsivePanelBarComponent
-} from './responsive-panel-bar/responsive-panel-bar.component';
-import {
-  ResponsivePanelItemDirective
-} from './responsive-panel-item/responsive-panel-item.directive';
+
+import { ResponsivePanelBarComponent } from './responsive-panel-bar/responsive-panel-bar.component';
+import { ResponsivePanelItemDirective } from './responsive-panel-item/responsive-panel-item.directive';
 
 // Constants
 const SCROLL_OFFSET = 60;
@@ -128,13 +126,14 @@ export class ResponsivePanelComponent implements AfterViewInit, AfterViewChecked
 
   public ngAfterViewInit(): void {
     Promise.resolve().then(() => {
-      this.panelItems.changes
-        .pipe(startWith(null), takeUntil(this._destroySubject))
-        .subscribe(() => {
-          this._updatePagination();
-          this._subscribeToClickEvents();
-          this._initializeSelection();
-        });
+      this.panelItems.changes.pipe(
+        startWith(null as any),
+        takeUntil(this._destroySubject)
+      ).subscribe(() => {
+        this._updatePagination();
+        this._subscribeToClickEvents();
+        this._initializeSelection();
+      });
     });
     this._subscribeToViewportChange();
   }

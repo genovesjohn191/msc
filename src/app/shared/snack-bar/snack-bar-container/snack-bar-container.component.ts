@@ -1,34 +1,36 @@
+import { Subject } from 'rxjs';
+
 import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger,
+  AnimationEvent
+} from '@angular/animations';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
-  OnInit,
-  ViewChild,
+  ComponentFactoryResolver,
   ComponentRef,
   EmbeddedViewRef,
-  ChangeDetectorRef,
-  ComponentFactoryResolver,
-  ChangeDetectionStrategy,
+  OnInit,
+  ViewChild,
   ViewEncapsulation
 } from '@angular/core';
-import {
-  AnimationEvent,
-  trigger,
-  state,
-  transition,
-  animate,
-  style
-} from '@angular/animations';
-import { Subject } from 'rxjs';
 import {
   isNullOrEmpty,
   McsPlacementType,
   McsThemeType
 } from '@app/utilities';
+
 import {
   PortalComponent,
   PortalTemplate
 } from '../../portal-template';
-import { SnackBarRefDirective } from '../snack-bar-ref/snack-bar-ref.directive';
 import { SnackBarConfig } from '../snack-bar-config';
+import { SnackBarRefDirective } from '../snack-bar-ref/snack-bar-ref.directive';
 
 @Component({
   selector: 'snack-bar-container',
@@ -118,7 +120,7 @@ export class SnackBarContainerComponent implements OnInit {
     let componenRef = attachView.createComponent(
       componentFactory,
       attachView.length,
-      portal.injector || attachView.parentInjector
+      portal.injector
     );
 
     // Set the dispose function to destroy the component itself

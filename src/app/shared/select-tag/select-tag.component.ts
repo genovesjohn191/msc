@@ -1,41 +1,42 @@
 import {
-  Component,
-  QueryList,
-  ViewChild,
-  ContentChildren,
-  AfterContentInit,
-  AfterViewInit,
-  OnDestroy,
-  Output,
-  EventEmitter,
-  ChangeDetectorRef,
-  ChangeDetectionStrategy,
-  ViewEncapsulation
-} from '@angular/core';
-import {
-  Observable,
   merge,
+  Observable,
   Subject
 } from 'rxjs';
 import {
   startWith,
   takeUntil
 } from 'rxjs/operators';
+
+import {
+  AfterContentInit,
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ContentChildren,
+  EventEmitter,
+  OnDestroy,
+  Output,
+  QueryList,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
+import {
+  McsOption,
+  McsSelection
+} from '@app/models';
+import { Search } from '@app/shared';
 import {
   isNullOrEmpty,
   unsubscribeSafely,
   CommonDefinition
 } from '@app/utilities';
-import { Search } from '@app/shared';
-import {
-  McsSelection,
-  McsOption,
-} from '@app/models';
 
 // Child Items of the select tag
 import { SelectTagMainItemComponent } from './select-tag-main-item/select-tag-main-item.component';
-import { SelectTagSubItemComponent } from './select-tag-sub-item/select-tag-sub-item.component';
 import { SelectTagSubItemPlaceholderDirective } from './select-tag-sub-item-placeholder.directive';
+import { SelectTagSubItemComponent } from './select-tag-sub-item/select-tag-sub-item.component';
 
 @Component({
   selector: 'mcs-select-tag',
@@ -111,14 +112,16 @@ export class SelectTagComponent implements AfterViewInit, AfterContentInit, OnDe
   public ngAfterContentInit() {
     Promise.resolve().then(() => {
       // Listener when user selects the main item
-      this._mainItems.changes
-        .pipe(startWith(null), takeUntil(this._destroySubject))
-        .subscribe(() => this._listenToMainSelectionChange());
+      this._mainItems.changes.pipe(
+        startWith(null as any),
+        takeUntil(this._destroySubject)
+      ).subscribe(() => this._listenToMainSelectionChange());
 
       // Listener when user selects the sub item
-      this._subItems.changes
-        .pipe(startWith(null), takeUntil(this._destroySubject))
-        .subscribe(() => this._listenToSubSelectionChange());
+      this._subItems.changes.pipe(
+        startWith(null as any),
+        takeUntil(this._destroySubject)
+      ).subscribe(() => this._listenToSubSelectionChange());
     });
   }
 

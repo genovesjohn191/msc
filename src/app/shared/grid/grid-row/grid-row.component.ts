@@ -1,29 +1,31 @@
 import {
-  Component,
-  ChangeDetectionStrategy,
-  ViewEncapsulation,
-  AfterContentInit,
-  OnDestroy,
-  ContentChildren,
-  QueryList,
-  ChangeDetectorRef,
-  Input,
-  ElementRef
-} from '@angular/core';
-import {
-  Subject,
-  merge
+  merge,
+  Subject
 } from 'rxjs';
 import {
-  takeUntil,
-  startWith
+  startWith,
+  takeUntil
 } from 'rxjs/operators';
+
+import {
+  AfterContentInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ContentChildren,
+  ElementRef,
+  Input,
+  OnDestroy,
+  QueryList,
+  ViewEncapsulation
+} from '@angular/core';
 import { McsBrowserService } from '@app/core';
 import {
-  unsubscribeSafely,
+  coerceNumber,
   isNullOrEmpty,
-  coerceNumber
+  unsubscribeSafely
 } from '@app/utilities';
+
 import { GridColumnComponent } from '../grid-column/grid-column.component';
 
 const DEFAULT_MAX_GRID_SIZE = 12;
@@ -78,7 +80,7 @@ export class GridRowComponent implements AfterContentInit, OnDestroy {
    */
   private _subscribesToColumnChanges(): void {
     this._gridColumns.changes.pipe(
-      startWith(null),
+      startWith(null as any),
       takeUntil(this._destroySubject)
     ).subscribe(() => {
       this._subscribeToBreakpointChanges();

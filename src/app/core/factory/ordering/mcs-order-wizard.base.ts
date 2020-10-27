@@ -170,7 +170,7 @@ export abstract class McsOrderWizardBase extends McsWizardBase implements McsDis
    */
   private _subscribeToOrderChanges(): void {
     this.order$ = this._orderBase.orderChange().pipe(
-      startWith(null),
+      startWith(null as McsOrder),
       shareReplay(1),
       tap(() => this._setPricingCalculatorVisibility())
     );

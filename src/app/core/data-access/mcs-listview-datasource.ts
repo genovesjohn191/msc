@@ -1,27 +1,28 @@
 import {
+  of,
+  throwError,
   BehaviorSubject,
   Observable,
-  of,
-  Subject,
-  throwError
+  Subject
 } from 'rxjs';
 import {
+  catchError,
+  exhaustMap,
   filter,
-  takeUntil,
   startWith,
   switchMap,
-  exhaustMap,
-  catchError
+  takeUntil
 } from 'rxjs/operators';
+
 import { DataStatus } from '@app/models';
 import {
   McsDataSource,
   Search
 } from '@app/shared';
 import {
-  unsubscribeSafely,
   isNullOrEmpty,
-  isNullOrUndefined
+  isNullOrUndefined,
+  unsubscribeSafely
 } from '@app/utilities';
 
 type DatasourceFunc<TEntity> = () => Observable<TEntity[]>;
@@ -186,7 +187,7 @@ export class McsListViewDatasource<TEntity> implements McsDataSource<TEntity> {
    */
   private _subscribeToRequestChange(): void {
     this._requestUpdate.pipe(
-      startWith(null),
+      startWith(null as void),
       filter(() => !isNullOrUndefined(this._dataSource)),
       switchMap(() => {
         this._setDataStatus(DataStatus.Active);

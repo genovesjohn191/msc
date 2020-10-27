@@ -1,34 +1,36 @@
 import {
-  Router,
-  NavigationEnd,
-  ActivatedRoute,
-  ActivatedRouteSnapshot
-} from '@angular/router';
-import { Injectable } from '@angular/core';
-import {
   Subject,
   Subscription
 } from 'rxjs';
 import {
-  takeUntil,
-  filter
+  filter,
+  takeUntil
 } from 'rxjs/operators';
+
+import { Injectable } from '@angular/core';
 import {
-  isNullOrEmpty,
-  McsDisposable,
-  getSafeProperty,
-  unsubscribeSafely
-} from '@app/utilities';
+  ActivatedRoute,
+  ActivatedRouteSnapshot,
+  NavigationEnd,
+  Router
+} from '@angular/router';
+import { McsEvent } from '@app/events';
 import {
   McsIdentity,
   RouteKey
 } from '@app/models';
-import { McsEvent } from '@app/events';
+import {
+  getSafeProperty,
+  isNullOrEmpty,
+  unsubscribeSafely,
+  McsDisposable
+} from '@app/utilities';
 import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import {
   LogClass,
   LogIgnore
 } from '@peerlancers/ngx-logger';
+
 import { CoreRoutes } from '../core.routes';
 
 @Injectable()

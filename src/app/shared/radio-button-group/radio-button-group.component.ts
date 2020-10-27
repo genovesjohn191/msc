@@ -1,36 +1,38 @@
 import {
-  Component,
-  forwardRef,
-  Input,
-  AfterContentInit,
-  OnDestroy,
-  ContentChildren,
-  QueryList,
-  ChangeDetectorRef,
-  ChangeDetectionStrategy,
-  ViewEncapsulation
-} from '@angular/core';
-import {
-  ControlValueAccessor,
-  NG_VALUE_ACCESSOR
-} from '@angular/forms';
-import {
-  Observable,
   merge,
+  Observable,
   Subject
 } from 'rxjs';
 import {
   startWith,
   takeUntil
 } from 'rxjs/operators';
-import { Key } from '@app/models';
+
+import {
+  forwardRef,
+  AfterContentInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ContentChildren,
+  Input,
+  OnDestroy,
+  QueryList,
+  ViewEncapsulation
+} from '@angular/core';
+import {
+  ControlValueAccessor,
+  NG_VALUE_ACCESSOR
+} from '@angular/forms';
+import { McsUniqueId } from '@app/core';
 import {
   coerceNumber,
+  isNullOrUndefined,
   unsubscribeSafely,
-  McsOrientationType,
-  isNullOrUndefined
+  KeyboardKey,
+  McsOrientationType
 } from '@app/utilities';
-import { McsUniqueId } from '@app/core';
+
 import { RadioButtonComponent } from './radio-button/radio-button.component';
 
 @Component({
@@ -114,7 +116,8 @@ export class RadioButtonGroupComponent implements AfterContentInit,
   public ngAfterContentInit() {
     Promise.resolve().then(() => {
       this._radioButtons.changes.pipe(
-        startWith(null), takeUntil(this._destroySubject)
+        startWith(null as any),
+        takeUntil(this._destroySubject)
       ).subscribe(() => {
         this._listenToSelectionChanges();
         this._initializeSelection();
@@ -132,16 +135,16 @@ export class RadioButtonGroupComponent implements AfterContentInit,
    * @param event Keyboard event elements
    */
   public onKeyDown(event: KeyboardEvent) {
-    switch (event.keyCode) {
-      case Key.UpArrow:
-      case Key.RightArrow:
+    switch (event.keyboardKey()) {
+      case KeyboardKey.UpArrow:
+      case KeyboardKey.RightArrow:
         let nextTag = Math.min((this._radioButtons.length - 1),
           this._selectedItemIndex + 1);
         this._radioButtons.toArray()[nextTag].onClickEvent(null);
         break;
 
-      case Key.DownArrow:
-      case Key.LeftArrow:
+      case KeyboardKey.DownArrow:
+      case KeyboardKey.LeftArrow:
         let previousTag = Math.max(0, this._selectedItemIndex - 1);
         this._radioButtons.toArray()[previousTag].onClickEvent(null);
         break;

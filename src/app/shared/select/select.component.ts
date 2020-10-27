@@ -1,22 +1,36 @@
 import {
-  Component,
-  Input,
-  QueryList,
-  ChangeDetectorRef,
+  defer,
+  merge,
+  Observable,
+  Subject
+} from 'rxjs';
+import {
+  startWith,
+  switchMap,
+  take,
+  takeUntil,
+  tap
+} from 'rxjs/operators';
+
+import {
+  AfterContentInit,
   ChangeDetectionStrategy,
-  ViewEncapsulation,
+  ChangeDetectorRef,
+  Component,
+  ContentChild,
+  ContentChildren,
   DoCheck,
+  ElementRef,
+  EventEmitter,
+  Input,
+  NgZone,
   OnChanges,
   OnDestroy,
-  AfterContentInit,
-  ContentChildren,
-  ElementRef,
   Optional,
-  Self,
-  EventEmitter,
   Output,
-  NgZone,
-  ContentChild
+  QueryList,
+  Self,
+  ViewEncapsulation
 } from '@angular/core';
 import {
   ControlValueAccessor,
@@ -25,43 +39,31 @@ import {
   NgForm
 } from '@angular/forms';
 import {
-  Observable,
-  Subject,
-  merge,
-  defer
-} from 'rxjs';
-import {
-  startWith,
-  takeUntil,
-  take,
-  switchMap,
-  tap
-} from 'rxjs/operators';
-import {
   McsFormFieldControlBase,
   McsItemListKeyManager,
   McsScrollDispatcherService,
   McsUniqueId
 } from '@app/core';
-import { Key } from '@app/models';
 import {
+  animateFactory,
+  coerceBoolean,
+  coerceNumber,
+  getSafeProperty,
   isNullOrEmpty,
   registerEvent,
   unregisterEvent,
-  ErrorStateMatcher,
-  coerceBoolean,
-  coerceNumber,
-  animateFactory,
-  getSafeProperty,
   unsubscribeSafely,
-  CommonDefinition
+  CommonDefinition,
+  ErrorStateMatcher,
+  KeyboardKey
 } from '@app/utilities';
+
 import {
   OptionComponent,
   OptionGroupComponent
 } from '../option-group';
-import { SelectTriggerLabelDirective } from './select-trigger-label.directive';
 import { SelectSearchDirective } from './select-search.directive';
+import { SelectTriggerLabelDirective } from './select-trigger-label.directive';
 
 const SELECT_PANEL_MAX_HEIGHT = 400;
 const SELECT_ITEM_OFFSET = 7;
@@ -186,8 +188,8 @@ export class SelectComponent extends McsFormFieldControlBase<any>
   }
 
   private _itemListKeyManager: McsItemListKeyManager<OptionComponent>;
-  private _closePanelKeyEventsMap = new Map<Key, (_event) => void>();
-  private _openPanelKeyEventsMap = new Map<Key, (_event) => void>();
+  private _closePanelKeyEventsMap = new Map<KeyboardKey, (_event) => void>();
+  private _openPanelKeyEventsMap = new Map<KeyboardKey, (_event) => void>();
   private _destroySubject = new Subject<void>();
   private _closeOutsideHandler = this._onCloseOutside.bind(this);
   private _optionViewHeightPx: string;
@@ -577,10 +579,10 @@ export class SelectComponent extends McsFormFieldControlBase<any>
    * @param event Keyboard eventhandler details
    */
   private _handleClosedPanelKeydown(event: KeyboardEvent): void {
-    let keyCodeExists = this._closePanelKeyEventsMap.has(event.keyCode);
+    let keyCodeExists = this._closePanelKeyEventsMap.has(event.keyboardKey());
     if (keyCodeExists) {
       event.preventDefault();
-      this._closePanelKeyEventsMap.get(event.keyCode)(event);
+      this._closePanelKeyEventsMap.get(event.keyboardKey())(event);
     }
   }
 
@@ -589,10 +591,10 @@ export class SelectComponent extends McsFormFieldControlBase<any>
    * @param event Keyboard event instance
    */
   private _handleOpenPanelKeydown(event: KeyboardEvent): void {
-    let keyCodeExists = this._openPanelKeyEventsMap.has(event.keyCode);
+    let keyCodeExists = this._openPanelKeyEventsMap.has(event.keyboardKey());
     if (keyCodeExists) {
       event.preventDefault();
-      this._openPanelKeyEventsMap.get(event.keyCode)(event);
+      this._openPanelKeyEventsMap.get(event.keyboardKey())(event);
     }
   }
 
@@ -600,24 +602,24 @@ export class SelectComponent extends McsFormFieldControlBase<any>
    * Registers the keyboard events of the component while the panel is opened
    */
   private _registerOpenPanelKeyEvents(): void {
-    this._openPanelKeyEventsMap.set(Key.Enter, this._selectActiveItem.bind(this));
-    this._openPanelKeyEventsMap.set(Key.Space, this._selectActiveItem.bind(this));
-    this._openPanelKeyEventsMap.set(Key.Escape, this.closePanel.bind(this));
-    this._openPanelKeyEventsMap.set(Key.Tab, this._keymanagerKeyDown.bind(this));
-    this._openPanelKeyEventsMap.set(Key.UpArrow, this._setActiveItemByVisibility.bind(this));
-    this._openPanelKeyEventsMap.set(Key.DownArrow, this._setActiveItemByVisibility.bind(this));
+    this._openPanelKeyEventsMap.set(KeyboardKey.Enter, this._selectActiveItem.bind(this));
+    this._openPanelKeyEventsMap.set(KeyboardKey.Space, this._selectActiveItem.bind(this));
+    this._openPanelKeyEventsMap.set(KeyboardKey.Escape, this.closePanel.bind(this));
+    this._openPanelKeyEventsMap.set(KeyboardKey.Tab, this._keymanagerKeyDown.bind(this));
+    this._openPanelKeyEventsMap.set(KeyboardKey.UpArrow, this._setActiveItemByVisibility.bind(this));
+    this._openPanelKeyEventsMap.set(KeyboardKey.DownArrow, this._setActiveItemByVisibility.bind(this));
   }
 
   /**
    * Registers the keyboard events of the component while the panel is closed
    */
   private _registerClosePanelKeyEvents(): void {
-    this._closePanelKeyEventsMap.set(Key.Enter, this.openPanel.bind(this));
-    this._closePanelKeyEventsMap.set(Key.Space, this.openPanel.bind(this));
-    this._closePanelKeyEventsMap.set(Key.UpArrow, this._keymanagerKeyDown.bind(this));
-    this._closePanelKeyEventsMap.set(Key.DownArrow, this._keymanagerKeyDown.bind(this));
-    this._closePanelKeyEventsMap.set(Key.LeftArrow, this._keymanagerKeyDown.bind(this));
-    this._closePanelKeyEventsMap.set(Key.RightArrow, this._keymanagerKeyDown.bind(this));
+    this._closePanelKeyEventsMap.set(KeyboardKey.Enter, this.openPanel.bind(this));
+    this._closePanelKeyEventsMap.set(KeyboardKey.Space, this.openPanel.bind(this));
+    this._closePanelKeyEventsMap.set(KeyboardKey.UpArrow, this._keymanagerKeyDown.bind(this));
+    this._closePanelKeyEventsMap.set(KeyboardKey.DownArrow, this._keymanagerKeyDown.bind(this));
+    this._closePanelKeyEventsMap.set(KeyboardKey.LeftArrow, this._keymanagerKeyDown.bind(this));
+    this._closePanelKeyEventsMap.set(KeyboardKey.RightArrow, this._keymanagerKeyDown.bind(this));
   }
 
   /**
@@ -684,12 +686,12 @@ export class SelectComponent extends McsFormFieldControlBase<any>
     activeIndex = !isNullOrEmpty(activeItem) && activeItem.isVisible() ? activeIndex : -1;
 
     let visibleRecords: OptionComponent[];
-    if (event.keyCode === Key.UpArrow) {
+    if (event.keyboardKey() === KeyboardKey.UpArrow) {
       visibleRecords = this._itemListKeyManager.itemsArray
         .slice(0, activeIndex)
         .filter((item) => item.isVisible())
         .reverse();
-    } else if (event.keyCode === Key.DownArrow) {
+    } else if (event.keyboardKey() === KeyboardKey.DownArrow) {
       visibleRecords = this._itemListKeyManager.itemsArray
         .slice(activeIndex + 1)
         .filter((item) => item.isVisible());
@@ -722,7 +724,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
    */
   private _subscribeToOptionItemsChanges(): void {
     this._options.changes.pipe(
-      startWith(null),
+      startWith(null as any),
       takeUntil(this._destroySubject)
     ).subscribe(() => {
       this._enableMultipleSelection();

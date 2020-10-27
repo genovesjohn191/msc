@@ -1,39 +1,41 @@
-import {
-  Component,
-  AfterViewInit,
-  OnDestroy,
-  ChangeDetectorRef,
-  ChangeDetectionStrategy,
-  ViewChildren,
-  QueryList,
-  ElementRef,
-  ViewChild,
-  Input,
-  OnChanges,
-  SimpleChanges,
-  Output,
-  EventEmitter
-} from '@angular/core';
-import {
-  FormArray,
-  FormBuilder
-} from '@angular/forms';
 import { Subject } from 'rxjs';
 import {
   startWith,
   takeUntil
 } from 'rxjs/operators';
+
 import {
-  McsFormGroupService,
-  IMcsNavigateAwayGuard
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  Output,
+  QueryList,
+  SimpleChanges,
+  ViewChild,
+  ViewChildren
+} from '@angular/core';
+import {
+  FormArray,
+  FormBuilder
+} from '@angular/forms';
+import {
+  IMcsNavigateAwayGuard,
+  McsFormGroupService
 } from '@app/core';
-import {
-  unsubscribeSafely,
-  isNullOrEmpty,
-  getSafeProperty
-} from '@app/utilities';
 import { McsResource } from '@app/models';
 import { ComponentHandlerDirective } from '@app/shared';
+import {
+  getSafeProperty,
+  isNullOrEmpty,
+  unsubscribeSafely
+} from '@app/utilities';
+
 import { ServerCreateDetailsBase } from './server-create-details.base';
 
 enum ServerCreateType {
@@ -83,8 +85,10 @@ export class ServerCreateDetailsComponent implements OnChanges, AfterViewInit, O
 
   public ngAfterViewInit() {
     this._createServerItems.changes
-      .pipe(startWith(null), takeUntil(this._destroySubject))
-      .subscribe(() => {
+      .pipe(
+        startWith(null as any),
+        takeUntil(this._destroySubject)
+      ).subscribe(() => {
         if (!isNullOrEmpty(this._createServerItems)) {
           this.faCreationForms = this._formBuilder.array([]);
           this._createServerItems.forEach((creationDetails) => {

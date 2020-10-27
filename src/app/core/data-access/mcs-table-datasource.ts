@@ -1,18 +1,21 @@
 import {
-  Subject,
-  Observable,
   of,
+  throwError,
   BehaviorSubject,
-  throwError
+  Observable,
+  Subject
 } from 'rxjs';
 import {
+  catchError,
+  exhaustMap,
+  filter,
   startWith,
   switchMap,
-  takeUntil,
-  filter,
-  catchError,
-  exhaustMap
+  takeUntil
 } from 'rxjs/operators';
+
+import { DataStatus } from '@app/models';
+import { McsRepository } from '@app/services';
 import {
   McsDataSource,
   Paginator,
@@ -20,12 +23,10 @@ import {
 } from '@app/shared';
 import {
   isNullOrEmpty,
-  unsubscribeSafely,
   isNullOrUndefined,
+  unsubscribeSafely,
   CommonDefinition
 } from '@app/utilities';
-import { DataStatus } from '@app/models';
-import { McsRepository } from '@app/services';
 
 type DelegateSource<T> = () => Observable<T[]>;
 type DatasourceType<T> = McsRepository<T> | T[] | Observable<T[]> | DelegateSource<T>;
@@ -245,7 +246,7 @@ export class McsTableDataSource<T> implements McsDataSource<T> {
    */
   private _subscribeToRequestChange(): void {
     this._requestUpdate.pipe(
-      startWith(null),
+      startWith(null as void),
       switchMap(() => {
         this.updateDataStatus(DataStatus.Active);
 

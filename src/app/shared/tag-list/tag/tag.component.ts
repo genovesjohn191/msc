@@ -1,26 +1,26 @@
 import {
-  Component,
-  ChangeDetectionStrategy,
-  ViewEncapsulation,
-  Input,
-  Output,
-  EventEmitter,
-  ElementRef,
-  ChangeDetectorRef
-} from '@angular/core';
-import {
   animate,
   state,
   style,
   transition,
   trigger
 } from '@angular/animations';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  Output,
+  ViewEncapsulation
+} from '@angular/core';
 import { McsUniqueId } from '@app/core';
-import { Key } from '@app/models';
 import {
   coerceBoolean,
   isNullOrEmpty,
-  CommonDefinition
+  CommonDefinition,
+  KeyboardKey
 } from '@app/utilities';
 
 @Component({
@@ -156,14 +156,14 @@ export class TagComponent {
    * Event that emits when the tag received keyboard input
    */
   public onKeyDown(_event: KeyboardEvent): void {
-    switch (_event.keyCode) {
-      case Key.Delete:
-      case Key.Backspace:
+    switch (_event.keyboardKey()) {
+      case KeyboardKey.Delete:
+      case KeyboardKey.Backspace:
         this.remove();
         _event.preventDefault();
         break;
 
-      case Key.Space:
+      case KeyboardKey.Space:
         // Toggle the selection of the tag
         if (this.selectable) {
           this.selected ? this.deselect() : this.select();

@@ -1,16 +1,5 @@
-import {
-  Component,
-  AfterViewInit,
-  AfterContentInit,
-  AfterContentChecked,
-  ContentChild,
-  ContentChildren,
-  QueryList,
-  ChangeDetectorRef,
-  ChangeDetectionStrategy,
-  ViewEncapsulation,
-  Input
-} from '@angular/core';
+import { startWith } from 'rxjs/operators';
+
 import {
   animate,
   state,
@@ -18,12 +7,25 @@ import {
   transition,
   trigger
 } from '@angular/animations';
-import { startWith } from 'rxjs/operators';
+import {
+  AfterContentChecked,
+  AfterContentInit,
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ContentChild,
+  ContentChildren,
+  Input,
+  QueryList,
+  ViewEncapsulation
+} from '@angular/core';
 import { McsFormFieldControlBase } from '@app/core';
 import { isNullOrEmpty } from '@app/utilities';
+
 import {
-  HintComponent,
   ErrorComponent,
+  HintComponent,
   PrefixComponent,
   SuffixComponent
 } from './shared';
@@ -92,7 +94,7 @@ export class FormFieldComponent implements AfterViewInit, AfterContentInit, Afte
       this._validateControlChild();
       // Subscribe to any state changes of the control
       this._controlChild.stateChanges.pipe(
-        startWith(null)
+        startWith(null as void)
       ).subscribe(() => {
         this._redisplayErrorMessage();
         this._changeDetectorRef.markForCheck();
@@ -109,14 +111,14 @@ export class FormFieldComponent implements AfterViewInit, AfterContentInit, Afte
 
       // Subscribe to any changes of the hint
       this._hintChildren.changes.pipe(
-        startWith(null)
+        startWith(null as any)
       ).subscribe(() => {
         this._changeDetectorRef.markForCheck();
       });
 
       // Subscribe to any changes of the error
       this._errorChildren.changes.pipe(
-        startWith(null)
+        startWith(null as any)
       ).subscribe(() => {
         this._changeDetectorRef.markForCheck();
       });

@@ -1,35 +1,37 @@
 import {
-  Component,
-  ChangeDetectorRef,
-  ViewEncapsulation,
-  ChangeDetectionStrategy,
-  Input,
-  ContentChild,
-  NgZone,
-  QueryList,
-  AfterContentInit,
-  ContentChildren
-} from '@angular/core';
-import {
   defer,
   merge,
   Observable,
   Subject
 } from 'rxjs';
 import {
-  take,
+  startWith,
   switchMap,
-  takeUntil,
-  startWith
+  take,
+  takeUntil
 } from 'rxjs/operators';
+
 import {
-  isNullOrEmpty,
+  AfterContentInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ContentChild,
+  ContentChildren,
+  Input,
+  NgZone,
+  QueryList,
+  ViewEncapsulation
+} from '@angular/core';
+import {
   animateFactory,
   coerceBoolean,
+  isNullOrEmpty,
   CommonDefinition
 } from '@app/utilities';
-import { TreeNodeGroupLabelDirective } from './tree-node-group-label.directive';
+
 import { TreeNodeComponent } from '../tree-node/tree-node.component';
+import { TreeNodeGroupLabelDirective } from './tree-node-group-label.directive';
 
 @Component({
   selector: 'mcs-tree-node-group',
@@ -159,7 +161,7 @@ export class TreeNodeGroupComponent<T> implements AfterContentInit {
    */
   private _subscribeToTreeNodesChanges(): void {
     this.treeNodes.changes.pipe(
-      startWith(null),
+      startWith(null as any),
       takeUntil(this._destroySubject)
     ).subscribe(() => {
       this._setTreeNodeCheckableState();
@@ -172,7 +174,7 @@ export class TreeNodeGroupComponent<T> implements AfterContentInit {
    */
   private _subscribeToTreeNodesSelection(): void {
     this._treeNodesSelectionChanges.pipe(
-      startWith(null),
+      startWith(null as any),
       takeUntil(this._destroySubject)
     ).subscribe(() => {
       this._changeDetectorRef.markForCheck();

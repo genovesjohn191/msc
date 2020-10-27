@@ -1,23 +1,6 @@
 import {
-  Component,
-  ChangeDetectionStrategy,
-  ViewEncapsulation,
-  Input,
-  ContentChildren,
-  ContentChild,
-  QueryList,
-  ChangeDetectorRef,
-  ElementRef,
-  Optional,
-  Self,
-  AfterContentInit,
-  DoCheck,
-  OnChanges,
-  OnDestroy
-} from '@angular/core';
-import {
-  Observable,
   merge,
+  Observable,
   Subject
 } from 'rxjs';
 import {
@@ -25,6 +8,24 @@ import {
   takeUntil,
   tap
 } from 'rxjs/operators';
+
+import {
+  AfterContentInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ContentChild,
+  ContentChildren,
+  DoCheck,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnDestroy,
+  Optional,
+  QueryList,
+  Self,
+  ViewEncapsulation
+} from '@angular/core';
 import {
   ControlValueAccessor,
   FormGroupDirective,
@@ -35,17 +36,18 @@ import {
   McsFormFieldControlBase,
   McsUniqueId
 } from '@app/core';
-import { Key } from '@app/models';
 import {
+  coerceBoolean,
+  coerceNumber,
   isNullOrEmpty,
   refreshView,
-  coerceNumber,
-  coerceBoolean,
+  unsubscribeSafely,
   ErrorStateMatcher,
-  unsubscribeSafely
+  KeyboardKey
 } from '@app/utilities';
-import { TagComponent } from './tag/tag.component';
+
 import { TagInputDirective } from './tag-input/tag-input.directive';
+import { TagComponent } from './tag/tag.component';
 
 @Component({
   selector: 'mcs-tag-list',
@@ -149,14 +151,15 @@ export class TagListComponent extends McsFormFieldControlBase<any>
 
   public ngAfterContentInit() {
     Promise.resolve().then(() => {
-      this._items.changes
-        .pipe(startWith(null), takeUntil(this._destroySubject))
-        .subscribe(() => {
-          this._listenToFocusChanges();
-          this._listenToSelectionChanges();
-          this._listenToRemovedChanges();
-          this._setModelValue(this._items.length);
-        });
+      this._items.changes.pipe(
+        startWith(null as any),
+        takeUntil(this._destroySubject)
+      ).subscribe(() => {
+        this._listenToFocusChanges();
+        this._listenToSelectionChanges();
+        this._listenToRemovedChanges();
+        this._setModelValue(this._items.length);
+      });
 
       this._subscribeToTagInputEvents();
     });
@@ -240,11 +243,11 @@ export class TagListComponent extends McsFormFieldControlBase<any>
    * Event that emits when the element received keyboard input
    */
   public onKeyDown(_event: KeyboardEvent) {
-    let target = event.target as HTMLElement;
+    let target = _event.target as HTMLElement;
     let isInputEmpty = this._isInputEmpty(target);
 
     // If they are on an empty input and hit backspace, focus the last tag
-    if (isInputEmpty && _event.keyCode === Key.Backspace) {
+    if (isInputEmpty && _event.keyboardKey() === KeyboardKey.Backspace) {
       this._items.last.focus();
       _event.preventDefault();
       return;
@@ -254,15 +257,15 @@ export class TagListComponent extends McsFormFieldControlBase<any>
     if (this._tagInput && this._tagInput.focused) { return; }
 
     // Check for arrow keys and set the focus to corresponding tag
-    switch (_event.keyCode) {
-      case Key.LeftArrow:
-      case Key.DownArrow:
+    switch (_event.keyboardKey()) {
+      case KeyboardKey.LeftArrow:
+      case KeyboardKey.DownArrow:
         let previousTag = Math.max(0, this._activeTagIndex - 1);
         this._items.toArray()[previousTag].focus();
         break;
 
-      case Key.RightArrow:
-      case Key.UpArrow:
+      case KeyboardKey.RightArrow:
+      case KeyboardKey.UpArrow:
         let nextTag = Math.min((this._items.length - 1), this._activeTagIndex + 1);
         this._items.toArray()[nextTag].focus();
         break;

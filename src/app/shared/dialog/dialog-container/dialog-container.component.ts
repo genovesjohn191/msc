@@ -1,31 +1,32 @@
 import {
-  Component,
-  ElementRef,
-  Renderer2,
-  ViewChild,
-  EventEmitter,
-  ComponentRef,
-  EmbeddedViewRef,
-  ChangeDetectorRef,
-  ComponentFactoryResolver,
-  ChangeDetectionStrategy,
-  ViewEncapsulation,
-} from '@angular/core';
-import {
   animate,
-  AnimationEvent,
   state,
   style,
   transition,
-  trigger
+  trigger,
+  AnimationEvent
 } from '@angular/animations';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ComponentFactoryResolver,
+  ComponentRef,
+  ElementRef,
+  EmbeddedViewRef,
+  EventEmitter,
+  Renderer2,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
 import { isNullOrEmpty } from '@app/utilities';
+
 import {
   PortalComponent,
   PortalTemplate
 } from '../../portal-template';
-import { DialogRefDirective } from '../dialog-ref/dialog-ref.directive';
 import { DialogConfig } from '../dialog-config';
+import { DialogRefDirective } from '../dialog-ref/dialog-ref.directive';
 
 @Component({
   selector: 'dialog-container',
@@ -91,7 +92,7 @@ export class DialogContainerComponent {
     let componenRef = attachView.createComponent(
       componentFactory,
       attachView.length,
-      portal.injector || attachView.parentInjector
+      portal.injector
     );
 
     // Set the dispose function to destroy the component itself

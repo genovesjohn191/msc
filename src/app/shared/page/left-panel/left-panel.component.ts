@@ -1,27 +1,25 @@
-import {
-  Component,
-  ChangeDetectionStrategy,
-  ViewChild,
-  ContentChildren,
-  AfterContentInit,
-  ViewEncapsulation,
-  QueryList,
-  OnDestroy,
-  ChangeDetectorRef
-} from '@angular/core';
 import { Subject } from 'rxjs';
 import {
+  startWith,
   takeUntil,
-  tap,
-  startWith
+  tap
 } from 'rxjs/operators';
+
+import {
+  AfterContentInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ContentChildren,
+  OnDestroy,
+  QueryList,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
 import { unsubscribeSafely } from '@app/utilities';
-import {
-  LeftPanelItemDefDirective
-} from './left-panel-item/left-panel-item-def.directive';
-import {
-  LeftPanelItemPlaceholderDirective
-} from './left-panel-item/left-panel-item-placeholder.directive';
+
+import { LeftPanelItemDefDirective } from './left-panel-item/left-panel-item-def.directive';
+import { LeftPanelItemPlaceholderDirective } from './left-panel-item/left-panel-item-placeholder.directive';
 
 @Component({
   selector: 'mcs-left-panel',
@@ -62,7 +60,7 @@ export class LeftPanelComponent implements AfterContentInit, OnDestroy {
   private _subscribeToLeftPanelItemChanges(): void {
     this._leftPanelItemDefinition.changes.pipe(
       takeUntil(this._destroySubject),
-      startWith(null),
+      startWith(null as any),
       tap(() => {
         this._leftPanelItemPlaceholder.viewContainer.clear();
         this._leftPanelItemDefinition.forEach((item) => {
