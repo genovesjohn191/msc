@@ -127,7 +127,9 @@
                     mcsId="input-name"
                     mcsEventTracker="input-name"
                     mcsEventCategory="order-collocation-staff-escort"
-                    mcsEventLabel="order-collocation-staff-escort-page">
+                    mcsEventLabel="order-collocation-staff-escort-page"
+                    [placeholder]="'orderColocationStaffEscort.requestDetails.name.placeHolder' | translate"
+                    required>
                   <mcs-error mcsError errorState="required">
                     {{ 'orderColocationStaffEscort.requestDetails.name.errorRequired' | translate }}
                   </mcs-error>
@@ -142,7 +144,9 @@
                     mcsId="input-organization"
                     mcsEventTracker="input-organization"
                     mcsEventCategory="order-collocation-staff-escort"
-                    mcsEventLabel="order-collocation-staff-escort-page">
+                    mcsEventLabel="order-collocation-staff-escort-page"
+                    [placeholder]="'orderColocationStaffEscort.requestDetails.organization.placeHolder' | translate"
+                    required>
                   <mcs-error mcsError errorState="required">
                     {{ 'orderColocationStaffEscort.requestDetails.organization.errorRequired' | translate }}
                   </mcs-error>
@@ -157,7 +161,9 @@
                     mcsId="input-job-title"
                     mcsEventTracker="input-job-title"
                     mcsEventCategory="order-collocation-staff-escort"
-                    mcsEventLabel="order-collocation-staff-escort-page">
+                    mcsEventLabel="order-collocation-staff-escort-page"
+                    [placeholder]="'orderColocationStaffEscort.requestDetails.jobTitle.placeHolder' | translate"
+                    required>
                   <mcs-error mcsError errorState="required">
                     {{ 'orderColocationStaffEscort.requestDetails.jobTitle.errorRequired' | translate }}
                   </mcs-error>
@@ -174,7 +180,8 @@
                     mcsEventCategory="order-collocation-staff-escort"
                     mcsEventLabel="order-collocation-staff-escort-page"
                     [mcsContextualHelp]="'orderColocationStaffEscort.requestDetails.mobile.helpText' | translate"
-                    [placeholder]="'orderColocationStaffEscort.requestDetails.mobile.placeHolder' | translate">
+                    [placeholder]="'orderColocationStaffEscort.requestDetails.mobile.placeHolder' | translate"
+                    required>
                   <mcs-error mcsError errorState="pattern">
                     {{ 'orderColocationStaffEscort.requestDetails.mobile.errorFormat' | translate }}
                   </mcs-error>
@@ -195,7 +202,9 @@
                     mcsId="input-email"
                     mcsEventTracker="input-email"
                     mcsEventCategory="order-collocation-staff-escort"
-                    mcsEventLabel="order-collocation-staff-escort-page">
+                    mcsEventLabel="order-collocation-staff-escort-page"
+                    [placeholder]="'orderColocationStaffEscort.requestDetails.email.placeHolder' | translate"
+                    required>
                   <mcs-error mcsError errorState="required">
                     {{ 'orderColocationStaffEscort.requestDetails.email.errorRequired' | translate }}
                   </mcs-error>
