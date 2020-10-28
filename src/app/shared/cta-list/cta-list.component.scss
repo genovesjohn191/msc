@@ -1,19 +1,14 @@
 @import "../../../styles/shared/base";
 
-$large-icon-width: 42px;
-$compact-icon-width: 22px;
-
 .cta-list-wrapper {
   .items-container {
     .item-wrapper {
       margin-bottom: $space-large;
 
       .icon {
-        font-size: 46px;
-        margin-top: 15px;
+        margin-top: $space-xsmall;
 
         &.compact {
-          font-size: 30px;
           margin-top: 0;
         }
       }

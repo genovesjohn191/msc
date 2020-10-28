@@ -5,6 +5,7 @@ import {
 } from '@angular/core';
 import { CoreRoutes } from '@app/core';
 import { RouteKey } from '@app/models';
+import { CommonDefinition } from '@app/utilities';
 
 @Component({
   selector: 'mcs-change-requests-widget',
@@ -18,6 +19,18 @@ import { RouteKey } from '@app/models';
 })
 
 export class ChangeRequestWidgetComponent {
+  public get azureServiceRequestIcon(): string {
+    return CommonDefinition.ASSETS_SVG_SMALL_DOCUMENT_CONFIG_BLACK ;
+  }
+
+  public get changeLicenseCountIcon(): string {
+    return CommonDefinition.ASSETS_SVG_SMALL_DOCUMENT_NEW_BLACK  ;
+  }
+
+  public get changeDnsZoneIcon(): string {
+    return CommonDefinition.ASSETS_SVG_SMALL_DOCUMENT_BLACK  ;
+  }
+
   public get azureServiceRequestLink(): string {
     return CoreRoutes.getNavigationPath(RouteKey.OrderMsRequestChange);
   }

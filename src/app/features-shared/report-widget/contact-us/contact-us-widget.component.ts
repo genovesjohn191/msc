@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   ViewEncapsulation
 } from '@angular/core';
+import { CommonDefinition } from '@app/utilities';
 
 @Component({
   selector: 'mcs-contact-us-widget',
@@ -15,5 +16,9 @@ import {
   }
 })
 
-export class ContactUsWidgetComponent { }
+export class ContactUsWidgetComponent {
+  public get contactPersonIcon(): string {
+    return CommonDefinition.ASSETS_SVG_SMALL_PERSON_FAV_BLACK;
+  }
+}
 
