@@ -165,6 +165,25 @@ export class CommonDefinition {
   public static ASSETS_SVG_ATTACHMENT = 'attachment';
   public static ASSETS_SVG_BULLET = 'bullet';
 
+  public static ASSETS_SVG_SMALL_CLOUD_BLACK = 'small-cloud-black';
+  public static ASSETS_SVG_SMALL_CLOUD_BLUE = 'small-cloud-blue';
+  public static ASSETS_SVG_SMALL_DOCUMENT_BLACK = 'small-document-black';
+  public static ASSETS_SVG_SMALL_DOCUMENT_BLUE = 'small-document-blue';
+  public static ASSETS_SVG_SMALL_DOCUMENT_CONFIG_BLACK = 'small-document-config-black';
+  public static ASSETS_SVG_SMALL_DOCUMENT_CONFIG_BLUE = 'small-document-config-blue';
+  public static ASSETS_SVG_SMALL_DOCUMENT_NEW_BLACK = 'small-document-new-black';
+  public static ASSETS_SVG_SMALL_DOCUMENT_NEW_BLUE = 'small-document-new-blue';
+  public static ASSETS_SVG_SMALL_DOLLAR_BLACK = 'small-dollar-black';
+  public static ASSETS_SVG_SMALL_DOLLAR_BLUE = 'small-dollar-blue';
+  public static ASSETS_SVG_SMALL_DRAAS_BLACK = 'small-draas-black';
+  public static ASSETS_SVG_SMALL_DRAAS_BLUE = 'small-draas-blue';
+  public static ASSETS_SVG_SMALL_NOT_VISIBLE_COPY_BLACK = 'small-not-visible-copy-black';
+  public static ASSETS_SVG_SMALL_NOT_VISIBLE_COPY_BLUE = 'small-not-visible-copy-blue';
+  public static ASSETS_SVG_SMALL_PERSON_FAV_BLACK = 'small-person-fav-black';
+  public static ASSETS_SVG_SMALL_PERSON_FAV_BLUE = 'small-person-fav-blue';
+  public static ASSETS_SVG_SMALL_MARKETING_BLACK = 'small-marketing-black';
+  public static ASSETS_SVG_SMALL_MARKETING_BLUE = 'small-marketing-blue';
+
   /** Filter Selector */
   public static FILTERSELECTOR_SERVER_LISTING = 'serverFilter';
   public static FILTERSELECTOR_NOTIFICATIONS_LISTING = 'notificationFilter';
