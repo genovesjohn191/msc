@@ -138,33 +138,6 @@ $product-panel-color: $color-grey-08;
   }
 }
 
-// Set the scrollable link numbering based on the scrollable link items
-.scrollable-link-wrapper:not(:only-child) {
-  counter-increment: link-item-count;
-
-  .scroll-link-label {
-    h1:before {
-      content: counter(link-item-count) ". ";
-    }
-  }
-
-  .product-catalog-item {
-    counter-increment: product-catalog-item-count;
-    h2:before {
-      content: counter(link-item-count) "." counter(product-catalog-item-count) ". ";
-    }
-  }
-}
-
-.scrollable-link-wrapper:only-child {
-  .product-catalog-item {
-    counter-increment: product-catalog-item-count;
-    h2:before {
-      content: counter(product-catalog-item-count) ". ";
-    }
-  }
-}
-
 .scrollable-link-body {
   @include print() {
     margin-left: $space-large;
