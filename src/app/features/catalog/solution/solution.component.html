@@ -7,27 +7,6 @@
       <div class="product-catalog-item">
 
         <div class="product-catalog-widget-wrapper">
-          <!-- Ownerships -->
-          <mcs-presentation-panel [hidden]="!solution.hasOwner" [embossed]="true" *mcsAccessControl="['CompanyView']">
-            <ng-container mcsPresentationPanelHeader>
-              <strong>Ownership</strong>
-            </ng-container>
-
-            <mcs-list>
-              <mcs-list-item *ngIf="solution.primaryOwner?.name">
-                <span>{{ solution.primaryOwner.name }} -
-                  <small read-only> Primary Product Owner</small>
-                </span>
-              </mcs-list-item>
-
-              <mcs-list-item *ngIf="solution.secondaryOwner?.name">
-                <span>{{ solution.secondaryOwner.name }} -
-                  <small read-only> Secondary Product Owner</small>
-                </span>
-              </mcs-list-item>
-            </mcs-list>
-          </mcs-presentation-panel>
-
           <!-- Included products -->
           <mcs-presentation-panel [embossed]="true" *ngIf="solution.includedProducts | mcsIsNotNullOrEmpty">
             <ng-container mcsPresentationPanelHeader>
