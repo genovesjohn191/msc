@@ -451,15 +451,18 @@
       },
       "name": {
         "label": "Name",
-        "errorRequired": "Enter Name"
+        "errorRequired": "Enter Name", 
+        "placeHolder": "Attendee's name"
       },
       "organization": {
         "label": "Organization",
-        "errorRequired": "Enter Organization"
+        "errorRequired": "Enter Organization",
+        "placeHolder": "Attendee's organization name"
       },
       "jobTitle": {
         "label": "Job Title",
-        "errorRequired": "Enter Job Title"
+        "errorRequired": "Enter Job Title",
+        "placeHolder": "Attendee's job title"
       },
       "mobile": {
         "label": "Mobile Number",
@@ -471,7 +474,8 @@
       "email": {
         "label": "E-mail address is reqruired",
         "errorRequired": "Enter Email Address",
-        "errorEmailFormat": "Invalid e-mail address format"
+        "errorEmailFormat": "Invalid e-mail address format",
+        "placeHolder": "Attendee's email address"
       },
       "attendanceDate": {
         "label": "Date of attendance",
@@ -2354,7 +2358,7 @@
     "getJobConnection": "Something went wrong while retrieving your notifications.",
     "getInternetPorts": "Something went wrong while retrieving your internet services.",
     "getInternetPort": "Something went wrong while retrieving your internet service.",
-    "getNetworkDnss": "Something went wrong while retrieving your Network DNS.",
+    "getNetworkDns": "Something went wrong while retrieving your Network DNS.",
     "getResources": "Something went wrong while retrieving your services.",
     "getResource": "Something went wrong while retrieving your service information.",
     "getResourceCompute": "Something went wrong while retrieving your service information.",
