@@ -19,6 +19,7 @@ import {
 } from 'rxjs/operators';
 
 import {
+  CommonDefinition,
   currencyFormat,
   unsubscribeSafely
 } from '@app/utilities';
@@ -41,6 +42,14 @@ import { McsReportingService } from '@app/core/services/mcs-reporting.service';
 })
 
 export class CostRecommendationsWidgetComponent implements OnInit, OnDestroy {
+  public get budgetIcon(): string {
+    return CommonDefinition.ASSETS_SVG_SMALL_DOLLAR_BLACK ;
+  }
+
+  public get savingsIcon(): string {
+    return CommonDefinition.ASSETS_SVG_SMALL_MARKETING_BLACK  ;
+  }
+
   public processing: boolean = false;
   public hasError: boolean = false;
   public costRecommendations: McsReportCostRecommendations;

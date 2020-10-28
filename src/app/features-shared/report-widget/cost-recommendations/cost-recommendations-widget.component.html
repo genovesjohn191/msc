@@ -21,7 +21,7 @@
     <ng-template #done>
       <div *ngIf="!hasError; else error">
         <mcs-cta-list>
-          <mcs-cta-list-panel icon="attach_money">
+          <mcs-cta-list-panel [icon]="budgetIcon">
             <mcs-cta-list-header>
               Actual vs Budget
             </mcs-cta-list-header>
@@ -49,7 +49,7 @@
             </mcs-cta-list-action>
           </mcs-cta-list-panel>
 
-          <mcs-cta-list-panel icon="insights">
+          <mcs-cta-list-panel [icon]="savingsIcon">
             <mcs-cta-list-header link="servers">
               Operational Monthly Savings
             </mcs-cta-list-header>

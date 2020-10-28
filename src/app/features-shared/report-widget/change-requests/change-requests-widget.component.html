@@ -2,7 +2,7 @@
   <h3>Make a change</h3>
   <div class="data-wrapper">
     <mcs-cta-list>
-      <mcs-cta-list-panel icon="connect_without_contact" *mcsAccessControl="['OrderEdit']; feature: ['EnableOrderingMicrosoftRequestChange']">
+      <mcs-cta-list-panel [icon]="azureServiceRequestIcon" *mcsAccessControl="['OrderEdit']; feature: ['EnableOrderingMicrosoftRequestChange']">
         <mcs-cta-list-header link="servers">
           <a href="{{ azureServiceRequestLink }}">
             Azure Service Request
@@ -12,7 +12,7 @@
           Request a change to resources in a subscription in your Azure Environment.
         </mcs-cta-list-body>
       </mcs-cta-list-panel>
-      <mcs-cta-list-panel icon="ballot" *mcsAccessControl="['OrderEdit'];">
+      <mcs-cta-list-panel [icon]="changeLicenseCountIcon" *mcsAccessControl="['OrderEdit'];">
         <mcs-cta-list-header link="servers">
           <a href="{{ changeLicenseCountLink }}">
             Change License subscription count
@@ -22,7 +22,7 @@
           Change the number of licenses against a subscription.
         </mcs-cta-list-body>
       </mcs-cta-list-panel>
-      <mcs-cta-list-panel icon="cloud_circle" *mcsAccessControl="['OrderEdit']; feature: ['EnableOrderingDnsCustomRequest']">
+      <mcs-cta-list-panel [icon]="changeDnsZoneIcon" *mcsAccessControl="['OrderEdit']; feature: ['EnableOrderingDnsCustomRequest']">
         <mcs-cta-list-header link="servers">
           <a href="{{ changeManagedDnsLink }}">
             Change Macquarie-managed DNS zone
