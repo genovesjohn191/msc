@@ -30,7 +30,7 @@
                 <div class="text-overlay">
                   <span>{{ moneyFormat(actual) }} / {{ moneyFormat(budget) }} ({{ costPercentage }}%)</span>
                 </div>
-                <mat-progress-bar class="{{ costColor }}" mode="determinate" value="{{ costPercentage }}" style="height: 20px;"></mat-progress-bar>
+                <mat-progress-bar class="{{ costColor }}" mode="determinate" value="{{ costPercentage }}" style="height: 25px;"></mat-progress-bar>
                 <br />
                 <small>Refreshed {{ costRecommendations.updatedOn | mcsStdDateFormat: 'friendly' }}</small>
               </div>

@@ -13,8 +13,6 @@ import {
 } from 'rxjs';
 import {
   catchError,
-  concatMap,
-  delay,
   takeUntil
 } from 'rxjs/operators';
 

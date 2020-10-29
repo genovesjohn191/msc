@@ -1,0 +1,15 @@
+<apx-chart #chartObject [class.hidden]="!hasData"
+  [chart]="options.chart"
+  [dataLabels]="options.dataLabels"
+  [legend]="options.legend"
+  [plotOptions]="options.plotOptions"
+  [series]="options.series"
+  [stroke]="options.stroke"
+  [title]="options.title"
+  [tooltip]="options.tooltip"
+  [xaxis]="options.xaxis"
+  [yaxis]="options.yaxis">
+</apx-chart>
+<mcs-status-message type="info" [class.hidden]="hasData">
+  No data found
+</mcs-status-message>

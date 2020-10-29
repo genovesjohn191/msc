@@ -12,7 +12,12 @@
         <span>{{ 'reports.widgets.azureResourcesWidget.cloudHealthLinkLabel' | translate }}</span>
     </a>
   </h3>
-  <mcs-bar-chart [data]="data$ | async" [showLegend]="false" *ngIf="!processing && !hasError"></mcs-bar-chart>
+
+  <mcs-horizontal-bar-chart
+    *ngIf="!processing && !hasError"
+    [data]="data$ | async"
+    [distributed]="false">
+  </mcs-horizontal-bar-chart>
 
   <mcs-report-widget-data-status type="info" [processing]="processing" [hasError]="hasError" (retry)="getData()">
   </mcs-report-widget-data-status>
