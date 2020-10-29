@@ -66,6 +66,11 @@
   color: $color-black;
   width: 100%;
   z-index: 1;
+
+  span {
+    @include font-size(12, 24);
+  }
+
 }
 
 .good {

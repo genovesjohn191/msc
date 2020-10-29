@@ -20,15 +20,15 @@ import { CommonDefinition } from '@app/utilities';
 
 export class ChangeRequestWidgetComponent {
   public get azureServiceRequestIcon(): string {
-    return CommonDefinition.ASSETS_SVG_SMALL_DOCUMENT_CONFIG_BLACK ;
+    return CommonDefinition.ASSETS_SVG_SMALL_DOCUMENT_CONFIG_BLACK;
   }
 
   public get changeLicenseCountIcon(): string {
-    return CommonDefinition.ASSETS_SVG_SMALL_DOCUMENT_NEW_BLACK  ;
+    return CommonDefinition.ASSETS_SVG_SMALL_DOCUMENT_NEW_BLACK;
   }
 
   public get changeDnsZoneIcon(): string {
-    return CommonDefinition.ASSETS_SVG_SMALL_DOCUMENT_BLACK  ;
+    return CommonDefinition.ASSETS_SVG_SMALL_DOCUMENT_BLACK;
   }
 
   public get azureServiceRequestLink(): string {

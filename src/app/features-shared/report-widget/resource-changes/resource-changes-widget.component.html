@@ -1,6 +1,15 @@
 <div class="widget">
   <h3>Changes vs Prior Period</h3>
   <div class="data-wrapper">
-    <mcs-bar-chart [data]="data$ | async" [isHorizontal]="true" [showLegend]="false"></mcs-bar-chart>
+    <!-- <mcs-bar-chart [data]="data$ | async" [isHorizontal]="true" [showLegend]="false"></mcs-bar-chart> -->
+    <mcs-horizontal-bar-chart
+      [data]="data$ | async"
+      [hideYAxis]="true"
+      [dataLabelFormatter]="dataLabelFormatter"
+      [legendLabelFormatter]="legendLabelFormatter"
+      [xAxisLabelFormatter]="xAxisLabelFormatter"
+      [tooltipXValueFormatter]="tooltipXValueFormatter"
+      [tooltipYTitleFormatter]="tooltipYTitleFormatter">
+    </mcs-horizontal-bar-chart>
   </div>
 </div>
