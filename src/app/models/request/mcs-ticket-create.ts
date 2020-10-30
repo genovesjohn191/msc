@@ -1,8 +1,8 @@
 import { JsonProperty } from '@app/utilities';
 import {
-  TicketSubType,
-  TicketSubTypeSerialization
-} from '../enumerations/ticket-subtype';
+  TicketType,
+  TicketTypeSerialization
+} from '../enumerations/ticket-type';
 import { McsTicketCreateAttachment } from './mcs-ticket-create-attachment';
 
 export class McsTicketCreate {
@@ -22,8 +22,8 @@ export class McsTicketCreate {
   public attachments: McsTicketCreateAttachment[] = undefined;
 
   @JsonProperty({
-    serializer: TicketSubTypeSerialization,
-    deserializer: TicketSubTypeSerialization
+    serializer: TicketTypeSerialization,
+    deserializer: TicketTypeSerialization
   })
-  public subType: TicketSubType = undefined;
+  public ticketType: TicketType = undefined;
 }

@@ -11,10 +11,10 @@ import {
   ticketStatusText
 } from '../enumerations/ticket-status';
 import {
-  TicketSubType,
-  TicketSubTypeSerialization,
-  ticketSubTypeText
-} from '../enumerations/ticket-subtype';
+  TicketType,
+  TicketTypeSerialization,
+  ticketTypeText
+} from '../enumerations/ticket-type';
 import { McsTicketComment } from './mcs-ticket-comment';
 import { McsTicketClosureInformation } from './mcs-ticket-closure-information';
 import { McsTicketAttachment } from './mcs-ticket-attachment';
@@ -97,10 +97,10 @@ export class McsTicket extends McsEntityBase {
   public state: TicketStatus = undefined;
 
   @JsonProperty({
-    serializer: TicketSubTypeSerialization,
-    deserializer: TicketSubTypeSerialization
+    serializer: TicketTypeSerialization,
+    deserializer: TicketTypeSerialization
   })
-  public subType: TicketSubType = undefined;
+  public ticketType: TicketType = undefined;
 
   constructor() {
     super();
@@ -125,7 +125,7 @@ export class McsTicket extends McsEntityBase {
     this.childTickets = undefined;
     this.priority = undefined;
     this.state = undefined;
-    this.subType = undefined;
+    this.ticketType = undefined;
   }
 
   /**
@@ -150,10 +150,10 @@ export class McsTicket extends McsEntityBase {
   }
 
   /**
-   * Returns the ticket sub type label
+   * Returns the ticket type label
    */
-  public get subTypeLabel(): string {
-    return ticketSubTypeText[this.subType];
+  public get ticketTypeLabel(): string {
+    return ticketTypeText[this.ticketType];
   }
 
   /**
