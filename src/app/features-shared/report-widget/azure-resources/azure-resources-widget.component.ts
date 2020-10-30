@@ -14,7 +14,7 @@ import {
 import { ChartItem } from '@app/shared';
 import { McsReportingService } from '@app/core/services/mcs-reporting.service';
 import { catchError } from 'rxjs/operators';
-import { unsubscribeSafely } from '@app/utilities';
+import { CommonDefinition, unsubscribeSafely } from '@app/utilities';
 
 const maxResourcesToDisplay = 10;
 @Component({
@@ -33,6 +33,10 @@ export class AzureResourcesWidgetComponent implements OnInit, OnDestroy {
   public dataBehavior: BehaviorSubject<ChartItem[]>;
   public hasError: boolean = false;
   public processing: boolean = true;
+
+  public get cloudHealthUrl(): string  {
+    return CommonDefinition.CLOUD_HEALTH_URL;
+  }
 
   public constructor(
     private _changeDetectorRef: ChangeDetectorRef,

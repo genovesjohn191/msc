@@ -48,6 +48,10 @@ export class CostRecommendationsWidgetComponent implements OnInit, OnDestroy {
     return CommonDefinition.ASSETS_SVG_SMALL_MARKETING_BLACK  ;
   }
 
+  public get cloudHealthUrl(): string  {
+    return CommonDefinition.CLOUD_HEALTH_URL;
+  }
+
   public processing: boolean = false;
   public hasError: boolean = false;
   public costRecommendations: McsReportCostRecommendations;

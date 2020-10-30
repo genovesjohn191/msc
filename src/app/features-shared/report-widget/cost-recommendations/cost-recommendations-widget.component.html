@@ -38,12 +38,12 @@
             </mcs-cta-list-body>
             <mcs-cta-list-action>
               <a
-                mcsId
+                mcsId="recommendations-update-budget"
                 mcsEventTracker="navigate-to-cloudhealth-budget"
-                mcsEventCategory="navigation"
+                mcsEventCategory="dashboard-navigation"
                 mcsEventLabel="cost-and-recommendations-link"
                 target="_blank"
-                href="https://apps.cloudhealthtech.com/ui/budgets/">
+                href="{{ cloudHealthUrl }}/ui/budgets/">
                 Update your budget
               </a>
             </mcs-cta-list-action>
@@ -59,7 +59,11 @@
             <mcs-cta-list-action>
               <a href="{{ azureServiceRequestLink }}"
                 matTooltip="We'll work with you to optimise your environment."
-                matTooltipPosition="right">
+                matTooltipPosition="right"
+                mcsId="recommendations-optimize"
+                mcsEventTracker="navigate-to-order-request-change"
+                mcsEventCategory="dashboard-navigation"
+                mcsEventLabel="optimize-link">
                 Optimise
               </a>
             </mcs-cta-list-action>
@@ -70,7 +74,11 @@
             <mcs-cta-list-action>
               <a href="{{ azureServiceRequestLink }}"
                 matTooltip="We'll work with you to rightsize the VMs in your environment."
-                matTooltipPosition="right">
+                matTooltipPosition="right"
+                mcsId="recommendations-rightsize"
+                mcsEventTracker="navigate-to-order-request-change"
+                mcsEventCategory="dashboard-navigation"
+                mcsEventLabel="optimize-link">
                 Rightsize
               </a>
             </mcs-cta-list-action>

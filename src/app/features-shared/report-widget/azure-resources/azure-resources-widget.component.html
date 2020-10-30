@@ -3,9 +3,10 @@
     {{ 'reports.widgets.azureResourcesWidget.title' | translate }}
     <a
       class="hide-on-print"
-      href="#"
+      href="{{ cloudHealthUrl }}"
+      target="_blank"
       style="float: right;"
-      mcsId
+      mcsId="services-overview-cloudhealth-link"
       mcsEventTracker="navigate-to-cloudhealth"
       mcsEventCategory="cloudhealth"
       mcsEventLabel="azure-resources-widget">
