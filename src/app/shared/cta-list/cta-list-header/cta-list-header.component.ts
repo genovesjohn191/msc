@@ -25,7 +25,6 @@ export class CtaListHeaderComponent {
   public linkEvent?: CtaLinkEvent;
 
   public get hasLink(): boolean {
-    console.log(this.link);
     return !isNullOrEmpty(this.link);
   }
 }

@@ -64,7 +64,7 @@ export class ReportInsightsComponent implements OnDestroy {
   public get subscriptionIdsFilter(): string[] {
     return this._subscriptionIdsFilter;
   }
-  public _subscriptionIdsFilter: string[] = [];
+  public _subscriptionIdsFilter: string[] = undefined;
 
   public serviceCostConfig: PerformanceAndScalabilityWidgetConfig;
 

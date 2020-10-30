@@ -49,122 +49,143 @@ describe('CostRecommendationsWidgetComponent', () => {
 
   /** Test Implementation */
   describe('costPercentage()', () => {
-    it('over lower limit should round off correctly', () => {
-      component.costRecommendations = {
-        budget: 1000,
-        actual: 1000.01,
-        variance: 0,
-        potentialOperationalSavings: 1000,
-        potentialRightsizingSavings: 1000,
-        updatedOn: '',
-      };
+    describe('when value is over wan limit', () => {
+      it('should round off correctly', () => {
+        component.costRecommendations = {
+          budget: 1000,
+          actual: 1000.01,
+          variance: 0,
+          potentialOperationalSavings: 1000,
+          potentialRightsizingSavings: 1000,
+          updatedOn: '',
+        };
 
-      expect(component.costPercentage).toBe(101);
-      expect(component.costColor).toBe('danger');
+        expect(component.costPercentage).toBe(101);
+        expect(component.costColor).toBe('danger');
+      });
     });
 
-    it('warn top limit should round off correctly', () => {
-      component.costRecommendations = {
-        budget: 1000,
-        actual: 1000,
-        variance: 0,
-        potentialOperationalSavings: 1000,
-        potentialRightsizingSavings: 1000,
-        updatedOn: '',
-      };
 
-      expect(component.costPercentage).toBe(100);
-      expect(component.costColor).toBe('warn');
+    describe('when value is warn top limit', () => {
+      it('should round off correctly', () => {
+        component.costRecommendations = {
+          budget: 1000,
+          actual: 1000,
+          variance: 0,
+          potentialOperationalSavings: 1000,
+          potentialRightsizingSavings: 1000,
+          updatedOn: '',
+        };
+
+        expect(component.costPercentage).toBe(100);
+        expect(component.costColor).toBe('warn');
+      });
     });
 
-    it('warn lower limit should round off correctly', () => {
-      component.costRecommendations = {
-        budget: 1000,
-        actual: 840.1,
-        variance: 0,
-        potentialOperationalSavings: 1000,
-        potentialRightsizingSavings: 1000,
-        updatedOn: '',
-      };
 
-      expect(component.costPercentage).toBe(85);
-      expect(component.costColor).toBe('warn');
+    describe('when value is warn lower limit ', () => {
+      it('should round off correctly', () => {
+        component.costRecommendations = {
+          budget: 1000,
+          actual: 840.1,
+          variance: 0,
+          potentialOperationalSavings: 1000,
+          potentialRightsizingSavings: 1000,
+          updatedOn: '',
+        };
+
+        expect(component.costPercentage).toBe(85);
+        expect(component.costColor).toBe('warn');
+      });
     });
 
-    it('good upper limit should round off correctly', () => {
-      component.costRecommendations = {
-        budget: 1000,
-        actual: 840,
-        variance: 0,
-        potentialOperationalSavings: 1000,
-        potentialRightsizingSavings: 1000,
-        updatedOn: '',
-      };
 
-      expect(component.costPercentage).toBe(84);
-      expect(component.costColor).toBe('good');
+    describe('when value is good upper limit', () => {
+      it('should round off correctly', () => {
+        component.costRecommendations = {
+          budget: 1000,
+          actual: 840,
+          variance: 0,
+          potentialOperationalSavings: 1000,
+          potentialRightsizingSavings: 1000,
+          updatedOn: '',
+        };
+
+        expect(component.costPercentage).toBe(84);
+        expect(component.costColor).toBe('good');
+      });
     });
 
-    it('good lower limit should round off correctly', () => {
-      component.costRecommendations = {
-        budget: 1000,
-        actual: 0,
-        variance: 0,
-        potentialOperationalSavings: 1000,
-        potentialRightsizingSavings: 1000,
-        updatedOn: '',
-      };
 
-      expect(component.costPercentage).toBe(0);
-      expect(component.costColor).toBe('good');
+    describe('when value is good lower limit', () => {
+      it(' should round off correctly', () => {
+        component.costRecommendations = {
+          budget: 1000,
+          actual: 0,
+          variance: 0,
+          potentialOperationalSavings: 1000,
+          potentialRightsizingSavings: 1000,
+          updatedOn: '',
+        };
+
+        expect(component.costPercentage).toBe(0);
+        expect(component.costColor).toBe('good');
+      });
     });
 
-    it('negative values value should return 0', () => {
-      component.costRecommendations = {
-        budget: -1000,
-        actual: -500,
-        variance: 0,
-        potentialOperationalSavings: 1000,
-        potentialRightsizingSavings: 1000,
-        updatedOn: '',
-      };
+    describe('when values are negative', () => {
+      it(' should return 0', () => {
+        component.costRecommendations = {
+          budget: -1000,
+          actual: -500,
+          variance: 0,
+          potentialOperationalSavings: 1000,
+          potentialRightsizingSavings: 1000,
+          updatedOn: '',
+        };
 
-      expect(component.costPercentage).toBe(0);
-      expect(component.actual).toBe(0);
-      expect(component.budget).toBe(0);
-      expect(component.costColor).toBe('good');
+        expect(component.costPercentage).toBe(0);
+        expect(component.actual).toBe(0);
+        expect(component.budget).toBe(0);
+        expect(component.costColor).toBe('good');
+      });
     });
 
-    it('budget is negative value should round off to 0', () => {
-      component.costRecommendations = {
-        budget: -1000,
-        actual: 1000,
-        variance: 0,
-        potentialOperationalSavings: 1000,
-        potentialRightsizingSavings: 1000,
-        updatedOn: '',
-      };
+    describe('when budget is negative', () => {
+      it('should round off to 0', () => {
+        component.costRecommendations = {
+          budget: -1000,
+          actual: 1000,
+          variance: 0,
+          potentialOperationalSavings: 1000,
+          potentialRightsizingSavings: 1000,
+          updatedOn: '',
+        };
 
-      expect(component.costPercentage).toBe(0);
-      expect(component.actual).toBe(1000);
-      expect(component.budget).toBe(0);
-      expect(component.costColor).toBe('good');
+        expect(component.costPercentage).toBe(0);
+        expect(component.actual).toBe(1000);
+        expect(component.budget).toBe(0);
+        expect(component.costColor).toBe('good');
+      });
     });
 
-    it('actual is negative value should round off to 0', () => {
-      component.costRecommendations = {
-        budget: 1000,
-        actual: -1000,
-        variance: 0,
-        potentialOperationalSavings: 1000,
-        potentialRightsizingSavings: 1000,
-        updatedOn: '',
-      };
 
-      expect(component.costPercentage).toBe(0);
-      expect(component.actual).toBe(0);
-      expect(component.budget).toBe(1000);
-      expect(component.costColor).toBe('good');
+    describe('when actual is negative', () => {
+      it(' value should round off to 0', () => {
+        component.costRecommendations = {
+          budget: 1000,
+          actual: -1000,
+          variance: 0,
+          potentialOperationalSavings: 1000,
+          potentialRightsizingSavings: 1000,
+          updatedOn: '',
+        };
+
+        expect(component.costPercentage).toBe(0);
+        expect(component.actual).toBe(0);
+        expect(component.budget).toBe(1000);
+        expect(component.costColor).toBe('good');
+      });
     });
   });
 });

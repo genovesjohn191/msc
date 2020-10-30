@@ -3,7 +3,8 @@ import {
   transformNumberToDecimal,
   minimizeByStepValue,
   maximizeByStepValue,
-  currencyFormat
+  currencyFormat,
+  truncateDecimals
 } from './mcs-number.function';
 
 describe('NUMBER Functions', () => {
@@ -106,6 +107,35 @@ describe('NUMBER Functions', () => {
         let testNumber: number = -1223.66;
         let expected: string = '-$1,223.66';
         let result = currencyFormat(testNumber);
+        expect(result).toBe(expected);
+      });
+    });
+  });
+
+  describe('truncateDecimals()', () => {
+    describe('given number with no decimals', () => {
+      it(`should return result with no decimals`, () => {
+        let testNumber: number = 100;
+        let expected: number = 100;
+        let result = truncateDecimals(testNumber, 2);
+        expect(result).toBe(expected);
+      });
+    });
+
+    describe('given number with decimals', () => {
+      it(`should return fixed down version with no rounding`, () => {
+        let testNumber: number = 100.157;
+        let expected: number = 100.15;
+        let result = truncateDecimals(testNumber, 2);
+        expect(result).toBe(expected);
+      });
+    });
+
+    describe('given number with less decimals than required', () => {
+      it(`should return the the value with no change`, () => {
+        let testNumber: number = 100.9;
+        let expected: number = 100.9;
+        let result = truncateDecimals(testNumber, 2);
         expect(result).toBe(expected);
       });
     });

@@ -3,7 +3,8 @@ import {
   ChangeDetectionStrategy,
   ViewEncapsulation,
   ChangeDetectorRef,
-  OnInit
+  OnInit,
+  Input
 } from '@angular/core';
 import { isNullOrEmpty } from '@app/utilities';
 import { ChartDataService } from '../chart-data.service';
@@ -35,7 +36,8 @@ export class VerticalBarChartComponent extends ChartComponentBase implements OnI
   private _setDefaultOptions(): void {
     this.chart = {
       type: 'bar',
-      height: isNullOrEmpty(this.height) ? '400px' : this.height
+      stacked: this.stacked,
+      height: isNullOrEmpty(this.height) ? 'auto' : this.height
     };
 
     this.plotOptions = {
@@ -43,14 +45,14 @@ export class VerticalBarChartComponent extends ChartComponentBase implements OnI
         barHeight: '100%',
         horizontal: false,
         dataLabels: {
-          position: 'bottom'
+          position: 'top'
         },
-        distributed: true
+        distributed: this.distributed
       }
     };
 
     this.dataLabels = {
-      enabled: true,
+      enabled: this.enableDataLabels,
       offsetY: 0,
       style: {
         fontSize: '10px',

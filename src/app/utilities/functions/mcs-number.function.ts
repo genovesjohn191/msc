@@ -72,3 +72,17 @@ export function currencyFormat(value: number): string {
 
   return formatter.format(value);
 }
+
+/**
+ * Fix a decimal to specific number of decimal point
+ * e.g. fixdown(2.599, 2)  output: 2.59
+ * @param value Decimal to truncate
+ * @param digits Number of allowed decimals
+ */
+export function truncateDecimals(value: number, digits: number) {
+  let multiplier = Math.pow(10, digits);
+  let adjustedNum = value * multiplier;
+  let truncatedNum = Math[adjustedNum < 0 ? 'ceil' : 'floor'](adjustedNum);
+
+  return truncatedNum / multiplier;
+}

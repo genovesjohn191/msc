@@ -1,12 +1,12 @@
 <div class="widget flat">
-  <mcs-bar-chart
+  <mcs-vertical-bar-chart
     *ngIf="!processing && !hasError"
     [data]="data$ | async"
-    yLabel="Avg % Used"
-    xLabel="Days"
-    [yAxisDataFormatter]="percentFormatter">
-  </mcs-bar-chart>
+    xAxisLabel="Days"
+    yAxisLabel="Avg % Used"
+    [yAxisLabelFormatter]="yAxisLabelFormatter">
+  </mcs-vertical-bar-chart>
 
-  <mcs-report-widget-data-status type="info" [processing]="processing" [hasError]="hasError" (retry)="getData()">  
+  <mcs-report-widget-data-status type="info" [processing]="processing" [hasError]="hasError" (retry)="getData()">
   </mcs-report-widget-data-status>
 </div>
