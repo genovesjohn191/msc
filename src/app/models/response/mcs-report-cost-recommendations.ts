@@ -1,4 +1,3 @@
-import { TextPhoneNumberFormatPipe } from '@app/shared/pipes/text-phonenumber-format.pipe';
 import { JsonProperty } from '@app/utilities';
 
 export class McsReportCostRecommendations {

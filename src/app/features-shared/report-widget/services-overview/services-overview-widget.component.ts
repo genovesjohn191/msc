@@ -31,6 +31,9 @@ interface ServiceInfo {
   link: string;
   icon: string;
   getData: (id: number) => void;
+  eventId: string;
+  eventTracker: string;
+  eventLabel: string;
 }
 
 @Component({
@@ -54,7 +57,10 @@ export class ServicesOverviewWidgetComponent implements OnInit, OnDestroy {
       processing: true,
       hasError: true,
       link: CoreRoutes.getNavigationPath(RouteKey.Licenses),
-      getData: this.getAzureSubscriptionInfo.bind(this)
+      getData: this.getAzureSubscriptionInfo.bind(this),
+      eventId: 'services-overview-azure-sub',
+      eventTracker: 'navigate-to-azure-subscription',
+      eventLabel: 'azure-subscription-link'
     },
     {
       id: 1,
@@ -64,7 +70,10 @@ export class ServicesOverviewWidgetComponent implements OnInit, OnDestroy {
       processing: true,
       hasError: true,
       link: CoreRoutes.getNavigationPath(RouteKey.Licenses),
-      getData: this.getLicenseSubscriptionInfo.bind(this)
+      getData: this.getLicenseSubscriptionInfo.bind(this),
+      eventId: 'services-overview-license-sub',
+      eventTracker: 'navigate-to-license-subscription',
+      eventLabel: 'license-subscription-link'
     }
   ];
 

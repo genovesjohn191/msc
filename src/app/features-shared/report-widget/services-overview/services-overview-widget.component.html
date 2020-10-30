@@ -4,7 +4,13 @@
     <mcs-cta-list>
       <mcs-cta-list-panel *ngFor="let serviceInfo of servicesInfo" [icon]="serviceInfo.icon" compact="true">
         <mcs-cta-list-action>
-          <a *ngIf="!serviceInfo.processing && !serviceInfo.hasError; else processing"  href="{{ serviceInfo.link }}">
+          <a
+            *ngIf="!serviceInfo.processing && !serviceInfo.hasError; else processing"
+            href="{{ serviceInfo.link }}"
+            mcsId="{{ serviceInfo.eventId }}"
+            mcsEventTracker="{{ serviceInfo.eventTracker }}"
+            mcsEventCategory="dashboard-navigation"
+            mcsEventLabel="{{ serviceInfo.eventLabel }}">
             {{ serviceInfo.count }} {{ serviceInfo.description }}
           </a>
           <ng-template #processing>
