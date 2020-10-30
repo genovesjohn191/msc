@@ -60,7 +60,7 @@ export class ChartComponentBase {
     if (isNullOrEmpty(value)) {
       return;
     }
-    console.log(value);
+
     let data: ChartData = this._chartDataService.convertToApexChartData(value);
 
     this.series = data.series;
@@ -73,6 +73,15 @@ export class ChartComponentBase {
 
   @Input()
   public height: string;
+
+  @Input()
+  public enableDataLabels: boolean = false;
+
+  @Input()
+  public distributed: boolean = false;
+
+  @Input()
+  public stacked: boolean = false;
 
   @Input()
   public set dataLabelFormatter(value: dataLabelFormatter) {
@@ -136,10 +145,8 @@ export class ChartComponentBase {
   }
 
   @Input()
-  public set hideDataLabels(value: boolean) {
-    this.dataLabels = {
-      enabled: !value
-    };
+  public set showDataLabels(value: boolean) {
+    this.dataLabels.enabled = value;
   }
 
   @Input()
@@ -158,6 +165,24 @@ export class ChartComponentBase {
         show: !value
       }
     };
+  }
+
+  @Input()
+  public set yAxisLabel(value: string) {
+    this.yaxis = {
+      title: {
+        text: value
+      }
+    }
+  }
+
+  @Input()
+  public set xAxisLabel(value: string) {
+    this.xaxis = {
+      title: {
+        text: value
+      }
+    }
   }
 
   @ViewChild('chartObject', { static: true })
@@ -241,7 +266,7 @@ export class ChartComponentBase {
   protected colors = {};
 
   private _dataLabels: ApexDataLabels = {
-    enabled: true,
+    enabled: false,
     offsetX: 0,
     textAnchor: 'start',
     style: {

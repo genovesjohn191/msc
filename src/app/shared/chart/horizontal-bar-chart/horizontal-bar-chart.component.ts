@@ -22,9 +22,6 @@ import { ChartComponentBase } from '../core/chart-base.component';
 })
 
 export class HorizontalBarChartComponent extends ChartComponentBase implements OnInit {
-  @Input()
-  public distributed: boolean = true;
-
   public constructor(
     chartDataService: ChartDataService,
     changeDetector: ChangeDetectorRef
@@ -39,12 +36,12 @@ export class HorizontalBarChartComponent extends ChartComponentBase implements O
   private _setDefaultOptions(): void {
     this.chart = {
       type: 'bar',
-      height: isNullOrEmpty(this.height) ? '400px' : this.height
+      stacked: this.stacked,
+      height: isNullOrEmpty(this.height) ? 'auto' : this.height
     };
 
     this.plotOptions = {
       bar: {
-        colors: this.colors,
         barHeight: '85%',
         horizontal: true,
         dataLabels: {
@@ -55,7 +52,7 @@ export class HorizontalBarChartComponent extends ChartComponentBase implements O
     };
 
     this.dataLabels = {
-      enabled: true,
+      enabled: this.enableDataLabels,
       offsetX: -65,
       style: {
         fontSize: '10px',

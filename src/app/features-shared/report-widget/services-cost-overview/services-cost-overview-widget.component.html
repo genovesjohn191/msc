@@ -1,11 +1,12 @@
 <div class="widget flat">
-  <mcs-bar-chart
+  <mcs-vertical-bar-chart
     *ngIf="!processing && !hasError"
     [data]="data$ | async"
     [stacked]="true"
-    yLabel="Total Cost(s)"
-    xLabel="Months">
-  </mcs-bar-chart>
+    xAxisLabel="Months"
+    yAxisLabel="Total Cost(s)">
+  </mcs-vertical-bar-chart>
+
   <mcs-report-widget-data-status type="info" [processing]="processing" [hasError]="hasError" (retry)="getData()">
   </mcs-report-widget-data-status>
   <div class="hide-on-print" style="text-align: left; padding-top: 15px;">

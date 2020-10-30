@@ -36,7 +36,7 @@ import { ReportPeriod } from '../report-period.interface';
 export class ServicesCostOverviewWidgetComponent implements OnInit, OnDestroy {
   @Input()
   public set subscriptionIds(value: string[]) {
-    if (value === this._subscriptionIds) {
+    if (JSON.stringify(value) === JSON.stringify(this._subscriptionIds)) {
       return;
     }
 
@@ -49,7 +49,7 @@ export class ServicesCostOverviewWidgetComponent implements OnInit, OnDestroy {
   public hasError: boolean = false;
   public processing: boolean = true;
 
-  private _subscriptionIds: string[] = [];
+  private _subscriptionIds: string[] = undefined;
   private _startPeriod: string = '';
   private _endPeriod: string = '';
 

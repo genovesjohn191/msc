@@ -44,58 +44,64 @@ describe('ResourceChangesWidgetComponent', () => {
 
   /** Test Implementation */
   describe('dataLabelFormatter()', () => {
-    it('should return with no prefix when value is 0', () => {
-      let opts = {
-        dataPointIndex: 0,
-        w: {
-          globals: {
-            labels: [
-              'Apps|0.00'
-            ]
+    describe('when value is 0', () => {
+      it('should return with no prefix', () => {
+        let opts = {
+          dataPointIndex: 0,
+          w: {
+            globals: {
+              labels: [
+                'Apps|0.00'
+              ]
+            }
           }
-        }
-      };
+        };
 
-      let expectedResult = '$0.00'
-      let actualResult = component.dataLabelFormatter(2, opts);
+        let expectedResult = '$0.00'
+        let actualResult = component.dataLabelFormatter(2, opts);
 
-      expect(actualResult).toBe(expectedResult);
+        expect(actualResult).toBe(expectedResult);
+      });
     });
 
-    it('should return with + prefix when value is positive', () => {
-      let opts = {
-        dataPointIndex: 0,
-        w: {
-          globals: {
-            labels: [
-              'Apps|500.00'
-            ]
+    describe('when value is positive', () => {
+      it('should return with + prefix', () => {
+        let opts = {
+          dataPointIndex: 0,
+          w: {
+            globals: {
+              labels: [
+                'Apps|500.00'
+              ]
+            }
           }
-        }
-      };
+        };
 
-      let expectedResult = '+$500.00'
-      let actualResult = component.dataLabelFormatter(3, opts);
+        let expectedResult = '+$500.00'
+        let actualResult = component.dataLabelFormatter(3, opts);
 
-      expect(actualResult).toBe(expectedResult);
+        expect(actualResult).toBe(expectedResult);
+      });
     });
 
-    it('should return with - prefix when value is negative', () => {
-      let opts = {
-        dataPointIndex: 0,
-        w: {
-          globals: {
-            labels: [
-              'Apps|-500.00'
-            ]
+    describe('when value is negative', () => {
+      it('should return with - prefix', () => {
+        let opts = {
+          dataPointIndex: 0,
+          w: {
+            globals: {
+              labels: [
+                'Apps|-500.00'
+              ]
+            }
           }
-        }
-      };
+        };
 
-      let expectedResult = '-$500.00'
-      let actualResult = component.dataLabelFormatter(3, opts);
+        let expectedResult = '-$500.00'
+        let actualResult = component.dataLabelFormatter(3, opts);
 
-      expect(actualResult).toBe(expectedResult);
+        expect(actualResult).toBe(expectedResult);
+      });
     });
   });
 
@@ -107,104 +113,124 @@ describe('ResourceChangesWidgetComponent', () => {
       expect(actualResult).toBe(expectedResult);
     });
   });
+
   describe('xAxisLabelFormatter()', () => {
-    it('should return with no prefix when value is 0', () => {
-      let expectedResult = '0'
-      let actualResult = component.xAxisLabelFormatter('0');
+    describe('when value is 0', () => {
+      it('should return with no prefix', () => {
+        let expectedResult = '0'
+        let actualResult = component.xAxisLabelFormatter('0');
 
-      expect(actualResult).toBe(expectedResult);
+        expect(actualResult).toBe(expectedResult);
+      });
     });
 
-    it('should return with + prefix when value is positive', () => {
-      let expectedResult = '+5'
-      let actualResult = component.xAxisLabelFormatter('5');
+    describe('when value is positive', () => {
+      it('should return with + prefix', () => {
+        let expectedResult = '+5'
+        let actualResult = component.xAxisLabelFormatter('5');
 
-      expect(actualResult).toBe(expectedResult);
+        expect(actualResult).toBe(expectedResult);
+      });
     });
 
-    it('should return with - prefix when value is negative', () => {
-      let expectedResult = '-5'
-      let actualResult = component.xAxisLabelFormatter('-5');
+    describe('when value is negative', () => {
+      it('should return with - prefix', () => {
+        let expectedResult = '-5'
+        let actualResult = component.xAxisLabelFormatter('-5');
 
-      expect(actualResult).toBe(expectedResult);
+        expect(actualResult).toBe(expectedResult);
+      });
     });
   });
+
   describe('tooltipXValueFormatter()', () => {
-    it('should return with no prefix when value is 0', () => {
-      let opts = {
-        dataPointIndex: 0,
-        w: {
-          globals: {
-            labels: [
-              'Apps|0.00'
-            ]
+    describe('when value is 0', () => {
+      it('should return with no prefix', () => {
+        let opts = {
+          dataPointIndex: 0,
+          w: {
+            globals: {
+              labels: [
+                'Apps|0.00'
+              ]
+            }
           }
-        }
-      };
+        };
 
-      let expectedResult = 'Apps ($0.00)'
-      let actualResult = component.tooltipXValueFormatter('0', opts);
+        let expectedResult = 'Apps ($0.00)'
+        let actualResult = component.tooltipXValueFormatter('0', opts);
 
-      expect(actualResult).toBe(expectedResult);
+        expect(actualResult).toBe(expectedResult);
+      });
     });
 
-    it('hould return with + prefix when value is positive', () => {
-      let opts = {
-        dataPointIndex: 0,
-        w: {
-          globals: {
-            labels: [
-              'Apps|+500.00'
-            ]
+    describe('when value is positive', () => {
+      it('should return with + prefix', () => {
+        let opts = {
+          dataPointIndex: 0,
+          w: {
+            globals: {
+              labels: [
+                'Apps|+500.00'
+              ]
+            }
           }
-        }
-      };
+        };
 
-      let expectedResult = 'Apps (+$500.00)'
-      let actualResult = component.tooltipXValueFormatter('+5', opts);
+        let expectedResult = 'Apps (+$500.00)'
+        let actualResult = component.tooltipXValueFormatter('+5', opts);
 
-      expect(actualResult).toBe(expectedResult);
+        expect(actualResult).toBe(expectedResult);
+      });
     });
 
-    it('should return with - prefix when value is negative', () => {
-      let opts = {
-        dataPointIndex: 0,
-        w: {
-          globals: {
-            labels: [
-              'Apps|-500.00'
-            ]
+    describe('when value is negative', () => {
+      it('should return with - prefix', () => {
+        let opts = {
+          dataPointIndex: 0,
+          w: {
+            globals: {
+              labels: [
+                'Apps|-500.00'
+              ]
+            }
           }
-        }
-      };
+        };
 
-      let expectedResult = 'Apps (-$500.00)'
-      let actualResult = component.tooltipXValueFormatter('-5', opts);
+        let expectedResult = 'Apps (-$500.00)'
+        let actualResult = component.tooltipXValueFormatter('-5', opts);
 
-      expect(actualResult).toBe(expectedResult);
+        expect(actualResult).toBe(expectedResult);
+      });
     });
   });
 
   describe('tooltipYValueFormatter()', () => {
-    it('should return with no prefix when value is 0', () => {
-      let expectedResult = '0'
-      let actualResult = component.tooltipYValueFormatter(0);
+    describe('when value is 0', () => {
+      it('should return with no prefix', () => {
+        let expectedResult = '0'
+        let actualResult = component.tooltipYValueFormatter(0);
 
-      expect(actualResult).toBe(expectedResult);
+        expect(actualResult).toBe(expectedResult);
+      });
     });
 
-    it('should return with + prefix when value is positive', () => {
-      let expectedResult = '+5'
-      let actualResult = component.tooltipYValueFormatter(5);
+    describe('when value is positive', () => {
+      it('should return with + prefix', () => {
+        let expectedResult = '+5'
+        let actualResult = component.tooltipYValueFormatter(5);
 
-      expect(actualResult).toBe(expectedResult);
+        expect(actualResult).toBe(expectedResult);
+      });
     });
 
-    it('should return with - prefix when value is negative', () => {
-      let expectedResult = '-5'
-      let actualResult = component.tooltipYValueFormatter(-5);
+    describe('when value is negative', () => {
+      it('should return with - prefix', () => {
+        let expectedResult = '-5'
+        let actualResult = component.tooltipYValueFormatter(-5);
 
-      expect(actualResult).toBe(expectedResult);
+        expect(actualResult).toBe(expectedResult);
+      });
     });
   });
 });

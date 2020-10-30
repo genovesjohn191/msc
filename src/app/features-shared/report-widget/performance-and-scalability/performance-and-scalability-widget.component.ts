@@ -14,7 +14,7 @@ import {
 import { catchError } from 'rxjs/operators';
 
 import { ChartItem } from '@app/shared';
-import { isNullOrEmpty, unsubscribeSafely } from '@app/utilities';
+import { truncateDecimals, isNullOrEmpty, unsubscribeSafely } from '@app/utilities';
 import { McsReportingService } from '@app/core/services/mcs-reporting.service';
 
 export interface PerformanceAndScalabilityWidgetConfig {
@@ -86,7 +86,7 @@ export class PerformanceAndScalabilityWidgetComponent implements OnInit, OnDestr
     });
   }
 
-  public percentFormatter(val: number) {
-    return val + '%';
+  public yAxisLabelFormatter(val: number) {
+    return truncateDecimals(val, 2) + '%';
   }
 }

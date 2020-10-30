@@ -5,6 +5,9 @@
     <mcs-horizontal-bar-chart
       [data]="data$ | async"
       [hideYAxis]="true"
+      [enableDataLabels]="true"
+      height="480px"
+      [distributed]="true"
       [dataLabelFormatter]="dataLabelFormatter"
       [legendLabelFormatter]="legendLabelFormatter"
       [xAxisLabelFormatter]="xAxisLabelFormatter"
