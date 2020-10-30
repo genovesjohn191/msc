@@ -29,8 +29,8 @@ import {
   McsFileInfo,
   McsComment,
   McsTicket,
-  TicketSubType,
-  ticketSubTypeText,
+  TicketType,
+  ticketTypeText,
   McsTicketAttachment,
   McsTicketCreateComment,
   McsTicketCreateAttachment
@@ -83,19 +83,19 @@ export class TicketComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Returns the formatted ticket header by subtype and crisp ticket number
+   * Returns the formatted ticket header by ticket type and crisp ticket number
    */
   public getTicketHeader(ticket: McsTicket): string {
     if (isNullOrEmpty(ticket)) { return ''; }
-    return `${ticket.subTypeLabel} #${ticket.ticketNumber}`;
+    return `${ticket.ticketTypeLabel} #${ticket.ticketNumber}`;
   }
 
   /**
-   * Return the subtype string based on enumeration type
+   * Return the ticket type string based on enumeration type
    * @param status Enumeration status to be converted
    */
-  public getSubTypeString(status: TicketSubType) {
-    return ticketSubTypeText[status];
+  public getTicketTypeString(status: TicketType) {
+    return ticketTypeText[status];
   }
 
   /**

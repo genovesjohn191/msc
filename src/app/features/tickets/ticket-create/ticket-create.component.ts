@@ -35,8 +35,8 @@ import {
 } from '@app/utilities';
 import { McsFormGroupDirective } from '@app/shared';
 import {
-  TicketSubType,
-  ticketSubTypeText,
+  TicketType,
+  ticketTypeText,
   serviceTypeText,
   McsFileInfo,
   McsOption,
@@ -144,7 +144,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     let ticket = new McsTicketCreate();
 
     // Set ticket data information
-    ticket.subType = this.fcType.value;
+    ticket.ticketType = this.fcType.value;
     ticket.shortDescription = this.fcSummary.value;
     ticket.description = this.fcDetails.value;
     if (!isNullOrEmpty(this.fcReference.value)) {
@@ -217,12 +217,12 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
    * Set ticket type based on selection
    */
   private _setTicketType(): void {
-    if (isNullOrEmpty(ticketSubTypeText)) { return; }
+    if (isNullOrEmpty(ticketTypeText)) { return; }
 
-    this.ticketTypeList.push(new McsOption(TicketSubType.Enquiry,
-      ticketSubTypeText[TicketSubType.Enquiry]));
-    this.ticketTypeList.push(new McsOption(TicketSubType.TroubleTicket,
-      ticketSubTypeText[TicketSubType.TroubleTicket]));
+    this.ticketTypeList.push(new McsOption(TicketType.Enquiry,
+      ticketTypeText[TicketType.Enquiry]));
+    this.ticketTypeList.push(new McsOption(TicketType.TroubleTicket,
+      ticketTypeText[TicketType.TroubleTicket]));
   }
 
   /**

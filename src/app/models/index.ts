@@ -66,7 +66,7 @@ export * from './enumerations/comment-category';
 export * from './enumerations/comment-type';
 export * from './enumerations/ticket-priority';
 export * from './enumerations/ticket-status';
-export * from './enumerations/ticket-subtype';
+export * from './enumerations/ticket-type';
 export * from './enumerations/status-code.enum';
 export * from './enumerations/provisioning-status.enum';
 export * from './enumerations/action-status.enum';
