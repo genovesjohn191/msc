@@ -253,6 +253,7 @@ export * from './response/mcs-report-cost-recommendations';
 export * from './response/mcs-report-generic-item';
 export * from './response/mcs-report-integer-data';
 export * from './response/mcs-report-subscription';
+export * from './response/mcs-report-service-change-info';
 
 /** Common */
 export * from './common/mcs-api-search-key';

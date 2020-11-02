@@ -4,6 +4,7 @@ import {
   McsReportCostRecommendations,
   McsReportGenericItem,
   McsReportIntegerData,
+  McsReportServiceChangeInfo,
   McsReportSubscription
 } from '@app/models';
 
@@ -28,4 +29,6 @@ export interface IMcsApiReportsService {
   getAzureResourcesReport(): Observable<McsApiSuccessResponse<McsReportIntegerData[]>>;
 
   getCostRecommendations(): Observable<McsApiSuccessResponse<McsReportCostRecommendations>>;
+
+  getServiceChanges(): Observable<McsApiSuccessResponse<McsReportServiceChangeInfo[]>>;
 }

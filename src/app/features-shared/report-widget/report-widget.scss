@@ -10,6 +10,11 @@ $shadow-effect: 1px solid #e3e3e3;
     border-bottom: $shadow-effect;
     border-right: $shadow-effect;
 
+    @include print() {
+      padding-bottom: 0;
+      padding-top: 0;
+    }
+
     .error-wrapper {
       margin: $space-large 0;
     }

@@ -17,6 +17,7 @@ import { catchError } from 'rxjs/operators';
 import { CommonDefinition, unsubscribeSafely } from '@app/utilities';
 
 const maxResourcesToDisplay = 10;
+
 @Component({
   selector: 'mcs-azure-resources-widget',
   templateUrl: './azure-resources-widget.component.html',
@@ -40,8 +41,7 @@ export class AzureResourcesWidgetComponent implements OnInit, OnDestroy {
 
   public constructor(
     private _changeDetectorRef: ChangeDetectorRef,
-    private reportingService: McsReportingService) {
-  }
+    private _reportingService: McsReportingService) { }
 
   public ngOnInit() {
     this.dataBehavior = new BehaviorSubject<ChartItem[]>(null);
@@ -59,7 +59,7 @@ export class AzureResourcesWidgetComponent implements OnInit, OnDestroy {
     this.processing = true;
     this._changeDetectorRef.markForCheck();
 
-    this.reportingService.getAzureServicesReport()
+    this._reportingService.getAzureServicesReport()
     .pipe(catchError(() => {
       this.hasError = true;
       this.processing = false;
@@ -68,60 +68,6 @@ export class AzureResourcesWidgetComponent implements OnInit, OnDestroy {
     }))
     .subscribe((result) => {
       result = result.slice(0, maxResourcesToDisplay);
-
-      let data = [
-        {
-          name: '1',
-          xValue: 'Virtual machines|4201.33',
-          yValue: 17,
-        },
-        {
-          name: '1',
-          xValue: 'SQL Managed Instance|944.20',
-          yValue: 14,
-        },
-        {
-          name: '1',
-          xValue: 'Apps|500.00',
-          yValue: 13,
-        },
-        {
-          name: '1',
-          xValue: 'Extensions|1201.33',
-          yValue: 7,
-        },
-        {
-          name: '1',
-          xValue: 'Workspace|944.20',
-          yValue: 3,
-        },
-        {
-          name: '1',
-          xValue: 'Networking|-500.00',
-          yValue: -1,
-        },
-        {
-          name: '1',
-          xValue: 'Firewall|1201.33',
-          yValue: -3,
-        },
-        {
-          name: '1',
-          xValue: 'Disks|-944.20',
-          yValue: -4,
-        },
-        {
-          name: '1',
-          xValue: 'Memory|-500.00',
-          yValue: -8,
-        },
-        {
-          name: '1',
-          xValue: 'Solutions|-1200.00',
-          yValue: -11,
-        }
-      ];
-
       this.dataBehavior.next(result);
       this.processing = false;
       this._changeDetectorRef.markForCheck();
