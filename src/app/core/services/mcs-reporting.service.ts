@@ -1,7 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { McsReportCostRecommendations, McsReportGenericItem, McsReportIntegerData, McsReportSubscription } from '@app/models';
+import {
+  McsReportCostRecommendations,
+  McsReportGenericItem,
+  McsReportIntegerData,
+  McsReportServiceChangeInfo,
+  McsReportSubscription
+} from '@app/models';
 import { McsApiService } from '@app/services';
 import { ChartItem } from '@app/shared/chart';
 import { isNullOrEmpty } from '@app/utilities';
@@ -65,6 +71,30 @@ export class McsReportingService {
 
   public getCostRecommendations(): Observable<McsReportCostRecommendations> {
     return this._apiService.getCostRecommendations();
+  }
+
+  public getServiceChanges(): Observable<ChartItem[]> {
+    return this._apiService.getServiceChanges()
+      .pipe(map((resources) => {
+        let items: McsReportServiceChangeInfo[] = [];
+        if (!isNullOrEmpty(resources.collection)) {
+          items = resources.collection.sort((a, b) => b.serviceCountChange - a.serviceCountChange);
+        }
+        return this._convertServiceChangeInfoToChartItem(items);
+      }));
+  }
+
+  private _convertServiceChangeInfoToChartItem(items: McsReportServiceChangeInfo[]): ChartItem[] {
+    let data: ChartItem[] = [];
+    items.forEach(item => {
+        data.push({
+          name: 'Change',
+          xValue: `${item.serviceName}|${item.serviceCostChange}`,
+          yValue: item.serviceCountChange
+        });
+    });
+
+    return data;
   }
 
   private _convertIntegerDataToChartItem(items: McsReportIntegerData[]): ChartItem[] {

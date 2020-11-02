@@ -72,16 +72,22 @@ export class ChartComponentBase {
   }
 
   @Input()
-  public height: string;
-
-  @Input()
-  public enableDataLabels: boolean = false;
+  public set height(value: string) {
+    this._chart.height = isNullOrEmpty(value) ? 'auto' : value
+  };
 
   @Input()
   public distributed: boolean = false;
 
   @Input()
-  public stacked: boolean = false;
+  public set stacked(value: boolean) {
+    this._chart.stacked = value;
+  };
+
+  @Input()
+  public set enableDataLabels(value: boolean) {
+    this._dataLabels.enabled = value;
+  }
 
   @Input()
   public set dataLabelFormatter(value: dataLabelFormatter) {
@@ -142,11 +148,6 @@ export class ChartComponentBase {
         }
       }
     };
-  }
-
-  @Input()
-  public set showDataLabels(value: boolean) {
-    this.dataLabels.enabled = value;
   }
 
   @Input()

@@ -3,10 +3,8 @@ import {
   ChangeDetectionStrategy,
   ViewEncapsulation,
   ChangeDetectorRef,
-  Input,
   OnInit
 } from '@angular/core';
-import { isNullOrEmpty } from '@app/utilities';
 import { ChartDataService } from '../chart-data.service';
 import { ChartComponentBase } from '../core/chart-base.component';
 
@@ -35,9 +33,7 @@ export class HorizontalBarChartComponent extends ChartComponentBase implements O
 
   private _setDefaultOptions(): void {
     this.chart = {
-      type: 'bar',
-      stacked: this.stacked,
-      height: isNullOrEmpty(this.height) ? 'auto' : this.height
+      type: 'bar'
     };
 
     this.plotOptions = {
@@ -52,7 +48,6 @@ export class HorizontalBarChartComponent extends ChartComponentBase implements O
     };
 
     this.dataLabels = {
-      enabled: this.enableDataLabels,
       offsetX: -65,
       style: {
         fontSize: '10px',

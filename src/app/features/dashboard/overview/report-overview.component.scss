@@ -1,0 +1,42 @@
+@import "../../../../styles/shared/base";
+
+.widget-wrapper {
+  max-width: 1863px;
+  margin-left: auto;
+  margin-right: auto;
+
+  @include print() {
+    mcs-grid-row, mcs-grid-column {
+      display: block !important;
+    }
+    mcs-grid-column {
+      width: 721px !important;
+      max-width: 721px !important;
+      margin-top: 0 !important;
+    }
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    @include print() {
+      @include column-count(1);
+    }
+    @include column-count(2);
+
+    @include breakpoint(wide) {
+      @include column-count(3);
+    }
+
+    @include breakpoint(large) {
+      @include column-count(1);
+    }
+
+    li {
+      margin-top: 0;
+      margin-bottom: 0;
+      @include break(avoid);
+    }
+  }
+}

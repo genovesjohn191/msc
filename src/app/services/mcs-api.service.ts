@@ -126,6 +126,7 @@ import {
   McsColocationStandardSqm,
   McsReportSubscription,
   McsReportCostRecommendations,
+  McsReportServiceChangeInfo,
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -1551,6 +1552,15 @@ export class McsApiService {
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getCostRecommendations'))
       ),
       map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public getServiceChanges(): Observable<McsApiCollection<McsReportServiceChangeInfo>> {
+    return this._reportsApi.getServiceChanges().pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getServiceChanges'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
     );
   }
 

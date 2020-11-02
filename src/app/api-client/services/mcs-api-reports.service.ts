@@ -7,7 +7,8 @@ import {
   McsReportGenericItem,
   McsReportIntegerData,
   McsReportSubscription,
-  McsReportCostRecommendations
+  McsReportCostRecommendations,
+  McsReportServiceChangeInfo
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiReportsService } from '../interfaces/mcs-api-reports.interface';
@@ -116,7 +117,7 @@ export class McsApiReportsService implements IMcsApiReportsService {
 
   public getCostRecommendations(): Observable<McsApiSuccessResponse<McsReportCostRecommendations>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = '/public-cloud/reports/cost-recommendations ';
+    mcsApiRequestParameter.endPoint = '/public-cloud/reports/cost-recommendations';
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -124,6 +125,21 @@ export class McsApiReportsService implements IMcsApiReportsService {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
             .deserializeResponse<McsReportCostRecommendations>(McsReportCostRecommendations, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  public getServiceChanges(): Observable<McsApiSuccessResponse<McsReportServiceChangeInfo[]>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/public-cloud/reports/service-changes';
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsReportServiceChangeInfo[]>(McsReportServiceChangeInfo, response);
           return apiResponse;
         })
       );

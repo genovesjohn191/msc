@@ -7,7 +7,8 @@ import {
 } from '@angular/core';
 import {
   BehaviorSubject,
-  Observable
+  Observable,
+  throwError
 } from 'rxjs';
 
 import { ChartItem } from '@app/shared';
@@ -15,6 +16,10 @@ import {
   coerceNumber,
   currencyFormat
 } from '@app/utilities';
+import { McsReportingService } from '@app/core/services/mcs-reporting.service';
+import { catchError } from 'rxjs/operators';
+
+const maxItemToDisplay = 10;
 
 @Component({
   selector: 'mcs-resource-changes-widget',
@@ -30,68 +35,38 @@ import {
 export class ResourceChangesWidgetComponent implements OnInit {
   public data$: Observable<ChartItem[]>;
   public dataBehavior: BehaviorSubject<ChartItem[]>;
+  public hasError: boolean = false;
+  public processing: boolean = true;
 
-  public constructor(private _changeDetectorRef: ChangeDetectorRef) {
-  }
+  public constructor(
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _reportingService: McsReportingService) { }
 
   public ngOnInit() {
-    let data = [
-      {
-        name: 'Change',
-        xValue: 'Virtual machines|4201.33',
-        yValue: 17,
-      },
-      {
-        name: 'Change',
-        xValue: 'SQL Managed Instance|944.20',
-        yValue: 14,
-      },
-      {
-        name: 'Change',
-        xValue: 'Apps|500.00',
-        yValue: 13,
-      },
-      {
-        name: 'Change',
-        xValue: 'Extensions|1201.33',
-        yValue: 7,
-      },
-      {
-        name: 'Change',
-        xValue: 'Workspace|944.20',
-        yValue: 3,
-      },
-      {
-        name: 'Change',
-        xValue: 'Networking|-500.00',
-        yValue: -1,
-      },
-      {
-        name: 'Change',
-        xValue: 'Firewall|1201.33',
-        yValue: -3,
-      },
-      {
-        name: 'Change',
-        xValue: 'Disks|-944.20',
-        yValue: -4,
-      },
-      {
-        name: 'Change',
-        xValue: 'Memory|-500.00',
-        yValue: -8,
-      },
-      {
-        name: 'Change',
-        xValue: 'Solutions|-1200.00',
-        yValue: -11,
-      }
-    ];
-
     this.dataBehavior = new BehaviorSubject<ChartItem[]>(null);
-    this._changeDetectorRef.markForCheck();
     this.data$ = this.dataBehavior.asObservable();
-    this.dataBehavior.next(data);
+
+    this.getData();
+  }
+
+  public getData(): void {
+    this.hasError = false;
+    this.processing = true;
+    this._changeDetectorRef.markForCheck();
+
+    this._reportingService.getServiceChanges()
+    .pipe(catchError(() => {
+      this.hasError = true;
+      this.processing = false;
+      this._changeDetectorRef.markForCheck();
+      return throwError('Service changes endpoint failed.');
+    }))
+    .subscribe((result) => {
+      result = result.slice(0, maxItemToDisplay);
+      this.dataBehavior.next(result);
+      this.processing = false;
+      this._changeDetectorRef.markForCheck();
+    });
   }
 
   public dataLabelFormatter(val: number, opts?: any): string {
