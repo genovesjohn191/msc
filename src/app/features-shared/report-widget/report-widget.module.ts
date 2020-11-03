@@ -11,6 +11,7 @@ import { AzureTicketsWidgetComponent } from './azure-tickets/azure-tickets-widge
 import { ServicesCostOverviewWidgetComponent } from './services-cost-overview/services-cost-overview-widget.component';
 import { VirtualMachineBreakdownWidgetComponent } from './virtual-machine-breakdown/virtual-machine-breakdown-widget.component';
 import { PerformanceAndScalabilityWidgetComponent } from './performance-and-scalability/performance-and-scalability-widget.component';
+import { SecurityAndComplianceWidgetComponent } from './security-and-compliance/security-and-compliance-widget.component';
 
 @NgModule({
   imports: [ SharedModule ],
@@ -23,6 +24,7 @@ import { PerformanceAndScalabilityWidgetComponent } from './performance-and-scal
     PerformanceAndScalabilityWidgetComponent,
     ReportWidgetDataStatusComponent,
     ResourceChangesWidgetComponent,
+    SecurityAndComplianceWidgetComponent,
     ServicesCostOverviewWidgetComponent,
     ServicesOverviewWidgetComponent,
     VirtualMachineBreakdownWidgetComponent
@@ -36,6 +38,7 @@ import { PerformanceAndScalabilityWidgetComponent } from './performance-and-scal
     PerformanceAndScalabilityWidgetComponent,
     ReportWidgetDataStatusComponent,
     ResourceChangesWidgetComponent,
+    SecurityAndComplianceWidgetComponent,
     ServicesCostOverviewWidgetComponent,
     ServicesOverviewWidgetComponent,
     VirtualMachineBreakdownWidgetComponent

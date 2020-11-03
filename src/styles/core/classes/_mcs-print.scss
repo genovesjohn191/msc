@@ -4,6 +4,14 @@
   }
 }
 
+.show-on-print-only {
+  display: none !important;
+
+  @include print() {
+    display: initial !important;
+  }
+}
+
 .no-break-on-print {
   @include print() {
     page-break-before: auto !important;
