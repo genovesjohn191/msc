@@ -87,7 +87,7 @@ export class TicketComponent implements OnInit, OnDestroy {
    */
   public getTicketHeader(ticket: McsTicket): string {
     if (isNullOrEmpty(ticket)) { return ''; }
-    return `${ticket.ticketTypeLabel} #${ticket.ticketNumber}`;
+    return `${ticket.typeLabel} #${ticket.ticketNumber}`;
   }
 
   /**

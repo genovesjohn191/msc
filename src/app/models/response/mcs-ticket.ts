@@ -100,7 +100,7 @@ export class McsTicket extends McsEntityBase {
     serializer: TicketTypeSerialization,
     deserializer: TicketTypeSerialization
   })
-  public ticketType: TicketType = undefined;
+  public type: TicketType = undefined;
 
   constructor() {
     super();
@@ -125,7 +125,7 @@ export class McsTicket extends McsEntityBase {
     this.childTickets = undefined;
     this.priority = undefined;
     this.state = undefined;
-    this.ticketType = undefined;
+    this.type = undefined;
   }
 
   /**
@@ -152,8 +152,8 @@ export class McsTicket extends McsEntityBase {
   /**
    * Returns the ticket type label
    */
-  public get ticketTypeLabel(): string {
-    return ticketTypeText[this.ticketType];
+  public get typeLabel(): string {
+    return ticketTypeText[this.type];
   }
 
   /**
