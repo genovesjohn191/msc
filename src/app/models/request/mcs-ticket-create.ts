@@ -25,5 +25,5 @@ export class McsTicketCreate {
     serializer: TicketTypeSerialization,
     deserializer: TicketTypeSerialization
   })
-  public ticketType: TicketType = undefined;
+  public type: TicketType = undefined;
 }

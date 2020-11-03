@@ -144,7 +144,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     let ticket = new McsTicketCreate();
 
     // Set ticket data information
-    ticket.ticketType = this.fcType.value;
+    ticket.type = this.fcType.value;
     ticket.shortDescription = this.fcSummary.value;
     ticket.description = this.fcDetails.value;
     if (!isNullOrEmpty(this.fcReference.value)) {
