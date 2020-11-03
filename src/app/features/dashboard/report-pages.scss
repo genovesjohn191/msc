@@ -7,16 +7,9 @@ mcs-content-panel {
   }
 }
 .report-wrapper {
-
   @include print() {
     width: 721px !important;
     max-width: 721px !important;
-  }
-
-  .options-container {
-    @include display-flex(row);
-    justify-content: space-between;
-    margin-bottom: $space-large;
   }
 
   h1 {
@@ -26,30 +19,4 @@ mcs-content-panel {
       margin-top: $space-medium;
     }
   }
-
-  .content-wrapper {
-    max-width: 1100px;
-    width: 70vw;
-
-    @include breakpoint(large) {
-      width: 720px;
-    }
-
-    @include breakpoint(medium) {
-      width: 100%;
-    }
-
-    .chart {
-      padding: 30px;
-
-      @include print() {
-        width: 1100px;
-        padding: 0;
-      }
-
-      margin-bottom: 20px;
-      background-color: $color-white;
-    }
-  }
-
 }

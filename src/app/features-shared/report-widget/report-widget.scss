@@ -4,6 +4,7 @@ $shadow-effect: 1px solid #e3e3e3;
 
 .widget-box {
   .widget {
+    margin-top: $space-large;
     margin-bottom: $space-large;
     padding: $space-large;
     background-color: $color-white;
@@ -32,7 +33,6 @@ $shadow-effect: 1px solid #e3e3e3;
     }
 
     &.flat {
-      margin-bottom: 0;
       padding: 0;
       border-bottom: none;
       border-right: none;

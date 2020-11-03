@@ -1,0 +1,38 @@
+@import "../../../../styles/shared/base";
+
+.content-wrapper {
+  max-width: 1100px;
+  width: 70vw;
+
+  @include breakpoint(large) {
+    width: 720px;
+  }
+
+  @include breakpoint(medium) {
+    width: 100%;
+  }
+
+  h2 {
+    margin: $space-medium 0;
+  }
+
+  .options-container {
+    margin-top: $space-medium;
+    @include display-flex(row);
+    justify-content: space-between;
+  }
+
+  section {
+    padding: $space-xlarge;
+
+    @include print() {
+      margin-bottom: $space-medium;
+      width: 1100px;
+      padding: 0;
+    }
+
+    margin-bottom: $space-large;
+    background-color: $color-white;
+  }
+}
+

@@ -24,40 +24,48 @@
           </div>
         </div>
 
-        <div class="chart no-break-on-print">
-          <h1>1. Costs</h1>
-          <br />
-          <h2>1.1 Services Overview</h2>
-          <br />
-          <mcs-services-cost-overview-widget [subscriptionIds]="subscriptionIdsFilter"></mcs-services-cost-overview-widget>
-          <br />
-          <h2>1.2 Virtual Machine Breakdown</h2>
-          <br />
-          <mcs-virtual-machine-breakdown-widget [subscriptionIds]="subscriptionIdsFilter"></mcs-virtual-machine-breakdown-widget>
-        </div>
+        <section class="no-break-on-print">
+          <h1><span class="show-on-print-only">1 </span>Costs</h1>
 
-        <div class="chart no-break-on-print">
-          <h1>2. Tech Review</h1>
-          <br />
-          <div class="options-container">
-            <div style="padding-top: 10px;">
-              <h2>2.2 Performance and Scalability</h2>
-            </div>
-            <div class="hide-on-print">
-              <mat-form-field appearance="outline">
-                <mat-label>Month</mat-label>
-                <mat-select [(ngModel)]="selectedPerformanceMonth">
-                  <mat-option *ngFor="let opt of monthOptions" [value]="opt">
-                    {{ opt.label }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
+          <div class="sub-section">
+            <h2><span class="show-on-print-only">1.1 </span>Services Overview</h2>
+            <mcs-services-cost-overview-widget [subscriptionIds]="subscriptionIdsFilter"></mcs-services-cost-overview-widget>
+
+            <mat-divider></mat-divider>
+
+            <h2><span class="show-on-print-only">1.2 </span>Virtual Machine Breakdown</h2>
+            <mcs-virtual-machine-breakdown-widget [subscriptionIds]="subscriptionIdsFilter"></mcs-virtual-machine-breakdown-widget>
           </div>
+        </section>
 
-          <br />
-          <mcs-performance-and-scalability-widget [config]="serviceCostConfig"></mcs-performance-and-scalability-widget>
-        </div>
+        <section class="no-break-on-print">
+          <h1><span class="show-on-print-only">2 </span>Tech Review</h1>
+
+          <div class="sub-section">
+            <h2><span class="show-on-print-only">2.1 </span>Security and Compliance</h2>
+            <mcs-security-and-compliance-widget></mcs-security-and-compliance-widget>
+
+            <mat-divider></mat-divider>
+
+            <div class="options-container">
+              <div>
+                <h2><span class="show-on-print-only">2.2 </span>Performance and Scalability</h2>
+              </div>
+              <div class="hide-on-print">
+                <mat-form-field appearance="outline">
+                  <mat-label>Month</mat-label>
+                  <mat-select [(ngModel)]="selectedPerformanceMonth">
+                    <mat-option *ngFor="let opt of monthOptions" [value]="opt">
+                      {{ opt.label }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <mcs-performance-and-scalability-widget [config]="serviceCostConfig"></mcs-performance-and-scalability-widget>
+
+          </div>
+        </section>
       </div>
     </div>
   </mcs-content-panel>

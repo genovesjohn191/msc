@@ -34,10 +34,10 @@ const months = [
 @Component({
   selector: 'mcs-report-insights',
   templateUrl: './report-insights.component.html',
-  styleUrls: ['../report-pages.scss'],
+  styleUrls: ['../report-pages.scss', './report-insights.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    'class': 'report-insights-wrapper'
+    'class': 'report-insights-component'
   }
 })
 export class ReportInsightsComponent implements OnDestroy {

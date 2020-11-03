@@ -1,0 +1,36 @@
+@import "../../../../styles/shared/base";
+
+.score-panel {
+  margin: $space-small $space-medium;
+  width: 100%;
+
+  .info {
+    @include display-flex(row);
+
+    .label {
+      display: inline-block;
+      margin-left: $space-small;
+      margin-bottom: $space-small;
+    }
+
+    .score {
+      @include font-size($font-size-large);
+      display: block;
+    }
+  }
+
+  &.overall {
+    height: auto;
+    margin-top: 24px;
+    margin-bottom: auto;
+
+    .score {
+      @include font-size($font-size-xxlarge);
+    }
+
+    mcs-icon {
+      align-self: flex-start;
+    }
+  }
+
+}
