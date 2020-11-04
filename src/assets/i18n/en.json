@@ -29,6 +29,10 @@
         "overview": "Overview",
         "insights": "Insights"
       },
+      "azure": {
+        "label": "Azure",
+        "resources": "Resources"
+      },
       "licenses": "Licenses"
     },
     "tools": "Other Tools",
@@ -2088,6 +2092,20 @@
       "noContent": "No linked services have been identified for this Backup Aggregation Target.",
       "errorContent": "Sorry, something’s not right. We weren’t able to retrieve the linked services for this Backup Aggregation Target."
     }
+  },
+  "azureResources": {
+    "header": "Resources",
+    "leftPanelHeader": "Resource Filter",
+    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of resources.",
+    "noRecordsFoundMessage": "There are no resources to display.",
+    "filterColumn": "Resource Filter",
+    "dataSingular": "Resource",
+    "dataPlural": "Resources",
+    "requestChange": "Request a Change",
+    "raiseTicket": "Raise a Ticket",
+    "viewAzurePortal": "View in Azure Portal",
+    "retry": "Try again shortly",
+    "tableBanner": "Below is a simple overview of your public cloud resources. Head to the Azure portal to manage these in detail."
   },
   "licenses": {
     "header": "Licenses",

@@ -1744,6 +1744,11 @@ export class McsApiService {
       eventEmitter: this._batsRepository.dataChange()
     });
 
+    this._entitiesEventMap.push({
+      event: McsEvent.dataChangeAzureResources,
+      eventEmitter: this._azureResourceRepository.dataChange()
+    });
+
     // Data Clear Events
     this._entitiesEventMap.push({
       event: McsEvent.dataClearServers,

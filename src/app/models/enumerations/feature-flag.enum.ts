@@ -6,6 +6,8 @@ export enum McsFeatureFlag {
 
   PublicCloudDashboard = 'EnablePublicCloudDashboard',
 
+  PublicCloudResourceListing = 'EnablePublicCloudResourceListing',
+
   CatalogSolutionListing = 'EnableCatalogSolutionListing',
 
   MediaCatalog = 'EnableMediaCatalog',

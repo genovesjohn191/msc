@@ -1,0 +1,155 @@
+<mcs-page [header]="'azureResources.header' | translate">
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef>
+    <mcs-top-panel-item *mcsTopPanelItemDef>
+      <div class="listing-action-wrapper">
+        <div class="total-record-count">
+          <span>{{ totalRecordsCount | mcsPlural:
+                ('azureResources.dataSingular' | translate) : ('azureResources.dataPlural' | translate) }}
+          </span>
+        </div>
+      </div>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
+  <!-- Left Panel -->
+  <mcs-left-panel *mcsLeftPanelDef="'azureResources.leftPanelHeader' | translate">
+    <!-- Search -->
+    <mcs-left-panel-item *mcsLeftPanelItemDef>
+      <mcs-search *ngIf="!isMobile" #search mcsId="azure-resources-desktop-search"></mcs-search>
+    </mcs-left-panel-item>
+
+    <!-- Column Filter -->
+    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'azureResources.filterColumn' | translate" offset="medium">
+      <mcs-column-filter [filters]="dataFilters"
+        (dataChange)="onColumnFilterChange($event)"></mcs-column-filter>
+    </mcs-left-panel-item>
+  </mcs-left-panel>
+
+  <!-- Content Panel -->
+  <mcs-content-panel *mcsContentPanelDef>
+    <div class="listing-table-wrapper">
+      <!-- Table Banner -->
+      <div> 
+        {{ 'azureResources.tableBanner' | translate }} 
+      </div>
+      <!-- Search -->
+      <mcs-search *ngIf="isMobile" #search mcsId="virtual-mobile-search"></mcs-search>
+      <!-- Table -->
+      <mcs-table #table [dataSource]="dataSource">
+        <!-- Name Column -->
+        <ng-container mcsColumnDef="name">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ columnSettings.name.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row">
+            {{ row.name }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Service ID Column -->
+        <ng-container mcsColumnDef="serviceId">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ columnSettings.serviceId.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row">
+            {{ row.serviceId }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Subscription Name Column -->
+        <ng-container mcsColumnDef="subscriptionName">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ columnSettings.subscriptionName.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row">
+            {{ row.subscriptionName }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Subscription ID Column -->
+        <ng-container mcsColumnDef="subscriptionId">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ columnSettings.subscriptionId.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row">
+            {{ row.subscriptionId }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Action Column -->
+        <ng-container mcsColumnDef="action">
+          <mcs-header-cell *mcsHeaderCellDef></mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" text-center>
+            <mcs-icon mcsStopPropagation [key]="cogIconKey" size="large"
+              mcsPopover placement="bottom" orientation="left" theme="light"
+              padding="none" [content]="actionContent" mcsCursor="pointer">
+            </mcs-icon>
+            <ng-template #actionContent>
+              <div *mcsAccessControl="['OrderEdit']"
+                class="cog-actions-wrapper">
+                <a mcsButton="basic" color="white" labelPlacement="left"
+                  href="{{ onRequestChange }}"
+                  mcsId="azure-resource-request-change"
+                  mcsEventTracker="azure-resource-request-change"
+                  mcsEventCategory="azure resource"
+                  mcsEventLabel="azure-resource-listing-page">
+                  {{ 'azureResources.requestChange' | translate }}
+                </a>
+              </div>
+              <div *mcsAccessControl="['TicketCreate']"
+                class="cog-actions-wrapper">
+                <a mcsButton="basic" color="white" labelPlacement="left"
+                  [href]="onRaiseTicket(row)"
+                  mcsId="azure-resource-raise-ticket"
+                  mcsEventTracker="azure-resource-raise-ticket"
+                  mcsEventCategory="azure resource"
+                  mcsEventLabel="azure-resource-listing-page">
+                  {{ 'azureResources.raiseTicket' | translate }}
+                </a>
+              </div>
+              <div class="cog-actions-wrapper">
+                <a mcsButton="basic" color="white" labelPlacement="left"
+                  href="{{ row.portalUrl }}"
+                  target="_blank"
+                  mcsId="azure-resource-view-in-azure-portal"
+                  mcsEventTracker="azure-resource-view-in-azure-portal"
+                  mcsEventCategory="azure resource"
+                  mcsEventLabel="azure-resource-listing-page">
+                  {{ 'azureResources.viewAzurePortal' | translate }}
+                </a>
+              </div>
+            </ng-template>
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Data Status Integration -->
+        <ng-container mcsDataStatusDef>
+          <mcs-data-empty *mcsDataEmptyDef>
+            <span>{{ 'azureResources.noRecordsFoundMessage' | translate }}</span>
+          </mcs-data-empty>
+          <mcs-data-error *mcsDataErrorDef>
+            <div class="listing-status-wrapper">
+              <span>{{ 'azureResources.errorMessage' | translate }}</span>
+              <a (click)="retryDatasource()"
+                mcsId
+                mcsEventTracker="retry-loading-azure-resource-list"
+                mcsEventCategory="azure-resource"
+                mcsEventLabel="azure-resource-listing-page">{{ 'azureResources.retry' | translate }}</a>.
+            </div>
+          </mcs-data-error>
+        </ng-container>
+
+        <!-- Header and Data row -->
+        <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
+        <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"></mcs-data-row>
+      </mcs-table>
+
+      <!-- Paginator -->
+      <mcs-paginator #paginator
+        [hidden]="!hasNextPage"
+        [totalCount]="totalRecordsCount">
+      </mcs-paginator>
+    </div>
+  </mcs-content-panel>
+</mcs-page>

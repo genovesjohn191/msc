@@ -55,6 +55,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
   private _showNetworkSubmenu: boolean;
   private _showStorageSubmenu: boolean;
   private _showDashboardSubmenu: boolean;
+  private _showAzureSubMenu: boolean;
   private _showOrdersMenu: boolean;
 
   public get showLaunchPadMenu(): boolean {
@@ -87,6 +88,10 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
   public get showDashboardSubmenu(): boolean {
     return this._showDashboardSubmenu;
+  }
+
+  public get showAzureSubMenu(): boolean {
+    return this._showAzureSubMenu;
   }
 
   public get caretUpIconKey(): string {
@@ -228,6 +233,10 @@ export class NavigationComponent implements OnInit, OnDestroy {
     this._showDashboardSubmenu = (this._navInitialized && this._showDashboardSubmenu)
       ? this._showDashboardSubmenu
       : this.selectedCategory === RouteCategory.Dashboard;
+
+    this._showAzureSubMenu = (this._navInitialized && this._showAzureSubMenu)
+      ? this._showAzureSubMenu
+      : this.selectedCategory === RouteCategory.Azure;
 
     this._showOrdersMenu = (this._navInitialized && this._showOrdersMenu)
       ? this._showOrdersMenu

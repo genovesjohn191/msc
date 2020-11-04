@@ -33,6 +33,20 @@
     "documentTitle": "Insights - Macquarie Cloud Services",
     "requiredFeatureFlag": "EnablePublicCloudDashboard"
   },
+  "azure": {
+    "enumKey": "Azure",
+    "navigationPath": "azure",
+    "documentTitle": "Azure - Macquarie Cloud Services"
+  },
+  "azureResources": {
+    "enumKey": "AzureResources",
+    "enumCategory": "Azure",
+    "navigationPath": "azure/resources",
+    "enumPlatform": "Public",
+    "documentTitle": "Resources - Macquarie Cloud Services",
+    "requiredPermissions": ["AzureView"],
+    "requiredFeatureFlag": "EnablePublicCloudResourceListing"
+  },
   "console": {
     "enumPlatform": "Private",
     "enumKey": "Console",

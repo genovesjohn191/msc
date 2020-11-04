@@ -182,6 +182,29 @@
               </li>
             </ul>
           </li>
+          <!-- Azure -->
+          <li>
+            <a (click)="toggleThis('showAzureSubMenu')"
+              [class.active]="selectedCategory === routerCategoryEnum.Azure"
+              mcsId="azure-link">
+              {{ 'navigation.publicCloud.azure.label' | translate }}
+              <mcs-icon [key]="showAzureSubMenu ? caretUpIconKey : caretDownIconKey" color="light" size="small"></mcs-icon>
+            </a>
+            <ul [class.hidden]="!showAzureSubMenu">
+              <!-- Resources -->
+              <li *mcsAccessControl="['AzureView']; feature: 'EnablePublicCloudResourceListing'">
+                <a [mcsRouterLink]="routeKeyEnum.AzureResources"
+                  mcsRouterLinkActive="active"
+                  class="sub-navigation-item unstyled-link"
+                  mcsId="resources-link"
+                  mcsEventTracker="navigate-to-azure-resources"
+                  mcsEventCategory="navigation"
+                  mcsEventLabel="main-nav">
+                  {{ 'navigation.publicCloud.azure.resources' | translate }}
+                </a>
+              </li>
+            </ul>
+          </li>
           <!-- Licenses -->
           <li>
             <a [mcsRouterLink]="routeKeyEnum.Licenses"
