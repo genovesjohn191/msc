@@ -32,6 +32,7 @@ import { DataChangeCompaniesEvent } from './items/data-change-companies.event';
 import { DataChangeJobsEvent } from './items/data-change-jobs.event';
 import { DataChangeInternetPortsEvent } from './items/data-change-internet-ports.event';
 import { DataChangeAggregationTargetsEvent } from './items/data-change-aggregation-targets-event';
+import { DataChangeAzureResourcesEvent } from './items/data-change-azure-resources.event';
 
 import { DataClearServersEvent } from './items/data-clear-servers.event';
 import { DataClearMediaEvent } from './items/data-clear-media.event';
@@ -126,6 +127,7 @@ export class McsEvent {
   public static dataChangeJobs = new DataChangeJobsEvent();
   public static dataChangeInternetPorts = new DataChangeInternetPortsEvent();
   public static dataChangeAggregationTargets = new DataChangeAggregationTargetsEvent();
+  public static dataChangeAzureResources = new DataChangeAzureResourcesEvent();
 
   public static dataClearServers = new DataClearServersEvent();
   public static dataClearMedia = new DataClearMediaEvent();

@@ -8,6 +8,7 @@ export enum RouteCategory {
   Storage,
   MakeAChange,
   Orders,
+  Azure,
 }
 
 export const routeCategoryText = {
@@ -19,4 +20,5 @@ export const routeCategoryText = {
   [RouteCategory.Network]: 'Network',
   [RouteCategory.Storage]: 'Storage',
   [RouteCategory.MakeAChange]: 'MakeAChange',
+  [RouteCategory.Azure]: 'Azure',
 };

@@ -4,6 +4,8 @@ export enum RouteKey {
   LaunchPadCrispOrders,
   ReportOverview,
   ReportInsights,
+  Azure,
+  AzureResources,
 
   Console,
   Maintenance,
