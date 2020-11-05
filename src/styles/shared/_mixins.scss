@@ -570,3 +570,13 @@
   page-break-inside: $value;
   break-inside: $value;
 }
+
+// Adjusts color for printing
+// Usage:
+// body {
+//   @include color-adjust(exact);
+// }
+@mixin color-adjust($value) {
+  -webkit-print-color-adjust: $value;
+  color-adjust: $value;
+}
