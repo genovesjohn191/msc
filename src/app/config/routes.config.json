@@ -38,6 +38,13 @@
     "navigationPath": "azure",
     "documentTitle": "Azure - Macquarie Cloud Services"
   },
+  "azureManagedServices": {
+    "enumKey": "AzureManagedServices",
+    "enumCategory": "Azure",
+    "navigationPath": "azure/managed-services",
+    "enumPlatform": "Public",
+    "documentTitle": "Managed Services - Macquarie Cloud Services"
+  },
   "azureResources": {
     "enumKey": "AzureResources",
     "enumCategory": "Azure",

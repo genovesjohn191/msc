@@ -1,0 +1,148 @@
+<mcs-page [header]="'azureManagedServices.header' | translate">
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef>
+    <mcs-top-panel-item *mcsTopPanelItemDef>
+      <div class="listing-action-wrapper">
+        <div class="total-record-count">
+          <span>{{ totalRecordsCount | mcsPlural:
+                ('azureManagedServices.dataSingular' | translate) : ('azureManagedServices.dataPlural' | translate) }}
+          </span>
+        </div>
+      </div>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+  
+  <!-- Left Panel -->
+  <mcs-left-panel *mcsLeftPanelDef="'azureManagedServices.leftPanelHeader' | translate">
+    <!-- Search -->
+    <mcs-left-panel-item *mcsLeftPanelItemDef>
+      <mcs-search *ngIf="!isMobile" #search mcsId="azure-managed-services-desktop-search"></mcs-search>
+    </mcs-left-panel-item>
+
+    <!-- Column Filter -->
+    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'azureManagedServices.filterColumn' | translate" offset="medium">
+      <mcs-column-filter [filters]="dataFilters"
+        (dataChange)="onColumnFilterChange($event)"></mcs-column-filter>
+    </mcs-left-panel-item>
+  </mcs-left-panel>
+  
+  <!-- Content Panel -->
+  <mcs-content-panel *mcsContentPanelDef>
+    <div class="listing-table-wrapper">
+      <!-- Search -->
+      <mcs-search *ngIf="isMobile" #search mcsId="virtual-mobile-search"></mcs-search>
+      <!-- Table -->
+      <mcs-table #table [dataSource]="dataSource">
+        <!-- Name Column -->
+        <ng-container mcsColumnDef="friendlyName">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ columnSettings.friendlyName.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row">
+            {{ row.friendlyName }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Service ID Column -->
+        <ng-container mcsColumnDef="serviceId">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ columnSettings.serviceId.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row">
+            {{ row.serviceId }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Parent Subscription Service ID Column -->
+        <ng-container mcsColumnDef="parentSubscriptionServiceId">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ columnSettings.parentSubscriptionServiceId.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row">
+            <mcs-item>
+              <ng-container *ngIf="(row.parentSubscriptionServiceId); else NoParentId">
+                <span> {{  row.parentSubscriptionServiceId | uppercase }}</span>
+              </ng-container>
+              <ng-template #NoParentId>
+                  <span>{{'azureManagedServices.noParentSubscriptionIdLabel' | translate}}</span>
+              </ng-template>
+            </mcs-item>
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Action Column -->
+        <ng-container mcsColumnDef="action">
+          <mcs-header-cell *mcsHeaderCellDef></mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" text-center>
+            <mcs-icon mcsStopPropagation [key]="cogIconKey" size="large"
+              mcsPopover placement="bottom" orientation="left" theme="light"
+              padding="none" [content]="actionContent" mcsCursor="pointer">
+            </mcs-icon>
+            <ng-template #actionContent>
+              <div *mcsAccessControl="['TicketCreate']"
+                class="cog-actions-wrapper">
+                <a mcsButton="basic" color="white" labelPlacement="left"
+                  [href]="onRaiseTicket(row)"
+                  mcsId="azure-managed-service-raise-ticket"
+                  mcsEventTracker="azure-managed-service-raise-ticket"
+                  mcsEventCategory="azure managed service"
+                  mcsEventLabel="azure-managed-service-listing-page">
+                  {{ 'azureManagedServices.raiseTicket' | translate }}
+                </a>
+              </div>
+              <div *mcsAccessControl="['OrderEdit']"
+                class="cog-actions-wrapper">
+                <a mcsButton="basic" color="white" labelPlacement="left"
+                  href="{{ azureServiceRequestLink }}"
+                  mcsId="azure-managed-service-request"
+                  mcsEventTracker="azure-managed-service-request"
+                  mcsEventCategory="azure managed service"
+                  mcsEventLabel="azure-managed-service-listing-page">
+                  {{ 'azureManagedServices.serviceRequest' | translate }}
+                </a>
+              </div>
+              <div *ngIf="row.cloudHealthPortalUrl" class="cog-actions-wrapper">
+                <a mcsButton="basic" color="white" labelPlacement="left"
+                  href="{{ row.cloudHealthPortalUrl }}"
+                  target="_blank"
+                  mcsId="azure-managed-service-access-cloudhealth"
+                  mcsEventTracker="azure-managed-service-access-cloudhealth"
+                  mcsEventCategory="azure managed service"
+                  mcsEventLabel="azure-managed-service-listing-page">
+                  {{ 'azureManagedServices.accessCloudHealth' | translate }}
+                </a>
+              </div>
+            </ng-template>
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Data Status Integration -->
+        <ng-container mcsDataStatusDef>
+          <mcs-data-empty *mcsDataEmptyDef>
+            <span>{{ 'azureManagedServices.noRecordsFoundMessage' | translate }}</span>
+          </mcs-data-empty>
+          <mcs-data-error *mcsDataErrorDef>
+            <div class="listing-status-wrapper">
+              <span>{{ 'azureManagedServices.errorMessage' | translate }}</span>
+              <a (click)="retryDatasource()"
+                mcsId
+                mcsEventTracker="retry-loading-azure-managed-service-list"
+                mcsEventCategory="azure-managed-service"
+                mcsEventLabel="azure-managed-service-listing-page">{{ 'azureManagedServices.retry' | translate }}</a>.
+            </div>
+          </mcs-data-error>
+        </ng-container>
+
+        <!-- Header and Data row -->
+        <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
+        <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"></mcs-data-row>
+      </mcs-table>
+
+      <!-- Paginator -->
+      <mcs-paginator #paginator
+        [hidden]="!hasNextPage"
+        [totalCount]="totalRecordsCount">
+      </mcs-paginator>
+    </div>
+  </mcs-content-panel>
+</mcs-page>

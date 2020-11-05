@@ -11,4 +11,10 @@ export class McsAzureService extends McsEntityBase {
 
   @JsonProperty()
   public friendlyName: string = undefined;
+
+  @JsonProperty()
+  public cloudHealthPortalUrl: string = undefined;
+
+  @JsonProperty()
+  public parentSubscriptionServiceId: string = undefined;
 }
