@@ -78,7 +78,7 @@ describe('TextPhoneNumberFormatPipe', () => {
   describe('ngOnInit()', () => {
     it(`should transform the phone number text content to corresponding value given custom regex`, () => {
       let testTextElement = component.testElementForCustomRegex.nativeElement as HTMLElement;
-      expect(testTextElement.textContent.trim()).toBe('111 122 2333');
+      expect(testTextElement.textContent.trim()).toBe('1111222333');
     });
   });
 });

@@ -31,9 +31,7 @@ export class MinimumTimeValidatorDirective implements Validator, OnChanges {
   private _validator: ValidatorFn;
 
   @Input()
-  public get minimumTime(): [number, number] { return this._minimumTime; }
-  public set minimumTime(min: [number, number]) { this._minimumTime = min; }
-  private _minimumTime: [number, number];
+  public minimumTime: [number, number];
 
   public ngOnChanges(changes: SimpleChanges): void {
     if (changes.minimumTime) {
