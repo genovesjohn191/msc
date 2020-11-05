@@ -59,6 +59,7 @@ html {
   height: 100%;
 
   body {
+    @include color-adjust(exact !important);
     height: 100%;
     overflow: hidden;
     @include print() {

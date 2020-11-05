@@ -56,7 +56,7 @@ export class ServicesOverviewWidgetComponent implements OnInit, OnDestroy {
       count: 0,
       processing: true,
       hasError: true,
-      link: CoreRoutes.getNavigationPath(RouteKey.Licenses),
+      link: undefined,
       getData: this.getAzureSubscriptionInfo.bind(this),
       eventId: 'services-overview-azure-sub',
       eventTracker: 'navigate-to-azure-subscription',
@@ -80,7 +80,6 @@ export class ServicesOverviewWidgetComponent implements OnInit, OnDestroy {
   private _baseDestroySubject = new Subject<void>();
 
   public constructor(private _changeDetector: ChangeDetectorRef, private _reportingService: McsReportingService) { }
-
 
   public ngOnInit(): void {
     for(let i = 0; i < this.servicesInfo.length; ++i) {
