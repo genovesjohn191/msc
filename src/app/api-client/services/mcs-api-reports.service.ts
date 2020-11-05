@@ -68,7 +68,7 @@ export class McsApiReportsService implements IMcsApiReportsService {
     }
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = '/public-cloud/reports/virtual-machine-breakdown';
+    mcsApiRequestParameter.endPoint = '/public-cloud/reports/virtual-machine-usage-breakdown';
     mcsApiRequestParameter.searchParameters = searchParams;
 
     return this._mcsApiService.get(mcsApiRequestParameter)

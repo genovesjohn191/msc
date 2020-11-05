@@ -2,8 +2,8 @@
   <mcs-vertical-bar-chart
     *ngIf="!processing && !hasError"
     [data]="data$ | async"
-    xAxisLabel="Days"
-    yAxisLabel="Avg % Used"
+    xAxisTitle="Days"
+    yAxisTitle="Avg % Used"
     [yAxisLabelFormatter]="yAxisLabelFormatter">
   </mcs-vertical-bar-chart>
 

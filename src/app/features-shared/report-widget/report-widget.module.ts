@@ -9,7 +9,7 @@ import { ResourceChangesWidgetComponent } from './resource-changes/resource-chan
 import { ReportWidgetDataStatusComponent } from './report-widget-data-status.component';
 import { AzureTicketsWidgetComponent } from './azure-tickets/azure-tickets-widget.component';
 import { ServicesCostOverviewWidgetComponent } from './services-cost-overview/services-cost-overview-widget.component';
-import { VirtualMachineBreakdownWidgetComponent } from './virtual-machine-breakdown/virtual-machine-breakdown-widget.component';
+import { VirtualMachineUsageBreakdownWidgetComponent } from './virtual-machine-usage-breakdown/virtual-machine-usage-breakdown-widget.component';
 import { PerformanceAndScalabilityWidgetComponent } from './performance-and-scalability/performance-and-scalability-widget.component';
 import { SecurityAndComplianceWidgetComponent } from './security-and-compliance/security-and-compliance-widget.component';
 
@@ -27,7 +27,7 @@ import { SecurityAndComplianceWidgetComponent } from './security-and-compliance/
     SecurityAndComplianceWidgetComponent,
     ServicesCostOverviewWidgetComponent,
     ServicesOverviewWidgetComponent,
-    VirtualMachineBreakdownWidgetComponent
+    VirtualMachineUsageBreakdownWidgetComponent
   ],
   exports: [
     AzureResourcesWidgetComponent,
@@ -41,7 +41,7 @@ import { SecurityAndComplianceWidgetComponent } from './security-and-compliance/
     SecurityAndComplianceWidgetComponent,
     ServicesCostOverviewWidgetComponent,
     ServicesOverviewWidgetComponent,
-    VirtualMachineBreakdownWidgetComponent
+    VirtualMachineUsageBreakdownWidgetComponent
   ]
 })
 export class ReportWidgetModule { }

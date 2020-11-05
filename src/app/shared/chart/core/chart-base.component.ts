@@ -169,16 +169,17 @@ export class ChartComponentBase {
   }
 
   @Input()
-  public set yAxisLabel(value: string) {
+  public set yAxisTitle(value: string) {
     this.yaxis = {
       title: {
         text: value
+
       }
     }
   }
 
   @Input()
-  public set xAxisLabel(value: string) {
+  public set xAxisTitle(value: string) {
     this.xaxis = {
       title: {
         text: value

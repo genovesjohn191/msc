@@ -21,13 +21,17 @@ $header-small-padding: $space-medium;
     padding-right: $header-small-padding;
   }
 
-  .context-switch {
-    @include breakpoint(small) {
-      display: none;
-    }
+  @include print() {
+    position: fixed !important;
+    top: 0;
+    width: 100%;
   }
 
   .user-panel-wrapper {
+    @include print() {
+      display: none;
+    }
+
     @include display-flex(row);
     height: 100%;
 
@@ -57,6 +61,10 @@ $header-small-padding: $space-medium;
   }
 
   .navigation-icon {
+    @include print() {
+      display: none;
+    }
+
     @include breakpoint(medium) {
       @include display-flex(row);
     }
