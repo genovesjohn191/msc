@@ -1477,12 +1477,16 @@ export class McsApiService {
     );
   }
 
-  public getAzureServices(): Observable<McsApiCollection<McsAzureService>> {
-    return this._azureServicesApi.getAzureServices().pipe(
+  public getAzureServices(query?: McsQueryParam): Observable<McsApiCollection<McsAzureService>> {
+    let azureServices = isNullOrEmpty(query) ?
+    this._azureServicesRepository.getAll() :
+    this._azureServicesRepository.filterBy(query);
+
+    return azureServices.pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getAzureServices'))
       ),
-      map((response) => this._mapToCollection(response.content, response.totalCount))
+      map((response) => this._mapToCollection(response, this._azureServicesRepository.getTotalRecordsCount()))
     );
   }
 
@@ -1747,6 +1751,11 @@ export class McsApiService {
     this._entitiesEventMap.push({
       event: McsEvent.dataChangeAzureResources,
       eventEmitter: this._azureResourceRepository.dataChange()
+    });
+
+    this._entitiesEventMap.push({
+      event: McsEvent.dataChangeAzureManagedServices,
+      eventEmitter: this._azureServicesRepository.dataChange()
     });
 
     // Data Clear Events

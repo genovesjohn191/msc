@@ -199,6 +199,7 @@ export class CommonDefinition {
   public static FILTERSELECTOR_SYSTEM_MESSAGE_LISTING = 'systemMessageFilter';
   public static FILTERSELECTOR_LICENSE_LISTING = 'licenseFilter';
   public static FILTERSELECTOR_AZURE_RESOURCES_LISTING = 'azureResourceFilter';
+  public static FILTERSELECTOR_AZURE_MANAGED_SERVICES_LISTING = 'azureManagedServiceFilter';
 
   /** RegEx Patterns */
   public static REGEX_EMAIL_PATTERN = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;

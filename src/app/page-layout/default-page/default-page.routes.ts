@@ -87,6 +87,12 @@ export const defaultPageRoutes: Routes = [
         loadChildren: () => import('../../features/azure-resources/azure-resources.module').then(m => m.AzureResourcesModule)
       },
       {
+        path: 'azure/managed-services',
+        data: { routeId: RouteKey.AzureManagedServices },
+        loadChildren: () =>
+          import('../../features/azure-managed-services/azure-managed-services.module').then(m => m.AzureManagedServicesModule)
+      },
+      {
         path: 'licenses',
         data: { routeId: RouteKey.Licenses },
         loadChildren: () => import('../../features/licenses/licenses.module').then(m => m.LicensesModule)

@@ -191,6 +191,18 @@
               <mcs-icon [key]="showAzureSubMenu ? caretUpIconKey : caretDownIconKey" color="light" size="small"></mcs-icon>
             </a>
             <ul [class.hidden]="!showAzureSubMenu">
+              <!-- Managed Services -->
+              <li>
+                <a [mcsRouterLink]="routeKeyEnum.AzureManagedServices"
+                  mcsRouterLinkActive="active"
+                  class="sub-navigation-item unstyled-link"
+                  mcsId="managed-services-link"
+                  mcsEventTracker="navigate-to-azure-managed-services"
+                  mcsEventCategory="navigation"
+                  mcsEventLabel="main-nav">
+                  {{ 'navigation.publicCloud.azure.managedServices' | translate }}
+                </a>
+              </li>
               <!-- Resources -->
               <li *mcsAccessControl="['AzureView']; feature: 'EnablePublicCloudResourceListing'">
                 <a [mcsRouterLink]="routeKeyEnum.AzureResources"

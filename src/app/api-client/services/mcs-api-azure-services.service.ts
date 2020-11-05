@@ -29,6 +29,7 @@ export class McsApiAzureServicesService implements IMcsApiAzureServicesService {
 
     let requestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     requestParameter.endPoint = `/public-cloud/services`;
+    requestParameter.searchParameters = searchParams;
 
     return this._mcsApiHttpService.get(requestParameter)
       .pipe(

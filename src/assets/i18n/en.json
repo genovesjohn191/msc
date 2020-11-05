@@ -31,7 +31,8 @@
       },
       "azure": {
         "label": "Azure",
-        "resources": "Resources"
+        "resources": "Resources",
+        "managedServices": "Managed Services"
       },
       "licenses": "Licenses"
     },
@@ -2092,6 +2093,20 @@
       "noContent": "No linked services have been identified for this Backup Aggregation Target.",
       "errorContent": "Sorry, something’s not right. We weren’t able to retrieve the linked services for this Backup Aggregation Target."
     }
+  },
+  "azureManagedServices": {
+    "header": "Managed Services",
+    "leftPanelHeader": "Managed Services Filter",
+    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of managed services.",
+    "noRecordsFoundMessage": "There are no managed services to display.",
+    "filterColumn": "Managed Services Filter",
+    "dataSingular": "Managed Service",
+    "dataPlural": "Managed Services",
+    "raiseTicket": "Raise a Ticket",
+    "serviceRequest": "Place a Service Request",
+    "accessCloudHealth": "Access CloudHealth",
+    "retry": "Try again shortly",
+    "noParentSubscriptionIdLabel": "None"
   },
   "azureResources": {
     "header": "Resources",
