@@ -36,62 +36,52 @@
             <p>{{'orderColocationStaffEscort.requestDetails.descriptionNote' | translate}}</p>
           </mcs-item>
 
-          <!-- Colocation Service -->
-          <mcs-item orientation='block'>
-            <mcs-form-field>
-              <mcs-select [formControl]="fcColocationService" required
-                [placeholder]="'orderColocationStaffEscort.requestDetails.colocationService.placeholder' | translate"
-                [mcsContextualHelp]="'orderColocationStaffEscort.requestDetails.colocationService.helptext' | translate"
-                mcsId="select-colocation-service"
-                mcsEventTracker="select-colocation-service"
-                mcsEventCategory="order-collocation-staff-escort"
-                mcsEventLabel="order-collocation-staff-escort-page">
-
-                <ng-template #servicesTemplate let-colocationServices let-title="serviceTitle">
-                  <mcs-option-group>
-                    <ng-container *mcsOptionGroupLabel>
-                      <span>{{ title }}</span>
-                    </ng-container>
-
-                    <mcs-option *ngFor="let service of colocationServices" [value]="service.serviceId">
-                      {{ service.name }}
-                    </mcs-option>
-                  </mcs-option-group>
-                </ng-template>
-
-                <ng-container *ngTemplateOutlet="servicesTemplate;
-                  context: { $implicit: (colocationRacks$ | async), serviceTitle: 'Racks'}">
+            <mcs-item orientation="block">
+               <!-- Colocation Service -->
+                <ng-container *ngIf="loadingInProgress; else serviceTemplate">
+                  <mcs-loader size="small"
+                    [mcsTooltip]="loadingText"
+                    mcsTooltipPosition="right"></mcs-loader>
                 </ng-container>
-
-                <ng-container *ngTemplateOutlet="servicesTemplate;
-                  context: { $implicit: (colocationAntennas$ | async), serviceTitle: 'Antennas'}">
-                </ng-container>
-
-                <ng-container *ngTemplateOutlet="servicesTemplate;
-                  context: { $implicit: (colocationCustomDevices$ | async), serviceTitle: 'Custom Devices'}">
-                </ng-container>
-
-                <ng-container *ngTemplateOutlet="servicesTemplate;
-                  context: { $implicit: (colocationRooms$ | async), serviceTitle: 'Rooms'}">
-                </ng-container>
-
-                <ng-container *ngTemplateOutlet="servicesTemplate;
-                  context: { $implicit: (colocationStandardSqMs$ | async), serviceTitle: 'Standard Square Metres'}">
-                </ng-container>
-              </mcs-select>
-            </mcs-form-field>
-            <ng-template #noColocationServiceTemplate>
-              <p> <span>{{ 'orderColocationStaffEscort.requestDetails.colocationService.fallback' | translate }}</span>
-                <ng-container *mcsAccessControl="['TicketCreate']">
-                  <span> {{'orderColocationStaffEscort.requestDetails.colocationService.raiseTicketPrefix' | translate }} </span>
-                  <a [mcsRouterLink]="[routeKeyEnum.TicketCreate]" mcsId="raise-a-ticket"
-                    mcsEventTracker="raise-a-ticket" mcsEventCategory="ticket"
-                    mcsEventLabel="order-colocation-staff-escort-page">{{ 'orderColocationStaffEscort.requestDetails.colocationService.raiseTicketLink' | translate }}</a>
-                  <span> {{'orderColocationStaffEscort.requestDetails.colocationService.raiseTicketSuffix' | translate }} </span>
-                </ng-container>.
-              </p>
-            </ng-template>
-          </mcs-item><br><hr><br>
+                <ng-template #serviceTemplate>
+                  <mcs-form-field>
+                    <mcs-select [formControl]="fcColocationService"
+                    [placeholder]="'orderColocationStaffEscort.requestDetails.colocationService.placeholder' | translate"
+                    [mcsContextualHelp]="'orderColocationStaffEscort.requestDetails.colocationService.helptext' | translate"
+                    [disabled]="!hasServiceToDisplay"
+                    mcsId="select-colocation-service"
+                    mcsEventTracker="select-colocation-service"
+                    mcsEventCategory="order-collocation-staff-escort"
+                    mcsEventLabel="order-collocation-staff-escort-page"
+                    required>
+                      <mcs-option-group *ngFor="let colocationGroup of colocationGroups" >
+                        <ng-container *mcsOptionGroupLabel>
+                          <span>{{ colocationGroup?.groupName }}</span>
+                        </ng-container>
+                        <mcs-option *ngFor="let service of colocationGroup.options"  [value]="service.value">
+                          {{ service.text }}
+                        </mcs-option>
+                      </mcs-option-group>
+                    </mcs-select>
+                    <mcs-error 
+                          mcsError errorState="required"
+                          [innerHTML]="('orderColocationStaffEscort.requestDetails.colocationService.error' | translate)">
+                    </mcs-error>
+                  </mcs-form-field>
+                  <ng-container *ngIf="!hasServiceToDisplay">
+                      <p [mcsGreyedOut]="true"> <span>{{ 'orderColocationStaffEscort.requestDetails.colocationService.fallback' | translate }}</span>
+                        <ng-container *mcsAccessControl="['TicketCreate']">
+                         <span> {{'orderColocationStaffEscort.requestDetails.colocationService.raiseTicketPrefix' | translate }} </span>
+                          <a [mcsRouterLink]="[routeKeyEnum.TicketCreate]" mcsId="raise-a-ticket"
+                            mcsEventTracker="raise-a-ticket" mcsEventCategory="ticket"
+                            mcsEventLabel="order-colocation-staff-escort-page">{{ 'orderColocationStaffEscort.requestDetails.colocationService.raiseTicketLink' | translate }}</a>
+                          <span> {{'orderColocationStaffEscort.requestDetails.colocationService.raiseTicketSuffix' | translate }}</span>
+                        </ng-container>.
+                      </p>
+                   </ng-container>
+                </ng-template>  
+            </mcs-item>
+          <br><hr><br>
 
           <!-- Attendance Details -->
           <mcs-item>
@@ -187,9 +177,6 @@
                   </mcs-error>
                   <mcs-error mcsError errorState="required">
                     {{ 'orderColocationStaffEscort.requestDetails.mobile.errorRequired' | translate }}
-                  </mcs-error>
-                  <mcs-error mcsError errorState="maxlength">
-                    {{ 'orderColocationStaffEscort.requestDetails.mobile.errorFormat' | translate }}
                   </mcs-error>
                 </mcs-form-field>
               </mcs-item>
@@ -397,7 +384,7 @@
           [requestState]="dataStatus$ | async"
           [eventTrack]="orderEventTrack.billingDetailsStep"
           (dataChange)="onOrderDetailsDataChange($event)"
-          (submitOrder)="onSubmitOrder($event)">
+          (submitOrder)="onSubmitOrder($event, fcColocationService?.value.serviceId)">
         </mcs-step-order-details>
       </mcs-wizard-step>
 

@@ -217,7 +217,7 @@ export class CommonDefinition {
     = /[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/gi;
   public static REGEX_SPACE_AND_DASH = /([\s-]+)/;
   public static REGEX_BEARER_PATTERN = /bearer=[^&]*/g;
-  public static REGEX_MOBILE_NUMBER_PATTERN = /^(\+?\d{1,3}?[- ]?)?\d{10}$/;
+  public static REGEX_MOBILE_NUMBER_PATTERN = /^(\+?\d{1,3}?)?\d{10}$/;
 
   /** Session count */
   public static SESSION_IDLE_TIME_IN_SECONDS = 900;

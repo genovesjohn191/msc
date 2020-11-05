@@ -1,5 +1,5 @@
 const regex = /\w\S*/g;
-const DEFAULT_PHONENUMBER_REGEX: RegExp = /^(\d{4})(\d{3})(\d{3})$/;
+const DEFAULT_PHONENUMBER_FORMAT_REGEX: RegExp = /^(\d{4})(\d{3})(\d{3})$/;
 
 /**
  * This will return the inputted string to proper casing
@@ -141,20 +141,26 @@ export function convertSpacesToDash(source: string): string {
 /**
  * Returns the converted string numbers to phone number
  */
-export function formatStringToPhoneNumber(source: string, customFormatRegex: RegExp = null): string {
+export function formatStringToPhoneNumber(source: string,
+                                          customFormatRegex: RegExp = null,
+                                          removeCountryCodes: boolean = false): string {
     let result: string = null;
+    if(!source) {return result;}
     let trimmedNumberString = source.replace(/\D/g, '');
-    let matches = null;
 
-    if (customFormatRegex) {
-        matches = trimmedNumberString.match(customFormatRegex);
-    } else {
-        matches = trimmedNumberString.match(DEFAULT_PHONENUMBER_REGEX);
+    if(trimmedNumberString) {
+      let [first, ...rest] = (customFormatRegex) ? trimmedNumberString.match(customFormatRegex)
+                                                : trimmedNumberString.match(DEFAULT_PHONENUMBER_FORMAT_REGEX);
+      if (customFormatRegex) {
+        result = first;
+      } else {
+        result = rest.join(' ');
+      }
+
+      if (removeCountryCodes) {
+          let removedCountryCode = result.slice(-10);
+          result = removedCountryCode;
+      }
     }
-
-    if (matches) {
-       result = matches.filter((match, index) => (index > 0)).join(' ');
-    }
-
     return result;
 }
