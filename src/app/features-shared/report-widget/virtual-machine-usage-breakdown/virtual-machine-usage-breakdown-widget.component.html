@@ -3,13 +3,10 @@
     *ngIf="!processing && !hasError"
     [data]="data$ | async"
     [stacked]="true"
-    xAxisTitle="Months"
-    yAxisTitle="Total Cost(s)">
+    yAxisTitle="# VMs by Usage"
+    xAxisTitle="Months">
   </mcs-vertical-bar-chart>
 
   <mcs-report-widget-data-status type="info" [processing]="processing" [hasError]="hasError" (retry)="getData()">
   </mcs-report-widget-data-status>
-  <div class="hide-on-print" style="text-align: left; padding-top: 15px;">
-    <span>Forcasts the next month based on the previous 12</span>
-  </div>
 </div>

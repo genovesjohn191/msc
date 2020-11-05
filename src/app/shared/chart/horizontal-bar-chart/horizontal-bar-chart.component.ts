@@ -48,7 +48,7 @@ export class HorizontalBarChartComponent extends ChartComponentBase implements O
     };
 
     this.dataLabels = {
-      offsetX: -65,
+      offsetX: 0,
       style: {
         fontSize: '10px',
         colors: ['#333']

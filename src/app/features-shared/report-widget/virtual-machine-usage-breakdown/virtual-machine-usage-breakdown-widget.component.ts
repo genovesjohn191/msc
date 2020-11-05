@@ -15,15 +15,11 @@ import { catchError } from 'rxjs/operators';
 
 import { ChartItem } from '@app/shared';
 import { McsReportingService } from '@app/core/services/mcs-reporting.service';
-import {
-  isNullOrEmpty,
-  unsubscribeSafely
-} from '@app/utilities';
-import { ReportPeriod } from '../report-period.interface';
+import { unsubscribeSafely } from '@app/utilities';
 
 @Component({
-  selector: 'mcs-virtual-machine-breakdown-widget',
-  templateUrl: './virtual-machine-breakdown-widget.component.html',
+  selector: 'mcs-virtual-machine-usage-breakdown-widget',
+  templateUrl: './virtual-machine-usage-breakdown-widget.component.html',
   styleUrls: ['../report-widget.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
@@ -32,7 +28,7 @@ import { ReportPeriod } from '../report-period.interface';
   }
 })
 
-export class VirtualMachineBreakdownWidgetComponent implements OnInit, OnDestroy {
+export class VirtualMachineUsageBreakdownWidgetComponent implements OnInit, OnDestroy {
   @Input()
   public set subscriptionIds(value: string[]) {
     if (JSON.stringify(value) === JSON.stringify(this._subscriptionIds)) {

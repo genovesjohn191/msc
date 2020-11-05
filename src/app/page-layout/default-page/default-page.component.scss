@@ -18,4 +18,8 @@
   position: relative;
   @include flex(1 1 auto);
   @include display-flex(column);
+
+  @include print() {
+    margin: calc(#{$shared-header-panel-height} + #{$space-medium}) $space-xlarge 0 $space-xlarge;
+  }
 }

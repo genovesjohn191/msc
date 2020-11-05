@@ -36,6 +36,8 @@ import {
   unsubscribeSafely
 } from '@app/utilities';
 
+const maxTicketsToDisplay: number = 5;
+
 @Component({
   selector: 'mcs-azure-tickets-widget',
   templateUrl: './azure-tickets-widget.component.html',
@@ -50,7 +52,6 @@ import {
 export class AzureTicketsWidgetComponent extends McsTableListingBase<McsTicket>implements OnInit, OnDestroy {
   private _ticketStatusIconMap = new Map<string, string>();
   private _destroySubject = new Subject<void>();
-  private _maxTicketsToDisplay: number = 5;
 
   public empty: boolean = false;
   public hasError: boolean = false;
@@ -111,7 +112,7 @@ export class AzureTicketsWidgetComponent extends McsTableListingBase<McsTicket>i
       .subscribe((result) => {
         this.processing = false;
         this.empty = result.totalCollectionCount === 0;
-        this.hasMore = result.totalCollectionCount > this._maxTicketsToDisplay;
+        this.hasMore = result.totalCollectionCount > maxTicketsToDisplay;
         this.changeDetectorRef.markForCheck();
       });
   }
@@ -131,7 +132,7 @@ export class AzureTicketsWidgetComponent extends McsTableListingBase<McsTicket>i
 
   protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsTicket>> {
     // These will be updated once we have the correct filter...
-    query.pageSize = this._maxTicketsToDisplay;
+    query.pageSize = maxTicketsToDisplay;
     return this._apiService.getTickets(query);
   }
 
