@@ -13,7 +13,7 @@ import {
 } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { ChartItem } from '@app/shared';
+import { ChartConfig, ChartItem } from '@app/shared';
 import { McsReportingService } from '@app/core/services/mcs-reporting.service';
 import { unsubscribeSafely } from '@app/utilities';
 
@@ -27,8 +27,17 @@ import { unsubscribeSafely } from '@app/utilities';
     'class': 'widget-box'
   }
 })
-
 export class VirtualMachineUsageBreakdownWidgetComponent implements OnInit, OnDestroy {
+  public chartConfig: ChartConfig = {
+    stacked: true,
+    yaxis: {
+      title: '# VMs by Usage'
+    },
+    xaxis: {
+      title: 'Months'
+    }
+  };
+
   @Input()
   public set subscriptionIds(value: string[]) {
     if (JSON.stringify(value) === JSON.stringify(this._subscriptionIds)) {

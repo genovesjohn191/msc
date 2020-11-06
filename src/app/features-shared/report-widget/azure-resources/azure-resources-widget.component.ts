@@ -11,7 +11,7 @@ import {
   Observable,
   throwError
 } from 'rxjs';
-import { ChartItem } from '@app/shared';
+import { ChartConfig, ChartItem } from '@app/shared';
 import { McsReportingService } from '@app/core/services/mcs-reporting.service';
 import { catchError } from 'rxjs/operators';
 import { CommonDefinition, unsubscribeSafely } from '@app/utilities';
@@ -30,6 +30,10 @@ const maxResourcesToDisplay = 10;
 })
 
 export class AzureResourcesWidgetComponent implements OnInit, OnDestroy {
+  public chartConfig: ChartConfig = {
+    height: '380px'
+  }
+
   public data$: Observable<ChartItem[]>;
   public dataBehavior: BehaviorSubject<ChartItem[]>;
   public hasError: boolean = false;

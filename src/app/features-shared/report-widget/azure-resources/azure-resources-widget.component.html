@@ -16,9 +16,8 @@
 
   <mcs-horizontal-bar-chart
     *ngIf="!processing && !hasError"
-    height="380px"
     [data]="data$ | async"
-    [distributed]="false">
+    [config]="chartConfig">
   </mcs-horizontal-bar-chart>
 
   <mcs-report-widget-data-status type="info" [processing]="processing" [hasError]="hasError" (retry)="getData()">

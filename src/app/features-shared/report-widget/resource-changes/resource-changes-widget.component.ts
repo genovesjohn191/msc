@@ -11,7 +11,7 @@ import {
   throwError
 } from 'rxjs';
 
-import { ChartItem } from '@app/shared';
+import { ChartConfig, ChartItem } from '@app/shared';
 import {
   coerceNumber,
   currencyFormat
@@ -31,8 +31,28 @@ const maxItemToDisplay = 10;
     'class': 'widget-box'
   }
 })
-
 export class ResourceChangesWidgetComponent implements OnInit {
+  public chartConfig: ChartConfig = {
+    height: '380px',
+    dataLabels: {
+      enabled: true,
+      formatter: this.dataLabelFormatter
+    },
+    legend: {
+      formatter: this.legendLabelFormatter
+    },
+    yaxis: {
+      showLabel: false,
+    },
+    xaxis: {
+      valueFormatter: this.xAxisLabelFormatter
+    },
+    tooltip: {
+      xValueFormatter: this.tooltipXValueFormatter,
+      yValueFormatter: this.tooltipYValueFormatter
+    }
+  };
+
   public data$: Observable<ChartItem[]>;
   public dataBehavior: BehaviorSubject<ChartItem[]>;
   public hasError: boolean = false;
@@ -81,16 +101,14 @@ export class ResourceChangesWidgetComponent implements OnInit {
   }
 
   public legendLabelFormatter(val: string, opts?: any): string {
-    let items = val.split('|', 2);
-
-    return items[0];
+    return val.split('|', 2)[0];
   }
 
   public xAxisLabelFormatter(val: string, timestamp?: number): string {
     return (coerceNumber(val) > 0) ? `+${val}`: val;
   }
 
-  public tooltipXValueFormatter(val: string, opts?: any): string {
+  public tooltipXValueFormatter(val: number, opts?: any): string {
     let fullLabel = opts.w.globals.labels[opts.dataPointIndex];
     let items = fullLabel.split('|', 2);
     let amount = currencyFormat(items[1]);

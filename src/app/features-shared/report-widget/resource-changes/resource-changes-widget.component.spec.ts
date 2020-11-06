@@ -158,7 +158,7 @@ describe('ResourceChangesWidgetComponent', () => {
         };
 
         let expectedResult = 'Apps ($0.00)'
-        let actualResult = component.tooltipXValueFormatter('0', opts);
+        let actualResult = component.tooltipXValueFormatter(0, opts);
 
         expect(actualResult).toBe(expectedResult);
       });
@@ -178,7 +178,7 @@ describe('ResourceChangesWidgetComponent', () => {
         };
 
         let expectedResult = 'Apps (+$500.00)'
-        let actualResult = component.tooltipXValueFormatter('+5', opts);
+        let actualResult = component.tooltipXValueFormatter(5, opts);
 
         expect(actualResult).toBe(expectedResult);
       });
@@ -198,7 +198,7 @@ describe('ResourceChangesWidgetComponent', () => {
         };
 
         let expectedResult = 'Apps (-$500.00)'
-        let actualResult = component.tooltipXValueFormatter('-5', opts);
+        let actualResult = component.tooltipXValueFormatter(-5, opts);
 
         expect(actualResult).toBe(expectedResult);
       });
