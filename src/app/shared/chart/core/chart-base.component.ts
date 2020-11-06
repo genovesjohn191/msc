@@ -25,7 +25,45 @@ import {
 import { ChartData, ChartDataService } from '../chart-data.service';
 import { ChartItem } from '../chart-item.interface';
 
-export type ChartOptions = {
+export type ChartDataLabels = {
+  enabled?: boolean;
+  formatter?: (val: number, opts?: any) => string | number;
+}
+
+export type ChartXAxis = {
+  showLabel?: boolean;
+  title?: string;
+  valueFormatter?: (val: string, timestamp?: number) => string | string[];
+}
+
+export type ChartYAxis = {
+  showLabel?: boolean;
+  title?: string;
+  valueFormatter?: (val: number, opts?: any) => string;
+}
+
+export type ChartLegend = {
+  formatter?: (val: string, opts?: any) => string;
+}
+
+export type ChartTooltip = {
+  yTitleFormatter?:  (seriesName: string) => string;
+  yValueFormatter?: (val: number, opts?: any) => string;
+  xValueFormatter?: (val: number, opts?: any) => string;
+}
+
+export type ChartConfig = {
+  data?: ChartItem[];
+  height?: string;
+  stacked?: boolean;
+  dataLabels?: ChartDataLabels;
+  xaxis?: ChartXAxis;
+  yaxis?: ChartYAxis;
+  legend?: ChartLegend;
+  tooltip?: ChartTooltip;
+}
+
+type ChartOptions = {
   chart: ApexChart;
   colors?: string[];
   dataLabels: ApexDataLabels;
@@ -38,10 +76,6 @@ export type ChartOptions = {
   xaxis: ApexXAxis;
   yaxis: ApexYAxis;
 };
-
-type dataLabelFormatter =  (val: number, opts?: any) => string | number;
-
-type xAxisLabelsFormatter =  (val: string, timestamp?: number) => string | string[];
 
 @Component({
   selector: 'mcs-chart-base',
@@ -56,6 +90,9 @@ type xAxisLabelsFormatter =  (val: string, timestamp?: number) => string | strin
 
 export class ChartComponentBase {
   @Input()
+  public distributed: boolean;
+
+  @Input()
   public set data(value: ChartItem[]) {
     if (isNullOrEmpty(value)) {
       return;
@@ -63,128 +100,80 @@ export class ChartComponentBase {
 
     let data: ChartData = this._chartDataService.convertToApexChartData(value);
 
-    this.series = data.series;
     this.xaxis = {
-      categories: data.categories,
+      categories: data.categories
     };
+    this.series = data.series;
 
     this.updateChart();
   }
 
   @Input()
-  public set height(value: string) {
-    this._chart.height = isNullOrEmpty(value) ? 'auto' : value
-  };
+  public set config(value: ChartConfig) {
+    if (isNullOrEmpty(value) || JSON.stringify(value) === JSON.stringify(this._config)) {
+      return;
+    }
 
-  @Input()
-  public distributed: boolean = false;
+    this._config = value;
 
-  @Input()
-  public set stacked(value: boolean) {
-    this._chart.stacked = value;
-  };
-
-  @Input()
-  public set enableDataLabels(value: boolean) {
-    this._dataLabels.enabled = value;
-  }
-
-  @Input()
-  public set dataLabelFormatter(value: dataLabelFormatter) {
-    this.dataLabels = {
-      formatter: value,
+    this.chart = {
+      type: 'bar',
+      stacked: value.stacked,
+      height: isNullOrEmpty(value.height) ? 'auto' : value.height
     };
-  }
 
-  @Input()
-  public set xAxisLabelFormatter(value: xAxisLabelsFormatter) {
-    this.xaxis = {
-      labels: {
-        formatter: value,
-      }
-    };
-  }
-
-  @Input()
-  public set yAxisLabelFormatter(value: (val: number, opts?: any) => string) {
-    this.yaxis = {
-      labels: {
-        formatter: value,
-      }
-    };
-  }
-
-  @Input()
-  public set legendLabelFormatter(value: (val: string, opts?: any) => string) {
-    this.legend = {
-      formatter: value,
-    };
-  }
-
-  @Input()
-  public set tooltipYValueFormatter(value: (val: number, opts?: any) => string) {
-    this.tooltip = {
-      y: {
-        formatter: value
-      }
-    };
-  }
-
-  @Input()
-  public set tooltipXValueFormatter(value: (val: number, opts?: any) => string) {
-    this.tooltip = {
-      x: {
-        formatter: value
-      }
-    };
-  }
-
-  @Input()
-  public set tooltipYTitleFormatter(value: (seriesName: string) => string) {
-    this.tooltip = {
-      y: {
+    if (!isNullOrEmpty(value.xaxis)) {
+      this.xaxis = {
         title: {
-          formatter: value
+          text: value.xaxis.title ?? ''
+        },
+        labels: {
+          show: value.xaxis.showLabel ?? true,
+          formatter: value.xaxis.valueFormatter
+        }
+      };
+    }
+
+    if (!isNullOrEmpty(value.yaxis)) {
+      this.yaxis = {
+        title: {
+          text: value.yaxis.title ?? ''
+        },
+        labels: {
+          show: value.yaxis.showLabel,
+          formatter: value.yaxis.valueFormatter
+        }
+      };
+    }
+
+    if (!isNullOrEmpty(value.dataLabels)) {
+      this.dataLabels = {
+        enabled: value.dataLabels.enabled,
+        formatter: value.dataLabels.formatter
+      };
+    }
+
+    if (!isNullOrEmpty(value.legend)) {
+      this.legend = {
+        formatter: value.legend.formatter
+      };
+    }
+
+    if (!isNullOrEmpty(value.tooltip)) {
+      this.tooltip = {
+        x: {
+          formatter: value.tooltip.xValueFormatter
+        },
+        y: {
+          formatter: value.tooltip.yValueFormatter,
+          title: {
+            formatter: value.tooltip.yTitleFormatter
+          }
         }
       }
-    };
-  }
-
-  @Input()
-  public set hideYAxis(value: boolean) {
-    this.yaxis = {
-      labels: {
-        show: !value
-      }
-    };
-  }
-
-  @Input()
-  public set hideXAxis(value: boolean) {
-    this.xaxis = {
-      labels: {
-        show: !value
-      }
-    };
-  }
-
-  @Input()
-  public set yAxisTitle(value: string) {
-    this.yaxis = {
-      title: {
-        text: value
-
-      }
     }
-  }
 
-  @Input()
-  public set xAxisTitle(value: string) {
-    this.xaxis = {
-      title: {
-        text: value
-      }
-    }
+    this.updateChart();
   }
 
   @ViewChild('chartObject', { static: true })
@@ -249,6 +238,8 @@ export class ChartComponentBase {
   public set yaxis(value: ApexYAxis) {
     this._yaxis = {...this._yaxis, ...value};
   }
+
+  private _config: ChartConfig;
 
   private _chart: ApexChart = {
     type: 'bar',

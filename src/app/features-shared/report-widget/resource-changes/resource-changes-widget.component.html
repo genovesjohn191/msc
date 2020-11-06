@@ -3,15 +3,8 @@
   <mcs-horizontal-bar-chart
     *ngIf="!processing && !hasError"
     [data]="data$ | async"
-    [hideYAxis]="true"
     [distributed]="true"
-    height="380px"
-    [enableDataLabels]="true"
-    [dataLabelFormatter]="dataLabelFormatter"
-    [legendLabelFormatter]="legendLabelFormatter"
-    [xAxisLabelFormatter]="xAxisLabelFormatter"
-    [tooltipXValueFormatter]="tooltipXValueFormatter"
-    [tooltipYValueFormatter]="tooltipYValueFormatter">
+    [config]="chartConfig">
   </mcs-horizontal-bar-chart>
 
   <mcs-report-widget-data-status type="info" [processing]="processing" [hasError]="hasError" (retry)="getData()">

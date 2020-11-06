@@ -1,10 +1,8 @@
 <div class="widget flat">
   <mcs-vertical-bar-chart
     *ngIf="!processing && !hasError"
-    [data]="data$ | async"
-    [stacked]="true"
-    yAxisTitle="# VMs by Usage"
-    xAxisTitle="Months">
+    [config]="chartConfig"
+    [data]="data$ | async">
   </mcs-vertical-bar-chart>
 
   <mcs-report-widget-data-status type="info" [processing]="processing" [hasError]="hasError" (retry)="getData()">

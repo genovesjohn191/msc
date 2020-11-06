@@ -13,7 +13,7 @@ import {
 } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { ChartItem } from '@app/shared';
+import { ChartConfig, ChartItem } from '@app/shared';
 import { truncateDecimals, isNullOrEmpty, unsubscribeSafely } from '@app/utilities';
 import { McsReportingService } from '@app/core/services/mcs-reporting.service';
 
@@ -32,8 +32,17 @@ export interface PerformanceAndScalabilityWidgetConfig {
     'class': 'widget-box'
   }
 })
-
 export class PerformanceAndScalabilityWidgetComponent implements OnInit, OnDestroy {
+  public chartConfig: ChartConfig = {
+    yaxis: {
+      title: 'Avg % Used',
+      valueFormatter: this.yAxisLabelFormatter
+    },
+    xaxis: {
+      title: 'Days'
+    }
+  };
+
   @Input()
   public set config(value: PerformanceAndScalabilityWidgetConfig) {
     let validValue = !isNullOrEmpty(value)
@@ -86,7 +95,7 @@ export class PerformanceAndScalabilityWidgetComponent implements OnInit, OnDestr
     });
   }
 
-  public yAxisLabelFormatter(val: number) {
+  public yAxisLabelFormatter(val: number, opts?: any): string {
     return truncateDecimals(val, 2) + '%';
   }
 }

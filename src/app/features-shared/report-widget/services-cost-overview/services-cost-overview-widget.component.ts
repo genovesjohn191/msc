@@ -14,7 +14,7 @@ import {
 } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { ChartItem } from '@app/shared';
+import { ChartConfig, ChartItem } from '@app/shared';
 import {
   isNullOrEmpty,
   unsubscribeSafely
@@ -32,8 +32,17 @@ import { ReportPeriod } from '../report-period.interface';
     'class': 'widget-box'
   }
 })
-
 export class ServicesCostOverviewWidgetComponent implements OnInit, OnDestroy {
+  public chartConfig: ChartConfig = {
+    stacked: true,
+    yaxis: {
+      title: 'Months'
+    },
+    xaxis: {
+      title: 'Total Cost(s)'
+    }
+  };
+
   @Input()
   public set subscriptionIds(value: string[]) {
     if (JSON.stringify(value) === JSON.stringify(this._subscriptionIds)) {
