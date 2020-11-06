@@ -93,7 +93,7 @@
               <div *mcsAccessControl="['OrderEdit']"
                 class="cog-actions-wrapper">
                 <a mcsButton="basic" color="white" labelPlacement="left"
-                  href="{{ azureServiceRequestLink }}"
+                  [href]="azureServiceRequestLink(row)"
                   mcsId="azure-managed-service-request"
                   mcsEventTracker="azure-managed-service-request"
                   mcsEventCategory="azure managed service"

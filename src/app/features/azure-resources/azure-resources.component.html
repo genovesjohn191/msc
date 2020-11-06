@@ -89,7 +89,7 @@
               <div *mcsAccessControl="['OrderEdit']"
                 class="cog-actions-wrapper">
                 <a mcsButton="basic" color="white" labelPlacement="left"
-                  href="{{ onRequestChange }}"
+                  [href]="onRequestChange(row)"
                   mcsId="azure-resource-request-change"
                   mcsEventTracker="azure-resource-request-change"
                   mcsEventCategory="azure resource"

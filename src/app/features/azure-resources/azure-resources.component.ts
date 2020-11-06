@@ -41,8 +41,10 @@ export class AzureResourcesComponent extends McsTableListingBase<McsAzureResourc
   /**
    * Navigate to request change
    */
-  public get onRequestChange(): string {
-    return CoreRoutes.getNavigationPath(RouteKey.OrderMsRequestChange);
+  public onRequestChange(resource: McsAzureResource): string {
+    return isNullOrEmpty(resource.serviceId && resource.azureId) ?
+      CoreRoutes.getNavigationPath(RouteKey.OrderMsRequestChange) :
+      `${CoreRoutes.getNavigationPath(RouteKey.OrderMsRequestChange)}?serviceId=${resource.serviceId}&resourceId=${resource.azureId}`;
   }
 
   /**
