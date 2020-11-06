@@ -283,6 +283,7 @@ export * from './common/mcs-route-info';
 export * from './common/mcs-service-base';
 export * from './common/mcs-query-param';
 export * from './common/mcs-entity-provision';
+export * from './common/mcs-azure-service-query-params';
 
 /** Serialization */
 export * from './serialization/mcs-date-serialization';

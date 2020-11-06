@@ -41,16 +41,18 @@ export class AzureManagedServicesComponent extends McsTableListingBase<McsAzureS
   /**
    * Navigate to create a ticket
    */
-  public onRaiseTicket(resource: McsAzureService): string {
-    return isNullOrEmpty(resource.serviceId) ?
+  public onRaiseTicket(service: McsAzureService): string {
+    return isNullOrEmpty(service.serviceId) ?
       CoreRoutes.getNavigationPath(RouteKey.TicketCreate) :
-      `${CoreRoutes.getNavigationPath(RouteKey.TicketCreate)}?serviceId=${resource.serviceId}`;
+      `${CoreRoutes.getNavigationPath(RouteKey.TicketCreate)}?serviceId=${service.serviceId}`;
   }
 
   /**
    * Navigate to service request
    */
-  public get azureServiceRequestLink(): string {
-    return CoreRoutes.getNavigationPath(RouteKey.OrderMsRequestChange);
+  public azureServiceRequestLink(service: McsAzureService): string {
+    return isNullOrEmpty(service.serviceId) ?
+      CoreRoutes.getNavigationPath(RouteKey.OrderMsRequestChange) :
+      `${CoreRoutes.getNavigationPath(RouteKey.OrderMsRequestChange)}?serviceId=${service.serviceId}`;
   }
 }

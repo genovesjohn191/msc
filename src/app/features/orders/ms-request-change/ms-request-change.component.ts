@@ -11,6 +11,7 @@ import {
   FormControl,
   FormBuilder
 } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import {
   Subject,
   zip,
@@ -65,7 +66,8 @@ import {
   azureProductsText,
   complexityText,
   formResponseText,
-  DeliveryType
+  DeliveryType,
+  McsAzureServiceQueryParams
 } from '@app/models';
 import { MsRequestChangeService } from './ms-request-change.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -105,6 +107,7 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
   public complexityOptions$: Observable<McsOption[]>;
   public contactOptions$: Observable<McsOption[]>;
   public azureServices$: Observable<McsOption[]>;
+  public selectedServiceId$: Observable<McsAzureServiceQueryParams>;
   public smacSharedFormConfig$: Observable<SmacSharedFormConfig>;
   public selectedScheduleDate: Date;
 
@@ -195,6 +198,7 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
 
   constructor(
     _injector: Injector,
+    private _activatedRoute: ActivatedRoute,
     private _msRequestChangeService: MsRequestChangeService,
     private _formBuilder: FormBuilder,
     private _apiService: McsApiService,
@@ -216,6 +220,7 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
   }
 
   public ngOnInit(): void {
+    this._getSelectedAzureService();
     this._subscribeToAzureProductOptions();
     this._subscribeToContactOptions();
     this._subscribeToSubscriptions();
@@ -280,7 +285,7 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
   }
 
   private _resetAzureResources(service: McsAzureService): void {
-    this._subscribeToAzureResources(service.id);
+    this._getAzureResources(service.serviceId);
   }
 
   public onServiceChange(service: McsAzureService): void {
@@ -419,13 +424,14 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
   /**
    * Subscribe and get Azure Resources from API
    */
-  private _subscribeToAzureResources(subscriptionId: string = null): void {
+  private _getAzureResources(serviceId: string = null): void {
     this.loadingInProgress = true;
-    this.azureResourcesOptions$ = this._apiService.getAzureResourcesBySubscriptionId(subscriptionId).pipe(
+    this.azureResourcesOptions$ = this._apiService.getAzureResources().pipe(
       map((resourcesCollection) => {
         let resources = getSafeProperty(resourcesCollection, (obj) => obj.collection) || [];
+        let filteredResources = resources.filter((resource) => resource.serviceId === serviceId)
         let resourceOptions: McsOption[] = [];
-        resources.forEach((resource) => {
+        filteredResources.forEach((resource) => {
           let textValue = `${resource.name}`;
           resourceOptions.push(createObject(McsOption, { text: textValue, value: resource }));
         });
@@ -447,5 +453,24 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
     this._selectedServiceHandler = this._eventDispatcher.addEventListener(
       McsEvent.serviceRequestChangeSelectedEvent, this._onSelectedServiceRequestChange.bind(this));
   }
-}
 
+  /**
+   * Subscribes to selected azure service
+   */
+  private _getSelectedAzureService(): void {
+    this.selectedServiceId$ = this._activatedRoute.queryParams.pipe(
+      map((params) => {
+        if (params) {
+          return getSafeProperty(params, (obj) => new McsAzureServiceQueryParams(obj.serviceId, obj.resourceId)) || undefined;
+        }
+      }),
+      tap((params) => {
+        if (!params.serviceId) {
+          return this.enableAzureResources = false;
+        }
+        this._getAzureResources(params.serviceId);
+      }),
+      shareReplay(1)
+    );
+  }
+}

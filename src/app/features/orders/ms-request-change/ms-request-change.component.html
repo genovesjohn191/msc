@@ -46,6 +46,7 @@
                     (selectionChange)="onServiceChange($event)"
                     [placeholder]="'orderMsRequestChange.detailsStep.servicePlaceholder' | translate">
                     <mcs-option *ngFor="let azureService of azureServices$ | async"
+                      [selected]="(selectedServiceId$ | async)?.serviceId === azureService.value.serviceId"
                       [value]="azureService.value"
                       [disabled]="!(azureService.value.serviceId | mcsIsNotNullOrEmpty)">
                         <span [ngStyle]="{'pointer-events': 'auto'}"
@@ -111,7 +112,9 @@
                     [multiSelectLimit]="maxSelectionLimit"
                     required>
                     <mcs-search mcsSelectSearch></mcs-search>
-                    <mcs-option *ngFor="let resource of azureResourcesOptions$ | async" [value]="resource.value">
+                    <mcs-option *ngFor="let resource of azureResourcesOptions$ | async" 
+                      [selected]="(selectedServiceId$ | async)?.azureId === resource.value.azureId"
+                      [value]="resource.value">
                       <span [ngStyle]="{'pointer-events': 'auto'}"
                       [mcsTooltip]="resource.value?.azureId"
                       [mcsTooltipShow]="resource.value?.azureId"
