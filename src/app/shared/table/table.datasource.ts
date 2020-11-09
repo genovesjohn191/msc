@@ -1,11 +1,12 @@
 import {
-  Observable,
   isObservable,
   of,
-  BehaviorSubject
+  BehaviorSubject,
+  Observable
 } from 'rxjs';
+
 import { DataStatus } from '@app/models';
-import { McsDataSource } from './mcs-data-source.interface';
+import { McsDataSource } from '@app/utilities';
 
 type DatasourceType<T> = T[] | Observable<T[]>;
 

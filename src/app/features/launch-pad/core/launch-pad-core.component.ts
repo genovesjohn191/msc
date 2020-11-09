@@ -1,9 +1,12 @@
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   Input,
   OnDestroy,
-  ChangeDetectorRef,
   ViewChild
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -18,13 +21,12 @@ import {
   isNullOrEmpty,
   unsubscribeSafely
 } from '@app/utilities';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+
 import { LaunchPadWorkflowGroupComponent } from './layout/workflow-group/workflow-group.component';
 import { LaunchPadLoadStateDialogComponent } from './layout/workflow-load-state-dialog/workflow-load-state-dialog.component';
 import {
-  WorkflowGroupSaveState,
-  WorkflowGroupConfig
+  WorkflowGroupConfig,
+  WorkflowGroupSaveState
 } from './workflows/workflow-group.interface';
 import { Workflow } from './workflows/workflow.interface';
 

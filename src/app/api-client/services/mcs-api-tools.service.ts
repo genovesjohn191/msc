@@ -1,13 +1,15 @@
-import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+
+import { Injectable } from '@angular/core';
 import {
-  McsApiSuccessResponse,
   McsApiRequestParameter,
+  McsApiSuccessResponse,
   McsPortal
 } from '@app/models';
-import { McsApiClientHttpService } from '../mcs-api-client-http.service';
+
 import { IMcsApiToolsService } from '../interfaces/mcs-api-tools.interface';
+import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 
 @Injectable()
 export class McsApiToolsService implements IMcsApiToolsService {

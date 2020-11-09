@@ -1,6 +1,8 @@
 // Table
+$table-row-size: 2.5rem;
 $table-cell-side-padding: $space-medium;
 $table-margin-size: $space-medium;
+$table-action-cell-size: 55px;
 
 // Table header
 $table-header-background-color: $color-black;
@@ -34,89 +36,58 @@ table {
   border-collapse: collapse;
   width: 100%;
 
-  &.no-gutter {
-    margin-top: 0;
-    margin-bottom: 0;
-  }
-
-  tbody,
   thead {
-    tr {
-      border-bottom: 1px solid $table-data-border-color;
+    tr.mat-header-row {
+      text-align: left;
+      white-space: nowrap;
+      background-color: $table-header-background-color;
+      height: $table-row-size;
 
-      &:hover:not(th) {
-        background-color: $table-data-hover-background-color;
-      }
-
-      th {
-        background-color: $table-header-background-color;
-        color: $table-header-font-color;
-        white-space: nowrap;
-        text-align: left;
-
+      th.mat-header-cell {
         @extend %cell-style;
         @include font-size($table-header-font-size);
         vertical-align: middle;
         padding: $table-header-cell-padding;
+        font-family: $circular-pro-book;
+        color: $table-header-font-color;
       }
 
-      td {
+      th.action-header-cell {
+        min-width: $table-action-cell-size;
+        width: $table-action-cell-size;
+        padding: 0;
+      }
+    }
+  }
+
+  tbody {
+    tr.mat-row {
+      text-align: left;
+      white-space: nowrap;
+      border-bottom: 1px solid $table-data-border-color;
+      height: $table-row-size;
+
+      &:hover {
+        background-color: $table-data-hover-background-color;
+      }
+
+      td.mat-cell {
         @extend %cell-style;
         @include font-size($table-data-font-size);
         vertical-align: middle;
         border-right: none;
-        text-align: left;
+        font-family: $circular-pro-book;
         padding: $table-data-cell-padding;
       }
-    }
-  }
-}
 
-// Basic table
-$table-basic-border-color: $table-data-border-color;
-$table-basic-hover-color: $table-data-hover-background-color;
-$table-basic-header-bg-color: $color-white;
-$table-basic-header-color: $color-grey-02;
-$table-basic-header-padding: $space-small;
-$table-basic-data-padding: $space-xsmall $space-small;
-
-table.basic-table {
-  margin-top: $table-margin-size;
-  margin-bottom: $table-margin-size;
-  border-collapse: collapse;
-  width: 100%;
-
-  &.no-gutter {
-    margin-top: 0;
-    margin-bottom: 0;
-  }
-
-  tbody,
-  thead {
-    tr {
-      border-bottom: 1px solid $table-basic-border-color;
-
-      &:hover:not(th) {
-        background-color: $table-basic-hover-color;
+      td.action-data-cell {
+        min-width: $table-action-cell-size;
+        width: $table-action-cell-size;
+        padding: 0;
       }
 
-      th {
-        background-color: $table-basic-header-bg-color;
-        color: $table-basic-header-color;
-        white-space: nowrap;
-        text-align: left;
-
-        @extend %cell-style;
-        vertical-align: middle;
-        padding: $table-basic-header-padding;
-      }
-
-      td {
-        @extend %cell-style;
-        vertical-align: middle;
-        border-right: none;
-        text-align: left;
-        padding: $table-basic-data-padding;
+      td.action-data-row {
+        background-color: $hover-bg-color;
       }
     }
   }

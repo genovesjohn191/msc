@@ -21,6 +21,7 @@ export * from './progress-bar';
 export * from './overlay';
 export * from './scrollable-link-group';
 export * from './datetimepicker';
+export * from './column-filter';
 
 /** Expose directives */
 export * from './form-field/form-group.directive';

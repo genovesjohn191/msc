@@ -1,28 +1,32 @@
-import {
-  Component,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Injector
-} from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Injector,
+  OnInit
+} from '@angular/core';
 import {
   CoreConfig,
-  McsTableListingBase
+  McsFilterService,
+  McsMatTableContext,
+  McsMatTableQueryParam,
+  McsTableDataSource2
 } from '@app/core';
-import { McsApiService } from '@app/services';
 import {
   McsPortal,
   McsPortalAccess,
-  McsQueryParam,
-  McsApiCollection
+  McsQueryParam
 } from '@app/models';
+import { McsApiService } from '@app/services';
 import {
   cloneObject,
+  getSafeProperty,
   CommonDefinition
 } from '@app/utilities';
-import { McsEvent } from '@app/events';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'mcs-tools',
@@ -30,33 +34,50 @@ import { McsEvent } from '@app/events';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class ToolsComponent extends McsTableListingBase<McsPortal> {
-  public toolDescription: Map<string, string>;
+export class ToolsComponent implements OnInit {
+  public readonly toolDescriptionMap: Map<string, string>;
+  public readonly dataSource: McsTableDataSource2<McsPortal>;
 
   constructor(
     _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
     private _coreConfig: CoreConfig,
     private _translateService: TranslateService,
-    private _apiService: McsApiService
+    private _apiService: McsApiService,
+    private _filterService: McsFilterService
   ) {
-    super(_injector, _changeDetectorRef, { dataChangeEvent: McsEvent.dataChangeTools });
-    this._initializeToolDescriptionMap();
+    this.toolDescriptionMap = new Map<string, string>();
+    this.dataSource = new McsTableDataSource2(this._getPortals.bind(this));
+    this._initializeToolDescriptionMap()
   }
 
-  /**
-   * Returns the column settings key for the filter selector
-   */
+  public ngOnInit(): void {
+    this._initializeDataColumns();
+  }
+
   public get columnSettingsKey(): string {
     return CommonDefinition.FILTERSELECTOR_TOOLS_LISTING;
   }
 
-  /**
-   * Gets the entity listing based on the context
-   * @param query Query to be obtained on the listing
-   */
-  protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsPortal>> {
-    return this._apiService.getPortals(query).pipe(
+  public retryDatasource(): void {
+    this.dataSource.refreshDataRecords();
+  }
+
+  private _initializeToolDescriptionMap(): void {
+    let descriptions = this._translateService.instant('tools.table.descriptions');
+    this.toolDescriptionMap.set(descriptions.macquarieView.name, descriptions.macquarieView.description);
+    this.toolDescriptionMap.set(descriptions.vCloud.name, descriptions.vCloud.description);
+    this.toolDescriptionMap.set(descriptions.vSphere.name, descriptions.vSphere.description);
+    this.toolDescriptionMap.set(descriptions.firewall.name, descriptions.firewall.description);
+  }
+
+  private _getPortals(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsPortal>> {
+    let queryParam = new McsQueryParam();
+    queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
+    queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
+    queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
+
+    return this._apiService.getPortals(queryParam).pipe(
       map((response) => {
         let macquarieTools: McsPortal[] = [];
 
@@ -71,31 +92,16 @@ export class ToolsComponent extends McsTableListingBase<McsPortal> {
         macquarieView.portalAccess = Array(macquarieViewPortalAccess);
         macquarieTools.push(macquarieView, ...cloneObject(response.collection));
 
-        let portalCollection = new McsApiCollection<McsPortal>();
-        portalCollection.collection = macquarieTools.filter((tool) => tool.resourceSpecific);
-        portalCollection.totalCollectionCount = portalCollection.collection.length;
-        return portalCollection;
+        let dataItems = macquarieTools.filter((tool) => tool.resourceSpecific);
+        let dataSourceContext = new McsMatTableContext(dataItems, dataItems.length);
+        return dataSourceContext;
       })
     );
   }
 
-  /**
-   * Intializes tool description map
-   */
-  private _initializeToolDescriptionMap(): void {
-    let descriptions = this._translateService.instant('tools.table.descriptions');
-    this.toolDescription = new Map<string, string>();
-    this.toolDescription.set(
-      descriptions.macquarieView.name,
-      descriptions.macquarieView.description);
-    this.toolDescription.set(
-      descriptions.vCloud.name,
-      descriptions.vCloud.description);
-    this.toolDescription.set(
-      descriptions.vSphere.name,
-      descriptions.vSphere.description);
-    this.toolDescription.set(
-      descriptions.firewall.name,
-      descriptions.firewall.description);
+  private _initializeDataColumns(): void {
+    let dataColumns = this._filterService.getFilterSettings(
+      CommonDefinition.FILTERSELECTOR_TOOLS_LISTING);
+    this.dataSource.registerColumnsFilterInfo(dataColumns);
   }
 }

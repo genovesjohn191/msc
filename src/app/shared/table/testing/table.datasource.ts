@@ -1,10 +1,12 @@
 import {
-  Observable,
-  of
+  of,
+  Observable
 } from 'rxjs';
-import { McsDataSource } from '../mcs-data-source.interface';
-import { TableUserData } from './table-userdata';
+
 import { DataStatus } from '@app/models';
+import { McsDataSource } from '@app/utilities';
+
+import { TableUserData } from './table-userdata';
 
 export class TableDatasource implements McsDataSource<any> {
   /**

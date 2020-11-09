@@ -1,38 +1,44 @@
 import {
-  Component,
-  QueryList,
-  ContentChildren,
-  ChangeDetectionStrategy,
-  ViewEncapsulation,
-  ChangeDetectorRef,
+  defer,
+  merge,
+  Observable,
+  Subject
+} from 'rxjs';
+import {
+  shareReplay,
+  takeUntil,
+  tap
+} from 'rxjs/operators';
+
+import {
   AfterContentInit,
-  OnDestroy,
-  Input,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
   ContentChild,
+  ContentChildren,
+  Input,
+  IterableChangeRecord,
   IterableDiffer,
   IterableDiffers,
+  OnDestroy,
+  QueryList,
   TrackByFunction,
   ViewChild,
-  IterableChangeRecord
+  ViewEncapsulation
 } from '@angular/core';
-import {
-  Subject,
-  Observable,
-  merge,
-  defer
-} from 'rxjs';
-import { takeUntil, take, tap, shareReplay } from 'rxjs/operators';
+import { DataStatus } from '@app/models';
 import {
   isNullOrEmpty,
-  unsubscribeSafely
+  unsubscribeSafely,
+  McsDataSource
 } from '@app/utilities';
-import { OptionComponent } from '../option-group/option/option.component';
+
 import { OptionGroupComponent } from '../option-group/option-group.component';
-import { McsDataSource } from '../table/mcs-data-source.interface';
-import { DataStatus } from '@app/models';
-import { ListPanelConfig } from './list-panel.config';
+import { OptionComponent } from '../option-group/option/option.component';
 import { ListPanelContentDirective } from './list-content/list-panel-content.directive';
 import { ListPanelContentOutletDirective } from './list-content/list-panel-content.outlet';
+import { ListPanelConfig } from './list-panel.config';
 
 @Component({
   selector: 'mcs-list-panel',
@@ -173,9 +179,9 @@ export class ListPanelComponent<TEntity> implements AfterContentInit, OnDestroy 
       throw new Error(`Unable to render the list panel without datasource.`);
     }
 
-    this._dataSource.connect().pipe(
+    this._dataSource.connect(null).pipe(
       takeUntil(this._destroySubject),
-      tap((entities) => this._renderListPanelContent(entities))
+      tap((entities) => this._renderListPanelContent(entities as TEntity[]))
     ).subscribe();
   }
 
