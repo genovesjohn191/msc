@@ -46,6 +46,7 @@ import {
 import { McsApiService } from '@app/services';
 import { McsFormGroupDirective } from '@app/shared';
 import { ServerManageNetwork } from './server-manage-network';
+import { McsResourceNetworkSubnet } from '@app/models/response/mcs-resource-network-subnet';
 
 // Constants
 const DEFAULT_GATEWAY = '192.168.0.1';
@@ -68,7 +69,7 @@ const Netmask = require('netmask').Netmask;
 export class ServerManageNetworkComponent
   implements OnInit, OnChanges, AfterViewInit, IMcsFormGroup, IMcsDataChange<ServerManageNetwork> {
 
-  public netMask: any;
+  public netMasks: any[];
   public ipAddressesInUsed: McsResourceNetworkIpAddress[];
   public ipAddressItems: McsOption[];
   public inputManageType: InputManageType;
@@ -125,7 +126,8 @@ export class ServerManageNetworkComponent
     this.inputManageType = InputManageType.Auto;
     this.ipAddressItems = new Array();
     this.ipAddressesInUsed = new Array();
-    this.netMask = new Netmask(`${DEFAULT_GATEWAY}/${DEFAULT_NETMASK}`);
+    this.netMasks = new Array();
+    this.netMasks.push(new Netmask(`${DEFAULT_GATEWAY}/${DEFAULT_NETMASK}`));
     this._createFormControlsMap();
   }
 
@@ -166,9 +168,12 @@ export class ServerManageNetworkComponent
    * Returns the ip range error text content
    */
   public get ipRangeErrorText(): string {
+    let ranges: Array<string> = new Array<string>();
+    this.netMasks.forEach((netMask)=> ranges.push(`${netMask.first} - ${netMask.last}`));
+    let ipRange: string = ranges.join(`\r\n`);
     return this._translateService.instant(
       'serverShared.manageNetwork.errors.ipAddressRangeError',
-      { ip_range: `${this.netMask.first} - ${this.netMask.last}` }
+      { ip_range: ipRange }
     );
   }
 
@@ -252,12 +257,18 @@ export class ServerManageNetworkComponent
    * @param network Network to be considered
    */
   private _createNetmaskByNetwork(network: McsResourceNetwork): void {
-    if (isNullOrEmpty(network)) { return; }
-    this.netMask = new Netmask(`${network.gateway}/${network.netmask}`);
-    if (!isNullOrEmpty(this.netMask.last) &&
-        this.netMask.last === network.gateway) {
-      this.netMask.last = this.netMask.last.replace(/.$/, DEFAULT_IP_RANGE_LAST);
+    if (isNullOrUndefined(network)) { return; }
+    let netWorkSubnets: Array<McsResourceNetworkSubnet> = network.subnets;
+    this.netMasks = new Array<any>();
+    netWorkSubnets.forEach((subnet)=>{
+      this.netMasks.push(new Netmask(`${subnet.gateway}/${subnet.netmask}`));
+    });
+    this.netMasks.forEach((netMask)=> {
+      if (!isNullOrEmpty(netMask.last) &&
+      netMask.last === netMask.gateway) {
+      netMask.last = netMask.last.replace(/.$/, DEFAULT_IP_RANGE_LAST);
     }
+    });
   }
 
   /**
@@ -281,15 +292,33 @@ export class ServerManageNetworkComponent
    * Return true when the input value is valid
    * @param inputValue Input value to be checked
    */
-  private _ipRangeValidator(inputValue: any) {
+  private _ipRangeValidator(inputValue: any): boolean {
     try {
+      let selectedNedworkGateway =  this.selectedNetwork.subnets.find((subnet)=> subnet.gateway === inputValue);
+
       // Catch and return false in case the input is not ip address format
       // to prevent exception thrown in the Netmask
-      return this.netMask.contains(inputValue) &&
-        this.netMask.broadcast !== inputValue &&
-        this.netMask.base !== inputValue &&
-        this.selectedNetwork.gateway !== inputValue;
-    } catch (error) {
+      return this.netMasks.find((netMask)=> {
+        return (netMask.contains(inputValue) &&
+        netMask.broadcast !== inputValue &&
+        netMask.base !== inputValue);
+      });
+    }
+    catch (error) {
+      return false;
+    }
+  }
+
+  /**
+   * Checks if input is used as gateway and returns true when the input value is valid
+   * @param inputValue Input value to be checked
+   */
+  private _ipGatewayValidator(inputValue: any): boolean {
+    try {
+      let selectedNedworkGateway =  this.selectedNetwork.subnets.find((subnet)=> subnet.gateway === inputValue);
+      return  (isNullOrUndefined(selectedNedworkGateway));
+    }
+    catch (error) {
       return false;
     }
   }
@@ -311,6 +340,10 @@ export class ServerManageNetworkComponent
       CoreValidators.custom(
         this._ipRangeValidator.bind(this),
         'ipRange'
+      ),
+      CoreValidators.custom(
+        this._ipGatewayValidator.bind(this),
+        'ipIsGateway'
       )
     ]);
     this.fcCustomIpAddress.valueChanges

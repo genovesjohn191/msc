@@ -14,7 +14,7 @@
           {{ 'serverShared.manageNetwork.networkGroupLabel' | translate }}
         </ng-container>
         <mcs-option *ngFor="let network of networks" [value]="network">
-          {{ network.name }}
+          {{ network.networkName }}
         </mcs-option>
       </mcs-option-group>
     </mcs-select>
@@ -50,9 +50,12 @@
       <div>{{ 'serverShared.manageNetwork.customMessage' | translate }}</div>
 
       <mcs-item orientation="block">
-        <span read-only *ngIf="netMask">
-          {{ 'serverShared.manageNetwork.hints.ipRange' | translate }}: {{ netMask.first }} - {{ netMask.last }}
-        </span>
+        <ng-container *ngIf="netMasks | mcsArrayHasElement">
+          {{ 'serverShared.manageNetwork.hints.ipRange' | translate }}:
+          <span read-only *ngFor="let netMask of netMasks">
+            {{ netMask.first }} - {{ netMask.last }}
+          </span>
+        </ng-container>
         <mcs-form-field class="form-field-size-medium">
           <input mcsInput placeholder="Enter IP Address" #customInput
             mcsId="input-ipaddress" [formControl]="fcCustomIpAddress">
@@ -63,8 +66,11 @@
           <mcs-error mcsError errorState="ipAddress">
             {{ 'serverShared.manageNetwork.errors.ipAddressInvalid' | translate }}
           </mcs-error>
-          <mcs-error mcsError errorState="ipRange">
-            {{ ipRangeErrorText }}
+          <mcs-error mcsError errorState="ipRange"
+          [innerHTML]="(ipRangeErrorText | translate)  | mcsNewLines">
+          </mcs-error>
+          <mcs-error mcsError errorState="ipIsGateway">
+            {{ 'serverShared.manageNetwork.errors.ipAddressIsUsedAsGateway' | translate }}
           </mcs-error>
         </mcs-form-field>
       </mcs-item>

@@ -1588,12 +1588,13 @@
       "inUsedEnteredIpMessage": "This IP address is already assigned to a server.\r\n Your server may not be usable until the IP address is dissociated or the server it is assigned to is stopped.",
       "loadingIpInUsed": "Loading Ip-addresses.",
       "hints": {
-        "ipRange": "Valid range"
+        "ipRange": "Valid ranges"
       },
       "errors": {
         "ipAddressRequired": "Enter an IP address.",
         "ipAddressInvalid": "Please enter a valid IP Address.",
-        "ipAddressRangeError": "IP Address must be in the range ({{ip_range}})."
+        "ipAddressRangeError": "IP Address must be in the range ({{ip_range}}).",
+        "ipAddressIsUsedAsGateway": "This IP address is reserved and cannot be used."
       }
     },
     "manageScale": {
