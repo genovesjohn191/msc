@@ -85,7 +85,7 @@
             <p>{{ resourceDetailLabels.networkDescription }}</p>
             <mcs-item>
               <span>{{ 'serversVdcOverview.shared.network.gateway' | translate }}:</span>
-              <span [innerHTML]="network.gateway | mcsDataLabel"></span>
+              <span [innerHTML]="(networkGatewayLabel | async) | mcsDataLabel"></span>
             </mcs-item>
           </mcs-accordion-panel>
         </mcs-accordion>

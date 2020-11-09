@@ -15,7 +15,8 @@ import {
   replacePlaceholder,
   getSafeProperty,
   CommonDefinition,
-  createObject
+  createObject,
+  pluck
 } from '@app/utilities';
 import {
   RouteKey,
@@ -27,6 +28,8 @@ import {
 } from '@app/models';
 import { McsEvent } from '@app/events';
 import { VdcDetailsBase } from '../vdc-details.base';
+import { map } from 'rxjs/operators';
+import { McsResourceNetworkSubnet } from '@app/models/response/mcs-resource-network-subnet';
 
 const VDC_LOW_CAPACITY_STORAGE_PERCENTAGE = 85;
 const VDC_HIGH_CAPACITY_STORAGE_PERCENTAGE = 75;
@@ -94,6 +97,17 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnDestroy {
     let verb = (storageCount === 1) ? 'is' : 'are';
     status = replacePlaceholder(status, 'verb', verb);
     return status;
+  }
+
+  public get networkGatewayLabel(): string {
+    let result: Array<string> = new Array<string>();
+    this.resource$.pipe(map((resource) => {
+      let networks = getSafeProperty(resource, object => object.networks, []);
+      let netWorkSubnets = pluck(networks, 'subnets') as McsResourceNetworkSubnet[];
+      let gateways = pluck(netWorkSubnets, 'gateWay') as Array<string>;
+      result.concat(gateways);
+    }));
+    return result.join(`\r\n`);
   }
 
   /**
