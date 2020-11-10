@@ -4,28 +4,6 @@ import {
   FormsModule,
   ReactiveFormsModule
 } from '@angular/forms';
-import { MatBadgeModule } from '@angular/material/badge';
-import { MatButtonModule } from '@angular/material/button';
-import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { MatCardModule } from '@angular/material/card';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatListModule } from '@angular/material/list';
-import { MatOptionModule } from '@angular/material/core';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSelectModule } from '@angular/material/select';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatStepperModule } from '@angular/material/stepper';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatTreeModule } from '@angular/material/tree';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -64,6 +42,7 @@ import { ListPanelModule } from './list-panel/list-panel.module';
 import { ListModule } from './list/list.module';
 import { LoaderModule } from './loader/loader.module';
 import { LoadingModule } from './loading/loading.module';
+import { MaterialModule } from './material.module';
 import { NoteModule } from './note/note.module';
 import { OptionGroupModule } from './option-group/option-group.module';
 import { OverlayModule } from './overlay/overlay.module';
@@ -76,7 +55,6 @@ import { PricingCalculatorModule } from './pricing-calculator/pricing-calculator
 import { ProgressBarModule } from './progress-bar/progress-bar.module';
 import { RadioButtonGroupModule } from './radio-button-group/radio-button-group.module';
 import { ResponsivePanelModule } from './responsive-panel/responsive-panel.module';
-/** Modules */
 import { RippleModule } from './ripple/ripple.module';
 import { ScrollableLinkGroupModule } from './scrollable-link-group/scrollable-link-group.module';
 import { SearchModule } from './search/search.module';
@@ -95,199 +73,82 @@ import { TreeModule } from './tree/tree.module';
 import { WidgetsModule } from './widgets/widgets.module';
 import { WizardModule } from './wizard/wizard.module';
 
+const exportedModules = [
+  CommonModule,
+  RouterModule,
+  FormsModule,
+  ReactiveFormsModule,
+  TranslateModule,
+  MaterialModule,
+
+  PipesModule,
+  DirectivesModule,
+  RippleModule,
+  PopoverModule,
+  IconModule,
+  AlertModule,
+  ImageModule,
+  GridModule,
+  ButtonModule,
+  ChartModule,
+  CheckboxModule,
+  ColumnFilterModule,
+  TableModule,
+  ListPanelModule,
+  LoaderModule,
+  PageModule,
+  ContextualHelpModule,
+  OptionGroupModule,
+  SelectModule,
+  AccordionModule,
+  ListModule,
+  OverlayModule,
+  DialogModule,
+  SnackBarModule,
+  TooltipModule,
+  TabGroupModule,
+  ScrollableLinkGroupModule,
+  WizardModule,
+  WidgetsModule,
+  FileAttachmentModule,
+  PaginatorModule,
+  ActionItemModule,
+  SlidingPanelModule,
+  ResponsivePanelModule,
+  CollapsiblePanelModule,
+  RadioButtonGroupModule,
+  FormFieldModule,
+  FormMessageModule,
+  InputModule,
+  SearchModule,
+  SliderModule,
+  TagListModule,
+  SelectTagModule,
+  CommentBoxModule,
+  DataStatusModule,
+  StatusMessageModule,
+  AuthenticationModule,
+  ProgressBarModule,
+  CapacityBarModule,
+  FileDownloadModule,
+  EventTrackerModule,
+  BusyRibbonModule,
+  NoteModule,
+  PresentationPanelModule,
+  JobsProvisioningModule,
+  LoadingModule,
+  ItemModule,
+  DividerModule,
+  TreeModule,
+  SectionModule,
+  PricingCalculatorModule,
+  DynamicListModule,
+  DateTimePickerModule,
+  CtaListModule
+];
+
 @NgModule({
-  imports: [
-    CommonModule,
-    RouterModule,
-    FormsModule,
-    ReactiveFormsModule,
-    TranslateModule,
-    PipesModule,
-    DirectivesModule,
-    RippleModule,
-    PopoverModule,
-    IconModule,
-    AlertModule,
-    ImageModule,
-    GridModule,
-    ButtonModule,
-    ChartModule,
-    CheckboxModule,
-    ColumnFilterModule,
-    TableModule,
-    ListPanelModule,
-    LoaderModule,
-    PageModule,
-    ContextualHelpModule,
-    OptionGroupModule,
-    SelectModule,
-    AccordionModule,
-    ListModule,
-    OverlayModule,
-    DialogModule,
-    SnackBarModule,
-    TooltipModule,
-    TabGroupModule,
-    ScrollableLinkGroupModule,
-    WizardModule,
-    WidgetsModule,
-    FileAttachmentModule,
-    PaginatorModule,
-    ActionItemModule,
-    SlidingPanelModule,
-    ResponsivePanelModule,
-    CollapsiblePanelModule,
-    RadioButtonGroupModule,
-    FormFieldModule,
-    FormMessageModule,
-    InputModule,
-    SearchModule,
-    SliderModule,
-    TagListModule,
-    SelectTagModule,
-    CommentBoxModule,
-    DataStatusModule,
-    StatusMessageModule,
-    AuthenticationModule,
-    ProgressBarModule,
-    CapacityBarModule,
-    FileDownloadModule,
-    EventTrackerModule,
-    BusyRibbonModule,
-    NoteModule,
-    PresentationPanelModule,
-    JobsProvisioningModule,
-    LoadingModule,
-    ItemModule,
-    DividerModule,
-    TreeModule,
-    SectionModule,
-    PricingCalculatorModule,
-    DynamicListModule,
-    DateTimePickerModule,
-    CtaListModule,
-
-    // Angular Material
-    MatBadgeModule,
-    MatButtonModule,
-    MatBottomSheetModule,
-    MatButtonToggleModule,
-    MatCardModule,
-    MatDialogModule,
-    MatDividerModule,
-    MatExpansionModule,
-    MatFormFieldModule,
-    MatGridListModule,
-    MatIconModule,
-    MatInputModule,
-    MatListModule,
-    MatOptionModule,
-    MatProgressBarModule,
-    MatProgressSpinnerModule,
-    MatSelectModule,
-    MatSlideToggleModule,
-    MatSnackBarModule,
-    MatProgressSpinnerModule,
-    MatStepperModule,
-    MatTooltipModule,
-    MatTreeModule
-  ],
-  exports: [
-    CommonModule,
-    RouterModule,
-    FormsModule,
-    ReactiveFormsModule,
-    TranslateModule,
-    PipesModule,
-    DirectivesModule,
-    RippleModule,
-    PopoverModule,
-    IconModule,
-    AlertModule,
-    ImageModule,
-    GridModule,
-    ButtonModule,
-    ChartModule,
-    CheckboxModule,
-    ColumnFilterModule,
-    TableModule,
-    ListPanelModule,
-    LoaderModule,
-    PageModule,
-    ContextualHelpModule,
-    OptionGroupModule,
-    SelectModule,
-    AccordionModule,
-    ListModule,
-    OverlayModule,
-    DialogModule,
-    SnackBarModule,
-    TooltipModule,
-    TabGroupModule,
-    ScrollableLinkGroupModule,
-    WizardModule,
-    WidgetsModule,
-    FileAttachmentModule,
-    PaginatorModule,
-    ActionItemModule,
-    SlidingPanelModule,
-    ResponsivePanelModule,
-    CollapsiblePanelModule,
-    RadioButtonGroupModule,
-    FormFieldModule,
-    FormMessageModule,
-    InputModule,
-    SearchModule,
-    SliderModule,
-    TagListModule,
-    SelectTagModule,
-    CommentBoxModule,
-    DataStatusModule,
-    StatusMessageModule,
-    AuthenticationModule,
-    ProgressBarModule,
-    CapacityBarModule,
-    FileDownloadModule,
-    EventTrackerModule,
-    BusyRibbonModule,
-    NoteModule,
-    PresentationPanelModule,
-    JobsProvisioningModule,
-    LoadingModule,
-    ItemModule,
-    DividerModule,
-    TreeModule,
-    SectionModule,
-    PricingCalculatorModule,
-    DynamicListModule,
-    DateTimePickerModule,
-    CtaListModule,
-
-    // Angular Material
-    MatBadgeModule,
-    MatButtonModule,
-    MatBottomSheetModule,
-    MatButtonToggleModule,
-    MatCardModule,
-    MatDialogModule,
-    MatDividerModule,
-    MatExpansionModule,
-    MatFormFieldModule,
-    MatGridListModule,
-    MatIconModule,
-    MatInputModule,
-    MatListModule,
-    MatOptionModule,
-    MatProgressBarModule,
-    MatProgressSpinnerModule,
-    MatSelectModule,
-    MatSlideToggleModule,
-    MatSnackBarModule,
-    MatProgressSpinnerModule,
-    MatStepperModule,
-    MatTooltipModule,
-    MatTreeModule
-  ]
+  imports: exportedModules,
+  exports: exportedModules
 })
-
 export class SharedModule { }

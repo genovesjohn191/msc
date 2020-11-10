@@ -1,13 +1,14 @@
 import {
-  Component,
   ChangeDetectionStrategy,
-  ViewEncapsulation,
-  Input,
+  Component,
   EventEmitter,
-  Output
+  Input,
+  Output,
+  ViewEncapsulation
 } from '@angular/core';
-import { IMcsDataChange } from '@app/core';
 import { McsFilterInfo } from '@app/models';
+
+import { ColumnFilter } from './column-filter.interface';
 
 @Component({
   selector: 'mcs-column-filter',
@@ -19,7 +20,7 @@ import { McsFilterInfo } from '@app/models';
   }
 })
 
-export class ColumnFilterComponent implements IMcsDataChange<McsFilterInfo[]> {
+export class ColumnFilterComponent implements ColumnFilter {
   @Input()
   public filters: McsFilterInfo[];
 

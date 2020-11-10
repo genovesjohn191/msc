@@ -17,7 +17,6 @@ import {
 import { DataStatus } from '@app/models';
 import { McsRepository } from '@app/services';
 import {
-  McsDataSource,
   Paginator,
   Search
 } from '@app/shared';
@@ -25,12 +24,14 @@ import {
   isNullOrEmpty,
   isNullOrUndefined,
   unsubscribeSafely,
-  CommonDefinition
+  CommonDefinition,
+  McsDataSource
 } from '@app/utilities';
 
 type DelegateSource<T> = () => Observable<T[]>;
 type DatasourceType<T> = McsRepository<T> | T[] | Observable<T[]> | DelegateSource<T>;
 
+/// @deprecated: Use McsTableDataSource2 instead and bind the material design
 export class McsTableDataSource<T> implements McsDataSource<T> {
   public dataStatus: DataStatus;
 

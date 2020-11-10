@@ -22,6 +22,7 @@ export * from './functions/mcs-coerce.function';
 export * from './interfaces/mcs-component-type.interface';
 export * from './interfaces/mcs-delegate.interface';
 export * from './interfaces/mcs-disposable.interface';
+export * from './interfaces/mcs-datasource';
 
 export * from './rxjs-operators/emitLatestMap';
 

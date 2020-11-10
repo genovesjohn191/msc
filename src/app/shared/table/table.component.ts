@@ -1,59 +1,62 @@
 import {
-  Component,
-  Input,
-  OnInit,
-  OnDestroy,
-  AfterContentInit,
-  AfterContentChecked,
-  ViewChild,
-  ContentChild,
-  ContentChildren,
-  ChangeDetectorRef,
-  Renderer2,
-  ElementRef,
-  QueryList,
-  NgIterable,
-  IterableDiffer,
-  IterableDiffers,
-  TrackByFunction,
-  IterableChangeRecord,
-  EmbeddedViewRef,
-  ViewEncapsulation,
-  ChangeDetectionStrategy
-} from '@angular/core';
-import {
-  Subject,
-  Subscription,
+  isObservable,
   Observable,
-  isObservable
+  Subject,
+  Subscription
 } from 'rxjs';
 import {
   takeUntil,
   tap
 } from 'rxjs/operators';
+
+import {
+  AfterContentChecked,
+  AfterContentInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ContentChild,
+  ContentChildren,
+  ElementRef,
+  EmbeddedViewRef,
+  Input,
+  IterableChangeRecord,
+  IterableDiffer,
+  IterableDiffers,
+  NgIterable,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  Renderer2,
+  TrackByFunction,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
 import { DataStatus } from '@app/models';
 import {
   isNullOrEmpty,
-  unsubscribeSafely
+  unsubscribeSafely,
+  McsDataSource
 } from '@app/utilities';
-import {
-  CellOutletDirective,
-  HeaderPlaceholderDirective,
-  DataPlaceholderDirective,
-  DataStatusPlaceholderDirective,
-  CellOutletContext
-} from './shared';
+
 import { ColumnDefDirective } from './column';
-import {
-  HeaderRowDefDirective,
-  HeaderCellDefDirective
-} from './header';
 import {
   DataCellDefDirective,
   DataRowDefDirective
 } from './data';
 import { DataStatusDefDirective } from './data-status';
-import { McsDataSource } from './mcs-data-source.interface';
+import {
+  HeaderCellDefDirective,
+  HeaderRowDefDirective
+} from './header';
+import {
+  CellOutletContext,
+  CellOutletDirective,
+  DataPlaceholderDirective,
+  DataStatusPlaceholderDirective,
+  HeaderPlaceholderDirective
+} from './shared';
+// import { McsDataSource } from './mcs-data-source.interface';
 import { TableDataSource } from './table.datasource';
 import { Table } from './table.interface';
 
@@ -224,7 +227,7 @@ export class TableComponent<T> implements Table, OnInit, AfterContentInit, After
 
     this._data = [];
     if (newDatasource) {
-      this._dataSource.disconnect();
+      this._dataSource.disconnect(null);
     }
 
     // We need to set the subscription into null in order
@@ -378,10 +381,10 @@ export class TableComponent<T> implements Table, OnInit, AfterContentInit, After
    * `@Note` This will run asynchronously
    */
   private _getDatasourceData(): void {
-    this._dataSourceSubscription = this._dataSource.connect().subscribe((data) => {
+    this._dataSourceSubscription = this._dataSource.connect(null).subscribe((data) => {
       this._data = data;
       this._createDataRows();
-      this._dataSource.onCompletion(data);
+      this._dataSource.onCompletion(data as any);
     });
   }
 
