@@ -254,6 +254,7 @@ export * from './response/mcs-report-generic-item';
 export * from './response/mcs-report-integer-data';
 export * from './response/mcs-report-subscription';
 export * from './response/mcs-report-service-change-info';
+export * from './response/mcs-contact-us';
 
 /** Common */
 export * from './common/mcs-api-search-key';
@@ -284,6 +285,7 @@ export * from './common/mcs-service-base';
 export * from './common/mcs-query-param';
 export * from './common/mcs-entity-provision';
 export * from './common/mcs-azure-service-query-params';
+export * from './common/mcs-ticket-query-params';
 
 /** Serialization */
 export * from './serialization/mcs-date-serialization';

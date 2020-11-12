@@ -1,5 +1,6 @@
 import { JsonProperty } from '@app/utilities';
 import { McsEntityBase } from '../common/mcs-entity.base';
+import { McsContactUs } from './mcs-contact-us';
 import {
   CompanyStatus,
   CompanyStatusSerialization
@@ -26,4 +27,7 @@ export class McsCompany extends McsEntityBase {
     deserializer: CompanyStatusSerialization
   })
   public status: CompanyStatus = undefined;
+
+  @JsonProperty()
+  public contacts?: McsContactUs[] = undefined;
 }

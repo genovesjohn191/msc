@@ -1,5 +1,5 @@
 <div class="widget">
-  <h3>Changes vs Prior Period</h3>
+  <h3>{{ 'reports.overview.resourceChangesWidget.title' | translate }}</h3>
   <mcs-horizontal-bar-chart
     *ngIf="!processing && !hasError"
     [data]="data$ | async"

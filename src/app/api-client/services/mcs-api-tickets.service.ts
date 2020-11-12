@@ -14,7 +14,8 @@ import {
   McsTicketCreate,
   McsTicketCreateComment,
   McsTicketComment,
-  McsQueryParam
+  McsQueryParam,
+  McsTicketQueryParams
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiTicketsService } from '../interfaces/mcs-api-tickets.interface';
@@ -28,7 +29,7 @@ export class McsApiTicketsService implements IMcsApiTicketsService {
    * Get all the tickets from the API
    * @param query Query predicate that serves as the parameter of the endpoint
    */
-  public getTickets(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsTicket[]>> {
+  public getTickets(query?: McsTicketQueryParams): Observable<McsApiSuccessResponse<McsTicket[]>> {
 
     // Set default values if null
     let searchParams = new Map<string, any>();
@@ -36,6 +37,8 @@ export class McsApiTicketsService implements IMcsApiTicketsService {
     searchParams.set('page', query.pageIndex);
     searchParams.set('per_page', query.pageSize);
     searchParams.set('search_keyword', query.keyword);
+    searchParams.set('state', query.state);
+    searchParams.set('serviceId', query.serviceId);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/tickets';

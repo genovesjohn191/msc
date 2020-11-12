@@ -17,7 +17,8 @@ import {
   RouteKey,
   McsTicket,
   McsQueryParam,
-  McsApiCollection
+  McsApiCollection,
+  McsTicketQueryParams
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { McsEvent } from '@app/events';
@@ -77,7 +78,7 @@ export class TicketsComponent extends McsTableListingBase<McsTicket> {
    * Gets the entity listing based on the context
    * @param query Query to be obtained on the listing
    */
-  protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsTicket>> {
+  protected getEntityListing(query: McsTicketQueryParams): Observable<McsApiCollection<McsTicket>> {
     return this._apiService.getTickets(query);
   }
 }

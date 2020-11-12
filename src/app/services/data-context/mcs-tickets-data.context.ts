@@ -4,7 +4,8 @@ import { isNullOrEmpty } from '@app/utilities';
 import {
   McsTicket,
   McsQueryParam,
-  McsApiSuccessResponse
+  McsApiSuccessResponse,
+  McsTicketQueryParams
 } from '@app/models';
 import { IMcsApiTicketsService } from '@app/api-client';
 import { McsDataContext } from '../core/mcs-data-context.interface';
@@ -37,7 +38,7 @@ export class McsTicketsDataContext implements McsDataContext<McsTicket> {
    * Filters the records based on the query provided
    * @param query Query to be sent to API to query the data
    */
-  public filterRecords(query: McsQueryParam): Observable<McsTicket[]> {
+  public filterRecords(query: McsTicketQueryParams): Observable<McsTicket[]> {
     return this._ticketsApiService.getTickets(query).pipe(
       map((response) => this._getApiContentResponse(response))
     );

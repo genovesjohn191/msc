@@ -127,6 +127,7 @@ import {
   McsReportSubscription,
   McsReportCostRecommendations,
   McsReportServiceChangeInfo,
+  McsTicketQueryParams,
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -1060,7 +1061,7 @@ export class McsApiService {
     );
   }
 
-  public getTickets(query?: McsQueryParam): Observable<McsApiCollection<McsTicket>> {
+  public getTickets(query?: McsTicketQueryParams): Observable<McsApiCollection<McsTicket>> {
     return this._mapToEntityRecords(this._ticketsRepository, query).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getTickets'))

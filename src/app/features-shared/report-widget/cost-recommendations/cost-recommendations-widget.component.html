@@ -1,5 +1,5 @@
 <div class="widget">
-  <h3>Cost and Recommendations</h3>
+  <h3>{{ 'reports.overview.costAndRecommendationsWidget.title' | translate }}</h3>
   <div class="data-wrapper">
     <div *ngIf="processing; else done">
       <div class="placeholder-content">
@@ -88,10 +88,10 @@
       <ng-template #error>
         <div class="error-wrapper">
           <mcs-status-message type="error">
-            {{ 'reports.widgets.errorMessage' | translate }}<a style="margin-left: 5px;" mcsId (click)="getCostRecommendations()">{{ 'reports.widgets.retryLabel' | translate }}</a>
+            {{ 'reports.errorMessage' | translate }}<a style="margin-left: 5px;" mcsId (click)="getCostRecommendations()">{{ 'reports.retryLabel' | translate }}</a>
           </mcs-status-message>
         </div>
-    </ng-template>
+      </ng-template>
     </ng-template>
   </div>
 </div>

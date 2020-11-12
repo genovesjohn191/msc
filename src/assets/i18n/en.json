@@ -102,18 +102,51 @@
     }
   },
   "reports": {
-    "widgets": {
-      "errorMessage": "Something went wrong while retrieving your data.",
-      "retryLabel": "Try Again",
+    "errorMessage": "Something went wrong while retrieving your data.",
+    "retryLabel": "Try Again",
+    "overview": {
       "azureResourcesWidget": {
         "title": "Azure Resources",
         "cloudHealthLinkLabel": "View in CloudHealth"
       },
       "azureTicketsWidget": {
         "title": "Open Azure Tickets",
+        "table": {
+          "header": {
+            "summary": "Summary",
+            "lastUpdated": "Last Updated"
+          }
+        },
         "newTicketLinkLabel": "New",
         "moreTicketsLinkLabel": "View All",
         "empty": "No open tickets."
+      },
+      "servicesOverviewWidget": {
+        "title": "Services Overview"
+      },
+      "costAndRecommendationsWidget": {
+        "title": "Cost and Recommendations"
+      },
+      "contactUsWidget": {
+        "title": "Contact Us"
+      },
+      "resourceChangesWidget": {
+        "title": "Resource Count Since Last Month"
+      },
+      "changeRequestsWidget": {
+        "title": "Make a Change",
+        "changeServiceRequest": {
+          "link": "Azure Service Request",
+          "description": "Request a change to resources in a subscription in your Azure Environment."
+        },
+        "changeLicenseCount": {
+          "link": "Change License Subscription Count",
+          "description": "Change the number of licenses against a subscription."
+        },
+        "changeDNSZone": {
+          "link": "Change Macquarie-Managed DNS Zone",
+          "description": "Manage DNS zones in MacquarieView."
+        }
       }
     }
   },
