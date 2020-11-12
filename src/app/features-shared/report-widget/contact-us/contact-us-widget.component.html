@@ -1,27 +1,48 @@
-<div class="widget">
-  <h3>Contact us</h3>
-  <div class="data-wrapper">
-    <mcs-cta-list>
-      <mcs-cta-list-panel [icon]="contactPersonIcon">
-        <mcs-cta-list-body>
-          Solution Delivery Manager<br />Jane Gee<br />0488 871 123
-        </mcs-cta-list-body>
-        <mcs-cta-list-action>
-          <a href="mailto:jgee@macquariecloudservices.com">
-            jgee@macquariecloudservices.com
-          </a>
-        </mcs-cta-list-action>
-      </mcs-cta-list-panel>
-      <mcs-cta-list-panel [icon]="contactPersonIcon">
-        <mcs-cta-list-body>
-          Account Manager<br />John Vicor<br />0488 871 123
-        </mcs-cta-list-body>
-        <mcs-cta-list-action>
-          <a href="mailto:jvicor@macquariecloudservices.com">
-            jvicor@macquariecloudservices.com
-          </a>
-        </mcs-cta-list-action>
-      </mcs-cta-list-panel>
-    </mcs-cta-list>
+<div *ngIf="processing; else done">
+  <div class="placeholder-content">
   </div>
 </div>
+<ng-template #done>
+  <div *ngIf="!hasError; else error">
+    <div *ngIf="contactsInfo.contacts && contactsInfo.contacts.length > 0">
+      <div class="data-wrapper">
+        <div class="widget">
+          <h3>{{ 'reports.overview.contactUsWidget.title' | translate }}</h3>
+          <mcs-cta-list *ngFor="let contactInfo of contactsInfo.contacts">
+            <mcs-cta-list-panel [icon]="contactPersonIcon">
+              <mcs-cta-list-body *ngIf="contactInfo.position"
+                style="display: block;">
+                {{ contactInfo.position }}
+              </mcs-cta-list-body> 
+              <mcs-cta-list-body *ngIf="contactInfo.firstName || contactInfo.lastName"
+                style="display: block;">
+                {{ contactInfo.firstName }} {{ contactInfo.lastName }}
+              </mcs-cta-list-body>  
+              <mcs-cta-list-body *ngIf="contactInfo.phone"
+                style="display: block;">
+                {{ contactInfo.phone }}
+              </mcs-cta-list-body>
+              <mcs-cta-list-action *ngIf="contactInfo.email">
+                <a href="mailto:{{ contactInfo.email }}">
+                  {{ contactInfo.email }}
+                </a>
+              </mcs-cta-list-action>
+            </mcs-cta-list-panel>
+          </mcs-cta-list>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template #error>
+    <div class="data-wrapper">
+      <div class="widget">
+        <h3>{{ 'reports.overview.contactUsWidget.title' | translate }}</h3>
+        <div class="error-wrapper">
+          <mcs-status-message type="error">
+            {{ 'reports.errorMessage' | translate }}<a style="margin-left: 5px;" mcsId (click)="getUserContactsInfo()">{{ 'reports.retryLabel' | translate }}</a>
+          </mcs-status-message>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</ng-template>

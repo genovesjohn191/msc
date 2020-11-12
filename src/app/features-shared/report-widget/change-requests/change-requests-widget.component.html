@@ -1,35 +1,35 @@
 <div class="widget">
-  <h3>Make a change</h3>
+  <h3>{{ 'reports.overview.changeRequestsWidget.title' | translate }}</h3>
   <div class="data-wrapper">
     <mcs-cta-list>
       <mcs-cta-list-panel [icon]="azureServiceRequestIcon" *mcsAccessControl="['OrderEdit']; feature: ['EnableOrderingMicrosoftRequestChange']">
         <mcs-cta-list-header link="servers">
           <a href="{{ azureServiceRequestLink }}">
-            Azure Service Request
+            {{ 'reports.overview.changeRequestsWidget.changeServiceRequest.link' | translate }}
           </a>
         </mcs-cta-list-header>
         <mcs-cta-list-body>
-          Request a change to resources in a subscription in your Azure Environment.
+          {{ 'reports.overview.changeRequestsWidget.changeServiceRequest.description' | translate }}
         </mcs-cta-list-body>
       </mcs-cta-list-panel>
       <mcs-cta-list-panel [icon]="changeLicenseCountIcon" *mcsAccessControl="['OrderEdit'];">
         <mcs-cta-list-header link="servers">
           <a href="{{ changeLicenseCountLink }}">
-            Change License subscription count
+            {{ 'reports.overview.changeRequestsWidget.changeLicenseCount.link' | translate }}
           </a>
         </mcs-cta-list-header>
         <mcs-cta-list-body>
-          Change the number of licenses against a subscription.
+          {{ 'reports.overview.changeRequestsWidget.changeLicenseCount.description' | translate }}
         </mcs-cta-list-body>
       </mcs-cta-list-panel>
       <mcs-cta-list-panel [icon]="changeDnsZoneIcon" *mcsAccessControl="['OrderEdit']; feature: ['EnableOrderingDnsCustomRequest']">
         <mcs-cta-list-header link="servers">
           <a href="{{ changeManagedDnsLink }}">
-            Change Macquarie-managed DNS zone
+            {{ 'reports.overview.changeRequestsWidget.changeDNSZone.link' | translate }}
           </a>
         </mcs-cta-list-header>
         <mcs-cta-list-body>
-          Manage DNS zones in MacquarieView.
+          {{ 'reports.overview.changeRequestsWidget.changeDNSZone.description' | translate }}
         </mcs-cta-list-body>
       </mcs-cta-list-panel>
     </mcs-cta-list>

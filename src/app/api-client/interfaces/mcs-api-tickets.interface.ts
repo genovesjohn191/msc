@@ -7,7 +7,8 @@ import {
   McsTicketCreateComment,
   McsTicketComment,
   McsTicketCreateAttachment,
-  McsTicketAttachment
+  McsTicketAttachment,
+  McsTicketQueryParams
 } from '@app/models';
 
 export interface IMcsApiTicketsService {
@@ -16,7 +17,7 @@ export interface IMcsApiTicketsService {
    * Get all the tickets from the API
    * @param query Query predicate that serves as the parameter of the endpoint
    */
-  getTickets(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsTicket[]>>;
+  getTickets(query?: McsTicketQueryParams): Observable<McsApiSuccessResponse<McsTicket[]>>;
 
   /**
    * Get the ticket from the API

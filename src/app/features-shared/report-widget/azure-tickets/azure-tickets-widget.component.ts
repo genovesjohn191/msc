@@ -14,23 +14,26 @@ import {
 } from 'rxjs';
 import {
   catchError,
-  takeUntil
+  map
 } from 'rxjs/operators';
 import { McsApiService } from '@app/services';
 import {
   CoreRoutes,
+  McsFilterService,
+  McsMatTableContext,
   McsNavigationService,
-  McsTableListingBase } from '@app/core';
-import { McsEvent } from '@app/events';
+  McsTableDataSource2
+} from '@app/core';
 import {
   McsTicket,
-  McsQueryParam,
   McsApiCollection,
   RouteKey,
   TicketStatus,
-  ticketStatusText
+  ticketStatusText,
+  McsTicketQueryParams
 } from '@app/models';
 import {
+  cloneObject,
   CommonDefinition,
   isNullOrEmpty,
   unsubscribeSafely
@@ -49,7 +52,9 @@ const maxTicketsToDisplay: number = 5;
   }
 })
 
-export class AzureTicketsWidgetComponent extends McsTableListingBase<McsTicket>implements OnInit, OnDestroy {
+export class AzureTicketsWidgetComponent implements OnInit, OnDestroy {
+  public readonly dataSource: McsTableDataSource2<McsTicket>;
+
   private _ticketStatusIconMap = new Map<string, string>();
   private _destroySubject = new Subject<void>();
 
@@ -60,10 +65,6 @@ export class AzureTicketsWidgetComponent extends McsTableListingBase<McsTicket>i
 
   public get routeKeyEnum(): any {
     return RouteKey;
-  }
-
-  public get columnSettingsKey(): string {
-    return CommonDefinition.FILTERSELECTOR_TICKET_LISTING;
   }
 
   public get ticketListingLink(): string {
@@ -78,43 +79,58 @@ export class AzureTicketsWidgetComponent extends McsTableListingBase<McsTicket>i
     _injector: Injector,
     private _changeDetectorRef: ChangeDetectorRef,
     private _apiService: McsApiService,
-    private _navigationService: McsNavigationService) {
-      super(_injector, _changeDetectorRef, { dataChangeEvent: McsEvent.dataChangeTickets });
-      this.setTicketStatusIconMap();
+    private _filterService: McsFilterService,
+    private _navigationService: McsNavigationService
+  ) {
+    this.dataSource = new McsTableDataSource2(this.getData.bind(this));
+    this.setTicketStatusIconMap();
   }
 
   public ngOnInit() {
-    this.getData();
+    this._initializeDataColumns();
+  }
+
+  public get columnSettingsKey(): string {
+    return CommonDefinition.FILTERSELECTOR_TICKET_LISTING;
   }
 
   public ngOnDestroy() {
     unsubscribeSafely(this._destroySubject);
   }
 
-  public retry(): void {
-    this.getData();
-    this.retryDatasource();
+  public retryDatasource(): void {
+    this.dataSource.refreshDataRecords();
   }
 
-  public getData(): void {
+  private getData(): Observable<McsMatTableContext<McsTicket>> {
     this.processing = true;
     this.hasError = false;
     this.empty = false;
+    let queryParam = new McsTicketQueryParams();
+    queryParam.pageSize = maxTicketsToDisplay;
+    queryParam.serviceId = 'AZ';
+    queryParam.state = 'open';
 
-    this.getEntityListing({}).pipe(
+    return this._apiService.getTickets(queryParam).pipe(
+      map((response) => {
+        this.processing = false;
+        this.empty = response.totalCollectionCount === 0;
+        this.hasMore = response.totalCollectionCount > maxTicketsToDisplay;
+        this._changeDetectorRef.markForCheck();
+
+        let azureTickets: McsTicket[] = [];
+        azureTickets.push(...cloneObject(response.collection));
+
+        let dataSourceContext = new McsMatTableContext(azureTickets, azureTickets.length);
+        return dataSourceContext;
+      }),
       catchError(() => {
         this.hasError = true;
         this.processing = false;
         this._changeDetectorRef.markForCheck();
         return throwError('Tickets endpoint failed.');
-      }),
-      takeUntil(this._destroySubject))
-      .subscribe((result) => {
-        this.processing = false;
-        this.empty = result.totalCollectionCount === 0;
-        this.hasMore = result.totalCollectionCount > maxTicketsToDisplay;
-        this.changeDetectorRef.markForCheck();
-      });
+      })
+    );
   }
 
   public getTicketDetailsLink(ticket: McsTicket): string {
@@ -130,12 +146,6 @@ export class AzureTicketsWidgetComponent extends McsTableListingBase<McsTicket>i
     this._navigationService.navigateTo(RouteKey.TicketDetails, [ticket.id]);
   }
 
-  protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsTicket>> {
-    // These will be updated once we have the correct filter...
-    query.pageSize = maxTicketsToDisplay;
-    return this._apiService.getTickets(query);
-  }
-
   private setTicketStatusIconMap(): void {
     this._ticketStatusIconMap.set(ticketStatusText[TicketStatus.Closed], CommonDefinition.ASSETS_SVG_STATE_SUSPENDED);
     this._ticketStatusIconMap.set(ticketStatusText[TicketStatus.New], CommonDefinition.ASSETS_SVG_STATE_RUNNING);
@@ -143,5 +153,11 @@ export class AzureTicketsWidgetComponent extends McsTableListingBase<McsTicket>i
     this._ticketStatusIconMap.set(ticketStatusText[TicketStatus.AwaitingCustomer], CommonDefinition.ASSETS_SVG_STATE_RESTARTING);
     this._ticketStatusIconMap.set(ticketStatusText[TicketStatus.WaitForRfo], CommonDefinition.ASSETS_SVG_STATE_RESTARTING);
     this._ticketStatusIconMap.set(ticketStatusText[TicketStatus.WaitingForTaskCompletion], CommonDefinition.ASSETS_SVG_STATE_RESTARTING);
+  }
+
+  private _initializeDataColumns(): void {
+    let dataColumns = this._filterService.getFilterSettings(
+      CommonDefinition.FILTERSELECTOR_AZURE_TICKETS_WIDGET_LISTING);
+    this.dataSource.registerColumnsFilterInfo(dataColumns);
   }
 }

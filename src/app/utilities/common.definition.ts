@@ -200,6 +200,7 @@ export class CommonDefinition {
   public static FILTERSELECTOR_LICENSE_LISTING = 'licenseFilter';
   public static FILTERSELECTOR_AZURE_RESOURCES_LISTING = 'azureResourceFilter';
   public static FILTERSELECTOR_AZURE_MANAGED_SERVICES_LISTING = 'azureManagedServiceFilter';
+  public static FILTERSELECTOR_AZURE_TICKETS_WIDGET_LISTING = 'azureTicketsWidgetFilter';
 
   /** RegEx Patterns */
   public static REGEX_EMAIL_PATTERN = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;

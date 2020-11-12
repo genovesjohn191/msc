@@ -13,8 +13,7 @@ import {
 
 import { ChartConfig, ChartItem } from '@app/shared';
 import {
-  coerceNumber,
-  currencyFormat
+  coerceNumber
 } from '@app/utilities';
 import { McsReportingService } from '@app/core/services/mcs-reporting.service';
 import { catchError } from 'rxjs/operators';
@@ -90,14 +89,7 @@ export class ResourceChangesWidgetComponent implements OnInit {
   }
 
   public dataLabelFormatter(val: number, opts?: any): string {
-    let fullLabel = opts.w.globals.labels[opts.dataPointIndex];
-    let items = fullLabel.split('|', 2);
-    let amount = currencyFormat(items[1]);
-    if ((items[1] as number) > 0) {
-      amount = '+' + currencyFormat(items[1]);
-    }
-
-    return amount;
+    return  val > 0 ? `+${val}` : val.toString();
   }
 
   public legendLabelFormatter(val: string, opts?: any): string {
@@ -111,12 +103,8 @@ export class ResourceChangesWidgetComponent implements OnInit {
   public tooltipXValueFormatter(val: number, opts?: any): string {
     let fullLabel = opts.w.globals.labels[opts.dataPointIndex];
     let items = fullLabel.split('|', 2);
-    let amount = currencyFormat(items[1]);
-    if ((items[1] as number) > 0) {
-      amount = '+' + currencyFormat(items[1]);
-    }
 
-    return `${items[0]} (${amount})`;
+    return `${items[0]}`;
   }
 
   public tooltipYValueFormatter(val: number, opts?: any): string {

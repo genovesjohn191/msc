@@ -416,5 +416,17 @@
       "value": true,
       "exclude": true
     }
+  },
+  "azureTicketsWidgetFilter": {
+    "summary": {
+      "text": "Summary",
+      "value": true,
+      "exclude": true 
+    },
+    "lastUpdatedDate": {
+      "text": "Last Updated",
+      "value": true,
+      "exclude": true 
+    }
   }
 }
