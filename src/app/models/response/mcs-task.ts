@@ -30,6 +30,9 @@ export class McsTask extends McsEntityBase {
   @JsonProperty()
   public ectInSeconds: number = undefined;
 
+  @JsonProperty()
+  public referenceId: string = undefined;
+
   @JsonProperty({
     serializer: TaskTypeSerialization,
     deserializer: TaskTypeSerialization

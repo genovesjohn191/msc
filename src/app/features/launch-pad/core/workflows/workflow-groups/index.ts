@@ -1,3 +1,1 @@
-export * from './provision-av-workflow';
-export * from './provision-vm-workflow';
-export * from './change-vm-workflow';
+export * from './provision-virtual-machine.workflow';

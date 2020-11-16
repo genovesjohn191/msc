@@ -1,0 +1,32 @@
+<mcs-page header="Draft Workflows" leftPanelExpandedByDefault="true">
+  <!-- Content Panel -->
+  <mcs-content-panel *mcsContentPanelDef>
+    <p>Unfinished workflows stored in this browser</p>
+    <table class="mcs-basic-table">
+      <thead>
+        <tr>
+          <th>Company ID</th>
+          <th>Service ID</th>
+          <th>Workflow</th>
+          <th>Source</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let state of savedState">
+          <td>{{ state.companyId }}</td>
+          <td>
+            <button mat-button (click)="onClick(state)">
+              {{ state.serviceId }}
+            </button>
+          </td>
+          <td>
+            <button mat-button (click)="onClick(state)">
+              {{ getWorkflowGroupId(state.workflowGroupId) }}
+            </button>
+          </td>
+          <td>{{ state.targetSource }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </mcs-content-panel>
+</mcs-page>

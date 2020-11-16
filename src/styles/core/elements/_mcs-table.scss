@@ -92,3 +92,98 @@ table {
     }
   }
 }
+
+table.mcs-compact-table {
+  border-collapse: collapse;
+  width: auto;
+  @include font-size($font-size-default);
+
+  .right-align {
+    text-align: right;
+  }
+
+  td, th {
+    border-bottom: 1px dashed $color-grey-05;
+    border-top: 1px dashed $color-grey-05;
+    padding: $space-medium;
+  }
+
+  tr:hover { background-color: $color-grey-05; }
+
+  th {
+    padding-top: $space-small;
+    padding-bottom: $space-small;
+    text-align: left;
+    background-color: $color-black;
+    color: $color-white;
+  }
+
+  &.alternate-highlight {
+    tr:nth-child(odd) {
+      background-color: $color-grey-07;
+    }
+  }
+}
+
+table.mcs-basic-table {
+  margin-top: $table-margin-size;
+  margin-bottom: $table-margin-size;
+  border-collapse: collapse;
+  width: 100%;
+
+  thead {
+    tr {
+      text-align: left;
+      white-space: nowrap;
+      background-color: $table-header-background-color;
+      height: $table-row-size;
+
+      th {
+        @extend %cell-style;
+        @include font-size($table-header-font-size);
+        vertical-align: middle;
+        padding: $table-header-cell-padding;
+        font-family: $circular-pro-book;
+        color: $table-header-font-color;
+      }
+
+      th.action-header-cell {
+        min-width: $table-action-cell-size;
+        width: $table-action-cell-size;
+        padding: 0;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      text-align: left;
+      white-space: nowrap;
+      border-bottom: 1px solid $table-data-border-color;
+      height: $table-row-size;
+
+      &:hover {
+        background-color: $table-data-hover-background-color;
+      }
+
+      td {
+        @extend %cell-style;
+        @include font-size($table-data-font-size);
+        vertical-align: middle;
+        border-right: none;
+        font-family: $circular-pro-book;
+        padding: $table-data-cell-padding;
+      }
+
+      td.action-data-cell {
+        min-width: $table-action-cell-size;
+        width: $table-action-cell-size;
+        padding: 0;
+      }
+
+      td.action-data-row {
+        background-color: $hover-bg-color;
+      }
+    }
+  }
+}

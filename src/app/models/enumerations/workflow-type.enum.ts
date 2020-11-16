@@ -1,7 +1,7 @@
 import { McsEnumSerializationBase } from '../serialization/mcs-enum-serialization-base';
 
 export enum WorkflowType {
-  ProvisionVm = 'servers.vcloud.provision',
+  ProvisionVirtualMachine = 'servers.vcloud.provision',
   ChangeVm = 'servers.vcloud.update',
   DeprovisionVm = 'servers.vcloud.deprovision',
   AddAntiVirus = 'hostsecurity.av.provision',

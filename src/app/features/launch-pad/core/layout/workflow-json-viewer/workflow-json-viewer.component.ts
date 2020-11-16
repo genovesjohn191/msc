@@ -25,7 +25,7 @@ export class WorkflowJsonViewerComponent {
     this.table = '';
     let convert = (source: any) => {
       let objectKeys = Object.keys(source);
-      this.table += '<table class="payload">';
+      this.table += '<table class="mcs-compact-table">';
       objectKeys.forEach((fieldKey) => {
         let fieldType = typeof source[fieldKey];
         let fieldValue = source[fieldKey];
@@ -36,8 +36,8 @@ export class WorkflowJsonViewerComponent {
           convert(fieldValue);
           this.table += '</td>';
         } else {
-          this.table += `<td>${fieldKey}</td>`;
-          this.table += `<td>${fieldValue}</td>`;
+          this.table += `<td class='right-align'>${ fieldKey }</td>`;
+          this.table += `<td><b>${fieldValue}</b></td>`;
         }
         this.table += '</tr>';
       });

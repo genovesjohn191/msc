@@ -1,0 +1,30 @@
+<mcs-page [header]="'launchPadSearch.header' | translate: { keyword: keyword }">
+  <!-- Left Panel -->
+  <mcs-left-panel *mcsLeftPanelDef="'launchPadSearch.filterHeader' | translate">
+    <!-- Column Filter -->
+    <mcs-left-panel-item *mcsLeftPanelItemDef offset="0">
+      <div [ngSwitch]="selectedTabIndex">
+        <mcs-column-filter *ngSwitchCase="0"
+          [filters]="elementsTableFilters" (dataChange)="onColumnFilterChange('elements', $event)"></mcs-column-filter>
+
+        <mcs-column-filter *ngSwitchCase="1"
+          [filters]="servicesTableFilters" (dataChange)="onColumnFilterChange('services', $event)"></mcs-column-filter>
+
+      </div>
+    </mcs-left-panel-item>
+  </mcs-left-panel>
+
+  <!-- Content Panel -->
+  <mcs-content-panel *mcsContentPanelDef>
+    <div class="listing-table-wrapper">
+      <mat-tab-group [(selectedIndex)]="selectedTabIndex">
+        <mat-tab label="Elements">
+          <mcs-launch-pad-search-elements-result #searchElementsResult [keyword]="keyword" [dataFilters]="elementsTableFilters"></mcs-launch-pad-search-elements-result>
+        </mat-tab>
+        <mat-tab label="Services">
+          <mcs-launch-pad-search-services-result #searchServicesResult [keyword]="keyword" [dataFilters]="servicesTableFilters"></mcs-launch-pad-search-services-result>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </mcs-content-panel>
+</mcs-page>

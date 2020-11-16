@@ -17,6 +17,11 @@ export interface WorkflowGroup {
 }
 
 export interface WorkflowGroupSaveState {
+  serviceId: string;
+  companyId: string;
+  targetSource: string;
+  workflowGroupId: string;
+  description: string;
   config: WorkflowGroupConfig;
   workflows: Workflow[];
 }

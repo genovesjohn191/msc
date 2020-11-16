@@ -1,18 +1,8 @@
 import { NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { MatBadgeModule } from '@angular/material/badge';
-import { MatButtonModule } from '@angular/material/button';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { MatOptionModule } from '@angular/material/core';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSelectModule } from '@angular/material/select';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { SharedModule } from '@app/shared/shared.module';
 
 import { DynamicInputHiddenComponent } from './input-hidden/input-hidden.component';
+import { DynamicInputIpComponent } from './input-ip/input-ip.component';
 import { DynamicInputNumberComponent } from './input-number/input-number.component';
 import { DynamicInputRandomComponent } from './input-random/input-random.component';
 import { DynamicInputTextComponent } from './input-text/input-text.component';
@@ -31,6 +21,7 @@ import { DynamicSelectComponent } from './select/select.component';
   declarations: [
     DynamicInputNumberComponent,
     DynamicInputHiddenComponent,
+    DynamicInputIpComponent,
     DynamicInputTextComponent,
     DynamicInputRandomComponent,
     DynamicSelectComponent,
@@ -44,6 +35,7 @@ import { DynamicSelectComponent } from './select/select.component';
   exports: [
     DynamicInputNumberComponent,
     DynamicInputHiddenComponent,
+    DynamicInputIpComponent,
     DynamicInputTextComponent,
     DynamicInputRandomComponent,
     DynamicSelectComponent,

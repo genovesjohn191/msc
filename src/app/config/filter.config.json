@@ -236,6 +236,99 @@
       "exclude": true
     }
   },
+  "launchPadSearchOrdersFilter": {
+    "orderId": {
+      "text": "Order ID",
+      "value": true,
+      "exclude": true
+    },
+    "description": {
+      "text": "Description",
+      "value": true
+    },
+    "status": {
+      "text": "Status",
+      "value": true
+    },
+    "companyName": {
+      "text": "Customer Name",
+      "value": true
+    },
+    "companyId": {
+      "text": "Customer ID",
+      "value": true
+    },
+    "createdOn": {
+      "text": "Created On",
+      "value": true
+    }
+  },
+  "launchPadSearchElementsFilter": {
+    "productId": {
+      "text": "Product ID",
+      "value": true,
+      "exclude": true
+    },
+    "description": {
+      "text": "Description",
+      "value": true
+    },
+    "serviceId": {
+      "text": "Service ID",
+      "value": true,
+      "exclude": true
+    },
+    "status": {
+      "text": "Status",
+      "value": true
+    },
+    "companyName": {
+      "text": "Customer Name",
+      "value": true
+    },
+    "companyId": {
+      "text": "Customer ID",
+      "value": true
+    }
+  },
+  "launchPadSearchServicesFilter": {
+    "serviceId": {
+      "text": "Service ID",
+      "value": true,
+      "exclude": true
+    },
+    "description": {
+      "text": "Description",
+      "value": true
+    },
+    "installedBaseState": {
+      "text": "Installed Base State",
+      "value": true
+    },
+    "companyName": {
+      "text": "Customer Name",
+      "value": true
+    },
+    "companyId": {
+      "text": "Customer ID",
+      "value": true
+    }
+  },
+  "launchPadSearchConfigurationItemsFilter": {
+    "serviceId": {
+      "text": "Service ID",
+      "value": true,
+      "exclude": true
+    },
+    "companyName": {
+      "text": "Customer Name",
+      "value": true
+    },
+    "companyId": {
+      "text": "Customer ID",
+      "value": true
+    }
+  },
   "mediaFilter": {
     "media": {
       "text": "Media",
@@ -401,7 +494,7 @@
     "friendlyName": {
       "text": "Name",
       "value": true,
-      "exclude": true 
+      "exclude": true
     },
     "serviceId": {
       "text": "Service ID",
@@ -421,12 +514,12 @@
     "summary": {
       "text": "Summary",
       "value": true,
-      "exclude": true 
+      "exclude": true
     },
     "lastUpdatedDate": {
       "text": "Last Updated",
       "value": true,
-      "exclude": true 
+      "exclude": true
     }
   }
 }

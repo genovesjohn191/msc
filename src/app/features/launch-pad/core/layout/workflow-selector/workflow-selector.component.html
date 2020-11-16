@@ -1,7 +1,13 @@
 <mat-nav-list>
+  <a *ngIf="!supportedService" mat-list-item>
+    <div>
+      <h3 mat-line style="color: red;">Unsupported</h3>
+      <span mat-line>This service is not yet supported.</span>
+    </div>
+  </a>
   <a *ngFor="let opt of options" #selectorItem mat-list-item (click)="showWorkflow(selectorItem)" [attr.data-id]="getWorkflowGroupId(opt.id)">
     <div>
-      <span mat-line> {{ opt.name }}</span>
+      <h3 mat-line>{{ opt.name }}</h3>
       <span mat-line>{{ opt.description }}</span>
     </div>
   </a>

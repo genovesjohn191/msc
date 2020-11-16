@@ -3,14 +3,8 @@ import { WorkflowGroupId } from './workflow-groups/workflow-group-type.enum';
 
 // Workflow: Assign workflow groups to product types
 export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map([
-  [ ProductType.VirtualManagedServer,
+  [ ProductType.VirtualDataCentreVmInstance,
     [
-      WorkflowGroupId.ProvisionVm,
-      WorkflowGroupId.ChangeVm,
-      WorkflowGroupId.DeprovisionVm
-    ]],
-  [ ProductType.ServerAntiVirus,
-    [
-      WorkflowGroupId.AddAntiVirus
-    ]],
+      WorkflowGroupId.ProvisionVirtualMachine
+    ]]
 ]);

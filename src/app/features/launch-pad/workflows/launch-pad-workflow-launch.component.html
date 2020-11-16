@@ -1,0 +1,11 @@
+<mcs-page [header]="'launchPadCrispOrders.header' | translate" leftPanelExpandedByDefault="true">
+  <!-- Content Panel -->
+  <mcs-content-panel *mcsContentPanelDef>
+    <mcs-launch-pad #launchPad [context]="launchPadContext" [config]="config" *ngIf="config && launchPadContext; else failed"></mcs-launch-pad>
+
+    <ng-template #failed>
+      <h1>Failed to load launch pad</h1>
+    </ng-template>
+
+  </mcs-content-panel>
+</mcs-page>

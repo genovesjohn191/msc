@@ -4,7 +4,8 @@ import {
   ViewEncapsulation,
   OnInit,
   OnDestroy,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  ViewChild
 } from '@angular/core';
 import {
   CommonDefinition,
@@ -18,6 +19,7 @@ import {
   McsRouteInfo
 } from '@app/models';
 import { Subscription } from 'rxjs';
+import { McsNavigationService } from '@app/core';
 
 @Component({
   selector: 'mcs-header',
@@ -31,12 +33,14 @@ import { Subscription } from 'rxjs';
 })
 
 export class HeaderComponent implements OnInit, OnDestroy {
+  public searchKeyword: string;
   public selectedCategory: RouteCategory;
   private _routeChangeHandler: Subscription;
 
   public constructor(
     private _eventDispatcher: EventBusDispatcherService,
-    private _changeDetectorRef: ChangeDetectorRef
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _navigationService: McsNavigationService
   ) {}
 
   public get lightLogoIconKey(): string {
@@ -65,6 +69,19 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   public toggleNav(): void {
     this._eventDispatcher.dispatch(McsEvent.navToggle);
+  }
+
+  public search(): void {
+    if (isNullOrEmpty(this.searchKeyword)) { return; }
+    this._navigationService.navigateTo(RouteKey.LaunchPadSearch, [this.searchKeyword]);
+  }
+
+  public clearSearch(): void {
+    this.searchKeyword = '';
+  }
+
+  public test(): void {
+    alert('x');
   }
 
   private _registerEvents(): void {

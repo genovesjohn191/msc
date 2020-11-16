@@ -2,7 +2,7 @@
 
 .mat-form-field {
   width: 400px;
-  
+
   @include breakpoint(medium) {
     width: 100%;
   }
@@ -11,11 +11,11 @@
     left: 400px !important;
     top: 0 !important;
   }
-  
+
   .select-placeholder-container {
     display: flex;
     align-items: center;
-  
+
     span {
       flex: 1;
     }
@@ -39,5 +39,12 @@
 
   .suffix {
     padding-left: .3em;
+  }
+
+  &.hidden {
+    display: block;
+    visibility: hidden;
+    height: 0;
+    width: 0;
   }
 }
