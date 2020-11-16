@@ -38,7 +38,7 @@ export class McsApiTicketsService implements IMcsApiTicketsService {
     searchParams.set('per_page', query.pageSize);
     searchParams.set('search_keyword', query.keyword);
     searchParams.set('state', query.state);
-    searchParams.set('serviceId', query.serviceId);
+    searchParams.set('service_id', query.serviceId);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/tickets';
