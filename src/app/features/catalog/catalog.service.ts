@@ -1,19 +1,22 @@
-import { Injectable } from '@angular/core';
 import {
-  Observable,
-  BehaviorSubject
+  BehaviorSubject,
+  Observable
 } from 'rxjs';
-import {
-  isNullOrEmpty,
-  createObject
-} from '@app/utilities';
+
+import { Injectable } from '@angular/core';
 import { McsOption } from '@app/models';
 import {
-  CatalogItemDetails,
+  createObject,
+  isNullOrEmpty
+} from '@app/utilities';
+
+import {
   CatalogItem,
-  CatalogType,
-  CatalogItemMenu
+  CatalogItemDetails,
+  CatalogItemMenu,
+  CatalogType
 } from './shared';
+
 @Injectable()
 export class CatalogService {
 
@@ -40,11 +43,6 @@ export class CatalogService {
   public updateActiveCatalogItemDetails(details: CatalogItemDetails): void {
     if (isNullOrEmpty(details)) { return; }
     this._activeCatalogItemDetailsChange.next(details);
-  }
-
-  public updateCatalogItemMenu(catalogItemMenu: CatalogItemMenu): void {
-    if (isNullOrEmpty(catalogItemMenu)) { return; }
-    this._catalogItemMenuChange.next(catalogItemMenu);
   }
 
   public updateCatalogItemMenuByType(type: CatalogType, showMenu: boolean): void {
