@@ -17,6 +17,7 @@ import { LaunchPadWorkflowGroupComponent } from './layout/workflow-group/workflo
 import { WorkflowJsonViewerComponent } from './layout/workflow-json-viewer/workflow-json-viewer.component';
 import { LaunchPadLoadStateDialogComponent } from './layout/workflow-load-state-dialog/workflow-load-state-dialog.component';
 import { LaunchPadWorkflowProvisionStateComponent } from './layout/workflow-provision-state/workflow-provision-state.component';
+import { McsApiService } from '@app/services';
 
 @NgModule({
   declarations: [
@@ -55,7 +56,8 @@ import { LaunchPadWorkflowProvisionStateComponent } from './layout/workflow-prov
     DynamicFormModule,
     WorkflowService,
     LaunchPadWorkflowSelectorService,
-    WorkflowFactory
+    WorkflowFactory,
+    McsApiService
   ]
 })
 

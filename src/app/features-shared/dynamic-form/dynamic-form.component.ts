@@ -76,8 +76,11 @@ export class DynamicFormComponent implements OnInit, AfterViewInit {
     this.controls.forEach(control => {
       if (params.dependents.indexOf(control.data.key) > -1) {
         control.onFormDataChange(params);
+        this._resetFieldValidators(control);
       }
     });
+    this.form.updateValueAndValidity();
+    this._changeDetectorRef.markForCheck();
   }
 
   /**
@@ -86,7 +89,7 @@ export class DynamicFormComponent implements OnInit, AfterViewInit {
    */
   public resetForm(preserveValues: boolean = true): void {
     this.controls.forEach(control => {
-      control.clearFormFields(preserveValues);
+      control.clearFormField(preserveValues);
     });
 
     this._changeDetectorRef.markForCheck();
@@ -108,8 +111,8 @@ export class DynamicFormComponent implements OnInit, AfterViewInit {
     this._changeDetectorRef.markForCheck();
   }
 
-  public isValid(key: string) {
-    if (!this.form.controls[key].dirty && !this.form.controls[key].touched) {
+  public isValidField(key: string) {
+    if ((!this.form.controls[key].dirty && !this.form.controls[key].touched)) {
       return true;
     }
 
@@ -145,12 +148,9 @@ export class DynamicFormComponent implements OnInit, AfterViewInit {
     this._markThisAsTouched(this.form);
   }
 
-  public setFieldVisiblity(visible: boolean) {
-    this.setHiddenFieldsVisibility(visible);
-  }
-
-  private setHiddenFieldsVisibility(visible: boolean): void {
+  private setFieldVisiblity(visible: boolean): void {
     this.controls.forEach(control => {
+
       if (!isNullOrEmpty(control.data.settings)) {
         control.data.settings.hidden = !visible;
       }
@@ -186,7 +186,6 @@ export class DynamicFormComponent implements OnInit, AfterViewInit {
   private _createCustomValidationMap() {
     this.customValidatorMap = new Map<string, ValidatorFn[]>();
 
-    this.customValidatorMap.set('textbox-host-name', [CoreValidators.hostName]);
     this.customValidatorMap.set('textbox-domain', [CoreValidators.domain]);
     this.customValidatorMap.set('textbox-ip', [CoreValidators.ipAddress]);
   }
@@ -226,6 +225,19 @@ export class DynamicFormComponent implements OnInit, AfterViewInit {
     }
 
     return validators;
+  }
+
+  private _resetFieldValidators(control: DynamicFormField): void {
+    let key = control.data.key;
+
+    if (control.visible) {
+      this.form.controls[key].setValidators(this._getValidators(control.data));
+    } else {
+      this.form.controls[key].markAsPristine();
+      this.form.controls[key].clearValidators();
+    }
+
+    this.form.controls[control.data.key].updateValueAndValidity();
   }
 
   private _invokeQueuedEvents(): void {

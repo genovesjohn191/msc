@@ -1,12 +1,15 @@
-<mat-form-field appearance="outline" [hintLabel]="data.hint">
-  <mat-label [attr.for]="data.key">{{data.label}}</mat-label>
+<mat-form-field
+  *ngIf="visible"
+  appearance="outline"
+  [hintLabel]="data.hint" >
+  <mat-label [attr.for]="id">{{ label }}</mat-label>
 
-  <mat-select #control 
-    (selectionChange)="valueChange($event)"
+  <mat-select #control multiple
+    [id]="id"
+    [required]="required"
+    [disabled]="disabled"
     [(value)]="data.value"
-    [id]="data.key"
-    multiple
-    [required]="data.validators?.required">
+    (selectionChange)="valueChange($event)">
     <mat-select-trigger>
       {{data.value ? data.value[0] : ''}}
       <span *ngIf="data.value?.length > 1" class='more'>

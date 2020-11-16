@@ -34,6 +34,10 @@ export abstract class DynamicSelectFieldComponentBase<T>
 
   public isLoading: boolean = false;
   public hasError: boolean = false;
+  public disabled: boolean = false;
+  public get required(): boolean {
+    return !isNullOrEmpty(this.data.validators) && this.data.validators.required;
+  }
 
   protected destroySubject: Subject<void> = new Subject<void>();
   protected collection: T[] = [];
@@ -59,7 +63,7 @@ export abstract class DynamicSelectFieldComponentBase<T>
         takeUntil(this.destroySubject),
         catchError(() => {
           this._endProcess(true);
-          return throwError('OS retrieval failed.');
+          return throwError(`${this.data.key} data retrieval failed.`);
         }))
       .subscribe((response) => {
         this.collection = response;
@@ -131,6 +135,8 @@ export abstract class DynamicSelectFieldComponentBase<T>
   private _initialize(): void {
     if (isNullOrEmpty(this.data.options)) {
       this.retrieveOptions();
+    } else if (!isNullOrEmpty(this.data.value)) {
+      this.setValue(this.data.value);
     }
   }
 

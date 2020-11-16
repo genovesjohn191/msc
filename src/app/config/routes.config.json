@@ -10,6 +10,27 @@
     "documentTitle": "LAUNCH Pad",
     "requiredFeatureFlag": "EnableLaunchPad"
   },
+  "launchPadSearch": {
+    "enumKey": "LaunchPadSearch",
+    "enumCategory": "LaunchPad",
+    "navigationPath": "launch-pad/search",
+    "documentTitle": "LAUNCH Pad - Search",
+    "requiredFeatureFlag": "EnableLaunchPad"
+  },
+  "launchPadWorkflows": {
+    "enumKey": "LaunchPadWorkflows",
+    "enumCategory": "LaunchPad",
+    "navigationPath": "launch-pad/workflows",
+    "documentTitle": "LAUNCH Pad - Workflows",
+    "requiredFeatureFlag": "EnableLaunchPad"
+  },
+  "launchPadWorkflowLaunch": {
+    "enumKey": "LaunchPadWorkflowLaunch",
+    "enumCategory": "LaunchPad",
+    "navigationPath": "launch-pad/workflows/launch",
+    "documentTitle": "LAUNCH Pad - Launch",
+    "requiredFeatureFlag": "EnableLaunchPad"
+  },
   "launchPadCrispOrders": {
     "enumKey": "LaunchPadCrispOrders",
     "enumCategory": "LaunchPad",

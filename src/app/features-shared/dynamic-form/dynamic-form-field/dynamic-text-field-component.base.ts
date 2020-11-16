@@ -19,6 +19,29 @@ export abstract class DynamicTextFieldComponentBase implements DynamicFormField,
   @Output()
   public dataChange: EventEmitter<DynamicFormFieldDataChangeEventParam> = new EventEmitter<DynamicFormFieldDataChangeEventParam>();
 
+  public get id(): string {
+    return this.data.key;
+  }
+
+  public get label(): string {
+    return this.data.label;
+  }
+
+  public get required(): boolean {
+    return this.data.validators && this.data.validators.required;
+  }
+
+  public get visible(): boolean {
+    let noSettings = isNullOrEmpty(this.data.settings);
+    if (this.required || noSettings) {
+      return true;
+    }
+
+    return !this.data.settings.hidden;
+  }
+
+  public disabled: boolean = false;
+
   // Can be overriden to modify the value being sent
   public valueChange(val: any): void {
     this.dataChange.emit({
@@ -31,7 +54,7 @@ export abstract class DynamicTextFieldComponentBase implements DynamicFormField,
 
   public abstract onFormDataChange(params: DynamicFormFieldDataChangeEventParam): void;
 
-  public clearFormFields(reuseValue: boolean): void {
+  public clearFormField(reuseValue: boolean): void {
     let preserveValue = reuseValue && this.data.settings && this.data.settings.preserve;
     if (!preserveValue) {
       this._resetValue('');
@@ -68,14 +91,4 @@ export abstract class DynamicTextFieldComponentBase implements DynamicFormField,
   public propagateChange = (_: any) => {};
 
   public onTouched = () => {};
-
-  public isVisible(): boolean {
-    let required = this.data.validators && this.data.validators.required;
-    let noSettings = isNullOrEmpty(this.data.settings);
-    if (required || noSettings) {
-      return true;
-    }
-
-    return !this.data.settings.hidden;
-  }
 }

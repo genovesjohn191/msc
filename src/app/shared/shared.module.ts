@@ -80,7 +80,6 @@ const exportedModules = [
   ReactiveFormsModule,
   TranslateModule,
   MaterialModule,
-
   PipesModule,
   DirectivesModule,
   RippleModule,

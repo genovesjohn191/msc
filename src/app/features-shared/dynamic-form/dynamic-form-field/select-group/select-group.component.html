@@ -1,11 +1,16 @@
-<mat-form-field appearance="outline" [hintLabel]="data.hint">
-  <mat-label [attr.for]="data.key">{{data.label}}</mat-label>
+<mat-form-field
+  *ngIf="visible"
+  appearance="outline"
+  [hintLabel]="data.hint">
+  <mat-label [attr.for]="id">{{ label }}</mat-label>
 
-  <mat-select (selectionChange)="valueChange($event)"
-      [(value)]="data.value" 
-      [id]="data.key"
-      [required]="data.validators?.required">
-    <mat-option *ngIf="!data.validators?.required">-- None --</mat-option>
+  <mat-select
+    [id]="id"
+    [required]="required"
+    [disabled]="disabled"
+    [(value)]="data.value"
+    (selectionChange)="valueChange($event)">
+    <mat-option *ngIf="!required">-- None --</mat-option>
     <mat-optgroup *ngFor="let group of data.options" [label]="group.name" [disabled]="group.disabled">
       <mat-option *ngFor="let opt of group.options" [value]="opt.key">
         {{opt.value}}

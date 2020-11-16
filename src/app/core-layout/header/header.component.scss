@@ -35,6 +35,32 @@ $header-small-padding: $space-medium;
     @include display-flex(row);
     height: 100%;
 
+    .global-search {
+      padding-top: $space-small;
+      padding-right: $space-xlarge;
+      padding-left: $space-xlarge;
+
+      @include breakpoint(medium) {
+        display: none;
+      }
+
+      mat-form-field {
+        width: 200px;
+
+        @include breakpoint(large) {
+          width: 130px;
+        }
+
+        @include breakpoint(medium) {
+          display: none;
+        }
+
+        mat-icon:hover {
+          cursor: pointer;
+        }
+      }
+    }
+
     .make-a-change {
       @include breakpoint(medium) {
         display: none;
@@ -50,6 +76,7 @@ $header-small-padding: $space-medium;
       }
 
       a {
+        min-width: 145px;
         padding: 18px;
         display: block;
         height: 100%;

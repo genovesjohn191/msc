@@ -2,6 +2,7 @@ import { McsEnumSerializationBase } from '../serialization/mcs-enum-serializatio
 
 export enum ProductType {
   Unknown = 0,
+  DotNetApplicationCentre,
   TwentyFourPortSwitch,
   FourtyEightPortSwitch,
   GigabitFourtyEightPortSwitch,

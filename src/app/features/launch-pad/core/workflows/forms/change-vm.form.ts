@@ -117,5 +117,113 @@ export const changeVmForm: DynamicFormFieldDataBase[] = [
     validators: { required: true, min: 10, max: 100000 },
     hint: 'Allowed value is 10-100000',
     suffix: 'GB'
-  })
+  }),
+  // new DynamicSelectField({
+  //   key: 'zone',
+  //   label: 'Availability Zone',
+  //   validators: { required: true },
+  //   options: [
+  //     { key: 'IC1', value: 'IC 1'},
+  //     { key: 'IC2', value: 'IC 2'},
+  //     { key: 'IC4', value: 'IC 4'},
+  //     { key: 'LB1', value: 'IC 1 (LAB)'},
+  //     { key: 'LB2', value: 'IC 2 (LAB)'},
+  //     { key: 'LB4', value: 'IC 4 (LAB)'}
+  //   ],
+  //   eventName: 'az-change',
+  //   dependents: ['vdc'],
+  //   settings: { preserve: true }
+  // }),
+  // new DynamicSelectField({
+  //   key: 'pod',
+  //   label: 'POD Name',
+  //   validators: { required: true },
+  //   options: [
+  //     { key: 'POD1', value: 'POD1'},
+  //     { key: 'POD2', value: 'POD2'}
+  //   ],
+  //   hint: 'POD in Availability Zone',
+  //   settings: { preserve: true }
+  // }),
+  // new DynamicSelectField({
+  //   key: 'subZone',
+  //   label: 'Sub Zone',
+  //   validators: { required: false },
+  //   options: [
+  //     { key: 'dmz', value: 'DMZ'},
+  //     { key: 'management', value: 'Management'},
+  //     { key: 'dedicated', value: 'Dedicated'},
+  //     { key: 'vcloud', value: 'vCloud'},
+  //     { key: 'colocation', value: 'Colocation'}
+  //   ],
+  //   settings: { preserve: true }
+  // }),
+  // new DynamicSelectField({
+  //   key: 'vCloudInstance',
+  //   label: 'vCloud Instance',
+  //   options: [
+  //     { key: 'vcloud', value: 'vcloud'},
+  //     { key: 'vcloud101.', value: 'vcloud101'},
+  //     { key: 'vcloud202.', value: 'vcloud202'},
+  //     { key: 'vcloud4.', value: 'vcloud4'}
+  //   ],
+  //   value: 'vcloud',
+  //   settings: { hidden: true, preserve: true }
+  // }),
+  // new DynamicInputRandomField({
+  //   key: 'intAdminPassword',
+  //   label: 'Int Admin Password',
+  //   placeholder: 'Enter a password',
+  //   validators: { minlength: 8 },
+  //   alphaCharCount: 10,
+  //   specialCharCount: 0,
+  //   numericCharCount: 0,
+  //   readonly: false,
+  //   hint: 'Defaults to well-known password if not specified'
+  // }),
+  // new DynamicInputRandomField({
+  //   key: 'customerAdminPassword',
+  //   label: 'Customer Admin Password',
+  //   placeholder: 'Enter a password',
+  //   validators: { minlength: 8 },
+  //   alphaCharCount: 0,
+  //   specialCharCount: 5,
+  //   numericCharCount: 0,
+  //   readonly: false
+  // }),
+  // new DynamicInputIpField({
+  //   key: 'ip',
+  //   label: 'Management IP',
+  //   placeholder: 'Enter an address',
+  //   validators: { required: true }
+  // }),
+  // new DynamicInputIpField({
+  //   key: 'subnetMask',
+  //   label: 'Management Subnet Mask',
+  //   placeholder: 'Enter an address',
+  //   validators: { required: true }
+  // }),
+  // new DynamicInputIpField({
+  //   key: 'gateway',
+  //   label: 'Management Gateway IP',
+  //   placeholder: 'Enter an address',
+  //   validators: { required: true }
+  // }),
+  // new DynamicSelectField({
+  //   key: 'ntp',
+  //   label: 'NTP Server',
+  //   options: [
+  //     { key: '192.168.1.1', value: '192.168.1.1'},
+  //     { key: '255.255.255.255', value: '255.255.255.255'},
+  //     { key: '12.10.55.122', value: '12.10.55.122'},
+  //     { key: '122.11.9.11', value: '122.11.9.11'}
+  //   ],
+  //   validators: { required: true }
+  // }),
+  // new DynamicInputDomainField({
+  //   key: 'fqdn',
+  //   label: 'Management FQDN',
+  //   placeholder: 'e.g. win.backup.intellicenter.au',
+  //   validators: { required: true }
+  // })
 ];

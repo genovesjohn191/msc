@@ -67,6 +67,7 @@ export type DynamicFormFieldType =
 export type DynamicFormFieldTemplate =
   'input-text'
   | 'input-hidden'
+  | 'input-ip'
   | 'input-number'
   | 'input-random'
   | 'select'
@@ -80,6 +81,7 @@ export type DynamicFormFieldTemplate =
 export type DynamicFormFieldOnChangeEvent =
   ''
   | 'az-change'
+  | 'ip-mode-change'
   | 'resource-change';
 
 export type DynamicFormFieldInputType =

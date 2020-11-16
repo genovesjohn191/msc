@@ -12,6 +12,16 @@
 
 <!-- User panel content -->
 <div mcsAlign="end" class="user-panel-wrapper">
+  <div class="global-search" *mcsAccessControl="[]; feature: ['EnableLaunchPad']">
+    <mat-form-field>
+      <mat-label>Search</mat-label>
+      <input #searchField type="text"
+        matInput
+        [(ngModel)]="searchKeyword"
+        (keydown.enter)="search()">
+      <mat-icon matSuffix (click)="search()">search</mat-icon>
+    </mat-form-field>
+  </div>
   <ng-container *mcsAccessControl="['OrderEdit'];">
     <div class="make-a-change" [class.active]="selectedCategory === routerCategoryEnum.MakeAChange">
       <a mcsCursor="pointer"

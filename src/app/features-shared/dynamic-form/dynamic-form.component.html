@@ -5,10 +5,10 @@
     color="primary">
     Show More Options
   </mat-slide-toggle>
-  
+
   <div *ngFor="let input of controlDataItems" class="form-row">
     <div  [ngSwitch]="input.template">
-      <mat-error *ngIf="!isValid(input.key)">
+      <mat-error *ngIf="!isValidField(input.key)">
         {{ getErrorMessage(input.key) }}
       </mat-error>
 
@@ -19,6 +19,10 @@
       <mcs-dff-input-hidden-field *ngSwitchCase="'input-hidden'"
         #control [formControlName]="input.key" [data] ="input" (dataChange)="onDataChange($event)">
       </mcs-dff-input-hidden-field>
+
+      <mcs-dff-input-ip-field *ngSwitchCase="'input-ip'"
+        #control [formControlName]="input.key" [data] ="input" (dataChange)="onDataChange($event)">
+      </mcs-dff-input-ip-field>
 
       <mcs-dff-input-number-field *ngSwitchCase="'input-number'"
         #control [formControlName]="input.key" [data] ="input" (dataChange)="onDataChange($event)">

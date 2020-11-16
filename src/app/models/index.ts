@@ -138,6 +138,7 @@ export * from './request/mcs-ticket-create';
 export * from './request/mcs-ticket-create-attachment';
 export * from './request/mcs-ticket-create-comment';
 export * from './request/mcs-resource-catalog-item-create';
+export * from './request/mcs-workflow-create';
 
 /** Response */
 export * from './response/mcs-identity';
@@ -255,6 +256,8 @@ export * from './response/mcs-report-integer-data';
 export * from './response/mcs-report-subscription';
 export * from './response/mcs-report-service-change-info';
 export * from './response/mcs-contact-us';
+export * from './response/mcs-object-crisp-element';
+export * from './response/mcs-object-installed-service';
 
 /** Common */
 export * from './common/mcs-api-search-key';

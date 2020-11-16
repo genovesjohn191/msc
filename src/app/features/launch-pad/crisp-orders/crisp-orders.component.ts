@@ -27,89 +27,90 @@ import {
   WorkflowGroupConfig
 } from '../core';
 
-const TREE_DATA: WorkflowSelectorConfig[] = [
-  {
-    label: '#00001 - New Managed Server',
-    children: [
-      {
-        label: 'Virtual Machines',
-        children: [
-          {
-            label: 'new-server01',
-            serviceId: 'MXCVM1111111',
-            type: ProductType.VirtualManagedServer,
-            properties: [
-              { key: 'zone', value: 'LB1' },
-              { key: 'pod', value: 'POD2' },
-              { key: 'subZone', value: 'Management' },
-              { key: 'vCloudInstance', value: 'vcloud101' },
-              { key: 'vdc', value: 'M1VDC28603002' },
-              { key: 'network', value: 'Customer_104220-V1009-APP-M1VLN279999001'},
-              { key: 'hostName', value: 'new-server01' },
-              { key: 'cpu', value: 4 },
-              { key: 'ram', value: 9 },
-              { key: 'disk', value: 66 }
-            ],
-            children: [
-              {
-                label: 'HIDS',
-                type: ProductType.ServerHostIntrusionPreventionSystem,
-                properties: [
-                  { key: 'mode', value: 'protect' }
-                ]
-              },
-              {
-                label: 'Backup',
-                type: ProductType.VmBackup,
-                properties: [
-                  { key: 'retention', value: '7 Days' },
-                  { key: 'dailyQuota', value: 33 },
-                ]
-              },
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    label: '#00002 - Change Managed Server',
-    children: [
-      {
-        label: 'Virtual Machines',
-        children: [
-          {
-            label: 'webserver01',
-            serviceId: 'MXCVM2222222',
-            type: ProductType.VirtualManagedServer,
-            properties: [
-              { key: 'zone', value: 'LB1' },
-              { key: 'pod', value: 'POD2' },
-              { key: 'subZone', value: 'Management' },
-              { key: 'vCloudInstance', value: 'vcloud101' },
-              { key: 'vdc', value: 'M1VDC28603002' },
-              { key: 'hostName', value: 'webserver01' },
-              { key: 'cpu', value: 2 },
-              { key: 'network', value: 'Customer_104220-V1009-APP-M1VLN279999001'},
-              { key: 'ram', value: 8 },
-              { key: 'disk', value: 50 }
-            ]
-          }
-        ]
-      },
-      {
-        label: 'Host Security',
-        children: [
-          {
-            label: 'Add Anti-Virus',
-            serviceId: 'MXCVM2222222',
-            type: ProductType.ServerAntiVirus
-          }
-        ]
-      }
-    ]
-  }
-];
+const TREE_DATA: WorkflowSelectorConfig[] = [];
+//  = [
+//   {
+//     label: '#00001 - New Managed Server',
+//     children: [
+//       {
+//         label: 'Virtual Machines',
+//         children: [
+//           {
+//             label: 'new-server01',
+//             serviceId: 'MXCVM1111111',
+//             type: ProductType.VirtualManagedServer,
+//             properties: [
+//               { key: 'zone', value: 'LB1' },
+//               { key: 'pod', value: 'POD2' },
+//               { key: 'subZone', value: 'Management' },
+//               { key: 'vCloudInstance', value: 'vcloud101' },
+//               { key: 'vdc', value: 'M1VDC28603002' },
+//               { key: 'network', value: 'Customer_104220-V1009-APP-M1VLN279999001'},
+//               { key: 'hostName', value: 'new-server01' },
+//               { key: 'cpu', value: 4 },
+//               { key: 'ram', value: 9 },
+//               { key: 'disk', value: 66 }
+//             ],
+//             children: [
+//               {
+//                 label: 'HIDS',
+//                 type: ProductType.ServerHostIntrusionPreventionSystem,
+//                 properties: [
+//                   { key: 'mode', value: 'protect' }
+//                 ]
+//               },
+//               {
+//                 label: 'Backup',
+//                 type: ProductType.VmBackup,
+//                 properties: [
+//                   { key: 'retention', value: '7 Days' },
+//                   { key: 'dailyQuota', value: 33 },
+//                 ]
+//               },
+//             ]
+//           }
+//         ]
+//       }
+//     ]
+//   },
+//   {
+//     label: '#00002 - Change Managed Server',
+//     children: [
+//       {
+//         label: 'Virtual Machines',
+//         children: [
+//           {
+//             label: 'webserver01',
+//             serviceId: 'MXCVM2222222',
+//             type: ProductType.VirtualManagedServer,
+//             properties: [
+//               { key: 'zone', value: 'LB1' },
+//               { key: 'pod', value: 'POD2' },
+//               { key: 'subZone', value: 'Management' },
+//               { key: 'vCloudInstance', value: 'vcloud101' },
+//               { key: 'vdc', value: 'M1VDC28603002' },
+//               { key: 'hostName', value: 'webserver01' },
+//               { key: 'cpu', value: 2 },
+//               { key: 'network', value: 'Customer_104220-V1009-APP-M1VLN279999001'},
+//               { key: 'ram', value: 8 },
+//               { key: 'disk', value: 50 }
+//             ]
+//           }
+//         ]
+//       },
+//       {
+//         label: 'Host Security',
+//         children: [
+//           {
+//             label: 'Add Anti-Virus',
+//             serviceId: 'MXCVM2222222',
+//             type: ProductType.ServerAntiVirus
+//           }
+//         ]
+//       }
+//     ]
+//   }
+// ];
 
 @Component({
   selector: 'mcs-launch-pad-crisp-orders',
@@ -122,7 +123,7 @@ export class CrispOrdersWorkflowComponent implements OnDestroy, IMcsNavigateAway
   protected launchPad: LaunchPadComponent;
 
   public config: WorkflowGroupConfig;
-  public treeControl = new NestedTreeControl<WorkflowSelectorConfig>(node => node.children);
+  // public treeControl = new NestedTreeControl<WorkflowSelectorConfig>(node => node.children);
   public dataSource = new MatTreeNestedDataSource<WorkflowSelectorConfig>();
   public companyId = '556';
   private _initHandler: Subscription;
@@ -148,7 +149,7 @@ export class CrispOrdersWorkflowComponent implements OnDestroy, IMcsNavigateAway
     return this.launchPad.canNavigateAway();
   }
 
-  public hasChild = (_: number, node: WorkflowSelectorConfig) => !!node.children && node.children.length > 0;
+  // public hasChild = (_: number, node: WorkflowSelectorConfig) => !!node.children && node.children.length > 0;
 
   public get valid(): boolean {
     if (isNullOrEmpty(this.launchPad)) {

@@ -3,15 +3,23 @@ import { RouterModule } from '@angular/router';
 import { SharedModule } from '@app/shared';
 /** Components */
 import { launchPadRoutes } from './launch-pad.constants';
-import { CrispOrdersWorkflowComponent } from './crisp-orders/crisp-orders.component';
 import { LaunchPadCoreModule } from './core/launch-pad-core.module';
 import { McsStorageService } from '@app/core';
+import { LaunchPadSearchComponent } from './search/launch-pad-search.component';
+import { LaunchPadWorkflowLaunchComponent } from './workflows/launch-pad-workflow-launch.component';
+import { LaunchPadWorkflowsComponent } from './workflows/launch-pad-workflows.component';
+import { LaunchPadSearchElementsResultComponent } from './search/results-table/elements-result.component';
+import { LaunchPadSearchServicesResultComponent } from './search/results-table/services-result.component';
 
 @NgModule({
   declarations: [
-    CrispOrdersWorkflowComponent,
+    LaunchPadSearchComponent,
+    LaunchPadSearchElementsResultComponent,
+    LaunchPadSearchServicesResultComponent,
+    LaunchPadWorkflowsComponent,
+    LaunchPadWorkflowLaunchComponent
   ],
-  exports: [ ],
+  exports: [],
   imports: [
     SharedModule,
     LaunchPadCoreModule,

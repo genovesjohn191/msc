@@ -1,17 +1,20 @@
-<mat-form-field appearance="outline" [hintLabel]="data.hint">
-  <mat-label [attr.for]="data.key">{{data.label}}</mat-label>
+<mat-form-field
+  *ngIf="visible"
+  appearance="outline"
+  [hintLabel]="data.hint">
+  <mat-label [attr.for]="id">{{ label }}</mat-label>
 
-  <input 
-    #control matInput 
-    [id]="data.key"
+  <input #control matInput
+    [id]="id"
+    [required]="required"
+    [disabled]="disabled"
+    [readonly]="data.readonly"
     [placeholder]="data.placeholder"
-    [(ngModel)]="data.value"
-    (input)="valueChange($event)"
-    [required]="data.validators?.required"
     [maxlength]="data.validators?.maxlength"
     [minlength]="data.validators?.minlength"
-    [readonly]="data.readonly">
-  <button mat-icon-button matSuffix 
+    [(ngModel)]="data.value"
+    (input)="valueChange($event)"/>
+  <button mat-icon-button matSuffix
     type="button"
     (click)="copy(control)"
     matTooltip="Copy to clipboard"
@@ -25,7 +28,6 @@
     matTooltipPosition="above">
     <mat-icon>refresh</mat-icon>
   </button>
-  
+
   <mat-hint align="end" *ngIf="data.validators?.maxlength > 0">{{control.value?.length || 0}}/{{ data.validators?.maxlength }}</mat-hint>
 </mat-form-field>
-  

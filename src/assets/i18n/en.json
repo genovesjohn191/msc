@@ -63,6 +63,66 @@
     "noProducts": "No products to display.",
     "errorProducts": "Sorry, something’s not right. We weren’t able to retrieve the list of products."
   },
+  "launchPadSearch": {
+    "header": "Results for {{keyword}}",
+    "filterHeader": "Column Settings",
+    "orders": {
+      "table": {
+        "header": {
+          "orderId": "Order ID",
+          "description": "Description",
+          "status": "Status",
+          "companyName": "Customer Name",
+          "companyId": "Customer ID",
+          "createdOn": "Created On"
+        },
+        "noRecordsFoundMessage": "No orders to display.",
+        "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of orders.",
+        "retry": "Try again shortly"
+      }
+    },
+    "elements": {
+      "table": {
+        "header": {
+          "productId": "Product ID",
+          "description": "Description",
+          "serviceId": "Service ID",
+          "status": "Status",
+          "companyName": "Customer Name",
+          "companyId": "Customer ID"
+        },
+        "noRecordsFoundMessage": "No elements to display.",
+        "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of elements.",
+        "retry": "Try again shortly"
+      }
+    },
+    "services": {
+      "table": {
+        "header": {
+          "serviceId": "Service ID",
+          "description": "Description",
+          "installedBaseState": "Installed Base State",
+          "companyName": "Customer Name",
+          "companyId": "Customer ID"
+        },
+        "noRecordsFoundMessage": "No services to display.",
+        "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of services.",
+        "retry": "Try again shortly"
+      }
+    },
+    "configurationItems": {
+      "table": {
+        "header": {
+          "serviceId": "Service ID",
+          "companyName": "Customer Name",
+          "companyId": "Customer ID"
+        },
+        "noRecordsFoundMessage": "No items to display.",
+        "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of items.",
+        "retry": "Try again shortly"
+      }
+    }
+  },
   "launchPadCrispOrders": {
     "header": "Run Workflow",
     "filterHeader": "CRISP Elements"
@@ -489,7 +549,7 @@
       },
       "name": {
         "label": "Name",
-        "errorRequired": "Enter Name", 
+        "errorRequired": "Enter Name",
         "placeHolder": "Attendee's name"
       },
       "organization": {

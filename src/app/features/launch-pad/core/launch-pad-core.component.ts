@@ -1,5 +1,5 @@
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Subject, throwError } from 'rxjs';
+import { catchError, takeUntil } from 'rxjs/operators';
 
 import {
   ChangeDetectionStrategy,
@@ -28,12 +28,21 @@ import {
   WorkflowGroupConfig,
   WorkflowGroupSaveState
 } from './workflows/workflow-group.interface';
+import { WorkflowGroupId } from './workflows/workflow-groups/workflow-group-type.enum';
 import { Workflow } from './workflows/workflow.interface';
+import { McsApiService } from '@app/services';
+import { McsJob, McsWorkflowCreate } from '@app/models';
 
 enum WizardStep  {
   EditWorkflowGroup = 0,
   ConfirmDetails = 1,
   ProvisionWorkflows = 2
+}
+
+export interface LaunchPadContext {
+  companyId: string;
+  targetSource: string;
+  serviceId: string;
 }
 
 // TODO: This can be moved to global location
@@ -54,7 +63,7 @@ export class LaunchPadComponent implements OnDestroy, IMcsNavigateAwayGuard {
   protected workflowGroup: LaunchPadWorkflowGroupComponent;
 
   @Input()
-  public companyId: string;
+  public context: LaunchPadContext;
 
   @Input()
   public set config(value: WorkflowGroupConfig) {
@@ -72,16 +81,14 @@ export class LaunchPadComponent implements OnDestroy, IMcsNavigateAwayGuard {
   }
 
   public get saveStateKey(): string {
-    // TODO: This needs to be user specific
-    // Include userId in the key and hash everything
-    return `${this.companyId}_${this.config.id}`;
+    return `workflows`;
   }
 
-  public get savedState(): WorkflowGroupSaveState {
-    return this._storageService.getItem(this.saveStateKey);
+  public get savedState(): WorkflowGroupSaveState[] {
+    return this._storageService.getItem(this.saveStateKey) ?? [];
   }
 
-  public set savedState(value: WorkflowGroupSaveState) {
+  public set savedState(value: WorkflowGroupSaveState[]) {
     if (isNullOrEmpty(value)) {
       this._storageService.removeItem(this.saveStateKey);
     } else {
@@ -101,11 +108,14 @@ export class LaunchPadComponent implements OnDestroy, IMcsNavigateAwayGuard {
   }
 
   public workflows: Workflow[] = [];
+  public workflowsState: McsJob[] = [];
   public isNewWorkflowGroup: boolean = true;
   public isEditing: boolean = false;
   public isProvisioning: boolean = false;
   public editWorkflowGroup = new Subject<Workflow[]>();
   public newlyAddedWorkflowIds: string[] = [];
+  public hasError: boolean = false;
+  public processing: boolean = false;
 
   private _config: WorkflowGroupConfig;
   private _deletedWorkflows: Workflow[] = [];
@@ -116,7 +126,8 @@ export class LaunchPadComponent implements OnDestroy, IMcsNavigateAwayGuard {
     private _dialog: MatDialog,
     private _storageService: McsStorageService,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private _apiService: McsApiService
   ) { }
 
   public canNavigateAway(): boolean {
@@ -134,6 +145,7 @@ export class LaunchPadComponent implements OnDestroy, IMcsNavigateAwayGuard {
 
     this._saveWorkflowGroup(this.workflowGroup.payload);
     this._saveState();
+    console.log(JSON.stringify(this.workflows));
   }
 
   public addAnother(): void {
@@ -171,9 +183,43 @@ export class LaunchPadComponent implements OnDestroy, IMcsNavigateAwayGuard {
   }
 
   public runWorkflow(): void {
+    this.hasError = false;
+    this.processing = true;
+
+    let payload: McsWorkflowCreate[] = this.workflows.map((workflow) => ({
+      type: workflow.type,
+      referenceId: workflow.referenceId,
+      parentReferenceId: workflow.parentReferenceId,
+      serviceId: workflow.serviceId,
+      properties: workflow.properties
+    }));
     this._gotoStep(WizardStep.ProvisionWorkflows);
-    // TODO: Implement provisioning code here
-    this.savedState = null;
+
+    // this._apiService.provisionWorkflows(payload)
+    // .pipe(catchError(() => {
+    //   this.hasError = true;
+    //   this.processing = false;
+    //   this._changeDetectorRef.markForCheck();
+    //   return throwError('Workflow provision endpoint failed.');
+    // }))
+    // .subscribe((response) => {
+    //   // Pass ongoing jobs to provisioning component
+    //   this.workflowsState = response.collection;
+
+    //   // Go to provisioning step
+    //   this._gotoStep(WizardStep.ProvisionWorkflows);
+
+    //   // Remove saved state
+    //   // this.savedState = null;
+
+    //   this._changeDetectorRef.markForCheck();
+    // });
+  }
+
+  public retryProvision(): void {
+    this.hasError = false;
+    this.processing = false;
+    this._changeDetectorRef.markForCheck();
   }
 
   public isNew(referenceId: string): boolean {
@@ -377,23 +423,32 @@ export class LaunchPadComponent implements OnDestroy, IMcsNavigateAwayGuard {
   private _saveState(): void {
     let state: WorkflowGroupSaveState = null;
     let hasChanges = !isNullOrEmpty(this.workflows);
+
     if (hasChanges) {
       state = {
+        companyId: this.context.companyId,
+        targetSource: this.context.targetSource,
+        workflowGroupId: this.config.id.toString(),
+        serviceId: this.workflows[0].serviceId,
+        description: this.workflows[0].title,
         config: cloneDeep(this.config),
         workflows: cloneDeep(this.workflows)
       };
     }
 
-    this.savedState = state;
+    this._tryRemoveCurrentWorkflowFromSavedState();
+    let currentState = this.savedState;
+    currentState.push(state);
+    this.savedState = currentState;
   }
 
   private _tryLoadSavedState(): void {
-    if (isNullOrEmpty(this.savedState)) {
+    if (isNullOrEmpty(this.savedState) || this._getSavedStateIndex() < 0) {
       return;
     }
 
     const loadSaveStateDialogRef = this._dialog.open(LaunchPadLoadStateDialogComponent, {
-      data: this.savedState
+      data: this.savedState[this._getSavedStateIndex()]
     });
 
     loadSaveStateDialogRef.afterClosed()
@@ -402,14 +457,34 @@ export class LaunchPadComponent implements OnDestroy, IMcsNavigateAwayGuard {
       if (result === true) {
         this._loadSavedState();
       } else if (result === false) {
-        this.savedState = null;
+        this._tryRemoveCurrentWorkflowFromSavedState();
       }
     });
   }
 
   private _loadSavedState(): void {
-    this._initializeWorkflowProcess(cloneDeep(this.savedState.workflows));
+    let foundStateIndex = this._getSavedStateIndex();
+
+    this._initializeWorkflowProcess(cloneDeep(this.savedState[foundStateIndex].workflows));
     this._resetForm();
     this._markFirstStepAsComplete();
+  }
+
+  private _getSavedStateIndex(): number {
+    return this.savedState.findIndex((state) =>
+    state.companyId === this.context.companyId
+    && state.targetSource === this.context.targetSource
+    && state.serviceId === this.context.serviceId
+    && state.workflowGroupId === this.config.id.toString());
+  }
+
+  private _tryRemoveCurrentWorkflowFromSavedState(): void {
+    let foundStateIndex = this._getSavedStateIndex();
+
+    if (foundStateIndex >= 0) {
+      let currentState = this.savedState;
+      currentState.splice(foundStateIndex, 1);
+      this.savedState = currentState;
+    }
   }
 }

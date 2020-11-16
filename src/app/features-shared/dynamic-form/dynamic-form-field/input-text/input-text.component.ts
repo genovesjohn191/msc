@@ -11,7 +11,7 @@ import { DynamicTextFieldComponentBase } from '../dynamic-text-field-component.b
 
 @Component({
   selector: 'mcs-dff-input-text-field',
-  templateUrl: './input-text.component.html',
+  templateUrl: '../shared-template/input-text.component.html',
   styleUrls: [ '../dynamic-form-field.scss' ],
   providers: [
     {

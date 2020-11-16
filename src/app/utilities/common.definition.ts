@@ -196,6 +196,10 @@ export class CommonDefinition {
   public static FILTERSELECTOR_INTERNET_LISTING = 'internetFilter';
   public static FILTERSELECTOR_AGGREGATION_TARGETS_LISTING = 'aggregationTargetFilter';
   public static FILTERSELECTOR_TOOLS_LISTING = 'toolsFilter';
+  public static FILTERSELECTOR_LAUNCH_PAD_SEARCH_ORDERS_LISTING = 'launchPadSearchOrdersFilter';
+  public static FILTERSELECTOR_LAUNCH_PAD_SEARCH_ELEMENTS_LISTING = 'launchPadSearchElementsFilter';
+  public static FILTERSELECTOR_LAUNCH_PAD_SEARCH_SERVICES_LISTING = 'launchPadSearchServicesFilter';
+  public static FILTERSELECTOR_LAUNCH_PAD_SEARCH_CONFIGURATION_ITEMS_LISTING = 'launchPadSearchConfigurationItemsFilter';
   public static FILTERSELECTOR_SYSTEM_MESSAGE_LISTING = 'systemMessageFilter';
   public static FILTERSELECTOR_LICENSE_LISTING = 'licenseFilter';
   public static FILTERSELECTOR_AZURE_RESOURCES_LISTING = 'azureResourceFilter';

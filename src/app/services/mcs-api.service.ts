@@ -128,6 +128,9 @@ import {
   McsReportCostRecommendations,
   McsReportServiceChangeInfo,
   McsTicketQueryParams,
+  McsWorkflowCreate,
+  McsObjectCrispElement,
+  McsObjectInstalledService,
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -177,6 +180,8 @@ import {
   McsApiNetworkDnsFactory,
   IMcsApiColocationsService,
   McsApiColocationsFactory,
+  McsApiWorkflowsFactory,
+  IMcsApiWorkflowsService,
 } from '@app/api-client';
 import { McsEvent } from '@app/events';
 import { McsRepository } from './core/mcs-repository.interface';
@@ -197,6 +202,8 @@ import { McsLicensesRepository } from './repositories/mcs-licenses.repository';
 import { McsAccountRepository } from './repositories/mcs-account.repository';
 import { McsAzureResourcesRepository } from './repositories/mcs-azure-resources.repository';
 import { McsAzureServicesRepository } from './repositories/mcs-azure-services.repository';
+import { IMcsApiObjectsService } from '@app/api-client/interfaces/mcs-api-objects.interface';
+import { McsApiObjectsFactory } from '@app/api-client/factory/mcs-api-objects.factory';
 
 interface DataEmitter<T> {
   eventEmitter: Observable<T>;
@@ -246,6 +253,8 @@ export class McsApiService {
   private readonly _azureServicesApi: IMcsApiAzureServicesService;
   private readonly _colocationServicesApi: IMcsApiColocationsService;
   private readonly _reportsApi: IMcsApiReportsService;
+  private readonly _workflowsApi: IMcsApiWorkflowsService;
+  private readonly _objectsApi: IMcsApiObjectsService;
 
   private readonly _eventDispatcher: EventBusDispatcherService;
   private readonly _entitiesEventMap: Array<DataEmitter<any>>;
@@ -293,6 +302,8 @@ export class McsApiService {
     this._azureServicesApi = apiClientFactory.getService(new McsApiAzureServicesFactory());
     this._colocationServicesApi = apiClientFactory.getService(new McsApiColocationsFactory());
     this._reportsApi = apiClientFactory.getService(new McsApiReportsFactory());
+    this._workflowsApi = apiClientFactory.getService(new McsApiWorkflowsFactory());
+    this._objectsApi = apiClientFactory.getService(new McsApiObjectsFactory());
 
     // Register events
     this._entitiesEventMap = [];
@@ -1564,6 +1575,43 @@ export class McsApiService {
     return this._reportsApi.getServiceChanges().pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getServiceChanges'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public provisionWorkflows(workflows: McsWorkflowCreate[]): Observable<McsApiCollection<McsJob>> {
+    return this._workflowsApi.provisionWorkflows(workflows).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.provisionWorkflows'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public getCrispElements(query?: McsQueryParam): Observable<McsApiCollection<McsObjectCrispElement>> {
+    return this._objectsApi.getCrispElements(query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getCrispElements'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+
+  public getCrispElement(productId: string): Observable<McsObjectCrispElement> {
+    return this._objectsApi.getCrispElement(productId).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getCrispElement'))
+      ),
+      map((response) =>  getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public getInstalledServices(query?: McsQueryParam): Observable<McsApiCollection<McsObjectInstalledService>> {
+    return this._objectsApi.getInstalledServices(query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getInstalledServices'))
       ),
       map((response) => this._mapToCollection(response.content, response.totalCount))
     );
