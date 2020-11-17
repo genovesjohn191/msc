@@ -74,8 +74,7 @@
           <ng-container *ngIf="catalogItemMenu.showMenu">
             <mcs-left-panel-item *mcsLeftPanelItemDef [ngStyle]="{'padding-top': 0}">
               <div class="listing-panel-wrapper">
-                <!-- TODO: Hidden temporarily since the API search is not yet implemented -->
-                <mcs-search [hidden]="true" #search mcsId="products-listing-panel-search"></mcs-search>
+                <mcs-search #search mcsId="products-listing-panel-search"></mcs-search>
 
                 <mcs-list-panel [dataSource]="listviewDatasource" [config]="listViewConfig?.panelSettings">
                   <ng-container [ngSwitch]="catalogItemMenu.catalogItem.type" *mcsListPanelContent="let entity">

@@ -17,6 +17,7 @@ import {
 import { DataStatus } from '@app/models';
 import { Search } from '@app/shared';
 import {
+  cloneObject,
   isNullOrEmpty,
   isNullOrUndefined,
   unsubscribeSafely,
@@ -34,6 +35,8 @@ export class McsListViewDatasource<TEntity> implements McsDataSource<TEntity> {
   private _dataStatusChange = new BehaviorSubject<DataStatus>(null);
 
   private _search: Search;
+  private _searchPredicate: (data: TEntity, keyword: string) => boolean;
+
   private _searchSubject = new Subject<void>();
   private _requestUpdate = new Subject<void>();
   private _sortPredicate: (first: TEntity, second: TEntity) => number;
@@ -47,25 +50,16 @@ export class McsListViewDatasource<TEntity> implements McsDataSource<TEntity> {
     return Math.max(this._totalRecordsCount, 0);
   }
 
-  /**
-   * Event that emits when the table data has been changed
-   */
   public dataStatusChange(): Observable<DataStatus> {
     return this._dataStatusChange.asObservable();
   }
 
-  /**
-   * Connects to data records of the listview
-   */
   public connect(): Observable<TEntity[]> {
     return this._dataRecords.asObservable().pipe(
       filter((records) => records !== null)
     );
   }
 
-  /**
-   * Disconnect all resources of the list view
-   */
   public disconnect() {
     unsubscribeSafely(this._dataRecords);
     unsubscribeSafely(this._dataStatusChange);
@@ -73,38 +67,31 @@ export class McsListViewDatasource<TEntity> implements McsDataSource<TEntity> {
     unsubscribeSafely(this._requestUpdate);
   }
 
-  /**
-   * Event that emits when the obtainment of data has been completed
-   */
   public onCompletion(_data?: any): void {
     if (!isNullOrEmpty(this._search)) {
       this._search.showLoading(false);
     }
   }
 
-  /**
-   * Updates the data source provided on the table
-   * @param dataSource New datasource provided
-   */
   public updateDatasource(dataSource: DatasourceType<TEntity>): void {
     this._setDataStatus(DataStatus.Active);
     this._setDatasourcePointer(dataSource);
     this.refreshDataRecords();
   }
 
-  /**
-   * Registers the search instance to this datasource
-   * @param search Search instance to be registered
-   */
   public registerSearch(search: Search): McsListViewDatasource<TEntity> {
     this._search = search;
     this._subscribeToSearching();
     return this;
   }
 
-  /**
-   * Registers the sort predicate
-   */
+  public registerSearchPredicate(
+    predicate: (data: TEntity, keyword: string) => boolean
+  ): McsListViewDatasource<TEntity> {
+    this._searchPredicate = predicate;
+    return this;
+  }
+
   public registerSortPredicate(
     predicate: (first: TEntity, second: TEntity) => number
   ): McsListViewDatasource<TEntity> {
@@ -112,23 +99,14 @@ export class McsListViewDatasource<TEntity> implements McsDataSource<TEntity> {
     return this;
   }
 
-  /**
-   * Refreshes the data records of the source observables
-   */
   public refreshDataRecords(): void {
     this._requestUpdate.next();
   }
 
-  /**
-   * Sets the data status of the datasource
-   */
   private _setDataStatus(dataStatus: DataStatus): void {
     this._dataStatusChange.next(dataStatus);
   }
 
-  /**
-   * Sets the datasource function pointer
-   */
   private _setDatasourcePointer(dataSource: DatasourceType<TEntity>): void {
     if (isNullOrUndefined(dataSource)) { return; }
 
@@ -141,36 +119,32 @@ export class McsListViewDatasource<TEntity> implements McsDataSource<TEntity> {
       () => dataSource;
   }
 
-  /**
-   * Updates the entity data records
-   * @param records Entity records to be updated
-   */
   private _updateDataRecords(records: TEntity[]): void {
     this._dataRecords.next(records);
     this._totalRecordsCount = records && records.length;
   }
 
-  /**
-   * Filters the data records accordingly
-   * @param dataRecords Data records to be filtered
-   */
   private _filterData(dataRecords: TEntity[]): TEntity[] {
-    let sortedRecords = this._sortRecords(dataRecords);
+    let searchedRecords = this._searchData(dataRecords);
+    let sortedRecords = this._sortRecords(searchedRecords);
     return sortedRecords;
   }
 
-  /**
-   * Sorts the data records of the provided entities
-   * @param dataRecords Data records to be sorted
-   */
+  private _searchData(dataRecords: TEntity[]): TEntity[] {
+    let hasSearchingMethod = isNullOrEmpty(this._searchPredicate);
+    if (hasSearchingMethod) { return dataRecords; }
+
+    // We need to clone the object records to not touch
+    // the original instance of the data
+    let clonedRecords = cloneObject(dataRecords);
+    return clonedRecords.filter((record) => this._searchPredicate(record, this._search.keyword));
+  }
+
   private _sortRecords(dataRecords: TEntity[]): TEntity[] {
     if (isNullOrEmpty(this._sortPredicate)) { return dataRecords; }
     return dataRecords.sort(this._sortPredicate);
   }
 
-  /**
-   * Subscribes to searching of data records
-   */
   private _subscribeToSearching(): void {
     if (isNullOrEmpty(this._search)) { return; }
 
@@ -180,9 +154,6 @@ export class McsListViewDatasource<TEntity> implements McsDataSource<TEntity> {
     ).subscribe(() => this.refreshDataRecords());
   }
 
-  /**
-   * Subscribes to request changes for rendering datasource
-   */
   private _subscribeToRequestChange(): void {
     this._requestUpdate.pipe(
       startWith(null as void),

@@ -1,62 +1,69 @@
 import {
-  Component,
-  ChangeDetectionStrategy,
-  OnInit,
-  OnDestroy,
-  ViewEncapsulation,
-  ViewChild
-} from '@angular/core';
-import {
-  Router,
-  ActivatedRoute,
-  NavigationEnd,
-  RouterEvent
-} from '@angular/router';
-import {
   Observable,
   Subject
 } from 'rxjs';
 import {
-  shareReplay,
   map,
+  shareReplay,
   takeUntil,
-  tap,
-  take
+  tap
 } from 'rxjs/operators';
-import { TranslateService } from '@ngx-translate/core';
+
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
+import {
+  ActivatedRoute,
+  NavigationEnd,
+  Router,
+  RouterEvent
+} from '@angular/router';
 import {
   CoreRoutes,
-  McsListViewDatasource,
   ListViewListingConfig,
-  McsNavigationService,
   McsAccessControlService,
-  McsErrorHandlerService
+  McsErrorHandlerService,
+  McsListViewDatasource,
+  McsNavigationService
 } from '@app/core';
 import {
-  McsOption,
-  RouteKey,
-  McsCatalogProductPlatform,
   CatalogViewType,
+  HttpStatusCode,
+  McsCatalog,
+  McsCatalogProduct,
   McsCatalogProductBracket,
-  McsFeatureFlag,
+  McsCatalogProductFamily,
+  McsCatalogProductPlatform,
+  McsCatalogSolution,
   McsCatalogSolutionBracket,
-  HttpStatusCode
+  McsCatalogSolutionGroup,
+  McsFeatureFlag,
+  McsOption,
+  RouteKey
 } from '@app/models';
-import {
-  unsubscribeSafely,
-  isNullOrEmpty,
-  getSafeProperty,
-  createObject,
-} from '@app/utilities';
 import { Search } from '@app/shared';
 import {
-  CatalogType,
-  CatalogItem,
-  catalogTypeText,
-  CatalogItemDetails,
-  CatalogItemMenu
-} from './shared';
+  cloneObject,
+  createObject,
+  getSafeProperty,
+  isNullOrEmpty,
+  unsubscribeSafely
+} from '@app/utilities';
+import { TranslateService } from '@ngx-translate/core';
+
 import { CatalogService } from './catalog.service';
+import {
+  catalogTypeText,
+  CatalogItem,
+  CatalogItemDetails,
+  CatalogItemMenu,
+  CatalogType
+} from './shared';
 
 @Component({
   selector: 'mcs-catalog',
@@ -69,14 +76,13 @@ import { CatalogService } from './catalog.service';
     'class': 'catalog-wrapper'
   }
 })
-export class CatalogComponent<TEntity> implements OnInit, OnDestroy {
-
+export class CatalogComponent implements OnInit, OnDestroy {
   public catalogOptions$: Observable<McsOption[]>;
   public catalogItemMenu$: Observable<CatalogItemMenu>;
   public activeCatalogItemDetails$: Observable<CatalogItemDetails>;
 
   public listViewConfig: ListViewListingConfig;
-  public listviewDatasource = new McsListViewDatasource();
+  public listviewDatasource = new McsListViewDatasource<McsCatalogProductPlatform[] | McsCatalogSolutionGroup[]>();
 
   private _search: Search;
   private _destroySubject = new Subject<void>();
@@ -94,7 +100,6 @@ export class CatalogComponent<TEntity> implements OnInit, OnDestroy {
   public ngOnInit(): void {
     this._initializeListViewConfig();
     this._subscribeToCatalogResolver();
-    this._initializeDatasource();
     this._subscribeToCatalogItemDetailsChange();
     this._subscribeToCatalogItemMenuChange();
     this._subscribeToRouterChange();
@@ -109,6 +114,7 @@ export class CatalogComponent<TEntity> implements OnInit, OnDestroy {
     if (this._search !== value) {
       this._search = value;
       this.listviewDatasource.registerSearch(value);
+      this.listviewDatasource.registerSearchPredicate(this._onFilterRecords.bind(this));
     }
   }
 
@@ -124,7 +130,11 @@ export class CatalogComponent<TEntity> implements OnInit, OnDestroy {
     return RouteKey;
   }
 
-  public onCatalogTypeChange(selectedCatalogType: CatalogType, currentViewType: CatalogViewType, currentCatalogType: CatalogType): void {
+  public onCatalogTypeChange(
+    selectedCatalogType: CatalogType,
+    currentViewType: CatalogViewType,
+    currentCatalogType: CatalogType
+  ): void {
     if (isNullOrEmpty(selectedCatalogType) || currentCatalogType === selectedCatalogType) { return; }
 
     let isItemDetailsViewType = currentViewType === CatalogViewType.Solution || currentViewType === CatalogViewType.Product;
@@ -163,7 +173,7 @@ export class CatalogComponent<TEntity> implements OnInit, OnDestroy {
   private _subscribeToCatalogResolver(): void {
     this.catalogOptions$ = this._activatedRoute.data.pipe(
       map((resolver) => {
-        let catalog = getSafeProperty(resolver, (obj) => obj.catalog);
+        let catalog = getSafeProperty(resolver, (obj) => obj.catalog) as McsCatalog;
         let catalogOptions: McsOption[] = [];
 
         let products = createObject(CatalogItem, {
@@ -190,26 +200,6 @@ export class CatalogComponent<TEntity> implements OnInit, OnDestroy {
         }
       }),
       shareReplay(1)
-    );
-  }
-
-  private _initializeDatasource(): void {
-    this.listviewDatasource.updateDatasource(this._getEntities.bind(this));
-  }
-
-  private _getEntities(): Observable<TEntity[]> {
-    //  When the searching is available in API, you need to change the map to switchMap
-    // to call on API catalogs/products/{query} or catalogs/solutions/{query}
-    // and provide the query
-    return this._catalogService.catalogItemMenuChange.pipe(
-      map((response) => {
-        let entities = getSafeProperty(response, (obj) => obj.catalogItem.content);
-        if (isNullOrEmpty(entities)) { return; }
-
-        return response.catalogItem.type === CatalogType.Products ?
-          entities.platforms : entities.groups;
-      }),
-      take(1)
     );
   }
 
@@ -294,5 +284,84 @@ export class CatalogComponent<TEntity> implements OnInit, OnDestroy {
     let normalizedUrl = url.slice(1, url.length);
     let catalogPath = CoreRoutes.getNavigationPath(RouteKey.Catalog);
     return normalizedUrl === catalogPath;
+  }
+
+  private _onFilterRecords(
+    data: McsCatalogProductPlatform | McsCatalogSolutionGroup,
+    keyword: string
+  ): boolean {
+    if (isNullOrEmpty(keyword)) { return true; }
+
+    data = (data instanceof McsCatalogProductPlatform) ?
+      this._filterRecordsByProduct(data, keyword) :
+      this._filterRecordsBySolution(data, keyword);
+    return !isNullOrEmpty(data);
+  }
+
+  private _filterRecordsByProduct(
+    productPlatform: McsCatalogProductPlatform,
+    keyword: string
+  ): McsCatalogProductPlatform {
+    if (isNullOrEmpty(productPlatform?.families)) { return productPlatform };
+
+    let dataFamilies = new Array<McsCatalogProductFamily>();
+    for (let family of productPlatform.families) {
+      if (isNullOrEmpty(family)) { continue; }
+
+      let tempFamily = new McsCatalogProductFamily();
+      tempFamily.groups = [];
+
+      for (let group of family.groups) {
+        if (isNullOrEmpty(group.products)) { continue; }
+
+        let filteredProducts = new Array<McsCatalogProduct>();
+        for (let product of group.products) {
+          let productIsIncluded = product.name.toLocaleLowerCase()
+            .includes(keyword.toLocaleLowerCase());
+          if (!productIsIncluded) { continue; }
+
+          let clonedProduct = cloneObject(product);
+          filteredProducts.push(clonedProduct);
+        }
+
+        if (!isNullOrEmpty(filteredProducts)) {
+          let clonedGroup = cloneObject(group);
+          clonedGroup.products = filteredProducts;
+          tempFamily.groups.push(clonedGroup);
+        }
+      }
+
+      if (!isNullOrEmpty(tempFamily.groups)) {
+        tempFamily.displayOrder = family.displayOrder;
+        tempFamily.id = family.id;
+        tempFamily.name = family.name;
+        dataFamilies.push(tempFamily);
+      }
+    }
+
+    if (isNullOrEmpty(dataFamilies)) { return null; }
+    productPlatform.families = dataFamilies;
+    return productPlatform;
+  }
+
+  private _filterRecordsBySolution(
+    solutionGroup: McsCatalogSolutionGroup,
+    keyword: string
+  ): McsCatalogSolutionGroup {
+    if (isNullOrEmpty(solutionGroup?.solutions)) { return solutionGroup };
+
+    let filteredSolutions = new Array<McsCatalogSolution>();
+    for (let solution of solutionGroup.solutions) {
+      if (isNullOrEmpty(solution)) { continue; }
+
+      let solutionIncluded = solution.name.toLocaleLowerCase().includes(keyword.toLocaleLowerCase());
+      if (solutionIncluded) {
+        filteredSolutions.push(solution);
+      }
+    }
+
+    if (isNullOrEmpty(filteredSolutions)) { return null; }
+    solutionGroup.solutions = filteredSolutions;
+    return solutionGroup;
   }
 }
