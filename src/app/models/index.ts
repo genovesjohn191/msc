@@ -260,6 +260,10 @@ export * from './response/mcs-report-integer-data';
 export * from './response/mcs-report-subscription';
 export * from './response/mcs-report-service-change-info';
 export * from './response/mcs-contact-us';
+export * from './response/mcs-report-operational-savings';
+export * from './response/mcs-report-operational-savings-sub-items';
+export * from './response/mcs-report-vm-rightsizing';
+export * from './response/mcs-report-vm-rightsizing-summary';
 export * from './response/mcs-object-crisp-element';
 export * from './response/mcs-object-installed-service';
 

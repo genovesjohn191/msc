@@ -36,10 +36,10 @@ export class ServicesCostOverviewWidgetComponent implements OnInit, OnDestroy {
   public chartConfig: ChartConfig = {
     stacked: true,
     yaxis: {
-      title: 'Months'
+      title: 'Total Cost ($)'
     },
     xaxis: {
-      title: 'Total Cost(s)'
+      title: 'Months'
     }
   };
 

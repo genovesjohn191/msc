@@ -521,5 +521,52 @@
       "value": true,
       "exclude": true
     }
+  },
+  "vmRightsizingWidgetFilter": {
+    "vmName": {
+      "text": "VM Name",
+      "value": true,
+      "exclude": true
+    },
+    "totalScore": {
+      "text": "Total Score",
+      "value": true,
+      "exclude": true
+    },
+    "cpuScore": {
+      "text": "CPU Score",
+      "value": true,
+      "exclude": true
+    },
+    "memoryScore": {
+      "text": "Memory Score",
+      "value": true,
+      "exclude": true
+    },
+    "diskScore": {
+      "text": "Disk Score",
+      "value": true,
+      "exclude": true
+    },
+    "size": {
+      "text": "Size",
+      "value": true,
+      "exclude": true
+    },
+    "region": {
+      "text": "Region",
+      "value": true,
+      "exclude": true
+    },
+    "projectedComputeCost": {
+      "text": "Projected Compute Cost",
+      "value": true,
+      "exclude": true
+    },
+    "recommendationSavings": {
+      "text": "Recommendation Savings",
+      "value": true,
+      "exclude": true
+    }
   }
 }

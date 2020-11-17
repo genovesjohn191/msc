@@ -2,11 +2,15 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
+  McsQueryParam,
   McsReportCostRecommendations,
   McsReportGenericItem,
   McsReportIntegerData,
   McsReportServiceChangeInfo,
-  McsReportSubscription
+  McsReportSubscription,
+  McsReportVMRightsizing,
+  McsReportVMRightsizingSummary,
+  McsReportOperationalSavings
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { ChartItem } from '@app/shared/chart';
@@ -39,6 +43,14 @@ export class McsReportingService {
     endPeriod: string = '',
     subscriptionIds: string[] = []): Observable<ChartItem[]> {
     return this._apiService.getServicesCostOverviewReport(startPeriod, endPeriod, subscriptionIds)
+      .pipe(map((resources) => this._convertGenericItemToChartItem(resources.collection)));
+  }
+
+  public getResourceMonthlyCostReport(
+    startPeriod: string = '',
+    endPeriod: string = '',
+    subscriptionIds: string[] = []): Observable<ChartItem[]> {
+    return this._apiService.getResourceMonthlyCostReport(startPeriod, endPeriod, subscriptionIds)
       .pipe(map((resources) => this._convertGenericItemToChartItem(resources.collection)));
   }
 
@@ -82,6 +94,18 @@ export class McsReportingService {
         }
         return this._convertServiceChangeInfoToChartItem(items);
       }));
+  }
+
+  public getOperationalMonthlySavings(): Observable<McsReportOperationalSavings[]> {
+    return this._apiService.getOperationalMonthlySavings();
+  }
+
+  public getVMRightsizing(query?: McsQueryParam): Observable<McsReportVMRightsizing[]> {
+    return this._apiService.getVMRightsizing();
+  }
+
+  public getVMRightsizingSummary(): Observable<McsReportVMRightsizingSummary> {
+    return this._apiService.getVMRightsizingSummary();
   }
 
   private _convertServiceChangeInfoToChartItem(items: McsReportServiceChangeInfo[]): ChartItem[] {

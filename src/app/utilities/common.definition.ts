@@ -185,6 +185,7 @@ export class CommonDefinition {
   public static ASSETS_SVG_SMALL_PERSON_FAV_BLUE = 'small-person-fav-blue';
   public static ASSETS_SVG_SMALL_MARKETING_BLACK = 'small-marketing-black';
   public static ASSETS_SVG_SMALL_MARKETING_BLUE = 'small-marketing-blue';
+  public static ASSETS_SVG_SMALL_CALCULATOR_CHECK_BLACK = 'small-calculator-check-black';
 
   /** Filter Selector */
   public static FILTERSELECTOR_SERVER_LISTING = 'serverFilter';
@@ -206,7 +207,7 @@ export class CommonDefinition {
   public static FILTERSELECTOR_AZURE_RESOURCES_LISTING = 'azureResourceFilter';
   public static FILTERSELECTOR_AZURE_MANAGED_SERVICES_LISTING = 'azureManagedServiceFilter';
   public static FILTERSELECTOR_AZURE_TICKETS_WIDGET_LISTING = 'azureTicketsWidgetFilter';
-
+  public static FILTERSELECTOR_VM_RIGHTSIZING_LISTING = 'vmRightsizingWidgetFilter';
   /** RegEx Patterns */
   public static REGEX_EMAIL_PATTERN = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
   public static REGEX_IP_PATTERN = /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.|$)){4}$/;

@@ -12,7 +12,10 @@ import { ServicesCostOverviewWidgetComponent } from './services-cost-overview/se
 import { VirtualMachineUsageBreakdownWidgetComponent } from './virtual-machine-usage-breakdown/virtual-machine-usage-breakdown-widget.component';
 import { PerformanceAndScalabilityWidgetComponent } from './performance-and-scalability/performance-and-scalability-widget.component';
 import { SecurityAndComplianceWidgetComponent } from './security-and-compliance/security-and-compliance-widget.component';
-
+import { ResourceMonthlyCostWidgetComponent } from './resource-monthly-cost/resource-monthly-cost-widget.component';
+import { OperationalMonthlySavingsWidgetComponent } from './operational-monthly-savings/operational-monthly-savings-widget.component';
+import { VmRightsizingWidgetComponent } from './vm-rightsizing/vm-rightsizing-widget.component';
+import { OperationalSavingsSubitemsViewerComponent } from './operational-monthly-savings/subitems/operational-savings-subitems-viewer.component';
 @NgModule({
   imports: [ SharedModule ],
   declarations: [
@@ -21,13 +24,17 @@ import { SecurityAndComplianceWidgetComponent } from './security-and-compliance/
     ChangeRequestWidgetComponent,
     ContactUsWidgetComponent,
     CostRecommendationsWidgetComponent,
+    OperationalMonthlySavingsWidgetComponent,
+    OperationalSavingsSubitemsViewerComponent,
     PerformanceAndScalabilityWidgetComponent,
     ReportWidgetDataStatusComponent,
     ResourceChangesWidgetComponent,
+    ResourceMonthlyCostWidgetComponent,
     SecurityAndComplianceWidgetComponent,
     ServicesCostOverviewWidgetComponent,
     ServicesOverviewWidgetComponent,
-    VirtualMachineUsageBreakdownWidgetComponent
+    VirtualMachineUsageBreakdownWidgetComponent,
+    VmRightsizingWidgetComponent
   ],
   exports: [
     AzureResourcesWidgetComponent,
@@ -35,13 +42,17 @@ import { SecurityAndComplianceWidgetComponent } from './security-and-compliance/
     ChangeRequestWidgetComponent,
     ContactUsWidgetComponent,
     CostRecommendationsWidgetComponent,
+    OperationalMonthlySavingsWidgetComponent,
+    OperationalSavingsSubitemsViewerComponent,
     PerformanceAndScalabilityWidgetComponent,
     ReportWidgetDataStatusComponent,
     ResourceChangesWidgetComponent,
+    ResourceMonthlyCostWidgetComponent,
     SecurityAndComplianceWidgetComponent,
     ServicesCostOverviewWidgetComponent,
     ServicesOverviewWidgetComponent,
-    VirtualMachineUsageBreakdownWidgetComponent
+    VirtualMachineUsageBreakdownWidgetComponent,
+    VmRightsizingWidgetComponent
   ]
 })
 export class ReportWidgetModule { }

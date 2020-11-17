@@ -1,0 +1,42 @@
+@import "../../../../styles/shared/base";
+
+.vm-rightsizing-wrapper {
+  max-height: 570px;
+
+  .item-wrapper {
+    .icon {
+      margin-right: $space-large;
+    }
+
+    .content-wrapper {
+      text-align: left;
+    }
+  }
+
+  .listing-table-wrapper {
+    min-height: 150px;
+    width: 100%;
+
+    .mat-table {
+      max-height: 500px;
+      min-height: 127px;
+      max-width: 100%;
+      overflow-y: scroll;
+      display: block;
+
+      th {
+        position: sticky;
+        top: 0;
+        background: $color-black;
+      }
+    }
+
+    mcs-item {
+      margin-top: -80px;
+
+      div {
+        z-index: 1;
+      }
+    }
+  }
+}
