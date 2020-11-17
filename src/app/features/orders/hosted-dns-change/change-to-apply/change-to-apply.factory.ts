@@ -52,6 +52,12 @@ export class ChangeToApplyFactory {
   private static _createRemoveSpeficFormControls(): { controlName: string, control: FormControl }[] {
     let formControls: { controlName: string, control: FormControl }[] = [
       { controlName: 'fcRecordType', control: new FormControl(DnsRecordType.A, []) },
+      { controlName: 'fcTarget', control: new FormControl('') },
+      { controlName: 'fcTtl', control: new FormControl('', [
+        CoreValidators.numeric,
+        CoreValidators.min(MIN_TTL_VALUE),
+        CoreValidators.max(MAX_TTL_VALUE)
+      ])},
       {
         controlName: 'fcPriority', control: new FormControl({value: '', disabled: true}, [
           CoreValidators.numeric,
