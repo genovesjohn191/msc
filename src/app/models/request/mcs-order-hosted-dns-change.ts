@@ -2,19 +2,17 @@ import { JsonProperty } from '@app/utilities';
 
 export class McsOrderHostedDnsChange {
 
-  // TODO: replace with own Type
   @JsonProperty()
-  public addRecords: any[] = undefined;
-
-  // TODO: replace with own Type
-  @JsonProperty()
-  public removeRecords: any[] = undefined;
+  public zone: string = undefined;
 
   @JsonProperty()
-  public phoneConfirmationRequired: boolean = undefined;
+  public records: any[] = undefined;
 
   @JsonProperty()
   public customerReferenceNumber: string = undefined;
+
+  @JsonProperty()
+  public phoneConfirmationRequired: boolean = undefined;
 
   @JsonProperty()
   public notes: string = undefined;

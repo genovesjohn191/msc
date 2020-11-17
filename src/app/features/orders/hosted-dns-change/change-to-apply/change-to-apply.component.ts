@@ -161,9 +161,10 @@ export class ChangeToApplyComponent implements IMcsFormGroup, OnInit, OnDestroy 
    */
   public notifyDataChange(): void {
     this.dataChange.emit(createObject(ChangeToApply, {
-      recordType: getSafeProperty(this.formGroup.controls['fcRecordType'], (obj) => obj.value),
+      action: getSafeProperty(this.formGroup.controls['fcActionType'], (obj) => obj.value),
+      type: getSafeProperty(this.formGroup.controls['fcRecordType'], (obj) => obj.value),
       hostName: getSafeProperty(this.formGroup.controls['fcHostName'], (obj) => obj.value),
-      target: getSafeProperty(this.formGroup.controls['fcTarget'], (obj) => obj.value),
+      value: getSafeProperty(this.formGroup.controls['fcTarget'], (obj) => obj.value),
       priority: getSafeProperty(this.formGroup.controls['fcPriority'], (obj) => +obj.value),
       ttlSeconds: getSafeProperty(this.formGroup.controls['fcTtl'], (obj) => +obj.value)
     }));
