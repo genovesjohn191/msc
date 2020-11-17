@@ -297,7 +297,7 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
             schedule: getCurrentDate().toISOString(),
             properties: createObject(McsOrderHostedDnsChange, {
               zone: this.fcZone.value,
-              records: this._getChangeDetailsByAction(ActionType.Add),
+              records: this._getChangeDetailsByAction(),
               customerReferenceNumber: this._smacSharedDetails.referenceNumber,
               phoneConfirmationRequired: this._smacSharedDetails.contactAfterChange,
               notes: this._smacSharedDetails.notes
@@ -324,11 +324,9 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
   /**
    * Extracts and Return all the values from the form array based on Action Type
    */
-  private _getChangeDetailsByAction(actionType: ActionType): ChangeToApply[] {
+  private _getChangeDetailsByAction(): ChangeToApply[] {
     let changesToApply: ChangeToApply[] = [];
     this.faChangeToApply.controls.forEach((formGroup: FormGroup) => {
-      if (formGroup.controls['fcActionType'].value === actionType) {
-
         let changeDetail: ChangeToApply = {
           action: formGroup.controls['fcActionType'].value,
           type: formGroup.controls['fcRecordType'].value,
@@ -342,7 +340,6 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
         }
 
         changesToApply.push(changeDetail);
-      }
     });
 
     return changesToApply;
