@@ -27,7 +27,7 @@ export class LaunchPadWorkflowsComponent  {
   public onClick(state: WorkflowGroupSaveState): void {
     this._navigationService.navigateTo(
       RouteKey.LaunchPadWorkflowLaunch,
-      [state.companyId,state.targetSource,state.workflowGroupId,state.serviceId]);
+      [state.source, state.companyId, state.workflowGroupId, state.serviceId, state.productId]);
   }
 
   public getWorkflowGroupId(workflowTypeId: number): string {

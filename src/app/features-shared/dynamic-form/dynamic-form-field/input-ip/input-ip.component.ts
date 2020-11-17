@@ -26,6 +26,7 @@ import { DynamicInputIpField } from './input-ip';
 })
 export class DynamicInputIpComponent extends DynamicInputTextComponent {
   public data: DynamicInputIpField;
+  private _hasInitialized: boolean = false;
 
   public constructor(private _changeDetectorRef: ChangeDetectorRef) {
     super();
@@ -58,7 +59,14 @@ export class DynamicInputIpComponent extends DynamicInputTextComponent {
     }
 
     this.disabled = !required;
+
     this.clearFormField(false);
+
+    // Set initial value if required
+    if (required && !this._hasInitialized) {
+      this.setInitialValue(this.data.initialValue);
+      this._hasInitialized = true;
+    }
 
     this._changeDetectorRef.markForCheck();
   }

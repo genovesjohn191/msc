@@ -45,7 +45,7 @@ export class WorkflowFactory {
       title: options.workflowGroup.parent.title,
       required: true,
       // Clone the form to ensure data is not persisted
-      properties: cloneDeep(options.workflowGroup.parent.form),
+      properties: cloneDeep(options.workflowGroup.parent.form.config),
       data: options.config.parent.propertyOverrides
     });
   }
@@ -70,7 +70,7 @@ export class WorkflowFactory {
           title: child.title,
           required: child.required,
           // Clone the form to ensure data is not persisted
-          properties: cloneDeep(child.form),
+          properties: cloneDeep(child.form.config),
           data: dataOverride
 
         });

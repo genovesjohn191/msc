@@ -7,6 +7,7 @@
         <tr>
           <th>Company ID</th>
           <th>Service ID</th>
+          <th>Product ID</th>
           <th>Workflow</th>
           <th>Source</th>
         </tr>
@@ -17,6 +18,11 @@
           <td>
             <button mat-button (click)="onClick(state)">
               {{ state.serviceId }}
+            </button>
+          </td>
+          <td>
+            <button mat-button (click)="onClick(state)">
+              {{ state.productId }}
             </button>
           </td>
           <td>

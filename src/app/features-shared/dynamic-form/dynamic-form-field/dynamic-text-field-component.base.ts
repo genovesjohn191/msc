@@ -57,16 +57,16 @@ export abstract class DynamicTextFieldComponentBase implements DynamicFormField,
   public clearFormField(reuseValue: boolean): void {
     let preserveValue = reuseValue && this.data.settings && this.data.settings.preserve;
     if (!preserveValue) {
-      this._resetValue('');
+      this._changeValue('');
     }
   }
 
-  public setValue(value: any): void {
+  public setInitialValue(value: any): void {
     this.data.initialValue = value;
-    this._resetValue(value);
+    this._changeValue(value);
   }
 
-  private _resetValue(value: any): void {
+  private _changeValue(value: any): void {
     this.data.value = value;
     this.valueChange(this.data.value);
   }

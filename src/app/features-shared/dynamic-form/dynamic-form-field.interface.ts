@@ -23,5 +23,5 @@ export interface DynamicFormField {
 
   clearFormField(reuseValue: boolean): void;
 
-  setValue(value: any): void;
+  setInitialValue(value: any): void;
 }

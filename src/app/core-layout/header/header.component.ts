@@ -80,10 +80,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.searchKeyword = '';
   }
 
-  public test(): void {
-    alert('x');
-  }
-
   private _registerEvents(): void {
     this._routeChangeHandler = this._eventDispatcher.addEventListener(
       McsEvent.routeChange, this._onRouteChanged.bind(this)

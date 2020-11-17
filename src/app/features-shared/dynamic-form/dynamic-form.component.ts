@@ -74,6 +74,7 @@ export class DynamicFormComponent implements OnInit, AfterViewInit {
 
     // Trigger data change event
     this.controls.forEach(control => {
+
       if (params.dependents.indexOf(control.data.key) > -1) {
         control.onFormDataChange(params);
         this._resetFieldValidators(control);
@@ -104,7 +105,7 @@ export class DynamicFormComponent implements OnInit, AfterViewInit {
       let value = properties[control.data.key];
 
       if (!isNullOrEmpty(value)) {
-        control.setValue(value);
+        control.setInitialValue(value);
       }
     });
 

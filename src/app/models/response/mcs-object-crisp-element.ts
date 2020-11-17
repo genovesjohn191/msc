@@ -6,7 +6,7 @@ export class McsObjectCrispElementServiceAttribute {
   public code: string = undefined;
 
   @JsonProperty()
-  public value: string = undefined;
+  public value: string | string[] = undefined;
 
   @JsonProperty()
   public displayValue: string = undefined;

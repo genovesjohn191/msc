@@ -14,7 +14,6 @@ import {
   RouteKey,
 } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import { workflowGroupMap } from '../../workflows/workflow-group.map';
 import { WorkflowGroupId } from '../../workflows/workflow-groups/workflow-group-type.enum';
 import { WorkflowService } from '../../workflows/workflow.service';
@@ -23,12 +22,15 @@ import {
   WorkflowSelectorItem
 } from './workflow-selector.service';
 
+export type LaunchPadContextSource = 'crisp-elements' | 'installed-services';
+
 export interface WorkflowSelectorConfig {
   label: string;
   companyId: string;
   type: ProductType;
-  system: string;
-  serviceId: string;
+  source: LaunchPadContextSource;
+  serviceId?: string;
+  productId?: string;
 }
 
 @Component({
@@ -61,7 +63,10 @@ export class LaunchPadWorkflowSelectorComponent {
       return;
     }
 
-    this._navigationService.navigateTo(RouteKey.LaunchPadWorkflowLaunch, [this.data.companyId, this.data.system, id, this.data.serviceId])
+    this._navigationService.navigateTo(
+      RouteKey.LaunchPadWorkflowLaunch,
+      [this.data.source, this.data.companyId, id, this.data.serviceId, this.data.productId]);
+
     this._bottomSheetRef.dismiss();
   }
 

@@ -1,11 +1,11 @@
 import { Component, ChangeDetectionStrategy, OnDestroy, Input } from '@angular/core';
 import { McsTableDataSource2, McsMatTableQueryParam, McsMatTableContext } from '@app/core';
-import { McsFilterInfo, McsObjectCrispElement, McsQueryParam } from '@app/models';
+import { McsFilterInfo, McsObjectCrispElement, McsQueryParam, ProductType } from '@app/models';
 import { McsApiService } from '@app/services';
 import { unsubscribeSafely, isNullOrEmpty } from '@app/utilities';
 import { Subject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { WorkflowSelectorConfig } from '../../core';
+import { LaunchPadContextSource, WorkflowSelectorConfig } from '../../core';
 
 @Component({
   selector: 'mcs-launch-pad-search-elements-result',
@@ -60,12 +60,15 @@ export class LaunchPadSearchElementsResultComponent implements OnDestroy {
   }
 
   public getLauncherConfig(record: McsObjectCrispElement):  WorkflowSelectorConfig {
+    let productType: any = ProductType[record.productType];
+
     return {
       label: record.serviceId,
       companyId: record.companyId,
-      system: 'elements',
+      source: 'crisp-elements',
       serviceId: record.serviceId,
-      type: record.productType
+      productId: record.productId,
+      type: productType
     };
   }
 }

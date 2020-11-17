@@ -110,8 +110,10 @@ export abstract class DynamicSelectFieldComponentBase<T>
     // Set to default initial value if has multiple options and not yet initialized
 
     let hasMultipleOptions = this.data.options.length > 1;
+
     if (hasMultipleOptions && !isNullOrEmpty(this.data.initialValue)) {
       let isSelectable = false;
+
       if (this.data.options[0].type === 'flat') {
         isSelectable = !isNullOrEmpty((this.data.options as FlatOption[]).find((opt) => opt.key === this.data.initialValue
         ));
@@ -121,7 +123,7 @@ export abstract class DynamicSelectFieldComponentBase<T>
             item.key === this.data.initialValue));
 
           if (isSelectable) {
-            return;
+            this._setValue(this.data.initialValue);
           }
         });
       }
@@ -136,7 +138,7 @@ export abstract class DynamicSelectFieldComponentBase<T>
     if (isNullOrEmpty(this.data.options)) {
       this.retrieveOptions();
     } else if (!isNullOrEmpty(this.data.value)) {
-      this.setValue(this.data.value);
+      this.setInitialValue(this.data.value);
     }
   }
 

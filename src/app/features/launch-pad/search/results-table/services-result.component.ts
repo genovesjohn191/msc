@@ -70,7 +70,7 @@ export class LaunchPadSearchServicesResultComponent implements OnDestroy {
     return {
       label: record.serviceId,
       companyId: record.companyId,
-      system: 'services',
+      source: 'installed-services',
       serviceId: record.serviceId,
       type: record.productType
     };
