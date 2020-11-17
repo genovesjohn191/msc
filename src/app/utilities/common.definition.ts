@@ -27,6 +27,7 @@ export class CommonDefinition {
   public static PAGE_SIZE_MIN = 25;
   public static PAGE_SIZE_MAX = 1000;
   public static OTHER_TEXT = 'Others';
+  public static NOT_APPLICABLE = 'N/A';
 
   /** Others */
   public static SEARCH_TIME = 1000;

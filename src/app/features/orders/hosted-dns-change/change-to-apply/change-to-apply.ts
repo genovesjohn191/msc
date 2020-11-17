@@ -6,9 +6,10 @@ export enum ActionType {
 }
 
 export class ChangeToApply {
-  recordType: DnsRecordType;
+  action: string;
+  type: DnsRecordType;
   hostName: string;
-  target: string;
+  value: string;
   priority?: number;
   ttlSeconds: number;
 }
