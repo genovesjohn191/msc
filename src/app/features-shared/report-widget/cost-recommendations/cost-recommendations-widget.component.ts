@@ -41,11 +41,11 @@ import { McsReportingService } from '@app/core/services/mcs-reporting.service';
 
 export class CostRecommendationsWidgetComponent implements OnInit, OnDestroy {
   public get budgetIcon(): string {
-    return CommonDefinition.ASSETS_SVG_SMALL_DOLLAR_BLACK ;
+    return CommonDefinition.ASSETS_SVG_SMALL_DOLLAR_BLACK;
   }
 
   public get savingsIcon(): string {
-    return CommonDefinition.ASSETS_SVG_SMALL_MARKETING_BLACK  ;
+    return CommonDefinition.ASSETS_SVG_SMALL_CALCULATOR_CHECK_BLACK;
   }
 
   public get cloudHealthUrl(): string  {

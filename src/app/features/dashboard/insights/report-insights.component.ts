@@ -6,6 +6,7 @@ import {
 } from '@angular/core';
 import { McsReportingService } from '@app/core/services/mcs-reporting.service';
 import { PerformanceAndScalabilityWidgetConfig, ReportPeriod } from '@app/features-shared/report-widget';
+import { ResourceMonthlyCostWidgetConfig } from '@app/features-shared/report-widget/resource-monthly-cost/resource-monthly-cost-widget.component';
 import { McsReportSubscription } from '@app/models';
 import { unsubscribeSafely } from '@app/utilities';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
@@ -57,6 +58,20 @@ export class ReportInsightsComponent implements OnDestroy {
     return this._selectedPerformanceMonth;
   }
 
+  public set selectedResourceCostMonth(value: PeriodOption) {
+    this._selectedResourceCostMonth = value;
+    this.resourceMonthlyCostConfig = {
+      period: this._selectedResourceCostMonth.period.from,
+      subscriptionIds: this.subscriptionIdsFilter
+    };
+
+    this._changeDetector.markForCheck();
+  }
+
+  public get selectedResourceCostMonth(): PeriodOption {
+    return this._selectedResourceCostMonth;
+  }
+
   public set subscriptionIdsFilter(value: string[]) {
     this._subscriptionFilterChange.next(value);
   }
@@ -67,10 +82,12 @@ export class ReportInsightsComponent implements OnDestroy {
   public _subscriptionIdsFilter: string[] = undefined;
 
   public serviceCostConfig: PerformanceAndScalabilityWidgetConfig;
+  public resourceMonthlyCostConfig: ResourceMonthlyCostWidgetConfig;
 
   public subscriptions: McsReportSubscription[];
   private _subscriptionFilterChange = new BehaviorSubject<string[]>([]);
   private _selectedPerformanceMonth: PeriodOption;
+  private _selectedResourceCostMonth: PeriodOption;
   private _subscriptionSubject = new Subject();
 
   public constructor(private reportService: McsReportingService, private _changeDetector: ChangeDetectorRef) {
@@ -122,5 +139,6 @@ export class ReportInsightsComponent implements OnDestroy {
     }
 
     this.selectedPerformanceMonth = this.monthOptions[0];
+    this.selectedResourceCostMonth = this.monthOptions[0];
   }
 }

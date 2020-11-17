@@ -1,0 +1,151 @@
+<div class="vm-rightsizing-wrapper">
+  <div *ngIf="!processing && !hasError; else error">
+    <div *ngIf="empty; else vmRightsizing">
+      <mcs-status-message type="info">
+        {{ 'reports.insights.costs.vmRightsizing.empty' | translate }}
+      </mcs-status-message>
+    </div> 
+    <ng-template #vmRightsizing>
+      <mcs-cta-list-panel [icon]="savingsIcon">
+        <mcs-cta-list-body>
+          Up to <strong>{{ potentialRightsizingSavings }}</strong> could be saved by rightsizing virtual machines.
+        </mcs-cta-list-body>
+        <mcs-cta-list-action>
+          <a href="{{ azureServiceRequestLink }}"
+            matTooltip="We'll work with you to optimise your environment."
+            matTooltipPosition="right"
+            mcsId="recommendations-optimize"
+            mcsEventTracker="navigate-to-order-request-change"
+            mcsEventCategory="dashboard-navigation"
+            mcsEventLabel="optimize-link">
+            Rightsize
+          </a>
+        </mcs-cta-list-action>
+      </mcs-cta-list-panel>
+    </ng-template>
+  </div>
+  <ng-template #error>
+    <mcs-status-message type="error">
+      {{ 'reports.errorMessage' | translate }}
+      <a style="margin-left: 5px;" mcsId (click)="getVMRightsizingSummary()">
+        {{ 'reports.retryLabel' | translate }}
+      </a>
+    </mcs-status-message>
+  </ng-template>
+
+  <div class="listing-table-wrapper limited-view">
+    <!-- Table -->
+    <table mat-table #table [dataSource]="dataSource">
+      <!-- VM Name Column -->
+      <ng-container matColumnDef="vmName">
+        <th mat-header-cell *matHeaderCellDef>
+          {{ 'reports.insights.costs.vmRightsizing.table.header.vmName' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.vmName }}
+        </td>
+      </ng-container>
+
+      <!-- Total Score Column -->
+      <ng-container matColumnDef="totalScore">
+        <th mat-header-cell *matHeaderCellDef>
+          {{ 'reports.insights.costs.vmRightsizing.table.header.totalScore' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.totalScore }}
+        </td>
+      </ng-container>
+
+      <!-- CPU Score Column -->
+      <ng-container matColumnDef="cpuScore">
+        <th mat-header-cell *matHeaderCellDef>
+          {{ 'reports.insights.costs.vmRightsizing.table.header.cpuScore' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.cpuScore }}
+        </td>
+      </ng-container>
+
+      <!-- Memory Score Column -->
+      <ng-container matColumnDef="memoryScore">
+        <th mat-header-cell *matHeaderCellDef>
+          {{ 'reports.insights.costs.vmRightsizing.table.header.memoryScore' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.memoryScore }}
+        </td>
+      </ng-container>
+
+      <!-- Disk Score Column -->
+      <ng-container matColumnDef="diskScore">
+        <th mat-header-cell *matHeaderCellDef>
+          {{ 'reports.insights.costs.vmRightsizing.table.header.diskScore' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.diskScore }}
+        </td>
+      </ng-container>
+
+      <!-- Size Column -->
+      <ng-container matColumnDef="size">
+        <th mat-header-cell *matHeaderCellDef>
+          {{ 'reports.insights.costs.vmRightsizing.table.header.size' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.size }}
+        </td>
+      </ng-container>
+
+      <!-- Region Column -->
+      <ng-container matColumnDef="region">
+        <th mat-header-cell *matHeaderCellDef>
+          {{ 'reports.insights.costs.vmRightsizing.table.header.region' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.region }}
+        </td>
+      </ng-container>
+
+      <!-- Projected Compute Cost Column -->
+      <ng-container matColumnDef="projectedComputeCost">
+        <th mat-header-cell *matHeaderCellDef>
+          {{ 'reports.insights.costs.vmRightsizing.table.header.projectedComputeCost' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.projectedComputeCost }}
+        </td>
+      </ng-container>
+
+      <!-- Recommendation Savings Column -->
+      <ng-container matColumnDef="recommendationSavings">
+        <th mat-header-cell *matHeaderCellDef>
+          {{ 'reports.insights.costs.vmRightsizing.table.header.recommendationSavings' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.recommendationSavings }}
+        </td>
+      </ng-container>
+
+      <!-- Header and Data row -->
+      <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"></tr>
+      <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"></tr>
+    </table>
+    
+    <mcs-item orientation="block">
+      <div *ngIf="dataSource?.isInProgress$ | async" align="center">
+        <mcs-loader size="medium"></mcs-loader>
+      </div>
+      <div *ngIf="dataSource?.hasNoRecords$ | async" text-center>
+        {{ 'reports.insights.costs.vmRightsizing.empty' | translate }}
+      </div>
+      <div *ngIf="dataSource?.hasError$ | async" text-center>
+        <span margin-right-small>{{ 'reports.errorMessage' | translate }}</span>
+        <a (click)="retryDatasource()"
+          mcsId="retry-datasource"
+          mcsEventTracker="retry-tools"
+          mcsEventCategory="tools"
+          mcsEventLabel="tools-listing-page">{{ 'reports.retryLabel' | translate }}</a>
+      </div>
+    </mcs-item>
+  </div>
+</div>

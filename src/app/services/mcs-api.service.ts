@@ -127,6 +127,8 @@ import {
   McsReportSubscription,
   McsReportCostRecommendations,
   McsReportServiceChangeInfo,
+  McsReportVMRightsizingSummary,
+  McsReportVMRightsizing,
   McsTicketQueryParams,
   McsWorkflowCreate,
   McsObjectCrispElement,
@@ -205,6 +207,7 @@ import { McsAzureResourcesRepository } from './repositories/mcs-azure-resources.
 import { McsAzureServicesRepository } from './repositories/mcs-azure-services.repository';
 import { IMcsApiObjectsService } from '@app/api-client/interfaces/mcs-api-objects.interface';
 import { McsApiObjectsFactory } from '@app/api-client/factory/mcs-api-objects.factory';
+import { McsReportOperationalSavings } from '@app/models/response/mcs-report-operational-savings';
 
 interface DataEmitter<T> {
   eventEmitter: Observable<T>;
@@ -1535,6 +1538,20 @@ export class McsApiService {
     );
   }
 
+  public getResourceMonthlyCostReport(
+    periodStart?: string,
+    periodEnd?: string,
+    subscriptionIds?: string[]
+  ): Observable<McsApiCollection<McsReportGenericItem>> {
+
+    return this._reportsApi.getResourceMonthlyCostReport(periodStart, periodEnd, subscriptionIds).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getResourceMonthlyCostReport'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
   public getVirtualMachineBreakdownReport(
     periodStart?: string,
     periodEnd?: string,
@@ -1587,6 +1604,33 @@ export class McsApiService {
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getServiceChanges'))
       ),
       map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public getOperationalMonthlySavings(): Observable<McsReportOperationalSavings[]> {
+    return this._reportsApi.getOperationalMonthlySavings().pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getOperationalMonthlySavings'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public getVMRightsizing(query?: McsQueryParam): Observable<McsReportVMRightsizing[]> {
+    return this._reportsApi.getVMRightsizing(query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getVMRightsizing'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public getVMRightsizingSummary(): Observable<McsReportVMRightsizingSummary> {
+    return this._reportsApi.getVMRightsizingSummary().pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.McsReportVMRightsizingSummary'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
 

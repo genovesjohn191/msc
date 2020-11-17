@@ -1,0 +1,33 @@
+@import "../../../../styles/shared/base";
+
+.operational-savings-wrapper {
+  margin-bottom: $space-large;
+
+  .item-wrapper {
+    margin-bottom: $space-large;
+
+    .icon {
+      margin-right: $space-large;
+    }
+  }
+
+  table.mcs-compact-table {
+    width: 100%;
+  
+    tr {
+      td:last-child {
+        text-align: right;
+        padding-right: 24px;
+      }
+    }
+  }
+  .mat-expansion-panel-header {
+    height: auto;
+    padding: $space-large 24px;
+
+    .mat-expansion-panel-header-description {
+      justify-content: flex-end;
+      align-items: center;
+    }
+  }
+}

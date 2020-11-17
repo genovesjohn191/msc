@@ -6,15 +6,15 @@
         <div class="hide-on-print options-container">
           <div style="padding-top: 20px;">
             <span>
-              Insights gives you visibility into your Azure environment, powered by
+              {{ 'reports.insights.subtitle' | translate }}
               <a href="#">
-                VMware CloudHealth.
+                {{ 'reports.insights.vmCloudHealthLink' | translate }}
               </a>
             </span>
           </div>
           <div>
             <mat-form-field appearance="outline">
-              <mat-label>Subscriptions</mat-label>
+              <mat-label>{{ 'reports.insights.subscriptionText' | translate }}</mat-label>
               <mat-select multiple [(value)]="subscriptionIdsFilter">
                 <mat-option *ngFor="let subscription of subscriptions" [value]="subscription.id">
                   {{ subscription.name }}
@@ -25,35 +25,62 @@
         </div>
 
         <section class="no-break-on-print">
-          <h1><span class="show-on-print-only">1 </span>Costs</h1>
+          <h1><span class="show-on-print-only">1 </span>{{ 'reports.insights.costs.label' | translate }}</h1>
 
           <div class="sub-section">
-            <h2><span class="show-on-print-only">1.1 </span>Services Overview</h2>
+            <h2><span class="show-on-print-only">1.1 </span>{{ 'reports.insights.costs.serviceOverview.title' | translate }}</h2>
             <mcs-services-cost-overview-widget [subscriptionIds]="subscriptionIdsFilter"></mcs-services-cost-overview-widget>
 
             <mat-divider></mat-divider>
 
-            <h2><span class="show-on-print-only">1.2 </span>Virtual Machine Breakdown</h2>
+            <div class="options-container">
+              <div>
+                <h2><span class="show-on-print-only">1.2 </span>{{ 'reports.insights.costs.resourceCost.title' | translate }} {{ selectedResourceCostMonth.label }}</h2>
+              </div>
+              <div class="hide-on-print">
+                <mat-form-field appearance="outline">
+                  <mat-label>{{ 'reports.insights.monthLabel' | translate }}</mat-label>
+                  <mat-select [(ngModel)]="selectedResourceCostMonth">
+                    <mat-option *ngFor="let opt of monthOptions" [value]="opt">
+                      {{ opt.label }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <mcs-resource-monthly-cost-widget [config]="resourceMonthlyCostConfig"></mcs-resource-monthly-cost-widget>
+
+            <mat-divider></mat-divider>
+
+            <h2><span class="show-on-print-only">1.3 </span>{{ 'reports.insights.costs.vmBreakdown.title' | translate }}</h2>
             <mcs-virtual-machine-usage-breakdown-widget [subscriptionIds]="subscriptionIdsFilter"></mcs-virtual-machine-usage-breakdown-widget>
+            
+            <mat-divider></mat-divider>
+            <h2><span class="show-on-print-only">1.4 </span>{{ 'reports.insights.costs.operationalSavings.title' | translate }}</h2>
+            <mcs-operational-monthly-savings-widget></mcs-operational-monthly-savings-widget>
+          
+            <mat-divider></mat-divider>
+            <h2><span class="show-on-print-only">1.5 </span>{{ 'reports.insights.costs.vmRightsizing.title' | translate }}</h2>
+            <mcs-vm-rightsizing-widget></mcs-vm-rightsizing-widget>
           </div>
         </section>
 
         <section class="no-break-on-print">
-          <h1><span class="show-on-print-only">2 </span>Tech Review</h1>
+          <h1><span class="show-on-print-only">2 </span>{{ 'reports.insights.techReview.label' | translate }}</h1>
 
           <div class="sub-section">
-            <h2><span class="show-on-print-only">2.1 </span>Security and Compliance</h2>
+            <h2><span class="show-on-print-only">2.1 </span>{{ 'reports.insights.techReview.securityCompliance.title' | translate }}</h2>
             <mcs-security-and-compliance-widget></mcs-security-and-compliance-widget>
 
             <mat-divider></mat-divider>
 
             <div class="options-container">
               <div>
-                <h2><span class="show-on-print-only">2.2 </span>Performance and Scalability</h2>
+                <h2><span class="show-on-print-only">2.2 </span>{{ 'reports.insights.techReview.performanceScalability.title' | translate }}</h2>
               </div>
               <div class="hide-on-print">
                 <mat-form-field appearance="outline">
-                  <mat-label>Month</mat-label>
+                  <mat-label>{{ 'reports.insights.monthLabel' | translate }}</mat-label>
                   <mat-select [(ngModel)]="selectedPerformanceMonth">
                     <mat-option *ngFor="let opt of monthOptions" [value]="opt">
                       {{ opt.label }}

@@ -8,7 +8,11 @@ import {
   McsReportIntegerData,
   McsReportSubscription,
   McsReportCostRecommendations,
-  McsReportServiceChangeInfo
+  McsReportServiceChangeInfo,
+  McsReportVMRightsizing,
+  McsQueryParam,
+  McsReportVMRightsizingSummary,
+  McsReportOperationalSavings
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiReportsService } from '../interfaces/mcs-api-reports.interface';
@@ -45,6 +49,30 @@ export class McsApiReportsService implements IMcsApiReportsService {
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/public-cloud/reports/services-cost-overview';
+    mcsApiRequestParameter.searchParameters = searchParams;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          return McsApiSuccessResponse.deserializeResponse<McsReportGenericItem[]>(McsReportGenericItem, response);
+        })
+      );
+  }
+
+  public getResourceMonthlyCostReport(
+    periodStart?: string,
+    periodEnd?: string,
+    subscriptionIds?: string[]): Observable<McsApiSuccessResponse<McsReportGenericItem[]>> {
+
+    let searchParams = new Map<string, any>();
+    searchParams.set('period_start', periodStart);
+    searchParams.set('period_end', periodEnd);
+    if (!isNullOrEmpty(subscriptionIds)) {
+      searchParams.set('subscription_ids', subscriptionIds.join());
+    }
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/public-cloud/reports/monthly-cost';
     mcsApiRequestParameter.searchParameters = searchParams;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
@@ -140,6 +168,58 @@ export class McsApiReportsService implements IMcsApiReportsService {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
             .deserializeResponse<McsReportServiceChangeInfo[]>(McsReportServiceChangeInfo, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  public getOperationalMonthlySavings(): Observable<McsApiSuccessResponse<McsReportOperationalSavings[]>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/public-cloud/reports/potential-operational-savings';
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsReportOperationalSavings[]>(McsReportOperationalSavings, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  public getVMRightsizing(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsReportVMRightsizing[]>> {
+    // Set default values if null
+    let searchParams = new Map<string, any>();
+    if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
+    searchParams.set('page', query.pageIndex);
+    searchParams.set('per_page', query.pageSize);
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/public-cloud/reports/vm-rightsizing';
+    mcsApiRequestParameter.searchParameters = searchParams;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsReportVMRightsizing[]>(McsReportVMRightsizing, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  public getVMRightsizingSummary(): Observable<McsApiSuccessResponse<McsReportVMRightsizingSummary>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/public-cloud/reports/rightsizing-summary';
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsReportVMRightsizing>(McsReportVMRightsizingSummary, response);
           return apiResponse;
         })
       );
