@@ -1,14 +1,14 @@
-import { DynamicFormFieldDataBase } from '@app/features-shared/dynamic-form';
 import {
   ProductType,
   WorkflowType
 } from '@app/models';
+import { LaunchPadForm } from './forms';
 
 export interface WorkflowConfig {
   id: WorkflowType;
   productType: ProductType;
   title: string;
-  form: DynamicFormFieldDataBase[];
+  form: LaunchPadForm;
   required?: boolean;
 }
 

@@ -21,7 +21,7 @@ export class LaunchPadWorkflowProvisionStateComponent implements OnDestroy {
   public workflows: Workflow[];
 
   @Input()
-  public set jobs(value: McsJob[]) {
+  public set state(value: McsJob[]) {
     if (isNullOrEmpty(value)) { return; }
 
     this._jobs = value;
@@ -39,7 +39,7 @@ export class LaunchPadWorkflowProvisionStateComponent implements OnDestroy {
   }
 
   public getTaskInfo(workflow: Workflow): McsTask | undefined {
-    if (isNullOrEmpty(this.jobs)) { return undefined; }
+    if (isNullOrEmpty(this.state)) { return undefined; }
 
     let job = this._jobs.find((j) => j.referenceId === workflow.parentReferenceId ?? workflow.referenceId);
     let task = job.tasks.find((t) => t.referenceId === workflow.referenceId);

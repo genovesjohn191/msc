@@ -2,6 +2,7 @@ import {
   waitForAsync,
   TestBed
 } from '@angular/core/testing';
+import { McsNavigationService } from '@app/core/services/mcs-navigation.service';
 import { CommonDefinition } from '@app/utilities';
 import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 
@@ -21,7 +22,8 @@ describe('HeaderComponent', () => {
       declarations: [
         HeaderComponent
       ], providers: [
-        EventBusDispatcherService
+        EventBusDispatcherService,
+        McsNavigationService
       ]
     });
 
@@ -43,8 +45,6 @@ describe('HeaderComponent', () => {
 
   /** Test Implementation */
   describe('ngOnInit()', () => {
-    it('should call the getImagePath() of AssetsProvider', () => {
-      expect(component.lightLogoIconKey).toBe(CommonDefinition.ASSETS_IMAGE_MCS_LIGHT_LOGO_SVG);
-    });
+
   });
 });

@@ -31,7 +31,8 @@ import {
 import { WorkflowGroupId } from './workflows/workflow-groups/workflow-group-type.enum';
 import { Workflow } from './workflows/workflow.interface';
 import { McsApiService } from '@app/services';
-import { McsJob, McsWorkflowCreate } from '@app/models';
+import { McsJob, McsWorkflowCreate, ProductType } from '@app/models';
+import { LaunchPadContextSource } from './layout/workflow-selector/workflow-selector.component';
 
 enum WizardStep  {
   EditWorkflowGroup = 0,
@@ -40,9 +41,11 @@ enum WizardStep  {
 }
 
 export interface LaunchPadContext {
+  source: LaunchPadContextSource,
   companyId: string;
-  targetSource: string;
   serviceId: string;
+  workflowGroupId: WorkflowGroupId;
+  productId?: string;
 }
 
 // TODO: This can be moved to global location
@@ -426,10 +429,11 @@ export class LaunchPadComponent implements OnDestroy, IMcsNavigateAwayGuard {
 
     if (hasChanges) {
       state = {
+        source: this.context.source,
         companyId: this.context.companyId,
-        targetSource: this.context.targetSource,
         workflowGroupId: this.config.id.toString(),
-        serviceId: this.workflows[0].serviceId,
+        serviceId: this.context.serviceId,
+        productId: this.context.productId,
         description: this.workflows[0].title,
         config: cloneDeep(this.config),
         workflows: cloneDeep(this.workflows)
@@ -473,8 +477,9 @@ export class LaunchPadComponent implements OnDestroy, IMcsNavigateAwayGuard {
   private _getSavedStateIndex(): number {
     return this.savedState.findIndex((state) =>
     state.companyId === this.context.companyId
-    && state.targetSource === this.context.targetSource
+    && state.source === this.context.source
     && state.serviceId === this.context.serviceId
+    && state.productId === this.context.productId
     && state.workflowGroupId === this.config.id.toString());
   }
 

@@ -3,7 +3,7 @@
 
   <mat-step [editable]="!isProvisioning && (!processing && !hasError)" [completed]="false" [optional]="validForProvisioning">
     <ng-template matStepLabel>Create workflow</ng-template>
-    <mcs-launch-pad-workflow-group #workflowGroup [config]="config" [companyId]="companyId" [loadWorkflowNotifier]="editWorkflowGroup"></mcs-launch-pad-workflow-group>
+    <mcs-launch-pad-workflow-group #workflowGroup [config]="config" [companyId]="context.companyId" [loadWorkflowNotifier]="editWorkflowGroup"></mcs-launch-pad-workflow-group>
 
     <br />
     <button *ngIf="isEditing || validForProvisioning" mat-button (click)="cancelEditing()">

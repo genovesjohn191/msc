@@ -1,19 +1,21 @@
-import { Component, ChangeDetectionStrategy, ViewChild, OnInit } from '@angular/core';
+// import { Component, ChangeDetectionStrategy, ViewChild, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { ProductType, WorkflowType } from '@app/models';
+import { McsApiService } from '@app/services';
 import { isNullOrEmpty } from '@app/utilities';
 import { Subject } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
-import { LaunchPadComponent, LaunchPadContext, WorkflowGroup, WorkflowGroupConfig } from '../core';
+import { LaunchPadComponent, LaunchPadContext, LaunchPadContextSource, WorkflowGroupConfig } from '../core';
 import { workflowGroupMap } from '../core/workflows/workflow-group.map';
 import { WorkflowGroupId } from '../core/workflows/workflow-groups/workflow-group-type.enum';
 import { WorkflowData } from '../core/workflows/workflow.interface';
 
-interface ItemX {
-  type: ProductType;
-  properties: { key: string, value: any }[];
-  children?: ItemX[];
-}
+export const sourceParam: string = 'source';
+export const companyIdParam: string = 'companyid';
+export const worklowGroupIdParam: string = 'workflowgroupid';
+export const serviceIdParam: string = 'serviceid';
+export const productIdParam: string = 'productid';
 
 @Component({
   selector: 'mcs-launch-pad-workflow-launch.component',
@@ -31,7 +33,10 @@ export class LaunchPadWorkflowLaunchComponent implements OnInit {
 
   private _destroySubject = new Subject<void>();
 
-  public constructor(private _activatedRoute: ActivatedRoute) {}
+  public constructor(
+    private _activatedRoute: ActivatedRoute,
+    private _apiService: McsApiService,
+    private _changeDetector: ChangeDetectorRef) {}
 
   public ngOnInit(): void {
     this.getRouterParams();
@@ -41,98 +46,96 @@ export class LaunchPadWorkflowLaunchComponent implements OnInit {
     this._activatedRoute.paramMap.pipe(
       takeUntil(this._destroySubject),
       tap((params: ParamMap) => {
-        let companyId = params.get('companyid');
-        let workflowGroupIdParam = params.get('workflowgroupid');
-        let targetSource = params.get('system');
-
+        let workflowGroupIdParam = params.get(worklowGroupIdParam);
         let id: any = WorkflowGroupId[WorkflowGroupId[workflowGroupIdParam]];
-        let workflowGroupType = workflowGroupMap.get(id);
 
-        let hasRequiredParameters =
-          !isNullOrEmpty(workflowGroupType)
-          && !isNullOrEmpty(companyId)
-          && !isNullOrEmpty(targetSource);
+        // Set LAUNCH pad context
+        this.launchPadContext = {
+          source: params.get(sourceParam) as LaunchPadContextSource,
+          workflowGroupId: id,
+          companyId : params.get(companyIdParam),
+          serviceId: params.get(serviceIdParam),
+          productId: params.get(productIdParam)
+        };
 
-        if (!hasRequiredParameters) {
+        let incompleteParameters =
+          isNullOrEmpty(this.launchPadContext.source)
+          || isNullOrEmpty(workflowGroupMap.get(id))
+          || isNullOrEmpty(this.launchPadContext.companyId)
+          || isNullOrEmpty(this.launchPadContext.productId);
+
+        if (incompleteParameters) {
           console.log(`No workflow group found for ${id.toString()}`);
           return;
         }
 
-        let serviceId = params.get('serviceid');
-
-        // Set LAUNCH pad context
-        this.launchPadContext = {
-          companyId,
-          targetSource,
-          serviceId
-        };
-
         // Set LAUNCH pad config
-        this._loadConfig(id, serviceId);
+        this._loadWorkflow(this.launchPadContext);
       })
     ).subscribe();
   }
 
-  private _loadConfig(workflowGroupId: WorkflowGroupId, serviceId: string): void {
-    let workflowGroupType = workflowGroupMap.get(workflowGroupId);
+  private _loadWorkflow(context: LaunchPadContext): void {
+    let workflowGroupType = workflowGroupMap.get(context.workflowGroupId);
     let workflowGroup = new workflowGroupType();
 
-    // Create parent workflow
-    let parentWorkflowType: WorkflowType = workflowGroup.parent.id;
-
-    if (isNullOrEmpty(parentWorkflowType)) {
+    if (isNullOrEmpty(workflowGroup.parent.id)) {
       // This will cause the workflow to not load at all
       console.log(`No mapping found for ${workflowGroup.toString()}`);
       return;
     }
 
-    // TODO: Get payload overrides, retrieve based on service ID, add mapping of payload
-    let item: ItemX = {
-      type: workflowGroup.parent.productType,
-      properties: [],
-      children: []
-    }
+    // TODO: This approach is for crisp-elements only
+    this._apiService.getCrispElement(this.launchPadContext.productId)
+      .pipe(takeUntil(this._destroySubject))
+      .subscribe((response) => {
+        let parent: WorkflowData = {
+          id: workflowGroup.parent.id,
+          serviceId: this.launchPadContext.serviceId,
+          propertyOverrides: workflowGroup.parent.form.crispElementConverter(response.serviceAttributes),
+        };
 
-    let parent: WorkflowData = {
-      id: parentWorkflowType,
-      serviceId,
-      propertyOverrides: item.properties
-    };
+        // Create child workflows
+        let children: WorkflowData[] = [];
+        // TODO: Map children payload to form
 
-    // Create child workflows
-    let children: WorkflowData[] = [];
-    if (!isNullOrEmpty(item.children)) {
-      item.children.forEach((child) => {
-        let notAService = isNullOrEmpty(child.type);
-        if (notAService) {
-          return;
-        }
+        // This will now trigger LAUNCH pad loading
+        this.config = {
+          id: context.workflowGroupId,
+          parent,
+          children
+        };
 
-        // Check child workflows of workflow group if product type has a match
-        let result = workflowGroup.children.find((childWorkflow) => childWorkflow.productType === child.type);
-        let noWorkflowEquivalent = isNullOrEmpty(result);
-        if (noWorkflowEquivalent) {
-          return;
-        }
-
-        let childWorkflowType = workflowGroup.children.find((childWorkflow) => childWorkflow.productType === child.type).id;
-
-        if (isNullOrEmpty(childWorkflowType)) {
-          console.log(`No mapping found for ${child.type.toString()}`);
-          return;
-        }
-
-        children.push({
-          id: childWorkflowType,
-          propertyOverrides: child.properties
-        });
+        this._changeDetector.markForCheck();
       });
-    }
-
-    this.config = {
-      id: workflowGroupId,
-      parent,
-      children
-    }
   }
 }
+
+// let children: WorkflowData[] = [];
+// if (!isNullOrEmpty(item.children)) {
+//   item.children.forEach((child) => {
+//     let notAService = isNullOrEmpty(child.type);
+//     if (notAService) {
+//       return;
+//     }
+
+//     // Check child workflows of workflow group if product type has a match
+//     let result = workflowGroup.children.find((childWorkflow) => childWorkflow.productType === child.type);
+//     let noWorkflowEquivalent = isNullOrEmpty(result);
+//     if (noWorkflowEquivalent) {
+//       return;
+//     }
+
+//     let childWorkflowType = workflowGroup.children.find((childWorkflow) => childWorkflow.productType === child.type).id;
+
+//     if (isNullOrEmpty(childWorkflowType)) {
+//       console.log(`No mapping found for ${child.type.toString()}`);
+//       return;
+//     }
+
+//     children.push({
+//       id: childWorkflowType,
+//       propertyOverrides: child.properties
+//     });
+//   });
+// }
