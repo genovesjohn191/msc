@@ -133,7 +133,8 @@ import {
   McsWorkflowCreate,
   McsObjectCrispElement,
   McsObjectInstalledService,
-  McsNetworkDnsZonesSummary
+  McsNetworkDnsZonesSummary,
+  McsReportResourceHealth
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -1629,6 +1630,15 @@ export class McsApiService {
     return this._reportsApi.getVMRightsizingSummary().pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.McsReportVMRightsizingSummary'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public getResourceHealth(): Observable<McsReportResourceHealth> {
+    return this._reportsApi.getResourceHealth().pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getResourceHealth'))
       ),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );

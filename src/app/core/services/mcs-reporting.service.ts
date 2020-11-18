@@ -10,7 +10,8 @@ import {
   McsReportSubscription,
   McsReportVMRightsizing,
   McsReportVMRightsizingSummary,
-  McsReportOperationalSavings
+  McsReportOperationalSavings,
+  McsReportResourceHealth
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { ChartItem } from '@app/shared/chart';
@@ -108,14 +109,20 @@ export class McsReportingService {
     return this._apiService.getVMRightsizingSummary();
   }
 
+  public getResourceHealth(): Observable<McsReportResourceHealth> {
+    return this._apiService.getResourceHealth();
+  }
+
   private _convertServiceChangeInfoToChartItem(items: McsReportServiceChangeInfo[]): ChartItem[] {
     let data: ChartItem[] = [];
     items.forEach(item => {
-        data.push({
-          name: 'Change',
-          xValue: `${item.serviceName}|${item.serviceCostChange}`,
-          yValue: item.serviceCountChange
-        });
+      let invalidData = isNullOrEmpty(item.serviceName) || isNullOrEmpty(item.serviceCountChange);
+      if (invalidData) { return; }
+      data.push({
+        name: 'Change',
+        xValue: `${item.serviceName}|${item.serviceCostChange}`,
+        yValue: item.serviceCountChange
+      });
     });
 
     return data;
@@ -124,11 +131,13 @@ export class McsReportingService {
   private _convertIntegerDataToChartItem(items: McsReportIntegerData[]): ChartItem[] {
     let data: ChartItem[] = [];
     items.forEach(item => {
-        data.push({
-          name: '',
-          xValue: item.name,
-          yValue: item.value
-        });
+      let invalidData = isNullOrEmpty(item.name) || isNullOrEmpty(item.value);
+      if (invalidData) { return; }
+      data.push({
+        name: '',
+        xValue: item.name,
+        yValue: item.value
+      });
     });
 
     return data;
@@ -137,11 +146,13 @@ export class McsReportingService {
   private _convertGenericItemToChartItem(items: McsReportGenericItem[]): ChartItem[] {
     let data: ChartItem[] = [];
     items.forEach(item => {
-        data.push({
-          name: item.name,
-          xValue: item.period,
-          yValue: item.value
-        });
+      let invalidData = isNullOrEmpty(item.name) || isNullOrEmpty(item.value) || isNullOrEmpty(item.period);
+      if (invalidData) { return; }
+      data.push({
+        name: item.name,
+        xValue: item.period,
+        yValue: item.value
+      });
     });
 
     return data;

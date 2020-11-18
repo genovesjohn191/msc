@@ -5,6 +5,7 @@ import { StatusMessageModule } from '../status-message/status-message.module';
 import { HorizontalBarChartComponent } from './horizontal-bar-chart/horizontal-bar-chart.component';
 import { VerticalBarChartComponent } from './vertical-bar-chart/vertical-bar-chart.component';
 import { ChartComponentBase } from './core/chart-base.component';
+import { PieChartComponent } from './pie-chart/pie-chart.component';
 
 @NgModule({
   imports: [
@@ -15,10 +16,12 @@ import { ChartComponentBase } from './core/chart-base.component';
     ChartComponentBase,
     HorizontalBarChartComponent,
     VerticalBarChartComponent,
+    PieChartComponent,
   ],
   exports: [
     HorizontalBarChartComponent,
     VerticalBarChartComponent,
+    PieChartComponent,
   ],
   providers: [
     ChartDataService,

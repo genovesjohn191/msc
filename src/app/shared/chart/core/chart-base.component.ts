@@ -3,8 +3,6 @@ import {
   ChangeDetectionStrategy,
   ViewEncapsulation,
   ViewChild,
-  OnChanges,
-  SimpleChanges,
   ChangeDetectorRef,
   Input
 } from '@angular/core';
@@ -20,9 +18,11 @@ import {
   ApexYAxis,
   ApexLegend,
   ApexTitleSubtitle,
-  ApexTooltip
+  ApexTooltip,
+  ApexNonAxisChartSeries,
+  ChartType
 } from 'ng-apexcharts';
-import { ChartData, ChartDataService } from '../chart-data.service';
+import { ChartDataService } from '../chart-data.service';
 import { ChartItem } from '../chart-item.interface';
 
 export type ChartDataLabels = {
@@ -43,6 +43,9 @@ export type ChartYAxis = {
 }
 
 export type ChartLegend = {
+  position?: string,
+  horizontalAlign?: string,
+  offsetX?: number,
   formatter?: (val: string, opts?: any) => string;
 }
 
@@ -54,6 +57,7 @@ export type ChartTooltip = {
 
 export type ChartConfig = {
   data?: ChartItem[];
+  type?: ChartType;
   height?: string;
   stacked?: boolean;
   dataLabels?: ChartDataLabels;
@@ -61,6 +65,7 @@ export type ChartConfig = {
   yaxis?: ChartYAxis;
   legend?: ChartLegend;
   tooltip?: ChartTooltip;
+  labels?: any[];
 }
 
 type ChartOptions = {
@@ -69,12 +74,13 @@ type ChartOptions = {
   dataLabels: ApexDataLabels;
   legend: ApexLegend;
   plotOptions: ApexPlotOptions;
-  series: ApexAxisChartSeries;
+  series: ApexAxisChartSeries | ApexNonAxisChartSeries;
   stroke: ApexStroke;
   title: ApexTitleSubtitle;
   tooltip: ApexTooltip;
   xaxis: ApexXAxis;
   yaxis: ApexYAxis;
+  labels: any[];
 };
 
 @Component({
@@ -93,34 +99,24 @@ export class ChartComponentBase {
   public distributed: boolean;
 
   @Input()
-  public set data(value: ChartItem[]) {
-    if (isNullOrEmpty(value)) {
-      return;
-    }
-
-    let data: ChartData = this._chartDataService.convertToApexChartData(value);
-
-    this.xaxis = {
-      categories: data.categories
-    };
-    this.series = data.series;
-
-    this.updateChart();
-  }
-
-  @Input()
   public set config(value: ChartConfig) {
     if (isNullOrEmpty(value) || JSON.stringify(value) === JSON.stringify(this._config)) {
       return;
     }
 
-    this._config = value;
-
     this.chart = {
-      type: 'bar',
+      type: value.type,
       stacked: value.stacked,
-      height: isNullOrEmpty(value.height) ? 'auto' : value.height
+      height: isNullOrEmpty(value.height) ? 'auto' : value.height,
+      toolbar: {
+        show: true,
+        tools: {
+          download: true
+        }
+      }
     };
+
+    this._config = value;
 
     if (!isNullOrEmpty(value.xaxis)) {
       this.xaxis = {
@@ -173,6 +169,11 @@ export class ChartComponentBase {
       }
     }
 
+    if (!isNullOrEmpty(value.labels)) {
+      let chartlabel: any[] = Object.values(value.labels);
+      this.labels = chartlabel; 
+    }
+
     this.updateChart();
   }
 
@@ -189,7 +190,8 @@ export class ChartComponentBase {
       stroke: this._stroke,
       legend: this._legend,
       title: this._title,
-      tooltip: this._tooltip
+      tooltip: this._tooltip,
+      labels: this._labels
     };
 
     return config;
@@ -215,7 +217,7 @@ export class ChartComponentBase {
     this._plotOptions = {...this._plotOptions, ...value};
   }
 
-  public set series(value: ApexAxisChartSeries) {
+  public set series(value: ApexAxisChartSeries | ApexNonAxisChartSeries) {
     this._series = value;
   }
 
@@ -237,6 +239,10 @@ export class ChartComponentBase {
 
   public set yaxis(value: ApexYAxis) {
     this._yaxis = {...this._yaxis, ...value};
+  }
+
+  public set labels(value: any) {
+    this._labels = value;
   }
 
   private _config: ChartConfig;
@@ -268,16 +274,12 @@ export class ChartComponentBase {
     }
   };
 
-  private _legend: ApexLegend = {
-    position: 'top',
-    horizontalAlign: 'left',
-    offsetX: 0
-  };
-
+  private _legend: ApexLegend;
   private _plotOptions: ApexPlotOptions;
-  private _series: ApexAxisChartSeries = [];
+  protected _series: ApexAxisChartSeries | ApexNonAxisChartSeries = [];
   private _stroke: ApexStroke;
   private _title: ApexTitleSubtitle;
+  private _labels: any[];
   private _tooltip: ApexTooltip = {
     theme: 'dark',
   };
@@ -285,10 +287,10 @@ export class ChartComponentBase {
   private _yaxis: ApexYAxis = {};
 
   public updateChart(): void {
-    this._changeDetectorRef.markForCheck();
+    this.changeDetectorRef.markForCheck();
   }
 
   public constructor(
-    private _chartDataService: ChartDataService,
-    private _changeDetectorRef: ChangeDetectorRef) {}
+    protected chartDataService: ChartDataService,
+    protected changeDetectorRef: ChangeDetectorRef) {}
 }

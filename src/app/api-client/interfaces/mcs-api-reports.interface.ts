@@ -9,7 +9,8 @@ import {
   McsReportSubscription,
   McsReportVMRightsizing,
   McsReportVMRightsizingSummary,
-  McsReportOperationalSavings
+  McsReportOperationalSavings,
+  McsReportResourceHealth
 } from '@app/models';
 
 export interface IMcsApiReportsService {
@@ -46,4 +47,6 @@ export interface IMcsApiReportsService {
   getVMRightsizing(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsReportVMRightsizing[]>>;
 
   getVMRightsizingSummary(): Observable<McsApiSuccessResponse<McsReportVMRightsizingSummary>>;
+
+  getResourceHealth(): Observable<McsApiSuccessResponse<McsReportResourceHealth>>;
 }

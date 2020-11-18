@@ -34,9 +34,11 @@ import { ReportPeriod } from '../report-period.interface';
 })
 export class ServicesCostOverviewWidgetComponent implements OnInit, OnDestroy {
   public chartConfig: ChartConfig = {
+    type: 'bar',
     stacked: true,
     yaxis: {
-      title: 'Total Cost ($)'
+      title: 'Total Cost ($)',
+      showLabel: true
     },
     xaxis: {
       title: 'Months'

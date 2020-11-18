@@ -1,0 +1,11 @@
+<div class="widget flat">
+    <mcs-pie-chart
+      *ngIf="!processing && !hasError"
+      [config]="chartConfig"
+      [data]="data$ | async">
+    </mcs-pie-chart>
+  
+    <mcs-report-widget-data-status type="info" [processing]="processing" [hasError]="hasError" (retry)="getData()">
+    </mcs-report-widget-data-status>
+</div>
+  

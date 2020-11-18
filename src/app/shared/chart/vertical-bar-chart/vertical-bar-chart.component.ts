@@ -3,9 +3,12 @@ import {
   ChangeDetectionStrategy,
   ViewEncapsulation,
   ChangeDetectorRef,
-  OnInit
+  OnInit,
+  Input
 } from '@angular/core';
-import { ChartDataService } from '../chart-data.service';
+import { ChartItem } from '@app/shared';
+import { isNullOrEmpty } from '@app/utilities';
+import { ChartData, ChartDataService } from '../chart-data.service';
 import { ChartComponentBase } from '../core/chart-base.component';
 
 @Component({
@@ -20,6 +23,22 @@ import { ChartComponentBase } from '../core/chart-base.component';
 })
 
 export class VerticalBarChartComponent extends ChartComponentBase implements OnInit {
+  @Input()
+  public set data(value: ChartItem[]) {
+    if (isNullOrEmpty(value)) {
+      return;
+    }
+
+    let data: ChartData = this.chartDataService.convertToApexChartData(value);
+
+    this.xaxis = {
+      categories: data.categories
+    };
+    this.series = data.series;
+
+    this.updateChart();
+  }
+
   public constructor(
     chartDataService: ChartDataService,
     changeDetector: ChangeDetectorRef
@@ -32,9 +51,11 @@ export class VerticalBarChartComponent extends ChartComponentBase implements OnI
   }
 
   private _setDefaultOptions(): void {
-    this.chart = {
-      type: 'bar'
-    };
+    this.legend = {
+      position: 'top',
+      horizontalAlign: 'left',
+      offsetX: 0,
+    }
 
     this.plotOptions = {
       bar: {

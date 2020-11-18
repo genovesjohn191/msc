@@ -29,9 +29,11 @@ import { unsubscribeSafely } from '@app/utilities';
 })
 export class VirtualMachineUsageBreakdownWidgetComponent implements OnInit, OnDestroy {
   public chartConfig: ChartConfig = {
+    type: 'bar',
     stacked: true,
     yaxis: {
-      title: '# VMs by Usage'
+      title: '# VMs by Usage',
+      showLabel: true
     },
     xaxis: {
       title: 'Months'
@@ -75,7 +77,7 @@ export class VirtualMachineUsageBreakdownWidgetComponent implements OnInit, OnDe
     this.processing = true;
     this._changeDetectorRef.markForCheck();
 
-    this.reportingService.getVirtualMachineBreakdownReport(this._startPeriod, this._endPeriod, this.subscriptionIds)
+    this.reportingService.getVirtualMachineBreakdownReport(this._startPeriod, this._endPeriod, this._subscriptionIds)
     .pipe(catchError(() => {
       this.hasError = true;
       this.processing = false;

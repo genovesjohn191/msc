@@ -16,7 +16,6 @@ import {
   catchError,
   map
 } from 'rxjs/operators';
-import { McsApiService } from '@app/services';
 import {
   CoreRoutes,
   McsFilterService,
@@ -26,7 +25,6 @@ import {
 } from '@app/core';
 import {
   McsTicket,
-  McsApiCollection,
   RouteKey,
   TicketStatus,
   ticketStatusText,
@@ -38,6 +36,7 @@ import {
   isNullOrEmpty,
   unsubscribeSafely
 } from '@app/utilities';
+import { McsApiTicketsService } from '@app/api-client/services/mcs-api-tickets.service';
 
 const maxTicketsToDisplay: number = 5;
 
@@ -78,8 +77,8 @@ export class AzureTicketsWidgetComponent implements OnInit, OnDestroy {
   public constructor(
     _injector: Injector,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _apiService: McsApiService,
     private _filterService: McsFilterService,
+    private _ticketService: McsApiTicketsService,
     private _navigationService: McsNavigationService
   ) {
     this.dataSource = new McsTableDataSource2(this.getData.bind(this));
@@ -111,15 +110,15 @@ export class AzureTicketsWidgetComponent implements OnInit, OnDestroy {
     queryParam.serviceId = 'AZ';
     queryParam.state = 'open';
 
-    return this._apiService.getTickets(queryParam).pipe(
+    return this._ticketService.getTickets(queryParam).pipe(
       map((response) => {
         this.processing = false;
-        this.empty = response.totalCollectionCount === 0;
-        this.hasMore = response.totalCollectionCount > maxTicketsToDisplay;
+        this.empty = response.totalCount === 0;
+        this.hasMore = response.totalCount > maxTicketsToDisplay;
         this._changeDetectorRef.markForCheck();
 
         let azureTickets: McsTicket[] = [];
-        azureTickets.push(...cloneObject(response.collection));
+        azureTickets.push(...cloneObject(response.content));
 
         let dataSourceContext = new McsMatTableContext(azureTickets, azureTickets.length);
         return dataSourceContext;

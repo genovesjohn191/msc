@@ -34,14 +34,26 @@ export interface PerformanceAndScalabilityWidgetConfig {
 })
 export class PerformanceAndScalabilityWidgetComponent implements OnInit, OnDestroy {
   public chartConfig: ChartConfig = {
+    type: 'bar',
     yaxis: {
       title: 'Avg % Used',
+      showLabel: true,
       valueFormatter: this.yAxisLabelFormatter
     },
     xaxis: {
       title: 'Days'
     }
   };
+
+  @Input()
+  public set subscriptionIds(value: string[]) {
+    if (JSON.stringify(value) === JSON.stringify(this._subscriptionIds)) {
+      return;
+    }
+
+    this._subscriptionIds = value;
+    this.getData();
+  }
 
   @Input()
   public set config(value: PerformanceAndScalabilityWidgetConfig) {
@@ -62,6 +74,7 @@ export class PerformanceAndScalabilityWidgetComponent implements OnInit, OnDestr
   public processing: boolean = true;
 
   private _config: PerformanceAndScalabilityWidgetConfig;
+  private _subscriptionIds: string[] = undefined;
   private _startPeriod: string = '';
   private _endPeriod: string = '';
 
@@ -81,7 +94,7 @@ export class PerformanceAndScalabilityWidgetComponent implements OnInit, OnDestr
     this.processing = true;
     this._changeDetectorRef.markForCheck();
 
-    this.reportingService.getPerformanceReport(this._startPeriod, this._endPeriod, this._config.subscriptionIds)
+    this.reportingService.getPerformanceReport(this._startPeriod, this._endPeriod, this._subscriptionIds)
     .pipe(catchError(() => {
       this.hasError = true;
       this.processing = false;

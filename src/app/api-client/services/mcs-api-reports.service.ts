@@ -12,7 +12,8 @@ import {
   McsReportVMRightsizing,
   McsQueryParam,
   McsReportVMRightsizingSummary,
-  McsReportOperationalSavings
+  McsReportOperationalSavings,
+  McsReportResourceHealth
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiReportsService } from '../interfaces/mcs-api-reports.interface';
@@ -220,6 +221,21 @@ export class McsApiReportsService implements IMcsApiReportsService {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
             .deserializeResponse<McsReportVMRightsizing>(McsReportVMRightsizingSummary, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  public getResourceHealth(): Observable<McsApiSuccessResponse<McsReportResourceHealth>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/public-cloud/reports/resource-health';
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsReportResourceHealth>(McsReportResourceHealth, response);
           return apiResponse;
         })
       );
