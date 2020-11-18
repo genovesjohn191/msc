@@ -35,7 +35,7 @@ export class PieChartComponent extends ChartComponentBase implements OnInit {
 
     this.updateChart();
   }
-  
+
   public constructor(
     chartDataService: ChartDataService,
     changeDetector: ChangeDetectorRef
