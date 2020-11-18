@@ -33,6 +33,7 @@ const maxItemToDisplay = 10;
 export class ResourceChangesWidgetComponent implements OnInit {
   public chartConfig: ChartConfig = {
     height: '380px',
+    type: 'bar',
     dataLabels: {
       enabled: true,
       formatter: this.dataLabelFormatter

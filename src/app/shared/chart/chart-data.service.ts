@@ -12,6 +12,10 @@ export interface ChartData {
   series: Series[];
 }
 
+export interface PieChartData {
+  series: number[];
+}
+
 @Injectable()
 export class ChartDataService {
   public convertToApexChartData(rawData: ChartItem[]): ChartData {
@@ -36,6 +40,14 @@ export class ChartDataService {
       }
     });
 
+    return chartData;
+  }
+
+  public convertToPieApexChartData(rawData: number[]): PieChartData {
+    let chartData: PieChartData = { series: [] };
+    let series: number[] = Object.values(rawData);
+
+    chartData.series.push(...series);
     return chartData;
   }
 }

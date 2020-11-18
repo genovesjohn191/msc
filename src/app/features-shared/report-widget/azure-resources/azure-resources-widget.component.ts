@@ -31,6 +31,7 @@ const maxResourcesToDisplay = 10;
 
 export class AzureResourcesWidgetComponent implements OnInit, OnDestroy {
   public chartConfig: ChartConfig = {
+    type: 'bar',
     height: '380px'
   }
 

@@ -252,8 +252,14 @@
         "securityCompliance": {
           "title": "Security and Compliance"
         },
+        "resourceHealth": {
+          "title": "Resource Health"
+        },
         "performanceScalability": {
           "title": "Performance and Scalability"
+        },
+        "monitoringAlerting": {
+          "title": "Monitoring and Alerting"
         }
       }
     }

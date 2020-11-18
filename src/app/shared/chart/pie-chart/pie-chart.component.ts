@@ -6,39 +6,36 @@ import {
   OnInit,
   Input
 } from '@angular/core';
-import { ChartItem } from '@app/shared';
 import { isNullOrEmpty } from '@app/utilities';
-import { ChartData, ChartDataService } from '../chart-data.service';
+import { ChartDataService, PieChartData } from '../chart-data.service';
 import { ChartComponentBase } from '../core/chart-base.component';
 
 @Component({
-  selector: 'mcs-horizontal-bar-chart',
+  selector: 'mcs-pie-chart',
   templateUrl: '../core/chart-base.component.html',
   styleUrls: ['../chart.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   host: {
-    'class': 'horizontal-bar-chart-component'
+    'class': 'pie-chart-component'
   }
 })
 
-export class HorizontalBarChartComponent extends ChartComponentBase implements OnInit {
+export class PieChartComponent extends ChartComponentBase implements OnInit {
+
   @Input()
-  public set data(value: ChartItem[]) {
+  public set data(value: number[]) {
     if (isNullOrEmpty(value)) {
       return;
     }
 
-    let data: ChartData = this.chartDataService.convertToApexChartData(value);
+    let data: PieChartData = this.chartDataService.convertToPieApexChartData(value);
 
-    this.xaxis = {
-      categories: data.categories
-    };
     this.series = data.series;
 
     this.updateChart();
   }
-
+  
   public constructor(
     chartDataService: ChartDataService,
     changeDetector: ChangeDetectorRef
@@ -52,27 +49,20 @@ export class HorizontalBarChartComponent extends ChartComponentBase implements O
 
   private _setDefaultOptions(): void {
     this.legend = {
-      position: 'top',
-      horizontalAlign: 'left',
-      offsetX: 0,
-    }
-
-    this.plotOptions = {
-      bar: {
-        barHeight: '85%',
-        horizontal: true,
-        dataLabels: {
-          position: 'bottom'
-        },
-        distributed: this.distributed
-      }
+      position: 'right'
     };
 
-    this.dataLabels = {
-      offsetX: 0,
-      style: {
-        fontSize: '10px',
-        colors: ['#333']
+    this.plotOptions = {
+      pie: {
+        donut: {
+          labels: {
+            show: true,
+            total: {
+              showAlways: true,
+              show: true
+            }
+          }
+        }
       }
     };
   }
