@@ -42,7 +42,8 @@
             <input mcsInput
               [formControl]="formGroup?.controls['fcHostName']"
               [placeholder]="'orderHostedDnsChange.requestDetails.desiredChange.hostname.placeholder' | translate"
-              mcsId="input-order-hosted-dns-change-hostname">
+              mcsId="input-order-hosted-dns-change-hostname"
+              required>
             <mcs-error mcsError errorState="required">
               {{ 'orderHostedDnsChange.requestDetails.desiredChange.hostname.errorRequired' | translate }}
             </mcs-error>
@@ -53,7 +54,8 @@
             <input mcsInput
               [formControl]="formGroup?.controls['fcTarget']"
               [placeholder]="targetPlaceholder(recordType?.value)"
-              mcsId="input-order-hosted-dns-change-target">
+              mcsId="input-order-hosted-dns-change-target"
+              [required]="isActionTypeAdd">
               <mcs-error mcsError errorState="required" >
                <ng-container *ngIf="isTxtRecordType(recordType?.value); else notTxtRecordErrorTemplate">
                  {{ 'orderHostedDnsChange.requestDetails.desiredChange.target.errorRequiredValue' | translate }}
@@ -72,7 +74,8 @@
             <input mcsInput
               [formControl]="formGroup?.controls['fcPriority']" #priorityControl
               [placeholder]="'orderHostedDnsChange.requestDetails.desiredChange.priority.placeholder' | translate"
-              mcsId="input-order-hosted-dns-change-priority">
+              mcsId="input-order-hosted-dns-change-priority"
+              [required]="(isActionTypeAdd && isMxRecordType(recordType?.value))">
               <mcs-error mcsError errorState="required">
                 {{ 'orderHostedDnsChange.requestDetails.desiredChange.priority.errorRequired' | translate }}
               </mcs-error>
