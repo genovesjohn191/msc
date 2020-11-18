@@ -24,7 +24,7 @@ export class ResourceHealthWidgetComponent implements OnInit, OnDestroy {
   public processing: boolean = true;
 
   constructor(
-    private _changeDetectorRef: ChangeDetectorRef, 
+    private _changeDetectorRef: ChangeDetectorRef,
     private reportingService: McsReportingService
   ) {
     this.getData();

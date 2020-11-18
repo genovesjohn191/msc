@@ -171,7 +171,7 @@ export class ChartComponentBase {
 
     if (!isNullOrEmpty(value.labels)) {
       let chartlabel: any[] = Object.values(value.labels);
-      this.labels = chartlabel; 
+      this.labels = chartlabel;
     }
 
     this.updateChart();
