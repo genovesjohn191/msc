@@ -52,6 +52,7 @@ export class ChangeToApplyComponent implements IMcsFormGroup, OnInit, OnDestroy 
 
   public actionTypeOptions$: Observable<McsOption[]>;
   public recordTypeOptions$: Observable<McsOption[]>;
+  public isActionTypeAdd: boolean;
 
   @Output()
   public dataChange = new EventEmitter<ChangeToApply>();
@@ -125,6 +126,7 @@ export class ChangeToApplyComponent implements IMcsFormGroup, OnInit, OnDestroy 
    */
   public onActionTypeSelectionChange(action: ActionType): void {
     let changeControls = ChangeToApplyFactory.createChangeFormControls(action);
+    this.isActionTypeAdd = (action === ActionType.Add);
     this._assignFormControlsToGroup(changeControls);
     this._changeDetector.markForCheck();
   }
