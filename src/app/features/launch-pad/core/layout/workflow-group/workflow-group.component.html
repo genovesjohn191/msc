@@ -9,7 +9,7 @@
     matTooltipPosition="above">
     <mat-label>{{ ongoingServiceIdRetrieval ? 'Loading...' : 'Service ID' }}</mat-label>
 
-    <mat-select required [value]="serviceId" (selectionChange)="serviceIdChanged($event)">
+    <mat-select required [value]="context.serviceId" (selectionChange)="serviceIdChanged($event)">
       <mat-option *ngFor="let services of servicesOption" [value]="services.serviceId">
         {{ services.serviceId }}
       </mat-option>

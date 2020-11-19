@@ -5,24 +5,16 @@
     <table class="mcs-basic-table">
       <thead>
         <tr>
-          <th>Company ID</th>
-          <th>Service ID</th>
-          <th>Product ID</th>
+          <th>Company</th>
           <th>Workflow</th>
           <th>Source</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let state of savedState">
-          <td>{{ state.companyId }}</td>
           <td>
             <button mat-button (click)="onClick(state)">
-              {{ state.serviceId }}
-            </button>
-          </td>
-          <td>
-            <button mat-button (click)="onClick(state)">
-              {{ state.productId }}
+              {{ state.companyName ? state.companyName : state.companyId }}
             </button>
           </td>
           <td>
@@ -41,7 +33,6 @@
         </tr>
       </tbody>
     </table>
-
 
   </mcs-content-panel>
 </mcs-page>

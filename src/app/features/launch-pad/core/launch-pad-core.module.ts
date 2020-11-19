@@ -18,6 +18,7 @@ import { WorkflowJsonViewerComponent } from './layout/workflow-json-viewer/workf
 import { LaunchPadLoadStateDialogComponent } from './layout/workflow-load-state-dialog/workflow-load-state-dialog.component';
 import { LaunchPadWorkflowProvisionStateComponent } from './layout/workflow-provision-state/workflow-provision-state.component';
 import { McsApiService } from '@app/services';
+import { LaunchPadServiceIdSwitchDialogComponent } from './layout/service-id-switch-dialog/service-id-switch-dialog.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { McsApiService } from '@app/services';
     WorkflowJsonViewerComponent,
     LaunchPadWorkflowGroupComponent,
     WorkflowGroupDirective,
+    LaunchPadServiceIdSwitchDialogComponent,
     LaunchPadLoadStateDialogComponent,
     LaunchPadWorkflowComponent,
     LaunchPadWorkflowProvisionStateComponent,
@@ -37,6 +39,7 @@ import { McsApiService } from '@app/services';
     WorkflowJsonViewerComponent,
     LaunchPadWorkflowGroupComponent,
     WorkflowGroupDirective,
+    LaunchPadServiceIdSwitchDialogComponent,
     LaunchPadLoadStateDialogComponent,
     LaunchPadWorkflowComponent,
     LaunchPadWorkflowProvisionStateComponent,
@@ -49,6 +52,7 @@ import { McsApiService } from '@app/services';
   entryComponents: [
     LaunchPadWorkflowComponent,
     LaunchPadWorkflowSelectorComponent,
+    LaunchPadServiceIdSwitchDialogComponent,
     LaunchPadLoadStateDialogComponent
   ],
   providers: [

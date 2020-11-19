@@ -19,6 +19,7 @@ export interface WorkflowGroup {
 export interface WorkflowGroupSaveState {
   source: string;
   companyId: string;
+  companyName?: string;
   workflowGroupId: WorkflowGroupId;
   serviceId: string;
   productId: string;

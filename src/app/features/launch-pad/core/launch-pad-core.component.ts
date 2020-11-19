@@ -453,8 +453,6 @@ export class LaunchPadComponent implements OnDestroy, IMcsNavigateAwayGuard {
     return this.savedState.findIndex((state) =>
       state.companyId === this.context.companyId
       && state.source === this.context.source
-      && state.serviceId === this.context.serviceId
-      && state.productId === this.context.productId
       && state.workflowGroupId === this.context.workflowGroupId
     );
   }

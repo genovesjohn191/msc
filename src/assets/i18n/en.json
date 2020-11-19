@@ -123,10 +123,6 @@
       }
     }
   },
-  "launchPadCrispOrders": {
-    "header": "Run Workflow",
-    "filterHeader": "CRISP Elements"
-  },
   "consolePage": {
     "loading": "Loading VM Console...",
     "sendCtrlAltDelete": "Ctrl + Alt + Del",
