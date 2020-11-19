@@ -13,26 +13,29 @@
         </a>
       </li>
       <!-- LAUNCH Pad -->
-      <li *mcsAccessControl="[]; feature: 'EnableLaunchPad'" hidden-small>
-        <a (click)="toggleThis('showLaunchPadMenu')"
-          [class.active]="selectedCategory === routerCategoryEnum.LaunchPad"
-          mcsId>
-          {{ 'navigation.launchPad.label' | translate }}
-          <mcs-icon [key]="showLaunchPadMenu ? caretUpIconKey : caretDownIconKey" color="light" size="small"></mcs-icon>
-        </a>
-        <ul *ngIf="showLaunchPadMenu">
-          <li>
-            <a [mcsRouterLink]="routeKeyEnum.LaunchPadWorkflows"
-              mcsId="launch-pad-workflows-link"
-              mcsEventTracker="navigate-to-launch-pad-workflows"
-              mcsEventCategory="navigation"
-              mcsEventLabel="main-nav"
-              mcsRouterLinkActive="active">
-              Workflows
-            </a>
-          </li>
-        </ul>
-      </li>
+      <ng-container *ngIf="!isImpersonating">
+        <li *mcsAccessControl="[]; feature: 'EnableLaunchPad'" hidden-small>
+          <a (click)="toggleThis('showLaunchPadMenu')"
+            [class.active]="selectedCategory === routerCategoryEnum.LaunchPad"
+            mcsId>
+            {{ 'navigation.launchPad.label' | translate }}
+            <mcs-icon [key]="showLaunchPadMenu ? caretUpIconKey : caretDownIconKey" color="light" size="small"></mcs-icon>
+          </a>
+          <ul *ngIf="showLaunchPadMenu">
+            <li>
+              <a [mcsRouterLink]="routeKeyEnum.LaunchPadWorkflows"
+                mcsId="launch-pad-workflows-link"
+                mcsEventTracker="navigate-to-launch-pad-workflows"
+                mcsEventCategory="navigation"
+                mcsEventLabel="main-nav"
+                mcsRouterLinkActive="active">
+                Workflows
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ng-container>
+
       <!-- Private Cloud -->
       <li *ngIf="hasPrivateCloudAccess">
         <a (click)="toggleThis('showPrivateCloudMenu')"

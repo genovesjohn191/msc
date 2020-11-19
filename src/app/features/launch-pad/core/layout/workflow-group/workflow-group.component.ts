@@ -30,6 +30,9 @@ import { catchError, takeUntil } from 'rxjs/operators';
 import { productWorkflowGroupMap } from '../../workflows/product-workflow-group.map';
 import { LaunchPadServiceIdSwitchDialogComponent } from '../service-id-switch-dialog/service-id-switch-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
+export const errorSnackbarDuration: number = 30000;
 
 interface ServiceIdSelector {
   serviceId: string;
@@ -83,7 +86,8 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
     private _componentFactoryResolver: ComponentFactoryResolver,
     private _workflowService: WorkflowService,
     private _apiService: McsApiService,
-    private _dialog: MatDialog) { }
+    private _dialog: MatDialog,
+    private _snackBar: MatSnackBar,) { }
 
   public ngOnInit(): void {
     if (!isNullOrEmpty(this.loadWorkflowNotifier)) {
@@ -159,23 +163,21 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
     this._apiService.getCrispElement(this.context.productId)
     .pipe(
       catchError(() => {
-        // this.processing = false;
-
-        // This will load the form without preselected values
         this._context.config = {
           id: this.context.workflowGroupId,
           parent,
           children
         };
 
-        // this._snackBar.open('Unable to retrieve CRISP attributes.', 'OK', {
-        //   duration: errorSnackbarDuration,
-        //   horizontalPosition: 'center',
-        //   verticalPosition: 'bottom'
-        // });
-        this._renderWorkflowGroup(this.context.config);
+        this._snackBar.open('Unable to retrieve CRISP attributes.', 'OK', {
+          duration: errorSnackbarDuration,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom'
+        });
 
+        this._renderWorkflowGroup(this.context.config);
         this._changeDetector.markForCheck();
+
         return throwError('Retrieving CRISP element failed.');
       }))
     .subscribe((response) => {
@@ -191,11 +193,8 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
         children
       };
 
-      console.log('config', this.context.config);
-
       this._renderWorkflowGroup(this.context.config);
 
-      // this.processing = false;
       this._changeDetector.markForCheck();
     });
   }
