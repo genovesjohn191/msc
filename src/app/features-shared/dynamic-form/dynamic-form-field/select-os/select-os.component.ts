@@ -73,6 +73,7 @@ export class DynamicSelectOsComponent extends DynamicSelectFieldComponentBase<Mc
 
   protected filter(collection: McsServerOperatingSystem[]): GroupedOption[] {
     let groupedOptions: GroupedOption[] = [];
+    this._billingCodeMapping.clear();
 
     collection.forEach((item) => {
       // Filter by serviceType
