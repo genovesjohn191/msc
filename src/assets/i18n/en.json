@@ -246,7 +246,9 @@
       "techReview": {
         "label": "Tech Review",
         "securityCompliance": {
-          "title": "Security and Compliance"
+          "title": "Security and Compliance",
+          "overAllSecurityScore": "Overall security score",
+          "viewRecommendation": "View Recommendations in Azure"
         },
         "resourceHealth": {
           "title": "Resource Health"
@@ -255,7 +257,8 @@
           "title": "Performance and Scalability"
         },
         "monitoringAlerting": {
-          "title": "Monitoring and Alerting"
+          "title": "Monitoring and Alerting",
+          "totalAlerts": "Total Alerts"
         }
       }
     }

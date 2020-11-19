@@ -1,21 +1,33 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewEncapsulation
+} from '@angular/core';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { McsReportingService } from '@app/core/services/mcs-reporting.service';
 import { McsReportResourceHealth } from '@app/models';
 import { ChartConfig } from '@app/shared';
 import { unsubscribeSafely } from '@app/utilities';
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'mcs-resource-health-widget',
   templateUrl: './resource-health-widget.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./resource-health-widget.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  host: {
+    'class': 'widget-box'
+  }
 })
 export class ResourceHealthWidgetComponent implements OnInit, OnDestroy {
   public chartConfig: ChartConfig = {
     type: 'donut',
-    labels: ['Unhealthy', 'Healthy', 'Not Applicable'],
-    height: '400px'
+    labels: ['Healthy', 'Unhealthy', 'Not Applicable'],
+    height: '380px'
   };
 
   public data$: Observable<McsReportResourceHealth>;

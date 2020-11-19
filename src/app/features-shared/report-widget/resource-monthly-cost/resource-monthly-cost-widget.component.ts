@@ -1,4 +1,11 @@
-import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { McsReportingService } from '@app/core/services/mcs-reporting.service';
@@ -12,7 +19,11 @@ export interface ResourceMonthlyCostWidgetConfig {
 
 @Component({
   selector: 'mcs-resource-monthly-cost-widget',
-  templateUrl: './resource-monthly-cost-widget.component.html'
+  templateUrl: './resource-monthly-cost-widget.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    'class': 'widget-box'
+  }
 })
 export class ResourceMonthlyCostWidgetComponent implements OnInit, OnDestroy {
   public chartConfig: ChartConfig = {

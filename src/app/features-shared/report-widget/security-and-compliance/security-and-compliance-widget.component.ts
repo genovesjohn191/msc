@@ -4,23 +4,18 @@ import {
   ViewEncapsulation,
   OnInit,
   ChangeDetectorRef,
-  OnDestroy,
-  Input
+  OnDestroy
 } from '@angular/core';
 import {
-  BehaviorSubject,
-  Observable,
+  Subject,
   throwError
 } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-
-import { ChartItem } from '@app/shared';
+import { catchError, takeUntil } from 'rxjs/operators';
 import {
-  isNullOrEmpty,
   unsubscribeSafely
 } from '@app/utilities';
 import { McsReportingService } from '@app/core/services/mcs-reporting.service';
-import { ReportPeriod } from '../report-period.interface';
+import { McsReportSecurityScore } from '@app/models';
 
 @Component({
   selector: 'mcs-security-and-compliance-widget',
@@ -34,29 +29,58 @@ import { ReportPeriod } from '../report-period.interface';
 })
 
 export class SecurityAndComplianceWidgetComponent implements OnInit, OnDestroy {
-  public data$: Observable<ChartItem[]>;
-  public dataBehavior: BehaviorSubject<ChartItem[]>;
   public hasError: boolean = false;
   public processing: boolean = true;
 
+  public securityScore: McsReportSecurityScore;
+
+  private _destroySubject = new Subject<void>();
+
   public constructor(
-    private _changeDetector: ChangeDetectorRef,
-    private reportingService: McsReportingService) { }
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _reportingService: McsReportingService) { }
 
   public ngOnInit() {
-    this.dataBehavior = new BehaviorSubject<ChartItem[]>(null);
-    this.data$ = this.dataBehavior.asObservable();
+    this.getSecurityScore();
   }
 
   public ngOnDestroy(): void {
-    unsubscribeSafely(this.dataBehavior);
+    unsubscribeSafely(this._destroySubject);
   }
 
-  public getData(): void {
-    this.hasError = false;
-    this.processing = true;
-    this._changeDetector.markForCheck();
+  public get currentScore(): number {
+    return this.securityScore.currentScore < 0 ? 0 : this.securityScore.currentScore;
+  }
 
-    // TODO: Implement API call here
+  public get maxScore(): number {
+    return this.securityScore.maxScore < 0 ? 0 : this.securityScore.maxScore;
+  }
+
+  public get securityScorePercentage(): number {
+    if (this.maxScore === 0) {
+      return 0;
+    }
+
+    return Math.ceil((this.currentScore / this.maxScore) * 100);
+  }
+
+  public getSecurityScore(): void {
+    this.processing = true;
+    this.hasError = false;
+
+    this._reportingService.getSecurityScore()
+    .pipe(
+      catchError(() => {
+        this.hasError = true;
+        this.processing = false;
+        this._changeDetectorRef.markForCheck();
+        return throwError('Security Score endpoint failed.');
+      }),
+      takeUntil(this._destroySubject))
+    .subscribe((response) => {
+      this.processing = false;
+      this.securityScore = response;
+      this._changeDetectorRef.markForCheck();
+    });
   }
 }

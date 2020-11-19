@@ -9,7 +9,10 @@ import { RouteKey, OperationalSavingsSubItems, McsReportOperationalSavings } fro
   selector: 'mcs-operational-monthly-savings-widget',
   templateUrl: './operational-monthly-savings-widget.component.html',
   styleUrls: ['./operational-monthly-savings-widget.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  host: {
+    'class': 'widget-box'
+  }
 })
 export class OperationalMonthlySavingsWidgetComponent implements OnInit, OnDestroy {
 

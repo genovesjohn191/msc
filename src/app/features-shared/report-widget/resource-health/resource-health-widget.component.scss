@@ -1,0 +1,16 @@
+@import "../../../../styles/shared/base";
+
+.resource-health-wrapper {
+  .apexcharts-datalabels-group {
+    .apexcharts-datalabel-label {
+      font-size: 1.75em;
+      line-height: 1;
+    }
+
+    .apexcharts-datalabel-value {
+      font-size: 2em;
+      line-height: 1;
+      font-weight: 700;
+    }
+  }
+}

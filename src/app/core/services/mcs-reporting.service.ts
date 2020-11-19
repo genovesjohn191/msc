@@ -11,7 +11,10 @@ import {
   McsReportVMRightsizing,
   McsReportVMRightsizingSummary,
   McsReportOperationalSavings,
-  McsReportResourceHealth
+  McsReportResourceHealth,
+  McsReportSecurityScore,
+  McsReportSeverityAlerts,
+  McsReportMonitoringAndAlerting
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { ChartItem } from '@app/shared/chart';
@@ -113,6 +116,28 @@ export class McsReportingService {
     return this._apiService.getResourceHealth();
   }
 
+  public getSecurityScore(): Observable<McsReportSecurityScore> {
+    return this._apiService.getSecurityScore();
+  }
+
+  public getMonitoringAndAlerting(): Observable<McsReportMonitoringAndAlerting> {
+    return this._apiService.getMonitoringAndAlerting()
+    .pipe(map((resources) => {
+      let items: ChartItem[] = [];
+      let alerts: McsReportSeverityAlerts[] = [];
+      if (!isNullOrEmpty(resources.alerts)) {
+        alerts = resources.alerts.sort((a, b) => a.severity - b.severity);
+      }
+      items = this._convertMonitoringAndAlertingToChartItem(alerts);
+      return {
+        startedOn: resources.startedOn,
+        totalAlerts: resources.totalAlerts,
+        alerts: resources.alerts,
+        alertsChartItem: items
+      };
+    }));
+  }
+
   private _convertServiceChangeInfoToChartItem(items: McsReportServiceChangeInfo[]): ChartItem[] {
     let data: ChartItem[] = [];
     items.forEach(item => {
@@ -122,6 +147,21 @@ export class McsReportingService {
         name: 'Change',
         xValue: `${item.serviceName}|${item.serviceCostChange}`,
         yValue: item.serviceCountChange
+      });
+    });
+
+    return data;
+  }
+
+  public _convertMonitoringAndAlertingToChartItem(items: McsReportSeverityAlerts[]): ChartItem[] {
+    let data: ChartItem[] = [];
+    items.forEach(item => {
+      let invalidData = isNullOrEmpty(item.description);
+      if (invalidData) { return; }
+      data.push({
+        name: item.description,
+        xValue: `Sev ${item.severity}`,
+        yValue: item.totalAlerts
       });
     });
 
