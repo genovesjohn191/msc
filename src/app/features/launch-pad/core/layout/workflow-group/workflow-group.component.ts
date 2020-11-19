@@ -6,31 +6,36 @@ import {
   ComponentRef,
   Input,
   OnInit,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  OnDestroy
 } from '@angular/core';
 
 import {
   Guid,
-  isNullOrEmpty
+  isNullOrEmpty,
+  unsubscribeSafely
 } from '@app/utilities';
 import { LaunchPadWorkflowComponent } from './workflow.component';
 import { LaunchPadWorkflow } from '../../workflows/workflow';
 import { WorkflowService } from '../../workflows/workflow.service';
 import { WorkflowGroupDirective } from '../../workflows/workflow-group.directive';
-import { Workflow } from '../../workflows/workflow.interface';
+import { Workflow, WorkflowData } from '../../workflows/workflow.interface';
 import { WorkflowGroupConfig, WorkflowGroupSaveState } from '../../workflows/workflow-group.interface';
 import { Subject, throwError } from 'rxjs';
 import { MatSelectChange } from '@angular/material/select';
 import { McsApiService } from '@app/services';
 import { McsObjectQueryParams, ProductType } from '@app/models';
 import { workflowGroupMap } from '../../workflows/workflow-group.map';
-import { catchError } from 'rxjs/operators';
+import { catchError, takeUntil } from 'rxjs/operators';
 import { productWorkflowGroupMap } from '../../workflows/product-workflow-group.map';
+import { LaunchPadServiceIdSwitchDialogComponent } from '../service-id-switch-dialog/service-id-switch-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 interface ServiceIdSelector {
   serviceId: string;
   description: string;
   productType: string;
+  productId: string;
 }
 
 @Component({
@@ -39,21 +44,17 @@ interface ServiceIdSelector {
   styleUrls: ['./workflow-group.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LaunchPadWorkflowGroupComponent implements OnInit {
+export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
   @ViewChild(WorkflowGroupDirective, {static: true})
   public workflowGroup: WorkflowGroupDirective;
 
-  // TODO: Update list
   @Input()
   public set context(value: WorkflowGroupSaveState) {
     if (isNullOrEmpty(value)) { return; }
     this._context = value;
 
     this.getServiceIds();
-
-    if (!isNullOrEmpty(value.config)) {
-      this._renderWorkflowGroup(value.config);
-    }
+    this._loadWorkflow();
   }
 
   public get context(): WorkflowGroupSaveState {
@@ -71,23 +72,27 @@ export class LaunchPadWorkflowGroupComponent implements OnInit {
 
   public title: string;
 
-  public serviceId: string;
-
   public ongoingServiceIdRetrieval: boolean = false;
   public hasServiceIdRetrievalError: boolean = false;
 
   private _context: WorkflowGroupSaveState;
+  private _dialogSubject = new Subject<void>();
 
   constructor(
     private _changeDetector: ChangeDetectorRef,
     private _componentFactoryResolver: ComponentFactoryResolver,
     private _workflowService: WorkflowService,
-    private _apiService: McsApiService) { }
+    private _apiService: McsApiService,
+    private _dialog: MatDialog) { }
 
   public ngOnInit(): void {
     if (!isNullOrEmpty(this.loadWorkflowNotifier)) {
       this.loadWorkflowNotifier.subscribe((workflows) => this._loadWorkflowGroup(workflows));
     }
+  }
+
+  public ngOnDestroy(): void {
+    unsubscribeSafely(this._dialogSubject);
   }
 
   public getServiceIds(): void {
@@ -128,12 +133,70 @@ export class LaunchPadWorkflowGroupComponent implements OnInit {
         this.servicesOption.push({
           serviceId: service.serviceId,
           description: service.description,
-          productType: service.productType.toString()
+          productType: service.productType.toString(),
+          productId: service.productId,
         });
+        this.context.companyName = service.companyName;
 
         this.ongoingServiceIdRetrieval = false;
         this._changeDetector.markForCheck();
       });
+    });
+  }
+
+  private _loadWorkflow(): void {
+    let workflowGroupType = workflowGroupMap.get(this.context.workflowGroupId);
+    let workflowGroup = new workflowGroupType();
+
+    let parent: WorkflowData = {
+      id: workflowGroup.parent.id,
+      serviceId: this.context.serviceId,
+      propertyOverrides: [],
+    };
+    let children: WorkflowData[] = [];
+
+    // TODO: This approach is for crisp-elements only
+    this._apiService.getCrispElement(this.context.productId)
+    .pipe(
+      catchError(() => {
+        // this.processing = false;
+
+        // This will load the form without preselected values
+        this._context.config = {
+          id: this.context.workflowGroupId,
+          parent,
+          children
+        };
+
+        // this._snackBar.open('Unable to retrieve CRISP attributes.', 'OK', {
+        //   duration: errorSnackbarDuration,
+        //   horizontalPosition: 'center',
+        //   verticalPosition: 'bottom'
+        // });
+        this._renderWorkflowGroup(this.context.config);
+
+        this._changeDetector.markForCheck();
+        return throwError('Retrieving CRISP element failed.');
+      }))
+    .subscribe((response) => {
+      // Sets the preselected values of the form
+      parent.propertyOverrides = workflowGroup.parent.form.crispElementConverter(response.serviceAttributes);
+
+      // TODO: Load the child overrides
+
+      // Load the form
+      this._context.config = {
+        id: this.context.workflowGroupId,
+        parent,
+        children
+      };
+
+      console.log('config', this.context.config);
+
+      this._renderWorkflowGroup(this.context.config);
+
+      // this.processing = false;
+      this._changeDetector.markForCheck();
     });
   }
 
@@ -161,7 +224,7 @@ export class LaunchPadWorkflowGroupComponent implements OnInit {
       let isParentWorkflow = !isNullOrEmpty(workflows[workflowIndex].serviceId);
       if (isParentWorkflow) {
         parentReferenceId = workflows[workflowIndex].referenceId;
-        this.serviceId = workflows[workflowIndex].serviceId;
+        this.context.serviceId = workflows[workflowIndex].serviceId;
       }
 
       // Load values to form
@@ -174,7 +237,7 @@ export class LaunchPadWorkflowGroupComponent implements OnInit {
    */
   public get valid(): boolean {
     let validForm = true;
-    let validServiceId: boolean = !isNullOrEmpty(this.serviceId);
+    let validServiceId: boolean = !isNullOrEmpty(this.context.serviceId);
 
     this.workflowComponentRef.forEach(ref => {
       if (ref.instance.included && !ref.instance.valid) {
@@ -217,21 +280,41 @@ export class LaunchPadWorkflowGroupComponent implements OnInit {
   }
 
   public serviceIdChanged(event: MatSelectChange): void {
-    this.serviceId = event.value;
-    this._updateServiceId(this.serviceId);
+    const loadSaveStateDialogRef = this._dialog.open(LaunchPadServiceIdSwitchDialogComponent, { data: event.value });
+
+    loadSaveStateDialogRef.afterClosed()
+    .pipe(takeUntil(this._dialogSubject))
+    .subscribe(result => {
+      if (result === true) {
+
+        this.context.serviceId = event.value;
+        let service = this.servicesOption.find((item) => item.serviceId === this.context.serviceId);
+        this.context.serviceId = this.context.serviceId;
+        this.context.productId = service.productId;
+
+        this._loadWorkflow();
+        this._updateServiceId(this.context.serviceId);
+        this._changeDetector.markForCheck();
+      } else {
+
+        this.context.serviceId = event.value;
+        this._updateServiceId(this.context.serviceId);
+        this._changeDetector.markForCheck();
+      }
+    });
   }
 
   private _updateServiceId(serviceId: string): void {
     this.workflowComponentRef.forEach(ref => {
       if (!isNullOrEmpty(ref.instance.serviceId)) {
-        ref.instance.serviceId = serviceId ;
+        ref.instance.serviceId = serviceId;
       }
     });
   }
 
   private _renderWorkflowGroup(config: WorkflowGroupConfig): void {
     let workflows: LaunchPadWorkflow[] = this._workflowService.getWorkflowGroup(config);
-    this.serviceId = config.parent.serviceId;
+    this.context.serviceId = config.parent.serviceId;
 
     // Clear references and instances of existing workflow
     this.workflowComponentRef = [];

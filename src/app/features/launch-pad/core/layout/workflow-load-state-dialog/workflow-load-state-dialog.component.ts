@@ -1,17 +1,13 @@
 import {
   Component,
-  Inject,
-  Input
+  Inject
 } from '@angular/core';
 import {
   MatDialogRef,
   MAT_DIALOG_DATA
 } from '@angular/material/dialog';
 
-import {
-  WorkflowGroupSaveState,
-  WorkflowGroupConfig
-} from '../../workflows/workflow-group.interface';
+import { WorkflowGroupSaveState } from '../../workflows/workflow-group.interface';
 import { Workflow } from '../../workflows/workflow.interface';
 
 @Component({
@@ -19,12 +15,7 @@ import { Workflow } from '../../workflows/workflow.interface';
   templateUrl: './workflow-load-state-dialog.component.html',
 })
 export class LaunchPadLoadStateDialogComponent {
-  @Input()
-  public companyId: string = '556';
-
   public workflows: Workflow[];
-
-  public config: WorkflowGroupConfig;
 
   public constructor(
     public dialogRef: MatDialogRef<LaunchPadLoadStateDialogComponent>,

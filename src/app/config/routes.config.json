@@ -8,6 +8,7 @@
     "enumKey": "LaunchPad",
     "navigationPath": "launch-pad",
     "documentTitle": "LAUNCH Pad",
+    "requiredPermissions": ["RawDataView"],
     "requiredFeatureFlag": "EnableLaunchPad"
   },
   "launchPadSearch": {
@@ -15,6 +16,7 @@
     "enumCategory": "LaunchPad",
     "navigationPath": "launch-pad/search",
     "documentTitle": "LAUNCH Pad - Search",
+    "requiredPermissions": ["RawDataView"],
     "requiredFeatureFlag": "EnableLaunchPad"
   },
   "launchPadWorkflows": {
@@ -22,6 +24,7 @@
     "enumCategory": "LaunchPad",
     "navigationPath": "launch-pad/workflows",
     "documentTitle": "LAUNCH Pad - Workflows",
+    "requiredPermissions": ["RawDataView"],
     "requiredFeatureFlag": "EnableLaunchPad"
   },
   "launchPadWorkflowLaunch": {
@@ -29,13 +32,7 @@
     "enumCategory": "LaunchPad",
     "navigationPath": "launch-pad/workflows/launch",
     "documentTitle": "LAUNCH Pad - Launch",
-    "requiredFeatureFlag": "EnableLaunchPad"
-  },
-  "launchPadCrispOrders": {
-    "enumKey": "LaunchPadCrispOrders",
-    "enumCategory": "LaunchPad",
-    "navigationPath": "launch-pad/crisp-orders",
-    "documentTitle": "LAUNCH Pad - Crisp Orders",
+    "requiredPermissions": ["RawDataView"],
     "requiredFeatureFlag": "EnableLaunchPad"
   },
   "reportOverview": {

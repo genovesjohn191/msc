@@ -1,4 +1,4 @@
-<mcs-page [header]="'launchPadCrispOrders.header' | translate" leftPanelExpandedByDefault="true">
+<mcs-page header="Run Workflow" leftPanelExpandedByDefault="true">
   <!-- Content Panel -->
   <mcs-content-panel *mcsContentPanelDef>
     <mcs-launch-pad #launchPad [context]="context" *ngIf="!processing"></mcs-launch-pad>
@@ -12,11 +12,6 @@
       <div class="placeholder-content_item"></div>
       <div class="placeholder-content_item"></div>
     </div>
-
-    <!-- <div *ngIf="!processing">
-      <h1>LAUNCH Pad </h1>
-      <p>An err</p>
-    </div> -->
 
   </mcs-content-panel>
 </mcs-page>
