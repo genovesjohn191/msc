@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   Input,
@@ -14,7 +15,8 @@ import { Workflow } from '../../workflows/workflow.interface';
 @Component({
   selector: 'mcs-launch-pad-workflow-provision-state',
   templateUrl: 'workflow-provision-state.component.html',
-  styleUrls: [ './workflow-provision-state.component.scss' ]
+  styleUrls: [ './workflow-provision-state.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LaunchPadWorkflowProvisionStateComponent implements OnDestroy {
   @Input()
@@ -29,6 +31,10 @@ export class LaunchPadWorkflowProvisionStateComponent implements OnDestroy {
     this._changeDetector.markForCheck();
   }
 
+  public get state(): McsJob[] {
+    return this._jobs;
+  }
+
   private _currentUserJobHandler: Subscription;
   private _jobs: McsJob[];
 
@@ -41,7 +47,9 @@ export class LaunchPadWorkflowProvisionStateComponent implements OnDestroy {
   public getTaskInfo(workflow: Workflow): McsTask | undefined {
     if (isNullOrEmpty(this.state)) { return undefined; }
 
-    let job = this._jobs.find((j) => j.referenceId === workflow.parentReferenceId ?? workflow.referenceId);
+    let reference: string = isNullOrEmpty(workflow.parentReferenceId) ? workflow.referenceId : workflow.parentReferenceId;
+
+    let job = this._jobs.find((j) => j.referenceId === reference);
     let task = job.tasks.find((t) => t.referenceId === workflow.referenceId);
 
     return task;

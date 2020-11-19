@@ -82,8 +82,7 @@ export class DynamicSelectOsComponent extends DynamicSelectFieldComponentBase<Mc
         : item.type === 'WIN' ? 'Microsoft'
         : 'Custom Template';
       let existingGroup = groupedOptions.find((opt) => opt.name === groupName);
-      let option = {key: item.name, value: item.name} as FlatOption;
-
+      let option = {key: item.billingCode ?? item.id, value: item.name} as FlatOption;
 
       if (existingGroup) {
         // Add option to existing group

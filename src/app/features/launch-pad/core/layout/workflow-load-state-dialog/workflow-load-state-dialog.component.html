@@ -1,6 +1,7 @@
-<h2 mat-dialog-title>You have an unfinished workflow</h2>
+<h3 mat-dialog-title>You have an unfinished workflow</h3>
+
 <mat-dialog-content class="mat-typography">
-  <table style="width: 550px;">
+  <table class="mcs-compact-table" style="width: 550px;">
     <tbody>
       <tr *ngFor="let workflow of workflows">
         <td>
@@ -13,12 +14,11 @@
       </tr>
     </tbody>
   </table>
-  <br />
-  <p>How do you want to proceed?</p>
-  <small>Note: Closing this dialog will allow overwriting when you save a new workflow.</small>
+  <small>Starting new will override this unfinished workflow.</small>
 </mat-dialog-content>
+
 <mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>Close</button>
-  <button mat-raised-button mat-dialog-close color="warn" [mat-dialog-close]="false">Discard</button>
+  <button mat-raised-button color="warn" [mat-dialog-close]="false" style="margin-right: auto;">Discard</button>
+  <button mat-button mat-dialog-close>Start New</button>
   <button mat-raised-button color="primary" [mat-dialog-close]="true" cdkFocusInitial>Continue Working</button>
 </mat-dialog-actions>

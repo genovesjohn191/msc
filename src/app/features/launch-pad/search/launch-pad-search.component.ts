@@ -1,17 +1,16 @@
-import { ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { OnDestroy } from '@angular/core';
 import {
   Component,
   ChangeDetectionStrategy,
   OnInit,
-  ViewChild
 } from '@angular/core';
-import { MatTabChangeEvent } from '@angular/material/tabs';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { McsFilterService } from '@app/core';
 import { McsFilterInfo } from '@app/models';
 import { CommonDefinition, isNullOrEmpty, unsubscribeSafely } from '@app/utilities';
 import { Subject } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
+import { LaunchPadContextSource } from '../core';
 
 @Component({
   selector: 'mcs-launch-pad-search',
@@ -53,15 +52,15 @@ export class LaunchPadSearchComponent implements OnInit, OnDestroy {
     ).subscribe();
   }
 
-  public onColumnFilterChange(table: string, updatedFilters: McsFilterInfo[]): void {
+  public onColumnFilterChange(table: LaunchPadContextSource, updatedFilters: McsFilterInfo[]): void {
     if (isNullOrEmpty(updatedFilters)) { return; }
 
     switch(table) {
-      case 'elements': {
+      case 'crisp-elements': {
         this.elementsTableFilters = updatedFilters.filter(() => true);
         break;
       }
-      case 'services': {
+      case 'installed-services': {
         this.servicesTableFilters = updatedFilters.filter(() => true);
         break;
       }

@@ -2,6 +2,8 @@ import { McsObjectCrispElementServiceAttribute } from '@app/models';
 
 export enum CrispAttriuteNames {
   Resource = 'IC2_ACCESS',
+  WindowsOperatingSystem = 'IC2_WINLIC',
+  LinuxOperatingSystem = 'IC2_LINLIC',
   CpuCount = 'IC2_VCPU',
   Memory = 'IC2_VRAM',
   Storage = 'IC2_STORAGE',

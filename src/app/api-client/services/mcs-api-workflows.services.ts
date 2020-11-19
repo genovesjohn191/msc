@@ -18,9 +18,9 @@ export class McsApiWorkflowsService implements IMcsApiWorkflowsService {
 
   constructor(private _mcsApiService: McsApiClientHttpService) { }
 
-  public provisionWorkflows(workflows: McsWorkflowCreate[]): Observable<McsApiSuccessResponse<McsJob[]>> {
+  public provisionWorkflow(workflows: McsWorkflowCreate[]): Observable<McsApiSuccessResponse<McsJob[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = '/workflows';
+    mcsApiRequestParameter.endPoint = '/workflow';
     mcsApiRequestParameter.recordData = serializeObjectToJson(workflows);
 
     return this._mcsApiService.post(mcsApiRequestParameter)

@@ -5,10 +5,10 @@
     <mcs-left-panel-item *mcsLeftPanelItemDef offset="0">
       <div [ngSwitch]="selectedTabIndex">
         <mcs-column-filter *ngSwitchCase="0"
-          [filters]="elementsTableFilters" (dataChange)="onColumnFilterChange('elements', $event)"></mcs-column-filter>
+          [filters]="elementsTableFilters" (dataChange)="onColumnFilterChange('crisp-elements', $event)"></mcs-column-filter>
 
         <mcs-column-filter *ngSwitchCase="1"
-          [filters]="servicesTableFilters" (dataChange)="onColumnFilterChange('services', $event)"></mcs-column-filter>
+          [filters]="servicesTableFilters" (dataChange)="onColumnFilterChange('installed-services', $event)"></mcs-column-filter>
 
       </div>
     </mcs-left-panel-item>

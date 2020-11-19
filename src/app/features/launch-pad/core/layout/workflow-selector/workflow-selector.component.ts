@@ -14,6 +14,7 @@ import {
   RouteKey,
 } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
+import { LaunchPadContextSource } from '../../workflows/workflow-group.interface';
 import { workflowGroupMap } from '../../workflows/workflow-group.map';
 import { WorkflowGroupId } from '../../workflows/workflow-groups/workflow-group-type.enum';
 import { WorkflowService } from '../../workflows/workflow.service';
@@ -21,8 +22,6 @@ import {
   LaunchPadWorkflowSelectorService,
   WorkflowSelectorItem
 } from './workflow-selector.service';
-
-export type LaunchPadContextSource = 'crisp-elements' | 'installed-services';
 
 export interface WorkflowSelectorConfig {
   label: string;

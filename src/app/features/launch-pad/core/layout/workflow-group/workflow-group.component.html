@@ -1,17 +1,29 @@
-<div style="width: 500px;">
-  <mat-form-field appearance="outline">
-    <mat-label>Service ID</mat-label>
+<div style="width: 500px; padding-top: 10px;">
+  <mat-form-field
+    appearance="outline"
+    [matBadge]="hasServiceIdRetrievalError ? '!' : ''"
+    matBadgePosition="before"
+    matBadgeColor="warn"
+    matBadgeSize="small"
+    [matTooltip]="hasServiceIdRetrievalError ? 'Unable to retrieve service IDs' : ''"
+    matTooltipPosition="above">
+    <mat-label>{{ ongoingServiceIdRetrieval ? 'Loading...' : 'Service ID' }}</mat-label>
+
     <mat-select required [value]="serviceId" (selectionChange)="serviceIdChanged($event)">
-      <mat-option>Service ID</mat-option>
-      <mat-option value="MXCVM1111111"><small>CRISP</small> | MXCVM1111111</mat-option>
-      <mat-option value="MXCVM2222222"><small>CRISP</small> | MXCVM2222222</mat-option>
-      <mat-option value="MXCVM3333333"><small>CRISP</small> | MXCVM3333333</mat-option>
-      <mat-option value="MXCVM4444444"><small>CRISP</small> | MXCVM4444444</mat-option>
-      <mat-option value="MXCVM5555555"><small>CMDB</small> | MXCVM5555555</mat-option>
-      <mat-option value="MXCVM6666666"><small>CMDB</small> | MXCVM6666666</mat-option>
-      <mat-option value="MXCVM7777777"><small>CMDB</small> | MXCVM7777777</mat-option>
-      <mat-option value="MXCVM8888888"><small>CMDB</small> | MXCVM8888888</mat-option>
+      <mat-option *ngFor="let services of servicesOption" [value]="services.serviceId">
+        {{ services.serviceId }}
+      </mat-option>
     </mat-select>
+
+    <mat-spinner *ngIf="ongoingServiceIdRetrieval" class="spinner" diameter="20" matSuffix></mat-spinner>
+
+    <button mat-icon-button matSuffix
+      (click)="getServiceIds()"
+      *ngIf="hasServiceIdRetrievalError"
+      matTooltip="Retry"
+      matTooltipPosition="above">
+      <mat-icon color="primary">refresh</mat-icon>
+    </button>
   </mat-form-field>
 
   <mat-accordion multi>

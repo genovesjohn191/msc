@@ -1,2 +1,2 @@
-export * from './new-virtual-machine.form';
+export * from './create-virtual-machine.form';
 export * from './form.interface';

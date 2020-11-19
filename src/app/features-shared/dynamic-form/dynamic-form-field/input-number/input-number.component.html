@@ -14,6 +14,6 @@
     [max]="data.validators?.max"
     [(ngModel)]="data.value"
     (input)="valueChange($event)"/>
-  <span matPrefix class="prefix"  *ngIf="data.suffix">{{data.prefix}}</span>
+  <span matPrefix class="prefix" *ngIf="data.suffix">{{data.prefix}}</span>
   <span matSuffix class="suffix" *ngIf="data.suffix">{{data.suffix}}</span>
 </mat-form-field>

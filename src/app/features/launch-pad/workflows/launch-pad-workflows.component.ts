@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { CoreRoutes, McsNavigationService, McsStorageService } from '@app/core';
 import { RouteKey } from '@app/models';
 import { WorkflowGroupSaveState } from '../core';
-import { workflowGroupIdText } from '../core/workflows/workflow-groups/workflow-group-type.enum';
+import { WorkflowGroupId, workflowGroupIdText } from '../core/workflows/workflow-groups/workflow-group-type.enum';
 
 @Component({
   selector: 'mcs-launch-pad-workflows.component',
@@ -27,7 +27,7 @@ export class LaunchPadWorkflowsComponent  {
   public onClick(state: WorkflowGroupSaveState): void {
     this._navigationService.navigateTo(
       RouteKey.LaunchPadWorkflowLaunch,
-      [state.source, state.companyId, state.workflowGroupId, state.serviceId, state.productId]);
+      [state.source, state.companyId, state.workflowGroupId.toString(), state.serviceId, state.productId]);
   }
 
   public getWorkflowGroupId(workflowTypeId: number): string {

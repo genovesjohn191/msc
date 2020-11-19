@@ -23,4 +23,7 @@ export class McsServerOperatingSystem extends McsEntityBase {
 
   @JsonProperty()
   public vendor: string = undefined;
+
+  @JsonProperty()
+  public billingCode: string = undefined;
 }

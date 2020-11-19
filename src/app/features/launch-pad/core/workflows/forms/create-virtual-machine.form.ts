@@ -13,7 +13,7 @@ import { McsObjectCrispElementServiceAttribute } from '@app/models';
 import { LaunchPadForm } from './form.interface';
 import { CrispAttriuteNames, findCrispElementAttribute } from './mapping-helper';
 
-export const newVirtualMachineForm: LaunchPadForm = {
+export const createVirtualMachineForm: LaunchPadForm = {
   config: [
     new DynamicInputHiddenField({
       key: 'platform',
@@ -32,7 +32,7 @@ export const newVirtualMachineForm: LaunchPadForm = {
       label: 'Name',
       placeholder: 'Enter a host name',
       validators: { required: true, minlength: 1, maxlength: 100 },
-      hint: 'e.g. mt-webserver01, mt-db02'
+      hint: `e.g. mt-webserver01, mt-db01. '-{service ID}' will be appended to this name in vCloud automatically`
     }),
     new DynamicSelectOsField({
       key: 'os',
@@ -99,9 +99,17 @@ export const newVirtualMachineForm: LaunchPadForm = {
     let mappedProperties: { key: string, value: any }[] = [];
 
     mappedProperties.push({ key: 'resource', value: findCrispElementAttribute(CrispAttriuteNames.Resource , attributes)?.displayValue } );
+
+    // Operating System
+    let windowsOs = findCrispElementAttribute(CrispAttriuteNames.WindowsOperatingSystem , attributes)?.value;
+    let linuxOs = findCrispElementAttribute(CrispAttriuteNames.LinuxOperatingSystem , attributes)?.value;
+    let selectedOs = ((linuxOs as string).toLowerCase() === 'Not') ? linuxOs : windowsOs;
+    mappedProperties.push({ key: 'os', value: selectedOs });
     mappedProperties.push({ key: 'cpuCount', value:findCrispElementAttribute(CrispAttriuteNames.CpuCount , attributes)?.value } );
     mappedProperties.push({ key: 'memoryInGB', value: findCrispElementAttribute(CrispAttriuteNames.Memory , attributes)?.value } );
     mappedProperties.push({ key: 'storageSizeInGB', value: findCrispElementAttribute(CrispAttriuteNames.Storage , attributes)?.value } );
+
+    // IP Address
     let ipAddress = findCrispElementAttribute(CrispAttriuteNames.IPAddress , attributes)?.value;
     mappedProperties.push({ key: 'ipAddress', value: ipAddress } );
     mappedProperties.push({ key: 'ipAllocationMode', value: ipAddress ? 'Manual' : 'Dhcp' } );

@@ -18,11 +18,13 @@ export interface WorkflowGroup {
 
 export interface WorkflowGroupSaveState {
   source: string;
+  companyId: string;
+  workflowGroupId: WorkflowGroupId;
   serviceId: string;
   productId: string;
-  companyId: string;
-  workflowGroupId: string;
-  description: string;
-  config: WorkflowGroupConfig;
-  workflows: Workflow[];
+  description?: string;
+  config?: WorkflowGroupConfig;
+  workflows?: Workflow[];
 }
+
+export type LaunchPadContextSource = 'crisp-elements' | 'installed-services';

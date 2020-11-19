@@ -10,5 +10,5 @@ export interface IMcsApiWorkflowsService {
    * This will provision workflows
    * @param workflows Workflows to be provisioned
    */
-  provisionWorkflows(workflows: McsWorkflowCreate[]): Observable<McsApiSuccessResponse<McsJob[]>>;
+  provisionWorkflow(workflows: McsWorkflowCreate[]): Observable<McsApiSuccessResponse<McsJob[]>>;
 }
