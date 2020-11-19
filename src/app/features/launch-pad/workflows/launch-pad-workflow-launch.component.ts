@@ -11,9 +11,7 @@ import {
   ParamMap
 } from '@angular/router';
 import { Subject } from 'rxjs';
-import { throwError } from 'rxjs/internal/observable/throwError';
 import {
-  catchError,
   takeUntil,
   tap
 } from 'rxjs/operators';
@@ -28,7 +26,6 @@ import { isNullOrEmpty } from '@app/utilities';
 import {
   LaunchPadComponent,
   LaunchPadContextSource,
-  WorkflowGroupConfig,
   WorkflowGroupSaveState
 } from '../core';
 import { workflowGroupMap } from '../core/workflows/workflow-group.map';
@@ -116,44 +113,14 @@ export class LaunchPadWorkflowLaunchComponent implements OnInit {
     };
     let children: WorkflowData[] = [];
 
-    // TODO: This approach is for crisp-elements only
-    this._apiService.getCrispElement(this.context.productId)
-    .pipe(
-      catchError(() => {
-        this.processing = false;
+    this.context.config = {
+      id: context.workflowGroupId,
+      parent,
+      children
+    };
 
-        // This will load the form without preselected values
-        this.context.config = {
-          id: context.workflowGroupId,
-          parent,
-          children
-        };
-
-        this._snackBar.open('Unable to retrieve CRISP attributes.', 'OK', {
-          duration: errorSnackbarDuration,
-          horizontalPosition: 'center',
-          verticalPosition: 'bottom'
-        });
-        this._changeDetector.markForCheck();
-        return throwError('Retrieving CRISP element failed.');
-      }),
-      takeUntil(this._destroySubject))
-    .subscribe((response) => {
-      // Sets the preselected values of the form
-      parent.propertyOverrides = workflowGroup.parent.form.crispElementConverter(response.serviceAttributes);
-
-      // TODO: Load the child overrides
-
-      // Load the form
-      this.context.config = {
-        id: context.workflowGroupId,
-        parent,
-        children
-      };
-
-      this.processing = false;
-      this._changeDetector.markForCheck();
-    });
+    this.processing = false;
+    this._changeDetector.markForCheck();
   }
 }
 

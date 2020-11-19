@@ -19,7 +19,7 @@ import {
   McsRouteInfo
 } from '@app/models';
 import { Subscription } from 'rxjs';
-import { McsNavigationService } from '@app/core';
+import { McsAuthenticationIdentity, McsNavigationService } from '@app/core';
 
 @Component({
   selector: 'mcs-header',
@@ -40,8 +40,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
   public constructor(
     private _eventDispatcher: EventBusDispatcherService,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _navigationService: McsNavigationService
+    private _navigationService: McsNavigationService,
+    private _authenticationIdentity: McsAuthenticationIdentity,
   ) {}
+
+  public get isImpersonating(): boolean {
+    return this._authenticationIdentity.isImpersonating;
+  }
 
   public get lightLogoIconKey(): string {
     return CommonDefinition.ASSETS_IMAGE_MCS_LIGHT_LOGO_SVG;

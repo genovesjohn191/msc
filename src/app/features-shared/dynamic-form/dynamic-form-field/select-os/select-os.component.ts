@@ -22,6 +22,7 @@ import {
 } from '../../dynamic-form-field-data.interface';
 import { DynamicSelectOsField } from './select-os';
 import { DynamicSelectFieldComponentBase } from '../dynamic-select-field-component.base';
+import { isNullOrEmpty } from '@app/utilities';
 
 @Component({
   selector: 'mcs-dff-select-os-field',
@@ -43,6 +44,8 @@ export class DynamicSelectOsComponent extends DynamicSelectFieldComponentBase<Mc
 
   // Filter variables
   private _resource: McsResource;
+
+  private _billingCodeMapping: Map<string, string> = new Map<string, string>();
 
   public constructor(
     private _apiService: McsApiService,
@@ -81,8 +84,15 @@ export class DynamicSelectOsComponent extends DynamicSelectFieldComponentBase<Mc
         item.type === 'LIN' ? 'CentOs'
         : item.type === 'WIN' ? 'Microsoft'
         : 'Custom Template';
+
+      // Build a billing code map so we can map billing codes to correct key when initializing the value
+      let uniqueNonEmptyBillingCode = !isNullOrEmpty(item.billingCode) && !this._billingCodeMapping.has(item.billingCode);
+      if (uniqueNonEmptyBillingCode) {
+        this._billingCodeMapping.set(item.billingCode, item.id);
+      }
+
       let existingGroup = groupedOptions.find((opt) => opt.name === groupName);
-      let option = {key: item.billingCode ?? item.id, value: item.name} as FlatOption;
+      let option = { key: item.id, value: item.name} as FlatOption;
 
       if (existingGroup) {
         // Add option to existing group
@@ -97,6 +107,25 @@ export class DynamicSelectOsComponent extends DynamicSelectFieldComponentBase<Mc
       }
     });
 
+    let initialValueIsValidBillingCode = this._billingCodeMapping.has(this.data.initialValue);
+    if (initialValueIsValidBillingCode) {
+      // Force the control to reselect the initial value
+      this.writeValue(this.data.initialValue);
+      // Force the form to check the validty of the control
+      this.valueChange(this.data.initialValue);
+    }
+
     return groupedOptions;
+  }
+
+  // Override function to allow OS field to map with billing code
+  public writeValue(obj: any): void {
+    if (this._billingCodeMapping.has(obj)) {
+      obj = this._billingCodeMapping.get(obj);
+    }
+
+    if (!isNullOrEmpty(obj)) {
+      this.data.value = obj;
+    }
   }
 }

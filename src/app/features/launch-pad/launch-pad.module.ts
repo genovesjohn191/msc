@@ -10,6 +10,7 @@ import { LaunchPadWorkflowLaunchComponent } from './workflows/launch-pad-workflo
 import { LaunchPadWorkflowsComponent } from './workflows/launch-pad-workflows.component';
 import { LaunchPadSearchElementsResultComponent } from './search/results-table/elements-result.component';
 import { LaunchPadSearchServicesResultComponent } from './search/results-table/services-result.component';
+import { LaunchPadGuard } from './launch-pad.guard';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { LaunchPadSearchServicesResultComponent } from './search/results-table/s
     RouterModule.forChild(launchPadRoutes)
   ],
   providers: [
-    McsStorageService
+    McsStorageService,
+    LaunchPadGuard
   ]
 })
 

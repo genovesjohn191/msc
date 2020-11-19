@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
-import { McsNavigateAwayGuard } from '@app/core';
 import { RouteKey } from '@app/models';
+import { LaunchPadGuard } from './launch-pad.guard';
 import { LaunchPadSearchComponent } from './search/launch-pad-search.component';
 import {
   companyIdParam,
@@ -20,15 +20,18 @@ export const launchPadRoutes: Routes = [
     path: 'search/:keyword',
     component: LaunchPadSearchComponent,
     data: { routeId: RouteKey.LaunchPadSearch },
+    canActivate: [ LaunchPadGuard ]
   },
   {
     path: 'workflows',
     component: LaunchPadWorkflowsComponent,
     data: { routeId: RouteKey.LaunchPadWorkflowLaunch },
+    canActivate: [ LaunchPadGuard ]
   },
   {
     path: `workflows/launch/:${sourceParam}/:${companyIdParam}/:${worklowGroupIdParam}/:${serviceIdParam}/:${productIdParam}`,
     component: LaunchPadWorkflowLaunchComponent,
     data: { routeId: RouteKey.LaunchPadWorkflowLaunch },
+    canActivate: [ LaunchPadGuard ]
   },
 ];

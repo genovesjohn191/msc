@@ -58,6 +58,10 @@ export class NavigationComponent implements OnInit, OnDestroy {
   private _showAzureSubMenu: boolean;
   private _showOrdersMenu: boolean;
 
+  public get isImpersonating(): boolean {
+    return this._authenticationIdentity.isImpersonating;
+  }
+
   public get showLaunchPadMenu(): boolean {
     return this._showLaunchPadMenu;
   }
@@ -126,7 +130,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
     private _routeSettingsService: McsRouteSettingsService,
     private _authenticationIdentity: McsAuthenticationIdentity,
     private _authenticationService: McsAuthenticationService,
-    private _coreConfig: CoreConfig
+    private _coreConfig: CoreConfig,
   ) { }
 
   public ngOnInit() {
