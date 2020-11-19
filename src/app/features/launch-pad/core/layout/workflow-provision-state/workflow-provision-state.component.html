@@ -9,23 +9,24 @@
       <mat-panel-title>
         <h3>{{ workflow.title }}</h3>
       </mat-panel-title>
-      <mat-panel-description>
+      <mat-panel-description style="flex-grow: 0;">
         {{ workflow.serviceId }}
       </mat-panel-description>
     </mat-expansion-panel-header>
 
     <div>
-      <strong>Failed to complete.</strong>
+      <span>{{ getTaskInfo(workflow)?.description }}</span>
+      <small style="position: absolute; right: 21px;">{{ getTaskInfo(workflow)?.summaryInformation }}</small>
       <br />
       <br />
-      <mat-progress-bar mode="indeterminate" value="40"></mat-progress-bar>
+      <mat-progress-bar [mode]="getTaskInfo(workflow)?.status < 2 ? 'indeterminate' : 'determinate'" [color]="getTaskInfo(workflow)?.status < 3 ? 'primary' : 'warn'"></mat-progress-bar>
       <br />
-      <p>
+      <!-- <p>
         13-10-2020 07:30:20 Something is done
       </p>
       <p>
         13-10-2020 07:30:20 Something is done
-      </p>
+      </p> -->
     </div>
   </mat-expansion-panel>
 </mat-accordion>

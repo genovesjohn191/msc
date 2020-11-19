@@ -1,0 +1,76 @@
+$loader-height: 800px;
+
+.placeholder-content {
+  width: 550px;
+  height: $loader-height;
+  margin-bottom: 30px;
+
+  $left-offset: 30px;
+  $spacer: 12px;
+  $text-height: 20px;
+
+  &_item {
+    width: 100%;
+    height: 20px;
+    position: absolute;
+    background: #fff;
+    z-index: 2;
+
+    &:after,
+    &:before {
+      width: inherit;
+      height: inherit;
+      content: '';
+      position: absolute;
+    }
+
+    &:nth-child(1) {
+      top: 0;
+      left: 0;
+      width: $left-offset;
+      height: $loader-height;
+    }
+
+    &:nth-child(2) {
+      top: 40px;
+      left: calc(#{$left-offset} + 1px);
+      width: calc(100% - #{$left-offset});
+      height: $spacer;
+    }
+
+    &:nth-child(3) {
+      top: 0;
+      right: 0;
+      width: 60%;
+      height: $spacer + 40px;
+    }
+
+    &:nth-child(4) {
+      bottom: 40px;
+      left: calc(#{$left-offset} + 1px);
+      width: calc(100% - #{$left-offset});
+      height: $spacer;
+    }
+
+    &:nth-child(5) {
+      bottom: 0;
+      left: 170px;
+      width: $spacer;
+      height: 50px;
+    }
+
+    &:nth-child(6) {
+      bottom: 0;
+      left: calc(300px + #{$spacer});
+      width: 300px;
+      height: 50px;
+    }
+
+    &:nth-child(7) {
+      top: 0;
+      left: 31px;
+      width: 20px;
+      height: $loader-height;
+    }
+  }
+}

@@ -134,6 +134,7 @@ import {
   McsObjectCrispElement,
   McsObjectInstalledService,
   McsNetworkDnsZonesSummary,
+  McsObjectQueryParams,
   McsReportResourceHealth
 } from '@app/models';
 import {
@@ -1645,7 +1646,7 @@ export class McsApiService {
   }
 
   public provisionWorkflows(workflows: McsWorkflowCreate[]): Observable<McsApiCollection<McsJob>> {
-    return this._workflowsApi.provisionWorkflows(workflows).pipe(
+    return this._workflowsApi.provisionWorkflow(workflows).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.provisionWorkflows'))
       ),
@@ -1653,7 +1654,7 @@ export class McsApiService {
     );
   }
 
-  public getCrispElements(query?: McsQueryParam): Observable<McsApiCollection<McsObjectCrispElement>> {
+  public getCrispElements(query?: McsObjectQueryParams): Observable<McsApiCollection<McsObjectCrispElement>> {
     return this._objectsApi.getCrispElements(query).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getCrispElements'))
@@ -1672,7 +1673,7 @@ export class McsApiService {
     );
   }
 
-  public getInstalledServices(query?: McsQueryParam): Observable<McsApiCollection<McsObjectInstalledService>> {
+  public getInstalledServices(query?: McsObjectQueryParams): Observable<McsApiCollection<McsObjectInstalledService>> {
     return this._objectsApi.getInstalledServices(query).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getInstalledServices'))

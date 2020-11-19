@@ -1,26 +1,42 @@
-import { Component, ChangeDetectionStrategy, OnDestroy, Input } from '@angular/core';
-import { McsTableDataSource2, McsMatTableQueryParam, McsMatTableContext } from '@app/core';
-import { McsFilterInfo, McsObjectCrispElement, McsQueryParam, ProductType } from '@app/models';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  OnDestroy,
+  Input,
+  EventEmitter,
+  ChangeDetectorRef
+} from '@angular/core';
+import {
+  McsTableDataSource2,
+  McsMatTableQueryParam,
+  McsMatTableContext
+} from '@app/core';
+import {
+  McsFilterInfo,
+  McsObjectCrispElement,
+  McsQueryParam,
+  ProductType
+} from '@app/models';
 import { McsApiService } from '@app/services';
-import { unsubscribeSafely, isNullOrEmpty } from '@app/utilities';
-import { Subject, Observable } from 'rxjs';
+import { Search } from '@app/shared';
+import {
+  unsubscribeSafely,
+  isNullOrEmpty,
+  getSafeProperty
+} from '@app/utilities';
+import {
+  Subject,
+  Observable
+} from 'rxjs';
 import { map } from 'rxjs/operators';
-import { LaunchPadContextSource, WorkflowSelectorConfig } from '../../core';
+import { WorkflowSelectorConfig } from '../../core';
 
 @Component({
   selector: 'mcs-launch-pad-search-elements-result',
   templateUrl: './elements-result.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LaunchPadSearchElementsResultComponent implements OnDestroy {
-  @Input()
-  public set keyword(value: string) {
-    if (this._keyword !== value) {
-      this._keyword = value;
-    }
-    this.retryDatasource();
-  }
-
+export class LaunchPadSearchElementsResultComponent implements OnDestroy, Search {
   @Input()
   public set dataFilters(value: McsFilterInfo[]) {
     if (isNullOrEmpty(value)) { return; }
@@ -28,25 +44,47 @@ export class LaunchPadSearchElementsResultComponent implements OnDestroy {
     this.dataSource.registerColumnsFilterInfo(value);
   }
 
+  @Input()
+  public set keyword(value: string) {
+    if (this._keyword !== value) {
+      this._keyword = value;
+    }
+
+    this.showLoading(true);
+    this.searchChangedStream.emit(this);
+    this._changeDetector.markForCheck();
+  }
+
+  public get keyword(): string {
+    return this._keyword;
+  }
+
+  public searching: boolean;
+
+  public searchChangedStream: EventEmitter<any> =  new EventEmitter<any>();
+
   public readonly dataSource: McsTableDataSource2<McsObjectCrispElement>;
 
   public _keyword: string = '';
-
   private _destroySubject = new Subject<void>();
 
-  public constructor(private _apiService: McsApiService) {
+  public constructor(private _changeDetector: ChangeDetectorRef, private _apiService: McsApiService) {
     this.dataSource = new McsTableDataSource2(this._getData.bind(this));
+    this.dataSource.registerSearch(this);
   }
 
+  public showLoading(showLoading: boolean): void { }
+
   public ngOnDestroy(): void {
+    unsubscribeSafely(this.searchChangedStream);
     unsubscribeSafely(this._destroySubject);
   }
 
   private _getData(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsObjectCrispElement>> {
     let queryParam = new McsQueryParam();
-    // queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
-    // queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
-    queryParam.keyword = this._keyword;
+    queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
+    queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
+    queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
 
     return this._apiService.getCrispElements(queryParam).pipe(
       map((response) => {

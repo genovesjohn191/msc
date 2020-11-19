@@ -2,16 +2,16 @@ import {
   ProductType,
   WorkflowType
 } from '@app/models';
-import { newVirtualMachineForm } from '../forms';
+import { createVirtualMachineForm } from '../forms';
 import { WorkflowGroup } from '../workflow-group.interface';
 import { WorkflowConfig } from '../workflow.interface';
 
 export class ProvisionVmWorkflowGroup implements WorkflowGroup {
   public parent: WorkflowConfig = {
-    id: WorkflowType.ProvisionVirtualMachine,
+    id: WorkflowType.CreateManagedVm,
     productType: ProductType.VirtualManagedServer,
-    title: 'Provision Virtual Machine',
-    form: newVirtualMachineForm
+    title: 'Create Managed Virtual Machine',
+    form: createVirtualMachineForm
   };
 
   public children: WorkflowConfig[] = [];

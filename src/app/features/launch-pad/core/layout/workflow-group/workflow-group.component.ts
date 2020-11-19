@@ -5,7 +5,8 @@ import {
   ComponentFactoryResolver,
   ComponentRef,
   Input,
-  OnInit
+  OnInit,
+  ChangeDetectorRef
 } from '@angular/core';
 
 import {
@@ -17,9 +18,20 @@ import { LaunchPadWorkflow } from '../../workflows/workflow';
 import { WorkflowService } from '../../workflows/workflow.service';
 import { WorkflowGroupDirective } from '../../workflows/workflow-group.directive';
 import { Workflow } from '../../workflows/workflow.interface';
-import { WorkflowGroupConfig } from '../../workflows/workflow-group.interface';
-import { Subject } from 'rxjs';
+import { WorkflowGroupConfig, WorkflowGroupSaveState } from '../../workflows/workflow-group.interface';
+import { Subject, throwError } from 'rxjs';
 import { MatSelectChange } from '@angular/material/select';
+import { McsApiService } from '@app/services';
+import { McsObjectQueryParams, ProductType } from '@app/models';
+import { workflowGroupMap } from '../../workflows/workflow-group.map';
+import { catchError } from 'rxjs/operators';
+import { productWorkflowGroupMap } from '../../workflows/product-workflow-group.map';
+
+interface ServiceIdSelector {
+  serviceId: string;
+  description: string;
+  productType: string;
+}
 
 @Component({
   selector: 'mcs-launch-pad-workflow-group',
@@ -28,6 +40,31 @@ import { MatSelectChange } from '@angular/material/select';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LaunchPadWorkflowGroupComponent implements OnInit {
+  @ViewChild(WorkflowGroupDirective, {static: true})
+  public workflowGroup: WorkflowGroupDirective;
+
+  // TODO: Update list
+  @Input()
+  public set context(value: WorkflowGroupSaveState) {
+    if (isNullOrEmpty(value)) { return; }
+    this._context = value;
+
+    this.getServiceIds();
+
+    if (!isNullOrEmpty(value.config)) {
+      this._renderWorkflowGroup(value.config);
+    }
+  }
+
+  public get context(): WorkflowGroupSaveState {
+    return this._context;
+  }
+
+  @Input()
+  protected loadWorkflowNotifier: Subject<Workflow[]>;
+
+  public servicesOption: ServiceIdSelector[] = [];
+
   public workflowComponentRef: ComponentRef<LaunchPadWorkflowComponent>[] = [];
 
   public componentRef: ComponentRef<any>;
@@ -36,31 +73,68 @@ export class LaunchPadWorkflowGroupComponent implements OnInit {
 
   public serviceId: string;
 
-  @Input()
-  public companyId: string;
+  public ongoingServiceIdRetrieval: boolean = false;
+  public hasServiceIdRetrievalError: boolean = false;
 
-  @Input()
-  public set config(value: WorkflowGroupConfig) {
-    if (isNullOrEmpty(value)) {
-      return;
-    }
-    this._renderWorkflowGroup(value);
-  }
-
-  @Input()
-  protected loadWorkflowNotifier: Subject<Workflow[]>;
-
-  @ViewChild(WorkflowGroupDirective, {static: true})
-  public workflowGroup: WorkflowGroupDirective;
+  private _context: WorkflowGroupSaveState;
 
   constructor(
+    private _changeDetector: ChangeDetectorRef,
     private _componentFactoryResolver: ComponentFactoryResolver,
-    private _workflowService: WorkflowService) { }
+    private _workflowService: WorkflowService,
+    private _apiService: McsApiService) { }
 
   public ngOnInit(): void {
     if (!isNullOrEmpty(this.loadWorkflowNotifier)) {
       this.loadWorkflowNotifier.subscribe((workflows) => this._loadWorkflowGroup(workflows));
     }
+  }
+
+  public getServiceIds(): void {
+    this.ongoingServiceIdRetrieval = true;
+    this.hasServiceIdRetrievalError = false;
+
+    // Get product types that are valid for this workflow group
+    let validProductTypes: string[] = [];
+    productWorkflowGroupMap.forEach((val, key) => {
+      if (val.findIndex((workflowGroup) => workflowGroup === this._context.workflowGroupId) >= 0) {
+        validProductTypes.push(ProductType[key]);
+      }
+    });
+
+    // Get service list that are valid for this workflow group
+    let queryParam = new McsObjectQueryParams();
+    queryParam.pageSize = 100;
+    queryParam.companyId = this._context.companyId;
+    queryParam.productType = validProductTypes.join();
+
+    this._apiService.getCrispElements(queryParam)
+    .pipe(
+      catchError(() => {
+        this.ongoingServiceIdRetrieval = false;
+        this.hasServiceIdRetrievalError = true;
+        this._changeDetector.markForCheck();
+
+        return throwError('Retrieving CRISP elements by product Type.');
+      }))
+    .subscribe((response) => {
+      response.collection.forEach((service) => {
+        // Ignore missing service ID
+        if(isNullOrEmpty(service.serviceId)) { return; }
+        // Ignore duplicate
+        let isExistng = this.servicesOption.findIndex((item) => item.serviceId === service.serviceId) > 0;
+        if (isExistng) { return; }
+
+        this.servicesOption.push({
+          serviceId: service.serviceId,
+          description: service.description,
+          productType: service.productType.toString()
+        });
+
+        this.ongoingServiceIdRetrieval = false;
+        this._changeDetector.markForCheck();
+      });
+    });
   }
 
   private _loadWorkflowGroup(workflows: Workflow[]): void {

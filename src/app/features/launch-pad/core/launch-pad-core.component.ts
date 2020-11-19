@@ -24,15 +24,10 @@ import {
 
 import { LaunchPadWorkflowGroupComponent } from './layout/workflow-group/workflow-group.component';
 import { LaunchPadLoadStateDialogComponent } from './layout/workflow-load-state-dialog/workflow-load-state-dialog.component';
-import {
-  WorkflowGroupConfig,
-  WorkflowGroupSaveState
-} from './workflows/workflow-group.interface';
-import { WorkflowGroupId } from './workflows/workflow-groups/workflow-group-type.enum';
+import { WorkflowGroupSaveState } from './workflows/workflow-group.interface';
 import { Workflow } from './workflows/workflow.interface';
 import { McsApiService } from '@app/services';
 import { McsJob, McsWorkflowCreate, ProductType } from '@app/models';
-import { LaunchPadContextSource } from './layout/workflow-selector/workflow-selector.component';
 
 enum WizardStep  {
   EditWorkflowGroup = 0,
@@ -40,15 +35,6 @@ enum WizardStep  {
   ProvisionWorkflows = 2
 }
 
-export interface LaunchPadContext {
-  source: LaunchPadContextSource,
-  companyId: string;
-  serviceId: string;
-  workflowGroupId: WorkflowGroupId;
-  productId?: string;
-}
-
-// TODO: This can be moved to global location
 const standardSnackbarDurationInMs = 4000;
 const removeWorkflowsSnackbarDurationInMs = 6000;
 
@@ -66,21 +52,17 @@ export class LaunchPadComponent implements OnDestroy, IMcsNavigateAwayGuard {
   protected workflowGroup: LaunchPadWorkflowGroupComponent;
 
   @Input()
-  public context: LaunchPadContext;
-
-  @Input()
-  public set config(value: WorkflowGroupConfig) {
-    if (isNullOrEmpty(value)) {
-      return;
-    }
+  public set context(value: WorkflowGroupSaveState) {
+    if (isNullOrEmpty(value)) { return; }
+    this._context = value;
 
     this._initializeWorkflowProcess();
-    this._config = value;
     this._tryLoadSavedState();
+    this._changeDetector.markForCheck();
   }
 
-  public get config(): WorkflowGroupConfig {
-    return this._config;
+  public get context(): WorkflowGroupSaveState {
+    return this._context;
   }
 
   public get saveStateKey(): string {
@@ -100,7 +82,7 @@ export class LaunchPadComponent implements OnDestroy, IMcsNavigateAwayGuard {
   }
 
   public get validForProvisioning(): boolean {
-    return !isNullOrEmpty(this.workflows);
+    return !isNullOrEmpty(this.context?.workflows);
   }
 
   public get valid(): boolean {
@@ -110,7 +92,7 @@ export class LaunchPadComponent implements OnDestroy, IMcsNavigateAwayGuard {
     return this.workflowGroup.valid;
   }
 
-  public workflows: Workflow[] = [];
+  // public workflows: Workflow[] = [];
   public workflowsState: McsJob[] = [];
   public isNewWorkflowGroup: boolean = true;
   public isEditing: boolean = false;
@@ -120,7 +102,7 @@ export class LaunchPadComponent implements OnDestroy, IMcsNavigateAwayGuard {
   public hasError: boolean = false;
   public processing: boolean = false;
 
-  private _config: WorkflowGroupConfig;
+  private _context: WorkflowGroupSaveState;
   private _deletedWorkflows: Workflow[] = [];
   private _deleteWorkflowSubject = new Subject<void>();
   private _dialogSubject = new Subject<void>();
@@ -128,13 +110,13 @@ export class LaunchPadComponent implements OnDestroy, IMcsNavigateAwayGuard {
   public constructor(
     private _dialog: MatDialog,
     private _storageService: McsStorageService,
-    private _changeDetectorRef: ChangeDetectorRef,
+    private _changeDetector: ChangeDetectorRef,
     private _snackBar: MatSnackBar,
     private _apiService: McsApiService
   ) { }
 
   public canNavigateAway(): boolean {
-    return isNullOrEmpty(this.workflows);
+    return isNullOrEmpty(this.context.workflows);
   }
 
   public ngOnDestroy(): void {
@@ -148,7 +130,6 @@ export class LaunchPadComponent implements OnDestroy, IMcsNavigateAwayGuard {
 
     this._saveWorkflowGroup(this.workflowGroup.payload);
     this._saveState();
-    console.log(JSON.stringify(this.workflows));
   }
 
   public addAnother(): void {
@@ -189,40 +170,40 @@ export class LaunchPadComponent implements OnDestroy, IMcsNavigateAwayGuard {
     this.hasError = false;
     this.processing = true;
 
-    let payload: McsWorkflowCreate[] = this.workflows.map((workflow) => ({
+    let payload: McsWorkflowCreate[] = this.context.workflows.map((workflow) => ({
       type: workflow.type,
       referenceId: workflow.referenceId,
       parentReferenceId: workflow.parentReferenceId,
       serviceId: workflow.serviceId,
       properties: workflow.properties
     }));
-    this._gotoStep(WizardStep.ProvisionWorkflows);
 
-    // this._apiService.provisionWorkflows(payload)
-    // .pipe(catchError(() => {
-    //   this.hasError = true;
-    //   this.processing = false;
-    //   this._changeDetectorRef.markForCheck();
-    //   return throwError('Workflow provision endpoint failed.');
-    // }))
-    // .subscribe((response) => {
-    //   // Pass ongoing jobs to provisioning component
-    //   this.workflowsState = response.collection;
+    console.log('payload', payload);
+    this._apiService.provisionWorkflows(payload)
+    .pipe(catchError(() => {
+      this.hasError = true;
+      this.processing = false;
+      this._changeDetector.markForCheck();
+      return throwError('Workflow provision endpoint failed.');
+    }))
+    .subscribe((response) => {
+      // Pass ongoing jobs to provisioning component
+      this.workflowsState = response.collection;
+      console.log('this.workflowsState', this.workflowsState);
+      // Go to provisioning step
+      this._gotoStep(WizardStep.ProvisionWorkflows);
 
-    //   // Go to provisioning step
-    //   this._gotoStep(WizardStep.ProvisionWorkflows);
+      // Remove saved state
+      // this.savedState = null;
 
-    //   // Remove saved state
-    //   // this.savedState = null;
-
-    //   this._changeDetectorRef.markForCheck();
-    // });
+      this._changeDetector.markForCheck();
+    });
   }
 
   public retryProvision(): void {
     this.hasError = false;
     this.processing = false;
-    this._changeDetectorRef.markForCheck();
+    this._changeDetector.markForCheck();
   }
 
   public isNew(referenceId: string): boolean {
@@ -234,7 +215,8 @@ export class LaunchPadComponent implements OnDestroy, IMcsNavigateAwayGuard {
   }
 
   private _initializeWorkflowProcess(workflows: Workflow[] = []): void {
-    this.workflows = workflows;
+    this.context.workflows = workflows;
+
     if (this.stepper) {
       this.isNewWorkflowGroup = true;
       this.isEditing = false;
@@ -280,18 +262,18 @@ export class LaunchPadComponent implements OnDestroy, IMcsNavigateAwayGuard {
     // Get parent info
     let parentWorkflow: Workflow = workflowGroup.find((item) => !isNullOrEmpty(item.serviceId));
     let parentWorkflowIndex: number =
-      isNullOrEmpty(this.workflows)
+      isNullOrEmpty(this.context.workflows)
       ? -1
-      : this.workflows.findIndex((item) => item.referenceId === parentWorkflow.referenceId);
+      : this.context.workflows.findIndex((item) => item.referenceId === parentWorkflow.referenceId);
 
     if (parentWorkflowIndex < 0) {
       // Add parent
-      this.workflows.push(parentWorkflow);
-      parentWorkflowIndex = this.workflows.length - 1;
+      this.context.workflows.push(parentWorkflow);
+      parentWorkflowIndex = this.context.workflows.length - 1;
     } else {
       // Update parent
       existingWorkflow = true;
-      this.workflows[parentWorkflowIndex] = parentWorkflow;
+      this.context.workflows[parentWorkflowIndex] = parentWorkflow;
     }
     this.newlyAddedWorkflowIds.push(parentWorkflow.referenceId);
 
@@ -310,14 +292,14 @@ export class LaunchPadComponent implements OnDestroy, IMcsNavigateAwayGuard {
 
   private _addChildWorkflows(parentIndex: number, workflows: Workflow[]): void {
     let ctr = 0;
-    let isLastParent = parentIndex === this.workflows.length - 1;
+    let isLastParent = parentIndex === this.context.workflows.length - 1;
 
     workflows.forEach((child) => {
       this.newlyAddedWorkflowIds.push(child.referenceId);
       if (isLastParent) {
-        this.workflows.push(child);
+        this.context.workflows.push(child);
       } else {
-        this.workflows.splice(parentIndex + 1 + ctr++, 0, child);
+        this.context.workflows.splice(parentIndex + 1 + ctr++, 0, child);
       }
     });
   }
@@ -338,11 +320,11 @@ export class LaunchPadComponent implements OnDestroy, IMcsNavigateAwayGuard {
   }
 
   private _getWorkflowByReferenceId(referenceId: string): Workflow {
-    return this.workflows.find((workflow) => workflow.referenceId === referenceId);
+    return this.context.workflows.find((workflow) => workflow.referenceId === referenceId);
   }
 
   private _getChildWorkflowsByParentReferenceId(parentReferenceId: string): Workflow[] {
-    return this.workflows.filter(payload => payload.parentReferenceId === parentReferenceId);
+    return this.context.workflows.filter(payload => payload.parentReferenceId === parentReferenceId);
   }
 
   private _resetForm(): void {
@@ -353,20 +335,20 @@ export class LaunchPadComponent implements OnDestroy, IMcsNavigateAwayGuard {
   private _removeWorkflowGroup(referenceId: string, canRestore: boolean = false): void {
     this._deletedWorkflows = [];
     if (canRestore) {
-      this._deletedWorkflows = this._deletedWorkflows.concat(this.workflows.filter(payload => payload.referenceId === referenceId));
+      this._deletedWorkflows = this._deletedWorkflows.concat(this.context.workflows.filter(payload => payload.referenceId === referenceId));
     }
 
-    this.workflows = this.workflows.filter(payload => payload.referenceId !== referenceId);
+    this.context.workflows = this.context.workflows.filter(payload => payload.referenceId !== referenceId);
     this._removeChildWorkflows(referenceId, canRestore);
   }
 
   private _removeChildWorkflows(parentReferenceId: string, canRestore: boolean = false): void {
     if (canRestore) {
-      let workflowsToRemove = this.workflows.filter(payload => payload.parentReferenceId === parentReferenceId);
+      let workflowsToRemove = this.context.workflows.filter(payload => payload.parentReferenceId === parentReferenceId);
       this._deletedWorkflows =
         this._deletedWorkflows.concat(workflowsToRemove);
     }
-    this.workflows = this.workflows.filter(payload => payload.parentReferenceId !== parentReferenceId);
+    this.context.workflows = this.context.workflows.filter(payload => payload.parentReferenceId !== parentReferenceId);
   }
 
   private _showWorkflowsUpdateNotification(title: string, serviceId: string, existing: boolean = false): void {
@@ -402,15 +384,15 @@ export class LaunchPadComponent implements OnDestroy, IMcsNavigateAwayGuard {
       let isParentWorkflow = !isNullOrEmpty(workflow.serviceId);
 
       if (isParentWorkflow) {
-        this.workflows.push(workflow);
+        this.context.workflows.push(workflow);
       } else {
         // Resolve parent workflow
-        let parentWorkflow: Workflow = this.workflows.find((item) => item.referenceId === workflow.parentReferenceId);
-        let parentWorkflowIndex: number = this.workflows.findIndex((item) => item.referenceId === parentWorkflow.referenceId);
+        let parentWorkflow: Workflow = this.context.workflows.find((item) => item.referenceId === workflow.parentReferenceId);
+        let parentWorkflowIndex: number = this.context.workflows.findIndex((item) => item.referenceId === parentWorkflow.referenceId);
         let childWorkflowIndex = parentWorkflowIndex + 1 + offset++;
 
         if (!isNullOrEmpty(parentWorkflow)) {
-          this.workflows.splice(childWorkflowIndex, 0, workflow);
+          this.context.workflows.splice(childWorkflowIndex, 0, workflow);
         }
       }
 
@@ -419,30 +401,23 @@ export class LaunchPadComponent implements OnDestroy, IMcsNavigateAwayGuard {
 
     this._saveState();
 
-    this._changeDetectorRef.markForCheck();
+    this._changeDetector.markForCheck();
     this._markFirstStepAsComplete();
   }
 
   private _saveState(): void {
-    let state: WorkflowGroupSaveState = null;
-    let hasChanges = !isNullOrEmpty(this.workflows);
+    let hasChanges = !isNullOrEmpty(this.context.workflows);
 
     if (hasChanges) {
-      state = {
-        source: this.context.source,
-        companyId: this.context.companyId,
-        workflowGroupId: this.config.id.toString(),
-        serviceId: this.context.serviceId,
-        productId: this.context.productId,
-        description: this.workflows[0].title,
-        config: cloneDeep(this.config),
-        workflows: cloneDeep(this.workflows)
-      };
+      this.context.workflowGroupId = this.context.workflowGroupId,
+      this.context.description = this.context.workflows[0].title;
+      this.context.config = cloneDeep(this.context.config);
+      this.context.workflows = cloneDeep(this.context.workflows);
     }
 
     this._tryRemoveCurrentWorkflowFromSavedState();
     let currentState = this.savedState;
-    currentState.push(state);
+    currentState.push(this.context);
     this.savedState = currentState;
   }
 
@@ -476,11 +451,12 @@ export class LaunchPadComponent implements OnDestroy, IMcsNavigateAwayGuard {
 
   private _getSavedStateIndex(): number {
     return this.savedState.findIndex((state) =>
-    state.companyId === this.context.companyId
-    && state.source === this.context.source
-    && state.serviceId === this.context.serviceId
-    && state.productId === this.context.productId
-    && state.workflowGroupId === this.config.id.toString());
+      state.companyId === this.context.companyId
+      && state.source === this.context.source
+      && state.serviceId === this.context.serviceId
+      && state.productId === this.context.productId
+      && state.workflowGroupId === this.context.workflowGroupId
+    );
   }
 
   private _tryRemoveCurrentWorkflowFromSavedState(): void {

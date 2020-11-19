@@ -7,7 +7,9 @@ import {
   McsApiSuccessResponse,
   McsObjectCrispElement,
   McsObjectInstalledService,
-  McsApiRequestParameter
+  McsApiRequestParameter,
+  McsObjectQueryParams,
+  ProductType
 } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
 import { IMcsApiObjectsService } from '../interfaces/mcs-api-objects.interface';
@@ -18,13 +20,15 @@ export class McsApiObjectsService implements IMcsApiObjectsService {
 
   constructor(private _mcsApiService: McsApiClientHttpService) { }
 
-  public getCrispElements(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsObjectCrispElement[]>> {
+  public getCrispElements(query?: McsObjectQueryParams): Observable<McsApiSuccessResponse<McsObjectCrispElement[]>> {
     // Set default values if null
     let searchParams = new Map<string, any>();
     if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
     searchParams.set('page', query.pageIndex);
     searchParams.set('per_page', query.pageSize);
     searchParams.set('search_keyword', query.keyword);
+    searchParams.set('company_id', query.companyId);
+    searchParams.set('product_type', query.productType);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/objects/crisp-elements';
@@ -52,13 +56,15 @@ export class McsApiObjectsService implements IMcsApiObjectsService {
       );
   }
 
-  public getInstalledServices(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsObjectInstalledService[]>> {
+  public getInstalledServices(query?: McsObjectQueryParams): Observable<McsApiSuccessResponse<McsObjectInstalledService[]>> {
     // Set default values if null
     let searchParams = new Map<string, any>();
     if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
     searchParams.set('page', query.pageIndex);
     searchParams.set('per_page', query.pageSize);
     searchParams.set('search_keyword', query.keyword);
+    searchParams.set('company_id', query.companyId);
+    searchParams.set('product_type', query.productType);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/objects/crisp-installed-services';
