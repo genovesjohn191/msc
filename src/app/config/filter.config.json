@@ -269,14 +269,14 @@
       "value": true,
       "exclude": true
     },
-    "description": {
-      "text": "Description",
-      "value": true
-    },
     "serviceId": {
       "text": "Service ID",
       "value": true,
       "exclude": true
+    },
+    "description": {
+      "text": "Description",
+      "value": true
     },
     "status": {
       "text": "Status",
@@ -292,6 +292,11 @@
     }
   },
   "launchPadSearchServicesFilter": {
+    "productId": {
+      "text": "Product ID",
+      "value": true,
+      "exclude": true
+    },
     "serviceId": {
       "text": "Service ID",
       "value": true,

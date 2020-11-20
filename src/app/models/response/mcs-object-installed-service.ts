@@ -3,9 +3,6 @@ import { ProductType } from '../enumerations/product-type.enum';
 
 export class McsObjectInstalledService {
   @JsonProperty()
-  public id: string = undefined;
-
-  @JsonProperty()
   public companyId: string = undefined;
 
   @JsonProperty()
@@ -13,6 +10,9 @@ export class McsObjectInstalledService {
 
   @JsonProperty()
   public productType: ProductType = undefined;
+
+  @JsonProperty()
+  public productId: string = undefined;
 
   @JsonProperty()
   public serviceId: string = undefined;
