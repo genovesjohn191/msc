@@ -1,46 +1,62 @@
-<mat-grid-list cols="2" rowHeight="20px">
-  <mat-grid-tile colspan="1" rowspan="1">
-    <h4>Overall security score</h4>
-  </mat-grid-tile>
-  <mat-grid-tile colspan="1" rowspan="1">
-    <h4>Security score by category</h4>
-  </mat-grid-tile>
-</mat-grid-list>
+<div class="widget" style="padding:0; margin:0; border: none;">
+  <div class="security-compliance-wrapper" *ngIf="!hasError && !processing">
+    <mat-grid-list cols="2" rowHeight="20px">
+      <!-- Overall Score -->
+      <mat-grid-tile colspan="1" rowspan="1">
+        <h4>{{ 'reports.insights.techReview.securityCompliance.overAllSecurityScore' | translate }}</h4>
+      </mat-grid-tile>
 
-<mat-grid-list cols="4" rowHeight="100px">
-  <mat-grid-tile colspan="2" rowspan="2">
-    <div class="score-panel overall">
-      <div class="info">
-        <mcs-icon key="small-document-new-black" color="light" size="large"></mcs-icon>
-        <div class="label">
-          <span class="score">
-            <strong>
-              622
-            </strong>
-            / 1316
-          </span>
+      <!-- Security Score by Category -->
+      <!-- <mat-grid-tile colspan="1" rowspan="1">
+        <h4>Security score by category</h4>
+      </mat-grid-tile> -->
+    </mat-grid-list>
+
+    <mat-grid-list cols="4" rowHeight="70px" *ngIf="securityScore">
+      <!-- Overall Score -->
+      <mat-grid-tile colspan="2" rowspan="2">
+        <div class="score-panel overall">
+          <div class="info">
+            <mcs-icon key="small-lock-black" color="light" size="large"></mcs-icon>
+            <div class="label">
+              <span class="score">
+                <strong>
+                  {{ securityScore.currentScore }}
+                </strong>
+                / {{ securityScore.maxScore }}
+              </span>
+            </div>
+          </div>
+          <mat-progress-bar mode="determinate" value="{{ securityScorePercentage }}" style="height: 10px;"></mat-progress-bar>
+          <div style="margin-top: 20px;">
+            <a href="https://portal.azure.com/#blade/Microsoft_Azure_Security/SecurityMenuBlade/5" target="_blank">
+              {{ 'reports.insights.techReview.securityCompliance.viewRecommendation' | translate }}
+            </a>
+          </div>
         </div>
-      </div>
-      <mat-progress-bar mode="determinate" value="30" style="height: 10px;"></mat-progress-bar>
-    </div>
-  </mat-grid-tile>
+      </mat-grid-tile>
 
-  <mat-grid-tile *ngFor="let number of [0,1,2,3]" colspan="1" rowspan="1">
-    <div class="score-panel">
-      <div class="info">
-        <mcs-icon key="small-document-new-black" color="light" size="large"></mcs-icon>
-        <div class="label">
-          <span>Category name</span>
-          <span class="score">
-            <strong>
-              622
-            </strong>
-            / 1316
-          </span>
+      <!-- Security Score by Category (temporarily hidden: Part of Phase 2) -->
+      <!-- <mat-grid-tile *ngFor="let number of [0,1,2,3]" colspan="1" rowspan="1">
+        <div class="score-panel">
+          <div class="info">
+            <mcs-icon key="small-document-new-black" color="light" size="large"></mcs-icon>
+            <div class="label">
+              <span>Category name</span>
+              <span class="score">
+                <strong>
+                  622
+                </strong>
+                / 1316
+              </span>
+            </div>
+          </div>
+
+          <mat-progress-bar mode="determinate" value="30" style="height: 10px;"></mat-progress-bar>
         </div>
-      </div>
-
-      <mat-progress-bar mode="determinate" value="30" style="height: 10px;"></mat-progress-bar>
-    </div>
-  </mat-grid-tile>
-</mat-grid-list>
+      </mat-grid-tile> -->
+    </mat-grid-list>
+  </div>
+  <mcs-report-widget-data-status type="info" [processing]="processing" [hasError]="hasError" (retry)="getSecurityScore()">
+  </mcs-report-widget-data-status>
+</div>

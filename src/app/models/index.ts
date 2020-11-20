@@ -265,6 +265,9 @@ export * from './response/mcs-report-operational-savings-sub-items';
 export * from './response/mcs-report-vm-rightsizing';
 export * from './response/mcs-report-vm-rightsizing-summary';
 export * from './response/mcs-report-resource-health';
+export * from './response/mcs-report-security-score';
+export * from './response/mcs-report-monitoring-and-alerting';
+export * from './response/mcs-report-severity-alerts';
 export * from './response/mcs-object-crisp-element';
 export * from './response/mcs-object-installed-service';
 

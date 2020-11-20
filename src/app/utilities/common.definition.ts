@@ -186,6 +186,7 @@ export class CommonDefinition {
   public static ASSETS_SVG_SMALL_MARKETING_BLACK = 'small-marketing-black';
   public static ASSETS_SVG_SMALL_MARKETING_BLUE = 'small-marketing-blue';
   public static ASSETS_SVG_SMALL_CALCULATOR_CHECK_BLACK = 'small-calculator-check-black';
+  public static ASSETS_SVG_SMALL_LOCK_BLACK = 'small-lock-black';
 
   /** Filter Selector */
   public static FILTERSELECTOR_SERVER_LISTING = 'serverFilter';

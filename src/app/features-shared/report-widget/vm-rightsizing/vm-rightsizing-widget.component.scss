@@ -17,6 +17,10 @@
     min-height: 150px;
     width: 100%;
 
+    @include breakpoint(small) {
+      overflow: hidden;
+    }
+
     .mat-table {
       max-height: 500px;
       min-height: 127px;

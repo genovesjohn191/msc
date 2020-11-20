@@ -13,7 +13,9 @@ import {
   McsQueryParam,
   McsReportVMRightsizingSummary,
   McsReportOperationalSavings,
-  McsReportResourceHealth
+  McsReportResourceHealth,
+  McsReportSecurityScore,
+  McsReportMonitoringAndAlerting
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiReportsService } from '../interfaces/mcs-api-reports.interface';
@@ -236,6 +238,36 @@ export class McsApiReportsService implements IMcsApiReportsService {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
             .deserializeResponse<McsReportResourceHealth>(McsReportResourceHealth, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  public getSecurityScore(): Observable<McsApiSuccessResponse<McsReportSecurityScore>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/public-cloud/reports/secure-score';
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsReportSecurityScore>(McsReportSecurityScore, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  public getMonitoringAndAlerting(): Observable<McsApiSuccessResponse<McsReportMonitoringAndAlerting>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/public-cloud/reports/monitoring-alerting';
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsReportMonitoringAndAlerting>(McsReportMonitoringAndAlerting, response);
           return apiResponse;
         })
       );

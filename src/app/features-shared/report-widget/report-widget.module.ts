@@ -17,6 +17,7 @@ import { OperationalMonthlySavingsWidgetComponent } from './operational-monthly-
 import { VmRightsizingWidgetComponent } from './vm-rightsizing/vm-rightsizing-widget.component';
 import { OperationalSavingsSubitemsViewerComponent } from './operational-monthly-savings/subitems/operational-savings-subitems-viewer.component';
 import { ResourceHealthWidgetComponent } from './resource-health/resource-health-widget.component';
+import { MonitoringAndAlertingWidgetComponent } from './monitoring-and-alerting/monitoring-and-alerting-widget.component';
 @NgModule({
   imports: [ SharedModule ],
   declarations: [
@@ -25,6 +26,7 @@ import { ResourceHealthWidgetComponent } from './resource-health/resource-health
     ChangeRequestWidgetComponent,
     ContactUsWidgetComponent,
     CostRecommendationsWidgetComponent,
+    MonitoringAndAlertingWidgetComponent,
     OperationalMonthlySavingsWidgetComponent,
     OperationalSavingsSubitemsViewerComponent,
     PerformanceAndScalabilityWidgetComponent,
@@ -44,6 +46,7 @@ import { ResourceHealthWidgetComponent } from './resource-health/resource-health
     ChangeRequestWidgetComponent,
     ContactUsWidgetComponent,
     CostRecommendationsWidgetComponent,
+    MonitoringAndAlertingWidgetComponent,
     OperationalMonthlySavingsWidgetComponent,
     OperationalSavingsSubitemsViewerComponent,
     PerformanceAndScalabilityWidgetComponent,

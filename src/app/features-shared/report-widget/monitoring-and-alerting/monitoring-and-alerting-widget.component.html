@@ -1,0 +1,19 @@
+<div class="widget flat">
+  <div *ngIf="!processing && !hasError" class="monitoring-alerting-wrapper">
+    <div class="total-alerts-wrapper">
+      <b>{{ 'reports.insights.techReview.monitoringAlerting.totalAlerts' | translate }}</b>
+      <div class="total-alerts">
+        {{ monitoringAlerting.totalAlerts }}
+      </div>
+      <div class="started-on">
+        Since {{ convertedDate }}
+      </div>
+    </div>
+    <mcs-horizontal-bar-chart
+      [data]="data$ | async"
+      [config]="chartConfig">
+    </mcs-horizontal-bar-chart>
+  </div>
+  <mcs-report-widget-data-status type="info" [processing]="processing" [hasError]="hasError" (retry)="getData()">
+  </mcs-report-widget-data-status>
+</div>

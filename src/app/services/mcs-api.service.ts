@@ -135,7 +135,9 @@ import {
   McsObjectInstalledService,
   McsNetworkDnsZonesSummary,
   McsObjectQueryParams,
-  McsReportResourceHealth
+  McsReportResourceHealth,
+  McsReportSecurityScore,
+  McsReportMonitoringAndAlerting
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -1640,6 +1642,24 @@ export class McsApiService {
     return this._reportsApi.getResourceHealth().pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getResourceHealth'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public getSecurityScore(): Observable<McsReportSecurityScore> {
+    return this._reportsApi.getSecurityScore().pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getSecurityScore'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public getMonitoringAndAlerting(): Observable<McsReportMonitoringAndAlerting> {
+    return this._reportsApi.getMonitoringAndAlerting().pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getServiceChanges'))
       ),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
