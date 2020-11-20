@@ -14,9 +14,6 @@ export class McsObjectCrispElementServiceAttribute {
 
 export class McsObjectCrispElement {
   @JsonProperty()
-  public id: string = undefined;
-
-  @JsonProperty()
   public companyId: string = undefined;
 
   @JsonProperty()

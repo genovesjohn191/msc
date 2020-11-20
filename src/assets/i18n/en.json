@@ -99,6 +99,7 @@
     "services": {
       "table": {
         "header": {
+          "productId": "Product ID",
           "serviceId": "Service ID",
           "description": "Description",
           "installedBaseState": "Installed Base State",

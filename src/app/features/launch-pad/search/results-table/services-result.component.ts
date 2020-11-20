@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnDestroy, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
-import { McsFilterService, McsMatTableContext, McsMatTableQueryParam, McsTableDataSource2 } from '@app/core';
-import { McsFilterInfo, McsObjectInstalledService, McsQueryParam } from '@app/models';
+import { McsMatTableContext, McsMatTableQueryParam, McsTableDataSource2 } from '@app/core';
+import { McsFilterInfo, McsObjectInstalledService, McsQueryParam, ProductType } from '@app/models';
 import { McsApiService } from '@app/services';
 import { Search } from '@app/shared';
 import { unsubscribeSafely, getSafeProperty, isNullOrEmpty } from '@app/utilities';
@@ -75,12 +75,15 @@ export class LaunchPadSearchServicesResultComponent implements OnDestroy, Search
   }
 
   public getLauncherConfig(record: McsObjectInstalledService):  WorkflowSelectorConfig {
+    let productType: any = ProductType[record.productType];
+
     return {
       label: record.serviceId,
       companyId: record.companyId,
       source: 'installed-services',
       serviceId: record.serviceId,
-      type: record.productType
+      productId: record.productId,
+      type: productType
     };
   }
 }
