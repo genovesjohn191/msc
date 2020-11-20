@@ -1,30 +1,5 @@
 <div style="width: 500px; padding-top: 10px;">
-  <mat-form-field
-    appearance="outline"
-    [matBadge]="hasServiceIdRetrievalError ? '!' : ''"
-    matBadgePosition="before"
-    matBadgeColor="warn"
-    matBadgeSize="small"
-    [matTooltip]="hasServiceIdRetrievalError ? 'Unable to retrieve service IDs' : ''"
-    matTooltipPosition="above">
-    <mat-label>{{ ongoingServiceIdRetrieval ? 'Loading...' : 'Service ID' }}</mat-label>
-
-    <mat-select required [value]="context.serviceId" (selectionChange)="serviceIdChanged($event)">
-      <mat-option *ngFor="let services of servicesOption" [value]="services.serviceId">
-        {{ services.serviceId }}
-      </mat-option>
-    </mat-select>
-
-    <mat-spinner *ngIf="ongoingServiceIdRetrieval" class="spinner" diameter="20" matSuffix></mat-spinner>
-
-    <button mat-icon-button matSuffix
-      (click)="getServiceIds()"
-      *ngIf="hasServiceIdRetrievalError"
-      matTooltip="Retry"
-      matTooltipPosition="above">
-      <mat-icon color="primary">refresh</mat-icon>
-    </button>
-  </mat-form-field>
+  <mcs-launch-pad-object-selector [context]="context" (targetObjectChanged)="switchObject($event)"></mcs-launch-pad-object-selector>
 
   <mat-accordion multi>
     <ng-template workflowGroup></ng-template>

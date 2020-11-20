@@ -19,6 +19,7 @@ import { LaunchPadLoadStateDialogComponent } from './layout/workflow-load-state-
 import { LaunchPadWorkflowProvisionStateComponent } from './layout/workflow-provision-state/workflow-provision-state.component';
 import { McsApiService } from '@app/services';
 import { LaunchPadServiceIdSwitchDialogComponent } from './layout/service-id-switch-dialog/service-id-switch-dialog.component';
+import { LaunchPadObjectSelectorComponent } from './layout/workflow-group/object-selector.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { LaunchPadServiceIdSwitchDialogComponent } from './layout/service-id-swi
     LaunchPadLoadStateDialogComponent,
     LaunchPadWorkflowComponent,
     LaunchPadWorkflowProvisionStateComponent,
-    LaunchPadWorkflowSelectorComponent
+    LaunchPadWorkflowSelectorComponent,
+    LaunchPadObjectSelectorComponent
   ],
   exports: [
     LaunchPadComponent,
@@ -43,7 +45,8 @@ import { LaunchPadServiceIdSwitchDialogComponent } from './layout/service-id-swi
     LaunchPadLoadStateDialogComponent,
     LaunchPadWorkflowComponent,
     LaunchPadWorkflowProvisionStateComponent,
-    LaunchPadWorkflowSelectorComponent
+    LaunchPadWorkflowSelectorComponent,
+    LaunchPadObjectSelectorComponent
   ],
   imports: [
     SharedModule,

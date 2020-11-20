@@ -1,0 +1,54 @@
+<div *ngIf="!isSwitching">
+  <mat-form-field appearance="standard" style="width: 300px !important;">
+    <mat-label>Target Object</mat-label>
+
+    <input matInput type="text"
+      required
+      readonly
+      placeholder="Select object"
+      [value]="context.serviceId"
+      (input)="valueChange($event)"/>
+    <button mat-icon-button matSuffix
+      type="button"
+      (click)="isSwitching = !isSwitching"
+      matTooltip="Change target object"
+      matTooltipPosition="above">
+      <mat-icon>edit</mat-icon>
+    </button>
+  </mat-form-field>
+</div>
+
+<form *ngIf="isSwitching">
+  <mat-form-field appearance="outline" style="width: 350px !important; ">
+    <mat-label>Search Object</mat-label>
+
+    <input matInput type="text"
+      placeholder="Select object"
+      [matAutocomplete]="auto"
+      [formControl]="serviceFilterControl"/>
+
+    <button mat-icon-button matPrefix
+      type="button"
+      (click)="isSwitching = false"
+      matTooltip="Go back"
+      matTooltipPosition="above">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <mat-spinner *ngIf="processing" class="spinner" diameter="20" matSuffix></mat-spinner>
+    <mat-icon *ngIf="hasValidSelection && !processing" color="primary" matSuffix>check_circle</mat-icon>
+
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayProperty">
+      <mat-option *ngFor="let service of filteredOptions | async" [value]="service">
+        <small>{{ service.serviceId }} | {{ service.productId }} | {{ service.status }}</small>
+      </mat-option>
+    </mat-autocomplete>
+
+  </mat-form-field>
+  <button
+    *ngIf="hasValidSelection"
+    mat-stroked-button
+    matSuffix
+    (click)="switchNow()"
+    color="primary"
+    style="margin-left: 10px;">Switch</button>
+</form>

@@ -6,7 +6,7 @@
     <mcs-launch-pad-workflow-group #workflowGroup [context]="context" [loadWorkflowNotifier]="editWorkflowGroup"></mcs-launch-pad-workflow-group>
 
     <br />
-    <button *ngIf="isEditing || validForProvisioning" mat-button (click)="cancelEditing()">
+    <button *ngIf="isEditing || validForProvisioning" mat-stroked-button (click)="cancelEditing()" style="margin-right: 10px;">
       Cancel
     </button>
     <button mat-raised-button color="primary" [disabled]="!valid" (click)="addOrUpdate()">
@@ -57,7 +57,7 @@
       </div>
       <br />
       <div>
-        <button mat-button (click)="addAnother()">
+        <button mat-stroked-button (click)="addAnother()" style="margin-right: 10px;">
           {{ validForProvisioning ? 'Add Another' : 'Add Workflow' }}
         </button>
         <button *ngIf="validForProvisioning" mat-raised-button color="primary" (click)="runWorkflow()">

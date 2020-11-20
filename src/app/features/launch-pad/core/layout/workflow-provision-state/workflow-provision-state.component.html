@@ -15,18 +15,17 @@
     </mat-expansion-panel-header>
 
     <div>
-      <span>{{ getTaskInfo(workflow)?.description }}</span>
-      <small style="position: absolute; right: 21px;">{{ getTaskInfo(workflow)?.summaryInformation }}</small>
+      <div>
+        <span>{{ getTaskInfo(workflow)?.description }}</span>
+        <small style="position: absolute; right: 21px;">{{ getTaskInfo(workflow)?.summaryInformation }}</small>
+      </div>
+      <div style="margin-top: 10px" *ngIf="getTaskInfo(workflow)?.status >= 3">
+        <span>{{ getTaskInfo(workflow)?.errorMessage }}</span>
+      </div>
       <br />
       <br />
       <mat-progress-bar [mode]="getTaskInfo(workflow)?.status < 2 ? 'indeterminate' : 'determinate'" [color]="getTaskInfo(workflow)?.status < 3 ? 'primary' : 'warn'"></mat-progress-bar>
       <br />
-      <!-- <p>
-        13-10-2020 07:30:20 Something is done
-      </p>
-      <p>
-        13-10-2020 07:30:20 Something is done
-      </p> -->
     </div>
   </mat-expansion-panel>
 </mat-accordion>

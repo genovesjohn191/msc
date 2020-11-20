@@ -24,7 +24,7 @@
           </td>
           <td>{{ state.source }}</td>
         </tr>
-        <tr *ngIf="!savedState">
+        <tr *ngIf="!hasDrafts">
           <td colspan="5" style="padding: 0;">
             <mcs-alert type="warn">
               <span>No draft workflows yet.</span>
