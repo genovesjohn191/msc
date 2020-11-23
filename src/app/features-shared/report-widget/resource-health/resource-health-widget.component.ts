@@ -27,12 +27,17 @@ export class ResourceHealthWidgetComponent implements OnInit, OnDestroy {
   public chartConfig: ChartConfig = {
     type: 'donut',
     labels: ['Healthy', 'Unhealthy', 'Not Applicable'],
-    height: '380px'
+    height: '380px',
+    dataLabels: {
+      enabled: true,
+      formatter: this.dataLabelFormatter
+    }
   };
 
   public data$: Observable<McsReportResourceHealth>;
   public dataBehavior: BehaviorSubject<McsReportResourceHealth>;
   public hasError: boolean = false;
+  public empty: boolean = false;
   public processing: boolean = true;
 
   constructor(
@@ -64,9 +69,19 @@ export class ResourceHealthWidgetComponent implements OnInit, OnDestroy {
       return throwError('Resource Health endpoint failed.');
     }))
     .subscribe((result) => {
+      this.empty = this.addResourceHealth(result);
       this.dataBehavior.next(result);
       this.processing = false;
       this._changeDetectorRef.markForCheck();
     });
+  }
+
+  public dataLabelFormatter(val: number, opts?: any): string {
+    return val > 0 ? `${val.toFixed()}%` : `0`;
+  }
+
+  public addResourceHealth(result): boolean {
+    let sumResourceHealth = result.healthyResourceCount + result.unhealthyResourceCount + result.notApplicableResourceCount;
+    return sumResourceHealth > 0 ? false : true;
   }
 }

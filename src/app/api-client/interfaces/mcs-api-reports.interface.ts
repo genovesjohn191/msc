@@ -12,7 +12,8 @@ import {
   McsReportOperationalSavings,
   McsReportResourceHealth,
   McsReportSecurityScore,
-  McsReportMonitoringAndAlerting
+  McsReportMonitoringAndAlerting,
+  McsReportResourceCompliance
 } from '@app/models';
 
 export interface IMcsApiReportsService {
@@ -53,6 +54,10 @@ export interface IMcsApiReportsService {
   getResourceHealth(): Observable<McsApiSuccessResponse<McsReportResourceHealth>>;
 
   getSecurityScore(): Observable<McsApiSuccessResponse<McsReportSecurityScore>>;
+
+  getResourceCompliance(
+    periodStart?: string,
+    periodEnd?: string): Observable<McsApiSuccessResponse<McsReportResourceCompliance>>;
 
   getMonitoringAndAlerting(): Observable<McsApiSuccessResponse<McsReportMonitoringAndAlerting>>;
 }

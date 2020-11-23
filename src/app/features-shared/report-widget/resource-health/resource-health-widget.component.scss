@@ -4,13 +4,19 @@
   .apexcharts-datalabels-group {
     .apexcharts-datalabel-label {
       font-size: 1.75em;
-      line-height: 1;
     }
 
     .apexcharts-datalabel-value {
       font-size: 2em;
-      line-height: 1;
       font-weight: 700;
+    }
+  }
+
+  .apexcharts-pie-label {
+    display: none;
+
+    @include print() {
+      display: block;
     }
   }
 }

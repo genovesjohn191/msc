@@ -10,7 +10,7 @@ import { catchError, takeUntil, tap } from 'rxjs/operators';
 import { McsAuthenticationIdentity } from '@app/core';
 import { McsCompany } from '@app/models';
 import { McsApiService } from '@app/services';
-import { CommonDefinition } from '@app/utilities';
+import { CommonDefinition, isNullOrEmpty } from '@app/utilities';
 
 @Component({
   selector: 'mcs-contact-us-widget',
@@ -35,7 +35,9 @@ export class ContactUsWidgetComponent implements OnInit {
   }
 
   public get activeUserCompanyId(): string {
-    return this._authenticationIdentity.user?.companyId;
+    let switchedAccount = this._authenticationIdentity?.activeAccount?.id;
+    let initialAccount = this._authenticationIdentity.user?.companyId
+    return isNullOrEmpty(switchedAccount) ? initialAccount : switchedAccount;
   }
 
   constructor(

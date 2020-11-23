@@ -18,6 +18,7 @@ export class OperationalMonthlySavingsWidgetComponent implements OnInit, OnDestr
 
   public processing: boolean = false;
   public hasError: boolean = false;
+  public empty: boolean = false;
 
   public potentialOperationalSavings: string;
   public operationalSavings: McsReportOperationalSavings[];
@@ -73,6 +74,7 @@ export class OperationalMonthlySavingsWidgetComponent implements OnInit, OnDestr
       }),
       takeUntil(this._destroySubject))
     .subscribe((response) => {
+      this.empty = response.length === 0 ? true : false;
       this.processing = false;
       this.operationalSavings = response;
       this._changeDetectorRef.markForCheck();

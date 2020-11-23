@@ -17,20 +17,28 @@
       </mcs-cta-list-action>
     </mcs-cta-list-panel>
 
-    <mat-accordion #confirmPayloadViewer="matAccordion" multi displayMode="flat">
-      <mat-expansion-panel *ngFor="let operationalSaving of operationalSavings">
-        <mat-expansion-panel-header style="position: relative;">
-          <mat-panel-title>
-            <b>{{ operationalSaving.description }}</b>
-          </mat-panel-title>
-          <mat-panel-description >
-            <b>{{ moneyFormat(operationalSaving.savings) }}</b>
-          </mat-panel-description>
-        </mat-expansion-panel-header>
+    <div *ngIf="empty; else operationalSavingsAccordion">
+      <mcs-status-message type="info">
+        {{ 'reports.insights.techReview.empty' | translate }}
+      </mcs-status-message>
+    </div>
 
-        <mcs-operational-savings-subitems-viewer [obj]="clone(operationalSaving)"></mcs-operational-savings-subitems-viewer>
-      </mat-expansion-panel>
-    </mat-accordion>
+    <ng-template #operationalSavingsAccordion>
+      <mat-accordion #confirmPayloadViewer="matAccordion" multi displayMode="flat">
+        <mat-expansion-panel *ngFor="let operationalSaving of operationalSavings">
+          <mat-expansion-panel-header style="position: relative;">
+            <mat-panel-title>
+              <b>{{ operationalSaving.description }}</b>
+            </mat-panel-title>
+            <mat-panel-description >
+              <b>{{ moneyFormat(operationalSaving.savings) }}</b>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <mcs-operational-savings-subitems-viewer [obj]="clone(operationalSaving)"></mcs-operational-savings-subitems-viewer>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </ng-template>
   </div>
 
   <mcs-report-widget-data-status type="info" [processing]="processing" [hasError]="hasError" (retry)="retryData()">

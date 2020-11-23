@@ -46,7 +46,18 @@ describe('SecurityAndComplianceWidgetComponent', () => {
 
   /** Test Implementation */
   describe('securityScorePercentage()', () => {
-    describe('when value is warn top limit', () => {
+    describe('when values are both 0', () => {
+      it(' should return 0', () => {
+        component.securityScore = {
+          currentScore: 0,
+          maxScore: 0
+        };
+
+        expect(component.securityScorePercentage).toBe(0);
+      });
+    });
+
+    describe('when values are positive', () => {
       it(' should round off correctly', () => {
         component.securityScore = {
           currentScore: 100,
@@ -104,6 +115,35 @@ describe('SecurityAndComplianceWidgetComponent', () => {
         expect(component.securityScorePercentage).toBe(0);
         expect(component.currentScore).toBe(10);
         expect(component.maxScore).toBe(0);
+      });
+    });
+  });
+
+  describe('dataLabelFormatter()', () => {
+    describe('when value is 0', () => {
+      it('should return 0', () => {
+        let expectedResult = '0'
+        let actualResult = component.dataLabelFormatter(0);
+
+        expect(actualResult).toBe(expectedResult);
+      });
+    });
+
+    describe('when value is positive', () => {
+      it('should return positive percentage value', () => {
+        let expectedResult = '50%'
+        let actualResult = component.dataLabelFormatter(50);
+
+        expect(actualResult).toBe(expectedResult);
+      });
+    });
+
+    describe('when value is negative', () => {
+      it('should return 0', () => {
+        let expectedResult = '0'
+        let actualResult = component.dataLabelFormatter(-5);
+
+        expect(actualResult).toBe(expectedResult);
       });
     });
   });

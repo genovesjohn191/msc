@@ -246,9 +246,14 @@
       },
       "techReview": {
         "label": "Tech Review",
+        "empty": "No data found.",
         "securityCompliance": {
           "title": "Security and Compliance",
-          "overAllSecurityScore": "Overall security score",
+          "overAllSecurityScore": "Overall Security Score",
+          "overAllResourceCompliance": "Overall Resource Compliance",
+          "complianceState": "Resources by Compliance State",
+          "nonCompliantInitiatives": "Non-compliant Initiatives",
+          "nonCompliantPolicies": "Non-compliant Policies",
           "viewRecommendation": "View Recommendations in Azure"
         },
         "resourceHealth": {

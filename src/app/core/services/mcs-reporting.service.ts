@@ -14,7 +14,8 @@ import {
   McsReportResourceHealth,
   McsReportSecurityScore,
   McsReportSeverityAlerts,
-  McsReportMonitoringAndAlerting
+  McsReportMonitoringAndAlerting,
+  McsReportResourceCompliance
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { ChartItem } from '@app/shared/chart';
@@ -120,6 +121,13 @@ export class McsReportingService {
     return this._apiService.getSecurityScore();
   }
 
+  public getResourceCompliance(
+    startPeriod: string = '',
+    endPeriod: string = ''
+  ): Observable<McsReportResourceCompliance> {
+    return this._apiService.getResourceCompliance(startPeriod, endPeriod);
+  }
+
   public getMonitoringAndAlerting(): Observable<McsReportMonitoringAndAlerting> {
     return this._apiService.getMonitoringAndAlerting()
     .pipe(map((resources) => {
@@ -186,7 +194,7 @@ export class McsReportingService {
   private _convertGenericItemToChartItem(items: McsReportGenericItem[]): ChartItem[] {
     let data: ChartItem[] = [];
     items.forEach(item => {
-      let invalidData = isNullOrEmpty(item.name) || isNullOrEmpty(item.value) || isNullOrEmpty(item.period);
+      let invalidData = isNullOrEmpty(item.name) || isNullOrEmpty(item.period);
       if (invalidData) { return; }
       data.push({
         name: item.name,

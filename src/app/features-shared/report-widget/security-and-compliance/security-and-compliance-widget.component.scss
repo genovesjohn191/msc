@@ -1,36 +1,77 @@
 @import "../../../../styles/shared/base";
 
-.score-panel {
-  margin: $space-small $space-medium;
-  width: 100%;
+.security-compliance-wrapper {
+  .security-score {
+    .label {
+      margin-left: $space-small;
+    }
+  }
 
-  .info {
-    @include display-flex(row);
+  .score-panel {
+    margin: $space-small $space-medium;
+    width: 100%;
+
+    .info {
+      @include display-flex(row);
+
+      .label {
+        display: inline-block;
+        margin-bottom: $space-small;
+      }
+
+      .score {
+        @include font-size($font-size-large);
+        display: block;
+      }
+    }
+
+    &.overall {
+      height: auto;
+      margin-top: 24px;
+      margin-bottom: auto;
+      max-width: 200px;
+
+      .score {
+        @include font-size($font-size-xxlarge);
+      }
+
+      mcs-icon {
+        align-self: flex-start;
+      }
+    }
+  }
+
+  .resource-compliance-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  
+    > div {
+      margin-right: $space-xlarge;
+      margin-top: $space-xlarge;
+    }
 
     .label {
-      display: inline-block;
-      margin-left: $space-small;
-      margin-bottom: $space-small;
+      margin-left: 0;
     }
 
-    .score {
-      @include font-size($font-size-large);
-      display: block;
-    }
-  }
-
-  &.overall {
-    height: auto;
-    margin-top: 24px;
-    margin-bottom: auto;
-
-    .score {
-      @include font-size($font-size-xxlarge);
+    .initial-compliant-label {
+      font-size: $space-xlarge;
+      font-weight: 700;
     }
 
-    mcs-icon {
-      align-self: flex-start;
+    .apexcharts-pie-label {
+      display: none;
+  
+      @include print() {
+        display: block;
+      }
+    }
+
+    .apexcharts-datalabels-group {
+      .apexcharts-datalabel-value {
+        font-weight: 700;
+      }
     }
   }
-
 }
