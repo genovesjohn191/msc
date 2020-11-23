@@ -137,7 +137,8 @@ import {
   McsObjectQueryParams,
   McsReportResourceHealth,
   McsReportSecurityScore,
-  McsReportMonitoringAndAlerting
+  McsReportMonitoringAndAlerting,
+  McsReportResourceCompliance
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -1651,6 +1652,18 @@ export class McsApiService {
     return this._reportsApi.getSecurityScore().pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getSecurityScore'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public getResourceCompliance(
+    periodStart?: string,
+    periodEnd?: string
+  ): Observable<McsReportResourceCompliance> {
+    return this._reportsApi.getResourceCompliance(periodStart, periodEnd).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getResourceCompliance'))
       ),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );

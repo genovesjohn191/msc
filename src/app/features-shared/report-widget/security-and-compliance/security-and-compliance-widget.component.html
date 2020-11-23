@@ -1,20 +1,14 @@
-<div class="widget" style="padding:0; margin:0; border: none;">
-  <div class="security-compliance-wrapper" *ngIf="!hasError && !processing">
-    <mat-grid-list cols="2" rowHeight="20px">
-      <!-- Overall Score -->
-      <mat-grid-tile colspan="1" rowspan="1">
-        <h4>{{ 'reports.insights.techReview.securityCompliance.overAllSecurityScore' | translate }}</h4>
-      </mat-grid-tile>
-
-      <!-- Security Score by Category -->
-      <!-- <mat-grid-tile colspan="1" rowspan="1">
-        <h4>Security score by category</h4>
-      </mat-grid-tile> -->
-    </mat-grid-list>
-
-    <mat-grid-list cols="4" rowHeight="70px" *ngIf="securityScore">
-      <!-- Overall Score -->
-      <mat-grid-tile colspan="2" rowspan="2">
+<div class="widget flat">
+  <div class="security-compliance-wrapper" *ngIf="!hasError && !processing; else error">
+    <div class="security-score">
+      <h4>{{ 'reports.insights.techReview.securityCompliance.overAllSecurityScore' | translate }}</h4>
+      <div *ngIf="empty; else secureScore">
+        <mcs-status-message type="info">
+          {{ 'reports.insights.techReview.empty' | translate }}
+        </mcs-status-message>
+      </div>
+      <!-- Overall Security Score -->
+      <ng-template #secureScore>
         <div class="score-panel overall">
           <div class="info">
             <mcs-icon key="small-lock-black" color="light" size="large"></mcs-icon>
@@ -34,29 +28,109 @@
             </a>
           </div>
         </div>
-      </mat-grid-tile>
+      </ng-template>
+    </div>
+  </div>
+  <ng-template #error>
+    <mcs-report-widget-data-status type="info" [processing]="processing"
+      [hasError]="hasError" (retry)="getSecurityScore()">
+    </mcs-report-widget-data-status>
+  </ng-template>
 
-      <!-- Security Score by Category (temporarily hidden: Part of Phase 2) -->
-      <!-- <mat-grid-tile *ngFor="let number of [0,1,2,3]" colspan="1" rowspan="1">
-        <div class="score-panel">
-          <div class="info">
-            <mcs-icon key="small-document-new-black" color="light" size="large"></mcs-icon>
-            <div class="label">
-              <span>Category name</span>
-              <span class="score">
-                <strong>
-                  622
-                </strong>
-                / 1316
+  <div class="security-compliance-wrapper" *ngIf="!hasErrorCompliance && !processingCompliance; else errorResourceCompliance">
+    <div class="resource-compliance-wrapper">
+      <div *ngIf="emptyCompliance; else resourceComplianceData">
+        <h4>{{ 'reports.insights.techReview.securityCompliance.overAllResourceCompliance' | translate }}</h4>
+        <mcs-status-message type="info">
+          {{ 'reports.insights.techReview.empty' | translate }}
+        </mcs-status-message>
+      </div>
+      <ng-template #resourceComplianceData>
+        <!-- Overall Resource Compliance Score -->
+        <div class="resource-compliance">
+          <h4>
+            {{ 'reports.insights.techReview.securityCompliance.overAllResourceCompliance' | translate }}
+            <mcs-icon [key]="statusIconKey" size="xsmall" color="light"></mcs-icon>
+          </h4>
+          <div class="score-panel overall">
+            <div class="info">
+              <div class="label">
+                <span class="score">
+                  <strong>
+                    {{ resourceCompliance.resourceCompliancePercentage }}%
+                  </strong>
+                </span>
+              </div>
+            </div>
+            <mat-progress-bar mode="determinate" value="{{ resourceCompliancePercentage }}" style="height: 10px;"></mat-progress-bar>
+            <div>
+              <span class="total-compliance-resources">
+                {{ resourceCompliance.compliantResources }} of {{ resourceCompliance.totalResources }}
               </span>
             </div>
           </div>
-
-          <mat-progress-bar mode="determinate" value="30" style="height: 10px;"></mat-progress-bar>
         </div>
-      </mat-grid-tile> -->
-    </mat-grid-list>
+
+        <!-- Resources by Compliance state -->
+        <div class="resource-compliance-state" *ngIf="resources">
+          <h4>
+            {{ 'reports.insights.techReview.securityCompliance.complianceState' | translate }}
+            <mcs-icon [key]="statusIconKey" size="xsmall" color="light"></mcs-icon>
+          </h4>
+          <div *ngIf="emptyComplianceState; else complianceStateChart">
+            <mcs-status-message type="info">
+              {{ 'reports.insights.techReview.empty' | translate }}
+            </mcs-status-message>
+          </div>
+          <ng-template #complianceStateChart>
+            <mcs-pie-chart
+              [config]="chartConfig"
+              [data]="resources">
+            </mcs-pie-chart>
+          </ng-template>
+        </div>
+
+        <!-- Non compliant initiatives -->
+        <div class="resource-compliance-state">
+          <h4>
+            {{ 'reports.insights.techReview.securityCompliance.nonCompliantInitiatives' | translate }}
+            <mcs-icon [key]="statusIconKey" size="xsmall" color="light"></mcs-icon>
+          </h4>
+          <div class="score-panel overall">
+            <div>
+              <span class="initial-compliant-label">
+                  {{ resourceCompliance.nonCompliantInitiatives }}
+              </span>
+              <span class="total-compliant-label">
+                out of {{ resourceCompliance.totalInitiatives }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Non compliant policies -->
+        <div class="resource-compliance-state">
+          <h4>
+            {{ 'reports.insights.techReview.securityCompliance.nonCompliantPolicies' | translate }}
+            <mcs-icon [key]="statusIconKey" size="xsmall" color="light"></mcs-icon>
+          </h4>
+          <div class="score-panel overall">
+            <div>
+              <span class="initial-compliant-label">
+                  {{ resourceCompliance.nonCompliantPolicies }}
+              </span>
+              <span class="total-compliant-label">
+                out of {{ resourceCompliance.totalPolicies }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </div>
   </div>
-  <mcs-report-widget-data-status type="info" [processing]="processing" [hasError]="hasError" (retry)="getSecurityScore()">
-  </mcs-report-widget-data-status>
+  <ng-template #errorResourceCompliance>
+    <mcs-report-widget-data-status type="info" [processing]="processingCompliance"
+      [hasError]="hasErrorCompliance" (retry)="getResourceCompliance()">
+    </mcs-report-widget-data-status>
+  </ng-template>
 </div>

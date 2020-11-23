@@ -1,10 +1,16 @@
 <div class="widget flat">
-  <div class="resource-health-wrapper">
-    <mcs-pie-chart
-      *ngIf="!processing && !hasError"
-      [config]="chartConfig"
-      [data]="data$ | async">
-    </mcs-pie-chart>
+  <div class="resource-health-wrapper" *ngIf="!processing && !hasError">
+    <div *ngIf="empty; else resourceHealth">
+      <mcs-status-message type="info">
+        {{ 'reports.insights.techReview.empty' | translate }}
+      </mcs-status-message>
+    </div>
+    <ng-template #resourceHealth>
+      <mcs-pie-chart
+        [config]="chartConfig"
+        [data]="data$ | async">
+      </mcs-pie-chart>
+    </ng-template>
   </div>
 
   <mcs-report-widget-data-status type="info" [processing]="processing" [hasError]="hasError" (retry)="getData()">

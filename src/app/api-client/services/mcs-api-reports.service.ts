@@ -15,7 +15,8 @@ import {
   McsReportOperationalSavings,
   McsReportResourceHealth,
   McsReportSecurityScore,
-  McsReportMonitoringAndAlerting
+  McsReportMonitoringAndAlerting,
+  McsReportResourceCompliance
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiReportsService } from '../interfaces/mcs-api-reports.interface';
@@ -253,6 +254,29 @@ export class McsApiReportsService implements IMcsApiReportsService {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
             .deserializeResponse<McsReportSecurityScore>(McsReportSecurityScore, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  public getResourceCompliance(
+    periodStart?: string,
+    periodEnd?: string
+  ): Observable<McsApiSuccessResponse<McsReportResourceCompliance>> {
+    let searchParams = new Map<string, any>();
+    searchParams.set('period_start', periodStart);
+    searchParams.set('period_end', periodEnd);
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/public-cloud/reports/compliance';
+    mcsApiRequestParameter.searchParameters = searchParams;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsReportResourceCompliance>(McsReportResourceCompliance, response);
           return apiResponse;
         })
       );

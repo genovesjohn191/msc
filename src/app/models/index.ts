@@ -266,6 +266,8 @@ export * from './response/mcs-report-vm-rightsizing';
 export * from './response/mcs-report-vm-rightsizing-summary';
 export * from './response/mcs-report-resource-health';
 export * from './response/mcs-report-security-score';
+export * from './response/mcs-report-resource-compliance';
+export * from './response/mcs-report-resource-compliance-state';
 export * from './response/mcs-report-monitoring-and-alerting';
 export * from './response/mcs-report-severity-alerts';
 export * from './response/mcs-object-crisp-element';
