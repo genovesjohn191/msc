@@ -533,8 +533,28 @@
       "value": true,
       "exclude": true
     },
-    "totalScore": {
-      "text": "Total Score",
+    "size": {
+      "text": "Size",
+      "value": true,
+      "exclude": true
+    },
+    "region": {
+      "text": "Region",
+      "value": true,
+      "exclude": true
+    },
+    "recommendation": {
+      "text": "Recommendation",
+      "value": true,
+      "exclude": true
+    },
+    "projectedComputeCost": {
+      "text": "Projected Compute Cost",
+      "value": true,
+      "exclude": true
+    },
+    "recommendationSavings": {
+      "text": "Possible Savings",
       "value": true,
       "exclude": true
     },
@@ -553,23 +573,8 @@
       "value": true,
       "exclude": true
     },
-    "size": {
-      "text": "Size",
-      "value": true,
-      "exclude": true
-    },
-    "region": {
-      "text": "Region",
-      "value": true,
-      "exclude": true
-    },
-    "projectedComputeCost": {
-      "text": "Projected Compute Cost",
-      "value": true,
-      "exclude": true
-    },
-    "recommendationSavings": {
-      "text": "Recommendation Savings",
+    "totalScore": {
+      "text": "Total Score",
       "value": true,
       "exclude": true
     }

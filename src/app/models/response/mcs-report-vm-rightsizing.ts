@@ -27,4 +27,7 @@ export class McsReportVMRightsizing {
 
   @JsonProperty()
   public recommendationSavings: number = undefined;
+
+  @JsonProperty()
+  public recommendation: string = undefined;
 }
