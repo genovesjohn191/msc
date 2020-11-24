@@ -5,12 +5,11 @@ import {
   OnInit,
   ChangeDetectorRef
 } from '@angular/core';
-import { Observable, Subject, throwError } from 'rxjs';
-import { catchError, takeUntil, tap } from 'rxjs/operators';
-import { McsAuthenticationIdentity } from '@app/core';
+import { Subject, throwError } from 'rxjs';
+import { catchError, takeUntil } from 'rxjs/operators';
 import { McsCompany } from '@app/models';
 import { McsApiService } from '@app/services';
-import { CommonDefinition, isNullOrEmpty } from '@app/utilities';
+import { CommonDefinition } from '@app/utilities';
 
 @Component({
   selector: 'mcs-contact-us-widget',
@@ -34,16 +33,9 @@ export class ContactUsWidgetComponent implements OnInit {
     return CommonDefinition.ASSETS_SVG_SMALL_PERSON_FAV_BLACK;
   }
 
-  public get activeUserCompanyId(): string {
-    let switchedAccount = this._authenticationIdentity?.activeAccount?.id;
-    let initialAccount = this._authenticationIdentity.user?.companyId
-    return isNullOrEmpty(switchedAccount) ? initialAccount : switchedAccount;
-  }
-
   constructor(
     private _apiService: McsApiService,
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _authenticationIdentity: McsAuthenticationIdentity
+    private _changeDetectorRef: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -53,7 +45,7 @@ export class ContactUsWidgetComponent implements OnInit {
   public getUserContactsInfo(): void {
     this.processing = true;
     this.hasError = false;
-    this._apiService.getCompany(this.activeUserCompanyId)
+    this._apiService.getCompanyActiveUser()
     .pipe(
       catchError(() => {
         this.hasError = true;

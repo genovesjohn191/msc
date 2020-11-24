@@ -16,7 +16,8 @@ import {
   McsReportResourceHealth,
   McsReportSecurityScore,
   McsReportMonitoringAndAlerting,
-  McsReportResourceCompliance
+  McsReportResourceCompliance,
+  McsRightSizingQueryParams
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiReportsService } from '../interfaces/mcs-api-reports.interface';
@@ -192,12 +193,14 @@ export class McsApiReportsService implements IMcsApiReportsService {
       );
   }
 
-  public getVMRightsizing(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsReportVMRightsizing[]>> {
+  public getVMRightsizing(query?: McsRightSizingQueryParams): Observable<McsApiSuccessResponse<McsReportVMRightsizing[]>> {
     // Set default values if null
     let searchParams = new Map<string, any>();
     if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
     searchParams.set('page', query.pageIndex);
     searchParams.set('per_page', query.pageSize);
+    searchParams.set('period_start', query.periodStart);
+    searchParams.set('period_end', query.periodStart);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/public-cloud/reports/vm-rightsizing';

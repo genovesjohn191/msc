@@ -13,7 +13,8 @@ import {
   McsReportResourceHealth,
   McsReportSecurityScore,
   McsReportMonitoringAndAlerting,
-  McsReportResourceCompliance
+  McsReportResourceCompliance,
+  McsRightSizingQueryParams
 } from '@app/models';
 
 export interface IMcsApiReportsService {
@@ -47,7 +48,7 @@ export interface IMcsApiReportsService {
 
   getOperationalMonthlySavings(): Observable<McsApiSuccessResponse<McsReportOperationalSavings[]>>;
 
-  getVMRightsizing(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsReportVMRightsizing[]>>;
+  getVMRightsizing(query?: McsRightSizingQueryParams): Observable<McsApiSuccessResponse<McsReportVMRightsizing[]>>;
 
   getVMRightsizingSummary(): Observable<McsApiSuccessResponse<McsReportVMRightsizingSummary>>;
 

@@ -218,7 +218,7 @@
           "chartBottomLabel": "Forecasts the next month based on the previous 12"
         },
         "resourceCost": {
-          "title": "Resources Cost for"
+          "title": "Resource Cost for"
         },
         "vmBreakdown": {
           "title": "Virtual Machine Breakdown"
@@ -241,12 +241,12 @@
               "recommendationSavings": "Recommendation Savings"
             }
           },
-          "empty": "No data found."
+          "empty": "No data found"
         }
       },
       "techReview": {
         "label": "Tech Review",
-        "empty": "No data found.",
+        "empty": "No data found",
         "securityCompliance": {
           "title": "Security and Compliance",
           "overAllSecurityScore": "Overall Security Score",

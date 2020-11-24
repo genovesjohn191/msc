@@ -8,7 +8,7 @@ import { McsReportingService } from '@app/core/services/mcs-reporting.service';
 import { PerformanceAndScalabilityWidgetConfig, ReportPeriod } from '@app/features-shared/report-widget';
 import { ResourceMonthlyCostWidgetConfig } from '@app/features-shared/report-widget/resource-monthly-cost/resource-monthly-cost-widget.component';
 import { McsReportSubscription } from '@app/models';
-import { unsubscribeSafely } from '@app/utilities';
+import { CommonDefinition, unsubscribeSafely } from '@app/utilities';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 
@@ -43,6 +43,10 @@ const months = [
 })
 export class ReportInsightsComponent implements OnDestroy {
   public monthOptions: PeriodOption[];
+
+  public get cloudHealthUrl(): string  {
+    return CommonDefinition.CLOUD_HEALTH_URL;
+  }
 
   public set selectedPerformanceMonth(value: PeriodOption) {
     this._selectedPerformanceMonth = value;

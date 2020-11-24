@@ -4,7 +4,7 @@ import { Observable, Subject, throwError } from 'rxjs';
 import { cloneObject, CommonDefinition, currencyFormat, getSafeProperty, unsubscribeSafely } from '@app/utilities';
 import { McsReportingService } from '@app/core/services/mcs-reporting.service';
 import { CoreRoutes, McsFilterService, McsMatTableContext, McsMatTableQueryParam, McsTableDataSource2 } from '@app/core';
-import { McsQueryParam, McsReportVMRightsizing, RouteKey } from '@app/models';
+import { McsQueryParam, McsReportVMRightsizing, McsRightSizingQueryParams, RouteKey } from '@app/models';
 
 @Component({
   selector: 'mcs-vm-rightsizing-widget',

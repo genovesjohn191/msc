@@ -22,7 +22,8 @@
           {{ 'reports.overview.changeRequestsWidget.changeLicenseCount.description' | translate }}
         </mcs-cta-list-body>
       </mcs-cta-list-panel>
-      <mcs-cta-list-panel [icon]="changeDnsZoneIcon" *mcsAccessControl="['OrderEdit']; feature: ['EnableOrderingDnsCustomRequest']">
+      <!-- temporarily hidden until Change DNS page is available -->
+      <!-- <mcs-cta-list-panel [icon]="changeDnsZoneIcon" *mcsAccessControl="['OrderEdit']; feature: ['EnableOrderingDnsCustomRequest']">
         <mcs-cta-list-header link="servers">
           <a href="{{ changeManagedDnsLink }}">
             {{ 'reports.overview.changeRequestsWidget.changeDNSZone.link' | translate }}
@@ -31,7 +32,7 @@
         <mcs-cta-list-body>
           {{ 'reports.overview.changeRequestsWidget.changeDNSZone.description' | translate }}
         </mcs-cta-list-body>
-      </mcs-cta-list-panel>
+      </mcs-cta-list-panel> -->
     </mcs-cta-list>
   </div>
 </div>

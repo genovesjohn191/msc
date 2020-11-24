@@ -1,18 +1,25 @@
 <div class="widget flat">
   <div *ngIf="!processing && !hasError" class="monitoring-alerting-wrapper">
-    <div class="total-alerts-wrapper">
-      <b>{{ 'reports.insights.techReview.monitoringAlerting.totalAlerts' | translate }}</b>
-      <div class="total-alerts">
-        {{ monitoringAlerting.totalAlerts }}
-      </div>
-      <div class="started-on">
-        Since {{ convertedDate }}
-      </div>
+    <div *ngIf="empty; else monitoringAlertingContent">
+      <mcs-status-message type="info">
+        {{ 'reports.insights.techReview.empty' | translate }}
+      </mcs-status-message>
     </div>
-    <mcs-horizontal-bar-chart
-      [data]="data$ | async"
-      [config]="chartConfig">
-    </mcs-horizontal-bar-chart>
+    <ng-template #monitoringAlertingContent>
+      <div class="total-alerts-wrapper">
+        <b>{{ 'reports.insights.techReview.monitoringAlerting.totalAlerts' | translate }}</b>
+        <div class="total-alerts">
+          {{ monitoringAlerting.totalAlerts }}
+        </div>
+        <div class="started-on" *ngIf="monitoringAlerting.startedOn">
+          Since {{ monitoringAlerting.startedOn | mcsStdDateFormat }}
+        </div>
+      </div>
+      <mcs-horizontal-bar-chart
+        [data]="data$ | async"
+        [config]="chartConfig">
+      </mcs-horizontal-bar-chart>
+    </ng-template>
   </div>
   <mcs-report-widget-data-status type="info" [processing]="processing" [hasError]="hasError" (retry)="getData()">
   </mcs-report-widget-data-status>

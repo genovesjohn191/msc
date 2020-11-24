@@ -59,4 +59,22 @@ export class McsApiCompaniesService implements IMcsApiCompaniesService {
         })
       );
   }
+
+  /**
+   * Get active user company info
+   */
+  public getCompanyActiveUser(): Observable<McsApiSuccessResponse<McsCompany>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/companies/my-company`;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsCompany>(McsCompany, response);
+          return apiResponse;
+        })
+      );
+  }
 }

@@ -19,4 +19,9 @@ export interface IMcsApiCompaniesService {
    * @param id Company identification
    */
   getCompany(id: any): Observable<McsApiSuccessResponse<McsCompany>>;
+
+  /**
+   * Get active user company info
+   */
+  getCompanyActiveUser(): Observable<McsApiSuccessResponse<McsCompany>>;
 }
