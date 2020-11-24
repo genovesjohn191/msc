@@ -143,6 +143,6 @@ export class ReportInsightsComponent implements OnDestroy {
     }
 
     this.selectedPerformanceMonth = this.monthOptions[0];
-    this.selectedResourceCostMonth = this.monthOptions[0];
+    this.selectedResourceCostMonth = this.monthOptions[1];
   }
 }

@@ -238,7 +238,8 @@
               "size": "Size",
               "region": "Region",
               "projectedComputeCost": "Projected Compute Cost",
-              "recommendationSavings": "Recommendation Savings"
+              "recommendationSavings": "Possible Savings",
+              "recommendation": "Recommendation"
             }
           },
           "empty": "No data found"
