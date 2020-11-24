@@ -15,7 +15,8 @@ import {
   McsReportSecurityScore,
   McsReportSeverityAlerts,
   McsReportMonitoringAndAlerting,
-  McsReportResourceCompliance
+  McsReportResourceCompliance,
+  McsRightSizingQueryParams
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { ChartItem } from '@app/shared/chart';
@@ -56,7 +57,7 @@ export class McsReportingService {
     endPeriod: string = '',
     subscriptionIds: string[] = []): Observable<ChartItem[]> {
     return this._apiService.getResourceMonthlyCostReport(startPeriod, endPeriod, subscriptionIds)
-      .pipe(map((resources) => this._convertGenericItemToChartItem(resources.collection)));
+      .pipe(map((resources) => this._convertGenericItemToChartItemNoMonth(resources.collection)));
   }
 
   public getVirtualMachineBreakdownReport(
@@ -72,7 +73,7 @@ export class McsReportingService {
     endPeriod: string = '',
     subscriptionIds: string[] = []): Observable<ChartItem[]> {
     return this._apiService.getPerformanceReport(startPeriod, endPeriod, subscriptionIds)
-      .pipe(map((resources) => this._convertGenericItemToChartItem(resources.collection)));
+      .pipe(map((resources) => this._convertGenericItemToChartItemNoMonth(resources.collection)));
   }
 
   public getAzureServicesReport(): Observable<ChartItem[]> {
@@ -105,8 +106,8 @@ export class McsReportingService {
     return this._apiService.getOperationalMonthlySavings();
   }
 
-  public getVMRightsizing(query?: McsQueryParam): Observable<McsReportVMRightsizing[]> {
-    return this._apiService.getVMRightsizing();
+  public getVMRightsizing(query?: McsRightSizingQueryParams): Observable<McsReportVMRightsizing[]> {
+    return this._apiService.getVMRightsizing(query);
   }
 
   public getVMRightsizingSummary(): Observable<McsReportVMRightsizingSummary> {
@@ -167,7 +168,7 @@ export class McsReportingService {
       let invalidData = isNullOrEmpty(item.description);
       if (invalidData) { return; }
       data.push({
-        name: item.description,
+        name: '',
         xValue: `Sev ${item.severity}`,
         yValue: item.totalAlerts
       });
@@ -199,6 +200,23 @@ export class McsReportingService {
       data.push({
         name: item.name,
         xValue: item.period,
+        yValue: item.value
+      });
+    });
+
+    return data;
+  }
+
+  private _convertGenericItemToChartItemNoMonth(items: McsReportGenericItem[]): ChartItem[] {
+    let data: ChartItem[] = [];
+    items.forEach(item => {
+      let invalidData = isNullOrEmpty(item.name) || isNullOrEmpty(item.period);
+      if (invalidData) { return; }
+
+      let period = item.period.replace(/[a-zA-z ]/g, '');
+      data.push({
+        name: item.name,
+        xValue: period,
         yValue: item.value
       });
     });

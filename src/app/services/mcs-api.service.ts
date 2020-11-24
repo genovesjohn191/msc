@@ -138,7 +138,8 @@ import {
   McsReportResourceHealth,
   McsReportSecurityScore,
   McsReportMonitoringAndAlerting,
-  McsReportResourceCompliance
+  McsReportResourceCompliance,
+  McsRightSizingQueryParams
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -190,6 +191,8 @@ import {
   McsApiColocationsFactory,
   McsApiWorkflowsFactory,
   IMcsApiWorkflowsService,
+  IMcsApiCompaniesService,
+  McsApiCompaniesFactory,
 } from '@app/api-client';
 import { McsEvent } from '@app/events';
 import { McsRepository } from './core/mcs-repository.interface';
@@ -264,6 +267,7 @@ export class McsApiService {
   private readonly _reportsApi: IMcsApiReportsService;
   private readonly _workflowsApi: IMcsApiWorkflowsService;
   private readonly _objectsApi: IMcsApiObjectsService;
+  private readonly _companyActiveUser: IMcsApiCompaniesService;
 
   private readonly _eventDispatcher: EventBusDispatcherService;
   private readonly _entitiesEventMap: Array<DataEmitter<any>>;
@@ -313,6 +317,7 @@ export class McsApiService {
     this._reportsApi = apiClientFactory.getService(new McsApiReportsFactory());
     this._workflowsApi = apiClientFactory.getService(new McsApiWorkflowsFactory());
     this._objectsApi = apiClientFactory.getService(new McsApiObjectsFactory());
+    this._companyActiveUser = apiClientFactory.getService(new McsApiCompaniesFactory());
 
     // Register events
     this._entitiesEventMap = [];
@@ -1169,6 +1174,15 @@ export class McsApiService {
     );
   }
 
+  public getCompanyActiveUser(): Observable<McsCompany> {
+    return this._companyActiveUser.getCompanyActiveUser().pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getCompanyActiveUser'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
   public getPlatform(): Observable<McsPlatform> {
     return this._platformApi.getPlatform().pipe(
       catchError((error) =>
@@ -1621,7 +1635,7 @@ export class McsApiService {
     );
   }
 
-  public getVMRightsizing(query?: McsQueryParam): Observable<McsReportVMRightsizing[]> {
+  public getVMRightsizing(query?: McsRightSizingQueryParams): Observable<McsReportVMRightsizing[]> {
     return this._reportsApi.getVMRightsizing(query).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getVMRightsizing'))

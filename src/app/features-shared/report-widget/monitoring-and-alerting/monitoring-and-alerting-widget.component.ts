@@ -7,12 +7,10 @@ import {
 } from '@angular/core';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { McsDateTimeService } from '@app/core';
 import { McsReportingService } from '@app/core/services/mcs-reporting.service';
 import { McsReportMonitoringAndAlerting } from '@app/models';
 import { ChartConfig, ChartItem } from '@app/shared';
-
-const DATEFORMAT = `M/DD/YYYY[,] h:mm:ss A`;
+import { isNullOrEmpty } from '@app/utilities';
 
 @Component({
   selector: 'mcs-monitoring-and-alerting-widget',
@@ -40,11 +38,11 @@ export class MonitoringAndAlertingWidgetComponent implements OnInit, OnDestroy {
   public monitoringAlerting: McsReportMonitoringAndAlerting;
   public hasError: boolean = false;
   public processing: boolean = true;
+  public empty: boolean = true;
   public convertedDate: string;
 
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
-    private _dateTimeService: McsDateTimeService,
     private _reportingService: McsReportingService
   ) {
   }
@@ -73,9 +71,8 @@ export class MonitoringAndAlertingWidgetComponent implements OnInit, OnDestroy {
     .subscribe((result) => {
       this.processing = false;
       this.monitoringAlerting = result;
+      this.empty = isNullOrEmpty(result) ? true : false;
       this.dataBehavior.next(result.alertsChartItem);
-      let parseDate = new Date(Date.parse(result.startedOn));
-      this.convertedDate = this._dateTimeService.formatDate(parseDate, DATEFORMAT);
       this._changeDetectorRef.markForCheck();
     });
   }
