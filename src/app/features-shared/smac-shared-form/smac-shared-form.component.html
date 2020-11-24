@@ -66,6 +66,8 @@
     <mcs-form-field>
       <input mcsInput
         [formControl]="fcCustomerReference"
+        [placeholder]="config?.customerReferenceConfig?.placeholder"
+        [mcsContextualHelp]="config?.customerReferenceConfig?.helpText"
         mcsId="input-customer-reference"
         mcsEventTracker="input-customer-reference"
         mcsEventCategory="order"

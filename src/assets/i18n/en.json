@@ -939,6 +939,63 @@
       "serverRequired" : "Server is required"
     }
   },
+  "orderSimpleFirewallChanges": {
+    "title": "Simple Firewall Change",
+    "detailsStep": {
+      "stepTitle": "Request Details",
+      "previous": "Back",
+      "cancel": "Cancel",
+      "description": "You can use this wizard to request new rules be added to your firewall service.",
+      "leadTime": "Our standard lead time of {{lead_time}} hours for this request ensures we have time to get the right engineer for the task.",
+      "addRuleTabLabel": "Add a Rule",
+      "modifyRuleTabLabel": "Modify a Rule",
+      "removeRuleTabLabel": "Remove a Rule",
+      "firewallService": {
+        "placeholder": "Select a firewall service",
+        "helptext": "Select a firewall service to request this change for",
+        "fallback": "There are no applicable services to display, or you do not have the necessary permissions required to view them. Please contact your account team",
+        "raiseTicketPrefix": " or ",
+        "raiseTicketLink": "raise a ticket",
+        "raiseTicketSuffix": "if this is unexpected"
+      },
+      "sharedRuleForm": {
+        "addBtnLabel": "Additional Change",
+        "removeBtnLabel": "Remove Item",
+        "add": {
+          "label": "What firewall rules would you like to add?",
+          "helptext": "Enter the source and destination details, and the protocol for your new rule. Use the Additional Change button to add multiple.",
+          "action": {
+            "errorRequired": "action is required"
+          },
+          "sourceZoneOrInterface": {
+            "placeholder": "Source Zone or Interface",
+            "errorRequired": "Source Zone/Interface is required"
+          },
+          "sourceIpOrSubnet": {
+            "placeholder": "Source IP or Subnet",
+            "errorRequired": "Source IP/Subnet is required"
+          },
+          "destinationZoneOrInterface": {
+            "placeholder": "Destination Zone or Interface",
+            "errorRequired": "Destination Zone/Interface is required"
+          },
+          "destinationIpOrSubnet": {
+            "placeholder": "Destination IP or Subnet",
+            "errorRequired": "Destination IP/Subnet is required"
+          },
+          "destinationPort": {
+            "placeholder": "Destination Port(s)",
+            "errorRequired": "Protocol is required"
+          },
+          "protocol": {
+            "errorRequired": "Protocol is required"
+          },
+          "notesLabel": "Additional Details",
+          "referenceNumberHelpText": "Enter an optional reference number. This is useful if you need to reference an internal change record or ticket ID."
+        }
+      }
+    }
+  },
   "notification": {
     "leftPanelHeader": "Notification details",
     "backToNotifications": "Back to Notifications"
@@ -1874,7 +1931,8 @@
       },
       "customerReference": {
         "label": "Customer reference number",
-        "placeholder": "Customer reference number"
+        "placeholder": "Customer reference number",
+        "helpText": "Enter an optional reference number"
       }
     },
     "fallback": {

@@ -25,6 +25,8 @@ import { MsLicenseCountChangeComponent } from './ms-license-count-change/ms-lice
 import { MsRequestChangeComponent } from './ms-request-change/ms-request-change.component';
 import { RemoteHandsComponent } from './remote-hands/remote-hands.component';
 import { ServerRequestPatchComponent } from './server-request-patch/server-request-patch.component';
+import { SimpleFirewallChangeComponent } from './simple-firewall-changes/simple-firewall-change.component';
+import { FirewallChangesSharedRuleComponent } from './simple-firewall-changes/firewall-changes-shared-rule/firewall-changes-shared-rule.component';
 import { OrdersGuard } from './orders.guard';
 
 /**
@@ -61,7 +63,9 @@ export const ordersComponents: any[] = [
   MsLicenseCountChangeComponent,
   MsRequestChangeComponent,
   RemoteHandsComponent,
-  ServerRequestPatchComponent
+  ServerRequestPatchComponent,
+  SimpleFirewallChangeComponent,
+  FirewallChangesSharedRuleComponent
 ];
 
 /**
@@ -167,6 +171,11 @@ export const ordersRoutes: Routes = [
     path: 'request-patch',
     component: ServerRequestPatchComponent,
     data: { routeId: RouteKey.OrderServerRequestPatch }
+  },
+  {
+    path: 'add/simple-firewall-changes',
+    component: SimpleFirewallChangeComponent,
+    data: { routeId: RouteKey.OrderAddSimpleFirewallChange }
   },
   // Add additional routes above this line
   {

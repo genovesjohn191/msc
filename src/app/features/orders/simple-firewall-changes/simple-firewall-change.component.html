@@ -1,0 +1,140 @@
+<mcs-page [header]="'orderSimpleFirewallChanges.title' | translate">
+    <!-- Top Panel -->
+    <mcs-top-panel *mcsTopPanelDef>
+  
+      <!-- Back to Server Details -->
+      <mcs-top-panel-item *mcsTopPanelItemDef no-border>
+        <mcs-action-item mcsAlign="end" mcsNavigateBackward mcsId="navigate-back" mcsEventTracker="navigate-back-click"
+          mcsEventCategory="orders" mcsEventLabel="navigate-back">
+          <mcs-icon [key]="backIconKey" size="small"></mcs-icon>
+          <span>{{'shared.wizard.previous' | translate}}</span>
+        </mcs-action-item>
+      </mcs-top-panel-item>
+    </mcs-top-panel>
+  
+    <mcs-content-panel *mcsContentPanelDef>
+  
+      <mcs-wizard (stepChange)="onWizardStepChanged($event)">
+  
+        <!-- Error message -->
+        <ng-container mcsWizardErrorTemplate>
+          <mcs-form-message #formMessage></mcs-form-message>
+        </ng-container>
+  
+        <!-- Details Step-->
+        <mcs-wizard-step id="request-details-step"
+          [stepTitle]="'orderSimpleFirewallChanges.detailsStep.stepTitle' | translate"
+          customClass="contextual-help-page-wrapper limited-view">
+          <form [formGroup]="fgAddFirewallRules" mcsFormGroup>
+            <ng-container  *ngIf="isLoading; else dnsTemplate">
+              <mcs-loader size="small"
+                [mcsTooltip]="loadingText"
+                mcsTooltipPosition="right"></mcs-loader>
+            </ng-container>
+            <ng-template #dnsTemplate>
+                <mcs-item orientation="block">
+                  <p>{{'orderSimpleFirewallChanges.detailsStep.description' | translate}}</p>
+                  <p>{{'orderSimpleFirewallChanges.detailsStep.leadTime' | translate: { lead_time: dnsLeadTimeHours } }}</p>
+                </mcs-item>
+            </ng-template>
+                <!-- Firewall Services -->
+                <mcs-item orientation='block'>
+                  <ng-container  *ngIf="isLoading; else firewallService">
+                    <mcs-loader size="small"
+                      [mcsTooltip]="loadingText"
+                      mcsTooltipPosition="right"></mcs-loader>
+                  </ng-container>
+                  <ng-template #firewallService>
+                    <mcs-form-field *ngIf="!(isLoading) && firewallOptions | mcsArrayHasElement else noServicesTemplate">
+                      <mcs-select [formControl]="fcFirewallServices" required
+                        [placeholder]="'orderSimpleFirewallChanges.detailsStep.firewallService.placeholder' | translate"
+                        [mcsContextualHelp]="'orderSimpleFirewallChanges.detailsStep.firewallService.helptext' | translate"
+                        mcsId="select-firewall-service" mcsEventTracker="select-firewall-service" mcsEventCategory="order"
+                        mcsEventLabel="add-simple-firewall-change-page">
+                        <mcs-option *ngFor="let firewallOption of firewallOptions " [value]="firewallOption.value">
+                          {{ firewallOption.text }}
+                        </mcs-option>
+                      </mcs-select>
+                      <mcs-error mcsError errorState="required">
+                        {{ 'orderSimpleFirewallChanges.detailsStep.firewallService.errorRequired' | translate }}
+                      </mcs-error>
+                    </mcs-form-field>
+                    <ng-template #noServicesTemplate>
+                      <p [mcsGreyedOut]="true"> 
+                        <span>{{ 'orderSimpleFirewallChanges.detailsStep.firewallService.fallback' | translate }}</span>
+                        <ng-container *mcsAccessControl="['TicketCreate']">
+                          <span> {{'orderSimpleFirewallChanges.detailsStep.firewallService.raiseTicketPrefix' | translate }} </span>
+                          <a [mcsRouterLink]="[routeKeyEnum.TicketCreate]" mcsId="raise-a-ticket"
+                            mcsEventTracker="raise-a-ticket" mcsEventCategory="ticket"
+                            mcsEventLabel="add-simple-firewall-change-page">{{ 'orderSimpleFirewallChanges.detailsStep.firewallService.raiseTicketLink' | translate }}</a>
+                          <span> {{'orderSimpleFirewallChanges.detailsStep.firewallService.raiseTicketSuffix' | translate }}</span>
+                        </ng-container>.
+                      </p>
+                    </ng-template>
+                  </ng-template>
+                </mcs-item>
+
+                <mcs-item orientation="block">
+                    <div formArrayName="faSharedRuleForm">
+                    <mcs-accordion [multi]="true">
+                        <mcs-accordion-panel *ngFor="let formItem of faSharedRuleForm?.controls; index as i" [expanded]="i === 0" margin-top-small>
+                        <mcs-accordion-panel-header mcsPanelHeaderDef>
+                            <span>{{ getFormControl(formItem, 'fcActionType').value }}</span>
+                            <span *ngIf="getFormControl(formItem, 'fcSourceIpSubnet').value"> - {{ getFormControl(formItem, 'fcSourceIpSubnet').value }}</span>
+                            <span *ngIf="getFormControl(formItem, 'fcDestinationIpSubnet').value"> -> {{ getFormControl(formItem, 'fcDestinationIpSubnet').value }}</span>
+                            <span *ngIf="getFormControl(formItem, 'fcProtocol').value"> {{ getFormControl(formItem, 'fcProtocol').value }}</span>
+                        </mcs-accordion-panel-header>
+                        <mcs-firewall-changes-shared-rule
+                            [formGroup]="formItem"
+                            (dataChange)="onChangeToApplyFormDataChange()">
+                        </mcs-firewall-changes-shared-rule>
+                        <mcs-item orientation="separated" margin-top-small *ngIf="isChangeItemRemovable(faSharedRuleForm?.controls?.length)">
+                            <button mcsButton color="error" (click)="removeChangeItem(i)">
+                              {{ 'orderSimpleFirewallChanges.detailsStep.sharedRuleForm.removeBtnLabel' | translate }}
+                            </button>
+                        </mcs-item>
+                        </mcs-accordion-panel>
+                    </mcs-accordion>
+                    </div>
+                    <div class="action-items" margin-top-medium margin-bottom-none>
+                      <button mcsButton (click)="addChangeItem()">
+                        {{ 'orderSimpleFirewallChanges.detailsStep.sharedRuleForm.addBtnLabel' | translate }}
+                      </button>
+                    </div>
+                </mcs-item>
+
+                <!-- SMAC Shared Form -->
+                <mcs-item orientation="block">
+                    <mcs-smac-shared-form #fgSmacSharedForm [config]="smacSharedFormConfig$ | async"
+                    (dataChange)="onChangeSharedForm($event)">
+                    </mcs-smac-shared-form>
+                </mcs-item>
+
+                <div class="action-items">
+                    <button mcsButton arrow="right" mcsWizardStepNext [disabled]="!formIsValid" mcsId="step-1-next"
+                    mcsEventTracker="step-1-next" mcsEventCategory="orders"
+                    mcsEventLabel="add-simple-firewall-change-next">{{ 'shared.wizard.next' | translate }}</button>
+                </div>
+            </form>
+        </mcs-wizard-step>
+  
+        <!-- Confirm Step  -->
+        <mcs-wizard-step id="confirm-step" [stepTitle]="'shared.wizard.confirm' | translate"
+          customClass="contextual-help-page-wrapper limited-view">
+  
+          <mcs-step-order-details [order]="order$ | async" [orderItemType]="orderItemType$ | async"
+            [requestState]="dataStatus$ | async" [eventTrack]="orderEventTrack.billingDetailsStep"
+            (dataChange)="onOrderDetailsDataChange($event)" 
+            (submitOrder)="onSubmitOrder($event, fcFirewallServices?.value.serviceId)">
+          </mcs-step-order-details>
+        </mcs-wizard-step>
+  
+        <!-- Go! Step  -->
+        <mcs-wizard-step id="go-step" [stepTitle]="'shared.wizard.completed' | translate" customClass="limited-view">
+          <mcs-step-manual-order-completed [order]="order$ | async"
+            [orderWorkflowSubmitStatus]="orderWorkflowSubmitStatus$ | async">
+          </mcs-step-manual-order-completed>
+        </mcs-wizard-step>
+      </mcs-wizard>
+    </mcs-content-panel>
+  </mcs-page>

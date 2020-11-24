@@ -115,6 +115,8 @@ export class SmacSharedFormConfig {
           this._translate.instant('smacShared.form.customerReference.placeholder')),
         label: getSafeProperty(customerReferenceConfig, (obj) => obj.label,
           this._translate.instant('smacShared.form.customerReference.label')),
+        helpText: getSafeProperty(customerReferenceConfig, (obj) => obj.helpText,
+          this._translate.instant('smacShared.form.customerReference.helpText')),
         validators: getSafeProperty(customerReferenceConfig, (obj) => obj.validators, [])
       };
       this._validatorsMap.set('fcCustomerReference', this.customerReferenceConfig.validators);

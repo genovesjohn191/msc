@@ -84,6 +84,9 @@ export enum RouteKey {
   OrderMsRequestChange,
   OrderRemoteHands,
   OrderServerRequestPatch,
+  OrderAddSimpleFirewallChange,
+  OrderModifySimpleFirewallChange,
+  OrderRemoveSimpleFirewallChange,
 
   Internet,
   InternetDetails,
