@@ -54,7 +54,30 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
   @Input()
   protected loadWorkflowNotifier: Subject<Workflow[]>;
 
-  public title: string;
+  public get valid(): boolean {
+    let validForm = true;
+    let validServiceId: boolean = !isNullOrEmpty(this.context.serviceId);
+
+    this.workflowComponentRef.forEach(ref => {
+      if (ref.instance.included && !ref.instance.valid) {
+        validForm = false;
+      }
+    });
+
+    return validForm && validServiceId;
+  }
+
+  public get payload(): Workflow[] {
+    let payloadItems: Workflow[] = [];
+    this.workflowComponentRef.forEach(ref => {
+      let payload = ref.instance.getRawValue();
+      if (!isNullOrEmpty(payload)) {
+        payloadItems.push(payload);
+      }
+    });
+
+    return payloadItems;
+  }
 
   public workflowComponentRef: ComponentRef<LaunchPadWorkflowComponent>[] = [];
   public componentRef: ComponentRef<any>;
@@ -79,6 +102,22 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy(): void {
     unsubscribeSafely(this._dialogSubject);
+  }
+
+  public reset(): void {
+    let parentReferenceId = Guid.newGuid().toString();
+
+    this.workflowComponentRef.forEach(ref => {
+      // Set new reference IDs
+      if (isNullOrEmpty(ref.instance.parentReferenceId)) {
+        ref.instance.referenceId = parentReferenceId;
+      } else {
+        ref.instance.referenceId = Guid.newGuid().toString();
+        ref.instance.parentReferenceId = parentReferenceId;
+      }
+
+      ref.instance.reset();
+    });
   }
 
   public switchObject(event: McsObjectCrispElement): void {
@@ -185,53 +224,6 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
       this._renderWorkflowGroup(this.context.config);
 
       this._changeDetector.markForCheck();
-    });
-  }
-
-  /**
-   * Returns validity of combined workflow
-   */
-  public get valid(): boolean {
-    let validForm = true;
-    let validServiceId: boolean = !isNullOrEmpty(this.context.serviceId);
-
-    this.workflowComponentRef.forEach(ref => {
-      if (ref.instance.included && !ref.instance.valid) {
-        validForm = false;
-      }
-    });
-
-    return validForm && validServiceId;
-  }
-
-  /**
-   * Returns consolidated fields
-   */
-  public get payload(): Workflow[] {
-    let payloadItems: Workflow[] = [];
-    this.workflowComponentRef.forEach(ref => {
-      let payload = ref.instance.getRawValue();
-      if (!isNullOrEmpty(payload)) {
-        payloadItems.push(payload);
-      }
-    });
-
-    return payloadItems;
-  }
-
-  public reset(): void {
-    let parentReferenceId = Guid.newGuid().toString();
-
-    this.workflowComponentRef.forEach(ref => {
-      // Set new reference IDs
-      if (isNullOrEmpty(ref.instance.parentReferenceId)) {
-        ref.instance.referenceId = parentReferenceId;
-      } else {
-        ref.instance.referenceId = Guid.newGuid().toString();
-        ref.instance.parentReferenceId = parentReferenceId;
-      }
-
-      ref.instance.reset();
     });
   }
 
