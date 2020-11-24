@@ -92,7 +92,6 @@ export class LaunchPadComponent implements OnDestroy, IMcsNavigateAwayGuard {
     return this.workflowGroup.valid;
   }
 
-  // public workflows: Workflow[] = [];
   public workflowsState: McsJob[] = [];
   public isNewWorkflowGroup: boolean = true;
   public isEditing: boolean = false;

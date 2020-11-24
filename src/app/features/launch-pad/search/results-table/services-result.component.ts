@@ -60,7 +60,7 @@ export class LaunchPadSearchServicesResultComponent implements OnDestroy, Search
   private _getData(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsObjectInstalledService>> {
     let queryParam = new McsQueryParam();
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
-    queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
+    queryParam.pageSize = 50; // TODO: Update once paging is available in API
     queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
 
     return this._apiService.getInstalledServices(queryParam).pipe(
