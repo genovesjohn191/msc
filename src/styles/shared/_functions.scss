@@ -1,11 +1,21 @@
 @function get-value($value) {
     @return $value
 }
-
 @function get-color-shade($color) {
   @return mix(#000, $color, 12%);
 }
 
 @function get-color-tint($color) {
   @return mix(#fff, $color, 10%);
+}
+
+@function get-color($color-def, $name, $tone, $alpha: 1) {
+  @if map-has-key($color-def, $name) == false {
+    @warn "unknown color `#{$name}` in the pallete.";
+    @return null;
+  }
+  $color-pallete: map-get($color-def, $name);
+  $color-value: map-get($color-pallete, $tone);
+
+  @return rgba($color-value, $alpha);
 }

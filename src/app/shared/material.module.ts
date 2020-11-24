@@ -5,6 +5,7 @@ import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
 import { MatOptionModule } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
@@ -50,7 +51,8 @@ const exportedModules = [
   MatTreeModule,
   MatTableModule,
   MatDividerModule,
-  MatTabsModule
+  MatTabsModule,
+  MatChipsModule
 ];
 
 @NgModule({

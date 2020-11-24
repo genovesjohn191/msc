@@ -46,19 +46,29 @@
 
         <!-- Short description -->
         <div *ngIf="solution.shortDescription | mcsIsNotNullOrEmpty" margin-bottom-large>
-          <h2 margin-bottom-medium>Short Description</h2>
           <div [innerHTML]="solution.shortDescription"></div>
         </div>
 
         <!-- Use Cases -->
         <div class="product-catalog-item" *ngIf="solution.useCases | mcsIsNotNullOrEmpty">
-          <h2 margin-bottom-medium>Use Cases</h2>
+          <h2 margin-bottom-medium>
+            <span>Use Cases</span><br/>
+            <small read-only text-italic>Click to learn more</small>
+          </h2>
 
-          <ng-container *ngFor="let useCase of solution.useCases">
-            <mcs-item orientation="block">
-              <strong>{{ useCase.name }}</strong>
-              <div [innerHTML]="useCase.description"></div>
-            </mcs-item>
+          <mat-chip-list>
+            <mat-chip *ngFor="let useCase of solution.useCases"
+              [value]="useCase"
+              (click)="onClickUseCase(useCase)"
+              mcsCursor="pointer">
+              {{ useCase.name }}
+            </mat-chip>
+          </mat-chip-list>
+
+          <ng-container *ngIf="selectedUseCase$ | async as selectedUseCase">
+            <mcs-note type="outlined" margin-top-medium>
+              <span [innerHTML]="selectedUseCase?.description"></span>
+            </mcs-note>
           </ng-container>
         </div>
 

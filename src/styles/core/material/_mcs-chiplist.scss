@@ -1,0 +1,19 @@
+mat-chip-list.mat-chip-list {
+  $chip-font-size: 12;
+  $chip-font-weight: 400;
+
+  @include font-size($chip-font-size);
+  font-weight: $chip-font-weight;
+
+  // For chip items
+  mat-chip.mat-chip {
+    @include font-size($chip-font-size);
+    font-weight: $chip-font-weight;
+    min-height: 24px;
+    padding: $space-xsmall $space-small;
+    border-radius: $border-radius-medium;
+
+    background-color: get-color($color-definitions, primary, base);
+    color: get-color($color-definitions, primary, contrast);
+  }
+}

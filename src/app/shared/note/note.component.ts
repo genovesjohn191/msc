@@ -1,9 +1,12 @@
 import {
-  Component,
   ChangeDetectionStrategy,
+  Component,
+  Input,
   ViewEncapsulation
 } from '@angular/core';
 import { animateFactory } from '@app/utilities';
+
+export type NoteType = 'default' | 'outlined';
 
 @Component({
   selector: 'mcs-note',
@@ -16,8 +19,16 @@ import { animateFactory } from '@app/utilities';
   ],
   host: {
     'class': 'note-wrapper',
+    '[class.outlined]': 'isOutlined',
     '[@fadeIn]': '"show"'
   }
 })
 
-export class NoteComponent { }
+export class NoteComponent {
+  @Input()
+  public type: NoteType = 'default';
+
+  public isOutlined(): boolean {
+    return this.type === 'outlined';
+  }
+}

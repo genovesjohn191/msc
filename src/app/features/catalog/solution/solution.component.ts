@@ -1,33 +1,41 @@
 import {
+  BehaviorSubject,
+  Observable,
+  Subject
+} from 'rxjs';
+import {
+  map,
+  shareReplay,
+  takeUntil,
+  tap
+} from 'rxjs/operators';
+
+import {
+  ChangeDetectionStrategy,
   Component,
   OnInit,
-  ChangeDetectionStrategy,
   ViewChild
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
 import {
-  map,
-  tap,
-  shareReplay
-} from 'rxjs/operators';
-import {
+  CatalogViewType,
+  McsCatalogProductUseCase,
   McsCatalogSolution,
-  RouteKey,
-  CatalogViewType
+  RouteKey
 } from '@app/models';
+import { ScrollableLinkGroup } from '@app/shared';
 import {
+  createObject,
   getSafeProperty,
   isNullOrEmpty,
-  CommonDefinition,
-  createObject
+  CommonDefinition
 } from '@app/utilities';
-import { ScrollableLinkGroup } from '@app/shared';
+
 import { CatalogService } from '../catalog.service';
 import {
-  CatalogType,
   CatalogHeader,
-  CatalogItemDetails
+  CatalogItemDetails,
+  CatalogType
 } from '../shared';
 
 @Component({
@@ -39,7 +47,7 @@ import {
   }
 })
 export class SolutionComponent implements OnInit {
-
+  public selectedUseCase$: Observable<McsCatalogProductUseCase>;
   public solution$: Observable<McsCatalogSolution>;
 
   public benefitAndLimitationColumns = ['benefit', 'limitation'];
@@ -47,12 +55,16 @@ export class SolutionComponent implements OnInit {
   @ViewChild('scrollableLinkGroup')
   private _scrollableLink: ScrollableLinkGroup;
 
+  private _selectedUseCaseChange = new BehaviorSubject<McsCatalogProductUseCase>(null);
+  private _destroySubject = new Subject<void>();
+
   constructor(
     private _activatedRoute: ActivatedRoute,
     private _catalogService: CatalogService
   ) { }
 
   public ngOnInit(): void {
+    this._subscribeToSelectedUseCaseChange();
     this._subscribeToSolutionResolver();
   }
 
@@ -62,6 +74,16 @@ export class SolutionComponent implements OnInit {
 
   public get routeKeyEnum(): typeof RouteKey {
     return RouteKey;
+  }
+
+  public onClickUseCase(useCase: McsCatalogProductUseCase): void {
+    this._selectedUseCaseChange.next(useCase);
+  }
+
+  private _subscribeToSelectedUseCaseChange(): void {
+    this.selectedUseCase$ = this._selectedUseCaseChange.pipe(
+      takeUntil(this._destroySubject)
+    );
   }
 
   private _subscribeToSolutionResolver(): void {
