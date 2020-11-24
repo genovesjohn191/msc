@@ -89,19 +89,29 @@
 
         <!-- Short description -->
         <div *ngIf="selectedProduct.shortDescription | mcsIsNotNullOrEmpty" margin-bottom-large>
-          <h2>Short Description</h2>
           <div [innerHTML]="selectedProduct.shortDescription"></div>
         </div>
 
         <!-- Use Cases -->
         <div class="product-catalog-item" *ngIf="selectedProduct.useCases | mcsIsNotNullOrEmpty">
-          <h2 margin-bottom-medium>Use Cases</h2>
+          <h2 margin-bottom-medium>
+            <span>Use Cases</span><br/>
+            <small read-only text-italic>Click to learn more</small>
+          </h2>
 
-          <ng-container *ngFor="let useCase of selectedProduct.useCases">
-            <mcs-item orientation="block">
-              <strong>{{ useCase.name }}</strong>
-              <div [innerHTML]="useCase.description"></div>
-            </mcs-item>
+          <mat-chip-list>
+            <mat-chip *ngFor="let useCase of selectedProduct.useCases"
+              [value]="useCase"
+              (click)="onClickUseCase(useCase)"
+              mcsCursor="pointer">
+              {{ useCase.name }}
+            </mat-chip>
+          </mat-chip-list>
+
+          <ng-container *ngIf="selectedUseCase$ | async as selectedUseCase">
+            <mcs-note type="outlined" margin-top-medium>
+              <span [innerHTML]="selectedUseCase?.description"></span>
+            </mcs-note>
           </ng-container>
         </div>
 
@@ -131,18 +141,18 @@
               Options
             </mcs-header-cell>
             <mcs-data-cell *mcsDataCellDef="let row">
-              <mcs-tag-list>
+              <mat-chip-list>
                 <ng-container *ngIf="selectedProduct.hasProductProperties">
-                  <mcs-tag *ngFor="let property of getFormattedProperties(row)" [removable]="false">
+                  <mat-chip *ngFor="let property of getFormattedProperties(row)">
                     {{ property }}
-                  </mcs-tag>
+                  </mat-chip>
                 </ng-container>
                 <ng-container *ngIf="selectedProduct.hasProductListOptions">
-                  <mcs-tag *ngFor="let item of row.listOptions" [removable]="false">
+                  <mat-chip *ngFor="let item of row.listOptions">
                     {{ item }}
-                  </mcs-tag>
+                  </mat-chip>
                 </ng-container>
-              </mcs-tag-list>
+              </mat-chip-list>
             </mcs-data-cell>
           </ng-container>
           <mcs-header-row *mcsHeaderRowDef="productOptionsColumns"></mcs-header-row>

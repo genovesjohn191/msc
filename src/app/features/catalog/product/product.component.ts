@@ -1,36 +1,44 @@
 import {
+  BehaviorSubject,
+  Observable,
+  Subject
+} from 'rxjs';
+import {
+  map,
+  shareReplay,
+  takeUntil,
+  tap
+} from 'rxjs/operators';
+
+import {
+  ChangeDetectionStrategy,
   Component,
   OnInit,
-  ChangeDetectionStrategy,
   ViewChild
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
 import {
-  map,
-  tap,
-  shareReplay
-} from 'rxjs/operators';
-import {
-  RouteKey,
+  CatalogViewType,
   McsCatalogProduct,
   McsCatalogProductOption,
   McsCatalogProductOptionProperty,
-  CatalogViewType,
-  McsCatalogProductPciDetail
+  McsCatalogProductPciDetail,
+  McsCatalogProductUseCase,
+  RouteKey
 } from '@app/models';
+import { ScrollableLinkGroup } from '@app/shared';
 import {
+  compareStrings,
+  createObject,
   getSafeProperty,
   isNullOrEmpty,
-  CommonDefinition,
-  compareStrings,
-  createObject
+  CommonDefinition
 } from '@app/utilities';
-import { ScrollableLinkGroup } from '@app/shared';
+
 import { CatalogService } from '../catalog.service';
 import {
-  CatalogItemDetails,
   CatalogHeader,
+  CatalogItemDetails,
   CatalogType
 } from '../shared';
 
@@ -45,8 +53,9 @@ const PRODUCT_OPTION_TYPE_NUMERIC = 'numeric';
   }
 })
 export class ProductComponent implements OnInit {
-
+  public selectedUseCase$: Observable<McsCatalogProductUseCase>;
   public product$: Observable<McsCatalogProduct>;
+
   public productOptionsColumns = ['name', 'options'];
   public thresholdColumns = ['description', 'alertThreshold'];
   public pciComplianceColumns = [
@@ -62,12 +71,16 @@ export class ProductComponent implements OnInit {
   @ViewChild('scrollableLinkGroup')
   private _scrollableLink: ScrollableLinkGroup;
 
+  private _selectedUseCaseChange = new BehaviorSubject<McsCatalogProductUseCase>(null);
+  private _destroySubject = new Subject<void>();
+
   constructor(
     private _activatedRoute: ActivatedRoute,
     private _catalogService: CatalogService
   ) { }
 
   public ngOnInit(): void {
+    this._subscribeToSelectedUseCaseChange();
     this._subscribeToProductResolver();
   }
 
@@ -77,6 +90,10 @@ export class ProductComponent implements OnInit {
 
   public get routeKeyEnum(): typeof RouteKey {
     return RouteKey;
+  }
+
+  public onClickUseCase(useCase: McsCatalogProductUseCase): void {
+    this._selectedUseCaseChange.next(useCase);
   }
 
   /**
@@ -156,6 +173,12 @@ export class ProductComponent implements OnInit {
         this._scrollableLink.reset();
       }),
       shareReplay(1)
+    );
+  }
+
+  private _subscribeToSelectedUseCaseChange(): void {
+    this.selectedUseCase$ = this._selectedUseCaseChange.pipe(
+      takeUntil(this._destroySubject)
     );
   }
 

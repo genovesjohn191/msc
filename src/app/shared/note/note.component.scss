@@ -1,9 +1,16 @@
 @import "../../../styles/shared/base";
 
-$note-interval-size: 20px;
-
 .note-wrapper {
-  display: block;
+  $note-interval-size: 20px;
+  $note-padding: 8px;
+
+  @include display-flex(row);
+  padding: $note-padding;
+
+  &.outlined {
+    border: 1px solid get-color($color-definitions, medium, base);
+    border-radius: $border-radius-medium;
+  }
 
   .note-interval {
     height: $note-interval-size;
