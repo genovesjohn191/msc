@@ -74,6 +74,7 @@ $accordion-panel-content-padding: $space-medium 22px;
       @include flex(1 1 auto);
       @include display-flex(column);
       padding: $accordion-panel-content-padding;
+      overflow-y: auto;
     }
   }
 }

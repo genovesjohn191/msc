@@ -561,6 +561,14 @@
     "requiredPermissions": ["OrderEdit"],
     "documentTitle": "Request a Patch - Macquarie Cloud Services"
   },
+  "orderAddSimpleFirewallChange": {
+    "enumPlatform": "Private",
+    "enumKey": "OrderAddSimpleFirewallChange",
+    "enumCategory": "MakeAChange",
+    "navigationPath": "orders/add/simple-firewall-changes",
+    "requiredPermissions": ["OrderEdit"],
+    "documentTitle": "Add Simple Firewall Change - Macquarie Cloud Services"
+  },
   "otherTools": {
     "enumKey": "OtherTools",
     "navigationPath": "tools",

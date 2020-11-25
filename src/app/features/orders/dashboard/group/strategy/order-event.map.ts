@@ -16,7 +16,7 @@ import { HostedDnsChangeEvent } from './events/hosted-dns-change.event';
 import { ColocationStaffEscortEvent } from './events/colocation-staff-escort.event';
 import { ColocationRemoteHandsEvent } from './events/colocation-remote-hands.event';
 import { ServerPatchRequestEvent } from './events/server-request-patch.event';
-
+import { SimpleFirewallChangeAddEvent } from './events/simple-firewall-change-add.event';
 export type OrderEventRecord = Record<string, IOrderEventStrategy>;
 
 export const orderEventMap: OrderEventRecord = {
@@ -36,5 +36,6 @@ export const orderEventMap: OrderEventRecord = {
   'services.customRequest': new ServiceCustomChangeEvent(),
   'dns.customRequest': new HostedDnsChangeEvent(),
   'colocation.staffEscort': new ColocationStaffEscortEvent(),
-  'colocation.remoteHands': new ColocationRemoteHandsEvent()
+  'colocation.remoteHands': new ColocationRemoteHandsEvent(),
+  'firewall.simpleChange.add': new SimpleFirewallChangeAddEvent()
 };

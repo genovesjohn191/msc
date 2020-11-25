@@ -19,7 +19,10 @@ export enum OrderIdType {
   MsRequestChange = 'microsoft.subscription.requestChange',
   HostedDnsChange = 'dns.customRequest',
   ColocationRemoteHands = 'colocation.remoteHands',
-  ServerRequestPatch = 'servers.patchRequest'
+  ServerRequestPatch = 'servers.patchRequest',
+  SimpleFirewallChangeAdd = 'firewall.simpleChange.add',
+  SimpleFirewallChangeRemove = 'firewall.simpleChange.remove',
+  SimpleFirewallChangeModify = 'firewall.simpleChange.modify'
 }
 
 /**
