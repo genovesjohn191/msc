@@ -19,7 +19,7 @@ export type NoteType = 'default' | 'outlined';
   ],
   host: {
     'class': 'note-wrapper',
-    '[class.outlined]': 'isOutlined',
+    '[class.outlined]': 'isOutlined ? true : null',
     '[@fadeIn]': '"show"'
   }
 })
@@ -28,7 +28,7 @@ export class NoteComponent {
   @Input()
   public type: NoteType = 'default';
 
-  public isOutlined(): boolean {
+  public get isOutlined(): boolean {
     return this.type === 'outlined';
   }
 }
