@@ -80,6 +80,7 @@ export type DynamicFormFieldTemplate =
 
 export type DynamicFormFieldOnChangeEvent =
   ''
+  | 'company-change'
   | 'az-change'
   | 'ip-mode-change'
   | 'resource-change';

@@ -10,7 +10,7 @@ import {
   Observable
 } from 'rxjs';
 
-import { isNullOrEmpty } from '@app/utilities';
+import { CommonDefinition, isNullOrEmpty } from '@app/utilities';
 import { McsApiService } from '@app/services';
 import {
   McsResource,
@@ -43,6 +43,7 @@ export class DynamicSelectNetworkComponent extends DynamicSelectFieldComponentBa
 
   // Filter variables
   private _resource: McsResource;
+  private _companyId: string = '';
 
   public constructor(
     private _apiService: McsApiService,
@@ -53,9 +54,16 @@ export class DynamicSelectNetworkComponent extends DynamicSelectFieldComponentBa
 
   public onFormDataChange(params: DynamicFormFieldDataChangeEventParam): void {
     switch (params.eventName) {
+
+      case 'company-change':
+        this._companyId = params.value;
+        this.retrieveOptions();
+        break;
+
       case 'resource-change':
         this._resource = params.value as McsResource;
         this.retrieveOptions();
+        break;
     }
   }
 
@@ -64,7 +72,11 @@ export class DynamicSelectNetworkComponent extends DynamicSelectFieldComponentBa
       return of([]);
     }
 
-    return this._apiService.getResourceNetworks(this._resource.id).pipe(
+    let optionalHeaders = new Map<string, any>([
+      [CommonDefinition.HEADER_COMPANY_ID, this._companyId]
+    ]);
+
+    return this._apiService.getResourceNetworks(this._resource.id, optionalHeaders).pipe(
       takeUntil(this.destroySubject),
       switchMap((response) => {
         let returnValue = response && response.collection;

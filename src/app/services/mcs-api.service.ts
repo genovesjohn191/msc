@@ -412,7 +412,16 @@ export class McsApiService {
     ));
   }
 
-  public getResources(query?: McsQueryParam): Observable<McsApiCollection<McsResource>> {
+  public getResources(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsResource>> {
+    if (!isNullOrEmpty(optionalHeaders)) {
+      return this._resourcesApi.getResources(optionalHeaders).pipe(
+        catchError((error) =>
+          this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getResourcesWithCustomHeaders'))
+        ),
+        map((response) => this._mapToCollection(response.content, response.totalCount))
+      );
+    }
+
     let dataCollection = isNullOrEmpty(query) ?
       this._resourcesRepository.getAll() :
       this._resourcesRepository.filterBy(query);
@@ -442,8 +451,8 @@ export class McsApiService {
     );
   }
 
-  public getResourceStorages(id: string): Observable<McsApiCollection<McsResourceStorage>> {
-    return this._resourcesApi.getResourceStorage(id).pipe(
+  public getResourceStorages(id: string, optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsResourceStorage>> {
+    return this._resourcesApi.getResourceStorage(id, optionalHeaders).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getResourceStorages'))
       ),
@@ -451,8 +460,8 @@ export class McsApiService {
     );
   }
 
-  public getResourceNetworks(id: string): Observable<McsApiCollection<McsResourceNetwork>> {
-    return this._resourcesApi.getResourceNetworks(id).pipe(
+  public getResourceNetworks(id: string, optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsResourceNetwork>> {
+    return this._resourcesApi.getResourceNetworks(id, optionalHeaders).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getResourceNetworks'))
       ),
@@ -639,8 +648,8 @@ export class McsApiService {
     );
   }
 
-  public getServerOs(): Observable<McsApiCollection<McsServerOperatingSystem>> {
-    return this._serversApi.getServerOs().pipe(
+  public getServerOs(optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsServerOperatingSystem>> {
+    return this._serversApi.getServerOs(optionalHeaders).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getServerOs'))
       ),

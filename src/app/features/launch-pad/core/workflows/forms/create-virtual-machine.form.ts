@@ -10,11 +10,18 @@ import {
   DynamicSelectVdcField
 } from '@app/features-shared/dynamic-form';
 import { McsObjectCrispElementServiceAttribute } from '@app/models';
+import { WorkflowGroupSaveState } from '../workflow-group.interface';
 import { LaunchPadForm } from './form.interface';
 import { CrispAttriuteNames, findCrispElementAttribute } from './mapping-helper';
 
 export const createVirtualMachineForm: LaunchPadForm = {
   config: [
+    new DynamicInputHiddenField({
+      key: 'companyId',
+      value: '',
+      eventName: 'company-change',
+      dependents: ['resource', 'os', 'storage', 'network'],
+    }),
     new DynamicInputHiddenField({
       key: 'platform',
       value: 'vcloud'
@@ -95,9 +102,10 @@ export const createVirtualMachineForm: LaunchPadForm = {
   ],
 
   // CRISP Element Mapper
-  crispElementConverter: (attributes: McsObjectCrispElementServiceAttribute[]) => {
+  crispElementConverter: (context: WorkflowGroupSaveState, attributes: McsObjectCrispElementServiceAttribute[]) => {
     let mappedProperties: { key: string, value: any }[] = [];
 
+    mappedProperties.push({ key: 'companyId', value: context.companyId });
     mappedProperties.push({ key: 'resource', value: findCrispElementAttribute(CrispAttriuteNames.Resource , attributes)?.displayValue } );
 
     // Operating System

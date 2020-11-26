@@ -13,7 +13,7 @@ import {
 } from 'rxjs/operators';
 
 import { McsAccessControlService } from '@app/core';
-import { isNullOrEmpty } from '@app/utilities';
+import { CommonDefinition, isNullOrEmpty } from '@app/utilities';
 import {
   McsResource,
   McsPermission,
@@ -48,6 +48,7 @@ export class DynamicSelectVdcComponent extends DynamicSelectFieldComponentBase<M
 
   // Filter variables
   private _az: string = '';
+  private _companyId: string = '';
 
   constructor(
     private _accessControlService: McsAccessControlService,
@@ -59,14 +60,25 @@ export class DynamicSelectVdcComponent extends DynamicSelectFieldComponentBase<M
 
   public onFormDataChange(params: DynamicFormFieldDataChangeEventParam) {
     switch (params.eventName) {
+
+      case 'company-change':
+        this._companyId = params.value;
+        this.retrieveOptions();
+        break;
+
       case 'az-change':
         this._az = params.value;
         this.retrieveOptions();
+        break;
     }
   }
 
   protected callService(): Observable<McsResource[]> {
-    return this._apiService.getResources().pipe(
+    let optionalHeaders = new Map<string, any>([
+      [CommonDefinition.HEADER_COMPANY_ID, this._companyId]
+    ]);
+
+    return this._apiService.getResources(null, optionalHeaders).pipe(
       takeUntil(this.destroySubject),
       switchMap((response) => {
         let managedResourceIsOn = this._accessControlService.hasPermission([McsPermission.OrderEdit], true);

@@ -18,7 +18,7 @@ export interface IMcsApiResourcesService {
   /**
    * Get Resources (MCS API Response)
    */
-  getResources(): Observable<McsApiSuccessResponse<McsResource[]>>;
+  getResources(optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsResource[]>>;
 
   /**
    * Get resource by ID (MCS API Response)
@@ -36,13 +36,13 @@ export interface IMcsApiResourcesService {
    * Get resource storage by ID (MCS API Response)
    * @param id Resource identification
    */
-  getResourceStorage(id: any): Observable<McsApiSuccessResponse<McsResourceStorage[]>>;
+  getResourceStorage(id: any, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsResourceStorage[]>>;
 
   /**
    * Get resource networks by ID (MCS API Response)
    * @param resourceId Resource identification
    */
-  getResourceNetworks(resourceId: any): Observable<McsApiSuccessResponse<McsResourceNetwork[]>>;
+  getResourceNetworks(resourceId: any, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsResourceNetwork[]>>;
 
   /**
    * Get resource network details by ID (MCS API Response)
