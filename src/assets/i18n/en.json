@@ -973,7 +973,8 @@
           },
           "sourceIpOrSubnet": {
             "placeholder": "Source IP or Subnet",
-            "errorRequired": "Source IP/Subnet is required"
+            "errorRequired": "Source IP/Subnet is required",
+            "invalidFormat": "Invalid source IP/Subnet format"
           },
           "destinationZoneOrInterface": {
             "placeholder": "Destination Zone or Interface",
@@ -981,7 +982,8 @@
           },
           "destinationIpOrSubnet": {
             "placeholder": "Destination IP or Subnet",
-            "errorRequired": "Destination IP/Subnet is required"
+            "errorRequired": "Destination IP/Subnet is required",
+            "invalidFormat": "Invalid destination IP/Subnet format"
           },
           "destinationPort": {
             "placeholder": "Destination Port(s)",

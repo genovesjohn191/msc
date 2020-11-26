@@ -212,6 +212,8 @@ export class CommonDefinition {
   /** RegEx Patterns */
   public static REGEX_EMAIL_PATTERN = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
   public static REGEX_IP_PATTERN = /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.|$)){4}$/;
+  public static REGEX_IP_PATTERN_SHORTHAND_MASK
+    = /([1-9]|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])(\.(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])){3}(\/(3[0-2]|[1-2]\d|\d))?/;
   public static REGEX_URL_PATTERN
     = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
   public static REGEX_DOMAIN_PATTERN
