@@ -62,6 +62,9 @@
                 <mcs-error mcsError errorState="required">
                   {{ 'orderSimpleFirewallChanges.detailsStep.sharedRuleForm.add.sourceIpOrSubnet.errorRequired' | translate }}
                 </mcs-error>
+                <mcs-error mcsError errorState="ipAddressShortHandMask">
+                  {{ 'orderSimpleFirewallChanges.detailsStep.sharedRuleForm.add.sourceIpOrSubnet.invalidFormat' | translate }}
+                </mcs-error>
               </mcs-form-field>
             </mcs-grid-column>
           </mcs-grid-row>
@@ -88,6 +91,9 @@
                   required>
                 <mcs-error mcsError errorState="required">
                   {{ 'orderSimpleFirewallChanges.detailsStep.sharedRuleForm.add.destinationIpOrSubnet.errorRequired' | translate }}
+                </mcs-error>
+                <mcs-error mcsError errorState="ipAddressShortHandMask">
+                  {{ 'orderSimpleFirewallChanges.detailsStep.sharedRuleForm.add.destinationIpOrSubnet.invalidFormat' | translate }}
                 </mcs-error>
               </mcs-form-field>
             </mcs-grid-column>

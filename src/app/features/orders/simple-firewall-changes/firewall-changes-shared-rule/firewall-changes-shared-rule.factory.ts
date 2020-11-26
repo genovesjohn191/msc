@@ -17,9 +17,11 @@ export class FirewallChangesRuleFactory {
     if (action === RuleAction.Add) {
       formControls = [
       { controlName: 'fcSourceZoneInterface', control: new FormControl('', [CoreValidators.required]) },
-      { controlName: 'fcSourceIpSubnet', control: new FormControl('', [CoreValidators.required]) },
+      { controlName: 'fcSourceIpSubnet', control: new FormControl('', [CoreValidators.required,
+                                                                       CoreValidators.ipAddressShortHandMask]) },
       { controlName: 'fcSourceZoneInterface', control: new FormControl('', [CoreValidators.required]) },
-      { controlName: 'fcDestinationIpSubnet', control: new FormControl('', [CoreValidators.required]) },
+      { controlName: 'fcDestinationIpSubnet', control: new FormControl('', [CoreValidators.required,
+                                                                            CoreValidators.ipAddressShortHandMask]) },
       { controlName: 'fcDestinationZoneInterface', control: new FormControl('', [CoreValidators.required]) },
       { controlName: 'fcDestinationPort', control: new FormControl('', [CoreValidators.required]) },
       { controlName: 'fcProtocol', control: new FormControl(ProtocolType.TCP, [CoreValidators.required]) }]

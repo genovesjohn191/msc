@@ -16,6 +16,7 @@ import {
 import { IMcsProperty } from './interfaces/mcs-property.interface';
 import { CommonDefinition } from '@app/utilities';
 
+/* TO DO: create unit tests for Core Validators and Regex*/
 export class CoreValidators {
 
   /**
@@ -26,6 +27,16 @@ export class CoreValidators {
    */
   public static ipAddress(control: AbstractControl): ValidationErrors | null {
     return CommonDefinition.REGEX_IP_PATTERN.test(control.value) ? null : { ipAddress: true };
+  }
+
+  /**
+   * Validator that performs ip address with shorthand mask validation
+   *
+   * `@Note` This will produce the following value when false
+   * { 'ipAddressShortHandMask': true }
+   */
+  public static ipAddressShortHandMask(control: AbstractControl): ValidationErrors | null {
+    return CommonDefinition.REGEX_IP_PATTERN_SHORTHAND_MASK.test(control.value) ? null : { ipAddressShortHandMask: true };
   }
 
   /**

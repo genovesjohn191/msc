@@ -20,12 +20,6 @@ export abstract class DynamicTextFieldComponentBase implements OnInit, DynamicFo
   @Output()
   public dataChange: EventEmitter<DynamicFormFieldDataChangeEventParam> = new EventEmitter<DynamicFormFieldDataChangeEventParam>();
 
-  public ngOnInit(): void {
-    if (!isNullOrEmpty(this.data.initialValue)) {
-      this.setInitialValue(this.data.initialValue);
-    }
-  }
-
   public get id(): string {
     return this.data.key;
   }
@@ -102,4 +96,11 @@ export abstract class DynamicTextFieldComponentBase implements OnInit, DynamicFo
   public propagateChange = (_: any) => {};
 
   public onTouched = () => {};
+
+  public ngOnInit(): void {
+    if (!isNullOrEmpty(this.data.initialValue)) {
+      this.setInitialValue(this.data.initialValue);
+    }
+  }
+
 }
