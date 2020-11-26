@@ -210,7 +210,7 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
       }))
     .subscribe((response) => {
       // Sets the preselected values of the form
-      parent.propertyOverrides = workflowGroup.parent.form.crispElementConverter(response.serviceAttributes);
+      parent.propertyOverrides = workflowGroup.parent.form.crispElementConverter(this.context, response.serviceAttributes);
 
       // TODO: Load the child overrides
 

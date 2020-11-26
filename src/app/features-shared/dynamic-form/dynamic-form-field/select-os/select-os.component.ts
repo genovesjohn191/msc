@@ -22,7 +22,7 @@ import {
 } from '../../dynamic-form-field-data.interface';
 import { DynamicSelectOsField } from './select-os';
 import { DynamicSelectFieldComponentBase } from '../dynamic-select-field-component.base';
-import { isNullOrEmpty } from '@app/utilities';
+import { CommonDefinition, isNullOrEmpty } from '@app/utilities';
 
 @Component({
   selector: 'mcs-dff-select-os-field',
@@ -44,6 +44,7 @@ export class DynamicSelectOsComponent extends DynamicSelectFieldComponentBase<Mc
 
   // Filter variables
   private _resource: McsResource;
+  private _companyId: string = '';
 
   private _billingCodeMapping: Map<string, string> = new Map<string, string>();
 
@@ -56,14 +57,24 @@ export class DynamicSelectOsComponent extends DynamicSelectFieldComponentBase<Mc
 
   public onFormDataChange(params: DynamicFormFieldDataChangeEventParam): void {
     switch (params.eventName) {
+      case 'company-change':
+        this._companyId = params.value;
+        this.retrieveOptions();
+        break;
+
       case 'resource-change':
         this._resource = params.value as McsResource;
         this.filterOptions();
+        break;
     }
   }
 
   protected callService(): Observable<McsServerOperatingSystem[]> {
-    return this._apiService.getServerOs().pipe(
+    let optionalHeaders = new Map<string, any>([
+      [CommonDefinition.HEADER_COMPANY_ID, this._companyId]
+    ]);
+
+    return this._apiService.getServerOs(optionalHeaders).pipe(
       takeUntil(this.destroySubject),
       switchMap((response) => {
         return of(response && response.collection);

@@ -18,6 +18,7 @@ import {
 import { serializeObjectToJson } from '@app/utilities';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiResourcesService } from '../interfaces/mcs-api-resources.interface';
+import { McsApiClientDefinition } from '../mcs-api-client.definition';
 
 @Injectable()
 export class McsApiResourcesService implements IMcsApiResourcesService {
@@ -27,9 +28,10 @@ export class McsApiResourcesService implements IMcsApiResourcesService {
   /**
    * Get Resources (MCS API Response)
    */
-  public getResources(): Observable<McsApiSuccessResponse<McsResource[]>> {
+  public getResources(optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsResource[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/private-cloud/resources';
+    mcsApiRequestParameter.optionalHeaders = optionalHeaders;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -84,9 +86,10 @@ export class McsApiResourcesService implements IMcsApiResourcesService {
    * Get resource storage by ID (MCS API Response)
    * @param id Resource identification
    */
-  public getResourceStorage(id: any): Observable<McsApiSuccessResponse<McsResourceStorage[]>> {
+  public getResourceStorage(id: any, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsResourceStorage[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/private-cloud/resources/${id}/storage`;
+    mcsApiRequestParameter.optionalHeaders = optionalHeaders;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -103,10 +106,11 @@ export class McsApiResourcesService implements IMcsApiResourcesService {
    * Get resource networks by ID (MCS API Response)
    * @param resourceId Resource identification
    */
-  public getResourceNetworks(resourceId: any):
+  public getResourceNetworks(resourceId: any, optionalHeaders?: Map<string, any>):
     Observable<McsApiSuccessResponse<McsResourceNetwork[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/private-cloud/resources/${resourceId}/networks`;
+    mcsApiRequestParameter.optionalHeaders = optionalHeaders;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(

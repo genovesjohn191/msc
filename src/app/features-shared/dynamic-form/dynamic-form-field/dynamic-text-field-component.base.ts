@@ -2,6 +2,7 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnInit,
   Output
 } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
@@ -12,12 +13,18 @@ import { DynamicFormFieldDataChangeEventParam } from '../dynamic-form-field-data
 import { DynamicFormField } from '../dynamic-form-field.interface';
 
 @Component({ template: '' })
-export abstract class DynamicTextFieldComponentBase implements DynamicFormField, ControlValueAccessor {
+export abstract class DynamicTextFieldComponentBase implements OnInit, DynamicFormField, ControlValueAccessor {
   @Input()
   public data: DynamicFormFieldDataBase;
 
   @Output()
   public dataChange: EventEmitter<DynamicFormFieldDataChangeEventParam> = new EventEmitter<DynamicFormFieldDataChangeEventParam>();
+
+  public ngOnInit(): void {
+    if (!isNullOrEmpty(this.data.initialValue)) {
+      this.setInitialValue(this.data.initialValue);
+    }
+  }
 
   public get id(): string {
     return this.data.key;
@@ -44,11 +51,15 @@ export abstract class DynamicTextFieldComponentBase implements DynamicFormField,
 
   // Can be overriden to modify the value being sent
   public valueChange(val: any): void {
-    this.dataChange.emit({
-      value: this.data.value,
-      eventName: this.data.eventName,
-      dependents: this.data.dependents
-    });
+    let validEvent = !isNullOrEmpty(this.data.eventName) && !isNullOrEmpty(this.data.dependents);
+    if (validEvent) {
+      this.dataChange.emit({
+        value: this.data.value,
+        eventName: this.data.eventName,
+        dependents: this.data.dependents
+      });
+    }
+
     this.propagateChange(this.data.value);
   }
 

@@ -51,6 +51,7 @@ import {
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiServersService } from '../interfaces/mcs-api-servers.interface';
+import { McsApiClientDefinition } from '../mcs-api-client.definition';
 
 /**
  * Servers Services Class
@@ -471,9 +472,10 @@ export class McsApiServersService implements IMcsApiServersService {
   /**
    * This will get the server os data from the API
    */
-  public getServerOs(): Observable<McsApiSuccessResponse<McsServerOperatingSystem[]>> {
+  public getServerOs(optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsServerOperatingSystem[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/private-cloud/servers/os';
+    mcsApiRequestParameter.optionalHeaders = optionalHeaders;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(

@@ -166,7 +166,7 @@ export interface IMcsApiServersService {
   /**
    * This will get the server os data from the API
    */
-  getServerOs(): Observable<McsApiSuccessResponse<McsServerOperatingSystem[]>>;
+  getServerOs(optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsServerOperatingSystem[]>>;
 
   /**
    * This will get the server storage data from the API
