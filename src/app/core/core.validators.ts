@@ -16,7 +16,6 @@ import {
 import { IMcsProperty } from './interfaces/mcs-property.interface';
 import { CommonDefinition } from '@app/utilities';
 
-/* TO DO: create unit tests for Core Validators and Regex*/
 export class CoreValidators {
 
   /**
