@@ -187,10 +187,12 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
     };
     let children: WorkflowData[] = [];
 
-    // TODO: This approach is for crisp-elements only
     this._apiService.getCrispElement(this.context.productId)
     .pipe(
       catchError(() => {
+        // Ensures the context of the form is set for loading options during failure
+        parent.propertyOverrides = workflowGroup.parent.form.mapContext(this.context);
+
         this._context.config = {
           id: this.context.workflowGroupId,
           parent,
@@ -210,7 +212,9 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
       }))
     .subscribe((response) => {
       // Sets the preselected values of the form
-      parent.propertyOverrides = workflowGroup.parent.form.crispElementConverter(this.context, response.serviceAttributes);
+      let contextOverrides = workflowGroup.parent.form.mapContext(this.context);
+      let crispOverrides = workflowGroup.parent.form.mapCrispElementAttributes(response.serviceAttributes);
+      parent.propertyOverrides = contextOverrides.concat(crispOverrides);
 
       // TODO: Load the child overrides
 

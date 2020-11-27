@@ -32,7 +32,8 @@ export const createVirtualMachineForm: LaunchPadForm = {
       dependents: ['os', 'storage', 'network'],
       validators: { required: true },
       hint: 'e.g M2VDC270011',
-      settings: { preserve: true }
+      settings: { preserve: true },
+      hideSelfManaged: true
     }),
     new DynamicInputHostNameField({
       key: 'name',
@@ -101,11 +102,18 @@ export const createVirtualMachineForm: LaunchPadForm = {
     })
   ],
 
-  // CRISP Element Mapper
-  crispElementConverter: (context: WorkflowGroupSaveState, attributes: McsObjectCrispElementServiceAttribute[]) => {
+  mapContext: (context: WorkflowGroupSaveState) => {
     let mappedProperties: { key: string, value: any }[] = [];
 
     mappedProperties.push({ key: 'companyId', value: context.companyId });
+
+    return mappedProperties;
+  },
+
+  // CRISP Element Mapper
+  mapCrispElementAttributes: (attributes: McsObjectCrispElementServiceAttribute[]) => {
+    let mappedProperties: { key: string, value: any }[] = [];
+
     mappedProperties.push({ key: 'resource', value: findCrispElementAttribute(CrispAttriuteNames.Resource , attributes)?.displayValue } );
 
     // Operating System

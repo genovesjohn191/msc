@@ -5,6 +5,9 @@ import { WorkflowGroupSaveState } from '../workflow-group.interface';
 export interface LaunchPadForm {
   config: DynamicFormFieldDataBase[];
 
-  crispElementConverter?: (context: WorkflowGroupSaveState, attributes: McsObjectCrispElementServiceAttribute[])
+  mapContext: (context: WorkflowGroupSaveState)
+  => { key: string, value: any }[]
+
+  mapCrispElementAttributes: (attributes: McsObjectCrispElementServiceAttribute[])
   => { key: string, value: any }[]
 }
