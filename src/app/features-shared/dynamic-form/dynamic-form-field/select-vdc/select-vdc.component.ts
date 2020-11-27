@@ -81,11 +81,19 @@ export class DynamicSelectVdcComponent extends DynamicSelectFieldComponentBase<M
     return this._apiService.getResources(null, optionalHeaders).pipe(
       takeUntil(this.destroySubject),
       switchMap((response) => {
-        let managedResourceIsOn = this._accessControlService.hasPermission([McsPermission.OrderEdit], true);
 
         let returnValue = response && response.collection.filter((resource) =>
-          (resource.serviceType === ServiceType.SelfManaged
-          || (managedResourceIsOn && resource.serviceType === ServiceType.Managed)) && !isNullOrEmpty(resource.availabilityZone));
+          !isNullOrEmpty(resource.availabilityZone));
+
+        // Hide managed VDCs if enabled in config
+        if (!isNullOrEmpty(returnValue) && this.data.hideManaged) {
+          returnValue = returnValue.filter((resource) => resource.serviceType !== ServiceType.Managed);
+        }
+
+        // Hide self managed VDCs if enabled in config
+        if (!isNullOrEmpty(returnValue) && this.data.hideSelfManaged) {
+          returnValue = returnValue.filter((resource) => resource.serviceType !== ServiceType.SelfManaged);
+        }
 
         return of(returnValue);
       })

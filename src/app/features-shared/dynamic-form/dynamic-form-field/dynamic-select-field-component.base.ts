@@ -26,6 +26,7 @@ import {
 } from '../dynamic-form-field-data.interface';
 import { DynamicFormField } from '../dynamic-form-field.interface';
 import { DynamicTextFieldComponentBase } from './dynamic-text-field-component.base';
+import { McsReportResourceCompliance } from '@app/models';
 
 @Component({ template: '' })
 export abstract class DynamicSelectFieldComponentBase<T>
@@ -90,50 +91,6 @@ export abstract class DynamicSelectFieldComponentBase<T>
 
   protected abstract filter(collection: T[]): FlatOption[] | GroupedOption[];
 
-  private _preselectOption(): void {
-    let isRequiredField = this.data.validators && this.data.validators.required;
-    // TODO: Need to check for grouped options too if only 1 option is available
-    let hasSingleOption = this.data.options.length === 1;
-
-    // Preselect option if has only one option and field is required
-    if (isRequiredField && hasSingleOption) {
-      let selectedValue: any = '';
-      if (this.data.options[0].type === 'flat') {
-        selectedValue = (this.data.options[0] as FlatOption).value;
-      } else {
-        selectedValue = ((this.data.options[0] as GroupedOption).options[0] as FlatOption).value;
-      }
-
-      this._setValue(selectedValue);
-    }
-
-    // Set to default initial value if has multiple options and not yet initialized
-
-    let hasMultipleOptions = this.data.options.length > 1;
-
-    if (hasMultipleOptions && !isNullOrEmpty(this.data.initialValue)) {
-      let isSelectable = false;
-
-      if (this.data.options[0].type === 'flat') {
-        isSelectable = !isNullOrEmpty((this.data.options as FlatOption[]).find((opt) => opt.key === this.data.initialValue
-        ));
-      } else {
-        (this.data.options as GroupedOption[]).forEach((opt) => {
-          isSelectable = !isNullOrEmpty((opt.options as FlatOption[]).find((item) =>
-            item.key === this.data.initialValue));
-
-          if (isSelectable) {
-            this._setValue(this.data.initialValue);
-          }
-        });
-      }
-
-      if (isSelectable) {
-        this._setValue(this.data.initialValue);
-      }
-    }
-  }
-
   private _initialize(): void {
     if (isNullOrEmpty(this.data.options)) {
       this.retrieveOptions();
@@ -157,5 +114,61 @@ export abstract class DynamicSelectFieldComponentBase<T>
     this.isLoading = false;
     this.hasError = hasError;
     this._changeDetectorRef.markForCheck();
+  }
+
+  private _preselectOption(): void {
+    if (this.data.options.length <= 0) { return; }
+
+    if (this._tryAutoSelectSingleOption()) { return; }
+    console.log(this.data.key, this.data.initialValue );
+    this._selectInitialValue();
+  }
+
+  private _tryAutoSelectSingleOption(): boolean {
+    let isRequiredField = this.data.validators && this.data.validators.required;
+    let hasSingleFlatOption = this.data.options[0].type === 'flat' && this.data.options.length === 1;
+    let hasSingleGroupOption = this.data.options[0].type === 'group' && this.data.options[0].options.length === 1;
+    let hasSingleOption = hasSingleFlatOption || hasSingleGroupOption;
+
+    let validForAutoSelect = isRequiredField && hasSingleOption && isNullOrEmpty(this.data.initialValue);
+
+    if (!validForAutoSelect) { return validForAutoSelect; }
+
+    // Autoselect
+    if (hasSingleFlatOption) {
+      this._setValue((this.data.options[0] as FlatOption).key);
+    } else if (hasSingleGroupOption) {
+      this._setValue(((this.data.options[0] as GroupedOption).options[0] as FlatOption).key);
+    }
+
+    return validForAutoSelect;
+  }
+
+  private _selectInitialValue(): void {
+    if (isNullOrEmpty(this.data.initialValue)) { return; }
+
+    // Set to default initial value if has multiple options and not yet initialized
+    let hasMultipleFlatOptions = this.data.options[0].type === 'flat' && this.data.options.length >= 1;
+    let hasMultipleGroupOption = this.data.options[0].type === 'group' && this.data.options[0].options.length >= 1;
+    let hasMultipleOptions = hasMultipleGroupOption || hasMultipleFlatOptions;
+
+    if (hasMultipleOptions) {
+      let initialValueIsInOptionsList = false;
+
+      if (hasMultipleFlatOptions) {
+        initialValueIsInOptionsList = !isNullOrEmpty((this.data.options as FlatOption[]).find((opt) => opt.key === this.data.initialValue
+        ));
+      } else if (hasMultipleGroupOption) {
+        (this.data.options as GroupedOption[]).forEach((opt) => {
+          if (initialValueIsInOptionsList) { return; }
+
+          initialValueIsInOptionsList = !isNullOrEmpty((opt.options as FlatOption[]).find((item) =>
+            item.key === this.data.initialValue));
+
+        });
+      }
+
+      if (initialValueIsInOptionsList) { this._setValue(this.data.initialValue); }
+    }
   }
 }
