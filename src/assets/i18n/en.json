@@ -973,8 +973,9 @@
           },
           "sourceIpOrSubnet": {
             "placeholder": "Source IP or Subnet",
+            "helpText": "Acceptable format examples:<br/>10.1.1.1<br/>10.1.1.1/32",
             "errorRequired": "Source IP/Subnet is required",
-            "invalidFormat": "Invalid source IP/Subnet format"
+            "invalidFormat": "Please enter an IPv4 address or range"
           },
           "destinationZoneOrInterface": {
             "placeholder": "Destination Zone or Interface",
@@ -982,8 +983,9 @@
           },
           "destinationIpOrSubnet": {
             "placeholder": "Destination IP or Subnet",
+            "helpText": "Acceptable format examples:<br/>10.1.1.1<br/>10.1.1.1/32",
             "errorRequired": "Destination IP/Subnet is required",
-            "invalidFormat": "Invalid destination IP/Subnet format"
+            "invalidFormat": "Please enter an IPv4 address or range"
           },
           "destinationPort": {
             "placeholder": "Destination Port(s)",

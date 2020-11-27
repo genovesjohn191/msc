@@ -18,9 +18,11 @@
 </div> -->
 
 <!-- Changes To Apply Form -->
-<form [formGroup]="formGroup" mcsFormGroup>
+<form [formGroup]="formGroup" 
+      [mcsContextualHelp]="'orderSimpleFirewallChanges.detailsStep.sharedRuleForm.add.helptext' | translate"
+      mcsFormGroup>
       <div> {{ 'orderSimpleFirewallChanges.detailsStep.sharedRuleForm.add.label' | translate }} </div>
-        <mcs-grid [mcsContextualHelp]="'orderSimpleFirewallChanges.detailsStep.sharedRuleForm.add.helptext' | translate">
+        <mcs-grid>
           <mcs-grid-row [gapSize]="4">
             <mcs-grid-column sizeLg="6">
               <mcs-form-field>
@@ -56,6 +58,7 @@
               <mcs-form-field>
                 <input mcsInput
                   [formControl]="formGroup?.controls['fcSourceIpSubnet']"
+                  [mcsContextualHelp]="'orderSimpleFirewallChanges.detailsStep.sharedRuleForm.add.sourceIpOrSubnet.helpText' | translate"
                   [placeholder]="'orderSimpleFirewallChanges.detailsStep.sharedRuleForm.add.sourceIpOrSubnet.placeholder' | translate"
                   mcsId="input-add-simple-firewall-change-source-ip-subnet"
                   required>
@@ -86,6 +89,7 @@
               <mcs-form-field>
                 <input mcsInput
                   [formControl]="formGroup?.controls['fcDestinationIpSubnet']"
+                  [mcsContextualHelp]="'orderSimpleFirewallChanges.detailsStep.sharedRuleForm.add.destinationIpOrSubnet.helpText' | translate"
                   [placeholder]="'orderSimpleFirewallChanges.detailsStep.sharedRuleForm.add.destinationIpOrSubnet.placeholder' | translate"
                   mcsId="input-add-simple-firewall-change-destination-ip-subnet"
                   required>
