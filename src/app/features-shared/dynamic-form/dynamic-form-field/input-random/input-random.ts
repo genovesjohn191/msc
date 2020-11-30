@@ -1,11 +1,11 @@
-import { DynamicFormFieldDataBase } from '../../dynamic-form-field-data.base';
+import { DynamicFormFieldConfigBase } from '../../dynamic-form-field-config.base';
 import {
   DynamicFormFieldOnChangeEvent,
   DynamicFormFieldType,
   DynamicFormFieldTemplate
-} from '../../dynamic-form-field-data.interface';
+} from '../../dynamic-form-field-config.interface';
 
-export class DynamicInputRandomField extends DynamicFormFieldDataBase {
+export class DynamicInputRandomField extends DynamicFormFieldConfigBase {
   // Overrides
   public type: DynamicFormFieldType = 'textbox-random';
   public template: DynamicFormFieldTemplate = 'input-random';

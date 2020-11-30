@@ -1,12 +1,12 @@
-import { DynamicFormFieldDataBase } from '../../dynamic-form-field-data.base';
+import { DynamicFormFieldConfigBase } from '../../dynamic-form-field-config.base';
 import {
   DynamicFormFieldOnChangeEvent,
   DynamicFormFieldType,
   DynamicFormFieldTemplate,
   DynamicFormControlSettings
-} from '../../dynamic-form-field-data.interface';
+} from '../../dynamic-form-field-config.interface';
 
-export class DynamicSelectStorageProfileField extends DynamicFormFieldDataBase {
+export class DynamicSelectStorageProfileField extends DynamicFormFieldConfigBase {
   // Overrides
   public type: DynamicFormFieldType = 'select-storage-profile';
   public template: DynamicFormFieldTemplate = 'select-storage-profile';

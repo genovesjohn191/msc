@@ -1,4 +1,4 @@
-import { DynamicFormFieldDataBase } from '@app/features-shared/dynamic-form';
+import { DynamicFormFieldConfigBase } from '@app/features-shared/dynamic-form';
 import { WorkflowType } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
 import { Workflow } from './workflow.interface';
@@ -10,7 +10,7 @@ export class LaunchPadWorkflow implements Workflow {
   public serviceId?: string;
   public title: string;
   public required: boolean = false;
-  public properties: DynamicFormFieldDataBase[];
+  public properties: DynamicFormFieldConfigBase[];
   public hasValueOverride: boolean = false;
 
   public constructor(options: {
@@ -20,7 +20,7 @@ export class LaunchPadWorkflow implements Workflow {
     required?: boolean,
     serviceId?: string,
     parentReferenceId?: string,
-    properties: DynamicFormFieldDataBase[],
+    properties: DynamicFormFieldConfigBase[],
     data?: { key: string, value: any }[]
   }) {
     this.title = options.title;

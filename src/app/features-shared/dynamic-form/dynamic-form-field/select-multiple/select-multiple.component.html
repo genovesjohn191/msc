@@ -1,22 +1,22 @@
 <mat-form-field
   *ngIf="visible"
   appearance="outline"
-  [hintLabel]="data.hint" >
+  [hintLabel]="config.hint" >
   <mat-label [attr.for]="id">{{ label }}</mat-label>
 
   <mat-select #control multiple
     [id]="id"
     [required]="required"
     [disabled]="disabled"
-    [(value)]="data.value"
+    [(value)]="config.value"
     (selectionChange)="valueChange($event)">
     <mat-select-trigger>
-      {{data.value ? data.value[0] : ''}}
-      <span *ngIf="data.value?.length > 1" class='more'>
-        (+{{data.value.length - 1}} more)
+      {{config.value ? config.value[0] : ''}}
+      <span *ngIf="config.value?.length > 1" class='more'>
+        (+{{config.value.length - 1}} more)
       </span>
     </mat-select-trigger>
-    <mat-option *ngFor="let opt of data.options" [value]="opt.key">
+    <mat-option *ngFor="let opt of config.options" [value]="opt.key">
       {{ opt.value }}
     </mat-option>
   </mat-select>

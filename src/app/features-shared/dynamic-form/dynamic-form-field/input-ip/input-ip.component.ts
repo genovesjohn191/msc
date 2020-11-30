@@ -5,7 +5,7 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { CommonDefinition, isNullOrEmpty } from '@app/utilities';
-import { DynamicFormFieldDataChangeEventParam } from '../../dynamic-form-field-data.interface';
+import { DynamicFormFieldDataChangeEventParam } from '../../dynamic-form-field-config.interface';
 import { DynamicInputTextComponent } from '../input-text/input-text.component';
 import { DynamicInputIpField } from './input-ip';
 
@@ -25,7 +25,7 @@ import { DynamicInputIpField } from './input-ip';
   }
 })
 export class DynamicInputIpComponent extends DynamicInputTextComponent {
-  public data: DynamicInputIpField;
+  public config: DynamicInputIpField;
   private _hasInitialized: boolean = false;
 
   public constructor(private _changeDetectorRef: ChangeDetectorRef) {
@@ -43,19 +43,19 @@ export class DynamicInputIpComponent extends DynamicInputTextComponent {
   private _updateBehavior(mode: string ): void {
     let required = mode.toLowerCase() === 'manual';
 
-    let hasValidators = !isNullOrEmpty(this.data.validators);
+    let hasValidators = !isNullOrEmpty(this.config.validators);
     if (hasValidators) {
-      this.data.validators.required = required
+      this.config.validators.required = required
 
     } else {
-      this.data.validators = { required };
+      this.config.validators = { required };
     }
 
-    let hasSettings = !isNullOrEmpty(this.data.settings);
+    let hasSettings = !isNullOrEmpty(this.config.settings);
     if (hasSettings) {
-      this.data.settings.hidden = !required;
+      this.config.settings.hidden = !required;
     } else {
-      this.data.settings = { hidden: !required };
+      this.config.settings = { hidden: !required };
     }
 
     this.disabled = !required;
@@ -64,7 +64,7 @@ export class DynamicInputIpComponent extends DynamicInputTextComponent {
 
     // Set initial value if required
     if (required && !this._hasInitialized) {
-      this.setInitialValue(this.data.initialValue);
+      this.setInitialValue(this.config.initialValue);
       this._hasInitialized = true;
     }
 

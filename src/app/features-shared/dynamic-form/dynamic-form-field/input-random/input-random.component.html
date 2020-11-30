@@ -1,18 +1,18 @@
 <mat-form-field
   *ngIf="visible"
   appearance="outline"
-  [hintLabel]="data.hint">
+  [hintLabel]="config.hint">
   <mat-label [attr.for]="id">{{ label }}</mat-label>
 
   <input #control matInput
     [id]="id"
     [required]="required"
     [disabled]="disabled"
-    [readonly]="data.readonly"
-    [placeholder]="data.placeholder"
-    [maxlength]="data.validators?.maxlength"
-    [minlength]="data.validators?.minlength"
-    [(ngModel)]="data.value"
+    [readonly]="config.readonly"
+    [placeholder]="config.placeholder"
+    [maxlength]="config.validators?.maxlength"
+    [minlength]="config.validators?.minlength"
+    [(ngModel)]="config.value"
     (input)="valueChange($event)"/>
   <button mat-icon-button matSuffix
     type="button"
@@ -29,5 +29,5 @@
     <mat-icon>refresh</mat-icon>
   </button>
 
-  <mat-hint align="end" *ngIf="data.validators?.maxlength > 0">{{control.value?.length || 0}}/{{ data.validators?.maxlength }}</mat-hint>
+  <mat-hint align="end" *ngIf="config.validators?.maxlength > 0">{{control.value?.length || 0}}/{{ config.validators?.maxlength }}</mat-hint>
 </mat-form-field>

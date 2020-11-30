@@ -10,7 +10,7 @@ import {
   DynamicFormFieldDataChangeEventParam,
   GroupedOption,
   FlatOption
-} from '../../dynamic-form-field-data.interface';
+} from '../../dynamic-form-field-config.interface';
 import { DynamicSelectGroupField } from './select-group';
 import { DynamicSelectFieldComponentBase } from '../dynamic-select-field-component.base';
 
@@ -30,7 +30,7 @@ import { DynamicSelectFieldComponentBase } from '../dynamic-select-field-compone
   }
 })
 export class DynamicSelectGroupComponent extends DynamicSelectFieldComponentBase<void> {
-  public data: DynamicSelectGroupField;
+  public config: DynamicSelectGroupField;
 
   constructor(_changeDetectorRef: ChangeDetectorRef) {
     super(_changeDetectorRef);

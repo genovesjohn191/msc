@@ -1,5 +1,5 @@
 import {
-  DynamicFormFieldData,
+  DynamicFormFieldConfig,
   DynamicFormFieldType,
   DynamicFormFieldOnChangeEvent,
   DynamicFormFieldTemplate,
@@ -7,9 +7,9 @@ import {
   GroupedOption,
   DynamicFormControlValidator,
   DynamicFormControlSettings
-} from './dynamic-form-field-data.interface';
+} from './dynamic-form-field-config.interface';
 
-export class DynamicFormFieldDataBase implements DynamicFormFieldData {
+export class DynamicFormFieldConfigBase implements DynamicFormFieldConfig {
   public type: DynamicFormFieldType;
   public template: DynamicFormFieldTemplate;
   public key: string;

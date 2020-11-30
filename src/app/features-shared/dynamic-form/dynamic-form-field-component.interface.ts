@@ -1,10 +1,10 @@
 import {
-  DynamicFormFieldData,
+  DynamicFormFieldConfig,
   DynamicFormFieldDataChangeEventParam
-} from './dynamic-form-field-data.interface';
+} from './dynamic-form-field-config.interface';
 import { EventEmitter } from '@angular/core';
 
-export interface DynamicFormField {
+export interface DynamicFormFieldComponent {
   id: string;
 
   label: string;
@@ -15,7 +15,7 @@ export interface DynamicFormField {
 
   required: boolean;
 
-  data: DynamicFormFieldData;
+  config: DynamicFormFieldConfig;
 
   dataChange: EventEmitter<DynamicFormFieldDataChangeEventParam>;
 

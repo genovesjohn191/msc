@@ -19,7 +19,7 @@ import {
 import {
   DynamicFormFieldDataChangeEventParam,
   FlatOption
-} from '../../dynamic-form-field-data.interface';
+} from '../../dynamic-form-field-config.interface';
 import { DynamicSelectNetworkField } from './select-network';
 import { DynamicSelectFieldComponentBase } from '../dynamic-select-field-component.base';
 
@@ -39,7 +39,7 @@ import { DynamicSelectFieldComponentBase } from '../dynamic-select-field-compone
   }
 })
 export class DynamicSelectNetworkComponent extends DynamicSelectFieldComponentBase<McsResourceNetwork> {
-  public data: DynamicSelectNetworkField;
+  public config: DynamicSelectNetworkField;
 
   // Filter variables
   private _resource: McsResource;

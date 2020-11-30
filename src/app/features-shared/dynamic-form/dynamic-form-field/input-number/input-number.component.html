@@ -1,7 +1,7 @@
 <mat-form-field
   *ngIf="visible"
   appearance="outline"
-  [hintLabel]="data.hint"
+  [hintLabel]="config.hint"
   style="max-width: 200px;">
   <mat-label [attr.for]="id">{{ label }}</mat-label>
 
@@ -9,11 +9,11 @@
     [id]="id"
     [required]="required"
     [disabled]="disabled"
-    [placeholder]="data.placeholder"
-    [min]="data.validators?.min"
-    [max]="data.validators?.max"
-    [(ngModel)]="data.value"
+    [placeholder]="config.placeholder"
+    [min]="config.validators?.min"
+    [max]="config.validators?.max"
+    [(ngModel)]="config.value"
     (input)="valueChange($event)"/>
-  <span matPrefix class="prefix" *ngIf="data.prefix">{{data.prefix}}</span>
-  <span matSuffix class="suffix" *ngIf="data.suffix">{{data.suffix}}</span>
+  <span matPrefix class="prefix" *ngIf="config.prefix">{{config.prefix}}</span>
+  <span matSuffix class="suffix" *ngIf="config.suffix">{{config.suffix}}</span>
 </mat-form-field>

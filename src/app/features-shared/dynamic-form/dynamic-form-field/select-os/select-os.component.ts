@@ -19,7 +19,7 @@ import {
   DynamicFormFieldDataChangeEventParam,
   GroupedOption,
   FlatOption
-} from '../../dynamic-form-field-data.interface';
+} from '../../dynamic-form-field-config.interface';
 import { DynamicSelectOsField } from './select-os';
 import { DynamicSelectFieldComponentBase } from '../dynamic-select-field-component.base';
 import { CommonDefinition, isNullOrEmpty } from '@app/utilities';
@@ -40,7 +40,7 @@ import { CommonDefinition, isNullOrEmpty } from '@app/utilities';
   }
 })
 export class DynamicSelectOsComponent extends DynamicSelectFieldComponentBase<McsServerOperatingSystem> {
-  public data: DynamicSelectOsField;
+  public config: DynamicSelectOsField;
 
   // Filter variables
   private _resource: McsResource;
@@ -119,12 +119,12 @@ export class DynamicSelectOsComponent extends DynamicSelectFieldComponentBase<Mc
       }
     });
 
-    let initialValueIsValidBillingCode = this._billingCodeMapping.has(this.data.initialValue);
+    let initialValueIsValidBillingCode = this._billingCodeMapping.has(this.config.initialValue);
     if (initialValueIsValidBillingCode) {
       // Force the control to reselect the initial value
-      this.writeValue(this.data.initialValue);
+      this.writeValue(this.config.initialValue);
       // Force the form to check the validty of the control
-      this.valueChange(this.data.initialValue);
+      this.valueChange(this.config.initialValue);
     }
 
     return groupedOptions;
@@ -137,7 +137,7 @@ export class DynamicSelectOsComponent extends DynamicSelectFieldComponentBase<Mc
     }
 
     if (!isNullOrEmpty(obj)) {
-      this.data.value = obj;
+      this.config.value = obj;
     }
   }
 }

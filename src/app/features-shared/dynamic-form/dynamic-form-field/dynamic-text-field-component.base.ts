@@ -8,77 +8,78 @@ import {
 import { ControlValueAccessor } from '@angular/forms';
 import { isNullOrEmpty } from '@app/utilities';
 
-import { DynamicFormFieldDataBase } from '../dynamic-form-field-data.base';
-import { DynamicFormFieldDataChangeEventParam } from '../dynamic-form-field-data.interface';
-import { DynamicFormField } from '../dynamic-form-field.interface';
+import { DynamicFormFieldConfigBase } from '../dynamic-form-field-config.base';
+import { DynamicFormFieldDataChangeEventParam } from '../dynamic-form-field-config.interface';
+import { DynamicFormFieldComponent } from '../dynamic-form-field-component.interface';
 
 @Component({ template: '' })
-export abstract class DynamicTextFieldComponentBase implements OnInit, DynamicFormField, ControlValueAccessor {
+export abstract class DynamicTextFieldComponentBase implements OnInit, DynamicFormFieldComponent, ControlValueAccessor {
   @Input()
-  public data: DynamicFormFieldDataBase;
+  public config: DynamicFormFieldConfigBase;
 
   @Output()
   public dataChange: EventEmitter<DynamicFormFieldDataChangeEventParam> = new EventEmitter<DynamicFormFieldDataChangeEventParam>();
 
   public get id(): string {
-    return this.data.key;
+    return this.config.key;
   }
 
   public get label(): string {
-    return this.data.label;
+    return this.config.label;
   }
 
   public get required(): boolean {
-    return this.data.validators && this.data.validators.required;
+    return this.config.validators && this.config.validators.required;
   }
 
   public get visible(): boolean {
-    let noSettings = isNullOrEmpty(this.data.settings);
+    let noSettings = isNullOrEmpty(this.config.settings);
     if (this.required || noSettings) {
       return true;
     }
 
-    return !this.data.settings.hidden;
+    return !this.config.settings.hidden;
   }
 
   public disabled: boolean = false;
 
+  public ngOnInit(): void {
+    if (!isNullOrEmpty(this.config.initialValue)) {
+      this.setInitialValue(this.config.initialValue);
+    }
+  }
+
   // Can be overriden to modify the value being sent
   public valueChange(val: any): void {
-    let validEvent = !isNullOrEmpty(this.data.eventName) && !isNullOrEmpty(this.data.dependents);
+    let validEvent = !isNullOrEmpty(this.config.eventName) && !isNullOrEmpty(this.config.dependents);
     if (validEvent) {
       this.dataChange.emit({
-        value: this.data.value,
-        eventName: this.data.eventName,
-        dependents: this.data.dependents
+        value: this.config.value,
+        eventName: this.config.eventName,
+        dependents: this.config.dependents
       });
     }
 
-    this.propagateChange(this.data.value);
+    this.propagateChange(this.config.value);
   }
 
   public abstract onFormDataChange(params: DynamicFormFieldDataChangeEventParam): void;
 
   public clearFormField(reuseValue: boolean): void {
-    let preserveValue = reuseValue && this.data.settings && this.data.settings.preserve;
+    let preserveValue = reuseValue && this.config.settings && this.config.settings.preserve;
     if (!preserveValue) {
       this._changeValue('');
     }
   }
 
   public setInitialValue(value: any): void {
-    this.data.initialValue = value;
+    this.config.initialValue = value;
     this._changeValue(value);
-  }
-
-  private _changeValue(value: any): void {
-    this.data.value = value;
-    this.valueChange(this.data.value);
   }
 
   public writeValue(obj: any): void {
     if (!isNullOrEmpty(obj)) {
-      this.data.value = obj;
+      this.config.value = obj;
     }
   }
 
@@ -97,10 +98,8 @@ export abstract class DynamicTextFieldComponentBase implements OnInit, DynamicFo
 
   public onTouched = () => {};
 
-  public ngOnInit(): void {
-    if (!isNullOrEmpty(this.data.initialValue)) {
-      this.setInitialValue(this.data.initialValue);
-    }
+  private _changeValue(value: any): void {
+    this.config.value = value;
+    this.valueChange(this.config.value);
   }
-
 }
