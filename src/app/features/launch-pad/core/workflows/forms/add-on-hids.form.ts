@@ -23,7 +23,8 @@ export const addOnHidsForm: LaunchPadForm = {
   mapCrispElementAttributes: (attributes: McsObjectCrispElementServiceAttribute[]) => {
     let mappedProperties: { key: string, value: any }[] = [];
 
-    mappedProperties.push({ key: 'protectionLevel', value: findCrispElementAttribute(CrispAttributeNames.HidsProtectionLevel , attributes)?.value } );
+    mappedProperties.push({ key: 'protectionLevel',
+                            value: findCrispElementAttribute(CrispAttributeNames.HidsProtectionLevel, attributes)?.value } );
 
     return mappedProperties;
   }
