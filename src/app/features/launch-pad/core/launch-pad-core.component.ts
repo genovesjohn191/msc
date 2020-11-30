@@ -177,7 +177,6 @@ export class LaunchPadComponent implements OnDestroy, IMcsNavigateAwayGuard {
       properties: workflow.properties
     }));
 
-    console.log('payload', payload);
     this._apiService.provisionWorkflows(payload)
     .pipe(catchError(() => {
       this.hasError = true;
@@ -188,7 +187,7 @@ export class LaunchPadComponent implements OnDestroy, IMcsNavigateAwayGuard {
     .subscribe((response) => {
       // Pass ongoing jobs to provisioning component
       this.workflowsState = response.collection;
-      console.log('this.workflowsState', this.workflowsState);
+
       // Go to provisioning step
       this._gotoStep(WizardStep.ProvisionWorkflows);
 

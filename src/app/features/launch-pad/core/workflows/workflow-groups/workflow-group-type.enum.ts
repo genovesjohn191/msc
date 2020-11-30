@@ -1,8 +1,8 @@
 // Workflow: Add new workflow group ID here
 export enum WorkflowGroupId {
-  ProvisionVirtualMachine
+  ProvisionVirtualDataCentreVmInstance
 }
 
 export const workflowGroupIdText = {
-  [WorkflowGroupId.ProvisionVirtualMachine]: 'Provision Virtual Machine'
+  [WorkflowGroupId.ProvisionVirtualDataCentreVmInstance]: 'Provision Virtual Data Centre VM Instance'
 }

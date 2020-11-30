@@ -9,26 +9,41 @@ import {
   ChangeDetectorRef,
   OnDestroy
 } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import {
+  Subject,
+  throwError
+} from 'rxjs';
+import {
+  catchError,
+  takeUntil
+} from 'rxjs/operators';
 
 import {
   Guid,
   isNullOrEmpty,
   unsubscribeSafely
 } from '@app/utilities';
+import { McsApiService } from '@app/services';
+import {
+  McsObjectCrispElement,
+  WorkflowType
+} from '@app/models';
 import { LaunchPadWorkflowComponent } from './workflow.component';
 import { LaunchPadWorkflow } from '../../workflows/workflow';
 import { WorkflowService } from '../../workflows/workflow.service';
 import { WorkflowGroupDirective } from '../../workflows/workflow-group.directive';
-import { Workflow, WorkflowData } from '../../workflows/workflow.interface';
-import { WorkflowGroupConfig, WorkflowGroupSaveState } from '../../workflows/workflow-group.interface';
-import { Subject, throwError } from 'rxjs';
-import { McsApiService } from '@app/services';
-import { McsObjectCrispElement } from '@app/models';
+import {
+  Workflow,
+  WorkflowData
+} from '../../workflows/workflow.interface';
+import {
+  WorkflowGroupConfig,
+  WorkflowGroupSaveState
+} from '../../workflows/workflow-group.interface';
 import { workflowGroupMap } from '../../workflows/workflow-group.map';
-import { catchError, takeUntil } from 'rxjs/operators';
 import { LaunchPadServiceIdSwitchDialogComponent } from '../service-id-switch-dialog/service-id-switch-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'mcs-launch-pad-workflow-group',
@@ -191,7 +206,9 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
     .pipe(
       catchError(() => {
         // Ensures the context of the form is set for loading options during failure
-        parent.propertyOverrides = workflowGroup.parent.form.mapContext(this.context);
+        if (!isNullOrEmpty(workflowGroup.parent.form.mapContext)) {
+          parent.propertyOverrides = workflowGroup.parent.form.mapContext(this.context);
+        }
 
         this._context.config = {
           id: this.context.workflowGroupId,
@@ -212,11 +229,17 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
       }))
     .subscribe((response) => {
       // Sets the preselected values of the form
-      let contextOverrides = workflowGroup.parent.form.mapContext(this.context);
+      if (!isNullOrEmpty(workflowGroup.parent.form.mapContext)) {
+        parent.propertyOverrides = workflowGroup.parent.form.mapContext(this.context);
+      }
       let crispOverrides = workflowGroup.parent.form.mapCrispElementAttributes(response.serviceAttributes);
-      parent.propertyOverrides = contextOverrides.concat(crispOverrides);
+      parent.propertyOverrides = parent.propertyOverrides.concat(crispOverrides);
 
       // TODO: Load the child overrides
+      children.push({
+        id: WorkflowType.AddHids,
+        propertyOverrides: [{ key: 'protectionLevel', value: 'Detect'}]
+      });
 
       // Load the form
       this._context.config = {
