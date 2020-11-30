@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import { DynamicFormFieldDataChangeEventParam } from '../../dynamic-form-field-data.interface';
+import { DynamicFormFieldDataChangeEventParam } from '../../dynamic-form-field-config.interface';
 import { DynamicInputHiddenField } from './input-hidden';
 import { DynamicTextFieldComponentBase } from '../dynamic-text-field-component.base';
 
@@ -21,7 +21,7 @@ import { DynamicTextFieldComponentBase } from '../dynamic-text-field-component.b
   ]
 })
 export class DynamicInputHiddenComponent extends DynamicTextFieldComponentBase {
-  public data: DynamicInputHiddenField;
+  public config: DynamicInputHiddenField;
 
   public onFormDataChange(params: DynamicFormFieldDataChangeEventParam): void {
     throw new Error('Method not implemented.');

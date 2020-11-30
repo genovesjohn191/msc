@@ -23,21 +23,20 @@ import {
 import {
   FlatOption,
   GroupedOption
-} from '../dynamic-form-field-data.interface';
-import { DynamicFormField } from '../dynamic-form-field.interface';
+} from '../dynamic-form-field-config.interface';
+import { DynamicFormFieldComponent } from '../dynamic-form-field-component.interface';
 import { DynamicTextFieldComponentBase } from './dynamic-text-field-component.base';
-import { McsReportResourceCompliance } from '@app/models';
 
 @Component({ template: '' })
 export abstract class DynamicSelectFieldComponentBase<T>
   extends DynamicTextFieldComponentBase
-  implements DynamicFormField, ControlValueAccessor, OnInit, OnDestroy {
+  implements DynamicFormFieldComponent, ControlValueAccessor, OnInit, OnDestroy {
 
   public isLoading: boolean = false;
   public hasError: boolean = false;
   public disabled: boolean = false;
   public get required(): boolean {
-    return !isNullOrEmpty(this.data.validators) && this.data.validators.required;
+    return !isNullOrEmpty(this.config.validators) && this.config.validators.required;
   }
 
   protected destroySubject: Subject<void> = new Subject<void>();
@@ -64,7 +63,7 @@ export abstract class DynamicSelectFieldComponentBase<T>
         takeUntil(this.destroySubject),
         catchError(() => {
           this._endProcess(true);
-          return throwError(`${this.data.key} data retrieval failed.`);
+          return throwError(`${this.config.key} data retrieval failed.`);
         }))
       .subscribe((response) => {
         this.collection = response;
@@ -73,11 +72,11 @@ export abstract class DynamicSelectFieldComponentBase<T>
   }
 
   public filterOptions(): void {
-    if (this._initialized && !isNullOrEmpty(this.data.value)) {
+    if (this._initialized && !isNullOrEmpty(this.config.value)) {
       this._setValue();
     }
 
-    this.data.options = this.filter(this.collection);
+    this.config.options = this.filter(this.collection);
 
     this._endProcess();
 
@@ -92,16 +91,16 @@ export abstract class DynamicSelectFieldComponentBase<T>
   protected abstract filter(collection: T[]): FlatOption[] | GroupedOption[];
 
   private _initialize(): void {
-    if (isNullOrEmpty(this.data.options)) {
+    if (isNullOrEmpty(this.config.options)) {
       this.retrieveOptions();
-    } else if (!isNullOrEmpty(this.data.value)) {
-      this.setInitialValue(this.data.value);
+    } else if (!isNullOrEmpty(this.config.value)) {
+      this.setInitialValue(this.config.value);
     }
   }
 
   private _setValue(val: any = ''): void {
-    this.data.value = val;
-    this.valueChange(this.data.value);
+    this.config.value = val;
+    this.valueChange(this.config.value);
   }
 
   private _startProcess(): void {
@@ -117,7 +116,7 @@ export abstract class DynamicSelectFieldComponentBase<T>
   }
 
   private _preselectOption(): void {
-    if (this.data.options.length <= 0) { return; }
+    if (this.config.options.length <= 0) { return; }
 
     if (this._tryAutoSelectSingleOption()) { return; }
 
@@ -125,50 +124,50 @@ export abstract class DynamicSelectFieldComponentBase<T>
   }
 
   private _tryAutoSelectSingleOption(): boolean {
-    let isRequiredField = this.data.validators && this.data.validators.required;
-    let hasSingleFlatOption = this.data.options[0].type === 'flat' && this.data.options.length === 1;
-    let hasSingleGroupOption = this.data.options[0].type === 'group' && this.data.options[0].options.length === 1;
+    let isRequiredField = this.config.validators && this.config.validators.required;
+    let hasSingleFlatOption = this.config.options[0].type === 'flat' && this.config.options.length === 1;
+    let hasSingleGroupOption = this.config.options[0].type === 'group' && this.config.options[0].options.length === 1;
     let hasSingleOption = hasSingleFlatOption || hasSingleGroupOption;
 
-    let validForAutoSelect = isRequiredField && hasSingleOption && isNullOrEmpty(this.data.initialValue);
+    let validForAutoSelect = isRequiredField && hasSingleOption && isNullOrEmpty(this.config.initialValue);
 
     if (!validForAutoSelect) { return validForAutoSelect; }
 
     // Autoselect
     if (hasSingleFlatOption) {
-      this._setValue((this.data.options[0] as FlatOption).key);
+      this._setValue((this.config.options[0] as FlatOption).key);
     } else if (hasSingleGroupOption) {
-      this._setValue(((this.data.options[0] as GroupedOption).options[0] as FlatOption).key);
+      this._setValue(((this.config.options[0] as GroupedOption).options[0] as FlatOption).key);
     }
 
     return validForAutoSelect;
   }
 
   private _selectInitialValue(): void {
-    if (isNullOrEmpty(this.data.initialValue)) { return; }
+    if (isNullOrEmpty(this.config.initialValue)) { return; }
 
     // Set to default initial value if has multiple options and not yet initialized
-    let hasMultipleFlatOptions = this.data.options[0].type === 'flat' && this.data.options.length >= 1;
-    let hasMultipleGroupOption = this.data.options[0].type === 'group' && this.data.options[0].options.length >= 1;
+    let hasMultipleFlatOptions = this.config.options[0].type === 'flat' && this.config.options.length >= 1;
+    let hasMultipleGroupOption = this.config.options[0].type === 'group' && this.config.options[0].options.length >= 1;
     let hasMultipleOptions = hasMultipleGroupOption || hasMultipleFlatOptions;
 
     if (hasMultipleOptions) {
       let initialValueIsInOptionsList = false;
 
       if (hasMultipleFlatOptions) {
-        initialValueIsInOptionsList = !isNullOrEmpty((this.data.options as FlatOption[]).find((opt) => opt.key === this.data.initialValue
-        ));
+        initialValueIsInOptionsList = !isNullOrEmpty((this.config.options as FlatOption[])
+        .find((opt) => opt.key === this.config.initialValue));
       } else if (hasMultipleGroupOption) {
-        (this.data.options as GroupedOption[]).forEach((opt) => {
+        (this.config.options as GroupedOption[]).forEach((opt) => {
           if (initialValueIsInOptionsList) { return; }
 
           initialValueIsInOptionsList = !isNullOrEmpty((opt.options as FlatOption[]).find((item) =>
-            item.key === this.data.initialValue));
+            item.key === this.config.initialValue));
 
         });
       }
 
-      if (initialValueIsInOptionsList) { this._setValue(this.data.initialValue); }
+      if (initialValueIsInOptionsList) { this._setValue(this.config.initialValue); }
     }
   }
 }

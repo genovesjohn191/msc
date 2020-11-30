@@ -1,9 +1,9 @@
-import { DynamicFormFieldDataBase } from '@app/features-shared/dynamic-form';
+import { DynamicFormFieldConfigBase } from '@app/features-shared/dynamic-form';
 import { McsObjectCrispElementServiceAttribute } from '@app/models';
 import { WorkflowGroupSaveState } from '../workflow-group.interface';
 
 export interface LaunchPadForm {
-  config: DynamicFormFieldDataBase[];
+  config: DynamicFormFieldConfigBase[];
 
   mapContext?: (context: WorkflowGroupSaveState)
   => { key: string, value: any }[]

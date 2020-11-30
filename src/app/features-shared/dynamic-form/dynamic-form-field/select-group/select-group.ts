@@ -1,12 +1,12 @@
-import { DynamicFormFieldDataBase } from '../../dynamic-form-field-data.base';
+import { DynamicFormFieldConfigBase } from '../../dynamic-form-field-config.base';
 import {
   DynamicFormFieldOnChangeEvent,
   DynamicFormFieldType,
   DynamicFormFieldTemplate,
   GroupedOption
-} from '../../dynamic-form-field-data.interface';
+} from '../../dynamic-form-field-config.interface';
 
-export class DynamicSelectGroupField extends DynamicFormFieldDataBase {
+export class DynamicSelectGroupField extends DynamicFormFieldConfigBase {
   // Overrides
   public type: DynamicFormFieldType = 'select-group';
   public template: DynamicFormFieldTemplate = 'select-group';

@@ -24,7 +24,7 @@ import {
   DynamicFormFieldDataChangeEventParam,
   FlatOption,
   GroupedOption
-} from '../../dynamic-form-field-data.interface';
+} from '../../dynamic-form-field-config.interface';
 import { DynamicSelectVdcField } from './select-vdc';
 import { DynamicSelectFieldComponentBase } from '../dynamic-select-field-component.base';
 
@@ -44,7 +44,7 @@ import { DynamicSelectFieldComponentBase } from '../dynamic-select-field-compone
   }
 })
 export class DynamicSelectVdcComponent extends DynamicSelectFieldComponentBase<McsResource> {
-  public data: DynamicSelectVdcField;
+  public config: DynamicSelectVdcField;
 
   // Filter variables
   private _az: string = '';
@@ -86,12 +86,12 @@ export class DynamicSelectVdcComponent extends DynamicSelectFieldComponentBase<M
           !isNullOrEmpty(resource.availabilityZone));
 
         // Hide managed VDCs if enabled in config
-        if (!isNullOrEmpty(returnValue) && this.data.hideManaged) {
+        if (!isNullOrEmpty(returnValue) && this.config.hideManaged) {
           returnValue = returnValue.filter((resource) => resource.serviceType !== ServiceType.Managed);
         }
 
         // Hide self managed VDCs if enabled in config
-        if (!isNullOrEmpty(returnValue) && this.data.hideSelfManaged) {
+        if (!isNullOrEmpty(returnValue) && this.config.hideSelfManaged) {
           returnValue = returnValue.filter((resource) => resource.serviceType !== ServiceType.SelfManaged);
         }
 
@@ -132,10 +132,10 @@ export class DynamicSelectVdcComponent extends DynamicSelectFieldComponentBase<M
 
   public valueChange(val: any): void {
     this.dataChange.emit({
-      value: this.collection.find((item) => item.name === this.data.value),
-      eventName: this.data.eventName,
-      dependents: this.data.dependents
+      value: this.collection.find((item) => item.name === this.config.value),
+      eventName: this.config.eventName,
+      dependents: this.config.dependents
     });
-    this.propagateChange(this.data.value);
+    this.propagateChange(this.config.value);
   }
 }

@@ -1,4 +1,4 @@
-export interface DynamicFormFieldData {
+export interface DynamicFormFieldConfig {
   type: DynamicFormFieldType;
   template: DynamicFormFieldTemplate;
   key: string;

@@ -8,7 +8,7 @@ import { MatExpansionPanel } from '@angular/material/expansion';
 
 import {
   DynamicFormComponent,
-  DynamicFormFieldDataBase
+  DynamicFormFieldConfigBase
 } from '@app/features-shared/dynamic-form';
 import { WorkflowType } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
@@ -48,7 +48,7 @@ export class LaunchPadWorkflowComponent {
   public serviceId?: string;
 
   @Input()
-  public fieldData: DynamicFormFieldDataBase[];
+  public fieldData: DynamicFormFieldConfigBase[];
 
   @Input()
   public required: boolean = false;

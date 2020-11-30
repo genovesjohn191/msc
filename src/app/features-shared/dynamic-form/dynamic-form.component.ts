@@ -16,11 +16,11 @@ import {
 import { isNullOrEmpty } from '@app/utilities';
 import { CoreValidators } from '@app/core';
 import {
-  DynamicFormFieldData,
+  DynamicFormFieldConfig,
   DynamicFormFieldDataChangeEventParam
-} from './dynamic-form-field-data.interface';
-import { DynamicFormField } from './dynamic-form-field.interface';
-import { DynamicFormFieldDataBase } from './dynamic-form-field-data.base';
+} from './dynamic-form-field-config.interface';
+import { DynamicFormFieldComponent } from './dynamic-form-field-component.interface';
+import { DynamicFormFieldConfigBase } from './dynamic-form-field-config.base';
 
 @Component({
   selector: 'mcs-dynamic-form',
@@ -29,13 +29,13 @@ import { DynamicFormFieldDataBase } from './dynamic-form-field-data.base';
 })
 export class DynamicFormComponent implements OnInit, AfterViewInit {
   @Input()
-  public controlDataItems: DynamicFormFieldDataBase[];
+  public controlDataItems: DynamicFormFieldConfigBase[];
 
   @Input()
   public hideMoreFieldsToggle: boolean = false;
 
   @ViewChildren('control')
-  public controls: QueryList<DynamicFormField>;
+  public controls: QueryList<DynamicFormFieldComponent>;
 
   public hasMoreFields: boolean = false;
   public form: FormGroup;
@@ -75,7 +75,7 @@ export class DynamicFormComponent implements OnInit, AfterViewInit {
     // Trigger data change event
     this.controls.forEach(control => {
 
-      if (params.dependents.indexOf(control.data.key) > -1) {
+      if (params.dependents.indexOf(control.config.key) > -1) {
         control.onFormDataChange(params);
         this._resetFieldValidators(control);
       }
@@ -102,7 +102,7 @@ export class DynamicFormComponent implements OnInit, AfterViewInit {
     }
 
     this.controls.forEach(control => {
-      let value = properties[control.data.key];
+      let value = properties[control.config.key];
 
       if (!isNullOrEmpty(value)) {
         control.setInitialValue(value);
@@ -152,8 +152,8 @@ export class DynamicFormComponent implements OnInit, AfterViewInit {
   private setFieldVisiblity(visible: boolean): void {
     this.controls.forEach(control => {
 
-      if (!isNullOrEmpty(control.data.settings)) {
-        control.data.settings.hidden = !visible;
+      if (!isNullOrEmpty(control.config.settings)) {
+        control.config.settings.hidden = !visible;
       }
     });
 
@@ -191,7 +191,7 @@ export class DynamicFormComponent implements OnInit, AfterViewInit {
     this.customValidatorMap.set('textbox-ip', [CoreValidators.ipAddress]);
   }
 
-  private _getValidators(controlData: DynamicFormFieldData): ValidatorFn[] {
+  private _getValidators(controlData: DynamicFormFieldConfig): ValidatorFn[] {
     let validators: ValidatorFn[] = [];
 
     if (isNullOrEmpty(controlData)) {
@@ -228,17 +228,17 @@ export class DynamicFormComponent implements OnInit, AfterViewInit {
     return validators;
   }
 
-  private _resetFieldValidators(control: DynamicFormField): void {
-    let key = control.data.key;
+  private _resetFieldValidators(control: DynamicFormFieldComponent): void {
+    let key = control.config.key;
 
     if (control.visible) {
-      this.form.controls[key].setValidators(this._getValidators(control.data));
+      this.form.controls[key].setValidators(this._getValidators(control.config));
     } else {
       this.form.controls[key].markAsPristine();
       this.form.controls[key].clearValidators();
     }
 
-    this.form.controls[control.data.key].updateValueAndValidity();
+    this.form.controls[control.config.key].updateValueAndValidity();
   }
 
   private _invokeQueuedEvents(): void {

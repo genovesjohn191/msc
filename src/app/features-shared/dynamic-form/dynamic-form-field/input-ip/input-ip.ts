@@ -4,7 +4,7 @@ import {
   DynamicFormFieldOnChangeEvent,
   DynamicFormFieldTemplate,
   DynamicFormFieldType
-} from '../../dynamic-form-field-data.interface';
+} from '../../dynamic-form-field-config.interface';
 import { DynamicInputTextField } from '../input-text/input-text';
 
 export class DynamicInputIpField extends DynamicInputTextField {

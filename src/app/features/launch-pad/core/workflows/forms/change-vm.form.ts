@@ -1,5 +1,5 @@
 import {
-  DynamicFormFieldDataBase,
+  DynamicFormFieldConfigBase,
   DynamicInputDomainField,
   DynamicInputHiddenField,
   DynamicInputHostNameField,
@@ -13,7 +13,7 @@ import {
   DynamicSelectVdcField
 } from '@app/features-shared/dynamic-form';
 
-export const changeVmForm: DynamicFormFieldDataBase[] = [
+export const changeVmForm: DynamicFormFieldConfigBase[] = [
   new DynamicSelectField({
     key: 'zone',
     label: 'Availability Zone',

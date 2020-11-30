@@ -19,7 +19,7 @@ import { McsResource, McsResourceStorage } from '@app/models';
 import {
   DynamicFormFieldDataChangeEventParam,
   FlatOption
-} from '../../dynamic-form-field-data.interface';
+} from '../../dynamic-form-field-config.interface';
 import { DynamicSelectStorageProfileField } from './select-storage-profile';
 import { DynamicSelectFieldComponentBase } from '../dynamic-select-field-component.base';
 
@@ -39,7 +39,7 @@ import { DynamicSelectFieldComponentBase } from '../dynamic-select-field-compone
   }
 })
 export class DynamicSelectStorageProfileComponent extends DynamicSelectFieldComponentBase<McsResourceStorage> {
-  public data: DynamicSelectStorageProfileField;
+  public config: DynamicSelectStorageProfileField;
 
   // Filter variables
   private _resource: McsResource;

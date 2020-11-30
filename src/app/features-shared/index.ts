@@ -42,4 +42,4 @@ export * from './system-message-form/system-message-form.component';
 export * from './system-message-form/system-message-form';
 
 /** Dynamic Form */
-export * from './dynamic-form/dynamic-form-field-data.interface';
+export * from './dynamic-form/dynamic-form-field-config.interface';

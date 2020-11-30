@@ -5,7 +5,7 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import { DynamicFormFieldDataChangeEventParam } from '../../dynamic-form-field-data.interface';
+import { DynamicFormFieldDataChangeEventParam } from '../../dynamic-form-field-config.interface';
 import { DynamicInputRandomField } from './input-random';
 import { DynamicTextFieldComponentBase } from '../dynamic-text-field-component.base';
 import { createRandomString, copyToClipboard } from '@app/utilities';
@@ -29,10 +29,10 @@ export class DynamicInputRandomComponent
   extends DynamicTextFieldComponentBase
   implements AfterViewInit {
 
-  public data: DynamicInputRandomField;
+  public config: DynamicInputRandomField;
 
   public ngAfterViewInit(): void {
-    if (this.data.value === '' && this.data.validators.required) {
+    if (this.config.value === '' && this.config.validators.required) {
       this.generate();
     }
   }
@@ -42,14 +42,14 @@ export class DynamicInputRandomComponent
   }
 
   public generate(): void {
-    this.data.value =
+    this.config.value =
     createRandomString(
-      this.data.alphaCharCount,
-      this.data.numericCharCount,
-      this.data.specialCharCount,
-      this.data.anyCharCount);
+      this.config.alphaCharCount,
+      this.config.numericCharCount,
+      this.config.specialCharCount,
+      this.config.anyCharCount);
 
-    this.valueChange(this.data.value);
+    this.valueChange(this.config.value);
   }
 
   public copy(element: any): void {

@@ -1,12 +1,12 @@
-import { DynamicFormFieldDataBase } from '../../dynamic-form-field-data.base';
+import { DynamicFormFieldConfigBase } from '../../dynamic-form-field-config.base';
 import {
   DynamicFormFieldOnChangeEvent,
   DynamicFormFieldType,
   DynamicFormFieldTemplate,
   DynamicFormControlSettings
-} from '../../dynamic-form-field-data.interface';
+} from '../../dynamic-form-field-config.interface';
 
-export class DynamicSelectOsField extends DynamicFormFieldDataBase {
+export class DynamicSelectOsField extends DynamicFormFieldConfigBase {
   // Overrides
   public type: DynamicFormFieldType = 'select-os';
   public template: DynamicFormFieldTemplate = 'select-os';

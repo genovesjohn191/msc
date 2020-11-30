@@ -2,7 +2,7 @@ import { CommonDefinition } from '@app/utilities';
 import {
   DynamicFormFieldOnChangeEvent,
   DynamicFormFieldType
-} from '../../dynamic-form-field-data.interface';
+} from '../../dynamic-form-field-config.interface';
 import { DynamicInputTextField } from '../input-text/input-text';
 
 export class DynamicInputDomainField extends DynamicInputTextField {

@@ -1,11 +1,11 @@
-import { DynamicFormFieldDataBase } from '../../dynamic-form-field-data.base';
+import { DynamicFormFieldConfigBase } from '../../dynamic-form-field-config.base';
 import {
   DynamicFormFieldOnChangeEvent,
   DynamicFormFieldType,
   DynamicFormFieldTemplate
-} from '../../dynamic-form-field-data.interface';
+} from '../../dynamic-form-field-config.interface';
 
-export class DynamicInputTextField extends DynamicFormFieldDataBase {
+export class DynamicInputTextField extends DynamicFormFieldConfigBase {
   // Overrides
   public type: DynamicFormFieldType = 'textbox-input';
   public template: DynamicFormFieldTemplate = 'input-text';

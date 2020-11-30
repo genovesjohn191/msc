@@ -1,7 +1,7 @@
 <mat-form-field
   *ngIf="visible"
   appearance="outline"
-  [hintLabel]="data.hint"
+  [hintLabel]="config.hint"
   [matBadge]="hasError ? '!' : ''"
   matBadgePosition="before"
   matBadgeColor="warn"
@@ -14,10 +14,10 @@
     [id]="id"
     [required]="required"
     [disabled]="disabled"
-    [(value)]="data.value"
+    [(value)]="config.value"
     (selectionChange)="valueChange($event)">
     <mat-option *ngIf="!required">-- None --</mat-option>
-    <mat-option *ngFor="let opt of data.options" [value]="opt.key">
+    <mat-option *ngFor="let opt of config.options" [value]="opt.key">
       {{ opt.value }}
     </mat-option>
   </mat-select>
