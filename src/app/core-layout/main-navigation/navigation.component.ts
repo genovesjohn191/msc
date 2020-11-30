@@ -182,6 +182,12 @@ export class NavigationComponent implements OnInit, OnDestroy {
     this._changeDetectorRef.markForCheck();
   }
 
+  public togglePublicCloud(propertyName: string): void {
+    (this as any)[`_${propertyName}`] = !((this)[`_${propertyName}`] as boolean);
+    (this as any)['_showDashboardSubmenu'] = !((this)['_showDashboardSubmenu'] as boolean);
+    this._changeDetectorRef.markForCheck();
+  }
+
   public logout(event: any): void {
     event.preventDefault();
     this._authenticationService.logOut();

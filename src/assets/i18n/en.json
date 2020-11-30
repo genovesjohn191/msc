@@ -224,7 +224,9 @@
           "title": "Virtual Machine Breakdown"
         },
         "operationalSavings": {
-          "title": "Operational Monthly Savings"
+          "title": "Operational Monthly Savings",
+          "noSQLdatabase": "No SQL Database savings at this time",
+          "noVirtualMachine": "No Virtual Machine savings at this time"
         },
         "vmRightsizing": {
           "title": "VM Rightsizing",
@@ -248,14 +250,21 @@
       "techReview": {
         "label": "Tech Review",
         "empty": "No data found",
-        "securityCompliance": {
-          "title": "Security and Compliance",
+        "security": {
+          "title": "Security",
           "overAllSecurityScore": "Overall Security Score",
+          "viewRecommendation": "View Recommendations in Azure"
+        },
+        "compliance": {
+          "title": "Compliance",
           "overAllResourceCompliance": "Overall Resource Compliance",
           "complianceState": "Resources by Compliance State",
           "nonCompliantInitiatives": "Non-compliant Initiatives",
           "nonCompliantPolicies": "Non-compliant Policies",
-          "viewRecommendation": "View Recommendations in Azure"
+          "overAllResourceComplianceTooltip": "Overall resource compliance grants an overall picture of the compliance state across all your resources for a particular subscription",
+          "complianceStateTooltip": "Resource by compliance state offers a categorized look at how many of your resources for a particular subscription fall into each compliance state",
+          "nonCompliantInitiativesTooltip": "An Azure initiative is a collection of Azure policy definitions that are grouped together towards a specific goal or purpose in mind. Any initiative which is not compliant will be counted towards this score",
+          "nonCompliantPoliciesTooltip": "A non-compliant policy is an Azure policy that targets a specific resource, where that resource does not conform to the regulatory or governance definitions set out in the policy"
         },
         "resourceHealth": {
           "title": "Resource Health"

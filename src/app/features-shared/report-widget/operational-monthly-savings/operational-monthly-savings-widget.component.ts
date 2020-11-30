@@ -1,10 +1,28 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewEncapsulation
+} from '@angular/core';
 import { Subject, throwError } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 import { CoreRoutes } from '@app/core';
-import { cloneDeep, CommonDefinition, currencyFormat, unsubscribeSafely } from '@app/utilities';
+import {
+  cloneDeep,
+  coerceNumber,
+  CommonDefinition,
+  currencyFormat,
+  isNullOrEmpty,
+  unsubscribeSafely
+} from '@app/utilities';
 import { McsReportingService } from '@app/core/services/mcs-reporting.service';
-import { RouteKey, OperationalSavingsSubItems, McsReportOperationalSavings } from '@app/models';
+import {
+  RouteKey,
+  OperationalSavingsSubItems,
+  McsReportOperationalSavings,
+  OperationalSavingsItems
+} from '@app/models';
 @Component({
   selector: 'mcs-operational-monthly-savings-widget',
   templateUrl: './operational-monthly-savings-widget.component.html',
@@ -15,13 +33,11 @@ import { RouteKey, OperationalSavingsSubItems, McsReportOperationalSavings } fro
   }
 })
 export class OperationalMonthlySavingsWidgetComponent implements OnInit, OnDestroy {
-
   public processing: boolean = false;
   public hasError: boolean = false;
   public empty: boolean = false;
-
-  public potentialOperationalSavings: string;
-  public operationalSavings: McsReportOperationalSavings[];
+  public operationalSavings: McsReportOperationalSavings;
+  public totalSavings: string;
 
   private _destroySubject = new Subject<void>();
 
@@ -35,7 +51,6 @@ export class OperationalMonthlySavingsWidgetComponent implements OnInit, OnDestr
   ) { }
 
   ngOnInit(): void {
-    this.getCostRecommendations();
     this.getOperationalMonthlySavings();
   }
 
@@ -51,13 +66,12 @@ export class OperationalMonthlySavingsWidgetComponent implements OnInit, OnDestr
     return CoreRoutes.getNavigationPath(RouteKey.OrderMsRequestChange);
   }
 
-  public clone(operationalSavings: McsReportOperationalSavings): OperationalSavingsSubItems[] {
-    return cloneDeep(operationalSavings.subItems);
+  public get hasPotentialSavings(): boolean {
+    return coerceNumber(this.totalSavings) > 0 ? true : false;
   }
 
-  public retryData(): void {
-    this.getCostRecommendations();
-    this.getOperationalMonthlySavings();
+  public clone(operationalSavings: OperationalSavingsItems): OperationalSavingsSubItems[] {
+    return cloneDeep(operationalSavings.subItems);
   }
 
   public getOperationalMonthlySavings(): void {
@@ -74,29 +88,10 @@ export class OperationalMonthlySavingsWidgetComponent implements OnInit, OnDestr
       }),
       takeUntil(this._destroySubject))
     .subscribe((response) => {
-      this.empty = response.length === 0 ? true : false;
+      this.empty = isNullOrEmpty(response) ? true : false;
+      this.totalSavings = response.totalSavings > 0 ? response.totalSavings.toFixed(2) : '0.00';
       this.processing = false;
       this.operationalSavings = response;
-      this._changeDetectorRef.markForCheck();
-    });
-  }
-
-  public getCostRecommendations(): void {
-    this.processing = true;
-    this.hasError = false;
-
-    this._reportingService.getCostRecommendations()
-    .pipe(
-      catchError(() => {
-        this.hasError = true;
-        this.processing = false;
-        this._changeDetectorRef.markForCheck();
-        return throwError('Cost Recommendations endpoint failed.');
-      }),
-      takeUntil(this._destroySubject))
-    .subscribe((response) => {
-      this.processing = false;
-      this.potentialOperationalSavings = this.moneyFormat(response.potentialOperationalSavings);
       this._changeDetectorRef.markForCheck();
     });
   }

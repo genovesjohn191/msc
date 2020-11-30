@@ -1635,7 +1635,7 @@ export class McsApiService {
     );
   }
 
-  public getOperationalMonthlySavings(): Observable<McsReportOperationalSavings[]> {
+  public getOperationalMonthlySavings(): Observable<McsReportOperationalSavings> {
     return this._reportsApi.getOperationalMonthlySavings().pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getOperationalMonthlySavings'))

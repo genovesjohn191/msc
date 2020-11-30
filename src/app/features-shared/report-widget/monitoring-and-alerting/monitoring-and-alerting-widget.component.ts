@@ -10,7 +10,7 @@ import { catchError } from 'rxjs/operators';
 import { McsReportingService } from '@app/core/services/mcs-reporting.service';
 import { McsReportMonitoringAndAlerting } from '@app/models';
 import { ChartConfig, ChartItem } from '@app/shared';
-import { isNullOrEmpty } from '@app/utilities';
+import { isNullOrEmpty, unsubscribeSafely } from '@app/utilities';
 
 @Component({
   selector: 'mcs-monitoring-and-alerting-widget',
@@ -54,6 +54,7 @@ export class MonitoringAndAlertingWidgetComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    unsubscribeSafely(this.dataBehavior);
   }
 
   public getData(): void {
@@ -66,7 +67,7 @@ export class MonitoringAndAlertingWidgetComponent implements OnInit, OnDestroy {
       this.hasError = true;
       this.processing = false;
       this._changeDetectorRef.markForCheck();
-      return throwError('Azure resources endpoint failed.');
+      return throwError('Monitoring and Alerting endpoint failed.');
     }))
     .subscribe((result) => {
       this.processing = false;

@@ -16,10 +16,49 @@
     margin: $space-medium 0;
   }
 
+  .insight-header {
+    margin-bottom: $space-large;
+
+    &.tech-review {
+      margin-top: $space-xxlarge;
+    }
+  }
+
+  .tab-bar {
+    border-bottom: 1px $color-black solid;
+    padding: $space-small 0;
+    display: flex;
+
+    div {
+      padding: $space-small $space-large;
+      display: inline;
+
+      &:hover {
+        border-bottom: 3px $color-black solid;
+        font-weight: 700;
+        cursor: pointer;
+      }
+    }
+
+    a {
+      text-decoration: none;
+      color: $color-black;
+      @include font-size($font-size-default);
+    }
+  }
+
   .options-container {
     margin-top: $space-medium;
     @include display-flex(row);
     justify-content: space-between;
+
+    .subtitle-container {
+      padding-top: $space-large;
+
+      @include breakpoint(small) {
+        padding-top: 0;
+      }
+    }
   }
 
   section {

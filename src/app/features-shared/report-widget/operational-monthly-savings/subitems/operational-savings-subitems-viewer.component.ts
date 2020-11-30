@@ -29,6 +29,7 @@ export class OperationalSavingsSubitemsViewerComponent {
       this.table += '<table class="mcs-compact-table">';
       objectKeys.forEach((fieldKey) => {
         let fieldValue = source[fieldKey];
+        if (isNullOrEmpty(fieldValue.description)) { return; }
         this.table += '<tr>';
           this.table += `<td>${fieldValue.description}</td>`;
           this.table += `<td>${this.moneyFormat(fieldValue.savings)}</td>`;

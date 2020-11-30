@@ -1,13 +1,10 @@
 import { JsonProperty } from '@app/utilities';
-import { OperationalSavingsSubItems } from '@app/models';
+import { OperationalSavingsItems } from '@app/models';
 
 export class McsReportOperationalSavings {
   @JsonProperty()
-  public description: string = undefined;
+  public totalSavings: number = undefined;
 
   @JsonProperty()
-  public savings: number = undefined;
-
-  @JsonProperty()
-  public subItems: OperationalSavingsSubItems[] = undefined;
+  public items: OperationalSavingsItems[] = undefined;
 }

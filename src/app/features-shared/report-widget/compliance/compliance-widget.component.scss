@@ -1,0 +1,75 @@
+@import "../../../../styles/shared/base";
+
+.resource-compliance-wrapper {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  .score-panel {
+    margin: $space-small $space-medium;
+    width: 100%;
+
+    .info {
+      @include display-flex(row);
+
+      .label {
+        display: inline-block;
+        margin-bottom: $space-small;
+      }
+
+      .score {
+        @include font-size($font-size-large);
+        display: block;
+      }
+    }
+
+    &.overall {
+      height: auto;
+      margin-top: 24px;
+      margin-bottom: auto;
+      max-width: 200px;
+
+      .score {
+        @include font-size($font-size-xxlarge);
+      }
+
+      mcs-icon {
+        align-self: flex-start;
+      }
+    }
+  }
+  .resource-compliance-state {
+    mcs-item {
+      margin-top: 24px;
+      margin-left: 10px;
+    }
+  }
+
+  > div {
+    margin-right: $space-xlarge;
+    margin-bottom: $space-large;
+  }
+
+  .label {
+    margin-left: 0;
+  }
+
+  .initial-compliant-label {
+    font-size: $space-xlarge;
+    font-weight: 700;
+  }
+
+  .apexcharts-pie-label {
+    display: none;
+
+    @include print() {
+      display: block;
+    }
+  }
+
+  .apexcharts-datalabels-group {
+    .apexcharts-datalabel-value {
+      font-weight: 700;
+    }
+  }
+}

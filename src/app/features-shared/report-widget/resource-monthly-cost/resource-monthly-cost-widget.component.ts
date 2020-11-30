@@ -31,10 +31,14 @@ export class ResourceMonthlyCostWidgetComponent implements OnInit, OnDestroy {
     stacked: true,
     yaxis: {
       title: 'Total Cost ($)',
-      showLabel: true
+      showLabel: true,
+      valueFormatter: this.valueYFormatter
     },
     xaxis: {
       title: 'Days'
+    },
+    tooltip: {
+      yValueFormatter: this.tooltipYValueFormatter
     }
   };
 
@@ -99,5 +103,13 @@ export class ResourceMonthlyCostWidgetComponent implements OnInit, OnDestroy {
       this.processing = false;
       this._changeDetector.markForCheck();
     });
+  }
+
+  public tooltipYValueFormatter(val: number): string {
+    return `${val.toFixed(2)}`;
+  }
+
+  public valueYFormatter(val: number): string {
+    return `${val.toFixed()}`;
   }
 }

@@ -38,10 +38,14 @@ export class ServicesCostOverviewWidgetComponent implements OnInit, OnDestroy {
     stacked: true,
     yaxis: {
       title: 'Total Cost ($)',
-      showLabel: true
+      showLabel: true,
+      valueFormatter: this.valueYFormatter
     },
     xaxis: {
       title: 'Months'
+    },
+    tooltip: {
+      yValueFormatter: this.tooltipYValueFormatter
     }
   };
 
@@ -102,5 +106,13 @@ export class ServicesCostOverviewWidgetComponent implements OnInit, OnDestroy {
 
     this._startPeriod = `${from.getFullYear()}-${from.getMonth() + 1}`;
     this._endPeriod = `${until.getFullYear()}-${until.getMonth() + 1}`;
+  }
+
+  public tooltipYValueFormatter(val: number): string {
+    return `${val.toFixed(2)}`;
+  }
+
+  public valueYFormatter(val: number): string {
+    return `${val.toFixed()}`;
   }
 }

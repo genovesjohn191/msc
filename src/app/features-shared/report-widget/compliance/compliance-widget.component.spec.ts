@@ -1,17 +1,13 @@
-import {
-  waitForAsync,
-  TestBed
-} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { McsReportingService } from '@app/core/services/mcs-reporting.service';
 import { CoreTestingModule } from '@app/core/testing';
 import { ServicesTestingModule } from '@app/services/testing';
 import { of } from 'rxjs';
-import { ResourceHealthWidgetComponent } from './resource-health-widget.component';
 
-describe('ResourceHealthWidgetComponent', () => {
+import { ComplianceWidgetComponent } from './compliance-widget.component';
 
-  /** Stub Services/Components */
-  let component: ResourceHealthWidgetComponent;
+describe('ComplianceWidgetComponent', () => {
+  let component: ComplianceWidgetComponent;
 
   beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
@@ -20,7 +16,7 @@ describe('ResourceHealthWidgetComponent', () => {
     /** Testbed Configuration */
     TestBed.configureTestingModule({
       declarations: [
-        ResourceHealthWidgetComponent
+        ComplianceWidgetComponent
       ], imports: [
         CoreTestingModule,
         ServicesTestingModule
@@ -30,23 +26,22 @@ describe('ResourceHealthWidgetComponent', () => {
     });
 
     /** Testbed Onverriding of Components */
-    TestBed.overrideComponent(ResourceHealthWidgetComponent, {
+    TestBed.overrideComponent(ComplianceWidgetComponent, {
       set: {
-        template: `<div>SecurityWidgetComponent Template</div>`
+        template: `<div>ComplianceWidgetComponent Template</div>`
       }
     });
 
     /** Tesbed Component Compilation and Creation */
     TestBed.compileComponents().then(() => {
-      let fixture = TestBed.createComponent(ResourceHealthWidgetComponent);
+      let fixture = TestBed.createComponent(ComplianceWidgetComponent);
       fixture.detectChanges();
 
       component = fixture.componentInstance;
     });
   }));
 
-  /** Test Implementation */
-  describe('datalabelFormatter()', () => {
+  describe('dataLabelFormatter()', () => {
     describe('when value is 0', () => {
       it('should return 0', () => {
         let expectedResult = '0'
@@ -75,31 +70,27 @@ describe('ResourceHealthWidgetComponent', () => {
     });
   });
 
-  describe('healthResourceSeries()', () => {
+  describe('complianceSeries()', () => {
     describe('when count is 0', () => {
       it('should remove data from the series', () => {
         const results$ = of({
           resources: [
             {
-              'description': 'Healthy',
+              'state': 'Compliant',
               'count': 0
             },
             {
-              'description': 'Unhealthy',
+              'state': 'Non-compliant',
               'count': 30
-            },
-            {
-              'description': 'Not Applicable',
-              'count': 0
             }
           ]
         });
         results$.subscribe((results) => {
-           component.chartSeries= component.healthResourceSeries(results.resources);
+           component.resources= component.complianceSeries(results.resources);
         })
 
         let expectedResult = [30];
-        expect(component.chartSeries).toEqual(expectedResult);
+        expect(component.resources).toEqual(expectedResult);
       });
     });
 
@@ -108,79 +99,68 @@ describe('ResourceHealthWidgetComponent', () => {
         const results$ = of({
           resources: [
             {
-              'description': 'Healthy',
+              'state': 'Compliant',
               'count': 20
             },
             {
-              'description': 'Unhealthy',
-              'count': 10
-            },
-            {
-              'description': 'Not Applicable',
-              'count': 50
+              'state': 'Non-compliant',
+              'count': 30
             }
           ]
         });
         results$.subscribe((results) => {
-           component.chartSeries= component.healthResourceSeries(results.resources);
+           component.resources= component.complianceSeries(results.resources);
         })
 
-        let expectedResult = [20, 10, 50];
-        expect(component.chartSeries).toEqual(expectedResult);
+        let expectedResult = [20, 30];
+        expect(component.resources).toEqual(expectedResult);
       });
     });
+
     describe('when count less than 0', () => {
       it('should remove data from the series', () => {
         const results$ = of({
           resources: [
             {
-              'description': 'Healthy',
-              'count': 20
+              'state': 'Compliant',
+              'count': -20
             },
             {
-              'description': 'Unhealthy',
-              'count': -6
-            },
-            {
-              'description': 'Not Applicable',
-              'count': 50
+              'state': 'Non-compliant',
+              'count': 30
             }
           ]
         });
         results$.subscribe((results) => {
-           component.chartSeries= component.healthResourceSeries(results.resources);
+           component.resources= component.complianceSeries(results.resources);
         })
 
-        let expectedResult = [20, 50];
-        expect(component.chartSeries).toEqual(expectedResult);
+        let expectedResult = [30];
+        expect(component.resources).toEqual(expectedResult);
       });
     });
   });
 
-  describe('healthResourceLabels()', () => {
+  describe('complianceLabels()', () => {
     describe('when label is null', () => {
       it('should remove from the labels', () => {
         const results$ = of({
           resources: [
             {
-              'description': null,
+              'state': null,
               'count': 20
             },
             {
-              'description': 'Unhealthy',
+              'state': 'Non-compliant',
               'count': 30
-            },
-            {
-              'description': 'Not Applicable',
-              'count': 40
             }
           ]
         });
         results$.subscribe((results) => {
-           component.chartLabels= component.healthResourceLabels(results.resources);
+           component.chartLabels= component.complianceLabels(results.resources);
         })
 
-        let expectedResult = ['Unhealthy', 'Not Applicable'];
+        let expectedResult = ['Non-compliant'];
         expect(component.chartLabels).toEqual(expectedResult);
       });
     });
@@ -190,25 +170,77 @@ describe('ResourceHealthWidgetComponent', () => {
         const results$ = of({
           resources: [
             {
-              'description': 'Healthy',
+              'state': 'Compliant',
               'count': 20
             },
             {
-              'description': 'Unhealthy',
+              'state': 'Non-compliant',
               'count': 30
-            },
-            {
-              'description': 'Not Applicable',
-              'count': 40
             }
           ]
         });
         results$.subscribe((results) => {
-           component.chartLabels= component.healthResourceLabels(results.resources);
+           component.chartLabels= component.complianceLabels(results.resources);
         })
 
-        let expectedResult = ['Healthy', 'Unhealthy', 'Not Applicable'];
+        let expectedResult = ['Compliant', 'Non-compliant']
         expect(component.chartLabels).toEqual(expectedResult);
+      });
+    });
+  });
+
+  describe('resourceCompliancePercentage()', () => {
+    describe('when value is 0', () => {
+      it('should return 0', () => {
+        component.resourceCompliance = {
+          resourceCompliancePercentage: 0,
+          compliantResources: 20,
+          totalResources: 100,
+          resources: [],
+          nonCompliantInitiatives: 20,
+          totalInitiatives: 30,
+          nonCompliantPolicies: 50,
+          totalPolicies: 20,
+          resourceChartItem: []
+        };
+
+        expect(component.resourceCompliancePercentage).toBe(0);
+      });
+    });
+
+    describe('when value is positive', () => {
+      it('should return positive percentage value', () => {
+        component.resourceCompliance = {
+          resourceCompliancePercentage: 30.67,
+          compliantResources: 20,
+          totalResources: 100,
+          resources: [],
+          nonCompliantInitiatives: 20,
+          totalInitiatives: 30,
+          nonCompliantPolicies: 50,
+          totalPolicies: 20,
+          resourceChartItem: []
+        };
+
+        expect(component.resourceCompliancePercentage).toBe(31);
+      });
+    });
+
+    describe('when value is negative', () => {
+      it('should return 0', () => {
+        component.resourceCompliance = {
+          resourceCompliancePercentage: -40,
+          compliantResources: 20,
+          totalResources: 100,
+          resources: [],
+          nonCompliantInitiatives: 20,
+          totalInitiatives: 30,
+          nonCompliantPolicies: 50,
+          totalPolicies: 20,
+          resourceChartItem: []
+        };
+
+        expect(component.resourceCompliancePercentage).toBe(0);
       });
     });
   });

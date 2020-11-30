@@ -8,7 +8,8 @@
     <ng-template #resourceHealth>
       <mcs-pie-chart
         [config]="chartConfig"
-        [data]="data$ | async">
+        [chartLabels]="chartLabels"
+        [data]="chartSeries">
       </mcs-pie-chart>
     </ng-template>
   </div>

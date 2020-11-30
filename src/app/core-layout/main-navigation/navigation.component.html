@@ -142,7 +142,7 @@
       </li>
       <!-- Public Cloud -->
       <li *ngIf="hasPublicCloudAccess">
-        <a (click)="toggleThis('showPublicCloudMenu')"
+        <a (click)="togglePublicCloud('showPublicCloudMenu')"
           [class.active]="isPublicCloudRoute"
           mcsId="public-cloud-access-link">
           {{ 'navigation.publicCloud.label' | translate }}

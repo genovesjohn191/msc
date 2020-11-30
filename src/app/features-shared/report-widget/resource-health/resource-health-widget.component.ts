@@ -6,12 +6,12 @@ import {
   OnInit,
   ViewEncapsulation
 } from '@angular/core';
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { Subject, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { McsReportingService } from '@app/core/services/mcs-reporting.service';
-import { McsReportResourceHealth } from '@app/models';
+import { McsReportResourceHealthResources } from '@app/models';
 import { ChartConfig } from '@app/shared';
-import { unsubscribeSafely } from '@app/utilities';
+import { isNullOrEmpty, unsubscribeSafely } from '@app/utilities';
 
 @Component({
   selector: 'mcs-resource-health-widget',
@@ -26,7 +26,6 @@ import { unsubscribeSafely } from '@app/utilities';
 export class ResourceHealthWidgetComponent implements OnInit, OnDestroy {
   public chartConfig: ChartConfig = {
     type: 'donut',
-    labels: ['Healthy', 'Unhealthy', 'Not Applicable'],
     height: '380px',
     dataLabels: {
       enabled: true,
@@ -34,26 +33,25 @@ export class ResourceHealthWidgetComponent implements OnInit, OnDestroy {
     }
   };
 
-  public data$: Observable<McsReportResourceHealth>;
-  public dataBehavior: BehaviorSubject<McsReportResourceHealth>;
+  public chartSeries: number[];
+  public chartLabels: string[];
   public hasError: boolean = false;
   public empty: boolean = false;
   public processing: boolean = true;
 
+  private _destroySubject = new Subject<void>();
+
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private reportingService: McsReportingService
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.getData();
   }
 
-  ngOnInit(): void {
-    this.dataBehavior = new BehaviorSubject<McsReportResourceHealth>(null);
-    this.data$ = this.dataBehavior.asObservable();
-  }
-
   public ngOnDestroy(): void {
-    unsubscribeSafely(this.dataBehavior);
+    unsubscribeSafely(this._destroySubject);
   }
 
   public getData(): void {
@@ -68,9 +66,12 @@ export class ResourceHealthWidgetComponent implements OnInit, OnDestroy {
       this._changeDetectorRef.markForCheck();
       return throwError('Resource Health endpoint failed.');
     }))
-    .subscribe((result) => {
-      this.empty = this.addResourceHealth(result);
-      this.dataBehavior.next(result);
+    .subscribe((response) => {
+      this.empty = isNullOrEmpty(response) ? true : false;
+      if (!this.empty) {
+        this.chartSeries = this.healthResourceSeries(response.resources);
+        this.chartLabels = this.healthResourceLabels(response.resources);
+      }
       this.processing = false;
       this._changeDetectorRef.markForCheck();
     });
@@ -80,8 +81,25 @@ export class ResourceHealthWidgetComponent implements OnInit, OnDestroy {
     return val > 0 ? `${val.toFixed()}%` : `0`;
   }
 
-  public addResourceHealth(result): boolean {
-    let sumResourceHealth = result.healthyResourceCount + result.unhealthyResourceCount + result.notApplicableResourceCount;
-    return sumResourceHealth > 0 ? false : true;
+  public healthResourceSeries(items: McsReportResourceHealthResources[]): number[] {
+    let series: number[] = [];
+    items.forEach(item => {
+      let invalidData = isNullOrEmpty(item.count) || isNullOrEmpty(item.description) || item.count < 0;
+      if (invalidData) { return; }
+      series.push(item.count);
+    });
+
+    return series;
+  }
+
+  public healthResourceLabels(items: McsReportResourceHealthResources[]): string[] {
+    let labels: string[] = [];
+    items.forEach(item => {
+      let invalidData = isNullOrEmpty(item.count) || isNullOrEmpty(item.description);
+      if (invalidData) { return; }
+      labels.push(item.description);
+    });
+
+    return labels;
   }
 }

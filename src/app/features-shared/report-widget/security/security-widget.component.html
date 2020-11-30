@@ -1,0 +1,39 @@
+<div class="widget flat">
+  <div class="security-compliance-wrapper" *ngIf="!hasError && !processing; else error">
+    <div class="security-score">
+      <h4>{{ 'reports.insights.techReview.security.overAllSecurityScore' | translate }}</h4>
+      <div *ngIf="empty; else secureScore">
+        <mcs-status-message type="info">
+          {{ 'reports.insights.techReview.empty' | translate }}
+        </mcs-status-message>
+      </div>
+      <!-- Overall Security Score -->
+      <ng-template #secureScore>
+        <div class="score-panel overall">
+          <div class="info">
+            <mcs-icon key="small-lock-black" color="light" size="large"></mcs-icon>
+            <div class="label">
+              <span class="score">
+                <strong>
+                  {{ securityScore.currentScore }}
+                </strong>
+                / {{ securityScore.maxScore }}
+              </span>
+            </div>
+          </div>
+          <mat-progress-bar mode="determinate" value="{{ securityScorePercentage }}" style="height: 10px;"></mat-progress-bar>
+          <div style="margin-top: 20px;">
+            <a href="https://portal.azure.com/#blade/Microsoft_Azure_Security/SecurityMenuBlade/5" target="_blank">
+              {{ 'reports.insights.techReview.security.viewRecommendation' | translate }}
+            </a>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+  <ng-template #error>
+    <mcs-report-widget-data-status type="info" [processing]="processing"
+      [hasError]="hasError" (retry)="getSecurityScore()">
+    </mcs-report-widget-data-status>
+  </ng-template>
+</div>

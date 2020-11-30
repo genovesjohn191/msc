@@ -5,12 +5,12 @@ import {
 import { McsReportingService } from '@app/core/services/mcs-reporting.service';
 import { CoreTestingModule } from '@app/core/testing';
 import { ServicesTestingModule } from '@app/services/testing';
-import { SecurityAndComplianceWidgetComponent } from './security-and-compliance-widget.component';
+import { SecurityWidgetComponent } from './security-widget.component';
 
-describe('SecurityAndComplianceWidgetComponent', () => {
+describe('SecurityWidgetComponent', () => {
 
   /** Stub Services/Components */
-  let component: SecurityAndComplianceWidgetComponent;
+  let component: SecurityWidgetComponent;
 
   beforeEach(waitForAsync(() => {
     /** Testbed Reset Module */
@@ -19,7 +19,7 @@ describe('SecurityAndComplianceWidgetComponent', () => {
     /** Testbed Configuration */
     TestBed.configureTestingModule({
       declarations: [
-        SecurityAndComplianceWidgetComponent
+        SecurityWidgetComponent
       ], imports: [
         CoreTestingModule,
         ServicesTestingModule
@@ -29,15 +29,15 @@ describe('SecurityAndComplianceWidgetComponent', () => {
     });
 
     /** Testbed Onverriding of Components */
-    TestBed.overrideComponent(SecurityAndComplianceWidgetComponent, {
+    TestBed.overrideComponent(SecurityWidgetComponent, {
       set: {
-        template: `<div>SecurityAndComplianceWidgetComponent Template</div>`
+        template: `<div>SecurityWidgetComponent Template</div>`
       }
     });
 
     /** Tesbed Component Compilation and Creation */
     TestBed.compileComponents().then(() => {
-      let fixture = TestBed.createComponent(SecurityAndComplianceWidgetComponent);
+      let fixture = TestBed.createComponent(SecurityWidgetComponent);
       fixture.detectChanges();
 
       component = fixture.componentInstance;
@@ -115,35 +115,6 @@ describe('SecurityAndComplianceWidgetComponent', () => {
         expect(component.securityScorePercentage).toBe(0);
         expect(component.currentScore).toBe(10);
         expect(component.maxScore).toBe(0);
-      });
-    });
-  });
-
-  describe('dataLabelFormatter()', () => {
-    describe('when value is 0', () => {
-      it('should return 0', () => {
-        let expectedResult = '0'
-        let actualResult = component.dataLabelFormatter(0);
-
-        expect(actualResult).toBe(expectedResult);
-      });
-    });
-
-    describe('when value is positive', () => {
-      it('should return positive percentage value', () => {
-        let expectedResult = '50%'
-        let actualResult = component.dataLabelFormatter(50);
-
-        expect(actualResult).toBe(expectedResult);
-      });
-    });
-
-    describe('when value is negative', () => {
-      it('should return 0', () => {
-        let expectedResult = '0'
-        let actualResult = component.dataLabelFormatter(-5);
-
-        expect(actualResult).toBe(expectedResult);
       });
     });
   });
