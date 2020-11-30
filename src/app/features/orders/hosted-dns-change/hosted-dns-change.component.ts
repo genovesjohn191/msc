@@ -327,15 +327,17 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
   private _getChangeDetailsByAction(): ChangeToApply[] {
     let changesToApply: ChangeToApply[] = [];
     this.faChangeToApply.controls.forEach((formGroup: FormGroup) => {
-        let ttlSecondsValue = formGroup.controls['fcTtl'].value;
-        let recordType =  formGroup.controls['fcRecordType'].value;
+        let ttlSecondsValue: number = formGroup.controls['fcTtl'].value;
+        let recordType: string =  formGroup.controls['fcRecordType'].value;
+        let priorityValue: number = (formGroup.controls['fcPriority'].value) ?
+                                     formGroup.controls['fcPriority'].value : 0;
         let changeDetail: ChangeToApply = {
           action: formGroup.controls['fcActionType'].value,
           type: formGroup.controls['fcRecordType'].value,
           hostName: formGroup.controls['fcHostName'].value,
           value: formGroup.controls['fcTarget'].value,
           ttlSeconds: (isNullOrEmpty(ttlSecondsValue)) ? 0 : ttlSecondsValue,
-          priority: (recordType === DnsRecordType.MX) ? recordType : 0
+          priority: (recordType === DnsRecordType.MX) ? priorityValue : 0
         };
 
         changesToApply.push(changeDetail);
