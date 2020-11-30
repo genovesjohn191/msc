@@ -1,46 +1,55 @@
 <div class="widget flat">
   <div *ngIf="!hasError && !processing" class="operational-savings-wrapper">
-    <mcs-cta-list-panel [icon]="savingsIcon">
-      <mcs-cta-list-body>
-        Up to <strong>{{ potentialOperationalSavings }}</strong> could be saved by optimising underutilised resources.
-      </mcs-cta-list-body>
-      <mcs-cta-list-action>
-        <a href="{{ azureServiceRequestLink }}"
-          matTooltip="We'll work with you to optimise your environment."
-          matTooltipPosition="right"
-          mcsId="operational-savings-optimize"
-          mcsEventTracker="navigate-to-order-request-change"
-          mcsEventCategory="dashboard-navigation"
-          mcsEventLabel="optimize-link">
-          Optimise
-        </a>
-      </mcs-cta-list-action>
-    </mcs-cta-list-panel>
-
-    <div *ngIf="empty; else operationalSavingsAccordion">
+    <div *ngIf="empty; else operationalSavingsContent">
       <mcs-status-message type="info">
         {{ 'reports.insights.techReview.empty' | translate }}
       </mcs-status-message>
     </div>
+    <ng-template #operationalSavingsContent>
+      <div *ngIf="!hasPotentialSavings; else operationalSavingsAccordion">
+        <mcs-status-message type="info">
+          {{ 'reports.insights.costs.operationalSavings.noVirtualMachine' | translate }}
+        </mcs-status-message>
+        <mcs-status-message type="info">
+          {{ 'reports.insights.costs.operationalSavings.noSQLdatabase' | translate }}
+        </mcs-status-message>
+      </div>
+      <ng-template #operationalSavingsAccordion>
+        <mcs-cta-list-panel [icon]="savingsIcon">
+          <mcs-cta-list-body>
+            Up to <strong>{{ moneyFormat(totalSavings) }}</strong> could be saved by optimising underutilised resources.
+          </mcs-cta-list-body>
+          <mcs-cta-list-action>
+            <a href="{{ azureServiceRequestLink }}"
+              matTooltip="We'll work with you to optimise your environment."
+              matTooltipPosition="right"
+              mcsId="operational-savings-optimize"
+              mcsEventTracker="navigate-to-order-request-change"
+              mcsEventCategory="dashboard-navigation"
+              mcsEventLabel="optimize-link">
+              Optimise
+            </a>
+          </mcs-cta-list-action>
+        </mcs-cta-list-panel>
 
-    <ng-template #operationalSavingsAccordion>
-      <mat-accordion #confirmPayloadViewer="matAccordion" multi displayMode="flat">
-        <mat-expansion-panel *ngFor="let operationalSaving of operationalSavings">
-          <mat-expansion-panel-header style="position: relative;">
-            <mat-panel-title>
-              <b>{{ operationalSaving.description }}</b>
-            </mat-panel-title>
-            <mat-panel-description >
-              <b>{{ moneyFormat(operationalSaving.savings) }}</b>
-            </mat-panel-description>
-          </mat-expansion-panel-header>
+        <mat-accordion #confirmPayloadViewer="matAccordion" multi displayMode="flat">
+          <mat-expansion-panel *ngFor="let operationalSaving of operationalSavings.items">
+            <mat-expansion-panel-header style="position: relative;">
+              <mat-panel-title>
+                <b>{{ operationalSaving.description }}</b>
+              </mat-panel-title>
+              <mat-panel-description >
+                <b>{{ moneyFormat(operationalSaving.savings) }}</b>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
 
-          <mcs-operational-savings-subitems-viewer [obj]="clone(operationalSaving)"></mcs-operational-savings-subitems-viewer>
-        </mat-expansion-panel>
-      </mat-accordion>
+            <mcs-operational-savings-subitems-viewer [obj]="clone(operationalSaving)"></mcs-operational-savings-subitems-viewer>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </ng-template>
     </ng-template>
   </div>
 
-  <mcs-report-widget-data-status type="info" [processing]="processing" [hasError]="hasError" (retry)="retryData()">
+  <mcs-report-widget-data-status type="info" [processing]="processing" [hasError]="hasError" (retry)="getOperationalMonthlySavings()">
   </mcs-report-widget-data-status>
 </div>

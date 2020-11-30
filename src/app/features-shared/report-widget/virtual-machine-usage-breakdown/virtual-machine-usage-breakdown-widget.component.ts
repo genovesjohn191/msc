@@ -33,10 +33,14 @@ export class VirtualMachineUsageBreakdownWidgetComponent implements OnInit, OnDe
     stacked: true,
     yaxis: {
       title: '# VMs by Usage',
-      showLabel: true
+      showLabel: true,
+      valueFormatter: this.valueYFormatter
     },
     xaxis: {
       title: 'Months'
+    },
+    tooltip: {
+      yValueFormatter: this.tooltipYValueFormatter
     }
   };
 
@@ -97,5 +101,13 @@ export class VirtualMachineUsageBreakdownWidgetComponent implements OnInit, OnDe
 
     this._startPeriod = `${from.getFullYear()}-${from.getMonth() + 1}`;
     this._endPeriod = `${until.getFullYear()}-${until.getMonth() + 1}`;
+  }
+
+  public tooltipYValueFormatter(val: number): string {
+    return `${val.toFixed(2)}`;
+  }
+
+  public valueYFormatter(val: number): string {
+    return `${val.toFixed()}`;
   }
 }

@@ -48,20 +48,6 @@ export class ReportInsightsComponent implements OnDestroy {
     return CommonDefinition.CLOUD_HEALTH_URL;
   }
 
-  public set selectedPerformanceMonth(value: PeriodOption) {
-    this._selectedPerformanceMonth = value;
-    this.serviceCostConfig = {
-      period: this._selectedPerformanceMonth.period.from,
-      subscriptionIds: this.subscriptionIdsFilter
-    };
-
-    this._changeDetector.markForCheck();
-  }
-
-  public get selectedPerformanceMonth(): PeriodOption {
-    return this._selectedPerformanceMonth;
-  }
-
   public set selectedResourceCostMonth(value: PeriodOption) {
     this._selectedResourceCostMonth = value;
     this.resourceMonthlyCostConfig = {
@@ -90,7 +76,6 @@ export class ReportInsightsComponent implements OnDestroy {
 
   public subscriptions: McsReportSubscription[];
   private _subscriptionFilterChange = new BehaviorSubject<string[]>([]);
-  private _selectedPerformanceMonth: PeriodOption;
   private _selectedResourceCostMonth: PeriodOption;
   private _subscriptionSubject = new Subject();
 
@@ -142,7 +127,10 @@ export class ReportInsightsComponent implements OnDestroy {
       this.monthOptions.push({label, period});
     }
 
-    this.selectedPerformanceMonth = this.monthOptions[0];
-    this.selectedResourceCostMonth = this.monthOptions[1];
+    this.selectedResourceCostMonth = this.monthOptions[0];
+  }
+
+  public scrollToElement(el: HTMLElement) {
+    el.scrollIntoView({behavior: 'smooth'});
   }
 }

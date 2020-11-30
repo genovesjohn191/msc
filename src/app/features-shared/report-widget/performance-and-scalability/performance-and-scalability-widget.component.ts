@@ -41,7 +41,7 @@ export class PerformanceAndScalabilityWidgetComponent implements OnInit, OnDestr
       valueFormatter: this.yAxisLabelFormatter
     },
     xaxis: {
-      title: 'Days'
+      title: 'Months'
     }
   };
 
@@ -55,19 +55,6 @@ export class PerformanceAndScalabilityWidgetComponent implements OnInit, OnDestr
     this.getData();
   }
 
-  @Input()
-  public set config(value: PerformanceAndScalabilityWidgetConfig) {
-    let validValue = !isNullOrEmpty(value)
-      && JSON.stringify(this._config) !== JSON.stringify(value);
-    if (!validValue) { return; }
-
-    this._config = value;
-    this._startPeriod = `${value.period.getFullYear()}-${value.period.getMonth() + 1}`;
-    this._endPeriod = `${value.period.getFullYear()}-${value.period.getMonth() + 1}`;
-
-    this.getData();
-  }
-
   public data$: Observable<ChartItem[]>;
   public dataBehavior: BehaviorSubject<ChartItem[]>;
   public hasError: boolean = false;
@@ -78,7 +65,12 @@ export class PerformanceAndScalabilityWidgetComponent implements OnInit, OnDestr
   private _startPeriod: string = '';
   private _endPeriod: string = '';
 
-  public constructor(private _changeDetectorRef: ChangeDetectorRef, private reportingService: McsReportingService) {}
+  public constructor(
+    private _changeDetectorRef: ChangeDetectorRef,
+    private reportingService: McsReportingService)
+  {
+    this._initializePeriod();
+  }
 
   public ngOnInit() {
     this.dataBehavior = new BehaviorSubject<ChartItem[]>(null);
@@ -106,6 +98,14 @@ export class PerformanceAndScalabilityWidgetComponent implements OnInit, OnDestr
       this.processing = false;
       this._changeDetectorRef.markForCheck();
     });
+  }
+
+  private _initializePeriod(): void {
+    let from = new Date(new Date().setMonth(new Date().getMonth() - 12));
+    let until = new Date(new Date().setMonth(new Date().getMonth()));
+
+    this._startPeriod = `${from.getFullYear()}-${from.getMonth() + 1}`;
+    this._endPeriod = `${until.getFullYear()}-${until.getMonth() + 1}`;
   }
 
   public yAxisLabelFormatter(val: number, opts?: any): string {

@@ -40,43 +40,4 @@
       }
     }
   }
-
-  mcs-item {
-    margin-top: 24px;
-    margin-left: 10px;
-  }
-
-  .resource-compliance-wrapper {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-  
-    > div {
-      margin-right: $space-xlarge;
-      margin-top: $space-xlarge;
-    }
-
-    .label {
-      margin-left: 0;
-    }
-
-    .initial-compliant-label {
-      font-size: $space-xlarge;
-      font-weight: 700;
-    }
-
-    .apexcharts-pie-label {
-      display: none;
-  
-      @include print() {
-        display: block;
-      }
-    }
-
-    .apexcharts-datalabels-group {
-      .apexcharts-datalabel-value {
-        font-weight: 700;
-      }
-    }
-  }
 }

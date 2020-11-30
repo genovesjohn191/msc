@@ -1,12 +1,10 @@
 import { JsonProperty } from '@app/utilities';
+import { McsReportResourceHealthResources } from './mcs-report-resource-health-resources';
 
 export class McsReportResourceHealth {
   @JsonProperty()
-  public healthyResourceCount: number = undefined;
+  public totalCount: number = undefined;
 
   @JsonProperty()
-  public unhealthyResourceCount: number = undefined;
-
-  @JsonProperty()
-  public notApplicableResourceCount: number = undefined;
+  public resources: McsReportResourceHealthResources[] = undefined;
 }

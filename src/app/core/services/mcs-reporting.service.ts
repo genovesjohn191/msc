@@ -73,7 +73,7 @@ export class McsReportingService {
     endPeriod: string = '',
     subscriptionIds: string[] = []): Observable<ChartItem[]> {
     return this._apiService.getPerformanceReport(startPeriod, endPeriod, subscriptionIds)
-      .pipe(map((resources) => this._convertGenericItemToChartItemNoMonth(resources.collection)));
+      .pipe(map((resources) => this._convertGenericItemToChartItem(resources.collection)));
   }
 
   public getAzureServicesReport(): Observable<ChartItem[]> {
@@ -102,7 +102,7 @@ export class McsReportingService {
       }));
   }
 
-  public getOperationalMonthlySavings(): Observable<McsReportOperationalSavings[]> {
+  public getOperationalMonthlySavings(): Observable<McsReportOperationalSavings> {
     return this._apiService.getOperationalMonthlySavings();
   }
 

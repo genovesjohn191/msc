@@ -3,8 +3,12 @@
   <mcs-content-panel *mcsContentPanelDef>
     <div class="report-wrapper limited-wide-view">
       <div class="content-wrapper">
+        <div class="hide-on-print tab-bar">
+          <a><div (click)="scrollToElement(costsSection)">Costs</div></a>
+          <a><div (click)="scrollToElement(techReview)">Tech Review</div></a>
+        </div>
         <div class="hide-on-print options-container">
-          <div style="padding-top: 20px;">
+          <div class="subtitle-container">
             <span>
               {{ 'reports.insights.subtitle' | translate }}
               <a href="{{ cloudHealthUrl }}/dashboard" target="_blank">
@@ -24,10 +28,10 @@
             </mat-form-field>
           </div>
         </div>
-
-        <section class="no-break-on-print">
-          <h1><span class="show-on-print-only">1 </span>{{ 'reports.insights.costs.label' | translate }}</h1>
-
+        <div class="insight-header costs" #costsSection>
+          <h1><span class="show-on-print-only">1. </span>{{ 'reports.insights.costs.label' | translate }}</h1>
+        </div>
+        <section>
           <div class="sub-section">
             <!-- Service Overview -->
             <h2><span class="show-on-print-only">1.1 </span>{{ 'reports.insights.costs.serviceOverview.title' | translate }}</h2>
@@ -69,41 +73,33 @@
           </div>
         </section>
 
-        <section class="no-break-on-print">
-          <h1><span class="show-on-print-only">2 </span>{{ 'reports.insights.techReview.label' | translate }}</h1>
-
+        <div class="insight-header tech-review" #techReview>
+          <h1><span class="show-on-print-only">2. </span>{{ 'reports.insights.techReview.label' | translate }}</h1>
+        </div>
+        <section>
           <div class="sub-section">
-            <!-- Security and Compliance -->
-            <h2><span class="show-on-print-only">2.1 </span>{{ 'reports.insights.techReview.securityCompliance.title' | translate }}</h2>
-            <mcs-security-and-compliance-widget></mcs-security-and-compliance-widget>
+            <!-- Security -->
+            <h2><span class="show-on-print-only">2.1 </span>{{ 'reports.insights.techReview.security.title' | translate }}</h2>
+            <mcs-security-widget></mcs-security-widget>
             <mat-divider></mat-divider>
 
+             <!-- Compliance -->
+             <h2><span class="show-on-print-only">2.2 </span>{{ 'reports.insights.techReview.compliance.title' | translate }}</h2>
+             <mcs-compliance-widget></mcs-compliance-widget>
+             <mat-divider></mat-divider>
+
             <!-- Resource Health -->
-            <h2><span class="show-on-print-only">2.2 </span>{{ 'reports.insights.techReview.resourceHealth.title' | translate }}</h2>
+            <h2><span class="show-on-print-only">2.3 </span>{{ 'reports.insights.techReview.resourceHealth.title' | translate }}</h2>
             <mcs-resource-health-widget></mcs-resource-health-widget>
             <mat-divider></mat-divider>
 
             <!-- Performance and Scalability -->
-            <div class="options-container">
-              <div>
-                <h2><span class="show-on-print-only">2.3 </span>{{ 'reports.insights.techReview.performanceScalability.title' | translate }}</h2>
-              </div>
-              <div class="hide-on-print">
-                <mat-form-field appearance="outline">
-                  <mat-label>{{ 'reports.insights.monthLabel' | translate }}</mat-label>
-                  <mat-select [(ngModel)]="selectedPerformanceMonth">
-                    <mat-option *ngFor="let opt of monthOptions" [value]="opt">
-                      {{ opt.label }}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
-            </div>
-            <mcs-performance-and-scalability-widget [subscriptionIds]="subscriptionIdsFilter" [config]="serviceCostConfig"></mcs-performance-and-scalability-widget>
+            <h2><span class="show-on-print-only">2.4 </span>{{ 'reports.insights.techReview.performanceScalability.title' | translate }}</h2>
+            <mcs-performance-and-scalability-widget [subscriptionIds]="subscriptionIdsFilter"></mcs-performance-and-scalability-widget>
             <mat-divider></mat-divider>
 
             <!-- Monitoring and Alerting -->
-            <h2><span class="show-on-print-only">2.4 </span>{{ 'reports.insights.techReview.monitoringAlerting.title' | translate }}</h2>
+            <h2><span class="show-on-print-only">2.5 </span>{{ 'reports.insights.techReview.monitoringAlerting.title' | translate }}</h2>
             <mcs-monitoring-and-alerting-widget></mcs-monitoring-and-alerting-widget>
           </div>
         </section>

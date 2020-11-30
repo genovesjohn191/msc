@@ -66,6 +66,7 @@ export type ChartConfig = {
   legend?: ChartLegend;
   tooltip?: ChartTooltip;
   labels?: any[];
+  colors?: string[];
 }
 
 type ChartOptions = {
@@ -169,9 +170,8 @@ export class ChartComponentBase {
       }
     }
 
-    if (!isNullOrEmpty(value.labels)) {
-      let chartlabel: any[] = Object.values(value.labels);
-      this.labels = chartlabel;
+    if (!isNullOrEmpty(value.colors)) {
+      this.colors = value.colors;
     }
 
     this.updateChart();
@@ -191,7 +191,8 @@ export class ChartComponentBase {
       legend: this._legend,
       title: this._title,
       tooltip: this._tooltip,
-      labels: this._labels
+      labels: this._labels,
+      colors: this._colors
     };
 
     return config;
@@ -241,8 +242,12 @@ export class ChartComponentBase {
     this._yaxis = {...this._yaxis, ...value};
   }
 
-  public set labels(value: any) {
+  public set labels(value: any[]) {
     this._labels = value;
+  }
+
+  public set colors(value: string[]) {
+    this._colors = value;
   }
 
   private _config: ChartConfig;
@@ -262,8 +267,6 @@ export class ChartComponentBase {
     }
   };
 
-  protected colors = {};
-
   private _dataLabels: ApexDataLabels = {
     enabled: false,
     offsetX: 0,
@@ -280,8 +283,9 @@ export class ChartComponentBase {
   private _stroke: ApexStroke;
   private _title: ApexTitleSubtitle;
   private _labels: any[];
+  private _colors: string[];
   private _tooltip: ApexTooltip = {
-    theme: 'dark',
+
   };
   private _xaxis: ApexXAxis = {};
   private _yaxis: ApexYAxis = {};

@@ -125,7 +125,7 @@ export class McsApiReportsService implements IMcsApiReportsService {
     }
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = '/public-cloud/reports/performance';
+    mcsApiRequestParameter.endPoint = '/public-cloud/reports/performance-scalability';
     mcsApiRequestParameter.searchParameters = searchParams;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
@@ -178,7 +178,7 @@ export class McsApiReportsService implements IMcsApiReportsService {
       );
   }
 
-  public getOperationalMonthlySavings(): Observable<McsApiSuccessResponse<McsReportOperationalSavings[]>> {
+  public getOperationalMonthlySavings(): Observable<McsApiSuccessResponse<McsReportOperationalSavings>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/public-cloud/reports/potential-operational-savings';
 
@@ -187,7 +187,7 @@ export class McsApiReportsService implements IMcsApiReportsService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<McsReportOperationalSavings[]>(McsReportOperationalSavings, response);
+            .deserializeResponse<McsReportOperationalSavings>(McsReportOperationalSavings, response);
           return apiResponse;
         })
       );

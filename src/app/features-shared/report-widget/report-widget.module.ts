@@ -11,19 +11,21 @@ import { AzureTicketsWidgetComponent } from './azure-tickets/azure-tickets-widge
 import { ServicesCostOverviewWidgetComponent } from './services-cost-overview/services-cost-overview-widget.component';
 import { VirtualMachineUsageBreakdownWidgetComponent } from './virtual-machine-usage-breakdown/virtual-machine-usage-breakdown-widget.component';
 import { PerformanceAndScalabilityWidgetComponent } from './performance-and-scalability/performance-and-scalability-widget.component';
-import { SecurityAndComplianceWidgetComponent } from './security-and-compliance/security-and-compliance-widget.component';
+import { SecurityWidgetComponent } from './security/security-widget.component';
 import { ResourceMonthlyCostWidgetComponent } from './resource-monthly-cost/resource-monthly-cost-widget.component';
 import { OperationalMonthlySavingsWidgetComponent } from './operational-monthly-savings/operational-monthly-savings-widget.component';
 import { VmRightsizingWidgetComponent } from './vm-rightsizing/vm-rightsizing-widget.component';
 import { OperationalSavingsSubitemsViewerComponent } from './operational-monthly-savings/subitems/operational-savings-subitems-viewer.component';
 import { ResourceHealthWidgetComponent } from './resource-health/resource-health-widget.component';
 import { MonitoringAndAlertingWidgetComponent } from './monitoring-and-alerting/monitoring-and-alerting-widget.component';
+import { ComplianceWidgetComponent } from './compliance/compliance-widget.component';
 @NgModule({
   imports: [ SharedModule ],
   declarations: [
     AzureResourcesWidgetComponent,
     AzureTicketsWidgetComponent,
     ChangeRequestWidgetComponent,
+    ComplianceWidgetComponent,
     ContactUsWidgetComponent,
     CostRecommendationsWidgetComponent,
     MonitoringAndAlertingWidgetComponent,
@@ -34,7 +36,7 @@ import { MonitoringAndAlertingWidgetComponent } from './monitoring-and-alerting/
     ResourceChangesWidgetComponent,
     ResourceHealthWidgetComponent,
     ResourceMonthlyCostWidgetComponent,
-    SecurityAndComplianceWidgetComponent,
+    SecurityWidgetComponent,
     ServicesCostOverviewWidgetComponent,
     ServicesOverviewWidgetComponent,
     VirtualMachineUsageBreakdownWidgetComponent,
@@ -44,6 +46,7 @@ import { MonitoringAndAlertingWidgetComponent } from './monitoring-and-alerting/
     AzureResourcesWidgetComponent,
     AzureTicketsWidgetComponent,
     ChangeRequestWidgetComponent,
+    ComplianceWidgetComponent,
     ContactUsWidgetComponent,
     CostRecommendationsWidgetComponent,
     MonitoringAndAlertingWidgetComponent,
@@ -54,7 +57,7 @@ import { MonitoringAndAlertingWidgetComponent } from './monitoring-and-alerting/
     ResourceChangesWidgetComponent,
     ResourceHealthWidgetComponent,
     ResourceMonthlyCostWidgetComponent,
-    SecurityAndComplianceWidgetComponent,
+    SecurityWidgetComponent,
     ServicesCostOverviewWidgetComponent,
     ServicesOverviewWidgetComponent,
     VirtualMachineUsageBreakdownWidgetComponent,

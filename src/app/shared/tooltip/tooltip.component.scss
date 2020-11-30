@@ -10,6 +10,7 @@ $tooltip-padding: $space-xsmall $space-small;
 .tooltip-wrapper {
   @include display-flex(column);
   position: relative;
+  max-width: 500px;
 
   .tooltip-panel {
     @include border-radius($tooltip-border-radius);

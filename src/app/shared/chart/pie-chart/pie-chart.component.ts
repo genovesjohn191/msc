@@ -36,6 +36,18 @@ export class PieChartComponent extends ChartComponentBase implements OnInit {
     this.updateChart();
   }
 
+  @Input()
+  public set chartLabels(value: string[]) {
+    if (isNullOrEmpty(value)) {
+      return;
+    }
+
+    let chartlabel: string[] = Object.values(value);
+
+    this.labels = chartlabel;
+    this.updateChart();
+  }
+
   public constructor(
     chartDataService: ChartDataService,
     changeDetector: ChangeDetectorRef

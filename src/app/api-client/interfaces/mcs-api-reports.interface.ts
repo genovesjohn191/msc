@@ -46,7 +46,7 @@ export interface IMcsApiReportsService {
 
   getServiceChanges(): Observable<McsApiSuccessResponse<McsReportServiceChangeInfo[]>>;
 
-  getOperationalMonthlySavings(): Observable<McsApiSuccessResponse<McsReportOperationalSavings[]>>;
+  getOperationalMonthlySavings(): Observable<McsApiSuccessResponse<McsReportOperationalSavings>>;
 
   getVMRightsizing(query?: McsRightSizingQueryParams): Observable<McsApiSuccessResponse<McsReportVMRightsizing[]>>;
 
