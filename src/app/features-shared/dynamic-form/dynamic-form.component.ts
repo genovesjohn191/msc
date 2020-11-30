@@ -37,6 +37,10 @@ export class DynamicFormComponent implements OnInit, AfterViewInit {
   @ViewChildren('control')
   public controls: QueryList<DynamicFormFieldComponent>;
 
+  public get valid(): boolean {
+    return this.form.valid;
+  }
+
   public hasMoreFields: boolean = false;
   public form: FormGroup;
 

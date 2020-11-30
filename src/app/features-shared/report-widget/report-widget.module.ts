@@ -1,4 +1,7 @@
-import { NgModule } from '@angular/core';
+import {
+  NgModule,
+  Type
+} from '@angular/core';
 import { SharedModule } from '@app/shared';
 import { ChangeRequestWidgetComponent } from './change-requests/change-requests-widget.component';
 import { ContactUsWidgetComponent } from './contact-us/contact-us-widget.component';
@@ -19,49 +22,32 @@ import { OperationalSavingsSubitemsViewerComponent } from './operational-monthly
 import { ResourceHealthWidgetComponent } from './resource-health/resource-health-widget.component';
 import { MonitoringAndAlertingWidgetComponent } from './monitoring-and-alerting/monitoring-and-alerting-widget.component';
 import { ComplianceWidgetComponent } from './compliance/compliance-widget.component';
+
+const exports: any[] | Type<any> = [
+  AzureResourcesWidgetComponent,
+  AzureTicketsWidgetComponent,
+  ChangeRequestWidgetComponent,
+  ComplianceWidgetComponent,
+  ContactUsWidgetComponent,
+  CostRecommendationsWidgetComponent,
+  MonitoringAndAlertingWidgetComponent,
+  OperationalMonthlySavingsWidgetComponent,
+  OperationalSavingsSubitemsViewerComponent,
+  PerformanceAndScalabilityWidgetComponent,
+  ReportWidgetDataStatusComponent,
+  ResourceChangesWidgetComponent,
+  ResourceHealthWidgetComponent,
+  ResourceMonthlyCostWidgetComponent,
+  SecurityWidgetComponent,
+  ServicesCostOverviewWidgetComponent,
+  ServicesOverviewWidgetComponent,
+  VirtualMachineUsageBreakdownWidgetComponent,
+  VmRightsizingWidgetComponent
+];
+
 @NgModule({
   imports: [ SharedModule ],
-  declarations: [
-    AzureResourcesWidgetComponent,
-    AzureTicketsWidgetComponent,
-    ChangeRequestWidgetComponent,
-    ComplianceWidgetComponent,
-    ContactUsWidgetComponent,
-    CostRecommendationsWidgetComponent,
-    MonitoringAndAlertingWidgetComponent,
-    OperationalMonthlySavingsWidgetComponent,
-    OperationalSavingsSubitemsViewerComponent,
-    PerformanceAndScalabilityWidgetComponent,
-    ReportWidgetDataStatusComponent,
-    ResourceChangesWidgetComponent,
-    ResourceHealthWidgetComponent,
-    ResourceMonthlyCostWidgetComponent,
-    SecurityWidgetComponent,
-    ServicesCostOverviewWidgetComponent,
-    ServicesOverviewWidgetComponent,
-    VirtualMachineUsageBreakdownWidgetComponent,
-    VmRightsizingWidgetComponent
-  ],
-  exports: [
-    AzureResourcesWidgetComponent,
-    AzureTicketsWidgetComponent,
-    ChangeRequestWidgetComponent,
-    ComplianceWidgetComponent,
-    ContactUsWidgetComponent,
-    CostRecommendationsWidgetComponent,
-    MonitoringAndAlertingWidgetComponent,
-    OperationalMonthlySavingsWidgetComponent,
-    OperationalSavingsSubitemsViewerComponent,
-    PerformanceAndScalabilityWidgetComponent,
-    ReportWidgetDataStatusComponent,
-    ResourceChangesWidgetComponent,
-    ResourceHealthWidgetComponent,
-    ResourceMonthlyCostWidgetComponent,
-    SecurityWidgetComponent,
-    ServicesCostOverviewWidgetComponent,
-    ServicesOverviewWidgetComponent,
-    VirtualMachineUsageBreakdownWidgetComponent,
-    VmRightsizingWidgetComponent
-  ]
+  declarations: [...exports],
+  exports: [...exports]
 })
 export class ReportWidgetModule { }

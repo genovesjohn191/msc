@@ -17,7 +17,6 @@ export class DynamicSelectVdcField extends DynamicFormFieldConfigBase {
   public constructor(options: {
     key: string;
     label: string;
-    placeholder?: string;
     value?: string;
     hint?: string;
     order?: number;
