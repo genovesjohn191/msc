@@ -15,7 +15,6 @@ export class DynamicSelectGroupField extends DynamicFormFieldConfigBase {
   public constructor(options: {
     key: string;
     label: string;
-    placeholder?: string;
     options: GroupedOption[];
     value?: string;
     hint?: string;

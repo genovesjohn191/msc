@@ -112,11 +112,7 @@ export class LaunchPadWorkflowComponent {
   }
 
   public get valid(): boolean {
-    if (this.form) {
-      return this.form.form.valid;
-    }
-
-    return false;
+    return this.form && this.form.valid;
   }
 
   public reset(): void {

@@ -1,4 +1,7 @@
-import { NgModule } from '@angular/core';
+import {
+  NgModule,
+  Type
+} from '@angular/core';
 import { SharedModule } from '@app/shared/shared.module';
 
 import { DynamicInputHiddenComponent } from './input-hidden/input-hidden.component';
@@ -14,37 +17,26 @@ import { DynamicSelectStorageProfileComponent } from './select-storage-profile/s
 import { DynamicSelectVdcComponent } from './select-vdc/select-vdc.component';
 import { DynamicSelectComponent } from './select/select.component';
 
+const exports: any[] | Type<any> = [
+  DynamicInputNumberComponent,
+  DynamicInputHiddenComponent,
+  DynamicInputIpComponent,
+  DynamicInputTextComponent,
+  DynamicInputRandomComponent,
+  DynamicSelectComponent,
+  DynamicSelectGroupComponent,
+  DynamicSelectMultipleComponent,
+  DynamicSelectNetworkComponent,
+  DynamicSelectOsComponent,
+  DynamicSelectStorageProfileComponent,
+  DynamicSelectVdcComponent
+];
+
 @NgModule({
   imports: [
     SharedModule
   ],
-  declarations: [
-    DynamicInputNumberComponent,
-    DynamicInputHiddenComponent,
-    DynamicInputIpComponent,
-    DynamicInputTextComponent,
-    DynamicInputRandomComponent,
-    DynamicSelectComponent,
-    DynamicSelectGroupComponent,
-    DynamicSelectMultipleComponent,
-    DynamicSelectNetworkComponent,
-    DynamicSelectOsComponent,
-    DynamicSelectStorageProfileComponent,
-    DynamicSelectVdcComponent
-  ],
-  exports: [
-    DynamicInputNumberComponent,
-    DynamicInputHiddenComponent,
-    DynamicInputIpComponent,
-    DynamicInputTextComponent,
-    DynamicInputRandomComponent,
-    DynamicSelectComponent,
-    DynamicSelectGroupComponent,
-    DynamicSelectMultipleComponent,
-    DynamicSelectNetworkComponent,
-    DynamicSelectOsComponent,
-    DynamicSelectStorageProfileComponent,
-    DynamicSelectVdcComponent
-  ]
+  declarations: [...exports],
+  exports: [...exports]
 })
 export class DynamicFormFieldModule { }

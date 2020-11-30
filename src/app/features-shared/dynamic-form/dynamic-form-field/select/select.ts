@@ -16,7 +16,6 @@ export class DynamicSelectField extends DynamicFormFieldConfigBase {
   public constructor(options: {
     key: string;
     label: string;
-    placeholder?: string;
     options: FlatOption[];
     value?: string;
     hint?: string;
