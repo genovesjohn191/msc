@@ -120,7 +120,7 @@ export abstract class DynamicSelectFieldComponentBase<T>
     if (this.data.options.length <= 0) { return; }
 
     if (this._tryAutoSelectSingleOption()) { return; }
-    console.log(this.data.key, this.data.initialValue );
+
     this._selectInitialValue();
   }
 
