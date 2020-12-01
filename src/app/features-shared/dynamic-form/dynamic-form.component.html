@@ -6,7 +6,7 @@
     Show More Options
   </mat-slide-toggle>
 
-  <div *ngFor="let input of controlDataItems" class="form-row">
+  <div *ngFor="let input of config" class="form-row">
     <div  [ngSwitch]="input.template">
       <mat-error *ngIf="!isValidField(input.key)">
         {{ getErrorMessage(input.key) }}
