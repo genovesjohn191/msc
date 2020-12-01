@@ -49,7 +49,7 @@ export interface IMcsApiServersService {
    * Get Servers (MCS API Response)
    * @param query Query predicate that serves as the parameter of the endpoint
    */
-  getServers(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsServer[]>>;
+  getServers(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsServer[]>>;
 
   /**
    * Get server by ID (MCS API Response)

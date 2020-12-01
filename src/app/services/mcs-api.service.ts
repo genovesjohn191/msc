@@ -546,7 +546,16 @@ export class McsApiService {
     );
   }
 
-  public getServers(query?: McsQueryParam): Observable<McsApiCollection<McsServer>> {
+  public getServers(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsServer>> {
+    if (!isNullOrEmpty(optionalHeaders)) {
+      return this._serversApi.getServers(query, optionalHeaders).pipe(
+        catchError((error) =>
+          this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getServersWithCustomHeaders'))
+        ),
+        map((response) => this._mapToCollection(response.content, response.totalCount))
+      );
+    }
+
     let dataCollection = isNullOrEmpty(query) ?
       this._serversRepository.getAll() :
       this._serversRepository.filterBy(query);
