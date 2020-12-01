@@ -4,11 +4,11 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { switchMap, takeUntil } from 'rxjs/operators';
 import {
-  of,
-  Observable
-} from 'rxjs';
+  map,
+  takeUntil
+} from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 import { McsApiService } from '@app/services';
 import {
@@ -76,10 +76,7 @@ export class DynamicSelectOsComponent extends DynamicSelectFieldComponentBase<Mc
 
     return this._apiService.getServerOs(optionalHeaders).pipe(
       takeUntil(this.destroySubject),
-      switchMap((response) => {
-        return of(response && response.collection);
-      })
-    );
+      map((response) => response && response.collection));
   }
 
   protected filter(collection: McsServerOperatingSystem[]): GroupedOption[] {

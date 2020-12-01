@@ -4,13 +4,16 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { takeUntil, switchMap } from 'rxjs/operators';
+import { takeUntil, map } from 'rxjs/operators';
 import {
   of,
   Observable
 } from 'rxjs';
 
-import { CommonDefinition, isNullOrEmpty } from '@app/utilities';
+import {
+  CommonDefinition,
+  isNullOrEmpty
+} from '@app/utilities';
 import { McsApiService } from '@app/services';
 import {
   McsResource,
@@ -68,9 +71,7 @@ export class DynamicSelectNetworkComponent extends DynamicSelectFieldComponentBa
   }
 
   protected callService(): Observable<McsResourceNetwork[]> {
-    if (isNullOrEmpty(this._resource)) {
-      return of([]);
-    }
+    if (isNullOrEmpty(this._resource)) { return of([]); }
 
     let optionalHeaders = new Map<string, any>([
       [CommonDefinition.HEADER_COMPANY_ID, this._companyId]
@@ -78,11 +79,7 @@ export class DynamicSelectNetworkComponent extends DynamicSelectFieldComponentBa
 
     return this._apiService.getResourceNetworks(this._resource.id, optionalHeaders).pipe(
       takeUntil(this.destroySubject),
-      switchMap((response) => {
-        let returnValue = response && response.collection;
-        return of(returnValue);
-      })
-    );
+      map((response) => response && response.collection));
   }
 
   protected filter(collection: McsResourceNetwork[]): FlatOption[] {

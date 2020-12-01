@@ -6,16 +6,22 @@ import {
 } from '@angular/core';
 import {
   takeUntil,
-  switchMap
+  map
 } from 'rxjs/operators';
 import {
   of,
   Observable
 } from 'rxjs';
 
-import { CommonDefinition, isNullOrEmpty } from '@app/utilities';
+import {
+  CommonDefinition,
+  isNullOrEmpty
+} from '@app/utilities';
 import { McsApiService } from '@app/services';
-import { McsResource, McsResourceStorage } from '@app/models';
+import {
+  McsResource,
+  McsResourceStorage
+} from '@app/models';
 import {
   DynamicFormFieldDataChangeEventParam,
   FlatOption
@@ -68,9 +74,7 @@ export class DynamicSelectStorageProfileComponent extends DynamicSelectFieldComp
   }
 
   protected callService(): Observable<McsResourceStorage[]> {
-    if (isNullOrEmpty(this._resource)) {
-      return of([]);
-    }
+    if (isNullOrEmpty(this._resource)) { return of([]); }
 
     let optionalHeaders = new Map<string, any>([
       [CommonDefinition.HEADER_COMPANY_ID, this._companyId]
@@ -78,11 +82,7 @@ export class DynamicSelectStorageProfileComponent extends DynamicSelectFieldComp
 
     return this._apiService.getResourceStorages(this._resource.id, optionalHeaders).pipe(
       takeUntil(this.destroySubject),
-      switchMap((response) => {
-        let returnValue = response && response.collection;
-        return of(returnValue);
-      })
-    );
+      map((response) => response && response.collection));
   }
 
   protected filter(collection: McsResourceStorage[]): FlatOption[] {

@@ -4,19 +4,15 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import {
-  Observable,
-  of } from 'rxjs';
+import { Observable } from 'rxjs';
 import {
   takeUntil,
-  switchMap
+  map
 } from 'rxjs/operators';
 
-import { McsAccessControlService } from '@app/core';
 import { CommonDefinition, isNullOrEmpty } from '@app/utilities';
 import {
   McsResource,
-  McsPermission,
   ServiceType,
   serviceTypeText } from '@app/models';
 import { McsApiService } from '@app/services';
@@ -51,7 +47,6 @@ export class DynamicSelectVdcComponent extends DynamicSelectFieldComponentBase<M
   private _companyId: string = '';
 
   constructor(
-    private _accessControlService: McsAccessControlService,
     private _apiService: McsApiService,
     _changeDetectorRef: ChangeDetectorRef
   ) {
@@ -80,7 +75,7 @@ export class DynamicSelectVdcComponent extends DynamicSelectFieldComponentBase<M
 
     return this._apiService.getResources(null, optionalHeaders).pipe(
       takeUntil(this.destroySubject),
-      switchMap((response) => {
+      map((response) => {
 
         let returnValue = response && response.collection.filter((resource) =>
           !isNullOrEmpty(resource.availabilityZone));
@@ -95,7 +90,7 @@ export class DynamicSelectVdcComponent extends DynamicSelectFieldComponentBase<M
           returnValue = returnValue.filter((resource) => resource.serviceType !== ServiceType.SelfManaged);
         }
 
-        return of(returnValue);
+        return returnValue;
       })
     );
   }

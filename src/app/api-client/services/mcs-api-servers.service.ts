@@ -65,7 +65,7 @@ export class McsApiServersService implements IMcsApiServersService {
    * Get Servers (MCS API Response)
    * @param query Query predicate that serves as the parameter of the endpoint
    */
-  public getServers(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsServer[]>> {
+  public getServers(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsServer[]>> {
 
     // Set default values if null
     let searchParams = new Map<string, any>();
@@ -77,6 +77,7 @@ export class McsApiServersService implements IMcsApiServersService {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/private-cloud/servers';
     mcsApiRequestParameter.searchParameters = searchParams;
+    mcsApiRequestParameter.optionalHeaders = optionalHeaders;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(

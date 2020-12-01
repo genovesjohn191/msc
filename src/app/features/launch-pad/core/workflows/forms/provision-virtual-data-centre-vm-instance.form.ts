@@ -110,7 +110,6 @@ export const provisionVirtualDataCentreVmInstanceForm: LaunchPadForm = {
     return mappedProperties;
   },
 
-  // CRISP Element Mapper
   mapCrispElementAttributes: (attributes: McsObjectCrispElementServiceAttribute[]) => {
     let mappedProperties: { key: string, value: any }[] = [];
 
@@ -121,9 +120,9 @@ export const provisionVirtualDataCentreVmInstanceForm: LaunchPadForm = {
     let linuxOs = findCrispElementAttribute(CrispAttributeNames.LinuxOperatingSystem , attributes)?.value;
     let selectedOs = linuxOs && ((linuxOs as string).toLowerCase() === 'Not') ? linuxOs : windowsOs;
     mappedProperties.push({ key: 'os', value: selectedOs });
-    mappedProperties.push({ key: 'cpuCount', value:findCrispElementAttribute(CrispAttributeNames.CpuCount , attributes)?.value } );
-    mappedProperties.push({ key: 'memoryInGB', value: findCrispElementAttribute(CrispAttributeNames.Memory , attributes)?.value } );
-    mappedProperties.push({ key: 'storageSizeInGB', value: findCrispElementAttribute(CrispAttributeNames.Storage , attributes)?.value } );
+    mappedProperties.push({ key: 'cpuCount', value:findCrispElementAttribute(CrispAttributeNames.CpuCount, attributes)?.value } );
+    mappedProperties.push({ key: 'memoryInGB', value: findCrispElementAttribute(CrispAttributeNames.Memory, attributes)?.value } );
+    mappedProperties.push({ key: 'storageSizeInGB', value: findCrispElementAttribute(CrispAttributeNames.Storage, attributes)?.value } );
 
     // IP Address
     let ipAddress = findCrispElementAttribute(CrispAttributeNames.IPAddress , attributes)?.value;
