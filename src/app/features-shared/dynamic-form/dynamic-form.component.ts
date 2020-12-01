@@ -29,7 +29,7 @@ import { DynamicFormFieldConfigBase } from './dynamic-form-field-config.base';
 })
 export class DynamicFormComponent implements OnInit, AfterViewInit {
   @Input()
-  public controlDataItems: DynamicFormFieldConfigBase[];
+  public config: DynamicFormFieldConfigBase[];
 
   @Input()
   public hideMoreFieldsToggle: boolean = false;
@@ -166,7 +166,7 @@ export class DynamicFormComponent implements OnInit, AfterViewInit {
 
   private _buildForm(): FormGroup {
     const formGroup = {};
-    this.controlDataItems.forEach(formControl => {
+    this.config.forEach(formControl => {
       let validators: ValidatorFn[] = this._getValidators(formControl);
       formGroup[formControl.key] = new FormControl(formControl.value || '', validators);
 
