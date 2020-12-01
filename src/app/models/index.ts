@@ -145,6 +145,7 @@ export * from './response/mcs-identity';
 export * from './response/mcs-job-connection';
 export * from './response/mcs-job';
 export * from './response/mcs-task';
+export * from './response/mcs-task-log';
 export * from './response/mcs-console';
 export * from './response/mcs-company';
 export * from './response/mcs-firewall';

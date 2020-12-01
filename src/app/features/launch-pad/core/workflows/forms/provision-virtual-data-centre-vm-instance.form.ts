@@ -119,7 +119,7 @@ export const provisionVirtualDataCentreVmInstanceForm: LaunchPadForm = {
     // Operating System
     let windowsOs = findCrispElementAttribute(CrispAttributeNames.WindowsOperatingSystem , attributes)?.value;
     let linuxOs = findCrispElementAttribute(CrispAttributeNames.LinuxOperatingSystem , attributes)?.value;
-    let selectedOs = ((linuxOs as string).toLowerCase() === 'Not') ? linuxOs : windowsOs;
+    let selectedOs = linuxOs && ((linuxOs as string).toLowerCase() === 'Not') ? linuxOs : windowsOs;
     mappedProperties.push({ key: 'os', value: selectedOs });
     mappedProperties.push({ key: 'cpuCount', value:findCrispElementAttribute(CrispAttributeNames.CpuCount , attributes)?.value } );
     mappedProperties.push({ key: 'memoryInGB', value: findCrispElementAttribute(CrispAttributeNames.Memory , attributes)?.value } );
