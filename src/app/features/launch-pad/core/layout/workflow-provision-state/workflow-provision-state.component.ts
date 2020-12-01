@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { McsEvent } from '@app/events';
 import { McsJob, McsTask } from '@app/models';
-import { addOrUpdateArrayRecord, isNullOrEmpty, unsubscribeSafely } from '@app/utilities';
+import { addOrUpdateArrayRecord, CommonDefinition, isNullOrEmpty, unsubscribeSafely } from '@app/utilities';
 import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import { Subscription } from 'rxjs';
 import { Workflow } from '../../workflows/workflow.interface';
@@ -33,6 +33,14 @@ export class LaunchPadWorkflowProvisionStateComponent implements OnDestroy {
 
   public get state(): McsJob[] {
     return this._jobs;
+  }
+
+  public get infoIcon(): string {
+    return CommonDefinition.ASSETS_SVG_INFO;
+  }
+
+  public get errorIcon(): string {
+    return CommonDefinition.ASSETS_SVG_ERROR;
   }
 
   private _currentUserJobHandler: Subscription;

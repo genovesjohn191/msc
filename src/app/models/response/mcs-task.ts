@@ -10,6 +10,7 @@ import {
 import { DataStatus } from '../enumerations/data-status.enum';
 import { McsEntityBase } from '../common/mcs-entity.base';
 import { McsDateSerialization } from '../serialization/mcs-date-serialization';
+import { McsTaskLog } from './mcs-task-log';
 
 export class McsTask extends McsEntityBase {
   @JsonProperty()
@@ -68,6 +69,9 @@ export class McsTask extends McsEntityBase {
     deserializer: McsDateSerialization
   })
   public endedOn: Date = undefined;
+
+  @JsonProperty({ target: McsTaskLog })
+  public logs: McsTaskLog[] = undefined;
 
   /**
    * Returns the job data status if in progress,

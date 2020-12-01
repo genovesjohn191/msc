@@ -133,7 +133,7 @@ export class DynamicFormComponent implements OnInit, AfterViewInit {
       return 'You must enter a minimum of ' + this.form.controls[key].errors.minlength.requiredLength + ' characters';
     }
     if (this.form.controls[key].hasError('min')) {
-      return 'Must not be less than' + this.form.controls[key].errors.min.min;
+      return 'Must not be less than ' + this.form.controls[key].errors.min.min;
     }
     if (this.form.controls[key].hasError('max')) {
       return 'Must not exceed ' + this.form.controls[key].errors.max.max;
