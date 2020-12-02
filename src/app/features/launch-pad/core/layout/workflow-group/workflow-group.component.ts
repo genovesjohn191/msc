@@ -268,6 +268,14 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
 
       let tasks$ = this._createAssociatedServiceTasks(workflowGroup, childServices);
 
+      // Load workflow UI if no associated services
+      if (isNullOrEmpty(tasks$)) {
+        this._renderWorkflowGroup(this.context.config);
+        this._changeDetector.markForCheck();
+        return;
+      }
+
+      // Retrieve data for associated services
       forkJoin(tasks$)
       .pipe(catchError(() => {
         // Ensures the context of the form is set for loading options during failure
@@ -320,7 +328,6 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
         this._renderWorkflowGroup(this.context.config);
         this._changeDetector.markForCheck();
       });
-
     });
   }
 
