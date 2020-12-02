@@ -123,32 +123,3 @@ export class LaunchPadWorkflowLaunchComponent implements OnInit {
     this._changeDetector.markForCheck();
   }
 }
-
-// let children: WorkflowData[] = [];
-// if (!isNullOrEmpty(item.children)) {
-//   item.children.forEach((child) => {
-//     let notAService = isNullOrEmpty(child.type);
-//     if (notAService) {
-//       return;
-//     }
-
-//     // Check child workflows of workflow group if product type has a match
-//     let result = workflowGroup.children.find((childWorkflow) => childWorkflow.productType === child.type);
-//     let noWorkflowEquivalent = isNullOrEmpty(result);
-//     if (noWorkflowEquivalent) {
-//       return;
-//     }
-
-//     let childWorkflowType = workflowGroup.children.find((childWorkflow) => childWorkflow.productType === child.type).id;
-
-//     if (isNullOrEmpty(childWorkflowType)) {
-//       console.log(`No mapping found for ${child.type.toString()}`);
-//       return;
-//     }
-
-//     children.push({
-//       id: childWorkflowType,
-//       propertyOverrides: child.properties
-//     });
-//   });
-// }

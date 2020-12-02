@@ -12,7 +12,21 @@ export class McsObjectCrispElementServiceAttribute {
   public displayValue: string = undefined;
 }
 
-export class McsObjectCrispElement {
+export class McsObjectCrispElementService {
+  @JsonProperty()
+  public productId: string = undefined;
+
+  @JsonProperty()
+  public description: string = undefined;
+
+  @JsonProperty()
+  public productType: ProductType = undefined;
+
+  @JsonProperty()
+  public serviceId: string = undefined;
+}
+
+export class McsObjectCrispElement extends McsObjectCrispElementService {
   @JsonProperty()
   public companyId: string = undefined;
 
@@ -20,19 +34,7 @@ export class McsObjectCrispElement {
   public companyName: string = undefined;
 
   @JsonProperty()
-  public productType: ProductType = undefined;
-
-  @JsonProperty()
-  public serviceId: string = undefined;
-
-  @JsonProperty()
   public orderId: string = undefined;
-
-  @JsonProperty()
-  public productId: string = undefined;
-
-  @JsonProperty()
-  public description: string = undefined;
 
   @JsonProperty()
   public status: string = undefined;
@@ -42,4 +44,7 @@ export class McsObjectCrispElement {
 
   @JsonProperty({ target: McsObjectCrispElementServiceAttribute })
   public serviceAttributes: McsObjectCrispElementServiceAttribute[] = undefined;
+
+  @JsonProperty({ target: McsObjectCrispElementService })
+  public associatedServices: McsObjectCrispElementService[] = undefined;
 }
