@@ -39,5 +39,3 @@ export class LaunchPadWorkflowsComponent  {
     return workflowGroupIdText[workflowTypeId];
   }
 }
-
-// TODO: Refactor and clean

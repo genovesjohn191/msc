@@ -10,6 +10,7 @@ import {
   DynamicSelectVdcField
 } from '@app/features-shared/dynamic-form';
 import { McsObjectCrispElementServiceAttribute } from '@app/models';
+import { isNullOrEmpty } from '@app/utilities';
 import { WorkflowGroupSaveState } from '../workflow-group.interface';
 import { LaunchPadForm } from './form.interface';
 import { CrispAttributeNames, findCrispElementAttribute } from './mapping-helper';
@@ -104,6 +105,7 @@ export const provisionVirtualDataCentreVmInstanceForm: LaunchPadForm = {
 
   mapContext: (context: WorkflowGroupSaveState) => {
     let mappedProperties: { key: string, value: any }[] = [];
+    if (isNullOrEmpty(context)) { return mappedProperties; }
 
     mappedProperties.push({ key: 'companyId', value: context.companyId });
 
@@ -112,6 +114,7 @@ export const provisionVirtualDataCentreVmInstanceForm: LaunchPadForm = {
 
   mapCrispElementAttributes: (attributes: McsObjectCrispElementServiceAttribute[]) => {
     let mappedProperties: { key: string, value: any }[] = [];
+    if (isNullOrEmpty(attributes)) { return mappedProperties; }
 
     mappedProperties.push({ key: 'resource', value: findCrispElementAttribute(CrispAttributeNames.Resource , attributes)?.displayValue } );
 
