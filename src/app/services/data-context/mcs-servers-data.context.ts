@@ -1,12 +1,14 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { isNullOrEmpty } from '@app/utilities';
-import {
-  McsServer,
-  McsQueryParam,
-  McsApiSuccessResponse
-} from '@app/models';
+
 import { IMcsApiServersService } from '@app/api-client';
+import {
+  McsApiSuccessResponse,
+  McsQueryParam,
+  McsServer
+} from '@app/models';
+import { isNullOrEmpty } from '@app/utilities';
+
 import { McsDataContext } from '../core/mcs-data-context.interface';
 
 export class McsServersDataContext implements McsDataContext<McsServer> {
@@ -49,6 +51,7 @@ export class McsServersDataContext implements McsDataContext<McsServer> {
    */
   private _getApiContentResponse<T>(apiResponse: McsApiSuccessResponse<T>): T {
     if (isNullOrEmpty(apiResponse)) { return; }
+
     this.totalRecordsCount = apiResponse.totalCount;
     return apiResponse.content;
   }

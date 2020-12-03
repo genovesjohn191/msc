@@ -1,5 +1,8 @@
 import { Observable } from 'rxjs';
+
 import { McsQueryParam } from '@app/models';
+
+import { McsRepositoryConfig } from './mcs-repository.config';
 
 export interface McsRepository<T> {
   getAll(): Observable<T[]>;
@@ -17,6 +20,6 @@ export interface McsRepository<T> {
 
   clearData(): void;
 
-  dataChange(): Observable<T[]>;
+  getConfig(): McsRepositoryConfig<T>;
   dataClear(): Observable<void>;
 }

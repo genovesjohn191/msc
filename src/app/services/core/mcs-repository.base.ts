@@ -1,33 +1,34 @@
 import {
-  Observable,
   of,
-  Subject,
-  BehaviorSubject
+  Observable,
+  Subject
 } from 'rxjs';
+import {
+  filter,
+  finalize,
+  switchMap,
+  tap
+} from 'rxjs/operators';
+
+import { McsEvent } from '@app/events';
 import {
   McsEntityBase,
   McsQueryParam
 } from '@app/models';
 import {
-  tap,
-  switchMap,
-  finalize,
-  filter
-} from 'rxjs/operators';
-import {
   addOrUpdateArrayRecord,
-  mergeArrays,
+  clearArrayRecord,
   deleteArrayRecord,
   isNullOrEmpty,
-  clearArrayRecord
+  mergeArrays
 } from '@app/utilities';
-import { McsRepository } from './mcs-repository.interface';
-import { McsDataContext } from './mcs-data-context.interface';
 import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
-import { McsEvent } from '@app/events';
+
+import { McsDataContext } from './mcs-data-context.interface';
+import { McsRepositoryConfig } from './mcs-repository.config';
+import { McsRepository } from './mcs-repository.interface';
 
 export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsRepository<T> {
-
   protected dataRecords = new Array<T>();
   protected filteredRecords = new Array<T>();
 
@@ -37,12 +38,13 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
   private _detailedItems: Set<string> = new Set();
 
   // Events notifier for live data refresh on the view per subscription
-  private _dataClear = new Subject<void>();
-  private _dataChange = new BehaviorSubject<T[]>(null);
+  private _dataCleared = new Subject<void>();
 
   constructor(
     private _context: McsDataContext<T>,
-    private _eventDispatcher: EventBusDispatcherService = null) { }
+    private _eventDispatcher: EventBusDispatcherService,
+    private _repositoryConfig?: McsRepositoryConfig<T>
+  ) { }
 
   /**
    * Get all records from the repository and creates a new observable
@@ -55,7 +57,10 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
 
     return allRecordsObserver.pipe(
       switchMap(() => of(this.dataRecords)),
-      finalize(() => this._notifyDataChange())
+      finalize(() => {
+        this._notifyDataChangeEvent();
+        this._notifyDataAllUpdateEvent();
+      })
     );
   }
 
@@ -81,7 +86,10 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
 
     return filteredRecords.pipe(
       switchMap(() => of(this.filteredRecords)),
-      finalize(() => this._notifyDataChange())
+      finalize(() => {
+        this._notifyDataChangeEvent();
+        this._notifyDataAllUpdateEvent();
+      })
     );
   }
 
@@ -94,7 +102,7 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
   public getById(id: string): Observable<T> {
     return this._getRecordByIdFromContext(id).pipe(
       switchMap(() => of(this.dataRecords.find((record) => record.id === id))),
-      finalize(() => this._notifyDataChange())
+      finalize(() => this._notifyDataChangeEvent())
     );
   }
 
@@ -105,7 +113,7 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
   public getBy(predicate: (entity: T) => boolean): Observable<T> {
     let foundItem = this.dataRecords.find((item) => predicate(item));
     return of(foundItem).pipe(
-      finalize(() => this._notifyDataChange())
+      finalize(() => this._notifyDataChangeEvent())
     );
   }
 
@@ -125,10 +133,10 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
     );
 
     if (!isUpdate) {
-      this._notifyDataChange();
+      this._notifyDataChangeEvent();
       if (!isNullOrEmpty(this._allRecordsCount)) { ++this._allRecordsCount; }
     } else {
-      this._notifyDataChange();
+      this._notifyDataChangeEvent();
     }
   }
 
@@ -160,23 +168,24 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
     this.dataRecords = deleteArrayRecord(this.dataRecords, predicate);
     this.filteredRecords = deleteArrayRecord(this.filteredRecords, predicate);
     --this._allRecordsCount;
-    this._notifyDataChange();
+    this._notifyDataChangeEvent();
   }
 
   /**
-   * An observable event that emits when the data has been changed
+   * Gets the repository configuration
    */
-  public dataChange(): Observable<T[]> {
-    return this._dataChange.asObservable().pipe(
-      filter((response) => !isNullOrEmpty(response))
-    );
+  public getConfig(): McsRepositoryConfig<T> {
+    return this._repositoryConfig;
   }
 
   /**
    * An observable event that emits when the data has been cleared
+   * @deprecated The repository is already notifying the changes to
+   * clearing the data events using EventBus.
+   * This will be removed once the TableDatasource2 was already implemented in all listing.
    */
   public dataClear(): Observable<void> {
-    return this._dataClear.asObservable();
+    return this._dataCleared.asObservable();
   }
 
   /**
@@ -185,7 +194,7 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
    */
   public sortRecords(predicate: (first: T, second: T) => number): void {
     this.dataRecords.sort(predicate);
-    this._notifyDataChange();
+    this._notifyDataChangeEvent();
   }
 
   /**
@@ -203,7 +212,8 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
     this._allRecordsCount = 0;
     clearArrayRecord(this.dataRecords);
     clearArrayRecord(this.filteredRecords);
-    this._dataClear.next();
+    this._dataCleared.next();
+    this._notifyDataClearEvent();
   }
 
   /**
@@ -248,8 +258,6 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
         this._allRecordsCount = this._context.totalRecordsCount;
         this._updateFilteredRecords(newFilteredRecords);
         this._cacheRecords(...newFilteredRecords);
-
-        this._sendRecordsUpdateNotice();
       })
     );
   }
@@ -279,23 +287,10 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
       tap((newFilteredRecords) => {
         this._allRecordsCount = this._context.totalRecordsCount;
         this._updateFilteredRecords(newFilteredRecords);
-
-        // Ensure new entities are added to repository
-        newFilteredRecords.forEach(entity => {
-          this.addOrUpdate(entity);
-        });
+        this._cacheRecords(...newFilteredRecords);
       })
     );
-
-    this._sendRecordsUpdateNotice();
-
     return searchedRecords;
-  }
-
-  private _sendRecordsUpdateNotice() {
-    if (!isNullOrEmpty(this._eventDispatcher)) {
-      this._eventDispatcher.dispatch(McsEvent.newRecordsRetrieved);
-    }
   }
 
   /**
@@ -334,6 +329,7 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
     let filterByObserver = requestRecordFromCache ?
       this._pageRecordsFromCache(query) :
       this._pageRecordsFromContext(query);
+
     return filterByObserver;
   }
 
@@ -366,23 +362,34 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> implements McsR
       tap((item) => {
         this._cacheRecords(item);
         this._detailedItems.add(item.id);
-        this._notifyDataChange();
+        this._notifyDataChangeEvent();
       })
     );
   }
 
-  /**
-   * Notifies the datarecords changes event
-   */
-  private _notifyDataChange(): void {
-    this._dataChange.next(this.dataRecords);
+  private _notifyDataChangeEvent(): void {
+    if (isNullOrEmpty(this._repositoryConfig.dataChangeEvent)) { return; }
+    this._eventDispatcher.dispatch(
+      this._repositoryConfig.dataChangeEvent,
+      this.dataRecords
+    );
   }
 
-  /**
-   * Merge the new records to the cached datasource, if the record
-   * is already exist, the instance will be remained
-   */
+  private _notifyDataClearEvent(): void {
+    if (isNullOrEmpty(this._repositoryConfig.dataClearEvent)) { return; }
+    this._eventDispatcher.dispatch(
+      this._repositoryConfig.dataClearEvent,
+      null
+    );
+  }
+
+  private _notifyDataAllUpdateEvent(): void {
+    this._eventDispatcher.dispatch(McsEvent.dataAllRecordsUpdated);
+  }
+
   private _cacheRecords(...newItems: T[]): void {
+    // Merge the new records to the cached datasource, if the record
+    // is already exist, the instance will be remained
     let updatedItems = newItems && newItems.filter((item) => !this._detailedItems.has(item.id));
     this.dataRecords = mergeArrays(
       this.dataRecords, updatedItems,

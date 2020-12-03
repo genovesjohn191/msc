@@ -1,21 +1,7 @@
 import {
-  Component,
-  ChangeDetectionStrategy,
-  ViewChild,
-  ComponentFactoryResolver,
-  ComponentRef,
-  Input,
-  OnInit,
-  ChangeDetectorRef,
-  OnDestroy,
-  EventEmitter
-} from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import {
   forkJoin,
-  Subject,
-  throwError
+  throwError,
+  Subject
 } from 'rxjs';
 import {
   catchError,
@@ -23,34 +9,48 @@ import {
 } from 'rxjs/operators';
 
 import {
-  Guid,
-  isNullOrEmpty,
-  unsubscribeSafely
-} from '@app/utilities';
-import { McsApiService } from '@app/services';
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ComponentFactoryResolver,
+  ComponentRef,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   McsApiErrorContext,
   McsObjectCrispElement,
   McsObjectCrispElementService,
-  ProductType,
-  WorkflowType
+  ProductType
 } from '@app/models';
-import { LaunchPadWorkflowComponent } from './workflow.component';
-import { LaunchPadWorkflow } from '../../workflows/workflow';
-import { WorkflowService } from '../../workflows/workflow.service';
-import { WorkflowGroupDirective } from '../../workflows/workflow-group.directive';
+import { McsApiService } from '@app/services';
 import {
-  Workflow,
-  WorkflowData
-} from '../../workflows/workflow.interface';
+  isNullOrEmpty,
+  unsubscribeSafely,
+  Guid
+} from '@app/utilities';
+
+import { LaunchPadWorkflow } from '../../workflows/workflow';
+import { WorkflowGroupDirective } from '../../workflows/workflow-group.directive';
 import {
   WorkflowGroup,
   WorkflowGroupConfig,
   WorkflowGroupSaveState
 } from '../../workflows/workflow-group.interface';
 import { workflowGroupMap } from '../../workflows/workflow-group.map';
-import { LaunchPadServiceIdSwitchDialogComponent } from '../service-id-switch-dialog/service-id-switch-dialog.component';
 import { WorkflowGroupId } from '../../workflows/workflow-groups/workflow-group-type.enum';
+import {
+  Workflow,
+  WorkflowData
+} from '../../workflows/workflow.interface';
+import { WorkflowService } from '../../workflows/workflow.service';
+import { LaunchPadServiceIdSwitchDialogComponent } from '../service-id-switch-dialog/service-id-switch-dialog.component';
+import { LaunchPadWorkflowComponent } from './workflow.component';
 
 @Component({
   selector: 'mcs-launch-pad-workflow-group',
@@ -375,7 +375,6 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
     this.workflowGroup.viewContainerRef.clear();
 
     if (isNullOrEmpty(workflows)) {
-      console.log('No workflow group found.');
       return;
     }
     // Render workflows

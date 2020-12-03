@@ -1,50 +1,60 @@
 import {
-  Component,
-  OnInit,
-  OnDestroy,
-  ChangeDetectorRef,
-  ChangeDetectionStrategy,
-  Injector
-} from '@angular/core';
-import {
-  of,
   forkJoin,
+  of,
   Observable
 } from 'rxjs';
 import {
-  map,
-  concatMap
+  concatMap,
+  map
 } from 'rxjs/operators';
-import { TranslateService } from '@ngx-translate/core';
+
 import {
-  McsTableListingBase,
-  McsNavigationService,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Injector,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
+import {
   IMcsColumnManager,
-  McsAccessControlService
+  McsAccessControlService,
+  McsMatTableContext,
+  McsMatTableQueryParam,
+  McsNavigationService,
+  McsTableDataSource2,
+  McsTableEvents,
+  McsTableSelection2
 } from '@app/core';
+import { McsEvent } from '@app/events';
 import {
-  isNullOrEmpty,
-  CommonDefinition
-} from '@app/utilities';
-import {
-  ServiceType,
   serviceTypeText,
-  ServerCommand,
-  RouteKey,
-  McsServer,
-  VmPowerstateCommand,
-  McsServerDelete,
+  McsFilterInfo,
   McsQueryParam,
-  McsApiCollection,
+  McsServer,
+  McsServerDelete,
   McsServerPowerstateCommand,
-  McsFilterInfo
+  RouteKey,
+  ServerCommand,
+  ServiceType,
+  VmPowerstateCommand
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
+  ColumnFilter,
   DialogConfirmation,
-  DialogService
+  DialogService,
+  Paginator,
+  Search
 } from '@app/shared';
-import { McsEvent } from '@app/events';
+import {
+  getSafeProperty,
+  isNullOrEmpty,
+  CommonDefinition
+} from '@app/utilities';
+import { TranslateService } from '@ngx-translate/core';
+
 import { ServersService } from './servers.service';
 
 @Component({
@@ -53,16 +63,19 @@ import { ServersService } from './servers.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class ServersComponent extends McsTableListingBase<McsServer>
-  implements OnInit, OnDestroy, IMcsColumnManager {
-
+export class ServersComponent implements OnInit, OnDestroy, IMcsColumnManager {
   public hasCreateResources: boolean;
   public hasManagedResource: boolean;
+
+  public readonly dataSource: McsTableDataSource2<McsServer>;
+  public readonly dataSelection: McsTableSelection2<McsServer>;
+  public readonly dataEvents: McsTableEvents<McsServer>;
+
   private _columnPermissionMatrix = new Map<string, () => boolean>();
 
   public constructor(
     _injector: Injector,
-    _changeDetectorRef: ChangeDetectorRef,
+    private _changeDetectorRef: ChangeDetectorRef,
     private _accessControlService: McsAccessControlService,
     private _navigationService: McsNavigationService,
     private _translateService: TranslateService,
@@ -70,11 +83,14 @@ export class ServersComponent extends McsTableListingBase<McsServer>
     private _dialogService: DialogService,
     private _serversService: ServersService
   ) {
-    super(_injector, _changeDetectorRef, {
+    this.dataSource = new McsTableDataSource2(this._getServers.bind(this));
+    this.dataSelection = new McsTableSelection2(this.dataSource, true);
+    this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
       dataChangeEvent: McsEvent.dataChangeServers,
       dataClearEvent: McsEvent.dataClearServers,
       entityDeleteEvent: McsEvent.entityDeletedEvent
     });
+
     this._createColumnMatrix();
   }
 
@@ -83,7 +99,8 @@ export class ServersComponent extends McsTableListingBase<McsServer>
   }
 
   public ngOnDestroy() {
-    this.dispose();
+    this.dataSource.disconnect(null);
+    this.dataEvents.dispose();
   }
 
   public get routeKeyEnum(): any {
@@ -130,40 +147,50 @@ export class ServersComponent extends McsTableListingBase<McsServer>
     return CommonDefinition.ASSETS_SVG_RESUME;
   }
 
-  /**
-   * Toggle all the servers
-   * Servers that are processing are excluded
-   */
+  @ViewChild('search')
+  public set search(value: Search) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerSearch(value);
+    }
+  }
+
+  @ViewChild('paginator')
+  public set paginator(value: Paginator) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerPaginator(value);
+    }
+  }
+
+  @ViewChild('columnFilter')
+  public set columnFilter(value: ColumnFilter) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerColumnFilter(value);
+    }
+  }
+
   public toggleAllServersSelection() {
-    if (isNullOrEmpty(this.selection)) { return; }
-    this.selection.toggleAllItemsSelection((server) => !server.isProcessing);
+    if (isNullOrEmpty(this.dataSelection)) { return; }
+    this.dataSelection.toggleAllItemsSelection((server) => !server.isProcessing);
   }
 
-  /**
-   * Returns true if all the servers are selected
-   * Servers that are processing are excluded
-   */
   public allServersAreSelected() {
-    if (isNullOrEmpty(this.selection)) { return false; }
-    return this.selection.allItemsAreSelected((server) => !server.isProcessing);
+    if (isNullOrEmpty(this.dataSelection)) { return false; }
+    return this.dataSelection.allItemsAreSelected((server) => !server.isProcessing);
   }
 
-  /**
-   * Returns true when the selected action can be executed
-   * @param propName Property name to be checked
-   */
   public canExecuteAction(propName: string): boolean {
-    if (isNullOrEmpty(this.selection) || !this.selection.hasSelecion()) { return false; }
-    let someServersCannotExecute = this.selection.getSelectedItems()
+    if (isNullOrEmpty(this.dataSelection) || !this.dataSelection.hasSelecion()) { return false; }
+    let someServersCannotExecute = this.dataSelection.getSelectedItems()
       .find((selectedServer) => !selectedServer[propName]);
     return !someServersCannotExecute;
   }
 
-  /**
-   * PoweredOn multiple servers
-   */
+  public retryDatasource(): void {
+    this.dataSource.refreshDataRecords();
+  }
+
   public startMultipleServers(): void {
-    this.selection.getSelectedItems().forEach((server) => {
+    this.dataSelection.getSelectedItems().forEach((server) => {
       let powerState = new McsServerPowerstateCommand();
       powerState.command = VmPowerstateCommand.Start;
       powerState.clientReferenceObject = {
@@ -172,14 +199,11 @@ export class ServersComponent extends McsTableListingBase<McsServer>
 
       this._apiService.sendServerPowerState(server.id, powerState).subscribe();
     });
-    this.selection.clearAllSelection();
+    this.dataSelection.clearAllSelection();
   }
 
-  /**
-   * Powered off multiple servers selected
-   */
   public stopMultipleServers(): void {
-    this.selection.getSelectedItems().forEach((server) => {
+    this.dataSelection.getSelectedItems().forEach((server) => {
       let powerState = new McsServerPowerstateCommand();
       powerState.command = VmPowerstateCommand.PowerOff;
       powerState.clientReferenceObject = {
@@ -188,14 +212,11 @@ export class ServersComponent extends McsTableListingBase<McsServer>
 
       this._apiService.sendServerPowerState(server.id, powerState).subscribe();
     });
-    this.selection.clearAllSelection();
+    this.dataSelection.clearAllSelection();
   }
 
-  /**
-   * Restart Multiple Servers
-   */
   public restartMultipleServers(): void {
-    this.selection.getSelectedItems().forEach((server) => {
+    this.dataSelection.getSelectedItems().forEach((server) => {
       let powerState = new McsServerPowerstateCommand();
       powerState.command = VmPowerstateCommand.Restart;
       powerState.clientReferenceObject = {
@@ -204,15 +225,12 @@ export class ServersComponent extends McsTableListingBase<McsServer>
 
       this._apiService.sendServerPowerState(server.id, powerState).subscribe();
     });
-    this.selection.clearAllSelection();
+    this.dataSelection.clearAllSelection();
   }
 
-  /**
-   * Delete multiple servers selected
-   */
   public deleteMultipleServers(): void {
     let dialogData = {
-      data: this.selection.getSelectedItems(),
+      data: this.dataSelection.getSelectedItems(),
       title: this._translateService.instant('dialogDeleteServerMultiple.title'),
       message: this._translateService.instant('dialogDeleteServerMultiple.message'),
       type: 'warning'
@@ -232,15 +250,12 @@ export class ServersComponent extends McsTableListingBase<McsServer>
         }));
       })
     ).subscribe();
-    this.selection.clearAllSelection();
+    this.dataSelection.clearAllSelection();
   }
 
-  /**
-   * Suspends multiple servers selected
-   */
   public suspendMultipleServers(): void {
     let dialogData = {
-      data: this.selection.getSelectedItems(),
+      data: this.dataSelection.getSelectedItems(),
       title: this._translateService.instant('dialogSuspendServerMultiple.title'),
       message: this._translateService.instant('dialogSuspendServerMultiple.message'),
       type: 'warning'
@@ -262,15 +277,12 @@ export class ServersComponent extends McsTableListingBase<McsServer>
         }));
       })
     ).subscribe();
-    this.selection.clearAllSelection();
+    this.dataSelection.clearAllSelection();
   }
 
-  /**
-   * Resume multiple servers selected
-   */
   public resumeMultipleServers(): void {
     let dialogData = {
-      data: this.selection.getSelectedItems(),
+      data: this.dataSelection.getSelectedItems(),
       title: this._translateService.instant('dialogResumeServerMultiple.title'),
       message: this._translateService.instant('dialogResumeServerMultiple.message'),
       type: 'warning'
@@ -292,82 +304,58 @@ export class ServersComponent extends McsTableListingBase<McsServer>
         }));
       })
     ).subscribe();
-    this.selection.clearAllSelection();
+    this.dataSelection.clearAllSelection();
   }
 
-  /**
-   * This will navigate to new server page
-   */
   public onClickNewServerButton() {
     this._navigationService.navigateTo(RouteKey.ServerCreate);
   }
 
-  /**
-   * Returns true when the column is included in the display
-   */
   public includeColumn(column: McsFilterInfo): boolean {
     if (isNullOrEmpty(this._accessControlService)) { return true; }
     let columnFunc = this._columnPermissionMatrix.get(column.id);
     return columnFunc ? columnFunc() : true;
   }
 
-  /**
-   * Navigate to server resouce page
-   * @param server Server to be used as the data of the page
-   */
   public navigateToResource(server: McsServer): void {
     if (isNullOrEmpty(server.platform)) { return; }
     this._navigationService.navigateTo(RouteKey.VdcDetails, [server.platform.resourceId]);
   }
 
-  /**
-   * Navigate to server details page
-   * @param server Server to checked the details
-   */
   public navigateToServer(server: McsServer): void {
     if (isNullOrEmpty(server) || server.isDisabled) { return; }
     this._navigationService.navigateTo(RouteKey.Servers, [server.id]);
   }
 
-  /**
-   * Returns the column settings key for the filter selector
-   */
-  public get columnSettingsKey(): string {
-    return CommonDefinition.FILTERSELECTOR_SERVER_LISTING;
+  private _getServers(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsServer>> {
+    let queryParam = new McsQueryParam();
+    queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
+    queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
+    queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
+
+    return this._apiService.getServers(queryParam).pipe(
+      map(response => new McsMatTableContext(response?.collection,
+        response?.totalCollectionCount))
+    );
   }
 
-  /**
-   * Gets the entity listing based on the context
-   * @param query Query to be obtained on the listing
-   */
-  protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsServer>> {
-    return this._apiService.getServers(query);
-  }
-
-  /**
-   * Initialize the server resources based on repository cache
-   * and check whether the resource has self managed type
-   */
   private _setResourcesFlag(): void {
     let managedResources = this._apiService.getResources().pipe(
       map((resources) => {
         this.hasManagedResource = resources && !!resources.collection.find((_resource) =>
           _resource.serviceType === ServiceType.Managed);
-        this.changeDetectorRef.markForCheck();
+        this._changeDetectorRef.markForCheck();
       })
     );
     let createServerResources = this._serversService.getResourcesByAccess().pipe(
       map((response) => {
         this.hasCreateResources = !isNullOrEmpty(response);
-        this.changeDetectorRef.markForCheck();
+        this._changeDetectorRef.markForCheck();
       })
     );
     managedResources.subscribe(() => createServerResources.subscribe());
   }
 
-  /**
-   * Creates the column permission matrix
-   */
   private _createColumnMatrix(): void {
     this._columnPermissionMatrix.set('select',
       () => this._accessControlService.hasPermission(

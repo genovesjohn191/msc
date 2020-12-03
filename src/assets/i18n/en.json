@@ -2857,5 +2857,18 @@
   "dialogSaveConflictSystemMessageEdit": {
     "title": "Conflicting Message",
     "message": "Are you sure you wish to continue?\r\nAn existing message is already enabled.\r\n\nSaving this message will cause the conflicting message to be disabled and this message enabled in its place."
+  },
+  "columnHeader": {
+    "select": "Select",
+    "server": "Server",
+    "type": "Type",
+    "catalog": "OS Edition",
+    "toolsVersion": "Tools Version",
+    "managementIp": "Management IP",
+    "zone": "Zone",
+    "serviceId": "Service ID",
+    "resource": "Resource",
+    "vApp": "vApp",
+    "action": "Action"
   }
 }

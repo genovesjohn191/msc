@@ -74,6 +74,8 @@ export * from './data-access/mcs-listview-datasource';
 export * from './data-access/mcs-table-datasource';
 export * from './data-access/mcs-table-selection';
 export * from './data-access/mcs-table-datasource2';
+export * from './data-access/mcs-table-selection2';
+export * from './data-access/mcs-table-events';
 
 // Interfaces
 export * from './interfaces/mcs-fallible.interface';

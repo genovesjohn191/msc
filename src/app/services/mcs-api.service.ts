@@ -1,226 +1,222 @@
 import {
+  throwError,
+  Observable
+} from 'rxjs';
+import {
+  catchError,
+  finalize,
+  map,
+  tap
+} from 'rxjs/operators';
+
+import {
   Injectable,
   Injector
 } from '@angular/core';
 import {
-  Observable,
-  throwError
-} from 'rxjs';
+  IMcsApiAccountService,
+  IMcsApiAzureResourcesService,
+  IMcsApiAzureServicesService,
+  IMcsApiBatsService,
+  IMcsApiCatalogService,
+  IMcsApiColocationsService,
+  IMcsApiCompaniesService,
+  IMcsApiConsoleService,
+  IMcsApiFirewallsService,
+  IMcsApiIdentityService,
+  IMcsApiJobsService,
+  IMcsApiLicensesService,
+  IMcsApiMediaService,
+  IMcsApiNetworkDnsService,
+  IMcsApiOrdersService,
+  IMcsApiPlatformService,
+  IMcsApiReportsService,
+  IMcsApiResourcesService,
+  IMcsApiServersService,
+  IMcsApiSystemService,
+  IMcsApiTicketsService,
+  IMcsApiToolsService,
+  IMcsApiWorkflowsService,
+  McsApiAccountFactory,
+  McsApiAzureResourceFactory,
+  McsApiAzureServicesFactory,
+  McsApiBatsFactory,
+  McsApiCatalogFactory,
+  McsApiClientFactory,
+  McsApiColocationsFactory,
+  McsApiCompaniesFactory,
+  McsApiConsoleFactory,
+  McsApiFirewallsFactory,
+  McsApiIdentityFactory,
+  McsApiJobsFactory,
+  McsApiLicensesFactory,
+  McsApiMediaFactory,
+  McsApiNetworkDnsFactory,
+  McsApiOrdersFactory,
+  McsApiPlatformFactory,
+  McsApiReportsFactory,
+  McsApiResourcesFactory,
+  McsApiServersFactory,
+  McsApiSystemFactory,
+  McsApiTicketsFactory,
+  McsApiToolsFactory,
+  McsApiWorkflowsFactory
+} from '@app/api-client';
+import { McsApiObjectsFactory } from '@app/api-client/factory/mcs-api-objects.factory';
+import { IMcsApiObjectsService } from '@app/api-client/interfaces/mcs-api-objects.interface';
+import { McsEvent } from '@app/events';
 import {
-  map,
-  catchError,
-  tap,
-  finalize
-} from 'rxjs/operators';
+  ApiErrorRequester,
+  EntityRequester,
+  JobStatus,
+  McsAccount,
+  McsApiCollection,
+  McsApiErrorContext,
+  McsApiErrorResponse,
+  McsApiSuccessResponse,
+  McsAzureResource,
+  McsAzureService,
+  McsBackUpAggregationTarget,
+  McsBatLinkedService,
+  McsBilling,
+  McsCatalog,
+  McsCatalogProduct,
+  McsCatalogProductBracket,
+  McsCatalogSolution,
+  McsCatalogSolutionBracket,
+  McsColocationAntenna,
+  McsColocationCustomDevice,
+  McsColocationRack,
+  McsColocationRoom,
+  McsColocationStandardSqm,
+  McsCompany,
+  McsConsole,
+  McsEntityRequester,
+  McsFirewall,
+  McsFirewallPolicy,
+  McsIdentity,
+  McsInternetPort,
+  McsJob,
+  McsJobConnection,
+  McsLicense,
+  McsNetworkDnsSummary,
+  McsNetworkDnsZonesSummary,
+  McsObjectCrispElement,
+  McsObjectInstalledService,
+  McsObjectQueryParams,
+  McsOrder,
+  McsOrderApprover,
+  McsOrderAvailable,
+  McsOrderCreate,
+  McsOrderItem,
+  McsOrderItemType,
+  McsOrderWorkflow,
+  McsPlatform,
+  McsPortal,
+  McsQueryParam,
+  McsReportCostRecommendations,
+  McsReportGenericItem,
+  McsReportIntegerData,
+  McsReportMonitoringAndAlerting,
+  McsReportResourceCompliance,
+  McsReportResourceHealth,
+  McsReportSecurityScore,
+  McsReportServiceChangeInfo,
+  McsReportSubscription,
+  McsReportVMRightsizing,
+  McsReportVMRightsizingSummary,
+  McsResource,
+  McsResourceCatalog,
+  McsResourceCatalogItem,
+  McsResourceCatalogItemCreate,
+  McsResourceCompute,
+  McsResourceMedia,
+  McsResourceMediaServer,
+  McsResourceNetwork,
+  McsResourceStorage,
+  McsResourceVApp,
+  McsRightSizingQueryParams,
+  McsServer,
+  McsServerAttachMedia,
+  McsServerBackupServer,
+  McsServerBackupServerDetails,
+  McsServerBackupVm,
+  McsServerBackupVmDetails,
+  McsServerClone,
+  McsServerCompute,
+  McsServerCreate,
+  McsServerCreateNic,
+  McsServerDelete,
+  McsServerDetachMedia,
+  McsServerHostSecurity,
+  McsServerHostSecurityAntiVirus,
+  McsServerHostSecurityAvLog,
+  McsServerHostSecurityHids,
+  McsServerHostSecurityHidsLog,
+  McsServerMedia,
+  McsServerNic,
+  McsServerOperatingSystem,
+  McsServerOsUpdates,
+  McsServerOsUpdatesCategory,
+  McsServerOsUpdatesDetails,
+  McsServerOsUpdatesInspectRequest,
+  McsServerOsUpdatesRequest,
+  McsServerOsUpdatesSchedule,
+  McsServerOsUpdatesScheduleRequest,
+  McsServerPasswordReset,
+  McsServerPowerstateCommand,
+  McsServerRename,
+  McsServerSnapshot,
+  McsServerSnapshotCreate,
+  McsServerSnapshotDelete,
+  McsServerSnapshotRestore,
+  McsServerStorageDevice,
+  McsServerStorageDeviceUpdate,
+  McsServerThumbnail,
+  McsServerUpdate,
+  McsSystemMessage,
+  McsSystemMessageCreate,
+  McsSystemMessageEdit,
+  McsSystemMessageValidate,
+  McsTicket,
+  McsTicketAttachment,
+  McsTicketComment,
+  McsTicketCreate,
+  McsTicketCreateAttachment,
+  McsTicketCreateComment,
+  McsTicketQueryParams,
+  McsValidation,
+  McsWorkflowCreate
+} from '@app/models';
+import { McsReportOperationalSavings } from '@app/models/response/mcs-report-operational-savings';
+import {
+  getSafeProperty,
+  isNullOrEmpty
+} from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
 import {
   EventBusDispatcherService,
   EventBusState
 } from '@peerlancers/ngx-event-bus';
 import { LogClass } from '@peerlancers/ngx-logger';
-import {
-  JobStatus,
-  McsInternetPort,
-  McsQueryParam,
-  McsJob,
-  McsApiCollection,
-  McsServerPowerstateCommand,
-  McsServerRename,
-  McsServerDelete,
-  McsServerPasswordReset,
-  McsApiSuccessResponse,
-  McsIdentity,
-  McsJobConnection,
-  McsApiErrorResponse,
-  McsApiErrorContext,
-  ApiErrorRequester,
-  McsServer,
-  McsServerStorageDevice,
-  McsServerNic,
-  McsServerCompute,
-  McsServerMedia,
-  McsServerSnapshot,
-  McsServerOsUpdates,
-  McsServerOsUpdatesDetails,
-  McsServerOsUpdatesRequest,
-  McsServerOsUpdatesSchedule,
-  McsServerOsUpdatesScheduleRequest,
-  McsServerOsUpdatesCategory,
-  McsServerCreate,
-  McsServerClone,
-  McsServerStorageDeviceUpdate,
-  McsServerCreateNic,
-  McsServerUpdate,
-  McsServerAttachMedia,
-  McsServerDetachMedia,
-  McsServerThumbnail,
-  McsServerSnapshotCreate,
-  McsServerSnapshotRestore,
-  McsServerSnapshotDelete,
-  McsResource,
-  McsResourceCompute,
-  McsResourceStorage,
-  McsResourceNetwork,
-  McsResourceCatalog,
-  McsResourceCatalogItem,
-  McsResourceVApp,
-  McsResourceCatalogItemCreate,
-  McsValidation,
-  McsServerOperatingSystem,
-  McsPortal,
-  McsTicket,
-  McsTicketCreate,
-  McsTicketCreateComment,
-  McsTicketComment,
-  McsTicketCreateAttachment,
-  McsTicketAttachment,
-  McsOrder,
-  McsOrderCreate,
-  McsOrderWorkflow,
-  McsOrderItem,
-  McsBilling,
-  McsOrderApprover,
-  McsOrderItemType,
-  McsResourceMedia,
-  McsResourceMediaServer,
-  McsFirewallPolicy,
-  McsConsole,
-  McsCompany,
-  McsFirewall,
-  McsSystemMessage,
-  McsSystemMessageCreate,
-  McsSystemMessageEdit,
-  McsSystemMessageValidate,
-  McsEntityRequester,
-  EntityRequester,
-  McsServerOsUpdatesInspectRequest,
-  McsOrderAvailable,
-  McsBackUpAggregationTarget,
-  McsServerBackupVm,
-  McsServerBackupServer,
-  McsServerHostSecurity,
-  McsServerHostSecurityHidsLog,
-  McsServerHostSecurityAvLog,
-  McsServerHostSecurityAntiVirus,
-  McsServerHostSecurityHids,
-  McsServerBackupVmDetails,
-  McsServerBackupServerDetails,
-  McsCatalog,
-  McsCatalogProductBracket,
-  McsCatalogSolutionBracket,
-  McsCatalogProduct,
-  McsCatalogSolution,
-  McsPlatform,
-  McsLicense,
-  McsBatLinkedService,
-  McsAccount,
-  McsAzureResource,
-  McsAzureService,
-  McsReportGenericItem,
-  McsNetworkDnsSummary,
-  McsReportIntegerData,
-  McsColocationRack,
-  McsColocationAntenna,
-  McsColocationCustomDevice,
-  McsColocationRoom,
-  McsColocationStandardSqm,
-  McsReportSubscription,
-  McsReportCostRecommendations,
-  McsReportServiceChangeInfo,
-  McsReportVMRightsizingSummary,
-  McsReportVMRightsizing,
-  McsTicketQueryParams,
-  McsWorkflowCreate,
-  McsObjectCrispElement,
-  McsObjectInstalledService,
-  McsNetworkDnsZonesSummary,
-  McsObjectQueryParams,
-  McsReportResourceHealth,
-  McsReportSecurityScore,
-  McsReportMonitoringAndAlerting,
-  McsReportResourceCompliance,
-  McsRightSizingQueryParams
-} from '@app/models';
-import {
-  isNullOrEmpty,
-  getSafeProperty
-} from '@app/utilities';
-import {
-  McsApiClientFactory,
-  IMcsApiServersService,
-  McsApiServersFactory,
-  IMcsApiJobsService,
-  McsApiJobsFactory,
-  IMcsApiIdentityService,
-  McsApiIdentityFactory,
-  IMcsApiResourcesService,
-  McsApiResourcesFactory,
-  IMcsApiTicketsService,
-  McsApiTicketsFactory,
-  IMcsApiOrdersService,
-  McsApiOrdersFactory,
-  IMcsApiMediaService,
-  McsApiMediaFactory,
-  IMcsApiFirewallsService,
-  McsApiFirewallsFactory,
-  IMcsApiConsoleService,
-  McsApiConsoleFactory,
-  IMcsApiSystemService,
-  McsApiSystemFactory,
-  IMcsApiToolsService,
-  McsApiToolsFactory,
-  IMcsApiBatsService,
-  McsApiBatsFactory,
-  IMcsApiCatalogService,
-  McsApiCatalogFactory,
-  McsApiPlatformFactory,
-  IMcsApiPlatformService,
-  IMcsApiLicensesService,
-  McsApiLicensesFactory,
-  IMcsApiAccountService,
-  McsApiAccountFactory,
-  IMcsApiAzureResourcesService,
-  McsApiAzureResourceFactory,
-  IMcsApiAzureServicesService,
-  McsApiAzureServicesFactory,
-  IMcsApiReportsService,
-  McsApiReportsFactory,
-  IMcsApiNetworkDnsService,
-  McsApiNetworkDnsFactory,
-  IMcsApiColocationsService,
-  McsApiColocationsFactory,
-  McsApiWorkflowsFactory,
-  IMcsApiWorkflowsService,
-  IMcsApiCompaniesService,
-  McsApiCompaniesFactory,
-} from '@app/api-client';
-import { McsEvent } from '@app/events';
-import { McsRepository } from './core/mcs-repository.interface';
 
-import { McsJobsRepository } from './repositories/mcs-jobs.repository';
-import { McsInternetRepository } from './repositories/mcs-internet.repository';
-import { McsServersRepository } from './repositories/mcs-servers.repository';
-import { McsResourcesRepository } from './repositories/mcs-resources.repository';
-import { McsTicketsRepository } from './repositories/mcs-tickets.repository';
-import { McsSystemMessagesRepository } from './repositories/mcs-system-messages.repository';
-import { McsOrdersRepository } from './repositories/mcs-orders.repository';
-import { McsMediaRepository } from './repositories/mcs-media.repository';
-import { McsFirewallsRepository } from './repositories/mcs-firewalls.repository';
-import { McsConsoleRepository } from './repositories/mcs-console.repository';
-import { McsCompaniesRepository } from './repositories/mcs-companies.repository';
-import { McsBatsRepository } from './repositories/mcs-bats.repository';
-import { McsLicensesRepository } from './repositories/mcs-licenses.repository';
+import { McsRepository } from './core/mcs-repository.interface';
 import { McsAccountRepository } from './repositories/mcs-account.repository';
 import { McsAzureResourcesRepository } from './repositories/mcs-azure-resources.repository';
 import { McsAzureServicesRepository } from './repositories/mcs-azure-services.repository';
-import { IMcsApiObjectsService } from '@app/api-client/interfaces/mcs-api-objects.interface';
-import { McsApiObjectsFactory } from '@app/api-client/factory/mcs-api-objects.factory';
-import { McsReportOperationalSavings } from '@app/models/response/mcs-report-operational-savings';
-
-interface DataEmitter<T> {
-  eventEmitter: Observable<T>;
-  event: EventBusState<any>;
-}
+import { McsBatsRepository } from './repositories/mcs-bats.repository';
+import { McsCompaniesRepository } from './repositories/mcs-companies.repository';
+import { McsConsoleRepository } from './repositories/mcs-console.repository';
+import { McsFirewallsRepository } from './repositories/mcs-firewalls.repository';
+import { McsInternetRepository } from './repositories/mcs-internet.repository';
+import { McsJobsRepository } from './repositories/mcs-jobs.repository';
+import { McsLicensesRepository } from './repositories/mcs-licenses.repository';
+import { McsMediaRepository } from './repositories/mcs-media.repository';
+import { McsOrdersRepository } from './repositories/mcs-orders.repository';
+import { McsResourcesRepository } from './repositories/mcs-resources.repository';
+import { McsServersRepository } from './repositories/mcs-servers.repository';
+import { McsSystemMessagesRepository } from './repositories/mcs-system-messages.repository';
+import { McsTicketsRepository } from './repositories/mcs-tickets.repository';
 
 @Injectable()
 @LogClass()
@@ -270,7 +266,6 @@ export class McsApiService {
   private readonly _companyActiveUser: IMcsApiCompaniesService;
 
   private readonly _eventDispatcher: EventBusDispatcherService;
-  private readonly _entitiesEventMap: Array<DataEmitter<any>>;
 
   constructor(_injector: Injector) {
     this._translate = _injector.get(TranslateService);
@@ -320,9 +315,7 @@ export class McsApiService {
     this._companyActiveUser = apiClientFactory.getService(new McsApiCompaniesFactory());
 
     // Register events
-    this._entitiesEventMap = [];
     this._eventDispatcher = _injector.get(EventBusDispatcherService);
-    this._createEntityEventDispatcher();
   }
 
   public getIdentity(): Observable<McsIdentity> {
@@ -409,7 +402,7 @@ export class McsApiService {
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNetworkDnsById'))
       ),
       map((response) => getSafeProperty(response, (obj) => obj.content)
-    ));
+      ));
   }
 
   public getResources(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsResource>> {
@@ -564,7 +557,9 @@ export class McsApiService {
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getServers'))
       ),
-      map((response) => this._mapToCollection(response, this._serversRepository.getTotalRecordsCount()))
+      map((response) =>
+        this._mapToCollection(response, this._serversRepository.getTotalRecordsCount())
+      )
     );
   }
 
@@ -1519,8 +1514,8 @@ export class McsApiService {
 
   public getAzureResources(query?: McsQueryParam): Observable<McsApiCollection<McsAzureResource>> {
     let azureResources = isNullOrEmpty(query) ?
-    this._azureResourceRepository.getAll() :
-    this._azureResourceRepository.filterBy(query);
+      this._azureResourceRepository.getAll() :
+      this._azureResourceRepository.filterBy(query);
 
     return azureResources.pipe(
       catchError((error) =>
@@ -1541,8 +1536,8 @@ export class McsApiService {
 
   public getAzureServices(query?: McsQueryParam): Observable<McsApiCollection<McsAzureService>> {
     let azureServices = isNullOrEmpty(query) ?
-    this._azureServicesRepository.getAll() :
-    this._azureServicesRepository.filterBy(query);
+      this._azureServicesRepository.getAll() :
+      this._azureServicesRepository.filterBy(query);
 
     return azureServices.pipe(
       catchError((error) =>
@@ -1733,7 +1728,7 @@ export class McsApiService {
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getCrispElement'))
       ),
-      map((response) =>  getSafeProperty(response, (obj) => obj.content))
+      map((response) => getSafeProperty(response, (obj) => obj.content))
     );
   }
 
@@ -1859,104 +1854,5 @@ export class McsApiService {
     apiCollection.collection = apiCollection.collection || [];
     apiCollection.totalCollectionCount = apiCollection.totalCollectionCount || 0;
     return apiCollection;
-  }
-
-  /**
-   * Creates the entity subscribers to dispatch in the event bus state
-   */
-  private _createEntityEventDispatcher(): void {
-    // Data Change Events
-    this._entitiesEventMap.push({
-      event: McsEvent.dataChangeJobs,
-      eventEmitter: this._jobsRepository.dataChange()
-    });
-
-    this._entitiesEventMap.push({
-      event: McsEvent.dataChangeServers,
-      eventEmitter: this._serversRepository.dataChange()
-    });
-
-    this._entitiesEventMap.push({
-      event: McsEvent.dataChangeResources,
-      eventEmitter: this._resourcesRepository.dataChange()
-    });
-
-    this._entitiesEventMap.push({
-      event: McsEvent.dataChangeTickets,
-      eventEmitter: this._ticketsRepository.dataChange()
-    });
-
-    this._entitiesEventMap.push({
-      event: McsEvent.dataChangeSystemMessages,
-      eventEmitter: this._systemMessagesRepository.dataChange()
-    });
-
-    this._entitiesEventMap.push({
-      event: McsEvent.dataChangeOrders,
-      eventEmitter: this._ordersRepository.dataChange()
-    });
-
-    this._entitiesEventMap.push({
-      event: McsEvent.dataChangeMedia,
-      eventEmitter: this._mediaRepository.dataChange()
-    });
-
-    this._entitiesEventMap.push({
-      event: McsEvent.dataChangeFirewalls,
-      eventEmitter: this._firewallsRepository.dataChange()
-    });
-
-    this._entitiesEventMap.push({
-      event: McsEvent.dataChangeConsole,
-      eventEmitter: this._consoleRepository.dataChange()
-    });
-
-    this._entitiesEventMap.push({
-      event: McsEvent.dataChangeCompanies,
-      eventEmitter: this._companiesRepository.dataChange()
-    });
-
-    this._entitiesEventMap.push({
-      event: McsEvent.dataChangeInternetPorts,
-      eventEmitter: this._internetRepository.dataChange()
-    });
-
-    this._entitiesEventMap.push({
-      event: McsEvent.dataChangeAggregationTargets,
-      eventEmitter: this._batsRepository.dataChange()
-    });
-
-    this._entitiesEventMap.push({
-      event: McsEvent.dataChangeAzureResources,
-      eventEmitter: this._azureResourceRepository.dataChange()
-    });
-
-    this._entitiesEventMap.push({
-      event: McsEvent.dataChangeAzureManagedServices,
-      eventEmitter: this._azureServicesRepository.dataChange()
-    });
-
-    // Data Clear Events
-    this._entitiesEventMap.push({
-      event: McsEvent.dataClearServers,
-      eventEmitter: this._serversRepository.dataClear()
-    });
-
-    this._entitiesEventMap.push({
-      event: McsEvent.dataClearMedia,
-      eventEmitter: this._mediaRepository.dataClear()
-    });
-
-    this._entitiesEventMap.push({
-      event: McsEvent.dataClearSystemMessage,
-      eventEmitter: this._systemMessagesRepository.dataClear()
-    });
-
-    // Dispatch all associated events
-    this._entitiesEventMap.forEach((dataChange) => {
-      dataChange.eventEmitter.subscribe((entities) =>
-        this._eventDispatcher.dispatch(dataChange.event, entities)
-      );
-    });
   }
 }

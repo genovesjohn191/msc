@@ -1,36 +1,38 @@
-import { Injectable } from '@angular/core';
 import {
-  Subject,
   BehaviorSubject,
-  Observable
+  Observable,
+  Subject
 } from 'rxjs';
 import {
-  takeUntil,
+  filter,
   map,
-  tap,
-  filter
+  takeUntil,
+  tap
 } from 'rxjs/operators';
-import { LogClass } from '@peerlancers/ngx-logger';
+
+import { Injectable } from '@angular/core';
+import { McsEvent } from '@app/events';
 import {
-  addOrUpdateArrayRecord,
-  deleteArrayRecord,
-  isNullOrEmpty,
-  unsubscribeSafely,
-  getSafeProperty,
-  McsDisposable
-} from '@app/utilities';
-import {
-  McsJob,
   DataStatus,
-  JobType,
   JobStatus,
+  JobType,
+  McsJob,
   McsPermission
 } from '@app/models';
 import { McsApiService } from '@app/services';
-import { McsNotificationJobService } from './mcs-notification-job.service';
-import { McsAccessControlService } from '../authentication/mcs-access-control.service';
+import {
+  addOrUpdateArrayRecord,
+  deleteArrayRecord,
+  getSafeProperty,
+  isNullOrEmpty,
+  unsubscribeSafely,
+  McsDisposable
+} from '@app/utilities';
 import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
-import { McsEvent } from '@app/events';
+import { LogClass } from '@peerlancers/ngx-logger';
+
+import { McsAccessControlService } from '../authentication/mcs-access-control.service';
+import { McsNotificationJobService } from './mcs-notification-job.service';
 
 /**
  * MCS notification context service
@@ -66,6 +68,7 @@ export class McsNotificationContextService implements McsDisposable {
       filter((response) => response !== null),
       map((jobs) => jobs.filter((job) => {
         let jobType = getSafeProperty(job, (obj) => obj.type);
+
         return isNullOrEmpty(this._excludedJobTypes
           .find((filteredType) => filteredType === jobType));
       }))
@@ -106,11 +109,14 @@ export class McsNotificationContextService implements McsDisposable {
 
   private _registerEvents(): void {
     this._eventDispatcher.addEventListener(
-      McsEvent.newRecordsRetrieved, this._resendActiveJobs.bind(this));
+      McsEvent.dataAllRecordsUpdated,
+      this._resendActiveJobs.bind(this)
+    );
   }
 
   private _resendActiveJobs(): void {
-    this.getAllActiveJobs().subscribe();
+    if (isNullOrEmpty(this._notifications)) { return; }
+    this._notificationsStream.next(this._notifications);
   }
 
   /**
@@ -164,7 +170,7 @@ export class McsNotificationContextService implements McsDisposable {
    */
   private _createFilteredJobList(): void {
     this._excludedJobTypes.push(JobType.Undefined);
-    this._excludedJobTypes.push(JobType.CatalogRefreshCache );
+    this._excludedJobTypes.push(JobType.CatalogRefreshCache);
   }
 
   /**

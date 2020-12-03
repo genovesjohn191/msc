@@ -1,44 +1,46 @@
 import {
-  Injector,
-  Injectable
-} from '@angular/core';
-import {
-  Subscription,
   of,
   zip,
-  Observable
+  Observable,
+  Subscription
 } from 'rxjs';
 import {
-  tap,
+  switchMap,
   take,
-  switchMap
+  tap
 } from 'rxjs/operators';
+
 import {
-  EventBusState,
-  EventBusDispatcherService
-} from '@peerlancers/ngx-event-bus';
+  Injectable,
+  Injector
+} from '@angular/core';
+import { McsEvent } from '@app/events';
 import {
-  McsJob,
+  ActionStatus,
   JobType,
   McsEntityBase,
-  ActionStatus,
-  McsEntityRequester
+  McsEntityRequester,
+  McsJob
 } from '@app/models';
 import {
-  McsDisposable,
-  unsubscribeSafely,
-  isNullOrEmpty,
   compareDates,
-  getSafeProperty
+  getSafeProperty,
+  isNullOrEmpty,
+  unsubscribeSafely,
+  McsDisposable
 } from '@app/utilities';
-import { McsEvent } from '@app/events';
-import { IMcsJobEntity } from './base/mcs-job-entity.interface';
+import {
+  EventBusDispatcherService,
+  EventBusState
+} from '@peerlancers/ngx-event-bus';
+
 import { McsJobsRepository } from '../repositories/mcs-jobs.repository';
-import { McsJobServerManager } from './entities/mcs-job-server.manager';
-import { McsJobMediaManager } from './entities/mcs-job-media.manager';
+import { IMcsJobEntity } from './base/mcs-job-entity.interface';
 import { McsJobBackupAggregationTargetManager } from './entities/mcs-job-backup-aggregation-target.manager';
-import { McsJobResourceManager } from './entities/mcs-job-resource.manager';
 import { McsJobLicenseManager } from './entities/mcs-job-license.manager';
+import { McsJobMediaManager } from './entities/mcs-job-media.manager';
+import { McsJobResourceManager } from './entities/mcs-job-resource.manager';
+import { McsJobServerManager } from './entities/mcs-job-server.manager';
 
 @Injectable()
 export class McsJobManagerClient implements McsDisposable {
