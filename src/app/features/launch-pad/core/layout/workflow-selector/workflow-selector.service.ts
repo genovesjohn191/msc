@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { isNullOrEmpty } from '@app/utilities';
 import { workflowOptions } from '../workflow-options.map';
-import { WorkflowGroupId } from '../../workflows/workflow-groups/workflow-group-type.enum';
+import { WorkflowGroupId, workflowGroupIdText } from '../../workflows/workflow-groups/workflow-group-type.enum';
 
 export interface WorkflowSelectorItem {
-  name: string;
   id: WorkflowGroupId;
+  name: string;
   description: string;
 }
 
@@ -19,9 +19,13 @@ export class LaunchPadWorkflowSelectorService {
     }
 
     ids.forEach(id => {
-      let option = workflowOptions.get(id);
-      if (!isNullOrEmpty(option)) {
-        items.push(option);
+      let description = workflowOptions.get(id);
+      if (!isNullOrEmpty(description)) {
+        items.push({
+          id,
+          name: workflowGroupIdText[id],
+          description
+        });
       }
     });
 

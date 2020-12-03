@@ -2,10 +2,8 @@ import { WorkflowSelectorItem } from './workflow-selector/workflow-selector.serv
 import { WorkflowGroupId } from '../workflows/workflow-groups/workflow-group-type.enum';
 
 // Workflow: Add workflow group to selector options
-export const workflowOptions: Map<WorkflowGroupId, WorkflowSelectorItem> = new Map([
-  [WorkflowGroupId.ProvisionVirtualDataCentreVmInstance, {
-    id: WorkflowGroupId.ProvisionVirtualDataCentreVmInstance,
-    name: 'Provision Virtual Data Centre VM Instance',
-    description: 'Create a new virtual data centre VM instance.'
-  }]
+export const workflowOptions: Map<WorkflowGroupId, string> = new Map([
+
+  [WorkflowGroupId.ProvisionVirtualDataCentreVmInstance, 'Create a new virtual data centre VM instance.']
+
 ]);
