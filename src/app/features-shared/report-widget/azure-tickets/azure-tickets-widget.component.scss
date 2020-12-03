@@ -1,0 +1,11 @@
+@import "../../../../styles/shared/base";
+
+.azure-ticket-wrapper {
+  position: relative;
+
+  .new-ticket-link {
+    position: absolute;
+    top: $space-large;
+    right: $space-large;
+  }
+}

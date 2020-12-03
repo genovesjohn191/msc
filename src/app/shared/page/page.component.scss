@@ -121,7 +121,7 @@ $left-panel-navigation-collapse-padding: 6px;
     position: relative;
     overflow: hidden;
     @include print() {
-      width: 100%;
+      width: 850px;
       overflow: visible !important;
     }
     @include display-flex(column);

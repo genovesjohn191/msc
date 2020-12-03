@@ -57,7 +57,8 @@
               Up to <strong>{{ potentialOperationalSavings }}</strong> could be saved by optimising underutilised resources.
             </mcs-cta-list-body>
             <mcs-cta-list-action>
-              <a href="{{ azureServiceRequestLink }}"
+              <a *mcsAccessControl="['OrderEdit'];"
+                href="{{ azureServiceRequestLink }}"
                 matTooltip="We'll work with you to optimise your environment."
                 matTooltipPosition="right"
                 mcsId="recommendations-optimize"
@@ -72,7 +73,8 @@
               Up to <strong>{{ potentialRightsizingSavings }}</strong> could be saved by rightsizing virtual machines.
             </mcs-cta-list-body>
             <mcs-cta-list-action>
-              <a href="{{ azureServiceRequestLink }}"
+              <a *mcsAccessControl="['OrderEdit'];"
+                href="{{ azureServiceRequestLink }}"
                 matTooltip="We'll work with you to rightsize the VMs in your environment."
                 matTooltipPosition="right"
                 mcsId="recommendations-rightsize"

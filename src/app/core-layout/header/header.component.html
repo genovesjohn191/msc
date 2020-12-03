@@ -3,12 +3,16 @@
   <mcs-icon [key]="toggleIconKey" size="medium" (click)="toggleNav()"></mcs-icon>
 </div>
 <a [mcsRouterLink]="['/']"
+  class="hide-on-print"
   mcsId="header-logo"
   mcsEventTracker="header-logo"
   mcsEventCategory="navigation"
   mcsEventLabel="user-panel">
   <mcs-image size="175px" [key]="lightLogoIconKey"></mcs-image>
 </a>
+<div class="dark-logo show-on-print-only">
+  <mcs-image size="175px" [key]="darkLogoIconKey"></mcs-image>
+</div>
 
 <!-- User panel content -->
 <div mcsAlign="end" class="user-panel-wrapper">

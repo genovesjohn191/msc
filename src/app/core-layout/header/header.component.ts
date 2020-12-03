@@ -52,6 +52,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
     return CommonDefinition.ASSETS_IMAGE_MCS_LIGHT_LOGO_SVG;
   }
 
+  public get darkLogoIconKey(): string {
+    return CommonDefinition.ASSETS_IMAGE_MCS_LIGHT_LOGO;
+  }
+
   public get toggleIconKey(): string {
     return CommonDefinition.ASSETS_SVG_TOGGLE_NAV_BLUE;
   }

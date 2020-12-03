@@ -52,11 +52,11 @@ export class SecurityWidgetComponent implements OnInit, OnDestroy {
   }
 
   public get currentScore(): number {
-    return this.securityScore.currentScore < 0 ? 0 : this.securityScore.currentScore;
+    return this.securityScore.currentScore < 0 ? 0 : Number(this.securityScore.currentScore.toFixed());
   }
 
   public get maxScore(): number {
-    return this.securityScore.maxScore < 0 ? 0 : this.securityScore.maxScore;
+    return this.securityScore.maxScore < 0 ? 0 : Number(this.securityScore.maxScore.toFixed());
   }
 
   public get securityScorePercentage(): number {

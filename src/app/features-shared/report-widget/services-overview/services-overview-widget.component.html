@@ -6,7 +6,7 @@
         <mcs-cta-list-action>
           <div *ngIf="!serviceInfo.processing && !serviceInfo.hasError; else processing">
             <a
-              *ngIf="serviceInfo.link; else noLink"
+              *ngIf="serviceInfo.link && serviceInfo.count; else noLink"
               href="{{ serviceInfo.link }}"
               mcsId="{{ serviceInfo.eventId }}"
               mcsEventTracker="{{ serviceInfo.eventTracker }}"

@@ -23,8 +23,18 @@ $header-small-padding: $space-medium;
 
   @include print() {
     position: fixed !important;
-    top: 0;
+    bottom: 0;
+    right: 0;
     width: 100%;
+    background-color: transparent;
+  }
+  
+  .dark-logo {
+    img {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+    }
   }
 
   .user-panel-wrapper {

@@ -113,6 +113,6 @@ export class ServicesCostOverviewWidgetComponent implements OnInit, OnDestroy {
   }
 
   public valueYFormatter(val: number): string {
-    return `${val.toFixed()}`;
+    return !Number.isInteger(val) ? `${val.toFixed(2)}` : `${val.toFixed()}`;
   }
 }
