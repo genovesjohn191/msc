@@ -29,6 +29,7 @@ import {
 } from '@app/utilities';
 import { McsApiService } from '@app/services';
 import {
+  McsApiErrorContext,
   McsObjectCrispElement,
   McsObjectCrispElementService,
   ProductType,
@@ -214,7 +215,8 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
 
     this._apiService.getCrispElement(this.context.productId)
     .pipe(
-      catchError(() => {
+      catchError((error: McsApiErrorContext) => {
+
         // Ensures the context of the form is set for loading options during failure
         if (!isNullOrEmpty(workflowGroup.parent.form.mapContext)) {
           parent.propertyOverrides = workflowGroup.parent.form.mapContext(this.context);
@@ -226,11 +228,13 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
           children
         };
 
-        this._snackBar.open('Unable to retrieve CRISP attributes.', 'OK', {
-          duration: 30000,
-          horizontalPosition: 'center',
-          verticalPosition: 'bottom'
-        });
+        if (error?.details?.status !== 404) {
+          this._snackBar.open('Unable to retrieve object from CRISP.', 'OK', {
+            duration: 10000,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom'
+          });
+        }
 
         this._renderWorkflowGroup(this.context.config);
         this._changeDetector.markForCheck();
@@ -242,8 +246,11 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
       if (!isNullOrEmpty(workflowGroup.parent.form.mapContext)) {
         parent.propertyOverrides = workflowGroup.parent.form.mapContext(this.context);
       }
-      let crispOverrides = workflowGroup.parent.form.mapCrispElementAttributes(response.serviceAttributes);
-      parent.propertyOverrides = parent.propertyOverrides.concat(crispOverrides);
+      if (!isNullOrEmpty(workflowGroup.parent.form.mapCrispElementAttributes)) {
+        let crispOverrides = workflowGroup.parent.form.mapCrispElementAttributes(response.serviceAttributes);
+        parent.propertyOverrides = parent.propertyOverrides.concat(crispOverrides);
+      }
+
       this._context.config = {
         id: this.context.workflowGroupId,
         parent,
@@ -277,7 +284,7 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
 
       // Retrieve data for associated services
       forkJoin(tasks$)
-      .pipe(catchError(() => {
+      .pipe(catchError((error) => {
         // Ensures the context of the form is set for loading options during failure
         let children: WorkflowData[] = [];
         workflowGroup.children.forEach((child) => {
@@ -292,11 +299,13 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
           });
         });
 
-        this._snackBar.open('Unable to retrieve associated CRISP elements.', 'OK', {
-          duration: 30000,
-          horizontalPosition: 'center',
-          verticalPosition: 'bottom'
-        });
+        if (error?.details?.status !== 404) {
+          this._snackBar.open('Unable to retrieve associated object from CRISP.', 'OK', {
+            duration: 10000,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom'
+          });
+        }
 
         this.context.config.children = children;
         this._renderWorkflowGroup(this.context.config);
@@ -315,8 +324,10 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
           if (!isNullOrEmpty(child.form.mapContext)) {
             propertyOverrides = child.form.mapContext(this.context);
           }
-          let crispOverrides = child.form.mapCrispElementAttributes(crispElement?.serviceAttributes);
-          propertyOverrides = propertyOverrides.concat(crispOverrides);
+          if (!isNullOrEmpty(child.form.mapCrispElementAttributes)) {
+            let crispOverrides = child.form.mapCrispElementAttributes(crispElement?.serviceAttributes);
+            propertyOverrides = propertyOverrides.concat(crispOverrides);
+          }
 
           children.push({
             id: child.id,
