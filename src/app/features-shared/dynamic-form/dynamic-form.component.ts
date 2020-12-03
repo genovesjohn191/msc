@@ -14,13 +14,13 @@ import {
 } from '@angular/forms';
 
 import { isNullOrEmpty } from '@app/utilities';
-import { CoreValidators } from '@app/core';
 import {
   DynamicFormFieldConfig,
   DynamicFormFieldDataChangeEventParam
 } from './dynamic-form-field-config.interface';
 import { DynamicFormFieldComponent } from './dynamic-form-field-component.interface';
 import { DynamicFormFieldConfigBase } from './dynamic-form-field-config.base';
+import { DynamicFormValidationService } from './dynamic-form-validation.service';
 
 @Component({
   selector: 'mcs-dynamic-form',
@@ -48,13 +48,13 @@ export class DynamicFormComponent implements OnInit, AfterViewInit {
   public hasMoreFields: boolean = false;
   public form: FormGroup;
 
-  private customValidatorMap: Map<string, ValidatorFn[]>;
   private dataChangeEventQueue: DynamicFormFieldDataChangeEventParam[] = [];
 
-  public constructor(private _changeDetectorRef: ChangeDetectorRef) {}
+  public constructor(
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _validationService: DynamicFormValidationService) {}
 
   public ngOnInit() {
-    this._createCustomValidationMap();
     this.form = this._buildForm();
   }
 
@@ -130,27 +130,7 @@ export class DynamicFormComponent implements OnInit, AfterViewInit {
 
   // Generic error messages for validations
   public getErrorMessage(key: string): string {
-    if (this.form.controls[key].hasError('required')) {
-      return 'You must enter a value';
-    }
-    if (this.form.controls[key].hasError('minlength')) {
-      return 'You must enter a minimum of ' + this.form.controls[key].errors.minlength.requiredLength + ' characters';
-    }
-    if (this.form.controls[key].hasError('min')) {
-      return 'Must not be less than ' + this.form.controls[key].errors.min.min;
-    }
-    if (this.form.controls[key].hasError('max')) {
-      return 'Must not exceed ' + this.form.controls[key].errors.max.max;
-    }
-    if (this.form.controls[key].hasError('ipAddress')) {
-      return 'Incorrect IP address format';
-    }
-    if (this.form.controls[key].hasError('domain')) {
-      return 'Incorrect domain format';
-    }
-    if (this.form.controls[key].hasError('hostName')) {
-      return 'Incorrect host name format';
-    }
+    return this._validationService.getErrorMessage(this.form.controls[key]);
   }
 
   public markAsTouched(): void {
@@ -192,48 +172,8 @@ export class DynamicFormComponent implements OnInit, AfterViewInit {
     });
   }
 
-  private _createCustomValidationMap() {
-    this.customValidatorMap = new Map<string, ValidatorFn[]>();
-
-    this.customValidatorMap.set('textbox-domain', [CoreValidators.domain]);
-    this.customValidatorMap.set('textbox-ip', [CoreValidators.ipAddress]);
-  }
-
   private _getValidators(controlData: DynamicFormFieldConfig): ValidatorFn[] {
-    let validators: ValidatorFn[] = [];
-
-    if (isNullOrEmpty(controlData)) {
-      return validators;
-    }
-
-    // Explicit validators based on configuration
-    if (!isNullOrEmpty(controlData.validators)) {
-      if (controlData.validators.required) {
-        validators.push(Validators.required);
-      }
-      if (controlData.validators.minlength > 0) {
-        validators.push(Validators.minLength(controlData.validators.minlength));
-      }
-      if (controlData.validators.maxlength > 0) {
-        validators.push(Validators.maxLength(controlData.validators.maxlength));
-      }
-      if (controlData.validators.min > 0) {
-        validators.push(Validators.min(controlData.validators.min));
-      }
-      if (controlData.validators.max > 0) {
-        validators.push(Validators.max(controlData.validators.max));
-      }
-    }
-
-    // Implicit validators based on control type
-    let customValidators = this.customValidatorMap.get(controlData.type);
-    if (customValidators) {
-      customValidators.forEach(customValidator => {
-        validators.push(customValidator);
-      });
-    }
-
-    return validators;
+    return this._validationService.getValidators(controlData);
   }
 
   private _resetFieldValidators(control: DynamicFormFieldComponent): void {
