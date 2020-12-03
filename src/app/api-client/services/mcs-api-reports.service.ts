@@ -263,12 +263,10 @@ export class McsApiReportsService implements IMcsApiReportsService {
   }
 
   public getResourceCompliance(
-    periodStart?: string,
-    periodEnd?: string
+    period?: string
   ): Observable<McsApiSuccessResponse<McsReportResourceCompliance>> {
     let searchParams = new Map<string, any>();
-    searchParams.set('period_start', periodStart);
-    searchParams.set('period_end', periodEnd);
+    searchParams.set('period', period);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/public-cloud/reports/compliance';

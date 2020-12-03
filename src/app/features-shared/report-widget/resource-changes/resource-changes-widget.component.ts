@@ -12,9 +12,7 @@ import {
 } from 'rxjs';
 
 import { ChartConfig, ChartItem } from '@app/shared';
-import {
-  coerceNumber
-} from '@app/utilities';
+import { coerceNumber, isNullOrEmpty } from '@app/utilities';
 import { McsReportingService } from '@app/core/services/mcs-reporting.service';
 import { catchError } from 'rxjs/operators';
 
@@ -57,6 +55,7 @@ export class ResourceChangesWidgetComponent implements OnInit {
   public dataBehavior: BehaviorSubject<ChartItem[]>;
   public hasError: boolean = false;
   public processing: boolean = true;
+  public empty: boolean = false;
 
   public constructor(
     private _changeDetectorRef: ChangeDetectorRef,
@@ -83,6 +82,7 @@ export class ResourceChangesWidgetComponent implements OnInit {
     }))
     .subscribe((result) => {
       result = result.slice(0, maxItemToDisplay);
+      this.empty = isNullOrEmpty(result) ? true : false;
       this.dataBehavior.next(result);
       this.processing = false;
       this._changeDetectorRef.markForCheck();

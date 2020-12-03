@@ -176,7 +176,8 @@
         },
         "newTicketLinkLabel": "New",
         "moreTicketsLinkLabel": "View All",
-        "empty": "No open tickets."
+        "empty": "No open tickets.",
+        "noTicketViewPermission": "This information could not be loaded as you do not have permission to view it."
       },
       "servicesOverviewWidget": {
         "title": "Services Overview"
@@ -188,7 +189,8 @@
         "title": "Contact Us"
       },
       "resourceChangesWidget": {
-        "title": "Resource Count Since Last Month"
+        "title": "Resource Count Since Last Month",
+        "noData": "No resource count changes since last month"
       },
       "changeRequestsWidget": {
         "title": "Make a Change",

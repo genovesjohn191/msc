@@ -31,6 +31,7 @@ import { catchError, takeUntil } from 'rxjs/operators';
 export class ComplianceWidgetComponent implements OnInit, OnDestroy {
   public chartConfig: ChartConfig = {
     type: 'donut',
+    height: '125px',
     dataLabels: {
       enabled: true,
       formatter: this.dataLabelFormatter
@@ -40,8 +41,7 @@ export class ComplianceWidgetComponent implements OnInit, OnDestroy {
 
   public statusIconKey: string = CommonDefinition.ASSETS_SVG_INFO;
 
-  private _startPeriod: string = '';
-  private _endPeriod: string = '';
+  private _period: string = '';
 
   public hasError: boolean = false;
   public processing: boolean = true;
@@ -80,7 +80,7 @@ export class ComplianceWidgetComponent implements OnInit, OnDestroy {
     this.processing = true;
     this.hasError = false;
 
-    this._reportingService.getResourceCompliance(this._startPeriod, this._endPeriod)
+    this._reportingService.getResourceCompliance(this._period)
     .pipe(
       catchError(() => {
         this.hasError = true;
@@ -130,10 +130,6 @@ export class ComplianceWidgetComponent implements OnInit, OnDestroy {
   }
 
   private _initializePeriod(): void {
-    let from = new Date(new Date().setMonth(new Date().getMonth()));
-    let until = new Date(new Date().setMonth(new Date().getMonth()));
-
-    this._startPeriod = `${from.getFullYear()}-${from.getMonth() + 1}`;
-    this._endPeriod = `${until.getFullYear()}-${until.getMonth() + 1}`;
-  }
+    let currentMonth = new Date(new Date().setMonth(new Date().getMonth()));
+    this._period = `${currentMonth.getFullYear()}-${currentMonth.getMonth() + 1}`;  }
 }

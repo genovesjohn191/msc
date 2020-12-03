@@ -43,7 +43,7 @@ const maxTicketsToDisplay: number = 5;
 @Component({
   selector: 'mcs-azure-tickets-widget',
   templateUrl: './azure-tickets-widget.component.html',
-  styleUrls: ['../report-widget.scss'],
+  styleUrls: ['../report-widget.scss', './azure-tickets-widget.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   host: {

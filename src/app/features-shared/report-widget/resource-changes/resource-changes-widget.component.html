@@ -1,12 +1,22 @@
 <div class="widget">
   <h3>{{ 'reports.overview.resourceChangesWidget.title' | translate }}</h3>
-  <mcs-horizontal-bar-chart
-    *ngIf="!processing && !hasError"
-    [data]="data$ | async"
-    [distributed]="true"
-    [config]="chartConfig">
-  </mcs-horizontal-bar-chart>
-
-  <mcs-report-widget-data-status type="info" [processing]="processing" [hasError]="hasError" (retry)="getData()">
-  </mcs-report-widget-data-status>
+  <div *ngIf="!hasError && !processing; else error">
+    <div *ngIf="empty; else resourceChangeChart">
+      <mcs-status-message type="info">
+        {{ 'reports.overview.resourceChangesWidget.noData' | translate }}
+      </mcs-status-message>
+    </div>
+    <ng-template #resourceChangeChart>
+      <mcs-horizontal-bar-chart
+        *ngIf="!processing && !hasError"
+        [data]="data$ | async"
+        [distributed]="true"
+        [config]="chartConfig">
+      </mcs-horizontal-bar-chart>
+    </ng-template>
+  </div>
+  <ng-template #error>
+    <mcs-report-widget-data-status type="info" [processing]="processing" [hasError]="hasError" (retry)="getData()">
+    </mcs-report-widget-data-status>
+  </ng-template>
 </div>

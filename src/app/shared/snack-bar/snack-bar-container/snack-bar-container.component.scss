@@ -19,6 +19,10 @@ $snack-bar-container-light-color: $light-bg-text-color;
   @include border-radius($snack-bar-container-border-radius);
   @include transform(translateY(100%) translateY($snack-bar-container-offset));
 
+  @include print() {
+    display: none;
+  }
+
   &.top-position {
     @include transform(translateY(-100%) translateY(-$snack-bar-container-offset));
   }

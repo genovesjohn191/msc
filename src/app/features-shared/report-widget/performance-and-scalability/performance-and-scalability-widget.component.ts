@@ -38,10 +38,13 @@ export class PerformanceAndScalabilityWidgetComponent implements OnInit, OnDestr
     yaxis: {
       title: 'Avg % Used',
       showLabel: true,
-      valueFormatter: this.yAxisLabelFormatter
+      valueFormatter: this.valueYFormatter
     },
     xaxis: {
       title: 'Months'
+    },
+    tooltip: {
+      yValueFormatter: this.tooltipYValueFormatter
     }
   };
 
@@ -108,7 +111,11 @@ export class PerformanceAndScalabilityWidgetComponent implements OnInit, OnDestr
     this._endPeriod = `${until.getFullYear()}-${until.getMonth() + 1}`;
   }
 
-  public yAxisLabelFormatter(val: number, opts?: any): string {
-    return truncateDecimals(val, 2) + '%';
+  public tooltipYValueFormatter(val: number, opts?: any): string {
+    return `${val.toFixed(2)}%`;
+  }
+
+  public valueYFormatter(val: number): string {
+    return !Number.isInteger(val) ? `${val.toFixed(2)}%` : `${val.toFixed()}%`;
   }
 }

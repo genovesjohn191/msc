@@ -53,7 +53,7 @@
 
 @page {
   size: portrait;
-  margin: 0 0 $space-xlarge 0;
+  margin: $space-large $space-large $space-large 0;
 }
 
 html {
@@ -67,6 +67,7 @@ html {
     @include print() {
       height: auto;
       overflow-y: visible;
+      overflow-x: visible;
     }
 
     font-family: $font-default;

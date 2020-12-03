@@ -123,10 +123,9 @@ export class McsReportingService {
   }
 
   public getResourceCompliance(
-    startPeriod: string = '',
-    endPeriod: string = ''
+    period: string = ''
   ): Observable<McsReportResourceCompliance> {
-    return this._apiService.getResourceCompliance(startPeriod, endPeriod);
+    return this._apiService.getResourceCompliance(period);
   }
 
   public getMonitoringAndAlerting(): Observable<McsReportMonitoringAndAlerting> {
@@ -147,6 +146,7 @@ export class McsReportingService {
     }));
   }
 
+  // TO DO: Create unit test
   private _convertServiceChangeInfoToChartItem(items: McsReportServiceChangeInfo[]): ChartItem[] {
     let data: ChartItem[] = [];
     items.forEach(item => {
@@ -162,6 +162,7 @@ export class McsReportingService {
     return data;
   }
 
+  // TO DO: Create unit test
   public _convertMonitoringAndAlertingToChartItem(items: McsReportSeverityAlerts[]): ChartItem[] {
     let data: ChartItem[] = [];
     items.forEach(item => {
@@ -177,6 +178,7 @@ export class McsReportingService {
     return data;
   }
 
+  // TO DO: Create unit test
   private _convertIntegerDataToChartItem(items: McsReportIntegerData[]): ChartItem[] {
     let data: ChartItem[] = [];
     items.forEach(item => {
@@ -192,8 +194,10 @@ export class McsReportingService {
     return data;
   }
 
+  // TO DO: Create unit test
   private _convertGenericItemToChartItem(items: McsReportGenericItem[]): ChartItem[] {
     let data: ChartItem[] = [];
+    items = this.fillMissingRecordsWithDefault(items);
     items.forEach(item => {
       let invalidData = isNullOrEmpty(item.name) || isNullOrEmpty(item.period);
       if (invalidData) { return; }
@@ -207,8 +211,10 @@ export class McsReportingService {
     return data;
   }
 
+  // TO DO: Create unit test
   private _convertGenericItemToChartItemNoMonth(items: McsReportGenericItem[]): ChartItem[] {
     let data: ChartItem[] = [];
+    items = this.fillMissingRecordsWithDefault(items);
     items.forEach(item => {
       let invalidData = isNullOrEmpty(item.name) || isNullOrEmpty(item.period);
       if (invalidData) { return; }
@@ -222,5 +228,34 @@ export class McsReportingService {
     });
 
     return data;
+  }
+
+  // TO DO: Create unit test
+  public fillMissingRecordsWithDefault(items: McsReportGenericItem[], defaultValue: number = 0): McsReportGenericItem[] {
+    let newPeriods: string[] = [];
+    let newNames: string[] = [];
+    let newData: McsReportGenericItem[] = [];
+
+    // Break periods and names to separate array and ensure uniqueness
+    items.forEach((data) => {
+      let newPeriodList = newPeriods.findIndex((period) => period === data.period) < 0;
+      if (newPeriodList) { newPeriods.push(data.period) };
+
+      let newNameList = newNames.findIndex((name) => name === data.name) < 0;
+      if (newNameList) { newNames.push(data.name) };
+    });
+
+    newPeriods.forEach((newPeriod) => {
+      newNames.forEach((newName) => {
+        let item = items.find((data) => data.period === newPeriod && data.name === newName);
+        newData.push({
+          period: newPeriod,
+          name: newName,
+          value: (item && item.value) || defaultValue
+        });
+      })
+    })
+
+    return newData;
   }
 }

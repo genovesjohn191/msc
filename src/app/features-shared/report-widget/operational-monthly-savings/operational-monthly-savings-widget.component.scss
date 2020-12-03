@@ -1,7 +1,17 @@
 @import "../../../../styles/shared/base";
 
-.operational-savings-wrapper {
+.operational-savings-container {
   margin-bottom: $space-large;
+}
+
+.operational-savings-wrapper {
+  @include print() {
+    width: 850px;
+    height: auto;
+    overflow: auto;
+    page-break-before: auto;
+    page-break-after: auto;
+  }
 
   .item-wrapper {
     margin-bottom: $space-large;
@@ -11,8 +21,16 @@
     }
   }
 
+  .error-wrapper {
+    margin-bottom: $space-large;
+  }
+
   table.mcs-compact-table {
     width: 100%;
+
+    @include print() {
+      overflow: auto;
+    }
   
     tr {
       td:last-child {

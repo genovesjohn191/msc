@@ -54,7 +54,7 @@
                 </mat-form-field>
               </div>
             </div>
-            <mcs-resource-monthly-cost-widget [subscriptionIds]="subscriptionIdsFilter" [config]="resourceMonthlyCostConfig"></mcs-resource-monthly-cost-widget>
+            <mcs-resource-monthly-cost-widget [subscriptionIds]="subscriptionIdsFilter" [config]="resourceMonthlyCostConfig" (dataReceived)="resourceMonthDataReceived($event)"></mcs-resource-monthly-cost-widget>
             <mat-divider></mat-divider>
 
             <!-- Virtual Machine Breakdown -->

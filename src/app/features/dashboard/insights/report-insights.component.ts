@@ -8,8 +8,9 @@ import { McsReportingService } from '@app/core/services/mcs-reporting.service';
 import { PerformanceAndScalabilityWidgetConfig, ReportPeriod } from '@app/features-shared/report-widget';
 import { ResourceMonthlyCostWidgetConfig } from '@app/features-shared/report-widget/resource-monthly-cost/resource-monthly-cost-widget.component';
 import { McsReportSubscription } from '@app/models';
-import { CommonDefinition, unsubscribeSafely } from '@app/utilities';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { ChartItem } from '@app/shared';
+import { CommonDefinition, isNullOrEmpty, unsubscribeSafely } from '@app/utilities';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 
 interface PeriodOption {
@@ -51,8 +52,7 @@ export class ReportInsightsComponent implements OnDestroy {
   public set selectedResourceCostMonth(value: PeriodOption) {
     this._selectedResourceCostMonth = value;
     this.resourceMonthlyCostConfig = {
-      period: this._selectedResourceCostMonth.period.from,
-      subscriptionIds: this.subscriptionIdsFilter
+      period: this._selectedResourceCostMonth.period.from
     };
 
     this._changeDetector.markForCheck();
@@ -128,6 +128,17 @@ export class ReportInsightsComponent implements OnDestroy {
     }
 
     this.selectedResourceCostMonth = this.monthOptions[0];
+  }
+
+  public resourceMonthDataReceived(chartData: ChartItem[]) {
+    if (!isNullOrEmpty(chartData)) {
+      return;
+    }
+    let indexOfSelectedMonth = this.monthOptions.findIndex((options) => options.label === this.selectedResourceCostMonth.label);
+    let lastIndexReached = indexOfSelectedMonth === this.monthOptions.length - 1;
+    if (!lastIndexReached) {
+      this.selectedResourceCostMonth = this.monthOptions[indexOfSelectedMonth + 1];
+    }
   }
 
   public scrollToElement(el: HTMLElement) {

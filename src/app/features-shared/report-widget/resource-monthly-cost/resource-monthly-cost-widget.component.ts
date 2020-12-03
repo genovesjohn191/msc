@@ -2,9 +2,11 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  EventEmitter,
   Input,
   OnDestroy,
-  OnInit
+  OnInit,
+  Output
 } from '@angular/core';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -13,8 +15,7 @@ import { isNullOrEmpty, unsubscribeSafely } from '@app/utilities';
 import { ChartConfig, ChartItem } from '@app/shared';
 
 export interface ResourceMonthlyCostWidgetConfig {
-  period: Date,
-  subscriptionIds: string[];
+  period: Date
 }
 
 @Component({
@@ -44,13 +45,17 @@ export class ResourceMonthlyCostWidgetComponent implements OnInit, OnDestroy {
 
   @Input()
   public set subscriptionIds(value: string[]) {
-    if (JSON.stringify(value) === JSON.stringify(this._subscriptionIds)) {
+    let subscriptionId = !isNullOrEmpty(value) ? value : [];
+    if (JSON.stringify(subscriptionId) === JSON.stringify(this._subscriptionIds)) {
       return;
     }
 
-    this._subscriptionIds = value;
-    this.getData();
+    this._subscriptionIds = subscriptionId;
+    this.getResourceMonthlyCostReport();
   }
+
+  @Output()
+  public dataReceived: EventEmitter<ChartItem[]>;
 
   @Input()
   public set config(value: ResourceMonthlyCostWidgetConfig) {
@@ -62,20 +67,25 @@ export class ResourceMonthlyCostWidgetComponent implements OnInit, OnDestroy {
     this._startPeriod = `${value.period.getFullYear()}-${value.period.getMonth() + 1}`;
     this._endPeriod = `${value.period.getFullYear()}-${value.period.getMonth() + 1}`;
 
-    this.getData();
+    this.getResourceMonthlyCostReport();
   }
 
   public data$: Observable<ChartItem[]>;
   public dataBehavior: BehaviorSubject<ChartItem[]>;
+  public chartData: ChartItem[];
   public hasError: boolean = false;
   public processing: boolean = true;
 
   private _config: ResourceMonthlyCostWidgetConfig;
-  private _subscriptionIds: string[] = undefined;
+  private _subscriptionIds: string[] = [];
   private _startPeriod: string = '';
   private _endPeriod: string = '';
 
-  public constructor(private _changeDetector: ChangeDetectorRef, private reportingService: McsReportingService) {}
+  public constructor(
+    private _changeDetector: ChangeDetectorRef,
+    private reportingService: McsReportingService) {
+    this.dataReceived = new EventEmitter();
+  }
 
   public ngOnInit() {
     this.dataBehavior = new BehaviorSubject<ChartItem[]>(null);
@@ -86,11 +96,9 @@ export class ResourceMonthlyCostWidgetComponent implements OnInit, OnDestroy {
     unsubscribeSafely(this.dataBehavior);
   }
 
-  public getData(): void {
+  public getResourceMonthlyCostReport(): void {
     this.hasError = false;
     this.processing = true;
-    this._changeDetector.markForCheck();
-
     this.reportingService.getResourceMonthlyCostReport(this._startPeriod, this._endPeriod, this._subscriptionIds)
     .pipe(catchError(() => {
       this.hasError = true;
@@ -99,7 +107,11 @@ export class ResourceMonthlyCostWidgetComponent implements OnInit, OnDestroy {
       return throwError('Resources Monthly Cost endpoint failed.');
     }))
     .subscribe((result) => {
-      this.dataBehavior.next(result);
+      this.chartData = result;
+      this.dataReceived.emit(result);
+      if (!isNullOrEmpty(result)) {
+        this.dataReceived.complete();
+      }
       this.processing = false;
       this._changeDetector.markForCheck();
     });
@@ -110,6 +122,6 @@ export class ResourceMonthlyCostWidgetComponent implements OnInit, OnDestroy {
   }
 
   public valueYFormatter(val: number): string {
-    return `${val.toFixed()}`;
+    return !Number.isInteger(val) ? `${val.toFixed(2)}` : `${val.toFixed()}`;
   }
 }
