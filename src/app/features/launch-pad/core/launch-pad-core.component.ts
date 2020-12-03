@@ -212,6 +212,10 @@ export class LaunchPadComponent implements OnDestroy, IMcsNavigateAwayGuard {
     return cloneDeep(workflow.properties);
   }
 
+  public hasProperties(workflow: Workflow): boolean {
+    return Object.keys(workflow.properties).length > 0;
+  }
+
   private _initializeWorkflowProcess(workflows: Workflow[] = []): void {
     this.context.workflows = workflows;
 

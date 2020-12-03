@@ -26,7 +26,11 @@
         </div>
 
         <mat-accordion #confirmPayloadViewer="matAccordion" multi displayMode="flat">
-          <mat-expansion-panel [class.new]="isNew(payload.referenceId)" [class.parent]="payload.serviceId" *ngFor="let payload of context?.workflows" [expanded]="isNew(payload.referenceId)">
+
+          <mat-expansion-panel *ngFor="let payload of context?.workflows"
+            [class.new]="isNew(payload.referenceId)"
+            [class.parent]="payload.serviceId"
+            [expanded]="isNew(payload.referenceId)">
             <mat-expansion-panel-header style="position: relative;">
               <mat-panel-title>
                 <h3>{{ payload.title }}</h3>
@@ -36,7 +40,10 @@
               </mat-panel-description>
             </mat-expansion-panel-header>
 
-            <mcs-workflow-json-viewer [obj]="clone(payload)"></mcs-workflow-json-viewer>
+            <mcs-workflow-json-viewer *ngIf="hasProperties(payload); else noProperties" [obj]="clone(payload)"></mcs-workflow-json-viewer>
+            <ng-template #noProperties>
+              <small>No properties to display</small>
+            </ng-template>
             <div>
               <button mat-icon-button aria-label="Remove"
                 matTooltip="{{ payload.serviceId ? 'Remove this and related workflows' : 'Remove this workflow' }}"
@@ -52,6 +59,7 @@
               </button>
             </div>
           </mat-expansion-panel>
+
         </mat-accordion>
 
       </div>

@@ -61,4 +61,8 @@
       </mcs-dff-select-vdc-field>
     </div>
   </div>
+
+  <div *ngIf="!hasFields">
+    This form has no changeable fields.
+  </div>
 </form>

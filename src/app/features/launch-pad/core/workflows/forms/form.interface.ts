@@ -8,6 +8,6 @@ export interface LaunchPadForm {
   mapContext?: (context: WorkflowGroupSaveState)
   => { key: string, value: any }[]
 
-  mapCrispElementAttributes: (attributes: McsObjectCrispElementServiceAttribute[])
+  mapCrispElementAttributes?: (attributes: McsObjectCrispElementServiceAttribute[])
   => { key: string, value: any }[]
 }

@@ -41,6 +41,10 @@ export class DynamicFormComponent implements OnInit, AfterViewInit {
     return this.form.valid;
   }
 
+  public get hasFields(): boolean {
+    return !isNullOrEmpty(this.config);
+  }
+
   public hasMoreFields: boolean = false;
   public form: FormGroup;
 
