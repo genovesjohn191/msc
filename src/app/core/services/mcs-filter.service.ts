@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { McsFilterInfo } from '@app/models';
 import {
-  isNullOrEmpty,
+  compareArrays,
   convertJsonToMapObject,
   convertMapToJsonObject,
-  compareArrays,
-  createObject
+  createObject,
+  isNullOrEmpty
 } from '@app/utilities';
+import { TranslateService } from '@ngx-translate/core';
+
 import { McsStorageService } from '../services/mcs-storage.service';
 
 @Injectable()
@@ -14,7 +16,10 @@ export class McsFilterService {
   private _config: any;
   private _filters: Map<string, McsFilterInfo[]>;
 
-  constructor(private _storageService: McsStorageService) {
+  constructor(
+    private _storageService: McsStorageService,
+    private _translateService: TranslateService
+  ) {
     this._filters = new Map<string, any>();
     this.load();
   }
@@ -69,7 +74,19 @@ export class McsFilterService {
     }
 
     let mapFilters = value && convertJsonToMapObject(value);
-    return this._convertMapFiltersToArray(mapFilters);
+    let arrayFilters = this._convertMapFiltersToArray(mapFilters)
+
+    // TODO(apascual): Remove all text in the filter.config because
+    // this code will automatically obtained the text from columnHeader translation
+
+    // Need to update manually the column header based on localization
+    arrayFilters.forEach(filter => {
+      let translatedValue = this._translateService.instant(`columnHeader.${filter.id}`);
+      let valueObtainmentFailed = translatedValue?.includes(`columnHeader`);
+      if (valueObtainmentFailed) { return; }
+      filter.text = translatedValue;
+    });
+    return arrayFilters;
   }
 
   private _convertMapFiltersToArray(mapFilters: any): McsFilterInfo[] {

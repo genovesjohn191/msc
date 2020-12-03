@@ -1,28 +1,30 @@
+import { Subscription } from 'rxjs';
+import { tap } from 'rxjs/operators';
+
 import {
   Injectable,
   Injector
 } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { McsEvent } from '@app/events';
 import {
-  McsDisposable,
+  EntityRequester,
+  McsEntityRequester
+} from '@app/models';
+import {
+  getSafeProperty,
   isNullOrEmpty,
   unsubscribeSafely,
-  getSafeProperty
+  McsDisposable
 } from '@app/utilities';
-import {
-  McsEntityRequester,
-  EntityRequester
-} from '@app/models';
-import { McsEvent } from '@app/events';
 import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+
 import { IMcsEntityStateManager } from './base/mcs-entity-state-manager.interface';
+import { McsBackupAggregationTargetStateManager } from './entities/mcs-backup-aggregation-target.state-manager';
+import { McsMediaStateManager } from './entities/mcs-media.state-manager';
 import { McsOrderStateManager } from './entities/mcs-order.state-manager';
 import { McsServerStateManager } from './entities/mcs-server.state-manager';
-import { McsMediaStateManager } from './entities/mcs-media.state-manager';
 import { McsSystemMessageStateManager } from './entities/mcs-system-message.state-manager';
 import { McsTicketStateManager } from './entities/mcs-ticket.state-manager';
-import { McsBackupAggregationTargetStateManager } from './entities/mcs-backup-aggregation-target.state-manager';
 
 @Injectable()
 export class McsStateManagerClient implements McsDisposable {

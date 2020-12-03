@@ -1,7 +1,8 @@
-import { EventEmitter } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+
 import { McsFilterInfo } from '@app/models';
 
 export interface ColumnFilter {
   filters: McsFilterInfo[];
-  dataChange: EventEmitter<McsFilterInfo[]>;
+  filtersChange: BehaviorSubject<McsFilterInfo[]>;
 }

@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import {
-  McsApiClientFactory,
-  McsApiAzureResourceFactory
+  McsApiAzureResourceFactory,
+  McsApiClientFactory
 } from '@app/api-client';
+import { McsEvent } from '@app/events';
 import { McsAzureResource } from '@app/models';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+
 import { McsRepositoryBase } from '../core/mcs-repository.base';
 import { McsAzureResourceDataContext } from '../data-context/mcs-azure-resource-data.context';
 
@@ -14,7 +16,10 @@ export class McsAzureResourcesRepository extends McsRepositoryBase<McsAzureResou
   constructor(_apiClientFactory: McsApiClientFactory, _eventDispatcher: EventBusDispatcherService) {
     super(
       new McsAzureResourceDataContext(_apiClientFactory.getService(new McsApiAzureResourceFactory())),
-      _eventDispatcher
+      _eventDispatcher,
+      {
+        dataChangeEvent: McsEvent.dataChangeAzureResources
+      }
     );
   }
 }

@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import {
-McsApiClientFactory,
-McsApiAzureServicesFactory
+  McsApiAzureServicesFactory,
+  McsApiClientFactory
 } from '@app/api-client';
+import { McsEvent } from '@app/events';
 import { McsAzureService } from '@app/models';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+
 import { McsRepositoryBase } from '../core/mcs-repository.base';
 import { McsAzureServicesDataContext } from '../data-context/mcs-azure-services-data.context';
 
@@ -14,7 +16,10 @@ export class McsAzureServicesRepository extends McsRepositoryBase<McsAzureServic
   constructor(_apiClientFactory: McsApiClientFactory, _eventDispatcher: EventBusDispatcherService) {
     super(
       new McsAzureServicesDataContext(_apiClientFactory.getService(new McsApiAzureServicesFactory())),
-      _eventDispatcher
+      _eventDispatcher,
+      {
+        dataChangeEvent: McsEvent.dataChangeAzureManagedServices
+      }
     );
   }
 }

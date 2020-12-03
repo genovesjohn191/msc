@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
-import { compareDates } from '@app/utilities';
-import { McsJob } from '@app/models';
-import { McsEvent } from '@app/events';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import {
   McsApiClientFactory,
   McsApiJobsFactory
 } from '@app/api-client';
-import { McsJobsDataContext } from '../data-context/mcs-jobs-data.context';
+import { McsEvent } from '@app/events';
+import { McsJob } from '@app/models';
+import { compareDates } from '@app/utilities';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+
 import { McsRepositoryBase } from '../core/mcs-repository.base';
+import { McsJobsDataContext } from '../data-context/mcs-jobs-data.context';
 
 @Injectable()
 export class McsJobsRepository extends McsRepositoryBase<McsJob> {
@@ -16,7 +17,13 @@ export class McsJobsRepository extends McsRepositoryBase<McsJob> {
   private _dispatcher: EventBusDispatcherService;
 
   constructor(_apiClientFactory: McsApiClientFactory, _eventDispatcher: EventBusDispatcherService) {
-    super(new McsJobsDataContext(_apiClientFactory.getService(new McsApiJobsFactory())));
+    super(
+      new McsJobsDataContext(_apiClientFactory.getService(new McsApiJobsFactory())),
+      _eventDispatcher,
+      {
+        dataChangeEvent: McsEvent.dataChangeJobs
+      }
+    );
 
     this._dispatcher = _eventDispatcher;
     this._registerEvents();

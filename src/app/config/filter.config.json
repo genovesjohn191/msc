@@ -1,49 +1,38 @@
 {
   "serverFilter": {
     "select": {
-      "text": "Select",
       "value": true,
       "exclude": true
     },
     "name": {
-      "text": "Server",
       "value": true,
       "exclude": true
     },
     "type": {
-      "text": "Type",
       "value": true
     },
     "catalog": {
-      "text": "OS Edition",
       "value": true
     },
     "toolsVersion": {
-      "text": "Tools Version",
       "value": true
     },
     "managementIp": {
-      "text": "Management IP",
       "value": true
     },
     "zone": {
-      "text": "Zone",
       "value": true
     },
     "serviceId": {
-      "text": "Service ID",
       "value": true
     },
     "resource": {
-      "text": "Resource",
       "value": true
     },
     "vApp": {
-      "text": "vApp",
       "value": false
     },
     "action": {
-      "text": "Action",
       "value": true,
       "exclude": true
     }

@@ -52,7 +52,7 @@ export class McsMatTableQueryParam {
     if (isNullOrEmpty(this.paginator)) {
       this.paginator = Object.create({});
       this.paginator.pageIndex = CommonDefinition.PAGE_INDEX_DEFAULT;
-      this.paginator.pageSize = CommonDefinition.PAGE_SIZE_MAX;
+      this.paginator.pageSize = CommonDefinition.PAGE_SIZE_MIN;
     }
   }
 }
@@ -149,6 +149,7 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity> {
   }
 
   public registerColumnFilter(columnFilter: ColumnFilter): McsTableDataSource2<TEntity> {
+    if (this._columnFilter === columnFilter) { return this; }
     if (!isNullOrEmpty(this._dataColumnsChange.getValue())) {
       throw new Error(`Unable to determine which column filter to be used.
         Either set it manually or by component`);
@@ -199,9 +200,9 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity> {
 
   private _subscribeToColumnChange(): void {
     if (isNullOrEmpty(this._columnFilter)) { return; }
-
     this._columnSelectorSubject.next();
-    this._columnFilter.dataChange.pipe(
+
+    this._columnFilter.filtersChange.pipe(
       takeUntil(this._columnSelectorSubject),
       tap((state) => {
         let displayedColumns = state

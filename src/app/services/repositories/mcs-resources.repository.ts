@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
-import { McsResource } from '@app/models';
 import {
-  McsApiResourcesFactory,
-  McsApiClientFactory
+  McsApiClientFactory,
+  McsApiResourcesFactory
 } from '@app/api-client';
-import { McsResourcesDataContext } from '../data-context/mcs-resources-data.context';
-import { McsRepositoryBase } from '../core/mcs-repository.base';
+import { McsEvent } from '@app/events';
+import { McsResource } from '@app/models';
 import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+
+import { McsRepositoryBase } from '../core/mcs-repository.base';
+import { McsResourcesDataContext } from '../data-context/mcs-resources-data.context';
 
 @Injectable()
 export class McsResourcesRepository extends McsRepositoryBase<McsResource> {
@@ -14,7 +16,10 @@ export class McsResourcesRepository extends McsRepositoryBase<McsResource> {
   constructor(_apiClientFactory: McsApiClientFactory, _eventDispatcher: EventBusDispatcherService) {
     super(
       new McsResourcesDataContext(_apiClientFactory.getService(new McsApiResourcesFactory())),
-      _eventDispatcher
+      _eventDispatcher,
+      {
+        dataChangeEvent: McsEvent.dataChangeResources
+      }
     );
   }
 }

@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
+import { McsEvent } from '@app/events';
 import {
-  compareStrings,
-  isNullOrEmpty,
-  compareDates
-} from '@app/utilities';
-import {
-  McsJob,
+  DataStatus,
   JobType,
-  DataStatus
+  McsJob
 } from '@app/models';
+import {
+  compareDates,
+  compareStrings,
+  isNullOrEmpty
+} from '@app/utilities';
 import {
   EventBusDispatcherService,
   EventBusState
 } from '@peerlancers/ngx-event-bus';
-import { McsEvent } from '@app/events';
 import { LogClass } from '@peerlancers/ngx-logger';
 
 import { McsAuthenticationIdentity } from '../authentication/mcs-authentication.identity';
@@ -44,6 +44,7 @@ export class McsNotificationEventsService {
       updatedNotifications.sort((first: McsJob, second: McsJob) => {
         return compareDates(first.startedOn, second.startedOn);
       });
+
       this._notifyJobEventListeners(updatedNotifications);
     });
   }

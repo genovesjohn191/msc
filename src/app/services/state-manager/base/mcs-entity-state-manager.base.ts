@@ -1,6 +1,7 @@
-import { Injector } from '@angular/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
+
+import { Injector } from '@angular/core';
 import {
   McsEntityBase,
   McsEntityRequester
@@ -9,8 +10,9 @@ import {
   getSafeProperty,
   isNullOrEmpty
 } from '@app/utilities';
-import { IMcsEntityStateManager } from '../base/mcs-entity-state-manager.interface';
+
 import { McsRepository } from '../../core/mcs-repository.interface';
+import { IMcsEntityStateManager } from '../base/mcs-entity-state-manager.interface';
 
 export abstract class McsEntityStateManagerBase<T extends McsEntityBase> implements IMcsEntityStateManager<T> {
   protected readonly entityRepository: McsRepository<T>;
