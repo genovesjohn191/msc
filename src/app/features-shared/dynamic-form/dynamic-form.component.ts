@@ -29,7 +29,15 @@ import { DynamicFormValidationService } from './dynamic-form-validation.service'
 })
 export class DynamicFormComponent implements OnInit, AfterViewInit {
   @Input()
-  public config: DynamicFormFieldConfigBase[];
+  public set config(value: DynamicFormFieldConfigBase[]) {
+    this._config = value.sort((value1, value2) => value1.order - value2.order);;
+  }
+
+  public get config(): DynamicFormFieldConfigBase[] {
+    return this._config;
+  }
+
+  private _config: DynamicFormFieldConfigBase[];
 
   @Input()
   public hideMoreFieldsToggle: boolean = false;
@@ -83,10 +91,12 @@ export class DynamicFormComponent implements OnInit, AfterViewInit {
     // Trigger data change event
     this.controls.forEach(control => {
 
-      if (params.dependents.indexOf(control.config.key) > -1) {
+      let fieldIsDependent = params.dependents.indexOf(control.config.key) > -1;
+      if (fieldIsDependent) {
         control.onFormDataChange(params);
         this._resetFieldValidators(control);
       }
+
     });
     this.form.updateValueAndValidity();
     this._changeDetectorRef.markForCheck();
@@ -137,7 +147,7 @@ export class DynamicFormComponent implements OnInit, AfterViewInit {
     this._markThisAsTouched(this.form);
   }
 
-  private setFieldVisiblity(visible: boolean): void {
+  public setFieldVisiblity(visible: boolean): void {
     this.controls.forEach(control => {
 
       if (!isNullOrEmpty(control.config.settings)) {

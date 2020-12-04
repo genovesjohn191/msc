@@ -6,7 +6,7 @@ import { LaunchPadForm } from './forms';
 
 export interface WorkflowConfig {
   id: WorkflowType;
-  productType: ProductType;
+  crispProductType?: ProductType;
   title: string;
   form: LaunchPadForm;
   required?: boolean;

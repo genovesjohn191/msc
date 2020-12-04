@@ -4,7 +4,7 @@ import {
   forwardRef,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { CommonDefinition, isNullOrEmpty } from '@app/utilities';
+import { isNullOrEmpty } from '@app/utilities';
 import { DynamicFormFieldDataChangeEventParam } from '../../dynamic-form-field-config.interface';
 import { DynamicInputTextComponent } from '../input-text/input-text.component';
 import { DynamicInputIpField } from './input-ip';
