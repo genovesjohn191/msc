@@ -2,7 +2,8 @@ import { DynamicFormFieldConfigBase } from '../../dynamic-form-field-config.base
 import {
   DynamicFormFieldOnChangeEvent,
   DynamicFormFieldType,
-  DynamicFormFieldTemplate
+  DynamicFormFieldTemplate,
+  DynamicFormControlSettings
 } from '../../dynamic-form-field-config.interface';
 
 export class DynamicInputTextField extends DynamicFormFieldConfigBase {
@@ -23,6 +24,7 @@ export class DynamicInputTextField extends DynamicFormFieldConfigBase {
     eventName?: DynamicFormFieldOnChangeEvent;
     dependents?: string[];
     validators?: { required?: boolean; minlength?: number; maxlength?: number; };
+    settings?: DynamicFormControlSettings;
   }) {
     super(options);
   }

@@ -7,7 +7,7 @@ import {
 
 import { CoreValidators } from '@app/core';
 import { isNullOrEmpty } from '@app/utilities';
-import { DynamicFormFieldConfig } from './dynamic-form-field-config.interface';
+import { DynamicFormFieldConfig, DynamicFormFieldType } from './dynamic-form-field-config.interface';
 
 @Injectable()
 export class DynamicFormValidationService {
@@ -81,7 +81,7 @@ export class DynamicFormValidationService {
   }
 
   private _initializeCustomValidatorMap(): void {
-    this._customValidatorMap = new Map<string, ValidatorFn[]>();
+    this._customValidatorMap = new Map<DynamicFormFieldType, ValidatorFn[]>();
 
     this._customValidatorMap.set('textbox-domain', [CoreValidators.domain]);
     this._customValidatorMap.set('textbox-ip', [CoreValidators.ipAddress]);

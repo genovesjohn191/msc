@@ -1,5 +1,5 @@
 import { JsonProperty } from '@app/utilities';
-import { McsDateSerialization } from '..';
+import { McsDateSerialization } from '../serialization/mcs-date-serialization';
 
 export class McsTaskLog {
   @JsonProperty()

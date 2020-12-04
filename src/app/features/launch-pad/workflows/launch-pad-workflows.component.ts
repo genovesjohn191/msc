@@ -17,7 +17,20 @@ export class LaunchPadWorkflowsComponent  {
   }
 
   public get savedState(): WorkflowGroupSaveState[] {
-    return this._storageService.getItem('workflows') ?? [];
+    let saveStateId = 'workflows';
+    let currentStates: WorkflowGroupSaveState[] = this._storageService.getItem(saveStateId) ?? [];
+
+    // Remove invalid states
+    let validStates =  currentStates.filter((state) =>
+      !isNullOrEmpty(this.getWorkflowGroupId(state.workflowGroupId))
+      && !isNullOrEmpty(state.companyId)
+      && state.companyId !== '0'
+      && !isNullOrEmpty(state.productId)
+      && !isNullOrEmpty(state.serviceId));
+
+    this._storageService.setItem(saveStateId, validStates);
+
+    return validStates;
   }
 
   public get workflowLaunchLink(): string {

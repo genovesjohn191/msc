@@ -12,7 +12,7 @@ import { WorkflowConfig } from '../workflow.interface';
 export class ProvisionVirtualDataCentreVmInstanceWorkflowGroup implements WorkflowGroup {
   public parent: WorkflowConfig = {
     id: WorkflowType.CreateManagedVm,
-    productType: ProductType.VirtualManagedServer,
+    crispProductType: ProductType.VirtualDataCentreVmInstance,
     title: 'Provision Virtual Data Centre VM Instance',
     form: provisionVirtualDataCentreVmInstanceForm
   };
@@ -20,7 +20,7 @@ export class ProvisionVirtualDataCentreVmInstanceWorkflowGroup implements Workfl
   public children: WorkflowConfig[] = [
     {
       id: WorkflowType.AddHids,
-      productType: ProductType.ServerHostIntrusionPreventionSystem,
+      crispProductType: ProductType.ServerHostIntrusionPreventionSystem,
       title: 'Add HIDS',
       form: addOnHidsForm
     }

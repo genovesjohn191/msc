@@ -126,7 +126,9 @@ export abstract class DynamicSelectFieldComponentBase<T>
   private _tryAutoSelectSingleOption(): boolean {
     let isRequiredField = this.config.validators && this.config.validators.required;
     let hasSingleFlatOption = this.config.options[0].type === 'flat' && this.config.options.length === 1;
-    let hasSingleGroupOption = this.config.options[0].type === 'group' && this.config.options[0].options.length === 1;
+    let hasSingleGroupOption = this.config.options[0].type === 'group'
+      && this.config.options.length === 1
+      && this.config.options[0].options.length === 1;
     let hasSingleOption = hasSingleFlatOption || hasSingleGroupOption;
 
     let validForAutoSelect = isRequiredField && hasSingleOption && isNullOrEmpty(this.config.initialValue);

@@ -16,7 +16,7 @@
     [disabled]="disabled"
     [(value)]="config.value"
     (selectionChange)="valueChange($event)">
-    <mat-option *ngIf="!required">-- None --</mat-option>
+    <mat-option *ngIf="!required && !hasError">-- None --</mat-option>
     <mat-optgroup *ngFor="let group of config.options" [label]="group.name" [disabled]="group.disabled">
       <mat-option *ngFor="let opt of group.options" [value]="opt.key">
         {{opt.value}}

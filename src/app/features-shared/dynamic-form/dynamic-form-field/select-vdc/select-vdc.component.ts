@@ -126,11 +126,15 @@ export class DynamicSelectVdcComponent extends DynamicSelectFieldComponentBase<M
   }
 
   public valueChange(val: any): void {
-    this.dataChange.emit({
-      value: this.collection.find((item) => item.name === this.config.value),
-      eventName: this.config.eventName,
-      dependents: this.config.dependents
-    });
+    let validEvent = !isNullOrEmpty(this.config.eventName) && !isNullOrEmpty(this.config.dependents);
+    if (validEvent) {
+      this.dataChange.emit({
+        value: this.collection.find((item) => item.name === this.config.value),
+        eventName: this.config.eventName,
+        dependents: this.config.dependents
+      });
+    }
+
     this.propagateChange(this.config.value);
   }
 }
