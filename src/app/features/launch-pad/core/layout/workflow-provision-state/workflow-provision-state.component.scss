@@ -1,6 +1,24 @@
 
 @import "../../../../../../styles/shared/base";
 
-.parent {
-  margin-top: $space-medium;
+.mat-expansion-panel {
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  border: 1px solid $color-grey-04;
+  margin-top: 0;
+  margin-bottom: 0;
+
+  &.mat-expanded {
+    margin-bottom: 0;
+  }
+
+  &.parent {
+    margin-top: $space-medium;
+  }
+
+  &.child {
+    top: -1px;
+    margin-top: 0;
+    border-top: 1px dashed $color-grey-04;
+  }
 }

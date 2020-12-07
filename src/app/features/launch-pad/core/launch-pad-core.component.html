@@ -30,6 +30,7 @@
           <mat-expansion-panel *ngFor="let payload of context?.workflows"
             [class.new]="isNew(payload.referenceId)"
             [class.parent]="payload.serviceId"
+            [class.child]="payload.parentReferenceId"
             [expanded]="isNew(payload.referenceId)">
             <mat-expansion-panel-header style="position: relative;">
               <mat-panel-title>

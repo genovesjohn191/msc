@@ -4,7 +4,11 @@
 </div>
 
 <mat-accordion #accordion="matAccordion" multi displayMode="flat" class="workflow-provision-panel">
-  <mat-expansion-panel *ngFor="let workflow of workflows" [class.parent]="workflow.serviceId" [expanded]="true">
+  <mat-expansion-panel
+    *ngFor="let workflow of workflows"
+    [class.parent]="workflow.serviceId"
+    [class.child]="workflow.parentReferenceId"
+    [expanded]="true">
     <mat-expansion-panel-header style="position: relative;">
       <mat-panel-title>
         <h3>{{ workflow.title }}</h3>

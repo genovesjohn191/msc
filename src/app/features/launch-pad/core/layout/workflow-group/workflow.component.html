@@ -1,4 +1,4 @@
-<mat-expansion-panel #panel [expanded]="required || openPanelByDefault" (opened)="panelOpened()" (closed)="panelClosed()" hideToggle="true">
+<mat-expansion-panel #panel [expanded]="required || openPanelByDefault" (opened)="panelOpened()" (closed)="panelClosed()" hideToggle="true" [class.child]="parentReferenceId">
   <mat-expansion-panel-header style="position: relative;">
     <mat-panel-title>
       <h1>{{ title }}</h1>
