@@ -4,7 +4,7 @@ $contextual-help-page-information-border-color: $color-grey-04;
 .contextual-help-page-wrapper {
   @include display-flex(column);
   @include set-items-interval($space-medium);
-  max-width: 70%;
+  max-width: 65%;
   padding-right: $contextual-help-page-information-padding;
   border-right: 1px solid $contextual-help-page-information-border-color;
 
