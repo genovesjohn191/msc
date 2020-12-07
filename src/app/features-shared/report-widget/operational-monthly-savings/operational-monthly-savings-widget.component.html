@@ -34,7 +34,8 @@
 
         <mat-accordion #confirmPayloadViewer="matAccordion" multi displayMode="flat">
           <mat-expansion-panel *ngFor="let operationalSaving of operationalSavings.items">
-            <mat-expansion-panel-header style="position: relative;">
+            <mat-expansion-panel-header *ngIf="operationalSaving.savings"
+              style="position: relative;">
               <mat-panel-title>
                 <b>{{ operationalSaving.description }}</b>
               </mat-panel-title>
