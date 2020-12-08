@@ -96,7 +96,11 @@
     <ng-template matStepLabel>Provision</ng-template>
 
     <div class="workflow-group-wrapper">
-      <mcs-launch-pad-workflow-provision-state [workflows]="context.workflows" [state]="workflowsState"></mcs-launch-pad-workflow-provision-state>
+      <mcs-launch-pad-workflow-provision-state [workflows]="context.workflows" [state]="workflowsState" (completed)="provisioningCompleted($event)"></mcs-launch-pad-workflow-provision-state>
+      <br />
+      <button *ngIf="!processing && hasError" mat-stroked-button (click)="goBackToEdit()" >
+        Go Back to Editing
+      </button>
     </div>
 
   </mat-step>

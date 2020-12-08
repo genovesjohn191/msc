@@ -2,15 +2,33 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  EventEmitter,
   Input,
-  OnDestroy
+  OnDestroy,
+  Output
 } from '@angular/core';
 import { McsEvent } from '@app/events';
-import { McsJob, McsTask } from '@app/models';
-import { addOrUpdateArrayRecord, CommonDefinition, isNullOrEmpty, unsubscribeSafely } from '@app/utilities';
+import {
+  JobStatus,
+  McsJob,
+  McsTask
+} from '@app/models';
+import {
+  addOrUpdateArrayRecord,
+  CommonDefinition,
+  isNullOrEmpty,
+  unsubscribeSafely
+} from '@app/utilities';
 import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import { Subscription } from 'rxjs';
 import { Workflow } from '../../workflows/workflow.interface';
+
+export enum WorkflowProvisionCompletionState
+{
+  Processing,
+  Successful,
+  WithError
+}
 
 @Component({
   selector: 'mcs-launch-pad-workflow-provision-state',
@@ -35,6 +53,9 @@ export class LaunchPadWorkflowProvisionStateComponent implements OnDestroy {
     return this._jobs;
   }
 
+  @Output()
+  public completed: EventEmitter<WorkflowProvisionCompletionState>;
+
   public get infoIcon(): string {
     return CommonDefinition.ASSETS_SVG_INFO;
   }
@@ -43,10 +64,32 @@ export class LaunchPadWorkflowProvisionStateComponent implements OnDestroy {
     return CommonDefinition.ASSETS_SVG_ERROR;
   }
 
+  public get completionState(): WorkflowProvisionCompletionState {
+    let hasError: boolean = false;
+    let hasOngoing: boolean = false;
+
+    this._jobs.forEach((job) => {
+      job.tasks.forEach((task) => {
+        if (task.status > JobStatus.Completed) {
+          hasError = true;
+        }
+        if (task.status < JobStatus.Completed) {
+          hasOngoing = true;
+        }
+      });
+    });
+
+    return hasOngoing ? WorkflowProvisionCompletionState.Processing :
+      hasError ? WorkflowProvisionCompletionState.WithError :
+      WorkflowProvisionCompletionState.Successful;
+  }
+
   private _currentUserJobHandler: Subscription;
   private _jobs: McsJob[];
 
-  public constructor(private _changeDetector: ChangeDetectorRef, private _eventDispatcher: EventBusDispatcherService) { }
+  public constructor(private _changeDetector: ChangeDetectorRef, private _eventDispatcher: EventBusDispatcherService) {
+    this.completed = new EventEmitter();
+  }
 
   public ngOnDestroy() {
     unsubscribeSafely(this._currentUserJobHandler);
@@ -80,6 +123,11 @@ export class LaunchPadWorkflowProvisionStateComponent implements OnDestroy {
       (_existingJob: McsJob) => {
         return _existingJob.id === job.id;
       });
+
+    let state = this.completionState;
+    if (state !== WorkflowProvisionCompletionState.Processing) {
+      this.completed.emit(state);
+    }
 
     this._changeDetector.markForCheck();
   }
