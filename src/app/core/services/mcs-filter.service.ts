@@ -75,6 +75,7 @@ export class McsFilterService {
 
     let mapFilters = value && convertJsonToMapObject(value);
     let arrayFilters = this._convertMapFiltersToArray(mapFilters)
+    if (isNullOrEmpty(arrayFilters)) { return []; }
 
     // TODO(apascual): Remove all text in the filter.config because
     // this code will automatically obtained the text from columnHeader translation
