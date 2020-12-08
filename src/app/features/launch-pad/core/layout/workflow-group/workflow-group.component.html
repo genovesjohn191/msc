@@ -1,4 +1,4 @@
-<div style="width: 750px; padding-top: 10px;">
+<div style="padding-top: 10px;" class="workflow-group-wrapper" [class.contextual]="hasContextualHelp">
   <mcs-launch-pad-object-selector [context]="context" (targetObjectChanged)="switchObject($event)"></mcs-launch-pad-object-selector>
 
   <mat-accordion multi>
