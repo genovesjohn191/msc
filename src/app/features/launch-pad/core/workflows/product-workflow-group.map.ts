@@ -6,6 +6,7 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map([
   [ ProductType.VirtualDataCentreVmInstance,
     [
       WorkflowGroupId.ProvisionVirtualDataCentreVmInstance,
-      WorkflowGroupId.AddToManagementToolsCvm
+      WorkflowGroupId.AddToManagementToolsCvm,
+      WorkflowGroupId.RemoveFromManagementToolsCvm
     ]]
 ]);

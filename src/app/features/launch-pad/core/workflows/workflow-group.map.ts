@@ -3,6 +3,7 @@ import { Type } from '@angular/core';
 import { WorkflowGroupId } from './workflow-groups/workflow-group-type.enum';
 import {
   AddToManagementToolsCvmWorkflowGroup,
+  RemoveFromManagementToolsCvmWorkflowGroup,
   ProvisionVirtualDataCentreVmInstanceWorkflowGroup
 } from './workflow-groups';
 import { WorkflowGroup } from './workflow-group.interface';
@@ -10,5 +11,6 @@ import { WorkflowGroup } from './workflow-group.interface';
 // Workflow: Assign IDs to workflow groups
 export const workflowGroupMap: Map<WorkflowGroupId, Type<WorkflowGroup>> = new Map([
   [ WorkflowGroupId.ProvisionVirtualDataCentreVmInstance, ProvisionVirtualDataCentreVmInstanceWorkflowGroup ],
-  [ WorkflowGroupId.AddToManagementToolsCvm, AddToManagementToolsCvmWorkflowGroup ]
+  [ WorkflowGroupId.AddToManagementToolsCvm, AddToManagementToolsCvmWorkflowGroup ],
+  [ WorkflowGroupId.RemoveFromManagementToolsCvm, RemoveFromManagementToolsCvmWorkflowGroup ]
 ]);

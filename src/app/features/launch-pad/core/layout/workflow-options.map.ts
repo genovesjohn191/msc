@@ -5,5 +5,6 @@ import { WorkflowGroupId } from '../workflows/workflow-groups/workflow-group-typ
 export const workflowOptions: Map<WorkflowGroupId, string> = new Map([
 
   [WorkflowGroupId.ProvisionVirtualDataCentreVmInstance, 'Create a new virtual data centre VM instance.'],
-  [WorkflowGroupId.AddToManagementToolsCvm, 'Add To Management Tools.']
+  [WorkflowGroupId.AddToManagementToolsCvm, 'Add To Management Tools.'],
+  [WorkflowGroupId.RemoveFromManagementToolsCvm, 'Remove from Management Tools.']
 ]);
