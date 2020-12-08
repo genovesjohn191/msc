@@ -55,6 +55,7 @@ import { LaunchPadWorkflowComponent } from './workflow.component';
 @Component({
   selector: 'mcs-launch-pad-workflow-group',
   templateUrl: './workflow-group.component.html',
+  styleUrls: ['./workflow-group.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
@@ -99,6 +100,30 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
     });
 
     return payloadItems;
+  }
+
+  public get hasContextualHelp(): boolean {
+    let hasContextualHelp = false;
+    let workflowGroup = this._getWorkflowGroupById(this.context.workflowGroupId);
+    if (isNullOrEmpty(workflowGroup)) { return hasContextualHelp; }
+
+    workflowGroup.parent.form.config.forEach((field) => {
+      if (!isNullOrEmpty(field.hint)) {
+        hasContextualHelp = true;
+      }
+    });
+
+    if (hasContextualHelp) { return hasContextualHelp };
+
+    workflowGroup.children.forEach((child) => {
+      child.form.config.forEach((field) => {
+        if (!isNullOrEmpty(field.hint)) {
+          hasContextualHelp = true;
+        }
+      });
+    });
+
+    return hasContextualHelp;
   }
 
   public workflowComponentRef: ComponentRef<LaunchPadWorkflowComponent>[] = [];

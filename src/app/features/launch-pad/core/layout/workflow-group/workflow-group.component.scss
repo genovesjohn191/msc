@@ -1,0 +1,9 @@
+@import "../../../../../../styles/shared/base";
+
+.workflow-group-wrapper {
+  width: 500px;
+
+  &.contextual {
+    width: 750px;
+  }
+}
