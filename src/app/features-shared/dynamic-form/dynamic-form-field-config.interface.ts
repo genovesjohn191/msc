@@ -50,6 +50,7 @@ export interface DynamicFormFieldDataChangeEventParam {
 
 export type DynamicFormFieldType =
   'textbox-domain'
+  | 'textbox-fqdn-domain'
   | 'textbox-hidden'
   | 'textbox-host-name'
   | 'textbox-input'

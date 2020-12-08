@@ -4,6 +4,6 @@ import { WorkflowGroupId } from '../workflows/workflow-groups/workflow-group-typ
 // Workflow: Add workflow group to selector options
 export const workflowOptions: Map<WorkflowGroupId, string> = new Map([
 
-  [WorkflowGroupId.ProvisionVirtualDataCentreVmInstance, 'Create a new virtual data centre VM instance.']
-
+  [WorkflowGroupId.ProvisionVirtualDataCentreVmInstance, 'Create a new virtual data centre VM instance.'],
+  [WorkflowGroupId.AddToManagementToolsCvm, 'Add To Management Tools.']
 ]);

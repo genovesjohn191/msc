@@ -36,6 +36,9 @@ export class DynamicFormValidationService {
     if (control.hasError('domain')) {
       return 'Incorrect domain format';
     }
+    if (control.hasError('fqdnDomain')) {
+      return 'Incorrect FQDN domain format';
+    }
     if (control.hasError('hostName')) {
       return 'Incorrect host name format';
     }
@@ -84,6 +87,7 @@ export class DynamicFormValidationService {
     this._customValidatorMap = new Map<DynamicFormFieldType, ValidatorFn[]>();
 
     this._customValidatorMap.set('textbox-domain', [CoreValidators.domain]);
+    this._customValidatorMap.set('textbox-fqdn-domain', [CoreValidators.fqdnDomain]);
     this._customValidatorMap.set('textbox-ip', [CoreValidators.ipAddress]);
   }
 }

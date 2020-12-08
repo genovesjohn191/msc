@@ -111,6 +111,17 @@ export class CoreValidators {
   }
 
   /**
+   * Validator that performs fqdn domain validation
+   * e.g. of valid values
+   *  ec2-35-160-210-253.us-west-2-.compute.amazonaws.com
+   *  1.2.3.4.com
+   *  xn--d1aacihrobi6i.xn--p1ai
+   */
+  public static fqdnDomain(control: AbstractControl): ValidationErrors | null {
+    return CommonDefinition.REGEX_FQDN_DOMAIN_PATTERN.test(control.value) ? null : { fqdnDomain: true };
+  }
+
+  /**
    * Validator that performs email validation
    *
    * `@Note` This will produce the following value when false

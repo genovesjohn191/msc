@@ -115,7 +115,7 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
 
     if (hasContextualHelp) { return hasContextualHelp };
 
-    workflowGroup.children.forEach((child) => {
+    workflowGroup.children?.forEach((child) => {
       child.form.config.forEach((field) => {
         if (!isNullOrEmpty(field.hint)) {
           hasContextualHelp = true;
