@@ -5,6 +5,7 @@ import { WorkflowGroupId } from './workflow-groups/workflow-group-type.enum';
 export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map([
   [ ProductType.VirtualDataCentreVmInstance,
     [
-      WorkflowGroupId.ProvisionVirtualDataCentreVmInstance
+      WorkflowGroupId.ProvisionVirtualDataCentreVmInstance,
+      WorkflowGroupId.AddToManagementToolsCvm
     ]]
 ]);
