@@ -27,7 +27,8 @@ import { LaunchPadLoadStateDialogComponent } from './layout/workflow-load-state-
 import { WorkflowGroupSaveState } from './workflows/workflow-group.interface';
 import { Workflow } from './workflows/workflow.interface';
 import { McsApiService } from '@app/services';
-import { McsJob, McsWorkflowCreate, ProductType } from '@app/models';
+import { BreakpointSerialization, McsJob, McsWorkflowCreate, ProductType } from '@app/models';
+import { WorkflowProvisionCompletionState } from './layout/workflow-provision-state/workflow-provision-state.component';
 
 enum WizardStep  {
   EditWorkflowGroup = 0,
@@ -190,11 +191,6 @@ export class LaunchPadComponent implements OnDestroy, IMcsNavigateAwayGuard {
 
       // Go to provisioning step
       this._gotoStep(WizardStep.ProvisionWorkflows);
-
-      // Remove saved state
-      // this.savedState = null;
-
-      this._changeDetector.markForCheck();
     });
   }
 
@@ -214,6 +210,29 @@ export class LaunchPadComponent implements OnDestroy, IMcsNavigateAwayGuard {
 
   public hasProperties(workflow: Workflow): boolean {
     return Object.keys(workflow.properties).length > 0;
+  }
+
+  public provisioningCompleted(state: WorkflowProvisionCompletionState): void {
+    this.processing = false;
+
+    switch (state) {
+      case WorkflowProvisionCompletionState.Successful: {
+        this.savedState = null;
+        this.hasError = false;
+        break;
+      }
+      case WorkflowProvisionCompletionState.WithError: {
+        this.hasError = true;
+        break;
+      }
+    }
+
+    this._changeDetector.markForCheck();
+  }
+
+  public goBackToEdit(): void {
+    // Go to provisioning step
+    this._gotoStep(WizardStep.ConfirmDetails);
   }
 
   private _initializeWorkflowProcess(workflows: Workflow[] = []): void {
@@ -236,7 +255,14 @@ export class LaunchPadComponent implements OnDestroy, IMcsNavigateAwayGuard {
       }
 
       case WizardStep.ConfirmDetails: {
-        if (this.validForProvisioning) {
+        if (this.isProvisioning) {
+          this.processing = false;
+          this.hasError = false;
+          this.isProvisioning = false;
+          this.stepper.reset();
+          this.stepper.selectedIndex = 1;
+        }
+        else if (this.validForProvisioning) {
           this.isEditing = false;
           this.stepper.next();
         }

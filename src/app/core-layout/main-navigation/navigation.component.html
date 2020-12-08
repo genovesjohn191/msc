@@ -14,7 +14,7 @@
       </li>
       <!-- LAUNCH Pad -->
       <ng-container *ngIf="!isImpersonating">
-        <li *mcsAccessControl="[]; feature: 'EnableLaunchPad'" hidden-small>
+        <li *mcsAccessControl="['RawDataView']; feature: ['EnableLaunchPad']" hidden-small>
           <a (click)="toggleThis('showLaunchPadMenu')"
             [class.active]="selectedCategory === routerCategoryEnum.LaunchPad"
             mcsId>
