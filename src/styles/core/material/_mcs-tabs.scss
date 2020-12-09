@@ -1,0 +1,13 @@
+
+mat-tab-header {
+  $tab-font: $base-font-bold;
+  $tab-font-size: 17;
+
+  .mat-tab-label {
+    color: $color-black;
+    @include font-size($tab-font-size);
+    font-family: $tab-font;
+    height: 100%;
+    padding: 10px 0;
+  }
+}
