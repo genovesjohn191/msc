@@ -2,7 +2,7 @@
 @import '~@angular/material/theming';
 @include mat-core();
 
-// custom pallete 
+// custom pallete
 $mcs-black: (
     50: #000000,
     100: #0A0A0A,
@@ -26,7 +26,7 @@ $normal-value: 'normal';
 $font-feature-setting: 'liga';
 
 @include angular-material-theme($mcs-theme);
-  
+
 .material-icons {
   font-family: 'Material Icons';
   font-weight: $normal-value;
@@ -47,3 +47,11 @@ $font-feature-setting: 'liga';
 .mcs-overlay-theme {
   z-index: 1250;
 }
+
+$custom-typography: mat-typography-config(
+  $font-family: $font-default,
+  $headline: mat-typography-level($font-size-large, $line-height-large, 700),
+  $body-1: mat-typography-level($font-size-default, $line-height-default, 500)
+);
+
+@include angular-material-typography($custom-typography);
