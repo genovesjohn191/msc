@@ -35,6 +35,7 @@ import { McsSessionHandlerService } from './services/mcs-session-handler.service
 import { McsStorageService } from './services/mcs-storage.service';
 import { McsSystemMessageService } from './services/mcs-system-message.service';
 import { McsViewportService } from './services/mcs-viewport.service';
+import { McsReportingService } from './services/mcs-reporting.service';
 
 /**
  * Array coverage for the core modules
@@ -69,5 +70,6 @@ export const coreProviders: any[] = [
   McsComponentHandlerService,
   McsDateTimeService,
   McsNavigationService,
-  McsSystemMessageService
+  McsSystemMessageService,
+  McsReportingService
 ];
