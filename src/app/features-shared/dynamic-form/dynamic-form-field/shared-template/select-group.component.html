@@ -6,7 +6,8 @@
   matBadgeColor="warn"
   matBadgeSize="small"
   [matTooltip]="hasError ? 'Failed to load options' : ''"
-  matTooltipPosition="above">
+  matTooltipPosition="above"
+  [hintLabel]="config.hint">
   <mat-label [attr.for]="id" >{{ isLoading ? 'Loading...' : label }}</mat-label>
 
   <mat-select

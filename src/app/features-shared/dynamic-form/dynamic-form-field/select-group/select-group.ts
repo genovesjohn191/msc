@@ -18,6 +18,7 @@ export class DynamicSelectGroupField extends DynamicFormFieldConfigBase {
     options: GroupedOption[];
     value?: string;
     hint?: string;
+    contextualHelp?: string;
     order?: number;
     eventName?: DynamicFormFieldOnChangeEvent;
     dependents?: string[];

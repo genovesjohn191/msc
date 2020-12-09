@@ -16,6 +16,7 @@ export class DynamicInputNumberField extends DynamicFormFieldConfigBase {
     placeholder: string;
     value?: number;
     hint?: string;
+    contextualHelp?: string;
     order?: number;
     onChangeEvent?: DynamicFormFieldOnChangeEvent;
     dependents?: string[];

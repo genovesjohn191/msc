@@ -20,6 +20,7 @@ export class DynamicInputTextField extends DynamicFormFieldConfigBase {
     placeholder: string;
     value?: string;
     hint?: string;
+    contextualHelp?: string;
     order?: number;
     eventName?: DynamicFormFieldOnChangeEvent;
     dependents?: string[];

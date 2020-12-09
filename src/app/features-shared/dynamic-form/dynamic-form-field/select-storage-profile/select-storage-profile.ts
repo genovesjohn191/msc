@@ -16,6 +16,7 @@ export class DynamicSelectStorageProfileField extends DynamicFormFieldConfigBase
     label: string;
     value?: string;
     hint?: string;
+    contextualHelp?: string;
     order?: number;
     eventName?: DynamicFormFieldOnChangeEvent;
     dependents?: string[];
