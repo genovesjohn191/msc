@@ -146,15 +146,14 @@ export class McsReportingService {
     }));
   }
 
-  // TO DO: Create unit test
-  private _convertServiceChangeInfoToChartItem(items: McsReportServiceChangeInfo[]): ChartItem[] {
+  public _convertServiceChangeInfoToChartItem(items: McsReportServiceChangeInfo[]): ChartItem[] {
     let data: ChartItem[] = [];
     items.forEach(item => {
       let invalidData = isNullOrEmpty(item.serviceName) || isNullOrEmpty(item.serviceCountChange);
       if (invalidData) { return; }
       data.push({
         name: 'Change',
-        xValue: `${item.serviceName}|${item.serviceCostChange}`,
+        xValue: item.serviceName,
         yValue: item.serviceCountChange
       });
     });
@@ -162,7 +161,6 @@ export class McsReportingService {
     return data;
   }
 
-  // TO DO: Create unit test
   public _convertMonitoringAndAlertingToChartItem(items: McsReportSeverityAlerts[]): ChartItem[] {
     let data: ChartItem[] = [];
     items.forEach(item => {
@@ -178,8 +176,7 @@ export class McsReportingService {
     return data;
   }
 
-  // TO DO: Create unit test
-  private _convertIntegerDataToChartItem(items: McsReportIntegerData[]): ChartItem[] {
+  public _convertIntegerDataToChartItem(items: McsReportIntegerData[]): ChartItem[] {
     let data: ChartItem[] = [];
     items.forEach(item => {
       let invalidData = isNullOrEmpty(item.name) || isNullOrEmpty(item.value);
@@ -194,13 +191,10 @@ export class McsReportingService {
     return data;
   }
 
-  // TO DO: Create unit test
-  private _convertGenericItemToChartItem(items: McsReportGenericItem[]): ChartItem[] {
+  public _convertGenericItemToChartItem(items: McsReportGenericItem[]): ChartItem[] {
     let data: ChartItem[] = [];
     items = this.fillMissingRecordsWithDefault(items);
     items.forEach(item => {
-      let invalidData = isNullOrEmpty(item.name) || isNullOrEmpty(item.period);
-      if (invalidData) { return; }
       data.push({
         name: item.name,
         xValue: item.period,
@@ -211,14 +205,10 @@ export class McsReportingService {
     return data;
   }
 
-  // TO DO: Create unit test
-  private _convertGenericItemToChartItemNoMonth(items: McsReportGenericItem[]): ChartItem[] {
+  public _convertGenericItemToChartItemNoMonth(items: McsReportGenericItem[]): ChartItem[] {
     let data: ChartItem[] = [];
     items = this.fillMissingRecordsWithDefault(items);
     items.forEach(item => {
-      let invalidData = isNullOrEmpty(item.name) || isNullOrEmpty(item.period);
-      if (invalidData) { return; }
-
       let period = item.period.replace(/[a-zA-z ]/g, '');
       data.push({
         name: item.name,
@@ -230,7 +220,6 @@ export class McsReportingService {
     return data;
   }
 
-  // TO DO: Create unit test
   public fillMissingRecordsWithDefault(items: McsReportGenericItem[], defaultValue: number = 0): McsReportGenericItem[] {
     let newPeriods: string[] = [];
     let newNames: string[] = [];
@@ -238,6 +227,9 @@ export class McsReportingService {
 
     // Break periods and names to separate array and ensure uniqueness
     items.forEach((data) => {
+      let invalidData = isNullOrEmpty(data.name) || isNullOrEmpty(data.period);
+      if (invalidData) { return; }
+
       let newPeriodList = newPeriods.findIndex((period) => period === data.period) < 0;
       if (newPeriodList) { newPeriods.push(data.period) };
 

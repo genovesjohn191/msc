@@ -6,7 +6,4 @@ export class McsReportServiceChangeInfo {
 
   @JsonProperty()
   public serviceCountChange: number = undefined;
-
-  @JsonProperty()
-  public serviceCostChange: number = undefined;
 }
