@@ -9,7 +9,6 @@ import { DynamicInputTextField } from '../input-text/input-text';
 export class DynamicInputHostNameField extends DynamicInputTextField {
   // Overrides
   public type: DynamicFormFieldType = 'textbox-host-name';
-  // public pattern: RegExp = CommonDefinition.REGEX_SERVER_NAME_PATTERN;
 
   public constructor(options: {
     key: string;
@@ -17,6 +16,7 @@ export class DynamicInputHostNameField extends DynamicInputTextField {
     placeholder: string;
     value?: string;
     hint?: string;
+    contextualHelp?: string;
     order?: number;
     eventName?: DynamicFormFieldOnChangeEvent;
     dependents?: string[];

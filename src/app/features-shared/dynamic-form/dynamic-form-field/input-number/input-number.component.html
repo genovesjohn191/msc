@@ -1,7 +1,8 @@
 <mat-form-field
   *ngIf="visible"
   appearance="outline"
-  style="max-width: 200px;">
+  style="max-width: 200px;"
+  [hintLabel]="config.hint">
   <mat-label [attr.for]="id">{{ label }}</mat-label>
 
   <input #control matInput type="number" class="number"

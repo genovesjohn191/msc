@@ -57,7 +57,7 @@ export class DynamicFormComponent implements OnInit, AfterViewInit {
     let hasContextualHelp = false;
 
     this.config.forEach((field) => {
-      if (!isNullOrEmpty(field.hint)) {
+      if (!isNullOrEmpty(field.contextualHelp)) {
         hasContextualHelp = true;
       }
     });

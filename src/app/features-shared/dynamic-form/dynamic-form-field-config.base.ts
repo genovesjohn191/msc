@@ -1,3 +1,4 @@
+import { isNullOrEmpty } from '@app/utilities';
 import {
   DynamicFormFieldConfig,
   DynamicFormFieldType,
@@ -21,6 +22,7 @@ export class DynamicFormFieldConfigBase implements DynamicFormFieldConfig {
   public dependents?: string[];
   public options?: FlatOption[] | GroupedOption[];
   public hint?: string;
+  public contextualHelp?: string;
   public order?: number;
   public validators?: DynamicFormControlValidator;
   public settings?: DynamicFormControlSettings;
@@ -34,6 +36,7 @@ export class DynamicFormFieldConfigBase implements DynamicFormFieldConfig {
     value?: any;
     options?: FlatOption[] | GroupedOption[];
     hint?: string;
+    contextualHelp?: string;
     order?: number;
     eventName?: DynamicFormFieldOnChangeEvent;
     dependents?: string[];
@@ -48,7 +51,8 @@ export class DynamicFormFieldConfigBase implements DynamicFormFieldConfig {
     this.value = options.value || '';
     this.initialValue = this.value;
     this.options = options.options || [];
-    this.hint = options.hint || '';
+    this.hint = isNullOrEmpty(options.hint) ? '' : options.hint.substring(0, 60);
+    this.contextualHelp = options.contextualHelp || '';
     this.order = options.order === undefined ? 1 : options.order;
     this.eventName = options.eventName || '';
     this.dependents = options.dependents || [];

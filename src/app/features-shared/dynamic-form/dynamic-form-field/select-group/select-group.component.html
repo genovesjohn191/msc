@@ -1,6 +1,7 @@
 <mat-form-field
   *ngIf="visible"
-  appearance="outline">
+  appearance="outline"
+  [hintLabel]="config.hint">
   <mat-label [attr.for]="id">{{ label }}</mat-label>
 
   <mat-select

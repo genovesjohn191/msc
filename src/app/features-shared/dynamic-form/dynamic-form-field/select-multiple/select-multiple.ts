@@ -18,6 +18,7 @@ export class DynamicSelectMultipleField extends DynamicFormFieldConfigBase {
     options: FlatOption[];
     value?: string[];
     hint?: string;
+    contextualHelp?: string;
     order?: number;
     eventName?: DynamicFormFieldOnChangeEvent;
     dependents?: string[];
