@@ -1709,7 +1709,7 @@
   },
   "orderAgreement": {
     "agreementChargesQuoted": "By submitting this order, you agree to the charges quoted and the ",
-    "agreementCharges": "By submitting this order, you agree to these charges and our ",
+    "agreementCharges": "By submitting this order, you agree to these charges and our",
     "termsAndConditions": "terms and conditions."
   },
   "pricingCalculator": {
