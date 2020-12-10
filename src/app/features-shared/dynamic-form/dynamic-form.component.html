@@ -6,7 +6,8 @@
     Show More Options
   </mat-slide-toggle>
 
-  <div *ngIf="hasFields" [class.contextual-help-page-wrapper]="hasContextualHelp">
+  <div *ngIf="hasFields" [class.contextual-help-page-wrapper]="hasContextualHelp"
+    [class.dynamic-form]="hasContextualHelp">
     <div *ngFor="let input of config" class="form-row" [mcsContextualHelp]="input.contextualHelp">
       <div  [ngSwitch]="input.template">
         <mat-error *ngIf="!isValidField(input.key)">
