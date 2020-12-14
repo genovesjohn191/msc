@@ -1695,8 +1695,8 @@ export class McsApiService {
     );
   }
 
-  public getMonitoringAndAlerting(): Observable<McsReportMonitoringAndAlerting> {
-    return this._reportsApi.getMonitoringAndAlerting().pipe(
+  public getMonitoringAndAlerting(period?: string): Observable<McsReportMonitoringAndAlerting> {
+    return this._reportsApi.getMonitoringAndAlerting(period).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getServiceChanges'))
       ),

@@ -276,7 +276,8 @@
         },
         "monitoringAlerting": {
           "title": "Monitoring and Alerting",
-          "totalAlerts": "Total Alerts"
+          "totalAlerts": "Total Alerts",
+          "currentMonthLabel": "Monitoring and Alerting based on the current month"
         }
       }
     }
