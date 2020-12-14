@@ -123,9 +123,10 @@ export class McsReportingService {
   }
 
   public getResourceCompliance(
-    period: string = ''
+    period: string = '',
+    subscriptionIds?: string[]
   ): Observable<McsReportResourceCompliance> {
-    return this._apiService.getResourceCompliance(period);
+    return this._apiService.getResourceCompliance(period, subscriptionIds);
   }
 
   public getMonitoringAndAlerting(period?: string): Observable<McsReportMonitoringAndAlerting> {

@@ -1685,9 +1685,10 @@ export class McsApiService {
   }
 
   public getResourceCompliance(
-    period?: string
+    period?: string,
+    subscriptionIds?: string[]
   ): Observable<McsReportResourceCompliance> {
-    return this._reportsApi.getResourceCompliance(period).pipe(
+    return this._reportsApi.getResourceCompliance(period, subscriptionIds).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getResourceCompliance'))
       ),

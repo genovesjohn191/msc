@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  Input,
   OnDestroy,
   OnInit,
   ViewEncapsulation
@@ -39,9 +40,20 @@ export class ComplianceWidgetComponent implements OnInit, OnDestroy {
     colors: ['#4CAF50', '#F44336', '#EFC225', '#0A97E5']
   };
 
+  @Input()
+  public set subscriptionIds(value: string[]) {
+    if (JSON.stringify(value) === JSON.stringify(this._subscriptionIds)) {
+      return;
+    }
+
+    this._subscriptionIds = value;
+    this.getResourceCompliance();
+  }
+
   public statusIconKey: string = CommonDefinition.ASSETS_SVG_INFO;
 
   private _period: string = '';
+  private _subscriptionIds: string[] = undefined;
 
   public hasError: boolean = false;
   public processing: boolean = true;
@@ -61,7 +73,6 @@ export class ComplianceWidgetComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this._initializePeriod();
-    this.getResourceCompliance();
   }
 
   ngOnDestroy(): void {
@@ -80,7 +91,7 @@ export class ComplianceWidgetComponent implements OnInit, OnDestroy {
     this.processing = true;
     this.hasError = false;
 
-    this._reportingService.getResourceCompliance(this._period)
+    this._reportingService.getResourceCompliance(this._period, this._subscriptionIds)
     .pipe(
       catchError(() => {
         this.hasError = true;

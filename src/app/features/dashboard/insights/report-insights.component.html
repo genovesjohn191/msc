@@ -85,7 +85,7 @@
 
              <!-- Compliance -->
              <h2><span class="show-on-print-only">2.2 </span>{{ 'reports.insights.techReview.compliance.title' | translate }}</h2>
-             <mcs-compliance-widget></mcs-compliance-widget>
+             <mcs-compliance-widget [subscriptionIds]="subscriptionIdsFilter"></mcs-compliance-widget>
              <mat-divider></mat-divider>
 
             <!-- Resource Health -->
