@@ -56,7 +56,9 @@ export interface IMcsApiReportsService {
 
   getSecurityScore(): Observable<McsApiSuccessResponse<McsReportSecurityScore>>;
 
-  getResourceCompliance(period?: string): Observable<McsApiSuccessResponse<McsReportResourceCompliance>>;
+  getResourceCompliance(
+    period?: string,
+    subscriptionIds?: string[]): Observable<McsApiSuccessResponse<McsReportResourceCompliance>>;
 
   getMonitoringAndAlerting(period?: string): Observable<McsApiSuccessResponse<McsReportMonitoringAndAlerting>>;
 }
