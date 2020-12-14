@@ -40,6 +40,7 @@ export class MonitoringAndAlertingWidgetComponent implements OnInit, OnDestroy {
   public processing: boolean = true;
   public empty: boolean = true;
   public convertedDate: string;
+  private _period: string = '';
 
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
@@ -48,6 +49,7 @@ export class MonitoringAndAlertingWidgetComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this._initializePeriod();
     this.dataBehavior = new BehaviorSubject<ChartItem[]>(null);
     this.data$ = this.dataBehavior.asObservable();
     this.getData();
@@ -62,7 +64,7 @@ export class MonitoringAndAlertingWidgetComponent implements OnInit, OnDestroy {
     this.processing = true;
     this._changeDetectorRef.markForCheck();
 
-    this._reportingService.getMonitoringAndAlerting()
+    this._reportingService.getMonitoringAndAlerting(this._period)
     .pipe(catchError(() => {
       this.hasError = true;
       this.processing = false;
@@ -76,5 +78,10 @@ export class MonitoringAndAlertingWidgetComponent implements OnInit, OnDestroy {
       this.dataBehavior.next(result.alertsChartItem);
       this._changeDetectorRef.markForCheck();
     });
+  }
+
+  private _initializePeriod(): void {
+    let currentMonth = new Date(new Date().setMonth(new Date().getMonth()));
+    this._period = `${currentMonth.getFullYear()}-${currentMonth.getMonth() + 1}`;
   }
 }

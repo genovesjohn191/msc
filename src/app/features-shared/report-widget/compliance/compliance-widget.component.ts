@@ -131,5 +131,6 @@ export class ComplianceWidgetComponent implements OnInit, OnDestroy {
 
   private _initializePeriod(): void {
     let currentMonth = new Date(new Date().setMonth(new Date().getMonth()));
-    this._period = `${currentMonth.getFullYear()}-${currentMonth.getMonth() + 1}`;  }
+    this._period = `${currentMonth.getFullYear()}-${currentMonth.getMonth() + 1}`;
+  }
 }
