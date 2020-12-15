@@ -18,7 +18,6 @@ import {
   ViewChild
 } from '@angular/core';
 import {
-  IMcsColumnManager,
   McsAccessControlService,
   McsMatTableContext,
   McsMatTableQueryParam,
@@ -49,6 +48,7 @@ import {
   Search
 } from '@app/shared';
 import {
+  createObject,
   getSafeProperty,
   isNullOrEmpty,
   CommonDefinition
@@ -63,7 +63,7 @@ import { ServersService } from './servers.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class ServersComponent implements OnInit, OnDestroy, IMcsColumnManager {
+export class ServersComponent implements OnInit, OnDestroy {
   public hasCreateResources: boolean;
   public hasManagedResource: boolean;
 
@@ -71,7 +71,20 @@ export class ServersComponent implements OnInit, OnDestroy, IMcsColumnManager {
   public readonly dataSelection: McsTableSelection2<McsServer>;
   public readonly dataEvents: McsTableEvents<McsServer>;
 
-  private _columnPermissionMatrix = new Map<string, () => boolean>();
+  public readonly filterPredicate = this._isColumnIncluded.bind(this);
+  public readonly defaultColumnFilters = [
+    createObject(McsFilterInfo, { value: true, exclude: true, id: 'select' }),
+    createObject(McsFilterInfo, { value: true, exclude: true, id: 'name' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'type' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'catalog' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'toolsVersion' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'managementIp' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'zone' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'serviceId' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'resource' }),
+    createObject(McsFilterInfo, { value: false, exclude: false, id: 'vApp' }),
+    createObject(McsFilterInfo, { value: true, exclude: true, id: 'action' })
+  ];
 
   public constructor(
     _injector: Injector,
@@ -90,8 +103,6 @@ export class ServersComponent implements OnInit, OnDestroy, IMcsColumnManager {
       dataClearEvent: McsEvent.dataClearServers,
       entityDeleteEvent: McsEvent.entityDeletedEvent
     });
-
-    this._createColumnMatrix();
   }
 
   public ngOnInit() {
@@ -311,12 +322,6 @@ export class ServersComponent implements OnInit, OnDestroy, IMcsColumnManager {
     this._navigationService.navigateTo(RouteKey.ServerCreate);
   }
 
-  public includeColumn(column: McsFilterInfo): boolean {
-    if (isNullOrEmpty(this._accessControlService)) { return true; }
-    let columnFunc = this._columnPermissionMatrix.get(column.id);
-    return columnFunc ? columnFunc() : true;
-  }
-
   public navigateToResource(server: McsServer): void {
     if (isNullOrEmpty(server.platform)) { return; }
     this._navigationService.navigateTo(RouteKey.VdcDetails, [server.platform.resourceId]);
@@ -356,17 +361,20 @@ export class ServersComponent implements OnInit, OnDestroy, IMcsColumnManager {
     managedResources.subscribe(() => createServerResources.subscribe());
   }
 
-  private _createColumnMatrix(): void {
-    this._columnPermissionMatrix.set('select',
-      () => this._accessControlService.hasPermission(
-        ['DedicatedVmPowerStateEdit', 'CloudVmPowerStateEdit']
-      )
-    );
+  private _isColumnIncluded(filter: McsFilterInfo): boolean {
+    if (filter.id === 'select') {
+      return this._accessControlService.hasPermission([
+        'DedicatedVmPowerStateEdit',
+        'CloudVmManagementIpView'
+      ]);
+    }
 
-    this._columnPermissionMatrix.set('managementIp',
-      () => this._accessControlService.hasPermission(
-        ['DedicatedVmManagementIpView', 'CloudVmManagementIpView']
-      )
-    );
+    if (filter.id === 'managementIp') {
+      return this._accessControlService.hasPermission([
+        'DedicatedVmManagementIpView',
+        'CloudVmManagementIpView'
+      ]);
+    }
+    return true;
   }
 }

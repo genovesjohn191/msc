@@ -36,6 +36,9 @@ export class ColumnFilterComponent implements ColumnFilter, OnInit, OnDestroy {
   @Input()
   public filters: McsFilterInfo[];
 
+  @Input()
+  public defaultFilters: McsFilterInfo[];
+
   /**
    * @deprecated Use the filtersChange instead.
    * This will be removed once everything was change to mat-table
@@ -46,6 +49,7 @@ export class ColumnFilterComponent implements ColumnFilter, OnInit, OnDestroy {
   @Input()
   public key: string;
 
+  public filterPredicate: (filter: McsFilterInfo) => boolean;
   public filtersChange = new BehaviorSubject<McsFilterInfo[]>([]);
 
   constructor(

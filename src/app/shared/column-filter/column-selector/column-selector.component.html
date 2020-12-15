@@ -1,0 +1,9 @@
+<mcs-list>
+  <ng-container *ngFor="let filter of filters">
+    <mcs-item *ngIf="isFilterIncluded(filter)">
+      <mcs-checkbox mcsId [(ngModel)]="filter.value" (statusChange)="notifyDataChange()">
+        {{ getFilterText(filter) }}
+      </mcs-checkbox>
+    </mcs-item>
+  </ng-container>
+</mcs-list>

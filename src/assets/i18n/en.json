@@ -2880,6 +2880,11 @@
     "serviceId": "Service ID",
     "resource": "Resource",
     "vApp": "vApp",
-    "action": "Action"
+    "action": "Action",
+    "firewall": "Firewall",
+    "serialNumber": "Serial Number",
+    "firmwareVersion": "Firmware Version",
+    "ipAddress": "IP Address",
+    "role": "Role"
   }
 }

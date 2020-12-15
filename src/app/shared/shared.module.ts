@@ -17,6 +17,7 @@ import { CapacityBarModule } from './capacity-bar/capacity-bar.module';
 import { ChartModule } from './chart/chart.module';
 import { CheckboxModule } from './checkbox/checkbox.module';
 import { CollapsiblePanelModule } from './collapsible-panel/collapsible-panel.module';
+import { ColumnSelectorModule } from './column-filter';
 import { ColumnFilterModule } from './column-filter/column-filter.module';
 import { CommentBoxModule } from './comment-box/comment-box.module';
 import { ContextualHelpModule } from './contextual-help/contextual-help.module';
@@ -92,6 +93,7 @@ const exportedModules = [
   ChartModule,
   CheckboxModule,
   ColumnFilterModule,
+  ColumnSelectorModule,
   TableModule,
   ListPanelModule,
   LoaderModule,

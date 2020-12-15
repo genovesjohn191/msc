@@ -94,33 +94,26 @@
   },
   "firewallFilter": {
     "firewall": {
-      "text": "Firewall",
       "value": true,
       "exclude": true
     },
     "serialNumber": {
-      "text": "Serial Number",
       "value": true,
       "exclude": true
     },
     "firmwareVersion": {
-      "text": "Firmware Version",
       "value": true
     },
     "ipAddress": {
-      "text": "IP Address",
       "value": true
     },
     "role": {
-      "text": "Role",
       "value": true
     },
     "serviceId": {
-      "text": "Service ID",
       "value": true
     },
     "action": {
-      "text": "",
       "value": true,
       "exclude": true
     }

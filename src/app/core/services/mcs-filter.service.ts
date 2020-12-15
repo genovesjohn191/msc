@@ -27,10 +27,23 @@ export class McsFilterService {
   /**
    * Gets the filter settings based on the key
    * @param key Key to be obtained from the settings or saved settings
+   * @deprecated Key alone was not use anymore. Use the getFilterSettings2 instead
    */
   public getFilterSettings(key: string): McsFilterInfo[] {
     let savedSettings = this._getSavedSettings(key);
     let defaultSettings = this._getDefaultSettings(key);
+
+    if (isNullOrEmpty(savedSettings)) { return defaultSettings; }
+    let comparisonResult = compareArrays(
+      Array.from(savedSettings.keys()),
+      Array.from(defaultSettings.keys())
+    );
+    return comparisonResult === 0 ? savedSettings : defaultSettings;
+  }
+
+  public getFilterSettings2(key: string, defaultFilters: McsFilterInfo[]): McsFilterInfo[] {
+    let savedSettings = this._getSavedSettings(key);
+    let defaultSettings = defaultFilters;
 
     if (isNullOrEmpty(savedSettings)) { return defaultSettings; }
     let comparisonResult = compareArrays(
@@ -62,6 +75,7 @@ export class McsFilterService {
   /**
    * Gets the default settings
    * @param key Key to be obtained
+   * @deprecated We don't need this anymore, the obtainment of columnHeader is on the component selector
    */
   private _getDefaultSettings(key: string): McsFilterInfo[] {
     let value: any = null;

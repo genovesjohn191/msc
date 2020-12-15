@@ -108,7 +108,11 @@
 
     <!-- Column Filter -->
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'servers.filterColumn' | translate" offset="medium">
-      <mcs-column-filter #columnFilter key="serverFilter"></mcs-column-filter>
+      <mcs-column-selector #columnFilter
+        storageKey="servers"
+        [defaultFilters]="defaultColumnFilters"
+        [filterPredicate]="filterPredicate">
+      </mcs-column-selector>
     </mcs-left-panel-item>
   </mcs-left-panel>
 
