@@ -13,7 +13,7 @@ export const addToManagementToolsFormConfig: DynamicFormFieldConfigBase[] = [
     validators: { required: true },
   }),
   new DynamicInputIpField({
-    key: 'ip',
+    key: 'ipAddress',
     label: 'IP Address',
     placeholder: 'Enter an IP Address',
     validators: { required: true },

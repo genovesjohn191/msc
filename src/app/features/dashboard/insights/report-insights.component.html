@@ -35,6 +35,7 @@
           <div class="sub-section">
             <!-- Service Overview -->
             <h2><span class="show-on-print-only">1.1 </span>{{ 'reports.insights.costs.serviceOverview.title' | translate }}</h2>
+            <div class="widget-label">{{ 'reports.insights.costs.serviceOverview.subTitle' | translate }}</div>
             <mcs-services-cost-overview-widget [subscriptionIds]="subscriptionIdsFilter"></mcs-services-cost-overview-widget>
 
             <mat-divider></mat-divider>
@@ -54,21 +55,25 @@
                 </mat-form-field>
               </div>
             </div>
+            <div class="widget-label monthly-cost">{{ 'reports.insights.costs.resourceCost.subTitle' | translate }}</div>
             <mcs-resource-monthly-cost-widget [subscriptionIds]="subscriptionIdsFilter" [config]="resourceMonthlyCostConfig" (dataReceived)="resourceMonthDataReceived($event)"></mcs-resource-monthly-cost-widget>
             <mat-divider></mat-divider>
 
             <!-- Virtual Machine Breakdown -->
             <h2><span class="show-on-print-only">1.3 </span>{{ 'reports.insights.costs.vmBreakdown.title' | translate }}</h2>
+            <div class="widget-label">{{ 'reports.insights.costs.vmBreakdown.subTitle' | translate }}</div>
             <mcs-virtual-machine-usage-breakdown-widget [subscriptionIds]="subscriptionIdsFilter"></mcs-virtual-machine-usage-breakdown-widget>
             <mat-divider></mat-divider>
 
             <!-- Operational Savings -->
             <h2><span class="show-on-print-only">1.4 </span>{{ 'reports.insights.costs.operationalSavings.title' | translate }}</h2>
+            <div class="widget-label">{{ 'reports.insights.costs.operationalSavings.subTitle' | translate }}</div>
             <mcs-operational-monthly-savings-widget></mcs-operational-monthly-savings-widget>
             <mat-divider></mat-divider>
 
             <!-- VM Rightsizing -->
             <h2><span class="show-on-print-only">1.5 </span>{{ 'reports.insights.costs.vmRightsizing.title' | translate }}</h2>
+            <div class="widget-label">{{ 'reports.insights.costs.vmRightsizing.subTitle' | translate }}</div>
             <mcs-vm-rightsizing-widget></mcs-vm-rightsizing-widget>
           </div>
         </section>
@@ -80,26 +85,31 @@
           <div class="sub-section">
             <!-- Security -->
             <h2><span class="show-on-print-only">2.1 </span>{{ 'reports.insights.techReview.security.title' | translate }}</h2>
+            <div class="widget-label">{{ 'reports.insights.techReview.security.subTitle' | translate }}</div>
             <mcs-security-widget></mcs-security-widget>
             <mat-divider></mat-divider>
 
              <!-- Compliance -->
              <h2><span class="show-on-print-only">2.2 </span>{{ 'reports.insights.techReview.compliance.title' | translate }}</h2>
+             <div class="widget-label">{{ 'reports.insights.techReview.compliance.subTitle' | translate }}</div>
              <mcs-compliance-widget [subscriptionIds]="subscriptionIdsFilter"></mcs-compliance-widget>
              <mat-divider></mat-divider>
 
             <!-- Resource Health -->
             <h2><span class="show-on-print-only">2.3 </span>{{ 'reports.insights.techReview.resourceHealth.title' | translate }}</h2>
+            <div class="widget-label">{{ 'reports.insights.techReview.resourceHealth.subTitle' | translate }}</div>
             <mcs-resource-health-widget></mcs-resource-health-widget>
             <mat-divider></mat-divider>
 
             <!-- Performance and Scalability -->
             <h2><span class="show-on-print-only">2.4 </span>{{ 'reports.insights.techReview.performanceScalability.title' | translate }}</h2>
+            <div class="widget-label">{{ 'reports.insights.techReview.performanceScalability.subTitle' | translate }}</div>
             <mcs-performance-and-scalability-widget [subscriptionIds]="subscriptionIdsFilter"></mcs-performance-and-scalability-widget>
             <mat-divider></mat-divider>
 
             <!-- Monitoring and Alerting -->
             <h2><span class="show-on-print-only">2.5 </span>{{ 'reports.insights.techReview.monitoringAlerting.title' | translate }}</h2>
+            <div class="widget-label">{{ 'reports.insights.techReview.monitoringAlerting.subTitle' | translate }}</div>
             <mcs-monitoring-and-alerting-widget></mcs-monitoring-and-alerting-widget>
           </div>
         </section>

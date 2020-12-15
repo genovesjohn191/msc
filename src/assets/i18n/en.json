@@ -217,21 +217,26 @@
         "label": "Costs",
         "serviceOverview": {
           "title": "Services Overview",
+          "subTitle": "A summary of costs for each resource type, for the previous 12 months.",
           "chartBottomLabel": "Forecasts the next month based on the previous 12"
         },
         "resourceCost": {
-          "title": "Resource Cost for"
+          "title": "Resource Cost for",
+          "subTitle": "A summary of costs for each resource type, for each day of the month."
         },
         "vmBreakdown": {
-          "title": "Virtual Machine Breakdown"
+          "title": "Virtual Machine Breakdown",
+          "subTitle": "Your quantity of VMs, by size."
         },
         "operationalSavings": {
           "title": "Operational Monthly Savings",
+          "subTitle": "A list of resources which are underutilized and their potential savings if removed.",
           "noSQLdatabase": "No SQL Database savings at this time",
           "noVirtualMachine": "No Virtual Machine savings at this time"
         },
         "vmRightsizing": {
           "title": "VM Rightsizing",
+          "subTitle": "A list of resources which may be uneconomically sized and their potential savings if scaled down.",
           "table": {
             "header": {
               "vmName": "VM Name",
@@ -254,11 +259,13 @@
         "empty": "No data found",
         "security": {
           "title": "Security",
+          "subTitle": "Your resources, subscriptions and overall environment is continually assessed for security issues. All findings are then aggregated into a single score. The higher the score, the lower the risk level.",
           "overAllSecurityScore": "Overall Security Score",
           "viewRecommendation": "View Recommendations in Azure"
         },
         "compliance": {
           "title": "Compliance",
+          "subTitle": "Overall resource compliance is calculated using a combination of your resource compliance state, non-compliant initiatives and non-compliant policies.",
           "overAllResourceCompliance": "Overall Resource Compliance",
           "complianceState": "Resources by Compliance State",
           "nonCompliantInitiatives": "Non-compliant Initiatives",
@@ -269,13 +276,16 @@
           "nonCompliantPoliciesTooltip": "A non-compliant policy is an Azure policy that targets a specific resource, where that resource does not conform to the regulatory or governance definitions set out in the policy"
         },
         "resourceHealth": {
-          "title": "Resource Health"
+          "title": "Resource Health",
+          "subTitle": "Resource Health is determined by whether a resource in your environment is currently affected by a broader Azure service outage."
         },
         "performanceScalability": {
-          "title": "Performance and Scalability"
+          "title": "Performance and Scalability",
+          "subTitle": "Performance and Scalability gives you a summary of aggregate VM memory, file system and CPU usage, for each day of the month."
         },
         "monitoringAlerting": {
           "title": "Monitoring and Alerting",
+          "subTitle": "Monitoring and Alerting displays the total number of your environment alerts by severity, for all time.",
           "totalAlerts": "Total Alerts",
           "currentMonthLabel": "Monitoring and Alerting based on the current month"
         }
