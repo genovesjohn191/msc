@@ -98,7 +98,13 @@ export class ResourceChangesWidgetComponent implements OnInit {
   }
 
   public xAxisLabelFormatter(val: string, timestamp?: number): string {
-    return (coerceNumber(val) > 0) ? `+${val}`: val;
+    let forceNumber = coerceNumber(val);
+    let formattedNumber = !Number.isInteger(forceNumber) ? forceNumber.toFixed(2) : forceNumber.toFixed();
+    if (coerceNumber(formattedNumber) > 0) {
+      return `+${formattedNumber}`;
+    }
+
+    return `${formattedNumber}`;
   }
 
   public tooltipXValueFormatter(val: number, opts?: any): string {

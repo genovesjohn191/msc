@@ -108,6 +108,24 @@ describe('ResourceChangesWidgetComponent', () => {
         expect(actualResult).toBe(expectedResult);
       });
     });
+
+    describe('when value is positive decimal number', () => {
+      it('should return with - prefix', () => {
+        let expectedResult = '+0.56'
+        let actualResult = component.xAxisLabelFormatter('0.5555');
+
+        expect(actualResult).toBe(expectedResult);
+      });
+    });
+
+    describe('when value is negative decimal number', () => {
+      it('should return with - prefix', () => {
+        let expectedResult = '-0.56'
+        let actualResult = component.xAxisLabelFormatter('-0.5555');
+
+        expect(actualResult).toBe(expectedResult);
+      });
+    });
   });
 
   describe('tooltipXValueFormatter()', () => {
