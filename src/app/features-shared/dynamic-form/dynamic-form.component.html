@@ -61,6 +61,10 @@
         <mcs-dff-select-vdc-field *ngSwitchCase="'select-vdc'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)">
         </mcs-dff-select-vdc-field>
+
+        <mcs-dff-select-vm-field *ngSwitchCase="'select-vm'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)">
+        </mcs-dff-select-vm-field>
       </div>
     </div>
   </div>

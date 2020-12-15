@@ -63,7 +63,8 @@ export type DynamicFormFieldType =
   | 'select-network'
   | 'select-os'
   | 'select-storage-profile'
-  | 'select-vdc';
+  | 'select-vdc'
+  | 'select-vm';
 
 export type DynamicFormFieldTemplate =
   'input-text'
@@ -77,14 +78,16 @@ export type DynamicFormFieldTemplate =
   | 'select-network'
   | 'select-os'
   | 'select-storage-profile'
-  | 'select-vdc';
+  | 'select-vdc'
+  | 'select-vm';
 
 export type DynamicFormFieldOnChangeEvent =
   ''
   | 'company-change'
   | 'az-change'
   | 'ip-mode-change'
-  | 'resource-change';
+  | 'resource-change'
+  | 'service-id-change';
 
 export type DynamicFormFieldInputType =
   ''

@@ -13,3 +13,4 @@ export * from './select-network/select-network';
 export * from './select-os/select-os';
 export * from './select-storage-profile/select-storage-profile';
 export * from './select-vdc/select-vdc';
+export * from './select-vm/select-vm';
