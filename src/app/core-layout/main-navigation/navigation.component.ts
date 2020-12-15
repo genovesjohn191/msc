@@ -131,7 +131,9 @@ export class NavigationComponent implements OnInit, OnDestroy {
     private _authenticationIdentity: McsAuthenticationIdentity,
     private _authenticationService: McsAuthenticationService,
     private _coreConfig: CoreConfig,
-  ) { }
+  ) {
+    this._updateOnCompanySwitch();
+  }
 
   public ngOnInit() {
     this._registerEvents();
@@ -254,5 +256,11 @@ export class NavigationComponent implements OnInit, OnDestroy {
         && (this.selectedCategory === RouteCategory.Orders || this.selectedCategory === RouteCategory.MakeAChange);
 
     this._navInitialized = true;
+  }
+
+  private _updateOnCompanySwitch(): void {
+    this._eventDispatcher.addEventListener(McsEvent.accountChange, () => {
+      this._changeDetectorRef.markForCheck()
+    });
   }
 }

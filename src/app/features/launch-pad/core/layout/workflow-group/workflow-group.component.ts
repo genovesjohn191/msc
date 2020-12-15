@@ -26,7 +26,9 @@ import {
   McsApiErrorContext,
   McsObjectCrispElement,
   McsObjectCrispElementService,
-  ProductType
+  McsObjectCrispElementServiceAttribute,
+  ProductType,
+  WorkflowType
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -51,6 +53,7 @@ import {
 import { WorkflowService } from '../../workflows/workflow.service';
 import { LaunchPadServiceIdSwitchDialogComponent } from '../service-id-switch-dialog/service-id-switch-dialog.component';
 import { LaunchPadWorkflowComponent } from './workflow.component';
+import { LaunchPadForm } from '../../workflows/forms/form.interface';
 
 @Component({
   selector: 'mcs-launch-pad-workflow-group',
@@ -67,7 +70,7 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
     if (isNullOrEmpty(value)) { return; }
     this._context = value;
 
-    this._loadParentWorkflow();
+    this._initWorkflowGroup();
   }
 
   public get context(): WorkflowGroupSaveState {
@@ -184,7 +187,7 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
         this.context.serviceId = event.serviceId;
         this.context.productId = event.productId;
 
-        this._loadParentWorkflow();
+        this._initWorkflowGroup();
         this._updateServiceId(this.context.serviceId);
         this._changeDetector.markForCheck();
       } else {
@@ -228,49 +231,41 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
     });
   }
 
-  private _loadParentWorkflow(): void {
+  private _initWorkflowGroup(): void {
     let workflowGroup = this._getWorkflowGroupById(this.context.workflowGroupId);
-
-    let parent: WorkflowData = {
-      id: workflowGroup.parent.id,
-      serviceId: this.context.serviceId,
-      propertyOverrides: [],
-    };
 
     let requiresCrispData = !isNullOrEmpty(workflowGroup.parent.form?.mapCrispElementAttributes);
 
     if (requiresCrispData) {
-      this._getParentWorkflowCrispData(workflowGroup, parent);
-      return;
+      this._crispInitWorkflowGroup(workflowGroup);
     }
+    else {
+      this._defaultInitWorkflowGroup(workflowGroup);
+    }
+  }
+
+  private _defaultInitWorkflowGroup(workflowGroup: WorkflowGroup): void {
+    let parent: WorkflowData = this._buildWorkflowData({
+      id: workflowGroup.parent.id,
+      form: workflowGroup.parent.form,
+      serviceId: this.context.serviceId
+    });
+    let children: WorkflowData[] = this._buildWorkflowDataForChildWorkflows(workflowGroup);
 
     this._context.config = {
       id: this.context.workflowGroupId,
       parent,
-      children: []
+      children
     };
 
     this._renderWorkflowGroup(this.context.config);
     this._changeDetector.markForCheck();
   }
 
-  private _getParentWorkflowCrispData(workflowGroup: WorkflowGroup, parent: WorkflowData): void {
+  private _crispInitWorkflowGroup(workflowGroup: WorkflowGroup): void {
     this._apiService.getCrispElement(this.context.productId)
     .pipe(
       catchError((error: McsApiErrorContext) => {
-
-        // Ensures the context of the form is set for loading options during failure
-        let requiresContextMapping = !isNullOrEmpty(workflowGroup.parent.form.mapContext);
-        if (requiresContextMapping) {
-          parent.propertyOverrides = workflowGroup.parent.form.mapContext(this.context);
-        }
-
-        this._context.config = {
-          id: this.context.workflowGroupId,
-          parent,
-          children: []
-        };
-
         if (error?.details?.status !== 404) {
           this._snackBar.open('Unable to retrieve object from CRISP.', 'OK', {
             duration: 10000,
@@ -279,6 +274,18 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
           });
         }
 
+        let parent: WorkflowData = this._buildWorkflowData({
+          id: workflowGroup.parent.id,
+          form: workflowGroup.parent.form,
+          serviceId: this.context.serviceId
+        });
+
+        this._context.config = {
+          id: this.context.workflowGroupId,
+          parent,
+          children: this._buildWorkflowDataForChildWorkflows(workflowGroup)
+        };
+
         this._renderWorkflowGroup(this.context.config);
         this._changeDetector.markForCheck();
 
@@ -286,31 +293,31 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
       })
     )
     .subscribe((response) => {
-      // Sets the preselected values of the form
-      let hasContextMapper = !isNullOrEmpty(workflowGroup.parent.form.mapContext);
-      if (hasContextMapper) {
-        parent.propertyOverrides = workflowGroup.parent.form.mapContext(this.context);
-      }
-      let hasCrispDataMapper = !isNullOrEmpty(workflowGroup.parent.form.mapCrispElementAttributes);
-      if (hasCrispDataMapper) {
-        let crispOverrides = workflowGroup.parent.form.mapCrispElementAttributes(response.serviceAttributes);
-        parent.propertyOverrides = parent.propertyOverrides.concat(crispOverrides);
-      }
+      let parent: WorkflowData = this._buildWorkflowData({
+        id: workflowGroup.parent.id,
+        form: workflowGroup.parent.form,
+        serviceId: this.context.serviceId,
+        crispElementServiceAttributes: response.serviceAttributes
+      });
 
       this._context.config = {
         id: this.context.workflowGroupId,
         parent,
-        children: []
+        children: this._buildWorkflowDataForChildWorkflows(workflowGroup)
       };
 
-      let childRequiresCrispData = !isNullOrEmpty(workflowGroup.children) && !isNullOrEmpty(response.associatedServices);
-      if (!childRequiresCrispData) {
-        this._renderWorkflowGroup(this.context.config);
-        this._changeDetector.markForCheck();
+      let childRequiresCrispData =
+        !isNullOrEmpty(workflowGroup.children)
+        && !isNullOrEmpty(response.associatedServices);
+
+      if (childRequiresCrispData) {
+        // Trigger event for retrieving child CRISP data
+        this._parentServiceRetrieved.emit(response.associatedServices);
         return;
       }
 
-      this._parentServiceRetrieved.emit(response.associatedServices);
+      this._renderWorkflowGroup(this.context.config);
+      this._changeDetector.markForCheck();
     });
   }
 
@@ -320,7 +327,6 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
       let workflowGroup = this._getWorkflowGroupById(this.context.workflowGroupId);
       let tasks$ = this._createAssociatedServiceTasks(workflowGroup, childServices);
 
-      // Load workflow UI if no associated services
       if (isNullOrEmpty(tasks$)) {
         this._renderWorkflowGroup(this.context.config);
         this._changeDetector.markForCheck();
@@ -330,20 +336,6 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
       // Retrieve data for associated services
       forkJoin(tasks$)
       .pipe(catchError((error) => {
-        // Ensures the context of the form is set for loading options during failure
-        let children: WorkflowData[] = [];
-        workflowGroup.children.forEach((child) => {
-          let propertyOverrides = [];
-          if (!isNullOrEmpty(child.form.mapContext)) {
-            propertyOverrides = child.form.mapContext(this.context);
-          }
-
-          children.push({
-            id: child.id,
-            propertyOverrides
-          });
-        });
-
         if (error?.details?.status !== 404) {
           this._snackBar.open('Unable to retrieve associated object from CRISP.', 'OK', {
             duration: 10000,
@@ -352,39 +344,73 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
           });
         }
 
-        this.context.config.children = children;
         this._renderWorkflowGroup(this.context.config);
         this._changeDetector.markForCheck();
 
         return throwError('Retrieving CRISP associated CRISP elements failed.');
       }))
       .subscribe((results: McsObjectCrispElement[]) => {
-        let children: WorkflowData[] = [];
-
-        // Map each CRISP attributes as propertyOverride
-        workflowGroup.children.forEach((child) => {
-          let crispElement = results.find((result) => result.productType.toString() === ProductType[child.crispProductType]);
-
-          let propertyOverrides = [];
-          if (!isNullOrEmpty(child.form.mapContext)) {
-            propertyOverrides = child.form.mapContext(this.context);
-          }
-          if (!isNullOrEmpty(child.form.mapCrispElementAttributes)) {
-            let crispOverrides = child.form.mapCrispElementAttributes(crispElement?.serviceAttributes);
-            propertyOverrides = propertyOverrides.concat(crispOverrides);
-          }
-
-          children.push({
-            id: child.id,
-            propertyOverrides
-          });
-        });
-
-        this.context.config.children = children;
+        this.context.config.children = this._buildWorkflowDataForChildWorkflows(workflowGroup, results);
         this._renderWorkflowGroup(this.context.config);
         this._changeDetector.markForCheck();
       });
     });
+  }
+
+  private _buildWorkflowData(options: {
+    id: WorkflowType;
+    form: LaunchPadForm;
+    serviceId?: string;
+    crispElementServiceAttributes?: McsObjectCrispElementServiceAttribute[]
+  }): WorkflowData {
+
+    return {
+      id : options.id,
+      serviceId: options.serviceId,
+      propertyOverrides: this._buildPropertyOverrides(options.form, options.crispElementServiceAttributes),
+    };
+  }
+
+  private _buildWorkflowDataForChildWorkflows(
+    workflowGroup: WorkflowGroup,
+    crispElements: McsObjectCrispElement[] = []): WorkflowData[] {
+
+    let children: WorkflowData[] = [];
+
+    workflowGroup.children?.forEach((child) => {
+      let crispElement = crispElements?.find((result) => result.productType.toString() === ProductType[child.crispProductType]);
+      let data: WorkflowData = this._buildWorkflowData({
+        id: child.id,
+        form: child.form,
+        crispElementServiceAttributes: crispElement?.serviceAttributes
+      });
+
+      children.push(data);
+    });
+
+    return children;
+  }
+
+  private _buildPropertyOverrides(
+    form: LaunchPadForm,
+    crispAttributes: McsObjectCrispElementServiceAttribute[] = []): { key: string, value: any }[] {
+
+    let propertyOverrides: Array<{ key: string, value: any }> = [];
+
+    // Add context to form field overrides
+    let requiresContextMapping = !isNullOrEmpty(form.mapContext);
+    if (requiresContextMapping) {
+      propertyOverrides = form.mapContext(this.context);
+    }
+
+    // Add CRISP attributes to form field overrides
+    let hasCrispAttributeOverrides = !isNullOrEmpty(form.mapCrispElementAttributes) && !isNullOrEmpty(crispAttributes);
+    if (hasCrispAttributeOverrides) {
+      let crispOverrides = form.mapCrispElementAttributes(crispAttributes);
+      propertyOverrides = propertyOverrides.concat(crispOverrides);
+    }
+
+    return propertyOverrides;
   }
 
   private _createAssociatedServiceTasks(workflowGroup: WorkflowGroup, childServices: McsObjectCrispElementService[]): any[]  {

@@ -15,6 +15,7 @@ import { DynamicSelectNetworkComponent } from './select-network/select-network.c
 import { DynamicSelectOsComponent } from './select-os/select-os.component';
 import { DynamicSelectStorageProfileComponent } from './select-storage-profile/select-storage-profile.component';
 import { DynamicSelectVdcComponent } from './select-vdc/select-vdc.component';
+import { DynamicSelectVmComponent } from './select-vm/select-vm.component';
 import { DynamicSelectComponent } from './select/select.component';
 
 const exports: any[] | Type<any> = [
@@ -29,7 +30,8 @@ const exports: any[] | Type<any> = [
   DynamicSelectNetworkComponent,
   DynamicSelectOsComponent,
   DynamicSelectStorageProfileComponent,
-  DynamicSelectVdcComponent
+  DynamicSelectVdcComponent,
+  DynamicSelectVmComponent
 ];
 
 @NgModule({
