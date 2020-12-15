@@ -1,29 +1,40 @@
-import {
-  Component,
-  ChangeDetectorRef,
-  ChangeDetectionStrategy,
-  Injector
-} from '@angular/core';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import {
-  McsTableListingBase,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Injector,
+  ViewChild
+} from '@angular/core';
+import {
+  McsAccessControlService,
+  McsMatTableContext,
+  McsMatTableQueryParam,
   McsNavigationService,
-  IMcsColumnManager,
-  McsAccessControlService
+  McsTableDataSource2,
+  McsTableEvents
 } from '@app/core';
+import { McsEvent } from '@app/events';
 import {
+  McsFilterInfo,
+  McsFirewall,
+  McsQueryParam,
+  RouteKey
+} from '@app/models';
+import { McsApiService } from '@app/services';
+import {
+  ColumnFilter,
+  Paginator,
+  Search
+} from '@app/shared';
+import {
+  createObject,
+  getSafeProperty,
   isNullOrEmpty,
   CommonDefinition
 } from '@app/utilities';
-import {
-  RouteKey,
-  McsFirewall,
-  McsQueryParam,
-  McsApiCollection,
-  McsFilterInfo
-} from '@app/models';
-import { McsApiService } from '@app/services';
-import { McsEvent } from '@app/events';
 
 @Component({
   selector: 'mcs-firewalls',
@@ -31,9 +42,20 @@ import { McsEvent } from '@app/events';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class FirewallsComponent extends McsTableListingBase<McsFirewall> implements IMcsColumnManager {
+export class FirewallsComponent {
+  public readonly dataSource: McsTableDataSource2<McsFirewall>;
+  public readonly dataEvents: McsTableEvents<McsFirewall>;
 
-  private _columnPermissionMatrix = new Map<string, () => boolean>();
+  public readonly filterPredicate = this._isColumnIncluded.bind(this);
+  public readonly defaultColumnFilters = [
+    createObject(McsFilterInfo, { value: true, exclude: true, id: 'firewall' }),
+    createObject(McsFilterInfo, { value: true, exclude: true, id: 'serialNumber' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'firmwareVersion' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'ipAddress' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'role' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'serviceId' }),
+    createObject(McsFilterInfo, { value: true, exclude: true, id: 'action' })
+  ];
 
   public constructor(
     _injector: Injector,
@@ -42,10 +64,10 @@ export class FirewallsComponent extends McsTableListingBase<McsFirewall> impleme
     private _navigationService: McsNavigationService,
     private _apiService: McsApiService
   ) {
-    super(_injector, _changeDetectorRef, {
+    this.dataSource = new McsTableDataSource2(this._getFirewalls.bind(this));
+    this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
       dataChangeEvent: McsEvent.dataChangeFirewalls
     });
-    this._createColumnMatrix();
   }
 
   public get routeKeyEnum(): any {
@@ -56,47 +78,46 @@ export class FirewallsComponent extends McsTableListingBase<McsFirewall> impleme
     return CommonDefinition.ASSETS_SVG_ELLIPSIS_HORIZONTAL;
   }
 
-  /**
-   * Navigate to firewall details page
-   * @param firewall Firewall to view the details
-   */
+  @ViewChild('search')
+  public set search(value: Search) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerSearch(value);
+    }
+  }
+
+  @ViewChild('paginator')
+  public set paginator(value: Paginator) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerPaginator(value);
+    }
+  }
+
+  @ViewChild('columnFilter')
+  public set columnFilter(value: ColumnFilter) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerColumnFilter(value);
+    }
+  }
+
   public navigateToFirewall(firewall: McsFirewall): void {
     if (isNullOrEmpty(firewall)) { return; }
     this._navigationService.navigateTo(RouteKey.FirewallDetails, [firewall.id]);
   }
 
-  /**
-   * Returns the column settings key for the filter selector
-   */
-  public get columnSettingsKey(): string {
-    return CommonDefinition.FILTERSELECTOR_FIREWALLS_LISTING;
+  private _isColumnIncluded(filter: McsFilterInfo): boolean {
+    if (filter.id !== 'serialNumber') { return true; }
+    return this._accessControlService.hasPermission(['FirewallSerialNumberView']);
   }
 
-  /**
-   * Returns true when the column is included in the display
-   */
-  public includeColumn(column: McsFilterInfo): boolean {
-    if (isNullOrEmpty(this._accessControlService)) { return true; }
-    let columnFunc = this._columnPermissionMatrix.get(column.id);
-    return columnFunc ? columnFunc() : true;
-  }
+  private _getFirewalls(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsFirewall>> {
+    let queryParam = new McsQueryParam();
+    queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
+    queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
+    queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
 
-  /**
-   * Gets the entity listing based on the context
-   * @param query Query to be obtained on the listing
-   */
-  protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsFirewall>> {
-    return this._apiService.getFirewalls(query);
-  }
-
-  /**
-   * Creates the column permission matrix
-   */
-  private _createColumnMatrix(): void {
-    this._columnPermissionMatrix.set('serialNumber',
-      () => this._accessControlService.hasPermission(
-        ['FirewallSerialNumberView']
-      )
+    return this._apiService.getFirewalls(queryParam).pipe(
+      map(response => new McsMatTableContext(response?.collection,
+        response?.totalCollectionCount))
     );
   }
 }

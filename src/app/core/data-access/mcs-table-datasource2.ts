@@ -160,18 +160,21 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity> {
     return this;
   }
 
-  public registerColumnsFilterInfo(columns: McsFilterInfo[]): McsTableDataSource2<TEntity> {
+  public registerColumnsFilterInfo(
+    columns: McsFilterInfo[],
+    predicate?: (filter: McsFilterInfo) => boolean
+  ): McsTableDataSource2<TEntity> {
     if (!isNullOrEmpty(this._columnFilter)) {
       throw new Error(`Unable to determine which column filter to be used.
         The column filter ${this._columnFilter} was already registered`);
     }
 
-    let displayedColumns = columns
-      .filter(item => item.value)
-      .map(item => item.id);
-
-    this._dataColumnsChange.next(displayedColumns);
-    return this;
+    let columnFilter = {
+      filters: columns,
+      filtersChange: new BehaviorSubject(columns),
+      filterPredicate: predicate
+    } as ColumnFilter;
+    return this.registerColumnFilter(columnFilter);
   }
 
   public refreshDataRecords(): void {
@@ -206,7 +209,10 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity> {
       takeUntil(this._columnSelectorSubject),
       tap((state) => {
         let displayedColumns = state
-          .filter(item => item.value)
+          .filter(item => {
+            return !this._columnFilter.filterPredicate ? item.value :
+              this._columnFilter.filterPredicate(item) && item.value;
+          })
           .map(item => item.id);
 
         this._dataColumnsChange.next(displayedColumns);

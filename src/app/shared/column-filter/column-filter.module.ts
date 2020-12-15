@@ -1,24 +1,23 @@
 import { NgModule } from '@angular/core';
-import { ListModule } from '../list/list.module';
-import { ItemModule } from '../item/item.module';
-import { CheckboxModule } from '../checkbox/checkbox.module';
+import { TranslateModule } from '@ngx-translate/core';
 
+import { CheckboxModule } from '../checkbox/checkbox.module';
+import { ItemModule } from '../item/item.module';
+import { ListModule } from '../list/list.module';
 import { ColumnFilterComponent } from './column-filter.component';
 
 @NgModule({
   imports: [
     ListModule,
     ItemModule,
-    CheckboxModule
+    CheckboxModule,
+    TranslateModule
   ],
   declarations: [
     ColumnFilterComponent
   ],
   exports: [
-    ColumnFilterComponent,
-    ListModule,
-    ItemModule,
-    CheckboxModule
+    ColumnFilterComponent
   ]
 })
 export class ColumnFilterModule { }
