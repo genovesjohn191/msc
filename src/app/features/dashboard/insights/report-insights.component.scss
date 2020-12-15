@@ -16,6 +16,10 @@
     margin: $space-medium 0;
   }
 
+  .widget-label {
+    margin-bottom: $space-medium;
+  }
+
   .tech-review {
     page-break-before: always;
   }
@@ -67,6 +71,18 @@
       @include breakpoint(small) {
         padding-top: 0;
       }
+    }
+  }
+
+  .monthly-cost {
+    margin-top: -15px;
+
+    @include breakpoint(small) {
+      margin-top: 0;
+    }
+
+    @include print() {
+      margin-top: 0;
     }
   }
 
