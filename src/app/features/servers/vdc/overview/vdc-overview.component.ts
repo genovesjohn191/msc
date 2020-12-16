@@ -183,8 +183,8 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnDestroy {
   /**
    * Redirects to create new server page
    */
-  public createNewServer(): void {
-    this._navigationService.navigateTo(RouteKey.ServerCreate);
+  public createNewServer(resource: McsResource): void {
+    this._navigationService.navigateTo(RouteKey.ServerCreate, [], { queryParams: { resource: resource.id } });
   }
 
   /**

@@ -166,6 +166,8 @@ export class SelectComponent extends McsFormFieldControlBase<any>
    */
   private _value: any;
   public get value(): any { return this._value; }
+
+  @Input()
   public set value(value: any) {
     if (this._value !== value) {
       this._value = value;

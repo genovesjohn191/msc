@@ -47,7 +47,7 @@
           <ng-container *ngIf="resourceDetailLabels.newServerButtonShown">
             <mcs-item *ngIf="canCreateNewServer(resource)">
               <button mcsButton size="small" mcsId
-                (click)="createNewServer()"
+                (click)="createNewServer(resource)"
                 mcsEventTracker="new-server"
                 mcsEventCategory="vdc"
                 mcsEventLabel="vdc-details-page">

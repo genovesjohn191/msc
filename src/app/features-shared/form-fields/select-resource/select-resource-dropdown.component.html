@@ -1,0 +1,23 @@
+
+<form [formGroup]="fg" mcsFormGroup>
+
+  <mcs-form-field>
+    <mcs-select placeholder="Select a resource" required
+      mcsId="select-resource"
+      [value]="value"
+      [formControl]="fcResource"
+      (selectionChange)="onValueChange($event)">
+
+      <mcs-option-group>
+        <ng-container *mcsOptionGroupHeader>
+          {{ 'serverCreate.vdcDropdownList.header' | translate }}
+        </ng-container>
+
+        <mcs-option [value]="item" *ngFor="let item of resources$ | async">
+          {{ getResourceDisplayedText(item) }}
+        </mcs-option>
+      </mcs-option-group>
+    </mcs-select>
+  </mcs-form-field>
+
+</form>

@@ -31,24 +31,12 @@
         [stepTitle]="'serverCreateDetailsStep.stepTitle' | translate"
         customClass="contextual-help-page-wrapper limited-view">
 
-        <mcs-form-field>
-          <mcs-select placeholder="Select a VDC" required
-            mcsId="select-resource"
-            (selectionChange)="onChangeResource($event)"
-            [formControl]="fcResource"
-            [mcsContextualHelp]="'serverCreate.vdcDropdownList.helpText' | translate">
+        <mcs-select-resource-dropdown
+          (dataChange)="onChangeResource($event)"
+          [value]="selectedResource"
+          [mcsContextualHelp]="'serverCreate.vdcDropdownList.helpText' | translate">
 
-            <mcs-option-group>
-              <ng-container *mcsOptionGroupHeader>
-                {{ 'serverCreate.vdcDropdownList.header' | translate }}
-              </ng-container>
-
-              <mcs-option [value]="item" *ngFor="let item of resources$ | async">
-                {{ getResourceDisplayedText(item) }}
-              </mcs-option>
-            </mcs-option-group>
-          </mcs-select>
-        </mcs-form-field>
+        </mcs-select-resource-dropdown>
 
         <ng-container *ngIf="resource$ | async as selectedResource">
           <mcs-server-create-details #serverDetailsStep
