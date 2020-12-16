@@ -1,5 +1,9 @@
 @import "../../../../styles/shared/base";
 
+.subtitle {
+  margin-top: $space-medium;
+}
+
 .security-compliance-wrapper {
   .security-score {
     .label {
