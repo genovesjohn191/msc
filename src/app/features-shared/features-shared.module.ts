@@ -23,6 +23,7 @@ import { SystemMessageFormComponent } from './system-message-form/system-message
 import { RenameServerDialogComponent } from './server-dialogs/rename-server/rename-server.dialog';
 import { HelpWidgetComponent } from './help-widget/help-widget.component';
 import { SmacSharedFormComponent } from './smac-shared-form/smac-shared-form.component';
+import { FormFieldsModule } from './form-fields/form-fields.module';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { SmacSharedFormComponent } from './smac-shared-form/smac-shared-form.com
     SmacSharedFormComponent
   ],
   imports: [
-    SharedModule
+    SharedModule,
+    FormFieldsModule,
   ],
   exports: [
     ServerManageBackupVmComponent,
@@ -74,7 +76,8 @@ import { SmacSharedFormComponent } from './smac-shared-form/smac-shared-form.com
     SystemMessageFormComponent,
     RenameServerDialogComponent,
     HelpWidgetComponent,
-    SmacSharedFormComponent
+    SmacSharedFormComponent,
+    FormFieldsModule
   ],
   entryComponents: [
     RenameServerDialogComponent
