@@ -49,6 +49,10 @@ export class ReportInsightsComponent implements OnDestroy {
     return CommonDefinition.CLOUD_HEALTH_URL;
   }
 
+  public get azureSecurityUrl(): string  {
+    return CommonDefinition.AZURE_SECURITY_URL;
+  }
+
   public set selectedResourceCostMonth(value: PeriodOption) {
     this._selectedResourceCostMonth = value;
     this.resourceMonthlyCostConfig = {

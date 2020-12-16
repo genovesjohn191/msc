@@ -12,6 +12,7 @@ import {
 } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 import {
+  CommonDefinition,
   isNullOrEmpty,
   unsubscribeSafely
 } from '@app/utilities';
@@ -49,6 +50,10 @@ export class SecurityWidgetComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy(): void {
     unsubscribeSafely(this._destroySubject);
+  }
+
+  public get azureSecurityUrl(): string  {
+    return CommonDefinition.AZURE_SECURITY_URL;
   }
 
   public get currentScore(): number {

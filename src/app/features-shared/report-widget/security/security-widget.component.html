@@ -1,7 +1,17 @@
 <div class="widget flat">
+  <h4>{{ 'reports.insights.techReview.security.overAllSecurityScore' | translate }}</h4>
+  <div class="subtitle">
+    <a href="{{ azureSecurityUrl }}/23"
+      target="_blank"
+      mcsId="security-azure-security-center"
+      mcsEventTracker="navigate-to-azure-security-center"
+      mcsEventCategory="dashboard-navigation"
+      mcsEventLabel="azure-security-center-link">
+      {{ 'reports.insights.techReview.security.azureSecurityCenter' | translate }}</a>
+       {{ 'reports.insights.techReview.security.subTitle' | translate }} 
+  </div>
   <div class="security-compliance-wrapper" *ngIf="!hasError && !processing; else error">
     <div class="security-score">
-      <h4>{{ 'reports.insights.techReview.security.overAllSecurityScore' | translate }}</h4>
       <div *ngIf="empty; else secureScore">
         <mcs-status-message type="info">
           {{ 'reports.insights.techReview.empty' | translate }}
@@ -23,7 +33,7 @@
           </div>
           <mat-progress-bar mode="determinate" value="{{ securityScorePercentage }}" style="height: 10px;"></mat-progress-bar>
           <div style="margin-top: 20px;">
-            <a href="https://portal.azure.com/#blade/Microsoft_Azure_Security/SecurityMenuBlade/5" target="_blank">
+            <a href="{{ azureSecurityUrl }}/5" target="_blank">
               {{ 'reports.insights.techReview.security.viewRecommendation' | translate }}
             </a>
           </div>

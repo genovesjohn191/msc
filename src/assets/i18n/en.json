@@ -217,26 +217,27 @@
         "label": "Costs",
         "serviceOverview": {
           "title": "Services Overview",
-          "subTitle": "A summary of costs for each resource type, for the previous 12 months.",
-          "chartBottomLabel": "Forecasts the next month based on the previous 12"
+          "subTitle": "associated with Azure resource types by month."
         },
         "resourceCost": {
           "title": "Resource Cost for",
-          "subTitle": "A summary of costs for each resource type, for each day of the month."
+          "subTitle": "by Azure resource type by day."
         },
         "vmBreakdown": {
           "title": "Virtual Machine Breakdown",
-          "subTitle": "Your quantity of VMs, by size."
+          "subTitle": "by instance type by month."
         },
         "operationalSavings": {
           "title": "Operational Monthly Savings",
-          "subTitle": "A list of resources which are underutilized and their potential savings if removed.",
+          "subTitle": "A list of Azure resources deemed underutilised. Savings could be found through optimisation.",
+          "labelBelowChart": "VMs listed here are utilised 35% of the time or less. SQL Databases 25% or less in storage and DTU. See more in",
           "noSQLdatabase": "No SQL Database savings at this time",
           "noVirtualMachine": "No Virtual Machine savings at this time"
         },
         "vmRightsizing": {
           "title": "VM Rightsizing",
-          "subTitle": "A list of resources which may be uneconomically sized and their potential savings if scaled down.",
+          "subTitle": "A list of VMs where savings could be found through rightsizing.",
+          "labelBelowChart": "These insights show how well your VMs are utilised in terms of the workloads running on them, how metrics such as CPU, Memory and Virtual Disk I/O contribute to VM utilisation, and opportunities for rightsizing VMs thereby saving costs and optimising workloads.",
           "table": {
             "header": {
               "vmName": "VM Name",
@@ -259,35 +260,35 @@
         "empty": "No data found",
         "security": {
           "title": "Security",
-          "subTitle": "Your resources, subscriptions and overall environment is continually assessed for security issues. All findings are then aggregated into a single score. The higher the score, the lower the risk level.",
+          "azureSecurityCenter": "Azure Security Center",
+          "subTitle": "continually assesses your resources and subscriptions for security issues. It then aggregates all the findings into a single score so you can tell, at a glance, your current security situation. The higher the score, the lower the identified risk level.",
           "overAllSecurityScore": "Overall Security Score",
           "viewRecommendation": "View Recommendations in Azure"
         },
         "compliance": {
           "title": "Compliance",
-          "subTitle": "Overall resource compliance is calculated using a combination of your resource compliance state, non-compliant initiatives and non-compliant policies.",
+          "subTitle": "of your Azure resources and their compliance to initiatives and/or policies configured in your environment.",
           "overAllResourceCompliance": "Overall Resource Compliance",
           "complianceState": "Resources by Compliance State",
           "nonCompliantInitiatives": "Non-compliant Initiatives",
           "nonCompliantPolicies": "Non-compliant Policies",
-          "overAllResourceComplianceTooltip": "Overall resource compliance grants an overall picture of the compliance state across all your resources for a particular subscription",
-          "complianceStateTooltip": "Resource by compliance state offers a categorized look at how many of your resources for a particular subscription fall into each compliance state",
-          "nonCompliantInitiativesTooltip": "An Azure initiative is a collection of Azure policy definitions that are grouped together towards a specific goal or purpose in mind. Any initiative which is not compliant will be counted towards this score",
-          "nonCompliantPoliciesTooltip": "A non-compliant policy is an Azure policy that targets a specific resource, where that resource does not conform to the regulatory or governance definitions set out in the policy"
+          "overAllResourceComplianceTooltip": "Overall resource compliance grants an overall picture of the compliance state across all your resources for a particular subscription.",
+          "complianceStateTooltip": "Resource by compliance state offers a categorized look at how many of your resources for a particular subscription fall into each compliance state.",
+          "nonCompliantInitiativesTooltip": "An Azure initiative is a collection of Azure policy definitions that are grouped together towards a specific goal or purpose in mind. Any initiative which is not compliant will be counted towards this score.",
+          "nonCompliantPoliciesTooltip": "A non-compliant policy is an Azure policy that targets a specific resource, where that resource does not conform to the regulatory or governance definitions set out in the policy."
         },
         "resourceHealth": {
           "title": "Resource Health",
-          "subTitle": "Resource Health is determined by whether a resource in your environment is currently affected by a broader Azure service outage."
+          "subTitle": "An unhealthy resource is a resource which has one or more identified security risks that should be mitigated. These can be addressed or exempted in the"
         },
         "performanceScalability": {
           "title": "Performance and Scalability",
-          "subTitle": "Performance and Scalability gives you a summary of aggregate VM memory, file system and CPU usage, for each day of the month."
+          "subTitle": "by day of the month."
         },
         "monitoringAlerting": {
           "title": "Monitoring and Alerting",
-          "subTitle": "Monitoring and Alerting displays the total number of your environment alerts by severity, for all time.",
-          "totalAlerts": "Total Alerts",
-          "currentMonthLabel": "Monitoring and Alerting based on the current month"
+          "subTitle": "by severity, for the current month.",
+          "totalAlerts": "Total Alerts"
         }
       }
     }
