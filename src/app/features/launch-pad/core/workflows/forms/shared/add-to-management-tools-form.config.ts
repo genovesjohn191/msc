@@ -2,6 +2,9 @@ import {
   DynamicFormFieldConfigBase,
   DynamicInputFqdnDomainField,
   DynamicInputIpField,
+  DynamicInputPasswordField,
+  DynamicInputRandomField,
+  DynamicInputTextField,
   DynamicSelectField
 } from '@app/features-shared/dynamic-form';
 
@@ -79,5 +82,15 @@ export const addToManagementToolsFormConfig: DynamicFormFieldConfigBase[] = [
       { key: 'OT', value: 'OTHER'},
       { key: 'UN', value: 'UNKNOWN'},
     ]
+  }),
+  new DynamicInputTextField({
+    key: 'username',
+    label: 'Username',
+    placeholder: 'Enter current username'
+  }),
+  new DynamicInputPasswordField({
+    key: 'password',
+    label: 'Password',
+    placeholder: 'Enter current password'
   })
 ];

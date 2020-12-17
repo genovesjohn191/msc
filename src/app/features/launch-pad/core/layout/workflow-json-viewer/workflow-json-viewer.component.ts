@@ -31,13 +31,13 @@ export class WorkflowJsonViewerComponent {
         let fieldValue = source[fieldKey];
         this.table += '<tr>';
         if (fieldType === 'object') {
-          this.table += `<td>${fieldKey}</td>`;
+          this.table += `<td>${ fieldKey }</td>`;
           this.table += '<td>';
           convert(fieldValue);
           this.table += '</td>';
         } else {
           this.table += `<td class='right-align'>${ fieldKey }</td>`;
-          this.table += `<td><b>${fieldValue}</b></td>`;
+          this.table += `<td><b>${ this._filter(fieldKey, fieldValue) }</b></td>`;
         }
         this.table += '</tr>';
       });
@@ -48,5 +48,15 @@ export class WorkflowJsonViewerComponent {
 
   public parse(payload: any): string {
     return JSON.stringify(payload, null, 2);
+  }
+
+  private _filter(key: string, value: any): any {
+    let sensitiveKeys: string[] = [
+      'username',
+      'password'
+    ];
+
+    let keyIsSensitive = sensitiveKeys.findIndex((sensitiveKey) => sensitiveKey === key) >= 0;
+    return keyIsSensitive ? '*secret*' : value;
   }
 }
