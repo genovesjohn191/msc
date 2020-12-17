@@ -81,7 +81,7 @@ export class LaunchPadWorkflowLaunchComponent implements OnInit {
           source: params.get(sourceParam) as LaunchPadContextSource,
           workflowGroupId: id,
           companyId : params.get(companyIdParam),
-          serviceId: params.get(serviceIdParam),
+          serviceId: params.get(serviceIdParam).toUpperCase(),
           productId: params.get(productIdParam)
         };
 

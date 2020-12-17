@@ -8,7 +8,6 @@ import { DynamicFormFieldDataChangeEventParam } from '../../dynamic-form-field-c
 import { DynamicTextFieldComponentBase } from '../dynamic-text-field-component.base';
 import { DynamicInputPasswordField } from './input-password';
 
-
 @Component({
   selector: 'mcs-dff-input-password-field',
   templateUrl: 'input-password.component.html',

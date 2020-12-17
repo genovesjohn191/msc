@@ -83,10 +83,11 @@ export const addToManagementToolsFormConfig: DynamicFormFieldConfigBase[] = [
       { key: 'UN', value: 'UNKNOWN'},
     ]
   }),
-  new DynamicInputTextField({
+  new DynamicInputPasswordField({
     key: 'username',
     label: 'Username',
-    placeholder: 'Enter current username'
+    placeholder: 'Enter current username',
+    showByDefault: true
   }),
   new DynamicInputPasswordField({
     key: 'password',

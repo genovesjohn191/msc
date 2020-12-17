@@ -11,6 +11,8 @@ export class DynamicInputPasswordField extends DynamicFormFieldConfigBase {
   public type: DynamicFormFieldType = 'textbox-password';
   public template: DynamicFormFieldTemplate = 'input-password';
 
+  public showByDefault: boolean = false;
+
   public constructor(options: {
     key: string;
     label: string;
@@ -21,9 +23,12 @@ export class DynamicInputPasswordField extends DynamicFormFieldConfigBase {
     order?: number;
     eventName?: DynamicFormFieldOnChangeEvent;
     dependents?: string[];
+    showByDefault?: boolean;
     validators?: { required?: boolean; minlength?: number; maxlength?: number; };
     settings?: DynamicFormControlSettings;
   }) {
     super(options);
+
+    this.showByDefault = options.showByDefault || false;
   }
 }
