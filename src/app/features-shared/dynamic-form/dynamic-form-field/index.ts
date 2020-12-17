@@ -4,6 +4,7 @@ export * from './input-hidden/input-hidden';
 export * from './input-host-name/input-host-name';
 export * from './input-ip/input-ip';
 export * from './input-number/input-number';
+export * from './input-password/input-password';
 export * from './input-random/input-random';
 export * from './input-text/input-text';
 export * from './select/select';

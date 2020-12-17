@@ -30,6 +30,10 @@
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)">
         </mcs-dff-input-number-field>
 
+        <mcs-dff-input-password-field *ngSwitchCase="'input-password'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)">
+        </mcs-dff-input-password-field>
+
         <mcs-dff-input-random-field *ngSwitchCase="'input-random'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)">
         </mcs-dff-input-random-field>
