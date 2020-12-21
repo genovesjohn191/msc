@@ -174,6 +174,7 @@ export class LaunchPadComponent implements OnDestroy, IMcsNavigateAwayGuard {
       type: workflow.type,
       referenceId: workflow.referenceId,
       parentReferenceId: workflow.parentReferenceId,
+      companyId: this.context.companyId,
       serviceId: workflow.serviceId,
       properties: workflow.properties
     }));

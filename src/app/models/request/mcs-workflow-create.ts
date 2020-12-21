@@ -14,5 +14,8 @@ export class McsWorkflowCreate {
   public serviceId: string = undefined;
 
   @JsonProperty()
+  public companyId: string = undefined;
+
+  @JsonProperty()
   public properties: any;
 }
