@@ -274,8 +274,8 @@
           "nonCompliantPolicies": "Non-compliant Policies",
           "overAllResourceComplianceTooltip": "Overall resource compliance grants an overall picture of the compliance state across all your resources for a particular subscription.",
           "complianceStateTooltip": "Resource by compliance state offers a categorized look at how many of your resources for a particular subscription fall into each compliance state.",
-          "nonCompliantInitiativesTooltip": "An Azure initiative is a collection of Azure policy definitions that are grouped together towards a specific goal or purpose in mind. Any initiative which is not compliant will be counted towards this score. The total number of initiatives is based on policies with 1 or more matching resources.",
-          "nonCompliantPoliciesTooltip": "A non-compliant policy is an Azure policy that targets a specific resource, where that resource does not conform to the regulatory or governance definitions set out in the policy. The total number of initiatives is based on policies with 1 or more matching resources."
+          "nonCompliantInitiativesTooltip": "An Azure initiative is a collection of Azure policy definitions that are grouped together towards a specific goal or purpose in mind. Any initiative which is not compliant will be counted towards this score. The total number of initiatives is based on initiatives with 1 or more matching resources.",
+          "nonCompliantPoliciesTooltip": "A non-compliant policy is an Azure policy that targets a specific resource, where that resource does not conform to the regulatory or governance definitions set out in the policy. The total number of policies is based on policies with 1 or more matching resources."
         },
         "resourceHealth": {
           "title": "Resource Health",
