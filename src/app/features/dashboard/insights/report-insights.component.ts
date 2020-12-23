@@ -133,7 +133,6 @@ export class ReportInsightsComponent implements OnDestroy {
   private _listenToPerformanceSubscriptionFilterChange(): void {
     this._performanceSubscriptionFilterChange
     .pipe(
-      debounceTime(2000),
       distinctUntilChanged((val1: string, va2: string) =>
         JSON.stringify(val1) === JSON.stringify(va2)))
     .subscribe((performanceSubscriptionIds) => {
