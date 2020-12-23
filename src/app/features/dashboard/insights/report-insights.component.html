@@ -164,7 +164,21 @@
             <mat-divider></mat-divider>
 
             <!-- Performance and Scalability -->
-            <h2><span class="show-on-print-only">2.4 </span>{{ 'reports.insights.techReview.performanceScalability.title' | translate }}</h2>
+            <div class="options-container">
+              <div>
+                <h2><span class="show-on-print-only">2.4 </span>{{ 'reports.insights.techReview.performanceScalability.title' | translate }}</h2>
+              </div>
+              <div class="hide-on-print">
+                <mat-form-field appearance="outline">
+                  <mat-label>{{ 'reports.insights.subscriptionText' | translate }}</mat-label>
+                  <mat-select [(value)]="performanceSubscriptionIdsFilter">
+                    <mat-option *ngFor="let subscription of performanceSubscriptions" [value]="subscription.id">
+                      {{ subscription.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
             <div class="widget-label">
               A summary of aggregate
               <a href="{{ cloudHealthUrl }}/olap_reports/azure_performance/virtual_machine"
@@ -176,7 +190,7 @@
               VM memory, file system and CPU usage,</a>
               {{ 'reports.insights.techReview.performanceScalability.subTitle' | translate }}
             </div>
-            <mcs-performance-and-scalability-widget [subscriptionIds]="subscriptionIdsFilter"></mcs-performance-and-scalability-widget>
+            <mcs-performance-and-scalability-widget [subscriptionIds]="performanceSubscriptionIdsFilter"></mcs-performance-and-scalability-widget>
             <mat-divider></mat-divider>
 
             <!-- Monitoring and Alerting -->

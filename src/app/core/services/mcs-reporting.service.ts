@@ -71,7 +71,7 @@ export class McsReportingService {
   public getPerformanceReport(
     startPeriod: string = '',
     endPeriod: string = '',
-    subscriptionIds: string[] = []): Observable<ChartItem[]> {
+    subscriptionIds: string = ''): Observable<ChartItem[]> {
     return this._apiService.getPerformanceReport(startPeriod, endPeriod, subscriptionIds)
       .pipe(map((resources) => this._convertGenericItemToChartItem(resources.collection)));
   }

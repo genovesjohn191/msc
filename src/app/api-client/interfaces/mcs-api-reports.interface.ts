@@ -38,7 +38,7 @@ export interface IMcsApiReportsService {
   getPerformanceReport(
     periodStart?: string,
     periodEnd?: string,
-    subscriptionIds?: string[]): Observable<McsApiSuccessResponse<McsReportGenericItem[]>>;
+    subscriptionIds?: string): Observable<McsApiSuccessResponse<McsReportGenericItem[]>>;
 
   getAzureResourcesReport(): Observable<McsApiSuccessResponse<McsReportIntegerData[]>>;
 

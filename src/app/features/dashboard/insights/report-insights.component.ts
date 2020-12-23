@@ -73,13 +73,25 @@ export class ReportInsightsComponent implements OnDestroy {
   public get subscriptionIdsFilter(): string[] {
     return this._subscriptionIdsFilter;
   }
+
+  public set performanceSubscriptionIdsFilter(value: string) {
+    this._performanceSubscriptionFilterChange.next(value);
+  }
+
+  public get performanceSubscriptionIdsFilter(): string {
+    return this._performanceSubscriptionIdsFilter;
+  }
+
   public _subscriptionIdsFilter: string[] = undefined;
+  public _performanceSubscriptionIdsFilter: string = '';
 
   public serviceCostConfig: PerformanceAndScalabilityWidgetConfig;
   public resourceMonthlyCostConfig: ResourceMonthlyCostWidgetConfig;
 
   public subscriptions: McsReportSubscription[];
+  public performanceSubscriptions: McsReportSubscription[] = [{id: '', name: 'All'}];
   private _subscriptionFilterChange = new BehaviorSubject<string[]>([]);
+  private _performanceSubscriptionFilterChange = new BehaviorSubject<string>('');
   private _selectedResourceCostMonth: PeriodOption;
   private _subscriptionSubject = new Subject();
 
@@ -87,6 +99,7 @@ export class ReportInsightsComponent implements OnDestroy {
     this._getSubscriptions();
     this._createMonthOptions();
     this._listenToSubscriptionFilterChange();
+    this._listenToPerformanceSubscriptionFilterChange();
   }
 
   public ngOnDestroy(): void {
@@ -99,6 +112,8 @@ export class ReportInsightsComponent implements OnDestroy {
       takeUntil(this._subscriptionSubject))
     .subscribe((data) => {
       this.subscriptions = data;
+      this.performanceSubscriptions.push(...data);
+      this.performanceSubscriptionIdsFilter =  this.performanceSubscriptions[0].id;
       this._changeDetector.markForCheck();
     });
   }
@@ -111,6 +126,18 @@ export class ReportInsightsComponent implements OnDestroy {
         JSON.stringify(arr1) === JSON.stringify(arr2)))
     .subscribe((subscriptionIds) => {
       this._subscriptionIdsFilter = subscriptionIds;
+      this._changeDetector.markForCheck();
+    });
+  }
+
+  private _listenToPerformanceSubscriptionFilterChange(): void {
+    this._performanceSubscriptionFilterChange
+    .pipe(
+      debounceTime(2000),
+      distinctUntilChanged((val1: string, va2: string) =>
+        JSON.stringify(val1) === JSON.stringify(va2)))
+    .subscribe((performanceSubscriptionIds) => {
+      this._performanceSubscriptionIdsFilter = performanceSubscriptionIds;
       this._changeDetector.markForCheck();
     });
   }

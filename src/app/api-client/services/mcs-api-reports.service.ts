@@ -115,13 +115,13 @@ export class McsApiReportsService implements IMcsApiReportsService {
   public getPerformanceReport(
     periodStart?: string,
     periodEnd?: string,
-    subscriptionIds?: string[]): Observable<McsApiSuccessResponse<McsReportGenericItem[]>> {
+    subscriptionIds?: string): Observable<McsApiSuccessResponse<McsReportGenericItem[]>> {
 
     let searchParams = new Map<string, any>();
     searchParams.set('period_start', periodStart);
     searchParams.set('period_end', periodEnd);
     if (!isNullOrEmpty(subscriptionIds)) {
-      searchParams.set('subscription_ids', subscriptionIds.join());
+      searchParams.set('subscription_ids', subscriptionIds);
     }
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();

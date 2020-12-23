@@ -14,12 +14,12 @@ import {
 import { catchError } from 'rxjs/operators';
 
 import { ChartConfig, ChartItem } from '@app/shared';
-import { truncateDecimals, isNullOrEmpty, unsubscribeSafely } from '@app/utilities';
+import { unsubscribeSafely } from '@app/utilities';
 import { McsReportingService } from '@app/core/services/mcs-reporting.service';
 
 export interface PerformanceAndScalabilityWidgetConfig {
   period: Date,
-  subscriptionIds: string[];
+  subscriptionIds: string;
 }
 
 @Component({
@@ -49,7 +49,7 @@ export class PerformanceAndScalabilityWidgetComponent implements OnInit, OnDestr
   };
 
   @Input()
-  public set subscriptionIds(value: string[]) {
+  public set subscriptionIds(value: string) {
     if (JSON.stringify(value) === JSON.stringify(this._subscriptionIds)) {
       return;
     }
@@ -63,8 +63,7 @@ export class PerformanceAndScalabilityWidgetComponent implements OnInit, OnDestr
   public hasError: boolean = false;
   public processing: boolean = true;
 
-  private _config: PerformanceAndScalabilityWidgetConfig;
-  private _subscriptionIds: string[] = undefined;
+  private _subscriptionIds: string = undefined;
   private _startPeriod: string = '';
   private _endPeriod: string = '';
 
