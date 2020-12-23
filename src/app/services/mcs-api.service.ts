@@ -1601,7 +1601,7 @@ export class McsApiService {
   public getPerformanceReport(
     periodStart?: string,
     periodEnd?: string,
-    subscriptionIds?: string[]
+    subscriptionIds?: string
   ): Observable<McsApiCollection<McsReportGenericItem>> {
 
     return this._reportsApi.getPerformanceReport(periodStart, periodEnd, subscriptionIds).pipe(
