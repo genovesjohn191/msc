@@ -1,17 +1,19 @@
+import { map } from 'rxjs/operators';
+
 import { Injectable } from '@angular/core';
 import {
   ActivatedRouteSnapshot,
   CanActivate,
   RouterStateSnapshot
 } from '@angular/router';
-import { map } from 'rxjs/operators';
 import {
   McsFeatureFlag,
   RouteKey
 } from '@app/models';
-import { McsAuthenticationService } from './mcs-authentication.service';
-import { McsAccessControlService } from './mcs-access-control.service';
+
 import { McsNavigationService } from '../services/mcs-navigation.service';
+import { McsAccessControlService } from './mcs-access-control.service';
+import { McsAuthenticationService } from './mcs-authentication.service';
 
 @Injectable()
 export class McsAuthenticationGuard implements CanActivate {

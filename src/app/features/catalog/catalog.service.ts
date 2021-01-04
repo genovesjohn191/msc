@@ -5,6 +5,7 @@ import {
 
 import { Injectable } from '@angular/core';
 import { McsOption } from '@app/models';
+import { Search } from '@app/shared';
 import {
   createObject,
   isNullOrEmpty
@@ -23,6 +24,7 @@ export class CatalogService {
   private _catalogItemMenuChange = new BehaviorSubject<CatalogItemMenu>(null);
   private _activeCatalogItemDetailsChange = new BehaviorSubject<CatalogItemDetails>(null);
   private _catalogOptionsCached = new Array<McsOption>();
+  private _useCaseSearchRefChange = new BehaviorSubject<Search>(null);
 
   public get activeCatalogItemDetailsChange(): Observable<CatalogItemDetails> {
     return this._activeCatalogItemDetailsChange.asObservable();
@@ -38,6 +40,14 @@ export class CatalogService {
 
   public set catalogOptionsCached(options: Array<McsOption>) {
     this._catalogOptionsCached = options;
+  }
+
+  public useCaseSearchRefChange(): Observable<Search> {
+    return this._useCaseSearchRefChange.asObservable();
+  }
+
+  public updateUseCaseSeachRef(useCaseSearchRef: Search): void {
+    this._useCaseSearchRefChange.next(useCaseSearchRef);
   }
 
   public updateActiveCatalogItemDetails(details: CatalogItemDetails): void {

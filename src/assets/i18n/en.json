@@ -2394,7 +2394,8 @@
   "catalog": {
     "header": "Catalog",
     "leftPanelHeader": "Catalog",
-    "platformLabel": "Platform"
+    "platformLabel": "Platform",
+    "useCase": "Use Case"
   },
   "tools": {
     "header": "Other Tools",

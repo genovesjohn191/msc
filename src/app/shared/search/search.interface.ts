@@ -1,6 +1,8 @@
 import { Subject } from 'rxjs';
 
-export interface Search {
+import { McsSearch } from '@app/utilities';
+
+export interface Search extends McsSearch {
   /**
    * This will give the keyword to be searched
    */

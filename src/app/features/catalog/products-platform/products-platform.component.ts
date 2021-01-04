@@ -1,34 +1,47 @@
 import {
-  Component,
-  OnInit,
-  ChangeDetectionStrategy
-} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
+  combineLatest,
+  of,
+  Observable
+} from 'rxjs';
 import {
   map,
-  shareReplay,
   tap
 } from 'rxjs/operators';
+
 import {
-  McsNavigationService,
-  McsErrorHandlerService
+  ChangeDetectionStrategy,
+  Component,
+  OnInit
+} from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import {
+  McsErrorHandlerService,
+  McsNavigationService
 } from '@app/core';
 import {
-  RouteKey,
-  McsCatalogProductPlatform,
   CatalogViewType,
-  HttpStatusCode
+  HttpStatusCode,
+  McsCatalogProduct,
+  McsCatalogProductFamily,
+  McsCatalogProductPlatform,
+  RouteKey
 } from '@app/models';
+import { Search } from '@app/shared';
 import {
+  containsString,
+  createObject,
   getSafeProperty,
   isNullOrEmpty,
-  createObject
+  TreeDatasource,
+  TreeGroup,
+  TreeItem,
+  TreeUtility
 } from '@app/utilities';
+
 import { CatalogService } from '../catalog.service';
 import {
-  CatalogItemDetails,
   CatalogHeader,
+  CatalogItemDetails,
   CatalogType
 } from '../shared';
 
@@ -38,8 +51,7 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProductsPlatformComponent implements OnInit {
-
-  public platform$: Observable<McsCatalogProductPlatform>;
+  public treeDatasource = new TreeDatasource<McsCatalogProductFamily>(null);
 
   constructor(
     private _activatedRoute: ActivatedRoute,
@@ -49,7 +61,7 @@ export class ProductsPlatformComponent implements OnInit {
   ) { }
 
   public ngOnInit(): void {
-    this._subscribeToPlatformResolver();
+    this._subscribetoPlatformDetails();
   }
 
   public get routeKeyEnum(): typeof RouteKey {
@@ -61,10 +73,17 @@ export class ProductsPlatformComponent implements OnInit {
     this._navigationService.navigateTo(RouteKey.CatalogProduct, [id]);
   }
 
-  private _subscribeToPlatformResolver(): void {
-    this.platform$ = this._activatedRoute.data.pipe(
-      map((resolver) => getSafeProperty(resolver, (obj) => obj.platform)),
-      tap((platform) => {
+  private _subscribetoPlatformDetails(): void {
+    combineLatest([
+      this._activatedRoute.data,
+      this._catalogService.useCaseSearchRefChange()
+    ]).pipe(
+      map(([resolver, useCaseFilter]) => {
+        let platformDetails = getSafeProperty(resolver, (obj) => obj.platform) as McsCatalogProductPlatform;
+        this._updatePlatformDetails(platformDetails, useCaseFilter);
+        return platformDetails;
+      }),
+      tap(platform => {
         if (isNullOrEmpty(platform)) { this._errorHandlerService.redirectToErrorPage(HttpStatusCode.NotFound); }
         this._catalogService.updateActiveCatalogItemDetails(createObject(CatalogItemDetails, {
           id: platform.id,
@@ -76,8 +95,44 @@ export class ProductsPlatformComponent implements OnInit {
           })
         }));
         this._catalogService.updateCatalogItemMenuByType(CatalogType.Products, false);
-      }),
-      shareReplay(1)
+      })
+    ).subscribe();
+  }
+
+  private _updatePlatformDetails(
+    details: McsCatalogProductPlatform,
+    search: Search
+  ): void {
+    this.treeDatasource.updateDatasource(this._convertFamiliesToTreeItems.bind(this, details));
+    this.treeDatasource
+      .registerSearch(search)
+      .registerSearchPredicate(this._useCaseFilterPredicate.bind(this));
+  }
+
+  private _convertFamiliesToTreeItems(details: McsCatalogProductPlatform): Observable<TreeItem<any>[]> {
+    return of(TreeUtility.convertEntityToTreemItems(
+      details?.families,
+      entity => new TreeGroup(entity.name, entity.id, entity.groups),
+      group => new TreeGroup(group.name, group.id, group.products),
+      product => new TreeGroup(product.name)
+    ));
+  }
+
+  private _useCaseFilterPredicate(
+    product: McsCatalogProduct,
+    keyword: string
+  ): boolean {
+    if (isNullOrEmpty(keyword)) { return true; }
+    // We want to skip those are not product in the searching
+    if (!(product instanceof McsCatalogProduct)) { return false; }
+
+    let useCases = product.useCases || [];
+    let useCaseFound = useCases.find(useCase =>
+      containsString(useCase.name, keyword) ||
+      containsString(useCase.description, keyword)
     );
+    // TODO(apascual): FUSION-3880 Waiting for the API endpoint to be finished.
+    // and we need to retest this
+    return !isNullOrEmpty(useCaseFound);
   }
 }

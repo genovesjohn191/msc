@@ -137,7 +137,7 @@ export class McsListViewDatasource<TEntity> implements McsDataSource<TEntity> {
     // We need to clone the object records to not touch
     // the original instance of the data
     let clonedRecords = cloneObject(dataRecords);
-    return clonedRecords.filter((record) => this._searchPredicate(record, this._search.keyword));
+    return clonedRecords.filter((record) => this._searchPredicate(record, this._search?.keyword));
   }
 
   private _sortRecords(dataRecords: TEntity[]): TEntity[] {
