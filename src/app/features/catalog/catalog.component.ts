@@ -118,6 +118,13 @@ export class CatalogComponent implements OnInit, OnDestroy {
     }
   }
 
+  @ViewChild('useCaseSearch')
+  public set useCaseSearch(value: Search) {
+    if (!isNullOrEmpty(value)) {
+      this._catalogService.updateUseCaseSeachRef(value);
+    }
+  }
+
   public get catalogViewTypeEnum(): typeof CatalogViewType {
     return CatalogViewType;
   }

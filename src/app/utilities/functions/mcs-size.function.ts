@@ -1,3 +1,5 @@
+import { isNullOrEmpty } from './mcs-object.function';
+
 let gbToMbMultiplier = 1024;
 let kbToMbMultiplier = 1024;
 
@@ -29,4 +31,16 @@ export function convertKbToMb(value: number): number {
   if (!value) { return 0; }
 
   return (value / kbToMbMultiplier);
+}
+
+export function getPropertiesByString(rawString: string): string[] {
+  if (isNullOrEmpty(rawString)) { return []; }
+  let allParamsText = rawString.slice(
+    rawString.indexOf('('),
+    rawString.indexOf(')')
+  );
+
+  let splittedParams = allParamsText.split(',')
+    .map(name => name.split('.')[1]);
+  return splittedParams || [];
 }

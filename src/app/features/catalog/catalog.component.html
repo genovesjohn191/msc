@@ -17,9 +17,9 @@
 
   <!-- Side Menu -->
   <mcs-left-panel *mcsLeftPanelDef="'catalog.leftPanelHeader' | translate">
-    <!-- Catalog Options -->
     <ng-container *ngIf="catalogOptions$ | async as catalogOptions">
 
+      <!-- Catalog Options -->
       <mcs-left-panel-item *mcsLeftPanelItemDef>
         <mcs-section>
           <ng-container *ngIf="activeCatalogItemDetails$ | async as activeCatalogItem">
@@ -39,18 +39,18 @@
         </mcs-section>
       </mcs-left-panel-item>
 
-      <!-- Product Platforms Options -->
+      <!-- Product Platforms Options or Solution Options -->
       <ng-container *ngIf="activeCatalogItemDetails$ | async as activeCatalogItem">
         <ng-container *ngIf="catalogViewTypeEnum.ProductPlatform === activeCatalogItem.catalogViewType">
           <ng-container *ngIf="catalogItemMenu$ | async as productCatalogMenu">
             <mcs-left-panel-item *mcsLeftPanelItemDef>
               <mcs-section>
-                <strong>{{ 'catalog.platformLabel' | translate | translate }}</strong>
+                <strong>{{ 'catalog.platformLabel' | translate }}</strong>
                 <mcs-radio-button-group orientation="vertical" [value]="activeCatalogItem.platformType">
                   <ng-container *ngFor="let platform of sortPlatforms(productCatalogMenu.catalogItem.content.platforms)">
                     <ng-container *ngIf="platform.families | mcsIsNotNullOrEmpty">
                       <mcs-item *ngIf="platform.families | mcsArrayHasElement: 'groups'">
-                        <mcs-radio-button  mcsId [value]="platform.name"
+                        <mcs-radio-button [value]="platform.name"
                           mcsId="select-product-platform"
                           mcsEventTracker="catalog-product-platform-option"
                           mcsEventCategory="catalog"
@@ -65,10 +65,18 @@
               </mcs-section>
             </mcs-left-panel-item>
           </ng-container>
+
+          <!-- Use Case Filtering Options -->
+          <mcs-left-panel-item *mcsLeftPanelItemDef>
+            <mcs-section>
+              <strong>{{ 'catalog.useCase' | translate }}</strong>
+              <mcs-search #useCaseSearch mcsId="products-listing-panel-usecase-search"></mcs-search>
+            </mcs-section>
+          </mcs-left-panel-item>
         </ng-container>
       </ng-container>
 
-      <!-- Catalog Item Selection Panel -->
+      <!-- Product Catalog Items Selection Panel -->
       <ng-container *ngIf="catalogItemMenu$ | async as catalogItemMenu">
         <ng-container *ngIf="activeCatalogItemDetails$ | async as activeCatalogItem">
           <ng-container *ngIf="catalogItemMenu.showMenu">

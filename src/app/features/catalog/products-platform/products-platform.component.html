@@ -1,40 +1,40 @@
-<ng-container *ngIf="platform$ | async as platform">
-  <!-- With records -->
-  <mcs-grid *ngIf="platform.families | mcsIsNotNullOrEmpty; else emptyTemplate">
-    <mcs-grid-row>
-      <ng-container *ngFor="let family of platform.families; last as isLastItem">
-          <mcs-grid-column *ngIf="family.groups | mcsIsNotNullOrEmpty">
-            <ng-container *ngIf="family.groups | mcsArrayHasElement: 'products'">
-              <mcs-presentation-panel>
-                <ng-container mcsPresentationPanelHeader>
-                  <h2>{{ family.name }}</h2>
-                </ng-container>
+<ng-container *ngIf="treeDatasource?.connect(null) | async as treeItems; else emptyTemplate">
+  <ng-container *ngIf="treeItems | mcsIsNotNullOrEmpty; else emptyTemplate">
+    <!-- With records -->
+    <mcs-grid>
+      <mcs-grid-row>
+        <ng-container *ngFor="let family of treeItems; last as isLastItem">
+          <mcs-grid-column *ngIf="family.children | mcsIsNotNullOrEmpty">
+            <mcs-presentation-panel>
+              <ng-container mcsPresentationPanelHeader>
+                <h2>{{ family.text }}</h2>
+              </ng-container>
 
-                <mcs-section>
-                  <mcs-list [header]="group.name" *ngFor="let group of family.groups">
-                    <mcs-item *ngFor="let product of group.products">
-                      <a mcsButton="basic" mcsId="select-product"
-                        [mcsGreyedOut]="product.isActiveIncompleteRelease"
-                        labelPlacement="left" text-wrap full-width
-                        (click)="onProductChange(product.id)"
-                        mcsEventTracker="select-product"
-                        mcsEventCategory="catalog"
-                        mcsEventLabel="catalog-product-platform-view">
-                        {{ product.name }}
-                      </a>
-                    </mcs-item>
-                  </mcs-list>
-                </mcs-section>
-              </mcs-presentation-panel>
-            </ng-container>
+              <mcs-section>
+                <mcs-list [header]="group.text" *ngFor="let group of family.children">
+                  <mcs-item *ngFor="let product of group.children">
+                    <a mcsButton="basic" mcsId="select-product"
+                      [mcsGreyedOut]="product.value.isActiveIncompleteRelease"
+                      labelPlacement="left" text-wrap full-width
+                      (click)="onProductChange(product.value.id)"
+                      mcsEventTracker="select-product"
+                      mcsEventCategory="catalog"
+                      mcsEventLabel="catalog-product-platform-view">
+                      {{ product.text }}
+                    </a>
+                  </mcs-item>
+                </mcs-list>
+              </mcs-section>
+            </mcs-presentation-panel>
           </mcs-grid-column>
-        <mcs-divider *ngIf="!isLastItem" orientation="vertical"></mcs-divider>
-      </ng-container>
-    </mcs-grid-row>
-  </mcs-grid>
-
-  <!-- Without records -->
-  <ng-template #emptyTemplate>
-    <p>No products to be displayed.</p>
-  </ng-template>
+          <mcs-divider *ngIf="!isLastItem" orientation="vertical"></mcs-divider>
+        </ng-container>
+      </mcs-grid-row>
+    </mcs-grid>
+  </ng-container>
 </ng-container>
+
+<!-- Without records -->
+<ng-template #emptyTemplate>
+  <p>No products to be displayed.</p>
+</ng-template>
