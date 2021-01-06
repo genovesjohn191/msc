@@ -31,6 +31,14 @@
           customClass="contextual-help-page-wrapper limited-view">
 
           <form [formGroup]="fgRemoteHands" mcsFormGroup>
+            <!-- Contextual Catalog Link -->
+            <ng-container *ngIf="orderItemType$ | async as orderItemType">
+              <mcs-contextual-catalog-link
+                [eventLabel]="'remote-hands-product-catalog-link'"
+                [orderProductId]="orderItemType.productId">
+              </mcs-contextual-catalog-link>
+            </ng-container>
+
               <!-- Rack Service Selection -->
               <ng-container *ngIf="loadingInProgress; else serviceTemplate">
                 <mcs-loader size="small"

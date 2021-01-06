@@ -31,6 +31,13 @@
           customClass="contextual-help-page-wrapper limited-view">
 
           <form [formGroup]="fgMsLicenseCount" mcsFormGroup>
+            <!-- Contextual Catalog Link -->
+            <ng-container *ngIf="orderItemType$ | async as orderItemType">
+              <mcs-contextual-catalog-link
+                [eventLabel]="'license-count-change-product-catalog-link'"
+                [orderProductId]="orderItemType.productId">
+              </mcs-contextual-catalog-link>
+            </ng-container>
 
             <!-- Base License -->
             <mcs-item orientation="block" *ngIf="childLicensesFcConfig$ | async as childLicensesFcConfig">

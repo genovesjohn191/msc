@@ -31,6 +31,13 @@
         customClass="contextual-help-page-wrapper limited-view">
 
         <form [formGroup]="fgServerBackup" mcsFormGroup>
+          <!-- Contextual Catalog Link -->
+          <ng-container *ngIf="orderItemType$ | async as orderItemType">
+            <mcs-contextual-catalog-link
+              [eventLabel]="'server-backup-product-catalog-link'"
+              [orderProductId]="orderItemType.productId">
+            </mcs-contextual-catalog-link>
+          </ng-container>
 
           <mcs-item orientation="block">
             <span align-self-start>{{ 'orderAddServerBackup.detailsStep.serverLabel' | translate }}:</span>

@@ -30,6 +30,14 @@
         [stepTitle]="'orderVdcStorageExpand.vdcDetails.stepTitle' | translate"
         customClass="contextual-help-page-wrapper limited-view">
         <form [formGroup]="fgVdcStorageExpandDetails" mcsFormGroup>
+          <!-- Contextual Catalog Link -->
+          <ng-container *ngIf="orderItemType$ | async as orderItemType">
+            <mcs-contextual-catalog-link
+              [eventLabel]="'vdc-block-storage-product-catalog-link'"
+              [orderProductId]="orderItemType.productId">
+            </mcs-contextual-catalog-link>
+          </ng-container>
+
           <p>{{ 'orderVdcStorageExpand.vdc.description' | translate }}</p>
           <mcs-form-field>
             <mcs-select [formControl]="fcResource" required

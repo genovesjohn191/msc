@@ -31,6 +31,14 @@
           customClass="contextual-help-page-wrapper limited-view">
           <form [formGroup]="fgAddAntiVirusDetails" mcsFormGroup>
 
+            <!-- Contextual Catalog Link -->
+            <ng-container *ngIf="orderItemType$ | async as orderItemType">
+              <mcs-contextual-catalog-link
+                [eventLabel]="'server-anti-virus-product-catalog-link'"
+                [orderProductId]="orderItemType.productId">
+              </mcs-contextual-catalog-link>
+            </ng-container>
+
             <ng-container *ngIf="hasAvPermission; else permissionFallbackTemplate">
               <p>{{ 'orderAddAntiVirus.details.server.description' | translate }}</p>
 

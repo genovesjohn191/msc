@@ -31,6 +31,14 @@
         [stepTitle]="'serverCreateDetailsStep.stepTitle' | translate"
         customClass="contextual-help-page-wrapper limited-view">
 
+        <!-- Contextual Catalog Link -->
+        <ng-container *ngIf="orderItemType$ | async as orderItemType">
+          <mcs-contextual-catalog-link *ngIf="!isSelfManaged"
+            [eventLabel]="'vdc-vm-instance-product-catalog-link'"
+            [orderProductId]="orderItemType.productId">
+          </mcs-contextual-catalog-link>
+        </ng-container>
+
         <mcs-select-resource-dropdown
           (dataChange)="onChangeResource($event)"
           [value]="selectedResource"

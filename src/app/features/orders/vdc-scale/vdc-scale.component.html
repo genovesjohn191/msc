@@ -30,6 +30,14 @@
           [stepTitle]="'orderVdcScale.vdcDetails.stepTitle' | translate"
           customClass="contextual-help-page-wrapper limited-view">
           <form [formGroup]="fgVdcScaleDetails" mcsFormGroup>
+            <!-- Contextual Catalog Link -->
+            <ng-container *ngIf="orderItemType$ | async as orderItemType">
+              <mcs-contextual-catalog-link
+                [eventLabel]="'vdc-product-catalog-link'"
+                [orderProductId]="orderItemType.productId">
+              </mcs-contextual-catalog-link>
+            </ng-container>
+
             <p>{{ 'orderVdcScale.vdc.label' | translate }}</p>
             <mcs-form-field>
               <mcs-select [placeholder]="'orderVdcScale.vdc.placeholder' | translate"

@@ -30,6 +30,14 @@
         [stepTitle]="'orderServerManagedScale.vmDetails.stepTitle' | translate"
         customClass="contextual-help-page-wrapper limited-view">
         <form [formGroup]="fgServerManagedScaleDetails" mcsFormGroup>
+          <!-- Contextual Catalog Link -->
+          <ng-container *ngIf="orderItemType$ | async as orderItemType">
+            <mcs-contextual-catalog-link
+              [eventLabel]="'vdc-vm-instance-product-catalog-link'"
+              [orderProductId]="orderItemType.productId">
+            </mcs-contextual-catalog-link>
+          </ng-container>
+
           <p>{{ 'orderServerManagedScale.vm.label' | translate }}</p>
           <mcs-form-field>
             <mcs-select [placeholder]="'orderServerManagedScale.vm.placeholder' | translate"

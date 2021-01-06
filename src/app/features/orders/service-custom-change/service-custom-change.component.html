@@ -30,6 +30,13 @@
         [stepTitle]="'orderServiceCustomChange.requestDetails.stepTitle' | translate"
         customClass="contextual-help-page-wrapper limited-view">
         <form [formGroup]="fgCustomChangeDetails" mcsFormGroup>
+          <!-- Contextual Catalog Link -->
+          <ng-container *ngIf="orderItemType$ | async as orderItemType">
+            <mcs-contextual-catalog-link
+              [eventLabel]="'server-custom-change-product-catalog-link'"
+              [orderProductId]="orderItemType.productId">
+            </mcs-contextual-catalog-link>
+          </ng-container>
 
           <mcs-item orientation="block">
             <p>{{'orderServiceCustomChange.requestDetails.description' | translate}}</p>

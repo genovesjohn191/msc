@@ -22,7 +22,7 @@
 
         <!-- Error message -->
         <ng-container mcsWizardErrorTemplate>
-          <mcs-form-message #formMessage></mcs-form-message>
+        <mcs-form-message #formMessage></mcs-form-message>
         </ng-container>
 
         <!-- Service Details Step-->
@@ -31,6 +31,14 @@
           customClass="contextual-help-page-wrapper limited-view">
 
           <form [formGroup]="fgMsServiceChange" mcsFormGroup>
+            <!-- Contextual Catalog Link -->
+            <ng-container *ngIf="orderItemType$ | async as orderItemType">
+              <mcs-contextual-catalog-link
+                [eventLabel]="'request-change-product-catalog-link'"
+                [orderProductId]="orderItemType.productId">
+              </mcs-contextual-catalog-link>
+            </ng-container>
+
               <mcs-item>
                 <p [innerHTML]="('orderMsRequestChange.detailsStep.description' | translate) | mcsNewLines"></p>
               </mcs-item>
