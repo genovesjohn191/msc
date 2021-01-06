@@ -27,6 +27,14 @@
         customClass="contextual-help-page-wrapper limited-view">
 
         <form [formGroup]="fgDnsChangeDetails" mcsFormGroup>
+            <!-- Contextual Catalog Link -->
+            <ng-container *ngIf="orderItemType$ | async as orderItemType">
+              <mcs-contextual-catalog-link
+                [eventLabel]="'hosted-dns-change-product-catalog-link'"
+                [orderProductId]="orderItemType.productId">
+              </mcs-contextual-catalog-link>
+            </ng-container>
+
             <ng-container  *ngIf="loadingLeadTimeHours; else dnsTemplate">
               <mcs-loader size="small"
                 [mcsTooltip]="loadingText"

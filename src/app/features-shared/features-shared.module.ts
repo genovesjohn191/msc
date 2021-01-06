@@ -24,6 +24,7 @@ import { RenameServerDialogComponent } from './server-dialogs/rename-server/rena
 import { HelpWidgetComponent } from './help-widget/help-widget.component';
 import { SmacSharedFormComponent } from './smac-shared-form/smac-shared-form.component';
 import { FormFieldsModule } from './form-fields/form-fields.module';
+import { ContextualCatalogLinkComponent } from './contextual-catalog-link/mcs-contextual-catalog-link.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { FormFieldsModule } from './form-fields/form-fields.module';
     AddOnInviewComponent,
     AddOnSqlServerComponent,
     AddOnHidsComponent,
+    ContextualCatalogLinkComponent,
     OrderApprovalComponent,
     OrderItemLeadTimeComponent,
     ServerCommandComponent,
@@ -60,6 +62,7 @@ import { FormFieldsModule } from './form-fields/form-fields.module';
     AddOnInviewComponent,
     AddOnSqlServerComponent,
     AddOnHidsComponent,
+    ContextualCatalogLinkComponent,
     OrderApprovalComponent,
     OrderItemLeadTimeComponent,
     ServerCommandComponent,

@@ -57,6 +57,7 @@ export class ServerCreateComponent extends McsOrderWizardBase
   public selectedResource: McsResource;
   public resource$: Observable<McsResource>;
   public selectedServerId: string;
+  public isSelfManaged: boolean = true;
 
   public get backIconKey(): string {
     return CommonDefinition.ASSETS_SVG_CHEVRON_LEFT;
@@ -124,6 +125,7 @@ export class ServerCreateComponent extends McsOrderWizardBase
    */
   public onChangeResource(resource: McsResource): void {
     if (isNullOrEmpty(resource)) { return; }
+    this.isSelfManaged = resource.isSelfManaged;
     this._subscribeResourceById(resource.id);
 
     this._serverCreateBuilder.setServiceType(resource.serviceType);

@@ -17,7 +17,6 @@
   </mcs-top-panel>
 
   <mcs-content-panel *mcsContentPanelDef>
-
     <mcs-wizard>
 
       <!-- Error message -->
@@ -31,6 +30,14 @@
         customClass="contextual-help-page-wrapper limited-view">
 
         <form [formGroup]="fgRequestPatch" mcsFormGroup>
+          <!-- Contextual Catalog Link -->
+          <ng-container *ngIf="orderItemType$ | async as orderItemType">
+            <mcs-contextual-catalog-link
+              [eventLabel]="'server-request-patch-product-catalog-link'"
+              [orderProductId]="orderItemType.productId">
+            </mcs-contextual-catalog-link>
+          </ng-container>
+
           <!-- Managed Servers -->
           <ng-container *ngIf="loadingInProgress; else serverTemplate">
             <mcs-loader size="small"
