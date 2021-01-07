@@ -3,9 +3,6 @@
   <mcs-snack-bar [snackBarRef]="stompErrorStatusBarRef" theme="dark" [hideCloseButton]="true">
     <mcs-item>
       <span>{{ 'pageNotifications.webStomp.connectionError' | translate }}</span>
-      <span (click)="reconnectWebsocket()" mcsCursor="pointer" text-color="primary">
-        {{ 'pageNotifications.webStomp.connectionRetryButton' | translate }}
-      </span>
     </mcs-item>
   </mcs-snack-bar>
 </ng-template>

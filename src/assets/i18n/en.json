@@ -152,7 +152,7 @@
   },
   "pageNotifications": {
     "webStomp": {
-      "connectionError": "We’re experiencing connectivity issues.",
+      "connectionError": "We’re experiencing connectivity issues. Attempting to reconnect...",
       "connectionSuccess": "Successfully connected.",
       "connectionRetryButton": "RETRY",
       "connectionRefreshButton": "REFRESH"
