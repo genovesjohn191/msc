@@ -17,6 +17,11 @@
                 <span>{{ newOrder.orderAction }}</span>
               </a><br/>
               <span read-only>{{ newOrder.orderName }}</span>
+              <mcs-contextual-catalog-link
+                [isIcon]="true"
+                [eventLabel]="newOrder.orderName + '-product-catalog-link'"
+                [orderProductId]="newOrder.productId">
+              </mcs-contextual-catalog-link>
             </div>
           </section>
 
@@ -39,6 +44,11 @@
                 <span>{{ changeOrder.orderAction }}</span>
               </a><br/>
               <span read-only>{{ changeOrder.orderName }}</span>
+              <mcs-contextual-catalog-link
+                [isIcon]="true"
+                [eventLabel]="changeOrder.orderName + '-product-catalog-link'"
+                [orderProductId]="changeOrder.productId">
+              </mcs-contextual-catalog-link>
             </div>
           </section>
 
