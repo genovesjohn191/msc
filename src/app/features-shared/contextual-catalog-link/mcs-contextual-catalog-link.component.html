@@ -1,7 +1,22 @@
-<div *ngIf="orderProductId">Not familiar with this product? Click 
-  <a target="_blank"
-    mcsEventTracker="navigate-to-product-catalog"
-    mcsEventCategory="product-catalog"
-    mcsEventLabel="{{ eventLabel }}"
-    href="{{ productCatalogLink }}">here</a> to learn more in our Product Catalog.
-</div>
+<ng-container *ngIf="orderProductId">
+  <span *ngIf="isIcon; else textTemplate">
+    <a target="_blank"
+      href="{{ productCatalogLink }}"
+      matTooltip="Learn more in Product Catalog."
+      matTooltipPosition="below"
+      mcsEventTracker="navigate-to-product-catalog"
+      mcsEventCategory="product-catalog"
+      mcsEventLabel="{{ eventLabel }}">
+      <mat-icon [inline]="true" class="launch-icon">launch</mat-icon>
+    </a>
+  </span>
+  <ng-template #textTemplate>
+    <div>Not familiar with this product? Click 
+      <a target="_blank"
+        mcsEventTracker="navigate-to-product-catalog"
+        mcsEventCategory="product-catalog"
+        mcsEventLabel="{{ eventLabel }}"
+        href="{{ productCatalogLink }}">here</a> to learn more in our Product Catalog.
+    </div>
+  </ng-template>
+</ng-container>

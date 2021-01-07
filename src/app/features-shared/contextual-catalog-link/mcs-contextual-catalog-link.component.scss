@@ -1,0 +1,11 @@
+@import "../../../styles/shared/base";
+
+.launch-icon {
+  margin-left: 3px;
+  color: $color-grey-01;
+  vertical-align: middle;
+
+  &:hover {
+    color: $color-primary-01;
+  }
+}
