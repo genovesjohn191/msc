@@ -156,12 +156,19 @@ export class UserPanelComponent implements OnInit, OnDestroy {
    * Event that emits when notification panel is opened
    */
   public onOpenNotificationPanel(jobs: McsJob[]): void {
-    let displayNotificationsPage = isNullOrEmpty(jobs)
-      || this.deviceType !== Breakpoint.Large;
-    if (displayNotificationsPage) { this.viewNotificationsPage(); }
+    let event: Event;
+    let hasRunningJob = !(isNullOrEmpty(jobs));
+    let isBreakpointLarge = this.deviceType === Breakpoint.Large;
+    let displayNotificationsPage = (!hasRunningJob) && (!isBreakpointLarge);
+    let mobileMode = !isBreakpointLarge && !isNullOrEmpty(this.notificationsPopover);
 
-    let mobileMode = this.deviceType !== Breakpoint.Large
-      && !isNullOrEmpty(this.notificationsPopover);
+    if (displayNotificationsPage) {
+      this.viewNotificationsPage();
+    }
+    else {
+      event.stopPropagation();
+      this.notificationsPopover.toggle();
+    }
     if (mobileMode) { this.notificationsPopover.close(); }
   }
 
