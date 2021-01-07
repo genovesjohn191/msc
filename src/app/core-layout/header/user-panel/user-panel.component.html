@@ -61,12 +61,13 @@
     <div class="user-panel-item notification-item" *ngIf="notifications$ | async as notifications">
       <a class="icon-content"
         mcsPopover #notificationsPopover="mcsPopover"
+        [trigger]="'manual'"
         (onOpen)="onOpenNotificationPanel(notifications)"
         maxWidth="350px" padding="none"
-        placement="bottom" orientation="left" theme="light" priority="max"
+        placement="bottom" orientation="left" theme="light" priority="high"
         [content]="notificationsContent">
 
-        <mcs-icon [key]="bellIconKey" size="medium" color="light"></mcs-icon>
+        <mcs-icon [key]="bellIconKey" size="medium" color="light" ></mcs-icon>
         <span *ngIf="notifications | mcsIsNotNullOrEmpty">{{ notifications.length }}</span>
       </a>
     </div>
