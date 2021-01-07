@@ -131,6 +131,8 @@ export class WebStompComponent implements AfterViewInit, OnDestroy {
         horizontalAlignment: 'end'
       } as SnackBarConfig
     );
+
+    this.reconnectWebsocket();
   }
 
   /**
