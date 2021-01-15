@@ -11,8 +11,7 @@ export class SimpleFirewallChangeRemoveEvent implements IOrderEventStrategy {
     this._navigationService = injector.get(McsNavigationService);
   }
 
-  // TO DO: enable when remove simple firewall change is complete
   public executeEvent(): void {
-    // this._navigationService.navigateTo(RouteKey.OrderRemoveSimpleFirewallChange);
+    this._navigationService.navigateTo(RouteKey.OrderRemoveSimpleFirewallChange);
   }
 }

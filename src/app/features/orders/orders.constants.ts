@@ -25,8 +25,10 @@ import { MsLicenseCountChangeComponent } from './ms-license-count-change/ms-lice
 import { MsRequestChangeComponent } from './ms-request-change/ms-request-change.component';
 import { RemoteHandsComponent } from './remote-hands/remote-hands.component';
 import { ServerRequestPatchComponent } from './server-request-patch/server-request-patch.component';
-import { SimpleFirewallChangeComponent } from './simple-firewall-changes/simple-firewall-change.component';
-import { FirewallChangesSharedRuleComponent } from './simple-firewall-changes/firewall-changes-shared-rule/firewall-changes-shared-rule.component';
+import { AddSimpleFirewallChangeComponent } from './simple-firewall-changes/add-firewall-changes/add-simple-firewall-change.component';
+import { FirewallChangesSharedRuleComponent } from './simple-firewall-changes/firewall-changes-shared/rule/firewall-changes-shared-rule.component';
+import { ModifySimpleFirewallChangeComponent } from './simple-firewall-changes/modify-firewall-changes/modify-simple-firewall-change.component';
+import { RemoveSimpleFirewallChangeComponent } from './simple-firewall-changes/remove-firewall-changes/remove-simple-firewall-change.component';
 import { OrdersGuard } from './orders.guard';
 
 /**
@@ -64,7 +66,9 @@ export const ordersComponents: any[] = [
   MsRequestChangeComponent,
   RemoteHandsComponent,
   ServerRequestPatchComponent,
-  SimpleFirewallChangeComponent,
+  AddSimpleFirewallChangeComponent,
+  ModifySimpleFirewallChangeComponent,
+  RemoveSimpleFirewallChangeComponent,
   FirewallChangesSharedRuleComponent
 ];
 
@@ -173,9 +177,19 @@ export const ordersRoutes: Routes = [
     data: { routeId: RouteKey.OrderServerRequestPatch }
   },
   {
-    path: 'add/simple-firewall-changes',
-    component: SimpleFirewallChangeComponent,
+    path: 'change/add-simple-firewall-changes',
+    component: AddSimpleFirewallChangeComponent,
     data: { routeId: RouteKey.OrderAddSimpleFirewallChange }
+  },
+  {
+    path: 'change/modify-simple-firewall-changes',
+    component: ModifySimpleFirewallChangeComponent,
+    data: { routeId: RouteKey.OrderModifySimpleFirewallChange }
+  },
+  {
+    path: 'change/remove-simple-firewall-changes',
+    component: RemoveSimpleFirewallChangeComponent,
+    data: { routeId: RouteKey.OrderRemoveSimpleFirewallChange }
   },
   // Add additional routes above this line
   {

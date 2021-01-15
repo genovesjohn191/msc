@@ -1,0 +1,175 @@
+<form [formGroup]="formGroup" 
+      [mcsContextualHelp]="formHelpText"
+      mcsFormGroup>
+    <mcs-grid>
+      <ng-container *ngIf="isAddRule" >
+              <mcs-grid-row [gapSize]="4">
+                <mcs-grid-column sizeLg="6">
+                  <mcs-form-field>
+                    <mcs-select [formControl]="formGroup?.controls['fcActionType']" required
+                      (selectionChange)="onActionTypeSelectionChange($event)"
+                      mcsId="select-order-simple-firewall-change-action-type"
+                      mcsEventTracker="select-order-simple-firewall-change-action-type"
+                      mcsEventCategory="order"
+                      mcsEventLabel="simple-firewall-change-page">
+
+                      <mcs-option *ngFor="let actionType of actionTypeOptions$ | async" [value]="actionType.value">
+                        {{ actionType.text }}
+                      </mcs-option>
+                    </mcs-select>
+                  </mcs-form-field>
+                </mcs-grid-column>
+              </mcs-grid-row>
+
+              <mcs-grid-row [gapSize]="4" margin-top-small>
+                <mcs-grid-column sizeLg="6">
+                  <mcs-form-field>
+                    <input mcsInput
+                      [formControl]="formGroup?.controls['fcSourceZoneInterface']"
+                      [placeholder]="'orderSimpleFirewallChanges.detailsStep.add.sourceZoneOrInterface.placeholder' | translate"
+                      mcsId="input-add-simple-firewall-change-source-zone-interface"
+                      required>
+                    <mcs-error mcsError errorState="required">
+                      {{ 'orderSimpleFirewallChanges.detailsStep.add.sourceZoneOrInterface.errorRequired' | translate }}
+                    </mcs-error>
+                  </mcs-form-field>
+                </mcs-grid-column>
+                <mcs-grid-column sizeLg="6">
+                  <mcs-form-field>
+                    <input mcsInput
+                      [formControl]="formGroup?.controls['fcSourceIpSubnet']"
+                      [mcsContextualHelp]="'orderSimpleFirewallChanges.detailsStep.add.sourceIpOrSubnet.helpText' | translate"
+                      [placeholder]="'orderSimpleFirewallChanges.detailsStep.add.sourceIpOrSubnet.placeholder' | translate"
+                      mcsId="input-add-simple-firewall-change-source-ip-subnet"
+                      required>
+                    <mcs-error mcsError errorState="required">
+                      {{ 'orderSimpleFirewallChanges.detailsStep.add.sourceIpOrSubnet.errorRequired' | translate }}
+                    </mcs-error>
+                    <mcs-error mcsError errorState="ipAddressShortHandMask">
+                      {{ 'orderSimpleFirewallChanges.detailsStep.add.sourceIpOrSubnet.invalidFormat' | translate }}
+                    </mcs-error>
+                  </mcs-form-field>
+                </mcs-grid-column>
+              </mcs-grid-row>
+
+              <mcs-grid-row [gapSize]="4" margin-top-small>
+                <mcs-grid-column sizeLg="6">
+                  <mcs-form-field>
+                    <input mcsInput
+                      [formControl]="formGroup?.controls['fcDestinationZoneInterface']"
+                      [placeholder]="'orderSimpleFirewallChanges.detailsStep.add.destinationZoneOrInterface.placeholder' | translate"
+                      mcsId="input-add-simple-firewall-change-destination-zone-interface"
+                      required>
+                    <mcs-error mcsError errorState="required">
+                      {{ 'orderSimpleFirewallChanges.detailsStep.add.destinationZoneOrInterface.errorRequired' | translate }}
+                    </mcs-error>
+                  </mcs-form-field>
+                </mcs-grid-column>
+                <mcs-grid-column sizeLg="6">
+                  <mcs-form-field>
+                    <input mcsInput
+                      [formControl]="formGroup?.controls['fcDestinationIpSubnet']"
+                      [mcsContextualHelp]="'orderSimpleFirewallChanges.detailsStep.add.destinationIpOrSubnet.helpText' | translate"
+                      [placeholder]="'orderSimpleFirewallChanges.detailsStep.add.destinationIpOrSubnet.placeholder' | translate"
+                      mcsId="input-add-simple-firewall-change-destination-ip-subnet"
+                      required>
+                    <mcs-error mcsError errorState="required">
+                      {{ 'orderSimpleFirewallChanges.detailsStep.add.destinationIpOrSubnet.errorRequired' | translate }}
+                    </mcs-error>
+                    <mcs-error mcsError errorState="ipAddressShortHandMask">
+                      {{ 'orderSimpleFirewallChanges.detailsStep.add.destinationIpOrSubnet.invalidFormat' | translate }}
+                    </mcs-error>
+                  </mcs-form-field>
+                </mcs-grid-column>
+              </mcs-grid-row>
+
+              <mcs-grid-row [gapSize]="4" margin-top-small>
+                <mcs-grid-column sizeLg="6">
+                  <mcs-form-field>
+                    <input mcsInput
+                      [formControl]="formGroup?.controls['fcDestinationPort']"
+                      [placeholder]="'orderSimpleFirewallChanges.detailsStep.add.destinationPort.placeholder' | translate"
+                      mcsId="input-add-simple-firewall-change-destination-port"
+                      required>
+                    <mcs-error mcsError errorState="required">
+                      {{ 'orderSimpleFirewallChanges.detailsStep.add.destinationPort.errorRequired' | translate }}
+                    </mcs-error>
+                  </mcs-form-field>
+                </mcs-grid-column>
+                <mcs-grid-column sizeLg="6">
+                  <mcs-form-field>
+                    <mcs-select [formControl]="formGroup?.controls['fcProtocol']" required
+                      mcsId="select-order-simple-firewall-change-protocol"
+                      mcsEventTracker="select-order-simple-firewall-change-protocol"
+                      mcsEventCategory="order"
+                      mcsEventLabel="simple-firewall-change-page">
+                      <mcs-option *ngFor="let protocolType of protocolTypeOptions$ | async" [value]="protocolType.value">
+                        {{ protocolType.text }}
+                      </mcs-option>
+                    </mcs-select>
+                  </mcs-form-field>
+                </mcs-grid-column>
+              </mcs-grid-row>
+            </ng-container>
+            <!-- Remove Rule -->
+            <ng-container *ngIf="isRemoveRule">
+              <mcs-grid-row [gapSize]="4" margin-top-small >
+                <mcs-grid-column sizeLg="12">
+                  <mcs-form-field>
+                    <textarea
+                    required
+                    mcsInput rows="3"
+                    [formControl]="formGroup?.controls['fcRulesToDelete']"
+                    [placeholder]="'orderSimpleFirewallChanges.detailsStep.remove.rulesToRemove.placeHolder' | translate"
+                    mcsEventTracker="textarea-remove-simple-firewall-change-rule"
+                    mcsEventCategory="order"
+                    mcsEventLabel="order-remove-simple-firewall-change"
+                    mcsId="textarea-remove-simple-firewall-change-rule"></textarea>
+                    <mcs-error mcsError errorState="required">
+                      {{ 'orderSimpleFirewallChanges.detailsStep.remove.rulesToRemove.errorRequired' | translate }}
+                    </mcs-error>
+                  </mcs-form-field>
+                </mcs-grid-column>
+              </mcs-grid-row>
+            </ng-container>
+             <!-- Modify Rule -->
+            <ng-container *ngIf="isModifyRule">
+              <mcs-grid-row [gapSize]="4" margin-top-small >
+                <mcs-grid-column sizeLg="12">
+                  <mcs-form-field>
+                    <textarea
+                    required
+                    mcsInput rows="3"
+                    [formControl]="formGroup?.controls['fcExistingRule']"
+                    [placeholder]="'orderSimpleFirewallChanges.detailsStep.modify.existingRule.placeHolder' | translate"
+                    mcsEventTracker="textarea-modify-simple-firewall-change-rule"
+                    mcsEventCategory="order"
+                    mcsEventLabel="order-modify-simple-firewall-change"
+                    mcsId="textarea-modify-simple-firewall-change-rule"></textarea>
+                    <mcs-error mcsError errorState="required">
+                      {{ 'orderSimpleFirewallChanges.detailsStep.modify.existingRule.errorRequired' | translate }}
+                    </mcs-error>
+                  </mcs-form-field>
+                </mcs-grid-column>
+              </mcs-grid-row>
+              <mcs-grid-row [gapSize]="4" margin-top-small >
+                <mcs-grid-column sizeLg="12">
+                  <mcs-form-field>
+                    <textarea
+                    required
+                    mcsInput rows="3"
+                    [formControl]="formGroup?.controls['fcNewRule']"
+                    [placeholder]="'orderSimpleFirewallChanges.detailsStep.modify.newRule.placeHolder' | translate"
+                    mcsEventTracker="textarea-modify-simple-firewall-change-rule"
+                    mcsEventCategory="order"
+                    mcsEventLabel="order-modify-simple-firewall-change"
+                    mcsId="textarea-modify-simple-firewall-change-rule"></textarea>
+                    <mcs-error mcsError errorState="required">
+                      {{ 'orderSimpleFirewallChanges.detailsStep.modify.newRule.errorRequired' | translate }}
+                    </mcs-error>
+                  </mcs-form-field>
+                </mcs-grid-column>
+              </mcs-grid-row>
+            </ng-container>
+  </mcs-grid>
+</form>

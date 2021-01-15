@@ -36,9 +36,11 @@
             </ng-container>
 
             <ng-container  *ngIf="loadingLeadTimeHours; else dnsTemplate">
-              <mcs-loader size="small"
-                [mcsTooltip]="loadingText"
-                mcsTooltipPosition="right"></mcs-loader>
+              <mcs-item orientation="block">
+                <mcs-loader size="small"
+                  [mcsTooltip]="loadingText"
+                  mcsTooltipPosition="right"></mcs-loader>
+              </mcs-item>
             </ng-container>
             <ng-template #dnsTemplate>
                 <mcs-item orientation="block">
@@ -93,7 +95,8 @@
                       mcsTooltipPosition="right"></mcs-loader>
                   </ng-container>
                   <ng-template #dnsZones>
-                    <mcs-form-field *ngIf="!(loadingDNSZones) && networkDnsZoneOptions | mcsArrayHasElement; else noZoneTemplate">
+                    <mcs-form-field *ngIf="!(loadingDNSZones) && 
+                                            (networkDnsZoneOptions | mcsArrayHasElement); else noZoneTemplate">
                       <mcs-select [formControl]="fcZone" required
                         [placeholder]="'orderHostedDnsChange.requestDetails.zones.placeholder' | translate"
                         [mcsContextualHelp]="'orderHostedDnsChange.requestDetails.zones.helptext' | translate"
@@ -108,7 +111,7 @@
                       </mcs-error>
                     </mcs-form-field>
                     <ng-template #noZoneTemplate>
-                      <p [mcsGreyedOut]="true">
+                      <p [mcsGreyedOut]="true" *ngIf="!(loadingDNSZones) && networkDnsOptions | mcsArrayHasElement">
                         <span>{{ 'orderHostedDnsChange.requestDetails.zones.fallback' | translate }}</span>
                         <ng-container *mcsAccessControl="['TicketCreate']">
                           <span> {{'orderHostedDnsChange.requestDetails.zones.raiseTicketPrefix' | translate }} </span>

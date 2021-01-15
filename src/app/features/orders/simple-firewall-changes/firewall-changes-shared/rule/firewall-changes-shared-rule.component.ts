@@ -33,7 +33,7 @@ import {
   RuleAction,
   FirewallChangesSharedRule
 } from './firewall-changes-shared-rule';
-import { FirewallChangesRuleFactory } from './firewall-changes-shared-rule.factory';
+import { FirewallChangesRuleHelper } from './firewall-changes-shared-rule.helper';
 import { IMcsFormGroup } from '@app/core';
 import { McsOption } from '@app/models';
 import { McsFormGroupDirective } from '@app/shared';
@@ -52,7 +52,8 @@ export class FirewallChangesSharedRuleComponent implements IMcsFormGroup, OnInit
 
   @Output()
   public dataChange = new EventEmitter<FirewallChangesSharedRule>();
-
+  @Input()
+  public ruleActionType: RuleAction;
   @Input()
   public formGroup: FormGroup;
 
@@ -63,9 +64,7 @@ export class FirewallChangesSharedRuleComponent implements IMcsFormGroup, OnInit
     this._formGroup = value;
     this._subscribeToValueChanges();
   }
-
-  private _routerHandler: Subscription;
-
+  public formHelpText: string;
   private _formGroup: McsFormGroupDirective;
   private _valueChangesSubject = new Subject<void>();
 
@@ -77,52 +76,47 @@ export class FirewallChangesSharedRuleComponent implements IMcsFormGroup, OnInit
   public ngOnInit(): void {
     this._subscribeToActionTypeOptions();
     this._subscribeToProtocolTypeOptions();
+    this._assignFormLabelsAndHelpText(this.ruleActionType);
   }
 
   public ngOnDestroy() {
     unsubscribeSafely(this._valueChangesSubject);
   }
 
-  /**
-   * Returns the form group
-   */
   public getFormGroup(): McsFormGroupDirective {
     return this._formGroup;
   }
 
-  /**
-   * Returns true when the form group is valid
-   */
   public isValid(): boolean {
     return getSafeProperty(this._formGroup, (obj) => obj.isValid());
   }
 
-  /**
-   * Returns true when the rule action is Add
-   */
-  public isAddRule(value: RuleAction): boolean {
-    return value === RuleAction.Add;
+  public get isAddRule(): boolean {
+    return this.ruleActionType === RuleAction.Add;
   }
 
-  /**
-   * Returns true when the rule action is Remove
-   */
-  public isRemoveRule(value: RuleAction): boolean {
-    return value === RuleAction.Remove;
+  public get isRemoveRule(): boolean {
+    return this.ruleActionType === RuleAction.Remove;
   }
 
-  /**
-   * Returns true when the rule action is Modify
-   */
-  public isModifyRule(value: RuleAction): boolean {
-    return value === RuleAction.Modify;
+  public get isModifyRule(): boolean {
+    return this.ruleActionType === RuleAction.Modify;
   }
+  public get addRuleHelpText(): string {
+    return this._translate.instant('orderSimpleFirewallChanges.detailsStep.add.helpText');
+  }
+  public get modifyRuleHelpText(): string {
+    return this._translate.instant('orderSimpleFirewallChanges.detailsStep.modify.helpText');
+  }
+  public get removeRuleHelpText(): string {
+    return this._translate.instant('orderSimpleFirewallChanges.detailsStep.remove.helpText');
+  }
 
   /**
    * Event listener when the action type was change
    */
   public onActionTypeSelectionChange(action: RuleAction): void {
-    let changeControls = FirewallChangesRuleFactory.createFormControls(action);
+    let changeControls = FirewallChangesRuleHelper.createFormControls(action);
     this._assignFormControlsToGroup(changeControls);
     this._changeDetector.markForCheck();
   }
@@ -190,5 +184,21 @@ export class FirewallChangesSharedRuleComponent implements IMcsFormGroup, OnInit
     protocolTypeOptions.push(createObject(McsOption, { text: ProtocolType.IP, value: ProtocolType.IP }));
     protocolTypeOptions.push(createObject(McsOption, { text: ProtocolType.TCPUDP, value: ProtocolType.TCPUDP }));
     this.protocolTypeOptions$ = of(protocolTypeOptions);
+  }
+
+   private _assignFormLabelsAndHelpText(ruleAction: RuleAction): void {
+      switch(ruleAction) {
+        case RuleAction.Modify:
+            this.formHelpText = this.modifyRuleHelpText;
+            break;
+        case RuleAction.Remove:
+            this.formHelpText = this.removeRuleHelpText;
+            break;
+        case RuleAction.Add:
+            this.formHelpText = this.addRuleHelpText;
+            break;
+        default:
+          break;
+    }
   }
 }

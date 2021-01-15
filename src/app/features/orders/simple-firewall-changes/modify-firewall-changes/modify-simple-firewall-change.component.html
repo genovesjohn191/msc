@@ -1,4 +1,4 @@
-<mcs-page [header]="'orderSimpleFirewallChanges.title' | translate">
+<mcs-page [header]="'orderSimpleFirewallChanges.modifyTitle' | translate">
     <!-- Top Panel -->
     <mcs-top-panel *mcsTopPanelDef>
   
@@ -25,7 +25,7 @@
         <mcs-wizard-step id="request-details-step"
           [stepTitle]="'orderSimpleFirewallChanges.detailsStep.stepTitle' | translate"
           customClass="contextual-help-page-wrapper limited-view">
-          <form [formGroup]="fgAddFirewallRules" mcsFormGroup>
+          <form [formGroup]="fgModifyFirewallRules" mcsFormGroup>
             <!-- Contextual Catalog Link -->
             <ng-container *ngIf="orderItemType$ | async as orderItemType">
               <mcs-contextual-catalog-link
@@ -35,17 +35,20 @@
             </ng-container>
 
             <ng-container  *ngIf="isLoading; else dnsTemplate">
-              <mcs-loader size="small"
-                [mcsTooltip]="loadingText"
-                mcsTooltipPosition="right"></mcs-loader>
+              <mcs-item orientation="block">
+                <mcs-loader size="small"
+                  [mcsTooltip]="loadingText"
+                  mcsTooltipPosition="right"></mcs-loader>
+              </mcs-item>
             </ng-container>
             <ng-template #dnsTemplate>
                 <mcs-item orientation="block">
-                  <p>{{'orderSimpleFirewallChanges.detailsStep.description' | translate}}</p>
-                  <p>{{'orderSimpleFirewallChanges.detailsStep.leadTime' | translate: { lead_time: dnsLeadTimeHours } }}</p>
+                  <p>{{'orderSimpleFirewallChanges.detailsStep.modify.description' | translate}}</p>
+                  <p>{{'orderSimpleFirewallChanges.detailsStep.sharedRuleForm.leadTime' | translate: { lead_time: leadTimeHours } }}</p>
                 </mcs-item>
             </ng-template>
                 <!-- Firewall Services -->
+                <!--TO DO: convert to shared angular material dynamic dropdown for firerwall services-->
                 <mcs-item orientation='block'>
                   <ng-container  *ngIf="isLoading; else firewallService">
                     <mcs-loader size="small"
@@ -58,7 +61,7 @@
                         [placeholder]="'orderSimpleFirewallChanges.detailsStep.firewallService.placeholder' | translate"
                         [mcsContextualHelp]="'orderSimpleFirewallChanges.detailsStep.firewallService.helptext' | translate"
                         mcsId="select-firewall-service" mcsEventTracker="select-firewall-service" mcsEventCategory="order"
-                        mcsEventLabel="add-simple-firewall-change-page">
+                        mcsEventLabel="modify-simple-firewall-change-page">
                         <mcs-option *ngFor="let firewallOption of firewallOptions " [value]="firewallOption.value">
                           {{ firewallOption.text }}
                         </mcs-option>
@@ -74,7 +77,7 @@
                           <span> {{'orderSimpleFirewallChanges.detailsStep.firewallService.raiseTicketPrefix' | translate }} </span>
                           <a [mcsRouterLink]="[routeKeyEnum.TicketCreate]" mcsId="raise-a-ticket"
                             mcsEventTracker="raise-a-ticket" mcsEventCategory="ticket"
-                            mcsEventLabel="add-simple-firewall-change-page">{{ 'orderSimpleFirewallChanges.detailsStep.firewallService.raiseTicketLink' | translate }}</a>
+                            mcsEventLabel="modify-simple-firewall-change-page">{{ 'orderSimpleFirewallChanges.detailsStep.firewallService.raiseTicketLink' | translate }}</a>
                           <span> {{'orderSimpleFirewallChanges.detailsStep.firewallService.raiseTicketSuffix' | translate }}</span>
                         </ng-container>.
                       </p>
@@ -82,33 +85,31 @@
                   </ng-template>
                 </mcs-item>
 
-                <mcs-item orientation="block">
-                    <div formArrayName="faSharedRuleForm">
-                    <mcs-accordion [multi]="true">
-                        <mcs-accordion-panel *ngFor="let formItem of faSharedRuleForm?.controls; index as i" [expanded]="i === 0" margin-top-small>
-                        <mcs-accordion-panel-header mcsPanelHeaderDef>
-                            <span>{{ getFormControl(formItem, 'fcActionType').value }}</span>
-                            <span *ngIf="getFormControl(formItem, 'fcSourceIpSubnet').value"> - {{ getFormControl(formItem, 'fcSourceIpSubnet').value }}</span>
-                            <span *ngIf="getFormControl(formItem, 'fcDestinationIpSubnet').value"> -> {{ getFormControl(formItem, 'fcDestinationIpSubnet').value }}</span>
-                            <span *ngIf="getFormControl(formItem, 'fcProtocol').value"> {{ getFormControl(formItem, 'fcProtocol').value }}</span>
+                <mcs-item orientation="block">
+                  <div>{{modifyRuleLabel}}</div>
+                  <div formArrayName="faSharedRuleForm">
+                    <mcs-accordion [multi]="true">
+                      <mcs-accordion-panel *ngFor="let formItem of faSharedRuleForm?.controls; index as i" [expanded]="i === 0" margin-top-small>
+                        <mcs-accordion-panel-header mcsPanelHeaderDef>
+                          <span>{{ 'orderSimpleFirewallChanges.detailsStep.modify.tabHeader' | translate: { index: i+1 } }}</span>
                         </mcs-accordion-panel-header>
-                        <mcs-firewall-changes-shared-rule
-                            [formGroup]="formItem"
-                            (dataChange)="onChangeToApplyFormDataChange()">
-                        </mcs-firewall-changes-shared-rule>
-                        <mcs-item orientation="separated" margin-top-small *ngIf="isChangeItemRemovable(faSharedRuleForm?.controls?.length)">
-                            <button mcsButton color="error" (click)="removeChangeItem(i)">
-                              {{ 'orderSimpleFirewallChanges.detailsStep.sharedRuleForm.removeBtnLabel' | translate }}
+                            <mcs-firewall-changes-shared-rule [formGroup]="formItem"
+                              (dataChange)="onChangeToApplyFormDataChange()"
+                              [ruleActionType]="ruleActionType">
+                            </mcs-firewall-changes-shared-rule>
+                          <mcs-item orientation="separated" margin-top-small *ngIf="isChangeItemRemovable(faSharedRuleForm?.controls?.length)">
+                            <button mcsButton color="error" (click)="removeChangeItem(i)">
+                              {{ 'orderSimpleFirewallChanges.detailsStep.sharedRuleForm.removeBtnLabel' | translate }}
                             </button>
-                        </mcs-item>
-                        </mcs-accordion-panel>
+                          </mcs-item>
+                      </mcs-accordion-panel>
                     </mcs-accordion>
-                    </div>
-                    <div class="action-items" margin-top-medium margin-bottom-none>
-                      <button mcsButton (click)="addChangeItem()">
-                        {{ 'orderSimpleFirewallChanges.detailsStep.sharedRuleForm.addBtnLabel' | translate }}
-                      </button>
-                    </div>
+                  </div>
+                  <div class="action-items" margin-top-medium margin-bottom-none>
+                    <button mcsButton (click)="addChangeItem()">
+                      {{ 'orderSimpleFirewallChanges.detailsStep.sharedRuleForm.addBtnLabel' | translate }}
+                    </button>
+                  </div>
                 </mcs-item>
 
                 <!-- SMAC Shared Form -->
@@ -121,7 +122,7 @@
                 <div class="action-items">
                     <button mcsButton arrow="right" mcsWizardStepNext [disabled]="!formIsValid" mcsId="step-1-next"
                     mcsEventTracker="step-1-next" mcsEventCategory="orders"
-                    mcsEventLabel="add-simple-firewall-change-next">{{ 'shared.wizard.next' | translate }}</button>
+                    mcsEventLabel="modify-simple-firewall-change-next">{{ 'shared.wizard.next' | translate }}</button>
                 </div>
             </form>
         </mcs-wizard-step>

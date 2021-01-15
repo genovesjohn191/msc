@@ -1,5 +1,5 @@
 import { JsonProperty } from '@app/utilities';
-import { McsOrderSimpleFirewallAddRule } from './mcs-order-simple-firewall-add-rules';
+import { McsOrderSimpleFirewallAddRule } from './mcs-order-simple-firewall-add-rule';
 
 export class McsOrderAddSimpleFirewallChange {
   @JsonProperty()

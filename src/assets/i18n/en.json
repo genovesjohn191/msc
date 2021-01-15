@@ -964,12 +964,13 @@
   },
   "orderSimpleFirewallChanges": {
     "title": "Simple Firewall Change",
+    "addTitle": "Simple Firewall Change - Add",
+    "modifyTitle": "Simple Firewall Change - Modify",
+    "removeTitle": "Simple Firewall Change - Remove",
     "detailsStep": {
       "stepTitle": "Request Details",
       "previous": "Back",
       "cancel": "Cancel",
-      "description": "You can use this wizard to request new rules be added to your firewall service.",
-      "leadTime": "Our standard lead time of {{lead_time}} hours for this request ensures we have time to get the right engineer for the task.",
       "addRuleTabLabel": "Add a Rule",
       "modifyRuleTabLabel": "Modify a Rule",
       "removeRuleTabLabel": "Remove a Rule",
@@ -981,44 +982,79 @@
         "raiseTicketLink": "raise a ticket",
         "raiseTicketSuffix": "if this is unexpected"
       },
+      "add": {
+        "description": "You can use this wizard to request new rules be added to your firewall service.",
+        "label": "What firewall rules would you like to add?",
+        "helpText": "Enter the source and destination details, and the protocol for your new rule. Use the Additional Change button to add multiple.",
+        "action": {
+          "errorRequired": "action is required"
+        },
+        "sourceZoneOrInterface": {
+          "placeholder": "Source Zone or Interface",
+          "errorRequired": "Source Zone/Interface is required"
+        },
+        "sourceIpOrSubnet": {
+          "placeholder": "Source IP or Subnet",
+          "helpText": "<br/><br/>Acceptable format examples:<br/>10.1.1.1<br/>10.1.1.1/32",
+          "errorRequired": "Source IP/Subnet is required",
+          "invalidFormat": "Please enter an IPv4 address or range"
+        },
+        "destinationZoneOrInterface": {
+          "placeholder": "Destination Zone or Interface",
+          "errorRequired": "Destination Zone/Interface is required"
+        },
+        "destinationIpOrSubnet": {
+          "placeholder": "Destination IP or Subnet",
+          "helpText": "Acceptable format examples:<br/>10.1.1.1<br/>10.1.1.1/32",
+          "errorRequired": "Destination IP/Subnet is required",
+          "invalidFormat": "Please enter an IPv4 address or range"
+        },
+        "destinationPort": {
+          "placeholder": "Destination Port(s)",
+          "errorRequired": "Protocol is required"
+        },
+        "protocol": {
+          "errorRequired": "Protocol is required"
+        }
+      },
+      "remove": {
+        "tabHeader": "Rule to remove {{index}}",
+        "description": "You can use this wizard to request rules be removed for your firewall service.",
+        "label": "What firewall rules would you like to remove?",
+        "helpText": "Enter the details of the rule you would like removed.<br/>Use the Additional Change button to remove multiple.",
+        "action": {
+          "errorRequired": "action is required"
+        },
+        "rulesToRemove": {
+          "placeHolder": "Existing rule",
+          "errorRequired": "This field is required"
+        }
+      },
+      "modify": {
+        "tabHeader": "Rule to modify {{index}}",
+        "description": "You can use this wizard to request rule modifications for your firewall service",
+        "label": "What firewall rules would you like to modify?",
+        "helpText": "Enter the details of your existing rule and the parameters for the new rule which will replace it.<br/>Use the Additional Change button to modify multiple.",
+        "existingRule": {
+          "placeHolder": "Existing rule",
+          "errorRequired": "This field is required"
+        },
+        "newRule": {
+          "placeHolder": "New Rule",
+          "errorRequired": "This field is required"
+        }
+      },
       "sharedRuleForm": {
+        "leadTime": "Our standard lead time of {{lead_time}} hours for this request ensures we have time to get the right engineer for the task.",
         "addBtnLabel": "Additional Change",
+        "notesLabel": "Additional Details",
         "removeBtnLabel": "Remove Item",
-        "add": {
-          "label": "What firewall rules would you like to add?",
-          "helptext": "Enter the source and destination details, and the protocol for your new rule. Use the Additional Change button to add multiple.",
-          "action": {
-            "errorRequired": "action is required"
-          },
-          "sourceZoneOrInterface": {
-            "placeholder": "Source Zone or Interface",
-            "errorRequired": "Source Zone/Interface is required"
-          },
-          "sourceIpOrSubnet": {
-            "placeholder": "Source IP or Subnet",
-            "helpText": "Acceptable format examples:<br/>10.1.1.1<br/>10.1.1.1/32",
-            "errorRequired": "Source IP/Subnet is required",
-            "invalidFormat": "Please enter an IPv4 address or range"
-          },
-          "destinationZoneOrInterface": {
-            "placeholder": "Destination Zone or Interface",
-            "errorRequired": "Destination Zone/Interface is required"
-          },
-          "destinationIpOrSubnet": {
-            "placeholder": "Destination IP or Subnet",
-            "helpText": "Acceptable format examples:<br/>10.1.1.1<br/>10.1.1.1/32",
-            "errorRequired": "Destination IP/Subnet is required",
-            "invalidFormat": "Please enter an IPv4 address or range"
-          },
-          "destinationPort": {
-            "placeholder": "Destination Port(s)",
-            "errorRequired": "Protocol is required"
-          },
-          "protocol": {
-            "errorRequired": "Protocol is required"
-          },
-          "notesLabel": "Additional Details",
-          "referenceNumberHelpText": "Enter an optional reference number. This is useful if you need to reference an internal change record or ticket ID."
+        "referenceNumberHelpText": "Enter an optional reference number. This is useful if you need to reference an internal change record or ticket ID.",
+        "dialog": {
+          "header": "Are you sure",
+          "description": "If you continue, you will lost any data entered in this tab",
+          "noBtnLabel": "No",
+          "yesBtnLabel": "Yes"
         }
       }
     }
@@ -1959,7 +1995,7 @@
       "customerReference": {
         "label": "Customer reference number",
         "placeholder": "Customer reference number",
-        "helpText": "Enter an optional reference number"
+        "helpText": "Enter an optional reference number. This is useful if you need to reference an internal change record or ticket ID."
       }
     },
     "fallback": {
