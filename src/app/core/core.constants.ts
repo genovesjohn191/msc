@@ -36,6 +36,8 @@ import { McsStorageService } from './services/mcs-storage.service';
 import { McsSystemMessageService } from './services/mcs-system-message.service';
 import { McsViewportService } from './services/mcs-viewport.service';
 import { McsReportingService } from './services/mcs-reporting.service';
+import { McsPrivateCloudOnlyGuard } from './guards/mcs-private-cloud-only.guard';
+import { McsPublicCloudOnlyGuard } from './guards/mcs-public-cloud-only.guard';
 
 /**
  * Array coverage for the core modules
@@ -64,6 +66,8 @@ export const coreProviders: any[] = [
   McsAuthenticationGuard,
   McsAccessControlService,
   McsNavigateAwayGuard,
+  McsPrivateCloudOnlyGuard,
+  McsPublicCloudOnlyGuard,
   McsRequiredResourcesGuard,
   GoogleAnalyticsEventsService,
   McsSessionHandlerService,
