@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit
+} from '@angular/core';
 import {
   ChangeDetectionStrategy,
   OnDestroy,
@@ -22,9 +25,9 @@ import {
   Subject,
   Observable,
   zip,
-  of,
   Subscription
 } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 import {
   Guid,
   CommonDefinition,
@@ -57,37 +60,35 @@ import {
   SmacSharedFormConfig
 } from '@app/features-shared';
 import { McsFormGroupDirective } from '@app/shared';
-import { TranslateService } from '@ngx-translate/core';
-import { SimpleFirewallChangeService } from './simple-firewall-change.service';
-import { FirewallChangesRuleFactory } from './firewall-changes-shared-rule/firewall-changes-shared-rule.factory';
 import {
   RuleAction,
   ActionType }
-from './firewall-changes-shared-rule/firewall-changes-shared-rule';
+from '../firewall-changes-shared/rule/firewall-changes-shared-rule';
 import { McsOrderAddSimpleFirewallChange } from '@app/models/request/mcs-order-add-simple-firewall-change';
-import { McsOrderSimpleFirewallAddRule } from '@app/models/request/mcs-order-simple-firewall-add-rules';
+import { McsOrderSimpleFirewallAddRule } from '@app/models/request/mcs-order-simple-firewall-add-rule';
+import { AddSimpleFirewallChangeService } from '../firewall-changes-shared/services/add-simple-firewall-change.service';
+import { FirewallChangesRuleHelper } from '../firewall-changes-shared/rule/firewall-changes-shared-rule.helper';
 
 const FIREWALL_CHANGE_ID = Guid.newGuid().toString();
 const LOADING_TEXT = 'loading';
-// Add another group type in here if you have addition tab
-type tabGroupType = 'addRule' | 'modifyRule' | 'removeRule';
 
 @Component({
-  selector: 'mcs-simple-firewall-change',
-  templateUrl: './simple-firewall-change.component.html',
+  selector: 'mcs-add-simple-firewall-change',
+  templateUrl: './add-simple-firewall-change.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [SimpleFirewallChangeService]
+  providers: [AddSimpleFirewallChangeService]
 })
 
-export class SimpleFirewallChangeComponent extends
+export class AddSimpleFirewallChangeComponent extends
 McsOrderWizardBase implements OnInit, OnDestroy {
 
   public fgAddFirewallRules: FormGroup;
   public fcFirewallServices: FormControl;
   public faSharedRuleForm: FormArray;
-  public dnsLeadTimeHours: number;
+  public leadTimeHours: number;
   public isLoading: boolean;
   public firewallOptions: Array<McsOption> = new Array<McsOption>();
+  public ruleActionType: RuleAction = RuleAction.Add;
   public smacSharedFormConfig$: Observable<SmacSharedFormConfig>;
   public get loadingText(): string {
     return LOADING_TEXT;
@@ -120,14 +121,14 @@ McsOrderWizardBase implements OnInit, OnDestroy {
 
   constructor(
     _injector: Injector,
-    private _simpleFirewallChangeService: SimpleFirewallChangeService,
+    private _addSimpleFirewallChangeService: AddSimpleFirewallChangeService,
     private _formBuilder: FormBuilder,
     private _apiService: McsApiService,
     private _changeDetectionRef: ChangeDetectorRef,
     private _translateService: TranslateService
   ) {
     super(
-        _simpleFirewallChangeService,
+      _addSimpleFirewallChangeService,
       _injector,
       {
         billingDetailsStep: {
@@ -165,12 +166,16 @@ McsOrderWizardBase implements OnInit, OnDestroy {
   }
 
   public get notesLabel(): string {
-    return this._translateService.instant('orderSimpleFirewallChanges.detailsStep.sharedRuleForm.add.notesLabel');
+    return this._translateService.instant('orderSimpleFirewallChanges.detailsStep.sharedRuleForm.notesLabel');
   }
 
   public get referenceNumberHelpText(): string {
-    return this._translateService.instant('orderSimpleFirewallChanges.detailsStep.sharedRuleForm.add.referenceNumberHelpText');
+    return this._translateService.instant('orderSimpleFirewallChanges.detailsStep.sharedRuleForm.referenceNumberHelpText');
   }
+
+  public get addRuleLabel(): string {
+    return this._translateService.instant('orderSimpleFirewallChanges.detailsStep.add.label');
+  }
 
   public isChangeItemRemovable(formArrayLength: number): boolean {
     return formArrayLength > 1;
@@ -203,7 +208,7 @@ McsOrderWizardBase implements OnInit, OnDestroy {
   public onOrderDetailsDataChange(orderDetails: OrderDetails): void {
     if (isNullOrEmpty(orderDetails)) { return; }
 
-    this._simpleFirewallChangeService.createOrUpdateOrder(
+    this._addSimpleFirewallChangeService.createOrUpdateOrder(
       createObject(McsOrderCreate, {
         contractDurationMonths: orderDetails.contractDurationMonths,
         description: orderDetails.description,
@@ -215,7 +220,7 @@ McsOrderWizardBase implements OnInit, OnDestroy {
       orderDetails.deliveryType,
       orderDetails.schedule
     );
-    this._simpleFirewallChangeService.submitOrderRequest();
+    this._addSimpleFirewallChangeService.submitOrderRequest();
   }
 
   public onSubmitOrder(submitDetails: OrderDetails, serviceID: string): void {
@@ -252,7 +257,7 @@ McsOrderWizardBase implements OnInit, OnDestroy {
   }
 
   private _onAddFirewallDetailsChange(): void {
-    this._simpleFirewallChangeService.createOrUpdateOrder(
+    this._addSimpleFirewallChangeService.createOrUpdateOrder(
       createObject(McsOrderCreate, {
         items: [
           createObject(McsOrderItemCreate, {
@@ -307,7 +312,7 @@ McsOrderWizardBase implements OnInit, OnDestroy {
   private _getLeadTimeHours(): void {
     this.isLoading = true;
     this.orderItemType$.subscribe(order => {
-      this.dnsLeadTimeHours = order.standardLeadTimeHours;
+      this.leadTimeHours = order.standardLeadTimeHours;
     });
   }
 
@@ -325,7 +330,7 @@ McsOrderWizardBase implements OnInit, OnDestroy {
   }
 
   private _createSharedRuleForm(): FormGroup {
-    let formControls = FirewallChangesRuleFactory.createFormControls(RuleAction.Add);
+    let formControls = FirewallChangesRuleHelper.createFormControls(RuleAction.Add);
     let form = this._formBuilder.group({ fcActionType: [ActionType.Allow, [CoreValidators.required]] });
     formControls.forEach((item) => {
       form.setControl(item.controlName, item.control);

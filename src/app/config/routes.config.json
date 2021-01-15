@@ -565,9 +565,25 @@
     "enumPlatform": "Private",
     "enumKey": "OrderAddSimpleFirewallChange",
     "enumCategory": "MakeAChange",
-    "navigationPath": "orders/add/simple-firewall-changes",
+    "navigationPath": "orders/change/add-simple-firewall-changes",
     "requiredPermissions": ["OrderEdit"],
     "documentTitle": "Add Simple Firewall Change - Macquarie Cloud Services"
+  },
+  "orderModifySimpleFirewallChange": {
+    "enumPlatform": "Private",
+    "enumKey": "OrderModifySimpleFirewallChange",
+    "enumCategory": "MakeAChange",
+    "navigationPath": "orders/change/modify-simple-firewall-changes",
+    "requiredPermissions": ["OrderEdit"],
+    "documentTitle": "Modify Simple Firewall Change - Macquarie Cloud Services"
+  },
+  "orderRemoveSimpleFirewallChange": {
+    "enumPlatform": "Private",
+    "enumKey": "OrderRemoveSimpleFirewallChange",
+    "enumCategory": "MakeAChange",
+    "navigationPath": "orders/change/remove-simple-firewall-changes",
+    "requiredPermissions": ["OrderEdit"],
+    "documentTitle": "Remove Simple Firewall Change - Macquarie Cloud Services"
   },
   "otherTools": {
     "enumKey": "OtherTools",

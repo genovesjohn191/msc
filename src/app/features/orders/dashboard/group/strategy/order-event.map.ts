@@ -17,6 +17,8 @@ import { ColocationStaffEscortEvent } from './events/colocation-staff-escort.eve
 import { ColocationRemoteHandsEvent } from './events/colocation-remote-hands.event';
 import { ServerPatchRequestEvent } from './events/server-request-patch.event';
 import { SimpleFirewallChangeAddEvent } from './events/simple-firewall-change-add.event';
+import { SimpleFirewallChangeRemoveEvent } from './events/simple-firewall-change-remove.event';
+import { SimpleFirewallChangeModifyEvent } from './events/simple-firewall-change-modify.event';
 export type OrderEventRecord = Record<string, IOrderEventStrategy>;
 
 export const orderEventMap: OrderEventRecord = {
@@ -37,5 +39,7 @@ export const orderEventMap: OrderEventRecord = {
   'dns.customRequest': new HostedDnsChangeEvent(),
   'colocation.staffEscort': new ColocationStaffEscortEvent(),
   'colocation.remoteHands': new ColocationRemoteHandsEvent(),
-  'firewall.simpleChange.add': new SimpleFirewallChangeAddEvent()
+  'firewall.simpleChange.add': new SimpleFirewallChangeAddEvent(),
+  'firewall.simpleChange.remove': new SimpleFirewallChangeRemoveEvent(),
+  'firewall.simpleChange.modify': new SimpleFirewallChangeModifyEvent(),
 };

@@ -126,7 +126,7 @@ export class UserPanelComponent implements OnInit, OnDestroy {
   /**
    * Navigate to notifications page to see all the jobs
    */
-  public viewNotificationsPage(): void {
+  public navigateToNotificationsPage(): void {
     this._navigationService.navigateTo(RouteKey.Notifications);
   }
 
@@ -156,20 +156,20 @@ export class UserPanelComponent implements OnInit, OnDestroy {
    * Event that emits when notification panel is opened
    */
   public onOpenNotificationPanel(jobs: McsJob[]): void {
-    let event: Event;
-    let hasRunningJob = !(isNullOrEmpty(jobs));
-    let isBreakpointLarge = this.deviceType === Breakpoint.Large;
-    let displayNotificationsPage = (!hasRunningJob) && (!isBreakpointLarge);
-    let mobileMode = !isBreakpointLarge && !isNullOrEmpty(this.notificationsPopover);
+    let hasOngoingJobs = (isNullOrEmpty(jobs) === false);
+    let isOnlargeDevice = (this.deviceType === Breakpoint.Large || this.deviceType === Breakpoint.Wide);
+    let shouldRedirectToNotifPage = (!hasOngoingJobs || !isOnlargeDevice);
+    let isMobileMode = (!isOnlargeDevice && !isNullOrEmpty(this.notificationsPopover));
 
-    if (displayNotificationsPage) {
-      this.viewNotificationsPage();
+    if (shouldRedirectToNotifPage) {
+      this.navigateToNotificationsPage();
     }
     else {
+      let event: Event;
       event.stopPropagation();
       this.notificationsPopover.toggle();
     }
-    if (mobileMode) { this.notificationsPopover.close(); }
+    if (isMobileMode) { this.notificationsPopover.close(); }
   }
 
   /**
