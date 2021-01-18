@@ -30,6 +30,8 @@ import { FirewallChangesSharedRuleComponent } from './simple-firewall-changes/fi
 import { ModifySimpleFirewallChangeComponent } from './simple-firewall-changes/modify-firewall-changes/modify-simple-firewall-change.component';
 import { RemoveSimpleFirewallChangeComponent } from './simple-firewall-changes/remove-firewall-changes/remove-simple-firewall-change.component';
 import { OrdersGuard } from './orders.guard';
+import { McsPrivateCloudOnlyGuard } from '@app/core/guards/mcs-private-cloud-only.guard';
+import { McsPublicCloudOnlyGuard } from '@app/core/guards/mcs-public-cloud-only.guard';
 
 /**
  * List of services for the main module
@@ -92,105 +94,222 @@ export const ordersRoutes: Routes = [
     data: { routeId: RouteKey.OrdersDashboard }
   },
   {
+    path: 'change/server-managed-scale',
+    component: ServerManagedScaleComponent,
+    data: { routeId: RouteKey.OrderServerManagedScale },
+    canActivate: [ McsPrivateCloudOnlyGuard ]
+  },
+  {
+    // TODO: Deprecated - Remove when orch is ready
     path: 'server-managed-scale',
     component: ServerManagedScaleComponent,
-    data: { routeId: RouteKey.OrderServerManagedScale }
+    data: { routeId: RouteKey.OrderServerManagedScale },
+    canActivate: [ McsPrivateCloudOnlyGuard ]
+  },
+
+  {
+    path: 'change/vdc-scale',
+    component: VdcScaleComponent,
+    data: { routeId: RouteKey.OrderVdcScale },
+    canActivate: [ McsPrivateCloudOnlyGuard ]
   },
   {
+    // TODO: Deprecated - Remove when orch is ready
     path: 'vdc-scale',
     component: VdcScaleComponent,
-    data: { routeId: RouteKey.OrderVdcScale }
+    data: { routeId: RouteKey.OrderVdcScale },
+    canActivate: [ McsPrivateCloudOnlyGuard ]
+  },
+
+  {
+    path: 'change/vdc-storage',
+    component: VdcStorageExpandComponent,
+    data: { routeId: RouteKey.OrderVdcStorageExpand },
+    canActivate: [ McsPrivateCloudOnlyGuard ]
   },
   {
+    // TODO: Deprecated - Remove when orch is ready
     path: 'vdc-storage-expand',
     component: VdcStorageExpandComponent,
-    data: { routeId: RouteKey.OrderVdcStorageExpand }
+    data: { routeId: RouteKey.OrderVdcStorageExpand },
+    canActivate: [ McsPrivateCloudOnlyGuard ]
+  },
+
+  {
+    path: 'add/vdc-storage',
+    component: VdcStorageCreateComponent,
+    data: { routeId: RouteKey.OrderVdcStorageCreate },
+    canActivate: [ McsPrivateCloudOnlyGuard ]
   },
   {
+    // TODO: Deprecated - Remove when orch is ready
     path: 'vdc-storage-create',
     component: VdcStorageCreateComponent,
-    data: { routeId: RouteKey.OrderVdcStorageCreate }
+    data: { routeId: RouteKey.OrderVdcStorageCreate },
+    canActivate: [ McsPrivateCloudOnlyGuard ]
+  },
+
+  {
+    path: 'change/services/inview',
+    component: ServiceInviewRaiseComponent,
+    data: { routeId: RouteKey.OrderServiceInviewRaise },
+    canActivate: [ McsPrivateCloudOnlyGuard ]
   },
   {
+    // TODO: Deprecated - Remove when orch is ready
     path: 'services/inview',
     component: ServiceInviewRaiseComponent,
-    data: { routeId: RouteKey.OrderServiceInviewRaise }
+    data: { routeId: RouteKey.OrderServiceInviewRaise },
+    canActivate: [ McsPrivateCloudOnlyGuard ]
+  },
+
+  {
+    path: 'change/services/custom',
+    component: ServiceCustomChangeComponent,
+    data: { routeId: RouteKey.OrderServiceCustomChange },
+    canActivate: [ McsPrivateCloudOnlyGuard ]
   },
   {
+    // TODO: Deprecated - Remove when orch is ready
     path: 'services/custom-change',
     component: ServiceCustomChangeComponent,
-    data: { routeId: RouteKey.OrderServiceCustomChange }
+    data: { routeId: RouteKey.OrderServiceCustomChange },
+    canActivate: [ McsPrivateCloudOnlyGuard ]
+  },
+
+  {
+    path: 'change/hosted-dns',
+    component: HostedDnsChangeComponent,
+    data: { routeId: RouteKey.OrderHostedDnsChange },
+    canActivate: [ McsPrivateCloudOnlyGuard ]
   },
   {
+    // TODO: Deprecated - Remove when orch is ready
     path: 'hosted-dns-change',
     component: HostedDnsChangeComponent,
-    data: { routeId: RouteKey.OrderHostedDnsChange }
+    data: { routeId: RouteKey.OrderHostedDnsChange },
+    canActivate: [ McsPrivateCloudOnlyGuard ]
+  },
+
+  {
+    path: 'change/colocation/staff-escort',
+    component: ColocationStaffEscortComponent,
+    data: { routeId: RouteKey.OrderColocationStaffEscort },
+    canActivate: [ McsPrivateCloudOnlyGuard ]
   },
   {
+    // TODO: Deprecated - Remove when orch is ready
     path: 'colocation/staff-escort',
     component: ColocationStaffEscortComponent,
-    data: { routeId: RouteKey.OrderColocationStaffEscort }
+    data: { routeId: RouteKey.OrderColocationStaffEscort },
+    canActivate: [ McsPrivateCloudOnlyGuard ]
   },
+
   {
     path: 'add/anti-virus',
     component: AddAntiVirusComponent,
-    data: { routeId: RouteKey.OrderAddAntiVirus }
+    data: { routeId: RouteKey.OrderAddAntiVirus },
+    canActivate: [ McsPrivateCloudOnlyGuard ]
   },
   {
     path: 'add/host-intrusion-detection',
     component: AddHidsComponent,
-    data: { routeId: RouteKey.OrderAddHids }
+    data: { routeId: RouteKey.OrderAddHids },
+    canActivate: [ McsPrivateCloudOnlyGuard ]
   },
   {
     path: 'add/server-backup',
     component: AddServerBackupComponent,
-    data: { routeId: RouteKey.OrderAddServerBackup }
+    data: { routeId: RouteKey.OrderAddServerBackup },
+    canActivate: [ McsPrivateCloudOnlyGuard ]
   },
   {
     path: 'add/vm-backup',
     component: AddVmBackupComponent,
-    data: { routeId: RouteKey.OrderAddVmBackup }
+    data: { routeId: RouteKey.OrderAddVmBackup },
+    canActivate: [ McsPrivateCloudOnlyGuard ]
   },
   {
     path: 'add/backup-aggregation-target',
     component: AddBatComponent,
-    data: { routeId: RouteKey.OrderAddBat }
+    data: { routeId: RouteKey.OrderAddBat },
+    canActivate: [ McsPrivateCloudOnlyGuard ]
   },
   {
+    path: 'change/ms-license-count',
+    component: MsLicenseCountChangeComponent,
+    data: { routeId: RouteKey.OrderMsLicenseCountChange },
+    canActivate: [ McsPublicCloudOnlyGuard ]
+  },
+  {
+    // TODO: Deprecated - Remove when orch is ready
     path: 'ms-license-count-change',
     component: MsLicenseCountChangeComponent,
-    data: { routeId: RouteKey.OrderMsLicenseCountChange }
+    data: { routeId: RouteKey.OrderMsLicenseCountChange },
+    canActivate: [ McsPublicCloudOnlyGuard ]
+  },
+
+  {
+    path: 'change/ms-request',
+    component: MsRequestChangeComponent,
+    data: { routeId: RouteKey.OrderMsRequestChange },
+    canActivate: [ McsPublicCloudOnlyGuard ]
   },
   {
+    // TODO: Deprecated - Remove when orch is ready
     path: 'ms-request-change',
     component: MsRequestChangeComponent,
-    data: { routeId: RouteKey.OrderMsRequestChange }
+    data: { routeId: RouteKey.OrderMsRequestChange },
+    canActivate: [ McsPublicCloudOnlyGuard ]
+  },
+
+  {
+    path: 'change/remote-hands',
+    component: RemoteHandsComponent,
+    data: { routeId: RouteKey.OrderRemoteHands },
+    canActivate: [ McsPrivateCloudOnlyGuard ]
   },
   {
+    // TODO: Deprecated - Remove when orch is ready
     path: 'remote-hands',
     component: RemoteHandsComponent,
-    data: { routeId: RouteKey.OrderRemoteHands }
+    data: { routeId: RouteKey.OrderRemoteHands },
+    canActivate: [ McsPrivateCloudOnlyGuard ]
+  },
+
+  {
+    path: 'change/request-patch',
+    component: ServerRequestPatchComponent,
+    data: { routeId: RouteKey.OrderServerRequestPatch },
+    canActivate: [ McsPrivateCloudOnlyGuard ]
   },
   {
+    // TODO: Deprecated - Remove when orch is ready
     path: 'request-patch',
     component: ServerRequestPatchComponent,
-    data: { routeId: RouteKey.OrderServerRequestPatch }
+    data: { routeId: RouteKey.OrderServerRequestPatch },
+    canActivate: [ McsPrivateCloudOnlyGuard ]
   },
+
   {
-    path: 'change/add-simple-firewall-changes',
+    path: 'change/add-simple-firewall',
     component: AddSimpleFirewallChangeComponent,
-    data: { routeId: RouteKey.OrderAddSimpleFirewallChange }
+    data: { routeId: RouteKey.OrderAddSimpleFirewallChange },
+    canActivate: [ McsPrivateCloudOnlyGuard ]
   },
   {
-    path: 'change/modify-simple-firewall-changes',
+    path: 'change/modify-simple-firewall',
     component: ModifySimpleFirewallChangeComponent,
-    data: { routeId: RouteKey.OrderModifySimpleFirewallChange }
+    data: { routeId: RouteKey.OrderModifySimpleFirewallChange },
+    canActivate: [ McsPrivateCloudOnlyGuard ]
   },
   {
-    path: 'change/remove-simple-firewall-changes',
+    path: 'change/remove-simple-firewall',
     component: RemoveSimpleFirewallChangeComponent,
-    data: { routeId: RouteKey.OrderRemoveSimpleFirewallChange }
+    data: { routeId: RouteKey.OrderRemoveSimpleFirewallChange },
+    canActivate: [ McsPrivateCloudOnlyGuard ]
   },
+
   // Add additional routes above this line
   {
     path: 'history/:id',

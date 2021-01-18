@@ -416,79 +416,69 @@
     "documentTitle": "Orders Dashboard - Macquarie Cloud Services"
   },
   "orderServerManagedScale": {
-    "enumPlatform": "Private",
     "enumKey": "OrderServerManagedScale",
     "enumCategory": "MakeAChange",
-    "navigationPath": "orders/server-managed-scale",
+    "navigationPath": "orders/change/server-managed-scale",
     "requiredPermissions": ["OrderEdit"],
     "documentTitle": "Scale Managed Servers - Macquarie Cloud Services"
   },
   "orderVdcScale": {
-    "enumPlatform": "Private",
     "enumKey": "OrderVdcScale",
     "enumCategory": "MakeAChange",
-    "navigationPath": "orders/vdc-scale",
+    "navigationPath": "orders/change/vdc-scale",
     "requiredPermissions": ["OrderEdit"],
     "documentTitle": "Scale VDC - Macquarie Cloud Services"
   },
   "orderVdcStorageExpand": {
-    "enumPlatform": "Private",
     "enumKey": "OrderVdcStorageExpand",
     "enumCategory": "MakeAChange",
-    "navigationPath": "orders/vdc-storage-expand",
+    "navigationPath": "orders/change/vdc-storage",
     "requiredPermissions": ["OrderEdit"],
     "documentTitle": "Expand Vdc Storage - Macquarie Cloud Services"
   },
   "orderVdcStorageCreate": {
-    "enumPlatform": "Private",
     "enumKey": "OrderVdcStorageCreate",
     "enumCategory": "MakeAChange",
-    "navigationPath": "orders/vdc-storage-create",
+    "navigationPath": "orders/add/vdc-storage",
     "requiredPermissions": ["OrderEdit"],
     "requiredFeatureFlag": ["EnableOrderingVdcStorageProvision"],
     "requireAllFeatures": true,
     "documentTitle": "Create Vdc Storage - Macquarie Cloud Services"
   },
   "orderServiceInviewRaise": {
-    "enumPlatform": "Private",
     "enumKey": "OrderServiceInviewRaise",
     "enumCategory": "MakeAChange",
-    "navigationPath": "orders/services/inview",
+    "navigationPath": "orders/change/services/inview",
     "requiredPermissions": ["OrderEdit"],
     "documentTitle": "Service Raise Inview Level - Macquarie Cloud Services"
   },
   "orderServiceCustomChange": {
-    "enumPlatform": "Private",
     "enumKey": "OrderServiceCustomChange",
     "enumCategory": "MakeAChange",
-    "navigationPath": "orders/services/custom-change",
+    "navigationPath": "orders/change/services/custom",
     "requiredPermissions": ["OrderEdit"],
     "requiredFeatureFlag": ["EnableOrderingServiceCustomRequest"],
     "requireAllFeatures": true,
     "documentTitle": "Custom Change Service - Macquarie Cloud Services"
   },
   "orderHostedDnsChange": {
-    "enumPlatform": "Private",
     "enumKey": "OrderHostedDnsChange",
     "enumCategory": "MakeAChange",
-    "navigationPath": "orders/hosted-dns-change",
+    "navigationPath": "orders/change/hosted-dns",
     "requiredPermissions": ["OrderEdit"],
     "requiredFeatureFlag": ["EnableOrderingDnsCustomRequest"],
     "requireAllFeatures": true,
     "documentTitle": "Hosted DNS Change - Macquarie Cloud Services"
   },
 "orderColocationStaffEscort": {
-    "enumPlatform": "Private",
     "enumKey": "OrderColocationStaffEscort",
     "enumCategory": "MakeAChange",
-    "navigationPath": "orders/colocation/staff-escort",
+    "navigationPath": "orders/change/colocation/staff-escort",
     "requiredPermissions": ["OrderEdit"],
     "requiredFeatureFlag": "EnableOrderingColocationStaffEscort",
     "documentTitle": "Colocation Staff Escort - Macquarie Cloud Services"
   },
-
   "orderAddAntiVirus": {
-    "enumPlatform": "Private",
     "enumKey": "OrderAddAntiVirus",
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/add/anti-virus",
@@ -496,7 +486,6 @@
     "documentTitle": "Add Anti-Virus - Macquarie Cloud Services"
   },
   "orderAddHids": {
-    "enumPlatform": "Private",
     "enumKey": "OrderAddHids",
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/add/host-intrusion-detection",
@@ -504,7 +493,6 @@
     "documentTitle": "Add Host Intrusion Detection - Macquarie Cloud Services"
   },
   "orderAddServerBackup": {
-    "enumPlatform": "Private",
     "enumKey": "OrderAddServerBackup",
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/add/server-backup",
@@ -512,7 +500,6 @@
     "documentTitle": "Add Server Backup Provision - Macquarie Cloud Services"
   },
   "orderAddVmBackup": {
-    "enumPlatform": "Private",
     "enumKey": "OrderAddVmBackup",
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/add/vm-backup",
@@ -520,7 +507,6 @@
     "documentTitle": "Add VM Backup Provision - Macquarie Cloud Services"
   },
   "orderAddBat": {
-    "enumPlatform": "Private",
     "enumKey": "OrderAddBat",
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/add/backup-aggregation-target",
@@ -528,62 +514,57 @@
     "documentTitle": "Add Backup Aggregation Target Provision - Macquarie Cloud Services"
   },
   "orderMsLicenseCountChange": {
-    "enumPlatform": "Public",
     "enumKey": "OrderMsLicenseCountChange",
     "enumCategory": "MakeAChange",
-    "navigationPath": "orders/ms-license-count-change",
+    "navigationPath": "orders/change/ms-license-count",
     "requiredPermissions": ["OrderEdit"],
     "documentTitle": "Change Microsoft License Count - Macquarie Cloud Services"
   },
   "orderMsRequestChange": {
-    "enumPlatform": "Public",
     "enumKey": "OrderMsRequestChange",
     "enumCategory": "MakeAChange",
-    "navigationPath": "orders/ms-request-change",
+    "navigationPath": "orders/change/ms-request",
     "requiredPermissions": ["OrderEdit"],
     "requiredFeatureFlag": ["EnableOrderingMicrosoftRequestChange"],
     "requireAllFeatures": true,
     "documentTitle": "Microsoft Place Service Request - Macquarie Cloud Services"
   },
   "orderRemoteHands": {
-    "enumPlatform": "Private",
     "enumKey": "OrderRemoteHands",
     "enumCategory": "MakeAChange",
-    "navigationPath": "orders/remote-hands",
+    "navigationPath": "orders/change/remote-hands",
     "requiredPermissions": ["OrderEdit"],
     "documentTitle": "Request Remote Hands - Macquarie Cloud Services"
   },
   "orderServerRequestPatch": {
-    "enumPlatform": "Private",
     "enumKey": "OrderServerRequestPatch",
     "enumCategory": "MakeAChange",
-    "navigationPath": "orders/request-patch",
+    "navigationPath": "orders/change/request-patch",
     "requiredPermissions": ["OrderEdit"],
     "documentTitle": "Request a Patch - Macquarie Cloud Services"
   },
   "orderAddSimpleFirewallChange": {
-    "enumPlatform": "Private",
     "enumKey": "OrderAddSimpleFirewallChange",
     "enumCategory": "MakeAChange",
-    "navigationPath": "orders/change/add-simple-firewall-changes",
+    "navigationPath": "orders/change/add-simple-firewall",
     "requiredPermissions": ["OrderEdit"],
-    "documentTitle": "Add Simple Firewall Change - Macquarie Cloud Services"
+    "documentTitle": "Add Simple Firewall - Macquarie Cloud Services"
   },
   "orderModifySimpleFirewallChange": {
     "enumPlatform": "Private",
     "enumKey": "OrderModifySimpleFirewallChange",
     "enumCategory": "MakeAChange",
-    "navigationPath": "orders/change/modify-simple-firewall-changes",
+    "navigationPath": "orders/change/modify-simple-firewall",
     "requiredPermissions": ["OrderEdit"],
-    "documentTitle": "Modify Simple Firewall Change - Macquarie Cloud Services"
+    "documentTitle": "Modify Simple Firewall - Macquarie Cloud Services"
   },
   "orderRemoveSimpleFirewallChange": {
     "enumPlatform": "Private",
     "enumKey": "OrderRemoveSimpleFirewallChange",
     "enumCategory": "MakeAChange",
-    "navigationPath": "orders/change/remove-simple-firewall-changes",
+    "navigationPath": "orders/change/remove-simple-firewall",
     "requiredPermissions": ["OrderEdit"],
-    "documentTitle": "Remove Simple Firewall Change - Macquarie Cloud Services"
+    "documentTitle": "Remove Simple Firewall - Macquarie Cloud Services"
   },
   "otherTools": {
     "enumKey": "OtherTools",
