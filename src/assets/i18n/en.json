@@ -2924,5 +2924,8 @@
     "firmwareVersion": "Firmware Version",
     "ipAddress": "IP Address",
     "role": "Role"
+  },
+  "formFields": {
+    "selectStorage": "Select storage profile"
   }
 }

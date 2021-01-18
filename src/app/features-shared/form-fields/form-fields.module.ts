@@ -4,10 +4,13 @@ import {
 } from '@angular/core';
 import { McsApiService } from '@app/services';
 import { SharedModule } from '@app/shared';
+
 import { SelectResourceDropdownComponent } from './select-resource/select-resource-dropdown.component';
+import { SelectStorageProfileComponent } from './select-storage-profile/select-storage-profile.component';
 
 const exports: any[] | Type<any> = [
-  SelectResourceDropdownComponent
+  SelectResourceDropdownComponent,
+  SelectStorageProfileComponent
 ];
 
 @NgModule({

@@ -42,7 +42,7 @@ export class TreeDatasource<TValue> extends DataSource<TreeItem<TValue>> {
   private _requestUpdate = new Subject<void>();
   private _destroySubject = new Subject<void>();
 
-  constructor(dataSource: DatasourceTreeType<TValue>) {
+  constructor(dataSource?: DatasourceTreeType<TValue>) {
     super();
     this._updateDatasourceFn(dataSource);
     this._subscribeToRequestChange();
