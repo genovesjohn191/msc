@@ -7,10 +7,7 @@ import { TreeItem } from './tree-item';
 type Dict<T> = { [key in keyof T]?: any };
 type Single<T> = T extends Array<infer U> ? U : T;
 type PickField<T, K extends keyof T> = T[K];
-
-interface Selector<TSource extends Dict<TSource> = any, TReturnType = any> {
-  (source: TSource): TReturnType;
-}
+type Selector<TSource extends Dict<TSource> = any, TReturnType = any> = (source: TSource) => TReturnType;
 
 export class TreeUtility {
 
