@@ -14,7 +14,7 @@
         </mcs-grid-column>
       </mcs-grid-row>
       <ng-container *ngIf="raiseInviewButtonsShown(server) || !server.isInviewNone">
-        <mcs-grid-row *mcsExclusiveForAccount>
+        <mcs-grid-row *mcsExclusiveForAccount="'default'">
           <mcs-item>
             <ng-container *ngIf="!server.isInviewNone">
               <a mcsButton size="xsmall"
