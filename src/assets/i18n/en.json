@@ -987,7 +987,7 @@
         "label": "What firewall rules would you like to add?",
         "helpText": "Enter the source and destination details, and the protocol for your new rule. Use the Additional Change button to add multiple.",
         "action": {
-          "errorRequired": "action is required"
+          "errorRequired": "Action is required"
         },
         "sourceZoneOrInterface": {
           "placeholder": "Source Zone or Interface",
@@ -1011,7 +1011,7 @@
         },
         "destinationPort": {
           "placeholder": "Destination Port(s)",
-          "errorRequired": "Protocol is required"
+          "errorRequired": "Destination is required"
         },
         "protocol": {
           "errorRequired": "Protocol is required"
