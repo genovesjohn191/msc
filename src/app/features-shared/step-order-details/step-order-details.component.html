@@ -235,7 +235,7 @@
        </mcs-item>
 
         <ng-container [ngSwitch]="fcWorkflowAction?.value">
-          <mcs-order-agreement *ngSwitchCase="orderWorkFlowEnum.Submitted" orderAgreementType="charges"></mcs-order-agreement>
+          <mcs-order-agreement *ngSwitchCase="orderWorkFlowEnum.Submitted" orderAgreementType="charges"  wrapAgreement="false"></mcs-order-agreement>
           <mcs-order-agreement *ngSwitchCase="orderWorkFlowEnum.AwaitingApproval" orderAgreementType="charges"></mcs-order-agreement>
           <mcs-note *ngSwitchCase="orderWorkFlowEnum.Unknown">
             <mcs-form-field>
