@@ -193,17 +193,17 @@
         <!-- Order Action -->
         <mcs-item orientation="separated">
           <span>{{ 'orderDetailsStep.orderActions.header' | translate }}</span>
-          <mcs-form-field class="form-field-size-small" [disabled]="isUpdatingCharges">
+          <mcs-form-field class="form-field-size-small" [disabled]="isUpdatingCharges || isImpersonating">
             <mcs-select required [formControl]="fcWorkflowAction" mcsId="select-workflow-action">
 
               <ng-container *mcsAccessControl="['OrderApprove']; else requestApprovalTemplate">
-                <mcs-option [value]="orderWorkFlowEnum.Submitted">
+                <mcs-option *ngIf="!isImpersonating" [value]="orderWorkFlowEnum.Submitted">
                   {{ 'orderDetailsStep.orderActions.submitOrder' | translate }}
                 </mcs-option>
               </ng-container>
 
               <ng-template #requestApprovalTemplate>
-                <mcs-option [value]="orderWorkFlowEnum.AwaitingApproval">
+                <mcs-option *ngIf="!isImpersonating" [value]="orderWorkFlowEnum.AwaitingApproval">
                   {{ 'orderDetailsStep.orderActions.awaitingApproval' | translate }}
                 </mcs-option>
               </ng-template>
