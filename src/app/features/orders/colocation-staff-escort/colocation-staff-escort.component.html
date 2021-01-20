@@ -96,7 +96,7 @@
           </mcs-item>
 
           <!-- Escortee -->
-          <mcs-item orientation="separated" [mcsContextualHelp]="'orderColocationStaffEscort.requestDetails.escortee.helptext' | translate">
+          <mcs-item orientation="separated" [mcsContextualHelp]="'orderColocationStaffEscort.requestDetails.escortee.helptext' | translate" [hidden]="isImpersonating">
             <span align-self-start>{{ 'orderColocationStaffEscort.requestDetails.escortee.placeholder' | translate }}</span>
             <mcs-form-field class="form-field-size-small">
               <mcs-select required
@@ -114,7 +114,7 @@
             </mcs-form-field>
           </mcs-item>
 
-          <ng-container *ngIf="isEscorteeSomeoneElse(fcEscortee?.value)">
+          <ng-container *ngIf="isEscorteeSomeoneElse(fcEscortee?.value) || isImpersonating">
             <mcs-item orientation="block">
               <!-- Name -->
               <mcs-item orientation="block">

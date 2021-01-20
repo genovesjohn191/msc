@@ -29,7 +29,8 @@ import {
 import {
   McsOrderWizardBase,
   OrderRequester,
-  CoreValidators
+  CoreValidators,
+  McsAuthenticationIdentity
 } from '@app/core';
 import {
   Guid,
@@ -66,6 +67,8 @@ import { OrderDetails } from '@app/features-shared';
 import { ColocationStaffEscortService } from './colocation-staff-escort.service';
 import { McsOrderColocationStaffEscort } from '@app/models/request/mcs-order-colocation-staff-escort';
 import { SwitchAccountService } from '@app/core-layout/shared';
+import { McsEvent } from '@app/events';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 
 const COLOCATION_STAFF_ESCORT = Guid.newGuid().toString();
 const TEXTAREA_MAXLENGTH_DEFAULT = 850;
@@ -138,7 +141,9 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
     private _formBuilder: FormBuilder,
     private _apiService: McsApiService,
     private _switchAccountService: SwitchAccountService,
-    private _changeDetector: ChangeDetectorRef
+    private _changeDetector: ChangeDetectorRef,
+    private _authenticationIdentity: McsAuthenticationIdentity,
+    private _eventDispatcher: EventBusDispatcherService
   ) {
     super(
       _colocationStaffEscortService,
@@ -150,6 +155,7 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
           action: 'next-button'
         }
       });
+    this._updateOnCompanySwitch();
     this._registerFormGroups();
   }
 
@@ -218,6 +224,10 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
     return  (arrivalHour > MAX_HOUR) ? [23, 0] :  [arrivalHour, arrivalMinutes];
   }
 
+  public get isImpersonating(): boolean {
+    return this._authenticationIdentity.isImpersonating;
+  }
+
   // TO DO: for unit test
   public get defaultExitTime(): [number, number] {
     let exitHours = this.defaultArrivalTime[0] + DEFAULT_ARRIVAL_EXIT_TIME_RANGE;
@@ -242,10 +252,21 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
     return escortee === ColocationEscortee.SomeoneElse;
   }
 
+  private _updateOnCompanySwitch(): void {
+    this._eventDispatcher.addEventListener(McsEvent.accountChange, () => {
+      if (this.isImpersonating) {
+        this.fcEscortee.setValue(ColocationEscortee.SomeoneElse);
+        this.fcEscortee.updateValueAndValidity();
+        this._subscribeToValueChanges();
+      }
+      this._changeDetector.markForCheck();
+    });
+  }
+
   public onEscorteeChange(escortee: ColocationEscortee): void {
     this._resetAttendeeFields();
     this._getUserIdentityAndAccountDetails();
-    if (this.isEscorteeSomeoneElse(escortee)) {
+    if (this.isEscorteeSomeoneElse(escortee) || this.isImpersonating) {
       this.fcName.enable();
       this.fcOrganization.enable();
       this.fcJobTitle.enable();
@@ -388,7 +409,7 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
    * Event listener whenever there is a change in the form
    */
   private _onColocationStaffEscortFormChange(): void {
-    let isEscorteeSomeoneElse = this.isEscorteeSomeoneElse(this.fcEscortee.value);
+    let isEscorteeSomeoneElse = this.isEscorteeSomeoneElse(this.fcEscortee.value) || this.isImpersonating;
     this._colocationStaffEscortService.createOrUpdateOrder(
       createObject(McsOrderCreate, {
         items: [
@@ -496,7 +517,7 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
 
   private _formatMobileNumber(): string {
     let userPhoneNumber: string = this._userAccount.phoneNumber;
-    if (this.isEscorteeSomeoneElse(this.fcEscortee.value)) {
+    if (this.isEscorteeSomeoneElse(this.fcEscortee.value) || this.isImpersonating) {
       let userInputNumber = formatStringToPhoneNumber(this.fcMobile.value,
                                                       CommonDefinition.REGEX_MOBILE_NUMBER_PATTERN,
                                                       true);
