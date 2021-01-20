@@ -30,7 +30,7 @@
             <ng-template #requiresApprovalTemplate>
               <ng-container *mcsAccessControl="['OrderEdit']">
                 <mcs-action-item mcsResponsivePanelItem mcsId
-                  *ngIf="selectedOrder.requiresApproval"
+                  *ngIf="selectedOrder.requiresApproval && !isImpersonating"
                   (click)="selectApprover()"
                   mcsEventTracker="submit-for-approval"
                   mcsEventCategory="order"

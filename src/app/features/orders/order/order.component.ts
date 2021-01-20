@@ -30,7 +30,8 @@ import {
 } from 'rxjs/operators';
 import {
   McsTableDataSource,
-  McsNavigationService
+  McsNavigationService,
+  McsAuthenticationIdentity
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -107,8 +108,10 @@ export class OrderComponent implements OnInit, OnDestroy {
     private _eventDispatcher: EventBusDispatcherService,
     private _dialogService: DialogService,
     private _navigationService: McsNavigationService,
-    private _apiService: McsApiService
+    private _apiService: McsApiService,
+    private _authenticationIdentity: McsAuthenticationIdentity
   ) {
+    this._updateOnCompanySwitch();
     this.orderDetailsView = OrderDetailsView.OrderDetails;
     this.orderItemsDataSource = new McsTableDataSource();
     this.setOrderItemsColumn();
@@ -156,6 +159,10 @@ export class OrderComponent implements OnInit, OnDestroy {
     return this._hasDeliveryTypeOptions;
   }
 
+  public get isImpersonating(): boolean {
+    return this._authenticationIdentity.isImpersonating;
+  }
+
   /**
    * Returns true when there are selected approvers
    */
@@ -196,6 +203,12 @@ export class OrderComponent implements OnInit, OnDestroy {
     this._identifyIfDeliveryTypeIsRequired(order.items);
     this.orderItemsDataSource.updateDatasource(order.items);
     return this.orderItemsDataSource;
+  }
+
+  private _updateOnCompanySwitch(): void {
+    this._eventDispatcher.addEventListener(McsEvent.accountChange, () => {
+      this._changeDetectorRef.markForCheck()
+    });
   }
 
   private _identifyIfDeadlineIsRequired(orderItems: McsOrderItem[]): void {
