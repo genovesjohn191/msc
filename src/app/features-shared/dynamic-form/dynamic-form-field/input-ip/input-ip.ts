@@ -1,3 +1,5 @@
+import { ValidatorFn } from '@angular/forms';
+import { CoreValidators } from '@app/core';
 import { CommonDefinition } from '@app/utilities';
 import {
   DynamicFormControlSettings,
@@ -13,6 +15,10 @@ export class DynamicInputIpField extends DynamicInputTextField {
   public template: DynamicFormFieldTemplate = 'input-ip';
   public pattern: RegExp = CommonDefinition.REGEX_IP_PATTERN;
 
+  public useNetworkRange?: boolean = false;
+  public ipRangeValidator?: (inputValue: any) => boolean = () => true;
+  public ipGatewayValidator?: (inputValue: any) => boolean = () => true;
+
   public constructor(options: {
     key: string;
     label: string;
@@ -25,7 +31,25 @@ export class DynamicInputIpField extends DynamicInputTextField {
     dependents?: string[];
     validators?: { required?: boolean; minlength?: number; maxlength?: number; };
     settings?: DynamicFormControlSettings;
+    useNetworkRange?: boolean;
   }) {
     super(options);
+
+    this.useNetworkRange = options.useNetworkRange || false;
+  }
+
+  public configureValidators(validators: ValidatorFn[]) {
+    validators.push(CoreValidators.ipAddress);
+
+    if (this.useNetworkRange) {
+      validators.push(CoreValidators.custom(
+        this.ipRangeValidator.bind(this),
+        'ipRange'
+      ));
+      validators.push(CoreValidators.custom(
+        this.ipGatewayValidator.bind(this),
+        'ipIsGateway'
+      ));
+    }
   }
 }

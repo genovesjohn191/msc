@@ -38,6 +38,7 @@ import { McsViewportService } from './services/mcs-viewport.service';
 import { McsReportingService } from './services/mcs-reporting.service';
 import { McsPrivateCloudOnlyGuard } from './guards/mcs-private-cloud-only.guard';
 import { McsPublicCloudOnlyGuard } from './guards/mcs-public-cloud-only.guard';
+import { McsIpValidatorService } from './services/mcs-ip-validator.service';
 
 /**
  * Array coverage for the core modules
@@ -75,5 +76,6 @@ export const coreProviders: any[] = [
   McsDateTimeService,
   McsNavigationService,
   McsSystemMessageService,
-  McsReportingService
+  McsReportingService,
+  McsIpValidatorService
 ];

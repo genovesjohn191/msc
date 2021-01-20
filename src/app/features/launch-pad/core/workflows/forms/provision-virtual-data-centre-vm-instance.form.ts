@@ -21,7 +21,7 @@ export const provisionVirtualDataCentreVmInstanceForm: LaunchPadForm = {
       key: 'companyId',
       value: '',
       eventName: 'company-change',
-      dependents: ['resource', 'os', 'storage', 'network'],
+      dependents: ['resource', 'os', 'storage', 'network', 'ipAddress'],
     }),
     new DynamicInputHiddenField({
       key: 'platform',
@@ -30,10 +30,10 @@ export const provisionVirtualDataCentreVmInstanceForm: LaunchPadForm = {
     new DynamicSelectVdcField({
       key: 'resource',
       label: 'VDC',
-      dependents: ['os', 'storage', 'network'],
+      dependents: ['os', 'storage', 'network', 'ipAddress'],
       validators: { required: true },
       settings: { preserve: true },
-      hideSelfManaged: true
+      hideSelfManaged: false
     }),
     new DynamicInputHostNameField({
       key: 'name',
@@ -80,6 +80,7 @@ export const provisionVirtualDataCentreVmInstanceForm: LaunchPadForm = {
     new DynamicSelectNetworkField({
       key: 'network',
       label: 'Network Name',
+      dependents: ['ipAddress'],
       validators: { required: true }
     }),
     new DynamicSelectField({
@@ -99,7 +100,8 @@ export const provisionVirtualDataCentreVmInstanceForm: LaunchPadForm = {
       key: 'ipAddress',
       label: 'IP Address',
       placeholder: 'Enter an IP address',
-      settings: { hidden: true }
+      settings: { hidden: true },
+      useNetworkRange: true
     })
   ],
 
