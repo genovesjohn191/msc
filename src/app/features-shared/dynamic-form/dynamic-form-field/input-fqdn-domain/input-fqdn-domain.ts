@@ -1,3 +1,5 @@
+import { ValidatorFn } from '@angular/forms';
+import { CoreValidators } from '@app/core';
 import { CommonDefinition } from '@app/utilities';
 import {
   DynamicFormControlSettings,
@@ -25,5 +27,9 @@ export class DynamicInputFqdnDomainField extends DynamicInputTextField {
     validators?: { required?: boolean; minlength?: number; maxlength?: number; };
   }) {
     super(options);
+  }
+
+  public configureValidators(validators: ValidatorFn[]) {
+    validators.push(CoreValidators.fqdnDomain);
   }
 }

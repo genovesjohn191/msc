@@ -10,6 +10,7 @@ export class DynamicSelectNetworkField extends DynamicFormFieldConfigBase {
   // Overrides
   public type: DynamicFormFieldType = 'select-network';
   public template: DynamicFormFieldTemplate = 'select-network';
+  public eventName: DynamicFormFieldOnChangeEvent = 'network-change';
 
   public constructor(options: {
     key: string;

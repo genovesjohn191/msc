@@ -34,6 +34,7 @@ export * from './services/mcs-date-time.service';
 export * from './services/mcs-navigation.service';
 export * from './services/mcs-filter.service';
 export * from './services/mcs-system-message.service';
+export * from './services/mcs-ip-validator.service';
 
 /** Providers */
 export * from './providers/mcs-assets.provider';

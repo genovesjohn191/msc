@@ -91,4 +91,17 @@ export class DynamicSelectNetworkComponent extends DynamicSelectFieldComponentBa
 
     return options;
   }
+
+  public valueChange(val: any): void {
+    let validEvent = !isNullOrEmpty(this.config.eventName) && !isNullOrEmpty(this.config.dependents);
+    if (validEvent) {
+      this.dataChange.emit({
+        value: this.collection.find((item) => item.name === this.config.value),
+        eventName: this.config.eventName,
+        dependents: this.config.dependents
+      });
+    }
+
+    this.propagateChange(this.config.value);
+  }
 }

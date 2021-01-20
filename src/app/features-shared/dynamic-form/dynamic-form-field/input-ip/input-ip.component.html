@@ -1,0 +1,34 @@
+<div *ngIf="visible && config.useNetworkRange">
+  <p>
+    <span class="note">Valid Ranges</span>
+    <mat-chip-list aria-label="IP ranges">
+      <mat-chip *ngFor="let netMask of netMasks">{{ netMask.first }} - {{ netMask.last }}</mat-chip>
+    </mat-chip-list>
+  </p>
+</div>
+
+<mat-form-field
+  *ngIf="visible"
+  appearance="outline"
+  [hintLabel]="config.hint">
+  <mat-label [attr.for]="id">{{ label }}</mat-label>
+
+  <input #control matInput type="text"
+    [id]="id"
+    [required]="required"
+    [disabled]="disabled"
+    [placeholder]="config.placeholder"
+    [maxlength]="config.validators?.maxlength"
+    [minlength]="config.validators?.minlength"
+    [pattern]="config.pattern"
+    [(ngModel)]="config.value"
+    (input)="valueChange($event)"/>
+  <mat-hint align="end" *ngIf="config.validators?.maxlength > 0">{{control.value?.length || 0}}/{{ config.validators?.maxlength }}</mat-hint>
+
+  <ng-container *ngIf="config.useNetworkRange && isIpAddressInUsed(control?.value)">
+    <mcs-data-status-warning>
+      <br />
+      <span [innerHTML]="('serverShared.manageNetwork.inUsedEnteredIpMessage' | translate)  | mcsNewLines"></span>
+    </mcs-data-status-warning>
+  </ng-container>
+</mat-form-field>

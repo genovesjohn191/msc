@@ -48,3 +48,9 @@
     width: 0;
   }
 }
+
+span.note {
+  font-family: $base-font;
+  @include font-size($font-size-small);
+  color: $color-grey-02;;
+}

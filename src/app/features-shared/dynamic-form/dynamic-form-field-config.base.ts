@@ -1,3 +1,4 @@
+import { ValidatorFn } from '@angular/forms';
 import { isNullOrEmpty } from '@app/utilities';
 import {
   DynamicFormFieldConfig,
@@ -75,4 +76,6 @@ export class DynamicFormFieldConfigBase implements DynamicFormFieldConfig {
       }
     }
   }
+
+  public configureValidators(validators: ValidatorFn[]) { }
 }

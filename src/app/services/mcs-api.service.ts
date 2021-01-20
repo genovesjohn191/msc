@@ -462,8 +462,8 @@ export class McsApiService {
     );
   }
 
-  public getResourceNetwork(id: string, networkId: string): Observable<McsResourceNetwork> {
-    return this._resourcesApi.getResourceNetwork(id, networkId).pipe(
+  public getResourceNetwork(id: string, networkId: string, optionalHeaders?: Map<string, any>): Observable<McsResourceNetwork> {
+    return this._resourcesApi.getResourceNetwork(id, networkId, optionalHeaders).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getResourceNetwork'))
       ),

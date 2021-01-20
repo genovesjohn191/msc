@@ -1,3 +1,5 @@
+import { ValidatorFn } from "@angular/forms";
+
 export interface DynamicFormFieldConfig {
   type: DynamicFormFieldType;
   template: DynamicFormFieldTemplate;
@@ -13,6 +15,7 @@ export interface DynamicFormFieldConfig {
   settings?: DynamicFormControlSettings;
   eventName?: DynamicFormFieldOnChangeEvent;
   dependents?: string[];
+  configureValidators(validators: ValidatorFn[]);
 }
 
 export interface FlatOption {
@@ -89,6 +92,7 @@ export type DynamicFormFieldOnChangeEvent =
   | 'az-change'
   | 'ip-mode-change'
   | 'resource-change'
+  | 'network-change'
   | 'service-id-change';
 
 export type DynamicFormFieldInputType =

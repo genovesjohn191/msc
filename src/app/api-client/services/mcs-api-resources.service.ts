@@ -128,10 +128,11 @@ export class McsApiResourcesService implements IMcsApiResourcesService {
    * @param resourceId Resource identification
    * @param networkId Network identification
    */
-  public getResourceNetwork(resourceId: any, networkId: any):
+  public getResourceNetwork(resourceId: any, networkId: any, optionalHeaders?: Map<string, any>):
     Observable<McsApiSuccessResponse<McsResourceNetwork>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/private-cloud/resources/${resourceId}/networks/${networkId}`;
+    mcsApiRequestParameter.optionalHeaders = optionalHeaders;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(

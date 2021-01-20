@@ -5,18 +5,11 @@ import {
   Validators
 } from '@angular/forms';
 
-import { CoreValidators } from '@app/core';
 import { isNullOrEmpty } from '@app/utilities';
-import { DynamicFormFieldConfig, DynamicFormFieldType } from './dynamic-form-field-config.interface';
+import { DynamicFormFieldConfig } from './dynamic-form-field-config.interface';
 
 @Injectable()
 export class DynamicFormValidationService {
-  private _customValidatorMap: Map<string, ValidatorFn[]>;
-
-  public constructor() {
-    this._initializeCustomValidatorMap();
-  }
-
   public getErrorMessage(control: AbstractControl): string {
     if (control.hasError('required')) {
       return 'You must enter a value';
@@ -31,7 +24,13 @@ export class DynamicFormValidationService {
       return 'Must not exceed ' + control.errors.max.max;
     }
     if (control.hasError('ipAddress')) {
-      return 'Incorrect IP address format';
+      return 'Please enter a valid IP address.';
+    }
+    if (control.hasError('ipRange')) {
+      return 'IP address must be in range';
+    }
+    if (control.hasError('ipIsGateway')) {
+      return 'This IP address is reserved and cannot be used.';
     }
     if (control.hasError('domain')) {
       return 'Incorrect domain format';
@@ -72,22 +71,8 @@ export class DynamicFormValidationService {
     }
 
     // Validators based on field type
-    let customValidators = this._customValidatorMap.get(controlData.type);
-    let hasImplicitValidators = !isNullOrEmpty(customValidators);
-    if (hasImplicitValidators) {
-      customValidators.forEach(customValidator => {
-        validators.push(customValidator);
-      });
-    }
+    controlData.configureValidators(validators);
 
     return validators;
-  }
-
-  private _initializeCustomValidatorMap(): void {
-    this._customValidatorMap = new Map<DynamicFormFieldType, ValidatorFn[]>();
-
-    this._customValidatorMap.set('textbox-domain', [CoreValidators.domain]);
-    this._customValidatorMap.set('textbox-fqdn-domain', [CoreValidators.fqdnDomain]);
-    this._customValidatorMap.set('textbox-ip', [CoreValidators.ipAddress]);
   }
 }
