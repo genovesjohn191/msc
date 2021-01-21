@@ -51,7 +51,8 @@ import {
   McsOrderWorkflow,
   WorkflowStatus,
   DeliveryType,
-  deliveryTypeText
+  deliveryTypeText,
+  McsCompany
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import {
@@ -170,6 +171,10 @@ export class OrderComponent implements OnInit, OnDestroy {
     return !isNullOrEmpty(this._orderApprovers);
   }
 
+  public get activeCompany(): McsCompany {
+    return this._authenticationIdentity.activeAccount;
+  }
+
   /**
    * Returns delivery type field value
    */
@@ -191,6 +196,14 @@ export class OrderComponent implements OnInit, OnDestroy {
    */
   public getOderTypeById(typeId: string): string {
     return typeId;
+  }
+
+  /**
+   * Whether to show annotation or not
+   * @param companyId createdByCompanyId/modifiedByCompanyId of the selected order
+   */
+  public createdWithDifferentCompany(companyId: string): boolean {
+    return companyId && this.activeCompany?.id !== companyId;
   }
 
   /**

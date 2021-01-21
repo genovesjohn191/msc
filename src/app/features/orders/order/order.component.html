@@ -109,6 +109,9 @@
                 <mcs-item>
                   <span>{{ 'order.createdBy' | translate }}:</span>
                   <span>{{ selectedOrder.createdBy }}</span>
+                  <span read-only *ngIf="createdWithDifferentCompany(selectedOrder.createdByCompanyId)">
+                    {{ 'notifications.account' | translate }}
+                  </span>
                 </mcs-item>
 
                 <mcs-item>
@@ -119,6 +122,9 @@
                 <mcs-item>
                   <span>{{ 'order.updatedBy' | translate }}:</span>
                   <span>{{ selectedOrder.modifiedBy }}</span>
+                  <span read-only *ngIf="createdWithDifferentCompany(selectedOrder.modifiedByCompanyId)">
+                    {{ 'notifications.account' | translate }}
+                  </span>
                 </mcs-item>
 
                 <mcs-item>

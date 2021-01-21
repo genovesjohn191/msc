@@ -49,7 +49,8 @@ export interface IMcsApiResourcesService {
    * @param resourceId Resource identification
    * @param networkId Network identification
    */
-  getResourceNetwork(resourceId: any, networkId: any, optionalHeaders?: Map<string, any>): Observable<McsApiSuccessResponse<McsResourceNetwork>>;
+  getResourceNetwork(resourceId: any, networkId: any, optionalHeaders?: Map<string, any>):
+    Observable<McsApiSuccessResponse<McsResourceNetwork>>;
 
   /**
    * Get resource catalogs (MCS API Response)

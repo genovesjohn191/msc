@@ -80,7 +80,10 @@
             {{ columnSettings.createdBy.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" hidden-xsmall>
-            {{ row.createdBy }}
+            <span>{{ row.createdBy }}</span><br/>
+            <span read-only *ngIf="createdWithDifferentCompany(row.createdByCompanyId)">
+              {{ 'notifications.account' | translate }}
+            </span>
           </mcs-data-cell>
         </ng-container>
 

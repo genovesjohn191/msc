@@ -1,21 +1,21 @@
 import {
   EventEmitter,
   Injectable
-} from "@angular/core";
-import { shareReplay } from "rxjs/operators";
+} from '@angular/core';
+import { shareReplay } from 'rxjs/operators';
 
 import {
   McsResource,
   McsResourceNetwork,
   McsResourceNetworkIpAddress
-} from "@app/models";
-import {McsResourceNetworkSubnet } from "@app/models/response/mcs-resource-network-subnet";
-import { McsApiService } from "@app/services/mcs-api.service";
+} from '@app/models';
+import {McsResourceNetworkSubnet } from '@app/models/response/mcs-resource-network-subnet';
+import { McsApiService } from '@app/services/mcs-api.service';
 import {
   CommonDefinition,
   isNullOrEmpty,
   isNullOrUndefined
-} from "@app/utilities";
+} from '@app/utilities';
 
 // Require subnetting javscript class
 const Netmask = require('netmask').Netmask;
