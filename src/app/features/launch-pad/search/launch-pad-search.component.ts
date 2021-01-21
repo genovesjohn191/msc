@@ -1,16 +1,25 @@
-import { OnDestroy } from '@angular/core';
+import {
+  OnDestroy,
+  ViewChild
+} from '@angular/core';
 import {
   Component,
   ChangeDetectionStrategy,
   OnInit,
 } from '@angular/core';
-import { ActivatedRoute, ParamMap } from '@angular/router';
-import { McsFilterService } from '@app/core';
+import {
+  ActivatedRoute,
+  ParamMap
+} from '@angular/router';
 import { McsFilterInfo } from '@app/models';
-import { CommonDefinition, isNullOrEmpty, unsubscribeSafely } from '@app/utilities';
+import { ColumnFilter } from '@app/shared';
+import {
+  createObject,
+  isNullOrEmpty,
+  unsubscribeSafely
+} from '@app/utilities';
 import { Subject } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
-import { LaunchPadContextSource } from '../core';
 
 @Component({
   selector: 'mcs-launch-pad-search',
@@ -19,17 +28,47 @@ import { LaunchPadContextSource } from '../core';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LaunchPadSearchComponent implements OnInit, OnDestroy {
-  public elementsTableFilters: McsFilterInfo[];
-  public servicesTableFilters: McsFilterInfo[];
+  public readonly defaultCrispElementsColumnFilters = [
+    createObject(McsFilterInfo, { value: true, exclude: true, id: 'productId' }),
+    createObject(McsFilterInfo, { value: true, exclude: true, id: 'serviceId' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'description' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'status' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'companyName' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'companyId' })
+  ];
+
+  public readonly defaultInstalledServicesColumnFilters = [
+    createObject(McsFilterInfo, { value: true, exclude: true, id: 'productId' }),
+    createObject(McsFilterInfo, { value: true, exclude: true, id: 'serviceId' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'description' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'installedBaseState' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'companyName' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'companyId' })
+  ];
+
+  @ViewChild('crispElementsColumnFilter')
+  public set crispElementsColumnFilter(value: ColumnFilter) {
+    if (!isNullOrEmpty(value) && isNullOrEmpty(this.elementsTableFilters)) {
+      this.elementsTableFilters = value;
+    }
+  }
+
+  @ViewChild('installedServicesColumnFilter')
+  public set installedServicesColumnFilter(value: ColumnFilter) {
+    if (!isNullOrEmpty(value) && isNullOrEmpty(this.servicesTableFilters)) {
+      this.servicesTableFilters = value;
+    }
+  }
+
+  public elementsTableFilters: ColumnFilter;
+  public servicesTableFilters: ColumnFilter;
   public keyword: string = '';
   public selectedTabIndex: number = 0;
 
   private _destroySubject = new Subject<void>();
 
   public constructor(
-    private _activatedRoute: ActivatedRoute,
-    private _filterService: McsFilterService) {
-    this._initializeDataColumns();
+    private _activatedRoute: ActivatedRoute) {
   }
 
   public ngOnInit(): void {
@@ -50,25 +89,5 @@ export class LaunchPadSearchComponent implements OnInit, OnDestroy {
         this.keyword = keyword;
       })
     ).subscribe();
-  }
-
-  public onColumnFilterChange(table: LaunchPadContextSource, updatedFilters: McsFilterInfo[]): void {
-    if (isNullOrEmpty(updatedFilters)) { return; }
-
-    switch(table) {
-      case 'crisp-elements': {
-        this.elementsTableFilters = updatedFilters.filter(() => true);
-        break;
-      }
-      case 'installed-services': {
-        this.servicesTableFilters = updatedFilters.filter(() => true);
-        break;
-      }
-    }
-  }
-
-  public _initializeDataColumns(): void {
-    this.elementsTableFilters = this._filterService.getFilterSettings(CommonDefinition.FILTERSELECTOR_LAUNCH_PAD_SEARCH_ELEMENTS_LISTING);
-    this.servicesTableFilters = this._filterService.getFilterSettings(CommonDefinition.FILTERSELECTOR_LAUNCH_PAD_SEARCH_SERVICES_LISTING);
   }
 }

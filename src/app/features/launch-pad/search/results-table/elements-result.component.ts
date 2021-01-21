@@ -4,7 +4,8 @@ import {
   OnDestroy,
   Input,
   EventEmitter,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  ViewChild
 } from '@angular/core';
 import {
   McsTableDataSource2,
@@ -12,13 +13,15 @@ import {
   McsMatTableContext
 } from '@app/core';
 import {
-  McsFilterInfo,
   McsObjectCrispElement,
   McsQueryParam,
   ProductType
 } from '@app/models';
 import { McsApiService } from '@app/services';
-import { Search } from '@app/shared';
+import {
+  ColumnFilter,
+  Paginator,
+  Search } from '@app/shared';
 import {
   unsubscribeSafely,
   isNullOrEmpty,
@@ -37,11 +40,18 @@ import { WorkflowSelectorConfig } from '../../core';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LaunchPadSearchElementsResultComponent implements OnDestroy, Search {
-  @Input()
-  public set dataFilters(value: McsFilterInfo[]) {
-    if (isNullOrEmpty(value)) { return; }
+  @ViewChild('paginator')
+  public set paginator(value: Paginator) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerPaginator(value);
+    }
+  }
 
-    this.dataSource.registerColumnsFilterInfo(value);
+  @Input()
+  public set columnFilter(value: ColumnFilter) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerColumnFilter(value);
+    }
   }
 
   @Input()
@@ -83,14 +93,11 @@ export class LaunchPadSearchElementsResultComponent implements OnDestroy, Search
   private _getData(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsObjectCrispElement>> {
     let queryParam = new McsQueryParam();
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
-    queryParam.pageSize = 50; // TODO: Update once paging is available in API
+    queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
     queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
 
     return this._apiService.getCrispElements(queryParam).pipe(
-      map((response) => {
-        return new McsMatTableContext(response.collection, response.totalCollectionCount);
-      })
-    );
+      map((response) => new McsMatTableContext(response?.collection, response?.totalCollectionCount)));
   }
 
   public retryDatasource(): void {

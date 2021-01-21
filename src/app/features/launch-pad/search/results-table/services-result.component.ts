@@ -1,11 +1,38 @@
-import { Component, ChangeDetectionStrategy, OnDestroy, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
-import { McsMatTableContext, McsMatTableQueryParam, McsTableDataSource2 } from '@app/core';
-import { McsFilterInfo, McsObjectInstalledService, McsQueryParam, ProductType } from '@app/models';
-import { McsApiService } from '@app/services';
-import { Search } from '@app/shared';
-import { unsubscribeSafely, getSafeProperty, isNullOrEmpty } from '@app/utilities';
-import { Subject, Observable } from 'rxjs';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  OnDestroy,
+  Input,
+  EventEmitter,
+  ChangeDetectorRef,
+  ViewChild
+} from '@angular/core';
+import {
+  Subject,
+  Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+
+import {
+  McsMatTableContext,
+  McsMatTableQueryParam,
+  McsTableDataSource2
+} from '@app/core';
+import {
+  McsObjectInstalledService,
+  McsQueryParam,
+  ProductType
+} from '@app/models';
+import { McsApiService } from '@app/services';
+import {
+  ColumnFilter,
+  Paginator,
+  Search
+} from '@app/shared';
+import {
+  unsubscribeSafely,
+  getSafeProperty,
+  isNullOrEmpty
+} from '@app/utilities';
 import { WorkflowSelectorConfig } from '../../core';
 
 @Component({
@@ -14,11 +41,18 @@ import { WorkflowSelectorConfig } from '../../core';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LaunchPadSearchServicesResultComponent implements OnDestroy, Search {
-  @Input()
-  public set dataFilters(value: McsFilterInfo[]) {
-    if (isNullOrEmpty(value)) { return; }
+  @ViewChild('paginator')
+  public set paginator(value: Paginator) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerPaginator(value);
+    }
+  }
 
-    this.dataSource.registerColumnsFilterInfo(value);
+  @Input()
+  public set columnFilter(value: ColumnFilter) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerColumnFilter(value);
+    }
   }
 
   @Input()
@@ -60,14 +94,11 @@ export class LaunchPadSearchServicesResultComponent implements OnDestroy, Search
   private _getData(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsObjectInstalledService>> {
     let queryParam = new McsQueryParam();
     queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
-    queryParam.pageSize = 50; // TODO: Update once paging is available in API
+    queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
     queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
 
     return this._apiService.getInstalledServices(queryParam).pipe(
-      map((response) => {
-        return new McsMatTableContext(response.collection, response.totalCollectionCount);
-      })
-    );
+      map((response) => new McsMatTableContext(response?.collection, response?.totalCollectionCount)));
   }
 
   public retryDatasource(): void {
