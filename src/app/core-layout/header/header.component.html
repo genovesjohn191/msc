@@ -22,9 +22,15 @@
         <mat-label>Search</mat-label>
         <input #searchField type="text"
           matInput
+          mcsId="global-search-input"
           [(ngModel)]="searchKeyword"
           (keydown.enter)="search()">
-        <mat-icon matSuffix (click)="search()">search</mat-icon>
+        <mat-icon
+          matSuffix (click)="search()"
+          mcsId="global-search-button"
+          mcsEventTracker="global-search"
+          mcsEventCategory="navigation"
+          mcsEventLabel="search">search</mat-icon>
       </mat-form-field>
     </div>
   </ng-container>

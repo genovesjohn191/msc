@@ -84,3 +84,9 @@
       mcsEventLabel="tools-listing-page">{{ 'launchPadSearch.elements.table.retry' | translate }}</a>
   </div>
 </mcs-item>
+
+<!-- Paginator -->
+<mcs-paginator #paginator
+  [hidden]="!hasNextPage"
+  [totalCount]="dataSource?.totalCount$ | async">
+</mcs-paginator>
