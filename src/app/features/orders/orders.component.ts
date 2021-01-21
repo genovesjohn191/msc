@@ -7,7 +7,8 @@ import {
 import { Observable } from 'rxjs';
 import {
   McsTableListingBase,
-  McsNavigationService
+  McsNavigationService,
+  McsAuthenticationIdentity
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -17,7 +18,8 @@ import {
   RouteKey,
   McsOrder,
   McsQueryParam,
-  McsApiCollection
+  McsApiCollection,
+  McsCompany
 } from '@app/models';
 import { McsEvent } from '@app/events';
 import { McsApiService } from '@app/services';
@@ -34,7 +36,8 @@ export class OrdersComponent extends McsTableListingBase<McsOrder> {
     _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
     private _navigationService: McsNavigationService,
-    private _apiService: McsApiService
+    private _apiService: McsApiService,
+    private _authenticationIdentity: McsAuthenticationIdentity,
   ) {
     super(_injector, _changeDetectorRef, { dataChangeEvent: McsEvent.dataChangeOrders });
   }
@@ -48,6 +51,18 @@ export class OrdersComponent extends McsTableListingBase<McsOrder> {
    */
   public get addIconKey(): string {
     return CommonDefinition.ASSETS_SVG_PLUS;
+  }
+
+  public get activeCompany(): McsCompany {
+    return this._authenticationIdentity.activeAccount;
+  }
+
+  /**
+   * Whether to show annotation or not
+   * @param companyId createdByCompanyId/modifiedByCompanyId of the selected order
+   */
+  public createdWithDifferentCompany(companyId: string): boolean {
+    return companyId && this.activeCompany?.id !== companyId;
   }
 
   /**

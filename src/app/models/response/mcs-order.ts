@@ -71,6 +71,12 @@ export class McsOrder extends McsEntityBase {
   @JsonProperty()
   public modifiedBy: string = undefined;
 
+  @JsonProperty()
+  public createdByCompanyId: string = undefined;
+
+  @JsonProperty()
+  public modifiedByCompanyId: string = undefined;
+
   @JsonProperty({
     serializer: McsDateSerialization,
     deserializer: McsDateSerialization
