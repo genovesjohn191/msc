@@ -60,9 +60,9 @@ export abstract class DynamicTextFieldComponentBase implements OnInit, DynamicFo
 
   public valueChange(val: any): void {
     let validEvent = !isNullOrEmpty(this.config.eventName) && !isNullOrEmpty(this.config.dependents);
-    if (!validEvent) { return; }
-
-    this.notifyForDataChange(this.config.eventName, this.config.dependents, this.config.value);
+    if (validEvent) {
+      this.notifyForDataChange(this.config.eventName, this.config.dependents, this.config.value);
+    }
 
     this.propagateChange(this.config.value);
   }
