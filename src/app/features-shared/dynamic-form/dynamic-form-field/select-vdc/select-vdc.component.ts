@@ -18,6 +18,7 @@ import {
 import { McsApiService } from '@app/services';
 import {
   DynamicFormFieldDataChangeEventParam,
+  DynamicFormFieldOnChangeEvent,
   FlatOption,
   GroupedOption
 } from '../../dynamic-form-field-config.interface';
@@ -125,16 +126,11 @@ export class DynamicSelectVdcComponent extends DynamicSelectFieldComponentBase<M
     return groupedOptions;
   }
 
-  public valueChange(val: any): void {
-    let validEvent = !isNullOrEmpty(this.config.eventName) && !isNullOrEmpty(this.config.dependents);
-    if (validEvent) {
-      this.dataChange.emit({
-        value: this.collection.find((item) => item.name === this.config.value),
-        eventName: this.config.eventName,
-        dependents: this.config.dependents
-      });
-    }
-
-    this.propagateChange(this.config.value);
+  public notifyForDataChange(eventName: DynamicFormFieldOnChangeEvent, dependents: string[], value?: any): void {
+    this.dataChange.emit({
+      value: this.collection.find((item) => item.name === value),
+      eventName: eventName,
+      dependents: dependents
+    });
   }
 }

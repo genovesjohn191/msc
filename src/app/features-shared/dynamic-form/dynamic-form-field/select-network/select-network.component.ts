@@ -21,6 +21,7 @@ import {
 } from '@app/models';
 import {
   DynamicFormFieldDataChangeEventParam,
+  DynamicFormFieldOnChangeEvent,
   FlatOption
 } from '../../dynamic-form-field-config.interface';
 import { DynamicSelectNetworkField } from './select-network';
@@ -92,16 +93,11 @@ export class DynamicSelectNetworkComponent extends DynamicSelectFieldComponentBa
     return options;
   }
 
-  public valueChange(val: any): void {
-    let validEvent = !isNullOrEmpty(this.config.eventName) && !isNullOrEmpty(this.config.dependents);
-    if (validEvent) {
-      this.dataChange.emit({
-        value: this.collection.find((item) => item.name === this.config.value),
-        eventName: this.config.eventName,
-        dependents: this.config.dependents
-      });
-    }
-
-    this.propagateChange(this.config.value);
+  public notifyForDataChange(eventName: DynamicFormFieldOnChangeEvent, dependents: string[], value?: any): void {
+    this.dataChange.emit({
+      value: this.collection.find((item) => item.name === value),
+      eventName: eventName,
+      dependents: dependents
+    });
   }
 }

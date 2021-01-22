@@ -18,6 +18,7 @@ import { DynamicSelectStorageProfileComponent } from './select-storage-profile/s
 import { DynamicSelectVdcComponent } from './select-vdc/select-vdc.component';
 import { DynamicSelectVmComponent } from './select-vm/select-vm.component';
 import { DynamicSelectComponent } from './select/select.component';
+import { DynamicSlideToggleComponent } from './slide-toggle/slide-toggle.component';
 
 const exports: any[] | Type<any> = [
   DynamicInputNumberComponent,
@@ -33,7 +34,8 @@ const exports: any[] | Type<any> = [
   DynamicSelectOsComponent,
   DynamicSelectStorageProfileComponent,
   DynamicSelectVdcComponent,
-  DynamicSelectVmComponent
+  DynamicSelectVmComponent,
+  DynamicSlideToggleComponent
 ];
 
 @NgModule({

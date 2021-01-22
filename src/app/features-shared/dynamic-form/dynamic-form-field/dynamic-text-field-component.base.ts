@@ -9,7 +9,7 @@ import { ControlValueAccessor } from '@angular/forms';
 import { isNullOrEmpty } from '@app/utilities';
 
 import { DynamicFormFieldConfigBase } from '../dynamic-form-field-config.base';
-import { DynamicFormFieldDataChangeEventParam } from '../dynamic-form-field-config.interface';
+import { DynamicFormFieldDataChangeEventParam, DynamicFormFieldOnChangeEvent } from '../dynamic-form-field-config.interface';
 import { DynamicFormFieldComponent } from '../dynamic-form-field-component.interface';
 
 @Component({ template: '' })
@@ -50,15 +50,19 @@ export abstract class DynamicTextFieldComponentBase implements OnInit, DynamicFo
   }
 
   // Can be overriden to modify the value being sent
+  public notifyForDataChange(eventName: DynamicFormFieldOnChangeEvent, dependents: string[], value?: any): void {
+    this.dataChange.emit({
+      value: value,
+      eventName: eventName,
+      dependents: dependents
+    });
+  }
+
   public valueChange(val: any): void {
     let validEvent = !isNullOrEmpty(this.config.eventName) && !isNullOrEmpty(this.config.dependents);
-    if (validEvent) {
-      this.dataChange.emit({
-        value: this.config.value,
-        eventName: this.config.eventName,
-        dependents: this.config.dependents
-      });
-    }
+    if (!validEvent) { return; }
+
+    this.notifyForDataChange(this.config.eventName, this.config.dependents, this.config.value);
 
     this.propagateChange(this.config.value);
   }
@@ -68,7 +72,11 @@ export abstract class DynamicTextFieldComponentBase implements OnInit, DynamicFo
   public clearFormField(reuseValue: boolean): void {
     let preserveValue = reuseValue && this.config.settings && this.config.settings.preserve;
     if (!preserveValue) {
-      this._changeValue('');
+      if (typeof this.config.value === 'boolean') {
+        this._changeValue(false);
+      } else {
+        this._changeValue('');
+      }
     }
   }
 

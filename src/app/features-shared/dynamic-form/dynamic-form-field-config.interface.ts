@@ -68,7 +68,9 @@ export type DynamicFormFieldType =
   | 'select-os'
   | 'select-storage-profile'
   | 'select-vdc'
-  | 'select-vm';
+  | 'select-vm'
+  | 'slide-toggle';
+
 
 export type DynamicFormFieldTemplate =
   'input-text'
@@ -84,7 +86,8 @@ export type DynamicFormFieldTemplate =
   | 'select-os'
   | 'select-storage-profile'
   | 'select-vdc'
-  | 'select-vm';
+  | 'select-vm'
+  | 'slide-toggle';
 
 export type DynamicFormFieldOnChangeEvent =
   ''

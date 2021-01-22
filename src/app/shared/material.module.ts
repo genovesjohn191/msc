@@ -47,6 +47,7 @@ const exportedModules = [
   MatSnackBarModule,
   MatProgressSpinnerModule,
   MatStepperModule,
+  MatSlideToggleModule,
   MatTooltipModule,
   MatTreeModule,
   MatTableModule,
