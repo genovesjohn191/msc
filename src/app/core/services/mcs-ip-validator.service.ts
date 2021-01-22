@@ -1,7 +1,4 @@
-import {
-  EventEmitter,
-  Injectable
-} from '@angular/core';
+import { Injectable } from '@angular/core';
 import { shareReplay } from 'rxjs/operators';
 
 import {
@@ -25,8 +22,6 @@ const DEFAULT_IP_RANGE_LAST = '3';
 
 @Injectable()
 export class McsIpValidatorService {
-
-  public inUsedIpAddressUpdated = new EventEmitter<McsResourceNetworkIpAddress[]>();
   public netMasks: any[];
   public ipAddressesInUsed: McsResourceNetworkIpAddress[];
 
@@ -35,7 +30,6 @@ export class McsIpValidatorService {
   private _network: McsResourceNetwork;
 
   public constructor(private _apiService: McsApiService) {
-    this.inUsedIpAddressUpdated = new EventEmitter<McsResourceNetworkIpAddress[]>();
     this.resetNetworkIpInformation();
   }
 
@@ -92,11 +86,9 @@ export class McsIpValidatorService {
   public ipGatewayValidator(inputValue: any): boolean {
     try {
       let selectedNedworkGateway =  this._network.subnets.find((subnet)=> subnet.gateway === inputValue);
-      console.log('selectedNedworkGateway', selectedNedworkGateway);
       return  (isNullOrUndefined(selectedNedworkGateway));
     }
     catch (error) {
-      console.log('selectedNedworkGateway', error);
       return false;
     }
   }
@@ -119,7 +111,6 @@ export class McsIpValidatorService {
       if (isNullOrEmpty(response)) { return; }
 
       this.ipAddressesInUsed = response.ipAddresses;
-      this.inUsedIpAddressUpdated.emit(this.ipAddressesInUsed);
     });
   }
 }

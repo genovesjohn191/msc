@@ -49,7 +49,6 @@ export class DynamicInputIpComponent extends DynamicInputTextComponent {
   ) {
     super();
     this.resetNetworkIpInformation();
-    this._ipValidationService.inUsedIpAddressUpdated = this.ipAddressesInUsedUpdated.bind(this);
   }
 
   public onFormDataChange(params: DynamicFormFieldDataChangeEventParam): void {
@@ -69,8 +68,6 @@ export class DynamicInputIpComponent extends DynamicInputTextComponent {
 
       case 'network-change':
         this._network = params.value as McsResourceNetwork;
-
-        console.log('CHECK FOR SUBNETS',this._network);
         this.initNetworkIpInformation();
         break;
     }
@@ -125,10 +122,6 @@ export class DynamicInputIpComponent extends DynamicInputTextComponent {
       this._hasInitialized = true;
     }
 
-    this._changeDetectorRef.markForCheck();
-  }
-
-  private ipAddressesInUsedUpdated(): void {
     this._changeDetectorRef.markForCheck();
   }
 }
