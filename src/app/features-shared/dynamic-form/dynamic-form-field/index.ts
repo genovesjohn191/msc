@@ -12,6 +12,7 @@ export * from './select-group/select-group';
 export * from './select-multiple/select-multiple';
 export * from './select-network/select-network';
 export * from './select-os/select-os';
+export * from './slide-toggle/slide-toggle';
 export * from './select-storage-profile/select-storage-profile';
 export * from './select-vdc/select-vdc';
 export * from './select-vm/select-vm';

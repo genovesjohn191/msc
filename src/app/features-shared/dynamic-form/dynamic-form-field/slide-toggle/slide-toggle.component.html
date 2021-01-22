@@ -1,0 +1,15 @@
+<mat-form-field
+  *ngIf="visible"
+  appearance="none"
+  floatLabel="always">
+
+  <mat-slide-toggle
+    [inputId]="id"
+    color="primary"
+    [(ngModel)]="config.value"
+    (change)="valueChange($event)">
+    {{ label }} - {{ config.value }}
+  </mat-slide-toggle>
+  <textarea matInput hidden></textarea>
+
+</mat-form-field>

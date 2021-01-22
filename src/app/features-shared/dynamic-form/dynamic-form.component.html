@@ -69,6 +69,10 @@
         <mcs-dff-select-vm-field *ngSwitchCase="'select-vm'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)">
         </mcs-dff-select-vm-field>
+
+        <mcs-dff-slide-toggle-field *ngSwitchCase="'slide-toggle'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)">
+        </mcs-dff-slide-toggle-field>
       </div>
     </div>
   </div>
