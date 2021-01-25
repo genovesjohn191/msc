@@ -164,11 +164,7 @@ export class UserPanelComponent implements OnInit, OnDestroy {
     if (shouldRedirectToNotifPage) {
       this.navigateToNotificationsPage();
     }
-    else {
-      let event: Event;
-      event.stopPropagation();
-      this.notificationsPopover.toggle();
-    }
+
     if (isMobileMode) { this.notificationsPopover.close(); }
   }
 

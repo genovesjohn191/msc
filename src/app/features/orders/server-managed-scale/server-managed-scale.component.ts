@@ -104,6 +104,7 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
   private _selectedServerHandler: Subscription;
   private _resourcesDataChangeHandler: Subscription;
   private _scaleServerOrderStateMessageMap = new Map<ServiceOrderState, string>();
+  private _defaultServer: McsServer = new McsServer();
 
   constructor(
     _injector: Injector,
@@ -271,6 +272,7 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
       map((serversCollection) => {
         let serverGroups: McsOptionGroup[] = [];
         let servers = getSafeProperty(serversCollection, (obj) => obj.collection) || [];
+        this._defaultServer = servers.find(_s => _s.serviceChangeAvailable || !_s.isProcessing);
 
         servers.forEach((server) => {
           if (!server.isManagedVCloud) { return; }
@@ -288,8 +290,21 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
           );
         });
         return serverGroups;
+      }),
+      tap((serverGroups)=>{
+        this._preSelectServer(serverGroups)
       })
     );
+  }
+
+  private _preSelectServer(serverGroups: McsOptionGroup[]): void {
+    if (!isNullOrEmpty(this._defaultServer)) {
+        serverGroups.find(_group => {
+          let serverGroupOptions =_group.options;
+          let preSelectedServer = serverGroupOptions.find(_option => _option.value.entity.serviceId === this._defaultServer.serviceId);
+          this.fcManageServer.setValue(preSelectedServer);
+        });
+    }
   }
 
   /**

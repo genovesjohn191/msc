@@ -46,7 +46,7 @@
               (selectionChange)="onChangeServer($event)"
               [mcsContextualHelp]="'orderServerManagedScale.vm.contextualHelp' | translate">
 
-              <mcs-search mcsSelectSearch></mcs-search>
+              <mcs-search mcsSelectSearch mcsId="server-managed-scale-search"></mcs-search>
 
               <mcs-option-group *ngFor="let serverGroup of (serverGroups$ | async)">
                 <ng-container *mcsOptionGroupLabel>

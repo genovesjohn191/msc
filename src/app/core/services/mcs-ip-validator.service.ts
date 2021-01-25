@@ -85,8 +85,8 @@ export class McsIpValidatorService {
 
   public ipGatewayValidator(inputValue: any): boolean {
     try {
-      let selectedNedworkGateway =  this._network.subnets.find((subnet)=> subnet.gateway === inputValue);
-      return  (isNullOrUndefined(selectedNedworkGateway));
+      let selectedNetworkGateway =  this._network.subnets.find((subnet)=> subnet.gateway === inputValue);
+      return  (isNullOrUndefined(selectedNetworkGateway));
     }
     catch (error) {
       return false;
