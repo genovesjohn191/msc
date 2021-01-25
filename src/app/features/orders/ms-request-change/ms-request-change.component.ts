@@ -32,7 +32,6 @@ import {
   CoreValidators,
   OrderRequester,
   IMcsFormGroup,
-  McsDateTimeService
 } from '@app/core';
 import {
   CommonDefinition,
@@ -285,7 +284,7 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
   }
 
   private _resetAzureResources(service: McsAzureService): void {
-    this._getAzureResources(service.serviceId);
+    this._getAzureResources(service?.serviceId);
   }
 
   public onServiceChange(service: McsAzureService): void {
@@ -468,6 +467,10 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
         if (!params.serviceId) {
           return this.enableAzureResources = false;
         }
+        this.azureServices$.subscribe(_services => {
+          let preSelectedOption: McsOption = _services.find(_service => _service.value.serviceId === params.serviceId);
+          this.fcMsService.setValue(preSelectedOption.value);
+        })
         this._getAzureResources(params.serviceId);
       }),
       shareReplay(1)
