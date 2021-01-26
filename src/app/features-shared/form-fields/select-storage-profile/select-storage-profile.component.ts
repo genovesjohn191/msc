@@ -17,7 +17,6 @@ import {
   OnInit
 } from '@angular/core';
 import {
-  ControlValueAccessor,
   FormControl,
   NG_VALUE_ACCESSOR
 } from '@angular/forms';
@@ -43,12 +42,12 @@ import { FormFieldBaseComponent } from '../form-field.base';
     }
   ],
   host: {
-    'class': 'select-storage-profile'
+    'class': 'mcs-select-storage-profile'
   }
 })
 export class SelectStorageProfileComponent
   extends FormFieldBaseComponent<McsResourceStorage>
-  implements OnInit, OnDestroy, ControlValueAccessor {
+  implements OnInit, OnDestroy {
 
   public fcModel = new FormControl('', []);
   public storages$: Observable<McsResourceStorage[]>;
@@ -62,13 +61,8 @@ export class SelectStorageProfileComponent
   @Input()
   public resourceId: string;
 
-  private _value: McsResourceStorage;
   private _destroySubject = new Subject<void>();
   private _storagesChange = new BehaviorSubject<McsResourceStorage[]>(null);
-
-  public get value(): McsResourceStorage {
-    return this._value;
-  }
 
   constructor(
     private _translateService: TranslateService,
@@ -86,23 +80,6 @@ export class SelectStorageProfileComponent
 
   public ngOnDestroy() {
     unsubscribeSafely(this._destroySubject);
-  }
-
-  public writeValue(value: McsResourceStorage): void {
-    this._value = value;
-    this._onChange(this.value)
-  }
-
-  public registerOnChange(fn: (value: McsResourceStorage) => void): void {
-    this._onChange = fn;
-  }
-
-  public registerOnTouched(fn: () => void): void {
-    this._onTouched = fn;
-  }
-
-  public setDisabledState(isDisabled: boolean): void {
-    this.disabled = isDisabled;
   }
 
   private _validateResourceId(): void {

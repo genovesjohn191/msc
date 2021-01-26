@@ -1,0 +1,21 @@
+<ng-container [ngSwitch]="inlineEditMode$ | async">
+  <!-- Edit Mode -->
+  <ng-container *ngSwitchCase="inlineEditMode.Edit">
+    <mat-form-field appearance="outline">
+      <mat-label>{{ placeholder }}</mat-label>
+      <input matInput [(ngModel)]="value"
+        (blur)="onSetViewMode()">
+    </mat-form-field>
+  </ng-container>
+
+  <!-- View Mode -->
+  <ng-container *ngSwitchDefault>
+    <a href="#"
+      (click)="onSetEditMode()"
+      (focus)="onSetEditMode()">
+      {{ value }}
+    </a>
+  </ng-container>
+</ng-container>
+
+
