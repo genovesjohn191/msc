@@ -208,6 +208,8 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity> {
     this._columnFilter.filtersChange.pipe(
       takeUntil(this._columnSelectorSubject),
       tap((state) => {
+        if (isNullOrEmpty(state)) { return; }
+
         let displayedColumns = state
           .filter(item => {
             return !this._columnFilter.filterPredicate ? item.value :
