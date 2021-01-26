@@ -8,7 +8,7 @@
                   <mcs-form-field>
                     <mcs-select [formControl]="formGroup?.controls['fcActionType']" required
                       (selectionChange)="onActionTypeSelectionChange($event)"
-                      mcsId="select-order-simple-firewall-change-action-type"
+                      mcsId="add-simple-firewall-change-action-type"
                       mcsEventTracker="select-order-simple-firewall-change-action-type"
                       mcsEventCategory="order"
                       mcsEventLabel="simple-firewall-change-page">
@@ -27,7 +27,7 @@
                     <input mcsInput
                       [formControl]="formGroup?.controls['fcSourceZoneInterface']"
                       [placeholder]="'orderSimpleFirewallChanges.detailsStep.add.sourceZoneOrInterface.placeholder' | translate"
-                      mcsId="input-add-simple-firewall-change-source-zone-interface"
+                      mcsId="add-simple-firewall-change-source-zone-interface"
                       required>
                     <mcs-error mcsError errorState="required">
                       {{ 'orderSimpleFirewallChanges.detailsStep.add.sourceZoneOrInterface.errorRequired' | translate }}
@@ -40,7 +40,7 @@
                       [formControl]="formGroup?.controls['fcSourceIpSubnet']"
                       [mcsContextualHelp]="'orderSimpleFirewallChanges.detailsStep.add.sourceIpOrSubnet.helpText' | translate"
                       [placeholder]="'orderSimpleFirewallChanges.detailsStep.add.sourceIpOrSubnet.placeholder' | translate"
-                      mcsId="input-add-simple-firewall-change-source-ip-subnet"
+                      mcsId="add-simple-firewall-change-source-ip-subnet"
                       required>
                     <mcs-error mcsError errorState="required">
                       {{ 'orderSimpleFirewallChanges.detailsStep.add.sourceIpOrSubnet.errorRequired' | translate }}
@@ -58,7 +58,7 @@
                     <input mcsInput
                       [formControl]="formGroup?.controls['fcDestinationZoneInterface']"
                       [placeholder]="'orderSimpleFirewallChanges.detailsStep.add.destinationZoneOrInterface.placeholder' | translate"
-                      mcsId="input-add-simple-firewall-change-destination-zone-interface"
+                      mcsId="add-simple-firewall-change-destination-zone-interface"
                       required>
                     <mcs-error mcsError errorState="required">
                       {{ 'orderSimpleFirewallChanges.detailsStep.add.destinationZoneOrInterface.errorRequired' | translate }}
@@ -71,7 +71,7 @@
                       [formControl]="formGroup?.controls['fcDestinationIpSubnet']"
                       [mcsContextualHelp]="'orderSimpleFirewallChanges.detailsStep.add.destinationIpOrSubnet.helpText' | translate"
                       [placeholder]="'orderSimpleFirewallChanges.detailsStep.add.destinationIpOrSubnet.placeholder' | translate"
-                      mcsId="input-add-simple-firewall-change-destination-ip-subnet"
+                      mcsId="add-simple-firewall-change-destination-ip-subnet"
                       required>
                     <mcs-error mcsError errorState="required">
                       {{ 'orderSimpleFirewallChanges.detailsStep.add.destinationIpOrSubnet.errorRequired' | translate }}
@@ -89,7 +89,7 @@
                     <input mcsInput
                       [formControl]="formGroup?.controls['fcDestinationPort']"
                       [placeholder]="'orderSimpleFirewallChanges.detailsStep.add.destinationPort.placeholder' | translate"
-                      mcsId="input-add-simple-firewall-change-destination-port"
+                      mcsId="add-simple-firewall-change-destination-port"
                       required>
                     <mcs-error mcsError errorState="required">
                       {{ 'orderSimpleFirewallChanges.detailsStep.add.destinationPort.errorRequired' | translate }}
@@ -99,7 +99,7 @@
                 <mcs-grid-column sizeLg="6">
                   <mcs-form-field>
                     <mcs-select [formControl]="formGroup?.controls['fcProtocol']" required
-                      mcsId="select-order-simple-firewall-change-protocol"
+                      mcsId="add-simple-firewall-change-protocol"
                       mcsEventTracker="select-order-simple-firewall-change-protocol"
                       mcsEventCategory="order"
                       mcsEventLabel="simple-firewall-change-page">
@@ -124,7 +124,7 @@
                     mcsEventTracker="textarea-remove-simple-firewall-change-rule"
                     mcsEventCategory="order"
                     mcsEventLabel="order-remove-simple-firewall-change"
-                    mcsId="textarea-remove-simple-firewall-change-rule"></textarea>
+                    mcsId="remove-simple-firewall-change-rule"></textarea>
                     <mcs-error mcsError errorState="required">
                       {{ 'orderSimpleFirewallChanges.detailsStep.remove.rulesToRemove.errorRequired' | translate }}
                     </mcs-error>
@@ -145,7 +145,7 @@
                     mcsEventTracker="textarea-modify-simple-firewall-change-rule"
                     mcsEventCategory="order"
                     mcsEventLabel="order-modify-simple-firewall-change"
-                    mcsId="textarea-modify-simple-firewall-change-rule"></textarea>
+                    mcsId="modify-simple-firewall-existing-rule"></textarea>
                     <mcs-error mcsError errorState="required">
                       {{ 'orderSimpleFirewallChanges.detailsStep.modify.existingRule.errorRequired' | translate }}
                     </mcs-error>
@@ -163,7 +163,7 @@
                     mcsEventTracker="textarea-modify-simple-firewall-change-rule"
                     mcsEventCategory="order"
                     mcsEventLabel="order-modify-simple-firewall-change"
-                    mcsId="textarea-modify-simple-firewall-change-rule"></textarea>
+                    mcsId="modify-simple-firewall-new-rule"></textarea>
                     <mcs-error mcsError errorState="required">
                       {{ 'orderSimpleFirewallChanges.detailsStep.modify.newRule.errorRequired' | translate }}
                     </mcs-error>

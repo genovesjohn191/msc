@@ -60,7 +60,7 @@
                       <mcs-select [formControl]="fcFirewallServices" required
                         [placeholder]="'orderSimpleFirewallChanges.detailsStep.firewallService.placeholder' | translate"
                         [mcsContextualHelp]="'orderSimpleFirewallChanges.detailsStep.firewallService.helptext' | translate"
-                        mcsId="select-firewall-service" mcsEventTracker="select-firewall-service" mcsEventCategory="order"
+                        mcsId="modify-firewall-services" mcsEventTracker="select-firewall-service" mcsEventCategory="order"
                         mcsEventLabel="modify-simple-firewall-change-page">
                         <mcs-option *ngFor="let firewallOption of firewallOptions " [value]="firewallOption.value">
                           {{ firewallOption.text }}
@@ -98,7 +98,7 @@
                               [ruleActionType]="ruleActionType">
                             </mcs-firewall-changes-shared-rule>
                           <mcs-item orientation="separated" margin-top-small *ngIf="isChangeItemRemovable(faSharedRuleForm?.controls?.length)">
-                            <button mcsButton color="error" (click)="removeChangeItem(i)">
+                            <button mcsButton color="error" mcsId="remove-list-item" (click)="removeChangeItem(i)">
                               {{ 'orderSimpleFirewallChanges.detailsStep.sharedRuleForm.removeBtnLabel' | translate }}
                             </button>
                           </mcs-item>
@@ -106,7 +106,7 @@
                     </mcs-accordion>
                   </div>
                   <div class="action-items" margin-top-medium margin-bottom-none>
-                    <button mcsButton (click)="addChangeItem()">
+                    <button mcsButton mcsId="add-list-item" (click)="addChangeItem()">
                       {{ 'orderSimpleFirewallChanges.detailsStep.sharedRuleForm.addBtnLabel' | translate }}
                     </button>
                   </div>
