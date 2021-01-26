@@ -1,0 +1,18 @@
+@import "../../../../../styles/shared/base";
+
+.box.cdk-drag-animating {
+  @include transition(transform 250ms cubic-bezier(0, 0, 0.2, 1));
+}
+
+.chip .cdk-drop-list-dragging {
+  @include transition(transform 250ms cubic-bezier(0, 0, 0.2, 1));
+}
+
+.box {
+  padding: 5px 10px;
+  @include border-radius(4px);
+  word-break: keep-all;
+  font-size: 0.75rem;
+  line-height: 1.125rem;
+  color: $color-grey-01;
+}

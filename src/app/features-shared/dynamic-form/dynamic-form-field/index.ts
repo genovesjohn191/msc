@@ -7,6 +7,7 @@ export * from './input-number/input-number';
 export * from './input-password/input-password';
 export * from './input-random/input-random';
 export * from './input-text/input-text';
+export * from './select-chips/select-chips';
 export * from './select/select';
 export * from './select-group/select-group';
 export * from './select-multiple/select-multiple';

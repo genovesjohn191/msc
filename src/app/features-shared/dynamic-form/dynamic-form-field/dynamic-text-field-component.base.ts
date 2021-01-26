@@ -52,9 +52,9 @@ export abstract class DynamicTextFieldComponentBase implements OnInit, DynamicFo
   // Can be overriden to modify the value being sent
   public notifyForDataChange(eventName: DynamicFormFieldOnChangeEvent, dependents: string[], value?: any): void {
     this.dataChange.emit({
-      value: value,
-      eventName: eventName,
-      dependents: dependents
+      value,
+      eventName,
+      dependents
     });
   }
 
@@ -72,10 +72,11 @@ export abstract class DynamicTextFieldComponentBase implements OnInit, DynamicFo
   public clearFormField(reuseValue: boolean): void {
     let preserveValue = reuseValue && this.config.settings && this.config.settings.preserve;
     if (!preserveValue) {
+      console.log(this.config.key, typeof this.config.value);
       if (typeof this.config.value === 'boolean') {
         this._changeValue(false);
       } else {
-        this._changeValue('');
+        this._changeValue(null);
       }
     }
   }

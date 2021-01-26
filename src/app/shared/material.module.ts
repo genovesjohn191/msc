@@ -25,8 +25,10 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTreeModule } from '@angular/material/tree';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 const exportedModules = [
+  DragDropModule,
   MatAutocompleteModule,
   MatBadgeModule,
   MatButtonModule,
