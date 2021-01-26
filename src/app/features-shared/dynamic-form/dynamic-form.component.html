@@ -38,6 +38,10 @@
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)">
         </mcs-dff-input-random-field>
 
+        <mcs-dff-select-chips-field *ngSwitchCase="'select-chips'"
+          #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)">
+        </mcs-dff-select-chips-field>
+
         <mcs-dff-select-field *ngSwitchCase="'select'"
           #control [formControlName]="input.key" [config] ="input" (dataChange)="onDataChange($event)">
         </mcs-dff-select-field>

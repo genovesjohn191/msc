@@ -129,8 +129,8 @@ export class DynamicSelectVdcComponent extends DynamicSelectFieldComponentBase<M
   public notifyForDataChange(eventName: DynamicFormFieldOnChangeEvent, dependents: string[], value?: any): void {
     this.dataChange.emit({
       value: this.collection.find((item) => item.name === value),
-      eventName: eventName,
-      dependents: dependents
+      eventName,
+      dependents
     });
   }
 }
