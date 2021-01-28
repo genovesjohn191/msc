@@ -93,7 +93,9 @@ export abstract class DynamicSelectFieldComponentBase<T>
   private _initialize(): void {
     if (isNullOrEmpty(this.config.options)) {
       this.retrieveOptions();
-    } else if (!isNullOrEmpty(this.config.value)) {
+    }
+
+    if (!isNullOrEmpty(this.config.value)) {
       this.setInitialValue(this.config.value);
     }
   }

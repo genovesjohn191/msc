@@ -1,5 +1,6 @@
 <mat-form-field
   *ngIf="visible"
+  appearance="outline"
   [hintLabel]="config.hint">
   <mat-label [attr.for]="id">{{ label }}</mat-label>
 
@@ -9,12 +10,12 @@
 
     <mat-chip
       class="box"
-      *ngFor="let value of config.value"
+      *ngFor="let item of config.value"
       [selectable]="selectable"
       [removable]="removable"
-      (removed)="remove(value)"
+      (removed)="remove(item)"
       cdkDrag>
-      {{ value }}
+      {{ isString(item) ? item : item.label }}
       <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
     </mat-chip>
 
@@ -32,7 +33,7 @@
 
   <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
     <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-      {{ option.value }}
+      <small>{{ option.value }}</small>
     </mat-option>
   </mat-autocomplete>
 
