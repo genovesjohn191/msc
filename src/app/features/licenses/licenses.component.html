@@ -6,6 +6,20 @@
 
     <!-- Top Panel -->
     <mcs-top-panel *mcsTopPanelDef>
+        <ng-container *mcsAccessControl="['OrderEdit'];">
+            <mcs-top-panel-item *mcsTopPanelItemDef>
+                <mcs-action-item
+                    [disabled]="!isLicensesActiveAndNoRunningJobs(dataSource?.dataRecords, activeJobs$ | async)"
+                    (click)="onChangeLicenseCount()"
+                    mcsId
+                    mcsEventTracker="change-license-count"
+                    mcsEventCategory="license"
+                    mcsEventLabel="license-listing-top-panel">
+                    <mcs-icon [key]="unfoldMoreIcon"></mcs-icon>
+                    <span>{{ 'licenses.changeCount' | translate }}</span>
+                </mcs-action-item>
+            </mcs-top-panel-item>
+        </ng-container>
         <!--TODO: update creation when there's a story for it-->
         <!-- License Creation -->
         <ng-container *mcsAccessControl>
@@ -177,7 +191,8 @@
                   *mcsAccessControl="['OrderEdit'];">
                     <mcs-header-cell *mcsHeaderCellDef hidden-small></mcs-header-cell>
                     <mcs-data-cell *mcsDataCellDef="let row" hidden-small text-center>
-                        <ng-container *ngIf="!isLicenseDisabled(dataSource?.dataRecords, row)">
+                        <ng-container *ngIf="!isLicenseDisabled(dataSource?.dataRecords, row)
+                            && isCurrentLicenseHasNoActiveJob(row, activeJobs$ | async) && row.serviceId">
                             <mcs-icon mcsStopPropagation [key]="ellipsisIconKey" size="large"
                                 mcsPopover placement="bottom" orientation="left" theme="light"
                                 padding="none" [content]="actionContent" mcsCursor="pointer">

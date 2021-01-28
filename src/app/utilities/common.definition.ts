@@ -167,6 +167,7 @@ export class CommonDefinition {
   public static ASSETS_SVG_CLIPBOARD = 'clipboard';
   public static ASSETS_SVG_ATTACHMENT = 'attachment';
   public static ASSETS_SVG_BULLET = 'bullet';
+  public static ASSETS_SVG_UNFOLD_MORE_BLACK = 'unfold-more-black';
 
   public static ASSETS_SVG_SMALL_CLOUD_BLACK = 'small-cloud-black';
   public static ASSETS_SVG_SMALL_CLOUD_BLUE = 'small-cloud-blue';

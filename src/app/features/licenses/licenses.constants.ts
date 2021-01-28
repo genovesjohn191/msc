@@ -4,8 +4,10 @@ import { RouteKey } from '@app/models';
 
 import { LicensesComponent } from './licenses.component';
 import { LicensesResolver } from './licenses.resolver';
+import { LicenseService } from './licenses.service';
 
 export const licensesProviders: Provider[] = [
+    LicenseService,
     LicensesResolver
 ];
 

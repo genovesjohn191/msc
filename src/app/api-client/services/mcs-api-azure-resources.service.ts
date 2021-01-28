@@ -46,7 +46,7 @@ export class McsApiAzureResourcesService implements IMcsApiAzureResourcesService
    */
   public getAzureResourcesBySubscriptionId(subscriptionId: string): Observable<McsApiSuccessResponse<McsAzureResource[]>> {
     let requestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    requestParameter.endPoint = `/public-cloud/resources?subscriptionId=${subscriptionId}`;
+    requestParameter.endPoint = `/public-cloud/resources?subscription_id=${subscriptionId}`;
 
     return this._mcsApiHttpService.get(requestParameter)
     .pipe(
