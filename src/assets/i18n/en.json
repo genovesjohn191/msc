@@ -852,7 +852,8 @@
         "trialLabel": "This license-based subscription is currently subscribed to on a trial basis. This item cannot be changed at this time. Please contact your accounts team for more information.",
         "pendingLabel": "This license-based subscription is currently pending and will be provisioned shortly. This item cannot be changed at this time.",
         "suspendedLabel": "This license-based subscription is currently suspended. This item cannot be changed at this time. Please contact your accounts team for more information.",
-        "noneStatusLabel": "Status unavailable"
+        "noneStatusLabel": "Status unavailable",
+        "noServiceId": "This license-based subscription has not completed provisioning. This item cannot be changed at this time. Please contact your accounts team for more information."
       },
       "addons": {
         "label": "Add-Ons",
@@ -2411,6 +2412,7 @@
   "licenses": {
     "header": "Licenses",
     "leftPanelHeader": "License Filter",
+    "changeCount": "Change Count",
     "newLicense": "New License",
     "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of licenses.",
     "noRecordsFoundMessage": "No licenses to display.",

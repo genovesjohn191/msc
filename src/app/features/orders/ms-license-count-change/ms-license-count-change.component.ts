@@ -178,7 +178,8 @@ export class MsLicenseCountChangeComponent extends McsOrderWizardBase implements
     let workflow = new McsOrderWorkflow();
     workflow.state = submitDetails.workflowAction;
     workflow.clientReferenceObject = {
-      resourceDescription: this.progressDescription
+      resourceDescription: this.progressDescription,
+      serviceId: this.fcLicenses?.value?.serviceId
     };
     this.submitOrderWorkflow(workflow);
   }

@@ -7,8 +7,8 @@ import {
   OnDestroy,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { map, shareReplay, takeUntil } from 'rxjs/operators';
 import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import {
   McsTableListingBase,
@@ -21,15 +21,20 @@ import {
   McsApiCollection,
   McsQueryParam,
   McsFilterInfo,
-  RouteKey
+  RouteKey,
+  LicenseStatus,
+  licenseStatusText,
+  McsJob
 } from '@app/models';
 import {
   getSafeProperty,
   CommonDefinition,
-  isNullOrEmpty
+  isNullOrEmpty,
+  unsubscribeSafely
 } from '@app/utilities';
 import { McsApiService } from '@app/services';
 import { McsEvent } from '@app/events';
+import { LicenseService } from './licenses.service';
 
 @Component({
   selector: 'mcs-licenses',
@@ -37,8 +42,9 @@ import { McsEvent } from '@app/events';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LicensesComponent extends McsTableListingBase<McsLicense> implements OnInit, OnDestroy, IMcsColumnManager {
-
+  public activeJobs$: Observable<McsJob[]>;
   public licenses$: Observable<McsLicense[]>;
+  private _destroySubject = new Subject<void>();
 
   private _columnPermissionMatrix = new Map<string, () => boolean>();
 
@@ -50,6 +56,7 @@ export class LicensesComponent extends McsTableListingBase<McsLicense> implement
     private _navigationService: McsNavigationService,
     private _activatedRoute: ActivatedRoute,
     private _accessControlService: McsAccessControlService,
+    private _licenseService: LicenseService
   ) {
     super(_injector, _changeDetectorRef);
   }
@@ -66,11 +73,17 @@ export class LicensesComponent extends McsTableListingBase<McsLicense> implement
     return CommonDefinition.ASSETS_SVG_ELLIPSIS_HORIZONTAL;
   }
 
+  public get unfoldMoreIcon(): string {
+    return CommonDefinition.ASSETS_SVG_UNFOLD_MORE_BLACK;
+  }
+
   public ngOnInit(): void {
+    this._subscribeToLicenseChange();
     this._subscribeToLicensesResolver();
   }
 
   public ngOnDestroy(): void {
+    unsubscribeSafely(this._destroySubject);
     this.dispose();
   }
 
@@ -136,5 +149,66 @@ export class LicensesComponent extends McsTableListingBase<McsLicense> implement
     this.licenses$ = this._activatedRoute.data.pipe(
       map((resolver) => getSafeProperty(resolver, (obj) => obj.licenses))
     );
+  }
+
+  /**
+   * Returns true if current license has no running job
+   */
+  public isCurrentLicenseHasNoActiveJob(currentLicense: McsLicense, activeJobs: McsJob[]) {
+    let hasActiveJob = activeJobs.find((job) => job?.clientReferenceObject?.serviceId === currentLicense.serviceId);
+    if (isNullOrEmpty(hasActiveJob)) {
+      return true;
+    }
+  }
+
+  /**
+   * Returns true if 1 or more active licenses without running jobs attached
+   */
+  public isLicensesActiveAndNoRunningJobs(licenses, activeJobs): boolean {
+    let activeLicenses = this.getAllActiveLicenses(licenses);
+    if (!activeLicenses) {
+      return;
+    }
+
+    if (activeJobs) {
+      let licenseWithNoActiveJob: McsLicense[] = [];
+      activeLicenses.forEach((license) => {
+        activeJobs.forEach((job) => {
+          if (job.clientReferenceObject.serviceId !== license.serviceId) {
+            licenseWithNoActiveJob.push(license);
+          }
+        });
+      });
+      if (licenseWithNoActiveJob.length >= 1) {
+        this.changeDetectorRef.markForCheck();
+        return true;
+      }
+    }
+
+    if (activeLicenses.length > 0 && activeJobs.length === 0) {
+      this.changeDetectorRef.markForCheck();
+      return true;
+    }
+  }
+
+  /**
+   * Returns all licenses that has an active status and service Id
+   */
+  private getAllActiveLicenses(licenses: McsLicense[]): McsLicense[] {
+    let licenseActiveWithServiceId: McsLicense[] = [];
+    licenseActiveWithServiceId = licenses.filter((license) => license.serviceId !== null &&
+      license.statusLabel === licenseStatusText[LicenseStatus.Active]);
+    return licenseActiveWithServiceId;
+  }
+
+  /**
+   * Subscribe to license count changes
+   */
+  private _subscribeToLicenseChange(): void {
+    this.activeJobs$ = this._licenseService.licenseJobsChange().pipe(
+      takeUntil(this._destroySubject),
+      map((licenseJobs) => licenseJobs.filter((job) => job.inProgress)),
+      shareReplay(1)
+    )
   }
 }
