@@ -69,6 +69,14 @@ export class DynamicSelectVdcComponent extends DynamicSelectFieldComponentBase<M
     }
   }
 
+  public notifyForDataChange(eventName: DynamicFormFieldOnChangeEvent, dependents: string[], value?: any): void {
+    this.dataChange.emit({
+      value: this.collection.find((item) => item.name === value),
+      eventName,
+      dependents
+    });
+  }
+
   protected callService(): Observable<McsResource[]> {
     let optionalHeaders = new Map<string, any>([
       [CommonDefinition.HEADER_COMPANY_ID, this._companyId]
@@ -100,10 +108,7 @@ export class DynamicSelectVdcComponent extends DynamicSelectFieldComponentBase<M
     let groupedOptions: GroupedOption[] = [];
 
     collection.forEach((item) => {
-      // Filter by Availabilty Zone
-      if (!isNullOrEmpty(this._az) && item.availabilityZone !== this._az) {
-        return;
-      }
+      if (this._exluded(item)) { return; }
 
       let groupName = serviceTypeText[item.serviceType];
       let existingGroup = groupedOptions.find((opt) => opt.name === groupName);
@@ -126,11 +131,12 @@ export class DynamicSelectVdcComponent extends DynamicSelectFieldComponentBase<M
     return groupedOptions;
   }
 
-  public notifyForDataChange(eventName: DynamicFormFieldOnChangeEvent, dependents: string[], value?: any): void {
-    this.dataChange.emit({
-      value: this.collection.find((item) => item.name === value),
-      eventName,
-      dependents
-    });
+  private _exluded(item: McsResource): boolean {
+    // Filter by Availabilty Zone
+    if (!isNullOrEmpty(this._az) && item.availabilityZone !== this._az) {
+      return true;
+    }
+
+    return false;
   }
 }

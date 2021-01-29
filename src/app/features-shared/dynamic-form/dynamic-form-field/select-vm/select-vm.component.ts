@@ -89,10 +89,7 @@ export class DynamicSelectVmComponent extends DynamicSelectFieldComponentBase<Mc
     let groupedOptions: GroupedOption[] = [];
 
     collection.forEach((item) => {
-      // Filter by service ID
-      if (!isNullOrEmpty(this._serviceId) && item.serviceId !== this._serviceId) {
-        return;
-      }
+     if (this._exluded(item)) { return; }
 
       let groupName = serviceTypeText[item.serviceType];
       let existingGroup = groupedOptions.find((opt) => opt.name === groupName);
@@ -112,5 +109,29 @@ export class DynamicSelectVmComponent extends DynamicSelectFieldComponentBase<Mc
     });
 
     return groupedOptions;
+  }
+
+  private _exluded(item: McsServer): boolean {
+    // Filter by service ID
+    if (!isNullOrEmpty(this._serviceId) && item.serviceId !== this._serviceId) {
+      return true;
+    }
+
+    // Filter dedicated
+    if (this.config.hideDedicated && item.isDedicated) {
+      return true;
+    }
+
+    // Filter Non-Dedicated
+    if (this.config.hideNonDedicated && !item.isDedicated) {
+      return true;
+    }
+
+    // Filter  type filter
+    if (!isNullOrEmpty(this.config.allowedHardwareType) && this.config.allowedHardwareType.indexOf(item.hardware.type) < 0) {
+      return true;
+    }
+
+    return false;
   }
 }

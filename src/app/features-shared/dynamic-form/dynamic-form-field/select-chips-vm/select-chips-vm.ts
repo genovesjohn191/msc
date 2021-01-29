@@ -1,3 +1,4 @@
+import { hardwareType } from '@app/models';
 import { DynamicFormFieldConfigBase } from '../../dynamic-form-field-config.base';
 import {
   DynamicFormFieldOnChangeEvent,
@@ -16,6 +17,9 @@ export class DynamicSelectChipsVmField extends DynamicFormFieldConfigBase {
 
   public allowDuplicates: boolean = false;
   public options: FlatOption[] = [];
+  public hideDedicated?: boolean = false;
+  public hideNonDedicated?: boolean = false;
+  public allowedHardwareType: hardwareType[] = [];
 
   public constructor(options: {
     key: string;
@@ -30,9 +34,15 @@ export class DynamicSelectChipsVmField extends DynamicFormFieldConfigBase {
     validators?: { required?: boolean; };
     settings?: DynamicFormControlSettings;
     allowDuplicates?: boolean;
+    hideDedicated?: boolean;
+    hideNonDedicated?: boolean;
+    allowedHardwareType?: hardwareType[];
   }) {
     super(options);
 
     this.allowDuplicates = options.allowDuplicates || false;
+    this.hideDedicated = options.hideDedicated || false;
+    this.hideNonDedicated = options.hideNonDedicated || false;
+    this.allowedHardwareType = options.allowedHardwareType || [];
   }
 }
