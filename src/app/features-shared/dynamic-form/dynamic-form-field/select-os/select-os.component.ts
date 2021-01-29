@@ -69,6 +69,17 @@ export class DynamicSelectOsComponent extends DynamicSelectFieldComponentBase<Mc
     }
   }
 
+  // Override function to allow OS field to map with billing code
+  public writeValue(obj: any): void {
+    if (this._billingCodeMapping.has(obj)) {
+      obj = this._billingCodeMapping.get(obj);
+    }
+
+    if (!isNullOrEmpty(obj)) {
+      this.config.value = obj;
+    }
+  }
+
   protected callService(): Observable<McsServerOperatingSystem[]> {
     let optionalHeaders = new Map<string, any>([
       [CommonDefinition.HEADER_COMPANY_ID, this._companyId]
@@ -84,10 +95,7 @@ export class DynamicSelectOsComponent extends DynamicSelectFieldComponentBase<Mc
     this._billingCodeMapping.clear();
 
     collection.forEach((item) => {
-      // Filter by serviceType
-      if (this._resource && this._resource.serviceType !== item.serviceType) {
-        return;
-      }
+      if (this._exluded(item)) { return; }
 
       let groupName =
         item.type === 'LIN' ? 'CentOs'
@@ -127,14 +135,12 @@ export class DynamicSelectOsComponent extends DynamicSelectFieldComponentBase<Mc
     return groupedOptions;
   }
 
-  // Override function to allow OS field to map with billing code
-  public writeValue(obj: any): void {
-    if (this._billingCodeMapping.has(obj)) {
-      obj = this._billingCodeMapping.get(obj);
+  private _exluded(item: McsServerOperatingSystem): boolean {
+     // Filter by serviceType
+     if (this._resource && this._resource.serviceType !== item.serviceType) {
+      return;
     }
 
-    if (!isNullOrEmpty(obj)) {
-      this.config.value = obj;
-    }
+    return false;
   }
 }

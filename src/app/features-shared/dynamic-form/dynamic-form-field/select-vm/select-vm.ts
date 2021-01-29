@@ -1,3 +1,4 @@
+import { hardwareType } from '@app/models';
 import { DynamicFormFieldConfigBase } from '../../dynamic-form-field-config.base';
 import {
   DynamicFormFieldOnChangeEvent,
@@ -11,6 +12,10 @@ export class DynamicSelectVmField extends DynamicFormFieldConfigBase {
   public type: DynamicFormFieldType = 'select-vm';
   public template: DynamicFormFieldTemplate = 'select-vm';
 
+  public hideDedicated?: boolean = false;
+  public hideNonDedicated?: boolean = false;
+  public allowedHardwareType: hardwareType[] = [];
+
   public constructor(options: {
     key: string;
     label: string;
@@ -22,7 +27,14 @@ export class DynamicSelectVmField extends DynamicFormFieldConfigBase {
     dependents?: string[];
     validators?: { required?: boolean; };
     settings?: DynamicFormControlSettings;
+    hideDedicated?: boolean;
+    hideNonDedicated?: boolean;
+    allowedHardwareType?: hardwareType[];
   }) {
     super(options);
+
+    this.hideDedicated = options.hideDedicated || false;
+    this.hideNonDedicated = options.hideNonDedicated || false;
+    this.allowedHardwareType = options.allowedHardwareType || [];
   }
 }

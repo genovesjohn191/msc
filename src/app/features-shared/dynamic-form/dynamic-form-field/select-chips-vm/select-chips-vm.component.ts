@@ -54,6 +54,7 @@ export class DynamicSelectChipsVmComponent extends DynamicSelectChipsFieldCompon
   public config: DynamicSelectChipsVmField;
 
   private _companyId: string = '';
+  private _serviceId: string = '';
 
   constructor(private _apiService: McsApiService) {
     super();
@@ -92,6 +93,11 @@ export class DynamicSelectChipsVmComponent extends DynamicSelectChipsFieldCompon
         this._companyId = params.value;
         this.retrieveOptions();
         break;
+
+      case 'service-id-change':
+        this._serviceId = params.value;
+        this.filterOptions();
+        break;
     }
   }
 
@@ -111,6 +117,8 @@ export class DynamicSelectChipsVmComponent extends DynamicSelectChipsFieldCompon
     let options: FlatOption[] = [];
 
     collection.forEach((item) => {
+      if (this._exluded(item)) { return; }
+
       let value = item.name;
       if (item.serviceId) { value += ` (${item.serviceId})`; }
 
@@ -128,5 +136,29 @@ export class DynamicSelectChipsVmComponent extends DynamicSelectChipsFieldCompon
     const filterValue = selectedOption.toLowerCase();
 
     return this.config.options.filter(option => option.value.toLowerCase().indexOf(filterValue) >= 0);
+  }
+
+  private _exluded(item: McsServer): boolean {
+    // Filter by service ID
+    if (!isNullOrEmpty(this._serviceId) && item.serviceId !== this._serviceId) {
+      return true;
+    }
+
+    // Filter dedicated
+    if (this.config.hideDedicated && item.isDedicated) {
+      return true;
+    }
+
+    // Filter Non-Dedicated
+    if (this.config.hideNonDedicated && !item.isDedicated) {
+      return true;
+    }
+
+    // Filter  type filter
+    if (!isNullOrEmpty(this.config.allowedHardwareType) && this.config.allowedHardwareType.indexOf(item.hardware.type) < 0) {
+      return true;
+    }
+
+    return false;
   }
 }
