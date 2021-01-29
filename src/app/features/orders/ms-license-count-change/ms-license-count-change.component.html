@@ -54,7 +54,9 @@
                   mcsEventTracker="select-ms-license"
                   mcsEventCategory="order"
                   mcsEventLabel="ms-license-count-change">
-                  <mcs-option *ngFor="let license of licenses$ | async" [value]="license.value">
+                  <mcs-option *ngFor="let license of licenses$ | async"
+                    [value]="license.value"
+                    [disabled]="isCurrentLicenseHasActiveJob(license?.value?.serviceId, activeJob$ | async)">
                       {{ license.text }}
                   </mcs-option>
                 </mcs-select>
@@ -66,8 +68,8 @@
               </ng-template>
             </mcs-item>
             <ng-container *ngIf="fcLicenses?.value?.serviceId; else licenseNoServiceIdTemplate">
-              <mcs-item orientation="block" *ngIf="(licenses$ | async) | mcsArrayHasElement">
-                
+              <mcs-item orientation="block" *ngIf="(licenses$ | async) | mcsArrayHasElement"
+                [disabled]="isCurrentLicenseHasActiveJob(fcLicenses?.value?.serviceId, activeJob$ | async)">
                 <ng-container *ngIf="!fcLicenses?.value?.isTrial; else baseTrialTemplate">
                   <ng-container [ngSwitch]="fcLicenses?.value?.status">
                     <mcs-item orientation="block" *ngSwitchCase="licenseStatusOption.Active">

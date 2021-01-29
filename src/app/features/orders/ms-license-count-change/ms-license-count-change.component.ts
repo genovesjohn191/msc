@@ -40,7 +40,8 @@ import {
   Guid,
   getSafeProperty,
   createObject,
-  CommonDefinition
+  CommonDefinition,
+  addOrUpdateArrayRecord
 } from '@app/utilities';
 import { McsEvent } from '@app/events';
 import { McsFormGroupDirective } from '@app/shared';
@@ -52,7 +53,8 @@ import {
   McsOrderCreate,
   OrderIdType,
   McsOrderItemCreate,
-  LicenseStatus
+  LicenseStatus,
+  McsJob
 } from '@app/models';
 import { OrderDetails } from '@app/features-shared';
 import { MsLicenseCountChangeService } from './ms-license-count-change.service';
@@ -81,6 +83,7 @@ export class MsLicenseCountChangeComponent extends McsOrderWizardBase implements
   public licenses$: Observable<McsOption[]>;
   public childLicensesFcConfig$: Observable<LicenseCountFormControlConfig[]>;
   public licensesHasValueChange$: Observable<boolean>;
+  public activeJob$: Observable<McsJob[]>;
 
   public fgMsLicenseCount: FormGroup;
   public fcLicenses: FormControl;
@@ -88,6 +91,8 @@ export class MsLicenseCountChangeComponent extends McsOrderWizardBase implements
 
   private _destroySubject = new Subject<void>();
   private _selectedLicenseHandler: Subscription;
+  private _licenseChangeJobHandler: Subscription;
+  private _licenseJobsChange: BehaviorSubject<McsJob[]>;
   private _childLicensesFcConfigChange: BehaviorSubject<LicenseCountFormControlConfig[]>;
   private _licensesHasValueChange: BehaviorSubject<boolean>;
   private _childLicensesFcConfig: LicenseCountFormControlConfig[] = [];
@@ -121,7 +126,9 @@ export class MsLicenseCountChangeComponent extends McsOrderWizardBase implements
           action: 'next-button'
         }
       });
+    this._registerEvents();
     this._childLicensesFcConfigChange = new BehaviorSubject([]);
+    this._licenseJobsChange = new BehaviorSubject([]);
     this._licensesHasValueChange = new BehaviorSubject(false);
     this._registerFormGroup();
   }
@@ -130,13 +137,14 @@ export class MsLicenseCountChangeComponent extends McsOrderWizardBase implements
     this._subscribeToPublicLicenses();
     this._subscribeToChildLicenseMapChange();
     this._subscribeTolicensesHasValueChange();
-    this._registerEvents();
+    this._subscribeToJobLicenseChange();
   }
 
   public ngOnDestroy(): void {
     unsubscribeSafely(this._formGroupSubject);
     unsubscribeSafely(this._destroySubject);
     unsubscribeSafely(this._selectedLicenseHandler);
+    unsubscribeSafely(this._licenseChangeJobHandler);
   }
 
   public get licenseStatusOption(): typeof LicenseStatus {
@@ -203,6 +211,13 @@ export class MsLicenseCountChangeComponent extends McsOrderWizardBase implements
   public onSubmitMsLicenseCountChangeDetails(license: McsLicense): void {
     if (isNullOrEmpty(license)) { return; }
     this._changeDetectorRef.markForCheck();
+  }
+
+  public isCurrentLicenseHasActiveJob(licenseServiceId: string, activeJobs: McsJob[]): boolean {
+    let hasActiveJob = activeJobs.find((job) => job?.clientReferenceObject?.serviceId === licenseServiceId);
+    if (!isNullOrEmpty(hasActiveJob)) {
+      return true;
+    }
   }
 
   private _registerFormGroup(): void {
@@ -335,9 +350,24 @@ export class MsLicenseCountChangeComponent extends McsOrderWizardBase implements
     this.fcLicenses.setValue(cachedParentLicense);
   }
 
+  private _onLicenseCountChangeJob(job: McsJob): void {
+    let _licenseJobs: McsJob[] = [];
+    _licenseJobs = addOrUpdateArrayRecord(
+      _licenseJobs,
+      job,
+      false,
+      (_existingJob: McsJob) => {
+        return _existingJob.id === job.id;
+      });
+    this._licenseJobsChange.next(_licenseJobs);
+  }
+
   private _registerEvents(): void {
     this._selectedLicenseHandler = this._eventDispatcher.addEventListener(
       McsEvent.licenseCountChangeSelectedEvent, this._onSelectedLicense.bind(this));
+
+    this._licenseChangeJobHandler = this._eventDispatcher.addEventListener(
+      McsEvent.jobMsLicenseCountChangeEvent, this._onLicenseCountChangeJob.bind(this));
   }
 
   private _subscribeToChildLicenseMapChange(): void {
@@ -351,6 +381,14 @@ export class MsLicenseCountChangeComponent extends McsOrderWizardBase implements
   private _subscribeTolicensesHasValueChange(): void {
     this.licensesHasValueChange$ = this._licensesHasValueChange.asObservable().pipe(
       distinctUntilChanged()
+    );
+  }
+
+  private _subscribeToJobLicenseChange(): void {
+    this.activeJob$ = this._licenseJobsChange.asObservable().pipe(
+      takeUntil(this._destroySubject),
+      map((licenseJobs) => licenseJobs.filter((job) => job.inProgress)),
+      shareReplay(1)
     );
   }
 
