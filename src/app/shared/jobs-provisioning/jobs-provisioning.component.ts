@@ -185,6 +185,10 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
    * Returns the constructed resource link if available
    */
   public resourceLink(job: McsJob): string {
+    if (job.type === JobType.PublicCloudLicenseChangeCount) {
+      return CoreRoutes.getNavigationPath(RouteKey.Licenses);
+    }
+
     let completedTask = job.tasks && job.tasks.find((task) => {
       return task.dataStatus === DataStatus.Success && !isNullOrEmpty(task.referenceObject);
     });
