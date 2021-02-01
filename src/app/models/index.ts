@@ -273,6 +273,7 @@ export * from './response/mcs-report-resource-compliance';
 export * from './response/mcs-report-resource-compliance-state';
 export * from './response/mcs-report-monitoring-and-alerting';
 export * from './response/mcs-report-severity-alerts';
+export * from './response/mcs-report-management-service';
 export * from './response/mcs-object-crisp-element';
 export * from './response/mcs-object-installed-service';
 

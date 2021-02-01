@@ -117,6 +117,7 @@ import {
   McsReportCostRecommendations,
   McsReportGenericItem,
   McsReportIntegerData,
+  McsReportManagementService,
   McsReportMonitoringAndAlerting,
   McsReportResourceCompliance,
   McsReportResourceHealth,
@@ -1551,6 +1552,15 @@ export class McsApiService {
     return this._reportsApi.getSubscriptions().pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getSubscriptions'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public getManagementServices(isEssentials?: boolean): Observable<McsApiCollection<McsReportManagementService>> {
+    return this._reportsApi.getManagementServices(isEssentials).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getManagementServices'))
       ),
       map((response) => this._mapToCollection(response.content, response.totalCount))
     );

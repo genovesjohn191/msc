@@ -14,11 +14,14 @@ import {
   McsReportSecurityScore,
   McsReportMonitoringAndAlerting,
   McsReportResourceCompliance,
-  McsRightSizingQueryParams
+  McsRightSizingQueryParams,
+  McsReportManagementService
 } from '@app/models';
 
 export interface IMcsApiReportsService {
   getSubscriptions(): Observable<McsApiSuccessResponse<McsReportSubscription[]>>;
+
+  getManagementServices(isEssentials?: boolean): Observable<McsApiSuccessResponse<McsReportManagementService[]>>;
 
   getServicesCostOverviewReport(
     periodStart?: string,

@@ -88,6 +88,9 @@ export class ReportInsightsComponent implements OnDestroy {
   public serviceCostConfig: PerformanceAndScalabilityWidgetConfig;
   public resourceMonthlyCostConfig: ResourceMonthlyCostWidgetConfig;
 
+  public hasManagementService: boolean;
+  private _destroySubject = new Subject<void>();
+
   public subscriptions: McsReportSubscription[];
   public performanceSubscriptions: McsReportSubscription[] = [{id: '', name: 'All'}];
   private _subscriptionFilterChange = new BehaviorSubject<string[]>([]);
@@ -97,6 +100,7 @@ export class ReportInsightsComponent implements OnDestroy {
 
   public constructor(private reportService: McsReportingService, private _changeDetector: ChangeDetectorRef) {
     this._getSubscriptions();
+    this._identifyNonEssentialManagementServiceExistence();
     this._createMonthOptions();
     this._listenToSubscriptionFilterChange();
     this._listenToPerformanceSubscriptionFilterChange();
@@ -104,6 +108,7 @@ export class ReportInsightsComponent implements OnDestroy {
 
   public ngOnDestroy(): void {
     unsubscribeSafely(this._subscriptionSubject);
+    unsubscribeSafely(this._destroySubject);
   }
 
   private _getSubscriptions(): void {
@@ -115,6 +120,15 @@ export class ReportInsightsComponent implements OnDestroy {
       this.performanceSubscriptions.push(...data);
       this.performanceSubscriptionIdsFilter =  this.performanceSubscriptions[0].id;
       this._changeDetector.markForCheck();
+    });
+  }
+
+  private _identifyNonEssentialManagementServiceExistence(): void {
+    this.reportService.getManagementServices(false)
+    .pipe(
+      takeUntil(this._destroySubject))
+    .subscribe((service) => {
+      this.hasManagementService = service.length > 0;
     });
   }
 
