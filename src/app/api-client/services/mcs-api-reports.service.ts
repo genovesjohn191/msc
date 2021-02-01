@@ -17,7 +17,8 @@ import {
   McsReportSecurityScore,
   McsReportMonitoringAndAlerting,
   McsReportResourceCompliance,
-  McsRightSizingQueryParams
+  McsRightSizingQueryParams,
+  McsReportManagementService
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiReportsService } from '../interfaces/mcs-api-reports.interface';
@@ -36,6 +37,22 @@ export class McsApiReportsService implements IMcsApiReportsService {
       .pipe(
         map((response) => {
           return McsApiSuccessResponse.deserializeResponse<McsReportSubscription[]>(McsReportSubscription, response);
+        })
+      );
+  }
+
+  public getManagementServices(isEssentials?: boolean): Observable<McsApiSuccessResponse<McsReportManagementService[]>> {
+    let searchParams = new Map<string, any>();
+    searchParams.set('is_essentials', isEssentials);
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/public-cloud/management-services';
+    mcsApiRequestParameter.searchParameters = searchParams;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          return McsApiSuccessResponse.deserializeResponse<McsReportManagementService[]>(McsReportManagementService, response);
         })
       );
   }

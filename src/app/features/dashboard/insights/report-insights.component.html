@@ -3,7 +3,7 @@
   <mcs-content-panel *mcsContentPanelDef>
     <div class="report-wrapper limited-wide-view">
       <div class="content-wrapper">
-        <div class="hide-on-print tab-bar">
+        <div *ngIf="hasManagementService" class="hide-on-print tab-bar">
           <a><div (click)="scrollToElement(costsSection)">Costs</div></a>
           <a><div (click)="scrollToElement(techReview)">Tech Review</div></a>
         </div>
@@ -124,90 +124,93 @@
             <mcs-vm-rightsizing-widget></mcs-vm-rightsizing-widget>
           </div>
         </section>
+        <div #techReview>
+          <ng-container *ngIf="hasManagementService">
+            <div class="insight-header tech-review">
+              <h1><span class="show-on-print-only">2. </span>{{ 'reports.insights.techReview.label' | translate }}</h1>
+            </div>
+            <section>
+              <div class="sub-section">
+                <!-- Security -->
+                <h2><span class="show-on-print-only">2.1 </span>{{ 'reports.insights.techReview.security.title' | translate }}</h2>
+                <mcs-security-widget></mcs-security-widget>
+                <mat-divider></mat-divider>
 
-        <div class="insight-header tech-review" #techReview>
-          <h1><span class="show-on-print-only">2. </span>{{ 'reports.insights.techReview.label' | translate }}</h1>
+                <!-- Compliance -->
+                <h2><span class="show-on-print-only">2.2 </span>{{ 'reports.insights.techReview.compliance.title' | translate }}</h2>
+                <div class="widget-label">
+                  An overarching <a href="https://portal.azure.com/#blade/Microsoft_Azure_Policy/PolicyMenuBlade/Overview"
+                  target="_blank"
+                  mcsId="compliance-view"
+                  mcsEventTracker="navigate-to-compliance-view"
+                  mcsEventCategory="dashboard-navigation"
+                  mcsEventLabel="compliance-view-link">
+                  compliance view</a>
+                    {{ 'reports.insights.techReview.compliance.subTitle' | translate }}</div>
+                <mcs-compliance-widget [subscriptionIds]="subscriptionIdsFilter"></mcs-compliance-widget>
+                <mat-divider></mat-divider>
+
+                <!-- Resource Health -->
+                <h2><span class="show-on-print-only">2.3 </span>{{ 'reports.insights.techReview.resourceHealth.title' | translate }}</h2>
+                <div class="widget-label">{{ 'reports.insights.techReview.resourceHealth.subTitle' | translate }}
+                  <a href="{{ azureSecurityUrl }}/5"
+                  target="_blank"
+                  mcsId="azure-security-center"
+                  mcsEventTracker="navigate-to-azure-security-center"
+                  mcsEventCategory="dashboard-navigation"
+                  mcsEventLabel="azure-security-center-link">
+                  Azure Security Center</a>.
+                </div>
+                <mcs-resource-health-widget></mcs-resource-health-widget>
+                <mat-divider></mat-divider>
+
+                <!-- Performance and Scalability -->
+                <div class="options-container">
+                  <div>
+                    <h2><span class="show-on-print-only">2.4 </span>{{ 'reports.insights.techReview.performanceScalability.title' | translate }}</h2>
+                  </div>
+                  <div class="hide-on-print">
+                    <mat-form-field appearance="outline">
+                      <mat-label>{{ 'reports.insights.subscriptionText' | translate }}</mat-label>
+                      <mat-select [(value)]="performanceSubscriptionIdsFilter">
+                        <mat-option *ngFor="let subscription of performanceSubscriptions" [value]="subscription.id">
+                          {{ subscription.name }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="widget-label">
+                  A summary of aggregate
+                  <a href="{{ cloudHealthUrl }}/olap_reports/azure_performance/virtual_machine"
+                  target="_blank"
+                  mcsId="azure-performance"
+                  mcsEventTracker="navigate-to-azure-performance"
+                  mcsEventCategory="dashboard-navigation"
+                  mcsEventLabel="azure-performance-link">
+                  VM memory, file system and CPU usage,</a>
+                  {{ 'reports.insights.techReview.performanceScalability.subTitle' | translate }}
+                </div>
+                <mcs-performance-and-scalability-widget [subscriptionIds]="performanceSubscriptionIdsFilter"></mcs-performance-and-scalability-widget>
+                <mat-divider></mat-divider>
+
+                <!-- Monitoring and Alerting -->
+                <h2><span class="show-on-print-only">2.5 </span>{{ 'reports.insights.techReview.monitoringAlerting.title' | translate }}</h2>
+                <div class="widget-label">
+                  A count of <a href="https://portal.azure.com/#blade/Microsoft_Azure_Monitoring/AzureMonitoringBrowseBlade/alertsV2"
+                  target="_blank"
+                  mcsId="azure-monitor"
+                  mcsEventTracker="navigate-to-azure-monitor"
+                  mcsEventCategory="dashboard-navigation"
+                  mcsEventLabel="azure-monitor-link">
+                  Azure Monitor alerts</a>
+                  {{ 'reports.insights.techReview.monitoringAlerting.subTitle' | translate }}
+                </div>
+                <mcs-monitoring-and-alerting-widget></mcs-monitoring-and-alerting-widget>
+              </div>
+            </section>
+          </ng-container>
         </div>
-        <section>
-          <div class="sub-section">
-            <!-- Security -->
-            <h2><span class="show-on-print-only">2.1 </span>{{ 'reports.insights.techReview.security.title' | translate }}</h2>
-            <mcs-security-widget></mcs-security-widget>
-            <mat-divider></mat-divider>
-
-             <!-- Compliance -->
-             <h2><span class="show-on-print-only">2.2 </span>{{ 'reports.insights.techReview.compliance.title' | translate }}</h2>
-             <div class="widget-label">
-               An overarching <a href="https://portal.azure.com/#blade/Microsoft_Azure_Policy/PolicyMenuBlade/Overview"
-               target="_blank"
-               mcsId="compliance-view"
-               mcsEventTracker="navigate-to-compliance-view"
-               mcsEventCategory="dashboard-navigation"
-               mcsEventLabel="compliance-view-link">
-               compliance view</a>
-                {{ 'reports.insights.techReview.compliance.subTitle' | translate }}</div>
-             <mcs-compliance-widget [subscriptionIds]="subscriptionIdsFilter"></mcs-compliance-widget>
-             <mat-divider></mat-divider>
-
-            <!-- Resource Health -->
-            <h2><span class="show-on-print-only">2.3 </span>{{ 'reports.insights.techReview.resourceHealth.title' | translate }}</h2>
-            <div class="widget-label">{{ 'reports.insights.techReview.resourceHealth.subTitle' | translate }}
-              <a href="{{ azureSecurityUrl }}/5"
-               target="_blank"
-               mcsId="azure-security-center"
-               mcsEventTracker="navigate-to-azure-security-center"
-               mcsEventCategory="dashboard-navigation"
-               mcsEventLabel="azure-security-center-link">
-               Azure Security Center</a>.
-            </div>
-            <mcs-resource-health-widget></mcs-resource-health-widget>
-            <mat-divider></mat-divider>
-
-            <!-- Performance and Scalability -->
-            <div class="options-container">
-              <div>
-                <h2><span class="show-on-print-only">2.4 </span>{{ 'reports.insights.techReview.performanceScalability.title' | translate }}</h2>
-              </div>
-              <div class="hide-on-print">
-                <mat-form-field appearance="outline">
-                  <mat-label>{{ 'reports.insights.subscriptionText' | translate }}</mat-label>
-                  <mat-select [(value)]="performanceSubscriptionIdsFilter">
-                    <mat-option *ngFor="let subscription of performanceSubscriptions" [value]="subscription.id">
-                      {{ subscription.name }}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
-            </div>
-            <div class="widget-label">
-              A summary of aggregate
-              <a href="{{ cloudHealthUrl }}/olap_reports/azure_performance/virtual_machine"
-              target="_blank"
-              mcsId="azure-performance"
-              mcsEventTracker="navigate-to-azure-performance"
-              mcsEventCategory="dashboard-navigation"
-              mcsEventLabel="azure-performance-link">
-              VM memory, file system and CPU usage,</a>
-              {{ 'reports.insights.techReview.performanceScalability.subTitle' | translate }}
-            </div>
-            <mcs-performance-and-scalability-widget [subscriptionIds]="performanceSubscriptionIdsFilter"></mcs-performance-and-scalability-widget>
-            <mat-divider></mat-divider>
-
-            <!-- Monitoring and Alerting -->
-            <h2><span class="show-on-print-only">2.5 </span>{{ 'reports.insights.techReview.monitoringAlerting.title' | translate }}</h2>
-            <div class="widget-label">
-              A count of <a href="https://portal.azure.com/#blade/Microsoft_Azure_Monitoring/AzureMonitoringBrowseBlade/alertsV2"
-              target="_blank"
-              mcsId="azure-monitor"
-              mcsEventTracker="navigate-to-azure-monitor"
-              mcsEventCategory="dashboard-navigation"
-              mcsEventLabel="azure-monitor-link">
-              Azure Monitor alerts</a>
-              {{ 'reports.insights.techReview.monitoringAlerting.subTitle' | translate }}
-            </div>
-            <mcs-monitoring-and-alerting-widget></mcs-monitoring-and-alerting-widget>
-          </div>
-        </section>
       </div>
     </div>
   </mcs-content-panel>

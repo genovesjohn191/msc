@@ -16,7 +16,8 @@ import {
   McsReportSeverityAlerts,
   McsReportMonitoringAndAlerting,
   McsReportResourceCompliance,
-  McsRightSizingQueryParams
+  McsRightSizingQueryParams,
+  McsReportManagementService
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { ChartItem } from '@app/shared/chart';
@@ -39,6 +40,13 @@ export class McsReportingService {
 
   public getSubscriptions(): Observable<McsReportSubscription[]> {
     return this._apiService.getSubscriptions()
+      .pipe(map((resources) => {
+        return resources.collection;
+      }));
+  }
+
+  public getManagementServices(isEssentials?: boolean): Observable<McsReportManagementService[]> {
+    return this._apiService.getManagementServices(isEssentials)
       .pipe(map((resources) => {
         return resources.collection;
       }));
