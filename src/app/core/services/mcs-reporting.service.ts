@@ -137,8 +137,11 @@ export class McsReportingService {
     return this._apiService.getResourceCompliance(period, subscriptionIds);
   }
 
-  public getMonitoringAndAlerting(period?: string): Observable<McsReportMonitoringAndAlerting> {
-    return this._apiService.getMonitoringAndAlerting(period)
+  public getMonitoringAndAlerting(
+    period?: string,
+    subscriptionIds?: string[]
+  ): Observable<McsReportMonitoringAndAlerting> {
+    return this._apiService.getMonitoringAndAlerting(period, subscriptionIds)
     .pipe(map((resources) => {
       let items: ChartItem[] = [];
       let alerts: McsReportSeverityAlerts[] = [];

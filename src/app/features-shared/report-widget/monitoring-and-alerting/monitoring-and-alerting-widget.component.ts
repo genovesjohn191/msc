@@ -1,6 +1,7 @@
 import {
   ChangeDetectorRef,
   Component,
+  Input,
   OnDestroy,
   OnInit,
   ViewEncapsulation
@@ -33,6 +34,16 @@ export class MonitoringAndAlertingWidgetComponent implements OnInit, OnDestroy {
     }
   }
 
+  @Input()
+  public set subscriptionIds(value: string[]) {
+    if (JSON.stringify(value) === JSON.stringify(this._subscriptionIds)) {
+      return;
+    }
+
+    this._subscriptionIds = value;
+    this.getData();
+  }
+
   public data$: Observable<ChartItem[]>;
   public dataBehavior: BehaviorSubject<ChartItem[]>;
   public monitoringAlerting: McsReportMonitoringAndAlerting;
@@ -41,18 +52,18 @@ export class MonitoringAndAlertingWidgetComponent implements OnInit, OnDestroy {
   public empty: boolean = true;
   public convertedDate: string;
   private _period: string = '';
+  private _subscriptionIds: string[] = undefined;
 
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private _reportingService: McsReportingService
   ) {
+    this._initializePeriod();
   }
 
   ngOnInit(): void {
-    this._initializePeriod();
     this.dataBehavior = new BehaviorSubject<ChartItem[]>(null);
     this.data$ = this.dataBehavior.asObservable();
-    this.getData();
   }
 
   ngOnDestroy(): void {
@@ -64,7 +75,7 @@ export class MonitoringAndAlertingWidgetComponent implements OnInit, OnDestroy {
     this.processing = true;
     this._changeDetectorRef.markForCheck();
 
-    this._reportingService.getMonitoringAndAlerting(this._period)
+    this._reportingService.getMonitoringAndAlerting(this._period, this._subscriptionIds)
     .pipe(catchError(() => {
       this.hasError = true;
       this.processing = false;

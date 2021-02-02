@@ -304,9 +304,14 @@ export class McsApiReportsService implements IMcsApiReportsService {
       );
   }
 
-  public getMonitoringAndAlerting(period?: string): Observable<McsApiSuccessResponse<McsReportMonitoringAndAlerting>> {
+  public getMonitoringAndAlerting(
+    period?: string,
+    subscriptionIds?: string[]): Observable<McsApiSuccessResponse<McsReportMonitoringAndAlerting>> {
     let searchParams = new Map<string, any>();
     searchParams.set('period', period);
+    if (!isNullOrEmpty(subscriptionIds)) {
+      searchParams.set('subscription_ids', subscriptionIds.join());
+    }
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/public-cloud/reports/monitoring-alerting';
