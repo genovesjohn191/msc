@@ -2931,7 +2931,20 @@
     "toolsVersion": "Tools Version",
     "type": "Type",
     "vApp": "vApp",
-    "zone": "Zone"
+    "zone": "Zone",
+    "sequence": "Sequence",
+    "sourceInterfaces": "Source Interfaces",
+    "destinationInterfaces": "Destination Interfaces",
+    "label": "Label",
+    "schedule": "Schedule",
+    "source": "Source",
+    "destination": "Destination",
+    "service": "Service",
+    "media": "Media",
+    "mediaSize": "Media Size",
+    "uploadedDate": "Uploaded Date",
+    "vdc": "VDC",
+    "attachedTo": "Attached To"
   },
   "formFields": {
     "selectStorage": "Select storage profile"

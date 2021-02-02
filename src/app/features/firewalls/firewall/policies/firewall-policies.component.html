@@ -14,9 +14,12 @@
             mcsPopover placement="bottom" orientation="left" theme="light"
             padding="narrow" [content]="filterSelectorTemplate" mcsCursor="pointer">
           </mcs-icon>
+
           <ng-template #filterSelectorTemplate>
-            <mcs-column-filter [filters]="dataFilters"
-              (dataChange)="onColumnFilterChange($event)"></mcs-column-filter>
+            <mcs-column-selector #columnFilter
+              storageKey="firewall-policies"
+              [defaultFilters]="defaultColumnFilters">
+            </mcs-column-selector>
           </ng-template>
 
           <div mcsAlign="end" hidden-small>
@@ -27,13 +30,13 @@
         </mcs-item>
 
         <!-- Table -->
-        <mcs-table #table [dataSource]="dataSource">
+        <table mat-table [dataSource]="dataSource">
           <!-- Action column -->
-          <ng-container mcsColumnDef="action">
-            <mcs-header-cell *mcsHeaderCellDef hidden-small>
-              {{ columnSettings.action.text }}
-            </mcs-header-cell>
-            <mcs-data-cell *mcsDataCellDef="let row" hidden-small text-center>
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef hidden-small>
+              {{ 'columnHeader.action' | translate }}
+            </th>
+            <td mat-cell *matCellDef="let row" hidden-small text-center>
               <mcs-icon [key]="row.actionIconKey" size="medium"
                 mcsPopover trigger="hover" maxWidth="250px" padding="narrow"
                 [content]="tooltipContent"></mcs-icon>
@@ -42,53 +45,53 @@
                   {{ row.actionLabel }}
                 </span>
               </ng-template>
-            </mcs-data-cell>
+            </td>
           </ng-container>
 
           <!-- Sequence Column -->
-          <ng-container mcsColumnDef="sequence">
-            <mcs-header-cell *mcsHeaderCellDef hidden-small>
-              {{ columnSettings.sequence.text }}
-            </mcs-header-cell>
-            <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+          <ng-container matColumnDef="sequence">
+            <th mat-header-cell *matHeaderCellDef hidden-small>
+              {{ 'columnHeader.sequence' | translate }}
+            </th>
+            <td mat-cell *matCellDef="let row" hidden-small>
               <span>{{ row.objectSequence }}</span>
-            </mcs-data-cell>
+            </td>
           </ng-container>
 
           <!-- Source Interfaces Column -->
-          <ng-container mcsColumnDef="sourceInterfaces">
-            <mcs-header-cell *mcsHeaderCellDef hidden-small>
-              {{ columnSettings.sourceInterfaces.text }}
-            </mcs-header-cell>
-            <mcs-data-cell *mcsDataCellDef="let row" text-left hidden-small>
+          <ng-container matColumnDef="sourceInterfaces">
+            <th mat-header-cell *matHeaderCellDef hidden-small>
+              {{ 'columnHeader.sourceInterfaces' | translate }}
+            </th>
+            <td mat-cell *matCellDef="let row" text-left hidden-small>
               <mcs-list spacing="auto">
                 <mcs-list-item *ngFor="let sourceInterfaces of row.sourceInterfaces">
-                    <span>{{ sourceInterfaces }}</span>
+                  <span>{{ sourceInterfaces }}</span>
                 </mcs-list-item>
               </mcs-list>
-            </mcs-data-cell>
+            </td>
           </ng-container>
 
           <!-- Desination Interfaces Column -->
-          <ng-container mcsColumnDef="destinationInterfaces">
-            <mcs-header-cell *mcsHeaderCellDef hidden-small>
-              {{ columnSettings.destinationInterfaces.text }}
-            </mcs-header-cell>
-            <mcs-data-cell *mcsDataCellDef="let row" text-left hidden-small>
+          <ng-container matColumnDef="destinationInterfaces">
+            <th mat-header-cell *matHeaderCellDef hidden-small>
+              {{ 'columnHeader.destinationInterfaces' | translate }}
+            </th>
+            <td mat-cell *matCellDef="let row" text-left hidden-small>
               <mcs-list spacing="auto">
                 <mcs-list-item *ngFor="let destinationInterface of row.destinationInterfaces">
                   {{ destinationInterface }}
                 </mcs-list-item>
               </mcs-list>
-            </mcs-data-cell>
+            </td>
           </ng-container>
 
           <!-- Source Column -->
-          <ng-container mcsColumnDef="source" >
-            <mcs-header-cell *mcsHeaderCellDef>
-              {{ columnSettings.source.text }}
-            </mcs-header-cell>
-            <mcs-data-cell *mcsDataCellDef="let row" text-wrap>
+          <ng-container matColumnDef="source" >
+            <th mat-header-cell *matHeaderCellDef>
+              {{ 'columnHeader.source' | translate }}
+            </th>
+            <td mat-cell *matCellDef="let row" text-wrap>
               <strong visible-small>Address</strong>
               <mcs-list spacing="auto">
                 <mcs-list-item *ngFor="let source of row.sourceAddresses">
@@ -102,15 +105,15 @@
                   {{ sourceInterfaces }}
                 </mcs-list-item>
               </mcs-list>
-            </mcs-data-cell>
+            </td>
           </ng-container>
 
           <!-- Destination Interfaces Column -->
-          <ng-container mcsColumnDef="destination">
-            <mcs-header-cell *mcsHeaderCellDef>
-              {{ columnSettings.destination.text }}
-            </mcs-header-cell>
-            <mcs-data-cell *mcsDataCellDef="let row" text-wrap>
+          <ng-container matColumnDef="destination">
+            <th mat-header-cell *matHeaderCellDef>
+              {{ 'columnHeader.destination' | translate }}
+            </th>
+            <td mat-cell *matCellDef="let row" text-wrap>
               <strong visible-small>Address</strong>
               <mcs-list spacing="auto">
                 <mcs-list-item *ngFor="let destination of row.destinationAddresses">
@@ -124,49 +127,49 @@
                   {{ destinationInterface }}
                 </mcs-list-item>
               </mcs-list>
-            </mcs-data-cell>
+            </td>
           </ng-container>
 
           <!-- Label Column -->
-          <ng-container mcsColumnDef="label">
-            <mcs-header-cell *mcsHeaderCellDef hidden-small>
-              {{ columnSettings.label.text }}
-            </mcs-header-cell>
-            <mcs-data-cell *mcsDataCellDef="let row" text-left hidden-small>
+          <ng-container matColumnDef="label">
+            <th mat-header-cell *matHeaderCellDef hidden-small>
+              {{ 'columnHeader.label' | translate }}
+            </th>
+            <td mat-cell *matCellDef="let row" text-left hidden-small>
               <span>{{ row.label }}</span>
-            </mcs-data-cell>
+            </td>
           </ng-container>
 
           <!-- Schedule Column -->
-          <ng-container mcsColumnDef="schedule">
-            <mcs-header-cell *mcsHeaderCellDef hidden-small>
-              {{ columnSettings.schedule.text }}
-            </mcs-header-cell>
-            <mcs-data-cell *mcsDataCellDef="let row" text-left hidden-small>
+          <ng-container matColumnDef="schedule">
+            <th mat-header-cell *matHeaderCellDef hidden-small>
+              {{ 'columnHeader.schedule' | translate }}
+            </th>
+            <td mat-cell *matCellDef="let row" text-left hidden-small>
               <mcs-list spacing="auto">
                 <mcs-list-item *ngFor="let schedule of row.schedule">
                   {{ schedule }}
                 </mcs-list-item>
               </mcs-list>
-            </mcs-data-cell>
+            </td>
           </ng-container>
 
           <!-- Service Column -->
-          <ng-container mcsColumnDef="service">
-            <mcs-header-cell *mcsHeaderCellDef>
-              {{ columnSettings.service.text }}
-            </mcs-header-cell>
-            <mcs-data-cell *mcsDataCellDef="let row" text-wrap>
+          <ng-container matColumnDef="service">
+            <th mat-header-cell *matHeaderCellDef>
+              {{ 'columnHeader.service' | translate }}
+            </th>
+            <td mat-cell *matCellDef="let row" text-wrap>
               <mcs-list spacing="auto">
                 <mcs-list-item *ngFor="let service of row.service">
                   {{ service }}
                 </mcs-list-item>
               </mcs-list>
-            </mcs-data-cell>
+            </td>
           </ng-container>
 
           <!-- Data Status Integration -->
-          <ng-container mcsDataStatusDef>
+          <!-- <ng-container mcsDataStatusDef>
             <mcs-data-empty *mcsDataEmptyDef>
               <span>{{ 'firewall.policies.noPolicies' | translate }}</span>
             </mcs-data-empty>
@@ -180,17 +183,42 @@
                   mcsEventLabel="firewall-details-page">{{ 'firewall.policies.retry' | translate }}</a>.
               </div>
             </mcs-data-error>
-          </ng-container>
+          </ng-container> -->
 
-          <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
-          <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"
-            mcsCursor="pointer" (click)="showFirewallPolicyDetails(row)"></mcs-data-row>
-        </mcs-table>
+          <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"></tr>
+          <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"
+            mcsCursor="pointer"
+            (click)="showFirewallPolicyDetails(row)"
+            mcsId="firewall-row"
+            mcsEventTracker="navigate-to-firewall"
+            mcsEventCategory="firewall-policies"
+            mcsEventLabel="firewall-policies-page"></tr>
+        </table>
+
+        <!-- Table Statuses -->
+        <mcs-item orientation="block">
+          <div *ngIf="dataSource?.isInProgress$ | async" align="center">
+            <mcs-loader size="medium"></mcs-loader>
+          </div>
+          <div *ngIf="dataSource?.hasNoRecords$ | async" text-center>
+            {{ 'firewall.policies.noPolicies' | translate }}
+          </div>
+          <div *ngIf="dataSource?.hasError$ | async" text-center>
+            <div class="listing-status-wrapper">
+              <span>{{ 'firewall.policies.errorMessage' | translate }}</span>
+              <a (click)="retryDatasource()"
+                mcsId
+                mcsEventTracker="firewall-policies-retry-loading-list"
+                mcsEventCategory="firewall"
+                mcsEventLabel="firewall-details-page">{{ 'firewall.policies.retry' | translate }}</a>.
+            </div>
+          </div>
+        </mcs-item>
 
         <!-- Paginator -->
         <mcs-paginator #paginator
           [hidden]="!hasNextPage"
-          [totalCount]="totalRecordsCount">
+          [totalCount]="dataSource?.totalCount$ | async">
         </mcs-paginator>
       </div>
     </div>

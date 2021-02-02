@@ -1,21 +1,38 @@
-import {
-  Component,
-  ChangeDetectorRef,
-  ChangeDetectionStrategy,
-  Injector
-} from '@angular/core';
 import { Observable } from 'rxjs';
-import { McsTableListingBase } from '@app/core';
+import { map } from 'rxjs/operators';
+
 import {
-  animateFactory,
-  CommonDefinition
-} from '@app/utilities';
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Injector,
+  ViewChild
+} from '@angular/core';
 import {
+  McsMatTableContext,
+  McsMatTableQueryParam,
+  McsTableDataSource2,
+  McsTableEvents
+} from '@app/core';
+import {
+  McsFilterInfo,
   McsFirewallPolicy,
-  McsQueryParam,
-  McsApiCollection
+  McsQueryParam
 } from '@app/models';
 import { McsApiService } from '@app/services';
+import {
+  ColumnFilter,
+  Paginator,
+  Search
+} from '@app/shared';
+import {
+  animateFactory,
+  createObject,
+  getSafeProperty,
+  isNullOrEmpty,
+  CommonDefinition
+} from '@app/utilities';
+
 import { FirewallService } from '../firewall.service';
 
 // Enumeration
@@ -35,71 +52,98 @@ export enum FirewallPoliciesMode {
     'class': 'block'
   }
 })
+export class FirewallPoliciesComponent {
+  public readonly dataSource: McsTableDataSource2<McsFirewallPolicy>;
+  public readonly dataEvents: McsTableEvents<McsFirewallPolicy>;
+  public readonly defaultColumnFilters: McsFilterInfo[];
 
-export class FirewallPoliciesComponent extends McsTableListingBase<McsFirewallPolicy> {
   public selectedFirewallPolicy: McsFirewallPolicy;
+
+  constructor(
+    _injector: Injector,
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _apiService: McsApiService,
+    private _firewallService: FirewallService
+  ) {
+    this.selectedFirewallPolicy = new McsFirewallPolicy();
+
+    this.dataSource = new McsTableDataSource2(this._getFirewallPolicies.bind(this));
+    this.defaultColumnFilters = [
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'action' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'sequence' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'sourceInterfaces' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'destinationInterfaces' }),
+      createObject(McsFilterInfo, { value: true, exclude: true, id: 'source' }),
+      createObject(McsFilterInfo, { value: true, exclude: true, id: 'destination' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'label' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'schedule' }),
+      createObject(McsFilterInfo, { value: true, exclude: true, id: 'service' })
+    ];
+    this.dataSource.registerColumnsFilterInfo(this.defaultColumnFilters);
+  }
 
   public get columnFilterIconKey(): string {
     return CommonDefinition.ASSETS_SVG_COLUMNS_BLACK;
   }
 
-  /**
-   * Returns the firewall policies mode enum
-   */
   public get firewallPoliciesModeEnum(): any {
     return FirewallPoliciesMode;
   }
 
-  /**
-   * Returns the firewall policies viewing mode
-   */
   private _firewallPoliciesMode: FirewallPoliciesMode = FirewallPoliciesMode.Listing;
   public get firewallPoliciesMode(): FirewallPoliciesMode { return this._firewallPoliciesMode; }
   public set firewallPoliciesMode(value: FirewallPoliciesMode) {
     if (this._firewallPoliciesMode !== value) {
       this._firewallPoliciesMode = value;
-      this.changeDetectorRef.markForCheck();
+      this._changeDetectorRef.markForCheck();
     }
   }
 
-  constructor(
-    _injector: Injector,
-    _changeDetectorRef: ChangeDetectorRef,
-    private _apiService: McsApiService,
-    private _firewallService: FirewallService
-  ) {
-    super(_injector, _changeDetectorRef);
-    this.selectedFirewallPolicy = new McsFirewallPolicy();
+  @ViewChild('search')
+  public set search(value: Search) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerSearch(value);
+    }
   }
 
-  /**
-   * Display the selected firewall policy details
-   * @param policy Firewall Policy data
-   */
+  @ViewChild('paginator')
+  public set paginator(value: Paginator) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerPaginator(value);
+    }
+  }
+
+  @ViewChild('columnFilter')
+  public set columnFilter(value: ColumnFilter) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerColumnFilter(value);
+    }
+  }
+
   public showFirewallPolicyDetails(policy: McsFirewallPolicy): void {
     this.selectedFirewallPolicy = policy;
     this.firewallPoliciesMode = FirewallPoliciesMode.Details;
   }
 
-  /**
-   * Hide the firewall policy details and go back to firewall policy listing
-   */
   public hideFirewallPolicyDetails(): void {
     this.firewallPoliciesMode = FirewallPoliciesMode.Listing;
   }
 
-  /**
-   * Returns the column settings key for the filter selector
-   */
-  public get columnSettingsKey(): string {
-    return CommonDefinition.FILTERSELECTOR_FIREWALL_POLICIES_LISTING;
-  }
+  private _getFirewallPolicies(
+    param: McsMatTableQueryParam
+  ): Observable<McsMatTableContext<McsFirewallPolicy>> {
+    let queryParam = new McsQueryParam();
+    queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
+    queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
+    queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
 
-  /**
-   * Gets the entity listing based on the context
-   * @param query Query to be obtained on the listing
-   */
-  protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsFirewallPolicy>> {
-    return this._apiService.getFirewallPolicies(this._firewallService.selectedFirewall.id, query);
+    return this._apiService.getFirewallPolicies(
+      this._firewallService.selectedFirewall.id,
+      queryParam
+    ).pipe(
+      map(response => new McsMatTableContext(response?.collection,
+        response?.totalCollectionCount)
+      )
+    );
   }
 }
