@@ -5,7 +5,7 @@ import { WorkflowConfig } from '../workflow.interface';
 
 export class RemoveFromManagementToolsCvmWorkflowGroup implements WorkflowGroup {
   public parent: WorkflowConfig = {
-    id: WorkflowType.RemoveFromManagementToolsCvm,
+    id: WorkflowType.ManagementToolsRemoveCvm,
     title: 'Remove CVM from Management Tools',
     form: removeFromManagementToolsForm
   };

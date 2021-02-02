@@ -1,5 +1,8 @@
 import {
   DynamicInputHiddenField,
+  DynamicSelectChipsField,
+  DynamicSelectChipsVmField,
+  DynamicSelectVdcField,
   DynamicSelectVmField
 } from '@app/features-shared/dynamic-form';
 import { isNullOrEmpty } from '@app/utilities';
@@ -12,13 +15,13 @@ export const removeFromManagementToolsForm: LaunchPadForm = {
       key: 'companyId',
       value: '',
       eventName: 'company-change',
-      dependents: ['id'],
+      dependents: ['id', 'server'],
     }),
     new DynamicInputHiddenField({
       key: 'serviceId',
       value: '',
       eventName: 'service-id-change',
-      dependents: ['id'],
+      dependents: ['id', 'server'],
     }),
     new DynamicSelectVmField({
       key: 'id',
@@ -26,6 +29,25 @@ export const removeFromManagementToolsForm: LaunchPadForm = {
       validators: { required: true },
       settings: { preserve: true },
     }),
+    new DynamicSelectChipsField({
+      key: 'chips',
+      label: 'Sample Chips',
+      placeholder: 'Select Chip',
+      validators: { required: true },
+      options: [
+        { key: 'Dhcp', value: 'DHCP'},
+        { key: 'Pool', value: 'Pool'},
+        { key: 'Manual', value: 'Manual'}
+      ],
+      allowCustomValue: true
+    }),
+    new DynamicSelectChipsVmField({
+      key: 'server',
+      label: 'Target Virtual Machine',
+      placeholder: 'Server',
+      validators: { required: false },
+      allowDuplicates: true
+    })
   ],
 
   mapContext: (context: WorkflowGroupSaveState) => {

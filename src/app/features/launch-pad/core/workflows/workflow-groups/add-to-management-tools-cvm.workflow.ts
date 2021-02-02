@@ -5,7 +5,7 @@ import { WorkflowConfig } from '../workflow.interface';
 
 export class AddToManagementToolsCvmWorkflowGroup implements WorkflowGroup {
   public parent: WorkflowConfig = {
-    id: WorkflowType.AddToManagementToolsCvm,
+    id: WorkflowType.ManagementToolsAddCvm,
     crispProductType: ProductType.VirtualDataCentreVmInstance,
     title: 'Add CVM to Management Tools',
     form: addToManagementToolsCvmForm
