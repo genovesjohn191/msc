@@ -8,7 +8,7 @@ import { WorkflowConfig } from '../workflow.interface';
 
 export class ProvisionVirtualDataCentreVmInstanceWorkflowGroup implements WorkflowGroup {
   public parent: WorkflowConfig = {
-    id: WorkflowType.CreateManagedVm,
+    id: WorkflowType.ManagedVmCreate,
     crispProductType: ProductType.VirtualDataCentreVmInstance,
     title: 'Provision Virtual Data Centre VM Instance',
     form: provisionVirtualDataCentreVmInstanceForm

@@ -72,11 +72,12 @@ export abstract class DynamicTextFieldComponentBase implements OnInit, DynamicFo
   public clearFormField(reuseValue: boolean): void {
     let preserveValue = reuseValue && this.config.settings && this.config.settings.preserve;
     if (!preserveValue) {
-      console.log(this.config.key, typeof this.config.value);
       if (typeof this.config.value === 'boolean') {
         this._changeValue(false);
-      } else {
+      } else if (typeof this.config.value === 'object') {
         this._changeValue(null);
+      } else {
+        this._changeValue('');
       }
     }
   }

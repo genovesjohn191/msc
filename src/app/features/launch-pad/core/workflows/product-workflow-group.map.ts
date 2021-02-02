@@ -5,8 +5,19 @@ import { WorkflowGroupId } from './workflow-groups/workflow-group-type.enum';
 export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map([
   [ ProductType.VirtualDataCentreVmInstance,
     [
-      WorkflowGroupId.ProvisionVirtualDataCentreVmInstance,
-      WorkflowGroupId.AddToManagementToolsCvm,
-      WorkflowGroupId.RemoveFromManagementToolsCvm
+      WorkflowGroupId.VirtualDataCentreVmInstanceProvision,
+      WorkflowGroupId.VirtualDataCentreVmInstanceAddToManagementTools,
+      WorkflowGroupId.VirtualDataCentreVmInstanceRemoveFromManagementTools
+    ]],
+
+  [ ProductType.PrimaryDedicatedStorage,
+    [
+      WorkflowGroupId.DedicatedStorageAttachVolume,
+      WorkflowGroupId.DedicatedStorageAttachVolumeCluster,
+      WorkflowGroupId.DedicatedStorageCreateAttachVolume,
+      WorkflowGroupId.DedicatedStorageCreateAttachVolumeCluster,
+      WorkflowGroupId.DedicatedStorageIncreaseVolume,
+      WorkflowGroupId.DedicatedStorageRemoveZoning,
+      WorkflowGroupId.DedicatedStorageUnmaskVolume,
     ]]
 ]);

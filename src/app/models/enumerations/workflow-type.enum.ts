@@ -1,10 +1,19 @@
 import { McsEnumSerializationBase } from '../serialization/mcs-enum-serialization-base';
 
 export enum WorkflowType {
-  CreateManagedVm = 'launchpad.managedvm.create',
+  ManagedVmCreate = 'launchpad.managedvm.create',
   AddHids = 'launchpad.hids.addon',
-  AddToManagementToolsCvm = 'launchpad.managementtools.addcvm',
-  RemoveFromManagementToolsCvm = 'launchpad.managementtools.deletecvm'
+
+  ManagementToolsAddCvm = 'launchpad.managementtools.addcvm',
+  ManagementToolsRemoveCvm = 'launchpad.managementtools.deletecvm',
+
+  DedicatedStorageAttachVolume = 'launchpad.dedicatedstorage.attachvolume',
+  DedicatedStorageAttachVolumeCluster = 'launchpad.dedicatedstorage.attachvolumecluster',
+  DedicatedStorageCreateAttachVolume = 'launchpad.dedicatedstorage.createattachvolume',
+  DedicatedStorageCreateAttachVolumeCluster = 'launchpad.dedicatedstorage.createattachvolumecluster',
+  DedicatedStorageIncreaseVolume = 'launchpad.dedicatedstorage.increasevolume',
+  DedicatedStorageRemoveZoning = 'launchpad.dedicatedstorage.removezoning',
+  DedicatedStorageUmaskVolume = 'launchpad.dedicatedstorage.unmaskvolume',
 }
 
 /**
