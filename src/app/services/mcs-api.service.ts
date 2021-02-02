@@ -1706,10 +1706,13 @@ export class McsApiService {
     );
   }
 
-  public getMonitoringAndAlerting(period?: string): Observable<McsReportMonitoringAndAlerting> {
-    return this._reportsApi.getMonitoringAndAlerting(period).pipe(
+  public getMonitoringAndAlerting(
+    period?: string,
+    subscriptionIds?: string[]
+    ): Observable<McsReportMonitoringAndAlerting> {
+    return this._reportsApi.getMonitoringAndAlerting(period, subscriptionIds).pipe(
       catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getServiceChanges'))
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getMonitoringAndAlerting'))
       ),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
