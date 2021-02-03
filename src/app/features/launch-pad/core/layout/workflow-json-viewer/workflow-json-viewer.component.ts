@@ -52,7 +52,6 @@ export class WorkflowJsonViewerComponent {
 
   private _filter(key: string, value: any): any {
     let sensitiveKeys: string[] = [
-      'username',
       'password'
     ];
 
