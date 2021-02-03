@@ -113,6 +113,18 @@
                   {{ 'navigation.privateCloud.network.internet' | translate }}
                 </a>
               </li>
+              <!-- DNS -->
+              <li *mcsAccessControl="['InternetView'];">
+                <a [mcsRouterLink]="routeKeyEnum.DnsListing"
+                  mcsRouterLinkActive="active"
+                  class="sub-navigation-item unstyled-link"
+                  mcsId="dns-listing-link"
+                  mcsEventTracker="navigate-to-dns-listing"
+                  mcsEventCategory="navigation"
+                  mcsEventLabel="sub-nav">
+                  {{ 'navigation.privateCloud.network.dns' | translate }}
+                </a>
+              </li>
             </ul>
           </li>
           <!-- Storage -->

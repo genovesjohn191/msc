@@ -64,7 +64,8 @@
                         mcsId="select-dns-service" mcsEventTracker="select-dns-service" mcsEventCategory="order"
                         mcsEventLabel="order-hosted-dns-change-page"
                         (selectionChange)="onDnsServiceChange($event)">
-                        <mcs-option *ngFor="let networkDnsOption of networkDnsOptions" [value]="networkDnsOption.value">
+                        <mcs-option *ngFor="let networkDnsOption of networkDnsOptions" [value]="networkDnsOption.value"
+                        [selected]="(selectedDnsNetwork$ | async)?.serviceId === networkDnsOption.value.serviceId">
                           {{ networkDnsOption.text }}
                         </mcs-option>
                       </mcs-select>

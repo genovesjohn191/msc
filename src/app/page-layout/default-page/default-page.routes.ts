@@ -62,6 +62,12 @@ export const defaultPageRoutes: Routes = [
         loadChildren: () => import('../../features/internet/internet.module').then(m => m.InternetModule)
       },
       {
+        path: 'network/dns',
+        data: { routeId: RouteKey.DnsListing },
+        loadChildren: () =>
+          import('../../features/dns/dns-listing.module').then(m => m.DnsListingModule)
+      },
+      {
         path: 'storage/aggregation-targets',
         data: { routeId: RouteKey.BackupAggregationTargets },
         loadChildren: () => import('../../features/aggregation-targets/aggregation-targets.module').then(m => m.AggregationTargetsModule)

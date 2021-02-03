@@ -17,7 +17,8 @@ import {
   takeUntil,
   map,
   filter,
-  tap
+  tap,
+  shareReplay
 } from 'rxjs/operators';
 import {
   Subject,
@@ -53,7 +54,8 @@ import {
   DnsRecordType,
   McsOrderHostedDnsChange,
   McsNetworkDnsSummary,
-  DeliveryType
+  DeliveryType,
+  McsAzureServiceQueryParams
 } from '@app/models';
 import {
   OrderDetails,
@@ -68,6 +70,7 @@ import {
 } from './change-to-apply/change-to-apply';
 import { ChangeToApplyFactory } from './change-to-apply/change-to-apply.factory';
 import { TranslateService } from '@ngx-translate/core';
+import { ActivatedRoute } from '@angular/router';
 
 const HOSTED_DNS_CHANGE = Guid.newGuid().toString();
 const LOADING_TEXT = 'loading';
@@ -92,6 +95,7 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
   public networkDnsOptions: Array<McsOption> = new Array<McsOption>();
   public networkDnsZoneOptions: Array<McsOption> = new Array<McsOption>();
   public smacSharedFormConfig$: Observable<SmacSharedFormConfig>;
+  public selectedDnsNetwork$: Observable<McsAzureServiceQueryParams>;
   public get loadingText(): string {
     return LOADING_TEXT;
   }
@@ -120,6 +124,7 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
 
   constructor(
     _injector: Injector,
+    private _activatedRoute: ActivatedRoute,
     private _hostedDnsChangeService: HostedDnsChangeService,
     private _formBuilder: FormBuilder,
     private _apiService: McsApiService,
@@ -143,6 +148,7 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
   public ngOnInit(): void {
     this._getLeadTimeHours();
     this._getNetworkDns();
+    this._getPreSelectedNetworkDns();
     this._initializeSmacSharedForm();
   }
 
@@ -421,5 +427,21 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
       this.dnsLeadTimeHours = order.standardLeadTimeHours;
       this.loadingLeadTimeHours = false;
     });
+  }
+
+  private _getPreSelectedNetworkDns(): void {
+    this.selectedDnsNetwork$ = this._activatedRoute.queryParams.pipe(
+      map((params) => {
+        if (params) {
+          return getSafeProperty(params, (obj) => new McsAzureServiceQueryParams(obj.serviceId)) || undefined;
+        }
+      }),
+      tap((params) => {
+          let preSelectedOption: McsOption = this.networkDnsOptions.find(_dnsNetwork => _dnsNetwork.value.serviceId === params.serviceId);
+          this.fcDnsService.setValue(preSelectedOption.value);
+          this._getNetworkDnsZones(params.serviceId);
+      }),
+      shareReplay(1)
+    );
   }
 }
