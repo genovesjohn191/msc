@@ -33,8 +33,8 @@ export class LaunchPadSearchComponent implements OnInit, OnDestroy {
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'serviceId' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'description' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'status' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'companyName' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'companyId' })
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'customerName' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'customerId' })
   ];
 
   public readonly defaultInstalledServicesColumnFilters = [
@@ -42,8 +42,8 @@ export class LaunchPadSearchComponent implements OnInit, OnDestroy {
     createObject(McsFilterInfo, { value: true, exclude: true, id: 'serviceId' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'description' }),
     createObject(McsFilterInfo, { value: true, exclude: false, id: 'installedBaseState' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'companyName' }),
-    createObject(McsFilterInfo, { value: true, exclude: false, id: 'companyId' })
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'customerName' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'customerId' })
   ];
 
   @ViewChild('crispElementsColumnFilter')
