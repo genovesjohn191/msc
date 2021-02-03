@@ -3,7 +3,8 @@ import {
   ViewChild,
   ElementRef,
   OnDestroy,
-  OnInit
+  OnInit,
+  ChangeDetectorRef
 } from '@angular/core';
 import {
   CdkDragDrop,
@@ -14,7 +15,6 @@ import {
   ENTER
 } from '@angular/cdk/keycodes';
 import {
-  MatAutocomplete,
   MatAutocompleteSelectedEvent
 } from '@angular/material/autocomplete';
 import { ControlValueAccessor, FormControl } from '@angular/forms';
@@ -43,6 +43,8 @@ export abstract class DynamicSelectChipsFieldComponentBase<T>
   extends DynamicTextFieldComponentBase
   implements DynamicFormFieldComponent, ControlValueAccessor, OnInit, OnDestroy {
 
+  public isLoading: boolean = false;
+  public hasError: boolean = false;
   public selectable = true;
   public removable = true;
   public separatorKeysCodes: number[] = [ENTER, COMMA];
@@ -53,6 +55,10 @@ export abstract class DynamicSelectChipsFieldComponentBase<T>
   protected destroySubject: Subject<void> = new Subject<void>();
 
   private currentServiceCall: Subscription;
+
+  constructor(private _changeDetectorRef: ChangeDetectorRef) {
+    super();
+  }
 
   public ngOnInit(): void {
     this._initialize();
@@ -77,6 +83,8 @@ export abstract class DynamicSelectChipsFieldComponentBase<T>
   }
 
   public retrieveOptions(): void {
+    this._startProcess();
+
     if (this.currentServiceCall) {
       this.currentServiceCall.unsubscribe();
     }
@@ -85,6 +93,7 @@ export abstract class DynamicSelectChipsFieldComponentBase<T>
       .pipe(
         takeUntil(this.destroySubject),
         catchError(() => {
+          this._endProcess(true);
           return throwError(`${this.config.key} data retrieval failed.`);
         }))
       .subscribe((response) => {
@@ -96,6 +105,8 @@ export abstract class DynamicSelectChipsFieldComponentBase<T>
 
   public filterOptions(): void {
     this.config.options = this.filter(this.collection);
+
+    this._endProcess();
   }
 
   public isString(item: any): boolean {
@@ -130,5 +141,17 @@ export abstract class DynamicSelectChipsFieldComponentBase<T>
     if (!isNullOrEmpty(this.config.value)) {
       this.setInitialValue(this.config.value);
     }
+  }
+
+  private _startProcess(): void {
+    this.isLoading = true;
+    this.hasError = false;
+    this._changeDetectorRef.markForCheck();
+  }
+
+  private _endProcess(hasError: boolean = false): void {
+    this.isLoading = false;
+    this.hasError = hasError;
+    this._changeDetectorRef.markForCheck();
   }
 }

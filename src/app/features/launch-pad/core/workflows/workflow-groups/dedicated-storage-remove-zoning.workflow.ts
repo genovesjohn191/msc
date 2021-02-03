@@ -1,5 +1,8 @@
-import { ProductType, WorkflowType } from '@app/models';
-import { dedicatedStorageRemoveZoningForm } from '../forms/dedicated-storage-remove-zoning.form';
+import {
+  ProductType,
+  WorkflowType
+} from '@app/models';
+import { dedicatedStorageRemoveZoningForm } from '../forms';
 import { WorkflowGroup } from '../workflow-group.interface';
 import { WorkflowConfig } from '../workflow.interface';
 

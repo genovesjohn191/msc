@@ -1,12 +1,12 @@
 import { WorkflowType } from '@app/models';
-import { removeFromManagementToolsForm } from '../forms/remove-from-management-tools-cvm.form';
+import { vdcVmInstanceRemoveFromManagementToolsForm } from '../forms';
 import { WorkflowGroup } from '../workflow-group.interface';
 import { WorkflowConfig } from '../workflow.interface';
 
-export class RemoveFromManagementToolsCvmWorkflowGroup implements WorkflowGroup {
+export class VdcVmInstanceRemoveFromManagementToolsWorkflowGroup implements WorkflowGroup {
   public parent: WorkflowConfig = {
     id: WorkflowType.ManagementToolsRemoveCvm,
     title: 'Remove CVM from Management Tools',
-    form: removeFromManagementToolsForm
+    form: vdcVmInstanceRemoveFromManagementToolsForm
   };
 }

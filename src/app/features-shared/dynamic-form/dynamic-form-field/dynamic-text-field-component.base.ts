@@ -73,18 +73,18 @@ export abstract class DynamicTextFieldComponentBase implements OnInit, DynamicFo
     let preserveValue = reuseValue && this.config.settings && this.config.settings.preserve;
     if (!preserveValue) {
       if (typeof this.config.value === 'boolean') {
-        this._changeValue(false);
+        this.changeValue(false);
       } else if (typeof this.config.value === 'object') {
-        this._changeValue(null);
+        this.changeValue(null);
       } else {
-        this._changeValue('');
+        this.changeValue('');
       }
     }
   }
 
   public setInitialValue(value: any): void {
     this.config.initialValue = value;
-    this._changeValue(value);
+    this.changeValue(value);
   }
 
   public writeValue(obj: any): void {
@@ -108,7 +108,7 @@ export abstract class DynamicTextFieldComponentBase implements OnInit, DynamicFo
 
   public onTouched = () => {};
 
-  private _changeValue(value: any): void {
+  protected changeValue(value: any): void {
     this.config.value = value;
     this.valueChange(this.config.value);
   }

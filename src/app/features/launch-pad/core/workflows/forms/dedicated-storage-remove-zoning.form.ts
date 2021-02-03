@@ -2,9 +2,11 @@ import {
   DynamicInputHiddenField,
   DynamicSelectVmField
 } from '@app/features-shared/dynamic-form';
+import { McsObjectCrispElementServiceAttribute } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
 import { WorkflowGroupSaveState } from '../workflow-group.interface';
 import { LaunchPadForm } from './form.interface';
+import { CrispAttributeNames, findCrispElementAttribute } from './mapping-helper';
 
 export const dedicatedStorageRemoveZoningForm: LaunchPadForm = {
   config: [
@@ -12,7 +14,7 @@ export const dedicatedStorageRemoveZoningForm: LaunchPadForm = {
       key: 'companyId',
       value: '',
       eventName: 'company-change',
-      dependents: ['servers'],
+      dependents: ['server'],
     }),
     new DynamicSelectVmField({
       key: 'server',
@@ -30,5 +32,12 @@ export const dedicatedStorageRemoveZoningForm: LaunchPadForm = {
 
     return mappedProperties;
   },
-  // TODO: CRISP Mapping for IC2_SERVER
+  mapCrispElementAttributes: (attributes: McsObjectCrispElementServiceAttribute[]) => {
+    let mappedProperties: { key: string, value: any }[] = [];
+    if (isNullOrEmpty(attributes)) { return mappedProperties; }
+
+    mappedProperties.push({ key: 'server', value: findCrispElementAttribute(CrispAttributeNames.Server, attributes)?.displayValue } );
+
+    return mappedProperties;
+  }
 }

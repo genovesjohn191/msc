@@ -10,7 +10,10 @@ import {
   map
 } from 'rxjs/operators';
 
-import { CommonDefinition, isNullOrEmpty } from '@app/utilities';
+import {
+  CommonDefinition,
+  isNullOrEmpty
+} from '@app/utilities';
 import {
   McsQueryParam,
   McsServer,
@@ -48,6 +51,8 @@ export class DynamicSelectVmComponent extends DynamicSelectFieldComponentBase<Mc
   private _companyId: string = '';
   private _serviceId: string = '';
 
+  private _serviceIdMapping: Map<string, string> = new Map<string, string>();
+
   constructor(
     private _apiService: McsApiService,
     _changeDetectorRef: ChangeDetectorRef
@@ -70,6 +75,17 @@ export class DynamicSelectVmComponent extends DynamicSelectFieldComponentBase<Mc
     }
   }
 
+  // Override function to allow field to map with service ID
+  public writeValue(obj: any): void {
+    if (this._serviceIdMapping.has(obj)) {
+      obj = this._serviceIdMapping.get(obj);
+    }
+
+    if (!isNullOrEmpty(obj)) {
+      this.config.value = obj;
+    }
+  }
+
   protected callService(): Observable<McsServer[]> {
     let optionalHeaders = new Map<string, any>([
       [CommonDefinition.HEADER_COMPANY_ID, this._companyId]
@@ -87,13 +103,24 @@ export class DynamicSelectVmComponent extends DynamicSelectFieldComponentBase<Mc
 
   protected filter(collection: McsServer[]): GroupedOption[] {
     let groupedOptions: GroupedOption[] = [];
+    this._serviceIdMapping.clear();
 
     collection.forEach((item) => {
      if (this._exluded(item)) { return; }
 
       let groupName = serviceTypeText[item.serviceType];
+
+      // Build a service ID map so we can map with service IDs to correct key when initializing the value
+      let uniqueNonEmptyServiceId = !isNullOrEmpty(item.serviceId) && !this._serviceIdMapping.has(item.serviceId);
+      if (uniqueNonEmptyServiceId) {
+        this._serviceIdMapping.set(item.serviceId, item.id);
+      }
+
       let existingGroup = groupedOptions.find((opt) => opt.name === groupName);
-      let option = { key: item.id, value: item.name } as FlatOption;
+      let value = item.name;
+      if (item.serviceId) { value += ` (${item.serviceId})`; }
+
+      let option = { key: item.id, value } as FlatOption;
 
       if (existingGroup) {
         // Add option to existing group
@@ -107,6 +134,14 @@ export class DynamicSelectVmComponent extends DynamicSelectFieldComponentBase<Mc
         });
       }
     });
+
+    let initialValueIsValidServiceId = this._serviceIdMapping.has(this.config.initialValue);
+    if (initialValueIsValidServiceId) {
+      // Force the control to reselect the initial value
+      this.writeValue(this.config.initialValue);
+      // Force the form to check the validty of the control
+      this.valueChange(this.config.initialValue);
+    }
 
     return groupedOptions;
   }

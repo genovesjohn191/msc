@@ -1,5 +1,8 @@
-import { ProductType, WorkflowType } from '@app/models';
-import { dedicatedStorageIncreaseVolumeForm } from '../forms/dedicated-storage-increase-volume.form';
+import {
+  ProductType,
+  WorkflowType
+} from '@app/models';
+import { dedicatedStorageIncreaseVolumeForm } from '../forms';
 import { WorkflowGroup } from '../workflow-group.interface';
 import { WorkflowConfig } from '../workflow.interface';
 

@@ -5,9 +5,12 @@ import {
   DynamicSelectField,
   DynamicSlideToggleField
 } from '@app/features-shared/dynamic-form';
+import { DynamicSelectChipsValue } from '@app/features-shared/dynamic-form/dynamic-form-field/dynamic-select-chips-field-component.base';
+import { McsObjectCrispElementServiceAttribute } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
 import { WorkflowGroupSaveState } from '../workflow-group.interface';
 import { LaunchPadForm } from './form.interface';
+import { CrispAttributeNames, findCrispElementAttribute } from './mapping-helper';
 
 export const dedicatedStorageCreateAndAttachVolumeClusterForm: LaunchPadForm = {
   config: [
@@ -36,7 +39,7 @@ export const dedicatedStorageCreateAndAttachVolumeClusterForm: LaunchPadForm = {
       suffix: 'GB'
     }),
     new DynamicSlideToggleField({
-      key: 'boot',
+      key: 'bootLun',
       label: 'Boot'
     }),
     new DynamicSelectChipsVmField({
@@ -56,5 +59,25 @@ export const dedicatedStorageCreateAndAttachVolumeClusterForm: LaunchPadForm = {
 
     return mappedProperties;
   },
-  // TODO: CRISP Mapping for IC2_DISK_SPACE,IC2_STORAGE_TIER,DESIGNATED_USAGE,IC2_SERVER
+  mapCrispElementAttributes: (attributes: McsObjectCrispElementServiceAttribute[]) => {
+    let mappedProperties: { key: string, value: any }[] = [];
+    if (isNullOrEmpty(attributes)) { return mappedProperties; }
+
+    mappedProperties.push({ key: 'tier', value: findCrispElementAttribute(CrispAttributeNames.StorageTier, attributes)?.value } );
+    mappedProperties.push({ key: 'diskSizeInGB', value: findCrispElementAttribute(CrispAttributeNames.DiskSpace, attributes)?.value } );
+
+    let bootLun: boolean = findCrispElementAttribute(CrispAttributeNames.DesignatedUsage, attributes)?.value === 'BOOT';
+    mappedProperties.push({ key: 'bootLun', value: bootLun } );
+
+    let server: string = findCrispElementAttribute(CrispAttributeNames.Server, attributes)?.displayValue;
+    let servers: DynamicSelectChipsValue[]  = [
+      {
+        value: server,
+        label: ''
+      }
+    ];
+    mappedProperties.push({ key: 'servers', value: servers } );
+
+    return mappedProperties;
+  }
 }

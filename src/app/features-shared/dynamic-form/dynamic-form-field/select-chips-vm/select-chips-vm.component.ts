@@ -3,13 +3,14 @@ import {
   forwardRef,
   ViewChild,
   ElementRef,
+  ChangeDetectorRef,
 } from '@angular/core';
 import {
   MatAutocomplete,
   MatAutocompleteSelectedEvent
 } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { NG_VALUE_ACCESSOR, RequiredValidator, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 
@@ -22,7 +23,7 @@ import {
   McsServer
 } from '@app/models';
 import { McsApiService } from '@app/services';
-import { DynamicSelectChipsFieldComponentBase } from '../dynamic-select-chips-field-component.base';
+import { DynamicSelectChipsFieldComponentBase, DynamicSelectChipsValue } from '../dynamic-select-chips-field-component.base';
 import { DynamicSelectChipsVmField } from './select-chips-vm';
 import {
   DynamicFormFieldDataChangeEventParam,
@@ -56,13 +57,45 @@ export class DynamicSelectChipsVmComponent extends DynamicSelectChipsFieldCompon
   private _companyId: string = '';
   private _serviceId: string = '';
 
-  constructor(private _apiService: McsApiService) {
-    super();
+  private _serviceIdMapping: Map<string, string> = new Map<string, string>();
+
+  constructor(
+    private _apiService: McsApiService,
+    _changeDetectorRef: ChangeDetectorRef
+  ) {
+    super(_changeDetectorRef);
+  }
+
+  // Override function to allow field to map with service ID
+  public writeValue(obj: any): void {
+    let chipsValue = obj as DynamicSelectChipsValue[];
+    let translatedValue: DynamicSelectChipsValue[] = [];
+    chipsValue.forEach((chip) => {
+      let validChip: boolean = !isNullOrEmpty(chip.value) && !isNullOrEmpty(chip.label);
+      if (validChip) {
+        translatedValue.push(chip);
+      } else {
+        // Assumes value is service ID and search via map
+        if (this._serviceIdMapping.has(chip.value)) {
+          let id = this._serviceIdMapping.get(chip.value);
+          chip.label = chip.value;
+          chip.value = id;
+
+          let isUnique = translatedValue.findIndex(item => item.value === id) < 0;
+          if (this.config.allowDuplicates || isUnique) {
+            translatedValue.push(chip);
+          }
+        }
+      }
+    });
+
+    this.config.value = translatedValue;
   }
 
   public add(event: MatChipInputEvent): void {
     event.input.value = '';
     this.inputCtrl.setValue(null);
+
   }
 
   public selected(event: MatAutocompleteSelectedEvent): void {
@@ -102,6 +135,11 @@ export class DynamicSelectChipsVmComponent extends DynamicSelectChipsFieldCompon
   }
 
   protected callService(): Observable<McsServer[]> {
+    // Force the control to reselect the initial value
+    this.writeValue([]);
+    // Force the form to check the validty of the control
+    this.valueChange([]);
+
     let optionalHeaders = new Map<string, any>([
       [CommonDefinition.HEADER_COMPANY_ID, this._companyId]
     ]);
@@ -115,15 +153,29 @@ export class DynamicSelectChipsVmComponent extends DynamicSelectChipsFieldCompon
 
   protected filter(collection: McsServer[]): FlatOption[] {
     let options: FlatOption[] = [];
+    this._serviceIdMapping.clear();
 
     collection.forEach((item) => {
       if (this._exluded(item)) { return; }
+
+      // Build a service ID map so we can map with service IDs to correct key when initializing the value
+      let uniqueNonEmptyServiceId = !isNullOrEmpty(item.serviceId) && !this._serviceIdMapping.has(item.serviceId);
+      if (uniqueNonEmptyServiceId) {
+        this._serviceIdMapping.set(item.serviceId, item.id);
+      }
 
       let value = item.name;
       if (item.serviceId) { value += ` (${item.serviceId})`; }
 
       options.push({ type: 'flat', key: item.id, value });
     });
+
+    if (!isNullOrEmpty(this.config.initialValue)) {
+      // Force the control to reselect the initial value
+      this.writeValue(this.config.initialValue);
+      // Force the form to check the validty of the control
+      this.valueChange(this.config.initialValue);
+    }
 
     return options;
   }

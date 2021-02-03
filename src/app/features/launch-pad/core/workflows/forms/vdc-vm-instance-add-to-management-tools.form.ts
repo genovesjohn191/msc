@@ -7,7 +7,7 @@ import {
 } from './mapping-helper';
 import { addToManagementToolsFormConfig } from './shared/add-to-management-tools-form.config';
 
-export const addToManagementToolsCvmForm: LaunchPadForm = {
+export const vdcVmInstanceAddToManagementToolsForm: LaunchPadForm = {
   config: addToManagementToolsFormConfig,
 
   mapCrispElementAttributes: (attributes: McsObjectCrispElementServiceAttribute[]) => {
