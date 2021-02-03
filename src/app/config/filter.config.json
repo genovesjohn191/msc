@@ -118,47 +118,6 @@
       "exclude": true
     }
   },
-  "firewallPolicyFilter": {
-    "action": {
-      "text": "Action",
-      "value": true
-    },
-    "sequence": {
-      "text": "Sequence",
-      "value": true
-    },
-    "sourceInterfaces": {
-      "text": "Source Interfaces",
-      "value": true
-    },
-    "destinationInterfaces": {
-      "text": "Destination Interfaces",
-      "value": true
-    },
-    "source": {
-      "text": "Source",
-      "value": true,
-      "exclude": true
-    },
-    "destination": {
-      "text": "Destination",
-      "value": true,
-      "exclude": true
-    },
-    "label": {
-      "text": "Label",
-      "value": true
-    },
-    "schedule": {
-      "text": "Schedule",
-      "value": true
-    },
-    "service": {
-      "text": "Service",
-      "value": true,
-      "exclude": true
-    }
-  },
   "internetFilter": {
     "service": {
       "text": "Service",
@@ -314,34 +273,6 @@
     "companyId": {
       "text": "Customer ID",
       "value": true
-    }
-  },
-  "mediaFilter": {
-    "media": {
-      "text": "Media",
-      "value": true,
-      "exclude": true
-    },
-    "size": {
-      "text": "Media Size",
-      "value": true
-    },
-    "uploadedDate": {
-      "text": "Upload Date",
-      "value": true
-    },
-    "vdc": {
-      "text": "VDC",
-      "value": true
-    },
-    "attachedTo": {
-      "text": "Attached To",
-      "value": true
-    },
-    "action": {
-      "text": "",
-      "value": true,
-      "exclude": true
     }
   },
   "orderFilter": {

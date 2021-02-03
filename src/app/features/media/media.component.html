@@ -35,8 +35,10 @@
 
     <!-- Column Filter -->
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'media.filterColumn' | translate" offset="medium">
-      <mcs-column-filter [filters]="dataFilters"
-        (dataChange)="onColumnFilterChange($event)"></mcs-column-filter>
+      <mcs-column-selector #columnFilter
+        storageKey="media"
+        [defaultFilters]="defaultColumnFilters">
+      </mcs-column-selector>
     </mcs-left-panel-item>
   </mcs-left-panel>
 
@@ -44,109 +46,110 @@
   <mcs-content-panel *mcsContentPanelDef>
 
     <div class="listing-table-wrapper">
-
       <!-- Search -->
       <mcs-search *ngIf="isMobile" #search mcsId="media-mobile-search"></mcs-search>
 
       <!-- Table -->
-      <mcs-table #table [dataSource]="dataSource">
+      <table mat-table [dataSource]="dataSource">
         <!-- Media Name Column -->
-        <ng-container mcsColumnDef="media">
-          <mcs-header-cell *mcsHeaderCellDef>
-            {{ columnSettings.media.text }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row">
+        <ng-container matColumnDef="media">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ 'columnHeader.media' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row">
             <a [mcsRouterLink]="[routeKeyEnum.Medium, row.id]"
               mcsId="select-media"
               mcsEventTracker="navigate-to-media"
               mcsEventCategory="media"
               mcsEventLabel="media-listing-page">
               {{ row.name }}</a>
-          </mcs-data-cell>
+          </td>
         </ng-container>
 
-        <!-- Size Column -->
-        <ng-container mcsColumnDef="size">
-          <mcs-header-cell *mcsHeaderCellDef hidden-small>
-            {{ columnSettings.size.text }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+        <!-- Media Size Column -->
+        <ng-container matColumnDef="mediaSize">
+          <th mat-header-cell *matHeaderCellDef hidden-small>
+            {{ 'columnHeader.mediaSize' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-small>
             {{ row.sizeMB | mcsDataSize: 'MB' }}
-          </mcs-data-cell>
+          </td>
         </ng-container>
 
         <!-- Uploaded Date Column -->
-        <ng-container mcsColumnDef="uploadedDate">
-          <mcs-header-cell *mcsHeaderCellDef hidden-small>
-            {{ columnSettings.uploadedDate.text }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+        <ng-container matColumnDef="uploadedDate">
+          <th mat-header-cell *matHeaderCellDef hidden-small>
+            {{ 'columnHeader.uploadedDate' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-small>
             {{ row.createdOn | mcsStdDateFormat }}
-          </mcs-data-cell>
+          </td>
         </ng-container>
 
         <!-- VDC Column -->
-        <ng-container mcsColumnDef="vdc">
-          <mcs-header-cell *mcsHeaderCellDef hidden-small>
-            {{ columnSettings.vdc.text }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+        <ng-container matColumnDef="vdc">
+          <th mat-header-cell *matHeaderCellDef hidden-small>
+            {{ 'columnHeader.vdc' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row" hidden-small>
             {{ row.resourceName }}
-          </mcs-data-cell>
+          </td>
         </ng-container>
 
         <!-- Attached To Column -->
-        <ng-container mcsColumnDef="attachedTo">
-          <mcs-header-cell *mcsHeaderCellDef>
-            {{ columnSettings.attachedTo.text }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row">
+        <ng-container matColumnDef="attachedTo">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ 'columnHeader.attachedTo' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row">
             <span [innerHTML]="(row.usageCount | mcsPlural: 'Server') | mcsDataLabel: 'None'">
             </span>
-          </mcs-data-cell>
-        </ng-container>
-
-        <!-- Data Status Integration -->
-        <ng-container mcsDataStatusDef>
-          <mcs-data-empty *mcsDataEmptyDef>
-            <div class="listing-status-wrapper">
-              <span>{{ 'media.noMedia' | translate }} </span>
-              <ng-container *mcsAccessControl="['TemplateEdit']">
-                <span *mcsAccessControl="['TemplateEdit']; feature: 'EnableResourceMediaUpload'">
-                  Click <a (click)="navigateToMediaUpload()"
-                  mcsEventTracker="upload-media"
-                  mcsEventCategory="media"
-                  mcsEventLabel="empty-media-listing-option">here</a> to upload media.
-                </span>
-              </ng-container>
-            </div>
-          </mcs-data-empty>
-          <mcs-data-error *mcsDataErrorDef>
-            <div class="listing-status-wrapper">
-              <span>{{ 'media.errorMessage' | translate }}</span>
-              <a (click)="retryDatasource()"
-                mcsId
-                mcsEventTracker="retry-media"
-                mcsEventCategory="media"
-                mcsEventLabel="media-listing-page">{{ 'media.retry' | translate }}</a>.
-            </div>
-          </mcs-data-error>
+          </td>
         </ng-container>
 
         <!-- Header and Data row -->
-        <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
-        <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"
-          mcsCursor="pointer" (click)="navigateToMedia(row)"
+        <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"></tr>
+        <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"
+          mcsCursor="pointer"
+          (click)="navigateToMedia(row)"
           mcsId="select-media"
           mcsEventTracker="navigate-to-media"
           mcsEventCategory="media"
-          mcsEventLabel="media-listing-page"></mcs-data-row>
-      </mcs-table>
+          mcsEventLabel="media-listing-page"></tr>
+      </table>
+
+      <!-- Table Statuses -->
+      <mcs-item orientation="block">
+        <div *ngIf="dataSource?.isInProgress$ | async" align="center">
+          <mcs-loader size="medium"></mcs-loader>
+        </div>
+        <div *ngIf="dataSource?.hasNoRecords$ | async" text-center>
+          <span>{{ 'media.noMedia' | translate }} </span>
+          <ng-container *mcsAccessControl="['TemplateEdit']">
+            <span *mcsAccessControl="['TemplateEdit']; feature: 'EnableResourceMediaUpload'">
+              Click <a (click)="navigateToMediaUpload()"
+              mcsEventTracker="upload-media"
+              mcsEventCategory="media"
+              mcsEventLabel="empty-media-listing-option">here</a> to upload media.
+            </span>
+          </ng-container>
+        </div>
+        <div *ngIf="dataSource?.hasError$ | async" text-center>
+          <div class="listing-status-wrapper">
+            <span>{{ 'media.errorMessage' | translate }}</span>
+            <a (click)="retryDatasource()"
+              mcsId
+              mcsEventTracker="retry-media"
+              mcsEventCategory="media"
+              mcsEventLabel="media-listing-page">{{ 'media.retry' | translate }}</a>.
+          </div>
+        </div>
+      </mcs-item>
 
       <!-- Paginator -->
       <mcs-paginator #paginator
         [hidden]="!hasNextPage"
-        [totalCount]="totalRecordsCount">
+        [totalCount]="dataSource?.totalCount$ | async">
       </mcs-paginator>
     </div>
   </mcs-content-panel>

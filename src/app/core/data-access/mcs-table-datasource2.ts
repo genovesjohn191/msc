@@ -150,11 +150,6 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity> {
 
   public registerColumnFilter(columnFilter: ColumnFilter): McsTableDataSource2<TEntity> {
     if (this._columnFilter === columnFilter) { return this; }
-    if (!isNullOrEmpty(this._dataColumnsChange.getValue())) {
-      throw new Error(`Unable to determine which column filter to be used.
-        Either set it manually or by component`);
-    }
-
     this._columnFilter = columnFilter;
     this._subscribeToColumnChange();
     return this;
@@ -165,8 +160,9 @@ export class McsTableDataSource2<TEntity> implements McsDataSource<TEntity> {
     predicate?: (filter: McsFilterInfo) => boolean
   ): McsTableDataSource2<TEntity> {
     if (!isNullOrEmpty(this._columnFilter)) {
-      throw new Error(`Unable to determine which column filter to be used.
-        The column filter ${this._columnFilter} was already registered`);
+      // We always want to prioritize the registerColumnFilter as component.
+      // because sometimes the change detection is executing first prior class initialization
+      return;
     }
 
     let columnFilter = {
