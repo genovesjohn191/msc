@@ -1,8 +1,14 @@
 <mat-form-field
   *ngIf="visible"
   appearance="outline"
+  [matBadge]="hasError ? '!' : ''"
+  matBadgePosition="before"
+  matBadgeColor="warn"
+  matBadgeSize="small"
+  [matTooltip]="hasError ? 'Failed to load options' : ''"
+  matTooltipPosition="above"
   [hintLabel]="config.hint">
-  <mat-label [attr.for]="id">{{ label }}</mat-label>
+  <mat-label [attr.for]="id">{{ label }} {{ required ? ' *' : ''}}</mat-label>
 
   <mat-chip-list class="chip" #chipList cdkDropList
   cdkDropListOrientation="horizontal"
@@ -20,8 +26,10 @@
     </mat-chip>
 
     <input
-      #valueInput
+      #valueInput type="text"
       [id]="id"
+      [required]="required"
+      [disabled]="disabled"
       [placeholder]="config.placeholder"
       [formControl]="inputCtrl"
       [matAutocomplete]="auto"
@@ -29,6 +37,7 @@
       [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
       (matChipInputTokenEnd)="add($event)">
 
+      <mat-spinner *ngIf="isLoading" class="spinner" diameter="20" matSuffix></mat-spinner>
   </mat-chip-list>
 
   <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
@@ -36,5 +45,7 @@
       <small>{{ option.value }}</small>
     </mat-option>
   </mat-autocomplete>
+
+
 
 </mat-form-field>

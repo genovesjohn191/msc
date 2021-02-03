@@ -1,5 +1,8 @@
-import { ProductType, WorkflowType } from '@app/models';
-import { dedicatedStorageAttachVolumeForm } from '../forms/dedicated-storage-attach-volume.form';
+import {
+  ProductType,
+  WorkflowType
+} from '@app/models';
+import { dedicatedStorageAttachVolumeForm } from '../forms';
 import { WorkflowGroup } from '../workflow-group.interface';
 import { WorkflowConfig } from '../workflow.interface';
 

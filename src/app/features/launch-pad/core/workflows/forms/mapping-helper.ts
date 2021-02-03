@@ -8,6 +8,10 @@ export enum CrispAttributeNames {
   Memory = 'IC2_VRAM',
   Storage = 'IC2_STORAGE',
   IPAddress = 'IC2_IP',
+  DiskSpace = 'IC2_DISK_SPACE',
+  StorageTier = 'IC2_STORAGE_TIER',
+  DesignatedUsage = 'DESIGNATED_USAGE',
+  Server = 'IC2_SERVER',
   HidsProtectionLevel = 'HIPS_PROTECTION_LVL'
 }
 

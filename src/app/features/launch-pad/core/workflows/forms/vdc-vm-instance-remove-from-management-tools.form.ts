@@ -9,7 +9,7 @@ import { isNullOrEmpty } from '@app/utilities';
 import { WorkflowGroupSaveState } from '../workflow-group.interface';
 import { LaunchPadForm } from './form.interface';
 
-export const removeFromManagementToolsForm: LaunchPadForm = {
+export const vdcVmInstanceRemoveFromManagementToolsForm: LaunchPadForm = {
   config: [
     new DynamicInputHiddenField({
       key: 'companyId',

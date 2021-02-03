@@ -5,9 +5,11 @@ import {
   DynamicSelectVmField,
   DynamicSlideToggleField
 } from '@app/features-shared/dynamic-form';
+import { McsObjectCrispElementServiceAttribute } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
 import { WorkflowGroupSaveState } from '../workflow-group.interface';
 import { LaunchPadForm } from './form.interface';
+import { CrispAttributeNames, findCrispElementAttribute } from './mapping-helper';
 
 export const dedicatedStorageCreateAndAttachVolumeForm: LaunchPadForm = {
   config: [
@@ -15,7 +17,7 @@ export const dedicatedStorageCreateAndAttachVolumeForm: LaunchPadForm = {
       key: 'companyId',
       value: '',
       eventName: 'company-change',
-      dependents: ['servers'],
+      dependents: ['server'],
     }),
     new DynamicSelectField({
       key: 'tier',
@@ -36,7 +38,7 @@ export const dedicatedStorageCreateAndAttachVolumeForm: LaunchPadForm = {
       suffix: 'GB'
     }),
     new DynamicSlideToggleField({
-      key: 'boot',
+      key: 'bootLun',
       label: 'Boot'
     }),
     new DynamicSelectVmField({
@@ -55,5 +57,17 @@ export const dedicatedStorageCreateAndAttachVolumeForm: LaunchPadForm = {
 
     return mappedProperties;
   },
-  // TODO: CRISP Mapping for IC2_DISK_SPACE,IC2_STORAGE_TIER,DESIGNATED_USAGE,IC2_SERVER
+  // TODO: CRISP Mapping for IC2_SERVER
+  mapCrispElementAttributes: (attributes: McsObjectCrispElementServiceAttribute[]) => {
+    let mappedProperties: { key: string, value: any }[] = [];
+    if (isNullOrEmpty(attributes)) { return mappedProperties; }
+
+    mappedProperties.push({ key: 'tier', value: findCrispElementAttribute(CrispAttributeNames.StorageTier, attributes)?.value } );
+    mappedProperties.push({ key: 'diskSizeInGB', value: findCrispElementAttribute(CrispAttributeNames.DiskSpace, attributes)?.value } );
+    let bootLun: boolean = findCrispElementAttribute(CrispAttributeNames.DesignatedUsage, attributes)?.value === 'BOOT';
+    mappedProperties.push({ key: 'bootLun', value: bootLun } );
+    mappedProperties.push({ key: 'server', value: findCrispElementAttribute(CrispAttributeNames.Server, attributes)?.displayValue } );
+
+    return mappedProperties;
+  }
 }

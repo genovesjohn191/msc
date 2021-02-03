@@ -1,5 +1,8 @@
-import { ProductType, WorkflowType } from '@app/models';
-import { dedicatedStorageUnmaskVolumeForm } from '../forms/dedicated-storage-unmask-volume.form';
+import {
+  ProductType,
+  WorkflowType
+} from '@app/models';
+import { dedicatedStorageUnmaskVolumeForm } from '../forms';
 import { WorkflowGroup } from '../workflow-group.interface';
 import { WorkflowConfig } from '../workflow.interface';
 

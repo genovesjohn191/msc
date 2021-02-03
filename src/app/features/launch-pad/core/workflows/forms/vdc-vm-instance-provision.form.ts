@@ -15,7 +15,7 @@ import { WorkflowGroupSaveState } from '../workflow-group.interface';
 import { LaunchPadForm } from './form.interface';
 import { CrispAttributeNames, findCrispElementAttribute } from './mapping-helper';
 
-export const provisionVirtualDataCentreVmInstanceForm: LaunchPadForm = {
+export const vdcVmInstanceProvisionForm: LaunchPadForm = {
   config: [
     new DynamicInputHiddenField({
       key: 'companyId',
