@@ -176,6 +176,16 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
   }
 
   public switchObject(event: McsObjectCrispElement): void {
+    let workflowGroup = this._getWorkflowGroupById(this.context.workflowGroupId);
+    let requiresCrispData = !isNullOrEmpty(workflowGroup.parent.form?.mapCrispElementAttributes);
+
+    if (!requiresCrispData) {
+      this.context.serviceId = event.serviceId;
+      this._updateServiceId(this.context.serviceId);
+      this._changeDetector.markForCheck();
+      return;
+    }
+
     const loadSaveStateDialogRef =
       this._dialog.open(LaunchPadServiceIdSwitchDialogComponent, { data: event.serviceId + ' [' + event.productId + ']' });
 
@@ -183,7 +193,6 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
     .pipe(takeUntil(this._dialogSubject))
     .subscribe(result => {
       if (result === true) {
-
         this.context.serviceId = event.serviceId;
         this.context.productId = event.productId;
 
@@ -191,7 +200,6 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
         this._updateServiceId(this.context.serviceId);
         this._changeDetector.markForCheck();
       } else {
-
         this.context.serviceId = event.serviceId;
         this._updateServiceId(this.context.serviceId);
         this._changeDetector.markForCheck();
