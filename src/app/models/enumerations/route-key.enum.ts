@@ -63,6 +63,8 @@ export enum RouteKey {
   CatalogSolution,
   CatalogSolutions,
 
+  DnsListing,
+
   Orders,
   OrdersHistory,
   OrderDetails,

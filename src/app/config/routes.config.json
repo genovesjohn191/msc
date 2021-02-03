@@ -277,6 +277,14 @@
     "requiredPermissions": ["InternetView"],
     "documentTitle": "Internet Ports Management - Macquarie Cloud Services"
   },
+  "dnsListing": {
+    "enumKey": "DnsListing",
+    "enumPlatform": "Private",
+    "enumCategory": "Network",
+    "navigationPath": "network/dns",
+    "requireAllFeatures": true,
+    "documentTitle": "DNS Listing - Macquarie Cloud Services"
+  },
   "backupAggregationTargets": {
     "enumPlatform": "Private",
     "enumCategory": "Storage",

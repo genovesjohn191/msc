@@ -15,7 +15,8 @@
       "network": {
         "label": "Network",
         "firewalls": "Firewalls",
-        "internet": "Internet"
+        "internet": "Internet",
+        "dns": "DNS"
       },
       "storage": {
         "label": "Storage",
@@ -2409,6 +2410,18 @@
     "retry": "Try again shortly",
     "tableBanner": "Below is a simple overview of your public cloud resources. Head to the Azure portal to manage these in detail."
   },
+  "dnsListing": {
+    "header": "DNS Services",
+    "leftPanelHeader": "DNS Service Filter",
+    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of resources.",
+    "noRecordsFoundMessage": "There are no DNS services to display. ",
+    "filterColumn": "Column Filter",
+    "dataSingular": "service",
+    "dataPlural": "services",
+    "requestChange": "Request Record Changes",
+    "raiseTicket": "Raise a Ticket",
+    "retry": "Try again shortly"
+  },
   "licenses": {
     "header": "Licenses",
     "leftPanelHeader": "License Filter",
@@ -2946,7 +2959,10 @@
     "mediaSize": "Media Size",
     "uploadedDate": "Uploaded Date",
     "vdc": "VDC",
-    "attachedTo": "Attached To"
+    "attachedTo": "Attached To",
+    "zoneCount": "Zones",
+    "isPrimary": "Type",
+    "billingDescription": "Description"
   },
   "formFields": {
     "selectStorage": "Select storage profile"
