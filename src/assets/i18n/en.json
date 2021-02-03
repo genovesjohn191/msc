@@ -2914,6 +2914,8 @@
     "catalog": "OS Edition",
     "companyId": "Company ID",
     "companyName": "Company Name",
+    "customerId": "Customer ID",
+    "customerName": "Customer Name",
     "description": "Description",
     "firewall": "Firewall",
     "firmwareVersion": "Firmware Version",
