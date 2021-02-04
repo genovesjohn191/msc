@@ -1,9 +1,18 @@
-import { CommonDefinition } from '@app/utilities';
+import { CommonDefinition, isNullOrEmpty } from '@app/utilities';
 
 export class McsQueryParam {
-  public keyword?: string;
+  public set keyword(value: string) {
+    this._keyword = value;
+  }
+
+  public get keyword(): string {
+    return isNullOrEmpty(this._keyword) ? '' : this._keyword;
+  }
+
   public pageIndex?: number;
   public pageSize?: number;
+
+  public _keyword?: string;
 
   constructor() {
     this.keyword = '';
