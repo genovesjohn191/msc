@@ -135,7 +135,8 @@ export class ServiceOsUpdatesPatchDetailsComponent implements OnInit {
     this.dataStatusFactory.setInProgress();
     this.osUpdates$ = this._apiService.getServerOsUpdates(this.selectedServer.id, {
       pageIndex: CommonDefinition.PAGE_INDEX_DEFAULT,
-      pageSize: CommonDefinition.PAGE_SIZE_MAX
+      pageSize: CommonDefinition.PAGE_SIZE_MAX,
+      keyword: ''
     }).pipe(
       map((response) => getSafeProperty(response, (obj) => obj.collection)),
       tap((osUpdates) => {
