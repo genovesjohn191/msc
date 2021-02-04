@@ -112,7 +112,7 @@ export class DnsListingComponent {
       return this._accessControlService.hasPermission([
         'OrderEdit',
         'TicketCreate'
-      ]);
+      ], true);
     }
     return true;
   }
