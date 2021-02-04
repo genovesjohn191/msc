@@ -16,9 +16,10 @@
  <!-- Left Panel -->
  <mcs-left-panel *mcsLeftPanelDef="'dnsListing.leftPanelHeader' | translate">
    <!-- Search -->
-   <mcs-left-panel-item *mcsLeftPanelItemDef>
+   <!--TODO: uncomment after orch & api implementation of search -->
+   <!-- <mcs-left-panel-item *mcsLeftPanelItemDef>
      <mcs-search *ngIf="!isMobile" #search mcsId="dns-listing-desktop-search"></mcs-search>
-   </mcs-left-panel-item>
+   </mcs-left-panel-item> -->
 
    <!-- Column Filter -->
    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'firewalls.filterColumn' | translate" offset="medium">
