@@ -125,6 +125,16 @@
           {{ row.diskScore }}
         </td>
       </ng-container>
+      
+      <!-- Efficiency -->
+      <ng-container matColumnDef="efficiency">
+        <th mat-header-cell *matHeaderCellDef>
+          {{ 'reports.insights.costs.vmRightsizing.table.header.efficiency' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.efficiency }}
+        </td>
+      </ng-container>
 
       <!-- Total Score Column -->
       <ng-container matColumnDef="totalScore">

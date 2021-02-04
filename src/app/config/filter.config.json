@@ -486,6 +486,11 @@
       "value": true,
       "exclude": true
     },
+    "efficiency": {
+      "text": "Efficiency",
+      "value": true,
+      "exclude": true
+    },
     "totalScore": {
       "text": "Total Score",
       "value": true,

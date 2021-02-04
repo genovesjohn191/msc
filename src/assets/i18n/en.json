@@ -233,6 +233,7 @@
               "size": "Size",
               "region": "Region",
               "projectedComputeCost": "Projected Compute Cost",
+              "efficiency": "Efficiency",
               "recommendationSavings": "Possible Savings",
               "recommendation": "Recommendation"
             }
