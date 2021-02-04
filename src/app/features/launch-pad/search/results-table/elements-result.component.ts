@@ -27,10 +27,7 @@ import {
   isNullOrEmpty,
   getSafeProperty
 } from '@app/utilities';
-import {
-  Subject,
-  Observable
-} from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { WorkflowSelectorConfig } from '../../core';
 
@@ -58,6 +55,7 @@ export class LaunchPadSearchElementsResultComponent implements OnDestroy, Search
   public set keyword(value: string) {
     if (this._keyword !== value) {
       this._keyword = value;
+      this._data = [];
     }
 
     this.showLoading(true);
@@ -76,7 +74,8 @@ export class LaunchPadSearchElementsResultComponent implements OnDestroy, Search
   public readonly dataSource: McsTableDataSource2<McsObjectCrispElement>;
 
   public _keyword: string = '';
-  private _destroySubject = new Subject<void>();
+
+  private _data: McsObjectCrispElement[] = [];
 
   public constructor(private _changeDetector: ChangeDetectorRef, private _apiService: McsApiService) {
     this.dataSource = new McsTableDataSource2(this._getData.bind(this));
@@ -87,7 +86,7 @@ export class LaunchPadSearchElementsResultComponent implements OnDestroy, Search
 
   public ngOnDestroy(): void {
     unsubscribeSafely(this.searchChangedStream);
-    unsubscribeSafely(this._destroySubject);
+    this.dataSource.disconnect(null);
   }
 
   private _getData(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsObjectCrispElement>> {
@@ -97,7 +96,10 @@ export class LaunchPadSearchElementsResultComponent implements OnDestroy, Search
     queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
 
     return this._apiService.getCrispElements(queryParam).pipe(
-      map((response) => new McsMatTableContext(response?.collection, response?.totalCollectionCount)));
+      map((response) => {
+        this._data = this._data.concat(response?.collection);
+        return new McsMatTableContext(this._data, response?.totalCollectionCount);
+      }));
   }
 
   public retryDatasource(): void {

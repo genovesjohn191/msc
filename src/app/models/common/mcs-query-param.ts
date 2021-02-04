@@ -12,7 +12,7 @@ export class McsQueryParam {
   public pageIndex?: number;
   public pageSize?: number;
 
-  public _keyword?: string;
+  private _keyword?: string;
 
   constructor() {
     this.keyword = '';

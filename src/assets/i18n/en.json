@@ -84,14 +84,6 @@
     },
     "elements": {
       "table": {
-        "header": {
-          "productId": "Product ID",
-          "description": "Description",
-          "serviceId": "Service ID",
-          "status": "Status",
-          "companyName": "Customer Name",
-          "companyId": "Customer ID"
-        },
         "noRecordsFoundMessage": "No elements to display.",
         "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of elements.",
         "retry": "Try again shortly"
@@ -99,14 +91,6 @@
     },
     "services": {
       "table": {
-        "header": {
-          "productId": "Product ID",
-          "serviceId": "Service ID",
-          "description": "Description",
-          "installedBaseState": "Installed Base State",
-          "companyName": "Customer Name",
-          "companyId": "Customer ID"
-        },
         "noRecordsFoundMessage": "No services to display.",
         "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of services.",
         "retry": "Try again shortly"
