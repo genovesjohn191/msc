@@ -132,7 +132,12 @@
           {{ 'reports.insights.costs.vmRightsizing.table.header.efficiency' | translate }}
         </th>
         <td mat-cell *matCellDef="let row">
-          {{ row.efficiency }}
+          <ng-container *ngIf="row.efficiency; else efficiencyEmpty">
+            {{ row.efficiency }}
+          </ng-container>
+          <ng-template #efficiencyEmpty>
+            {{ 'reports.insights.costs.vmRightsizing.efficiencyEmpty' | translate }}
+          </ng-template>
         </td>
       </ng-container>
 
