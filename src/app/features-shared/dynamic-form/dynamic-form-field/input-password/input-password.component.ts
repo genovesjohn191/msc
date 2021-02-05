@@ -5,7 +5,7 @@ import {
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { DynamicFormFieldDataChangeEventParam } from '../../dynamic-form-field-config.interface';
-import { DynamicTextFieldComponentBase } from '../dynamic-text-field-component.base';
+import { DynamicFieldComponentBase } from '../dynamic-field-component.base';
 import { DynamicInputPasswordField } from './input-password';
 
 @Component({
@@ -23,7 +23,7 @@ import { DynamicInputPasswordField } from './input-password';
     '(blur)': 'onTouched()'
   }
 })
-export class DynamicInputPasswordComponent extends DynamicTextFieldComponentBase {
+export class DynamicInputPasswordComponent extends DynamicFieldComponentBase {
   public config: DynamicInputPasswordField;
 
   public onFormDataChange(params: DynamicFormFieldDataChangeEventParam): void {

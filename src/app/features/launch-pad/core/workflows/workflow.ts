@@ -1,6 +1,6 @@
 import { DynamicFormFieldConfigBase } from '@app/features-shared/dynamic-form';
 import { WorkflowType } from '@app/models';
-import { isNullOrEmpty } from '@app/utilities';
+import { isNullOrEmpty, isNullOrUndefined } from '@app/utilities';
 import { Workflow } from './workflow.interface';
 
 export class LaunchPadWorkflow implements Workflow {
@@ -51,11 +51,10 @@ export class LaunchPadWorkflow implements Workflow {
 
   private _overrideDefaultValues(params: { key: string, value: any }[]): void {
     params.forEach((param) => {
-      if (isNullOrEmpty(param.key) || isNullOrEmpty(param.value)) {
-        return;
-      }
+      if (isNullOrEmpty(param.key) || isNullOrUndefined(param.value)) { return; }
 
       let field = this.properties.find((property) => param.key === property.key);
+
       if (!isNullOrEmpty(field)) {
         field.value = param.value;
         field.initialValue = param.value;

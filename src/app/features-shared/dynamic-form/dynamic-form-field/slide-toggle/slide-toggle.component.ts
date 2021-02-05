@@ -5,7 +5,7 @@ import {
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { DynamicFormFieldDataChangeEventParam } from '../../dynamic-form-field-config.interface';
-import { DynamicTextFieldComponentBase } from '../dynamic-text-field-component.base';
+import { DynamicFieldComponentBase } from '../dynamic-field-component.base';
 import { DynamicSlideToggleField } from './slide-toggle';
 
 @Component({
@@ -23,7 +23,7 @@ import { DynamicSlideToggleField } from './slide-toggle';
     '(blur)': 'onTouched()'
   }
 })
-export class DynamicSlideToggleComponent extends DynamicTextFieldComponentBase {
+export class DynamicSlideToggleComponent extends DynamicFieldComponentBase {
   public config: DynamicSlideToggleField;
 
   public onFormDataChange(params: DynamicFormFieldDataChangeEventParam): void {

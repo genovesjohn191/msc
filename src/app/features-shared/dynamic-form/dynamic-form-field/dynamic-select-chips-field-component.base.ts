@@ -28,7 +28,7 @@ import {
 import { catchError, map, startWith, takeUntil } from 'rxjs/operators';
 import { isNullOrEmpty, unsubscribeSafely } from '@app/utilities';
 
-import { DynamicTextFieldComponentBase } from './dynamic-text-field-component.base';
+import { DynamicFieldComponentBase } from './dynamic-field-component.base';
 import { DynamicFormFieldDataChangeEventParam, FlatOption } from '../dynamic-form-field-config.interface';
 import { throwError } from 'rxjs';
 import { DynamicFormFieldComponent } from '../dynamic-form-field-component.interface';
@@ -40,7 +40,7 @@ export interface DynamicSelectChipsValue {
 
 @Component({ template: '' })
 export abstract class DynamicSelectChipsFieldComponentBase<T>
-  extends DynamicTextFieldComponentBase
+  extends DynamicFieldComponentBase
   implements DynamicFormFieldComponent, ControlValueAccessor, OnInit, OnDestroy {
 
   public isLoading: boolean = false;
@@ -96,7 +96,7 @@ export abstract class DynamicSelectChipsFieldComponentBase<T>
           this._endProcess(true);
           return throwError(`${this.config.key} data retrieval failed.`);
         }))
-      .subscribe((response) => {
+      .subscribe((response: T[]) => {
         this.collection = response;
         this.filterOptions();
         this.initializeFiltering();

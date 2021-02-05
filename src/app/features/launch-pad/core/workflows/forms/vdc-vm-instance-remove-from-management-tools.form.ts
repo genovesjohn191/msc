@@ -1,8 +1,6 @@
 import {
   DynamicInputHiddenField,
-  DynamicSelectChipsField,
   DynamicSelectChipsVmField,
-  DynamicSelectVdcField,
   DynamicSelectVmField
 } from '@app/features-shared/dynamic-form';
 import { isNullOrEmpty } from '@app/utilities';
@@ -28,18 +26,6 @@ export const vdcVmInstanceRemoveFromManagementToolsForm: LaunchPadForm = {
       label: 'Target Server',
       validators: { required: true },
       settings: { preserve: true },
-    }),
-    new DynamicSelectChipsField({
-      key: 'chips',
-      label: 'Sample Chips',
-      placeholder: 'Select Chip',
-      validators: { required: true },
-      options: [
-        { key: 'Dhcp', value: 'DHCP'},
-        { key: 'Pool', value: 'Pool'},
-        { key: 'Manual', value: 'Manual'}
-      ],
-      allowCustomValue: true
     }),
     new DynamicSelectChipsVmField({
       key: 'server',

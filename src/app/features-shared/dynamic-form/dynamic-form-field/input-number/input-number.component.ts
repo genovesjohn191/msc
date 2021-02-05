@@ -5,7 +5,7 @@ import {
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { DynamicFormFieldDataChangeEventParam } from '../../dynamic-form-field-config.interface';
-import { DynamicTextFieldComponentBase } from '../dynamic-text-field-component.base';
+import { DynamicFieldComponentBase } from '../dynamic-field-component.base';
 import { DynamicInputNumberField } from './input-number';
 
 @Component({
@@ -23,7 +23,7 @@ import { DynamicInputNumberField } from './input-number';
     '(blur)': 'onTouched()'
   }
 })
-export class DynamicInputNumberComponent extends DynamicTextFieldComponentBase {
+export class DynamicInputNumberComponent extends DynamicFieldComponentBase {
   public config: DynamicInputNumberField;
 
   public onFormDataChange(params: DynamicFormFieldDataChangeEventParam): void {
