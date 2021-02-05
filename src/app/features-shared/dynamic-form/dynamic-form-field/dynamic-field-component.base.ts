@@ -6,14 +6,14 @@ import {
   Output
 } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
-import { isNullOrEmpty } from '@app/utilities';
+import { isNullOrEmpty, isNullOrUndefined } from '@app/utilities';
 
 import { DynamicFormFieldConfigBase } from '../dynamic-form-field-config.base';
 import { DynamicFormFieldDataChangeEventParam, DynamicFormFieldOnChangeEvent } from '../dynamic-form-field-config.interface';
 import { DynamicFormFieldComponent } from '../dynamic-form-field-component.interface';
 
 @Component({ template: '' })
-export abstract class DynamicTextFieldComponentBase implements OnInit, DynamicFormFieldComponent, ControlValueAccessor {
+export abstract class DynamicFieldComponentBase implements OnInit, DynamicFormFieldComponent, ControlValueAccessor {
   @Input()
   public config: DynamicFormFieldConfigBase;
 
@@ -44,7 +44,7 @@ export abstract class DynamicTextFieldComponentBase implements OnInit, DynamicFo
   public disabled: boolean = false;
 
   public ngOnInit(): void {
-    if (!isNullOrEmpty(this.config.initialValue)) {
+    if (!isNullOrUndefined(this.config.initialValue)) {
       this.setInitialValue(this.config.initialValue);
     }
   }
@@ -63,7 +63,6 @@ export abstract class DynamicTextFieldComponentBase implements OnInit, DynamicFo
     if (validEvent) {
       this.notifyForDataChange(this.config.eventName, this.config.dependents, this.config.value);
     }
-
     this.propagateChange(this.config.value);
   }
 
@@ -71,14 +70,17 @@ export abstract class DynamicTextFieldComponentBase implements OnInit, DynamicFo
 
   public clearFormField(reuseValue: boolean): void {
     let preserveValue = reuseValue && this.config.settings && this.config.settings.preserve;
-    if (!preserveValue) {
-      if (typeof this.config.value === 'boolean') {
-        this.changeValue(false);
-      } else if (typeof this.config.value === 'object') {
-        this.changeValue(null);
-      } else {
-        this.changeValue('');
-      }
+    if (preserveValue) { return; }
+
+    // Use appropriate default empty values based on object type
+    if (this.config.value instanceof Array) {
+      this.changeValue([]);
+    } else if (typeof this.config.value === 'object') {
+      this.changeValue(null);
+    } else if (typeof this.config.value === 'boolean') {
+      this.changeValue(false);
+    } else {
+      this.changeValue('');
     }
   }
 
@@ -88,7 +90,10 @@ export abstract class DynamicTextFieldComponentBase implements OnInit, DynamicFo
   }
 
   public writeValue(obj: any): void {
-    if (!isNullOrEmpty(obj)) {
+    if (isNullOrEmpty(obj) && typeof this.config.value === 'boolean') {
+      obj = false;
+    }
+    if (!isNullOrUndefined(obj)) {
       this.config.value = obj;
     }
   }

@@ -6,7 +6,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { DynamicFormFieldDataChangeEventParam } from '../../dynamic-form-field-config.interface';
 import { DynamicInputHiddenField } from './input-hidden';
-import { DynamicTextFieldComponentBase } from '../dynamic-text-field-component.base';
+import { DynamicFieldComponentBase } from '../dynamic-field-component.base';
 
 @Component({
   selector: 'mcs-dff-input-hidden-field',
@@ -20,7 +20,7 @@ import { DynamicTextFieldComponentBase } from '../dynamic-text-field-component.b
     }
   ]
 })
-export class DynamicInputHiddenComponent extends DynamicTextFieldComponentBase {
+export class DynamicInputHiddenComponent extends DynamicFieldComponentBase {
   public config: DynamicInputHiddenField;
 
   public onFormDataChange(params: DynamicFormFieldDataChangeEventParam): void {

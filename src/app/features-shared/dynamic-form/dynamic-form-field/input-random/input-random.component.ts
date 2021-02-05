@@ -7,7 +7,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { DynamicFormFieldDataChangeEventParam } from '../../dynamic-form-field-config.interface';
 import { DynamicInputRandomField } from './input-random';
-import { DynamicTextFieldComponentBase } from '../dynamic-text-field-component.base';
+import { DynamicFieldComponentBase } from '../dynamic-field-component.base';
 import { createRandomString, copyToClipboard } from '@app/utilities';
 
 @Component({
@@ -26,7 +26,7 @@ import { createRandomString, copyToClipboard } from '@app/utilities';
   }
 })
 export class DynamicInputRandomComponent
-  extends DynamicTextFieldComponentBase
+  extends DynamicFieldComponentBase
   implements AfterViewInit {
 
   public config: DynamicInputRandomField;

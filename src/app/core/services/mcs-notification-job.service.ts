@@ -126,6 +126,7 @@ export class McsNotificationJobService implements McsDisposable {
       url: this._jobConnection.host,
       headers: this._getHeaders(),
       debug: false,
+      discardWebsocketOnCommFailure: true,
       heartbeat_in: DEFAULT_HEARTBEAT_IN,
       heartbeat_out: DEFAULT_HEARTBEAT_OUT,
       reconnect_delay: CommonDefinition.NOTIFICATION_CONNECTION_RETRY_INTERVAL

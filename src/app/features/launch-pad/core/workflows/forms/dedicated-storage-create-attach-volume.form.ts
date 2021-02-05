@@ -57,7 +57,6 @@ export const dedicatedStorageCreateAndAttachVolumeForm: LaunchPadForm = {
 
     return mappedProperties;
   },
-  // TODO: CRISP Mapping for IC2_SERVER
   mapCrispElementAttributes: (attributes: McsObjectCrispElementServiceAttribute[]) => {
     let mappedProperties: { key: string, value: any }[] = [];
     if (isNullOrEmpty(attributes)) { return mappedProperties; }

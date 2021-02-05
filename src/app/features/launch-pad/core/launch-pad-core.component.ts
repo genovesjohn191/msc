@@ -27,7 +27,7 @@ import { LaunchPadLoadStateDialogComponent } from './layout/workflow-load-state-
 import { WorkflowGroupSaveState } from './workflows/workflow-group.interface';
 import { Workflow } from './workflows/workflow.interface';
 import { McsApiService } from '@app/services';
-import { BreakpointSerialization, McsJob, McsWorkflowCreate, ProductType } from '@app/models';
+import { BreakpointSerialization, McsApiCollection, McsJob, McsWorkflowCreate, ProductType } from '@app/models';
 import { WorkflowProvisionCompletionState } from './layout/workflow-provision-state/workflow-provision-state.component';
 
 enum WizardStep  {
@@ -127,7 +127,6 @@ export class LaunchPadComponent implements OnDestroy, IMcsNavigateAwayGuard {
 
   public addOrUpdate(): void {
     if (!this.workflowGroup.valid) { return; }
-
     this._saveWorkflowGroup(this.workflowGroup.payload);
     this._saveState();
   }
@@ -186,7 +185,7 @@ export class LaunchPadComponent implements OnDestroy, IMcsNavigateAwayGuard {
       this._changeDetector.markForCheck();
       return throwError('Workflow provision endpoint failed.');
     }))
-    .subscribe((response) => {
+    .subscribe((response: McsApiCollection<McsJob>) => {
       // Pass ongoing jobs to provisioning component
       this.workflowsState = response.collection;
 

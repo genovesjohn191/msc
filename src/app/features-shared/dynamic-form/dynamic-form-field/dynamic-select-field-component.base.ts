@@ -25,11 +25,11 @@ import {
   GroupedOption
 } from '../dynamic-form-field-config.interface';
 import { DynamicFormFieldComponent } from '../dynamic-form-field-component.interface';
-import { DynamicTextFieldComponentBase } from './dynamic-text-field-component.base';
+import { DynamicFieldComponentBase } from './dynamic-field-component.base';
 
 @Component({ template: '' })
 export abstract class DynamicSelectFieldComponentBase<T>
-  extends DynamicTextFieldComponentBase
+  extends DynamicFieldComponentBase
   implements DynamicFormFieldComponent, ControlValueAccessor, OnInit, OnDestroy {
 
   public isLoading: boolean = false;
@@ -65,7 +65,7 @@ export abstract class DynamicSelectFieldComponentBase<T>
           this._endProcess(true);
           return throwError(`${this.config.key} data retrieval failed.`);
         }))
-      .subscribe((response) => {
+      .subscribe((response: T[]) => {
         this.collection = response;
         this.filterOptions();
       });

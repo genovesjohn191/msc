@@ -70,6 +70,9 @@ export class DynamicSelectChipsVmComponent extends DynamicSelectChipsFieldCompon
   public writeValue(obj: any): void {
     let chipsValue = obj as DynamicSelectChipsValue[];
     let translatedValue: DynamicSelectChipsValue[] = [];
+
+    if (isNullOrEmpty(chipsValue)) { return; }
+
     chipsValue.forEach((chip) => {
       let validChip: boolean = !isNullOrEmpty(chip.value) && !isNullOrEmpty(chip.label);
       if (validChip) {
