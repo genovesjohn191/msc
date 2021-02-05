@@ -112,13 +112,28 @@ export class DnsListingComponent {
       return this._accessControlService.hasPermission([
         'OrderEdit',
         'TicketCreate'
-      ], true);
+      ]);
     }
     return true;
   }
 
   public isPrimary(isPrimaryDns: boolean): string {
     return (isPrimaryDns) ? 'Primary' : 'Secondary';
+  }
+
+  public hasServiceChangeAccess(dns: McsNetworkDnsBase) {
+    return (dns.isPrimary && dns.serviceChangeAvailable) &&
+            this._accessControlService.hasPermission([
+              'OrderEdit'
+            ]);
+  }
+
+  public actionsEnabled(dns: McsNetworkDnsBase) {
+    let hasRequestChangeAccess = this.hasServiceChangeAccess(dns);
+    let hasTicketCreatePermission = this._accessControlService.hasPermission([
+      'TicketCreate'
+    ]);
+    return hasRequestChangeAccess || hasTicketCreatePermission;
   }
 
 }

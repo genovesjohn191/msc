@@ -83,11 +83,12 @@
          <th mat-header-cell *matHeaderCellDef hidden-small></th>
          <td mat-cell *matCellDef="let row" hidden-small text-center>
            <mcs-icon mcsStopPropagation [key]="cogIconKey" size="large"
+            *ngIf="actionsEnabled(row)"
              mcsPopover placement="bottom" orientation="left" theme="light"
              padding="none" [content]="actionContent" mcsCursor="pointer">
            </mcs-icon>
            <ng-template #actionContent>
-             <ng-container *ngIf="(!row.isPrimary) || (!row.serviceChangeAvailable)">
+             <ng-container *ngIf="hasServiceChangeAccess(row)">
                 <div *mcsAccessControl="['OrderEdit']"
                   class="cog-actions-wrapper">
                   <a mcsButton="basic" color="white" labelPlacement="left"
