@@ -283,6 +283,7 @@
     "enumCategory": "Network",
     "navigationPath": "network/dns",
     "requireAllFeatures": true,
+    "requiredFeatureFlag": "enablePrivateCloudNetworkDnsListing",
     "documentTitle": "DNS Listing - Macquarie Cloud Services"
   },
   "backupAggregationTargets": {
