@@ -238,6 +238,7 @@
               "recommendation": "Recommendation"
             }
           },
+          "efficiencyEmpty": "No Data",
           "empty": "No data found"
         }
       },
