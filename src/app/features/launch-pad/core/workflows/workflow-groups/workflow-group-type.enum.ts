@@ -8,8 +8,6 @@
  */
 export enum WorkflowGroupId {
   VirtualDataCentreVmInstanceProvision = 100001,
-  VirtualDataCentreVmInstanceAddToManagementTools = 100002,
-  VirtualDataCentreVmInstanceRemoveFromManagementTools = 100003,
 
   DedicatedStorageAttachVolume = 200001,
   DedicatedStorageAttachVolumeCluster  = 200002,
@@ -17,13 +15,15 @@ export enum WorkflowGroupId {
   DedicatedStorageCreateAttachVolumeCluster = 200004,
   DedicatedStorageIncreaseVolume  = 200005,
   DedicatedStorageRemoveZoning = 200006,
-  DedicatedStorageUnmaskVolume = 200007
+  DedicatedStorageUnmaskVolume = 200007,
+
+  ManagementToolsQueryStatus = 300001,
+  ManagementToolsAddCvm = 300002,
+  ManagementToolsRemoveCvm = 300003,
 }
 
 export const workflowGroupIdText = {
   [WorkflowGroupId.VirtualDataCentreVmInstanceProvision]: 'Provision Virtual Data Centre VM Instance',
-  [WorkflowGroupId.VirtualDataCentreVmInstanceAddToManagementTools]: 'Add CVM To Management Tools',
-  [WorkflowGroupId.VirtualDataCentreVmInstanceRemoveFromManagementTools]: 'Remove CVM From Management Tools',
 
   [WorkflowGroupId.DedicatedStorageAttachVolume]: 'Attach Volume',
   [WorkflowGroupId.DedicatedStorageAttachVolumeCluster]: 'Attach Volume Cluster',
@@ -31,5 +31,9 @@ export const workflowGroupIdText = {
   [WorkflowGroupId.DedicatedStorageCreateAttachVolumeCluster]: 'Create and Attach Volume Cluster',
   [WorkflowGroupId.DedicatedStorageIncreaseVolume]: 'Increase Volume',
   [WorkflowGroupId.DedicatedStorageRemoveZoning]: 'Remove Zoning',
-  [WorkflowGroupId.DedicatedStorageUnmaskVolume]: 'Unmask Volume'
+  [WorkflowGroupId.DedicatedStorageUnmaskVolume]: 'Unmask Volume',
+
+  [WorkflowGroupId.ManagementToolsQueryStatus]: 'Query Management Tools Status',
+  [WorkflowGroupId.ManagementToolsAddCvm]: 'Add To Management Tools',
+  [WorkflowGroupId.ManagementToolsRemoveCvm]: 'Remove From Management Tools',
 }
