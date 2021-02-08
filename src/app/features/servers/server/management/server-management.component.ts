@@ -31,6 +31,7 @@ import {
   ServerManageScale
 } from '@app/features-shared';
 import {
+  CatalogItemType,
   IpAllocationMode,
   McsJob,
   McsResourceCatalog,
@@ -362,7 +363,12 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
     this.resourceCatalogs$ = this.apiService.getResourceCatalogs(resourceId).pipe(
       map((response) => {
         let catalogs = getSafeProperty(response, (obj) => obj.collection);
-        return catalogs.filter((catalog) => !isNullOrEmpty(catalog.items));
+        let filteredCatalogs = catalogs.filter((catalog) => !isNullOrEmpty(catalog.items));
+        filteredCatalogs.forEach(filteredCatalog => {
+          filteredCatalog.items = filteredCatalog.items
+            .filter(item => item.type === CatalogItemType.Media);
+        });
+        return filteredCatalogs;
       }),
       shareReplay(1)
     );
