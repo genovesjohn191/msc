@@ -29,6 +29,7 @@ import {
   DynamicFormFieldDataChangeEventParam,
   FlatOption
 } from '../../dynamic-form-field-config.interface';
+import { DynamicSelectChipsField } from '../select-chips/select-chips';
 
 @Component({
   selector: 'mcs-dff-select-chips-vm-field',
@@ -74,17 +75,24 @@ export class DynamicSelectChipsVmComponent extends DynamicSelectChipsFieldCompon
     if (isNullOrEmpty(chipsValue)) { return; }
 
     chipsValue.forEach((chip) => {
+      let itemLimitReached = this._isItemLimitReached(translatedValue);
       let validChip: boolean = !isNullOrEmpty(chip.value) && !isNullOrEmpty(chip.label);
-      if (validChip) {
+      if (!itemLimitReached && validChip) {
         translatedValue.push(chip);
       } else {
         // Assumes value is service ID and search via map
         if (this._serviceIdMapping.has(chip.value)) {
-          let id = this._serviceIdMapping.get(chip.value);
           chip.label = chip.value;
-          chip.value = id;
+          chip.value = this.config.useServiceIdAsKey ? chip.value : this._serviceIdMapping.get(chip.value);
 
-          let isUnique = translatedValue.findIndex(item => item.value === id) < 0;
+        // Check if we can allow custom input after service ID search has failed
+        } else if (this.config.allowCustomInput) {
+          chip.label = chip.value;
+        }
+
+        validChip = !isNullOrEmpty(chip.value) && !isNullOrEmpty(chip.label);
+        if (!itemLimitReached && validChip) {
+          let isUnique = translatedValue.findIndex(item => item.value === chip.value) < 0;
           if (this.config.allowDuplicates || isUnique) {
             translatedValue.push(chip);
           }
@@ -96,29 +104,40 @@ export class DynamicSelectChipsVmComponent extends DynamicSelectChipsFieldCompon
   }
 
   public add(event: MatChipInputEvent): void {
-    event.input.value = '';
-    this.inputCtrl.setValue(null);
+    // Ensure the storage array is instantiated
+    if (isNullOrEmpty(this.config.value)) { this.config.value = []; }
 
+    const input = event.input;
+    const value = event.value;
+
+    // Add our custom value to the array
+    let validCustomInput = this.config.allowCustomInput && !isNullOrEmpty(value?.trim());
+    if (validCustomInput) {
+      this._tryAddChip({
+        value: value.trim(),
+        label: value.trim()
+      });
+    }
+
+    // Clean up and notify
+    if (input) { input.value = ''; }
+    this.inputCtrl.setValue(null);
+    this.valueChange(this.config.value);
   }
 
   public selected(event: MatAutocompleteSelectedEvent): void {
     // Ensure the storage array is instantiated
     if (isNullOrEmpty(this.config.value)) { this.config.value = []; }
-
     let option = event.option.value as FlatOption;
 
-    let isUnique = this.config.value.findIndex(item => item.value === option.key) < 0;
-    if (this.config.allowDuplicates || isUnique) {
+    this._tryAddChip({
+      value: option.key,
+      label: option.value
+    });
 
-      this.config.value.push({
-        value: option.key,
-        label: option.value
-      });
-    }
-
+    // Clean up and notify
     this.valueInput.nativeElement.value = '';
     this.inputCtrl.setValue(null);
-
     this.valueChange(this.config.value);
   }
 
@@ -168,9 +187,10 @@ export class DynamicSelectChipsVmComponent extends DynamicSelectChipsFieldCompon
       }
 
       let value = item.name;
+      let key = this.config.useServiceIdAsKey ? item.serviceId : item.id;
       if (item.serviceId) { value += ` (${item.serviceId})`; }
 
-      options.push({ type: 'flat', key: item.id, value });
+      options.push({ type: 'flat', key, value });
     });
 
     if (!isNullOrEmpty(this.config.initialValue)) {
@@ -209,11 +229,34 @@ export class DynamicSelectChipsVmComponent extends DynamicSelectChipsFieldCompon
       return true;
     }
 
+    // Filter no service ID if service ID is used as key
+    if (this.config.useServiceIdAsKey && isNullOrEmpty(item.serviceId)) {
+      return true;
+    }
+
     // Filter  type filter
     if (!isNullOrEmpty(this.config.allowedHardwareType) && this.config.allowedHardwareType.indexOf(item.hardware.type) < 0) {
       return true;
     }
 
     return false;
+  }
+
+  private _tryAddChip(chip: DynamicSelectChipsValue): void {
+    let isUnique = this.config.value.findIndex(val => val.value.toLowerCase() === chip.value.toLowerCase()) < 0;
+    if (this.config.allowDuplicates || isUnique) {
+      if (this._isItemLimitReached(this.config.value) && Math.trunc(this.config.maxItems) === 1) {
+        // This allows auto replace of value if allowed max items is 1
+        this.config.value = [];
+      }
+
+      if (!this._isItemLimitReached(this.config.value)) {
+        this.config.value.push(chip);
+      }
+    }
+  }
+
+  private _isItemLimitReached(items: DynamicSelectChipsValue[]): boolean {
+    return items.length >= Math.trunc(this.config.maxItems) && this.config.maxItems > 0;
   }
 }

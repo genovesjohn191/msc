@@ -19,7 +19,11 @@ export class DynamicSelectChipsVmField extends DynamicFormFieldConfigBase {
   public options: FlatOption[] = [];
   public hideDedicated?: boolean = false;
   public hideNonDedicated?: boolean = false;
+  public useServiceIdAsKey: boolean = false;
+  public allowCustomInput: boolean = false;
+  public maxItems: number = 0; // less than 1 is considered infinite
   public allowedHardwareType: hardwareType[] = [];
+
 
   public constructor(options: {
     key: string;
@@ -36,6 +40,9 @@ export class DynamicSelectChipsVmField extends DynamicFormFieldConfigBase {
     allowDuplicates?: boolean;
     hideDedicated?: boolean;
     hideNonDedicated?: boolean;
+    useServiceIdAsKey?: boolean;
+    allowCustomInput?: boolean;
+    maxItems?: number;
     allowedHardwareType?: hardwareType[];
   }) {
     super(options);
@@ -43,6 +50,9 @@ export class DynamicSelectChipsVmField extends DynamicFormFieldConfigBase {
     this.allowDuplicates = options.allowDuplicates || false;
     this.hideDedicated = options.hideDedicated || false;
     this.hideNonDedicated = options.hideNonDedicated || false;
+    this.useServiceIdAsKey = options.useServiceIdAsKey || false;
+    this.allowCustomInput = options.allowCustomInput || false;
+    this.maxItems = options.maxItems || 0;
     this.allowedHardwareType = options.allowedHardwareType || [];
   }
 }
