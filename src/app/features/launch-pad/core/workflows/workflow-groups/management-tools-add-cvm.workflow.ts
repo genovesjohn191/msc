@@ -6,7 +6,7 @@ import { vdcVmInstanceAddToManagementToolsForm } from '../forms';
 import { WorkflowGroup } from '../workflow-group.interface';
 import { WorkflowConfig } from '../workflow.interface';
 
-export class VdcVmInstanceAddToManagementToolsWorkflowGroup implements WorkflowGroup {
+export class ManagementToolsAddCvmWorkflowGroup implements WorkflowGroup {
   public parent: WorkflowConfig = {
     id: WorkflowType.ManagementToolsAddCvm,
     crispProductType: ProductType.VirtualDataCentreVmInstance,
