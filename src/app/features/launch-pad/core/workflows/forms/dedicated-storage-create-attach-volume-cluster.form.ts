@@ -46,7 +46,10 @@ export const dedicatedStorageCreateAndAttachVolumeClusterForm: LaunchPadForm = {
       key: 'servers',
       label: 'Servers',
       placeholder: 'Search for name or service ID...',
+      contextualHelp: 'Select one or more target servers. You can also enter service IDs manually if the target servers exist only in UCS Central',
       validators: { required: true },
+      allowCustomInput: true,
+      useServiceIdAsKey: true,
       hideNonDedicated: true,
       allowedHardwareType: [ 'BO', 'LO', 'BL' ]
     })
@@ -72,8 +75,7 @@ export const dedicatedStorageCreateAndAttachVolumeClusterForm: LaunchPadForm = {
     let server: string = findCrispElementAttribute(CrispAttributeNames.Server, attributes)?.displayValue;
     let servers: DynamicSelectChipsValue[]  = [
       {
-        value: server,
-        label: ''
+        value: server
       }
     ];
     mappedProperties.push({ key: 'servers', value: servers } );

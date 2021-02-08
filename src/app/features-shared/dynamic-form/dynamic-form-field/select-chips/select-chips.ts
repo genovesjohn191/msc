@@ -30,12 +30,12 @@ export class DynamicSelectChipsField extends DynamicFormFieldConfigBase {
     dependents?: string[];
     validators?: { required?: boolean; };
     settings?: DynamicFormControlSettings;
-    allowCustomValue?: boolean;
+    allowCustomInput?: boolean;
     allowDuplicates?: boolean;
   }) {
     super(options);
 
-    this.allowCustomInput = options.allowCustomValue || false;
+    this.allowCustomInput = options.allowCustomInput || false;
     this.allowDuplicates = options.allowDuplicates || false;
   }
 }

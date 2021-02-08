@@ -35,7 +35,7 @@ import { DynamicFormFieldComponent } from '../dynamic-form-field-component.inter
 
 export interface DynamicSelectChipsValue {
   value: string;
-  label: string;
+  label?: string;
 }
 
 @Component({ template: '' })
