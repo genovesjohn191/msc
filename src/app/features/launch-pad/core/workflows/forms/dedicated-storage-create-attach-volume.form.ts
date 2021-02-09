@@ -27,7 +27,7 @@ export const dedicatedStorageCreateAndAttachVolumeForm: LaunchPadForm = {
       options: [
         { key: 'Superior', value: 'Superior'},
         { key: 'Premium2', value: 'Premium 2'},
-        { key: 'Performance 8000', value: 'Performance-8000'}
+        { key: 'Performance-8000', value: 'Performance 8000'}
       ]
     }),
     new DynamicInputNumberField({
