@@ -16,6 +16,7 @@ export class DynamicSelectChipsField extends DynamicFormFieldConfigBase {
 
   public allowCustomInput: boolean = false;
   public allowDuplicates: boolean = false;
+  public maxItems: number = 0; // less than 1 is considered infinite
 
   public constructor(options: {
     key: string;
@@ -32,10 +33,12 @@ export class DynamicSelectChipsField extends DynamicFormFieldConfigBase {
     settings?: DynamicFormControlSettings;
     allowCustomInput?: boolean;
     allowDuplicates?: boolean;
+    maxItems?: number;
   }) {
     super(options);
 
     this.allowCustomInput = options.allowCustomInput || false;
     this.allowDuplicates = options.allowDuplicates || false;
+    this.maxItems = options.maxItems || 0;
   }
 }

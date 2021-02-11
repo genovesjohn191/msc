@@ -4,7 +4,6 @@ import {
   ViewChild,
   ElementRef
 } from '@angular/core';
-import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Observable } from 'rxjs';
 
@@ -53,11 +52,9 @@ export class DynamicSelectChipsComponent extends DynamicSelectChipsFieldComponen
     const value = event.value;
 
     // Add our custom value to the array
-    if (!isNullOrEmpty(value.trim()) && this.config.allowCustomInput) {
-      let isUnique = this.config.value.findIndex(val => val.toLowerCase() === value.trim().toLowerCase()) < 0;
-      if (this.config.allowDuplicates || isUnique) {
-        this.config.value.push(value.trim());
-      }
+    let validCustomInput = this.config.allowCustomInput && !isNullOrEmpty(value?.trim());
+    if (validCustomInput) {
+      this._tryAddChip(value.trim());
     }
 
     // Reset the input value
@@ -72,14 +69,11 @@ export class DynamicSelectChipsComponent extends DynamicSelectChipsFieldComponen
     // Ensure the storage array is instantiated
     if (isNullOrEmpty(this.config.value)) { this.config.value = []; }
 
-    let isUnique = this.config.value.findIndex(val => val.toLowerCase() === event.option.viewValue.toLowerCase()) < 0;
-    if (this.config.allowDuplicates || isUnique) {
-      this.config.value.push(event.option.viewValue);
-    }
+    this._tryAddChip(event.option.viewValue);
 
+    // Clean up and notify
     this.valueInput.nativeElement.value = '';
     this.inputCtrl.setValue(null);
-
     this.valueChange(this.config.value);
   }
 
@@ -105,5 +99,26 @@ export class DynamicSelectChipsComponent extends DynamicSelectChipsFieldComponen
 
   protected filter(collection: string[]): FlatOption[] {
     throw new Error('Method not implemented.');
+  }
+
+  private _tryAddChip(chip: string): void {
+    let isUnique = this.config.value.findIndex(val => val.toLowerCase() === chip.toLowerCase()) < 0;
+    if (!this.config.allowDuplicates && !isUnique) {
+      return;
+    }
+
+    let validToReplaceValue = this._isItemLimitReached(this.config.value) && Math.trunc(this.config.maxItems) === 1;
+    if (validToReplaceValue) {
+      // This allows auto replace of value if allowed max items is 1
+      this.config.value = [];
+    }
+
+    if (!this._isItemLimitReached(this.config.value)) {
+      this.config.value.push(chip);
+    }
+  }
+
+  private _isItemLimitReached(items: string[]): boolean {
+    return items.length >= Math.trunc(this.config.maxItems) && this.config.maxItems > 0;
   }
 }

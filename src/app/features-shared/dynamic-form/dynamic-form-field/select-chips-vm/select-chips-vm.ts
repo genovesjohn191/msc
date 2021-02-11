@@ -38,21 +38,21 @@ export class DynamicSelectChipsVmField extends DynamicFormFieldConfigBase {
     validators?: { required?: boolean; };
     settings?: DynamicFormControlSettings;
     allowDuplicates?: boolean;
+    allowCustomInput?: boolean;
+    maxItems?: number;
     hideDedicated?: boolean;
     hideNonDedicated?: boolean;
     useServiceIdAsKey?: boolean;
-    allowCustomInput?: boolean;
-    maxItems?: number;
     allowedHardwareType?: hardwareType[];
   }) {
     super(options);
 
     this.allowDuplicates = options.allowDuplicates || false;
+    this.allowCustomInput = options.allowCustomInput || false;
+    this.maxItems = options.maxItems || 0;
     this.hideDedicated = options.hideDedicated || false;
     this.hideNonDedicated = options.hideNonDedicated || false;
     this.useServiceIdAsKey = options.useServiceIdAsKey || false;
-    this.allowCustomInput = options.allowCustomInput || false;
-    this.maxItems = options.maxItems || 0;
     this.allowedHardwareType = options.allowedHardwareType || [];
   }
 }

@@ -29,7 +29,6 @@ import {
   DynamicFormFieldDataChangeEventParam,
   FlatOption
 } from '../../dynamic-form-field-config.interface';
-import { DynamicSelectChipsField } from '../select-chips/select-chips';
 
 @Component({
   selector: 'mcs-dff-select-chips-vm-field',
@@ -77,7 +76,12 @@ export class DynamicSelectChipsVmComponent extends DynamicSelectChipsFieldCompon
     chipsValue.forEach((chip) => {
       let itemLimitReached = this._isItemLimitReached(translatedValue);
       let validChip: boolean = !isNullOrEmpty(chip.value) && !isNullOrEmpty(chip.label);
-      if (!itemLimitReached && validChip) {
+
+      if (itemLimitReached) {
+        return;
+      }
+
+      if (validChip) {
         translatedValue.push(chip);
       } else {
         // Assumes value is service ID and search via map
@@ -244,15 +248,18 @@ export class DynamicSelectChipsVmComponent extends DynamicSelectChipsFieldCompon
 
   private _tryAddChip(chip: DynamicSelectChipsValue): void {
     let isUnique = this.config.value.findIndex(val => val.value.toLowerCase() === chip.value.toLowerCase()) < 0;
-    if (this.config.allowDuplicates || isUnique) {
-      if (this._isItemLimitReached(this.config.value) && Math.trunc(this.config.maxItems) === 1) {
-        // This allows auto replace of value if allowed max items is 1
-        this.config.value = [];
-      }
+    if (!this.config.allowDuplicates && !isUnique) {
+      return;
+    }
 
-      if (!this._isItemLimitReached(this.config.value)) {
-        this.config.value.push(chip);
-      }
+    let validToReplaceValue = this._isItemLimitReached(this.config.value) && Math.trunc(this.config.maxItems) === 1;
+    if (validToReplaceValue) {
+      // This allows auto replace of value if allowed max items is 1
+      this.config.value = [];
+    }
+
+    if (!this._isItemLimitReached(this.config.value)) {
+      this.config.value.push(chip);
     }
   }
 
