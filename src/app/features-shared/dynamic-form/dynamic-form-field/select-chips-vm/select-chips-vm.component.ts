@@ -190,8 +190,8 @@ export class DynamicSelectChipsVmComponent extends DynamicSelectChipsFieldCompon
         this._serviceIdMapping.set(item.serviceId, item.id);
       }
 
-      let value = item.name;
       let key = this.config.useServiceIdAsKey ? item.serviceId : item.id;
+      let value = item.name;
       if (item.serviceId) { value += ` (${item.serviceId})`; }
 
       options.push({ type: 'flat', key, value });
@@ -223,23 +223,36 @@ export class DynamicSelectChipsVmComponent extends DynamicSelectChipsFieldCompon
       return true;
     }
 
-    // Filter dedicated
-    if (this.config.hideDedicated && item.isDedicated) {
-      return true;
-    }
-
-    // Filter Non-Dedicated
-    if (this.config.hideNonDedicated && !item.isDedicated) {
-      return true;
-    }
-
     // Filter no service ID if service ID is used as key
     if (this.config.useServiceIdAsKey && isNullOrEmpty(item.serviceId)) {
       return true;
     }
 
-    // Filter  type filter
-    if (!isNullOrEmpty(this.config.allowedHardwareType) && this.config.allowedHardwareType.indexOf(item.hardware.type) < 0) {
+    // Filter dedicated
+    if (this.config.dataFilter?.hideDedicated && item.isDedicated) {
+      return true;
+    }
+
+    // Filter Non-Dedicated
+    if (this.config.dataFilter?.hideNonDedicated && !item.isDedicated) {
+      return true;
+    }
+
+    // Filter hardware type
+    if (!isNullOrEmpty(this.config.dataFilter?.allowedHardwareType)
+    && this.config.dataFilter.allowedHardwareType.indexOf(item.hardware.type) < 0) {
+      return true;
+    }
+
+    // Filter service type
+    if (!isNullOrEmpty(this.config.dataFilter?.allowedServiceType)
+    && this.config.dataFilter.allowedServiceType.indexOf(item.serviceType) < 0) {
+      return true;
+    }
+
+    // Filter platform type
+    if (!isNullOrEmpty(this.config.dataFilter?.allowedPlatformType)
+    && this.config.dataFilter.allowedPlatformType.indexOf(item.platform.type) < 0) {
       return true;
     }
 

@@ -26,8 +26,10 @@ export const dedicatedStorageRemoveZoningForm: LaunchPadForm = {
       allowCustomInput: true,
       useServiceIdAsKey: true,
       maxItems: 1,
-      hideNonDedicated: true,
-      allowedHardwareType: [ 'BO', 'LO', 'BL' ]
+      dataFilter: {
+        hideNonDedicated: true,
+        allowedHardwareType: [ 'BO', 'LO', 'BL' ]
+      }
     })
   ],
   mapContext: (context: WorkflowGroupSaveState) => {

@@ -50,8 +50,10 @@ export const dedicatedStorageCreateAndAttachVolumeClusterForm: LaunchPadForm = {
       validators: { required: true },
       allowCustomInput: true,
       useServiceIdAsKey: true,
-      hideNonDedicated: true,
-      allowedHardwareType: [ 'BO', 'LO', 'BL' ]
+      dataFilter: {
+        hideNonDedicated: true,
+        allowedHardwareType: [ 'BO', 'LO', 'BL' ]
+      }
     })
   ],
   mapContext: (context: WorkflowGroupSaveState) => {

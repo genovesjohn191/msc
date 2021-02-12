@@ -1,4 +1,3 @@
-import { hardwareType } from '@app/models';
 import { DynamicFormFieldConfigBase } from '../../dynamic-form-field-config.base';
 import {
   DynamicFormFieldOnChangeEvent,
@@ -6,15 +5,15 @@ import {
   DynamicFormFieldTemplate,
   DynamicFormControlSettings
 } from '../../dynamic-form-field-config.interface';
+import { ServerFilterConfig } from '../shared-template/config/server-filter';
 
 export class DynamicSelectVmField extends DynamicFormFieldConfigBase {
   // Overrides
   public type: DynamicFormFieldType = 'select-vm';
   public template: DynamicFormFieldTemplate = 'select-vm';
 
-  public hideDedicated?: boolean = false;
-  public hideNonDedicated?: boolean = false;
-  public allowedHardwareType: hardwareType[] = [];
+  public useServiceIdAsKey: boolean = false;
+  public dataFilter: ServerFilterConfig = {};
 
   public constructor(options: {
     key: string;
@@ -27,14 +26,13 @@ export class DynamicSelectVmField extends DynamicFormFieldConfigBase {
     dependents?: string[];
     validators?: { required?: boolean; };
     settings?: DynamicFormControlSettings;
-    hideDedicated?: boolean;
-    hideNonDedicated?: boolean;
-    allowedHardwareType?: hardwareType[];
+    useServiceIdAsKey?: boolean;
+    dataFilter?: ServerFilterConfig;
   }) {
     super(options);
 
-    this.hideDedicated = options.hideDedicated || false;
-    this.hideNonDedicated = options.hideNonDedicated || false;
-    this.allowedHardwareType = options.allowedHardwareType || [];
+    this.useServiceIdAsKey = options.useServiceIdAsKey || false;
+    this.dataFilter = options.dataFilter || {};
   }
 }
+

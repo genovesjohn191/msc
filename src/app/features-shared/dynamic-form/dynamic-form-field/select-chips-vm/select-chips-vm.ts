@@ -1,4 +1,3 @@
-import { hardwareType } from '@app/models';
 import { DynamicFormFieldConfigBase } from '../../dynamic-form-field-config.base';
 import {
   DynamicFormFieldOnChangeEvent,
@@ -8,6 +7,7 @@ import {
   DynamicFormControlSettings
 } from '../../dynamic-form-field-config.interface';
 import { DynamicSelectChipsValue } from '../dynamic-select-chips-field-component.base';
+import { ServerFilterConfig } from '../shared-template/config/server-filter';
 
 export class DynamicSelectChipsVmField extends DynamicFormFieldConfigBase {
   // Overrides
@@ -17,13 +17,10 @@ export class DynamicSelectChipsVmField extends DynamicFormFieldConfigBase {
 
   public allowDuplicates: boolean = false;
   public options: FlatOption[] = [];
-  public hideDedicated?: boolean = false;
-  public hideNonDedicated?: boolean = false;
+  public dataFilter: ServerFilterConfig = {};
   public useServiceIdAsKey: boolean = false;
   public allowCustomInput: boolean = false;
   public maxItems: number = 0; // less than 1 is considered infinite
-  public allowedHardwareType: hardwareType[] = [];
-
 
   public constructor(options: {
     key: string;
@@ -40,19 +37,15 @@ export class DynamicSelectChipsVmField extends DynamicFormFieldConfigBase {
     allowDuplicates?: boolean;
     allowCustomInput?: boolean;
     maxItems?: number;
-    hideDedicated?: boolean;
-    hideNonDedicated?: boolean;
     useServiceIdAsKey?: boolean;
-    allowedHardwareType?: hardwareType[];
+    dataFilter?: ServerFilterConfig;
   }) {
     super(options);
 
     this.allowDuplicates = options.allowDuplicates || false;
     this.allowCustomInput = options.allowCustomInput || false;
     this.maxItems = options.maxItems || 0;
-    this.hideDedicated = options.hideDedicated || false;
-    this.hideNonDedicated = options.hideNonDedicated || false;
     this.useServiceIdAsKey = options.useServiceIdAsKey || false;
-    this.allowedHardwareType = options.allowedHardwareType || [];
+    this.dataFilter = options.dataFilter || {};
   }
 }
