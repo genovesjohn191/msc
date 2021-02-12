@@ -346,6 +346,18 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
       ]
     ],
 
+    [ ProductType.ServerHostIntrusionPreventionSystem,
+      [
+        WorkflowGroupId.HostSecurityProvisionHids
+      ]
+    ],
+
+    [ ProductType.ServerAntiVirus,
+      [
+        WorkflowGroupId.HostSecurityProvisionAntiVirus
+      ]
+    ],
+
     [ ProductType.SolarisServerLarge,
       [
         WorkflowGroupId.ManagementToolsQueryStatus

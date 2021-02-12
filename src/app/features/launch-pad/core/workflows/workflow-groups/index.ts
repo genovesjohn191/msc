@@ -8,6 +8,9 @@ export * from './dedicated-storage-increase-volume.workflow';
 export * from './dedicated-storage-remove-zoning.workflow';
 export * from './dedicated-storage-unmask-volume.workflow';
 
+export * from './host-security-provision-anti-virus.workflow';
+export * from './host-security-provision-hids.workflow';
+
 export * from './management-tools-query-status.workflow';
 export * from './management-tools-add-cvm.workflow';
 export * from './management-tools-remove-cvm.workflow';

@@ -78,7 +78,7 @@ export class DynamicSelectVmComponent extends DynamicSelectFieldComponentBase<Mc
   // Override function to allow field to map with service ID
   public writeValue(obj: any): void {
     if (this._serviceIdMapping.has(obj)) {
-      obj = this._serviceIdMapping.get(obj);
+      obj = this.config.useServiceIdAsKey ? obj : this._serviceIdMapping.get(obj);
     }
 
     if (!isNullOrEmpty(obj)) {
@@ -117,10 +117,12 @@ export class DynamicSelectVmComponent extends DynamicSelectFieldComponentBase<Mc
       }
 
       let existingGroup = groupedOptions.find((opt) => opt.name === groupName);
+
+      let key = this.config.useServiceIdAsKey ? item.serviceId : item.id;
       let value = item.name;
       if (item.serviceId) { value += ` (${item.serviceId})`; }
 
-      let option = { key: item.id, value } as FlatOption;
+      let option = { key, value } as FlatOption;
 
       if (existingGroup) {
         // Add option to existing group
@@ -152,18 +154,36 @@ export class DynamicSelectVmComponent extends DynamicSelectFieldComponentBase<Mc
       return true;
     }
 
+    // Filter no service ID if service ID is used as key
+    if (this.config.useServiceIdAsKey && isNullOrEmpty(item.serviceId)) {
+      return true;
+    }
+
     // Filter dedicated
-    if (this.config.hideDedicated && item.isDedicated) {
+    if (this.config.dataFilter?.hideDedicated && item.isDedicated) {
       return true;
     }
 
-    // Filter Non-Dedicated
-    if (this.config.hideNonDedicated && !item.isDedicated) {
+    // Filter non-dedicated
+    if (this.config.dataFilter?.hideNonDedicated && !item.isDedicated) {
       return true;
     }
 
-    // Filter  type filter
-    if (!isNullOrEmpty(this.config.allowedHardwareType) && this.config.allowedHardwareType.indexOf(item.hardware.type) < 0) {
+    // Filter hardware type
+    if (!isNullOrEmpty(this.config.dataFilter?.allowedHardwareType)
+    && this.config.dataFilter.allowedHardwareType.indexOf(item.hardware.type) < 0) {
+      return true;
+    }
+
+    // Filter service type
+    if (!isNullOrEmpty(this.config.dataFilter?.allowedServiceType)
+    && this.config.dataFilter.allowedServiceType.indexOf(item.serviceType) < 0) {
+      return true;
+    }
+
+    // Filter platform type
+    if (!isNullOrEmpty(this.config.dataFilter?.allowedPlatformType)
+    && this.config.dataFilter.allowedPlatformType.indexOf(item.platform.type) < 0) {
       return true;
     }
 

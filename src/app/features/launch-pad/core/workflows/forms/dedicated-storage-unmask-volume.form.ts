@@ -1,10 +1,16 @@
-import { DynamicInputHiddenField, DynamicSelectChipsVmField } from '@app/features-shared/dynamic-form';
+import {
+  DynamicInputHiddenField,
+  DynamicSelectChipsVmField
+} from '@app/features-shared/dynamic-form';
 import { DynamicSelectChipsValue } from '@app/features-shared/dynamic-form/dynamic-form-field/dynamic-select-chips-field-component.base';
 import { McsObjectCrispElementServiceAttribute } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
 import { WorkflowGroupSaveState } from '../workflow-group.interface';
 import { LaunchPadForm } from './form.interface';
-import { CrispAttributeNames, findCrispElementAttribute } from './mapping-helper';
+import {
+  CrispAttributeNames,
+  findCrispElementAttribute
+} from './mapping-helper';
 
 export const dedicatedStorageUnmaskVolumeForm: LaunchPadForm = {
   config: [
@@ -23,8 +29,10 @@ export const dedicatedStorageUnmaskVolumeForm: LaunchPadForm = {
       allowCustomInput: true,
       useServiceIdAsKey: true,
       maxItems: 1,
-      hideNonDedicated: true,
-      allowedHardwareType: [ 'BO', 'LO', 'BL' ]
+      dataFilter: {
+        hideNonDedicated: true,
+        allowedHardwareType: [ 'BO', 'LO', 'BL' ]
+      }
     })
   ],
   mapContext: (context: WorkflowGroupSaveState) => {

@@ -12,6 +12,8 @@ export enum CrispAttributeNames {
   StorageTier = 'IC2_STORAGE_TIER',
   DesignatedUsage = 'DESIGNATED_USAGE',
   Server = 'IC2_SERVER',
+  ServerLink = 'SERVER_LINK',
+  ServerLinkAv = 'LINK_SRV_ID_VAV',
   HidsProtectionLevel = 'HIPS_PROTECTION_LVL'
 }
 

@@ -12,4 +12,5 @@ export * from './dedicated-storage-increase-volume.form';
 export * from './dedicated-storage-remove-zoning.form';
 export * from './dedicated-storage-unmask-volume.form';
 
-export * from './add-on-hids.form';
+export * from './host-security-provision-anti-virus.form';
+export * from './host-security-provision-hids.form';

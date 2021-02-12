@@ -13,6 +13,9 @@ export const workflowOptions: Map<WorkflowGroupId, string> = new Map([
   [WorkflowGroupId.DedicatedStorageCreateAttachVolume, 'Create and Attach Dedicated Storage Volume.'],
   [WorkflowGroupId.DedicatedStorageRemoveZoning, 'Remove Dedicated Storage Zoning.'],
 
+  [WorkflowGroupId.HostSecurityProvisionAntiVirus, 'Provision Anti-Virus Software.'],
+  [WorkflowGroupId.HostSecurityProvisionHids, 'Provision Host Intrusion Prevention System.'],
+
   [WorkflowGroupId.ManagementToolsQueryStatus, 'Query Management Tools Status.'],
   [WorkflowGroupId.ManagementToolsAddCvm, 'Add To Management Tools.'],
   [WorkflowGroupId.ManagementToolsRemoveCvm, 'Remove from Management Tools.'],

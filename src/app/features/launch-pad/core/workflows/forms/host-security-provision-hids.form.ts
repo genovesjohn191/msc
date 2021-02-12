@@ -1,17 +1,22 @@
 import {
   DynamicInputHiddenField,
-  DynamicSelectChipsField,
-  DynamicSelectChipsVmField,
+  DynamicSelectField,
   DynamicSelectVmField
 } from '@app/features-shared/dynamic-form';
-import { DynamicSelectChipsValue } from '@app/features-shared/dynamic-form/dynamic-form-field/dynamic-select-chips-field-component.base';
-import { McsObjectCrispElementServiceAttribute } from '@app/models';
+import {
+  McsObjectCrispElementServiceAttribute,
+  PlatformType,
+  ServiceType
+} from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
 import { WorkflowGroupSaveState } from '../workflow-group.interface';
 import { LaunchPadForm } from './form.interface';
-import { CrispAttributeNames, findCrispElementAttribute } from './mapping-helper';
+import {
+  CrispAttributeNames,
+  findCrispElementAttribute
+} from './mapping-helper';
 
-export const dedicatedStorageAttachVolumeForm: LaunchPadForm = {
+export const hostSecurityProvisionHidsForm: LaunchPadForm = {
   config: [
     new DynamicInputHiddenField({
       key: 'companyId',
@@ -19,20 +24,25 @@ export const dedicatedStorageAttachVolumeForm: LaunchPadForm = {
       eventName: 'company-change',
       dependents: ['server'],
     }),
-    new DynamicSelectChipsVmField({
+    new DynamicSelectVmField({
       key: 'server',
-      label: 'Server',
-      placeholder: 'Search for name or service ID...',
-      contextualHelp: 'Select a target server, or enter a service ID manually if the target server exists only in UCS Central',
+      label: 'Target Server',
       validators: { required: true },
-      allowCustomInput: true,
-      allowDuplicates: true,
-      maxItems: 2,
       useServiceIdAsKey: true,
       dataFilter: {
-        hideNonDedicated: true,
-        allowedHardwareType: [ 'BO', 'LO', 'BL' ]
+        hideDedicated: true,
+        allowedServiceType: [ ServiceType.Managed ],
+        allowedPlatformType: [ PlatformType.VCloud ]
       }
+    }),
+    new DynamicSelectField({
+      key: 'protectionLevel',
+      label: 'Protection Level',
+      validators: { required: true },
+      options: [
+        { key: 'Detect', value: 'Detect'},
+        { key: 'Protect', value: 'Protect'}
+      ]
     })
   ],
   mapContext: (context: WorkflowGroupSaveState) => {
@@ -47,13 +57,7 @@ export const dedicatedStorageAttachVolumeForm: LaunchPadForm = {
     let mappedProperties: { key: string, value: any }[] = [];
     if (isNullOrEmpty(attributes)) { return mappedProperties; }
 
-    let server: string = findCrispElementAttribute(CrispAttributeNames.Server, attributes)?.displayValue;
-    let servers: DynamicSelectChipsValue[]  = [
-      {
-        value: server
-      }
-    ];
-    mappedProperties.push({ key: 'server', value: servers } );
+    mappedProperties.push({ key: 'server', value: findCrispElementAttribute(CrispAttributeNames.ServerLink, attributes)?.displayValue } );
 
     return mappedProperties;
   }
