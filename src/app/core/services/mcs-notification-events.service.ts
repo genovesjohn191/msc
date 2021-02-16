@@ -144,6 +144,7 @@ export class McsNotificationEventsService {
     this._jobTypeEventMap.set(JobType.ManagedServerProvisionVmBackup, McsEvent.jobServerBackupVmAddEvent);
     this._jobTypeEventMap.set(JobType.ManagedServerProvisionBat, McsEvent.jobBackupAggregationTargetAddEvent);
     this._jobTypeEventMap.set(JobType.PublicCloudLicenseChangeCount, McsEvent.jobMsLicenseCountChangeEvent);
+    this._jobTypeEventMap.set(JobType.InternetPortPlanChange, McsEvent.jobInternetChangePortPlanEvent);
   }
 
   /**

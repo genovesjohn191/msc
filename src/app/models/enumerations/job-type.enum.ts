@@ -79,7 +79,10 @@ export enum JobType {
   LaunchpadDedicatedStorageRemoveZoning = 102014,
 
   // Microsoft License
-  PublicCloudLicenseChangeCount = 2000001
+  PublicCloudLicenseChangeCount = 2000001,
+
+  // Internet
+  InternetPortPlanChange = 3000001,
 }
 
 export const jobTypeText = {
@@ -131,6 +134,7 @@ export const jobTypeText = {
   [JobType.LaunchpadDedicatedStorageRemoveZoning]: 'Remove Dedicated Storage Zoning',
 
   [JobType.PublicCloudLicenseChangeCount]: 'Change License Count',
+  [JobType.InternetPortPlanChange]: 'Change Internet Port Plan',
 };
 
 /**

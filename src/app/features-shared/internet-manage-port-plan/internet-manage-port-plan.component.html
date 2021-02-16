@@ -1,0 +1,117 @@
+<form [formGroup]="fgInternetPortPlan" mcsFormGroup>
+  <ng-container *ngIf="!isInternetPlanUnlimited(plan)">
+    <!-- Monthly Cap header and switcher -->
+    <mcs-item orientation="separated">
+      <div><!--empty container for spacing--></div>
+      <div>
+        <a *ngIf="inputManageType === inputManageTypeEnum.Custom" mcsId
+          (click)="onChangeInputManageType(inputManageTypeEnum.Auto)">
+          {{ 'changeInternetPortPlan.sliderSwitch' | translate }}</a>
+        <a *ngIf="inputManageType === inputManageTypeEnum.Auto" mcsId
+          (click)="onChangeInputManageType(inputManageTypeEnum.Custom)">
+          {{ 'changeInternetPortPlan.customSwitch' | translate }}</a>
+      </div>
+    </mcs-item>
+
+    <!-- Monthly Cap -->
+    <div [ngSwitch]="inputManageType"
+      [mcsContextualHelp]="'changeInternetPortPlan.monthlyCap.contextualHelp' | translate">
+      <!-- Slider selection mode -->
+      <mcs-section [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Auto">
+        <div>
+          <span>{{ 'changeInternetPortPlan.monthlyCap.title' | translate }} </span>
+        </div>
+        <div>
+          <mcs-slider [min]="monthlyCapMin" [max]="monthlyCapMax"
+            mcsId="slider-monthly-cap"
+            [step]="monthlyCapSliderStep"
+            [ngModel]="monthlyCapSliderValueIndex" [ngModelOptions]="{standalone: true}"
+            (ngModelChange)="onMonthlyCapSliderChanged($event)">
+          </mcs-slider>
+          <strong display-block text-center>
+            {{ 'changeInternetPortPlan.monthlyCap.sliderSelectedMonthlyCap' | translate:
+              {
+                monthlyCap_value: (monthlyCapSliderValueIndex | mcsDataSize: 'GB')
+              }
+            }}
+          </strong>
+          <span display-block text-center>
+            {{ 'changeInternetPortPlan.monthlyCap.sliderCurrentMonthlyCap' | translate:
+              {
+                monthlyCap_value: (monthlyCap | mcsDataSize: 'GB')
+              }
+            }}
+          </span>
+        </div>
+      </mcs-section>
+
+      <!-- Custom scale mode -->
+      <mcs-section [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Custom">
+        <div>
+          <span>{{ 'changeInternetPortPlan.monthlyCap.title' | translate }} </span>
+        </div>
+
+        <mcs-form-field class="form-field-size-small">
+            <input mcsInput
+              placeholder="Enter Monthly Cap"
+              mcsId="manual-monthly-cap"
+              [formControl]="fcCustomMonthlyCap"
+              (change)="onMonthlyCapChange()">
+            <mcs-suffix mcsSuffix>{{ 'changeInternetPortPlan.monthlyCap.monthlyCapUnit' | translate }}</mcs-suffix>
+
+            <mcs-hint mcsHint align="start">
+              <div>
+                <strong display-block>
+                  {{ 'changeInternetPortPlan.monthlyCap.hint' | translate }}
+                </strong>
+                <span display-block text-left>
+                  {{ 'changeInternetPortPlan.monthlyCap.sliderCurrentMonthlyCap' | translate:
+                    {
+                      monthlyCap_value: (monthlyCap | mcsDataSize: 'GB')
+                    }
+                  }}
+                </span>
+              </div>
+            </mcs-hint>
+            <mcs-error mcsError errorState="numeric">
+                {{ 'changeInternetPortPlan.monthlyCap.errors.monthlyCapNumeric' | translate }}
+            </mcs-error>
+            <mcs-error mcsError errorState="min">
+                {{ 'changeInternetPortPlan.monthlyCap.errors.monthlyCapMin' | translate: {min_value: cpuMin} }}
+            </mcs-error>
+            <mcs-error mcsError errorState="max">
+                {{ 'changeInternetPortPlan.monthlyCap.errors.monthlyCapMax' | translate: {max_value: cpuMax} }}
+            </mcs-error>
+          </mcs-form-field>
+      </mcs-section>
+    </div>
+  </ng-container>
+
+  <!-- Port Speed -->
+  <div>
+    <div>
+      <span>{{ 'changeInternetPortPlan.portSpeed.title' | translate }} </span>
+    </div>
+    <mcs-slider [min]="portSpeedMin" [max]="portSpeedMax"
+      mcsId="slider-port-speed"
+      [mcsContextualHelp]="'changeInternetPortPlan.portSpeed.contextualHelp' | translate"
+      [step]="portSpeedSliderStep"
+      [ngModel]="portSpeedSliderValueIndex" [ngModelOptions]="{standalone: true}"
+      (ngModelChange)="onPortSpeedSliderChanged($event)">
+    </mcs-slider>
+    <strong display-block text-center>
+      {{ 'changeInternetPortPlan.portSpeed.sliderSelectedPortSpeed' | translate:
+        {
+          portSpeed_value: (portSpeedSliderValue | mcsBitDataSize: 'Mb')
+        }
+      }}
+    </strong>
+    <span display-block text-center>
+      {{ 'changeInternetPortPlan.portSpeed.sliderCurrentPortSpeed' | translate:
+        {
+          portSpeed_value: (portSpeed | mcsBitDataSize: 'Mb')
+        }
+      }}
+    </span>
+  </div>
+</form>

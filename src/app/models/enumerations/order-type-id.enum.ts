@@ -22,7 +22,8 @@ export enum OrderIdType {
   ServerRequestPatch = 'servers.patchRequest',
   SimpleFirewallChangeAdd = 'firewall.simpleChange.add',
   SimpleFirewallChangeRemove = 'firewall.simpleChange.remove',
-  SimpleFirewallChangeModify = 'firewall.simpleChange.modify'
+  SimpleFirewallChangeModify = 'firewall.simpleChange.modify',
+  ChangeInternetPortPlan = 'internetPort.change'
 }
 
 /**

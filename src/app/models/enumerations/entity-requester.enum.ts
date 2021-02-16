@@ -9,5 +9,6 @@ export enum EntityRequester {
   SystemMessage,
   BackupAggregationTarget,
   Resource,
-  License
+  License,
+  Internet
 }

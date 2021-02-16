@@ -25,6 +25,7 @@ import { HelpWidgetComponent } from './help-widget/help-widget.component';
 import { SmacSharedFormComponent } from './smac-shared-form/smac-shared-form.component';
 import { FormFieldsModule } from './form-fields/form-fields.module';
 import { ContextualCatalogLinkComponent } from './contextual-catalog-link/mcs-contextual-catalog-link.component';
+import { InternetManagePortPlanComponent } from './internet-manage-port-plan/internet-manage-port-plan.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { ContextualCatalogLinkComponent } from './contextual-catalog-link/mcs-co
     SystemMessageFormComponent,
     RenameServerDialogComponent,
     HelpWidgetComponent,
-    SmacSharedFormComponent
+    SmacSharedFormComponent,
+    InternetManagePortPlanComponent
   ],
   imports: [
     SharedModule,
@@ -80,6 +82,7 @@ import { ContextualCatalogLinkComponent } from './contextual-catalog-link/mcs-co
     RenameServerDialogComponent,
     HelpWidgetComponent,
     SmacSharedFormComponent,
+    InternetManagePortPlanComponent,
     FormFieldsModule
   ],
   entryComponents: [

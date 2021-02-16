@@ -31,6 +31,9 @@ export type McsOrientationType = 'horizontal' | 'vertical';
 // Data Size Type
 export type McsDataSizeType = 'B' | 'KB' | 'MB' | 'GB' | 'TB';
 
+// Bit Data Size Type
+export type McsBitDataSizeType = 'Mb' | 'Gb';
+
 // Priority Type
 export type McsPriorityType = 'low' | 'medium' | 'high';
 

@@ -24,10 +24,12 @@ import { EntityCreatedEvent } from './items/entity-created.event';
 import { EntityDeletedEvent } from './items/entity-deleted.event';
 import { EntityUpdatedEvent } from './items/entity-updated.event';
 import { ErrorShowEvent } from './items/error-show.event';
+import { InternetChangePortPlanSelectedEvent } from './items/internet-change-port-plan-selected.event';
 import { JobBackupAggregationTargetAddEvent } from './items/job-backup-aggregation-target-add.event';
 import { JobCurrentUserEvent } from './items/job-current-user.event';
 import { JobErrorEvent } from './items/job-error.event';
 import { JobInProgressEvent } from './items/job-in-progress.event';
+import { JobInternetChangePortPlanEvent } from './items/job-internet-change-port-plan.event';
 import { JobMsLicenseCountChangeEvent } from './items/job-ms-license-count-change.event';
 import { JobReceiveEvent } from './items/job-receive.event';
 import { JobResourceCatalogItemCreateEvent } from './items/job-resource-catalog-item-create.event';
@@ -99,6 +101,7 @@ export class McsEvent {
   public static serverRequestPatchSelectedEvent = new ServerRequestPatchSelectedEvent();
   public static vdcScaleSelectedEvent = new VdcScaleSelectedEvent();
   public static vdcStorageExpandSelectedEvent = new VdcStorageExpandSelectedEvent();
+  public static internetChangePortPlanSelectedEvent = new InternetChangePortPlanSelectedEvent();
   public static loaderShow = new LoaderShowEvent();
   public static loaderHide = new LoaderHideEvent();
   public static errorShow = new ErrorShowEvent();
@@ -168,6 +171,6 @@ export class McsEvent {
   public static jobVdcStorageExpandEvent = new JobVdcStorageExpandEvent();
   public static jobResourceCatalogItemCreate = new JobResourceCatalogItemCreateEvent();
   public static jobMsLicenseCountChangeEvent = new JobMsLicenseCountChangeEvent();
-
+  public static jobInternetChangePortPlanEvent = new JobInternetChangePortPlanEvent();
   public static launchPadWorkflowInitEvent = new LaunchPadWorkflowInitEvent();
 }
