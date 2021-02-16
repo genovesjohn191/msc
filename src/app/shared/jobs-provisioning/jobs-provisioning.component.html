@@ -41,6 +41,14 @@
               <span>{{ task.summaryInformation }}</span>
             </mcs-item>
           </ng-container>
+
+          <!-- <mcs-list *ngFor="let task of job.tasks">
+            <mcs-item *ngFor="let log of task.logs" [icon]="log.logType === 'ERROR' ? errorIcon : infoIcon" compact="true">
+              <small> {{ log.loggedOn | mcsStdDateFormat }} </small>
+              <small>{{ log.message }}</small>
+            </p>
+          </mcs-item> -->
+
         </mcs-item>
       </mcs-list>
     </ng-container>
@@ -67,6 +75,20 @@
           </mcs-alert>
         </ng-container>
       </ng-container>
+
+      <div style="margin-left: 15px;">
+        <mcs-cta-list *ngFor="let task of job.tasks">
+          <mcs-cta-list-panel *ngFor="let log of task.logs" [icon]="log.logType === 'ERROR' ? errorIcon : infoIcon" compact="true">
+            <mcs-cta-list-body>
+              <small> {{ log.loggedOn | mcsStdDateFormat }} </small>
+            </mcs-cta-list-body>
+            <mcs-cta-list-action>
+              <small>{{ log.message }}</small>
+            </mcs-cta-list-action>
+          </mcs-cta-list-panel>
+        </mcs-cta-list>
+      </div>
+
     </mcs-list>
   </section>
 </section>

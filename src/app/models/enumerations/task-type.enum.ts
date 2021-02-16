@@ -45,7 +45,23 @@ export enum TaskType {
   ManagedServerProvisionServerBackup = 5009,
   ManagedServerProvisionVmBackup = 5010,
 
-  PublicCloudLicenseChangeCount = 6000
+  PublicCloudLicenseChangeCount = 6000,
+
+  // Launchpad 7000-8999
+  LaunchpadManagedServerCreate = 7000,
+  LaunchpadManagementToolsAddCvm = 7001,
+  LaunchpadManagementToolsDeleteCvm = 7002,
+  LaunchpadBackupProvisionServerBackup = 7003,
+  LaunchpadBackupProvisionVmBackup = 7004,
+  LaunchpadDedicatedStorageUnmaskVolume = 7005,
+  LaunchpadDedicatedStorageIncreaseVolume = 7006,
+  LaunchpadHostSecurityProvisionAntiVirus = 7007,
+  LaunchpadHostSecurityProvisionHids = 7008,
+  LaunchpadDedicatedStorageCreateAttachVolume = 7009,
+  LaunchpadDedicatedStorageAttachVolume = 7010,
+  LaunchpadDedicatedStorageCreateAttachVolumeCluster = 7011,
+  LaunchpadDedicatedStorageAttachVolumeCluster = 7012,
+  LaunchpadDedicatedStorageRemoveZoning = 7013,
 }
 
 /**

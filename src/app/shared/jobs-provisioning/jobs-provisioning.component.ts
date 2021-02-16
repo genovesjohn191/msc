@@ -62,6 +62,15 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
       this._changeDetectorRef.markForCheck();
     }
   }
+
+  public get infoIcon(): string {
+    return CommonDefinition.ASSETS_SVG_INFO;
+  }
+
+  public get errorIcon(): string {
+    return CommonDefinition.ASSETS_SVG_ERROR;
+  }
+
   private _jobs: McsJob[];
   private _jobsDiffer: IterableDiffer<McsJob>;
 

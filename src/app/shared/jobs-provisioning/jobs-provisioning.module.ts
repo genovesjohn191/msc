@@ -13,6 +13,8 @@ import { ItemModule } from '../item/item.module';
 
 import { JobsProvisioningComponent } from './jobs-provisioning.component';
 import { JobsProvisioningLoadingTextDirective } from './jobs-provisioning-loading-text.directive';
+import { CtaListModule } from '../cta-list/cta-list.module';
+import { PipesModule } from '../pipes/pipes.module';
 
 @NgModule({
   declarations: [
@@ -30,7 +32,9 @@ import { JobsProvisioningLoadingTextDirective } from './jobs-provisioning-loadin
     DirectivesModule,
     ButtonModule,
     ListModule,
-    ItemModule
+    ItemModule,
+    PipesModule,
+    CtaListModule
   ],
   exports: [
     CommonModule,

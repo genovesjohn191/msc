@@ -62,6 +62,22 @@ export enum JobType {
   ManagedServerProvisionVmBackup = 100607,
   ManagedServerProvisionBat = 1000608,
 
+  // Launchpad
+  LaunchpadManagedServerCreate = 102001,
+  LaunchpadManagementToolsAddCvm = 102002,
+  LaunchpadManagementToolsDeleteCvm = 102003,
+  LaunchpadBackupProvisionServerBackup = 102004,
+  LaunchpadBackupProvisionVmBackup = 102005,
+  LaunchpadDedicatedStorageUnmaskVolume = 102006,
+  LaunchpadDedicatedStorageIncreaseVolume = 102007,
+  LaunchpadHostSecurityProvisionAntiVirus = 102008,
+  LaunchpadHostSecurityProvisionHids = 102009,
+  LaunchpadDedicatedStorageCreateAttachVolume = 102010,
+  LaunchpadDedicatedStorageAttachVolume = 102011,
+  LaunchpadDedicatedStorageCreateAttachVolumeCluster = 102012,
+  LaunchpadDedicatedStorageAttachVolumeCluster = 102013,
+  LaunchpadDedicatedStorageRemoveZoning = 102014,
+
   // Microsoft License
   PublicCloudLicenseChangeCount = 2000001
 }
@@ -98,6 +114,22 @@ export const jobTypeText = {
   [JobType.ManagedServerProvisionAntiVirus]: 'New Anti-Virus',
   [JobType.ManagedServerProvisionHids]: 'New HIDS',
   [JobType.ManagedServerProvisionBat]: 'New Backup Aggregation Target',
+
+  [JobType.LaunchpadManagedServerCreate]: 'New Managed Server',
+  [JobType.LaunchpadManagementToolsAddCvm]: 'Add CVM to Management Tools',
+  [JobType.LaunchpadManagementToolsDeleteCvm]: 'Remove CVM from Management Tools',
+  [JobType.LaunchpadBackupProvisionServerBackup]: 'Backup Server',
+  [JobType.LaunchpadBackupProvisionVmBackup]: 'Backup VM',
+  [JobType.LaunchpadDedicatedStorageUnmaskVolume]: 'Unmask Dedicated Storage Volume',
+  [JobType.LaunchpadDedicatedStorageIncreaseVolume]: 'Increase Dedicated Storage Volume',
+  [JobType.LaunchpadHostSecurityProvisionAntiVirus]: 'New Anti-Virus',
+  [JobType.LaunchpadHostSecurityProvisionHids]: 'New HIDS',
+  [JobType.LaunchpadDedicatedStorageCreateAttachVolume]: 'Create and Attach Dedicated Storage Volume',
+  [JobType.LaunchpadDedicatedStorageAttachVolume]: 'Attach Dedicated Storage Volume',
+  [JobType.LaunchpadDedicatedStorageCreateAttachVolumeCluster]: 'Create and Attach Dedicated Storage Volume Cluster',
+  [JobType.LaunchpadDedicatedStorageAttachVolumeCluster]: 'Attach Dedicated Storage Volume Cluster',
+  [JobType.LaunchpadDedicatedStorageRemoveZoning]: 'Remove Dedicated Storage Zoning',
+
   [JobType.PublicCloudLicenseChangeCount]: 'Change License Count',
 };
 
