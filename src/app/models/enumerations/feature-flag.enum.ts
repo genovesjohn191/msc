@@ -23,4 +23,5 @@ export enum McsFeatureFlag {
 
   OrderingVdcStorageProvision = 'EnableOrderingVdcStorageProvision',
   OrderingMicrosoftRequestChange = 'EnableOrderingMicrosoftRequestChange',
+  DnsListing = 'enablePrivateCloudNetworkDnsListing',
 }

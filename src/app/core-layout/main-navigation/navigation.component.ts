@@ -57,6 +57,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
   private _showDashboardSubmenu: boolean;
   private _showAzureSubMenu: boolean;
   private _showOrdersMenu: boolean;
+  private _showDnsListing: boolean;
 
   public get isImpersonating(): boolean {
     return this._authenticationIdentity.isImpersonating;
@@ -120,6 +121,10 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
   public get macviewOrdersUrl(): string {
     return this._coreConfig.macviewOrdersUrl;
+  }
+
+  public get showDnsListing(): boolean {
+    return this._showDnsListing;
   }
 
   public constructor(
@@ -254,6 +259,8 @@ export class NavigationComponent implements OnInit, OnDestroy {
       ? this._showOrdersMenu
       : this._accessControlService.hasPermission([McsPermission.OrderView])
         && (this.selectedCategory === RouteCategory.Orders || this.selectedCategory === RouteCategory.MakeAChange);
+
+    this._showDnsListing = this._accessControlService.hasAccessToFeature([McsFeatureFlag.DnsListing]);
 
     this._navInitialized = true;
   }
