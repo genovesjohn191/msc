@@ -41,6 +41,7 @@ import { McsJobLicenseManager } from './entities/mcs-job-license.manager';
 import { McsJobMediaManager } from './entities/mcs-job-media.manager';
 import { McsJobResourceManager } from './entities/mcs-job-resource.manager';
 import { McsJobServerManager } from './entities/mcs-job-server.manager';
+import { McsJobInternetManager } from './entities/mcs-job-internet.manager';
 
 @Injectable()
 export class McsJobManagerClient implements McsDisposable {
@@ -313,6 +314,11 @@ export class McsJobManagerClient implements McsDisposable {
     // Microsoft License
     this._jobEntitiesFactory.set(JobType.PublicCloudLicenseChangeCount,
       new McsJobLicenseManager(ActionStatus.Update, this._injector)
+    );
+
+    // Internet
+    this._jobEntitiesFactory.set(JobType.InternetPortPlanChange,
+      new McsJobInternetManager(ActionStatus.Update, this._injector)
     );
   }
 }

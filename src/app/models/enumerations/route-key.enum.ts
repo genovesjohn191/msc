@@ -89,6 +89,7 @@ export enum RouteKey {
   OrderAddSimpleFirewallChange,
   OrderModifySimpleFirewallChange,
   OrderRemoveSimpleFirewallChange,
+  OrderChangeInternetPortPlan,
 
   Internet,
   InternetDetails,

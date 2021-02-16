@@ -1,0 +1,142 @@
+<mcs-page [header]="'changeInternetPortPlan.title' | translate">
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef>
+    <!-- Back to Order Dashboard -->
+    <mcs-top-panel-item *mcsTopPanelItemDef no-border>
+      <mcs-action-item mcsAlign="end"
+        mcsNavigateBackward
+        mcsId="navigate-back"
+        mcsEventTracker="navigate-back-click"
+        mcsEventCategory="orders"
+        mcsEventLabel="navigate-back">
+        <mcs-icon [key]="backIconKey" size="small"></mcs-icon>
+        <span>{{'shared.wizard.previous' | translate}}</span>
+      </mcs-action-item>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
+  <mcs-content-panel *mcsContentPanelDef>
+    <mcs-wizard (stepChange)="onWizardStepChanged($event)">
+      <!-- Error message -->
+      <ng-container mcsWizardErrorTemplate>
+        <mcs-form-message #formMessage></mcs-form-message>
+      </ng-container>
+
+      <!-- Internet Details Step-->
+      <mcs-wizard-step id="internet-plan-details-step"
+        [stepTitle]="'changeInternetPortPlan.detailsStep.stepTitle' | translate"
+        customClass="contextual-help-page-wrapper limited-view">
+        <form [formGroup]="fgInternetPlanDetails" mcsFormGroup>
+          <!-- Contextual Catalog Link -->
+          <ng-container *ngIf="orderItemType$ | async as orderItemType">
+            <mcs-contextual-catalog-link
+              [eventLabel]="'internet-product-catalog-link'"
+              [orderProductId]="orderItemType.productId">
+            </mcs-contextual-catalog-link>
+          </ng-container>
+
+          <p>{{ 'changeInternetPortPlan.internetPlan.label' | translate }}</p>
+          <mcs-form-field>
+            <mcs-select [placeholder]="'changeInternetPortPlan.internetPlan.placeholder' | translate"
+              required mcsId="select-internet-port"
+              [formControl]="fcInternetPort"
+              (selectionChange)="onChangeInternetPort($event)">
+
+              <ng-container *ngIf="internetPorts$ | async as internetPorts">
+                <mcs-option *ngFor="let internetPort of internetPorts"
+                  [value]="internetPort"
+                  [disabled]="!selectedInternetIsValid(internetPort)">
+                  <span
+                      [ngStyle]="{'pointer-events': 'auto'}"
+                      [mcsTooltip]="serviceChangeUnavailableToolTipText(internetPort.serviceChangeAvailable)"
+                      [mcsTooltipShow]="!internetPort.serviceChangeAvailable"
+                      [mcsTooltipPosition]="'right'">
+                      {{ internetPort.billingDescription }} - {{ internetPort.serviceId }}
+                  </span>
+                  <!-- {{ internetPort.billingDescription }} - {{ internetPort.serviceId }} -->
+                </mcs-option>
+              </ng-container>
+            </mcs-select>
+          </mcs-form-field>
+
+          <ng-container *ngIf="internetPort$ | async as internetPort">
+            <ng-container *ngIf="selectedInternetIsValid(internetPort); else internetPortInvalidTemplate">
+              <div *mcsComponentHandler>
+                <mcs-item orientation="block">
+                  <mcs-internet-manage-port-plan #fgInternetManagePortPlan
+                    [monthlyCap]="selectedInternetMonthlyCap(internetPort)"
+                    [portSpeed]="selectedInternetPortSpeed(internetPort)"
+                    [plan]="internetPort.plan"
+                    (dataChange)="onPortPlanChanged($event, fcInternetPort?.value)">
+                  </mcs-internet-manage-port-plan>
+                </mcs-item>
+              </div>
+            </ng-container>
+            <ng-template #internetPortInvalidTemplate>
+              <mcs-item *ngIf="!internetPort.serviceChangeAvailable">
+                <span>{{ 'changeInternetPortPlan.internetIsInvalid.serviceChangeAvailable' | translate }}</span>
+              </mcs-item>
+              <mcs-item *ngIf="isPlanNinetyFifthPercentile(internetPort.plan)">
+                <span>{{ 'changeInternetPortPlan.internetIsInvalid.plan' | translate }}</span>
+              </mcs-item>
+              <mcs-item *ngIf="isPrimaryPortNotNull(internetPort.primaryPort)">
+                <span>{{ 'changeInternetPortPlan.internetIsInvalid.primaryPort' | translate }}</span>
+              </mcs-item>
+            </ng-template>
+          </ng-container>
+
+          <div class="action-items">
+            <!-- Cancel -->
+            <a mcsAlign="start"
+              mcsNavigateBackward
+              mcsId="cancel-navigate-back"
+              mcsEventTracker="cancel-navigate-back-click"
+              mcsEventCategory="orders"
+              mcsEventLabel="navigate-back"
+              style="padding-bottom: 2px;">
+              <span>{{'changeInternetPortPlan.detailsStep.cancel' | translate}}</span>
+            </a>
+            <!-- Next button -->
+            <button mcsButton arrow="right"
+              mcsWizardStepNext
+              (click)="onSubmitPortPlanDetails()"
+              [disabled]="!formIsValid"
+              mcsId="step-1-next"
+              mcsEventTracker="step-1-next"
+              mcsEventCategory="orders"
+              mcsEventLabel="change-internet-port-plan">{{ 'shared.wizard.next' | translate }}</button>
+          </div>
+        </form>
+      </mcs-wizard-step>
+
+      <!-- Confirm Step  -->
+      <mcs-wizard-step id="confirm-step"
+        [stepTitle]="'shared.wizard.confirm' | translate"
+        customClass="contextual-help-page-wrapper limited-view">
+        <mcs-step-order-details [order]="order$ | async"
+          [orderItemType]="orderItemType$ | async"
+          [requestState]="dataStatus$ | async"
+          [eventTrack]="orderEventTrack.billingDetailsStep"
+          (dataChange)="onInternetConfirmOrderChange($event)"
+          (submitOrder)="onSubmitOrder($event, fcInternetPort?.value?.serviceId)">
+        </mcs-step-order-details>
+      </mcs-wizard-step>
+
+      <!-- Go! Step  -->
+      <mcs-wizard-step id="go-step"
+        [stepTitle]="'shared.wizard.completed' | translate"
+        customClass="limited-view">
+        <mcs-step-provisioning [jobs]="jobs$ | async" [requestState]="dataStatus$ | async">
+          <ng-container mcsProvisioningStepDescription>
+            {{ 'changeInternetPortPlan.provisioning.description' | translate }}
+          </ng-container>
+
+          <ng-container mcsProvisioningStepInProgress>
+            <span *ngIf="orderIsToBeSubmitted">{{ 'changeInternetPortPlan.provisioning.dataInProgress' | translate }}</span>
+            <span *ngIf="!orderIsToBeSubmitted">{{ 'provisioningStep.savingOrder' | translate }}</span>
+          </ng-container>
+        </mcs-step-provisioning>
+      </mcs-wizard-step>
+    </mcs-wizard>
+  </mcs-content-panel>
+</mcs-page>

@@ -950,6 +950,49 @@
       "serverRequired" : "Server is required"
     }
   },
+  "changeInternetPortPlan": {
+    "title": "Change Internet Port Plan",
+    "sliderSwitch": "Select from slider",
+    "customSwitch": "Enter custom size",
+    "detailsStep": {
+      "stepTitle": "Request Details",
+      "previous": "Back",
+      "cancel": "Cancel"
+    },
+    "internetPlan": {
+      "label": "Please select the Internet Port you wish to change.",
+      "placeholder": "Select a service to change"
+    },
+    "monthlyCap": {
+      "title": "Monthly Cap",
+      "sliderSelectedMonthlyCap": "{{monthlyCap_value}}",
+      "sliderCurrentMonthlyCap": "(Current: {{monthlyCap_value}})",
+      "contextualHelp": "If you're expecting a surge in internet download, you can order more download capacity by selecting it here.",
+      "monthlyCapUnit": "GB",
+      "hint": "Maximum value: 1TB",
+      "errors": {
+        "monthlyCapNumeric": "Please enter a valid number.",
+        "monthlyCapMin": "The minimum value that can be entered is 1 GB.",
+        "monthlyCapMax": "The maximum value that can be entered is 1 TB."
+      }
+    },
+    "portSpeed": {
+      "title": "Port Speed",
+      "sliderSelectedPortSpeed": "{{portSpeed_value}}ps",
+      "sliderCurrentPortSpeed": "(Current: {{portSpeed_value}}ps)",
+      "contextualHelp": "Select your desired speed. Note, your speed cannot be scaled down once changed."
+    },
+    "provisioning": {
+      "description": "Your internet port plan is being changed and will be available shortly. You can track progress from the notifications menu at the top of the Portal.",
+      "dataInProgress": "Preparing to change your internet port plan. This may take a moment.",
+      "dataError": "Something went wrong while processing your request. Please try again later."
+    },
+    "internetIsInvalid": {
+      "serviceChangeAvailable": "This service cannot be modified because it is currently being provisioned.",
+      "plan": "95th Percentile plans are currently unsupported for this operation. Please contact your account team for more information.",
+      "primaryPort": "Redundant Internet Port services are currently unsupported for this operation. Please contact your account team for more information."
+    }
+  },
   "orderSimpleFirewallChanges": {
     "title": "Simple Firewall Change",
     "addTitle": "Simple Firewall Change - Add",

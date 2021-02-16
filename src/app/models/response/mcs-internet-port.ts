@@ -43,6 +43,15 @@ export class McsInternetPort extends McsEntityBase {
   @JsonProperty()
   public primaryPort: string = undefined;
 
+  @JsonProperty()
+  public billingDescription: string = undefined;
+
+  @JsonProperty()
+  public monthlyCapMB: number = undefined;
+
+  @JsonProperty()
+  public serviceChangeAvailable: boolean = undefined;
+
   @JsonProperty({
     serializer: ServiceLevelSerialization,
     deserializer: ServiceLevelSerialization

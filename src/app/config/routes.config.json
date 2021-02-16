@@ -552,6 +552,13 @@
     "requiredPermissions": ["OrderEdit"],
     "documentTitle": "Request a Patch - Macquarie Cloud Services"
   },
+  "orderChangeInternetPortPlan": {
+    "enumKey": "OrderChangeInternetPortPlan",
+    "enumCategory": "MakeAChange",
+    "navigationPath": "orders/change/internet-port-plan",
+    "requiredPermissions": ["OrderEdit"],
+    "documentTitle": "Change Internet Port Plan - Macquarie Cloud Services"
+  },
   "orderAddSimpleFirewallChange": {
     "enumKey": "OrderAddSimpleFirewallChange",
     "enumCategory": "MakeAChange",

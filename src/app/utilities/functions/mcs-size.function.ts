@@ -2,6 +2,7 @@ import { isNullOrEmpty } from './mcs-object.function';
 
 let gbToMbMultiplier = 1024;
 let kbToMbMultiplier = 1024;
+let gbitToMbitMultiplier = 1000;
 
 /**
  * This will return the value converted from MB to GB
@@ -31,6 +32,16 @@ export function convertKbToMb(value: number): number {
   if (!value) { return 0; }
 
   return (value / kbToMbMultiplier);
+}
+
+/**
+ * This will return the value converted from Megabit to Gigabit
+ * @param value Value in Megabit
+ */
+export function convertMbitToGbit(value: number): number {
+  if (!value) { return 0; }
+
+  return (value / gbitToMbitMultiplier);
 }
 
 export function getPropertiesByString(rawString: string): string[] {

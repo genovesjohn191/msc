@@ -32,6 +32,7 @@ import { RemoveSimpleFirewallChangeComponent } from './simple-firewall-changes/r
 import { OrdersGuard } from './orders.guard';
 import { McsPrivateCloudOnlyGuard } from '@app/core/guards/mcs-private-cloud-only.guard';
 import { McsPublicCloudOnlyGuard } from '@app/core/guards/mcs-public-cloud-only.guard';
+import { ChangeInternetPortPlanComponent } from './change-internet-port-plan/change-internet-port-plan.component';
 
 /**
  * List of services for the main module
@@ -71,7 +72,8 @@ export const ordersComponents: any[] = [
   AddSimpleFirewallChangeComponent,
   ModifySimpleFirewallChangeComponent,
   RemoveSimpleFirewallChangeComponent,
-  FirewallChangesSharedRuleComponent
+  FirewallChangesSharedRuleComponent,
+  ChangeInternetPortPlanComponent
 ];
 
 /**
@@ -290,7 +292,12 @@ export const ordersRoutes: Routes = [
     data: { routeId: RouteKey.OrderServerRequestPatch },
     canActivate: [ McsPrivateCloudOnlyGuard ]
   },
-
+  {
+    path: 'change/internet-port-plan',
+    component: ChangeInternetPortPlanComponent,
+    data: { routeId: RouteKey.OrderChangeInternetPortPlan },
+    canActivate: [ McsPrivateCloudOnlyGuard ]
+  },
   {
     path: 'change/add-simple-firewall',
     component: AddSimpleFirewallChangeComponent,

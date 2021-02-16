@@ -32,6 +32,9 @@ export * from './addon-inview/addon-inview';
 export * from './addon-sql-server/addon-sql-server';
 export * from './addon-hids/addon-hids';
 
+/** Internet */
+export * from './internet-manage-port-plan/internet-manage-port-plan';
+
 /** SMACs */
 export * from './smac-shared-form/smac-shared-form.component';
 export * from './smac-shared-form/smac-shared-details';

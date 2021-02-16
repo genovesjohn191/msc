@@ -14,12 +14,14 @@ import { IsNotNullOrEmptyPipe } from './is-not-null-or-empty.pipe';
 import { IsNotNullOrUndefinedPipe } from './is-not-null-or-undefined.pipe';
 import { ArrayHasElement } from './array-has-element.pipe';
 import { TextPhoneNumberFormatPipe } from './text-phonenumber-format.pipe';
+import { BitDataSizePipe } from './bit-data-size.pipe';
 
 @NgModule({
   declarations: [
     NewLinesPipe,
     MapIterablePipe,
     DataSizePipe,
+    BitDataSizePipe,
     SortArrayPipe,
     DataLabelPipe,
     StdDateFormatPipe,
@@ -36,6 +38,7 @@ import { TextPhoneNumberFormatPipe } from './text-phonenumber-format.pipe';
     NewLinesPipe,
     MapIterablePipe,
     DataSizePipe,
+    BitDataSizePipe,
     SortArrayPipe,
     DataLabelPipe,
     StdDateFormatPipe,
