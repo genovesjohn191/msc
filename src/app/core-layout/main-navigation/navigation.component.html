@@ -114,7 +114,7 @@
                 </a>
               </li>
               <!-- DNS -->
-              <li *mcsAccessControl="['InternetView'];">
+              <li *ngIf="showDnsListing">
                 <a [mcsRouterLink]="routeKeyEnum.DnsListing"
                   mcsRouterLinkActive="active"
                   class="sub-navigation-item unstyled-link"

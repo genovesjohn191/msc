@@ -27,6 +27,7 @@ import {
 } from '@app/utilities';
 import { map } from 'rxjs/operators';
 import { ColumnFilter, Paginator, Search } from '@app/shared';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'mcs-dns-listing',
@@ -49,6 +50,7 @@ export class DnsListingComponent {
   constructor(
     _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
+    private _translateService: TranslateService,
     private _apiService: McsApiService,
     private _accessControlService: McsAccessControlService,
   ) {
@@ -81,6 +83,10 @@ export class DnsListingComponent {
 
   public get cogIconKey(): string {
     return CommonDefinition.ASSETS_SVG_ELLIPSIS_HORIZONTAL;
+  }
+
+  public get unavailableText(): string {
+    return this._translateService.instant('dnsListing.unavailable');;
   }
 
   private _getNetworkDNS(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsNetworkDnsBase>> {

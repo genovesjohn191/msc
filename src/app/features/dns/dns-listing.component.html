@@ -43,8 +43,8 @@
         <th mat-header-cell *matHeaderCellDef hidden-small>
           {{ 'columnHeader.billingDescription' | translate }}
         </th>
-        <td mat-cell *matCellDef="let row" hidden-small>
-          {{ row.billingDescription }}
+        <td mat-cell *matCellDef="let row" hidden-small
+          [innerHtml]="row.billingDescription | mcsDataLabel: unavailableText">
         </td>
       </ng-container>
 
@@ -53,8 +53,8 @@
         <th mat-header-cell *matHeaderCellDef hidden-small>
           {{ 'columnHeader.isPrimary' | translate }}
         </th>
-        <td mat-cell *matCellDef="let row" hidden-small>
-          {{ isPrimary(row.isPrimary) }}
+        <td mat-cell *matCellDef="let row" hidden-small
+          [innerHtml]="isPrimary(row.isPrimary) | mcsDataLabel: unavailableText">
         </td>
       </ng-container>
   
@@ -63,8 +63,8 @@
         <th mat-header-cell *matHeaderCellDef hidden-small>
           {{ 'columnHeader.serviceId' | translate }}
         </th>
-        <td mat-cell *matCellDef="let row" hidden-small>
-          {{ row.serviceId }}
+        <td mat-cell *matCellDef="let row" hidden-small
+          [innerHtml]="row.serviceId | mcsDataLabel: unavailableText">
         </td>
       </ng-container>
 
@@ -73,8 +73,8 @@
         <th mat-header-cell *matHeaderCellDef hidden-small>
           {{ 'columnHeader.zoneCount' | translate }}
         </th>
-        <td mat-cell *matCellDef="let row" hidden-small>
-          {{ row.zoneCount }}
+        <td mat-cell *matCellDef="let row" hidden-small
+          [innerHtml]="row.zoneCount">
         </td>
       </ng-container>
 

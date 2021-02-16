@@ -2449,7 +2449,8 @@
     "dataPlural": "services",
     "requestChange": "Request Record Changes",
     "raiseTicket": "Raise a Ticket",
-    "retry": "Try again shortly"
+    "retry": "Try again shortly",
+    "unavailable": "Unavailable"
   },
   "licenses": {
     "header": "Licenses",
