@@ -1,15 +1,19 @@
-import { JsonProperty } from '@app/utilities';
+import {
+  getSafeProperty,
+  isNullOrEmpty,
+  JsonProperty
+} from '@app/utilities';
+
 import { McsEntityBase } from '../common/mcs-entity.base';
-import { McsCatalogProductUseCase } from './mcs-catalog-product-use-case';
-import { McsCatalogProductLocation } from './mcs-catalog-product-location';
-import { McsCatalogProductOwner } from './mcs-catalog-product-owner';
-import { McsCatalogSolutionProduct } from './mcs-catalog-solution-product';
-import { McsCatalogSolutionBenefitsAndLimitations } from './mcs-catalog-solution-benefits-and-limitations';
 import {
   ProductAvailabilityState,
   ProductAvailabilityStateSerialization
 } from '../enumerations/product-availability-state.enum';
-import { getSafeProperty, isNullOrEmpty } from '@app/utilities';
+import { McsCatalogProductLocation } from './mcs-catalog-product-location';
+import { McsCatalogProductOwner } from './mcs-catalog-product-owner';
+import { McsCatalogProductUseCase } from './mcs-catalog-product-use-case';
+import { McsCatalogSolutionBenefitsAndLimitations } from './mcs-catalog-solution-benefits-and-limitations';
+import { McsCatalogSolutionProduct } from './mcs-catalog-solution-product';
 
 export class McsCatalogSolution extends McsEntityBase {
   @JsonProperty()
@@ -61,7 +65,7 @@ export class McsCatalogSolution extends McsEntityBase {
   public solutionArchitecture: string = undefined;
 
   @JsonProperty({ target: McsCatalogSolutionBenefitsAndLimitations })
-  public benefitsAndLimitations: McsCatalogSolutionBenefitsAndLimitations = undefined;
+  public benefitsAndLimitations: McsCatalogSolutionBenefitsAndLimitations[] = undefined;
 
   /**
    * Returns true when there is an owner atleast 1

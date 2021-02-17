@@ -91,15 +91,17 @@ export class SolutionComponent implements OnInit {
       map((resolver) => getSafeProperty(resolver, (obj) => obj.solution)),
       tap((solution) => {
         if (!isNullOrEmpty(solution)) {
-          this._catalogService.updateActiveCatalogItemDetails(createObject(CatalogItemDetails, {
-            id: solution.id,
-            catalogViewType: CatalogViewType.Solution,
-            catalogType: CatalogType.Solutions,
-            header: createObject(CatalogHeader, {
-              title: solution.name,
-              version: solution.version || ''
-            })
-          }));
+          let catalogItemDetails = new CatalogItemDetails();
+          catalogItemDetails.id = solution.id;
+          catalogItemDetails.data = solution;
+          catalogItemDetails.catalogViewType = CatalogViewType.Solution;
+          catalogItemDetails.catalogType = CatalogType.Solutions;
+          catalogItemDetails.header = createObject(CatalogHeader, {
+            title: solution.name,
+            version: solution.version || ''
+          });
+
+          this._catalogService.updateActiveCatalogItemDetails(catalogItemDetails);
           this._catalogService.updateCatalogItemMenuByType(CatalogType.Solutions, true);
         }
         if (isNullOrEmpty(this._scrollableLink)) { return; }

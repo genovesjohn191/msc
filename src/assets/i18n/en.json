@@ -2476,7 +2476,8 @@
     "header": "Catalog",
     "leftPanelHeader": "Catalog",
     "platformLabel": "Platform",
-    "useCase": "Use Case"
+    "useCase": "Use Case",
+    "exportWord": "Export Word Document"
   },
   "tools": {
     "header": "Other Tools",

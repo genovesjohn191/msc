@@ -1,30 +1,32 @@
+import { Observable } from 'rxjs';
+import {
+  map,
+  shareReplay,
+  tap
+} from 'rxjs/operators';
+
 import {
   ChangeDetectionStrategy,
   Component,
   OnInit
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
-import {
-  map,
-  tap,
-  shareReplay
-} from 'rxjs/operators';
 import { McsNavigationService } from '@app/core';
 import {
-  RouteKey,
   CatalogViewType,
-  McsCatalogSolutionBracket
+  McsCatalogSolutionBracket,
+  RouteKey
 } from '@app/models';
 import {
+  createObject,
   getSafeProperty,
-  isNullOrEmpty,
-  createObject
+  isNullOrEmpty
 } from '@app/utilities';
+
 import { CatalogService } from '../catalog.service';
 import {
-  CatalogItemDetails,
   CatalogHeader,
+  CatalogItemDetails,
   CatalogType
 } from '../shared';
 
@@ -61,13 +63,14 @@ export class SolutionsComponent implements OnInit {
       map((resolver) => getSafeProperty(resolver, (obj) => obj.solutions)),
       tap((solutions) => {
         if (isNullOrEmpty(solutions)) { return; }
-        this._catalogService.updateActiveCatalogItemDetails(createObject(CatalogItemDetails, {
-          catalogViewType: CatalogViewType.Solutions,
-          catalogType: CatalogType.Solutions,
-          header: createObject(CatalogHeader, {
-            title: 'Solutions'
-          })
-        }));
+        let catalogItemDetails = new CatalogItemDetails();
+        catalogItemDetails.catalogViewType = CatalogViewType.Solutions;
+        catalogItemDetails.catalogType = CatalogType.Solutions;
+        catalogItemDetails.header = createObject(CatalogHeader, {
+          title: 'Solutions'
+        });
+
+        this._catalogService.updateActiveCatalogItemDetails(catalogItemDetails);
         this._catalogService.updateCatalogItemMenuByType(CatalogType.Solutions, false);
       }),
       shareReplay(1)

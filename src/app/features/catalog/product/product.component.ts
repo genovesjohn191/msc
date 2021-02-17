@@ -157,16 +157,18 @@ export class ProductComponent implements OnInit {
       map((resolver) => getSafeProperty(resolver, (obj) => obj.product)),
       tap((product) => {
         if (!isNullOrEmpty(product)) {
-          this._catalogService.updateActiveCatalogItemDetails(createObject(CatalogItemDetails, {
-            id: product.id,
-            catalogViewType: CatalogViewType.Product,
-            catalogType: CatalogType.Products,
-            header: createObject(CatalogHeader, {
-              title: product.name,
-              prefix: product.serviceIdPrefix,
-              version: product.version
-            })
-          }));
+          let catalogItemDetails = new CatalogItemDetails();
+          catalogItemDetails.id = product.id;
+          catalogItemDetails.data = product;
+          catalogItemDetails.catalogViewType = CatalogViewType.Product;
+          catalogItemDetails.catalogType = CatalogType.Products;
+          catalogItemDetails.header = createObject(CatalogHeader, {
+            title: product.name,
+            prefix: product.serviceIdPrefix,
+            version: product.version
+          });
+
+          this._catalogService.updateActiveCatalogItemDetails(catalogItemDetails);
           this._catalogService.updateCatalogItemMenuByType(CatalogType.Products, true);
         }
         if (isNullOrEmpty(this._scrollableLink)) { return; }

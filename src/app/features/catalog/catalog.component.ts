@@ -62,7 +62,9 @@ import {
   CatalogItem,
   CatalogItemDetails,
   CatalogItemMenu,
-  CatalogType
+  CatalogType,
+  ExportDocumentManager,
+  ExportDocumentType
 } from './shared';
 
 @Component({
@@ -171,6 +173,18 @@ export class CatalogComponent implements OnInit, OnDestroy {
   public onSolutionChange(id: string): void {
     if (isNullOrEmpty(id)) { return; }
     this._navigationService.navigateTo(RouteKey.CatalogSolution, [id]);
+  }
+
+  public onClickExportWord(itemDetails: CatalogItemDetails): void {
+    if (isNullOrEmpty(itemDetails)) { return; }
+
+    itemDetails.catalogType === CatalogType.Products ?
+      ExportDocumentManager.initializeFactories()
+        .getCreationFactory(ExportDocumentType.MsWordProduct)
+        .exportDocument(itemDetails) :
+      ExportDocumentManager.initializeFactories()
+        .getCreationFactory(ExportDocumentType.MsWordSolution)
+        .exportDocument(itemDetails)
   }
 
   public sortPlatforms(platforms: McsCatalogProductPlatform[]): McsCatalogProductPlatform[] {
