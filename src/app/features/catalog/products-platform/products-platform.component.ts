@@ -85,15 +85,16 @@ export class ProductsPlatformComponent implements OnInit {
       }),
       tap(platform => {
         if (isNullOrEmpty(platform)) { this._errorHandlerService.redirectToErrorPage(HttpStatusCode.NotFound); }
-        this._catalogService.updateActiveCatalogItemDetails(createObject(CatalogItemDetails, {
-          id: platform.id,
-          catalogViewType: CatalogViewType.ProductPlatform,
-          catalogType: CatalogType.Products,
-          platformType: platform.name,
-          header: createObject(CatalogHeader, {
-            title: platform.name
-          })
-        }));
+        let catalogItemDetails = new CatalogItemDetails();
+        catalogItemDetails.id = platform.id;
+        catalogItemDetails.catalogViewType = CatalogViewType.ProductPlatform;
+        catalogItemDetails.catalogType = CatalogType.Products;
+        catalogItemDetails.platformType = platform.name;
+        catalogItemDetails.header = createObject(CatalogHeader, {
+          title: platform.name
+        });
+
+        this._catalogService.updateActiveCatalogItemDetails(catalogItemDetails);
         this._catalogService.updateCatalogItemMenuByType(CatalogType.Products, false);
       })
     ).subscribe();

@@ -5,7 +5,18 @@
     <ng-container *ngIf="activeCatalogItemDetails$ | async as activeCatalogItem">
       <mcs-item full-width>
         <div>
-          <h1>{{ activeCatalogItem?.header?.title }}</h1>
+          <mcs-item spacing="medium">
+            <h1>{{ activeCatalogItem?.header?.title }}</h1>
+
+            <ng-container *ngIf="activeCatalogItem.isForDetailView">
+              <mcs-icon key="word-black"
+                size="medium"
+                mcsCursor="pointer"
+                [mcsTooltip]="'catalog.exportWord' | translate"
+                (click)="onClickExportWord(activeCatalogItem)">
+              </mcs-icon>
+            </ng-container>
+          </mcs-item>
         </div>
         <mcs-item mcsAlign="end">
           <h3 *ngIf="activeCatalogItem?.header?.prefix">{{ activeCatalogItem.header.prefix }}</h3>
