@@ -22,6 +22,7 @@ import { OperationalSavingsSubitemsViewerComponent } from './operational-monthly
 import { ResourceHealthWidgetComponent } from './resource-health/resource-health-widget.component';
 import { MonitoringAndAlertingWidgetComponent } from './monitoring-and-alerting/monitoring-and-alerting-widget.component';
 import { ComplianceWidgetComponent } from './compliance/compliance-widget.component';
+import { UpdateManagementWidgetComponent } from './update-management/update-management-widget.component';
 
 const exports: any[] | Type<any> = [
   AzureResourcesWidgetComponent,
@@ -42,7 +43,8 @@ const exports: any[] | Type<any> = [
   ServicesCostOverviewWidgetComponent,
   ServicesOverviewWidgetComponent,
   VirtualMachineUsageBreakdownWidgetComponent,
-  VmRightsizingWidgetComponent
+  VmRightsizingWidgetComponent,
+  UpdateManagementWidgetComponent
 ];
 
 @NgModule({

@@ -18,7 +18,8 @@ import {
   McsReportMonitoringAndAlerting,
   McsReportResourceCompliance,
   McsRightSizingQueryParams,
-  McsReportManagementService
+  McsReportManagementService,
+  McsReportUpdateManagement
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiReportsService } from '../interfaces/mcs-api-reports.interface';
@@ -323,6 +324,25 @@ export class McsApiReportsService implements IMcsApiReportsService {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
             .deserializeResponse<McsReportMonitoringAndAlerting>(McsReportMonitoringAndAlerting, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  public getUpdateManagement(period?: string): Observable<McsApiSuccessResponse<McsReportUpdateManagement[]>> {
+    let searchParams = new Map<string, any>();
+    searchParams.set('period', period);
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/public-cloud/reports/update-management';
+    mcsApiRequestParameter.searchParameters = searchParams;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsReportUpdateManagement[]>(McsReportUpdateManagement, response);
           return apiResponse;
         })
       );

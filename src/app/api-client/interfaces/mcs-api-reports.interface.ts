@@ -1,7 +1,6 @@
 import { Observable } from 'rxjs';
 import {
   McsApiSuccessResponse,
-  McsQueryParam,
   McsReportCostRecommendations,
   McsReportGenericItem,
   McsReportIntegerData,
@@ -15,7 +14,8 @@ import {
   McsReportMonitoringAndAlerting,
   McsReportResourceCompliance,
   McsRightSizingQueryParams,
-  McsReportManagementService
+  McsReportManagementService,
+  McsReportUpdateManagement
 } from '@app/models';
 
 export interface IMcsApiReportsService {
@@ -66,4 +66,6 @@ export interface IMcsApiReportsService {
   getMonitoringAndAlerting(
     period?: string,
     subscriptionIds?: string[]): Observable<McsApiSuccessResponse<McsReportMonitoringAndAlerting>>;
+
+  getUpdateManagement(period?: string): Observable<McsApiSuccessResponse<McsReportUpdateManagement[]>>;
 }
