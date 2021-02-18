@@ -89,31 +89,3 @@ $material-default-gray: rgba(0, 0, 0, 0.38);
     margin: $space-xsmall;
   }
 }
-
-table {
-  padding: 0px !important;
-  margin: 0px !important;
-
-  thead tr th {
-    background-color: transparent !important;
-    color: $material-default-gray !important;
-  }
-
-  tbody,
-  thead {
-    tr {
-      border: none !important;
-      margin: 0px !important;
-      padding: 0px !important;
-
-      td {
-        padding: 0px;
-      }
-    }
-  }
-
-  tbody tr:hover:not(th),
-  thead tr:hover:not(th) {
-    background-color: transparent !important;
-  }
-}
