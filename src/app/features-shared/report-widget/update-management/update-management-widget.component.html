@@ -1,0 +1,124 @@
+<div class="update-management-widget">
+  <div class="listing-table-wrapper">
+    <!-- Table -->
+    <table mat-table [dataSource]="dataSource">
+      <!-- Target Computer Column -->
+      <ng-container matColumnDef="targetComputer">
+        <th mat-header-cell *matHeaderCellDef hidden-small>
+          {{ 'columnHeader.targetComputer' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let row" hidden-small>
+          {{ row.targetComputer || 'Unavailable'}}
+        </td>
+      </ng-container>
+
+      <!-- OS Type Column -->
+      <ng-container matColumnDef="osType">
+        <th mat-header-cell *matHeaderCellDef hidden-small>
+          {{ 'columnHeader.osType' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let row" hidden-small>
+          {{ row.osType || 'Unavailable' }}
+        </td>
+      </ng-container>
+
+      <!-- Subscription Column -->
+      <ng-container matColumnDef="subscription">
+        <th mat-header-cell *matHeaderCellDef hidden-small>
+          {{ 'columnHeader.subscription' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let row" hidden-small>
+          {{ row.subscription || 'Unavailable' }}
+        </td>
+      </ng-container>
+
+      <!-- Resource Group Column -->
+      <ng-container matColumnDef="resourceGroup">
+        <th mat-header-cell *matHeaderCellDef>
+          {{ 'columnHeader.resourceGroup' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.resourceGroup || 'Unavailable' }}
+        </td>
+      </ng-container>
+
+      <!-- Last Start Time Column -->
+      <ng-container matColumnDef="lastStartTime">
+        <th mat-header-cell *matHeaderCellDef>
+          {{ 'columnHeader.lastStartTime' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let row">
+          {{ (row.lastStartTime | mcsStdDateFormat) || 'Unavailable' }}
+        </td>
+      </ng-container>
+
+      <!-- Last End Time Column -->
+      <ng-container matColumnDef="lastEndTime">
+        <th mat-header-cell *matHeaderCellDef>
+          {{ 'columnHeader.lastEndTime' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let row">
+          {{ (row.lastEndTime | mcsStdDateFormat) || 'Unavailable' }}
+        </td>
+      </ng-container>
+
+      <!-- Last Status Column -->
+      <ng-container matColumnDef="lastStatus">
+        <th mat-header-cell *matHeaderCellDef>
+          {{ 'columnHeader.lastStatus' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <ng-container *ngIf="row.lastStatus; else noStatusTemplate">
+            <mat-icon *ngIf="isStatusFailedWithError(row)"
+              matTooltip="{{ row.error }}" [inline]="true">info</mat-icon>
+            {{ row.lastStatus }}
+            <a (click)="onRequestChange(row)"
+                mcsId="update-management-request-change"
+                mcsEventTracker="update-management-request-change"
+                mcsEventCategory="update-management"
+                mcsEventLabel="update-management-dashboard-insight">
+              <div *ngIf="row.lastStatus === 'Succeeded'; else statusFailedTemplate">
+                {{ 'reports.insights.techReview.updateManagement.status.rollback' | translate }}
+              </div>
+              <ng-template #statusFailedTemplate>
+                <div>
+                  {{ 'reports.insights.techReview.updateManagement.status.remediate' | translate }}
+                </div>
+              </ng-template>
+            </a>
+          </ng-container>
+          <ng-template #noStatusTemplate>Unavailable</ng-template>
+        </td>
+      </ng-container>
+
+      <!-- Header and Data row -->
+      <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"></tr>
+      <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"
+        mcsCursor="pointer"
+        mcsId="update-management-row"
+        mcsEventTracker="navigate-to-update-management"
+        mcsEventCategory="update-management"
+        mcsEventLabel="dashboard-insight-page"></tr>
+    </table>
+
+    <!-- Table Statuses -->
+    <mcs-item orientation="block">
+      <div *ngIf="dataSource?.isInProgress$ | async" align="center">
+        <mcs-loader size="medium"></mcs-loader>
+      </div>
+      <div *ngIf="dataSource?.hasNoRecords$ | async" text-center>
+        {{ 'reports.insights.techReview.updateManagement.noUpdateManagement' | translate }}
+      </div>
+      <div *ngIf="dataSource?.hasError$ | async" text-center>
+        <div class="listing-status-wrapper">
+          <span>{{ 'reports.insights.techReview.updateManagement.errorMessage' | translate }}</span>
+          <a (click)="retryDatasource()"
+            mcsId
+            mcsEventTracker="retry-loading-update-management-list"
+            mcsEventCategory="update-management"
+            mcsEventLabel="dashboard-insight-page">{{ 'reports.insights.techReview.updateManagement.retry' | translate }}</a>.
+        </div>
+      </div>
+    </mcs-item>
+  </div>
+</div>

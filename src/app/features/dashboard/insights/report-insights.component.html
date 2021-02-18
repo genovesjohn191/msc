@@ -207,6 +207,14 @@
                   {{ 'reports.insights.techReview.monitoringAlerting.subTitle' | translate }}
                 </div>
                 <mcs-monitoring-and-alerting-widget [subscriptionIds]="subscriptionIdsFilter"></mcs-monitoring-and-alerting-widget>
+                <mat-divider></mat-divider>
+
+                <!-- Update Management -->
+                <h2><span class="show-on-print-only">2.6 </span>{{ 'reports.insights.techReview.updateManagement.title' | translate }}</h2>
+                <div class="widget-label">
+                  {{ 'reports.insights.techReview.updateManagement.subTitle' | translate }}
+                </div>
+                <mcs-update-management-widget></mcs-update-management-widget>
               </div>
             </section>
           </ng-container>

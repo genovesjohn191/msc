@@ -276,6 +276,17 @@
           "title": "Monitoring and Alerting",
           "subTitle": "by severity, for the current month.",
           "totalAlerts": "Total Alerts"
+        },
+        "updateManagement": {
+          "title": "Update Management",
+          "subTitle": "An overview of the state of each of your managed VMs which are configured for update scheduling; when they were last updated and whether the attempt was successful.",
+          "errorMessage": "Something went wrong while retrieving your data.",
+          "noUpdateManagement": "No data found",
+          "retry": "Try again",
+          "status": {
+            "remediate": "Remediate",
+            "rollback": "Rollback"
+          }
         }
       }
     }
@@ -2993,7 +3004,14 @@
     "attachedTo": "Attached To",
     "zoneCount": "Zones",
     "isPrimary": "Type",
-    "billingDescription": "Description"
+    "billingDescription": "Description",
+    "targetComputer": "Target VM",
+    "osType": "OS Type",
+    "subscription": "Subscription",
+    "resourceGroup": "Resource Group",
+    "lastStartTime": "Last Start Time",
+    "lastEndTime": "Last End Time",
+    "lastStatus": "Last Status"
   },
   "formFields": {
     "selectStorage": "Select storage profile"

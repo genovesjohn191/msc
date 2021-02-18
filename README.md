@@ -198,3 +198,9 @@ Then create the configmap like so:
 Point a new Jenkins pipeline job at the ssh git repository for this project. The Jenkins master must itself be deployed within kubernetes and have the [https://github.com/jenkinsci/kubernetes-plugin/blob/master/README.md](jenkinsci kubernetes)) plugin installed. Follow the instructions in the [https://github.com/jenkinsci/kubernetes-plugin/blob/master/README.md](README.md) for that plugin to get Jenkins to talk to your kubernetes cluster.
 
 The blue ocean container is a nice plugin on top of Jenkins and is highly recommended.
+
+### ERRORS
+
+    An unhandled exception occurred: ENOENT: no such file or directory, open 'F:\mcs.portal.frontend\ssl\dev-portal.key'
+
+Ensure ssl/dev-portal.key file exists in your project. If none, ask for a generated private key from your team.

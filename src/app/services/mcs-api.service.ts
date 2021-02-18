@@ -124,6 +124,7 @@ import {
   McsReportSecurityScore,
   McsReportServiceChangeInfo,
   McsReportSubscription,
+  McsReportUpdateManagement,
   McsReportVMRightsizing,
   McsReportVMRightsizingSummary,
   McsResource,
@@ -1713,6 +1714,15 @@ export class McsApiService {
     return this._reportsApi.getMonitoringAndAlerting(period, subscriptionIds).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getMonitoringAndAlerting'))
+      ),
+      map((response) => getSafeProperty(response, (obj) => obj.content))
+    );
+  }
+
+  public getUpdateManagement(period?: string): Observable<McsReportUpdateManagement[]> {
+    return this._reportsApi.getUpdateManagement(period).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getUpdateManagement'))
       ),
       map((response) => getSafeProperty(response, (obj) => obj.content))
     );
