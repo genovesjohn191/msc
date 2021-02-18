@@ -1,27 +1,27 @@
 import {
-  Directive,
-  ContentChild,
-  AfterContentInit,
-  OnDestroy
-} from '@angular/core';
-import {
   Observable,
   Subject
 } from 'rxjs';
 import {
-  takeUntil,
+  filter,
   map,
-  tap,
-  filter
+  takeUntil,
+  tap
 } from 'rxjs/operators';
+
+import {
+  forwardRef,
+  Directive,
+  Inject,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
 import {
   isNullOrEmpty,
   unsubscribeSafely
 } from '@app/utilities';
-import {
-  Search,
-  SearchComponent
-} from '../search';
+
+import { SearchComponent } from '../search';
 
 @Directive({
   selector: '[mcsSelectSearch]',
@@ -30,21 +30,18 @@ import {
   }
 })
 
-export class SelectSearchDirective implements AfterContentInit, OnDestroy {
-
+export class SelectSearchDirective implements OnInit, OnDestroy {
   public focusReceive = new Subject<void>();
-
-  @ContentChild(SearchComponent)
-  private _search: Search;
 
   private _searchChange = new Subject<string>();
   private _destroySubject = new Subject<void>();
 
-  public ngAfterContentInit(): void {
-    Promise.resolve().then(() => {
-      this._validateSearchControl();
-      this._subscribeToSearchControl();
-    });
+  constructor(@Inject(forwardRef(() => SearchComponent)) private _searchHost: SearchComponent) {
+  }
+
+  public ngOnInit(): void {
+    this._validateSearchControl();
+    this._subscribeToSearchControl();
   }
 
   public ngOnDestroy(): void {
@@ -63,7 +60,7 @@ export class SelectSearchDirective implements AfterContentInit, OnDestroy {
    * Subscribes to search control component
    */
   private _subscribeToSearchControl(): void {
-    this._search.searchChangedStream.pipe(
+    this._searchHost.searchChangedStream.pipe(
       takeUntil(this._destroySubject),
       filter((searchControl) => !isNullOrEmpty(searchControl)),
       tap((searchControl) => searchControl.showLoading(false)),
@@ -75,7 +72,7 @@ export class SelectSearchDirective implements AfterContentInit, OnDestroy {
    * Validates the search control component is declared
    */
   private _validateSearchControl(): void {
-    if (!isNullOrEmpty(this._search)) { return; }
+    if (!isNullOrEmpty(this._searchHost)) { return; }
     throw new Error('Unable to find search component on select-search element.');
   }
 }
