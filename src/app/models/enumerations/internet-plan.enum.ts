@@ -4,14 +4,14 @@ export enum InternetPlan {
   Unknown = 0,
   Prepaid,
   Unlimited,
-  NintyFifthPercentile
+  NinetyFifthPercentile
 }
 
 export const internetPlanText = {
   [InternetPlan.Unknown]: 'Unknown',
   [InternetPlan.Prepaid]: 'Prepaid',
   [InternetPlan.Unlimited]: 'Unlimited',
-  [InternetPlan.NintyFifthPercentile]: '95th Percentile'
+  [InternetPlan.NinetyFifthPercentile]: '95th Percentile'
 };
 
 /**

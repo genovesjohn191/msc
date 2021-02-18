@@ -200,12 +200,12 @@ export class ChangeInternetPortPlanComponent extends McsOrderWizardBase implemen
 
   public selectedInternetIsValid(internet: McsInternetPort): boolean {
     return internet.serviceChangeAvailable &&
-          internet.plan !== InternetPlan.NintyFifthPercentile &&
+          internet.plan !== InternetPlan.NinetyFifthPercentile &&
           isNullOrEmpty(internet.primaryPort);
   }
 
   public isPlanNinetyFifthPercentile(plan: number): boolean {
-    return plan === InternetPlan.NintyFifthPercentile;
+    return plan === InternetPlan.NinetyFifthPercentile;
   }
 
   public isPrimaryPortNotNull(primaryPort): boolean {
