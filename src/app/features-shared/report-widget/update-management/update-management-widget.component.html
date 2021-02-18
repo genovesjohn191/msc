@@ -93,12 +93,7 @@
 
       <!-- Header and Data row -->
       <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"></tr>
-      <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"
-        mcsCursor="pointer"
-        mcsId="update-management-row"
-        mcsEventTracker="navigate-to-update-management"
-        mcsEventCategory="update-management"
-        mcsEventLabel="dashboard-insight-page"></tr>
+      <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"></tr>
     </table>
 
     <!-- Table Statuses -->
