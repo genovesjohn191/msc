@@ -160,14 +160,14 @@
                 <mcs-item>
                   <span>{{ 'order.totalMonthlyCost' | translate }}:</span>
                   <span>
-                    {{ selectedOrder.charges?.currencySymbol }}{{ (selectedOrder.charges?.monthly | number: '1.2') || 0 }}
+                    {{ selectedOrder.charges?.currencySymbol }}{{ ((selectedOrder.charges?.monthly || 0) | number: '1.2')}}
                   </span>
                 </mcs-item>
 
                 <mcs-item>
                   <span>{{ 'order.totalOneOffCost' | translate }}:</span>
                   <span>
-                    {{ selectedOrder.charges?.currencySymbol }}{{ (selectedOrder.charges?.oneOff | number: '1.2') || 0 }}
+                    {{ selectedOrder.charges?.currencySymbol }}{{ ((selectedOrder.charges?.oneOff || 0) | number: '1.2')}}
                   </span>
                 </mcs-item>
 
