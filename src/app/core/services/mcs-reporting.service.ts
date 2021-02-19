@@ -244,7 +244,7 @@ export class McsReportingService {
 
     // Break periods and names to separate array and ensure uniqueness
     items.forEach((data) => {
-      let invalidData = isNullOrEmpty(data.name) || isNullOrEmpty(data.period);
+      let invalidData = isNullOrEmpty(data.name) || isNullOrEmpty(data.period) || isNullOrEmpty(data.value);
       if (invalidData) { return; }
 
       let newPeriodList = newPeriods.findIndex((period) => period === data.period) < 0;
