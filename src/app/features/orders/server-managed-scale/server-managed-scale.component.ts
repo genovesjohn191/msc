@@ -1,70 +1,71 @@
 import {
-  Component,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  ViewChild,
-  ElementRef,
-  OnDestroy,
-  Injector,
-  OnInit
-} from '@angular/core';
-import {
   Observable,
   Subject,
   Subscription
 } from 'rxjs';
 import {
-  isNullOrEmpty,
-  getSafeProperty,
-  unsubscribeSafely,
-  convertGbToMb,
-  convertMbToGb,
-  CommonDefinition,
-  Guid,
-  createObject
-} from '@app/utilities';
-import {
   map,
-  tap,
-  takeUntil,
-  shareReplay
+  shareReplay,
+  tap
 } from 'rxjs/operators';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+
 import {
-  McsOrderWizardBase,
-  McsFormGroupService,
-  IMcsFormGroup,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Injector,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup
+} from '@angular/forms';
+import {
   CoreValidators,
+  IMcsFormGroup,
+  McsFormGroupService,
+  McsOrderWizardBase,
   OrderRequester
 } from '@app/core';
-import {
-  McsResource,
-  McsServer,
-  McsOrderWorkflow,
-  OrderIdType,
-  McsServerCompute,
-  McsOrderCreate,
-  McsOrderItemCreate,
-  McsOptionGroup,
-  McsEntityProvision,
-  ServiceOrderState,
-  McsOption
-} from '@app/models';
-import { McsApiService } from '@app/services';
+import { McsEvent } from '@app/events';
 import {
   OrderDetails,
   ServerManageScale
 } from '@app/features-shared';
 import {
-  FormBuilder,
-  FormGroup,
-  FormControl
-} from '@angular/forms';
+  McsEntityProvision,
+  McsOption,
+  McsOptionGroup,
+  McsOrderCreate,
+  McsOrderItemCreate,
+  McsOrderWorkflow,
+  McsResource,
+  McsServer,
+  McsServerCompute,
+  OrderIdType,
+  ServiceOrderState
+} from '@app/models';
+import { McsApiService } from '@app/services';
 import {
-  McsFormGroupDirective,
-  ComponentHandlerDirective
+  ComponentHandlerDirective,
+  McsFormGroupDirective
 } from '@app/shared';
-import { McsEvent } from '@app/events';
+import {
+  convertGbToMb,
+  convertMbToGb,
+  createObject,
+  getSafeProperty,
+  isNullOrEmpty,
+  unsubscribeSafely,
+  CommonDefinition,
+  Guid
+} from '@app/utilities';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+
 import { ServerManagedScaleService } from './server-managed-scale.service';
 
 type ScaleManageProperties = {
@@ -104,7 +105,6 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
   private _selectedServerHandler: Subscription;
   private _resourcesDataChangeHandler: Subscription;
   private _scaleServerOrderStateMessageMap = new Map<ServiceOrderState, string>();
-  private _defaultServer: McsServer = new McsServer();
 
   constructor(
     _injector: Injector,
@@ -126,12 +126,12 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
           action: 'next-button'
         }
       });
-    this._registerFormGroups();
-    this._registerEvents();
     this._manageScale = new ServerManageScale();
   }
 
   public ngOnInit() {
+    this._registerFormGroups();
+    this._registerEvents();
     this._registerProvisionStateMap();
     this._subscribeToManagedCloudServers();
   }
@@ -272,7 +272,6 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
       map((serversCollection) => {
         let serverGroups: McsOptionGroup[] = [];
         let servers = getSafeProperty(serversCollection, (obj) => obj.collection) || [];
-        this._defaultServer = servers.find(_s => _s.serviceChangeAvailable || !_s.isProcessing);
 
         servers.forEach((server) => {
           if (!server.isManagedVCloud) { return; }
@@ -290,21 +289,8 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
           );
         });
         return serverGroups;
-      }),
-      tap((serverGroups)=>{
-        this._preSelectServer(serverGroups)
       })
     );
-  }
-
-  private _preSelectServer(serverGroups: McsOptionGroup[]): void {
-    if (!isNullOrEmpty(this._defaultServer)) {
-        serverGroups.find(_group => {
-          let serverGroupOptions =_group.options;
-          let preSelectedServer = serverGroupOptions.find(_option => _option.value.entity.serviceId === this._defaultServer.serviceId);
-          this.fcManageServer.setValue(preSelectedServer);
-        });
-    }
   }
 
   /**
@@ -402,9 +388,6 @@ export class ServerManagedScaleComponent extends McsOrderWizardBase implements O
       this.fgServerManagedScaleDetails.addControl('fgManageScale',
         this._fgManageScale.getFormGroup().formGroup);
     }
-    this.fgServerManagedScaleDetails.valueChanges.pipe(
-      takeUntil(this._destroySubject)
-    ).subscribe();
   }
 
   /**

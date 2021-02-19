@@ -427,7 +427,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
     if (isNullOrEmpty(options)) { return; }
 
     options.forEach((item) => {
-        this._checkMultiSelectOptionLimit(item);
+      this._checkMultiSelectOptionLimit(item);
     });
   }
 
@@ -443,7 +443,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
       this.value = this.selectedOptions && this.selectedOptions.map((selectedOption) => selectedOption.value);
       this._disableNotSelectedOptions();
       this.stateChanges.next();
-    }  else {
+    } else {
       if (option.selected === true) {
         this._removeFromSelectedOptions(option);
       }
@@ -457,7 +457,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
     if (this.selectedOptions.length === this.multiSelectLimit) {
       this._options.forEach((_option) => {
         _option.disabled = (this.selectedOptions.find((selectedOption) => selectedOption.value === _option.value)) ?
-        false : true;
+          false : true;
       });
     }
   }
@@ -565,9 +565,14 @@ export class SelectComponent extends McsFormFieldControlBase<any>
       let isFirstItemSelected = this.required && !isNullOrEmpty(this._options)
         && !this._options.find((option) => option.value === selectedValue);
 
-      isFirstItemSelected ?
-        this._selectOption(this._options.first) :
+      if (isFirstItemSelected) {
+        let firstEnabledOption = this._options.find(option => !option.disabled);
+        if (!isNullOrEmpty(firstEnabledOption)) {
+          this._selectOption(firstEnabledOption);
+        }
+      } else {
         this._selectOptionByValue(this.ngControl ? this.ngControl.value : this._value);
+      }
 
       let associatedControl = getSafeProperty(this.ngControl, (obj) => obj.control);
       if (!isNullOrEmpty(associatedControl)) {
