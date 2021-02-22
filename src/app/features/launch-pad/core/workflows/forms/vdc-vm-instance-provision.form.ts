@@ -39,7 +39,7 @@ export const vdcVmInstanceProvisionForm: LaunchPadForm = {
       key: 'name',
       label: 'Name',
       placeholder: 'Enter a host name',
-      validators: { required: true, minlength: 1, maxlength: 100 },
+      validators: { required: true, minlength: 1, maxlength: 15 },
       hint: 'e.g. mt-webserver01, mt-db01',
       contextualHelp: `'-{service ID}' will be appended to this name in vCloud automatically`
     }),
