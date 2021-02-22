@@ -143,9 +143,14 @@ export class ChangeInternetPortPlanComponent extends McsOrderWizardBase implemen
     return getSafeProperty(this._formGroup, (obj) => obj.isValid()) && this._internetManagePortPlan?.hasChanged;
   }
 
-  public serviceChangeUnavailableToolTipText(serviceChangeAvailable: boolean): string {
-    if (serviceChangeAvailable) { return; }
-    return this._translate.instant('changeInternetPortPlan.internetIsInvalid.serviceChangeAvailable')
+  public internetPortToolTipText(internetPort: McsInternetPort): string {
+    if (internetPort.plan === InternetPlan.NinetyFifthPercentile) {
+      return this._translate.instant('changeInternetPortPlan.internetIsInvalid.plan')
+    } else if (!isNullOrEmpty(internetPort.primaryPort)) {
+      return this._translate.instant('changeInternetPortPlan.internetIsInvalid.primaryPort')
+    } else {
+      return this._translate.instant('changeInternetPortPlan.internetIsInvalid.serviceChangeAvailable')
+    }
   }
 
   /**
