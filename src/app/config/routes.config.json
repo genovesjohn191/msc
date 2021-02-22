@@ -557,6 +557,7 @@
     "enumCategory": "MakeAChange",
     "navigationPath": "orders/change/internet-port-plan",
     "requiredPermissions": ["OrderEdit"],
+    "requiredFeatureFlag": "EnableOrderingInternetPortPlanChange",
     "documentTitle": "Change Internet Port Plan - Macquarie Cloud Services"
   },
   "orderAddSimpleFirewallChange": {

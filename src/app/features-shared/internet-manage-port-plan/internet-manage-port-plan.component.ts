@@ -241,21 +241,22 @@ export class InternetManagePortPlanComponent
    */
   public notifyDataChange() {
     let updatedMonthlyCapValue = convertGbToMb(coerceNumber(this.setMonthlyCapValue()));
+    let currentMonthlyCap = convertGbToMb(coerceNumber(this._monthlyCap));
 
     switch (this.inputManageType) {
       case InputManageType.Custom:
         this._portPlanOutput.monthlyCap = updatedMonthlyCapValue;
+        this._portPlanOutput.valid = this.fcCustomMonthlyCap.valid
         break;
       case InputManageType.Auto:
       default:
         this._portPlanOutput.monthlyCap = updatedMonthlyCapValue;
+        this._portPlanOutput.valid = currentMonthlyCap !== updatedMonthlyCapValue;
         break;
     }
 
     this._portPlanOutput.portSpeed = this.portSpeedSliderValue;
-    this._portPlanOutput.valid = this.fcCustomMonthlyCap.valid
 
-    let currentMonthlyCap = convertGbToMb(coerceNumber(this._monthlyCap));
     this._portPlanOutput.hasChanged = this._portPlanOutput.valid
       && (this.portSpeed !== this._portPlanOutput.portSpeed
       || currentMonthlyCap !== this._portPlanOutput.monthlyCap);
