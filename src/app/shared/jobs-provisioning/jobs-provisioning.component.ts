@@ -15,7 +15,10 @@ import {
   Subscription
 } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { CoreRoutes } from '@app/core';
+import {
+  CoreRoutes,
+  McsAccessControlService
+} from '@app/core';
 import { McsEvent } from '@app/events';
 import {
   isNullOrEmpty,
@@ -29,7 +32,8 @@ import {
   McsJob,
   DataStatus,
   JobType,
-  RouteKey
+  RouteKey,
+  McsPermission
 } from '@app/models';
 import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import { JobsProvisioningLoadingTextDirective } from './jobs-provisioning-loading-text.directive';
@@ -67,6 +71,12 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
     return CommonDefinition.ASSETS_SVG_INFO;
   }
 
+  public get showLogs(): boolean {
+    let hasAccessToLogs: boolean = !isNullOrEmpty(this._accessControlService)
+      && this._accessControlService.hasPermission([McsPermission.RawDataView]);
+    return hasAccessToLogs;
+  }
+
   public get errorIcon(): string {
     return CommonDefinition.ASSETS_SVG_ERROR;
   }
@@ -84,7 +94,8 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
   public constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private _eventDispatcher: EventBusDispatcherService,
-    private _iterableDiffers: IterableDiffers
+    private _iterableDiffers: IterableDiffers,
+    private _accessControlService: McsAccessControlService
   ) {
     this.progressValue = 0;
     this.progressMax = 0;

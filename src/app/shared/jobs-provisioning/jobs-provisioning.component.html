@@ -76,7 +76,7 @@
         </ng-container>
       </ng-container>
 
-      <div style="margin-left: 15px;">
+      <div style="margin-left: 15px;" *ngIf="showLogs">
         <mcs-cta-list *ngFor="let task of job.tasks">
           <mcs-cta-list-panel *ngFor="let log of task.logs" [icon]="log.logType === 'ERROR' ? errorIcon : infoIcon" compact="true">
             <mcs-cta-list-body>
