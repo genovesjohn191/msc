@@ -242,6 +242,7 @@ export class InternetManagePortPlanComponent
   public notifyDataChange() {
     let updatedMonthlyCapValue = convertGbToMb(coerceNumber(this.setMonthlyCapValue()));
     let currentMonthlyCap = convertGbToMb(coerceNumber(this._monthlyCap));
+    this._portPlanOutput.portSpeed = this.portSpeedSliderValue || this.sliderTable[0].portSpeed;
 
     switch (this.inputManageType) {
       case InputManageType.Custom:
@@ -251,11 +252,9 @@ export class InternetManagePortPlanComponent
       case InputManageType.Auto:
       default:
         this._portPlanOutput.monthlyCap = updatedMonthlyCapValue;
-        this._portPlanOutput.valid = currentMonthlyCap !== updatedMonthlyCapValue;
+        this._portPlanOutput.valid = currentMonthlyCap !== updatedMonthlyCapValue || this.portSpeed !== this._portPlanOutput.portSpeed;
         break;
     }
-
-    this._portPlanOutput.portSpeed = this.portSpeedSliderValue;
 
     this._portPlanOutput.hasChanged = this._portPlanOutput.valid
       && (this.portSpeed !== this._portPlanOutput.portSpeed
@@ -275,7 +274,7 @@ export class InternetManagePortPlanComponent
       return this.fcCustomMonthlyCap.value;
     }
 
-    return this.monthlyCapSliderValueIndex;
+    return isNullOrEmpty(this.monthlyCapSliderValueIndex) ? 1 : this.monthlyCapSliderValueIndex;
   }
 
   /**
