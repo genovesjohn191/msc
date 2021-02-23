@@ -1,9 +1,27 @@
-<mcs-list>
-  <ng-container *ngFor="let filter of filters">
-    <mcs-item *ngIf="isFilterIncluded(filter)">
-      <mcs-checkbox mcsId [(ngModel)]="filter.value" (statusChange)="notifyDataChange()">
-        {{ getFilterText(filter) }}
-      </mcs-checkbox>
-    </mcs-item>
-  </ng-container>
-</mcs-list>
+<ng-container *ngIf="triggerable">
+  <mcs-icon key="columns-black" size="large"
+    mcsCursor="pointer"
+    mcsPopover
+    placement="bottom"
+    orientation="left"
+    theme="light"
+    padding="narrow"
+    [content]="itemsTemplate">
+  </mcs-icon>
+</ng-container>
+
+<ng-container *ngIf="!triggerable">
+  <ng-container *ngTemplateOutlet="itemsTemplate"></ng-container>
+</ng-container>
+
+<ng-template #itemsTemplate>
+  <mcs-list>
+    <ng-container *ngFor="let filter of filters">
+      <mcs-item *ngIf="isFilterIncluded(filter)">
+        <mcs-checkbox mcsId [(ngModel)]="filter.value" (statusChange)="notifyDataChange()">
+          {{ getFilterText(filter) }}
+        </mcs-checkbox>
+      </mcs-item>
+    </ng-container>
+  </mcs-list>
+</ng-template>
