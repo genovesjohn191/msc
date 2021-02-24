@@ -54,10 +54,17 @@
           </mcs-radio-button>
         </mcs-radio-button-group>
       </ng-container>
-      <ng-container *ngIf="config.contactConfig.phoneNumber">
+      <ng-container *ngIf="isPhoneNumberLoaded; else loading">
         <!-- TODO: add a new shared directive / global color classes for coloring font elements-->
-        <span [mcsGreyedOut]="true">{{ 'smacShared.form.contact.description' | translate: { phone_number: config?.contactConfig?.phoneNumber } }}</span>
+        <span [mcsGreyedOut]="true" *ngIf="config?.contactConfig?.phoneNumber">
+          {{ 'smacShared.form.contact.description' | translate: { phone_number: config?.contactConfig?.phoneNumber } }}
+        </span>
       </ng-container>
+      <ng-template #loading>
+        <mcs-loader size="small"
+        [mcsTooltip]="loadingText"
+        mcsTooltipPosition="right"></mcs-loader>
+      </ng-template>
   </mcs-item>
 
   <!-- Customer Reference Number -->

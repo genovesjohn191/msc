@@ -7,7 +7,8 @@ import {
   OnDestroy,
   ViewChild,
   Input,
-  Injector
+  Injector,
+  ChangeDetectorRef
 } from '@angular/core';
 import {
   FormGroup,
@@ -24,23 +25,27 @@ import {
 import {
   takeUntil,
   filter,
-  tap
+  tap,
+  map
 } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
-import { McsOption } from '@app/models';
+import { McsOption, McsPermission } from '@app/models';
 import {
   unsubscribeSafely,
   getSafeProperty,
   isNullOrEmpty,
-  createObject
+  createObject,
+  formatStringToPhoneNumber
 } from '@app/utilities';
 import {
   CoreValidators,
-  IMcsFormGroup
+  IMcsFormGroup,
+  McsAccessControlService
 } from '@app/core';
 import { McsFormGroupDirective } from '@app/shared';
 import { SmacSharedDetails } from './smac-shared-details';
 import { SmacSharedFormConfig } from './smac-shared-form-config';
+import { McsApiService } from '@app/services';
 
 const NOTES_MAXLENGTH = 850;
 
@@ -57,6 +62,7 @@ export class SmacSharedFormComponent implements IMcsFormGroup, OnInit, OnDestroy
   public fcContact: FormControl;
   public fcCustomerReference: FormControl;
   public fcNotes: FormControl;
+  public isPhoneNumberLoaded: boolean;
 
   public contactOptions$: Observable<McsOption[]>;
 
@@ -79,7 +85,6 @@ export class SmacSharedFormComponent implements IMcsFormGroup, OnInit, OnDestroy
   }
   public get config(): SmacSharedFormConfig { return this._config; }
   private _config: SmacSharedFormConfig;
-
   @ViewChild(McsFormGroupDirective)
   public set formGroup(value: McsFormGroupDirective) {
     if (isNullOrEmpty(value)) { return; }
@@ -93,8 +98,11 @@ export class SmacSharedFormComponent implements IMcsFormGroup, OnInit, OnDestroy
 
   constructor(
     _injector: Injector,
+    private _changeDetectionRef: ChangeDetectorRef,
     private _formBuilder: FormBuilder,
-    private _translate: TranslateService
+    private _translate: TranslateService,
+    private _apiService: McsApiService,
+    private _accessControlService: McsAccessControlService,
   ) {
     this._registerFormGroup();
 
@@ -105,6 +113,7 @@ export class SmacSharedFormComponent implements IMcsFormGroup, OnInit, OnDestroy
 
   public ngOnInit(): void {
     this._subscribeToContactOptions();
+    this._getContactNumber();
   }
 
   public ngOnDestroy(): void {
@@ -113,6 +122,10 @@ export class SmacSharedFormComponent implements IMcsFormGroup, OnInit, OnDestroy
 
   public get notesMaxLength(): number {
     return NOTES_MAXLENGTH;
+  }
+
+  public get loadingText(): string {
+    return this._translate.instant('smacShared.loading.text');
   }
 
   /**
@@ -183,5 +196,24 @@ export class SmacSharedFormComponent implements IMcsFormGroup, OnInit, OnDestroy
       createObject(McsOption, { text: this._translate.instant('smacShared.form.contact.options.yes'), value: true }),
       createObject(McsOption, { text: this._translate.instant('smacShared.form.contact.options.no'), value: false })
     ]);
+  }
+
+  private _getContactNumber(): void {
+    this.isPhoneNumberLoaded = false;
+    if(isNullOrEmpty(this._config.contactConfig.phoneNumber)){
+      let hasViewAllAccess = this._accessControlService.hasPermission([McsPermission.CompanyView]);
+      if(hasViewAllAccess){
+        this.isPhoneNumberLoaded = true;
+        return;
+      }
+      else {
+        this._apiService.getAccount().subscribe(
+          (account) => {
+            this._config.contactConfig.phoneNumber = formatStringToPhoneNumber(account.phoneNumber);
+            this.isPhoneNumberLoaded = true;
+          this._changeDetectionRef.detectChanges();
+        });
+      }
+    }
   }
 }

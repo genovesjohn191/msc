@@ -27,7 +27,8 @@ import {
   Subject,
   Observable,
   zip,
-  Subscription
+  Subscription,
+  BehaviorSubject
 } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import {
@@ -83,7 +84,7 @@ McsOrderWizardBase implements OnInit, OnDestroy {
   public leadTimeHours: number;
   public isLoading: boolean;
   public firewallOptions: Array<McsOption> = new Array<McsOption>();
-  public smacSharedFormConfig$: Observable<SmacSharedFormConfig>;
+  public smacSharedFormConfig$:BehaviorSubject<SmacSharedFormConfig>;
   public ruleActionType: RuleAction = RuleAction.Remove;
   public get loadingText(): string {
     return LOADING_TEXT;
@@ -137,6 +138,7 @@ McsOrderWizardBase implements OnInit, OnDestroy {
     super.dispose();
     unsubscribeSafely(this._routerHandler);
     unsubscribeSafely(this._formGroupSubject);
+    unsubscribeSafely(this.smacSharedFormConfig$);
   }
   public get backIconKey(): string {
     return CommonDefinition.ASSETS_SVG_CHEVRON_LEFT;
@@ -254,16 +256,12 @@ McsOrderWizardBase implements OnInit, OnDestroy {
   }
 
   private _initializeSmacSharedForm(): void {
-    this.smacSharedFormConfig$ = this._apiService.getAccount().pipe(
-      map((response) => {
-        let testCaseConfig = { isIncluded: false };
-        let notesConfig = { isIncluded: true, label: this.notesLabel };
-        let contactConfig = { isIncluded: true, phoneNumber: formatStringToPhoneNumber(response.phoneNumber) };
-        let custRefConfig = { isIncluded: true, helpText: this.referenceNumberHelpText}
-        let config = new SmacSharedFormConfig(this._injector, testCaseConfig, notesConfig, contactConfig, custRefConfig);
-        return config;
-      })
-    );
+    let testCaseConfig = { isIncluded: false };
+    let notesConfig = { isIncluded: true, label: this.notesLabel };
+    let contactConfig = { isIncluded: true };
+    let custRefConfig = { isIncluded: true, helpText: this.referenceNumberHelpText}
+    let config = new SmacSharedFormConfig(this._injector, testCaseConfig, notesConfig, contactConfig, custRefConfig);
+    this.smacSharedFormConfig$ = new BehaviorSubject<SmacSharedFormConfig>(config);
   }
 
   private _getRulesToDelete(): Array<string> {

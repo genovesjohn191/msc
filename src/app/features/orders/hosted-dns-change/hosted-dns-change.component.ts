@@ -33,7 +33,6 @@ import {
   isNullOrEmpty,
   createObject,
   unsubscribeSafely,
-  formatStringToPhoneNumber,
   isNullOrUndefined,
   getCurrentDate
 } from '@app/utilities';
@@ -71,6 +70,7 @@ import {
 import { ChangeToApplyFactory } from './change-to-apply/change-to-apply.factory';
 import { TranslateService } from '@ngx-translate/core';
 import { ActivatedRoute } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 
 const HOSTED_DNS_CHANGE = Guid.newGuid().toString();
 const LOADING_TEXT = 'loading';
@@ -94,7 +94,7 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
   public loadingDNSZones: boolean;
   public networkDnsOptions: Array<McsOption> = new Array<McsOption>();
   public networkDnsZoneOptions: Array<McsOption> = new Array<McsOption>();
-  public smacSharedFormConfig$: Observable<SmacSharedFormConfig>;
+  public smacSharedFormConfig$: BehaviorSubject<SmacSharedFormConfig>;
   public selectedDnsNetwork$: Observable<McsAzureServiceQueryParams>;
   public get loadingText(): string {
     return LOADING_TEXT;
@@ -154,6 +154,7 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
 
   public ngOnDestroy() {
     unsubscribeSafely(this._formGroupSubject);
+    unsubscribeSafely(this.smacSharedFormConfig$);
   }
 
   public get backIconKey(): string {
@@ -409,16 +410,11 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
    * Initialize to Smac Shared Form Config
    */
   private _initializeSmacSharedForm(): void {
-    this.smacSharedFormConfig$ = this._apiService.getAccount().pipe(
-      map((response) => {
-        let testCaseConfig = { isIncluded: false };
-        let notesConfig = { isIncluded: true, label: this.notesLabel };
-        let contactConfig = { isIncluded: true, phoneNumber: formatStringToPhoneNumber(response.phoneNumber) };
-
-        let config = new SmacSharedFormConfig(this._injector, testCaseConfig, notesConfig, contactConfig);
-        return config;
-      })
-    );
+    let testCaseConfig = { isIncluded: false };
+    let notesConfig = { isIncluded: true, label: this.notesLabel };
+    let contactConfig = { isIncluded: true };
+    let config = new SmacSharedFormConfig(this._injector, testCaseConfig, notesConfig, contactConfig);
+    this.smacSharedFormConfig$ = new BehaviorSubject<SmacSharedFormConfig>(config);
   }
 
   private _getLeadTimeHours(): void {

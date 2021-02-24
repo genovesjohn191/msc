@@ -4,7 +4,8 @@ import {
   zip,
   Observable,
   Subject,
-  Subscription
+  Subscription,
+  BehaviorSubject
 } from 'rxjs';
 import {
   filter,
@@ -103,7 +104,7 @@ export class RemoteHandsComponent  extends McsOrderWizardBase  implements OnInit
 
   public colocationGroups: McsOptionGroup[] = [];
   public cabinetLocationOption$: Observable<McsOption[]>;
-  public smacSharedFormConfig$: Observable<SmacSharedFormConfig>;
+  public smacSharedFormConfig$: BehaviorSubject<SmacSharedFormConfig>;
   public remoteHandsStandardLeadTimeHours: number;
   public hasServiceToDisplay: boolean;
 
@@ -216,6 +217,7 @@ export class RemoteHandsComponent  extends McsOrderWizardBase  implements OnInit
   public ngOnDestroy(): void {
     unsubscribeSafely(this._formGroupSubject);
     unsubscribeSafely(this._selectedRackServiceHandler);
+    unsubscribeSafely(this.smacSharedFormConfig$);
   }
 
   /**
@@ -254,16 +256,11 @@ export class RemoteHandsComponent  extends McsOrderWizardBase  implements OnInit
    * Subscribe to Smac Shared Form Config
    */
   private _subscribeToSmacSharedFormConfig(): void {
-    this.smacSharedFormConfig$ = this._apiService.getAccount().pipe(
-      map((response) => {
-        let testCaseConfig = { isIncluded: true, placeholder: this.testCasePlaceHolder, helpText: this.testCasesHelpText };
-        let notesConfig = { isIncluded: true, label: this.notesLabel, isRequired: false };
-        let contactConfig = { isIncluded: true, phoneNumber: formatStringToPhoneNumber(response.phoneNumber) };
-
-        let config = new SmacSharedFormConfig(this._injector, testCaseConfig, notesConfig, contactConfig);
-        return config;
-      })
-    );
+    let testCaseConfig = { isIncluded: true, placeholder: this.testCasePlaceHolder, helpText: this.testCasesHelpText };
+    let notesConfig = { isIncluded: true, label: this.notesLabel, isRequired: false };
+    let contactConfig = { isIncluded: true };
+    let config = new SmacSharedFormConfig(this._injector, testCaseConfig, notesConfig, contactConfig);
+    this.smacSharedFormConfig$ = new BehaviorSubject<SmacSharedFormConfig>(config);
   }
 
   /**
