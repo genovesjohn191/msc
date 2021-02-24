@@ -1,6 +1,6 @@
 <div class="widget flat">
   <div *ngIf="!processing && !hasError" class="monitoring-alerting-wrapper">
-    <div *ngIf="empty; else monitoringAlertingContent">
+    <div *ngIf="!monitoringAlerting?.totalAlerts; else monitoringAlertingContent">
       <mcs-status-message type="info">
         {{ 'reports.insights.techReview.empty' | translate }}
       </mcs-status-message>

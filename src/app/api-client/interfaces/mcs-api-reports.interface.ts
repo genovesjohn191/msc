@@ -64,7 +64,8 @@ export interface IMcsApiReportsService {
     subscriptionIds?: string[]): Observable<McsApiSuccessResponse<McsReportResourceCompliance>>;
 
   getMonitoringAndAlerting(
-    period?: string,
+    periodStart?: string,
+    periodEnd?: string,
     subscriptionIds?: string[]): Observable<McsApiSuccessResponse<McsReportMonitoringAndAlerting>>;
 
   getUpdateManagement(period?: string): Observable<McsApiSuccessResponse<McsReportUpdateManagement[]>>;

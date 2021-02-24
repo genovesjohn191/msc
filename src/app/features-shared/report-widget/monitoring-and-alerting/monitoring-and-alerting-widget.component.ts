@@ -13,6 +13,12 @@ import { McsReportMonitoringAndAlerting } from '@app/models';
 import { ChartConfig, ChartItem } from '@app/shared';
 import { isNullOrEmpty, unsubscribeSafely } from '@app/utilities';
 
+export interface MonitoringAlertingWidgetConfig {
+  period: {
+    from: Date,
+    until: Date
+  }
+}
 @Component({
   selector: 'mcs-monitoring-and-alerting-widget',
   templateUrl: './monitoring-and-alerting-widget.component.html',
@@ -36,11 +42,25 @@ export class MonitoringAndAlertingWidgetComponent implements OnInit, OnDestroy {
 
   @Input()
   public set subscriptionIds(value: string[]) {
-    if (JSON.stringify(value) === JSON.stringify(this._subscriptionIds)) {
+    let subscriptionId = !isNullOrEmpty(value) ? value : [];
+    if (JSON.stringify(subscriptionId) === JSON.stringify(this._subscriptionIds)) {
       return;
     }
 
     this._subscriptionIds = value;
+    this.getData();
+  }
+
+  @Input()
+  public set config(value: MonitoringAlertingWidgetConfig) {
+    let validValue = !isNullOrEmpty(value)
+      && JSON.stringify(this._config) !== JSON.stringify(value);
+    if (!validValue) { return; }
+
+    this._config = value;
+    this._startPeriod = `${value.period.from.getFullYear()}-${value.period.from.getMonth() + 1}-${value.period.from.getDate()}`;
+    this._endPeriod = `${value.period.until.getFullYear()}-${value.period.until.getMonth() + 1}-${value.period.until.getDate()}`;
+
     this.getData();
   }
 
@@ -49,17 +69,16 @@ export class MonitoringAndAlertingWidgetComponent implements OnInit, OnDestroy {
   public monitoringAlerting: McsReportMonitoringAndAlerting;
   public hasError: boolean = false;
   public processing: boolean = true;
-  public empty: boolean = true;
-  public convertedDate: string;
-  private _period: string = '';
-  private _subscriptionIds: string[] = undefined;
+
+  private _config: MonitoringAlertingWidgetConfig;
+  private _startPeriod: string = '';
+  private _endPeriod: string = '';
+  private _subscriptionIds: string[] = [];
 
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private _reportingService: McsReportingService
-  ) {
-    this._initializePeriod();
-  }
+  ) { }
 
   ngOnInit(): void {
     this.dataBehavior = new BehaviorSubject<ChartItem[]>(null);
@@ -75,7 +94,7 @@ export class MonitoringAndAlertingWidgetComponent implements OnInit, OnDestroy {
     this.processing = true;
     this._changeDetectorRef.markForCheck();
 
-    this._reportingService.getMonitoringAndAlerting(this._period, this._subscriptionIds)
+    this._reportingService.getMonitoringAndAlerting(this._startPeriod, this._endPeriod, this._subscriptionIds)
     .pipe(catchError(() => {
       this.hasError = true;
       this.processing = false;
@@ -85,14 +104,8 @@ export class MonitoringAndAlertingWidgetComponent implements OnInit, OnDestroy {
     .subscribe((result) => {
       this.processing = false;
       this.monitoringAlerting = result;
-      this.empty = isNullOrEmpty(result) ? true : false;
       this.dataBehavior.next(result.alertsChartItem);
       this._changeDetectorRef.markForCheck();
     });
-  }
-
-  private _initializePeriod(): void {
-    let currentMonth = new Date(new Date().setMonth(new Date().getMonth()));
-    this._period = `${currentMonth.getFullYear()}-${currentMonth.getMonth() + 1}`;
   }
 }
