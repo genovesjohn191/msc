@@ -10,17 +10,12 @@
         <!-- Search -->
         <mcs-item>
           <mcs-search #search mcsId="firewall-policy-search"></mcs-search>
-          <mcs-icon [key]="columnFilterIconKey" size="large" hidden-small
-            mcsPopover placement="bottom" orientation="left" theme="light"
-            padding="narrow" [content]="filterSelectorTemplate" mcsCursor="pointer">
-          </mcs-icon>
 
-          <ng-template #filterSelectorTemplate>
-            <mcs-column-selector #columnFilter
-              storageKey="firewall-policies"
-              [defaultFilters]="defaultColumnFilters">
-            </mcs-column-selector>
-          </ng-template>
+          <mcs-column-selector #columnFilter hidden-small
+            storageKey="firewall-policies"
+            [triggerable]="true"
+            [defaultFilters]="defaultColumnFilters">
+          </mcs-column-selector>
 
           <div mcsAlign="end" hidden-small>
             <span> {{ totalRecordsCount | mcsPlural:

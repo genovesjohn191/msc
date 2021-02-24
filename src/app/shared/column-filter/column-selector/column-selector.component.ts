@@ -38,6 +38,9 @@ export class ColumnSelectorComponent implements ColumnFilter, OnInit, OnDestroy 
   @Input()
   public filterPredicate: (filter: McsFilterInfo) => boolean;
 
+  @Input()
+  public triggerable: boolean;
+
   public filters = new Array<McsFilterInfo>();
   public filtersChange = new BehaviorSubject<McsFilterInfo[]>([]);
 
