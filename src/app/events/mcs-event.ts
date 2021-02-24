@@ -4,6 +4,7 @@ import { DataChangeAzureManagedServicesEvent } from './items/data-change-azure-m
 import { DataChangeAzureResourcesEvent } from './items/data-change-azure-resources.event';
 import { DataChangeCompaniesEvent } from './items/data-change-companies.event';
 import { DataChangeConsoleEvent } from './items/data-change-console.event';
+import { DnsDetailsChangeEvent } from './items/data-change-dns-details.event';
 import { DnsListingEvent } from './items/data-change-dns-listing.event';
 import { DataChangeFirewallsEvent } from './items/data-change-firewalls.event';
 import { DataChangeInternetPortsEvent } from './items/data-change-internet-ports.event';
@@ -131,6 +132,7 @@ export class McsEvent {
   public static dataChangeAzureResources = new DataChangeAzureResourcesEvent();
   public static dataChangeAzureManagedServices = new DataChangeAzureManagedServicesEvent();
   public static dataChangeDnsListing = new DnsListingEvent();
+  public static dataChangeDnsDetails = new DnsDetailsChangeEvent();
   public static dataClearServers = new DataClearServersEvent();
   public static dataClearMedia = new DataClearMediaEvent();
   public static dataClearSystemMessage = new DataClearSystemMessageEvent();

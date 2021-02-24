@@ -5,9 +5,6 @@ import { McsNetworkDnsRrSets } from './mcs-network-dns-rrsets';
 export class McsNetworkDnsZone extends McsNetworkDnsBase {
 
     @JsonProperty()
-    public id: string = undefined;
-
-    @JsonProperty()
     public serviceId: string = undefined;
 
     @JsonProperty()

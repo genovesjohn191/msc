@@ -223,7 +223,6 @@ export * from './response/mcs-validation';
 export * from './response/mcs-internet-port';
 export * from './response/mcs-network-dns-base';
 export * from './response/mcs-network-dns-summary';
-export * from './response/mcs-network-dns-zones-summary';
 export * from './response/mcs-network-dns-zone';
 export * from './response/mcs-network-dns-rrsets';
 export * from './response/mcs-network-dns-rrsets-record';

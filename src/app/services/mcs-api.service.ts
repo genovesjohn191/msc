@@ -99,8 +99,8 @@ import {
   McsJob,
   McsJobConnection,
   McsLicense,
+  McsNetworkDnsBase,
   McsNetworkDnsSummary,
-  McsNetworkDnsZonesSummary,
   McsObjectCrispElement,
   McsObjectInstalledService,
   McsObjectQueryParams,
@@ -392,19 +392,19 @@ export class McsApiService {
   public getNetworkDns(query?: McsQueryParam): Observable<McsApiCollection<McsNetworkDnsSummary>> {
     return this._networkDnsApi.getNetworkDns(query).pipe(
       catchError((error) =>
-        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNetworkDnss'))
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNetworkDns'))
       ),
       map((response) => this._mapToCollection(response.content, response.totalCount))
     );
   }
 
-  public getNetworkDnsZones(dnsId: string): Observable<McsNetworkDnsZonesSummary> {
-    return this._networkDnsApi.getNetworkDnsZones(dnsId).pipe(
+  public getNetworkDnsById(id: string): Observable<McsNetworkDnsSummary> {
+    return this._networkDnsApi.getNetworkDnsById(id).pipe(
+      map((response) => getSafeProperty(response, (obj) => obj.content)),
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getNetworkDnsById'))
-      ),
-      map((response) => getSafeProperty(response, (obj) => obj.content)
-      ));
+      )
+    );
   }
 
   public getResources(query?: McsQueryParam, optionalHeaders?: Map<string, any>): Observable<McsApiCollection<McsResource>> {

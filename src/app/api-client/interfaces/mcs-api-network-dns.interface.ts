@@ -1,9 +1,8 @@
 import { Observable } from 'rxjs';
 import {
   McsApiSuccessResponse,
-  McsQueryParam,
   McsNetworkDnsSummary,
-  McsNetworkDnsZonesSummary
+  McsQueryParam,
 } from '@app/models';
 
 export interface IMcsApiNetworkDnsService {
@@ -14,10 +13,9 @@ export interface IMcsApiNetworkDnsService {
    */
   getNetworkDns(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsNetworkDnsSummary[]>>;
 
-
   /**
-   * Get all the network dns zones
-   * @param id Id
+   * Gets a network dns by id
+   * @param id id of the network dns
    */
-  getNetworkDnsZones(id: string): Observable<McsApiSuccessResponse<McsNetworkDnsZonesSummary>>;
+  getNetworkDnsById(id: string): Observable<McsApiSuccessResponse<McsNetworkDnsSummary>>;
 }
