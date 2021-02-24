@@ -20,7 +20,8 @@ import {
 import {
   Subject,
   Observable,
-  zip
+  zip,
+  BehaviorSubject
 } from 'rxjs';
 import {
   Guid,
@@ -88,7 +89,7 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
   public internetPortServices$: Observable<CustomChangeService[]>;
   public batServices$: Observable<CustomChangeService[]>;
   public account$: Observable<McsAccount>;
-  public smacSharedFormConfig$: Observable<SmacSharedFormConfig>;
+  public smacSharedFormConfig$: BehaviorSubject<SmacSharedFormConfig>;
 
   public contactOptions$: Observable<McsOption[]>;
 
@@ -146,6 +147,7 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
 
   public ngOnDestroy() {
     unsubscribeSafely(this._formGroupSubject);
+    unsubscribeSafely(this.smacSharedFormConfig$);
   }
 
   public get backIconKey(): string {
@@ -158,6 +160,10 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
 
   public get routeKeyEnum(): typeof RouteKey {
     return RouteKey;
+  }
+
+  public get notesLabel(): string {
+    return this.translateService.instant('orderServiceCustomChange.requestDetails.additionalNotes.label');
   }
 
   public get defaultMaxlength(): number {
@@ -357,14 +363,10 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
    * Subscribe to Smac Shared Form Config
    */
   private _subscribeToSmacSharedFormConfig(): void {
-    this.smacSharedFormConfig$ = this._apiService.getAccount().pipe(
-      map((response) => {
-        let smacSharedFormConfig = new SmacSharedFormConfig(this._injector);
-        response.phoneNumber = formatStringToPhoneNumber(response.phoneNumber);
-        smacSharedFormConfig.contactConfig.phoneNumber = response.phoneNumber;
-        smacSharedFormConfig.notesConfig.label = this.translateService.instant('orderServiceCustomChange.requestDetails.additionalNotes.label');
-        return smacSharedFormConfig;
-      })
-    );
+    let testCaseConfig = { isIncluded: false };
+    let notesConfig = { isIncluded: true, label: this.notesLabel};
+    let contactConfig = { isIncluded: true };
+    let config = new SmacSharedFormConfig(this._injector, testCaseConfig, notesConfig, contactConfig);
+    this.smacSharedFormConfig$ = new BehaviorSubject<SmacSharedFormConfig>(config);
   }
 }

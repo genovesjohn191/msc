@@ -5,6 +5,7 @@ import {
   ViewChild,
   Injector} from '@angular/core';
 import {
+  BehaviorSubject,
   Observable,
   Subject,
   Subscription,
@@ -81,7 +82,7 @@ export class ServerRequestPatchComponent  extends McsOrderWizardBase  implements
   public fcServers: FormControl;
   public fcExclusions: FormControl;
 
-  public smacSharedFormConfig$: Observable<SmacSharedFormConfig>;
+  public smacSharedFormConfig$: BehaviorSubject<SmacSharedFormConfig>;
   public requestPatchLeadTimeHours: number;
   public managedServers: McsOption[] = [];
 
@@ -191,19 +192,16 @@ export class ServerRequestPatchComponent  extends McsOrderWizardBase  implements
   public ngOnDestroy(): void {
     unsubscribeSafely(this._formGroupSubject);
     unsubscribeSafely(this._selectedManagedServerHandler);
+    unsubscribeSafely(this.smacSharedFormConfig$);unsubscribeSafely(this.smacSharedFormConfig$);
   }
 
   private _subscribeToSmacSharedFormConfig(): void {
-    this.smacSharedFormConfig$ = this._apiService.getAccount().pipe(
-      map((response) => {
-        let testCaseConfig = { isIncluded: true, placeholder: this.testCasePlaceHolder };
-        let notesConfig = { isIncluded: true, isRequired: false, label: this.notesLabel, helpText: this.notesHelpText };
-        let contactConfig = { isIncluded: true, phoneNumber: formatStringToPhoneNumber(response.phoneNumber) };
-        let customerRefConfig = {isIncluded: true, isRequired: false, placeholder: this.customerReferenceNumberPlaceHolder};
-        let config = new SmacSharedFormConfig(this._injector, testCaseConfig, notesConfig, contactConfig, customerRefConfig);
-        return config;
-      })
-    );
+    let testCaseConfig = { isIncluded: true, placeholder: this.testCasePlaceHolder };
+    let notesConfig = { isIncluded: true, isRequired: false, label: this.notesLabel, helpText: this.notesHelpText };
+    let contactConfig = { isIncluded: true };
+    let customerRefConfig = {isIncluded: true, isRequired: false, placeholder: this.customerReferenceNumberPlaceHolder};
+    let config = new SmacSharedFormConfig(this._injector, testCaseConfig, notesConfig, contactConfig, customerRefConfig);
+    this.smacSharedFormConfig$ = new BehaviorSubject<SmacSharedFormConfig>(config);
   }
 
   private _subscribeToValueChanges(): void {

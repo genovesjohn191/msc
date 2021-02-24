@@ -2,7 +2,13 @@ import { Injector } from '@angular/core';
 import { ValidatorFn } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { getSafeProperty } from '@app/utilities';
-import { CoreValidators } from '@app/core';
+import {
+  CoreValidators,
+  McsAccessControlService
+} from '@app/core';
+import { McsApiService } from '@app/services';
+import { map } from 'rxjs/operators';
+import { McsAccount } from '@app/models';
 
 const TEXTAREA_MAXLENGTH_DEFAULT = 850;
 
@@ -49,7 +55,7 @@ export class SmacSharedFormConfig {
     return this._validatorsMap;
   }
   private _validatorsMap: Map<string, ValidatorFn[]> = new Map();
-
+  private _phoneNumber: string;
   private _translate: TranslateService;
 
   constructor(

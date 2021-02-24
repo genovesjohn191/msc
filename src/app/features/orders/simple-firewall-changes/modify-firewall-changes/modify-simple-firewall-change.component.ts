@@ -63,6 +63,7 @@ import { ModifySimpleFirewallChangeService } from '../firewall-changes-shared/se
 import { RuleAction } from '../firewall-changes-shared/rule/firewall-changes-shared-rule';
 import { FirewallChangesRuleHelper } from '../firewall-changes-shared/rule/firewall-changes-shared-rule.helper';
 import { McsOrderSimpleFirewallModifyRule } from '@app/models/request/mcs-order-simple-firewall-modify-rule';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 const FIREWALL_CHANGE_ID = Guid.newGuid().toString();
 const LOADING_TEXT = 'loading';
 @Component({
@@ -80,7 +81,7 @@ McsOrderWizardBase implements OnInit, OnDestroy {
   public leadTimeHours: number;
   public isLoading: boolean;
   public firewallOptions: Array<McsOption> = new Array<McsOption>();
-  public smacSharedFormConfig$: Observable<SmacSharedFormConfig>;
+  public smacSharedFormConfig$: BehaviorSubject<SmacSharedFormConfig>;
   public ruleActionType: RuleAction = RuleAction.Modify;
   public get loadingText(): string {
     return LOADING_TEXT;
@@ -134,6 +135,7 @@ McsOrderWizardBase implements OnInit, OnDestroy {
     super.dispose();
     unsubscribeSafely(this._routerHandler);
     unsubscribeSafely(this._formGroupSubject);
+    unsubscribeSafely(this.smacSharedFormConfig$);
   }
   public get backIconKey(): string {
     return CommonDefinition.ASSETS_SVG_CHEVRON_LEFT;
@@ -246,18 +248,16 @@ McsOrderWizardBase implements OnInit, OnDestroy {
     );
     this._changeDetectionRef.detectChanges();
   }
+
   private _initializeSmacSharedForm(): void {
-    this.smacSharedFormConfig$ = this._apiService.getAccount().pipe(
-      map((response) => {
-        let testCaseConfig = { isIncluded: false };
-        let notesConfig = { isIncluded: true, label: this.notesLabel };
-        let contactConfig = { isIncluded: true, phoneNumber: formatStringToPhoneNumber(response.phoneNumber) };
-        let custRefConfig = { isIncluded: true, helpText: this.referenceNumberHelpText}
-        let config = new SmacSharedFormConfig(this._injector, testCaseConfig, notesConfig, contactConfig, custRefConfig);
-        return config;
-      })
-    );
+    let testCaseConfig = { isIncluded: false };
+    let notesConfig = { isIncluded: true, label: this.notesLabel };
+    let contactConfig = { isIncluded: true };
+    let custRefConfig = { isIncluded: true, helpText: this.referenceNumberHelpText}
+    let config = new SmacSharedFormConfig(this._injector, testCaseConfig, notesConfig, contactConfig, custRefConfig);
+    this.smacSharedFormConfig$ = new BehaviorSubject<SmacSharedFormConfig>(config);
   }
+
   private _getSharedRuleValues(): McsOrderSimpleFirewallModifyRule[] {
     let sharedRules:McsOrderSimpleFirewallModifyRule[] = [];
     this.faSharedRuleForm.controls.forEach((formGroup: FormGroup) => {

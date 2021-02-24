@@ -70,6 +70,7 @@ import {
 } from '@app/models';
 import { MsRequestChangeService } from './ms-request-change.service';
 import { TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject } from 'rxjs';
 
 const MAX_DESCRIPTION_LENGTH = 850;
 const VISIBILE_ROWS = 3;
@@ -107,7 +108,7 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
   public contactOptions$: Observable<McsOption[]>;
   public azureServices$: Observable<McsOption[]>;
   public selectedServiceId$: Observable<McsAzureServiceQueryParams>;
-  public smacSharedFormConfig$: Observable<SmacSharedFormConfig>;
+  public smacSharedFormConfig$: BehaviorSubject<SmacSharedFormConfig>;
   public selectedScheduleDate: Date;
 
   private _formGroup: McsFormGroupDirective;
@@ -230,6 +231,7 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
   public ngOnDestroy(): void {
     unsubscribeSafely(this._formGroupSubject);
     unsubscribeSafely(this._selectedServiceHandler);
+    unsubscribeSafely(this.smacSharedFormConfig$);
   }
 
   /**
@@ -385,18 +387,13 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
    * Subscribe to Smac Shared Form Config
    */
   private _subscribeToSmacSharedFormConfig(): void {
-    this.smacSharedFormConfig$ = this._apiService.getAccount().pipe(
-      map((response) => {
-        let testCaseConfig = { isIncluded: false };
-        let notesConfig = { isIncluded: true, validators: [CoreValidators.required],
-                            placeholder: this.requestDescriptionPlaceHolder,
-                            isRequired: true };
-        let contactConfig = { isIncluded: true, phoneNumber: formatStringToPhoneNumber(response.phoneNumber) };
-
-        let config = new SmacSharedFormConfig(this._injector, testCaseConfig, notesConfig, contactConfig);
-        return config;
-      })
-    );
+    let testCaseConfig = { isIncluded: false };
+    let notesConfig = { isIncluded: true, validators: [CoreValidators.required],
+                        placeholder: this.requestDescriptionPlaceHolder,
+                        isRequired: true };
+    let contactConfig = { isIncluded: true };
+    let config = new SmacSharedFormConfig(this._injector, testCaseConfig, notesConfig, contactConfig);
+    this.smacSharedFormConfig$ = new BehaviorSubject<SmacSharedFormConfig>(config);
   }
 
   /**
