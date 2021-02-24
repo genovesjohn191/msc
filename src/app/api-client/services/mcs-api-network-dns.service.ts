@@ -6,7 +6,6 @@ import {
   McsApiRequestParameter,
   McsQueryParam,
   McsNetworkDnsSummary,
-  McsNetworkDnsZonesSummary,
 } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
@@ -40,17 +39,18 @@ export class McsApiNetworkDnsService implements IMcsApiNetworkDnsService {
     );
   }
 
+
   /**
    * Get all the network dns zones
-   * @param id dns id to get the specific zones
+   * @param id dns id to get specific dns details
    */
-  public getNetworkDnsZones(id: string): Observable<McsApiSuccessResponse<McsNetworkDnsZonesSummary>> {
+  public getNetworkDnsById(id: string): Observable<McsApiSuccessResponse<McsNetworkDnsSummary>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/private-cloud/networks/dns/${id}`;
 
     return this._apiClientService.get(mcsApiRequestParameter).pipe(
       map((response) =>
-        McsApiSuccessResponse.deserializeResponse<McsNetworkDnsZonesSummary>(McsNetworkDnsZonesSummary, response)
+        McsApiSuccessResponse.deserializeResponse<McsNetworkDnsSummary>(McsNetworkDnsSummary, response)
       )
     );
   }

@@ -286,6 +286,33 @@
     "requiredFeatureFlag": "enablePrivateCloudNetworkDnsListing",
     "documentTitle": "DNS Listing - Macquarie Cloud Services"
   },
+  "dnsDetails": {
+    "enumKey": "DnsDetails",
+    "enumPlatform": "Private",
+    "enumCategory": "Network",
+    "navigationPath": "network/dns/details",
+    "requireAllFeatures": true,
+    "requiredFeatureFlag": "enablePrivateCloudNetworkDnsListing",
+    "documentTitle": "DNS Details - Macquarie Cloud Services"
+  },
+  "dnsManagement": {
+    "enumKey": "DnsManagement",
+    "enumPlatform": "Private",
+    "enumCategory": "Network",
+    "navigationPath": "management",
+    "requireAllFeatures": true,
+    "requiredFeatureFlag": "enablePrivateCloudNetworkDnsListing",
+    "documentTitle": "DNS Management - Macquarie Cloud Services"
+  },
+  "dnsZones": {
+    "enumKey": "DnsZones",
+    "enumPlatform": "Private",
+    "enumCategory": "Network",
+    "navigationPath": "zones",
+    "requireAllFeatures": true,
+    "requiredFeatureFlag": "enablePrivateCloudNetworkDnsListing",
+    "documentTitle": "DNS Zones - Macquarie Cloud Services"
+  },
   "backupAggregationTargets": {
     "enumPlatform": "Private",
     "enumCategory": "Storage",

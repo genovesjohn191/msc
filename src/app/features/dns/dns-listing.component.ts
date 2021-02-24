@@ -9,6 +9,7 @@ import {
   McsAccessControlService,
   McsMatTableContext,
   McsMatTableQueryParam,
+  McsNavigationService,
   McsTableDataSource2,
   McsTableEvents } from '@app/core';
 import { Observable } from 'rxjs';
@@ -51,6 +52,7 @@ export class DnsListingComponent {
     _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
     private _translateService: TranslateService,
+    private _navigationService: McsNavigationService,
     private _apiService: McsApiService,
     private _accessControlService: McsAccessControlService,
   ) {
@@ -142,4 +144,9 @@ export class DnsListingComponent {
     return hasRequestChangeAccess || hasTicketCreatePermission;
   }
 
+  public navigateToDNSDetails(dns: McsNetworkDnsBase) {
+    if (isNullOrEmpty(dns)) { return; }
+    this._navigationService.navigateTo(RouteKey.DnsDetails, [dns.id]);
+  }
 }
+

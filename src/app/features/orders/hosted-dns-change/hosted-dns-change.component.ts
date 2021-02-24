@@ -387,8 +387,8 @@ export class HostedDnsChangeComponent extends McsOrderWizardBase implements OnIn
       return;
     }
 
-    this._apiService.getNetworkDnsZones(id).subscribe(zonesSummary => {
-        let zonesList = getSafeProperty(zonesSummary, (obj) => obj.zones) || [];
+    this._apiService.getNetworkDnsById(id).subscribe(response => {
+        let zonesList = getSafeProperty(response, (obj) => obj.zones) || [];
         let optionList = new Array<McsOption>();
         if(zonesList.length === 0) {
           this.loadingDNSZones = false;

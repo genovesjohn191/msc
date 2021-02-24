@@ -1,8 +1,8 @@
 import { JsonProperty } from '@app/utilities';
-import { McsServiceBase } from '../common/mcs-service-base';
+import { McsEntityBase } from '../common/mcs-entity.base';
 
+export class McsNetworkDnsBase extends McsEntityBase {
 
-export class McsNetworkDnsBase {
   @JsonProperty()
   public serviceId: string = undefined;
 

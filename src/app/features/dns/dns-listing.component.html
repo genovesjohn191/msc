@@ -121,6 +121,7 @@
        <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"
          mcsCursor="pointer"
          mcsId="dns-listing-row"
+         (click)="navigateToDNSDetails(row)"
          mcsEventTracker="navigate-to-hosted-dns-change"
          mcsEventCategory="dns listing"
          mcsEventLabel="dns-listing-page"></tr>
@@ -136,7 +137,7 @@
        </div>
        <div *ngIf="dataSource?.hasError$ | async" text-center>
          <div class="listing-status-wrapper">
-           <span>{{ 'dnsListing.errorMessage' | translate }}</span>
+           <span>{{ 'dnsListing.shared.errorMessage' | translate }}</span>
            <a (click)="retryDatasource()"
              mcsId
              mcsEventTracker="retry-loading-dns-listing"
