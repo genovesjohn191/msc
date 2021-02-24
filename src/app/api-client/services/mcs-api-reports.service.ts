@@ -306,10 +306,12 @@ export class McsApiReportsService implements IMcsApiReportsService {
   }
 
   public getMonitoringAndAlerting(
-    period?: string,
+    periodStart?: string,
+    periodEnd?: string,
     subscriptionIds?: string[]): Observable<McsApiSuccessResponse<McsReportMonitoringAndAlerting>> {
     let searchParams = new Map<string, any>();
-    searchParams.set('period', period);
+    searchParams.set('period_start', periodStart);
+    searchParams.set('period_end', periodEnd);
     if (!isNullOrEmpty(subscriptionIds)) {
       searchParams.set('subscription_ids', subscriptionIds.join());
     }

@@ -4,14 +4,16 @@ import {
   ChangeDetectorRef,
   OnDestroy
 } from '@angular/core';
-import { McsReportingService } from '@app/core/services/mcs-reporting.service';
-import { PerformanceAndScalabilityWidgetConfig, ReportPeriod } from '@app/features-shared/report-widget';
-import { ResourceMonthlyCostWidgetConfig } from '@app/features-shared/report-widget/resource-monthly-cost/resource-monthly-cost-widget.component';
-import { McsReportSubscription } from '@app/models';
-import { ChartItem } from '@app/shared';
-import { CommonDefinition, isNullOrEmpty, unsubscribeSafely } from '@app/utilities';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
+import { McsReportingService } from '@app/core/services/mcs-reporting.service';
+import { PerformanceAndScalabilityWidgetConfig, ReportPeriod } from '@app/features-shared/report-widget';
+import { MonitoringAlertingWidgetConfig } from '@app/features-shared/report-widget/monitoring-and-alerting/monitoring-and-alerting-widget.component';
+import { ResourceMonthlyCostWidgetConfig } from '@app/features-shared/report-widget/resource-monthly-cost/resource-monthly-cost-widget.component';
+import { McsReportSubscription } from '@app/models';
+import { MonitoringAlertingPeriod, monitoringAlertingPeriodText } from '@app/models/enumerations/report-monitoring-alerting-period.enum';
+import { ChartItem } from '@app/shared';
+import { CommonDefinition, isNullOrEmpty, unsubscribeSafely } from '@app/utilities';
 
 interface PeriodOption {
   label: string;
@@ -44,6 +46,11 @@ const months = [
 })
 export class ReportInsightsComponent implements OnDestroy {
   public monthOptions: PeriodOption[];
+  public monitoringAlertingPeriodOptions: PeriodOption[];
+
+  public get monitoringAlertingPeriodEnum(): any {
+    return MonitoringAlertingPeriod;
+  }
 
   public get cloudHealthUrl(): string  {
     return CommonDefinition.CLOUD_HEALTH_URL;
@@ -64,6 +71,21 @@ export class ReportInsightsComponent implements OnDestroy {
 
   public get selectedResourceCostMonth(): PeriodOption {
     return this._selectedResourceCostMonth;
+  }
+
+  public set selectedMonitoringAlertingPeriod(value: PeriodOption) {
+    this._selectedMonitoringAlertingPeriod = value;
+    this.monitoringAlertingConfig = {
+      period: {
+        from: this._selectedMonitoringAlertingPeriod.period.from,
+        until: this._selectedMonitoringAlertingPeriod.period.until,
+      }
+    };
+    this._changeDetector.markForCheck();
+  }
+
+  public get selectedMonitoringAlertingPeriod(): PeriodOption {
+    return this._selectedMonitoringAlertingPeriod;
   }
 
   public set subscriptionIdsFilter(value: string[]) {
@@ -87,21 +109,25 @@ export class ReportInsightsComponent implements OnDestroy {
 
   public serviceCostConfig: PerformanceAndScalabilityWidgetConfig;
   public resourceMonthlyCostConfig: ResourceMonthlyCostWidgetConfig;
-
-  public hasManagementService: boolean;
-  private _destroySubject = new Subject<void>();
+  public monitoringAlertingConfig: MonitoringAlertingWidgetConfig
 
   public subscriptions: McsReportSubscription[];
   public performanceSubscriptions: McsReportSubscription[] = [{id: '', name: 'All'}];
+
+  public hasManagementService: boolean;
+
   private _subscriptionFilterChange = new BehaviorSubject<string[]>([]);
   private _performanceSubscriptionFilterChange = new BehaviorSubject<string>('');
   private _selectedResourceCostMonth: PeriodOption;
+  private _selectedMonitoringAlertingPeriod: PeriodOption;
   private _subscriptionSubject = new Subject();
+  private _destroySubject = new Subject<void>();
 
   public constructor(private reportService: McsReportingService, private _changeDetector: ChangeDetectorRef) {
     this._getSubscriptions();
     this._identifyNonEssentialManagementServiceExistence();
     this._createMonthOptions();
+    this._createMonitoringAlertingPeriodOptions();
     this._listenToSubscriptionFilterChange();
     this._listenToPerformanceSubscriptionFilterChange();
   }
@@ -172,6 +198,52 @@ export class ReportInsightsComponent implements OnDestroy {
     }
 
     this.selectedResourceCostMonth = this.monthOptions[0];
+  }
+
+  private _createMonitoringAlertingPeriodOptions(): void {
+    this.monitoringAlertingPeriodOptions = Array<PeriodOption>();
+    let monitoringAlertingPeriodRange = this._mapPeriodEnumToPeriodOptions(this.monitoringAlertingPeriodEnum, monitoringAlertingPeriodText);
+    const periodLength = monitoringAlertingPeriodRange.length;
+    for (let ctr = 0; ctr < periodLength; ctr++) {
+      let label = monitoringAlertingPeriodRange[ctr];
+      let period = this.setMonitoringAlertingPeriodRange(label);
+
+      this.monitoringAlertingPeriodOptions.push({label, period});
+    }
+    this.selectedMonitoringAlertingPeriod = this.monitoringAlertingPeriodOptions[0];
+  }
+
+  private _mapPeriodEnumToPeriodOptions(period: MonitoringAlertingPeriod, enumText: any): string[] {
+    let periodOptions = [];
+    Object.values(period)
+      .filter((objValue) => (typeof objValue === 'number'))
+      .map(objValue => periodOptions.push(enumText[objValue]));
+    return periodOptions;
+  }
+
+  private setMonitoringAlertingPeriodRange(label: string): ReportPeriod {
+    let currentDate = new Date();
+    if (label === monitoringAlertingPeriodText[1]) {
+      return {
+        from: new Date(new Date().setMonth(currentDate.getMonth() - 1)),
+        until: new Date(new Date())
+      };
+    } else if (label === monitoringAlertingPeriodText[2]) {
+      return {
+        from: new Date(new Date().setDate(currentDate.getDate() - 14)),
+        until: new Date(new Date())
+      };
+    } else if (label === monitoringAlertingPeriodText[3]) {
+      return {
+        from: new Date(new Date().setDate(currentDate.getDate() - 7)),
+        until: new Date(new Date())
+      };
+    } else if (label ===monitoringAlertingPeriodText[4]) {
+      return {
+        from:  new Date(new Date()),
+        until:  new Date(new Date())
+      };
+    }
   }
 
   public resourceMonthDataReceived(chartData: ChartItem[]) {

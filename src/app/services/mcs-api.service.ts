@@ -1708,10 +1708,11 @@ export class McsApiService {
   }
 
   public getMonitoringAndAlerting(
-    period?: string,
+    periodStart?: string,
+    periodEnd?: string,
     subscriptionIds?: string[]
     ): Observable<McsReportMonitoringAndAlerting> {
-    return this._reportsApi.getMonitoringAndAlerting(period, subscriptionIds).pipe(
+    return this._reportsApi.getMonitoringAndAlerting(periodStart, periodEnd, subscriptionIds).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getMonitoringAndAlerting'))
       ),

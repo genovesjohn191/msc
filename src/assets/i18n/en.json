@@ -198,6 +198,7 @@
       "vmCloudHealthLink": "VMware CloudHealth.",
       "subscriptionText": "Subscriptions",
       "monthLabel": "Month",
+      "periodLabel": "Period",
       "costs": {
         "label": "Costs",
         "serviceOverview": {
@@ -274,7 +275,7 @@
         },
         "monitoringAlerting": {
           "title": "Monitoring and Alerting",
-          "subTitle": "by severity, for the current month.",
+          "subTitle": "by severity, for the specified period.",
           "totalAlerts": "Total Alerts"
         },
         "updateManagement": {

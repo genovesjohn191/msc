@@ -64,7 +64,7 @@
                 </mat-form-field>
               </div>
             </div>
-            <div class="widget-label monthly-cost">
+            <div class="widget-label label-with-dropdown">
               The <a href="{{ cloudHealthUrl }}/olap_reports/azure_cost/current"
               target="_blank"
               mcsId="azure-cost"
@@ -180,7 +180,7 @@
                     </mat-form-field>
                   </div>
                 </div>
-                <div class="widget-label">
+                <div class="widget-label label-with-dropdown">
                   A summary of aggregate
                   <a href="{{ cloudHealthUrl }}/olap_reports/azure_performance/virtual_machine"
                   target="_blank"
@@ -195,8 +195,22 @@
                 <mat-divider></mat-divider>
 
                 <!-- Monitoring and Alerting -->
-                <h2><span class="show-on-print-only">2.5 </span>{{ 'reports.insights.techReview.monitoringAlerting.title' | translate }}</h2>
-                <div class="widget-label">
+                <div class="options-container">
+                  <div>
+                    <h2><span class="show-on-print-only">2.5 </span>{{ 'reports.insights.techReview.monitoringAlerting.title' | translate }}</h2>
+                  </div>
+                  <div class="hide-on-print">
+                    <mat-form-field appearance="outline">
+                      <mat-label>{{ 'reports.insights.periodLabel' | translate }}</mat-label>
+                      <mat-select [(value)]="selectedMonitoringAlertingPeriod">
+                        <mat-option *ngFor="let opt of monitoringAlertingPeriodOptions" [value]="opt">
+                          {{ opt.label }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="widget-label label-with-dropdown">
                   A count of <a href="https://portal.azure.com/#blade/Microsoft_Azure_Monitoring/AzureMonitoringBrowseBlade/alertsV2"
                   target="_blank"
                   mcsId="azure-monitor"
@@ -206,7 +220,7 @@
                   Azure Monitor alerts</a>
                   {{ 'reports.insights.techReview.monitoringAlerting.subTitle' | translate }}
                 </div>
-                <mcs-monitoring-and-alerting-widget [subscriptionIds]="subscriptionIdsFilter"></mcs-monitoring-and-alerting-widget>
+                <mcs-monitoring-and-alerting-widget [config]="monitoringAlertingConfig" [subscriptionIds]="subscriptionIdsFilter"></mcs-monitoring-and-alerting-widget>
                 <mat-divider></mat-divider>
 
                 <!-- Update Management -->
