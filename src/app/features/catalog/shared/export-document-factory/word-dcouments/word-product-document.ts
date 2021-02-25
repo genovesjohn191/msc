@@ -1,6 +1,7 @@
 import { CoreRoutes } from '@app/core';
 import {
   McsCatalogProduct,
+  McsCatalogProductOwner,
   RouteKey
 } from '@app/models';
 import {
@@ -99,19 +100,18 @@ export class WordProductDocument implements IExportDocument {
     if (isNullOrEmpty(productDetails)) { return ``; }
     let ownershipsHtml = '';
 
-    let filteredOwners = [
-      productDetails.primaryOwner,
-      productDetails.tertiaryOwner,
-      productDetails.architectOwnerPrimary,
-      productDetails.architectOwnerSecondary,
-      productDetails.secondaryOwner,
-      productDetails.specialistOwner
-    ].filter(item => !isNullOrEmpty(item));
-    if (isNullOrEmpty(filteredOwners)) { return ``; }
+    let ownershipMap = new Map<string, McsCatalogProductOwner>();
+    ownershipMap.set('Primary Product Owner', productDetails.primaryOwner);
+    ownershipMap.set('Secondary Product Owner', productDetails.secondaryOwner);
+    ownershipMap.set('Primary Architecture Owner', productDetails.architectOwnerPrimary);
+    ownershipMap.set('Secondary Architecture Owner', productDetails.architectOwnerSecondary);
+    ownershipMap.set('Specialist Product Owner', productDetails.specialistOwner);
 
-    filteredOwners.forEach(owner => {
-      ownershipsHtml += `<p>${owner.name} - ${owner.email}</p>`;
+    ownershipMap.forEach((value, key) => {
+      if (isNullOrEmpty(value)) { return; }
+      ownershipsHtml += `<p>${key} - ${value.name}</p>`;
     });
+    if (isNullOrEmpty(ownershipsHtml)) { return ``; }
 
     let actualResponse = `
       <div class="product-catalog-item">

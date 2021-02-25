@@ -6,7 +6,12 @@ export class DocumentUtility {
   public static generateHtmlDocument(fileName: string, htmlString: string): void {
     if (!htmlString) { return; }
 
-    asBlob(htmlString, { orientation: 'landscape' }).then(data => {
+    let formattedHtml = `
+      <!DOCTYPE html> <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></head>
+      ${htmlString}
+    `;
+
+    asBlob(formattedHtml, { orientation: 'landscape' }).then(data => {
       saveAs(data, fileName); // save as docx file
     });
   }
