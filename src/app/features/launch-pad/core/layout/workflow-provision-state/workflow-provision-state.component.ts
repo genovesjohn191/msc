@@ -109,8 +109,6 @@ export class LaunchPadWorkflowProvisionStateComponent implements OnDestroy {
   private _startMonitoringProvisioningProgress(): void {
     this._currentUserJobHandler = this._eventDispatcher.addEventListener(
       McsEvent.jobCurrentUser, this._onCurrentUserJob.bind(this));
-
-    this._eventDispatcher.dispatch(McsEvent.jobCurrentUser);
   }
 
   private _onCurrentUserJob(job: McsJob): void {

@@ -56,6 +56,6 @@ export class WorkflowJsonViewerComponent {
     ];
 
     let keyIsSensitive = sensitiveKeys.findIndex((sensitiveKey) => sensitiveKey === key) >= 0;
-    return keyIsSensitive ? '*secret*' : value;
+    return keyIsSensitive && !isNullOrEmpty(value) ? '*secret*' : value;
   }
 }
