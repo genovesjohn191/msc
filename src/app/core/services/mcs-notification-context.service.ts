@@ -158,9 +158,7 @@ export class McsNotificationContextService implements McsDisposable {
    */
   private _isSameJobReceived(updatedJob: McsJob): boolean {
     let jobExists = this._notifications.find((_job) => {
-      return _job.id === updatedJob.id &&
-        _job.dataStatus === updatedJob.dataStatus &&
-        _job.summaryInformation === updatedJob.summaryInformation;
+      return JSON.stringify(_job) === JSON.stringify(updatedJob);
     });
     return !isNullOrEmpty(jobExists);
   }
