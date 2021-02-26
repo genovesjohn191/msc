@@ -127,7 +127,7 @@ export class DnsDetailsComponent extends McsListViewListingBase<McsNetworkDnsSum
             ]);
   }
 
-  public actionsEnabled(dns: McsNetworkDnsSummary) {
+  public hasRequestChangeAndTicketCreateAccess(dns: McsNetworkDnsSummary) {
     let hasRequestChangeAccess = this.hasServiceChangeAccess(dns);
     let hasTicketCreatePermission = this._accessControlService.hasPermission([
       'TicketCreate'
