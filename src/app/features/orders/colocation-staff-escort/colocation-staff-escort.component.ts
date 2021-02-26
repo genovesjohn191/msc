@@ -18,13 +18,14 @@ import {
   zip,
   of,
   forkJoin,
-  Subscription
+  Subscription,
+  throwError
 } from 'rxjs';
 import {
   takeUntil,
   tap,
   filter,
-  map
+  catchError
 } from 'rxjs/operators';
 import {
   McsOrderWizardBase,
@@ -43,8 +44,7 @@ import {
   addMonthsToDate,
   pluck,
   isNullOrUndefined,
-  formatStringToPhoneNumber,
-  addHoursToDate,
+  formatStringToPhoneNumber
 } from '@app/utilities';
 import { McsFormGroupDirective } from '@app/shared';
 import { McsApiService } from '@app/services';
@@ -490,7 +490,11 @@ export class ColocationStaffEscortComponent extends McsOrderWizardBase implement
 
   private _getUserIdentityAndAccountDetails(): void {
     this._company = this._switchAccountService.activeAccount;
-    this._apiService.getAccount().subscribe(
+    this._apiService.getAccount()
+    .pipe(catchError((error) => {
+      return throwError('No account information found.');
+    }))
+    .subscribe(
       (response) => {
         this._userAccount.firstName = response.firstName;
         this._userAccount.lastName = response.lastName;
