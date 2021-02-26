@@ -43,7 +43,7 @@
 
           <!-- Action tab -->
           <ng-container mcsTabHeaderCustom>
-            <button *mcsAccessControl="['OrderEdit', 'TicketCreate']"
+            <button [hidden]="!hasRequestChangeAndTicketCreateAccess(selectedDns$ | async)"
               mcsButton="icon" mcsId="dns-action"  mcsAlign="end"
               #popoverActionElement="mcsPopover" [autoCalculatePosition]="false"
               mcsPopover placement="bottom" orientation="left"
