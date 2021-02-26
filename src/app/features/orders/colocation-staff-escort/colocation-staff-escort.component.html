@@ -70,7 +70,7 @@
                         </mcs-option>
                       </mcs-option-group>
                     </mcs-select>
-                    <mcs-error 
+                    <mcs-error
                           mcsError errorState="required"
                           [innerHTML]="('orderColocationStaffEscort.requestDetails.colocationService.error' | translate)">
                     </mcs-error>
@@ -86,13 +86,16 @@
                         </ng-container>.
                       </p>
                    </ng-container>
-                </ng-template>  
+                </ng-template>
             </mcs-item>
           <br><hr><br>
 
           <!-- Attendance Details -->
           <mcs-item>
             <p><strong>{{ 'orderColocationStaffEscort.requestDetails.attendanceLabel' | translate }}</strong></p>
+          </mcs-item>
+          <mcs-item [hidden]="!isImpersonating">
+            <span align-self-start>{{ 'orderColocationStaffEscort.requestDetails.escortee.placeholder' | translate }}</span>
           </mcs-item>
 
           <!-- Escortee -->
