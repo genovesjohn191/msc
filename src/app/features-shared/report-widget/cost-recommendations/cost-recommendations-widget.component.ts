@@ -25,8 +25,7 @@ import {
   McsReportCostRecommendations,
   RouteKey
 } from '@app/models';
-import { CoreRoutes } from '@app/core';
-import { McsReportingService } from '@app/core/services/mcs-reporting.service';
+import { CoreRoutes, McsReportingService } from '@app/core';
 
 @Component({
   selector: 'mcs-cost-recommendations-widget',

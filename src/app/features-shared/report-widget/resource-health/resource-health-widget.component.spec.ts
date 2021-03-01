@@ -2,10 +2,10 @@ import {
   waitForAsync,
   TestBed
 } from '@angular/core/testing';
-import { McsReportingService } from '@app/core/services/mcs-reporting.service';
+import { of } from 'rxjs';
+import { McsReportingService } from '@app/core';
 import { CoreTestingModule } from '@app/core/testing';
 import { ServicesTestingModule } from '@app/services/testing';
-import { of } from 'rxjs';
 import { ResourceHealthWidgetComponent } from './resource-health-widget.component';
 
 describe('ResourceHealthWidgetComponent', () => {

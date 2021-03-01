@@ -2,12 +2,9 @@ import {
   waitForAsync,
   TestBed
 } from '@angular/core/testing';
-import { McsApiClientTestingModule } from '@app/api-client/testing';
-import { McsReportingService } from '@app/core/services/mcs-reporting.service';
+import { McsReportingService } from '@app/core';
 import { CoreTestingModule } from '@app/core/testing';
-import { McsApiService } from '@app/services';
 import { ServicesTestingModule } from '@app/services/testing';
-import { TranslateService } from '@ngx-translate/core';
 import { CostRecommendationsWidgetComponent } from './cost-recommendations-widget.component';
 
 describe('CostRecommendationsWidgetComponent', () => {

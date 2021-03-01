@@ -23,8 +23,10 @@ import { ResourceHealthWidgetComponent } from './resource-health/resource-health
 import { MonitoringAndAlertingWidgetComponent } from './monitoring-and-alerting/monitoring-and-alerting-widget.component';
 import { ComplianceWidgetComponent } from './compliance/compliance-widget.component';
 import { UpdateManagementWidgetComponent } from './update-management/update-management-widget.component';
+import { AuditAlertsWidgetComponent } from './audit-alerts/audit-alerts-widget.component';
 
 const exports: any[] | Type<any> = [
+  AuditAlertsWidgetComponent,
   AzureResourcesWidgetComponent,
   AzureTicketsWidgetComponent,
   ChangeRequestWidgetComponent,

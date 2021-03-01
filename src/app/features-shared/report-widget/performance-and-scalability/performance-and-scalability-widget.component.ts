@@ -12,10 +12,12 @@ import {
   throwError
 } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-
-import { ChartConfig, ChartItem } from '@app/shared';
+import {
+  ChartConfig,
+  ChartItem
+} from '@app/shared';
 import { unsubscribeSafely } from '@app/utilities';
-import { McsReportingService } from '@app/core/services/mcs-reporting.service';
+import { McsReportingService } from '@app/core';
 
 export interface PerformanceAndScalabilityWidgetConfig {
   period: Date,

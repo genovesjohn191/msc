@@ -7,8 +7,19 @@ import {
   OnInit,
   ViewEncapsulation
 } from '@angular/core';
-import { McsReportingService } from '@app/core/services/mcs-reporting.service';
-import { McsReportResourceCompliance, McsReportResourceComplianceState } from '@app/models';
+import {
+  Subject,
+  throwError
+} from 'rxjs';
+import {
+  catchError,
+  takeUntil
+} from 'rxjs/operators';
+import { McsReportingService } from '@app/core';
+import {
+  McsReportResourceCompliance,
+  McsReportResourceComplianceState
+} from '@app/models';
 import { ChartConfig } from '@app/shared';
 import {
   coerceNumber,
@@ -16,8 +27,6 @@ import {
   isNullOrEmpty,
   unsubscribeSafely
 } from '@app/utilities';
-import { Subject, throwError } from 'rxjs';
-import { catchError, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'mcs-compliance-widget',

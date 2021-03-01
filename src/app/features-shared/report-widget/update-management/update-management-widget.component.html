@@ -102,16 +102,16 @@
         <mcs-loader size="medium"></mcs-loader>
       </div>
       <div *ngIf="dataSource?.hasNoRecords$ | async" text-center>
-        {{ 'reports.insights.techReview.updateManagement.noUpdateManagement' | translate }}
+        {{ 'reports.noDataFound' | translate }}
       </div>
       <div *ngIf="dataSource?.hasError$ | async" text-center>
         <div class="listing-status-wrapper">
-          <span>{{ 'reports.insights.techReview.updateManagement.errorMessage' | translate }}</span>
+          <span>{{ 'reports.errorMessage' | translate }}</span>
           <a (click)="retryDatasource()"
             mcsId
             mcsEventTracker="retry-loading-update-management-list"
             mcsEventCategory="update-management"
-            mcsEventLabel="dashboard-insight-page">{{ 'reports.insights.techReview.updateManagement.retry' | translate }}</a>.
+            mcsEventLabel="dashboard-insight-page">{{ 'reports.retryLabel' | translate }}</a>.
         </div>
       </div>
     </mcs-item>

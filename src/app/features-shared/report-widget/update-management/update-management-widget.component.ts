@@ -3,21 +3,29 @@ import {
   Component,
   OnInit
 } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import {
+  Observable,
+  throwError
+} from 'rxjs';
+import {
+  catchError,
+  map
+} from 'rxjs/operators';
 import {
   McsFilterInfo,
   McsReportUpdateManagement,
   RouteKey
 } from '@app/models';
 import {
-  CoreRoutes,
   McsMatTableContext,
   McsNavigationService,
-  McsTableDataSource2
+  McsTableDataSource2,
+  McsReportingService
 } from '@app/core';
-import { createObject, isNullOrEmpty } from '@app/utilities';
-import { McsReportingService } from '@app/core/services/mcs-reporting.service';
+import {
+  createObject,
+  isNullOrEmpty
+} from '@app/utilities';
 
 @Component({
   selector: 'mcs-update-management-widget',

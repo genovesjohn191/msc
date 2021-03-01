@@ -22,12 +22,12 @@ import {
   currencyFormat,
   unsubscribeSafely
 } from '@app/utilities';
-import { McsReportingService } from '@app/core/services/mcs-reporting.service';
 import {
   CoreRoutes,
   McsFilterService,
   McsMatTableContext,
-  McsTableDataSource2
+  McsTableDataSource2,
+  McsReportingService
 } from '@app/core';
 import {
   McsReportVMRightsizing,

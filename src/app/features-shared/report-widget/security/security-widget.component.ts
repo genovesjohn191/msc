@@ -10,13 +10,16 @@ import {
   Subject,
   throwError
 } from 'rxjs';
-import { catchError, takeUntil } from 'rxjs/operators';
+import {
+  catchError,
+  takeUntil
+} from 'rxjs/operators';
 import {
   CommonDefinition,
   isNullOrEmpty,
   unsubscribeSafely
 } from '@app/utilities';
-import { McsReportingService } from '@app/core/services/mcs-reporting.service';
+import { McsReportingService } from '@app/core';
 import { McsReportSecurityScore } from '@app/models';
 
 @Component({
@@ -52,8 +55,12 @@ export class SecurityWidgetComponent implements OnInit, OnDestroy {
     unsubscribeSafely(this._destroySubject);
   }
 
-  public get azureSecurityUrl(): string  {
-    return CommonDefinition.AZURE_SECURITY_URL;
+  public get securityCenterAzurePortalUrl(): string  {
+    return `${CommonDefinition.AZURE_PORTAL_URL}/Microsoft_Azure_Security/SecurityMenuBlade/23`;
+  }
+
+  public get recommendationAzurePortalUrl(): string  {
+    return `${CommonDefinition.AZURE_PORTAL_URL}/Microsoft_Azure_Security/SecurityMenuBlade/5`;
   }
 
   public get currentScore(): number {

@@ -5,9 +5,15 @@ import {
   OnInit,
   ViewEncapsulation
 } from '@angular/core';
-import { Subject, throwError } from 'rxjs';
-import { catchError, takeUntil } from 'rxjs/operators';
-import { CoreRoutes } from '@app/core';
+import {
+  Subject,
+  throwError
+} from 'rxjs';
+import {
+  catchError,
+  takeUntil
+} from 'rxjs/operators';
+import { CoreRoutes, McsReportingService } from '@app/core';
 import {
   cloneDeep,
   coerceNumber,
@@ -16,7 +22,6 @@ import {
   isNullOrEmpty,
   unsubscribeSafely
 } from '@app/utilities';
-import { McsReportingService } from '@app/core/services/mcs-reporting.service';
 import {
   RouteKey,
   OperationalSavingsSubItems,

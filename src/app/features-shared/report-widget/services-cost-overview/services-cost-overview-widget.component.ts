@@ -13,14 +13,12 @@ import {
   throwError
 } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-
-import { ChartConfig, ChartItem } from '@app/shared';
 import {
-  isNullOrEmpty,
-  unsubscribeSafely
-} from '@app/utilities';
-import { McsReportingService } from '@app/core/services/mcs-reporting.service';
-import { ReportPeriod } from '../report-period.interface';
+  ChartConfig,
+  ChartItem
+} from '@app/shared';
+import { unsubscribeSafely } from '@app/utilities';
+import { McsReportingService } from '@app/core';
 
 @Component({
   selector: 'mcs-services-cost-overview-widget',

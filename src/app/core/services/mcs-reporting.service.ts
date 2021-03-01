@@ -18,7 +18,8 @@ import {
   McsReportResourceCompliance,
   McsRightSizingQueryParams,
   McsReportManagementService,
-  McsReportUpdateManagement
+  McsReportUpdateManagement,
+  McsReportAuditAlerts
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { ChartItem } from '@app/shared/chart';
@@ -162,6 +163,13 @@ export class McsReportingService {
 
   public getUpdateManagement(period?: string): Observable<McsReportUpdateManagement[]> {
     return this._apiService.getUpdateManagement(period);
+  }
+
+  public getAuditAlerts(
+    periodStart?: string,
+    periodEnd?: string,
+    subscriptionIds?: string[]): Observable<McsReportAuditAlerts[]> {
+    return this._apiService.getAuditAlerts(periodStart, periodEnd, subscriptionIds);
   }
 
   public _convertServiceChangeInfoToChartItem(items: McsReportServiceChangeInfo[]): ChartItem[] {

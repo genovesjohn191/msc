@@ -6,12 +6,18 @@ import {
   OnInit,
   ViewEncapsulation
 } from '@angular/core';
-import { Subject, throwError } from 'rxjs';
+import {
+  Subject,
+  throwError
+} from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { McsReportingService } from '@app/core/services/mcs-reporting.service';
+import { McsReportingService } from '@app/core';
 import { McsReportResourceHealthResources } from '@app/models';
 import { ChartConfig } from '@app/shared';
-import { isNullOrEmpty, unsubscribeSafely } from '@app/utilities';
+import {
+  isNullOrEmpty,
+  unsubscribeSafely
+} from '@app/utilities';
 
 @Component({
   selector: 'mcs-resource-health-widget',
