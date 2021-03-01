@@ -43,7 +43,7 @@ export class CommonDefinition {
   public static INVIEW_URL = `{{macviewUrl}}/Bounce.aspx?bounce=1&mvClientID={{companyId}}`
     + `&mvURL={{inviewUrl}}%2Fframe%2Finview%2Fdata_details.html%3Fservice%3D{{serviceId}};`;
   public static CLOUD_HEALTH_URL = 'https://apps.cloudhealthtech.com';
-  public static AZURE_SECURITY_URL = 'https://portal.azure.com/#blade/Microsoft_Azure_Security/SecurityMenuBlade';
+  public static AZURE_PORTAL_URL = 'https://portal.azure.com/#blade';
 
   // Common Timezone
   public static TIMEZONE_SYDNEY = `Australia/Sydney`;

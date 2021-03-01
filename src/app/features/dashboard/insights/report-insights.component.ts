@@ -4,16 +4,33 @@ import {
   ChangeDetectorRef,
   OnDestroy
 } from '@angular/core';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
-import { McsReportingService } from '@app/core/services/mcs-reporting.service';
-import { PerformanceAndScalabilityWidgetConfig, ReportPeriod } from '@app/features-shared/report-widget';
+import {
+  BehaviorSubject,
+  Subject
+} from 'rxjs';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  takeUntil
+} from 'rxjs/operators';
+import { McsReportingService } from '@app/core';
+import {
+  PerformanceAndScalabilityWidgetConfig,
+  ReportPeriod
+} from '@app/features-shared/report-widget';
 import { MonitoringAlertingWidgetConfig } from '@app/features-shared/report-widget/monitoring-and-alerting/monitoring-and-alerting-widget.component';
 import { ResourceMonthlyCostWidgetConfig } from '@app/features-shared/report-widget/resource-monthly-cost/resource-monthly-cost-widget.component';
 import { McsReportSubscription } from '@app/models';
-import { MonitoringAlertingPeriod, monitoringAlertingPeriodText } from '@app/models/enumerations/report-monitoring-alerting-period.enum';
+import {
+  MonitoringAlertingPeriod,
+  monitoringAlertingPeriodText
+} from '@app/models/enumerations/report-monitoring-alerting-period.enum';
 import { ChartItem } from '@app/shared';
-import { CommonDefinition, isNullOrEmpty, unsubscribeSafely } from '@app/utilities';
+import {
+  CommonDefinition,
+  isNullOrEmpty,
+  unsubscribeSafely
+} from '@app/utilities';
 
 interface PeriodOption {
   label: string;
@@ -56,8 +73,20 @@ export class ReportInsightsComponent implements OnDestroy {
     return CommonDefinition.CLOUD_HEALTH_URL;
   }
 
-  public get azureSecurityUrl(): string  {
-    return CommonDefinition.AZURE_SECURITY_URL;
+  public get complianceAzurePortalUrl(): string  {
+    return `${CommonDefinition.AZURE_PORTAL_URL}/Microsoft_Azure_Policy/PolicyMenuBlade/Overview`;
+  }
+
+  public get resourceHealthAzurePortalUrl(): string  {
+    return `${CommonDefinition.AZURE_PORTAL_URL}/Microsoft_Azure_Security/SecurityMenuBlade/5`;
+  }
+
+  public get monitoringAlertingAzurePortalUrl(): string  {
+    return `${CommonDefinition.AZURE_PORTAL_URL}/Microsoft_Azure_Monitoring/AzureMonitoringBrowseBlade/alertsV2`;
+  }
+
+  public get auditAlertsAzurePortalUrl(): string  {
+    return `${CommonDefinition.AZURE_PORTAL_URL}/Microsoft_Azure_Monitoring/AlertsManagementSummaryBlade`;
   }
 
   public set selectedResourceCostMonth(value: PeriodOption) {
@@ -71,6 +100,19 @@ export class ReportInsightsComponent implements OnDestroy {
 
   public get selectedResourceCostMonth(): PeriodOption {
     return this._selectedResourceCostMonth;
+  }
+
+  public set selectedAuditAlertsMonth(value: PeriodOption) {
+    this._selectedAuditAlertsMonth = value;
+    this.auditAlertsConfig = {
+      period: this._selectedAuditAlertsMonth.period.from
+    };
+
+    this._changeDetector.markForCheck();
+  }
+
+  public get selectedAuditAlertsMonth(): PeriodOption {
+    return this._selectedAuditAlertsMonth;
   }
 
   public set selectedMonitoringAlertingPeriod(value: PeriodOption) {
@@ -109,6 +151,7 @@ export class ReportInsightsComponent implements OnDestroy {
 
   public serviceCostConfig: PerformanceAndScalabilityWidgetConfig;
   public resourceMonthlyCostConfig: ResourceMonthlyCostWidgetConfig;
+  public auditAlertsConfig: ResourceMonthlyCostWidgetConfig;
   public monitoringAlertingConfig: MonitoringAlertingWidgetConfig
 
   public subscriptions: McsReportSubscription[];
@@ -119,11 +162,15 @@ export class ReportInsightsComponent implements OnDestroy {
   private _subscriptionFilterChange = new BehaviorSubject<string[]>([]);
   private _performanceSubscriptionFilterChange = new BehaviorSubject<string>('');
   private _selectedResourceCostMonth: PeriodOption;
+  private _selectedAuditAlertsMonth: PeriodOption;
   private _selectedMonitoringAlertingPeriod: PeriodOption;
   private _subscriptionSubject = new Subject();
   private _destroySubject = new Subject<void>();
 
-  public constructor(private reportService: McsReportingService, private _changeDetector: ChangeDetectorRef) {
+  public constructor(
+    private reportService: McsReportingService,
+    private _changeDetector: ChangeDetectorRef
+  ) {
     this._getSubscriptions();
     this._identifyNonEssentialManagementServiceExistence();
     this._createMonthOptions();
@@ -198,6 +245,7 @@ export class ReportInsightsComponent implements OnDestroy {
     }
 
     this.selectedResourceCostMonth = this.monthOptions[0];
+    this.selectedAuditAlertsMonth = this.monthOptions[0];
   }
 
   private _createMonitoringAlertingPeriodOptions(): void {

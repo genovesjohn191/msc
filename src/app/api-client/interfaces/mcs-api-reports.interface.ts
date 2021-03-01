@@ -15,7 +15,8 @@ import {
   McsReportResourceCompliance,
   McsRightSizingQueryParams,
   McsReportManagementService,
-  McsReportUpdateManagement
+  McsReportUpdateManagement,
+  McsReportAuditAlerts
 } from '@app/models';
 
 export interface IMcsApiReportsService {
@@ -69,4 +70,9 @@ export interface IMcsApiReportsService {
     subscriptionIds?: string[]): Observable<McsApiSuccessResponse<McsReportMonitoringAndAlerting>>;
 
   getUpdateManagement(period?: string): Observable<McsApiSuccessResponse<McsReportUpdateManagement[]>>;
+
+  getAuditAlerts(
+    periodStart?: string,
+    periodEnd?: string,
+    subscriptionIds?: string[]): Observable<McsApiSuccessResponse<McsReportAuditAlerts[]>>;
 }

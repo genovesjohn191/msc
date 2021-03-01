@@ -139,7 +139,7 @@
                 <!-- Compliance -->
                 <h2><span class="show-on-print-only">2.2 </span>{{ 'reports.insights.techReview.compliance.title' | translate }}</h2>
                 <div class="widget-label">
-                  An overarching <a href="https://portal.azure.com/#blade/Microsoft_Azure_Policy/PolicyMenuBlade/Overview"
+                  An overarching <a href="{{ complianceAzurePortalUrl }}"
                   target="_blank"
                   mcsId="compliance-view"
                   mcsEventTracker="navigate-to-compliance-view"
@@ -153,7 +153,7 @@
                 <!-- Resource Health -->
                 <h2><span class="show-on-print-only">2.3 </span>{{ 'reports.insights.techReview.resourceHealth.title' | translate }}</h2>
                 <div class="widget-label">{{ 'reports.insights.techReview.resourceHealth.subTitle' | translate }}
-                  <a href="{{ azureSecurityUrl }}/5"
+                  <a href="{{ resourceHealthAzurePortalUrl }}"
                   target="_blank"
                   mcsId="azure-security-center"
                   mcsEventTracker="navigate-to-azure-security-center"
@@ -211,7 +211,7 @@
                   </div>
                 </div>
                 <div class="widget-label label-with-dropdown">
-                  A count of <a href="https://portal.azure.com/#blade/Microsoft_Azure_Monitoring/AzureMonitoringBrowseBlade/alertsV2"
+                  A count of <a href="{{ monitoringAlertingAzurePortalUrl }}"
                   target="_blank"
                   mcsId="azure-monitor"
                   mcsEventTracker="navigate-to-azure-monitor"
@@ -223,8 +223,36 @@
                 <mcs-monitoring-and-alerting-widget [config]="monitoringAlertingConfig" [subscriptionIds]="subscriptionIdsFilter"></mcs-monitoring-and-alerting-widget>
                 <mat-divider></mat-divider>
 
+                <!-- Audit Alerts -->
+                <div class="options-container">
+                  <div>
+                    <h2><span class="show-on-print-only">2.6 </span>{{ 'reports.insights.techReview.auditAlerts.title' | translate }}</h2>
+                  </div>
+                  <div class="hide-on-print">
+                    <mat-form-field appearance="outline">
+                      <mat-label>{{ 'reports.insights.monthLabel' | translate }}</mat-label>
+                      <mat-select [(ngModel)]="selectedAuditAlertsMonth">
+                        <mat-option *ngFor="let opt of monthOptions" [value]="opt">
+                          {{ opt.label }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="widget-label label-with-dropdown">
+                  {{ 'reports.insights.techReview.auditAlerts.subTitle' | translate }}
+                  <a href="{{ auditAlertsAzurePortalUrl }}"
+                    target="_blank"
+                    mcsId="azure-portal"
+                    mcsEventTracker="navigate-to-azure-portal"
+                    mcsEventCategory="dashboard-navigation"
+                    mcsEventLabel="azure-portal-link">{{ 'reports.insights.techReview.auditAlerts.viewInAzurePortal' | translate }}</a>.
+                </div>
+                <mcs-audit-alerts-widget [subscriptionIds]="subscriptionIdsFilter" [config]="auditAlertsConfig"></mcs-audit-alerts-widget>
+                <mat-divider></mat-divider>
+
                 <!-- Update Management -->
-                <h2><span class="show-on-print-only">2.6 </span>{{ 'reports.insights.techReview.updateManagement.title' | translate }}</h2>
+                <h2><span class="show-on-print-only">2.7 </span>{{ 'reports.insights.techReview.updateManagement.title' | translate }}</h2>
                 <div class="widget-label">
                   {{ 'reports.insights.techReview.updateManagement.subTitle' | translate }}
                 </div>

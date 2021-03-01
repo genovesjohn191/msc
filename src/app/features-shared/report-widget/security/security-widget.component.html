@@ -1,7 +1,7 @@
 <div class="widget flat">
   <h4>{{ 'reports.insights.techReview.security.overAllSecurityScore' | translate }}</h4>
   <div class="subtitle">
-    <a href="{{ azureSecurityUrl }}/23"
+    <a href="{{ securityCenterAzurePortalUrl }}"
       target="_blank"
       mcsId="security-azure-security-center"
       mcsEventTracker="navigate-to-azure-security-center"
@@ -33,7 +33,7 @@
           </div>
           <mat-progress-bar mode="determinate" value="{{ securityScorePercentage }}" style="height: 10px;"></mat-progress-bar>
           <div style="margin-top: 20px;">
-            <a href="{{ azureSecurityUrl }}/5" target="_blank">
+            <a href="{{ recommendationAzurePortalUrl }}" target="_blank">
               {{ 'reports.insights.techReview.security.viewRecommendation' | translate }}
             </a>
           </div>

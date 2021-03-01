@@ -6,12 +6,23 @@ import {
   OnInit,
   ViewEncapsulation
 } from '@angular/core';
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  throwError
+} from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { McsReportingService } from '@app/core/services/mcs-reporting.service';
+import { McsReportingService } from '@app/core';
 import { McsReportMonitoringAndAlerting } from '@app/models';
-import { ChartConfig, ChartItem } from '@app/shared';
-import { isNullOrEmpty, unsubscribeSafely } from '@app/utilities';
+import {
+  ChartConfig,
+  ChartItem
+} from '@app/shared';
+import {
+  compareArrays,
+  isNullOrEmpty,
+  unsubscribeSafely
+} from '@app/utilities';
 
 export interface MonitoringAlertingWidgetConfig {
   period: {
@@ -43,9 +54,8 @@ export class MonitoringAndAlertingWidgetComponent implements OnInit, OnDestroy {
   @Input()
   public set subscriptionIds(value: string[]) {
     let subscriptionId = !isNullOrEmpty(value) ? value : [];
-    if (JSON.stringify(subscriptionId) === JSON.stringify(this._subscriptionIds)) {
-      return;
-    }
+    let comparisonResult = compareArrays(subscriptionId, this._subscriptionIds);
+    if (comparisonResult === 0) { return; }
 
     this._subscriptionIds = value;
     this.getData();

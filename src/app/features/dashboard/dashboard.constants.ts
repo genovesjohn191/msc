@@ -1,10 +1,10 @@
 import { Routes } from '@angular/router';
 import { RouteKey } from '@app/models';
+import { McsReportingService } from '@app/core';
 import { DashboardComponent } from './dashboard.component';
 import { DashboardGuard } from './dashboard.guard';
 import { ReportOverviewComponent } from './overview';
 import { ReportInsightsComponent } from './insights';
-import { McsReportingService } from '@app/core/services/mcs-reporting.service';
 
 /**
  * List of services for the main module

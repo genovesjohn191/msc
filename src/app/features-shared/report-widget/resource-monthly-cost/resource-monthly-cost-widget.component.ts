@@ -8,11 +8,22 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  throwError
+} from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { McsReportingService } from '@app/core/services/mcs-reporting.service';
-import { isNullOrEmpty, unsubscribeSafely } from '@app/utilities';
-import { ChartConfig, ChartItem } from '@app/shared';
+import { McsReportingService } from '@app/core';
+import {
+  compareArrays,
+  isNullOrEmpty,
+  unsubscribeSafely
+} from '@app/utilities';
+import {
+  ChartConfig,
+  ChartItem
+} from '@app/shared';
 
 export interface ResourceMonthlyCostWidgetConfig {
   period: Date
@@ -46,9 +57,8 @@ export class ResourceMonthlyCostWidgetComponent implements OnInit, OnDestroy {
   @Input()
   public set subscriptionIds(value: string[]) {
     let subscriptionId = !isNullOrEmpty(value) ? value : [];
-    if (JSON.stringify(subscriptionId) === JSON.stringify(this._subscriptionIds)) {
-      return;
-    }
+    let comparisonResult = compareArrays(subscriptionId, this._subscriptionIds);
+    if (comparisonResult === 0) { return; }
 
     this._subscriptionIds = subscriptionId;
     this.getResourceMonthlyCostReport();

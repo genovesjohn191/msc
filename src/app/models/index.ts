@@ -274,6 +274,7 @@ export * from './response/mcs-report-monitoring-and-alerting';
 export * from './response/mcs-report-severity-alerts';
 export * from './response/mcs-report-management-service';
 export * from './response/mcs-report-update-management';
+export * from './response/mcs-report-audit-alerts';
 export * from './response/mcs-object-crisp-element';
 export * from './response/mcs-object-installed-service';
 

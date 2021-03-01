@@ -11,10 +11,16 @@ import {
   Observable,
   throwError
 } from 'rxjs';
-import { ChartConfig, ChartItem } from '@app/shared';
-import { McsReportingService } from '@app/core/services/mcs-reporting.service';
+import {
+  ChartConfig,
+  ChartItem
+} from '@app/shared';
+import { McsReportingService } from '@app/core';
 import { catchError } from 'rxjs/operators';
-import { CommonDefinition, unsubscribeSafely } from '@app/utilities';
+import {
+  CommonDefinition,
+  unsubscribeSafely
+} from '@app/utilities';
 
 const maxResourcesToDisplay = 10;
 

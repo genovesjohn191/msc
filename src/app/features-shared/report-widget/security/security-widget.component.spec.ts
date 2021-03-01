@@ -2,7 +2,7 @@ import {
   waitForAsync,
   TestBed
 } from '@angular/core/testing';
-import { McsReportingService } from '@app/core/services/mcs-reporting.service';
+import { McsReportingService } from '@app/core';
 import { CoreTestingModule } from '@app/core/testing';
 import { ServicesTestingModule } from '@app/services/testing';
 import { SecurityWidgetComponent } from './security-widget.component';

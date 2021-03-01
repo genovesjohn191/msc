@@ -19,7 +19,8 @@ import {
   McsReportResourceCompliance,
   McsRightSizingQueryParams,
   McsReportManagementService,
-  McsReportUpdateManagement
+  McsReportUpdateManagement,
+  McsReportAuditAlerts
 } from '@app/models';
 import { McsApiClientHttpService } from '../mcs-api-client-http.service';
 import { IMcsApiReportsService } from '../interfaces/mcs-api-reports.interface';
@@ -345,6 +346,32 @@ export class McsApiReportsService implements IMcsApiReportsService {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
             .deserializeResponse<McsReportUpdateManagement[]>(McsReportUpdateManagement, response);
+          return apiResponse;
+        })
+      );
+  }
+
+  public getAuditAlerts(
+    periodStart?: string,
+    periodEnd?: string,
+    subscriptionIds?: string[]): Observable<McsApiSuccessResponse<McsReportAuditAlerts[]>> {
+    let searchParams = new Map<string, any>();
+    searchParams.set('period_start', periodStart);
+    searchParams.set('period_end', periodEnd);
+    if (!isNullOrEmpty(subscriptionIds)) {
+      searchParams.set('subscription_ids', subscriptionIds.join());
+    }
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/public-cloud/reports/audit-alerts';
+    mcsApiRequestParameter.searchParameters = searchParams;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsReportAuditAlerts[]>(McsReportAuditAlerts, response);
           return apiResponse;
         })
       );

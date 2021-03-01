@@ -146,6 +146,7 @@
   "reports": {
     "errorMessage": "Something went wrong while retrieving your data.",
     "retryLabel": "Try Again",
+    "noDataFound": "No data found",
     "overview": {
       "azureResourcesWidget": {
         "title": "Azure Resources",
@@ -278,12 +279,14 @@
           "subTitle": "by severity, for the specified period.",
           "totalAlerts": "Total Alerts"
         },
+        "auditAlerts": {
+          "title": "Audit Alerts",
+          "subTitle": "A list of alerts which detail security events that have occurred in your environment.",
+          "viewInAzurePortal": "View in Azure Portal"
+        },
         "updateManagement": {
           "title": "Update Management",
           "subTitle": "An overview of the state of each of your managed VMs which are configured for update scheduling; when they were last updated and whether the attempt was successful.",
-          "errorMessage": "Something went wrong while retrieving your data.",
-          "noUpdateManagement": "No data found",
-          "retry": "Try again",
           "status": {
             "remediate": "Remediate",
             "rollback": "Rollback"
@@ -3038,7 +3041,10 @@
     "resourceGroup": "Resource Group",
     "lastStartTime": "Last Start Time",
     "lastEndTime": "Last End Time",
-    "lastStatus": "Last Status"
+    "lastStatus": "Last Status",
+    "severity": "Severity",
+    "operationName": "Operation Name",
+    "time": "Time"
   },
   "formFields": {
     "selectStorage": "Select storage profile"

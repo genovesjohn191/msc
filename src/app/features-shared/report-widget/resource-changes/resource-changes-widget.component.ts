@@ -10,10 +10,15 @@ import {
   Observable,
   throwError
 } from 'rxjs';
-
-import { ChartConfig, ChartItem } from '@app/shared';
-import { coerceNumber, isNullOrEmpty } from '@app/utilities';
-import { McsReportingService } from '@app/core/services/mcs-reporting.service';
+import {
+  ChartConfig,
+  ChartItem
+} from '@app/shared';
+import {
+  coerceNumber,
+  isNullOrEmpty
+} from '@app/utilities';
+import { McsReportingService } from '@app/core';
 import { catchError } from 'rxjs/operators';
 
 const maxItemToDisplay = 10;
