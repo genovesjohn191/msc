@@ -15,12 +15,13 @@ export const dedicatedStorageIncreaseVolumeForm: LaunchPadForm = {
       suffix: 'GB'
     }),
   ],
-  mapContext: null,
+
   mapCrispElementAttributes: (attributes: McsObjectCrispElementServiceAttribute[]) => {
     let mappedProperties: { key: string, value: any }[] = [];
     if (isNullOrEmpty(attributes)) { return mappedProperties; }
 
-    mappedProperties.push({ key: 'diskSizeInGB', value: findCrispElementAttribute(CrispAttributeNames.DiskSpace, attributes)?.value } );
+    mappedProperties.push({ key: 'diskSizeInGB',
+      value: findCrispElementAttribute(CrispAttributeNames.Ic2DiskSpace, attributes)?.value } );
 
     return mappedProperties;
   }

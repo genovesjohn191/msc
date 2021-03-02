@@ -10,12 +10,14 @@ import { DynamicInputNumberComponent } from './input-number/input-number.compone
 import { DynamicInputPasswordComponent } from './input-password/input-password.component';
 import { DynamicInputRandomComponent } from './input-random/input-random.component';
 import { DynamicInputTextComponent } from './input-text/input-text.component';
+import { DynamicSelectBatComponent } from './select-bat/select-bat.component';
 import { DynamicSelectChipsVmComponent } from './select-chips-vm/select-chips-vm.component';
 import { DynamicSelectChipsComponent } from './select-chips/select-chips.component';
 import { DynamicSelectGroupComponent } from './select-group/select-group.component';
 import { DynamicSelectMultipleComponent } from './select-multiple/select-multiple.component';
 import { DynamicSelectNetworkComponent } from './select-network/select-network.component';
 import { DynamicSelectOsComponent } from './select-os/select-os.component';
+import { DynamicSelectRetentionPeriodComponent } from './select-retention-period/select-retention-period.component';
 import { DynamicSelectStorageProfileComponent } from './select-storage-profile/select-storage-profile.component';
 import { DynamicSelectVdcComponent } from './select-vdc/select-vdc.component';
 import { DynamicSelectVmComponent } from './select-vm/select-vm.component';
@@ -29,6 +31,7 @@ const exports: any[] | Type<any> = [
   DynamicInputTextComponent,
   DynamicInputPasswordComponent,
   DynamicInputRandomComponent,
+  DynamicSelectBatComponent,
   DynamicSelectChipsComponent,
   DynamicSelectChipsVmComponent,
   DynamicSelectComponent,
@@ -36,6 +39,7 @@ const exports: any[] | Type<any> = [
   DynamicSelectMultipleComponent,
   DynamicSelectNetworkComponent,
   DynamicSelectOsComponent,
+  DynamicSelectRetentionPeriodComponent,
   DynamicSelectStorageProfileComponent,
   DynamicSelectVdcComponent,
   DynamicSelectVmComponent,

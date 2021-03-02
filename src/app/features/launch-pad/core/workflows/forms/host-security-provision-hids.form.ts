@@ -9,12 +9,12 @@ import {
   ServiceType
 } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
-import { WorkflowGroupSaveState } from '../workflow-group.interface';
 import { LaunchPadForm } from './form.interface';
 import {
   CrispAttributeNames,
   findCrispElementAttribute
 } from './mapping-helper';
+import { standardContextMapper } from './shared/standard-context-mapper';
 
 export const hostSecurityProvisionHidsForm: LaunchPadForm = {
   config: [
@@ -45,19 +45,15 @@ export const hostSecurityProvisionHidsForm: LaunchPadForm = {
       ]
     })
   ],
-  mapContext: (context: WorkflowGroupSaveState) => {
-    let mappedProperties: { key: string, value: any }[] = [];
-    if (isNullOrEmpty(context)) { return mappedProperties; }
 
-    mappedProperties.push({ key: 'companyId', value: context.companyId });
+  mapContext: standardContextMapper,
 
-    return mappedProperties;
-  },
   mapCrispElementAttributes: (attributes: McsObjectCrispElementServiceAttribute[]) => {
     let mappedProperties: { key: string, value: any }[] = [];
     if (isNullOrEmpty(attributes)) { return mappedProperties; }
 
-    mappedProperties.push({ key: 'server', value: findCrispElementAttribute(CrispAttributeNames.ServerLink, attributes)?.displayValue } );
+    mappedProperties.push({ key: 'server',
+      value: findCrispElementAttribute(CrispAttributeNames.ServerLink, attributes)?.displayValue } );
 
     return mappedProperties;
   }

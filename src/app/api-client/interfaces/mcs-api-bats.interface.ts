@@ -11,7 +11,8 @@ export interface IMcsApiBatsService {
   /**
    * Get all the backup aggregation targets
    */
-  getBackUpAggregationTargets(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsBackUpAggregationTarget[]>>;
+  getBackUpAggregationTargets(query?: McsQueryParam, optionalHeaders?: Map<string, any>):
+    Observable<McsApiSuccessResponse<McsBackUpAggregationTarget[]>>;
 
   /**
    * Get all the backup aggregation targets

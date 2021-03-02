@@ -8,9 +8,12 @@ import {
 import { DynamicSelectChipsValue } from '@app/features-shared/dynamic-form/dynamic-form-field/dynamic-select-chips-field-component.base';
 import { McsObjectCrispElementServiceAttribute } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
-import { WorkflowGroupSaveState } from '../workflow-group.interface';
 import { LaunchPadForm } from './form.interface';
-import { CrispAttributeNames, findCrispElementAttribute } from './mapping-helper';
+import {
+  CrispAttributeNames,
+  findCrispElementAttribute
+} from './mapping-helper';
+import { standardContextMapper } from './shared/standard-context-mapper';
 
 export const dedicatedStorageCreateAndAttachVolumeClusterForm: LaunchPadForm = {
   config: [
@@ -56,25 +59,23 @@ export const dedicatedStorageCreateAndAttachVolumeClusterForm: LaunchPadForm = {
       }
     })
   ],
-  mapContext: (context: WorkflowGroupSaveState) => {
-    let mappedProperties: { key: string, value: any }[] = [];
-    if (isNullOrEmpty(context)) { return mappedProperties; }
 
-    mappedProperties.push({ key: 'companyId', value: context.companyId });
+  mapContext: standardContextMapper,
 
-    return mappedProperties;
-  },
   mapCrispElementAttributes: (attributes: McsObjectCrispElementServiceAttribute[]) => {
     let mappedProperties: { key: string, value: any }[] = [];
     if (isNullOrEmpty(attributes)) { return mappedProperties; }
 
-    mappedProperties.push({ key: 'tier', value: findCrispElementAttribute(CrispAttributeNames.StorageTier, attributes)?.value } );
-    mappedProperties.push({ key: 'diskSizeInGB', value: findCrispElementAttribute(CrispAttributeNames.DiskSpace, attributes)?.value } );
+    mappedProperties.push({ key: 'tier',
+      value: findCrispElementAttribute(CrispAttributeNames.Ic2StorageTier, attributes)?.value } );
+
+    mappedProperties.push({ key: 'diskSizeInGB',
+      value: findCrispElementAttribute(CrispAttributeNames.Ic2DiskSpace, attributes)?.value } );
 
     let bootLun: boolean = findCrispElementAttribute(CrispAttributeNames.DesignatedUsage, attributes)?.value === 'BOOT';
     mappedProperties.push({ key: 'bootLun', value: bootLun } );
 
-    let server: string = findCrispElementAttribute(CrispAttributeNames.Server, attributes)?.displayValue;
+    let server: string = findCrispElementAttribute(CrispAttributeNames.Ic2Server, attributes)?.displayValue;
     let servers: DynamicSelectChipsValue[]  = [
       {
         value: server

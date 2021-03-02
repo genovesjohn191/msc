@@ -1,20 +1,24 @@
 import { McsObjectCrispElementServiceAttribute } from '@app/models';
 
 export enum CrispAttributeNames {
-  Resource = 'IC2_ACCESS',
-  WindowsOperatingSystem = 'IC2_WINLIC',
-  LinuxOperatingSystem = 'IC2_LINLIC',
-  CpuCount = 'IC2_VCPU',
-  Memory = 'IC2_VRAM',
-  Storage = 'IC2_STORAGE',
-  IPAddress = 'IC2_IP',
-  DiskSpace = 'IC2_DISK_SPACE',
-  StorageTier = 'IC2_STORAGE_TIER',
+  BaasRetentionReq = 'BAAS_RETENTION_REQ',
+  DailyBackupQuota = 'DAILY-BACKUP-QUOTA',
   DesignatedUsage = 'DESIGNATED_USAGE',
-  Server = 'IC2_SERVER',
+  HidsProtectionLvl = 'HIPS_PROTECTION_LVL',
+  Ic2Access = 'IC2_ACCESS',
+  Ic2DiskSpace = 'IC2_DISK_SPACE',
+  Ic2Ip = 'IC2_IP',
+  Ic2LinLic = 'IC2_LINLIC',
+  Ic2Server = 'IC2_SERVER',
+  Ic2Storage = 'IC2_STORAGE',
+  Ic2StorageTier = 'IC2_STORAGE_TIER',
+  Ic2Vcpu = 'IC2_VCPU',
+  Ic2Vram = 'IC2_VRAM',
+  Ic2WinLic = 'IC2_WINLIC',
+  IntelliDeuNominatedBackup = 'INTELLI-DEU-NOMINATED-BACKUP',
+  LinkedServiceId = 'LINKED_SERVICEID',
+  LinkSrvIdVav = 'LINK_SRV_ID_VAV',
   ServerLink = 'SERVER_LINK',
-  ServerLinkAv = 'LINK_SRV_ID_VAV',
-  HidsProtectionLevel = 'HIPS_PROTECTION_LVL'
 }
 
 export const findCrispElementAttribute:

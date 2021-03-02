@@ -33,7 +33,6 @@ import { DynamicInputIpField } from './input-ip';
 })
 export class DynamicInputIpComponent extends DynamicInputTextComponent {
   public config: DynamicInputIpField;
-  private _hasInitialized: boolean = false;
 
   // Filter variables
   private _companyId: string = '';
@@ -97,30 +96,7 @@ export class DynamicInputIpComponent extends DynamicInputTextComponent {
   private _updateBehavior(mode: string ): void {
     let required = mode.toLowerCase() === 'manual';
 
-    let hasValidators = !isNullOrEmpty(this.config.validators);
-    if (hasValidators) {
-      this.config.validators.required = required
-
-    } else {
-      this.config.validators = { required };
-    }
-
-    let hasSettings = !isNullOrEmpty(this.config.settings);
-    if (hasSettings) {
-      this.config.settings.hidden = !required;
-    } else {
-      this.config.settings = { hidden: !required };
-    }
-
-    this.disabled = !required;
-
-    this.clearFormField(false);
-
-    // Set initial value if required
-    if (required && !this._hasInitialized) {
-      this.setInitialValue(this.config.initialValue);
-      this._hasInitialized = true;
-    }
+    this.updateVisiblityBasedOnRequirement(required);
 
     this._changeDetectorRef.markForCheck();
   }

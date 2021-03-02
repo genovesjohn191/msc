@@ -20,7 +20,9 @@ export class McsApiBatsService implements IMcsApiBatsService {
   /**
    * Get all the backup aggregation targets
    */
-  public getBackUpAggregationTargets(query?: McsQueryParam): Observable<McsApiSuccessResponse<McsBackUpAggregationTarget[]>> {
+  public getBackUpAggregationTargets(query?: McsQueryParam, optionalHeaders?: Map<string, any>):
+    Observable<McsApiSuccessResponse<McsBackUpAggregationTarget[]>> {
+
     // Set default values if null
     let searchParams = new Map<string, any>();
     if (isNullOrEmpty(query)) { query = new McsQueryParam(); }
@@ -31,6 +33,7 @@ export class McsApiBatsService implements IMcsApiBatsService {
     let requestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     requestParameter.endPoint = `/storage/backup/aggregation-targets`;
     requestParameter.searchParameters = searchParams;
+    requestParameter.optionalHeaders = optionalHeaders;
 
     return this._mcsApiHttpService.get(requestParameter)
       .pipe(

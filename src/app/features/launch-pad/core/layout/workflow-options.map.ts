@@ -19,4 +19,8 @@ export const workflowOptions: Map<WorkflowGroupId, string> = new Map([
   [WorkflowGroupId.ManagementToolsQueryStatus, 'Query Management Tools Status.'],
   [WorkflowGroupId.ManagementToolsAddCvm, 'Add To Management Tools.'],
   [WorkflowGroupId.ManagementToolsRemoveCvm, 'Remove from Management Tools.'],
+
+  [WorkflowGroupId.ServerBackupProvision, 'Provision Server Backup.'],
+
+  [WorkflowGroupId.VmBackupProvision, 'Provision Virtual Machine Backup.'],
 ]);

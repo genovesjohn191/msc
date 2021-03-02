@@ -15,7 +15,7 @@ export const vdcVmInstanceAddToManagementToolsForm: LaunchPadForm = {
     if (isNullOrEmpty(attributes)) { return mappedProperties; }
 
     // Operating System
-    let linuxOs = findCrispElementAttribute(CrispAttributeNames.LinuxOperatingSystem , attributes)?.value;
+    let linuxOs = findCrispElementAttribute(CrispAttributeNames.Ic2LinLic , attributes)?.value;
     let notLinux = linuxOs && ((linuxOs as string).toLowerCase() === 'not');
     let selectedOs = notLinux ? 'WIN' : 'LIN';
     mappedProperties.push({ key: 'osType', value: selectedOs });
