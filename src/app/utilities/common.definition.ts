@@ -192,7 +192,6 @@ export class CommonDefinition {
 
   /** Filter Selector */
   public static FILTERSELECTOR_NOTIFICATIONS_LISTING = 'notificationFilter';
-  public static FILTERSELECTOR_TICKET_LISTING = 'ticketFilter';
   public static FILTERSELECTOR_ORDER_LISTING = 'orderFilter';
   public static FILTERSELECTOR_INTERNET_LISTING = 'internetFilter';
   public static FILTERSELECTOR_AGGREGATION_TARGETS_LISTING = 'aggregationTargetFilter';
