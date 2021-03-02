@@ -14,6 +14,7 @@ import { isNullOrEmpty } from '@app/utilities';
 import { WorkflowGroupSaveState } from '../workflow-group.interface';
 import { LaunchPadForm } from './form.interface';
 import { CrispAttributeNames, findCrispElementAttribute } from './mapping-helper';
+import { standardContextMapper } from './shared/standard-context-mapper';
 
 export const vdcVmInstanceProvisionForm: LaunchPadForm = {
   config: [
@@ -105,34 +106,35 @@ export const vdcVmInstanceProvisionForm: LaunchPadForm = {
     })
   ],
 
-  mapContext: (context: WorkflowGroupSaveState) => {
-    let mappedProperties: { key: string, value: any }[] = [];
-    if (isNullOrEmpty(context)) { return mappedProperties; }
-
-    mappedProperties.push({ key: 'companyId', value: context.companyId });
-
-    return mappedProperties;
-  },
+  mapContext: standardContextMapper,
 
   mapCrispElementAttributes: (attributes: McsObjectCrispElementServiceAttribute[]) => {
     let mappedProperties: { key: string, value: any }[] = [];
     if (isNullOrEmpty(attributes)) { return mappedProperties; }
 
-    mappedProperties.push({ key: 'resource', value: findCrispElementAttribute(CrispAttributeNames.Resource , attributes)?.displayValue } );
+    mappedProperties.push({ key: 'resource',
+      value: findCrispElementAttribute(CrispAttributeNames.Ic2Access , attributes)?.displayValue } );
 
     // Operating System
-    let windowsOs = findCrispElementAttribute(CrispAttributeNames.WindowsOperatingSystem , attributes)?.value;
-    let linuxOs = findCrispElementAttribute(CrispAttributeNames.LinuxOperatingSystem , attributes)?.value;
+    let windowsOs = findCrispElementAttribute(CrispAttributeNames.Ic2WinLic , attributes)?.value;
+    let linuxOs = findCrispElementAttribute(CrispAttributeNames.Ic2LinLic , attributes)?.value;
     let notLinux = linuxOs && ((linuxOs as string).toLowerCase() === 'not');
     let selectedOs = notLinux ? windowsOs: linuxOs;
     mappedProperties.push({ key: 'os', value: selectedOs });
-    mappedProperties.push({ key: 'cpuCount', value:findCrispElementAttribute(CrispAttributeNames.CpuCount, attributes)?.value } );
-    mappedProperties.push({ key: 'memoryInGB', value: findCrispElementAttribute(CrispAttributeNames.Memory, attributes)?.value } );
-    mappedProperties.push({ key: 'storageSizeInGB', value: findCrispElementAttribute(CrispAttributeNames.Storage, attributes)?.value } );
+
+    mappedProperties.push({ key: 'cpuCount',
+      value:findCrispElementAttribute(CrispAttributeNames.Ic2Vcpu, attributes)?.value } );
+
+    mappedProperties.push({ key: 'memoryInGB',
+      value: findCrispElementAttribute(CrispAttributeNames.Ic2Vram, attributes)?.value } );
+
+    mappedProperties.push({ key: 'storageSizeInGB',
+      value: findCrispElementAttribute(CrispAttributeNames.Ic2Storage, attributes)?.value } );
 
     // IP Address
-    let ipAddress = findCrispElementAttribute(CrispAttributeNames.IPAddress , attributes)?.value;
+    let ipAddress = findCrispElementAttribute(CrispAttributeNames.Ic2Ip , attributes)?.value;
     mappedProperties.push({ key: 'ipAddress', value: ipAddress } );
+
     mappedProperties.push({ key: 'ipAllocationMode', value: ipAddress ? 'Manual' : 'Dhcp' } );
 
     return mappedProperties;

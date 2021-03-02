@@ -346,6 +346,12 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
       ]
     ],
 
+    [ ProductType.ServerBackup,
+      [
+        WorkflowGroupId.ServerBackupProvision
+      ]
+    ],
+
     [ ProductType.ServerHostIntrusionPreventionSystem,
       [
         WorkflowGroupId.HostSecurityProvisionHids
@@ -424,6 +430,12 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
     [ ProductType.VirtualPrivateServer,
       [
         WorkflowGroupId.ManagementToolsQueryStatus
+      ]
+    ],
+
+    [ ProductType.VmBackup,
+      [
+        WorkflowGroupId.VmBackupProvision
       ]
     ],
   ]

@@ -43,7 +43,7 @@ export abstract class DynamicSelectFieldComponentBase<T>
   protected collection: T[] = [];
   private _initialized: boolean = false;
 
-  constructor(private _changeDetectorRef: ChangeDetectorRef) {
+  constructor(protected _changeDetectorRef: ChangeDetectorRef) {
     super();
   }
 

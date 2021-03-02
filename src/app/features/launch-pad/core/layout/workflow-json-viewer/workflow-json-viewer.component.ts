@@ -2,7 +2,7 @@ import {
   Component,
   Input
 } from '@angular/core';
-import { isNullOrEmpty } from '@app/utilities';
+import { isNullOrEmpty, isNullOrUndefined } from '@app/utilities';
 
 @Component({
   selector: 'mcs-workflow-json-viewer',
@@ -56,6 +56,8 @@ export class WorkflowJsonViewerComponent {
     ];
 
     let keyIsSensitive = sensitiveKeys.findIndex((sensitiveKey) => sensitiveKey === key) >= 0;
-    return keyIsSensitive && !isNullOrEmpty(value) ? '*secret*' : value;
+    if (keyIsSensitive && !isNullOrEmpty(value)) return '*secret*';
+
+    return isNullOrUndefined(value) ? '' : value;
   }
 }

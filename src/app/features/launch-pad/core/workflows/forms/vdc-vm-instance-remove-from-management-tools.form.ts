@@ -3,9 +3,8 @@ import {
   DynamicSelectChipsVmField,
   DynamicSelectVmField
 } from '@app/features-shared/dynamic-form';
-import { isNullOrEmpty } from '@app/utilities';
-import { WorkflowGroupSaveState } from '../workflow-group.interface';
 import { LaunchPadForm } from './form.interface';
+import { standardContextMapper } from './shared/standard-context-mapper';
 
 export const vdcVmInstanceRemoveFromManagementToolsForm: LaunchPadForm = {
   config: [
@@ -36,13 +35,5 @@ export const vdcVmInstanceRemoveFromManagementToolsForm: LaunchPadForm = {
     })
   ],
 
-  mapContext: (context: WorkflowGroupSaveState) => {
-    let mappedProperties: { key: string, value: any }[] = [];
-    if (isNullOrEmpty(context)) { return mappedProperties; }
-
-    mappedProperties.push({ key: 'companyId', value: context.companyId });
-    mappedProperties.push({ key: 'serviceId', value: context.serviceId });
-
-    return mappedProperties;
-  }
+  mapContext: standardContextMapper,
 }

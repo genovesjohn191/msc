@@ -23,6 +23,10 @@ export enum WorkflowGroupId {
 
   HostSecurityProvisionAntiVirus = 4000000,
   HostSecurityProvisionHids = 4000001,
+
+  ServerBackupProvision = 5000000,
+
+  VmBackupProvision = 6000000,
 }
 
 export const workflowGroupIdText = {
@@ -42,4 +46,8 @@ export const workflowGroupIdText = {
 
   [WorkflowGroupId.HostSecurityProvisionAntiVirus]: 'Provision Anti-Virus',
   [WorkflowGroupId.HostSecurityProvisionHids]: 'Provision HIDS',
+
+  [WorkflowGroupId.ServerBackupProvision]: 'Server Backup',
+
+  [WorkflowGroupId.VmBackupProvision]: 'VM Backup',
 }

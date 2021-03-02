@@ -43,6 +43,8 @@ export abstract class DynamicFieldComponentBase implements OnInit, DynamicFormFi
 
   public disabled: boolean = false;
 
+  private _hasInitializedOnVisibilityUpdate: boolean = false;
+
   public ngOnInit(): void {
     if (!isNullOrUndefined(this.config.initialValue)) {
       this.setInitialValue(this.config.initialValue);
@@ -116,5 +118,31 @@ export abstract class DynamicFieldComponentBase implements OnInit, DynamicFormFi
   protected changeValue(value: any): void {
     this.config.value = value;
     this.valueChange(this.config.value);
+  }
+
+  protected updateVisiblityBasedOnRequirement(required: boolean): void {
+    let hasValidators = !isNullOrEmpty(this.config.validators);
+    if (hasValidators) {
+      this.config.validators.required = required
+    } else {
+      this.config.validators = { required };
+    }
+
+    let hasSettings = !isNullOrEmpty(this.config.settings);
+    if (hasSettings) {
+      this.config.settings.hidden = !required;
+    } else {
+      this.config.settings = { hidden: !required };
+    }
+
+    this.disabled = !required;
+
+    this.clearFormField(false);
+
+    // Set initial value if required
+    if (required && !this._hasInitializedOnVisibilityUpdate) {
+      this.setInitialValue(this.config.initialValue);
+      this._hasInitializedOnVisibilityUpdate = true;
+    }
   }
 }

@@ -1039,8 +1039,10 @@ export class McsApiService {
     );
   }
 
-  public getBackupAggregationTargets(query?: McsQueryParam): Observable<McsApiCollection<McsBackUpAggregationTarget>> {
-    return this._batsApi.getBackUpAggregationTargets(query).pipe(
+  public getBackupAggregationTargets(query?: McsQueryParam, optionalHeaders?: Map<string, any>):
+    Observable<McsApiCollection<McsBackUpAggregationTarget>> {
+
+    return this._batsApi.getBackUpAggregationTargets(query, optionalHeaders).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getBackupAggregationTargets'))
       ),
