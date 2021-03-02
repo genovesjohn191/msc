@@ -1,21 +1,23 @@
 import {
-  Component,
-  ChangeDetectionStrategy,
-  ViewEncapsulation,
-  OnInit,
-  ChangeDetectorRef,
-  Injector,
-  OnDestroy
-} from '@angular/core';
-import {
-  Observable,
   throwError,
+  Observable,
   Subject
 } from 'rxjs';
 import {
   catchError,
   map
 } from 'rxjs/operators';
+
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Injector,
+  OnDestroy,
+  OnInit,
+  ViewEncapsulation
+} from '@angular/core';
+import { McsApiTicketsService } from '@app/api-client/services/mcs-api-tickets.service';
 import {
   CoreRoutes,
   McsFilterService,
@@ -24,19 +26,18 @@ import {
   McsTableDataSource2
 } from '@app/core';
 import {
-  McsTicket,
-  RouteKey,
-  TicketStatus,
   ticketStatusText,
-  McsTicketQueryParams
+  McsTicket,
+  McsTicketQueryParams,
+  RouteKey,
+  TicketStatus
 } from '@app/models';
 import {
   cloneObject,
-  CommonDefinition,
   isNullOrEmpty,
-  unsubscribeSafely
+  unsubscribeSafely,
+  CommonDefinition
 } from '@app/utilities';
-import { McsApiTicketsService } from '@app/api-client/services/mcs-api-tickets.service';
 
 const maxTicketsToDisplay: number = 5;
 
@@ -87,10 +88,6 @@ export class AzureTicketsWidgetComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this._initializeDataColumns();
-  }
-
-  public get columnSettingsKey(): string {
-    return CommonDefinition.FILTERSELECTOR_TICKET_LISTING;
   }
 
   public ngOnDestroy() {

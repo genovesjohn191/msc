@@ -2490,7 +2490,7 @@
       "loading": "Loading DNS list",
       "noDns": "No DNS to display.",
       "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of DNS."
-      
+
     }
   },
   "licenses": {
@@ -3044,7 +3044,14 @@
     "lastStatus": "Last Status",
     "severity": "Severity",
     "operationName": "Operation Name",
-    "time": "Time"
+    "time": "Time",
+    "ticketNumber": "Ticket Number",
+    "loggedBy": "Logged By",
+    "loggedOn": "Logged On",
+    "lastUpdatedDate": "Last Updated Date",
+    "lastUpdatedBy": "Last Updated By",
+    "customerReference": "Customer Reference",
+    "summary": "Summary"
   },
   "formFields": {
     "selectStorage": "Select storage profile"
