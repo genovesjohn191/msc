@@ -16,7 +16,8 @@ import {
 } from 'rxjs/operators';
 import {
   McsTableDataSource,
-  McsNavigationService
+  McsNavigationService,
+  McsAccessControlService
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -28,7 +29,8 @@ import {
   McsResourceStorage,
   RouteKey,
   McsExpandResourceStorage,
-  McsResource
+  McsResource,
+  McsFeatureFlag
 } from '@app/models';
 import { McsEvent } from '@app/events';
 import { VdcDetailsBase } from '../vdc-details.base';
@@ -51,7 +53,8 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnInit, OnDes
   constructor(
     _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
-    private _navigationService: McsNavigationService
+    private _navigationService: McsNavigationService,
+    private _accessControlService: McsAccessControlService,
   ) {
     super(_injector, _changeDetectorRef);
     this.storageColumns = [];
@@ -68,6 +71,36 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnInit, OnDes
 
   public get storageIconKey(): string {
     return CommonDefinition.ASSETS_SVG_STORAGE;
+  }
+
+  public get cogIconKey(): string {
+    return CommonDefinition.ASSETS_SVG_ELLIPSIS_HORIZONTAL;
+  }
+
+  public canRequestCustomChange(serviceId: string): boolean {
+    const serviceCustomChangeFeatureFlag = this._accessControlService.hasAccessToFeature([McsFeatureFlag.OrderingServiceCustomChange]);
+
+    return !isNullOrEmpty(serviceId) && serviceCustomChangeFeatureFlag &&
+            this._accessControlService.hasPermission(['OrderEdit']);
+  }
+
+  public canCreateTicket(serviceId: string): boolean {
+    return !isNullOrEmpty(serviceId) &&
+      this._accessControlService.hasPermission([
+        'TicketCreate'
+      ]);
+  }
+
+  public canExpandVdcStorage(scaleable: boolean): boolean {
+    return scaleable && this._accessControlService.hasPermission(['OrderEdit']);
+  }
+
+  public hasActionsEnabled(scaleable: boolean, resourceStorage: McsResourceStorage): boolean {
+    let hasRequestChangeAccess = this.canRequestCustomChange(resourceStorage.serviceId);
+    let hasTicketCreatePermission = this.canCreateTicket(resourceStorage.serviceId);
+    let resourceIsScaleable = this.canExpandVdcStorage(scaleable);
+
+    return resourceIsScaleable || hasTicketCreatePermission || hasRequestChangeAccess;
   }
 
   /**

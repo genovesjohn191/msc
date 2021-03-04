@@ -84,6 +84,9 @@ export class McsFirewall extends McsEntityBase {
   @JsonProperty()
   public url: string = undefined;
 
+  @JsonProperty()
+  public serviceChangeAvailable: boolean = undefined;
+
   @JsonProperty({ target: McsFirewallPolicy })
   public policies: McsFirewallPolicy[];
 

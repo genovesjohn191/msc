@@ -39,6 +39,17 @@
           <mcs-tab
             [label]="'aggregationTarget.linkedServices.label' | translate" id="linked-services">
           </mcs-tab>
+
+          <ng-container mcsTabHeaderCustom>
+            <mcs-context-menu-link *ngIf="selectedAggregationTarget$ | async as selectedAggregationTarget"
+              mcsAlign="end"
+              [serviceId]="selectedAggregationTarget.serviceId"
+              [serviceChangeAvailable]="selectedAggregationTarget.serviceChangeAvailable"
+              [hasMenuButton]="true"
+              [eventCategory]="'aggregation-target'"
+              [eventLabel]="'aggregation-target-details-page'">
+            </mcs-context-menu-link>
+          </ng-container>
         </mcs-tab-group>
 
         <!-- Tab content for routing tab -->

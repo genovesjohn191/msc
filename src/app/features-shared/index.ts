@@ -46,3 +46,6 @@ export * from './system-message-form/system-message-form';
 
 /** Dynamic Form */
 export * from './dynamic-form/dynamic-form-field-config.interface';
+
+/** Context Menu Link */
+export * from './context-menu-link/context-menu-link.component';

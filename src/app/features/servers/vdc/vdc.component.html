@@ -63,6 +63,16 @@
         <!-- Storage Tab -->
         <mcs-tab [label]="'serversVdcStorage.label' | translate" id="storage">
         </mcs-tab>
+        <ng-container *ngIf="selectedResource$ | async as selectedResource" mcsTabHeaderCustom>
+          <mcs-context-menu-link
+            mcsAlign="end"
+            [serviceId]="selectedResource.serviceId"
+            [serviceChangeAvailable]="selectedResource.serviceChangeAvailable"
+            [hasMenuButton]="true"
+            [eventCategory]="'vdc'"
+            [eventLabel]="'vdc-details-page'">
+          </mcs-context-menu-link>
+        </ng-container>
       </mcs-tab-group>
 
       <!-- Tab content for routing tab -->

@@ -2,7 +2,17 @@
   <mcs-grid-row>
     <mcs-grid-column>
       <mcs-item orientation="block">
-        <strong>{{ 'serverServices.antivirus.title' | translate }}</strong>
+        <div style="display: flex">
+          <div><strong>{{ 'serverServices.antivirus.title' | translate }}</strong></div>
+          <mcs-context-menu-link
+            mcsAlign="end"
+            [serviceId]="server.serviceId"
+            [serviceChangeAvailable]="server.serviceChangeAvailable"
+            [hasMenuButton]="true"
+            [eventCategory]="'server'"
+            [eventLabel]="'antivirus-server-services'">
+          </mcs-context-menu-link>
+        </div>
         <mcs-item>
           <mcs-icon [key]="antiVirusDetails.icon" size="small" mcsId="antivirus-status-icon"></mcs-icon>
           <span mcsId="antivirus-status-label">{{ antiVirusDetails.label }}</span>

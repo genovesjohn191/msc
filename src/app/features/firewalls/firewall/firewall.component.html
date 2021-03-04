@@ -89,6 +89,14 @@
                 mcsEventCategory="firewall"
                 mcsEventLabel="firewall-details-page">View in Portal
               </a>
+
+              <mcs-context-menu-link
+                [serviceId]="selectedFirewall.serviceId"
+                [serviceChangeAvailable]="selectedFirewall.serviceChangeAvailable"
+                [hasMenuButton]="false"
+                [eventCategory]="'firewall'"
+                [eventLabel]="'firewall-details-page'">
+              </mcs-context-menu-link>
             </div>
           </ng-template>
         </ng-container>

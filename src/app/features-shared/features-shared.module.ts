@@ -26,6 +26,7 @@ import { SmacSharedFormComponent } from './smac-shared-form/smac-shared-form.com
 import { FormFieldsModule } from './form-fields/form-fields.module';
 import { ContextualCatalogLinkComponent } from './contextual-catalog-link/mcs-contextual-catalog-link.component';
 import { InternetManagePortPlanComponent } from './internet-manage-port-plan/internet-manage-port-plan.component';
+import { ContextMenuLinkComponent } from './context-menu-link/context-menu-link.component';
 
 @NgModule({
   declarations: [
@@ -52,7 +53,8 @@ import { InternetManagePortPlanComponent } from './internet-manage-port-plan/int
     RenameServerDialogComponent,
     HelpWidgetComponent,
     SmacSharedFormComponent,
-    InternetManagePortPlanComponent
+    InternetManagePortPlanComponent,
+    ContextMenuLinkComponent
   ],
   imports: [
     SharedModule,
@@ -83,6 +85,7 @@ import { InternetManagePortPlanComponent } from './internet-manage-port-plan/int
     HelpWidgetComponent,
     SmacSharedFormComponent,
     InternetManagePortPlanComponent,
+    ContextMenuLinkComponent,
     FormFieldsModule
   ],
   entryComponents: [

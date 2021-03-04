@@ -104,6 +104,10 @@
     "serviceId": {
       "text": "Service ID",
       "value": true
+    },
+    "action": {
+      "value": true,
+      "exclude": true
     }
   },
   "aggregationTargetFilter": {
@@ -123,6 +127,10 @@
     "serviceId": {
       "text": "Service ID",
       "value": true
+    },
+    "action": {
+      "value": true,
+      "exclude": true
     }
   },
   "toolsFilter": {
