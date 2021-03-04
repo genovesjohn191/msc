@@ -23,4 +23,7 @@ export class McsBackUpAggregationTarget extends McsEntityBase {
 
   @JsonProperty()
   public retentionPeriod: string = undefined;
+
+  @JsonProperty()
+  public serviceChangeAvailable: boolean = undefined;
 }

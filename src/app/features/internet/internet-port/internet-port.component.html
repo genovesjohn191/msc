@@ -62,6 +62,17 @@
         <!-- Management Tab -->
         <mcs-tab [label]="'internetPortManagement.label' | translate" id="management">
         </mcs-tab>
+
+        <ng-container mcsTabHeaderCustom>
+          <mcs-context-menu-link
+            mcsAlign="end"
+            [serviceId]="selectedInternetPort.serviceId"
+            [serviceChangeAvailable]="selectedInternetPort.serviceChangeAvailable"
+            [hasMenuButton]="true"
+            [eventCategory]="'internet'"
+            [eventLabel]="'internet-details-page'">
+          </mcs-context-menu-link>
+        </ng-container>
       </mcs-tab-group>
 
       <!-- Tab content for routing tab -->

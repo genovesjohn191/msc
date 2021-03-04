@@ -21,6 +21,7 @@ export enum McsFeatureFlag {
   DedicatedVmNicView = 'EnableDedicatedVmNicView',
   DedicatedVmStorageView = 'EnableDedicatedVmStorageView',
 
+  OrderingServiceCustomChange = 'EnableOrderingServiceCustomRequest',
   OrderingVdcStorageProvision = 'EnableOrderingVdcStorageProvision',
   OrderingMicrosoftRequestChange = 'EnableOrderingMicrosoftRequestChange',
   DnsListing = 'enablePrivateCloudNetworkDnsListing',

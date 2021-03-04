@@ -33,6 +33,9 @@ export class McsResource extends McsEntityBase {
   @JsonProperty()
   public portalUrl: string = undefined;
 
+  @JsonProperty()
+  public serviceChangeAvailable: boolean = undefined;
+
   @JsonProperty({ target: McsResourceCompute })
   public compute: McsResourceCompute = undefined;
 

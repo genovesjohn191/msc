@@ -1105,6 +1105,10 @@
       }
     }
   },
+  "contextMenuLink": {
+    "requestCustomChange": "Request a Custom Change",
+    "raiseTicket": "Raise a Ticket"
+  },
   "notification": {
     "leftPanelHeader": "Notification details",
     "backToNotifications": "Back to Notifications"

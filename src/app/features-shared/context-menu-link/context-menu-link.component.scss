@@ -1,0 +1,23 @@
+mcs-context-menu-link {
+  margin-top: 0 !important;
+
+  .context-menu-button {
+    height: 25px !important;
+    width: 25px !important;
+  
+    .button-text-wrapper {
+      display: inline-block;
+    }
+  }
+}
+
+.context-menu-container {
+  a:first-child {
+    margin-top: 0 !important;
+  }
+}
+
+.context-menu-link {
+  margin-top: 5px !important;
+  width: 100%;
+}

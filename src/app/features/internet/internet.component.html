@@ -93,6 +93,20 @@
           </mcs-data-cell>
         </ng-container>
 
+        <!-- Action Column -->
+        <ng-container mcsColumnDef="action">
+          <mcs-header-cell *mcsHeaderCellDef hidden-small></mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" hidden-small text-center>
+            <mcs-context-menu-link mcsStopPropagation
+              [serviceId]="row.serviceId"
+              [serviceChangeAvailable]="row.serviceChangeAvailable"
+              [hasMenuButton]="true"
+              [eventCategory]="'internet'"
+              [eventLabel]="'internet-listing-page'">
+            </mcs-context-menu-link>
+          </mcs-data-cell>
+        </ng-container>
+
         <!-- Data Status Integration -->
         <ng-container mcsDataStatusDef>
           <mcs-data-empty *mcsDataEmptyDef>

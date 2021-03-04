@@ -58,7 +58,7 @@
           <!-- Service -->
           <mcs-item orientation='block'>
             <mcs-form-field>
-              <mcs-select [formControl]="fcService" required
+              <mcs-select [formControl]="fcService"
                 [placeholder]="'orderServiceCustomChange.requestDetails.service.placeholder' | translate"
                 mcsId="select-service"
                 mcsEventTracker="select-service"
@@ -71,7 +71,8 @@
                       <span>{{ title }}</span>
                     </ng-container>
 
-                    <mcs-option *ngFor="let service of customChangeServices" [value]="service.serviceId">
+                    <mcs-option *ngFor="let service of customChangeServices" [value]="service.serviceId"
+                      [selected]="(selectedServiceId$ | async) === service.serviceId">
                       {{ service.name }}
                     </mcs-option>
                   </mcs-option-group>

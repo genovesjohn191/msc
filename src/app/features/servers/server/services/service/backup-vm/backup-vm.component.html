@@ -1,6 +1,13 @@
 <mcs-presentation-panel *ngIf="!isStatusUnknown">
   <ng-container mcsPresentationPanelHeader>
     <h2>{{ 'serverServices.vmBackup.title' | translate }}</h2>
+    <mcs-context-menu-link
+      [serviceId]="server.serviceId"
+      [serviceChangeAvailable]="server.serviceChangeAvailable"
+      [hasMenuButton]="true"
+      [eventCategory]="'server'"
+      [eventLabel]="'vm-backup-services'">
+    </mcs-context-menu-link>
   </ng-container>
 
   <mcs-section>

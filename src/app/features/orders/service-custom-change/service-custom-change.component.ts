@@ -15,7 +15,8 @@ import {
   takeUntil,
   map,
   filter,
-  tap
+  tap,
+  shareReplay
 } from 'rxjs/operators';
 import {
   Subject,
@@ -59,6 +60,7 @@ import {
 } from '@app/features-shared';
 import { McsFormGroupDirective } from '@app/shared';
 import { ServiceCustomChangeService } from './service-custom-change.service';
+import { ActivatedRoute } from '@angular/router';
 
 const SERVICE_CUSTOM_CHANGE = Guid.newGuid().toString();
 const TEXTAREA_MAXLENGTH_DEFAULT = 850;
@@ -92,6 +94,7 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
   public smacSharedFormConfig$: BehaviorSubject<SmacSharedFormConfig>;
 
   public contactOptions$: Observable<McsOption[]>;
+  public selectedServiceId$: Observable<string>;
 
   private _smacSharedDetails: SmacSharedDetails;
 
@@ -120,7 +123,8 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
     _injector: Injector,
     private _customChangeService: ServiceCustomChangeService,
     private _formBuilder: FormBuilder,
-    private _apiService: McsApiService
+    private _apiService: McsApiService,
+    private _activatedRoute: ActivatedRoute
   ) {
     super(
       _customChangeService,
@@ -137,6 +141,7 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
   }
 
   public ngOnInit(): void {
+    this._subscribesToSelectedService();
     this._subscribeToVdcServices();
     this._subscribeToServerServices();
     this._subscribeToFirewallServices();
@@ -225,6 +230,16 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
       fcChangeDescription: this.fcChangeDescription,
       fcChangeObjective: this.fcChangeObjective
     });
+  }
+
+  private _subscribesToSelectedService(): void {
+    this.selectedServiceId$ = this._activatedRoute.queryParams.pipe(
+      map((params) => getSafeProperty(params, (obj) => obj.serviceId)),
+      tap((params) => {
+        this.fcService.setValue(params);
+      }),
+      shareReplay(1)
+    );
   }
 
   /**

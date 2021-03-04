@@ -1,0 +1,46 @@
+<ng-container *ngIf="serviceId">
+  <ng-container *ngIf="hasMenuButton; else contextMenuLinksTemplate" mcsTabHeaderCustom>
+    <button [hidden]="!hasActionsEnabled()"
+      mcsButton="icon"
+      mcsId="context-menu-button"
+      #popoverActionElement="mcsPopover"
+      [autoCalculatePosition]="false"
+      mcsPopover
+      theme="light"
+      padding="none"
+      [content]="contextMenuWrapperTemplate"
+      class="context-menu-button">
+      <mcs-icon [key]="cogIconKey" size="large"></mcs-icon>
+    </button>
+    <ng-template #contextMenuWrapperTemplate>
+      <div class="cog-actions-wrapper context-menu-container">
+        <ng-container *ngTemplateOutlet="contextMenuLinksTemplate">
+        </ng-container>
+      </div>
+    </ng-template>
+  </ng-container>
+  <ng-template #contextMenuLinksTemplate>
+    <ng-container *ngIf="canRequestCustomChange()">
+      <a mcsButton="basic" color="white" labelPlacement="left"
+        class="context-menu-link"
+        (click)="onRequestCustomChange()"
+        mcsId="request-custom-change-link"
+        mcsEventTracker="navigate-to-request-custom-change"
+        mcsEventCategory="{{ eventCategory }}"
+        mcsEventLabel="{{ eventLabel }}">
+        {{ 'contextMenuLink.requestCustomChange' | translate }}
+      </a>
+    </ng-container>
+    <ng-container *mcsAccessControl="['TicketCreate']">
+      <a mcsButton="basic" color="white" labelPlacement="left"
+        class="context-menu-link"
+        (click)="onRaiseTicket()"
+        mcsId="create-ticket-link"
+        mcsEventTracker="navigate-to-raise-ticket"
+        mcsEventCategory="{{ eventCategory }}"
+        mcsEventLabel="{{ eventLabel }}">
+        {{ 'contextMenuLink.raiseTicket' | translate }}
+      </a>
+    </ng-container>
+  </ng-template>
+</ng-container>
