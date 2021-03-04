@@ -367,12 +367,12 @@
     }
   },
   "orderDashboard": {
-    "loading": "Loading order available items.",
-    "leftPanelHeader": "Order available items",
-    "noOrdersAvailable": "No order available items",
+    "loading": "Loading available items.",
+    "leftPanelHeader": "Available items",
+    "noOrdersAvailable": "No available items",
     "noOrdersAvailableMenu": "Nothing to display",
     "noOrdersAvailableContent": "There are no order operations to display. \r\nYou may not have permission to raise an order, or some of our ordering operations may be temporarily unavilable.",
-    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of order available items."
+    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of available items."
   },
   "orderGroups": {
     "header": "Add or Change a Service",
@@ -438,12 +438,12 @@
       "contextualHelp": "Choose a VDC."
     },
     "vdcStorage": {
-      "placeholder": "Select a VDC Storage",
-      "contextualHelp": "Choose the VDC storage to expand.",
+      "placeholder": "Select a storage profile",
+      "contextualHelp": "Choose the storage profile to expand.",
       "warningLabel": "This storage profile cannot be expanded as it does not have a service ID associated. Please contact your accounts team for assistance."
     },
     "vdcDetails": {
-      "stepTitle": "VDC Details",
+      "stepTitle": "Storage Profile Details",
       "label": "Storage Element",
       "optionGroupLabel": "Virtual Data Centres",
       "storageLabel": "Storage",
@@ -452,7 +452,7 @@
     },
     "expanding": {
       "description": "Your VDC storage is being expanded and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
-      "dataInProgress": "Preparing the VDC storage for expanding. This may take a moment.",
+      "dataInProgress": "Preparing the VDC storage for expansion. This may take a moment.",
       "dataError": "Something went wrong while processing your request. Please try again later."
     }
   },
@@ -463,13 +463,13 @@
       "label": "VDC",
       "description": "Please select the VDC you wish to create a storage profile for",
       "placeholder": "Select a VDC",
-      "contextualHelp": "Choose the virtual data centre to create a storage.",
+      "contextualHelp": "Choose the virtual data centre you wish to create a storage profile for.",
       "hints": {
         "currentStorage": "Current Storage: {{current_storage}}"
       }
     },
     "vdcDetails": {
-      "stepTitle": "VDC Details",
+      "stepTitle": "Storage Profile Details",
       "label": "Storage Element",
       "optionGroupLabel": "Virtual Data Centres",
       "storageLabel": "Storage",
@@ -477,8 +477,8 @@
       "fullStorageSpace": "This disk cannot be expanded due to insufficient storage space (0 GB remaining)."
     },
     "provisioning": {
-      "description": "Description placeholder",
-      "dataInProgress": "data in progress placeholder",
+      "description": "Your storage profile is being provisioned and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
+      "dataInProgress": "Preparing to provision your storage profile. This may take a moment.",
       "dataError": "Something went wrong while processing your request. Please try again later."
     }
   },
@@ -517,7 +517,7 @@
     "requestDetails": {
       "stepTitle": "Request Details",
       "description": "You can use this wizard to request a custom, non-standard change to your services. Please provide the details of your request below.",
-      "raiseTicketLabel": "If you are experiencing issues with your service, raise a ticket​​​​​​​",
+      "raiseTicketLabel": "If you are experiencing issues with your service, raise a ticket",
       "leadTimeLabel": "Our standard lead time of 120 hours for this request ensures we have time to get the right engineer for the task.",
       "service": {
         "placeholder": "Select a service to change"
@@ -618,8 +618,8 @@
       }
     },
     "provisioning": {
-      "description": "Your service is being updated and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
-      "dataInProgress": "Preparing to custom change your service. This may take a moment.",
+      "description": "Your order is being processed. You can track progress from the notifications menu at the top of the portal.",
+      "dataInProgress": "Preparing your order. This may take a moment.",
       "dataError": "Something went wrong while processing your request. Please try again later."
     }
   },
@@ -714,8 +714,8 @@
       }
     },
     "provisioning": {
-      "description": "Your request is being processed. You can track progress from the notifications menu at the top of the portal.",
-      "dataInProgress": "Preparing your request. This may take a moment.",
+      "description": "Your order is being processed. You can track progress from the notifications menu at the top of the portal.",
+      "dataInProgress": "Preparing your order. This may take a moment.",
       "dataError": "Something went wrong while processing your request. Please try again later."
     }
   },
@@ -733,10 +733,10 @@
         "optionGroupLabel": "Virtual Data Centres",
         "serverProvisioned": "Provisioned",
         "serverDisabled": "Anti-Virus cannot be installed on this server because {{server_issue}}",
-        "serverPoweredOff": "it is powered off",
-        "serverChangeAvailableFalse": "its currently being provisioned",
-        "serverOsAutomationFalse": "OS Automation is not available. Contact your account team or raise a ticket for assistance.",
-        "busy": "it is currently busy. Installation can be performed once its current operation has completed."
+        "serverPoweredOff": "the server is powered off",
+        "serverChangeAvailableFalse": "the server is currently being provisioned",
+        "serverOsAutomationFalse": "OS automation is not available. Contact your account team or raise a ticket for assistance.",
+        "busy": "the server is currently busy. Installation can be performed once its current operation has completed."
       }
     },
     "provisioning": {
@@ -760,9 +760,9 @@
         "serverProvisioned": "Provisioned",
         "serverDisabled": "HIDS cannot be installed on this server because {{server_issue}}",
         "serverPoweredOff": "it is powered off",
-        "serverChangeAvailableFalse": "its currently being provisioned",
-        "serverOsAutomationFalse": "OS Automation is not available. Contact your account team or raise a ticket for assistance.",
-        "busy": "it is currently busy. Installation can be performed once its current operation has completed."
+        "serverChangeAvailableFalse": "it is currently being provisioned",
+        "serverOsAutomationFalse": "OS automation is not available. Contact your account team or raise a ticket for assistance.",
+        "busy": "the server is currently busy. Installation can be performed once its current operation has completed."
       },
       "protectionLevel": {
         "label": "Protection Level:",
@@ -785,9 +785,9 @@
       "serverProvisioned": "Provisioned",
       "serverDisabled": "Server backup cannot be installed on this server because {{server_issue}}",
       "serverPoweredOff": "it is powered off",
-      "serverChangeAvailableFalse": "its currently being provisioned",
-      "serverOsAutomationFalse": "OS Automation is not available. Contact your account team or raise a ticket for assistance.",
-      "busy": "it is currently busy. Installation can be performed once its current operation has completed."
+      "serverChangeAvailableFalse": "it is currently being provisioned",
+      "serverOsAutomationFalse": "OS automation is not available. Contact your account team or raise a ticket for assistance.",
+      "busy": "the server is currently busy. Installation can be performed once its current operation has completed."
     },
     "provisioningStep": {
       "description": "Server Backup is being provisioned and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
@@ -804,9 +804,9 @@
       "serverProvisioned": "Provisioned",
       "serverDisabled": "VM backup cannot be installed on this server because {{server_issue}}",
       "serverPoweredOff": "it is powered off",
-      "serverChangeAvailableFalse": "its currently being provisioned",
-      "serverOsAutomationFalse": "OS Automation is not available. Contact your account team or raise a ticket for assistance.",
-      "busy": "it is currently busy. Installation can be performed once its current operation has completed."
+      "serverChangeAvailableFalse": "it is currently being provisioned",
+      "serverOsAutomationFalse": "OS automation is not available. Contact your account team or raise a ticket for assistance.",
+      "busy": "the server currently busy. Installation can be performed once its current operation has completed."
     },
     "provisioningStep": {
       "description": "VM Backup is being provisioned and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
@@ -828,7 +828,7 @@
       "dailyQuotaPlaceholder": "Quota",
       "dailyQuotaHelp": "Your desired backup quota, per day. Additional fees may apply if this is exceeded.",
       "dailyQuotaSuffix": "GB",
-      "dailyQuotaRequired": "Enter quota value.",
+      "dailyQuotaRequired": "Enter desired quota.",
       "dailyQuotaNumeric": "Please enter a valid number.",
       "dailyQuotaMinimum": "The minimum quota that can be entered is {{min_value}}.",
       "dailyQuotaMaximum": "Quota should not exceed {{max_value}}.",
@@ -836,8 +836,8 @@
       "note": "After your Backup Aggregation Target is ready, you can select it when ordering new Backup services."
     },
     "provisioningStep": {
-      "description": "Backup Aggregation Target is being provisioned and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
-      "dataInProgress": "Preparing to provision Backup Aggregation Target. This may take a moment."
+      "description": "Your Backup Aggregation Target is being provisioned and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
+      "dataInProgress": "Preparing to provision your Backup Aggregation Target. This may take a moment."
     }
   },
   "orderMsLicenseCountChange": {
@@ -905,7 +905,7 @@
       "azureProductContextualHelp": "The main Azure product this service request relates to",
       "complexityLabel": "Complexity",
       "complexityDescription": "This will affect the cost of your request. We'll contact you and get your approval if we need to recategorize this after your request is submitted.",
-      "complexityContextualHelp": "Please note, your request may need to be delayed or resubmitted if the complexity provided does not match the nature of the work required"
+      "complexityContextualHelp": "Please note, your request may need to be delayed or resubmitted if the complexity provided does not match the nature of the work required."
     },
     "errors": {
       "complexity": "You must select a complexity",
@@ -940,7 +940,7 @@
       "rackServiceRequired" : "Service is required",
       "location": "Cabinet location is required",
       "floorLevel": "Floor number is required",
-      "rackNumber": "Row and rack number required",
+      "rackNumber": "Row and rack number are required",
       "instructions": "Instructions are required"
     }
   },
@@ -1041,7 +1041,7 @@
         },
         "sourceIpOrSubnet": {
           "placeholder": "Source IP or Subnet",
-          "helpText": "<br/><br/>Acceptable format examples:<br/>10.1.1.1<br/>10.1.1.1/32",
+          "helpText": "<br/><br/>Acceptable format examples:<br/>10.1.1.1<br/>10.1.1.1/32",
           "errorRequired": "Source IP/Subnet is required",
           "invalidFormat": "Please enter an IPv4 address or range"
         },
@@ -1051,7 +1051,7 @@
         },
         "destinationIpOrSubnet": {
           "placeholder": "Destination IP or Subnet",
-          "helpText": "Acceptable format examples:<br/>10.1.1.1<br/>10.1.1.1/32",
+          "helpText": "Acceptable format examples:<br/>10.1.1.1<br/>10.1.1.1/32",
           "errorRequired": "Destination IP/Subnet is required",
           "invalidFormat": "Please enter an IPv4 address or range"
         },
@@ -1064,10 +1064,10 @@
         }
       },
       "remove": {
-        "tabHeader": "Rule to remove {{index}}",
-        "description": "You can use this wizard to request rules be removed for your firewall service.",
+        "tabHeader": "Rule to remove {{index}}",
+        "description": "You can use this wizard to request rules be removed for your firewall service.",
         "label": "What firewall rules would you like to remove?",
-        "helpText": "Enter the details of the rule you would like removed.<br/>Use the Additional Change button to remove multiple.",
+        "helpText": "Enter the details of the rule you would like removed.<br/>Use the Additional Change button to remove multiple.",
         "action": {
           "errorRequired": "action is required"
         },
@@ -1077,7 +1077,7 @@
         }
       },
       "modify": {
-        "tabHeader": "Rule to modify {{index}}",
+        "tabHeader": "Rule to modify {{index}}",
         "description": "You can use this wizard to request rule modifications for your firewall service",
         "label": "What firewall rules would you like to modify?",
         "helpText": "Enter the details of your existing rule and the parameters for the new rule which will replace it.<br/>Use the Additional Change button to modify multiple.",
@@ -1115,7 +1115,7 @@
   },
   "servers": {
     "header": "Virtual",
-    "description": "View and manage any Managed or Self-Managed VDC servers. Dedicated and physical servers will be displayed in future versions of the portal.",
+    "description": "View and manage any Managed or Self-Managed virtual servers.",
     "leftPanelHeader": "Virtual Server Filter",
     "newServer": "New Server",
     "loading": "Loading servers.",
@@ -1155,27 +1155,27 @@
     "label": "Overview",
     "vcloud": {
       "properties": {
-        "title": "VDC Properties"
+        "title": "Basic Properties"
       },
       "platform": {
-        "title": "vCloud Director Virtual Data Centre",
-        "linkLabel": "View in VCloud",
+        "title": "Actions",
+        "linkLabel": "View in vCloud",
         "buttonLabel": "New Server"
       },
       "network": {
-        "itemDescription": "Standard management network for this VDC."
+        "itemDescription": "Standard network."
       }
     },
     "vcenter": {
       "properties": {
-        "title": "Cluster Properties"
+        "title": "Basic Properties"
       },
       "platform": {
-        "title": "vCenter Cluster",
+        "title": "Actions",
         "linkLabel": "View in vCenter"
       },
       "network": {
-        "itemDescription": "Standard management network for this cluster."
+        "itemDescription": "Standard network."
       }
     },
     "shared": {
@@ -1188,7 +1188,7 @@
       },
       "network": {
         "title": "Network Information",
-        "description": "All networks are fully operational",
+        "description": "Networks associated with this resource",
         "gateway": "Gateway"
       },
       "storageProfiles": {
@@ -1227,7 +1227,7 @@
   },
   "serverSnapshots": {
     "label": "Snapshots",
-    "loading": "Loading snapshots information.",
+    "loading": "Loading snapshot information.",
     "loadingContent": "Loading snapshots.",
     "formMessageDefaultError": "Something went wrong while processing your request. Please try again later.",
     "header": "Server Snapshot",
@@ -1268,8 +1268,8 @@
       "dhcpLabel": "Automatically assigned",
       "staticLabel": "Unable to obtain",
       "noContentMessage": "There are no NICs for this server.",
-      "nicsUnavailableNotInstalledTooltip": "Unavailable because VMWare tools is not installed.",
-      "nicsUnavailableNotRunningTooltip": "Unavailable because VMWare tools is not running.",
+      "nicsUnavailableNotInstalledTooltip": "Unavailable because VMWare Tools is not installed on the server.",
+      "nicsUnavailableNotRunningTooltip": "Unavailable because VMWare Tools is not running on the server.",
       "nicsUnavailableNotInstalled": "VMWare Tools Not Installed.",
       "nicsUnavailableNotRunning": "VMWare Tools Not Running."
     },
@@ -1290,9 +1290,9 @@
       "detach": "Detach",
       "cancel": "Cancel",
       "loadingContent": "Loading list of media.",
-      "errorGettingMedias": "Sorry, something’s not right. We weren’t able to retrieve the list of media.",
+      "errorGettingMedias": "Sorry, something’s not right. We weren’t able to retrieve the list of attached media for this server.",
       "noContentMessage": "No media is attached to this server.",
-      "noAvailableMedia": "There is no media in this VDC's catalogs to display."
+      "noAvailableMedia": "There is no media in this catalog to display."
     },
     "manageScale": {
       "header": "Manage RAM and vCPU",
@@ -1317,7 +1317,7 @@
   },
   "serverNics": {
     "label": "NICs",
-    "loading": "Loading NICs information.",
+    "loading": "Loading NIC information.",
     "loadingContent": "Loading NICs.",
     "title": "Manage NICs",
     "editLink": "Edit",
@@ -1338,7 +1338,7 @@
     },
     "noNics": "There are no NICs to display for this server.",
     "warningEditingNic": "This server will be restarted.",
-    "errorGettingNics": "Sorry, something’s not right. We weren’t able to retrieve the list of NICs.",
+    "errorGettingNics": "Sorry, something’s not right. We weren’t able to retrieve the list of NICs for this server.",
     "reachedNetworksLimit": "You've reached the maximum number of NICs for this server."
   },
   "serverServices": {
@@ -1348,7 +1348,7 @@
     "operatingSystemUpdates": {
       "loading": "Loading services information.",
       "loadingContent": "Loading OS update details.",
-      "errorGettingServerDetails": "Sorry, something’s not right. We weren’t able to retrieve the os update details of the server.",
+      "errorGettingServerDetails": "Sorry, something’s not right. We weren’t able to retrieve the OS Update details for this server.",
       "formMessageDefaultError": "Something went wrong while processing your request. Please try again later.",
       "label": "Services",
       "title": "Operating System Updates",
@@ -1385,10 +1385,10 @@
       "title": "VM Backup",
       "detailsLink": "See Details",
       "unprovisionedFallback": "VM Backup is not currently ordered for this server, or it has not completed provisioning.",
-      "poweredOff": "This server must be powered on to provision an Add-On.",
+      "poweredOff": "This server must be powered on to provision VM Backup.",
       "provisioning": "This server is still being provisioned and Add-Ons can be installed once it is finished.",
       "processing": "This server is currently busy and Add-Ons can be installed once its current operation has completed.",
-      "osAutomationUnavailable": "This server does not currently support OS automation, please contact your account team",
+      "osAutomationUnavailable": "This server does not currently support OS automation. Please contact your account team for more information.",
       "raiseTicketLabel": "raise a ticket",
       "orderlinkLabel": "Click here to order it.",
       "batLinkDescription": "This service is linked to a ",
@@ -1402,7 +1402,7 @@
       "poweredOff": "This server must be powered on to provision an Add-On.",
       "provisioning": "This server is still being provisioned and Add-Ons can be installed once it is finished.",
       "processing": "This server is currently busy and Add-Ons can be installed once its current operation has completed.",
-      "osAutomationUnavailable": "This server does not currently support OS automation, please contact your account team",
+      "osAutomationUnavailable": "This server does not currently support OS automation. Please contact your account team for more information.",
       "raiseTicketLabel": "raise a ticket",
       "orderlinkLabel": "Click here to order it.",
       "batLinkDescription": "This service is linked to a ",
@@ -1420,7 +1420,7 @@
       "poweredOff": "This server must be powered on to provision an Add-On.",
       "provisioning": "This server is still being provisioned and Add-Ons can be installed once it is finished.",
       "processing": "This server is currently busy and Add-Ons can be installed once its current operation has completed.",
-      "osAutomationUnavailable": "This server does not currently support OS automation, please contact your account team",
+      "osAutomationUnavailable": "This server does not currently support OS automation. Please contact your account team.",
       "raiseTicketLabel": "raise a ticket",
       "avLinkLabel": "Click here to order Anti-Virus",
       "hidsLinkLabel": "Click here to order HIDS"
@@ -1443,7 +1443,7 @@
     }
   },
   "serverServicesOsUpdatesApplyNow": {
-    "loading": "Loading server os updates.",
+    "loading": "Loading server OS update information.",
     "title": "Apply Updates",
     "description": "Select the updates or update categories you would like applied and we will install them on your server for you. Your server will be inspected again after the update process and any newly available updates will be shown.",
     "snapshotOptionsLabel": "Snapshot Options:",
@@ -1457,9 +1457,9 @@
     "deleteSnapshotDialogMessage": "One or more snapshots already exist for this server. Would you like to delete these snapshots and proceed?",
     "listLabel": "Which updates should we apply?",
     "listAllSelection": "All Updates",
-    "noOsUpdates": "no availabe os updates for this server.",
-    "osUpdatesloadingContent": "Loading list of server os updates.",
-    "errorOsUpdates": "Sorry, something’s not right. We weren’t able to retrieve the list of os updates for this server.",
+    "noOsUpdates": "no availabe OS updates for this server.",
+    "osUpdatesloadingContent": "Loading list of available OS updates.",
+    "errorOsUpdates": "Sorry, something’s not right. We weren’t able to retrieve the list of available updates for this server.",
     "applyUpdatesButton": "Apply Updates"
   },
   "serverServicesOsUpdatesSchedule": {
@@ -1494,17 +1494,17 @@
     "checkboxSelectionWeekends": "Weekends",
     "timeSelection": "12:00,12:15,12:30,12:45,1:00,1:15,1:30,1:45,2:00,2:15,2:30,2:45,3:00,3:15,3:30,3:45,4:00,4:15,4:30,4:45,5:00,5:15,5:30,5:45,6:00,6:15,6:30,6:45,7:00,7:15,7:30,7:45,8:00,8:15,8:30,8:45,9:00,9:15,9:30,9:45,10:00,10:15,10:30,10:45,11:00,11:15,11:30,11:45",
     "dayPeriod": "AM,PM",
-    "osUpdatesCategoryloadingContent": "Loading server os updates categories.",
-    "noOsUpdatesCategory": "no availabe os updates category for this server.",
-    "errorGettingOsUpdatesCategory": "Sorry, something’s not right. We weren’t able to retrieve the list of os updates category for this server.",
-    "scheduleDateloadingContent": "Loading server os updates schedule",
-    "errorGettingscheduleDate": "Sorry, something’s not right. We weren’t able to retrieve the os update schedule for this server.",
+    "osUpdatesCategoryloadingContent": "Loading OS update categories.",
+    "noOsUpdatesCategory": "no available OS update categories to display for this server.",
+    "errorGettingOsUpdatesCategory": "Sorry, something’s not right. We weren’t able to retrieve the list of OS update categories for this server.",
+    "scheduleDateloadingContent": "Loading OS update schedule information",
+    "errorGettingscheduleDate": "Sorry, something’s not right. We weren’t able to retrieve the OS update scheduling information for this server.",
     "deleteScheduleButton": "Delete Existing Schedule",
     "deleteConfirmText": "Delete",
     "saveScheduleButton": "Save Schedule",
     "saveConfirmText": "Save",
     "updateDialogTitle": "Save Update Schedule",
-    "updateDialogMessage": "Your server already has an update schedule configured. \n \n Are you sure you wish to overwrite this?",
+    "updateDialogMessage": "Your server already has an OS update schedule configured. \n \n Are you sure you wish to overwrite this?",
     "deleteDialogTitle": "Delete Existing Schedule",
     "deleteDialogMessage": "Deleting a schedule cannot be undone and will not revert any updates which have been applied. \n \n Are you sure you wish to continue?"
   },
@@ -1512,7 +1512,7 @@
     "title": "Anti-Virus",
     "description": "Server Anti-Virus provides both real-time and on-demand protection against threats such as viruses, trojans and spyware. \r \nThe table below lists recent threat detection events and their severities (where 1 is the lowest and 6 is the highest).",
     "noContent": "No threats have been identified for this server.",
-    "errorContent": "Sorry, something’s not right. We weren’t able to retrieve the Anti-Virus for this server.",
+    "errorContent": "Sorry, something’s not right. We weren’t able to retrieve the Anti-Virus information for this server.",
     "viewInTrendDsmLabel": "View in Trend DSM",
     "columnHeaders": {
       "threat": "Threat",
@@ -1526,7 +1526,7 @@
     "title": "Host Intrusion Detection",
     "description": "Host Based Intrusion Prevention rules examines payload in the session and application layers of packets (such as DNS, HTTP, SSL, and SMTP), as well as the sequence of those packets according to those higher-layer protocols. \r \nWhen traffic matches a rule or contains content that signals an attack, the Host Intrusion Detection handles it as a possible or confirmed attack, and performs the configured action.",
     "noContent": "No intrusion attempts have been detected for this server.",
-    "errorContent": "Sorry, something’s not right. We weren’t able to retrieve the host intrusion detection for this server.",
+    "errorContent": "Sorry, something’s not right. We weren’t able to retrieve the Host Intrusion Detection information for this server.",
     "viewInTrendDsmLabel": "View in Trend DSM",
     "columnHeaders": {
       "threat": "Threat",
@@ -1618,14 +1618,14 @@
       "serverNameField": "Choose a name for your server. The server name must be 15 characters or less and can contain letters, numbers and hyphens. We'll also use this as a hostname for the server.",
       "vAppField": "A vApp houses one or more servers. By default we create a vApp for each of your servers.",
       "intellicentre": "Virtual Data Centre to deploy this Server in.",
-      "serverTemplateField": "Select the operating system or your own custom template to create this server from.",
-      "computeField": "Choose the memory and vCPU for your server. Click 'Enter custom size' to enter a precise value. Your selection is bound by the remaining compute in your Virtual Data Centre.",
-      "storageField": "Choose the profile and size of the server's primary storage volume. Click 'Enter custom size' to enter a precise value. Your selection is bound by the remaining capacity in the selected storage profile.",
+      "serverTemplateField": "Select one of our standard operating systems or your own custom template to create this server from.",
+      "computeField": "Choose the memory and vCPU for your server. Click 'Enter custom size' to enter a precise value. Your selection is bound by the available resources in your Virtual Data Centre.",
+      "storageField": "Choose the profile and size of the server's primary disk. Click 'Enter custom size' to enter a precise value. Your selection is bound by the remaining capacity in the selected storage profile.",
       "serverName": "Starting from an existing server's configuration helps you get a new server up and running quicker.",
       "networkField": "Select the network to create a primary network interface for your server.\r\n\n Select a method for acquiring the server's private IP address. Selecting DHCP will allocate an IP address on boot. Static Pool will give you the next available IP in the static pool.",
-      "cloneServer": "When you clone a server you get an identical copy of the existing server. it will have the same compute, storage and network characteristics. You can change the properties of server once it has been deployed.",
-      "quickNavigateToCreatedServer": "You can go back to server listing page to view your newly created server",
-      "backToListing": "This link would take you back to your server listing page"
+      "cloneServer": "By selecting Clone a Server, an exact copy of an existing server will be created. It will have the same RAM, vCPU, storage and network properties. You can change the properties of server once it has been deployed.",
+      "quickNavigateToCreatedServer": "You can return to the server listing page to view your newly created server.",
+      "backToListing": "This link will take you back to your the listing page."
     },
     "newServer": {
       "title": "New server",
@@ -1664,7 +1664,7 @@
     },
     "cloneServer": {
       "title": "Clone a server",
-      "description": "Cloning a server gives you an exact replica of an existing server in the same Virtual Data Centre.",
+      "description": "Cloning a server gives you an exact copy of an existing server in the same Virtual Data Centre.",
       "loadingServerDetails": "Retrieving network information.",
       "loadingServers": "Loading servers.",
       "noServers": "No servers to clone. Create a new server first.",
@@ -1693,7 +1693,7 @@
     },
     "backupServer": {
       "label": "Server Backup",
-      "contextualHelp": "Server Backup provides file-level backup which can be configured in MacquarieView on a fine-grain basis."
+      "contextualHelp": "Server Backup provides file-level backup for your server."
     },
     "antivirus": {
       "label": "Anti-Virus",
@@ -1705,7 +1705,7 @@
     },
     "inviewLevel": {
       "label": "InView Level",
-      "contextualHelp": "InView allows you to keep track of your services in realtime – from receiving alerts and reviewing trends, to learning how compute resources are being used at a low level. It gives you full visibility over your servers and also helps you respond to issues more quickly."
+      "contextualHelp": "InView allows you to keep track of your services in realtime - from receiving alerts and reviewing trends, to learning how compute resources are being used at a low level. It gives you full visibility over your servers and also helps you respond to issues more quickly."
     },
     "disasterRecovery": {
       "label": "Disaster Recovery",
@@ -1713,7 +1713,7 @@
     },
     "sqlServer": {
       "label": "SQL Server",
-      "contextualHelp": "Build intelligent, mission-critical applications using a scalable, hybrid database platform that has everything built in—from in-memory performance and advanced security to in-database analytics."
+      "contextualHelp": "Build intelligent, mission-critical applications using a scalable, hybrid database platform that has everything built in - from in-memory performance and advanced security to in-database analytics."
     }
   },
   "serverCreateConfirmStep": {
@@ -1733,26 +1733,26 @@
     "leadTimeNote": "Our standard lead time of {{ standardLeadTimeHours }} hours for this request ensures we have time to get the right engineer for the task.",
     "billingDetails": {
       "header": "Billing Details",
-      "changeOrderNote": "The contract term and billing details for this service will not be changed.",
+      "changeOrderNote": "The contract term and billing details for this service will remain as-is.",
       "contractTermPlaceholder": "Contract Term",
       "contractTermHelp": "Select a contract term for all items in this order.",
-      "contractTermRequired": "You must select the contract term.",
+      "contractTermRequired": "You must select a contract term.",
       "entityPlaceholder": "Billing Entity",
       "entityHelp": "Select the billing entity to bill this order to.",
-      "entityRequired": "You must select the billing entity.",
+      "entityRequired": "You must select a billing entity.",
       "sitePlaceholder": "Billing Site",
       "siteHelp": "Select a nominated billing site.",
-      "siteRequired": "You must select the billing site.",
+      "siteRequired": "You must select a billing site.",
       "costCenterPlaceholder": "Billing Cost Center",
       "costCenterHelp": "Select the correct billing cost centre.",
-      "costCenterRequired": "You must select the cost center."
+      "costCenterRequired": "You must select a cost center."
     },
     "orderDetails": {
       "header": "Order Details",
       "description": "Review the charges for this order below.",
       "totalLabel": "<strong>TOTAL</strong>",
-      "noLineItems": "No order items to display.",
-      "errorLineItems": "Something went wrong while processing your request order. Please try again later.",
+      "noLineItems": "No items to display.",
+      "errorLineItems": "Something went wrong while processing your request. Please try again later.",
       "columnHeaders": {
         "description": "Description",
         "monthlyCharge": "Monthly Fee",
@@ -1777,7 +1777,7 @@
       "saveOrder": "Save as draft",
       "mergeOrder": "Merge",
       "contractTerms": {
-        "trial": "30 days cancellation",
+        "trial": "30-day cancellation",
         "12Months": "12 Months",
         "24Months": "24 Months",
         "36Months": "36 Months"
@@ -1826,13 +1826,13 @@
       "header": "Anti-Virus",
       "template": {
         "label": "Policy Template",
-        "placeholder": "Select policy template"
+        "placeholder": "Select a policy template"
       }
     },
     "addOnDisasterRecovery": {
       "header": "Disaster Recovery",
       "label": "VM Replication Protection Group",
-      "placeholder": "Select group"
+      "placeholder": "Select a protection group"
     },
     "addOnHids": {
       "header": "Host Intrusion Detection",
@@ -1920,14 +1920,14 @@
       "buttonSwitch": "Select from default",
       "buttonMessage": "Selecting DHCP will allocate an IP address on boot. Static Pool will give you the next available IP in the static pool.",
       "inUsedEnteredIpMessage": "This IP address is already assigned to a server.\r\n Your server may not be usable until the IP address is dissociated or the server it is assigned to is stopped.",
-      "loadingIpInUsed": "Loading Ip-addresses.",
+      "loadingIpInUsed": "Loading IP addresses.",
       "hints": {
         "ipRange": "Valid ranges"
       },
       "errors": {
         "ipAddressRequired": "Enter an IP address.",
-        "ipAddressInvalid": "Please enter a valid IP Address.",
-        "ipAddressRangeError": "IP Address must be in the range ({{ip_range}}).",
+        "ipAddressInvalid": "Please enter a valid IP address.",
+        "ipAddressRangeError": "IP address must be in one of the following ranges: {{ip_range}}.",
         "ipAddressIsUsedAsGateway": "This IP address is reserved and cannot be used."
       }
     },
@@ -1988,12 +1988,12 @@
     "manageScale": {
       "sliderSwitch": "Select from slider",
       "customSwitch": "Enter custom size",
-      "sliderMessage": "Select the CPU and RAM for this VDC from a slider.",
-      "customMessage": "Manually enter the CPU and size of RAM for this VDC.",
+      "sliderMessage": "Select the vCPU and RAM for this VDC from a slider.",
+      "customMessage": "Manually enter the vCPU and RAM for this VDC.",
       "availableRam": "Maximum RAM: {{ram_value}}",
-      "availableCpu": "Maximum CPU: {{cpu_value}} vCPU",
+      "availableCpu": "Maximum vCPU: {{cpu_value}} vCPU",
       "minimumRam": "Minimum RAM: {{ram_value}}",
-      "minimumCpu": "Minimum CPU: {{cpu_value}} vCPU",
+      "minimumCpu": "Minimum vCPU: {{cpu_value}} vCPU",
       "sliderSelectedRamCpu": "{{cpu_value}} vCPU / {{ram_value}} RAM",
       "sliderCurrentRamCpu": "Current: {{cpu_value}} vCPU / {{ram_value}} RAM",
       "customCurrentCpu": "Current vCPU: {{cpu_value}} vCPU",
@@ -2008,7 +2008,7 @@
         "ramMin": "The minimum value that can be entered is {{min_value}}.",
         "ramMax": "Memory should not exceed {{max_value}}.",
         "ramInvalid": "RAM must be a multiple of {{step}} GB.",
-        "cpuRequired": "Enter CPU count.",
+        "cpuRequired": "Enter vCPU count.",
         "cpuNumeric": "Please enter a valid number.",
         "cpuMin": "The minimum value that can be entered is {{min_value}} vCPUs.",
         "cpuMax": "The number of vCPUs should not exceed {{max_value}}.",
@@ -2052,7 +2052,7 @@
       "text": "loading"
     },
     "fallback": {
-      "description": "There are no applicable services to display, or you do not have the necessary permissions required to view them. Please contact your account team",
+      "description": "There are no applicable services to display, or you do not have the necessary permissions required to view them. Please contact your account team for more information.",
       "raiseTicketPrefix": " or ",
       "raiseTicketLink": "raise a ticket",
       "raiseTicketSuffix": " if this is unexpected."
@@ -2093,8 +2093,8 @@
   "mediaServers": {
     "label": "Servers",
     "title": "Attached Servers",
-    "noMediaServers": "No attached servers to display.",
-    "errorMediaServers": "Sorry, something’s not right. We weren’t able to retrieve the list of attached servers.",
+    "noMediaServers": "No servers to display.",
+    "errorMediaServers": "Sorry, something’s not right. We weren’t able to retrieve the list of servers this media is attached to.",
     "attachServersHeader": "Attach to Server",
     "attachAction": "Attach",
     "detachAction": "Detach",
@@ -2145,16 +2145,16 @@
     "manageServer": {
       "serverGroupHeader": "Servers",
       "loadingContent": "Loading servers.",
-      "noServers": "No servers to attach.",
-      "errorGettingServers": "Sorry, something’s not right. We weren’t able to retrieve the list of servers to attach."
+      "noServers": "No servers to attach to.",
+      "errorGettingServers": "Sorry, something’s not right. We weren’t able to retrieve the list of servers to attach your media to."
     }
   },
   "systemMessages": {
     "header": "System Messages",
     "leftPanelHeader": "Message Filter",
-    "description": "Below is the list of your Macquarie Cloud Services system messages.",
+    "description": "Below is the list of Portal system messages.",
     "newMessage": "New Message",
-    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of messages.",
+    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of system messages.",
     "noRecordsFoundMessage": "No messages to display.",
     "retry": "Try again shortly",
     "filterColumn": "Table Filter",
@@ -2253,7 +2253,7 @@
     "attachments": "Attachments",
     "backToTickets": "Back To Tickets",
     "newTicket": "Log Ticket",
-    "creatingTicket": "Creating ticket, this may take a few moments.",
+    "creatingTicket": "Creating your ticket, this may take a few moments.",
     "hints": {
       "reference": "Max of {{max_char}} characters",
       "summary": "Max of {{max_char}} characters",
@@ -2274,7 +2274,7 @@
     },
     "contextualHelp": {
       "type": "Select the ticket type",
-      "reference": "If you have a reference number or ID you would like to relate to this ticket, enter it here.",
+      "reference": "If you have an internal reference number or ID you would like to relate to this ticket, enter it here.",
       "summary": "A short title that describes this ticket.",
       "details": "Please provide as much information as you can and describe any attempts made to remedy the problem",
       "services": "Choose the service type this ticket relates to.",
@@ -2283,7 +2283,7 @@
   },
   "ticketShared": {
     "activity": {
-      "worknotes": "The comment is not visible to the customer"
+      "worknotes": "The comment is not visible to users"
     }
   },
   "firewalls": {
@@ -2491,9 +2491,9 @@
       }
     },
     "shared": {
-      "loading": "Loading DNS list",
-      "noDns": "No DNS to display.",
-      "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of DNS."
+      "loading": "Loading DNS services list",
+      "noDns": "No DNS services to display.",
+      "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of DNS services."
 
     }
   },
@@ -2546,11 +2546,11 @@
         },
         "vSphere": {
           "name": "vSphere",
-          "description": "Manage every detail of your virtual data centres."
+          "description": "Manage every detail of your Virtual Data Centres."
         },
         "firewall": {
           "name": "FortiManager",
-          "description": "Manage your network Firewall."
+          "description": "Manage your network firewall."
         },
         "zerto": {
           "name": "Zerto",
@@ -2558,22 +2558,22 @@
         },
         "ciscoUcs": {
           "name": "Cisco UCS",
-          "description": "Unified management of all server hardware managed under one umbrella."
+          "description": "Unified management of all server hardware, managed under one umbrella."
         },
         "f5": {
           "name": "F5",
           "description": "Manage load balancing and SSL offload."
         }
       },
-      "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of other tools.",
-      "noRecordsFoundMessage": "No other tools found.",
+      "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of tools.",
+      "noRecordsFoundMessage": "No items found.",
       "retry": "Try again shortly"
     }
   },
   "notifications": {
     "header": "Notifications",
     "leftPanelHeader": "Notification Filter",
-    "description": "Notifications play back and track activity within the portal.",
+    "description": "Notifications track activity within the portal.",
     "filterColumn": "Table Filter",
     "tableSearch": "Table Search",
     "account": "(Macquarie)",
@@ -2612,7 +2612,7 @@
     },
     "unauthorized": {
       "header": "401",
-      "summary": "You are unauthorized to access this page.",
+      "summary": "You are not authorized to access this page.",
       "retry": "Please check the address and try again."
     },
     "forbidden": {
@@ -2660,7 +2660,7 @@
       "notifications": {
         "title": "Notifications",
         "noRecord": "Nothing new to report",
-        "connectionError": "Notification server connection error",
+        "connectionError": "Connection error",
         "viewMoreCount": "View {{count}} more...",
         "viewMore": "View more..."
       },
@@ -2769,7 +2769,7 @@
     "getJobConnection": "Something went wrong while retrieving your notifications.",
     "getInternetPorts": "Something went wrong while retrieving your internet services.",
     "getInternetPort": "Something went wrong while retrieving your internet service.",
-    "getNetworkDns": "Something went wrong while retrieving your Network DNS.",
+    "getNetworkDns": "Something went wrong while retrieving your DNS services.",
     "getResources": "Something went wrong while retrieving your services.",
     "getResource": "Something went wrong while retrieving your service information.",
     "getResourceCompute": "Something went wrong while retrieving your service information.",
@@ -2788,8 +2788,8 @@
     "getServerStorage": "Something went wrong while retrieving your server storage information.",
     "getServerNics": "Something went wrong while retrieving your server NIC information.",
     "getServerCompute": "Something went wrong while retrieving your server server compute information.",
-    "getServerMedia": "Something went wrong while retrieving your server media.",
-    "getServerSnapshots": "Something went wrong while retrieving your server snapshots.",
+    "getServerMedia": "Something went wrong while retrieving a list of attached media for this server.",
+    "getServerSnapshots": "Something went wrong while retrieving your snapshots.",
     "getServerOsUpdates": "Something went wrong while retrieving OS update information.",
     "getServerOsUpdatesDetails": "Something went wrong while retrieving OS update information.",
     "getServerOsUpdatesSchedule": "Something went wrong while retrieving OS update schedule information.",
@@ -2798,40 +2798,40 @@
     "updateServerOs": "Something went wrong while updating your server information.",
     "updateServerOsUpdatesSchedule": "Something went wrong while setting your schedule. Please try again.",
     "deleteServerOsUpdatesSchedule": "Something went wrong while deleting your schedule. Please try again.",
-    "inspectServerForAvailableOsUpdates": "Something went wrong while inspecting your server. Please try again.",
+    "inspectServerForAvailableOsUpdates": "Something went wrong while inspecting your server for available updates. Please try again.",
     "sendServerPowerState": "Something went wrong while changing the power state of your server. Please try again.",
     "renameServer": "Something went wrong while renaming your server. Please try again.",
     "createServer": "Something went wrong while creating your server. Please try again.",
     "cloneServer": "Something went wrong while cloning your server. Please try again.",
     "deleteServer": "Something went wrong while deleting your server. Please try again.",
-    "getServerBackupVm": "Something went wrong while retrieving your VM Backup for your server. Please try again.",
+    "getServerBackupVm": "Something went wrong while retrieving the VM Backup information for your server. Please try again.",
     "getServerBackupVmDetails": "Something went wrong while retrieving the VM Backup details for your server. Please try again.",
-    "getServerBackupVms": "Something went wrong while retrieving your servers with VM Backup provisioned. Please try again.",
-    "getServerBackupServer": "Something went wrong while retrieving the Server Backup for your server. Please try again.",
+    "getServerBackupVms": "Something went wrong while retrieving a list of servers with VM Backup installed. Please try again.",
+    "getServerBackupServer": "Something went wrong while retrieving the Server Backup details for your server. Please try again.",
     "getServerBackupServerDetails": "Something went wrong while retrieving the Server Backup details for your server. Please try again.",
-    "getServerBackupServers": "Something went wrong while retrieving your servers with Server Backup provisioned. Please try again.",
-    "getServerHostSecurity": "Something went wrong while retrieving the host security for your server. Please try again.",
-    "getServerHostSecurityAntiVirus": "Something went wrong while retrieving the Anti-Virus for your server. Please try again.",
+    "getServerBackupServers": "Something went wrong while retrieving a list of servers with Server Backup installed. Please try again.",
+    "getServerHostSecurity": "Something went wrong while retrieving the host security details  for your server. Please try again.",
+    "getServerHostSecurityAntiVirus": "Something went wrong while retrieving the Anti-Virus details for your server. Please try again.",
     "getServerHostSecurityAvLogs": "Something went wrong while retrieving the Anti-Virus logs for your server. Please try again.",
-    "getServerHostSecurityHids": "Something went wrong while retrieving the Host Intrusion Detection for your server. Please try again.",
+    "getServerHostSecurityHids": "Something went wrong while retrieving the Host Intrusion Detection details for your server. Please try again.",
     "getServerHostSecurityHidsLogs": "Something went wrong while retrieving the Host Intrusion Detection logs for your server. Please try again.",
-    "getBackupAggregationTargets": "Something went wrong while retrieving your storage Backup Aggregation Targets. Please try again.",
-    "getBackupAggregationTarget": "Something went wrong while retrieving the details for this backup aggregation target.",
+    "getBackupAggregationTargets": "Something went wrong while retrieving your Backup Aggregation Targets. Please try again.",
+    "getBackupAggregationTarget": "Something went wrong while retrieving the details for this Backup Aggregation Target.",
     "getBackupAggregationTargetLinkedServices": "Something went wrong while retrieving the linked services for this Backup Aggregation Target.",
-    "getColocationRacks": "Something went wrong while retrieving your colocation racks.",
-    "getColocationAntennas": "Something went wrong while retrieving your colocation antennas.",
-    "getColocationCustomDevices": "Something went wrong while retrieving your colocation custom devices.",
-    "getColocationRooms": "Something went wrong while retrieving your colocation rooms.",
-    "getColocationStandardSqms": "Something went wrong while retrieving your colocation standard square metres.",
+    "getColocationRacks": "Something went wrong while retrieving your Colocation Racks.",
+    "getColocationAntennas": "Something went wrong while retrieving your Colocation Antennas.",
+    "getColocationCustomDevices": "Something went wrong while retrieving your Custom Colocation Devices.",
+    "getColocationRooms": "Something went wrong while retrieving your Colocation Rooms.",
+    "getColocationStandardSqms": "Something went wrong while retrieving your Standard Square Metre services.",
     "resetServerPassword": "Something went wrong while resetting the password for your server. Please try again.",
     "updateServerStorage": "Something went wrong while expanding your disk. Please try again.",
     "createServerStorage": "Something went wrong while creating your disk. Please try again.",
-    "addServerNic": "Something went wrong while expanding your NIC. Please try again.",
+    "addServerNic": "Something went wrong while adding your NIC. Please try again.",
     "updateServerCompute": "Something went wrong while scaling your server. Please try again.",
     "attachServerMedia": "Something went wrong while attaching your media. Please try again.",
     "detachServerMedia": "Something went wrong while detaching your media. Please try again.",
-    "getServerThumbnail": "Something went wrong while retrieving the console image for your server.",
-    "createServerSnapshot": "Something went wrong while creating your snapshot. Please try again.",
+    "getServerThumbnail": "Something went wrong while retrieving the console thumbnail for your server.",
+    "createServerSnapshot": "Something went wrong while capturing your snapshot. Please try again.",
     "restoreServerSnapshot": "Something went wrong while restoring your snapshot. Please try again.",
     "deleteServerSnapshot": "Something went wrong while deleting your snapshot. Please try again.",
     "updateServerNic": "Something went wrong while updating your NIC. Please try again.",
@@ -2853,14 +2853,14 @@
     "createOrderWorkFlow": "Something went wrong while creating your order. Please try again.",
     "getOrderWorkflow": "Something went wrong while retrieving the details for this order.",
     "getBilling": "Something went wrong while retrieving your billing information.",
-    "getOrderAvailableItemTypes": "Something went wrong while retrieving the available order item types.",
-    "getOrderApprovers": "Something went wrong while retrieving a list of order approvers.",
+    "getOrderAvailableItemTypes": "Something went wrong while retrieving the available order types.",
+    "getOrderApprovers": "Something went wrong while retrieving a list of order approvers for your company.",
     "getOrderItemTypes": "Something went wrong while retrieving the list of available products.",
     "getItemOrderType": "Something went wrong while retrieving the details for this product.",
     "updateOrder": "Something went wrong while updating your order. Please try again.",
     "deleteOrder": "Something went wrong while deleting your order. Please try again.",
     "getMedia": "Something went wrong while retrieving the list of media.",
-    "getMedium": "Something went wrong while retrieving the media details.",
+    "getMedium": "Something went wrong while retrieving the details for this media.",
     "getMediaServers": "Something went wrong while retrieving the details for this media.",
     "getFirewalls": "Something went wrong while retrieving your firewalls.",
     "getFirewall": "Something went wrong while retrieving the details for this firewall.",
@@ -2880,15 +2880,15 @@
     "getAccount": "Something went wrong while retrieving your account details. Please try again.",
     "getAzureResources": "Something went wrong while retrieving the list of azure resources. Please try again.",
     "getAzureServices": "Something went wrong while retrieving the list of services. Please try again.",
-    "getNetworkDnsById": "Something went wrong while retrieving the network dns. Please try again.",
-    "getSubscriptions": "Something went wrong while retrieving your data. Please try again."
+    "getNetworkDnsById": "Something went wrong while retrieving this DNS service. Please try again.",
+    "getSubscriptions": "Something went wrong while retrieving your subscription information. Please try again."
   },
   "entityState": {
     "inProgress": "Processing request..."
   },
   "dialogDetachMedia": {
     "title": "Detach Media",
-    "message": "Are you sure you want to detach <strong>{{media_name}}</strong>?"
+    "message": "Are you sure you want to detach <strong>{{media_name}}</strong> from this server?"
   },
   "dialogDeleteNic": {
     "title": "Delete Nic",
@@ -2896,7 +2896,7 @@
   },
   "dialogDeleteStorage": {
     "title": "Delete Storage",
-    "message": "The data on <strong>{{storage_name}}</strong> will be lost forever.\r\n\nAre you sure you want to delete this volume?"
+    "message": "The data on <strong>{{storage_name}}</strong> will be permanently lost.\r\n\nAre you sure you want to delete this volume?"
   },
   "dialogCreateSnapshot": {
     "title": "New Server Snapshot",
@@ -2904,7 +2904,7 @@
   },
   "dialogInsufficientStorageSnapshot": {
     "title": "Insufficient Storage",
-    "message": "The VDC <strong>{{vdc_name}}</strong> does not have enough storage space available in order to capture a snapshot.\r\n\nPlease remove any unneeded servers or snapshots and then try again."
+    "message": "The target storage profile does not have enough space available in order to capture a snapshot.\r\n\nPlease remove any unneeded servers or snapshots and then try again. To continue, you must have at least this server's total size available on the target storage profile."
   },
   "dialogDiskConflictSnapshot": {
     "title": "Disk Conflict",
@@ -2915,7 +2915,7 @@
     "message": "Restoring a snapshot replaces data on the server and cannot be undone. The server will be unavailable until this process is complete.\r\n\nAre you sure you wish to restore <strong>{{snapshot_name}}</strong> to <strong>{{server_name}}</strong>?"
   },
   "dialogDeleteSnapshot": {
-    "title": "Delete Server Snapshot",
+    "title": "Delete Snapshot",
     "message": "Deleting <strong>{{snapshot_name}}</strong> cannot be undone.\r\n\nAre you sure you wish to continue?"
   },
   "dialogSessionIdle": {
