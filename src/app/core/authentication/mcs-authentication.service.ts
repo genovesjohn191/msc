@@ -5,7 +5,10 @@ import {
   forkJoin
 } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { McsIdentity } from '@app/models';
+import {
+  McsFeatureFlag,
+  McsIdentity
+} from '@app/models';
 import {
   isNullOrEmpty,
   CommonDefinition
@@ -15,6 +18,7 @@ import { McsApiService } from '@app/services';
 import { CoreConfig } from '../core.config';
 import { McsCookieService } from '../services/mcs-cookie.service';
 import { McsAuthenticationIdentity } from './mcs-authentication.identity';
+import { McsAccessControlService } from './mcs-access-control.service';
 
 @Injectable()
 export class McsAuthenticationService {
@@ -23,6 +27,7 @@ export class McsAuthenticationService {
     private _appState: AppState,
     private _cookieService: McsCookieService,
     private _apiService: McsApiService,
+    private _accessControlService: McsAccessControlService,
     private _authenticationIdentity: McsAuthenticationIdentity,
     private _coreConfig: CoreConfig
   ) { }
@@ -45,7 +50,7 @@ export class McsAuthenticationService {
       throw new Error(`Invalid logout url of ${this._coreConfig.logoutUrl}`);
     }
     this.deleteCookieContent();
-    window.location.href = this._coreConfig.logoutUrl;
+    window.location.href = this._getLogoutPath();
   }
 
   /**
@@ -116,6 +121,23 @@ export class McsAuthenticationService {
    */
   private _getLoginPath(): string {
     let _returnUrl = this._appState.get(CommonDefinition.APPSTATE_RETURN_URL_KEY);
-    return `${this._coreConfig.loginUrl}${_returnUrl}`;
+    let _loginUrl = this._coreConfig.loginUrl;
+    if (this._accessControlService.hasAccessToFeature([McsFeatureFlag.OAuthV2])) {
+      // TODO: new login path here
+      // _loginUrl = '';
+    }
+    return `${_loginUrl}${_returnUrl}`;
+  }
+
+  private _getLogoutPath(): string {
+    let _returnUrl = this._appState.get(CommonDefinition.APPSTATE_RETURN_URL_KEY);
+    let _logoutUrl = this._coreConfig.logoutUrl;
+
+    if (this._accessControlService.hasAccessToFeature([McsFeatureFlag.OAuthV2])) {
+      // TODO: new logout path here
+      // _logoutUrl = '';
+    }
+
+     return `${_logoutUrl}`;
   }
 }

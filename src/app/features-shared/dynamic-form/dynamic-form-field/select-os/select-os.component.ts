@@ -13,7 +13,8 @@ import { Observable } from 'rxjs';
 import { McsApiService } from '@app/services';
 import {
   McsResource,
-  McsServerOperatingSystem
+  McsServerOperatingSystem,
+  serviceTypeText
 } from '@app/models';
 import {
   DynamicFormFieldDataChangeEventParam,
@@ -109,7 +110,8 @@ export class DynamicSelectOsComponent extends DynamicSelectFieldComponentBase<Mc
       }
 
       let existingGroup = groupedOptions.find((opt) => opt.name === groupName);
-      let option = { key: item.id, value: item.name} as FlatOption;
+      let name = item.name + ' (' + serviceTypeText[item.serviceType] + ')';
+      let option = { key: item.id, value: name} as FlatOption;
 
       if (existingGroup) {
         // Add option to existing group
