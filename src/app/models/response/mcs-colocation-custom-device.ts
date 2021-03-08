@@ -9,6 +9,9 @@ export class McsColocationCustomDevice extends McsServiceBase {
   @JsonProperty()
   public description: string = undefined;
 
+  @JsonProperty()
+  public billingDescription: string = undefined;
+
   public get colocationGroup(): string {
     return colocationTypeText[ColocationType.CustomDevices];
   }

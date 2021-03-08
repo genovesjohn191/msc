@@ -19,11 +19,13 @@ import {
   finalize,
   tap,
   map,
-  shareReplay
+  shareReplay,
+  switchMap
 } from 'rxjs/operators';
 import {
   CoreValidators,
   IMcsNavigateAwayGuard,
+  McsAuthenticationIdentity,
   McsNavigationService
 } from '@app/core';
 import {
@@ -42,7 +44,9 @@ import {
   McsOption,
   RouteKey,
   McsTicketCreate,
-  McsTicketCreateAttachment
+  McsTicketCreateAttachment,
+  McsResource,
+  McsServer
 } from '@app/models';
 import { McsApiService } from '@app/services';
 import { TicketService } from '../shared';
@@ -69,6 +73,22 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
   public batServices$: Observable<TicketService[]>;
   public licenses$: Observable<TicketService[]>;
   public azureServices$: Observable<TicketService[]>;
+  public colocationAntennas$: Observable<TicketService[]>;
+  public colocationCustomDevices$: Observable<TicketService[]>;
+  public colocationRooms$: Observable<TicketService[]>;
+  public colocationStandardSqms$: Observable<TicketService[]>;
+  public colocationRacks$: Observable<TicketService[]>;
+  public vdcStorages$: Observable<TicketService[]>;
+  public dedicatedServers$: Observable<TicketService[]>;
+  public managementServices$: Observable<TicketService[]>;
+  public serverBackup$: Observable<TicketService[]>;
+  public vmBackup$: Observable<TicketService[]>;
+  public antiVirus$: Observable<TicketService[]>;
+  public hids$: Observable<TicketService[]>;
+  public dns$: Observable<TicketService[]>;
+
+  public serversList$: Observable<McsServer[]>;
+  public vdcList$: Observable<McsResource[]>;
 
   // Form variables
   public fgCreateTicket: FormGroup;
@@ -87,13 +107,16 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
   constructor(
     private _activatedRoute: ActivatedRoute,
     private _navigateService: McsNavigationService,
-    private _apiService: McsApiService
+    private _apiService: McsApiService,
+    private _authenticationIdentity: McsAuthenticationIdentity,
   ) {
     this._registerFormGroup();
     this._setTicketType();
   }
 
   public ngOnInit() {
+    this._subscribesToServersList();
+    this._subscribesToVdcList();
     this._subscribesToSelectedService();
     this._subscribesToVdcServices();
     this._subscribesToServerServices();
@@ -102,6 +125,19 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     this._subscribesToBatServices();
     this._subscribesToLicenses();
     this._subscribesToAzureServices();
+    this._subscribesToColocationAntennas();
+    this._subscribesToColocationCustomDevices();
+    this._subscribesToColocationRooms();
+    this._subscribesToColocationStandardSquareMetres();
+    this._subscribesToColocationRacks();
+    this._subscribesToVdcStorage();
+    this._subscribesToDedicatedServers();
+    this._subscribesToManagementServices();
+    this._subscribesToServerBackup();
+    this._subscribesToVmBackup();
+    this._subscribesToAntiVirus();
+    this._subscribesToHids();
+    this._subscribesToDns();
   }
 
   public ngOnDestroy() {
@@ -182,6 +218,10 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
     ).subscribe();
   }
 
+  public get hasPublicCloudAccess(): boolean {
+    return this._authenticationIdentity.platformSettings.hasPublicCloud;
+  }
+
   /**
    * Form groups and Form controls registration area
    */
@@ -226,6 +266,36 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
   }
 
   /**
+   * Subscribes to list of servers
+   */
+  private _subscribesToServersList(): void {
+    this.serversList$ = this._apiService.getServers().pipe(
+      map((response) => {
+        let resources = getSafeProperty(response, (obj) => obj.collection);
+        return resources
+          .filter((resource) => getSafeProperty(resource, (obj) => obj.serviceId))
+          .map((resource) => resource);
+      }),
+      shareReplay(1)
+    );
+  }
+
+  /**
+   * Subscribes to list of vdc resources
+   */
+  private _subscribesToVdcList(): void {
+    this.vdcList$ = this._apiService.getResources().pipe(
+      map((response) => {
+        let resources = getSafeProperty(response, (obj) => obj.collection);
+        return resources
+          .filter((resource) => getSafeProperty(resource, (obj) => obj.serviceId))
+          .map((resource) => resource);
+      }),
+      shareReplay(1)
+    );
+  }
+
+  /**
    * Subscribes to selected serviceId
    */
   private _subscribesToSelectedService(): void {
@@ -239,9 +309,9 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
    * Subscribes to vdc services
    */
   private _subscribesToVdcServices(): void {
-    this.vdcServices$ = this._apiService.getResources().pipe(
+    this.vdcServices$ = this.vdcList$.pipe(
       map((response) => {
-        let resources = getSafeProperty(response, (obj) => obj.collection);
+        let resources = response;
         return resources
           .filter((resource) => getSafeProperty(resource, (obj) => obj.serviceId))
           .map((resource) => new TicketService(
@@ -256,9 +326,9 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
    * Subscribes to servers services
    */
   private _subscribesToServerServices(): void {
-    this.serverServices$ = this._apiService.getServers().pipe(
+    this.serverServices$ = this.serversList$.pipe(
       map((response) => {
-        let servers = getSafeProperty(response, (obj) => obj.collection);
+        let servers = response;
         return servers
           .filter((server) => getSafeProperty(server, (obj) => obj.serviceId))
           .map((server) => new TicketService(
@@ -320,6 +390,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
    * Subscribes to licenses
    */
   private _subscribesToLicenses(): void {
+    if (!this.hasPublicCloudAccess) { return; }
     this.licenses$ = this._apiService.getLicenses().pipe(
       map((response) => {
         let licenses = getSafeProperty(response, (obj) => obj.collection);
@@ -338,6 +409,252 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
         let azureServices = getSafeProperty(response, (obj) => obj.collection);
         return azureServices.filter((service) => getSafeProperty(service, (obj) => obj.serviceId))
           .map((service) => new TicketService(`${service.friendlyName} (${service.serviceId})`, service.serviceId));
+      })
+    );
+  }
+
+  /**
+   * Subscribes to colocation antennas
+   */
+  private _subscribesToColocationAntennas(): void {
+    this.colocationAntennas$ = this._apiService.getColocationAntennas().pipe(
+      map((response) => {
+        let colocationAntennas = getSafeProperty(response, (obj) => obj.collection);
+        return colocationAntennas.filter((service) => getSafeProperty(service, (obj) => obj.serviceId))
+          .map((service) => new TicketService(`${service.billingDescription} (${service.serviceId})`, service.serviceId));
+      })
+    );
+  }
+
+  /**
+   * Subscribes to colocation custom services
+   */
+  private _subscribesToColocationCustomDevices(): void {
+    this.colocationCustomDevices$ = this._apiService.getColocationCustomDevices().pipe(
+      map((response) => {
+        let colocationCustomDervices = getSafeProperty(response, (obj) => obj.collection);
+        return colocationCustomDervices.filter((service) => getSafeProperty(service, (obj) => obj.serviceId))
+          .map((service) => new TicketService(`${service.billingDescription} (${service.serviceId})`, service.serviceId));
+      })
+    );
+  }
+
+  /**
+   * Subscribes to colocation rooms
+   */
+  private _subscribesToColocationRooms(): void {
+    this.colocationRooms$ = this._apiService.getColocationRooms().pipe(
+      map((response) => {
+        let colocationRooms = getSafeProperty(response, (obj) => obj.collection);
+        return colocationRooms.filter((service) => getSafeProperty(service, (obj) => obj.serviceId))
+          .map((service) => new TicketService(`${service.billingDescription} (${service.serviceId})`, service.serviceId));
+      })
+    );
+  }
+
+  /**
+   * Subscribes to colocation standard square metres
+   */
+  private _subscribesToColocationStandardSquareMetres(): void {
+    this.colocationStandardSqms$ = this._apiService.getColocationStandardSqms().pipe(
+      map((response) => {
+        let colocationStandardSqms = getSafeProperty(response, (obj) => obj.collection);
+        return colocationStandardSqms.filter((service) => getSafeProperty(service, (obj) => obj.serviceId))
+          .map((service) => new TicketService(`${service.billingDescription} (${service.serviceId})`, service.serviceId));
+      })
+    );
+  }
+
+  /**
+   * Subscribes to colocation racks
+   */
+  private _subscribesToColocationRacks(): void {
+    this.colocationRacks$ = this._apiService.getColocationRacks().pipe(
+      map((response) => {
+        let colocationRacks = getSafeProperty(response, (obj) => obj.collection);
+        return colocationRacks.filter((service) => getSafeProperty(service, (obj) => obj.serviceId))
+          .map((service) => new TicketService(`${service.description} (${service.serviceId})`, service.serviceId));
+      })
+    );
+  }
+
+  /**
+   * Subscribes to vdc storage
+   */
+  private _subscribesToVdcStorage(): void {
+    this.vdcStorages$ = this.vdcList$.pipe(
+      map((vdcCollection) => {
+        let vdcStorageGroup: TicketService[] = [];
+        let vdc = getSafeProperty(vdcCollection, (obj) => obj) || [];
+
+        vdc.forEach((resource) => {
+          this._apiService.getResource(resource.id).subscribe((vdcStorage) => {
+            vdcStorage.storage.forEach((storage) => {
+              if (isNullOrEmpty(storage?.serviceId)) { return; }
+              vdcStorageGroup.push(
+                new TicketService(`${storage.name} - for ${resource.serviceId} (${storage.serviceId})`
+                  , storage.serviceId)
+              );
+            });
+          })
+        })
+        return vdcStorageGroup;
+      })
+    );
+  }
+
+  /**
+   * Subscribes to dedicated servers
+   */
+  private _subscribesToDedicatedServers(): void {
+    this.dedicatedServers$ = this.serversList$.pipe(
+      map((response) => {
+        let servers = getSafeProperty(response, (obj) => obj)
+        return servers.filter((server) => server.isDedicated && server.hardware?.type !== 'VM' )
+          .map((service) => new TicketService(`${service.name} (${service.serviceId})`, service.serviceId));
+      })
+    );
+  }
+
+  /**
+   * Subscribes to management services
+   */
+  private _subscribesToManagementServices(): void {
+    if (!this.hasPublicCloudAccess) { return; }
+    this.managementServices$ = this._apiService.getManagementServices().pipe(
+      map((response) => {
+        let managementServices = getSafeProperty(response, (obj) => obj.collection);
+        return managementServices.filter((service) => getSafeProperty(service, (obj) => obj.serviceId))
+          .map((service) => new TicketService(`${service.description} (${service.serviceId})`, service.serviceId));
+      })
+    );
+  }
+
+  /**
+   * Subscribes to server backup
+   */
+  private _subscribesToServerBackup(): void {
+    this.serverBackup$ = this._apiService.getServerBackupServers().pipe(
+      switchMap((serverBackupsCollection) => {
+        return this.serversList$.pipe(
+          map((serversCollection) => {
+            let vmBackupGroup: TicketService[] = [];
+            let serverBackups = getSafeProperty(serverBackupsCollection, (obj) => obj.collection) || [];
+            let servers = getSafeProperty(serversCollection, (obj) => obj) || [];
+
+            serverBackups.forEach((serverBackup) => {
+              if (isNullOrEmpty(serverBackup?.serviceId)) { return; }
+              servers.filter((server) => {
+                if (serverBackup.id === server.id) {
+                  vmBackupGroup.push(
+                    new TicketService(`Server Backup - for ${server.name} (${serverBackup.serviceId})`,
+                      serverBackup.serviceId)
+                  );
+                }
+              });
+          })
+          return vmBackupGroup;
+        }))
+      }),
+    );
+  }
+
+  /**
+   * Subscribes to vm backup
+   */
+  private _subscribesToVmBackup(): void {
+    this.vmBackup$ = this._apiService.getServerBackupVms().pipe(
+      switchMap((backupsCollection) => {
+        return this.serversList$.pipe(
+          map((serversCollection) => {
+            let vmBackupGroup: TicketService[] = [];
+            let vmBackups = getSafeProperty(backupsCollection, (obj) => obj.collection) || [];
+            let servers = getSafeProperty(serversCollection, (obj) => obj) || [];
+
+            vmBackups.forEach((vmBackup) => {
+              if (isNullOrEmpty(vmBackup?.serviceId)) { return; }
+              servers.filter((server) => {
+                if (vmBackup.id === server.id) {
+                  vmBackupGroup.push(
+                    new TicketService(`VM Backup - for ${server.name} (${vmBackup.serviceId})`,
+                      vmBackup.serviceId)
+                  );
+                }
+              });
+          })
+          return vmBackupGroup;
+        }))
+      }),
+    );
+  }
+
+  /**
+   * Subscribes to anti virus
+   */
+  private _subscribesToAntiVirus(): void {
+    this.antiVirus$ = this._apiService.getServerHostSecurityAntiVirus().pipe(
+      switchMap((antiVirusCollection) => {
+        return this.serversList$.pipe(
+          map((serversCollection) => {
+            let antiVirusGroup: TicketService[] = [];
+            let antiVirus = getSafeProperty(antiVirusCollection, (obj) => obj.collection) || [];
+            let servers = getSafeProperty(serversCollection, (obj) => obj) || [];
+
+            antiVirus.forEach((av) => {
+              if (isNullOrEmpty(av?.antiVirus?.serviceId)) { return; }
+              servers.filter((server) => {
+                if (av.serverId === server.id) {
+                  antiVirusGroup.push(
+                    new TicketService(`${av.antiVirus.billingDescription} - for ${server.name} (${av.antiVirus.serviceId})`,
+                      av.antiVirus.serviceId)
+                  );
+                }
+              });
+          })
+          return antiVirusGroup;
+        }))
+      }),
+    );
+  }
+
+  /**
+   * Subscribes to hids
+   */
+  private _subscribesToHids(): void {
+    this.hids$ = this._apiService.getServerHostSecurityHids().pipe(
+      switchMap((hidsCollection) => {
+        return this.serversList$.pipe(
+          map((serversCollection) => {
+            let hidsGroup: TicketService[] = [];
+            let hids = getSafeProperty(hidsCollection, (obj) => obj.collection) || [];
+            let servers = getSafeProperty(serversCollection, (obj) => obj) || [];
+
+            hids.forEach((hidsDetails) => {
+              if (isNullOrEmpty(hidsDetails?.hids?.serviceId)) { return; }
+              servers.filter((server) => {
+                if (hidsDetails.serverId === server.id) {
+                  hidsGroup.push(
+                    new TicketService(`${hidsDetails.hids.billingDescription} - for ${server.name} (${hidsDetails.hids.serviceId})`,
+                      hidsDetails.hids.serviceId)
+                  );
+                }
+              });
+          })
+          return hidsGroup;
+        }))
+      }),
+    );
+  }
+
+  /**
+   * Subscribes to DNS
+   */
+  private _subscribesToDns(): void {
+    this.dns$ = this._apiService.getNetworkDns().pipe(
+      map((response) => {
+        let dns = getSafeProperty(response, (obj) => obj.collection);
+        return dns.filter((service) => getSafeProperty(service, (obj) => obj.serviceId))
+          .map((service) => new TicketService(`${service.billingDescription} (${service.serviceId})`, service.serviceId));
       })
     );
   }
