@@ -145,7 +145,59 @@
               </ng-container>
 
               <ng-container *ngTemplateOutlet="servicesTemplate;
-                context: { $implicit: (azureServices$ | async), serviceTitle: 'Azure Services'}">
+                context: { $implicit: (azureServices$ | async), serviceTitle: 'Microsoft Subscriptions'}">
+              </ng-container>
+
+              <ng-container *ngTemplateOutlet="servicesTemplate;
+                context: { $implicit: (colocationAntennas$ | async), serviceTitle: 'Antennas'}">
+              </ng-container>
+
+              <ng-container *ngTemplateOutlet="servicesTemplate;
+                context: { $implicit: (colocationCustomDevices$ | async), serviceTitle: 'Custom Devices'}">
+              </ng-container>
+
+              <ng-container *ngTemplateOutlet="servicesTemplate;
+                context: { $implicit: (colocationRooms$ | async), serviceTitle: 'Rooms'}">
+              </ng-container>
+
+              <ng-container *ngTemplateOutlet="servicesTemplate;
+                context: { $implicit: (colocationStandardSqms$ | async), serviceTitle: 'Standard Square Metres'}">
+              </ng-container>
+
+              <ng-container *ngTemplateOutlet="servicesTemplate;
+                context: { $implicit: (colocationRacks$ | async), serviceTitle: 'Racks'}">
+              </ng-container>
+              
+              <ng-container *ngTemplateOutlet="servicesTemplate;
+                context: { $implicit: (vdcStorages$ | async), serviceTitle: 'VDC Storage'}">
+              </ng-container>
+
+              <ng-container *ngTemplateOutlet="servicesTemplate;
+                context: { $implicit: (dedicatedServers$ | async), serviceTitle: 'Dedicated Servers'}">
+              </ng-container>
+
+              <ng-container *ngTemplateOutlet="servicesTemplate;
+                context: { $implicit: (managementServices$ | async), serviceTitle: 'Microsoft Management Services'}">
+              </ng-container>
+
+              <ng-container *ngTemplateOutlet="servicesTemplate;
+                context: { $implicit: (serverBackup$ | async), serviceTitle: 'Server Backup'}">
+              </ng-container>
+
+              <ng-container *ngTemplateOutlet="servicesTemplate;
+                context: { $implicit: (vmBackup$ | async), serviceTitle: 'VM Backup'}">
+              </ng-container>
+
+              <ng-container *ngTemplateOutlet="servicesTemplate;
+                context: { $implicit: (antiVirus$ | async), serviceTitle: 'Anti-Virus'}">
+              </ng-container>
+
+              <ng-container *ngTemplateOutlet="servicesTemplate;
+                context: { $implicit: (hids$ | async), serviceTitle: 'HIDS'}">
+              </ng-container>
+
+              <ng-container *ngTemplateOutlet="servicesTemplate;
+                context: { $implicit: (dns$ | async), serviceTitle: 'DNS'}">
               </ng-container>
             </mcs-select>
           </mcs-form-field>
