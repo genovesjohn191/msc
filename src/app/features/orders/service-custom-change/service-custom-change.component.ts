@@ -378,7 +378,7 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
    * Subscribe to Smac Shared Form Config
    */
   private _subscribeToSmacSharedFormConfig(): void {
-    let testCaseConfig = { isIncluded: false };
+    let testCaseConfig = { isIncluded: true };
     let notesConfig = { isIncluded: true, label: this.notesLabel};
     let contactConfig = { isIncluded: true };
     let config = new SmacSharedFormConfig(this._injector, testCaseConfig, notesConfig, contactConfig);
