@@ -90,6 +90,7 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
   public firewallServices$: Observable<CustomChangeService[]>;
   public internetPortServices$: Observable<CustomChangeService[]>;
   public batServices$: Observable<CustomChangeService[]>;
+  public dns$: Observable<CustomChangeService[]>;
   public account$: Observable<McsAccount>;
   public smacSharedFormConfig$: BehaviorSubject<SmacSharedFormConfig>;
 
@@ -147,6 +148,7 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
     this._subscribeToFirewallServices();
     this._subscribeToInternetPortServices();
     this._subscribeToBatServices();
+    this._subscribeToDnsServices();
     this._subscribeToSmacSharedFormConfig();
   }
 
@@ -309,7 +311,7 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
     this.serverServices$ = this._apiService.getServers().pipe(
       map((response) => {
         let servers = getSafeProperty(response, (obj) => obj.collection);
-        return servers.filter((server) => getSafeProperty(server, (obj) => obj.serviceId))
+        return servers.filter((server) => getSafeProperty(server, (obj) => obj.serviceId && obj.serviceChangeAvailable))
           .map((server) => {
             return {
               name: `${server.name} (${server.serviceId})`,
@@ -368,6 +370,24 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
             return {
               name: `${bat.description} (${bat.serviceId})`,
               serviceId: bat.serviceId
+            } as CustomChangeService;
+          });
+      })
+    );
+  }
+
+  /**
+   * Subscribe to DNS services
+   */
+  private _subscribeToDnsServices(): void {
+    this.dns$ = this._apiService.getNetworkDns().pipe(
+      map((response) => {
+        let dnsService = getSafeProperty(response, (obj) => obj.collection);
+        return dnsService.filter((dns) => getSafeProperty(dns, (obj) => obj.serviceId && obj.serviceChangeAvailable))
+          .map((dns) => {
+            return {
+              name: `${dns.billingDescription} (${dns.serviceId})`,
+              serviceId: dns.serviceId
             } as CustomChangeService;
           });
       })
