@@ -238,6 +238,10 @@ export class AddVmBackupComponent extends McsOrderWizardBase implements OnInit, 
     );
   }
 
+  public get serviceOrderStateOption(): typeof ServiceOrderState {
+    return ServiceOrderState;
+  }
+
   private _createVmBackupDetails(
     server: McsServer,
     backups: McsServerBackupVm[]
@@ -253,8 +257,10 @@ export class AddVmBackupComponent extends McsOrderWizardBase implements OnInit, 
       return vmBackupDetails;
     }
 
-    let serverProvisionMessage = this._backupProvisionMessageBitMap.get(server.getServiceOrderState());
-    if (isNullOrEmpty(serverProvisionMessage)) { return vmBackupDetails; }
+    let serverOrderState = server.getServiceOrderState();
+    let serverProvisionMessage = this._backupProvisionMessageBitMap.get(serverOrderState);
+    let serverOSAutomationNotready = serverOrderState === this.serviceOrderStateOption.OsAutomationNotReady;
+    if (isNullOrEmpty(serverProvisionMessage) || serverOSAutomationNotready) { return vmBackupDetails; }
 
     vmBackupDetails.message = serverProvisionMessage;
     vmBackupDetails.disabled = true;
