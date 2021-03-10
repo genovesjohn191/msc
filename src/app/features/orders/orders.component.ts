@@ -2,27 +2,32 @@ import {
   Component,
   ChangeDetectorRef,
   ChangeDetectionStrategy,
-  Injector
+  Injector,
+  ViewChild
 } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
-  McsTableListingBase,
   McsNavigationService,
-  McsAuthenticationIdentity
+  McsAuthenticationIdentity,
+  McsTableDataSource2,
+  McsMatTableQueryParam,
+  McsMatTableContext
 } from '@app/core';
 import {
   isNullOrEmpty,
-  CommonDefinition
+  createObject,
+  getSafeProperty
 } from '@app/utilities';
 import {
   RouteKey,
   McsOrder,
   McsQueryParam,
-  McsApiCollection,
-  McsCompany
+  McsCompany,
+  McsFilterInfo
 } from '@app/models';
-import { McsEvent } from '@app/events';
 import { McsApiService } from '@app/services';
+import { ColumnFilter, Paginator, Search } from '@app/shared';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'mcs-orders',
@@ -30,7 +35,24 @@ import { McsApiService } from '@app/services';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class OrdersComponent extends McsTableListingBase<McsOrder> {
+export class OrdersComponent {
+
+  public get routeKeyEnum(): any {
+    return RouteKey;
+  }
+
+  public get activeCompany(): McsCompany {
+    return this._authenticationIdentity.activeAccount;
+  }
+
+  public readonly dataSource: McsTableDataSource2<McsOrder>;
+  public readonly defaultColumnFilters: McsFilterInfo[] = [
+    createObject(McsFilterInfo, { value: true, exclude: true, id: 'description' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'status' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'orderId' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'createdBy' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'createdOn' })
+  ];
 
   public constructor(
     _injector: Injector,
@@ -39,22 +61,28 @@ export class OrdersComponent extends McsTableListingBase<McsOrder> {
     private _apiService: McsApiService,
     private _authenticationIdentity: McsAuthenticationIdentity,
   ) {
-    super(_injector, _changeDetectorRef, { dataChangeEvent: McsEvent.dataChangeOrders });
+    this.dataSource = new McsTableDataSource2(this._getOrders.bind(this));
   }
 
-  public get routeKeyEnum(): any {
-    return RouteKey;
+  @ViewChild('search')
+  public set search(value: Search) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerSearch(value);
+    }
   }
 
-  /**
-   * Returns the + icon key
-   */
-  public get addIconKey(): string {
-    return CommonDefinition.ASSETS_SVG_PLUS;
+  @ViewChild('paginator')
+  public set paginator(value: Paginator) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerPaginator(value);
+    }
   }
 
-  public get activeCompany(): McsCompany {
-    return this._authenticationIdentity.activeAccount;
+  @ViewChild('columnFilter')
+  public set columnFilter(value: ColumnFilter) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerColumnFilter(value);
+    }
   }
 
   /**
@@ -66,13 +94,6 @@ export class OrdersComponent extends McsTableListingBase<McsOrder> {
   }
 
   /**
-   * Creates a new order
-   */
-  public onClickNewOrder(): void {
-    // Do the create order
-  }
-
-  /**
    * Navigate to order details page
    * @param order Order to view the details
    */
@@ -81,18 +102,19 @@ export class OrdersComponent extends McsTableListingBase<McsOrder> {
     this._navigationService.navigateTo(RouteKey.OrderDetails, [order.id]);
   }
 
-  /**
-   * Returns the column settings key for the filter selector
-   */
-  public get columnSettingsKey(): string {
-    return CommonDefinition.FILTERSELECTOR_ORDER_LISTING;
+  public retryDatasource(): void {
+    this.dataSource.refreshDataRecords();
   }
 
-  /**
-   * Gets the entity listing based on the context
-   * @param query Query to be obtained on the listing
-   */
-  protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsOrder>> {
-    return this._apiService.getOrders(query);
+  private _getOrders(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsOrder>> {
+    let queryParam = new McsQueryParam();
+    queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
+    queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
+    queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
+
+    return this._apiService.getOrders(queryParam).pipe(
+      map(response => new McsMatTableContext(response?.collection,
+        response?.totalCollectionCount))
+    );
   }
 }

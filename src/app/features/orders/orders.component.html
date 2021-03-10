@@ -24,8 +24,10 @@
 
     <!-- Column Filter -->
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'orders.filterColumn' | translate" offset="medium">
-      <mcs-column-filter [filters]="dataFilters"
-        (dataChange)="onColumnFilterChange($event)"></mcs-column-filter>
+      <mcs-column-selector #columnFilter
+        storageKey="orders"
+        [defaultFilters]="defaultColumnFilters">
+      </mcs-column-selector>
     </mcs-left-panel-item>
   </mcs-left-panel>
 
@@ -38,98 +40,99 @@
       <mcs-search *ngIf="isMobile" #search mcsId="orders-mobile-search"></mcs-search>
 
       <!-- Table -->
-      <mcs-table #table [dataSource]="dataSource">
+      <table mat-table [dataSource]="dataSource">
         <!-- Description Column -->
-        <ng-container mcsColumnDef="description">
-          <mcs-header-cell *mcsHeaderCellDef>
-            {{ columnSettings.description.text }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row">
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ 'columnHeader.description' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row">
             <a [mcsRouterLink]="[routeKeyEnum.OrderDetails, row.id]"
               mcsId="select-order"
               mcsEventTracker="navigate-to-order"
               mcsEventCategory="order"
               mcsEventLabel="order-listing-page">
               {{ row.description }}</a>
-          </mcs-data-cell>
+          </td>
         </ng-container>
 
         <!-- Status Column -->
-        <ng-container mcsColumnDef="status">
-          <mcs-header-cell *mcsHeaderCellDef hidden-xsmall>
-            {{ columnSettings.status.text }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" hidden-xsmall>
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+            {{ 'columnHeader.status' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row">
             {{ row.workflowStatusLabel }}
-          </mcs-data-cell>
+          </td>
         </ng-container>
 
         <!-- Order ID Column -->
-        <ng-container mcsColumnDef="orderId">
-          <mcs-header-cell *mcsHeaderCellDef>
-            {{ columnSettings.orderId.text }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row">
+        <ng-container matColumnDef="orderId">
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+            {{ 'columnHeader.orderId' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row">
             {{ row.orderId }}
-          </mcs-data-cell>
+          </td>
         </ng-container>
 
         <!-- Created By Column -->
-        <ng-container mcsColumnDef="createdBy">
-          <mcs-header-cell *mcsHeaderCellDef hidden-xsmall>
-            {{ columnSettings.createdBy.text }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" hidden-xsmall>
+        <ng-container matColumnDef="createdBy">
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+            {{ 'columnHeader.createdBy' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row">
             <span>{{ row.createdBy }}</span><br/>
             <span read-only *ngIf="createdWithDifferentCompany(row.createdByCompanyId)">
               {{ 'notifications.account' | translate }}
             </span>
-          </mcs-data-cell>
+          </td>
         </ng-container>
 
         <!-- Created On Column -->
-        <ng-container mcsColumnDef="createdOn">
-          <mcs-header-cell *mcsHeaderCellDef hidden-xsmall>
-            {{ columnSettings.createdOn.text }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" hidden-xsmall>
+        <ng-container matColumnDef="createdOn">
+          <th mat-header-cell *matHeaderCellDef hidden-xsmall>
+            {{ 'columnHeader.createdOn' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row">
             {{ row.createdOn | mcsStdDateFormat }}
-          </mcs-data-cell>
-        </ng-container>
-
-        <!-- Data Status Integration -->
-        <ng-container mcsDataStatusDef>
-          <mcs-data-empty *mcsDataEmptyDef>
-            <div class="listing-status-wrapper">
-              <span>{{ 'orders.noOrders' | translate }} </span>
-            </div>
-          </mcs-data-empty>
-          <mcs-data-error *mcsDataErrorDef>
-            <div class="listing-status-wrapper">
-              <span>{{ 'orders.errorMessage' | translate }}</span>
-              <a (click)="retryDatasource()"
-                mcsId
-                mcsEventTracker="retry-orders"
-                mcsEventCategory="order"
-                mcsEventLabel="order-listing-page">{{ 'orders.retry' | translate }}</a>.
-            </div>
-          </mcs-data-error>
+          </td>
         </ng-container>
 
         <!-- Header and Data row -->
-        <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
-        <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"
-          mcsCursor="pointer" (click)="navigateToOrder(row)"
+        <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"></tr>
+        <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"
+          mcsCursor="pointer"
+          (click)="navigateToOrder(row)"
           mcsId="order-row"
           mcsEventTracker="navigate-to-order"
           mcsEventCategory="order"
-          mcsEventLabel="order-listing-page"></mcs-data-row>
-      </mcs-table>
+          mcsEventLabel="order-listing-page">
+        </tr>
+      </table>
+
+      <!-- Table Status -->
+      <mcs-item orientation="block">
+        <div *ngIf="dataSource?.isInProgress$ | async" align="center">
+          <mcs-loader size="medium"></mcs-loader>
+        </div>
+        <div *ngIf="dataSource?.hasNoRecords$ | async" text-center>
+          <span>{{ 'orders.noOrders' | translate }}</span>
+        </div>
+        <div *ngIf="dataSource?.hasError$ | async" text-center>
+          <div class="listing-status-wrapper">
+            <span>{{ 'orders.errorMessage' | translate }}</span>
+            <a (click)="retryDatasource()"
+              mcsId
+              mcsEventTracker="retry-orders"
+              mcsEventCategory="order"
+              mcsEventLabel="order-listing-page">{{ 'orders.retry' | translate }}</a>.
+          </div>
+        </div>
+      </mcs-item>
 
       <!-- Paginator -->
-      <mcs-paginator #paginator
-        [hidden]="!hasNextPage"
-        [totalCount]="totalRecordsCount">
+      <mcs-paginator #paginator [totalCount]="dataSource?.totalCount$ | async">
       </mcs-paginator>
     </div>
   </mcs-content-panel>
