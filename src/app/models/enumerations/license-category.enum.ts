@@ -58,7 +58,8 @@ export enum AzureProducts {
   VirtualWAN = 54,
   VPNGateway = 55,
   WebApplicationFirewall = 56,
-  WebApps = 57
+  WebApps = 57,
+  WindowsVirtualDesktop = 58
 }
 
 export const azureProductsText = {
@@ -118,7 +119,8 @@ export const azureProductsText = {
   [AzureProducts.VirtualWAN]: 'Virtual WAN',
   [AzureProducts.VPNGateway]: 'VPN Gateway',
   [AzureProducts.WebApplicationFirewall]: 'Web Application Firewall',
-  [AzureProducts.WebApps]: 'Web Apps'
+  [AzureProducts.WebApps]: 'Web Apps',
+  [AzureProducts.WindowsVirtualDesktop]: 'Windows Virtual Desktop'
 };
 
 /**
