@@ -83,28 +83,28 @@
       <div class="product-catalog-item" *ngIf="solution.benefitsAndLimitations | mcsIsNotNullOrEmpty">
         <h2>Benefits and Limitations</h2>
 
-        <mcs-table [dataSource]="solution.benefitsAndLimitations" class="limited-view">
-          <ng-container mcsColumnDef="benefit">
-            <mcs-header-cell *mcsHeaderCellDef>
+        <table mat-table [dataSource]="solution.benefitsAndLimitations" class="limited-view">
+          <ng-container matColumnDef="benefit">
+            <th mat-header-cell *matHeaderCellDef>
               Benefits/Advantages
-            </mcs-header-cell>
-            <mcs-data-cell *mcsDataCellDef="let row">
+            </th>
+            <td mat-cell *matCellDef="let row">
               {{ row.benefit }}
-            </mcs-data-cell>
+            </td>
           </ng-container>
 
-          <ng-container mcsColumnDef="limitation" >
-            <mcs-header-cell *mcsHeaderCellDef>
+          <ng-container matColumnDef="limitation" >
+            <th mat-header-cell *matHeaderCellDef>
               Limitations/Disadvantages
-            </mcs-header-cell>
-            <mcs-data-cell *mcsDataCellDef="let row">
+            </th>
+            <td mat-cell *matCellDef="let row">
               {{ row.limitation }}
-            </mcs-data-cell>
+            </td>
           </ng-container>
 
-          <mcs-header-row *mcsHeaderRowDef="benefitAndLimitationColumns"></mcs-header-row>
-          <mcs-data-row *mcsDataRowDef="let row; columns: benefitAndLimitationColumns;"></mcs-data-row>
-        </mcs-table>
+          <tr mat-header-row *matHeaderRowDef="benefitAndLimitationColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: benefitAndLimitationColumns;"></tr>
+        </table>
       </div>
     </mcs-scrollable-link>
   </mcs-scrollable-link-group>

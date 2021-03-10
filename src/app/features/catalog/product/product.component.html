@@ -126,21 +126,21 @@
       <div class="product-catalog-item" *ngIf="selectedProduct.productOptions | mcsIsNotNullOrEmpty">
         <h2>Product Options</h2>
 
-        <mcs-table [dataSource]="selectedProduct.productOptions" class="limited-view">
-          <ng-container mcsColumnDef="name">
-            <mcs-header-cell *mcsHeaderCellDef>
+        <table mat-table [dataSource]="selectedProduct.productOptions" class="limited-view">
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>
               Name
-            </mcs-header-cell>
-            <mcs-data-cell *mcsDataCellDef="let row">
+            </th>
+            <td mat-cell *matCellDef="let row">
               {{ row.name }}
-            </mcs-data-cell>
+            </td>
           </ng-container>
 
-          <ng-container mcsColumnDef="options" >
-            <mcs-header-cell *mcsHeaderCellDef>
+          <ng-container matColumnDef="options" >
+            <th mat-header-cell *matHeaderCellDef>
               Options
-            </mcs-header-cell>
-            <mcs-data-cell *mcsDataCellDef="let row">
+            </th>
+            <td mat-cell *matCellDef="let row">
               <mat-chip-list>
                 <ng-container *ngIf="selectedProduct.hasProductProperties">
                   <mat-chip *ngFor="let property of getFormattedProperties(row)">
@@ -153,11 +153,12 @@
                   </mat-chip>
                 </ng-container>
               </mat-chip-list>
-            </mcs-data-cell>
+            </td>
           </ng-container>
-          <mcs-header-row *mcsHeaderRowDef="productOptionsColumns"></mcs-header-row>
-          <mcs-data-row *mcsDataRowDef="let row; columns: productOptionsColumns;"></mcs-data-row>
-        </mcs-table>
+
+          <tr mat-header-row *matHeaderRowDef="productOptionsColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: productOptionsColumns;"></tr>
+        </table>
       </div>
 
       <!-- Feature Benefit Matrix -->
@@ -178,7 +179,7 @@
           <mcs-grid>
 
             <ng-container *ngFor="let inview of inviews">
-              <mcs-grid-row >
+              <mcs-grid-row>
                 <mcs-grid-column sizeSm="12">
                   <h4>{{ inview.name }}</h4>
                   <p [innerHTML]="inview.description" no-margin></p>
@@ -196,31 +197,31 @@
 
               <mcs-grid-row *ngIf="inview?.thresholds | mcsIsNotNullOrEmpty">
                 <mcs-grid-column>
-                  <mcs-table [dataSource]="inview.thresholds">
+                  <table [dataSource]="inview.thresholds">
                     <!-- Description Column -->
-                    <ng-container mcsColumnDef="description">
-                      <mcs-header-cell *mcsHeaderCellDef>
+                    <ng-container matColumnDef="description">
+                      <th mat-header-cell *matHeaderCellDef>
                         Description
-                      </mcs-header-cell>
-                      <mcs-data-cell text-wrap *mcsDataCellDef="let row">
+                      </th>
+                      <td text-wrap mat-cell *matCellDef="let row">
                         {{ row.description }}
-                      </mcs-data-cell>
+                      </td>
                     </ng-container>
 
                     <!-- Threshold Utilisation Column -->
-                    <ng-container mcsColumnDef="alertThreshold">
-                      <mcs-header-cell *mcsHeaderCellDef>
+                    <ng-container matColumnDef="alertThreshold">
+                      <th mat-header-cell *matHeaderCellDef>
                         Alert Threshold
-                      </mcs-header-cell>
-                      <mcs-data-cell text-wrap *mcsDataCellDef="let row">
+                      </th>
+                      <td text-wrap mat-cell *matCellDef="let row">
                         {{ row.defaultAlertThreshold }}
-                      </mcs-data-cell>
+                      </td>
                     </ng-container>
 
                     <!-- Header and Data row -->
-                    <mcs-header-row *mcsHeaderRowDef="thresholdColumns"></mcs-header-row>
-                    <mcs-data-row *mcsDataRowDef="let row; columns: thresholdColumns;"></mcs-data-row>
-                  </mcs-table>
+                    <tr mat-header-row *matHeaderRowDef="thresholdColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: thresholdColumns;"></tr>
+                  </table>
                 </mcs-grid-column>
               </mcs-grid-row>
             </ng-container>
@@ -246,81 +247,81 @@
       <mcs-scrollable-link label="Compliance" *ngIf="selectedProduct.pciDetails | mcsIsNotNullOrEmpty">
       <div class="product-catalog-item">
         <h2>PCI Compliance</h2>
-        <mcs-table [dataSource]="sortPciDetails(selectedProduct.pciDetails)">
+        <table [dataSource]="sortPciDetails(selectedProduct.pciDetails)">
           <!-- Raci Column -->
-          <ng-container mcsColumnDef="raci">
-            <mcs-header-cell *mcsHeaderCellDef>
+          <ng-container matColumnDef="raci">
+            <th mat-header-cell *matHeaderCellDef>
               RACI
-            </mcs-header-cell>
-            <mcs-data-cell text-wrap *mcsDataCellDef="let row">
+            </th>
+            <td text-wrap mat-cell *matCellDef="let row">
               {{ row.raci }}
-            </mcs-data-cell>
+            </td>
           </ng-container>
 
           <!-- MCS Responsibility Definition Column -->
-          <ng-container mcsColumnDef="mcsResponsibilityDefinition">
-            <mcs-header-cell *mcsHeaderCellDef>
+          <ng-container matColumnDef="mcsResponsibilityDefinition">
+            <th mat-header-cell *matHeaderCellDef>
               MCS Responsibility Definition
-            </mcs-header-cell>
-            <mcs-data-cell text-wrap *mcsDataCellDef="let row">
+            </th>
+            <td text-wrap mat-cell *matCellDef="let row">
               {{ row.mcsResponsibilityDefinition }}
-            </mcs-data-cell>
+            </td>
           </ng-container>
 
           <!-- Customer Responsibility Definition -->
-          <ng-container mcsColumnDef="customerResponsibilityDefinition">
-            <mcs-header-cell *mcsHeaderCellDef>
+          <ng-container matColumnDef="customerResponsibilityDefinition">
+            <th mat-header-cell *matHeaderCellDef>
               Customer Responsibility Definition
-            </mcs-header-cell>
-            <mcs-data-cell text-wrap *mcsDataCellDef="let row">
+            </th>
+            <td text-wrap mat-cell *matCellDef="let row">
               {{ row.customerResponsibilityDefinition }}
-            </mcs-data-cell>
+            </td>
           </ng-container>
 
           <!-- Not Applicable Justification Column -->
-          <ng-container mcsColumnDef="notApplicableJustification">
-            <mcs-header-cell *mcsHeaderCellDef>
+          <ng-container matColumnDef="notApplicableJustification">
+            <th mat-header-cell *matHeaderCellDef>
               Not Applicable Justification
-            </mcs-header-cell>
-            <mcs-data-cell text-wrap *mcsDataCellDef="let row">
+            </th>
+            <td text-wrap mat-cell *matCellDef="let row">
               {{ row.notApplicableJustification }}
-            </mcs-data-cell>
+            </td>
           </ng-container>
 
           <!-- Control Column -->
-          <ng-container mcsColumnDef="control">
-            <mcs-header-cell *mcsHeaderCellDef>
+          <ng-container matColumnDef="control">
+            <th mat-header-cell *matHeaderCellDef>
               Control
-            </mcs-header-cell>
-            <mcs-data-cell text-wrap *mcsDataCellDef="let row">
+            </th>
+            <td text-wrap mat-cell *matCellDef="let row">
               {{ row.control }}
-            </mcs-data-cell>
+            </td>
           </ng-container>
 
           <!-- Requirement Column -->
-          <ng-container mcsColumnDef="requirement">
-            <mcs-header-cell *mcsHeaderCellDef>
+          <ng-container matColumnDef="requirement">
+            <th mat-header-cell *matHeaderCellDef>
               Requirement
-            </mcs-header-cell>
-            <mcs-data-cell text-wrap *mcsDataCellDef="let row">
+            </th>
+            <td text-wrap mat-cell *matCellDef="let row">
               {{ row.requirement }}
-            </mcs-data-cell>
+            </td>
           </ng-container>
 
           <!-- Version Column -->
-          <ng-container mcsColumnDef="version">
-            <mcs-header-cell *mcsHeaderCellDef>
+          <ng-container matColumnDef="version">
+            <th mat-header-cell *matHeaderCellDef>
               Version
-            </mcs-header-cell>
-            <mcs-data-cell text-wrap *mcsDataCellDef="let row">
+            </th>
+            <td text-wrap mat-cell *matCellDef="let row">
               {{ row.version }}
-            </mcs-data-cell>
+            </td>
           </ng-container>
 
           <!-- Header and Data row -->
-          <mcs-header-row *mcsHeaderRowDef="pciComplianceColumns"></mcs-header-row>
-          <mcs-data-row *mcsDataRowDef="let row; columns: pciComplianceColumns;"></mcs-data-row>
-        </mcs-table>
+          <tr mat-header-row *matHeaderRowDef="pciComplianceColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: pciComplianceColumns;"></tr>
+        </table>
       </div>
     </mcs-scrollable-link>
 
