@@ -248,29 +248,6 @@
       "value": true
     }
   },
-  "orderFilter": {
-    "description": {
-      "text": "Description",
-      "value": true,
-      "exclude": true
-    },
-    "status": {
-      "text": "Status",
-      "value": true
-    },
-    "orderId": {
-      "text": "Order ID",
-      "value": true
-    },
-    "createdBy": {
-      "text": "Created By",
-      "value": true
-    },
-    "createdOn": {
-      "text": "Created On",
-      "value": true
-    }
-  },
   "systemMessageFilter": {
     "message": {
       "text": "Message",
