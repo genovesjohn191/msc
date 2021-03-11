@@ -14,3 +14,4 @@ export * from './host-security-provision-hids.workflow';
 export * from './management-tools-query-status.workflow';
 export * from './management-tools-add-cvm.workflow';
 export * from './management-tools-remove-cvm.workflow';
+export * from './management-tools-rename.workflow';
