@@ -14,7 +14,8 @@ import {
   ManagementToolsRemoveCvmWorkflowGroup,
   VdcVmInstanceProvisionWorkflowGroup,
   HostSecurityProvisionAntiVirusWorkflowGroup,
-  HostSecurityProvisionHidsWorkflowGroup
+  HostSecurityProvisionHidsWorkflowGroup,
+  ManagementToolsRenameWorkflowGroup
 } from './workflow-groups';
 import { WorkflowGroup } from './workflow-group.interface';
 import { VmBackupProvisionWorkflowGroup } from './workflow-groups/vm-backup-provision.workflow';
@@ -36,6 +37,7 @@ export const workflowGroupMap: Map<WorkflowGroupId, Type<WorkflowGroup>> = new M
   [ WorkflowGroupId.ManagementToolsAddCvm, ManagementToolsAddCvmWorkflowGroup ],
   [ WorkflowGroupId.ManagementToolsQueryStatus, ManagementToolsQueryStatusWorkflowGroup ],
   [ WorkflowGroupId.ManagementToolsRemoveCvm, ManagementToolsRemoveCvmWorkflowGroup ],
+  [ WorkflowGroupId.ManagementToolsRename, ManagementToolsRenameWorkflowGroup ],
 
   [ WorkflowGroupId.ServerBackupProvision,  ServerBackupProvisionWorkflowGroup ],
 

@@ -7,7 +7,8 @@ import {
   DynamicSelectNetworkField,
   DynamicSelectOsField,
   DynamicSelectStorageProfileField,
-  DynamicSelectVdcField
+  DynamicSelectVdcField,
+  DynamicSlideToggleField
 } from '@app/features-shared/dynamic-form';
 import { McsObjectCrispElementServiceAttribute } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
@@ -103,7 +104,11 @@ export const vdcVmInstanceProvisionForm: LaunchPadForm = {
       placeholder: 'Enter an IP address',
       settings: { hidden: true },
       useNetworkRange: true
-    })
+    }),
+    new DynamicSlideToggleField({
+      key: 'preserveServerOnError',
+      label: 'Preserve Server On Error',
+    }),
   ],
 
   mapContext: standardContextMapper,

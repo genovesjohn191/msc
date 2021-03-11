@@ -78,13 +78,15 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
 
     [ ProductType.DedicatedServer,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus
+        WorkflowGroupId.ManagementToolsQueryStatus,
+        WorkflowGroupId.ManagementToolsRename
       ]
     ],
 
     [ ProductType.DedicatedServerVmInstance,
       [
-        WorkflowGroupId.ManagementToolsQueryStatus
+        WorkflowGroupId.ManagementToolsQueryStatus,
+        WorkflowGroupId.ManagementToolsRename
       ]
     ],
 
@@ -397,9 +399,10 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
     [ ProductType.VirtualDataCentreVmInstance,
       [
         WorkflowGroupId.VirtualDataCentreVmInstanceProvision,
-        WorkflowGroupId.ManagementToolsQueryStatus,
         WorkflowGroupId.ManagementToolsAddCvm,
-        WorkflowGroupId.ManagementToolsRemoveCvm
+        WorkflowGroupId.ManagementToolsQueryStatus,
+        WorkflowGroupId.ManagementToolsRemoveCvm,
+        WorkflowGroupId.ManagementToolsRename
       ]
     ],
 

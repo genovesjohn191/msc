@@ -20,6 +20,7 @@ export enum WorkflowGroupId {
   ManagementToolsQueryStatus = 300001,
   ManagementToolsAddCvm = 300002,
   ManagementToolsRemoveCvm = 300003,
+  ManagementToolsRename = 300004,
 
   HostSecurityProvisionAntiVirus = 4000000,
   HostSecurityProvisionHids = 4000001,
@@ -43,6 +44,7 @@ export const workflowGroupIdText = {
   [WorkflowGroupId.ManagementToolsQueryStatus]: 'Query Management Tools Status',
   [WorkflowGroupId.ManagementToolsAddCvm]: 'Add To Management Tools',
   [WorkflowGroupId.ManagementToolsRemoveCvm]: 'Remove From Management Tools',
+  [WorkflowGroupId.ManagementToolsRename]: 'Rename In Management Tools',
 
   [WorkflowGroupId.HostSecurityProvisionAntiVirus]: 'Provision Anti-Virus',
   [WorkflowGroupId.HostSecurityProvisionHids]: 'Provision HIDS',
