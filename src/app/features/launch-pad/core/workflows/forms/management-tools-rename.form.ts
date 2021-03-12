@@ -2,7 +2,7 @@ import { DynamicInputTextField } from '@app/features-shared/dynamic-form';
 import { LaunchPadForm } from './form.interface';
 import { standardContextMapper } from './shared/standard-context-mapper';
 
-export const RenameInManagementToolsForm: LaunchPadForm = {
+export const renameInManagementToolsForm: LaunchPadForm = {
   config: [
     new DynamicInputTextField({
       key: 'name',

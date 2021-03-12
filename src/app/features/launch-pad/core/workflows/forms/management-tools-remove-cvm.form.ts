@@ -1,7 +1,7 @@
 import { LaunchPadForm } from './form.interface';
 import { standardContextMapper } from './shared/standard-context-mapper';
 
-export const ManagementToolsRemoveCvmForm: LaunchPadForm = {
+export const managementToolsRemoveCvmForm: LaunchPadForm = {
   config: [],
   mapContext: standardContextMapper,
 }
