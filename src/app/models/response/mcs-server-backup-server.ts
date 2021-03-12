@@ -17,6 +17,9 @@ export class McsServerBackupServer extends McsEntityBase {
   @JsonProperty()
   public provisioned: boolean = undefined;
 
+  @JsonProperty()
+  public serviceChangeAvailable: boolean = undefined;
+
   @JsonProperty({ target: McsBackupAttempt })
   public lastBackupAttempt: McsBackupAttempt = undefined;
 

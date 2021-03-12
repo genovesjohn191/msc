@@ -16,7 +16,8 @@ import {
   map,
   filter,
   tap,
-  shareReplay
+  shareReplay,
+  switchMap
 } from 'rxjs/operators';
 import {
   Subject,
@@ -51,7 +52,8 @@ import {
   McsOption,
   McsAccount,
   RouteKey,
-  DeliveryType
+  DeliveryType,
+  McsServer
 } from '@app/models';
 import {
   OrderDetails,
@@ -91,6 +93,10 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
   public internetPortServices$: Observable<CustomChangeService[]>;
   public batServices$: Observable<CustomChangeService[]>;
   public dns$: Observable<CustomChangeService[]>;
+  public serverBackup$: Observable<CustomChangeService[]>;
+
+  public serversList$: Observable<McsServer[]>;
+
   public account$: Observable<McsAccount>;
   public smacSharedFormConfig$: BehaviorSubject<SmacSharedFormConfig>;
 
@@ -142,6 +148,7 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
   }
 
   public ngOnInit(): void {
+    this._subscribesToServersList();
     this._subscribesToSelectedService();
     this._subscribeToVdcServices();
     this._subscribeToServerServices();
@@ -149,6 +156,7 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
     this._subscribeToInternetPortServices();
     this._subscribeToBatServices();
     this._subscribeToDnsServices();
+    this._subscribeToServerBackupServices();
     this._subscribeToSmacSharedFormConfig();
   }
 
@@ -287,6 +295,21 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
   }
 
   /**
+   * Subscribes to servers list
+   */
+  private _subscribesToServersList(): void {
+      this.serversList$ = this._apiService.getServers().pipe(
+        map((response) => {
+          let resources = getSafeProperty(response, (obj) => obj.collection);
+          return resources
+            .filter((resource) => getSafeProperty(resource, (obj) => obj.serviceId))
+            .map((resource) => resource);
+        }),
+        shareReplay(1)
+      );
+  }
+
+  /**
    * Subscribe to vdc services
    */
   private _subscribeToVdcServices(): void {
@@ -308,10 +331,10 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
    * Subscribe to servers services
    */
   private _subscribeToServerServices(): void {
-    this.serverServices$ = this._apiService.getServers().pipe(
+    this.serverServices$ = this.serversList$.pipe(
       map((response) => {
-        let servers = getSafeProperty(response, (obj) => obj.collection);
-        return servers.filter((server) => getSafeProperty(server, (obj) => obj.serviceId && obj.serviceChangeAvailable))
+        let servers = response;
+        return servers.filter((server) => getSafeProperty(server, (obj) => obj.serviceChangeAvailable))
           .map((server) => {
             return {
               name: `${server.name} (${server.serviceId})`,
@@ -373,6 +396,36 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
             } as CustomChangeService;
           });
       })
+    );
+  }
+
+  /**
+   * Subscribe to server backup
+   */
+   private _subscribeToServerBackupServices(): void {
+    this.serverBackup$ = this._apiService.getServerBackupServers().pipe(
+      switchMap((serverBackupsCollection) => {
+        return this.serversList$.pipe(
+          map((serversCollection) => {
+            let serverBackupGroup: CustomChangeService[] = [];
+            let serverBackups = getSafeProperty(serverBackupsCollection, (obj) => obj.collection) || [];
+            let servers = getSafeProperty(serversCollection, (obj) => obj) || [];
+
+            serverBackups.forEach((serverBackup) => {
+              if (isNullOrEmpty(serverBackup.serviceId) || !serverBackup.serviceChangeAvailable) { return; }
+              servers.filter((server) => {
+                if (serverBackup.id === server.id) {
+                  serverBackupGroup.push({
+                    name: `Server Backup - for ${server.name} (${serverBackup.serviceId})`,
+                    serviceId: serverBackup.serviceId
+                  });
+                }
+              });
+            })
+            return serverBackupGroup;
+          })
+        )
+      }),
     );
   }
 
