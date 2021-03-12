@@ -83,33 +83,6 @@
       "exclude": true
     }
   },
-  "internetFilter": {
-    "service": {
-      "text": "Service",
-      "value": true,
-      "exclude": true
-    },
-    "speed": {
-      "text": "Speed",
-      "value": true
-    },
-    "plan": {
-      "text": "Plan",
-      "value": true
-    },
-    "zone": {
-      "text": "Zone",
-      "value": true
-    },
-    "serviceId": {
-      "text": "Service ID",
-      "value": true
-    },
-    "action": {
-      "value": true,
-      "exclude": true
-    }
-  },
   "aggregationTargetFilter": {
     "aggregationTarget": {
       "text": "Aggregation Target",
