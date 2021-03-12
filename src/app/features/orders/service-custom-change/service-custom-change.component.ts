@@ -94,6 +94,7 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
   public batServices$: Observable<CustomChangeService[]>;
   public dns$: Observable<CustomChangeService[]>;
   public serverBackup$: Observable<CustomChangeService[]>;
+  public vmBackup$: Observable<CustomChangeService[]>;
 
   public serversList$: Observable<McsServer[]>;
 
@@ -155,8 +156,9 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
     this._subscribeToFirewallServices();
     this._subscribeToInternetPortServices();
     this._subscribeToBatServices();
-    this._subscribeToDnsServices();
     this._subscribeToServerBackupServices();
+    this._subscribeToVMBackupServices();
+    this._subscribeToDnsServices();
     this._subscribeToSmacSharedFormConfig();
   }
 
@@ -402,7 +404,7 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
   /**
    * Subscribe to server backup
    */
-   private _subscribeToServerBackupServices(): void {
+  private _subscribeToServerBackupServices(): void {
     this.serverBackup$ = this._apiService.getServerBackupServers().pipe(
       switchMap((serverBackupsCollection) => {
         return this.serversList$.pipe(
@@ -423,6 +425,36 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
               });
             })
             return serverBackupGroup;
+          })
+        )
+      }),
+    );
+  }
+
+  /**
+   * Subscribe to vm backup
+   */
+  private _subscribeToVMBackupServices(): void {
+    this.vmBackup$ = this._apiService.getServerBackupVms().pipe(
+      switchMap((vmBackupsCollection) => {
+        return this.serversList$.pipe(
+          map((serversCollection) => {
+            let vmBackupGroup: CustomChangeService[] = [];
+            let vmBackups = getSafeProperty(vmBackupsCollection, (obj) => obj.collection) || [];
+            let servers = getSafeProperty(serversCollection, (obj) => obj) || [];
+
+            vmBackups.forEach((vmBackup) => {
+              if (isNullOrEmpty(vmBackup.serviceId) || !vmBackup.serviceChangeAvailable) { return; }
+              servers.filter((server) => {
+                if (vmBackup.id === server.id) {
+                  vmBackupGroup.push({
+                    name: `VM Backup - for ${server.name} (${vmBackup.serviceId})`,
+                    serviceId: vmBackup.serviceId
+                  });
+                }
+              });
+            })
+            return vmBackupGroup;
           })
         )
       }),

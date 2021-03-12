@@ -103,6 +103,10 @@
                 </ng-container>
 
                 <ng-container *ngTemplateOutlet="servicesTemplate;
+                  context: { $implicit: (vmBackup$ | async), serviceTitle: 'VM Backup'}">
+                </ng-container>
+
+                <ng-container *ngTemplateOutlet="servicesTemplate;
                   context: { $implicit: (dns$ | async), serviceTitle: 'DNS'}">
                 </ng-container>
               </mcs-select>
