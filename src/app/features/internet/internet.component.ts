@@ -24,7 +24,6 @@ import {
 } from '@app/models';
 import {
   isNullOrEmpty,
-  CommonDefinition,
   getSafeProperty,
   createObject
 } from '@app/utilities';

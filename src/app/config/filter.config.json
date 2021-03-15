@@ -331,26 +331,6 @@
       "exclude": true
     }
   },
-  "azureManagedServiceFilter": {
-    "friendlyName": {
-      "text": "Name",
-      "value": true,
-      "exclude": true
-    },
-    "serviceId": {
-      "text": "Service ID",
-      "value": true
-    },
-    "parentSubscriptionServiceId": {
-      "text": "Parent",
-      "value": true
-    },
-    "action": {
-      "text": "",
-      "value": true,
-      "exclude": true
-    }
-  },
   "azureTicketsWidgetFilter": {
     "summary": {
       "text": "Summary",
