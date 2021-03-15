@@ -6,8 +6,8 @@
           <div><strong>{{ 'serverServices.antivirus.title' | translate }}</strong></div>
           <mcs-context-menu-link
             mcsAlign="end"
-            [serviceId]="server.serviceId"
-            [serviceChangeAvailable]="server.serviceChangeAvailable"
+            [serviceId]="antivirus.serviceId"
+            [serviceChangeAvailable]="antivirus.serviceChangeAvailable"
             [hasMenuButton]="true"
             [eventCategory]="'server'"
             [eventLabel]="'antivirus-server-services'">

@@ -6,8 +6,8 @@
           <div><strong>{{ 'serverServices.hids.title' | translate }}</strong></div>
           <mcs-context-menu-link
             mcsAlign="end"
-            [serviceId]="server.serviceId"
-            [serviceChangeAvailable]="server.serviceChangeAvailable"
+            [serviceId]="hids.serviceId"
+            [serviceChangeAvailable]="hids.serviceChangeAvailable"
             [hasMenuButton]="true"
             [eventCategory]="'server'"
             [eventLabel]="'hids-server-services'">

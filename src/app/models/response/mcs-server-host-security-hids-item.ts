@@ -27,5 +27,11 @@ export class McsServerHostSecurityHidsItem {
 
   @JsonProperty()
   public statusMessage: string = undefined;
+
+  @JsonProperty()
+  public serviceId: string = undefined;
+
+  @JsonProperty()
+  public serviceChangeAvailable: boolean = undefined;
 }
 

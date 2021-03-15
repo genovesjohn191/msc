@@ -107,6 +107,14 @@
                 </ng-container>
 
                 <ng-container *ngTemplateOutlet="servicesTemplate;
+                  context: { $implicit: (antiVirus$ | async), serviceTitle: 'Anti-Virus'}">
+                </ng-container>
+
+                <ng-container *ngTemplateOutlet="servicesTemplate;
+                  context: { $implicit: (hids$ | async), serviceTitle: 'HIDS'}">
+                </ng-container>
+
+                <ng-container *ngTemplateOutlet="servicesTemplate;
                   context: { $implicit: (dns$ | async), serviceTitle: 'DNS'}">
                 </ng-container>
               </mcs-select>

@@ -95,6 +95,8 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
   public dns$: Observable<CustomChangeService[]>;
   public serverBackup$: Observable<CustomChangeService[]>;
   public vmBackup$: Observable<CustomChangeService[]>;
+  public antiVirus$: Observable<CustomChangeService[]>;
+  public hids$: Observable<CustomChangeService[]>;
 
   public serversList$: Observable<McsServer[]>;
 
@@ -158,6 +160,8 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
     this._subscribeToBatServices();
     this._subscribeToServerBackupServices();
     this._subscribeToVMBackupServices();
+    this._subscribeToAntiVirusServices();
+    this._subscribeToHidsServices();
     this._subscribeToDnsServices();
     this._subscribeToSmacSharedFormConfig();
   }
@@ -414,14 +418,12 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
             let servers = getSafeProperty(serversCollection, (obj) => obj) || [];
 
             serverBackups.forEach((serverBackup) => {
-              if (isNullOrEmpty(serverBackup.serviceId) || !serverBackup.serviceChangeAvailable) { return; }
-              servers.filter((server) => {
-                if (serverBackup.id === server.id) {
-                  serverBackupGroup.push({
-                    name: `Server Backup - for ${server.name} (${serverBackup.serviceId})`,
-                    serviceId: serverBackup.serviceId
-                  });
-                }
+              let serverBackupInvalidForCustomChange = isNullOrEmpty(serverBackup.serviceId) || !serverBackup.serviceChangeAvailable;
+              if (serverBackupInvalidForCustomChange) { return; }
+              let serverName = this._getServerName(serverBackup.id, servers);
+              serverBackupGroup.push({
+                name: `Server Backup - ${serverName} (${serverBackup.serviceId})`,
+                serviceId: serverBackup.serviceId
               });
             })
             return serverBackupGroup;
@@ -444,14 +446,12 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
             let servers = getSafeProperty(serversCollection, (obj) => obj) || [];
 
             vmBackups.forEach((vmBackup) => {
-              if (isNullOrEmpty(vmBackup.serviceId) || !vmBackup.serviceChangeAvailable) { return; }
-              servers.filter((server) => {
-                if (vmBackup.id === server.id) {
-                  vmBackupGroup.push({
-                    name: `VM Backup - for ${server.name} (${vmBackup.serviceId})`,
-                    serviceId: vmBackup.serviceId
-                  });
-                }
+              let vmBackupInvalidForCustomChange = isNullOrEmpty(vmBackup.serviceId) || !vmBackup.serviceChangeAvailable;
+              if (vmBackupInvalidForCustomChange) { return; }
+              let serverName = this._getServerName(vmBackup.id, servers);
+              vmBackupGroup.push({
+                name: `VM Backup - ${serverName} (${vmBackup.serviceId})`,
+                serviceId: vmBackup.serviceId
               });
             })
             return vmBackupGroup;
@@ -459,6 +459,68 @@ export class ServiceCustomChangeComponent extends McsOrderWizardBase implements 
         )
       }),
     );
+  }
+
+  private _subscribeToAntiVirusServices(): void {
+    this.antiVirus$ = this._apiService.getServerHostSecurityAntiVirus().pipe(
+      switchMap((antiVirusCollection) => {
+        return this.serversList$.pipe(
+          map((serversCollection) => {
+            let antiVirusGroup: CustomChangeService[] = [];
+            let antiVirus = getSafeProperty(antiVirusCollection, (obj) => obj.collection) || [];
+            let servers = getSafeProperty(serversCollection, (obj) => obj) || [];
+
+            antiVirus.forEach((av) => {
+              let antiVirusInvalidForCustomChange = isNullOrEmpty(av?.antiVirus?.serviceId) || !av?.antiVirus?.serviceChangeAvailable;
+              if (antiVirusInvalidForCustomChange) { return; }
+              let serverName = this._getServerName(av.serverId, servers);
+              antiVirusGroup.push({
+                name: `${av.antiVirus.billingDescription} - ${serverName} (${av.antiVirus.serviceId})`,
+                serviceId: av.antiVirus.serviceId
+              });
+            })
+            return antiVirusGroup;
+          })
+        )
+      }),
+    );
+  }
+
+  private _subscribeToHidsServices(): void {
+    this.hids$ = this._apiService.getServerHostSecurityHids().pipe(
+      switchMap((hidsCollection) => {
+        return this.serversList$.pipe(
+          map((serversCollection) => {
+            let hidsGroup: CustomChangeService[] = [];
+            let hids = getSafeProperty(hidsCollection, (obj) => obj.collection) || [];
+            let servers = getSafeProperty(serversCollection, (obj) => obj) || [];
+
+            hids.forEach((hidsDetails) => {
+              let hidsInvalidForCustomChange = isNullOrEmpty(hidsDetails?.hids?.serviceId) || !hidsDetails?.hids?.serviceChangeAvailable;
+              if (hidsInvalidForCustomChange) { return; }
+              let serverName = this._getServerName(hidsDetails.serverId, servers);
+              hidsGroup.push({
+                name: `${hidsDetails.hids.billingDescription} - ${serverName} (${hidsDetails.hids.serviceId})`,
+                serviceId: hidsDetails.hids.serviceId
+              });
+            })
+            return hidsGroup;
+          })
+        )
+      }),
+    );
+  }
+
+  private _getServerName(serviceServerId: string, servers: McsServer[]): string {
+    let serverName = 'No server linked';
+    servers.map((server) => {
+      let serviceHasLinkedServer = serviceServerId === server.id;
+      if (serviceHasLinkedServer) {
+        serverName = `for ${server.name}`;
+      };
+    });
+
+    return serverName;
   }
 
   /**
