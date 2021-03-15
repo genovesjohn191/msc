@@ -538,23 +538,22 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
       switchMap((serverBackupsCollection) => {
         return this.serversList$.pipe(
           map((serversCollection) => {
-            let vmBackupGroup: TicketService[] = [];
+            let serverBackupGroup: TicketService[] = [];
             let serverBackups = getSafeProperty(serverBackupsCollection, (obj) => obj.collection) || [];
             let servers = getSafeProperty(serversCollection, (obj) => obj) || [];
 
             serverBackups.forEach((serverBackup) => {
-              if (isNullOrEmpty(serverBackup?.serviceId)) { return; }
-              servers.filter((server) => {
-                if (serverBackup.id === server.id) {
-                  vmBackupGroup.push(
-                    new TicketService(`Server Backup - for ${server.name} (${serverBackup.serviceId})`,
-                      serverBackup.serviceId)
-                  );
-                }
-              });
+              let serverBackupInvalidToCreateTicket = isNullOrEmpty(serverBackup.serviceId);
+              if (serverBackupInvalidToCreateTicket) { return; }
+              let serverName = this._getServerName(serverBackup.id, servers);
+              serverBackupGroup.push(
+                new TicketService(`Server Backup - ${serverName} (${serverBackup.serviceId})`,
+                  serverBackup.serviceId)
+              );
+            })
+            return serverBackupGroup;
           })
-          return vmBackupGroup;
-        }))
+        )
       }),
     );
   }
@@ -572,18 +571,17 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
             let servers = getSafeProperty(serversCollection, (obj) => obj) || [];
 
             vmBackups.forEach((vmBackup) => {
-              if (isNullOrEmpty(vmBackup?.serviceId)) { return; }
-              servers.filter((server) => {
-                if (vmBackup.id === server.id) {
-                  vmBackupGroup.push(
-                    new TicketService(`VM Backup - for ${server.name} (${vmBackup.serviceId})`,
-                      vmBackup.serviceId)
-                  );
-                }
-              });
+              let vmBackupInvalidToCreateTicket = isNullOrEmpty(vmBackup.serviceId);
+              if (vmBackupInvalidToCreateTicket) { return; }
+              let serverName = this._getServerName(vmBackup.id, servers);
+              vmBackupGroup.push(
+                new TicketService(`VM Backup - ${serverName} (${vmBackup.serviceId})`,
+                  vmBackup.serviceId)
+              );
+            })
+            return vmBackupGroup;
           })
-          return vmBackupGroup;
-        }))
+        )
       }),
     );
   }
@@ -601,18 +599,17 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
             let servers = getSafeProperty(serversCollection, (obj) => obj) || [];
 
             antiVirus.forEach((av) => {
-              if (isNullOrEmpty(av?.antiVirus?.serviceId)) { return; }
-              servers.filter((server) => {
-                if (av.serverId === server.id) {
-                  antiVirusGroup.push(
-                    new TicketService(`${av.antiVirus.billingDescription} - for ${server.name} (${av.antiVirus.serviceId})`,
-                      av.antiVirus.serviceId)
-                  );
-                }
-              });
+              let antiVirusInvalidToCreateTicket = isNullOrEmpty(av?.antiVirus?.serviceId);
+              if (antiVirusInvalidToCreateTicket) { return; }
+              let serverName = this._getServerName(av.serverId, servers);
+              antiVirusGroup.push(
+                new TicketService(`${av.antiVirus.billingDescription} - ${serverName} (${av.antiVirus.serviceId})`,
+                  av.antiVirus.serviceId)
+              );
+            })
+            return antiVirusGroup;
           })
-          return antiVirusGroup;
-        }))
+        )
       }),
     );
   }
@@ -630,20 +627,31 @@ export class TicketCreateComponent implements OnInit, OnDestroy, IMcsNavigateAwa
             let servers = getSafeProperty(serversCollection, (obj) => obj) || [];
 
             hids.forEach((hidsDetails) => {
-              if (isNullOrEmpty(hidsDetails?.hids?.serviceId)) { return; }
-              servers.filter((server) => {
-                if (hidsDetails.serverId === server.id) {
-                  hidsGroup.push(
-                    new TicketService(`${hidsDetails.hids.billingDescription} - for ${server.name} (${hidsDetails.hids.serviceId})`,
-                      hidsDetails.hids.serviceId)
-                  );
-                }
-              });
+              let hidsInvalidToCreateTicket = isNullOrEmpty(hidsDetails?.hids?.serviceId);
+              if (hidsInvalidToCreateTicket) { return; }
+              let serverName = this._getServerName(hidsDetails.serverId, servers);
+              hidsGroup.push(
+                new TicketService(`${hidsDetails.hids.billingDescription} - ${serverName} (${hidsDetails.hids.serviceId})`,
+                  hidsDetails.hids.serviceId)
+              );
+            })
+            return hidsGroup;
           })
-          return hidsGroup;
-        }))
+        )
       }),
     );
+  }
+
+  private _getServerName(serviceServerId: string, servers: McsServer[]): string {
+    let serverName = 'No server linked';
+    servers.map((server) => {
+      let serviceHasLinkedServer = serviceServerId === server.id;
+      if (serviceHasLinkedServer) {
+        serverName = `for ${server.name}`;
+      };
+    });
+
+    return serverName;
   }
 
   /**
