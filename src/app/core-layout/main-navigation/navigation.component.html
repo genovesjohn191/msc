@@ -1,4 +1,4 @@
-<nav>
+<nav *ngIf="!isAnonymous">
   <div class="nav-wrapper">
     <ul>
       <!-- Temp Dashboard -->
@@ -338,6 +338,35 @@
           mcsEventCategory="navigation"
           mcsEventLabel="main-nav">
           {{ 'navigation.signOut' | translate }}
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<nav *ngIf="isAnonymous">
+  <div class="nav-wrapper">
+    <ul>
+      <!-- Products and Solutions -->
+      <li>
+        <a [mcsRouterLink]="routeKeyEnum.Catalog"
+          mcsId="catalog-link"
+          mcsEventTracker="navigate-to-catalog"
+          mcsEventCategory="navigation"
+          mcsEventLabel="main-nav"
+          mcsRouterLinkActive="active">
+          {{ 'navigation.productsAndSolutions' | translate }}
+        </a>
+      </li>
+
+      <!-- Login -->
+      <li>
+        <a mcsCursor="pointer" (click)="login($event)"
+          mcsId="signout-link"
+          mcsEventTracker="sign-out"
+          mcsEventCategory="navigation"
+          mcsEventLabel="main-nav">
+          {{ 'navigation.signIn' | translate }}
         </a>
       </li>
     </ul>

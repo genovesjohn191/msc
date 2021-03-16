@@ -78,11 +78,6 @@ export const defaultPageRoutes: Routes = [
         loadChildren: () => import('../../features/tools/tools.module').then(m => m.ToolsModule)
       },
       {
-        path: 'catalog',
-        data: { routeId: RouteKey.Catalog },
-        loadChildren: () => import('../../features/catalog/catalog.module').then(m => m.CatalogModule)
-      },
-      {
         path: 'orders',
         data: { routeId: RouteKey.Orders },
         loadChildren: () => import('../../features/orders/orders.module').then(m => m.OrdersModule)

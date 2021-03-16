@@ -12,6 +12,11 @@ export const appRoutes: Routes = [
     data: { routeId: RouteKey.Console }
   },
   {
+    path: 'catalog',
+    loadChildren: () => import('./page-layout/catalog-page/catalog-page.module').then(m => m.CatalogPageModule),
+    data: { routeId: RouteKey.Catalog }
+  },
+  {
     path: 'maintenance',
     loadChildren: () => import('./page-layout/maintenance-page/maintenance-page.module').then(m => m.MaintenancePageModule),
     data: { routeId: RouteKey.Maintenance }

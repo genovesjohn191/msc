@@ -1,0 +1,24 @@
+@import "../../../styles/shared/base";
+
+:host {
+  height: 100%;
+  @include display-flex(column);
+}
+
+.header,
+.main-navigation,
+.sub-navigation,
+.footer {
+  position: relative;
+  @include flex(0 0 auto);
+}
+
+.content {
+  position: relative;
+  @include flex(1 1 auto);
+  @include display-flex(column);
+
+  @include print() {
+    margin: calc(#{$shared-header-panel-height} + #{$space-medium}) $space-xlarge 0 $space-xlarge;
+  }
+}

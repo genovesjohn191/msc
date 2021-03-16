@@ -1,4 +1,4 @@
-@import "../../../styles/shared/base";
+@import "../../../../styles/shared/base";
 
 .catalog-wrapper {
   display: block;
@@ -12,17 +12,17 @@
 }
 
 
-@import "../../../styles/shared/base";
-@import "../../../styles/core/fonts";
-@import "../../../styles/core/elements/mcs-anchor";
-@import "../../../styles/core/elements/mcs-bold";
-@import "../../../styles/core/elements/mcs-button";
-@import "../../../styles/core/elements/mcs-form-field";
-@import "../../../styles/core/elements/mcs-heading";
-@import "../../../styles/core/elements/mcs-paragraph";
-@import "../../../styles/core/elements/mcs-small";
-@import "../../../styles/core/elements/mcs-strong";
-@import "../../../styles/core/elements/mcs-table";
+@import "../../../../styles/shared/base";
+@import "../../../../styles/core/fonts";
+@import "../../../../styles/core/elements/mcs-anchor";
+@import "../../../../styles/core/elements/mcs-bold";
+@import "../../../../styles/core/elements/mcs-button";
+@import "../../../../styles/core/elements/mcs-form-field";
+@import "../../../../styles/core/elements/mcs-heading";
+@import "../../../../styles/core/elements/mcs-paragraph";
+@import "../../../../styles/core/elements/mcs-small";
+@import "../../../../styles/core/elements/mcs-strong";
+@import "../../../../styles/core/elements/mcs-table";
 
 $product-max-width: 100%;
 $product-catalog-description-max-height: 30px;
