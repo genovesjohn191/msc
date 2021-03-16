@@ -27,6 +27,7 @@ import {
   IMcsApiJobsService,
   IMcsApiLicensesService,
   IMcsApiMediaService,
+  IMcsApiMetadataService,
   IMcsApiNetworkDnsService,
   IMcsApiOrdersService,
   IMcsApiPlatformService,
@@ -51,6 +52,7 @@ import {
   McsApiJobsFactory,
   McsApiLicensesFactory,
   McsApiMediaFactory,
+  McsApiMetadataFactory,
   McsApiNetworkDnsFactory,
   McsApiOrdersFactory,
   McsApiPlatformFactory,
@@ -98,6 +100,7 @@ import {
   McsInternetPort,
   McsJob,
   McsJobConnection,
+  McsKeyValue,
   McsLicense,
   McsNetworkDnsBase,
   McsNetworkDnsSummary,
@@ -252,6 +255,7 @@ export class McsApiService {
   private readonly _ticketsApi: IMcsApiTicketsService;
   private readonly _ordersApi: IMcsApiOrdersService;
   private readonly _mediaApi: IMcsApiMediaService;
+  private readonly _metadataApi: IMcsApiMetadataService;
   private readonly _firewallsApi: IMcsApiFirewallsService;
   private readonly _networkDnsApi: IMcsApiNetworkDnsService;
   private readonly _consoleApi: IMcsApiConsoleService;
@@ -301,6 +305,7 @@ export class McsApiService {
     this._ticketsApi = apiClientFactory.getService(new McsApiTicketsFactory());
     this._ordersApi = apiClientFactory.getService(new McsApiOrdersFactory());
     this._mediaApi = apiClientFactory.getService(new McsApiMediaFactory());
+    this._metadataApi = apiClientFactory.getService(new McsApiMetadataFactory());
     this._firewallsApi = apiClientFactory.getService(new McsApiFirewallsFactory());
     this._networkDnsApi = apiClientFactory.getService(new McsApiNetworkDnsFactory());
     this._consoleApi = apiClientFactory.getService(new McsApiConsoleFactory());
@@ -1352,6 +1357,16 @@ export class McsApiService {
       map((response) => this._mapToCollection(response))
     );
   }
+
+  public getMetadataLinks(): Observable<McsApiCollection<McsKeyValue>> {
+    return this._metadataApi.getLinks().pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getMetadataLinks'))
+      ),
+      map((response) => this._mapToCollection(response))
+    );
+  }
+
 
   public getFirewalls(query?: McsQueryParam): Observable<McsApiCollection<McsFirewall>> {
     return this._mapToEntityRecords(this._firewallsRepository, query).pipe(

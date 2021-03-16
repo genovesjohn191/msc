@@ -31,6 +31,7 @@ import { McsApiAzureServicesService } from './services/mcs-api-azure-services.se
 import { McsApiReportsService } from './services/mcs-api-reports.service';
 import { McsApiWorkflowsService } from './services/mcs-api-workflows.services';
 import { McsApiObjectsService } from './services/mcs-api-objects.service';
+import { McsApiMetadataService } from './services/mcs-api-metadata.service';
 
 export const apiClientProviders: Provider[] = [
   McsApiClientHttpService,
@@ -42,6 +43,7 @@ export const apiClientProviders: Provider[] = [
   McsApiJobsService,
   McsApiPlatformService,
   McsApiMediaService,
+  McsApiMetadataService,
   McsApiOrdersService,
   McsApiCatalogService,
   McsApiColocationsService,

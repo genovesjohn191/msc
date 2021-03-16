@@ -3,7 +3,8 @@ import {
   McsCompany,
   McsIdentity,
   AccountStatus,
-  McsPlatform
+  McsPlatform,
+  McsKeyValue
 } from '@app/models';
 import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import { McsEvent } from '@app/events';
@@ -29,6 +30,12 @@ export class McsAuthenticationIdentity {
    */
   private _platformSettings: McsPlatform;
   public get platformSettings(): McsPlatform { return this._platformSettings; }
+
+  /**
+   * Available Links based on target account
+   */
+ private _metadataLinks: McsKeyValue[] = [];
+ public get metadataLinks(): McsKeyValue[] { return this._metadataLinks; }
 
   /**
    * Returns the active account current status [default, impersonator]
@@ -76,5 +83,9 @@ export class McsAuthenticationIdentity {
    */
   public setActivePlatform(platform: McsPlatform): void {
     this._platformSettings = platform;
+  }
+
+  public setMetadataLinks(links: McsKeyValue[]): void {
+    this._metadataLinks = links;
   }
 }

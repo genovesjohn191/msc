@@ -94,14 +94,17 @@ export class McsAuthenticationService {
   public IsAuthenticated(): Observable<boolean> {
     let identityObservable = this._apiService.getIdentity();
     let platformObservable = this._apiService.getPlatform();
+    let metadataLinks = this._apiService.getMetadataLinks();
 
-    return forkJoin([identityObservable, platformObservable]).pipe(
+    return forkJoin([identityObservable, platformObservable, metadataLinks]).pipe(
       map(results => {
         let identity = results[0];
         let platform = results[1];
+        let links = results[2];
         if (isNullOrEmpty(identity)) { return false; }
         this._setUserIdentity(identity);
         this._authenticationIdentity.setActivePlatform(platform);
+        this._authenticationIdentity.setMetadataLinks(links.collection);
         return true;
       })
     );
