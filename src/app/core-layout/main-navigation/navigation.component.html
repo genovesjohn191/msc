@@ -32,6 +32,16 @@
                 Workflows
               </a>
             </li>
+            <li *ngIf="workflowReportingLink">
+              <a [href]="workflowReportingLink"
+                target="_blank"
+                mcsId="launch-pad-reporting-link"
+                mcsEventTracker="navigate-to-launch-pad-workflows-reporting"
+                mcsEventCategory="navigation"
+                mcsEventLabel="main-nav">
+                Reporting
+              </a>
+            </li>
           </ul>
         </li>
       </ng-container>

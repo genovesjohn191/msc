@@ -179,6 +179,10 @@ export class NavigationComponent implements OnInit, OnDestroy {
     return this._authenticationIdentity.platformSettings.hasPublicCloud;
   }
 
+  public get workflowReportingLink(): string {
+    return this._authenticationIdentity.metadataLinks.find((link) => link.key === 'workflow_report')?.value;
+  }
+
   public getCategoryLabel(routeCategory: RouteCategory): string {
     return routeCategoryText[routeCategory];
   }
