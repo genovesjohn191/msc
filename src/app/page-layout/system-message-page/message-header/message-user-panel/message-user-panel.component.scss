@@ -1,7 +1,5 @@
 @import '../../../../../styles/shared/base';
 
-// System Message Header User-Panel
-$system-message-user-panel-item-padding: 0 $space-xlarge;
 // System Message Popover
 $system-message-user-panel-max-height: 80vh;
 $system-message-user-panel-desktop-min-width: 250px;
@@ -20,10 +18,17 @@ $system-message-user-panel-desktop-min-width: 250px;
 
   .system-message-user-panel-item {
     padding-right: 0;
-    padding: $system-message-user-panel-item-padding;
 
     .caret-down {
       padding-left: $space-xsmall;
+    }
+
+    .user-info {
+      display: block;
+      padding-right: $space-large;
+      @include breakpoint(small) {
+        display: none;
+      }
     }
   }
 }

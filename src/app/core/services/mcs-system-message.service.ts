@@ -19,6 +19,7 @@ import { Injectable } from '@angular/core';
 import { McsEvent } from '@app/events';
 import {
   McsFeatureFlag,
+  McsPermission,
   McsSystemMessage,
   RouteKey
 } from '@app/models';
@@ -123,8 +124,14 @@ export class McsSystemMessageService implements McsDisposable {
         CommonDefinition.COOKIE_ACTIVE_MESSAGE
       );
 
-      let comparisonOutput = compareJsons(message, activeSystemMessageCookie);
-      if (comparisonOutput === 0) { return; }
+      let sameMessage = compareJsons(message, activeSystemMessageCookie) === 0;
+      let hasSystemMessagePermission = this._accessControlService.hasPermission(
+        [McsPermission.SystemMessageEdit, McsPermission.SystemMessageView]);
+      let userAllowedToViewPortal = sameMessage && hasSystemMessagePermission;
+
+      if (userAllowedToViewPortal) { return; }
+
+      this._activeMessageChange.next(message);
     });
   }
 }

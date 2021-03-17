@@ -11,7 +11,6 @@
   </div>
 </ng-template>
 
-
 <div class="system-message-user-panel-wrapper">
   <div class="system-message-user-panel-item">
     <mcs-item>
@@ -22,12 +21,12 @@
         mcsEventCategory="system-message-navigation"
         mcsEventLabel="system-message-user-panel"
         mcsStopPropagation>
-        <span hidden-small>{{ (activeUser$ | async)?.fullName }}</span>
-      </a>
 
+        <span hidden-small>{{ currentUser.firstName }} {{ currentUser.lastName }}</span>
+        <small class="user-info" read-only>{{ currentUser.companyName }}</small>
+      </a>
       <mcs-icon class="caret-down"
         [key]="caretDownIconKey" color="light" mcsCursor="pointer"
-
         mcsPopover #systemMessagePopover="mcsPopover"
         padding="none" placement="bottom" orientation="left"
         theme="dark" priority="max"
@@ -35,3 +34,4 @@
     </mcs-item>
   </div>
 </div>
+
