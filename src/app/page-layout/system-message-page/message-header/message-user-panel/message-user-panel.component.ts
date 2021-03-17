@@ -5,7 +5,7 @@ import {
 } from '@angular/core';
 import { Observable } from 'rxjs';
 import { McsIdentity } from '@app/models';
-import { McsAuthenticationService } from '@app/core';
+import { McsAuthenticationIdentity, McsAuthenticationService } from '@app/core';
 import { EventBusPropertyListenOn } from '@peerlancers/ngx-event-bus';
 import { McsEvent } from '@app/events';
 import { CommonDefinition } from '@app/utilities';
@@ -22,13 +22,17 @@ export class SystemMessageUserPanelComponent {
   @ViewChild('systemMessagePopover')
   public systemMessagePopover: any;
 
-  @EventBusPropertyListenOn(McsEvent.userChange)
-  public activeUser$: Observable<McsIdentity>;
-
-  public constructor(private _authenticationService: McsAuthenticationService) { }
+  public constructor(
+    private _authenticationService: McsAuthenticationService,
+    private _authenticationIdentity: McsAuthenticationIdentity
+  ) { }
 
   public get caretDownIconKey(): string {
     return CommonDefinition.ASSETS_SVG_CHEVRON_DOWN;
+  }
+
+  public get currentUser(): McsIdentity {
+    return this._authenticationIdentity.user;
   }
 
   /**
