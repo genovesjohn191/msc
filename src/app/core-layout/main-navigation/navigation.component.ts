@@ -63,6 +63,10 @@ export class NavigationComponent implements OnInit, OnDestroy {
     return this._authenticationIdentity.isImpersonating;
   }
 
+  public get isAnonymous(): boolean {
+    return this._authenticationIdentity.user?.isAnonymous;
+  }
+
   public get showLaunchPadMenu(): boolean {
     return this._showLaunchPadMenu;
   }
@@ -204,11 +208,17 @@ export class NavigationComponent implements OnInit, OnDestroy {
     this._authenticationService.logOut();
   }
 
+  public login(event: any): void {
+    event.preventDefault();
+    this._authenticationService.logIn();
+  }
+
   private _registerEvents(): void {
     this._routeHandler = this._eventDispatcher.addEventListener(
       McsEvent.routeChange, this._onRouteChanged.bind(this));
 
     this._eventDispatcher.dispatch(McsEvent.routeChange);
+
   }
 
   private _onRouteChanged(routeInfo: McsRouteInfo): void {

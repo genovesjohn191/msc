@@ -1,4 +1,5 @@
 import { JsonProperty } from '@app/utilities';
+
 import { McsKeyValuePair } from '../common/mcs-key-value-pair';
 import { McsDateSerialization } from '../serialization/mcs-date-serialization';
 
@@ -35,6 +36,9 @@ export class McsIdentity {
     deserializer: McsDateSerialization
   })
   public expiry: Date = undefined;
+
+  @JsonProperty()
+  public isAnonymous: boolean = undefined;
 
   /**
    * Returns the full name of the user

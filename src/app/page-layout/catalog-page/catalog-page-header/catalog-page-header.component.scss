@@ -1,0 +1,40 @@
+@import '../../../../styles/shared/base';
+
+// Header definitions
+$catalog-page-header-bg-color: $color-black;
+$catalog-page-header-color: $color-white;
+$catalog-page-header-large-padding: $space-large;
+$catalog-page-header-small-padding: $space-medium;
+
+.catalog-page-header-wrapper {
+  @include display-flex(row);
+  @include align-items(center);
+  z-index: $zindex-header;
+  height: $shared-header-panel-height;
+  padding-left: $catalog-page-header-large-padding;
+  padding-right: $catalog-page-header-large-padding;
+  background-color: $catalog-page-header-bg-color;
+  color: $catalog-page-header-color;
+
+  @include breakpoint(small) {
+    padding-left: $catalog-page-header-small-padding;
+    padding-right: $catalog-page-header-small-padding;
+  }
+
+  .navigation-icon {
+    @include print() {
+      display: none;
+    }
+
+    @include breakpoint(medium) {
+      @include display-flex(row);
+    }
+
+    cursor: pointer;
+    align-items: center;
+
+    mcs-icon {
+      padding-right: $space-large;
+    }
+  }
+}
