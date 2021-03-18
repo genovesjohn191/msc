@@ -16,6 +16,8 @@ import {
 import { McsEvent } from '@app/events';
 import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 
+const HIDE_ERROR_NOTIFICATION_DURATION = 10000;
+
 interface ErrorDetails {
   id: string;
   errorMessage: string;
@@ -82,6 +84,7 @@ export class ErrorNotificationComponent implements OnDestroy {
       id: Guid.newGuid().toString(),
       errorMessage: message
     });
+    setTimeout(() => this.errorList.shift(), HIDE_ERROR_NOTIFICATION_DURATION);
     this._changeDetectorRef.markForCheck();
   }
 }

@@ -12,6 +12,7 @@ $error-notification-min-height: 50px;
 $error-notification-max-height: 200px;
 $error-notification-bg-color: $color-white;
 $error-notification-color: $color-black;
+$error-notification-hide-duration: 10s;
 
 .error-notification-wrapper {
   @include display-flex(column);
@@ -44,10 +45,24 @@ $error-notification-color: $color-black;
     min-height: $error-notification-min-height;
     max-height: $error-notification-max-height;
     margin-bottom: $space-medium;
+    @include animation(hideErrorNotificationAnimation ease-in $error-notification-hide-duration forwards);
 
     .error-template-close {
       position: absolute;
       right: 0;
+    }
+  }
+
+  @keyframes hideErrorNotificationAnimation {
+    to {
+      width: 0;
+      height: 0;
+    }
+  }
+  @-webkit-keyframes hideErrorNotificationAnimation {
+    to {
+      width: 0;
+      height: 0;
     }
   }
 }
