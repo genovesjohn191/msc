@@ -13,6 +13,7 @@ $error-notification-max-height: 200px;
 $error-notification-bg-color: $color-white;
 $error-notification-color: $color-black;
 $error-notification-hide-duration: 10s;
+$animation-start-time: 0s;
 
 .error-notification-wrapper {
   @include display-flex(column);
@@ -45,7 +46,7 @@ $error-notification-hide-duration: 10s;
     min-height: $error-notification-min-height;
     max-height: $error-notification-max-height;
     margin-bottom: $space-medium;
-    @include animation(hideErrorNotificationAnimation ease-in $error-notification-hide-duration forwards);
+    @include animation(hideErrorNotificationAnimation $animation-start-time ease-in $error-notification-hide-duration forwards);
 
     .error-template-close {
       position: absolute;
