@@ -1,43 +1,45 @@
-import { Injectable } from '@angular/core';
 import {
-  Subject,
   BehaviorSubject,
   Observable,
+  Subject,
   Subscription
 } from 'rxjs';
 import {
   takeUntil,
   tap
 } from 'rxjs/operators';
+
+import { Injectable } from '@angular/core';
+import { McsEvent } from '@app/events';
 import {
-  StompRService,
-  StompConfig,
-  StompState
-} from '@stomp/ng2-stompjs';
-import { StompHeaders } from '@stomp/stompjs';
-import {
-  unsubscribeSafely,
-  deserializeJsonToObject,
-  isNullOrEmpty,
-  McsDisposable,
-  CommonDefinition
-} from '@app/utilities';
-import {
+  McsIdentity,
   McsJob,
   McsJobConnection,
-  NetworkStatus,
-  McsIdentity,
-  McsPermission
+  McsPermission,
+  NetworkStatus
 } from '@app/models';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
-import { McsEvent } from '@app/events';
 import { McsApiService } from '@app/services';
+import {
+  deserializeJsonToObject,
+  isNullOrEmpty,
+  unsubscribeSafely,
+  CommonDefinition,
+  McsDisposable
+} from '@app/utilities';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import {
   LogClass,
   LogIgnore
 } from '@peerlancers/ngx-logger';
-import { McsSessionHandlerService } from './mcs-session-handler.service';
+import {
+  StompConfig,
+  StompRService,
+  StompState
+} from '@stomp/ng2-stompjs';
+import { StompHeaders } from '@stomp/stompjs';
+
 import { McsAccessControlService } from '../authentication/mcs-access-control.service';
+import { McsSessionHandlerService } from './mcs-session-handler.service';
 
 const DEFAULT_HEARTBEAT_IN = 0;
 const DEFAULT_HEARTBEAT_OUT = 20000;
@@ -164,7 +166,9 @@ export class McsNotificationJobService implements McsDisposable {
    */
   @LogIgnore()
   private _onStompMessage(message) {
-    if (message.body) { this._updateNotification(message.body); }
+    if (!this._sessionHandlerService.sessionActive ||
+      isNullOrEmpty(message.body)) { return; }
+    this._updateNotification(message.body);
   }
 
   /**
