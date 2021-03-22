@@ -2,28 +2,38 @@ import {
   Component,
   ChangeDetectionStrategy,
   Injector,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  ViewChild
 } from '@angular/core';
+import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import {
-  McsTableListingBase,
-  IMcsColumnManager,
-  McsNavigationService
+  McsNavigationService,
+  McsTableDataSource2,
+  McsTableEvents,
+  McsMatTableQueryParam,
+  McsMatTableContext
 } from '@app/core';
 import {
   McsBackUpAggregationTarget,
   McsQueryParam,
-  McsApiCollection,
   RouteKey,
   InviewLevel,
-  inviewLevelText
+  inviewLevelText,
+  McsFilterInfo
 } from '@app/models';
 import {
-  CommonDefinition,
+  createObject,
+  getSafeProperty,
   isNullOrEmpty
 } from '@app/utilities';
 import { McsApiService } from '@app/services';
 import { McsEvent } from '@app/events';
+import {
+  ColumnFilter,
+  Paginator,
+  Search
+} from '@app/shared';
 
 @Component({
   selector: 'mcs-aggregation-targets',
@@ -31,32 +41,57 @@ import { McsEvent } from '@app/events';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class AggregationTargetsComponent extends McsTableListingBase<McsBackUpAggregationTarget> implements IMcsColumnManager {
+export class AggregationTargetsComponent {
 
-  public constructor(
+  public readonly dataSource: McsTableDataSource2<McsBackUpAggregationTarget>;
+  public readonly dataEvents: McsTableEvents<McsBackUpAggregationTarget>;
+  public readonly defaultColumnFilters: McsFilterInfo[] = [
+    createObject(McsFilterInfo, { value: true, exclude: true, id: 'aggregationTarget' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'retentionPeriod' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'inviewLevel' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'serviceId' }),
+    createObject(McsFilterInfo, { value: true, exclude: true, id: 'action' })
+  ];
+
+  constructor(
     _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
     private _navigationService: McsNavigationService,
     private _apiService: McsApiService
   ) {
-    super(_injector, _changeDetectorRef, {
+    this.dataSource = new McsTableDataSource2(this._getBackupAggregationTargets.bind(this));
+    this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
       dataChangeEvent: McsEvent.dataChangeAggregationTargets
     });
   }
 
-  public get routeKeyEnum(): any {
-    return RouteKey;
+  @ViewChild('search')
+  public set search(value: Search) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerSearch(value);
+    }
   }
 
-  /**
-   * Returns the column settings key for the filter selector
-   */
-  public get columnSettingsKey(): string {
-    return CommonDefinition.FILTERSELECTOR_AGGREGATION_TARGETS_LISTING;
+  @ViewChild('paginator')
+  public set paginator(value: Paginator) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerPaginator(value);
+    }
+  }
+
+  @ViewChild('columnFilter')
+  public set columnFilter(value: ColumnFilter) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerColumnFilter(value);
+    }
   }
 
   public inviewLevelLabel(inview: InviewLevel): string {
     return inviewLevelText[inview];
+  }
+
+  public retryDatasource(): void {
+    this.dataSource.refreshDataRecords();
   }
 
   /**
@@ -68,12 +103,15 @@ export class AggregationTargetsComponent extends McsTableListingBase<McsBackUpAg
     this._navigationService.navigateTo(RouteKey.BackupAggregationTargetsDetails, [aggregationTarget.id]);
   }
 
-  /**
-   * Gets the entity listing based on the context
-   * @param query Query to be obtained on the listing
-   */
-  protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsBackUpAggregationTarget>> {
-    query.pageSize = 1000;
-    return this._apiService.getBackupAggregationTargets(query);
+  private _getBackupAggregationTargets(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsBackUpAggregationTarget>> {
+    let queryParam = new McsQueryParam();
+    queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
+    queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
+    queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
+
+    return this._apiService.getBackupAggregationTargets(queryParam).pipe(
+      map(response => new McsMatTableContext(response?.collection,
+        response?.totalCollectionCount))
+    );
   }
 }
