@@ -3002,6 +3002,7 @@
   },
   "columnHeader": {
     "action": "Action",
+    "aggregationTarget": "Aggregation Target",
     "attachedTo": "Attached To",
     "billingDescription": "Description",
     "catalog": "OS Edition",
@@ -3018,6 +3019,7 @@
     "firewall": "Firewall",
     "firmwareVersion": "Firmware Version",
     "installedBaseState": "Installed Base State",
+    "inviewLevel": "InView Level",
     "ipAddress": "IP Address",
     "isPrimary": "Type",
     "label": "Label",
@@ -3040,6 +3042,7 @@
     "productId": "Product ID",
     "resource": "Resource",
     "resourceGroup": "Resource Group",
+    "retentionPeriod": "Retention Period",
     "role": "Role",
     "schedule": "Schedule",
     "select": "Select",
