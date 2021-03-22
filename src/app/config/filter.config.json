@@ -307,30 +307,6 @@
       "exclude": true
     }
   },
-  "azureResourceFilter": {
-    "name": {
-      "text": "Name",
-      "value": true,
-      "exclude": true
-    },
-    "serviceId": {
-      "text": "Service ID",
-      "value": true
-    },
-    "subscriptionName": {
-      "text": "Subscription",
-      "value": true
-    },
-    "subscriptionId": {
-      "text": "Subscription ID",
-      "value": true
-    },
-    "action": {
-      "text": "",
-      "value": true,
-      "exclude": true
-    }
-  },
   "azureTicketsWidgetFilter": {
     "summary": {
       "text": "Summary",

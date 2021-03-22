@@ -23,6 +23,7 @@ import {
   CoreRoutes,
   McsMatTableContext,
   McsMatTableQueryParam,
+  McsNavigationService,
   McsTableDataSource2,
   McsTableEvents
 } from '@app/core';
@@ -35,15 +36,11 @@ import {
 } from '@app/shared';
 
 @Component({
-  selector: 'app-azure-managed-services',
+  selector: 'mcs-azure-managed-services',
   templateUrl: './azure-managed-services.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AzureManagedServicesComponent {
-
-  public get columnSettingsKey(): string {
-    return CommonDefinition.FILTERSELECTOR_AZURE_MANAGED_SERVICES_LISTING;
-  }
 
   public get cogIconKey(): string {
     return CommonDefinition.ASSETS_SVG_ELLIPSIS_HORIZONTAL;
@@ -62,6 +59,7 @@ export class AzureManagedServicesComponent {
     _injector: Injector,
     _changeDetectorRef: ChangeDetectorRef,
     private _apiService: McsApiService,
+    private _navigationService: McsNavigationService
   ) {
     this.dataSource = new McsTableDataSource2(this._getAzureServices.bind(this));
     this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
@@ -102,21 +100,25 @@ export class AzureManagedServicesComponent {
     );
   }
 
+  public retryDatasource(): void {
+    this.dataSource.refreshDataRecords();
+  }
+
   /**
    * Navigate to create a ticket
    */
-  public onRaiseTicket(service: McsAzureService): string {
+  public onRaiseTicket(service: McsAzureService): void {
     return isNullOrEmpty(service.serviceId) ?
-      CoreRoutes.getNavigationPath(RouteKey.TicketCreate) :
-      `${CoreRoutes.getNavigationPath(RouteKey.TicketCreate)}?serviceId=${service.serviceId}`;
+      this._navigationService.navigateTo(RouteKey.TicketCreate) :
+      this._navigationService.navigateTo(RouteKey.TicketCreate, [], { queryParams: { serviceId: service.serviceId}});
   }
 
   /**
    * Navigate to service request
    */
-  public azureServiceRequestLink(service: McsAzureService): string {
+  public azureServiceRequestLink(service: McsAzureService): void {
     return isNullOrEmpty(service.serviceId) ?
-      CoreRoutes.getNavigationPath(RouteKey.OrderMsRequestChange) :
-      `${CoreRoutes.getNavigationPath(RouteKey.OrderMsRequestChange)}?serviceId=${service.serviceId}`;
+      this._navigationService.navigateTo(RouteKey.OrderMsRequestChange) :
+      this._navigationService.navigateTo(RouteKey.OrderMsRequestChange, [], { queryParams: { serviceId: service.serviceId}});
   }
 }

@@ -3053,6 +3053,7 @@
     "sourceInterfaces": "Source Interfaces",
     "speed": "Speed",
     "subscription": "Subscription",
+    "subscriptionId": "Subscription ID",
     "summary": "Summary",
     "status": "Status",
     "targetComputer": "Target VM",
