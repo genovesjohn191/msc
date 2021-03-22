@@ -3,8 +3,8 @@
   <mcs-top-panel *mcsTopPanelDef>
     <mcs-top-panel-item *mcsTopPanelItemDef>
       <div class="listing-action-wrapper">
-        <div class="total-record-count">
-          <span>{{ totalRecordsCount | mcsPlural:
+        <div class="total-record-count"  *ngIf="dataSource?.totalCount$ | async as totalCount">
+          <span>{{ totalCount | mcsPlural:
                 ('azureManagedServices.dataSingular' | translate) : ('azureManagedServices.dataPlural' | translate) }}
           </span>
         </div>
@@ -85,7 +85,7 @@
               <div *mcsAccessControl="['TicketCreate']"
                 class="cog-actions-wrapper">
                 <a mcsButton="basic" color="white" labelPlacement="left"
-                  [href]="onRaiseTicket(row)"
+                  (click)="onRaiseTicket(row)"
                   mcsId="azure-managed-service-raise-ticket"
                   mcsEventTracker="azure-managed-service-raise-ticket"
                   mcsEventCategory="azure managed service"
@@ -96,7 +96,7 @@
               <div *mcsAccessControl="['OrderEdit']"
                 class="cog-actions-wrapper">
                 <a mcsButton="basic" color="white" labelPlacement="left"
-                  [href]="azureServiceRequestLink(row)"
+                  (click)="azureServiceRequestLink(row)"
                   mcsId="azure-managed-service-request"
                   mcsEventTracker="azure-managed-service-request"
                   mcsEventCategory="azure managed service"

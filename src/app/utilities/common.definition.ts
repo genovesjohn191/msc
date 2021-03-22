@@ -202,8 +202,6 @@ export class CommonDefinition {
   public static FILTERSELECTOR_LAUNCH_PAD_SEARCH_CONFIGURATION_ITEMS_LISTING = 'launchPadSearchConfigurationItemsFilter';
   public static FILTERSELECTOR_SYSTEM_MESSAGE_LISTING = 'systemMessageFilter';
   public static FILTERSELECTOR_LICENSE_LISTING = 'licenseFilter';
-  public static FILTERSELECTOR_AZURE_RESOURCES_LISTING = 'azureResourceFilter';
-  public static FILTERSELECTOR_AZURE_MANAGED_SERVICES_LISTING = 'azureManagedServiceFilter';
   public static FILTERSELECTOR_AZURE_TICKETS_WIDGET_LISTING = 'azureTicketsWidgetFilter';
   public static FILTERSELECTOR_VM_RIGHTSIZING_LISTING = 'vmRightsizingWidgetFilter';
   /** RegEx Patterns */
