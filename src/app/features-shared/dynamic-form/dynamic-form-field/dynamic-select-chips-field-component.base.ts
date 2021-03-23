@@ -1,7 +1,5 @@
 import {
   Component,
-  ViewChild,
-  ElementRef,
   OnDestroy,
   OnInit,
   ChangeDetectorRef
@@ -17,20 +15,34 @@ import {
 import {
   MatAutocompleteSelectedEvent
 } from '@angular/material/autocomplete';
-import { ControlValueAccessor, FormControl } from '@angular/forms';
+import {
+  ControlValueAccessor,
+  FormControl
+} from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import {
   Observable,
   Subject,
-  Subscription
+  Subscription,
+  throwError
 } from 'rxjs';
+import {
+  catchError,
+  map,
+  startWith,
+  switchMap,
+  takeUntil
+} from 'rxjs/operators';
 
-import { catchError, map, startWith, takeUntil } from 'rxjs/operators';
-import { isNullOrEmpty, unsubscribeSafely } from '@app/utilities';
-
+import {
+  isNullOrEmpty,
+  unsubscribeSafely
+} from '@app/utilities';
 import { DynamicFieldComponentBase } from './dynamic-field-component.base';
-import { DynamicFormFieldDataChangeEventParam, FlatOption } from '../dynamic-form-field-config.interface';
-import { throwError } from 'rxjs';
+import {
+  DynamicFormFieldDataChangeEventParam,
+  FlatOption
+} from '../dynamic-form-field-config.interface';
 import { DynamicFormFieldComponent } from '../dynamic-form-field-component.interface';
 
 export interface DynamicSelectChipsValue {
@@ -92,6 +104,7 @@ export abstract class DynamicSelectChipsFieldComponentBase<T>
     this.currentServiceCall = this.callService()
       .pipe(
         takeUntil(this.destroySubject),
+        switchMap(() => this.callService()),
         catchError(() => {
           this._endProcess(true);
           return throwError(`${this.config.key} data retrieval failed.`);
