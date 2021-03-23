@@ -91,7 +91,7 @@
       <!-- Order Details -->
       <section margin-top-xlarge>
         <h3>{{ 'orderDetailsStep.orderDetails.header' | translate }}</h3>
-        <mcs-form-field>
+        <mcs-form-field [mcsContextualHelp]="'orderDetailsStep.orderDetails.orderName.contextualHelp' | translate">
           <input type="text" mcsInput [formControl]="fcDescription" #orderDescription
             (focus)="onDescriptionFocus(orderDescription)">
         </mcs-form-field>
@@ -191,7 +191,7 @@
         </mcs-item>
 
         <!-- Order Action -->
-        <mcs-item orientation="separated">
+        <mcs-item orientation="separated" [mcsContextualHelp]="assignContextualHelpTextToOrderAction(isImpersonating)">
           <span>{{ 'orderDetailsStep.orderActions.header' | translate }}</span>
           <mcs-form-field class="form-field-size-small" [disabled]="isUpdatingCharges || isImpersonating">
             <mcs-select required [formControl]="fcWorkflowAction" mcsId="select-workflow-action">

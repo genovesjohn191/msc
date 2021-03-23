@@ -40,7 +40,8 @@
   </mcs-item>
 
   <!-- Contact -->
-  <mcs-item orientation="block" *ngIf="config?.contactConfig?.isIncluded">
+  <mcs-item orientation="block" *ngIf="config?.contactConfig?.isIncluded"
+    [mcsContextualHelp]="config?.contactConfig?.helpText">
     <span align-self-start>{{ config?.contactConfig?.label }}</span>
 
       <ng-container *ngIf="contactOptions$ | async as contactOptions">

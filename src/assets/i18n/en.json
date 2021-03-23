@@ -527,12 +527,14 @@
       "changeDescription": {
         "placeholder": "What change would you like applied?",
         "hint": "Max of {{max_char}} characters",
-        "errorRequired": "Description of change must be entered."
+        "errorRequired": "Description of change must be entered.",
+        "helpText": "Please provide a description of the change you would like performed, with as much detail as possible."
       },
       "changeObjective": {
         "placeholder": "What is the objective of this change?",
         "hint": "Max of {{max_char}} characters",
-        "errorRequired": "Objective of change must be entered."
+        "errorRequired": "Objective of change must be entered.",
+        "helpText": "Please provide the objective of the change you would like performed, with as much detail as possible."
       },
       "testCases": {
         "placeholder": "What test cases would you like us to execute after the change?"
@@ -857,11 +859,12 @@
         "pendingLabel": "This license-based subscription is currently pending and will be provisioned shortly. This item cannot be changed at this time.",
         "suspendedLabel": "This license-based subscription is currently suspended. This item cannot be changed at this time. Please contact your accounts team for more information.",
         "noneStatusLabel": "Status unavailable",
-        "noServiceId": "This license-based subscription has not completed provisioning. This item cannot be changed at this time. Please contact your accounts team for more information."
+        "noServiceId": "This license-based subscription has not completed provisioning. This item cannot be changed at this time. Please contact your accounts team for more information.",
+        "labelHelpText": "Increase or decrease this license depending on what you require for your organization. Your quantity must be at least 1. Please call your Macquarie Cloud Services account manager if you would like to suspend this item."
       },
       "addons": {
         "label": "Add-Ons",
-        "helpText": "Increase or decrease the license count for this add-on. You must have at least 1 {{unit}}. Please call your Macquarie Cloud Services account manager if you'd like to suspend this subscription.",
+        "helpText": "Increase or decrease this Add-On license depending on what you require for your organization. Your quantity must be at least 1. Please call your Macquarie Cloud Services account manager if you would like to suspend this item.",
         "activeLabel": "This add-on is active and renews on {{renewalDate}}.",
         "activeLabelNoRenewal": "This add-on is active.",
         "trialLabel": "This license-based subscription is currently subscribed to on a trial basis. This item cannot be changed at this time. Please contact your accounts team for more information.",
@@ -1751,6 +1754,9 @@
     },
     "orderDetails": {
       "header": "Order Details",
+      "orderName": {
+        "contextualHelp": "A custom description for your order."
+      },
       "description": "Review the charges for this order below.",
       "totalLabel": "<strong>TOTAL</strong>",
       "noLineItems": "No items to display.",
@@ -1777,6 +1783,11 @@
       "submitOrder": "Submit",
       "awaitingApproval": "Submit for approval",
       "saveOrder": "Save as draft",
+      "contextualHelp": {
+        "isImpersonating": "Since you are a Macquarie user, you can only save this order as a draft. This can then be submitted by the customer at their discretion.",
+        "orderApprover": "Submitting this order will begin provisioning on it immediately (or at the scheduled time in the case of service requests).\r\n\nIf you choose to save this order as a draft, you can return and submit it at any time in the future.",
+        "orderEdit": "If you choose to save this order as a draft, you can return and submit it at any time in the future.\r\n\nIf you choose to submit this order for approval, you will be able to request approval from someone in your company who has the appropriate permissions."
+      },
       "mergeOrder": "Merge",
       "contractTerms": {
         "trial": "30-day cancellation",
@@ -1851,7 +1862,8 @@
         "optionNoneLabel": "None",
         "tip": "It is recommended that you check your Backup Aggregation Target usage before proceeding. Charges may apply for exceeded quota.",
         "placeholder": "Select aggregation",
-        "aggregationTargetPremium": "Your selected Backup Aggregation Target has InView Premium, so this will also be applied to your new Server Backup service."
+        "aggregationTargetPremium": "Your selected Backup Aggregation Target has InView Premium, so this will also be applied to your new Server Backup service.",
+        "contextualHelp": "Choosing an aggregation target will allow you to aggregate the backup volume for your new service to a single billing entity for ease of administration and monitoring. Please note that choosing this option will cause the retention period for your service to be set to that of your BAT."
       },
       "vmAggregation": {
         "label": "Back up my VM to an aggregation target",
@@ -1859,12 +1871,13 @@
         "optionNoneLabel": "None",
         "tip": "It is recommended that you check your Backup Aggregation Target usage before proceeding. Charges may apply for exceeded quota.",
         "placeholder": "Select aggregation",
-        "aggregationTargetPremium": "Your selected Backup Aggregation Target has InView Premium, so this will also be applied to your new VM Backup service."
+        "aggregationTargetPremium": "Your selected Backup Aggregation Target has InView Premium, so this will also be applied to your new VM Backup service.",
+        "contextualHelp": "Choosing an aggregation target will allow you to aggregate the backup volume for your new service to a single billing entity for ease of administration and monitoring. Please note that choosing this option will cause the retention period for your service to be set to that of your BAT."
       },
       "retention": {
         "label": "Keep my backups for",
         "placeholder": "",
-        "contextualHelp": "Your desired backup retention setting. We can store your backups from 2 weeks, to 7 years."
+        "contextualHelp": "Your desired backup retention setting. We can store your backups from 2 weeks to 7 years."
       },
       "inviewLevel": {
         "label": "InView Level",
@@ -2042,7 +2055,8 @@
         "options": {
           "yes": "Yes",
           "no": "No"
-        }
+        },
+        "helpText": "If you wish to be contacted before and after this operation takes place, we will use the phone number set in your user profile."
       },
       "customerReference": {
         "label": "Customer reference number",
