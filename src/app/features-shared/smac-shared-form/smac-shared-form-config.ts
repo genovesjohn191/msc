@@ -107,7 +107,7 @@ export class SmacSharedFormConfig {
           this._translate.instant('smacShared.form.contact.placeholder')),
         label: getSafeProperty(contactConfig, (obj) => obj.label,
           this._translate.instant('smacShared.form.contact.label')),
-        helpText: getSafeProperty(customerReferenceConfig, (obj) => obj.helpText,
+        helpText: getSafeProperty(contactConfig, (obj) => obj.helpText,
           this._translate.instant('smacShared.form.contact.helpText')),
         validators: getSafeProperty(contactConfig, (obj) => obj.validators, [CoreValidators.required]),
         phoneNumber: getSafeProperty(contactConfig, (obj) => obj.phoneNumber, ''),

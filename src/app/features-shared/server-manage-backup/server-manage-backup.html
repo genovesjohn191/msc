@@ -102,10 +102,10 @@
   <!-- BackUp Quota  -->
   <mcs-item orientation="separated" [hidden]="hasAggregation">
     <span align-self-start>{{ 'serverShared.addOnBackup.dailyQuota.label' | translate }}:</span>
-    <mcs-form-field class="form-field-size-small">
+    <mcs-form-field class="form-field-size-small"
+      [mcsContextualHelp]="'serverShared.addOnBackup.dailyQuota.contextualHelp' | translate">
       <input mcsInput [formControl]="fcDailyQuota"
         [placeholder]="'serverShared.addOnBackup.dailyQuota.placeholder' | translate"
-        [mcsContextualHelp]="'serverShared.addOnBackup.dailyQuota.contextualHelp' | translate"
         mcsId="manage-backup-server-daily-quota"
         mcsEventTracker="backup-server-daily-quota"
         mcsEventCategory="order"
