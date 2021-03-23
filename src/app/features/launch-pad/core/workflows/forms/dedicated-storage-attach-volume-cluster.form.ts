@@ -27,11 +27,7 @@ export const dedicatedStorageAttachVolumeClusterForm: LaunchPadForm = {
       contextualHelp: 'Select one or more target servers. You can also enter service IDs manually if the target servers exist only in UCS Central',
       validators: { required: true },
       allowCustomInput: true,
-      useServiceIdAsKey: true,
-      dataFilter: {
-        hideNonDedicated: true,
-        allowedHardwareType: [ 'BO', 'LO', 'BL' ]
-      }
+      useServiceIdAsKey: true
     })
   ],
 

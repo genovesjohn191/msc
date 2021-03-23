@@ -29,11 +29,7 @@ export const dedicatedStorageAttachVolumeForm: LaunchPadForm = {
       allowCustomInput: true,
       allowDuplicates: true,
       maxItems: 2,
-      useServiceIdAsKey: true,
-      dataFilter: {
-        hideNonDedicated: true,
-        allowedHardwareType: [ 'BO', 'LO', 'BL' ]
-      }
+      useServiceIdAsKey: true
     })
   ],
 

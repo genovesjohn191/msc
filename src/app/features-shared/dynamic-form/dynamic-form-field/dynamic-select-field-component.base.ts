@@ -5,6 +5,7 @@ import {
 } from 'rxjs';
 import {
   catchError,
+  switchMap,
   takeUntil
 } from 'rxjs/operators';
 
@@ -61,6 +62,7 @@ export abstract class DynamicSelectFieldComponentBase<T>
     this.callService()
       .pipe(
         takeUntil(this.destroySubject),
+        switchMap(() => this.callService()),
         catchError(() => {
           this._endProcess(true);
           return throwError(`${this.config.key} data retrieval failed.`);

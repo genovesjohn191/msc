@@ -28,11 +28,7 @@ export const dedicatedStorageUnmaskVolumeForm: LaunchPadForm = {
       validators: { required: true },
       allowCustomInput: true,
       useServiceIdAsKey: true,
-      maxItems: 1,
-      dataFilter: {
-        hideNonDedicated: true,
-        allowedHardwareType: [ 'BO', 'LO', 'BL' ]
-      }
+      maxItems: 1
     })
   ],
 
