@@ -69,7 +69,8 @@
             </mcs-item>
             <ng-container *ngIf="fcLicenses?.value?.serviceId; else licenseNoServiceIdTemplate">
               <mcs-item orientation="block" *ngIf="(licenses$ | async) | mcsArrayHasElement"
-                [disabled]="isCurrentLicenseHasActiveJob(fcLicenses?.value?.serviceId, activeJob$ | async)">
+                [disabled]="isCurrentLicenseHasActiveJob(fcLicenses?.value?.serviceId, activeJob$ | async)"
+                [mcsContextualHelp]="'orderMsLicenseCountChange.detailsStep.baseLicense.labelHelpText' | translate">
                 <ng-container *ngIf="!fcLicenses?.value?.isTrial; else baseTrialTemplate">
                   <ng-container [ngSwitch]="fcLicenses?.value?.status">
                     <mcs-item orientation="block" *ngSwitchCase="licenseStatusOption.Active">
@@ -152,7 +153,7 @@
                     <h2 align-self-start padding-top-medium>{{ 'orderMsLicenseCountChange.detailsStep.addons.label' | translate }}</h2>
                     <ng-container *ngFor="let childLicensesFcItem of childLicensesFcConfig">
                       <mcs-item orientation="block"
-                        [mcsContextualHelp]="'orderMsLicenseCountChange.detailsStep.addons.helpText' | translate: { unit: childLicensesFcItem?.license?.unit }">
+                        [mcsContextualHelp]="'orderMsLicenseCountChange.detailsStep.addons.helpText' | translate">
                         <mcs-item orientation="block">
                           <strong align-self-start>{{ childLicensesFcItem?.license?.name  }} </strong>
                         </mcs-item>

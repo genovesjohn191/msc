@@ -36,7 +36,8 @@ import {
   McsTableDataSource,
   CoreValidators,
   IMcsDataChange,
-  McsAuthenticationIdentity
+  McsAuthenticationIdentity,
+  McsAccessControlService
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -62,7 +63,8 @@ import {
   McsEventTrack,
   McsOrderCharge,
   DeliveryType,
-  WorkflowStatus
+  WorkflowStatus,
+  McsPermission
 } from '@app/models';
 import {
   WizardStepComponent,
@@ -149,7 +151,9 @@ export class StepOrderDetailsComponent
     private _formBuilder: FormBuilder,
     private _translate: TranslateService,
     private _apiService: McsApiService,
-    private _authenticationIdentity: McsAuthenticationIdentity
+    private _authenticationIdentity: McsAuthenticationIdentity,
+    private _accessControlService: McsAccessControlService,
+    private _translateService: TranslateService
   ) {
     this.orderDatasource = new McsTableDataSource([]);
     this._registerFormGroup();
@@ -320,6 +324,18 @@ export class StepOrderDetailsComponent
   public notifyDataChange(): void {
     this.dataChange.next(this._getOrderDetails());
     this._changeDetectorRef.markForCheck();
+  }
+
+  public assignContextualHelpTextToOrderAction(isImpersonating): string {
+    let hasOrderApproveAccess = this._accessControlService.hasPermission([McsPermission.OrderApprove]);
+
+    if (isImpersonating) {
+      return this._translateService.instant('orderDetailsStep.orderActions.contextualHelp.isImpersonating');
+    } else if (hasOrderApproveAccess) {
+      return this._translateService.instant('orderDetailsStep.orderActions.contextualHelp.orderApprover');
+    } else {
+      return this._translateService.instant('orderDetailsStep.orderActions.contextualHelp.orderEdit');
+    }
   }
 
   /**

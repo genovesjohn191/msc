@@ -8,6 +8,7 @@
         <mcs-form-field class="form-field-size-small">
           <mcs-select [formControl]="fcAggregation"
             [placeholder]="'serverShared.addOnBackup.vmAggregation.placeholder' | translate"
+            [mcsContextualHelp]="'serverShared.addOnBackup.vmAggregation.contextualHelp' | translate"
             mcsId="manage-backup-vm-aggregation-target"
             mcsEventTracker="backup-vm-aggregation-target"
             mcsEventCategory="order"
@@ -37,6 +38,7 @@
         <mcs-select required
           [formControl]="fcRetention"
           [placeholder]="'serverShared.addOnBackup.retention.placeholder' | translate"
+          [mcsContextualHelp]="'serverShared.addOnBackup.retention.contextualHelp' | translate"
           mcsId="manage-backup-vm-retention"
           mcsEventTracker="backup-vm-retention"
           mcsEventCategory="order"
