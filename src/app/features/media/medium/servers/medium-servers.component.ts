@@ -1,46 +1,48 @@
 import {
-  Component,
-  OnInit,
-  OnDestroy,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef
-} from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import {
+  of,
   throwError,
-  Subscription,
   Observable,
-  of
+  Subscription
 } from 'rxjs';
 import {
   catchError,
-  tap,
-  map
+  map,
+  tap
 } from 'rxjs/operators';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
-import { McsTableDataSource } from '@app/core';
+
 import {
-  isNullOrEmpty,
-  addOrUpdateArrayRecord,
-  unsubscribeSafely,
-  getSafeProperty,
-  Guid
-} from '@app/utilities';
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
+import { McsTableDataSource } from '@app/core';
+import { McsEvent } from '@app/events';
+import {
+  McsJob,
+  McsResourceMedia,
+  McsResourceMediaServer,
+  McsServer
+} from '@app/models';
+import { McsApiService } from '@app/services';
 import {
   DialogConfirmation,
   DialogService
 } from '@app/shared';
 import {
-  McsJob,
-  McsResourceMediaServer,
-  McsServer,
-  McsResourceMedia
-} from '@app/models';
-import { McsEvent } from '@app/events';
-import { McsApiService } from '@app/services';
-import { MediumService } from '../medium.service';
-import { MediumDetailsBase } from '../medium-details.base';
+  addOrUpdateArrayRecord,
+  getSafeProperty,
+  isNullOrEmpty,
+  unsubscribeSafely,
+  Guid
+} from '@app/utilities';
+import { TranslateService } from '@ngx-translate/core';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+
 import { MediaManageServers } from '../../shared';
+import { MediumDetailsBase } from '../medium-details.base';
+import { MediumService } from '../medium.service';
 
 const SERVER_MEDIA_NEW_ID = Guid.newGuid().toString();
 
@@ -89,7 +91,8 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
   }
 
   public mediaIsProcessing(media: McsResourceMedia): boolean {
-    return media.isProcessing && this._mediaInProgressByJob;
+    return (media.isProcessing && this._mediaInProgressByJob) ||
+      !media.isReady;
   }
 
   /**

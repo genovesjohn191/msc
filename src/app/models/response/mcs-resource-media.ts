@@ -1,7 +1,8 @@
 import { JsonProperty } from '@app/utilities';
-import { McsResourceMediaServer } from './mcs-resource-media-server';
+
 import { McsEntityBase } from '../common/mcs-entity.base';
 import { McsDateSerialization } from '../serialization/mcs-date-serialization';
+import { McsResourceMediaServer } from './mcs-resource-media-server';
 
 export class McsResourceMedia extends McsEntityBase {
   @JsonProperty()
@@ -42,5 +43,10 @@ export class McsResourceMedia extends McsEntityBase {
    */
   public get statusLabel(): string {
     return this.status;
+  }
+
+  public get isReady(): boolean {
+    // TODO(apascual): FUSION-5546: The status should be implemented first in resource media and this should be enum type not string
+    return this.status === 'Ready';
   }
 }

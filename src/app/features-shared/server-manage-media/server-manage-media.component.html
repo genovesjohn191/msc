@@ -12,8 +12,15 @@
             <span>{{ catalog.name }}</span>
           </ng-container>
 
-          <mcs-option *ngFor="let catalogItem of catalog.items" [value]="catalogItem">
-            {{ catalogItem.name }}
+          <mcs-option *ngFor="let catalogItem of catalog.items"
+            [value]="catalogItem"
+            [disabled]="!catalogItem.isReady">
+
+            <span [ngStyle]="{'pointer-events': 'auto'}"
+              [mcsTooltip]="'serverManageMedia.creationInProgress' | translate"
+              [mcsTooltipShow]="!catalogItem.isReady">
+              {{ catalogItem.name }}
+            </span>
           </mcs-option>
         </mcs-option-group>
       </ng-container>
