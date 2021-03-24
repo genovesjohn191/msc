@@ -235,4 +235,8 @@ export class CommonDefinition {
 
   /** Environment settings */
   public static LOCALE = 'en-AU';
+
+  /** Extensions */
+  public static FILE_EXTENSION_ISO = 'iso';
+  public static FILE_EXTENSION_OVA = 'ova';
 }

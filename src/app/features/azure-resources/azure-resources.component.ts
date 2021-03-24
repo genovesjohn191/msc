@@ -1,3 +1,6 @@
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -5,8 +8,6 @@ import {
   Injector,
   ViewChild
 } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import {
   McsMatTableContext,
   McsMatTableQueryParam,
@@ -14,25 +15,25 @@ import {
   McsTableDataSource2,
   McsTableEvents
 } from '@app/core';
+import { McsEvent } from '@app/events';
 import {
   McsAzureResource,
   McsFilterInfo,
   McsQueryParam,
   RouteKey
 } from '@app/models';
-import {
-  CommonDefinition,
-  createObject,
-  getSafeProperty,
-  isNullOrEmpty
-} from '@app/utilities';
+import { McsApiService } from '@app/services';
 import {
   ColumnFilter,
   Paginator,
   Search
 } from '@app/shared';
-import { McsEvent } from '@app/events';
-import { McsApiService } from '@app/services';
+import {
+  createObject,
+  getSafeProperty,
+  isNullOrEmpty,
+  CommonDefinition
+} from '@app/utilities';
 
 @Component({
   selector: 'mcs-azure-resources',
@@ -98,8 +99,12 @@ export class AzureResourcesComponent {
   public onRequestChange(resource: McsAzureResource): void {
     return isNullOrEmpty(resource.serviceId && resource.azureId) ?
       this._navigationService.navigateTo(RouteKey.OrderMsRequestChange) :
-      this._navigationService.navigateTo(
-        RouteKey.OrderMsRequestChange, [], { queryParams: { serviceId: resource.serviceId, resourceId: resource.azureId}});
+      this._navigationService.navigateTo(RouteKey.OrderMsRequestChange, [], {
+        queryParams: {
+          serviceId: resource.serviceId,
+          resourceId: resource.azureId
+        }
+      });
   }
 
   /**
@@ -108,7 +113,7 @@ export class AzureResourcesComponent {
   public onRaiseTicket(resource: McsAzureResource): void {
     return isNullOrEmpty(resource.serviceId) ?
       this._navigationService.navigateTo(RouteKey.TicketCreate) :
-      this._navigationService.navigateTo(RouteKey.TicketCreate, [], { queryParams: { serviceId: resource.serviceId}});
+      this._navigationService.navigateTo(RouteKey.TicketCreate, [], { queryParams: { serviceId: resource.serviceId } });
   }
 
   private _getAzureResources(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsAzureResource>> {

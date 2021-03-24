@@ -1,19 +1,22 @@
+import { Subject } from 'rxjs';
+
 import {
+  ChangeDetectionStrategy,
   Component,
   OnDestroy,
-  ChangeDetectionStrategy,
   ViewChild
 } from '@angular/core';
-import { Subject } from 'rxjs';
 import {
-  McsWizardBase,
-  IMcsNavigateAwayGuard
+  IMcsNavigateAwayGuard,
+  McsWizardBase
 } from '@app/core';
 import {
-  unsubscribeSafely,
+  getSafeFormValue,
   getSafeProperty,
+  unsubscribeSafely,
   CommonDefinition
 } from '@app/utilities';
+
 import { MediaUploadDetailsComponent } from './details/media-upload-details.component';
 import { MediaUploadService } from './media-upload.service';
 
@@ -43,9 +46,15 @@ export class MediaUploadComponent extends McsWizardBase
     return CommonDefinition.ASSETS_SVG_CHEVRON_LEFT;
   }
 
-  /**
-   * Event that emits when navigating away from media upload page to other route
-   */
+  public get hideDetailsButton(): boolean {
+    let mediaExtension = getSafeFormValue<string>(
+      this._detailsStep?.fcMediaExtension,
+      obj => obj.value,
+      ''
+    );
+    return mediaExtension.includes(CommonDefinition.FILE_EXTENSION_OVA);
+  }
+
   public canNavigateAway(): boolean {
     return this.getActiveWizardStep().isLastStep ||
       getSafeProperty(this._detailsStep, (obj) => obj.canNavigateAway(), true);

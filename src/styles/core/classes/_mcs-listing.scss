@@ -49,4 +49,5 @@ $listing-table-search-max-width: 300px;
   @include display-flex(row);
   @include align-items(center);
   @include set-items-interval($space-xsmall, horizontal);
+  justify-content: center;
 }

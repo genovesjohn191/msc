@@ -192,7 +192,10 @@ export class MediaUploadDetailsComponent
    * Subscribes to media extensions
    */
   private _subscribeToMediaExtensions(): void {
-    this.mediaExtensions$ = of(['.iso', '.ova']);
+    this.mediaExtensions$ = of([
+      `.${CommonDefinition.FILE_EXTENSION_ISO}`,
+      `.${CommonDefinition.FILE_EXTENSION_OVA}`
+    ]);
   }
 
   /**
