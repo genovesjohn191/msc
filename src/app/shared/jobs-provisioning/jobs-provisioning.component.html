@@ -60,7 +60,7 @@
         <!-- Job Success -->
         <ng-container *ngSwitchCase="dataStatusEnum.Success">
           <mcs-alert type="success" [header]="job.summaryInformation"></mcs-alert>
-          <mcs-item *ngIf="resourceLink(job)">
+          <mcs-item *ngIf="resourceLink(job) && !hideDetailsButton">
             <a mcsButton arrow="right" size="small" mcsId="view-job" margin-top-small
               [mcsRouterLink]="resourceLink(job)">
               {{ 'shared.jobsProvisioning.viewDetails' | translate }}

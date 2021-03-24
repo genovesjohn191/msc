@@ -1,76 +1,78 @@
 import {
-  ChangeDetectionStrategy,
-  OnInit,
-  OnDestroy,
-  Component,
-  Injector,
-  ViewChild
-} from '@angular/core';
-import {
-  FormGroup,
-  FormControl,
-  FormBuilder
-} from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import {
-  Subject,
-  zip,
-  Observable,
   of,
+  zip,
+  BehaviorSubject,
+  Observable,
+  Subject,
   Subscription
 } from 'rxjs';
 import {
   filter,
-  tap,
-  takeUntil,
   map,
-  shareReplay
+  shareReplay,
+  takeUntil,
+  tap
 } from 'rxjs/operators';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+
 import {
-  McsOrderWizardBase,
+  ChangeDetectionStrategy,
+  Component,
+  Injector,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup
+} from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import {
   CoreValidators,
-  OrderRequester,
   IMcsFormGroup,
+  McsOrderWizardBase,
+  OrderRequester
 } from '@app/core';
-import {
-  CommonDefinition,
-  isNullOrEmpty,
-  unsubscribeSafely,
-  getSafeProperty,
-  createObject,
-  Guid,
-  formatStringToPhoneNumber,
-  getCurrentDate,
-  pluck
-} from '@app/utilities';
-import { McsFormGroupDirective } from '@app/shared';
+import { McsEvent } from '@app/events';
 import {
   OrderDetails,
   SmacSharedDetails,
   SmacSharedFormConfig
 } from '@app/features-shared';
-import { McsApiService } from '@app/services';
-import { McsEvent } from '@app/events';
 import {
-  McsOrderWorkflow,
-  McsOption,
-  McsOrderCreate,
-  McsOrderItemCreate,
-  OrderIdType,
-  McsAzureService,
-  AzureProducts,
-  Complexity,
-  FormResponse,
   azureProductsText,
   complexityText,
   formResponseText,
+  AzureProducts,
+  Complexity,
   DeliveryType,
-  McsAzureServiceQueryParams
+  FormResponse,
+  McsAzureService,
+  McsAzureServiceQueryParams,
+  McsOption,
+  McsOrderCreate,
+  McsOrderItemCreate,
+  McsOrderWorkflow,
+  OrderIdType
 } from '@app/models';
-import { MsRequestChangeService } from './ms-request-change.service';
+import { McsApiService } from '@app/services';
+import { McsFormGroupDirective } from '@app/shared';
+import {
+  compareStrings,
+  createObject,
+  getCurrentDate,
+  getSafeProperty,
+  isNullOrEmpty,
+  pluck,
+  unsubscribeSafely,
+  CommonDefinition,
+  Guid
+} from '@app/utilities';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject } from 'rxjs';
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+
+import { MsRequestChangeService } from './ms-request-change.service';
 
 const MAX_DESCRIPTION_LENGTH = 850;
 const VISIBILE_ROWS = 3;
@@ -95,7 +97,6 @@ type MsRequestChangeProperties = {
 })
 
 export class MsRequestChangeComponent extends McsOrderWizardBase implements OnInit, OnDestroy {
-
   public fgMsServiceChange: FormGroup;
   public fcMsService: FormControl;
   public fcAzureProduct: FormControl;
@@ -388,9 +389,11 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
    */
   private _subscribeToSmacSharedFormConfig(): void {
     let testCaseConfig = { isIncluded: false };
-    let notesConfig = { isIncluded: true, validators: [CoreValidators.required],
-                        placeholder: this.requestDescriptionPlaceHolder,
-                        isRequired: true };
+    let notesConfig = {
+      isIncluded: true, validators: [CoreValidators.required],
+      placeholder: this.requestDescriptionPlaceHolder,
+      isRequired: true
+    };
     let contactConfig = { isIncluded: true };
     let config = new SmacSharedFormConfig(this._injector, testCaseConfig, notesConfig, contactConfig);
     this.smacSharedFormConfig$ = new BehaviorSubject<SmacSharedFormConfig>(config);
@@ -456,18 +459,19 @@ export class MsRequestChangeComponent extends McsOrderWizardBase implements OnIn
   private _getSelectedAzureService(): void {
     this.selectedServiceId$ = this._activatedRoute.queryParams.pipe(
       map((params) => {
-        if (params) {
-          return getSafeProperty(params, (obj) => new McsAzureServiceQueryParams(obj.serviceId, obj.resourceId)) || undefined;
-        }
+        if (isNullOrEmpty(params)) { return null; }
+        return new McsAzureServiceQueryParams(params?.serviceId, params?.resourceId);
       }),
       tap((params) => {
         if (!params.serviceId) {
-          return this.enableAzureResources = false;
+          this.enableAzureResources = false;
         }
-        this.azureServices$.subscribe(_services => {
-          let preSelectedOption: McsOption = _services.find(_service => _service.value.serviceId === params.serviceId);
-          this.fcMsService.setValue(preSelectedOption.value);
-        })
+
+        this.azureServices$.subscribe(services => {
+          let serviceFound = services.find(service =>
+            compareStrings(service.value.serviceId, params.serviceId) === 0);
+          this.fcMsService.setValue(serviceFound?.value);
+        });
         this._getAzureResources(params.serviceId);
       }),
       shareReplay(1)

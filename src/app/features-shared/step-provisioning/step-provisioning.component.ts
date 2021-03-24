@@ -1,18 +1,19 @@
 import {
+  of,
+  Observable
+} from 'rxjs';
+
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   Input,
   OnChanges,
-  SimpleChanges,
-  ChangeDetectorRef,
-  ChangeDetectionStrategy
+  SimpleChanges
 } from '@angular/core';
 import {
-  Observable,
-  of
-} from 'rxjs';
-import {
-  McsJob,
-  DataStatus
+  DataStatus,
+  McsJob
 } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
 
@@ -27,6 +28,9 @@ export class StepProvisioningComponent implements OnChanges {
 
   @Input()
   public jobs: McsJob[];
+
+  @Input()
+  public hideDetailsButton: boolean;
 
   @Input()
   public requestState: DataStatus;

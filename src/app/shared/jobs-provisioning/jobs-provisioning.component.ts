@@ -1,41 +1,43 @@
 import {
-  Component,
-  OnInit,
-  DoCheck,
-  OnDestroy,
-  Input,
-  ChangeDetectorRef,
-  ChangeDetectionStrategy,
-  IterableDiffers,
-  IterableDiffer,
-  ContentChild
-} from '@angular/core';
-import {
   timer,
   Subscription
 } from 'rxjs';
 import { take } from 'rxjs/operators';
+
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ContentChild,
+  DoCheck,
+  Input,
+  IterableDiffer,
+  IterableDiffers,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
 import {
   CoreRoutes,
   McsAccessControlService
 } from '@app/core';
 import { McsEvent } from '@app/events';
 import {
-  isNullOrEmpty,
-  unsubscribeSafely,
+  DataStatus,
+  JobType,
+  McsJob,
+  McsPermission,
+  RouteKey
+} from '@app/models';
+import {
   addOrUpdateArrayRecord,
   animateFactory,
   getSafeProperty,
+  isNullOrEmpty,
+  unsubscribeSafely,
   CommonDefinition
 } from '@app/utilities';
-import {
-  McsJob,
-  DataStatus,
-  JobType,
-  RouteKey,
-  McsPermission
-} from '@app/models';
 import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+
 import { JobsProvisioningLoadingTextDirective } from './jobs-provisioning-loading-text.directive';
 
 @Component({
@@ -55,9 +57,9 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
   @ContentChild(JobsProvisioningLoadingTextDirective)
   public jobsProvisioningLoadingText: JobsProvisioningLoadingTextDirective;
 
-  /**
-   * Returns all the jobs of the current provisioning
-   */
+  @Input()
+  public hideDetailsButton: boolean;
+
   @Input()
   public get jobs(): McsJob[] { return this._jobs; }
   public set jobs(value: McsJob[]) {
