@@ -1,13 +1,14 @@
 import { JsonProperty } from '@app/utilities';
+
 import { McsEntityBase } from '../common/mcs-entity.base';
-import {
-  ServiceType,
-  ServiceTypeSerialization
-} from '../enumerations/service-type.enum';
 import {
   CatalogItemType,
   CatalogItemTypeSerialization
 } from '../enumerations/catalog-item-type.enum';
+import {
+  ServiceType,
+  ServiceTypeSerialization
+} from '../enumerations/service-type.enum';
 
 export class McsResourceCatalogItem extends McsEntityBase {
   @JsonProperty()
@@ -24,4 +25,10 @@ export class McsResourceCatalogItem extends McsEntityBase {
     deserializer: ServiceTypeSerialization
   })
   public serviceType: ServiceType = undefined;
+
+  public get isReady(): boolean  {
+    // return this.catalogItem?.status === 'Ready';
+    // TODO(apascual): FUSION-5546: The status should be implemented first in catalogItem
+    return false;
+  }
 }

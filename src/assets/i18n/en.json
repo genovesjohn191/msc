@@ -2777,6 +2777,9 @@
       "contextualHelp": "Select a schedule for this operation. One of our friendly engineers will contact you if the schedule you have chosen is unavailable."
     }
   },
+  "serverManageMedia": {
+    "creationInProgress": "This item is still being created or has failed to upload correctly."
+  },
   "apiErrorMessage": {
     "getIdentity": "Something went wrong while retrieving your session information. Please try logging in again.",
     "getJobsByStatus": "Something went wrong while retrieving your notifications.",
