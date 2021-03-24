@@ -191,7 +191,7 @@
         </mcs-item>
 
         <!-- Order Action -->
-        <mcs-item orientation="separated" [mcsContextualHelp]="assignContextualHelpTextToOrderAction(isImpersonating)">
+        <mcs-item orientation="separated">
           <span>{{ 'orderDetailsStep.orderActions.header' | translate }}</span>
           <mcs-form-field class="form-field-size-small" [disabled]="isUpdatingCharges || isImpersonating">
             <mcs-select required [formControl]="fcWorkflowAction" mcsId="select-workflow-action">
