@@ -242,48 +242,6 @@
       "value": true
     }
   },
-  "licenseFilter": {
-    "name": {
-      "text": "Name",
-      "value": true,
-      "exclude": true
-    },
-    "quantity": {
-      "text": "Quantity",
-      "value": true,
-      "exclude": true
-    },
-    "unit": {
-      "text": "Unit",
-      "value": true
-    },
-    "status": {
-      "text": "Status",
-      "value": true
-    },
-    "serviceId": {
-      "text": "Service ID",
-      "value": true
-    },
-    "offerId": {
-      "text": "Offer ID",
-      "value": true,
-      "exclude": true
-    },
-    "pcSubscriptionId": {
-      "text": "Subscription ID",
-      "value": true
-    },
-    "parentId": {
-      "text": "Parent",
-      "value": true
-    },
-    "action": {
-      "text": "",
-      "value": true,
-      "exclude": true
-    }
-  },
   "azureTicketsWidgetFilter": {
     "summary": {
       "text": "Summary",

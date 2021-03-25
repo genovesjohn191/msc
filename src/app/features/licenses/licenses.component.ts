@@ -5,20 +5,29 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy,
   OnDestroy,
+  ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, Subject } from 'rxjs';
-import { map, shareReplay, takeUntil } from 'rxjs/operators';
+import {
+  Observable,
+  Subject
+} from 'rxjs';
+import {
+  map,
+  shareReplay,
+  takeUntil
+} from 'rxjs/operators';
 import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 import {
-  McsTableListingBase,
-  IMcsColumnManager,
   McsAccessControlService,
-  McsNavigationService
+  McsMatTableContext,
+  McsMatTableQueryParam,
+  McsNavigationService,
+  McsTableDataSource2,
+  McsTableEvents
 } from '@app/core';
 import {
   McsLicense,
-  McsApiCollection,
   McsQueryParam,
   McsFilterInfo,
   RouteKey,
@@ -30,39 +39,79 @@ import {
   getSafeProperty,
   CommonDefinition,
   isNullOrEmpty,
-  unsubscribeSafely
+  unsubscribeSafely,
+  createObject
 } from '@app/utilities';
 import { McsApiService } from '@app/services';
 import { McsEvent } from '@app/events';
 import { LicenseService } from './licenses.service';
+import {
+  ColumnFilter,
+  Paginator,
+  Search
+} from '@app/shared';
 
 @Component({
   selector: 'mcs-licenses',
   templateUrl: './licenses.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LicensesComponent extends McsTableListingBase<McsLicense> implements OnInit, OnDestroy, IMcsColumnManager {
+export class LicensesComponent implements OnInit, OnDestroy {
+
+  public readonly dataSource: McsTableDataSource2<McsLicense>;
+  public readonly dataEvents: McsTableEvents<McsLicense>;
+  public readonly filterPredicate = this._isColumnIncluded.bind(this);
+  public readonly defaultColumnFilters: McsFilterInfo[] = [
+    createObject(McsFilterInfo, { value: true, exclude: true, id: 'name' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'quantity' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'unit' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'status' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'serviceId' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'offerId' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'subscriptionId' }),
+    createObject(McsFilterInfo, { value: true, exclude: false, id: 'parent' }),
+    createObject(McsFilterInfo, { value: true, exclude: true, id: 'action' })
+  ];
+
   public activeJobs$: Observable<McsJob[]>;
   public licenses$: Observable<McsLicense[]>;
   private _destroySubject = new Subject<void>();
 
-  private _columnPermissionMatrix = new Map<string, () => boolean>();
-
   constructor(
     _injector: Injector,
-    _changeDetectorRef: ChangeDetectorRef,
-    private _apiService: McsApiService,
-    private _eventDispatcher: EventBusDispatcherService,
-    private _navigationService: McsNavigationService,
-    private _activatedRoute: ActivatedRoute,
     private _accessControlService: McsAccessControlService,
-    private _licenseService: LicenseService
+    private _activatedRoute: ActivatedRoute,
+    private _apiService: McsApiService,
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _eventDispatcher: EventBusDispatcherService,
+    private _licenseService: LicenseService,
+    private _navigationService: McsNavigationService,
   ) {
-    super(_injector, _changeDetectorRef);
+    this.dataSource = new McsTableDataSource2(this._getLicenses.bind(this));
+    this.dataEvents = new McsTableEvents(_injector, this.dataSource, {
+      dataChangeEvent: McsEvent.dataChangeLicenses
+    });
   }
 
-  public get columnSettingsKey(): string {
-    return CommonDefinition.FILTERSELECTOR_LICENSE_LISTING;
+  @ViewChild('search')
+  public set search(value: Search) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerSearch(value);
+    }
+  }
+
+  @ViewChild('paginator')
+  public set paginator(value: Paginator) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerPaginator(value);
+    }
+  }
+
+  @ViewChild('columnFilter')
+  public set columnFilter(value: ColumnFilter) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerColumnFilter(value);
+    }
   }
 
   public get addIconKey(): string {
@@ -84,7 +133,10 @@ export class LicensesComponent extends McsTableListingBase<McsLicense> implement
 
   public ngOnDestroy(): void {
     unsubscribeSafely(this._destroySubject);
-    this.dispose();
+  }
+
+  public retryDatasource(): void {
+    this.dataSource.refreshDataRecords();
   }
 
   /**
@@ -104,15 +156,6 @@ export class LicensesComponent extends McsTableListingBase<McsLicense> implement
   }
 
   /**
-   * Returns true when the column is included in the display
-   */
-  public includeColumn(column: McsFilterInfo): boolean {
-    if (isNullOrEmpty(this._accessControlService)) { return true; }
-    let columnFunc = this._columnPermissionMatrix.get(column.id);
-    return columnFunc ? columnFunc() : true;
-  }
-
-  /**
    * Returns true if the selected license is suspended, pending or trial license,
    * Also check its parent if it has similar status
    */
@@ -126,25 +169,6 @@ export class LicensesComponent extends McsTableListingBase<McsLicense> implement
     return !parentLicense.isChangeable || !currentLicense.isChangeable;
   }
 
-  /**
-   * TODO: update method on new license creation
-   * This will navigate to new license page
-   */
-  public onClickNewLicenseButton(): void {
-    // navigate to route
-  }
-
-  protected getEntityListing(query: McsQueryParam): Observable<McsApiCollection<McsLicense>> {
-    return this._apiService.getLicenses(query);
-  }
-
-  /**
-   * TODO: apply permissions
-   */
-  private _createColumnMatrix(): void {
-    // create column matrix
-  }
-
   private _subscribeToLicensesResolver(): void {
     this.licenses$ = this._activatedRoute.data.pipe(
       map((resolver) => getSafeProperty(resolver, (obj) => obj.licenses))
@@ -154,7 +178,7 @@ export class LicensesComponent extends McsTableListingBase<McsLicense> implement
   /**
    * Returns true if current license has no running job
    */
-  public isCurrentLicenseHasNoActiveJob(currentLicense: McsLicense, activeJobs: McsJob[]) {
+  public isCurrentLicenseHasNoActiveJob(currentLicense: McsLicense, activeJobs: McsJob[]): boolean {
     let hasActiveJob = activeJobs.find((job) => job?.clientReferenceObject?.serviceId === currentLicense.serviceId);
     if (isNullOrEmpty(hasActiveJob)) {
       return true;
@@ -164,7 +188,7 @@ export class LicensesComponent extends McsTableListingBase<McsLicense> implement
   /**
    * Returns true if 1 or more active licenses without running jobs attached
    */
-  public isLicensesActiveAndNoRunningJobs(licenses, activeJobs): boolean {
+  public isLicensesActiveAndNoRunningJobs(licenses: McsLicense[], activeJobs: McsJob[]): boolean {
     let activeLicenses = this.getAllActiveLicenses(licenses);
     if (!activeLicenses) {
       return;
@@ -180,13 +204,13 @@ export class LicensesComponent extends McsTableListingBase<McsLicense> implement
         });
       });
       if (licenseWithNoActiveJob.length >= 1) {
-        this.changeDetectorRef.markForCheck();
+        this._changeDetectorRef.markForCheck();
         return true;
       }
     }
 
     if (activeLicenses.length > 0 && activeJobs.length === 0) {
-      this.changeDetectorRef.markForCheck();
+      this._changeDetectorRef.markForCheck();
       return true;
     }
   }
@@ -195,8 +219,9 @@ export class LicensesComponent extends McsTableListingBase<McsLicense> implement
    * Returns all licenses that has an active status and service Id
    */
   private getAllActiveLicenses(licenses: McsLicense[]): McsLicense[] {
+    if (isNullOrEmpty(licenses)) { return; }
     let licenseActiveWithServiceId: McsLicense[] = [];
-    licenseActiveWithServiceId = licenses.filter((license) => license.serviceId !== null &&
+    licenseActiveWithServiceId = licenses.filter((license) => !isNullOrEmpty(license.serviceId) &&
       license.statusLabel === licenseStatusText[LicenseStatus.Active]);
     return licenseActiveWithServiceId;
   }
@@ -210,5 +235,24 @@ export class LicensesComponent extends McsTableListingBase<McsLicense> implement
       map((licenseJobs) => licenseJobs.filter((job) => job.inProgress)),
       shareReplay(1)
     )
+  }
+
+  private _getLicenses(param: McsMatTableQueryParam): Observable<McsMatTableContext<McsLicense>> {
+    let queryParam = new McsQueryParam();
+    queryParam.pageIndex = getSafeProperty(param, obj => obj.paginator.pageIndex);
+    queryParam.pageSize = getSafeProperty(param, obj => obj.paginator.pageSize);
+    queryParam.keyword = getSafeProperty(param, obj => obj.search.keyword);
+
+    return this._apiService.getLicenses(queryParam).pipe(
+      map(response => new McsMatTableContext(response?.collection,
+        response?.totalCollectionCount))
+    );
+  }
+
+  private _isColumnIncluded(filter: McsFilterInfo): boolean {
+    if (filter.id === 'offerId') {
+      return this._accessControlService.hasPermission(['CompanyView']);
+    }
+    return true;
   }
 }

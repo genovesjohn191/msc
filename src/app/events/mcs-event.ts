@@ -9,6 +9,7 @@ import { DnsListingEvent } from './items/data-change-dns-listing.event';
 import { DataChangeFirewallsEvent } from './items/data-change-firewalls.event';
 import { DataChangeInternetPortsEvent } from './items/data-change-internet-ports.event';
 import { DataChangeJobsEvent } from './items/data-change-jobs.event';
+import { DataChangeLicensesEvent } from './items/data-change-licenses.event';
 import { DataChangeMediaEvent } from './items/data-change-media.event';
 import { DataChangeOrdersEvent } from './items/data-change-orders.event';
 import { DataChangeResourcesEvent } from './items/data-change-resources.event';
@@ -122,6 +123,7 @@ export class McsEvent {
   public static dataChangeCompanies = new DataChangeCompaniesEvent();
   public static dataChangeConsole = new DataChangeConsoleEvent();
   public static dataChangeFirewalls = new DataChangeFirewallsEvent();
+  public static dataChangeLicenses = new DataChangeLicensesEvent();
   public static dataChangeMedia = new DataChangeMediaEvent();
   public static dataChangeOrders = new DataChangeOrdersEvent();
   public static dataChangeSystemMessages = new DataChangeSystemMessagesEvent();
