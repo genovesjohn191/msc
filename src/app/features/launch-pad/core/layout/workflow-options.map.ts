@@ -4,6 +4,7 @@ import { WorkflowGroupId } from '../workflows/workflow-groups/workflow-group-typ
 export const workflowOptions: Map<WorkflowGroupId, string> = new Map([
 
   [WorkflowGroupId.VirtualDataCentreVmInstanceProvision, 'Create a new virtual data centre VM instance.'],
+  [WorkflowGroupId.VirtualDataCentreVmInstanceProvisionComplex, 'Create a new virtual data centre VM instance w/ Add Ons.'],
 
   [WorkflowGroupId.DedicatedStorageUnmaskVolume, 'Unmask Dedicated Storage Volume.'],
   [WorkflowGroupId.DedicatedStorageIncreaseVolume, 'Increase Dedicated Storage Volume.'],

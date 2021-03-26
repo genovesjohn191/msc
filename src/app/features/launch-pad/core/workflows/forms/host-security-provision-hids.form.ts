@@ -55,6 +55,33 @@ export const hostSecurityProvisionHidsForm: LaunchPadForm = {
     mappedProperties.push({ key: 'server',
       value: findCrispElementAttribute(CrispAttributeNames.ServerLink, attributes)?.displayValue } );
 
+    mappedProperties.push({ key: 'protectionLevel',
+      value: findCrispElementAttribute(CrispAttributeNames.HipsProtectionLvl, attributes)?.value } );
+
+    return mappedProperties;
+  }
+}
+
+export const hostSecurityProvisionHidsAddOnForm: LaunchPadForm = {
+  config: [
+    new DynamicSelectField({
+      key: 'protectionLevel',
+      label: 'Protection Level',
+      validators: { required: true },
+      options: [
+        { key: 'Detect', value: 'Detect'},
+        { key: 'Protect', value: 'Protect'}
+      ]
+    })
+  ],
+
+  mapCrispElementAttributes: (attributes: McsObjectCrispElementServiceAttribute[]) => {
+    let mappedProperties: { key: string, value: any }[] = [];
+    if (isNullOrEmpty(attributes)) { return mappedProperties; }
+
+    mappedProperties.push({ key: 'protectionLevel',
+      value: findCrispElementAttribute(CrispAttributeNames.HipsProtectionLvl, attributes)?.value } );
+
     return mappedProperties;
   }
 }

@@ -15,7 +15,8 @@ import {
   VdcVmInstanceProvisionWorkflowGroup,
   HostSecurityProvisionAntiVirusWorkflowGroup,
   HostSecurityProvisionHidsWorkflowGroup,
-  ManagementToolsRenameWorkflowGroup
+  ManagementToolsRenameWorkflowGroup,
+  VdcVmInstanceProvisionComplexWorkflowGroup
 } from './workflow-groups';
 import { WorkflowGroup } from './workflow-group.interface';
 import { VmBackupProvisionWorkflowGroup } from './workflow-groups/vm-backup-provision.workflow';
@@ -42,6 +43,7 @@ export const workflowGroupMap: Map<WorkflowGroupId, Type<WorkflowGroup>> = new M
   [ WorkflowGroupId.ServerBackupProvision,  ServerBackupProvisionWorkflowGroup ],
 
   [ WorkflowGroupId.VirtualDataCentreVmInstanceProvision,  VdcVmInstanceProvisionWorkflowGroup ],
+  [ WorkflowGroupId.VirtualDataCentreVmInstanceProvisionComplex, VdcVmInstanceProvisionComplexWorkflowGroup ],
 
   [ WorkflowGroupId.VmBackupProvision,  VmBackupProvisionWorkflowGroup ],
 ]);

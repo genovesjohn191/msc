@@ -459,6 +459,7 @@ export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
     [ ProductType.VirtualDataCentreVmInstance,
       [
         WorkflowGroupId.VirtualDataCentreVmInstanceProvision,
+        // WorkflowGroupId.VirtualDataCentreVmInstanceProvisionComplex,
         WorkflowGroupId.ManagementToolsAddCvm,
         WorkflowGroupId.ManagementToolsQueryStatus,
         WorkflowGroupId.ManagementToolsRemoveCvm,

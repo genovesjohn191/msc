@@ -8,6 +8,7 @@
  */
 export enum WorkflowGroupId {
   VirtualDataCentreVmInstanceProvision = 100001,
+  VirtualDataCentreVmInstanceProvisionComplex = 100002,
 
   DedicatedStorageAttachVolume = 200001,
   DedicatedStorageAttachVolumeCluster  = 200002,
@@ -32,6 +33,7 @@ export enum WorkflowGroupId {
 
 export const workflowGroupIdText = {
   [WorkflowGroupId.VirtualDataCentreVmInstanceProvision]: 'Provision Virtual Data Centre VM Instance',
+  [WorkflowGroupId.VirtualDataCentreVmInstanceProvisionComplex]: 'Provision Virtual Data Centre VM Instance+',
 
   [WorkflowGroupId.DedicatedStorageAttachVolume]: 'Attach Volume',
   [WorkflowGroupId.DedicatedStorageAttachVolumeCluster]: 'Attach Volume Cluster',

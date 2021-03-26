@@ -12,12 +12,13 @@
   }
 
   &.child {
-    margin-top: 0;
-    top: -1px;
+    margin-top: -1px;
+    background-color: $color-grey-07;
     border-top: 1px dashed $color-grey-04;
 
     &.mat-expanded {
       border-top: 1px solid $color-grey-04;
+      background-color: $color-white;
       margin-top: $space-medium;
     }
   }

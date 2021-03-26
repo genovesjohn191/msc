@@ -11,7 +11,7 @@
   <mat-label [attr.for]="id" >{{ isLoading ? 'Loading...' : label }}</mat-label>
 
   <mat-select
-    [id]="id"
+    [mcsId]="id"
     [required]="required"
     [disabled]="disabled"
     [(value)]="config.value"

@@ -2,7 +2,6 @@ import { McsEnumSerializationBase } from '../serialization/mcs-enum-serializatio
 
 export enum WorkflowType {
   ManagedVmCreate = 'launchpad.managedvm.create',
-  AddHids = 'launchpad.hids.addon',
 
   ManagementToolsAddCvm = 'launchpad.managementtools.addcvm',
   ManagementToolsRemoveCvm = 'launchpad.managementtools.deletecvm',
