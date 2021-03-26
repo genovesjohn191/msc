@@ -1,4 +1,5 @@
 export * from './vdc-vm-instance-provision.workflow';
+export * from './vdc-vm-instance-provision.complex-workflow';
 
 export * from './dedicated-storage-attach-volume.workflow';
 export * from './dedicated-storage-attach-volume-cluster.workflow';

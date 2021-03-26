@@ -4,7 +4,7 @@ export enum CrispAttributeNames {
   BaasRetentionReq = 'BAAS_RETENTION_REQ',
   DailyBackupQuota = 'DAILY-BACKUP-QUOTA',
   DesignatedUsage = 'DESIGNATED_USAGE',
-  HidsProtectionLvl = 'HIPS_PROTECTION_LVL',
+  HipsProtectionLvl = 'HIPS_PROTECTION_LVL',
   Ic2Access = 'IC2_ACCESS',
   Ic2DiskSpace = 'IC2_DISK_SPACE',
   Ic2Ip = 'IC2_IP',

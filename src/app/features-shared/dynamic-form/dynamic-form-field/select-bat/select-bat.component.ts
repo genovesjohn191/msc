@@ -87,7 +87,6 @@ export class DynamicSelectBatComponent extends DynamicSelectFieldComponentBase<M
     return this._apiService.getBackupAggregationTargets(param, optionalHeaders).pipe(
       takeUntil(this.destroySubject),
       map((response) => {
-        console.log(response.collection);
         return response && response.collection;
       })
     );

@@ -336,7 +336,7 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
       let tasks$ = this._createAssociatedServiceTasks(workflowGroup, childServices);
 
       if (isNullOrEmpty(tasks$)) {
-        this._renderWorkflowGroup(this.context.config);
+        this._renderWorkflowGroup(this.context.config, childServices);
         this._changeDetector.markForCheck();
         return;
       }
@@ -352,14 +352,14 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
           });
         }
 
-        this._renderWorkflowGroup(this.context.config);
+        this._renderWorkflowGroup(this.context.config, childServices);
         this._changeDetector.markForCheck();
 
         return throwError('Retrieving CRISP associated CRISP elements failed.');
       }))
       .subscribe((results: McsObjectCrispElement[]) => {
         this.context.config.children = this._buildWorkflowDataForChildWorkflows(workflowGroup, results);
-        this._renderWorkflowGroup(this.context.config);
+        this._renderWorkflowGroup(this.context.config, childServices);
         this._changeDetector.markForCheck();
       });
     });
@@ -447,7 +447,7 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
     });
   }
 
-  private _renderWorkflowGroup(config: WorkflowGroupConfig): void {
+  private _renderWorkflowGroup(config: WorkflowGroupConfig, associateServices: McsObjectCrispElementService[] = []): void {
     let workflows: LaunchPadWorkflow[] = this._workflowService.getWorkflowGroup(config);
     this.context.serviceId = config.parent.serviceId;
 
@@ -458,21 +458,40 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
     if (isNullOrEmpty(workflows)) {
       return;
     }
+
     // Render workflows
     workflows.forEach(workflow => {
-      this._renderWorkflow(workflow);
+      this._renderWorkflow(workflow, associateServices);
     });
   }
 
-  private _renderWorkflow(param: LaunchPadWorkflow): void {
+  private _renderWorkflow(param: LaunchPadWorkflow, associateServices: McsObjectCrispElementService[] = []): void {
     let componentFactory = this._componentFactoryResolver.resolveComponentFactory(LaunchPadWorkflowComponent);
     let componentRef = this.workflowGroup.viewContainerRef.createComponent<LaunchPadWorkflowComponent>(componentFactory);
 
     // Set workflow settings
     componentRef.instance.initialize(param);
-    if (param.hasValueOverride) {
-      componentRef.instance.open();
+
+    if (!isNullOrEmpty(associateServices)) {
+      // Initialize workflow based on associated service info
+      let isParentWorkflow = !isNullOrEmpty(param.serviceId);
+      let workflowGroup = this._getWorkflowGroupById(this.context.workflowGroupId);
+
+      let crispProductType: string = ProductType[workflowGroup.parent.crispProductType];
+      if (!isParentWorkflow) {
+        crispProductType = ProductType[workflowGroup.children?.find((child) => child.id === param.type).crispProductType];
+      }
+
+      let isAssociated: boolean = associateServices?.findIndex((service) => service.productType.toString() === crispProductType) >= 0;
+      if (isAssociated) { componentRef.instance.open(); }
+
+    } else {
+      // Loading workflow from draft
+      if (param.hasValueOverride) {
+        componentRef.instance.open();
+      }
     }
+
 
     this.workflowComponentRef.push(componentRef);
   }
