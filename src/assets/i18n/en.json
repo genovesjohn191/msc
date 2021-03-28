@@ -2938,6 +2938,10 @@
     "title": "Delete Snapshot",
     "message": "Deleting <strong>{{snapshot_name}}</strong> cannot be undone.\r\n\nAre you sure you wish to continue?"
   },
+  "dialogInvalidDiskSnapshot": {
+    "title": " Invalid Disk Configuration",
+    "message": "A snapshot cannot be raised as this server currently has one or more disks which are not linked to a storage profile.\r\n\nPlease raise a ticket if this is unexpected. In the meantime, this operation may be possible directly within vCloud."
+  },
   "dialogSessionIdle": {
     "title": "Hey, are you still there?",
     "alert": "We've noticed you've been inactive for a while. Click to continue your session, otherwise you'll be signed out in ",
