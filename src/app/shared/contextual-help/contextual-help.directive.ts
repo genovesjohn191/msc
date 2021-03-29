@@ -170,6 +170,16 @@ export class ContextualHelpDirective implements OnInit, OnDestroy {
           hostElement: this._elementRef.nativeElement,
           placement: 'right-top'
         });
+
+        let helpTextContainerTop = this._globalElementRef.globalElementItem.getBoundingClientRect().top;
+        let helpTextContainerHeight = this._globalElementRef.globalElementItem.offsetHeight;
+        let hostElementHeight = this._elementRef.nativeElement.getBoundingClientRect().height
+        let isHelpTextContentFitToScreen = this._isHelpTextContentFitToScreen(helpTextContainerTop, helpTextContainerHeight);
+
+        if (!isHelpTextContentFitToScreen) {
+          let helpTextContainerTopValue = (helpTextContainerTop - helpTextContainerHeight) + hostElementHeight;
+          this._globalElementRef.globalElementItem.style.top = `${helpTextContainerTopValue}px`;
+        }
       });
   }
 
@@ -181,5 +191,18 @@ export class ContextualHelpDirective implements OnInit, OnDestroy {
   private _setTabIndex(): void {
     this._renderer.setAttribute(this._elementRef.nativeElement, 'tabindex', '0');
     this._renderer.setStyle(this._elementRef.nativeElement, 'outline', 'none');
+  }
+
+  /**
+   * This will return true when the contextual help text to be opened is fit to screen
+   * otherwise false (overlapped)
+   */
+  private _isHelpTextContentFitToScreen(helpTextContainerTop: number, helpTextContainerHeight: number): boolean {
+    let fitToScreen: boolean = true;
+    let windowHeight = window.innerHeight;
+    let helpTextActualHeight = helpTextContainerTop + helpTextContainerHeight;
+    if (helpTextActualHeight > windowHeight) { fitToScreen = false; }
+
+    return fitToScreen;
   }
 }
