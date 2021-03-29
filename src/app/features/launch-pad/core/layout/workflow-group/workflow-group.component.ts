@@ -181,7 +181,8 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
 
     if (!requiresCrispData) {
       this.context.serviceId = event.serviceId;
-      this._updateServiceId(this.context.serviceId);
+      this.context.productId = event.productId.toString();
+      this._updateWorkflowInstances(this.context);
       this._changeDetector.markForCheck();
       return;
     }
@@ -192,16 +193,17 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
     loadSaveStateDialogRef.afterClosed()
     .pipe(takeUntil(this._dialogSubject))
     .subscribe(result => {
-      if (result === true) {
+      if (result) {
         this.context.serviceId = event.serviceId;
-        this.context.productId = event.productId;
+        this.context.productId = event.productId.toString();
 
         this._initWorkflowGroup();
-        this._updateServiceId(this.context.serviceId);
+        this._updateWorkflowInstances(this.context);
         this._changeDetector.markForCheck();
       } else {
         this.context.serviceId = event.serviceId;
-        this._updateServiceId(this.context.serviceId);
+        this.context.productId = event.productId.toString();
+        this._updateWorkflowInstances(this.context);
         this._changeDetector.markForCheck();
       }
     });
@@ -256,7 +258,8 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
     let parent: WorkflowData = this._buildWorkflowData({
       id: workflowGroup.parent.id,
       form: workflowGroup.parent.form,
-      serviceId: this.context.serviceId
+      serviceId: this.context.serviceId,
+      productId: this.context.productId
     });
     let children: WorkflowData[] = this._buildWorkflowDataForChildWorkflows(workflowGroup);
 
@@ -285,7 +288,8 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
         let parent: WorkflowData = this._buildWorkflowData({
           id: workflowGroup.parent.id,
           form: workflowGroup.parent.form,
-          serviceId: this.context.serviceId
+          serviceId: this.context.serviceId,
+          productId: this.context.productId
         });
 
         this._context.config = {
@@ -305,6 +309,7 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
         id: workflowGroup.parent.id,
         form: workflowGroup.parent.form,
         serviceId: this.context.serviceId,
+        productId: this.context.productId,
         crispElementServiceAttributes: response.serviceAttributes
       });
 
@@ -369,12 +374,14 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
     id: WorkflowType;
     form: LaunchPadForm;
     serviceId?: string;
+    productId?: string;
     crispElementServiceAttributes?: McsObjectCrispElementServiceAttribute[]
   }): WorkflowData {
 
     return {
       id : options.id,
       serviceId: options.serviceId,
+      productId: options.productId,
       propertyOverrides: this._buildPropertyOverrides(options.form, options.crispElementServiceAttributes),
     };
   }
@@ -439,10 +446,13 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
     return tasks$;
   }
 
-  private _updateServiceId(serviceId: string): void {
+  private _updateWorkflowInstances(saveState: WorkflowGroupSaveState): void {
     this.workflowComponentRef.forEach(ref => {
       if (!isNullOrEmpty(ref.instance.serviceId)) {
-        ref.instance.serviceId = serviceId;
+        ref.instance.serviceId = saveState.serviceId;
+      }
+      if (!isNullOrEmpty(ref.instance.productId)) {
+        ref.instance.productId = saveState.productId;
       }
     });
   }
@@ -450,6 +460,7 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
   private _renderWorkflowGroup(config: WorkflowGroupConfig, associateServices: McsObjectCrispElementService[] = []): void {
     let workflows: LaunchPadWorkflow[] = this._workflowService.getWorkflowGroup(config);
     this.context.serviceId = config.parent.serviceId;
+    this.context.productId = config.parent.productId;
 
     // Clear references and instances of existing workflow
     this.workflowComponentRef = [];

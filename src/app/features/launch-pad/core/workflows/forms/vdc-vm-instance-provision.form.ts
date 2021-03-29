@@ -35,7 +35,7 @@ export const vdcVmInstanceProvisionForm: LaunchPadForm = {
       dependents: ['os', 'storage', 'network', 'ipAddress'],
       validators: { required: true },
       settings: { preserve: true },
-      hideSelfManaged: false
+      hideSelfManaged: true
     }),
     new DynamicInputHostNameField({
       key: 'name',
@@ -85,24 +85,10 @@ export const vdcVmInstanceProvisionForm: LaunchPadForm = {
       dependents: ['ipAddress'],
       validators: { required: true }
     }),
-    new DynamicSelectField({
-      key: 'ipAllocationMode',
-      label: 'IP Mode',
-      options: [
-        { key: 'Dhcp', value: 'DHCP'},
-        { key: 'Pool', value: 'Pool'},
-        { key: 'Manual', value: 'Manual'}
-      ],
-      value: 'Dhcp',
-      eventName: 'ip-mode-change',
-      dependents: ['ipAddress'],
-      validators: { required: true }
-    }),
     new DynamicInputIpField({
       key: 'ipAddress',
       label: 'IP Address',
       placeholder: 'Enter an IP address',
-      settings: { hidden: true },
       useNetworkRange: true
     }),
     new DynamicSlideToggleField({
