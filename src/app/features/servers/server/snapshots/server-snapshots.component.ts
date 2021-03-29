@@ -1,54 +1,57 @@
 import {
-  Component,
-  OnDestroy,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  ViewChild,
-  OnInit,
-  Injector
-} from '@angular/core';
-import {
+  of,
   throwError,
   Observable,
-  Subscription,
-  of
+  Subscription
 } from 'rxjs';
 import {
   catchError,
+  concatMap,
   map,
-  tap,
-  concatMap
+  tap
 } from 'rxjs/operators';
-import { TranslateService } from '@ngx-translate/core';
-import { McsEvent } from '@app/events';
+
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Injector,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import { McsDataStatusFactory } from '@app/core';
+import { McsEvent } from '@app/events';
 import {
-  isNullOrEmpty,
-  getUniqueRecords,
-  unsubscribeSafely,
-  getSafeProperty,
-  CommonDefinition
-} from '@app/utilities';
-import {
-  StdDateFormatPipe,
-  FormMessage,
-  DialogService,
-  DialogConfirmation,
-  DialogMessageConfig
-} from '@app/shared';
-import {
+  McsApiErrorResponse,
+  McsFeatureFlag,
   McsJob,
-  McsServerSnapshot,
-  McsServerStorageDevice,
-  McsServer,
   McsResource,
   McsResourceStorage,
-  McsApiErrorResponse,
-  McsServerSnapshotRestore,
+  McsServer,
+  McsServerSnapshot,
   McsServerSnapshotCreate,
   McsServerSnapshotDelete,
-  McsFeatureFlag
+  McsServerSnapshotRestore,
+  McsServerStorageDevice
 } from '@app/models';
+import {
+  DialogConfirmation,
+  DialogMessageConfig,
+  DialogService,
+  FormMessage,
+  StdDateFormatPipe
+} from '@app/shared';
+import {
+  getSafeProperty,
+  getUniqueRecords,
+  isNullOrEmpty,
+  isNullOrUndefined,
+  unsubscribeSafely,
+  CommonDefinition
+} from '@app/utilities';
+import { TranslateService } from '@ngx-translate/core';
+
 import { ServerDetailsBase } from '../server-details.base';
 
 enum SnapshotDialogType {
@@ -57,7 +60,8 @@ enum SnapshotDialogType {
   Restore,
   Delete,
   InsufficientStorage,
-  DiskConflict
+  DiskConflict,
+  InvalidDisk
 }
 
 @Component({
@@ -131,6 +135,10 @@ export class ServerSnapshotsComponent extends ServerDetailsBase
       case SnapshotDialogType.InsufficientStorage:
         this._showInsufficientDiskDialog(resource);
         break;
+
+      case SnapshotDialogType.InvalidDisk:
+        this._showInvalidDiskDialog(resource);
+        break;
     }
   }
 
@@ -171,6 +179,17 @@ export class ServerSnapshotsComponent extends ServerDetailsBase
       type: 'info',
       title: this._translateService.instant('dialogInsufficientStorageSnapshot.title'),
       message: this._translateService.instant('dialogInsufficientStorageSnapshot.message', { vdc_name: resource.name })
+    } as DialogMessageConfig;
+
+    this._dialogService.openMessage(dialogData);
+  }
+
+  private _showInvalidDiskDialog(resource: McsResource): void {
+    let dialogData = {
+      data: resource,
+      type: 'info',
+      title: this._translateService.instant('dialogInvalidDiskSnapshot.title'),
+      message: this._translateService.instant('dialogInvalidDiskSnapshot.message', { vdc_name: resource.name })
     } as DialogMessageConfig;
 
     this._dialogService.openMessage(dialogData);
@@ -384,7 +403,7 @@ export class ServerSnapshotsComponent extends ServerDetailsBase
     let storage = resourceStorage && resourceStorage.find((profile) => {
       return profile.name === storageProfile;
     });
-    return !isNullOrEmpty(storage) ? storage.availableMB : 0;
+    return storage?.availableMB;
   }
 
   /**
@@ -403,6 +422,11 @@ export class ServerSnapshotsComponent extends ServerDetailsBase
     } else {
       let storageProfile = server.storageDevices[0].storageProfile;
       let resourceSizeMb = this._getStorageProfileAvailableMB(resource.storage, storageProfile);
+      if (isNullOrUndefined(resourceSizeMb)) {
+        dialogType = SnapshotDialogType.InvalidDisk;
+        return dialogType;
+      }
+
       let disksSizeMb = server.storageDevices && server.storageDevices
         .map((disk) => disk.sizeMB)
         .reduce((totalSize, currentSize) => totalSize + currentSize);
