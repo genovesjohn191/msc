@@ -48,6 +48,9 @@ export class LaunchPadWorkflowComponent {
   public serviceId?: string;
 
   @Input()
+  public productId?: string;
+
+  @Input()
   public fieldData: DynamicFormFieldConfigBase[];
 
   @Input()
@@ -85,6 +88,7 @@ export class LaunchPadWorkflowComponent {
       referenceId: this.referenceId,
       parentReferenceId: this.parentReferenceId,
       serviceId: this.serviceId,
+      productId: this.productId,
       properties: this.form.getRawValue()
     };
   }
@@ -99,6 +103,7 @@ export class LaunchPadWorkflowComponent {
     this.referenceId = workflow.referenceId;
     this.parentReferenceId = workflow.parentReferenceId;
     this.serviceId = workflow.serviceId;
+    this.productId = workflow.productId;
 
     // Set fields
     this.form.setValues(workflow.properties);
@@ -134,6 +139,7 @@ export class LaunchPadWorkflowComponent {
     this.referenceId = workflow.referenceId;
     this.parentReferenceId = workflow.parentReferenceId;
     this.serviceId = workflow.serviceId;
+    this.productId = workflow.productId;
     this.fieldData = workflow.properties;
   }
 }

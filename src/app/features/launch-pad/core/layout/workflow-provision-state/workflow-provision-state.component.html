@@ -27,7 +27,15 @@
         <small>{{ getTaskInfo(workflow)?.errorMessage }}</small>
       </div>
       <br />
-      <mat-progress-bar [mode]="getTaskInfo(workflow)?.status < 2 ? 'indeterminate' : 'determinate'" [color]="getTaskInfo(workflow)?.status < 3 ? 'primary' : 'warn'"></mat-progress-bar>
+
+      <div  [ngSwitch]="getTaskInfo(workflow)?.status">
+        <mat-progress-bar *ngSwitchCase="0" mode="determinate" color="primary" value="0"></mat-progress-bar >
+        <mat-progress-bar *ngSwitchCase="1" mode="indeterminate" color="primary"></mat-progress-bar >
+        <mat-progress-bar *ngSwitchCase="2" mode="indeterminate" color="primary"></mat-progress-bar >
+        <mat-progress-bar *ngSwitchCase="3" mode="determinate" color="primary"></mat-progress-bar >
+        <mat-progress-bar *ngSwitchDefault mode="determinate" color="warn"></mat-progress-bar >
+      </div>
+      <!-- <mat-progress-bar [mode]="getTaskInfo(workflow)?.status < 2 ? 'indeterminate' : 'determinate'" [color]="getTaskInfo(workflow)?.status < 3 ? 'primary' : 'warn'"></mat-progress-bar> -->
       <br />
       <mcs-cta-list>
         <mcs-cta-list-panel *ngFor="let log of getTaskInfo(workflow)?.logs" [icon]="log.logType === 'ERROR' ? errorIcon : infoIcon" compact="true">

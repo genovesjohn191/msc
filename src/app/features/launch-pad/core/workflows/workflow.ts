@@ -8,6 +8,7 @@ export class LaunchPadWorkflow implements Workflow {
   public referenceId: string;
   public parentReferenceId?: string;
   public serviceId?: string;
+  public productId?: string;
   public title: string;
   public required: boolean = false;
   public properties: DynamicFormFieldConfigBase[];
@@ -19,6 +20,7 @@ export class LaunchPadWorkflow implements Workflow {
     referenceId: string,
     required?: boolean,
     serviceId?: string,
+    productId?: string,
     parentReferenceId?: string,
     properties: DynamicFormFieldConfigBase[],
     data?: { key: string, value: any }[]
@@ -29,6 +31,7 @@ export class LaunchPadWorkflow implements Workflow {
     this.referenceId = options.referenceId;
     this.parentReferenceId = options.parentReferenceId || '';
     this.serviceId = options.serviceId;
+    this.productId = options.productId;
     this.properties = options.properties;
 
     this._setDefaultValues(options.data);

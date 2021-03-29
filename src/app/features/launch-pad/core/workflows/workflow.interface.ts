@@ -15,6 +15,7 @@ export interface WorkflowConfig {
 export interface WorkflowData {
   id: WorkflowType;
   serviceId?: string;
+  productId?: string;
   referenceId?: string;
   propertyOverrides?: { key: string, value: any }[];
 }
@@ -25,6 +26,7 @@ export interface Workflow {
   referenceId: string;
   parentReferenceId?: string;
   serviceId?: string;
+  productId?: string;
   properties: any;
   hasValueOverride?: boolean;
 }

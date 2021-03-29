@@ -42,6 +42,7 @@ export class WorkflowFactory {
       type: options.workflowGroup.parent.id,
       referenceId: options.config.parent.referenceId  || Guid.newGuid().toString(),
       serviceId: options.config.parent.serviceId || '',
+      productId: options.config.parent.productId || '',
       title: options.workflowGroup.parent.title,
       required: true,
       // Clone the form to ensure data is not persisted

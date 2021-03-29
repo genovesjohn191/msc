@@ -27,7 +27,11 @@ import { LaunchPadLoadStateDialogComponent } from './layout/workflow-load-state-
 import { WorkflowGroupSaveState } from './workflows/workflow-group.interface';
 import { Workflow } from './workflows/workflow.interface';
 import { McsApiService } from '@app/services';
-import { BreakpointSerialization, McsApiCollection, McsJob, McsWorkflowCreate, ProductType } from '@app/models';
+import {
+  McsApiCollection,
+  McsJob,
+  McsWorkflowCreate
+} from '@app/models';
 import { WorkflowProvisionCompletionState } from './layout/workflow-provision-state/workflow-provision-state.component';
 
 enum WizardStep  {
@@ -175,6 +179,7 @@ export class LaunchPadComponent implements OnDestroy, IMcsNavigateAwayGuard {
       parentReferenceId: workflow.parentReferenceId,
       companyId: this.context.companyId,
       serviceId: workflow.serviceId,
+      productId: workflow.productId,
       properties: workflow.properties
     }));
 
