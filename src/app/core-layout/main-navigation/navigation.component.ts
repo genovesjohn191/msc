@@ -1,5 +1,3 @@
-import { Subscription } from 'rxjs';
-
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -9,6 +7,11 @@ import {
   OnInit,
   ViewEncapsulation
 } from '@angular/core';
+
+import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
+import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
+
 import {
   CoreConfig,
   McsAccessControlService,
@@ -31,7 +34,6 @@ import {
   unsubscribeSafely,
   CommonDefinition
 } from '@app/utilities';
-import { EventBusDispatcherService } from '@peerlancers/ngx-event-bus';
 
 @Component({
   selector: 'mcs-navigation',
@@ -140,6 +142,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
     private _authenticationIdentity: McsAuthenticationIdentity,
     private _authenticationService: McsAuthenticationService,
     private _coreConfig: CoreConfig,
+    private _translateService: TranslateService
   ) {
     this._updateOnCompanySwitch();
   }
@@ -185,6 +188,15 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
   public get workflowReportingLink(): string {
     return this._authenticationIdentity.metadataLinks.find((link) => link.key === 'workflow_report')?.value;
+  }
+
+  public get catalogLinkText(): string {
+    let hasSolutionCatalogAccess = this._accessControlService.hasAccessToFeature([McsFeatureFlag.CatalogSolutionListing]);
+    if (hasSolutionCatalogAccess) {
+      return this._translateService.instant(`navigation.productsAndSolutions`);
+    }
+
+    return this._translateService.instant(`navigation.catalog`);
   }
 
   public getCategoryLabel(routeCategory: RouteCategory): string {
