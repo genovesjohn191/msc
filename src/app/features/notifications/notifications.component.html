@@ -1,12 +1,11 @@
 <mcs-page [header]="'notifications.header' | translate">
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef>
-
     <!-- Notifications Action -->
     <mcs-top-panel-item *mcsTopPanelItemDef>
       <div class="listing-action-wrapper">
-        <div class="total-record-count">
-          <span>{{ totalRecordsCount | mcsPlural:
+        <div class="total-record-count" *ngIf="dataSource?.totalCount$ | async as totalCount">
+          <span>{{ totalCount | mcsPlural:
                 ('notifications.dataSingular' | translate) : ('notifications.dataPlural' | translate) }}
           </span>
         </div>
@@ -23,8 +22,10 @@
 
     <!-- Column Filter -->
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="'notifications.filterColumn' | translate" offset="medium">
-      <mcs-column-filter [filters]="dataFilters"
-        (dataChange)="onColumnFilterChange($event)"></mcs-column-filter>
+      <mcs-column-selector #columnFilter
+        storageKey="notifications"
+        [defaultFilters]="defaultColumnFilters">
+      </mcs-column-selector>
     </mcs-left-panel-item>
   </mcs-left-panel>
 
@@ -35,14 +36,13 @@
       <mcs-search *ngIf="isMobile" #search mcsId="notifications-mobile-search"></mcs-search>
 
       <!-- Table -->
-      <mcs-table #table [dataSource]="dataSource">
-
+      <table mat-table [dataSource]="dataSource">
         <!-- Notification Column -->
-        <ng-container mcsColumnDef="notification">
-          <mcs-header-cell *mcsHeaderCellDef>
-            {{ columnSettings.notification.text }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" text-wrap>
+        <ng-container matColumnDef="notification">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ 'columnHeader.notification' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row">
             <mcs-item>
               <ng-container *ngIf="row.inProgress; else iconTemplate">
                 <mcs-loader size="small"></mcs-loader>
@@ -55,74 +55,75 @@
                 {{ row.summaryInformation }}
               </span>
             </mcs-item>
-          </mcs-data-cell>
+          </td>
         </ng-container>
 
         <!-- User Column -->
-        <ng-container mcsColumnDef="user">
-          <mcs-header-cell *mcsHeaderCellDef>
-            {{ columnSettings.user.text }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row">
+        <ng-container matColumnDef="user">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ 'columnHeader.user' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row">
             <span>{{ row.initiatorFullName }}</span><br/>
             <span read-only *ngIf="activeCompany?.id !== row.initiatorCompanyId">
               {{ 'notifications.account' | translate }}
             </span>
-          </mcs-data-cell>
+          </td>
         </ng-container>
 
         <!-- Start Time Column -->
-        <ng-container mcsColumnDef="startTime">
-          <mcs-header-cell *mcsHeaderCellDef hidden-small>
-            {{ columnSettings.startTime.text }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
-              {{ row.startedOn | mcsStdDateFormat }}
-          </mcs-data-cell>
+        <ng-container matColumnDef="startTime">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ 'columnHeader.startTime' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row">
+            {{ row.startedOn | mcsStdDateFormat }}
+          </td>
         </ng-container>
 
         <!-- Completed Column -->
-        <ng-container mcsColumnDef="completed">
-          <mcs-header-cell *mcsHeaderCellDef hidden-small>
-            {{ columnSettings.completed.text }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
-              {{ row.endedOn | mcsStdDateFormat }}
-          </mcs-data-cell>
-        </ng-container>
-
-        <!-- Data Status Integration -->
-        <ng-container mcsDataStatusDef>
-          <mcs-data-empty *mcsDataEmptyDef>
-            <span>{{ 'notifications.noNotifications' | translate }}</span>
-          </mcs-data-empty>
-          <mcs-data-error *mcsDataErrorDef>
-            <div class="listing-status-wrapper">
-              <span>{{ 'notifications.errorMessage' | translate }}</span>
-              <a (click)="retryDatasource()"
-                mcsId
-                mcsEventTracker="retry-loading-notifications"
-                mcsEventCategory="notification"
-                mcsEventLabel="notification-listing-page">{{ 'notifications.retry' | translate }}</a>.
-            </div>
-          </mcs-data-error>
+        <ng-container matColumnDef="completed">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ 'columnHeader.completed' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row">
+            {{ row.endedOn | mcsStdDateFormat }}
+          </td>
         </ng-container>
 
         <!-- Header and Data row -->
-        <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
-        <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"
+        <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"></tr>
+        <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"
           mcsCursor="pointer"
           (click)="navigateToNotification(row)"
           mcsId="notification-row"
           mcsEventTracker="try-navigate-to-job-details"
           mcsEventCategory="notification"
-          mcsEventLabel="notification-listing-page"></mcs-data-row>
-      </mcs-table>
+          mcsEventLabel="notification-listing-page"></tr>
+      </table>
+
+      <!-- Table Status -->
+      <mcs-item orientation="block">
+        <div *ngIf="dataSource?.isInProgress$ | async" align="center">
+          <mcs-loader size="medium"></mcs-loader>
+        </div>
+        <div *ngIf="dataSource?.hasNoRecords$ | async" text-center>
+          <span>{{ 'notifications.noNotifications' | translate }}</span>
+        </div>
+        <div *ngIf="dataSource?.hasError$ | async" text-center>
+          <div class="listing-status-wrapper">
+            <span>{{ 'notifications.errorMessage' | translate }}</span>
+              <a (click)="retryDatasource()"
+                mcsId
+                mcsEventTracker="retry-loading-notifications"
+                mcsEventCategory="notification"
+                mcsEventLabel="notification-listing-page">{{ 'notifications.retry' | translate }}</a>.
+          </div>
+        </div>
+      </mcs-item>
 
       <!-- Paginator -->
-      <mcs-paginator #paginator
-        [hidden]="!hasNextPage"
-        [totalCount]="totalRecordsCount">
+      <mcs-paginator #paginator [totalCount]="dataSource?.totalCount$ | async">
       </mcs-paginator>
     </div>
   </mcs-content-panel>
