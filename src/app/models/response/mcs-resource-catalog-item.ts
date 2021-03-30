@@ -29,6 +29,6 @@ export class McsResourceCatalogItem extends McsEntityBase {
   public get isReady(): boolean  {
     // return this.catalogItem?.status === 'Ready';
     // TODO(apascual): FUSION-5546: The status should be implemented first in catalogItem
-    return false;
+    return true;
   }
 }
