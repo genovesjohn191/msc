@@ -37,26 +37,6 @@
       "exclude": true
     }
   },
-  "notificationFilter": {
-    "notification": {
-      "text": "Notification",
-      "value": true,
-      "exclude": true
-    },
-    "user": {
-      "text": "User",
-      "value": true,
-      "exclude": true
-    },
-    "startTime": {
-      "text": "Start Time",
-      "value": true
-    },
-    "completed": {
-      "text": "Completed",
-      "value": true
-    }
-  },
   "firewallFilter": {
     "firewall": {
       "value": true,

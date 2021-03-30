@@ -191,7 +191,6 @@ export class CommonDefinition {
   public static ASSETS_SVG_SMALL_LOCK_BLACK = 'small-lock-black';
 
   /** Filter Selector */
-  public static FILTERSELECTOR_NOTIFICATIONS_LISTING = 'notificationFilter';
   public static FILTERSELECTOR_ORDER_LISTING = 'orderFilter';
   public static FILTERSELECTOR_INTERNET_LISTING = 'internetFilter';
   public static FILTERSELECTOR_TOOLS_LISTING = 'toolsFilter';
