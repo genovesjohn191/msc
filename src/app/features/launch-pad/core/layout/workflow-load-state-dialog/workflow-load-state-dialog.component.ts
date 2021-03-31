@@ -8,6 +8,7 @@ import {
 } from '@angular/material/dialog';
 
 import { WorkflowGroupSaveState } from '../../workflows/workflow-group.interface';
+import { workflowGroupIdText } from '../../workflows/workflow-groups/workflow-group-type.enum';
 import { Workflow } from '../../workflows/workflow.interface';
 
 @Component({
@@ -16,12 +17,13 @@ import { Workflow } from '../../workflows/workflow.interface';
 })
 export class LaunchPadLoadStateDialogComponent {
   public workflows: Workflow[];
+  public workflowType: string;
 
   public constructor(
     public dialogRef: MatDialogRef<LaunchPadLoadStateDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: WorkflowGroupSaveState
   ) {
-
+    this.workflowType = workflowGroupIdText[data.workflowGroupId];
     this.workflows = data.workflows;
   }
 }
