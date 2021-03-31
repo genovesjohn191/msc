@@ -493,8 +493,18 @@ export class LaunchPadWorkflowGroupComponent implements OnInit, OnDestroy {
         crispProductType = ProductType[workflowGroup.children?.find((child) => child.id === param.type).crispProductType];
       }
 
-      let isAssociated: boolean = associateServices?.findIndex((service) => service.productType.toString() === crispProductType) >= 0;
-      if (isAssociated) { componentRef.instance.open(); }
+      let associatedIndex = associateServices?.findIndex((service) => service.productType.toString() === crispProductType);
+      let isAssociated: boolean = associatedIndex >= 0;
+
+      // Open panel if workflow has association to parent
+      if (isAssociated) {
+        componentRef.instance.open();
+
+        // Update the service ID for child workflow
+        if (!isParentWorkflow) {
+          componentRef.instance.serviceId = associateServices[associatedIndex].serviceId;
+        }
+      }
 
     } else {
       // Loading workflow from draft

@@ -118,7 +118,7 @@ export class LaunchPadObjectSelectorComponent implements OnInit {
         // Search CRISP for matches
         let queryParam = new McsObjectQueryParams();
         queryParam.keyword = value;
-        queryParam.pageSize = 10;
+        queryParam.pageSize = 50;
         queryParam.companyId = this._context.companyId;
         queryParam.productType = this._validProductTypes.join();
 
