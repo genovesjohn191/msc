@@ -5,49 +5,49 @@
 
   <p>{{ 'serversVdc.storageRefreshMessage' | translate }}</p>
 
-  <mcs-table [dataSource]="storageDatasource">
+  <table mat-table [dataSource]="dataSource">
     <!-- Storage Profile Column -->
-    <ng-container mcsColumnDef="storageProfile">
-      <mcs-header-cell *mcsHeaderCellDef>
-        {{ 'serversVdcStorage.columnHeaders.storageProfile' | translate }}
-      </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row" text-wrap>
+    <ng-container matColumnDef="storageProfile">
+      <th mat-header-cell *matHeaderCellDef hidden-small>
+        {{ 'columnHeader.storageProfile' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row" hidden-small>
         <mcs-item>
           <mcs-icon [key]="storageIconKey" size="small"></mcs-icon>
           <span text-wrap>{{ row.name }}</span>
         </mcs-item>
-      </mcs-data-cell>
+      </td>
     </ng-container>
 
     <!-- Usage Column -->
-    <ng-container mcsColumnDef="usage">
-      <mcs-header-cell *mcsHeaderCellDef hidden-small>
-        {{ 'serversVdcStorage.columnHeaders.usage' | translate }}
-      </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+    <ng-container matColumnDef="usage">
+      <th mat-header-cell *matHeaderCellDef hidden-small>
+        {{ 'columnHeader.usage' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row" hidden-small>
         <mcs-capacity-bar
           [(ngModel)]="row.usedMB"
-          [maxValue]="row.limitMB"></mcs-capacity-bar>
-      </mcs-data-cell>
+          [maxValue]="row.limitMB">
+        </mcs-capacity-bar>
+      </td>
     </ng-container>
 
     <!-- Tier Column -->
-    <ng-container mcsColumnDef="tier">
-      <mcs-header-cell *mcsHeaderCellDef hidden-small>
-        {{ 'serversVdcStorage.columnHeaders.tier' | translate }}
-      </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row" hidden-small>
+    <ng-container matColumnDef="tier">
+      <th mat-header-cell *matHeaderCellDef hidden-small>
+        {{ 'columnHeader.tier' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row" hidden-small>
         <span [innerHTML]="(iopsLabelPlaceholder |
           mcsTextPlaceholder: 'iops': row.iops) |
           mcsDataLabel"></span>
-      </mcs-data-cell>
+      </td>
     </ng-container>
 
-    <!-- Action Column -->
-    <ng-container mcsColumnDef="action">
-      <mcs-header-cell *mcsHeaderCellDef class="action-header-cell">
-      </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row">
+    <!-- Action column -->
+    <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef hidden-small></th>
+      <td mat-cell *matCellDef="let row" hidden-small text-center>
         <ng-container *ngIf="hasActionsEnabled(resource.scaleable, row)">
           <mcs-icon mcsStopPropagation [key]="cogIconKey" size="large"
             mcsPopover placement="bottom" orientation="left" theme="light"
@@ -74,21 +74,30 @@
             </div>
           </ng-template>
         </ng-container>
-      </mcs-data-cell>
+      </td>
     </ng-container>
 
-    <!-- Data Status Integration -->
-    <ng-container mcsDataStatusDef>
-      <mcs-data-empty *mcsDataEmptyDef>
-        <span>{{ 'serversVdcStorage.noStorage' | translate }} </span>
-      </mcs-data-empty>
-      <mcs-data-error *mcsDataErrorDef>
+    <tr mat-header-row *matHeaderRowDef="dataSource?.dataColumns$ | async"></tr>
+    <tr mat-row *matRowDef="let row; columns: dataSource?.dataColumns$ | async;"></tr>
+  </table>
+
+  <!-- Table Statuses -->
+  <mcs-item orientation="block">
+    <div *ngIf="dataSource?.isInProgress$ | async" align="center">
+      <mcs-loader size="medium"></mcs-loader>
+    </div>
+    <div *ngIf="dataSource?.hasNoRecords$ | async" text-center>
+      <span>{{ 'serversVdcStorage.noStorage' | translate }} </span>
+    </div>
+    <div *ngIf="dataSource?.hasError$ | async" text-center>
+      <div class="listing-status-wrapper">
         <span>{{ 'serversVdcStorage.errorGettingStorage' | translate }}</span>
-      </mcs-data-error>
-    </ng-container>
-
-    <!-- Header and Data row -->
-    <mcs-header-row *mcsHeaderRowDef="storageColumns"></mcs-header-row>
-    <mcs-data-row *mcsDataRowDef="let row; columns: storageColumns;"></mcs-data-row>
-  </mcs-table>
+        <a (click)="retryDatasource()"
+          mcsId
+          mcsEventTracker="retry-vdc-storage"
+          mcsEventCategory="servers"
+          mcsEventLabel="vdc-storage-listing-page">{{ 'serversVdcStorage.retry' | translate }}</a>.
+      </div>
+    </div>
+  </mcs-item>
 </mcs-presentation-panel>

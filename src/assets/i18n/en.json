@@ -1212,17 +1212,12 @@
   "serversVdcStorage": {
     "label": "Storage",
     "title": "Manage Storage",
-    "columnHeaders": {
-      "storageProfile": "Storage Profile",
-      "usage": "Usage",
-      "tier": "Tier",
-      "action": ""
-    },
     "iopsLabel": "Performance",
     "expandLink": "Expand",
     "newStorageProfile": "New Storage Profile",
     "loadingContent": "Loading list of storage.",
     "noStorage": "No storage available.",
+    "retry": "Try again shortly",
     "errorGettingStorage": "Sorry, something’s not right. We weren’t able to retrieve the list of storage."
   },
   "server": {
@@ -3086,14 +3081,17 @@
     "summary": "Summary",
     "startTime": "Start Time",
     "status": "Status",
+    "storageProfile": "Storage Profile",
     "targetComputer": "Target VM",
     "ticketNumber": "Ticket Number",
+    "tier": "Tier",
     "time": "Time",
     "toolsVersion": "Tools Version",
     "type": "Type",
     "unit": "Unit",
-    "user": "User",
     "uploadedDate": "Uploaded Date",
+    "usage": "Usage",
+    "user": "User",
     "vApp": "vApp",
     "vdc": "VDC",
     "zone": "Zone",
