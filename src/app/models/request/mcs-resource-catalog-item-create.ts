@@ -1,11 +1,16 @@
 import { JsonProperty } from '@app/utilities';
+
+import { McsApiJobRequestBase } from '../common/mcs-api-job-request-base';
 import {
   CatalogItemType,
   CatalogItemTypeSerialization
 } from '../enumerations/catalog-item-type.enum';
-import { McsApiJobRequestBase } from '../common/mcs-api-job-request-base';
 
-export class McsResourceCatalogItemCreate extends McsApiJobRequestBase<any> {
+export interface IMcsResourceCatalogItemCreateRefObj {
+  hideDetailsButton: boolean;
+}
+
+export class McsResourceCatalogItemCreate extends McsApiJobRequestBase<IMcsResourceCatalogItemCreateRefObj> {
   @JsonProperty({
     serializer: CatalogItemTypeSerialization,
     deserializer: CatalogItemTypeSerialization

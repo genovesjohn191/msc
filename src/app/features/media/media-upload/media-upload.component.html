@@ -39,7 +39,6 @@
         customClass="limited-view">
 
         <mcs-step-provisioning [jobs]="jobs$ | async"
-          [hideDetailsButton]="hideDetailsButton"
           [requestState]="dataStatus$ | async">
 
           <ng-container mcsProvisioningStepDescription>
