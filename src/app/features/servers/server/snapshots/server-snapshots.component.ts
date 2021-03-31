@@ -137,7 +137,7 @@ export class ServerSnapshotsComponent extends ServerDetailsBase
         break;
 
       case SnapshotDialogType.InvalidDisk:
-        this._showInvalidDiskDialog(resource);
+        this._showInvalidDiskDialog(server, resource);
         break;
     }
   }
@@ -184,12 +184,20 @@ export class ServerSnapshotsComponent extends ServerDetailsBase
     this._dialogService.openMessage(dialogData);
   }
 
-  private _showInvalidDiskDialog(resource: McsResource): void {
+  /**
+   * Shows the invalid disk dialog
+   * @param server The selected server to which to view the vcloud
+   * @param resource The resource group of the server
+   */
+  private _showInvalidDiskDialog(server: McsServer, resource: McsResource): void {
     let dialogData = {
       data: resource,
       type: 'info',
       title: this._translateService.instant('dialogInvalidDiskSnapshot.title'),
-      message: this._translateService.instant('dialogInvalidDiskSnapshot.message', { vdc_name: resource.name })
+      message: this._translateService.instant('dialogInvalidDiskSnapshot.message', {
+        vdc_name: resource.name,
+        vCloudUrl: server.portalUrl
+      })
     } as DialogMessageConfig;
 
     this._dialogService.openMessage(dialogData);

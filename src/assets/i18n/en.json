@@ -2935,7 +2935,7 @@
   },
   "dialogInvalidDiskSnapshot": {
     "title": " Invalid Disk Configuration",
-    "message": "A snapshot cannot be raised as this server currently has one or more disks which are not linked to a storage profile.\r\n\nPlease raise a ticket if this is unexpected. In the meantime, this operation may be possible directly within vCloud."
+    "message": "A snapshot cannot be raised as this server currently has one or more disks which are not linked to a storage profile.\r\n\nPlease raise a ticket if this is unexpected. In the meantime, this operation may be possible directly within <a href='{{vCloudUrl}}' target='_blank'>vCloud</a>."
   },
   "dialogSessionIdle": {
     "title": "Hey, are you still there?",

@@ -58,9 +58,6 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
   public jobsProvisioningLoadingText: JobsProvisioningLoadingTextDirective;
 
   @Input()
-  public hideDetailsButton: boolean;
-
-  @Input()
   public get jobs(): McsJob[] { return this._jobs; }
   public set jobs(value: McsJob[]) {
     if (value !== this._jobs) {
@@ -224,6 +221,14 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
     let resourceId = getSafeProperty(completedTask, (obj) => obj.referenceObject.resourceId);
     let hasNoResource = isNullOrEmpty(resourceId) || isNullOrEmpty(resourcePath);
     return hasNoResource ? undefined : `${resourcePath}/${resourceId}`;
+  }
+
+  /**
+   * Returns true when the details button should be hidden
+   */
+  public isActionHidden(job: McsJob): boolean {
+    if (isNullOrEmpty(job)) { return false; }
+    return getSafeProperty(job, (obj) => obj.clientReferenceObject.hideDetailsButton) || false;
   }
 
   /**

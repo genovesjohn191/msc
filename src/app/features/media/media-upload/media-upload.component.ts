@@ -11,7 +11,6 @@ import {
   McsWizardBase
 } from '@app/core';
 import {
-  getSafeFormValue,
   getSafeProperty,
   unsubscribeSafely,
   CommonDefinition
@@ -44,15 +43,6 @@ export class MediaUploadComponent extends McsWizardBase
 
   public get backIconKey(): string {
     return CommonDefinition.ASSETS_SVG_CHEVRON_LEFT;
-  }
-
-  public get hideDetailsButton(): boolean {
-    let mediaExtension = getSafeFormValue<string>(
-      this._detailsStep?.fcMediaExtension,
-      obj => obj.value,
-      ''
-    );
-    return mediaExtension.includes(CommonDefinition.FILE_EXTENSION_OVA);
   }
 
   public canNavigateAway(): boolean {

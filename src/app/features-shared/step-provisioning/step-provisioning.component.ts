@@ -30,9 +30,6 @@ export class StepProvisioningComponent implements OnChanges {
   public jobs: McsJob[];
 
   @Input()
-  public hideDetailsButton: boolean;
-
-  @Input()
   public requestState: DataStatus;
 
   constructor(private _changeDetectorRef: ChangeDetectorRef) { }
