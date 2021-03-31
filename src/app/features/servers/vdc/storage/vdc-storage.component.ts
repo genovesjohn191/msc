@@ -1,27 +1,25 @@
 import {
   Component,
-  OnInit,
   OnDestroy,
   ChangeDetectorRef,
   ChangeDetectionStrategy,
-  Injector
+  Injector,
+  ViewChild
 } from '@angular/core';
-import {
-  Observable,
-  of
-} from 'rxjs';
+import { Observable } from 'rxjs';
 import {
   map,
-  tap
+  switchMap,
 } from 'rxjs/operators';
 import {
-  McsTableDataSource,
   McsNavigationService,
-  McsAccessControlService
+  McsAccessControlService,
+  McsTableDataSource2,
+  McsTableEvents,
+  McsMatTableContext
 } from '@app/core';
 import {
   isNullOrEmpty,
-  getSafeProperty,
   CommonDefinition,
   createObject
 } from '@app/utilities';
@@ -30,9 +28,11 @@ import {
   RouteKey,
   McsExpandResourceStorage,
   McsResource,
-  McsFeatureFlag
+  McsFeatureFlag,
+  McsFilterInfo
 } from '@app/models';
 import { McsEvent } from '@app/events';
+import { ColumnFilter } from '@app/shared';
 import { VdcDetailsBase } from '../vdc-details.base';
 
 @Component({
@@ -44,11 +44,10 @@ import { VdcDetailsBase } from '../vdc-details.base';
   }
 })
 
-export class VdcStorageComponent extends VdcDetailsBase implements OnInit, OnDestroy {
-  public storageDatasource: McsTableDataSource<McsResourceStorage>;
-  public storageColumns: string[];
-
-  private _storageCache: Observable<McsResourceStorage[]>;
+export class VdcStorageComponent extends VdcDetailsBase implements OnDestroy {
+  public readonly dataSource: McsTableDataSource2<McsResourceStorage>;
+  public readonly dataEvents: McsTableEvents<McsResourceStorage>;
+  public readonly defaultColumnFilters: McsFilterInfo[];
 
   constructor(
     _injector: Injector,
@@ -57,12 +56,21 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnInit, OnDes
     private _accessControlService: McsAccessControlService,
   ) {
     super(_injector, _changeDetectorRef);
-    this.storageColumns = [];
-    this.storageDatasource = new McsTableDataSource();
+    this.dataSource = new McsTableDataSource2(this._getVdcStorage.bind(this));
+    this.defaultColumnFilters = [
+      createObject(McsFilterInfo, { value: true, exclude: true, id: 'storageProfile' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'usage' }),
+      createObject(McsFilterInfo, { value: true, exclude: false, id: 'tier' }),
+      createObject(McsFilterInfo, { value: true, exclude: true, id: 'action' })
+    ];
+    this.dataSource.registerColumnsFilterInfo(this.defaultColumnFilters);
   }
 
-  public ngOnInit() {
-    this._setDataColumns();
+  @ViewChild('columnFilter')
+  public set columnFilter(value: ColumnFilter) {
+    if (!isNullOrEmpty(value)) {
+      this.dataSource.registerColumnFilter(value);
+    }
   }
 
   public ngOnDestroy() {
@@ -75,6 +83,10 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnInit, OnDes
 
   public get cogIconKey(): string {
     return CommonDefinition.ASSETS_SVG_ELLIPSIS_HORIZONTAL;
+  }
+
+  public retryDatasource(): void {
+    this.dataSource.refreshDataRecords();
   }
 
   public canRequestCustomChange(serviceId: string): boolean {
@@ -119,36 +131,18 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnInit, OnDes
   /**
    * An abstract method that get notified when the vdc selection has been changed
    */
-  protected resourceChange(resource: McsResource): void {
-    this._updateTableDataSource(resource);
+  protected resourceChange(): void {
+    this._getVdcStorage();
   }
 
-  /**
-   * Sets data column for the corresponding table
-   */
-  private _setDataColumns(): void {
-    this.storageColumns = Object.keys(
-      this.translateService.instant('serversVdcStorage.columnHeaders')
-    );
-    if (isNullOrEmpty(this.storageColumns)) {
-      throw new Error('column definition for storage was not defined');
-    }
-  }
-
-  /**
-   * Initializes the data source of the resource storage table
-   */
-  private _updateTableDataSource(resource: McsResource): void {
-    let storageApiSource: Observable<McsResourceStorage[]>;
-    if (!isNullOrEmpty(resource)) {
-      storageApiSource = this.apiService.getResourceStorages(resource.id).pipe(
-        map((response) => getSafeProperty(response, (obj) => obj.collection)),
-        tap((records) => this._storageCache = of(records))
-      );
-    }
-
-    let tableDataSource = isNullOrEmpty(this._storageCache) ?
-      storageApiSource : this._storageCache;
-    this.storageDatasource.updateDatasource(tableDataSource);
+  private _getVdcStorage(): Observable<McsMatTableContext<McsResourceStorage>> {
+    return this.resource$.pipe(
+      switchMap((selectedResource) => {
+        return this.apiService.getResourceStorages(selectedResource.id).pipe(
+        map(response => new McsMatTableContext(response?.collection,
+          response?.totalCollectionCount)
+        )
+      )
+    }))
   }
 }
