@@ -141,6 +141,7 @@ export * from './request/mcs-resource-catalog-item-create';
 export * from './request/mcs-workflow-create';
 
 /** Response */
+export * from './response/mcs-availability-zone';
 export * from './response/mcs-identity';
 export * from './response/mcs-job-connection';
 export * from './response/mcs-job';
@@ -278,6 +279,7 @@ export * from './response/mcs-report-severity-alerts';
 export * from './response/mcs-report-management-service';
 export * from './response/mcs-report-update-management';
 export * from './response/mcs-report-audit-alerts';
+export * from './response/mcs-tenant';
 export * from './response/mcs-object-crisp-element';
 export * from './response/mcs-object-installed-service';
 

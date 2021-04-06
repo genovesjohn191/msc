@@ -15,6 +15,7 @@ import {
 } from '@angular/core';
 import {
   IMcsApiAccountService,
+  IMcsApiAvailabilityZonesService,
   IMcsApiAzureResourcesService,
   IMcsApiAzureServicesService,
   IMcsApiBatsService,
@@ -35,10 +36,12 @@ import {
   IMcsApiResourcesService,
   IMcsApiServersService,
   IMcsApiSystemService,
+  IMcsApiTenantsService,
   IMcsApiTicketsService,
   IMcsApiToolsService,
   IMcsApiWorkflowsService,
   McsApiAccountFactory,
+  McsApiAvailabilityZonesFactory,
   McsApiAzureResourceFactory,
   McsApiAzureServicesFactory,
   McsApiBatsFactory,
@@ -60,6 +63,7 @@ import {
   McsApiResourcesFactory,
   McsApiServersFactory,
   McsApiSystemFactory,
+  McsApiTenantsFactory,
   McsApiTicketsFactory,
   McsApiToolsFactory,
   McsApiWorkflowsFactory
@@ -76,6 +80,7 @@ import {
   McsApiErrorContext,
   McsApiErrorResponse,
   McsApiSuccessResponse,
+  McsAvailabilityZone,
   McsAzureResource,
   McsAzureService,
   McsBackUpAggregationTarget,
@@ -184,6 +189,7 @@ import {
   McsSystemMessageCreate,
   McsSystemMessageEdit,
   McsSystemMessageValidate,
+  McsTenant,
   McsTicket,
   McsTicketAttachment,
   McsTicketComment,
@@ -229,98 +235,102 @@ import { McsTicketsRepository } from './repositories/mcs-tickets.repository';
 export class McsApiService {
   private readonly _translate: TranslateService;
 
-  private readonly _jobsRepository: McsJobsRepository;
-  private readonly _internetRepository: McsInternetRepository;
-  private readonly _serversRepository: McsServersRepository;
-  private readonly _resourcesRepository: McsResourcesRepository;
-  private readonly _ticketsRepository: McsTicketsRepository;
-  private readonly _systemMessagesRepository: McsSystemMessagesRepository;
-  private readonly _ordersRepository: McsOrdersRepository;
-  private readonly _mediaRepository: McsMediaRepository;
-  private readonly _firewallsRepository: McsFirewallsRepository;
-  private readonly _batsRepository: McsBatsRepository;
-  private readonly _consoleRepository: McsConsoleRepository;
-  private readonly _companiesRepository: McsCompaniesRepository;
-  private readonly _licensesRepository: McsLicensesRepository;
   private readonly _accountRepository: McsAccountRepository;
   private readonly _azureResourceRepository: McsAzureResourcesRepository;
   private readonly _azureServicesRepository: McsAzureServicesRepository;
+  private readonly _batsRepository: McsBatsRepository;
+  private readonly _companiesRepository: McsCompaniesRepository;
+  private readonly _consoleRepository: McsConsoleRepository;
+  private readonly _firewallsRepository: McsFirewallsRepository;
+  private readonly _internetRepository: McsInternetRepository;
+  private readonly _jobsRepository: McsJobsRepository;
+  private readonly _licensesRepository: McsLicensesRepository;
+  private readonly _mediaRepository: McsMediaRepository;
+  private readonly _ordersRepository: McsOrdersRepository;
+  private readonly _resourcesRepository: McsResourcesRepository;
+  private readonly _serversRepository: McsServersRepository;
+  private readonly _systemMessagesRepository: McsSystemMessagesRepository;
+  private readonly _ticketsRepository: McsTicketsRepository;
 
-  private readonly _serversApi: IMcsApiServersService;
-  private readonly _jobsApi: IMcsApiJobsService;
-  private readonly _platformApi: IMcsApiPlatformService;
-  private readonly _identityApi: IMcsApiIdentityService;
-  private readonly _resourcesApi: IMcsApiResourcesService;
-  private readonly _batsApi: IMcsApiBatsService;
-  private readonly _ticketsApi: IMcsApiTicketsService;
-  private readonly _ordersApi: IMcsApiOrdersService;
-  private readonly _mediaApi: IMcsApiMediaService;
-  private readonly _metadataApi: IMcsApiMetadataService;
-  private readonly _firewallsApi: IMcsApiFirewallsService;
-  private readonly _networkDnsApi: IMcsApiNetworkDnsService;
-  private readonly _consoleApi: IMcsApiConsoleService;
-  private readonly _systemMessageApi: IMcsApiSystemService;
-  private readonly _toolsService: IMcsApiToolsService;
-  private readonly _catalogService: IMcsApiCatalogService;
-  private readonly _licensesApi: IMcsApiLicensesService;
   private readonly _accountApi: IMcsApiAccountService;
+  private readonly _availabilityZonesApi: IMcsApiAvailabilityZonesService;
   private readonly _azureResourcesApi: IMcsApiAzureResourcesService;
   private readonly _azureServicesApi: IMcsApiAzureServicesService;
+  private readonly _batsApi: IMcsApiBatsService;
+  private readonly _catalogService: IMcsApiCatalogService;
   private readonly _colocationServicesApi: IMcsApiColocationsService;
-  private readonly _reportsApi: IMcsApiReportsService;
-  private readonly _workflowsApi: IMcsApiWorkflowsService;
-  private readonly _objectsApi: IMcsApiObjectsService;
   private readonly _companyActiveUser: IMcsApiCompaniesService;
-
+  private readonly _consoleApi: IMcsApiConsoleService;
   private readonly _eventDispatcher: EventBusDispatcherService;
+  private readonly _firewallsApi: IMcsApiFirewallsService;
+  private readonly _identityApi: IMcsApiIdentityService;
+  private readonly _jobsApi: IMcsApiJobsService;
+  private readonly _licensesApi: IMcsApiLicensesService;
+  private readonly _mediaApi: IMcsApiMediaService;
+  private readonly _metadataApi: IMcsApiMetadataService;
+  private readonly _networkDnsApi: IMcsApiNetworkDnsService;
+  private readonly _objectsApi: IMcsApiObjectsService;
+  private readonly _ordersApi: IMcsApiOrdersService;
+  private readonly _platformApi: IMcsApiPlatformService;
+  private readonly _reportsApi: IMcsApiReportsService;
+  private readonly _resourcesApi: IMcsApiResourcesService;
+  private readonly _serversApi: IMcsApiServersService;
+  private readonly _systemMessageApi: IMcsApiSystemService;
+  private readonly _tenantsApi: IMcsApiTenantsService;
+  private readonly _ticketsApi: IMcsApiTicketsService;
+  private readonly _toolsService: IMcsApiToolsService;
+  private readonly _workflowsApi: IMcsApiWorkflowsService;
 
   constructor(_injector: Injector) {
     this._translate = _injector.get(TranslateService);
     // Register api repositories
-    this._jobsRepository = _injector.get(McsJobsRepository);
-    this._internetRepository = _injector.get(McsInternetRepository);
-    this._serversRepository = _injector.get(McsServersRepository);
-    this._resourcesRepository = _injector.get(McsResourcesRepository);
-    this._ticketsRepository = _injector.get(McsTicketsRepository);
-    this._systemMessagesRepository = _injector.get(McsSystemMessagesRepository);
-    this._ordersRepository = _injector.get(McsOrdersRepository);
-    this._mediaRepository = _injector.get(McsMediaRepository);
-    this._firewallsRepository = _injector.get(McsFirewallsRepository);
-    this._batsRepository = _injector.get(McsBatsRepository);
-    this._consoleRepository = _injector.get(McsConsoleRepository);
-    this._companiesRepository = _injector.get(McsCompaniesRepository);
-    this._licensesRepository = _injector.get(McsLicensesRepository);
     this._accountRepository = _injector.get(McsAccountRepository);
     this._azureResourceRepository = _injector.get(McsAzureResourcesRepository);
     this._azureServicesRepository = _injector.get(McsAzureServicesRepository);
+    this._batsRepository = _injector.get(McsBatsRepository);
+    this._companiesRepository = _injector.get(McsCompaniesRepository);
+    this._consoleRepository = _injector.get(McsConsoleRepository);
+    this._firewallsRepository = _injector.get(McsFirewallsRepository);
+    this._jobsRepository = _injector.get(McsJobsRepository);
+    this._internetRepository = _injector.get(McsInternetRepository);
+    this._licensesRepository = _injector.get(McsLicensesRepository);
+    this._mediaRepository = _injector.get(McsMediaRepository);
+    this._ordersRepository = _injector.get(McsOrdersRepository);
+    this._resourcesRepository = _injector.get(McsResourcesRepository);
+    this._serversRepository = _injector.get(McsServersRepository);
+    this._systemMessagesRepository = _injector.get(McsSystemMessagesRepository);
+    this._ticketsRepository = _injector.get(McsTicketsRepository);
 
     // Register api services
     let apiClientFactory = _injector.get(McsApiClientFactory);
-    this._serversApi = apiClientFactory.getService(new McsApiServersFactory());
-    this._jobsApi = apiClientFactory.getService(new McsApiJobsFactory());
-    this._platformApi = apiClientFactory.getService(new McsApiPlatformFactory());
-    this._identityApi = apiClientFactory.getService(new McsApiIdentityFactory());
-    this._resourcesApi = apiClientFactory.getService(new McsApiResourcesFactory());
-    this._batsApi = apiClientFactory.getService(new McsApiBatsFactory());
-    this._ticketsApi = apiClientFactory.getService(new McsApiTicketsFactory());
-    this._ordersApi = apiClientFactory.getService(new McsApiOrdersFactory());
-    this._mediaApi = apiClientFactory.getService(new McsApiMediaFactory());
-    this._metadataApi = apiClientFactory.getService(new McsApiMetadataFactory());
-    this._firewallsApi = apiClientFactory.getService(new McsApiFirewallsFactory());
-    this._networkDnsApi = apiClientFactory.getService(new McsApiNetworkDnsFactory());
-    this._consoleApi = apiClientFactory.getService(new McsApiConsoleFactory());
-    this._systemMessageApi = apiClientFactory.getService(new McsApiSystemFactory());
-    this._toolsService = apiClientFactory.getService(new McsApiToolsFactory());
-    this._catalogService = apiClientFactory.getService(new McsApiCatalogFactory());
-    this._licensesApi = apiClientFactory.getService(new McsApiLicensesFactory());
+
     this._accountApi = apiClientFactory.getService(new McsApiAccountFactory());
+    this._availabilityZonesApi = apiClientFactory.getService(new McsApiAvailabilityZonesFactory());
     this._azureResourcesApi = apiClientFactory.getService(new McsApiAzureResourceFactory());
     this._azureServicesApi = apiClientFactory.getService(new McsApiAzureServicesFactory());
+    this._batsApi = apiClientFactory.getService(new McsApiBatsFactory());
+    this._catalogService = apiClientFactory.getService(new McsApiCatalogFactory());
     this._colocationServicesApi = apiClientFactory.getService(new McsApiColocationsFactory());
-    this._reportsApi = apiClientFactory.getService(new McsApiReportsFactory());
-    this._workflowsApi = apiClientFactory.getService(new McsApiWorkflowsFactory());
-    this._objectsApi = apiClientFactory.getService(new McsApiObjectsFactory());
     this._companyActiveUser = apiClientFactory.getService(new McsApiCompaniesFactory());
+    this._consoleApi = apiClientFactory.getService(new McsApiConsoleFactory());
+    this._serversApi = apiClientFactory.getService(new McsApiServersFactory());
+    this._firewallsApi = apiClientFactory.getService(new McsApiFirewallsFactory());
+    this._jobsApi = apiClientFactory.getService(new McsApiJobsFactory());
+    this._identityApi = apiClientFactory.getService(new McsApiIdentityFactory());
+    this._licensesApi = apiClientFactory.getService(new McsApiLicensesFactory());
+    this._mediaApi = apiClientFactory.getService(new McsApiMediaFactory());
+    this._metadataApi = apiClientFactory.getService(new McsApiMetadataFactory());
+    this._networkDnsApi = apiClientFactory.getService(new McsApiNetworkDnsFactory());
+    this._objectsApi = apiClientFactory.getService(new McsApiObjectsFactory());
+    this._ordersApi = apiClientFactory.getService(new McsApiOrdersFactory());
+    this._platformApi = apiClientFactory.getService(new McsApiPlatformFactory());
+    this._reportsApi = apiClientFactory.getService(new McsApiReportsFactory());
+    this._resourcesApi = apiClientFactory.getService(new McsApiResourcesFactory());
+    this._systemMessageApi = apiClientFactory.getService(new McsApiSystemFactory());
+    this._tenantsApi = apiClientFactory.getService(new McsApiTenantsFactory());
+    this._ticketsApi = apiClientFactory.getService(new McsApiTicketsFactory());
+    this._toolsService = apiClientFactory.getService(new McsApiToolsFactory());
+    this._workflowsApi = apiClientFactory.getService(new McsApiWorkflowsFactory());
 
     // Register events
     this._eventDispatcher = _injector.get(EventBusDispatcherService);
@@ -1791,6 +1801,24 @@ export class McsApiService {
     return this._objectsApi.getInstalledServices(query).pipe(
       catchError((error) =>
         this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getInstalledServices'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public getTenants(query?: McsQueryParam): Observable<McsApiCollection<McsTenant>> {
+    return this._tenantsApi.getTenants(query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getTenants'))
+      ),
+      map((response) => this._mapToCollection(response.content, response.totalCount))
+    );
+  }
+
+  public getAvailabilityZones(query?: McsQueryParam): Observable<McsApiCollection<McsAvailabilityZone>> {
+    return this._availabilityZonesApi.getAvailabilityZones(query).pipe(
+      catchError((error) =>
+        this._handleApiClientError(error, this._translate.instant('apiErrorMessage.getAvailabilityZones'))
       ),
       map((response) => this._mapToCollection(response.content, response.totalCount))
     );
