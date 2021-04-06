@@ -17,6 +17,7 @@ export enum CrispAttributeNames {
   Ic2WinLic = 'IC2_WINLIC',
   IntelliDeuNominatedBackup = 'INTELLI-DEU-NOMINATED-BACKUP',
   LinkedServiceId = 'LINKED_SERVICEID',
+  LinkedMsTenant = 'LINKED_MS_TENANT',
   LinkSrvIdVav = 'LINK_SRV_ID_VAV',
   ServerLink = 'SERVER_LINK',
 }
