@@ -29,6 +29,8 @@ export enum WorkflowGroupId {
   ServerBackupProvision = 5000000,
 
   VmBackupProvision = 6000000,
+
+  MicrosoftCreateSubscription = 7000000,
 }
 
 export const workflowGroupIdText = {
@@ -54,4 +56,6 @@ export const workflowGroupIdText = {
   [WorkflowGroupId.ServerBackupProvision]: 'Server Backup',
 
   [WorkflowGroupId.VmBackupProvision]: 'VM Backup',
+
+  [WorkflowGroupId.MicrosoftCreateSubscription]: 'Create Microsoft Subscription',
 }

@@ -6,23 +6,25 @@ export const workflowOptions: Map<WorkflowGroupId, string> = new Map([
   [WorkflowGroupId.VirtualDataCentreVmInstanceProvision, 'Create a new virtual data centre VM instance.'],
   [WorkflowGroupId.VirtualDataCentreVmInstanceProvisionComplex, 'Create a new virtual data centre VM instance w/ Add Ons.'],
 
-  [WorkflowGroupId.DedicatedStorageUnmaskVolume, 'Unmask Dedicated Storage Volume.'],
-  [WorkflowGroupId.DedicatedStorageIncreaseVolume, 'Increase Dedicated Storage Volume.'],
-  [WorkflowGroupId.DedicatedStorageAttachVolumeCluster, 'Attach Dedicated Storage Volume Cluster.'],
-  [WorkflowGroupId.DedicatedStorageCreateAttachVolumeCluster, 'Create and Attach Dedicated Storage Volume Cluster.'],
-  [WorkflowGroupId.DedicatedStorageAttachVolume, 'Attach Dedicated Storage Volume.'],
-  [WorkflowGroupId.DedicatedStorageCreateAttachVolume, 'Create and Attach Dedicated Storage Volume.'],
-  [WorkflowGroupId.DedicatedStorageRemoveZoning, 'Remove Dedicated Storage Zoning.'],
+  [WorkflowGroupId.DedicatedStorageUnmaskVolume, 'Unmask dedicated storage volume.'],
+  [WorkflowGroupId.DedicatedStorageIncreaseVolume, 'Increase dedicated storage volume.'],
+  [WorkflowGroupId.DedicatedStorageAttachVolumeCluster, 'Attach dedicated storage volume cluster.'],
+  [WorkflowGroupId.DedicatedStorageCreateAttachVolumeCluster, 'Create and attach dedicated storage volume cluster.'],
+  [WorkflowGroupId.DedicatedStorageAttachVolume, 'Attach dedicated storage volume.'],
+  [WorkflowGroupId.DedicatedStorageCreateAttachVolume, 'Create and attach dedicated storage volume.'],
+  [WorkflowGroupId.DedicatedStorageRemoveZoning, 'Remove dedicated storage zoning.'],
 
-  [WorkflowGroupId.HostSecurityProvisionAntiVirus, 'Provision Anti-Virus Software.'],
-  [WorkflowGroupId.HostSecurityProvisionHids, 'Provision Host Intrusion Prevention System.'],
+  [WorkflowGroupId.HostSecurityProvisionAntiVirus, 'Provision an anti-virus software.'],
+  [WorkflowGroupId.HostSecurityProvisionHids, 'Provision a host intrusion prevention system.'],
 
-  [WorkflowGroupId.ManagementToolsQueryStatus, 'Query Management Tools Status.'],
-  [WorkflowGroupId.ManagementToolsAddCvm, 'Add To Management Tools.'],
-  [WorkflowGroupId.ManagementToolsRemoveCvm, 'Remove from Management Tools.'],
-  [WorkflowGroupId.ManagementToolsRename, 'Rename in Management Tools.'],
+  [WorkflowGroupId.ManagementToolsQueryStatus, 'Query nanagement tools status.'],
+  [WorkflowGroupId.ManagementToolsAddCvm, 'Add to management tools.'],
+  [WorkflowGroupId.ManagementToolsRemoveCvm, 'Remove from management tools.'],
+  [WorkflowGroupId.ManagementToolsRename, 'Rename in management tools.'],
 
-  [WorkflowGroupId.ServerBackupProvision, 'Provision Server Backup.'],
+  [WorkflowGroupId.MicrosoftCreateSubscription, 'Create Microsoft subscription for a tenant.'],
 
-  [WorkflowGroupId.VmBackupProvision, 'Provision Virtual Machine Backup.'],
+  [WorkflowGroupId.ServerBackupProvision, 'Provision server backup.'],
+
+  [WorkflowGroupId.VmBackupProvision, 'Provision virtual machine backup.'],
 ]);

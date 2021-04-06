@@ -4,6 +4,12 @@ import { WorkflowGroupId } from './workflow-groups/workflow-group-type.enum';
 // Workflow: Assign workflow groups to product types
 export const productWorkflowGroupMap: Map<ProductType, number[]> = new Map(
   [
+    [ ProductType.AzureProductConsumption,
+      [
+        WorkflowGroupId.MicrosoftCreateSubscription
+      ]
+    ],
+
     [ ProductType.BrickFirewall,
       [
         WorkflowGroupId.ManagementToolsQueryStatus,

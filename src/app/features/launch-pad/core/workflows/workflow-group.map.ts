@@ -16,7 +16,8 @@ import {
   HostSecurityProvisionAntiVirusWorkflowGroup,
   HostSecurityProvisionHidsWorkflowGroup,
   ManagementToolsRenameWorkflowGroup,
-  VdcVmInstanceProvisionComplexWorkflowGroup
+  VdcVmInstanceProvisionComplexWorkflowGroup,
+  MicrosoftCreateSubscriptionWorkflowGroup
 } from './workflow-groups';
 import { WorkflowGroup } from './workflow-group.interface';
 import { VmBackupProvisionWorkflowGroup } from './workflow-groups/vm-backup-provision.workflow';
@@ -39,6 +40,8 @@ export const workflowGroupMap: Map<WorkflowGroupId, Type<WorkflowGroup>> = new M
   [ WorkflowGroupId.ManagementToolsQueryStatus, ManagementToolsQueryStatusWorkflowGroup ],
   [ WorkflowGroupId.ManagementToolsRemoveCvm, ManagementToolsRemoveCvmWorkflowGroup ],
   [ WorkflowGroupId.ManagementToolsRename, ManagementToolsRenameWorkflowGroup ],
+
+  [ WorkflowGroupId.MicrosoftCreateSubscription, MicrosoftCreateSubscriptionWorkflowGroup ],
 
   [ WorkflowGroupId.ServerBackupProvision,  ServerBackupProvisionWorkflowGroup ],
 
