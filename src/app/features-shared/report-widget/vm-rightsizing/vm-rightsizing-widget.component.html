@@ -39,7 +39,7 @@
       <!-- VM Name Column -->
       <ng-container matColumnDef="vmName">
         <th mat-header-cell *matHeaderCellDef>
-          {{ 'reports.insights.costs.vmRightsizing.table.header.vmName' | translate }}
+          {{ 'columnHeader.vmName' | translate }}
         </th>
         <td mat-cell *matCellDef="let row">
           {{ row.vmName }}
@@ -49,7 +49,7 @@
       <!-- Size Column -->
       <ng-container matColumnDef="size">
         <th mat-header-cell *matHeaderCellDef>
-          {{ 'reports.insights.costs.vmRightsizing.table.header.size' | translate }}
+          {{ 'columnHeader.size' | translate }}
         </th>
         <td mat-cell *matCellDef="let row">
           {{ row.size }}
@@ -59,7 +59,7 @@
       <!-- Region Column -->
       <ng-container matColumnDef="region">
         <th mat-header-cell *matHeaderCellDef>
-          {{ 'reports.insights.costs.vmRightsizing.table.header.region' | translate }}
+          {{ 'columnHeader.region' | translate }}
         </th>
         <td mat-cell *matCellDef="let row">
           {{ row.region }}
@@ -69,7 +69,7 @@
       <!-- Recommendation Column -->
       <ng-container matColumnDef="recommendation">
         <th mat-header-cell *matHeaderCellDef>
-          {{ 'reports.insights.costs.vmRightsizing.table.header.recommendation' | translate }}
+          {{ 'columnHeader.recommendation' | translate }}
         </th>
         <td mat-cell *matCellDef="let row">
           {{ row.recommendation }}
@@ -79,7 +79,7 @@
       <!-- Projected Compute Cost Column -->
       <ng-container matColumnDef="projectedComputeCost">
         <th mat-header-cell *matHeaderCellDef>
-          {{ 'reports.insights.costs.vmRightsizing.table.header.projectedComputeCost' | translate }}
+          {{ 'columnHeader.projectedComputeCost' | translate }}
         </th>
         <td mat-cell *matCellDef="let row">
           {{ row.projectedComputeCost }}
@@ -87,9 +87,9 @@
       </ng-container>
 
       <!-- Possible Savings Column -->
-      <ng-container matColumnDef="recommendationSavings">
+      <ng-container matColumnDef="possibleSavings">
         <th mat-header-cell *matHeaderCellDef>
-          {{ 'reports.insights.costs.vmRightsizing.table.header.recommendationSavings' | translate }}
+          {{ 'columnHeader.possibleSavings' | translate }}
         </th>
         <td mat-cell *matCellDef="let row">
           {{ row.recommendationSavings }}
@@ -99,7 +99,7 @@
       <!-- CPU Score Column -->
       <ng-container matColumnDef="cpuScore">
         <th mat-header-cell *matHeaderCellDef>
-          {{ 'reports.insights.costs.vmRightsizing.table.header.cpuScore' | translate }}
+          {{ 'columnHeader.cpuScore' | translate }}
         </th>
         <td mat-cell *matCellDef="let row">
           {{ row.cpuScore }}
@@ -109,7 +109,7 @@
       <!-- Memory Score Column -->
       <ng-container matColumnDef="memoryScore">
         <th mat-header-cell *matHeaderCellDef>
-          {{ 'reports.insights.costs.vmRightsizing.table.header.memoryScore' | translate }}
+          {{ 'columnHeader.memoryScore' | translate }}
         </th>
         <td mat-cell *matCellDef="let row">
           {{ row.memoryScore }}
@@ -119,7 +119,7 @@
       <!-- Disk Score Column -->
       <ng-container matColumnDef="diskScore">
         <th mat-header-cell *matHeaderCellDef>
-          {{ 'reports.insights.costs.vmRightsizing.table.header.diskScore' | translate }}
+          {{ 'columnHeader.diskScore' | translate }}
         </th>
         <td mat-cell *matCellDef="let row">
           {{ row.diskScore }}
@@ -129,7 +129,7 @@
       <!-- Efficiency -->
       <ng-container matColumnDef="efficiency">
         <th mat-header-cell *matHeaderCellDef>
-          {{ 'reports.insights.costs.vmRightsizing.table.header.efficiency' | translate }}
+          {{ 'columnHeader.efficiency' | translate }}
         </th>
         <td mat-cell *matCellDef="let row">
           <ng-container *ngIf="row.efficiency; else efficiencyEmpty">
@@ -144,7 +144,7 @@
       <!-- Total Score Column -->
       <ng-container matColumnDef="totalScore">
         <th mat-header-cell *matHeaderCellDef>
-          {{ 'reports.insights.costs.vmRightsizing.table.header.totalScore' | translate }}
+          {{ 'columnHeader.totalScore' | translate }}
         </th>
         <td mat-cell *matCellDef="let row">
           {{ row.totalScore }}

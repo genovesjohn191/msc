@@ -1,4 +1,12 @@
 import {
+  ChangeDetectionStrategy,
+  Component,
+  Injector,
+  OnDestroy,
+  ViewEncapsulation
+} from '@angular/core';
+
+import {
   throwError,
   Observable,
   Subject
@@ -8,19 +16,9 @@ import {
   map
 } from 'rxjs/operators';
 
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  Injector,
-  OnDestroy,
-  OnInit,
-  ViewEncapsulation
-} from '@angular/core';
 import { McsApiTicketsService } from '@app/api-client/services/mcs-api-tickets.service';
 import {
   CoreRoutes,
-  McsFilterService,
   McsMatTableContext,
   McsNavigationService,
   McsTableDataSource2
@@ -30,13 +28,15 @@ import {
   McsTicket,
   McsTicketQueryParams,
   RouteKey,
-  TicketStatus
+  TicketStatus,
+  McsFilterInfo
 } from '@app/models';
 import {
   cloneObject,
   isNullOrEmpty,
   unsubscribeSafely,
-  CommonDefinition
+  CommonDefinition,
+  createObject
 } from '@app/utilities';
 
 const maxTicketsToDisplay: number = 5;
@@ -52,16 +52,15 @@ const maxTicketsToDisplay: number = 5;
   }
 })
 
-export class AzureTicketsWidgetComponent implements OnInit, OnDestroy {
+export class AzureTicketsWidgetComponent implements OnDestroy {
+
   public readonly dataSource: McsTableDataSource2<McsTicket>;
+  public readonly defaultColumnFilters: McsFilterInfo[];
+
+  public hasMore: boolean = false;
 
   private _ticketStatusIconMap = new Map<string, string>();
   private _destroySubject = new Subject<void>();
-
-  public empty: boolean = false;
-  public hasError: boolean = false;
-  public processing: boolean = false;
-  public hasMore: boolean = false;
 
   public get routeKeyEnum(): any {
     return RouteKey;
@@ -77,17 +76,16 @@ export class AzureTicketsWidgetComponent implements OnInit, OnDestroy {
 
   public constructor(
     _injector: Injector,
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _filterService: McsFilterService,
     private _ticketService: McsApiTicketsService,
     private _navigationService: McsNavigationService
   ) {
-    this.dataSource = new McsTableDataSource2(this.getData.bind(this));
+    this.dataSource = new McsTableDataSource2(this._getAzureTickets.bind(this));
+    this.defaultColumnFilters = [
+      createObject(McsFilterInfo, { value: true, exclude: true, id: 'summary' }),
+      createObject(McsFilterInfo, { value: true, exclude: true, id: 'lastUpdatedDate' }),
+    ];
+    this.dataSource.registerColumnsFilterInfo(this.defaultColumnFilters);
     this.setTicketStatusIconMap();
-  }
-
-  public ngOnInit() {
-    this._initializeDataColumns();
   }
 
   public ngOnDestroy() {
@@ -98,10 +96,7 @@ export class AzureTicketsWidgetComponent implements OnInit, OnDestroy {
     this.dataSource.refreshDataRecords();
   }
 
-  private getData(): Observable<McsMatTableContext<McsTicket>> {
-    this.processing = true;
-    this.hasError = false;
-    this.empty = false;
+  private _getAzureTickets(): Observable<McsMatTableContext<McsTicket>> {
     let queryParam = new McsTicketQueryParams();
     queryParam.pageSize = maxTicketsToDisplay;
     queryParam.serviceId = 'AZ';
@@ -109,10 +104,7 @@ export class AzureTicketsWidgetComponent implements OnInit, OnDestroy {
 
     return this._ticketService.getTickets(queryParam).pipe(
       map((response) => {
-        this.processing = false;
-        this.empty = response.totalCount === 0;
         this.hasMore = response.totalCount > maxTicketsToDisplay;
-        this._changeDetectorRef.markForCheck();
 
         let azureTickets: McsTicket[] = [];
         azureTickets.push(...cloneObject(response.content));
@@ -121,9 +113,6 @@ export class AzureTicketsWidgetComponent implements OnInit, OnDestroy {
         return dataSourceContext;
       }),
       catchError(() => {
-        this.hasError = true;
-        this.processing = false;
-        this._changeDetectorRef.markForCheck();
         return throwError('Tickets endpoint failed.');
       })
     );
@@ -149,11 +138,5 @@ export class AzureTicketsWidgetComponent implements OnInit, OnDestroy {
     this._ticketStatusIconMap.set(ticketStatusText[TicketStatus.AwaitingCustomer], CommonDefinition.ASSETS_SVG_STATE_RESTARTING);
     this._ticketStatusIconMap.set(ticketStatusText[TicketStatus.WaitForRfo], CommonDefinition.ASSETS_SVG_STATE_RESTARTING);
     this._ticketStatusIconMap.set(ticketStatusText[TicketStatus.WaitingForTaskCompletion], CommonDefinition.ASSETS_SVG_STATE_RESTARTING);
-  }
-
-  private _initializeDataColumns(): void {
-    let dataColumns = this._filterService.getFilterSettings(
-      CommonDefinition.FILTERSELECTOR_AZURE_TICKETS_WIDGET_LISTING);
-    this.dataSource.registerColumnsFilterInfo(dataColumns);
   }
 }

@@ -156,12 +156,6 @@
       },
       "azureTicketsWidget": {
         "title": "Open Azure Tickets",
-        "table": {
-          "header": {
-            "summary": "Summary",
-            "lastUpdated": "Last Updated"
-          }
-        },
         "newTicketLinkLabel": "New",
         "moreTicketsLinkLabel": "View All",
         "empty": "No open tickets.",
@@ -227,21 +221,6 @@
           "title": "VM Rightsizing",
           "subTitle": "A list of VMs where savings could be found through rightsizing.",
           "labelBelowChart": "These insights show how well your VMs are utilised in terms of the workloads running on them, how metrics such as CPU, Memory and Virtual Disk I/O contribute to VM utilisation, and opportunities for rightsizing VMs thereby saving costs and optimising workloads.",
-          "table": {
-            "header": {
-              "vmName": "VM Name",
-              "totalScore": "Total Score",
-              "cpuScore": "CPU Score",
-              "memoryScore": "Memory Score",
-              "diskScore": "Disk Score",
-              "size": "Size",
-              "region": "Region",
-              "projectedComputeCost": "Projected Compute Cost",
-              "efficiency": "Efficiency",
-              "recommendationSavings": "Possible Savings",
-              "recommendation": "Recommendation"
-            }
-          },
           "efficiencyEmpty": "No Data",
           "empty": "No data found"
         }
@@ -3028,12 +3007,15 @@
     "completed": "Completed",
     "createdBy": "Created By",
     "createdOn": "Created On",
+    "cpuScore": "CPU Score",
     "customerId": "Customer ID",
     "customerName": "Customer Name",
     "customerReference": "Customer Reference",
     "description": "Description",
     "destination": "Destination",
     "destinationInterfaces": "Destination Interfaces",
+    "diskScore": "Disk Score",
+    "efficiency": "Efficiency",
     "firewall": "Firewall",
     "firmwareVersion": "Firmware Version",
     "installedBaseState": "Installed Base State",
@@ -3044,6 +3026,7 @@
     "lastEndTime": "Last End Time",
     "lastStartTime": "Last Start Time",
     "lastStatus": "Last Status",
+    "lastUpdated": "Last Updated",
     "lastUpdatedBy": "Last Updated By",
     "lastUpdatedDate": "Last Updated Date",
     "loggedBy": "Logged By",
@@ -3051,6 +3034,7 @@
     "managementIp": "Management IP",
     "media": "Media",
     "mediaSize": "Media Size",
+    "memoryScore": "Memory Score",
     "name": "Name",
     "notification": "Notification",
     "offerId": "Offer ID",
@@ -3060,7 +3044,11 @@
     "parent": "Parent",
     "plan": "Plan",
     "productId": "Product ID",
+    "projectedComputeCost": "Projected Compute Cost",
     "quantity": "Quantity",
+    "recommendation": "Recommendation",
+    "possibleSavings": "Possible Savings",
+    "region": "Region",
     "resource": "Resource",
     "resourceGroup": "Resource Group",
     "retentionPeriod": "Retention Period",
@@ -3073,6 +3061,7 @@
     "service": "Service",
     "serviceId": "Service ID",
     "severity": "Severity",
+    "size": "Size",
     "source": "Source",
     "sourceInterfaces": "Source Interfaces",
     "speed": "Speed",
@@ -3087,6 +3076,7 @@
     "tier": "Tier",
     "time": "Time",
     "toolsVersion": "Tools Version",
+    "totalScore": "Total Score",
     "type": "Type",
     "unit": "Unit",
     "uploadedDate": "Uploaded Date",
@@ -3094,6 +3084,7 @@
     "user": "User",
     "vApp": "vApp",
     "vdc": "VDC",
+    "vmName":"VM Name",
     "zone": "Zone",
     "zoneCount": "Zones"
   },

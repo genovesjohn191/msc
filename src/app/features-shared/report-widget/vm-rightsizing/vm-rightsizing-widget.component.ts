@@ -1,7 +1,6 @@
 import {
   ChangeDetectorRef,
   Component,
-  OnInit,
   OnDestroy,
   ChangeDetectionStrategy,
   ViewEncapsulation
@@ -19,17 +18,18 @@ import {
 import {
   cloneObject,
   CommonDefinition,
+  createObject,
   currencyFormat,
   unsubscribeSafely
 } from '@app/utilities';
 import {
   CoreRoutes,
-  McsFilterService,
   McsMatTableContext,
   McsTableDataSource2,
   McsReportingService
 } from '@app/core';
 import {
+  McsFilterInfo,
   McsReportVMRightsizing,
   RouteKey
 } from '@app/models';
@@ -41,9 +41,10 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
-export class VmRightsizingWidgetComponent implements OnInit, OnDestroy {
+export class VmRightsizingWidgetComponent implements OnDestroy {
 
   public readonly dataSource: McsTableDataSource2<McsReportVMRightsizing>;
+  public readonly defaultColumnFilters: McsFilterInfo[];
 
   public empty: boolean = false;
   public hasError: boolean = false;
@@ -61,15 +62,24 @@ export class VmRightsizingWidgetComponent implements OnInit, OnDestroy {
 
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
-    private _filterService: McsFilterService,
     private _reportingService: McsReportingService
   ) {
     this.dataSource = new McsTableDataSource2(this.getVMRightsizing.bind(this));
+    this.defaultColumnFilters = [
+      createObject(McsFilterInfo, { value: true, exclude: true, id: 'vmName' }),
+      createObject(McsFilterInfo, { value: true, exclude: true, id: 'size' }),
+      createObject(McsFilterInfo, { value: true, exclude: true, id: 'region' }),
+      createObject(McsFilterInfo, { value: true, exclude: true, id: 'recommendation' }),
+      createObject(McsFilterInfo, { value: true, exclude: true, id: 'projectedComputeCost' }),
+      createObject(McsFilterInfo, { value: true, exclude: true, id: 'possibleSavings' }),
+      createObject(McsFilterInfo, { value: true, exclude: true, id: 'cpuScore' }),
+      createObject(McsFilterInfo, { value: true, exclude: true, id: 'memoryScore' }),
+      createObject(McsFilterInfo, { value: true, exclude: true, id: 'diskScore' }),
+      createObject(McsFilterInfo, { value: true, exclude: true, id: 'efficiency' }),
+      createObject(McsFilterInfo, { value: true, exclude: true, id: 'totalScore' }),
+    ];
+    this.dataSource.registerColumnsFilterInfo(this.defaultColumnFilters);
     this.getVMRightsizingSummary();
-  }
-
-  ngOnInit(): void {
-    this._initializeDataColumns();
   }
 
   ngOnDestroy() {
@@ -121,11 +131,5 @@ export class VmRightsizingWidgetComponent implements OnInit, OnDestroy {
       this.potentialRightsizingSavings = this.moneyFormat(response.recommendationSavings);
       this._changeDetectorRef.markForCheck();
     });
-  }
-
-  private _initializeDataColumns(): void {
-    let dataColumns = this._filterService.getFilterSettings(
-      CommonDefinition.FILTERSELECTOR_VM_RIGHTSIZING_LISTING);
-    this.dataSource.registerColumnsFilterInfo(dataColumns);
   }
 }

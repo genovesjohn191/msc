@@ -32,6 +32,8 @@ import { McsApiReportsService } from './services/mcs-api-reports.service';
 import { McsApiWorkflowsService } from './services/mcs-api-workflows.services';
 import { McsApiObjectsService } from './services/mcs-api-objects.service';
 import { McsApiMetadataService } from './services/mcs-api-metadata.service';
+import { McsApiAvailabilityZonesService } from './services/mcs-api-availability-zones.service';
+import { McsApiTenantsService } from './services/mcs-api-tenants.service';
 
 export const apiClientProviders: Provider[] = [
   McsApiClientHttpService,
@@ -62,7 +64,9 @@ export const apiClientProviders: Provider[] = [
   McsApiAzureServicesService,
   McsApiReportsService,
   McsApiWorkflowsService,
-  McsApiObjectsService
+  McsApiObjectsService,
+  McsApiAvailabilityZonesService,
+  McsApiTenantsService
 ];
 
 export const apiClientInterceptors: Provider[] = [
