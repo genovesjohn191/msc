@@ -199,8 +199,7 @@ export class CommonDefinition {
   public static FILTERSELECTOR_LAUNCH_PAD_SEARCH_SERVICES_LISTING = 'launchPadSearchServicesFilter';
   public static FILTERSELECTOR_LAUNCH_PAD_SEARCH_CONFIGURATION_ITEMS_LISTING = 'launchPadSearchConfigurationItemsFilter';
   public static FILTERSELECTOR_SYSTEM_MESSAGE_LISTING = 'systemMessageFilter';
-  public static FILTERSELECTOR_AZURE_TICKETS_WIDGET_LISTING = 'azureTicketsWidgetFilter';
-  public static FILTERSELECTOR_VM_RIGHTSIZING_LISTING = 'vmRightsizingWidgetFilter';
+
   /** RegEx Patterns */
   public static REGEX_EMAIL_PATTERN = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
   public static REGEX_IP_PATTERN = /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.|$)){4}$/;
